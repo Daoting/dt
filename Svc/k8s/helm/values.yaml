@@ -1,0 +1,47 @@
+# 此处变量值将应用到模板
+
+# 镜像名称格式：repository:tag
+# install时通过--set image.repository 重置
+image:
+  repository: svc
+  tag: latest
+  pullPolicy: IfNotPresent
+
+# 启用ingress
+ingress:
+  enabled: true
+  # 未使用默认的hosts和paths（多host,多path）
+  host: ""
+  # 虚拟路径，install时重置
+  path: ""
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+# 副本数
+replicaCount: 1
+
+# 未设置，使用Chart.name的值
+nameOverride: ""
+fullnameOverride: ""
+
+# 服务
+service:
+  type: ClusterIP
+  port: 80
+
+# 自定义资源如：
+resources: {}
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

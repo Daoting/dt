@@ -1,0 +1,183 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <style>
+        a, b, body, div, font, h1, h2, h3, h4, i, input, lp, select, td, u { font-family: verdana,宋体; font-size: 14px; }
+        a:link { text-decoration: none; }
+        table { border: 0; border-collapse: collapse; border-spacing: 0; width: 100%; }
+        .trClass { height: 40px; vertical-align: bottom; }
+        .trMethod { height: 30px; }
+        .tdMethod { width: 20%; }
+        .trLeft { height: 20px; }
+        .tdParam { border-right: 1px solid #C3C3C3; border-bottom: 1px solid #C3C3C3; padding-left: 5px; }
+        .aTitle { font-size: 20px; margin-left: 20px; }
+    </style>
+</head>
+<body style="overflow: auto; margin: 0; padding: 0;">
+    <table>
+        <tr>
+            <td style="background: #F1F1F1; border: 1px solid #E0E0E0;"><pre id="topbar" style="margin: 10px 20px 10px 20px"></pre></td>
+        </tr>
+        <tr>
+            <td style="padding: 0px 20px 20px 20px;"><pre id="con"></pre></td>
+        </tr>
+    </table>
+    <script>
+        var _rpcUrl = location.href.substr(0, location.href.lastIndexOf("/")) + "/.c";
+        window.onload = function ()
+        {
+            var txt = call('["Admin.GetInitInfo"]');
+            var result = JSON.parse(txt);
+            if (result.length == 3)
+            {
+                var dt = result[2];
+                document.title = dt[1];
+                $("topbar").innerHTML = dt[2];
+                $("con").innerHTML = dt[3];
+            }
+            else
+            {
+                $("con").innerText = txt;
+            }
+        }
+
+        function $(id)
+        {
+            return document.getElementById(id);
+        }
+
+        function call(content)
+        {
+            var xmlHttp = null;
+            if (window.XMLHttpRequest)
+                xmlHttp = new XMLHttpRequest();
+            else if (window.ActiveXObject)
+                xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
+            else
+                throw new Error("无法创建XMLHttpRequest对象！");
+
+            try
+            {
+                xmlHttp.open("post", _rpcUrl, false);
+            }
+            catch (e)
+            {
+                throw e;
+            }
+            xmlHttp.setRequestHeader("sid", "b064966efb5044fcaf794f6c6aeadee0");
+            xmlHttp.setRequestHeader("uname", "admin");
+            xmlHttp.send(content);
+
+            if (xmlHttp.status == 200)
+                return xmlHttp.responseText;
+            throw new Error(xmlHttp.responseText);
+        }
+
+        function load(p_request, p_isHtml)
+        {
+            var txt = call(p_request);
+            var result = JSON.parse(txt);
+            if (result.length == 3)
+            {
+                if (p_isHtml)
+                    $("con").innerHTML = result[2];
+                else
+                    $("con").innerText = result[2];
+            }
+            else
+            {
+                $("con").innerText = txt;
+            }
+            return false;
+        }
+
+        function onTest()
+        {
+            var txt = call($("methodCall").value);
+            var result = JSON.parse(txt);
+            if (result.length == 3)
+            {
+                $("tdTitle").innerText = (result[0] == 0 ? "成功，耗时" : "调用失败！耗时") + result[1] + "毫秒";
+                if (Object.prototype.toString.call(result[2]) === "[object String]")
+                    $("tdResult").innerText = result[2];
+                else
+                    $("tdResult").innerText = formatJson(JSON.stringify(result[2]));
+            }
+            else
+            {
+                $("tdResult").innerText = formatJson(txt);
+            }
+        }
+
+        function loadAgent(cls)
+        {
+            load('["Admin.GetAgentClass", "' + cls + '"]', false);
+            var selection = window.getSelection();
+            var range = document.createRange();
+            range.selectNodeContents($("con"));
+            selection.removeAllRanges();
+            selection.addRange(range);
+            return false;
+        }
+
+        function formatJson(json)
+        {
+            var result = [];
+            var length = json.length;
+            var number = 0;
+            var key = 0;
+            var line = '\n';
+
+            for (var i = 0; i < length; i++)
+            {
+                key = json.charAt(i);
+
+                if ((key == '[') || (key == '{'))
+                {
+                    if ((i - 1 > 0) && (json.charAt(i - 1) == ':'))
+                    {
+                        result.push(line);
+                        result.push(indent(number));
+                    }
+
+                    result.push(key);
+                    result.push(line);
+                    number++;
+                    result.push(indent(number));
+                    continue;
+                }
+
+                if ((key == ']') || (key == '}'))
+                {
+                    result.push(line);
+                    number--;
+                    result.push(indent(number));
+                    result.push(key);
+                    continue;
+                }
+
+                if ((key == ','))
+                {
+                    result.push(key);
+                    result.push(line);
+                    result.push(indent(number));
+                    continue;
+                }
+                result.push(key);
+            }
+            return result.join('');
+        }
+
+        function indent(number)
+        {
+            var result = [];
+            for (var i = 0; i < number; i++)
+            {
+                result.push('    ');
+            }
+            return result.join('');
+        }
+    </script>
+</body>
+</html>
