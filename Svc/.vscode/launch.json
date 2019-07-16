@@ -1,0 +1,36 @@
+{
+    // 使用 IntelliSense 了解相关属性。 
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "k8s",
+            "type": "coreclr",
+            "request": "attach",
+            // 前置任务
+            //"preLaunchTask": "build",
+            // ${command:pickRemoteProcess} 出错，通常为1
+            "processId": "1",
+            "justMyCode": true,
+
+            "pipeTransport": {
+                "pipeProgram": "kubectl",
+                "pipeArgs": [
+                    "exec",
+                    "-i",
+                    // pod名称变化，无法自动获取？
+                    "baisui-cm-55cd8ccf8b-nh8n5",
+                    "--"
+                ],
+                "pipeCwd": "${workspaceFolder}",
+                "debuggerPath": "/root/vsdbg/vsdbg",
+                "quoteArgs": false
+            },
+            "sourceFileMap": {
+                // 设置源文件映射，容器中的/src映射到当前工作区的/src
+                "/src": "${workspaceFolder}/src"
+            }
+        }
+    ]
+}
