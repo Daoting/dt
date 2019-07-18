@@ -20,11 +20,16 @@ if ($buildImage) {
 # 删除上一release
 if ($clean) {
     Write-Host "删除旧版releases..." -ForegroundColor Green
+    # 手动立即删除旧pod，确保部署时pod已被删除
+    kubectl delete pod $fullName --grace-period=0 --force
     helm delete --purge $fullName
-    # helm delete --purge $(helm ls -q) 
+    # helm delete --purge $(helm ls -q -a)
     Write-Host
 }
 
 Write-Host "使用Helm部署" $fullName "服务" -ForegroundColor Green
 $ingressPath = "/" + $appName + "/" + $svcName
-helm install --set image.repository=$fullName --set image.tag=$tag --set ingress.path=$ingressPath --name="$fullName" ./k8s/helm
+helm install --set image.repository=$fullName,image.tag=$tag,ingress.path=$ingressPath --name="$fullName" ./k8s/$svcName
+
+# 延时等待pod启动
+Start-Sleep 2

@@ -2,17 +2,26 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "部署cm",
-            "command": "./k8s/deploy.ps1",
+            "label": "cm",
+            "command": "./k8s/build.ps1",
             "type": "shell",
             "args": [
                 "cm"
             ],
-            "problemMatcher": "$tsc",
+            "problemMatcher": [],
             "group": {
                 "kind": "build",
                 "isDefault": true
             }
+        },
+        {
+            "label": "auth",
+            "command": "./k8s/build.ps1",
+            "type": "shell",
+            "args": [
+                "auth"
+            ],
+            "problemMatcher": []
         }
     ]
 }

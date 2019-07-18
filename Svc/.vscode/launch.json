@@ -5,22 +5,21 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "k8s",
+            "name": "cm",
             "type": "coreclr",
             "request": "attach",
             // 前置任务
-            //"preLaunchTask": "build",
+            "preLaunchTask": "cm",
             // ${command:pickRemoteProcess} 出错，通常为1
             "processId": "1",
             "justMyCode": true,
-
             "pipeTransport": {
                 "pipeProgram": "kubectl",
                 "pipeArgs": [
                     "exec",
                     "-i",
                     // pod名称变化，无法自动获取？
-                    "baisui-cm-55cd8ccf8b-nh8n5",
+                    "baisui-cm",
                     "--"
                 ],
                 "pipeCwd": "${workspaceFolder}",

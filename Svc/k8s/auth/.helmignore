@@ -1,3 +1,7 @@
+# 开发时为调试方便，使用Pod定义
+deployment.yaml
+#pod.yaml
+
 # Patterns to ignore when building packages.
 # This supports shell glob matching, relative path matching, and
 # negation (prefixed with !). Only one pattern per line.
