@@ -4,9 +4,9 @@ metadata:
   name: {{ include "svc.fullname" . }}
   labels:
     app.kubernetes.io/name: {{ include "svc.name" . }}
-    helm.sh/chart: {{ include "svc.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
+    helm.sh/chart: {{ include "svc.chart" . }}
 spec:
   type: {{ .Values.service.type }}
   ports:

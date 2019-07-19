@@ -40,18 +40,43 @@ namespace Dts.Core.EventBus
         {
             _log = p_log;
 
-            var cfg = Glb.Config.GetSection("RabbitMq");
-            if (!cfg.Exists())
-                throw new InvalidOperationException("Œ¥’“µΩRabbitMq≈‰÷√Ω⁄£°");
+            var cfg = Glb.GetCfg<string>("rabbitmq");
+            if (string.IsNullOrWhiteSpace(cfg))
+                throw new InvalidOperationException("Œ¥’“µΩRabbitMqµƒ≈‰÷√£°");
 
             // RabbitMQ¡¨Ω”≈‰÷√
-            _connectionFactory = new ConnectionFactory()
+            var fac = new ConnectionFactory();
+            var arr = cfg.Split(',');
+            foreach (var paddedOption in arr)
             {
-                HostName = cfg["HostName"],
-                UserName = cfg["UserName"],
-                Password = cfg["Password"],
-                Port = cfg.GetValue<int>("Port"),
-            };
+                var option = paddedOption.Trim();
+                if (string.IsNullOrWhiteSpace(option))
+                    continue;
+
+                int idx = option.IndexOf('=');
+                if (idx <= 0)
+                    continue;
+
+                var key = option.Substring(0, idx).Trim().ToLower();
+                var value = option.Substring(idx + 1).Trim();
+                switch (key)
+                {
+                    case "hostname":
+                        fac.HostName = value;
+                        break;
+                    case "username":
+                        fac.UserName = value;
+                        break;
+                    case "password":
+                        fac.Password = value;
+                        break;
+                    case "port":
+                        if (int.TryParse(value, out int port))
+                            fac.Port = port;
+                        break;
+                }
+            }
+            _connectionFactory = fac;
         }
         #endregion
 

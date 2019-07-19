@@ -103,7 +103,7 @@ namespace Dts.Core
         /// </summary>
         public static string AppName
         {
-            get { return _config.GetValue("App", "dt"); }
+            get { return _config.GetValue("appname", "dt"); }
         }
 
         /// <summary>

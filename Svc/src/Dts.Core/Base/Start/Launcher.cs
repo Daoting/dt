@@ -91,7 +91,6 @@ namespace Dts.Core
                 Glb.Config = new ConfigurationBuilder()
                     .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "etc/config"))
                     .AddJsonFile("service.json", false, true)
-                    .AddJsonFile("global.json", false, true)
                     .AddEnvironmentVariables()
                     .Build();
                 Log.Information("读取配置成功");

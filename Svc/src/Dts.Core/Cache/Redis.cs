@@ -23,7 +23,7 @@ namespace Dts.Core.Cache
 
         static Redis()
         {
-            var cfg = Glb.GetCfg<string>("Redis");
+            var cfg = Glb.GetCfg<string>("redis");
             if (string.IsNullOrEmpty(cfg))
                 throw new InvalidOperationException("Œ¥’“Redisµƒ¡¨Ω”≈‰÷√£°");
             _muxer = ConnectionMultiplexer.Connect(ConfigurationOptions.Parse(cfg));

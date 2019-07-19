@@ -21,7 +21,8 @@ namespace Dts.Core
     {
         public Task<string> GetString()
         {
-            return AtTestRpc.GetString();
+            return Task.FromResult(Glb.GetCfg("rabbitmq", ""));
+            //return AtTestRpc.GetString();
         }
 
         public Task<bool> SetString(string p_str)

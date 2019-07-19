@@ -29,7 +29,7 @@ if ($clean) {
 
 Write-Host "使用Helm部署" $fullName "服务" -ForegroundColor Green
 $ingressPath = "/" + $appName + "/" + $svcName
-helm install --set image.repository=$fullName,image.tag=$tag,ingress.path=$ingressPath --name="$fullName" ./k8s/$svcName
+helm install --values ./k8s/global.yaml --set image.repository=$fullName,image.tag=$tag,ingress.path=$ingressPath --name="$fullName" ./k8s/$svcName
 
 # 延时等待pod启动
 Start-Sleep 2

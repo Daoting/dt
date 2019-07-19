@@ -3,7 +3,7 @@
     "tasks": [
         {
             "label": "cm",
-            "command": "./k8s/build.ps1",
+            "command": "./k8s/debug.ps1",
             "type": "shell",
             "args": [
                 "cm"
@@ -16,7 +16,7 @@
         },
         {
             "label": "auth",
-            "command": "./k8s/build.ps1",
+            "command": "./k8s/debug.ps1",
             "type": "shell",
             "args": [
                 "auth"

@@ -6,9 +6,9 @@ metadata:
   name: {{ $fullName }}
   labels:
     app.kubernetes.io/name: {{ include "svc.name" . }}
-    helm.sh/chart: {{ include "svc.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
+    helm.sh/chart: {{ include "svc.chart" . }}
   annotations:
     kubernetes.io/ingress.class: "traefik"
     # 是否强制使用https

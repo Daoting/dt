@@ -18,7 +18,7 @@
                 "pipeArgs": [
                     "exec",
                     "-i",
-                    // pod名称变化，无法自动获取？
+                    // 使用Deployment部署时pod名称变化，无法自动获取！
                     "baisui-cm",
                     "--"
                 ],

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ include "svc.fullname" . }}-cfg"
+  labels:
+    app.kubernetes.io/name: {{ include "svc.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    helm.sh/chart: {{ include "svc.chart" . }}
+data:
+  {{ (.Files.Glob "config/*").AsConfig | nindent 2 }}

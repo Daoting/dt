@@ -4,9 +4,9 @@ metadata:
   name: {{ include "svc.fullname" . }}
   labels:
     app.kubernetes.io/name: {{ include "svc.name" . }}
-    helm.sh/chart: {{ include "svc.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
+    helm.sh/chart: {{ include "svc.chart" . }}
 spec:
   containers:
   - name: {{ .Chart.Name }}
@@ -15,3 +15,16 @@ spec:
     ports:
       - name: http
         containerPort: 80
+    # 全局参数作为环境变量
+    {{- with .Values.global }}
+    env:
+      {{- toYaml . | nindent 6 }}
+    {{- end }}
+    # 服务的配置文件，支持热更新
+    volumeMounts:
+      - name: config-volume
+        mountPath: /app/etc/config
+  volumes:
+    - name: config-volume
+      configMap:
+        name: "{{ include "svc.fullname" . }}-cfg"
