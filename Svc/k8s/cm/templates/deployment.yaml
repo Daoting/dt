@@ -32,10 +32,14 @@ spec:
           env:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          # 服务的配置文件，支持热更新
+          # 挂载数据卷
           volumeMounts:
+            # 服务的配置文件，支持热更新
             - name: config-volume
               mountPath: /app/etc/config
+            # 日志存储到宿主机
+            - name: log-volume
+              mountPath: /app/etc/log
           # 开发时不启用探针
           # livenessProbe:
           #   httpGet:
@@ -60,6 +64,11 @@ spec:
         - name: config-volume
           configMap:
             name: "{{ include "svc.fullname" . }}-cfg"
+        # 在宿主机上指定一个目录，挂载到Pod的容器中，存储日志文件
+        - name: log-volume
+          hostPath:
+            path: /home/dts/log
+            type: DirectoryOrCreate
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

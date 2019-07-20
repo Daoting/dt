@@ -2,7 +2,19 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "cm",
+            "label": "cm-local",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/src/Dts.Cm/Dts.Cm.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "cm-k8s",
             "command": "./k8s/debug.ps1",
             "type": "shell",
             "args": [
@@ -15,7 +27,7 @@
             }
         },
         {
-            "label": "auth",
+            "label": "auth-k8s",
             "command": "./k8s/debug.ps1",
             "type": "shell",
             "args": [

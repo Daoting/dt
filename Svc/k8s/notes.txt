@@ -15,5 +15,5 @@ global.yaml ----应用级的全局参数
 
 
 
-》调试服务时launch.json中需要指定pod的名称，若采用depoyment方式部署，则每次都需要修改pod名称，也无法将build task作为前置任务。
+》在k8s中调试服务时launch.json中需要指定pod的名称，若采用depoyment方式部署，则每次都需要修改pod名称，也无法将build task作为前置任务。
 解决方法：使用pod资源模板，需要在helm的.helmignore文件中忽略deployment.yaml

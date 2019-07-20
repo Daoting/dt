@@ -5,7 +5,34 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "cm",
+            "name": "cm-local",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "cm-local",
+            "program": "${workspaceFolder}/src/Dts.Cm/bin/Debug/netcoreapp2.1/Dts.Cm.dll",
+            "args": [],
+            // 调试时的工作目录
+            "cwd": "${workspaceFolder}/src/Dts.Cm/",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
+            },
+            // 环境变量和global.yaml相同
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "appname": "baisui",
+                "rabbitmq": "hostname=10.10.1.2,username=dt,password=dt,port=5672",
+                "redis": "10.10.1.2,password=dt,defaultDatabase=15,allowAdmin=true"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            },
+            // 调试时将程序输出到终端，和调试控制台分开
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "cm-k8s",
             "type": "coreclr",
             "request": "attach",
             // 前置任务
