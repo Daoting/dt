@@ -1,0 +1,5 @@
+删除坏的<none>:<none>镜像，节省存储空间
+docker rmi $(docker images -f "dangling=true" -q)
+
+删除所有的release
+helm delete --purge $(helm ls -q -a)
