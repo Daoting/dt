@@ -1,6 +1,5 @@
 》目录结构
-cm  ----以服务名区分的chart包
-    config  ----服务配置文件，json格式，以卷的形式挂载进Pod的/app/etc/config目录，目录若存在被替换
+helm  ----所有服务的公共chart文件
     templates   ----chart模板文件，所有服务文件相同
         configmap.yaml  
         deployment.yaml
@@ -8,8 +7,10 @@ cm  ----以服务名区分的chart包
         pod.yaml
         service.yaml
     .helmignore ----生成chart包时忽略的文件
-    Chart.yaml  ----各服务之间不同，Chart.Name格式：app-svc
     values.yaml ----模板值
+cm  ----以服务名区分的配置文件
+    config  ----服务配置文件，json格式，以卷的形式挂载进Pod的/app/etc/config目录
+    Chart.yaml  ----各服务之间不同，Chart.Name格式：app-svc
 debug.ps1   ----脚本，生成docker镜像、通过helm部署服务
 global.yaml ----应用级的全局参数
 
