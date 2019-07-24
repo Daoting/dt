@@ -8,7 +8,6 @@
 
 #region 引用命名
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 #endregion
 
@@ -29,7 +28,6 @@ namespace Dts.Core
         /// 定义请求管道的中间件和初始化服务
         /// </summary>
         /// <param name="p_app"></param>
-        /// <param name="p_env"></param>
-        void Configure(IApplicationBuilder p_app, IHostingEnvironment p_env);
+        void Configure(IApplicationBuilder p_app);
     }
 }

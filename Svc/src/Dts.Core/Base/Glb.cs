@@ -235,12 +235,12 @@ namespace Dts.Core
                 });
         }
 
-        internal static void Configure(IApplicationBuilder p_app, IHostingEnvironment p_env)
+        internal static void Configure(IApplicationBuilder p_app)
         {
             // 全局服务容器
             _svcProvider = p_app.ApplicationServices;
             _accessor = _svcProvider.GetRequiredService<IHttpContextAccessor>();
-            _stub.Configure(p_app, p_env);
+            _stub.Configure(p_app);
         }
         #endregion
     }

@@ -34,21 +34,17 @@ namespace Dts.Core
         /// 定义请求管道的中间件
         /// </summary>
         /// <param name="p_app"></param>
-        /// <param name="p_env"></param>
-        public void Configure(IApplicationBuilder p_app, IHostingEnvironment p_env)
+        public void Configure(IApplicationBuilder p_app)
         {
             // 添加中间件，注意先后顺序！
             // 异常处理中间件放在管道的最前端，处理所有异常，内部 try { await _next(context); }
-            if (p_env.IsDevelopment())
-                p_app.UseDeveloperExceptionPage();
-            else
-                p_app.UseExceptionHandler("/.error");
+            p_app.UseExceptionHandler("/.error");
 
             // 内置中间件
             p_app.UseMiddleware<DtMiddleware>();
 
             // 外部中间件
-            Glb.Configure(p_app, p_env);
+            Glb.Configure(p_app);
 
             // 静态文件
             p_app.UseStaticFiles();

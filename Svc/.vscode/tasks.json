@@ -27,6 +27,18 @@
             }
         },
         {
+            "label": "auth-local",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/src/Dts.Auth/Dts.Auth.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
             "label": "auth-k8s",
             "command": "./k8s/debug.ps1",
             "type": "shell",
@@ -34,6 +46,18 @@
                 "auth"
             ],
             "problemMatcher": []
-        }
+        },
+        {
+            "label": "core-local",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/src/Dts.Core/Dts.Core.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
     ]
 }

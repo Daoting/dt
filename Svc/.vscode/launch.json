@@ -9,7 +9,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "cm-local",
-            "program": "${workspaceFolder}/src/Dts.Cm/bin/Debug/netcoreapp2.1/Dts.Cm.dll",
+            "program": "${workspaceFolder}/src/Dts.Cm/bin/Debug/netcoreapp3.0/Dts.Cm.dll",
             "args": [],
             // 调试时的工作目录
             "cwd": "${workspaceFolder}/src/Dts.Cm/",
@@ -49,7 +49,9 @@
                     "baisui-cm",
                     "--"
                 ],
+                // 管道工作目录
                 "pipeCwd": "${workspaceFolder}",
+                // 调试工具位置
                 "debuggerPath": "/root/vsdbg/vsdbg",
                 "quoteArgs": false
             },
@@ -57,6 +59,33 @@
                 // 设置源文件映射，容器中的/src映射到当前工作区的/src
                 "/src": "${workspaceFolder}/src"
             }
-        }
+        },
+        {
+            "name": "auth-local",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "auth-local",
+            "program": "${workspaceFolder}/src/Dts.Auth/bin/Debug/netcoreapp3.0/Dts.Auth.dll",
+            "args": [],
+            // 调试时的工作目录
+            "cwd": "${workspaceFolder}/src/Dts.Auth/",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
+            },
+            // 环境变量和global.yaml相同
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "appname": "baisui",
+                "rabbitmq": "hostname=10.10.1.2,username=dt,password=dt,port=5672",
+                "redis": "10.10.1.2,password=dt,defaultDatabase=15,allowAdmin=true"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            },
+            // 调试时将程序输出到终端，和调试控制台分开
+            "console": "integratedTerminal"
+        },
     ]
 }

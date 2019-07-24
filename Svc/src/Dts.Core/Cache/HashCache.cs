@@ -53,11 +53,11 @@ namespace Dts.Core.Cache
         /// <typeparam name="T">缓存类型</typeparam>
         /// <param name="p_keys">不带前缀的键名列表</param>
         /// <returns>缓存对象列表</returns>
-        public async Task<List<T>> BatchGet<T>(IEnumerable<string> p_keys)
+        public Task<List<T>> BatchGet<T>(IEnumerable<string> p_keys)
             where T : class
         {
-            if (p_keys == null || p_keys.Count() == 0)
-                return null;
+            // if (p_keys == null || p_keys.Count() == 0)
+            //     return null;
             throw new NotImplementedException();
         }
 

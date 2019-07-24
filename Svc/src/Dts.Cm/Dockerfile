@@ -1,10 +1,10 @@
 # mcr.microsoft.com/dotnet/core/aspnet:2.1-stretch-slim + vsdbg
-FROM aspnet-vsdbg:2.1 AS base
+FROM aspnet-vsdbg:3.0 AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/core/sdk:2.1-stretch AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.0-buster AS build
 WORKDIR /src
 COPY ["Dts.Cm/Dts.Cm.csproj", "Dts.Cm/"]
 COPY ["Dts.Core/Dts.Core.csproj", "Dts.Core/"]

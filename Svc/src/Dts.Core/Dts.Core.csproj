@@ -1,32 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup Label="Globals">
-    <SccProjectName>SAK</SccProjectName>
-    <SccProvider>SAK</SccProvider>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccLocalPath>SAK</SccLocalPath>
-  </PropertyGroup>
-
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netcoreapp2.0\Dts.Core.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\netcoreapp3.0\Dts.Core.xml</DocumentationFile>
     <NoWarn>1701;1702;1705;1591</NoWarn>
-    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <LangVersion>7.1</LangVersion>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="Dts.Core.csproj.vspscc" />
-    <None Remove="Res\404.html" />
-    <None Remove="Res\Admin.html" />
-    <None Remove="Res\Error.html" />
-  </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Res\404.html" />
@@ -35,10 +16,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.0.0-preview7.19365.7" />
     <PackageReference Include="Autofac" Version="4.9.2" />
     <PackageReference Include="Castle.Core" Version="4.4.0" />
     <PackageReference Include="Dapper" Version="1.60.6" />
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.11" />
     <PackageReference Include="MySqlConnector" Version="0.56.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <PackageReference Include="Nito.AsyncEx.Coordination" Version="5.0.0" />

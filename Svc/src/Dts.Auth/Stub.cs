@@ -42,8 +42,7 @@ namespace Dts.Auth
         /// 定义请求管道的中间件和初始化服务
         /// </summary>
         /// <param name="p_app"></param>
-        /// <param name="p_env"></param>
-        public void Configure(IApplicationBuilder p_app, IHostingEnvironment p_env)
+        public void Configure(IApplicationBuilder p_app)
         {
             p_app.UseIdentityServer();
         }
