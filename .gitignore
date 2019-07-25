@@ -4,8 +4,8 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 # 后添加
-Svc/src/Dts.Auth/etc/
-Svc/src/Dts.Cm/etc/
+Service/src/Dts.Auth/etc/
+Service/src/Dts.Cm/etc/
 
 # User-specific files
 *.rsuser
