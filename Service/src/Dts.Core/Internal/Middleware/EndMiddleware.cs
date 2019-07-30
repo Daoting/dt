@@ -12,7 +12,7 @@ using System.IO;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dts.Core.Rpc
+namespace Dts.Core
 {
     /// <summary>
     /// 末尾中间件，处理未找到请求目标的情况
@@ -30,7 +30,7 @@ namespace Dts.Core.Rpc
             {
                 try
                 {
-                    using (var sr = new StreamReader(typeof(PageFileHandler).Assembly.GetManifestResourceStream("Dts.Core.Res.404.html")))
+                    using (var sr = new StreamReader(typeof(EndMiddleware).Assembly.GetManifestResourceStream("Dts.Core.Res.404.html")))
                     {
                         _page = sr.ReadToEnd();
                     }

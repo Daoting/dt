@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2019-04-25 创建
+* 日志: 2019-07-30 创建
 ******************************************************************************/
 #endregion
 
@@ -17,10 +17,10 @@ namespace Dts.Core.Rpc
     /// </summary>
     public class ApiMethod
     {
-        public ApiMethod(MethodInfo p_method, ApiMethodUsage p_usage, bool p_isTransactional)
+        public ApiMethod(MethodInfo p_method, ApiCallMode p_callMode, bool p_isTransactional)
         {
             Method = p_method;
-            Usage = p_usage;
+            CallMode = p_callMode;
             IsTransactional = p_isTransactional;
         }
 
@@ -30,35 +30,14 @@ namespace Dts.Core.Rpc
         public MethodInfo Method { get; }
 
         /// <summary>
-        /// Api方法种类
+        /// Api调用模式
         /// </summary>
-        public ApiMethodUsage Usage { get; }
+        public ApiCallMode CallMode { get; }
 
         /// <summary>
         /// 是否自动为方法启用事务
         /// </summary>
         public bool IsTransactional { get; }
-    }
-
-    /// <summary>
-    /// Api方法的种类
-    /// </summary>
-    public enum ApiMethodUsage
-    {
-        /// <summary>
-        /// 同步方法
-        /// </summary>
-        SyncMethod,
-
-        /// <summary>
-        /// 异步方法，无返回值
-        /// </summary>
-        AsyncVoid,
-
-        /// <summary>
-        /// 异步方法，有返回值
-        /// </summary>
-        AsyncResult,
     }
 }
 

@@ -11,7 +11,7 @@ using Serilog.Core;
 using Serilog.Events;
 #endregion
 
-namespace Dts.Core.Rpc
+namespace Dts.Core
 {
     /// <summary>
     /// 业务线处理日志的附加属性

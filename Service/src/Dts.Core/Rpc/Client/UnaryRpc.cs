@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2019-06-21 创建
+* 日志: 2019-07-29 创建
 ******************************************************************************/
 #endregion
 
@@ -21,53 +21,56 @@ using System.Threading.Tasks;
 namespace Dts.Core.Rpc
 {
     /// <summary>
-    /// 服务之间的Http远程调用，Json格式和客户端相同
+    /// 基于Http2的请求/响应模式的远程调用
     /// </summary>
-    public static class ServiceRpc
+    public class UnaryRpc
     {
+        #region 成员变量
         // 每种服务缓存一个HttpClient，HttpClient所有异步方法都是多线程安全！
         static readonly ConcurrentDictionary<string, HttpClient> _clients = new ConcurrentDictionary<string, HttpClient>();
+
+        protected readonly HttpClient _client;
+        protected readonly string _methodName;
+        protected readonly byte[] _data;
+        #endregion
+
+        /// <summary>
+        /// 构造方法
+        /// </summary>
+        /// <param name="p_serviceName">服务名称</param>
+        /// <param name="p_methodName">方法名</param>
+        /// <param name="p_params">参数列表</param>
+        public UnaryRpc(string p_serviceName, string p_methodName, params object[] p_params)
+        {
+            if (string.IsNullOrEmpty(p_serviceName) || string.IsNullOrEmpty(p_methodName))
+                throw new InvalidOperationException("Rpc调用时需要指定服务名称和API名称！");
+
+            _client = GetHttpClient(p_serviceName);
+            _methodName = p_methodName;
+            _data = GetRpcData(p_methodName, p_params);
+        }
 
         /// <summary>
         /// 发送json格式的Http Rpc远程调用
         /// </summary>
         /// <typeparam name="T">结果对象的类型</typeparam>
-        /// <param name="p_serviceName">服务名称</param>
-        /// <param name="p_methodName">方法名</param>
-        /// <param name="p_params">参数列表</param>
         /// <returns>返回远程调用结果</returns>
-        public static async Task<T> Call<T>(string p_serviceName, string p_methodName, params object[] p_params)
+        public async Task<T> Call<T>()
         {
-            // 获取服务地址
-            HttpClient client;
-            if (!_clients.TryGetValue(p_serviceName, out client))
-            {
-                try
-                {
-                    client = CreateClient(p_serviceName);
-                    _clients.TryAdd(p_serviceName, client);
-                }
-                catch
-                {
-                    throw new Exception($"调用【{p_methodName}】时获取【{p_serviceName}】服务的HttpClient失败！");
-                }
-            }
-
             // 远程请求
             Stream stream = null;
             try
             {
-                using (var content = new StringContent(GetRpcJson(p_methodName, p_params)))
+                using (var content = new ByteArrayContent(_data))
                 {
-                    // 默认编码utf8
-                    var response = await client.PostAsync(default(Uri), content);
+                    var response = await _client.PostAsync(default(Uri), content).ConfigureAwait(false);
                     response.EnsureSuccessStatusCode();
                     stream = await response.Content.ReadAsStreamAsync();
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception($"调用【{p_methodName}】时服务器连接失败！\r\n{ex.Message}");
+                throw new Exception($"调用【{_methodName}】时服务器连接失败！\r\n{ex.Message}");
             }
 
             // 解析结果
@@ -124,15 +127,39 @@ namespace Dts.Core.Rpc
                     }
                     catch (Exception convExp)
                     {
-                        throw new Exception($"调用【{p_methodName}】对返回结果类型转换时异常：\r\n {result.Value.GetType()}-->{typeof(T)}：{convExp.Message}");
+                        throw new Exception($"调用【{_methodName}】对返回结果类型转换时异常：\r\n {result.Value.GetType()}-->{typeof(T)}：{convExp.Message}");
                     }
                 }
             }
             else
             {
-                throw new Exception($"调用【{p_methodName}】异常：\r\n{result.Info}");
+                throw new Exception($"调用【{_methodName}】异常：\r\n{result.Info}");
             }
             return val;
+        }
+
+        HttpClient GetHttpClient(string p_serviceName)
+        {
+            HttpClient client;
+            if (!_clients.TryGetValue(p_serviceName, out client))
+            {
+                try
+                {
+                    // 自动GZip解压
+                    client = new HttpClient(new HttpClientHandler { AutomaticDecompression = DecompressionMethods.GZip });
+                    // 使用http2协议
+                    client.DefaultRequestVersion = new Version(2, 0);
+                    // 部署在k8s时内部DNS通过服务名即可
+                    string uri = Glb.IsInDocker ? $"https://{p_serviceName}/.c" : $"http://localhost/{Glb.AppName}/{p_serviceName}/.c";
+                    client.BaseAddress = new Uri(uri, UriKind.Absolute);
+                    _clients.TryAdd(p_serviceName, client);
+                }
+                catch
+                {
+                    throw new Exception($"获取【{p_serviceName}】服务的HttpClient失败！");
+                }
+            }
+            return client;
         }
 
         /// <summary>
@@ -141,7 +168,7 @@ namespace Dts.Core.Rpc
         /// <param name="p_methodName">方法名</param>
         /// <param name="p_params">参数</param>
         /// <returns></returns>
-        public static string GetRpcJson(string p_methodName, ICollection<object> p_params)
+        static byte[] GetRpcData(string p_methodName, ICollection<object> p_params)
         {
             StringBuilder sb = new StringBuilder();
             using (StringWriter sr = new StringWriter(sb))
@@ -159,71 +186,7 @@ namespace Dts.Core.Rpc
                 writer.WriteEndArray();
                 writer.Flush();
             }
-            return sb.ToString();
+            return Encoding.UTF8.GetBytes(sb.ToString());
         }
-
-        static HttpClient CreateClient(string p_serviceName)
-        {
-            // 自动GZip解压
-            HttpClient client = new HttpClient(new HttpClientHandler { AutomaticDecompression = DecompressionMethods.GZip });
-            // 保持TCP连接
-            client.DefaultRequestHeaders.Connection.Add("keep-alive");
-            // 部署在k8s时内部DNS通过服务名即可
-            string uri = Glb.IsInDocker ? $"http://{p_serviceName}/.c" : $"http://localhost/{Glb.AppName}/{p_serviceName}/.c";
-            client.BaseAddress = new Uri(uri, UriKind.Absolute);
-            return client;
-        }
-    }
-
-    /// <summary>
-    /// 远程回调结果包装类
-    /// </summary>
-    internal class RpcResult
-    {
-        /// <summary>
-        /// 结果类型
-        /// </summary>
-        public RpcResultType ResultType { get; set; }
-
-        /// <summary>
-        /// 结果值
-        /// </summary>
-        public object Value { get; set; }
-
-        /// <summary>
-        /// 提示信息
-        /// </summary>
-        public string Info { get; set; }
-
-        /// <summary>
-        /// 耗时
-        /// </summary>
-        public string Elapsed { get; set; }
-
-        /// <summary>
-        /// 监控结果内容
-        /// </summary>
-        public string Trace { get; set; }
-    }
-
-    /// <summary>
-    /// 反序列化结果的种类
-    /// </summary>
-    internal enum RpcResultType
-    {
-        /// <summary>
-        /// 普通结果值
-        /// </summary>
-        Value,
-
-        /// <summary>
-        /// 服务端错误信息
-        /// </summary>
-        Error,
-
-        /// <summary>
-        /// 业务警告信息
-        /// </summary>
-        Message
     }
 }

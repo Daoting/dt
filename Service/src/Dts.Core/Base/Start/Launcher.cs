@@ -9,11 +9,13 @@
 #region 引用命名
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Formatting.Compact;
 using System;
 using System.IO;
+using System.Net;
 using System.Runtime.InteropServices;
 #endregion
 
@@ -110,7 +112,16 @@ namespace Dts.Core
             try
             {
                 var host = new WebHostBuilder()
-                            .UseKestrel()
+                            .UseKestrel(options =>
+                            {
+                                // 设置http2为默认监听协议
+                                // 未使用Listen方法，因无法应用外部设置的端口！
+                                options.ConfigureEndpointDefaults(listenOptions =>
+                                {
+                                    listenOptions.Protocols = HttpProtocols.Http2;
+                                    listenOptions.UseHttps(Path.Combine(Directory.GetCurrentDirectory(), "etc/cert.pfx"), "test");
+                                });
+                            })
                             .UseContentRoot(Directory.GetCurrentDirectory())
                             .UseStartup<Startup>()
                             // 内部注入AddSingleton<ILoggerFactory>(new SerilogLoggerFactory())

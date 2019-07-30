@@ -37,7 +37,7 @@ namespace Dts.Core
         public void Configure(IApplicationBuilder p_app)
         {
             // 添加中间件，注意先后顺序！
-            // 异常处理中间件放在管道的最前端，处理所有异常，内部 try { await _next(context); }
+            // 异常处理中间件放在管道的最前端，内部try { await _next(context); }捕获异常时重定向到 /.error
             p_app.UseExceptionHandler("/.error");
 
             // 内置中间件
@@ -46,10 +46,12 @@ namespace Dts.Core
             // 外部中间件
             Glb.Configure(p_app);
 
+            // 默认页
+            p_app.UseDefaultFiles();
             // 静态文件
             p_app.UseStaticFiles();
 
-            // 末尾中间件
+            // 末尾中间件，显示自定义404页面
             p_app.UseMiddleware<EndMiddleware>();
 
             // 订阅事件

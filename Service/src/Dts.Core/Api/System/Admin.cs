@@ -159,8 +159,7 @@ namespace Dts.Core
 
             sb.Append("<tr><td style=\"padding-top: 15px;font-weight: bold;\">参数列表</td></tr>");
             ParameterInfo[] pis = method.GetParameters();
-            if (pis.Length == 0
-                && (sm.Usage == ApiMethodUsage.SyncMethod || sm.Usage == ApiMethodUsage.AsyncVoid || sm.Usage == ApiMethodUsage.AsyncResult))
+            if (pis.Length == 0)
             {
                 sb.Append("<tr><td style=\"padding-top: 4px;\">该方法无需参数。</td></tr>");
             }

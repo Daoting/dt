@@ -7,8 +7,8 @@
 #endregion
 
 #region 引用命名
+using Dts.Core.Rpc;
 using System.Threading.Tasks;
-using static Dts.Core.Rpc.ServiceRpc;
 #endregion
 
 namespace Dts.Core
@@ -21,8 +21,7 @@ namespace Dts.Core
     {
         public Task<string> GetString()
         {
-            return Task.FromResult(Glb.GetCfg("rabbitmq", ""));
-            //return AtTestRpc.GetString();
+            return AtTestRpc.GetString();
         }
 
         public Task<bool> SetString(string p_str)
@@ -39,10 +38,10 @@ namespace Dts.Core
         /// <returns></returns>
         public static Task<string> GetString()
         {
-            return Call<string>(
+            return new UnaryRpc(
                 "cm",
                 "TestSerialize.GetString"
-            );
+            ).Call<string>();
         }
 
         /// <summary>
@@ -51,11 +50,20 @@ namespace Dts.Core
         /// <param name="p_str"></param>
         public static Task<bool> SetString(string p_str)
         {
-            return Call<bool>(
+            return new UnaryRpc(
                 "cm",
                 "TestSerialize.SetString",
                 p_str
-            );
+            ).Call<bool>();
+        }
+
+        public static ResponseReader GetServerStream(string p_str)
+        {
+            return new StreamRpc(
+                "cm",
+                "TestSerialize.SetString",
+                p_str
+            ).StartServerStream();
         }
     }
 }

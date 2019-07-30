@@ -405,18 +405,21 @@ namespace Dts.Core
                 }
             }
 
-            ApiMethodUsage usage;
+            ApiCallMode callMode;
             bool isTran;
             MethodInfo[] methods = p_type.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             foreach (MethodInfo mi in methods)
             {
-                // 是否为异步方法
+                // 是否为流模式方法，流模式返回值始终为Task
+                callMode = ApiCallMode.Unary;
                 if (mi.ReturnType == typeof(Task))
-                    usage = ApiMethodUsage.AsyncVoid;
-                else if (typeof(Task).IsAssignableFrom(mi.ReturnType))
-                    usage = ApiMethodUsage.AsyncResult;
-                else
-                    usage = ApiMethodUsage.SyncMethod;
+                {
+                    //ParameterInfo[] pis = mi.GetParameters();
+                    //if (pis.Length > 0)
+                    //{
+                    //    if (pis[pis.Length - 1].ParameterType == typeof())
+                    //}
+                }
 
                 // 是否启用事务
                 var transAttr = mi.GetCustomAttribute<TransactionAttribute>(false);
@@ -428,7 +431,7 @@ namespace Dts.Core
                     isTran = false;
 
                 string name = $"{p_type.Name}.{mi.Name}";
-                Methods[name] = new ApiMethod(mi, usage, isTran);
+                Methods[name] = new ApiMethod(mi, callMode, isTran);
                 if (grpMethods != null)
                     grpMethods.Add(name);
             }
