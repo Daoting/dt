@@ -12,7 +12,7 @@ cm  ----以服务名区分的配置文件
     config  ----服务配置文件，json格式，以卷的形式挂载进Pod的/app/etc/config目录
     Chart.yaml  ----各服务之间不同，Chart.Name格式：app-svc
 debug.ps1   ----脚本，生成docker镜像、通过helm部署服务
-global.yaml ----应用级的全局参数
+global.json ----应用级的全局参数
 
 
 

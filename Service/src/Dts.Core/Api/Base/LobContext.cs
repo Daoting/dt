@@ -36,11 +36,17 @@ namespace Dts.Core
         bool _intercepted;
         #endregion
 
+        #region 构造方法
+        /// <summary>
+        /// 构造方法
+        /// </summary>
+        /// <param name="p_context"></param>
         internal LobContext(HttpContext p_context)
         {
             Context = p_context;
             Context.Items["lc"] = this;
         }
+        #endregion
 
         #region 属性
         /// <summary>
@@ -194,6 +200,10 @@ namespace Dts.Core
             }
         }
 
+        /// <summary>
+        /// 处理http rpc请求
+        /// </summary>
+        /// <returns></returns>
         internal async Task Handle()
         {
             if (!await ParseParams())
@@ -215,13 +225,13 @@ namespace Dts.Core
                     await new UnaryHandler(this).Call();
                     break;
                 case ApiCallMode.ServerStream:
-                    //await new ServerStreamHandler(this).Call();
+                    await new ServerStreamHandler(this).Call();
                     break;
                 case ApiCallMode.ClientStream:
-                    //await new ClientStreamHandler(this).Call();
+                    await new ClientStreamHandler(this).Call();
                     break;
                 case ApiCallMode.DuplexStream:
-                    //await new DuplexStreamHandler(this).Call();
+                    await new DuplexStreamHandler(this).Call();
                     break;
             }
         }

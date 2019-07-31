@@ -214,17 +214,4 @@ namespace Dts.Core.Rpc
             }
         }
     }
-
-    public class DuplexStream
-    {
-        public DuplexStream(RequestWriter p_requestWriter, ResponseReader p_responseReader)
-        {
-            RequestWriter = p_requestWriter;
-            ResponseReader = p_responseReader;
-        }
-
-        public RequestWriter RequestWriter { get; }
-
-        public ResponseReader ResponseReader { get; }
-    }
 }

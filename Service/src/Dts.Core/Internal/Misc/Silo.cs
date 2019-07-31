@@ -414,11 +414,24 @@ namespace Dts.Core
                 callMode = ApiCallMode.Unary;
                 if (mi.ReturnType == typeof(Task))
                 {
-                    //ParameterInfo[] pis = mi.GetParameters();
-                    //if (pis.Length > 0)
-                    //{
-                    //    if (pis[pis.Length - 1].ParameterType == typeof())
-                    //}
+                    ParameterInfo[] pis = mi.GetParameters();
+                    if (pis.Length > 0)
+                    {
+                        if (pis[pis.Length - 1].ParameterType == typeof(RequestReader))
+                        {
+                            callMode = ApiCallMode.ClientStream;
+                        }
+                        else if (pis.Length > 1
+                            && pis[pis.Length - 2].ParameterType == typeof(RequestReader)
+                            && pis[pis.Length - 1].ParameterType == typeof(ResponseWriter))
+                        {
+                            callMode = ApiCallMode.DuplexStream;
+                        }
+                        else if (pis[pis.Length - 1].ParameterType == typeof(ResponseWriter))
+                        {
+                            callMode = ApiCallMode.ServerStream;
+                        }
+                    }
                 }
 
                 // 是否启用事务

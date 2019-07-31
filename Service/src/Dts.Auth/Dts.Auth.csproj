@@ -11,7 +11,6 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\" />
-    <Folder Include="etc\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,5 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Dts.Core\Dts.Core.csproj" />
   </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties properties_4launchsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>

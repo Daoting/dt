@@ -258,7 +258,8 @@ namespace Dts.Core
             else
                 serviceName = "p_serviceName";
 
-            // 遍历所有方法，判断是否可远程调用方法
+            string retTypeName;
+            int paramsLength;
             StringBuilder sb = new StringBuilder();
             sb.Append("#region ");
             sb.Append(p_clsName);
@@ -282,32 +283,59 @@ namespace Dts.Core
                 }
 
                 // 方法定义
-                string retTypeName = GetRpcTypeName(mi.ReturnType);
-                bool existResult = !string.IsNullOrEmpty(retTypeName);
-                if (existResult)
-                    sb.AppendFormat("public static Task<{0}> {1}(", retTypeName, mi.Name);
+                if (sm.CallMode == ApiCallMode.Unary)
+                {
+                    retTypeName = GetRpcTypeName(mi.ReturnType);
+                    if (!string.IsNullOrEmpty(retTypeName))
+                        sb.AppendFormat("public static Task<{0}> {1}(", retTypeName, mi.Name);
+                    else
+                        sb.AppendFormat("public static async Task {0}(", mi.Name);
+                }
                 else
-                    sb.AppendFormat("public static async Task {0}(", mi.Name);
+                {
+                    if (sm.CallMode == ApiCallMode.ServerStream)
+                        retTypeName = "ResponseReader";
+                    else if (sm.CallMode == ApiCallMode.ClientStream)
+                        retTypeName = "RequestWriter";
+                    else
+                        retTypeName = "DuplexStream";
+
+                    sb.AppendFormat("public static {0} {1}(", retTypeName, mi.Name);
+                }
 
                 // 参数
                 ParameterInfo[] infos = mi.GetParameters();
+                if (infos.Length > 0)
+                {
+                    // 最后的RequestReader, ResponseWriter不算数
+                    if (sm.CallMode == ApiCallMode.Unary)
+                        paramsLength = infos.Length;
+                    else if (sm.CallMode == ApiCallMode.DuplexStream)
+                        paramsLength = infos.Length - 2;
+                    else
+                        paramsLength = infos.Length - 1;
+                }
+                else
+                {
+                    paramsLength = 0;
+                }
 
                 // 自定义服务名模式
                 if (mode == AgentMode.Custom)
                 {
                     sb.Append("string p_serviceName");
-                    if (infos.Length > 0)
+                    if (paramsLength > 0)
                         sb.Append(", ");
                 }
 
-                if (infos.Length > 0)
+                if (paramsLength > 0)
                 {
-                    for (int i = 0; i < infos.Length; i++)
+                    for (int i = 0; i < paramsLength; i++)
                     {
                         var item = infos[i];
 
                         // 最后的List<object>转为params object[]，方便客户端
-                        if (i == infos.Length - 1 && item.ParameterType == typeof(List<object>))
+                        if (i == paramsLength - 1 && item.ParameterType == typeof(List<object>))
                         {
                             sb.Append("params object[] ");
                             sb.Append(item.Name);
@@ -330,7 +358,7 @@ namespace Dts.Core
                                 sb.AppendFormat(" = {0}", item.DefaultValue);
                         }
 
-                        if (i < infos.Length - 1)
+                        if (i < paramsLength - 1)
                             sb.Append(", ");
                     }
                 }
@@ -339,16 +367,10 @@ namespace Dts.Core
                 // 方法体
                 sb.AppendLine("{");
                 AppendTabSpace(sb, 1);
-                if (existResult)
-                {
-                    sb.Append("return Call<");
-                    sb.Append(retTypeName);
-                    sb.AppendLine(">(");
-                }
+                if (sm.CallMode == ApiCallMode.Unary)
+                    sb.AppendLine("return new UnaryRpc(");
                 else
-                {
-                    sb.AppendLine("await Call<object>(");
-                }
+                    sb.AppendLine("return new StreamRpc(");
 
                 // 服务名
                 AppendTabSpace(sb, 2);
@@ -358,15 +380,15 @@ namespace Dts.Core
                 // 完整方法名
                 AppendTabSpace(sb, 2);
                 sb.AppendFormat("\"{0}.{1}\"", p_clsName, mi.Name);
-                if (infos.Length > 0)
+                if (paramsLength > 0)
                 {
-                    for (int i = 0; i < infos.Length; i++)
+                    for (int i = 0; i < paramsLength; i++)
                     {
                         var item = infos[i];
                         sb.AppendLine(",");
                         AppendTabSpace(sb, 2);
                         // params object[]转为List<object>
-                        if (i == infos.Length - 1 && item.ParameterType == typeof(List<object>))
+                        if (i == paramsLength - 1 && item.ParameterType == typeof(List<object>))
                             sb.AppendFormat("({0} == null || {0}.Length == 0) ? null : {0}.ToList()", item.Name);
                         else
                             sb.Append(item.Name);
@@ -374,9 +396,33 @@ namespace Dts.Core
                 }
                 sb.AppendLine();
 
+                // Rpc方法
                 AppendTabSpace(sb, 1);
-                sb.AppendLine(");");
-
+                if (sm.CallMode == ApiCallMode.Unary)
+                {
+                    if (!string.IsNullOrEmpty(retTypeName))
+                    {
+                        sb.Append(").Call<");
+                        sb.Append(retTypeName);
+                        sb.AppendLine(">();");
+                    }
+                    else
+                    {
+                        sb.AppendLine(").Call<object>();");
+                    }
+                }
+                else if (sm.CallMode == ApiCallMode.ServerStream)
+                {
+                    sb.AppendLine(").StartServerStream();");
+                }
+                else if (sm.CallMode == ApiCallMode.ClientStream)
+                {
+                    sb.AppendLine(").StartClientStream();");
+                }
+                else
+                {
+                    sb.AppendLine(").StartDuplexStream();");
+                }
                 sb.AppendLine("}");
             }
             sb.Append("#endregion");

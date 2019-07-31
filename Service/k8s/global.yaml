@@ -1,8 +1,0 @@
-# 应用级的全局参数，所有服务都使用，通过环境变量传递到pod
-global:
-  - name: appname
-    value: baisui
-  - name: rabbitmq
-    value: "hostname=10.10.1.2,username=dt,password=dt,port=5672"
-  - name: redis
-    value: "10.10.1.2,password=dt,defaultDatabase=15,allowAdmin=true"

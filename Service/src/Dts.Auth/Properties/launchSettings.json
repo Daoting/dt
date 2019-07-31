@@ -3,8 +3,8 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:53835/",
-      "sslPort": 0
+      "applicationUrl": "https://localhost:44384/",
+      "sslPort": 44384
     }
   },
   "profiles": {
@@ -12,14 +12,15 @@
       "commandName": "IISExpress",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "nativeDebugging": true
     },
     "Dts.Auth": {
       "commandName": "Project",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://localhost:53836/"
+      "applicationUrl": "https://localhost:53836/"
     }
   }
 }

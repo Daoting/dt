@@ -28,6 +28,7 @@ namespace Dts.Core
         {
             return AtTestRpc.SetString(p_str);
         }
+
     }
 
     internal static class AtTestRpc
@@ -57,13 +58,31 @@ namespace Dts.Core
             ).Call<bool>();
         }
 
-        public static ResponseReader GetServerStream(string p_str)
+        public static ResponseReader OnServerStream(string p_title)
         {
             return new StreamRpc(
                 "cm",
-                "TestSerialize.SetString",
-                p_str
+                "TestStreamRpc.OnServerStream",
+                p_title
             ).StartServerStream();
+        }
+
+        public static RequestWriter OnClientStream(string p_title)
+        {
+            return new StreamRpc(
+                "cm",
+                "TestStreamRpc.OnClientStream",
+                p_title
+            ).StartClientStream();
+        }
+
+        public static DuplexStream OnDuplexStream(string p_title)
+        {
+            return new StreamRpc(
+                "cm",
+                "TestStreamRpc.OnDuplexStream",
+                p_title
+            ).StartDuplexStream();
         }
     }
 }

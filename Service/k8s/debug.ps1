@@ -30,11 +30,12 @@ if ($clean) {
 # 复制服务的不同配置，保证完整chart包
 Write-Host "复制" $svcName "配置..." -ForegroundColor Green
 Copy-Item ./k8s/$svcName/* ./k8s/helm -recurse
+Copy-Item ./k8s/global.json ./k8s/helm/config -recurse
 Write-Host
 
 Write-Host "使用Helm部署" $fullName "服务" -ForegroundColor Green
 $ingressPath = "/" + $appName + "/" + $svcName
-helm install --values ./k8s/global.yaml --set image.repository=$fullName,image.tag=$tag,ingress.path=$ingressPath --name="$fullName" ./k8s/helm
+helm install --set image.repository=$fullName,image.tag=$tag,ingress.path=$ingressPath --name="$fullName" ./k8s/helm
 
 # 删除服务的不同配置
 del ./k8s/helm/config -recurse

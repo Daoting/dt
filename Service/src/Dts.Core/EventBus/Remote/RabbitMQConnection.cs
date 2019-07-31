@@ -40,43 +40,18 @@ namespace Dts.Core.EventBus
         {
             _log = p_log;
 
-            var cfg = Glb.GetCfg<string>("rabbitmq");
-            if (string.IsNullOrWhiteSpace(cfg))
-                throw new InvalidOperationException("未找到RabbitMq的配置！");
+            var cfg = Glb.Config.GetSection("RabbitMq");
+            if (!cfg.Exists())
+                throw new InvalidOperationException("未找到RabbitMq配置节！");
 
             // RabbitMQ连接配置
-            var fac = new ConnectionFactory();
-            var arr = cfg.Split(',');
-            foreach (var paddedOption in arr)
+            _connectionFactory = new ConnectionFactory()
             {
-                var option = paddedOption.Trim();
-                if (string.IsNullOrWhiteSpace(option))
-                    continue;
-
-                int idx = option.IndexOf('=');
-                if (idx <= 0)
-                    continue;
-
-                var key = option.Substring(0, idx).Trim().ToLower();
-                var value = option.Substring(idx + 1).Trim();
-                switch (key)
-                {
-                    case "hostname":
-                        fac.HostName = value;
-                        break;
-                    case "username":
-                        fac.UserName = value;
-                        break;
-                    case "password":
-                        fac.Password = value;
-                        break;
-                    case "port":
-                        if (int.TryParse(value, out int port))
-                            fac.Port = port;
-                        break;
-                }
-            }
-            _connectionFactory = fac;
+                HostName = cfg["HostName"],
+                UserName = cfg["UserName"],
+                Password = cfg["Password"],
+                Port = cfg.GetValue<int>("Port"),
+            };
         }
         #endregion
 

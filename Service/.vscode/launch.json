@@ -18,13 +18,6 @@
                 "action": "openExternally",
                 "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
             },
-            // 环境变量和global.yaml相同
-            "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development",
-                "appname": "baisui",
-                "rabbitmq": "hostname=10.10.1.2,username=dt,password=dt,port=5672",
-                "redis": "10.10.1.2,password=dt,defaultDatabase=15,allowAdmin=true"
-            },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
             },
@@ -73,13 +66,6 @@
             "serverReadyAction": {
                 "action": "openExternally",
                 "pattern": "^\\s*Now listening on:\\s+(https?://\\S+)"
-            },
-            // 环境变量和global.yaml相同
-            "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development",
-                "appname": "baisui",
-                "rabbitmq": "hostname=10.10.1.2,username=dt,password=dt,port=5672",
-                "redis": "10.10.1.2,password=dt,defaultDatabase=15,allowAdmin=true"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"

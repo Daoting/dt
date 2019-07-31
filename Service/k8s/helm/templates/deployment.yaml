@@ -27,11 +27,6 @@ spec:
             - name: http
               containerPort: 80
               protocol: TCP
-          # 全局参数作为环境变量
-          {{- with .Values.global }}
-          env:
-            {{- toYaml . | nindent 12 }}
-          {{- end }}
           # 挂载数据卷
           volumeMounts:
             # 服务的配置文件，支持热更新

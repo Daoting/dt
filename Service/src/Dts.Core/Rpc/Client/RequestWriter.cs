@@ -89,7 +89,9 @@ namespace Dts.Core.Rpc
                 _call.CancellationToken.ThrowIfCancellationRequested();
                 // 等到启动请求流，调用 PushStreamContent.SerializeToStreamAsync 时启动
                 var writeStream = await _call.GetRequestStream().ConfigureAwait(false);
+                // 写入完整Frame内容
                 await writeStream.WriteAsync(RpcKit.GetObjData(p_message), _call.CancellationToken).ConfigureAwait(false);
+                // 传输数据，清除本地缓存
                 await writeStream.FlushAsync(_call.CancellationToken).ConfigureAwait(false);
             }
             catch (TaskCanceledException)

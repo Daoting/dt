@@ -93,7 +93,7 @@ namespace Dts.Core
                 Glb.Config = new ConfigurationBuilder()
                     .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "etc/config"))
                     .AddJsonFile("service.json", false, true)
-                    .AddEnvironmentVariables()
+                    .AddJsonFile("global.json", false, true)
                     .Build();
                 Log.Information("读取配置成功");
             }
@@ -116,11 +116,11 @@ namespace Dts.Core
                             {
                                 // 设置http2为默认监听协议
                                 // 未使用Listen方法，因无法应用外部设置的端口！
-                                options.ConfigureEndpointDefaults(listenOptions =>
-                                {
-                                    listenOptions.Protocols = HttpProtocols.Http2;
-                                    listenOptions.UseHttps(Path.Combine(Directory.GetCurrentDirectory(), "etc/cert.pfx"), "test");
-                                });
+                                //options.ConfigureEndpointDefaults(listenOptions =>
+                                //{
+                                //    listenOptions.Protocols = HttpProtocols.Http2;
+                                //    listenOptions.UseHttps(Path.Combine(Directory.GetCurrentDirectory(), "etc/cert.pfx"), "test");
+                                //});
                             })
                             .UseContentRoot(Directory.GetCurrentDirectory())
                             .UseStartup<Startup>()

@@ -39,26 +39,22 @@ namespace Dts.Core.Rpc
             try
             {
                 var mi = _lc.Api.Method;
-                BaseApi tgt = Glb.GetSvc(mi.DeclaringType) as BaseApi;
-                if (tgt == null)
-                    throw new Exception($"类型{mi.DeclaringType.Name}未继承BaseApi！");
-
                 if (mi.ReturnType == typeof(Task))
                 {
                     // 异步无返回值时
-                    await (Task)mi.Invoke(tgt, _lc.Args);
+                    await (Task)mi.Invoke(_tgt, _lc.Args);
                 }
                 else if (typeof(Task).IsAssignableFrom(mi.ReturnType))
                 {
                     // 异步有返回值
-                    var task = (Task)mi.Invoke(tgt, _lc.Args);
+                    var task = (Task)mi.Invoke(_tgt, _lc.Args);
                     await task;
                     result = task.GetType().GetProperty("Result").GetValue(task);
                 }
                 else
                 {
                     // 调用同步方法
-                    result = mi.Invoke(tgt, _lc.Args);
+                    result = mi.Invoke(_tgt, _lc.Args);
                 }
             }
             catch (Exception ex)
