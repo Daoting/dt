@@ -24,9 +24,11 @@ namespace Dts.Core.Rpc
     {
         private readonly Func<Stream, Task> _onStreamAvailable;
 
-        public PushStreamContent(Func<Stream, Task> onStreamAvailable)
+        public PushStreamContent(bool p_isCompressed, Func<Stream, Task> onStreamAvailable)
         {
             _onStreamAvailable = onStreamAvailable;
+            if (p_isCompressed)
+                Headers.ContentEncoding.Add("gzip");
         }
 
         protected override Task SerializeToStreamAsync(Stream stream, TransportContext context)

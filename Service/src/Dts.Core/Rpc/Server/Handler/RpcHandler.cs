@@ -7,11 +7,7 @@
 #endregion
 
 #region 引用命名
-using Newtonsoft.Json;
 using System;
-using System.IO;
-using System.IO.Compression;
-using System.Text;
 using System.Threading.Tasks;
 #endregion
 
@@ -68,6 +64,20 @@ namespace Dts.Core.Rpc
         protected abstract Task CallMethod();
 
         /// <summary>
+        /// 流模式下启动响应，锁定头内容
+        /// </summary>
+        /// <returns></returns>
+        protected Task StartResponse()
+        {
+            if (!_lc.Context.Response.HasStarted)
+            {
+                _lc.Context.Response.ContentType = "text/plain";
+                return _lc.Context.Response.StartAsync();
+            }
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
         /// 记录调用过程的错误日志
         /// </summary>
         /// <param name="p_ex"></param>
@@ -78,50 +88,6 @@ namespace Dts.Core.Rpc
                 _lc.Log.Error(p_ex.InnerException, error);
             else
                 _lc.Log.Error(p_ex, error);
-        }
-
-        protected async Task EndResponse()
-        {
-            try
-            {
-                StringBuilder sb = new StringBuilder();
-                using (StringWriter sr = new StringWriter(sb))
-                using (JsonWriter writer = new JsonTextWriter(sr))
-                {
-                    writer.WriteStartArray();
-                    // 0成功，1错误，2警告提示
-                    writer.WriteValue(0);
-                    // 耗时
-                    writer.WriteValue(0);
-                    // 内容
-                    writer.WriteNull();
-                    writer.WriteEndArray();
-                    writer.Flush();
-                }
-
-                // 压缩内容
-                var ms = new MemoryStream();
-                using (GZipStream zs = new GZipStream(ms, CompressionMode.Compress))
-                {
-                    var data = Encoding.UTF8.GetBytes(sb.ToString());
-                    zs.Write(data, 0, data.Length);
-                }
-
-                var response = _lc.Context.Response;
-                if (!response.HasStarted)
-                {
-                    response.ContentType = "text/plain";
-                    response.Headers["content-encoding"] = "gzip";
-                    await response.StartAsync();
-                }
-
-                await response.BodyWriter.WriteAsync(ms.ToArray());
-                await response.BodyWriter.FlushAsync();
-            }
-            catch (Exception ex)
-            {
-                _lc.Log.Error(ex, "向客户端输出信息时异常！");
-            }
         }
 
         bool IsAuthenticated()

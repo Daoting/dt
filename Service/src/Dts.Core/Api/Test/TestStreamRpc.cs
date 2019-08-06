@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Dts.Core.Rpc;
+using System;
 using System.Threading.Tasks;
 #endregion
 
@@ -19,9 +20,13 @@ namespace Dts.Core
     [Api(true, "功能测试", AgentMode.Generic)]
     public class TestStreamRpc : BaseApi
     {
-        public Task OnServerStream(string p_title, ResponseWriter p_writer)
+        public async Task OnServerStream(string p_title, ResponseWriter p_writer)
         {
-            return Task.CompletedTask;
+            for (int i = 0; i < 3; i++)
+            {
+                await p_writer.Write($"{p_title} {i}");
+                await Task.Delay(TimeSpan.FromSeconds(2));
+            }
         }
 
         public Task OnClientStream(string p_title, RequestReader p_reader)

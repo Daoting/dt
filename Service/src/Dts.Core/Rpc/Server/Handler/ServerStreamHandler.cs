@@ -37,8 +37,8 @@ namespace Dts.Core.Rpc
                     objs.AddRange(_lc.Args);
                 objs.Add(new ResponseWriter(_lc));
 
+                await StartResponse();
                 await (Task)_lc.Api.Method.Invoke(_tgt, objs.ToArray());
-                await EndResponse();
             }
             catch (Exception ex)
             {

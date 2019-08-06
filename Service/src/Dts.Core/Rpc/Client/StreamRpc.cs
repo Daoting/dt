@@ -7,11 +7,15 @@
 #endregion
 
 #region 引用命名
+using Newtonsoft.Json;
 using Serilog;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 #endregion
@@ -77,22 +81,19 @@ namespace Dts.Core.Rpc
         /// <returns></returns>
         public ResponseReader StartServerStream()
         {
-            var request = new HttpRequestMessage
-            {
-                Method = HttpMethod.Post,
-                Content = new PushStreamContent((stream) => stream.WriteAsync(_data, 0, _data.Length))
-            };
+            var request = CreateRequestMessage();
+            request.Content = new PushStreamContent(_isCompressed, (stream) => stream.WriteAsync(_data, 0, _data.Length));
             _ = StartAsync(request);
             return new ResponseReader(this);
         }
-
+        
         /// <summary>
         /// 启动Http2协议的远程调用，客户端发送请求数据流，服务端返回一个响应
         /// </summary>
         /// <returns></returns>
         public RequestWriter StartClientStream()
         {
-            var request = new HttpRequestMessage { Method = HttpMethod.Post };
+            var request = CreateRequestMessage();
             _requestWriter = CreateWriter(request);
             _ = StartAsync(request);
             return _requestWriter;
@@ -104,7 +105,7 @@ namespace Dts.Core.Rpc
         /// <returns></returns>
         public DuplexStream StartDuplexStream()
         {
-            var request = new HttpRequestMessage { Method = HttpMethod.Post };
+            var request = CreateRequestMessage();
             _requestWriter = CreateWriter(request);
             _ = StartAsync(request);
             return new DuplexStream(_requestWriter, new ResponseReader(this));
@@ -155,16 +156,30 @@ namespace Dts.Core.Rpc
             _writeCompleteTcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
 
             p_request.Content = new PushStreamContent(
-                (stream) =>
+                _isCompressed,
+                async (stream) =>
                 {
+                    // 先发送调用帧
+                    await stream.WriteAsync(_data, 0, _data.Length).ConfigureAwait(false);
+                    await stream.FlushAsync().ConfigureAwait(false);
+
                     // 发送准备就绪
                     _writeStreamTcs.TrySetResult(stream);
                     // 控制发送任务不结束，未结束前一直可发送
-                    return _writeCompleteTcs.Task;
+                    await _writeCompleteTcs.Task;
                 });
             return new RequestWriter(this);
         }
 
+        HttpRequestMessage CreateRequestMessage()
+        {
+            return new HttpRequestMessage
+            {
+                Method = HttpMethod.Post,
+                // 使用http2协议
+                Version = new Version(2, 0),
+            };
+        }
 
         public void Dispose()
         {

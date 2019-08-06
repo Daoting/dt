@@ -12,6 +12,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -32,6 +33,7 @@ namespace Dts.Core.Rpc
         protected readonly HttpClient _client;
         protected readonly string _methodName;
         protected readonly byte[] _data;
+        protected bool _isCompressed;
         #endregion
 
         /// <summary>
@@ -63,6 +65,8 @@ namespace Dts.Core.Rpc
             {
                 using (var content = new ByteArrayContent(_data))
                 {
+                    if (_isCompressed)
+                        content.Headers.ContentEncoding.Add("gzip");
                     var response = await _client.PostAsync(default(Uri), content).ConfigureAwait(false);
                     response.EnsureSuccessStatusCode();
                     stream = await response.Content.ReadAsStreamAsync();
@@ -147,10 +151,10 @@ namespace Dts.Core.Rpc
                 {
                     // 自动GZip解压
                     client = new HttpClient(new HttpClientHandler { AutomaticDecompression = DecompressionMethods.GZip });
-                    // 使用http2协议
-                    client.DefaultRequestVersion = new Version(2, 0);
+                    // 此处设置无效！在HttpRequestMessage设置
+                    //client.DefaultRequestVersion = new Version(2, 0);
                     // 部署在k8s时内部DNS通过服务名即可
-                    string uri = Glb.IsInDocker ? $"https://{p_serviceName}/.c" : $"http://localhost/{Glb.AppName}/{p_serviceName}/.c";
+                    string uri = "https://localhost:50002/.c"; //Glb.IsInDocker ? $"https://{p_serviceName}/.c" : $"https://localhost/{Glb.AppName}/{p_serviceName}/.c";
                     client.BaseAddress = new Uri(uri, UriKind.Absolute);
                     _clients.TryAdd(p_serviceName, client);
                 }
@@ -163,12 +167,12 @@ namespace Dts.Core.Rpc
         }
 
         /// <summary>
-        /// 序列化RPC调用
+        /// 序列化RPC调用，按需压缩
         /// </summary>
         /// <param name="p_methodName">方法名</param>
         /// <param name="p_params">参数</param>
         /// <returns></returns>
-        static byte[] GetRpcData(string p_methodName, ICollection<object> p_params)
+        byte[] GetRpcData(string p_methodName, ICollection<object> p_params)
         {
             StringBuilder sb = new StringBuilder();
             using (StringWriter sr = new StringWriter(sb))
@@ -186,7 +190,20 @@ namespace Dts.Core.Rpc
                 writer.WriteEndArray();
                 writer.Flush();
             }
-            return Encoding.UTF8.GetBytes(sb.ToString());
+            var data = Encoding.UTF8.GetBytes(sb.ToString());
+
+            // 超过长度限制时执行压缩
+            if (data.Length > RpcKit.MinCompressLength)
+            {
+                _isCompressed = true;
+                var ms = new MemoryStream();
+                using (GZipStream zs = new GZipStream(ms, CompressionMode.Compress))
+                {
+                    zs.Write(data, 0, data.Length);
+                }
+                data = ms.ToArray();
+            }
+            return data;
         }
     }
 }

@@ -20,9 +20,6 @@ namespace Dts.Auth
     /// </summary>
     public class Stub : ISvcStub
     {
-        public Stub(string[] p_startArgs)
-        { }
-
         /// <summary>
         /// 定义全局服务
         /// </summary>

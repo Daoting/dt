@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Dts.Core.Rpc;
+using Serilog;
 using System.Threading.Tasks;
 #endregion
 
@@ -29,6 +30,14 @@ namespace Dts.Core
             return AtTestRpc.SetString(p_str);
         }
 
+        public async Task OnServerStream(string p_title)
+        {
+            var reader = AtTestRpc.OnServerStream(p_title);
+            while (await reader.MoveNext())
+            {
+                Log.Information(reader.GetOriginalVal());
+            }
+        }
     }
 
     internal static class AtTestRpc

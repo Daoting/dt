@@ -9,13 +9,10 @@
 #region 引用命名
 using Newtonsoft.Json;
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
+using System.Buffers.Binary;
 using System.IO;
-using System.Net;
-using System.Net.Http;
+using System.IO.Compression;
 using System.Text;
-using System.Threading.Tasks;
 #endregion
 
 namespace Dts.Core.Rpc
@@ -25,8 +22,21 @@ namespace Dts.Core.Rpc
     /// </summary>
     public static class RpcKit
     {
-        
+        /// <summary>
+        /// 数据包头长度，1字节压缩标志 + 4字节内容长度
+        /// </summary>
+        public const int HeaderSize = 5;
 
+        /// <summary>
+        /// 进行内容压缩的最小长度
+        /// </summary>
+        public const int MinCompressLength = 1024;
+
+        /// <summary>
+        /// 获取对象序列化后的完整数据包，1字节压缩标志 + 4字节内容长度 + 内容
+        /// </summary>
+        /// <param name="p_obj"></param>
+        /// <returns></returns>
         public static byte[] GetObjData(object p_obj)
         {
             if (p_obj == null)
@@ -41,7 +51,28 @@ namespace Dts.Core.Rpc
                 writer.WriteEndArray();
                 writer.Flush();
             }
-            return Encoding.UTF8.GetBytes(sb.ToString());
+            byte[] data = Encoding.UTF8.GetBytes(sb.ToString());
+            bool isCompress = data.Length > MinCompressLength;
+
+            // 超过长度限制时执行压缩
+            if (isCompress)
+            {
+                var ms = new MemoryStream();
+                using (GZipStream zs = new GZipStream(ms, CompressionMode.Compress))
+                {
+                    zs.Write(data, 0, data.Length);
+                }
+                data = ms.ToArray();
+            }
+
+            byte[] result = new byte[data.Length + HeaderSize];
+            // 压缩标志位
+            result[0] = (byte)(isCompress ? 1 : 0);
+            // 内容长度
+            BinaryPrimitives.WriteUInt32BigEndian(result.AsSpan(1), (uint)data.Length);
+            // 内容
+            Array.Copy(data, 0, result, HeaderSize, data.Length);
+            return result;
         }
     }
 }

@@ -3,28 +3,22 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "https://localhost:44322/"
+      "applicationUrl": "https://localhost:40002/"
     }
   },
   "profiles": {
     "IIS Express": {
       "commandName": "IISExpress",
       "environmentVariables": {
-        "rabbitmq": "hostname=10.10.1.2,username=dt,password=dt,port=5672",
-        "redis": "10.10.1.2,password=dt,defaultDatabase=15,allowAdmin=true",
-        "appname": "baisui",
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
     "Dts.Cm": {
       "commandName": "Project",
       "environmentVariables": {
-        "rabbitmq": "hostname=10.10.1.2,username=dt,password=dt,port=5672",
-        "redis": "10.10.1.2,password=dt,defaultDatabase=15,allowAdmin=true",
-        "appname": "baisui",
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "https://localhost:53149/"
+      "applicationUrl": "https://localhost:50002/"
     }
   }
 }

@@ -9,7 +9,9 @@
 #region 引用命名
 using Serilog;
 using System;
+using System.Buffers.Binary;
 using System.IO;
+using System.IO.Compression;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,10 +24,7 @@ namespace Dts.Core.Rpc
     /// </summary>
     public class ResponseReader
     {
-        const string _errReading = "上次读取未结束，禁止继续读取！";
         readonly StreamRpc _call;
-        readonly object _moveNextLock;
-        Task<bool> _moveNextTask;
         HttpResponseMessage _httpResponse;
         Stream _responseStream;
         string _originalVal;
@@ -33,28 +32,88 @@ namespace Dts.Core.Rpc
         public ResponseReader(StreamRpc p_call)
         {
             _call = p_call;
-            _moveNextLock = new object();
         }
 
-        public Task<bool> MoveNext()
+        public async Task<bool> MoveNext()
         {
             // HTTP响应已结束
             if (_call.ResponseFinished)
-                return Task.FromResult(false);
+                return false;
 
-            lock (_moveNextLock)
+            try
             {
-                // 上次读取未完成
-                if (IsMoveNextInProgress)
+                _call.CancellationToken.ThrowIfCancellationRequested();
+                if (_httpResponse == null)
                 {
-                    Log.Error(_errReading);
-                    return Task.FromException<bool>(new InvalidOperationException(_errReading));
+                    // 等待请求发送完毕
+                    await _call.SendTask.ConfigureAwait(false);
+                    _httpResponse = _call.HttpResponse;
+                }
+                if (_responseStream == null)
+                    _responseStream = await _httpResponse.Content.ReadAsStreamAsync().ConfigureAwait(false);
+
+                int received = 0;
+                int read;
+
+                // 包头
+                // 1字节压缩标志 + 4字节内容长度
+                byte[] header = new byte[RpcKit.HeaderSize];
+                while ((read = await _responseStream.ReadAsync(header, received, header.Length - received, _call.CancellationToken).ConfigureAwait(false)) > 0)
+                {
+                    received += read;
+                    if (received == header.Length)
+                        break;
                 }
 
-                // 保存任务用来检查是否完成
-                _moveNextTask = MoveNextCore();
+                if (received < header.Length)
+                {
+                    if (received == 0)
+                    {
+                        // 结束
+                        _originalVal = null;
+                        return false;
+                    }
+                    throw new InvalidDataException("数据包头错误");
+                }
+
+                // 读取内容
+                byte[] data;
+                var length = BinaryPrimitives.ReadUInt32BigEndian(header.AsSpan(1));
+                if (length > int.MaxValue)
+                    throw new InvalidDataException("消息超长");
+                if (length > 0)
+                {
+                    received = 0;
+                    data = new byte[length];
+                    while ((read = await _responseStream.ReadAsync(data, received, data.Length - received, _call.CancellationToken).ConfigureAwait(false)) > 0)
+                    {
+                        received += read;
+                        if (received == data.Length)
+                            break;
+                    }
+                }
+                else
+                {
+                    data = Array.Empty<byte>();
+                }
+
+                if (header[0] == 1)
+                {
+                    // 先解压
+                    var ms = new MemoryStream();
+                    using (GZipStream zs = new GZipStream(new MemoryStream(data), CompressionMode.Decompress))
+                    {
+                        zs.CopyTo(ms);
+                    }
+                    data = ms.ToArray();
+                }
+                _originalVal = Encoding.UTF8.GetString(data);
+                return true;
             }
-            return _moveNextTask;
+            catch
+            {
+                return false;
+            }
         }
 
         public T GetVal<T>()
@@ -65,54 +124,6 @@ namespace Dts.Core.Rpc
         public string GetOriginalVal()
         {
             return _originalVal;
-        }
-
-        async Task<bool> MoveNextCore()
-        {
-            try
-            {
-                _call.CancellationToken.ThrowIfCancellationRequested();
-                if (_httpResponse == null)
-                {
-                    // 等待发送完毕
-                    await _call.SendTask.ConfigureAwait(false);
-                    _httpResponse = _call.HttpResponse;
-                }
-                if (_responseStream == null)
-                    _responseStream = await _httpResponse.Content.ReadAsStreamAsync().ConfigureAwait(false);
-
-                // 无内容时表示响应已结束
-                if (_responseStream.Length == 0)
-                {
-                    _originalVal = null;
-                    _call.FinishResponse();
-                    return false;
-                }
-
-                int received = 0;
-                int read;
-                byte[] data = new byte[_responseStream.Length];
-                while ((read = await _responseStream.ReadAsync(data, received, data.Length - received, _call.CancellationToken).ConfigureAwait(false)) > 0)
-                {
-                    received += read;
-                    if (received == data.Length)
-                        break;
-                }
-                _originalVal = Encoding.UTF8.GetString(data, 0, data.Length);
-                return true;
-            }
-            catch
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        /// <summary>
-        /// 上次异步读取是否结束
-        /// </summary>
-        bool IsMoveNextInProgress
-        {
-            get { return _moveNextTask != null && !_moveNextTask.IsCompleted; }
         }
     }
 }

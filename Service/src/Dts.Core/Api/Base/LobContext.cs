@@ -268,20 +268,24 @@ namespace Dts.Core
                     writer.WriteEndArray();
                     writer.Flush();
                 }
+                var data = Encoding.UTF8.GetBytes(sb.ToString());
 
-                // 压缩内容
-                var ms = new MemoryStream();
-                using (GZipStream zs = new GZipStream(ms, CompressionMode.Compress))
+                // 超过长度限制时执行压缩
+                if (data.Length > RpcKit.MinCompressLength)
                 {
-                    var data = Encoding.UTF8.GetBytes(sb.ToString());
-                    zs.Write(data, 0, data.Length);
+                    Context.Response.Headers["content-encoding"] = "gzip";
+                    var ms = new MemoryStream();
+                    using (GZipStream zs = new GZipStream(ms, CompressionMode.Compress))
+                    {
+                        zs.Write(data, 0, data.Length);
+                    }
+                    data = ms.ToArray();
                 }
 
                 // 写入响应流
                 Context.Response.ContentType = "text/plain";
-                Context.Response.Headers["content-encoding"] = "gzip";
                 var bw = Context.Response.BodyWriter;
-                await bw.WriteAsync(ms.ToArray());
+                await bw.WriteAsync(data);
                 await bw.FlushAsync();
             }
             catch (Exception ex)
@@ -299,24 +303,25 @@ namespace Dts.Core
             try
             {
                 var input = await Context.Request.BodyReader.ReadAsync();
-                using (MemoryStream ms = new MemoryStream(input.Buffer.ToArray()))
-                using (StreamReader sr = new StreamReader(ms))
-                using (JsonReader reader = new JsonTextReader(sr))
+                if (Context.Request.Headers["content-encoding"] == "gzip")
                 {
-                    if (!reader.Read()
-                        || reader.TokenType != JsonToken.StartArray
-                        || !reader.Read()
-                        || reader.TokenType != JsonToken.String
-                        || string.IsNullOrEmpty(ApiName = (string)reader.Value))
-                        throw new Exception("Json Rpc格式错误！");
-
-                    List<object> objs = new List<object>();
-                    while (reader.Read() && reader.TokenType != JsonToken.EndArray)
+                    // 先解压
+                    using (MemoryStream ms = new MemoryStream(input.Buffer.ToArray()))
+                    using (GZipStream gs = new GZipStream(ms, CompressionMode.Decompress))
+                    using (StreamReader sr = new StreamReader(gs))
+                    using (JsonReader reader = new JsonTextReader(sr))
                     {
-                        objs.Add(JsonRpcSerializer.Deserialize(reader));
+                        ParseInternal(reader);
                     }
-                    if (objs.Count > 0)
-                        Args = objs.ToArray();
+                }
+                else
+                {
+                    using (MemoryStream ms = new MemoryStream(input.Buffer.ToArray()))
+                    using (StreamReader sr = new StreamReader(ms))
+                    using (JsonReader reader = new JsonTextReader(sr))
+                    {
+                        ParseInternal(reader);
+                    }
                 }
                 return true;
             }
@@ -328,6 +333,23 @@ namespace Dts.Core
             }
         }
 
+        void ParseInternal(JsonReader p_reader)
+        {
+            if (!p_reader.Read()
+                || p_reader.TokenType != JsonToken.StartArray
+                || !p_reader.Read()
+                || p_reader.TokenType != JsonToken.String
+                || string.IsNullOrEmpty(ApiName = (string)p_reader.Value))
+                throw new Exception("Json Rpc格式错误！");
+
+            List<object> objs = new List<object>();
+            while (p_reader.Read() && p_reader.TokenType != JsonToken.EndArray)
+            {
+                objs.Add(JsonRpcSerializer.Deserialize(p_reader));
+            }
+            if (objs.Count > 0)
+                Args = objs.ToArray();
+        }
         #endregion
     }
 

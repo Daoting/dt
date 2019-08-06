@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
@@ -15,8 +16,6 @@ using Serilog;
 using Serilog.Formatting.Compact;
 using System;
 using System.IO;
-using System.Net;
-using System.Runtime.InteropServices;
 #endregion
 
 namespace Dts.Core
@@ -36,14 +35,15 @@ namespace Dts.Core
         /// 此方法不可异步，否则启动有问题！！！
         /// </summary>
         /// <param name="p_stub">服务存根</param>
-        public static void Run(ISvcStub p_stub)
+        /// <param name="p_args">启动参数</param>
+        public static void Run(ISvcStub p_stub, string[] p_args)
         {
-            Glb.Stub = p_stub;
+            Glb.Stub = p_stub ?? throw new ArgumentNullException(nameof(p_stub));
             CreateLogger();
             LoadConfig();
             DbSchema.Init();
             Silo.CacheSql();
-            RunWebHost();
+            RunWebHost(p_args);
             Log.CloseAndFlush();
         }
 
@@ -107,27 +107,27 @@ namespace Dts.Core
         /// <summary>
         /// 启动Kestrel
         /// </summary>
-        static void RunWebHost()
+        /// <param name="p_args">启动参数</param>
+        static void RunWebHost(string[] p_args)
         {
             try
             {
-                var host = new WebHostBuilder()
-                            .UseKestrel(options =>
-                            {
-                                // 设置http2为默认监听协议
-                                // 未使用Listen方法，因无法应用外部设置的端口！
-                                //options.ConfigureEndpointDefaults(listenOptions =>
-                                //{
-                                //    listenOptions.Protocols = HttpProtocols.Http2;
-                                //    listenOptions.UseHttps(Path.Combine(Directory.GetCurrentDirectory(), "etc/cert.pfx"), "test");
-                                //});
-                            })
-                            .UseContentRoot(Directory.GetCurrentDirectory())
-                            .UseStartup<Startup>()
-                            // 内部注入AddSingleton<ILoggerFactory>(new SerilogLoggerFactory())
-                            .UseSerilog()
-                            // 实例化WebHost并初始化，调用Startup.ConfigureServices和Configure
-                            .Build();
+                var host = WebHost.CreateDefaultBuilder(p_args)
+                    .ConfigureKestrel(options =>
+                    {
+                        // 设置http2为默认监听协议
+                        // 未使用Listen方法，因无法应用外部设置的端口！
+                        options.ConfigureEndpointDefaults(listenOptions =>
+                        {
+                            listenOptions.Protocols = HttpProtocols.Http2;
+                            listenOptions.UseHttps(Path.Combine(Directory.GetCurrentDirectory(), "etc/cert.pfx"), "test");
+                        });
+                    })
+                    .UseStartup<Startup>()
+                    // 内部注入AddSingleton<ILoggerFactory>(new SerilogLoggerFactory())
+                    .UseSerilog()
+                    // 实例化WebHost并初始化，调用Startup.ConfigureServices和Configure
+                    .Build();
                 Log.Information($"启动 {Glb.SvcName} 成功");
 
                 // 内部调用WebHost.StartAsync()
