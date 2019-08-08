@@ -9,6 +9,7 @@
 #region 引用命名
 using Dts.Core.EventBus;
 using Dts.Core.Rpc;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Serilog;
@@ -29,6 +30,7 @@ namespace Dts.Core
     public class LobContext
     {
         #region 成员变量
+        const string _lcName = "LobContext";
         const string _errParse = "反序列化请求参数时异常";
         ILogger _logger;
         Db _defaultDb;
@@ -44,7 +46,10 @@ namespace Dts.Core
         internal LobContext(HttpContext p_context)
         {
             Context = p_context;
-            Context.Items["lc"] = this;
+            // 在服务中通过静态Current取出
+            Context.Items[_lcName] = this;
+            // 内容标志
+            Context.Response.ContentType = "application/dt";
         }
         #endregion
 
@@ -52,7 +57,7 @@ namespace Dts.Core
         /// <summary>
         /// 获取当前业务线上下文
         /// </summary>
-        public static LobContext Current => (LobContext)Glb.HttpContext.Items["lc"];
+        public static LobContext Current => (LobContext)Glb.HttpContext.Items[_lcName];
 
         /// <summary>
         /// http请求上下文
@@ -204,8 +209,17 @@ namespace Dts.Core
         /// 处理http rpc请求
         /// </summary>
         /// <returns></returns>
-        internal async Task Handle()
+        internal async Task Handle(Func<Task<AuthenticationScheme>> p_authScheme)
         {
+            // 只本地认证(JWT格式)，未处理远程认证及重定向，原中间件见Authentication.txt
+            var authScheme = await p_authScheme();
+            if (authScheme != null)
+            {
+                var result = await Context.AuthenticateAsync(authScheme.Name);
+                if (result?.Principal != null)
+                    Context.User = result.Principal;
+            }
+
             if (!await ParseParams())
                 return;
 
@@ -283,7 +297,6 @@ namespace Dts.Core
                 }
 
                 // 写入响应流
-                Context.Response.ContentType = "text/plain";
                 var bw = Context.Response.BodyWriter;
                 await bw.WriteAsync(data);
                 await bw.FlushAsync();
@@ -302,11 +315,15 @@ namespace Dts.Core
         {
             try
             {
-                var input = await Context.Request.BodyReader.ReadAsync();
+                var br = Context.Request.BodyReader;
+                var buffer = (await br.ReadAsync()).Buffer;
+                byte[] data = buffer.ToArray();
+                br.AdvanceTo(buffer.End);
+
                 if (Context.Request.Headers["content-encoding"] == "gzip")
                 {
                     // 先解压
-                    using (MemoryStream ms = new MemoryStream(input.Buffer.ToArray()))
+                    using (MemoryStream ms = new MemoryStream(data))
                     using (GZipStream gs = new GZipStream(ms, CompressionMode.Decompress))
                     using (StreamReader sr = new StreamReader(gs))
                     using (JsonReader reader = new JsonTextReader(sr))
@@ -316,7 +333,7 @@ namespace Dts.Core
                 }
                 else
                 {
-                    using (MemoryStream ms = new MemoryStream(input.Buffer.ToArray()))
+                    using (MemoryStream ms = new MemoryStream(data))
                     using (StreamReader sr = new StreamReader(ms))
                     using (JsonReader reader = new JsonTextReader(sr))
                     {

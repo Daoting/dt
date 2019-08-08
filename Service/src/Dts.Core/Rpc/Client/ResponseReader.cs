@@ -7,12 +7,10 @@
 #endregion
 
 #region 引用命名
-using Serilog;
 using System;
 using System.Buffers.Binary;
 using System.IO;
 using System.IO.Compression;
-using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 #endregion
@@ -24,41 +22,32 @@ namespace Dts.Core.Rpc
     /// </summary>
     public class ResponseReader
     {
-        readonly StreamRpc _call;
-        HttpResponseMessage _httpResponse;
-        Stream _responseStream;
+        readonly ServerStreamRpc _rpc;
         string _originalVal;
 
-        public ResponseReader(StreamRpc p_call)
+        public ResponseReader(ServerStreamRpc p_rpc)
         {
-            _call = p_call;
+            _rpc = p_rpc;
         }
 
+        /// <summary>
+        /// 读取服务器返回的一帧数据
+        /// </summary>
+        /// <returns></returns>
         public async Task<bool> MoveNext()
         {
-            // HTTP响应已结束
-            if (_call.ResponseFinished)
+            if (_rpc.ResponseStream == null)
                 return false;
 
             try
             {
-                _call.CancellationToken.ThrowIfCancellationRequested();
-                if (_httpResponse == null)
-                {
-                    // 等待请求发送完毕
-                    await _call.SendTask.ConfigureAwait(false);
-                    _httpResponse = _call.HttpResponse;
-                }
-                if (_responseStream == null)
-                    _responseStream = await _httpResponse.Content.ReadAsStreamAsync().ConfigureAwait(false);
-
                 int received = 0;
                 int read;
 
                 // 包头
                 // 1字节压缩标志 + 4字节内容长度
                 byte[] header = new byte[RpcKit.HeaderSize];
-                while ((read = await _responseStream.ReadAsync(header, received, header.Length - received, _call.CancellationToken).ConfigureAwait(false)) > 0)
+                while ((read = await _rpc.ResponseStream.ReadAsync(header, received, header.Length - received).ConfigureAwait(false)) > 0)
                 {
                     received += read;
                     if (received == header.Length)
@@ -85,7 +74,7 @@ namespace Dts.Core.Rpc
                 {
                     received = 0;
                     data = new byte[length];
-                    while ((read = await _responseStream.ReadAsync(data, received, data.Length - received, _call.CancellationToken).ConfigureAwait(false)) > 0)
+                    while ((read = await _rpc.ResponseStream.ReadAsync(data, received, data.Length - received).ConfigureAwait(false)) > 0)
                     {
                         received += read;
                         if (received == data.Length)

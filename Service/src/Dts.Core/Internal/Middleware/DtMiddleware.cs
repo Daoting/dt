@@ -39,35 +39,18 @@ namespace Dts.Core
         }
         #endregion
 
-        public async Task Invoke(HttpContext p_context)
+        public Task Invoke(HttpContext p_context)
         {
             // 内部特殊路径格式：/.xxx
-            switch (p_context.Request.Path.Value.ToLower())
-            {
-                case "/.c":
-                    await Authenticate(p_context);
-                    await new LobContext(p_context).Handle();
-                    return;
-                case "/.admin":
-                    await ResponseAdminPage(p_context);
-                    return;
-                case "/.error":
-                    await ResponseErrorPage(p_context);
-                    return;
-            }
-            await _next(p_context);
-        }
+            string path = p_context.Request.Path.Value.ToLower();
+            if (path == "/.c")
+                return new LobContext(p_context).Handle(() => _schemes.GetDefaultAuthenticateSchemeAsync());
+            if (path == "/.admin")
+                return ResponseAdminPage(p_context);
+            if (path == "/.error")
+                return ResponseErrorPage(p_context);
 
-        async Task Authenticate(HttpContext p_context)
-        {
-            // 只本地认证(JWT格式)，未处理远程认证及重定向，原中间件见Authentication.txt
-            var authScheme = await _schemes.GetDefaultAuthenticateSchemeAsync();
-            if (authScheme != null)
-            {
-                var result = await p_context.AuthenticateAsync(authScheme.Name);
-                if (result?.Principal != null)
-                    p_context.User = result.Principal;
-            }
+            return _next(p_context);
         }
 
         /// <summary>

@@ -35,14 +35,11 @@ namespace Dts.Core.Rpc
         /// 执行Http Rpc调用
         /// </summary>
         /// <returns></returns>
-        public async Task Call()
+        public Task Call()
         {
             // 校验授权
             if (!IsAuthenticated())
-            {
-                await _lc.Response(ApiResponseType.Error, 0, "未经授权");
-                return;
-            }
+                return _lc.Response(ApiResponseType.Error, 0, "未经授权");
 
             // 创建服务实例
             _tgt = Glb.GetSvc(_lc.Api.Method.DeclaringType) as BaseApi;
@@ -50,11 +47,10 @@ namespace Dts.Core.Rpc
             {
                 var msg = $"类型{_lc.Api.Method.DeclaringType.Name}未继承BaseApi！";
                 _lc.Log.Warning(msg);
-                await _lc.Response(ApiResponseType.Error, 0, msg);
-                return;
+                return _lc.Response(ApiResponseType.Error, 0, msg);
             }
 
-            await CallMethod();
+            return CallMethod();
         }
 
         /// <summary>
@@ -62,20 +58,6 @@ namespace Dts.Core.Rpc
         /// </summary>
         /// <returns></returns>
         protected abstract Task CallMethod();
-
-        /// <summary>
-        /// 流模式下启动响应，锁定头内容
-        /// </summary>
-        /// <returns></returns>
-        protected Task StartResponse()
-        {
-            if (!_lc.Context.Response.HasStarted)
-            {
-                _lc.Context.Response.ContentType = "text/plain";
-                return _lc.Context.Response.StartAsync();
-            }
-            return Task.CompletedTask;
-        }
 
         /// <summary>
         /// 记录调用过程的错误日志

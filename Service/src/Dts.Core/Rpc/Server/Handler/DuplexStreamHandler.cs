@@ -20,14 +20,14 @@ namespace Dts.Core.Rpc
     public class DuplexStreamHandler : RpcHandler
     {
         public DuplexStreamHandler(LobContext p_lc)
-            :base(p_lc)
+            : base(p_lc)
         { }
 
         /// <summary>
         /// 调用服务方法
         /// </summary>
         /// <returns></returns>
-        protected override async Task CallMethod()
+        protected override Task CallMethod()
         {
             try
             {
@@ -38,13 +38,13 @@ namespace Dts.Core.Rpc
                 objs.Add(new RequestReader(_lc));
                 objs.Add(new ResponseWriter(_lc));
 
-                await StartResponse();
-                await (Task)_lc.Api.Method.Invoke(_tgt, objs.ToArray());
+                return (Task)_lc.Api.Method.Invoke(_tgt, objs.ToArray());
             }
             catch (Exception ex)
             {
                 LogCallError(ex);
             }
+            return Task.CompletedTask;
         }
     }
 }

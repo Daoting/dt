@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{767D4D33-78C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{DDFB5A15-E546-4B2A-8AB9-4CD2F44FAB6F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dts.Core.Test", "test\Dts.Core.Test\Dts.Core.Test.csproj", "{E596FAD7-3643-4F03-A323-0D21A791FB16}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dts.Core.Test", "test\Dts.Core.Test\Dts.Core.Test.csproj", "{E596FAD7-3643-4F03-A323-0D21A791FB16}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -32,10 +32,22 @@ namespace Dts.Core
 
         public async Task OnServerStream(string p_title)
         {
-            var reader = AtTestRpc.OnServerStream(p_title);
+            var reader = await AtTestRpc.OnServerStream(p_title);
             while (await reader.MoveNext())
             {
-                Log.Information(reader.GetOriginalVal());
+                Log.Information("客户端读取：" + reader.GetOriginalVal());
+            }
+        }
+
+        public async Task OnClientStream(string p_title = "hello")
+        {
+            var writer = await AtTestRpc.OnClientStream(p_title);
+            for (int i = 0; i < 30; i++)
+            {
+                var msg = $"{p_title} {i}";
+                await writer.Write(msg);
+                Log.Information("客户端写入：" + msg);
+                //await Task.Delay(100);
             }
         }
     }
@@ -67,31 +79,31 @@ namespace Dts.Core
             ).Call<bool>();
         }
 
-        public static ResponseReader OnServerStream(string p_title)
+        public static Task<ResponseReader> OnServerStream(string p_title)
         {
-            return new StreamRpc(
+            return new ServerStreamRpc(
                 "cm",
                 "TestStreamRpc.OnServerStream",
                 p_title
-            ).StartServerStream();
+            ).Call();
         }
 
-        public static RequestWriter OnClientStream(string p_title)
+        public static Task<RequestWriter> OnClientStream(string p_title)
         {
-            return new StreamRpc(
+            return new ClientStreamRpc(
                 "cm",
                 "TestStreamRpc.OnClientStream",
                 p_title
-            ).StartClientStream();
+            ).Call();
         }
 
-        public static DuplexStream OnDuplexStream(string p_title)
-        {
-            return new StreamRpc(
-                "cm",
-                "TestStreamRpc.OnDuplexStream",
-                p_title
-            ).StartDuplexStream();
-        }
+        //public static DuplexStream OnDuplexStream(string p_title)
+        //{
+        //    return new StreamRpc(
+        //        "cm",
+        //        "TestStreamRpc.OnDuplexStream",
+        //        p_title
+        //    ).StartDuplexStream();
+        //}
     }
 }
