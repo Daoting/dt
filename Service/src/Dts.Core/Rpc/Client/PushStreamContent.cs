@@ -7,14 +7,10 @@
 #endregion
 
 #region 引用命名
-using Newtonsoft.Json;
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 #endregion
 
@@ -24,11 +20,9 @@ namespace Dts.Core.Rpc
     {
         private readonly Func<Stream, Task> _onStreamAvailable;
 
-        public PushStreamContent(bool p_isCompressed, Func<Stream, Task> onStreamAvailable)
+        public PushStreamContent(Func<Stream, Task> onStreamAvailable)
         {
             _onStreamAvailable = onStreamAvailable;
-            if (p_isCompressed)
-                Headers.ContentEncoding.Add("gzip");
         }
 
         protected override Task SerializeToStreamAsync(Stream stream, TransportContext context)

@@ -300,7 +300,7 @@ namespace Dts.Core
                     else
                         retTypeName = "DuplexStream";
 
-                    sb.AppendFormat("public static {0} {1}(", retTypeName, mi.Name);
+                    sb.AppendFormat("public static Task<{0}> {1}(", retTypeName, mi.Name);
                 }
 
                 // 参数
@@ -369,8 +369,12 @@ namespace Dts.Core
                 AppendTabSpace(sb, 1);
                 if (sm.CallMode == ApiCallMode.Unary)
                     sb.AppendLine("return new UnaryRpc(");
+                else if (sm.CallMode == ApiCallMode.ServerStream)
+                    sb.AppendLine("return new ServerStreamRpc(");
+                else if (sm.CallMode == ApiCallMode.ClientStream)
+                    sb.AppendLine("return new ClientStreamRpc(");
                 else
-                    sb.AppendLine("return new StreamRpc(");
+                    sb.AppendLine("return new DuplexStreamRpc(");
 
                 // 服务名
                 AppendTabSpace(sb, 2);
@@ -411,17 +415,9 @@ namespace Dts.Core
                         sb.AppendLine(").Call<object>();");
                     }
                 }
-                else if (sm.CallMode == ApiCallMode.ServerStream)
-                {
-                    sb.AppendLine(").StartServerStream();");
-                }
-                else if (sm.CallMode == ApiCallMode.ClientStream)
-                {
-                    sb.AppendLine(").StartClientStream();");
-                }
                 else
                 {
-                    sb.AppendLine(").StartDuplexStream();");
+                    sb.AppendLine(").Call();");
                 }
                 sb.AppendLine("}");
             }

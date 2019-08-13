@@ -23,7 +23,7 @@ namespace Dts.Core
     {
         public async Task OnServerStream(string p_title, ResponseWriter p_writer)
         {
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 50; i++)
             {
                 var msg = $"{p_title} {i}";
                 await p_writer.Write(msg);
@@ -36,13 +36,19 @@ namespace Dts.Core
         {
             while (await p_reader.MoveNext())
             {
-                Log.Information("服务端读取：" + p_reader.GetOriginalVal());
+                Log.Information("服务端读取：" + p_reader.Val<string>());
             }
         }
 
-        public Task OnDuplexStream(string p_title, RequestReader p_reader, ResponseWriter p_writer)
+        public async Task OnDuplexStream(string p_title, RequestReader p_reader, ResponseWriter p_writer)
         {
-            return Task.CompletedTask;
+            while (await p_reader.MoveNext())
+            {
+                Log.Information("服务端读取：" + p_reader.Val<string>());
+                var msg = "++" + p_reader.Val<string>();
+                await p_writer.Write(msg);
+                Log.Information("服务端写入：" + msg);
+            }
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Dts.Core.Rpc
         readonly object _writeLock;
         Task _writeTask;
 
-        public RequestWriter(ClientStreamRpc p_rpc)
+        internal RequestWriter(ClientStreamRpc p_rpc)
         {
             _rpc = p_rpc;
             _writeLock = new object();
@@ -37,9 +37,6 @@ namespace Dts.Core.Rpc
         /// <returns></returns>
         public Task Write(object p_message)
         {
-            if (p_message == null)
-                throw new ArgumentNullException(nameof(p_message));
-
             lock (_writeLock)
             {
                 // 请求流已关闭
@@ -51,7 +48,7 @@ namespace Dts.Core.Rpc
                     return Task.FromException(new InvalidOperationException(_errWriting));
 
                 // 保存任务用来检查是否完成
-                _writeTask = WriteCore(p_message);
+                _writeTask = RpcKit.WriteFrame(_rpc.RequestStream, p_message);
             }
             return _writeTask;
         }
@@ -79,19 +76,6 @@ namespace Dts.Core.Rpc
         bool IsWriteInProgress
         {
             get { return _writeTask != null && !_writeTask.IsCompleted; }
-        }
-
-        async Task WriteCore(object p_message)
-        {
-            try
-            {
-                // 写入完整Frame内容
-                await _rpc.RequestStream.WriteAsync(RpcKit.GetObjData(p_message)).ConfigureAwait(false);
-                // 传输数据，清除本地缓存
-                await _rpc.RequestStream.FlushAsync().ConfigureAwait(false);
-            }
-            catch
-            { }
         }
     }
 }

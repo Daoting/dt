@@ -35,19 +35,34 @@ namespace Dts.Core
             var reader = await AtTestRpc.OnServerStream(p_title);
             while (await reader.MoveNext())
             {
-                Log.Information("客户端读取：" + reader.GetOriginalVal());
+                Log.Information("客户端读取：" + reader.Val<string>());
             }
         }
 
         public async Task OnClientStream(string p_title = "hello")
         {
             var writer = await AtTestRpc.OnClientStream(p_title);
-            for (int i = 0; i < 30; i++)
+            for (int i = 0; i < 50; i++)
             {
                 var msg = $"{p_title} {i}";
                 await writer.Write(msg);
                 Log.Information("客户端写入：" + msg);
-                //await Task.Delay(100);
+                await Task.Delay(1000);
+            }
+        }
+
+        public async Task OnDuplexStream(string p_title)
+        {
+            var duplex = await AtTestRpc.OnDuplexStream(p_title);
+            for (int i = 0; i < 50; i++)
+            {
+                var msg = $"{p_title} {i}";
+                await duplex.RequestWriter.Write(msg);
+                Log.Information("客户端写入：" + msg);
+
+                if (await duplex.ResponseReader.MoveNext())
+                    Log.Information("客户端读取：" + duplex.ResponseReader.Val<string>());
+                await Task.Delay(1000);
             }
         }
     }
@@ -97,13 +112,13 @@ namespace Dts.Core
             ).Call();
         }
 
-        //public static DuplexStream OnDuplexStream(string p_title)
-        //{
-        //    return new StreamRpc(
-        //        "cm",
-        //        "TestStreamRpc.OnDuplexStream",
-        //        p_title
-        //    ).StartDuplexStream();
-        //}
+        public static Task<DuplexStream> OnDuplexStream(string p_title)
+        {
+            return new DuplexStreamRpc(
+                "cm",
+                "TestStreamRpc.OnDuplexStream",
+                p_title
+            ).Call();
+        }
     }
 }

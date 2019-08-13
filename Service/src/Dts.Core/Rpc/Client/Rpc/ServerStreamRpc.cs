@@ -31,32 +31,32 @@ namespace Dts.Core.Rpc
             : base(p_serviceName, p_methodName, p_params)
         { }
 
-        public Stream ResponseStream { get; private set; }
-
         /// <summary>
         /// 启动Http2协议的远程调用，客户端发送一个请求，服务端返回数据流响应
         /// </summary>
         /// <returns></returns>
         public async Task<ResponseReader> Call()
         {
+            Stream responseStream;
             try
             {
                 using (var request = CreateRequestMessage())
-                using (var content = new ByteArrayContent(_data))
+                using (var content = new PushStreamContent((ws) => RpcKit.WriteFrame(ws, _data, _isCompressed)))
                 {
-                    if (_isCompressed)
-                        content.Headers.ContentEncoding.Add("gzip");
                     request.Content = content;
+                    // 一定是ResponseHeadersRead，否则只在结束时收到一次！！！众里寻他千百度
                     var response = await _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, CancellationToken.None);
                     response.EnsureSuccessStatusCode();
-                    ResponseStream = await response.Content.ReadAsStreamAsync();
+                    responseStream = await response.Content.ReadAsStreamAsync();
+                    // 第一帧为心跳帧
+                    await RpcKit.ReadHeartbeat(responseStream);
                 }
             }
             catch (Exception ex)
             {
                 throw new Exception($"调用【{_methodName}】时服务器连接失败！\r\n{ex.Message}");
             }
-            return new ResponseReader(this);
+            return new ResponseReader(responseStream);
         }
     }
 }

@@ -13,7 +13,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Net;
 using System.Net.Http;
 using System.Text;
 #endregion
@@ -73,13 +72,12 @@ namespace Dts.Core.Rpc
             {
                 try
                 {
-                    // 自动GZip解压
-                    client = new HttpClient(new HttpClientHandler { AutomaticDecompression = DecompressionMethods.GZip });
-                    // 此处设置无效！在HttpRequestMessage设置
-                    //client.DefaultRequestVersion = new Version(2, 0);
                     // 部署在k8s时内部DNS通过服务名即可
                     string uri = Glb.IsInDocker ? $"https://{p_serviceName}/.c" : $"https://localhost/{Glb.AppName}/{p_serviceName}/.c";
+                    client = new HttpClient();
                     client.BaseAddress = new Uri(uri, UriKind.Absolute);
+                    // 此处设置无效！在HttpRequestMessage设置
+                    //client.DefaultRequestVersion = new Version(2, 0);
                     _clients.TryAdd(p_serviceName, client);
                 }
                 catch

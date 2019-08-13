@@ -7,11 +7,9 @@
 #endregion
 
 #region 引用命名
+using Newtonsoft.Json;
 using System;
-using System.Buffers.Binary;
 using System.IO;
-using System.IO.Compression;
-using System.Text;
 using System.Threading.Tasks;
 #endregion
 
@@ -22,97 +20,51 @@ namespace Dts.Core.Rpc
     /// </summary>
     public class ResponseReader
     {
-        readonly ServerStreamRpc _rpc;
-        string _originalVal;
+        readonly Stream _responseStream;
+        object _val;
 
-        public ResponseReader(ServerStreamRpc p_rpc)
+        internal ResponseReader(Stream p_stream)
         {
-            _rpc = p_rpc;
+            _responseStream = p_stream;
         }
 
         /// <summary>
-        /// 读取服务器返回的一帧数据
+        /// 读取从服务器返回的下一帧数据
         /// </summary>
         /// <returns></returns>
         public async Task<bool> MoveNext()
         {
-            if (_rpc.ResponseStream == null)
+            if (_responseStream == null)
                 return false;
 
             try
             {
-                int received = 0;
-                int read;
-
-                // 包头
-                // 1字节压缩标志 + 4字节内容长度
-                byte[] header = new byte[RpcKit.HeaderSize];
-                while ((read = await _rpc.ResponseStream.ReadAsync(header, received, header.Length - received).ConfigureAwait(false)) > 0)
+                var data = await RpcKit.ReadFrame(_responseStream);
+                if (data != null && data.Length > 0)
                 {
-                    received += read;
-                    if (received == header.Length)
-                        break;
-                }
-
-                if (received < header.Length)
-                {
-                    if (received == 0)
+                    using (MemoryStream ms = new MemoryStream(data))
+                    using (StreamReader sr = new StreamReader(ms))
+                    using (JsonReader reader = new JsonTextReader(sr))
                     {
-                        // 结束
-                        _originalVal = null;
-                        return false;
+                        reader.Read();
+                        _val = JsonRpcSerializer.Deserialize(reader);
                     }
-                    throw new InvalidDataException("数据包头错误");
+                    return true;
                 }
-
-                // 读取内容
-                byte[] data;
-                var length = BinaryPrimitives.ReadUInt32BigEndian(header.AsSpan(1));
-                if (length > int.MaxValue)
-                    throw new InvalidDataException("消息超长");
-                if (length > 0)
-                {
-                    received = 0;
-                    data = new byte[length];
-                    while ((read = await _rpc.ResponseStream.ReadAsync(data, received, data.Length - received).ConfigureAwait(false)) > 0)
-                    {
-                        received += read;
-                        if (received == data.Length)
-                            break;
-                    }
-                }
-                else
-                {
-                    data = Array.Empty<byte>();
-                }
-
-                if (header[0] == 1)
-                {
-                    // 先解压
-                    var ms = new MemoryStream();
-                    using (GZipStream zs = new GZipStream(new MemoryStream(data), CompressionMode.Decompress))
-                    {
-                        zs.CopyTo(ms);
-                    }
-                    data = ms.ToArray();
-                }
-                _originalVal = Encoding.UTF8.GetString(data);
-                return true;
             }
             catch
-            {
-                return false;
-            }
+            { }
+            return false;
         }
 
-        public T GetVal<T>()
+        /// <summary>
+        /// 获取当前帧的指定类型值
+        /// </summary>
+        /// <typeparam name="T">对象类型</typeparam>
+        /// <returns></returns>
+        public T Val<T>()
         {
-            throw new NotImplementedException();
-        }
-
-        public string GetOriginalVal()
-        {
-            return _originalVal;
+            return RpcKit.GetVal<T>(_val);
         }
     }
 }

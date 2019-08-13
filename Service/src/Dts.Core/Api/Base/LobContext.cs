@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Serilog;
 using System;
-using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -208,21 +207,15 @@ namespace Dts.Core
         /// <summary>
         /// 处理http rpc请求
         /// </summary>
+        /// <param name="p_schemes"></param>
         /// <returns></returns>
-        internal async Task Handle(Func<Task<AuthenticationScheme>> p_authScheme)
+        internal async Task Handle(IAuthenticationSchemeProvider p_schemes)
         {
-            // 只本地认证(JWT格式)，未处理远程认证及重定向，原中间件见Authentication.txt
-            var authScheme = await p_authScheme();
-            if (authScheme != null)
-            {
-                var result = await Context.AuthenticateAsync(authScheme.Name);
-                if (result?.Principal != null)
-                    Context.User = result.Principal;
-            }
-
+            // 解析rpc参数
             if (!await ParseParams())
                 return;
 
+            // 获取Api
             Api = Silo.GetMethod(ApiName);
             if (Api == null)
             {
@@ -232,6 +225,17 @@ namespace Dts.Core
                 await Response(ApiResponseType.Error, 0, msg);
                 return;
             }
+
+            // 校验授权
+            if (!await IsAuthenticated(p_schemes))
+            {
+                await Response(ApiResponseType.Error, 0, "未经授权");
+                return;
+            }
+
+            // 流模式先返回心跳帧，心跳帧为第一帧
+            if (Api.CallMode != ApiCallMode.Unary)
+                await RpcKit.WriteHeartbeat(Context.Response.BodyWriter);
 
             switch (Api.CallMode)
             {
@@ -257,7 +261,7 @@ namespace Dts.Core
         /// <param name="p_elapsed">耗时</param>
         /// <param name="p_content">内容</param>
         /// <returns></returns>
-        internal async Task Response(ApiResponseType p_responseType, long p_elapsed, object p_content)
+        internal Task Response(ApiResponseType p_responseType, long p_elapsed, object p_content)
         {
             try
             {
@@ -283,11 +287,11 @@ namespace Dts.Core
                     writer.Flush();
                 }
                 var data = Encoding.UTF8.GetBytes(sb.ToString());
+                bool compress = data.Length > RpcKit.MinCompressLength;
 
                 // 超过长度限制时执行压缩
-                if (data.Length > RpcKit.MinCompressLength)
+                if (compress)
                 {
-                    Context.Response.Headers["content-encoding"] = "gzip";
                     var ms = new MemoryStream();
                     using (GZipStream zs = new GZipStream(ms, CompressionMode.Compress))
                     {
@@ -297,48 +301,42 @@ namespace Dts.Core
                 }
 
                 // 写入响应流
-                var bw = Context.Response.BodyWriter;
-                await bw.WriteAsync(data);
-                await bw.FlushAsync();
+                return RpcKit.WriteFrame(Context.Response.BodyWriter, data, compress);
             }
             catch (Exception ex)
             {
                 Log.Error(ex, "向客户端输出信息时异常！");
             }
+            return Task.CompletedTask;
         }
 
         /// <summary>
-        /// 反序列化json格式的调用参数
+        /// 反序列化json格式的调用参数，请求的第一帧
         /// </summary>
         /// <returns></returns>
         async Task<bool> ParseParams()
         {
             try
             {
-                var br = Context.Request.BodyReader;
-                var buffer = (await br.ReadAsync()).Buffer;
-                byte[] data = buffer.ToArray();
-                br.AdvanceTo(buffer.End);
+                byte[] data = await RpcKit.ReadFrame(Context.Request.BodyReader);
+                using (MemoryStream ms = new MemoryStream(data))
+                using (StreamReader sr = new StreamReader(ms))
+                using (JsonReader reader = new JsonTextReader(sr))
+                {
+                    if (!reader.Read()
+                        || reader.TokenType != JsonToken.StartArray
+                        || !reader.Read()
+                        || reader.TokenType != JsonToken.String
+                        || string.IsNullOrEmpty(ApiName = (string)reader.Value))
+                        throw new Exception("Json Rpc格式错误！");
 
-                if (Context.Request.Headers["content-encoding"] == "gzip")
-                {
-                    // 先解压
-                    using (MemoryStream ms = new MemoryStream(data))
-                    using (GZipStream gs = new GZipStream(ms, CompressionMode.Decompress))
-                    using (StreamReader sr = new StreamReader(gs))
-                    using (JsonReader reader = new JsonTextReader(sr))
+                    List<object> objs = new List<object>();
+                    while (reader.Read() && reader.TokenType != JsonToken.EndArray)
                     {
-                        ParseInternal(reader);
+                        objs.Add(JsonRpcSerializer.Deserialize(reader));
                     }
-                }
-                else
-                {
-                    using (MemoryStream ms = new MemoryStream(data))
-                    using (StreamReader sr = new StreamReader(ms))
-                    using (JsonReader reader = new JsonTextReader(sr))
-                    {
-                        ParseInternal(reader);
-                    }
+                    if (objs.Count > 0)
+                        Args = objs.ToArray();
                 }
                 return true;
             }
@@ -350,22 +348,23 @@ namespace Dts.Core
             }
         }
 
-        void ParseInternal(JsonReader p_reader)
+        /// <summary>
+        /// 校验授权
+        /// </summary>
+        /// <param name="p_schemes"></param>
+        /// <returns></returns>
+        async Task<bool> IsAuthenticated(IAuthenticationSchemeProvider p_schemes)
         {
-            if (!p_reader.Read()
-                || p_reader.TokenType != JsonToken.StartArray
-                || !p_reader.Read()
-                || p_reader.TokenType != JsonToken.String
-                || string.IsNullOrEmpty(ApiName = (string)p_reader.Value))
-                throw new Exception("Json Rpc格式错误！");
-
-            List<object> objs = new List<object>();
-            while (p_reader.Read() && p_reader.TokenType != JsonToken.EndArray)
+            // 只本地认证(JWT格式)，未处理远程认证及重定向，原中间件见Authentication.txt
+            var authScheme = await p_schemes.GetDefaultAuthenticateSchemeAsync();
+            if (authScheme != null)
             {
-                objs.Add(JsonRpcSerializer.Deserialize(p_reader));
+                var result = await Context.AuthenticateAsync(authScheme.Name);
+                if (result?.Principal != null)
+                    Context.User = result.Principal;
             }
-            if (objs.Count > 0)
-                Args = objs.ToArray();
+
+            return true;
         }
         #endregion
     }

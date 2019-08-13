@@ -10,7 +10,6 @@
 using Newtonsoft.Json;
 using System;
 using System.IO;
-using System.Net.Http;
 using System.Threading.Tasks;
 #endregion
 
@@ -39,16 +38,17 @@ namespace Dts.Core.Rpc
         public async Task<T> Call<T>()
         {
             // 远程请求
-            Stream stream = null;
+            byte[] data = null;
             try
             {
-                using (var content = new ByteArrayContent(_data))
+                using (var request = CreateRequestMessage())
+                using (var content = new PushStreamContent((ws) => RpcKit.WriteFrame(ws, _data, _isCompressed)))
                 {
-                    if (_isCompressed)
-                        content.Headers.ContentEncoding.Add("gzip");
-                    var response = await _client.PostAsync(default(Uri), content).ConfigureAwait(false);
+                    request.Content = content;
+                    var response = await _client.SendAsync(request).ConfigureAwait(false);
                     response.EnsureSuccessStatusCode();
-                    stream = await response.Content.ReadAsStreamAsync();
+                    var stream = await response.Content.ReadAsStreamAsync();
+                    data = await RpcKit.ReadFrame(stream);
                 }
             }
             catch (Exception ex)
@@ -58,7 +58,8 @@ namespace Dts.Core.Rpc
 
             // 解析结果
             RpcResult result = new RpcResult();
-            using (StreamReader sr = new StreamReader(stream))
+            using (MemoryStream ms = new MemoryStream(data))
+            using (StreamReader sr = new StreamReader(ms))
             using (JsonReader reader = new JsonTextReader(sr))
             {
                 try
@@ -86,7 +87,6 @@ namespace Dts.Core.Rpc
                     result.Info = "返回Json内容结构不正确！";
                 }
             }
-            stream.Close();
 
             // 返回结果
             T val = default(T);

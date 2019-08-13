@@ -3,16 +3,51 @@
 <head>
     <meta charset="utf-8" />
     <style>
-        a, b, body, div, font, h1, h2, h3, h4, i, input, lp, select, td, u { font-family: verdana,宋体; font-size: 14px; }
-        a:link { text-decoration: none; }
-        table { border: 0; border-collapse: collapse; border-spacing: 0; width: 100%; }
-        .trClass { height: 40px; vertical-align: bottom; }
-        .trMethod { height: 30px; }
-        .tdMethod { width: 20%; }
-        .trLeft { height: 20px; }
-        .tdParam { border-right: 1px solid #C3C3C3; border-bottom: 1px solid #C3C3C3; padding-left: 5px; }
-        .aTitle { font-size: 20px; margin-left: 20px; }
+        a, b, body, div, font, h1, h2, h3, h4, i, input, lp, select, td, u {
+            font-family: verdana,宋体;
+            font-size: 14px;
+        }
+
+            a:link {
+                text-decoration: none;
+            }
+
+        table {
+            border: 0;
+            border-collapse: collapse;
+            border-spacing: 0;
+            width: 100%;
+        }
+
+        .trClass {
+            height: 40px;
+            vertical-align: bottom;
+        }
+
+        .trMethod {
+            height: 30px;
+        }
+
+        .tdMethod {
+            width: 20%;
+        }
+
+        .trLeft {
+            height: 20px;
+        }
+
+        .tdParam {
+            border-right: 1px solid #C3C3C3;
+            border-bottom: 1px solid #C3C3C3;
+            padding-left: 5px;
+        }
+
+        .aTitle {
+            font-size: 20px;
+            margin-left: 20px;
+        }
     </style>
+    <script src="https://cdn.bootcss.com/pako/1.0.9/pako_inflate.min.js"></script>
 </head>
 <body style="overflow: auto; margin: 0; padding: 0;">
     <table>
@@ -27,19 +62,21 @@
         var _rpcUrl = location.href.substr(0, location.href.lastIndexOf("/")) + "/.c";
         window.onload = function ()
         {
-            var txt = call('["Admin.GetInitInfo"]');
-            var result = JSON.parse(txt);
-            if (result.length == 3)
+            call('["Admin.GetInitInfo"]').then(function (txt)
             {
-                var dt = result[2];
-                document.title = dt[1];
-                $("topbar").innerHTML = dt[2];
-                $("con").innerHTML = dt[3];
-            }
-            else
-            {
-                $("con").innerText = txt;
-            }
+                var result = JSON.parse(txt);
+                if (result.length == 3)
+                {
+                    var dt = result[2];
+                    document.title = dt[1];
+                    $("topbar").innerHTML = dt[2];
+                    $("con").innerHTML = dt[3];
+                }
+                else
+                {
+                    $("con").innerText = txt;
+                }
+            });
         }
 
         function $(id)
@@ -49,76 +86,76 @@
 
         function call(content)
         {
-            var xmlHttp = null;
-            if (window.XMLHttpRequest)
-                xmlHttp = new XMLHttpRequest();
-            else if (window.ActiveXObject)
-                xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
-            else
-                throw new Error("无法创建XMLHttpRequest对象！");
-
-            try
+            return new Promise(function (resolve, reject)
             {
-                xmlHttp.open("post", _rpcUrl, false);
-            }
-            catch (e)
-            {
-                throw e;
-            }
-            xmlHttp.setRequestHeader("sid", "b064966efb5044fcaf794f6c6aeadee0");
-            xmlHttp.setRequestHeader("uname", "admin");
-            xmlHttp.send(content);
-
-            if (xmlHttp.status == 200)
-                return xmlHttp.responseText;
-            throw new Error(xmlHttp.responseText);
+                var xhr = new XMLHttpRequest();
+                xhr.responseType = "arraybuffer";
+                xhr.open("post", _rpcUrl, true);
+                xhr.setRequestHeader("sid", "b064966efb5044fcaf794f6c6aeadee0");
+                xhr.setRequestHeader("uname", "admin");
+                xhr.onload = function ()
+                {
+                    if (xhr.status == 200)
+                        resolve(readFrame(xhr.response));
+                };
+                xhr.send(writeFrame(content));
+            });
         }
 
         function load(p_request, p_isHtml)
         {
-            var txt = call(p_request);
-            var result = JSON.parse(txt);
-            if (result.length == 3)
+            call(p_request).then(function (txt)
             {
-                if (p_isHtml)
-                    $("con").innerHTML = result[2];
+                var result = JSON.parse(txt);
+                if (result.length == 3)
+                {
+                    if (p_isHtml)
+                        $("con").innerHTML = result[2];
+                    else
+                        $("con").innerText = result[2];
+                }
                 else
-                    $("con").innerText = result[2];
-            }
-            else
-            {
-                $("con").innerText = txt;
-            }
-            return false;
+                {
+                    $("con").innerText = txt;
+                }
+                return false;
+            });
         }
 
         function onTest()
         {
-            var txt = call($("methodCall").value);
-            var result = JSON.parse(txt);
-            if (result.length == 3)
+            call($("methodCall").value).then(function (txt)
             {
-                $("tdTitle").innerText = (result[0] == 0 ? "成功，耗时" : "调用失败！耗时") + result[1] + "毫秒";
-                if (Object.prototype.toString.call(result[2]) === "[object String]")
-                    $("tdResult").innerText = result[2];
+                var result = JSON.parse(txt);
+                if (result.length == 3)
+                {
+                    $("tdTitle").innerText = (result[0] == 0 ? "成功，耗时" : "调用失败！耗时") + result[1] + "毫秒";
+                    if (Object.prototype.toString.call(result[2]) === "[object String]")
+                        $("tdResult").innerText = result[2];
+                    else
+                        $("tdResult").innerText = formatJson(JSON.stringify(result[2]));
+                }
                 else
-                    $("tdResult").innerText = formatJson(JSON.stringify(result[2]));
-            }
-            else
-            {
-                $("tdResult").innerText = formatJson(txt);
-            }
+                {
+                    $("tdResult").innerText = formatJson(txt);
+                }
+            });
         }
 
         function loadAgent(cls)
         {
-            load('["Admin.GetAgentClass", "' + cls + '"]', false);
-            var selection = window.getSelection();
-            var range = document.createRange();
-            range.selectNodeContents($("con"));
-            selection.removeAllRanges();
-            selection.addRange(range);
-            return false;
+            call('["Admin.GetAgentClass", "' + cls + '"]').then(function (txt)
+            {
+                var result = JSON.parse(txt);
+                $("con").innerText = (result.length == 3) ? result[2] : txt;
+
+                var selection = window.getSelection();
+                var range = document.createRange();
+                range.selectNodeContents($("con"));
+                selection.removeAllRanges();
+                selection.addRange(range);
+                return false;
+            });
         }
 
         function formatJson(json)
@@ -177,6 +214,90 @@
                 result.push('    ');
             }
             return result.join('');
+        }
+
+        function writeFrame(str)
+        {
+            // Frame内容
+            var data = [];
+            var len, c;
+            len = str.length;
+            for (var i = 0; i < len; i++)
+            {
+                c = str.charCodeAt(i);
+                if (c >= 0x010000 && c <= 0x10FFFF)
+                {
+                    data.push(((c >> 18) & 0x07) | 0xF0);
+                    data.push(((c >> 12) & 0x3F) | 0x80);
+                    data.push(((c >> 6) & 0x3F) | 0x80);
+                    data.push((c & 0x3F) | 0x80);
+                }
+                else if (c >= 0x000800 && c <= 0x00FFFF)
+                {
+                    data.push(((c >> 12) & 0x0F) | 0xE0);
+                    data.push(((c >> 6) & 0x3F) | 0x80);
+                    data.push((c & 0x3F) | 0x80);
+                }
+                else if (c >= 0x000080 && c <= 0x0007FF)
+                {
+                    data.push(((c >> 6) & 0x1F) | 0xC0);
+                    data.push((c & 0x3F) | 0x80);
+                }
+                else
+                {
+                    data.push(c & 0xFF);
+                }
+            }
+
+            // Frame头
+            var header = [];
+            // 始终不压缩
+            header.push(0 & 0xFF);
+            // 内容长度
+            len = data.length;
+            header.push((len >> 24) & 0xFF);
+            header.push((len >> 16) & 0xFF);
+            header.push((len >> 8) & 0xFF);
+            header.push(len & 0xFF);
+
+            return new Uint8Array(header.concat(data));
+        }
+
+        function readFrame(buf)
+        {
+            // 1字节压缩标志 + 4字节内容长度
+            var arr = new Uint8Array(buf);
+
+            // Frame内容
+            var data;
+            if (arr[0] == 1)
+                data = pako.inflate(arr.slice(5));
+            else
+                data = arr.slice(5);
+
+            // 字节转utf8
+            var str = "";
+            for (var i = 0; i < data.length; i++)
+            {
+                var one = data[i].toString(2),
+                    v = one.match(/^1+?(?=0)/);
+                if (v && one.length == 8)
+                {
+                    var bytesLength = v[0].length;
+                    var store = data[i].toString(2).slice(7 - bytesLength);
+                    for (var st = 1; st < bytesLength; st++)
+                    {
+                        store += data[st + i].toString(2).slice(2);
+                    }
+                    str += String.fromCharCode(parseInt(store, 2));
+                    i += bytesLength - 1;
+                }
+                else
+                {
+                    str += String.fromCharCode(data[i]);
+                }
+            }
+            return str;
         }
     </script>
 </body>

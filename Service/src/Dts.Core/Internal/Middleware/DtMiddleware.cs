@@ -44,7 +44,7 @@ namespace Dts.Core
             // 内部特殊路径格式：/.xxx
             string path = p_context.Request.Path.Value.ToLower();
             if (path == "/.c")
-                return new LobContext(p_context).Handle(() => _schemes.GetDefaultAuthenticateSchemeAsync());
+                return new LobContext(p_context).Handle(_schemes);
             if (path == "/.admin")
                 return ResponseAdminPage(p_context);
             if (path == "/.error")

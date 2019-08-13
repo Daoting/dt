@@ -7,8 +7,10 @@
 #endregion
 
 #region 引用命名
+using System;
 using System.IO;
 using System.Net.Http;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 #endregion
@@ -20,7 +22,6 @@ namespace Dts.Core.Rpc
     /// </summary>
     public class ClientStreamRpc : BaseRpc
     {
-        TaskCompletionSource<Stream> _writeStreamTcs;
         TaskCompletionSource<bool> _writeCompleteTcs;
 
         /// <summary>
@@ -33,12 +34,15 @@ namespace Dts.Core.Rpc
             : base(p_serviceName, p_methodName, p_params)
         { }
 
+        /// <summary>
+        /// 启动Http2协议的远程调用，客户端发送请求数据流
+        /// </summary>
+        /// <returns></returns>
         public async Task<RequestWriter> Call()
         {
             var request = CreateRequestMessage();
             var writer = CreateWriter(request);
-            _ = _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, CancellationToken.None);
-            RequestStream = await _writeStreamTcs.Task;
+            await SendRequest(request);
             return writer;
         }
 
@@ -68,25 +72,38 @@ namespace Dts.Core.Rpc
             _writeCompleteTcs?.TrySetResult(true);
         }
 
-        RequestWriter CreateWriter(HttpRequestMessage p_request)
+        protected RequestWriter CreateWriter(HttpRequestMessage p_request)
         {
-            _writeStreamTcs = new TaskCompletionSource<Stream>(TaskCreationOptions.RunContinuationsAsynchronously);
             _writeCompleteTcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
 
-            p_request.Content = new PushStreamContent(
-                _isCompressed,
-                async (stream) =>
-                {
-                    // 先发送调用帧
-                    await stream.WriteAsync(_data, 0, _data.Length).ConfigureAwait(false);
-                    await stream.FlushAsync().ConfigureAwait(false);
+            p_request.Content = new PushStreamContent(async (stream) =>
+            {
+                // 先发送调用帧
+                await RpcKit.WriteFrame(stream, _data, _isCompressed).ConfigureAwait(false);
 
-                    // 发送准备就绪
-                    _writeStreamTcs.TrySetResult(stream);
-                    // 控制发送任务不结束，未结束前一直可发送
-                    await _writeCompleteTcs.Task;
-                });
+                RequestStream = stream;
+                // 控制发送任务不结束，未结束前一直可发送
+                await _writeCompleteTcs.Task;
+            });
             return new RequestWriter(this);
+        }
+
+        protected async Task<Stream> SendRequest(HttpRequestMessage p_request)
+        {
+            Stream responseStream;
+            try
+            {
+                var response = await _client.SendAsync(p_request, HttpCompletionOption.ResponseHeadersRead, CancellationToken.None);
+                response.EnsureSuccessStatusCode();
+                responseStream = await response.Content.ReadAsStreamAsync();
+                // 第一帧为心跳帧
+                await RpcKit.ReadHeartbeat(responseStream);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"调用【{_methodName}】时服务器连接失败！\r\n{ex.Message}");
+            }
+            return responseStream;
         }
     }
 }

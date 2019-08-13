@@ -37,10 +37,6 @@ namespace Dts.Core.Rpc
         /// <returns></returns>
         public Task Call()
         {
-            // 校验授权
-            if (!IsAuthenticated())
-                return _lc.Response(ApiResponseType.Error, 0, "未经授权");
-
             // 创建服务实例
             _tgt = Glb.GetSvc(_lc.Api.Method.DeclaringType) as BaseApi;
             if (_tgt == null)
@@ -70,11 +66,6 @@ namespace Dts.Core.Rpc
                 _lc.Log.Error(p_ex.InnerException, error);
             else
                 _lc.Log.Error(p_ex, error);
-        }
-
-        bool IsAuthenticated()
-        {
-            return true;
         }
     }
 }
