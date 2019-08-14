@@ -8,12 +8,14 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     helm.sh/chart: {{ include "svc.chart" . }}
 spec:
-  type: {{ .Values.service.type }}
+  type: ClusterIP
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
+      # 集群内部服务之间访问的端口号， clusterIP:port
+    - port: 443
+      # Pod里容器的端口名，默认和以上port相同
+      targetPort: https
       protocol: TCP
-      name: http
+      name: https
   selector:
     app.kubernetes.io/name: {{ include "svc.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}

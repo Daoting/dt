@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/src/Dts.Cm/Dts.Cm.csproj",
+                "${workspaceFolder}/src/Dt.Cm/Dt.Cm.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -32,7 +32,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/src/Dts.Auth/Dts.Auth.csproj",
+                "${workspaceFolder}/src/Dt.Auth/Dt.Auth.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -53,7 +53,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/src/Dts.Core/Dts.Core.csproj",
+                "${workspaceFolder}/src/Dt.Core/Dt.Core.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],

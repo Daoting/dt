@@ -15,10 +15,6 @@ ingress:
   host: ""
   # install时重置，--set ingress.path
   path: ""
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
 
 # 副本数
 replicaCount: 1
@@ -26,11 +22,6 @@ replicaCount: 1
 # 未设置，使用Chart.name的值
 nameOverride: ""
 fullnameOverride: ""
-
-# 服务
-service:
-  type: ClusterIP
-  port: 80
 
 # 自定义资源如：
 resources: {}

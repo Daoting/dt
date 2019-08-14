@@ -12,7 +12,7 @@ $fullName = $appName + "-" + $svcName
 if ($buildImage) {
     $imgName = $fullName + ":" + $tag
     Write-Host "正在生成" $imgName "镜像..." -ForegroundColor Green
-    docker build -f ./src/dts.$svcName/Dockerfile -t $imgName ./src
+    docker build -f ./src/dt.$svcName/Dockerfile -t $imgName ./src
     Write-Host "生成镜像结束 " $imgName -ForegroundColor Green
     Write-Host
 }

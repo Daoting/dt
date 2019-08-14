@@ -24,8 +24,8 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - name: http
-              containerPort: 80
+            - name: https
+              containerPort: 443
               protocol: TCP
           # 挂载数据卷
           volumeMounts:
@@ -62,7 +62,7 @@ spec:
         # 在宿主机上指定一个目录，挂载到Pod的容器中，存储日志文件
         - name: log-volume
           hostPath:
-            path: /home/dts/log
+            path: /home/dt/log
             type: DirectoryOrCreate
       {{- with .Values.nodeSelector }}
       nodeSelector:

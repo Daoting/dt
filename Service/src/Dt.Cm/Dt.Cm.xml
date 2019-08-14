@@ -1,0 +1,666 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Dt.Cm</name>
+    </assembly>
+    <members>
+        <member name="T:Dt.Cm.Fw">
+            <summary>
+            基础框架Api (Framework)
+            </summary>
+        </member>
+        <member name="M:Dt.Cm.Fw.GetConfig">
+            <summary>
+            获取参数配置，包括模型文件版本号
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Dt.Cm.TestCache">
+            <summary>
+            功能测试Api
+            </summary>
+        </member>
+        <member name="T:Dt.Cm.CmMiddleware">
+            <summary>
+            中间件
+            </summary>
+        </member>
+        <member name="T:Dt.Cm.ModelHandler">
+            <summary>
+            处理模型文件下载请求
+            </summary>
+        </member>
+        <member name="M:Dt.Cm.ModelHandler.GetFile(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            获取缓存中的模型文件内容
+            </summary>
+            <param name="p_context"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Dt.Cm.Users">
+            <summary>
+            账号
+            </summary>
+        </member>
+        <member name="T:Dt.Cm.User">
+            <summary>
+            用户(扩展表)
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.User.ID">
+            <summary>
+            用户标识
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.User.Name">
+            <summary>
+            姓名
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.User.Phone">
+            <summary>
+            手机号，唯一
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.User.Sex">
+            <summary>
+            性别
+            </summary>
+        </member>
+        <member name="T:Dt.Cm.Sqlite.OmMenu">
+            <summary>
+            业务菜单
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.OmMenu.ID">
+            <summary>
+            菜单ID
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.OmMenu.ParentID">
+            <summary>
+            父菜单项ID
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.OmMenu.Name">
+            <summary>
+            菜单名称
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.OmMenu.IsGroup">
+            <summary>
+            菜单类型是否为分组
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.OmMenu.ViewName">
+            <summary>
+            菜单对应的视图名称
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.OmMenu.Params">
+            <summary>
+            菜单参数
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.OmMenu.Icon">
+            <summary>
+            图标
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.OmMenu.SrvName">
+            <summary>
+            提供提示信息的服务名称，空表示无提示信息
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.OmMenu.Note">
+            <summary>
+            菜单描述
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.OmMenu.DispIdx">
+            <summary>
+            显示顺序
+            </summary>
+        </member>
+        <member name="T:Dt.Cm.Sqlite.OmBaseCode">
+            <summary>
+            基础代码
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.OmBaseCode.ID">
+            <summary>
+            ID
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.OmBaseCode.Grp">
+            <summary>
+            所属分组
+            </summary>
+        </member>
+        <member name="T:Dt.Cm.Sqlite.OmReport">
+            <summary>
+            报表模板
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.OmReport.ID">
+            <summary>
+            ID
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.OmReport.Name">
+            <summary>
+            报表名称
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.OmReport.Define">
+            <summary>
+            报表定义
+            </summary>
+        </member>
+        <member name="T:Dt.Cm.Sqlite.OmColumn">
+            <summary>
+            系统列定义
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.OmColumn.ID">
+            <summary>
+            主键
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.OmColumn.TabName">
+            <summary>
+            所属表名
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.OmColumn.ColName">
+            <summary>
+            列名
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.OmColumn.DbType">
+            <summary>
+            数据类型
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.OmColumn.IsPrimary">
+            <summary>
+            是否为主键
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.OmColumn.Length">
+            <summary>
+            列长度，只字符类型有效
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.OmColumn.Nullable">
+            <summary>
+            列是否允许为空
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.OmColumn.Comments">
+            <summary>
+            列注释
+            </summary>
+        </member>
+        <member name="T:Dt.Cm.Sqlite.OmNoticeType">
+            <summary>
+            公告类型
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.OmNoticeType.ID">
+            <summary>
+            公告类型标识
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.OmNoticeType.Browser">
+            <summary>
+            提供对该类型公告浏览功能的类名
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.OmNoticeType.Editor">
+            <summary>
+            提供对该类型公告编辑功能的类名
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.OmNoticeType.DispIdx">
+            <summary>
+            显示顺序
+            </summary>
+        </member>
+        <member name="T:Dt.Cm.Sqlite.PrcDef">
+            <summary>
+            流程模板定义
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.PrcDef.ID">
+            <summary>
+            流程标识
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.PrcDef.Name">
+            <summary>
+            流程名称
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.PrcDef.SrvName">
+            <summary>
+            服务名称
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.PrcDef.TblName">
+            <summary>
+            业务主表表名
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.PrcDef.Diagram">
+            <summary>
+            流程图
+            </summary>
+        </member>
+        <member name="T:Dt.Cm.Sqlite.AtvDef">
+            <summary>
+            活动模板定义
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.AtvDef.ID">
+            <summary>
+            活动标识
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.AtvDef.PrcID">
+            <summary>
+            流程标识
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.AtvDef.Name">
+            <summary>
+            活动名称，同时作为状态名称，可重复
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.AtvDef.Type">
+            <summary>
+            活动类别
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.AtvDef.ExecScope">
+            <summary>
+            执行者范围
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.AtvDef.ExecLimit">
+            <summary>
+            执行者限制
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.AtvDef.ExecAtvID">
+            <summary>
+            在执行者执行者限制为F或S时选择的活动
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.AtvDef.AutoAccept">
+            <summary>
+            是否自动签收，打开工作流视图时自动签收工作项
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.AtvDef.CanDelete">
+            <summary>
+            能否删除流程实例和业务数据，0否 1能
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.AtvDef.CanTerminate">
+            <summary>
+            能否中止流程实例，中止一个流程是流程的一种非正常的结束，0否 1能
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.AtvDef.CanJumpinto">
+            <summary>
+            是否可作为跳转目标，0不可跳转 1可以
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.AtvDef.JoinKind">
+            <summary>
+            同步活动有效，聚合方式
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.AtvDef.TransKind">
+            <summary>
+            当前活动的后续迁移方式
+            </summary>
+        </member>
+        <member name="T:Dt.Cm.Sqlite.RoleMenu">
+            <summary>
+            角色关联的菜单
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.RoleMenu.RoleID">
+            <summary>
+            角色标识
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.RoleMenu.MenuID">
+            <summary>
+            菜单标识
+            </summary>
+        </member>
+        <member name="T:Dt.Cm.Sqlite.RolePrv">
+            <summary>
+            角色关联的权限
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.RolePrv.RoleID">
+            <summary>
+            角色标识
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.RolePrv.PrvID">
+            <summary>
+            权限标识
+            </summary>
+        </member>
+        <member name="T:Dt.Cm.Sqlite.OmBoard">
+            <summary>
+            仪表盘
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.OmBoard.ID">
+            <summary>
+            标识
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.OmBoard.Name">
+            <summary>
+            名称，唯一
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.OmBoard.SrvName">
+            <summary>
+            所属服务名称
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.OmBoard.Cls">
+            <summary>
+            仪表的类名
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.OmBoard.DispIdx">
+            <summary>
+            显示顺序
+            </summary>
+        </member>
+        <member name="T:Dt.Cm.Sqlite.BoardRole">
+            <summary>
+            仪表盘角色授权
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.BoardRole.RoleID">
+            <summary>
+            角色标识
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.BoardRole.BoardID">
+            <summary>
+            仪表标识
+            </summary>
+        </member>
+        <member name="T:Dt.Cm.Sqlite.BoardUser">
+            <summary>
+            仪表盘用户授权
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.BoardUser.UserID">
+            <summary>
+            角色标识
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.BoardUser.BoardID">
+            <summary>
+            仪表标识
+            </summary>
+        </member>
+        <member name="M:Dt.Cm.Sqlite.SqliteConnectionEx.CreateTable(System.Type)">
+            <summary>
+            根据类型创建表
+            </summary>
+            <param name="p_type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.Sqlite.SqliteConnectionEx.BatchInsert(System.Type,Dt.Core.Table)">
+            <summary>
+            批量插入数据
+            </summary>
+            <param name="ty"></param>
+            <param name="p_tbl"></param>
+        </member>
+        <member name="M:Dt.Cm.Sqlite.SqliteConnectionEx.BatchInsert``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            批量插入数据
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="p_list"></param>
+        </member>
+        <member name="T:Dt.Cm.Sqlite.SqliteModel">
+            <summary>
+            Sqlite模型文件生成类
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.SqliteModel.Version">
+            <summary>
+            获取模型文件版本号
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.SqliteModel.ModelData">
+            <summary>
+            获取模型文件缓存
+            </summary>
+        </member>
+        <member name="M:Dt.Cm.Sqlite.SqliteModel.Init">
+            <summary>
+            初始化SQLite模型文件
+            </summary>
+        </member>
+        <member name="M:Dt.Cm.Sqlite.SqliteModel.Refresh">
+            <summary>
+            刷新模型版本
+            </summary>
+            <returns>刷新结果</returns>
+        </member>
+        <member name="M:Dt.Cm.Sqlite.SqliteModel.LoadModelFile">
+            <summary>
+            读取模型文件到缓存
+            </summary>
+        </member>
+        <member name="M:Dt.Cm.Sqlite.SqliteModel.RemoveReadOnlyFlag(System.String)">
+            <summary>
+            移除文件的只读属性
+            </summary>
+            <param name="p_filePath"></param>
+        </member>
+        <member name="M:Dt.Cm.Sqlite.SqliteModel.LoadSchema(System.Collections.Generic.List{Dt.Cm.Sqlite.OmColumn})">
+            <summary>
+            构造表结构信息
+            </summary>
+            <param name="p_cols"></param>
+        </member>
+        <member name="T:Dt.Cm.Sqlite.TableMapping">
+            <summary>
+            表与类的映射ORM
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.TableMapping.TableName">
+            <summary>
+            表名
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.TableMapping.Columns">
+            <summary>
+            所有列
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.TableMapping.PK">
+            <summary>
+            主键列
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.TableMapping.GetByPrimaryKeySql">
+            <summary>
+            根据主键列获取数据的sql
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.TableMapping.HasAutoIncPK">
+            <summary>
+            是否有自增主键
+            </summary>
+        </member>
+        <member name="M:Dt.Cm.Sqlite.TableMapping.SetAutoIncPK(System.Object,System.Int64)">
+            <summary>
+            设置自增主键的值
+            </summary>
+            <param name="obj"></param>
+            <param name="id"></param>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.TableMapping.InsertColumns">
+            <summary>
+            获取除自增列外的所有列
+            </summary>
+        </member>
+        <member name="M:Dt.Cm.Sqlite.TableMapping.FindColumnWithPropertyName(System.String)">
+            <summary>
+            查找列
+            </summary>
+            <param name="propertyName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.Sqlite.TableMapping.FindColumn(System.String)">
+            <summary>
+            查找列
+            </summary>
+            <param name="columnName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.Sqlite.TableMapping.GetCreateSql">
+            <summary>
+            获取create table语句
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.Sqlite.TableMapping.GetInsertSql">
+            <summary>
+            获取insert语句
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.TableMapping.Column.Name">
+            <summary>
+            列名
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.TableMapping.Column.PropertyName">
+            <summary>
+            属性名
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.TableMapping.Column.ColumnType">
+            <summary>
+            列类型
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.TableMapping.Column.Collation">
+            <summary>
+            列的比较函数
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.TableMapping.Column.IsAutoInc">
+            <summary>
+            是否为自增列
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.TableMapping.Column.IsPK">
+            <summary>
+            是否为主键列
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.TableMapping.Column.Indices">
+            <summary>
+            列的所有索引项
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.TableMapping.Column.IsNullable">
+            <summary>
+            列是否可空
+            </summary>
+        </member>
+        <member name="P:Dt.Cm.Sqlite.TableMapping.Column.MaxStringLength">
+            <summary>
+            列的最大长度
+            </summary>
+        </member>
+        <member name="M:Dt.Cm.Sqlite.TableMapping.SqlDecl(Dt.Cm.Sqlite.TableMapping.Column,System.Boolean)">
+            <summary>
+            获取创建表时列的描述串
+            </summary>
+            <param name="p"></param>
+            <param name="storeDateTimeAsTicks"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.Sqlite.TableMapping.SqlType(Dt.Cm.Sqlite.TableMapping.Column,System.Boolean)">
+            <summary>
+            获取列的数据类型
+            </summary>
+            <param name="p"></param>
+            <param name="storeDateTimeAsTicks"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.Sqlite.TableMapping.IsPK(System.Reflection.MemberInfo)">
+            <summary>
+            是否为主键列
+            </summary>
+            <param name="p"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.Sqlite.TableMapping.Collation(System.Reflection.MemberInfo)">
+            <summary>
+            获取列的比较函数
+            </summary>
+            <param name="p"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.Sqlite.TableMapping.IsAutoInc(System.Reflection.MemberInfo)">
+            <summary>
+            是否为自增列
+            </summary>
+            <param name="p"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.Sqlite.TableMapping.GetIndices(System.Reflection.MemberInfo)">
+            <summary>
+            获取列的所有索引项
+            </summary>
+            <param name="p"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Dt.Cm.Sqlite.TableMapping.MaxStringLength(System.Reflection.PropertyInfo)">
+            <summary>
+            获取列的最大长度
+            </summary>
+            <param name="p"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Dt.Cm.Stub">
+            <summary>
+            服务存根
+            </summary>
+        </member>
+        <member name="M:Dt.Cm.Stub.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            定义全局服务
+            </summary>
+            <param name="p_services"></param>
+        </member>
+        <member name="M:Dt.Cm.Stub.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            定义请求管道的中间件和初始化服务
+            </summary>
+            <param name="p_app"></param>
+        </member>
+    </members>
+</doc>

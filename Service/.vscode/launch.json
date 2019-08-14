@@ -9,10 +9,10 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "cm-local",
-            "program": "${workspaceFolder}/src/Dts.Cm/bin/Debug/netcoreapp3.0/Dts.Cm.dll",
+            "program": "${workspaceFolder}/src/Dt.Cm/bin/Debug/netcoreapp3.0/Dt.Cm.dll",
             "args": [],
             // 调试时的工作目录
-            "cwd": "${workspaceFolder}/src/Dts.Cm/",
+            "cwd": "${workspaceFolder}/src/Dt.Cm/",
             "stopAtEntry": false,
             "serverReadyAction": {
                 "action": "openExternally",
@@ -58,10 +58,10 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "auth-local",
-            "program": "${workspaceFolder}/src/Dts.Auth/bin/Debug/netcoreapp3.0/Dts.Auth.dll",
+            "program": "${workspaceFolder}/src/Dt.Auth/bin/Debug/netcoreapp3.0/Dt.Auth.dll",
             "args": [],
             // 调试时的工作目录
-            "cwd": "${workspaceFolder}/src/Dts.Auth/",
+            "cwd": "${workspaceFolder}/src/Dt.Auth/",
             "stopAtEntry": false,
             "serverReadyAction": {
                 "action": "openExternally",
