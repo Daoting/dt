@@ -73,11 +73,17 @@ namespace Dt.Core.Rpc
                 try
                 {
                     // 部署在k8s时内部DNS通过服务名即可
-                    string uri = Glb.IsInDocker ? $"https://{p_serviceName}/.c" : $"https://localhost/{Glb.AppName}/{p_serviceName}/.c";
-                    client = new HttpClient();
+                    string uri = Glb.IsInDocker ? $"https://{Glb.AppName}-{p_serviceName}/.c" : $"https://localhost/{Glb.AppName}/{p_serviceName}/.c";
+
+                    // 验证时服务端证书始终有效！
+                    HttpClientHandler handler = new HttpClientHandler();
+                    handler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true;
+
+                    client = new HttpClient(handler);
                     client.BaseAddress = new Uri(uri, UriKind.Absolute);
                     // 此处设置无效！在HttpRequestMessage设置
                     //client.DefaultRequestVersion = new Version(2, 0);
+
                     _clients.TryAdd(p_serviceName, client);
                 }
                 catch

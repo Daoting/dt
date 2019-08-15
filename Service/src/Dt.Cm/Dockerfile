@@ -20,4 +20,6 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
 
+# ÈÝÆ÷ÄÚ¼àÌý443
+ENV ASPNETCORE_URLS https://*:443
 ENTRYPOINT ["dotnet", "Dt.Cm.dll"]

@@ -2,19 +2,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "cm-local",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "build",
-                "${workspaceFolder}/src/Dt.Cm/Dt.Cm.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "cm-k8s",
+            "label": "cm",
             "command": "./k8s/debug.ps1",
             "type": "shell",
             "args": [
@@ -27,19 +15,7 @@
             }
         },
         {
-            "label": "auth-local",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "build",
-                "${workspaceFolder}/src/Dt.Auth/Dt.Auth.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "auth-k8s",
+            "label": "auth",
             "command": "./k8s/debug.ps1",
             "type": "shell",
             "args": [
@@ -48,16 +24,16 @@
             "problemMatcher": []
         },
         {
-            "label": "core-local",
+            "label": "cm-local",
             "command": "dotnet",
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/src/Dt.Core/Dt.Core.csproj",
+                "${workspaceFolder}/src/Dt.Cm/Dt.Cm.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
             "problemMatcher": "$msCompile"
-        },
+        }
     ]
 }

@@ -128,6 +128,10 @@ namespace Dt.Core
                             stream.Read(pfx, 0, (int)stream.Length);
                             listenOptions.UseHttps(new X509Certificate2(pfx, "dt"));
                         });
+
+                        // 不限制请求/响应的速率，不适合流模式长时间等待的情况！
+                        options.Limits.MinRequestBodyDataRate = null;
+                        options.Limits.MinResponseDataRate = null;
                     })
                     .UseStartup<Startup>()
                     // 内部注入AddSingleton<ILoggerFactory>(new SerilogLoggerFactory())

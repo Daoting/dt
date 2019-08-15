@@ -87,11 +87,11 @@ namespace Dt.Core.EventBus
                     _connection.CallbackException += OnCallbackException;
                     _connection.ConnectionBlocked += OnConnectionBlocked;
 
-                    _log.LogInformation("连接RabbitMQ成功");
+                    _log.LogInformation("RabbitMQ Connected");
                     return true;
                 }
 
-                _log.LogCritical("重试5次，连接RabbitMQ失败！");
+                _log.LogCritical("重试5次，连接 RabbitMQ 失败！");
                 return false;
             }
         }

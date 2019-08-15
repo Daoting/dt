@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Newtonsoft.Json;
+using Serilog;
 using System;
 using System.Buffers;
 using System.Buffers.Binary;
@@ -157,6 +158,10 @@ namespace Dt.Core.Rpc
                     // 不会再有数据写入
                     if (result.IsCompleted)
                         return Array.Empty<byte>();
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex, "XXXX");
                 }
                 finally
                 {

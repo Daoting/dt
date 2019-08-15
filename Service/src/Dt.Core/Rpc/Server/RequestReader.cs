@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Newtonsoft.Json;
+using Serilog;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -49,7 +50,10 @@ namespace Dt.Core.Rpc
                     return true;
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "MMMM");
+            }
             return false;
         }
 

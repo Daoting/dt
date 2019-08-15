@@ -98,24 +98,21 @@ namespace Dt.Core
 
                 num = index++ % 5;
                 if (num == 0)
-                {
                     sb.Append("<tr class=\"trMethod\">");
-                }
                 sb.Append("<td class=\"tdMethod\">");
                 if (index < 10)
-                {
                     sb.Append("&nbsp;&nbsp;");
-                }
                 else if (index < 100)
-                {
                     sb.Append("&nbsp;");
-                }
                 sb.Append(index);
-                sb.AppendFormat(".&nbsp;<a onclick=\"load('[&quot;Admin.CreateMethodCall&quot;,&quot;{0}&quot;]',true)\" href=\"javascript:void(0);\">{1}</a></td>", method, info[1]);
+                // 流模式Api无法调试
+                if (Silo.GetMethod(method).CallMode == ApiCallMode.Unary)
+                    sb.AppendFormat(".&nbsp;<a onclick=\"load('[&quot;Admin.CreateMethodCall&quot;,&quot;{0}&quot;]',true)\" href=\"javascript:void(0);\">{1}</a></td>", method, info[1]);
+                else
+                    sb.AppendFormat(".&nbsp;{0}</td>", info[1]);
+
                 if (num == 4)
-                {
                     sb.Append("</tr>");
-                }
             }
             if (num != 4)
                 sb.Append("</tr>");

@@ -16,8 +16,6 @@ metadata:
     # 截取path后作为请求路径传递到后端服务
     traefik.ingress.kubernetes.io/rule-type: "PathPrefixStrip"
 spec:
-  tls:
-    - secretName: traefik-cert
   rules:
     - host: {{ .Values.ingress.host | quote }}
       http:
