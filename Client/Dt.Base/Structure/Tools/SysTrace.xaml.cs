@@ -1,0 +1,481 @@
+﻿#region 文件描述
+/******************************************************************************
+* 创建: Daoting
+* 摘要: 
+* 日志: 2015-07-11 创建
+******************************************************************************/
+#endregion
+
+#region 引用命名
+using Dt.Core;
+using Dt.Core.Sqlite;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using Windows.ApplicationModel;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+#endregion
+
+namespace Dt.Base.Tools
+{
+    /// <summary>
+    /// 监视输出面板
+    /// </summary>
+    public sealed partial class SysTrace : PageWin
+    {
+        static SysTrace _win;
+        static Dlg _dlg;
+        static Dlg _dlgDb;
+
+        public SysTrace()
+        {
+            InitializeComponent();
+            _lv.View = new TraceItemSelector
+            {
+#if UWP
+                Normal = (DataTemplate)Resources["Normal"],
+                Call = (DataTemplate)Resources["Call"],
+                Recv = (DataTemplate)Resources["Recv"],
+                Exception = (DataTemplate)Resources["Exception"],
+#else
+                Normal = StaticResources.Normal,
+                Call = StaticResources.Call,
+                Recv = StaticResources.Recv,
+                Exception = StaticResources.Exception,
+#endif
+            };
+            _lv.ViewEx = typeof(TraceViewEx);
+            _lv.Data = AtKit.TraceList;
+            _lv.ItemClick += OnOutputClick;
+
+            // mono不支持 Stream.Position = 0，JsonRpc第136行！无法输出返回内容
+            if (!AtSys.IsPhoneUI)
+            {
+                _lv.Loaded += OnLoaded;
+                _lv.Unloaded += OnUnloaded;
+            }
+        }
+
+        public static void ShowBox()
+        {
+            // 桌面
+            if (SysVisual.RootContent is Desktop)
+            {
+                // 桌面时停靠在左侧
+                if (_win == null)
+                    _win = new SysTrace();
+                // 注销后再打开时可能异常！
+                Desktop.SetLeftWin(_win);
+                return;
+            }
+
+            // phone模式
+            if (SysVisual.RootContent is Frame)
+            {
+                AtUI.OpenWin(typeof(SysTrace));
+                return;
+            }
+
+            // win模式未登录
+            if (_dlg == null)
+            {
+                var trace = new SysTrace();
+                _dlg = new Dlg
+                {
+                    Title = "系统监视",
+                    Content = trace,
+                    IsPinned = true,
+                    WinPlacement = DlgPlacement.FromLeft,
+                    BorderBrush = AtRes.浅灰边框,
+                    Width = 400
+                };
+            }
+            _dlg.Show();
+        }
+
+        void OnClear(object sender, Mi e)
+        {
+            AtKit.TraceList.Clear();
+        }
+
+        void OnLocalDb(object sender, Mi e)
+        {
+            if (AtSys.IsPhoneUI || SysVisual.RootContent is Desktop)
+            {
+                AtUI.OpenWin(typeof(LocalDbView));
+                return;
+            }
+
+            // win模式未登录
+            if (_dlgDb == null)
+            {
+                _dlgDb = new Dlg
+                {
+                    Title = "本地库",
+                    Content = new LocalDbView(),
+                    IsPinned = true,
+                    WinPlacement = DlgPlacement.Maximized,
+                    BorderBrush = AtRes.浅灰边框,
+                };
+            }
+            _dlgDb.Show();
+        }
+
+        /// <summary>
+        /// 选择输出行
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void OnOutputClick(object sender, ItemClickArgs e)
+        {
+            Row row = e.Row;
+            string txt = row.Str("content");
+            if (txt.Length > 2 && txt[0] == '[' && txt[1] != '\r')
+            {
+                // 初次时对Json格式化
+                txt = FormatJson(txt);
+                row.InitVal("content", txt);
+            }
+            _tb.Text = txt;
+
+            // 格式化Db中的部分方法，不具体限制方法名！
+            _btnSql.IsEnabled = false;
+            if ((TraceOutType)row.Int("Type") == TraceOutType.RpcCall && row.Str("title").StartsWith("Db."))
+                _btnSql.IsEnabled = true;
+        }
+
+        void OnCopy(object sender, Mi e)
+        {
+            if (_tb.Text != string.Empty)
+                CopyToClipboard(_tb.Text);
+        }
+
+        void OnWrap(object sender, Mi e)
+        {
+            _tb.TextWrapping = e.IsChecked ? TextWrapping.Wrap : TextWrapping.NoWrap;
+        }
+
+        void OnLocalPath(object sender, Mi e)
+        {
+            _tb.Text = ApplicationData.Current.LocalFolder.Path;
+            CopyToClipboard(_tb.Text);
+        }
+
+        void OnInstallPath(object sender, Mi e)
+        {
+            _tb.Text = Package.Current.InstalledLocation.Path;
+            CopyToClipboard(_tb.Text);
+        }
+
+        void OnCreateSql(object sender, Mi e)
+        {
+            string method;
+            List<object> args = new List<object>();
+            using (StringReader sr = new StringReader(_tb.Text))
+            using (JsonReader reader = new JsonTextReader(sr))
+            {
+                try
+                {
+                    // [
+                    reader.Read();
+                    method = reader.ReadAsString();
+                    while (reader.Read() && reader.TokenType != JsonToken.EndArray)
+                    {
+                        args.Add(JsonRpcSerializer.Deserialize(reader));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    AtKit.Warn("Json解析错误：" + ex.Message);
+                    return;
+                }
+            }
+            if (args.Count < 2)
+                return;
+
+            AtKit.StopTrace = true;
+            string sql = "注释"; // await AtSrv.GetFormatSql(_lv.SelectedRow.Str("service"), method, args.ToArray());
+            AtKit.StopTrace = false;
+            if (!string.IsNullOrEmpty(sql))
+                CopyToClipboard(sql);
+        }
+
+        /// <summary>
+        /// 将文本复制到剪贴板
+        /// </summary>
+        /// <param name="p_text"></param>
+        void CopyToClipboard(string p_text)
+        {
+            DataPackage data = new DataPackage();
+            data.SetText(p_text);
+            Clipboard.SetContent(data);
+            AtKit.Msg("已复制到剪切板！");
+        }
+
+        /// <summary>
+        /// 格式化Json串，带缩进
+        /// </summary>
+        /// <param name="p_json"></param>
+        /// <returns></returns>
+        string FormatJson(string p_json)
+        {
+            try
+            {
+                return JsonConvert.DeserializeObject(p_json).ToString();
+            }
+            catch { }
+            return p_json;
+        }
+
+        void OnPageType(object sender, Mi e)
+        {
+            if (SysVisual.RootContent is Desktop)
+                _tb.Text = Desktop.Inst.MainWin.GetType().FullName;
+            else if (SysVisual.RootContent is Frame frame)
+                _tb.Text = frame.Content.GetType().FullName;
+            else
+                _tb.Text = SysVisual.RootContent.GetType().FullName;
+        }
+
+        void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            AtSys.TraceRpc = true;
+            _lv.LoadedRows += OnLoadedRows;
+            _lv.ScrollBottom();
+        }
+
+        void OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            AtSys.TraceRpc = false;
+            _lv.LoadedRows -= OnLoadedRows;
+        }
+
+        void OnLoadedRows(object sender, EventArgs e)
+        {
+            _lv.ScrollBottom();
+        }
+
+        #region 生成存根代码
+#if DEBUG
+        static string[] _ignoreAsm = new string[] { "Dt.Base" };
+        Dictionary<string, Type> _viewTypes;
+        Dictionary<string, Type> _formTypes;
+        Dictionary<string, Type> _sheetTypes;
+        Dictionary<string, Type> _serviceTypes;
+        Dictionary<string, Type> _serializeTypes;
+        Dictionary<string, Type> _stateTbls;
+        StringBuilder _sbState;
+
+        /// <summary>
+        /// 生成存根代码
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        async void OnStub(object sender, Mi e)
+        {
+            _viewTypes = new Dictionary<string, Type>();
+            _formTypes = new Dictionary<string, Type>();
+            _sheetTypes = new Dictionary<string, Type>();
+            _serviceTypes = new Dictionary<string, Type>();
+            _serializeTypes = new Dictionary<string, Type>();
+            _stateTbls = new Dictionary<string, Type>();
+            _sbState = new StringBuilder();
+
+            StorageFile exeFile = null;
+            IReadOnlyList<StorageFile> files = await Package.Current.InstalledLocation.GetFilesAsync();
+            foreach (StorageFile file in files)
+            {
+                if (file.DisplayName.StartsWith("Dt."))
+                {
+                    if (file.FileType == ".dll")
+                        ExtractAssembly(Assembly.Load(new AssemblyName(file.DisplayName)));
+                    else if (file.FileType == ".exe")
+                        exeFile = file;
+                }
+            }
+
+            // 最后加载exe，确保exe中提取的类型优先级最高
+            if (exeFile != null)
+                ExtractAssembly(Assembly.Load(new AssemblyName(exeFile.DisplayName)));
+
+            StringBuilder sb = new StringBuilder();
+            BuildStubDict(sb, _viewTypes, "_viewTypes");
+            BuildStubDict(sb, _formTypes, "_formTypes");
+            BuildStubDict(sb, _sheetTypes, "_sheetTypes");
+            BuildStubDict(sb, _serviceTypes, "_serviceTypes");
+            if (_serializeTypes.Count > 0)
+                BuildStubDict(sb, _serializeTypes, "_serializeTypes");
+            else
+                sb.Append("\t\treadonly Dictionary<string, Type> _serializeTypes = null;\r\n\r\n");
+            BuildStubDict(sb, _stateTbls, "_stateTbls");
+
+            // 所有状态库类型和属性的字符串，取MD5值以区分每次的变化
+            sb.AppendFormat("\t\tconst string _stateDbVer = \"{0}\";", AtKit.GetMD5(_sbState.ToString()));
+
+            DataPackage data = new DataPackage();
+            data.SetText(sb.ToString());
+            Clipboard.SetContent(data);
+            AtKit.Msg("已复制到剪切板！");
+
+            _viewTypes.Clear();
+            _formTypes.Clear();
+            _sheetTypes.Clear();
+            _serviceTypes.Clear();
+            _serializeTypes.Clear();
+        }
+
+        /// <summary>
+        /// 提取程序集中预定义的有用类型，只在初始化时调用
+        /// </summary>
+        /// <param name="p_asm">程序集</param>
+        void ExtractAssembly(Assembly p_asm)
+        {
+            if (p_asm == null || _ignoreAsm.Contains(p_asm.GetName().Name))
+                return;
+
+            try
+            {
+                foreach (Type tp in p_asm.ExportedTypes)
+                {
+                    TypeInfo tpInfo = tp.GetTypeInfo();
+                    // 枚举标签
+                    foreach (Attribute attr in tpInfo.GetCustomAttributes(false))
+                    {
+                        AliasAttribute alias = attr as AliasAttribute;
+                        if (alias != null)
+                        {
+                            if (alias is ViewAttribute)
+                            {
+                                // 视图
+                                _viewTypes[alias.Alias] = tp;
+                            }
+                            else if (alias is WfFormAttribute)
+                            {
+                                // 流程表单
+                                _formTypes[alias.Alias] = tp;
+                            }
+                            else if (alias is WfSheetAttribute)
+                            {
+                                // 流程Sheet
+                                _sheetTypes[alias.Alias] = tp;
+                            }
+                            else if (alias is JsonObjAttribute)
+                            {
+                                // 可序列化类型
+                                _serializeTypes[alias.Alias] = tp;
+                            }
+                        }
+                        else if (attr is StateTableAttribute)
+                        {
+                            // 本地状态库类型
+                            _stateTbls[tp.Name.ToLower()] = tp;
+                            _sbState.Append(tp.Name);
+                            foreach (var pro in tp.GetRuntimeProperties())
+                            {
+                                if (pro.GetCustomAttribute<IgnoreAttribute>(false) == null)
+                                    _sbState.Append(pro.Name);
+                            }
+                        }
+                        else if (attr is RpcClassAttribute)
+                        {
+                            // 客户端服务方法
+                            _serviceTypes[tp.Name] = tp;
+                        }
+                    }
+                }
+            }
+            catch (ReflectionTypeLoadException loadEx)
+            {
+                string msg;
+                if (loadEx.LoaderExceptions.Count() > 0)
+                {
+                    msg = loadEx.LoaderExceptions[0].Message;
+                }
+                else
+                {
+                    msg = string.Format("加载程序集【{0}】的过程中异常：\r\n{1}", p_asm.FullName, loadEx.Message);
+                }
+                throw new Exception(msg);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(string.Format("加载程序集【{0}】的过程中异常：\r\n{1}", p_asm.FullName, ex.Message));
+            }
+        }
+
+        void BuildStubDict(StringBuilder p_sb, Dictionary<string, Type> p_dt, string p_name)
+        {
+            p_sb.AppendFormat("\t\treadonly Dictionary<string, Type> {0} = new Dictionary<string, Type>\r\n", p_name);
+            p_sb.AppendLine("\t\t{");
+            foreach (var item in p_dt)
+            {
+                p_sb.AppendFormat("\t\t\t{{ \"{0}\", typeof({1}) }},\r\n", item.Key, item.Value.Name);
+            }
+            p_sb.AppendLine("\t\t};");
+            p_sb.AppendLine();
+        }
+
+#else
+        void OnStub(object sender, RoutedEventArgs e)
+        {
+        }
+#endif
+        #endregion
+    }
+
+    public class TraceItemSelector : DataTemplateSelector
+    {
+        public DataTemplate Normal { get; set; }
+        public DataTemplate Call { get; set; }
+        public DataTemplate Recv { get; set; }
+        public DataTemplate Exception { get; set; }
+
+        protected override DataTemplate SelectTemplateCore(object item)
+        {
+            switch ((TraceOutType)((LvItem)item).Row.Int("type"))
+            {
+                case TraceOutType.RpcCall:
+                case TraceOutType.WsCall:
+                    return Call;
+                case TraceOutType.RpcRecv:
+                case TraceOutType.WsRecv:
+                case TraceOutType.ServerPush:
+                    return Recv;
+                case TraceOutType.RpcException:
+                case TraceOutType.UnhandledException:
+                    return Exception;
+                default:
+                    return Normal;
+            }
+        }
+    }
+
+    public class TraceViewEx
+    {
+        public static string ServiceName(LvItem p_vr)
+        {
+            var row = (Row)p_vr.Data;
+            switch ((TraceOutType)row["type"])
+            {
+                case TraceOutType.RpcCall:
+                case TraceOutType.RpcRecv:
+                    return row.Str("service");
+                case TraceOutType.WsCall:
+                case TraceOutType.WsRecv:
+                    return "ws";
+                case TraceOutType.ServerPush:
+                    return "push";
+                default:
+                    return null;
+            }
+        }
+    }
+}

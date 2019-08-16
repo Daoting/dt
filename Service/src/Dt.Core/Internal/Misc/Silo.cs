@@ -32,29 +32,12 @@ namespace Dt.Core
     internal static class Silo
     {
         #region 成员变量
-        static readonly Dictionary<string, Type> _serializableTypes;
         static readonly Dictionary<string, string> _sqlDict;
         #endregion
 
         #region 构造方法
         static Silo()
         {
-            // 可序列化类型
-            _serializableTypes = new Dictionary<string, Type>();
-            _serializableTypes["tbl"] = typeof(Table);
-            _serializableTypes["row"] = typeof(Row);
-            _serializableTypes["dict"] = typeof(Dict);
-            _serializableTypes["ss"] = typeof(List<string>);
-            _serializableTypes["bs"] = typeof(List<bool>);
-            _serializableTypes["is"] = typeof(List<int>);
-            _serializableTypes["ds"] = typeof(List<double>);
-            _serializableTypes["dates"] = typeof(List<DateTime>);
-            _serializableTypes["objs"] = typeof(List<object>);
-            _serializableTypes["tbls"] = typeof(List<Table>);
-            _serializableTypes["dicts"] = typeof(List<Dict>);
-            // 数组只可反序列化，因客户端Native后不支持ToArray方法，只接收不返回数组！！！
-            _serializableTypes["objarr"] = typeof(object[]);
-
             // Api字典
             Methods = new Dictionary<string, ApiMethod>();
             GroupMethods = new Dictionary<string, List<string>>();
@@ -295,36 +278,6 @@ namespace Dt.Core
 
         #endregion
 
-        #region 序列化类型
-        /// <summary>
-        /// 查询可序列化类型，未找到时自动抛出异常
-        /// </summary>
-        /// <param name="p_alias"></param>
-        /// <returns></returns>
-        public static Type GetSerializableType(string p_alias)
-        {
-            Type tp;
-            if (_serializableTypes.TryGetValue(p_alias, out tp))
-                return tp;
-            throw new Exception($"可序列化别名“{p_alias}”不存在对应类型！");
-        }
-
-        /// <summary>
-        /// 查询某类型序列化时的别名
-        /// </summary>
-        /// <param name="p_type"></param>
-        /// <returns></returns>
-        public static string GetSerializableTypeAlias(Type p_type)
-        {
-            foreach (var item in _serializableTypes)
-            {
-                if (item.Value == p_type)
-                    return item.Key;
-            }
-            throw new Exception($"类“{p_type.FullName}”不存在可序列化别名！");
-        }
-        #endregion
-
         #region Startup
         /// <summary>
         /// 注入服务，提取程序集中的Api列表、可序列化类型列表、领域服务列表，注册服务，添加拦截
@@ -371,7 +324,7 @@ namespace Dt.Core
                 // 自定义json序列化对象
                 JsonObjAttribute serAttr = type.GetCustomAttribute<JsonObjAttribute>(false);
                 if (serAttr != null)
-                    _serializableTypes[serAttr.Alias] = type;
+                    SerializeTypeAlias.Add(serAttr.Alias, type);
             }
 
             // 内部服务管理Api

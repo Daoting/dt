@@ -79,7 +79,7 @@ namespace Dt.Core.Rpc
             p_request.Content = new PushStreamContent(async (stream) =>
             {
                 // 先发送调用帧
-                await RpcKit.WriteFrame(stream, _data, _isCompressed).ConfigureAwait(false);
+                await RpcClientKit.WriteFrame(stream, _data, _isCompressed).ConfigureAwait(false);
 
                 RequestStream = stream;
                 // 控制发送任务不结束，未结束前一直可发送
@@ -97,7 +97,7 @@ namespace Dt.Core.Rpc
                 response.EnsureSuccessStatusCode();
                 responseStream = await response.Content.ReadAsStreamAsync();
                 // 第一帧为心跳帧
-                await RpcKit.ReadHeartbeat(responseStream);
+                await RpcClientKit.ReadHeartbeat(responseStream);
             }
             catch (Exception ex)
             {

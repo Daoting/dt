@@ -7,6 +7,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>bin\Debug\netcoreapp3.0\Dt.Core.xml</DocumentationFile>
     <NoWarn>1701;1702;1705;1591</NoWarn>
+    <DefineConstants>TRACE;SERVER</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

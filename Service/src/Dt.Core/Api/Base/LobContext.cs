@@ -207,9 +207,8 @@ namespace Dt.Core
         /// <summary>
         /// 处理http rpc请求
         /// </summary>
-        /// <param name="p_schemes"></param>
         /// <returns></returns>
-        internal async Task Handle(IAuthenticationSchemeProvider p_schemes)
+        internal async Task Handle()
         {
             // 解析rpc参数
             if (!await ParseParams())
@@ -227,7 +226,7 @@ namespace Dt.Core
             }
 
             // 校验授权
-            if (!await IsAuthenticated(p_schemes))
+            if (!await IsAuthenticated())
             {
                 await Response(ApiResponseType.Error, 0, "未经授权");
                 return;
@@ -235,7 +234,7 @@ namespace Dt.Core
 
             // 流模式先返回心跳帧，心跳帧为第一帧
             if (Api.CallMode != ApiCallMode.Unary)
-                await RpcKit.WriteHeartbeat(Context.Response.BodyWriter);
+                await RpcServerKit.WriteHeartbeat(Context.Response.BodyWriter);
 
             switch (Api.CallMode)
             {
@@ -301,7 +300,7 @@ namespace Dt.Core
                 }
 
                 // 写入响应流
-                return RpcKit.WriteFrame(Context.Response.BodyWriter, data, compress);
+                return RpcServerKit.WriteFrame(Context.Response.BodyWriter, data, compress);
             }
             catch (Exception ex)
             {
@@ -318,7 +317,7 @@ namespace Dt.Core
         {
             try
             {
-                byte[] data = await RpcKit.ReadFrame(Context.Request.BodyReader);
+                byte[] data = await RpcServerKit.ReadFrame(Context.Request.BodyReader);
                 using (MemoryStream ms = new MemoryStream(data))
                 using (StreamReader sr = new StreamReader(ms))
                 using (JsonReader reader = new JsonTextReader(sr))
@@ -351,18 +350,14 @@ namespace Dt.Core
         /// <summary>
         /// 校验授权
         /// </summary>
-        /// <param name="p_schemes"></param>
         /// <returns></returns>
-        async Task<bool> IsAuthenticated(IAuthenticationSchemeProvider p_schemes)
+        async Task<bool> IsAuthenticated()
         {
             // 只本地认证(JWT格式)，未处理远程认证及重定向，原中间件见Authentication.txt
-            var authScheme = await p_schemes.GetDefaultAuthenticateSchemeAsync();
-            if (authScheme != null)
-            {
-                var result = await Context.AuthenticateAsync(authScheme.Name);
-                if (result?.Principal != null)
-                    Context.User = result.Principal;
-            }
+            // 首次认证时需要auth服务的远程认证
+            var result = await Context.AuthenticateAsync(Glb.AuthenticationScheme);
+            if (result?.Principal != null)
+                Context.User = result.Principal;
 
             return true;
         }

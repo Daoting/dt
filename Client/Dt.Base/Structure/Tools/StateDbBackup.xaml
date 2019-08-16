@@ -1,0 +1,16 @@
+﻿<a:PageWin
+    x:Class="Dt.Base.Tools.StateDbBackup"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="状态库备份">
+
+    <a:Fv>
+        <RadioButton x:Name="_rbAll" Content="备份所有文件" IsChecked="True" Margin="10,0" />
+        <RadioButton Content="只备份状态库文件" Margin="10,0" />
+        <Button Content="开始备份" Click="OnBackup" />
+        <a:CFree RowSpan="6" ShowTitle="False">
+            <TextBox x:Name="_tb" AcceptsReturn="True" />
+        </a:CFree>
+    </a:Fv>
+</a:PageWin>

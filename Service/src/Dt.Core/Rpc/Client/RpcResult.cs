@@ -35,10 +35,5 @@ namespace Dt.Core.Rpc
         /// 耗时
         /// </summary>
         public string Elapsed { get; set; }
-
-        /// <summary>
-        /// 监控结果内容
-        /// </summary>
-        public string Trace { get; set; }
     }
 }

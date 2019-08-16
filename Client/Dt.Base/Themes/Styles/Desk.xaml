@@ -1,0 +1,197 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/Dt.Base/Themes/Global.xaml"/>
+        <ResourceDictionary Source="/Dt.Base/Themes/Styles/Default.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <!--
+    *****************************************************************
+    桌面版UI默认控件样式
+    *****************************************************************
+    -->
+
+    <!--Desktop-->
+    <Style TargetType="a:Desktop">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Background" Value="{StaticResource 默认背景}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:Desktop">
+                    <Grid Background="{StaticResource 默认背景}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <a:Taskbar />
+                        <!--留出右边距-1-->
+                        <Grid x:Name="ContentGrid" Margin="0,4,1,0" Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <!--Splitter放在底层，确保显示边距-1的边框-->
+                            <a:Splitter x:Name="LeftSplitter" Visibility="Collapsed" Grid.Column="1" />
+                            <a:Splitter x:Name="RightSplitter" Visibility="Collapsed" Grid.Column="3" />
+                            <ContentPresenter Content="{TemplateBinding LeftWin}" />
+                            <ContentPresenter Content="{TemplateBinding MainWin}" Grid.Column="2" />
+                            <ContentPresenter Content="{TemplateBinding RightWin}" Grid.Column="4" />
+                        </Grid>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--Taskbar-->
+    <Style TargetType="a:Taskbar">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="IsTabStop" Value="False"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:Taskbar">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Rectangle Fill="{StaticResource 浅灰背景}" Stroke="{StaticResource 浅灰边框}" IsHitTestVisible="False" Grid.ColumnSpan="2"/>
+                        <Button x:Name="HomePageButton"
+                                Content="&#xE019;"
+                                FontSize="30"
+                                Style="{StaticResource 字符按钮}"
+                                ToolTipService.ToolTip="主页 (Alt + Home)"
+                                ToolTipService.Placement="Bottom"
+                                Margin="50,0,20,0"/>
+                        <ItemsControl x:Name="TaskItemsControl" Grid.Column="1">
+                            <ItemsControl.ItemContainerTransitions>
+                                <TransitionCollection>
+                                    <AddDeleteThemeTransition/>
+                                </TransitionCollection>
+                            </ItemsControl.ItemContainerTransitions>
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--任务栏关闭按钮-->
+    <Style x:Key="TaskbarCloseButton" TargetType="Button">
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="Width" Value="16" />
+        <Setter Property="Height" Value="16" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ButtonBase">
+                    <Grid x:Name="RootGrid" Background="Transparent">
+                        <TextBlock x:Name="ElementTitle"
+                                   Text="{TemplateBinding Content}"
+                                   TextAlignment="Center"
+                                   FontFamily="{StaticResource SymbolThemeFontFamily}"
+                                   FontSize="{TemplateBinding FontSize}"
+                                   Foreground="{StaticResource 深灰背景}" />
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal"/>
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Target="ElementTitle.Foreground" Value="{StaticResource 醒目蓝色}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <VisualState.Setters>
+                                        <Setter Target="ElementTitle.Foreground" Value="Red" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Disabled" />
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--TaskbarItem-->
+    <Style TargetType="a:TaskbarItem">
+        <Setter Property="Width" Value="260"/>
+        <Setter Property="MaxWidth" Value="260"/>
+        <Setter Property="IsTabStop" Value="False"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:TaskbarItem">
+                    <Grid Background="Transparent">
+                        <Rectangle x:Name="NormalBorder" Margin="0,0,-1,0" Stroke="{StaticResource 浅灰边框}" StrokeThickness="1" IsHitTestVisible="False"/>
+                        <Rectangle x:Name="SelectedBorder" Margin="1,1,0,0" Fill="White" Visibility="Collapsed" IsHitTestVisible="False"/>
+                        <Rectangle x:Name="LineRect" IsHitTestVisible="False" Height="4" VerticalAlignment="Top" />
+                        <Grid x:Name="RootGrid" Margin="10,0,10,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock x:Name="ElementIcon"
+                                       Text="{Binding Icon, Converter={StaticResource CvIconToChar}}"
+                                       FontFamily="{StaticResource IconFont}"
+                                       FontSize="30"
+                                       Foreground="{StaticResource 深灰边框}"
+                                       VerticalAlignment="Center" />
+                            <TextBlock x:Name="ElementTitle"
+                                       Text="{Binding Title}"
+                                       VerticalAlignment="Center"
+                                       Foreground="{StaticResource 深灰背景}"
+                                       Margin="5,0,5,0"
+                                       Grid.Column="1" />
+                            <Button x:Name="CloseButton" Content="&#xE711;" Style="{StaticResource TaskbarCloseButton}" Opacity="0" Grid.Column="2" />
+                        </Grid>
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="SelectionStates">
+                                <VisualState x:Name="UnSelected"/>
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Target="ElementIcon.Foreground" Value="{StaticResource 醒目蓝色}" />
+                                        <Setter Target="ElementTitle.Foreground" Value="{StaticResource 醒目蓝色}" />
+                                        <Setter Target="CloseButton.Opacity" Value="1" />
+                                        <Setter Target="NormalBorder.Fill" Value="{StaticResource 暗遮罩}" />
+                                        <Setter Target="LineRect.Fill" Value="{StaticResource 醒目蓝色}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <VisualState.Setters>
+                                        <Setter Target="ElementIcon.Foreground" Value="{StaticResource 醒目蓝色}" />
+                                        <Setter Target="ElementTitle.Foreground" Value="{StaticResource 醒目蓝色}" />
+                                        <Setter Target="NormalBorder.Fill" Value="{StaticResource 深暗遮罩}" />
+                                        <Setter Target="LineRect.Fill" Value="{StaticResource 醒目蓝色}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Selected">
+                                    <VisualState.Setters>
+                                        <Setter Target="ElementIcon.Foreground" Value="{StaticResource 默认前景}" />
+                                        <Setter Target="ElementTitle.Foreground" Value="{StaticResource 默认前景}" />
+                                        <Setter Target="CloseButton.Opacity" Value="1" />
+                                        <Setter Target="SelectedBorder.Visibility" Value="Visible" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

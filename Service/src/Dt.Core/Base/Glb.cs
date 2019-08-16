@@ -123,6 +123,11 @@ namespace Dt.Core
         /// ApiResource的默认名称
         /// </summary>
         public const string ApiResourceName = "dtapi";
+
+        /// <summary>
+        /// 默认认证方案名称
+        /// </summary>
+        public const string AuthenticationScheme = "Bearer";
         #endregion
 
         #region 系统配置
@@ -224,14 +229,13 @@ namespace Dt.Core
             
             // 注入认证服务，采用jwt格式的验证方案，方案名称为Bearer
             p_services
-                .AddAuthentication(o => o.DefaultScheme = "Bearer")
-                .AddJwtBearer("Bearer", o =>
+                .AddAuthentication(o => o.DefaultScheme = AuthenticationScheme)
+                .AddJwtBearer(AuthenticationScheme, o =>
                 {
                     // Auth服务地址
-                    o.Authority = "http://localhost/app/auth";
-                    o.RequireHttpsMetadata = false;
+                    o.Authority = IsInDocker ? $"https://{AppName}-auth" : $"https://localhost/{AppName}/auth";
                     // 需要认证的api资源名称
-                    o.Audience = Glb.ApiResourceName;
+                    o.Audience = ApiResourceName;
                 });
         }
 

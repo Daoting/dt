@@ -26,12 +26,11 @@ namespace Dt.Cm
             _next = p_next ?? throw new ArgumentNullException(nameof(p_next));
         }
 
-        public async Task Invoke(HttpContext p_context)
+        public Task Invoke(HttpContext p_context)
         {
             if (p_context.Request.Path.Value.ToLower() == "/.model")
-                await ModelHandler.GetFile(p_context);
-            else
-                await _next(p_context);
+                return ModelHandler.GetFile(p_context);
+            return _next(p_context);
         }
     }
 }

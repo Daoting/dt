@@ -41,7 +41,7 @@ namespace Dt.Core.Rpc
             try
             {
                 using (var request = CreateRequestMessage())
-                using (var content = new PushStreamContent((ws) => RpcKit.WriteFrame(ws, _data, _isCompressed)))
+                using (var content = new PushStreamContent((ws) => RpcClientKit.WriteFrame(ws, _data, _isCompressed)))
                 {
                     request.Content = content;
                     // 一定是ResponseHeadersRead，否则只在结束时收到一次！！！众里寻他千百度
@@ -49,7 +49,7 @@ namespace Dt.Core.Rpc
                     response.EnsureSuccessStatusCode();
                     responseStream = await response.Content.ReadAsStreamAsync();
                     // 第一帧为心跳帧
-                    await RpcKit.ReadHeartbeat(responseStream);
+                    await RpcClientKit.ReadHeartbeat(responseStream);
                 }
             }
             catch (Exception ex)

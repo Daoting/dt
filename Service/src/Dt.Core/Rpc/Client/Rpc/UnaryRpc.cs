@@ -42,13 +42,13 @@ namespace Dt.Core.Rpc
             try
             {
                 using (var request = CreateRequestMessage())
-                using (var content = new PushStreamContent((ws) => RpcKit.WriteFrame(ws, _data, _isCompressed)))
+                using (var content = new PushStreamContent((ws) => RpcClientKit.WriteFrame(ws, _data, _isCompressed)))
                 {
                     request.Content = content;
                     var response = await _client.SendAsync(request).ConfigureAwait(false);
                     response.EnsureSuccessStatusCode();
                     var stream = await response.Content.ReadAsStreamAsync();
-                    data = await RpcKit.ReadFrame(stream);
+                    data = await RpcClientKit.ReadFrame(stream);
                 }
             }
             catch (Exception ex)

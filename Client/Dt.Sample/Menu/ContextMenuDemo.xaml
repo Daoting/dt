@@ -1,0 +1,28 @@
+﻿<a:PageWin
+    x:Class="Dt.Sample.ContextMenuDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="上下文菜单">
+
+    <StackPanel Orientation="Horizontal">
+        <Button Content="左键左下显示">
+            <a:Ex.Menu>
+                <a:Menu MouseTrigger="LeftTapped" TouchTrigger="Tapped" WinPlacement="BottomLeft">
+                    <a:Mi ID="保存" Icon="保存" ShowInPhone="Icon" />
+                    <a:Mi ID="搜索" Icon="搜索" />
+                    <a:Mi ID="选择项" Icon="pos机" IsCheckable="True" />
+                </a:Menu>
+            </a:Ex.Menu>
+        </Button>
+        <Button Content="右键右上显示">
+            <a:Ex.Menu>
+                <a:Menu TouchTrigger="Tapped" WinPlacement="TopRight">
+                    <a:Mi ID="保存" Icon="保存" ShowInPhone="Icon" />
+                    <a:Mi ID="搜索" Icon="搜索" />
+                    <a:Mi ID="选择项" Icon="pos机" IsCheckable="True" />
+                </a:Menu>
+            </a:Ex.Menu>
+        </Button>
+    </StackPanel>
+</a:PageWin>

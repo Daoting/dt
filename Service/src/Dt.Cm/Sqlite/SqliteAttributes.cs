@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2017-11-30 创建
+* 日志: 2017-12-06 创建
 ******************************************************************************/
 #endregion
 
@@ -10,7 +10,7 @@
 using System;
 #endregion
 
-namespace Dt.Cm.Sqlite
+namespace Dt.Core.Sqlite
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class TableAttribute : Attribute
@@ -24,6 +24,14 @@ namespace Dt.Cm.Sqlite
         {
             Name = name;
         }
+    }
+
+    /// <summary>
+    /// 标识状态库类型表
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class)]
+    public class StateTableAttribute : Attribute
+    {
     }
 
     [AttributeUsage(AttributeTargets.Property)]
@@ -100,5 +108,16 @@ namespace Dt.Cm.Sqlite
         {
             Value = collation;
         }
+    }
+
+    [AttributeUsage(AttributeTargets.Property)]
+    public class DefaultAttribute : Attribute
+    {
+        public DefaultAttribute(object value = null)
+        {
+            Value = value;
+        }
+
+        public object Value { get; set; }
     }
 }

@@ -7,12 +7,11 @@
 #endregion
 
 #region 引用命名
-using Dt.Core;
+using Dt.Core.Sqlite;
 using MySql.Data.MySqlClient;
 using Serilog;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
@@ -21,7 +20,7 @@ using System.Text;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Cm.Sqlite
+namespace Dt.Core.Model
 {
     /// <summary>
     /// Sqlite模型文件生成类
@@ -54,27 +53,8 @@ namespace Dt.Cm.Sqlite
 	                                            dispidx";
             _cacheDict[typeof(OmBaseCode)] = "select id,grp from dt_res order by dispidx";
             _cacheDict[typeof(OmReport)] = "select id,name,define from dt_rpt";
-            _cacheDict[typeof(OmNoticeType)] = "select id,browser,editor,dispidx from dt_noticetype";
-            _cacheDict[typeof(PrcDef)] = "select id,name,srvname,tblname,diagram from dt_wfd_prc";
-            _cacheDict[typeof(AtvDef)] = @"select id,
-                                                prcid,
-                                                name,
-                                                type,
-                                                execscope,
-                                                execlimit,
-                                                execatvid,
-                                                autoaccept,
-                                                candelete,
-                                                canterminate,
-                                                canjumpinto,
-                                                joinkind,
-                                                transkind
-                                           from dt_wfd_atv";
             _cacheDict[typeof(RoleMenu)] = "select a.* from dt_rolemenu a,dt_menu b where a.menuid=b.id and b.islocked='0'";
             _cacheDict[typeof(RolePrv)] = "select * from dt_roleprv";
-            _cacheDict[typeof(OmBoard)] = "select * from dt_board order by dispidx";
-            _cacheDict[typeof(BoardRole)] = "select * from dt_boardrole";
-            _cacheDict[typeof(BoardUser)] = "select * from dt_boarduser";
         }
 
         /// <summary>
@@ -340,7 +320,7 @@ namespace Dt.Cm.Sqlite
 
                                 // character_maximum_length
                                 if (!reader.IsDBNull(4))
-                                    col.Length = reader.GetInt64(4);
+                                    col.Length = (int)reader.GetInt64(4);
 
                                 // is_nullable
                                 if (!reader.IsDBNull(5))
@@ -372,7 +352,7 @@ namespace Dt.Cm.Sqlite
             col.ColName = row.Name;
             col.DbType = row.TypeName;
             col.IsPrimary = p_isPrimaryKey;
-            col.Length = row.Length;
+            col.Length = (int)row.Length;
             col.Nullable = row.Nullable;
             col.Comments = row.Comments;
             return col;

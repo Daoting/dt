@@ -37,7 +37,7 @@ namespace Dt.Core.Rpc
         {
             try
             {
-                byte[] data = await RpcKit.ReadFrame(_lc.Context.Request.BodyReader);
+                byte[] data = await RpcServerKit.ReadFrame(_lc.Context.Request.BodyReader);
                 if (data != null && data.Length > 0)
                 {
                     using (MemoryStream ms = new MemoryStream(data))

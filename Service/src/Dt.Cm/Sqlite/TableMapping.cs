@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2017-11-30 创建
+* 日志: 2017-12-06 创建
 ******************************************************************************/
 #endregion
 
@@ -11,9 +11,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 #endregion
 
-namespace Dt.Cm.Sqlite
+namespace Dt.Core.Sqlite
 {
     /// <summary>
     /// 表与类的映射ORM
@@ -24,7 +25,8 @@ namespace Dt.Cm.Sqlite
         string _tableName;
         Column _autoPk = null;
         Column[] _insertColumns = null;
-        string _insertSql;
+        string _sqlInsert;
+        string _sqlInsertOrUpdate;
 
         public TableMapping(Type type)
         {
@@ -146,34 +148,94 @@ namespace Dt.Cm.Sqlite
         /// <returns></returns>
         public string GetCreateSql()
         {
-            var decls = Columns.Select(p => SqlDecl(p, false));
-            var decl = string.Join(",\n", decls.ToArray());
-            return $"create table if not exists {_tableName} (\n{decl})";
+            string pk = "";
+            bool autoIncPk = false;
+            StringBuilder sb = new StringBuilder();
+            sb.Append("create table if not exists ");
+            sb.Append(_tableName);
+            sb.Append(" (\n");
+            foreach (var col in Columns)
+            {
+                sb.Append(SqlDecl(col, false));
+                sb.Append(",\n");
+                if (col.IsPK)
+                {
+                    if (col.IsAutoInc)
+                    {
+                        autoIncPk = true;
+                    }
+                    else
+                    {
+                        if (pk == "")
+                            pk = col.Name;
+                        else
+                            pk += "," + col.Name;
+                    }
+                }
+            }
+
+            if (!autoIncPk && !string.IsNullOrEmpty(pk))
+            {
+                // 联合主键时必须放在语句最后，不允许有AutoInc列！
+                sb.Append("primary key (");
+                sb.Append(pk);
+                sb.Append("))");
+            }
+            else
+            {
+                sb.Remove(sb.Length - 2, 2);
+                sb.Append(")");
+            }
+            return sb.ToString();
         }
 
         /// <summary>
         /// 获取insert语句
         /// </summary>
+        /// <param name="p_autoUpdate">是否包含OR REPLACE</param>
         /// <returns></returns>
-        public string GetInsertSql()
+        public string GetInsertSql(bool p_autoUpdate)
         {
-            if (string.IsNullOrEmpty(_insertSql))
-                _insertSql = CreateInsertSql();
-            return _insertSql;
+            if (p_autoUpdate)
+            {
+                if (string.IsNullOrEmpty(_sqlInsertOrUpdate))
+                    _sqlInsertOrUpdate = CreateInsertSql(true);
+                return _sqlInsertOrUpdate;
+            }
+
+            if (string.IsNullOrEmpty(_sqlInsert))
+                _sqlInsert = CreateInsertSql(false);
+            return _sqlInsert;
         }
 
-        string CreateInsertSql()
+        string CreateInsertSql(bool p_autoUpdate)
         {
-            var cols = InsertColumns;
-            return string.Format("insert into {0} ({1}) values ({2})",
+            var cols = p_autoUpdate ? Columns : InsertColumns;
+            return string.Format("insert {0} into {1} ({2}) values ({3})",
+                p_autoUpdate ? "OR REPLACE" : "",
                 _tableName,
                 string.Join(",", (from c in cols select c.Name).ToArray()),
                 string.Join(",", (from c in cols select ":" + c.Name).ToArray()));
         }
-        
+
         public class Column
         {
             PropertyInfo _prop;
+
+            public Column(PropertyInfo prop)
+            {
+                _prop = prop;
+                var colAttr = prop.GetCustomAttribute<ColumnAttribute>(false);
+                Name = (colAttr != null && !string.IsNullOrEmpty(colAttr.Name)) ? colAttr.Name : prop.Name;
+                ColumnType = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
+                Collation = Collation(prop);
+                IsPK = IsPK(prop);
+                IsAutoInc = IsAutoInc(prop);
+                DefaultValue = GetDefaultValue(prop);
+                Indices = GetIndices(prop);
+                IsNullable = !IsPK;
+                MaxStringLength = MaxStringLength(prop);
+            }
 
             /// <summary>
             /// 列名
@@ -220,19 +282,10 @@ namespace Dt.Cm.Sqlite
             /// </summary>
             public int MaxStringLength { get; set; }
 
-            public Column(PropertyInfo prop)
-            {
-                _prop = prop;
-                var colAttr = prop.GetCustomAttribute<ColumnAttribute>(false);
-                Name = (colAttr != null && !string.IsNullOrEmpty(colAttr.Name)) ? colAttr.Name : prop.Name;
-                ColumnType = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
-                Collation = Collation(prop);
-                IsAutoInc = IsAutoInc(prop);
-                IsPK = IsPK(prop);
-                Indices = GetIndices(prop);
-                IsNullable = !IsPK;
-                MaxStringLength = MaxStringLength(prop);
-            }
+            /// <summary>
+            /// 默认值
+            /// </summary>
+            public object DefaultValue { get; set; }
 
             public void SetValue(object obj, object val)
             {
@@ -255,13 +308,10 @@ namespace Dt.Cm.Sqlite
         {
             string decl = p.Name + " " + SqlType(p, storeDateTimeAsTicks);
 
-            if (p.IsPK)
+            // 联合主键时必须放在语句最后！
+            if (p.IsPK && p.IsAutoInc)
             {
-                decl += " primary key";
-            }
-            if (p.IsAutoInc)
-            {
-                decl += " autoincrement";
+                decl += " primary key autoincrement";
             }
             if (!p.IsNullable)
             {
@@ -338,6 +388,28 @@ namespace Dt.Cm.Sqlite
         public static bool IsAutoInc(MemberInfo p)
         {
             return p.GetCustomAttribute<AutoIncrementAttribute>(false) != null;
+        }
+
+        /// <summary>
+        /// 获取列的默认值
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        public static object GetDefaultValue(PropertyInfo p)
+        {
+            var attr = p.GetCustomAttribute<DefaultAttribute>(false);
+            if (attr != null)
+            {
+                try
+                {
+                    return Convert.ChangeType(attr.Value, p.PropertyType);
+                }
+                catch (Exception exception)
+                {
+                    throw new Exception($"Unable to convert {attr.Value} to type {p.PropertyType}: {exception.Message}");
+                }
+            }
+            return null;
         }
 
         /// <summary>

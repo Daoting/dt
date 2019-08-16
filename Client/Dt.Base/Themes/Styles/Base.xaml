@@ -1,0 +1,294 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/Dt.Base/Themes/Global.xaml"/>
+        <ResourceDictionary Source="/Dt.Base/Themes/Styles/Default.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <!--BtnItem-->
+    <Style TargetType="a:BtnItem">
+        <Setter Property="Background" Value="{StaticResource 主题蓝色}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="BorderBrush" Value="{StaticResource 浅灰边框}" />
+        <Setter Property="FontSize" Value="{StaticResource ControlContentThemeFontSize}" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:BtnItem">
+                    <Grid x:Name="RootGrid" Background="Transparent">
+                        <Grid x:Name="ContentGrid" Margin="6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Border Background="{TemplateBinding Background}"
+                                    Height="50"
+                                    Width="50"
+                                    VerticalAlignment="Center">
+                                <TextBlock Text="{Binding Icon, Converter={StaticResource CvIconToChar}, RelativeSource={RelativeSource TemplatedParent}}"
+                                           FontFamily="{StaticResource IconFont}"
+                                           FontSize="30"
+                                           Foreground="White"
+                                           VerticalAlignment="Center"
+                                           TextAlignment="Center" />
+                            </Border>
+
+                            <StackPanel Margin="10,0,0,0" VerticalAlignment="Center" Grid.Column="1">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{TemplateBinding Title}"
+                                               FontFamily="{TemplateBinding FontFamily}"
+                                               TextWrapping="NoWrap"
+                                               VerticalAlignment="Center"
+                                               HorizontalAlignment="Left"/>
+                                    <ContentPresenter Content="{TemplateBinding Content}" Margin="10,0,0,0" Grid.Column="1" />
+                                </Grid>
+
+                                <TextBlock Text="{TemplateBinding Desc}"
+                                           Visibility="{Binding Text, Converter={StaticResource CvTextToVisible}, RelativeSource={RelativeSource Self}}"
+                                           Style="{StaticResource 小字}"
+                                           Foreground="{StaticResource 深灰边框}"
+                                           VerticalAlignment="Top"
+                                           HorizontalAlignment="Left"/>
+                            </StackPanel>
+                        </Grid>
+                        <!--分隔线-->
+                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" Margin="0,0,-1,-1" IsHitTestVisible="False" />
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Target="RootGrid.Background" Value="{StaticResource 暗遮罩}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <VisualState.Setters>
+                                        <Setter Target="RootGrid.Background" Value="{StaticResource 深暗遮罩}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <VisualState.Setters>
+                                        <Setter Target="RootGrid.Opacity" Value="0.5" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--TabControl默认-->
+    <ControlTemplate x:Key="DefaultTabControlTemplate" TargetType="a:TabControl">
+        <Grid x:Name="MainGrid" Background="{TemplateBinding Background}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid x:Name="ContentGrid"
+                  BorderThickness="1"
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  Margin="0,0,-1,0"
+                  Grid.ColumnSpan="2">
+                <ContentPresenter Content="{TemplateBinding SelectedContent}"
+                                  ContentTemplate="{TemplateBinding ContentTemplate}"
+                                  ContentTransitions="{TemplateBinding ContentTransitions}"
+                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                  Margin="{TemplateBinding Padding}" />
+            </Grid>
+            <!--标签-->
+            <ItemsPresenter x:Name="ItemsPresenter" Grid.Row="1" Grid.ColumnSpan="2" />
+        </Grid>
+    </ControlTemplate>
+
+    <!--TabControl弹出式-->
+    <ControlTemplate x:Key="PopTabControlTemplate" TargetType="a:TabControl">
+        <Grid x:Name="MainGrid" Background="{TemplateBinding Background}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid x:Name="ContentGrid" Grid.ColumnSpan="2" />
+            <!--标签-->
+            <ItemsPresenter x:Name="ItemsPresenter" Grid.Row="1" Grid.ColumnSpan="2" />
+        </Grid>
+    </ControlTemplate>
+
+    <!--TabControl-->
+    <Style TargetType="a:TabControl">
+        <Setter Property="BorderBrush" Value="{StaticResource 浅灰边框}"/>
+        <Setter Property="Background" Value="{StaticResource 默认背景}" />
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="PopTemplate" Value="{StaticResource PopTabControlTemplate}"/>
+        <Setter Property="DefaultTemplate" Value="{StaticResource DefaultTabControlTemplate}"/>
+        <Setter Property="Template" Value="{StaticResource DefaultTabControlTemplate}"/>
+    </Style>
+
+    <!--TabItem-->
+    <Style TargetType="a:TabItem">
+        <Setter Property="Foreground" Value="{StaticResource 深灰背景}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:TabItem">
+                    <Grid x:Name="ElementGrid" Background="{TemplateBinding Background}">
+                        <a:RotateContent x:Name="ElementHeader" Rotate="Horizontal" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                            <Grid x:Name="Container" Height="{StaticResource RowInnerHeight}">
+                                <Rectangle x:Name="NormalBorder" Margin="0,-1,-1,0" Stroke="{TemplateBinding BorderBrush}" Fill="{StaticResource 浅灰背景}" StrokeThickness="1" IsHitTestVisible="False"/>
+                                <Rectangle x:Name="SelectedBorder" Margin="1,-1,0,1" Fill="White" Visibility="Collapsed" IsHitTestVisible="False"/>
+                                <Rectangle x:Name="ElementLine" IsHitTestVisible="False" Height="4" VerticalAlignment="Bottom"/>
+                                <TextBlock x:Name="HeaderText"
+                                           Text="{TemplateBinding Title}"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Center"
+                                           Margin="15,0,15,0" />
+                            </Grid>
+                        </a:RotateContent>
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="SelectionStates">
+                                <VisualState x:Name="UnSelected"/>
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Target="NormalBorder.Fill" Value="{StaticResource 暗遮罩}" />
+                                        <Setter Target="ElementHeader.Foreground" Value="{StaticResource 醒目蓝色}" />
+                                        <Setter Target="ElementLine.Fill" Value="{StaticResource 醒目蓝色}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <VisualState.Setters>
+                                        <Setter Target="NormalBorder.Fill" Value="{StaticResource 深暗遮罩}" />
+                                        <Setter Target="ElementHeader.Foreground" Value="{StaticResource 醒目蓝色}" />
+                                        <Setter Target="ElementLine.Fill" Value="{StaticResource 醒目蓝色}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Selected">
+                                    <VisualState.Setters>
+                                        <Setter Target="SelectedBorder.Visibility" Value="Visible" />
+                                        <Setter Target="ElementHeader.Foreground" Value="{StaticResource 默认前景}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- SearchBox -->
+    <Style TargetType="a:SearchBox">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Background" Value="{StaticResource 默认背景}" />
+        <Setter Property="BorderBrush" Value="{StaticResource 浅灰边框}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:SearchBox">
+                    <Grid x:Name="Grid"
+                          BorderBrush="{TemplateBinding BorderBrush}"
+                          BorderThickness="{TemplateBinding BorderThickness}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="TextBox"
+                                 PlaceholderText="{TemplateBinding Placeholder}"
+                                 BorderThickness="0"
+                                 Padding="10" />
+                        <Button x:Name="Button"
+                                Content="&#xE013;"
+                                Style="{StaticResource 字符按钮}"
+                                Grid.Column="1" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--Splitter-->
+    <Style TargetType="a:Splitter">
+        <Setter Property="IsTabStop" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:Splitter">
+                    <Grid x:Name="RootGrid" Background="{StaticResource 浅灰背景}">
+                        <Rectangle x:Name="BorderLine" Fill="{StaticResource 醒目红色}" Visibility="Collapsed" />
+                        <StackPanel x:Name="GripDotsPanel" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <Ellipse Width="6" Height="6" Margin="2" Fill="{StaticResource 深灰边框}" />
+                            <Ellipse Width="6" Height="6" Margin="2" Fill="{StaticResource 深灰边框}" />
+                            <Ellipse Width="6" Height="6" Margin="2" Fill="{StaticResource 深灰边框}" />
+                        </StackPanel>
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="OrientationStates">
+                                <VisualState x:Name="VerticalOrientation">
+                                    <VisualState.Setters>
+                                        <Setter Target="BorderLine.Width" Value="4" />
+                                        <Setter Target="BorderLine.Height" Value="NaN" />
+                                        <Setter Target="RootGrid.Width" Value="12" />
+                                        <Setter Target="RootGrid.Height" Value="NaN" />
+                                        <Setter Target="GripDotsPanel.Orientation" Value="Vertical" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="HorizontalOrientation">
+                                    <VisualState.Setters>
+                                        <Setter Target="BorderLine.Width" Value="4" />
+                                        <Setter Target="BorderLine.Height" Value="NaN" />
+                                        <Setter Target="RootGrid.Width" Value="NaN" />
+                                        <Setter Target="RootGrid.Height" Value="12" />
+                                        <Setter Target="GripDotsPanel.Orientation" Value="Horizontal" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="VerticalFocused">
+                                    <VisualState.Setters>
+                                        <Setter Target="BorderLine.Visibility" Value="Visible" />
+                                        <Setter Target="BorderLine.Margin" Value="0,-1000,0,-1000" />
+                                        <Setter Target="GripDotsPanel.Visibility" Value="Collapsed" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="HorizontalFocused">
+                                    <VisualState.Setters>
+                                        <Setter Target="BorderLine.Visibility" Value="Visible" />
+                                        <Setter Target="BorderLine.Margin" Value="-1000,0,-1000,0" />
+                                        <Setter Target="GripDotsPanel.Visibility" Value="Collapsed" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

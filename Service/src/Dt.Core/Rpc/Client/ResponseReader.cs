@@ -39,7 +39,7 @@ namespace Dt.Core.Rpc
 
             try
             {
-                var data = await RpcKit.ReadFrame(_responseStream);
+                var data = await RpcClientKit.ReadFrame(_responseStream);
                 if (data != null && data.Length > 0)
                 {
                     using (MemoryStream ms = new MemoryStream(data))

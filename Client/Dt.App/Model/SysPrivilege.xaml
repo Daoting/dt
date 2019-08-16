@@ -1,0 +1,76 @@
+﻿<a:Win
+    x:Class="Dt.App.Model.SysPrivilege"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Home="菜单树">
+
+    <a:WinItem DockState="DockedLeft">
+        <a:Tabs>
+            <a:Tab Title="菜单树">
+                <a:Tab.Menu>
+                    <a:Menu>
+                        <a:Mi ID="上移" Icon="向上" Click="OnMoveUp" />
+                        <a:Mi ID="下移" Icon="向下" Click="OnMoveDown" />
+                    </a:Menu>
+                </a:Tab.Menu>
+                <a:Tv x:Name="_tv" ItemClick="OnItemClick">
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <a:Dot ID="icon" To="Icon" Margin="4,0,4,0" />
+                            <a:Dot ID="name" />
+                        </StackPanel>
+                    </DataTemplate>
+                </a:Tv>
+            </a:Tab>
+        </a:Tabs>
+    </a:WinItem>
+    <a:WinCenter>
+        <a:Tabs>
+            <a:Tab Title="菜单项">
+                <a:Tab.Menu>
+                    <a:Menu x:Name="_m">
+                        <a:Mi Icon="加号" ID="新建">
+                            <a:Mi ID="菜单" Icon="文件" Click="OnAddMi" />
+                            <a:Mi ID="分组" Icon="文件夹" Click="OnAddGroup" />
+                        </a:Mi>
+                        <a:Mi ID="保存" Icon="保存" Click="OnSave" IsEnabled="{Binding IsDirty,ElementName=_fv}" />
+                        <a:Mi ID="删除" Icon="删除" Click="OnDel" />
+                        <a:Mi ID="打开菜单" Icon="点击" Click="OnOpen" />
+                        <a:Mi ID="刷新模型" Icon="刷新" Click="OnRefreshModel" />
+                    </a:Menu>
+                </a:Tab.Menu>
+                <a:Fv x:Name="_fv">
+                    <a:CText ID="name" Title="名称" />
+                    <a:CIcon ID="icon" Title="图标" />
+                    <a:CTree ID="parentname" Title="所属菜单" RefreshData="true" SrcID="id" TgtID="parentid" LoadData="OnLoadTreeGroup" />
+                    <a:CText ID="viewname" Title="视图名称" />
+                    <a:CText ID="params" Title="视图参数" AcceptsReturn="True" RowSpan="3" />
+                    <a:CText ID="srvname" Title="提示服务" />
+                    <a:CText ID="note" Title="功能说明" AcceptsReturn="True" RowSpan="3" />
+                    <a:CBool ID="islocked" Title="锁定不可用" />
+                    <a:CDate ID="ctime" Title="创建时间" IsReadOnly="True" />
+                    <a:CDate ID="mtime" Title="修改时间" IsReadOnly="True" />
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:WinCenter>
+    <a:WinItem DockState="DockedRight">
+        <a:Tabs>
+            <a:Tab Title="菜单授权">
+                <a:Tab.Menu>
+                    <a:Menu x:Name="_mRole">
+                        <a:Mi ID="添加" Icon="加号" Click="OnAddRole" />
+                        <a:Mi ID="移除" Icon="垃圾箱" Click="OnRemoveRole" IsEnabled="{Binding HasSelected,ElementName=_lvRole}" />
+                        <a:Mi ID="刷新模型" Icon="刷新" Click="OnRefreshModel" />
+                    </a:Menu>
+                </a:Tab.Menu>
+                <a:Lv x:Name="_lvRole">
+                    <DataTemplate>
+                        <a:Dot ID="rolename" Margin="10,0,10,0" />
+                    </DataTemplate>
+                </a:Lv>
+            </a:Tab>
+        </a:Tabs>
+    </a:WinItem>
+</a:Win>

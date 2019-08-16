@@ -7,7 +7,6 @@
 #endregion
 
 #region 引用命名
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.IO;
@@ -17,9 +16,7 @@ using System.Threading.Tasks;
 namespace Dt.Core
 {
     /// <summary>
-    /// 系统内置中间件，完成：
-    /// JWT格式的本地认证；
-    /// 内部特殊路径处理；
+    /// 系统内置中间件，完成内部特殊路径处理；
     /// </summary>
     public class DtMiddleware
     {
@@ -28,14 +25,12 @@ namespace Dt.Core
         static string _errorPage;
 
         readonly RequestDelegate _next;
-        readonly IAuthenticationSchemeProvider _schemes;
         #endregion
 
         #region 构造方法
-        public DtMiddleware(RequestDelegate p_next, IAuthenticationSchemeProvider p_schemes)
+        public DtMiddleware(RequestDelegate p_next)
         {
             _next = p_next ?? throw new ArgumentNullException(nameof(p_next));
-            _schemes = p_schemes ?? throw new ArgumentNullException(nameof(p_schemes));
         }
         #endregion
 
@@ -44,7 +39,7 @@ namespace Dt.Core
             // 内部特殊路径格式：/.xxx
             string path = p_context.Request.Path.Value.ToLower();
             if (path == "/.c")
-                return new LobContext(p_context).Handle(_schemes);
+                return new LobContext(p_context).Handle();
             if (path == "/.admin")
                 return ResponseAdminPage(p_context);
             if (path == "/.error")

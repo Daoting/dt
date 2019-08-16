@@ -16,7 +16,6 @@ namespace Dt.Core
 {
     /// <summary>
     /// 可序列化的键值集合，键忽略大小写
-    /// 值为string时等同StringPair
     /// 可以描述存储过程、Sql语句参数列表
     /// 值为嵌套的Dict时可描述复杂的数据结构
     /// 各值可为不同类型
@@ -46,6 +45,16 @@ namespace Dt.Core
         public string Str(string p_key)
         {
             return GetVal<string>(p_key);
+        }
+
+        /// <summary>
+        /// 返回Table对象
+        /// </summary>
+        /// <param name="p_key">键名</param>
+        /// <returns>Table</returns>
+        public Table Tbl(string p_key)
+        {
+            return GetVal<Table>(p_key);
         }
 
         /// <summary>
@@ -215,19 +224,42 @@ namespace Dt.Core
         /// <returns>值</returns>
         public T GetVal<T>(string p_key)
         {
-            if (!ContainsKey(p_key))
+            object val;
+            if (!TryGetValue(p_key, out val))
                 throw new Exception(string.Format("Dict中不包含 {0} 键！", p_key));
 
-            object val = this[p_key];
+            Type type = typeof(T);
             if (val == null)
+            {
+                // 字符串返回Empty！！！
+                if (type == typeof(string))
+                    return (T)(object)string.Empty;
                 return default(T);
+            }
 
             // 若指定类型和当前类型匹配
-            if (typeof(T) == val.GetType())
+            if (type == val.GetType())
                 return (T)val;
 
+            // bool特殊处理1
+            if (type == typeof(bool))
+            {
+                string str = val.ToString().ToLower();
+                bool suc = (str == "1" || str == "true");
+                return (T)(object)suc;
+            }
+
             // 若类型不匹配执行转换
-            return (T)Convert.ChangeType(val, typeof(T));
+            object result;
+            try
+            {
+                result = Convert.ChangeType(val, type);
+            }
+            catch
+            {
+                throw new Exception($"Dict项[{p_key}]转换异常：无法将[{val}]转换到[{type}]类型！");
+            }
+            return (T)result;
         }
 
         #region IRpcJson
@@ -245,7 +277,7 @@ namespace Dt.Core
                 }
                 catch (Exception exception)
                 {
-                    throw new Exception(string.Format("反序列化Dict时异常: {0}", exception.Message));
+                    throw new Exception("反序列化Dict时异常: " + exception.Message);
                 }
             }
             // 最外层 ]

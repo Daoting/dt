@@ -1,0 +1,56 @@
+﻿条件预编译：
+
+#if UWP
+            throw new NotImplementedException();
+#elif IOS
+            throw new NotImplementedException();
+#elif ANDROID
+            throw new NotImplementedException();
+#elif WASM
+            throw new NotImplementedException();
+#endif
+
+
+uno上各平台事件支持情况：
+
+Android：
+Entered只在初次或Exited后的Pressed后触发，点击未释放前离开目标元素触发Exited事件
+
+元素自身事件
+Pressed -> Released 原地点击，释放间隔时间长 或 Released.Handled=true
+Pressed -> Moved -> Released 点击和释放不是同一点
+Pressed -> Released -> Tapped 原地点击，快速释放 且 Released.Handled=false
+Pressed -> Released -> Tapped -> Pressed -> DoubleTapped -> Released 原地双击
+
+子元素冒泡事件
+Pressed       子元素附加后始终不冒泡
+Released      子元素Released.Handled=true时不冒泡，也不触发自身的Tapped，false时冒泡
+Tapped        子元素未附加Tapped 且 子元素Released.Handled=false时冒泡
+DoubleTapped  冒泡条件同Tapped
+
+父元素AddHandler事件时
+Pressed       不再触发子元素Pressed，始终不触发父子Tapped, DoubleTapped事件
+Released      父子始终触发Released，始终不触发父子Tapped, DoubleTapped事件
+Tapped        父元素不AddHandler的Pressed和Released，且子元素Handled=false时才触发
+DoubleTapped  同上
+
+iOS：
+始终无Entered事件，点击未释放前离开目标元素触发Exited事件，Released和Tapped事件只触发一个
+
+元素自身事件
+Pressed -> Released 原地点击，释放间隔时间长
+Pressed -> Moved -> Released 点击和释放不是同一点
+Pressed -> Tapped 原地点击，快速释放 且 Released.Handled=false
+Pressed -> Tapped -> DoubleTapped 原地双击
+
+子元素冒泡事件
+Pressed       父元素附加后始终不触发子元素Pressed
+Released      子元素Released.Handled=true时不冒泡，false时冒泡
+Tapped        子元素Tapped.Handled=true时不冒泡，false时冒泡
+DoubleTapped  子元素DoubleTapped.Handled=true时不冒泡，false时冒泡
+
+父元素AddHandler事件时
+Pressed       不再触发子元素Pressed
+Released      父子始终触发Released，Released和Tapped事件只触发一个
+Tapped        父子始终触发Tapped，Released和Tapped事件只触发一个
+DoubleTapped  同上

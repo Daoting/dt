@@ -31,7 +31,7 @@ namespace Dt.Core.Rpc
         /// <returns></returns>
         public Task Write(object p_message)
         {
-            return RpcKit.WriteFrame(_lc.Context.Response.BodyWriter, p_message);
+            return RpcServerKit.WriteFrame(_lc.Context.Response.BodyWriter, p_message);
         }
     }
 }

@@ -1,0 +1,295 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras/2.0.31">
+
+  <PropertyGroup>
+    <TargetFrameworks>uap10.0.17763;MonoAndroid81</TargetFrameworks>
+  </PropertyGroup>
+
+  <Import Project="..\Common\dtc.props" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
+    <ProjectReference Include="..\Dt.Base\Dt.Base.csproj" />
+    <ProjectReference Include="..\Dt.App\Dt.App.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Include="SamplesMain.xaml" />
+
+    <Page Include="Menu\MenuHome.xaml" />
+    <Page Include="Menu\MenuDemo.xaml" />
+    <Page Include="Menu\ContextMenuDemo.xaml" />
+
+    <Page Include="Base\TabControlDemo.xaml" />
+    <Page Include="Base\DockPanelDemo.xaml" />
+    <Page Include="Base\SplitterDemo.xaml" />
+    <Page Include="Base\SketchPage.xaml" />
+
+    <Page Include="Structure\Dlg1.xaml" />
+    <Page Include="Structure\Dlg2.xaml" />
+    <Page Include="Structure\DlgDemo.xaml" />
+    <Page Include="Structure\FlyoutDemo.xaml" />
+    <Page Include="Structure\NotifyDemo.xaml" />
+    <Page Include="Structure\PageWinDemo.xaml" />
+    <Page Include="Structure\WinDemo.xaml" />
+    <Page Include="Structure\NaviWinDemo.xaml" />
+    <Page Include="Structure\SysTraceDemo.xaml" />
+    <Page Include="Structure\TabNav1.xaml" />
+    <Page Include="Structure\TabNav2.xaml" />
+
+    <Page Include="Styles\BtnDemo.xaml" />
+    <Page Include="Styles\IconDemo.xaml" />
+    <Page Include="Styles\BrushDemo.xaml" />
+    <Page Include="Styles\TestDemo1.xaml" />
+    <Page Include="Styles\TestDemo2.xaml" />
+    <Page Include="Styles\RouteEventDemo.xaml" />
+
+    <Page Include="FormView\FvHome.xaml" />
+    <Page Include="FormView\FvLayout.xaml" />
+    <Page Include="FormView\CustomCell.xaml" />
+    <Page Include="FormView\CellsDemo.xaml" />
+    <Page Include="FormView\FvDataSource.xaml" />
+    <Page Include="FormView\FvObjData.xaml" />
+    <Page Include="FormView\FvData.xaml" />
+    <Page Include="FormView\FvAutoCell.xaml" />
+
+    <Page Include="ListView\LvHome.xaml" />
+    <Page Include="ListView\LvViewBase.xaml" />
+    <Page Include="ListView\LvViewEx.xaml" />
+    <Page Include="ListView\NumericTicker.xaml" />
+    <Page Include="ListView\LvListSelector.xaml" />
+    <Page Include="ListView\LvList.xaml" />
+    <Page Include="ListView\LvTable.xaml" />
+    <Page Include="ListView\LvTile.xaml" />
+    <Page Include="ListView\LvTileSelector.xaml" />
+    <Page Include="ListView\LvGroupTemplate.xaml" />
+    <Page Include="ListView\LvContextMenu.xaml" />
+
+    <Page Include="DataAccess\DataAccessHome.xaml" />
+    <Page Include="DataAccess\TableAccess.xaml" />
+    <Page Include="DataAccess\SerializeDemo.xaml" />
+    <Page Include="DataAccess\DbAccess.xaml" />
+    <Page Include="DataAccess\LocalDbAccess.xaml" />
+
+    <Page Include="TreeView\TvHome.xaml" />
+    <Page Include="TreeView\TvBase.xaml" />
+    <Page Include="TreeView\TvDynamicLoading.xaml" />
+    <Page Include="TreeView\TvViewEx.xaml" />
+    <Page Include="TreeView\TvViewSelector.xaml" />
+    <Page Include="TreeView\TvContextMenu.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="SamplesMain.xaml.cs">
+      <DependentUpon>SamplesMain.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Menu\MenuDemo.xaml.cs">
+      <DependentUpon>MenuDemo.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Menu\ContextMenuDemo.xaml.cs">
+      <DependentUpon>ContextMenuDemo.xaml</DependentUpon>
+    </Compile>
+
+    <Compile Update="Base\PopBoxDemo.xaml.cs">
+      <DependentUpon>PopBoxDemo.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Base\PopBoxContent.xaml.cs">
+      <DependentUpon>PopBoxContent.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Base\DockPanelDemo.xaml.cs">
+      <DependentUpon>DockPanelDemo.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Base\SplitterDemo.xaml.cs">
+      <DependentUpon>SplitterDemo.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Base\SketchPage.xaml.cs">
+      <DependentUpon>SketchPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Base\TabControlDemo.xaml.cs">
+      <DependentUpon>TabControlDemo.xaml</DependentUpon>
+    </Compile>
+
+    <Compile Update="Structure\Dlg1.xaml.cs">
+      <DependentUpon>Dlg1.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Structure\Dlg2.xaml.cs">
+      <DependentUpon>Dlg2.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Structure\DlgDemo.xaml.cs">
+      <DependentUpon>DlgDemo.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Structure\FlyoutDemo.xaml.cs">
+      <DependentUpon>FlyoutDemo.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Structure\NotifyDemo.xaml.cs">
+      <DependentUpon>NotifyDemo.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Structure\WinDemo.xaml.cs">
+      <DependentUpon>WinDemo.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Structure\PageWinDemo.xaml.cs">
+      <DependentUpon>PageWinDemo.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Structure\NaviWinDemo.xaml.cs">
+      <DependentUpon>NaviWinDemo.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Structure\SysTraceDemo.xaml.cs">
+      <DependentUpon>SysTraceDemo.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Structure\TabNav1.xaml.cs">
+      <DependentUpon>TabNav1.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Structure\TabNav2.xaml.cs">
+      <DependentUpon>TabNav2.xaml</DependentUpon>
+    </Compile>
+
+    <Compile Update="Styles\BtnDemo.xaml.cs">
+      <DependentUpon>BtnDemo.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Styles\IconDemo.xaml.cs">
+      <DependentUpon>IconDemo.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Styles\BrushDemo.xaml.cs">
+      <DependentUpon>BrushDemo.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Styles\RouteEventDemo.xaml.cs">
+      <DependentUpon>RouteEventDemo.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Styles\TestDemo1.xaml.cs">
+      <DependentUpon>TestDemo1.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Styles\TestDemo2.xaml.cs">
+      <DependentUpon>TestDemo2.xaml</DependentUpon>
+    </Compile>
+
+    <Compile Update="FormView\FvHome.xaml.cs">
+      <DependentUpon>FvHome.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="FormView\FvLayout.xaml.cs">
+      <DependentUpon>FvLayout.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="FormView\CustomCell.xaml.cs">
+      <DependentUpon>CustomCell.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="FormView\CellsDemo.xaml.cs">
+      <DependentUpon>CellsDemo.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="FormView\FvDataSource.xaml.cs">
+      <DependentUpon>FvDataSource.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="FormView\FvObjData.xaml.cs">
+      <DependentUpon>FvObjData.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="FormView\FvData.xaml.cs">
+      <DependentUpon>FvData.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="FormView\FvAutoCell.xaml.cs">
+      <DependentUpon>FvAutoCell.xaml</DependentUpon>
+    </Compile>
+
+    <Compile Update="ListView\LvHome.xaml.cs">
+      <DependentUpon>LvHome.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="ListView\LvViewBase.xaml.cs">
+      <DependentUpon>LvViewBase.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="ListView\LvViewEx.xaml.cs">
+      <DependentUpon>LvViewEx.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="ListView\NumericTicker.xaml.cs">
+      <DependentUpon>NumericTicker.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="ListView\LvListSelector.xaml.cs">
+      <DependentUpon>LvListSelector.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="ListView\LvList.xaml.cs">
+      <DependentUpon>LvList.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="ListView\LvTable.xaml.cs">
+      <DependentUpon>LvTable.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="ListView\LvTile.xaml.cs">
+      <DependentUpon>LvTile.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="ListView\LvTileSelector.xaml.cs">
+      <DependentUpon>LvTileSelector.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="ListView\LvGroupTemplate.xaml.cs">
+      <DependentUpon>LvGroupTemplate.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="ListView\LvContextMenu.xaml.cs">
+      <DependentUpon>LvContextMenu.xaml</DependentUpon>
+    </Compile>
+
+    <Compile Update="DataAccess\DataAccessHome.xaml.cs">
+      <DependentUpon>DataAccessHome.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="DataAccess\TableAccess.xaml.cs">
+      <DependentUpon>TableAccess.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="DataAccess\SerializeDemo.xaml.cs">
+      <DependentUpon>SerializeDemo.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="DataAccess\DbAccess.xaml.cs">
+      <DependentUpon>DbAccess.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="DataAccess\LocalDbAccess.xaml.cs">
+      <DependentUpon>LocalDbAccess.xaml</DependentUpon>
+    </Compile>
+
+    <Compile Update="TreeView\TvHome.xaml.cs">
+      <DependentUpon>TvHome.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="TreeView\TvBase.xaml.cs">
+      <DependentUpon>TvBase.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="TreeView\TvDynamicLoading.xaml.cs">
+      <DependentUpon>TvDynamicLoading.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="TreeView\TvViewEx.xaml.cs">
+      <DependentUpon>TvViewEx.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="TreeView\TvViewSelector.xaml.cs">
+      <DependentUpon>TvViewSelector.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="TreeView\TvContextMenu.xaml.cs">
+      <DependentUpon>TvContextMenu.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ListView\LvContextMenu.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="ListView\LvGroupTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="ListView\LvHome.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="ListView\LvList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="ListView\LvListSelector.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="ListView\LvTable.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="ListView\LvTile.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="ListView\LvTileSelector.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="ListView\LvViewBase.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="ListView\LvViewEx.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="ListView\NumericTicker.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+  </ItemGroup>
+
+</Project>

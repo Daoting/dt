@@ -53,12 +53,12 @@ namespace Dt.Core
         [CustomAgent(
 @"public static async Task<T> GetScalar<T>(string p_keyOrSql, object p_params = null)
 {
-    object result = await Call<Object>(
+    object result = await new UnaryRpc(
         ###,
         ""DataAccess.GetScalar"",
         p_keyOrSql,
         p_params
-    );
+    ).Call<Object>();
     return AtKit.ConvertType<T>(result);
 }
 ")]

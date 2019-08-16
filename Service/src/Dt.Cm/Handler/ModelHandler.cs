@@ -7,7 +7,7 @@
 #endregion
 
 #region 引用命名
-using Dt.Cm.Sqlite;
+using Dt.Core.Model;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 #endregion

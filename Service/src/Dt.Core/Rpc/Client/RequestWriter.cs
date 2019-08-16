@@ -48,7 +48,7 @@ namespace Dt.Core.Rpc
                     return Task.FromException(new InvalidOperationException(_errWriting));
 
                 // 保存任务用来检查是否完成
-                _writeTask = RpcKit.WriteFrame(_rpc.RequestStream, p_message);
+                _writeTask = RpcClientKit.WriteFrame(_rpc.RequestStream, p_message);
             }
             return _writeTask;
         }

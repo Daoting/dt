@@ -15,6 +15,9 @@ using System.Reflection;
 
 namespace Dt.Core
 {
+    /// <summary>
+    /// Json Rpc序列化、反序列化
+    /// </summary>
     public static class JsonRpcSerializer
     {
         #region 序列化
@@ -72,6 +75,16 @@ namespace Dt.Core
             {
                 p_writer.WriteValue((int)p_value);
             }
+            else if (tgtType.Namespace == null && tgtType.IsNotPublic)
+            {
+                // 匿名对象转成Dict
+                Dict dt = new Dict();
+                foreach (var prop in tgtType.GetProperties())
+                {
+                    dt[prop.Name] = prop.GetValue(p_value);
+                }
+                ((IRpcJson)dt).WriteRpcJson(p_writer);
+            }
             else
             {
                 SerializeObject(p_value, p_writer);
@@ -81,7 +94,7 @@ namespace Dt.Core
         static void SerializeObject(object p_value, JsonWriter p_writer)
         {
             p_writer.WriteStartArray();
-            p_writer.WriteValue("#" + Silo.GetSerializableTypeAlias(p_value.GetType()));
+            p_writer.WriteValue("#" + SerializeTypeAlias.GetAlias(p_value.GetType()));
             JsonSerializer.Create().Serialize(p_writer, p_value);
             p_writer.WriteEndArray();
         }
@@ -89,7 +102,7 @@ namespace Dt.Core
         static void SerializeArray(IEnumerable p_value, JsonWriter p_writer)
         {
             p_writer.WriteStartArray();
-            p_writer.WriteValue("&" + Silo.GetSerializableTypeAlias(p_value.GetType()));
+            p_writer.WriteValue("&" + SerializeTypeAlias.GetAlias(p_value.GetType()));
             foreach (object item in p_value)
             {
                 Serialize(item, p_writer);
@@ -160,7 +173,7 @@ namespace Dt.Core
 
         static object DeserializeObject(JsonReader p_reader, string p_alias)
         {
-            Type type = Silo.GetSerializableType(p_alias);
+            Type type = SerializeTypeAlias.GetType(p_alias);
             object result = Activator.CreateInstance(type);
             if (result is IRpcJson xrs)
             {
@@ -175,18 +188,19 @@ namespace Dt.Core
 
         static object DeserializeArray(JsonReader p_reader, string p_alias)
         {
-            Type type = Silo.GetSerializableType(p_alias);
+            Type type = SerializeTypeAlias.GetType(p_alias);
             IList target = null;
             if (type.IsArray)
             {
+                // .Net Native不支持数组类型反序列化！
                 Type elementType = type.GetElementType();
                 target = Activator.CreateInstance(Type.GetType("System.Collections.Generic.List`1[[" + elementType.FullName + ", " + elementType.Assembly.FullName + "]]")) as IList;
             }
             else
             {
-                if (type.GetInterface("System.Collections.IList") == null)
-                    throw new Exception(type.FullName + " 类无法进行自动反序列化。");
                 target = Activator.CreateInstance(type, new object[0]) as IList;
+                if (target == null)
+                    throw new Exception(type.FullName + " 类无法进行自动反序列化。");
             }
 
             while (p_reader.Read() && p_reader.TokenType != JsonToken.EndArray)
@@ -194,6 +208,7 @@ namespace Dt.Core
                 target.Add(Deserialize(p_reader));
             }
 
+            // .Net Native不支持
             if (type.IsArray)
                 return target.GetType().InvokeMember("ToArray", BindingFlags.InvokeMethod, null, target, null);
             return target;

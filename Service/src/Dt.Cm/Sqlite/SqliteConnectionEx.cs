@@ -7,7 +7,6 @@
 #endregion
 
 #region 引用命名
-using Dt.Core;
 using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Concurrent;
@@ -15,7 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 #endregion
 
-namespace Dt.Cm.Sqlite
+namespace Dt.Core.Sqlite
 {
     public class SqliteConnectionEx : SqliteConnection
     {
@@ -102,7 +101,7 @@ namespace Dt.Cm.Sqlite
 
             using (SqliteCommand cmd = CreateCommand())
             {
-                cmd.CommandText = map.GetInsertSql();
+                cmd.CommandText = map.GetInsertSql(false);
                 foreach (var col in cols)
                 {
                     cmd.Parameters.Add(col.Name, ToDbType(col.ColumnType));
@@ -130,7 +129,7 @@ namespace Dt.Cm.Sqlite
 
             using (SqliteCommand cmd = CreateCommand())
             {
-                cmd.CommandText = map.GetInsertSql();
+                cmd.CommandText = map.GetInsertSql(false);
                 foreach (var col in cols)
                 {
                     cmd.Parameters.Add(col.Name, ToDbType(col.ColumnType));
