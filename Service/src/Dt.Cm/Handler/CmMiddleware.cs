@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Core.Model;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Threading.Tasks;
@@ -29,7 +30,10 @@ namespace Dt.Cm
         public Task Invoke(HttpContext p_context)
         {
             if (p_context.Request.Path.Value.ToLower() == "/.model")
-                return ModelHandler.GetFile(p_context);
+            {
+                p_context.Response.ContentType = "application/dt";
+                return p_context.Response.Body.WriteAsync(SqliteModel.ModelData, 0, SqliteModel.ModelData.Length);
+            }
             return _next(p_context);
         }
     }

@@ -29,6 +29,7 @@ namespace Dt.Sample
                 new NaviRow(Icons.详细, "序列化类型", typeof(SerializeDemo), ""),
                 new NaviRow(Icons.小图标, "增删改查", typeof(DbAccess), ""),
                 new NaviRow(Icons.排列, "本地库操作", typeof(LocalDbAccess), ""),
+                new NaviRow(Icons.耳麦, "远程过程调用", typeof(RpcDemo), ""),
             };
         }
     }

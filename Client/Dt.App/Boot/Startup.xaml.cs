@@ -98,6 +98,11 @@ namespace Dt.App
                 }
                 catch (Exception ex)
                 {
+                    try
+                    {
+                        File.Delete(Path.Combine(AtSys.LocalDbPath, p_modelFile));
+                    }
+                    catch { }
                     ShowError("下载模型文件失败！", ex);
                     return false;
                 }

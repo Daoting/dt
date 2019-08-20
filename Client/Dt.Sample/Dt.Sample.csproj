@@ -69,6 +69,7 @@
     <Page Include="DataAccess\SerializeDemo.xaml" />
     <Page Include="DataAccess\DbAccess.xaml" />
     <Page Include="DataAccess\LocalDbAccess.xaml" />
+    <Page Include="DataAccess\RpcDemo.xaml" />    
 
     <Page Include="TreeView\TvHome.xaml" />
     <Page Include="TreeView\TvBase.xaml" />
@@ -235,7 +236,10 @@
     <Compile Update="DataAccess\LocalDbAccess.xaml.cs">
       <DependentUpon>LocalDbAccess.xaml</DependentUpon>
     </Compile>
-
+    <Compile Update="DataAccess\RpcDemo.xaml.cs">
+      <DependentUpon>RpcDemo.xaml</DependentUpon>
+    </Compile> 
+    
     <Compile Update="TreeView\TvHome.xaml.cs">
       <DependentUpon>TvHome.xaml</DependentUpon>
     </Compile>
@@ -257,6 +261,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="DataAccess\RpcDemo.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
     <None Update="ListView\LvContextMenu.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>

@@ -57,14 +57,8 @@ namespace Dt.Cm
                 res["name"] = user.Name;
                 res["sex"] = user.Sex;
             }
-            res["roles"] = Glb.AnyoneID;
+            res["roles"] = "aca71e2d795d47b6942e4aa5c9df8248," + Glb.AnyoneID;
             return res;
-        }
-
-        [Authorize]
-        public string Test()
-        {
-            return "asd";
         }
     }
 }

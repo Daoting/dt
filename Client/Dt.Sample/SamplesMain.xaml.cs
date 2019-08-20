@@ -108,8 +108,8 @@ namespace Dt.Sample
                 },
                 new DataCmd
                 {
-                    Title = "数据访问",
-                    Note = "数据访问的常见方法，包括数据表的操作、支持的序列化类型、远程数据的增删改查、本地库操作等",
+                    Title = "数据访问与Rpc",
+                    Note = "包括数据表操作、数据序列化、远程/本地数据的增删改查、远程过程调用等",
                     Tag = typeof(DataAccessHome)
                 },
             };
