@@ -45,7 +45,7 @@ namespace Dt.Shell
         /// </summary>
         public string ServerUrl
         {
-            get { return "https://localhost/baisui"; }
+            get { return "https://10.10.1.16/baisui"; }
         }
 
         /// <summary>

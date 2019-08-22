@@ -7,7 +7,6 @@
 #endregion
 
 #region 引用命名
-using Dt.Core.Rpc;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -41,8 +40,6 @@ namespace Dt.Core
             Stub = p_stub;
             if (Stub.SerializeTypes != null)
                 SerializeTypeAlias.Merge(Stub.SerializeTypes);
-            if (!Stub.IsLocalMode)
-                BaseRpc.Init(Stub.ServerUrl);
 
             Application app = Application.Current;
             app.Suspending += OnSuspending;

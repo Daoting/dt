@@ -11,8 +11,9 @@
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
   
-  <ItemGroup>
-    <None Remove="Dt.Core.csproj.vspscc" />
+  <ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid81' ">
+    <PackageReference Include="Square.OkHttp3" Version="3.12.3" />
+    <PackageReference Include="Square.OkIO" version="1.17.4" />
   </ItemGroup>
   
   <ItemGroup>

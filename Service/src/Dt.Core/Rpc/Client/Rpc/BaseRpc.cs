@@ -13,9 +13,11 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Core.Rpc
@@ -26,10 +28,25 @@ namespace Dt.Core.Rpc
     public abstract class BaseRpc
     {
         #region 成员变量
+        protected readonly static HttpClient _client;
+        protected readonly string _svcName;
         protected readonly string _methodName;
         protected readonly byte[] _data;
         protected bool _isCompressed;
         #endregion
+
+        static BaseRpc()
+        {
+#if SERVER || UWP
+            _client = new HttpClient(new HttpClientHandler
+            {
+                // 验证时服务端证书始终有效！
+                ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
+            });
+#else
+            _client = new HttpClient(new NativeMessageHandler());
+#endif
+        }
 
         /// <summary>
         /// 构造方法
@@ -42,15 +59,32 @@ namespace Dt.Core.Rpc
             if (string.IsNullOrEmpty(p_serviceName) || string.IsNullOrEmpty(p_methodName))
                 throw new InvalidOperationException("Rpc调用时需要指定服务名称和API名称！");
 
-#if SERVER
-            _client = GetHttpClient(p_serviceName);
-#else
             _svcName = p_serviceName;
-#endif
             _methodName = p_methodName;
             _data = GetRpcData(p_methodName, p_params);
         }
 
+        /// <summary>
+        /// 获取单例HttpClient
+        /// </summary>
+        public static HttpClient Client => _client;
+
+        /// <summary>
+        /// 刷新HttpClient头的访问令牌信息
+        /// </summary>
+        /// <param name="p_token">访问令牌，null时清除认证信息</param>
+        internal static void SetToken(string p_token)
+        {
+            if (string.IsNullOrEmpty(p_token))
+                _client.DefaultRequestHeaders.Authorization = null;
+            else
+                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", p_token);
+        }
+
+        /// <summary>
+        /// 创建http2协议的Request
+        /// </summary>
+        /// <returns></returns>
         protected HttpRequestMessage CreateRequestMessage()
         {
             // 使用http2协议Post方法
@@ -58,8 +92,11 @@ namespace Dt.Core.Rpc
             {
                 Method = HttpMethod.Post,
                 Version = new Version(2, 0),
-#if !SERVER
-                RequestUri = new Uri(_svcName + "/.c", UriKind.Relative),
+#if SERVER
+                // 部署在k8s时内部DNS通过服务名即可
+                RequestUri = new Uri(Glb.IsInDocker ? $"https://{Glb.AppName}-{_svcName}/.c" : $"https://localhost/{Glb.AppName}/{_svcName}/.c"),
+#else
+                RequestUri = new Uri($"{AtSys.Stub.ServerUrl.TrimEnd('/')}/{_svcName}/.c"),
 #endif
             };
         }
@@ -103,74 +140,5 @@ namespace Dt.Core.Rpc
             }
             return data;
         }
-
-#if SERVER
-        // 每种服务缓存一个HttpClient，HttpClient所有异步方法都是多线程安全！
-        static readonly ConcurrentDictionary<string, HttpClient> _clients = new ConcurrentDictionary<string, HttpClient>();
-
-        protected readonly HttpClient _client;
-
-        /// <summary>
-        /// 每种服务缓存一个HttpClient
-        /// </summary>
-        /// <param name="p_serviceName"></param>
-        /// <returns></returns>
-        HttpClient GetHttpClient(string p_serviceName)
-        {
-            HttpClient client;
-            if (!_clients.TryGetValue(p_serviceName, out client))
-            {
-                try
-                {
-                    // 部署在k8s时内部DNS通过服务名即可
-                    string uri = Glb.IsInDocker ? $"https://{Glb.AppName}-{p_serviceName}/.c" : $"https://localhost/{Glb.AppName}/{p_serviceName}/.c";
-
-                    // 验证时服务端证书始终有效！
-                    HttpClientHandler handler = new HttpClientHandler();
-                    handler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true;
-
-                    client = new HttpClient(handler);
-                    client.BaseAddress = new Uri(uri, UriKind.Absolute);
-                    // 此处设置无效！在HttpRequestMessage设置
-                    //client.DefaultRequestVersion = new Version(2, 0);
-
-                    _clients.TryAdd(p_serviceName, client);
-                }
-                catch
-                {
-                    throw new Exception($"获取【{p_serviceName}】服务的HttpClient失败！");
-                }
-            }
-            return client;
-        }
-#else
-        protected static HttpClient _client;
-        readonly string _svcName;
-
-        /// <summary>
-        /// 初始化HttpClient
-        /// </summary>
-        /// <param name="p_url">服务器地址</param>
-        internal static void Init(string p_url)
-        {
-            // 验证时服务端证书始终有效！
-            HttpClientHandler handler = new HttpClientHandler();
-            handler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true;
-            _client = new HttpClient(handler);
-            _client.BaseAddress = new Uri(p_url.TrimEnd('/') + "/", UriKind.Absolute);
-        }
-
-        /// <summary>
-        /// 刷新HttpClient头的访问令牌信息
-        /// </summary>
-        /// <param name="p_token">访问令牌，null时清除认证信息</param>
-        internal static void SetToken(string p_token)
-        {
-            if (string.IsNullOrEmpty(p_token))
-                _client.DefaultRequestHeaders.Authorization = null;
-            else
-                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", p_token);
-        }
-#endif
     }
 }

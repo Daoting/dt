@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Dt.Core;
+using Dt.Core.Rpc;
 using System;
 using System.IO;
 using System.IO.Compression;
@@ -80,20 +81,14 @@ namespace Dt.App
 
                 try
                 {
-                    // 下载模型文件，下载地址如 http://localhost/app/cm/.model
-                    HttpClient client = new HttpClient();
-                    HttpResponseMessage response = await client.GetAsync(AtSys.Stub.ServerUrl + "/cm/.model");
-                    response.EnsureSuccessStatusCode();
-                    using (Stream stream = await response.Content.ReadAsStreamAsync())
+                    // 下载模型文件，下载地址如 https://localhost/app/cm/.model
+                    using(var response = await BaseRpc.Client.GetAsync(AtSys.Stub.ServerUrl.TrimEnd('/') + "/cm/.model"))
+                    using (var stream = await response.Content.ReadAsStreamAsync())
+                    using (var gzipStream = new GZipStream(stream, CompressionMode.Decompress))
+                    using (var fs = File.Create(Path.Combine(AtSys.LocalDbPath, p_modelFile), 262140, FileOptions.WriteThrough))
                     {
-                        using (GZipStream gzipStream = new GZipStream(stream, CompressionMode.Decompress))
-                        {
-                            using (FileStream fs = File.Create(Path.Combine(AtSys.LocalDbPath, p_modelFile), 262140, FileOptions.WriteThrough))
-                            {
-                                gzipStream.CopyTo(fs);
-                                fs.Flush();
-                            }
-                        }
+                        gzipStream.CopyTo(fs);
+                        fs.Flush();
                     }
                 }
                 catch (Exception ex)

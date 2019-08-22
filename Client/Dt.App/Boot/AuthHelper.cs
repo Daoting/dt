@@ -34,8 +34,7 @@ namespace Dt.App
                 return null;
 
             // 重新获取token
-            var client = new HttpClient();
-            var tokenResponse = await client.RequestPasswordTokenAsync(new PasswordTokenRequest
+            var tokenResponse = await BaseRpc.Client.RequestPasswordTokenAsync(new PasswordTokenRequest
             {
                 Address = AtSys.Stub.ServerUrl + "/auth/connect/token",
                 ClientId = "dtc",
