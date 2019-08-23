@@ -69,17 +69,22 @@ namespace Dt.Core.Rpc
         /// </summary>
         public static HttpClient Client => _client;
 
+#if !SERVER
         /// <summary>
-        /// 刷新HttpClient头的访问令牌信息
+        /// 刷新HttpClient头的用户信息
         /// </summary>
-        /// <param name="p_token">访问令牌，null时清除认证信息</param>
-        internal static void SetToken(string p_token)
+        internal static void RefreshHeader()
         {
-            if (string.IsNullOrEmpty(p_token))
-                _client.DefaultRequestHeaders.Authorization = null;
-            else
-                _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", p_token);
+            var header = _client.DefaultRequestHeaders;
+            header.Remove("sid");
+            header.Remove("uid");
+            if (!string.IsNullOrEmpty(AtUser.ID))
+            {
+                header.Add("sid", AtUser.SessionID);
+                header.Add("uid", AtUser.ID);
+            }
         }
+#endif
 
         /// <summary>
         /// 创建http2协议的Request

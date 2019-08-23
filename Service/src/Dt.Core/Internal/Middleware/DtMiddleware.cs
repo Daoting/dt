@@ -9,6 +9,7 @@
 #region 引用命名
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 #endregion
@@ -21,6 +22,11 @@ namespace Dt.Core
     public class DtMiddleware
     {
         #region 成员变量
+        /// <summary>
+        /// 外部自定义请求处理
+        /// </summary>
+        internal static readonly Dictionary<string, RequestDelegate> RequestHandlers = new Dictionary<string, RequestDelegate>();
+
         static string _adminPage;
         static string _errorPage;
 
@@ -44,6 +50,8 @@ namespace Dt.Core
                 return ResponseAdminPage(p_context);
             if (path == "/.error")
                 return ResponseErrorPage(p_context);
+            if (RequestHandlers.TryGetValue(path, out var callback))
+                return callback(p_context);
 
             return _next(p_context);
         }

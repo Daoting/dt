@@ -226,7 +226,7 @@ namespace Dt.Core
             }
 
             // 校验授权
-            if (!await IsAuthenticated())
+            if (!IsAuthenticated())
             {
                 await Response(ApiResponseType.Error, 0, "未经授权");
                 return;
@@ -351,14 +351,8 @@ namespace Dt.Core
         /// 校验授权
         /// </summary>
         /// <returns></returns>
-        async Task<bool> IsAuthenticated()
+        bool IsAuthenticated()
         {
-            // 只本地认证(JWT格式)，未处理远程认证及重定向，原中间件见Authentication.txt
-            // 首次认证时需要auth服务的远程认证
-            var result = await Context.AuthenticateAsync(Glb.AuthenticationScheme);
-            if (result?.Principal != null)
-                Context.User = result.Principal;
-
             return true;
         }
         #endregion

@@ -7,7 +7,7 @@
 #endregion
 
 #region 引用命名
-using Dt.App;
+using Dt.Base;
 using Dt.Core;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
@@ -42,7 +42,7 @@ namespace Dt.Shell
             // 状态栏字体设置白色，配合info.plist中的UIViewControllerBasedStatusBarAppearance
             UIKit.UIApplication.SharedApplication.StatusBarStyle = UIKit.UIStatusBarStyle.LightContent;
 #endif
-            Launcher.Run(p_args);
+            AtApp.Run(p_args);
         }
     }
 }

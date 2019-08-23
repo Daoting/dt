@@ -45,9 +45,9 @@ namespace Dt.Base
 
             _newParam = new PageParameter(p_content, null);
 #if UWP
-            AtUI.Frame.Navigate(typeof(PhonePage), _newParam);
+            AtApp.Frame.Navigate(typeof(PhonePage), _newParam);
 #else
-            AtUI.Frame.Navigate(typeof(PhonePage));
+            AtApp.Frame.Navigate(typeof(PhonePage));
 #endif
         }
 
@@ -63,9 +63,9 @@ namespace Dt.Base
             var taskSrc = new TaskCompletionSource<bool>();
             _newParam = new PageParameter(p_content, taskSrc);
 #if UWP
-            AtUI.Frame.Navigate(typeof(PhonePage), _newParam);
+            AtApp.Frame.Navigate(typeof(PhonePage), _newParam);
 #else
-            AtUI.Frame.Navigate(typeof(PhonePage));
+            AtApp.Frame.Navigate(typeof(PhonePage));
 #endif
             return taskSrc.Task;
         }

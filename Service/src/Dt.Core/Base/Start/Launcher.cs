@@ -119,8 +119,8 @@ namespace Dt.Core
                         // 未使用Listen方法，因无法应用外部设置的端口！
                         options.ConfigureEndpointDefaults(listenOptions =>
                         {
-                            // 默认http2，只有auth服务的IdentityServer用到http1
-                            listenOptions.Protocols = HttpProtocols.Http1AndHttp2;
+                            // 默认http2
+                            listenOptions.Protocols = HttpProtocols.Http2;
 
                             // X509证书为嵌入的资源
                             Stream stream = typeof(Launcher).Assembly.GetManifestResourceStream("Dt.Core.Res.tls.pfx");

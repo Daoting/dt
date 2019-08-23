@@ -1,0 +1,410 @@
+﻿#region 文件描述
+/******************************************************************************
+* 创建: Daoting
+* 摘要: 
+* 日志: 2019-08-22 创建
+******************************************************************************/
+#endregion
+
+#region 引用命名
+using Dt.Core;
+using Dt.Core.Rpc;
+using System;
+using System.IO;
+using System.IO.Compression;
+using System.Threading.Tasks;
+using System.Xml.Linq;
+using Windows.ApplicationModel.Activation;
+using Windows.UI.Core;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+#endregion
+
+namespace Dt.Base
+{
+    /// <summary>
+    /// 客户端整个生命周期管理类
+    /// </summary>
+    public static class AtApp
+    {
+        /// <summary>
+        /// 应用程序启动
+        /// </param>
+        public static void Run(LaunchActivatedEventArgs args)
+        {
+            // 已启动过则激活应用
+            if (SysVisual.RootContent != null)
+            {
+                Window.Current.Activate();
+                // 带参数启动
+                if (!string.IsNullOrEmpty(args.Arguments))
+                    AtKit.RunAsync(() => LaunchFreely(args.Arguments));
+                return;
+            }
+
+            // uwp和wasm 支持UI模式切换
+#if UWP
+            SysVisual.UIModeChanged = OnUIModeChanged;
+            if (!AtSys.IsPhoneUI)
+            {
+                _deskDict = new ResourceDictionary() { Source = new Uri(_deskStylePath) };
+                Application.Current.Resources.MergedDictionaries.Add(_deskDict);
+            }
+#endif
+
+            // 后退键
+            var view = SystemNavigationManager.GetForCurrentView();
+            view.BackRequested += InputManager.OnBackRequested;
+            if (AtSys.System == TargetSystem.Windows)
+            {
+                if (AtSys.IsPhoneUI)
+                    view.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
+                // 全局快捷键
+                Window.Current.CoreWindow.Dispatcher.AcceleratorKeyActivated += InputManager.AcceleratorKeyActivated;
+            }
+
+            // 带参数启动
+            if (!string.IsNullOrEmpty(args.Arguments))
+                _launchCallback = () => LaunchFreely(args.Arguments);
+
+            // 提示信息
+            NotifyManager.Init();
+
+            // 初始UI
+            if (AtSys.Stub.IsLocalMode)
+                LoadRootContent();
+            else
+                SysVisual.RootContent = AtSys.Stub.StartPage;
+            Window.Current.Activate();
+        }
+
+        /// <summary>
+        /// 更新打开模型文件
+        /// 1. 与本地不同时下载新模型文件；
+        /// 2. 打开模型库；
+        /// </summary>
+        /// <param name="p_prefix"></param>
+        /// <returns></returns>
+        public static async Task<string> OpenModelDb(string p_prefix)
+        {
+            // 获取全局参数
+            Dict cfg;
+            try
+            {
+                cfg = await new UnaryRpc("auth", "Entry.GetConfig", p_prefix).Call<Dict>();
+                AtSys.SyncTime(cfg.Date("now"));
+            }
+            catch (Exception ex)
+            {
+                return "服务器连接失败！" + ex.Message;
+            }
+
+            // 更新模型文件
+            string modelFile = cfg.Str("ver") + ".db";
+            bool existFile = File.Exists(Path.Combine(AtSys.LocalDbPath, modelFile));
+            if (!existFile)
+            {
+                // 关闭模型库，打开时无法删除文件
+                AtLocal.CloseModelDb();
+
+                // 删除旧版的模型文件
+                foreach (var file in new DirectoryInfo(AtSys.LocalDbPath).GetFiles())
+                {
+                    if (file.Extension == ".db" && file.Name != "State.db")
+                        try { file.Delete(); } catch { }
+                }
+
+                try
+                {
+                    // 下载模型文件，下载地址如 https://localhost/app/auth/.model
+                    using (var response = await BaseRpc.Client.GetAsync(AtSys.Stub.ServerUrl.TrimEnd('/') + "/auth/.model"))
+                    using (var stream = await response.Content.ReadAsStreamAsync())
+                    using (var gzipStream = new GZipStream(stream, CompressionMode.Decompress))
+                    using (var fs = File.Create(Path.Combine(AtSys.LocalDbPath, modelFile), 262140, FileOptions.WriteThrough))
+                    {
+                        gzipStream.CopyTo(fs);
+                        fs.Flush();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    try
+                    {
+                        File.Delete(Path.Combine(AtSys.LocalDbPath, modelFile));
+                    }
+                    catch { }
+                    return "下载模型文件失败！" + ex.Message;
+                }
+            }
+
+            // 打开模型库
+            try
+            {
+                AtLocal.OpenModelDb(modelFile);
+            }
+            catch (Exception ex)
+            {
+                return "打开模型库失败！" + ex.Message;
+            }
+            return null;
+        }
+
+        #region 登录注销
+        /// <summary>
+        /// 显示登录页面
+        /// </summary>
+        public static void Login()
+        {
+            SysVisual.RootContent = AtSys.Stub.LoginPage;
+        }
+
+        /// <summary>
+        /// 注销后重新登录
+        /// </summary>
+        /// <returns></returns>
+        public static async Task Logout()
+        {
+            AtUser.Reset();
+            await AtSys.Stub.OnLogout();
+            SysVisual.RootContent = AtSys.Stub.LoginPage;
+        }
+        #endregion
+
+        #region 根元素
+        /// <summary>
+        /// PhoneUI模式的根Frame
+        /// </summary>
+        public static Frame Frame { get; internal set; }
+
+        /// <summary>
+        /// 加载根内容 Desktop 或 Frame
+        /// </summary>
+        public static void LoadRootContent()
+        {
+            if (AtSys.IsPhoneUI)
+                LoadRootFrame();
+            else
+                LoadDesktop();
+        }
+
+        /// <summary>
+        /// 带参数启动的回调方法
+        /// </summary>
+        static Action _launchCallback;
+
+        /// <summary>
+        /// 加载根Frame
+        /// </summary>
+        static void LoadRootFrame()
+        {
+            // uno中默认字体大小11
+            Frame = new Frame { FontSize = 15 };
+            SysVisual.RootContent = Frame;
+
+            // 主页作为根
+            Type tp = AtSys.Stub.IsLocalMode ? AtUI.GetViewType(AtUI.LocalHomeView) : AtUI.GetViewType(AtUI.HomeView);
+            if (tp != null)
+            {
+                IWin win = Activator.CreateInstance(tp) as IWin;
+                if (win != null)
+                {
+                    win.Title = "主页";
+                    win.Icon = Icons.主页;
+                    win.NaviToHome();
+                }
+            }
+
+            // 自启动
+            AutoStartInfo autoStart;
+            if (_launchCallback != null)
+            {
+                // 带启动参数的自启动
+                _launchCallback();
+                _launchCallback = null;
+            }
+            else if ((autoStart = AtLocal.GetAutoStart()) != null)
+            {
+                // 用户设置的自启动
+                bool suc = false;
+                Type type = Type.GetType(autoStart.WinType);
+                if (type != null)
+                {
+                    try
+                    {
+                        IWin win = null;
+                        if (string.IsNullOrEmpty(autoStart.Params))
+                            win = (IWin)Activator.CreateInstance(type);
+                        else
+                            win = (IWin)Activator.CreateInstance(type, autoStart.Params);
+
+                        if (win != null)
+                        {
+                            win.Title = string.IsNullOrEmpty(autoStart.Title) ? "自启动" : autoStart.Title;
+                            Icons icon;
+                            if (Enum.TryParse(autoStart.Icon, out icon))
+                                win.Icon = icon;
+                            win.NaviToHome();
+                            suc = true;
+                        }
+                    }
+                    catch { }
+                }
+                if (!suc)
+                    AtLocal.DelAutoStart();
+            }
+        }
+
+        /// <summary>
+        /// 加载桌面
+        /// </summary>
+        static void LoadDesktop()
+        {
+            Desktop desktop = new Desktop();
+
+            // 主页
+            Type tp = AtSys.Stub.IsLocalMode ? AtUI.GetViewType(AtUI.LocalHomeView) : AtUI.GetViewType(AtUI.HomeView);
+            if (tp != null)
+            {
+                IWin win = Activator.CreateInstance(tp) as IWin;
+                if (win != null)
+                {
+                    win.Title = "主页";
+                    win.Icon = Icons.主页;
+                    desktop.HomeWin = win;
+                }
+            }
+
+            // 自启动
+            AutoStartInfo autoStart;
+            if (_launchCallback != null)
+            {
+                // 带启动参数的自启动
+                _launchCallback();
+                _launchCallback = null;
+            }
+            else if ((autoStart = AtLocal.GetAutoStart()) != null)
+            {
+                // 用户设置的自启动
+                bool suc = false;
+                Type type = Type.GetType(autoStart.WinType);
+                if (type != null)
+                {
+                    try
+                    {
+                        IWin win = null;
+                        if (string.IsNullOrEmpty(autoStart.Params))
+                            win = (IWin)Activator.CreateInstance(type);
+                        else
+                            win = (IWin)Activator.CreateInstance(type, autoStart.Params);
+
+                        if (win != null)
+                        {
+                            win.Title = string.IsNullOrEmpty(autoStart.Title) ? "自启动" : autoStart.Title;
+                            Icons icon;
+                            if (Enum.TryParse(autoStart.Icon, out icon))
+                                win.Icon = icon;
+
+                            Taskbar.LoadTaskItem(win);
+                            desktop.ShowNewWin(win);
+                            suc = true;
+                        }
+                    }
+                    catch { }
+                }
+                if (!suc)
+                    AtLocal.DelAutoStart();
+            }
+
+            if (desktop.MainWin == null)
+                desktop.MainWin = desktop.HomeWin;
+            SysVisual.RootContent = desktop;
+        }
+        #endregion
+
+        #region 响应式UI
+#if UWP
+        const string _deskStylePath = "ms-appx:///Dt.Base/Themes/Styles/Desk.xaml";
+        static ResourceDictionary _deskDict;
+
+        /// <summary>
+        /// 系统区域大小变化时UI自适应
+        /// </summary>
+        static void OnUIModeChanged()
+        {
+            // 刷新样式
+            var dict = Application.Current.Resources.MergedDictionaries;
+            if (AtSys.IsPhoneUI)
+            {
+                // 卸载桌面版样式
+                if (_deskDict != null)
+                    dict.Remove(_deskDict);
+                // 桌面Mini版显示后退按钮
+                SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
+                Desktop.Inst = null;
+                Taskbar.Inst = null;
+            }
+            else
+            {
+                // 加载桌面版样式
+                if (_deskDict == null)
+                    _deskDict = new ResourceDictionary() { Source = new Uri(_deskStylePath) };
+                dict.Add(_deskDict);
+                // 隐藏后退按钮
+                SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
+                Frame = null;
+            }
+
+            // 重构根元素
+            if (SysVisual.RootContent is Frame || SysVisual.RootContent is Desktop)
+                LoadRootContent();
+        }
+#endif
+        #endregion
+
+        #region 参数启动
+        /// <summary>
+        /// 以参数方式自启动，通常从Toast启动
+        /// </summary>
+        /// <param name="p_params">xml启动参数</param>
+        static void LaunchFreely(string p_params)
+        {
+            var root = XDocument.Parse(p_params).Root;
+            var attr = root.Attribute("id");
+            if (attr == null || string.IsNullOrEmpty(attr.Value))
+            {
+                AtKit.Msg("自启动时标识不可为空！");
+                return;
+            }
+
+            // 以菜单项方式启动
+            if (root.Name == "menu")
+            {
+                AtUI.OpenMenu(attr.Value);
+                return;
+            }
+
+            // 打开视图
+            string viewName = attr.Value;
+            string title = null;
+            Icons icon = Icons.None;
+            attr = root.Attribute("title");
+            if (attr != null && !string.IsNullOrEmpty(attr.Value))
+                title = attr.Value;
+            attr = root.Attribute("icon");
+            if (attr != null && !string.IsNullOrEmpty(attr.Value))
+                Enum.TryParse(attr.Value, out icon);
+
+            // undo
+            //Dictionary<string, string> pars = new Dictionary<string, string>();
+            //foreach (var elem in root.Elements("param"))
+            //{
+            //    var key = elem.Attribute("key");
+            //    var val = elem.Attribute("val");
+            //    if (key != null && !string.IsNullOrEmpty(key.Value) && val != null)
+            //        pars[key.Value] = val.Value;
+            //}
+            AtUI.OpenView(viewName, title, icon);
+        }
+        #endregion
+    }
+}

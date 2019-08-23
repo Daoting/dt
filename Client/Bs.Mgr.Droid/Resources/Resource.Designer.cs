@@ -3422,11 +3422,11 @@ namespace Dt.Shell
 			// aapt resource value: 0x7f02005c
 			public const int notification_icon_background = 2130837596;
 			
-			// aapt resource value: 0x7f020061
-			public const int notification_template_icon_bg = 2130837601;
-			
 			// aapt resource value: 0x7f020062
-			public const int notification_template_icon_low_bg = 2130837602;
+			public const int notification_template_icon_bg = 2130837602;
+			
+			// aapt resource value: 0x7f020063
+			public const int notification_template_icon_low_bg = 2130837603;
 			
 			// aapt resource value: 0x7f02005d
 			public const int notification_tile_bg = 2130837597;
@@ -3435,10 +3435,13 @@ namespace Dt.Shell
 			public const int notify_panel_notification_icon_bg = 2130837598;
 			
 			// aapt resource value: 0x7f02005f
-			public const int tooltip_frame_dark = 2130837599;
+			public const int StoreLogo = 2130837599;
 			
 			// aapt resource value: 0x7f020060
-			public const int tooltip_frame_light = 2130837600;
+			public const int tooltip_frame_dark = 2130837600;
+			
+			// aapt resource value: 0x7f020061
+			public const int tooltip_frame_light = 2130837601;
 			
 			static Drawable()
 			{

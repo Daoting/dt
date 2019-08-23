@@ -118,16 +118,6 @@ namespace Dt.Core
         /// 任何人角色ID
         /// </summary>
         public const string AnyoneID = "3b9eafc325e74c3d9e1901a0d51d3b28";
-
-        /// <summary>
-        /// ApiResource的默认名称
-        /// </summary>
-        public const string ApiResourceName = "dtapi";
-
-        /// <summary>
-        /// 默认认证方案名称
-        /// </summary>
-        public const string AuthenticationScheme = "Bearer";
         #endregion
 
         #region 系统配置
@@ -223,20 +213,9 @@ namespace Dt.Core
         {
             // 外部
             _stub.ConfigureServices(p_services);
-            
+
             // 以便访问当前的HttpContext
             p_services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            
-            // 注入认证服务，采用jwt格式的验证方案，方案名称为Bearer
-            p_services
-                .AddAuthentication(o => o.DefaultScheme = AuthenticationScheme)
-                .AddJwtBearer(AuthenticationScheme, o =>
-                {
-                    // Auth服务地址
-                    o.Authority = IsInDocker ? $"https://{AppName}-auth" : $"https://localhost/{AppName}/auth";
-                    // 需要认证的api资源名称
-                    o.Audience = ApiResourceName;
-                });
         }
 
         internal static void Configure(IApplicationBuilder p_app)
@@ -244,7 +223,7 @@ namespace Dt.Core
             // 全局服务容器
             _svcProvider = p_app.ApplicationServices;
             _accessor = _svcProvider.GetRequiredService<IHttpContextAccessor>();
-            _stub.Configure(p_app);
+            _stub.Configure(p_app, DtMiddleware.RequestHandlers);
         }
         #endregion
     }

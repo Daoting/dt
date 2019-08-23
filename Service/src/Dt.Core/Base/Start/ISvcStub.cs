@@ -8,7 +8,10 @@
 
 #region 引用命名
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
 #endregion
 
 namespace Dt.Core
@@ -25,9 +28,10 @@ namespace Dt.Core
         void ConfigureServices(IServiceCollection p_services);
 
         /// <summary>
-        /// 定义请求管道的中间件和初始化服务
+        /// 自定义请求处理或定义请求管道的中间件
         /// </summary>
         /// <param name="p_app"></param>
-        void Configure(IApplicationBuilder p_app);
+        /// <param name="p_handlers">注册自定义请求处理</param>
+        void Configure(IApplicationBuilder p_app, IDictionary<string, RequestDelegate> p_handlers);
     }
 }

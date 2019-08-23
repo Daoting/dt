@@ -7,7 +7,6 @@
 #endregion
 
 #region 引用命名
-using Dt.App;
 using Dt.Base;
 using Dt.Core;
 using Dt.Core.Model;
@@ -103,11 +102,11 @@ namespace Dt.Sample
         }
         #endregion
 
-        async void OnNewRow(object sender, Mi e)
+        void OnNewRow(object sender, Mi e)
         {
             _fv2.Data = Table.Create("dt_log").NewRow(new
             {
-                ID = await AtCm.GetSeqVal("sq_log"),
+                ID = 1,
                 loglevel = "1",
                 service = _fv2.GetCookie("service"),
                 timestamp = DateTime.Now,

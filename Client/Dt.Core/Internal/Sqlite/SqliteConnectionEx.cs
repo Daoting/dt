@@ -373,7 +373,7 @@ namespace Dt.Core.Sqlite
         /// </summary>
         internal void InitStateDb()
         {
-            var tps = AtSys.StateTbls;
+            var tps = AtSys.Stub.StateTbls;
             if (tps == null || tps.Count == 0)
                 return;
 
@@ -510,7 +510,7 @@ namespace Dt.Core.Sqlite
 
             // 表名->类型->获取映射
             Type tp;
-            var tps = AtSys.StateTbls;
+            var tps = AtSys.Stub.StateTbls;
             if (tps != null && tps.TryGetValue(p_tblName.ToLower(), out tp))
                 return GetMapping(tp);
             throw new Exception(string.Format("本地库无【{0}】！", p_tblName));

@@ -17,13 +17,13 @@
   </ItemGroup>
   
   <ItemGroup>
-    <Compile Include="..\..\Service\src\Dt.Cm\Sqlite\Model\OmBaseCode.cs" Link="Internal\Sqlite\Model\OmBaseCode.cs" />
-    <Compile Include="..\..\Service\src\Dt.Cm\Sqlite\Model\OmColumn.cs" Link="Internal\Sqlite\Model\OmColumn.cs" />
-    <Compile Include="..\..\Service\src\Dt.Cm\Sqlite\Model\OmReport.cs" Link="Internal\Sqlite\Model\OmReport.cs" />
-    <Compile Include="..\..\Service\src\Dt.Cm\Sqlite\Model\RoleMenu.cs" Link="Internal\Sqlite\Model\RoleMenu.cs" />
-    <Compile Include="..\..\Service\src\Dt.Cm\Sqlite\Model\RolePrv.cs" Link="Internal\Sqlite\Model\RolePrv.cs" />
-    <Compile Include="..\..\Service\src\Dt.Cm\Sqlite\SqliteAttributes.cs" Link="Internal\Sqlite\SqliteAttributes.cs" />
-    <Compile Include="..\..\Service\src\Dt.Cm\Sqlite\TableMapping.cs" Link="Internal\Sqlite\TableMapping.cs" />
+    <Compile Include="..\..\Service\src\Dt.Auth\Sqlite\Model\OmBaseCode.cs" Link="Internal\Sqlite\Model\OmBaseCode.cs" />
+    <Compile Include="..\..\Service\src\Dt.Auth\Sqlite\Model\OmColumn.cs" Link="Internal\Sqlite\Model\OmColumn.cs" />
+    <Compile Include="..\..\Service\src\Dt.Auth\Sqlite\Model\OmReport.cs" Link="Internal\Sqlite\Model\OmReport.cs" />
+    <Compile Include="..\..\Service\src\Dt.Auth\Sqlite\Model\RoleMenu.cs" Link="Internal\Sqlite\Model\RoleMenu.cs" />
+    <Compile Include="..\..\Service\src\Dt.Auth\Sqlite\Model\RolePrv.cs" Link="Internal\Sqlite\Model\RolePrv.cs" />
+    <Compile Include="..\..\Service\src\Dt.Auth\Sqlite\SqliteAttributes.cs" Link="Internal\Sqlite\SqliteAttributes.cs" />
+    <Compile Include="..\..\Service\src\Dt.Auth\Sqlite\TableMapping.cs" Link="Internal\Sqlite\TableMapping.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Dict.cs" Link="Base\Collection\Dict.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Serialize\IRpcJson.cs" Link="Internal\Serialize\IRpcJson.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Serialize\JsonRpcSerializer.cs" Link="Internal\Serialize\JsonRpcSerializer.cs" />

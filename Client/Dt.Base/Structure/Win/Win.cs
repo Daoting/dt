@@ -333,7 +333,7 @@ namespace Dt.Base
             {
                 if (_tabs.TryGetValue(p_tabTitle, out tab))
                 {
-                    if (AtUI.Frame.Content == null)
+                    if (AtApp.Frame.Content == null)
                         tab.PinButtonVisibility = Visibility.Collapsed;
                     PhonePage.Show(tab);
                 }
@@ -350,7 +350,7 @@ namespace Dt.Base
                 if (_tabs.TryGetValue(name, out tab))
                     tabs.AddItem(tab);
             }
-            if (AtUI.Frame.Content == null)
+            if (AtApp.Frame.Content == null)
                 tabs.HideBackButton();
             tabs.SelectFirstItem();
             PhonePage.Show(tabs);

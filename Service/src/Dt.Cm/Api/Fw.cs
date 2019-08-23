@@ -7,7 +7,6 @@
 #endregion
 
 #region 引用命名
-using Dt.Core.Model;
 using Dt.Core;
 using Microsoft.AspNetCore.Authorization;
 using System;
@@ -30,35 +29,6 @@ namespace Dt.Cm
     [Api]
     public class Fw : BaseApi
     {
-        /// <summary>
-        /// 获取参数配置，包括模型文件版本号
-        /// </summary>
-        /// <returns></returns>
-        public Dict GetConfig()
-        {
-            return new Dict { { "ver", SqliteModel.Version }, { "now", Glb.Now } };
-        }
-
-        public async Task<Dict> GetUserInfo()
-        {
-            long id = _c.GetUserID();
-            Dict res = new Dict();
-            if (id < 0)
-            {
-                res["valid"] = false;
-                res["error"] = "无认证信息！";
-                return res;
-            }
-
-            res["valid"] = true;
-            User user = await Users.GetUser(id);
-            if (user != null)
-            {
-                res["name"] = user.Name;
-                res["sex"] = user.Sex;
-            }
-            res["roles"] = "aca71e2d795d47b6942e4aa5c9df8248," + Glb.AnyoneID;
-            return res;
-        }
+        
     }
 }

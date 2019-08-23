@@ -10,12 +10,7 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <Folder Include="Sqlite\Model\" />
     <Folder Include="wwwroot\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="2.2.4" />
   </ItemGroup>
 
   <ItemGroup>

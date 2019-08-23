@@ -1,0 +1,64 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras/2.0.31">
+
+  <PropertyGroup>
+    <TargetFrameworks>uap10.0.17763;MonoAndroid81</TargetFrameworks>
+  </PropertyGroup>
+
+  <Import Project="..\Common\dtc.props" />
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
+    <ProjectReference Include="..\Dt.Base\Dt.Base.csproj" />
+    <ProjectReference Include="..\Dt.Sample\Dt.Sample.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Include="Boot\Startup.xaml" />
+    <Page Include="Boot\Login.xaml" />
+    <Page Include="Home\DefaultHome.xaml" />
+    <Page Include="Home\RootMenu.xaml" />
+    <Page Include="Home\GroupMenu.xaml" />
+    <Page Include="Home\SearchMenu.xaml" />
+    <Page Include="Model\SelectRolesDlg.xaml" />
+    <Page Include="Model\SysMenu.xaml" />
+    <Page Include="Model\SysModule.xaml" />
+    <Page Include="Model\SysPrivilege.xaml" />
+    <Page Include="Model\SysParams.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Boot\Startup.xaml.cs">
+      <DependentUpon>Startup.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Boot\Login.xaml.cs">
+      <DependentUpon>Login.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Home\DefaultHome.xaml.cs">
+      <DependentUpon>DefaultHome.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Home\RootMenu.xaml.cs">
+      <DependentUpon>RootMenu.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Home\GroupMenu.xaml.cs">
+      <DependentUpon>GroupMenu.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Home\SearchMenu.xaml.cs">
+      <DependentUpon>SearchMenu.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Model\SelectRolesDlg.xaml.cs">
+      <DependentUpon>SelectRolesDlg.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Model\SysMenu.xaml.cs">
+      <DependentUpon>SysMenu.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Model\SysModule.xaml.cs">
+      <DependentUpon>SysModule.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Model\SysPrivilege.xaml.cs">
+      <DependentUpon>SysPrivilege.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Model\SysParams.xaml.cs">
+      <DependentUpon>SysParams.xaml</DependentUpon>
+    </Compile>            
+  </ItemGroup>
+</Project>

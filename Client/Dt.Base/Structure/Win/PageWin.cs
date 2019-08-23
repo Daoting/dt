@@ -172,7 +172,7 @@ namespace Dt.Base
         /// </summary>
         void IWin.NaviToHome()
         {
-            if (AtUI.Frame.Content == null)
+            if (AtApp.Frame.Content == null)
                 BackButtonVisibility = Visibility.Collapsed;
             PhonePage.Show(this);
         }

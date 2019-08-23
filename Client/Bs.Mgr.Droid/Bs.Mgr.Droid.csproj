@@ -58,12 +58,9 @@
     <Reference Include="Mono.Android" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Bs.Uwp\App.xaml.cs">
+    <Compile Include="..\Common\App.xaml.cs">
       <Link>App.xaml.cs</Link>
       <DependentUpon>App.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="..\Bs.Uwp\Stub.cs">
-      <Link>Stub.cs</Link>
     </Compile>
     <Compile Include="MainActivity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -103,9 +100,9 @@
     <AndroidResource Include="Resources\drawable-xxhdpi\icon.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Dt.App\Dt.App.csproj">
-      <Project>{fadc7322-4d29-4147-9c01-d31fc42b94dc}</Project>
-      <Name>Dt.App</Name>
+    <ProjectReference Include="..\Bs.Mgr\Bs.Mgr.csproj">
+      <Project>{0a0f8195-6734-45bc-a4f6-2621054c1eab}</Project>
+      <Name>Bs.Mgr</Name>
     </ProjectReference>
     <ProjectReference Include="..\Dt.Base\Dt.Base.csproj">
       <Project>{e3f3c994-17dc-4b65-8a66-f2c70537df7d}</Project>
@@ -115,28 +112,24 @@
       <Project>{7e933aca-685d-4a54-979c-ce83c5cfd2fc}</Project>
       <Name>Dt.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Dt.Sample\Dt.Sample.csproj">
-      <Project>{c4711d86-3c0c-417b-a4c8-96b711aeec6b}</Project>
-      <Name>Dt.Sample</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\strings.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="..\Bs.Uwp\App.xaml">
+    <Page Include="..\Common\App.xaml">
       <Link>App.xaml</Link>
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="..\Bs\Assets\StoreLogo.png">
-      <Link>Resources\drawable\StoreLogo.png</Link>
-    </AndroidResource>
+    <AndroidResource Include="Resources\drawable\back.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\back.png" />
+    <AndroidResource Include="Resources\drawable\StoreLogo.png">
+      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
+    </AndroidResource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

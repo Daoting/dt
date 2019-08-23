@@ -8,9 +8,6 @@
 
 #region 引用命名
 using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
 using Windows.ApplicationModel;
 using Windows.Storage;
 using Windows.UI.Popups;
@@ -27,47 +24,6 @@ namespace Dt.Core
     {
         #region 成员变量
         static TimeSpan _timeSpan;
-        static readonly Dictionary<string, MethodInfo> _serviceMethods = new Dictionary<string, MethodInfo>();
-        #endregion
-
-        #region 平台方法
-        /// <summary>
-        /// 系统初始化
-        /// </summary>
-        /// <param name="p_stub">系统存根</param>
-        public static void Startup(IStub p_stub)
-        {
-            Stub = p_stub;
-            if (Stub.SerializeTypes != null)
-                SerializeTypeAlias.Merge(Stub.SerializeTypes);
-
-            Application app = Application.Current;
-            app.Suspending += OnSuspending;
-            app.Resuming += OnResuming;
-            app.UnhandledException += OnUnhandledException;
-
-            // 初始化不同平台的包绑定！V2支持类型和属性的绑定
-            SQLitePCL.Batteries_V2.Init();
-            // 打开状态库
-            AtLocal.OpenStateDb();
-        }
-
-        /// <summary>
-        /// 关闭系统
-        /// </summary>
-        public static async void ShutDown()
-        {
-            try
-            {
-                // 外部系统关闭处理
-                await Stub.ShutDown();
-            }
-            catch { }
-
-            // 调用Exit直接关闭时不走Suspending事件
-            // 以此方式关闭应用时，系统会将此视为应用崩溃，变态！！！
-            Application.Current.Exit();
-        }
         #endregion
 
         #region 系统信息
@@ -128,11 +84,6 @@ namespace Dt.Core
         public static IStub Stub { get; private set; }
 
         /// <summary>
-        /// 全局注销方法
-        /// </summary>
-        public static Action Logout { get; internal set; }
-
-        /// <summary>
         /// 本地sqlite文件路径
         /// </summary>
         public static string LocalDbPath
@@ -153,136 +104,28 @@ namespace Dt.Core
         internal static bool TraceRpc { get; set; }
         #endregion
 
-        #region 存根
+        #region 平台方法
         /// <summary>
-        /// 获取视图类型
+        /// 系统初始化
         /// </summary>
-        /// <param name="p_typeName">类型名称</param>
-        /// <returns>返回类型</returns>
-        public static Type GetViewType(string p_typeName)
+        /// <param name="p_stub">系统存根</param>
+        public static void Startup(IStub p_stub)
         {
-            Type tp;
-            if (!string.IsNullOrEmpty(p_typeName) && Stub.ViewTypes.TryGetValue(p_typeName, out tp))
-                return tp;
-            return null;
+            Stub = p_stub;
+            if (Stub.SerializeTypes != null)
+                SerializeTypeAlias.Merge(Stub.SerializeTypes);
+
+            Application app = Application.Current;
+            app.Suspending += OnSuspending;
+            app.Resuming += OnResuming;
+            app.UnhandledException += OnUnhandledException;
+
+            // 初始化不同平台的包绑定！V2支持类型和属性的绑定
+            SQLitePCL.Batteries_V2.Init();
+            // 打开状态库
+            AtLocal.OpenStateDb();
         }
 
-        /// <summary>
-        /// 是否存在指定视图
-        /// </summary>
-        /// <param name="p_viewName">视图名称</param>
-        /// <returns></returns>
-        public static bool IsExistView(string p_viewName)
-        {
-            return Stub.ViewTypes.ContainsKey(p_viewName);
-        }
-
-        /// <summary>
-        /// 获取客户端服务方法
-        /// </summary>
-        /// <param name="p_name"></param>
-        /// <returns></returns>
-        public static MethodInfo GetServiceMethod(string p_name)
-        {
-            if (string.IsNullOrEmpty(p_name))
-                return null;
-
-            MethodInfo mi;
-            if (_serviceMethods.TryGetValue(p_name, out mi))
-                return mi;
-
-            Type tp;
-            string[] arr = p_name.Split('.');
-            if (arr.Length == 2 && Stub.ServiceTypes.TryGetValue(arr[0], out tp))
-            {
-                mi = tp.GetMethod(arr[1]);
-                if (mi != null)
-                    _serviceMethods[p_name] = mi;
-                return mi;
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// 创建流程表单实例
-        /// </summary>
-        /// <param name="p_typeName">类型名称</param>
-        /// <returns>返回实例对象</returns>
-        public static object CreateWfForm(string p_typeName)
-        {
-            Type tp;
-            if (!string.IsNullOrEmpty(p_typeName) && Stub.FormTypes.TryGetValue(p_typeName, out tp))
-                return Activator.CreateInstance(tp);
-            return null;
-        }
-
-        /// <summary>
-        /// 创建FormGrid自定义查找实例对象
-        /// </summary>
-        /// <param name="p_typeName">类型名称</param>
-        /// <returns>返回实例对象</returns>
-        public static object CreateWfSheet(string p_typeName)
-        {
-            Type tp;
-            if (!string.IsNullOrEmpty(p_typeName) && Stub.SheetTypes.TryGetValue(p_typeName, out tp))
-                return Activator.CreateInstance(tp);
-            return null;
-        }
-
-        /// <summary>
-        /// 获取已加载程序的描述信息
-        /// </summary>
-        /// <returns>描述信息字符串</returns>
-        public static string GetAssemblyInfo()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("▶ 视图类型（{0}）\r\n", Stub.ViewTypes.Count);
-            foreach (string item in Stub.ViewTypes.Keys)
-            {
-                sb.AppendLine(item);
-            }
-            sb.AppendLine();
-
-            sb.AppendFormat("▶ 流程表单（{0}）\r\n", Stub.FormTypes.Count);
-            foreach (string item in Stub.FormTypes.Keys)
-            {
-                sb.AppendLine(item);
-            }
-            sb.AppendLine();
-
-            sb.AppendFormat("▶ 流程列表（{0}）\r\n", Stub.SheetTypes.Count);
-            foreach (string item in Stub.SheetTypes.Keys)
-            {
-                sb.AppendLine(item);
-            }
-            sb.AppendLine();
-
-            sb.AppendFormat("▶ 服务类型（{0}）\r\n", Stub.ServiceTypes.Count);
-            foreach (string item in Stub.ServiceTypes.Keys)
-            {
-                sb.AppendLine(item);
-            }
-            return sb.ToString();
-        }
-
-        /// <summary>
-        /// 获取状态库版本号，和本地不同时自动更新
-        /// </summary>
-        public static string StateDbVer
-        {
-            get { return Stub.StateDbVer; }
-        }
-
-        /// <summary>
-        /// 获取状态库表类型
-        /// </summary>
-        public static Dictionary<string, Type> StateTbls
-        {
-            get { return Stub.StateTbls; }
-        }
-        #endregion
-
-        #region 内部方法
         /// <summary>
         /// 同步服务器时间
         /// </summary>
@@ -292,7 +135,6 @@ namespace Dt.Core
             // 与服务器时差
             _timeSpan = p_serverTime - DateTime.Now;
         }
-
         #endregion
 
         #region App事件方法
@@ -309,7 +151,7 @@ namespace Dt.Core
             try
             {
                 // 外部系统关闭处理
-                await Stub.ShutDown();
+                await Stub.OnShutDown();
             }
             catch { }
 
@@ -382,7 +224,19 @@ namespace Dt.Core
                     AtKit.RunAsync(async () =>
                     {
                         MessageDialog dlg = new MessageDialog(e.Message, "程序异常");
-                        dlg.Commands.Add(new UICommand("终止", new UICommandInvokedHandler((cmd) => ShutDown())));
+                        dlg.Commands.Add(new UICommand("终止", new UICommandInvokedHandler(async (cmd) =>
+                        {
+                            try
+                            {
+                                // 外部系统关闭处理
+                                await Stub.OnShutDown();
+                            }
+                            catch { }
+
+                            // 调用Exit直接关闭时不走Suspending事件
+                            // 以此方式关闭应用时，系统会将此视为应用崩溃，变态！！！
+                            Application.Current.Exit();
+                        })));
                         dlg.Commands.Add(new UICommand("继续", null));
                         dlg.DefaultCommandIndex = 1;
                         dlg.CancelCommandIndex = 1;

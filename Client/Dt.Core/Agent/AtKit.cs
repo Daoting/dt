@@ -46,34 +46,6 @@ namespace Dt.Core
         #endregion
 
         #region 常量
-
-        #region 标准视图名称
-        /// <summary>
-        /// 主页视图名称
-        /// </summary>
-        public const string HomeView = "主页";
-
-        /// <summary>
-        /// 单机模式主页视图
-        /// </summary>
-        public const string LocalHomeView = "单机主页";
-
-        /// <summary>
-        /// 通讯录视图名称
-        /// </summary>
-        public const string ChatView = "通讯录";
-
-        /// <summary>
-        /// 关于视图名称
-        /// </summary>
-        public const string AboutView = "关于";
-
-        /// <summary>
-        /// 流程表单视图
-        /// </summary>
-        public const string TaskFormView = "任务表单";
-        #endregion
-
         /// <summary>
         /// XmlReader默认设置
         /// </summary>

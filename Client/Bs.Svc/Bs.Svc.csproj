@@ -1,0 +1,14 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras/2.0.31">
+
+  <PropertyGroup>
+    <TargetFrameworks>uap10.0.17763;MonoAndroid81</TargetFrameworks>
+  </PropertyGroup>
+
+  <Import Project="..\Common\dtc.props" />
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
+    <ProjectReference Include="..\Dt.Base\Dt.Base.csproj" />
+  </ItemGroup>
+
+</Project>

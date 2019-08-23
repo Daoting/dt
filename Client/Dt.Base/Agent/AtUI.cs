@@ -10,12 +10,11 @@
 using Dt.Base.Tools;
 using Dt.Core;
 using Dt.Core.Model;
+using Dt.Core.Rpc;
 using System;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -37,7 +36,7 @@ namespace Dt.Base
         /// <returns>返回打开的窗口或视图，null表示打开失败</returns>
         public static object OpenMenu(string p_menuID)
         {
-            return OpenMenu(AtUser.QueryMenu(p_menuID));
+            return OpenMenu(AtLocal.QueryModelFirst<OmMenu>($"select * from OmMenu where id='{p_menuID}'"));
         }
 
         /// <summary>
@@ -53,7 +52,7 @@ namespace Dt.Base
                 return null;
             }
 
-            Type tp = AtSys.GetViewType(p_menu.ViewName);
+            Type tp = GetViewType(p_menu.ViewName);
             if (tp == null)
             {
                 AtKit.Msg(string.Format("打开菜单时未找到视图【{0}】！", p_menu.ViewName));
@@ -100,7 +99,7 @@ namespace Dt.Base
             Icons p_icon = Icons.None,
             string p_params = null)
         {
-            Type tp = AtSys.GetViewType(p_viewName);
+            Type tp = GetViewType(p_viewName);
             if (tp == null)
             {
                 AtKit.Msg(string.Format("【{0}】视图未找到！", p_viewName));
@@ -172,6 +171,19 @@ namespace Dt.Base
             }
 
             AtKit.Msg("打开窗口失败，窗口类型需要实现IWin或IView接口！");
+            return null;
+        }
+
+        /// <summary>
+        /// 获取视图类型
+        /// </summary>
+        /// <param name="p_typeName">类型名称</param>
+        /// <returns>返回类型</returns>
+        public static Type GetViewType(string p_typeName)
+        {
+            Type tp;
+            if (!string.IsNullOrEmpty(p_typeName) && AtSys.Stub.ViewTypes.TryGetValue(p_typeName, out tp))
+                return tp;
             return null;
         }
         #endregion
@@ -246,176 +258,16 @@ namespace Dt.Base
         }
         #endregion
 
-        #region 根元素
+        #region 标准视图名称
         /// <summary>
-        /// PhoneUI模式的根Frame
+        /// 主页视图名称
         /// </summary>
-        public static Frame Frame { get; internal set; }
-
-        /// <summary>
-        /// 以单机模式启动应用，无登录页面
-        /// </summary>
-        internal static async void LoadLocalModeUI()
-        {
-            // 确保外部准备工作完成后才切换到桌面
-            try
-            {
-                await AtSys.Stub.Startup();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"启动项目程序集异常！{ex.Message}");
-            }
-
-            if (AtSys.IsPhoneUI)
-                LoadRootFrame();
-            else
-                LoadDesktop();
-        }
+        public const string HomeView = "主页";
 
         /// <summary>
-        /// 加载根内容 Desktop 或 Frame
+        /// 单机模式主页视图
         /// </summary>
-        internal static void LoadRootContent()
-        {
-            if (AtSys.IsPhoneUI)
-                LoadRootFrame();
-            else
-                LoadDesktop();
-        }
-
-        /// <summary>
-        /// 带参数启动的回调方法
-        /// </summary>
-        internal static Action LaunchCallback { get; set; }
-
-        /// <summary>
-        /// 加载根Frame
-        /// </summary>
-        static void LoadRootFrame()
-        {
-            // uno中默认字体大小11
-            Frame = new Frame { FontSize = 15 };
-            SysVisual.RootContent = Frame;
-
-            // 主页作为根
-            Type tp = AtSys.Stub.IsLocalMode ? AtSys.GetViewType(AtKit.LocalHomeView) : AtSys.GetViewType(AtKit.HomeView);
-            if (tp != null)
-            {
-                IWin win = Activator.CreateInstance(tp) as IWin;
-                if (win != null)
-                {
-                    win.Title = "主页";
-                    win.Icon = Icons.主页;
-                    win.NaviToHome();
-                }
-            }
-
-            // 自启动
-            AutoStartInfo autoStart;
-            if (LaunchCallback != null)
-            {
-                // 带启动参数的自启动
-                LaunchCallback();
-                LaunchCallback = null;
-            }
-            else if ((autoStart = AtLocal.GetAutoStart()) != null)
-            {
-                // 用户设置的自启动
-                bool suc = false;
-                Type type = Type.GetType(autoStart.WinType);
-                if (type != null)
-                {
-                    try
-                    {
-                        IWin win = null;
-                        if (string.IsNullOrEmpty(autoStart.Params))
-                            win = (IWin)Activator.CreateInstance(type);
-                        else
-                            win = (IWin)Activator.CreateInstance(type, autoStart.Params);
-
-                        if (win != null)
-                        {
-                            win.Title = string.IsNullOrEmpty(autoStart.Title) ? "自启动" : autoStart.Title;
-                            Icons icon;
-                            if (Enum.TryParse(autoStart.Icon, out icon))
-                                win.Icon = icon;
-                            win.NaviToHome();
-                            suc = true;
-                        }
-                    }
-                    catch { }
-                }
-                if (!suc)
-                    AtLocal.DelAutoStart();
-            }
-        }
-
-        /// <summary>
-        /// 加载桌面
-        /// </summary>
-        static void LoadDesktop()
-        {
-            Desktop desktop = new Desktop();
-
-            // 主页
-            Type tp = AtSys.Stub.IsLocalMode ? AtSys.GetViewType(AtKit.LocalHomeView) : AtSys.GetViewType(AtKit.HomeView);
-            if (tp != null)
-            {
-                IWin win = Activator.CreateInstance(tp) as IWin;
-                if (win != null)
-                {
-                    win.Title = "主页";
-                    win.Icon = Icons.主页;
-                    desktop.HomeWin = win;
-                }
-            }
-
-            // 自启动
-            AutoStartInfo autoStart;
-            if (LaunchCallback != null)
-            {
-                // 带启动参数的自启动
-                LaunchCallback();
-                LaunchCallback = null;
-            }
-            else if ((autoStart = AtLocal.GetAutoStart()) != null)
-            {
-                // 用户设置的自启动
-                bool suc = false;
-                Type type = Type.GetType(autoStart.WinType);
-                if (type != null)
-                {
-                    try
-                    {
-                        IWin win = null;
-                        if (string.IsNullOrEmpty(autoStart.Params))
-                            win = (IWin)Activator.CreateInstance(type);
-                        else
-                            win = (IWin)Activator.CreateInstance(type, autoStart.Params);
-
-                        if (win != null)
-                        {
-                            win.Title = string.IsNullOrEmpty(autoStart.Title) ? "自启动" : autoStart.Title;
-                            Icons icon;
-                            if (Enum.TryParse(autoStart.Icon, out icon))
-                                win.Icon = icon;
-
-                            Taskbar.LoadTaskItem(win);
-                            desktop.ShowNewWin(win);
-                            suc = true;
-                        }
-                    }
-                    catch { }
-                }
-                if (!suc)
-                    AtLocal.DelAutoStart();
-            }
-
-            if (desktop.MainWin == null)
-                desktop.MainWin = desktop.HomeWin;
-            SysVisual.RootContent = desktop;
-        }
+        public const string LocalHomeView = "单机主页";
         #endregion
 
         #region Phone模式标题菜单

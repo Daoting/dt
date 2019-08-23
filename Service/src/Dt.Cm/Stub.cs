@@ -7,22 +7,11 @@
 #endregion
 
 #region 引用命名
-using Dt.Core.Model;
 using Dt.Core;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Cm
@@ -42,13 +31,13 @@ namespace Dt.Cm
         }
 
         /// <summary>
-        /// 定义请求管道的中间件和初始化服务
+        /// 自定义请求处理或定义请求管道的中间件
         /// </summary>
         /// <param name="p_app"></param>
-        public void Configure(IApplicationBuilder p_app)
+        /// <param name="p_handlers">注册自定义请求处理</param>
+        public void Configure(IApplicationBuilder p_app, IDictionary<string, RequestDelegate> p_handlers)
         {
-            p_app.UseMiddleware<CmMiddleware>();
-            SqliteModel.Init().Wait();
+
         }
     }
 }

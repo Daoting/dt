@@ -203,7 +203,7 @@ namespace Dt.Sample
                 new DataCmd
                 {
                     Title = "注销",
-                    Callback = (e) => AtSys.Logout()
+                    Callback = async(e) => await AtApp.Logout()
                 },
                 new DataCmd
                 {

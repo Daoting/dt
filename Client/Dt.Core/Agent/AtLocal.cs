@@ -440,10 +440,10 @@ namespace Dt.Core
                 string id;
                 if (_stateDb.ExecuteScalar<int>("select count(1) from sqlite_master where type='table'") == 0
                     || string.IsNullOrEmpty(id = GetCookie("StateDbVer"))
-                    || id != AtSys.StateDbVer)
+                    || id != AtSys.Stub.StateDbVer)
                 {
                     _stateDb.InitStateDb();
-                    SaveCookie("StateDbVer", AtSys.StateDbVer);
+                    SaveCookie("StateDbVer", AtSys.Stub.StateDbVer);
                 }
             }
             catch (Exception ex)

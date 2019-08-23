@@ -29,7 +29,7 @@ namespace Dt.Base
         /// <param name="e"></param>
         public static void OnBackRequested(object sender, BackRequestedEventArgs e)
         {
-            e.Handled = SysVisual.ExistDlg || AtUI.Frame.CanGoBack;
+            e.Handled = SysVisual.ExistDlg || AtApp.Frame.CanGoBack;
             GoBack();
         }
 
@@ -58,17 +58,17 @@ namespace Dt.Base
                 return;
             }
 
-            if (AtUI.Frame.CanGoBack)
+            if (AtApp.Frame.CanGoBack)
             {
-                if (AtUI.Frame.Content is PhonePage page)
+                if (AtApp.Frame.Content is PhonePage page)
                 {
                     // 因OnNavigatingFrom中的取消导航无法实现异步！在此处判断
                     if (await page.IsAllowBack())
-                        AtUI.Frame.GoBack();
+                        AtApp.Frame.GoBack();
                 }
                 else
                 {
-                    AtUI.Frame.GoBack();
+                    AtApp.Frame.GoBack();
                 }
             }
         }

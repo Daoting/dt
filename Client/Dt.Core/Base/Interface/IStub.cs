@@ -11,6 +11,7 @@ using Dt.Core.Model;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
 #endregion
 
 namespace Dt.Core
@@ -21,62 +22,49 @@ namespace Dt.Core
     public interface IStub
     {
         /// <summary>
-        /// 获取系统标题
+        /// 启动页面
+        /// </summary>
+        /// <returns></returns>
+        UIElement StartPage { get; }
+
+        /// <summary>
+        /// 登录页面
+        /// </summary>
+        /// <returns></returns>
+        UIElement LoginPage { get; }
+
+        /// <summary>
+        /// 系统标题
         /// </summary>
         string Title { get; }
 
         /// <summary>
-        /// 获取系统描述信息
+        /// 系统描述信息
         /// </summary>
         string Desc { get; }
 
         /// <summary>
-        /// 获取服务器地址
+        /// 服务器地址
         /// </summary>
         string ServerUrl { get; }
 
         /// <summary>
-        /// 获取系统是否为单机模式
+        /// 系统是否为单机模式
         /// </summary>
         bool IsLocalMode { get; }
 
         /// <summary>
-        /// 获取是否允许延迟登录
+        /// 是否允许延迟登录
         /// </summary>
         bool AllowDelayLogin { get; }
 
         /// <summary>
-        /// 获取固定菜单项
-        /// </summary>
-        List<OmMenu> FixedMenus { get; }
-
-        /// <summary>
-        /// 获取外部处理后台任务的类型
-        /// </summary>
-        Type BgTaskType { get; }
-
-        /// <summary>
-        /// 获取视图字典
+        /// 视图字典
         /// </summary>
         Dictionary<string, Type> ViewTypes { get; }
 
         /// <summary>
-        /// 获取流程表单字典
-        /// </summary>
-        Dictionary<string, Type> FormTypes { get; }
-
-        /// <summary>
-        /// 获取流程Sheet字典
-        /// </summary>
-        Dictionary<string, Type> SheetTypes { get; }
-
-        /// <summary>
-        /// 获取本地服务类型字典
-        /// </summary>
-        Dictionary<string, Type> ServiceTypes { get; }
-
-        /// <summary>
-        /// 获取自定义可序列化类型字典
+        /// 自定义可序列化类型字典
         /// </summary>
         Dictionary<string, Type> SerializeTypes { get; }
 
@@ -91,15 +79,14 @@ namespace Dt.Core
         Dictionary<string, Type> StateTbls { get; }
 
         /// <summary>
-        /// 启动处理，登录成功后未加载桌面前调用
+        /// 系统注销时的处理
         /// </summary>
-        /// <returns></returns>
-        Task Startup();
+        Task OnLogout();
 
         /// <summary>
-        /// 系统关闭或挂起时调用，必须耗时小！
+        /// 系统关闭时的处理，必须耗时小！
         /// </summary>
         /// <returns></returns>
-        Task ShutDown();
+        Task OnShutDown();
     }
 }
