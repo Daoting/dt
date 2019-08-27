@@ -17,12 +17,12 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.App
+namespace Dt.App.Home
 {
     /// <summary>
     /// 主页
     /// </summary>
-    [View(AtKit.HomeView)]
+    [View(AtUI.HomeView)]
     public partial class DefaultHome : Win
     {
         public DefaultHome()

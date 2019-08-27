@@ -29,61 +29,61 @@ namespace Dt.Base
     public static class AtUI
     {
         #region 窗口
-        /// <summary>
-        /// 根据菜单id打开菜单项窗口
-        /// </summary>
-        /// <param name="p_menuID">菜单ID</param>
-        /// <returns>返回打开的窗口或视图，null表示打开失败</returns>
-        public static object OpenMenu(string p_menuID)
-        {
-            return OpenMenu(AtLocal.QueryModelFirst<OmMenu>($"select * from OmMenu where id='{p_menuID}'"));
-        }
+        ///// <summary>
+        ///// 根据菜单id打开菜单项窗口
+        ///// </summary>
+        ///// <param name="p_menuID">菜单ID</param>
+        ///// <returns>返回打开的窗口或视图，null表示打开失败</returns>
+        //public static object OpenMenu(string p_menuID)
+        //{
+        //    return OpenMenu(AtLocal.QueryModelFirst<OmMenu>($"select * from OmMenu where id='{p_menuID}'"));
+        //}
 
-        /// <summary>
-        /// 打开菜单项窗口，可以由点击菜单项或直接代码构造Menu的方式调用
-        /// </summary>
-        /// <param name="p_menu">OmMenu实例</param>
-        /// <returns>返回打开的窗口或视图，null表示打开失败</returns>
-        public static object OpenMenu(OmMenu p_menu)
-        {
-            if (p_menu == null)
-            {
-                AtKit.Msg("打开菜单项不可为空！");
-                return null;
-            }
+        ///// <summary>
+        ///// 打开菜单项窗口，可以由点击菜单项或直接代码构造Menu的方式调用
+        ///// </summary>
+        ///// <param name="p_menu">OmMenu实例</param>
+        ///// <returns>返回打开的窗口或视图，null表示打开失败</returns>
+        //public static object OpenMenu(OmMenu p_menu)
+        //{
+        //    if (p_menu == null)
+        //    {
+        //        AtKit.Msg("打开菜单项不可为空！");
+        //        return null;
+        //    }
 
-            Type tp = GetViewType(p_menu.ViewName);
-            if (tp == null)
-            {
-                AtKit.Msg(string.Format("打开菜单时未找到视图【{0}】！", p_menu.ViewName));
-                return null;
-            }
+        //    Type tp = GetViewType(p_menu.ViewName);
+        //    if (tp == null)
+        //    {
+        //        AtKit.Msg(string.Format("打开菜单时未找到视图【{0}】！", p_menu.ViewName));
+        //        return null;
+        //    }
 
-            Icons icon;
-            Enum.TryParse(p_menu.Icon, out icon);
-            object win = OpenWin(tp, p_menu.Name, icon, string.IsNullOrEmpty(p_menu.Params) ? null : p_menu.Params);
+        //    Icons icon;
+        //    Enum.TryParse(p_menu.Icon, out icon);
+        //    object win = OpenWin(tp, p_menu.Name, icon, string.IsNullOrEmpty(p_menu.Params) ? null : p_menu.Params);
 
-            // 保存点击次数，用于确定哪些是收藏菜单
-            if (win != null && !AtSys.Stub.IsLocalMode)
-            {
-                Task.Run(() =>
-                {
-                    if (AtLocal.GetModelScalar<int>($"select count(id) from ommenu where id=\"{p_menu.ID}\"") > 0)
-                    {
-                        // 点击次数保存在客户端
-                        Dict dt = new Dict();
-                        dt["userid"] = AtUser.ID;
-                        dt["menuid"] = p_menu.ID;
-                        int cnt = AtLocal.Execute("update menufav set clicks=clicks+1 where userid=:userid and menuid=:menuid", dt);
-                        if (cnt == 0)
-                            AtLocal.Execute("insert into menufav (userid, menuid, clicks) values (:userid, :menuid, 1)", dt);
-                    }
-                    // 收集使用频率
-                    //await AtAuth.ClickMenu(p_menu.ID);
-                });
-            }
-            return win;
-        }
+        //    // 保存点击次数，用于确定哪些是收藏菜单
+        //    if (win != null && !AtSys.Stub.IsLocalMode)
+        //    {
+        //        Task.Run(() =>
+        //        {
+        //            if (AtLocal.GetModelScalar<int>($"select count(id) from ommenu where id=\"{p_menu.ID}\"") > 0)
+        //            {
+        //                // 点击次数保存在客户端
+        //                Dict dt = new Dict();
+        //                dt["userid"] = AtUser.ID;
+        //                dt["menuid"] = p_menu.ID;
+        //                int cnt = AtLocal.Execute("update menufav set clicks=clicks+1 where userid=:userid and menuid=:menuid", dt);
+        //                if (cnt == 0)
+        //                    AtLocal.Execute("insert into menufav (userid, menuid, clicks) values (:userid, :menuid, 1)", dt);
+        //            }
+        //            // 收集使用频率
+        //            //await AtAuth.ClickMenu(p_menu.ID);
+        //        });
+        //    }
+        //    return win;
+        //}
 
         /// <summary>
         /// 根据视图名称激活旧窗口或打开新窗口

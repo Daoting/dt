@@ -26,8 +26,8 @@ namespace Dt.App.Home
         {
             InitializeComponent();
             _parent = p_parent;
-            _tb.Text = AtUser.GetMenuPath(p_parent);
-            _lv.Data = AtUser.LoadGroupMenus(p_parent);
+            _tb.Text = MenuKit.GetMenuPath(p_parent);
+            _lv.Data = MenuKit.LoadGroupMenus(p_parent);
         }
 
         void OnItemClick(object sender, ItemClickArgs e)
@@ -38,7 +38,7 @@ namespace Dt.App.Home
                 if (menu.IsGroup)
                     Tab.NaviTo(new GroupMenu(menu));
                 else
-                    AtUI.OpenMenu(menu);
+                    MenuKit.OpenMenu(menu);
             });
         }
 

@@ -83,15 +83,15 @@ namespace Dt.Base
         /// 1. 与本地不同时下载新模型文件；
         /// 2. 打开模型库；
         /// </summary>
-        /// <param name="p_prefix"></param>
+        /// <param name="p_svcName"></param>
         /// <returns></returns>
-        public static async Task<string> OpenModelDb(string p_prefix)
+        public static async Task<string> OpenModelDb(string p_svcName)
         {
             // 获取全局参数
             Dict cfg;
             try
             {
-                cfg = await new UnaryRpc("auth", "Entry.GetConfig", p_prefix).Call<Dict>();
+                cfg = await new UnaryRpc(p_svcName, "Entry.GetConfig").Call<Dict>();
                 AtSys.SyncTime(cfg.Date("now"));
             }
             catch (Exception ex)
@@ -116,8 +116,8 @@ namespace Dt.Base
 
                 try
                 {
-                    // 下载模型文件，下载地址如 https://localhost/app/auth/.model
-                    using (var response = await BaseRpc.Client.GetAsync(AtSys.Stub.ServerUrl.TrimEnd('/') + "/auth/.model"))
+                    // 下载模型文件，下载地址如 https://localhost/app/cm/.model
+                    using (var response = await BaseRpc.Client.GetAsync($"{AtSys.Stub.ServerUrl.TrimEnd('/')}/{p_svcName}/.model"))
                     using (var stream = await response.Content.ReadAsStreamAsync())
                     using (var gzipStream = new GZipStream(stream, CompressionMode.Decompress))
                     using (var fs = File.Create(Path.Combine(AtSys.LocalDbPath, modelFile), 262140, FileOptions.WriteThrough))
@@ -379,7 +379,7 @@ namespace Dt.Base
             // 以菜单项方式启动
             if (root.Name == "menu")
             {
-                AtUI.OpenMenu(attr.Value);
+                //AtUI.OpenMenu(attr.Value);
                 return;
             }
 

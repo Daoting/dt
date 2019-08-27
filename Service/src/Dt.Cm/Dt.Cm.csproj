@@ -10,6 +10,7 @@
   </PropertyGroup>
   
   <ItemGroup>
+    <Folder Include="etc\model\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

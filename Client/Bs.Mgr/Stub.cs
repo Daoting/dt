@@ -7,8 +7,11 @@
 #endregion
 
 #region 引用命名
-using Bs.Mgr;
-using Bs.Mgr.Model;
+using Dt.App;
+using Dt.App.Home;
+using Dt.App.Model;
+using Dt.Base.Docking;
+using Dt.Base.FormView;
 using Dt.Core;
 using Dt.Core.Model;
 using Dt.Sample;
@@ -108,8 +111,6 @@ namespace Dt.Shell
             { "menufav", typeof(MenuFav) },
             { "docklayout", typeof(DockLayout) },
             { "celllastval", typeof(CellLastVal) },
-            { "letter", typeof(Letter) },
-            { "filereadlog", typeof(FileReadLog) },
         };
 
         /// <summary>

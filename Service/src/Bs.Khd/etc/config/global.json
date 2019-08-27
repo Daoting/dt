@@ -1,0 +1,10 @@
+﻿{
+  "App": "baisui",
+  "RabbitMq": {
+    "HostName": "10.10.1.2",
+    "UserName": "dt",
+    "Password": "dt",
+    "Port": 5672
+  },
+  "Redis": "10.10.1.2,password=dt,defaultDatabase=15,allowAdmin=true"
+}

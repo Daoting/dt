@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Dt.Core;
+using Dt.Core.Sqlite;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,7 +28,7 @@ namespace Dt.Cm
         /// <param name="p_services"></param>
         public void ConfigureServices(IServiceCollection p_services)
         {
-
+            p_services.AddSingleton<SqliteModelHandler>();
         }
 
         /// <summary>
@@ -37,7 +38,7 @@ namespace Dt.Cm
         /// <param name="p_handlers">注册自定义请求处理</param>
         public void Configure(IApplicationBuilder p_app, IDictionary<string, RequestDelegate> p_handlers)
         {
-
+            Glb.GetSvc<SqliteModelHandler>().Init(p_handlers);
         }
     }
 }

@@ -199,12 +199,12 @@ namespace Dt.App.Model
             menu.Icon = row.Str("icon");
             menu.ViewName = row.Str("viewname");
             menu.Params = row.Str("params");
-            AtUI.OpenMenu(menu);
+            MenuKit.OpenMenu(menu);
         }
 
         void OnRefreshModel(object sender, Mi e)
         {
-            AtModel.UpdateModel();
+            ModelKit.UpdateModel();
         }
 
         async void OnAddRole(object sender, Mi e)

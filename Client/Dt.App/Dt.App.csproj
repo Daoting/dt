@@ -5,10 +5,6 @@
   </PropertyGroup>
 
   <Import Project="..\Common\dtc.props" />
-  
-  <ItemGroup>
-    <PackageReference Include="IdentityModel" Version="3.10.10" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />

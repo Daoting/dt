@@ -292,6 +292,12 @@ namespace Dt.Core
             // 内置拦截
             builder.RegisterType(typeof(LobInterceptor));
 
+            //// 提取有用类型，程序集包括Dt.Core、微服务、插件(以.Addin.dll结尾)
+            //List<Assembly> asms = new List<Assembly> { Glb.Stub.GetType().Assembly, typeof(Silo).Assembly };
+            //asms.AddRange(Directory
+            //    .EnumerateFiles(Path.GetDirectoryName(typeof(Silo).Assembly.Location), "*.Addin.dll", SearchOption.TopDirectoryOnly)
+            //    .Select(AssemblyLoadContext.Default.LoadFromAssemblyPath));
+
             // 提取微服务和Dt.Core程序集
             var types = Glb.Stub.GetType().Assembly.GetTypes()
                 .Concat(typeof(Silo).Assembly.GetTypes())
@@ -315,9 +321,22 @@ namespace Dt.Core
                 SvcAttribute svcAttr = type.GetCustomAttribute<SvcAttribute>(true);
                 if (svcAttr != null)
                 {
-                    builder
-                        .RegisterType(type)
-                        .ConfigureLifecycle(svcAttr.Lifetime, null);
+                    var itps = type.GetInterfaces();
+                    if (itps.Length > 0)
+                    {
+                        // 注册接口类型
+                        builder
+                            .RegisterType(type)
+                            .As(type)
+                            .As(itps)
+                            .ConfigureLifecycle(svcAttr.Lifetime, null);
+                    }
+                    else
+                    {
+                        builder
+                            .RegisterType(type)
+                            .ConfigureLifecycle(svcAttr.Lifetime, null);
+                    }
                     continue;
                 }
 

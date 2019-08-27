@@ -33,7 +33,7 @@ namespace Dt.App.Home
                 if (menu.IsGroup)
                     Tab.NaviTo(new GroupMenu(menu));
                 else
-                    AtUI.OpenMenu(menu);
+                    MenuKit.OpenMenu(menu);
             });
         }
 
@@ -47,7 +47,7 @@ namespace Dt.App.Home
             if (string.IsNullOrEmpty(p_filter))
                 _lv.Data = null;
             else
-                _lv.Data = AtUser.LoadMenusByName(p_filter.ToLower());
+                _lv.Data = MenuKit.LoadMenusByName(p_filter.ToLower());
         }
 
         #region ITabContent

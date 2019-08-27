@@ -12,7 +12,7 @@
 namespace Dt.Core.EventBus
 {
     /// <summary>
-    /// 事件
+    /// 事件，构造方法无参数！
     /// </summary>
     public interface IEvent
     { }

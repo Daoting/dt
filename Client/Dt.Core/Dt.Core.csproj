@@ -17,18 +17,14 @@
   </ItemGroup>
   
   <ItemGroup>
-    <Compile Include="..\..\Service\src\Dt.Auth\Sqlite\Model\OmBaseCode.cs" Link="Internal\Sqlite\Model\OmBaseCode.cs" />
-    <Compile Include="..\..\Service\src\Dt.Auth\Sqlite\Model\OmColumn.cs" Link="Internal\Sqlite\Model\OmColumn.cs" />
-    <Compile Include="..\..\Service\src\Dt.Auth\Sqlite\Model\OmReport.cs" Link="Internal\Sqlite\Model\OmReport.cs" />
-    <Compile Include="..\..\Service\src\Dt.Auth\Sqlite\Model\RoleMenu.cs" Link="Internal\Sqlite\Model\RoleMenu.cs" />
-    <Compile Include="..\..\Service\src\Dt.Auth\Sqlite\Model\RolePrv.cs" Link="Internal\Sqlite\Model\RolePrv.cs" />
-    <Compile Include="..\..\Service\src\Dt.Auth\Sqlite\SqliteAttributes.cs" Link="Internal\Sqlite\SqliteAttributes.cs" />
-    <Compile Include="..\..\Service\src\Dt.Auth\Sqlite\TableMapping.cs" Link="Internal\Sqlite\TableMapping.cs" />
+    <Compile Include="..\..\Service\src\Dt.Cm\SqliteModel\OmColumn.cs" Link="Internal\SqliteModel\OmColumn.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Dict.cs" Link="Base\Collection\Dict.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Serialize\IRpcJson.cs" Link="Internal\Serialize\IRpcJson.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Serialize\JsonRpcSerializer.cs" Link="Internal\Serialize\JsonRpcSerializer.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Serialize\RpcJson.cs" Link="Internal\Serialize\RpcJson.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Serialize\SerializeTypeAlias.cs" Link="Internal\Serialize\SerializeTypeAlias.cs" />
+    <Compile Include="..\..\Service\src\Dt.Core\Internal\Sqlite\SqliteAttributes.cs" Link="Internal\Sqlite\SqliteAttributes.cs" />
+    <Compile Include="..\..\Service\src\Dt.Core\Internal\Sqlite\TableMapping.cs" Link="Internal\Sqlite\TableMapping.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Rpc\Client\DuplexStream.cs" Link="Rpc\DuplexStream.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Rpc\Client\PushStreamContent.cs" Link="Rpc\PushStreamContent.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Rpc\Client\RequestWriter.cs" Link="Rpc\RequestWriter.cs" />

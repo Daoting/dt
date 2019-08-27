@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Core;
 using System;
 using System.Text.RegularExpressions;
@@ -72,7 +73,7 @@ namespace Dt.App
                     if (isCode)
                     {
                         // 验证码登录
-                        dt = await AtAuth.LoginByCode(phone, txt);
+                        dt = await AtCm.LoginByCode(phone, txt);
                         if (dt.Bool("valid"))
                             pwd = dt.Str("pwd");
                     }
@@ -80,7 +81,7 @@ namespace Dt.App
                     {
                         // 密码登录
                         pwd = AtKit.GetMD5(txt);
-                        dt = await AtAuth.LoginByPwd(phone, pwd);
+                        dt = await AtCm.LoginByPwd(phone, pwd);
                     }
 
                     if (!dt.Bool("valid"))
@@ -89,17 +90,9 @@ namespace Dt.App
                         return;
                     }
 
-                    string token = await AuthHelper.RequestToken(dt.Str("userid"), pwd);
-                    if (token == null)
-                    {
-                        LoginFailed("获取访问令牌失败！");
-                        return;
-                    }
-
-                    AtLocal.SaveCookie("LoginID", dt.Str("userid"));
-                    AtLocal.SaveCookie("LoginPwd", pwd);
-                    AtLocal.SaveCookie("LoginPhone", phone);
-                    await AuthHelper.LoadToken(token);
+                    // 切换到主页
+                    AtUser.Init(dt.Str("userid"), phone, dt.Str("name"), pwd);
+                    AtApp.LoadRootContent();
                 }
                 catch
                 {
@@ -134,7 +127,7 @@ namespace Dt.App
                 return;
 
             _btnCode.IsEnabled = false;
-            string code = await AtAuth.CreateVerificationCode(phone);
+            string code = await AtCm.CreateVerificationCode(phone);
             _tbCode.Focus(FocusState.Programmatic);
 
             int sec = 60;
