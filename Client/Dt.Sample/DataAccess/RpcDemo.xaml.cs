@@ -45,24 +45,30 @@ namespace Dt.Sample
             {
                 _tbInfo.Text += $"{Environment.NewLine}收到：{reader.Val<string>()}";
             }
+            _tbInfo.Text += Environment.NewLine + "结束";
         }
 
-        async void OnClientStream(object sender, RoutedEventArgs e)
+        void OnClientStream(object sender, RoutedEventArgs e)
         {
-            _tbInfo.Text = "ClientStream模式：";
-            var writer = await AtTestRpc.OnClientStream("hello");
-            for (int i = 0; i < 50; i++)
-            {
-                var msg = $"hello {i}";
-                await writer.Write(msg);
-                _tbInfo.Text += $"{Environment.NewLine}写入：{msg}";
-                await Task.Delay(1000);
-            }
+            _tbInfo.Text = "ClientStream模式未实现";
+            //_tbInfo.Text = "ClientStream模式：";
+            //var writer = await AtTestRpc.OnClientStream("hello");
+            //int i = 0;
+            //while (true)
+            //{
+            //    var msg = $"hello {i++}";
+            //    if (!await writer.Write(msg))
+            //        break;
+
+            //    _tbInfo.Text += $"{Environment.NewLine}写入：{msg}";
+            //    await Task.Delay(1000);
+            //}
+            //writer.Complete();
         }
 
         void OnDuplexStream(object sender, RoutedEventArgs e)
         {
-
+            _tbInfo.Text = "DuplexStream模式未实现";
         }
     }
 

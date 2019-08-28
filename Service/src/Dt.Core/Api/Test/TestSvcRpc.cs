@@ -37,18 +37,22 @@ namespace Dt.Core
             {
                 Log.Information("客户端读取：" + reader.Val<string>());
             }
+            Log.Information("服务端写入结束");
         }
 
         public async Task OnClientStream(string p_title = "hello")
         {
             var writer = await AtTestRpc.OnClientStream(p_title);
-            for (int i = 0; i < 50; i++)
+            int i = 0;
+            while (true)
             {
-                var msg = $"{p_title} {i}";
-                await writer.Write(msg);
+                var msg = $"{p_title} {i++}";
+                if (!await writer.Write(msg))
+                    break;
                 Log.Information("客户端写入：" + msg);
                 await Task.Delay(1000);
             }
+            writer.Complete();
         }
 
         public async Task OnDuplexStream(string p_title)

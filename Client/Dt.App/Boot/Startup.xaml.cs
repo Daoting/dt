@@ -44,26 +44,23 @@ namespace Dt.App
         {
             string phone = AtLocal.GetCookie("LoginPhone");
             string pwd = AtLocal.GetCookie("LoginPwd");
-            
-            // 未登录
-            if (string.IsNullOrEmpty(phone) || string.IsNullOrEmpty(pwd))
+
+            if (!string.IsNullOrEmpty(phone) && !string.IsNullOrEmpty(pwd))
             {
-                AtApp.Login();
-                return;
+                Dict dt = await AtCm.LoginByPwd(phone, pwd);
+                if (dt.Bool("valid"))
+                {
+                    AtUser.Init(dt.Str("userid"), phone, dt.Str("name"));
+                    MenuKit.Roles = dt.Str("roles").Split(',');
+
+                    // 切换到主页
+                    AtApp.LoadRootContent();
+                    return;
+                }
             }
 
-            Dict dt = await AtCm.LoginByPwd(phone, pwd);
-
-            // 登录失败
-            if (!dt.Bool("valid"))
-            {
-                AtApp.Login();
-                return;
-            }
-
-            // 切换到主页
-            AtUser.Init(dt.Str("userid"), phone, dt.Str("name"));
-            AtApp.LoadRootContent();
+            // 未登录或登录失败
+            AtApp.Login();
         }
     }
 }

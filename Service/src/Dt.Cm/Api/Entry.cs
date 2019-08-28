@@ -49,6 +49,8 @@ namespace Dt.Cm
 
             res["valid"] = true;
             res["userid"] = "1213";
+            res["name"] = "test";
+            res["roles"] = Glb.AnyoneID + ",aca71e2d795d47b6942e4aa5c9df8248";
             return res;
         }
 
@@ -103,6 +105,8 @@ namespace Dt.Cm
             //_verCode.Remove(p_phone);
             res["valid"] = true;
             res["userid"] = "abc";
+            res["name"] = "test";
+            res["roles"] = Glb.AnyoneID + ",aca71e2d795d47b6942e4aa5c9df8248";
             res["pwd"] = "xxx";
             return res;
         }

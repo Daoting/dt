@@ -232,10 +232,6 @@ namespace Dt.Core
                 return;
             }
 
-            // 流模式先返回心跳帧，心跳帧为第一帧
-            if (Api.CallMode != ApiCallMode.Unary)
-                await RpcServerKit.WriteHeartbeat(Context.Response.BodyWriter);
-
             switch (Api.CallMode)
             {
                 case ApiCallMode.Unary:
@@ -245,6 +241,8 @@ namespace Dt.Core
                     await new ServerStreamHandler(this).Call();
                     break;
                 case ApiCallMode.ClientStream:
+                    // 返回心跳帧为第一帧，可能仅响应一帧
+                    await RpcServerKit.WriteHeartbeat(Context.Response.BodyWriter);
                     await new ClientStreamHandler(this).Call();
                     break;
                 case ApiCallMode.DuplexStream:

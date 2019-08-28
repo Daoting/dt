@@ -8,7 +8,6 @@
 
 #region 引用命名
 using Newtonsoft.Json;
-using System;
 using System.IO;
 using System.Threading.Tasks;
 #endregion
@@ -52,8 +51,8 @@ namespace Dt.Core.Rpc
                     return true;
                 }
             }
-            catch
-            { }
+            catch { }
+
             return false;
         }
 

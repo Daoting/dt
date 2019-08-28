@@ -48,8 +48,6 @@ namespace Dt.Core.Rpc
                     var response = await _client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, CancellationToken.None);
                     response.EnsureSuccessStatusCode();
                     responseStream = await response.Content.ReadAsStreamAsync();
-                    // 第一帧为心跳帧
-                    await RpcClientKit.ReadHeartbeat(responseStream);
                 }
             }
             catch (Exception ex)

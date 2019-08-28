@@ -111,7 +111,7 @@ namespace Dt.Core.Rpc
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(ex, "XXXX");
+                    Log.Error(ex, "从管道读取帧异常");
                 }
                 finally
                 {

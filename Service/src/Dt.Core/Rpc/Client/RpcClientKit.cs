@@ -55,73 +55,68 @@ namespace Dt.Core.Rpc
         }
 
         /// <summary>
-        /// 从流中读取一帧，返回的数据不包括Frame头，已自动解压
+        /// 从流中读取一帧，返回的数据不包括Frame头，已解压，自动过滤心跳帧
         /// </summary>
         /// <param name="p_stream"></param>
         /// <returns></returns>
         public static async Task<byte[]> ReadFrame(Stream p_stream)
         {
-            int received = 0;
-            int read;
-
-            // 包头
-            // 1字节压缩标志 + 4字节内容长度
-            byte[] header = new byte[RpcKit.HeaderSize];
-            while ((read = await p_stream.ReadAsync(header, received, header.Length - received).ConfigureAwait(false)) > 0)
-            {
-                received += read;
-                if (received == header.Length)
-                    break;
-            }
-
-            if (received < header.Length)
-                throw new InvalidDataException("Frame头错误");
-
-            // 读取内容
             byte[] data;
-            var length = BinaryPrimitives.ReadUInt32BigEndian(header.AsSpan(1));
-            if (length > int.MaxValue)
-                throw new InvalidDataException("消息超长");
-            if (length > 0)
+            while (true)
             {
-                received = 0;
-                data = new byte[length];
-                while ((read = await p_stream.ReadAsync(data, received, data.Length - received).ConfigureAwait(false)) > 0)
+                int received = 0;
+                int read;
+
+                // 包头
+                // 1字节压缩标志 + 4字节内容长度
+                byte[] header = new byte[RpcKit.HeaderSize];
+                while ((read = await p_stream.ReadAsync(header, received, header.Length - received).ConfigureAwait(false)) > 0)
                 {
                     received += read;
-                    if (received == data.Length)
+                    if (received == header.Length)
                         break;
                 }
-            }
-            else
-            {
-                data = Array.Empty<byte>();
-            }
 
-            if (header[0] == 1)
-            {
-                // 先解压
-                var ms = new MemoryStream();
-                using (GZipStream zs = new GZipStream(new MemoryStream(data), CompressionMode.Decompress))
+                if (received < header.Length)
+                    throw new InvalidDataException("Frame头错误");
+
+                // 读取内容
+                var length = BinaryPrimitives.ReadUInt32BigEndian(header.AsSpan(1));
+                if (length > int.MaxValue)
+                    throw new InvalidDataException("消息超长");
+                if (length > 0)
                 {
-                    zs.CopyTo(ms);
+                    received = 0;
+                    data = new byte[length];
+                    while ((read = await p_stream.ReadAsync(data, received, data.Length - received).ConfigureAwait(false)) > 0)
+                    {
+                        received += read;
+                        if (received == data.Length)
+                            break;
+                    }
+
+                    // 过滤心跳帧
+                    if (length == RpcKit.ShakeHands.Length && data[0] == RpcKit.ShakeHands[0])
+                        continue;
                 }
-                data = ms.ToArray();
+                else
+                {
+                    data = Array.Empty<byte>();
+                }
+
+                if (header[0] == 1)
+                {
+                    // 先解压
+                    var ms = new MemoryStream();
+                    using (GZipStream zs = new GZipStream(new MemoryStream(data), CompressionMode.Decompress))
+                    {
+                        zs.CopyTo(ms);
+                    }
+                    data = ms.ToArray();
+                }
+                break;
             }
             return data;
         }
-
-        /// <summary>
-        /// 从流中读取心跳帧
-        /// </summary>
-        /// <param name="p_stream"></param>
-        /// <returns></returns>
-        public static async Task ReadHeartbeat(Stream p_stream)
-        {
-            byte[] data = await ReadFrame(p_stream);
-            if (data.Length != RpcKit.ShakeHands.Length)
-                throw new Exception("心跳信息错误！");
-        }
-
     }
 }

@@ -90,8 +90,10 @@ namespace Dt.App
                         return;
                     }
 
-                    // 切换到主页
                     AtUser.Init(dt.Str("userid"), phone, dt.Str("name"), pwd);
+                    MenuKit.Roles = dt.Str("roles").Split(',');
+
+                    // 切换到主页
                     AtApp.LoadRootContent();
                 }
                 catch

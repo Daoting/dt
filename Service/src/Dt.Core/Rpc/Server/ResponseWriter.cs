@@ -29,9 +29,20 @@ namespace Dt.Core.Rpc
         /// </summary>
         /// <param name="p_message">支持序列化的对象</param>
         /// <returns></returns>
-        public Task Write(object p_message)
+        public async Task<bool> Write(object p_message)
         {
-            return RpcServerKit.WriteFrame(_lc.Context.Response.BodyWriter, p_message);
+            // 请求已关闭，无法写入
+            if (_lc.Context.RequestAborted.IsCancellationRequested)
+                return false;
+
+            try
+            {
+                await RpcServerKit.WriteFrame(_lc.Context.Response.BodyWriter, p_message);
+                return true;
+            }
+            catch { }
+
+            return false;
         }
     }
 }

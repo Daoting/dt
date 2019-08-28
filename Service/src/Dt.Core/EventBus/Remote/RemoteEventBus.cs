@@ -73,6 +73,8 @@ namespace Dt.Core.EventBus
         /// <summary>
         /// 向某个服务的所有服务副本进行组播
         /// </summary>
+        /// <param name="p_event">事件内容</param>
+        /// <param name="p_svcName">服务名称</param>
         public void Multicast(IEvent p_event, string p_svcName)
         {
             // 进入第二队列
@@ -83,8 +85,8 @@ namespace Dt.Core.EventBus
         /// <summary>
         /// 向某个服务发布事件，有多个服务副本时采用均衡算法将消息投递给其中一个
         /// </summary>
-        /// <param name="p_event"></param>
-        /// <param name="p_svcName"></param>
+        /// <param name="p_event">事件内容</param>
+        /// <param name="p_svcName">服务名称</param>
         public void Push(IEvent p_event, string p_svcName)
         {
             // 进入第一队列
