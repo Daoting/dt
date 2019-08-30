@@ -21,15 +21,17 @@ using System.Threading;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core.Rpc
 {
     /// <summary>
-    /// android中使用OkHttp3实现Http通信
+    /// android中使用OkHttp3实现Http2通信
+    /// 参考：https://github.com/alexrainman/ModernHttpClient
     /// </summary>
     public class NativeMessageHandler : HttpClientHandler
     {
         OkHttpClient client = new OkHttpClient();
         readonly Dictionary<HttpRequestMessage, WeakReference> registeredProgressCallbacks = new Dictionary<HttpRequestMessage, WeakReference>();
+        readonly CacheControl noCacheCacheControl = new CacheControl.Builder().NoCache().Build();
 
         public NativeMessageHandler()
         {
@@ -44,7 +46,7 @@ namespace Dt.Core
             // 始终有Http11避免PROTOCOL_ERROR
             clientBuilder.Protocols(new[] { Protocol.Http11, Protocol.Http2 });
 
-            // 信任所有证书，支持自签名证书
+            // 信任所有服务器证书，支持自签名证书
             var sslContext = SSLContext.GetInstance("TLS");
             var trustManager = new CustomX509TrustManager();
             sslContext.Init(null, new ITrustManager[] { trustManager }, new SecureRandom());
@@ -78,6 +80,7 @@ namespace Dt.Core
             var requestBuilder = new Request.Builder()
                 .Method(request.Method.Method.ToUpperInvariant(), body)
                 .Url(url);
+            requestBuilder.CacheControl(noCacheCacheControl);
 
             foreach (var kvp in request.Headers)
             {

@@ -15,11 +15,11 @@
             }
         },
         {
-            "label": "auth",
+            "label": "msg",
             "command": "./k8s/debug.ps1",
             "type": "shell",
             "args": [
-                "auth"
+                "msg"
             ],
             "problemMatcher": []
         },

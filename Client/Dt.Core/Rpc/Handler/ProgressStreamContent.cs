@@ -15,7 +15,7 @@ using System.Net;
 using System.Threading;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core.Rpc
 {
     public delegate void ProgressDelegate(long bytes, long totalBytes, long totalBytesExpected);
 

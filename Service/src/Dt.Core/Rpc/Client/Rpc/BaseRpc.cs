@@ -76,11 +76,9 @@ namespace Dt.Core.Rpc
         internal static void RefreshHeader()
         {
             var header = _client.DefaultRequestHeaders;
-            header.Remove("sid");
             header.Remove("uid");
             if (!string.IsNullOrEmpty(AtUser.ID))
             {
-                header.Add("sid", AtUser.SessionID);
                 header.Add("uid", AtUser.ID);
             }
         }

@@ -90,11 +90,8 @@ namespace Dt.App
                         return;
                     }
 
-                    AtUser.Init(dt.Str("userid"), phone, dt.Str("name"), pwd);
                     MenuKit.Roles = dt.Str("roles").Split(',');
-
-                    // 切换到主页
-                    AtApp.LoadRootContent();
+                    AtApp.LoginSuccess(dt.Str("userid"), phone, dt.Str("name"), pwd);
                 }
                 catch
                 {

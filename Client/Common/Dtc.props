@@ -22,9 +22,9 @@
   </PropertyGroup>
   
   <ItemGroup>
-   <PackageReference Include="Uno.UI" Version="1.45.0" />
+   <PackageReference Include="Uno.UI" Version="1.44.1" />
   </ItemGroup>
- 
+
   <ItemGroup Condition=" '$(TargetFramework)' == 'xamarinios10' ">
     <Reference Include="System" />
     <Reference Include="System.Core" />

@@ -49,6 +49,9 @@ namespace Dt.Core
             Context.Items[_lcName] = this;
             // 内容标志
             Context.Response.ContentType = "application/dt";
+
+            if (long.TryParse(Context.Request.Headers["uid"], out var id))
+                UserID = id;
         }
         #endregion
 
@@ -62,6 +65,11 @@ namespace Dt.Core
         /// http请求上下文
         /// </summary>
         public HttpContext Context { get; }
+
+        /// <summary>
+        /// 获取当前用户标识
+        /// </summary>
+        public long UserID { get; } = -1;
 
         /// <summary>
         /// 获取mysql默认库
@@ -128,18 +136,6 @@ namespace Dt.Core
         #endregion
 
         #region 外部方法
-        /// <summary>
-        /// 获取当前用户标识
-        /// </summary>
-        public long GetUserID()
-        {
-            long id = -1;
-            var claim = Glb.HttpContext.User.FindFirst("uid");
-            if (claim != null)
-                long.TryParse(claim.Value, out id);
-            return id;
-        }
-
         /// <summary>
         /// 根据键名获取Db对象
         /// </summary>

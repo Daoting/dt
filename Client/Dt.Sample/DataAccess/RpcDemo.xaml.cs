@@ -74,27 +74,20 @@ namespace Dt.Sample
 
     internal static class AtTestRpc
     {
-        /// <summary>
-        /// 返回字符串
-        /// </summary>
-        /// <returns></returns>
+        #region TestRpc
         public static Task<string> GetString()
         {
             return new UnaryRpc(
                 "cm",
-                "TestSerialize.GetString"
+                "TestRpc.GetString"
             ).Call<string>();
         }
 
-        /// <summary>
-        /// 字符串参数
-        /// </summary>
-        /// <param name="p_str"></param>
         public static Task<bool> SetString(string p_str)
         {
             return new UnaryRpc(
                 "cm",
-                "TestSerialize.SetString",
+                "TestRpc.SetString",
                 p_str
             ).Call<bool>();
         }
@@ -103,7 +96,7 @@ namespace Dt.Sample
         {
             return new ServerStreamRpc(
                 "cm",
-                "TestStreamRpc.OnServerStream",
+                "TestRpc.OnServerStream",
                 p_title
             ).Call();
         }
@@ -112,7 +105,7 @@ namespace Dt.Sample
         {
             return new ClientStreamRpc(
                 "cm",
-                "TestStreamRpc.OnClientStream",
+                "TestRpc.OnClientStream",
                 p_title
             ).Call();
         }
@@ -121,9 +114,10 @@ namespace Dt.Sample
         {
             return new DuplexStreamRpc(
                 "cm",
-                "TestStreamRpc.OnDuplexStream",
+                "TestRpc.OnDuplexStream",
                 p_title
             ).Call();
         }
+        #endregion
     }
 }

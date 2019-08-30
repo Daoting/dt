@@ -159,12 +159,57 @@ namespace Dt.Base
         }
 
         /// <summary>
+        /// 登录成功后的处理
+        /// </summary>
+        /// <param name="p_id"></param>
+        /// <param name="p_phone"></param>
+        /// <param name="p_name"></param>
+        /// <param name="p_pwd"></param>
+        public static void LoginSuccess(string p_id, string p_phone, string p_name, string p_pwd = null)
+        {
+            // 登录后初始化用户信息
+            AtUser.ID = p_id;
+            AtUser.Phone = p_phone;
+            AtUser.Name = p_name;
+
+            // 初次登录
+            if (!string.IsNullOrEmpty(p_pwd))
+            {
+                AtLocal.SaveCookie("LoginPhone", p_phone);
+                AtLocal.SaveCookie("LoginPwd", p_pwd);
+            }
+            BaseRpc.RefreshHeader();
+
+            // 切换到主页
+            LoadRootContent();
+
+            //_ = RegisterMsg();
+        }
+
+        static async Task RegisterMsg()
+        {
+            var reader = await AtMsg.Register();
+            while (await reader.MoveNext())
+            {
+                reader.Val<string>();
+            }
+        }
+
+        /// <summary>
         /// 注销后重新登录
         /// </summary>
         /// <returns></returns>
         public static async Task Logout()
         {
-            AtUser.Reset();
+            // 注销时清空用户信息
+            AtUser.ID = null;
+            AtUser.Name = null;
+            AtUser.Phone = null;
+
+            AtLocal.DeleteCookie("LoginPhone");
+            AtLocal.DeleteCookie("LoginPwd");
+            BaseRpc.RefreshHeader();
+
             await AtSys.Stub.OnLogout();
             SysVisual.RootContent = AtSys.Stub.LoginPage;
         }

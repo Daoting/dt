@@ -286,7 +286,7 @@ namespace Dt.Core
                     if (!string.IsNullOrEmpty(retTypeName))
                         sb.AppendFormat("public static Task<{0}> {1}(", retTypeName, mi.Name);
                     else
-                        sb.AppendFormat("public static async Task {0}(", mi.Name);
+                        sb.AppendFormat("public static Task {0}(", mi.Name);
                 }
                 else
                 {

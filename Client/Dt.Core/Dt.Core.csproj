@@ -1,7 +1,7 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras/2.0.31">
 
   <PropertyGroup>
-    <TargetFrameworks>uap10.0.17763;MonoAndroid81</TargetFrameworks>
+    <TargetFrameworks>uap10.0.17763;MonoAndroid81;xamarinios10</TargetFrameworks>
   </PropertyGroup>
 
   <Import Project="..\Common\dtc.props" />
@@ -9,6 +9,10 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.Sqlite" Version="2.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'uap10.0.17763' ">
+    <PackageReference Include="System.Memory" Version="4.5.2" />
   </ItemGroup>
   
   <ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid81' ">

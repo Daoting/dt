@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace Dt.Core
 {
     /// <summary>
-    /// 功能测试Api
+    /// 服务之间Rpc测试
     /// </summary>
     [Api(true, "功能测试", AgentMode.Generic)]
     public class TestSvcRpc : BaseApi
@@ -47,7 +47,7 @@ namespace Dt.Core
             while (true)
             {
                 var msg = $"{p_title} {i++}";
-                if (!await writer.Write(msg))
+                if (!await writer.Write(msg) || i > 50)
                     break;
                 Log.Information("客户端写入：" + msg);
                 await Task.Delay(1000);
