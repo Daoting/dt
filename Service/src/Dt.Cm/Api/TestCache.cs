@@ -8,7 +8,7 @@
 
 #region 引用命名
 using Dt.Core;
-using Dt.Core.Cache;
+using Dt.Core.Caches;
 using System;
 using System.Threading.Tasks;
 #endregion
@@ -21,24 +21,32 @@ namespace Dt.Cm
     [Api(true, "功能测试", AgentMode.Generic)]
     public class TestCache : BaseApi
     {
-        public Task CacheStr(string p_key, string p_val)
+        public async Task<string> CacheStr(string p_key, string p_val)
         {
-            return new StringCache("Test:Str").Set(p_key, p_val);
+            var cache = new StringCache("Test:Str");
+            await cache.Set(p_key, p_val);
+            return await cache.Get<string>(p_key);
         }
 
-        public Task CacheLong(string p_key, long p_val)
+        public async Task<long> CacheLong(string p_key, long p_val)
         {
-            return new StringCache("Test:Long").Set(p_key, p_val);
+            var cache = new StringCache("Test:Long");
+            await cache.Set(p_key, p_val);
+            return await cache.Get<long>(p_key);
         }
 
-        public Task CacheStrObj(string p_key, string p_name, int p_age)
+        public async Task CacheStrObj(string p_key, string p_name, int p_age)
         {
-            return new StringCache("Test:StrObj").Set(p_key, new TestCacheObject { Name = p_name, Age = p_age });
+            var cache = new StringCache("Test:StrObj");
+            await cache.Set(p_key, new TestCacheObject { Name = p_name, Age = p_age });
+            var obj = await cache.Get<TestCacheObject>(p_key);
+            if (obj != null && !string.IsNullOrEmpty(obj.Name))
+                _c.Log.Information(obj.Name);
         }
 
         public Task CacheExpiry(string p_key, string p_val, int p_expiry)
         {
-            return new StringCache("Test:Str").Set(p_key, p_val, p_expiry > 0 ? TimeSpan.FromSeconds(p_expiry) : (TimeSpan?)null);
+            return Cache.StringSet("Test:Str", p_key, p_val, p_expiry > 0 ? TimeSpan.FromSeconds(p_expiry) : (TimeSpan?)null);
         }
 
         public Task BatchCacheStr()
@@ -48,17 +56,17 @@ namespace Dt.Cm
 
         public Task<string> GetStr(string p_key)
         {
-            return new StringCache("Test:Str").Get<string>(p_key);
+            return Cache.StringGet<string>("Test:Str", p_key);
         }
 
         public Task<long> GetLong(string p_key)
         {
-            return new StringCache("Test:Long").Get<long>(p_key);
+            return Cache.StringGet<long>("Test:Long", p_key);
         }
 
         public async Task<string> GetObjName(string p_key)
         {
-            var obj = await new StringCache("Test:StrObj").Get<TestCacheObject>(p_key);
+            var obj = await Cache.StringGet<TestCacheObject>("Test:StrObj", p_key);
             if (obj != null)
                 return obj.Name;
             return null;
@@ -74,25 +82,25 @@ namespace Dt.Cm
 
         public Task CacheHash(string p_key, string p_name, int p_age)
         {
-            return new HashCache("Test:Hash").Set(p_key, new TestCacheObject { Name = p_name, Age = p_age });
+            return Cache.HashSet("Test:Hash", p_key, new TestCacheObject { Name = p_name, Age = p_age });
         }
 
         public async Task<string> GetHash(string p_key)
         {
-            var obj = await new HashCache("Test:Hash").Get<TestCacheObject>(p_key);
+            var obj = await Cache.HashGet<TestCacheObject>("Test:Hash", p_key);
             if (obj != null)
                 return obj.Name;
             return null;
         }
 
-        public async Task<int> GetHashAge(string p_key)
+        public Task<int> GetHashAge(string p_key)
         {
-            return await new HashCache("Test:Hash").GetField<int>(p_key, "Age");
+            return Cache.HashGetField<int>("Test:Hash", p_key, "Age");
         }
 
-        public async void SetHashAge(string p_key, int p_age)
+        public Task SetHashAge(string p_key, int p_age)
         {
-            await new HashCache("Test:Hash").SetField(p_key, "Age", p_age);
+            return Cache.HashSetField("Test:Hash", p_key, "Age", p_age);
         }
     }
 

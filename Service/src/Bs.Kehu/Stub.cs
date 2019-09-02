@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 #endregion
 
-namespace Bs.Jhs
+namespace Bs.Kehu
 {
     /// <summary>
     /// 服务存根

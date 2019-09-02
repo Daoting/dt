@@ -15,7 +15,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Core.Cache
+namespace Dt.Core.Caches
 {
     /// <summary>
     /// 值为键值对集合的缓存基类
@@ -32,7 +32,7 @@ namespace Dt.Core.Cache
         }
 
         /// <summary>
-        /// 根据键查询缓存对象s
+        /// 根据键查询缓存对象
         /// </summary>
         /// <typeparam name="T">缓存类型</typeparam>
         /// <param name="p_key">不带前缀的键</param>
@@ -45,20 +45,6 @@ namespace Dt.Core.Cache
 
             var hashVal = await _db.HashGetAllAsync(GetFullKey(p_key));
             return FromHashEntry<T>(hashVal);
-        }
-
-        /// <summary>
-        /// 按键名批量查询缓存对象
-        /// </summary>
-        /// <typeparam name="T">缓存类型</typeparam>
-        /// <param name="p_keys">不带前缀的键名列表</param>
-        /// <returns>缓存对象列表</returns>
-        public Task<List<T>> BatchGet<T>(IEnumerable<string> p_keys)
-            where T : class
-        {
-            // if (p_keys == null || p_keys.Count() == 0)
-            //     return null;
-            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -77,6 +63,20 @@ namespace Dt.Core.Cache
 
             HashEntry[] val = ToHashEntry(p_value);
             await _db.HashSetAsync(GetFullKey(p_key), val);
+        }
+
+        /// <summary>
+        /// 按键名批量查询缓存对象
+        /// </summary>
+        /// <typeparam name="T">缓存类型</typeparam>
+        /// <param name="p_keys">不带前缀的键名列表</param>
+        /// <returns>缓存对象列表</returns>
+        public Task<List<T>> BatchGet<T>(IEnumerable<string> p_keys)
+            where T : class
+        {
+            // if (p_keys == null || p_keys.Count() == 0)
+            //     return null;
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -110,12 +110,12 @@ namespace Dt.Core.Cache
         /// <param name="p_field">hash中的field，大小写敏感</param>
         /// <param name="p_value">field对应的value</param>
         /// <returns></returns>
-        public async Task SetField(string p_key, string p_field, object p_value)
+        public Task SetField(string p_key, string p_field, object p_value)
         {
             if (string.IsNullOrEmpty(p_key))
-                return;
+                return Task.CompletedTask;
 
-            await _db.HashSetAsync(GetFullKey(p_key), new HashEntry[] { new HashEntry(p_field, p_value.ToString()) });
+            return _db.HashSetAsync(GetFullKey(p_key), new HashEntry[] { new HashEntry(p_field, p_value.ToString()) });
         }
 
         T FromHashEntry<T>(HashEntry[] p_hashVal)

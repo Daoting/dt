@@ -13,7 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Core.Cache
+namespace Dt.Core.Caches
 {
     /// <summary>
     /// 基于Redis的缓存接口

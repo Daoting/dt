@@ -95,6 +95,19 @@ namespace Dt.Core.EventBus
         }
 
         /// <summary>
+        /// 向某个服务的固定副本发布事件，使用场景少如：在线推送消息，因客户端连接的副本不同
+        /// </summary>
+        /// <param name="p_event">事件内容</param>
+        /// <param name="p_svcName">服务名称</param>
+        /// <param name="p_svcID">服务副本ID</param>
+        public void PushFixed(IEvent p_event, string p_svcName, string p_svcID)
+        {
+            // 进入第二队列
+            if (!string.IsNullOrEmpty(p_svcName) && !string.IsNullOrEmpty(p_svcID))
+                Publish(p_event, $"{Glb.AppName}.{p_svcName.ToLower()}.{p_svcID}");
+        }
+
+        /// <summary>
         /// 发布远程事件
         /// </summary>
         /// <param name="p_event"></param>

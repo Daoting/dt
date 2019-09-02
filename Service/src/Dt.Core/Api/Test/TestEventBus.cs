@@ -39,6 +39,12 @@ namespace Dt.Core
             return Task.CompletedTask;
         }
 
+        public Task PushFixed(string p_svcName, string p_svcID)
+        {
+            _c.Remote.PushFixed(new TestEventData(), p_svcName, p_svcID);
+            return Task.CompletedTask;
+        }
+
         public Task LocalPublish()
         {
             _c.Local.Publish(new KesEvent());

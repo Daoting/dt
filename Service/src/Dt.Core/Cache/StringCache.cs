@@ -15,7 +15,7 @@ using System.Linq;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Core.Cache
+namespace Dt.Core.Caches
 {
     /// <summary>
     /// 值为字符串的缓存基类

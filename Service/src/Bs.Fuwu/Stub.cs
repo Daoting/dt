@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 #endregion
 
-namespace Bs.Khd
+namespace Bs.Fuwu
 {
     /// <summary>
     /// 服务存根

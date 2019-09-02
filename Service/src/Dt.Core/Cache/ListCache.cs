@@ -14,7 +14,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Core.Cache
+namespace Dt.Core.Caches
 {
     /// <summary>
     /// 值为值为按插入顺序排序的字符串列表的缓存基类

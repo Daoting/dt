@@ -12,7 +12,7 @@ using System;
 using System.Collections.Generic;
 #endregion
 
-namespace Dt.Core.Cache
+namespace Dt.Core.Caches
 {
     /// <summary>
     /// Redis的基础管理

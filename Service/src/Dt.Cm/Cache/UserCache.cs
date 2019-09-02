@@ -8,7 +8,7 @@
 
 #region 引用命名
 using Dt.Core;
-using Dt.Core.Cache;
+using Dt.Core.Caches;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

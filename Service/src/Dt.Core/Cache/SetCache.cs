@@ -14,7 +14,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Core.Cache
+namespace Dt.Core.Caches
 {
     /// <summary>
     /// 值为无序字符串集合的缓存基类

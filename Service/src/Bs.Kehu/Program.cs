@@ -1,6 +1,6 @@
 ﻿using Dt.Core;
 
-namespace Bs.Khd
+namespace Bs.Kehu
 {
     public class Program
     {

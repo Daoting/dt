@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Dt.Core;
+using Dt.Core.Cache;
 using Dt.Core.Rpc;
 using Dt.Core.Sqlite;
 using System;
@@ -24,20 +25,30 @@ namespace Dt.Msg
     [Api]
     public class InstantMsg : BaseApi
     {
-        static readonly ConcurrentDictionary<long, BlockingCollection<string>> _sessions = new ConcurrentDictionary<long, BlockingCollection<string>>();
+        static readonly ConcurrentDictionary<long, ClientInfo> _sessions = new ConcurrentDictionary<long, ClientInfo>();
 
-        public async Task Register(ResponseWriter p_writer)
+        public async Task Register(ClientSystem p_clientSys, ResponseWriter p_writer)
         {
-            BlockingCollection<string> bc = new BlockingCollection<string>();
-            _sessions[_c.UserID] = bc;
-            while (bc.TryTake(out var msg))
+            string svcID = await new StringCache("").Get<string>(_c.UserID.ToString());
+            ClientInfo ci;
+            if (_sessions.TryGetValue(_c.UserID, out ci))
+                ci.Logout();
+
+            ci = new ClientInfo(_c.UserID, p_clientSys);
+            _sessions[_c.UserID] = ci;
+            MsgInfo msg;
+            while ((msg = ci.Take()) != null)
             {
-                if (!await p_writer.Write(msg))
+                if (msg.Type == MsgType.Logout)
+                    return;
+
+
+                if (!await msg.Write(p_writer))
                     break;
 
             }
 
-            _sessions.TryRemove(_c.UserID, out bc);
+            _sessions.TryRemove(_c.UserID, out ci);
 
         }
 
