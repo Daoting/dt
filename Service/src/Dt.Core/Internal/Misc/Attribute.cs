@@ -9,6 +9,7 @@
 #region 引用命名
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Core
@@ -122,6 +123,33 @@ namespace Dt.Core
         /// 自定义Agent方法代码
         /// </summary>
         public string Code { get; }
+    }
+
+    /// <summary>
+    /// 授权标志
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false)]
+    public class AuthAttribute : Attribute
+    {
+        public AuthAttribute(bool p_AllowAnonymous)
+        {
+            AllowAnonymous = p_AllowAnonymous;
+        }
+
+        public AuthAttribute(string p_privilege)
+        {
+            Privilege = p_privilege;
+        }
+
+        /// <summary>
+        /// 是否允许匿名用户访问
+        /// </summary>
+        public bool AllowAnonymous { get; }
+
+        /// <summary>
+        /// 允许权限
+        /// </summary>
+        public string Privilege { get; }
     }
 
     /// <summary>

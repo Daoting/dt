@@ -57,7 +57,7 @@ namespace Dt.App
             }
 
             // 未登录或登录失败
-            AtApp.Login();
+            AtSys.Login(false);
         }
     }
 }

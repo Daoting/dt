@@ -132,6 +132,11 @@ namespace Dt.Core
         /// </summary>
         public InterceptStatus Status { get; private set; }
 
+        /// <summary>
+        /// 当前为匿名用户
+        /// </summary>
+        public bool IsAnonymous => UserID == -1;
+
         internal object[] Args { get; private set; }
         #endregion
 
@@ -224,7 +229,8 @@ namespace Dt.Core
             // 校验授权
             if (!IsAuthenticated())
             {
-                await Response(ApiResponseType.Error, 0, "未经授权");
+                // 未授权
+                Context.Response.StatusCode = 401;
                 return;
             }
 
@@ -347,7 +353,24 @@ namespace Dt.Core
         /// <returns></returns>
         bool IsAuthenticated()
         {
-            return true;
+            // 普通登录用户
+            if (Api.Auth == null)
+                return UserID != -1;
+
+            // 内部服务标识
+            if (UserID == 110)
+                return true;
+
+            // 匿名用户
+            if (Api.Auth.AllowAnonymous)
+                return true;
+
+            // 按照权限授权
+            if (!string.IsNullOrEmpty(Api.Auth.Privilege))
+            {
+
+            }
+            return false;
         }
         #endregion
     }

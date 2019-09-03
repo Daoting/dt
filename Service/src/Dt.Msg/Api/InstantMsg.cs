@@ -9,6 +9,7 @@
 #region 引用命名
 using Dt.Core;
 using Dt.Core.Cache;
+using Dt.Core.Caches;
 using Dt.Core.Rpc;
 using Dt.Core.Sqlite;
 using System;
@@ -27,9 +28,11 @@ namespace Dt.Msg
     {
         static readonly ConcurrentDictionary<long, ClientInfo> _sessions = new ConcurrentDictionary<long, ClientInfo>();
 
+        [Auth]
         public async Task Register(ClientSystem p_clientSys, ResponseWriter p_writer)
         {
-            string svcID = await new StringCache("").Get<string>(_c.UserID.ToString());
+            Microsoft.AspNetCore.Authorization.AuthorizeAttribute
+            string svcID = await Cache.StringGet<string>("", _c.UserID.ToString());
             ClientInfo ci;
             if (_sessions.TryGetValue(_c.UserID, out ci))
                 ci.Logout();

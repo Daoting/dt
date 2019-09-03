@@ -20,6 +20,7 @@ namespace Dt.Cm
     /// 入口Api
     /// </summary>
     [Api]
+    [Auth(true)]
     public class Entry : BaseApi
     {
         /// <summary>

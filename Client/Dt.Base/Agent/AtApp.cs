@@ -32,6 +32,10 @@ namespace Dt.Base
         /// </param>
         public static void Run(LaunchActivatedEventArgs args)
         {
+            // 登录注销回调
+            AtSys.Login = Login;
+            AtSys.Logout = Logout;
+
             // 已启动过则激活应用
             if (SysVisual.RootContent != null)
             {
@@ -153,9 +157,28 @@ namespace Dt.Base
         /// <summary>
         /// 显示登录页面
         /// </summary>
-        public static void Login()
+        /// <param name="p_isPopup">是否为弹出式</param>
+        static void Login(bool p_isPopup)
         {
-            SysVisual.RootContent = AtSys.Stub.LoginPage;
+            if (!p_isPopup)
+            {
+                SysVisual.RootContent = AtSys.Stub.LoginPage;
+                return;
+            }
+
+            // 弹出式登录页面在未登录遇到需要登录的功能时
+            AtKit.RunAsync(() =>
+            {
+                var dlg = new Dlg
+                {
+                    Resizeable = false,
+                    HideTitleBar = true,
+                    PhonePlacement = DlgPlacement.Maximized,
+                    WinPlacement = DlgPlacement.Maximized,
+                    Content = AtSys.Stub.LoginPage,
+                };
+                dlg.Show();
+            });
         }
 
         /// <summary>
@@ -165,7 +188,7 @@ namespace Dt.Base
         /// <param name="p_phone"></param>
         /// <param name="p_name"></param>
         /// <param name="p_pwd"></param>
-        public static void LoginSuccess(string p_id, string p_phone, string p_name, string p_pwd = null)
+        public static void LoginSuccess(string p_id, string p_phone, string p_name, string p_pwd = null, Dlg p_dlg = null)
         {
             // 登录后初始化用户信息
             AtUser.ID = p_id;
@@ -180,8 +203,11 @@ namespace Dt.Base
             }
             BaseRpc.RefreshHeader();
 
-            // 切换到主页
-            LoadRootContent();
+            // 正常登录后切换到主页，中途登录后关闭对话框
+            if (p_dlg == null)
+                LoadRootContent();
+            else
+                p_dlg.Close();
 
             //_ = RegisterMsg();
         }
@@ -199,7 +225,7 @@ namespace Dt.Base
         /// 注销后重新登录
         /// </summary>
         /// <returns></returns>
-        public static async Task Logout()
+        static async void Logout()
         {
             // 注销时清空用户信息
             AtUser.ID = null;

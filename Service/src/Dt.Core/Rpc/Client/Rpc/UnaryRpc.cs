@@ -10,6 +10,7 @@
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Net.Http;
 using System.Threading.Tasks;
 #endregion
 
@@ -39,21 +40,35 @@ namespace Dt.Core.Rpc
         {
             // 远程请求
             byte[] data = null;
-            try
+            using (var request = CreateRequestMessage())
+            using (var content = new PushStreamContent((ws) => RpcClientKit.WriteFrame(ws, _data, _isCompressed)))
             {
-                using (var request = CreateRequestMessage())
-                using (var content = new PushStreamContent((ws) => RpcClientKit.WriteFrame(ws, _data, _isCompressed)))
+                request.Content = content;
+                HttpResponseMessage response;
+                try
                 {
-                    request.Content = content;
-                    var response = await _client.SendAsync(request).ConfigureAwait(false);
-                    response.EnsureSuccessStatusCode();
-                    var stream = await response.Content.ReadAsStreamAsync();
-                    data = await RpcClientKit.ReadFrame(stream);
+                    response = await _client.SendAsync(request).ConfigureAwait(false);
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"调用【{_methodName}】时服务器连接失败！\r\n{ex.Message}");
+                catch (Exception ex)
+                {
+                    throw new Exception($"调用【{_methodName}】时服务器连接失败！\r\n{ex.Message}");
+                }
+
+                if (response.StatusCode != System.Net.HttpStatusCode.OK)
+                {
+#if !SERVER
+                    // 无权限时跳转到登录页面
+                    if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                    {
+                        AtSys.Login(true);
+                        return default(T);
+                    }
+#endif
+                    throw new Exception($"调用【{_methodName}】时返回状态码：{response.StatusCode}");
+                }
+
+                var stream = await response.Content.ReadAsStreamAsync();
+                data = await RpcClientKit.ReadFrame(stream);
             }
 
             // 解析结果

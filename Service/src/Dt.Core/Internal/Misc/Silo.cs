@@ -379,6 +379,7 @@ namespace Dt.Core
 
             ApiCallMode callMode;
             bool isTran;
+            var clsAuth = p_type.GetCustomAttribute<AuthAttribute>(false);
             MethodInfo[] methods = p_type.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             foreach (MethodInfo mi in methods)
             {
@@ -415,8 +416,9 @@ namespace Dt.Core
                 else
                     isTran = false;
 
+                var methodAuth = mi.GetCustomAttribute<AuthAttribute>(false);
                 string name = $"{p_type.Name}.{mi.Name}";
-                Methods[name] = new ApiMethod(mi, callMode, isTran);
+                Methods[name] = new ApiMethod(mi, callMode, methodAuth?? clsAuth, isTran);
                 if (grpMethods != null)
                     grpMethods.Add(name);
             }

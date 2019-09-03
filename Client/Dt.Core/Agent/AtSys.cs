@@ -7,7 +7,9 @@
 #endregion
 
 #region 引用命名
+using Dt.Core.Rpc;
 using System;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Storage;
 using Windows.UI.Popups;
@@ -102,6 +104,18 @@ namespace Dt.Core
         /// 获取设置是否监控Rpc调用结果，TraceBox中控制输出
         /// </summary>
         internal static bool TraceRpc { get; set; }
+        #endregion
+
+        #region 登录注销
+        /// <summary>
+        /// 显示登录页面
+        /// </summary>
+        public static Action<bool> Login { get; internal set; }
+
+        /// <summary>
+        /// 注销后重新登录
+        /// </summary>
+        public static Action Logout { get; internal set; }
         #endregion
 
         #region 平台方法

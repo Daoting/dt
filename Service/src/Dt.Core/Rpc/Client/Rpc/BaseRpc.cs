@@ -43,6 +43,10 @@ namespace Dt.Core.Rpc
                 // 验证时服务端证书始终有效！
                 ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
             });
+#if SERVER
+            // 内部用户标识
+            _client.DefaultRequestHeaders.Add("uid", "110");
+#endif
 #else
             _client = new HttpClient(new NativeMessageHandler());
 #endif
