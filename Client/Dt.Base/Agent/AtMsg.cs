@@ -21,38 +21,26 @@ namespace Dt.Base
     public static class AtMsg
     {
         #region InstantMsg
-        public static Task<ResponseReader> Register()
+        public static Task<ResponseReader> Register(int p_clientSys)
         {
             return new ServerStreamRpc(
                 "msg",
-                "InstantMsg.Register"
+                "PushMsg.Register",
+                p_clientSys
             ).Call();
-        }
-
-        /// <summary>
-        /// 向在线用户广播信息
-        /// </summary>
-        /// <param name="p_msg"></param>
-        public static Task PushToAll(string p_msg)
-        {
-            return new UnaryRpc(
-                "msg",
-                "InstantMsg.PushToAll",
-                p_msg
-            ).Call<object>();
         }
 
         /// <summary>
         /// 向指定会话推送信息，门户之间调用推送信息
         /// </summary>
-        /// <param name="p_sessionIDs">会话列表，*表全部</param>
+        /// <param name="p_userID">会话列表，*表全部</param>
         /// <param name="p_content">推送内容</param>
-        public static Task PushMsg(string p_sessionIDs, string p_content)
+        public static Task PushMsg(Int64 p_userID, string p_content)
         {
             return new UnaryRpc(
                 "msg",
-                "InstantMsg.PushMsg",
-                p_sessionIDs,
+                "PushMsg.SendMsg",
+                p_userID,
                 p_content
             ).Call<object>();
         }

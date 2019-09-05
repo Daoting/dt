@@ -148,6 +148,29 @@ namespace Dt.Core
         {
             return p_val;
         }
+
+        /// <summary>
+        /// 返回MsgInfo
+        /// </summary>
+        /// <returns></returns>
+        public MsgInfo GetMsgInfo()
+        {
+            return new MsgInfo
+            {
+                MethodName = "abc.fun",
+                Params = new List<object> { 1, "a", true },
+                PushMode = MsgPushMode.Online,
+            };
+        }
+
+        /// <summary>
+        /// MsgInfo参数
+        /// </summary>
+        /// <param name="p_msg"></param>
+        public MsgInfo SetMsgInfo(MsgInfo p_msg)
+        {
+            return p_msg;
+        }
         #endregion
 
         #region 集合类型
@@ -486,9 +509,9 @@ namespace Dt.Core
         /// 返回复杂自定义类型
         /// </summary>
         /// <returns></returns>
-        public Person GetCustomCombine()
+        public Student GetCustomCombine()
         {
-            Person person = new Person();
+            Student person = new Student();
             person.Name = "John Smith";
             person.LastModified = DateTime.Now;
             person.Salary = new Dict();
@@ -503,7 +526,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_person"></param>
         /// <returns></returns>
-        public bool SetCustomCombine(Person p_person)
+        public bool SetCustomCombine(Student p_person)
         {
             return (p_person != null && !string.IsNullOrEmpty(p_person.Name));
         }
@@ -515,7 +538,7 @@ namespace Dt.Core
         public Department GetContainCustom()
         {
             Department dept = new Department() { Name = "人事部" };
-            Person employee = new Person();
+            Student employee = new Student();
             employee.Name = "John Smith";
             employee.LastModified = DateTime.Now;
             employee.Salary = new Dict();
@@ -569,8 +592,8 @@ namespace Dt.Core
         public string[] Sizes { get; set; }
     }
 
-    [JsonObj("人员")]
-    public class Person
+    [JsonObj("学生")]
+    public class Student
     {
         public string Name { get; set; }
 
@@ -589,6 +612,6 @@ namespace Dt.Core
     {
         public string Name { get; set; }
 
-        public Person Employee { get; set; }
+        public Student Employee { get; set; }
     }
 }

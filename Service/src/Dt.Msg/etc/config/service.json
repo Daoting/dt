@@ -2,5 +2,7 @@
   "Db": "Server=10.10.1.2;Database=dt0;Uid=dt;Pwd=dt;",
   "CacheSql": false,
   "TraceSql": true,
-  "TraceRpc": false
+  "TraceRpc": false,
+  "UwpClientSecret": "",
+  "UwpPkgSID": ""
 }

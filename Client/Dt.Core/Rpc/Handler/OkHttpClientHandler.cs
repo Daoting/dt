@@ -10,6 +10,7 @@
 #region 引用命名
 using Java.IO;
 using Java.Security;
+using Java.Util.Concurrent;
 using Javax.Net.Ssl;
 using Square.OkHttp3;
 using System;
@@ -53,6 +54,11 @@ namespace Dt.Core.Rpc
             // Create an ssl socket factory with our all-trusting manager
             var sslSocketFactory = sslContext.SocketFactory;
             clientBuilder.SslSocketFactory(sslSocketFactory, trustManager);
+
+            // 读始终不超时，配合服务器推送
+            clientBuilder.ReadTimeout(0, TimeUnit.Milliseconds);
+            clientBuilder.WriteTimeout(0, TimeUnit.Milliseconds);
+            clientBuilder.CallTimeout(0, TimeUnit.Milliseconds);
 
             // Hostname始终有效
             clientBuilder.HostnameVerifier((name, ssl) => true);

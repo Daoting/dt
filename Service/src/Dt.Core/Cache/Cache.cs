@@ -7,8 +7,10 @@
 #endregion
 
 #region 引用命名
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 #endregion
 
@@ -122,6 +124,72 @@ namespace Dt.Core.Caches
         public static Task HashSetField(string p_keyPrefix, string p_key, string p_field, object p_value)
         {
             return new HashCache(p_keyPrefix).SetField(p_key, p_field, p_value);
+        }
+
+        /// <summary>
+        /// 删除缓存对象
+        /// </summary>
+        /// <param name="p_keyPrefix">缓存键前缀</param>
+        /// <param name="p_key">不带前缀的键名</param>
+        /// <returns></returns>
+        public static Task<bool> Remove(string p_keyPrefix, string p_key)
+        {
+            if (string.IsNullOrEmpty(p_key))
+                return Task.FromResult(false);
+
+            string key;
+            if (string.IsNullOrEmpty(p_keyPrefix))
+                key = p_key;
+            else
+                key = $"{p_keyPrefix}:{p_key}";
+            return Redis.Db.KeyDeleteAsync(key);
+        }
+
+        /// <summary>
+        /// 批量删除缓存对象
+        /// </summary>
+        /// <param name="p_keyPrefix">缓存键前缀</param>
+        /// <param name="p_keys">不带前缀的键名列表</param>
+        /// <returns></returns>
+        public static Task BatchRemove(string p_keyPrefix, IEnumerable<string> p_keys)
+        {
+            if (p_keys == null || p_keys.Count() == 0)
+                return Task.FromResult(false);
+
+            IEnumerable<RedisKey> keys;
+            if (string.IsNullOrEmpty(p_keyPrefix))
+                keys = p_keys.Select(p => (RedisKey)p);
+            else
+                keys = p_keys.Select(p => (RedisKey)$"{p_keyPrefix}:{p}");
+            return Redis.Db.KeyDeleteAsync(keys.ToArray());
+        }
+
+        /// <summary>
+        /// 计数增加1
+        /// </summary>
+        /// <param name="p_key">完整键名</param>
+        /// <returns>返回加1后的值</returns>
+        public static long Increment(string p_key)
+        {
+            return Redis.Db.StringIncrement(p_key);
+        }
+
+        /// <summary>
+        /// 计数减1
+        /// </summary>
+        /// <param name="p_key">完整键名</param>
+        /// <param name="p_min">最小值</param>
+        /// <returns>返回减1后的值</returns>
+        public static long Decrement(string p_key, int p_min = 0)
+        {
+            var db = Redis.Db;
+            long cnt = db.StringDecrement(p_key);
+            if (cnt < p_min)
+            {
+                cnt = p_min;
+                db.StringSet(p_key, cnt);
+            }
+            return cnt;
         }
     }
 }

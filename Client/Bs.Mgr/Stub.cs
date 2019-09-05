@@ -99,7 +99,12 @@ namespace Dt.Shell
         /// <summary>
         /// 获取自定义可序列化类型字典
         /// </summary>
-        public Dictionary<string, Type> SerializeTypes => null;
+        public Dictionary<string, Type> SerializeTypes => new Dictionary<string, Type>
+        {
+            { "产品", typeof(Product) },
+            { "学生", typeof(Student) },
+            { "部门", typeof(Department) },
+        };
 
         /// <summary>
         /// 获取状态库表类型

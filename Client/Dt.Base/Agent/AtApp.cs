@@ -209,16 +209,17 @@ namespace Dt.Base
             else
                 p_dlg.Close();
 
-            //_ = RegisterMsg();
+            _ = RegisterMsg();
         }
 
         static async Task RegisterMsg()
         {
-            var reader = await AtMsg.Register();
+            var reader = await AtMsg.Register((int)AtSys.System);
             while (await reader.MoveNext())
             {
-                reader.Val<string>();
+                AtKit.Msg("客户端读取：" + reader.Val<string>());
             }
+            AtKit.Msg("服务端写入结束");
         }
 
         /// <summary>

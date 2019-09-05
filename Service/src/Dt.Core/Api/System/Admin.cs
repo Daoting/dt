@@ -431,6 +431,8 @@ namespace Dt.Core
                 tpName = "bool";
             else if (p_type == typeof(int))
                 tpName = "int";
+            else if (p_type == typeof(Int64))
+                tpName = "long";
             else if (p_type == typeof(List<string>))
                 tpName = "List<string>";
             else if (p_type == typeof(List<bool>))
