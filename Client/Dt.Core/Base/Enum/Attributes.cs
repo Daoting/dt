@@ -55,38 +55,6 @@ namespace Dt.Core
     }
 
     /// <summary>
-    /// 流程表单类属性
-    /// </summary>
-    [AttributeUsage( AttributeTargets.Class, AllowMultiple=false)]
-    public class WfFormAttribute : AliasAttribute
-    {
-        /// <summary>
-        /// 构造脚本类属性
-        /// </summary>
-        /// <param name="p_alias">名称</param>
-        public WfFormAttribute(string p_alias)
-            : base(p_alias)
-        {
-        }
-    }
-
-    /// <summary>
-    /// 流程业务数据列表类属性
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class WfSheetAttribute : AliasAttribute
-    {
-        /// <summary>
-        /// 构造自定义查找类属性
-        /// </summary>
-        /// <param name="p_alias">名称</param>
-        public WfSheetAttribute(string p_alias)
-            : base(p_alias)
-        {
-        }
-    }
-
-    /// <summary>
     /// 可序列化类型
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
@@ -105,45 +73,5 @@ namespace Dt.Core
             : base(p_alias)
         {
         }
-    }
-
-    /// <summary>
-    /// rpc时需要序列化属性的标志
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public class RpcMemberAttribute : AliasAttribute
-    {
-        /// <summary>
-        /// 构造rpc类型属性
-        /// </summary>
-        /// <param name="p_alias">名称</param>
-        public RpcMemberAttribute(string p_alias)
-            : base(p_alias)
-        {
-        }
-    }
-
-    /// <summary>
-    /// 可远程调用的类
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public class RpcClassAttribute : Attribute
-    {
-    }
-
-    /// <summary>
-    /// 可远程调用方法的标志
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public class RpcMethodAttribute : Attribute
-    {
-    }
-
-    /// <summary>
-    /// 忽略标志，Sqlite.Net中为IgnoreAttribute
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Property)]
-    public class IgnoredAttribute : Attribute
-    {
     }
 }

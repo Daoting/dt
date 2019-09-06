@@ -277,7 +277,7 @@ namespace Dt.Core
             [CallerLineNumber] int p_lineNumber = 0)
         {
             string note = string.Format("位置：{0}\r\n➡{1}\r\n➡{2}行", p_memberName, p_filePath, p_lineNumber);
-            AtLocal.SaveLog(note, p_msg);
+            Log.Error(note + (p_msg == null ? "" : "\r\n" + p_msg));
             if (string.IsNullOrEmpty(p_msg))
                 throw new FriendlyException(note);
             else

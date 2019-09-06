@@ -209,17 +209,7 @@ namespace Dt.Base
             else
                 p_dlg.Close();
 
-            _ = RegisterMsg();
-        }
-
-        static async Task RegisterMsg()
-        {
-            var reader = await AtMsg.Register((int)AtSys.System);
-            while (await reader.MoveNext())
-            {
-                AtKit.Msg("客户端读取：" + reader.Val<string>());
-            }
-            AtKit.Msg("服务端写入结束");
+            _ = HandlePushMsg();
         }
 
         /// <summary>
@@ -239,6 +229,31 @@ namespace Dt.Base
 
             await AtSys.Stub.OnLogout();
             SysVisual.RootContent = AtSys.Stub.LoginPage;
+        }
+
+        /// <summary>
+        /// 处理服务器推送
+        /// </summary>
+        /// <returns></returns>
+        static async Task HandlePushMsg()
+        {
+            try
+            {
+                var reader = await AtMsg.Register((int)AtSys.System);
+                PushHandler.RetryTimes = 0;
+                while (await reader.MoveNext())
+                {
+                    new PushHandler(reader.Val<string>()).Call();
+                }
+            }
+            catch { }
+
+            // 未停止接收推送时重连
+            if (!PushHandler.StopPush && PushHandler.RetryTimes < 5)
+            {
+                PushHandler.RetryTimes++;
+                _ = Task.Delay(TimeSpan.FromSeconds(Math.Pow(2, PushHandler.RetryTimes))).ContinueWith((t) => HandlePushMsg());
+            }
         }
         #endregion
 

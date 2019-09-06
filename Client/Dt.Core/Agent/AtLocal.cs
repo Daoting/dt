@@ -154,25 +154,6 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 保存客户端日志
-        /// </summary>
-        /// <param name="p_title">日志标题</param>
-        /// <param name="p_content">日志内容</param>
-        /// <param name="p_username">操作员姓名</param> 唐忠宝增加
-        public static void SaveLog(string p_title, string p_content, string p_username = "admin")
-        {
-            if (_stateDb != null)
-            {
-                ClientLog log = new ClientLog();
-                log.UserName = p_username;
-                log.CTime = DateTime.Now;
-                log.Title = p_title;
-                log.Content = p_content;
-                _stateDb.Insert(log, false);
-            }
-        }
-
-        /// <summary>
         /// 查询自启动信息
         /// </summary>
         /// <returns></returns>

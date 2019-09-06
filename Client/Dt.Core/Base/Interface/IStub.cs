@@ -64,6 +64,11 @@ namespace Dt.Core
         Dictionary<string, Type> ViewTypes { get; }
 
         /// <summary>
+        /// 处理服务器推送的类型字典
+        /// </summary>
+        Dictionary<string, Type> PushHandlers { get; }
+
+        /// <summary>
         /// 自定义可序列化类型字典
         /// </summary>
         Dictionary<string, Type> SerializeTypes { get; }

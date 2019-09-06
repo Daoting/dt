@@ -233,7 +233,7 @@ namespace Dt.Core
                         title = msg.Length > 20 ? msg.Substring(0, 20) : msg;
                     AtKit.Trace(TraceOutType.UnhandledException, title, e.Message);
                     // 保存日志
-                    AtLocal.SaveLog("程序异常", e.Message);
+                    Log.Error("未处理异常：" + e.Message);
                     // 显示异常错误对话框
                     AtKit.RunAsync(async () =>
                     {

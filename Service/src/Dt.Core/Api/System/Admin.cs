@@ -439,6 +439,8 @@ namespace Dt.Core
                 tpName = "List<bool>";
             else if (p_type == typeof(List<int>))
                 tpName = "List<int>";
+            else if (p_type == typeof(List<long>))
+                tpName = "List<long>";
             else if (p_type == typeof(List<double>))
                 tpName = "List<double>";
             else if (p_type == typeof(List<DateTime>))

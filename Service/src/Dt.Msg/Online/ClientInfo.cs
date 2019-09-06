@@ -93,7 +93,7 @@ namespace Dt.Msg
         {
             _closed = true;
             // 通知客户端退出
-            _queue.TryAdd("Logout");
+            _queue.TryAdd("[\"SysPushApi.StopPush\"]");
             // 触发_queue.Take()异常，会话结束
             _queue.CompleteAdding();
         }

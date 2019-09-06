@@ -32,8 +32,8 @@ namespace Dt.Sample
         {
             _fv1.Data = Table.CreateLocal("ClientLog").NewRow(new
             {
-                userName = "admin",
-                cTime = DateTime.Now
+                Content = "admin",
+                CTime = DateTime.Now
             });
         }
 
@@ -41,7 +41,7 @@ namespace Dt.Sample
         {
             _fv1.Data = new ClientLog
             {
-                UserName = "hdt",
+                Content = "hdt",
                 CTime = DateTime.Now,
             };
         }

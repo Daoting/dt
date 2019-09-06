@@ -50,7 +50,6 @@ namespace Dt.Sample
 
         void OnClientStream(object sender, RoutedEventArgs e)
         {
-            AtMsg.PushMsg(110, "abc");
             //_tbInfo.Text = "ClientStream模式未实现";
             //_tbInfo.Text = "ClientStream模式：";
             //var writer = await AtTestRpc.OnClientStream("hello");

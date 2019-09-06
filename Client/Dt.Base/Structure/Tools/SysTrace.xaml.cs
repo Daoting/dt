@@ -265,11 +265,8 @@ namespace Dt.Base.Tools
 
         #region 生成存根代码
 #if DEBUG
-        static string[] _ignoreAsm = new string[] { "Dt.Base" };
         Dictionary<string, Type> _viewTypes;
-        Dictionary<string, Type> _formTypes;
-        Dictionary<string, Type> _sheetTypes;
-        Dictionary<string, Type> _serviceTypes;
+        Dictionary<string, Type> _pushHandlers;
         Dictionary<string, Type> _serializeTypes;
         Dictionary<string, Type> _stateTbls;
         StringBuilder _sbState;
@@ -282,9 +279,7 @@ namespace Dt.Base.Tools
         async void OnStub(object sender, Mi e)
         {
             _viewTypes = new Dictionary<string, Type>();
-            _formTypes = new Dictionary<string, Type>();
-            _sheetTypes = new Dictionary<string, Type>();
-            _serviceTypes = new Dictionary<string, Type>();
+            _pushHandlers = new Dictionary<string, Type>();
             _serializeTypes = new Dictionary<string, Type>();
             _stateTbls = new Dictionary<string, Type>();
             _sbState = new StringBuilder();
@@ -293,7 +288,8 @@ namespace Dt.Base.Tools
             IReadOnlyList<StorageFile> files = await Package.Current.InstalledLocation.GetFilesAsync();
             foreach (StorageFile file in files)
             {
-                if (file.DisplayName.StartsWith("Dt."))
+                // Bs临时
+                if (file.DisplayName.StartsWith("Dt.") || file.DisplayName.StartsWith("Bs."))
                 {
                     if (file.FileType == ".dll")
                         ExtractAssembly(Assembly.Load(new AssemblyName(file.DisplayName)));
@@ -307,18 +303,40 @@ namespace Dt.Base.Tools
                 ExtractAssembly(Assembly.Load(new AssemblyName(exeFile.DisplayName)));
 
             StringBuilder sb = new StringBuilder();
-            BuildStubDict(sb, _viewTypes, "_viewTypes");
-            BuildStubDict(sb, _formTypes, "_formTypes");
-            BuildStubDict(sb, _sheetTypes, "_sheetTypes");
-            BuildStubDict(sb, _serviceTypes, "_serviceTypes");
-            if (_serializeTypes.Count > 0)
-                BuildStubDict(sb, _serializeTypes, "_serializeTypes");
-            else
-                sb.Append("\t\treadonly Dictionary<string, Type> _serializeTypes = null;\r\n\r\n");
-            BuildStubDict(sb, _stateTbls, "_stateTbls");
+            sb.AppendLine("\t\t#region 自动生成");
+
+            sb.AppendLine("\t\t/// <summary>");
+            sb.AppendLine("\t\t/// 获取视图字典");
+            sb.AppendLine("\t\t/// </summary>");
+            sb.AppendLine("\t\tpublic Dictionary<string, Type> ViewTypes => new Dictionary<string, Type>");
+            BuildStubDict(sb, _viewTypes);
+
+            sb.AppendLine("\t\t/// <summary>");
+            sb.AppendLine("\t\t/// 处理服务器推送的类型字典");
+            sb.AppendLine("\t\t/// </summary>");
+            sb.AppendLine("\t\tpublic Dictionary<string, Type> PushHandlers => new Dictionary<string, Type>");
+            BuildStubDict(sb, _pushHandlers);
+
+            sb.AppendLine("\t\t/// <summary>");
+            sb.AppendLine("\t\t/// 获取自定义可序列化类型字典");
+            sb.AppendLine("\t\t/// </summary>");
+            sb.AppendLine("\t\tpublic Dictionary<string, Type> SerializeTypes => new Dictionary<string, Type>");
+            BuildStubDict(sb, _serializeTypes);
+
+            sb.AppendLine("\t\t/// <summary>");
+            sb.AppendLine("\t\t/// 获取状态库表类型");
+            sb.AppendLine("\t\t/// </summary>");
+            sb.AppendLine("\t\tpublic Dictionary<string, Type> StateTbls => new Dictionary<string, Type>");
+            BuildStubDict(sb, _stateTbls);
 
             // 所有状态库类型和属性的字符串，取MD5值以区分每次的变化
-            sb.AppendFormat("\t\tconst string _stateDbVer = \"{0}\";", AtKit.GetMD5(_sbState.ToString()));
+            sb.AppendLine("\t\t/// <summary>");
+            sb.AppendLine("\t\t/// 获取状态库版本号，和本地不同时自动更新");
+            sb.AppendLine("\t\t/// </summary>");
+            sb.AppendFormat("\t\tpublic string StateDbVer => \"{0}\";", AtKit.GetMD5(_sbState.ToString()));
+            sb.AppendLine();
+
+            sb.Append("\t\t#endregion");
 
             DataPackage data = new DataPackage();
             data.SetText(sb.ToString());
@@ -326,10 +344,9 @@ namespace Dt.Base.Tools
             AtKit.Msg("已复制到剪切板！");
 
             _viewTypes.Clear();
-            _formTypes.Clear();
-            _sheetTypes.Clear();
-            _serviceTypes.Clear();
+            _pushHandlers.Clear();
             _serializeTypes.Clear();
+            _stateTbls.Clear();
         }
 
         /// <summary>
@@ -338,7 +355,7 @@ namespace Dt.Base.Tools
         /// <param name="p_asm">程序集</param>
         void ExtractAssembly(Assembly p_asm)
         {
-            if (p_asm == null || _ignoreAsm.Contains(p_asm.GetName().Name))
+            if (p_asm == null)
                 return;
 
             try
@@ -349,29 +366,15 @@ namespace Dt.Base.Tools
                     // 枚举标签
                     foreach (Attribute attr in tpInfo.GetCustomAttributes(false))
                     {
-                        AliasAttribute alias = attr as AliasAttribute;
-                        if (alias != null)
+                        if (attr is ViewAttribute va)
                         {
-                            if (alias is ViewAttribute)
-                            {
-                                // 视图
-                                _viewTypes[alias.Alias] = tp;
-                            }
-                            else if (alias is WfFormAttribute)
-                            {
-                                // 流程表单
-                                _formTypes[alias.Alias] = tp;
-                            }
-                            else if (alias is WfSheetAttribute)
-                            {
-                                // 流程Sheet
-                                _sheetTypes[alias.Alias] = tp;
-                            }
-                            else if (alias is JsonObjAttribute)
-                            {
-                                // 可序列化类型
-                                _serializeTypes[alias.Alias] = tp;
-                            }
+                            // 视图
+                            _viewTypes[va.Alias] = tp;
+                        }
+                        else if (attr is JsonObjAttribute ja)
+                        {
+                            // 可序列化类型
+                            _serializeTypes[ja.Alias] = tp;
                         }
                         else if (attr is StateTableAttribute)
                         {
@@ -384,10 +387,10 @@ namespace Dt.Base.Tools
                                     _sbState.Append(pro.Name);
                             }
                         }
-                        else if (attr is RpcClassAttribute)
+                        else if (attr is PushApiAttribute)
                         {
                             // 客户端服务方法
-                            _serviceTypes[tp.Name] = tp;
+                            _pushHandlers[tp.Name.ToLower()] = tp;
                         }
                     }
                 }
@@ -411,9 +414,15 @@ namespace Dt.Base.Tools
             }
         }
 
-        void BuildStubDict(StringBuilder p_sb, Dictionary<string, Type> p_dt, string p_name)
+        void BuildStubDict(StringBuilder p_sb, Dictionary<string, Type> p_dt)
         {
-            p_sb.AppendFormat("\t\treadonly Dictionary<string, Type> {0} = new Dictionary<string, Type>\r\n", p_name);
+            if (p_dt.Count == 0)
+            {
+                p_sb.AppendLine("\t\t{};");
+                p_sb.AppendLine();
+                return;
+            }
+
             p_sb.AppendLine("\t\t{");
             foreach (var item in p_dt)
             {

@@ -10,6 +10,7 @@
 using Dt.Core;
 using Dt.Core.Rpc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 #endregion
 
@@ -20,7 +21,13 @@ namespace Dt.Base
     /// </summary>
     public static class AtMsg
     {
-        #region InstantMsg
+        #region PushMsg
+        /// <summary>
+        /// 客户端注册在线推送
+        /// </summary>
+        /// <param name="p_clientSys">客户端系统</param>
+        /// <param name="p_writer"></param>
+        /// <returns></returns>
         public static Task<ResponseReader> Register(int p_clientSys)
         {
             return new ServerStreamRpc(
@@ -31,18 +38,49 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 向指定会话推送信息，门户之间调用推送信息
+        /// 注销指定用户客户端的在线推送
         /// </summary>
-        /// <param name="p_userID">会话列表，*表全部</param>
-        /// <param name="p_content">推送内容</param>
-        public static Task PushMsg(Int64 p_userID, string p_content)
+        /// <param name="p_userID"></param>
+        /// <returns></returns>
+        public static Task Unregister(long p_userID)
         {
             return new UnaryRpc(
                 "msg",
-                "PushMsg.SendMsg",
-                p_userID,
-                p_content
+                "PushMsg.Unregister",
+                p_userID
             ).Call<object>();
+        }
+
+        /// <summary>
+        /// 向某用户的客户端推送信息
+        /// </summary>
+        /// <param name="p_userID"></param>
+        /// <param name="p_msg"></param>
+        /// <returns></returns>
+        public static Task<string> Send(long p_userID, MsgInfo p_msg)
+        {
+            return new UnaryRpc(
+                "msg",
+                "PushMsg.Send",
+                p_userID,
+                p_msg
+            ).Call<string>();
+        }
+
+        /// <summary>
+        /// 向用户列表的所有客户端推送信息
+        /// </summary>
+        /// <param name="p_userIDs">用户列表</param>
+        /// <param name="p_msg">待推送信息</param>
+        /// <returns></returns>
+        public static Task<string> BatchSend(List<long> p_userIDs, MsgInfo p_msg)
+        {
+            return new UnaryRpc(
+                "msg",
+                "PushMsg.BatchSend",
+                p_userIDs,
+                p_msg
+            ).Call<string>();
         }
         #endregion
     }

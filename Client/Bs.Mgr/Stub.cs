@@ -10,6 +10,7 @@
 using Dt.App;
 using Dt.App.Home;
 using Dt.App.Model;
+using Dt.Base;
 using Dt.Base.Docking;
 using Dt.Base.FormView;
 using Dt.Core;
@@ -88,12 +89,20 @@ namespace Dt.Shell
         /// </summary>
         public Dictionary<string, Type> ViewTypes => new Dictionary<string, Type>
         {
-            { "主页", typeof(DefaultHome) },
             { "菜单管理", typeof(SysMenu) },
             { "系统模块", typeof(SysModule) },
             { "参数定义", typeof(SysParams) },
             { "基础权限", typeof(SysPrivilege) },
+            { "主页", typeof(DefaultHome) },
             { "控件样例", typeof(SamplesMain) },
+        };
+
+        /// <summary>
+        /// 处理服务器推送的类型字典
+        /// </summary>
+        public Dictionary<string, Type> PushHandlers => new Dictionary<string, Type>
+        {
+            { "syspushapi", typeof(SysPushApi) },
         };
 
         /// <summary>
@@ -111,17 +120,17 @@ namespace Dt.Shell
         /// </summary>
         public Dictionary<string, Type> StateTbls => new Dictionary<string, Type>
         {
-            { "clientcookie", typeof(ClientCookie) },
-            { "clientlog", typeof(ClientLog) },
             { "menufav", typeof(MenuFav) },
             { "docklayout", typeof(DockLayout) },
             { "celllastval", typeof(CellLastVal) },
+            { "clientlog", typeof(ClientLog) },
+            { "clientcookie", typeof(ClientCookie) },
         };
 
         /// <summary>
         /// 获取状态库版本号，和本地不同时自动更新
         /// </summary>
-        public string StateDbVer => "83975e59c4e069a15333a2d0ada18e2e";
+        public string StateDbVer => "5035b89092efb702051c91648eca0e63";
         #endregion
     }
 }
