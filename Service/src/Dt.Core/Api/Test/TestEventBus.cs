@@ -10,6 +10,7 @@
 using Dt.Core.EventBus;
 using Serilog;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 #endregion
 
@@ -21,9 +22,9 @@ namespace Dt.Core
     [Api(true, "功能测试", AgentMode.Generic)]
     public class TestEventBus : BaseApi
     {
-        public Task Broadcast(bool p_isAllSvcInst)
+        public Task Broadcast(List<string> p_svcs, bool p_isAllSvcInst)
         {
-            _c.Remote.Broadcast(new TestEventData(), p_isAllSvcInst);
+            _c.Remote.Broadcast(new TestEventData(), p_svcs, p_isAllSvcInst);
             return Task.CompletedTask;
         }
 
@@ -39,9 +40,9 @@ namespace Dt.Core
             return Task.CompletedTask;
         }
 
-        public Task PushFixed(string p_svcName, string p_svcID)
+        public Task PushFixed(string p_svcID)
         {
-            _c.Remote.PushFixed(new TestEventData(), p_svcName, p_svcID);
+            _c.Remote.PushFixed(new TestEventData(), p_svcID);
             return Task.CompletedTask;
         }
 
@@ -61,8 +62,6 @@ namespace Dt.Core
     {
 
     }
-
-    
 
     public class TestHandler1 : IRemoteHandler<TestEventData>
     {

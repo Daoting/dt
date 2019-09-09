@@ -109,7 +109,7 @@ namespace Dt.Msg
                     string svcID = await Cache.StringGet<string>(Online.PrefixKey, id.ToString());
                     if (!string.IsNullOrEmpty(svcID))
                     {
-                        Glb.GetSvc<RemoteEventBus>().PushFixed(new OnlinePushEvent { UserID = id, Msg = onlineMsg }, Glb.SvcName, svcID);
+                        //Glb.GetSvc<RemoteEventBus>().PushFixed(new OnlinePushEvent { UserID = id, Msg = onlineMsg }, Glb.SvcName, svcID);
                         break;
                     }
                 }

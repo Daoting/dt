@@ -61,7 +61,7 @@ namespace Dt.Msg
             else
             {
                 // 会话在其它服务副本时通过EventBus通知
-                Glb.GetSvc<RemoteEventBus>().PushFixed(new UnregisterPushEvent { UserID = p_userID }, Glb.SvcName, svcID);
+                //Glb.GetSvc<RemoteEventBus>().PushFixed(new UnregisterPushEvent { UserID = p_userID }, Glb.SvcName, svcID);
             }
         }
     }

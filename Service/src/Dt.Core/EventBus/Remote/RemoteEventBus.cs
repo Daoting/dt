@@ -52,21 +52,33 @@ namespace Dt.Core.EventBus
 
         #region 发布
         /// <summary>
-        /// 向应用内的所有服务进行广播
+        /// 向应用内的多个服务进行广播
         /// </summary>
         /// <param name="p_event">事件内容</param>
+        /// <param name="p_svcs">服务列表</param>
         /// <param name="p_isAllSvcInst">true表示所有服务的所有副本，false表示当服务有多个副本时只投递给其中一个</param>
-        public void Broadcast(IEvent p_event, bool p_isAllSvcInst = true)
+        public void Broadcast(IEvent p_event, List<string> p_svcs, bool p_isAllSvcInst = true)
         {
+            if (p_event == null || p_svcs == null || p_svcs.Count == 0)
+                return;
+
             if (p_isAllSvcInst)
             {
                 // 所有服务的所有副本，进入第二队列
-                Publish(p_event, Glb.AppName + ".*.*");
+                foreach (var svc in p_svcs)
+                {
+                    if (!string.IsNullOrEmpty(svc))
+                        Publish(p_event, $"{Glb.AppName}.{svc.ToLower()}.All", true);
+                }
             }
             else
             {
                 // 每个服务只投递给其中一个副本，进入第一队列
-                Publish(p_event, Glb.AppName + ":*");
+                foreach (var svc in p_svcs)
+                {
+                    if (!string.IsNullOrEmpty(svc))
+                        Publish(p_event, $"{Glb.AppName}.{svc.ToLower()}", false);
+                }
             }
         }
 
@@ -78,8 +90,8 @@ namespace Dt.Core.EventBus
         public void Multicast(IEvent p_event, string p_svcName)
         {
             // 进入第二队列
-            if (!string.IsNullOrEmpty(p_svcName))
-                Publish(p_event, $"{Glb.AppName}.{p_svcName.ToLower()}.*");
+            if (p_event != null && !string.IsNullOrEmpty(p_svcName))
+                Publish(p_event, $"{Glb.AppName}.{p_svcName.ToLower()}.All", true);
         }
 
         /// <summary>
@@ -90,21 +102,20 @@ namespace Dt.Core.EventBus
         public void Push(IEvent p_event, string p_svcName)
         {
             // 进入第一队列
-            if (!string.IsNullOrEmpty(p_svcName))
-                Publish(p_event, $"{Glb.AppName}:{p_svcName.ToLower()}");
+            if (p_event != null && !string.IsNullOrEmpty(p_svcName))
+                Publish(p_event, $"{Glb.AppName}.{p_svcName.ToLower()}", false);
         }
 
         /// <summary>
-        /// 向某个服务的固定副本发布事件，使用场景少如：在线推送消息，因客户端连接的副本不同
+        /// 向某个服务的固定副本发布事件，使用场景少，如在线推送消息，因客户端连接的副本不同
         /// </summary>
         /// <param name="p_event">事件内容</param>
-        /// <param name="p_svcName">服务名称</param>
         /// <param name="p_svcID">服务副本ID</param>
-        public void PushFixed(IEvent p_event, string p_svcName, string p_svcID)
+        public void PushFixed(IEvent p_event, string p_svcID)
         {
-            // 进入第二队列
-            if (!string.IsNullOrEmpty(p_svcName) && !string.IsNullOrEmpty(p_svcID))
-                Publish(p_event, $"{Glb.AppName}.{p_svcName.ToLower()}.{p_svcID}");
+            // 进入第二队列，使用完整名称时会匹配所有副本！
+            if (p_event != null && !string.IsNullOrEmpty(p_svcID))
+                Publish(p_event, $".{p_svcID}", true);
         }
 
         /// <summary>
@@ -112,11 +123,10 @@ namespace Dt.Core.EventBus
         /// </summary>
         /// <param name="p_event"></param>
         /// <param name="p_routingKey"></param>
-        async void Publish(IEvent p_event, string p_routingKey)
+        /// <param name="p_bindExchange"></param>
+        async void Publish(IEvent p_event, string p_routingKey, bool p_bindExchange)
         {
-            if (p_event == null)
-                return;
-
+            // IModel实例不支持多个线程同时使用
             using (await _mutex.LockAsync())
             {
                 await Task.Run(() =>
@@ -145,7 +155,7 @@ namespace Dt.Core.EventBus
                     var properties = _chPublish.CreateBasicProperties();
                     properties.Persistent = true;
                     _chPublish.BasicPublish(
-                        _exchangeName,
+                        p_bindExchange ? _exchangeName : "",
                         routingKey: p_routingKey,
                         basicProperties: properties,
                         body: data);
@@ -186,28 +196,27 @@ namespace Dt.Core.EventBus
                 autoDelete: false); // 是否自动删除
 
             // 声明两个消费者队列
-            // 1. 如dt:cm，接收单副本时的直接投递 或 多个服务副本时采用均衡算法投递给其中一个的情况
-            CreateConsumerChannel($"{Glb.AppName}:{Glb.SvcName}", false, $"{Glb.AppName}:*");
+            // 1. 如dt.cm，接收单副本时的直接投递 或 多个服务副本时采用均衡算法投递给其中一个的情况
+            CreateWorkConsumer();
             // 2. 如dt.cm.xxx，接收对所有副本广播或按服务组播的情况，因每次重启id不同，队列采用自动删除模式
-            CreateConsumerChannel($"{Glb.AppName}.{Glb.SvcName}.{Glb.ID}", true, $"{Glb.AppName}.*.*");
+            CreateTopicConsumer();
         }
 
-        void CreateConsumerChannel(string p_queueName, bool p_autoDelete, string p_routingKey)
+        /// <summary>
+        /// 声明消费者队列 AppName.SvcName，work模式，未绑定交换机，只支持和队列名称完全匹配时投递
+        /// 用于接收单副本时的直接投递 或 多个服务副本时采用均衡算法投递给其中一个的情况
+        /// </summary>
+        void CreateWorkConsumer()
         {
+            string queueName = $"{Glb.AppName}.{Glb.SvcName}";
             IModel channel = _conn.CreateModel();
 
             // 声明队列
             channel.QueueDeclare(
-                p_queueName,        // 队列名称
-                durable: true,      // 是否持久化
-                exclusive: false,   // 是否为排他队列，若排他则只首次连接可见，连接断开时删除
-                autoDelete: p_autoDelete); // true时若没有任何订阅者的话，该队列会被自动删除，这种队列适用于临时队列
-
-            // 绑定队列
-            channel.QueueBind(
-                queue: p_queueName,        // 队列名称
-                exchange: _exchangeName,   // 绑定的交换机
-                routingKey: p_routingKey); // 路由名称
+                queueName,         // 队列名称
+                durable: false,    // 是否持久化
+                exclusive: false,  // 是否为排他队列，若排他则只首次连接可见，连接断开时删除
+                autoDelete: true); // true时若没有任何订阅者的话，该队列会被自动删除，这种队列适用于临时队列
 
             // 创建消费者
             var consumer = new EventingBasicConsumer(channel);
@@ -224,7 +233,7 @@ namespace Dt.Core.EventBus
             channel.BasicQos(0, 1, false);
 
             // 要想做限流必须将autoAck设置为false
-            channel.BasicConsume(queue: p_queueName, autoAck: false, consumer: consumer);
+            channel.BasicConsume(queue: queueName, autoAck: false, consumer: consumer);
 
             // 异常处理
             channel.CallbackException += (s, e) =>
@@ -237,11 +246,75 @@ namespace Dt.Core.EventBus
                     if (!_conn.IsConnected)
                         _conn.TryConnect();
                     if (_conn.IsConnected)
-                        CreateConsumerChannel(p_queueName, p_autoDelete, p_routingKey);
+                        CreateWorkConsumer();
                 }
                 catch (Exception ex)
                 {
-                    _log.LogError(ex, "重建RabbitMQ消费者通道时异常！");
+                    _log.LogError(ex, $"重建RabbitMQ队列{queueName}时异常！");
+                }
+            };
+        }
+
+        /// <summary>
+        /// 声明消费者队列 AppName.SvcName.SvcID，绑定交换机，topic模式，支持按正则表达式匹配队列
+        /// AppName.SvcName.*  接收对服务所有副本的投递
+        /// #.SvcID  接收对当前副本的投递
+        /// </summary>
+        void CreateTopicConsumer()
+        {
+            string queueName = $"{Glb.AppName}.{Glb.SvcName}.{Glb.ID}";
+            IModel channel = _conn.CreateModel();
+
+            // 声明队列
+            channel.QueueDeclare(
+                queueName,         // 队列名称
+                durable: false,    // 是否持久化
+                exclusive: false,  // 是否为排他队列，若排他则只首次连接可见，连接断开时删除
+                autoDelete: true); // true时若没有任何订阅者的话，该队列会被自动删除，这种队列适用于临时队列
+
+            // 绑定队列
+            channel.QueueBind(
+                queue: queueName,        // 队列名称
+                exchange: _exchangeName,   // 绑定的交换机
+                routingKey: $"{Glb.AppName}.{Glb.SvcName}.*"); // 路由名称
+            channel.QueueBind(
+                queue: queueName,           // 队列名称
+                exchange: _exchangeName,    // 绑定的交换机
+                routingKey: $"#.{Glb.ID}"); // 路由名称
+
+            // 创建消费者
+            var consumer = new EventingBasicConsumer(channel);
+            consumer.Received += async (s, e) =>
+            {
+                await ProcessEvent(e);
+                channel.BasicAck(e.DeliveryTag, false);
+            };
+
+            // 限流的设置
+            // 参数一： 0表消息的大小不做任何限制
+            // 参数二： 1表服务器给的最大的消息数，这里是一条一条的消费，如果消费者没有确认消费，将不会接受新消息
+            // 参数三： false级别为consumer 
+            channel.BasicQos(0, 1, false);
+
+            // 要想做限流必须将autoAck设置为false
+            channel.BasicConsume(queue: queueName, autoAck: false, consumer: consumer);
+
+            // 异常处理
+            channel.CallbackException += (s, e) =>
+            {
+                try
+                {
+                    channel.Dispose();
+                    channel = null;
+
+                    if (!_conn.IsConnected)
+                        _conn.TryConnect();
+                    if (_conn.IsConnected)
+                        CreateTopicConsumer();
+                }
+                catch (Exception ex)
+                {
+                    _log.LogError(ex, $"重建RabbitMQ队列{queueName}时异常！");
                 }
             };
         }
