@@ -7,7 +7,9 @@
 #endregion
 
 #region 引用命名
+using Dt.Core.Caches;
 using Dt.Core.EventBus;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 #endregion
 
@@ -18,18 +20,29 @@ namespace Dt.Msg
     /// </summary>
     public class OnlinePushEvent : IEvent
     {
-        public long UserID { get; set; }
+        public string PrefixKey { get; set; }
+
+        public List<long> Receivers { get; set; }
 
         public string Msg { get; set; }
     }
 
     public class OnlinePushHandler : IRemoteHandler<OnlinePushEvent>
     {
-        public Task Handle(OnlinePushEvent p_event)
+        public async Task Handle(OnlinePushEvent p_event)
         {
-            if (Online.All.TryGetValue(p_event.UserID, out var ci))
-                ci.AddMsg(p_event.Msg);
-            return Task.CompletedTask;
+            if (p_event.Receivers != null && p_event.Receivers.Count > 0)
+            {
+                StringCache cache = new StringCache(p_event.PrefixKey);
+                foreach (var id in p_event.Receivers)
+                {
+                    if (Online.All.TryGetValue(id, out var ci))
+                    {
+                        ci.AddMsg(p_event.Msg);
+                        await cache.Set(id.ToString(), true);
+                    }
+                }
+            }
         }
     }
 }

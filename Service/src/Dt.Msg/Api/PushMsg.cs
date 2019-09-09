@@ -8,8 +8,6 @@
 
 #region 引用命名
 using Dt.Core;
-using Dt.Core.Caches;
-using Dt.Core.EventBus;
 using Dt.Core.Rpc;
 using Serilog;
 using System.Collections.Generic;
@@ -33,28 +31,16 @@ namespace Dt.Msg
         public async Task Register(int p_clientSys, ResponseWriter p_writer)
         {
             // 通知已注册的客户端退出推送
-            await Online.Unregister(_c.UserID);
+            Online.Unregister(_c.UserID);
 
             // 记录会话信息，登记会话所属服务id
             ClientInfo ci = new ClientInfo(_c, (ClientSystem)p_clientSys, p_writer);
             Online.All[_c.UserID] = ci;
-            await Cache.StringSet(Online.PrefixKey, _c.UserID.ToString(), Glb.ID);
-            Cache.Increment(Online.OnlineCountKey);
             Log.Debug($"用户{_c.UserID}注册推送");
 
             // 推送
             while (await ci.SendMsg())
             { }
-        }
-
-        /// <summary>
-        /// 注销指定用户客户端的在线推送
-        /// </summary>
-        /// <param name="p_userID"></param>
-        /// <returns></returns>
-        public Task Unregister(long p_userID)
-        {
-            return Online.Unregister(p_userID);
         }
 
         /// <summary>
@@ -85,40 +71,17 @@ namespace Dt.Msg
             if (!string.IsNullOrEmpty(error))
                 return error;
 
+            // 只离线推送
             if (p_msg.PushMode == MsgPushMode.Offline)
             {
                 Offline.Send(p_userIDs, p_msg);
                 return null;
             }
 
-            List<long> offlines = new List<long>();
-            string onlineMsg = p_msg.GetOnlineMsg();
-            foreach (var id in p_userIDs)
-            {
-                // 在线推送
-                if (p_msg.PushMode != MsgPushMode.Offline)
-                {
-                    // 会话在当前服务
-                    if (Online.All.TryGetValue(id, out var ci))
-                    {
-                        ci.AddMsg(onlineMsg);
-                        break;
-                    }
+            // 在线推送
+            List<long> offlines = await Online.Send(p_userIDs, p_msg);
 
-                    // 查询会话所属的服务副本ID
-                    string svcID = await Cache.StringGet<string>(Online.PrefixKey, id.ToString());
-                    if (!string.IsNullOrEmpty(svcID))
-                    {
-                        //Glb.GetSvc<RemoteEventBus>().PushFixed(new OnlinePushEvent { UserID = id, Msg = onlineMsg }, Glb.SvcName, svcID);
-                        break;
-                    }
-                }
-
-                // 离线推送
-                if (p_msg.PushMode != MsgPushMode.Online)
-                    offlines.Add(id);
-            }
-
+            // 离线推送
             if (offlines.Count > 0)
                 Offline.Send(offlines, p_msg);
             return null;

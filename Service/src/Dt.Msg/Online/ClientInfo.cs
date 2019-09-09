@@ -72,22 +72,20 @@ namespace Dt.Msg
             }
             catch { }
 
-            // 未关闭时需要删除会话及会话位置
+            // 未关闭时需要删除会话
             if (!_closed)
             {
                 Online.All.TryRemove(_c.UserID, out var ci);
-                Cache.Remove(Online.PrefixKey, _c.UserID.ToString());
                 _closed = true;
             }
 
-            Cache.Decrement(Online.OnlineCountKey);
             _queue.Dispose();
             Log.Debug($"用户{_c.UserID}退出推送");
             return Task.FromResult(false);
         }
 
         /// <summary>
-        /// 关闭推送，调用前已删除会话及会话位置！
+        /// 关闭推送，调用前已删除会话！
         /// </summary>
         public void Close()
         {

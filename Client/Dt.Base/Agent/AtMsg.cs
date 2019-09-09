@@ -38,20 +38,6 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 注销指定用户客户端的在线推送
-        /// </summary>
-        /// <param name="p_userID"></param>
-        /// <returns></returns>
-        public static Task Unregister(long p_userID)
-        {
-            return new UnaryRpc(
-                "msg",
-                "PushMsg.Unregister",
-                p_userID
-            ).Call<object>();
-        }
-
-        /// <summary>
         /// 向某用户的客户端推送信息
         /// </summary>
         /// <param name="p_userID"></param>

@@ -10,7 +10,9 @@
 using Dt.Core;
 using Dt.Core.Caches;
 using Dt.Core.EventBus;
+using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 #endregion
 
@@ -27,41 +29,56 @@ namespace Dt.Msg
         public static readonly ConcurrentDictionary<long, ClientInfo> All = new ConcurrentDictionary<long, ClientInfo>();
 
         /// <summary>
-        /// 在线客户端前缀
+        /// 向用户列表中的在线用户推送信息
         /// </summary>
-        public const string PrefixKey = "cli";
+        /// <param name="p_userIDs">用户列表</param>
+        /// <param name="p_msg"></param>
+        /// <returns>离线用户列表</returns>
+        public static async Task<List<long>> Send(List<long> p_userIDs, MsgInfo p_msg)
+        {
+            string onlineMsg = p_msg.GetOnlineMsg();
+            var busPush = new List<long>();
+            foreach (var id in p_userIDs)
+            {
+                // 会话在当前服务，直接放入推送队列
+                if (All.TryGetValue(id, out var ci))
+                    ci.AddMsg(onlineMsg);
+                else
+                    busPush.Add(id);
+            }
+
+            var offlines = new List<long>();
+            if (busPush.Count > 0)
+            {
+                // 推送结果的前缀键
+                string prefixKey = Guid.NewGuid().ToString().Substring(0, 4);
+                // 通知所有副本推送
+                Glb.GetSvc<RemoteEventBus>().Multicast(new OnlinePushEvent { PrefixKey = prefixKey, Receivers = busPush, Msg = onlineMsg }, Glb.SvcName);
+
+                // 收集未在线推送的
+                // 等待推送完毕，时间？
+                await Task.Delay(1000);
+                StringCache cache = new StringCache(prefixKey);
+                foreach (long id in busPush)
+                {
+                    // 有记录的表示在线推送成功
+                    if (!await cache.Remove(id.ToString()))
+                        offlines.Add(id);
+                }
+            }
+            return offlines;
+        }
 
         /// <summary>
-        /// 在线总数
-        /// </summary>
-        public const string OnlineCountKey = "cli:cnt";
-
-        /// <summary>
-        /// 注销指定用户的客户端推送
-        /// Unregister(Api) -> Pusher.Unregister -> ClientInfo.Close 或 UnregisterPushHandler.Handle
+        /// 只在本地服务注销对指定用户的推送，同一用户在一个服务副本最后注册的有效，在不同副本时都有效
         /// </summary>
         /// <param name="p_userID"></param>
-        /// <returns></returns>
-        public static async Task Unregister(long p_userID)
+        public static void Unregister(long p_userID)
         {
-            // 查询会话所属的服务副本ID
-            string svcID = await Cache.StringGet<string>(PrefixKey, p_userID.ToString());
-            if (string.IsNullOrEmpty(svcID))
-                return;
-
-            // 删除会话位置记录
-            await Cache.Remove(PrefixKey, p_userID.ToString());
-
-            if (svcID == Glb.ID)
+            if (All.TryRemove(p_userID, out var ci))
             {
-                // 会话在当前服务
-                if (All.TryRemove(p_userID, out var ci))
-                    ci.Close();
-            }
-            else
-            {
-                // 会话在其它服务副本时通过EventBus通知
-                //Glb.GetSvc<RemoteEventBus>().PushFixed(new UnregisterPushEvent { UserID = p_userID }, Glb.SvcName, svcID);
+                // 会话在当前服务时立即移除
+                ci.Close();
             }
         }
     }
