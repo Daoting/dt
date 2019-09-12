@@ -57,7 +57,7 @@ namespace Dt.Msg
 
                 // 收集未在线推送的
                 // 等待推送完毕，时间？
-                await Task.Delay(1000);
+                await Task.Delay(200);
                 StringCache cache = new StringCache(prefixKey);
                 foreach (long id in busPush)
                 {

@@ -18,7 +18,7 @@ namespace Dt.Msg
     /// <summary>
     /// 在线推送事件
     /// </summary>
-    public class OnlinePushEvent : IEvent
+    public class OnlinePushEvent : ExcludeEvent
     {
         public string PrefixKey { get; set; }
 

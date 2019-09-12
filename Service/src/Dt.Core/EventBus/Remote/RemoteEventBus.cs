@@ -351,6 +351,10 @@ namespace Dt.Core.EventBus
                 return;
             }
 
+            // 组播时排除的副本
+            if (eventObj is ExcludeEvent ee && ee.ExcludeSvcID == Glb.ID)
+                return;
+
             // 实例化所有Handler
             var handlers = Glb.GetSvcs(hType);
             var mi = hType.GetMethod("Handle");
