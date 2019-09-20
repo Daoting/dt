@@ -56,6 +56,11 @@ namespace Dt.Core
         {
             return _c.Local.Call(new UyEvent { Name = p_name });
         }
+
+        public string TestLoadBalance()
+        {
+            return Glb.ID;
+        }
     }
 
     public class TestEventData : IEvent

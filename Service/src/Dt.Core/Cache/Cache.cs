@@ -191,5 +191,49 @@ namespace Dt.Core.Caches
             }
             return cnt;
         }
+
+        /// <summary>
+        /// SortedSet中增加指定字符串的权重
+        /// </summary>
+        /// <param name="p_key">完整键名</param>
+        /// <param name="p_name">字符串</param>
+        /// <param name="p_stepValue">增量</param>
+        /// <returns></returns>
+        public static Task<double> SortedSetIncrement(string p_key, string p_name, double p_stepValue = 1)
+        {
+            return new SortedSetCache(p_key).Increment(p_name, p_stepValue);
+        }
+
+        /// <summary>
+        /// SortedSet中减少指定字符串的权重
+        /// </summary>
+        /// <param name="p_key">完整键名</param>
+        /// <param name="p_name">字符串</param>
+        /// <param name="p_stepValue">减量</param>
+        /// <returns></returns>
+        public static Task<double> SortedSetDecrement(string p_key, string p_name, double p_stepValue = 1)
+        {
+            return new SortedSetCache(p_key).Decrement(p_name, p_stepValue);
+        }
+
+        /// <summary>
+        /// 获取权重值最小的字符串
+        /// </summary>
+        /// <param name="p_key">完整键名</param>
+        /// <returns></returns>
+        public static Task<string> SortedSetGetMin(string p_key)
+        {
+            return new SortedSetCache(p_key).GetMin();
+        }
+
+        /// <summary>
+        /// 获取权重值最大的字符串
+        /// </summary>
+        /// <param name="p_key">完整键名</param>
+        /// <returns></returns>
+        public static Task<string> SortedSetGetMax(string p_key)
+        {
+            return new SortedSetCache(p_key).GetMax();
+        }
     }
 }

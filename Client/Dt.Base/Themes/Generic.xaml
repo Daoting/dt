@@ -7,9 +7,10 @@
         <ResourceDictionary Source="/Dt.Base/Themes/Styles/Menu.xaml" />
         <ResourceDictionary Source="/Dt.Base/Themes/Styles/Win.xaml" />
         <ResourceDictionary Source="/Dt.Base/Themes/Styles/Dialog.xaml" />
-        <ResourceDictionary Source="/Dt.Base/Themes/Styles/Fv.xaml" />
-        <ResourceDictionary Source="/Dt.Base/Themes/Styles/Lv.xaml" />
-        <ResourceDictionary Source="/Dt.Base/Themes/Styles/Tv.xaml" />
+        <ResourceDictionary Source="/Dt.Base/Themes/Styles/FormView.xaml" />
+        <ResourceDictionary Source="/Dt.Base/Themes/Styles/ListView.xaml" />
+        <ResourceDictionary Source="/Dt.Base/Themes/Styles/TreeView.xaml" />
+        <ResourceDictionary Source="/Dt.Base/Themes/Styles/FileTransfer.xaml" />
         <ResourceDictionary Source="/Dt.Base/Themes/Styles/Sketch.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

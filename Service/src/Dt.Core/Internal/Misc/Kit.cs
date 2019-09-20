@@ -22,6 +22,14 @@ namespace Dt.Core
         static string[] _hexDigits = new string[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f" };
 
         /// <summary>
+        /// 获取新Guid
+        /// </summary>
+        public static string NewID
+        {
+            get { return Guid.NewGuid().ToString("N"); }
+        }
+
+        /// <summary>
         /// MD5加密
         /// </summary>
         /// <param name="str"></param>

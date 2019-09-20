@@ -69,6 +69,7 @@ namespace Dt.Core.Rpc
 
                 var stream = await response.Content.ReadAsStreamAsync();
                 data = await RpcClientKit.ReadFrame(stream);
+                response.Dispose();
             }
 
             // 解析结果

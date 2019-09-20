@@ -598,6 +598,28 @@ namespace Dt.Base
         }
         #endregion
 
+        #region VirFile资源
+        /// <summary>
+        /// VirFile默认模板
+        /// </summary>
+        internal static readonly ControlTemplate VirFileTemplate = (ControlTemplate)_dict["VirFileTemplate"];
+
+        /// <summary>
+        /// VirFile图片模板
+        /// </summary>
+        internal static readonly ControlTemplate VirImageTemplate = (ControlTemplate)_dict["VirImageTemplate"];
+
+        /// <summary>
+        /// VirFile音频模板
+        /// </summary>
+        internal static readonly ControlTemplate VirSoundTemplate = (ControlTemplate)_dict["VirSoundTemplate"];
+
+        /// <summary>
+        /// VirFile视频模板
+        /// </summary>
+        internal static readonly ControlTemplate VirVideoTemplate = (ControlTemplate)_dict["VirVideoTemplate"];
+        #endregion
+
         #region 颜色
         /// <summary>
         /// 由标准Color形式字符串转换成Color对象，

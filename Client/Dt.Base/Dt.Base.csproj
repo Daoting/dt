@@ -7,6 +7,10 @@
   <Import Project="..\Common\dtc.props" />
 
   <ItemGroup>
+    <None Remove="Themes\Styles\FileTransfer.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
   </ItemGroup>
 
@@ -15,9 +19,12 @@
     <Page Include="Structure\Menu\Parts\SubMenuDlg.xaml" />
     <Page Include="Themes\Generic.xaml" />
     <Page Include="Themes\Global.xaml" />
-    <Page Include="Themes\Styles\Lv.xaml" />
-    <Page Include="Themes\Styles\Fv.xaml" />
-    <Page Include="Themes\Styles\Tv.xaml" />
+    <Page Include="Themes\Styles\FileTransfer.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\Styles\ListView.xaml" />
+    <Page Include="Themes\Styles\FormView.xaml" />
+    <Page Include="Themes\Styles\TreeView.xaml" />
     <Page Include="Themes\Styles\Win.xaml" />
     <Page Include="Themes\Styles\Menu.xaml" />
     <Page Include="Themes\Styles\Default.xaml" />
@@ -82,5 +89,11 @@
     <Compile Update="FormView\Cells\CList\ListDlg.xaml.cs">
       <DependentUpon>ListDlg.xaml</DependentUpon>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Transfer\AudioRecorder.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
   </ItemGroup>
 </Project>

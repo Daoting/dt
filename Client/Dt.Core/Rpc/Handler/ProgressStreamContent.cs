@@ -17,7 +17,13 @@ using System.Threading;
 
 namespace Dt.Core.Rpc
 {
-    public delegate void ProgressDelegate(long bytes, long totalBytes, long totalBytesExpected);
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="p_bytesStep">本次发送字节数</param>
+    /// <param name="p_bytesSent">共发送字节数</param>
+    /// <param name="p_totalBytesToSend">总字节数</param>
+    public delegate void ProgressDelegate(long p_bytesStep, long p_bytesSent, long p_totalBytesToSend);
 
     public class ProgressStreamContent : StreamContent
     {

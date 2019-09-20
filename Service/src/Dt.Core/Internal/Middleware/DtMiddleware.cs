@@ -50,6 +50,11 @@ namespace Dt.Core
                 return ResponseAdminPage(p_context);
             if (path == "/.error")
                 return ResponseErrorPage(p_context);
+
+            // 外部自定义路径，截取路径的前一节 /.xxx/xxx/xxx
+            int index = path.TrimStart('/').IndexOf('/');
+            if (index > -1)
+                path = path.Substring(0, index + 1);
             if (RequestHandlers.TryGetValue(path, out var callback))
                 return callback(p_context);
 

@@ -132,6 +132,9 @@ namespace Dt.Core
                         // 不限制请求/响应的速率，不适合流模式长时间等待的情况！
                         options.Limits.MinRequestBodyDataRate = null;
                         options.Limits.MinResponseDataRate = null;
+
+                        // 不限制post的body大小，默认28.6M
+                        options.Limits.MaxRequestBodySize = null;
                     })
                     .UseStartup<Startup>()
                     // 内部注入AddSingleton<ILoggerFactory>(new SerilogLoggerFactory())

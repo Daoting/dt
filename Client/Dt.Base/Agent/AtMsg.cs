@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 namespace Dt.Base
 {
     /// <summary>
-    /// 系统参数管理类
+    /// 消息服务Api代理类（自动生成）
     /// </summary>
     public static class AtMsg
     {
