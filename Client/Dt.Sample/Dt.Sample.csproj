@@ -22,6 +22,7 @@
     <Page Include="Base\DockPanelDemo.xaml" />
     <Page Include="Base\SplitterDemo.xaml" />
     <Page Include="Base\SketchPage.xaml" />
+    <Page Include="Base\FilePickerDemo.xaml" />
 
     <Page Include="Structure\Dlg1.xaml" />
     <Page Include="Structure\Dlg2.xaml" />
@@ -107,7 +108,10 @@
     <Compile Update="Base\TabControlDemo.xaml.cs">
       <DependentUpon>TabControlDemo.xaml</DependentUpon>
     </Compile>
-
+    <Compile Update="Base\FilePickerDemo.xaml.cs">
+      <DependentUpon>FilePickerDemo.xaml</DependentUpon>
+    </Compile> 
+    
     <Compile Update="Structure\Dlg1.xaml.cs">
       <DependentUpon>Dlg1.xaml</DependentUpon>
     </Compile>

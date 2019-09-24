@@ -123,39 +123,45 @@ namespace Dt.Sample
                 new DataCmd
                 {
                     Title = "菜单",
-                    Note = "包括普通工具栏菜单、上下文菜单，支持多层子项、选择和分组单选等功能。",
+                    Note = "包括普通工具栏菜单、上下文菜单，支持多层子项、选择和分组单选等功能",
                     Tag = typeof(MenuHome),
                 },
                 new DataCmd
                 {
                     Title = "可停靠面板",
-                    Note = "停靠式窗口的布局面板。",
+                    Note = "停靠式窗口的布局面板",
                     Tag = typeof(DockPanelDemo),
                     Callback = OnNaviTo
                 },
                 new DataCmd
                 {
                     Title = "分隔栏",
-                    Note = "包括水平/垂直分隔功能。",
+                    Note = "包括水平/垂直分隔功能",
                     Tag = typeof(SplitterDemo),
                     Callback = OnNaviTo
                 },
                 new DataCmd
                 {
+                    Title = "文件选择",
+                    Note = "跨平台文件选择",
+                    Tag = typeof(FilePickerDemo),
+                },
+                new DataCmd
+                {
                     Title = "流程图",
-                    Note = "任务流程定义示意图。",
+                    Note = "任务流程定义示意图",
                     Tag = typeof(SketchPage)
                 },
                  new DataCmd
                 {
                     Title = "Tab页",
-                    Note = "TabControl控件基本功能演示。",
+                    Note = "TabControl控件基本功能演示",
                     Tag = typeof(TabControlDemo)
                 },
                 new DataCmd
                 {
                     Title = "系统监视输出",
-                    Note = "内部使用的调试输出与断言处理，调试输出内容同时保存在日志，断言处理在调试与非调试状态有不同行为。",
+                    Note = "内部使用的调试输出与断言处理，调试输出内容同时保存在日志，断言处理在调试与非调试状态有不同行为",
                     Tag = typeof(SysTraceDemo)
                 },
                 new DataCmd
@@ -174,14 +180,14 @@ namespace Dt.Sample
                 new DataCmd
                 {
                     Title = "图标",
-                    Note = "内置的矢量文字，可用作图标、提示。",
+                    Note = "内置的矢量文字，可用作图标、提示",
                     Tag = typeof(IconDemo),
                     Callback = OnNaviTo
                 },
                 new DataCmd
                 {
                     Title = "按钮",
-                    Note = "标准按钮和自定义按钮的常用样式。",
+                    Note = "标准按钮和自定义按钮的常用样式",
                     Tag = typeof(BtnDemo),
                     Callback = OnNaviTo
                 },

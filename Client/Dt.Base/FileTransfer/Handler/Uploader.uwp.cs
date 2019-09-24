@@ -1,4 +1,5 @@
-﻿#region 文件描述
+﻿#if UWP
+#region 文件描述
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
@@ -24,7 +25,7 @@ using Windows.Storage;
 namespace Dt.Base
 {
     /// <summary>
-    /// 
+    /// UWP版文件上传
     /// </summary>
     public static class Uploader
     {
@@ -102,3 +103,4 @@ namespace Dt.Base
         }
     }
 }
+#endif

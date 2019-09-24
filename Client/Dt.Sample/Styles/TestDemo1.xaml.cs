@@ -21,6 +21,7 @@ using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
+using Xamarin.Essentials;
 #endregion
 
 namespace Dt.Sample
@@ -34,11 +35,13 @@ namespace Dt.Sample
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            FileOpenPicker picker = new FileOpenPicker();
-            picker.FileTypeFilter.Add("*");
-            IReadOnlyList<StorageFile> files = await picker.PickMultipleFilesAsync();
-            if (files.Count > 0)
-                await _tran.UploadFiles(files);
+           
+            //Xamarin.Essentials.FileSystem.
+            //FileOpenPicker picker = new FileOpenPicker();
+            ////picker.FileTypeFilter.Add("*");
+            //IReadOnlyList<StorageFile> files = await picker.PickMultipleFilesAsync();
+            //if (files.Count > 0)
+            //    await _tran.UploadFiles(files);
             //if (files.Count > 0)
             //{
             //    List<IUploadFile> lf = new List<IUploadFile>();

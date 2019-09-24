@@ -30,13 +30,13 @@ namespace Dt.Core.Rpc
     /// </summary>
     public class NativeMessageHandler : HttpClientHandler
     {
-        OkHttpClient client = new OkHttpClient();
-        readonly Dictionary<HttpRequestMessage, WeakReference> registeredProgressCallbacks = new Dictionary<HttpRequestMessage, WeakReference>();
-        readonly CacheControl noCacheCacheControl = new CacheControl.Builder().NoCache().Build();
+        OkHttpClient _client = new OkHttpClient();
+        readonly Dictionary<HttpRequestMessage, WeakReference> _registeredProgressCallbacks = new Dictionary<HttpRequestMessage, WeakReference>();
+        readonly CacheControl _noCacheCacheControl = new CacheControl.Builder().NoCache().Build();
 
         public NativeMessageHandler()
         {
-            var clientBuilder = client.NewBuilder();
+            var clientBuilder = _client.NewBuilder();
 
             // tls
             var tlsSpecBuilder = new ConnectionSpec.Builder(ConnectionSpec.ModernTls).TlsVersions(new[] { TlsVersion.Tls12, TlsVersion.Tls13 });
@@ -62,7 +62,7 @@ namespace Dt.Core.Rpc
 
             // Hostname始终有效
             clientBuilder.HostnameVerifier((name, ssl) => true);
-            client = clientBuilder.Build();
+            _client = clientBuilder.Build();
         }
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -86,7 +86,7 @@ namespace Dt.Core.Rpc
             var requestBuilder = new Request.Builder()
                 .Method(request.Method.Method.ToUpperInvariant(), body)
                 .Url(url);
-            requestBuilder.CacheControl(noCacheCacheControl);
+            requestBuilder.CacheControl(_noCacheCacheControl);
 
             foreach (var kvp in request.Headers)
             {
@@ -96,7 +96,7 @@ namespace Dt.Core.Rpc
             cancellationToken.ThrowIfCancellationRequested();
 
             var rq = requestBuilder.Build();
-            var call = client.NewCall(rq);
+            var call = _client.NewCall(rq);
 
             // NB: Even closing a socket must be done off the UI thread. Cray!
             cancellationToken.Register(() => Task.Run(() => call.Cancel()));
@@ -176,30 +176,30 @@ namespace Dt.Core.Rpc
 
         public void RegisterForProgress(HttpRequestMessage request, ProgressDelegate callback)
         {
-            if (callback == null && registeredProgressCallbacks.ContainsKey(request))
+            if (callback == null && _registeredProgressCallbacks.ContainsKey(request))
             {
-                registeredProgressCallbacks.Remove(request);
+                _registeredProgressCallbacks.Remove(request);
                 return;
             }
 
-            registeredProgressCallbacks[request] = new WeakReference(callback);
+            _registeredProgressCallbacks[request] = new WeakReference(callback);
         }
 
         ProgressDelegate GetAndRemoveCallbackFromRegister(HttpRequestMessage request)
         {
             ProgressDelegate emptyDelegate = delegate { };
 
-            lock (registeredProgressCallbacks)
+            lock (_registeredProgressCallbacks)
             {
-                if (!registeredProgressCallbacks.ContainsKey(request)) return emptyDelegate;
+                if (!_registeredProgressCallbacks.ContainsKey(request)) return emptyDelegate;
 
-                var weakRef = registeredProgressCallbacks[request];
+                var weakRef = _registeredProgressCallbacks[request];
                 if (weakRef == null) return emptyDelegate;
 
                 var callback = weakRef.Target as ProgressDelegate;
                 if (callback == null) return emptyDelegate;
 
-                registeredProgressCallbacks.Remove(request);
+                _registeredProgressCallbacks.Remove(request);
                 return callback;
             }
         }
