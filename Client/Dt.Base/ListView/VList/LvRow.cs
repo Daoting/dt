@@ -26,7 +26,6 @@ namespace Dt.Base.ListView
     public partial class LvRow : Panel
     {
         protected const double _flagWidth = 40;
-        const double _minMove = 4;
 
         protected Lv _owner;
         protected LvItem _row;
@@ -157,8 +156,7 @@ namespace Dt.Base.ListView
             {
                 e.Handled = true;
                 _pointerID = e.Pointer.PointerId;
-                if (e.IsMouse())
-                    _ptLast = e.GetCurrentPoint(null).Position;
+                _ptLast = e.GetCurrentPoint(null).Position;
             }
         }
 
@@ -167,22 +165,15 @@ namespace Dt.Base.ListView
             if (_pointerID != e.Pointer.PointerId)
                 return;
 
+            // 允许有短距离移动
             e.Handled = true;
-            if (e.IsTouch())
+            Point cur = e.GetCurrentPoint(null).Position;
+            if (Math.Abs(cur.X - _ptLast.X) > 4 || Math.Abs(cur.Y - _ptLast.Y) > 4)
             {
                 ReleasePointerCapture(e.Pointer);
                 _pointerID = null;
-                _rcPointer.Fill = null;
-            }
-            else
-            {
-                // 允许鼠标有短距离移动
-                Point cur = e.GetCurrentPoint(null).Position;
-                if (Math.Abs(cur.X - _ptLast.X) > _minMove || Math.Abs(cur.Y - _ptLast.Y) > _minMove)
-                {
-                    ReleasePointerCapture(e.Pointer);
-                    _pointerID = null;
-                }
+                if (e.IsTouch())
+                    _rcPointer.Fill = null;
             }
         }
 

@@ -406,7 +406,7 @@ namespace Dt.Base
                 AtUI.OnPhoneTitleTapped((Grid)GetTemplateChild("HeaderGrid"), OwnerWin);
                 Button btn = GetTemplateChild("BackButton") as Button;
                 if (btn != null)
-                    btn.Tapped += InputManager.OnBackClick;
+                    btn.Click += InputManager.OnBackClick;
             }
 
             _root = (Grid)GetTemplateChild("RootGrid");

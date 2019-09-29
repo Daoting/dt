@@ -11,6 +11,7 @@ using System;
 using System.Buffers.Binary;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Threading.Tasks;
 #endregion
 
@@ -45,7 +46,13 @@ namespace Dt.Core.Rpc
             // Frame头：1字节压缩标志 + 4字节内容长度
             byte[] header = new byte[RpcKit.HeaderSize];
             header[0] = p_compress ? (byte)1 : (byte)0;
+
+            // uno的ios版BinaryPrimitives程序集冲突，提了不改，操蛋
+#if IOS
+            BitConverter.GetBytes((uint)p_data.Length).Take(4).Reverse().ToArray().CopyTo(header, 1);
+#else
             BinaryPrimitives.WriteUInt32BigEndian(header.AsSpan(1), (uint)p_data.Length);
+#endif
             await p_stream.WriteAsync(header, 0, header.Length).ConfigureAwait(false);
 
             // Frame内容
@@ -80,8 +87,14 @@ namespace Dt.Core.Rpc
                 if (received < header.Length)
                     throw new InvalidDataException("Frame头错误");
 
-                // 读取内容
+                // 读取内容，uno操蛋
+#if IOS
+                byte[] arrLength = new byte[RpcKit.HeaderSize - 1];
+                Array.Copy(header, 1, arrLength, 0, arrLength.Length);
+                uint length = BitConverter.ToUInt32(arrLength.Reverse().ToArray(), 0);
+#else
                 var length = BinaryPrimitives.ReadUInt32BigEndian(header.AsSpan(1));
+#endif
                 if (length > int.MaxValue)
                     throw new InvalidDataException("消息超长");
                 if (length > 0)

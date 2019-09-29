@@ -38,9 +38,8 @@ namespace Dt.Base
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public static void OnBackClick(object sender, TappedRoutedEventArgs e)
+        public static void OnBackClick(object sender, RoutedEventArgs e)
         {
-            e.Handled = true;
             GoBack();
         }
 

@@ -207,7 +207,7 @@ namespace Dt.Base
                 AtUI.OnPhoneTitleTapped((Grid)GetTemplateChild("HeaderGrid"), this);
                 Button btn = GetTemplateChild("BackButton") as Button;
                 if (btn != null)
-                    btn.Tapped += InputManager.OnBackClick;
+                    btn.Click += InputManager.OnBackClick;
             }
         }
         #endregion
