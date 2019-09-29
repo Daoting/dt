@@ -14,7 +14,7 @@ namespace Dt.Base
     /// <summary>
     /// 文件种类
     /// </summary>
-    public enum VirFileType
+    public enum FileItemType
     {
         /// <summary>
         /// 文件

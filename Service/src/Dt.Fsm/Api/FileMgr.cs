@@ -44,6 +44,25 @@ namespace Dt.Fsm
                 {
                     return false;
                 }
+
+                // 删除缩略图
+                int pt = p_filePath.LastIndexOf('.');
+                if (pt > 0)
+                {
+                    string ext = p_filePath.Substring(pt);
+                    if (Cfg.IsImage(ext) || Cfg.IsVideo(ext))
+                    {
+                        fi = new FileInfo(Path.Combine(Cfg.Root, p_filePath.Substring(0, pt) + Cfg.ThumbPostfix));
+                        if (fi.Exists)
+                        {
+                            try
+                            {
+                                fi.Delete();
+                            }
+                            catch { }
+                        }
+                    }
+                }
             }
             await _c.Db.Exec($"delete from fsm_file where path='{p_filePath}'");
             return true;

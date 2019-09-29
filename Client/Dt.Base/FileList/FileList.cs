@@ -31,44 +31,41 @@ namespace Dt.Base
     /// <summary>
     /// 文件上传下载编辑器
     /// </summary>
-    public partial class FileTransfer : Control, IDisposable
+    public partial class FileList : Control
     {
         #region 静态成员
-        public static readonly DependencyProperty XmlProperty = DependencyProperty.Register(
-            "Xml",
+        public static readonly DependencyProperty DataProperty = DependencyProperty.Register(
+            "Data",
             typeof(string),
-            typeof(FileTransfer),
-            new PropertyMetadata(null, OnXmlPropertyChanged));
+            typeof(FileList),
+            new PropertyMetadata(null, OnDataPropertyChanged));
 
         public static readonly DependencyProperty AllowMultipleProperty = DependencyProperty.Register(
             "AllowMultiple",
             typeof(bool),
-            typeof(FileTransfer),
+            typeof(FileList),
             new PropertyMetadata(true));
 
-        static void OnXmlPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        static void OnDataPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            FileTransfer ft = (FileTransfer)d;
-            if (!ft._lockXml)
-                ft.ReadXml((string)e.NewValue);
+            FileList ft = (FileList)d;
+            if (!ft._lockData)
+                ft.ReadData((string)e.NewValue);
         }
         #endregion
 
         #region 成员变量
         readonly StackPanel _pnl;
-        bool _lockXml;
+        bool _lockData;
         CancellationTokenSource _cts;
-        VirFile _current;
-
         UpdateFileCmd _cmdUpdate;
         DeleteFileCmd _cmdDelete;
         DownloadFileCmd _cmdDownload;
         OpenFileCmd _cmdOpenFile;
         SaveAsCmd _cmdSaveAs;
-        BaseCommand _cmdAddOffice;
         BaseCommand _cmdAddImage;
         BaseCommand _cmdAddVideo;
-        BaseCommand _cmdAddSound;
+        BaseCommand _cmdAddAudio;
         BaseCommand _cmdAddFile;
         BaseCommand _cmdCaptureVoice;
         BaseCommand _cmdTakePhoto;
@@ -79,11 +76,10 @@ namespace Dt.Base
         /// <summary>
         /// 构造方法
         /// </summary>
-        public FileTransfer()
+        public FileList()
         {
-            DefaultStyleKey = typeof(FileTransfer);
+            DefaultStyleKey = typeof(FileList);
             _pnl = new StackPanel();
-            _cts = new CancellationTokenSource();
         }
         #endregion
 
@@ -96,7 +92,7 @@ namespace Dt.Base
         /// <summary>
         /// 上传结束事件
         /// </summary>
-        public event TypedEventHandler<FileTransfer, bool> UploadFinished;
+        public event TypedEventHandler<FileList, bool> UploadFinished;
 
         /// <summary>
         /// 文件成功删除后事件
@@ -106,12 +102,12 @@ namespace Dt.Base
 
         #region 属性
         /// <summary>
-        /// 获取设置文件描述信息
+        /// 获取设置文件列表的json描述信息
         /// </summary>
-        public string Xml
+        public string Data
         {
-            get { return (string)GetValue(XmlProperty); }
-            set { SetValue(XmlProperty, value); }
+            get { return (string)GetValue(DataProperty); }
+            set { SetValue(DataProperty, value); }
         }
 
         /// <summary>
@@ -126,11 +122,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取当前选择的文件
         /// </summary>
-        public VirFile Current
-        {
-            get { return _current; }
-            internal set { _current = value; }
-        }
+        public FileItem Current { get; internal set; }
 
         /// <summary>
         /// 获取面板，内部绑定用
@@ -141,33 +133,17 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 取消者令牌
+        /// 获取所有FileItem
         /// </summary>
-        public CancellationTokenSource Cts
-        {
-            get { return _cts; }
-        }
-
-        /// <summary>
-        /// 获取所有VirFile
-        /// </summary>
-        public IEnumerable<VirFile> Items
+        public IEnumerable<FileItem> Items
         {
             get
             {
                 return from obj in _pnl.Children
-                       let vf = obj as VirFile
+                       let vf = obj as FileItem
                        where vf != null
                        select vf;
             }
-        }
-
-        /// <summary>
-        /// 获取总文件数
-        /// </summary>
-        public int FilesCount
-        {
-            get { return _pnl.Children.Count; }
         }
         #endregion
 
@@ -238,19 +214,6 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取添加Office文档命令
-        /// </summary>
-        public BaseCommand CmdAddOffice
-        {
-            get
-            {
-                if (_cmdAddOffice == null)
-                    _cmdAddOffice = new BaseCommand((e) => AddFile(AtKit.OfficeFormat));
-                return _cmdAddOffice;
-            }
-        }
-
-        /// <summary>
         /// 获取添加图片命令
         /// </summary>
         public BaseCommand CmdAddImage
@@ -258,7 +221,7 @@ namespace Dt.Base
             get
             {
                 if (_cmdAddImage == null)
-                    _cmdAddImage = new BaseCommand((e) => AddFile(AtKit.ImageFormat));
+                    _cmdAddImage = new BaseCommand((e) => AddFile(FileFilter.UwpImage, FileFilter.AndroidImage, FileFilter.IOSImage));
                 return _cmdAddImage;
             }
         }
@@ -271,7 +234,7 @@ namespace Dt.Base
             get
             {
                 if (_cmdAddVideo == null)
-                    _cmdAddVideo = new BaseCommand((e) => AddFile(AtKit.VideoFormat));
+                    _cmdAddVideo = new BaseCommand((e) => AddFile(FileFilter.UwpVideo, FileFilter.AndroidVideo, FileFilter.IOSVideo));
                 return _cmdAddVideo;
             }
         }
@@ -279,13 +242,13 @@ namespace Dt.Base
         /// <summary>
         /// 获取添加音频命令
         /// </summary>
-        public BaseCommand CmdAddSound
+        public BaseCommand CmdAddAudio
         {
             get
             {
-                if (_cmdAddSound == null)
-                    _cmdAddSound = new BaseCommand((e) => AddFile(AtKit.SoundFormat));
-                return _cmdAddSound;
+                if (_cmdAddAudio == null)
+                    _cmdAddAudio = new BaseCommand((e) => AddFile(FileFilter.UwpAudio, FileFilter.AndroidAudio, FileFilter.IOSAudio));
+                return _cmdAddAudio;
             }
         }
 
@@ -297,7 +260,7 @@ namespace Dt.Base
             get
             {
                 if (_cmdAddFile == null)
-                    _cmdAddFile = new BaseCommand((e) => AddFile(null));
+                    _cmdAddFile = new BaseCommand((e) => AddFile());
                 return _cmdAddFile;
             }
         }
@@ -346,39 +309,27 @@ namespace Dt.Base
         /// <summary>
         /// 增加文件
         /// </summary>
-        /// <param name="p_format">文件选择时的过滤类型</param>
-        public async void AddFile(List<string> p_format)
+        /// <param name="p_uwpFileTypes">uwp文件过滤类型，如 .png .docx，null时不过滤</param>
+        /// <param name="p_androidFileTypes">android文件过滤类型，如 image/png image/*，null时不过滤</param>
+        /// <param name="p_iosFileTypes">ios文件过滤类型，如 UTType.Image，null时不过滤</param>
+        public async void AddFile(string[] p_uwpFileTypes = null, string[] p_androidFileTypes = null, string[] p_iosFileTypes = null)
         {
-            FileOpenPicker picker = new FileOpenPicker();
-            var filter = picker.FileTypeFilter;
-            if (p_format != null && p_format.Count > 0)
-            {
-                foreach (var tp in p_format)
-                {
-                    filter.Add(tp);
-                }
-            }
-            else
-            {
-                filter.Add("*");
-            }
-
             if (AllowMultiple)
             {
-                IReadOnlyList<StorageFile> files = await picker.PickMultipleFilesAsync();
-                if (files.Count > 0)
+                var files = await FileKit.PickFiles(p_uwpFileTypes, p_androidFileTypes, p_iosFileTypes);
+                if (files != null && files.Count > 0)
                     await UploadFiles(files);
             }
             else
             {
-                StorageFile file = await picker.PickSingleFileAsync();
+                var file = await FileKit.PickFile(p_uwpFileTypes, p_androidFileTypes, p_iosFileTypes);
                 if (file != null)
                 {
                     // 若已有文件则为更新
-                    if (FilesCount > 0)
-                        await UpdateFile(file, (VirFile)_pnl.Children[0]);
+                    if (_pnl.Children.Count > 0)
+                        await UpdateFile(file, (FileItem)_pnl.Children[0]);
                     else
-                        await UploadFiles(new List<StorageFile>() { file });
+                        await UploadFiles(new List<FileData>() { file });
                 }
             }
         }
@@ -387,7 +338,7 @@ namespace Dt.Base
         /// 批量上传文件
         /// </summary>
         /// <param name="p_files"></param>
-        public async Task UploadFiles(IReadOnlyList<StorageFile> p_files)
+        public async Task UploadFiles(IList<FileData> p_files)
         {
             if (p_files == null || p_files.Count == 0)
                 return;
@@ -396,16 +347,15 @@ namespace Dt.Base
             string date = AtSys.Now.ToString("yyyy-MM-dd HH:mm");
             foreach (var file in p_files)
             {
-                BasicProperties prop = await file.GetBasicPropertiesAsync();
-                if (prop.Size > AtKit.GB)
+                if (file.Size > AtKit.GB)
                 {
-                    AtKit.Warn(string.Format("【{0}】\r\n文件超过1GB限制！", file.DisplayName));
+                    AtKit.Warn(string.Format("【{0}】\r\n文件超过1GB限制！", file.FileName));
                     continue;
                 }
 
-                VirFile vf = new VirFile();
-                vf.SetOwner(this);
-                await vf.InitUpload(file, AtKit.GetFileSizeDesc(prop.Size), date);
+                FileItem vf = new FileItem();
+                vf.Owner = this;
+                await vf.InitUpload(file, date);
                 _pnl.Children.Add(vf);
                 vfs.Add(vf);
             }
@@ -422,13 +372,12 @@ namespace Dt.Base
         /// <param name="p_file">新文件</param>
         /// <param name="p_vf">待更新的旧文件</param>
         /// <returns></returns>
-        public async Task UpdateFile(StorageFile p_file, VirFile p_vf)
+        public async Task UpdateFile(FileData p_file, FileItem p_vf)
         {
             if (p_file == null || p_vf == null)
                 return;
 
-            BasicProperties prop = await p_file.GetBasicPropertiesAsync();
-            if (prop.Size > AtKit.GB)
+            if (p_file.Size > AtKit.GB)
             {
                 AtKit.Warn(string.Format("【{0}】\r\n文件超过1GB限制！", p_file.DisplayName));
                 return;
@@ -436,7 +385,7 @@ namespace Dt.Base
 
             // 新文件属性
             var date = AtSys.Now.ToString("yyyy-MM-dd HH:mm");
-            await p_vf.InitUpload(p_file, AtKit.GetFileSizeDesc(prop.Size), date);
+            await p_vf.InitUpload(p_file, date);
             await HandleUpload(new List<IUploadFile> { p_vf });
         }
 
@@ -448,29 +397,42 @@ namespace Dt.Base
         {
             UploadStarted?.Invoke(this, EventArgs.Empty);
 
-            bool suc;
-            var result = await Uploader.Handle(p_vfs, _cts.Token);
+            List<string> result = null;
+            _cts?.Dispose();
+            _cts = new CancellationTokenSource();
+            try
+            {
+                result = await Uploader.Handle(p_vfs, _cts.Token);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "上传出错");
+            }
+            finally
+            {
+                _cts?.Dispose();
+            }
+
+            bool suc = false;
             if (result == null || result.Count != p_vfs.Count)
             {
                 // 全部失败
                 AtKit.Warn("😢上传失败，请重新上传！");
-                suc = false;
-                foreach (var vf in p_vfs.Cast<VirFile>())
+                foreach (var vf in p_vfs.Cast<FileItem>())
                 {
                     _pnl.Children.Remove(vf);
                 }
-                ReadXml(Xml);
+                ReadData(Data);
             }
             else
             {
                 suc = true;
                 for (int i = 0; i < p_vfs.Count; i++)
                 {
-                    await (p_vfs[i] as VirFile).UploadSuccess(result[i]);
+                    await (p_vfs[i] as FileItem).UploadSuccess(result[i]);
                 }
-                WriteXml();
+                WriteData();
             }
-
             UploadFinished?.Invoke(this, suc);
         }
         #endregion
@@ -504,7 +466,7 @@ namespace Dt.Base
         /// 下载文件
         /// </summary>
         /// <param name="p_vf"></param>
-        public async void DownloadFile(VirFile p_vf)
+        public async void DownloadFile(FileItem p_vf)
         {
             if (p_vf != null && await p_vf.Download())
                 AtKit.Msg("下载成功！");
@@ -514,7 +476,7 @@ namespace Dt.Base
         /// 打开文件
         /// </summary>
         /// <param name="p_vf"></param>
-        public void OpenFile(VirFile p_vf)
+        public void OpenFile(FileItem p_vf)
         {
             if (p_vf != null)
                 p_vf.Open();
@@ -524,7 +486,7 @@ namespace Dt.Base
         /// 文件另存为
         /// </summary>
         /// <param name="p_vf"></param>
-        public void SaveAs(VirFile p_vf)
+        public void SaveAs(FileItem p_vf)
         {
             if (p_vf != null)
                 p_vf.SaveAs();
@@ -534,26 +496,13 @@ namespace Dt.Base
         /// 删除已上传的文件
         /// </summary>
         /// <param name="p_vf"></param>
-        public async void DeleteFile(VirFile p_vf)
+        public async void DeleteFile(FileItem p_vf)
         {
             if (p_vf != null && await p_vf.Delete())
             {
-                WriteXml();
+                WriteData();
                 Deleted?.Invoke(this, EventArgs.Empty);
             }
-        }
-
-        /// <summary>
-        /// 支持释放资源
-        /// </summary>
-        public void Dispose()
-        {
-            if (_cts != null)
-            {
-                _cts.Dispose();
-                _cts = null;
-            }
-            GC.SuppressFinalize(this);
         }
 
         /// <summary>
@@ -561,16 +510,19 @@ namespace Dt.Base
         /// </summary>
         internal void CancelTransfer()
         {
-            _cts.Cancel();
-            _cts.Dispose();
-            _cts = new CancellationTokenSource();
+            if (_cts != null)
+            {
+                _cts.Cancel();
+                _cts.Dispose();
+                _cts = null;
+            }
         }
 
         /// <summary>
         /// 移除子项
         /// </summary>
         /// <param name="p_vf"></param>
-        internal void RemoveChild(VirFile p_vf)
+        internal void RemoveChild(FileItem p_vf)
         {
             _pnl.ChildrenTransitions = AtRes.AddDeleteTransition;
             _pnl.Children.Remove(p_vf);
@@ -578,35 +530,35 @@ namespace Dt.Base
         }
         #endregion
 
-        #region Xml
+        #region Json
         /// <summary>
         /// 反序列化，初次加载或重新加载
         /// </summary>
-        /// <param name="p_xml"></param>
+        /// <param name="p_json"></param>
         /// <returns></returns>
-        void ReadXml(string p_xml)
+        void ReadData(string p_json)
         {
             _pnl.Children.Clear();
-            if (string.IsNullOrEmpty(p_xml))
+            if (string.IsNullOrEmpty(p_json))
                 return;
 
-            using (StringReader stream = new StringReader(p_xml))
-            using (XmlReader reader = XmlReader.Create(stream, AtKit.ReaderSettings))
+            using (StringReader sr = new StringReader(p_json))
+            using (JsonReader reader = new JsonTextReader(sr))
             {
-                // <Fs>
-                if (reader.Read() && reader.Read())
-                {
-                    while (reader.NodeType != XmlNodeType.None)
-                    {
-                        if (reader.NodeType == XmlNodeType.EndElement && reader.Name == "Fs")
-                            break;
+                // 最外层 [
+                reader.Read();
 
-                        VirFile vf = new VirFile();
-                        vf.SetOwner(this);
-                        vf.ReadXml(reader);
-                        _pnl.Children.Add(vf);
-                        reader.ReadToNextSibling("F");
-                    }
+                // FileItem [
+                while (reader.Read())
+                {
+                    // 最外层 ]
+                    if (reader.TokenType == JsonToken.EndArray)
+                        break;
+
+                    FileItem vf = new FileItem();
+                    vf.Owner = this;
+                    vf.ReadData(reader);
+                    _pnl.Children.Add(vf);
                 }
             }
         }
@@ -615,32 +567,33 @@ namespace Dt.Base
         /// 序列化
         /// </summary>
         /// <returns></returns>
-        void WriteXml()
+        void WriteData()
         {
             if (_pnl.Children.Count == 0)
             {
-                _lockXml = true;
-                Xml = null;
-                _lockXml = false;
+                _lockData = true;
+                Data = null;
+                _lockData = false;
                 return;
             }
 
             StringBuilder sb = new StringBuilder();
-            using (XmlWriter writer = XmlWriter.Create(sb, AtKit.WriterSettings))
+            using (StringWriter sr = new StringWriter(sb))
+            using (JsonWriter writer = new JsonTextWriter(sr))
             {
-                writer.WriteStartElement("Fs");
+                writer.WriteStartArray();
                 foreach (var obj in _pnl.Children)
                 {
-                    VirFile vf = obj as VirFile;
-                    if (vf != null)
-                        vf.WriteXml(writer);
+                    if (obj is FileItem vf)
+                        vf.WriteData(writer);
                 }
-                writer.WriteEndElement();
+                writer.WriteEndArray();
                 writer.Flush();
             }
-            _lockXml = true;
-            Xml = sb.ToString();
-            _lockXml = false;
+
+            _lockData = true;
+            Data = sb.ToString();
+            _lockData = false;
         }
         #endregion
     }

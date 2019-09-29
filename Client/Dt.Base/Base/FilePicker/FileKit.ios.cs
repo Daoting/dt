@@ -25,27 +25,27 @@ namespace Dt.Base
     /// <summary>
     /// IOS版文件选择
     /// </summary>
-    public static class FilePicker
+    public static class FileKit
     {
         static int _requestId;
         static TaskCompletionSource<List<FileData>> _completionSource;
 
         /// <summary>
-        /// 选择单个照片
+        /// 选择单个图片
         /// </summary>
         /// <returns></returns>
-        public static Task<FileData> PickPhoto()
+        public static Task<FileData> PickImage()
         {
-            return PickFile(new string[] { UTType.Image });
+            return PickFile(p_iosFileTypes: FileFilter.IOSImage);
         }
 
         /// <summary>
-        /// 选择多个照片
+        /// 选择多个图片
         /// </summary>
         /// <returns></returns>
-        public static Task<List<FileData>> PickPhotos()
+        public static Task<List<FileData>> PickImages()
         {
-            return PickFiles(true, new string[] { UTType.Image });
+            return PickFiles(true, FileFilter.IOSImage);
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace Dt.Base
         /// <returns></returns>
         public static Task<FileData> PickVideo()
         {
-            return PickFile(new string[] { UTType.Video });
+            return PickFile(p_iosFileTypes: FileFilter.IOSVideo);
         }
 
         /// <summary>
@@ -63,40 +63,55 @@ namespace Dt.Base
         /// <returns></returns>
         public static Task<List<FileData>> PickVideos()
         {
-            return PickFiles(true, new string[] { UTType.Video });
+            return PickFiles(true, FileFilter.IOSVideo);
         }
 
         /// <summary>
-        /// 选择单个照片或视频
+        /// 选择单个音频文件
+        /// </summary>
+        /// <returns></returns>
+        public static Task<FileData> PickAudio()
+        {
+            return PickFile(p_iosFileTypes: FileFilter.IOSAudio);
+        }
+
+        /// <summary>
+        /// 选择多个音频文件
+        /// </summary>
+        /// <returns></returns>
+        public static Task<List<FileData>> PickAudios()
+        {
+            return PickFiles(true, FileFilter.IOSAudio);
+        }
+
+        /// <summary>
+        /// 选择单个媒体文件
         /// </summary>
         /// <returns></returns>
         public static Task<FileData> PickMedia()
         {
-            return PickFile(new string[] { UTType.Image, UTType.Video });
+            return PickFile(p_iosFileTypes: FileFilter.IOSMedia);
         }
 
         /// <summary>
-        /// 选择多个照片或视频
+        /// 选择多个媒体文件
         /// </summary>
         /// <returns></returns>
         public static Task<List<FileData>> PickMedias()
         {
-            return PickFiles(true, new string[] { UTType.Image, UTType.Video });
+            return PickFiles(true, FileFilter.IOSMedia);
         }
 
         /// <summary>
         /// 选择单个文件
         /// </summary>
-        /// <param name="p_allowedTypes">
-        /// 文件过滤类型，null时不过滤文件类型，各平台格式不同：
-        /// uwp：如.png .docx
-        /// android：image/png image/*
-        /// ios：UTType.Image
-        /// </param>
+        /// <param name="p_uwpFileTypes">uwp文件过滤类型，如 .png .docx，null时不过滤</param>
+        /// <param name="p_androidFileTypes">android文件过滤类型，如 image/png image/*，null时不过滤</param>
+        /// <param name="p_iosFileTypes">ios文件过滤类型，如 UTType.Image，null时不过滤</param>
         /// <returns></returns>
-        public static async Task<FileData> PickFile(string[] p_allowedTypes)
+        public static async Task<FileData> PickFile(string[] p_uwpFileTypes = null, string[] p_androidFileTypes = null, string[] p_iosFileTypes = null)
         {
-            var ls = await PickFiles(false, p_allowedTypes);
+            var ls = await PickFiles(false, p_androidFileTypes);
             if (ls != null && ls.Count > 0)
                 return ls[0];
             return null;
@@ -105,16 +120,13 @@ namespace Dt.Base
         /// <summary>
         /// 选择多个文件
         /// </summary>
-        /// <param name="p_allowedTypes">
-        /// 文件过滤类型，null时不过滤文件类型，各平台格式不同：
-        /// uwp：如.png .docx
-        /// android：image/png image/*
-        /// ios：UTType.Image
-        /// </param>
+        /// <param name="p_uwpFileTypes">uwp文件过滤类型，如 .png .docx，null时不过滤</param>
+        /// <param name="p_androidFileTypes">android文件过滤类型，如 image/png image/*，null时不过滤</param>
+        /// <param name="p_iosFileTypes">ios文件过滤类型，如 UTType.Image，null时不过滤</param>
         /// <returns></returns>
-        public static Task<List<FileData>> PickFiles(string[] p_allowedTypes)
+        public static Task<List<FileData>> PickFiles(string[] p_uwpFileTypes = null, string[] p_androidFileTypes = null, string[] p_iosFileTypes = null)
         {
-            return PickFiles(true, p_allowedTypes);
+            return PickFiles(true, p_androidFileTypes);
         }
 
         static Task<List<FileData>> PickFiles(bool p_allowMultiple, string[] allowedTypes)
@@ -159,21 +171,21 @@ namespace Dt.Base
         /// </summary>
         /// <param name="fileToSave">picked file data for file to save</param>
         /// <returns>true when file was saved successfully, false when not</returns>
-        public static Task<bool> SaveFile(FileData fileToSave)
+        public static async Task<bool> SaveFile(FileData fileToSave)
         {
             try
             {
                 var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
                 var fileName = Path.Combine(documents, fileToSave.FileName);
 
-                File.WriteAllBytes(fileName, fileToSave.GetBytes());
+                File.WriteAllBytes(fileName, await fileToSave.GetBytes());
 
-                return Task.FromResult(true);
+                return true;
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                return Task.FromResult(false);
+                return false;
             }
         }
 
@@ -263,6 +275,7 @@ namespace Dt.Base
             try
             {
                 List<FileData> ls = new List<FileData>();
+                NSFileManager mg = new NSFileManager();
                 foreach (var url in args.Urls)
                 {
                     url.StartAccessingSecurityScopedResource();
@@ -273,7 +286,7 @@ namespace Dt.Base
                     // iCloud drive can return null for LocalizedName.
                     if (name == null && path != null)
                         name = Path.GetFileName(path);
-                    ls.Add(new FileData(path, name));
+                    ls.Add(new FileData(path, name, mg.GetAttributes(path).Size.Value));
 
                     url.StopAccessingSecurityScopedResource();
                 }
@@ -313,8 +326,9 @@ namespace Dt.Base
                     name = Path.GetFileName(path);
                 }
 
+                NSFileManager mg = new NSFileManager();
                 List<FileData> ls = new List<FileData>();
-                ls.Add(new FileData(path, name));
+                ls.Add(new FileData(path, name, mg.GetAttributes(path).Size.Value));
                 var tcs = Interlocked.Exchange(ref _completionSource, null);
                 tcs?.SetResult(ls);
             }

@@ -8,7 +8,7 @@
 
 #region 引用命名
 using Dt.Core.Rpc;
-using Windows.Storage;
+using System.IO;
 #endregion
 
 namespace Dt.Base
@@ -24,9 +24,9 @@ namespace Dt.Base
         public string Path { get; set; }
 
         /// <summary>
-        /// 获取设置下载内容要保存的目标文件
+        /// 获取设置下载内容要保存的目标文件流
         /// </summary>
-        public StorageFile TgtFile { get; set; }
+        public Stream TgtStream { get; set; }
 
         /// <summary>
         /// 获取设置错误提示信息

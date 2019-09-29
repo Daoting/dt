@@ -7,33 +7,31 @@
 #endregion
 
 #region 引用命名
+using Dt.Core.Sqlite;
 #endregion
 
 namespace Dt.Base
 {
     /// <summary>
-    /// 上传下载文件的状态
+    /// 文件打开记录
     /// </summary>
-    public enum VirFileState
+    [StateTable]
+    public class FileReadLog
     {
         /// <summary>
-        /// 普通状态，无正在上传下载
+        /// 主键
         /// </summary>
-        None,
+        [PrimaryKey, AutoIncrement]
+        public int ID { get; set; }
 
         /// <summary>
-        /// 等待上传
+        /// 文件标识
         /// </summary>
-        UploadWaiting,
+        public string FileID { get; set; }
 
         /// <summary>
-        /// 正在上传
+        /// 用户名
         /// </summary>
-        Uploading,
-        
-        /// <summary>
-        /// 正在下载
-        /// </summary>
-        Downloading
+        public string UserName { get; set; }
     }
 }

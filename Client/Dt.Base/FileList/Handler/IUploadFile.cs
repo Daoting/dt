@@ -29,7 +29,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置待上传的文件
         /// </summary>
-        StorageFile File { get; }
+        FileData File { get; }
 
         /// <summary>
         /// 上传进度，可以为null

@@ -57,26 +57,6 @@ namespace Dt.Core
         public static readonly XmlWriterSettings WriterSettings = new XmlWriterSettings() { OmitXmlDeclaration = true };
 
         /// <summary>
-        /// 内部支持的图片格式
-        /// </summary>
-        public static readonly List<string> ImageFormat = new List<string> { ".png", ".jpg", ".bmp", ".gif", ".ico", ".tif" };
-
-        /// <summary>
-        /// 内部支持的音频格式
-        /// </summary>
-        public static readonly List<string> SoundFormat = new List<string> { ".m4a", ".mp3", ".wav", ".wma" };
-
-        /// <summary>
-        /// 内部支持的视频格式
-        /// </summary>
-        public static readonly List<string> VideoFormat = new List<string> { ".mp4", ".wmv" };
-
-        /// <summary>
-        /// Office文档格式
-        /// </summary>
-        public static readonly List<string> OfficeFormat = new List<string> { ".docx", ".doc", ".xls", ".xlsx", ".ppt", ".pptx" };
-
-        /// <summary>
         /// 1GB
         /// </summary>
         public const int GB = 1024 * 1024 * 1024;
@@ -410,19 +390,6 @@ namespace Dt.Core
             if (p_size < GB)
                 return string.Format("{0} MB", Math.Round(p_size / (float)MB, 2));
             return string.Format("{0} GB", Math.Round(p_size / (float)GB, 2));
-        }
-
-        /// <summary>
-        /// 删除临时文件夹的文件
-        /// </summary>
-        /// <param name="p_name">文件名</param>
-        public static void DeleteTempFile(string p_name)
-        {
-            try
-            {
-                File.Delete(Path.Combine(ApplicationData.Current.TemporaryFolder.Path, p_name));
-            }
-            catch { }
         }
 
         /// <summary>

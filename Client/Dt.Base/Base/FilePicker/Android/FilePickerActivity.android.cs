@@ -15,6 +15,7 @@ using Android.Content.PM;
 using Android.OS;
 using Android.Provider;
 using Android.Runtime;
+using Java.IO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -164,7 +165,7 @@ namespace Dt.Base
                     if (string.IsNullOrEmpty(filePath))
                         filePath = IOUtil.IsMediaStore(uri.Scheme) ? uri.ToString() : uri.Path;
                     var fileName = GetFileName(_context, uri);
-                    ls.Add(new FileData(filePath, fileName));
+                    ls.Add(new FileData(filePath, fileName, (ulong)new File(filePath).Length()));
                 }
                 else if (data.ClipData != null)
                 {
@@ -174,7 +175,8 @@ namespace Dt.Base
                         var uri = data.ClipData.GetItemAt(i).Uri;
                         var filePath = IOUtil.GetPath(_context, uri);
                         var fileName = GetFileName(_context, uri);
-                        ls.Add(new FileData(filePath, fileName));
+
+                        ls.Add(new FileData(filePath, fileName, (ulong)new File(filePath).Length()));
                     }
                 }
                 else

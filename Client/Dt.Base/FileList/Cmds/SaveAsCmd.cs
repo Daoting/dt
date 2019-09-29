@@ -13,17 +13,17 @@ using Dt.Core;
 namespace Dt.Base.Transfer
 {
     /// <summary>
-    /// 删除上传文件命令
+    /// 另存为命令
     /// </summary>
-    public class DeleteFileCmd : BaseCommand
+    public class SaveAsCmd : BaseCommand
     {
-        private FileTransfer _owner;
+        private FileList _owner;
 
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="p_owner"></param>
-        public DeleteFileCmd(FileTransfer p_owner)
+        public SaveAsCmd(FileList p_owner)
         {
             _owner = p_owner;
             AllowExecute = true;
@@ -35,7 +35,7 @@ namespace Dt.Base.Transfer
         /// <param name="p_parameter"></param>
         protected override void DoExecute(object p_parameter)
         {
-            _owner.DeleteFile(_owner.Current);
+            _owner.SaveAs(_owner.Current);
         }
     }
 }

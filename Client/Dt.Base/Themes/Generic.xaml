@@ -10,7 +10,7 @@
         <ResourceDictionary Source="/Dt.Base/Themes/Styles/FormView.xaml" />
         <ResourceDictionary Source="/Dt.Base/Themes/Styles/ListView.xaml" />
         <ResourceDictionary Source="/Dt.Base/Themes/Styles/TreeView.xaml" />
-        <ResourceDictionary Source="/Dt.Base/Themes/Styles/FileTransfer.xaml" />
+        <ResourceDictionary Source="/Dt.Base/Themes/Styles/FileList.xaml" />
         <ResourceDictionary Source="/Dt.Base/Themes/Styles/Sketch.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

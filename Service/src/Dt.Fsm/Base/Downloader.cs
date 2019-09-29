@@ -43,8 +43,9 @@ namespace Dt.Fsm
             var response = _context.Response;
             response.Headers["Content-Type"] = "application/octet-stream";
             response.Headers["Content-Transfer-Encoding"] = "binary";
-            response.Headers["Content-Disposition"] = "attachment;filename=" + path.Substring(path.LastIndexOf('/') + 1);
             response.Headers["Content-Length"] = fileInfo.Length.ToString();
+            // 不以附件形式下载
+            //response.Headers["Content-Disposition"] = "attachment;filename=" + path.Substring(path.LastIndexOf('/') + 1);
 
             try
             {

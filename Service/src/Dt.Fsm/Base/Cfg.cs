@@ -7,7 +7,6 @@
 #endregion
 
 #region 引用命名
-using Dt.Core;
 using Dt.Core.Caches;
 using Serilog;
 using System.Collections.Generic;
@@ -22,7 +21,19 @@ namespace Dt.Fsm
     public static class Cfg
     {
         const string _defaultVol = "v0";
+
+        /// <summary>
+        /// 卷状态缓存键
+        /// </summary>
         public const string VolumeKey = "volume";
+
+        /// <summary>
+        /// 缩略图后缀名
+        /// </summary>
+        public const string ThumbPostfix = "-t.jpg";
+
+        static readonly List<string> _imgExt = new List<string> { ".png", ".jpg", ".jpeg", ".bmp", ".gif", ".ico", ".tif" };
+        static readonly List<string> _videoExt = new List<string> { ".mp4", ".wmv" };
 
         /// <summary>
         /// 文件服务的根目录
@@ -65,6 +76,26 @@ namespace Dt.Fsm
                 }
                 Log.Information("文件存储卷 " + vol);
             }
+        }
+
+        /// <summary>
+        /// 是否为Image
+        /// </summary>
+        /// <param name="p_ext">扩展名带 .</param>
+        /// <returns></returns>
+        public static bool IsImage(string p_ext)
+        {
+            return _imgExt.Contains(p_ext);
+        }
+
+        /// <summary>
+        /// 是否为视频
+        /// </summary>
+        /// <param name="p_ext">扩展名带 .</param>
+        /// <returns></returns>
+        public static bool IsVideo(string p_ext)
+        {
+            return _videoExt.Contains(p_ext);
         }
     }
 }

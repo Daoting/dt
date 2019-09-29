@@ -8,22 +8,25 @@
 
 #region 引用命名
 using Dt.Core;
+using System;
+using Windows.Storage;
+using Windows.Storage.Pickers;
 #endregion
 
 namespace Dt.Base.Transfer
 {
     /// <summary>
-    /// 另存为命令
+    /// 更新文件命令
     /// </summary>
-    public class SaveAsCmd : BaseCommand
+    public class UpdateFileCmd : BaseCommand
     {
-        private FileTransfer _owner;
+        private FileList _owner;
 
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="p_owner"></param>
-        public SaveAsCmd(FileTransfer p_owner)
+        public UpdateFileCmd(FileList p_owner)
         {
             _owner = p_owner;
             AllowExecute = true;
@@ -33,9 +36,15 @@ namespace Dt.Base.Transfer
         /// 执行命令
         /// </summary>
         /// <param name="p_parameter"></param>
-        protected override void DoExecute(object p_parameter)
+        protected async override void DoExecute(object p_parameter)
         {
-            _owner.SaveAs(_owner.Current);
+            FileItem vf = _owner.Current;
+            if (vf == null || vf.State != FileItemState.None)
+                return;
+
+            var file = await FileKit.PickFile();
+            if (file != null)
+                await _owner.UpdateFile(file, vf);
         }
     }
 }

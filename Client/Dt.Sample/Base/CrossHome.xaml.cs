@@ -9,28 +9,25 @@
 #region 引用命名
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading;
+using System.Threading.Tasks;
 using Dt.Base;
 using Dt.Core;
-using Dt.Core.Rpc;
-using Uno;
-using Windows.Foundation;
-using Windows.Storage;
-using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
-using Xamarin.Essentials;
 #endregion
 
 namespace Dt.Sample
 {
-    public sealed partial class TestDemo1 : PageWin
+    public sealed partial class CrossHome : NaviWin
     {
-        public TestDemo1()
+        public CrossHome()
         {
             InitializeComponent();
+            NaviData = new List<NaviRow>
+            {
+                new NaviRow(Icons.保存, "文件选择", typeof(FilePickerDemo), "文件类型过滤、单选、多选"),
+                new NaviRow(Icons.日历, "上传下载", typeof(FileTransDemo), "跨平台文件上传下载"),
+            };
         }
     }
 }

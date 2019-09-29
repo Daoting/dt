@@ -22,7 +22,9 @@
     <Page Include="Base\DockPanelDemo.xaml" />
     <Page Include="Base\SplitterDemo.xaml" />
     <Page Include="Base\SketchPage.xaml" />
+    <Page Include="Base\CrossHome.xaml" />
     <Page Include="Base\FilePickerDemo.xaml" />
+    <Page Include="Base\FileTransDemo.xaml" />
 
     <Page Include="Structure\Dlg1.xaml" />
     <Page Include="Structure\Dlg2.xaml" />
@@ -108,8 +110,14 @@
     <Compile Update="Base\TabControlDemo.xaml.cs">
       <DependentUpon>TabControlDemo.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Base\CrossHome.xaml.cs">
+      <DependentUpon>CrossHome.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Base\FilePickerDemo.xaml.cs">
       <DependentUpon>FilePickerDemo.xaml</DependentUpon>
+    </Compile>         
+    <Compile Update="Base\FileTransDemo.xaml.cs">
+      <DependentUpon>FileTransDemo.xaml</DependentUpon>
     </Compile> 
     
     <Compile Update="Structure\Dlg1.xaml.cs">
@@ -261,45 +269,6 @@
     <Compile Update="TreeView\TvContextMenu.xaml.cs">
       <DependentUpon>TvContextMenu.xaml</DependentUpon>
     </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="DataAccess\RpcDemo.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="ListView\LvContextMenu.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="ListView\LvGroupTemplate.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="ListView\LvHome.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="ListView\LvList.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="ListView\LvListSelector.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="ListView\LvTable.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="ListView\LvTile.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="ListView\LvTileSelector.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="ListView\LvViewBase.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="ListView\LvViewEx.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="ListView\NumericTicker.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
   </ItemGroup>
 
 </Project>

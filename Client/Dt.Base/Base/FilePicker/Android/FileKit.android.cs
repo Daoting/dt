@@ -25,27 +25,27 @@ namespace Dt.Base
     /// Android版文件选择
     /// </summary>
     [Preserve(AllMembers = true)]
-    public static class FilePicker
+    public static class FileKit
     {
         static int _requestId;
         static TaskCompletionSource<List<FileData>> _completionSource;
 
         /// <summary>
-        /// 选择单个照片
+        /// 选择单个图片
         /// </summary>
         /// <returns></returns>
-        public static Task<FileData> PickPhoto()
+        public static Task<FileData> PickImage()
         {
-            return PickFile(new string[] { "image/*" });
+            return PickFile(p_androidFileTypes: FileFilter.AndroidImage);
         }
 
         /// <summary>
-        /// 选择多个照片
+        /// 选择多个图片
         /// </summary>
         /// <returns></returns>
-        public static Task<List<FileData>> PickPhotos()
+        public static Task<List<FileData>> PickImages()
         {
-            return PickFiles(true, new string[] { "image/*" });
+            return PickFiles(true, FileFilter.AndroidImage);
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace Dt.Base
         /// <returns></returns>
         public static Task<FileData> PickVideo()
         {
-            return PickFile(new string[] { "video/*" });
+            return PickFile(p_androidFileTypes: FileFilter.AndroidVideo);
         }
 
         /// <summary>
@@ -63,40 +63,55 @@ namespace Dt.Base
         /// <returns></returns>
         public static Task<List<FileData>> PickVideos()
         {
-            return PickFiles(true, new string[] { "video/*" });
+            return PickFiles(true, FileFilter.AndroidVideo);
         }
 
         /// <summary>
-        /// 选择单个照片或视频
+        /// 选择单个音频文件
+        /// </summary>
+        /// <returns></returns>
+        public static Task<FileData> PickAudio()
+        {
+            return PickFile(p_androidFileTypes: FileFilter.AndroidAudio);
+        }
+
+        /// <summary>
+        /// 选择多个音频文件
+        /// </summary>
+        /// <returns></returns>
+        public static Task<List<FileData>> PickAudios()
+        {
+            return PickFiles(true, FileFilter.AndroidAudio);
+        }
+
+        /// <summary>
+        /// 选择单个媒体文件
         /// </summary>
         /// <returns></returns>
         public static Task<FileData> PickMedia()
         {
-            return PickFile(new string[] { "image/*", "video/*" });
+            return PickFile(p_androidFileTypes: FileFilter.AndroidMedia);
         }
 
         /// <summary>
-        /// 选择多个照片或视频
+        /// 选择多个媒体文件
         /// </summary>
         /// <returns></returns>
         public static Task<List<FileData>> PickMedias()
         {
-            return PickFiles(true, new string[] { "image/*", "video/*" });
+            return PickFiles(true, FileFilter.AndroidMedia);
         }
 
         /// <summary>
         /// 选择单个文件
         /// </summary>
-        /// <param name="p_allowedTypes">
-        /// 文件过滤类型，null时不过滤文件类型，各平台格式不同：
-        /// uwp：如.png .docx
-        /// android：image/png image/*
-        /// ios：UTType.Image
-        /// </param>
+        /// <param name="p_uwpFileTypes">uwp文件过滤类型，如 .png .docx，null时不过滤</param>
+        /// <param name="p_androidFileTypes">android文件过滤类型，如 image/png image/*，null时不过滤</param>
+        /// <param name="p_iosFileTypes">ios文件过滤类型，如 UTType.Image，null时不过滤</param>
         /// <returns></returns>
-        public static async Task<FileData> PickFile(string[] p_allowedTypes)
+        public static async Task<FileData> PickFile(string[] p_uwpFileTypes = null, string[] p_androidFileTypes = null, string[] p_iosFileTypes = null)
         {
-            var ls = await PickFiles(false, p_allowedTypes);
+            var ls = await PickFiles(false, p_androidFileTypes);
             if (ls != null && ls.Count > 0)
                 return ls[0];
             return null;
@@ -105,16 +120,13 @@ namespace Dt.Base
         /// <summary>
         /// 选择多个文件
         /// </summary>
-        /// <param name="p_allowedTypes">
-        /// 文件过滤类型，null时不过滤文件类型，各平台格式不同：
-        /// uwp：如.png .docx
-        /// android：image/png image/*
-        /// ios：UTType.Image
-        /// </param>
+        /// <param name="p_uwpFileTypes">uwp文件过滤类型，如 .png .docx，null时不过滤</param>
+        /// <param name="p_androidFileTypes">android文件过滤类型，如 image/png image/*，null时不过滤</param>
+        /// <param name="p_iosFileTypes">ios文件过滤类型，如 UTType.Image，null时不过滤</param>
         /// <returns></returns>
-        public static Task<List<FileData>> PickFiles(string[] p_allowedTypes)
+        public static Task<List<FileData>> PickFiles(string[] p_uwpFileTypes = null, string[] p_androidFileTypes = null, string[] p_iosFileTypes = null)
         {
-            return PickFiles(true, p_allowedTypes);
+            return PickFiles(true, p_androidFileTypes);
         }
 
         static Task<List<FileData>> PickFiles(bool p_allowMultiple, string[] p_allowedTypes)
@@ -162,7 +174,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="fileToSave">picked file data for file to save</param>
         /// <returns>true when file was saved successfully, false when not</returns>
-        public static Task<bool> SaveFile(FileData fileToSave)
+        public static async Task<bool> SaveFile(FileData fileToSave)
         {
             try
             {
@@ -170,20 +182,20 @@ namespace Dt.Base
 
                 if (myFile.Exists())
                 {
-                    return Task.FromResult(true);
+                    return true;
                 }
 
                 var fos = new FileOutputStream(myFile.Path);
 
-                fos.Write(fileToSave.GetBytes());
+                fos.Write(await fileToSave.GetBytes());
                 fos.Close();
 
-                return Task.FromResult(true);
+                return true;
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                return Task.FromResult(false);
+                return false;
             }
         }
 

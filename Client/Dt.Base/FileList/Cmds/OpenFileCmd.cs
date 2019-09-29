@@ -13,17 +13,17 @@ using Dt.Core;
 namespace Dt.Base.Transfer
 {
     /// <summary>
-    /// 下载命令
+    /// 打开文件命令
     /// </summary>
-    public class DownloadFileCmd : BaseCommand
+    public class OpenFileCmd : BaseCommand
     {
-        private FileTransfer _owner;
+        private FileList _owner;
 
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="p_owner"></param>
-        public DownloadFileCmd(FileTransfer p_owner)
+        public OpenFileCmd(FileList p_owner)
         {
             _owner = p_owner;
             AllowExecute = true;
@@ -35,7 +35,7 @@ namespace Dt.Base.Transfer
         /// <param name="p_parameter"></param>
         protected override void DoExecute(object p_parameter)
         {
-            _owner.DownloadFile(_owner.Current);
+            _owner.OpenFile(_owner.Current);
         }
     }
 }

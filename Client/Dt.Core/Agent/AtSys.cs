@@ -9,6 +9,7 @@
 #region 引用命名
 using Dt.Core.Rpc;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Storage;
@@ -86,6 +87,27 @@ namespace Dt.Core
         public static IStub Stub { get; private set; }
 
         /// <summary>
+        /// 获取设置是否监控Rpc调用结果，TraceBox中控制输出
+        /// </summary>
+        internal static bool TraceRpc { get; set; }
+        #endregion
+
+        #region 路径
+        /* 在uno保存文件时只支持以下路径，形如：
+         * LocalFolder
+         * uwp：C:\Users\hdt\AppData\Local\Packages\4e169f82-ed49-494f-8c23-7dab11228222_dm57000t4aqw0\LocalState
+         * android：/data/user/0/App.Droid/files
+         * 
+         * RoamingFolder
+         * android：/data/user/0/App.Droid/files/.config
+         * 
+         * SharedLocalFolder
+         * android：/data/user/0/App.Droid/files/.local/share
+         * 
+         * TemporaryFolder 缓存路径，app关闭时删除，不可用于保存文件！
+         */
+
+        /// <summary>
         /// 本地sqlite文件路径
         /// </summary>
         public static string LocalDbPath
@@ -101,9 +123,54 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 获取设置是否监控Rpc调用结果，TraceBox中控制输出
+        /// 本地文件存放路径
+        /// uwp：C:\Users\...\LocalState\.doc
+        /// android：/data/user/0/App.Droid/files/.doc
         /// </summary>
-        internal static bool TraceRpc { get; set; }
+        public static string DocPath { get; } =
+#if UWP
+            Path.Combine(ApplicationData.Current.LocalFolder.Path, ".doc");
+#else
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), ".doc");
+#endif
+
+        /// <summary>
+        /// 清空本地文件
+        /// </summary>
+        public static void ClearDoc()
+        {
+            try
+            {
+                if (Directory.Exists(DocPath))
+                    Directory.Delete(DocPath, true);
+                Directory.CreateDirectory(DocPath);
+            }
+            catch { }
+        }
+
+        /// <summary>
+        /// 获取存放在.doc路径的本地文件(仅uwp可用)
+        /// </summary>
+        /// <param name="p_fileName"></param>
+        /// <returns></returns>
+        public static async Task<StorageFile> GetUwpDocFile(string p_fileName)
+        {
+            var folder = await StorageFolder.GetFolderFromPathAsync(DocPath);
+            return await folder.TryGetItemAsync(p_fileName) as StorageFile;
+        }
+
+        /// <summary>
+        /// 删除存放在.doc路径的本地文件
+        /// </summary>
+        /// <param name="p_fileName">文件名</param>
+        public static void DeleteDocFile(string p_fileName)
+        {
+            try
+            {
+                File.Delete(Path.Combine(DocPath, p_fileName));
+            }
+            catch { }
+        }
         #endregion
 
         #region 登录注销
@@ -138,6 +205,9 @@ namespace Dt.Core
             SQLitePCL.Batteries_V2.Init();
             // 打开状态库
             AtLocal.OpenStateDb();
+            // 创建本地文件存放目录
+            if (!Directory.Exists(DocPath))
+                Directory.CreateDirectory(DocPath);
         }
 
         /// <summary>

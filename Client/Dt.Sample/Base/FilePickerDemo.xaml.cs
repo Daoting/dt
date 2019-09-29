@@ -18,42 +18,42 @@ namespace Dt.Sample
 
         void OnPickPhoto(object sender, RoutedEventArgs e)
         {
-            Write(FilePicker.PickPhoto());
+            Write(FileKit.PickImage());
         }
 
         void OnPickPhotos(object sender, RoutedEventArgs e)
         {
-            Write(FilePicker.PickPhotos());
+            Write(FileKit.PickImages());
         }
 
         void OnPickVideo(object sender, RoutedEventArgs e)
         {
-            Write(FilePicker.PickVideo());
+            Write(FileKit.PickVideo());
         }
 
         void OnPickVideos(object sender, RoutedEventArgs e)
         {
-            Write(FilePicker.PickVideos());
+            Write(FileKit.PickVideos());
         }
 
         void OnPickMedia(object sender, RoutedEventArgs e)
         {
-            Write(FilePicker.PickMedia());
+            Write(FileKit.PickMedia());
         }
 
         void OnPickMedias(object sender, RoutedEventArgs e)
         {
-            Write(FilePicker.PickMedias());
+            Write(FileKit.PickMedias());
         }
 
         void OnPickFile(object sender, RoutedEventArgs e)
         {
-            Write(FilePicker.PickFile(null));
+            Write(FileKit.PickFile(null));
         }
 
         void OnPickFiles(object sender, RoutedEventArgs e)
         {
-            Write(FilePicker.PickFiles(null));
+            Write(FileKit.PickFiles(null));
         }
 
         async void Write(Task<FileData> p_file)
@@ -62,7 +62,7 @@ namespace Dt.Sample
             if (file == null)
                 _tbInfo.Text = "未选择";
             else
-                _tbInfo.Text = $"{file.FileName}\r\n{file.FilePath}";
+                _tbInfo.Text = $"{file.FileName}\r\n{file.Size}\r\n{file.FilePath}";
         }
 
         async void Write(Task<List<FileData>> p_files)
@@ -78,6 +78,7 @@ namespace Dt.Sample
             foreach (var file in files)
             {
                 sb.AppendLine(file.FileName);
+                sb.AppendLine(file.Size.ToString());
                 sb.AppendLine(file.FilePath);
                 sb.AppendLine();
             }

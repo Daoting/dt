@@ -36,7 +36,12 @@ namespace Dt.Base
             ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
         });
 
-
+        /// <summary>
+        /// 执行上传
+        /// </summary>
+        /// <param name="p_uploadFiles"></param>
+        /// <param name="p_token"></param>
+        /// <returns></returns>
         public static async Task<List<string>> Handle(List<IUploadFile> p_uploadFiles, CancellationToken p_token)
         {
             if (p_uploadFiles == null || p_uploadFiles.Count == 0)
@@ -48,14 +53,23 @@ namespace Dt.Base
             using (var request = CreateRequestMessage())
             using (var content = new MultipartFormDataContent())
             {
-                foreach (var up in p_uploadFiles)
+                foreach (var uf in p_uploadFiles)
                 {
-                    if (up == null || up.File == null)
+                    if (uf == null || uf.File == null)
                         continue;
 
-                    var streamContent = new ProgressStreamContent((await up.File.OpenReadAsync()).AsStream(), CancellationToken.None);
-                    streamContent.Progress = up.UploadProgress;
-                    content.Add(streamContent, up.File.DisplayName, up.File.Name);
+                    // 带进度的流内容
+                    var streamContent = new ProgressStreamContent(await uf.File.GetStream(), CancellationToken.None);
+                    streamContent.Progress = uf.UploadProgress;
+                    content.Add(streamContent, uf.File.Desc, uf.File.FileName);
+
+                    // 含缩略图
+                    if (uf.File.ThumbStream != null)
+                    {
+                        uf.File.ThumbStream.Seek(0, SeekOrigin.Begin);
+                        var thumb = new StreamContent(uf.File.ThumbStream);
+                        content.Add(thumb, "thumbnail", "thumbnail.jpg");
+                    }
                 }
                 request.Content = content;
 
@@ -81,14 +95,6 @@ namespace Dt.Base
                 reader.Read();
                 return JsonRpcSerializer.Deserialize(reader) as List<string>;
             }
-        }
-
-        /// <summary>
-        /// 获取当前是否已锁定文件传输
-        /// </summary>
-        public static bool IsLocked
-        {
-            get { return _locker.IsLocked; }
         }
 
         static HttpRequestMessage CreateRequestMessage()

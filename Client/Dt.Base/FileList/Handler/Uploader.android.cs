@@ -15,6 +15,7 @@ using Java.Util.Concurrent;
 using Javax.Net.Ssl;
 using Newtonsoft.Json;
 using Square.OkHttp3;
+using Square.OkIO;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -66,6 +67,12 @@ namespace Dt.Base
             _client = clientBuilder.Build();
         }
 
+        /// <summary>
+        /// 执行上传
+        /// </summary>
+        /// <param name="p_uploadFiles"></param>
+        /// <param name="p_token"></param>
+        /// <returns></returns>
         public static async Task<List<string>> Handle(List<IUploadFile> p_uploadFiles, CancellationToken p_token)
         {
             if (p_uploadFiles == null || p_uploadFiles.Count == 0)
@@ -74,9 +81,21 @@ namespace Dt.Base
             var bodyBuilder = new MultipartBody.Builder().SetType(MultipartBody.Form);
             foreach (var uf in p_uploadFiles)
             {
-                Java.IO.File file = new Java.IO.File(uf.File.Path);
+                Java.IO.File file = new Java.IO.File(uf.File.FilePath);
                 RequestBody rb = RequestBody.Create(MediaType.Parse("application/octet-stream"), file);
-                bodyBuilder.AddFormDataPart(uf.File.FileType, uf.File.Name, rb);
+                // 包一层实现进度
+                ProgressRequestBody progress = new ProgressRequestBody(rb, uf.UploadProgress);
+                bodyBuilder.AddFormDataPart(uf.File.Desc, uf.File.FileName, progress);
+
+                // 含缩略图
+                if (uf.File.ThumbStream != null)
+                {
+                    uf.File.ThumbStream.Seek(0, SeekOrigin.Begin);
+                    byte[] data = new byte[uf.File.ThumbStream.Length];
+                    uf.File.ThumbStream.Read(data, 0, data.Length);
+                    var thumb = RequestBody.Create(MediaType.Parse("application/octet-stream"), data);
+                    bodyBuilder.AddFormDataPart("thumbnail", "thumbnail.jpg", thumb);
+                }
             }
             RequestBody body = bodyBuilder.Build();
 
@@ -109,13 +128,61 @@ namespace Dt.Base
                 return JsonRpcSerializer.Deserialize(reader) as List<string>;
             }
         }
+    }
 
-        /// <summary>
-        /// 获取当前是否已锁定文件传输
-        /// </summary>
-        public static bool IsLocked
+    public class ProgressRequestBody : RequestBody
+    {
+        RequestBody _body;
+        ProgressDelegate _progressListener;
+
+        public ProgressRequestBody(RequestBody p_body, ProgressDelegate p_progressListener)
         {
-            get { return false; }
+            _body = p_body;
+            _progressListener = p_progressListener;
+        }
+
+        public override MediaType ContentType()
+        {
+            return _body.ContentType();
+        }
+
+        public override long ContentLength()
+        {
+            return _body.ContentLength();
+        }
+
+        public override void WriteTo(IBufferedSink p_sink)
+        {
+            // 需要另一个代理类来获取写入的长度
+            ExForwardingSink forwardingSink = new ExForwardingSink(p_sink, _progressListener, ContentLength());
+            // 转一下
+            IBufferedSink bufferedSink = OkIO.Buffer(forwardingSink);
+            // 写数据
+            _body.WriteTo(bufferedSink);
+            // 刷新写入
+            bufferedSink.Flush();
+        }
+    }
+
+    public class ExForwardingSink : ForwardingSink
+    {
+        ProgressDelegate _progressListener;
+        long _totalLength;
+        long _currentLength;
+
+        public ExForwardingSink(ISink p_sink, ProgressDelegate p_progressListener, long p_totalLength)
+            : base(p_sink)
+        {
+            _progressListener = p_progressListener;
+            _totalLength = p_totalLength;
+        }
+
+        public override void Write(OkBuffer p_source, long p_byteCount)
+        {
+            _currentLength += p_byteCount;
+            // 回调进度
+            _progressListener?.Invoke(p_byteCount, _currentLength, _totalLength);
+            base.Write(p_source, p_byteCount);
         }
     }
 }

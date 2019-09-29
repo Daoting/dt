@@ -62,13 +62,40 @@ namespace Dt.Fsm
                 // 增加使用次数
                 await cache.Increment(_volume);
 
+                // Section顺序：文件，文件，缩略图，文件
+                // 缩略图由客户端生成，因提取视频帧耗资源，属于前面的文件
+                FileDesc lastFile = null;
                 var reader = new MultipartReader(boundary, _context.Request.Body);
                 var section = await reader.ReadNextSectionAsync(_context.RequestAborted);
                 while (section != null)
                 {
                     var fileSection = section.AsFileSection();
                     if (fileSection != null)
-                        sucFiles.Add(await ReceiveFile(fileSection, db));
+                    {
+                        if (fileSection.Name == "thumbnail")
+                        {
+                            // 将缩略图复制到同路径，命名：xxx-t.jpg
+                            int index;
+                            if (lastFile != null && (index = lastFile.Path.LastIndexOf('.')) > 0)
+                            {
+                                string fullPath = Path.Combine(Cfg.Root, lastFile.Path.Substring(0, index) + Cfg.ThumbPostfix);
+                                try
+                                {
+                                    using (var writeStream = File.Create(fullPath))
+                                    {
+                                        await fileSection.FileStream.CopyToAsync(writeStream, _bufferSize, _context.RequestAborted);
+                                    }
+                                }
+                                catch { }
+                                lastFile = null;
+                            }
+                        }
+                        else
+                        {
+                            lastFile = await ReceiveFile(fileSection, db);
+                            sucFiles.Add(lastFile);
+                        }
+                    }
                     section = await reader.ReadNextSectionAsync(_context.RequestAborted);
                 }
             }
@@ -127,6 +154,7 @@ namespace Dt.Fsm
             if (long.TryParse(_context.Request.Headers["uid"], out var id))
                 desc.Uploader = id;
             desc.UserType = 3;
+            desc.Info = p_section.Name;
 
             // 根据文件名获取两级目录
             string dir = GetDir(desc.Name);
@@ -229,5 +257,7 @@ namespace Dt.Fsm
         public long Uploader { get; set; }
 
         public int UserType { get; set; }
+
+        public string Info { get; set; }
     }
 }

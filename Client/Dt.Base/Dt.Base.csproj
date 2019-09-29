@@ -7,7 +7,7 @@
   <Import Project="..\Common\dtc.props" />
 
   <ItemGroup>
-    <None Remove="Themes\Styles\FileTransfer.xaml" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0007" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,9 +19,7 @@
     <Page Include="Structure\Menu\Parts\SubMenuDlg.xaml" />
     <Page Include="Themes\Generic.xaml" />
     <Page Include="Themes\Global.xaml" />
-    <Page Include="Themes\Styles\FileTransfer.xaml">
-      <SubType>Designer</SubType>
-    </Page>
+    <Page Include="Themes\Styles\FileList.xaml" />
     <Page Include="Themes\Styles\ListView.xaml" />
     <Page Include="Themes\Styles\FormView.xaml" />
     <Page Include="Themes\Styles\TreeView.xaml" />
@@ -37,7 +35,7 @@
     <Page Include="Structure\Tools\LocalDbView.xaml" />
     <Page Include="Structure\Tools\SysTrace.xaml" />
     <Page Include="Structure\Tools\StateDb.xaml" />
-     <Page Include="Structure\Tools\ModelDb.xaml" />
+    <Page Include="Structure\Tools\ModelDb.xaml" />
     <Page Include="Structure\Tools\StateDbBackup.xaml" />
     <Page Include="Structure\Tools\StateDbUpdate.xaml" />            
     <Page Include="FormView\Cells\CColor\ColorDlg.xaml" />
@@ -91,9 +89,4 @@
     </Compile>
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="Transfer\AudioRecorder.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-  </ItemGroup>
 </Project>

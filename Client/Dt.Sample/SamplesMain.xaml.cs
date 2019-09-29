@@ -142,12 +142,6 @@ namespace Dt.Sample
                 },
                 new DataCmd
                 {
-                    Title = "文件选择",
-                    Note = "跨平台文件选择",
-                    Tag = typeof(FilePickerDemo),
-                },
-                new DataCmd
-                {
                     Title = "流程图",
                     Note = "任务流程定义示意图",
                     Tag = typeof(SketchPage)
@@ -168,6 +162,12 @@ namespace Dt.Sample
                 {
                     Title = "基础事件",
                     Tag = typeof(RouteEventDemo)
+                },
+                new DataCmd
+                {
+                    Title = "跨平台",
+                    Note = "文件选择、上传下载文件",
+                    Tag = typeof(CrossHome),
                 },
             };
             group.Title = "基础控件";

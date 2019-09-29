@@ -24,26 +24,26 @@ namespace Dt.Base
     /// <summary>
     /// Uwp版文件选择
     /// </summary>
-    public static class FilePicker
+    public static class FileKit
     {
         /// <summary>
-        /// 选择单个照片
+        /// 选择单个图片
         /// </summary>
         /// <returns></returns>
-        public static Task<FileData> PickPhoto()
+        public static Task<FileData> PickImage()
         {
-            var picker = CreatePicker(PickerLocationId.PicturesLibrary, AtKit.ImageFormat.ToArray());
+            var picker = CreatePicker(PickerLocationId.PicturesLibrary, FileFilter.UwpImage);
             picker.ViewMode = PickerViewMode.Thumbnail;
             return PickFile(picker);
         }
 
         /// <summary>
-        /// 选择多个照片
+        /// 选择多个图片
         /// </summary>
         /// <returns></returns>
-        public static Task<List<FileData>> PickPhotos()
+        public static Task<List<FileData>> PickImages()
         {
-            var picker = CreatePicker(PickerLocationId.PicturesLibrary, AtKit.ImageFormat.ToArray());
+            var picker = CreatePicker(PickerLocationId.PicturesLibrary, FileFilter.UwpImage);
             picker.ViewMode = PickerViewMode.Thumbnail;
             return PickFiles(picker);
         }
@@ -54,7 +54,7 @@ namespace Dt.Base
         /// <returns></returns>
         public static Task<FileData> PickVideo()
         {
-            var picker = CreatePicker(PickerLocationId.VideosLibrary, AtKit.VideoFormat.ToArray());
+            var picker = CreatePicker(PickerLocationId.VideosLibrary, FileFilter.UwpVideo);
             picker.ViewMode = PickerViewMode.Thumbnail;
             return PickFile(picker);
         }
@@ -65,35 +65,47 @@ namespace Dt.Base
         /// <returns></returns>
         public static Task<List<FileData>> PickVideos()
         {
-            var picker = CreatePicker(PickerLocationId.VideosLibrary, AtKit.VideoFormat.ToArray());
+            var picker = CreatePicker(PickerLocationId.VideosLibrary, FileFilter.UwpVideo);
             picker.ViewMode = PickerViewMode.Thumbnail;
             return PickFiles(picker);
         }
 
         /// <summary>
-        /// 选择单个照片或视频
+        /// 选择单个音频文件
+        /// </summary>
+        /// <returns></returns>
+        public static Task<FileData> PickAudio()
+        {
+            return PickFile(CreatePicker(PickerLocationId.MusicLibrary, FileFilter.UwpAudio));
+        }
+
+        /// <summary>
+        /// 选择多个音频文件
+        /// </summary>
+        /// <returns></returns>
+        public static Task<List<FileData>> PickAudios()
+        {
+            return PickFiles(CreatePicker(PickerLocationId.MusicLibrary, FileFilter.UwpAudio));
+        }
+
+        /// <summary>
+        /// 选择单个媒体文件
         /// </summary>
         /// <returns></returns>
         public static Task<FileData> PickMedia()
         {
-            List<string> ls = new List<string>();
-            ls.AddRange(AtKit.ImageFormat);
-            ls.AddRange(AtKit.VideoFormat);
-            var picker = CreatePicker(PickerLocationId.DocumentsLibrary, ls.ToArray());
+            var picker = CreatePicker(PickerLocationId.DocumentsLibrary, FileFilter.UwpMedia);
             picker.ViewMode = PickerViewMode.Thumbnail;
             return PickFile(picker);
         }
 
         /// <summary>
-        /// 选择多个照片或视频
+        /// 选择多个媒体文件
         /// </summary>
         /// <returns></returns>
         public static Task<List<FileData>> PickMedias()
         {
-            List<string> ls = new List<string>();
-            ls.AddRange(AtKit.ImageFormat);
-            ls.AddRange(AtKit.VideoFormat);
-            var picker = CreatePicker(PickerLocationId.DocumentsLibrary, ls.ToArray());
+            var picker = CreatePicker(PickerLocationId.DocumentsLibrary, FileFilter.UwpMedia);
             picker.ViewMode = PickerViewMode.Thumbnail;
             return PickFiles(picker);
         }
@@ -101,31 +113,25 @@ namespace Dt.Base
         /// <summary>
         /// 选择单个文件
         /// </summary>
-        /// <param name="p_allowedTypes">
-        /// 文件过滤类型，null时不过滤文件类型，各平台格式不同：
-        /// uwp：如.png .docx
-        /// android：image/png image/*
-        /// ios：UTType.Image
-        /// </param>
+        /// <param name="p_uwpFileTypes">uwp文件过滤类型，如 .png .docx，null时不过滤</param>
+        /// <param name="p_androidFileTypes">android文件过滤类型，如 image/png image/*，null时不过滤</param>
+        /// <param name="p_iosFileTypes">ios文件过滤类型，如 UTType.Image，null时不过滤</param>
         /// <returns></returns>
-        public static Task<FileData> PickFile(string[] p_allowedTypes)
+        public static Task<FileData> PickFile(string[] p_uwpFileTypes = null, string[] p_androidFileTypes = null, string[] p_iosFileTypes = null)
         {
-            return PickFile(CreatePicker(PickerLocationId.DocumentsLibrary, p_allowedTypes));
+            return PickFile(CreatePicker(PickerLocationId.DocumentsLibrary, p_uwpFileTypes));
         }
 
         /// <summary>
         /// 选择多个文件
         /// </summary>
-        /// <param name="p_allowedTypes">
-        /// 文件过滤类型，null时不过滤文件类型，各平台格式不同：
-        /// uwp：如.png .docx
-        /// android：image/png image/*
-        /// ios：UTType.Image
-        /// </param>
+        /// <param name="p_uwpFileTypes">uwp文件过滤类型，如 .png .docx，null时不过滤</param>
+        /// <param name="p_androidFileTypes">android文件过滤类型，如 image/png image/*，null时不过滤</param>
+        /// <param name="p_iosFileTypes">ios文件过滤类型，如 UTType.Image，null时不过滤</param>
         /// <returns></returns>
-        public static Task<List<FileData>> PickFiles(string[] p_allowedTypes)
+        public static Task<List<FileData>> PickFiles(string[] p_uwpFileTypes = null, string[] p_androidFileTypes = null, string[] p_iosFileTypes = null)
         {
-            return PickFiles(CreatePicker(PickerLocationId.DocumentsLibrary, p_allowedTypes));
+            return PickFiles(CreatePicker(PickerLocationId.DocumentsLibrary, p_uwpFileTypes));
         }
 
         /// <summary>
@@ -141,7 +147,7 @@ namespace Dt.Base
                     fileToSave.FileName,
                     CreationCollisionOption.ReplaceExisting);
 
-                await FileIO.WriteBytesAsync(file, fileToSave.GetBytes());
+                await FileIO.WriteBytesAsync(file, await fileToSave.GetBytes());
 
                 return true;
             }
@@ -212,7 +218,7 @@ namespace Dt.Base
                 return null;
 
             string id = StorageApplicationPermissions.FutureAccessList.Add(file);
-            return new FileData(id, file.Name);
+            return new FileData(id, file.Name, (await file.GetBasicPropertiesAsync()).Size);
         }
 
         static async Task<List<FileData>> PickFiles(FileOpenPicker p_picker)
@@ -225,7 +231,7 @@ namespace Dt.Base
             foreach (var file in files)
             {
                 string id = StorageApplicationPermissions.FutureAccessList.Add(file);
-                ls.Add(new FileData(id, file.Name));
+                ls.Add(new FileData(id, file.Name, (await file.GetBasicPropertiesAsync()).Size));
             }
             return ls;
         }

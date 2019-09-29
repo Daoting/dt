@@ -114,4 +114,6 @@
     <a:IconNameToUnicodeConverter x:Key="CvIconNameToChar" />
     <!-- Icons枚举值名称转unicode字符 -->
     <a:IconToNameConverter x:Key="CvIconToName" />
+    <!-- 文件长度自动转换为K,M,G -->
+    <a:FileLengthConverter x:Key="CvFileLength" />
 </ResourceDictionary>

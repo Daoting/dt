@@ -8,11 +8,11 @@
         <ResourceDictionary Source="/Dt.Base/Themes/Styles/Default.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
-    <!--FileTransfer-->
-    <Style TargetType="a:FileTransfer">
+    <!--FileList-->
+    <Style TargetType="a:FileList">
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="a:FileTransfer">
+                <ControlTemplate TargetType="a:FileList">
                     <Border BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             Padding="{TemplateBinding Padding}"
@@ -24,7 +24,7 @@
         </Setter>
     </Style>
 
-    <!--VirFile注释-->
+    <!--FileItem注释-->
     <Style x:Key="VirFileNoteStyle" TargetType="TextBlock">
         <Setter Property="FontSize" Value="{StaticResource 小字号}"/>
         <Setter Property="Foreground" Value="{StaticResource 深灰边框}"/>
@@ -32,8 +32,8 @@
         <Setter Property="TextWrapping" Value="NoWrap"/>
     </Style>
 
-    <!--VirFile默认模板-->
-    <ControlTemplate x:Key="VirFileTemplate" TargetType="a:VirFile">
+    <!--FileItem默认模板-->
+    <ControlTemplate x:Key="VirFileTemplate" TargetType="a:FileItem">
         <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
             <Grid x:Name="ContentGrid" Padding="{TemplateBinding Padding}">
                 <Grid.ColumnDefinitions>
@@ -44,7 +44,7 @@
                 <StackPanel Grid.Column="1">
                     <TextBlock Text="{TemplateBinding FileName}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
                     <TextBlock Text="{TemplateBinding FileDesc}" Style="{StaticResource VirFileNoteStyle}"/>
-                    <TextBlock Text="{TemplateBinding Length}" Style="{StaticResource VirFileNoteStyle}"/>
+                    <TextBlock Text="{Binding Length, Converter={StaticResource CvFileLength}, RelativeSource={RelativeSource TemplatedParent}}" Style="{StaticResource VirFileNoteStyle}"/>
                     <TextBlock Text="{TemplateBinding Date}" Style="{StaticResource VirFileNoteStyle}"/>
                     <TextBlock Text="{TemplateBinding Uploader}" Style="{StaticResource VirFileNoteStyle}"/>
                 </StackPanel>
@@ -104,19 +104,19 @@
         </Grid>
     </ControlTemplate>
 
-    <!--VirFile图片模板-->
-    <ControlTemplate x:Key="VirImageTemplate" TargetType="a:VirFile">
+    <!--FileItem图片模板-->
+    <ControlTemplate x:Key="VirImageTemplate" TargetType="a:FileItem">
         <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
             <ToolTipService.ToolTip>
                 <StackPanel>
                     <TextBlock Text="{TemplateBinding FileDesc}" FontSize="{StaticResource 小字号}"/>
-                    <TextBlock Text="{TemplateBinding Length}" FontSize="{StaticResource 小字号}"/>
+                    <TextBlock Text="{Binding Length, Converter={StaticResource CvFileLength}, RelativeSource={RelativeSource TemplatedParent}}" FontSize="{StaticResource 小字号}"/>
                     <TextBlock Text="{TemplateBinding Date}" FontSize="{StaticResource 小字号}"/>
                     <TextBlock Text="{TemplateBinding Uploader}" FontSize="{StaticResource 小字号}"/>
                 </StackPanel>
             </ToolTipService.ToolTip>
             <TextBlock Text="图片" Foreground="{StaticResource 深灰边框}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <Image x:Name="Image" Source="{TemplateBinding Bitmap}" Stretch="None"/>
+            <Image x:Name="Image" Source="{TemplateBinding Bitmap}" MaxHeight="160" MaxWidth="160" Stretch="UniformToFill"/>
             <!--上传下载状态-->
             <Grid x:Name="ProgressGrid" Visibility="Collapsed" Background="{StaticResource 深暗遮罩}">
                 <Rectangle x:Name="ProgressRect" Width="{TemplateBinding ProgressWidth}" Height="6" Fill="Red" StrokeThickness="0" HorizontalAlignment="Left" VerticalAlignment="Top" IsHitTestVisible="False"/>
@@ -155,8 +155,8 @@
         </Grid>
     </ControlTemplate>
 
-    <!--VirFile音频模板-->
-    <ControlTemplate x:Key="VirSoundTemplate" TargetType="a:VirFile">
+    <!--FileItem音频模板-->
+    <ControlTemplate x:Key="VirSoundTemplate" TargetType="a:FileItem">
         <Grid x:Name="RootGrid" Background="{TemplateBinding Background}" MinWidth="260">
             <Grid x:Name="ContentGrid" Padding="{TemplateBinding Padding}">
                 <Grid.ColumnDefinitions>
@@ -184,7 +184,7 @@
                                  VerticalAlignment="Center"
                                  HorizontalAlignment="Left" />
                     </StackPanel>
-                    <TextBlock Text="{TemplateBinding Length}" Style="{StaticResource VirFileNoteStyle}" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="1"/>
+                    <TextBlock Text="{Binding Length, Converter={StaticResource CvFileLength}, RelativeSource={RelativeSource TemplatedParent}}" Style="{StaticResource VirFileNoteStyle}" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="1"/>
                     <TextBlock Text="{TemplateBinding Uploader}" Style="{StaticResource VirFileNoteStyle}" Grid.Row="1"/>
                     <TextBlock Text="{TemplateBinding Date}" Style="{StaticResource VirFileNoteStyle}" HorizontalAlignment="Right" Grid.Row="1" Grid.Column="1"/>
                 </Grid>
@@ -236,13 +236,13 @@
         </Grid>
     </ControlTemplate>
 
-    <!--VirFile视频模板-->
-    <ControlTemplate x:Key="VirVideoTemplate" TargetType="a:VirFile">
+    <!--FileItem视频模板-->
+    <ControlTemplate x:Key="VirVideoTemplate" TargetType="a:FileItem">
         <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
             <ToolTipService.ToolTip>
                 <StackPanel>
                     <TextBlock Text="{TemplateBinding FileDesc}" FontSize="{StaticResource 小字号}"/>
-                    <TextBlock Text="{TemplateBinding Length}" FontSize="{StaticResource 小字号}"/>
+                    <TextBlock Text="{Binding Length, Converter={StaticResource CvFileLength}, RelativeSource={RelativeSource TemplatedParent}}" FontSize="{StaticResource 小字号}"/>
                     <TextBlock Text="{TemplateBinding Date}" FontSize="{StaticResource 小字号}"/>
                     <TextBlock Text="{TemplateBinding Uploader}" FontSize="{StaticResource 小字号}"/>
                 </StackPanel>
@@ -300,8 +300,8 @@
         </Grid>
     </ControlTemplate>
 
-    <!--VirFile-->
-    <Style TargetType="a:VirFile">
+    <!--FileItem-->
+    <Style TargetType="a:FileItem">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Padding" Value="10,6,10,6"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>

@@ -46,7 +46,7 @@ namespace Dt.Base
         /// <returns>是否成功</returns>
         public static async Task<bool> Handle(DownloadInfo p_info, CancellationToken p_token)
         {
-            if (p_info == null || string.IsNullOrEmpty(p_info.Path))
+            if (p_info == null || string.IsNullOrEmpty(p_info.Path) || p_info.TgtStream == null)
                 return false;
 
             HttpResponseMessage response = null;
@@ -86,7 +86,6 @@ namespace Dt.Base
 
             try
             {
-                using (var fs = (await p_info.TgtFile.OpenAsync(FileAccessMode.ReadWrite)).AsStream())
                 using (var inputStream = await response.Content.ReadAsStreamAsync())
                 {
                     int read;
@@ -94,11 +93,11 @@ namespace Dt.Base
                     byte[] data = new byte[81920];
                     while ((read = await inputStream.ReadAsync(data, 0, data.Length, p_token).ConfigureAwait(false)) > 0)
                     {
-                        await fs.WriteAsync(data, 0, read);
+                        await p_info.TgtStream.WriteAsync(data, 0, read);
                         readTotal += read;
                         p_info.Progress?.Invoke(read, readTotal, total);
                     }
-                    await fs.FlushAsync();
+                    await p_info.TgtStream.FlushAsync();
                 }
             }
             catch (TaskCanceledException)
@@ -116,12 +115,14 @@ namespace Dt.Base
 
         static HttpRequestMessage CreateRequestMessage(string p_act)
         {
-            // 使用http2协议Post方法
+            // 使用http2协议Post方法，路径相同连续 Get 时无效！
             return new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
                 Version = new Version(2, 0),
-                RequestUri = new Uri($"{AtSys.Stub.ServerUrl.TrimEnd('/')}/fsm/.d/{p_act}")
+                RequestUri = new Uri($"{AtSys.Stub.ServerUrl.TrimEnd('/')}/fsm/.d/{p_act}"),
+                // 无内容时 okhttp 异常
+                Content = new StringContent("a")
             };
         }
     }

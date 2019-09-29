@@ -598,24 +598,24 @@ namespace Dt.Base
         }
         #endregion
 
-        #region VirFile资源
+        #region FileItem资源
         /// <summary>
-        /// VirFile默认模板
+        /// FileItem默认模板
         /// </summary>
         internal static readonly ControlTemplate VirFileTemplate = (ControlTemplate)_dict["VirFileTemplate"];
 
         /// <summary>
-        /// VirFile图片模板
+        /// FileItem图片模板
         /// </summary>
         internal static readonly ControlTemplate VirImageTemplate = (ControlTemplate)_dict["VirImageTemplate"];
 
         /// <summary>
-        /// VirFile音频模板
+        /// FileItem音频模板
         /// </summary>
         internal static readonly ControlTemplate VirSoundTemplate = (ControlTemplate)_dict["VirSoundTemplate"];
 
         /// <summary>
-        /// VirFile视频模板
+        /// FileItem视频模板
         /// </summary>
         internal static readonly ControlTemplate VirVideoTemplate = (ControlTemplate)_dict["VirVideoTemplate"];
         #endregion
