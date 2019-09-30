@@ -10,6 +10,7 @@
 #region 引用命名
 using Dt.Core;
 using Dt.Core.Rpc;
+using Foundation;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -29,24 +30,48 @@ namespace Dt.Base
     /// </summary>
     public static class Uploader
     {
-        static readonly AsyncLocker _locker = new AsyncLocker();
-        readonly static HttpClient _client = new HttpClient(new HttpClientHandler
-        {
-            // 验证时服务端证书始终有效！
-            ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
-        });
+        static readonly NSUrlSession _session;
+
+        //static Uploader()
+        //{
+        //    var sessionConfiguration = NSUrlSessionConfiguration.CreateBackgroundSessionConfiguration("fileuploader");
+
+        //    var headerDictionary = new NSMutableDictionary();
+        //    headerDictionary.Add(new NSString("Accept"), new NSString("application/json"));
+        //    headerDictionary.Add(new NSString("Content-Type"), new NSString(string.Format("multipart/form-data; boundary={0}", boundary)));
+
+
+        //    if (headers != null)
+        //    {
+        //        foreach (string key in headers.Keys)
+        //        {
+        //            if (!string.IsNullOrEmpty(headers[key]))
+        //            {
+        //                var headerKey = new NSString(key);
+        //                if (headerDictionary.ContainsKey(new NSString(key)))
+        //                {
+        //                    headerDictionary[headerKey] = new NSString(headers[key]);
+        //                }
+        //                else
+        //                {
+        //                    headerDictionary.Add(new NSString(key), new NSString(headers[key]));
+        //                }
+
+        //            }
+        //        }
+        //    }
+
+
+        //    sessionConfiguration.HttpAdditionalHeaders = headerDictionary;
+        //    sessionConfiguration.AllowsCellularAccess = true;
+
+        //    sessionConfiguration.NetworkServiceType = NSUrlRequestNetworkServiceType.Default;
+        //    sessionConfiguration.TimeoutIntervalForRequest = 30;
+        //}
 
         public static async Task<List<string>> Handle(List<IUploadFile> p_uploadFiles, CancellationToken p_token)
         {
             return null;
-        }
-
-        /// <summary>
-        /// 获取当前是否已锁定文件传输
-        /// </summary>
-        public static bool IsLocked
-        {
-            get { return _locker.IsLocked; }
         }
     }
 }

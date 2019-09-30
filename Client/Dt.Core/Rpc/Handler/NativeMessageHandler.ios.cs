@@ -30,7 +30,7 @@ namespace Dt.Core.Rpc
     /// </summary>
     public class NativeMessageHandler : HttpClientHandler
     {
-        readonly NSUrlSession session;
+        readonly NSUrlSession _session;
 
         readonly Dictionary<NSUrlSessionTask, InflightOperation> inflightRequests =
             new Dictionary<NSUrlSessionTask, InflightOperation>();
@@ -48,7 +48,7 @@ namespace Dt.Core.Rpc
             configuration.TLSMinimumSupportedProtocol = SslProtocol.Tls_1_2;
 
             var urlSessionDelegate = new DataTaskDelegate(this);
-            session = NSUrlSession.FromConfiguration(configuration, (INSUrlSessionDelegate)urlSessionDelegate, null);
+            _session = NSUrlSession.FromConfiguration(configuration, (INSUrlSessionDelegate)urlSessionDelegate, null);
         }
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -76,7 +76,7 @@ namespace Dt.Core.Rpc
                 Url = NSUrl.FromString(request.RequestUri.AbsoluteUri),
             };
 
-            var op = session.CreateDataTask(rq);
+            var op = _session.CreateDataTask(rq);
 
             cancellationToken.ThrowIfCancellationRequested();
 

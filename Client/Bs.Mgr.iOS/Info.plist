@@ -33,6 +33,8 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+  <key>NSPhotoLibraryUsageDescription</key>
+  <string>Picture Picker uses photo library</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Fonts/icon.ttf</string>

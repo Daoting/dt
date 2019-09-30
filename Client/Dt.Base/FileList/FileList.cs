@@ -221,7 +221,7 @@ namespace Dt.Base
             get
             {
                 if (_cmdAddImage == null)
-                    _cmdAddImage = new BaseCommand((e) => AddFile(FileFilter.UwpImage, FileFilter.AndroidImage, FileFilter.IOSImage));
+                    _cmdAddImage = new BaseCommand((e) => AddImage());
                 return _cmdAddImage;
             }
         }
@@ -234,7 +234,7 @@ namespace Dt.Base
             get
             {
                 if (_cmdAddVideo == null)
-                    _cmdAddVideo = new BaseCommand((e) => AddFile(FileFilter.UwpVideo, FileFilter.AndroidVideo, FileFilter.IOSVideo));
+                    _cmdAddVideo = new BaseCommand((e) => AddVideo());
                 return _cmdAddVideo;
             }
         }
@@ -247,7 +247,7 @@ namespace Dt.Base
             get
             {
                 if (_cmdAddAudio == null)
-                    _cmdAddAudio = new BaseCommand((e) => AddFile(FileFilter.UwpAudio, FileFilter.AndroidAudio, FileFilter.IOSAudio));
+                    _cmdAddAudio = new BaseCommand((e) => AddAudio());
                 return _cmdAddAudio;
             }
         }
@@ -307,31 +307,48 @@ namespace Dt.Base
 
         #region 上传
         /// <summary>
+        /// 增加图片文件
+        /// </summary>
+        public void AddImage()
+        {
+            _ = AppendFile(() => FileKit.PickImages(), () => FileKit.PickImage());
+        }
+
+        /// <summary>
+        /// 增加视频文件
+        /// </summary>
+        public void AddVideo()
+        {
+            _ = AppendFile(() => FileKit.PickVideos(), () => FileKit.PickVideo());
+        }
+
+        /// <summary>
+        /// 增加音频文件
+        /// </summary>
+        public void AddAudio()
+        {
+            _ = AppendFile(() => FileKit.PickAudios(), () => FileKit.PickAudio());
+        }
+
+        /// <summary>
+        /// 增加媒体文件
+        /// </summary>
+        public void AddMedia()
+        {
+            _ = AppendFile(() => FileKit.PickMedias(), () => FileKit.PickMedia());
+        }
+
+        /// <summary>
         /// 增加文件
         /// </summary>
         /// <param name="p_uwpFileTypes">uwp文件过滤类型，如 .png .docx，null时不过滤</param>
         /// <param name="p_androidFileTypes">android文件过滤类型，如 image/png image/*，null时不过滤</param>
         /// <param name="p_iosFileTypes">ios文件过滤类型，如 UTType.Image，null时不过滤</param>
-        public async void AddFile(string[] p_uwpFileTypes = null, string[] p_androidFileTypes = null, string[] p_iosFileTypes = null)
+        public void AddFile(string[] p_uwpFileTypes = null, string[] p_androidFileTypes = null, string[] p_iosFileTypes = null)
         {
-            if (AllowMultiple)
-            {
-                var files = await FileKit.PickFiles(p_uwpFileTypes, p_androidFileTypes, p_iosFileTypes);
-                if (files != null && files.Count > 0)
-                    await UploadFiles(files);
-            }
-            else
-            {
-                var file = await FileKit.PickFile(p_uwpFileTypes, p_androidFileTypes, p_iosFileTypes);
-                if (file != null)
-                {
-                    // 若已有文件则为更新
-                    if (_pnl.Children.Count > 0)
-                        await UpdateFile(file, (FileItem)_pnl.Children[0]);
-                    else
-                        await UploadFiles(new List<FileData>() { file });
-                }
-            }
+            _ = AppendFile(
+                () => FileKit.PickFiles(p_uwpFileTypes, p_androidFileTypes, p_iosFileTypes),
+                () => FileKit.PickFile(p_uwpFileTypes, p_androidFileTypes, p_iosFileTypes));
         }
 
         /// <summary>
@@ -434,6 +451,28 @@ namespace Dt.Base
                 WriteData();
             }
             UploadFinished?.Invoke(this, suc);
+        }
+
+        async Task AppendFile(Func<Task<List<FileData>>> p_funMulti, Func<Task<FileData>> p_funSingle)
+        {
+            if (AllowMultiple)
+            {
+                var files = await p_funMulti();
+                if (files != null && files.Count > 0)
+                    await UploadFiles(files);
+            }
+            else
+            {
+                var file = await p_funSingle();
+                if (file != null)
+                {
+                    // 若已有文件则为更新
+                    if (_pnl.Children.Count > 0)
+                        await UpdateFile(file, (FileItem)_pnl.Children[0]);
+                    else
+                        await UploadFiles(new List<FileData>() { file });
+                }
+            }
         }
         #endregion
 

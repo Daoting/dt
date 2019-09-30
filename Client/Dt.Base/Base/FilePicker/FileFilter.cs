@@ -26,15 +26,15 @@ namespace Dt.Base
         /// </summary>
         public static readonly string[] AndroidImage = new string[] { "image/*" };
 
+#if IOS
         /// <summary>
         /// ios图片格式
         /// </summary>
-        public static readonly string[] IOSImage = new string[]
+        public static readonly Photos.PHAssetMediaType[] IOSImage = new Photos.PHAssetMediaType[]
         {
-#if IOS
-            MobileCoreServices.UTType.Image
-#endif
+            Photos.PHAssetMediaType.Image
         };
+#endif
 
         /// <summary>
         /// uwp视频格式
@@ -46,15 +46,15 @@ namespace Dt.Base
         /// </summary>
         public static readonly string[] AndroidVideo = new string[] { "video/*", };
 
+#if IOS
         /// <summary>
         /// ios视频格式
         /// </summary>
-        public static readonly string[] IOSVideo = new string[]
+        public static readonly Photos.PHAssetMediaType[] IOSVideo = new Photos.PHAssetMediaType[]
         {
-#if IOS
-            MobileCoreServices.UTType.Video
-#endif
+            Photos.PHAssetMediaType.Video
         };
+#endif
 
         /// <summary>
         /// uwp音频格式
@@ -66,15 +66,15 @@ namespace Dt.Base
         /// </summary>
         public static readonly string[] AndroidAudio = new string[] { "audio/*" };
 
+#if IOS
         /// <summary>
         /// ios音频格式
         /// </summary>
-        public static readonly string[] IOSAudio = new string[]
+        public static readonly Photos.PHAssetMediaType[] IOSAudio = new Photos.PHAssetMediaType[]
         {
-#if IOS
-            MobileCoreServices.UTType.Audio
-#endif
+            Photos.PHAssetMediaType.Audio
         };
+#endif
 
         /// <summary>
         /// uwp媒体文件格式
@@ -86,16 +86,16 @@ namespace Dt.Base
         /// </summary>
         public static readonly string[] AndroidMedia = new string[] { "image/*", "video/*", "audio/*" };
 
+#if IOS
         /// <summary>
         /// ios媒体文件格式
         /// </summary>
-        public static readonly string[] IOSMedia = new string[]
+        public static readonly Photos.PHAssetMediaType[] IOSMedia = new Photos.PHAssetMediaType[]
         {
-#if IOS
-            MobileCoreServices.UTType.Image,
-            MobileCoreServices.UTType.Video,
-            MobileCoreServices.UTType.Audio
-#endif
+            Photos.PHAssetMediaType.Image,
+            Photos.PHAssetMediaType.Video,
+            Photos.PHAssetMediaType.Audio
         };
+#endif
     }
 }
