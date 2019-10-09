@@ -145,7 +145,6 @@ namespace Dt.Core.Rpc
                     }
 
                     var resp = (NSHttpUrlResponse)response;
-                    var req = data.Request;
 
                     var content = new CancellableStreamContent(data.ResponseBody, () =>
                     {
@@ -239,8 +238,6 @@ namespace Dt.Core.Rpc
                 }
             }
 
-            static readonly Regex cnRegex = new Regex(@"CN\s*=\s*([^,]*)", RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.Singleline);
-
             public override void DidReceiveChallenge(NSUrlSession session, NSUrlSessionTask task, NSUrlAuthenticationChallenge challenge, Action<NSUrlSessionAuthChallengeDisposition, NSUrlCredential> completionHandler)
             {
                 // 信任所有服务器证书，支持自签名证书
@@ -274,8 +271,6 @@ namespace Dt.Core.Rpc
                 completionHandler(NSUrlSessionAuthChallengeDisposition.PerformDefaultHandling, challenge.ProposedCredential);
             }
 
-            string PinningFailureMessage = null;
-
             public override void WillPerformHttpRedirection(NSUrlSession session, NSUrlSessionTask task, NSHttpUrlResponse response, NSUrlRequest newRequest, Action<NSUrlRequest> completionHandler)
             {
                 NSUrlRequest nextRequest = (nativeHandler.AllowAutoRedirect ? newRequest : null);
@@ -308,7 +303,7 @@ namespace Dt.Core.Rpc
                         case NSUrlErrorExtended.Cancelled:
                         case NSUrlErrorExtended.UserCancelledAuthentication:
                             // No more processing is required so just return.
-                            var message = PinningFailureMessage ?? error.LocalizedDescription;
+                            var message = error.LocalizedDescription;
                             return new OperationCanceledException(message, innerException);
                         case NSUrlErrorExtended.BadURL:
                         case NSUrlErrorExtended.UnsupportedURL:
@@ -399,7 +394,7 @@ namespace Dt.Core.Rpc
                         case CFNetworkErrors.CFURLErrorUserCancelledAuthentication:
                         case CFNetworkErrors.CFNetServiceErrorCancel:
                             // No more processing is required so just return.
-                            var message = PinningFailureMessage ?? error.LocalizedDescription;
+                            var message = error.LocalizedDescription;
                             return new OperationCanceledException(message, innerException);
                         case CFNetworkErrors.CFSOCKS5ErrorBadCredentials:
                         case CFNetworkErrors.CFSOCKS5ErrorUnsupportedNegotiationMethod:

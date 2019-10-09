@@ -80,8 +80,9 @@ namespace Dt.Base
                         result = await response.Content.ReadAsStringAsync();
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
+                    Log.Error(ex, "上传异常");
                     return null;
                 }
             }

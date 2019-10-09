@@ -85,7 +85,7 @@ namespace Dt.Base
         /// <summary>
         /// 文件描述
         /// </summary>
-        public string Desc { get; private set; }
+        public string Desc { get; internal set; }
 
         /// <summary>
         /// 缩略图路径
@@ -161,8 +161,10 @@ namespace Dt.Base
             }
             else if (FileFilter.UwpImage.Contains(ext))
             {
+#if !IOS
                 try
                 {
+                    
                     using (Image image = Image.Load(await GetStream()))
                     {
                         Desc = $"{image.Width} x {image.Height} ({ext.TrimStart('.')})";
@@ -193,6 +195,7 @@ namespace Dt.Base
                 {
                     Log.Warning(ex, "生成缩略图异常");
                 }
+#endif
             }
             else if (FileFilter.UwpVideo.Contains(ext))
             {

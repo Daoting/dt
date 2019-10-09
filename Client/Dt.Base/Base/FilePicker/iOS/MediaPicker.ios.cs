@@ -11,14 +11,10 @@
 using AVFoundation;
 using Foundation;
 using GMImagePicker;
-using MobileCoreServices;
 using Photos;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using UIKit;
 #endregion
@@ -31,9 +27,7 @@ namespace Dt.Base
     public class MediaPickerForIOS
     {
         TaskCompletionSource<List<FileData>> _tcs;
-        UIImagePickerController _imagePicker;
         readonly NSFileManager _fileManager = new NSFileManager();
-
 
         public Task<List<FileData>> PickFiles(bool p_allowMultiple, PHAssetMediaType[] p_mediaType)
         {
@@ -69,8 +63,12 @@ namespace Dt.Base
             return _tcs.Task;
         }
 
-        void FinishedPickingAssets(object sender, MultiAssetEventArgs args)
+        async void FinishedPickingAssets(object sender, MultiAssetEventArgs args)
         {
+            var picker = (GMImagePickerController)sender;
+            picker.FinishedPickingAssets -= FinishedPickingAssets;
+            picker.Canceled -= OnPickerCanceled;
+
             var options = new PHImageRequestOptions()
             {
                 NetworkAccessAllowed = true,
@@ -79,6 +77,7 @@ namespace Dt.Base
                 DeliveryMode = PHImageRequestOptionsDeliveryMode.HighQualityFormat
             };
 
+            var tcs = new TaskCompletionSource<object>();
             bool completed = false;
             List<FileData> result = new List<FileData>();
             for (var i = 0; i < args.Assets.Length; i++)
@@ -99,7 +98,7 @@ namespace Dt.Base
                                 if (args.Assets.Length == result.Count && !completed)
                                 {
                                     completed = true;
-                                    _tcs.SetResult(result);
+                                    tcs.TrySetResult(null);
                                 }
                             });
 
@@ -111,22 +110,34 @@ namespace Dt.Base
                             (data, dataUti, orientation, info) =>
                             {
                                 if (info["PHImageFileURLKey"] is NSUrl url)
-                                    result.Add(ParseUrl(url));
+                                {
+                                    var fd = ParseUrl(url);
+                                    fd.Desc = $"{asset.PixelWidth} x {asset.PixelHeight} ({fd.Ext.TrimStart('.')})";
+                                    result.Add(fd);
+                                }
 
                                 if (args.Assets.Length == result.Count && !completed)
                                 {
                                     completed = true;
-                                    _tcs.SetResult(result);
+                                    tcs.TrySetResult(null);
                                 }
                             });
 
                         break;
                 }
             }
+
+            // 用临时tcs等待比直接在回调方法中用_tcs速度大幅提高！！！
+            await tcs.Task;
+            _tcs.TrySetResult(result);
         }
 
         void OnPickerCanceled(object sender, EventArgs e)
         {
+            var picker = (GMImagePickerController)sender;
+            picker.FinishedPickingAssets -= FinishedPickingAssets;
+            picker.Canceled -= OnPickerCanceled;
+
             _tcs.SetResult(null);
         }
 
@@ -291,4 +302,3 @@ namespace Dt.Base
     }
 }
 #endif
-      
