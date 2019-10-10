@@ -51,7 +51,7 @@
             </Grid>
             <!--上传下载状态-->
             <Grid x:Name="ProgressGrid" Visibility="Collapsed" Background="{StaticResource 深暗遮罩}">
-                <Rectangle x:Name="ProgressRect" Width="{TemplateBinding ProgressWidth}" Height="6" Fill="Red" StrokeThickness="0" HorizontalAlignment="Left" VerticalAlignment="Top" IsHitTestVisible="False"/>
+                <Rectangle x:Name="ProgressRect" Width="{TemplateBinding ProgressWidth}" Height="4" Fill="Red" StrokeThickness="0" HorizontalAlignment="Left" VerticalAlignment="Top" IsHitTestVisible="False"/>
                 <TextBlock x:Name="MsgBlock" Text="{TemplateBinding Percent}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <TextBlock x:Name="NoteBlock" Text="点击可取消" Foreground="White" FontSize="{StaticResource 小字号}" Margin="0,0,0,6" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
             </Grid>
@@ -119,7 +119,7 @@
             <Image x:Name="Image" Source="{TemplateBinding Bitmap}" MaxHeight="160" MaxWidth="160" Stretch="UniformToFill"/>
             <!--上传下载状态-->
             <Grid x:Name="ProgressGrid" Visibility="Collapsed" Background="{StaticResource 深暗遮罩}">
-                <Rectangle x:Name="ProgressRect" Width="{TemplateBinding ProgressWidth}" Height="6" Fill="Red" StrokeThickness="0" HorizontalAlignment="Left" VerticalAlignment="Top" IsHitTestVisible="False"/>
+                <Rectangle x:Name="ProgressRect" Width="{TemplateBinding ProgressWidth}" Height="4" Fill="Red" StrokeThickness="0" HorizontalAlignment="Left" VerticalAlignment="Top" IsHitTestVisible="False"/>
                 <TextBlock x:Name="MsgBlock" Text="{TemplateBinding Percent}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <TextBlock x:Name="NoteBlock" Text="点击可取消" Foreground="White" FontSize="{StaticResource 小字号}" Margin="0,0,0,6" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
             </Grid>
@@ -192,7 +192,7 @@
             <ContentPresenter Content="{TemplateBinding MediaPlayer}" />
             <!--上传下载状态-->
             <Grid x:Name="ProgressGrid" Visibility="Collapsed" Background="{StaticResource 深暗遮罩}">
-                <Rectangle x:Name="ProgressRect" Width="{TemplateBinding ProgressWidth}" Height="6" Fill="Red" StrokeThickness="0" HorizontalAlignment="Left" VerticalAlignment="Top" IsHitTestVisible="False"/>
+                <Rectangle x:Name="ProgressRect" Width="{TemplateBinding ProgressWidth}" Height="4" Fill="Red" StrokeThickness="0" HorizontalAlignment="Left" VerticalAlignment="Top" IsHitTestVisible="False"/>
                 <TextBlock x:Name="MsgBlock" Text="{TemplateBinding Percent}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <TextBlock x:Name="NoteBlock" Text="点击可取消" Foreground="White" FontSize="{StaticResource 小字号}" Margin="0,0,10,6" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
             </Grid>
@@ -256,7 +256,7 @@
             <ContentPresenter Content="{TemplateBinding MediaPlayer}" />
             <!--上传下载状态-->
             <Grid x:Name="ProgressGrid" Visibility="Collapsed" Background="{StaticResource 深暗遮罩}">
-                <Rectangle x:Name="ProgressRect" Width="{TemplateBinding ProgressWidth}" Height="6" Fill="Red" StrokeThickness="0" HorizontalAlignment="Left" VerticalAlignment="Top" IsHitTestVisible="False"/>
+                <Rectangle x:Name="ProgressRect" Width="{TemplateBinding ProgressWidth}" Height="4" Fill="Red" StrokeThickness="0" HorizontalAlignment="Left" VerticalAlignment="Top" IsHitTestVisible="False"/>
                 <TextBlock x:Name="MsgBlock" Text="{TemplateBinding Percent}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <TextBlock x:Name="NoteBlock" Text="点击可取消" Foreground="White" FontSize="{StaticResource 小字号}" Margin="0,0,0,6" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
             </Grid>

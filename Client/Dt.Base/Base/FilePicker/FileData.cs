@@ -7,23 +7,16 @@
 #endregion
 
 #region 引用命名
-using Dt.Core;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
 using System;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
-using Windows.Storage;
 using Windows.Storage.AccessCache;
-using Windows.Storage.FileProperties;
-using Windows.UI.Xaml.Media.Imaging;
 #endregion
 
 namespace Dt.Base
 {
     /// <summary>
-    /// 
+    /// 选择文件的文件信息
     /// </summary>
     public class FileData
     {
@@ -37,6 +30,8 @@ namespace Dt.Base
             FilePath = p_filePath;
             FileName = p_fileName;
             Size = p_size;
+            string ext = Ext;
+            Desc = string.IsNullOrEmpty(ext) ? "" : $"{ext.TrimStart('.')}文件";
         }
 
         /// <summary>
@@ -85,17 +80,12 @@ namespace Dt.Base
         /// <summary>
         /// 文件描述
         /// </summary>
-        public string Desc { get; internal set; }
+        public string Desc { get; set; }
 
         /// <summary>
         /// 缩略图路径
         /// </summary>
-        public string ThumbPath { get; private set; }
-
-        /// <summary>
-        /// 缩略图上传流
-        /// </summary>
-        public Stream ThumbStream { get; private set; }
+        public string ThumbPath { get; set; }
 
 #if UWP
         /// <summary>
@@ -137,167 +127,17 @@ namespace Dt.Base
 #endif
 
         /// <summary>
-        /// 获取文件内容
+        /// 删除临时缩略图文件，上传成功的已改名无需删除
         /// </summary>
-        public async Task<byte[]> GetBytes()
+        internal void DeleteThumbnail()
         {
-            using (var stream = await GetStream())
-            using (var ms = new MemoryStream())
+            if (!string.IsNullOrEmpty(ThumbPath) && File.Exists(ThumbPath))
             {
-                stream.CopyTo(ms);
-                return ms.ToArray();
-            }
-        }
-
-        /// <summary>
-        /// 上传前：生成文件描述和缩略图
-        /// </summary>
-        internal async Task InitUpload()
-        {
-            string ext = Ext;
-            if (string.IsNullOrEmpty(ext))
-            {
-                Desc = "未知文件";
-            }
-            else if (FileFilter.UwpImage.Contains(ext))
-            {
-#if !IOS
                 try
                 {
-                    
-                    using (Image image = Image.Load(await GetStream()))
-                    {
-                        Desc = $"{image.Width} x {image.Height} ({ext.TrimStart('.')})";
-
-                        // 图片大小超过缩略图时生成
-                        if (image.Width > ThumbSize || image.Height > ThumbSize)
-                        {
-                            if (image.Width > image.Height)
-                                image.Mutate(x => x.Resize(ThumbSize, 0));
-                            else
-                                image.Mutate(x => x.Resize(0, ThumbSize));
-
-                            ThumbStream = new MemoryStream();
-                            image.SaveAsJpeg(ThumbStream);
-
-                            // 保存到文件
-                            ThumbStream.Seek(0, SeekOrigin.Begin);
-                            ThumbPath = Path.Combine(AtSys.DocPath, AtKit.NewID + "-t.jpg");
-                            using (var fs = File.Create(ThumbPath))
-                            {
-                                await ThumbStream.CopyToAsync(fs);
-                                await fs.FlushAsync();
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Log.Warning(ex, "生成缩略图异常");
-                }
-#endif
-            }
-            else if (FileFilter.UwpVideo.Contains(ext))
-            {
-#if UWP
-                var sf = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(FilePath);
-                var prop = await sf.Properties.GetVideoPropertiesAsync();
-                Desc = string.Format("{0:HH:mm:ss} ({1} x {2})", new DateTime(prop.Duration.Ticks), prop.Width, prop.Height);
-                // 默认根据DPI调整缩略图大小
-                ThumbStream = (await sf.GetThumbnailAsync(ThumbnailMode.SingleItem, ThumbSize, ThumbnailOptions.ResizeThumbnail)).AsStreamForRead();
-
-                // 保存到文件
-                ThumbPath = Path.Combine(AtSys.DocPath, AtKit.NewID + "-t.jpg");
-                using (var fs = File.Create(ThumbPath))
-                {
-                    await ThumbStream.CopyToAsync(fs);
-                }
-#elif ANDROID
-                Android.Media.MediaMetadataRetriever media = new Android.Media.MediaMetadataRetriever();
-                try
-                {
-                    await media.SetDataSourceAsync(FilePath);
-                    string dur = media.ExtractMetadata(Android.Media.MetadataKey.Duration);
-                    var bmp = media.GetFrameAtTime(1, Android.Media.Option.ClosestSync);
-                    Desc = string.Format("{0:HH:mm:ss} ({1} x {2})", new DateTime(long.Parse(dur) * 10000), bmp.Width, bmp.Height);
-
-                    // 将帧输出到流
-                    MemoryStream tempStream = new MemoryStream();
-                    await bmp.CompressAsync(Android.Graphics.Bitmap.CompressFormat.Png, 100, tempStream);
-
-                    // 缩略图
-                    try
-                    {
-                        tempStream.Seek(0, SeekOrigin.Begin);
-                        using (Image image = Image.Load(tempStream))
-                        {
-                            if (image.Width > image.Height)
-                                image.Mutate(x => x.Resize(ThumbSize, 0));
-                            else
-                                image.Mutate(x => x.Resize(0, ThumbSize));
-
-                            ThumbStream = new MemoryStream();
-                            image.SaveAsJpeg(ThumbStream);
-
-                            // 保存到文件
-                            ThumbStream.Seek(0, SeekOrigin.Begin);
-                            ThumbPath = Path.Combine(AtSys.DocPath, AtKit.NewID + "-t.jpg");
-                            using (var fs = File.Create(ThumbPath))
-                            {
-                                await ThumbStream.CopyToAsync(fs);
-                                await fs.FlushAsync();
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Warning(ex, "生成缩略图异常");
-                    }
+                    File.Delete(ThumbPath);
                 }
                 catch { }
-                finally
-                {
-                    media.Release();
-                }
-#elif IOS
-
-#endif
-            }
-            else if (FileFilter.UwpAudio.Contains(ext))
-            {
-#if UWP
-                var sf = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(FilePath);
-                var prop = await sf.Properties.GetMusicPropertiesAsync();
-                Desc = string.Format("{0:mm:ss}", new DateTime(prop.Duration.Ticks));
-#elif ANDROID
-                Android.Media.MediaMetadataRetriever media = new Android.Media.MediaMetadataRetriever();
-                try
-                {
-                    await media.SetDataSourceAsync(FilePath);
-                    string dur = media.ExtractMetadata(Android.Media.MetadataKey.Duration);
-                    Desc = string.Format("{0:mm:ss}", new DateTime(long.Parse(dur) * 10000));
-                }
-                catch { }
-                finally
-                {
-                    media.Release();
-                }
-#elif IOS
-
-#endif
-            }
-            else
-            {
-                Desc = $"{ext.TrimStart('.')}文件";
-            }
-        }
-
-        internal void Close()
-        {
-            if (ThumbStream != null)
-            {
-                ThumbStream.Close();
-                ThumbStream = null;
             }
         }
     }

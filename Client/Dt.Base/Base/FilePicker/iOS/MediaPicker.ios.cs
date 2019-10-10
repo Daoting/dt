@@ -9,11 +9,13 @@
 
 #region 引用命名
 using AVFoundation;
+using Dt.Core;
 using Foundation;
 using GMImagePicker;
 using Photos;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
 using UIKit;
@@ -69,12 +71,27 @@ namespace Dt.Base
             picker.FinishedPickingAssets -= FinishedPickingAssets;
             picker.Canceled -= OnPickerCanceled;
 
-            var options = new PHImageRequestOptions()
+            // synchronous: NO.异步。
+            // a.deliveryMode: Opportunistic: 会返回多张图片
+            //  1). ResizeMode.None: 先返回低清的缩略图，再返回原图大小
+            //  2). ResizeMode.Fast: 先返回低清的缩略图，再返回的原图会使用targetSize来最优解码图片，获得的图片大小可能比targetSize大
+            //  3). ResizeMode.Exact: 先返回低清的缩略图，再返回的原图会使用targetSize的高质量图
+
+            // b.deliveryMode: HighQualityFormat: 只会返回一张高清图片
+            //  1). ResizeMode.None: 返回的是原图大小
+            //  2). ResizeMode.Fast: 当原图是压缩图时，会使用targetSize来最优解码图片，获得的图片大小可能比targetSize大
+            //  3). ResizeMode.Exact: 解压和Fast一样，但是返回的是指定targetSize的高质量图
+
+            // c.deliveryMode: FastFormat: 只会返回一张图片，并且可能是低清图
+            //  1). ResizeMode.None: 返回一张低清图
+            //  2). ResizeMode.Fast: 返回一张低清图
+            //  3). ResizeMode.Exact: 返回一张低清图
+            var options = new PHImageRequestOptions
             {
                 NetworkAccessAllowed = true,
                 Synchronous = false,
-                ResizeMode = PHImageRequestOptionsResizeMode.Fast,
-                DeliveryMode = PHImageRequestOptionsDeliveryMode.HighQualityFormat
+                DeliveryMode = PHImageRequestOptionsDeliveryMode.HighQualityFormat,
+                ResizeMode = PHImageRequestOptionsResizeMode.Exact,
             };
 
             var tcs = new TaskCompletionSource<object>();
@@ -87,13 +104,39 @@ namespace Dt.Base
                 {
                     case PHAssetMediaType.Video:
                         // 未测
-                        PHImageManager.DefaultManager.RequestAvAsset(
+                        PHImageManager.DefaultManager.RequestImageForAsset(
                             asset,
-                            null,
-                            (avAsset, audioMix, vInfo) =>
+                            new SizeF(FileData.ThumbSize, FileData.ThumbSize),
+                            PHImageContentMode.AspectFit,
+                            options,
+                            async (img, info) =>
                             {
-                                if (avAsset is AVUrlAsset avUrl)
-                                    result.Add(ParseUrl(avUrl.Url));
+                                // 获取路径，麻烦
+                                TaskCompletionSource<NSUrl> tcsUrl = new TaskCompletionSource<NSUrl>();
+                                var vOptions = new PHVideoRequestOptions
+                                {
+                                    NetworkAccessAllowed = true,
+                                    Version = PHVideoRequestOptionsVersion.Original,
+                                    DeliveryMode = PHVideoRequestOptionsDeliveryMode.FastFormat,
+                                };
+                                PHImageManager.DefaultManager.RequestAvAsset(
+                                    asset,
+                                    vOptions,
+                                    (avAsset, audioMix, vInfo) =>
+                                    {
+                                        if (avAsset is AVUrlAsset avUrl)
+                                            tcsUrl.TrySetResult(avUrl.Url);
+                                        else
+                                            tcsUrl.TrySetResult(null);
+                                    });
+                                NSUrl url = await tcsUrl.Task;
+
+                                // 生成文件描述和缩略图
+                                var fd = ParseUrl(url);
+                                fd.Desc = $"{asset.PixelWidth} x {asset.PixelHeight} ({fd.Ext.TrimStart('.')})";
+                                fd.ThumbPath = Path.Combine(AtSys.DocPath, AtKit.NewID + "-t.jpg");
+                                img.AsJPEG().Save(fd.ThumbPath, true);
+                                result.Add(fd);
 
                                 if (args.Assets.Length == result.Count && !completed)
                                 {
@@ -104,17 +147,27 @@ namespace Dt.Base
 
                         break;
                     default:
-                        PHImageManager.DefaultManager.RequestImageData(
+                        PHImageManager.DefaultManager.RequestImageForAsset(
                             asset,
+                            new SizeF(FileData.ThumbSize, FileData.ThumbSize),
+                            PHImageContentMode.AspectFit,
                             options,
-                            (data, dataUti, orientation, info) =>
+                            async (img, info) =>
                             {
-                                if (info["PHImageFileURLKey"] is NSUrl url)
+                                // 获取路径，麻烦
+                                TaskCompletionSource<NSUrl> tcsUrl = new TaskCompletionSource<NSUrl>();
+                                asset.RequestContentEditingInput(new PHContentEditingInputRequestOptions(), (input, _) =>
                                 {
-                                    var fd = ParseUrl(url);
-                                    fd.Desc = $"{asset.PixelWidth} x {asset.PixelHeight} ({fd.Ext.TrimStart('.')})";
-                                    result.Add(fd);
-                                }
+                                    tcsUrl.TrySetResult(input.FullSizeImageUrl);
+                                });
+                                NSUrl url = await tcsUrl.Task;
+
+                                // 生成文件描述和缩略图
+                                var fd = ParseUrl(url);
+                                fd.Desc = $"{asset.PixelWidth} x {asset.PixelHeight} ({fd.Ext.TrimStart('.')})";
+                                fd.ThumbPath = Path.Combine(AtSys.DocPath, AtKit.NewID + "-t.jpg");
+                                img.AsJPEG().Save(fd.ThumbPath, true);
+                                result.Add(fd);
 
                                 if (args.Assets.Length == result.Count && !completed)
                                 {

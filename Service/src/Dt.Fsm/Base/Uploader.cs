@@ -159,7 +159,7 @@ namespace Dt.Fsm
             // 根据文件名获取两级目录
             string dir = GetDir(desc.Name);
             int pt = desc.Name.LastIndexOf('.');
-            string ext = pt > -1 ? desc.Name.Substring(pt) : "";
+            string ext = pt > -1 ? desc.Name.Substring(pt).ToLower() : "";
             desc.Path = Path.Combine(_volume, dir, desc.ID + ext).Replace('\\', '/');
             _result.Add(desc.Path);
             EnsurePathExist(dir);

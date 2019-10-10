@@ -88,12 +88,10 @@ namespace Dt.Base
                 bodyBuilder.AddFormDataPart(uf.File.Desc, uf.File.FileName, progress);
 
                 // 含缩略图
-                if (uf.File.ThumbStream != null)
+                if (!string.IsNullOrEmpty(uf.File.ThumbPath))
                 {
-                    uf.File.ThumbStream.Seek(0, SeekOrigin.Begin);
-                    byte[] data = new byte[uf.File.ThumbStream.Length];
-                    uf.File.ThumbStream.Read(data, 0, data.Length);
-                    var thumb = RequestBody.Create(MediaType.Parse("application/octet-stream"), data);
+                    var thumbFile = new Java.IO.File(uf.File.FilePath);
+                    var thumb = RequestBody.Create(MediaType.Parse("application/octet-stream"), thumbFile);
                     bodyBuilder.AddFormDataPart("thumbnail", "thumbnail.jpg", thumb);
                 }
             }

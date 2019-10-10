@@ -64,10 +64,10 @@ namespace Dt.Base
                     content.Add(streamContent, uf.File.Desc, uf.File.FileName);
 
                     // 含缩略图
-                    if (uf.File.ThumbStream != null)
+                    if (!string.IsNullOrEmpty(uf.File.ThumbPath))
                     {
-                        uf.File.ThumbStream.Seek(0, SeekOrigin.Begin);
-                        var thumb = new StreamContent(uf.File.ThumbStream);
+                        var sf = await StorageFile.GetFileFromPathAsync(uf.File.ThumbPath);
+                        var thumb = new StreamContent(await sf.OpenStreamForReadAsync());
                         content.Add(thumb, "thumbnail", "thumbnail.jpg");
                     }
                 }

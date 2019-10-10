@@ -12,14 +12,17 @@ using Android;
 using Android.App;
 using Android.Content;
 using Android.Content.PM;
+using Android.Graphics;
 using Android.OS;
 using Android.Provider;
 using Android.Runtime;
+using Dt.Core;
 using Java.IO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Base
@@ -142,7 +145,7 @@ namespace Dt.Base
         /// <param name="requestCode">request code used in StartActivityForResult()</param>
         /// <param name="resultCode">result code</param>
         /// <param name="data">intent data from file picking</param>
-        protected override void OnActivityResult(int requestCode, [GeneratedEnum] Result resultCode, Intent data)
+        protected override async void OnActivityResult(int requestCode, [GeneratedEnum] Result resultCode, Intent data)
         {
             base.OnActivityResult(requestCode, resultCode, data);
 
@@ -160,12 +163,8 @@ namespace Dt.Base
                 if (data.Data != null)
                 {
                     // 单选
-                    var uri = data.Data;
-                    var filePath = IOUtil.GetPath(_context, uri);
-                    if (string.IsNullOrEmpty(filePath))
-                        filePath = IOUtil.IsMediaStore(uri.Scheme) ? uri.ToString() : uri.Path;
-                    var fileName = GetFileName(_context, uri);
-                    ls.Add(new FileData(filePath, fileName, (ulong)new File(filePath).Length()));
+                    var fd = await GetFileData(data.Data);
+                    ls.Add(fd);
                 }
                 else if (data.ClipData != null)
                 {
@@ -173,10 +172,8 @@ namespace Dt.Base
                     for (int i = 0; i < data.ClipData.ItemCount; i++)
                     {
                         var uri = data.ClipData.GetItemAt(i).Uri;
-                        var filePath = IOUtil.GetPath(_context, uri);
-                        var fileName = GetFileName(_context, uri);
-
-                        ls.Add(new FileData(filePath, fileName, (ulong)new File(filePath).Length()));
+                        var fd = await GetFileData(uri);
+                        ls.Add(fd);
                     }
                 }
                 else
@@ -193,6 +190,65 @@ namespace Dt.Base
             {
                 Finish();
             }
+        }
+
+        async Task<FileData> GetFileData(Android.Net.Uri p_uri)
+        {
+            var filePath = IOUtil.GetPath(_context, p_uri);
+            if (string.IsNullOrEmpty(filePath))
+                filePath = IOUtil.IsMediaStore(p_uri.Scheme) ? p_uri.ToString() : p_uri.Path;
+            var fileName = GetFileName(_context, p_uri);
+
+            var fd = new FileData(filePath, fileName, (ulong)new File(filePath).Length());
+            string ext = fd.Ext;
+
+            // 生成文件描述和缩略图
+            if (FileFilter.UwpImage.Contains(ext))
+            {
+                //BitmapFactory.Options options = new BitmapFactory.Options();
+                //options.InJustDecodeBounds = true;
+                //Bitmap bitmap = BitmapFactory.DecodeFile(filePath, options);
+                //fd.Desc = $"{image.Width} x {image.Height} ({ext.TrimStart('.')})";
+            }
+            else if (FileFilter.UwpVideo.Contains(ext))
+            {
+                Android.Media.MediaMetadataRetriever media = new Android.Media.MediaMetadataRetriever();
+                try
+                {
+                    await media.SetDataSourceAsync(filePath);
+                    string dur = media.ExtractMetadata(Android.Media.MetadataKey.Duration);
+                    var bmp = media.GetFrameAtTime(1, Android.Media.Option.ClosestSync);
+                    fd.Desc = string.Format("{0:HH:mm:ss} ({1} x {2})", new DateTime(long.Parse(dur) * 10000), bmp.Width, bmp.Height);
+
+                    // 将帧输出到缩略图
+                    fd.ThumbPath = System.IO.Path.Combine(AtSys.DocPath, AtKit.NewID + "-t.jpg");
+                    using (var fs = System.IO.File.Create(fd.ThumbPath))
+                    {
+                        await bmp.CompressAsync(Android.Graphics.Bitmap.CompressFormat.Jpeg, 80, fs);
+                    }
+                }
+                catch { }
+                finally
+                {
+                    media.Release();
+                }
+            }
+            else if (FileFilter.UwpAudio.Contains(ext))
+            {
+                Android.Media.MediaMetadataRetriever media = new Android.Media.MediaMetadataRetriever();
+                try
+                {
+                    await media.SetDataSourceAsync(filePath);
+                    string dur = media.ExtractMetadata(Android.Media.MetadataKey.Duration);
+                    fd.Desc = string.Format("{0:mm:ss}", new DateTime(long.Parse(dur) * 10000));
+                }
+                catch { }
+                finally
+                {
+                    media.Release();
+                }
+            }
+            return fd;
         }
 
         /// <summary>

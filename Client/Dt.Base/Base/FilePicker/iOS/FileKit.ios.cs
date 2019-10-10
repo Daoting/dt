@@ -8,6 +8,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Core;
 using Foundation;
 using System;
 using System.Collections.Generic;
@@ -137,25 +138,21 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// iOS implementation of saving a picked file to the iOS "my documents" directory.
+        /// 将选择的文件保存到.doc目录
         /// </summary>
-        /// <param name="fileToSave">picked file data for file to save</param>
-        /// <returns>true when file was saved successfully, false when not</returns>
-        public static async Task<bool> SaveFile(FileData fileToSave)
+        /// <param name="p_file">待另存的文件信息</param>
+        /// <returns>文件完整路径</returns>
+        public static Task<string> SaveFile(FileData p_file)
         {
             try
             {
-                var documents = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                var fileName = Path.Combine(documents, fileToSave.FileName);
-
-                File.WriteAllBytes(fileName, await fileToSave.GetBytes());
-
-                return true;
+                var tempPath = Path.Combine(AtSys.DocPath, AtKit.NewID + p_file.Ext);
+                System.IO.File.Copy(p_file.FilePath, tempPath);
+                return Task.FromResult(tempPath);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Debug.WriteLine(ex.Message);
-                return false;
+                return Task.FromResult("");
             }
         }
 

@@ -437,6 +437,7 @@ namespace Dt.Base
                 AtKit.Warn("😢上传失败，请重新上传！");
                 foreach (var vf in p_vfs.Cast<FileItem>())
                 {
+                    vf.UploadFail();
                     _pnl.Children.Remove(vf);
                 }
                 ReadData(Data);

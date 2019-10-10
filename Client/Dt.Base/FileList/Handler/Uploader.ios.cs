@@ -64,6 +64,7 @@ namespace Dt.Base
         CancellationToken _cancelToken;
         TaskCompletionSource<List<string>> _result;
         NSMutableData _dataResponse;
+        string _tempFile;
 
         private Uploader()
         {
@@ -84,18 +85,23 @@ namespace Dt.Base
             _result = new TaskCompletionSource<List<string>>();
             _cancelToken.Register(() => _result.TrySetCanceled());
 
-            string path = await SaveToFile(p_uploadFiles);
+            _tempFile = await SaveToFile(p_uploadFiles);
 
             var request = new NSMutableUrlRequest(NSUrl.FromString($"{AtSys.Stub.ServerUrl.TrimEnd('/')}/fsm/.u"));
             request.HttpMethod = "POST";
             request["Content-Type"] = "multipart/form-data; boundary=" + _boundary;
 
-            var uploadTask = _session.CreateUploadTask(request, new NSUrl(path, false));
+            var uploadTask = _session.CreateUploadTask(request, new NSUrl(_tempFile, false));
             uploadTask.Resume();
 
             return await _result.Task.ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// 将所有要上传的文件按照 multipart/form-data 格式合并成一个文件，上传结束时删除
+        /// </summary>
+        /// <param name="p_uploadFiles"></param>
+        /// <returns></returns>
         Task<string> SaveToFile(List<IUploadFile> p_uploadFiles)
         {
             return Task.Run(() =>
@@ -120,16 +126,14 @@ namespace Dt.Base
                         fs.Write(line, 0, line.Length);
 
                         // 含缩略图
-                        if (uf.File.ThumbStream != null)
+                        if (!string.IsNullOrEmpty(uf.File.ThumbPath))
                         {
                             // section头
                             data = Encoding.UTF8.GetBytes(string.Format(_sectionHeader, _boundary, "thumbnail", "thumbnail.jpg"));
                             fs.Write(data, 0, data.Length);
 
                             // 内容
-                            uf.File.ThumbStream.Seek(0, SeekOrigin.Begin);
-                            data = new byte[uf.File.ThumbStream.Length];
-                            uf.File.ThumbStream.Read(data, 0, data.Length);
+                            data = File.ReadAllBytes(uf.File.ThumbPath);
                             fs.Write(data, 0, data.Length);
 
                             // 结束行
@@ -217,6 +221,16 @@ namespace Dt.Base
 
         public override void DidCompleteWithError(NSUrlSession session, NSUrlSessionTask task, NSError error)
         {
+            // 删除临时文件
+            if (File.Exists(_tempFile))
+            {
+                try
+                {
+                    File.Delete(_tempFile);
+                }
+                catch { }
+            }
+
             var resp = task.Response as NSHttpUrlResponse;
             if (error != null
                 || resp == null

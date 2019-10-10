@@ -496,7 +496,6 @@ namespace Dt.Base
         internal async Task InitUpload(FileData p_file, string p_date)
         {
             State = FileItemState.UploadWaiting;
-            await p_file.InitUpload();
             File = p_file;
 
             // 基础属性
@@ -550,8 +549,16 @@ namespace Dt.Base
                         await bmp.SetSourceAsync(stream);
                     }
                 }
-#else
-                if (p_file.ThumbStream == null)
+#elif ANDROID
+                if (!string.IsNullOrEmpty(p_file.ThumbPath))
+                {
+                    // 缩略图
+                    using (var stream = System.IO.File.OpenRead(p_file.ThumbPath))
+                    {
+                        await bmp.SetSourceAsync(stream);
+                    }
+                }
+                else
                 {
                     // 原始图
                     using (var stream = await p_file.GetStream())
@@ -559,12 +566,22 @@ namespace Dt.Base
                         await bmp.SetSourceAsync(stream);
                     }
                 }
-                else
+#elif IOS
+                if (!string.IsNullOrEmpty(p_file.ThumbPath))
                 {
                     // 缩略图
-                    var stream = p_file.ThumbStream;
-                    stream.Seek(0, SeekOrigin.Begin);
-                    await bmp.SetSourceAsync(stream);
+                    using (var stream = new FileStream(p_file.ThumbPath, FileMode.Open, FileAccess.Read))
+                    {
+                        await bmp.SetSourceAsync(stream);
+                    }
+                }
+                else
+                {
+                    // 原始图
+                    using (var stream = await p_file.GetStream())
+                    {
+                        await bmp.SetSourceAsync(stream);
+                    }
                 }
 #endif
                 Bitmap = bmp;
@@ -578,8 +595,6 @@ namespace Dt.Base
         /// <returns></returns>
         internal async Task UploadSuccess(string p_id)
         {
-            File.Close();
-
             // 更新时删除旧文件
             if (!string.IsNullOrEmpty(ID))
             {
@@ -633,6 +648,16 @@ namespace Dt.Base
                 catch { }
 #endif
             }
+
+            File = null;
+        }
+
+        /// <summary>
+        /// 上传失败
+        /// </summary>
+        internal void UploadFail()
+        {
+            File.DeleteThumbnail();
             File = null;
         }
         #endregion
@@ -783,8 +808,6 @@ namespace Dt.Base
                     Open();
                     break;
                 case FileItemState.UploadWaiting:
-                    Owner.RemoveChild(this);
-                    break;
                 case FileItemState.Uploading:
                     Owner.CancelTransfer();
                     break;

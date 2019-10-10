@@ -12,9 +12,11 @@ using Dt.Core;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
+using Windows.Storage.FileProperties;
 using Windows.Storage.Pickers;
 using Windows.System;
 #endregion
@@ -135,25 +137,25 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// Android implementation of saving a picked file to the external storage directory.
+        /// 将选择的文件保存到.doc目录
         /// </summary>
-        /// <param name="fileToSave">picked file data for file to save</param>
-        /// <returns>true when file was saved successfully, false when not</returns>
-        public static async Task<bool> SaveFile(FileData fileToSave)
+        /// <param name="p_file">待另存的文件信息</param>
+        /// <returns>文件完整路径</returns>
+        public static async Task<string> SaveFile(FileData p_file)
         {
             try
             {
-                var file = await ApplicationData.Current.LocalFolder.CreateFileAsync(
-                    fileToSave.FileName,
-                    CreationCollisionOption.ReplaceExisting);
-
-                await FileIO.WriteBytesAsync(file, await fileToSave.GetBytes());
-
-                return true;
+                var sf = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(p_file.FilePath);
+                var tempPath = Path.Combine(AtSys.DocPath, AtKit.NewID + p_file.Ext);
+                using (var fs = File.Create(tempPath))
+                {
+                    await (await sf.OpenStreamForReadAsync()).CopyToAsync(fs);
+                }
+                return tempPath;
             }
             catch (Exception)
             {
-                return false;
+                return null;
             }
         }
 
@@ -214,11 +216,9 @@ namespace Dt.Base
         static async Task<FileData> PickFile(FileOpenPicker p_picker)
         {
             var file = await p_picker.PickSingleFileAsync();
-            if (file == null)
-                return null;
-
-            string id = StorageApplicationPermissions.FutureAccessList.Add(file);
-            return new FileData(id, file.Name, (await file.GetBasicPropertiesAsync()).Size);
+            if (file != null)
+                return await GetFileData(file);
+            return null;
         }
 
         static async Task<List<FileData>> PickFiles(FileOpenPicker p_picker)
@@ -230,10 +230,48 @@ namespace Dt.Base
             List<FileData> ls = new List<FileData>();
             foreach (var file in files)
             {
-                string id = StorageApplicationPermissions.FutureAccessList.Add(file);
-                ls.Add(new FileData(id, file.Name, (await file.GetBasicPropertiesAsync()).Size));
+                ls.Add(await GetFileData(file));
             }
             return ls;
+        }
+
+        static async Task<FileData> GetFileData(StorageFile p_file)
+        {
+            string id = StorageApplicationPermissions.FutureAccessList.Add(p_file);
+            var fd = new FileData(id, p_file.Name, (await p_file.GetBasicPropertiesAsync()).Size);
+            string ext = fd.Ext;
+            bool isImg = FileFilter.UwpImage.Contains(ext);
+            bool isVideo = FileFilter.UwpVideo.Contains(ext);
+
+            // 详细描述
+            if (isImg)
+            {
+                var prop = await p_file.Properties.GetImagePropertiesAsync();
+                fd.Desc = $"{prop.Width} x {prop.Height} ({ext})";
+            }
+            else if (isVideo)
+            {
+                var prop = await p_file.Properties.GetVideoPropertiesAsync();
+                fd.Desc = string.Format("{0:HH:mm:ss} ({1} x {2})", new DateTime(prop.Duration.Ticks), prop.Width, prop.Height);
+            }
+            else if (FileFilter.UwpAudio.Contains(ext))
+            {
+                var prop = await p_file.Properties.GetMusicPropertiesAsync();
+                fd.Desc = string.Format("{0:mm:ss}", new DateTime(prop.Duration.Ticks));
+            }
+
+            // 生成缩略图
+            if (isImg || isVideo)
+            {
+                fd.ThumbPath = Path.Combine(AtSys.DocPath, AtKit.NewID + "-t.jpg");
+                using (var fs = File.Create(fd.ThumbPath))
+                {
+                    // 默认根据DPI调整缩略图大小
+                    var fl = await p_file.GetThumbnailAsync(ThumbnailMode.SingleItem, FileData.ThumbSize, ThumbnailOptions.ResizeThumbnail);
+                    await fl.AsStreamForRead().CopyToAsync(fs);
+                }
+            }
+            return fd;
         }
 
         static FileOpenPicker CreatePicker(PickerLocationId p_locationstring, string[] p_allowedTypes)
