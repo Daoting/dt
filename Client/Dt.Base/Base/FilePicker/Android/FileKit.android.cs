@@ -28,8 +28,7 @@ namespace Dt.Base
     [Preserve(AllMembers = true)]
     public static class FileKit
     {
-        static int _requestId;
-        static TaskCompletionSource<List<FileData>> _completionSource;
+        static TaskCompletionSource<List<FileData>> _tcs;
 
         /// <summary>
         /// 选择单个图片
@@ -132,14 +131,10 @@ namespace Dt.Base
 
         static Task<List<FileData>> PickFiles(bool p_allowMultiple, string[] p_allowedTypes)
         {
-            int id = GetRequestId();
-            var ntcs = new TaskCompletionSource<List<FileData>>(id);
-
-            var previousTcs = Interlocked.Exchange(ref _completionSource, ntcs);
+            var ntcs = new TaskCompletionSource<List<FileData>>();
+            var previousTcs = Interlocked.Exchange(ref _tcs, ntcs);
             if (previousTcs != null)
-            {
                 previousTcs.TrySetResult(null);
-            }
 
             try
             {
@@ -155,7 +150,7 @@ namespace Dt.Base
                 EventHandler<List<FileData>> handler = null;
                 handler = (s, e) =>
                 {
-                    var tcs = Interlocked.Exchange(ref _completionSource, null);
+                    var tcs = Interlocked.Exchange(ref _tcs, null);
                     FilePickerActivity.FilePicked -= handler;
                     tcs?.SetResult(e);
                 };
@@ -164,10 +159,10 @@ namespace Dt.Base
             catch (Exception ex)
             {
                 Debug.Write(ex);
-                _completionSource.SetException(ex);
+                _tcs.SetException(ex);
             }
 
-            return _completionSource.Task;
+            return _tcs.Task;
         }
 
         /// <summary>
@@ -233,26 +228,6 @@ namespace Dt.Base
             }
 
             OpenFile(myFile);
-        }
-
-        /// <summary>
-        /// Returns a new request ID for a new call to PickFile()
-        /// </summary>
-        /// <returns>new request ID</returns>
-        static int GetRequestId()
-        {
-            int id = _requestId;
-
-            if (_requestId == int.MaxValue)
-            {
-                _requestId = 0;
-            }
-            else
-            {
-                _requestId++;
-            }
-
-            return id;
         }
     }
 }

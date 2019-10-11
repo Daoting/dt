@@ -13,6 +13,7 @@ using Android.App;
 using Android.Content;
 using Android.Content.PM;
 using Android.Graphics;
+using Android.Media;
 using Android.OS;
 using Android.Provider;
 using Android.Runtime;
@@ -205,10 +206,28 @@ namespace Dt.Base
             // 生成文件描述和缩略图
             if (FileFilter.UwpImage.Contains(ext))
             {
-                //BitmapFactory.Options options = new BitmapFactory.Options();
-                //options.InJustDecodeBounds = true;
-                //Bitmap bitmap = BitmapFactory.DecodeFile(filePath, options);
-                //fd.Desc = $"{image.Width} x {image.Height} ({ext.TrimStart('.')})";
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                // 只解析图片大小，不加载内容
+                options.InJustDecodeBounds = true;
+                BitmapFactory.DecodeFile(filePath, options);
+                fd.Desc = $"{options.OutWidth} x {options.OutHeight} ({ext.TrimStart('.')})";
+
+                int maxSize = Math.Max(options.OutWidth, options.OutHeight);
+                if (maxSize > FileData.ThumbSize)
+                {
+                    // 直接按缩放比例加载
+                    options.InJustDecodeBounds = false;
+                    options.InSampleSize = maxSize / FileData.ThumbSize;
+                    options.InPurgeable = true;
+                    Bitmap bmp = BitmapFactory.DecodeFile(filePath, options);
+
+                    fd.ThumbPath = System.IO.Path.Combine(AtSys.DocPath, AtKit.NewID + "-t.jpg");
+                    using (var fs = System.IO.File.Create(fd.ThumbPath))
+                    {
+                        await bmp.CompressAsync(Android.Graphics.Bitmap.CompressFormat.Jpeg, 100, fs);
+                    }
+                    bmp.Recycle();
+                }
             }
             else if (FileFilter.UwpVideo.Contains(ext))
             {
@@ -217,21 +236,24 @@ namespace Dt.Base
                 {
                     await media.SetDataSourceAsync(filePath);
                     string dur = media.ExtractMetadata(Android.Media.MetadataKey.Duration);
-                    var bmp = media.GetFrameAtTime(1, Android.Media.Option.ClosestSync);
-                    fd.Desc = string.Format("{0:HH:mm:ss} ({1} x {2})", new DateTime(long.Parse(dur) * 10000), bmp.Width, bmp.Height);
-
-                    // 将帧输出到缩略图
-                    fd.ThumbPath = System.IO.Path.Combine(AtSys.DocPath, AtKit.NewID + "-t.jpg");
-                    using (var fs = System.IO.File.Create(fd.ThumbPath))
-                    {
-                        await bmp.CompressAsync(Android.Graphics.Bitmap.CompressFormat.Jpeg, 80, fs);
-                    }
+                    string width = media.ExtractMetadata(Android.Media.MetadataKey.VideoWidth);
+                    string height = media.ExtractMetadata(Android.Media.MetadataKey.VideoHeight);
+                    fd.Desc = string.Format("{0:HH:mm:ss} ({1} x {2})", new DateTime(long.Parse(dur) * 10000), width, height);
                 }
                 catch { }
                 finally
                 {
                     media.Release();
                 }
+
+                // 帧缩略图
+                var bmp = await ThumbnailUtils.CreateVideoThumbnailAsync(filePath, ThumbnailKind.MiniKind);
+                fd.ThumbPath = System.IO.Path.Combine(AtSys.DocPath, AtKit.NewID + "-t.jpg");
+                using (var fs = System.IO.File.Create(fd.ThumbPath))
+                {
+                    await bmp.CompressAsync(Android.Graphics.Bitmap.CompressFormat.Jpeg, 100, fs);
+                }
+                bmp.Recycle();
             }
             else if (FileFilter.UwpAudio.Contains(ext))
             {

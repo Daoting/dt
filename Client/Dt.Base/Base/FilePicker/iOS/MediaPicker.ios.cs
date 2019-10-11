@@ -165,8 +165,11 @@ namespace Dt.Base
                                 // 生成文件描述和缩略图
                                 var fd = ParseUrl(url);
                                 fd.Desc = $"{asset.PixelWidth} x {asset.PixelHeight} ({fd.Ext.TrimStart('.')})";
-                                fd.ThumbPath = Path.Combine(AtSys.DocPath, AtKit.NewID + "-t.jpg");
-                                img.AsJPEG().Save(fd.ThumbPath, true);
+                                if (asset.PixelWidth > FileData.ThumbSize || asset.PixelHeight > FileData.ThumbSize)
+                                {
+                                    fd.ThumbPath = Path.Combine(AtSys.DocPath, AtKit.NewID + "-t.jpg");
+                                    img.AsJPEG().Save(fd.ThumbPath, true);
+                                }
                                 result.Add(fd);
 
                                 if (args.Assets.Length == result.Count && !completed)

@@ -116,7 +116,7 @@
                 </StackPanel>
             </ToolTipService.ToolTip>
             <TextBlock Text="图片" Foreground="{StaticResource 深灰边框}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <Image x:Name="Image" Source="{TemplateBinding Bitmap}" MaxHeight="160" MaxWidth="160" Stretch="UniformToFill"/>
+            <Image x:Name="Image" Source="{TemplateBinding Bitmap}" MaxHeight="180" MaxWidth="180" Stretch="Uniform"/>
             <!--上传下载状态-->
             <Grid x:Name="ProgressGrid" Visibility="Collapsed" Background="{StaticResource 深暗遮罩}">
                 <Rectangle x:Name="ProgressRect" Width="{TemplateBinding ProgressWidth}" Height="4" Fill="Red" StrokeThickness="0" HorizontalAlignment="Left" VerticalAlignment="Top" IsHitTestVisible="False"/>
@@ -163,7 +163,7 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Text="&#xE767;" Margin="0,0,10,0" FontSize="30" VerticalAlignment="Center"/>
+                <TextBlock Text="&#xE078;" Margin="0,0,10,0" FontFamily="{StaticResource IconFont}" FontSize="30" VerticalAlignment="Center"/>
                 <Grid Grid.Column="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -248,10 +248,10 @@
                 </StackPanel>
             </ToolTipService.ToolTip>
             <TextBlock Text="视频" Foreground="{StaticResource 深灰边框}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <Image x:Name="Image" Source="{TemplateBinding Bitmap}" Stretch="None"/>
+            <Image x:Name="Image" Source="{TemplateBinding Bitmap}" MaxHeight="180" MaxWidth="180" Stretch="Uniform"/>
             <Grid Width="60" Height="60" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Ellipse Stroke="White" StrokeThickness="2" IsHitTestVisible="False" />
-                <TextBlock Text="&#xE102;" Foreground="White" FontFamily="Segoe UI Symbol" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                <TextBlock Text="&#xE045;" Foreground="White" FontFamily="{StaticResource IconFont}" FontSize="30" HorizontalAlignment="Center" VerticalAlignment="Center" />
             </Grid>
             <ContentPresenter Content="{TemplateBinding MediaPlayer}" />
             <!--上传下载状态-->

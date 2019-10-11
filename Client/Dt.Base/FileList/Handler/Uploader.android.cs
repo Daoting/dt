@@ -90,7 +90,7 @@ namespace Dt.Base
                 // 含缩略图
                 if (!string.IsNullOrEmpty(uf.File.ThumbPath))
                 {
-                    var thumbFile = new Java.IO.File(uf.File.FilePath);
+                    var thumbFile = new Java.IO.File(uf.File.ThumbPath);
                     var thumb = RequestBody.Create(MediaType.Parse("application/octet-stream"), thumbFile);
                     bodyBuilder.AddFormDataPart("thumbnail", "thumbnail.jpg", thumb);
                 }

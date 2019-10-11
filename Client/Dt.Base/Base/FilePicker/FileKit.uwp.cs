@@ -240,19 +240,20 @@ namespace Dt.Base
             string id = StorageApplicationPermissions.FutureAccessList.Add(p_file);
             var fd = new FileData(id, p_file.Name, (await p_file.GetBasicPropertiesAsync()).Size);
             string ext = fd.Ext;
-            bool isImg = FileFilter.UwpImage.Contains(ext);
-            bool isVideo = FileFilter.UwpVideo.Contains(ext);
+            bool existThumb = false;
 
             // 详细描述
-            if (isImg)
+            if (FileFilter.UwpImage.Contains(ext))
             {
                 var prop = await p_file.Properties.GetImagePropertiesAsync();
                 fd.Desc = $"{prop.Width} x {prop.Height} ({ext})";
+                existThumb = (prop.Width > FileData.ThumbSize || prop.Height > FileData.ThumbSize);
             }
-            else if (isVideo)
+            else if (FileFilter.UwpVideo.Contains(ext))
             {
                 var prop = await p_file.Properties.GetVideoPropertiesAsync();
                 fd.Desc = string.Format("{0:HH:mm:ss} ({1} x {2})", new DateTime(prop.Duration.Ticks), prop.Width, prop.Height);
+                existThumb = true;
             }
             else if (FileFilter.UwpAudio.Contains(ext))
             {
@@ -261,7 +262,7 @@ namespace Dt.Base
             }
 
             // 生成缩略图
-            if (isImg || isVideo)
+            if (existThumb)
             {
                 fd.ThumbPath = Path.Combine(AtSys.DocPath, AtKit.NewID + "-t.jpg");
                 using (var fs = File.Create(fd.ThumbPath))
