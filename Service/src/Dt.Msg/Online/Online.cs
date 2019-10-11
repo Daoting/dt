@@ -51,13 +51,13 @@ namespace Dt.Msg
             if (busPush.Count > 0)
             {
                 // 推送结果的前缀键
-                string prefixKey = Guid.NewGuid().ToString().Substring(0, 4);
+                string prefixKey = Guid.NewGuid().ToString().Substring(0, 6);
                 // 通知所有副本推送
                 Glb.GetSvc<RemoteEventBus>().Multicast(new OnlinePushEvent { PrefixKey = prefixKey, Receivers = busPush, Msg = onlineMsg }, Glb.SvcName);
 
                 // 收集未在线推送的
                 // 等待推送完毕，时间？
-                await Task.Delay(200);
+                await Task.Delay(500);
                 StringCache cache = new StringCache(prefixKey);
                 foreach (long id in busPush)
                 {

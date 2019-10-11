@@ -39,6 +39,7 @@ namespace Dt.Msg
                     if (Online.All.TryGetValue(id, out var ci))
                     {
                         ci.AddMsg(p_event.Msg);
+                        // 设置处理标志： 6位id前缀:userid = true
                         await cache.Set(id.ToString(), true);
                     }
                 }
