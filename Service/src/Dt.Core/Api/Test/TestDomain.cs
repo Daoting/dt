@@ -16,46 +16,9 @@ namespace Dt.Core
     /// <summary>
     /// 功能测试Api
     /// </summary>
-    [Api(true, "功能测试", AgentMode.Generic)]
+    [Api(GroupName = "功能测试", AgentMode = AgentMode.Generic)]
     public class TestDomain : BaseApi
     {
-        [Transaction(false)]
-        public virtual Task<string> NoTrans()
-        {
-            return GetSql();
-        }
 
-        /// <summary>
-        /// 不拦截内嵌方法
-        /// </summary>
-        /// <returns></returns>
-        public virtual Task<string> CallInline()
-        {
-            return GetSql();
-        }
-
-        /// <summary>
-        /// 外层不拦截，拦截内嵌方法
-        /// </summary>
-        /// <returns></returns>
-        public Task<string> NotIntercept()
-        {
-            return GetSql();
-        }
-
-        /// <summary>
-        /// 调用过程异常
-        /// </summary>
-        /// <returns></returns>
-        public virtual async Task ThrowException()
-        {
-            string sql = await GetSql();
-            throw new Exception("普通异常");
-        }
-
-        public virtual Task<string> GetSql()
-        {
-            return _c.Db.Scalar<string>($"select `sql` from {Glb.SvcName}_sql");
-        }
     }
 }

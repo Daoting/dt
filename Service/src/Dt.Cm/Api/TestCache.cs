@@ -18,7 +18,7 @@ namespace Dt.Cm
     /// <summary>
     /// 功能测试Api
     /// </summary>
-    [Api(true, "功能测试", AgentMode.Generic)]
+    [Api(GroupName = "功能测试", AgentMode = AgentMode.Generic)]
     public class TestCache : BaseApi
     {
         public async Task<string> CacheStr(string p_key, string p_val)

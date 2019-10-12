@@ -19,31 +19,32 @@ namespace Dt.Core.Rpc
     /// </summary>
     public class ServerStreamHandler : RpcHandler
     {
-        public ServerStreamHandler(LobContext p_lc)
-            : base(p_lc)
+        public ServerStreamHandler(LobContext p_c)
+            : base(p_c)
         { }
 
         /// <summary>
         /// 调用服务方法
         /// </summary>
         /// <returns></returns>
-        protected override Task CallMethod()
+        protected override async Task<bool> CallMethod()
         {
             try
             {
                 // 补充参数
                 List<object> objs = new List<object>();
-                if (_lc.Args != null && _lc.Args.Length > 0)
-                    objs.AddRange(_lc.Args);
-                objs.Add(new ResponseWriter(_lc));
+                if (_c.Args != null && _c.Args.Length > 0)
+                    objs.AddRange(_c.Args);
+                objs.Add(new ResponseWriter(_c));
 
-                return (Task)_lc.Api.Method.Invoke(_tgt, objs.ToArray());
+                await (Task)_c.Api.Method.Invoke(_tgt, objs.ToArray());
             }
             catch (Exception ex)
             {
                 LogCallError(ex);
+                return false;
             }
-            return Task.CompletedTask;
+            return true;
         }
     }
 }

@@ -21,7 +21,7 @@ namespace Dt.Core
     /// <summary>
     /// 所有服务的公共Api
     /// </summary>
-    [Api(false, null, AgentMode.Custom)]
+    [Api(AgentMode = AgentMode.Custom)]
     public class Mix : BaseApi
     {
         /*

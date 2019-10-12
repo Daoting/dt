@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Dt.Core;
+using Dt.Core.Caches;
 using Dt.Core.Sqlite;
 using System;
 using System.Text.RegularExpressions;
@@ -23,6 +24,8 @@ namespace Dt.Cm
     [Auth(true)]
     public class Entry : BaseApi
     {
+        const string _prefixCode = "vercode";
+
         /// <summary>
         /// 获取参数配置，包括模型文件版本号、服务器时间
         /// </summary>
@@ -71,15 +74,13 @@ namespace Dt.Cm
                 return res;
             }
 
-            //int code, verCode;
-            //if (!int.TryParse(p_code, out code)
-            //    || !_verCode.TryGetValue(p_phone, out verCode)
-            //    || code != verCode)
-            //{
-            //    res["valid"] = false;
-            //    res["error"] = "验证码错误！";
-            //    return res;
-            //}
+            string code = await Cache.StringGet<string>(_prefixCode, p_phone);
+            if (code != p_code)
+            {
+                res["valid"] = false;
+                res["error"] = "验证码错误！";
+                return res;
+            }
 
             //User user = await Users.GetUserByPhone(p_phone);
             //if (user == null)
@@ -122,10 +123,13 @@ namespace Dt.Cm
             if (string.IsNullOrWhiteSpace(p_phone) || !Regex.IsMatch(p_phone, "^1[34578]\\d{9}$"))
                 return string.Empty;
 
-            int cnt = new Random().Next(1000, 9999);
+            string code = new Random().Next(1000, 9999).ToString();
+            // 60秒失效
+            Cache.StringSet(_prefixCode, p_phone, code, TimeSpan.FromSeconds(60));
 
             // 发送短信
-            return cnt.ToString();
+
+            return code;
         }
     }
 }

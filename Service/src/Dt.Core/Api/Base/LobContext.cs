@@ -34,7 +34,6 @@ namespace Dt.Core
         ILogger _logger;
         Db _defaultDb;
         Dictionary<string, Db> _dbs;
-        bool _intercepted;
         #endregion
 
         #region 构造方法
@@ -72,23 +71,6 @@ namespace Dt.Core
         public long UserID { get; } = -1;
 
         /// <summary>
-        /// 获取mysql默认库
-        /// </summary>
-        public Db Db
-        {
-            get
-            {
-                if (_defaultDb == null)
-                {
-                    _defaultDb = new Db(false);
-                    if (Api.IsTransactional)
-                        _defaultDb.BeginTrans().Wait();
-                }
-                return _defaultDb;
-            }
-        }
-
-        /// <summary>
         /// 日志对象
         /// </summary>
         public ILogger Log
@@ -118,6 +100,13 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 当前为匿名用户
+        /// </summary>
+        public bool IsAnonymous => UserID == -1;
+        #endregion
+
+        #region Api
+        /// <summary>
         /// 当前Api方法
         /// </summary>
         public ApiMethod Api { get; private set; }
@@ -128,19 +117,29 @@ namespace Dt.Core
         public string ApiName { get; private set; }
 
         /// <summary>
-        /// 当前拦截状态
+        /// Api方法参数
         /// </summary>
-        public InterceptStatus Status { get; private set; }
-
-        /// <summary>
-        /// 当前为匿名用户
-        /// </summary>
-        public bool IsAnonymous => UserID == -1;
-
         internal object[] Args { get; private set; }
         #endregion
 
-        #region 外部方法
+        #region Db
+        /// <summary>
+        /// 获取mysql默认库，根据方法的 Transaction 标签确定是否自动启动事务，整个Api调用结束后提交或回滚事务、关闭数据库连接
+        /// </summary>
+        public Db Db
+        {
+            get
+            {
+                if (_defaultDb == null)
+                {
+                    _defaultDb = new Db(false);
+                    if (Api.IsTransactional)
+                        _defaultDb.BeginTrans().Wait();
+                }
+                return _defaultDb;
+            }
+        }
+
         /// <summary>
         /// 根据键名获取Db对象
         /// </summary>
@@ -164,47 +163,7 @@ namespace Dt.Core
         }
         #endregion
 
-        #region 内部方法
-        /// <summary>
-        /// 是否已被拦截过，确保只拦截一次
-        /// </summary>
-        /// <returns></returns>
-        internal bool IsIntercepted()
-        {
-            if (_intercepted)
-                return true;
-
-            _intercepted = true;
-            return false;
-        }
-
-        /// <summary>
-        /// 拦截结束，提交或回滚事务、关闭数据库连接
-        /// </summary>
-        /// <param name="p_suc"></param>
-        /// <returns></returns>
-        internal async Task Complete(bool p_suc)
-        {
-            if (Status != InterceptStatus.Intercepting)
-                return;
-
-            Status = p_suc ? InterceptStatus.Successful : InterceptStatus.Failed;
-            if (_defaultDb != null)
-            {
-                await _defaultDb.Close(p_suc);
-                _defaultDb = null;
-            }
-
-            if (_dbs != null && _dbs.Count > 0)
-            {
-                foreach (var db in _dbs.Values)
-                {
-                    await db.Close(p_suc);
-                }
-                _dbs.Clear();
-            }
-        }
-
+        #region Rpc
         /// <summary>
         /// 处理http rpc请求
         /// </summary>
@@ -238,21 +197,24 @@ namespace Dt.Core
             if (Api.CallMode != ApiCallMode.Unary)
                 await RpcServerKit.WriteHeartbeat(Context.Response.BodyWriter);
 
+            bool isSuc = true;
             switch (Api.CallMode)
             {
                 case ApiCallMode.Unary:
-                    await new UnaryHandler(this).Call();
+                    isSuc = await new UnaryHandler(this).Call();
                     break;
                 case ApiCallMode.ServerStream:
-                    await new ServerStreamHandler(this).Call();
+                    isSuc = await new ServerStreamHandler(this).Call();
                     break;
                 case ApiCallMode.ClientStream:
-                    await new ClientStreamHandler(this).Call();
+                    isSuc = await new ClientStreamHandler(this).Call();
                     break;
                 case ApiCallMode.DuplexStream:
-                    await new DuplexStreamHandler(this).Call();
+                    isSuc = await new DuplexStreamHandler(this).Call();
                     break;
             }
+            // Api调用结束后释放资源
+            await Close(isSuc);
         }
 
         /// <summary>
@@ -374,27 +336,29 @@ namespace Dt.Core
             }
             return false;
         }
+
+        /// <summary>
+        /// Api调用结束后释放资源，提交或回滚事务、关闭数据库连接
+        /// </summary>
+        /// <param name="p_suc"></param>
+        /// <returns></returns>
+        async Task Close(bool p_suc)
+        {
+            if (_defaultDb != null)
+            {
+                await _defaultDb.Close(p_suc);
+                _defaultDb = null;
+            }
+
+            if (_dbs != null && _dbs.Count > 0)
+            {
+                foreach (var db in _dbs.Values)
+                {
+                    await db.Close(p_suc);
+                }
+                _dbs.Clear();
+            }
+        }
         #endregion
-    }
-
-    /// <summary>
-    /// 拦截状态
-    /// </summary>
-    public enum InterceptStatus
-    {
-        /// <summary>
-        /// 拦截中
-        /// </summary>
-        Intercepting,
-
-        /// <summary>
-        /// 成功
-        /// </summary>
-        Successful,
-
-        /// <summary>
-        /// 过程中异常
-        /// </summary>
-        Failed
     }
 }

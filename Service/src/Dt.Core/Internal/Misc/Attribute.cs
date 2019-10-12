@@ -21,32 +21,24 @@ namespace Dt.Core
     public class ApiAttribute : Attribute
     {
         /// <summary>
-        /// 
+        /// 所属分组名称
         /// </summary>
-        /// <param name="p_isTransactional">是否为每个方法启动事务，默认false</param>
-        /// <param name="p_group">所属分组</param>
-        /// <param name="p_agentMode">生成代理代码的模式，默认固定服务名模式</param>
-        public ApiAttribute(bool p_isTransactional = false, string p_group = null, AgentMode p_agentMode = AgentMode.Default)
-        {
-            IsTransactional = p_isTransactional;
-            Group = p_group;
-            AgentMode = p_agentMode;
-        }
-
-        /// <summary>
-        /// 所属分组
-        /// </summary>
-        public string Group { get; }
+        public string GroupName { get; set; }
 
         /// <summary>
         /// 生成代理代码的模式
         /// </summary>
-        public AgentMode AgentMode { get; }
+        public AgentMode AgentMode { get; set; }
 
         /// <summary>
         /// 是否为每个方法启动事务，默认false
         /// </summary>
-        public bool IsTransactional { get; }
+        public bool IsTransactional { get; set; } = false;
+
+        /// <summary>
+        /// 拦截器类型数组
+        /// </summary>
+        public Type[] Interceptors { get; set; }
     }
 
     /// <summary>

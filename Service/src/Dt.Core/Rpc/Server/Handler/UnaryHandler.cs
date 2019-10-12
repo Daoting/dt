@@ -19,17 +19,18 @@ namespace Dt.Core.Rpc
     /// </summary>
     public class UnaryHandler : RpcHandler
     {
-        public UnaryHandler(LobContext p_lc)
-            :base(p_lc)
+        public UnaryHandler(LobContext p_c)
+            : base(p_c)
         { }
 
         /// <summary>
         /// 调用服务方法
         /// </summary>
         /// <returns></returns>
-        protected override async Task CallMethod()
+        protected override async Task<bool> CallMethod()
         {
             object result = null;
+            bool isSuc = true;
             ApiResponseType responseType = ApiResponseType.Success;
             string error = null;
 
@@ -38,27 +39,28 @@ namespace Dt.Core.Rpc
             stopwatch.Start();
             try
             {
-                var mi = _lc.Api.Method;
+                var mi = _c.Api.Method;
                 if (mi.ReturnType == typeof(Task))
                 {
                     // 异步无返回值时
-                    await (Task)mi.Invoke(_tgt, _lc.Args);
+                    await (Task)mi.Invoke(_tgt, _c.Args);
                 }
                 else if (typeof(Task).IsAssignableFrom(mi.ReturnType))
                 {
                     // 异步有返回值
-                    var task = (Task)mi.Invoke(_tgt, _lc.Args);
+                    var task = (Task)mi.Invoke(_tgt, _c.Args);
                     await task;
                     result = task.GetType().GetProperty("Result").GetValue(task);
                 }
                 else
                 {
                     // 调用同步方法
-                    result = mi.Invoke(_tgt, _lc.Args);
+                    result = mi.Invoke(_tgt, _c.Args);
                 }
             }
             catch (Exception ex)
             {
+                isSuc = false;
                 // 将异常记录日志
                 RpcException rpcEx = ex.InnerException as RpcException;
                 if (rpcEx != null)
@@ -71,11 +73,11 @@ namespace Dt.Core.Rpc
                 {
                     // 程序执行过程的错误
                     responseType = ApiResponseType.Error;
-                    error = $"调用{_lc.ApiName}出错";
+                    error = $"调用{_c.ApiName}出错";
                     if (ex.InnerException != null && !string.IsNullOrEmpty(ex.InnerException.Message))
-                        _lc.Log.Error(ex.InnerException, error);
+                        _c.Log.Error(ex.InnerException, error);
                     else
-                        _lc.Log.Error(ex, error);
+                        _c.Log.Error(ex, error);
                 }
             }
             finally
@@ -84,9 +86,10 @@ namespace Dt.Core.Rpc
             }
 
             if (TraceRpc)
-                _lc.Log.Information($"{_lc.ApiName} — {stopwatch.ElapsedMilliseconds}ms");
+                _c.Log.Information($"{_c.ApiName} — {stopwatch.ElapsedMilliseconds}ms");
 
-            await _lc.Response(responseType, stopwatch.ElapsedMilliseconds, error == null ? result : error);
+            await _c.Response(responseType, stopwatch.ElapsedMilliseconds, error == null ? result : error);
+            return isSuc;
         }
     }
 }

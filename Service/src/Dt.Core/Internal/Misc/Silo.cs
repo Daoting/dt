@@ -289,9 +289,6 @@ namespace Dt.Core
             var builder = new ContainerBuilder();
             builder.Populate(p_services);
 
-            // 内置拦截
-            builder.RegisterType(typeof(LobInterceptor));
-
             //// 提取有用类型，程序集包括Dt.Core、微服务、插件(以.Addin.dll结尾)
             //List<Assembly> asms = new List<Assembly> { Glb.Stub.GetType().Assembly, typeof(Silo).Assembly };
             //asms.AddRange(Directory
@@ -365,7 +362,7 @@ namespace Dt.Core
             List<string> grpMethods = null;
             if (p_apiAttr != null)
             {
-                string grpName = string.IsNullOrEmpty(p_apiAttr.Group) ? "基础API" : p_apiAttr.Group;
+                string grpName = string.IsNullOrEmpty(p_apiAttr.GroupName) ? "基础API" : p_apiAttr.GroupName;
                 if (GroupMethods.TryGetValue(grpName, out List<string> ls))
                 {
                     grpMethods = ls;
@@ -423,12 +420,24 @@ namespace Dt.Core
                     grpMethods.Add(name);
             }
 
-            // 注册服务，添加拦截
-            var b = p_builder
-                .RegisterType(p_type)
-                .InstancePerDependency()
-                .EnableClassInterceptors()
-                .InterceptedBy(typeof(LobInterceptor));
+            if (p_apiAttr != null
+                && p_apiAttr.Interceptors != null
+                && p_apiAttr.Interceptors.Length > 0)
+            {
+                // 将拦截器添加到容器
+                p_builder.RegisterTypes(p_apiAttr.Interceptors);
+                // 注册服务，添加拦截
+                p_builder
+                    .RegisterType(p_type)
+                    .InstancePerDependency()
+                    .EnableClassInterceptors()
+                    .InterceptedBy(p_apiAttr.Interceptors);
+            }
+            else
+            {
+                // 注册服务
+                p_builder.RegisterType(p_type);
+            }
         }
 
         /// <summary>

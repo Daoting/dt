@@ -27,7 +27,7 @@ namespace Dt.Cm
     /// <summary>
     /// 系统管理Api
     /// </summary>
-    [Api(false, "系统工具")]
+    [Api(GroupName = "系统工具")]
     public class SysMgr : BaseApi
     {
         /// <summary>

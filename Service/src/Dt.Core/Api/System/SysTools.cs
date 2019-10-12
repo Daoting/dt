@@ -20,7 +20,7 @@ namespace Dt.Core
     /// <summary>
     /// 所有服务内部使用的工具Api
     /// </summary>
-    [Api(false, "系统工具", AgentMode.Generic)]
+    [Api(GroupName = "系统工具", AgentMode = AgentMode.Generic)]
     public class SysTools : BaseApi
     {
         /// <summary>

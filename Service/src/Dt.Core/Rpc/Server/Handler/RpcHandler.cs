@@ -22,30 +22,30 @@ namespace Dt.Core.Rpc
         // 是否输出所有调用的Api名称
         internal static bool TraceRpc;
 
-        protected readonly LobContext _lc;
+        protected readonly LobContext _c;
         protected BaseApi _tgt;
         #endregion
 
-        public RpcHandler(LobContext p_lc)
+        public RpcHandler(LobContext p_c)
         {
-            _lc = p_lc;
+            _c = p_c;
         }
 
         /// <summary>
         /// 执行Http Rpc调用
         /// </summary>
         /// <returns></returns>
-        public Task Call()
+        public Task<bool> Call()
         {
             // 创建服务实例
-            _tgt = Glb.GetSvc(_lc.Api.Method.DeclaringType) as BaseApi;
+            _tgt = Glb.GetSvc(_c.Api.Method.DeclaringType) as BaseApi;
             if (_tgt == null)
             {
-                var msg = $"类型{_lc.Api.Method.DeclaringType.Name}未继承BaseApi！";
-                _lc.Log.Warning(msg);
-                return _lc.Response(ApiResponseType.Error, 0, msg);
+                var msg = $"类型{_c.Api.Method.DeclaringType.Name}未继承BaseApi！";
+                _c.Log.Warning(msg);
+                _ = _c.Response(ApiResponseType.Error, 0, msg);
+                return Task.FromResult(false);
             }
-
             return CallMethod();
         }
 
@@ -53,7 +53,7 @@ namespace Dt.Core.Rpc
         /// 调用服务方法
         /// </summary>
         /// <returns></returns>
-        protected abstract Task CallMethod();
+        protected abstract Task<bool> CallMethod();
 
         /// <summary>
         /// 记录调用过程的错误日志
@@ -61,11 +61,11 @@ namespace Dt.Core.Rpc
         /// <param name="p_ex"></param>
         protected void LogCallError(Exception p_ex)
         {
-            string error = $"调用{_lc.ApiName}出错";
+            string error = $"调用{_c.ApiName}出错";
             if (p_ex.InnerException != null && !string.IsNullOrEmpty(p_ex.InnerException.Message))
-                _lc.Log.Error(p_ex.InnerException, error);
+                _c.Log.Error(p_ex.InnerException, error);
             else
-                _lc.Log.Error(p_ex, error);
+                _c.Log.Error(p_ex, error);
         }
     }
 }

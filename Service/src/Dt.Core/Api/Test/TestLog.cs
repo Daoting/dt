@@ -15,7 +15,7 @@ namespace Dt.Core
     /// <summary>
     /// 功能测试Api
     /// </summary>
-    [Api(false, "功能测试", AgentMode.Generic)]
+    [Api(GroupName = "功能测试", AgentMode = AgentMode.Generic)]
     public class TestLog : BaseApi
     {
         /// <summary>
