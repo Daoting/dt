@@ -23,7 +23,6 @@ namespace Dt.Core
         Interceptors = new Type[] { typeof(Interceptor1), typeof(Interceptor2) })]
     public class TestIntercept : BaseApi
     {
-        [Transaction(false)]
         public virtual Task<string> NoTrans()
         {
             return GetSql();
@@ -33,6 +32,7 @@ namespace Dt.Core
         /// 不拦截内嵌方法
         /// </summary>
         /// <returns></returns>
+        [Transaction]
         public virtual Task<string> CallInline()
         {
             return GetSql();

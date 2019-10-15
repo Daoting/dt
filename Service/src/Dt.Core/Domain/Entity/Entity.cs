@@ -55,6 +55,7 @@ namespace Dt.Core
         /// <returns></returns>
         public override bool Equals(object obj)
         {
+            // 比较的对象为 NULL 或者对象不是派生自 Entity<T> 都视为不相等
             if (obj == null || !(obj is Entity<TKey>))
             {
                 return false;
@@ -80,6 +81,8 @@ namespace Dt.Core
             {
                 return false;
             }
+
+            // 通过泛型的 Equals 方法进行最后的比较
             return Id.Equals(other.Id);
         }
 

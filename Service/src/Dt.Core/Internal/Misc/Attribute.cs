@@ -31,11 +31,6 @@ namespace Dt.Core
         public AgentMode AgentMode { get; set; }
 
         /// <summary>
-        /// 是否为每个方法启动事务，默认false
-        /// </summary>
-        public bool IsTransactional { get; set; } = false;
-
-        /// <summary>
         /// 拦截器类型数组
         /// </summary>
         public Type[] Interceptors { get; set; }
@@ -88,17 +83,7 @@ namespace Dt.Core
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public class TransactionAttribute : Attribute
-    {
-        public TransactionAttribute(bool p_isTransactional = true)
-        {
-            IsTransactional = p_isTransactional;
-        }
-
-        /// <summary>
-        /// 是否自动为方法启用事务
-        /// </summary>
-        public bool IsTransactional { get; }
-    }
+    { }
 
     /// <summary>
     /// 自定义Agent方法代码

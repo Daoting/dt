@@ -375,7 +375,6 @@ namespace Dt.Core
             }
 
             ApiCallMode callMode;
-            bool isTran;
             var clsAuth = p_type.GetCustomAttribute<AuthAttribute>(false);
             MethodInfo[] methods = p_type.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
             foreach (MethodInfo mi in methods)
@@ -405,13 +404,7 @@ namespace Dt.Core
                 }
 
                 // 是否启用事务
-                var transAttr = mi.GetCustomAttribute<TransactionAttribute>(false);
-                if (transAttr != null)
-                    isTran = transAttr.IsTransactional;
-                else if (p_apiAttr != null)
-                    isTran = p_apiAttr.IsTransactional;
-                else
-                    isTran = false;
+                bool isTran = mi.GetCustomAttribute<TransactionAttribute>(false) != null;
 
                 var methodAuth = mi.GetCustomAttribute<AuthAttribute>(false);
                 string name = $"{p_type.Name}.{mi.Name}";
