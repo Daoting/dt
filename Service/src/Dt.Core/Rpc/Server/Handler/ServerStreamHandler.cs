@@ -17,10 +17,10 @@ namespace Dt.Core.Rpc
     /// <summary>
     /// 客户端发送一个请求，服务端返回数据流的处理类
     /// </summary>
-    public class ServerStreamHandler : RpcHandler
+    class ServerStreamHandler : RpcHandler
     {
-        public ServerStreamHandler(LobContext p_c)
-            : base(p_c)
+        public ServerStreamHandler(ApiInvoker p_invoker)
+            : base(p_invoker)
         { }
 
         /// <summary>
@@ -33,11 +33,11 @@ namespace Dt.Core.Rpc
             {
                 // 补充参数
                 List<object> objs = new List<object>();
-                if (_c.Args != null && _c.Args.Length > 0)
-                    objs.AddRange(_c.Args);
-                objs.Add(new ResponseWriter(_c));
+                if (_invoker.Args != null && _invoker.Args.Length > 0)
+                    objs.AddRange(_invoker.Args);
+                objs.Add(new ResponseWriter(_invoker));
 
-                await (Task)_c.Api.Method.Invoke(_tgt, objs.ToArray());
+                await (Task)_invoker.Api.Method.Invoke(_tgt, objs.ToArray());
             }
             catch (Exception ex)
             {

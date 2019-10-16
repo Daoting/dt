@@ -19,12 +19,12 @@ namespace Dt.Core.Rpc
     /// </summary>
     public class RequestReader
     {
-        LobContext _lc;
+        readonly ApiInvoker _invoker;
         object _val;
 
-        internal RequestReader(LobContext p_lc)
+        internal RequestReader(ApiInvoker p_invoker)
         {
-            _lc = p_lc;
+            _invoker = p_invoker;
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace Dt.Core.Rpc
         {
             try
             {
-                byte[] data = await RpcServerKit.ReadFrame(_lc.Context.Request.BodyReader);
+                byte[] data = await RpcServerKit.ReadFrame(_invoker.Context.Request.BodyReader);
                 if (data != null && data.Length > 0)
                 {
                     using (MemoryStream ms = new MemoryStream(data))

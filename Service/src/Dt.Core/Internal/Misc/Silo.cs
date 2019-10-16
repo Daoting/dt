@@ -280,7 +280,7 @@ namespace Dt.Core
 
         #region Startup
         /// <summary>
-        /// 注入服务，提取程序集中的Api列表、可序列化类型列表、领域服务列表，注册服务，添加拦截
+        /// 注入服务，提取程序集中的Api列表、事件处理类型、服务列表、可序列化类型列表，注册服务，添加拦截
         /// </summary>
         /// <param name="p_services"></param>
         /// <returns></returns>

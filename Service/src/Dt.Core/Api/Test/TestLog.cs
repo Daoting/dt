@@ -24,7 +24,7 @@ namespace Dt.Core
         /// <param name="p_msg"></param>
         public void LogInfo(string p_msg)
         {
-            _c.Log.Information(p_msg);
+            _.Log.Information(p_msg);
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace Dt.Core
             }
             catch (Exception ex)
             {
-                _c.Log.Warning(ex, "测试警告日志");
+                _.Log.Warning(ex, "测试警告日志");
             }
         }
 

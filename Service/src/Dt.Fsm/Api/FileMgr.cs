@@ -64,7 +64,7 @@ namespace Dt.Fsm
                     }
                 }
             }
-            await _c.Db.Exec($"delete from fsm_file where path='{p_filePath}'");
+            await _.Db.Exec($"delete from fsm_file where path='{p_filePath}'");
             return true;
         }
     }

@@ -59,7 +59,7 @@ namespace Dt.Core
 
         public virtual Task<string> GetSql()
         {
-            return _c.Db.Scalar<string>($"select `sql` from {Glb.SvcName}_sql");
+            return _.Db.Scalar<string>($"select `sql` from {Glb.SvcName}_sql");
         }
     }
 

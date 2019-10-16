@@ -7,10 +7,6 @@
 #endregion
 
 #region 引用命名
-using Dt.Core.Rpc;
-using Microsoft.AspNetCore.Http;
-using Serilog;
-using System.Web;
 #endregion
 
 namespace Dt.Core
@@ -23,6 +19,6 @@ namespace Dt.Core
         /// <summary>
         /// 业务线上下文
         /// </summary>
-        protected LobContext _c = LobContext.Current;
+        protected readonly LobContext _ = LobContext.Current;
     }
 }

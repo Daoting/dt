@@ -21,7 +21,6 @@ namespace Dt.Cm
     /// 入口Api
     /// </summary>
     [Api]
-    [Auth(true)]
     public class Entry : BaseApi
     {
         const string _prefixCode = "vercode";
@@ -51,7 +50,11 @@ namespace Dt.Cm
                 return res;
             }
 
-            res["valid"] = true;
+
+            //var repo = _c.Repo<UserRepo>();
+            //User user = await repo.GetByPhone(p_phone);
+            //if (user.ValidatePwd(p_password))
+
             res["userid"] = "110";
             res["name"] = "test";
             res["roles"] = Glb.AnyoneID + ",aca71e2d795d47b6942e4aa5c9df8248";

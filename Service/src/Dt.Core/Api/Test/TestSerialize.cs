@@ -563,7 +563,7 @@ namespace Dt.Core
         #region 异步
         public Task AsyncVoid(string p_msg)
         {
-            return Task.Run(() => _c.Log.Information(p_msg));
+            return Task.Run(() => _.Log.Information(p_msg));
         }
 
         public Task<Table> AsyncDb()

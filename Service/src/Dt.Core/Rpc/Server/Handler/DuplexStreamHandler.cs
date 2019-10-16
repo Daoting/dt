@@ -17,10 +17,10 @@ namespace Dt.Core.Rpc
     /// <summary>
     /// 客户端发送请求数据流，服务端返回数据流的处理类
     /// </summary>
-    public class DuplexStreamHandler : RpcHandler
+    class DuplexStreamHandler : RpcHandler
     {
-        public DuplexStreamHandler(LobContext p_c)
-            : base(p_c)
+        public DuplexStreamHandler(ApiInvoker p_invoker)
+            : base(p_invoker)
         { }
 
         /// <summary>
@@ -33,12 +33,12 @@ namespace Dt.Core.Rpc
             {
                 // 补充参数
                 List<object> objs = new List<object>();
-                if (_c.Args != null && _c.Args.Length > 0)
-                    objs.AddRange(_c.Args);
-                objs.Add(new RequestReader(_c));
-                objs.Add(new ResponseWriter(_c));
+                if (_invoker.Args != null && _invoker.Args.Length > 0)
+                    objs.AddRange(_invoker.Args);
+                objs.Add(new RequestReader(_invoker));
+                objs.Add(new ResponseWriter(_invoker));
 
-                await (Task)_c.Api.Method.Invoke(_tgt, objs.ToArray());
+                await (Task)_invoker.Api.Method.Invoke(_tgt, objs.ToArray());
             }
             catch (Exception ex)
             {

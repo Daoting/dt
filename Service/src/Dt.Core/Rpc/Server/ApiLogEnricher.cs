@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2019-04-25 创建
+* 日志: 2019-10-16 创建
 ******************************************************************************/
 #endregion
 
@@ -11,20 +11,18 @@ using Serilog.Core;
 using Serilog.Events;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core.Rpc
 {
     /// <summary>
-    /// 业务线处理日志的附加属性
+    /// Api调用过程日志的附加属性
     /// </summary>
-    class LobLogEnricher : ILogEventEnricher
+    class ApiLogEnricher : ILogEventEnricher
     {
-        LobContext _lc;
-        string _userId;
+        ApiInvoker _invoker;
 
-        public LobLogEnricher(LobContext p_lc, string p_userId)
+        public ApiLogEnricher(ApiInvoker p_invoker)
         {
-            _lc = p_lc;
-            _userId = p_userId;
+            _invoker = p_invoker;
         }
 
         public void Enrich(LogEvent p_logEvent, ILogEventPropertyFactory p_propertyFactory)
@@ -33,14 +31,14 @@ namespace Dt.Core
                 return;
 
             LogEventProperty property;
-            if (!string.IsNullOrEmpty(_lc.ApiName))
+            if (!string.IsNullOrEmpty(_invoker.ApiName))
             {
-                property = p_propertyFactory.CreateProperty("Api", _lc.ApiName);
+                property = p_propertyFactory.CreateProperty("Api", _invoker.ApiName);
                 p_logEvent.AddPropertyIfAbsent(property);
             }
-            if (!string.IsNullOrEmpty(_userId))
+            if (_invoker.UserID != -1)
             {
-                property = p_propertyFactory.CreateProperty("User", _userId);
+                property = p_propertyFactory.CreateProperty("User", _invoker.UserID);
                 p_logEvent.AddPropertyIfAbsent(property);
             }
         }

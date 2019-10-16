@@ -24,37 +24,37 @@ namespace Dt.Core
     {
         public Task Broadcast(List<string> p_svcs, bool p_isAllSvcInst)
         {
-            _c.Remote.Broadcast(new TestEventData(), p_svcs, p_isAllSvcInst);
+            _.Remote.Broadcast(new TestEventData(), p_svcs, p_isAllSvcInst);
             return Task.CompletedTask;
         }
 
         public Task Multicast(string p_svcName)
         {
-            _c.Remote.Multicast(new TestEventData(), p_svcName);
+            _.Remote.Multicast(new TestEventData(), p_svcName);
             return Task.CompletedTask;
         }
 
         public Task Push(string p_svcName)
         {
-            _c.Remote.Push(new TestEventData(), p_svcName);
+            _.Remote.Push(new TestEventData(), p_svcName);
             return Task.CompletedTask;
         }
 
         public Task PushFixed(string p_svcID)
         {
-            _c.Remote.PushFixed(new TestEventData(), p_svcID);
+            _.Remote.PushFixed(new TestEventData(), p_svcID);
             return Task.CompletedTask;
         }
 
         public Task LocalPublish()
         {
-            _c.Local.Publish(new KesEvent());
+            _.Local.Publish(new KesEvent());
             return Task.CompletedTask;
         }
 
         public Task<string> LocalCall(string p_name)
         {
-            return _c.Local.Call(new UyEvent { Name = p_name });
+            return _.Local.Call(new UyEvent { Name = p_name });
         }
 
         public string TestLoadBalance()

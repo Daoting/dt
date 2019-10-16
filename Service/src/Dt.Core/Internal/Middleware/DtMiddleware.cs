@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Core.Rpc;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -45,7 +46,7 @@ namespace Dt.Core
             // 内部特殊路径格式：/.xxx
             string path = p_context.Request.Path.Value.ToLower();
             if (path == "/.c")
-                return new LobContext(p_context).Handle();
+                return new ApiInvoker(p_context).Handle();
             if (path == "/.admin")
                 return ResponseAdminPage(p_context);
             if (path == "/.error")

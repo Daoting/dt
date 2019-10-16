@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
@@ -108,25 +109,25 @@ namespace Dt.Core
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false)]
     public class AuthAttribute : Attribute
     {
-        public AuthAttribute(bool p_AllowAnonymous)
-        {
-            AllowAnonymous = p_AllowAnonymous;
-        }
+        /// <summary>
+        /// 所有登录用户
+        /// </summary>
+        public AuthAttribute()
+        { }
 
-        public AuthAttribute(string p_privilege)
+        /// <summary>
+        /// 自定义校验授权方法
+        /// </summary>
+        /// <param name="p_isAuthenticated">自定义校验授权方法</param>
+        public AuthAttribute(Func<HttpContext, Task<bool>> p_isAuthenticated)
         {
-            Privilege = p_privilege;
+            IsAuthenticated = p_isAuthenticated;
         }
 
         /// <summary>
-        /// 是否允许匿名用户访问
+        /// 自定义校验授权方法
         /// </summary>
-        public bool AllowAnonymous { get; }
-
-        /// <summary>
-        /// 允许权限
-        /// </summary>
-        public string Privilege { get; }
+        public Func<HttpContext, Task<bool>> IsAuthenticated { get; }
     }
 
     /// <summary>

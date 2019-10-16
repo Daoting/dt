@@ -31,12 +31,12 @@ namespace Dt.Msg
         public async Task Register(int p_clientSys, ResponseWriter p_writer)
         {
             // 通知已注册的客户端退出推送
-            Online.Unregister(_c.UserID);
+            Online.Unregister(_.UserID);
 
             // 记录会话信息，登记会话所属服务id
-            ClientInfo ci = new ClientInfo(_c, (ClientSystem)p_clientSys, p_writer);
-            Online.All[_c.UserID] = ci;
-            Log.Debug($"用户{_c.UserID}注册推送");
+            ClientInfo ci = new ClientInfo(_, (ClientSystem)p_clientSys, p_writer);
+            Online.All[_.UserID] = ci;
+            Log.Debug($"用户{_.UserID}注册推送");
 
             // 推送
             while (await ci.SendMsg())

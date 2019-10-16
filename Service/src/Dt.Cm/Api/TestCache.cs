@@ -23,8 +23,14 @@ namespace Dt.Cm
     {
         public async Task<string> CacheStr(string p_key, string p_val)
         {
+            var dd = new DbRepo<User, long>();
+            UserRepo repo = new UserRepo();
             var cache = new StringCache("Test:Str");
             await cache.Set(p_key, p_val);
+            UserRepo b = Glb.GetSvc<UserRepo>();
+            bool eq = repo == b;
+
+            await CacheLong("a", 0);
             return await cache.Get<string>(p_key);
         }
 
@@ -32,6 +38,7 @@ namespace Dt.Cm
         {
             var cache = new StringCache("Test:Long");
             await cache.Set(p_key, p_val);
+            UserRepo b = Glb.GetSvc<UserRepo>();
             return await cache.Get<long>(p_key);
         }
 
@@ -41,7 +48,7 @@ namespace Dt.Cm
             await cache.Set(p_key, new TestCacheObject { Name = p_name, Age = p_age });
             var obj = await cache.Get<TestCacheObject>(p_key);
             if (obj != null && !string.IsNullOrEmpty(obj.Name))
-                _c.Log.Information(obj.Name);
+                _.Log.Information(obj.Name);
         }
 
         public Task CacheExpiry(string p_key, string p_val, int p_expiry)
