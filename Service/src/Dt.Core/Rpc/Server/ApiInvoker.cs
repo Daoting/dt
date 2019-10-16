@@ -240,13 +240,16 @@ namespace Dt.Core.Rpc
             if (Api.Auth == null)
                 return Task.FromResult(true);
 
-            // 内部服务之间调用时的固定标识，admin页面也使用该标识
+            // 固定特权标识，内部服务之间调用时或admin页面使用该标识
             if (UserID == 110)
                 return Task.FromResult(true);
 
             // 外部自定义校验授权方法
-            if (Api.Auth.IsAuthenticated != null)
-                return Api.Auth.IsAuthenticated(Context);
+            if (Api.Auth.CustomAuthType != null)
+            {
+                var custom = Activator.CreateInstance(Api.Auth.CustomAuthType) as ICustomAuth;
+                return custom.IsAuthenticated(Context);
+            }
 
             // 所有登录用户
             return Task.FromResult(UserID != -1);

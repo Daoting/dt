@@ -131,7 +131,7 @@ namespace Dt.Core
         }
         #endregion
 
-        #region Rpc
+        #region 内部方法
         /// <summary>
         /// Api调用结束后释放资源，提交或回滚事务、关闭数据库连接
         /// </summary>

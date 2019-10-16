@@ -117,17 +117,28 @@ namespace Dt.Core
 
         /// <summary>
         /// 自定义校验授权方法
+        /// Attribute 的参数只支持简单类型、Type、enum，无法指定委托
         /// </summary>
-        /// <param name="p_isAuthenticated">自定义校验授权方法</param>
-        public AuthAttribute(Func<HttpContext, Task<bool>> p_isAuthenticated)
+        /// <param name="p_customAuthType">自定义校验授权方法的类型</param>
+        public AuthAttribute(Type p_customAuthType)
         {
-            IsAuthenticated = p_isAuthenticated;
+            if (p_customAuthType.GetInterface("ICustomAuth") == null)
+                throw new Exception(p_customAuthType.FullName + " 需要实现 ICustomAuth 接口");
+            CustomAuthType = p_customAuthType;
         }
 
         /// <summary>
-        /// 自定义校验授权方法
+        /// 自定义校验授权方法的类型
         /// </summary>
-        public Func<HttpContext, Task<bool>> IsAuthenticated { get; }
+        public Type CustomAuthType { get; set; }
+    }
+
+    /// <summary>
+    /// 自定义校验授权接口
+    /// </summary>
+    public interface ICustomAuth
+    {
+        Task<bool> IsAuthenticated(HttpContext p_context);
     }
 
     /// <summary>
