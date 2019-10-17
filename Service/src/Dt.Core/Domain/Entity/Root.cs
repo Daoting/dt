@@ -2,29 +2,33 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2019-06-06 创建
+* 日志: 2019-10-17 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core.Domain
 {
     /// <summary>
-    /// 聚合根类，主键任意也可以是组合主键，为方便集成尽量使用<see cref="IAggregateRoot{TKey}"/>
+    /// 包含"ID"主键的聚合根基类
     /// </summary>
-    public interface IAggregateRoot : IEntity
+    /// <typeparam name="TKey"></typeparam>
+    public abstract class Root<TKey> : Entity<TKey>, IRoot<TKey>
     {
+        
     }
 
     /// <summary>
-    /// 聚合根类，只包含"Id"主键
+    /// 主键ID为long类型的聚合根基类
     /// </summary>
-    /// <typeparam name="TKey">主键类型</typeparam>
-    public interface IAggregateRoot<TKey> : IEntity<TKey>, IAggregateRoot
+    public abstract class Root : Root<long>
     {
+
     }
 }

@@ -86,12 +86,16 @@ namespace Dt.Core.EventBus
         /// 向某个服务的所有服务副本进行组播
         /// </summary>
         /// <param name="p_event">事件内容</param>
-        /// <param name="p_svcName">服务名称</param>
-        public void Multicast(IEvent p_event, string p_svcName)
+        /// <param name="p_svcName">服务名称，null表示当前服务</param>
+        public void Multicast(IEvent p_event, string p_svcName = null)
         {
             // 进入第二队列
-            if (p_event != null && !string.IsNullOrEmpty(p_svcName))
+            if (p_event != null)
+            {
+                if (string.IsNullOrEmpty(p_svcName))
+                    p_svcName = Glb.SvcName;
                 Publish(p_event, $"{Glb.AppName}.{p_svcName.ToLower()}.All", true);
+            }
         }
 
         /// <summary>

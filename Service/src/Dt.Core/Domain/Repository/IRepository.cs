@@ -10,7 +10,7 @@
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core.Domain
 {
     /// <summary>
     /// 标志一个类型为仓库类
@@ -18,19 +18,25 @@ namespace Dt.Core
     public interface IRepository
     { }
 
+    /// <summary>
+    /// 通用实体类仓库接口
+    /// </summary>
+    /// <typeparam name="TEntity"></typeparam>
     public interface IRepository<TEntity> : IRepository
         where TEntity : class, IEntity
     {
         /// <summary>
-        /// 插入一实体对象
+        /// 插入实体对象
         /// </summary>
         /// <param name="p_entity">待插入的实体</param>
+        /// <returns></returns>
         Task<TEntity> Insert(TEntity p_entity);
 
         /// <summary>
         /// 更新实体对象
         /// </summary>
         /// <param name="p_entity">实体</param>
+        /// <returns></returns>
         Task<TEntity> Update(TEntity p_entity);
 
         /// <summary>
@@ -41,7 +47,12 @@ namespace Dt.Core
         Task<bool> Delete(TEntity p_entity);
     }
 
-    public interface IRepository<TEntity, TKey> : IRepository<TEntity>
+    /// <summary>
+    /// 包含"ID"主键的实体类仓库接口
+    /// </summary>
+    /// <typeparam name="TEntity"></typeparam>
+    /// <typeparam name="TKey"></typeparam>
+    public interface IRepository<TEntity, TKey> : IRepository
         where TEntity : class, IEntity<TKey>
     {
         /// <summary>

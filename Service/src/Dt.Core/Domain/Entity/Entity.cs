@@ -2,50 +2,32 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2019-06-06 创建
+* 日志: 2019-10-17 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core.Domain
 {
     /// <summary>
-    /// 支持组合主键的实体基类
-    /// </summary>
-    public abstract class Entity : IEntity
-    {
-        /// <summary>
-        /// 输出组合主键
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return $"[ENTITY: {GetType().Name}] Keys = {string.Join(", ", GetKeys())}";
-        }
-
-        public abstract object[] GetKeys();
-    }
-
-    /// <summary>
-    /// 只包含"Id"主键的实体基类
+    /// 包含"ID"主键的实体基类
     /// </summary>
     /// <typeparam name="TKey">主键类型</typeparam>
-    public abstract class Entity<TKey> : Entity, IEntity<TKey>
+    public abstract class Entity<TKey> : IEntity<TKey>
     {
         /// <summary>
         /// 实体的唯一主键
         /// </summary>
-        public virtual TKey Id { get; set; }
+        public virtual TKey ID { get; set; }
 
         protected Entity()
-        {
-        }
+        { }
 
-        protected Entity(TKey id)
+        protected Entity(TKey p_id)
         {
-            Id = id;
+            ID = p_id;
         }
 
         /// <summary>
@@ -83,18 +65,18 @@ namespace Dt.Core
             }
 
             // 通过泛型的 Equals 方法进行最后的比较
-            return Id.Equals(other.Id);
+            return ID.Equals(other.ID);
         }
 
         /// <inheritdoc/>
         public override int GetHashCode()
         {
-            if (Id == null)
+            if (ID == null)
             {
                 return 0;
             }
 
-            return Id.GetHashCode();
+            return ID.GetHashCode();
         }
 
         public static bool operator ==(Entity<TKey> left, Entity<TKey> right)
@@ -112,18 +94,19 @@ namespace Dt.Core
             return !(left == right);
         }
 
-        public override object[] GetKeys()
-        {
-            return new object[] { Id };
-        }
-
         /// <summary>
         /// 输出实体描述
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
-            return $"[ENTITY: {GetType().Name}] Id = {Id}";
+            return $"[Entity: {GetType().Name}] ID = {ID}";
         }
     }
+
+    /// <summary>
+    /// 主键ID为long类型的实体基类
+    /// </summary>
+    public abstract class Entity : Entity<long>
+    { }
 }

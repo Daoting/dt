@@ -2,30 +2,31 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2019-06-06 创建
+* 日志: 2019-10-17 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
+using Dt.Core.EventBus;
 #endregion
 
 namespace Dt.Core.Domain
 {
     /// <summary>
-    /// 实体类接口，主键任意，可以是组合主键
+    /// 更新事件
     /// </summary>
-    public interface IEntity
-    { }
-
-    /// <summary>
-    /// 实体类接口，只包含"ID"主键
-    /// </summary>
-    /// <typeparam name="TKey">主键类型</typeparam>
-    public interface IEntity<TKey> : IEntity
+    /// <typeparam name="TEntity"></typeparam>
+    public class UpdateEventData<TEntity> : IEvent
+        where TEntity : class, IEntity
     {
+        public UpdateEventData(TEntity p_entity)
+        {
+            Entity = p_entity;
+        }
+
         /// <summary>
-        /// 实体的唯一主键
+        /// 实体对象
         /// </summary>
-        TKey ID { get; set; }
+        public TEntity Entity { get; }
     }
 }

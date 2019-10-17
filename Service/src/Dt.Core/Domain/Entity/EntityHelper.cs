@@ -13,7 +13,7 @@ using System.Linq;
 using System.Linq.Expressions;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core.Domain
 {
     /// <summary>
     /// 实体的帮助方法
@@ -27,7 +27,7 @@ namespace Dt.Core
 
         public static bool HasDefaultId<TKey>(IEntity<TKey> entity)
         {
-            if (EqualityComparer<TKey>.Default.Equals(entity.Id, default(TKey)))
+            if (EqualityComparer<TKey>.Default.Equals(entity.ID, default(TKey)))
             {
                 return true;
             }
@@ -35,12 +35,12 @@ namespace Dt.Core
             //Workaround for EF Core since it sets int/long to min value when attaching to dbcontext
             if (typeof(TKey) == typeof(int))
             {
-                return Convert.ToInt32(entity.Id) <= 0;
+                return Convert.ToInt32(entity.ID) <= 0;
             }
 
             if (typeof(TKey) == typeof(long))
             {
-                return Convert.ToInt64(entity.Id) <= 0;
+                return Convert.ToInt64(entity.ID) <= 0;
             }
 
             return false;
@@ -78,15 +78,5 @@ namespace Dt.Core
             return null;
         }
 
-        public static Expression<Func<TEntity, bool>> CreateEqualityExpressionForId<TEntity, TKey>(TKey id)
-            where TEntity : IEntity<TKey>
-        {
-            var lambdaParam = Expression.Parameter(typeof(TEntity));
-            var leftExpression = Expression.PropertyOrField(lambdaParam, "Id");
-            Expression<Func<object>> closure = () => id;
-            var rightExpression = Expression.Convert(closure.Body, leftExpression.Type);
-            var lambdaBody = Expression.Equal(leftExpression, rightExpression);
-            return Expression.Lambda<Func<TEntity, bool>>(lambdaBody, lambdaParam);
-        }
     }
 }

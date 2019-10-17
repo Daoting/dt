@@ -9,6 +9,7 @@
 #region 引用命名
 using Dt.Core;
 using Dt.Core.Caches;
+using Dt.Core.Domain;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Dt.Cm
 {
-    public class UserRepo : DbRepo<User, long>
+    public class UserRepo : Repo<User>
     {
         public int _rn;
 

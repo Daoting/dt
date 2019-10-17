@@ -2,19 +2,18 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2019-06-06 创建
+* 日志: 2019-10-17 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
-using System.Collections.Generic;
-using System.Linq;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Core.Domain
 {
-    public interface IHasConcurrencyStamp
-    {
-        string ConcurrencyStamp { get; set; }
-    }
+    /// <summary>
+    /// 支持组合主键的实体基类
+    /// </summary>
+    public abstract class FreeEntity : IEntity
+    { }
 }

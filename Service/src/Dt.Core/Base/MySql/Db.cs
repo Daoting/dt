@@ -621,6 +621,21 @@ namespace Dt.Core
             }
         }
 
+        public Task<T> Insert<T>(T p_entity)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public Task<T> Update<T>(T p_entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> Delete<T>(T p_entity)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
 
         #region 手动关闭

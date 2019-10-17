@@ -2,23 +2,18 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2019-10-15 创建
+* 日志: 2019-10-17 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
-using Dt.Core;
-using Dt.Core.Caches;
-using Dt.Core.Domain;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Cm
+namespace Dt.Core.Domain
 {
-    public class User : Root
-    {
-
-    }
+    /// <summary>
+    /// 支持组合主键的聚合根基类
+    /// </summary>
+    public abstract class FreeRoot : IRoot
+    { }
 }

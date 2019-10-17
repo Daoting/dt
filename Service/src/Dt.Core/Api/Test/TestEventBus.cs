@@ -22,39 +22,39 @@ namespace Dt.Core
     [Api(GroupName = "功能测试", AgentMode = AgentMode.Generic)]
     public class TestEventBus : BaseApi
     {
-        public Task Broadcast(List<string> p_svcs, bool p_isAllSvcInst)
+        public void Broadcast(List<string> p_svcs, bool p_isAllSvcInst)
         {
-            _.Remote.Broadcast(new TestEventData(), p_svcs, p_isAllSvcInst);
-            return Task.CompletedTask;
+            _.RemoteEB.Broadcast(new TestEventData(), p_svcs, p_isAllSvcInst);
         }
 
-        public Task Multicast(string p_svcName)
+        public void Multicast(string p_svcName)
         {
-            _.Remote.Multicast(new TestEventData(), p_svcName);
-            return Task.CompletedTask;
+            _.RemoteEB.Multicast(new TestEventData(), p_svcName);
         }
 
-        public Task Push(string p_svcName)
+        public void Push(string p_svcName)
         {
-            _.Remote.Push(new TestEventData(), p_svcName);
-            return Task.CompletedTask;
+            _.RemoteEB.Push(new TestEventData(), p_svcName);
         }
 
-        public Task PushFixed(string p_svcID)
+        public void PushFixed(string p_svcID)
         {
-            _.Remote.PushFixed(new TestEventData(), p_svcID);
-            return Task.CompletedTask;
+            _.RemoteEB.PushFixed(new TestEventData(), p_svcID);
         }
 
-        public Task LocalPublish()
+        public void PushGenericEvent(string p_name)
         {
-            _.Local.Publish(new KesEvent());
-            return Task.CompletedTask;
+            _.RemoteEB.Multicast(new GenericEvent<EventData>(new EventData { Name = p_name }));
+        }
+
+        public void LocalPublish()
+        {
+            _.LocalEB.Publish(new KesEvent());
         }
 
         public Task<string> LocalCall(string p_name)
         {
-            return _.Local.Call(new UyEvent { Name = p_name });
+            return _.LocalEB.Call(new UyEvent { Name = p_name });
         }
 
         public string TestLoadBalance()
@@ -111,6 +111,40 @@ namespace Dt.Core
         public Task Handle(KesEvent p_event)
         {
             throw new Exception("测试异常");
+        }
+    }
+
+    public class EventData
+    {
+        public string Name { get; set; }
+    }
+
+    public class GenericEvent<T> : IEvent
+    {
+        public GenericEvent(T p_entity)
+        {
+            Entity = p_entity;
+        }
+
+        public T Entity { get; set; }
+    }
+
+    public abstract class GenericHandler<T> : IRemoteHandler<GenericEvent<T>>
+    {
+        public virtual Task Handle(GenericEvent<T> p_event)
+        {
+            Log.Information($"{GetType().Name}已处理");
+            return Task.CompletedTask;
+        }
+    }
+
+    public class GenHandler : GenericHandler<EventData>
+    {
+        public override Task Handle(GenericEvent<EventData> p_event)
+        {
+            base.Handle(p_event);
+            Log.Information("Name:" + (p_event.Entity.Name ?? "null"));
+            return Task.CompletedTask;
         }
     }
 

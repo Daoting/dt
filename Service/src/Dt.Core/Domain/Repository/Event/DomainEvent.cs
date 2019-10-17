@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2019-06-06 创建
+* 日志: 2019-10-17 创建
 ******************************************************************************/
 #endregion
 
@@ -12,20 +12,23 @@
 namespace Dt.Core.Domain
 {
     /// <summary>
-    /// 实体类接口，主键任意，可以是组合主键
+    /// 领域事件的种类
     /// </summary>
-    public interface IEntity
-    { }
-
-    /// <summary>
-    /// 实体类接口，只包含"ID"主键
-    /// </summary>
-    /// <typeparam name="TKey">主键类型</typeparam>
-    public interface IEntity<TKey> : IEntity
+    public enum DomainEvent
     {
         /// <summary>
-        /// 实体的唯一主键
+        /// 不触发领域事件
         /// </summary>
-        TKey ID { get; set; }
+        None,
+
+        /// <summary>
+        /// 触发本地领域事件
+        /// </summary>
+        Local,
+
+        /// <summary>
+        /// 触发远程领域事件
+        /// </summary>
+        Remote
     }
 }

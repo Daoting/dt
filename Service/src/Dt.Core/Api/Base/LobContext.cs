@@ -25,8 +25,7 @@ namespace Dt.Core
         #region 成员变量
         const string _lcName = "LobContext";
         readonly ApiInvoker _invoker;
-        Db _defaultDb;
-        Dictionary<string, Db> _dbs;
+        Db _db;
         #endregion
 
         #region 构造方法
@@ -69,9 +68,29 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 获取当前mysql库
+        /// <para>根据方法的 Transaction 标签确定是否自动启动事务</para>
+        /// <para>整个Api调用结束后自动提交或回滚事务、关闭连接</para>
+        /// <para>可通过SetCurrentDb设置其它非默认库</para>
+        /// </summary>
+        public Db Db
+        {
+            get
+            {
+                if (_db == null)
+                {
+                    _db = new Db(false);
+                    if (_invoker.Api.IsTransactional)
+                        _db.BeginTrans().Wait();
+                }
+                return _db;
+            }
+        }
+
+        /// <summary>
         /// 本地事件总线
         /// </summary>
-        public LocalEventBus Local
+        public LocalEventBus LocalEB
         {
             get { return Glb.GetSvc<LocalEventBus>(); }
         }
@@ -79,7 +98,7 @@ namespace Dt.Core
         /// <summary>
         /// 远程事件总线
         /// </summary>
-        public RemoteEventBus Remote
+        public RemoteEventBus RemoteEB
         {
             get { return Glb.GetSvc<RemoteEventBus>(); }
         }
@@ -90,44 +109,20 @@ namespace Dt.Core
         public bool IsAnonymous => UserID == -1;
         #endregion
 
-        #region Db
+        #region 外部方法
         /// <summary>
-        /// 获取mysql默认库，根据方法的 Transaction 标签确定是否自动启动事务，整个Api调用结束后提交或回滚事务、关闭数据库连接
+        /// 设置当前mysql库，根据键名获取连接串
         /// </summary>
-        public Db Db
-        {
-            get
-            {
-                if (_defaultDb == null)
-                {
-                    _defaultDb = new Db(false);
-                    if (_invoker.Api.IsTransactional)
-                        _defaultDb.BeginTrans().Wait();
-                }
-                return _defaultDb;
-            }
-        }
-
-        /// <summary>
-        /// 根据键名获取Db对象
-        /// </summary>
-        /// <param name="p_dbKey">数据源键名，在json配置DbList节</param>
+        /// <param name="p_dbKey">数据源键名，null时使用默认连接串</param>
         /// <returns></returns>
-        public Db GetDbByKey(string p_dbKey)
+        public async Task SetCurrentDb(string p_dbKey)
         {
-            Check.NotNull(p_dbKey);
-            if (_dbs == null)
-                _dbs = new Dictionary<string, Db>();
+            if (_db != null)
+                await _db.Close(true);
 
-            Db db;
-            if (!_dbs.TryGetValue(p_dbKey, out db))
-            {
-                db = new Db(p_dbKey, false);
-                if (_invoker.Api.IsTransactional)
-                    db.BeginTrans().Wait();
-                _dbs[p_dbKey] = db;
-            }
-            return db;
+            _db = new Db(p_dbKey, false);
+            if (_invoker.Api.IsTransactional)
+                _db.BeginTrans().Wait();
         }
         #endregion
 
@@ -139,19 +134,10 @@ namespace Dt.Core
         /// <returns></returns>
         internal async Task Close(bool p_suc)
         {
-            if (_defaultDb != null)
+            if (_db != null)
             {
-                await _defaultDb.Close(p_suc);
-                _defaultDb = null;
-            }
-
-            if (_dbs != null && _dbs.Count > 0)
-            {
-                foreach (var db in _dbs.Values)
-                {
-                    await db.Close(p_suc);
-                }
-                _dbs.Clear();
+                await _db.Close(p_suc);
+                _db = null;
             }
         }
         #endregion

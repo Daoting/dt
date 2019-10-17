@@ -7,25 +7,24 @@
 #endregion
 
 #region 引用命名
+using System.Collections.Generic;
+using System.Linq;
 #endregion
 
 namespace Dt.Core.Domain
 {
     /// <summary>
-    /// 实体类接口，主键任意，可以是组合主键
+    /// 聚合根类接口，主键任意，可以是组合主键
     /// </summary>
-    public interface IEntity
-    { }
+    public interface IRoot : IEntity
+    {
+    }
 
     /// <summary>
-    /// 实体类接口，只包含"ID"主键
+    /// 聚合根类接口，只包含"ID"主键
     /// </summary>
     /// <typeparam name="TKey">主键类型</typeparam>
-    public interface IEntity<TKey> : IEntity
+    public interface IRoot<TKey> : IEntity<TKey>, IRoot
     {
-        /// <summary>
-        /// 实体的唯一主键
-        /// </summary>
-        TKey ID { get; set; }
     }
 }
