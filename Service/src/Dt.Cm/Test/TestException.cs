@@ -7,16 +7,17 @@
 #endregion
 
 #region 引用命名
+using Dt.Core;
 using Dt.Core.Rpc;
 using System;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Cm
 {
     /// <summary>
     /// 功能测试Api
     /// </summary>
-    [Api(GroupName = "功能测试", AgentMode = AgentMode.Generic)]
+    [Api(GroupName = "功能测试")]
     public class TestException : BaseApi
     {
         /// <summary>

@@ -12,6 +12,8 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Text;
 #endregion
 
 namespace Dt.Core
@@ -21,6 +23,10 @@ namespace Dt.Core
     /// </summary>
     public static class DbSchema
     {
+        static readonly Dictionary<string, string> _sqlInsert = new Dictionary<string, string>();
+        static readonly Dictionary<string, string> _sqlUpdate = new Dictionary<string, string>();
+        static readonly Dictionary<string, string> _sqlDel = new Dictionary<string, string>();
+
         /// <summary>
         /// 默认库的所有表结构
         /// </summary>
@@ -143,6 +149,101 @@ namespace Dt.Core
             if (Schema.TryGetValue(p_tblName.ToLower(), out schema))
                 return schema;
             throw new Exception(string.Format("未找到表{0}的结构信息！", p_tblName));
+        }
+
+        /// <summary>
+        /// 获取表的insert语句模板
+        /// </summary>
+        /// <param name="p_tblName"></param>
+        /// <returns></returns>
+        public static string GetInsertSql(string p_tblName)
+        {
+            Check.NotNullOrEmpty(p_tblName);
+            string tblName = p_tblName.ToLower();
+            string sql;
+            if (_sqlInsert.TryGetValue(tblName, out sql))
+                return sql;
+
+            StringBuilder insertCol = new StringBuilder();
+            StringBuilder insertVal = new StringBuilder();
+            var schema = GetTableSchema(tblName);
+            foreach (var col in schema.PrimaryKey.Concat(schema.Columns))
+            {
+                insertCol.Append(col.Name);
+                insertCol.Append(",");
+
+                insertVal.Append("@");
+                insertVal.Append(col.Name);
+                insertVal.Append(",");
+            }
+            sql = $"insert into `{tblName}` ({insertCol.ToString().TrimEnd(',')}) values ({insertVal.ToString().TrimEnd(',')})";
+            _sqlInsert[tblName] = sql;
+            return sql;
+        }
+
+        /// <summary>
+        /// 获取表的update语句模板
+        /// </summary>
+        /// <param name="p_tblName"></param>
+        /// <returns></returns>
+        public static string GetUpdateSql(string p_tblName)
+        {
+            Check.NotNullOrEmpty(p_tblName);
+            string tblName = p_tblName.ToLower();
+            string sql;
+            if (_sqlUpdate.TryGetValue(tblName, out sql))
+                return sql;
+
+            StringBuilder updateVal = new StringBuilder();
+            StringBuilder whereVal = new StringBuilder();
+            var schema = GetTableSchema(tblName);
+            foreach (var col in schema.PrimaryKey)
+            {
+                if (whereVal.Length > 0)
+                    whereVal.Append(" and ");
+                whereVal.Append(col.Name);
+                whereVal.Append("=@");
+                whereVal.Append(col.Name);
+            }
+            foreach (var col in schema.Columns)
+            {
+                if (updateVal.Length > 0)
+                    updateVal.Append(", ");
+                updateVal.Append(col.Name);
+                updateVal.Append("=@");
+                updateVal.Append(col.Name);
+            }
+            sql = $"update `{tblName}` set {updateVal} where {whereVal}";
+            _sqlUpdate[tblName] = sql;
+            return sql;
+        }
+
+        /// <summary>
+        /// 获取表的delete语句模板
+        /// </summary>
+        /// <param name="p_tblName"></param>
+        /// <returns></returns>
+        public static string GetDeleteSql(string p_tblName)
+        {
+            Check.NotNullOrEmpty(p_tblName);
+            string tblName = p_tblName.ToLower();
+            string sql;
+            if (_sqlDel.TryGetValue(tblName, out sql))
+                return sql;
+
+            StringBuilder whereVal = new StringBuilder();
+            var schema = GetTableSchema(tblName);
+            foreach (var col in schema.PrimaryKey)
+            {
+                if (whereVal.Length > 0)
+                    whereVal.Append(" and ");
+                whereVal.Append(col.Name);
+                whereVal.Append("=@");
+                whereVal.Append(col.Name);
+            }
+            sql = $"delete from `{tblName}` where {whereVal}";
+            _sqlDel[tblName] = sql;
+            return sql;
         }
 
         /// <summary>

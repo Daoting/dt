@@ -8,19 +8,18 @@
 
 #region 引用命名
 using Castle.DynamicProxy;
+using Dt.Core;
 using Serilog;
 using System;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Cm
 {
     /// <summary>
     /// 功能测试Api
     /// </summary>
-    [Api(GroupName = "功能测试",
-        AgentMode = AgentMode.Generic,
-        Interceptors = new Type[] { typeof(Interceptor1), typeof(Interceptor2) })]
+    [Api(GroupName = "功能测试", Interceptors = new Type[] { typeof(Interceptor1), typeof(Interceptor2) })]
     public class TestIntercept : BaseApi
     {
         public virtual Task<string> NoTrans()

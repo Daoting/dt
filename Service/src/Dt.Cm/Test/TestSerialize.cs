@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Core;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
@@ -14,12 +15,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Core
+namespace Dt.Cm
 {
     /// <summary>
     /// 功能测试Api
     /// </summary>
-    [Api(GroupName = "功能测试", AgentMode = AgentMode.Generic)]
+    [Api(GroupName = "功能测试")]
     public class TestSerialize : BaseApi
     {
         #region 基本类型

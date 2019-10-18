@@ -8,12 +8,14 @@
 
 #region 引用命名
 using Dapper;
+using Dt.Core.Domain;
 using MySql.Data.MySqlClient;
 using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -620,21 +622,84 @@ namespace Dt.Core
                 ReleaseConnection();
             }
         }
+        #endregion
 
-        public Task<T> Insert<T>(T p_entity)
+        #region Domain
+        /// <summary>
+        /// 根据主键获得实体对象，不存在时返回null
+        /// </summary>
+        /// <typeparam name="TEntity">实体类型</typeparam>
+        /// <typeparam name="TKey">主键类型</typeparam>
+        /// <param name="p_id">主键</param>
+        /// <returns>返回实体对象或null</returns>
+        public async Task<TEntity> FirstByKey<TEntity, TKey>(TKey p_id)
+            where TEntity : class, IEntity<TKey>
         {
-            throw new NotImplementedException();
+            string tblName = GetTblName(typeof(TEntity));
+            Check.NotNullOrEmpty(tblName);
+            string sql = $"select * from `{tblName}` where id='{p_id}'";
+
+            var cmd = CreateCommand(sql, null, false);
+            try
+            {
+                await OpenConnection();
+                var result = await _conn.QueryFirstOrDefaultAsync<TEntity>(cmd);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw GetSqlException(cmd, ex);
+            }
+            finally
+            {
+                ReleaseConnection();
+            }
         }
 
-
-        public Task<T> Update<T>(T p_entity)
+        /// <summary>
+        /// 将实体对象插入到对应表
+        /// </summary>
+        /// <typeparam name="TEntity">实体类型</typeparam>
+        /// <param name="p_entity">实体对象</param>
+        /// <returns>true 成功</returns>
+        public async Task<bool> Insert<TEntity>(TEntity p_entity)
+            where TEntity : class, IEntity
         {
-            throw new NotImplementedException();
+            Check.NotNull(p_entity);
+            string sql = DbSchema.GetInsertSql(GetTblName(typeof(TEntity)));
+            int cnt = await Exec(sql, p_entity);
+            return cnt == 1;
         }
 
-        public Task<bool> Delete<T>(T p_entity)
+        /// <summary>
+        /// 根据实体对象更新对应表数据
+        /// </summary>
+        /// <typeparam name="TEntity">实体类型</typeparam>
+        /// <param name="p_entity">实体对象</param>
+        /// <returns>true 成功</returns>
+        public async Task<bool> Update<TEntity>(TEntity p_entity)
+            where TEntity : class, IEntity
         {
-            throw new NotImplementedException();
+            Check.NotNull(p_entity);
+            string sql = DbSchema.GetUpdateSql(GetTblName(typeof(TEntity)));
+            await Exec(sql, p_entity);
+            int cnt = await Exec(sql, p_entity);
+            return cnt == 1;
+        }
+
+        /// <summary>
+        /// 在表中删除实体对象对应的数据
+        /// </summary>
+        /// <typeparam name="TEntity">实体类型</typeparam>
+        /// <param name="p_entity">实体对象</param>
+        /// <returns>true 成功</returns>
+        public async Task<bool> Delete<TEntity>(TEntity p_entity)
+            where TEntity : class, IEntity
+        {
+            Check.NotNull(p_entity);
+            string sql = DbSchema.GetDeleteSql(GetTblName(typeof(TEntity)));
+            int cnt = await Exec(sql, p_entity);
+            return cnt == 1;
         }
         #endregion
 
@@ -789,6 +854,20 @@ namespace Dt.Core
             }
             catch { }
             return str;
+        }
+
+        /// <summary>
+        /// 获取类型对应的表名
+        /// </summary>
+        /// <param name="p_type"></param>
+        /// <returns></returns>
+        static string GetTblName(Type p_type)
+        {
+            string tblName = p_type.Name;
+            var tag = p_type.GetCustomAttribute<TagAttribute>(false);
+            if (tag != null && !string.IsNullOrEmpty(tag.TblName))
+                tblName = tag.TblName;
+            return tblName;
         }
 
         /// <summary>

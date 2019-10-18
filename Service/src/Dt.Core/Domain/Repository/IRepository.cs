@@ -30,14 +30,14 @@ namespace Dt.Core.Domain
         /// </summary>
         /// <param name="p_entity">待插入的实体</param>
         /// <returns></returns>
-        Task<TEntity> Insert(TEntity p_entity);
+        Task<bool> Insert(TEntity p_entity);
 
         /// <summary>
         /// 更新实体对象
         /// </summary>
         /// <param name="p_entity">实体</param>
         /// <returns></returns>
-        Task<TEntity> Update(TEntity p_entity);
+        Task<bool> Update(TEntity p_entity);
 
         /// <summary>
         /// 删除实体对象

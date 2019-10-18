@@ -8,9 +8,6 @@
 
 #region 引用命名
 using System;
-using System.Linq.Expressions;
-using System.Threading;
-using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Core.Domain

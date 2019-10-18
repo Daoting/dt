@@ -29,46 +29,52 @@ namespace Dt.Core.Domain
         /// 插入实体对象
         /// </summary>
         /// <param name="p_entity">待插入的实体</param>
-        /// <returns></returns>
-        public async Task<TEntity> Insert(TEntity p_entity)
+        /// <returns>true 成功</returns>
+        public async Task<bool> Insert(TEntity p_entity)
         {
             Check.NotNull(p_entity);
             OnInserting(p_entity);
-            TEntity entity = await _.Db.Insert(p_entity);
-            OnInserted(entity);
-
-            if (InsertEvent != DomainEvent.None)
+            bool suc = await _.Db.Insert(p_entity);
+            if (suc)
             {
-                var e = new InsertEventData<TEntity>(entity);
-                if (InsertEvent == DomainEvent.Remote)
-                    _.RemoteEB.Multicast(e);
-                else
-                    _.LocalEB.Publish(e);
+                OnInserted(p_entity);
+
+                if (InsertEvent != DomainEvent.None)
+                {
+                    var e = new InsertEventData<TEntity>(p_entity);
+                    if (InsertEvent == DomainEvent.Remote)
+                        _.RemoteEB.Multicast(e);
+                    else
+                        _.LocalEB.Publish(e);
+                }
             }
-            return entity;
+            return suc;
         }
 
         /// <summary>
         /// 更新实体对象
         /// </summary>
         /// <param name="p_entity">实体</param>
-        /// <returns></returns>
-        public async Task<TEntity> Update(TEntity p_entity)
+        /// <returns>true 成功</returns>
+        public async Task<bool> Update(TEntity p_entity)
         {
             Check.NotNull(p_entity);
             OnUpdating(p_entity);
-            TEntity entity = await _.Db.Update(p_entity);
-            OnUpdated(entity);
-
-            if (UpdateEvent != DomainEvent.None)
+            bool suc = await _.Db.Update(p_entity);
+            if (suc)
             {
-                var e = new UpdateEventData<TEntity>(entity);
-                if (UpdateEvent == DomainEvent.Remote)
-                    _.RemoteEB.Multicast(e);
-                else
-                    _.LocalEB.Publish(e);
+                OnUpdated(p_entity);
+
+                if (UpdateEvent != DomainEvent.None)
+                {
+                    var e = new UpdateEventData<TEntity>(p_entity);
+                    if (UpdateEvent == DomainEvent.Remote)
+                        _.RemoteEB.Multicast(e);
+                    else
+                        _.LocalEB.Publish(e);
+                }
             }
-            return entity;
+            return suc;
         }
 
         /// <summary>
@@ -162,10 +168,28 @@ namespace Dt.Core.Domain
     public class DbRepo<TEntity, TKey> : DbRepo<TEntity>, IRepository<TEntity, TKey>
         where TEntity : class, IEntity<TKey>
     {
-
-        public Task<TEntity> Get(TKey p_id, bool p_includeChildren = true)
+        /// <summary>
+        /// 根据主键获得实体对象，不存在时返回null
+        /// </summary>
+        /// <param name="p_id">主键</param>
+        /// <param name="p_includeChildren">是否包含所有的子实体</param>
+        /// <returns>返回实体对象或null</returns>
+        public async Task<TEntity> Get(TKey p_id, bool p_includeChildren = true)
         {
-            throw new NotImplementedException();
+            TEntity entity = await _.Db.FirstByKey<TEntity, TKey>(p_id);
+            if (entity != null && p_includeChildren)
+                await LoadChildren(entity);
+            return entity;
+        }
+
+        /// <summary>
+        /// 加载所有子实体
+        /// </summary>
+        /// <param name="p_entity"></param>
+        /// <returns></returns>
+        protected virtual Task LoadChildren(TEntity p_entity)
+        {
+            return Task.CompletedTask;
         }
 
         /// <summary>
