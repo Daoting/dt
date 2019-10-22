@@ -7,7 +7,7 @@
 #endregion
 
 #region 引用命名
-using System;
+using System.Reflection;
 using System.Threading.Tasks;
 #endregion
 
@@ -20,6 +20,58 @@ namespace Dt.Core.Domain
     public class DbRepo<TEntity> : IRepository<TEntity>
         where TEntity : class, IEntity
     {
+        #region 缓存
+        protected static readonly bool _isCached;
+        static readonly CacheHandler _cacheHandler;
+
+        static DbRepo()
+        {
+            var tag = typeof(TEntity).GetCustomAttribute<TagAttribute>(false);
+            if (tag != null && tag.IsCached)
+            {
+                _cacheHandler = new CacheHandler(typeof(TEntity), tag);
+                _isCached = _cacheHandler.IsCached;
+            }
+        }
+
+        /// <summary>
+        /// 缓存实体对象
+        /// </summary>
+        /// <param name="p_entity"></param>
+        /// <returns></returns>
+        public static Task AddToCache(TEntity p_entity)
+        {
+            if (_isCached)
+                return _cacheHandler.Cache(p_entity);
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// 从缓存中获取实体对象
+        /// </summary>
+        /// <param name="p_keyVal">属性值</param>
+        /// <param name="p_keyName">属性名</param>
+        /// <returns>返回实体对象或null</returns>
+        public static Task<TEntity> GetFromCache(string p_keyVal, string p_keyName = "ID")
+        {
+            if (_isCached)
+                return _cacheHandler.Get<TEntity>(p_keyName, p_keyVal);
+            return Task.FromResult(default(TEntity));
+        }
+
+        /// <summary>
+        /// 从缓存中删除实体对象
+        /// </summary>
+        /// <param name="p_entity"></param>
+        /// <returns></returns>
+        public static Task RemoveCache(TEntity p_entity)
+        {
+            if (_isCached)
+                return _cacheHandler.Remove(p_entity);
+            return Task.CompletedTask;
+        }
+        #endregion
+
         /// <summary>
         /// 业务线上下文
         /// </summary>
@@ -37,6 +89,7 @@ namespace Dt.Core.Domain
             bool suc = await _.Db.Insert(p_entity);
             if (suc)
             {
+                await AddToCache(p_entity);
                 OnInserted(p_entity);
 
                 if (InsertEvent != DomainEvent.None)
@@ -63,6 +116,7 @@ namespace Dt.Core.Domain
             bool suc = await _.Db.Update(p_entity);
             if (suc)
             {
+                await AddToCache(p_entity);
                 OnUpdated(p_entity);
 
                 if (UpdateEvent != DomainEvent.None)
@@ -89,7 +143,9 @@ namespace Dt.Core.Domain
             bool suc = await _.Db.Delete(p_entity);
             if (suc)
             {
+                await RemoveCache(p_entity);
                 OnDeleted(p_entity);
+
                 if (DeleteEvent != DomainEvent.None)
                 {
                     var e = new DeleteEventData<TEntity>(p_entity);
@@ -172,24 +228,26 @@ namespace Dt.Core.Domain
         /// 根据主键获得实体对象，不存在时返回null
         /// </summary>
         /// <param name="p_id">主键</param>
-        /// <param name="p_includeChildren">是否包含所有的子实体</param>
         /// <returns>返回实体对象或null</returns>
-        public async Task<TEntity> Get(TKey p_id, bool p_includeChildren = true)
+        public async Task<TEntity> Get(TKey p_id)
         {
-            TEntity entity = await _.Db.FirstByKey<TEntity, TKey>(p_id);
-            if (entity != null && p_includeChildren)
-                await LoadChildren(entity);
-            return entity;
-        }
+            TEntity entity = null;
 
-        /// <summary>
-        /// 加载所有子实体
-        /// </summary>
-        /// <param name="p_entity"></param>
-        /// <returns></returns>
-        protected virtual Task LoadChildren(TEntity p_entity)
-        {
-            return Task.CompletedTask;
+            // 启用缓存时首先从缓存中查询
+            if (_isCached)
+            {
+                entity = await GetFromCache("id", p_id.ToString());
+                if (entity != null)
+                    return entity;
+            }
+
+            entity = await _.Db.FirstByKey<TEntity, TKey>(p_id);
+            if (entity != null)
+            {
+                await OnGot(entity);
+                await AddToCache(entity);
+            }
+            return entity;
         }
 
         /// <summary>
@@ -203,6 +261,16 @@ namespace Dt.Core.Domain
             if (entity != null)
                 return await Delete(entity);
             return false;
+        }
+
+        /// <summary>
+        /// 查询到实体对象后的处理，如：加载子实体、附加属性，自定义缓存等
+        /// </summary>
+        /// <param name="p_entity"></param>
+        /// <returns></returns>
+        protected virtual Task OnGot(TEntity p_entity)
+        {
+            return Task.CompletedTask;
         }
     }
 }

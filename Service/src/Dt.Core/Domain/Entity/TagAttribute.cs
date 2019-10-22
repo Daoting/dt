@@ -24,8 +24,15 @@ namespace Dt.Core.Domain
         public string TblName { get; set; }
 
         /// <summary>
-        /// 实体对象的缓存方式
+        /// 是否将实体缓存在Redis中
         /// </summary>
-        public EntityCacheMode CacheMode { get; set; }
+        public bool IsCached { get; set; }
+
+        /// <summary>
+        /// 缓存在Redis中的键对应的属性名
+        /// <para>默认ID</para>
+        /// <para>缓存时需要多个属性名作为键值时属性名之间逗号隔开</para>
+        /// </summary>
+        public string CacheKey { get; set; }
     }
 }

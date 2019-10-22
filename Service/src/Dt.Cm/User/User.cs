@@ -17,8 +17,53 @@ using System.Threading.Tasks;
 
 namespace Dt.Cm
 {
+    [Tag(TblName = "cm_user", IsCached = true, CacheKey = "ID,Phone")]
     public class User : Root
     {
+        public User()
+        {
+            ID = Id.New(0);
+            CTime = MTime = Glb.Now;
+        }
 
+        /// <summary>
+        /// 手机号，唯一
+        /// </summary>
+        public string Phone { get; set; }
+
+        /// <summary>
+        /// 密码的MD5
+        /// </summary>
+        public string Pwd { get; set; }
+
+        /// <summary>
+        /// 姓名
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// 性别
+        /// </summary>
+        public bool Sex { get; set; }
+
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime CTime { get; set; }
+
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime MTime { get; set; }
+
+        /// <summary>
+        /// 当前用户具有的角色，逗号隔开
+        /// </summary>
+        public string Roles { get; set; }
+
+        public bool ValidatePwd(string p_pwd)
+        {
+            return true;
+        }
     }
 }

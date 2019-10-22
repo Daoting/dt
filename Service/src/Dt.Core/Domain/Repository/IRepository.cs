@@ -59,9 +59,8 @@ namespace Dt.Core.Domain
         /// 根据主键获得实体对象，不存在时返回null
         /// </summary>
         /// <param name="p_id">主键</param>
-        /// <param name="p_includeChildren">是否包含所有的子实体</param>
         /// <returns>返回实体对象或null</returns>
-        Task<TEntity> Get(TKey p_id, bool p_includeChildren = true);
+        Task<TEntity> Get(TKey p_id);
 
         /// <summary>
         /// 根据主键删除实体对象

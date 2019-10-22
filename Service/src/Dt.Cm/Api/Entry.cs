@@ -38,25 +38,29 @@ namespace Dt.Cm
         /// 密码登录
         /// </summary>
         /// <param name="p_phone">手机号</param>
-        /// <param name="p_password">密码</param>
+        /// <param name="p_pwd">密码</param>
         /// <returns></returns>
-        public async Task<Dict> LoginByPwd(string p_phone, string p_password)
+        public async Task<Dict> LoginByPwd(string p_phone, string p_pwd)
         {
             Dict res = new Dict();
-            if (string.IsNullOrWhiteSpace(p_phone) || string.IsNullOrWhiteSpace(p_password))
+            if (string.IsNullOrWhiteSpace(p_phone) || string.IsNullOrWhiteSpace(p_pwd))
             {
                 res["valid"] = false;
                 res["error"] = "手机号或密码不可为空！";
                 return res;
             }
 
+            var repo = new UserRepo();
+            User user = await repo.GetByPhone(p_phone);
+            if (user == null || !user.ValidatePwd(p_pwd))
+            {
+                res["valid"] = false;
+                res["error"] = "手机号不存在或密码错误！";
+                return res;
+            }
 
-            //var repo = _c.Repo<UserRepo>();
-            //User user = await repo.GetByPhone(p_phone);
-            //if (user.ValidatePwd(p_password))
-
-            res["userid"] = "110";
-            res["name"] = "test";
+            res["userid"] = user.ID;
+            res["name"] = user.Name;
             res["roles"] = Glb.AnyoneID + ",aca71e2d795d47b6942e4aa5c9df8248";
             return res;
         }
@@ -77,37 +81,29 @@ namespace Dt.Cm
                 return res;
             }
 
-            string code = await Cache.StringGet<string>(_prefixCode, p_phone);
-            if (code != p_code)
-            {
-                res["valid"] = false;
-                res["error"] = "验证码错误！";
-                return res;
-            }
-
-            //User user = await Users.GetUserByPhone(p_phone);
-            //if (user == null)
+            //string code = await Cache.StringGet<string>(_prefixCode, p_phone);
+            //if (code != p_code)
             //{
-            //    // 初次登录，创建账号，初始密码为手机号后4位
-            //    user = new User
-            //    {
-            //        ID = Id.New(),
-            //        Phone = p_phone,
-            //        Pwd = Kit.GetMD5(p_phone.Substring(p_phone.Length - 4)),
-            //        //Pwd = Kit.GetMD5(new Random().Next(100000, 999999).ToString()),
-            //        CTime = Glb.Now
-            //    };
-            //    int cnt = await new Db().Exec("insert into auth_user (id,phone,pwd,ctime) values (@id,@phone,@pwd,@ctime)", user);
-            //    if (cnt != 1)
-            //    {
-            //        res["valid"] = false;
-            //        res["error"] = "手机号验证码登录失败！";
-            //        return res;
-            //    }
-            //    Users.CacheUser(user);
+            //    res["valid"] = false;
+            //    res["error"] = "验证码错误！";
+            //    return res;
             //}
 
-            //_verCode.Remove(p_phone);
+            var repo = new UserRepo();
+            User user = await repo.GetByPhone(p_phone);
+            if (user == null)
+            {
+                // 初次登录，创建账号，初始密码为手机号后4位
+                user = new User
+                {
+                    Phone = p_phone,
+                    Name = p_phone,
+                    Pwd = Kit.GetMD5(p_phone.Substring(p_phone.Length - 4)),
+                    //Pwd = Kit.GetMD5(new Random().Next(100000, 999999).ToString()),
+                };
+                await repo.Insert(user);
+            }
+
             res["valid"] = true;
             res["userid"] = "110";
             res["name"] = "test";

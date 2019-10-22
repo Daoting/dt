@@ -38,6 +38,14 @@ namespace Dt.Core.Caches
         }
 
         /// <summary>
+        /// 获取Redis服务器
+        /// </summary>
+        public static IServer Server
+        {
+            get { return _muxer.GetServer(_muxer.GetEndPoints(true)[0]); }
+        }
+
+        /// <summary>
         /// 在库中删除指定前缀的所有键值
         /// </summary>
         /// <param name="p_db"></param>

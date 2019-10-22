@@ -19,16 +19,22 @@ namespace Dt.Cm
 {
     public class UserRepo : Repo<User>
     {
-        public int _rn;
-
-        public UserRepo()
+        public async Task<User> GetByPhone(string p_phone)
         {
-            _rn = new Random().Next(1, 100000);
+            User user = await GetFromCache("phone", p_phone);
+            if (user != null)
+                return user;
+
+            user = await _.Db.First<User>("登录-手机号获取用户", new { phone = p_phone });
+            if (user != null)
+                await AddToCache(user);
+            return user;
         }
 
-        internal Task<User> GetByPhone(string p_phone)
+        protected override Task OnGot(User p_entity)
         {
-            return Task.FromResult(default(User));
+            
+            return Task.CompletedTask;
         }
     }
 }
