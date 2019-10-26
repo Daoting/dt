@@ -22,8 +22,8 @@ namespace Dt.App
         /// <summary>
         /// 角色标识
         /// </summary>
-        [Indexed, MaxLength(32)]
-        public string RoleID { get; set; }
+        [Indexed]
+        public long RoleID { get; set; }
 
         /// <summary>
         /// 权限标识

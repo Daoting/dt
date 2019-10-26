@@ -44,7 +44,7 @@ namespace Dt.App
             }
 
             Dict dt = BuildRowSqlDict(p_row);
-            int cnt = await new UnaryRpc(typeof(TSrv).Name, "Db.ExecSql", (string)dt["text"], (Dict)dt["params"]).Call<int>();
+            int cnt = await new UnaryRpc(typeof(TSrv).Name, "DataAccess.Exec", (string)dt["text"], (Dict)dt["params"]).Call<int>();
             if (cnt > 0)
             {
                 p_row.AcceptChanges();
@@ -107,7 +107,7 @@ namespace Dt.App
             if (dtsChild.Count == 0)
             {
                 // 只保存父行
-                int cnt = await new UnaryRpc(typeof(TSrv).Name, "Db.ExecSql", (string)dts[0]["text"], (Dict)dts[0]["params"]).Call<int>();
+                int cnt = await new UnaryRpc(typeof(TSrv).Name, "DataAccess.Exec", (string)dts[0]["text"], (Dict)dts[0]["params"]).Call<int>();
                 suc = cnt > 0;
             }
             else
@@ -115,12 +115,12 @@ namespace Dt.App
                 if (dts.Count != 0)
                 {
                     // 父子都需保存
-                    suc = await new UnaryRpc(typeof(TSrv).Name, "Db.RelationExecs", dts, dtsChild).Call<bool>();
+                    suc = await new UnaryRpc(typeof(TSrv).Name, "DataAccess.RelationExecs", dts, dtsChild).Call<bool>();
                 }
                 else
                 {
                     // 只保存子表
-                    suc = (await new UnaryRpc(typeof(TSrv).Name, "Db.BatchExecs", dtsChild).Call<int>()) > 0;
+                    suc = (await new UnaryRpc(typeof(TSrv).Name, "DataAccess.BatchExec", dtsChild).Call<int>()) > 0;
                 }
             }
 

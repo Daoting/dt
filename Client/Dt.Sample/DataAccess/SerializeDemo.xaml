@@ -53,6 +53,10 @@
             <Button Content="发int列表" Click="SetIntList" />
         </StackPanel>
         <StackPanel Orientation="Horizontal">
+            <Button Content="收long列表" Click="GetLongList" />
+            <Button Content="发long列表" Click="SetLongList" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
             <Button Content="收double列表" Click="GetDoubleList" />
             <Button Content="发double列表" Click="SetDoubleList" />
         </StackPanel>

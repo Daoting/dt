@@ -10,6 +10,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 #endregion
 
@@ -188,29 +189,33 @@ namespace Dt.Core
 
         static object DeserializeArray(JsonReader p_reader, string p_alias)
         {
+            if (p_alias == "ls")
+            {
+                // json中int和long都按照long处理，在前面已特殊处理
+                List<long> ls = new List<long>();
+                while (p_reader.Read() && p_reader.TokenType != JsonToken.EndArray)
+                {
+                    var val = Deserialize(p_reader);
+                    if (val is int c)
+                        ls.Add(c);
+                    else
+                        ls.Add((long)val);
+                }
+                return ls;
+            }
+
+            // 不支持数组，支持List<T>
+            // .Net Native不支持数组类型反序列化！
+            // target = Activator.CreateInstance(Type.GetType("System.Collections.Generic.List`1[[" + elementType.FullName + ", " + elementType.Assembly.FullName + "]]")) as IList;
             Type type = SerializeTypeAlias.GetType(p_alias);
-            IList target = null;
-            if (type.IsArray)
-            {
-                // .Net Native不支持数组类型反序列化！
-                Type elementType = type.GetElementType();
-                target = Activator.CreateInstance(Type.GetType("System.Collections.Generic.List`1[[" + elementType.FullName + ", " + elementType.Assembly.FullName + "]]")) as IList;
-            }
-            else
-            {
-                target = Activator.CreateInstance(type, new object[0]) as IList;
-                if (target == null)
-                    throw new Exception(type.FullName + " 类无法进行自动反序列化。");
-            }
+            IList target = Activator.CreateInstance(type, new object[0]) as IList;
+            if (target == null)
+                throw new Exception(type.FullName + " 类无法进行自动反序列化。");
 
             while (p_reader.Read() && p_reader.TokenType != JsonToken.EndArray)
             {
                 target.Add(Deserialize(p_reader));
             }
-
-            // .Net Native不支持
-            if (type.IsArray)
-                return target.GetType().InvokeMember("ToArray", BindingFlags.InvokeMethod, null, target, null);
             return target;
         }
         #endregion

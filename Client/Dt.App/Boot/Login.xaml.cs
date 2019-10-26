@@ -90,8 +90,8 @@ namespace Dt.App
                         return;
                     }
 
-                    MenuKit.Roles = dt.Str("roles").Split(',');
-                    AtApp.LoginSuccess(dt.Str("userid"), phone, dt.Str("name"), pwd, this.FindParentByType<Dlg>());
+                    MenuKit.InitRoles(dt.Str("roles"));
+                    AtApp.LoginSuccess(dt.Long("userid"), phone, dt.Str("name"), pwd, this.FindParentByType<Dlg>());
                 }
                 catch
                 {

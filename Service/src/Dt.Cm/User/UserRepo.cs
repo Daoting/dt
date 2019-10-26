@@ -21,7 +21,7 @@ namespace Dt.Cm
     {
         public async Task<User> GetByPhone(string p_phone)
         {
-            User user = await GetFromCache("phone", p_phone);
+            User user = await GetFromCache(p_phone, "phone");
             if (user != null)
                 return user;
 

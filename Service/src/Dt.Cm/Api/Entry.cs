@@ -59,9 +59,10 @@ namespace Dt.Cm
                 return res;
             }
 
+            res["valid"] = true;
             res["userid"] = user.ID;
             res["name"] = user.Name;
-            res["roles"] = Glb.AnyoneID + ",aca71e2d795d47b6942e4aa5c9df8248";
+            res["roles"] = user.Roles;
             return res;
         }
 
@@ -81,13 +82,13 @@ namespace Dt.Cm
                 return res;
             }
 
-            //string code = await Cache.StringGet<string>(_prefixCode, p_phone);
-            //if (code != p_code)
-            //{
-            //    res["valid"] = false;
-            //    res["error"] = "验证码错误！";
-            //    return res;
-            //}
+            string code = await Cache.StringGet<string>(_prefixCode, p_phone);
+            if (code != p_code)
+            {
+                res["valid"] = false;
+                res["error"] = "验证码错误！";
+                return res;
+            }
 
             var repo = new UserRepo();
             User user = await repo.GetByPhone(p_phone);
@@ -105,10 +106,10 @@ namespace Dt.Cm
             }
 
             res["valid"] = true;
-            res["userid"] = "110";
-            res["name"] = "test";
-            res["roles"] = Glb.AnyoneID + ",aca71e2d795d47b6942e4aa5c9df8248";
-            res["pwd"] = "xxx";
+            res["userid"] = user.ID;
+            res["name"] = user.Name;
+            res["roles"] = user.Roles;
+            res["pwd"] = user.Pwd;
             return res;
         }
 

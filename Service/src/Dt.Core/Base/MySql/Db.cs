@@ -635,7 +635,7 @@ namespace Dt.Core
         public async Task<TEntity> FirstByKey<TEntity, TKey>(TKey p_id)
             where TEntity : class, IEntity<TKey>
         {
-            string tblName = GetTblName(typeof(TEntity));
+            string tblName = DbSchema.GetEntityTblName(typeof(TEntity));
             Check.NotNullOrEmpty(tblName);
             string sql = $"select * from `{tblName}` where id='{p_id}'";
 
@@ -666,7 +666,7 @@ namespace Dt.Core
             where TEntity : class, IEntity
         {
             Check.NotNull(p_entity);
-            string sql = DbSchema.GetInsertSql(GetTblName(typeof(TEntity)));
+            string sql = DbSchema.GetEntityInsertSql(typeof(TEntity));
             int cnt = await Exec(sql, p_entity);
             return cnt == 1;
         }
@@ -681,7 +681,7 @@ namespace Dt.Core
             where TEntity : class, IEntity
         {
             Check.NotNull(p_entity);
-            string sql = DbSchema.GetUpdateSql(GetTblName(typeof(TEntity)));
+            string sql = DbSchema.GetEntityUpdateSql(typeof(TEntity));
             await Exec(sql, p_entity);
             int cnt = await Exec(sql, p_entity);
             return cnt == 1;
@@ -697,7 +697,7 @@ namespace Dt.Core
             where TEntity : class, IEntity
         {
             Check.NotNull(p_entity);
-            string sql = DbSchema.GetDeleteSql(GetTblName(typeof(TEntity)));
+            string sql = DbSchema.GetDeleteSql(DbSchema.GetEntityTblName(typeof(TEntity)));
             int cnt = await Exec(sql, p_entity);
             return cnt == 1;
         }
@@ -854,20 +854,6 @@ namespace Dt.Core
             }
             catch { }
             return str;
-        }
-
-        /// <summary>
-        /// 获取类型对应的表名
-        /// </summary>
-        /// <param name="p_type"></param>
-        /// <returns></returns>
-        static string GetTblName(Type p_type)
-        {
-            string tblName = p_type.Name;
-            var tag = p_type.GetCustomAttribute<TagAttribute>(false);
-            if (tag != null && !string.IsNullOrEmpty(tag.TblName))
-                tblName = tag.TblName;
-            return tblName;
         }
 
         /// <summary>

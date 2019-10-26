@@ -113,11 +113,6 @@ namespace Dt.Core
         {
             get { return RuntimeInformation.IsOSPlatform(OSPlatform.Linux); }
         }
-
-        /// <summary>
-        /// 任何人角色ID
-        /// </summary>
-        public const string AnyoneID = "3b9eafc325e74c3d9e1901a0d51d3b28";
         #endregion
 
         #region 系统配置

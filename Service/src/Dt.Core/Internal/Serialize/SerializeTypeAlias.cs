@@ -30,14 +30,14 @@ namespace Dt.Core
             _typeCache["ss"] = typeof(List<string>);
             _typeCache["bs"] = typeof(List<bool>);
             _typeCache["is"] = typeof(List<int>);
+            _typeCache["ls"] = typeof(List<long>);
             _typeCache["ds"] = typeof(List<double>);
             _typeCache["dates"] = typeof(List<DateTime>);
             _typeCache["objs"] = typeof(List<object>);
             _typeCache["tbls"] = typeof(List<Table>);
             _typeCache["dicts"] = typeof(List<Dict>);
             // 客户端UWP Release版无法反序列化，因Native无法调用ToArray方法！！！
-            // 服务端只接收不返回数组！！！
-            _typeCache["objarr"] = typeof(object[]);
+            //_typeCache["objarr"] = typeof(object[]);
             _typeCache["msg"] = typeof(MsgInfo);
         }
 

@@ -100,7 +100,6 @@ namespace Dt.Base
             var request = new Request.Builder()
                 .Post(body)
                 .Url($"{AtSys.Stub.ServerUrl.TrimEnd('/')}/fsm/.u")
-                .AddHeader("uid", AtUser.ID)
                 .Build();
             var call = _client.NewCall(request);
             p_token.Register(() => Task.Run(() => call.Cancel()));

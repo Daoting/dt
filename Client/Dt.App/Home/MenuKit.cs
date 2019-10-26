@@ -9,7 +9,6 @@
 #region 引用命名
 using Dt.Base;
 using Dt.Core;
-using Dt.Core.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,54 +40,33 @@ namespace Dt.App
         /// <summary>
         /// 用户角色列表
         /// </summary>
-        public static string[] Roles { get; internal set; }
+        public static List<long> Roles { get; private set; }
 
         /// <summary>
-        /// 用在sql中的角色串，格式 'XXXX','XXXX','XXXX'
+        /// 用在sql中的角色串，格式 1,2,3
         /// </summary>
-        public static string SqlRoles
+        public static string SqlRoles { get; private set; }
+
+        internal static void InitRoles(string p_roles)
         {
-            get
+            // 任何人角色ID
+            List<long> ls = new List<long> { 1 };
+            StringBuilder sb = new StringBuilder("1");
+            if (!string.IsNullOrEmpty(p_roles))
             {
-                StringBuilder sb = new StringBuilder("'");
-                foreach (var id in Roles)
+                long roleid;
+                foreach (string id in p_roles.Split(','))
                 {
-                    sb.Append("','");
-                    sb.Append(id);
+                    if (long.TryParse(id, out roleid))
+                    {
+                        ls.Add(roleid);
+                        sb.Append(",");
+                        sb.Append(id);
+                    }
                 }
-                sb.Append("'");
-                return sb.ToString();
             }
-        }
-
-        /// <summary>
-        /// 当前登录用户是否具有指定角色
-        /// </summary>
-        /// <param name="p_roleID"></param>
-        /// <returns></returns>
-        public static bool ContainsRole(string p_roleID)
-        {
-            if (Roles == null || string.IsNullOrEmpty(p_roleID))
-                return false;
-            return Roles.Contains(p_roleID);
-        }
-
-        /// <summary>
-        /// 当前登录用户是否具有任一角色
-        /// </summary>
-        /// <param name="p_roleIDs"></param>
-        /// <returns></returns>
-        public static bool ContainsRoles(IEnumerable<string> p_roleIDs)
-        {
-            if (Roles == null || p_roleIDs == null)
-                return false;
-
-            foreach (var id in p_roleIDs)
-            {
-                if (Roles.Contains(id))
-                    return true;
-            }
-            return false;
+            Roles = ls;
+            SqlRoles = sb.ToString();
         }
         #endregion
 
@@ -209,7 +187,7 @@ namespace Dt.App
         /// </summary>
         /// <param name="p_id"></param>
         /// <returns></returns>
-        public static OmMenu QueryMenu(string p_id)
+        public static OmMenu QueryMenu(long p_id)
         {
             // 所有菜单项 = _rootPageMenus + _leaveMenus
             var om = (from grp in _rootPageMenus
@@ -231,7 +209,8 @@ namespace Dt.App
         public static OmMenu CreateChatItem()
         {
             OmMenu item = new OmMenu();
-            item.ID = item.Name = "通讯录";
+            item.ID = 1110;
+            item.Name = "通讯录";
             item.Icon = "留言";
             item.ViewName = "通讯录";
             return item;
@@ -244,7 +223,7 @@ namespace Dt.App
         public static void LoadMenus(List<OmMenu> p_fixedMenus)
         {
             // 所有可访问项
-            List<string> idsAll = new List<string>();
+            List<long> idsAll = new List<long>();
             var ids = AtLocal.DeferredQueryModel<RoleMenu>(string.Format("select distinct(menuid) from RoleMenu where roleid in ({0})", SqlRoles));
             foreach (var rm in ids)
             {
@@ -252,8 +231,8 @@ namespace Dt.App
             }
 
             // 常用菜单项，按点击次数排序取前6名
-            List<string> idsFav = new List<string>();
-            var favMenu = AtLocal.DeferredQuery<MenuFav>($"select menuid from menufav where userid='{AtUser.ID}' order by clicks desc limit 0,6");
+            List<long> idsFav = new List<long>();
+            var favMenu = AtLocal.DeferredQuery<MenuFav>($"select menuid from menufav where userid={AtUser.ID} order by clicks desc limit 0,6");
             foreach (var fav in favMenu)
             {
                 idsFav.Add(fav.MenuID);
@@ -284,7 +263,7 @@ namespace Dt.App
                     continue;
 
                 // 一级项和其他分开
-                if (string.IsNullOrEmpty(item.ParentID))
+                if (!item.ParentID.HasValue)
                     roots.Add(item);
                 else
                     _leaveMenus.Add(item);
@@ -408,10 +387,10 @@ namespace Dt.App
             if (p_menu != null)
             {
                 sb.AppendFormat(" > {0}", p_menu.Name);
-                string parentID = p_menu.ParentID;
-                while (!string.IsNullOrEmpty(parentID))
+                long? parentID = p_menu.ParentID;
+                while (parentID.HasValue)
                 {
-                    OmMenu parent = QueryMenu(parentID);
+                    OmMenu parent = QueryMenu(parentID.Value);
                     if (parent == null)
                         break;
                     sb.Insert(0, string.Format(" > {0}", parent.Name));

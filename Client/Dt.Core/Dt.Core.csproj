@@ -29,6 +29,7 @@
   <ItemGroup>
     <Compile Include="..\..\Service\src\Dt.Cm\SqliteModel\OmColumn.cs" Link="Internal\SqliteModel\OmColumn.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Dict.cs" Link="Base\Collection\Dict.cs" />
+    <Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\Check.cs" Link="Base\Check.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\MsgInfo.cs" Link="Base\MsgInfo.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Serialize\IRpcJson.cs" Link="Internal\Serialize\IRpcJson.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Serialize\JsonRpcSerializer.cs" Link="Internal\Serialize\JsonRpcSerializer.cs" />

@@ -9,9 +9,7 @@
 #region 引用命名
 using Dt.Base;
 using Dt.Core;
-using Dt.Core.Model;
 using System.Linq;
-using System.Threading.Tasks;
 #endregion
 
 namespace Dt.App.Model
@@ -28,13 +26,13 @@ namespace Dt.App.Model
         #region 子系统
         async void LoadSys()
         {
-            string id = _lvSys.SelectedItem == null ? null : _lvSys.SelectedRow.Str("id");
+            long id = _lvSys.SelectedItem == null ? -1 : _lvSys.SelectedRow.Long("id");
             _lvSys.Data = await AtCm.Query("模块-所有子系统");
 
-            if (id != null)
+            if (id > 0)
             {
                 var select = (from row in (Table)_lvSys.Data
-                              where row.Str("id") == id
+                              where row.Long("id") == id
                               select row).FirstOrDefault();
                 if (select != null)
                     _lvSys.SelectedItem = select;
@@ -43,8 +41,8 @@ namespace Dt.App.Model
 
         async void OnSysClick(object sender, ItemClickArgs e)
         {
-            var row = await AtCm.GetRow("模块-id子系统", new Dict { { "id", e.Row.Str("id") } });
-            row.Table.Name = "dt_subsys";
+            var row = await AtCm.GetRow("模块-id子系统", new { ID = e.Row.Long("id") });
+            row.Table.Name = "cm_subsys";
             _fvSys.Data = row;
             LoadModule();
             NaviTo("模块列表,子系统");
@@ -77,14 +75,14 @@ namespace Dt.App.Model
         void OnSysListDel(object sender, Mi e)
         {
             Row row = e.TargetRow;
-            row.Table.Name = "dt_subsys";
+            row.Table.Name = "cm_subsys";
             DelSysRow(row);
         }
 
         async void ChangeDispidx(Row p_row, Row p_tgt)
         {
             Table tbl = new Table { { "id" }, { "dispidx", typeof(int) } };
-            tbl.Name = "dt_subsys";
+            tbl.Name = "cm_subsys";
 
             var save = tbl.NewRow(p_row.Str("id"));
             save.AcceptChanges();
@@ -100,11 +98,12 @@ namespace Dt.App.Model
 
         async void OnSysAdd(object sender, Mi e)
         {
-            _fvSys.Data = Table.Create("dt_subsys").NewRow(new
+            var ids = await AtCm.NewID("sq_subsys");
+            _fvSys.Data = Table.Create("cm_subsys").NewRow(new
             {
-                id = AtKit.NewID,
+                id = ids[0],
                 name = "新子系统",
-                dispidx = await AtCm.GetSeqVal("sq_subsys"),
+                dispidx = ids[1],
             });
         }
 
@@ -136,7 +135,7 @@ namespace Dt.App.Model
                 return;
             }
 
-            int count = await AtCm.GetScalar<int>("模块-子系统模块数", new Dict { { "subsysid", row.Str("id") } });
+            int count = await AtCm.GetScalar<int>("模块-子系统模块数", new { subsysid = row.Long("id") });
             if (count > 0)
             {
                 AtKit.Warn("子系统含模块无法删除！");
@@ -153,17 +152,17 @@ namespace Dt.App.Model
 
         async void LoadModule()
         {
-            string id = _lvModule.SelectedItem == null ? null : _lvModule.SelectedRow.Str("id");
+            long id = _lvModule.SelectedItem == null ? -1 : _lvModule.SelectedRow.Long("id");
             Row subsys = _lvSys.SelectedRow;
             if (subsys != null)
-                _lvModule.Data = await AtCm.Query("模块-子系统模块", new { subsysid = subsys.Str("id") });
+                _lvModule.Data = await AtCm.Query("模块-子系统模块", new { subsysid = subsys.Long("id") });
             else
                 _lvModule.Data = await AtCm.Query("模块-所有模块");
 
-            if (id != null)
+            if (id > 0)
             {
                 var select = (from row in (Table)_lvModule.Data
-                              where row.Str("id") == id
+                              where row.Long("id") == id
                               select row).FirstOrDefault();
                 if (select != null)
                     _lvModule.SelectedItem = select;
@@ -172,8 +171,8 @@ namespace Dt.App.Model
 
         async void OnModuleClick(object sender, ItemClickArgs e)
         {
-            var row = await AtCm.GetRow("模块-id模块", new { id = e.Row.Str("id") });
-            row.Table.Name = "dt_module";
+            var row = await AtCm.GetRow("模块-id模块", new { id = e.Row.Long("id") });
+            row.Table.Name = "cm_module";
             _fvModule.Data = row;
             NaviTo("模块");
         }
@@ -205,7 +204,7 @@ namespace Dt.App.Model
         void OnModuleListDel(object sender, Mi e)
         {
             Row row = e.TargetRow;
-            row.Table.Name = "dt_module";
+            row.Table.Name = "cm_module";
             DelModuleRow(row);
         }
 
@@ -218,7 +217,7 @@ namespace Dt.App.Model
         async void ChangeModuleDispidx(Row p_row, Row p_tgt)
         {
             Table tbl = new Table { { "id" }, { "dispidx", typeof(int) } };
-            tbl.Name = "dt_module";
+            tbl.Name = "cm_module";
 
             var save = tbl.NewRow(p_row.Str("id"));
             save.AcceptChanges();
@@ -242,15 +241,16 @@ namespace Dt.App.Model
             }
 
             Row subsys = _lvSys.SelectedRow ?? data[0];
-            var tbl = Table.Create("dt_module");
+            var tbl = Table.Create("cm_module");
             tbl.Add("subsysname");
+            var ids = await AtCm.NewID("sq_module");
             _fvModule.Data = tbl.NewRow(new
             {
-                id = AtKit.NewID,
+                id = ids[0],
                 name = "新模块",
-                subsysid = subsys.Str("id"),
+                subsysid = subsys.Long("id"),
                 subsysname = subsys.Str("name"),
-                dispidx = await AtCm.GetSeqVal("sq_module"),
+                dispidx = ids[1],
             });
         }
 

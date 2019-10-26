@@ -235,6 +235,25 @@ namespace Dt.Cm
         }
 
         /// <summary>
+        /// 返回long值列表
+        /// </summary>
+        /// <returns></returns>
+        public List<long> GetLongList()
+        {
+            List<long> ls = new List<long>() { 1, 2, 3, 4 };
+            return ls;
+        }
+
+        /// <summary>
+        /// long列表
+        /// </summary>
+        /// <param name="p_val"></param>
+        public List<long> SetLongList(List<long> p_val)
+        {
+            return p_val;
+        }
+
+        /// <summary>
         /// 返回double值列表
         /// </summary>
         /// <returns></returns>

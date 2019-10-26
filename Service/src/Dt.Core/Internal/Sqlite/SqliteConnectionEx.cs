@@ -104,13 +104,14 @@ namespace Dt.Core.Sqlite
                 cmd.CommandText = map.GetInsertSql(false);
                 foreach (var col in cols)
                 {
-                    cmd.Parameters.Add(col.Name, ToDbType(col.ColumnType));
+                    var par = cmd.Parameters.Add(col.Name, ToDbType(col.ColumnType));
                 }
                 foreach (var row in p_tbl)
                 {
                     foreach (var col in cols)
                     {
-                        cmd.Parameters[col.Name].Value = row[col.Name];
+                        var obj = row[col.Name];
+                        cmd.Parameters[col.Name].Value = (obj == null ? DBNull.Value : obj);
                     }
                     cmd.ExecuteNonQuery();
                 }
@@ -195,7 +196,7 @@ namespace Dt.Core.Sqlite
         {
             if (_sqliteTypeMapping.TryGetValue(p_type, out var sqliteType))
                 return sqliteType;
-            throw new InvalidOperationException("UnknownDataType "+ p_type.FullName);
+            throw new InvalidOperationException("UnknownDataType " + p_type.FullName);
         }
     }
 }

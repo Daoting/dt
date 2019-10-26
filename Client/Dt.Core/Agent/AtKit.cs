@@ -762,7 +762,7 @@ namespace Dt.Core
             switch (exp)
             {
                 case ValExp.UserID:
-                    return AtUser.ID;
+                    return AtUser.ID.ToString();
                 case ValExp.UserName:
                     return AtUser.Name;
                 case ValExp.Guid:

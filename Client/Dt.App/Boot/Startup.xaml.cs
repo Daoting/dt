@@ -50,8 +50,8 @@ namespace Dt.App
                 Dict dt = await AtCm.LoginByPwd(phone, pwd);
                 if (dt.Bool("valid"))
                 {
-                    MenuKit.Roles = dt.Str("roles").Split(',');
-                    AtApp.LoginSuccess(dt.Str("userid"), phone, dt.Str("name"));
+                    MenuKit.InitRoles(dt.Str("roles"));
+                    AtApp.LoginSuccess(dt.Long("userid"), phone, dt.Str("name"));
                     return;
                 }
             }

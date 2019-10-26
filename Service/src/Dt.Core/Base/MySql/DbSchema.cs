@@ -7,12 +7,14 @@
 #endregion
 
 #region 引用命名
+using Dt.Core.Domain;
 using MySql.Data.MySqlClient;
 using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 #endregion
 
@@ -26,6 +28,9 @@ namespace Dt.Core
         static readonly Dictionary<string, string> _sqlInsert = new Dictionary<string, string>();
         static readonly Dictionary<string, string> _sqlUpdate = new Dictionary<string, string>();
         static readonly Dictionary<string, string> _sqlDel = new Dictionary<string, string>();
+
+        static readonly Dictionary<Type, string> _entityInsert = new Dictionary<Type, string>();
+        static readonly Dictionary<Type, string> _entityUpdate = new Dictionary<Type, string>();
 
         /// <summary>
         /// 默认库的所有表结构
@@ -148,15 +153,15 @@ namespace Dt.Core
             TableSchema schema;
             if (Schema.TryGetValue(p_tblName.ToLower(), out schema))
                 return schema;
-            throw new Exception(string.Format("未找到表{0}的结构信息！", p_tblName));
+            throw new Exception($"未找到表{p_tblName}的结构信息！");
         }
 
         /// <summary>
-        /// 获取表的insert语句模板
+        /// 获取表的完整insert语句模板
         /// </summary>
         /// <param name="p_tblName"></param>
         /// <returns></returns>
-        public static string GetInsertSql(string p_tblName)
+        public static string GetFullInsertSql(string p_tblName)
         {
             Check.NotNullOrEmpty(p_tblName);
             string tblName = p_tblName.ToLower();
@@ -182,11 +187,11 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 获取表的update语句模板
+        /// 获取表的完整update语句模板
         /// </summary>
         /// <param name="p_tblName"></param>
         /// <returns></returns>
-        public static string GetUpdateSql(string p_tblName)
+        public static string GetFullUpdateSql(string p_tblName)
         {
             Check.NotNullOrEmpty(p_tblName);
             string tblName = p_tblName.ToLower();
@@ -245,6 +250,117 @@ namespace Dt.Core
             _sqlDel[tblName] = sql;
             return sql;
         }
+
+        #region 实体
+        /// <summary>
+        /// 获取实体类型对应的insert语句模板
+        /// </summary>
+        /// <param name="p_entityType">实体类型</param>
+        /// <returns></returns>
+        public static string GetEntityInsertSql(Type p_entityType)
+        {
+            string sql;
+            if (_entityInsert.TryGetValue(p_entityType, out sql))
+                return sql;
+
+            string tblName = GetEntityTblName(p_entityType);
+            StringBuilder insertCol = new StringBuilder();
+            StringBuilder insertVal = new StringBuilder();
+            var schema = GetTableSchema(tblName);
+            foreach (var col in schema.PrimaryKey.Concat(schema.Columns))
+            {
+                // 忽略没有的属性列
+                if (p_entityType.GetProperty(col.Name, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase) == null)
+                {
+                    // 自动设置创建时间和修改时间
+                    if (col.Name == "ctime" || col.Name == "mtime")
+                    {
+                        insertCol.Append(col.Name);
+                        insertCol.Append(",");
+
+                        insertVal.Append("now(),");
+                    }
+                    continue;
+                }
+
+                insertCol.Append(col.Name);
+                insertCol.Append(",");
+
+                insertVal.Append("@");
+                insertVal.Append(col.Name);
+                insertVal.Append(",");
+            }
+            sql = $"insert into `{tblName}` ({insertCol.ToString().TrimEnd(',')}) values ({insertVal.ToString().TrimEnd(',')})";
+            _entityInsert[p_entityType] = sql;
+            return sql;
+        }
+
+        /// <summary>
+        /// 获取实体类型对应的update语句模板
+        /// </summary>
+        /// <param name="p_entityType">实体类型</param>
+        /// <returns></returns>
+        public static string GetEntityUpdateSql(Type p_entityType)
+        {
+            string sql;
+            if (_entityUpdate.TryGetValue(p_entityType, out sql))
+                return sql;
+
+            string tblName = GetEntityTblName(p_entityType);
+            StringBuilder updateVal = new StringBuilder();
+            StringBuilder whereVal = new StringBuilder();
+            var schema = GetTableSchema(tblName);
+            foreach (var col in schema.PrimaryKey)
+            {
+                if (p_entityType.GetProperty(col.Name, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase) == null)
+                    throw new Exception($"实体类型{p_entityType.Name}中缺少主键列{col.Name}！");
+
+                if (whereVal.Length > 0)
+                    whereVal.Append(" and ");
+                whereVal.Append(col.Name);
+                whereVal.Append("=@");
+                whereVal.Append(col.Name);
+            }
+            foreach (var col in schema.Columns)
+            {
+                // 忽略没有的属性列
+                if (p_entityType.GetProperty(col.Name, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase) == null)
+                {
+                    // 自动设置修改时间
+                    if (col.Name == "mtime")
+                    {
+                        if (updateVal.Length > 0)
+                            updateVal.Append(", ");
+                        updateVal.Append("mtime=now()");
+                    }
+                    continue;
+                }
+
+                if (updateVal.Length > 0)
+                    updateVal.Append(", ");
+                updateVal.Append(col.Name);
+                updateVal.Append("=@");
+                updateVal.Append(col.Name);
+            }
+            sql = $"update `{tblName}` set {updateVal} where {whereVal}";
+            _entityUpdate[p_entityType] = sql;
+            return sql;
+        }
+
+        /// <summary>
+        /// 获取实体类型对应的表名
+        /// </summary>
+        /// <param name="p_type"></param>
+        /// <returns></returns>
+        public static string GetEntityTblName(Type p_type)
+        {
+            string tblName = p_type.Name.ToLower();
+            var tag = p_type.GetCustomAttribute<TagAttribute>(false);
+            if (tag != null && !string.IsNullOrEmpty(tag.TblName))
+                tblName = tag.TblName.ToLower();
+            return tblName;
+        }
+        #endregion
 
         /// <summary>
         /// 关闭MySql连接池，释放资源

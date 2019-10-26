@@ -481,6 +481,26 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 根据索引获取指定列的64位整数值，为null时返回零即default(long)！！！
+        /// </summary>
+        /// <param name="p_index">索引</param>
+        /// <returns>整数值</returns>
+        public long Long(int p_index)
+        {
+            return GetVal<long>(p_index);
+        }
+
+        /// <summary>
+        /// 根据列名获取指定列的64位整数值，为null时返回零即default(long)！！！
+        /// </summary>
+        /// <param name="p_columnName">列名</param>
+        /// <returns>整数值</returns>
+        public long Long(string p_columnName)
+        {
+            return GetVal<long>(p_columnName);
+        }
+
+        /// <summary>
         /// 根据索引获取指定列的日期值，为null时返回DateTime.MinValue，即default(DateTime)！！！
         /// </summary>
         /// <param name="p_index">索引</param>

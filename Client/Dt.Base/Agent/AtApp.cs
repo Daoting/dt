@@ -188,7 +188,7 @@ namespace Dt.Base
         /// <param name="p_phone"></param>
         /// <param name="p_name"></param>
         /// <param name="p_pwd"></param>
-        public static void LoginSuccess(string p_id, string p_phone, string p_name, string p_pwd = null, Dlg p_dlg = null)
+        public static void LoginSuccess(long p_id, string p_phone, string p_name, string p_pwd = null, Dlg p_dlg = null)
         {
             // 登录后初始化用户信息
             AtUser.ID = p_id;
@@ -219,7 +219,7 @@ namespace Dt.Base
         static async void Logout()
         {
             // 注销时清空用户信息
-            AtUser.ID = null;
+            AtUser.ID = -1;
             AtUser.Name = null;
             AtUser.Phone = null;
 

@@ -287,6 +287,31 @@ namespace Dt.Sample
         }
 
         /// <summary>
+        /// 返回long值列表
+        /// </summary>
+        /// <returns></returns>
+        public static Task<List<long>> GetLongList()
+        {
+            return new UnaryRpc(
+                "cm",
+                "TestSerialize.GetLongList"
+            ).Call<List<long>>();
+        }
+
+        /// <summary>
+        /// long列表
+        /// </summary>
+        /// <param name="p_val"></param>
+        public static Task<List<long>> SetLongList(List<long> p_val)
+        {
+            return new UnaryRpc(
+                "cm",
+                "TestSerialize.SetLongList",
+                p_val
+            ).Call<List<long>>();
+        }
+
+        /// <summary>
         /// 返回double值列表
         /// </summary>
         /// <returns></returns>

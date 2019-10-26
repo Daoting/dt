@@ -199,6 +199,23 @@ namespace Dt.Sample
             _tbInfo.Text = ls.Count == 4 ? "调用成功！" : "调用不成功！";
         }
 
+        async void GetLongList(object sender, RoutedEventArgs e)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("调用成功：");
+            foreach (var item in await AtTest.GetLongList())
+            {
+                sb.AppendLine(item.ToString());
+            }
+            _tbInfo.Text = sb.ToString();
+        }
+
+        async void SetLongList(object sender, RoutedEventArgs e)
+        {
+            var ls = await AtTest.SetLongList(new List<long>() { 1, 2, 3, 4 });
+            _tbInfo.Text = ls.Count == 4 ? "调用成功！" : "调用不成功！";
+        }
+
         async void GetDoubleList(object sender, RoutedEventArgs e)
         {
             StringBuilder sb = new StringBuilder();

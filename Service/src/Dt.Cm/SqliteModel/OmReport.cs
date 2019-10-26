@@ -21,8 +21,8 @@ namespace Dt.Core.Model
         /// <summary>
         /// ID
         /// </summary>
-        [PrimaryKey, MaxLength(32)]
-        public string ID { get; set; }
+        [PrimaryKey]
+        public long ID { get; set; }
 
         /// <summary>
         /// 报表名称

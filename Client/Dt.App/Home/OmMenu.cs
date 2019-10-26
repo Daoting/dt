@@ -25,14 +25,14 @@ namespace Dt.App
         /// <summary>
         /// 菜单ID
         /// </summary>
-        [PrimaryKey, MaxLength(32)]
-        public string ID { get; set; }
+        [PrimaryKey]
+        public long ID { get; set; }
 
         /// <summary>
         /// 父菜单项ID
         /// </summary>
-        [Indexed, MaxLength(32)]
-        public string ParentID { get; set; }
+        [Indexed]
+        public long? ParentID { get; set; }
 
         /// <summary>
         /// 菜单名称

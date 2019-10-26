@@ -123,17 +123,17 @@ namespace Dt.App
         }
 
         /// <summary>
-        /// 获取序列的下一值
+        /// 获取新ID和新序列值，序列名称为null时只返回新ID
         /// </summary>
         /// <param name="p_seqName">序列名称</param>
-        /// <returns></returns>
-        public static Task<int> GetSeqVal(string p_seqName)
+        /// <returns>返回新ID和新序列值列表</returns>
+        public static Task<List<long>> NewID(string p_seqName = null)
         {
             return new UnaryRpc(
                 typeof(TSrv).Name,
-                "DataAccess.GetSeqVal",
+                "DataAccess.NewID",
                 p_seqName
-            ).Call<int>();
+            ).Call<List<long>>();
         }
         #endregion
     }

@@ -19,7 +19,7 @@ namespace Dt.Core
         /// <summary>
         /// 用户ID
         /// </summary>
-        public static string ID { get; set; }
+        public static long ID { get; set; } = -1;
 
         /// <summary>
         /// 姓名
@@ -34,6 +34,6 @@ namespace Dt.Core
         /// <summary>
         /// 是否已登录
         /// </summary>
-        public static bool IsLogon => !string.IsNullOrEmpty(ID);
+        public static bool IsLogon => ID > 0;
     }
 }

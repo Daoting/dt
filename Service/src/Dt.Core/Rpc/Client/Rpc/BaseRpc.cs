@@ -81,9 +81,9 @@ namespace Dt.Core.Rpc
         {
             var header = _client.DefaultRequestHeaders;
             header.Remove("uid");
-            if (!string.IsNullOrEmpty(AtUser.ID))
+            if (AtUser.IsLogon)
             {
-                header.Add("uid", AtUser.ID);
+                header.Add("uid", AtUser.ID.ToString());
             }
         }
 #endif

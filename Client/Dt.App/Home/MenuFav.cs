@@ -22,13 +22,13 @@ namespace Dt.App
         /// 用户标识
         /// </summary>
         [PrimaryKey]
-        public string UserID { get; set; }
+        public long UserID { get; set; }
 
         /// <summary>
         /// 菜单标识
         /// </summary>
         [PrimaryKey]
-        public string MenuID { get; set; }
+        public long MenuID { get; set; }
 
         /// <summary>
         /// 点击次数，在常用列表中排序用，可以被重置

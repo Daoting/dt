@@ -10,6 +10,7 @@
 using Dt.Core;
 using Dt.Core.Caches;
 using Dt.Core.Domain;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -23,7 +24,6 @@ namespace Dt.Cm
         public User()
         {
             ID = Id.New(0);
-            CTime = MTime = Glb.Now;
         }
 
         /// <summary>
@@ -47,19 +47,27 @@ namespace Dt.Cm
         public bool Sex { get; set; }
 
         /// <summary>
-        /// 创建时间
-        /// </summary>
-        public DateTime CTime { get; set; }
-
-        /// <summary>
-        /// 创建时间
-        /// </summary>
-        public DateTime MTime { get; set; }
-
-        /// <summary>
         /// 当前用户具有的角色，逗号隔开
         /// </summary>
         public string Roles { get; set; }
+
+        /// <summary>
+        /// 分组id
+        /// </summary>
+        //[JsonIgnore]
+        //public long GroupID { get; set; }
+
+        ///// <summary>
+        ///// 创建时间
+        ///// </summary>
+        //[JsonIgnore]
+        //public DateTime CTime { get; set; }
+
+        ///// <summary>
+        ///// 创建时间
+        ///// </summary>
+        //[JsonIgnore]
+        //public DateTime MTime { get; set; }
 
         public bool ValidatePwd(string p_pwd)
         {

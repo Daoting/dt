@@ -38,7 +38,7 @@ namespace Dt.Cm
 	                                            id,
 	                                            parentid,
 	                                            name,
-	                                            IF (isgroup='1',1,0) AS isgroup,
+	                                            isgroup,
 	                                            viewname,
 	                                            params,
 	                                            icon,
@@ -46,15 +46,15 @@ namespace Dt.Cm
 	                                            note,
 	                                            dispidx 
                                             FROM
-	                                            dt_menu 
+	                                            cm_menu 
                                             WHERE
-	                                            islocked = '0' 
+	                                            islocked = 0 
                                             ORDER BY
 	                                            dispidx";
-            _cacheDict[typeof(OmBaseCode)] = "select id,grp from dt_res order by dispidx";
-            _cacheDict[typeof(OmReport)] = "select id,name,define from dt_rpt";
-            _cacheDict[typeof(RoleMenu)] = "select a.* from dt_rolemenu a,dt_menu b where a.menuid=b.id and b.islocked='0'";
-            _cacheDict[typeof(RolePrv)] = "select * from dt_roleprv";
+            _cacheDict[typeof(OmBaseCode)] = "select id,grp from cm_res order by dispidx";
+            _cacheDict[typeof(OmReport)] = "select id,name,define from cm_rpt";
+            _cacheDict[typeof(RoleMenu)] = "select a.* from cm_rolemenu a,cm_menu b where a.menuid=b.id and b.islocked=0";
+            _cacheDict[typeof(RolePrv)] = "select * from cm_roleprv";
         }
 
         public async Task Handle(ModelRefreshEvent p_event)

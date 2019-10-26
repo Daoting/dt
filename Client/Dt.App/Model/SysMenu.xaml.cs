@@ -28,7 +28,7 @@ namespace Dt.App.Model
 
         void Load()
         {
-            _tbl = Table.Create("dt_menu");
+            _tbl = Table.Create("cm_menu");
             _tbl.Add("parentname");
             _tv.FixedRoot = _tbl.NewRow(new { name = "菜单", isgroup = true, icon = "主页" });
             _fv.DataChanged += OnFvDataChanged;
@@ -39,14 +39,14 @@ namespace Dt.App.Model
         async void LoadTreeData()
         {
             // 记录已选择的节点
-            string id = _tv.SelectedItem == null ? null : _tv.SelectedRow.Str("id");
+            long id = _tv.SelectedItem == null ? -1 : _tv.SelectedRow.Long("id");
             _tv.Data = await AtCm.Query("菜单-完整树");
 
             object select = null;
-            if (id != null)
+            if (id > 0)
             {
                 select = (from row in (Table)_tv.Data
-                          where row.Str("id") == id
+                          where row.Long("id") == id
                           select row).FirstOrDefault();
             }
             _tv.SelectedItem = (select == null) ? _tv.FixedRoot : select;
@@ -54,8 +54,8 @@ namespace Dt.App.Model
 
         async void OnItemClick(object sender, ItemClickArgs e)
         {
-            string id = e.Row.Str("id");
-            if (id != "")
+            var id = e.Row.Long("id");
+            if (id > 0)
                 _fv.Data = await AtCm.GetRow("菜单-id菜单项", new Dict { { "id", id } });
             else
                 _fv.Data = _tv.FixedRoot;
@@ -70,7 +70,7 @@ namespace Dt.App.Model
         async void OnFvDataChanged(object sender, object e)
         {
             Row row = e as Row;
-            row.Table.Name = "dt_menu";
+            row.Table.Name = "cm_menu";
             if (row.Str("id") == "")
             {
                 // 根节点
@@ -104,21 +104,22 @@ namespace Dt.App.Model
             else
             {
                 _mRole.IsEnabled = true;
-                _lvRole.Data = await AtCm.Query("菜单-关联的角色", new { menuid = row.Str("id") });
+                _lvRole.Data = await AtCm.Query("菜单-关联的角色", new { menuid = row.Long("id") });
             }
         }
 
         async void OnAddMi(object sender, Mi e)
         {
+            var ids = await AtCm.NewID("sq_menu");
             _fv.Data = _tbl.NewRow(new
             {
-                id = AtKit.NewID,
+                id = ids[0],
                 name = "新菜单",
                 icon = "文件",
                 isgroup = false,
                 parentid = _tv.SelectedRow.Str("id"),
                 parentname = _tv.SelectedRow.Str("name"),
-                dispidx = await AtCm.GetSeqVal("sq_menu"),
+                dispidx = ids[1],
                 islocked = false,
                 ctime = AtSys.Now,
             });
@@ -126,15 +127,16 @@ namespace Dt.App.Model
 
         async void OnAddGroup(object sender, Mi e)
         {
+            var ids = await AtCm.NewID("sq_menu");
             _fv.Data = _tbl.NewRow(new
             {
-                id = AtKit.NewID,
+                id = ids[0],
                 name = "新菜单组",
                 icon = "文件夹",
                 isgroup = true,
                 parentid = _tv.SelectedRow.Str("id"),
                 parentname = _tv.SelectedRow.Str("name"),
-                dispidx = await AtCm.GetSeqVal("sq_menu"),
+                dispidx = ids[1],
                 islocked = false,
                 ctime = AtSys.Now,
             });
@@ -198,7 +200,7 @@ namespace Dt.App.Model
         {
             Row row = _fv.Row;
             OmMenu menu = new OmMenu();
-            menu.ID = row.Str("id");
+            menu.ID = row.Long("id");
             menu.Name = row.Str("name");
             menu.Icon = row.Str("icon");
             menu.ViewName = row.Str("viewname");
@@ -217,7 +219,7 @@ namespace Dt.App.Model
             string menuID = _fv.Row.Str("id");
             if (await dlg.ShowDlg(RoleRelations.Menu, menuID, e))
             {
-                Table tbl = Table.Create("dt_rolemenu");
+                Table tbl = Table.Create("cm_rolemenu");
                 foreach (var row in dlg.SelectedItems.OfType<Row>())
                 {
                     tbl.NewRow(new { roleid = row.Str("id"), menuid = menuID });
@@ -230,7 +232,7 @@ namespace Dt.App.Model
         async void OnRemoveRole(object sender, Mi e)
         {
             var row = _lvRole.SelectedRow;
-            Table tbl = Table.Create("dt_rolemenu");
+            Table tbl = Table.Create("cm_rolemenu");
             var data = tbl.NewRow(new { roleid = row.Str("roleid"), menuid = row.Str("menuid") });
             if (await AtCm.Delete(data))
                 _lvRole.DeleteSelection();
@@ -269,7 +271,7 @@ namespace Dt.App.Model
         void OnListDel(object sender, Mi e)
         {
             Row row = e.TargetRow;
-            row.Table.Name = "dt_menu";
+            row.Table.Name = "cm_menu";
             DelMenuRow(row);
         }
 
@@ -281,7 +283,7 @@ namespace Dt.App.Model
         async void ChangeDispidx(Row p_row, Row p_tgt)
         {
             Table tbl = new Table { { "id" }, { "dispidx", typeof(int) } };
-            tbl.Name = "dt_menu";
+            tbl.Name = "cm_menu";
 
             var save = tbl.NewRow(p_row.Str("id"));
             save.AcceptChanges();

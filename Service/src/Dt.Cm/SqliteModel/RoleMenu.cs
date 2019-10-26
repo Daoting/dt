@@ -21,12 +21,12 @@ namespace Dt.Core.Model
         /// <summary>
         /// 角色标识
         /// </summary>
-        [Indexed, MaxLength(32)]
-        public string RoleID { get; set; }
+        [Indexed]
+        public long RoleID { get; set; }
 
         /// <summary>
         /// 菜单标识
         /// </summary>
-        public string MenuID { get; set; }
+        public long MenuID { get; set; }
     }
 }

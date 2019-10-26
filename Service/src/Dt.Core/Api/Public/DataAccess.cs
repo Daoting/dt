@@ -118,15 +118,17 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 获取序列的下一值
+        /// 获取新ID和新序列值，序列名称为null时只返回新ID
         /// </summary>
         /// <param name="p_seqName">序列名称</param>
-        /// <returns></returns>
-        public Task<int> GetSeqVal(string p_seqName)
+        /// <returns>返回新ID和新序列值列表</returns>
+        public async Task<List<long>> NewID(string p_seqName = null)
         {
+            List<long> ls = new List<long>();
+            ls.Add(Id.New());
             if (!string.IsNullOrEmpty(p_seqName))
-                return new Db().Scalar<int>($"select nextval('{p_seqName}')");
-            return Task.FromResult(0);
+                ls.Add(await new Db().Scalar<int>($"select nextval('{p_seqName}')"));
+            return ls;
         }
     }
 }
