@@ -251,7 +251,7 @@ namespace Dt.Core
             if (mode == AgentMode.Default)
                 serviceName = $"\"{Glb.SvcName}\"";
             else if (mode == AgentMode.Generic)
-                serviceName = "typeof(TSrv).Name";
+                serviceName = "_svc";
             else
                 serviceName = "p_serviceName";
 
@@ -283,10 +283,14 @@ namespace Dt.Core
                 if (sm.CallMode == ApiCallMode.Unary)
                 {
                     retTypeName = GetRpcTypeName(mi.ReturnType);
-                    if (!string.IsNullOrEmpty(retTypeName))
-                        sb.AppendFormat("public static Task<{0}> {1}(", retTypeName, mi.Name);
+                    if (mode == AgentMode.Generic)
+                        sb.Append("public ");
                     else
-                        sb.AppendFormat("public static Task {0}(", mi.Name);
+                        sb.Append("public static ");
+                    if (!string.IsNullOrEmpty(retTypeName))
+                        sb.AppendFormat("Task<{0}> {1}(", retTypeName, mi.Name);
+                    else
+                        sb.AppendFormat("Task {0}(", mi.Name);
                 }
                 else
                 {
@@ -433,6 +437,8 @@ namespace Dt.Core
                 tpName = "int";
             else if (p_type == typeof(Int64))
                 tpName = "long";
+            else if (p_type == typeof(object))
+                tpName = "object";
             else if (p_type == typeof(List<string>))
                 tpName = "List<string>";
             else if (p_type == typeof(List<bool>))

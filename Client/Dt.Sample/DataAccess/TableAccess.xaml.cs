@@ -68,7 +68,7 @@ namespace Dt.Sample
         void OnCreateTableByRow(object sender, RoutedEventArgs e)
         {
             Table src = CreateTable();
-            Row row = src.CreateRow();
+            Row row = src.NewRow();
             Table tbl = Table.Create(row);
             WriteColumns(tbl);
         }
@@ -106,42 +106,44 @@ namespace Dt.Sample
         void OnAddEmptyRow(object sender, RoutedEventArgs e)
         {
             var tbl = CreateTable();
-            var row = tbl.NewRow();
+            var row = tbl.AddRow();
             WriteRows(tbl);
         }
 
         void OnAddRow(object sender, RoutedEventArgs e)
         {
             var tbl = CreateTable();
-            var row = tbl.NewRow(
-                "abc",
-                110,
-                DateTime.Now,
-                true,
-                1.80,
-                TargetSystem.Windows
-                );
+            var row = tbl.AddRow(new
+            {
+                id = "abc",
+                bh = 110,
+                chushengrq = DateTime.Now,
+                hunfou = true,
+                shengao = 1.80,
+                bumen = TargetSystem.Windows
+            });
             WriteRows(tbl);
         }
 
         void OnAddSingleRow(object sender, RoutedEventArgs e)
         {
             var tbl = CreateTable();
-            var row = tbl.CreateRow("123");
+            var row = tbl.NewRow(new { id = "123" });
             _tbInfo.Text = "创建独立行: tbl.CreateRow()";
         }
 
         void OnCloneRow(object sender, RoutedEventArgs e)
         {
             var tbl = CreateTable();
-            var row = tbl.NewRow(
-                "abc",
-                110,
-                DateTime.Now,
-                true,
-                1.80,
-                TargetSystem.Windows
-                );
+            var row = tbl.AddRow(new
+            {
+                id = "abc",
+                bh = 110,
+                chushengrq = DateTime.Now,
+                hunfou = true,
+                shengao = 1.80,
+                bumen = TargetSystem.Windows
+            });
             var clone = row.Clone();
             _tbInfo.Text = "克隆行: row.Clone()";
         }
@@ -171,14 +173,15 @@ namespace Dt.Sample
             var tbl = CreateTable();
             for (int i = 0; i < 10; i++)
             {
-                tbl.NewRow(
-                    "abc",
-                    _index++,
-                    DateTime.Now,
-                    true,
-                    1.80,
-                    TargetSystem.Windows
-                    );
+                tbl.AddRow(new
+                {
+                    id = "abc",
+                    bh = _index++,
+                    chushengrq = DateTime.Now,
+                    hunfou = true,
+                    shengao = 1.80,
+                    bumen = TargetSystem.Windows
+                });
             }
             return tbl;
         }

@@ -340,6 +340,24 @@ namespace Dt.Cm
         }
 
         /// <summary>
+        /// 返回Row到客户端
+        /// </summary>
+        /// <returns></returns>
+        public Row GetRow()
+        {
+            return CreateTable()[0];
+        }
+
+        /// <summary>
+        /// 由外部传递Row
+        /// </summary>
+        /// <param name="p_row"></param>
+        public Row SetRow(Row p_row)
+        {
+            return p_row;
+        }
+
+        /// <summary>
         /// 返回多个Table到客户端
         /// </summary>
         /// <returns></returns>

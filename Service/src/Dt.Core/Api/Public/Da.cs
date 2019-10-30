@@ -17,7 +17,7 @@ namespace Dt.Core
     /// MySql默认库的数据访问Api
     /// </summary>
     [Api(AgentMode = AgentMode.Generic)]
-    public class DataAccess : BaseApi
+    public class Da : BaseApi
     {
         /// <summary>
         /// 以参数值方式执行Sql语句，返回结果集
@@ -51,11 +51,11 @@ namespace Dt.Core
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回第一个单元格数据</returns>
         [CustomAgent(
-@"public static async Task<T> GetScalar<T>(string p_keyOrSql, object p_params = null)
+@"public async Task<T> GetScalar<T>(string p_keyOrSql, object p_params = null)
 {
     object result = await new UnaryRpc(
         ###,
-        ""DataAccess.GetScalar"",
+        ""Da.GetScalar"",
         p_keyOrSql,
         p_params
     ).Call<Object>();
@@ -92,7 +92,7 @@ namespace Dt.Core
         /// <summary>
         /// 一个事务内执行多个Sql
         /// </summary>
-        /// <param name="p_dts">参数列表，每个Dict中包含两个键：text,params</param>
+        /// <param name="p_dts">参数列表，每个Dict中包含两个键：text,params，text为sql语句params类型为Dict或List{Dict}</param>
         /// <returns>true 成功</returns>
         public async Task<bool> BatchExec(List<Dict> p_dts)
         {
@@ -105,7 +105,18 @@ namespace Dt.Core
                 await db.BeginTrans();
                 foreach (Dict dt in p_dts)
                 {
-                    await db.Exec((string)dt["text"], dt["params"]);
+                    string sql = (string)dt["text"];
+                    if (dt["params"] is List<Dict> ls)
+                    {
+                        foreach (var par in ls)
+                        {
+                            await db.Exec(sql, par);
+                        }
+                    }
+                    else if (dt["params"] is Dict par)
+                    {
+                        await db.Exec(sql, par);
+                    }
                 }
                 await db.CommitTrans();
                 return true;
@@ -118,11 +129,20 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 获取新ID和新序列值，序列名称为null时只返回新ID
+        /// 获取新ID
         /// </summary>
-        /// <param name="p_seqName">序列名称</param>
+        /// <returns></returns>
+        public long NewID()
+        {
+            return Id.New();
+        }
+
+        /// <summary>
+        /// 获取新ID和新序列值
+        /// </summary>
+        /// <param name="p_seqName">序列名称，不可为空</param>
         /// <returns>返回新ID和新序列值列表</returns>
-        public async Task<List<long>> NewID(string p_seqName = null)
+        public async Task<List<long>> NewIDAndSeq(string p_seqName)
         {
             List<long> ls = new List<long>();
             ls.Add(Id.New());

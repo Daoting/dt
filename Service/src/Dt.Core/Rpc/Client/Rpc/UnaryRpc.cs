@@ -73,6 +73,7 @@ namespace Dt.Core.Rpc
             }
 
             // 解析结果
+            T val = default(T);
             RpcResult result = new RpcResult();
             using (MemoryStream ms = new MemoryStream(data))
             using (StreamReader sr = new StreamReader(ms))
@@ -89,13 +90,25 @@ namespace Dt.Core.Rpc
                     if (result.ResultType == RpcResultType.Value)
                     {
                         reader.Read();
-                        result.Value = JsonRpcSerializer.Deserialize(reader);
+                        val = JsonRpcSerializer.Deserialize<T>(reader);
                     }
                     else
                     {
                         // 错误或提示信息
                         result.Info = reader.ReadAsString();
                     }
+
+#if !SERVER
+                    // 输出监视信息
+                    string content = null;
+                    if (AtSys.TraceRpc)
+                    {
+                        // 输出详细内容
+                        ms.Position = 0;
+                        content = sr.ReadToEnd();
+                    }
+                    AtKit.Trace(TraceOutType.RpcRecv, string.Format("{0}—{1}ms", _methodName, result.Elapsed), content, _svcName);
+#endif
                 }
                 catch
                 {
@@ -104,37 +117,15 @@ namespace Dt.Core.Rpc
                 }
             }
 
-            // 返回结果
-            T val = default(T);
             if (result.ResultType == RpcResultType.Value)
-            {
-                if (result.Value == null)
-                {
-                    // 空值
-                }
-                else if (typeof(T) == result.Value.GetType())
-                {
-                    // 结果对象与给定对象类型相同时
-                    val = (T)result.Value;
-                }
-                else
-                {
-                    // 特殊处理结果对象与给定对象类型不相同时
-                    try
-                    {
-                        val = (T)Convert.ChangeType(result.Value, typeof(T));
-                    }
-                    catch (Exception convExp)
-                    {
-                        throw new Exception($"调用【{_methodName}】对返回结果类型转换时异常：\r\n {result.Value.GetType()}-->{typeof(T)}：{convExp.Message}");
-                    }
-                }
-            }
-            else
-            {
-                throw new Exception($"调用【{_methodName}】异常：\r\n{result.Info}");
-            }
-            return val;
+                return val;
+
+#if !SERVER
+            if (result.ResultType == RpcResultType.Message)
+                throw new FriendlyException(result.Info);
+#endif
+
+            throw new Exception($"调用【{_methodName}】异常：\r\n{result.Info}");
         }
     }
 }

@@ -148,7 +148,7 @@ namespace Dt.Base.Tools
 
             // 格式化Db中的部分方法，不具体限制方法名！
             _btnSql.IsEnabled = false;
-            if ((TraceOutType)row.Int("Type") == TraceOutType.RpcCall && row.Str("title").StartsWith("Db."))
+            if ((TraceOutType)row.Int("Type") == TraceOutType.RpcCall && row.Str("title").StartsWith("Da."))
                 _btnSql.IsEnabled = true;
         }
 

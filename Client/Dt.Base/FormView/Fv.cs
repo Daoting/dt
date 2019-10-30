@@ -436,6 +436,17 @@ namespace Dt.Base
         }
 
         /// <summary>
+        /// 获取指定实体行类型的数据源
+        /// </summary>
+        /// <typeparam name="TRow">实体行类型</typeparam>
+        /// <returns></returns>
+        public TRow Get<TRow>()
+            where TRow : Row
+        {
+            return GetValue(DataProperty) as TRow;
+        }
+
+        /// <summary>
         /// 获取单元格cookie值，FvCell.AutoCookie为true时有效
         /// </summary>
         /// <param name="p_cellID"></param>

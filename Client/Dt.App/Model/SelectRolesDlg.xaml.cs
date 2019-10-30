@@ -21,6 +21,8 @@ namespace Dt.App.Model
 {
     public sealed partial class SelectRolesDlg : Dlg
     {
+        readonly CmDa _da = new CmDa("cm_role");
+
         public SelectRolesDlg()
         {
             InitializeComponent();
@@ -31,21 +33,21 @@ namespace Dt.App.Model
             get { return _lv.SelectedItems; }
         }
 
-        public async Task<bool> ShowDlg(RoleRelations p_relation, string p_tgtID, FrameworkElement p_target)
+        public async Task<bool> ShowDlg(RoleRelations p_relation, long p_tgtID, FrameworkElement p_target)
         {
             switch (p_relation)
             {
                 case RoleRelations.Prv:
-                    _lv.Data = await AtCm.Query("权限未关联的角色", new { prvid = p_tgtID });
+                    _lv.Data = await _da.Query("权限未关联的角色", new { prvid = p_tgtID });
                     break;
                 case RoleRelations.User:
-                    _lv.Data = await AtCm.Query("用户未关联的角色", new { userid = p_tgtID });
+                    _lv.Data = await _da.Query("用户未关联的角色", new { userid = p_tgtID });
                     break;
                 case RoleRelations.Menu:
-                    _lv.Data = await AtCm.Query("菜单-未关联的角色", new { menuid = p_tgtID });
+                    _lv.Data = await _da.Query("菜单-未关联的角色", new { menuid = p_tgtID });
                     break;
                 case RoleRelations.Notice:
-                    _lv.Data = await AtCm.Query("公告角色选择", new { noticeid = p_tgtID });
+                    _lv.Data = await _da.Query("公告角色选择", new { noticeid = p_tgtID });
                     break;
             }
             if (!AtSys.IsPhoneUI)

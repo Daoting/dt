@@ -22,11 +22,6 @@ namespace Dt.Core.Rpc
         public RpcResultType ResultType { get; set; }
 
         /// <summary>
-        /// 结果值
-        /// </summary>
-        public object Value { get; set; }
-
-        /// <summary>
         /// 提示信息
         /// </summary>
         public string Info { get; set; }

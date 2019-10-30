@@ -286,6 +286,45 @@ namespace Dt.Sample
             _tbInfo.Text = tbl != null ? "调用成功！" : "调用不成功！";
         }
 
+        async void GetRow(object sender, RoutedEventArgs e)
+        {
+            var row = await AtTest.GetRow();
+            StringBuilder sb = new StringBuilder("调用成功：\r\n");
+            foreach (var cell in row.Cells)
+            {
+                sb.AppendFormat("{0}：{1}    ", cell.ID, cell.Val);
+            }
+            _tbInfo.Text = sb.ToString();
+        }
+
+        async void SetRow(object sender, RoutedEventArgs e)
+        {
+            var row = await AtTest.SetRow(_tbl[0]);
+            _tbInfo.Text = row != null ? "调用成功！" : "调用不成功！";
+        }
+
+        async void GetEntityRowTable(object sender, RoutedEventArgs e)
+        {
+            var tbl = await AtTest.GetTable<MyRow>();
+            StringBuilder sb = new StringBuilder("调用成功：\r\n");
+            foreach (var row in tbl)
+            {
+                MyRow r = (MyRow)row;
+                sb.Append("Col1:");
+                sb.Append(r.Col1);
+                sb.Append("    Col2:");
+                sb.Append(r.Col2);
+                sb.AppendLine();
+            }
+            _tbInfo.Text = sb.ToString();
+        }
+
+        async void GetEntityRow(object sender, RoutedEventArgs e)
+        {
+            var row = await AtTest.GetRow<MyRow>();
+            _tbInfo.Text = row.Col1 + " " + row.Col2;
+        }
+
         /// <summary>
         /// 返回多个Table
         /// </summary>
@@ -649,8 +688,8 @@ namespace Dt.Sample
         public static Table CreateTable()
         {
             Table tbl = new Table { { "col1" }, { "col2" } };
-            tbl.NewRow("列值11", "列值12");
-            tbl.NewRow("列值21", "列值22");
+            tbl.AddRow(new { col1 = "列值11", col2 = "列值12" });
+            tbl.AddRow(new { col1 = "列值21", col2 = "列值22" });
             return tbl;
         }
     }
@@ -689,5 +728,20 @@ namespace Dt.Sample
         public string Name { get; set; }
 
         public Student Employee { get; set; }
+    }
+
+    public class MyRow : Row
+    {
+        public string Col1
+        {
+            get { return GetVal<string>("col1"); }
+            set { _cells["col1"].Val = value; }
+        }
+
+        public string Col2
+        {
+            get { return GetVal<string>("col2"); }
+            set { _cells["col2"].Val = value; }
+        }
     }
 }

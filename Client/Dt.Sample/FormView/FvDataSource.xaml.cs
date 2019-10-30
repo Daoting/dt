@@ -31,11 +31,12 @@ namespace Dt.Sample
 
         void OnDataRow(object sender, RoutedEventArgs e)
         {
-            _fv.Data = _tbl.NewRow(
-                $"第{++_rowNum}行",
-                22,
-                _rowNum.ToString()
-                );
+            _fv.Data = _tbl.AddRow(new
+            {
+                name = $"第{++_rowNum}行",
+                fontsize = 22,
+                id = _rowNum.ToString()
+            });
         }
 
         void OnTgt1(object sender, RoutedEventArgs e)

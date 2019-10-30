@@ -39,18 +39,19 @@ namespace Dt.Sample
             {
                 var per = persons[i % persons.Length];
                 birth = birth.AddDays(10);
-                tbl.NewRow(
-                    "2202820-" + i.ToString().PadLeft(5, '0'),
-                    per.Xm,
-                    i + 1,
-                    birth,
-                    per.Shenfenzh,
-                    per.Xb,
-                    per.Hunfou,
-                    per.Shengao,
-                    per.Bumen,
-                    per.Note
-                    );
+                tbl.AddRow(new
+                {
+                    id = "2202820-" + i.ToString().PadLeft(5, '0'),
+                    xm = per.Xm,
+                    bh = i + 1,
+                    chushengrq = birth,
+                    shenfenzh = per.Shenfenzh,
+                    xb = per.Xb,
+                    hunfou = per.Hunfou,
+                    shengao = per.Shengao,
+                    bumen = per.Bumen,
+                    note = per.Note
+                });
             }
             return tbl;
         }

@@ -17,7 +17,7 @@ namespace Dt.App
     /// <summary>
     /// 内核模型服务Api代理类（自动生成）
     /// </summary>
-    public class AtCm : SrvAgent<cm>
+    public class AtCm
     {
         #region Entry
         /// <summary>
@@ -79,9 +79,4 @@ namespace Dt.App
         }
         #endregion
     }
-
-    /// <summary>
-    /// 内核模型服务，只为规范服务名称
-    /// </summary>
-    public class cm { }
 }

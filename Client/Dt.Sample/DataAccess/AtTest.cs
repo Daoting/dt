@@ -10,6 +10,24 @@ namespace Dt.Sample
 {
     public static class AtTest
     {
+        public static async Task<Table> GetTable<TRow>()
+            where TRow : Row
+        {
+            return await new UnaryRpc(
+                "cm",
+                "TestSerialize.GetTable"
+            ).Call<Table<TRow>>();
+        }
+
+        public static Task<TRow> GetRow<TRow>()
+            where TRow : Row
+        {
+            return new UnaryRpc(
+                "cm",
+                "TestSerialize.GetRow"
+            ).Call<TRow>();
+        }
+
         #region TestSerialize
         /// <summary>
         /// 返回字符串
@@ -411,6 +429,31 @@ namespace Dt.Sample
                 "TestSerialize.SetDataTable",
                 p_tbl
             ).Call<Table>();
+        }
+
+        /// <summary>
+        /// 返回Row到客户端
+        /// </summary>
+        /// <returns></returns>
+        public static Task<Row> GetRow()
+        {
+            return new UnaryRpc(
+                "cm",
+                "TestSerialize.GetRow"
+            ).Call<Row>();
+        }
+
+        /// <summary>
+        /// 由外部传递Row
+        /// </summary>
+        /// <param name="p_row"></param>
+        public static Task<Row> SetRow(Row p_row)
+        {
+            return new UnaryRpc(
+                "cm",
+                "TestSerialize.SetRow",
+                p_row
+            ).Call<Row>();
         }
 
         /// <summary>

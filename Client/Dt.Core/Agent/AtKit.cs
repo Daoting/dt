@@ -212,12 +212,13 @@ namespace Dt.Core
         /// <param name="p_content">内容</param>
         public static void Trace(string p_title, string p_content = null)
         {
-            Row row = _traceList.CreateRow(
-                TraceOutType.Normal,
-                p_title,
-                (p_content == null) ? string.Empty : p_content,
-                DateTime.Now.ToString("HH:mm:ss")
-                );
+            Row row = _traceList.NewRow(new
+            {
+                type = TraceOutType.Normal,
+                title = p_title,
+                content = (p_content == null) ? string.Empty : p_content,
+                time = DateTime.Now.ToString("HH:mm:ss")
+            });
             Trace(row);
         }
 
@@ -234,13 +235,14 @@ namespace Dt.Core
             if (_stopTrace)
                 return;
 
-            Row row = _traceList.CreateRow(
-                p_type,
-                p_title,
-                (p_content == null) ? string.Empty : p_content,
-                DateTime.Now.ToString("HH:mm:ss"),
-                p_serviceName
-                );
+            Row row = _traceList.NewRow(new
+            {
+                type = p_type,
+                title = p_title,
+                content = (p_content == null) ? string.Empty : p_content,
+                time = DateTime.Now.ToString("HH:mm:ss"),
+                service = p_serviceName
+            });
             Trace(row);
         }
 

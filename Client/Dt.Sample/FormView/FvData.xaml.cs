@@ -30,7 +30,7 @@ namespace Dt.Sample
         #region 本地库
         void OnNewLocalRow(object sender, Mi e)
         {
-            _fv1.Data = Table.CreateLocal("ClientLog").NewRow(new
+            _fv1.Data = Table.CreateLocal("ClientLog").AddRow(new
             {
                 Content = "admin",
                 CTime = DateTime.Now
@@ -104,9 +104,9 @@ namespace Dt.Sample
 
         void OnNewRow(object sender, Mi e)
         {
-            _fv2.Data = Table.Create("dt_log").NewRow(new
+            _fv2.Data = Table.Create("dt_log").AddRow(new
             {
-                ID = 1,
+                id = 1,
                 loglevel = "1",
                 service = _fv2.GetCookie("service"),
                 timestamp = DateTime.Now,

@@ -107,7 +107,7 @@ namespace Dt.Sample
             var tbl = _lv.Table;
             if (tbl != null)
             {
-                Row row = tbl.CreateRow(new { xm = "数据行" });
+                Row row = tbl.NewRow(new { xm = "数据行" });
                 _lv.InsertRow(row);
             }
             else

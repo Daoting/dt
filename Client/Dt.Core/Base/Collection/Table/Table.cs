@@ -28,7 +28,7 @@ namespace Dt.Core
     public class Table : ObservableCollection<Row>, IRpcJson, ITreeData
     {
         #region 成员变量
-        readonly ColumnList _columns;
+        protected readonly ColumnList _columns;
         bool _isChanged = false;
         bool _delayCheckChanges = false;
         int _updating;
@@ -52,11 +52,6 @@ namespace Dt.Core
         #endregion
 
         #region 属性
-        /// <summary>
-        /// 获取设置表名
-        /// </summary>
-        public string Name { get; set; }
-
         /// <summary>
         /// 是否只序列化需要增删改的行
         /// </summary>
@@ -127,7 +122,6 @@ namespace Dt.Core
                 Throw("表名不可为空！");
 
             Table tbl = new Table();
-            tbl.Name = p_tblName.ToLower();
             foreach (var col in AtLocal.QueryColumns(p_tblName))
             {
                 tbl.Columns.Add(new Column(col.ColName, TableKit.GetType(col.DbType)));
@@ -145,9 +139,7 @@ namespace Dt.Core
             if (string.IsNullOrEmpty(p_tblName))
                 Throw("表名不可为空！");
 
-            Table tbl = AtLocal.Query($"select * from {p_tblName} where 1!=1");
-            tbl.Name = p_tblName.ToLower();
-            return tbl;
+            return AtLocal.Query($"select * from {p_tblName} where 1!=1");
         }
 
         /// <summary>
@@ -269,7 +261,7 @@ namespace Dt.Core
                 if (p_reader.NodeType == XmlNodeType.EndElement && p_reader.Name == root)
                     break;
 
-                Row row = NewRow();
+                Row row = AddRow();
                 row.IsAdded = false;
                 for (int i = 0; i < p_reader.AttributeCount; i++)
                 {
@@ -316,15 +308,16 @@ namespace Dt.Core
 
         #region 行操作
         /// <summary>
-        /// 添加新行并设置初始值，无参数时为空行，有参数时分两种情况，主要为简化编码：
-        /// <para>1. 只一个参数且为匿名对象时，将匿名对象的属性作为初始值进行赋值，属性名称不区分大小写</para>
-        /// <para>2. 按参数顺序进行赋值，跳过参数为null的情况，支持部分列值，支持列值的类型转换</para>
+        /// 添加新行并设置初始值，参数null时为空行
+        /// <para>有参数时将参数的属性值作为初始值，前提是属性名和列名相同(不区分大小写)且类型相同</para>
+        /// <para>支持匿名对象，主要为简化编码</para>
+        /// <para>不再支持多参数按顺序赋值！</para>
         /// </summary>
-        /// <param name="p_params">按顺序的列值或匿名对象</param>
+        /// <param name="p_init">含初始值的对象，一般为匿名对象</param>
         /// <returns>返回新行</returns>
-        public Row NewRow(params object[] p_params)
+        public Row AddRow(object p_init = null)
         {
-            Row row = CreateRow(p_params);
+            Row row = NewRow(p_init);
             row.IsAdded = true;
             row.Table = this;
             base.Add(row);
@@ -332,56 +325,71 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 创建独立行并设置初始值，未添加到当前Table！未设置IsAdded标志！无参数时为空行，有参数时分两种情况，主要为简化编码：
-        /// <para>1. 只一个参数且为匿名对象时，将匿名对象的属性作为初始值进行赋值，属性名称不区分大小写</para>
-        /// <para>2. 按参数顺序进行赋值，跳过参数为null的情况，支持部分列值，支持列值的类型转换</para>
+        /// 创建独立行并设置初始值，未添加到当前Table！未设置IsAdded标志！参数null时为空行
+        /// <para>有参数时将参数的属性值作为初始值，前提是属性名和列名相同(不区分大小写)且类型相同</para>
+        /// <para>支持匿名对象，主要为简化编码</para>
+        /// <para>不再支持多参数按顺序赋值！</para>
         /// </summary>
-        /// <param name="p_params">按顺序的列值或匿名对象</param>
+        /// <param name="p_init">含初始值的对象，一般为匿名对象</param>
         /// <returns>返回独立行</returns>
-        public Row CreateRow(params object[] p_params)
+        public Row NewRow(object p_init = null)
         {
-            Row row = new Row();
-            if (_columns.Count > 0)
+            Row row = CreateRowInstance();
+
+            // 空行
+            if (p_init == null)
             {
-                if (p_params.Length < 2)
+                foreach (var col in _columns)
                 {
-                    // 空行
-                    foreach (var col in _columns)
+                    new Cell(row, col.ID, col.Type);
+                }
+                return row;
+            }
+
+            // 匿名对象无法在GetProperty时指定BindingFlags！
+            var props = p_init.GetType().GetProperties().ToList();
+            foreach (var col in _columns)
+            {
+                if (props.Count > 0)
+                {
+                    int index = -1;
+                    PropertyInfo pi = null;
+                    for (int i = 0; i < props.Count; i++)
                     {
-                        new Cell(row, col.ID, col.Type);
+                        pi = props[i];
+                        if (pi.Name.Equals(col.ID, StringComparison.OrdinalIgnoreCase))
+                        {
+                            index = i;
+                            break;
+                        }
                     }
 
-                    object val;
-                    if (p_params.Length == 1 && (val = p_params[0]) != null)
+                    // 存在同名属性
+                    if (index > -1)
                     {
-                        // 一个参数时，处理匿名对象赋值情况！判断条件未全用！
-                        Type type = val.GetType();
-                        if (type.Namespace == null && type.IsNotPublic)
+                        // 减小下次查询范围
+                        props.RemoveAt(index);
+                        var val = pi.GetValue(p_init);
+
+                        // 类型相同
+                        if (pi.PropertyType == col.Type)
                         {
-                            // 参数为匿名对象
-                            foreach (var prop in type.GetProperties())
-                            {
-                                row.Cells[prop.Name].InitVal(prop.GetValue(val));
-                            }
+                            new Cell(col.ID, val, row);
+                            continue;
                         }
-                        else
+
+                        // 类型不同先转换，转换失败不赋值
+                        try
                         {
-                            // 普通参数
-                            row.Cells[0].InitVal(val);
+                            var obj = Convert.ChangeType(val, col.Type);
+                            new Cell(col.ID, obj, row);
+                            continue;
                         }
+                        catch { }
                     }
                 }
-                else
-                {
-                    // 多参数时按顺序赋值
-                    for (int i = 0; i < _columns.Count; i++)
-                    {
-                        var col = Columns[i];
-                        var cell = new Cell(row, col.ID, col.Type);
-                        if (i < p_params.Length && p_params[i] != null)
-                            cell.InitVal(p_params[i]);
-                    }
-                }
+
+                new Cell(row, col.ID, col.Type);
             }
             return row;
         }
@@ -558,7 +566,8 @@ namespace Dt.Core
         /// <returns></returns>
         public Table Clone()
         {
-            Table tbl = new Table();
+            // 当前可能为Table<TRow>
+            Table tbl = (Table)Activator.CreateInstance(GetType());
             // 添加列
             foreach (var col in _columns)
             {
@@ -573,153 +582,6 @@ namespace Dt.Core
                 tbl.Add(clone);
             }
             return tbl;
-        }
-
-        /// <summary>
-        /// 查找某行的指定一列或多列值相同的第一个匹配数据行，
-        /// 但不是传入的数据行本身。
-        /// </summary>
-        /// <param name="p_dr">指定的数据行</param>
-        /// <param name="p_colNames">匹配的列名数组。</param>
-        /// <returns>返回相同数据行的行号，无匹配返回 -1</returns>
-        public int FirstSameRow(Row p_dr, params string[] p_colNames)
-        {
-            int i;
-            int colsCount = p_colNames.Length;
-            if (colsCount == 0)
-                Throw("未指定查询列名。");
-            string[] vals = new string[colsCount];
-            for (i = 0; i < colsCount; i++)
-            {
-                if (!Columns.Contains(p_colNames[i]) || !p_dr.Contains(p_colNames[i]))
-                    Throw("指定的列名不存在。");
-                vals[i] = p_dr.Str(p_colNames[i]);
-            }
-            foreach (Row dr in this)
-            {
-                for (i = 0; i < colsCount; i++)
-                {
-                    if (!dr.Str(p_colNames[i]).Equals(vals[i]))
-                    {
-                        break;
-                    }
-                }
-                if (i != colsCount)  //有列未匹配，比较下一行
-                    continue;
-                else//所有列都匹配了
-                {
-                    if (this.Contains(p_dr) && dr == p_dr)//是传入的行则继续查找比较下一行
-                        continue;
-                    else
-                        return dr.Index;
-                }
-            }
-            return -1;
-        }
-
-        /// <summary>
-        /// 值数据源中查找指定列名匹配值的第一行，返回行号，支持从指定行号开始查找。
-        /// </summary>
-        /// <param name="p_colNames">匹配的列名</param>
-        /// <param name="p_vals">匹配值</param>
-        /// <param name="p_startRow">起始行，默认从第0行开始。</param>
-        /// <returns>返回查找行的行号，无匹配返回-1</returns>
-        public int FindFistRow(string[] p_colNames, string[] p_vals, int p_startRow = 0)
-        {
-            int colsCount = p_colNames.Length;
-            int i, j;
-            if (colsCount == 0)
-                Throw("未指定查询列名。");
-            if (colsCount != p_vals.Length)
-                Throw("查询列名数与查询值数目不等。");
-            for (i = 0; i < colsCount; i++)
-            {
-                if (!Columns.Contains(p_colNames[i]))
-                    Throw("指定的列名不存在。");
-            }
-            for (i = p_startRow; i < this.Count; i++)
-            {
-                for (j = 0; j < colsCount; j++)
-                {
-                    if (!this[i].Str(p_colNames[j]).Equals(p_vals[j]))
-                        break;
-                }
-                if (j != colsCount)  //有列未匹配，比较下一行
-                    continue;
-                else//所有列都匹配了
-                    return i;
-            }
-            return -1;
-        }
-
-        /// <summary>
-        /// 将当前表数据转成矩阵形式的表，如：
-        /// xm       subject    score
-        /// 张建国   语文       35
-        /// 张建国   数学       78
-        /// 张建国   外语       87
-        /// 于凤琴   语文       98
-        /// 于凤琴   数学       86
-        /// 于凤琴   外语       68
-        /// 
-        /// 转成
-        /// 
-        /// xm       语文    数学    外语
-        /// 张建国   35      78      87
-        /// 于凤琴   98      86      68
-        /// </summary>
-        /// <param name="p_rowHeader">行头列名</param>
-        /// <param name="p_colHeader">自动创建列的列名</param>
-        /// <param name="p_valCol">取值列名</param>
-        /// <returns>转置后的Table</returns>
-        public Table CreateMatrix(string p_rowHeader, string p_colHeader, string p_valCol)
-        {
-            if (string.IsNullOrEmpty(p_rowHeader)
-                || !_columns.Contains(p_rowHeader)
-                || string.IsNullOrEmpty(p_colHeader)
-                || !_columns.Contains(p_colHeader)
-                || string.IsNullOrEmpty(p_valCol)
-                || !_columns.Contains(p_valCol))
-                return null;
-
-            Row dr;
-            Dictionary<string, Row> rowDict = new Dictionary<string, Row>();
-
-            Table tbl = new Table();
-            // 添加行头列
-            tbl._columns.Add(new Column(p_rowHeader, typeof(string)));
-            Type valColType = _columns[p_valCol].Type;
-
-            foreach (Row row in this)
-            {
-                string rowHeader = row.Str(p_rowHeader);
-                if (string.IsNullOrEmpty(rowHeader))
-                    continue;
-
-                if (!rowDict.TryGetValue(rowHeader, out dr))
-                {
-                    dr = tbl.NewRow(rowHeader);
-                    rowDict[rowHeader] = dr;
-                }
-
-                string colHeader = row.Str(p_colHeader);
-                if (string.IsNullOrEmpty(colHeader))
-                    continue;
-
-                if (!tbl._columns.Contains(colHeader))
-                    tbl._columns.Add(new Column(colHeader, valColType));
-                dr.Cells[colHeader].InitVal(row[p_valCol]);
-            }
-            return tbl;
-        }
-
-        /// <summary>
-        /// 获取所有行的实体包装对象
-        /// </summary>
-        public IEnumerable<T> Defs<T>() where T : RowEntity
-        {
-            return from item in this
-                   select item.Def<T>();
         }
         #endregion
 
@@ -754,31 +616,12 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 判断行是否为异构
+        /// 创建行，重写可创建Row的派生行
         /// </summary>
-        /// <param name="p_row"></param>
-        bool IsSameSchema(Row p_row)
+        /// <returns></returns>
+        protected virtual Row CreateRowInstance()
         {
-            if (_columns.Count == p_row.Cells.Count)
-            {
-                // 判断新增行是否为异构
-                bool same = true;
-                if (_columns.Count > 0)
-                {
-                    for (int i = 0; i < _columns.Count; i++)
-                    {
-                        var col = _columns[i];
-                        var cell = p_row.Cells[i];
-                        if (col.ID != cell.ID || col.Type != cell.Type)
-                        {
-                            same = false;
-                            break;
-                        }
-                    }
-                }
-                return same;
-            }
-            return false;
+            return new Row();
         }
         #endregion
 
@@ -856,8 +699,6 @@ namespace Dt.Core
         {
             // <Table>
             p_reader.Read();
-            // 表名
-            Name = p_reader.GetAttribute("id");
             // Cols
             p_reader.Read();
 
@@ -897,7 +738,7 @@ namespace Dt.Core
                     if (p_reader.NodeType == XmlNodeType.EndElement && p_reader.Name == "Rows")
                         break;
 
-                    Row row = NewRow();
+                    Row row = AddRow();
                     // 置未修改状态
                     row.IsAdded = false;
                     // 列值
@@ -927,8 +768,6 @@ namespace Dt.Core
             p_writer.WriteStartElement("struct");
             p_writer.WriteAttributeString("type", "tbl");
             p_writer.WriteStartElement("Table");
-            if (!string.IsNullOrEmpty(Name))
-                p_writer.WriteAttributeString("id", Name);
 
             p_writer.WriteStartElement("Cols");
             foreach (Column column in _columns)
@@ -1001,18 +840,9 @@ namespace Dt.Core
         /// </summary>
         public void ReadRpcJson(JsonReader p_reader)
         {
-            // 可能为id或cols外层 [
+            // cols外层 [
             p_reader.Read();
-            // 表名id
-            if (p_reader.TokenType == JsonToken.String)
-            {
-                Name = p_reader.Value.ToString();
-                // cols外层 [
-                p_reader.Read();
-            }
-
-            // 列
-            // [
+            // 列[
             while (p_reader.Read())
             {
                 // cols外层 ]
@@ -1050,7 +880,7 @@ namespace Dt.Core
                     break;
 
                 int index = 0;
-                Row row = NewRow();
+                Row row = AddRow();
                 row.IsAdded = false;
                 // 行 [
                 while (p_reader.Read())
@@ -1089,9 +919,6 @@ namespace Dt.Core
             p_writer.WriteStartArray();
             // 类型
             p_writer.WriteValue("#tbl");
-            // 表名id
-            if (!string.IsNullOrEmpty(Name))
-                p_writer.WriteValue(Name);
 
             // 列
             p_writer.WriteStartArray();

@@ -285,7 +285,7 @@ namespace Dt.Base.FormView
             if (info[0].ToLower() == "local")
                 data = AtLocal.Query(sql);
             else
-                data = await new UnaryRpc(info[0], "Db.QuerySql", sql, null).Call<Table>();
+                data = await new UnaryRpc(info[0], "Da.Query", sql, null).Call<Table>();
             return data;
         }
 
@@ -303,7 +303,7 @@ namespace Dt.Base.FormView
             string[] info = p_key.Trim().Split(':');
             if (info.Length != 2 || string.IsNullOrEmpty(info[0]) || string.IsNullOrEmpty(info[1]))
                 throw new Exception("Key格式不正确！" + p_key);
-            return new UnaryRpc(info[0], "Db.GetDataByKey", info[1], p_filter).Call<Table>();
+            return new UnaryRpc(info[0], "Da.GetDataByKey", info[1], p_filter).Call<Table>();
         }
     }
 }

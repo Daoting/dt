@@ -84,43 +84,45 @@ namespace Dt.Sample
         {
             _rowNum++;
             DateTime now = DateTime.Now;
-            _fv.Data = _tbl.NewRow(
-                $"文本{_rowNum}",
-                "",
-                "",
-                _rowNum,
-                "",
-                "",
+            _fv.Data = _tbl.AddRow(new
+            {
+                txt = $"文本{_rowNum}",
+                txtlong = "",
+                txtpy = "",
+                num = _rowNum,
+                mask = "",
+                pwd = "",
 
-                now,
-                now,
-                now,
-                "2015-06-19",
-                now,
+                date = now,
+                time = now,
+                datetime = now,
+                datestr = "2015-06-19",
+                datetouch = now,
 
-                true,
-                1,
-                "男",
-                true,
+                check = true,
+                checkint = 1,
+                checkstr = "男",
+                checkswitch = true,
 
-                "选项三",
-                Base.SelectionMode.Multiple,
-                "None",
-                "2",
-                null,
-                "",
+                liststr = "选项三",
+                listenum1 = Base.SelectionMode.Multiple,
+                listenum2 = "None",
+                listint = "2",
+                listobj = default(Person),
+                listrow = "",
 
-                "抗微生物药物",
-                "消化系统药",
-                "肛肠科",
+                tree = "抗微生物药物",
+                treedata = "消化系统药",
+                treefill = "肛肠科",
 
-                Icons.主页,
-                10,
-                "主页",
+                icon = Icons.主页,
+                iconint = 10,
+                iconstr = "主页",
 
-                Colors.Green,
-                "#FF1BA1E2",
-                AtRes.YellowBrush);
+                color = Colors.Green,
+                colorstr = "#FF1BA1E2",
+                colorbrush = AtRes.YellowBrush
+            });
         }
 
         void OnObj(object sender, RoutedEventArgs e)
@@ -219,12 +221,12 @@ namespace Dt.Sample
         void OnLoadDataTable(object sender, AsyncEventArgs e)
         {
             Table tbl = new Table { { "id" }, { "name" } };
-            tbl.NewRow("1", "李全亮");
-            tbl.NewRow("2", "杨乐");
-            tbl.NewRow("3", "任艳莉");
-            tbl.NewRow("4", "潘洋");
-            tbl.NewRow("5", "李妍");
-            tbl.NewRow("6", "尚涛");
+            tbl.AddRow(new { id = "1", name = "李全亮" });
+            tbl.AddRow(new { id = "2", name = "杨乐" });
+            tbl.AddRow(new { id = "3", name = "任艳莉" });
+            tbl.AddRow(new { id = "4", name = "潘洋" });
+            tbl.AddRow(new { id = "5", name = "李妍" });
+            tbl.AddRow(new { id = "6", name = "尚涛" });
             ((CList)sender).Data = tbl;
         }
 

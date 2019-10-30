@@ -11,7 +11,6 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 #endregion
 
 namespace Dt.Core
@@ -113,6 +112,85 @@ namespace Dt.Core
         #endregion
 
         #region 反序列化
+        /// <summary>
+        /// 反序列化
+        /// </summary>
+        /// <typeparam name="T">目标类型</typeparam>
+        /// <param name="p_reader"></param>
+        /// <returns></returns>
+        public static T Deserialize<T>(JsonReader p_reader)
+        {
+            object result;
+            if (p_reader.TokenType == JsonToken.StartArray)
+            {
+                string tp;
+                if (!p_reader.Read()
+                    || p_reader.TokenType != JsonToken.String
+                    || string.IsNullOrEmpty(tp = (string)p_reader.Value))
+                    throw new Exception("Json自定义数组中未包含类型名！");
+
+                // 前缀'#'表示对象
+                if (tp.StartsWith("#"))
+                {
+                    Type type = SerializeTypeAlias.GetType(tp.Substring(1));
+                    // 目标类型 T 可以为派生类
+                    if (typeof(T) != type && !typeof(T).IsSubclassOf(type))
+                        throw new Exception($"{typeof(T).Name} 类型未继承 {type.Name}！");
+
+                    // 自定义序列化
+                    if (type.GetInterface("IRpcJson") != null)
+                    {
+                        T tgt = Activator.CreateInstance<T>();
+                        ((IRpcJson)tgt).ReadRpcJson(p_reader);
+                        return tgt;
+                    }
+
+                    // 标准序列化
+                    p_reader.Read();
+                    return JsonSerializer.Create().Deserialize<T>(p_reader);
+                }
+
+                // 前缀'&'表示集合
+                if (tp.StartsWith("&"))
+                {
+                    result = DeserializeArray(p_reader, tp.Substring(1));
+                }
+                else if (tp == "bytes")
+                {
+                    // base64编码的字节数组
+                    p_reader.Read();
+                    byte[] data = Convert.FromBase64String(p_reader.Value.ToString());
+                    p_reader.Read();
+                    result = data;
+                }
+                else
+                {
+                    throw new Exception($"无法自动反序列化Json类型{tp}！");
+                }
+            }
+            else
+            {
+                result = p_reader.Value;
+            }
+
+            T val = default(T);
+            if (result == null)
+            {
+                // 空值
+            }
+            else if (typeof(T) == result.GetType())
+            {
+                // 结果对象与给定对象类型相同时
+                val = (T)result;
+            }
+            else
+            {
+                // 特殊处理结果对象与给定对象类型不相同时
+                val = (T)Convert.ChangeType(result, typeof(T));
+            }
+            return val;
+        }
+
         /// <summary>
         /// 反序列化
         /// </summary>

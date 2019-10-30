@@ -467,6 +467,17 @@ namespace Dt.Base
 
         #region 外部方法
         /// <summary>
+        /// 获取当前选定行，已转型为指定的实体行类型
+        /// </summary>
+        /// <typeparam name="TRow">实体行类型</typeparam>
+        /// <returns></returns>
+        public TRow GetSelected<TRow>()
+            where TRow : Row
+        {
+            return SelectedItem as TRow;
+        }
+
+        /// <summary>
         /// 删除数据对应的节点，若节点为选择状态，则删除后选择同层后一节点或父节点
         /// </summary>
         /// <param name="p_item"></param>

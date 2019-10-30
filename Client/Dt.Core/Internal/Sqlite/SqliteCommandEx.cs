@@ -123,7 +123,7 @@ namespace Dt.Core.Sqlite
                 dt = ComposeDt(dataReader);
                 while (dataReader.Read())
                 {
-                    tmpDr = dt.NewRow();
+                    tmpDr = dt.AddRow();
                     tmpDr.IsAdded = false;
                     for (int i = 0; i < dataReader.FieldCount; i++)
                     {
@@ -147,7 +147,7 @@ namespace Dt.Core.Sqlite
                 Table dt = ComposeDt(dataReader);
                 if (dataReader.Read())
                 {
-                    dr = dt.NewRow();
+                    dr = dt.AddRow();
                     dr.IsAdded = false;
                     for (int i = 0; i < dataReader.FieldCount; i++)
                     {

@@ -737,6 +737,17 @@ namespace Dt.Base
 
         #region 外部方法
         /// <summary>
+        /// 获取当前选定行，已转型为指定的实体行类型
+        /// </summary>
+        /// <typeparam name="TRow">实体行类型</typeparam>
+        /// <returns></returns>
+        public TRow GetSelected<TRow>()
+            where TRow : Row
+        {
+            return SelectedItem as TRow;
+        }
+
+        /// <summary>
         /// 刷新数据视图，通常在动态过滤时调用
         /// </summary>
         public void Refresh()

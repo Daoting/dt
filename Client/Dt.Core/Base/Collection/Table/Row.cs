@@ -25,10 +25,9 @@ namespace Dt.Core
     public class Row : INotifyPropertyChanged, IRpcJson
     {
         #region 成员变量
+        protected readonly CellList _cells;
         bool _delayCheckChanges;
         bool _isChanged;
-        Table _table;
-        readonly CellList _cells;
         #endregion
 
         #region 构造方法
@@ -86,6 +85,15 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 获取设置id列的值，常用的实体属性
+        /// </summary>
+        public long ID
+        {
+            get { return GetVal<long>("id"); }
+            set { _cells["id"].Val = value; }
+        }
+
+        /// <summary>
         /// 获取当前所有数据项
         /// </summary>
         public CellList Cells
@@ -105,12 +113,12 @@ namespace Dt.Core
                     return;
 
                 _isChanged = value;
-                if (_table != null)
+                if (Table != null)
                 {
                     if (_isChanged)
-                        _table.IsChanged = true;
+                        Table.IsChanged = true;
                     else
-                        _table.CheckChanges();
+                        Table.CheckChanges();
                 }
                 // 触发当前行业务数据发生变化
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsChanged"));
@@ -143,8 +151,8 @@ namespace Dt.Core
         {
             get
             {
-                if (_table != null)
-                    return _table.IndexOf(this);
+                if (Table != null)
+                    return Table.IndexOf(this);
                 return -1;
             }
         }
@@ -169,21 +177,12 @@ namespace Dt.Core
         /// <summary>
         /// 当前行所属父集合
         /// </summary>
-        public Table Table
-        {
-            get { return _table; }
-            internal set { _table = value; }
-        }
+        public Table Table { get; internal set; }
 
         /// <summary>
         /// 获取设置用于存储与此对象相关的任意对象值
         /// </summary>
         public object Tag { get; set; }
-
-        /// <summary>
-        /// 获取Row的实体包装对象
-        /// </summary>
-        internal object Entity { get; set; }
         #endregion
 
         #region 外部方法
@@ -216,13 +215,30 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 添加新数据项
+        /// </summary>
+        /// <typeparam name="T">Cell的数据类型</typeparam>
+        /// <param name="p_cellName">字段名，不可为空，作为键值</param>
+        /// <param name="p_value">初始值</param>
+        public void AddCell<T>(string p_cellName, T p_value = default)
+        {
+            if (Contains(p_cellName))
+                Throw($"已包含{p_cellName}列！");
+            if (p_value != default)
+                new Cell(p_cellName, p_value, this);
+            else
+                new Cell(this, p_cellName, typeof(T));
+        }
+
+        /// <summary>
         /// 深度复制行对象，返回独立行，未设置IsAdded标志！
         /// </summary>
         /// <param name="p_acceptChange">提交修改标志，默认true, 即复制后AcceptChanges()</param>
         /// <returns>返回独立行</returns>
         public Row Clone(bool p_acceptChange = true)
         {
-            Row row = new Row();
+            // 当前可能为Row的派生类
+            Row row = (Row)Activator.CreateInstance(GetType());
             foreach (var item in _cells)
             {
                 var cell = new Cell(row, item.ID, item.Type);
@@ -251,8 +267,8 @@ namespace Dt.Core
         /// </summary>
         public void Remove()
         {
-            if (_table != null)
-                _table.Remove(this);
+            if (Table != null)
+                Table.Remove(this);
         }
 
         /// <summary>
@@ -283,23 +299,6 @@ namespace Dt.Core
                 dt[cell.ID] = cell.Val;
             }
             return dt;
-        }
-
-        /// <summary>
-        /// 获取数据实体包装对象
-        /// </summary>
-        /// <typeparam name="T">包装对象类型</typeparam>
-        /// <returns>返回数据实体包装对象</returns>
-        public T Def<T>() where T : RowEntity
-        {
-            T entity = Entity as T;
-            if (entity != null)
-                return entity;
-
-            Type type = typeof(T);
-            entity = Activator.CreateInstance(type, this) as T;
-            Entity = entity;
-            return entity;
         }
         #endregion
 
