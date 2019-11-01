@@ -20,7 +20,7 @@ namespace Dt.Core.Domain
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     public class Repo<TEntity> : DbRepo<TEntity, long>
-        where TEntity : class, IEntity<long>
+        where TEntity : class, IRoot<long>
     {
         
     }

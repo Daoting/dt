@@ -183,10 +183,10 @@ namespace Dt.Core
         {
             try
             {
-                var ls = new Db().ForEach($"select id,`sql` from {Glb.SvcName}_sql").Result;
-                foreach (var item in ls)
+                var ls = new Db().ForRow($"select id,`sql` from {Glb.SvcName}_sql").Result;
+                foreach (Row item in ls)
                 {
-                    _sqlDict[item.id] = item.sql;
+                    _sqlDict[item.Str("id")] = item.Str("sql");
                 }
                 Log.Information("缓存Sql成功");
             }

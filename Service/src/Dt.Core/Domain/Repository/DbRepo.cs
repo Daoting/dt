@@ -16,9 +16,9 @@ namespace Dt.Core.Domain
     /// <summary>
     /// mysql仓库类
     /// </summary>
-    /// <typeparam name="TEntity"></typeparam>
+    /// <typeparam name="TEntity">聚合根类型</typeparam>
     public class DbRepo<TEntity> : IRepository<TEntity>
-        where TEntity : class, IEntity
+        where TEntity : class, IRoot
     {
         #region 缓存
         protected static readonly bool _isCached;
@@ -219,10 +219,10 @@ namespace Dt.Core.Domain
     /// <summary>
     /// 包含"ID"主键的mysql仓库
     /// </summary>
-    /// <typeparam name="TEntity"></typeparam>
-    /// <typeparam name="TKey"></typeparam>
+    /// <typeparam name="TEntity">聚合根类型</typeparam>
+    /// <typeparam name="TKey">聚合根主键类型</typeparam>
     public class DbRepo<TEntity, TKey> : DbRepo<TEntity>, IRepository<TEntity, TKey>
-        where TEntity : class, IEntity<TKey>
+        where TEntity : class, IRoot<TKey>
     {
         /// <summary>
         /// 根据主键获得实体对象，不存在时返回null

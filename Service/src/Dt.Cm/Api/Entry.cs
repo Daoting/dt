@@ -50,9 +50,9 @@ namespace Dt.Cm
                 return res;
             }
 
-            var repo = new UserRepo();
-            User user = await repo.GetByPhone(p_phone);
-            if (user == null || !user.ValidatePwd(p_pwd))
+            // 从缓存读取
+            var ui = await Cache<UserItem>.Get(p_phone, "phone");
+            if (ui == null || ui.Pwd != p_pwd)
             {
                 res["valid"] = false;
                 res["error"] = "手机号不存在或密码错误！";
@@ -60,9 +60,9 @@ namespace Dt.Cm
             }
 
             res["valid"] = true;
-            res["userid"] = user.ID;
-            res["name"] = user.Name;
-            res["roles"] = user.Roles;
+            res["userid"] = ui.ID;
+            res["name"] = ui.Name;
+            res["roles"] = ui.Roles;
             return res;
         }
 
@@ -90,22 +90,29 @@ namespace Dt.Cm
                 return res;
             }
 
-            var repo = new UserRepo();
-            User user = await repo.GetByPhone(p_phone);
-            if (user == null)
+            res["valid"] = true;
+
+            // 已注册
+            var ui = await Cache<UserItem>.Get(p_phone, "phone");
+            if (ui != null)
             {
-                // 初次登录，创建账号，初始密码为手机号后4位
-                user = new User
-                {
-                    Phone = p_phone,
-                    Name = p_phone,
-                    Pwd = Kit.GetMD5(p_phone.Substring(p_phone.Length - 4)),
-                    //Pwd = Kit.GetMD5(new Random().Next(100000, 999999).ToString()),
-                };
-                await repo.Insert(user);
+                res["userid"] = ui.ID;
+                res["name"] = ui.Name;
+                res["roles"] = ui.Roles;
+                res["pwd"] = ui.Pwd;
+                return res;
             }
 
-            res["valid"] = true;
+            // 初次登录，创建账号，初始密码为手机号后4位
+            User user = new User
+            {
+                Phone = p_phone,
+                Name = p_phone,
+                Pwd = Kit.GetMD5(p_phone.Substring(p_phone.Length - 4)),
+                //Pwd = Kit.GetMD5(new Random().Next(100000, 999999).ToString()),
+            };
+            await new UserRepo().Insert(user);
+
             res["userid"] = user.ID;
             res["name"] = user.Name;
             res["roles"] = user.Roles;

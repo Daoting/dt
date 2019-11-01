@@ -21,9 +21,9 @@ namespace Dt.Core.Domain
     /// <summary>
     /// 通用实体类仓库接口
     /// </summary>
-    /// <typeparam name="TEntity"></typeparam>
+    /// <typeparam name="TEntity">聚合根类型</typeparam>
     public interface IRepository<TEntity> : IRepository
-        where TEntity : class, IEntity
+        where TEntity : class, IRoot
     {
         /// <summary>
         /// 插入实体对象
@@ -50,10 +50,10 @@ namespace Dt.Core.Domain
     /// <summary>
     /// 包含"ID"主键的实体类仓库接口
     /// </summary>
-    /// <typeparam name="TEntity"></typeparam>
-    /// <typeparam name="TKey"></typeparam>
+    /// <typeparam name="TEntity">聚合根类型</typeparam>
+    /// <typeparam name="TKey">聚合根主键类型</typeparam>
     public interface IRepository<TEntity, TKey> : IRepository
-        where TEntity : class, IEntity<TKey>
+        where TEntity : class, IRoot<TKey>
     {
         /// <summary>
         /// 根据主键获得实体对象，不存在时返回null

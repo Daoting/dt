@@ -15,7 +15,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -27,6 +26,7 @@ namespace Dt.Core
     /// <summary>
     /// MySql数据库访问类，全部采用异步操作
     /// 基于开源项目 MySqlConnector 和 Dapper
+    /// Dapper涉及dynamic的速度非常慢！
     /// </summary>
     public class Db
     {
@@ -83,10 +83,12 @@ namespace Dt.Core
             {
                 await OpenConnection();
                 Table tbl = new Table();
-                using (MySqlDataReader reader = (MySqlDataReader)await _conn.ExecuteReaderAsync(cmd))
+                using (var wrappedReader = (IWrappedDataReader)await _conn.ExecuteReaderAsync(cmd))
                 {
-                    // 参见github上的MySqlDataReader.cs
+                    // Dapper2.0 改版
+                    MySqlDataReader reader = (MySqlDataReader)wrappedReader.Reader;
 
+                    // 参见github上的MySqlDataReader.cs
                     // 获取列定义
                     var cols = reader.GetColumnSchema();
                     foreach (var col in cols)
@@ -122,6 +124,20 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 以参数值方式执行Sql语句，返回Row枚举，高性能
+        /// </summary>
+        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
+        /// <returns>返回Row枚举</returns>
+        public async Task<IEnumerable<Row>> ForRow(string p_keyOrSql, object p_params = null)
+        {
+            var cmd = CreateCommand(p_keyOrSql, p_params, false);
+            await OpenConnection();
+            var reader = (IWrappedDataReader)await _conn.ExecuteReaderAsync(cmd);
+            return ForEachRow(reader);
+        }
+
+        /// <summary>
         /// 以参数值方式执行Sql语句，返回泛型列表
         /// </summary>
         /// <typeparam name="T">ORM类型</typeparam>
@@ -145,27 +161,7 @@ namespace Dt.Core
             return Query<T>(p_keyOrSql, p_params, true);
         }
 
-        /// <summary>
-        /// 以参数值方式执行Sql语句，返回dynamic对象列表
-        /// </summary>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
-        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
-        /// <returns>返回dynamic对象列表</returns>
-        public async Task<List<dynamic>> List(string p_keyOrSql, object p_params = null)
-        {
-            return (List<dynamic>)await Query(p_keyOrSql, p_params, false);
-        }
-
-        /// <summary>
-        /// 以参数值方式执行Sql语句，返回dynamic对象枚举，高性能
-        /// </summary>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
-        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
-        /// <returns>返回dynamic对象枚举</returns>
-        public Task<IEnumerable<dynamic>> ForEach(string p_keyOrSql, object p_params = null)
-        {
-            return Query(p_keyOrSql, p_params, true);
-        }
+        // Dapper涉及dynamic的速度非常慢！已移除
 
         /// <summary>
         /// 以参数值方式执行Sql语句，返回指定类型的对象列表
@@ -224,20 +220,36 @@ namespace Dt.Core
         /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回第一行数据对象，无数据时返回空</returns>
-        public Task<T> First<T>(string p_keyOrSql, object p_params = null)
+        public async Task<T> First<T>(string p_keyOrSql, object p_params = null)
+            where T : class
         {
-            return QueryFirstRow<T>(p_keyOrSql, p_params);
+            return (T)await First(typeof(T), p_keyOrSql, p_params);
         }
 
         /// <summary>
         /// 以参数值方式执行Sql语句，只返回第一行数据
         /// </summary>
+        /// <param name="p_tgtType">ORM类型</param>
         /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
-        /// <returns>返回第一行数据的dynamic对象</returns>
-        public Task<dynamic> First(string p_keyOrSql, object p_params = null)
+        /// <returns>返回第一行数据对象，无数据时返回空</returns>
+        public async Task<object> First(Type p_tgtType, string p_keyOrSql, object p_params = null)
         {
-            return QueryFirstRow<dynamic>(p_keyOrSql, p_params);
+            string sql = $"select * from ({Glb.Sql(p_keyOrSql)}) a limit 1";
+            var cmd = CreateCommand(sql, p_params, false);
+            try
+            {
+                await OpenConnection();
+                return await _conn.QueryFirstOrDefaultAsync(p_tgtType, cmd);
+            }
+            catch (Exception ex)
+            {
+                throw GetSqlException(cmd, ex);
+            }
+            finally
+            {
+                ReleaseConnection();
+            }
         }
 
         /// <summary>
@@ -253,18 +265,30 @@ namespace Dt.Core
             return tbl.FirstOrDefault();
         }
 
-        async Task<IEnumerable<T>> Query<T>(string p_keyOrSql, object p_params, bool p_deferred)
+        IEnumerable<Row> ForEachRow(IWrappedDataReader p_wrappedReader)
         {
-            var cmd = CreateCommand(p_keyOrSql, p_params, p_deferred);
+            // yield无法使用await，无法在含catch的try内
+            // 一定要使用using 或 finally方式释放资源，不然foreach内部break时资源无法释放！！！
             try
             {
-                await OpenConnection();
-                var result = await _conn.QueryAsync<T>(cmd);
-                return result;
-            }
-            catch (Exception ex)
-            {
-                throw GetSqlException(cmd, ex);
+                using (p_wrappedReader)
+                {
+                    MySqlDataReader reader = (MySqlDataReader)p_wrappedReader.Reader;
+                    var cols = reader.GetColumnSchema();
+                    while (reader.Read())
+                    {
+                        Row row = new Row();
+                        for (int i = 0; i < reader.FieldCount; i++)
+                        {
+                            var col = cols[i];
+                            if (reader.IsDBNull(i))
+                                new Cell(row, col.ColumnName, col.DataType);
+                            else
+                                new Cell(col.ColumnName, reader.GetValue(i), row);
+                        }
+                        yield return row;
+                    }
+                }
             }
             finally
             {
@@ -272,13 +296,13 @@ namespace Dt.Core
             }
         }
 
-        async Task<IEnumerable<dynamic>> Query(string p_keyOrSql, object p_params, bool p_deferred)
+        async Task<IEnumerable<T>> Query<T>(string p_keyOrSql, object p_params, bool p_deferred)
         {
             var cmd = CreateCommand(p_keyOrSql, p_params, p_deferred);
             try
             {
                 await OpenConnection();
-                var result = await _conn.QueryAsync(cmd);
+                var result = await _conn.QueryAsync<T>(cmd);
                 return result;
             }
             catch (Exception ex)
@@ -301,26 +325,6 @@ namespace Dt.Core
             {
                 await OpenConnection();
                 var result = await _conn.QueryAsync(p_type, cmd);
-                return result;
-            }
-            catch (Exception ex)
-            {
-                throw GetSqlException(cmd, ex);
-            }
-            finally
-            {
-                ReleaseConnection();
-            }
-        }
-
-        async Task<T> QueryFirstRow<T>(string p_keyOrSql, object p_params)
-        {
-            string sql = $"select * from ({Glb.Sql(p_keyOrSql)}) a limit 1";
-            var cmd = CreateCommand(sql, p_params, false);
-            try
-            {
-                await OpenConnection();
-                var result = await _conn.QueryFirstOrDefaultAsync<T>(cmd);
                 return result;
             }
             catch (Exception ex)
