@@ -9,6 +9,7 @@
 #region 引用命名
 using Dt.Core;
 using Dt.Core.Caches;
+using Dt.Core.Domain;
 using Dt.Core.Sqlite;
 using System;
 using System.Text.RegularExpressions;
@@ -111,11 +112,11 @@ namespace Dt.Cm
                 Pwd = Kit.GetMD5(p_phone.Substring(p_phone.Length - 4)),
                 //Pwd = Kit.GetMD5(new Random().Next(100000, 999999).ToString()),
             };
-            await new UserRepo().Insert(user);
+            await new Repo<User>().Insert(user);
 
             res["userid"] = user.ID;
             res["name"] = user.Name;
-            res["roles"] = user.Roles;
+            res["roles"] = null;
             res["pwd"] = user.Pwd;
             return res;
         }

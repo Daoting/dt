@@ -7,10 +7,12 @@
 #endregion
 
 #region 引用命名
+using Dt.Core.EventBus;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Core.Domain
@@ -21,7 +23,42 @@ namespace Dt.Core.Domain
     /// <typeparam name="TKey"></typeparam>
     public abstract class Root<TKey> : Entity<TKey>, IRoot<TKey>
     {
-        
+        List<IEvent> _localEvents;
+        List<IEvent> _remoteEvents;
+
+        protected void AddLocalEvent(IEvent eventData)
+        {
+            if (_localEvents == null)
+                _localEvents = new List<IEvent>();
+            _localEvents.Add(eventData);
+        }
+
+        protected void AddRemoteEvent(IEvent eventData)
+        {
+            if (_remoteEvents == null)
+                _remoteEvents = new List<IEvent>();
+            _remoteEvents.Add(eventData);
+        }
+
+        public IReadOnlyCollection<IEvent> GetLocalEvents()
+        {
+            return _localEvents?.AsReadOnly();
+        }
+
+        public IReadOnlyCollection<IEvent> GetRemoteEvents()
+        {
+            return _remoteEvents?.AsReadOnly();
+        }
+
+        public void ClearLocalEvents()
+        {
+            _localEvents?.Clear();
+        }
+
+        public void ClearRemoteEvents()
+        {
+            _remoteEvents?.Clear();
+        }
     }
 
     /// <summary>

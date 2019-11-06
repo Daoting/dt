@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace Dt.Cm
 {
-    [Tag(TblName = "cm_user", IsCached = true, CacheKey = "ID,Phone")]
+    [Tbl("cm_user")]
     public class User : Root
     {
         public User()
@@ -47,31 +47,19 @@ namespace Dt.Cm
         public bool Sex { get; set; }
 
         /// <summary>
-        /// 当前用户具有的角色，逗号隔开
-        /// </summary>
-        public string Roles { get; set; }
-
-        /// <summary>
         /// 分组id
         /// </summary>
-        //[JsonIgnore]
-        //public long GroupID { get; set; }
+        public long GroupID { get; set; }
 
-        ///// <summary>
-        ///// 创建时间
-        ///// </summary>
-        //[JsonIgnore]
-        //public DateTime CTime { get; set; }
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime CTime { get; set; }
 
-        ///// <summary>
-        ///// 创建时间
-        ///// </summary>
-        //[JsonIgnore]
-        //public DateTime MTime { get; set; }
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime MTime { get; set; }
 
-        public bool ValidatePwd(string p_pwd)
-        {
-            return true;
-        }
     }
 }

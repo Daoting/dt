@@ -7,68 +7,28 @@
 #endregion
 
 #region 引用命名
-using System.Reflection;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Core.Domain
 {
     /// <summary>
-    /// mysql仓库类
+    /// 包含"ID"主键的mysql仓库
     /// </summary>
     /// <typeparam name="TEntity">聚合根类型</typeparam>
-    public class DbRepo<TEntity> : IRepository<TEntity>
-        where TEntity : class, IRoot
+    /// <typeparam name="TKey">聚合根主键类型</typeparam>
+    public class DbRepo<TEntity, TKey> : IRepository<TEntity, TKey>
+        where TEntity : class, IRoot<TKey>
     {
-        #region 缓存
-        protected static readonly bool _isCached;
-        static readonly CacheHandler _cacheHandler;
+        #region 静态内容
+        protected static readonly ModelBuilder _model;
 
         static DbRepo()
         {
-            var tag = typeof(TEntity).GetCustomAttribute<TagAttribute>(false);
-            if (tag != null && tag.IsCached)
-            {
-                _cacheHandler = new CacheHandler(typeof(TEntity), tag);
-                _isCached = _cacheHandler.IsCached;
-            }
-        }
-
-        /// <summary>
-        /// 缓存实体对象
-        /// </summary>
-        /// <param name="p_entity"></param>
-        /// <returns></returns>
-        public static Task AddToCache(TEntity p_entity)
-        {
-            if (_isCached)
-                return _cacheHandler.Cache(p_entity);
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// 从缓存中获取实体对象
-        /// </summary>
-        /// <param name="p_keyVal">属性值</param>
-        /// <param name="p_keyName">属性名</param>
-        /// <returns>返回实体对象或null</returns>
-        public static Task<TEntity> GetFromCache(string p_keyVal, string p_keyName = "ID")
-        {
-            if (_isCached)
-                return _cacheHandler.Get<TEntity>(p_keyName, p_keyVal);
-            return Task.FromResult(default(TEntity));
-        }
-
-        /// <summary>
-        /// 从缓存中删除实体对象
-        /// </summary>
-        /// <param name="p_entity"></param>
-        /// <returns></returns>
-        public static Task RemoveCache(TEntity p_entity)
-        {
-            if (_isCached)
-                return _cacheHandler.Remove(p_entity);
-            return Task.CompletedTask;
+            _model = new ModelBuilder(typeof(TEntity));
         }
         #endregion
 
@@ -78,6 +38,54 @@ namespace Dt.Core.Domain
         protected readonly LobContext _ = LobContext.Current;
 
         /// <summary>
+        /// 根据主键获得实体对象，不存在时返回null
+        /// </summary>
+        /// <param name="p_id">主键</param>
+        /// <param name="p_loadDetails">是否加载附加数据，默认false</param>
+        /// <returns>返回实体对象或null</returns>
+        public async Task<TEntity> Get(TKey p_id, bool p_loadDetails = false)
+        {
+            TEntity entity = await _.Db.First<TEntity>(_model.SqlSelect, new { id = p_id });
+            if (entity != null && p_loadDetails)
+                await LoadDetails(entity);
+            return entity;
+        }
+
+        public virtual async Task LoadDetails(TEntity p_entity)
+        {
+            if (!_model.ExistChild)
+                return;
+
+            foreach (var child in _model.Children)
+            {
+                var ls = await _.Db.List(child.Type, child.SqlSelect, new { parentid = p_entity.ID });
+                child.PropInfo.SetValue(p_entity, ls);
+            }
+        }
+
+        /// <summary>
+        /// 以参数值方式执行Sql语句，返回实体列表，未加载实体的附加数据！
+        /// </summary>
+        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
+        /// <returns>返回实体列表</returns>
+        public Task<List<TEntity>> GetList(string p_keyOrSql, object p_params = null)
+        {
+            return _.Db.List<TEntity>(p_keyOrSql, p_params);
+        }
+
+        /// <summary>
+        /// 以参数值方式执行Sql语句，返回实体枚举，未加载实体的附加数据！高性能
+        /// </summary>
+        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
+        /// <returns>返回实体枚举</returns>
+        public Task<IEnumerable<TEntity>> ForEach(string p_keyOrSql, object p_params = null)
+        {
+            return _.Db.ForEach<TEntity>(p_keyOrSql, p_params);
+        }
+
+        /// <summary>
         /// 插入实体对象
         /// </summary>
         /// <param name="p_entity">待插入的实体</param>
@@ -85,50 +93,66 @@ namespace Dt.Core.Domain
         public async Task<bool> Insert(TEntity p_entity)
         {
             Check.NotNull(p_entity);
-            OnInserting(p_entity);
-            bool suc = await _.Db.Insert(p_entity);
-            if (suc)
-            {
-                await AddToCache(p_entity);
-                OnInserted(p_entity);
+            int cnt = await _.Db.Exec(_model.SqlInsert, p_entity);
+            if (cnt != 1)
+                return false;
 
-                if (InsertEvent != DomainEvent.None)
+            if (_model.ExistChild)
+            {
+                foreach (var child in _model.Children)
                 {
-                    var e = new InsertEventData<TEntity>(p_entity);
-                    if (InsertEvent == DomainEvent.Remote)
-                        _.RemoteEB.Multicast(e);
-                    else
-                        _.LocalEB.Publish(e);
+                    IEnumerable ls = child.PropInfo.GetValue(p_entity) as IEnumerable;
+                    if (ls != null)
+                    {
+                        // 子实体列表
+                        foreach (object obj in ls)
+                        {
+                            cnt = await _.Db.Exec(child.SqlInsert, obj);
+                            if (cnt != 1)
+                                throw new Exception("插入子实体对象失败");
+                        }
+                    }
                 }
             }
-            return suc;
+
+            GatherEvents(p_entity);
+            return true;
         }
 
         /// <summary>
         /// 更新实体对象
         /// </summary>
-        /// <param name="p_entity">实体</param>
+        /// <param name="p_entity">待更新的实体</param>
         /// <returns>true 成功</returns>
         public async Task<bool> Update(TEntity p_entity)
         {
             Check.NotNull(p_entity);
-            OnUpdating(p_entity);
-            bool suc = await _.Db.Update(p_entity);
-            if (suc)
-            {
-                await AddToCache(p_entity);
-                OnUpdated(p_entity);
+            int cnt = await _.Db.Exec(_model.SqlUpdate, p_entity);
+            if (cnt != 1)
+                return false;
 
-                if (UpdateEvent != DomainEvent.None)
+            if (_model.ExistChild)
+            {
+                foreach (var child in _model.Children)
                 {
-                    var e = new UpdateEventData<TEntity>(p_entity);
-                    if (UpdateEvent == DomainEvent.Remote)
-                        _.RemoteEB.Multicast(e);
-                    else
-                        _.LocalEB.Publish(e);
+                    // 删除原有
+                    await _.Db.Exec(child.SqlDelete, new { parentid = p_entity.ID });
+                    // 重新插入
+                    IEnumerable ls = child.PropInfo.GetValue(p_entity) as IEnumerable;
+                    if (ls != null)
+                    {
+                        foreach (object obj in ls)
+                        {
+                            cnt = await _.Db.Exec(child.SqlInsert, obj);
+                            if (cnt != 1)
+                                throw new Exception("插入子实体对象失败");
+                        }
+                    }
                 }
             }
-            return suc;
+
+            GatherEvents(p_entity);
+            return true;
         }
 
         /// <summary>
@@ -139,115 +163,12 @@ namespace Dt.Core.Domain
         public async Task<bool> Delete(TEntity p_entity)
         {
             Check.NotNull(p_entity);
-            OnDeleting(p_entity);
-            bool suc = await _.Db.Delete(p_entity);
+
+            // 删除子实体依靠数据库的级联删除
+            bool suc = await _.Db.Exec(_model.SqlDelete, p_entity) > 0;
             if (suc)
-            {
-                await RemoveCache(p_entity);
-                OnDeleted(p_entity);
-
-                if (DeleteEvent != DomainEvent.None)
-                {
-                    var e = new DeleteEventData<TEntity>(p_entity);
-                    if (DeleteEvent == DomainEvent.Remote)
-                        _.RemoteEB.Multicast(e);
-                    else
-                        _.LocalEB.Publish(e);
-                }
-            }
+                GatherEvents(p_entity);
             return suc;
-        }
-
-        /// <summary>
-        /// 插入实体后触发的领域事件种类
-        /// </summary>
-        public DomainEvent InsertEvent { get; set; }
-
-        /// <summary>
-        /// 更新实体后触发的领域事件种类
-        /// </summary>
-        public DomainEvent UpdateEvent { get; set; }
-
-        /// <summary>
-        /// 删除实体后触发的领域事件种类
-        /// </summary>
-        public DomainEvent DeleteEvent { get; set; }
-
-        /// <summary>
-        /// 插入前
-        /// </summary>
-        /// <param name="p_entity"></param>
-        protected virtual void OnInserting(TEntity p_entity)
-        { }
-
-        /// <summary>
-        /// 插入后
-        /// </summary>
-        /// <param name="p_entity"></param>
-        protected virtual void OnInserted(TEntity p_entity)
-        { }
-
-        /// <summary>
-        /// 更新前
-        /// </summary>
-        /// <param name="p_entity"></param>
-        protected virtual void OnUpdating(TEntity p_entity)
-        { }
-
-        /// <summary>
-        /// 更新后
-        /// </summary>
-        /// <param name="p_entity"></param>
-        protected virtual void OnUpdated(TEntity p_entity)
-        { }
-
-        /// <summary>
-        /// 删除前
-        /// </summary>
-        /// <param name="p_entity"></param>
-        protected virtual void OnDeleting(TEntity p_entity)
-        { }
-
-        /// <summary>
-        /// 删除后
-        /// </summary>
-        /// <param name="p_entity"></param>
-        protected virtual void OnDeleted(TEntity p_entity)
-        { }
-    }
-
-    /// <summary>
-    /// 包含"ID"主键的mysql仓库
-    /// </summary>
-    /// <typeparam name="TEntity">聚合根类型</typeparam>
-    /// <typeparam name="TKey">聚合根主键类型</typeparam>
-    public class DbRepo<TEntity, TKey> : DbRepo<TEntity>, IRepository<TEntity, TKey>
-        where TEntity : class, IRoot<TKey>
-    {
-        /// <summary>
-        /// 根据主键获得实体对象，不存在时返回null
-        /// </summary>
-        /// <param name="p_id">主键</param>
-        /// <returns>返回实体对象或null</returns>
-        public async Task<TEntity> Get(TKey p_id)
-        {
-            TEntity entity = null;
-
-            // 启用缓存时首先从缓存中查询
-            if (_isCached)
-            {
-                entity = await GetFromCache("id", p_id.ToString());
-                if (entity != null)
-                    return entity;
-            }
-
-            entity = await _.Db.FirstByKey<TEntity, TKey>(p_id);
-            if (entity != null)
-            {
-                await OnGot(entity);
-                await AddToCache(entity);
-            }
-            return entity;
         }
 
         /// <summary>
@@ -257,20 +178,17 @@ namespace Dt.Core.Domain
         /// <returns>true 删除成功</returns>
         public async Task<bool> Delete(TKey p_id)
         {
-            TEntity entity = await Get(p_id);
-            if (entity != null)
-                return await Delete(entity);
-            return false;
+            // 删除子实体依靠数据库的级联删除
+            return await _.Db.Exec(_model.SqlDelete, new { id = p_id }) > 0;
         }
 
         /// <summary>
-        /// 查询到实体对象后的处理，如：加载子实体、附加属性，自定义缓存等
+        /// 收集待发布的领域事件
         /// </summary>
         /// <param name="p_entity"></param>
-        /// <returns></returns>
-        protected virtual Task OnGot(TEntity p_entity)
+        protected void GatherEvents(TEntity p_entity)
         {
-            return Task.CompletedTask;
+
         }
     }
 }

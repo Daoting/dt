@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace Dt.Cm
 {
-    [Tag(TblName = "cm_role")]
+    [Tbl("cm_role")]
     public class Role : Root
     {
         /// <summary>
