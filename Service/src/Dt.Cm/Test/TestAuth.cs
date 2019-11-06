@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Dt.Core;
+using Dt.Core.Domain;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 #endregion
@@ -20,6 +21,16 @@ namespace Dt.Cm
     [Api(GroupName = "功能测试")]
     public class TestAuth : BaseApi
     {
+        public async Task Test()
+        {
+            User u = new User();
+            u.ID = 1;
+            u.Phone = "15948371891";
+            u.StartTrack();
+            u.Name = "daoting";
+            await new Repo<User>().Update(u);
+        }
+
         public string NoAuth()
         {
             return "无授权验证";
