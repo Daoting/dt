@@ -145,6 +145,7 @@ namespace Dt.Core
          * 1. 存在和字段名称相同的属性，且属性含有setter，setter可以为private
          * 2. 存在和字段名称相同的变量(field)
          * 3. 存在和字段名称相同的属性，但无setter，直接设置到自动变量(Backing Field)
+         * 4. 删除字段名称中的_ ，按上述方法比较是否有映射属性
          */
 
         /// <summary>

@@ -53,6 +53,11 @@ namespace Dt.Core.Domain
             return entity;
         }
 
+        /// <summary>
+        /// 加载附加数据，默认加载所有关联的子表数据
+        /// </summary>
+        /// <param name="p_entity"></param>
+        /// <returns></returns>
         public virtual async Task LoadDetails(TEntity p_entity)
         {
             if (!_model.ExistChild)
@@ -122,6 +127,22 @@ namespace Dt.Core.Domain
         }
 
         /// <summary>
+        /// 批量插入实体对象
+        /// </summary>
+        /// <param name="p_entities">待插入的实体列表</param>
+        /// <returns>true 成功</returns>
+        public async Task<bool> BatchInsert(IEnumerable<TEntity> p_entities)
+        {
+            Check.NotNull(p_entities);
+            foreach (var entity in p_entities)
+            {
+                if (!await Insert(entity))
+                    throw new Exception($"插入实体{typeof(TEntity).Name }：{entity.ID} 时失败");
+            }
+            return true;
+        }
+
+        /// <summary>
         /// 更新实体对象
         /// </summary>
         /// <param name="p_entity">待更新的实体</param>
@@ -184,6 +205,22 @@ namespace Dt.Core.Domain
         }
 
         /// <summary>
+        /// 批量更新实体对象
+        /// </summary>
+        /// <param name="p_entities">待更新的实体列表</param>
+        /// <returns>true 成功</returns>
+        public async Task<bool> BatchUpdate(IEnumerable<TEntity> p_entities)
+        {
+            Check.NotNull(p_entities);
+            foreach (var entity in p_entities)
+            {
+                if (!await Update(entity))
+                    throw new Exception($"更新实体{typeof(TEntity).Name }：{entity.ID} 时失败");
+            }
+            return true;
+        }
+
+        /// <summary>
         /// 删除实体对象
         /// </summary>
         /// <param name="p_entity">待删除的实体</param>
@@ -208,6 +245,23 @@ namespace Dt.Core.Domain
         {
             // 删除子实体依靠数据库的级联删除
             return await _.Db.Exec(_model.SqlDelete, new { id = p_id }) > 0;
+        }
+
+        /// <summary>
+        /// 批量删除实体对象
+        /// </summary>
+        /// <param name="p_entities">待删除的实体列表</param>
+        /// <returns>成功删除行数</returns>
+        public async Task<int> BatchDelete(IEnumerable<TEntity> p_entities)
+        {
+            Check.NotNull(p_entities);
+            int cnt = 0;
+            foreach (var entity in p_entities)
+            {
+                if (await Delete(entity))
+                    cnt++;
+            }
+            return cnt;
         }
 
         /// <summary>
