@@ -51,7 +51,7 @@ namespace Dt.Core.Domain
         public string SqlInsert { get; }
 
         /// <summary>
-        /// 更新实体的sql
+        /// 完整更新实体的sql
         /// </summary>
         public string SqlUpdate { get; }
 
