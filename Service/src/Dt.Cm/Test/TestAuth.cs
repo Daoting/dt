@@ -24,11 +24,11 @@ namespace Dt.Cm
         public async Task Test()
         {
             User u = new User();
-            u.ID = 1;
-            u.Phone = "15948371891";
-            u.StartTrack();
+            u.ID = 13436621442719744;
+            u.Phone = "15948371821";
             u.Name = "daoting";
-            await new Repo<User>().Update(u);
+            u.Pwd = "124";
+            await new Repo<User>().Update(u, CudEvent.Local);
         }
 
         public string NoAuth()
@@ -55,6 +55,14 @@ namespace Dt.Cm
         {
             string userID = p_context.Request.Headers["uid"];
             return Task.FromResult(true);
+        }
+    }
+
+    public class InsertHandler : DeleteEventHandler<User>
+    {
+        public override Task Handle(DeleteEvent<User> p_event)
+        {
+            return base.Handle(p_event);
         }
     }
 }

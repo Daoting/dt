@@ -7,28 +7,30 @@
 #endregion
 
 #region 引用命名
+using Dt.Core.EventBus;
 #endregion
 
 namespace Dt.Core.Domain
 {
     /// <summary>
-    /// 领域事件的种类
+    /// 领域事件
     /// </summary>
-    public enum DomainEvent
+    internal class DomainEvent
     {
-        /// <summary>
-        /// 不触发领域事件
-        /// </summary>
-        None,
+        public DomainEvent(bool p_isRemote, IEvent p_event)
+        {
+            IsRemoteEvent = p_isRemote;
+            Event = p_event;
+        }
 
         /// <summary>
-        /// 触发本地领域事件
+        /// 是否为远程事件
         /// </summary>
-        Local,
+        public bool IsRemoteEvent { get; }
 
         /// <summary>
-        /// 触发远程领域事件
+        /// 事件内容
         /// </summary>
-        Remote
+        public IEvent Event { get; }
     }
 }

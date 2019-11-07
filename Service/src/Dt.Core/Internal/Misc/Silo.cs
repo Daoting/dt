@@ -444,36 +444,35 @@ namespace Dt.Core
             if (p_type.GetInterface("IEventHandler") == null)
                 return false;
 
-            // 获取泛型接口类型
-            Type iType = p_type.GetInterfaces().FirstOrDefault(t => t.IsGenericType);
-            if (iType == null)
-                return false;
-
-            Type eventType = iType.GetGenericArguments()[0];
-            Type genType = iType.GetGenericTypeDefinition();
-            if (genType == typeof(IRemoteHandler<>))
+            // 获取泛型接口类型，一个事件处理可以同时支持本地和远程
+            var types = p_type.GetInterfaces().Where(t => t.IsGenericType);
+            bool isHandler = false;
+            foreach (var iType in types)
             {
-                Type tgtType = typeof(IRemoteHandler<>).MakeGenericType(eventType);
-                p_builder.RegisterType(p_type).As(tgtType);
-                RemoteEventBus.Events[eventType.Name] = tgtType;
-                return true;
+                Type eventType = iType.GetGenericArguments()[0];
+                Type genType = iType.GetGenericTypeDefinition();
+                if (genType == typeof(IRemoteHandler<>))
+                {
+                    Type tgtType = typeof(IRemoteHandler<>).MakeGenericType(eventType);
+                    p_builder.RegisterType(p_type).As(tgtType);
+                    RemoteEventBus.Events[eventType.Name] = tgtType;
+                    isHandler = true;
+                }
+                else if (genType == typeof(ILocalHandler<>))
+                {
+                    Type tgtType = typeof(ILocalHandler<>).MakeGenericType(eventType);
+                    p_builder.RegisterType(p_type).As(tgtType);
+                    LocalEventBus.NoticeEvents[eventType.Name] = tgtType;
+                    isHandler = true;
+                }
+                else if (genType == typeof(IRequestHandler<,>))
+                {
+                    p_builder.RegisterType(p_type);
+                    LocalEventBus.RequestEvents[eventType] = p_type;
+                    isHandler = true;
+                }
             }
-
-            if (genType == typeof(ILocalHandler<>))
-            {
-                Type tgtType = typeof(ILocalHandler<>).MakeGenericType(eventType);
-                p_builder.RegisterType(p_type).As(tgtType);
-                LocalEventBus.NoticeEvents[eventType.Name] = tgtType;
-                return true;
-            }
-
-            if (genType == typeof(IRequestHandler<,>))
-            {
-                p_builder.RegisterType(p_type);
-                LocalEventBus.RequestEvents[eventType] = p_type;
-                return true;
-            }
-            return false;
+            return isHandler;
         }
         #endregion
     }

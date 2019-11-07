@@ -7,10 +7,6 @@
 #endregion
 
 #region 引用命名
-using System;
-using System.Linq.Expressions;
-using System.Threading;
-using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Core.Domain
@@ -20,8 +16,33 @@ namespace Dt.Core.Domain
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     public class Repo<TEntity> : DbRepo<TEntity, long>
-        where TEntity : class, IRoot<long>
+        where TEntity : Root<long>
     {
-        
+        protected override void AddInsertEvent(TEntity p_entity, CudEvent p_cudEvent)
+        {
+            if (p_cudEvent != CudEvent.None)
+            {
+                var ev = new InsertEvent<TEntity>(p_entity.ID);
+                _.AddDomainEvent(new DomainEvent(p_cudEvent == CudEvent.Remote, ev));
+            }
+        }
+
+        protected override void AddUpdateEvent(TEntity p_entity, CudEvent p_cudEvent)
+        {
+            if (p_cudEvent != CudEvent.None)
+            {
+                var ev = new UpdateEvent<TEntity>(p_entity.ID);
+                _.AddDomainEvent(new DomainEvent(p_cudEvent == CudEvent.Remote, ev));
+            }
+        }
+
+        protected override void AddDeleteEvent(long p_id, CudEvent p_cudEvent)
+        {
+            if (p_cudEvent != CudEvent.None)
+            {
+                var ev = new DeleteEvent<TEntity>(p_id);
+                _.AddDomainEvent(new DomainEvent(p_cudEvent == CudEvent.Remote, ev));
+            }
+        }
     }
 }

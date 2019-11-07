@@ -10,10 +10,7 @@
 using Dt.Core.EventBus;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Core.Domain
@@ -25,8 +22,7 @@ namespace Dt.Core.Domain
     public abstract class Root<TKey> : Entity<TKey>, IRoot<TKey>
     {
         Dictionary<string, object> _originalVal;
-        List<IEvent> _localEvents;
-        List<IEvent> _remoteEvents;
+        List<DomainEvent> _events;
 
         /// <summary>
         /// 启动跟踪属性值变化，Update时只更新变化的列
@@ -92,38 +88,28 @@ namespace Dt.Core.Domain
             }
         }
 
-        protected void AddLocalEvent(IEvent eventData)
+        protected void AddDomainEvent(IEvent p_event, bool p_isRemoteEvent = false)
         {
-            if (_localEvents == null)
-                _localEvents = new List<IEvent>();
-            _localEvents.Add(eventData);
+            if (_events == null)
+                _events = new List<DomainEvent>();
+            _events.Add(new DomainEvent(p_isRemoteEvent, p_event));
         }
 
-        protected void AddRemoteEvent(IEvent eventData)
+        /// <summary>
+        /// 获取实体对象的领域事件
+        /// </summary>
+        /// <returns></returns>
+        internal IEnumerable<DomainEvent> GetDomainEvents()
         {
-            if (_remoteEvents == null)
-                _remoteEvents = new List<IEvent>();
-            _remoteEvents.Add(eventData);
+            return _events;
         }
 
-        public IReadOnlyCollection<IEvent> GetLocalEvents()
+        /// <summary>
+        /// 清空实体对象的领域事件
+        /// </summary>
+        internal void ClearDomainEvents()
         {
-            return _localEvents?.AsReadOnly();
-        }
-
-        public IReadOnlyCollection<IEvent> GetRemoteEvents()
-        {
-            return _remoteEvents?.AsReadOnly();
-        }
-
-        public void ClearLocalEvents()
-        {
-            _localEvents?.Clear();
-        }
-
-        public void ClearRemoteEvents()
-        {
-            _remoteEvents?.Clear();
+            _events?.Clear();
         }
     }
 
@@ -131,7 +117,5 @@ namespace Dt.Core.Domain
     /// 主键ID为long类型的聚合根基类
     /// </summary>
     public abstract class Root : Root<long>
-    {
-
-    }
+    { }
 }

@@ -49,7 +49,7 @@ namespace Dt.Cm
         /// <summary>
         /// 分组id
         /// </summary>
-        public long GroupID { get; set; }
+        public long? GroupID { get; set; }
 
         /// <summary>
         /// 创建时间

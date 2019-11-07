@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Core.Domain;
 using Dt.Core.EventBus;
 using Dt.Core.Rpc;
 using Microsoft.AspNetCore.Http;
@@ -26,6 +27,7 @@ namespace Dt.Core
         const string _lcName = "LobContext";
         readonly ApiInvoker _invoker;
         Db _db;
+        List<DomainEvent> _domainEvents;
         #endregion
 
         #region 构造方法
@@ -128,7 +130,25 @@ namespace Dt.Core
 
         #region 内部方法
         /// <summary>
-        /// Api调用结束后释放资源，提交或回滚事务、关闭数据库连接
+        /// 收集待发布的领域事件
+        /// </summary>
+        /// <param name="p_events"></param>
+        internal void AddDomainEvents(IEnumerable<DomainEvent> p_events)
+        {
+            if (_domainEvents == null)
+                _domainEvents = new List<DomainEvent>();
+            _domainEvents.AddRange(p_events);
+        }
+
+        internal void AddDomainEvent(DomainEvent p_event)
+        {
+            if (_domainEvents == null)
+                _domainEvents = new List<DomainEvent>();
+            _domainEvents.Add(p_event);
+        }
+
+        /// <summary>
+        /// Api调用结束后释放资源，提交或回滚事务、关闭数据库连接、发布领域事件
         /// </summary>
         /// <param name="p_suc"></param>
         /// <returns></returns>
@@ -139,6 +159,25 @@ namespace Dt.Core
                 await _db.Close(p_suc);
                 _db = null;
             }
+
+            // 发布领域事件
+            if (p_suc && _domainEvents != null)
+            {
+                var localEB = LocalEB;
+                var remoteEB = RemoteEB;
+                foreach (var de in _domainEvents)
+                {
+                    if (de.IsRemoteEvent)
+                    {
+                        //remoteEB.
+                    }
+                    else
+                    {
+                        localEB.Publish(de.Event);
+                    }
+                }
+            }
+            _domainEvents?.Clear();
         }
         #endregion
     }
