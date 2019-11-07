@@ -292,7 +292,7 @@ namespace Dt.Core.Domain
         {
             if (p_cudEvent != CudEvent.None)
             {
-                var ev = new InsertEvent<TEntity, TKey>(p_entity.ID);
+                var ev = new InsertEvent<TEntity, TKey> { ID = p_entity.ID };
                 _.AddDomainEvent(new DomainEvent(p_cudEvent == CudEvent.Remote, ev));
             }
         }
@@ -306,7 +306,7 @@ namespace Dt.Core.Domain
         {
             if (p_cudEvent != CudEvent.None)
             {
-                var ev = new UpdateEvent<TEntity, TKey>(p_entity.ID);
+                var ev = new UpdateEvent<TEntity, TKey> { ID = p_entity.ID };
                 _.AddDomainEvent(new DomainEvent(p_cudEvent == CudEvent.Remote, ev));
             }
         }
@@ -320,7 +320,7 @@ namespace Dt.Core.Domain
         {
             if (p_cudEvent != CudEvent.None)
             {
-                var ev = new DeleteEvent<TEntity, TKey>(p_id);
+                var ev = new DeleteEvent<TEntity, TKey> { ID = p_id };
                 _.AddDomainEvent(new DomainEvent(p_cudEvent == CudEvent.Remote, ev));
             }
         }

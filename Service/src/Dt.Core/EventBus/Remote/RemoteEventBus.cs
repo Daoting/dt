@@ -52,6 +52,32 @@ namespace Dt.Core.EventBus
 
         #region 发布
         /// <summary>
+        /// 向应用内的所有服务进行广播
+        /// </summary>
+        /// <param name="p_event">事件内容</param>
+        /// <param name="p_isAllSvcInst">true表示所有服务的所有副本，false表示当服务有多个副本时只投递给其中一个</param>
+        public async void Broadcast(IEvent p_event, bool p_isAllSvcInst = true)
+        {
+            if (p_event == null)
+                return;
+
+            List<string> svcs = await Glb.GetCurrentSvcs(false);
+            foreach (var svc in svcs)
+            {
+                if (p_isAllSvcInst)
+                {
+                    // 所有服务的所有副本，进入第二队列
+                    Publish(p_event, $"{svc}.All", true);
+                }
+                else
+                {
+                    // 每个服务只投递给其中一个副本，进入第一队列
+                    Publish(p_event, svc, false);
+                }
+            }
+        }
+
+        /// <summary>
         /// 向应用内的多个服务进行广播
         /// </summary>
         /// <param name="p_event">事件内容</param>

@@ -10,6 +10,7 @@
 using Dt.Core;
 using Dt.Core.Domain;
 using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 #endregion
 
@@ -28,7 +29,7 @@ namespace Dt.Cm
             u.Phone = "15948371821";
             u.Name = "daoting";
             u.Pwd = "124";
-            await new Repo<User>().Update(u, CudEvent.Local);
+            await new Repo<User>().Update(u, CudEvent.Remote);
         }
 
         public string NoAuth()
@@ -58,9 +59,9 @@ namespace Dt.Cm
         }
     }
 
-    public class InsertHandler : DeleteEventHandler<User>
+    public class InsertHandler : UpdateEventHandler<User>
     {
-        public override Task Handle(DeleteEvent<User> p_event)
+        public override Task Handle(UpdateEvent<User> p_event)
         {
             return base.Handle(p_event);
         }

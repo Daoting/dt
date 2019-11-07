@@ -168,13 +168,9 @@ namespace Dt.Core
                 foreach (var de in _domainEvents)
                 {
                     if (de.IsRemoteEvent)
-                    {
-                        //remoteEB.
-                    }
+                        remoteEB.Broadcast(de.Event, false);
                     else
-                    {
                         localEB.Publish(de.Event);
-                    }
                 }
             }
             _domainEvents?.Clear();

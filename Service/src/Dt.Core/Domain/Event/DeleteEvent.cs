@@ -20,15 +20,10 @@ namespace Dt.Core.Domain
     public class DeleteEvent<TEntity, TKey> : IEvent
         where TEntity : Root<TKey>
     {
-        public DeleteEvent(TKey p_id)
-        {
-            ID = p_id;
-        }
-
         /// <summary>
         /// 实体主键
         /// </summary>
-        public TKey ID { get; }
+        public TKey ID { get; set; }
     }
 
     /// <summary>
@@ -38,14 +33,9 @@ namespace Dt.Core.Domain
     public class DeleteEvent<TEntity> : IEvent
         where TEntity : Root<long>
     {
-        public DeleteEvent(long p_id)
-        {
-            ID = p_id;
-        }
-
         /// <summary>
         /// 实体主键
         /// </summary>
-        public long ID { get; }
+        public long ID { get; set; }
     }
 }
