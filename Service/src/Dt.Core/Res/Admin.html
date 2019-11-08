@@ -142,6 +142,16 @@
             });
         }
 
+        function onCopy()
+        {
+            var selection = window.getSelection();
+            var range = document.createRange();
+            range.selectNodeContents($("tdResult"));
+            selection.removeAllRanges();
+            selection.addRange(range);
+            document.execCommand("Copy");
+        }
+
         function loadAgent(cls)
         {
             call('["Admin.GetAgentClass", "' + cls + '"]').then(function (txt)

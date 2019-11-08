@@ -91,10 +91,10 @@ namespace Dt.Core
                 case "long":
                     return typeof(long);
 
-                case "date":
+                case "DateTime":
                     return typeof(DateTime);
 
-                case "blob":
+                case "byte[]":
                     return typeof(byte[]);
 
                 default:

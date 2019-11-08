@@ -190,7 +190,7 @@ namespace Dt.Core
                 case "datetime":
                 case "timestamp":
                 case "time":
-                    return "date";
+                    return "DateTime";
 
                 case "blob":
                 case "tinyblob":
@@ -199,7 +199,7 @@ namespace Dt.Core
                 case "bit":
                 case "binary":
                 case "varbinary":
-                    return "blob";
+                    return "byte[]";
 
                 default:
                     return "string";

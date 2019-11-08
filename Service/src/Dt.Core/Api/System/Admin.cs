@@ -183,7 +183,7 @@ namespace Dt.Core
             sb.Append("<tr><td><textarea id=\"methodCall\" style=\"width:100%; height:360px;overflow: auto;\">");
             sb.Append(Silo.GetMethodCall(p_alias));
             sb.Append("</textarea></td></tr>");
-            sb.Append("<tr><td><input type=\"button\" onclick=\"onTest()\" value=\"测试方法\" style=\"width: 90px;\" /></td></tr>");
+            sb.Append("<tr><td><input type=\"button\" onclick=\"onTest()\" value=\"测试方法\" style=\"width: 90px;\" /><input type=\"button\" onclick=\"onCopy()\" value=\"复制结果\" style=\"width: 90px;margin-left:20px\" /></td></tr>");
             sb.Append("</table>");
             sb.Append("</td>");
             #endregion

@@ -22,16 +22,6 @@ namespace Dt.Cm
     [Api(GroupName = "功能测试")]
     public class TestAuth : BaseApi
     {
-        public async Task Test()
-        {
-            User u = new User();
-            u.ID = 13436621442719744;
-            u.Phone = "15948371821";
-            u.Name = "daoting";
-            u.Pwd = "124";
-            await new Repo<User>().Update(u, CudEvent.Remote);
-        }
-
         public string NoAuth()
         {
             return "无授权验证";
@@ -56,14 +46,6 @@ namespace Dt.Cm
         {
             string userID = p_context.Request.Headers["uid"];
             return Task.FromResult(true);
-        }
-    }
-
-    public class InsertHandler : UpdateEventHandler<User>
-    {
-        public override Task Handle(UpdateEvent<User> p_event)
-        {
-            return base.Handle(p_event);
         }
     }
 }
