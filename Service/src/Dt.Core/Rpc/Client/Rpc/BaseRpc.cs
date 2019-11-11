@@ -132,7 +132,12 @@ namespace Dt.Core.Rpc
                 writer.WriteEndArray();
                 writer.Flush();
             }
-            var data = Encoding.UTF8.GetBytes(sb.ToString());
+            string json = sb.ToString();
+#if !SERVER
+            // 输出监视信息
+            AtKit.Trace(TraceOutType.RpcCall, p_methodName, json, _svcName);
+#endif
+            var data = Encoding.UTF8.GetBytes(json);
 
             // 超过长度限制时执行压缩
             if (data.Length > RpcKit.MinCompressLength)

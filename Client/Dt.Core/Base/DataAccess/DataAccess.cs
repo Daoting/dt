@@ -376,7 +376,7 @@ namespace Dt.Core
             {
                 foreach (var col in Columns)
                 {
-                    new Cell(row, col.ColName, TableKit.GetType(col.DbType));
+                    new Cell(row, col.ColName, TableKit.GetColType(col.DbType));
                 }
                 return row;
             }
@@ -385,7 +385,7 @@ namespace Dt.Core
             var props = p_init.GetType().GetProperties().ToList();
             foreach (var col in Columns)
             {
-                Type colType = TableKit.GetType(col.DbType);
+                Type colType = TableKit.GetColType(col.DbType);
 
                 if (props.Count > 0)
                 {
@@ -451,7 +451,7 @@ namespace Dt.Core
             var tbl = new Table<TRow>();
             foreach (var col in Columns)
             {
-                tbl.Columns.Add(new Column(col.ColName, TableKit.GetType(col.DbType)));
+                tbl.Columns.Add(new Column(col.ColName, TableKit.GetColType(col.DbType)));
             }
             return tbl;
         }

@@ -21,8 +21,11 @@
     <Page Include="Model\SelectRolesDlg.xaml" />
     <Page Include="Model\SysMenu.xaml" />
     <Page Include="Model\SysModule.xaml" />
-    <Page Include="Model\SysPrivilege.xaml" />
-    <Page Include="Model\SysParams.xaml" />
+    <Page Include="Model\BasePrivilege.xaml" />
+    <Page Include="Model\UserParams.xaml" />
+    <Page Include="Model\UserAccount.xaml" />
+    <Page Include="Model\SysRole.xaml" /> 
+    <Page Include="Model\BaseCode.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -53,11 +56,20 @@
     <Compile Update="Model\SysModule.xaml.cs">
       <DependentUpon>SysModule.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Model\SysPrivilege.xaml.cs">
-      <DependentUpon>SysPrivilege.xaml</DependentUpon>
+    <Compile Update="Model\BasePrivilege.xaml.cs">
+      <DependentUpon>BasePrivilege.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Model\SysParams.xaml.cs">
-      <DependentUpon>SysParams.xaml</DependentUpon>
-    </Compile>            
+    <Compile Update="Model\UserParams.xaml.cs">
+      <DependentUpon>UserParams.xaml</DependentUpon>
+    </Compile> 
+    <Compile Update="Model\UserAccount.xaml.cs">
+      <DependentUpon>UserAccount.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Model\SysRole.xaml.cs">
+      <DependentUpon>SysRole.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Model\BaseCode.xaml.cs">
+      <DependentUpon>BaseCode.xaml</DependentUpon>
+    </Compile>        
   </ItemGroup>
 </Project>

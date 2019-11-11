@@ -89,10 +89,13 @@ namespace Dt.Shell
         /// </summary>
         public Dictionary<string, Type> ViewTypes => new Dictionary<string, Type>
         {
+            { "基础代码", typeof(BaseCode) },
+            { "基础权限", typeof(BasePrivilege) },
             { "菜单管理", typeof(SysMenu) },
             { "系统模块", typeof(SysModule) },
-            { "参数定义", typeof(SysParams) },
-            { "基础权限", typeof(SysPrivilege) },
+            { "系统角色", typeof(SysRole) },
+            { "用户账号", typeof(UserAccount) },
+            { "参数定义", typeof(UserParams) },
             { "主页", typeof(DefaultHome) },
             { "控件样例", typeof(SamplesMain) },
         };
@@ -121,6 +124,7 @@ namespace Dt.Shell
         public Dictionary<string, Type> StateTbls => new Dictionary<string, Type>
         {
             { "menufav", typeof(MenuFav) },
+            { "filereadlog", typeof(FileReadLog) },
             { "docklayout", typeof(DockLayout) },
             { "celllastval", typeof(CellLastVal) },
             { "clientlog", typeof(ClientLog) },
@@ -130,7 +134,7 @@ namespace Dt.Shell
         /// <summary>
         /// 获取状态库版本号，和本地不同时自动更新
         /// </summary>
-        public string StateDbVer => "5035b89092efb702051c91648eca0e63";
+        public string StateDbVer => "81122d42a894a237c687b80eaf48d50f";
         #endregion
     }
 }

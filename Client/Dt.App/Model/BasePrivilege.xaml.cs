@@ -16,9 +16,9 @@ using System.Linq;
 namespace Dt.App.Model
 {
     [View("基础权限")]
-    public partial class SysPrivilege : Win
+    public partial class BasePrivilege : Win
     {
-        public SysPrivilege()
+        public BasePrivilege()
         {
             InitializeComponent();
         }

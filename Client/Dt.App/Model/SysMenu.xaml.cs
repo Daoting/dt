@@ -77,7 +77,7 @@ namespace Dt.App.Model
         async void OnFvDataChanged(object sender, object e)
         {
             var row = (MenuRow)e;
-            if (row.ID < 0)
+            if (row.ID == 0)
             {
                 // 根节点
                 _m.HideExcept("新建", "刷新模型");
@@ -94,7 +94,7 @@ namespace Dt.App.Model
             }
             else
             {
-                if (e == _tv.SelectedItem)
+                if (row.ID == _tv.SelectedRow.ID)
                     _m.ShowExcept("新建");
                 else
                     _m.ShowExcept();
@@ -116,40 +116,42 @@ namespace Dt.App.Model
         async void OnAddMi(object sender, Mi e)
         {
             var ids = await _daMenu.NewIDAndSeq("sq_menu");
-            _fv.Data = _daMenu.NewRow<MenuRow>(new
+            var row = _daMenu.NewRow<MenuRow>(new
             {
                 id = ids[0],
                 name = "新菜单",
                 icon = "文件",
                 isgroup = false,
                 parentid = _tv.SelectedRow.ID,
-                parentname = _tv.SelectedRow.Str("name"),
                 dispidx = ids[1],
                 islocked = false,
                 ctime = AtSys.Now,
             });
+            row.AddCell("parentname", _tv.SelectedRow.Str("name"));
+            _fv.Data = row;
         }
 
         async void OnAddGroup(object sender, Mi e)
         {
             var ids = await _daMenu.NewIDAndSeq("sq_menu");
-            _fv.Data = _daMenu.NewRow<MenuRow>(new
+            var row = _daMenu.NewRow<MenuRow>(new
             {
                 id = ids[0],
                 name = "新菜单组",
                 icon = "文件夹",
                 isgroup = true,
                 parentid = _tv.SelectedRow.ID,
-                parentname = _tv.SelectedRow.Str("name"),
                 dispidx = ids[1],
                 islocked = false,
                 ctime = AtSys.Now,
             });
+            row.AddCell("parentname", _tv.SelectedRow.Str("name"));
+            _fv.Data = row;
         }
 
         async void OnSave(object sender, Mi e)
         {
-            if (_fv.ExistNull("name", "viewname"))
+            if (_fv.ExistNull("name"))
                 return;
 
             _fv.Get<MenuRow>().MTime = AtSys.Now;

@@ -11,15 +11,14 @@ using Dt.Base;
 using Dt.Core;
 using Dt.Core.Model;
 using System.Linq;
-using System.Threading.Tasks;
 #endregion
 
 namespace Dt.App.Model
 {
-    [View("参数定义")]
-    public partial class SysParams : Win
+    [View("系统角色")]
+    public partial class SysRole : Win
     {
-        public SysParams()
+        public SysRole()
         {
             InitializeComponent();
         }

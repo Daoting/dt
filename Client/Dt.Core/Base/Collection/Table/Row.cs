@@ -223,7 +223,7 @@ namespace Dt.Core
         public void AddCell<T>(string p_cellName, T p_value = default)
         {
             if (Contains(p_cellName))
-                Throw($"已包含{p_cellName}列！");
+                throw new Exception($"已包含{p_cellName}列！");
             if (p_value != default)
                 new Cell(p_cellName, p_value, this);
             else
@@ -257,8 +257,7 @@ namespace Dt.Core
         /// <returns>true 包含</returns>
         public bool Contains(string p_columnName)
         {
-            if (string.IsNullOrEmpty(p_columnName))
-                Throw("列名不能为空！");
+            Check.NotNullOrEmpty(p_columnName);
             return _cells.Contains(p_columnName);
         }
 
@@ -337,7 +336,7 @@ namespace Dt.Core
         public void InitVal(int p_index, object p_val)
         {
             if (p_index < 0 || p_index >= _cells.Count)
-                Throw("提供的索引值超出范围！");
+                throw new Exception("提供的索引值超出范围！");
             _cells[p_index].InitVal(p_val);
         }
 
@@ -532,7 +531,7 @@ namespace Dt.Core
         public T GetVal<T>(int p_index)
         {
             if (p_index < 0 || p_index >= _cells.Count)
-                Throw("提供的索引值超出范围！");
+                throw new Exception("提供的索引值超出范围！");
             var cell = _cells[p_index];
             if (cell != null)
             {
@@ -553,8 +552,7 @@ namespace Dt.Core
         /// <returns>返回已转换为指定类型的值</returns>
         public T GetVal<T>(string p_columnName)
         {
-            if (string.IsNullOrEmpty(p_columnName))
-                Throw("列名不能为空！");
+            Check.NotNullOrEmpty(p_columnName);
             var cell = _cells[p_columnName];
             if (cell != null)
             {
@@ -571,8 +569,7 @@ namespace Dt.Core
         /// <returns>返回已转换为指定类型的值</returns>
         public T GetOriginalVal<T>(string p_columnName)
         {
-            if (string.IsNullOrEmpty(p_columnName))
-                Throw("列名不能为空！");
+            Check.NotNullOrEmpty(p_columnName);
             var cell = _cells[p_columnName];
             if (cell != null)
             {

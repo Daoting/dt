@@ -334,7 +334,7 @@ namespace Dt.Sample
         {
             Dict tbls = await AtTest.GetTableDict();
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("调用成功，共有{0}个DataTable：\r\n", tbls.Count);
+            sb.AppendFormat("调用成功，共有{0}个Table：\r\n", tbls.Count);
             foreach (var item in tbls)
             {
                 var tbl = item.Value as Table;

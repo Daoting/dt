@@ -14,7 +14,6 @@
         <StackPanel Orientation="Horizontal">
             <Button Content="复制表结构" Click="OnCreateTableByTable" />
             <Button Content="复制行结构" Click="OnCreateTableByRow" />
-            <Button Content="根据xml创建" Click="OnCreateTableByXml" />
         </StackPanel>
 
         <a:CBar Title="行操作" />

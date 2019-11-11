@@ -1,0 +1,8 @@
+﻿<a:Win
+    x:Class="Dt.App.Model.SysRole"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Home="菜单树">
+
+</a:Win>

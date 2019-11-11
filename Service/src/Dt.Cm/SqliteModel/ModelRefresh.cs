@@ -15,6 +15,8 @@ using MySql.Data.MySqlClient;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Data.Common;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
@@ -224,59 +226,59 @@ namespace Dt.Cm
                 conn.Open();
                 using (MySqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT\n" +
-                                      "	table_name,\n" +
-                                      "	column_name,\n" +
-                                      "	data_type,\n" +
-                                      "	column_key,\n" +
-                                      "	character_maximum_length,\n" +
-                                      "	is_nullable,\n" +
-                                      "	column_comment \n" +
-                                      "FROM\n" +
-                                      "	information_schema.columns \n" +
-                                      "WHERE\n" +
-                                      "	table_schema = '" + conn.Database + "'";
-                    try
+                    // 所有表名
+                    cmd.CommandText = $"SELECT table_name FROM information_schema.tables WHERE table_schema='{conn.Database}'";
+                    List<string> tbls = new List<string>();
+                    using (reader = cmd.ExecuteReader())
                     {
-                        reader = cmd.ExecuteReader();
                         if (reader.HasRows)
                         {
                             while (reader.Read())
                             {
-                                OmColumn col = new OmColumn();
-                                col.TabName = reader.GetString(0).ToLower();
-                                col.ColName = reader.GetString(1).ToLower();
-                                col.DbType = DbTypeConverter.GetTypeNameByDbTypeName(reader.GetString(2));
-
-                                // 是否为主键
-                                if (!reader.IsDBNull(3) && reader.GetString(3) == "PRI")
-                                    col.IsPrimary = true;
-                                else
-                                    col.IsPrimary = false;
-
-                                // character_maximum_length
-                                if (!reader.IsDBNull(4))
-                                    col.Length = (int)reader.GetInt64(4);
-
-                                // is_nullable
-                                if (!reader.IsDBNull(5))
-                                    col.Nullable = reader.GetString(5).ToLower() == "yes";
-
-                                // column_comment
-                                if (!reader.IsDBNull(6))
-                                    col.Comments = reader.GetString(6);
-                                p_cols.Add(col);
+                                tbls.Add(reader.GetString(0).ToLower());
                             }
                         }
                     }
-                    catch (Exception ex)
+
+                    // 表结构
+                    foreach (var tbl in tbls)
                     {
-                        throw ex;
-                    }
-                    finally
-                    {
-                        if (reader != null)
-                            reader.Close();
+                        cmd.CommandText = $"SELECT * FROM {tbl} WHERE false";
+                        ReadOnlyCollection<DbColumn> cols;
+                        using (reader = cmd.ExecuteReader())
+                        {
+                            cols = reader.GetColumnSchema();
+                        }
+
+                        foreach (var colSchema in cols)
+                        {
+                            OmColumn col = new OmColumn();
+                            col.TabName = tbl;
+                            col.ColName = colSchema.ColumnName.ToLower();
+
+                            // 可为null的值类型
+                            if (colSchema.AllowDBNull.HasValue && colSchema.AllowDBNull.Value && colSchema.DataType.IsValueType)
+                                col.DbType = TableKit.GetColTypeAlias(typeof(Nullable<>).MakeGenericType(colSchema.DataType));
+                            else
+                                col.DbType = TableKit.GetColTypeAlias(colSchema.DataType);
+
+                            // 是否为主键
+                            if (colSchema.IsKey.HasValue && colSchema.IsKey.Value)
+                                col.IsPrimary = true;
+
+                            // character_maximum_length
+                            if (colSchema.ColumnSize.HasValue)
+                                col.Length = colSchema.ColumnSize.Value;
+
+                            if (colSchema.AllowDBNull.HasValue)
+                                col.Nullable = colSchema.AllowDBNull.Value;
+
+                            // 字段注释
+                            cmd.CommandText = $"SELECT column_comment FROM information_schema.columns WHERE table_schema='{conn.Database}' and table_name='{tbl}' and column_name='{colSchema.ColumnName}'";
+                            col.Comments = (string)cmd.ExecuteScalar();
+
+                            p_cols.Add(col);
+                        }
                     }
                 }
             }
@@ -288,7 +290,7 @@ namespace Dt.Cm
             col.ColName = row.Name;
             col.DbType = row.TypeName;
             col.IsPrimary = p_isPrimaryKey;
-            col.Length = (int)row.Length;
+            col.Length = row.Length;
             col.Nullable = row.Nullable;
             col.Comments = row.Comments;
             return col;

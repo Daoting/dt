@@ -365,12 +365,10 @@ namespace Dt.Cm
         {
             Dict dict = new Dict();
             var tbl = CreateTable();
-            tbl.Name = "tbl1";
-            dict[tbl.Name] = tbl;
+            dict["tbl1"] = tbl;
 
             tbl = CreateTable();
-            tbl.Name = "tbl2";
-            dict[tbl.Name] = tbl;
+            dict["tbl2"] = tbl;
             return dict;
         }
 
@@ -391,11 +389,9 @@ namespace Dt.Cm
         {
             List<Table> ls = new List<Table>();
             Table tbl = CreateTable();
-            tbl.Name = "tbl1";
             ls.Add(tbl);
 
             tbl = CreateTable();
-            tbl.Name = "tbl2";
             ls.Add(tbl);
             return ls;
         }

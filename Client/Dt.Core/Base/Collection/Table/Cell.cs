@@ -258,7 +258,16 @@ namespace Dt.Core
             {
                 try
                 {
-                    if (Type.IsEnum)
+                    if (Type.IsGenericType && Type.GetGenericTypeDefinition() == typeof(Nullable<>))
+                    {
+                        // 可空类型
+                        Type tp = Type.GetGenericArguments()[0];
+                        if (tp != p_val.GetType())
+                            _val = Convert.ChangeType(p_val, tp);
+                        else
+                            _val = p_val;
+                    }
+                    else if (Type.IsEnum)
                     {
                         if (p_val is string str)
                             _val = (str == string.Empty) ? Enum.ToObject(Type, 0) : Enum.Parse(Type, str);
@@ -312,6 +321,11 @@ namespace Dt.Core
                 // 字符串返回Empty！！！
                 if (type == typeof(string))
                     return (T)(object)string.Empty;
+
+                // 可空类型
+                if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+                    return (T)(object)null;
+
                 return default(T);
             }
 

@@ -94,7 +94,11 @@ namespace Dt.Core
                     var cols = reader.GetColumnSchema();
                     foreach (var col in cols)
                     {
-                        tbl.Add(col.ColumnName, col.DataType);
+                        // 可为null的值类型
+                        if (col.AllowDBNull.HasValue && col.AllowDBNull.Value && col.DataType.IsValueType)
+                            tbl.Add(col.ColumnName, typeof(Nullable<>).MakeGenericType(col.DataType));
+                        else
+                            tbl.Add(col.ColumnName, col.DataType);
                     }
 
                     while (await reader.ReadAsync())
@@ -800,11 +804,7 @@ namespace Dt.Core
         string ReplaceSql(string p_sql, string p_key, object p_value)
         {
             string str = p_sql;
-            DbType dbtype = DbTypeConverter.GetDbTypeByValue(p_value);
-            bool isBinary = dbtype == DbType.Binary;
-            // 时间类型和字符串类型同样处理
-            bool isStr = dbtype == DbType.DateTime || dbtype == DbType.String;
-            int posStart = str.IndexOf(p_key, StringComparison.CurrentCultureIgnoreCase);
+            int posStart = str.IndexOf(p_key, StringComparison.OrdinalIgnoreCase);
             while (posStart > -1)
             {
                 string next, trueVal;
@@ -818,17 +818,18 @@ namespace Dt.Core
                 if (!string.IsNullOrEmpty(next) && _sqlPattern.IsMatch(next))
                 {
                     // 匹配了一部分则继续向后查找
-                    posStart = str.IndexOf(p_key, posEnd, StringComparison.CurrentCultureIgnoreCase);
+                    posStart = str.IndexOf(p_key, posEnd, StringComparison.OrdinalIgnoreCase);
                     continue;
                 }
 
-                if (isBinary)
-                    trueVal = "长度为" + (p_value as byte[]).Length + "的二进制字符数组";
+                // mysql中非string类型外面加''也可正常运行！
+                if (p_value == null)
+                    trueVal = "null";
                 else
-                    trueVal = isStr ? "'" + p_value as string + "'" : p_value.ToString();
+                    trueVal = $"'{p_value}'";
 
                 str = str.Substring(0, posStart) + trueVal + str.Substring(posStart + p_key.Length);
-                posStart = str.IndexOf(p_key, posStart + trueVal.Length - 1, StringComparison.CurrentCultureIgnoreCase);
+                posStart = str.IndexOf(p_key, posStart + trueVal.Length - 1, StringComparison.OrdinalIgnoreCase);
             }
             return str;
         }

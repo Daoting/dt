@@ -73,12 +73,6 @@ namespace Dt.Sample
             WriteColumns(tbl);
         }
 
-        void OnCreateTableByXml(object sender, RoutedEventArgs e)
-        {
-            Table tbl = Table.CreateFromXml("<Table><Cols><Col id=\"USER_WID\" caption=\"USER_WID\" dbType=\"VARCHAR\" /><Col id=\"USER_NAME\" caption=\"USER_NAME\" dbType=\"VARCHAR\" /></Cols><Rows><Row><USER_WID>管理员</USER_WID><USER_NAME>admin</USER_NAME></Row><Row><USER_NAME>匿名用户</USER_NAME></Row><Row><USER_WID>ffff</USER_WID><USER_NAME>uuu</USER_NAME></Row></Rows></Table>");
-            WriteColumns(tbl);
-        }
-
         void WriteColumns(Table p_tbl)
         {
             StringBuilder sb = new StringBuilder();

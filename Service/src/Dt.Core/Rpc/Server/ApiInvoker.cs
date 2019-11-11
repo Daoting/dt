@@ -155,15 +155,10 @@ namespace Dt.Core.Rpc
 
                     // 0成功，1错误，2警告提示
                     writer.WriteValue((int)p_responseType);
-
                     // 耗时
                     writer.WriteValue(p_elapsed);
-
                     // 内容
-                    if (p_content is string str)
-                        writer.WriteValue(str);
-                    else
-                        JsonRpcSerializer.Serialize(p_content, writer);
+                    JsonRpcSerializer.Serialize(p_content, writer);
 
                     writer.WriteEndArray();
                     writer.Flush();

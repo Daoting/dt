@@ -13,11 +13,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Xml;
-using static Dt.Core.TableKit;
 #endregion
 
 namespace Dt.Core
@@ -118,13 +115,11 @@ namespace Dt.Core
         /// <returns></returns>
         public static Table Create(string p_tblName)
         {
-            if (string.IsNullOrEmpty(p_tblName))
-                Throw("表名不可为空！");
-
+            Check.NotNullOrEmpty(p_tblName);
             Table tbl = new Table();
             foreach (var col in AtLocal.QueryColumns(p_tblName))
             {
-                tbl.Columns.Add(new Column(col.ColName, TableKit.GetType(col.DbType)));
+                tbl.Columns.Add(new Column(col.ColName, TableKit.GetColType(col.DbType)));
             }
             return tbl;
         }
@@ -136,9 +131,7 @@ namespace Dt.Core
         /// <returns></returns>
         public static Table CreateLocal(string p_tblName)
         {
-            if (string.IsNullOrEmpty(p_tblName))
-                Throw("表名不可为空！");
-
+            Check.NotNullOrEmpty(p_tblName);
             return AtLocal.Query($"select * from {p_tblName} where 1!=1");
         }
 
@@ -176,133 +169,6 @@ namespace Dt.Core
                 }
             }
             return tbl;
-        }
-        #endregion
-
-        #region Xml创建表
-        /// <summary>
-        /// 根据Xml文件内容创建Table对象
-        /// </summary>
-        /// <param name="p_file"></param>
-        /// <returns></returns>
-        public static Table CreateFromXmlFile(string p_file)
-        {
-            if (string.IsNullOrEmpty(p_file))
-                return null;
-
-            Table tbl = new Table();
-            using (Stream stream = File.OpenRead(p_file))
-            using (XmlReader reader = XmlReader.Create(stream, ReaderSettings))
-            {
-                tbl.ReadRpcXml(reader);
-            }
-            return tbl;
-        }
-
-        /// <summary>
-        /// 由Xml字符串创建Table对象
-        /// </summary>
-        /// <param name="p_xml"></param>
-        /// <returns></returns>
-        public static Table CreateFromXml(string p_xml)
-        {
-            Table tbl = new Table();
-            using (StringReader stream = new StringReader(p_xml))
-            using (XmlReader reader = XmlReader.Create(stream, ReaderSettings))
-            {
-                tbl.ReadRpcXml(reader);
-            }
-            return tbl;
-        }
-
-        /// <summary>
-        /// 根据嵌入资源的Xml文件内容创建Table对象
-        /// </summary>
-        /// <param name="p_assembly">嵌入资源所属的程序集</param>
-        /// <param name="p_path">资源路径</param>
-        /// <returns></returns>
-        public static Table CreateFromXmlRes(Assembly p_assembly, string p_path)
-        {
-            if (p_assembly == null || string.IsNullOrEmpty(p_path))
-                return null;
-
-            Table tbl = new Table();
-            using (Stream stream = p_assembly.GetManifestResourceStream(p_path))
-            using (XmlReader reader = XmlReader.Create(stream, ReaderSettings))
-            {
-                tbl.ReadRpcXml(reader);
-            }
-            return tbl;
-        }
-
-        /// <summary>
-        /// 读取xml中的行数据，根元素和行元素名称任意，xml内容形如：
-        /// Params>
-        ///   Param id="参数标识" name="参数名" type="double" />
-        /// Params>
-        /// </summary>
-        /// <param name="p_reader"></param>
-        public void ReadXml(XmlReader p_reader)
-        {
-            if (p_reader == null)
-                return;
-
-            if (p_reader.IsEmptyElement)
-            {
-                p_reader.Read();
-                return;
-            }
-
-            string root = p_reader.Name;
-            p_reader.Read();
-            string rowName = p_reader.Name;
-            while (p_reader.NodeType != XmlNodeType.None)
-            {
-                if (p_reader.NodeType == XmlNodeType.EndElement && p_reader.Name == root)
-                    break;
-
-                Row row = AddRow();
-                row.IsAdded = false;
-                for (int i = 0; i < p_reader.AttributeCount; i++)
-                {
-                    p_reader.MoveToAttribute(i);
-                    string id = p_reader.Name;
-                    if (row.Cells.Contains(id))
-                        row.Cells[id].InitVal(p_reader.Value);
-                }
-
-                p_reader.ReadToNextSibling(rowName);
-            }
-            p_reader.Read();
-        }
-
-        /// <summary>
-        /// 按指定元素名称序列化行数据xml
-        /// </summary>
-        /// <param name="p_writer"></param>
-        /// <param name="p_rootName">根节点名称</param>
-        /// <param name="p_rowName">行节点名称</param>
-        public void WriteXml(XmlWriter p_writer, string p_rootName, string p_rowName)
-        {
-            p_writer.WriteStartElement(p_rootName);
-            foreach (Row row in this)
-            {
-                p_writer.WriteStartElement(p_rowName);
-                foreach (var cell in row.Cells)
-                {
-                    // 为空或与默认值相同时不输出
-                    if (cell.Val == null)
-                        continue;
-
-                    // 列值以属性输出
-                    if (cell.Type == typeof(DateTime))
-                        p_writer.WriteAttributeString(cell.ID, ((DateTime)cell.Val).ToString("yyyy-MM-ddTHH:mm:ss.ffffff"));
-                    else
-                        p_writer.WriteAttributeString(cell.ID, cell.Val.ToString());
-                }
-                p_writer.WriteEndElement();
-            }
-            p_writer.WriteEndElement();
         }
         #endregion
 
@@ -690,155 +556,11 @@ namespace Dt.Core
         }
         #endregion
 
-        #region IRpcXml
-        /// <summary>
-        /// 反序列化读取Rpc XML数据
-        /// </summary>
-        /// <param name="p_reader"></param>
-        public void ReadRpcXml(XmlReader p_reader)
-        {
-            // <Table>
-            p_reader.Read();
-            // Cols
-            p_reader.Read();
-
-            // 列反序列化
-            if (p_reader.Name == "Cols" && !p_reader.IsEmptyElement)
-            {
-                p_reader.Read();
-                while (p_reader.NodeType != XmlNodeType.None)
-                {
-                    if (p_reader.NodeType == XmlNodeType.EndElement && p_reader.Name == "Cols")
-                        break;
-
-                    string colName = null;
-                    Type colType = null;
-                    for (int i = 0; i < p_reader.AttributeCount; i++)
-                    {
-                        p_reader.MoveToAttribute(i);
-                        string name = p_reader.Name;
-                        string val = p_reader.Value;
-                        if (name == "id")
-                            colName = val;
-                        else if (name == "type")
-                            colType = TableKit.GetType(val);
-                    }
-                    _columns.Add(new Column(colName, colType));
-                    p_reader.ReadToNextSibling("Col");
-                }
-            }
-            p_reader.Read();
-
-            // 行反序列化
-            if (p_reader.Name == "Rows" && !p_reader.IsEmptyElement)
-            {
-                p_reader.Read();
-                while (p_reader.NodeType != XmlNodeType.None)
-                {
-                    if (p_reader.NodeType == XmlNodeType.EndElement && p_reader.Name == "Rows")
-                        break;
-
-                    Row row = AddRow();
-                    // 置未修改状态
-                    row.IsAdded = false;
-                    // 列值
-                    for (int i = 0; i < p_reader.AttributeCount; i++)
-                    {
-                        p_reader.MoveToAttribute(i);
-                        string id = p_reader.Name;
-                        if (row.Cells.Contains(id))
-                        {
-                            // 不会引起连续IsChanged改变
-                            row.Cells[id].InitVal(p_reader.Value);
-                        }
-                    }
-                    p_reader.ReadToNextSibling("Row");
-                }
-            }
-            p_reader.Read();
-            p_reader.Read();
-        }
-
-        /// <summary>
-        /// 将对象按照Rpc Xml数据结构进行序列化
-        /// </summary>
-        /// <param name="p_writer"></param>
-        public void WriteRpcXml(XmlWriter p_writer)
-        {
-            p_writer.WriteStartElement("struct");
-            p_writer.WriteAttributeString("type", "tbl");
-            p_writer.WriteStartElement("Table");
-
-            p_writer.WriteStartElement("Cols");
-            foreach (Column column in _columns)
-            {
-                p_writer.WriteStartElement("Col");
-                p_writer.WriteAttributeString("id", column.ID);
-                if (column.Type != typeof(string))
-                    p_writer.WriteAttributeString("type", TableKit.GetAlias(column.Type));
-                p_writer.WriteEndElement();
-            }
-            p_writer.WriteEndElement();
-
-            p_writer.WriteStartElement("Rows");
-            if (SerializeChanged)
-            {
-                // 只序列化需要增加修改的行
-                foreach (Row row in this)
-                {
-                    if (row.IsChanged)
-                        SerializeXmlRow(row, p_writer);
-                }
-            }
-            else
-            {
-                foreach (Row row in this)
-                {
-                    SerializeXmlRow(row, p_writer);
-                }
-            }
-            p_writer.WriteEndElement();
-
-            p_writer.WriteEndElement();
-            p_writer.WriteEndElement();
-        }
-
-        /// <summary>
-        /// 序列化行数据
-        /// </summary>
-        /// <param name="p_dataRow"></param>
-        /// <param name="p_writer"></param>
-        void SerializeXmlRow(Row p_dataRow, XmlWriter p_writer)
-        {
-            p_writer.WriteStartElement("Row");
-            // 行状态
-            if (p_dataRow.IsAdded)
-                p_writer.WriteAttributeString("rowState", "Added");
-            else if (p_dataRow.IsChanged)
-                p_writer.WriteAttributeString("rowState", "Modified");
-
-            foreach (var cell in p_dataRow.Cells)
-            {
-                if (cell.Val != null)
-                {
-                    // 列值以属性输出
-                    if (cell.Type == typeof(DateTime))
-                        p_writer.WriteAttributeString(cell.ID, ((DateTime)cell.Val).ToString("yyyy-MM-ddTHH:mm:ss.ffffff"));
-                    else if (cell.Type == typeof(byte[]))
-                        p_writer.WriteAttributeString(cell.ID, Convert.ToBase64String((byte[])cell.Val));
-                    else
-                        p_writer.WriteAttributeString(cell.ID, cell.Val.ToString());
-                }
-            }
-            p_writer.WriteEndElement();
-        }
-        #endregion
-
         #region IRpcJson
         /// <summary>
         /// 反序列化读取Rpc Json数据
         /// </summary>
-        public void ReadRpcJson(JsonReader p_reader)
+        void IRpcJson.ReadRpcJson(JsonReader p_reader)
         {
             // cols外层 [
             p_reader.Read();
@@ -863,7 +585,7 @@ namespace Dt.Core
                     if (index == 0)
                         colName = p_reader.Value.ToString();
                     else
-                        colType = TableKit.GetType(p_reader.Value.ToString());
+                        colType = TableKit.GetColType(p_reader.Value.ToString());
                     index++;
                 }
                 _columns.Add(new Column(colName, colType));
@@ -914,7 +636,7 @@ namespace Dt.Core
         /// <summary>
         /// 将对象按照Rpc Json数据结构进行序列化
         /// </summary>
-        public void WriteRpcJson(JsonWriter p_writer)
+        void IRpcJson.WriteRpcJson(JsonWriter p_writer)
         {
             p_writer.WriteStartArray();
             // 类型
@@ -927,7 +649,7 @@ namespace Dt.Core
                 p_writer.WriteStartArray();
                 p_writer.WriteValue(column.ID);
                 if (column.Type != typeof(string))
-                    p_writer.WriteValue(TableKit.GetAlias(column.Type));
+                    p_writer.WriteValue(TableKit.GetColTypeAlias(column.Type));
                 p_writer.WriteEndArray();
             }
             p_writer.WriteEndArray();

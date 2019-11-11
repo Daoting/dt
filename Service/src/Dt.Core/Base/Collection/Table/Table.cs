@@ -29,11 +29,6 @@ namespace Dt.Core
 
         #region 属性
         /// <summary>
-        /// 获取设置表名
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
         /// 是否只序列化需要增删改的行
         /// </summary>
         public bool SerializeChanged { get; set; }
@@ -97,7 +92,6 @@ namespace Dt.Core
                 throw new Exception("根据表名创建空Table时表名不可为空！");
 
             Table tbl = new Table();
-            tbl.Name = p_tblName.ToLower();
             var schema = DbSchema.GetTableSchema(p_tblName);
             foreach (var row in schema.PrimaryKey)
             {
@@ -321,18 +315,9 @@ namespace Dt.Core
         #region IRpcJson
         void IRpcJson.ReadRpcJson(JsonReader p_reader)
         {
-            // 可能为id或cols外层 [
+            // cols外层 [
             p_reader.Read();
-            // 表名id
-            if (p_reader.TokenType == JsonToken.String)
-            {
-                Name = p_reader.Value.ToString();
-                // cols外层 [
-                p_reader.Read();
-            }
-
-            // 列
-            // [
+            // 列[
             while (p_reader.Read())
             {
                 // cols外层 ]
@@ -353,7 +338,7 @@ namespace Dt.Core
                     if (index == 0)
                         colName = p_reader.Value.ToString();
                     else
-                        colType = GetColType(p_reader.Value.ToString());
+                        colType = TableKit.GetColType(p_reader.Value.ToString());
                     index++;
                 }
                 Columns.Add(new Column(colName, colType));
@@ -406,9 +391,6 @@ namespace Dt.Core
             p_writer.WriteStartArray();
             // 类型
             p_writer.WriteValue("#tbl");
-            // 表名id
-            if (!string.IsNullOrEmpty(Name))
-                p_writer.WriteValue(Name);
 
             // 列
             p_writer.WriteStartArray();
@@ -417,7 +399,7 @@ namespace Dt.Core
                 p_writer.WriteStartArray();
                 p_writer.WriteValue(column.ID);
                 if (column.Type != typeof(string))
-                    p_writer.WriteValue(GetColTypeAlias(column.Type));
+                    p_writer.WriteValue(TableKit.GetColTypeAlias(column.Type));
                 p_writer.WriteEndArray();
             }
             p_writer.WriteEndArray();
@@ -475,80 +457,6 @@ namespace Dt.Core
             else if (p_dataRow.IsChanged)
                 p_writer.WriteValue("Modified");
             p_writer.WriteEndArray();
-        }
-
-        /// <summary>
-        /// Type -> string
-        /// </summary>
-        /// <param name="p_type"></param>
-        /// <returns></returns>
-        static string GetColTypeAlias(Type p_type)
-        {
-            if (p_type == typeof(string) || p_type == typeof(char))
-                return "string";
-
-            if (p_type == typeof(decimal)
-                || p_type == typeof(double)
-                || p_type == typeof(float))
-                return "double";
-
-            if (p_type == typeof(bool))
-                return "bool";
-
-            if (p_type == typeof(DateTime))
-                return "date";
-
-            if (p_type == typeof(int)
-                || p_type == typeof(byte)
-                || p_type == typeof(sbyte)
-                || p_type == typeof(uint)
-                || p_type == typeof(short)
-                || p_type == typeof(ushort))
-                return "int";
-
-            if (p_type == typeof(long)
-                || p_type == typeof(ulong))
-                return "long";
-
-            if (p_type == typeof(byte[]))
-                return "blob";
-
-            throw new Exception("无法映射的数据类型:" + p_type.ToString());
-        }
-
-        /// <summary>
-        /// string -> Type
-        /// </summary>
-        /// <param name="p_name"></param>
-        /// <returns></returns>
-        static Type GetColType(string p_name)
-        {
-            switch (p_name)
-            {
-                case "string":
-                    return typeof(string);
-
-                case "double":
-                    return typeof(double);
-
-                case "int":
-                    return typeof(int);
-
-                case "bool":
-                    return typeof(bool);
-
-                case "long":
-                    return typeof(long);
-
-                case "date":
-                    return typeof(DateTime);
-
-                case "blob":
-                    return typeof(byte[]);
-
-                default:
-                    return typeof(string);
-            }
         }
         #endregion
     }

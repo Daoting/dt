@@ -11,6 +11,8 @@ using MySql.Data.MySqlClient;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Data.Common;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -70,65 +72,65 @@ namespace Dt.Core
                 Database = conn.Database;
                 using (MySqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT\n" +
-                                      "	table_name,\n" +
-                                      "	column_name,\n" +
-                                      "	data_type,\n" +
-                                      "	column_key,\n" +
-                                      "	character_maximum_length,\n" +
-                                      "	is_nullable,\n" +
-                                      "	column_comment \n" +
-                                      "FROM\n" +
-                                      "	information_schema.columns \n" +
-                                      "WHERE\n" +
-                                      "	table_schema = '" + conn.Database + "'";
-                    try
+                    // 原来通过系统表information_schema.columns获取结构，为准确获取与c#的映射类型采用当前方式
+
+                    // 所有表名
+                    cmd.CommandText = $"SELECT table_name FROM information_schema.tables WHERE table_schema='{conn.Database}'";
+                    List<string> tbls = new List<string>();
+                    using (reader = cmd.ExecuteReader())
                     {
-                        reader = cmd.ExecuteReader();
                         if (reader.HasRows)
                         {
                             while (reader.Read())
                             {
-                                string tblName = reader.GetString(0).ToLower();
-                                string colName = reader.GetString(1).ToLower();
-                                if (!schema.ContainsKey(tblName))
-                                    schema[tblName] = new TableSchema();
-
-                                TableSchema cols = schema[tblName];
-                                TableCol col = new TableCol();
-                                col.Name = colName;
-                                col.DbTypeName = reader.GetString(2);
-
-                                // 是否为主键
-                                if (!reader.IsDBNull(3) && reader.GetString(3) == "PRI")
-                                    cols.PrimaryKey.Add(col);
-                                else
-                                    cols.Columns.Add(col);
-
-                                // character_maximum_length
-                                if (!reader.IsDBNull(4))
-                                    col.Length = reader.GetInt64(4);
-
-                                // is_nullable
-                                if (!reader.IsDBNull(5))
-                                    col.Nullable = reader.GetString(5).ToLower() == "yes";
-
-                                // column_comment
-                                if (!reader.IsDBNull(6))
-                                    col.Comments = reader.GetString(6);
+                                tbls.Add(reader.GetString(0).ToLower());
                             }
                         }
                     }
-                    catch (Exception ex)
+
+                    // 表结构
+                    foreach (var tbl in tbls)
                     {
-                        throw ex;
-                    }
-                    finally
-                    {
-                        if (reader != null)
-                            reader.Close();
+                        TableSchema tblCols = new TableSchema();
+                        cmd.CommandText = $"SELECT * FROM {tbl} WHERE false";
+                        ReadOnlyCollection<DbColumn> cols;
+                        using (reader = cmd.ExecuteReader())
+                        {
+                            cols = reader.GetColumnSchema();
+                        }
+
+                        foreach (var colSchema in cols)
+                        {
+                            TableCol col = new TableCol();
+                            col.Name = colSchema.ColumnName.ToLower();
+
+                            // 可为null的值类型
+                            if (colSchema.AllowDBNull.HasValue && colSchema.AllowDBNull.Value && colSchema.DataType.IsValueType)
+                                col.Type = typeof(Nullable<>).MakeGenericType(colSchema.DataType);
+                            else
+                                col.Type = colSchema.DataType;
+
+                            // character_maximum_length
+                            if (colSchema.ColumnSize.HasValue)
+                                col.Length = colSchema.ColumnSize.Value;
+
+                            if (colSchema.AllowDBNull.HasValue)
+                                col.Nullable = colSchema.AllowDBNull.Value;
+
+                            // 字段注释
+                            cmd.CommandText = $"SELECT column_comment FROM information_schema.columns WHERE table_schema='{conn.Database}' and table_name='{tbl}' and column_name='{colSchema.ColumnName}'";
+                            col.Comments = (string)cmd.ExecuteScalar();
+
+                            // 是否为主键
+                            if (colSchema.IsKey.HasValue && colSchema.IsKey.Value)
+                                tblCols.PrimaryKey.Add(col);
+                            else
+                                tblCols.Columns.Add(col);
+                        }
+                        schema[tbl] = tblCols;
                     }
 
+                    // 取Db时间
                     cmd.CommandText = "select now()";
                     Glb.Now = (DateTime)cmd.ExecuteScalar();
                 }
@@ -286,14 +288,14 @@ namespace Dt.Core
         public string Name { get; set; }
 
         /// <summary>
-        /// mysql中数据类型名称
+        /// 列类型
         /// </summary>
-        public string DbTypeName { get; set; }
+        public Type Type { get; set; }
 
         /// <summary>
         /// 列长度，只字符类型有效
         /// </summary>
-        public long Length { get; set; }
+        public int Length { get; set; }
 
         /// <summary>
         /// 列是否允许为空
@@ -306,19 +308,11 @@ namespace Dt.Core
         public string Comments { get; set; }
 
         /// <summary>
-        /// 列类型
-        /// </summary>
-        public Type Type
-        {
-            get { return DbTypeConverter.GetTypeByDbTypeName(DbTypeName); }
-        }
-
-        /// <summary>
         /// 列类型名称
         /// </summary>
         public string TypeName
         {
-            get { return DbTypeConverter.GetTypeNameByDbTypeName(DbTypeName); }
+            get { return TableKit.GetColTypeAlias(Type); }
         }
     }
 }
