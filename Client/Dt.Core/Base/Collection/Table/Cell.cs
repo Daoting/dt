@@ -207,30 +207,37 @@ namespace Dt.Core
             if (p_tgtType == null || p_tgtType == Type)
                 return true;
 
-            if (_val != null && _val.GetType() != p_tgtType)
+            if (_val == null)
             {
-                try
-                {
-                    if (p_tgtType.IsEnum)
-                    {
-                        if (_val is string str)
-                            _val = (str == string.Empty) ? Enum.ToObject(p_tgtType, 0) : Enum.Parse(p_tgtType, str);
-                        else
-                            _val = Enum.ToObject(p_tgtType, _val);
-                    }
-                    else if (_val is IConvertible)
-                    {
-                        _val = Convert.ChangeType(_val, p_tgtType);
-                    }
-                    else
-                    {
-                        throw new Exception();
-                    }
-                }
-                catch
-                {
-                    ThrowDataCellException(_val, p_tgtType.Name);
-                }
+                // 类型的默认值，等同于default
+                _val = p_tgtType.IsValueType ? Activator.CreateInstance(p_tgtType) : null;
+            }
+            else if (_val.GetType() == p_tgtType)
+            {
+                // 类型相同
+            }
+            else if (p_tgtType.IsEnum)
+            {
+                // 枚举类型
+                if (_val is string str)
+                    _val = (str == string.Empty) ? Enum.ToObject(p_tgtType, 0) : Enum.Parse(p_tgtType, str);
+                else
+                    _val = Enum.ToObject(p_tgtType, _val);
+            }
+            else if (p_tgtType.IsGenericType && p_tgtType.GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+                // 可空类型
+                Type tp = p_tgtType.GetGenericArguments()[0];
+                if (tp != _val.GetType())
+                    _val = Convert.ChangeType(_val, tp);
+            }
+            else if (_val is IConvertible)
+            {
+                _val = Convert.ChangeType(_val, p_tgtType);
+            }
+            else
+            {
+                throw new Exception($"【{ID}】列重置类型异常：无法将【{_val}】转换到【{p_tgtType.Name}】类型！");
             }
 
             Type = p_tgtType;
@@ -253,44 +260,41 @@ namespace Dt.Core
                 || (Type == typeof(string) && (string)_val == string.Empty && p_val == null))
                 return;
 
-            // 检查类型对否
-            if (p_val != null && p_val.GetType() != Type)
+            if (p_val == null)
             {
-                try
-                {
-                    if (Type.IsGenericType && Type.GetGenericTypeDefinition() == typeof(Nullable<>))
-                    {
-                        // 可空类型
-                        Type tp = Type.GetGenericArguments()[0];
-                        if (tp != p_val.GetType())
-                            _val = Convert.ChangeType(p_val, tp);
-                        else
-                            _val = p_val;
-                    }
-                    else if (Type.IsEnum)
-                    {
-                        if (p_val is string str)
-                            _val = (str == string.Empty) ? Enum.ToObject(Type, 0) : Enum.Parse(Type, str);
-                        else
-                            _val = Enum.ToObject(Type, p_val);
-                    }
-                    else if (p_val is IConvertible)
-                    {
-                        _val = Convert.ChangeType(p_val, Type);
-                    }
-                    else
-                    {
-                        throw new Exception();
-                    }
-                }
-                catch
-                {
-                    ThrowDataCellException(p_val, Type.Name);
-                }
+                // 类型的默认值，等同于default
+                _val = Type.IsValueType ? Activator.CreateInstance(Type) : null;
+            }
+            else if (p_val.GetType() == Type)
+            {
+                // 类型相同
+                _val = p_val;
+            }
+            else if (Type.IsEnum)
+            {
+                // 枚举类型
+                if (p_val is string str)
+                    _val = (str == string.Empty) ? Enum.ToObject(Type, 0) : Enum.Parse(Type, str);
+                else
+                    _val = Enum.ToObject(Type, p_val);
+            }
+            else if (Type.IsGenericType && Type.GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+                // 可空类型
+                Type tp = Type.GetGenericArguments()[0];
+                if (tp != p_val.GetType())
+                    _val = Convert.ChangeType(p_val, tp);
+                else
+                    _val = p_val;
+            }
+            else if (p_val is IConvertible)
+            {
+                // 可转换
+                _val = Convert.ChangeType(p_val, Type);
             }
             else
             {
-                _val = p_val;
+                throw new Exception($"【{ID}】列值转换异常：无法将【{p_val}】转换到【{Type.Name}】类型！");
             }
 
             // 向上逐级更新IsChanged状态
@@ -315,6 +319,7 @@ namespace Dt.Core
         T GetValInternal<T>(object p_val)
         {
             Type type = typeof(T);
+
             // null时
             if (p_val == null)
             {
@@ -333,6 +338,10 @@ namespace Dt.Core
             if (type == Type)
                 return (T)p_val;
 
+            // 可空类型
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
+                return (T)p_val;
+
             // bool特殊处理1
             if (type == typeof(bool))
             {
@@ -342,26 +351,10 @@ namespace Dt.Core
             }
 
             // 非null时执行转换
-            object result = null;
-            try
-            {
-                result = Convert.ChangeType(p_val, type);
-            }
-            catch
-            {
-                ThrowDataCellException(p_val, type.Name);
-            }
-            return (T)result;
-        }
+            if (p_val is IConvertible)
+                return (T)Convert.ChangeType(p_val, type);
 
-        /// <summary>
-        /// 抛出赋值异常
-        /// </summary>
-        /// <param name="p_val"></param>
-        /// <param name="p_type"></param>
-        void ThrowDataCellException(object p_val, string p_type)
-        {
-            throw new Exception($"【{ID}】列赋值异常：无法将【{p_val}】转换到【{p_type}】类型！");
+            throw new Exception($"【{ID}】列值转换异常：无法将【{p_val}】转换到【{type.Name}】类型！");
         }
         #endregion
     }

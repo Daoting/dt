@@ -14,7 +14,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Xml;
-using static Dt.Core.TableKit;
 #endregion
 
 namespace Dt.Core
@@ -516,6 +515,30 @@ namespace Dt.Core
         public DateTime Date(string p_columnName)
         {
             return GetVal<DateTime>(p_columnName);
+        }
+
+        /// <summary>
+        /// 根据索引获取指定列的可空类型值
+        /// </summary>
+        /// <typeparam name="T">值类型</typeparam>
+        /// <param name="p_index">索引</param>
+        /// <returns>可空类型值</returns>
+        public T? Nullable<T>(int p_index)
+            where T : struct
+        {
+            return GetVal<T?>(p_index);
+        }
+
+        /// <summary>
+        /// 根据列名获取指定列的可空类型值
+        /// </summary>
+        /// <typeparam name="T">值类型</typeparam>
+        /// <param name="p_columnName">列名</param>
+        /// <returns>可空类型值</returns>
+        public T? Nullable<T>(string p_columnName)
+            where T : struct
+        {
+            return GetVal<T?>(p_columnName);
         }
 
         /// <summary>

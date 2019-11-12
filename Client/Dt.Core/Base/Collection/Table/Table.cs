@@ -716,6 +716,7 @@ namespace Dt.Core
             // 固定字段 id, parentid
             if (_columns.Contains("parentid") && Count > 0)
             {
+                // parentid类型可以为long?
                 return from row in this
                        where row.Str("parentid") == string.Empty
                        select row;
@@ -728,6 +729,7 @@ namespace Dt.Core
             Row parent = p_parent as Row;
             if (parent != null && parent.Contains("id"))
             {
+                // id, parentid类型可以为long, string等
                 return from row in this
                        where row.Str("parentid") == parent.Str("id")
                        select row;
