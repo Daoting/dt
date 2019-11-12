@@ -29,7 +29,12 @@
   <ItemGroup>
     <Compile Include="..\..\Service\src\Dt.Cm\SqliteModel\OmColumn.cs" Link="Internal\SqliteModel\OmColumn.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Dict.cs" Link="Base\Collection\Dict.cs" />
-    <Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\TableKit.cs" Link="Base\Collection\Table\TableKit.cs" />
+    <Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\Cell.cs" Link="Base\Collection\Table\Cell.cs" />
+    <Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\CellList.cs" Link="Base\Collection\Table\CellList.cs" />
+    <Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\Column.cs" Link="Base\Collection\Table\Column.cs" />
+    <Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\ColumnList.cs" Link="Base\Collection\Table\ColumnList.cs" />
+    <Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\Row.cs" Link="Base\Collection\Table\Row.cs" />
+    <Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\Table.cs" Link="Base\Collection\Table\Table.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\Check.cs" Link="Base\Check.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\MsgInfo.cs" Link="Base\MsgInfo.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Serialize\IRpcJson.cs" Link="Internal\Serialize\IRpcJson.cs" />

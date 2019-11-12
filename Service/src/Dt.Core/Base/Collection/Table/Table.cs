@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2019-04-16 创建
+* 日志: 2019-11-12 创建
 ******************************************************************************/
 #endregion
 
@@ -10,7 +10,11 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 #endregion
 
 namespace Dt.Core
@@ -18,13 +22,27 @@ namespace Dt.Core
     /// <summary>
     /// 数据表，行集合(行为同构)，提供简单的数据表管理功能
     /// </summary>
-    public class Table : List<Row>, IRpcJson
+    public partial class Table : ObservableCollection<Row>, IRpcJson
     {
+        #region 成员变量
+        protected readonly ColumnList _columns;
+        bool _isChanged = false;
+        bool _delayCheckChanges = false;
+        int _updating;
+        #endregion
+
         #region 构造方法
         public Table()
         {
-            Columns = new ColumnList(this);
+            _columns = new ColumnList(this);
         }
+        #endregion
+
+        #region 事件
+        /// <summary>
+        /// 内部单元格的值发生变化
+        /// </summary>
+        public event EventHandler<Cell> Changed;
         #endregion
 
         #region 属性
@@ -38,11 +56,14 @@ namespace Dt.Core
         /// </summary>
         public bool IsChanged
         {
-            get
+            get { return _isChanged; }
+            set
             {
-                return (from item in this
-                        where item.IsChanged
-                        select item).Any();
+                if (_isChanged != value)
+                {
+                    _isChanged = value;
+                    OnPropertyChanged(new PropertyChangedEventArgs("IsChanged"));
+                }
             }
         }
 
@@ -62,7 +83,10 @@ namespace Dt.Core
         /// <summary>
         /// 列结构集合
         /// </summary>
-        public ColumnList Columns { get; }
+        public ColumnList Columns
+        {
+            get { return _columns; }
+        }
 
         /// <summary>
         /// 获取设置用于存储与此对象相关的任意对象值
@@ -78,30 +102,7 @@ namespace Dt.Core
         /// <param name="p_colType">列数据类型, 默认typeof(string)</param>
         public void Add(string p_colName, Type p_colType = null)
         {
-            Columns.Add(new Column(p_colName, p_colType));
-        }
-
-        /// <summary>
-        /// 根据表名创建空Table
-        /// </summary>
-        /// <param name="p_tblName">表名</param>
-        /// <returns></returns>
-        public static Table Create(string p_tblName)
-        {
-            if (string.IsNullOrEmpty(p_tblName))
-                throw new Exception("根据表名创建空Table时表名不可为空！");
-
-            Table tbl = new Table();
-            var schema = DbSchema.GetTableSchema(p_tblName);
-            foreach (var row in schema.PrimaryKey)
-            {
-                tbl.Columns.Add(new Column(row.Name, row.Type));
-            }
-            foreach (var row in schema.Columns)
-            {
-                tbl.Columns.Add(new Column(row.Name, row.Type));
-            }
-            return tbl;
+            _columns.Add(new Column(p_colName, p_colType));
         }
 
         /// <summary>
@@ -112,11 +113,11 @@ namespace Dt.Core
         public static Table Create(Table p_tbl)
         {
             Table tbl = new Table();
-            if (p_tbl != null && p_tbl.Columns.Count > 0)
+            if (p_tbl != null && p_tbl._columns.Count > 0)
             {
-                foreach (var col in p_tbl.Columns)
+                foreach (var col in p_tbl._columns)
                 {
-                    tbl.Columns.Add(new Column(col.ID, col.Type));
+                    tbl._columns.Add(new Column(col.ID, col.Type));
                 }
             }
             return tbl;
@@ -134,7 +135,7 @@ namespace Dt.Core
             {
                 foreach (var cell in p_row.Cells)
                 {
-                    tbl.Columns.Add(new Column(cell.ID, cell.Type));
+                    tbl._columns.Add(new Column(cell.ID, cell.Type));
                 }
             }
             return tbl;
@@ -143,15 +144,16 @@ namespace Dt.Core
 
         #region 行操作
         /// <summary>
-        /// 添加新行并设置初始值，无参数时为空行，有参数时分两种情况，主要为简化编码：
-        /// <para>1. 只一个参数且为匿名对象时，将匿名对象的属性作为初始值进行赋值，属性名称不区分大小写</para>
-        /// <para>2. 按参数顺序进行赋值，跳过参数为null的情况，支持部分列值，支持列值的类型转换</para>
+        /// 添加新行并设置初始值，参数null时为空行
+        /// <para>有参数时将参数的属性值作为初始值，前提是属性名和列名相同(不区分大小写)且类型相同</para>
+        /// <para>支持匿名对象，主要为简化编码</para>
+        /// <para>不再支持多参数按顺序赋值！</para>
         /// </summary>
-        /// <param name="p_params">按顺序的列值或匿名对象</param>
+        /// <param name="p_init">含初始值的对象，一般为匿名对象</param>
         /// <returns>返回新行</returns>
-        public Row NewRow(params object[] p_params)
+        public Row AddRow(object p_init = null)
         {
-            Row row = CreateRow(p_params);
+            Row row = NewRow(p_init);
             row.IsAdded = true;
             row.Table = this;
             base.Add(row);
@@ -159,56 +161,71 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 创建独立行并设置初始值，未添加到当前Table！未设置IsAdded标志！无参数时为空行，有参数时分两种情况，主要为简化编码：
-        /// <para>1. 只一个参数且为匿名对象时，将匿名对象的属性作为初始值进行赋值，属性名称不区分大小写</para>
-        /// <para>2. 按参数顺序进行赋值，跳过参数为null的情况，支持部分列值，支持列值的类型转换</para>
+        /// 创建独立行并设置初始值，未添加到当前Table！未设置IsAdded标志！参数null时为空行
+        /// <para>有参数时将参数的属性值作为初始值，前提是属性名和列名相同(不区分大小写)且类型相同</para>
+        /// <para>支持匿名对象，主要为简化编码</para>
+        /// <para>不再支持多参数按顺序赋值！</para>
         /// </summary>
-        /// <param name="p_params">按顺序的列值或匿名对象</param>
+        /// <param name="p_init">含初始值的对象，一般为匿名对象</param>
         /// <returns>返回独立行</returns>
-        public Row CreateRow(params object[] p_params)
+        public Row NewRow(object p_init = null)
         {
-            Row row = new Row();
-            if (Columns.Count > 0)
+            Row row = CreateRowInstance();
+
+            // 空行
+            if (p_init == null)
             {
-                if (p_params.Length < 2)
+                foreach (var col in _columns)
                 {
-                    // 空行
-                    foreach (var col in Columns)
+                    new Cell(row, col.ID, col.Type);
+                }
+                return row;
+            }
+
+            // 匿名对象无法在GetProperty时指定BindingFlags！
+            var props = p_init.GetType().GetProperties().ToList();
+            foreach (var col in _columns)
+            {
+                if (props.Count > 0)
+                {
+                    int index = -1;
+                    PropertyInfo pi = null;
+                    for (int i = 0; i < props.Count; i++)
                     {
-                        new Cell(row, col.ID, col.Type);
+                        pi = props[i];
+                        if (pi.Name.Equals(col.ID, StringComparison.OrdinalIgnoreCase))
+                        {
+                            index = i;
+                            break;
+                        }
                     }
 
-                    object val;
-                    if (p_params.Length == 1 && (val = p_params[0]) != null)
+                    // 存在同名属性
+                    if (index > -1)
                     {
-                        // 一个参数时，处理匿名对象赋值情况！判断条件未全用！
-                        Type type = val.GetType();
-                        if (type.Namespace == null && type.IsNotPublic)
+                        // 减小下次查询范围
+                        props.RemoveAt(index);
+                        var val = pi.GetValue(p_init);
+
+                        // 类型相同
+                        if (pi.PropertyType == col.Type)
                         {
-                            // 参数为匿名对象
-                            foreach (var prop in type.GetProperties())
-                            {
-                                row.Cells[prop.Name].InitVal(prop.GetValue(val));
-                            }
+                            new Cell(col.ID, val, row);
+                            continue;
                         }
-                        else
+
+                        // 类型不同先转换，转换失败不赋值
+                        try
                         {
-                            // 普通参数
-                            row.Cells[0].InitVal(val);
+                            var obj = Convert.ChangeType(val, col.Type);
+                            new Cell(col.ID, obj, row);
+                            continue;
                         }
+                        catch { }
                     }
                 }
-                else
-                {
-                    // 多参数时按顺序赋值
-                    for (int i = 0; i < Columns.Count; i++)
-                    {
-                        var col = Columns[i];
-                        var cell = new Cell(row, col.ID, col.Type);
-                        if (i < p_params.Length && p_params[i] != null)
-                            cell.InitVal(p_params[i]);
-                    }
-                }
+
+                new Cell(row, col.ID, col.Type);
             }
             return row;
         }
@@ -239,6 +256,48 @@ namespace Dt.Core
                 base.Insert(p_index, p_row);
             }
         }
+
+        /// <summary>
+        /// 删除行，更新数据变化状态
+        /// </summary>
+        /// <param name="p_row">行实体</param>
+        new public bool Remove(Row p_row)
+        {
+            bool success = base.Remove(p_row);
+            if (success)
+            {
+                p_row.Table = null;
+                CheckChanges();
+            }
+            return success;
+        }
+
+        /// <summary>
+        /// 删除行，更新数据变化状态
+        /// </summary>
+        /// <param name="p_index"></param>
+        new public void RemoveAt(int p_index)
+        {
+            if (p_index > -1 && p_index < Count)
+            {
+                this[p_index].Table = null;
+                base.RemoveAt(p_index);
+                CheckChanges();
+            }
+        }
+
+        /// <summary>
+        /// 清空所有行
+        /// </summary>
+        new public void Clear()
+        {
+            while (Count > 0)
+            {
+                this[0].Table = null;
+                base.RemoveAt(0);
+            }
+            IsChanged = false;
+        }
         #endregion
 
         #region 列操作
@@ -260,7 +319,7 @@ namespace Dt.Core
                 }
             }
             if (suc)
-                Columns[p_colName].Type = p_tgtType;
+                _columns[p_colName].Type = p_tgtType;
             return suc;
         }
         #endregion
@@ -271,10 +330,13 @@ namespace Dt.Core
         /// </summary>
         public void AcceptChanges()
         {
+            _delayCheckChanges = true;
             foreach (Row row in ChangedRows)
             {
                 row.AcceptChanges();
             }
+            IsChanged = false;
+            _delayCheckChanges = false;
         }
 
         /// <summary>
@@ -282,10 +344,13 @@ namespace Dt.Core
         /// </summary>
         public void RejectChanges()
         {
+            _delayCheckChanges = true;
             foreach (Row row in ChangedRows)
             {
                 row.RejectChanges();
             }
+            IsChanged = false;
+            _delayCheckChanges = false;
         }
 
         /// <summary>
@@ -294,11 +359,12 @@ namespace Dt.Core
         /// <returns></returns>
         public Table Clone()
         {
-            Table tbl = new Table();
+            // 当前可能为Table<TRow>
+            Table tbl = (Table)Activator.CreateInstance(GetType());
             // 添加列
-            foreach (var col in Columns)
+            foreach (var col in _columns)
             {
-                tbl.Columns.Add(new Column(col.ID, col.Type));
+                tbl._columns.Add(new Column(col.ID, col.Type));
             }
 
             // 复制数据
@@ -312,7 +378,148 @@ namespace Dt.Core
         }
         #endregion
 
+        #region 内部方法
+        /// <summary>
+        /// 检查当前行数据是否有变化
+        /// </summary>
+        internal void CheckChanges()
+        {
+            if (_delayCheckChanges)
+                return;
+
+            bool changed = false;
+            foreach (Row row in this)
+            {
+                if (row.IsChanged)
+                {
+                    changed = true;
+                    break;
+                }
+            }
+            IsChanged = changed;
+        }
+
+        /// <summary>
+        /// 触发单元格值变化事件
+        /// </summary>
+        /// <param name="p_cell"></param>
+        internal void OnValueChanged(Cell p_cell)
+        {
+            Changed?.Invoke(this, p_cell);
+        }
+
+        /// <summary>
+        /// 创建行，重写可创建Row的派生行
+        /// </summary>
+        /// <returns></returns>
+        protected virtual Row CreateRowInstance()
+        {
+            return new Row();
+        }
+        #endregion
+
+        #region 延迟更新
+        /// <summary>
+        /// 延迟触发CollectionChanged事件
+        /// </summary>
+        /// <returns></returns>
+        /// <example>
+        /// <code>
+        /// using (tbl.Defer())
+        /// {
+        ///     foreach (var row in data)
+        ///     {
+        ///         tbl.Add(row);
+        ///     }
+        /// }
+        /// </code>
+        /// </example>
+        public IDisposable Defer()
+        {
+            return new InternalCls(this);
+        }
+
+        /// <summary>
+        /// 通过Defer实现延时更新
+        /// </summary>
+        int Updating
+        {
+            get { return _updating; }
+            set
+            {
+                _updating = value;
+                if (_updating == 0)
+                    OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+            }
+        }
+
+        /// <summary>
+        /// 重新触发CollectionChanged的方法
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        {
+            if (_updating <= 0)
+            {
+                // 符合更新条件，触发基类事件，否则延迟更新
+                base.OnCollectionChanged(e);
+            }
+        }
+
+        class InternalCls : IDisposable
+        {
+            Table _owner;
+
+            public InternalCls(Table p_owner)
+            {
+                _owner = p_owner;
+                _owner.Updating = _owner.Updating + 1;
+            }
+
+            public void Dispose()
+            {
+                _owner.Updating = _owner.Updating - 1;
+            }
+        }
+        #endregion
+
+        #region 列类型工具
+        /// <summary>
+        /// Type -> string，大小写敏感
+        /// </summary>
+        /// <param name="p_type"></param>
+        /// <returns></returns>
+        public static string GetColTypeAlias(Type p_type)
+        {
+            if (p_type.IsGenericType)
+            {
+                if (p_type.GetGenericTypeDefinition() == typeof(Nullable<>))
+                    return p_type.GetGenericArguments()[0].Name + "?";
+                throw new Exception("无法映射的数据类型:" + p_type.ToString());
+            }
+            return p_type.Name;
+        }
+
+        /// <summary>
+        /// string -> Type，大小写敏感
+        /// </summary>
+        /// <param name="p_name"></param>
+        /// <returns></returns>
+        public static Type GetColType(string p_name)
+        {
+            if (p_name.EndsWith('?'))
+            {
+                Type tp = Type.GetType("System." + p_name.TrimEnd('?'), true, false);
+                return typeof(Nullable<>).MakeGenericType(tp);
+            }
+            return Type.GetType("System." + p_name, true, false);
+        }
+        #endregion
+
         #region IRpcJson
+        /// <summary>
+        /// 反序列化读取Rpc Json数据
+        /// </summary>
         void IRpcJson.ReadRpcJson(JsonReader p_reader)
         {
             // cols外层 [
@@ -338,15 +545,15 @@ namespace Dt.Core
                     if (index == 0)
                         colName = p_reader.Value.ToString();
                     else
-                        colType = TableKit.GetColType(p_reader.Value.ToString());
+                        colType = GetColType(p_reader.Value.ToString());
                     index++;
                 }
-                Columns.Add(new Column(colName, colType));
+                _columns.Add(new Column(colName, colType));
             }
 
             // rows外层 [
             p_reader.Read();
-            int colCnt = Columns.Count;
+            int colCnt = _columns.Count;
             // [
             while (p_reader.Read())
             {
@@ -355,7 +562,7 @@ namespace Dt.Core
                     break;
 
                 int index = 0;
-                Row row = NewRow();
+                Row row = AddRow();
                 row.IsAdded = false;
                 // 行 [
                 while (p_reader.Read())
@@ -386,6 +593,9 @@ namespace Dt.Core
             p_reader.Read();
         }
 
+        /// <summary>
+        /// 将对象按照Rpc Json数据结构进行序列化
+        /// </summary>
         void IRpcJson.WriteRpcJson(JsonWriter p_writer)
         {
             p_writer.WriteStartArray();
@@ -394,12 +604,12 @@ namespace Dt.Core
 
             // 列
             p_writer.WriteStartArray();
-            foreach (Column column in Columns)
+            foreach (Column column in _columns)
             {
                 p_writer.WriteStartArray();
                 p_writer.WriteValue(column.ID);
                 if (column.Type != typeof(string))
-                    p_writer.WriteValue(TableKit.GetColTypeAlias(column.Type));
+                    p_writer.WriteValue(GetColTypeAlias(column.Type));
                 p_writer.WriteEndArray();
             }
             p_writer.WriteEndArray();
@@ -459,5 +669,22 @@ namespace Dt.Core
             p_writer.WriteEndArray();
         }
         #endregion
+    }
+
+    /// <summary>
+    /// 行类型为强类型的数据表，行类型模拟普通实体类型
+    /// </summary>
+    /// <typeparam name="TRow">行类型</typeparam>
+    public class Table<TRow> : Table
+        where TRow : Row
+    {
+        /// <summary>
+        /// 创建行
+        /// </summary>
+        /// <returns></returns>
+        protected override Row CreateRowInstance()
+        {
+            return Activator.CreateInstance<TRow>();
+        }
     }
 }

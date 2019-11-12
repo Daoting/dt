@@ -73,7 +73,7 @@ namespace Dt.Core
             sb.Append("(");
             foreach (var col in schema.Columns)
             {
-                sb.Append(col.TypeName);
+                sb.Append(GetTypeName(col.Type));
                 sb.Append(" p_");
                 sb.Append(col.Name);
                 sb.Append(", ");
@@ -105,7 +105,7 @@ namespace Dt.Core
                 AppendTabSpace(sb, 2);
                 sb.AppendLine("/// </summary>");
                 AppendTabSpace(sb, 2);
-                sb.Append($"public {col.TypeName}{(col.Nullable ? "?" : "")} {SetFirstToUpper(col.Name)} ");
+                sb.Append($"public {GetTypeName(col.Type)} {SetFirstToUpper(col.Name)} ");
                 sb.Append("{ get; private set; }");
                 sb.AppendLine();
             }
@@ -151,13 +151,13 @@ namespace Dt.Core
                 AppendTabSpace(sb, 2);
                 sb.AppendLine("/// </summary>");
                 AppendTabSpace(sb, 2);
-                string tpName = col.TypeName + (col.Nullable ? "?" : "");
+                string tpName = GetTypeName(col.Type);
                 sb.Append($"public {tpName} {SetFirstToUpper(col.Name)} ");
                 sb.AppendLine();
                 AppendTabSpace(sb, 2);
                 sb.AppendLine("{");
                 AppendTabSpace(sb, 3);
-                sb.AppendLine($"get {{ return GetVal<{col.TypeName}>(\"{col.Name}\"); }}");
+                sb.AppendLine($"get {{ return GetVal<{tpName}>(\"{col.Name}\"); }}");
                 AppendTabSpace(sb, 3);
                 sb.AppendLine($"set {{ _cells[\"{col.Name}\"].Val = value; }}");
                 AppendTabSpace(sb, 2);
@@ -176,6 +176,22 @@ namespace Dt.Core
         public Task<List<string>> 所有微服务副本()
         {
             return Glb.GetCurrentSvcs(true);
+        }
+
+        string GetTypeName(Type p_type)
+        {
+            if (p_type.IsGenericType && p_type.GetGenericTypeDefinition() == typeof(Nullable<>))
+                return GetTypeName(p_type.GetGenericArguments()[0]) + "?";
+
+            if (p_type == typeof(string))
+                return "string";
+            if (p_type == typeof(bool))
+                return "bool";
+            if (p_type == typeof(int))
+                return "int";
+            if (p_type == typeof(long))
+                return "long";
+            return p_type.Name;
         }
 
         static void AppendTabSpace(StringBuilder p_sb, int p_num)

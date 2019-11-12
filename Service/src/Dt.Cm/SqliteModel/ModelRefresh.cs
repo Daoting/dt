@@ -258,9 +258,9 @@ namespace Dt.Cm
 
                             // 可为null的值类型
                             if (colSchema.AllowDBNull.HasValue && colSchema.AllowDBNull.Value && colSchema.DataType.IsValueType)
-                                col.DbType = TableKit.GetColTypeAlias(typeof(Nullable<>).MakeGenericType(colSchema.DataType));
+                                col.DbType = Table.GetColTypeAlias(typeof(Nullable<>).MakeGenericType(colSchema.DataType));
                             else
-                                col.DbType = TableKit.GetColTypeAlias(colSchema.DataType);
+                                col.DbType = Table.GetColTypeAlias(colSchema.DataType);
 
                             // 是否为主键
                             if (colSchema.IsKey.HasValue && colSchema.IsKey.Value)
@@ -288,7 +288,7 @@ namespace Dt.Cm
         {
             OmColumn col = new OmColumn();
             col.ColName = row.Name;
-            col.DbType = row.TypeName;
+            col.DbType = Table.GetColTypeAlias(row.Type);
             col.IsPrimary = p_isPrimaryKey;
             col.Length = row.Length;
             col.Nullable = row.Nullable;

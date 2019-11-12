@@ -412,8 +412,8 @@ namespace Dt.Cm
         Table CreateTable()
         {
             Table tbl = new Table { { "col1" }, { "col2" } };
-            tbl.NewRow("列值11", "列值12");
-            tbl.NewRow("列值21", "列值22");
+            tbl.AddRow(new { col1 = "列值11", col2 = "列值12" });
+            tbl.AddRow(new { col1 = "列值21", col2 = "列值22" });
             return tbl;
         }
         #endregion

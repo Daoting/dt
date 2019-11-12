@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2019-04-16 创建
+* 日志: 2019-11-12 创建
 ******************************************************************************/
 #endregion
 
@@ -10,6 +10,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 #endregion
@@ -19,12 +20,13 @@ namespace Dt.Core
     /// <summary>
     /// 数据行管理类
     /// </summary>
-    public class Row : IRpcJson
+    public class Row : INotifyPropertyChanged, IRpcJson
     {
         #region 成员变量
         const string _indexError = "索引值{0}超出范围(0-{1})！";
+        protected readonly CellList _cells;
         bool _delayCheckChanges;
-        readonly CellList _cells;
+        bool _isChanged;
         #endregion
 
         #region 构造方法
@@ -35,6 +37,13 @@ namespace Dt.Core
         {
             _cells = new CellList();
         }
+        #endregion
+
+        #region 事件
+        /// <summary>
+        /// 内部单元格的值发生变化
+        /// </summary>
+        public event EventHandler<Cell> Changed;
         #endregion
 
         #region 属性
@@ -75,6 +84,15 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 获取设置id列的值，常用的实体属性
+        /// </summary>
+        public long ID
+        {
+            get { return GetVal<long>("id"); }
+            set { _cells["id"].Val = value; }
+        }
+
+        /// <summary>
         /// 获取当前所有数据项
         /// </summary>
         public CellList Cells
@@ -85,7 +103,26 @@ namespace Dt.Core
         /// <summary>
         /// 获取当前行是否已发生更改。
         /// </summary>
-        public bool IsChanged { get; set; }
+        public bool IsChanged
+        {
+            get { return _isChanged; }
+            set
+            {
+                if (_isChanged == value)
+                    return;
+
+                _isChanged = value;
+                if (Table != null)
+                {
+                    if (_isChanged)
+                        Table.IsChanged = true;
+                    else
+                        Table.CheckChanges();
+                }
+                // 触发当前行业务数据发生变化
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("IsChanged"));
+            }
+        }
 
         /// <summary>
         /// 获取设置当前行是否为新增
@@ -177,13 +214,30 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 添加新数据项
+        /// </summary>
+        /// <typeparam name="T">Cell的数据类型</typeparam>
+        /// <param name="p_cellName">字段名，不可为空，作为键值</param>
+        /// <param name="p_value">初始值</param>
+        public void AddCell<T>(string p_cellName, T p_value = default)
+        {
+            if (Contains(p_cellName))
+                throw new Exception($"已包含{p_cellName}列！");
+            if (p_value != default)
+                new Cell(p_cellName, p_value, this);
+            else
+                new Cell(this, p_cellName, typeof(T));
+        }
+
+        /// <summary>
         /// 深度复制行对象，返回独立行，未设置IsAdded标志！
         /// </summary>
         /// <param name="p_acceptChange">提交修改标志，默认true, 即复制后AcceptChanges()</param>
         /// <returns>返回独立行</returns>
         public Row Clone(bool p_acceptChange = true)
         {
-            Row row = new Row();
+            // 当前可能为Row的派生类
+            Row row = (Row)Activator.CreateInstance(GetType());
             foreach (var item in _cells)
             {
                 var cell = new Cell(row, item.ID, item.Type);
@@ -202,6 +256,7 @@ namespace Dt.Core
         /// <returns>true 包含</returns>
         public bool Contains(string p_columnName)
         {
+            Check.NotNullOrEmpty(p_columnName);
             return _cells.Contains(p_columnName);
         }
 
@@ -423,6 +478,26 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 根据索引获取指定列的64位整数值，为null时返回零即default(long)！！！
+        /// </summary>
+        /// <param name="p_index">索引</param>
+        /// <returns>整数值</returns>
+        public long Long(int p_index)
+        {
+            return GetVal<long>(p_index);
+        }
+
+        /// <summary>
+        /// 根据列名获取指定列的64位整数值，为null时返回零即default(long)！！！
+        /// </summary>
+        /// <param name="p_columnName">列名</param>
+        /// <returns>整数值</returns>
+        public long Long(string p_columnName)
+        {
+            return GetVal<long>(p_columnName);
+        }
+
+        /// <summary>
         /// 根据索引获取指定列的日期值，为null时返回DateTime.MinValue，即default(DateTime)！！！
         /// </summary>
         /// <param name="p_index">索引</param>
@@ -440,6 +515,30 @@ namespace Dt.Core
         public DateTime Date(string p_columnName)
         {
             return GetVal<DateTime>(p_columnName);
+        }
+
+        /// <summary>
+        /// 根据索引获取指定列的可空类型值
+        /// </summary>
+        /// <typeparam name="T">值类型</typeparam>
+        /// <param name="p_index">索引</param>
+        /// <returns>可空类型值</returns>
+        public T? Nullable<T>(int p_index)
+            where T : struct
+        {
+            return GetVal<T?>(p_index);
+        }
+
+        /// <summary>
+        /// 根据列名获取指定列的可空类型值
+        /// </summary>
+        /// <typeparam name="T">值类型</typeparam>
+        /// <param name="p_columnName">列名</param>
+        /// <returns>可空类型值</returns>
+        public T? Nullable<T>(string p_columnName)
+            where T : struct
+        {
+            return GetVal<T?>(p_columnName);
         }
 
         /// <summary>
@@ -526,6 +625,15 @@ namespace Dt.Core
             // 触发连带判断
             IsChanged = changed;
         }
+
+        /// <summary>
+        /// 触发单元格值变化事件
+        /// </summary>
+        /// <param name="p_cell"></param>
+        internal void OnValueChanged(Cell p_cell)
+        {
+            Changed?.Invoke(this, p_cell);
+        }
         #endregion
 
         #region IRpcJson
@@ -596,6 +704,13 @@ namespace Dt.Core
 
             p_writer.WriteEndArray();
         }
+        #endregion
+
+        #region INotifyPropertyChanged
+        /// <summary>
+        /// 属性 IsChanged 变化事件
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
         #endregion
     }
 }

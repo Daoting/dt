@@ -306,13 +306,5 @@ namespace Dt.Core
         /// 列注释
         /// </summary>
         public string Comments { get; set; }
-
-        /// <summary>
-        /// 列类型名称
-        /// </summary>
-        public string TypeName
-        {
-            get { return TableKit.GetColTypeAlias(Type); }
-        }
     }
 }
