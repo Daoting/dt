@@ -188,40 +188,53 @@ namespace Dt.Core
             {
                 if (props.Count > 0)
                 {
-                    int index = -1;
-                    PropertyInfo pi = null;
+                    object val = null;
                     for (int i = 0; i < props.Count; i++)
                     {
-                        pi = props[i];
+                        var pi = props[i];
                         if (pi.Name.Equals(col.ID, StringComparison.OrdinalIgnoreCase))
                         {
-                            index = i;
+                            // 存在同名属性，减小下次查询范围
+                            props.RemoveAt(i);
+                            val = pi.GetValue(p_init);
                             break;
                         }
                     }
 
-                    // 存在同名属性
-                    if (index > -1)
+                    if (val != null)
                     {
-                        // 减小下次查询范围
-                        props.RemoveAt(index);
-                        var val = pi.GetValue(p_init);
-
                         // 类型相同
-                        if (pi.PropertyType == col.Type)
+                        if (val.GetType() == col.Type)
                         {
                             new Cell(col.ID, val, row);
                             continue;
                         }
 
-                        // 类型不同先转换，转换失败不赋值
-                        try
+                        // 类型不同
+                        if (col.Type.IsGenericType && col.Type.GetGenericTypeDefinition() == typeof(Nullable<>))
                         {
-                            var obj = Convert.ChangeType(val, col.Type);
-                            new Cell(col.ID, obj, row);
-                            continue;
+                            // 可空类型
+                            Type tp = col.Type.GetGenericArguments()[0];
+                            try
+                            {
+                                if (tp != val.GetType())
+                                    val = Convert.ChangeType(val, tp);
+                                new Cell(col.ID, val, row);
+                                continue;
+                            }
+                            catch { }
                         }
-                        catch { }
+                        else if (val is IConvertible)
+                        {
+                            // 类型不同先转换，转换失败不赋值
+                            try
+                            {
+                                var obj = Convert.ChangeType(val, col.Type);
+                                new Cell(col.ID, obj, row);
+                                continue;
+                            }
+                            catch { }
+                        }
                     }
                 }
 

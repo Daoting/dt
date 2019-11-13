@@ -409,7 +409,11 @@
                 <ControlTemplate TargetType="a:Tab">
                     <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
                         <Grid.RowDefinitions>
+                            <!--第一行标题栏-->
                             <RowDefinition Height="Auto" />
+                            <!--第二行搜索栏-->
+                            <RowDefinition Height="Auto" />
+                            <!--第三行内容-->
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <Grid x:Name="HeaderGrid"
@@ -447,6 +451,10 @@
                                               HorizontalAlignment="Right"
                                               Grid.Column="2" />
                         </Grid>
+                        <!--搜索栏-->
+                        <ContentPresenter Content="{TemplateBinding PhoneBar}"
+                                          HorizontalAlignment="Stretch"
+                                          Grid.Row="1" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

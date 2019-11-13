@@ -16,6 +16,10 @@ namespace Dt.Core
     /// </summary>
     public class CmDa : DataAccess
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="p_tblName">表名</param>
         public CmDa(string p_tblName)
             :base("cm", p_tblName)
         { }

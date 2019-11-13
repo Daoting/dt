@@ -92,7 +92,6 @@ namespace Dt.Shell
             { "基础代码", typeof(BaseCode) },
             { "基础权限", typeof(BasePrivilege) },
             { "菜单管理", typeof(SysMenu) },
-            { "系统模块", typeof(SysModule) },
             { "系统角色", typeof(SysRole) },
             { "用户账号", typeof(UserAccount) },
             { "参数定义", typeof(UserParams) },

@@ -89,6 +89,12 @@ namespace Dt.Base
             typeof(Tab),
             new PropertyMetadata(false));
 
+        public readonly static DependencyProperty PhoneBarProperty = DependencyProperty.Register(
+            "PhoneBar",
+            typeof(object),
+            typeof(Tab),
+            new PropertyMetadata(null, OnPhoneBarChanged));
+
         public static readonly DependencyProperty IsPinnedProperty = DependencyProperty.Register(
             "IsPinned",
             typeof(bool),
@@ -158,6 +164,17 @@ namespace Dt.Base
         {
             ((Tab)d).UpdatePinButton();
         }
+
+        static void OnPhoneBarChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (AtSys.IsPhoneUI
+                && e.NewValue is Button btn
+                && btn.Style == null)
+            {
+                // 默认搜索按钮样式
+                btn.Style = AtRes.PhonSearchButton;
+            }
+        }
         #endregion
 
         #region 成员变量
@@ -202,6 +219,15 @@ namespace Dt.Base
         {
             get { return (bool)GetValue(HideTitleBarProperty); }
             set { SetValue(HideTitleBarProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置Phone模式下的工具栏，一般为搜索栏
+        /// </summary>
+        public object PhoneBar
+        {
+            get { return GetValue(PhoneBarProperty); }
+            set { SetValue(PhoneBarProperty, value); }
         }
 
         /// <summary>
@@ -423,12 +449,13 @@ namespace Dt.Base
                 // 为uno节省一级ContentPresenter！
                 if (_root != null)
                 {
-                    if (_root.Children.Count > 1)
-                        _root.Children.RemoveAt(1);
+                    // 第一行标题栏，第二行搜索栏，第三行内容
+                    if (_root.Children.Count > 2)
+                        _root.Children.RemoveAt(2);
                     FrameworkElement con = Content as FrameworkElement;
                     if (con != null)
                     {
-                        Grid.SetRow(con, 1);
+                        Grid.SetRow(con, 2);
                         _root.Children.Add(con);
                     }
                 }

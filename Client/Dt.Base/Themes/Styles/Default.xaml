@@ -203,7 +203,55 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
+    <!--Phone模式的搜索栏按钮-->
+    <Style x:Key="PhonSearchButton" TargetType="Button">
+        <Setter Property="Background" Value="{StaticResource 默认背景}" />
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}"/>
+        <Setter Property="FontSize" Value="{StaticResource 中字号}"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
+                        <Rectangle x:Name="Rect" Stroke="{StaticResource 浅灰边框}" IsHitTestVisible="False" />
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <TextBlock Text="&#xE013;"
+                                       FontFamily="{StaticResource IconFont}"
+                                       Foreground="{StaticResource 默认前景}"
+                                       VerticalAlignment="Center" />
+                            <ContentPresenter x:Name="ContentPresenter"
+                                              Content="{TemplateBinding Content}"
+                                              Margin="10" />
+                        </StackPanel>
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Target="Rect.Fill" Value="{StaticResource 暗遮罩}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <VisualState.Setters>
+                                        <Setter Target="Rect.Fill" Value="{StaticResource 深暗遮罩}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Disabled">
+                                    <VisualState.Setters>
+                                        <Setter Target="RootGrid.Opacity" Value="0.5" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!--****************************** CommandBar ******************************-->
 
     <!--****************************** FlyoutPresenter ******************************-->

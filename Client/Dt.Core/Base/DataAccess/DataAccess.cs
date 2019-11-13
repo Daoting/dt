@@ -12,7 +12,6 @@ using Dt.Core.Rpc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 #endregion
@@ -33,6 +32,8 @@ namespace Dt.Core
         // 表名
         protected readonly string _tbl;
         List<OmColumn> _columns;
+        // 空表模板
+        Dictionary<Type, Table> _tblTemps;
         #endregion
 
         #region 构造方法
@@ -368,66 +369,19 @@ namespace Dt.Core
         public TRow NewRow<TRow>(object p_init = null)
             where TRow : Row
         {
-            TRow row = Activator.CreateInstance<TRow>();
+            Table tbl;
+            if (_tblTemps == null || !_tblTemps.TryGetValue(typeof(TRow), out tbl))
+            {
+                if (_tblTemps == null)
+                    _tblTemps = new Dictionary<Type, Table>();
+
+                // 创建空表
+                tbl = NewTable<TRow>();
+                _tblTemps[typeof(TRow)] = tbl;
+            }
+
+            TRow row = (TRow)tbl.NewRow(p_init);
             row.IsAdded = true;
-
-            // 空行
-            if (p_init == null)
-            {
-                foreach (var col in Columns)
-                {
-                    new Cell(row, col.ColName, Table.GetColType(col.DbType));
-                }
-                return row;
-            }
-
-            // 匿名对象无法在GetProperty时指定BindingFlags！
-            var props = p_init.GetType().GetProperties().ToList();
-            foreach (var col in Columns)
-            {
-                Type colType = Table.GetColType(col.DbType);
-
-                if (props.Count > 0)
-                {
-                    int index = -1;
-                    PropertyInfo pi = null;
-                    for (int i = 0; i < props.Count; i++)
-                    {
-                        pi = props[i];
-                        if (pi.Name.Equals(col.ColName, StringComparison.OrdinalIgnoreCase))
-                        {
-                            index = i;
-                            break;
-                        }
-                    }
-
-                    // 存在同名属性
-                    if (index > -1)
-                    {
-                        // 减小下次查询范围
-                        props.RemoveAt(index);
-                        var val = pi.GetValue(p_init);
-
-                        // 类型相同
-                        if (pi.PropertyType == colType)
-                        {
-                            new Cell(col.ColName, val, row);
-                            continue;
-                        }
-
-                        // 类型不同先转换，转换失败不赋值
-                        try
-                        {
-                            var obj = Convert.ChangeType(val, colType);
-                            new Cell(col.ColName, obj, row);
-                            continue;
-                        }
-                        catch { }
-                    }
-                }
-
-                new Cell(row, col.ColName, colType);
-            }
             return row;
         }
 

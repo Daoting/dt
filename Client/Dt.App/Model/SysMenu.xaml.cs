@@ -115,6 +115,7 @@ namespace Dt.App.Model
 
         async void OnAddMi(object sender, Mi e)
         {
+            Row sel = _tv.SelectedRow;
             var ids = await _daMenu.NewIDAndSeq("sq_menu");
             var row = _daMenu.NewRow<MenuRow>(new
             {
@@ -122,17 +123,18 @@ namespace Dt.App.Model
                 name = "新菜单",
                 icon = "文件",
                 isgroup = false,
-                parentid = _tv.SelectedRow.ID,
+                parentid = sel.ID > 0 ? (long?)sel.ID : null,
                 dispidx = ids[1],
                 islocked = false,
                 ctime = AtSys.Now,
             });
-            row.AddCell("parentname", _tv.SelectedRow.Str("name"));
+            row.AddCell("parentname", sel.Str("name"));
             _fv.Data = row;
         }
 
         async void OnAddGroup(object sender, Mi e)
         {
+            Row sel = _tv.SelectedRow;
             var ids = await _daMenu.NewIDAndSeq("sq_menu");
             var row = _daMenu.NewRow<MenuRow>(new
             {
@@ -140,12 +142,12 @@ namespace Dt.App.Model
                 name = "新菜单组",
                 icon = "文件夹",
                 isgroup = true,
-                parentid = _tv.SelectedRow.ID,
+                parentid = sel.ID > 0 ? (long?)sel.ID : null,
                 dispidx = ids[1],
                 islocked = false,
                 ctime = AtSys.Now,
             });
-            row.AddCell("parentname", _tv.SelectedRow.Str("name"));
+            row.AddCell("parentname", sel.Str("name"));
             _fv.Data = row;
         }
 
