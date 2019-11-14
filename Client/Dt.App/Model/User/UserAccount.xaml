@@ -8,7 +8,7 @@
     <a:WinItem DockState="DockedLeft">
         <a:Tabs>
             <a:Tab Title="查找用户">
-                
+                <Button Content="查找" Click="OnSearch" />
             </a:Tab>
         </a:Tabs>
     </a:WinItem>
@@ -21,7 +21,7 @@
                     </a:Menu>
                 </a:Tab.Menu>
                 <a:Tab.PhoneBar>
-                    <Button x:Name="_btnSearch" Content="查找用户" />
+                    <Button x:Name="_btnSearch" Content="查找用户" Click="OnNaviToSearch" />
                 </a:Tab.PhoneBar>
                 <a:Lv x:Name="_lvUser" ViewMode="Table">
                     <a:Ex.Menu>

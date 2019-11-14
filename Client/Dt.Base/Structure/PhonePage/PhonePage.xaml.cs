@@ -44,11 +44,7 @@ namespace Dt.Base
                 return;
 
             _newParam = new PageParameter(p_content, null);
-#if UWP
             AtApp.Frame.Navigate(typeof(PhonePage), _newParam);
-#else
-            AtApp.Frame.Navigate(typeof(PhonePage));
-#endif
         }
 
         /// <summary>
@@ -62,11 +58,7 @@ namespace Dt.Base
 
             var taskSrc = new TaskCompletionSource<bool>();
             _newParam = new PageParameter(p_content, taskSrc);
-#if UWP
             AtApp.Frame.Navigate(typeof(PhonePage), _newParam);
-#else
-            AtApp.Frame.Navigate(typeof(PhonePage));
-#endif
             return taskSrc.Task;
         }
 
@@ -121,7 +113,7 @@ namespace Dt.Base
         /// <summary>
         /// 页面参数
         /// </summary>
-        class PageParameter
+        internal class PageParameter
         {
             public PageParameter(IPhonePage p_content, TaskCompletionSource<bool> p_taskSource)
             {

@@ -31,80 +31,216 @@ namespace Dt.Base
         readonly static ResourceDictionary _dict = Application.Current.Resources;
 
         #region 标准颜色画刷
+        static SolidColorBrush _transparentBrush;
+        static SolidColorBrush _blackBrush;
+        static SolidColorBrush _blueBrush;
+        static SolidColorBrush _brownBrush;
+        static SolidColorBrush _cyanBrush;
+        static SolidColorBrush _darkGrayBrush;
+        static SolidColorBrush _grayBrush;
+        static SolidColorBrush _greenBrush;
+        static SolidColorBrush _lightGrayBrush;
+        static SolidColorBrush _magentaBrush;
+        static SolidColorBrush _orangeBrush;
+        static SolidColorBrush _purpleBrush;
+        static SolidColorBrush _redBrush;
+        static SolidColorBrush _whiteBrush;
+        static SolidColorBrush _yellowBrush;
+
         /// <summary>
         /// 透明色
         /// </summary>
-        public static readonly SolidColorBrush TransparentBrush = new SolidColorBrush(Colors.Transparent);
+        public static SolidColorBrush TransparentBrush
+        {
+            get
+            {
+                if (_transparentBrush == null)
+                    _transparentBrush = new SolidColorBrush(Colors.Transparent);
+                return _transparentBrush;
+            }
+        }
 
         /// <summary>
         /// 黑色
         /// </summary>
-        public static readonly SolidColorBrush BlackBrush = new SolidColorBrush(Colors.Black);
+        public static SolidColorBrush BlackBrush
+        {
+            get
+            {
+                if (_blackBrush == null)
+                    _blackBrush = new SolidColorBrush(Colors.Black);
+                return _blackBrush;
+            }
+        }
 
         /// <summary>
         /// 蓝色
         /// </summary>
-        public static readonly SolidColorBrush BlueBrush = new SolidColorBrush(Colors.Blue);
+        public static SolidColorBrush BlueBrush
+        {
+            get
+            {
+                if (_blueBrush == null)
+                    _blueBrush = new SolidColorBrush(Colors.Blue);
+                return _blueBrush;
+            }
+        }
 
         /// <summary>
         /// 深褐色
         /// </summary>
-        public static readonly SolidColorBrush BrownBrush = new SolidColorBrush(Colors.Brown);
+        public static SolidColorBrush BrownBrush
+        {
+            get
+            {
+                if (_brownBrush == null)
+                    _brownBrush = new SolidColorBrush(Colors.Brown);
+                return _brownBrush;
+            }
+        }
 
         /// <summary>
         /// 青色
         /// </summary>
-        public static readonly SolidColorBrush CyanBrush = new SolidColorBrush(Colors.Cyan);
+        public static SolidColorBrush CyanBrush
+        {
+            get
+            {
+                if (_cyanBrush == null)
+                    _cyanBrush = new SolidColorBrush(Colors.Cyan);
+                return _cyanBrush;
+            }
+        }
 
         /// <summary>
         /// 深灰
         /// </summary>
-        public static readonly SolidColorBrush DarkGrayBrush = new SolidColorBrush(Colors.DarkGray);
+        public static SolidColorBrush DarkGrayBrush
+        {
+            get
+            {
+                if (_darkGrayBrush == null)
+                    _darkGrayBrush = new SolidColorBrush(Colors.DarkGray);
+                return _darkGrayBrush;
+            }
+        }
 
         /// <summary>
         /// 灰色
         /// </summary>
-        public static readonly SolidColorBrush GrayBrush = new SolidColorBrush(Colors.Gray);
+        public static SolidColorBrush GrayBrush
+        {
+            get
+            {
+                if (_grayBrush == null)
+                    _grayBrush = new SolidColorBrush(Colors.Gray);
+                return _grayBrush;
+            }
+        }
 
         /// <summary>
         /// 绿色
         /// </summary>
-        public static readonly SolidColorBrush GreenBrush = new SolidColorBrush(Colors.Green);
+        public static SolidColorBrush GreenBrush
+        {
+            get
+            {
+                if (_greenBrush == null)
+                    _greenBrush = new SolidColorBrush(Colors.Green);
+                return _greenBrush;
+            }
+        }
 
         /// <summary>
         /// 浅灰
         /// </summary>
-        public static readonly SolidColorBrush LightGrayBrush = new SolidColorBrush(Colors.LightGray);
+        public static SolidColorBrush LightGrayBrush
+        {
+            get
+            {
+                if (_lightGrayBrush == null)
+                    _lightGrayBrush = new SolidColorBrush(Colors.LightGray);
+                return _lightGrayBrush;
+            }
+        }
 
         /// <summary>
         /// 品红
         /// </summary>
-        public static readonly SolidColorBrush MagentaBrush = new SolidColorBrush(Colors.Magenta);
+        public static SolidColorBrush MagentaBrush
+        {
+            get
+            {
+                if (_magentaBrush == null)
+                    _magentaBrush = new SolidColorBrush(Colors.Magenta);
+                return _magentaBrush;
+            }
+        }
 
         /// <summary>
         /// 桔色
         /// </summary>
-        public static readonly SolidColorBrush OrangeBrush = new SolidColorBrush(Colors.Orange);
+        public static SolidColorBrush OrangeBrush
+        {
+            get
+            {
+                if (_orangeBrush == null)
+                    _orangeBrush = new SolidColorBrush(Colors.Orange);
+                return _orangeBrush;
+            }
+        }
 
         /// <summary>
         /// 紫色
         /// </summary>
-        public static readonly SolidColorBrush PurpleBrush = new SolidColorBrush(Colors.Purple);
+        public static SolidColorBrush PurpleBrush
+        {
+            get
+            {
+                if (_purpleBrush == null)
+                    _purpleBrush = new SolidColorBrush(Colors.Purple);
+                return _purpleBrush;
+            }
+        }
 
         /// <summary>
         /// 红色
         /// </summary>
-        public static readonly SolidColorBrush RedBrush = new SolidColorBrush(Colors.Red);
+        public static SolidColorBrush RedBrush
+        {
+            get
+            {
+                if (_redBrush == null)
+                    _redBrush = new SolidColorBrush(Colors.Red);
+                return _redBrush;
+            }
+        }
 
         /// <summary>
         /// 白色
         /// </summary>
-        public static readonly SolidColorBrush WhiteBrush = new SolidColorBrush(Colors.White);
+        public static SolidColorBrush WhiteBrush
+        {
+            get
+            {
+                if (_whiteBrush == null)
+                    _whiteBrush = new SolidColorBrush(Colors.White);
+                return _whiteBrush;
+            }
+        }
 
         /// <summary>
         /// 黄色
         /// </summary>
-        public static readonly SolidColorBrush YellowBrush = new SolidColorBrush(Colors.Yellow);
+        public static SolidColorBrush YellowBrush
+        {
+            get
+            {
+                if (_yellowBrush == null)
+                    _yellowBrush = new SolidColorBrush(Colors.Yellow);
+                return _yellowBrush;
+            }
+        }
 
         /// <summary>
         /// 根据标准颜色的名称获取画刷
@@ -153,87 +289,87 @@ namespace Dt.Base
         #endregion
 
         #region 系统画刷
-        public static readonly SolidColorBrush 主题蓝色 = (SolidColorBrush)_dict["主题蓝色"];
-        public static readonly SolidColorBrush 默认背景 = (SolidColorBrush)_dict["默认背景"];
-        public static readonly SolidColorBrush 默认前景 = (SolidColorBrush)_dict["默认前景"];
-        public static readonly SolidColorBrush 暗遮罩 = (SolidColorBrush)_dict["暗遮罩"];
-        public static readonly SolidColorBrush 深暗遮罩 = (SolidColorBrush)_dict["深暗遮罩"];
-        public static readonly SolidColorBrush 亮遮罩 = (SolidColorBrush)_dict["亮遮罩"];
-        public static readonly SolidColorBrush 深亮遮罩 = (SolidColorBrush)_dict["深亮遮罩"];
-        public static readonly SolidColorBrush 黄遮罩 = (SolidColorBrush)_dict["黄遮罩"];
-        public static readonly SolidColorBrush 深黄遮罩 = (SolidColorBrush)_dict["深黄遮罩"];
-        public static readonly SolidColorBrush 灰色背景 = (SolidColorBrush)_dict["灰色背景"];
-        public static readonly SolidColorBrush 灰色边框 = (SolidColorBrush)_dict["灰色边框"];
-        public static readonly SolidColorBrush 浅灰背景 = (SolidColorBrush)_dict["浅灰背景"];
-        public static readonly SolidColorBrush 浅灰边框 = (SolidColorBrush)_dict["浅灰边框"];
-        public static readonly SolidColorBrush 深灰背景 = (SolidColorBrush)_dict["深灰背景"];
-        public static readonly SolidColorBrush 深灰边框 = (SolidColorBrush)_dict["深灰边框"];
-        public static readonly SolidColorBrush 黄色背景 = (SolidColorBrush)_dict["黄色背景"];
-        public static readonly SolidColorBrush 浅黄背景 = (SolidColorBrush)_dict["浅黄背景"];
-        public static readonly SolidColorBrush 绿色背景 = (SolidColorBrush)_dict["绿色背景"];
-        public static readonly SolidColorBrush 浅绿背景 = (SolidColorBrush)_dict["浅绿背景"];
-        public static readonly SolidColorBrush 浅湖蓝背景 = (SolidColorBrush)_dict["浅湖蓝背景"];
-        public static readonly SolidColorBrush 淡蓝背景 = (SolidColorBrush)_dict["淡蓝背景"];
-        public static readonly SolidColorBrush 深蓝背景 = (SolidColorBrush)_dict["深蓝背景"];
-        public static readonly SolidColorBrush 醒目蓝色 = (SolidColorBrush)_dict["醒目蓝色"];
-        public static readonly SolidColorBrush 醒目红色 = (SolidColorBrush)_dict["醒目红色"];
+        public static SolidColorBrush 主题蓝色 => (SolidColorBrush)_dict["主题蓝色"];
+        public static SolidColorBrush 默认背景 => (SolidColorBrush)_dict["默认背景"];
+        public static SolidColorBrush 默认前景 => (SolidColorBrush)_dict["默认前景"];
+        public static SolidColorBrush 暗遮罩 => (SolidColorBrush)_dict["暗遮罩"];
+        public static SolidColorBrush 深暗遮罩 => (SolidColorBrush)_dict["深暗遮罩"];
+        public static SolidColorBrush 亮遮罩 => (SolidColorBrush)_dict["亮遮罩"];
+        public static SolidColorBrush 深亮遮罩 => (SolidColorBrush)_dict["深亮遮罩"];
+        public static SolidColorBrush 黄遮罩 => (SolidColorBrush)_dict["黄遮罩"];
+        public static SolidColorBrush 深黄遮罩 => (SolidColorBrush)_dict["深黄遮罩"];
+        public static SolidColorBrush 灰色背景 => (SolidColorBrush)_dict["灰色背景"];
+        public static SolidColorBrush 灰色边框 => (SolidColorBrush)_dict["灰色边框"];
+        public static SolidColorBrush 浅灰背景 => (SolidColorBrush)_dict["浅灰背景"];
+        public static SolidColorBrush 浅灰边框 => (SolidColorBrush)_dict["浅灰边框"];
+        public static SolidColorBrush 深灰背景 => (SolidColorBrush)_dict["深灰背景"];
+        public static SolidColorBrush 深灰边框 => (SolidColorBrush)_dict["深灰边框"];
+        public static SolidColorBrush 黄色背景 => (SolidColorBrush)_dict["黄色背景"];
+        public static SolidColorBrush 浅黄背景 => (SolidColorBrush)_dict["浅黄背景"];
+        public static SolidColorBrush 绿色背景 => (SolidColorBrush)_dict["绿色背景"];
+        public static SolidColorBrush 浅绿背景 => (SolidColorBrush)_dict["浅绿背景"];
+        public static SolidColorBrush 浅湖蓝背景 => (SolidColorBrush)_dict["浅湖蓝背景"];
+        public static SolidColorBrush 淡蓝背景 => (SolidColorBrush)_dict["淡蓝背景"];
+        public static SolidColorBrush 深蓝背景 => (SolidColorBrush)_dict["深蓝背景"];
+        public static SolidColorBrush 醒目蓝色 => (SolidColorBrush)_dict["醒目蓝色"];
+        public static SolidColorBrush 醒目红色 => (SolidColorBrush)_dict["醒目红色"];
         #endregion
 
         #region 系统资源
         /// <summary>
         /// 字符按钮样式
         /// </summary>
-        public static readonly Style 字符按钮 = (Style)_dict["字符按钮"];
+        public static Style 字符按钮 => (Style)_dict["字符按钮"];
 
         /// <summary>
         /// 浅色按钮样式
         /// </summary>
-        public static readonly Style 浅色按钮 = (Style)_dict["浅色按钮"];
+        public static Style 浅色按钮 => (Style)_dict["浅色按钮"];
 
         /// <summary>
         /// Phone模式的搜索栏按钮
         /// </summary>
-        public static readonly Style PhonSearchButton = (Style)_dict["PhonSearchButton"];
+        public static Style PhonSearchButton => (Style)_dict["PhonSearchButton"];
 
         /// <summary>
         /// 默认字体大小
         /// </summary>
-        public static readonly double DefaultFontSize = (double)_dict["ControlContentThemeFontSize"];
+        public static double DefaultFontSize => (double)_dict["ControlContentThemeFontSize"];
 
         /// <summary>
         /// 图标字体
         /// </summary>
-        public static readonly FontFamily IconFont = (FontFamily)_dict["IconFont"];
+        public static FontFamily IconFont => (FontFamily)_dict["IconFont"];
 
         /// <summary>
         /// 标题样式
         /// </summary>
-        public static readonly Style 标题 = (Style)_dict["标题"];
+        public static Style 标题 => (Style)_dict["标题"];
 
         /// <summary>
         /// 小字样式
         /// </summary>
-        public static readonly Style 小字 = (Style)_dict["小字"];
+        public static Style 小字 => (Style)_dict["小字"];
 
         /// <summary>
         /// 字符文本样式
         /// </summary>
-        public static readonly Style 字符 = (Style)_dict["字符"];
+        public static Style 字符 => (Style)_dict["字符"];
 
         /// <summary>
         /// Lv中默认文本
         /// </summary>
-        public static readonly Style LvTextBlock = (Style)_dict["LvTextBlock"];
+        public static Style LvTextBlock => (Style)_dict["LvTextBlock"];
 
         /// <summary>
         /// 默认行外高，含边框1
         /// </summary>
-        public static double RowOuterHeight = (double)_dict["RowOuterHeight"];
+        public static double RowOuterHeight => (double)_dict["RowOuterHeight"];
 
         /// <summary>
         /// 默认行内容高度
         /// </summary>
-        public static double RowInnerHeight = (double)_dict["RowInnerHeight"];
+        public static double RowInnerHeight => (double)_dict["RowInnerHeight"];
         #endregion
 
         #region 动画
@@ -607,22 +743,22 @@ namespace Dt.Base
         /// <summary>
         /// FileItem默认模板
         /// </summary>
-        internal static readonly ControlTemplate VirFileTemplate = (ControlTemplate)_dict["VirFileTemplate"];
+        internal static ControlTemplate VirFileTemplate => (ControlTemplate)_dict["VirFileTemplate"];
 
         /// <summary>
         /// FileItem图片模板
         /// </summary>
-        internal static readonly ControlTemplate VirImageTemplate = (ControlTemplate)_dict["VirImageTemplate"];
+        internal static ControlTemplate VirImageTemplate => (ControlTemplate)_dict["VirImageTemplate"];
 
         /// <summary>
         /// FileItem音频模板
         /// </summary>
-        internal static readonly ControlTemplate VirSoundTemplate = (ControlTemplate)_dict["VirSoundTemplate"];
+        internal static ControlTemplate VirSoundTemplate => (ControlTemplate)_dict["VirSoundTemplate"];
 
         /// <summary>
         /// FileItem视频模板
         /// </summary>
-        internal static readonly ControlTemplate VirVideoTemplate = (ControlTemplate)_dict["VirVideoTemplate"];
+        internal static ControlTemplate VirVideoTemplate => (ControlTemplate)_dict["VirVideoTemplate"];
         #endregion
 
         #region 颜色

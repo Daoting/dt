@@ -44,6 +44,11 @@ namespace Dt.Base
         internal IPhonePage OwnerWin { get; set; }
 
         /// <summary>
+        /// 导航时的标识，所有Tab标题逗号隔开
+        /// </summary>
+        internal string NaviID { get; set; }
+
+        /// <summary>
         /// 添加标签
         /// </summary>
         /// <param name="p_tab"></param>

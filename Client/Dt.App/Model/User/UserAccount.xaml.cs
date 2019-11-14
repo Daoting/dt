@@ -41,5 +41,15 @@ namespace Dt.App.Model
         {
             
         }
+
+        void OnNaviToSearch(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            NaviTo("查找用户");
+        }
+
+        void OnSearch(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            NaviTo("用户列表");
+        }
     }
 }

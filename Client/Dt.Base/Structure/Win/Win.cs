@@ -317,6 +317,8 @@ namespace Dt.Base
 
         #region PhoneUI
         Dictionary<string, Tab> _tabs;
+        // 主页在Frame中的索引
+        int _frameStartIndex;
 
         /// <summary>
         /// 导航到指定页，支持多页Tab形式
@@ -327,29 +329,110 @@ namespace Dt.Base
             if (!AtSys.IsPhoneUI || string.IsNullOrEmpty(p_tabTitle))
                 return;
 
-            // 导航到单页
-            Tab tab;
+            // 导航到单页或多页Tab
             if (!p_tabTitle.Contains(','))
+                NaviToSingleTab(p_tabTitle);
+            else
+                NaviToMultiTabs(p_tabTitle);
+        }
+
+        /// <summary>
+        /// 导航到单页Tab
+        /// </summary>
+        /// <param name="p_tabTitle"></param>
+        void NaviToSingleTab(string p_tabTitle)
+        {
+            Tab tab;
+            if (!_tabs.TryGetValue(p_tabTitle, out tab))
+                throw new Exception($"导航出错，缺少{p_tabTitle}Tab页！");
+
+            // 判断是否为向后导航
+            if (AtApp.Frame.BackStackDepth > _frameStartIndex)
             {
-                if (_tabs.TryGetValue(p_tabTitle, out tab))
+                // 向后查询
+                int index = -1;
+                for (int i = AtApp.Frame.BackStackDepth - 1; i >= _frameStartIndex; i--)
                 {
-                    if (AtApp.Frame.Content == null)
-                        tab.PinButtonVisibility = Visibility.Collapsed;
-                    PhonePage.Show(tab);
+                    var pageEntry = AtApp.Frame.BackStack[i];
+                    if (pageEntry.Parameter is PhonePage.PageParameter param
+                        && param.Content == tab)
+                    {
+                        // 后退位置
+                        index = i;
+                        break;
+                    }
                 }
-                return;
+
+                if (index > 0)
+                {
+                    // 向后导航
+                    for (int i = AtApp.Frame.BackStackDepth - 1; i >= index; i--)
+                    {
+                        if (AtApp.Frame.CanGoBack)
+                            AtApp.Frame.GoBack();
+                    }
+                    return;
+                }
             }
 
-            // 导航到多页Tab
+            // 起始页隐藏返回按钮
+            if (AtApp.Frame.Content == null)
+                tab.PinButtonVisibility = Visibility.Collapsed;
+
+            // 向前导航
+            PhonePage.Show(tab);
+        }
+
+        /// <summary>
+        /// 导航到多页Tab
+        /// </summary>
+        /// <param name="p_tabTitle"></param>
+        void NaviToMultiTabs(string p_tabTitle)
+        {
+            // 判断是否为向后导航
+            if (AtApp.Frame.BackStackDepth > _frameStartIndex)
+            {
+                // 向后查询
+                int index = -1;
+                for (int i = AtApp.Frame.BackStackDepth - 1; i >= _frameStartIndex; i--)
+                {
+                    var pageEntry = AtApp.Frame.BackStack[i];
+                    if (pageEntry.Parameter is PhonePage.PageParameter param
+                        && param.Content is PhoneTabs pts
+                        && pts.NaviID == p_tabTitle)
+                    {
+                        // 后退位置
+                        index = i;
+                        break;
+                    }
+                }
+
+                if (index > 0)
+                {
+                    // 向后导航
+                    for (int i = AtApp.Frame.BackStackDepth - 1; i >= index; i--)
+                    {
+                        if (AtApp.Frame.CanGoBack)
+                            AtApp.Frame.GoBack();
+                    }
+                    return;
+                }
+            }
+
+            // 向前导航
             string[] names = p_tabTitle.Split(',');
             PhoneTabs tabs = new PhoneTabs();
+            tabs.NaviID = p_tabTitle;
             if (p_tabTitle == Home)
                 tabs.OwnerWin = this;
+            Tab tab;
             foreach (var name in names)
             {
-                if (_tabs.TryGetValue(name, out tab))
-                    tabs.AddItem(tab);
+                if (!_tabs.TryGetValue(name, out tab))
+                    throw new Exception($"导航出错，缺少{name}Tab页！");
+                tabs.AddItem(tab);
             }
+            // 起始页隐藏返回按钮
             if (AtApp.Frame.Content == null)
                 tabs.HideBackButton();
             tabs.SelectFirstItem();
@@ -399,6 +482,8 @@ namespace Dt.Base
                 _tabs = new Dictionary<string, Tab>(StringComparer.OrdinalIgnoreCase);
                 ExtractItems(this);
             }
+            // 记录起始索引
+            _frameStartIndex = AtApp.Frame.BackStackDepth;
             NaviTo(Home);
         }
 

@@ -50,7 +50,12 @@
         </a:Tabs>
         <a:Tabs InitHeight="300">
             <a:Tab Title="Win属性说明"/>
-            <a:Tab Title="Tabs属性说明"/>
+            <a:Tab Title="Tabs属性说明">
+                <StackPanel Margin="10">
+                    <TextBlock Text="向后导航" />
+                    <Button Content="属性,解决方案" Click="OnNavi" />
+                </StackPanel>
+            </a:Tab>
         </a:Tabs>
     </a:WinItem>
     <a:WinItem InitWidth="300" DockState="DockedRight">
@@ -67,7 +72,12 @@
                     <Button Content="错误列表" Click="OnNavi" />
                 </StackPanel>
             </a:Tab>
-            <a:Tab Title="资源管理器"/>
+            <a:Tab Title="资源管理器">
+                <StackPanel Margin="10">
+                    <TextBlock Text="向后导航" />
+                    <Button Content="业务表单" Click="OnNavi" />
+                </StackPanel>
+            </a:Tab>
             <a:Tab Title="属性">
                 <Button Content="输出" Click="OnNavi" />
             </a:Tab>
@@ -77,7 +87,12 @@
     </a:WinItem>
     <a:WinItem InitHeight="200" DockState="DockedBottom">
         <a:Tabs>
-            <a:Tab Title="输出"/>
+            <a:Tab Title="输出">
+                <StackPanel Margin="10">
+                    <TextBlock Text="导航" />
+                    <Button Content="Tabs属性说明" Click="OnNavi" />
+                </StackPanel>
+            </a:Tab>
         </a:Tabs>
     </a:WinItem>
     <a:WinItem DockState="Floating" FloatPos="Center" FloatSize="200, 200">
