@@ -226,7 +226,7 @@ namespace Dt.App.Model
         {
             SelectRolesDlg dlg = new SelectRolesDlg();
             long menuID = _fv.Row.ID;
-            if (await dlg.ShowDlg(RoleRelations.Menu, menuID, e))
+            if (await dlg.Show(RoleRelations.Menu, menuID, e))
             {
                 Table tbl = _daRole.NewTable();
                 foreach (var row in dlg.SelectedItems.OfType<Row>())

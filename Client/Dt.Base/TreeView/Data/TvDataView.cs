@@ -50,7 +50,17 @@ namespace Dt.Base.TreeView
             {
                 // 固定根节点
                 TvItem fixedItem = new TvItem(_owner, _owner.FixedRoot, null);
-                BuildChildren(fixedItem);
+                foreach (var item in rootData)
+                {
+                    TvItem ti = new TvItem(_owner, item, fixedItem);
+                    BuildChildren(ti);
+                    fixedItem.Children.Add(ti);
+                }
+                // 根节点状态
+                if (fixedItem.Children.Count > 0 || _owner.IsDynamicLoading)
+                    fixedItem.ExpandedState = TvItemExpandedState.NotExpanded;
+                else
+                    fixedItem.ExpandedState = TvItemExpandedState.Hide;
                 rootItems.Add(fixedItem);
             }
             else

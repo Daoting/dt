@@ -8,7 +8,6 @@
 
 #region 引用命名
 using Dapper;
-using Dt.Core.Domain;
 using MySql.Data.MySqlClient;
 using Serilog;
 using System;
@@ -111,7 +110,7 @@ namespace Dt.Core
                             if (reader.IsDBNull(i))
                                 new Cell(row, col.ColumnName, col.DataType);
                             else
-                                new Cell(col.ColumnName, reader.GetValue(i), row);
+                                new Cell(row, col.ColumnName, col.DataType, reader.GetValue(i));
                         }
                         tbl.Add(row);
                     }
@@ -293,7 +292,7 @@ namespace Dt.Core
                             if (reader.IsDBNull(i))
                                 new Cell(row, col.ColumnName, col.DataType);
                             else
-                                new Cell(col.ColumnName, reader.GetValue(i), row);
+                                new Cell(row, col.ColumnName, col.DataType, reader.GetValue(i));
                         }
                         yield return row;
                     }

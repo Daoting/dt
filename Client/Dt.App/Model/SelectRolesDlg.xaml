@@ -11,7 +11,7 @@
         </a:Menu>
     </a:Dlg.Menu>
 
-    <a:Lv x:Name="_lv" GroupName="groupname" SelectionMode="Multiple">
+    <a:Lv x:Name="_lv" SelectionMode="Multiple">
         <DataTemplate>
             <a:Dot ID="name" Margin="10,0,10,0" />
         </DataTemplate>

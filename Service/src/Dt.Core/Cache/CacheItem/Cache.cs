@@ -7,7 +7,6 @@
 #endregion
 
 #region 引用命名
-using System.Reflection;
 using System.Threading.Tasks;
 #endregion
 
@@ -56,6 +55,16 @@ namespace Dt.Core.Caches
         public static Task Remove(TCacheItem p_entity)
         {
             return _cacheHandler.Remove(p_entity);
+        }
+
+        /// <summary>
+        /// 删除缓存项
+        /// </summary>
+        /// <param name="p_id">缓存项主键值</param>
+        /// <returns></returns>
+        public static Task Remove(string p_id)
+        {
+            return _cacheHandler.RemoveByID(p_id);
         }
     }
 }

@@ -191,6 +191,35 @@ namespace Dt.Core.Caches
             return _db.Value.ScriptEvaluateAsync(_sha1LuaDel, ls.ToArray());
         }
 
+        public async Task RemoveByID(string p_id)
+        {
+            // 只删除主键
+            string priKey = $"{_primaryItem.KeyPrefix}:{p_id}";
+            if (_cacheItems == null)
+            {
+                await _db.Value.KeyDeleteAsync(priKey);
+                return;
+            }
+
+            // 删除多键
+            var val = await _db.Value.StringGetAsync(priKey);
+            if (!val.HasValue)
+                return;
+
+            object entity = JsonConvert.DeserializeObject(val, _type);
+            List<RedisKey> ls = new List<RedisKey>();
+            ls.Add(priKey);
+            foreach (var item in _cacheItems.Values)
+            {
+                var propVal = item.PropInfo.GetValue(entity);
+                if (propVal != null)
+                    ls.Add($"{item.KeyPrefix}:{propVal}");
+            }
+
+            // lua脚本：批量删除
+            await _db.Value.ScriptEvaluateAsync(_sha1LuaDel, ls.ToArray());
+        }
+
         class CacheDesc
         {
             public readonly string KeyPrefix;

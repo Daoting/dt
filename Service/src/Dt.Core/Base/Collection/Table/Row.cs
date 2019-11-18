@@ -223,28 +223,23 @@ namespace Dt.Core
         {
             if (Contains(p_cellName))
                 throw new Exception($"已包含{p_cellName}列！");
-            if (p_value != default)
-                new Cell(p_cellName, p_value, this);
-            else
-                new Cell(this, p_cellName, typeof(T));
+            new Cell(this, p_cellName, typeof(T), p_value);
         }
 
         /// <summary>
         /// 深度复制行对象，返回独立行，未设置IsAdded标志！
         /// </summary>
-        /// <param name="p_acceptChange">提交修改标志，默认true, 即复制后AcceptChanges()</param>
         /// <returns>返回独立行</returns>
-        public Row Clone(bool p_acceptChange = true)
+        public Row Clone()
         {
             // 当前可能为Row的派生类
             Row row = (Row)Activator.CreateInstance(GetType());
             foreach (var item in _cells)
             {
-                var cell = new Cell(row, item.ID, item.Type);
-                if (p_acceptChange)
-                    cell.InitVal(item.Val);
+                if (item.IsChanged)
+                    new Cell(row, item.ID, item.Type, item.OriginalVal).Val = item.Val;
                 else
-                    cell.Val = item.Val;
+                    new Cell(row, item.ID, item.Type, item.OriginalVal);
             }
             return row;
         }
@@ -659,8 +654,34 @@ namespace Dt.Core
                 {
                     string id = p_reader.Value.ToString();
                     p_reader.Read();
-                    object val = JsonRpcSerializer.Deserialize(p_reader);
-                    new Cell(id, val, this);
+                    if (p_reader.TokenType == JsonToken.StartArray)
+                    {
+                        // 数组内容： ["当前值", "类型", "原始值"] 或 ["当前值", "类型"]
+                        p_reader.Read();
+                        // 当前值
+                        object val = p_reader.Value;
+                        p_reader.Read();
+                        // 类型
+                        Type type = Table.GetColType(p_reader.Value.ToString());
+                        p_reader.Read();
+                        if (p_reader.TokenType == JsonToken.EndArray)
+                        {
+                            // 非string类型，值无变化 ["当前值", "类型"]
+                            new Cell(this, id, type, val);
+                        }
+                        else
+                        {
+                            // 值变化时传递完整信息 ["当前值", "类型", "原始值"]
+                            new Cell(this, id, type, p_reader.Value).Val = val;
+                            // ]
+                            p_reader.Read();
+                        }
+                    }
+                    else
+                    {
+                        // string类型，值无变化
+                        new Cell(this, id, typeof(string), p_reader.Value);
+                    }
                 }
                 // 最外层 ]
                 p_reader.Read();
@@ -686,18 +707,27 @@ namespace Dt.Core
             foreach (var cell in _cells)
             {
                 p_writer.WritePropertyName(cell.ID);
-                if (cell.Val != null)
+                if (cell.IsChanged)
                 {
-                    if (cell.Type == typeof(DateTime))
-                        p_writer.WriteValue(((DateTime)cell.Val).ToString("yyyy-MM-ddTHH:mm:ss.ffffff"));
-                    else if (cell.Type == typeof(byte[]))
-                        p_writer.WriteValue(Convert.ToBase64String((byte[])cell.Val));
-                    else
-                        p_writer.WriteValue(cell.Val);
+                    // 值变化时传递完整信息 ["当前值", "类型", "原始值"]
+                    p_writer.WriteStartArray();
+                    p_writer.WriteValue(cell.Val);
+                    p_writer.WriteValue(Table.GetColTypeAlias(cell.Type));
+                    p_writer.WriteValue(cell.OriginalVal);
+                    p_writer.WriteEndArray();
+                }
+                else if (cell.Type == typeof(string))
+                {
+                    // string类型，值无变化
+                    p_writer.WriteValue(cell.Val);
                 }
                 else
                 {
-                    p_writer.WriteNull();
+                    // 非string类型，值无变化
+                    p_writer.WriteStartArray();
+                    p_writer.WriteValue(cell.Val);
+                    p_writer.WriteValue(Table.GetColTypeAlias(cell.Type));
+                    p_writer.WriteEndArray();
                 }
             }
             p_writer.WriteEndObject();

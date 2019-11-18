@@ -9,6 +9,7 @@
 #region 引用命名
 using Dt.Core;
 using Dt.Core.Rpc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 #endregion
 
@@ -76,6 +77,112 @@ namespace Dt.App
                 "Entry.CreateVerificationCode",
                 p_phone
             ).Call<string>();
+        }
+        #endregion
+
+        #region UserRoleApi
+        /// <summary>
+        /// 新增或修改用户信息
+        /// </summary>
+        /// <param name="p_row"></param>
+        /// <returns></returns>
+        public static Task<bool> SaveUser(Row p_row)
+        {
+            return new UnaryRpc(
+                "cm",
+                "UserRoleApi.SaveUser",
+                p_row
+            ).Call<bool>();
+        }
+
+        /// <summary>
+        /// 删除用户
+        /// </summary>
+        /// <param name="p_id"></param>
+        /// <returns></returns>
+        public static Task<bool> DeleteUser(long p_id)
+        {
+            return new UnaryRpc(
+                "cm",
+                "UserRoleApi.DeleteUser",
+                p_id
+            ).Call<bool>();
+        }
+
+        /// <summary>
+        /// 重置用户密码
+        /// </summary>
+        /// <param name="p_id"></param>
+        /// <returns></returns>
+        public static Task<bool> ResetUserPwd(long p_id)
+        {
+            return new UnaryRpc(
+                "cm",
+                "UserRoleApi.ResetUserPwd",
+                p_id
+            ).Call<bool>();
+        }
+
+        /// <summary>
+        /// 切换停用/启用状态
+        /// </summary>
+        /// <param name="p_id"></param>
+        /// <returns></returns>
+        public static Task<bool> ToggleUserExpired(long p_id)
+        {
+            return new UnaryRpc(
+                "cm",
+                "UserRoleApi.ToggleUserExpired",
+                p_id
+            ).Call<bool>();
+        }
+
+        /// <summary>
+        /// 删除用户角色的关联
+        /// </summary>
+        /// <param name="p_userID"></param>
+        /// <param name="p_roleID"></param>
+        /// <returns></returns>
+        public static Task<bool> RemoveUserRole(long p_userID, long p_roleID)
+        {
+            return new UnaryRpc(
+                "cm",
+                "UserRoleApi.RemoveUserRole",
+                p_userID,
+                p_roleID
+            ).Call<bool>();
+        }
+
+        /// <summary>
+        /// 批量增加用户关联的角色
+        /// </summary>
+        /// <param name="p_userID"></param>
+        /// <param name="p_roleIDs"></param>
+        /// <returns></returns>
+        public static Task<bool> AddUserRole(long p_userID, List<long> p_roleIDs)
+        {
+            return new UnaryRpc(
+                "cm",
+                "UserRoleApi.AddUserRole",
+                p_userID,
+                p_roleIDs
+            ).Call<bool>();
+        }
+
+        /// <summary>
+        /// 批量增加角色关联的用户
+        /// </summary>
+        /// <param name="p_roleID"></param>
+        /// <param name="p_userIDs"></param>
+        /// <returns></returns>
+        public static Task<bool> AddRoleUser(long p_roleID, List<long> p_userIDs)
+        {
+            return new UnaryRpc(
+                "cm",
+                "UserRoleApi.AddRoleUser",
+                p_roleID,
+                p_userIDs
+            ).Call<bool>();
         }
         #endregion
     }

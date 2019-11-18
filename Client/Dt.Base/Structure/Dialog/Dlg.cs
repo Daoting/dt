@@ -599,6 +599,14 @@ namespace Dt.Base
         async void RemoveFromCanvas(bool p_ok = false)
         {
             // 关闭前
+            if (Closing != null)
+            {
+                var args = new AsyncCancelEventArgs();
+                Closing(this, args);
+                await args.EnsureAllCompleted();
+                if (args.Cancel)
+                    return;
+            }
             if (!await OnClosing())
                 return;
 
@@ -613,6 +621,7 @@ namespace Dt.Base
 
             // 关闭后
             Closed?.Invoke(this, EventArgs.Empty);
+            OnClosed();
 
             // 遗漏的外框
             if (_bdResize != null)
@@ -674,24 +683,16 @@ namespace Dt.Base
         /// 关闭或后退之前，返回false表示禁止关闭
         /// </summary>
         /// <returns>true 表允许关闭</returns>
-        async Task<bool> OnClosing()
+        protected virtual Task<bool> OnClosing()
         {
-            if (Closing != null)
-            {
-                var args = new AsyncCancelEventArgs();
-                Closing(this, args);
-                await args.EnsureAllCompleted();
-                return !args.Cancel;
-            }
-            return true;
+            return Task.FromResult(true);
         }
 
         /// <summary>
         /// 关闭或后退之后
         /// </summary>
-        void OnClosed()
+        protected virtual void OnClosed()
         {
-            Closed?.Invoke(this, EventArgs.Empty);
         }
         #endregion
 

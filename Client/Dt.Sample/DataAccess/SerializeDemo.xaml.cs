@@ -687,9 +687,10 @@ namespace Dt.Sample
 
         public static Table CreateTable()
         {
-            Table tbl = new Table { { "col1" }, { "col2" } };
-            tbl.AddRow(new { col1 = "列值11", col2 = "列值12" });
-            tbl.AddRow(new { col1 = "列值21", col2 = "列值22" });
+            Table tbl = new Table { { "col1" }, { "col2", typeof(DateTime) }, { "col3", typeof(byte[]) } };
+            tbl.AddRow(new { col1 = "原始值", col2 = DateTime.Now, col3 = new byte[] { 10, 20, 30, 40 } });
+            tbl.AddRow(new { col1 = "列值21", col2 = DateTime.Now });
+            tbl[0]["col1"] = "当前值";
             return tbl;
         }
     }

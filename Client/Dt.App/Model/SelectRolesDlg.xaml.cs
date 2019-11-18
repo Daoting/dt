@@ -33,7 +33,7 @@ namespace Dt.App.Model
             get { return _lv.SelectedItems; }
         }
 
-        public async Task<bool> ShowDlg(RoleRelations p_relation, long p_tgtID, FrameworkElement p_target)
+        public async Task<bool> Show(RoleRelations p_relation, long p_tgtID, FrameworkElement p_target)
         {
             switch (p_relation)
             {

@@ -200,45 +200,12 @@ namespace Dt.Core
                             break;
                         }
                     }
-
-                    if (val != null)
-                    {
-                        // 类型相同
-                        if (val.GetType() == col.Type)
-                        {
-                            new Cell(col.ID, val, row);
-                            continue;
-                        }
-
-                        // 类型不同
-                        if (col.Type.IsGenericType && col.Type.GetGenericTypeDefinition() == typeof(Nullable<>))
-                        {
-                            // 可空类型
-                            Type tp = col.Type.GetGenericArguments()[0];
-                            try
-                            {
-                                if (tp != val.GetType())
-                                    val = Convert.ChangeType(val, tp);
-                                new Cell(col.ID, val, row);
-                                continue;
-                            }
-                            catch { }
-                        }
-                        else if (val is IConvertible)
-                        {
-                            // 类型不同先转换，转换失败不赋值
-                            try
-                            {
-                                var obj = Convert.ChangeType(val, col.Type);
-                                new Cell(col.ID, obj, row);
-                                continue;
-                            }
-                            catch { }
-                        }
-                    }
+                    new Cell(row, col.ID, col.Type, val);
                 }
-
-                new Cell(row, col.ID, col.Type);
+                else
+                {
+                    new Cell(row, col.ID, col.Type);
+                }
             }
             return row;
         }
@@ -586,8 +553,22 @@ namespace Dt.Core
 
                     if (index < colCnt)
                     {
-                        // 不会引起连续IsChanged改变
-                        row.Cells[index].InitVal(p_reader.Value);
+                        // 值变化时两值 [原始值,当前值]
+                        if (p_reader.TokenType == JsonToken.StartArray)
+                        {
+                            // 两值 [
+                            p_reader.Read();
+                            row.Cells[index].OriginalVal = p_reader.Value;
+                            p_reader.Read();
+                            row.Cells[index].Val = p_reader.Value;
+                            // 两值 ]
+                            p_reader.Read();
+                        }
+                        else
+                        {
+                            // 不会引起连续IsChanged改变
+                            row.Cells[index].InitVal(p_reader.Value);
+                        }
                     }
                     else
                     {
@@ -660,21 +641,20 @@ namespace Dt.Core
             p_writer.WriteStartArray();
             foreach (var cell in p_dataRow.Cells)
             {
-                if (cell.Val != null)
+                if (cell.IsChanged)
                 {
-                    if (cell.Type == typeof(DateTime))
-                        p_writer.WriteValue(((DateTime)cell.Val).ToString("yyyy-MM-ddTHH:mm:ss.ffffff"));
-                    else if (cell.Type == typeof(byte[]))
-                        p_writer.WriteValue(Convert.ToBase64String((byte[])cell.Val));
-                    else
-                        p_writer.WriteValue(cell.Val);
+                    // 值变化时传递两值数组 [原始值,当前值]
+                    p_writer.WriteStartArray();
+                    p_writer.WriteValue(cell.OriginalVal);
+                    p_writer.WriteValue(cell.Val);
+                    p_writer.WriteEndArray();
                 }
                 else
                 {
-                    p_writer.WriteNull();
+                    p_writer.WriteValue(cell.Val);
                 }
             }
-            // 行状态
+            // 行状态，多出的列
             if (p_dataRow.IsAdded)
                 p_writer.WriteValue("Added");
             else if (p_dataRow.IsChanged)

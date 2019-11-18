@@ -49,14 +49,8 @@ namespace Dt.Core.Domain
                 return true;
             }
 
-            // 两个临时对象(默认主键)不相同
-            var other = (Entity<TKey>)obj;
-            if (EntityHelper.HasDefaultId(this) && EntityHelper.HasDefaultId(other))
-            {
-                return false;
-            }
-
             // 类型不同且无继承关系的不相同
+            var other = (Entity<TKey>)obj;
             var typeOfThis = GetType();
             var typeOfOther = other.GetType();
             if (!typeOfThis.IsAssignableFrom(typeOfOther) && !typeOfOther.IsAssignableFrom(typeOfThis))

@@ -105,13 +105,7 @@ namespace Dt.Cm
             }
 
             // 初次登录，创建账号，初始密码为手机号后4位
-            User user = new User
-            {
-                Phone = p_phone,
-                Name = p_phone,
-                Pwd = Kit.GetMD5(p_phone.Substring(p_phone.Length - 4)),
-                //Pwd = Kit.GetMD5(new Random().Next(100000, 999999).ToString()),
-            };
+            User user = new User(p_phone);
             await new Repo<User>().Insert(user);
 
             res["userid"] = user.ID;

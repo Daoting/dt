@@ -20,7 +20,7 @@ namespace Dt.Core
     public partial class Cell : INotifyPropertyChanged
     {
         #region 成员变量
-        object _val = null;
+        object _val;
         bool _isChanged = false;
 
         /// <summary>
@@ -31,41 +31,18 @@ namespace Dt.Core
 
         #region 构造方法
         /// <summary>
-        /// 指定字段名和类型，只可通过Row构造
+        /// 指定字段名、类型、初始值(可选)，只可通过Row构造
         /// </summary>
         /// <param name="p_row">所属行</param>
         /// <param name="p_cellName">字段名，不可为空，作为键值</param>
         /// <param name="p_cellType">数据项值的类型</param>
-        internal Cell(Row p_row, string p_cellName, Type p_cellType)
+        /// <param name="p_value">初始值，null时取default值</param>
+        internal Cell(Row p_row, string p_cellName, Type p_cellType, object p_value = null)
         {
             Row = p_row;
             ID = p_cellName.ToLower();
             Type = p_cellType;
-            if (Type == typeof(string))
-                _val = OriginalVal = string.Empty;
-            Row.Cells.Add(this);
-        }
-
-        /// <summary>
-        /// 指定字段名和初始值
-        /// </summary>
-        /// <param name="p_cellName">字段名</param>
-        /// <param name="p_value">初始值</param>
-        /// <param name="p_row">所属行</param>
-        internal Cell(string p_cellName, object p_value, Row p_row)
-        {
-            Row = p_row;
-            ID = p_cellName.ToLower();
-            if (p_value == null)
-            {
-                Type = typeof(string);
-                _val = OriginalVal = string.Empty;
-            }
-            else
-            {
-                Type = p_value.GetType();
-                _val = OriginalVal = p_value;
-            }
+            _val = OriginalVal = GetValInternal(p_value, Type);
             Row.Cells.Add(this);
         }
         #endregion
@@ -180,7 +157,7 @@ namespace Dt.Core
         /// <returns>指定类型的值</returns>
         public T GetVal<T>()
         {
-            return GetValInternal<T>(_val);
+            return (T)GetValInternal(_val, typeof(T));
         }
 
         /// <summary>
@@ -194,7 +171,7 @@ namespace Dt.Core
         /// <returns>指定类型的值</returns>
         public T GetOriginalVal<T>()
         {
-            return GetValInternal<T>(OriginalVal);
+            return (T)GetValInternal(OriginalVal, typeof(T));
         }
 
         /// <summary>
@@ -287,6 +264,17 @@ namespace Dt.Core
                 else
                     _val = p_val;
             }
+            else if (Type == typeof(byte[]))
+            {
+                // base64 -> byte[]
+                _val = Convert.FromBase64String(p_val.ToString());
+            }
+            else if (Type == typeof(bool))
+            {
+                // bool特殊处理
+                string val = p_val.ToString().ToLower();
+                _val = (val == "1" || val == "true");
+            }
             else if (p_val is IConvertible)
             {
                 // 可转换
@@ -313,48 +301,65 @@ namespace Dt.Core
         /// <summary>
         /// 将值转换为指定类型
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="p_val"></param>
-        /// <returns></returns>
-        T GetValInternal<T>(object p_val)
+        /// <param name="p_val">值</param>
+        /// <param name="p_tgtType">目标类型</param>
+        /// <returns>转换结果</returns>
+        object GetValInternal(object p_val, Type p_tgtType)
         {
-            Type type = typeof(T);
-
             // null时
             if (p_val == null)
             {
                 // 字符串返回Empty！！！
-                if (type == typeof(string))
-                    return (T)(object)string.Empty;
+                if (p_tgtType == typeof(string))
+                    return string.Empty;
 
-                // 可空类型
-                if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
-                    return (T)(object)null;
+                // 值类型，可空类型Nullable<>也属值类型
+                if (p_tgtType.IsValueType)
+                    return Activator.CreateInstance(p_tgtType);
 
-                return default(T);
+                return null;
             }
 
             // 若指定类型和当前类型匹配
-            if (type == Type)
-                return (T)p_val;
+            if (p_tgtType == p_val.GetType())
+                return p_val;
 
-            // 可空类型
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>))
-                return (T)p_val;
-
-            // bool特殊处理1
-            if (type == typeof(bool))
+            // 枚举类型
+            if (p_tgtType.IsEnum)
             {
-                string val = p_val.ToString().ToLower();
-                bool suc = (val == "1" || val == "true");
-                return (T)(object)suc;
+                if (p_val is string str)
+                    return (str == string.Empty) ? Enum.ToObject(p_tgtType, 0) : Enum.Parse(p_tgtType, str);
+                return Enum.ToObject(p_tgtType, p_val);
             }
 
-            // 非null时执行转换
-            if (p_val is IConvertible)
-                return (T)Convert.ChangeType(p_val, type);
+            // 可空类型
+            if (p_tgtType.IsGenericType && p_tgtType.GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+                Type tp = p_tgtType.GetGenericArguments()[0];
+                // 参数类型不同时先转换
+                if (tp != p_val.GetType())
+                    return Convert.ChangeType(p_val, tp);
+                return p_val;
+            }
 
-            throw new Exception($"【{ID}】列值转换异常：无法将【{p_val}】转换到【{type.Name}】类型！");
+            if (p_tgtType == typeof(byte[]))
+            {
+                // base64 -> byte[]
+                return Convert.FromBase64String(p_val.ToString());
+            }
+
+            // bool特殊处理
+            if (p_tgtType == typeof(bool))
+            {
+                string val = p_val.ToString().ToLower();
+                return (val == "1" || val == "true");
+            }
+
+            // 执行转换
+            if (p_val is IConvertible)
+                return Convert.ChangeType(p_val, p_tgtType);
+
+            throw new Exception($"【{ID}】列值转换异常：无法将【{p_val}】转换到【{p_tgtType.Name}】类型！");
         }
         #endregion
     }
