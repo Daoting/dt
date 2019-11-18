@@ -109,83 +109,16 @@ namespace Dt.Core
         /// <returns></returns>
         public static T Deserialize<T>(JsonReader p_reader)
         {
-            object result;
-            if (p_reader.TokenType == JsonToken.StartArray)
-            {
-                string tp;
-                if (!p_reader.Read()
-                    || p_reader.TokenType != JsonToken.String
-                    || string.IsNullOrEmpty(tp = (string)p_reader.Value))
-                    throw new Exception("Json自定义数组中未包含类型名！");
-
-                // 前缀'#'表示对象
-                if (tp.StartsWith("#"))
-                {
-                    Type type = SerializeTypeAlias.GetType(tp.Substring(1));
-                    // 目标类型 T 可以为派生类
-                    if (typeof(T) != type && !typeof(T).IsSubclassOf(type))
-                        throw new Exception($"{typeof(T).Name} 类型未继承 {type.Name}！");
-
-                    // 自定义序列化
-                    if (type.GetInterface("IRpcJson") != null)
-                    {
-                        T tgt = Activator.CreateInstance<T>();
-                        ((IRpcJson)tgt).ReadRpcJson(p_reader);
-                        return tgt;
-                    }
-
-                    // 标准序列化
-                    p_reader.Read();
-                    return JsonSerializer.Create().Deserialize<T>(p_reader);
-                }
-
-                // 前缀'&'表示集合
-                if (tp.StartsWith("&"))
-                {
-                    result = DeserializeArray(p_reader, tp.Substring(1));
-                }
-                else if (tp == "bytes")
-                {
-                    // base64编码的字节数组
-                    p_reader.Read();
-                    byte[] data = Convert.FromBase64String(p_reader.Value.ToString());
-                    p_reader.Read();
-                    result = data;
-                }
-                else
-                {
-                    throw new Exception($"无法自动反序列化Json类型{tp}！");
-                }
-            }
-            else
-            {
-                result = p_reader.Value;
-            }
-
-            T val = default(T);
-            if (result == null)
-            {
-                // 空值
-            }
-            else if (typeof(T) == result.GetType())
-            {
-                // 结果对象与给定对象类型相同时
-                val = (T)result;
-            }
-            else
-            {
-                // 特殊处理结果对象与给定对象类型不相同时
-                val = (T)Convert.ChangeType(result, typeof(T));
-            }
-            return val;
+            return (T)Deserialize(p_reader, typeof(T));
         }
 
         /// <summary>
         /// 反序列化
         /// </summary>
         /// <param name="p_reader"></param>
+        /// <param name="p_tgtType">目标类型，默认null，无目标类型，列表、字节数组不支持类型转换</param>
         /// <returns></returns>
-        public static object Deserialize(JsonReader p_reader)
+        public static object Deserialize(JsonReader p_reader, Type p_tgtType = default)
         {
             if (p_reader.TokenType == JsonToken.StartArray)
             {
@@ -197,7 +130,7 @@ namespace Dt.Core
 
                 // 前缀'#'表示对象
                 if (tp.StartsWith("#"))
-                    return DeserializeObject(p_reader, tp.Substring(1));
+                    return DeserializeObject(p_reader, tp.Substring(1), p_tgtType);
 
                 // 前缀'&'表示集合
                 if (tp.StartsWith("&"))
@@ -221,21 +154,42 @@ namespace Dt.Core
                 if (num < int.MaxValue)
                     return (int)num;
             }
-            return p_reader.Value;
+
+            // 无目标类型
+            if (p_tgtType == null)
+                return p_reader.Value;
+
+            object result = p_reader.Value;
+            // 空值
+            if (result == null)
+                return p_tgtType.IsValueType ? Activator.CreateInstance(p_tgtType) : null;
+
+            // 结果对象与给定对象类型相同时
+            if (p_tgtType == result.GetType())
+                return result;
+
+            return Convert.ChangeType(result, p_tgtType);
         }
 
-        static object DeserializeObject(JsonReader p_reader, string p_alias)
+        static object DeserializeObject(JsonReader p_reader, string p_alias, Type p_tgtType)
         {
             Type type = SerializeTypeAlias.GetType(p_alias);
-            object result = Activator.CreateInstance(type);
-            if (result is IRpcJson xrs)
+
+            // 目标类型可以为派生类
+            if (p_tgtType != null && p_tgtType != type && !p_tgtType.IsSubclassOf(type))
+                throw new Exception($"{p_tgtType.Name} 类型未继承 {type.Name}！");
+
+            // 自定义序列化
+            if (type.GetInterface("IRpcJson") != null)
             {
-                xrs.ReadRpcJson(p_reader);
-                return result;
+                object tgt = Activator.CreateInstance(p_tgtType == null ? type : p_tgtType);
+                ((IRpcJson)tgt).ReadRpcJson(p_reader);
+                return tgt;
             }
 
+            // 标准序列化
             p_reader.Read();
-            object obj = JsonSerializer.Create().Deserialize(p_reader, type);
+            object obj = JsonSerializer.Create().Deserialize(p_reader, p_tgtType == null ? type : p_tgtType);
             return obj;
         }
 

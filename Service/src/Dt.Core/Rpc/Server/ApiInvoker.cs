@@ -92,17 +92,6 @@ namespace Dt.Core.Rpc
             if (!await ParseParams())
                 return;
 
-            // 获取Api
-            Api = Silo.GetMethod(ApiName);
-            if (Api == null)
-            {
-                // 未找到对应方法
-                var msg = $"Api方法“{ApiName}”不存在！";
-                Log.Warning(msg);
-                await Response(ApiResponseType.Error, 0, msg);
-                return;
-            }
-
             // 校验授权
             if (!await IsAuthenticated())
             {
@@ -200,20 +189,34 @@ namespace Dt.Core.Rpc
                 using (StreamReader sr = new StreamReader(ms))
                 using (JsonReader reader = new JsonTextReader(sr))
                 {
-                    if (!reader.Read()
-                        || reader.TokenType != JsonToken.StartArray
-                        || !reader.Read()
-                        || reader.TokenType != JsonToken.String
-                        || string.IsNullOrEmpty(ApiName = (string)reader.Value))
-                        throw new Exception("Json Rpc格式错误！");
-
-                    List<object> objs = new List<object>();
-                    while (reader.Read() && reader.TokenType != JsonToken.EndArray)
+                    // [
+                    reader.Read();
+                    ApiName = reader.ReadAsString();
+                    if (string.IsNullOrEmpty(ApiName) || (Api = Silo.GetMethod(ApiName)) == null)
                     {
-                        objs.Add(JsonRpcSerializer.Deserialize(reader));
+                        // 未找到对应方法
+                        var msg = $"Api方法“{ApiName}”不存在！";
+                        Log.Warning(msg);
+                        await Response(ApiResponseType.Error, 0, msg);
+                        return false;
                     }
-                    if (objs.Count > 0)
+
+                    var method = Api.Method.GetParameters();
+                    if (method.Length > 0)
+                    {
+                        // 确保和Api的参数个数和类型相同
+                        // 类型不同时 执行类型转换 或 直接创建派生类实例！如Row -> User, Table -> Table<User>
+                        int index = 0;
+                        List<object> objs = new List<object>();
+                        while (index < method.Length && reader.Read() && reader.TokenType != JsonToken.EndArray)
+                        {
+                            // 参数支持派生类型！
+                            var obj = JsonRpcSerializer.Deserialize(reader, method[index].ParameterType);
+                            objs.Add(obj);
+                            index++;
+                        }
                         Args = objs.ToArray();
+                    }
                 }
                 return true;
             }
