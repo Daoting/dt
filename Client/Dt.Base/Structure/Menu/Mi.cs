@@ -386,17 +386,20 @@ namespace Dt.Base
         /// <summary>
         /// 获取上下文菜单的目标数据
         /// </summary>
-        public Row TargetRow
-        {
-            get { return Owner?.TargetData as Row; }
-        }
-
-        /// <summary>
-        /// 获取上下文菜单的目标数据
-        /// </summary>
         public object TargetData
         {
             get { return Owner?.TargetData; }
+        }
+
+        /// <summary>
+        /// 获取上下文菜单的目标实体
+        /// </summary>
+        /// <typeparam name="TEntity">实体类型</typeparam>
+        /// <returns></returns>
+        public TEntity Get<TEntity>()
+            where TEntity : Row
+        {
+            return Owner?.TargetData as TEntity;
         }
         #endregion
 

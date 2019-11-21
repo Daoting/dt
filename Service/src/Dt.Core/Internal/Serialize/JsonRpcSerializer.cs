@@ -174,22 +174,26 @@ namespace Dt.Core
         static object DeserializeObject(JsonReader p_reader, string p_alias, Type p_tgtType)
         {
             Type type = SerializeTypeAlias.GetType(p_alias);
-
-            // 目标类型可以为派生类
-            if (p_tgtType != null && p_tgtType != type && !p_tgtType.IsSubclassOf(type))
-                throw new Exception($"{p_tgtType.Name} 类型未继承 {type.Name}！");
+            if (p_tgtType != null && p_tgtType != type)
+            {
+                // 以子类型为准
+                if (p_tgtType.IsSubclassOf(type))
+                    type = p_tgtType;
+                else if (!type.IsSubclassOf(p_tgtType))
+                    throw new Exception($"{p_tgtType.Name} 与 {type.Name} 无继承关系！");
+            }
 
             // 自定义序列化
             if (type.GetInterface("IRpcJson") != null)
             {
-                object tgt = Activator.CreateInstance(p_tgtType == null ? type : p_tgtType);
+                object tgt = Activator.CreateInstance(type);
                 ((IRpcJson)tgt).ReadRpcJson(p_reader);
                 return tgt;
             }
 
             // 标准序列化
             p_reader.Read();
-            object obj = JsonSerializer.Create().Deserialize(p_reader, p_tgtType == null ? type : p_tgtType);
+            object obj = JsonSerializer.Create().Deserialize(p_reader, type);
             return obj;
         }
 

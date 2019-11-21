@@ -40,7 +40,7 @@ namespace Dt.Core
         internal Cell(Row p_row, string p_cellName, Type p_cellType, object p_value = null)
         {
             Row = p_row;
-            ID = p_cellName.ToLower();
+            ID = p_cellName;
             Type = p_cellType;
             _val = OriginalVal = GetValInternal(p_value, Type);
             Row.Cells.Add(this);

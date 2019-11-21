@@ -10,7 +10,7 @@
 using System;
 #endregion
 
-namespace Dt.Core.Domain
+namespace Dt.Core
 {
     /// <summary>
     /// 实体类映射表标签
@@ -18,15 +18,21 @@ namespace Dt.Core.Domain
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public class TblAttribute : Attribute
     {
-        public TblAttribute(string p_tblName)
+        public TblAttribute(string p_tblName, string p_svcName)
         {
             Name = p_tblName;
+            Svc = p_svcName;
         }
 
         /// <summary>
         /// 实体类对应的表名
         /// </summary>
         public string Name { get; }
+
+        /// <summary>
+        /// 实体所属的服务，客户端用
+        /// </summary>
+        public string Svc { get; }
     }
 
     /// <summary>

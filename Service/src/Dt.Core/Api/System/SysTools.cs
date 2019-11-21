@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
 #endregion
 
 namespace Dt.Core
@@ -52,10 +53,10 @@ namespace Dt.Core
 
             StringBuilder sb = new StringBuilder();
             AppendTabSpace(sb, 1);
-            sb.Append($"[Tbl(\"{tblName}\")]");
+            sb.Append($"[Tbl(\"{tblName}\", \"{Glb.SvcName}\")]");
             sb.AppendLine();
             AppendTabSpace(sb, 1);
-            sb.Append($"public partial class {clsName} : Root");
+            sb.Append($"public partial class {clsName} : Entity");
             sb.AppendLine();
             AppendTabSpace(sb, 1);
             sb.AppendLine("{");
@@ -67,47 +68,97 @@ namespace Dt.Core
             sb.AppendLine("{ }");
             sb.AppendLine();
 
+            // 构造方法
             AppendTabSpace(sb, 2);
             sb.Append("public ");
             sb.Append(clsName);
-            sb.Append("(");
+            sb.AppendLine("(");
+            foreach (var col in schema.PrimaryKey)
+            {
+                AppendTabSpace(sb, 3);
+                sb.Append(GetTypeName(col.Type));
+                sb.Append(" ");
+                sb.Append(col.Name);
+                sb.AppendLine(",");
+            }
             foreach (var col in schema.Columns)
             {
+                AppendTabSpace(sb, 3);
                 sb.Append(GetTypeName(col.Type));
-                sb.Append(" p_");
+                sb.Append(" ");
                 sb.Append(col.Name);
-                sb.Append(", ");
+                if (string.IsNullOrEmpty(col.Default))
+                {
+                    sb.AppendLine(" = default,");
+                }
+                else if (col.Type == typeof(string))
+                {
+                    sb.AppendLine($" = \"{col.Default}\",");
+                }
+                else if (col.Type == typeof(bool))
+                {
+                    sb.Append(" = ");
+                    if (col.Default == "1")
+                        sb.AppendLine("true,");
+                    else
+                        sb.AppendLine("false,");
+                }
+                else
+                {
+                    sb.AppendLine($" = {col.Default},");
+                }
             }
-            sb.Remove(sb.Length - 2, 2);
+            sb.Remove(sb.Length - 3, 3);
             sb.Append(")");
             sb.AppendLine();
             AppendTabSpace(sb, 2);
             sb.AppendLine("{");
-            foreach (var col in schema.Columns)
+            foreach (var col in schema.PrimaryKey.Concat(schema.Columns))
             {
                 AppendTabSpace(sb, 3);
-                sb.Append(SetFirstToUpper(col.Name));
-                sb.Append(" = p_");
+                sb.Append("AddCell<");
+                sb.Append(GetTypeName(col.Type));
+                sb.Append(">(\"");
                 sb.Append(col.Name);
-                sb.AppendLine(";");
+                sb.Append("\", ");
+                sb.Append(col.Name);
+                sb.AppendLine(");");
             }
+            AppendTabSpace(sb, 3);
+            sb.AppendLine("IsAdded = true;");
             AppendTabSpace(sb, 2);
             sb.AppendLine("}");
 
+            // 主键
+            bool existID = false;
+            foreach (var col in schema.PrimaryKey)
+            {
+                if (col.Name.Equals("ID", StringComparison.OrdinalIgnoreCase))
+                {
+                    existID = true;
+                    if (col.Type != typeof(long))
+                    {
+                        // 类型不同时，覆盖原ID
+                        AppendColumn(col, sb, true);
+                    }
+                }
+                else
+                {
+                    AppendColumn(col, sb, false);
+                }
+            }
+            if (!existID)
+            {
+                // 无ID时，屏蔽ID属性
+                sb.AppendLine();
+                AppendTabSpace(sb, 2);
+                sb.AppendLine("new public long ID { get { return -1; } }");
+            }
+
+            // 普通列
             foreach (var col in schema.Columns)
             {
-                sb.AppendLine();
-                AppendTabSpace(sb, 2);
-                sb.AppendLine("/// <summary>");
-                AppendTabSpace(sb, 2);
-                sb.Append("/// ");
-                sb.AppendLine(col.Comments);
-                AppendTabSpace(sb, 2);
-                sb.AppendLine("/// </summary>");
-                AppendTabSpace(sb, 2);
-                sb.Append($"public {GetTypeName(col.Type)} {SetFirstToUpper(col.Name)} ");
-                sb.Append("{ get; private set; }");
-                sb.AppendLine();
+                AppendColumn(col, sb, false);
             }
             AppendTabSpace(sb, 1);
             sb.AppendLine("}");
@@ -176,6 +227,34 @@ namespace Dt.Core
         public Task<List<string>> 所有微服务副本()
         {
             return Glb.GetCurrentSvcs(true);
+        }
+
+        void AppendColumn(TableCol p_col, StringBuilder p_sb, bool p_isNew)
+        {
+            p_sb.AppendLine();
+            AppendTabSpace(p_sb, 2);
+            p_sb.AppendLine("/// <summary>");
+            AppendTabSpace(p_sb, 2);
+            p_sb.Append("/// ");
+            p_sb.AppendLine(p_col.Comments);
+            AppendTabSpace(p_sb, 2);
+            p_sb.AppendLine("/// </summary>");
+            AppendTabSpace(p_sb, 2);
+
+            string tpName = GetTypeName(p_col.Type);
+            if (p_isNew)
+                p_sb.Append("new ");
+            p_sb.AppendLine($"public {tpName} {p_col.Name}");
+
+            AppendTabSpace(p_sb, 2);
+            p_sb.AppendLine("{");
+            AppendTabSpace(p_sb, 3);
+            p_sb.AppendLine($"get {{ return ({tpName})_cells[\"{p_col.Name}\"].Val; }}");
+            AppendTabSpace(p_sb, 3);
+            // 私有，确保外部只能通过统一方法设置，DDD规范
+            p_sb.AppendLine($"private set {{ _cells[\"{p_col.Name}\"].Val = value; }}");
+            AppendTabSpace(p_sb, 2);
+            p_sb.AppendLine("}");
         }
 
         string GetTypeName(Type p_type)

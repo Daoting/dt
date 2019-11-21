@@ -69,62 +69,33 @@ namespace Dt.Core
         }
         #endregion
 
-        #region 查询
+        #region Table查询
         /// <summary>
         /// 以参数值方式执行Sql语句，返回结果集
         /// </summary>
         /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回Table数据集</returns>
-        public async Task<Table> Table(string p_keyOrSql, object p_params = null)
+        public async Task<Table> Query(string p_keyOrSql, object p_params = null)
         {
-            var cmd = CreateCommand(p_keyOrSql, p_params, false);
-            try
-            {
-                await OpenConnection();
-                Table tbl = new Table();
-                using (var wrappedReader = (IWrappedDataReader)await _conn.ExecuteReaderAsync(cmd))
-                {
-                    // Dapper2.0 改版
-                    MySqlDataReader reader = (MySqlDataReader)wrappedReader.Reader;
+            var tbl = new Table();
+            await QueryInternal<Row>(tbl, p_keyOrSql, p_params);
+            return tbl;
+        }
 
-                    // 参见github上的MySqlDataReader.cs
-                    // 获取列定义
-                    var cols = reader.GetColumnSchema();
-                    foreach (var col in cols)
-                    {
-                        // 可为null的值类型
-                        if (col.AllowDBNull.HasValue && col.AllowDBNull.Value && col.DataType.IsValueType)
-                            tbl.Add(col.ColumnName, typeof(Nullable<>).MakeGenericType(col.DataType));
-                        else
-                            tbl.Add(col.ColumnName, col.DataType);
-                    }
-
-                    while (await reader.ReadAsync())
-                    {
-                        // 整行已读到内存，官方推荐使用同步方法获取值，比异步性能更好！
-                        Row row = new Row();
-                        for (int i = 0; i < reader.FieldCount; i++)
-                        {
-                            var col = cols[i];
-                            if (reader.IsDBNull(i))
-                                new Cell(row, col.ColumnName, col.DataType);
-                            else
-                                new Cell(row, col.ColumnName, col.DataType, reader.GetValue(i));
-                        }
-                        tbl.Add(row);
-                    }
-                }
-                return tbl;
-            }
-            catch (Exception ex)
-            {
-                throw GetSqlException(cmd, ex);
-            }
-            finally
-            {
-                ReleaseConnection();
-            }
+        /// <summary>
+        /// 以参数值方式执行Sql语句，返回结果集
+        /// </summary>
+        /// <typeparam name="TEntity">实体类型</typeparam>
+        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
+        /// <returns>返回Table数据集</returns>
+        public async Task<Table<TEntity>> Query<TEntity>(string p_keyOrSql, object p_params = null)
+            where TEntity : Entity
+        {
+            var tbl = new Table<TEntity>();
+            await QueryInternal<TEntity>(tbl, p_keyOrSql, p_params);
+            return tbl;
         }
 
         /// <summary>
@@ -133,70 +104,46 @@ namespace Dt.Core
         /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回Row枚举</returns>
-        public async Task<IEnumerable<Row>> ForRow(string p_keyOrSql, object p_params = null)
+        public Task<IEnumerable<Row>> EachRow(string p_keyOrSql, object p_params = null)
         {
-            var cmd = CreateCommand(p_keyOrSql, p_params, false);
-            await OpenConnection();
-            var reader = (IWrappedDataReader)await _conn.ExecuteReaderAsync(cmd);
-            return ForEachRow(reader);
-        }
-
-        /* 
-         * Dapper涉及dynamic的速度非常慢！已移除
-         * 
-         * Dapper的ORM映射优先级：
-         * 1. 存在和字段名称相同的属性，且属性含有setter，setter可以为private
-         * 2. 存在和字段名称相同的变量(field)
-         * 3. 存在和字段名称相同的属性，但无setter，直接设置到自动变量(Backing Field)
-         * 4. 删除字段名称中的_ ，按上述方法比较是否有映射属性
-         */
-
-        /// <summary>
-        /// 以参数值方式执行Sql语句，返回泛型列表
-        /// </summary>
-        /// <typeparam name="T">ORM类型</typeparam>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
-        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
-        /// <returns>返回泛型列表</returns>
-        public async Task<List<T>> List<T>(string p_keyOrSql, object p_params = null)
-        {
-            return (List<T>)await Query<T>(p_keyOrSql, p_params, false);
+            return ForEachRow<Row>(p_keyOrSql, p_params);
         }
 
         /// <summary>
-        /// 以参数值方式执行Sql语句，返回泛型枚举，高性能
+        /// 以参数值方式执行Sql语句，返回Row枚举，高性能
         /// </summary>
-        /// <typeparam name="T">ORM类型</typeparam>
+        /// <typeparam name="TEntity">实体类型</typeparam>
         /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
-        /// <returns>返回泛型枚举</returns>
-        public Task<IEnumerable<T>> ForEach<T>(string p_keyOrSql, object p_params = null)
+        /// <returns>返回Row枚举</returns>
+        public Task<IEnumerable<TEntity>> Each<TEntity>(string p_keyOrSql, object p_params = null)
+            where TEntity : Entity
         {
-            return Query<T>(p_keyOrSql, p_params, true);
+            return ForEachRow<TEntity>(p_keyOrSql, p_params);
         }
 
         /// <summary>
-        /// 以参数值方式执行Sql语句，返回指定类型的对象列表，可直接转型为List`T
+        /// 以参数值方式执行Sql语句，只返回第一行数据
         /// </summary>
-        /// <param name="p_type">ORM类型</param>
         /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
-        /// <returns>返回指定类型的对象列表</returns>
-        public Task<System.Collections.IEnumerable> List(Type p_type, string p_keyOrSql, object p_params = null)
+        /// <returns>返回第一行Row或null</returns>
+        public async Task<Row> GetRow(string p_keyOrSql, object p_params = null)
         {
-            return Query(p_type, p_keyOrSql, p_params, false);
+            return (await ForEachRow<Row>(p_keyOrSql, p_params)).FirstOrDefault();
         }
 
         /// <summary>
-        /// 以参数值方式执行Sql语句，返回指定类型对象的枚举，高性能
+        /// 以参数值方式执行Sql语句，只返回第一行数据
         /// </summary>
-        /// <param name="p_type">ORM类型</param>
+        /// <typeparam name="TEntity">实体类型</typeparam>
         /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
-        /// <returns>返回指定类型对象的枚举</returns>
-        public Task<System.Collections.IEnumerable> ForEach(Type p_type, string p_keyOrSql, object p_params = null)
+        /// <returns>返回第一行Row或null</returns>
+        public async Task<TEntity> Get<TEntity>(string p_keyOrSql, object p_params = null)
+            where TEntity : Entity
         {
-            return Query(p_type, p_keyOrSql, p_params, true);
+            return (await ForEachRow<TEntity>(p_keyOrSql, p_params)).FirstOrDefault();
         }
 
         /// <summary>
@@ -206,7 +153,7 @@ namespace Dt.Core
         /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回第一个单元格数据</returns>
-        public async Task<T> Scalar<T>(string p_keyOrSql, object p_params = null)
+        public async Task<T> GetScalar<T>(string p_keyOrSql, object p_params = null)
         {
             var cmd = CreateCommand(p_keyOrSql, p_params, false);
             try
@@ -225,32 +172,45 @@ namespace Dt.Core
             }
         }
 
-        /// <summary>
-        /// 以参数值方式执行Sql语句，只返回第一行数据
-        /// </summary>
-        /// <typeparam name="T">ORM类型</typeparam>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
-        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
-        /// <returns>返回第一行数据对象，无数据时返回空</returns>
-        public async Task<T> First<T>(string p_keyOrSql, object p_params = null)
-        {
-            return (T)await First(typeof(T), p_keyOrSql, p_params);
-        }
-
-        /// <summary>
-        /// 以参数值方式执行Sql语句，只返回第一行数据
-        /// </summary>
-        /// <param name="p_tgtType">ORM类型</param>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
-        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
-        /// <returns>返回第一行数据对象，无数据时返回空</returns>
-        public async Task<object> First(Type p_tgtType, string p_keyOrSql, object p_params = null)
+        async Task QueryInternal<TRow>(Table p_tbl, string p_keyOrSql, object p_params = null)
+            where TRow : Row
         {
             var cmd = CreateCommand(p_keyOrSql, p_params, false);
             try
             {
                 await OpenConnection();
-                return await _conn.QueryFirstOrDefaultAsync(p_tgtType, cmd);
+                using (var wrappedReader = (IWrappedDataReader)await _conn.ExecuteReaderAsync(cmd))
+                {
+                    // Dapper2.0 改版
+                    MySqlDataReader reader = (MySqlDataReader)wrappedReader.Reader;
+
+                    // 参见github上的MySqlDataReader.cs
+                    // 获取列定义
+                    var cols = reader.GetColumnSchema();
+                    foreach (var col in cols)
+                    {
+                        // 可为null的值类型
+                        if (col.AllowDBNull.HasValue && col.AllowDBNull.Value && col.DataType.IsValueType)
+                            p_tbl.Add(col.ColumnName, typeof(Nullable<>).MakeGenericType(col.DataType));
+                        else
+                            p_tbl.Add(col.ColumnName, col.DataType);
+                    }
+
+                    while (await reader.ReadAsync())
+                    {
+                        // 整行已读到内存，官方推荐使用同步方法获取值，比异步性能更好！
+                        var row = Activator.CreateInstance<TRow>();
+                        for (int i = 0; i < reader.FieldCount; i++)
+                        {
+                            var col = p_tbl.Columns[i];
+                            if (reader.IsDBNull(i))
+                                new Cell(row, col.ID, col.Type);
+                            else
+                                new Cell(row, col.ID, col.Type, reader.GetValue(i));
+                        }
+                        p_tbl.Add(row);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -262,18 +222,17 @@ namespace Dt.Core
             }
         }
 
-        /// <summary>
-        /// 以参数值方式执行Sql语句，只返回第一行数据
-        /// </summary>
-        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
-        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
-        /// <returns>返回第一行Row或null</returns>
-        public async Task<Row> FirstRow(string p_keyOrSql, object p_params = null)
+        async Task<IEnumerable<TRow>> ForEachRow<TRow>(string p_keyOrSql, object p_params = null)
+            where TRow : Row
         {
-            return (await ForRow(p_keyOrSql, p_params)).FirstOrDefault();
+            var cmd = CreateCommand(p_keyOrSql, p_params, false);
+            await OpenConnection();
+            var reader = (IWrappedDataReader)await _conn.ExecuteReaderAsync(cmd);
+            return ForEachRow<TRow>(reader);
         }
 
-        IEnumerable<Row> ForEachRow(IWrappedDataReader p_wrappedReader)
+        IEnumerable<TRow> ForEachRow<TRow>(IWrappedDataReader p_wrappedReader)
+            where TRow : Row
         {
             // yield无法使用await，无法在含catch的try内
             // 一定要使用using 或 finally方式释放资源，不然foreach内部break时资源无法释放！！！
@@ -285,7 +244,7 @@ namespace Dt.Core
                     var cols = reader.GetColumnSchema();
                     while (reader.Read())
                     {
-                        Row row = new Row();
+                        TRow row = Activator.CreateInstance<TRow>();
                         for (int i = 0; i < reader.FieldCount; i++)
                         {
                             var col = cols[i];
@@ -303,8 +262,105 @@ namespace Dt.Core
                 ReleaseConnection();
             }
         }
+        #endregion
 
-        async Task<IEnumerable<T>> Query<T>(string p_keyOrSql, object p_params, bool p_deferred)
+        #region 强类型查询
+        /* 
+         * Dapper涉及dynamic的速度非常慢！已移除
+         * 
+         * Dapper的ORM映射优先级：
+         * 1. 存在和字段名称相同的属性，且属性含有setter，setter可以为private
+         * 2. 存在和字段名称相同的变量(field)
+         * 3. 存在和字段名称相同的属性，但无setter，直接设置到自动变量(Backing Field)
+         * 4. 删除字段名称中的_ ，按上述方法比较是否有映射属性
+         */
+
+        /// <summary>
+        /// 以参数值方式执行Sql语句，返回泛型列表
+        /// </summary>
+        /// <typeparam name="T">ORM类型</typeparam>
+        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
+        /// <returns>返回泛型列表</returns>
+        public async Task<List<T>> GetList<T>(string p_keyOrSql, object p_params = null)
+        {
+            return (List<T>)await GetListInternal<T>(p_keyOrSql, p_params, false);
+        }
+
+        /// <summary>
+        /// 以参数值方式执行Sql语句，返回泛型枚举，高性能
+        /// </summary>
+        /// <typeparam name="T">ORM类型</typeparam>
+        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
+        /// <returns>返回泛型枚举</returns>
+        public Task<IEnumerable<T>> EachItem<T>(string p_keyOrSql, object p_params = null)
+        {
+            return GetListInternal<T>(p_keyOrSql, p_params, true);
+        }
+
+        /// <summary>
+        /// 以参数值方式执行Sql语句，返回指定类型的对象列表，可直接转型为List`T
+        /// </summary>
+        /// <param name="p_type">ORM类型</param>
+        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
+        /// <returns>返回指定类型的对象列表</returns>
+        public Task<System.Collections.IEnumerable> GetList(Type p_type, string p_keyOrSql, object p_params = null)
+        {
+            return GetListInternal(p_type, p_keyOrSql, p_params, false);
+        }
+
+        /// <summary>
+        /// 以参数值方式执行Sql语句，返回指定类型对象的枚举，高性能
+        /// </summary>
+        /// <param name="p_type">ORM类型</param>
+        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
+        /// <returns>返回指定类型对象的枚举</returns>
+        public Task<System.Collections.IEnumerable> EachItem(Type p_type, string p_keyOrSql, object p_params = null)
+        {
+            return GetListInternal(p_type, p_keyOrSql, p_params, true);
+        }
+
+        /// <summary>
+        /// 以参数值方式执行Sql语句，只返回第一行数据
+        /// </summary>
+        /// <typeparam name="T">ORM类型</typeparam>
+        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
+        /// <returns>返回第一行数据对象，无数据时返回空</returns>
+        public async Task<T> GetItem<T>(string p_keyOrSql, object p_params = null)
+        {
+            return (T)await GetItem(typeof(T), p_keyOrSql, p_params);
+        }
+
+        /// <summary>
+        /// 以参数值方式执行Sql语句，只返回第一行数据
+        /// </summary>
+        /// <param name="p_tgtType">ORM类型</param>
+        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
+        /// <returns>返回第一行数据对象，无数据时返回空</returns>
+        public async Task<object> GetItem(Type p_tgtType, string p_keyOrSql, object p_params = null)
+        {
+            var cmd = CreateCommand(p_keyOrSql, p_params, false);
+            try
+            {
+                await OpenConnection();
+                return await _conn.QueryFirstOrDefaultAsync(p_tgtType, cmd);
+            }
+            catch (Exception ex)
+            {
+                throw GetSqlException(cmd, ex);
+            }
+            finally
+            {
+                ReleaseConnection();
+            }
+        }
+
+        async Task<IEnumerable<T>> GetListInternal<T>(string p_keyOrSql, object p_params, bool p_deferred)
         {
             var cmd = CreateCommand(p_keyOrSql, p_params, p_deferred);
             try
@@ -324,7 +380,7 @@ namespace Dt.Core
 
         // 泛型方法 QueryAsync<T>
         static MethodInfo _queryMethod = typeof(SqlMapper).GetMethod("QueryAsync", 1, new Type[] { typeof(IDbConnection), typeof(CommandDefinition) });
-        async Task<System.Collections.IEnumerable> Query(Type p_type, string p_keyOrSql, object p_params, bool p_deferred)
+        async Task<System.Collections.IEnumerable> GetListInternal(Type p_type, string p_keyOrSql, object p_params, bool p_deferred)
         {
             if (p_type == null)
                 throw new ArgumentNullException(nameof(p_type));

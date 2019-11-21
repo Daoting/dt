@@ -25,12 +25,8 @@ namespace Dt.Core
     /// </summary>
     public static class DbSchema
     {
-        static readonly Dictionary<string, string> _sqlInsert = new Dictionary<string, string>();
-        static readonly Dictionary<string, string> _sqlUpdate = new Dictionary<string, string>();
-        static readonly Dictionary<string, string> _sqlDel = new Dictionary<string, string>();
-
         /// <summary>
-        /// 默认库的所有表结构
+        /// 默认库的所有表结构，键名为小写表名
         /// </summary>
         public static IReadOnlyDictionary<string, TableSchema> Schema { get; private set; }
 
@@ -64,7 +60,7 @@ namespace Dt.Core
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
-            var schema = new Dictionary<string, TableSchema>(StringComparer.OrdinalIgnoreCase);
+            var schema = new Dictionary<string, TableSchema>();
             MySqlDataReader reader = null;
             using (MySqlConnection conn = new MySqlConnection(Glb.Config["Db"]))
             {
@@ -83,6 +79,7 @@ namespace Dt.Core
                         {
                             while (reader.Read())
                             {
+                                // 表名小写
                                 tbls.Add(reader.GetString(0).ToLower());
                             }
                         }
@@ -91,7 +88,7 @@ namespace Dt.Core
                     // 表结构
                     foreach (var tbl in tbls)
                     {
-                        TableSchema tblCols = new TableSchema();
+                        TableSchema tblCols = new TableSchema(tbl);
                         cmd.CommandText = $"SELECT * FROM {tbl} WHERE false";
                         ReadOnlyCollection<DbColumn> cols;
                         using (reader = cmd.ExecuteReader())
@@ -102,7 +99,7 @@ namespace Dt.Core
                         foreach (var colSchema in cols)
                         {
                             TableCol col = new TableCol();
-                            col.Name = colSchema.ColumnName.ToLower();
+                            col.Name = colSchema.ColumnName;
 
                             // 可为null的值类型
                             if (colSchema.AllowDBNull.HasValue && colSchema.AllowDBNull.Value && colSchema.DataType.IsValueType)
@@ -117,9 +114,19 @@ namespace Dt.Core
                             if (colSchema.AllowDBNull.HasValue)
                                 col.Nullable = colSchema.AllowDBNull.Value;
 
-                            // 字段注释
-                            cmd.CommandText = $"SELECT column_comment FROM information_schema.columns WHERE table_schema='{conn.Database}' and table_name='{tbl}' and column_name='{colSchema.ColumnName}'";
-                            col.Comments = (string)cmd.ExecuteScalar();
+                            // 读取列结构
+                            cmd.CommandText = $"SELECT column_default,column_comment FROM information_schema.columns WHERE table_schema='{conn.Database}' and table_name='{tbl}' and column_name='{colSchema.ColumnName}'";
+                            using (reader = cmd.ExecuteReader())
+                            {
+                                if (reader.HasRows && reader.Read())
+                                {
+                                    // 默认值
+                                    if (!reader.IsDBNull(0))
+                                        col.Default = reader.GetString(0);
+                                    // 字段注释
+                                    col.Comments = reader.GetString(1);
+                                }
+                            }
 
                             // 是否为主键
                             if (colSchema.IsKey.HasValue && colSchema.IsKey.Value)
@@ -154,101 +161,6 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 获取表的完整insert语句模板
-        /// </summary>
-        /// <param name="p_tblName"></param>
-        /// <returns></returns>
-        public static string GetInsertSql(string p_tblName)
-        {
-            Check.NotNullOrEmpty(p_tblName);
-            string tblName = p_tblName.ToLower();
-            string sql;
-            if (_sqlInsert.TryGetValue(tblName, out sql))
-                return sql;
-
-            StringBuilder insertCol = new StringBuilder();
-            StringBuilder insertVal = new StringBuilder();
-            var schema = GetTableSchema(tblName);
-            foreach (var col in schema.PrimaryKey.Concat(schema.Columns))
-            {
-                insertCol.Append(col.Name);
-                insertCol.Append(",");
-
-                insertVal.Append("@");
-                insertVal.Append(col.Name);
-                insertVal.Append(",");
-            }
-            sql = $"insert into `{tblName}` ({insertCol.ToString().TrimEnd(',')}) values ({insertVal.ToString().TrimEnd(',')})";
-            _sqlInsert[tblName] = sql;
-            return sql;
-        }
-
-        /// <summary>
-        /// 获取表的完整update语句模板
-        /// </summary>
-        /// <param name="p_tblName"></param>
-        /// <returns></returns>
-        public static string GetUpdateSql(string p_tblName)
-        {
-            Check.NotNullOrEmpty(p_tblName);
-            string tblName = p_tblName.ToLower();
-            string sql;
-            if (_sqlUpdate.TryGetValue(tblName, out sql))
-                return sql;
-
-            StringBuilder updateVal = new StringBuilder();
-            StringBuilder whereVal = new StringBuilder();
-            var schema = GetTableSchema(tblName);
-            foreach (var col in schema.PrimaryKey)
-            {
-                if (whereVal.Length > 0)
-                    whereVal.Append(" and ");
-                whereVal.Append(col.Name);
-                whereVal.Append("=@");
-                whereVal.Append(col.Name);
-            }
-            foreach (var col in schema.Columns)
-            {
-                if (updateVal.Length > 0)
-                    updateVal.Append(", ");
-                updateVal.Append(col.Name);
-                updateVal.Append("=@");
-                updateVal.Append(col.Name);
-            }
-            sql = $"update `{tblName}` set {updateVal} where {whereVal}";
-            _sqlUpdate[tblName] = sql;
-            return sql;
-        }
-
-        /// <summary>
-        /// 获取表的delete语句模板
-        /// </summary>
-        /// <param name="p_tblName"></param>
-        /// <returns></returns>
-        public static string GetDeleteSql(string p_tblName)
-        {
-            Check.NotNullOrEmpty(p_tblName);
-            string tblName = p_tblName.ToLower();
-            string sql;
-            if (_sqlDel.TryGetValue(tblName, out sql))
-                return sql;
-
-            StringBuilder whereVal = new StringBuilder();
-            var schema = GetTableSchema(tblName);
-            foreach (var col in schema.PrimaryKey)
-            {
-                if (whereVal.Length > 0)
-                    whereVal.Append(" and ");
-                whereVal.Append(col.Name);
-                whereVal.Append("=@");
-                whereVal.Append(col.Name);
-            }
-            sql = $"delete from `{tblName}` where {whereVal}";
-            _sqlDel[tblName] = sql;
-            return sql;
-        }
-
-        /// <summary>
         /// 关闭MySql连接池，释放资源
         /// </summary>
         internal static void Close()
@@ -259,52 +171,5 @@ namespace Dt.Core
             }
             catch { }
         }
-    }
-
-    /// <summary>
-    /// 存储表结构信息，分主键列列表和普通列列表
-    /// </summary>
-    public class TableSchema
-    {
-        /// <summary>
-        /// 主键列列表
-        /// </summary>
-        public List<TableCol> PrimaryKey { get; } = new List<TableCol>();
-
-        /// <summary>
-        /// 普通列列表
-        /// </summary>
-        public List<TableCol> Columns { get; } = new List<TableCol>();
-    }
-
-    /// <summary>
-    /// 列描述类
-    /// </summary>
-    public class TableCol
-    {
-        /// <summary>
-        /// 列名
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// 列类型
-        /// </summary>
-        public Type Type { get; set; }
-
-        /// <summary>
-        /// 列长度，只字符类型有效
-        /// </summary>
-        public int Length { get; set; }
-
-        /// <summary>
-        /// 列是否允许为空
-        /// </summary>
-        public bool Nullable { get; set; }
-
-        /// <summary>
-        /// 列注释
-        /// </summary>
-        public string Comments { get; set; }
     }
 }

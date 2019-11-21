@@ -88,8 +88,8 @@ namespace Dt.Core
         /// </summary>
         public long ID
         {
-            get { return GetVal<long>("id"); }
-            set { _cells["id"].Val = value; }
+            get { return (long)_cells["id"].Val; }
+            protected set { _cells["id"].Val = value; }
         }
 
         /// <summary>

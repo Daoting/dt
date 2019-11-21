@@ -204,18 +204,16 @@ namespace Dt.Core.Rpc
                     var method = Api.Method.GetParameters();
                     if (method.Length > 0)
                     {
-                        // 确保和Api的参数个数和类型相同
+                        // 确保和Api的参数个数、类型相同
                         // 类型不同时 执行类型转换 或 直接创建派生类实例！如Row -> User, Table -> Table<User>
                         int index = 0;
-                        List<object> objs = new List<object>();
+                        Args = new object[method.Length];
                         while (index < method.Length && reader.Read() && reader.TokenType != JsonToken.EndArray)
                         {
                             // 参数支持派生类型！
-                            var obj = JsonRpcSerializer.Deserialize(reader, method[index].ParameterType);
-                            objs.Add(obj);
+                            Args[index] = JsonRpcSerializer.Deserialize(reader, method[index].ParameterType);
                             index++;
                         }
-                        Args = objs.ToArray();
                     }
                 }
                 return true;

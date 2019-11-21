@@ -9,7 +9,6 @@
 #region 引用命名
 using Dt.Core;
 using Dt.Core.Caches;
-using Dt.Core.Domain;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -20,13 +19,14 @@ namespace Dt.Cm
 {
     public partial class User
     {
-        public User(string p_phone)
+        public static User CreateByPhone(string p_phone)
         {
             // cm用户标志0
-            ID = Id.New(0);
-            Phone = p_phone;
-            Name = p_phone;
-            ResetPwd();
+            return new User(
+                ID: Id.New(0),
+                Phone: p_phone,
+                Name: p_phone,
+                Pwd: Kit.GetMD5(p_phone.Substring(p_phone.Length - 4)));
         }
 
         public void ToggleExpired()

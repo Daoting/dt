@@ -21,7 +21,7 @@ namespace Dt.App.Model
 {
     public sealed partial class SelectRolesDlg : Dlg
     {
-        readonly CmDa _da = new CmDa("cm_role");
+        readonly Repo<Menu> _da = new Repo<Menu>();
 
         public SelectRolesDlg()
         {

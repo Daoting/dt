@@ -9,7 +9,6 @@
 #region 引用命名
 using Dt.Core;
 using Dt.Core.Caches;
-using Dt.Core.Domain;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -39,7 +38,7 @@ namespace Dt.Cm
 
         async Task ICacheItem.Init(Db p_db)
         {
-            var result = await p_db.ForRow("select roleid from cm_userrole where userid=@userid", new { userid = ID });
+            var result = await p_db.EachRow("select roleid from cm_userrole where userid=@userid", new { userid = ID });
             StringBuilder sb = new StringBuilder();
             foreach (var row in result)
             {

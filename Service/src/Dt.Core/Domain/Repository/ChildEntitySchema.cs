@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2019-11-05 创建
+* 日志: 2019-11-20 创建
 ******************************************************************************/
 #endregion
 
@@ -11,14 +11,14 @@ using System;
 using System.Reflection;
 #endregion
 
-namespace Dt.Core.Domain
+namespace Dt.Core
 {
     /// <summary>
-    /// 聚合根子实体的描述类
+    /// 子实体结构定义
     /// </summary>
-    public class ChildEntity
+    public class ChildEntitySchema
     {
-        public ChildEntity(Type p_type, PropertyInfo p_propInfo, string p_parentID)
+        public ChildEntitySchema(Type p_type, PropertyInfo p_propInfo, string p_parentID)
         {
             var tbl = p_type.GetCustomAttribute<TblAttribute>(false);
             if (tbl == null || string.IsNullOrEmpty(tbl.Name))
@@ -27,12 +27,12 @@ namespace Dt.Core.Domain
             Type = p_type;
             PropInfo = p_propInfo;
             ParentID = p_parentID;
-            TblName = tbl.Name.ToLower();
+            Schema = EntitySchema.GetTableSchema(tbl.Name);
+            if (Schema.PrimaryKey.Count == 0)
+                throw new Exception($"实体{p_type.Name}的映射表{Schema.Name}无主键！");
 
             // sql变量名parentid固定
-            SqlSelect = $"select * from `{TblName}` where {ParentID}=@parentid";
-            SqlInsert = ModelBuilder.GetInsertSql(p_type, TblName);
-            SqlDelete = $"delete from `{TblName}` where {ParentID}=@parentid";
+            SqlSelect = $"select * from `{Schema.Name}` where {ParentID}=@parentid";
         }
 
         /// <summary>
@@ -51,23 +51,13 @@ namespace Dt.Core.Domain
         public string ParentID { get; }
 
         /// <summary>
-        /// 子实体对应的表名
+        /// 表结构
         /// </summary>
-        public string TblName { get; }
+        public TableSchema Schema { get; }
 
         /// <summary>
         /// 查询所有子实体的sql
         /// </summary>
         public string SqlSelect { get; }
-
-        /// <summary>
-        /// 插入子实体的sql
-        /// </summary>
-        public string SqlInsert { get; }
-
-        /// <summary>
-        /// 删除所有子实体的sql
-        /// </summary>
-        public string SqlDelete { get; }
     }
 }

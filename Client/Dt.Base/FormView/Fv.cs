@@ -436,14 +436,14 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取指定实体行类型的数据源
+        /// 获取指定实体类型的数据源
         /// </summary>
-        /// <typeparam name="TRow">实体行类型</typeparam>
+        /// <typeparam name="TEntity">实体类型</typeparam>
         /// <returns></returns>
-        public TRow Get<TRow>()
-            where TRow : Row
+        public TEntity Get<TEntity>()
+            where TEntity : Entity
         {
-            return GetValue(DataProperty) as TRow;
+            return GetValue(DataProperty) as TEntity;
         }
 
         /// <summary>

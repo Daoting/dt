@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2019-10-28 创建
+* 日志: 2019-11-20 创建
 ******************************************************************************/
 #endregion
 
@@ -16,9 +16,10 @@ using System.Threading.Tasks;
 namespace Dt.Core
 {
     /// <summary>
-    /// 公共Api（自动生成）
+    /// 公共Api
     /// </summary>
-    public partial class DataAccess
+    public partial class Repo<TEntity>
+        where TEntity : Entity
     {
         #region Da
         /// <summary>
@@ -27,10 +28,10 @@ namespace Dt.Core
         /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回Table数据集</returns>
-        public Task<Table> Query(string p_keyOrSql, object p_params = null)
+        public Task<Table> GetTable(string p_keyOrSql, object p_params = null)
         {
             return new UnaryRpc(
-                _svc,
+                _model.Svc,
                 "Da.Query",
                 p_keyOrSql,
                 p_params
@@ -45,10 +46,10 @@ namespace Dt.Core
         /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回Table数据集</returns>
-        public Task<Table> GetPage(int p_starRow, int p_pageSize, string p_keyOrSql, object p_params = null)
+        public Task<Table> GetPageTable(int p_starRow, int p_pageSize, string p_keyOrSql, object p_params = null)
         {
             return new UnaryRpc(
-                _svc,
+                _model.Svc,
                 "Da.GetPage",
                 p_starRow,
                 p_pageSize,
@@ -66,7 +67,7 @@ namespace Dt.Core
         public async Task<T> GetScalar<T>(string p_keyOrSql, object p_params = null)
         {
             object result = await new UnaryRpc(
-                _svc,
+                _model.Svc,
                 "Da.GetScalar",
                 p_keyOrSql,
                 p_params
@@ -83,7 +84,7 @@ namespace Dt.Core
         public Task<Row> GetRow(string p_keyOrSql, object p_params = null)
         {
             return new UnaryRpc(
-                _svc,
+                _model.Svc,
                 "Da.GetRow",
                 p_keyOrSql,
                 p_params
@@ -99,7 +100,7 @@ namespace Dt.Core
         public Task<int> Exec(string p_keyOrSql, object p_params = null)
         {
             return new UnaryRpc(
-                _svc,
+                _model.Svc,
                 "Da.Exec",
                 p_keyOrSql,
                 p_params
@@ -114,7 +115,7 @@ namespace Dt.Core
         public Task<bool> BatchExec(List<Dict> p_dts)
         {
             return new UnaryRpc(
-                _svc,
+                _model.Svc,
                 "Da.BatchExec",
                 p_dts
             ).Call<bool>();
@@ -127,7 +128,7 @@ namespace Dt.Core
         public Task<long> NewID()
         {
             return new UnaryRpc(
-                _svc,
+                _model.Svc,
                 "Da.NewID"
             ).Call<long>();
         }
@@ -140,7 +141,7 @@ namespace Dt.Core
         public Task<List<long>> NewIDAndSeq(string p_seqName)
         {
             return new UnaryRpc(
-                _svc,
+                _model.Svc,
                 "Da.NewIDAndSeq",
                 p_seqName
             ).Call<List<long>>();

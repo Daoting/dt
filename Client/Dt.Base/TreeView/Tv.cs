@@ -438,7 +438,7 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取当前选定行Row，为SelectedItem转型，方便使用
+        /// 获取当前选定的Row
         /// </summary>
         public Row SelectedRow
         {
@@ -467,14 +467,14 @@ namespace Dt.Base
 
         #region 外部方法
         /// <summary>
-        /// 获取当前选定行，已转型为指定的实体行类型
+        /// 获取当前选定的实体
         /// </summary>
-        /// <typeparam name="TRow">实体行类型</typeparam>
+        /// <typeparam name="TEntity">实体类型</typeparam>
         /// <returns></returns>
-        public TRow GetSelected<TRow>()
-            where TRow : Row
+        public TEntity GetSelected<TEntity>()
+            where TEntity : Entity
         {
-            return SelectedItem as TRow;
+            return SelectedItem as TEntity;
         }
 
         /// <summary>

@@ -158,7 +158,7 @@ namespace Dt.Core.Caches
 
             // 缓存没有，查询db
             Db db = new Db(false);
-            var tgt = await db.First(_type, string.Format(_sqlGet, p_keyName), new Dict { { p_keyName, p_keyVal } });
+            var tgt = await db.GetItem(_type, string.Format(_sqlGet, p_keyName), new Dict { { p_keyName, p_keyVal } });
             if (tgt != null)
             {
                 // 缓存结果

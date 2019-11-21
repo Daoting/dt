@@ -45,33 +45,33 @@ namespace Dt.App.Model
 
         async void OnSave(object sender, Mi e)
         {
-            if (_fv.ExistNull("name", "phone"))
-                return;
+            //if (_fv.ExistNull("name", "phone"))
+            //    return;
 
-            Row row = _fv.Row;
-            string phone = row.Str("phone");
-            if (!Regex.IsMatch(phone, "^1[34578]\\d{9}$"))
-            {
-                _fv["phone"].Warn("手机号码错误！");
-                return;
-            }
+            //Row row = _fv.Row;
+            //string phone = row.Str("phone");
+            //if (!Regex.IsMatch(phone, "^1[34578]\\d{9}$"))
+            //{
+            //    _fv["phone"].Warn("手机号码错误！");
+            //    return;
+            //}
 
-            if ((row.IsAdded || row.Cells["phone"].IsChanged)
-                && await _da.GetScalar<int>("用户-重复手机号", new { phone = phone}) > 0)
-            {
-                _fv["phone"].Warn("手机号码重复！");
-                return;
-            }
+            //if ((row.IsAdded || row.Cells["phone"].IsChanged)
+            //    && await _da.GetScalar<int>("用户-重复手机号", new { phone = phone}) > 0)
+            //{
+            //    _fv["phone"].Warn("手机号码重复！");
+            //    return;
+            //}
 
-            // 初始密码为手机号后4位
-            if (row.IsAdded)
-            {
-                row["pwd"] = AtKit.GetMD5(phone.Substring(phone.Length - 4));
-                row["ctime"] = row["mtime"] = AtSys.Now;
-            }
+            //// 初始密码为手机号后4位
+            //if (row.IsAdded)
+            //{
+            //    row["pwd"] = AtKit.GetMD5(phone.Substring(phone.Length - 4));
+            //    row["ctime"] = row["mtime"] = AtSys.Now;
+            //}
 
-            if (await AtCm.SaveUser(row))
-                CreateUser();
+            //if (await AtCm.SaveUser(row))
+            //    CreateUser();
         }
 
         void OnAdd(object sender, Mi e)
@@ -81,8 +81,8 @@ namespace Dt.App.Model
 
         protected override Task<bool> OnClosing()
         {
-            if (_fv.Row.IsChanged)
-                return AtKit.Confirm("数据未保存，要放弃修改吗？");
+            //if (_fv.Row.IsChanged)
+            //    return AtKit.Confirm("数据未保存，要放弃修改吗？");
             return Task.FromResult(true);
         }
     }

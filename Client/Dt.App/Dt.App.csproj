@@ -23,7 +23,7 @@
     <Page Include="Home\GroupMenu.xaml" />
     <Page Include="Home\SearchMenu.xaml" />
     <Page Include="Model\SelectRolesDlg.xaml" />
-    <Page Include="Model\SysMenu.xaml" />
+    <Page Include="Model\Menu\SysMenu.xaml" />
     <Page Include="Model\BasePrivilege.xaml" />
     <Page Include="Model\UserParams.xaml" />
     <Page Include="Model\User\EditUserDlg.xaml" />
@@ -54,7 +54,7 @@
     <Compile Update="Model\SelectRolesDlg.xaml.cs">
       <DependentUpon>SelectRolesDlg.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Model\SysMenu.xaml.cs">
+    <Compile Update="Model\Menu\SysMenu.xaml.cs">
       <DependentUpon>SysMenu.xaml</DependentUpon>
     </Compile>
     <Compile Update="Model\BasePrivilege.xaml.cs">

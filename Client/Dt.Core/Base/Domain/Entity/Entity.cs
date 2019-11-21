@@ -7,7 +7,6 @@
 #endregion
 
 #region 引用命名
-using Dt.Core.EventBus;
 using System.Collections.Generic;
 #endregion
 
@@ -18,37 +17,7 @@ namespace Dt.Core
     /// </summary>
     public abstract class Entity : Row
     {
-        List<DomainEvent> _events;
-
-        /// <summary>
-        /// 增加领域事件
-        /// </summary>
-        /// <param name="p_event"></param>
-        /// <param name="p_isRemoteEvent"></param>
-        protected void AddDomainEvent(IEvent p_event, bool p_isRemoteEvent = false)
-        {
-            if (_events == null)
-                _events = new List<DomainEvent>();
-            _events.Add(new DomainEvent(p_isRemoteEvent, p_event));
-        }
-
-        /// <summary>
-        /// 获取实体对象的领域事件
-        /// </summary>
-        /// <returns></returns>
-        internal IEnumerable<DomainEvent> GetDomainEvents()
-        {
-            return _events;
-        }
-
-        /// <summary>
-        /// 清空实体对象的领域事件
-        /// </summary>
-        internal void ClearDomainEvents()
-        {
-            _events?.Clear();
-        }
-
+        
         /// <summary>
         /// 判断两实体是否相同
         /// </summary>

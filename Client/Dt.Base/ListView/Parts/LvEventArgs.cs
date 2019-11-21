@@ -43,11 +43,22 @@ namespace Dt.Base
         public object OldData { get; }
 
         /// <summary>
-        /// 当前点击Row
+        /// 当前点击的Row
         /// </summary>
         public Row Row
         {
             get { return Data as Row; }
+        }
+
+        /// <summary>
+        /// 当前点击的实体
+        /// </summary>
+        /// <typeparam name="TEntity">实体类型</typeparam>
+        /// <returns></returns>
+        public TEntity Get<TEntity>()
+            where TEntity : Entity
+        {
+            return Data as TEntity;
         }
     }
 }

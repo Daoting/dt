@@ -7,7 +7,6 @@
 #endregion
 
 #region 引用命名
-using Dt.Core.Domain;
 using Dt.Core.EventBus;
 using Dt.Core.Rpc;
 using Microsoft.AspNetCore.Http;

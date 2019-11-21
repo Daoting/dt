@@ -9,7 +9,7 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Core.Domain
+namespace Dt.Core
 {
     /// <summary>
     /// 实体对象的增删改事件类型

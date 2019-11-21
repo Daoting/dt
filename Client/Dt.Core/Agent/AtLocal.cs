@@ -377,9 +377,7 @@ namespace Dt.Core
         /// <returns></returns>
         public static IEnumerable<OmColumn> QueryColumns(string p_tblName)
         {
-            return _modelDb.DeferredQuery<OmColumn>(
-                "select * from OmColumn where tabname=:tabname",
-                new Dict { { "tabname", p_tblName } });
+            return _modelDb.DeferredQuery<OmColumn>($"select * from OmColumn where tabname='{p_tblName}'");
         }
 
         /// <summary>
@@ -389,9 +387,7 @@ namespace Dt.Core
         /// <returns></returns>
         public static IEnumerable<OmColumn> QueryPrimaryColumns(string p_tblName)
         {
-            return _modelDb.DeferredQuery<OmColumn>(
-                "select * from OmColumn where tabname=:tabname and isprimary=1",
-                new Dict { { "tabname", p_tblName } });
+            return _modelDb.DeferredQuery<OmColumn>($"select * from OmColumn where tabname='{p_tblName}' and isprimary=1");
         }
 
         /// <summary>

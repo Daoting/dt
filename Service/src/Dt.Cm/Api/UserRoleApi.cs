@@ -9,7 +9,6 @@
 #region 引用命名
 using Dt.Core;
 using Dt.Core.Caches;
-using Dt.Core.Domain;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 #endregion
@@ -29,18 +28,18 @@ namespace Dt.Cm
         /// <returns></returns>
         public async Task<bool> SaveUser(Row p_row)
         {
-            User u = p_row.To<User>();
-            var repo = new Repo<User>();
+            //User u = p_row.To<User>();
+            //var repo = new Repo<User>();
             
-            if (p_row.IsAdded)
-                return await repo.Insert(u);
+            //if (p_row.IsAdded)
+            //    return await repo.Insert(u);
 
-            if (await repo.Update(u))
-            {
-                // 用户信息修改，移除缓存
-                await Cache<UserItem>.Remove(p_row.Str("id"));
-                return true;
-            }
+            //if (await repo.Update(u))
+            //{
+            //    // 用户信息修改，移除缓存
+            //    await Cache<UserItem>.Remove(p_row.Str("id"));
+            //    return true;
+            //}
             return false;
         }
 
@@ -51,11 +50,11 @@ namespace Dt.Cm
         /// <returns></returns>
         public async Task<bool> DeleteUser(long p_id)
         {
-            if (await new Repo<User>().Delete(p_id))
-            {
-                await Cache<UserItem>.Remove(p_id.ToString());
-                return true;
-            }
+            //if (await new Repo<User>().Delete(p_id))
+            //{
+            //    await Cache<UserItem>.Remove(p_id.ToString());
+            //    return true;
+            //}
             return false;
         }
 
@@ -66,14 +65,14 @@ namespace Dt.Cm
         /// <returns></returns>
         public async Task<bool> ResetUserPwd(long p_id)
         {
-            var repo = new Repo<User>();
-            User u = await repo.Get(p_id);
-            if (u != null)
-            {
-                u.StartTrack();
-                u.ResetPwd();
-                return await repo.Update(u);
-            }
+            //var repo = new Repo<User>();
+            //User u = await repo.Get(p_id);
+            //if (u != null)
+            //{
+            //    u.StartTrack();
+            //    u.ResetPwd();
+            //    return await repo.Update(u);
+            //}
             return false;
         }
 
@@ -84,14 +83,14 @@ namespace Dt.Cm
         /// <returns></returns>
         public async Task<bool> ToggleUserExpired(long p_id)
         {
-            var repo = new Repo<User>();
-            User u = await repo.Get(p_id);
-            if (u != null)
-            {
-                u.StartTrack();
-                u.ToggleExpired();
-                return await repo.Update(u);
-            }
+            //var repo = new Repo<User>();
+            //User u = await repo.Get(p_id);
+            //if (u != null)
+            //{
+            //    u.StartTrack();
+            //    u.ToggleExpired();
+            //    return await repo.Update(u);
+            //}
             return false;
         }
 

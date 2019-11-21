@@ -26,7 +26,7 @@ namespace Dt.Core
         {
             if (string.IsNullOrEmpty(p_colName))
                 throw new Exception("未指定列名！");
-            ID = p_colName.ToLower();
+            ID = p_colName;
             Type = (p_colType == null) ? typeof(string) : p_colType;
         }
 

@@ -40,7 +40,7 @@ namespace Dt.App.Model
 
         void OnEditUser(object sender, Mi e)
         {
-            new EditUserDlg().Show(e.TargetRow.ID);
+            //new EditUserDlg().Show(e.TargetRow.ID);
         }
 
         void OnAddRole(object sender, Mi e)
@@ -65,31 +65,31 @@ namespace Dt.App.Model
 
         async void OnDelUser(object sender, Mi e)
         {
-            if (!await AtKit.Confirm($"确认要删除[{e.TargetRow.Str("name")}]吗？"))
-            {
-                AtKit.Msg("已取消删除！");
-                return;
-            }
+            //if (!await AtKit.Confirm($"确认要删除[{e.TargetRow.Str("name")}]吗？"))
+            //{
+            //    AtKit.Msg("已取消删除！");
+            //    return;
+            //}
 
-            if (await AtCm.DeleteUser(e.TargetRow.ID))
-                LoadAll();
+            //if (await AtCm.DeleteUser(e.TargetRow.ID))
+            //    LoadAll();
         }
 
         async void OnResetPwd(object sender, Mi e)
         {
-            if (await AtCm.ResetUserPwd(e.TargetRow.ID))
-                AtKit.Msg("密码已重置为手机号后4位！");
-            else
-                AtKit.Msg("重置密码失败！");
+            //if (await AtCm.ResetUserPwd(e.TargetRow.ID))
+            //    AtKit.Msg("密码已重置为手机号后4位！");
+            //else
+            //    AtKit.Msg("重置密码失败！");
         }
 
         async void OnToggleExpired(object sender, Mi e)
         {
-            string act = e.TargetRow.Bool("expired") ? "启用" : "停用";
-            if (await AtCm.ToggleUserExpired(e.TargetRow.ID))
-                AtKit.Msg($"账号[{e.TargetRow.Str("name")}]已{act}！");
-            else
-                AtKit.Msg(act + "失败！");
+            //string act = e.TargetRow.Bool("expired") ? "启用" : "停用";
+            //if (await AtCm.ToggleUserExpired(e.TargetRow.ID))
+            //    AtKit.Msg($"账号[{e.TargetRow.Str("name")}]已{act}！");
+            //else
+            //    AtKit.Msg(act + "失败！");
         }
     }
 }

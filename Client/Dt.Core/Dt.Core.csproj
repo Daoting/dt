@@ -35,6 +35,11 @@
     <Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\ColumnList.cs" Link="Base\Collection\Table\ColumnList.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\Row.cs" Link="Base\Collection\Table\Row.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\Table.cs" Link="Base\Collection\Table\Table.cs" />
+    <Compile Include="..\..\Service\src\Dt.Core\Base\Collection\Table\Table`1.cs" Link="Base\Collection\Table\Table`1.cs" />
+    <Compile Include="..\..\Service\src\Dt.Core\Base\MySql\TableSchema.cs" Link="Base\Domain\Repository\TableSchema.cs" />
+    <Compile Include="..\..\Service\src\Dt.Core\Domain\Entity\Attributes.cs" Link="Base\Domain\Entity\Attributes.cs" />
+    <Compile Include="..\..\Service\src\Dt.Core\Domain\Repository\ChildEntitySchema.cs" Link="Base\Domain\Repository\ChildEntitySchema.cs" />
+    <Compile Include="..\..\Service\src\Dt.Core\Domain\Repository\EntitySchema.cs" Link="Base\Domain\Repository\EntitySchema.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\Check.cs" Link="Base\Check.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\MsgInfo.cs" Link="Base\MsgInfo.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Serialize\IRpcJson.cs" Link="Internal\Serialize\IRpcJson.cs" />
@@ -63,6 +68,7 @@
   </ItemGroup>
   
   <ItemGroup>
+    <Folder Include="Base\Domain\Entity\" />
     <Folder Include="Rpc\Client\" />
   </ItemGroup>
 

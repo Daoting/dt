@@ -663,21 +663,4 @@ namespace Dt.Core
         }
         #endregion
     }
-
-    /// <summary>
-    /// 行类型为强类型的数据表，行类型模拟普通实体类型
-    /// </summary>
-    /// <typeparam name="TRow">行类型</typeparam>
-    public class Table<TRow> : Table
-        where TRow : Row
-    {
-        /// <summary>
-        /// 创建行
-        /// </summary>
-        /// <returns></returns>
-        protected override Row CreateRowInstance()
-        {
-            return Activator.CreateInstance<TRow>();
-        }
-    }
 }

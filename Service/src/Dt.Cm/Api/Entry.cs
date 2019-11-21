@@ -9,7 +9,6 @@
 #region 引用命名
 using Dt.Core;
 using Dt.Core.Caches;
-using Dt.Core.Domain;
 using Dt.Core.Sqlite;
 using System;
 using System.Text.RegularExpressions;
@@ -105,8 +104,8 @@ namespace Dt.Cm
             }
 
             // 初次登录，创建账号，初始密码为手机号后4位
-            User user = new User(p_phone);
-            await new Repo<User>().Insert(user);
+            User user = User.CreateByPhone(p_phone);
+            await new Repo<User>().Save(user);
 
             res["userid"] = user.ID;
             res["name"] = user.Name;

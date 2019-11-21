@@ -100,7 +100,7 @@ namespace Dt.Cm
                         {
                             conn.CreateTable(item.Key);
                             sb.AppendFormat("创建表{0}成功，", item.Key.Name);
-                            Table tbl = await db.Table(item.Value);
+                            Table tbl = await db.Query(item.Value);
                             if (tbl.Count > 0)
                             {
                                 conn.BatchInsert(item.Key, tbl);
@@ -254,7 +254,7 @@ namespace Dt.Cm
                         {
                             OmColumn col = new OmColumn();
                             col.TabName = tbl;
-                            col.ColName = colSchema.ColumnName.ToLower();
+                            col.ColName = colSchema.ColumnName;
 
                             // 可为null的值类型
                             if (colSchema.AllowDBNull.HasValue && colSchema.AllowDBNull.Value && colSchema.DataType.IsValueType)

@@ -10,7 +10,7 @@
 using Dt.Core.EventBus;
 #endregion
 
-namespace Dt.Core.Domain
+namespace Dt.Core
 {
     /// <summary>
     /// 领域事件

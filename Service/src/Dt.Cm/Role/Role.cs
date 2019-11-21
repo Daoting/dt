@@ -9,7 +9,6 @@
 #region 引用命名
 using Dt.Core;
 using Dt.Core.Caches;
-using Dt.Core.Domain;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -18,8 +17,7 @@ using System.Threading.Tasks;
 
 namespace Dt.Cm
 {
-    [Tbl("cm_role")]
-    public class Role : Root
+    public class Role
     {
         /// <summary>
         /// 任何人角色ID

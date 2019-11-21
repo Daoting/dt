@@ -27,7 +27,7 @@ namespace Dt.Core
         /// <returns>返回Table数据集</returns>
         public Task<Table> Query(string p_keyOrSql, object p_params = null)
         {
-            return new Db().Table(p_keyOrSql, p_params);
+            return new Db().Query(p_keyOrSql, p_params);
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace Dt.Core
         public Task<Table> GetPage(int p_starRow, int p_pageSize, string p_keyOrSql, object p_params = null)
         {
             string sql = $"select * from ({Glb.Sql(p_keyOrSql)}) a limit {p_starRow},{p_pageSize} ";
-            return new Db().Table(sql, p_params);
+            return new Db().Query(sql, p_params);
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace Dt.Core
 ")]
         public Task<object> GetScalar(string p_keyOrSql, object p_params = null)
         {
-            return new Db().Scalar<object>(p_keyOrSql, p_params);
+            return new Db().GetScalar<object>(p_keyOrSql, p_params);
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace Dt.Core
         /// <returns>返回第一行Row或null</returns>
         public Task<Row> GetRow(string p_keyOrSql, object p_params = null)
         {
-            return new Db().FirstRow(p_keyOrSql, p_params);
+            return new Db().GetRow(p_keyOrSql, p_params);
         }
 
         /// <summary>
@@ -147,7 +147,7 @@ namespace Dt.Core
             List<long> ls = new List<long>();
             ls.Add(Id.New());
             if (!string.IsNullOrEmpty(p_seqName))
-                ls.Add(await new Db().Scalar<int>($"select nextval('{p_seqName}')"));
+                ls.Add(await new Db().GetScalar<int>($"select nextval('{p_seqName}')"));
             return ls;
         }
     }
