@@ -21,6 +21,14 @@ namespace Dt.Core
         List<DomainEvent> _events;
 
         /// <summary>
+        /// 获取触发实体对象增删改事件的类型
+        /// </summary>
+        public virtual CudEvent GetCudEvent()
+        {
+            return CudEvent.None;
+        }
+
+        /// <summary>
         /// 增加领域事件
         /// </summary>
         /// <param name="p_event"></param>

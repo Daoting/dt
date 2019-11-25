@@ -8,23 +8,20 @@
 
 #region 引用命名
 using Dt.Core.EventBus;
+using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Core
 {
     /// <summary>
-    /// 保存后事件
+    /// 删除后事件处理的默认基类
     /// </summary>
-    public class SavedEvent : IEvent
+    public abstract class DeleteEventHandler<TEntity> : IRemoteHandler<DeleteEvent<TEntity>>, ILocalHandler<DeleteEvent<TEntity>>
+        where TEntity : Entity
     {
-        /// <summary>
-        /// 实体主键
-        /// </summary>
-        public string ID { get; set; }
-
-        /// <summary>
-        /// true 插入操作，false 更新操作
-        /// </summary>
-        public bool IsInsert { get; set; }
+        public virtual Task Handle(DeleteEvent<TEntity> p_event)
+        {
+            return Task.CompletedTask;
+        }
     }
 }

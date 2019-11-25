@@ -44,6 +44,48 @@
         </Setter>
     </Style>
 
+    <!--SearchFv-->
+    <Style TargetType="a:SearchFv">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:SearchFv">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid Margin="10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="SearchBox"
+                                     PlaceholderText="{TemplateBinding Placeholder}"
+                                     BorderThickness="1"
+                                     BorderBrush="{StaticResource 浅灰边框}"
+                                     Padding="10" />
+                            <Button x:Name="CloseButton" Content="取消" Grid.Column="1" />
+                        </Grid>
+                        
+                        <ScrollViewer x:Name="ScrollViewer"
+                                      HorizontalScrollMode="Disabled"
+                                      HorizontalScrollBarVisibility="Disabled"
+                                      VerticalScrollMode="Auto"
+                                      VerticalScrollBarVisibility="Auto"
+                                      Grid.Row="1">
+                            <!--为uno节省级数，边框在内部画-->
+                            <fv:FormPanel x:Name="FormPanel"
+                                          Background="{StaticResource 浅灰背景}"
+                                          HorizontalAlignment="Left"
+                                          VerticalAlignment="Top" />
+                        </ScrollViewer>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
     <!--CBar-->
     <Style TargetType="a:CBar">
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />

@@ -251,7 +251,7 @@ namespace Dt.Core
             if (mode == AgentMode.Default)
                 serviceName = $"\"{Glb.SvcName}\"";
             else if (mode == AgentMode.Generic)
-                serviceName = "_svc";
+                serviceName = "typeof(TSrv).Name";
             else
                 serviceName = "p_serviceName";
 
@@ -283,14 +283,10 @@ namespace Dt.Core
                 if (sm.CallMode == ApiCallMode.Unary)
                 {
                     retTypeName = GetRpcTypeName(mi.ReturnType);
-                    if (mode == AgentMode.Generic)
-                        sb.Append("public ");
-                    else
-                        sb.Append("public static ");
                     if (!string.IsNullOrEmpty(retTypeName))
-                        sb.AppendFormat("Task<{0}> {1}(", retTypeName, mi.Name);
+                        sb.AppendFormat("public static Task<{0}> {1}(", retTypeName, mi.Name);
                     else
-                        sb.AppendFormat("Task {0}(", mi.Name);
+                        sb.AppendFormat("public static Task {0}(", mi.Name);
                 }
                 else
                 {
@@ -334,6 +330,22 @@ namespace Dt.Core
                     for (int i = 0; i < paramsLength; i++)
                     {
                         var item = infos[i];
+
+                        // 实体类型，降型Row
+                        if (item.ParameterType.IsSubclassOf(typeof(Entity)))
+                        {
+                            sb.Append("Row ");
+                            sb.Append(item.Name);
+                            continue;
+                        }
+
+                        // Table<> -> Table
+                        if (item.ParameterType.IsGenericType && item.ParameterType.GetGenericTypeDefinition() == typeof(Table<>))
+                        {
+                            sb.Append("Table ");
+                            sb.Append(item.Name);
+                            continue;
+                        }
 
                         // 最后的List<object>转为params object[]，方便客户端
                         if (i == paramsLength - 1 && item.ParameterType == typeof(List<object>))

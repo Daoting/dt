@@ -8,19 +8,19 @@
 
 #region 引用命名
 using Dt.Core.EventBus;
-using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Core
 {
     /// <summary>
-    /// 删除后事件处理的默认基类
+    /// 插入后事件
     /// </summary>
-    public abstract class DeletedEventHandler : IRemoteHandler<DeletedEvent>, ILocalHandler<DeletedEvent>
+    public class InsertEvent<TEntity> : IEvent
+        where TEntity : Entity
     {
-        public virtual Task Handle(DeletedEvent p_event)
-        {
-            return Task.CompletedTask;
-        }
+        /// <summary>
+        /// 实体主键
+        /// </summary>
+        public string ID { get; set; }
     }
 }

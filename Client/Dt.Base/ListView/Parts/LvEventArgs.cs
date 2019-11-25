@@ -55,7 +55,7 @@ namespace Dt.Base
         /// </summary>
         /// <typeparam name="TEntity">实体类型</typeparam>
         /// <returns></returns>
-        public TEntity Get<TEntity>()
+        public TEntity To<TEntity>()
             where TEntity : Entity
         {
             return Data as TEntity;

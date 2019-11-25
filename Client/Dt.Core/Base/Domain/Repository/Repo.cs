@@ -22,7 +22,7 @@ namespace Dt.Core
     /// 数据仓库
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
-    public partial class Repo<TEntity>
+    public class Repo<TEntity>
         where TEntity : Entity
     {
         #region 静态内容
@@ -35,6 +35,14 @@ namespace Dt.Core
         static Repo()
         {
             _model = new EntitySchema(typeof(TEntity));
+        }
+
+        /// <summary>
+        /// 获取实体结构定义
+        /// </summary>
+        public static EntitySchema Model
+        {
+            get { return _model; }
         }
         #endregion
 
@@ -102,20 +110,52 @@ namespace Dt.Core
         /// <param name="p_id">主键</param>
         /// <param name="p_loadDetails">是否加载附加数据，默认false</param>
         /// <returns>返回实体对象或null</returns>
-        public Task<TEntity> GetByKey(long p_id, bool p_loadDetails = false)
+        public Task<TEntity> GetByKey(string p_id, bool p_loadDetails = false)
         {
             return Get(_model.Schema.SqlSelect, new { id = p_id }, p_loadDetails);
         }
 
         /// <summary>
-        /// 根据主键获得实体对象(包含所有列值)，不存在时返回null，仅支持单主键
+        /// 以参数值方式执行Sql语句，只返回第一个单元格数据
         /// </summary>
-        /// <param name="p_id">主键</param>
-        /// <param name="p_loadDetails">是否加载附加数据，默认false</param>
-        /// <returns>返回实体对象或null</returns>
-        public Task<TEntity> GetByKey(string p_id, bool p_loadDetails = false)
+        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
+        /// <returns>返回第一个单元格数据</returns>
+        public async Task<T> GetScalar<T>(string p_keyOrSql, object p_params = null)
         {
-            return Get(_model.Schema.SqlSelect, new { id = p_id }, p_loadDetails);
+            object result = await new UnaryRpc(
+                _model.Svc,
+                "Da.GetScalar",
+                p_keyOrSql,
+                p_params
+            ).Call<Object>();
+            return AtKit.ConvertType<T>(result);
+        }
+
+        /// <summary>
+        /// 获取新ID
+        /// </summary>
+        /// <returns></returns>
+        public Task<long> NewID()
+        {
+            return new UnaryRpc(
+                _model.Svc,
+                "Da.NewID"
+            ).Call<long>();
+        }
+
+        /// <summary>
+        /// 获取新ID和新序列值
+        /// </summary>
+        /// <param name="p_seqName">序列名称，不可为空</param>
+        /// <returns>返回新ID和新序列值列表</returns>
+        public Task<List<long>> NewIDAndSeq(string p_seqName)
+        {
+            return new UnaryRpc(
+                _model.Svc,
+                "Da.NewIDAndSeq",
+                p_seqName
+            ).Call<List<long>>();
         }
 
         /// <summary>
@@ -156,7 +196,7 @@ namespace Dt.Core
             if (dt == null)
             {
                 if (p_isNotify)
-                    AtKit.Warn(_unchangedMsg);
+                    AtKit.Warn(_unchangedMsg, true);
                 return true;
             }
 
@@ -174,7 +214,7 @@ namespace Dt.Core
                     if (!await BatchExec(dts))
                     {
                         if (p_isNotify)
-                            AtKit.Warn("保存失败！");
+                            AtKit.Warn("保存失败！", true);
                         return false;
                     }
 
@@ -198,7 +238,7 @@ namespace Dt.Core
             }
 
             if (p_isNotify)
-                AtKit.Warn("保存失败！");
+                AtKit.Warn("保存失败！", true);
             return false;
         }
 
@@ -208,7 +248,7 @@ namespace Dt.Core
         /// <param name="p_entities">待保存</param>
         /// <param name="p_isNotify">是否提示保存结果</param>
         /// <returns>true 保存成功</returns>
-        public async Task<bool> Save(IList<TEntity> p_entities, bool p_isNotify = true)
+        public async Task<bool> BatchSave(IList<TEntity> p_entities, bool p_isNotify = true)
         {
             List<Dict> dts = _model.Schema.GetBatchSaveSql(p_entities);
             if (dts == null)
@@ -255,8 +295,38 @@ namespace Dt.Core
             }
 
             if (p_isNotify)
-                AtKit.Warn("保存失败！");
+                AtKit.Warn("保存失败！", true);
             return false;
+        }
+
+        /// <summary>
+        /// 一个事务内执行Sql语句，返回影响的行数，p_params为IEnumerable时执行批量操作
+        /// </summary>
+        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象，为IEnumerable时执行批量操作</param>
+        /// <returns>返回执行后影响的行数</returns>
+        public Task<int> Exec(string p_keyOrSql, object p_params = null)
+        {
+            return new UnaryRpc(
+                _model.Svc,
+                "Da.Exec",
+                p_keyOrSql,
+                p_params
+            ).Call<int>();
+        }
+
+        /// <summary>
+        /// 一个事务内执行多个Sql
+        /// </summary>
+        /// <param name="p_dts">参数列表，每个Dict中包含两个键：text,params，text为sql语句params类型为Dict或List{Dict}</param>
+        /// <returns>true 成功</returns>
+        public Task<bool> BatchExec(List<Dict> p_dts)
+        {
+            return new UnaryRpc(
+                _model.Svc,
+                "Da.BatchExec",
+                p_dts
+            ).Call<bool>();
         }
         #endregion
 
@@ -264,7 +334,7 @@ namespace Dt.Core
         /// <summary>
         /// 删除实体，依靠数据库的级联删除自动删除子实体
         /// </summary>
-        /// <param name="p_row">待删除的行</param>
+        /// <param name="p_entity">待删除的行</param>
         /// <param name="p_isNotify">是否提示删除结果</param>
         /// <returns>true 删除成功</returns>
         public async Task<bool> Delete(TEntity p_entity, bool p_isNotify = true)
@@ -277,7 +347,7 @@ namespace Dt.Core
                 if (suc)
                     AtKit.Msg("删除成功！");
                 else
-                    AtKit.Warn("删除失败！");
+                    AtKit.Warn("删除失败！", true);
             }
             return suc;
         }
@@ -288,12 +358,12 @@ namespace Dt.Core
         /// <param name="p_rows">实体列表</param>
         /// <param name="p_isNotify">是否提示删除结果</param>
         /// <returns>true 删除成功</returns>
-        public async Task<bool> Delete(IList<TEntity> p_entities, bool p_isNotify = true)
+        public async Task<bool> BatchDelete(IList<TEntity> p_entities, bool p_isNotify = true)
         {
             if (p_entities == null || p_entities.Count == 0)
             {
                 if (p_isNotify)
-                    AtKit.Warn(_saveError);
+                    AtKit.Warn(_saveError, true);
                 return false;
             }
 
@@ -304,7 +374,7 @@ namespace Dt.Core
                 if (suc)
                     AtKit.Msg("删除成功！");
                 else
-                    AtKit.Warn("删除失败！");
+                    AtKit.Warn("删除失败！", true);
             }
             return suc;
         }
@@ -314,26 +384,179 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_id">主键</param>
         /// <param name="p_isNotify">是否提示删除结果</param>
-        /// <returns>实际删除行数</returns>
-        public async Task<bool> Delete(long p_id, bool p_isNotify = true)
+        /// <returns>true 删除成功</returns>
+        public async Task<bool> DelByKey(string p_id, bool p_isNotify = true)
         {
             bool suc = await Exec(_model.Schema.SqlDelete, new { id = p_id }) == 1;
             if (p_isNotify)
                 AtKit.Msg(suc ? "删除成功！" : "删除失败！");
             return suc;
         }
+        #endregion
+
+        #region 调用EntityAccess
+        /// <summary>
+        /// 调用服务端Repo保存实体
+        /// </summary>
+        /// <param name="p_entity">待保存</param>
+        /// <param name="p_isNotify">是否提示保存结果</param>
+        /// <returns>true 成功</returns>
+        public async Task<bool> SaveRow(TEntity p_entity, bool p_isNotify = true)
+        {
+            if (p_entity == null || (!p_entity.IsAdded && !p_entity.IsChanged))
+            {
+                if (p_isNotify)
+                    AtKit.Msg(_unchangedMsg);
+                return false;
+            }
+
+            bool suc = await new UnaryRpc(
+                _model.Svc,
+                "Ea.SaveRow",
+                p_entity,
+                _model.Schema.Name
+            ).Call<bool>();
+
+            if (suc)
+                p_entity.AcceptChanges();
+
+            if (p_isNotify)
+            {
+                if (suc)
+                    AtKit.Msg("保存成功！");
+                else
+                    AtKit.Warn("保存失败！", true);
+            }
+            return suc;
+        }
 
         /// <summary>
-        /// 根据主键删除实体对象，依靠数据库的级联删除自动删除子实体
+        /// 调用服务端Repo批量保存实体
+        /// </summary>
+        /// <param name="p_entities">待保存</param>
+        /// <param name="p_isNotify">是否提示保存结果</param>
+        /// <returns>true 成功</returns>
+        public async Task<bool> SaveRows(Table<TEntity> p_entities, bool p_isNotify = true)
+        {
+            if (p_entities == null || p_entities.Count == 0)
+            {
+                if (p_isNotify)
+                    AtKit.Msg(_unchangedMsg);
+                return false;
+            }
+
+            bool suc = await new UnaryRpc(
+                _model.Svc,
+                "Ea.SaveRows",
+                p_entities,
+                _model.Schema.Name
+            ).Call<bool>();
+
+            if (suc)
+                p_entities.AcceptChanges();
+
+            if (p_isNotify)
+            {
+                if (suc)
+                    AtKit.Msg("保存成功！");
+                else
+                    AtKit.Warn("保存失败！", true);
+            }
+            return suc;
+        }
+
+        /// <summary>
+        /// 调用服务端Repo删除实体
+        /// </summary>
+        /// <param name="p_entity">待删除的行</param>
+        /// <param name="p_isNotify">是否提示删除结果</param>
+        /// <returns>true 删除成功</returns>
+        public async Task<bool> DelRow(TEntity p_entity, bool p_isNotify = true)
+        {
+            if (p_entity == null)
+            {
+                if (p_isNotify)
+                    AtKit.Msg(_saveError);
+                return false;
+            }
+
+            bool suc = await new UnaryRpc(
+                _model.Svc,
+                "Ea.DelRow",
+                p_entity,
+                _model.Schema.Name
+            ).Call<int>() == 1;
+
+            if (p_isNotify)
+            {
+                if (suc)
+                    AtKit.Msg("删除成功！");
+                else
+                    AtKit.Warn("删除失败！", true);
+            }
+            return suc;
+        }
+
+        /// <summary>
+        /// 调用服务端Repo批量删除实体
+        /// </summary>
+        /// <param name="p_entities">实体列表</param>
+        /// <param name="p_isNotify">是否提示删除结果</param>
+        /// <returns>true 删除成功</returns>
+        public async Task<bool> DelRows(Table p_entities, bool p_isNotify = true)
+        {
+            if (p_entities == null || p_entities.Count == 0)
+            {
+                if (p_isNotify)
+                    AtKit.Msg(_saveError);
+                return false;
+            }
+
+            bool suc = await new UnaryRpc(
+                _model.Svc,
+                "Ea.DelRows",
+                p_entities,
+                _model.Schema.Name
+            ).Call<int>() == p_entities.Count;
+
+            if (p_isNotify)
+            {
+                if (suc)
+                    AtKit.Msg("删除成功！");
+                else
+                    AtKit.Warn("删除失败！", true);
+            }
+            return suc;
+        }
+
+        /// <summary>
+        /// 调用服务端Repo删除实体
         /// </summary>
         /// <param name="p_id">主键</param>
         /// <param name="p_isNotify">是否提示删除结果</param>
-        /// <returns>实际删除行数</returns>
-        public async Task<bool> Delete(string p_id, bool p_isNotify = true)
+        /// <returns>true 删除成功</returns>
+        public async Task<bool> DelRowByKey(string p_id, bool p_isNotify = true)
         {
-            bool suc = await Exec(_model.Schema.SqlDelete, new { id = p_id }) == 1;
+            if (string.IsNullOrEmpty(p_id))
+            {
+                if (p_isNotify)
+                    AtKit.Msg(_saveError);
+                return false;
+            }
+
+            bool suc = await new UnaryRpc(
+                _model.Svc,
+                "Ea.DelRowByKey",
+                p_id,
+                _model.Schema.Name
+            ).Call<int>() == 1;
             if (p_isNotify)
-                AtKit.Msg(suc ? "删除成功！" : "删除失败！");
+            {
+                if (suc)
+                    AtKit.Msg("删除成功！");
+                else
+                    AtKit.Warn("删除失败！", true);
+            }
             return suc;
         }
         #endregion
@@ -371,7 +594,7 @@ namespace Dt.Core
             save.AcceptChanges();
             save["dispidx"] = p_src["dispidx"];
 
-            return Save(tbl, false);
+            return BatchSave(tbl, false);
         }
         #endregion
 

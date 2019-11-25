@@ -15,7 +15,8 @@ namespace Dt.Core
     /// <summary>
     /// 删除后事件
     /// </summary>
-    public class DeletedEvent : IEvent
+    public class DeleteEvent<TEntity> : IEvent
+        where TEntity : Entity
     {
         /// <summary>
         /// 实体主键

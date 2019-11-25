@@ -33,6 +33,7 @@ namespace Dt.Core
     {
         #region 成员变量
         static readonly Dictionary<string, string> _sqlDict;
+        static readonly Dictionary<string, Type> _entityDict;
         #endregion
 
         #region 构造方法
@@ -43,6 +44,7 @@ namespace Dt.Core
             GroupMethods = new Dictionary<string, List<string>>();
             // Sql缓存字典
             _sqlDict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            _entityDict = new Dictionary<string, Type>(StringComparer.OrdinalIgnoreCase);
         }
         #endregion
 
@@ -278,6 +280,20 @@ namespace Dt.Core
 
         #endregion
 
+        #region 实体类型
+        /// <summary>
+        /// 获取实体类型，不存在时抛出异常
+        /// </summary>
+        /// <param name="p_tblName">表名</param>
+        /// <returns>实体类型</returns>
+        public static Type GetEntityType(string p_tblName)
+        {
+            if (_entityDict.TryGetValue(p_tblName, out var type))
+                return type;
+            throw new Exception($"表{p_tblName}不存在实体类型！");
+        }
+        #endregion
+
         #region Startup
         /// <summary>
         /// 注入服务，提取程序集中的Api列表、事件处理类型、服务列表、可序列化类型列表，注册服务，添加拦截
@@ -335,6 +351,14 @@ namespace Dt.Core
                             .ConfigureLifecycle(svcAttr.Lifetime, null);
                     }
                     continue;
+                }
+
+                // 实体类型字典
+                if (type.IsSubclassOf(typeof(Entity)))
+                {
+                    var tbl = type.GetCustomAttribute<TblAttribute>(false);
+                    if (tbl != null && !string.IsNullOrEmpty(tbl.Name))
+                        _entityDict[tbl.Name.ToLower()] = type;
                 }
 
                 // 自定义json序列化对象

@@ -19,6 +19,8 @@ namespace Dt.Core
     public partial class Table : ITreeData
     {
         #region 创建表结构
+        static Dictionary<string, Table> _tblTemplate = new Dictionary<string, Table>();
+
         /// <summary>
         /// 根据表名创建空Table
         /// </summary>
@@ -33,6 +35,27 @@ namespace Dt.Core
                 tbl._columns.Add(new Column(col.ColName, GetColType(col.DbType)));
             }
             return tbl;
+        }
+
+        /// <summary>
+        /// 创建独立行并设置初始值，已设置IsAdded标志！参数null时为空行
+        /// <para>有参数时将参数的属性值作为初始值，前提是属性名和列名相同(不区分大小写)且类型相同</para>
+        /// <para>支持匿名对象，主要为简化编码</para>
+        /// </summary>
+        /// <param name="p_tblName">表名</param>
+        /// <param name="p_init">含初始值的对象，一般为匿名对象</param>
+        /// <returns>返回独立行</returns>
+        public static Row NewRow(string p_tblName, object p_init = null)
+        {
+            Check.NotNullOrEmpty(p_tblName);
+            string tblName = p_tblName.ToLower();
+            Table tbl;
+            if (!_tblTemplate.TryGetValue(tblName, out tbl))
+            {
+                tbl = Create(tblName);
+                _tblTemplate[tblName] = tbl;
+            }
+            return tbl.NewRow(p_init);
         }
 
         /// <summary>

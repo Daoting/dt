@@ -88,20 +88,20 @@ namespace Dt.Core
         /// <param name="p_id">主键</param>
         /// <param name="p_loadDetails">是否加载附加数据，默认false</param>
         /// <returns>返回实体对象或null</returns>
-        public Task<TEntity> GetByKey(long p_id, bool p_loadDetails = false)
+        public Task<TEntity> GetByKey(string p_id, bool p_loadDetails = false)
         {
             return Get(_model.Schema.SqlSelect, new { id = p_id }, p_loadDetails);
         }
 
         /// <summary>
-        /// 根据主键获得实体对象(包含所有列值)，不存在时返回null，仅支持单主键
+        /// 以参数值方式执行Sql语句，只返回第一个单元格数据
         /// </summary>
-        /// <param name="p_id">主键</param>
-        /// <param name="p_loadDetails">是否加载附加数据，默认false</param>
-        /// <returns>返回实体对象或null</returns>
-        public Task<TEntity> GetByKey(string p_id, bool p_loadDetails = false)
+        /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
+        /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
+        /// <returns>返回第一个单元格数据</returns>
+        public Task<T> GetScalar<T>(string p_keyOrSql, object p_params = null)
         {
-            return Get(_model.Schema.SqlSelect, new { id = p_id }, p_loadDetails);
+            return _.Db.GetScalar<T>(p_keyOrSql, p_params);
         }
 
         /// <summary>
@@ -130,9 +130,8 @@ namespace Dt.Core
         /// 保存实体数据，同步保存子表数据
         /// </summary>
         /// <param name="p_entity">待保存的实体</param>
-        /// <param name="p_cudEvent">触发实体保存的事件类型，默认不触发</param>
         /// <returns>是否成功</returns>
-        public async Task<bool> Save(TEntity p_entity, CudEvent p_cudEvent = CudEvent.None)
+        public async Task<bool> Save(TEntity p_entity)
         {
             // p_entity为null时已触发异常
             Dict dt = _model.Schema.GetSaveSql(p_entity);
@@ -166,8 +165,7 @@ namespace Dt.Core
                 return false;
 
             // 实体事件
-            AddSaveEvent(p_entity, p_cudEvent);
-            GatherEvents(p_entity);
+            GatherSaveEvents(p_entity);
             p_entity.AcceptChanges();
             return true;
         }
@@ -175,21 +173,9 @@ namespace Dt.Core
         /// <summary>
         /// 批量保存实体数据，根据实体状态执行增改，同步保存每个实体的子表数据
         /// </summary>
-        /// <param name="p_tbl">待保存</param>
-        /// <param name="p_cudEvent">触发实体保存的事件类型，默认不触发</param>
-        /// <returns>true 保存成功</returns>
-        public Task<bool> Save(Table<TEntity> p_tbl, CudEvent p_cudEvent = CudEvent.None)
-        {
-            return Save((IList<TEntity>)p_tbl, p_cudEvent);
-        }
-
-        /// <summary>
-        /// 批量保存实体数据，根据实体状态执行增改，同步保存每个实体的子表数据
-        /// </summary>
         /// <param name="p_entities">待保存</param>
-        /// <param name="p_cudEvent">触发实体保存的事件类型，默认不触发</param>
         /// <returns>true 保存成功</returns>
-        public async Task<bool> Save(IList<TEntity> p_entities, CudEvent p_cudEvent = CudEvent.None)
+        public async Task<bool> BatchSave(IList<TEntity> p_entities)
         {
             List<Dict> dts = _model.Schema.GetBatchSaveSql(p_entities);
             if (dts == null)
@@ -216,8 +202,7 @@ namespace Dt.Core
             // 实体事件
             foreach (TEntity entity in p_entities)
             {
-                AddSaveEvent(entity, p_cudEvent);
-                GatherEvents(entity);
+                GatherSaveEvents(entity);
                 entity.AcceptChanges();
             }
 
@@ -232,9 +217,8 @@ namespace Dt.Core
         /// 删除实体，依靠数据库的级联删除自动删除子实体
         /// </summary>
         /// <param name="p_entity">待删除的实体</param>
-        /// <param name="p_cudEvent">触发实体删除的事件类型，默认不触发</param>
         /// <returns>实际删除行数</returns>
-        public async Task<int> Delete(TEntity p_entity, CudEvent p_cudEvent = CudEvent.None)
+        public async Task<int> Delete(TEntity p_entity)
         {
             Check.NotNull(p_entity);
             Dict dt = _model.Schema.GetDeleteSql(new List<Row> { p_entity });
@@ -242,8 +226,7 @@ namespace Dt.Core
             if (cnt == 1)
             {
                 // 删除实体事件
-                AddDeleteEvent(p_entity.ID.ToString(), p_cudEvent);
-                GatherEvents(p_entity);
+                GatherDelEvents(p_entity);
             }
             return cnt;
         }
@@ -251,21 +234,9 @@ namespace Dt.Core
         /// <summary>
         /// 批量删除实体，依靠数据库的级联删除自动删除子实体
         /// </summary>
-        /// <param name="p_tbl">实体列表</param>
-        /// <param name="p_cudEvent">触发实体删除的事件类型，默认不触发</param>
-        /// <returns>实际删除行数</returns>
-        public Task<int> Delete(Table<TEntity> p_tbl, CudEvent p_cudEvent = CudEvent.None)
-        {
-            return Delete((IList<TEntity>)p_tbl, p_cudEvent);
-        }
-
-        /// <summary>
-        /// 批量删除实体，依靠数据库的级联删除自动删除子实体
-        /// </summary>
         /// <param name="p_entities">实体列表</param>
-        /// <param name="p_cudEvent">触发实体删除的事件类型，默认不触发</param>
         /// <returns>实际删除行数</returns>
-        public async Task<int> Delete(IList<TEntity> p_entities, CudEvent p_cudEvent = CudEvent.None)
+        public async Task<int> BatchDelete(IList<TEntity> p_entities)
         {
             if (p_entities == null || p_entities.Count == 0)
                 return 0;
@@ -279,8 +250,7 @@ namespace Dt.Core
                 if (await _.Db.Exec(sql, ls[i]) == 1)
                 {
                     cnt++;
-                    AddSaveEvent(p_entities[i], p_cudEvent);
-                    GatherEvents(p_entities[i]);
+                    GatherDelEvents(p_entities[i]);
                 }
             }
             return cnt;
@@ -290,28 +260,13 @@ namespace Dt.Core
         /// 根据主键删除实体对象，依靠数据库的级联删除自动删除子实体
         /// </summary>
         /// <param name="p_id">主键</param>
-        /// <param name="p_cudEvent">触发删除实体的事件类型，默认不触发</param>
         /// <returns>实际删除行数</returns>
-        public async Task<int> Delete(long p_id, CudEvent p_cudEvent = CudEvent.None)
+        public async Task<int> DelByKey(string p_id)
         {
-            int cnt = await _.Db.Exec(_model.Schema.SqlDelete, new { id = p_id });
-            if (cnt == 1)
-                AddDeleteEvent(p_id.ToString(), p_cudEvent);
-            return cnt;
-        }
-
-        /// <summary>
-        /// 根据主键删除实体对象，依靠数据库的级联删除自动删除子实体
-        /// </summary>
-        /// <param name="p_id">主键</param>
-        /// <param name="p_cudEvent">触发删除实体的事件类型，默认不触发</param>
-        /// <returns>实际删除行数</returns>
-        public async Task<int> Delete(string p_id, CudEvent p_cudEvent = CudEvent.None)
-        {
-            int cnt = await _.Db.Exec(_model.Schema.SqlDelete, new { id = p_id });
-            if (cnt == 1)
-                AddDeleteEvent(p_id, p_cudEvent);
-            return cnt;
+            var entity = await GetByKey(p_id);
+            if (entity == null)
+                return 0;
+            return await Delete(entity);
         }
         #endregion
 
@@ -386,42 +341,53 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 收集领域事件：实体保存事件
+        /// 保存实体时收集待发布的领域事件
         /// </summary>
         /// <param name="p_entity"></param>
-        /// <param name="p_cudEvent"></param>
-        void AddSaveEvent(TEntity p_entity, CudEvent p_cudEvent)
-        {
-            if (p_cudEvent != CudEvent.None)
-            {
-                var ev = new SavedEvent { ID = p_entity.ID.ToString(), IsInsert = p_entity.IsAdded };
-                _.AddDomainEvent(new DomainEvent(p_cudEvent == CudEvent.Remote, ev));
-            }
-        }
-
-        /// <summary>
-        /// 收集领域事件：删除实体事件
-        /// </summary>
-        /// <param name="p_id"></param>
-        /// <param name="p_cudEvent"></param>
-        void AddDeleteEvent(string p_id, CudEvent p_cudEvent)
-        {
-            if (p_cudEvent != CudEvent.None)
-            {
-                var ev = new DeletedEvent { ID = p_id };
-                _.AddDomainEvent(new DomainEvent(p_cudEvent == CudEvent.Remote, ev));
-            }
-        }
-
-        /// <summary>
-        /// 收集待发布的领域事件
-        /// </summary>
-        /// <param name="p_entity"></param>
-        void GatherEvents(TEntity p_entity)
+        void GatherSaveEvents(TEntity p_entity)
         {
             var events = p_entity.GetDomainEvents();
             if (events != null)
                 _.AddDomainEvents(events);
+
+            var cudEvent = p_entity.GetCudEvent();
+            if (cudEvent != CudEvent.None)
+            {
+                if (p_entity.IsAdded)
+                {
+                    if ((cudEvent & CudEvent.LocalInsert) == CudEvent.LocalInsert)
+                        _.AddDomainEvent(new DomainEvent(false, new InsertEvent<TEntity> { ID = p_entity.ID.ToString() }));
+                    if ((cudEvent & CudEvent.RemoteInsert) == CudEvent.RemoteInsert)
+                        _.AddDomainEvent(new DomainEvent(true, new InsertEvent<TEntity> { ID = p_entity.ID.ToString() }));
+                }
+                else if (p_entity.IsChanged)
+                {
+                    if ((cudEvent & CudEvent.LocalUpdate) == CudEvent.LocalUpdate)
+                        _.AddDomainEvent(new DomainEvent(false, new UpdateEvent<TEntity> { ID = p_entity.ID.ToString() }));
+                    if ((cudEvent & CudEvent.RemoteUpdate) == CudEvent.RemoteUpdate)
+                        _.AddDomainEvent(new DomainEvent(true, new UpdateEvent<TEntity> { ID = p_entity.ID.ToString() }));
+                }
+            }
+        }
+
+        /// <summary>
+        /// 删除实体时收集待发布的领域事件
+        /// </summary>
+        /// <param name="p_entity"></param>
+        void GatherDelEvents(TEntity p_entity)
+        {
+            var events = p_entity.GetDomainEvents();
+            if (events != null)
+                _.AddDomainEvents(events);
+
+            var cudEvent = p_entity.GetCudEvent();
+            if (cudEvent != CudEvent.None)
+            {
+                if ((cudEvent & CudEvent.LocalDelete) == CudEvent.LocalDelete)
+                    _.AddDomainEvent(new DomainEvent(false, new DeleteEvent<TEntity> { ID = p_entity.ID.ToString() }));
+                if ((cudEvent & CudEvent.RemoteDelete) == CudEvent.RemoteDelete)
+                    _.AddDomainEvent(new DomainEvent(true, new DeleteEvent<TEntity> { ID = p_entity.ID.ToString() }));
+            }
         }
         #endregion
     }

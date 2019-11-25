@@ -8,7 +8,13 @@
     <a:WinItem DockState="DockedLeft">
         <a:Tabs>
             <a:Tab Title="查找用户">
-                <Button Content="查找" Click="OnSearch" />
+                <a:SearchFv x:Name="_fv">
+                    <TextBox x:Name="TextBox" PlaceholderText="姓名或手机号" />
+                    <a:CBar Title="常用" />
+                    <Button Content="全部" />
+                    <Button Content="今天注册" />
+                    <Button Content="查找" Click="OnSearch" />
+                </a:SearchFv>
             </a:Tab>
         </a:Tabs>
     </a:WinItem>
@@ -23,7 +29,7 @@
                 <a:Tab.PhoneBar>
                     <Button x:Name="_btnSearch" Content="查找用户" Click="OnNaviToSearch" />
                 </a:Tab.PhoneBar>
-                <a:Lv x:Name="_lvUser" ViewMode="Table">
+                <a:Lv x:Name="_lvUser" ViewMode="Table" ItemClick="OnItemClick">
                     <a:Ex.Menu>
                         <a:Menu>
                             <a:Mi ID="编辑" Icon="铅笔" Click="OnEditUser" />

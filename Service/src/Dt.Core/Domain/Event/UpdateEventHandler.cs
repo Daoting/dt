@@ -14,11 +14,12 @@ using System.Threading.Tasks;
 namespace Dt.Core
 {
     /// <summary>
-    /// 保存后事件处理的默认基类
+    /// 更新后事件处理的默认基类
     /// </summary>
-    public abstract class SavedEventHandler : IRemoteHandler<SavedEvent>, ILocalHandler<SavedEvent>
+    public abstract class UpdateEventHandler<TEntity> : IRemoteHandler<UpdateEvent<TEntity>>, ILocalHandler<UpdateEvent<TEntity>>
+        where TEntity : Entity
     {
-        public virtual Task Handle(SavedEvent p_event)
+        public virtual Task Handle(UpdateEvent<TEntity> p_event)
         {
             return Task.CompletedTask;
         }

@@ -18,7 +18,7 @@ namespace Dt.App
     /// <summary>
     /// 内核模型服务Api代理类（自动生成）
     /// </summary>
-    public class AtCm
+    public class AtCm : SrvAgent<cm>
     {
         #region Entry
         /// <summary>
@@ -84,14 +84,14 @@ namespace Dt.App
         /// <summary>
         /// 新增或修改用户信息
         /// </summary>
-        /// <param name="p_row"></param>
+        /// <param name="p_user"></param>
         /// <returns></returns>
-        public static Task<bool> SaveUser(Row p_row)
+        public static Task<bool> SaveUser(Row p_user)
         {
             return new UnaryRpc(
                 "cm",
                 "UserRoleApi.SaveUser",
-                p_row
+                p_user
             ).Call<bool>();
         }
 
@@ -186,4 +186,9 @@ namespace Dt.App
         }
         #endregion
     }
+
+    /// <summary>
+    /// 内核模型服务，只为规范服务名称
+    /// </summary>
+    public class cm { }
 }

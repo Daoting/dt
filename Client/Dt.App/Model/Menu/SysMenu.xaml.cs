@@ -9,8 +9,6 @@
 #region 引用命名
 using Dt.Base;
 using Dt.Core;
-using Dt.Core.Model;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 #endregion
@@ -42,7 +40,7 @@ namespace Dt.App.Model
         async void LoadTreeData()
         {
             // 记录已选择的节点
-            var m = _tv.GetSelected<Menu>();
+            var m = _tv.Selected<Menu>();
             long id = m == null ? -1 : m.ID;
             _tv.Data = await _menu.Query("菜单-完整树");
 
@@ -60,7 +58,7 @@ namespace Dt.App.Model
         {
             var id = e.Row.ID;
             if (id > 0)
-                _fv.Data = await _menu.GetRow("菜单-id菜单项", new { id = id });
+                _fv.Data = await _menu.Get("菜单-id菜单项", new { id = id });
             else
                 _fv.Data = _tv.FixedRoot;
             NaviTo("菜单项,菜单授权");
@@ -122,7 +120,7 @@ namespace Dt.App.Model
 
         async void AddMenu(bool p_isGroup)
         {
-            var sel = (Menu)_tv.SelectedItem;
+            var sel = _tv.Selected<Menu>();
             var ids = await _menu.NewIDAndSeq("sq_menu");
             Menu m = new Menu(
                 ID: ids[0],
@@ -142,7 +140,7 @@ namespace Dt.App.Model
             if (_fv.ExistNull("name"))
                 return;
 
-            if (await _menu.Save(_fv.Get<Menu>()))
+            if (await _menu.Save(_fv.To<Menu>()))
             {
                 OnFvDataChanged(_fv, _fv.Data);
                 LoadTreeData();
@@ -151,7 +149,7 @@ namespace Dt.App.Model
 
         void OnDel(object sender, Mi e)
         {
-            DelMenuRow(_fv.Get<Menu>());
+            DelMenuRow(_fv.To<Menu>());
         }
 
         async void DelMenuRow(Menu p_row)
@@ -192,7 +190,7 @@ namespace Dt.App.Model
 
         void OnOpen(object sender, Mi e)
         {
-            var row = _fv.Get<Menu>();
+            var row = _fv.To<Menu>();
             OmMenu menu = new OmMenu();
             menu.ID = row.ID;
             menu.Name = row.Name;
@@ -210,7 +208,7 @@ namespace Dt.App.Model
         async void OnAddRole(object sender, Mi e)
         {
             SelectRolesDlg dlg = new SelectRolesDlg();
-            long menuID = _fv.Get<Menu>().ID;
+            long menuID = _fv.To<Menu>().ID;
             if (await dlg.Show(RoleRelations.Menu, menuID, e))
             {
                 List<RoleMenu> ls = new List<RoleMenu>();
@@ -218,14 +216,14 @@ namespace Dt.App.Model
                 {
                     ls.Add(new RoleMenu(row.ID, menuID));
                 }
-                if (ls.Count > 0 && await _roleMenu.Save(ls))
+                if (ls.Count > 0 && await _roleMenu.BatchSave(ls))
                     _lvRole.Data = await _roleMenu.Query("菜单-关联的角色", new { menuid = menuID });
             }
         }
 
         async void OnRemoveRole(object sender, Mi e)
         {
-            if (await _roleMenu.Delete(_lvRole.GetSelected<RoleMenu>()))
+            if (await _roleMenu.Delete(_lvRole.Selected<RoleMenu>()))
                 _lvRole.DeleteSelection();
         }
 
@@ -239,7 +237,7 @@ namespace Dt.App.Model
 
         async void OnMoveUp(object sender, Mi e)
         {
-            var src = e.Get<Menu>();
+            var src = e.To<Menu>();
             if (src.ID == 0)
                 return;
 
@@ -250,7 +248,7 @@ namespace Dt.App.Model
 
         async void OnMoveDown(object sender, Mi e)
         {
-            var src = e.Get<Menu>();
+            var src = e.To<Menu>();
             if (src.ID == 0)
                 return;
 
@@ -261,11 +259,7 @@ namespace Dt.App.Model
 
         void OnListDel(object sender, Mi e)
         {
-            Table<Menu> menus = new Table<Menu>();
-            foreach (var row1 in menus)
-            {
-            }
-            DelMenuRow(e.Get<Menu>());
+            DelMenuRow(e.To<Menu>());
         }
     }
 }

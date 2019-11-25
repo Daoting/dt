@@ -387,6 +387,17 @@ namespace Dt.Base
 
         #region 外部方法
         /// <summary>
+        /// 获取指定实体类型的数据源
+        /// </summary>
+        /// <typeparam name="TEntity">实体类型</typeparam>
+        /// <returns></returns>
+        public TEntity To<TEntity>()
+            where TEntity : Entity
+        {
+            return GetValue(DataProperty) as TEntity;
+        }
+
+        /// <summary>
         /// 名称列表中的格不允许为空，空时给出警告并返回true
         /// </summary>
         /// <param name="p_names"></param>
@@ -433,17 +444,6 @@ namespace Dt.Base
                 row.RejectChanges();
             else if (DataView != null)
                 DataView.RejectChanges();
-        }
-
-        /// <summary>
-        /// 获取指定实体类型的数据源
-        /// </summary>
-        /// <typeparam name="TEntity">实体类型</typeparam>
-        /// <returns></returns>
-        public TEntity Get<TEntity>()
-            where TEntity : Entity
-        {
-            return GetValue(DataProperty) as TEntity;
         }
 
         /// <summary>
@@ -626,11 +626,14 @@ namespace Dt.Base
             else if (e.CollectionChange == CollectionChange.Reset)
             {
                 _panel.Clear();
-                LoadAllItems();
+                for (int i = 0; i < _items.Count; i++)
+                {
+                    AddItem(_items[i], i);
+                }
             }
         }
 
-        void LoadAllItems()
+        protected virtual void LoadAllItems()
         {
             for (int i = 0; i < _items.Count; i++)
             {
@@ -638,7 +641,7 @@ namespace Dt.Base
             }
         }
 
-        void AddItem(FrameworkElement p_item, int p_index)
+        protected void AddItem(FrameworkElement p_item, int p_index)
         {
             FrameworkElement elem = p_item;
             if (p_item is FvCell cell)

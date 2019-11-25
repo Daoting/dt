@@ -24,22 +24,21 @@ namespace Dt.Cm
         /// <summary>
         /// 新增或修改用户信息
         /// </summary>
-        /// <param name="p_row"></param>
+        /// <param name="p_user"></param>
         /// <returns></returns>
-        public async Task<bool> SaveUser(Row p_row)
+        public async Task<bool> SaveUser(User p_user)
         {
-            //User u = p_row.To<User>();
-            //var repo = new Repo<User>();
-            
-            //if (p_row.IsAdded)
-            //    return await repo.Insert(u);
+            bool isAdded = p_user.IsAdded;
+            if (isAdded)
+                p_user.InitNewUser();
 
-            //if (await repo.Update(u))
-            //{
-            //    // 用户信息修改，移除缓存
-            //    await Cache<UserItem>.Remove(p_row.Str("id"));
-            //    return true;
-            //}
+            if (await new Repo<User>().Save(p_user))
+            {
+                // 用户信息修改，移除缓存
+                if (!isAdded)
+                    await Cache<UserItem>.Remove(p_user.Str("id"));
+                return true;
+            }
             return false;
         }
 
@@ -50,11 +49,11 @@ namespace Dt.Cm
         /// <returns></returns>
         public async Task<bool> DeleteUser(long p_id)
         {
-            //if (await new Repo<User>().Delete(p_id))
-            //{
-            //    await Cache<UserItem>.Remove(p_id.ToString());
-            //    return true;
-            //}
+            if (await new Repo<User>().DelByKey(p_id) == 1)
+            {
+                await Cache<UserItem>.Remove(p_id.ToString());
+                return true;
+            }
             return false;
         }
 
@@ -65,14 +64,17 @@ namespace Dt.Cm
         /// <returns></returns>
         public async Task<bool> ResetUserPwd(long p_id)
         {
-            //var repo = new Repo<User>();
-            //User u = await repo.Get(p_id);
-            //if (u != null)
-            //{
-            //    u.StartTrack();
-            //    u.ResetPwd();
-            //    return await repo.Update(u);
-            //}
+            var repo = new Repo<User>();
+            User u = await repo.GetByKey(p_id);
+            if (u != null)
+            {
+                u.ResetPwd();
+                if (await repo.Save(u))
+                {
+                    await Cache<UserItem>.Remove(p_id.ToString());
+                    return true;
+                }
+            }
             return false;
         }
 
@@ -83,14 +85,17 @@ namespace Dt.Cm
         /// <returns></returns>
         public async Task<bool> ToggleUserExpired(long p_id)
         {
-            //var repo = new Repo<User>();
-            //User u = await repo.Get(p_id);
-            //if (u != null)
-            //{
-            //    u.StartTrack();
-            //    u.ToggleExpired();
-            //    return await repo.Update(u);
-            //}
+            var repo = new Repo<User>();
+            User u = await repo.GetByKey(p_id);
+            if (u != null)
+            {
+                u.ToggleExpired();
+                if (await repo.Save(u))
+                {
+                    await Cache<UserItem>.Remove(p_id.ToString());
+                    return true;
+                }
+            }
             return false;
         }
 
@@ -124,8 +129,12 @@ namespace Dt.Cm
 
             foreach (var rid in p_roleIDs)
             {
-                if (await _.Db.Exec("用户-增加用户角色", new { userid = p_userID, roleid = rid }) == 0)
-                    return false;
+                // 任何人不需要关联
+                if (rid != 1)
+                {
+                    if (await _.Db.Exec("用户-增加用户角色", new { userid = p_userID, roleid = rid }) == 0)
+                        return false;
+                }
             }
             await Cache<UserItem>.Remove(p_userID.ToString());
             return true;
@@ -140,7 +149,8 @@ namespace Dt.Cm
         [Transaction]
         public async Task<bool> AddRoleUser(long p_roleID, List<long> p_userIDs)
         {
-            if (p_userIDs == null || p_userIDs.Count == 0)
+            // 任何人 roleid = 1 
+            if (p_userIDs == null || p_userIDs.Count == 0 || p_roleID == 1)
                 return false;
 
             foreach (var uid in p_userIDs)

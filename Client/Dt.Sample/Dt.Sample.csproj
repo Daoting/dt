@@ -53,7 +53,8 @@
     <Page Include="FormView\FvObjData.xaml" />
     <Page Include="FormView\FvData.xaml" />
     <Page Include="FormView\FvAutoCell.xaml" />
-
+    <Page Include="FormView\SearchFvDemo.xaml" />
+    
     <Page Include="ListView\LvHome.xaml" />
     <Page Include="ListView\LvViewBase.xaml" />
     <Page Include="ListView\LvViewEx.xaml" />
@@ -197,7 +198,10 @@
     <Compile Update="FormView\FvAutoCell.xaml.cs">
       <DependentUpon>FvAutoCell.xaml</DependentUpon>
     </Compile>
-
+    <Compile Update="FormView\SearchFvDemo.xaml.cs">
+      <DependentUpon>SearchFvDemo.xaml</DependentUpon>
+    </Compile>
+    
     <Compile Update="ListView\LvHome.xaml.cs">
       <DependentUpon>LvHome.xaml</DependentUpon>
     </Compile>

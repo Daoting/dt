@@ -14,7 +14,6 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using System.Reflection;
 #endregion
 
 namespace Dt.Core
@@ -154,14 +153,13 @@ namespace Dt.Core
         public Row AddRow(object p_init = null)
         {
             Row row = NewRow(p_init);
-            row.IsAdded = true;
             row.Table = this;
             base.Add(row);
             return row;
         }
 
         /// <summary>
-        /// 创建独立行并设置初始值，未添加到当前Table！未设置IsAdded标志！参数null时为空行
+        /// 创建独立行并设置初始值，未添加到当前Table！已设置IsAdded标志！参数null时为空行
         /// <para>有参数时将参数的属性值作为初始值，前提是属性名和列名相同(不区分大小写)且类型相同</para>
         /// <para>支持匿名对象，主要为简化编码</para>
         /// <para>不再支持多参数按顺序赋值！</para>
@@ -171,6 +169,7 @@ namespace Dt.Core
         public Row NewRow(object p_init = null)
         {
             Row row = CreateRowInstance();
+            row.IsAdded = true;
 
             // 空行
             if (p_init == null)
@@ -334,13 +333,49 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 复制表结构及数据，深度克隆
+        /// 深度克隆表结构及数据，返回同类型的Table
         /// </summary>
         /// <returns></returns>
         public Table Clone()
         {
+            if (Count > 0)
+                return CloneTo(this[0].GetType());
+
+            // 空表
             // 当前可能为Table<TRow>
             Table tbl = (Table)Activator.CreateInstance(GetType());
+            // 添加列
+            foreach (var col in _columns)
+            {
+                tbl._columns.Add(new Column(col.ID, col.Type));
+            }
+            return tbl;
+        }
+
+        /// <summary>
+        /// 将表结构及数据深度克隆到新实体类型的表，返回新实体表，一般类型转换时用
+        /// </summary>
+        /// <typeparam name="TEntity">实体类型</typeparam>
+        /// <returns>返回新实体表</returns>
+        public Table<TEntity> CloneTo<TEntity>()
+            where TEntity : Entity
+        {
+            return (Table<TEntity>)CloneTo(typeof(TEntity));
+        }
+
+        /// <summary>
+        /// 将表结构及数据深度克隆到新实体类型的表，返回新实体表，一般类型转换时用
+        /// </summary>
+        /// <param name="p_rowType">实体类型</param>
+        /// <returns>返回新实体表</returns>
+        public Table CloneTo(Type p_rowType)
+        {
+            Table tbl;
+            if (p_rowType == typeof(Row))
+                tbl = new Table();
+            else
+                tbl = (Table)Activator.CreateInstance(typeof(Table<>).MakeGenericType(p_rowType));
+
             // 添加列
             foreach (var col in _columns)
             {
@@ -350,7 +385,7 @@ namespace Dt.Core
             // 复制数据
             foreach (var row in this)
             {
-                Row clone = row.Clone();
+                Row clone = row.CloneTo(p_rowType);
                 clone.Table = tbl;
                 tbl.Add(clone);
             }

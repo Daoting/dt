@@ -386,9 +386,17 @@ namespace Dt.Base
         /// <summary>
         /// 获取上下文菜单的目标数据
         /// </summary>
-        public object TargetData
+        public object Data
         {
             get { return Owner?.TargetData; }
+        }
+
+        /// <summary>
+        /// 获取上下文菜单的目标数据
+        /// </summary>
+        public Row Row
+        {
+            get { return Owner?.TargetData as Row; }
         }
 
         /// <summary>
@@ -396,7 +404,7 @@ namespace Dt.Base
         /// </summary>
         /// <typeparam name="TEntity">实体类型</typeparam>
         /// <returns></returns>
-        public TEntity Get<TEntity>()
+        public TEntity To<TEntity>()
             where TEntity : Row
         {
             return Owner?.TargetData as TEntity;

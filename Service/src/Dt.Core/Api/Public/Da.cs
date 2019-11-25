@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace Dt.Core
 {
     /// <summary>
-    /// MySql默认库的数据访问Api
+    /// MySql默认库的数据访问Api，全称DataAccess
     /// </summary>
     [Api(AgentMode = AgentMode.Generic)]
     public class Da : BaseApi
@@ -51,7 +51,7 @@ namespace Dt.Core
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回第一个单元格数据</returns>
         [CustomAgent(
-@"public async Task<T> GetScalar<T>(string p_keyOrSql, object p_params = null)
+@"public static async Task<T> GetScalar<T>(string p_keyOrSql, object p_params = null)
 {
     object result = await new UnaryRpc(
         ###,

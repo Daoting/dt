@@ -31,6 +31,7 @@ namespace Dt.Sample
                 new NaviRow(Icons.排列, "自动生成格", typeof(FvAutoCell), "根据数据源列类型生成对应格"),
                 new NaviRow(Icons.数据库, "多类型数据源", typeof(FvDataSource), "支持二维数据行和对普通对象作为数据源"),
                 new NaviRow(Icons.芯片, "自定义内容", typeof(CustomCell), "自定义格内容"),
+                new NaviRow(Icons.芯片, "查询面板", typeof(SearchFvDemo), "手机样式查询面板"),
                 new NaviRow(Icons.排列, "自动布局", typeof(FvLayout), "面板布局及格的样式"),
             };
         }

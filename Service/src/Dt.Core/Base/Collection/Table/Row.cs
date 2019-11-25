@@ -227,13 +227,35 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 深度复制行对象，返回独立行，未设置IsAdded标志！
+        /// 深度克隆行对象，返回同类型的独立行
         /// </summary>
         /// <returns>返回独立行</returns>
         public Row Clone()
         {
             // 当前可能为Row的派生类
-            Row row = (Row)Activator.CreateInstance(GetType());
+            return CloneTo(GetType());
+        }
+
+        /// <summary>
+        /// 将当前对象深度克隆到指定类型的新实体对象，返回新独立实体，一般类型转换时用
+        /// </summary>
+        /// <typeparam name="TEntity">实体类型</typeparam>
+        /// <returns>返回新独立实体</returns>
+        public TEntity CloneTo<TEntity>()
+            where TEntity : Entity
+        {
+            return (TEntity)CloneTo(typeof(TEntity));
+        }
+
+        /// <summary>
+        /// 将当前对象深度克隆到指定类型的新实体对象，返回新独立实体，一般类型转换时用
+        /// </summary>
+        /// <param name="p_type">实体类型</param>
+        /// <returns>返回新独立实体</returns>
+        public Row CloneTo(Type p_type)
+        {
+            Row row = (Row)Activator.CreateInstance(p_type);
+            row.IsAdded = true;
             foreach (var item in _cells)
             {
                 if (item.IsChanged)
@@ -262,22 +284,6 @@ namespace Dt.Core
         {
             if (Table != null)
                 Table.Remove(this);
-        }
-
-        /// <summary>
-        /// 复制给定行数据的对应列值
-        /// </summary>
-        /// <param name="p_src"></param>
-        public void Copy(Row p_src)
-        {
-            if (p_src == null)
-                return;
-
-            foreach (var item in _cells)
-            {
-                if (p_src.Contains(item.ID))
-                    item.InitVal(p_src[item.ID]);
-            }
         }
 
         /// <summary>

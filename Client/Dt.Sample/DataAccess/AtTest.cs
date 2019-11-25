@@ -10,22 +10,22 @@ namespace Dt.Sample
 {
     public static class AtTest
     {
-        public static async Task<Table> GetTable<TRow>()
-            where TRow : Row
+        public static async Task<Table> GetTable<TEntity>()
+            where TEntity : Entity
         {
             return await new UnaryRpc(
                 "cm",
                 "TestSerialize.GetTable"
-            ).Call<Table<TRow>>();
+            ).Call<Table<TEntity>>();
         }
 
-        public static Task<TRow> GetRow<TRow>()
-            where TRow : Row
+        public static Task<TEntity> GetRow<TEntity>()
+            where TEntity : Entity
         {
             return new UnaryRpc(
                 "cm",
                 "TestSerialize.GetRow"
-            ).Call<TRow>();
+            ).Call<TEntity>();
         }
 
         #region TestSerialize

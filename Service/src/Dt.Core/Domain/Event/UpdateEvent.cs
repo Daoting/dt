@@ -7,14 +7,20 @@
 #endregion
 
 #region 引用命名
-using Dt.Core;
-using System;
+using Dt.Core.EventBus;
 #endregion
 
-namespace Dt.App.Model
+namespace Dt.Core
 {
-    public partial class Menu
+    /// <summary>
+    /// 更新后事件
+    /// </summary>
+    public class UpdateEvent<TEntity> : IEvent
+        where TEntity : Entity
     {
-        
+        /// <summary>
+        /// 实体主键
+        /// </summary>
+        public string ID { get; set; }
     }
 }

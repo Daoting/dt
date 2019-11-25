@@ -731,7 +731,7 @@ namespace Dt.Sample
         public Student Employee { get; set; }
     }
 
-    public class MyRow : Row
+    public class MyRow : Entity
     {
         public string Col1
         {
