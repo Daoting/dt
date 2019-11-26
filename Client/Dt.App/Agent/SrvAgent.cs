@@ -147,6 +147,20 @@ namespace Dt.App
                 p_seqName
             ).Call<List<long>>();
         }
+
+        /// <summary>
+        /// 产生含3位标志位的新ID
+        /// </summary>
+        /// <param name="p_flag">ID标志，取值范围0-7</param>
+        /// <returns></returns>
+        public static Task<long> NewFlagID(int p_flag)
+        {
+            return new UnaryRpc(
+                typeof(TSrv).Name,
+                "Da.NewFlagID",
+                p_flag
+            ).Call<long>();
+        }
         #endregion
 
         #region Ea

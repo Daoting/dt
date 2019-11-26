@@ -77,8 +77,8 @@ namespace Dt.Core
         /// 发布消息提示
         /// </summary>
         /// <param name="p_content">显示内容</param>
-        /// <param name="p_autoClose">是否自动关闭，默认true</param>
-        public static void Msg(string p_content, bool p_autoClose = true)
+        /// <param name="p_delaySeconds">几秒后自动关闭，默认3秒，0表示不自动关闭</param>
+        public static void Msg(string p_content, int p_delaySeconds = 3)
         {
             if (string.IsNullOrEmpty(p_content))
                 return;
@@ -86,7 +86,7 @@ namespace Dt.Core
             NotifyInfo notify = new NotifyInfo();
             notify.Message = p_content;
             notify.NotifyType = NotifyType.Information;
-            notify.AutoClose = p_autoClose;
+            notify.DelaySeconds = p_delaySeconds;
             RunAsync(() => SysVisual.NotifyList.Add(notify));
         }
 
@@ -94,8 +94,8 @@ namespace Dt.Core
         /// 警告提示
         /// </summary>
         /// <param name="p_content">显示内容</param>
-        /// <param name="p_autoClose">是否自动关闭，默认false</param>
-        public static void Warn(string p_content, bool p_autoClose = false)
+        /// <param name="p_delaySeconds">几秒后自动关闭，默认5秒，0表示不自动关闭</param>
+        public static void Warn(string p_content, int p_delaySeconds = 5)
         {
             if (string.IsNullOrEmpty(p_content))
                 return;
@@ -103,7 +103,7 @@ namespace Dt.Core
             NotifyInfo notify = new NotifyInfo();
             notify.Message = p_content;
             notify.NotifyType = NotifyType.Warning;
-            notify.AutoClose = p_autoClose;
+            notify.DelaySeconds = p_delaySeconds;
             RunAsync(() => SysVisual.NotifyList.Add(notify));
         }
 

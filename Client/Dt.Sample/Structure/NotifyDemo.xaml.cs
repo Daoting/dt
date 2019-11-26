@@ -25,9 +25,9 @@ namespace Dt.Sample
         void OnShowNotify(object sender, RoutedEventArgs e)
         {
             if ((bool)_cbWarning.IsChecked)
-                AtKit.Warn(_tbMessage.Text, (bool)_cbAutoClose.IsChecked);
+                AtKit.Warn(_tbMessage.Text, (bool)_cbAutoClose.IsChecked ? 5 : 0);
             else
-                AtKit.Msg(_tbMessage.Text, (bool)_cbAutoClose.IsChecked);
+                AtKit.Msg(_tbMessage.Text, (bool)_cbAutoClose.IsChecked ? 3 : 0);
         }
 
         void OnCustomNotify(object sender, RoutedEventArgs e)
@@ -42,7 +42,7 @@ namespace Dt.Sample
             info.Message = _tbMessage.Text;
             info.Link = "查看详情";
             info.LinkCallback = OnLink;
-            info.AutoClose = (bool)_cbAutoClose.IsChecked;
+            info.DelaySeconds = (bool)_cbAutoClose.IsChecked ? 3 : 0;
             return info;
         }
 

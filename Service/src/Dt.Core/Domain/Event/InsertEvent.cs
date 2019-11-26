@@ -19,8 +19,8 @@ namespace Dt.Core
         where TEntity : Entity
     {
         /// <summary>
-        /// 实体主键
+        /// 实体
         /// </summary>
-        public string ID { get; set; }
+        public TEntity Entity { get; set; }
     }
 }

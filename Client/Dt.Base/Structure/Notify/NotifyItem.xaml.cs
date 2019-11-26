@@ -49,7 +49,7 @@ namespace Dt.Base
                 _sp.Children.Add(btn);
             }
 
-            if (_info.AutoClose)
+            if (_info.DelaySeconds > 0)
                 StartAutoClose();
 
             // 动画，uno暂时未实现
@@ -64,7 +64,7 @@ namespace Dt.Base
         void StartAutoClose()
         {
             KillCloseTimer();
-            _timerAutoClose = ThreadPoolTimer.CreateTimer(OnTimerHandler, TimeSpan.FromSeconds(4));
+            _timerAutoClose = ThreadPoolTimer.CreateTimer(OnTimerHandler, TimeSpan.FromSeconds(_info.DelaySeconds));
         }
 
         void KillCloseTimer()
@@ -146,7 +146,7 @@ namespace Dt.Base
         /// <param name="e"></param>
         void OnPointerExited(object sender, PointerRoutedEventArgs e)
         {
-            if (_info.AutoClose)
+            if (_info.DelaySeconds > 0)
                 StartAutoClose();
             _rc.Fill = null;
         }

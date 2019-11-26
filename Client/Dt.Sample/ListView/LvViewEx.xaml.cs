@@ -96,16 +96,5 @@ namespace Dt.Sample
         {
             return new NumericTicker(p_item.Row.Double("shengao"));
         }
-
-        public static string Group(GroupData<Row> p_group)
-        {
-            int man = 0;
-            foreach (var row in p_group)
-            {
-                if (row.Str("xb") == "男")
-                    man++;
-            }
-            return $"{p_group.Title}，共{p_group.Count}人，男医生{man}人，女医生{p_group.Count - man}人";
-        }
     }
 }

@@ -59,8 +59,27 @@ namespace Dt.App.Model
                 return;
             }
 
+            if (row.IsAdded)
+            {
+                row["id"] = await AtCm.NewFlagID(0);
+                // 初始密码为手机号后4位
+                row["pwd"] = AtKit.GetMD5(phone.Substring(phone.Length - 4));
+                row["ctime"] = row["mtime"] = AtSys.Now;
+            }
+            else
+            {
+                row["mtime"] = AtSys.Now;
+            }
             if (await AtCm.SaveRow(row, _tblName))
+            {
+                AtKit.Msg("保存成功！");
                 CreateUser();
+                _fv.GotoFirstCell();
+            }
+            else
+            {
+                AtKit.Warn("保存失败！");
+            }
         }
 
         void OnAdd(object sender, Mi e)

@@ -255,7 +255,7 @@ namespace Dt.Core
         public Row CloneTo(Type p_type)
         {
             Row row = (Row)Activator.CreateInstance(p_type);
-            row.IsAdded = true;
+            row.IsAdded = IsAdded;
             foreach (var item in _cells)
             {
                 if (item.IsChanged)

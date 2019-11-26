@@ -662,6 +662,52 @@ namespace Dt.Base
         #endregion
 
         #region 焦点处理
+        
+        /// <summary>
+        /// 自动跳入第一个可接收焦点的列
+        /// </summary>
+        public void GotoFirstCell()
+        {
+            foreach (var item in _panel.Children)
+            {
+                FvCell cell = item as FvCell;
+                if (cell != null && cell.ReceiveFocus())
+                    return;
+            }
+        }
+
+        /// <summary>
+        /// 最后一个非只读单元格获得焦点
+        /// </summary>
+        public void GotoLastCell()
+        {
+            for (int i = _panel.Children.Count - 1; i >= 0; i--)
+            {
+                FvCell cell = _panel.Children[i] as FvCell;
+                if (cell != null && cell.ReceiveFocus())
+                    return;
+            }
+        }
+
+        /// <summary>
+        /// 跳到指定单元格
+        /// </summary>
+        /// <param name="p_cellName">要跳到的格名称</param>
+        /// <returns>true 跳成功</returns>
+        public void GotoCell(string p_cellName)
+        {
+            FvCell cell = this[p_cellName];
+            if (cell != null)
+            {
+                if (!cell.ReceiveFocus())
+                    AtKit.Msg(string.Format("要跳入的单元格({0})无法获得焦点！", p_cellName));
+            }
+            else
+            {
+                AtKit.Msg(string.Format("未找到要跳入的单元格({0})！", p_cellName));
+            }
+        }
+
         /// <summary>
         /// 移向下一编辑器
         /// </summary>
@@ -686,51 +732,6 @@ namespace Dt.Base
                 FvCell cell = _panel.Children[index] as FvCell;
                 if (cell != null && cell.ReceiveFocus())
                     break;
-            }
-        }
-
-        /// <summary>
-        /// 自动跳入第一个可接收焦点的列
-        /// </summary>
-        internal void GotoFirstCell()
-        {
-            foreach (var item in _panel.Children)
-            {
-                FvCell cell = item as FvCell;
-                if (cell != null && cell.ReceiveFocus())
-                    return;
-            }
-        }
-
-        /// <summary>
-        /// 最后一个非只读单元格获得焦点
-        /// </summary>
-        internal void GotoLastCell()
-        {
-            for (int i = _panel.Children.Count - 1; i >= 0; i--)
-            {
-                FvCell cell = _panel.Children[i] as FvCell;
-                if (cell != null && cell.ReceiveFocus())
-                    return;
-            }
-        }
-
-        /// <summary>
-        /// 跳到指定单元格
-        /// </summary>
-        /// <param name="p_cellName">要跳到的格名称</param>
-        /// <returns>true 跳成功</returns>
-        internal void GotoCell(string p_cellName)
-        {
-            FvCell cell = this[p_cellName];
-            if (cell != null)
-            {
-                if (!cell.ReceiveFocus())
-                    AtKit.Msg(string.Format("要跳入的单元格({0})无法获得焦点！", p_cellName));
-            }
-            else
-            {
-                AtKit.Msg(string.Format("未找到要跳入的单元格({0})！", p_cellName));
             }
         }
 
@@ -760,7 +761,7 @@ namespace Dt.Base
         /// 单元格获得焦点后，滚动到可视范围
         /// </summary>
         /// <param name="p_cell"></param>
-        internal void ScrollIntoView(FvCell p_cell)
+        public void ScrollIntoView(FvCell p_cell)
         {
             if (_scroll == null || _panel == null)
                 return;

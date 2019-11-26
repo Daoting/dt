@@ -104,7 +104,7 @@ namespace Dt.App
         {
             LoginPanel.Visibility = Visibility.Visible;
             InfoPanel.Visibility = Visibility.Collapsed;
-            AtKit.Warn(p_error, true);
+            AtKit.Warn(p_error);
             _tbPhone.Focus(FocusState.Programmatic);
         }
 
@@ -159,7 +159,7 @@ namespace Dt.App
             if (!Regex.IsMatch(_tbPhone.Text.Trim(), "^1[34578]\\d{9}$"))
             {
                 _tbPhone.Focus(FocusState.Programmatic);
-                AtKit.Warn("手机号码格式错误！", true);
+                AtKit.Warn("手机号码格式错误！");
                 return true;
             }
             return false;

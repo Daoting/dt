@@ -82,62 +82,6 @@ namespace Dt.App
 
         #region UserRoleApi
         /// <summary>
-        /// 新增或修改用户信息
-        /// </summary>
-        /// <param name="p_user"></param>
-        /// <returns></returns>
-        public static Task<bool> SaveUser(Row p_user)
-        {
-            return new UnaryRpc(
-                "cm",
-                "UserRoleApi.SaveUser",
-                p_user
-            ).Call<bool>();
-        }
-
-        /// <summary>
-        /// 删除用户
-        /// </summary>
-        /// <param name="p_id"></param>
-        /// <returns></returns>
-        public static Task<bool> DeleteUser(long p_id)
-        {
-            return new UnaryRpc(
-                "cm",
-                "UserRoleApi.DeleteUser",
-                p_id
-            ).Call<bool>();
-        }
-
-        /// <summary>
-        /// 重置用户密码
-        /// </summary>
-        /// <param name="p_id"></param>
-        /// <returns></returns>
-        public static Task<bool> ResetUserPwd(long p_id)
-        {
-            return new UnaryRpc(
-                "cm",
-                "UserRoleApi.ResetUserPwd",
-                p_id
-            ).Call<bool>();
-        }
-
-        /// <summary>
-        /// 切换停用/启用状态
-        /// </summary>
-        /// <param name="p_id"></param>
-        /// <returns></returns>
-        public static Task<bool> ToggleUserExpired(long p_id)
-        {
-            return new UnaryRpc(
-                "cm",
-                "UserRoleApi.ToggleUserExpired",
-                p_id
-            ).Call<bool>();
-        }
-
-        /// <summary>
         /// 删除用户角色的关联
         /// </summary>
         /// <param name="p_userID"></param>

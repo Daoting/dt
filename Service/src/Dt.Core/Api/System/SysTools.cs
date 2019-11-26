@@ -52,8 +52,11 @@ namespace Dt.Core
             var schema = DbSchema.GetTableSchema(tblName);
 
             StringBuilder sb = new StringBuilder();
+
+            // Tbl标签
             AppendTabSpace(sb, 1);
             sb.Append($"[Tbl(\"{tblName}\", \"{Glb.SvcName}\")]");
+
             sb.AppendLine();
             AppendTabSpace(sb, 1);
             sb.Append($"public partial class {clsName} : Entity");
@@ -61,6 +64,7 @@ namespace Dt.Core
             AppendTabSpace(sb, 1);
             sb.AppendLine("{");
 
+            // 默认构造方法
             AppendTabSpace(sb, 2);
             sb.Append($"public {clsName}()");
             sb.AppendLine();
@@ -129,7 +133,7 @@ namespace Dt.Core
             AppendTabSpace(sb, 2);
             sb.AppendLine("}");
 
-            // 主键
+            // 主键属性
             bool existID = false;
             foreach (var col in schema.PrimaryKey)
             {

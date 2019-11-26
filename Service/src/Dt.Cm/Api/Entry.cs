@@ -51,8 +51,8 @@ namespace Dt.Cm
             }
 
             // 从缓存读取
-            var ui = await Cache<UserItem>.Get(p_phone, "phone");
-            if (ui == null || ui.Pwd != p_pwd)
+            var user = await new Repo<User>().GetByKey("phone", p_phone);
+            if (user == null || user.Pwd != p_pwd)
             {
                 res["valid"] = false;
                 res["error"] = "手机号不存在或密码错误！";
@@ -60,9 +60,9 @@ namespace Dt.Cm
             }
 
             res["valid"] = true;
-            res["userid"] = ui.ID;
-            res["name"] = ui.Name;
-            res["roles"] = ui.Roles;
+            res["userid"] = user.ID;
+            res["name"] = user.Name;
+            res["roles"] = null;
             return res;
         }
 
@@ -92,20 +92,22 @@ namespace Dt.Cm
 
             res["valid"] = true;
 
+            var repo = new Repo<User>();
+
             // 已注册
-            var ui = await Cache<UserItem>.Get(p_phone, "phone");
-            if (ui != null)
+            var user = await repo.GetByKey("phone", p_phone);
+            if (user != null)
             {
-                res["userid"] = ui.ID;
-                res["name"] = ui.Name;
-                res["roles"] = ui.Roles;
-                res["pwd"] = ui.Pwd;
+                res["userid"] = user.ID;
+                res["name"] = user.Name;
+                res["roles"] = null;
+                res["pwd"] = user.Pwd;
                 return res;
             }
 
             // 初次登录，创建账号，初始密码为手机号后4位
-            User user = User.CreateByPhone(p_phone);
-            await new Repo<User>().Save(user);
+            user = User.CreateByPhone(p_phone);
+            await repo.Save(user);
 
             res["userid"] = user.ID;
             res["name"] = user.Name;

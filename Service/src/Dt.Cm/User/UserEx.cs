@@ -17,6 +17,8 @@ using System.Threading.Tasks;
 
 namespace Dt.Cm
 {
+    [CudEvent(CudEvent.LocalDelete)]
+    [Cache(PrefixKey = "user", OtherKey = "Phone")]
     public partial class User
     {
         public static User CreateByPhone(string p_phone)
@@ -27,26 +29,6 @@ namespace Dt.Cm
                 Phone: p_phone,
                 Name: p_phone,
                 Pwd: Kit.GetMD5(p_phone.Substring(p_phone.Length - 4)));
-        }
-
-        public void ToggleExpired()
-        {
-            Expired = !Expired;
-        }
-
-        public void InitNewUser()
-        {
-            if (ID == 0)
-                ID = Id.New(0);
-            if (string.IsNullOrEmpty(Pwd))
-                Pwd = Kit.GetMD5(Phone.Substring(Phone.Length - 4));
-            Ctime = Mtime = Glb.Now;
-        }
-
-        public void ResetPwd()
-        {
-            // 初始密码为手机号后4位
-            Pwd = Kit.GetMD5(Phone.Substring(Phone.Length - 4));
         }
     }
 }

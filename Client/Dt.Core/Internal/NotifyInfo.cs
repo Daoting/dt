@@ -33,9 +33,9 @@ namespace Dt.Core
         public string Link { get; set; }
 
         /// <summary>
-        /// 是否自动关闭
+        /// 几秒后自动关闭，0表示不自动关闭
         /// </summary>
-        public bool AutoClose { get; set; }
+        public int DelaySeconds { get; set; }
 
         /// <summary>
         /// 附加信息

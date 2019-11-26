@@ -20,6 +20,20 @@ namespace Dt.Core
     public class Ea : BaseApi
     {
         /// <summary>
+        /// 根据主键或唯一索引列获得实体对象(包含所有列值)，仅支持单主键
+        /// 不存在时返回null，启用缓存时首先从缓存中获取
+        /// </summary>
+        /// <param name="p_keyName">主键列名</param>
+        /// <param name="p_keyVal">主键值</param>
+        /// <param name="p_tblName"></param>
+        /// <returns>返回实体对象或null</returns>
+        public async Task<Row> GetByKey(string p_keyName, string p_keyVal, string p_tblName)
+        {
+            Check.NotNullOrEmpty(p_keyName);
+            return (Row)await InvokeRepo(p_tblName, "GetByKey", (type) => new object[] { p_keyName, p_keyVal, false });
+        }
+
+        /// <summary>
         /// 调用服务端Repo保存实体，不支持含子实体
         /// </summary>
         /// <param name="p_row">实体</param>
@@ -28,7 +42,7 @@ namespace Dt.Core
         public async Task<bool> SaveRow(Row p_row, string p_tblName)
         {
             Check.NotNull(p_row);
-            return (bool)await InvokeRepo(p_tblName, "Save", (type) => p_row.CloneTo(type));
+            return (bool)await InvokeRepo(p_tblName, "Save", (type) => new object[] { p_row.CloneTo(type) });
         }
 
         /// <summary>
@@ -41,7 +55,7 @@ namespace Dt.Core
         public async Task<bool> SaveRows(Table p_entities, string p_tblName)
         {
             Check.NotNull(p_entities);
-            return (bool)await InvokeRepo(p_tblName, "BatchSave", (type) => p_entities.CloneTo(type));
+            return (bool)await InvokeRepo(p_tblName, "BatchSave", (type) => new object[] { p_entities.CloneTo(type) });
         }
 
         /// <summary>
@@ -53,7 +67,7 @@ namespace Dt.Core
         public async Task<int> DelRow(Row p_row, string p_tblName)
         {
             Check.NotNull(p_row);
-            return (int)await InvokeRepo(p_tblName, "Delete", (type) => p_row.CloneTo(type));
+            return (int)await InvokeRepo(p_tblName, "Delete", (type) => new object[] { p_row.CloneTo(type) });
         }
 
         /// <summary>
@@ -66,7 +80,7 @@ namespace Dt.Core
         public async Task<int> DelRows(Table p_entities, string p_tblName)
         {
             Check.NotNull(p_entities);
-            return (int)await InvokeRepo(p_tblName, "BatchDelete", (type) => p_entities.CloneTo(type));
+            return (int)await InvokeRepo(p_tblName, "BatchDelete", (type) => new object[] { p_entities.CloneTo(type) });
         }
 
         /// <summary>
@@ -78,7 +92,7 @@ namespace Dt.Core
         public async Task<int> DelRowByKey(string p_id, string p_tblName)
         {
             Check.NotNullOrEmpty(p_id);
-            return (int)await InvokeRepo(p_tblName, "DelByKey", (type) => p_id);
+            return (int)await InvokeRepo(p_tblName, "DelByKey", (type) => new object[] { p_id });
         }
 
         /// <summary>
@@ -88,7 +102,7 @@ namespace Dt.Core
         /// <param name="p_methodName"></param>
         /// <param name="p_params"></param>
         /// <returns></returns>
-        async Task<object> InvokeRepo(string p_tblName, string p_methodName, Func<Type, object> p_params)
+        async Task<object> InvokeRepo(string p_tblName, string p_methodName, Func<Type, object[]> p_params)
         {
             Check.NotNullOrEmpty(p_tblName);
 
@@ -96,7 +110,7 @@ namespace Dt.Core
             Type repoType = typeof(Repo<>).MakeGenericType(type);
 
             var repo = Activator.CreateInstance(repoType);
-            Task task = repoType.GetMethod(p_methodName).Invoke(repo, new object[] { p_params(type) }) as Task;
+            Task task = repoType.GetMethod(p_methodName).Invoke(repo, p_params(type)) as Task;
             await task;
             return task.GetType().GetProperty("Result").GetValue(task);
         }

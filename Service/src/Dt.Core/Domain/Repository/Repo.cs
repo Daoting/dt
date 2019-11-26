@@ -26,6 +26,9 @@ namespace Dt.Core
     {
         #region 静态内容
         protected static readonly EntitySchema _model;
+        static readonly CacheHandler<TEntity> _cache;
+        static readonly CudEvent _cudEvent;
+
         // 泛型方法 Query<TRow>
         static MethodInfo _query = typeof(Db).GetMethod("Query", 1, new Type[] { typeof(string), typeof(object) });
         // 泛型方法 GetBatchSaveSql
@@ -33,7 +36,20 @@ namespace Dt.Core
 
         static Repo()
         {
-            _model = new EntitySchema(typeof(TEntity));
+            Type type = typeof(TEntity);
+            _model = new EntitySchema(type);
+
+            // 缓存设置
+            var cfg = type.GetCustomAttribute<CacheAttribute>(false);
+            if (cfg != null && !string.IsNullOrEmpty(cfg.PrefixKey))
+                _cache = new CacheHandler<TEntity>(_model, cfg);
+
+            // 触发增删改事件的类型
+            var cud = type.GetCustomAttribute<CudEventAttribute>(false);
+            if (cud != null)
+                _cudEvent = cud.Event;
+            else
+                _cudEvent = CudEvent.None;
         }
         #endregion
 
@@ -83,14 +99,44 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 根据主键获得实体对象(包含所有列值)，不存在时返回null，仅支持单主键
+        /// 根据主键获得实体对象(包含所有列值)，主键列名id，仅支持单主键
+        /// 不存在时返回null，启用缓存时首先从缓存中获取
         /// </summary>
         /// <param name="p_id">主键</param>
         /// <param name="p_loadDetails">是否加载附加数据，默认false</param>
         /// <returns>返回实体对象或null</returns>
-        public Task<TEntity> GetByKey(string p_id, bool p_loadDetails = false)
+        public Task<TEntity> GetByID(string p_id, bool p_loadDetails = false)
         {
-            return Get(_model.Schema.SqlSelect, new { id = p_id }, p_loadDetails);
+            return GetByKey("id", p_id, p_loadDetails);
+        }
+
+        /// <summary>
+        /// 根据主键或唯一索引列获得实体对象(包含所有列值)，仅支持单主键
+        /// 不存在时返回null，启用缓存时首先从缓存中获取
+        /// </summary>
+        /// <param name="p_keyName">主键列名</param>
+        /// <param name="p_keyVal">主键值</param>
+        /// <param name="p_loadDetails">是否加载附加数据，默认false</param>
+        /// <returns>返回实体对象或null</returns>
+        public async Task<TEntity> GetByKey(string p_keyName, string p_keyVal, bool p_loadDetails = false)
+        {
+            TEntity entity = null;
+            if (_cache != null)
+                entity = await _cache.Get(p_keyName, p_keyVal);
+
+            if (entity == null)
+            {
+                entity = await _.Db.Get<TEntity>(
+                    $"select * from `{_model.Schema.Name}` where {p_keyName}=@{p_keyName}",
+                    new Dict { { p_keyName, p_keyVal } });
+
+                if (entity != null && _cache != null)
+                    await _cache.Cache(entity);
+            }
+
+            if (entity != null && p_loadDetails)
+                await LoadDetails(entity);
+            return entity;
         }
 
         /// <summary>
@@ -166,6 +212,11 @@ namespace Dt.Core
 
             // 实体事件
             GatherSaveEvents(p_entity);
+
+            // 更新实体时删除缓存
+            if (_cache != null && !p_entity.IsAdded && p_entity.IsChanged)
+                await _cache.Remove(p_entity);
+
             p_entity.AcceptChanges();
             return true;
         }
@@ -203,6 +254,8 @@ namespace Dt.Core
             foreach (TEntity entity in p_entities)
             {
                 GatherSaveEvents(entity);
+                if (_cache != null && !entity.IsAdded && entity.IsChanged)
+                    await _cache.Remove(entity);
                 entity.AcceptChanges();
             }
 
@@ -227,6 +280,9 @@ namespace Dt.Core
             {
                 // 删除实体事件
                 GatherDelEvents(p_entity);
+                // 删除缓存
+                if (_cache != null)
+                    await _cache.Remove(p_entity);
             }
             return cnt;
         }
@@ -251,22 +307,46 @@ namespace Dt.Core
                 {
                     cnt++;
                     GatherDelEvents(p_entities[i]);
+                    if (_cache != null)
+                        await _cache.Remove(p_entities[i]);
                 }
             }
             return cnt;
         }
 
         /// <summary>
-        /// 根据主键删除实体对象，依靠数据库的级联删除自动删除子实体
+        /// 根据主键删除实体对象，主键列名id，仅支持单主键
+        /// 依靠数据库的级联删除自动删除子实体
         /// </summary>
         /// <param name="p_id">主键</param>
         /// <returns>实际删除行数</returns>
-        public async Task<int> DelByKey(string p_id)
+        public Task<int> DelByID(string p_id)
         {
-            var entity = await GetByKey(p_id);
-            if (entity == null)
+            return DelByKey("id", p_id);
+        }
+
+        /// <summary>
+        /// 根据主键或唯一索引列删除实体，仅支持单主键
+        /// </summary>
+        /// <param name="p_keyName">主键列名</param>
+        /// <param name="p_keyVal">主键值</param>
+        /// <returns>实际删除行数</returns>
+        public async Task<int> DelByKey(string p_keyName, string p_keyVal)
+        {
+            // 有缓存或需要触发实体删除事件
+            if (_cache != null
+                || (_cudEvent & CudEvent.LocalDelete) == CudEvent.LocalDelete
+                || (_cudEvent & CudEvent.RemoteDelete) == CudEvent.RemoteDelete)
+            {
+                var entity = await GetByKey(p_keyName, p_keyVal);
+                if (entity != null)
+                    return await Delete(entity);
                 return 0;
-            return await Delete(entity);
+            }
+
+            return await _.Db.Exec(
+                $"delete from `{_model.Schema.Name}` where {p_keyName}=@{p_keyName}",
+                new Dict { { p_keyName, p_keyVal } });
         }
         #endregion
 
@@ -350,22 +430,21 @@ namespace Dt.Core
             if (events != null)
                 _.AddDomainEvents(events);
 
-            var cudEvent = p_entity.GetCudEvent();
-            if (cudEvent != CudEvent.None)
+            if (_cudEvent != CudEvent.None)
             {
                 if (p_entity.IsAdded)
                 {
-                    if ((cudEvent & CudEvent.LocalInsert) == CudEvent.LocalInsert)
-                        _.AddDomainEvent(new DomainEvent(false, new InsertEvent<TEntity> { ID = p_entity.ID.ToString() }));
-                    if ((cudEvent & CudEvent.RemoteInsert) == CudEvent.RemoteInsert)
-                        _.AddDomainEvent(new DomainEvent(true, new InsertEvent<TEntity> { ID = p_entity.ID.ToString() }));
+                    if ((_cudEvent & CudEvent.LocalInsert) == CudEvent.LocalInsert)
+                        _.AddDomainEvent(new DomainEvent(false, new InsertEvent<TEntity> { Entity = p_entity }));
+                    if ((_cudEvent & CudEvent.RemoteInsert) == CudEvent.RemoteInsert)
+                        _.AddDomainEvent(new DomainEvent(true, new InsertEvent<TEntity> { Entity = p_entity }));
                 }
                 else if (p_entity.IsChanged)
                 {
-                    if ((cudEvent & CudEvent.LocalUpdate) == CudEvent.LocalUpdate)
-                        _.AddDomainEvent(new DomainEvent(false, new UpdateEvent<TEntity> { ID = p_entity.ID.ToString() }));
-                    if ((cudEvent & CudEvent.RemoteUpdate) == CudEvent.RemoteUpdate)
-                        _.AddDomainEvent(new DomainEvent(true, new UpdateEvent<TEntity> { ID = p_entity.ID.ToString() }));
+                    if ((_cudEvent & CudEvent.LocalUpdate) == CudEvent.LocalUpdate)
+                        _.AddDomainEvent(new DomainEvent(false, new UpdateEvent<TEntity> { Entity = p_entity }));
+                    if ((_cudEvent & CudEvent.RemoteUpdate) == CudEvent.RemoteUpdate)
+                        _.AddDomainEvent(new DomainEvent(true, new UpdateEvent<TEntity> { Entity = p_entity }));
                 }
             }
         }
@@ -380,13 +459,12 @@ namespace Dt.Core
             if (events != null)
                 _.AddDomainEvents(events);
 
-            var cudEvent = p_entity.GetCudEvent();
-            if (cudEvent != CudEvent.None)
+            if (_cudEvent != CudEvent.None)
             {
-                if ((cudEvent & CudEvent.LocalDelete) == CudEvent.LocalDelete)
-                    _.AddDomainEvent(new DomainEvent(false, new DeleteEvent<TEntity> { ID = p_entity.ID.ToString() }));
-                if ((cudEvent & CudEvent.RemoteDelete) == CudEvent.RemoteDelete)
-                    _.AddDomainEvent(new DomainEvent(true, new DeleteEvent<TEntity> { ID = p_entity.ID.ToString() }));
+                if ((_cudEvent & CudEvent.LocalDelete) == CudEvent.LocalDelete)
+                    _.AddDomainEvent(new DomainEvent(false, new DeleteEvent<TEntity> { Entity = p_entity }));
+                if ((_cudEvent & CudEvent.RemoteDelete) == CudEvent.RemoteDelete)
+                    _.AddDomainEvent(new DomainEvent(true, new DeleteEvent<TEntity> { Entity = p_entity }));
             }
         }
         #endregion

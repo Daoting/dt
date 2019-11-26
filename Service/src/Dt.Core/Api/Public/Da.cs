@@ -150,5 +150,15 @@ namespace Dt.Core
                 ls.Add(await new Db().GetScalar<int>($"select nextval('{p_seqName}')"));
             return ls;
         }
+
+        /// <summary>
+        /// 产生含3位标志位的新ID
+        /// </summary>
+        /// <param name="p_flag">ID标志，取值范围0-7</param>
+        /// <returns></returns>
+        public long NewFlagID(int p_flag)
+        {
+            return Id.New(p_flag);
+        }
     }
 }

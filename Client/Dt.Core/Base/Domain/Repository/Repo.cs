@@ -105,12 +105,12 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 根据主键获得实体对象(包含所有列值)，不存在时返回null，仅支持单主键
+        /// 根据主键获得实体对象(包含所有列值)，主键列名id，仅支持单主键
         /// </summary>
         /// <param name="p_id">主键</param>
         /// <param name="p_loadDetails">是否加载附加数据，默认false</param>
         /// <returns>返回实体对象或null</returns>
-        public Task<TEntity> GetByKey(string p_id, bool p_loadDetails = false)
+        public Task<TEntity> GetByID(string p_id, bool p_loadDetails = false)
         {
             return Get(_model.Schema.SqlSelect, new { id = p_id }, p_loadDetails);
         }
@@ -159,6 +159,20 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 产生含3位标志位的新ID
+        /// </summary>
+        /// <param name="p_flag">ID标志，取值范围0-7</param>
+        /// <returns></returns>
+        public Task<long> NewFlagID(int p_flag)
+        {
+            return new UnaryRpc(
+                _model.Svc,
+                "Da.NewFlagID",
+                p_flag
+            ).Call<long>();
+        }
+
+        /// <summary>
         /// 加载附加数据，默认加载所有关联的子表数据
         /// </summary>
         /// <param name="p_entity"></param>
@@ -196,7 +210,7 @@ namespace Dt.Core
             if (dt == null)
             {
                 if (p_isNotify)
-                    AtKit.Warn(_unchangedMsg, true);
+                    AtKit.Warn(_unchangedMsg);
                 return true;
             }
 
@@ -214,7 +228,7 @@ namespace Dt.Core
                     if (!await BatchExec(dts))
                     {
                         if (p_isNotify)
-                            AtKit.Warn("保存失败！", true);
+                            AtKit.Warn("保存失败！");
                         return false;
                     }
 
@@ -238,7 +252,7 @@ namespace Dt.Core
             }
 
             if (p_isNotify)
-                AtKit.Warn("保存失败！", true);
+                AtKit.Warn("保存失败！");
             return false;
         }
 
@@ -295,7 +309,7 @@ namespace Dt.Core
             }
 
             if (p_isNotify)
-                AtKit.Warn("保存失败！", true);
+                AtKit.Warn("保存失败！");
             return false;
         }
 
@@ -347,7 +361,7 @@ namespace Dt.Core
                 if (suc)
                     AtKit.Msg("删除成功！");
                 else
-                    AtKit.Warn("删除失败！", true);
+                    AtKit.Warn("删除失败！");
             }
             return suc;
         }
@@ -363,7 +377,7 @@ namespace Dt.Core
             if (p_entities == null || p_entities.Count == 0)
             {
                 if (p_isNotify)
-                    AtKit.Warn(_saveError, true);
+                    AtKit.Warn(_saveError);
                 return false;
             }
 
@@ -374,18 +388,19 @@ namespace Dt.Core
                 if (suc)
                     AtKit.Msg("删除成功！");
                 else
-                    AtKit.Warn("删除失败！", true);
+                    AtKit.Warn("删除失败！");
             }
             return suc;
         }
 
         /// <summary>
-        /// 根据主键删除实体对象，依靠数据库的级联删除自动删除子实体
+        /// 根据主键删除实体对象，主键列名id，仅支持单主键
+        /// 依靠数据库的级联删除自动删除子实体
         /// </summary>
         /// <param name="p_id">主键</param>
         /// <param name="p_isNotify">是否提示删除结果</param>
         /// <returns>true 删除成功</returns>
-        public async Task<bool> DelByKey(string p_id, bool p_isNotify = true)
+        public async Task<bool> DelByID(string p_id, bool p_isNotify = true)
         {
             bool suc = await Exec(_model.Schema.SqlDelete, new { id = p_id }) == 1;
             if (p_isNotify)
@@ -425,7 +440,7 @@ namespace Dt.Core
                 if (suc)
                     AtKit.Msg("保存成功！");
                 else
-                    AtKit.Warn("保存失败！", true);
+                    AtKit.Warn("保存失败！");
             }
             return suc;
         }
@@ -460,7 +475,7 @@ namespace Dt.Core
                 if (suc)
                     AtKit.Msg("保存成功！");
                 else
-                    AtKit.Warn("保存失败！", true);
+                    AtKit.Warn("保存失败！");
             }
             return suc;
         }
@@ -492,7 +507,7 @@ namespace Dt.Core
                 if (suc)
                     AtKit.Msg("删除成功！");
                 else
-                    AtKit.Warn("删除失败！", true);
+                    AtKit.Warn("删除失败！");
             }
             return suc;
         }
@@ -524,7 +539,7 @@ namespace Dt.Core
                 if (suc)
                     AtKit.Msg("删除成功！");
                 else
-                    AtKit.Warn("删除失败！", true);
+                    AtKit.Warn("删除失败！");
             }
             return suc;
         }
@@ -555,7 +570,7 @@ namespace Dt.Core
                 if (suc)
                     AtKit.Msg("删除成功！");
                 else
-                    AtKit.Warn("删除失败！", true);
+                    AtKit.Warn("删除失败！");
             }
             return suc;
         }
