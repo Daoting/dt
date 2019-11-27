@@ -92,7 +92,7 @@ namespace Dt.Core
         public async Task<int> DelRowByKey(string p_id, string p_tblName)
         {
             Check.NotNullOrEmpty(p_id);
-            return (int)await InvokeRepo(p_tblName, "DelByKey", (type) => new object[] { p_id });
+            return (int)await InvokeRepo(p_tblName, "DelByID", (type) => new object[] { p_id });
         }
 
         /// <summary>

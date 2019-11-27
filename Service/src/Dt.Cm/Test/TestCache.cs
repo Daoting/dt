@@ -102,14 +102,6 @@ namespace Dt.Cm
         {
             return Cache.HashSetField("Test:Hash", p_key, "Age", p_age);
         }
-
-        public async Task<string> GetUserCache(string p_phone)
-        {
-            var ui = await Cache<UserItem>.Get(p_phone, "phone");
-            if (ui != null)
-                return ui.Name;
-            return "无";
-        }
     }
 
     public class TestCacheObject

@@ -31,7 +31,7 @@ namespace Dt.Cm
         {
             if (await _.Db.Exec("用户-删除用户角色", new { userid = p_userID, roleid = p_roleID }) > 0)
             {
-                await Cache<UserItem>.Remove(p_userID.ToString());
+                await new UserRoleCache().Remove(p_userID);
                 return true;
             }
             return false;
@@ -58,7 +58,7 @@ namespace Dt.Cm
                         return false;
                 }
             }
-            await Cache<UserItem>.Remove(p_userID.ToString());
+            await new UserRoleCache().Remove(p_userID);
             return true;
         }
 
@@ -81,11 +81,30 @@ namespace Dt.Cm
                     return false;
             }
 
+            var cache = new UserRoleCache();
             foreach (var uid in p_userIDs)
             {
-                await Cache<UserItem>.Remove(uid.ToString());
+                await cache.Remove(uid);
             }
             return true;
+        }
+
+        /// <summary>
+        /// 删除角色
+        /// </summary>
+        /// <param name="p_roleID"></param>
+        /// <returns></returns>
+        public async Task<int> DeleteRole(long p_roleID)
+        {
+            var cache = new UserRoleCache();
+            var ls = await _.Db.EachItem<long>("select userid from cm_userrole where roleid=@roleid", new { roleid = p_roleID });
+            foreach (var uid in ls)
+            {
+                await cache.Remove(uid);
+            }
+
+            Role role = new Role(p_roleID);
+            return await new Repo<Role>().Delete(role);
         }
     }
 }

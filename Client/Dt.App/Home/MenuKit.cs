@@ -50,23 +50,18 @@ namespace Dt.App
         internal static void InitRoles(string p_roles)
         {
             // 任何人角色ID
-            List<long> ls = new List<long> { 1 };
-            StringBuilder sb = new StringBuilder("1");
-            if (!string.IsNullOrEmpty(p_roles))
+            if (string.IsNullOrEmpty(p_roles))
+                p_roles = "1";
+
+            List<long> ls = new List<long>();
+            long roleid;
+            foreach (string id in p_roles.Split(','))
             {
-                long roleid;
-                foreach (string id in p_roles.Split(','))
-                {
-                    if (long.TryParse(id, out roleid))
-                    {
-                        ls.Add(roleid);
-                        sb.Append(",");
-                        sb.Append(id);
-                    }
-                }
+                if (long.TryParse(id, out roleid))
+                    ls.Add(roleid);
             }
             Roles = ls;
-            SqlRoles = sb.ToString();
+            SqlRoles = p_roles;
         }
         #endregion
 

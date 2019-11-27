@@ -62,7 +62,7 @@ namespace Dt.Cm
             res["valid"] = true;
             res["userid"] = user.ID;
             res["name"] = user.Name;
-            res["roles"] = null;
+            res["roles"] = await new UserRoleCache().GetRoles(user.ID);
             return res;
         }
 
@@ -100,7 +100,7 @@ namespace Dt.Cm
             {
                 res["userid"] = user.ID;
                 res["name"] = user.Name;
-                res["roles"] = null;
+                res["roles"] = await new UserRoleCache().GetRoles(user.ID);
                 res["pwd"] = user.Pwd;
                 return res;
             }
@@ -111,7 +111,7 @@ namespace Dt.Cm
 
             res["userid"] = user.ID;
             res["name"] = user.Name;
-            res["roles"] = null;
+            res["roles"] = "1"; // 任何人
             res["pwd"] = user.Pwd;
             return res;
         }

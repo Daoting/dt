@@ -326,9 +326,10 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 根据主键或唯一索引列删除实体，仅支持单主键
+        /// 根据单主键或唯一索引列删除实体
+        /// 依靠数据库的级联删除自动删除子实体
         /// </summary>
-        /// <param name="p_keyName">主键列名</param>
+        /// <param name="p_keyName">主键或唯一索引列名</param>
         /// <param name="p_keyVal">主键值</param>
         /// <returns>实际删除行数</returns>
         public async Task<int> DelByKey(string p_keyName, string p_keyVal)
@@ -338,12 +339,22 @@ namespace Dt.Core
                 || (_cudEvent & CudEvent.LocalDelete) == CudEvent.LocalDelete
                 || (_cudEvent & CudEvent.RemoteDelete) == CudEvent.RemoteDelete)
             {
-                var entity = await GetByKey(p_keyName, p_keyVal);
+                TEntity entity = null;
+                if (_cache != null)
+                    entity = await _cache.Get(p_keyName, p_keyVal);
+
+                if (entity == null)
+                {
+                    entity = await _.Db.Get<TEntity>(
+                        $"select * from `{_model.Schema.Name}` where {p_keyName}=@{p_keyName}",
+                        new Dict { { p_keyName, p_keyVal } });
+                }
                 if (entity != null)
                     return await Delete(entity);
                 return 0;
             }
 
+            // 无缓存无事件直接删除
             return await _.Db.Exec(
                 $"delete from `{_model.Schema.Name}` where {p_keyName}=@{p_keyName}",
                 new Dict { { p_keyName, p_keyVal } });

@@ -8,20 +8,17 @@
 
 #region 引用命名
 using Dt.Core;
-using Dt.Core.Caches;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Cm
 {
-    public class Role
+    public class DeleteUserHandler : DeleteEventHandler<User>
     {
-        /// <summary>
-        /// 任何人角色ID
-        /// </summary>
-        public const long AnyoneID = 1;
+        public override Task Handle(DeleteEvent<User> p_event)
+        {
+            // 删除用户时同步删除userrole缓存
+            return new UserRoleCache().Remove(p_event.Entity.ID);
+        }
     }
 }
