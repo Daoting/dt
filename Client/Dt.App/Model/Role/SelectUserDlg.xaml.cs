@@ -19,9 +19,9 @@ using Windows.UI.Xaml.Controls;
 
 namespace Dt.App.Model
 {
-    public sealed partial class SelectRolesDlg : Dlg
+    public sealed partial class SelectUserDlg : Dlg
     {
-        public SelectRolesDlg()
+        public SelectUserDlg()
         {
             InitializeComponent();
         }
@@ -31,20 +31,9 @@ namespace Dt.App.Model
             get { return _lv.SelectedItems; }
         }
 
-        public async Task<bool> Show(RoleRelations p_relation, string p_tgtID, FrameworkElement p_target)
+        public async Task<bool> Show(long p_id, FrameworkElement p_target)
         {
-            switch (p_relation)
-            {
-                case RoleRelations.Prv:
-                    _lv.Data = await AtCm.Query("权限-未关联的角色", new { prvid = p_tgtID });
-                    break;
-                case RoleRelations.User:
-                    _lv.Data = await AtCm.Query("用户-未关联的角色", new { userid = p_tgtID });
-                    break;
-                case RoleRelations.Menu:
-                    _lv.Data = await AtCm.Query("菜单-未关联的角色", new { menuid = p_tgtID });
-                    break;
-            }
+            _lv.Data = await AtCm.Query("角色-未关联的用户", new { roleid = p_id });
             if (!AtSys.IsPhoneUI)
             {
                 WinPlacement = DlgPlacement.TargetBottomLeft;
@@ -65,26 +54,5 @@ namespace Dt.App.Model
         {
             _lv.RemoveSelection(((Button)sender).DataContext as IList);
         }
-    }
-
-    /// <summary>
-    /// 角色关联的种类
-    /// </summary>
-    public enum RoleRelations
-    {
-        /// <summary>
-        /// 权限
-        /// </summary>
-        Prv,
-
-        /// <summary>
-        /// 用户
-        /// </summary>
-        User,
-
-        /// <summary>
-        /// 菜单
-        /// </summary>
-        Menu,
     }
 }

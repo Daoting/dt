@@ -7,13 +7,11 @@
 #endregion
 
 #region 引用命名
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Core
@@ -33,11 +31,11 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 生成服务端实体类
+        /// 生成实体类
         /// </summary>
         /// <param name="p_tblName">表名</param>
         /// <returns></returns>
-        public string GetServerTblCls(string p_tblName)
+        public string GetEntityCls(string p_tblName)
         {
             if (string.IsNullOrEmpty(p_tblName))
                 return null;
@@ -163,60 +161,6 @@ namespace Dt.Core
             foreach (var col in schema.Columns)
             {
                 AppendColumn(col, sb, false);
-            }
-            AppendTabSpace(sb, 1);
-            sb.AppendLine("}");
-            return sb.ToString();
-        }
-
-        /// <summary>
-        /// 生成客户端实体类
-        /// </summary>
-        /// <param name="p_tblName">表名</param>
-        /// <returns></returns>
-        public string GetClientTblCls(string p_tblName)
-        {
-            if (string.IsNullOrEmpty(p_tblName))
-                return null;
-
-            string tblName = p_tblName.ToLower();
-            string clsName;
-            string[] arr = tblName.Split('_');
-            if (arr.Length > 1)
-                clsName = SetFirstToUpper(arr[1]) + "Row";
-            else
-                clsName = SetFirstToUpper(tblName) + "Row";
-            var schema = DbSchema.GetTableSchema(tblName);
-
-            StringBuilder sb = new StringBuilder();
-            AppendTabSpace(sb, 1);
-            sb.Append($"public partial class {clsName} : Row");
-            sb.AppendLine();
-            AppendTabSpace(sb, 1);
-            sb.Append("{");
-
-            foreach (var col in schema.Columns)
-            {
-                sb.AppendLine();
-                AppendTabSpace(sb, 2);
-                sb.AppendLine("/// <summary>");
-                AppendTabSpace(sb, 2);
-                sb.Append("/// ");
-                sb.AppendLine(col.Comments);
-                AppendTabSpace(sb, 2);
-                sb.AppendLine("/// </summary>");
-                AppendTabSpace(sb, 2);
-                string tpName = GetTypeName(col.Type);
-                sb.Append($"public {tpName} {SetFirstToUpper(col.Name)} ");
-                sb.AppendLine();
-                AppendTabSpace(sb, 2);
-                sb.AppendLine("{");
-                AppendTabSpace(sb, 3);
-                sb.AppendLine($"get {{ return GetVal<{tpName}>(\"{col.Name}\"); }}");
-                AppendTabSpace(sb, 3);
-                sb.AppendLine($"set {{ _cells[\"{col.Name}\"].Val = value; }}");
-                AppendTabSpace(sb, 2);
-                sb.AppendLine("}");
             }
             AppendTabSpace(sb, 1);
             sb.AppendLine("}");

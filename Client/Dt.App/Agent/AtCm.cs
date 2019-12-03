@@ -128,6 +128,20 @@ namespace Dt.App
                 p_userIDs
             ).Call<bool>();
         }
+
+        /// <summary>
+        /// 删除角色
+        /// </summary>
+        /// <param name="p_roleID"></param>
+        /// <returns></returns>
+        public static Task<int> DeleteRole(long p_roleID)
+        {
+            return new UnaryRpc(
+                "cm",
+                "UserRoleApi.DeleteRole",
+                p_roleID
+            ).Call<int>();
+        }
         #endregion
     }
 

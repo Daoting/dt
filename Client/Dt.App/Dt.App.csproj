@@ -7,10 +7,6 @@
   <Import Project="..\Common\dtc.props" />
 
   <ItemGroup>
-    <None Remove="Model\User\UserGrpDlg.xaml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
     <ProjectReference Include="..\Dt.Base\Dt.Base.csproj" />
   </ItemGroup>
@@ -22,13 +18,18 @@
     <Page Include="Home\RootMenu.xaml" />
     <Page Include="Home\GroupMenu.xaml" />
     <Page Include="Home\SearchMenu.xaml" />
+    <Page Include="Model\Privilege\EditPrvDlg.xaml" />
+    <Page Include="Model\Role\EditRoleDlg.xaml" />
+    <Page Include="Model\Role\SelectRoleMenuDlg.xaml" />
+    <Page Include="Model\Role\SelectRolePrvDlg.xaml" />
+    <Page Include="Model\Role\SelectUserDlg.xaml" />
     <Page Include="Model\SelectRolesDlg.xaml" />
     <Page Include="Model\Menu\SysMenu.xaml" />
-    <Page Include="Model\BasePrivilege.xaml" />
+    <Page Include="Model\Privilege\BasePrivilege.xaml" />
     <Page Include="Model\UserParams.xaml" />
     <Page Include="Model\User\EditUserDlg.xaml" />
     <Page Include="Model\User\UserAccount.xaml" />
-    <Page Include="Model\SysRole.xaml" /> 
+    <Page Include="Model\Role\SysRole.xaml" /> 
     <Page Include="Model\BaseCode.xaml" />
   </ItemGroup>
 
@@ -51,13 +52,20 @@
     <Compile Update="Home\SearchMenu.xaml.cs">
       <DependentUpon>SearchMenu.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Model\Privilege\EditPrvDlg.xaml.cs">
+      <DependentUpon>EditPrvDlg.xaml</DependentUpon>
+    </Compile>
+    
+    <Compile Update="Model\Role\SelectUserDlg.xaml.cs">
+      <DependentUpon>SelectUserDlg.xaml</DependentUpon>
+    </Compile>
     <Compile Update="Model\SelectRolesDlg.xaml.cs">
       <DependentUpon>SelectRolesDlg.xaml</DependentUpon>
     </Compile>
     <Compile Update="Model\Menu\SysMenu.xaml.cs">
       <DependentUpon>SysMenu.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Model\BasePrivilege.xaml.cs">
+    <Compile Update="Model\Privilege\BasePrivilege.xaml.cs">
       <DependentUpon>BasePrivilege.xaml</DependentUpon>
     </Compile>
     <Compile Update="Model\UserParams.xaml.cs">
@@ -69,11 +77,29 @@
     <Compile Update="Model\User\UserAccount.xaml.cs">
       <DependentUpon>UserAccount.xaml</DependentUpon>
     </Compile>
-    <Compile Update="Model\SysRole.xaml.cs">
+    <Compile Update="Model\Role\SysRole.xaml.cs">
       <DependentUpon>SysRole.xaml</DependentUpon>
     </Compile>
     <Compile Update="Model\BaseCode.xaml.cs">
       <DependentUpon>BaseCode.xaml</DependentUpon>
-    </Compile>        
+    </Compile>
+    <Compile Update="Model\Role\EditRoleDlg.xaml.cs">
+      <DependentUpon>EditRoleDlg.xaml</DependentUpon>
+    </Compile>    
+    <Compile Update="Model\Role\SelectUserDlg.xaml.cs">
+      <DependentUpon>SelectUserDlg.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Model\Role\SelectRoleMenuDlg.xaml.cs">
+      <DependentUpon>SelectRoleMenuDlg.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Model\Role\SelectRolePrvDlg.xaml.cs">
+      <DependentUpon>SelectRolePrvDlg.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Model\Privilege\EditPrvDlg.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
   </ItemGroup>
 </Project>

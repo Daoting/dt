@@ -1,0 +1,91 @@
+﻿<a:Win
+    x:Class="Dt.App.Model.SysRole"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Home="角色列表">
+
+    <a:WinItem DockState="DockedLeft">
+        <a:Tabs>
+            <a:Tab Title="查找角色">
+                <a:SearchFv Placeholder="角色名称" Search="OnSearch">
+                    <a:CBar Title="常用" />
+                    <Button Content="全部" />
+                    <Button Content="系统角色" />
+                </a:SearchFv>
+            </a:Tab>
+        </a:Tabs>
+    </a:WinItem>
+    <a:WinCenter>
+        <a:Tabs>
+            <a:Tab Title="角色列表">
+                <a:Tab.Menu>
+                    <a:Menu>
+                        <a:Mi ID="增加" Icon="加号" ShowInPhone="Icon" Click="OnAddRole" />
+                    </a:Menu>
+                </a:Tab.Menu>
+                <a:Tab.PhoneBar>
+                    <Button x:Name="_btnSearch" Content="查找角色" Click="OnNaviToSearch" />
+                </a:Tab.PhoneBar>
+                <a:Lv x:Name="_lvRole" ItemClick="OnItemClick" DataChanged="OnDataChanged">
+                    <a:Ex.Menu>
+                        <a:Menu>
+                            <a:Mi ID="编辑" Icon="铅笔" Click="OnEditRole" />
+                            <a:Mi ID="删除" Icon="删除" Click="OnDelRole" />
+                        </a:Menu>
+                    </a:Ex.Menu>
+                    <DataTemplate>
+                        <StackPanel Padding="10">
+                            <a:Dot ID="name" />
+                            <a:Dot ID="note" Foreground="{StaticResource 深灰边框}" FontSize="12" />
+                        </StackPanel>
+                    </DataTemplate>
+                </a:Lv>
+            </a:Tab>
+        </a:Tabs>
+    </a:WinCenter>
+    <a:WinItem DockState="DockedRight">
+        <a:Tabs>
+            <a:Tab Title="关联用户">
+                <a:Tab.Menu>
+                    <a:Menu>
+                        <a:Mi ID="添加" Icon="加号" Click="OnAddUser" IsEnabled="{Binding HasSelected,ElementName=_lvRole}" />
+                        <a:Mi ID="移除" Icon="垃圾箱" Click="OnRemoveUser" IsEnabled="{Binding HasSelected,ElementName=_lvUser}" />
+                    </a:Menu>
+                </a:Tab.Menu>
+                <a:Lv x:Name="_lvUser">
+                    <DataTemplate>
+                        <a:Dot ID="username" Margin="10,0,10,0" />
+                    </DataTemplate>
+                </a:Lv>
+            </a:Tab>
+            <a:Tab Title="拥有菜单">
+                <a:Tab.Menu>
+                    <a:Menu>
+                        <a:Mi ID="添加" Icon="加号" Click="OnAddMenu" IsEnabled="{Binding HasSelected,ElementName=_lvRole}" />
+                        <a:Mi ID="移除" Icon="垃圾箱" Click="OnRemoveMenu" IsEnabled="{Binding HasSelected,ElementName=_lvMenu}" />
+                        <a:Mi ID="刷新模型" Icon="刷新" Click="OnRefreshModel" />
+                    </a:Menu>
+                </a:Tab.Menu>
+                <a:Lv x:Name="_lvMenu">
+                    <DataTemplate>
+                        <a:Dot ID="name" Margin="10,0,10,0" />
+                    </DataTemplate>
+                </a:Lv>
+            </a:Tab>
+            <a:Tab Title="授予权限">
+                <a:Tab.Menu>
+                    <a:Menu>
+                        <a:Mi ID="添加" Icon="加号" Click="OnAddPrv" IsEnabled="{Binding HasSelected,ElementName=_lvRole}" />
+                        <a:Mi ID="移除" Icon="垃圾箱" Click="OnRemovePrv" IsEnabled="{Binding HasSelected,ElementName=_lvPrv}" />
+                    </a:Menu>
+                </a:Tab.Menu>
+                <a:Lv x:Name="_lvPrv">
+                    <DataTemplate>
+                        <a:Dot ID="prvid" Margin="10,0,10,0" />
+                    </DataTemplate>
+                </a:Lv>
+            </a:Tab>
+        </a:Tabs>
+    </a:WinItem>
+</a:Win>

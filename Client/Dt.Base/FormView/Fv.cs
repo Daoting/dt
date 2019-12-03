@@ -625,10 +625,28 @@ namespace Dt.Base
             }
             else if (e.CollectionChange == CollectionChange.Reset)
             {
-                _panel.Clear();
                 for (int i = 0; i < _items.Count; i++)
                 {
-                    AddItem(_items[i], i);
+                    var item = _items[i];
+                    if (_panel.Children.Count > i)
+                    {
+                        var elem = _panel.Children[i];
+                        
+                        // 内容没变
+                        if (item == elem
+                            || (elem is CFree f && f.Content == item))
+                            continue;
+
+                        // 变了移除旧元素
+                        _panel.Children.RemoveAt(i);
+                    }
+                    AddItem(item, i);
+                }
+
+                // 移除多余的元素
+                while (_panel.Children.Count > _items.Count)
+                {
+                    _panel.Children.RemoveAt(_panel.Children.Count - 1);
                 }
             }
         }

@@ -209,7 +209,7 @@ namespace Dt.App.Model
         {
             SelectRolesDlg dlg = new SelectRolesDlg();
             long menuID = _fv.To<Menu>().ID;
-            if (await dlg.Show(RoleRelations.Menu, menuID, e))
+            if (await dlg.Show(RoleRelations.Menu, menuID.ToString(), e))
             {
                 List<RoleMenu> ls = new List<RoleMenu>();
                 foreach (var row in dlg.SelectedItems.OfType<Row>())

@@ -10,6 +10,7 @@
 using System;
 using System.Diagnostics;
 using Dt.Base;
+using Dt.Core;
 using Uno;
 using Windows.Foundation;
 using Windows.UI.Xaml;
@@ -242,6 +243,11 @@ namespace Dt.Sample
             if (element is FrameworkElement fe)
                 return string.IsNullOrWhiteSpace(fe.Name) ? fe.ToString() : fe.Name;
             return element.ToString();
+        }
+
+        void OnTbKeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            AtKit.Msg(e.Key.ToString());
         }
     }
 }

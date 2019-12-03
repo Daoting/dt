@@ -12,23 +12,30 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <StackPanel x:Name="_bdSingle" Background="Moccasin" Height="60">
             <TextBlock Text="自身事件触发" TextAlignment="Center" Margin="0,10,0,0" />
             <TextBlock x:Name="_tbSingle" TextWrapping="Wrap" />
         </StackPanel>
-        <Border x:Name="_bdParent" Background="Gray" Padding="10" Height="250" Grid.Row="1">
+        <Border x:Name="_bdParent" Background="Gray" Padding="10" Height="150" Grid.Row="1">
             <StackPanel x:Name="_bdChild" Background="Beige">
                 <TextBlock Text="父子事件路由" TextAlignment="Center" Margin="0,10,0,0" />
                 <ToggleSwitch x:Name="_cbHandled" OnContent="标志已处理" OffContent="未标志处理" />
                 <TextBlock x:Name="_tbRoute" TextWrapping="Wrap" />
             </StackPanel>
         </Border>
-        <Border x:Name="_bdAdd" Background="Aqua" Padding="10" Height="250" Grid.Row="2">
+        <Border x:Name="_bdAdd" Background="Aqua" Padding="10" Height="150" Grid.Row="2">
             <StackPanel x:Name="_bdAddChild" Background="Azure">
                 <TextBlock Text="父AddHandler事件" TextAlignment="Center" Margin="0,10,0,0" />
                 <ToggleSwitch x:Name="_cbAdd" OnContent="标志已处理" OffContent="未标志处理" />
                 <TextBlock x:Name="_tbAdd" TextWrapping="Wrap" />
+            </StackPanel>
+        </Border>
+        <Border Background="Salmon" Padding="10" Height="150" Grid.Row="3">
+            <StackPanel Background="Beige">
+                <TextBlock Text="TextBox事件" TextAlignment="Center" Margin="0,10,0,0" />
+                <TextBox KeyUp="OnTbKeyDown" />
             </StackPanel>
         </Border>
     </Grid>

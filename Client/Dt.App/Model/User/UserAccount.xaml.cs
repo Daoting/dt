@@ -26,6 +26,7 @@ namespace Dt.App.Model
         public UserAccount()
         {
             InitializeComponent();
+            _lvUser.View = GetResource(AtSys.IsPhoneUI ? "TileView" : "TableView");
             _lvUser.ViewEx = typeof(UserViewEx);
             LoadAll();
         }
@@ -35,21 +36,23 @@ namespace Dt.App.Model
             _lvUser.Data = await AtCm.Query("用户-所有");
         }
 
-        void OnAddUser(object sender, Mi e)
+        async void OnAddUser(object sender, Mi e)
         {
-            new EditUserDlg().Show(-1);
+            if (await new EditUserDlg().Show(-1))
+                _lvUser.Data = await AtCm.Query("用户-最近修改");
         }
 
-        void OnEditUser(object sender, Mi e)
+        async void OnEditUser(object sender, Mi e)
         {
-            new EditUserDlg().Show(e.Row.ID);
+            if (await new EditUserDlg().Show(e.Row.ID))
+                _lvUser.Data = await AtCm.Query("用户-最近修改");
         }
 
         async void OnAddRole(object sender, Mi e)
         {
             SelectRolesDlg dlg = new SelectRolesDlg();
             long userID = _lvUser.SelectedRow.ID;
-            if (await dlg.Show(RoleRelations.User, userID, e))
+            if (await dlg.Show(RoleRelations.User, userID.ToString(), e))
             {
                 List<long> roles = new List<long>();
                 foreach (var row in dlg.SelectedItems.OfType<Row>())
@@ -70,11 +73,6 @@ namespace Dt.App.Model
         void OnNaviToSearch(object sender, RoutedEventArgs e)
         {
             NaviTo("查找用户");
-        }
-
-        void OnSearch(object sender, RoutedEventArgs e)
-        {
-            NaviTo("用户列表");
         }
 
         async void OnDelUser(object sender, Mi e)
@@ -130,7 +128,51 @@ namespace Dt.App.Model
 
         async void OnItemClick(object sender, ItemClickArgs e)
         {
-            _lvRole.Data = await AtCm.Query("用户-关联角色", new { userid = e.Row.ID });
+            if (e.IsChanged)
+            {
+                long id = e.Row.ID;
+                _lvRole.Data = await AtCm.Query("用户-关联角色", new { userid = id });
+                _lvMenu.Data = await AtCm.Query("用户-可访问的菜单", new { userid = id });
+                _lvPrv.Data = await AtCm.Query("用户-具有的权限", new { userid = id });
+            }
+            NaviTo("关联角色,拥有菜单,授予权限");
+        }
+
+        void OnUserDataChanged(object sender, object e)
+        {
+            _lvRole.Data = null;
+            _lvMenu.Data = null;
+            _lvPrv.Data = null;
+        }
+
+        async void OnSearch(object sender, string e)
+        {
+            if (e == "#全部")
+            {
+                LoadAll();
+            }
+            else if (e == "#最近修改")
+            {
+                _lvUser.Data = await AtCm.Query("用户-最近修改");
+            }
+            else if (!string.IsNullOrEmpty(e))
+            {
+                _lvUser.Data = await AtCm.Query("用户-模糊查询", new { input = $"%{e}%" });
+            }
+            NaviTo("用户列表");
+        }
+
+        object GetResource(string p_key)
+        {
+#if UWP
+            return Resources[p_key];
+#else
+            if (p_key == "TableView")
+                return StaticResources.TableView;
+            if (p_key == "TileView")
+                return StaticResources.TileView;
+            return StaticResources.TableView;
+#endif
         }
 
         class UserViewEx

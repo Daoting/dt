@@ -5,15 +5,41 @@
     xmlns:a="using:Dt.Base"
     Home="用户列表">
 
+    <a:Win.Resources>
+        <a:Cols x:Key="TableView">
+            <a:Col ID="name" Title="姓名" Width="160" />
+            <a:Col ID="phone" Title="手机号" Width="160" />
+            <a:Col ID="sex" Title="性别" Width="60" />
+            <a:Col ID="ctime" Title="创建时间" Width="120" />
+            <a:Col ID="mtime" Title="修改时间" Width="120" />
+        </a:Cols>
+
+        <DataTemplate x:Key="TileView">
+            <StackPanel Padding="6">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="&#xE03C;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" />
+                    <a:Dot ID="name" VerticalAlignment="Center" Margin="4,0,0,0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,10,0,10">
+                    <TextBlock Text="&#xE0A5;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" />
+                    <a:Dot ID="phone" VerticalAlignment="Center" Margin="4,0,0,0" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <a:Dot ID="ctime" FontSize="12" Foreground="{StaticResource 深灰边框}" />
+                    <TextBlock Text="&#xE0C3;" Margin="40,0,0,0" FontFamily="{StaticResource IconFont}" FontSize="12" Foreground="{StaticResource 深灰边框}" />
+                    <a:Dot ID="mtime" FontSize="12" Foreground="{StaticResource 深灰边框}" VerticalAlignment="Center" Margin="10,0,0,0" />
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+    </a:Win.Resources>
+
     <a:WinItem DockState="DockedLeft">
         <a:Tabs>
             <a:Tab Title="查找用户">
-                <a:SearchFv x:Name="_fv">
-                    <TextBox x:Name="TextBox" PlaceholderText="姓名或手机号" />
+                <a:SearchFv Placeholder="姓名或手机号" Search="OnSearch">
                     <a:CBar Title="常用" />
                     <Button Content="全部" />
-                    <Button Content="今天注册" />
-                    <Button Content="查找" Click="OnSearch" />
+                    <Button Content="最近修改" />
                 </a:SearchFv>
             </a:Tab>
         </a:Tabs>
@@ -29,24 +55,15 @@
                 <a:Tab.PhoneBar>
                     <Button x:Name="_btnSearch" Content="查找用户" Click="OnNaviToSearch" />
                 </a:Tab.PhoneBar>
-                <a:Lv x:Name="_lvUser" ViewMode="Table" ItemClick="OnItemClick">
+                <a:Lv x:Name="_lvUser" ViewMode="Table" PhoneViewMode="List" ItemClick="OnItemClick" DataChanged="OnUserDataChanged">
                     <a:Ex.Menu>
                         <a:Menu>
                             <a:Mi ID="编辑" Icon="铅笔" Click="OnEditUser" />
-                            <a:Mi ID="查看权限" Icon="审核" />
-                            <a:Mi ID="可访问菜单" Icon="大图标" />
                             <a:Mi ID="重置密码" Icon="钥匙" Click="OnResetPwd" />
                             <a:Mi ID="停用/启用" Icon="禁止登记" Click="OnToggleExpired" />
                             <a:Mi ID="删除" Icon="删除" Click="OnDelUser" />
                         </a:Menu>
                     </a:Ex.Menu>
-                    <a:Cols>
-                        <a:Col ID="name" Title="姓名" Width="160" />
-                        <a:Col ID="phone" Title="手机号" Width="160" />
-                        <a:Col ID="sex" Title="性别" Width="60" />
-                        <a:Col ID="ctime" Title="创建时间" Width="120" />
-                        <a:Col ID="mtime" Title="修改时间" Width="120" />
-                    </a:Cols>
                 </a:Lv>
             </a:Tab>
         </a:Tabs>
@@ -55,14 +72,28 @@
         <a:Tabs>
             <a:Tab Title="关联角色">
                 <a:Tab.Menu>
-                    <a:Menu x:Name="_mRole">
-                        <a:Mi ID="添加" Icon="加号" Click="OnAddRole" />
+                    <a:Menu>
+                        <a:Mi ID="添加" Icon="加号" Click="OnAddRole" IsEnabled="{Binding HasSelected,ElementName=_lvUser}" />
                         <a:Mi ID="移除" Icon="垃圾箱" Click="OnRemoveRole" IsEnabled="{Binding HasSelected,ElementName=_lvRole}" />
                     </a:Menu>
                 </a:Tab.Menu>
                 <a:Lv x:Name="_lvRole">
                     <DataTemplate>
                         <a:Dot ID="rolename" Margin="10,0,10,0" />
+                    </DataTemplate>
+                </a:Lv>
+            </a:Tab>
+            <a:Tab Title="拥有菜单">
+                <a:Lv x:Name="_lvMenu">
+                    <DataTemplate>
+                        <a:Dot ID="name" Margin="10,0,10,0" />
+                    </DataTemplate>
+                </a:Lv>
+            </a:Tab>
+            <a:Tab Title="授予权限">
+                <a:Lv x:Name="_lvPrv">
+                    <DataTemplate>
+                        <a:Dot ID="prvid" Margin="10,0,10,0" />
                     </DataTemplate>
                 </a:Lv>
             </a:Tab>

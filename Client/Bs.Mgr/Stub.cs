@@ -93,8 +93,8 @@ namespace Dt.Shell
             { "基础权限", typeof(BasePrivilege) },
             { "菜单管理", typeof(SysMenu) },
             { "系统角色", typeof(SysRole) },
-            { "用户账号", typeof(UserAccount) },
             { "参数定义", typeof(UserParams) },
+            { "用户账号", typeof(UserAccount) },
             { "主页", typeof(DefaultHome) },
             { "控件样例", typeof(SamplesMain) },
         };
@@ -126,6 +126,7 @@ namespace Dt.Shell
             { "filereadlog", typeof(FileReadLog) },
             { "docklayout", typeof(DockLayout) },
             { "celllastval", typeof(CellLastVal) },
+            { "searchfvhis", typeof(SearchFvHis) },
             { "clientlog", typeof(ClientLog) },
             { "clientcookie", typeof(ClientCookie) },
         };
@@ -133,7 +134,7 @@ namespace Dt.Shell
         /// <summary>
         /// 获取状态库版本号，和本地不同时自动更新
         /// </summary>
-        public string StateDbVer => "81122d42a894a237c687b80eaf48d50f";
+        public string StateDbVer => "a9d6f73f1508bf8a2e8f00486b1a6d77";
         #endregion
     }
 }
