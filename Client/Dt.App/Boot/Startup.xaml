@@ -1,9 +1,0 @@
-﻿<Page
-    x:Class="Dt.App.Startup"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-
-    <Grid Background="{StaticResource 主题蓝色}">
-        <TextBlock x:Name="_tb" />
-    </Grid>
-</Page>

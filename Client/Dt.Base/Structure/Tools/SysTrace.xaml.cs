@@ -433,7 +433,7 @@ namespace Dt.Base.Tools
         }
 
 #else
-        void OnStub(object sender, RoutedEventArgs e)
+        void OnStub(object sender, Mi e)
         {
         }
 #endif

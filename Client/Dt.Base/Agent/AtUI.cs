@@ -11,6 +11,7 @@ using Dt.Base.Tools;
 using Dt.Core;
 using Dt.Core.Model;
 using Dt.Core.Rpc;
+using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -29,62 +30,6 @@ namespace Dt.Base
     public static class AtUI
     {
         #region 窗口
-        ///// <summary>
-        ///// 根据菜单id打开菜单项窗口
-        ///// </summary>
-        ///// <param name="p_menuID">菜单ID</param>
-        ///// <returns>返回打开的窗口或视图，null表示打开失败</returns>
-        //public static object OpenMenu(string p_menuID)
-        //{
-        //    return OpenMenu(AtLocal.QueryModelFirst<OmMenu>($"select * from OmMenu where id='{p_menuID}'"));
-        //}
-
-        ///// <summary>
-        ///// 打开菜单项窗口，可以由点击菜单项或直接代码构造Menu的方式调用
-        ///// </summary>
-        ///// <param name="p_menu">OmMenu实例</param>
-        ///// <returns>返回打开的窗口或视图，null表示打开失败</returns>
-        //public static object OpenMenu(OmMenu p_menu)
-        //{
-        //    if (p_menu == null)
-        //    {
-        //        AtKit.Msg("打开菜单项不可为空！");
-        //        return null;
-        //    }
-
-        //    Type tp = GetViewType(p_menu.ViewName);
-        //    if (tp == null)
-        //    {
-        //        AtKit.Msg(string.Format("打开菜单时未找到视图【{0}】！", p_menu.ViewName));
-        //        return null;
-        //    }
-
-        //    Icons icon;
-        //    Enum.TryParse(p_menu.Icon, out icon);
-        //    object win = OpenWin(tp, p_menu.Name, icon, string.IsNullOrEmpty(p_menu.Params) ? null : p_menu.Params);
-
-        //    // 保存点击次数，用于确定哪些是收藏菜单
-        //    if (win != null && !AtSys.Stub.IsLocalMode)
-        //    {
-        //        Task.Run(() =>
-        //        {
-        //            if (AtLocal.GetModelScalar<int>($"select count(id) from ommenu where id=\"{p_menu.ID}\"") > 0)
-        //            {
-        //                // 点击次数保存在客户端
-        //                Dict dt = new Dict();
-        //                dt["userid"] = AtUser.ID;
-        //                dt["menuid"] = p_menu.ID;
-        //                int cnt = AtLocal.Execute("update menufav set clicks=clicks+1 where userid=:userid and menuid=:menuid", dt);
-        //                if (cnt == 0)
-        //                    AtLocal.Execute("insert into menufav (userid, menuid, clicks) values (:userid, :menuid, 1)", dt);
-        //            }
-        //            // 收集使用频率
-        //            //await AtAuth.ClickMenu(p_menu.ID);
-        //        });
-        //    }
-        //    return win;
-        //}
-
         /// <summary>
         /// 根据视图名称激活旧窗口或打开新窗口
         /// </summary>
@@ -97,7 +42,7 @@ namespace Dt.Base
             string p_viewName,
             string p_title = null,
             Icons p_icon = Icons.None,
-            string p_params = null)
+            object p_params = null)
         {
             Type tp = GetViewType(p_viewName);
             if (tp == null)
@@ -120,7 +65,7 @@ namespace Dt.Base
             Type p_type,
             string p_title = null,
             Icons p_icon = Icons.None,
-            string p_params = null)
+            object p_params = null)
         {
             if (p_type == null)
                 AtKit.Throw("待显示的窗口类型不可为空！");
@@ -137,7 +82,7 @@ namespace Dt.Base
             TypeInfo info = p_type.GetTypeInfo();
             if (info.ImplementedInterfaces.Contains(typeof(IWin)))
             {
-                if (string.IsNullOrEmpty(p_params))
+                if (p_params == null)
                     win = (IWin)Activator.CreateInstance(p_type);
                 else
                     win = (IWin)Activator.CreateInstance(p_type, p_params);
@@ -149,6 +94,10 @@ namespace Dt.Base
 
                 if (p_icon != Icons.None)
                     win.Icon = p_icon;
+
+                // 记录初始参数，设置自启动和win模式下识别窗口时使用
+                if (p_params != null)
+                    win.Params = p_params;
 
                 if (AtSys.IsPhoneUI)
                 {
@@ -241,9 +190,10 @@ namespace Dt.Base
 
             AutoStartInfo info = new AutoStartInfo();
             info.WinType = p_win.GetType().AssemblyQualifiedName;
-            info.Params = p_win.Params;
             info.Title = p_win.Title;
             info.Icon = p_win.Icon.ToString();
+            //if (p_win.Params != null)
+            //    info.Params = JsonConverter..Serialize(p_win.Params);
             AtLocal.SaveAutoStart(info);
             AtKit.Msg(string.Format("{0}已设置自启动！", p_win.Title));
         }
@@ -263,11 +213,6 @@ namespace Dt.Base
         /// 主页视图名称
         /// </summary>
         public const string HomeView = "主页";
-
-        /// <summary>
-        /// 单机模式主页视图
-        /// </summary>
-        public const string LocalHomeView = "单机主页";
         #endregion
 
         #region Phone模式标题菜单

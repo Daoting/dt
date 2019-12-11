@@ -12,8 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Include="Boot\Startup.xaml" />
-    <Page Include="Boot\Login.xaml" />
+    <Page Include="Home\Login.xaml" />
     <Page Include="Home\DefaultHome.xaml" />
     <Page Include="Home\RootMenu.xaml" />
     <Page Include="Home\GroupMenu.xaml" />
@@ -34,10 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Boot\Startup.xaml.cs">
-      <DependentUpon>Startup.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Boot\Login.xaml.cs">
+    <Compile Update="Home\Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>
     </Compile>
     <Compile Update="Home\DefaultHome.xaml.cs">

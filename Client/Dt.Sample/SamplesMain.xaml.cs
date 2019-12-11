@@ -97,13 +97,13 @@ namespace Dt.Sample
                 new DataCmd
                 {
                     Title = "列表Lv",
-                    Note = "传统二维表格，支持选择、排序、过滤、分组、自动行高、自定义单元格等功能",
+                    Note = "支持三类视图表格、列表、磁贴，两种数据源，三种选择模式，定制分组，上下文菜单",
                     Tag = typeof(LvHome)
                 },
                 new DataCmd
                 {
                     Title = "树Tv",
-                    Note = "支持数据源绑定、多选",
+                    Note = "支持动态加载子节点，自定义节点样式、节点内容，动态设置节点模板，上下文菜单",
                     Tag = typeof(TvHome)
                 },
                 new DataCmd

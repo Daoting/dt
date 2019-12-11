@@ -76,6 +76,12 @@ namespace Dt.Base
             typeof(NaviWin),
             new PropertyMetadata(null));
 
+        public readonly static DependencyProperty ParamsProperty = DependencyProperty.Register(
+            "Params",
+            typeof(object),
+            typeof(NaviWin),
+            new PropertyMetadata(null));
+
         static void OnNaviDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((NaviWin)d).OnNaviDataChanged();
@@ -180,9 +186,10 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置初始参数
         /// </summary>
-        public virtual string Params
+        public object Params
         {
-            get { return null; }
+            get { return GetValue(ParamsProperty); }
+            set { SetValue(ParamsProperty, value); }
         }
         #endregion
 

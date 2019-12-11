@@ -59,6 +59,12 @@ namespace Dt.Base
             typeof(PageWin),
             new PropertyMetadata(null));
 
+        public readonly static DependencyProperty ParamsProperty = DependencyProperty.Register(
+            "Params",
+            typeof(object),
+            typeof(PageWin),
+            new PropertyMetadata(null));
+
         public static readonly DependencyProperty BackButtonVisibilityProperty = DependencyProperty.Register(
             "BackButtonVisibility",
             typeof(Visibility),
@@ -137,9 +143,10 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置初始参数
         /// </summary>
-        public virtual string Params
+        public object Params
         {
-            get { return null; }
+            get { return GetValue(ParamsProperty); }
+            set { SetValue(ParamsProperty, value); }
         }
 
         /// <summary>

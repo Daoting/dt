@@ -5,12 +5,12 @@
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
   IgnorableNamespaces="uap mp">
   <Identity
-    Name="4e169f82-ed49-494f-8c23-7dab11228222"
+    Name="4e169f82-ed49-494f-8c23-7dab11228111"
     Publisher="CN=hdt"
     Version="1.0.0.0" />
   <mp:PhoneIdentity PhoneProductId="4e169f82-ed49-494f-8c23-7dab11228222" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
-    <DisplayName>百岁</DisplayName>
+    <DisplayName>百岁管理</DisplayName>
     <PublisherDisplayName>hdt</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>

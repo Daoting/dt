@@ -29,7 +29,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置初始参数
         /// </summary>
-        string Params { get; }
+        object Params { get; set; }
 
         /// <summary>
         /// 导航到窗口主页

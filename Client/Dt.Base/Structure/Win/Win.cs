@@ -46,6 +46,12 @@ namespace Dt.Base
             typeof(Win),
             new PropertyMetadata(Icons.文件));
 
+        public readonly static DependencyProperty ParamsProperty = DependencyProperty.Register(
+            "Params",
+            typeof(object),
+            typeof(Win),
+            new PropertyMetadata(null));
+
         /// <summary>
         /// PhoneUI模式的首页Title
         /// </summary>
@@ -206,9 +212,10 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置初始参数
         /// </summary>
-        public virtual string Params
+        public object Params
         {
-            get { return null; }
+            get { return GetValue(ParamsProperty); }
+            set { SetValue(ParamsProperty, value); }
         }
 
         /// <summary>

@@ -27,24 +27,28 @@ namespace Dt.Base
     /// </summary>
     public static class AtApp
     {
+        #region 启动
         /// <summary>
         /// 应用程序启动
         /// </param>
         public static void Run(LaunchActivatedEventArgs args)
         {
-            // 登录注销回调
-            AtSys.Login = Login;
-            AtSys.Logout = Logout;
+            // 初始根元素用来提示信息
+            TextBlock info = SysVisual.RootContent as TextBlock;
+            Window.Current.Activate();
 
-            // 已启动过则激活应用
-            if (SysVisual.RootContent != null)
+            // 已启动过
+            if (info == null)
             {
-                Window.Current.Activate();
                 // 带参数启动
                 if (!string.IsNullOrEmpty(args.Arguments))
                     AtKit.RunAsync(() => LaunchFreely(args.Arguments));
                 return;
             }
+
+            // 登录注销回调
+            AtSys.Login = Login;
+            AtSys.Logout = Logout;
 
             // uwp和wasm 支持UI模式切换
 #if UWP
@@ -74,12 +78,8 @@ namespace Dt.Base
             // 提示信息
             NotifyManager.Init();
 
-            // 初始UI
-            if (AtSys.Stub.IsLocalMode)
-                LoadRootContent();
-            else
-                SysVisual.RootContent = AtSys.Stub.StartPage;
-            Window.Current.Activate();
+            // 从存根启动，因uno中无法在一个根UI的Loaded事件中切换到另一根UI，所以未采用启动页方式
+            AtSys.Stub.OnStartup(new StartupInfo());
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace Dt.Base
         /// 1. 与本地不同时下载新模型文件；
         /// 2. 打开模型库；
         /// </summary>
-        /// <param name="p_svcName"></param>
+        /// <param name="p_svcName">服务名，</param>
         /// <returns></returns>
         public static async Task<string> OpenModelDb(string p_svcName)
         {
@@ -152,6 +152,7 @@ namespace Dt.Base
             }
             return null;
         }
+        #endregion
 
         #region 登录注销
         /// <summary>
@@ -205,7 +206,7 @@ namespace Dt.Base
 
             // 正常登录后切换到主页，中途登录后关闭对话框
             if (p_dlg == null)
-                LoadRootContent();
+                LoadRootUI();
             else
                 p_dlg.Close();
 
@@ -266,7 +267,7 @@ namespace Dt.Base
         /// <summary>
         /// 加载根内容 Desktop 或 Frame
         /// </summary>
-        public static void LoadRootContent()
+        public static void LoadRootUI()
         {
             if (AtSys.IsPhoneUI)
                 LoadRootFrame();
@@ -289,7 +290,7 @@ namespace Dt.Base
             SysVisual.RootContent = Frame;
 
             // 主页作为根
-            Type tp = AtSys.Stub.IsLocalMode ? AtUI.GetViewType(AtUI.LocalHomeView) : AtUI.GetViewType(AtUI.HomeView);
+            Type tp = AtUI.GetViewType(AtUI.HomeView);
             if (tp != null)
             {
                 IWin win = Activator.CreateInstance(tp) as IWin;
@@ -349,7 +350,7 @@ namespace Dt.Base
             Desktop desktop = new Desktop();
 
             // 主页
-            Type tp = AtSys.Stub.IsLocalMode ? AtUI.GetViewType(AtUI.LocalHomeView) : AtUI.GetViewType(AtUI.HomeView);
+            Type tp = AtUI.GetViewType(AtUI.HomeView);
             if (tp != null)
             {
                 IWin win = Activator.CreateInstance(tp) as IWin;
@@ -443,7 +444,7 @@ namespace Dt.Base
 
             // 重构根元素
             if (SysVisual.RootContent is Frame || SysVisual.RootContent is Desktop)
-                LoadRootContent();
+                LoadRootUI();
         }
 #endif
         #endregion

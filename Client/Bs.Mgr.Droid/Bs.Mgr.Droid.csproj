@@ -11,7 +11,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Dt.Shell</RootNamespace>
-    <AssemblyName>Bs.Droid</AssemblyName>
+    <AssemblyName>Bs.Mgr.Droid</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <AndroidApplication>True</AndroidApplication>
     <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
@@ -73,11 +73,9 @@
     <AndroidAsset Include="..\Common\winjs-symbols.ttf">
       <Link>Assets\Fonts\winjs-symbols.ttf</Link>
     </AndroidAsset>
-    <None Include="Resources\AboutResources.txt" />
     <None Include="Properties\AndroidManifest.xml">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Assets\AboutAssets.txt" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\values\styles.xml" />
@@ -89,7 +87,7 @@
     <PackageReference Include="Xamarin.Android.Support.Compat">
       <Version>28.0.0.3</Version>
     </PackageReference>
-     <PackageReference Include="Xamarin.Android.Support.Core.Utils">
+    <PackageReference Include="Xamarin.Android.Support.Core.Utils">
       <Version>28.0.0.3</Version>
     </PackageReference>
   </ItemGroup>
@@ -136,6 +134,16 @@
     <AndroidResource Include="Resources\drawable\StoreLogo.png">
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
     </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Common\AboutResources.txt">
+      <Link>Resources\AboutResources.txt</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Common\AboutAssets.txt">
+      <Link>Assets\AboutAssets.txt</Link>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

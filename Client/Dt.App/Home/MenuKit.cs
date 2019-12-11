@@ -47,7 +47,7 @@ namespace Dt.App
         /// </summary>
         public static string SqlRoles { get; private set; }
 
-        internal static void InitRoles(string p_roles)
+        public static void InitRoles(string p_roles)
         {
             // 任何人角色ID
             if (string.IsNullOrEmpty(p_roles))
@@ -156,7 +156,7 @@ namespace Dt.App
             object win = AtUI.OpenWin(tp, p_menu.Name, icon, string.IsNullOrEmpty(p_menu.Params) ? null : p_menu.Params);
 
             // 保存点击次数，用于确定哪些是收藏菜单
-            if (win != null && !AtSys.Stub.IsLocalMode)
+            if (win != null)
             {
                 Task.Run(() =>
                 {

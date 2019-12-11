@@ -103,7 +103,7 @@ namespace Dt.Base.ListView
                     Holding += (s, e) =>
                     {
                         if (e.HoldingState == HoldingState.Started)
-                            OpenContextMenu(e.GetPosition(null));
+                            OpenContextMenu(default);
                     };
                     // win上触摸模式使用鼠标时不触发Holding事件！
                     if (AtSys.System == TargetSystem.Windows)
@@ -111,7 +111,7 @@ namespace Dt.Base.ListView
                 }
                 else
                 {
-                    Tapped += (s, e) => OpenContextMenu(e.GetPosition(null));
+                    Tapped += (s, e) => OpenContextMenu(default);
                 }
             }
             else

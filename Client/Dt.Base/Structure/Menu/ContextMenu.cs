@@ -126,7 +126,7 @@ namespace Dt.Base
         /// <summary>
         /// 是否为上下文菜单
         /// </summary>
-        internal bool IsContextMenu
+        public bool IsContextMenu
         {
             get { return (bool)GetValue(IsContextMenuProperty); }
             set { SetValue(IsContextMenuProperty, value); }
@@ -136,8 +136,18 @@ namespace Dt.Base
         /// <summary>
         /// 打开上下文菜单
         /// </summary>
-        /// <param name="p_pos">位置</param>
-        public async void OpenContextMenu(Point p_pos, FrameworkElement p_tgtPlacement = null)
+        /// <param name="p_tgt">相对目标元素，win模式有效，通过WinPlacement控制相对位置</param>
+        public void OpenContextMenu(FrameworkElement p_tgt)
+        {
+            OpenContextMenu(default, p_tgt);
+        }
+
+        /// <summary>
+        /// 打开上下文菜单
+        /// </summary>
+        /// <param name="p_pos">在指定位置显示，win模式有效</param>
+        /// <param name="p_tgtPlacement">相对目标元素，win模式有效</param>
+        public async void OpenContextMenu(Point p_pos = default, FrameworkElement p_tgtPlacement = null)
         {
             if (!IsContextMenu || (_dlg != null && _dlg.IsOpened))
                 return;
@@ -232,6 +242,13 @@ namespace Dt.Base
             if (tgt == null || tgt is IMenuHost)
                 return;
 
+            if (tgt is Button btn)
+            {
+                // uno中Button不触发Tapped事件！
+                btn.Click += OnButtonClick;
+                return;
+            }
+
             if (AtSys.IsTouchMode)
             {
                 if (TouchTrigger == TouchTriggerEvent.Holding)
@@ -261,6 +278,12 @@ namespace Dt.Base
             if (tgt == null || tgt is IMenuHost)
                 return;
 
+            if (tgt is Button btn)
+            {
+                btn.Click -= OnButtonClick;
+                return;
+            }
+
             tgt.RemoveHandler(TappedEvent, (TappedEventHandler)OnTargetTapped);
             tgt.RemoveHandler(RightTappedEvent, (RightTappedEventHandler)OnTargetRightTapped);
             tgt.RemoveHandler(HoldingEvent, (HoldingEventHandler)OnTargetHolding);
@@ -269,13 +292,19 @@ namespace Dt.Base
         void OnTargetRightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             e.Handled = true;
-            OpenContextMenu(e.GetPosition(null));
+            if (!AtSys.IsPhoneUI && WinPlacement == MenuPosition.Default)
+                OpenContextMenu(e.GetPosition(null));
+            else
+                OpenContextMenu();
         }
 
         void OnTargetTapped(object sender, TappedRoutedEventArgs e)
         {
             e.Handled = true;
-            OpenContextMenu(e.GetPosition(null));
+            if (!AtSys.IsPhoneUI && WinPlacement == MenuPosition.Default)
+                OpenContextMenu(e.GetPosition(null));
+            else
+                OpenContextMenu();
         }
 
         void OnTargetHolding(object sender, HoldingRoutedEventArgs e)
@@ -283,8 +312,19 @@ namespace Dt.Base
             if (e.HoldingState == HoldingState.Started)
             {
                 e.Handled = true;
-                OpenContextMenu(e.GetPosition(null));
+                if (!AtSys.IsPhoneUI && WinPlacement == MenuPosition.Default)
+                    OpenContextMenu(e.GetPosition(null));
+                else
+                    OpenContextMenu();
             }
+        }
+
+        void OnButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (!AtSys.IsPhoneUI && WinPlacement == MenuPosition.Default)
+                OpenContextMenu(((Button)sender).GetAbsolutePosition());
+            else
+                OpenContextMenu();
         }
 
         void OnTargetUnloaded(object sender, RoutedEventArgs e)

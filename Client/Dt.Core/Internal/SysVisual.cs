@@ -54,7 +54,16 @@ namespace Dt.Core
             // 根Grid
             _rootGrid = new Grid();
 
-            // 桌面层/页面层，此层调整为动态添加！为uno节省级数！
+            // 桌面层/页面层，此层调整为动态添加！为uno节省级数！启动时为临时提示信息
+            TextBlock tb = new TextBlock
+            {
+                Text = "正在启动...",
+                Foreground = new SolidColorBrush(Windows.UI.Colors.White),
+                Margin = new Thickness(40, 0, 40, 0),
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            _rootGrid.Children.Add(tb);
 
             // 对话框层
             _dlgCanvas = new Canvas();
@@ -88,9 +97,9 @@ namespace Dt.Core
             // 状态栏边距
             StatusBarHeight = (int)Application.Current.Resources["StatusBarHeight"];
             _rootGrid.Padding = new Thickness(0, StatusBarHeight, 0, 0);
+#endif
             // 主题蓝色
             _rootGrid.Background = new SolidColorBrush(Windows.UI.Color.FromArgb(0xFF, 0x1B, 0xA1, 0xE2));
-#endif
             Window.Current.Content = _rootGrid;
         }
 

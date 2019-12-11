@@ -1,0 +1,140 @@
+﻿<Page
+    x:Class="Dt.Kehu.GuidePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Page.Resources>
+        <Style x:Key="BorderStyle" TargetType="Border">
+            <Setter Property="BorderBrush" Value="White"/>
+            <Setter Property="BorderThickness" Value="6"/>
+            <Setter Property="Width" Value="50"/>
+            <Setter Property="Height" Value="50"/>
+        </Style>
+    </Page.Resources>
+
+    <Grid Background="{StaticResource 主题蓝色}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid x:Name="AnimateGrid" Padding="30" Grid.Row="1" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Border Style="{StaticResource BorderStyle}">
+                <Border.RenderTransform>
+                    <ScaleTransform CenterX="25" CenterY="25" x:Name="ScaleTransform1" />
+                </Border.RenderTransform>
+            </Border>
+            <Border Style="{StaticResource BorderStyle}" Margin="10,-28,0,0" Grid.Column="1">
+                <Border.RenderTransform>
+                    <RotateTransform CenterX="25" CenterY="25" Angle="45" x:Name="RotateTransform1" />
+                </Border.RenderTransform>
+            </Border>
+            <Border Style="{StaticResource BorderStyle}" Margin="0,-6,0,0" Grid.Row="1">
+                <Border.RenderTransform>
+                    <TranslateTransform x:Name="TranslateTransform1" />
+                </Border.RenderTransform>
+            </Border>
+            <Border Style="{StaticResource BorderStyle}" HorizontalAlignment="Left" Margin="-6,-6,0,0" Grid.Row="1" Grid.Column="1">
+                <Border.RenderTransform>
+                    <TranslateTransform x:Name="TranslateTransform2" />
+                </Border.RenderTransform>
+            </Border>
+        </Grid>
+
+        <StackPanel x:Name="GuidePanel1" Visibility="Collapsed" Margin="40" Grid.Row="1" Grid.Column="1">
+            <TextBlock Text="什么是福祉？" Foreground="White" FontSize="{StaticResource 大字号}" Margin="0,0,0,40" />
+            <TextBlock Text="通过科学的运动和饮食能够达到自立的有尊严的终老。" TextWrapping="Wrap" Foreground="White" FontSize="{StaticResource 大字号}" />
+        </StackPanel>
+
+        <StackPanel x:Name="GuidePanel2" Visibility="Collapsed" Margin="40" Grid.Row="1" Grid.Column="1">
+            <TextBlock Text="什么是介护？" Foreground="White" FontSize="{StaticResource 大字号}" Margin="0,0,0,40" />
+            <TextBlock Text="通过科学的运动和饮食能够达到自立的有尊严的终老。" TextWrapping="Wrap" Foreground="White" FontSize="{StaticResource 大字号}" />
+        </StackPanel>
+        
+        <Button x:Name="NextButton"
+                Content="下一步"
+                Click="OnNextClick"
+                Visibility="Collapsed"
+                Foreground="White"
+                BorderBrush="White"
+                Background="{StaticResource 深暗遮罩}"
+                Padding="14,8,14,8"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Bottom"
+                Grid.Row="2"
+                Grid.ColumnSpan="3" />
+        
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="StartupState">
+                <VisualState x:Name="Normal" />
+                <VisualState x:Name="Animated">
+                    <Storyboard>
+                        <DoubleAnimation Storyboard.TargetProperty="ScaleX"
+											Storyboard.TargetName="ScaleTransform1"
+											To="0.1"
+											Duration="0:0:2" />
+                        <DoubleAnimation Storyboard.TargetProperty="ScaleY"
+											Storyboard.TargetName="ScaleTransform1"
+											To="0.1"
+											Duration="0:0:2" />
+
+                        <DoubleAnimation Storyboard.TargetProperty="Angle"
+											Storyboard.TargetName="RotateTransform1"
+											From="45"
+											To="360"
+											Duration="0:0:2" />
+
+                        <DoubleAnimation Storyboard.TargetProperty="Y"
+											Storyboard.TargetName="TranslateTransform1"
+											From="0"
+											To="100"
+											Duration="0:0:2">
+                            <DoubleAnimation.EasingFunction>
+                                <CubicEase EasingMode="EaseInOut" />
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                        <DoubleAnimation Storyboard.TargetProperty="X"
+											Storyboard.TargetName="TranslateTransform2"
+											From="0"
+											To="100"
+											Duration="0:0:2">
+                            <DoubleAnimation.EasingFunction>
+                                <CubicEase EasingMode="EaseInOut" />
+                            </DoubleAnimation.EasingFunction>
+                        </DoubleAnimation>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="AnimateGrid" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:2" Value="Collapsed" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="GuidePanel1" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:2" Value="Visible" />
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="NextButton" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0:0:2" Value="Visible" />
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+                <VisualState x:Name="Guide2">
+                    <VisualState.Setters>
+                        <Setter Target="AnimateGrid.Visibility" Value="Collapsed" />
+                        <Setter Target="GuidePanel1.Visibility" Value="Collapsed" />
+                        <Setter Target="GuidePanel2.Visibility" Value="Visible" />
+                        <Setter Target="NextButton.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+    </Grid>
+</Page>

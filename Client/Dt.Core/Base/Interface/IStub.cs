@@ -7,11 +7,11 @@
 #endregion
 
 #region 引用命名
-using Dt.Core.Model;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 #endregion
 
 namespace Dt.Core
@@ -22,10 +22,14 @@ namespace Dt.Core
     public interface IStub
     {
         /// <summary>
-        /// 启动页面
+        /// 服务器地址
         /// </summary>
-        /// <returns></returns>
-        UIElement StartPage { get; }
+        string ServerUrl { get; }
+
+        /// <summary>
+        /// 系统标题
+        /// </summary>
+        string Title { get; }
 
         /// <summary>
         /// 登录页面
@@ -34,30 +38,23 @@ namespace Dt.Core
         UIElement LoginPage { get; }
 
         /// <summary>
-        /// 系统标题
+        /// 系统启动
         /// </summary>
-        string Title { get; }
+        /// <param name="p_info">提示信息</param>
+        void OnStartup(StartupInfo p_info);
 
         /// <summary>
-        /// 系统描述信息
+        /// 系统注销时的处理
         /// </summary>
-        string Desc { get; }
+        Task OnLogout();
 
         /// <summary>
-        /// 服务器地址
+        /// 系统关闭时的处理，必须耗时小！
         /// </summary>
-        string ServerUrl { get; }
+        /// <returns></returns>
+        Task OnShutDown();
 
-        /// <summary>
-        /// 系统是否为单机模式
-        /// </summary>
-        bool IsLocalMode { get; }
-
-        /// <summary>
-        /// 是否允许延迟登录
-        /// </summary>
-        bool AllowDelayLogin { get; }
-
+        //--------------------以下内容自动生成----------------------------------
         /// <summary>
         /// 视图字典
         /// </summary>
@@ -82,16 +79,5 @@ namespace Dt.Core
         /// 获取状态库表类型，键值为小写类型名
         /// </summary>
         Dictionary<string, Type> StateTbls { get; }
-
-        /// <summary>
-        /// 系统注销时的处理
-        /// </summary>
-        Task OnLogout();
-
-        /// <summary>
-        /// 系统关闭时的处理，必须耗时小！
-        /// </summary>
-        /// <returns></returns>
-        Task OnShutDown();
     }
 }

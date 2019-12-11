@@ -175,7 +175,7 @@ namespace Dt.Core
 
         #region 登录注销
         /// <summary>
-        /// 显示登录页面
+        /// 显示登录页面，参数：是否为弹出式
         /// </summary>
         public static Action<bool> Login { get; internal set; }
 

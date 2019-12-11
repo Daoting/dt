@@ -239,7 +239,7 @@ namespace Dt.Base
         /// <param name="p_type">窗口类型</param>
         /// <param name="p_params">初始参数</param>
         /// <returns>激活的窗口</returns>
-        internal IWin ActiveWin(Type p_type, string p_params)
+        internal IWin ActiveWin(Type p_type, object p_params)
         {
             foreach (var win in _winCache)
             {

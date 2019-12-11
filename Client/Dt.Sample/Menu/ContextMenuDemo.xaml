@@ -5,17 +5,18 @@
     xmlns:a="using:Dt.Base"
     Title="上下文菜单">
 
-    <StackPanel Orientation="Horizontal">
-        <Button Content="左键左下显示">
+    <StackPanel>
+        <Button Content="按钮只在click时触发">
             <a:Ex.Menu>
-                <a:Menu MouseTrigger="LeftTapped" TouchTrigger="Tapped" WinPlacement="BottomLeft">
+                <a:Menu WinPlacement="BottomLeft">
                     <a:Mi ID="保存" Icon="保存" ShowInPhone="Icon" />
                     <a:Mi ID="搜索" Icon="搜索" />
                     <a:Mi ID="选择项" Icon="pos机" IsCheckable="True" />
                 </a:Menu>
             </a:Ex.Menu>
         </Button>
-        <Button Content="右键右上显示">
+        <Border Height="50" Margin="0,20,0,0" HorizontalAlignment="Left" Background="Gray">
+            <TextBlock Text="鼠标右键，触摸点击" />
             <a:Ex.Menu>
                 <a:Menu TouchTrigger="Tapped" WinPlacement="TopRight">
                     <a:Mi ID="保存" Icon="保存" ShowInPhone="Icon" />
@@ -23,6 +24,6 @@
                     <a:Mi ID="选择项" Icon="pos机" IsCheckable="True" />
                 </a:Menu>
             </a:Ex.Menu>
-        </Button>
+        </Border>
     </StackPanel>
 </a:PageWin>
