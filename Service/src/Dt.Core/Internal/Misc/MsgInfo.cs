@@ -7,11 +7,12 @@
 #endregion
 
 #region 引用命名
-using Newtonsoft.Json;
+using System.Text.Json;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
+using Dt.Core.Rpc;
 #endregion
 
 namespace Dt.Core
@@ -75,23 +76,7 @@ namespace Dt.Core
         /// <returns></returns>
         public string GetOnlineMsg()
         {
-            StringBuilder sb = new StringBuilder();
-            using (StringWriter sr = new StringWriter(sb))
-            using (JsonWriter writer = new JsonTextWriter(sr))
-            {
-                writer.WriteStartArray();
-                writer.WriteValue(MethodName);
-                if (Params != null && Params.Count > 0)
-                {
-                    foreach (var par in Params)
-                    {
-                        JsonRpcSerializer.Serialize(par, writer);
-                    }
-                }
-                writer.WriteEndArray();
-                writer.Flush();
-            }
-            return sb.ToString();
+            return RpcKit.GetCallString(MethodName, Params);
         }
 
         /// <summary>
@@ -130,9 +115,10 @@ namespace Dt.Core
         }
 
         #region IRpcJson
-        void IRpcJson.ReadRpcJson(JsonReader p_reader)
+        void IRpcJson.ReadRpcJson(ref Utf8JsonReader p_reader)
         {
-            MethodName = p_reader.ReadAsString();
+            p_reader.Read();
+            MethodName = p_reader.GetString();
 
             // 参数外层 [
             p_reader.Read();
@@ -140,24 +126,27 @@ namespace Dt.Core
             while (p_reader.Read())
             {
                 // 参数外层 ]
-                if (p_reader.TokenType == JsonToken.EndArray)
+                if (p_reader.TokenType == JsonTokenType.EndArray)
                     break;
-                Params.Add(JsonRpcSerializer.Deserialize(p_reader));
+                Params.Add(JsonRpcSerializer.Deserialize(ref p_reader));
             }
 
-            PushMode = (MsgPushMode)p_reader.ReadAsInt32();
-            Title = p_reader.ReadAsString();
-            Content = p_reader.ReadAsString();
+            p_reader.Read();
+            PushMode = (MsgPushMode)p_reader.GetInt32();
+            p_reader.Read();
+            Title = p_reader.GetString();
+            p_reader.Read();
+            Content = p_reader.GetString();
 
             // 最外层 ]
             p_reader.Read();
         }
 
-        void IRpcJson.WriteRpcJson(JsonWriter p_writer)
+        void IRpcJson.WriteRpcJson(Utf8JsonWriter p_writer)
         {
             p_writer.WriteStartArray();
-            p_writer.WriteValue("#msg");
-            p_writer.WriteValue(MethodName);
+            p_writer.WriteStringValue("#msg");
+            p_writer.WriteStringValue(MethodName);
 
             // 参数
             p_writer.WriteStartArray();
@@ -170,9 +159,9 @@ namespace Dt.Core
             }
             p_writer.WriteEndArray();
 
-            p_writer.WriteValue((int)PushMode);
-            p_writer.WriteValue(Title);
-            p_writer.WriteValue(Content);
+            p_writer.WriteNumberValue((int)PushMode);
+            p_writer.WriteStringValue(Title);
+            p_writer.WriteStringValue(Content);
 
             p_writer.WriteEndArray();
         }

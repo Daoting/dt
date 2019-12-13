@@ -11,7 +11,7 @@ using Dt.Base.Tools;
 using Dt.Core;
 using Dt.Core.Model;
 using Dt.Core.Rpc;
-using Newtonsoft.Json;
+using System.Text.Json;
 using System;
 using System.Linq;
 using System.Reflection;

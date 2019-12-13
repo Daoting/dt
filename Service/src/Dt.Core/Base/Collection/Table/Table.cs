@@ -7,7 +7,7 @@
 #endregion
 
 #region 引用命名
-using Newtonsoft.Json;
+using System.Text.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -535,7 +535,7 @@ namespace Dt.Core
         /// <summary>
         /// 反序列化读取Rpc Json数据
         /// </summary>
-        void IRpcJson.ReadRpcJson(JsonReader p_reader)
+        void IRpcJson.ReadRpcJson(ref Utf8JsonReader p_reader)
         {
             // cols外层 [
             p_reader.Read();
@@ -543,7 +543,7 @@ namespace Dt.Core
             while (p_reader.Read())
             {
                 // cols外层 ]
-                if (p_reader.TokenType == JsonToken.EndArray)
+                if (p_reader.TokenType == JsonTokenType.EndArray)
                     break;
 
                 int index = 0;
@@ -554,13 +554,13 @@ namespace Dt.Core
                 while (p_reader.Read())
                 {
                     // 列 ]
-                    if (p_reader.TokenType == JsonToken.EndArray)
+                    if (p_reader.TokenType == JsonTokenType.EndArray)
                         break;
 
                     if (index == 0)
-                        colName = p_reader.Value.ToString();
+                        colName = p_reader.GetString();
                     else
-                        colType = GetColType(p_reader.Value.ToString());
+                        colType = GetColType(p_reader.GetString());
                     index++;
                 }
                 _columns.Add(new Column(colName, colType));
@@ -573,7 +573,7 @@ namespace Dt.Core
             while (p_reader.Read())
             {
                 // rows外层 ]
-                if (p_reader.TokenType == JsonToken.EndArray)
+                if (p_reader.TokenType == JsonTokenType.EndArray)
                     break;
 
                 int index = 0;
@@ -583,32 +583,32 @@ namespace Dt.Core
                 while (p_reader.Read())
                 {
                     // 行 ]
-                    if (p_reader.TokenType == JsonToken.EndArray)
+                    if (p_reader.TokenType == JsonTokenType.EndArray)
                         break;
 
                     if (index < colCnt)
                     {
                         // 值变化时两值 [原始值,当前值]
-                        if (p_reader.TokenType == JsonToken.StartArray)
+                        if (p_reader.TokenType == JsonTokenType.StartArray)
                         {
                             // 两值 [
                             p_reader.Read();
-                            row.Cells[index].OriginalVal = p_reader.Value;
+                            row.Cells[index].OriginalVal = JsonRpcSerializer.Deserialize(ref p_reader, _columns[index].Type);
                             p_reader.Read();
-                            row.Cells[index].Val = p_reader.Value;
+                            row.Cells[index].Val = JsonRpcSerializer.Deserialize(ref p_reader, _columns[index].Type);
                             // 两值 ]
                             p_reader.Read();
                         }
                         else
                         {
                             // 不会引起连续IsChanged改变
-                            row.Cells[index].InitVal(p_reader.Value);
+                            row.Cells[index].InitVal(JsonRpcSerializer.Deserialize(ref p_reader, _columns[index].Type));
                         }
                     }
                     else
                     {
                         // 超出的列值为行状态
-                        string state = p_reader.Value.ToString();
+                        string state = p_reader.GetString();
                         if (state == "Added")
                             row.IsAdded = true;
                         else if (state == "Modified")
@@ -625,20 +625,20 @@ namespace Dt.Core
         /// <summary>
         /// 将对象按照Rpc Json数据结构进行序列化
         /// </summary>
-        void IRpcJson.WriteRpcJson(JsonWriter p_writer)
+        void IRpcJson.WriteRpcJson(Utf8JsonWriter p_writer)
         {
             p_writer.WriteStartArray();
             // 类型
-            p_writer.WriteValue("#tbl");
+            p_writer.WriteStringValue("#tbl");
 
             // 列
             p_writer.WriteStartArray();
             foreach (Column column in _columns)
             {
                 p_writer.WriteStartArray();
-                p_writer.WriteValue(column.ID);
+                p_writer.WriteStringValue(column.ID);
                 if (column.Type != typeof(string))
-                    p_writer.WriteValue(GetColTypeAlias(column.Type));
+                    p_writer.WriteStringValue(GetColTypeAlias(column.Type));
                 p_writer.WriteEndArray();
             }
             p_writer.WriteEndArray();
@@ -671,7 +671,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_dataRow"></param>
         /// <param name="p_writer"></param>
-        void SerializeJsonRow(Row p_dataRow, JsonWriter p_writer)
+        void SerializeJsonRow(Row p_dataRow, Utf8JsonWriter p_writer)
         {
             p_writer.WriteStartArray();
             foreach (var cell in p_dataRow.Cells)
@@ -680,20 +680,20 @@ namespace Dt.Core
                 {
                     // 值变化时传递两值数组 [原始值,当前值]
                     p_writer.WriteStartArray();
-                    p_writer.WriteValue(cell.OriginalVal);
-                    p_writer.WriteValue(cell.Val);
+                    JsonRpcSerializer.Serialize(cell.OriginalVal, p_writer);
+                    JsonRpcSerializer.Serialize(cell.Val, p_writer);
                     p_writer.WriteEndArray();
                 }
                 else
                 {
-                    p_writer.WriteValue(cell.Val);
+                    JsonRpcSerializer.Serialize(cell.Val, p_writer);
                 }
             }
             // 行状态，多出的列
             if (p_dataRow.IsAdded)
-                p_writer.WriteValue("Added");
+                p_writer.WriteStringValue("Added");
             else if (p_dataRow.IsChanged)
-                p_writer.WriteValue("Modified");
+                p_writer.WriteStringValue("Modified");
             p_writer.WriteEndArray();
         }
         #endregion

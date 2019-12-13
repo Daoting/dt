@@ -7,7 +7,7 @@
 #endregion
 
 #region 引用命名
-using Newtonsoft.Json;
+using System.Text.Json;
 using System.IO;
 using System.Threading.Tasks;
 #endregion
@@ -35,18 +35,8 @@ namespace Dt.Core.Rpc
         {
             try
             {
-                byte[] data = await RpcServerKit.ReadFrame(_invoker.Context.Request.BodyReader);
-                if (data != null && data.Length > 0)
-                {
-                    using (MemoryStream ms = new MemoryStream(data))
-                    using (StreamReader sr = new StreamReader(ms))
-                    using (JsonReader reader = new JsonTextReader(sr))
-                    {
-                        reader.Read();
-                        _val = JsonRpcSerializer.Deserialize(reader);
-                    }
-                    return true;
-                }
+                _val = RpcKit.ParseBytes<object>(await RpcServerKit.ReadFrame(_invoker.Context.Request.BodyReader));
+                return true;
             }
             catch { }
 

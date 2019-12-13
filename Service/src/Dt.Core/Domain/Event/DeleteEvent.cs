@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Dt.Core.EventBus;
+using System.Text.Json.Serialization;
 #endregion
 
 namespace Dt.Core

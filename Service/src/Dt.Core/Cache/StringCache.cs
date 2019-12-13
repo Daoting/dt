@@ -7,7 +7,7 @@
 #endregion
 
 #region 引用命名
-using Newtonsoft.Json;
+using System.Text.Json;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
@@ -62,7 +62,7 @@ namespace Dt.Core.Caches
             }
 
             // 反序列化
-            return JsonConvert.DeserializeObject<T>(val);
+            return JsonSerializer.Deserialize<T>(val, JsonOptions.UnsafeSerializer);
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace Dt.Core.Caches
             if (tp == typeof(string) || !tp.IsClass)
                 await _db.StringSetAsync(key, p_value.ToString(), p_expiry);
             else
-                await _db.StringSetAsync(key, JsonConvert.SerializeObject(p_value), p_expiry);
+                await _db.StringSetAsync(key, JsonSerializer.Serialize(p_value, JsonOptions.UnsafeSerializer), p_expiry);
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace Dt.Core.Caches
                     }
                 }
                 // 反序列化
-                res.Add(JsonConvert.DeserializeObject<T>(val));
+                res.Add(JsonSerializer.Deserialize<T>(val, JsonOptions.UnsafeSerializer));
             }
             return res;
         }

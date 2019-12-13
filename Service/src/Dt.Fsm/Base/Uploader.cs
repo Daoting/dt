@@ -12,7 +12,7 @@ using Dt.Core.Caches;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.WebUtilities;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Serilog;
 using System;
 using System.Buffers;
@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Dt.Core.Rpc;
 #endregion
 
 namespace Dt.Fsm
@@ -196,15 +197,7 @@ namespace Dt.Fsm
             if (_result.Count == 0)
                 return;
 
-            StringBuilder sb = new StringBuilder();
-            using (var sr = new StringWriter(sb))
-            using (var writer = new JsonTextWriter(sr))
-            {
-                JsonRpcSerializer.Serialize(_result, writer);
-                writer.Flush();
-            }
-            var data = Encoding.UTF8.GetBytes(sb.ToString());
-            _context.Response.BodyWriter.Write(data);
+            _context.Response.BodyWriter.Write(RpcKit.GetObjectBytes(_result));
             await _context.Response.BodyWriter.FlushAsync();
         }
 

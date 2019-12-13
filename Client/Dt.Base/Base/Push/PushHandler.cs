@@ -8,19 +8,11 @@
 
 #region 引用命名
 using Dt.Core;
-using Dt.Core.Rpc;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
 using System.Reflection;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using Windows.ApplicationModel.Activation;
-using Windows.UI.Core;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using System.Text;
+using System.Text.Json;
 #endregion
 
 namespace Dt.Base
@@ -42,28 +34,42 @@ namespace Dt.Base
         /// </summary>
         public static int RetryTimes;
 
-        string _method;
-        List<object> _params;
-
-        public PushHandler(string p_msg)
+        public void Call(string p_msg)
         {
+            if (string.IsNullOrEmpty(p_msg))
+            {
+                Log.Warning("服务器推送内容为空");
+                return;
+            }
+
+            string method = "";
+            MethodInfo mi = null;
+            object[] args = null;
             try
             {
-                using (var sr = new StringReader(p_msg))
-                using (var jr = new JsonTextReader(sr))
+                var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(p_msg));
+                // [
+                reader.Read();
+                method = reader.ReadAsString();
+
+                if (string.IsNullOrEmpty(method) || (mi = GetMethod(method.ToLower())) == null)
                 {
-                    // Json Rpc格式错误
-                    if (jr.Read()
-                        && jr.TokenType == JsonToken.StartArray
-                        && !string.IsNullOrEmpty(_method = jr.ReadAsString()))
+                    Log.Warning($"服务器推送方法 {method} 不存在");
+                    return;
+                }
+
+                var pars = mi.GetParameters();
+                if (pars.Length > 0)
+                {
+                    // 确保和Api的参数个数、类型相同
+                    // 类型不同时 执行类型转换 或 直接创建派生类实例！如Row -> User, Table -> Table<User>
+                    int index = 0;
+                    args = new object[pars.Length];
+                    while (index < pars.Length && reader.Read() && reader.TokenType != JsonTokenType.EndArray)
                     {
-                        _method = _method.ToLower();
-                        _params = new List<object>();
-                        while (jr.Read() && jr.TokenType != JsonToken.EndArray)
-                        {
-                            _params.Add(JsonRpcSerializer.Deserialize(jr));
-                        }
-                        AtKit.Trace(TraceOutType.ServerPush, $"{_method}—推送", AtSys.TraceRpc ? p_msg : null);
+                        // 参数支持派生类型！
+                        args[index] = JsonRpcSerializer.Deserialize(ref reader, pars[index].ParameterType);
+                        index++;
                     }
                 }
             }
@@ -71,26 +77,21 @@ namespace Dt.Base
             {
                 Log.Warning(ex, "解析服务器推送时异常");
             }
-        }
 
-        public void Call()
-        {
-            MethodInfo mi;
-            if (string.IsNullOrEmpty(_method) || (mi = GetMethod()) == null)
-                return;
+            AtKit.Trace(TraceOutType.ServerPush, $"{method}—推送", AtSys.TraceRpc ? p_msg : null);
 
             try
             {
                 object tgt = Activator.CreateInstance(mi.DeclaringType);
-                AtKit.RunAsync(() => mi.Invoke(tgt, _params.ToArray()));
+                AtKit.RunAsync(() => mi.Invoke(tgt, args));
             }
             catch (Exception ex)
             {
-                Log.Warning(ex, $"调用推送处理方法{_method}时异常");
+                Log.Warning(ex, $"调用推送处理方法{method}时异常");
             }
         }
 
-        MethodInfo GetMethod()
+        MethodInfo GetMethod(string _method)
         {
             MethodInfo mi;
             if (_methods.TryGetValue(_method, out mi))

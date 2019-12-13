@@ -9,8 +9,7 @@
 #region 引用命名
 using Dt.Base;
 using Dt.Core;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using System.Text.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,6 +18,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using System.Text.Json.Serialization;
+using Dt.Core.Rpc;
 #endregion
 
 namespace Dt.Sample
@@ -90,7 +91,7 @@ namespace Dt.Sample
 
         async void SetDouble(object sender, RoutedEventArgs e)
         {
-            double val = 1234d;
+            double val = 1234.123d;
             double result = await AtTest.SetDouble(val);
             _tbInfo.Text = (result == val) ? "调用成功！" : "调用不成功！";
         }
@@ -713,13 +714,12 @@ namespace Dt.Sample
     {
         public string Name { get; set; }
 
-        [JsonConverter(typeof(JavaScriptDateTimeConverter))]
         public DateTime LastModified { get; set; }
 
-        [JsonConverter(typeof(RpcJson))]
+        [JsonConverter(typeof(RpcJson<Dict>))]
         public Dict Salary { get; set; }
 
-        [JsonConverter(typeof(RpcJson))]
+        [JsonConverter(typeof(RpcJson<Table>))]
         public Table Info { get; set; }
     }
 

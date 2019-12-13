@@ -10,7 +10,7 @@
 #region 引用命名
 using Dt.Core;
 using Dt.Core.Rpc;
-using Newtonsoft.Json;
+using System.Text.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -48,7 +48,7 @@ namespace Dt.Base
                 return null;
 
             // 排队避免服务器压力
-            string result;
+            byte[] result;
             using (await _locker.LockAsync())
             using (var request = CreateRequestMessage())
             using (var content = new MultipartFormDataContent())
@@ -77,7 +77,7 @@ namespace Dt.Base
                 {
                     using (var response = await _client.SendAsync(request, p_token).ConfigureAwait(false))
                     {
-                        result = await response.Content.ReadAsStringAsync();
+                        result = await response.Content.ReadAsByteArrayAsync();
                     }
                 }
                 catch (Exception ex)
@@ -87,15 +87,17 @@ namespace Dt.Base
                 }
             }
 
-            if (string.IsNullOrEmpty(result))
+            if (result == null || result.Length == 0)
                 return null;
+            return ParseResult(result);
+        }
 
-            using (var sr = new StringReader(result))
-            using (var reader = new JsonTextReader(sr))
-            {
-                reader.Read();
-                return JsonRpcSerializer.Deserialize(reader) as List<string>;
-            }
+        static List<string> ParseResult(byte[] p_data)
+        {
+            // Utf8JsonReader不能用在异步方法内！
+            var reader = new Utf8JsonReader(p_data);
+            reader.Read();
+            return JsonRpcSerializer.Deserialize(ref reader) as List<string>;
         }
 
         static HttpRequestMessage CreateRequestMessage()

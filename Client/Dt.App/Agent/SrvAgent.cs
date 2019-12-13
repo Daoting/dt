@@ -65,15 +65,14 @@ namespace Dt.App
         /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回第一个单元格数据</returns>
-        public static async Task<T> GetScalar<T>(string p_keyOrSql, object p_params = null)
+        public static Task<T> GetScalar<T>(string p_keyOrSql, object p_params = null)
         {
-            object result = await new UnaryRpc(
+            return new UnaryRpc(
                 typeof(TSrv).Name,
                 "Da.GetScalar",
                 p_keyOrSql,
                 p_params
-            ).Call<Object>();
-            return AtKit.ConvertType<T>(result);
+            ).Call<T>();
         }
 
         /// <summary>

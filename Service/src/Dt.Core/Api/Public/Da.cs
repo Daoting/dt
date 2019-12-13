@@ -51,15 +51,14 @@ namespace Dt.Core
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
         /// <returns>返回第一个单元格数据</returns>
         [CustomAgent(
-@"public static async Task<T> GetScalar<T>(string p_keyOrSql, object p_params = null)
+@"public static Task<T> GetScalar<T>(string p_keyOrSql, object p_params = null)
 {
-    object result = await new UnaryRpc(
+    return new UnaryRpc(
         ###,
         ""Da.GetScalar"",
         p_keyOrSql,
         p_params
-    ).Call<Object>();
-    return AtKit.ConvertType<T>(result);
+    ).Call<T>();
 }
 ")]
         public Task<object> GetScalar(string p_keyOrSql, object p_params = null)

@@ -32,12 +32,10 @@ namespace Dt.Core.Rpc
             try
             {
                 // 补充参数
-                List<object> objs = new List<object>();
                 if (_invoker.Args != null && _invoker.Args.Length > 0)
-                    objs.AddRange(_invoker.Args);
-                objs.Add(new RequestReader(_invoker));
+                    _invoker.Args[_invoker.Args.Length - 1] = new RequestReader(_invoker);
 
-                await (Task)_invoker.Api.Method.Invoke(_tgt, objs.ToArray());
+                await (Task)_invoker.Api.Method.Invoke(_tgt, _invoker.Args);
             }
             catch (Exception ex)
             {

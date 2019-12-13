@@ -31,7 +31,6 @@ namespace Dt.App
             InitializeComponent();
 
             _tbTitle.Text = AtSys.Stub.Title;
-            _tbDesc.Text = Desc;
             // 设置中间面板宽度
             LoginPanel.Width = Math.Min(Math.Floor(ApplicationView.GetForCurrentView().VisibleBounds.Width * 2 / 3), 340);
             Loaded += (s, e) => _tbPhone.Focus(FocusState.Programmatic);
@@ -40,7 +39,11 @@ namespace Dt.App
         /// <summary>
         /// 系统描述信息
         /// </summary>
-        public string Desc { get; set; }
+        public string Desc
+        {
+            get { return _tbDesc.Text; }
+            set { _tbDesc.Text = value; }
+        }
 
         /// <summary>
         /// 登录

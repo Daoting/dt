@@ -7,10 +7,9 @@
 #endregion
 
 #region 引用命名
-using Newtonsoft.Json;
 using System;
-using System.Linq;
-using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 #endregion
 
 namespace Dt.Core
@@ -18,25 +17,20 @@ namespace Dt.Core
     /// <summary>
     /// 属性自定义json序列化/反序列化，属性类型需实现IRpcJson接口
     /// </summary>
-    public class RpcJson : JsonConverter
+    public class RpcJson<T> : JsonConverter<T>
+        where T : class, IRpcJson
     {
-        public override bool CanConvert(Type p_objectType)
+        public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            return p_objectType.GetTypeInfo().ImplementedInterfaces.Contains(typeof(IRpcJson));
+            reader.Read();
+            IRpcJson rpc = Activator.CreateInstance(typeToConvert) as IRpcJson;
+            rpc.ReadRpcJson(ref reader);
+            return (T)rpc;
         }
 
-        public override object ReadJson(JsonReader p_reader, Type p_objectType, object p_existingValue, JsonSerializer p_serializer)
+        public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
         {
-            p_reader.Read();
-            IRpcJson rpc = Activator.CreateInstance(p_objectType) as IRpcJson;
-            rpc.ReadRpcJson(p_reader);
-            return rpc;
-        }
-
-        public override void WriteJson(JsonWriter p_writer, object p_value, JsonSerializer p_serializer)
-        {
-            if (p_value is IRpcJson rpc)
-                rpc.WriteRpcJson(p_writer);
+            value.WriteRpcJson(writer);
         }
     }
 }

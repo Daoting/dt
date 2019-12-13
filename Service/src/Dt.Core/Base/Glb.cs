@@ -12,8 +12,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -237,19 +236,17 @@ namespace Dt.Core
                 using (var response = await _mqClient.GetAsync(default(Uri)))
                 {
                     response.EnsureSuccessStatusCode();
-
-                    using (var stream = await response.Content.ReadAsStreamAsync())
-                    using (StreamReader sr = new StreamReader(stream))
-                    using (JsonReader reader = new JsonTextReader(sr))
+                    var data = await response.Content.ReadAsByteArrayAsync();
+                    var root = JsonSerializer.Deserialize<JsonElement>(data);
+                    if (root.ValueKind == JsonValueKind.Array)
                     {
-                        JArray arr = JsonSerializer.Create().Deserialize(reader) as JArray;
-                        JToken token;
-                        foreach (var item in arr)
+                        foreach (var elem in root.EnumerateArray())
                         {
-                            JObject obj = item as JObject;
-                            if (obj != null && (token = obj["name"]) != null)
+                            if (elem.ValueKind == JsonValueKind.Object
+                                && elem.TryGetProperty("name", out var name)
+                                && name.ValueKind == JsonValueKind.String)
                             {
-                                string val = token.ToString();
+                                string val = name.GetString();
                                 string[] parts = val.Split('.');
                                 // 属于当前应用
                                 if (parts.Length > 1 && parts[0] == AppName)

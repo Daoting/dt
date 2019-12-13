@@ -23,7 +23,6 @@ namespace Dt.Sample
     public partial class PageWinDemo : PageWin
     {
         PageWinDemo _nextWin;
-        string _params;
         string _rnd;
 
         public PageWinDemo()
@@ -36,15 +35,6 @@ namespace Dt.Sample
         public PageWinDemo(string p_params)
             : this()
         {
-            _params = p_params;
-        }
-
-        /// <summary>
-        /// 获取设置初始参数
-        /// </summary>
-        public override string Params
-        {
-            get { return _params; }
         }
 
         void OnToggleIcon(object sender, RoutedEventArgs e)

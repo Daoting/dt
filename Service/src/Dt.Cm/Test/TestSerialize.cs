@@ -8,11 +8,11 @@
 
 #region 引用命名
 using Dt.Core;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using System.Text.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 #endregion
 
 namespace Dt.Cm
@@ -84,7 +84,7 @@ namespace Dt.Cm
         /// <returns></returns>
         public long GetLong()
         {
-            return long.MaxValue;
+            return long.MaxValue - 1;
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace Dt.Cm
         /// <returns></returns>
         public double GetDouble()
         {
-            return 200.0d;
+            return 200d;
         }
 
         /// <summary>
@@ -632,13 +632,12 @@ namespace Dt.Cm
     {
         public string Name { get; set; }
 
-        [JsonConverter(typeof(JavaScriptDateTimeConverter))]
         public DateTime LastModified { get; set; }
 
-        [JsonConverter(typeof(RpcJson))]
+        [JsonConverter(typeof(RpcJson<Dict>))]
         public Dict Salary { get; set; }
 
-        [JsonConverter(typeof(RpcJson))]
+        [JsonConverter(typeof(RpcJson<Table>))]
         public Table Info { get; set; }
     }
 

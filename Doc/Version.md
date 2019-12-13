@@ -4,7 +4,8 @@
 * 
 
 ### 变更 
-* 
+*  移除Newtonsoft.Json，使用System.Text.Json 
+
 ### Bug修改 
 * 
 

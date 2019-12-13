@@ -9,7 +9,7 @@
 #region ÒýÓÃÃüÃû
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Nito.AsyncEx;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -178,9 +178,9 @@ namespace Dt.Core.EventBus
                     EventWrapper body = new EventWrapper
                     {
                         EventName = p_event.GetType().Name,
-                        Data = JsonConvert.SerializeObject(p_event)
+                        Data = JsonSerializer.Serialize(p_event, p_event.GetType(), JsonOptions.UnsafeSerializer)
                     };
-                    var data = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(body));
+                    var data = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(body, JsonOptions.UnsafeSerializer));
 
                     var properties = _chPublish.CreateBasicProperties();
                     properties.Persistent = true;
@@ -354,8 +354,7 @@ namespace Dt.Core.EventBus
             EventWrapper body;
             try
             {
-                var message = Encoding.UTF8.GetString(p_args.Body);
-                body = JsonConvert.DeserializeObject<EventWrapper>(message);
+                body = JsonSerializer.Deserialize<EventWrapper>(p_args.Body, JsonOptions.UnsafeSerializer);
             }
             catch (Exception e)
             {
@@ -373,7 +372,7 @@ namespace Dt.Core.EventBus
             object eventObj;
             try
             {
-                eventObj = JsonConvert.DeserializeObject(body.Data, hType.GetGenericArguments()[0]);
+                eventObj = JsonSerializer.Deserialize(body.Data, hType.GetGenericArguments()[0], JsonOptions.UnsafeSerializer);
             }
             catch (Exception e)
             {

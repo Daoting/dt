@@ -7,7 +7,7 @@
 #endregion
 
 #region 引用命名
-using Newtonsoft.Json;
+using System.Text.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -638,16 +638,16 @@ namespace Dt.Core
         #endregion
 
         #region IRpcJson
-        void IRpcJson.ReadRpcJson(JsonReader p_reader)
+        void IRpcJson.ReadRpcJson(ref Utf8JsonReader p_reader)
         {
             try
             {
                 // 可能为状态或 {
                 p_reader.Read();
                 // 状态
-                if (p_reader.TokenType == JsonToken.String)
+                if (p_reader.TokenType == JsonTokenType.String)
                 {
-                    string state = p_reader.Value.ToString();
+                    string state = p_reader.GetString();
                     if (state == "Added")
                         IsAdded = true;
                     else if (state == "Modified")
@@ -656,29 +656,32 @@ namespace Dt.Core
                     p_reader.Read();
                 }
 
-                while (p_reader.Read() && p_reader.TokenType == JsonToken.PropertyName)
+                while (p_reader.Read() && p_reader.TokenType == JsonTokenType.PropertyName)
                 {
-                    string id = p_reader.Value.ToString();
+                    string id = p_reader.GetString();
                     p_reader.Read();
-                    if (p_reader.TokenType == JsonToken.StartArray)
+                    if (p_reader.TokenType == JsonTokenType.StartArray)
                     {
-                        // 数组内容： ["当前值", "类型", "原始值"] 或 ["当前值", "类型"]
-                        p_reader.Read();
-                        // 当前值
-                        object val = p_reader.Value;
-                        p_reader.Read();
+                        // 数组内容： ["类型", "当前值", "原始值"] 或 ["类型", "当前值"]
+
                         // 类型
-                        Type type = Table.GetColType(p_reader.Value.ToString());
                         p_reader.Read();
-                        if (p_reader.TokenType == JsonToken.EndArray)
+                        Type type = Table.GetColType(p_reader.GetString());
+
+                        // 当前值
+                        p_reader.Read();
+                        object val = JsonRpcSerializer.Deserialize(ref p_reader, type);
+                        
+                        p_reader.Read();
+                        if (p_reader.TokenType == JsonTokenType.EndArray)
                         {
-                            // 非string类型，值无变化 ["当前值", "类型"]
+                            // 非string类型，值无变化 ["类型", "当前值"]
                             new Cell(this, id, type, val);
                         }
                         else
                         {
-                            // 值变化时传递完整信息 ["当前值", "类型", "原始值"]
-                            new Cell(this, id, type, p_reader.Value).Val = val;
+                            // 值变化时传递完整信息 ["类型", "当前值", "原始值"]
+                            new Cell(this, id, type, JsonRpcSerializer.Deserialize(ref p_reader, type)).Val = val;
                             // ]
                             p_reader.Read();
                         }
@@ -686,7 +689,7 @@ namespace Dt.Core
                     else
                     {
                         // string类型，值无变化
-                        new Cell(this, id, typeof(string), p_reader.Value);
+                        new Cell(this, id, typeof(string), JsonRpcSerializer.Deserialize(ref p_reader));
                     }
                 }
                 // 最外层 ]
@@ -698,16 +701,16 @@ namespace Dt.Core
             }
         }
 
-        void IRpcJson.WriteRpcJson(JsonWriter p_writer)
+        void IRpcJson.WriteRpcJson(Utf8JsonWriter p_writer)
         {
             p_writer.WriteStartArray();
-            p_writer.WriteValue("#row");
+            p_writer.WriteStringValue("#row");
 
             // 行状态
             if (IsAdded)
-                p_writer.WriteValue("Added");
+                p_writer.WriteStringValue("Added");
             else if (IsChanged)
-                p_writer.WriteValue("Modified");
+                p_writer.WriteStringValue("Modified");
 
             p_writer.WriteStartObject();
             foreach (var cell in _cells)
@@ -715,24 +718,24 @@ namespace Dt.Core
                 p_writer.WritePropertyName(cell.ID);
                 if (cell.IsChanged)
                 {
-                    // 值变化时传递完整信息 ["当前值", "类型", "原始值"]
+                    // 值变化时传递完整信息 ["类型", "当前值", "原始值"]
                     p_writer.WriteStartArray();
-                    p_writer.WriteValue(cell.Val);
-                    p_writer.WriteValue(Table.GetColTypeAlias(cell.Type));
-                    p_writer.WriteValue(cell.OriginalVal);
+                    p_writer.WriteStringValue(Table.GetColTypeAlias(cell.Type));
+                    JsonRpcSerializer.Serialize(cell.Val, p_writer);
+                    JsonRpcSerializer.Serialize(cell.OriginalVal, p_writer);
                     p_writer.WriteEndArray();
                 }
                 else if (cell.Type == typeof(string))
                 {
                     // string类型，值无变化
-                    p_writer.WriteValue(cell.Val);
+                    p_writer.WriteStringValue((string)cell.Val);
                 }
                 else
                 {
-                    // 非string类型，值无变化
+                    // 非string类型，值无变化 ["类型", "当前值"]
                     p_writer.WriteStartArray();
-                    p_writer.WriteValue(cell.Val);
-                    p_writer.WriteValue(Table.GetColTypeAlias(cell.Type));
+                    p_writer.WriteStringValue(Table.GetColTypeAlias(cell.Type));
+                    JsonRpcSerializer.Serialize(cell.Val, p_writer);
                     p_writer.WriteEndArray();
                 }
             }

@@ -7,10 +7,10 @@
 #endregion
 
 #region 引用命名
-using Newtonsoft.Json;
 using System;
-using System.IO;
 using System.Net.Http;
+using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 #endregion
 
@@ -71,60 +71,67 @@ namespace Dt.Core.Rpc
                 data = await RpcClientKit.ReadFrame(stream);
                 response.Dispose();
             }
+            return ParseResult<T>(data);
+        }
 
-            // 解析结果
+        /// <summary>
+        /// 解析结果，Utf8JsonReader不能用在异步方法内！
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="p_data"></param>
+        /// <returns></returns>
+        T ParseResult<T>(byte[] p_data)
+        {
             T val = default(T);
             RpcResult result = new RpcResult();
-            using (MemoryStream ms = new MemoryStream(data))
-            using (StreamReader sr = new StreamReader(ms))
-            using (JsonReader reader = new JsonTextReader(sr))
-            {
-                try
-                {
-                    // [
-                    reader.Read();
-                    // 0成功，1错误，2警告提示
-                    result.ResultType = (RpcResultType)reader.ReadAsInt32();
-                    // 耗时，非调试状态为0
-                    result.Elapsed = reader.ReadAsString();
-                    if (result.ResultType == RpcResultType.Value)
-                    {
-                        reader.Read();
-                        val = JsonRpcSerializer.Deserialize<T>(reader);
-                    }
-                    else
-                    {
-                        // 错误或提示信息
-                        result.Info = reader.ReadAsString();
-                    }
+            Utf8JsonReader reader = new Utf8JsonReader(p_data);
 
-#if !SERVER
-                    // 输出监视信息
-                    string content = null;
-                    if (AtSys.TraceRpc)
-                    {
-                        // 输出详细内容
-                        ms.Position = 0;
-                        content = sr.ReadToEnd();
-                    }
-                    AtKit.Trace(TraceOutType.RpcRecv, string.Format("{0}—{1}ms", _methodName, result.Elapsed), content, _svcName);
-#endif
-                }
-                catch
+            try
+            {
+                // [
+                reader.Read();
+
+                // 0成功，1错误，2警告提示
+                result.ResultType = (RpcResultType)reader.ReadAsInt();
+
+                // 耗时，非调试状态为0
+                reader.Read();
+                result.Elapsed = reader.GetInt32().ToString();
+
+                reader.Read();
+                if (result.ResultType == RpcResultType.Value)
                 {
-                    result.ResultType = RpcResultType.Error;
-                    result.Info = "返回Json内容结构不正确！";
+                    // 结果
+                    val = JsonRpcSerializer.Deserialize<T>(ref reader);
+                }
+                else
+                {
+                    // 错误或提示信息
+                    result.Info = reader.GetString();
                 }
             }
-
-            if (result.ResultType == RpcResultType.Value)
-                return val;
+            catch
+            {
+                result.ResultType = RpcResultType.Error;
+                result.Info = "返回Json内容结构不正确！";
+            }
 
 #if !SERVER
+            // 输出监视信息
+            string content = null;
+            if (AtSys.TraceRpc || result.ResultType == RpcResultType.Error)
+            {
+                // 输出详细内容
+                content = Encoding.UTF8.GetString(p_data);
+            }
+            AtKit.Trace(TraceOutType.RpcRecv, string.Format("{0}—{1}ms", _methodName, result.Elapsed), content, _svcName);
+
             if (result.ResultType == RpcResultType.Message)
                 throw new FriendlyException(result.Info);
 #endif
 
+            if (result.ResultType == RpcResultType.Value)
+                return val;
             throw new Exception($"调用【{_methodName}】异常：\r\n{result.Info}");
         }
     }

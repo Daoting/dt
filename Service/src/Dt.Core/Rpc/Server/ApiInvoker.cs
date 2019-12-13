@@ -8,7 +8,7 @@
 
 #region 引用命名
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -136,23 +136,24 @@ namespace Dt.Core.Rpc
         {
             try
             {
-                StringBuilder sb = new StringBuilder();
-                using (StringWriter sr = new StringWriter(sb))
-                using (JsonWriter writer = new JsonTextWriter(sr))
+                byte[] data;
+                using (var stream = new MemoryStream())
                 {
-                    writer.WriteStartArray();
+                    using (var writer = new Utf8JsonWriter(stream, JsonOptions.UnsafeWriter))
+                    {
+                        writer.WriteStartArray();
 
-                    // 0成功，1错误，2警告提示
-                    writer.WriteValue((int)p_responseType);
-                    // 耗时
-                    writer.WriteValue(p_elapsed);
-                    // 内容
-                    JsonRpcSerializer.Serialize(p_content, writer);
+                        // 0成功，1错误，2警告提示
+                        writer.WriteNumberValue((int)p_responseType);
+                        // 耗时
+                        writer.WriteNumberValue(p_elapsed);
+                        // 内容
+                        JsonRpcSerializer.Serialize(p_content, writer);
 
-                    writer.WriteEndArray();
-                    writer.Flush();
+                        writer.WriteEndArray();
+                    }
+                    data = stream.ToArray();
                 }
-                var data = Encoding.UTF8.GetBytes(sb.ToString());
                 bool compress = data.Length > RpcKit.MinCompressLength;
 
                 // 超过长度限制时执行压缩
@@ -185,37 +186,7 @@ namespace Dt.Core.Rpc
             try
             {
                 byte[] data = await RpcServerKit.ReadFrame(Context.Request.BodyReader);
-                using (MemoryStream ms = new MemoryStream(data))
-                using (StreamReader sr = new StreamReader(ms))
-                using (JsonReader reader = new JsonTextReader(sr))
-                {
-                    // [
-                    reader.Read();
-                    ApiName = reader.ReadAsString();
-                    if (string.IsNullOrEmpty(ApiName) || (Api = Silo.GetMethod(ApiName)) == null)
-                    {
-                        // 未找到对应方法
-                        var msg = $"Api方法“{ApiName}”不存在！";
-                        Log.Warning(msg);
-                        await Response(ApiResponseType.Error, 0, msg);
-                        return false;
-                    }
-
-                    var method = Api.Method.GetParameters();
-                    if (method.Length > 0)
-                    {
-                        // 确保和Api的参数个数、类型相同
-                        // 类型不同时 执行类型转换 或 直接创建派生类实例！如Row -> User, Table -> Table<User>
-                        int index = 0;
-                        Args = new object[method.Length];
-                        while (index < method.Length && reader.Read() && reader.TokenType != JsonToken.EndArray)
-                        {
-                            // 参数支持派生类型！
-                            Args[index] = JsonRpcSerializer.Deserialize(reader, method[index].ParameterType);
-                            index++;
-                        }
-                    }
-                }
+                DoParse(data);
                 return true;
             }
             catch (Exception ex)
@@ -223,6 +194,36 @@ namespace Dt.Core.Rpc
                 Log.Error(ex, _errParse);
                 await Response(ApiResponseType.Error, 0, _errParse);
                 return false;
+            }
+        }
+
+        void DoParse(byte[] p_data)
+        {
+            // Utf8JsonReader不能用在异步方法内！
+            Utf8JsonReader reader = new Utf8JsonReader(p_data);
+
+            // [
+            reader.Read();
+            ApiName = reader.ReadAsString();
+            if (string.IsNullOrEmpty(ApiName) || (Api = Silo.GetMethod(ApiName)) == null)
+            {
+                // 未找到对应方法
+                throw new Exception($"Api方法“{ApiName}”不存在！");
+            }
+
+            var method = Api.Method.GetParameters();
+            if (method.Length > 0)
+            {
+                // 确保和Api的参数个数、类型相同
+                // 类型不同时 执行类型转换 或 直接创建派生类实例！如Row -> User, Table -> Table<User>
+                int index = 0;
+                Args = new object[method.Length];
+                while (index < method.Length && reader.Read() && reader.TokenType != JsonTokenType.EndArray)
+                {
+                    // 参数支持派生类型！
+                    Args[index] = JsonRpcSerializer.Deserialize(ref reader, method[index].ParameterType);
+                    index++;
+                }
             }
         }
 

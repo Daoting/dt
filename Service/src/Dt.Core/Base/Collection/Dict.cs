@@ -7,7 +7,7 @@
 #endregion
 
 #region 引用命名
-using Newtonsoft.Json;
+using System.Text.Json;
 using System;
 using System.Collections.Generic;
 #endregion
@@ -263,17 +263,17 @@ namespace Dt.Core
         }
 
         #region IRpcJson
-        void IRpcJson.ReadRpcJson(JsonReader p_reader)
+        void IRpcJson.ReadRpcJson(ref Utf8JsonReader p_reader)
         {
             // #dict下的 {
             p_reader.Read();
-            while (p_reader.Read() && p_reader.TokenType == JsonToken.PropertyName)
+            while (p_reader.Read() && p_reader.TokenType == JsonTokenType.PropertyName)
             {
-                string name = p_reader.Value.ToString();
+                string name = p_reader.GetString();
                 p_reader.Read();
                 try
                 {
-                    this[name] = JsonRpcSerializer.Deserialize(p_reader);
+                    this[name] = JsonRpcSerializer.Deserialize(ref p_reader);
                 }
                 catch (Exception exception)
                 {
@@ -284,10 +284,10 @@ namespace Dt.Core
             p_reader.Read();
         }
 
-        void IRpcJson.WriteRpcJson(JsonWriter p_writer)
+        void IRpcJson.WriteRpcJson(Utf8JsonWriter p_writer)
         {
             p_writer.WriteStartArray();
-            p_writer.WriteValue("#dict");
+            p_writer.WriteStringValue("#dict");
 
             p_writer.WriteStartObject();
             foreach (var item in this)

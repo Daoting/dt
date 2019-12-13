@@ -13,7 +13,7 @@ using Autofac.Extras.DynamicProxy;
 using Dt.Core.EventBus;
 using Dt.Core.Rpc;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -159,21 +159,7 @@ namespace Dt.Core
             }
 
             // 序列化Json串 RPC 调用请求，含有缩进
-            StringBuilder json = new StringBuilder();
-            using (StringWriter sw = new StringWriter(json))
-            using (JsonWriter writer = new JsonTextWriter(sw))
-            {
-                writer.Formatting = Newtonsoft.Json.Formatting.Indented;
-                writer.WriteStartArray();
-                writer.WriteValue(p_methodName);
-                foreach (object item in funParams)
-                {
-                    JsonRpcSerializer.Serialize(item, writer);
-                }
-                writer.WriteEndArray();
-                writer.Flush();
-            }
-            return json.ToString();
+            return RpcKit.GetCallString(p_methodName, funParams, true);
         }
         #endregion
 

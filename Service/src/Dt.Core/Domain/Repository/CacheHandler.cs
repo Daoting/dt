@@ -8,7 +8,7 @@
 
 #region 引用命名
 using Dt.Core.Caches;
-using Newtonsoft.Json;
+using System.Text.Json;
 using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
@@ -16,6 +16,8 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Encodings.Web;
+using Dt.Core.Rpc;
 #endregion
 
 namespace Dt.Core
@@ -98,7 +100,7 @@ namespace Dt.Core
         public Task Cache(TEntity p_entity)
         {
             Check.NotNull(p_entity);
-            string val = Serialize(p_entity);
+            string val = RpcKit.GetObjectString(p_entity);
             string id = p_entity.Str(_primaryKey);
 
             // 只主键
@@ -126,7 +128,7 @@ namespace Dt.Core
             {
                 var val = await _db.Value.StringGetAsync($"{_prefix}:{_primaryKey}:{p_keyVal}");
                 if (val.HasValue)
-                    return Deserialize(val);
+                    return RpcKit.ParseString<TEntity>(val);
             }
             else if (_otherKeys != null)
             {
@@ -138,7 +140,7 @@ namespace Dt.Core
                     // lua脚本：先查到主键值，再用主键值查询json
                     var result = await _db.Value.ScriptEvaluateAsync(_sha1LuaGet, new RedisKey[] { $"{_prefix}:{item}:{p_keyVal}" }, new RedisValue[] { $"{_prefix}:{_primaryKey}" });
                     if (!result.IsNull)
-                        return Deserialize((string)result);
+                        return RpcKit.ParseString<TEntity>((string)result);
                     break;
                 }
             }
@@ -168,7 +170,7 @@ namespace Dt.Core
             if (!val.HasValue)
                 return;
 
-            var entity = Deserialize(val);
+            var entity = RpcKit.ParseString<TEntity>(val);
             List<RedisKey> ls = new List<RedisKey>();
             ls.Add(priKey);
             foreach (var item in _otherKeys)
@@ -180,28 +182,6 @@ namespace Dt.Core
 
             // lua脚本：批量删除
             await _db.Value.ScriptEvaluateAsync(_sha1LuaDel, ls.ToArray());
-        }
-
-        string Serialize(TEntity p_entity)
-        {
-            StringBuilder sb = new StringBuilder();
-            using (StringWriter sr = new StringWriter(sb))
-            using (JsonWriter writer = new JsonTextWriter(sr))
-            {
-                JsonRpcSerializer.Serialize(p_entity, writer);
-                writer.Flush();
-            }
-            return sb.ToString();
-        }
-
-        TEntity Deserialize(string p_val)
-        {
-            using (StringReader sr = new StringReader(p_val))
-            using (JsonReader reader = new JsonTextReader(sr))
-            {
-                reader.Read();
-                return JsonRpcSerializer.Deserialize<TEntity>(reader);
-            }
         }
     }
 }

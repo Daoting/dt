@@ -8,11 +8,6 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Data.Sqlite" Version="2.1.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'uap10.0.17763' ">
-    <PackageReference Include="System.Memory" Version="4.5.2" />
   </ItemGroup>
   
   <ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid81' ">
@@ -37,6 +32,7 @@
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\Check.cs" Link="Base\Check.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\MsgInfo.cs" Link="Base\MsgInfo.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Serialize\IRpcJson.cs" Link="Internal\Serialize\IRpcJson.cs" />
+    <Compile Include="..\..\Service\src\Dt.Core\Internal\Serialize\JsonOptions.cs" Link="Internal\Serialize\JsonOptions.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Serialize\JsonRpcSerializer.cs" Link="Internal\Serialize\JsonRpcSerializer.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Serialize\RpcJson.cs" Link="Internal\Serialize\RpcJson.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Serialize\SerializeTypeAlias.cs" Link="Internal\Serialize\SerializeTypeAlias.cs" />

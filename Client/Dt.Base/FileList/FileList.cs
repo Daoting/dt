@@ -9,7 +9,7 @@
 #region 引用命名
 using Dt.Base.Transfer;
 using Dt.Core;
-using Newtonsoft.Json;
+using System.Text.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -582,24 +582,21 @@ namespace Dt.Base
             if (string.IsNullOrEmpty(p_json))
                 return;
 
-            using (StringReader sr = new StringReader(p_json))
-            using (JsonReader reader = new JsonTextReader(sr))
+            var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(p_json));
+            // 最外层 [
+            reader.Read();
+
+            // FileItem [
+            while (reader.Read())
             {
-                // 最外层 [
-                reader.Read();
+                // 最外层 ]
+                if (reader.TokenType == JsonTokenType.EndArray)
+                    break;
 
-                // FileItem [
-                while (reader.Read())
-                {
-                    // 最外层 ]
-                    if (reader.TokenType == JsonToken.EndArray)
-                        break;
-
-                    FileItem vf = new FileItem();
-                    vf.Owner = this;
-                    vf.ReadData(reader);
-                    _pnl.Children.Add(vf);
-                }
+                FileItem vf = new FileItem();
+                vf.Owner = this;
+                vf.ReadData(ref reader);
+                _pnl.Children.Add(vf);
             }
         }
 
@@ -617,23 +614,22 @@ namespace Dt.Base
                 return;
             }
 
-            StringBuilder sb = new StringBuilder();
-            using (StringWriter sr = new StringWriter(sb))
-            using (JsonWriter writer = new JsonTextWriter(sr))
+            using (var stream = new MemoryStream())
             {
-                writer.WriteStartArray();
-                foreach (var obj in _pnl.Children)
+                using (var writer = new Utf8JsonWriter(stream, JsonOptions.UnsafeWriter))
                 {
-                    if (obj is FileItem vf)
-                        vf.WriteData(writer);
+                    writer.WriteStartArray();
+                    foreach (var obj in _pnl.Children)
+                    {
+                        if (obj is FileItem vf)
+                            vf.WriteData(writer);
+                    }
+                    writer.WriteEndArray();
                 }
-                writer.WriteEndArray();
-                writer.Flush();
+                _lockData = true;
+                Data = Encoding.UTF8.GetString(stream.ToArray());
+                _lockData = false;
             }
-
-            _lockData = true;
-            Data = sb.ToString();
-            _lockData = false;
         }
         #endregion
     }

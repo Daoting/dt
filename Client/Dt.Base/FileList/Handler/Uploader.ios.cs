@@ -10,7 +10,7 @@
 #region 引用命名
 using Dt.Core;
 using Foundation;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Security;
 using System;
 using System.Collections.Generic;
@@ -242,13 +242,17 @@ namespace Dt.Base
                 return;
             }
 
-            string msg = NSString.FromData(_dataResponse, NSStringEncoding.UTF8);
-            using (var sr = new StringReader(msg))
-            using (var reader = new JsonTextReader(sr))
+            var data = _dataResponse.ToArray();
+            if (data != null && data.Length > 0)
             {
+                var reader = new Utf8JsonReader(data);
                 reader.Read();
-                var ls = JsonRpcSerializer.Deserialize(reader) as List<string>;
+                var ls = JsonRpcSerializer.Deserialize(ref reader) as List<string>;
                 _result.SetResult(ls);
+            }
+            else
+            {
+                _result.SetResult(null);
             }
         }
     }

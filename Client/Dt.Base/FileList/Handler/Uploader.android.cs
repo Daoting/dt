@@ -13,7 +13,7 @@ using Dt.Core.Rpc;
 using Java.Security;
 using Java.Util.Concurrent;
 using Javax.Net.Ssl;
-using Newtonsoft.Json;
+using System.Text.Json;
 using Square.OkHttp3;
 using Square.OkIO;
 using System;
@@ -114,16 +114,18 @@ namespace Dt.Base
                 return null;
             }
 
-            string result = resp.Body().String();
-            if (string.IsNullOrEmpty(result))
+            var result = resp.Body().Bytes();
+            if (result == null || result.Length == 0)
                 return null;
+            return ParseResult(result);
+        }
 
-            using (var sr = new StringReader(result))
-            using (var reader = new JsonTextReader(sr))
-            {
-                reader.Read();
-                return JsonRpcSerializer.Deserialize(reader) as List<string>;
-            }
+        static List<string> ParseResult(byte[] p_data)
+        {
+            // Utf8JsonReader不能用在异步方法内！
+            var reader = new Utf8JsonReader(p_data);
+            reader.Read();
+            return JsonRpcSerializer.Deserialize(ref reader) as List<string>;
         }
     }
 

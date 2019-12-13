@@ -7,7 +7,7 @@
 #endregion
 
 #region 引用命名
-using Newtonsoft.Json;
+using System.Text.Json;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -116,28 +116,12 @@ namespace Dt.Core.Rpc
         /// <returns></returns>
         byte[] GetRpcData(string p_methodName, ICollection<object> p_params)
         {
-            StringBuilder sb = new StringBuilder();
-            using (StringWriter sr = new StringWriter(sb))
-            using (JsonWriter writer = new JsonTextWriter(sr))
-            {
-                writer.WriteStartArray();
-                writer.WriteValue(p_methodName);
-                if (p_params != null && p_params.Count > 0)
-                {
-                    foreach (var par in p_params)
-                    {
-                        JsonRpcSerializer.Serialize(par, writer);
-                    }
-                }
-                writer.WriteEndArray();
-                writer.Flush();
-            }
-            string json = sb.ToString();
+            byte[] data = RpcKit.GetCallBytes(p_methodName, p_params);
+
 #if !SERVER
             // 输出监视信息
-            AtKit.Trace(TraceOutType.RpcCall, p_methodName, json, _svcName);
+            AtKit.Trace(TraceOutType.RpcCall, p_methodName, Encoding.UTF8.GetString(data), _svcName);
 #endif
-            var data = Encoding.UTF8.GetBytes(json);
 
             // 超过长度限制时执行压缩
             if (data.Length > RpcKit.MinCompressLength)

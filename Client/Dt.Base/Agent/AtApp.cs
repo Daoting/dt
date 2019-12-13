@@ -244,7 +244,7 @@ namespace Dt.Base
                 PushHandler.RetryTimes = 0;
                 while (await reader.MoveNext())
                 {
-                    new PushHandler(reader.Val<string>()).Call();
+                    new PushHandler().Call(reader.Val<string>());
                 }
             }
             catch { }

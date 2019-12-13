@@ -7,11 +7,12 @@
 #endregion
 
 #region 引用命名
-using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Text;
+using System.Text.Json;
 #endregion
 
 namespace Dt.Core.Rpc
@@ -44,17 +45,7 @@ namespace Dt.Core.Rpc
         /// <returns>true 已压缩</returns>
         public static bool SerializeObj(object p_message, out byte[] p_data)
         {
-            if (p_message == null)
-                throw new ArgumentNullException(nameof(p_message));
-
-            StringBuilder sb = new StringBuilder();
-            using (StringWriter sr = new StringWriter(sb))
-            using (JsonWriter writer = new JsonTextWriter(sr))
-            {
-                JsonRpcSerializer.Serialize(p_message, writer);
-                writer.Flush();
-            }
-            p_data = Encoding.UTF8.GetBytes(sb.ToString());
+            p_data = GetObjectBytes(p_message);
             bool compress = p_data.Length > MinCompressLength;
 
             // 超过长度限制时执行压缩
@@ -101,6 +92,105 @@ namespace Dt.Core.Rpc
                 }
             }
             return val;
+        }
+
+        /// <summary>
+        /// 获取Rpc调用时json格式的字节数组
+        /// </summary>
+        /// <param name="p_methodName">方法名</param>
+        /// <param name="p_params">参数</param>
+        /// <param name="p_indented">序列化json时是否含有缩进</param>
+        /// <returns>字节数组</returns>
+        public static byte[] GetCallBytes(string p_methodName, ICollection<object> p_params, bool p_indented = false)
+        {
+            using (var stream = new MemoryStream())
+            {
+                using (var writer = new Utf8JsonWriter(stream, p_indented ? JsonOptions.IndentedWriter : JsonOptions.UnsafeWriter))
+                {
+                    writer.WriteStartArray();
+                    writer.WriteStringValue(p_methodName);
+                    if (p_params != null && p_params.Count > 0)
+                    {
+                        foreach (var par in p_params)
+                        {
+                            JsonRpcSerializer.Serialize(par, writer);
+                        }
+                    }
+                    writer.WriteEndArray();
+                }
+                return stream.ToArray();
+            }
+        }
+
+        /// <summary>
+        /// 获取Rpc调用时json字符串
+        /// </summary>
+        /// <param name="p_methodName">方法名</param>
+        /// <param name="p_params">参数</param>
+        /// <param name="p_indented">序列化json时是否含有缩进</param>
+        /// <returns>json串</returns>
+        public static string GetCallString(string p_methodName, ICollection<object> p_params, bool p_indented = false)
+        {
+            return Encoding.UTF8.GetString(GetCallBytes(p_methodName, p_params, p_indented));
+        }
+
+        /// <summary>
+        /// 获取通过网络传输对象时的json格式的字节数组
+        /// </summary>
+        /// <param name="p_obj">待传输对象</param>
+        /// <returns>字节数组</returns>
+        public static byte[] GetObjectBytes(object p_obj)
+        {
+            if (p_obj == null)
+                throw new ArgumentNullException(nameof(p_obj));
+
+            using (var stream = new MemoryStream())
+            {
+                using (var writer = new Utf8JsonWriter(stream, JsonOptions.UnsafeWriter))
+                {
+                    JsonRpcSerializer.Serialize(p_obj, writer);
+                }
+                return stream.ToArray();
+            }
+        }
+
+        /// <summary>
+        /// 获取通过网络传输对象时的json串
+        /// </summary>
+        /// <param name="p_obj">待传输对象</param>
+        /// <returns></returns>
+        public static string GetObjectString(object p_obj)
+        {
+            return Encoding.UTF8.GetString(GetObjectBytes(p_obj));
+        }
+
+        /// <summary>
+        /// json串解析成内部支持的对象
+        /// </summary>
+        /// <typeparam name="T">目标类型</typeparam>
+        /// <param name="p_json">json串</param>
+        /// <returns></returns>
+        public static T ParseString<T>(string p_json)
+        {
+            Check.NotNullOrEmpty(p_json);
+            return ParseBytes<T>(Encoding.UTF8.GetBytes(p_json));
+        }
+
+        /// <summary>
+        /// json字节数组解析成内部支持的对象
+        /// </summary>
+        /// <typeparam name="T">目标类型</typeparam>
+        /// <param name="p_data"></param>
+        /// <returns></returns>
+        public static T ParseBytes<T>(byte[] p_data)
+        {
+            if (p_data == null || p_data.Length == 0)
+                return default;
+
+            // Utf8JsonReader不能用在异步方法内！
+            Utf8JsonReader reader = new Utf8JsonReader(p_data);
+            reader.Read();
+            return JsonRpcSerializer.Deserialize<T>(ref reader);
         }
     }
 }

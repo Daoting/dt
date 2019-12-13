@@ -95,7 +95,6 @@
                 <a:Mi ID="复制" Icon="复制" Click="OnCopy" />
                 <a:Mi ID="库路径" Icon="数据库" Click="OnLocalPath" />
                 <a:Mi ID="换行" Icon="左对齐" IsCheckable="True" Click="OnWrap" />
-                <a:Mi x:Name="_btnSql" ID="生成Sql" Icon="传真" Click="OnCreateSql" IsEnabled="False"/>
                 <a:Mi ID="存根代码" Icon="链接" Click="OnStub" />
                 <a:Mi ID="页面类型" Icon="文件" Click="OnPageType" />
                 <a:Mi ID="安装路径" Icon="文件夹" Click="OnInstallPath" />

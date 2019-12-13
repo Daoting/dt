@@ -9,7 +9,7 @@
 #region 引用命名
 using Dt.Core;
 using Dt.Core.Sqlite;
-using Newtonsoft.Json;
+using System.Text.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -140,16 +140,11 @@ namespace Dt.Base.Tools
             string txt = row.Str("content");
             if (txt.Length > 2 && txt[0] == '[' && txt[1] != '\r')
             {
-                // 初次时对Json格式化
+                // 初次时对Json格式化，带缩进
                 txt = FormatJson(txt);
                 row.InitVal("content", txt);
             }
             _tb.Text = txt;
-
-            // 格式化Db中的部分方法，不具体限制方法名！
-            _btnSql.IsEnabled = false;
-            if ((TraceOutType)row.Int("Type") == TraceOutType.RpcCall && row.Str("title").StartsWith("Da."))
-                _btnSql.IsEnabled = true;
         }
 
         void OnCopy(object sender, Mi e)
@@ -175,39 +170,6 @@ namespace Dt.Base.Tools
             CopyToClipboard(_tb.Text);
         }
 
-        void OnCreateSql(object sender, Mi e)
-        {
-            string method;
-            List<object> args = new List<object>();
-            using (StringReader sr = new StringReader(_tb.Text))
-            using (JsonReader reader = new JsonTextReader(sr))
-            {
-                try
-                {
-                    // [
-                    reader.Read();
-                    method = reader.ReadAsString();
-                    while (reader.Read() && reader.TokenType != JsonToken.EndArray)
-                    {
-                        args.Add(JsonRpcSerializer.Deserialize(reader));
-                    }
-                }
-                catch (Exception ex)
-                {
-                    AtKit.Warn("Json解析错误：" + ex.Message);
-                    return;
-                }
-            }
-            if (args.Count < 2)
-                return;
-
-            AtKit.StopTrace = true;
-            string sql = "注释"; // await AtSrv.GetFormatSql(_lv.SelectedRow.Str("service"), method, args.ToArray());
-            AtKit.StopTrace = false;
-            if (!string.IsNullOrEmpty(sql))
-                CopyToClipboard(sql);
-        }
-
         /// <summary>
         /// 将文本复制到剪贴板
         /// </summary>
@@ -229,7 +191,7 @@ namespace Dt.Base.Tools
         {
             try
             {
-                return JsonConvert.DeserializeObject(p_json).ToString();
+                return JsonSerializer.Serialize<object>(JsonSerializer.Deserialize<object>(p_json), JsonOptions.IndentedSerializer);
             }
             catch { }
             return p_json;

@@ -9,7 +9,7 @@
 #region 引用命名
 using Dt.Core;
 using Dt.Core.Rpc;
-using Newtonsoft.Json;
+using System.Text.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -1061,7 +1061,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_reader"></param>
         /// <returns></returns>
-        internal void ReadData(JsonReader p_reader)
+        internal void ReadData(ref Utf8JsonReader p_reader)
         {
             ID = p_reader.ReadAsString();
             FileName = p_reader.ReadAsString();
@@ -1103,15 +1103,15 @@ namespace Dt.Base
         /// 序列化
         /// </summary>
         /// <param name="p_writer"></param>
-        internal void WriteData(JsonWriter p_writer)
+        internal void WriteData(Utf8JsonWriter p_writer)
         {
             p_writer.WriteStartArray();
-            p_writer.WriteValue(ID);
-            p_writer.WriteValue(FileName);
-            p_writer.WriteValue(FileDesc);
-            p_writer.WriteValue(Length);
-            p_writer.WriteValue(Uploader);
-            p_writer.WriteValue(Date);
+            p_writer.WriteStringValue(ID);
+            p_writer.WriteStringValue(FileName);
+            p_writer.WriteStringValue(FileDesc);
+            p_writer.WriteNumberValue(Length);
+            p_writer.WriteStringValue(Uploader);
+            p_writer.WriteStringValue(Date);
             p_writer.WriteEndArray();
         }
         #endregion
