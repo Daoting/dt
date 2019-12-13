@@ -634,10 +634,10 @@ namespace Dt.Cm
 
         public DateTime LastModified { get; set; }
 
-        [JsonConverter(typeof(RpcJson<Dict>))]
+        [RpcJson]
         public Dict Salary { get; set; }
 
-        [JsonConverter(typeof(RpcJson<Table>))]
+        [RpcJson]
         public Table Info { get; set; }
     }
 

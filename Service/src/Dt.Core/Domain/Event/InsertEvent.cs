@@ -21,6 +21,7 @@ namespace Dt.Core
         /// <summary>
         /// 实体
         /// </summary>
+        [RpcJson]
         public TEntity Entity { get; set; }
     }
 }

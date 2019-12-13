@@ -17,7 +17,7 @@ namespace Dt.Core
     /// <summary>
     /// 属性自定义json序列化/反序列化，属性类型需实现IRpcJson接口
     /// </summary>
-    public class RpcJson<T> : JsonConverter<T>
+    public class RpcJsonConverter<T> : JsonConverter<T>
         where T : class, IRpcJson
     {
         public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
@@ -31,6 +31,22 @@ namespace Dt.Core
         public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
         {
             value.WriteRpcJson(writer);
+        }
+    }
+
+    /// <summary>
+    /// 使用内部IRpcJson接口自定义json序列化/反序列化
+    /// </summary>
+    public class RpcJsonAttribute : JsonConverterAttribute
+    {
+        public override JsonConverter CreateConverter(Type typeToConvert)
+        {
+            if (typeToConvert.GetInterface("IRpcJson") != null)
+            {
+                Type type = typeof(RpcJsonConverter<>).MakeGenericType(typeToConvert);
+                return (JsonConverter)Activator.CreateInstance(type);
+            }
+            throw new Exception($"类型{typeToConvert.FullName}未实现IRpcJson，无法序列化");
         }
     }
 }
