@@ -10,6 +10,7 @@
 using Dt.Core;
 using System;
 using System.Linq;
+using System.Text.Json;
 using Windows.Foundation;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
@@ -135,7 +136,7 @@ namespace Dt.Base
                 if (autoStart != null
                     && win != null
                     && autoStart.WinType == win.GetType().AssemblyQualifiedName
-                    && autoStart.Params == win.Params)
+                    && (win.Params == null || autoStart.Params == JsonSerializer.Serialize(win.Params, JsonOptions.UnsafeSerializer)))
                 {
                     menu.Items[0].Visibility = Visibility.Visible;
                     menu.Items[1].Visibility = Visibility.Collapsed;

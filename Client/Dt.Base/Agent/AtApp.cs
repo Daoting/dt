@@ -12,6 +12,7 @@ using Dt.Core.Rpc;
 using System;
 using System.IO;
 using System.IO.Compression;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Windows.ApplicationModel.Activation;
@@ -321,9 +322,14 @@ namespace Dt.Base
                     {
                         IWin win = null;
                         if (string.IsNullOrEmpty(autoStart.Params))
+                        {
                             win = (IWin)Activator.CreateInstance(type);
+                        }
                         else
-                            win = (IWin)Activator.CreateInstance(type, autoStart.Params);
+                        {
+                            var par = JsonSerializer.Deserialize(autoStart.Params, Type.GetType(autoStart.ParamsType));
+                            win = (IWin)Activator.CreateInstance(type, par);
+                        }
 
                         if (win != null)
                         {
@@ -381,9 +387,14 @@ namespace Dt.Base
                     {
                         IWin win = null;
                         if (string.IsNullOrEmpty(autoStart.Params))
+                        {
                             win = (IWin)Activator.CreateInstance(type);
+                        }
                         else
-                            win = (IWin)Activator.CreateInstance(type, autoStart.Params);
+                        {
+                            var par = JsonSerializer.Deserialize(autoStart.Params, Type.GetType(autoStart.ParamsType));
+                            win = (IWin)Activator.CreateInstance(type, par);
+                        }
 
                         if (win != null)
                         {

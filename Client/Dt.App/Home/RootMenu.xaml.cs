@@ -9,7 +9,7 @@
 #region 引用命名
 using Dt.Base;
 using Dt.Core;
-using Dt.Core.Model;
+using Dt.Core.Rpc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -78,52 +78,52 @@ namespace Dt.App.Home
         void OnLoaded(object sender, RoutedEventArgs e)
         {
             // 过滤太频繁的刷新
-            //if ((DateTime.Now - _dtLast).TotalSeconds < 30)
-            //    return;
+            if ((DateTime.Now - _dtLast).TotalSeconds < 30)
+                return;
 
-            //_dtLast = DateTime.Now;
-            //AtKit.RunAsync(async () =>
-            //{
-            //    // 只取收藏项的提示信息
-            //    var items = new Dictionary<string, List<string>>();
-            //    foreach (var mi in AtUser.FavMenus)
-            //    {
-            //        if (string.IsNullOrEmpty(mi.SrvName))
-            //            continue;
+            _dtLast = DateTime.Now;
+            AtKit.RunAsync(async () =>
+            {
+                // 只取收藏项的提示信息
+                var items = new Dictionary<string, List<long>>();
+                foreach (var mi in MenuKit.FavMenus)
+                {
+                    if (string.IsNullOrEmpty(mi.SrvName))
+                        continue;
 
-            //        List<string> ls;
-            //        if (!items.TryGetValue(mi.SrvName, out ls))
-            //        {
-            //            ls = new List<string>();
-            //            items[mi.SrvName] = ls;
-            //        }
-            //        ls.Add(mi.ID);
-            //    }
-            //    if (items.Count == 0)
-            //        return;
+                    List<long> ls;
+                    if (!items.TryGetValue(mi.SrvName, out ls))
+                    {
+                        ls = new List<long>();
+                        items[mi.SrvName] = ls;
+                    }
+                    ls.Add(mi.ID);
+                }
+                if (items.Count == 0)
+                    return;
 
-            //    foreach (var item in items)
-            //    {
-            //        Dict dt = await AtSrv.GetMenuTips(item.Key, item.Value);
-            //        if (dt == null || dt.Count == 0)
-            //            continue;
+                // 确保服务存在Api：Entry.GetMenuTips
+                foreach (var item in items)
+                {
+                    Dict dt = await new UnaryRpc(item.Key, "Entry.GetMenuTips", item.Value).Call<Dict>();
+                    if (dt == null || dt.Count == 0)
+                        continue;
 
-            //        foreach (var obj in dt)
-            //        {
-            //            OmMenu om = (from mi in AtUser.FavMenus
-            //                         where mi.ID == obj.Key
-            //                         select mi).FirstOrDefault();
-            //            if (om == null)
-            //                continue;
-
-            //            int num;
-            //            if (obj.Value == null || !int.TryParse(obj.Value.ToString(), out num))
-            //                om.SetWarningNum(0);
-            //            else
-            //                om.SetWarningNum(num);
-            //        }
-            //    }
-            //});
+                    foreach (var obj in dt)
+                    {
+                        if (long.TryParse(obj.Key, out var id)
+                            && obj.Value != null
+                            && int.TryParse(obj.Value.ToString(), out int num))
+                        {
+                            OmMenu om = (from mi in MenuKit.FavMenus
+                                         where mi.ID == id
+                                         select mi).FirstOrDefault();
+                            if (om != null)
+                                om.SetWarningNum(num);
+                        }
+                    }
+                }
+            });
         }
 
         #region ITabContent

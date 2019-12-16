@@ -89,7 +89,7 @@ namespace Dt.Base
         /// </summary>
         internal void Unload()
         {
-            if (_root.Children.Count > 1)
+            if (_root != null && _root.Children.Count > 1)
                 _root.Children.RemoveAt(1);
 
 #if UWP

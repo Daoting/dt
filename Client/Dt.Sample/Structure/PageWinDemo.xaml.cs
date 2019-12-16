@@ -23,7 +23,7 @@ namespace Dt.Sample
     public partial class PageWinDemo : PageWin
     {
         PageWinDemo _nextWin;
-        string _rnd;
+        int _rnd = 0;
 
         public PageWinDemo()
         {
@@ -32,7 +32,7 @@ namespace Dt.Sample
             Closed += OnClosed;
         }
 
-        public PageWinDemo(string p_params)
+        public PageWinDemo(int p_params)
             : this()
         {
         }
@@ -59,10 +59,10 @@ namespace Dt.Sample
 
         void OnParamsWin(object sender, RoutedEventArgs e)
         {
-            if (string.IsNullOrEmpty(_rnd))
+            if (_rnd == 0)
             {
-                _rnd = new Random().Next(1000).ToString();
-                ((Button)sender).Content = "参数子窗口" + _rnd;
+                _rnd = new Random().Next(1000);
+                ((Button)sender).Content = "参数子窗口" + _rnd.ToString();
             }
             AtUI.OpenWin(typeof(PageWinDemo), $"参数窗口{_rnd}", Icons.None, _rnd);
         }

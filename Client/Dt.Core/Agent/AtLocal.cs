@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 
 #endregion
 
@@ -159,8 +160,13 @@ namespace Dt.Core
         /// <returns></returns>
         internal static AutoStartInfo GetAutoStart()
         {
-            string xml = _stateDb.ExecuteScalar<string>("select val from ClientCookie where key='AutoStart'");
-            return AutoStartInfo.ReadXml(xml);
+            try
+            {
+                string json = _stateDb.ExecuteScalar<string>("select val from ClientCookie where key='AutoStart'");
+                return JsonSerializer.Deserialize<AutoStartInfo>(json);
+            }
+            catch { }
+            return null;
         }
 
         /// <summary>
@@ -171,8 +177,8 @@ namespace Dt.Core
         {
             if (p_info != null)
             {
-                string xml = p_info.WriteXml();
-                _stateDb.Insert(new ClientCookie() { Key = "AutoStart", Val = xml }, true);
+                string json = JsonSerializer.Serialize(p_info, JsonOptions.UnsafeSerializer);
+                _stateDb.Insert(new ClientCookie() { Key = "AutoStart", Val = json }, true);
             }
         }
 

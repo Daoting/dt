@@ -192,8 +192,11 @@ namespace Dt.Base
             info.WinType = p_win.GetType().AssemblyQualifiedName;
             info.Title = p_win.Title;
             info.Icon = p_win.Icon.ToString();
-            //if (p_win.Params != null)
-            //    info.Params = JsonConverter..Serialize(p_win.Params);
+            if (p_win.Params != null)
+            {
+                info.Params = JsonSerializer.Serialize(p_win.Params, JsonOptions.UnsafeSerializer);
+                info.ParamsType = p_win.Params.GetType().AssemblyQualifiedName;
+            }
             AtLocal.SaveAutoStart(info);
             AtKit.Msg(string.Format("{0}已设置自启动！", p_win.Title));
         }
@@ -246,7 +249,7 @@ namespace Dt.Base
                 var autoStart = AtLocal.GetAutoStart();
                 if (autoStart != null
                     && autoStart.WinType == p_win.GetType().AssemblyQualifiedName
-                    && autoStart.Params == p_win.Params)
+                    && (p_win.Params == null || autoStart.Params == JsonSerializer.Serialize(p_win.Params, JsonOptions.UnsafeSerializer)))
                 {
                     _menu.Items[0].Visibility = Visibility.Visible;
                     _menu.Items[1].Visibility = Visibility.Collapsed;

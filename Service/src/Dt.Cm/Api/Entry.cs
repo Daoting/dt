@@ -11,6 +11,7 @@ using Dt.Core;
 using Dt.Core.Caches;
 using Dt.Core.Sqlite;
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 #endregion
@@ -133,6 +134,16 @@ namespace Dt.Cm
             // 发送短信
 
             return code;
+        }
+
+        /// <summary>
+        /// 获取菜单项的数字提示信息
+        /// </summary>
+        /// <param name="p_menuIDs"></param>
+        /// <returns></returns>
+        public Dict GetMenuTips(List<long> p_menuIDs)
+        {
+            return null;
         }
     }
 }
