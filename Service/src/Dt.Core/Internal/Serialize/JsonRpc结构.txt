@@ -62,12 +62,11 @@
 
 10.Dict
 [
-    "#dict", 
-    {
-        "key1": "val1", 
-        "key2": 11, 
-        "key3": "CgwOEA=="
-    }
+    "#dict",
+	["key1", "类型", "val1"], // 简单类型System.XXX
+	["key2", "Int64", 11],
+	["key3", "Byte[]", "CgwOEA=="],
+    ["key4", "", ["#row",...]] // 复杂类型空即可
 ]
 
 11.MsgInfo
@@ -123,11 +122,12 @@
 
 6. List<object>
 [
-    "&objs", 
-    "asdf", 
-    123, 
-    "CgwOEA==", 
-    "2016-10-18T14:56:09.848929"
+    "&objs",
+    ["类型", "asdf"], // 简单类型System.XXX
+    ["Int64", 123], 
+    ["Byte[]", "CgwOEA=="], 
+    ["DateTime", "2016-10-18T14:56:09.848929"],
+	["", ["#row",...]] // 复杂类型空
 ]
 
 7. List<Table>
@@ -166,17 +166,13 @@
     "&dicts", 
     [
         "#dict", 
-        {
-            "key1": "val1", 
-            "key2": 11
-        }
+        ["key1", "类型", "val1"],
+		["key2", "", ["#row",...]]
     ], 
     [
         "#dict", 
-        {
-            "key1": "val1", 
-            "key2": 11
-        }
+        ["key1", "类型", "val1"],
+		["key2", "", ["#row",...]]
     ]
 ]
 *** 支持类型嵌套

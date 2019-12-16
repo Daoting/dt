@@ -265,37 +265,111 @@ namespace Dt.Core
         #region IRpcJson
         void IRpcJson.ReadRpcJson(ref Utf8JsonReader p_reader)
         {
-            // #dict下的 {
-            p_reader.Read();
-            while (p_reader.Read() && p_reader.TokenType == JsonTokenType.PropertyName)
+            //[
+            //	"#dict",
+            //	["key1", "类型", "val1"], // 简单类型System.XXX
+            //	["key2", "Int64", 11],
+            //	["key3", "Byte[]", "CgwOEA=="],
+            //	["key4", "", ["#row",...]] // 复杂类型空即可
+            //]
+
+            // 项起始 [
+            while (p_reader.Read())
             {
-                string name = p_reader.GetString();
+                // 外层末尾 ]
+                if (p_reader.TokenType == JsonTokenType.EndArray)
+                    break;
+
+                // 项
                 p_reader.Read();
-                try
+                string key = p_reader.GetString();
+                p_reader.Read();
+                string tpName = p_reader.GetString();
+                p_reader.Read();
+                if (tpName == string.Empty)
                 {
-                    this[name] = JsonRpcSerializer.Deserialize(ref p_reader);
+                    try
+                    {
+                        this[key] = JsonRpcSerializer.Deserialize(ref p_reader);
+                    }
+                    catch (Exception exception)
+                    {
+                        throw new Exception("反序列化Dict时异常: " + exception.Message);
+                    }
                 }
-                catch (Exception exception)
+                else
                 {
-                    throw new Exception("反序列化Dict时异常: " + exception.Message);
+                    Type tp;
+                    if (tpName.EndsWith('?'))
+                    {
+                        tp = Type.GetType("System." + tpName.TrimEnd('?'), true, false);
+                        tp = typeof(Nullable<>).MakeGenericType(tp);
+                    }
+                    else
+                    {
+                        tp = Type.GetType("System." + tpName, true, false);
+                    }
+
+                    try
+                    {
+                        this[key] = JsonRpcSerializer.Deserialize(ref p_reader, tp);
+                    }
+                    catch (Exception exception)
+                    {
+                        throw new Exception("反序列化Dict时异常: " + exception.Message);
+                    }
                 }
+                // 项末尾 ]
+                p_reader.Read();
             }
-            // 最外层 ]
-            p_reader.Read();
         }
 
         void IRpcJson.WriteRpcJson(Utf8JsonWriter p_writer)
         {
+            //[
+            //	"#dict",
+            //	["key1", "类型", "val1"], // 简单类型System.XXX
+            //	["key2", "Int64", 11],
+            //	["key3", "Byte[]", "CgwOEA=="],
+            //	["key4", "", ["#row",...]] // 复杂类型空即可
+            //]
             p_writer.WriteStartArray();
             p_writer.WriteStringValue("#dict");
 
-            p_writer.WriteStartObject();
             foreach (var item in this)
             {
-                p_writer.WritePropertyName(item.Key);
-                JsonRpcSerializer.Serialize(item.Value, p_writer);
+                p_writer.WriteStartArray();
+
+                p_writer.WriteStringValue(item.Key);
+                if (item.Value == null)
+                {
+                    // null按string
+                    p_writer.WriteStringValue("String");
+                    p_writer.WriteNullValue();
+                }
+                else
+                {
+                    var tp = item.Value.GetType();
+                    if (tp.FullName == "System." + tp.Name)
+                    {
+                        // 简单类型
+                        p_writer.WriteStringValue(tp.Name);
+                    }
+                    else if (tp.IsGenericType && tp.GetGenericTypeDefinition() == typeof(Nullable<>))
+                    {
+                        // 可空值类型
+                        p_writer.WriteStringValue(tp.GetGenericArguments()[0].Name + "?");
+                    }
+                    else
+                    {
+                        // 复杂类型空即可
+                        p_writer.WriteStringValue("");
+                    }
+                    JsonRpcSerializer.Serialize(item.Value, p_writer);
+                }
+
+                p_writer.WriteEndArray();
             }
-            p_writer.WriteEndObject();
 
             p_writer.WriteEndArray();
         }

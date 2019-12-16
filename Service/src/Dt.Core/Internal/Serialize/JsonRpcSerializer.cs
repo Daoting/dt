@@ -136,9 +136,49 @@ namespace Dt.Core
         {
             p_writer.WriteStartArray();
             p_writer.WriteStringValue("&" + SerializeTypeAlias.GetAlias(p_value.GetType()));
-            foreach (object item in p_value)
+            if (p_value is List<object> lo)
             {
-                Serialize(item, p_writer);
+                // 记录item类型
+                foreach (object item in lo)
+                {
+                    p_writer.WriteStartArray();
+
+                    if (item != null)
+                    {
+                        var tp = item.GetType();
+                        if (tp.FullName == "System." + tp.Name)
+                        {
+                            // 简单类型
+                            p_writer.WriteStringValue(tp.Name);
+                        }
+                        else if (tp.IsGenericType && tp.GetGenericTypeDefinition() == typeof(Nullable<>))
+                        {
+                            // 可空值类型
+                            p_writer.WriteStringValue(tp.GetGenericArguments()[0].Name + "?");
+                        }
+                        else
+                        {
+                            // 复杂类型空即可
+                            p_writer.WriteStringValue("");
+                        }
+                        Serialize(item, p_writer);
+                    }
+                    else
+                    {
+                        // null按string
+                        p_writer.WriteStringValue("String");
+                        p_writer.WriteNullValue();
+                    }
+
+                    p_writer.WriteEndArray();
+                }
+            }
+            else
+            {
+                foreach (object item in p_value)
+                {
+                    Serialize(item, p_writer);
+                }
             }
             p_writer.WriteEndArray();
         }
@@ -311,7 +351,7 @@ namespace Dt.Core
             Type type = SerializeTypeAlias.GetType(p_alias);
             Type itemType = type.GetGenericArguments()[0];
             if (itemType == typeof(object))
-                itemType = null;
+                return DeserializeObjsArray(ref p_reader);
 
             IList target = Activator.CreateInstance(type) as IList;
             while (p_reader.Read() && p_reader.TokenType != JsonTokenType.EndArray)
@@ -319,6 +359,44 @@ namespace Dt.Core
                 target.Add(Deserialize(ref p_reader, itemType));
             }
             return target;
+        }
+
+        static object DeserializeObjsArray(ref Utf8JsonReader p_reader)
+        {
+            List<object> ls = new List<object>();
+            // 项起始 [
+            while (p_reader.Read())
+            {
+                // 外层末尾 ]
+                if (p_reader.TokenType == JsonTokenType.EndArray)
+                    break;
+
+                // 项
+                p_reader.Read();
+                string tpName = p_reader.GetString();
+                p_reader.Read();
+                if (tpName == string.Empty)
+                {
+                    ls.Add(Deserialize(ref p_reader));
+                }
+                else
+                {
+                    Type tp;
+                    if (tpName.EndsWith('?'))
+                    {
+                        tp = Type.GetType("System." + tpName.TrimEnd('?'), true, false);
+                        tp = typeof(Nullable<>).MakeGenericType(tp);
+                    }
+                    else
+                    {
+                        tp = Type.GetType("System." + tpName, true, false);
+                    }
+                    ls.Add(Deserialize(ref p_reader, tp));
+                }
+                // 项末尾 ]
+                p_reader.Read();
+            }
+            return ls;
         }
         #endregion
 
