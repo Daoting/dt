@@ -26,7 +26,7 @@ namespace Dt.Kehu
     {
         public static void ShowDetail(long p_id)
         {
-            
+            AtApp.OpenWin(typeof(JieHuMain), p_params: p_id);
         }
     }
 }

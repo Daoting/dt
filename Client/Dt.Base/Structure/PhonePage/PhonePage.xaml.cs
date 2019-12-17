@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Core;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -44,7 +45,7 @@ namespace Dt.Base
                 return;
 
             _newParam = new PageParameter(p_content, null);
-            AtApp.Frame.Navigate(typeof(PhonePage), _newParam);
+            SysVisual.RootFrame.Navigate(typeof(PhonePage), _newParam);
         }
 
         /// <summary>
@@ -58,7 +59,7 @@ namespace Dt.Base
 
             var taskSrc = new TaskCompletionSource<bool>();
             _newParam = new PageParameter(p_content, taskSrc);
-            AtApp.Frame.Navigate(typeof(PhonePage), _newParam);
+            SysVisual.RootFrame.Navigate(typeof(PhonePage), _newParam);
             return taskSrc.Task;
         }
 

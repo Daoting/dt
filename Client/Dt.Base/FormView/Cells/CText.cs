@@ -73,9 +73,9 @@ namespace Dt.Base
             if (c._tb != null)
             {
                 if ((bool)e.NewValue)
-                    c._tb.TextChanged += AtUI.OnUpdateSource;
+                    c._tb.TextChanged += OnUpdateSource;
                 else
-                    c._tb.TextChanged -= AtUI.OnUpdateSource;
+                    c._tb.TextChanged -= OnUpdateSource;
             }
         }
         #endregion
@@ -118,7 +118,7 @@ namespace Dt.Base
 
             _tb = (TextBox)GetTemplateChild("TextBox");
             if (UpdateTimely)
-                _tb.TextChanged += AtUI.OnUpdateSource;
+                _tb.TextChanged += OnUpdateSource;
             if (AcceptsReturn)
             {
                 _tb.AcceptsReturn = true;
@@ -139,6 +139,20 @@ namespace Dt.Base
                 return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// 确保TextBox的Text实时更新到数据源
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        static void OnUpdateSource(object sender, TextChangedEventArgs e)
+        {
+            TextBox tb = (TextBox)sender;
+            // 确保实时更新到数据源
+            BindingExpression expresson = tb.GetBindingExpression(TextBox.TextProperty);
+            if (expresson != null)
+                expresson.UpdateSource();
         }
     }
 }

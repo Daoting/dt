@@ -11,12 +11,11 @@ using Dt.Core;
 using Dt.Core.Rpc;
 using System;
 using System.IO;
+using System.Linq;
 using System.IO.Compression;
-using System.Text.Json;
+using System.Reflection;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using Windows.ApplicationModel.Activation;
-using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 #endregion
@@ -43,41 +42,20 @@ namespace Dt.Base
             {
                 // 带参数启动
                 if (!string.IsNullOrEmpty(args.Arguments))
-                    AtKit.RunAsync(() => LaunchFreely(args.Arguments));
+                    AtKit.RunAsync(() => LaunchManager.LaunchFreely(args.Arguments));
                 return;
             }
 
-            // 登录注销回调
             AtSys.Login = Login;
             AtSys.Logout = Logout;
-
-            // uwp和wasm 支持UI模式切换
-#if UWP
-            SysVisual.UIModeChanged = OnUIModeChanged;
-            if (!AtSys.IsPhoneUI)
-            {
-                _deskDict = new ResourceDictionary() { Source = new Uri(_deskStylePath) };
-                Application.Current.Resources.MergedDictionaries.Add(_deskDict);
-            }
-#endif
-
-            // 后退键
-            var view = SystemNavigationManager.GetForCurrentView();
-            view.BackRequested += InputManager.OnBackRequested;
-            if (AtSys.System == TargetSystem.Windows)
-            {
-                if (AtSys.IsPhoneUI)
-                    view.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
-                // 全局快捷键
-                Window.Current.CoreWindow.Dispatcher.AcceleratorKeyActivated += InputManager.AcceleratorKeyActivated;
-            }
-
-            // 带参数启动
-            if (!string.IsNullOrEmpty(args.Arguments))
-                _launchCallback = () => LaunchFreely(args.Arguments);
-
-            // 提示信息
+            InputManager.Init();
             NotifyManager.Init();
+            LaunchManager.Arguments = args.Arguments;
+
+#if UWP
+            // 支持响应式UI模式切换
+            UIModeManager.Init();
+#endif
 
             // 从存根启动，因uno中无法在一个根UI的Loaded事件中切换到另一根UI，所以未采用启动页方式
             AtSys.Stub.OnStartup(new StartupInfo());
@@ -190,6 +168,7 @@ namespace Dt.Base
         /// <param name="p_phone"></param>
         /// <param name="p_name"></param>
         /// <param name="p_pwd"></param>
+        /// <param name="p_dlg"></param>
         public static void LoginSuccess(long p_id, string p_phone, string p_name, string p_pwd = null, Dlg p_dlg = null)
         {
             // 登录后初始化用户信息
@@ -211,7 +190,8 @@ namespace Dt.Base
             else
                 p_dlg.Close();
 
-            _ = HandlePushMsg();
+            // 接收服务器推送
+            _ = PushHandler.Register();
         }
 
         /// <summary>
@@ -232,277 +212,134 @@ namespace Dt.Base
             await AtSys.Stub.OnLogout();
             SysVisual.RootContent = AtSys.Stub.LoginPage;
         }
+        #endregion
+
+        #region 窗口
+        /// <summary>
+        /// 根据视图名称激活旧窗口或打开新窗口
+        /// </summary>
+        /// <param name="p_viewName">窗口视图名称</param>
+        /// <param name="p_title">标题</param>
+        /// <param name="p_icon">图标</param>
+        /// <param name="p_params">启动参数</param>
+        /// <returns>返回打开的窗口或视图，null表示打开失败</returns>
+        public static object OpenView(
+            string p_viewName,
+            string p_title = null,
+            Icons p_icon = Icons.None,
+            object p_params = null)
+        {
+            Type tp = GetViewType(p_viewName);
+            if (tp == null)
+            {
+                AtKit.Msg(string.Format("【{0}】视图未找到！", p_viewName));
+                return null;
+            }
+            return OpenWin(tp, p_title, p_icon, p_params);
+        }
 
         /// <summary>
-        /// 处理服务器推送
+        /// 根据窗口类型和参数激活旧窗口或打开新窗口
         /// </summary>
-        /// <returns></returns>
-        static async Task HandlePushMsg()
+        /// <param name="p_type">窗口类型</param>
+        /// <param name="p_title">标题</param>
+        /// <param name="p_icon">图标</param>
+        /// <param name="p_params">初始参数</param>
+        /// <returns>返回打开的窗口或视图，null表示打开失败</returns>
+        public static object OpenWin(
+            Type p_type,
+            string p_title = null,
+            Icons p_icon = Icons.None,
+            object p_params = null)
         {
-            try
-            {
-                var reader = await AtMsg.Register((int)AtSys.System);
-                PushHandler.RetryTimes = 0;
-                while (await reader.MoveNext())
-                {
-                    new PushHandler().Call(reader.Val<string>());
-                }
-            }
-            catch { }
+            if (p_type == null)
+                AtKit.Throw("待显示的窗口类型不可为空！");
 
-            // 未停止接收推送时重连
-            if (!PushHandler.StopPush && PushHandler.RetryTimes < 5)
+            // 激活旧窗口，比较窗口类型和初始参数
+            IWin win;
+            if (!AtSys.IsPhoneUI && (win = Desktop.Inst.ActiveWin(p_type, p_params)) != null)
             {
-                PushHandler.RetryTimes++;
-                _ = Task.Delay(TimeSpan.FromSeconds(Math.Pow(2, PushHandler.RetryTimes))).ContinueWith((t) => HandlePushMsg());
+                Taskbar.Inst.ActiveTaskItem(win);
+                return win;
             }
+
+            // 打开新窗口
+            TypeInfo info = p_type.GetTypeInfo();
+            if (info.ImplementedInterfaces.Contains(typeof(IWin)))
+            {
+                if (p_params == null)
+                    win = (IWin)Activator.CreateInstance(p_type);
+                else
+                    win = (IWin)Activator.CreateInstance(p_type, p_params);
+
+                if (string.IsNullOrEmpty(win.Title) && string.IsNullOrEmpty(p_title))
+                    win.Title = "无标题";
+                else if (!string.IsNullOrEmpty(p_title))
+                    win.Title = p_title;
+
+                if (p_icon != Icons.None)
+                    win.Icon = p_icon;
+
+                // 记录初始参数，设置自启动和win模式下识别窗口时使用
+                if (p_params != null)
+                    win.Params = p_params;
+
+                if (AtSys.IsPhoneUI)
+                {
+                    win.NaviToHome();
+                }
+                else
+                {
+                    Taskbar.LoadTaskItem(win);
+                    Desktop.Inst.ShowNewWin(win);
+                }
+                return win;
+            }
+
+            // 处理自定义启动情况
+            if (info.ImplementedInterfaces.Contains(typeof(IView)))
+            {
+                IView viewer = Activator.CreateInstance(p_type) as IView;
+                viewer.Run(p_params);
+                return viewer;
+            }
+
+            AtKit.Msg("打开窗口失败，窗口类型需要实现IWin或IView接口！");
+            return null;
+        }
+
+        /// <summary>
+        /// 获取视图类型
+        /// </summary>
+        /// <param name="p_typeName">类型名称</param>
+        /// <returns>返回类型</returns>
+        public static Type GetViewType(string p_typeName)
+        {
+            Type tp;
+            if (!string.IsNullOrEmpty(p_typeName) && AtSys.Stub.ViewTypes.TryGetValue(p_typeName, out tp))
+                return tp;
+            return null;
         }
         #endregion
 
         #region 根元素
-        /// <summary>
-        /// PhoneUI模式的根Frame
-        /// </summary>
-        public static Frame Frame { get; internal set; }
-
         /// <summary>
         /// 加载根内容 Desktop 或 Frame
         /// </summary>
         public static void LoadRootUI()
         {
             if (AtSys.IsPhoneUI)
-                LoadRootFrame();
+                LaunchManager.LoadRootFrame();
             else
-                LoadDesktop();
+                LaunchManager.LoadDesktop();
         }
 
         /// <summary>
-        /// 带参数启动的回调方法
+        /// PhoneUI模式的根Frame
         /// </summary>
-        static Action _launchCallback;
-
-        /// <summary>
-        /// 加载根Frame
-        /// </summary>
-        static void LoadRootFrame()
+        public static Frame RootFrame
         {
-            // uno中默认字体大小11
-            Frame = new Frame { FontSize = 15 };
-            SysVisual.RootContent = Frame;
-
-            // 主页作为根
-            Type tp = AtUI.GetViewType(AtUI.HomeView);
-            if (tp != null)
-            {
-                IWin win = Activator.CreateInstance(tp) as IWin;
-                if (win != null)
-                {
-                    win.Title = "主页";
-                    win.Icon = Icons.主页;
-                    win.NaviToHome();
-                }
-            }
-
-            // 自启动
-            AutoStartInfo autoStart;
-            if (_launchCallback != null)
-            {
-                // 带启动参数的自启动
-                _launchCallback();
-                _launchCallback = null;
-            }
-            else if ((autoStart = AtLocal.GetAutoStart()) != null)
-            {
-                // 用户设置的自启动
-                bool suc = false;
-                Type type = Type.GetType(autoStart.WinType);
-                if (type != null)
-                {
-                    try
-                    {
-                        IWin win = null;
-                        if (string.IsNullOrEmpty(autoStart.Params))
-                        {
-                            win = (IWin)Activator.CreateInstance(type);
-                        }
-                        else
-                        {
-                            var par = JsonSerializer.Deserialize(autoStart.Params, Type.GetType(autoStart.ParamsType));
-                            win = (IWin)Activator.CreateInstance(type, par);
-                        }
-
-                        if (win != null)
-                        {
-                            win.Title = string.IsNullOrEmpty(autoStart.Title) ? "自启动" : autoStart.Title;
-                            Icons icon;
-                            if (Enum.TryParse(autoStart.Icon, out icon))
-                                win.Icon = icon;
-                            win.NaviToHome();
-                            suc = true;
-                        }
-                    }
-                    catch { }
-                }
-                if (!suc)
-                    AtLocal.DelAutoStart();
-            }
-        }
-
-        /// <summary>
-        /// 加载桌面
-        /// </summary>
-        static void LoadDesktop()
-        {
-            Desktop desktop = new Desktop();
-
-            // 主页
-            Type tp = AtUI.GetViewType(AtUI.HomeView);
-            if (tp != null)
-            {
-                IWin win = Activator.CreateInstance(tp) as IWin;
-                if (win != null)
-                {
-                    win.Title = "主页";
-                    win.Icon = Icons.主页;
-                    desktop.HomeWin = win;
-                }
-            }
-
-            // 自启动
-            AutoStartInfo autoStart;
-            if (_launchCallback != null)
-            {
-                // 带启动参数的自启动
-                _launchCallback();
-                _launchCallback = null;
-            }
-            else if ((autoStart = AtLocal.GetAutoStart()) != null)
-            {
-                // 用户设置的自启动
-                bool suc = false;
-                Type type = Type.GetType(autoStart.WinType);
-                if (type != null)
-                {
-                    try
-                    {
-                        IWin win = null;
-                        if (string.IsNullOrEmpty(autoStart.Params))
-                        {
-                            win = (IWin)Activator.CreateInstance(type);
-                        }
-                        else
-                        {
-                            var par = JsonSerializer.Deserialize(autoStart.Params, Type.GetType(autoStart.ParamsType));
-                            win = (IWin)Activator.CreateInstance(type, par);
-                        }
-
-                        if (win != null)
-                        {
-                            win.Title = string.IsNullOrEmpty(autoStart.Title) ? "自启动" : autoStart.Title;
-                            Icons icon;
-                            if (Enum.TryParse(autoStart.Icon, out icon))
-                                win.Icon = icon;
-
-                            Taskbar.LoadTaskItem(win);
-                            desktop.ShowNewWin(win);
-                            suc = true;
-                        }
-                    }
-                    catch { }
-                }
-                if (!suc)
-                    AtLocal.DelAutoStart();
-            }
-
-            if (desktop.MainWin == null)
-                desktop.MainWin = desktop.HomeWin;
-            SysVisual.RootContent = desktop;
-        }
-        #endregion
-
-        #region 响应式UI
-#if UWP
-        const string _deskStylePath = "ms-appx:///Dt.Base/Themes/Styles/Desk.xaml";
-        static ResourceDictionary _deskDict;
-
-        /// <summary>
-        /// 系统区域大小变化时UI自适应
-        /// </summary>
-        static void OnUIModeChanged()
-        {
-            // 刷新样式
-            var dict = Application.Current.Resources.MergedDictionaries;
-            if (AtSys.IsPhoneUI)
-            {
-                // 卸载桌面版样式
-                if (_deskDict != null)
-                    dict.Remove(_deskDict);
-                // 桌面Mini版显示后退按钮
-                SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
-                Desktop.Inst = null;
-                Taskbar.Inst = null;
-            }
-            else
-            {
-                // 加载桌面版样式
-                if (_deskDict == null)
-                    _deskDict = new ResourceDictionary() { Source = new Uri(_deskStylePath) };
-                dict.Add(_deskDict);
-                // 隐藏后退按钮
-                SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
-                Frame = null;
-            }
-
-            // 重构根元素
-            if (SysVisual.RootContent is Frame || SysVisual.RootContent is Desktop)
-                LoadRootUI();
-        }
-#endif
-        #endregion
-
-        #region 参数启动
-        /// <summary>
-        /// 以参数方式自启动，通常从Toast启动
-        /// </summary>
-        /// <param name="p_params">xml启动参数</param>
-        static void LaunchFreely(string p_params)
-        {
-            var root = XDocument.Parse(p_params).Root;
-            var attr = root.Attribute("id");
-            if (attr == null || string.IsNullOrEmpty(attr.Value))
-            {
-                AtKit.Msg("自启动时标识不可为空！");
-                return;
-            }
-
-            // 以菜单项方式启动
-            if (root.Name == "menu")
-            {
-                //AtUI.OpenMenu(attr.Value);
-                return;
-            }
-
-            // 打开视图
-            string viewName = attr.Value;
-            string title = null;
-            Icons icon = Icons.None;
-            attr = root.Attribute("title");
-            if (attr != null && !string.IsNullOrEmpty(attr.Value))
-                title = attr.Value;
-            attr = root.Attribute("icon");
-            if (attr != null && !string.IsNullOrEmpty(attr.Value))
-                Enum.TryParse(attr.Value, out icon);
-
-            // undo
-            //Dictionary<string, string> pars = new Dictionary<string, string>();
-            //foreach (var elem in root.Elements("param"))
-            //{
-            //    var key = elem.Attribute("key");
-            //    var val = elem.Attribute("val");
-            //    if (key != null && !string.IsNullOrEmpty(key.Value) && val != null)
-            //        pars[key.Value] = val.Value;
-            //}
-            AtUI.OpenView(viewName, title, icon);
+            get { return SysVisual.RootFrame; }
         }
         #endregion
     }

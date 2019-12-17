@@ -10,29 +10,26 @@
 using Dt.Base;
 using Dt.Core;
 using System;
-using System.Text;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media.Imaging;
 #endregion
 
 namespace Dt.Kehu
 {
     /// <summary>
-    /// 首页
+    /// 
     /// </summary>
-    [View("主页")]
-    public partial class DefaultHome : Win
+    public partial class JieHuMain : PageWin
     {
-        public DefaultHome()
+
+        public JieHuMain(long p_id)
         {
             InitializeComponent();
+            Title = "胡志强";
+            _img.Source = new BitmapImage(new Uri("ms-appx:///Bs.Kehu/Assets/header.png"));
         }
 
-        void OnInit(object sender, RoutedEventArgs e)
-        {
-            AtLocal.DeleteCookie("ShowGuide");
-        }
     }
 }

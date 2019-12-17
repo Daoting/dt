@@ -64,7 +64,7 @@ namespace Dt.Sample
                 _rnd = new Random().Next(1000);
                 ((Button)sender).Content = "参数子窗口" + _rnd.ToString();
             }
-            AtUI.OpenWin(typeof(PageWinDemo), $"参数窗口{_rnd}", Icons.None, _rnd);
+            AtApp.OpenWin(typeof(PageWinDemo), $"参数窗口{_rnd}", Icons.None, _rnd);
         }
 
         async void OnClosing(object sender, AsyncCancelEventArgs e)

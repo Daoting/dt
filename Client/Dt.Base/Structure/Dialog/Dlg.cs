@@ -420,8 +420,8 @@ namespace Dt.Base
 
             Rect rcTarget;
             Canvas.SetZIndex(this, ++_currentZIndex);
-            double maxWidth = AtUI.ViewWidth;
-            double maxHeight = AtUI.ViewHeight;
+            double maxWidth = SysVisual.ViewWidth;
+            double maxHeight = SysVisual.ViewHeight;
             Measure(new Size(maxWidth, maxHeight));
             double actWidth = DesiredSize.Width;
             double actHeight = DesiredSize.Height;

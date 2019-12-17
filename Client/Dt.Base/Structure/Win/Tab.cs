@@ -429,7 +429,7 @@ namespace Dt.Base
 
             if (PinButtonVisibility == Visibility.Visible)
             {
-                AtUI.OnPhoneTitleTapped((Grid)GetTemplateChild("HeaderGrid"), OwnerWin);
+                WinKit.OnPhoneTitleTapped((Grid)GetTemplateChild("HeaderGrid"), OwnerWin);
                 Button btn = GetTemplateChild("BackButton") as Button;
                 if (btn != null)
                     btn.Click += InputManager.OnBackClick;

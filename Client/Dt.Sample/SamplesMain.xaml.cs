@@ -239,7 +239,7 @@ namespace Dt.Sample
                 if (dc.Callback != null)
                     dc.Callback(dc);
                 else if (dc.Tag is Type type)
-                    AtUI.OpenWin(type, dc.Title);
+                    AtApp.OpenWin(type, dc.Title);
             });
         }
 

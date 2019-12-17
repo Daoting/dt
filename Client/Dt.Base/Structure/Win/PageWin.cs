@@ -165,7 +165,7 @@ namespace Dt.Base
             base.OnApplyTemplate();
             if (AtSys.IsPhoneUI && BackButtonVisibility == Visibility.Visible)
             {
-                AtUI.OnPhoneTitleTapped((Grid)GetTemplateChild("HeaderGrid"), this);
+                WinKit.OnPhoneTitleTapped((Grid)GetTemplateChild("HeaderGrid"), this);
                 Button btn = GetTemplateChild("BackButton") as Button;
                 if (btn != null)
                     btn.Click += InputManager.OnBackClick;
@@ -179,7 +179,7 @@ namespace Dt.Base
         /// </summary>
         void IWin.NaviToHome()
         {
-            if (AtApp.Frame.Content == null)
+            if (SysVisual.RootFrame.Content == null)
                 BackButtonVisibility = Visibility.Collapsed;
             PhonePage.Show(this);
         }

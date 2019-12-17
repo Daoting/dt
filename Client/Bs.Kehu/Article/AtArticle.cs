@@ -26,7 +26,7 @@ namespace Dt.Kehu
     {
         public static void Open(long p_id)
         {
-            AtUI.OpenWin(typeof(ArticlePage), );
+            AtApp.OpenWin(typeof(ArticlePage), p_params: p_id);
         }
 
         public static void Favorite(long p_id)

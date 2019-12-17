@@ -69,7 +69,7 @@ namespace Dt.Base.FormView
 
             int colCount;
             double colWidth, width;
-            double maxWidth = double.IsInfinity(availableSize.Width) ? AtUI.ViewWidth : availableSize.Width;
+            double maxWidth = double.IsInfinity(availableSize.Width) ? SysVisual.ViewWidth : availableSize.Width;
 
             // 确定列数和列宽
             if (maxWidth < CellMinWidth * 2)
@@ -82,7 +82,7 @@ namespace Dt.Base.FormView
             {
                 // 可视高度的80%
                 double maxHeight = double.IsInfinity(AvailableHeight) ?
-                    Math.Floor(AtUI.ViewHeight * 0.8) : Math.Floor(AvailableHeight * 0.8);
+                    Math.Floor(SysVisual.ViewHeight * 0.8) : Math.Floor(AvailableHeight * 0.8);
 
                 if (maxHeight >= GetTotalHeight(1, CellMaxWidth, false))
                 {

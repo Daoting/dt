@@ -10,29 +10,30 @@
 using Dt.Base;
 using Dt.Core;
 using System;
-using System.Text;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 #endregion
 
 namespace Dt.Kehu
 {
     /// <summary>
-    /// 首页
+    /// 
     /// </summary>
-    [View("主页")]
-    public partial class DefaultHome : Win
+    public partial class PlanTest1 : PageWin
     {
-        public DefaultHome()
+
+        public PlanTest1()
         {
             InitializeComponent();
+
         }
 
-        void OnInit(object sender, RoutedEventArgs e)
+        void OnNext(object sender, RoutedEventArgs e)
         {
-            AtLocal.DeleteCookie("ShowGuide");
+            AtApp.OpenWin(typeof(PlanTest2));
         }
     }
 }

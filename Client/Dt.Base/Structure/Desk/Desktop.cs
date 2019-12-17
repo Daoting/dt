@@ -7,8 +7,10 @@
 #endregion
 
 #region 引用命名
+using Dt.Core;
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -243,10 +245,16 @@ namespace Dt.Base
         {
             foreach (var win in _winCache)
             {
-                if (win.GetType() == p_type && win.Params == p_params)
+                if (win.GetType() == p_type)
                 {
-                    ActiveWinInternal(win);
-                    return win;
+                    if (win.Params == null
+                        || (p_params != null
+                            && win.Params != null
+                            && JsonSerializer.Serialize(win.Params, JsonOptions.UnsafeSerializer) == JsonSerializer.Serialize(p_params, JsonOptions.UnsafeSerializer)))
+                    {
+                        ActiveWinInternal(win);
+                        return win;
+                    }
                 }
             }
             return null;

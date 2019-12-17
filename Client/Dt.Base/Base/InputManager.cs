@@ -12,7 +12,6 @@ using Dt.Core;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Input;
 #endregion
 
 namespace Dt.Base
@@ -23,13 +22,29 @@ namespace Dt.Base
     internal static class InputManager
     {
         /// <summary>
+        /// 附加后退键事件
+        /// </summary>
+        public static void Init()
+        {
+            var view = SystemNavigationManager.GetForCurrentView();
+            view.BackRequested += OnBackRequested;
+            if (AtSys.System == TargetSystem.Windows)
+            {
+                if (AtSys.IsPhoneUI)
+                    view.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
+                // 全局快捷键
+                Window.Current.CoreWindow.Dispatcher.AcceleratorKeyActivated += AcceleratorKeyActivated;
+            }
+        }
+
+        /// <summary>
         /// 按下后退按钮
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         public static void OnBackRequested(object sender, BackRequestedEventArgs e)
         {
-            e.Handled = SysVisual.ExistDlg || AtApp.Frame.CanGoBack;
+            e.Handled = SysVisual.ExistDlg || SysVisual.RootFrame.CanGoBack;
             GoBack();
         }
 
@@ -57,17 +72,18 @@ namespace Dt.Base
                 return;
             }
 
-            if (AtApp.Frame.CanGoBack)
+            var frame = SysVisual.RootFrame;
+            if (frame.CanGoBack)
             {
-                if (AtApp.Frame.Content is PhonePage page)
+                if (frame.Content is PhonePage page)
                 {
                     // 因OnNavigatingFrom中的取消导航无法实现异步！在此处判断
                     if (await page.IsAllowBack())
-                        AtApp.Frame.GoBack();
+                        frame.GoBack();
                 }
                 else
                 {
-                    AtApp.Frame.GoBack();
+                    frame.GoBack();
                 }
             }
         }

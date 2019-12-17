@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Base
@@ -22,7 +23,10 @@ namespace Dt.Base
     /// </summary>
     internal class PushHandler
     {
+        #region 静态内容
         static readonly Dictionary<string, MethodInfo> _methods = new Dictionary<string, MethodInfo>();
+        // 连接推送的重试次数
+        static int _retryTimes;
 
         /// <summary>
         /// 该账户从其它位置登录时停止接收推送
@@ -30,9 +34,30 @@ namespace Dt.Base
         public static bool StopPush;
 
         /// <summary>
-        /// 连接推送的重试次数
+        /// 处理服务器推送
         /// </summary>
-        public static int RetryTimes;
+        /// <returns></returns>
+        public static async Task Register()
+        {
+            try
+            {
+                var reader = await AtMsg.Register((int)AtSys.System);
+                _retryTimes = 0;
+                while (await reader.MoveNext())
+                {
+                    new PushHandler().Call(reader.Val<string>());
+                }
+            }
+            catch { }
+
+            // 未停止接收推送时重连
+            if (!StopPush && _retryTimes < 5)
+            {
+                _retryTimes++;
+                _ = Task.Delay(TimeSpan.FromSeconds(Math.Pow(2, _retryTimes))).ContinueWith((t) => Register());
+            }
+        }
+        #endregion
 
         public void Call(string p_msg)
         {

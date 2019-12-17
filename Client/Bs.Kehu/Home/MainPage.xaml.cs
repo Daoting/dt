@@ -64,7 +64,9 @@ namespace Dt.Kehu
             {
                 AddArticleItem(new Article
                 {
+                    ID = 1,
                     AuthorIcon = "ms-appx:///Bs.Kehu/Assets/header.png",
+                    AuthorID = 1,
                     AuthorName = "胡志强",
                     JobTitle = "高级介护师",
                     PubDate = "2019-12-27",
@@ -77,7 +79,9 @@ namespace Dt.Kehu
 
                 AddArticleItem(new Article
                 {
+                    ID = 2,
                     AuthorIcon = "ms-appx:///Bs.Kehu/Assets/u366.png",
+                    AuthorID = 2,
                     AuthorName = "福祉堂",
                     JobTitle = "全国连锁",
                     PubDate = "2019-11-27",
@@ -90,7 +94,9 @@ namespace Dt.Kehu
 
                 AddArticleItem(new Article
                 {
+                    ID = 3,
                     AuthorIcon = "ms-appx:///Bs.Kehu/Assets/u364.png",
+                    AuthorID = 3,
                     AuthorName = "李小琳",
                     JobTitle = "中级介护师",
                     PubDate = "2019-08-17",
@@ -166,6 +172,11 @@ namespace Dt.Kehu
 
         }
 
+        void OnAddPlan(object sender, RoutedEventArgs e)
+        {
+            AtPlan.Add();
+        }
+
         #region 文章行交互
         uint? _pointerID;
         Point _ptLast;
@@ -206,7 +217,7 @@ namespace Dt.Kehu
             if (_pointerID != e.Pointer.PointerId || sender != _gridLast)
                 return;
 
-            AtArticle.Open(_gridLast.DataContext as Article);
+            AtArticle.Open(((Article)_gridLast.DataContext).ID);
 
             e.Handled = true;
             _gridLast.ReleasePointerCapture(e.Pointer);

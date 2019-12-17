@@ -2,37 +2,36 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2013-12-16 创建
+* 日志: 2019-12-10
 ******************************************************************************/
 #endregion
 
 #region 引用命名
 using Dt.Base;
+using Dt.Base.Docking;
+using Dt.Base.FormView;
 using Dt.Core;
+using Dt.Core.Model;
+using Dt.Kehu;
 using System;
-using System.Text;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 #endregion
 
 namespace Dt.Kehu
 {
-    /// <summary>
-    /// 首页
-    /// </summary>
-    [View("主页")]
-    public partial class DefaultHome : Win
+
+    public static class AtPlan
     {
-        public DefaultHome()
+        public static void Add()
         {
-            InitializeComponent();
+            AtApp.OpenWin(typeof(PlanTest1));
         }
 
-        void OnInit(object sender, RoutedEventArgs e)
+        public static void Favorite(long p_id)
         {
-            AtLocal.DeleteCookie("ShowGuide");
+
         }
     }
 }

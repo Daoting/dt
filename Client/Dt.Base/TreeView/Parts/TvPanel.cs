@@ -116,8 +116,8 @@ namespace Dt.Base.TreeView
             if (_owner.RootItems.Count == 0 || _owner.View == null)
                 return new Size();
 
-            double maxWidth = double.IsInfinity(AvailableSize.Width) ? AtUI.ViewWidth : AvailableSize.Width;
-            double maxHeight = double.IsInfinity(AvailableSize.Height) ? AtUI.ViewHeight : AvailableSize.Height;
+            double maxWidth = double.IsInfinity(AvailableSize.Width) ? SysVisual.ViewWidth : AvailableSize.Width;
+            double maxHeight = double.IsInfinity(AvailableSize.Height) ? SysVisual.ViewHeight : AvailableSize.Height;
             return _owner.IsVirtualized ? MeasureVirRows(maxWidth, maxHeight) : MeasureRealRows(maxWidth, maxHeight);
         }
 

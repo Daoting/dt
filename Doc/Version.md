@@ -5,9 +5,10 @@
 
 ### 变更 
 *  移除Newtonsoft.Json，使用System.Text.Json 
+*  AtUI合并到AtApp
 
 ### Bug修改 
-* 
+* 设置窗口自启动时参数序列化问题
 
 ## Release 1.0 
 

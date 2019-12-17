@@ -354,13 +354,14 @@ namespace Dt.Base
                 throw new Exception($"导航出错，缺少{p_tabTitle}Tab页！");
 
             // 判断是否为向后导航
-            if (AtApp.Frame.BackStackDepth > _frameStartIndex)
+            var frame = SysVisual.RootFrame;
+            if (frame.BackStackDepth > _frameStartIndex)
             {
                 // 向后查询
                 int index = -1;
-                for (int i = AtApp.Frame.BackStackDepth - 1; i >= _frameStartIndex; i--)
+                for (int i = frame.BackStackDepth - 1; i >= _frameStartIndex; i--)
                 {
-                    var pageEntry = AtApp.Frame.BackStack[i];
+                    var pageEntry = frame.BackStack[i];
                     if (pageEntry.Parameter is PhonePage.PageParameter param
                         && param.Content == tab)
                     {
@@ -373,17 +374,17 @@ namespace Dt.Base
                 if (index > 0)
                 {
                     // 向后导航
-                    for (int i = AtApp.Frame.BackStackDepth - 1; i >= index; i--)
+                    for (int i = frame.BackStackDepth - 1; i >= index; i--)
                     {
-                        if (AtApp.Frame.CanGoBack)
-                            AtApp.Frame.GoBack();
+                        if (frame.CanGoBack)
+                            frame.GoBack();
                     }
                     return;
                 }
             }
 
             // 起始页隐藏返回按钮
-            if (AtApp.Frame.Content == null)
+            if (frame.Content == null)
                 tab.PinButtonVisibility = Visibility.Collapsed;
 
             // 向前导航
@@ -397,13 +398,14 @@ namespace Dt.Base
         void NaviToMultiTabs(string p_tabTitle)
         {
             // 判断是否为向后导航
-            if (AtApp.Frame.BackStackDepth > _frameStartIndex)
+            var frame = SysVisual.RootFrame;
+            if (frame.BackStackDepth > _frameStartIndex)
             {
                 // 向后查询
                 int index = -1;
-                for (int i = AtApp.Frame.BackStackDepth - 1; i >= _frameStartIndex; i--)
+                for (int i = frame.BackStackDepth - 1; i >= _frameStartIndex; i--)
                 {
-                    var pageEntry = AtApp.Frame.BackStack[i];
+                    var pageEntry = frame.BackStack[i];
                     if (pageEntry.Parameter is PhonePage.PageParameter param
                         && param.Content is PhoneTabs pts
                         && pts.NaviID == p_tabTitle)
@@ -417,10 +419,10 @@ namespace Dt.Base
                 if (index > 0)
                 {
                     // 向后导航
-                    for (int i = AtApp.Frame.BackStackDepth - 1; i >= index; i--)
+                    for (int i = frame.BackStackDepth - 1; i >= index; i--)
                     {
-                        if (AtApp.Frame.CanGoBack)
-                            AtApp.Frame.GoBack();
+                        if (frame.CanGoBack)
+                            frame.GoBack();
                     }
                     return;
                 }
@@ -440,7 +442,7 @@ namespace Dt.Base
                 tabs.AddItem(tab);
             }
             // 起始页隐藏返回按钮
-            if (AtApp.Frame.Content == null)
+            if (frame.Content == null)
                 tabs.HideBackButton();
             tabs.SelectFirstItem();
             PhonePage.Show(tabs);
@@ -490,7 +492,7 @@ namespace Dt.Base
                 ExtractItems(this);
             }
             // 记录起始索引
-            _frameStartIndex = AtApp.Frame.BackStackDepth;
+            _frameStartIndex = SysVisual.RootFrame.BackStackDepth;
             NaviTo(Home);
         }
 

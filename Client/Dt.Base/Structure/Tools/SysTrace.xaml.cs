@@ -80,7 +80,7 @@ namespace Dt.Base.Tools
             // phone模式
             if (SysVisual.RootContent is Frame)
             {
-                AtUI.OpenWin(typeof(SysTrace));
+                AtApp.OpenWin(typeof(SysTrace));
                 return;
             }
 
@@ -110,7 +110,7 @@ namespace Dt.Base.Tools
         {
             if (AtSys.IsPhoneUI || SysVisual.RootContent is Desktop)
             {
-                AtUI.OpenWin(typeof(LocalDbView));
+                AtApp.OpenWin(typeof(LocalDbView));
                 return;
             }
 

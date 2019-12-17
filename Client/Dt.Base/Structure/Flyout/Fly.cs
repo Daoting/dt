@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Core;
 using System;
 using Windows.Foundation;
 using Windows.UI.Core;
@@ -192,8 +193,8 @@ namespace Dt.Base
         /// <param name="e"></param>
         void OnOpening(object sender, object e)
         {
-            _rootGrid.MaxWidth = AtUI.ViewWidth;
-            _rootGrid.MaxHeight = AtUI.ViewHeight;
+            _rootGrid.MaxWidth = SysVisual.ViewWidth;
+            _rootGrid.MaxHeight = SysVisual.ViewHeight;
 
             Rect rect = Target.GetBounds(null);
             switch (Placement)

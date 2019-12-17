@@ -124,6 +124,19 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// PhoneUI模式的根Frame
+        /// </summary>
+        public static Frame RootFrame
+        {
+            get
+            {
+                if (_rootGrid.Children.Count > 2)
+                    return (Frame)_rootGrid.Children[0];
+                return null;
+            }
+        }
+
+        /// <summary>
         /// 获取提示信息列表，避免启动时AtKit的初始化
         /// </summary>
         public static ItemList<NotifyInfo> NotifyList { get; }
@@ -271,6 +284,7 @@ namespace Dt.Core
         }
         #endregion
 
+        #region Notify
         /// <summary>
         /// UI添加一条提示信息
         /// </summary>
@@ -297,6 +311,34 @@ namespace Dt.Core
         {
             _notifyPanel.Children.Clear();
         }
+        #endregion
+
+        #region 可视区域
+        /// <summary>
+        /// 可视区域宽度
+        /// 手机：页面宽度
+        /// PC上：除标题栏和外框的窗口内部宽度
+        /// </summary>
+        public static double ViewWidth
+        {
+            get { return _rootGrid.ActualWidth; }
+        }
+
+        /// <summary>
+        /// 可视区域高度
+        /// 手机：不包括状态栏的高度
+        /// PC上：除标题栏和外框的窗口内部高度
+        /// </summary>
+        public static double ViewHeight
+        {
+            get
+            {
+                // ApplicationView.GetForCurrentView().VisibleBounds在uno中大小不正确！！！
+                // Android上高度多50
+                return _rootGrid.ActualHeight - StatusBarHeight;
+            }
+        }
+        #endregion
 
 #if UWP || WASM
         /// <summary>

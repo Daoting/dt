@@ -22,7 +22,7 @@ namespace Dt.App.Home
     /// <summary>
     /// 主页
     /// </summary>
-    [View(AtUI.HomeView)]
+    [View("主页")]
     public partial class DefaultHome : Win
     {
         public DefaultHome()

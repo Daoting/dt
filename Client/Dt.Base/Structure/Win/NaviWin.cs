@@ -211,7 +211,7 @@ namespace Dt.Base
             base.OnApplyTemplate();
             if (AtSys.IsPhoneUI)
             {
-                AtUI.OnPhoneTitleTapped((Grid)GetTemplateChild("HeaderGrid"), this);
+                WinKit.OnPhoneTitleTapped((Grid)GetTemplateChild("HeaderGrid"), this);
                 Button btn = GetTemplateChild("BackButton") as Button;
                 if (btn != null)
                     btn.Click += InputManager.OnBackClick;

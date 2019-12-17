@@ -144,7 +144,7 @@ namespace Dt.App
                 return null;
             }
 
-            Type tp = AtUI.GetViewType(p_menu.ViewName);
+            Type tp = AtApp.GetViewType(p_menu.ViewName);
             if (tp == null)
             {
                 AtKit.Msg(string.Format("打开菜单时未找到视图【{0}】！", p_menu.ViewName));
@@ -153,7 +153,7 @@ namespace Dt.App
 
             Icons icon;
             Enum.TryParse(p_menu.Icon, out icon);
-            object win = AtUI.OpenWin(tp, p_menu.Name, icon, string.IsNullOrEmpty(p_menu.Params) ? null : p_menu.Params);
+            object win = AtApp.OpenWin(tp, p_menu.Name, icon, string.IsNullOrEmpty(p_menu.Params) ? null : p_menu.Params);
 
             // 保存点击次数，用于确定哪些是收藏菜单
             if (win != null)

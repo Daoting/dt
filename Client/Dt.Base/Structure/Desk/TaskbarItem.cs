@@ -114,10 +114,10 @@ namespace Dt.Base
                 {
                     menu = new MenuFlyout();
                     var item = new MenuFlyoutItem { Text = "取消自启动" };
-                    item.Click += (s, a) => AtUI.DelAutoStart();
+                    item.Click += (s, a) => LaunchManager.DelAutoStart();
                     menu.Items.Add(item);
                     item = new MenuFlyoutItem { Text = "设置自启动" };
-                    item.Click += (s, a) => AtUI.SetAutoStart((IWin)DataContext);
+                    item.Click += (s, a) => LaunchManager.SetAutoStart((IWin)DataContext);
                     menu.Items.Add(item);
                     item = new MenuFlyoutItem { Text = "关闭其他" };
                     item.Click += CloseOtherWin;

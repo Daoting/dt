@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Core;
 using System;
 using Windows.Foundation;
 using Windows.System;
@@ -546,7 +547,7 @@ namespace Dt.Base.Docking
                 }
                 else
                 {
-                    Size maximum = MaxSize.IsEmpty ? new Size(AtUI.ViewWidth, AtUI.ViewHeight) : MaxSize;
+                    Size maximum = MaxSize.IsEmpty ? new Size(SysVisual.ViewWidth, SysVisual.ViewHeight) : MaxSize;
                     switch (Placement)
                     {
                         case ItemPlacement.Left:

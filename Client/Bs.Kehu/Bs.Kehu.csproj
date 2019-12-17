@@ -7,22 +7,11 @@
   <Import Project="..\Common\dtc.props" />
 
   <ItemGroup>
-    <None Remove="Article\ArticlePage.xaml" />
-    <None Remove="Assets\u287.png" />
-    <None Remove="Assets\u298.jpg" />
-    <None Remove="Assets\u354.png" />
-    <None Remove="Assets\u358.png" />
-    <None Remove="Assets\u360.png" />
-    <None Remove="Assets\u364.png" />
-    <None Remove="Assets\u366.png" />
-    <None Remove="Home\DefaultHome.xaml" />
-    <None Remove="Assets\header.png" />
-    <None Remove="Assets\u285.jpg" />
-    <None Remove="Home\MainPage.xaml" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <Content Include="Assets\cal.png" />
     <Content Include="Assets\header.png" />
+    <Content Include="Assets\test1.png" />
+    <Content Include="Assets\test2.png" />
+    <Content Include="Assets\test3.png" />
     <Content Include="Assets\u285.jpg" />
     <Content Include="Assets\u287.png" />
     <Content Include="Assets\u298.jpg" />
@@ -47,6 +36,24 @@
     </Page>
     <Page Include="Home\MainPage.xaml">
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="JieHu\JieHuMain.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Plan\PtMain.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Plan\PlanTest1.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Plan\PlanTest2.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Plan\PlanTest3.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Plan\PlanTest4.xaml">
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   
@@ -75,13 +82,43 @@
     <Compile Update="Home\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Update="JieHu\JieHuMain.xaml.cs">
+      <DependentUpon>JieHuMain.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Plan\PlanTest1.xaml.cs">
+      <DependentUpon>PlanTest1.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Plan\PlanTest2.xaml.cs">
+      <DependentUpon>PlanTest2.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Plan\PtMain.xaml.cs">
+      <DependentUpon>PtMain.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   
   <ItemGroup>
-    <None Update="Home\GuidePage.xaml">
+    <None Update="Article\ArticlePage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
-    <None Update="Home\Login.xaml">
+    <None Update="Home\DefaultHome.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="Home\MainPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="JieHu\JieHuMain.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="Plan\PlanTest1.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="Plan\PlanTest3.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="Plan\PlanTest4.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+    <None Update="Plan\PtMain.xaml">
       <Generator>MSBuild:Compile</Generator>
     </None>
   </ItemGroup>

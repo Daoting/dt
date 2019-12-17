@@ -252,8 +252,8 @@ namespace Dt.Base.ListView
             if (_owner.View == null)
                 return new Size();
 
-            double maxWidth = double.IsInfinity(AvailableSize.Width) ? AtUI.ViewWidth : AvailableSize.Width;
-            double maxHeight = double.IsInfinity(AvailableSize.Height) ? AtUI.ViewHeight : AvailableSize.Height;
+            double maxWidth = double.IsInfinity(AvailableSize.Width) ? SysVisual.ViewWidth : AvailableSize.Width;
+            double maxHeight = double.IsInfinity(AvailableSize.Height) ? SysVisual.ViewHeight : AvailableSize.Height;
             // 虚拟行/真实行
             return _owner.IsVir ? MeasureVirRows(maxWidth, maxHeight) : MeasureRealRows(maxWidth, maxHeight);
         }

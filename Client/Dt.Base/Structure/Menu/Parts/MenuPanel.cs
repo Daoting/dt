@@ -75,8 +75,8 @@ namespace Dt.Base.MenuView
         #region 重写方法
         protected override Size MeasureOverride(Size availableSize)
         {
-            double maxWidth = double.IsInfinity(availableSize.Width) ? AtUI.ViewWidth : availableSize.Width;
-            double maxHeight = double.IsInfinity(availableSize.Height) ? AtUI.ViewHeight : availableSize.Height;
+            double maxWidth = double.IsInfinity(availableSize.Width) ? SysVisual.ViewWidth : availableSize.Width;
+            double maxHeight = double.IsInfinity(availableSize.Height) ? SysVisual.ViewHeight : availableSize.Height;
 
             // win模式菜单在宽度变化或外部刷新布局时重新测量！
             if (!_owner.IsContextMenu
