@@ -1,0 +1,11 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras/2.0.31">
+
+  <PropertyGroup>
+    <TargetFrameworks>uap10.0.17763;MonoAndroid81;xamarinios10</TargetFrameworks>
+    <Authors>hdt</Authors>
+    <Product>DT业务基础平台</Product>
+    <Description>DT平台Excel计算引擎</Description>
+    <Copyright>Copyright ©  2014</Copyright>
+  </PropertyGroup>
+
+</Project>

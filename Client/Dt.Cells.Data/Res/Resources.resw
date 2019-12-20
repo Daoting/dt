@@ -1,0 +1,767 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+<data name="AnotherWorksheetWithTheSameNameError"  xml:space="preserve">
+    <value>工作表集合中已经存在相同工作表名称。</value>
+</data>
+<data name="ArrayFormatIsIllegal"  xml:space="preserve">
+    <value>数组格式是非法的。</value>
+</data>
+<data name="AutoFillChangedPartOfMergedCell"  xml:space="preserve">
+    <value>不能改变合并单元格的一部分。</value>
+</data>
+<data name="BorderLineLayoutNotSupportDirectionError"  xml:space="preserve">
+    <value>BorderLineLayoutNotSupportDirectionError</value>
+</data>
+<data name="CannotSetNullToStyleInfo"  xml:space="preserve">
+    <value>不能设置NamedStyleCollection的成员为空， 调用RemoveAt。</value>
+</data>
+<data name="CheckArgumentsInvalidRowColumn"  xml:space="preserve">
+    <value>非法 {0} {1}索引: {2} (必须介于-1 和{3}之间)。</value>
+</data>
+<data name="ConditionalFormatDataBarRuleScaleOutOfRangeError"  xml:space="preserve">
+    <value>ConditionalFormatDataBarRuleScaleOutOfRangeError</value>
+</data>
+<data name="CouldnotAddThemeWithSameName"  xml:space="preserve">
+    <value>同名主题名称已经存在。</value>
+</data>
+<data name="CouldnotChangeConnerHeaderCell"  xml:space="preserve">
+    <value>角落区域不支持此操作。</value>
+</data>
+<data name="CouldnotFindSpecifiedSheetArea"  xml:space="preserve">
+    <value>不能发现工作表区域。</value>
+</data>
+<data name="CouldnotRemoveTheLastViewport"  xml:space="preserve">
+    <value>只有一个 {0}视窗!</value>
+</data>
+<data name="CouldnotSetActiveSheetToNonExistingSheet"  xml:space="preserve">
+    <value>指定的工作表不再集合内。</value>
+</data>
+<data name="CouldnotSetCurrentThemeToNonExistingTheme"  xml:space="preserve">
+    <value>工作薄中找不到主题 {0}。</value>
+</data>
+<data name="CouldnotSetNegetiveColumnWidth"  xml:space="preserve">
+    <value>列宽必须大于0。</value>
+</data>
+<data name="CouldnotSetNegetiveRowHeight"  xml:space="preserve">
+    <value>行高必须大于0。</value>
+</data>
+<data name="CurrentWorksheetHasTheSameTableError"  xml:space="preserve">
+    <value>工作表中已经存在同名表。</value>
+</data>
+<data name="CustomNumberFormatNotSupportAddPartError"  xml:space="preserve">
+    <value>已经添加描述类型。</value>
+</data>
+<data name="DataBindingNotSupport"  xml:space="preserve">
+    <value>此版本不支持此操作。</value>
+</data>
+<data name="DataBindingNullConnection"  xml:space="preserve">
+    <value>工作薄不支持数据源的数据绑定。</value>
+</data>
+<data name="DataBindingRebindError"  xml:space="preserve">
+    <value>已经绑定到数据源，请解除绑定。</value>
+</data>
+<data name="DataBindingSetSheetWhenAlreadyBound"  xml:space="preserve">
+    <value>当绑定时不能设置工作表。</value>
+</data>
+<data name="DefaultAxisTitle"  xml:space="preserve">
+    <value>坐标轴标题</value>
+</data>
+<data name="DefaultChartTitle"  xml:space="preserve">
+    <value>图表标题</value>
+</data>
+<data name="DefaultDataSeriesName"  xml:space="preserve">
+    <value>系列</value>
+</data>
+<data name="DonotAllowSetTheNameOfTheDefaultStyle"  xml:space="preserve">
+    <value>不支持设置默认样式的样式名称。</value>
+</data>
+<data name="EmptyTableNameError"  xml:space="preserve">
+    <value>表名称不能为空。</value>
+</data>
+<data name="ExcelAddChartError"  xml:space="preserve">
+    <value>添加Chart {0} 到工作表 {1}失败。</value>
+</data>
+<data name="excelReaderFinish"  xml:space="preserve">
+    <value>更新控件状态失败。</value>
+</data>
+<data name="ExcelSetGlobalNameError"  xml:space="preserve">
+    <value>设置全局 NamedRange {0} 失败。</value>
+</data>
+<data name="ExcelSetNamedCellRangeError"  xml:space="preserve">
+    <value> 设置本地 NamedRange {0}, Sheet: {1}失败。</value>
+</data>
+<data name="ExcelWriterWriteConditionalFormatError"  xml:space="preserve">
+    <value>处理条件格式失败。</value>
+</data>
+<data name="FailedFoundWorksheetError"  xml:space="preserve">
+    <value>找不到工作表 '{0}'。</value>
+</data>
+<data name="FillRangeHasMergedCell"  xml:space="preserve">
+    <value>目标区域不能包含合并单元格。</value>
+</data>
+<data name="FillRangeHaveDifferentSize"  xml:space="preserve">
+    <value>此操作要求合并后的单元格大小相同。</value>
+</data>
+<data name="FilterSheetNullError"  xml:space="preserve">
+    <value>筛选应该添加到指定工作表。</value>
+</data>
+<data name="FormatIllegalCharError"  xml:space="preserve">
+    <value>FormatIllegalCharError</value>
+</data>
+<data name="FormatIllegalFormatError"  xml:space="preserve">
+    <value>FormatIllegalFormatError</value>
+</data>
+<data name="FormatIllegalStringError"  xml:space="preserve">
+    <value>FormatIllegalStringError</value>
+</data>
+<data name="FormatterCustomNumberFormatAddPartError"  xml:space="preserve">
+    <value>FormatterCustomNumberFormatAddPartError</value>
+</data>
+<data name="FormatterIllegalColorNameError"  xml:space="preserve">
+    <value>FormatterIllegalColorNameError</value>
+</data>
+<data name="FormatterIllegalValueError"  xml:space="preserve">
+    <value>FormatterIllegalValueError</value>
+</data>
+<data name="FormatterIllegaTokenError"  xml:space="preserve">
+    <value>FormatterIllegaTokenError</value>
+</data>
+<data name="FormatterInvalidColorNameError"  xml:space="preserve">
+    <value>颜色名称不合法。</value>
+</data>
+<data name="FormatterTransformEscapeSymbolError"  xml:space="preserve">
+    <value>FormatterTransformEscapeSymbolError</value>
+</data>
+<data name="FormulaChangePartOfArrayFormulaError"  xml:space="preserve">
+    <value>FormulaChangePartOfArrayFormulaError</value>
+</data>
+<data name="GrapeCityWindowsSpreadSheetDataAssemblyName"  xml:space="preserve">
+    <value>GrapeCity.Windows.SpreadSheet.Data</value>
+</data>
+<data name="HtmlGetCellInvalidSheetAreaError"  xml:space="preserve">
+    <value>不支持此类工作表区域。</value>
+</data>
+<data name="IllegalCharError"  xml:space="preserve">
+    <value>字符非法。</value>
+</data>
+<data name="IllegalFormatError"  xml:space="preserve">
+    <value>格式非法。</value>
+</data>
+<data name="IllegalTokenError"  xml:space="preserve">
+    <value>令牌非法。</value>
+</data>
+<data name="IntersectTableError"  xml:space="preserve">
+    <value>表不能交叉。</value>
+</data>
+<data name="InvaildRowIndexWithAllowedRangeBehind"  xml:space="preserve">
+    <value>行索引非法：{0} （必须在-1 和{1}之间）。</value>
+</data>
+<data name="InvalidColumnCount0MustBeBetween1And1"  xml:space="preserve">
+    <value>列数目非法：{0} （必须在-1 和{1}之间）。</value>
+</data>
+<data name="InvalidColumnCountWithAllowedColumnCountBehind"  xml:space="preserve">
+    <value>列数目非法：{0} （必须在-1 和{1}之间）。</value>
+</data>
+<data name="InvalidColumnIndex"  xml:space="preserve">
+    <value>列索引非法：</value>
+</data>
+<data name="InvalidColumnIndex0MustBeBetween1And1"  xml:space="preserve">
+    <value>列数目非法：{0} （必须在-1 和{1}之间）。</value>
+</data>
+<data name="InvalidColumnIndexWithAllowedRangeBehind"  xml:space="preserve">
+    <value>列数目非法：{0} （必须在-1 和{1}之间）。</value>
+</data>
+<data name="InvalidColumnWidth"  xml:space="preserve">
+    <value>宽度必须介于-1 和9999999。</value>
+</data>
+<data name="InvalidRowColumntCount2"  xml:space="preserve">
+    <value>非法{0} 数目: {1} (必须介于1和{2}之间).</value>
+</data>
+<data name="InvalidRowCountWithAllowedRowCountBehind"  xml:space="preserve">
+    <value>行数目非法：{0} （必须在-1 和{1}之间）。</value>
+</data>
+<data name="InvalidRowIndex0MustBeBetween1And1"  xml:space="preserve">
+    <value>行数目非法：{0} （必须在-1 和{1}之间）。</value>
+</data>
+<data name="InvalidSheetArea"  xml:space="preserve">
+    <value>工作表区域非法：{0}</value>
+</data>
+<data name="InvalidTableLocationColumnIndex"  xml:space="preserve">
+    <value>列索引非法：{0} （必须在0 和{1}之间）</value>
+</data>
+<data name="InvalidTableLocationRowIndex"  xml:space="preserve">
+    <value>行索引非法：{0} （必须在0 和{1}之间）</value>
+</data>
+<data name="InvalidThemeColor"  xml:space="preserve">
+    <value>主题颜色非法。</value>
+</data>
+<data name="ModifyReadonlyCollectionError"  xml:space="preserve">
+    <value>集合是只读的。</value>
+</data>
+<data name="NamedStyleInfoInvalidNameError"  xml:space="preserve">
+    <value>名称是非法的。</value>
+</data>
+<data name="NamedStyleInfoNameNullError"  xml:space="preserve">
+    <value>item.Name 不能为空</value>
+</data>
+<data name="NeedSingleCellRowColumn"  xml:space="preserve">
+    <value>引用无效。标题引用，数值或者是大小必须是单个单元格，行或者列。</value>
+</data>
+<data name="NumberFormatValidEscapeError"  xml:space="preserve">
+    <value>不能评估'\'。 </value>
+</data>
+<data name="NumberSourceOnlyWorkedWithNumbers"  xml:space="preserve">
+    <value>只对数字起作用。</value>
+</data>
+<data name="PdfInvertError"  xml:space="preserve">
+    <value>转换是不可逆的。</value>
+</data>
+<data name="PdfSetNumberOfCopiesError"  xml:space="preserve">
+    <value>合法的数值是介于1到5之间。</value>
+</data>
+<data name="RangeGroupSerializeError"  xml:space="preserve">
+    <value>索引丢失。</value>
+</data>
+<data name="RangeShouldNotHaveMergedCell"  xml:space="preserve">
+    <value>区域不能包含合并单元格。</value>
+</data>
+<data name="ReportingGcSheetSectionEndIndexError"  xml:space="preserve">
+    <value>{ 0 }结束索引必须小于或等于起始索引。</value>
+</data>
+<data name="ReportingGcSheetSectionRepeatEndIndexError"  xml:space="preserve">
+    <value>重复{ 0 }结束索引必须小于或等于起始索引。</value>
+</data>
+<data name="ReportingMarginError"  xml:space="preserve">
+    <value>页边距不适合页面尺寸</value>
+</data>
+<data name="ReportingPageRangeError"  xml:space="preserve">
+    <value>非法页面区域。</value>
+</data>
+<data name="ReportingPaperSizeHightError"  xml:space="preserve">
+    <value>高度必须大于0。</value>
+</data>
+<data name="ReportingPaperSizeWidthError"  xml:space="preserve">
+    <value>宽度必须大于0。</value>
+</data>
+<data name="ReportingPrintInfoRepeatColumnError"  xml:space="preserve">
+    <value>值必须大于等于-1。</value>
+</data>
+<data name="RowIndexerOutOfRangeError"  xml:space="preserve">
+    <value>行索引非法：{0}  或 {1}</value>
+</data>
+<data name="SaveEmptyWorkbookToExcelError"  xml:space="preserve">
+    <value>工作薄至少应该包含一个工作表。</value>
+</data>
+<data name="SearchArgumentOutOfRange"  xml:space="preserve">
+    <value>指定的工作表开始索引和终止索引越界。</value>
+</data>
+<data name="SerializationError"  xml:space="preserve">
+    <value>Row, Column, RowCount, 和 ColumnCount丢失。</value>
+</data>
+<data name="SerializeCannotCreateTypeOfArray"  xml:space="preserve">
+    <value>不能为数组类型创建实例。</value>
+</data>
+<data name="SerializeDeserializerArrayError"  xml:space="preserve">
+    <value>索引丢失。</value>
+</data>
+<data name="SerializeDeserializerCellError"  xml:space="preserve">
+    <value>找不到此类型。</value>
+</data>
+<data name="SerializeImageError"  xml:space="preserve">
+    <value>当前版本不支持序列化图片。</value>
+</data>
+<data name="SerializerDeserializeMatrixError"  xml:space="preserve">
+    <value>数据矩阵是非法的。</value>
+</data>
+<data name="SerializerDeserializerIllegalArrayFormat"  xml:space="preserve">
+    <value>数组数据格式是非法的。</value>
+</data>
+<data name="SerializerInvalidCastError"  xml:space="preserve">
+    <value>不支持此用例。</value>
+</data>
+<data name="SerializerNotSupportError"  xml:space="preserve">
+    <value>类型 '{0}' 不能格式化。</value>
+</data>
+<data name="SerializerParseTypeNotMatchError"  xml:space="preserve">
+    <value>类型不匹配。</value>
+</data>
+<data name="SetBuiltInBorderError"  xml:space="preserve">
+    <value>工作薄不支持设置内置的边框（GridLine 或者NoBorder）。</value>
+</data>
+<data name="SetOtherTypeToStyleInfoCollectionError"  xml:space="preserve">
+    <value>指定的对象{0}类型不合法：(必须是StyleInfo)</value>
+</data>
+<data name="SetSpanToNotSupportAreaError"  xml:space="preserve">
+    <value>不支持区域 {0}的合并。</value>
+</data>
+<data name="SetTagToNonExistingCell"  xml:space="preserve">
+    <value>不能为一个不存在的单元格设置标签。</value>
+</data>
+<data name="SheetNameCannotBeNullOrEmpty"  xml:space="preserve">
+    <value>工作表名称不能为空。</value>
+</data>
+<data name="SortCompareError"  xml:space="preserve">
+    <value>对象必须实现 Icomparable的接口。</value>
+</data>
+<data name="SpanModelOverlappingError"  xml:space="preserve">
+    <value>此操作将导致重叠的合并。</value>
+</data>
+<data name="SpreadReporting_Msg"  xml:space="preserve">
+    <value>值必须大于等于-1。</value>
+</data>
+<data name="StringIsIllegal"  xml:space="preserve">
+    <value>字符串是非法的。</value>
+</data>
+<data name="StyleInfoAnd"  xml:space="preserve">
+    <value>并</value>
+</data>
+<data name="StyleInfoChangeReadOnlyCollectionError"  xml:space="preserve">
+    <value>集合是只读的。</value>
+</data>
+<data name="StyleInfoCopyToArrayLengthError"  xml:space="preserve">
+    <value>指定数组长度不足(数组长度为{ 0 },长度要求是至少{ 1 })。</value>
+</data>
+<data name="StyleInfoCopyToArrayRankGreaterThanOneError"  xml:space="preserve">
+    <value>数组秩必须是1（指定的秩为'{0}'）。</value>
+</data>
+<data name="StyleInfoCopyToDestionationNullError"  xml:space="preserve">
+    <value>数组参数是空。</value>
+</data>
+<data name="StyleInfoexpected"  xml:space="preserve">
+    <value>期望的。</value>
+</data>
+<data name="StyleInfoOperationIndexOutOfRangeError"  xml:space="preserve">
+    <value>指定的{0} 非法：（必须介于0 到 {1}1之间）。</value>
+</data>
+<data name="StyleInfoOperationIndexOutOfRangeWithAllowedRangeBehind"  xml:space="preserve">
+    <value>指定的{0} 非法：（必须介于0 到 {1}1之间）。</value>
+</data>
+<data name="StyleInfoTextIndentMustBePositiveValue"  xml:space="preserve">
+    <value>TextIndent只接受正数。</value>
+</data>
+<data name="TableAlreayExistInOtherWorksheet"  xml:space="preserve">
+    <value>表 {0} 已经在工作表 {1}中存在。</value>
+</data>
+<data name="TableCollectionAddTableError"  xml:space="preserve">
+    <value>表 '{0}' 已经在工作表中存在。</value>
+</data>
+<data name="TableColumnDestinationOutOfRange"  xml:space="preserve">
+    <value>列'{0}'超出工作表范围。</value>
+</data>
+<data name="TableDataSourceCannotBeNull"  xml:space="preserve">
+    <value>数据源。</value>
+</data>
+<data name="TableMoveDestinationOutOfRange"  xml:space="preserve">
+    <value>表格不能移出工作表。</value>
+</data>
+<data name="TableNotFoundError"  xml:space="preserve">
+    <value>表格找不到。</value>
+</data>
+<data name="TableNotSupportDataSouceError"  xml:space="preserve">
+    <value>不支持的数据源类型。</value>
+</data>
+<data name="TableOwnerNullError"  xml:space="preserve">
+    <value>表必须添加到工作表中。</value>
+</data>
+<data name="TableResizeOutOfRangeError"  xml:space="preserve">
+    <value>表必须包含一个{0}。</value>
+</data>
+<data name="TableResizeRangeError"  xml:space="preserve">
+    <value>不支持设定表范围， 请调整表大小。</value>
+</data>
+<data name="TableRowDestinationOutOfRangeError"  xml:space="preserve">
+    <value>行{0} 超出工作表范围。</value>
+</data>
+<data name="TableShowFooterError"  xml:space="preserve">
+    <value>行数目{0}超出工作表区域。</value>
+</data>
+<data name="TableShowHeaderError"  xml:space="preserve">
+    <value>没有更多的标题。</value>
+</data>
+<data name="TableStyleAddCustomStyleError"  xml:space="preserve">
+    <value>样式 '{0}' 已经存在。</value>
+</data>
+<data name="ValueIsIllegal"  xml:space="preserve">
+    <value>值是非法的。</value>
+</data>
+<data name="WorksheetColumnCountMsg"  xml:space="preserve">
+    <value>列数目必须大于0。</value>
+</data>
+<data name="WorksheetCreateExpressionError"  xml:space="preserve">
+    <value>内部错误:如果您想为CreateExpression方法支持额外的参数类型,请将它添加在这里。</value>
+</data>
+<data name="WorksheetEmptySelection"  xml:space="preserve">
+    <value>选择模块不能为空。</value>
+</data>
+<data name="WorksheetInvalidRowHeaderColumnCount"  xml:space="preserve">
+    <value>值超出范围：0到{0}。</value>
+</data>
+<data name="WorksheetRowCountMsg"  xml:space="preserve">
+    <value>行数必须大于0。</value>
+</data>
+<data name="ZoomFactorOutOfRange"  xml:space="preserve">
+    <value>缩放比例必须介于0.1和4之间。</value>
+</data>
+
+<data name="addFloatingObj"  xml:space="preserve">
+    <value>添加浮动对象</value>
+</data>
+<data name="Cancel"  xml:space="preserve">
+    <value>取消</value>
+</data>
+<data name="ChangeChartType"  xml:space="preserve">
+    <value>改变图表类型</value>
+</data>
+<data name="ColumnResize"  xml:space="preserve">
+    <value>宽度: {0} 像素</value>
+</data>
+<data name="copyFloatingObj"  xml:space="preserve">
+    <value>拷贝浮动对象</value>
+</data>
+<data name="DefaultAxisTitle"  xml:space="preserve">
+    <value>坐标轴标题</value>
+</data>
+<data name="DefaultChartTitle"  xml:space="preserve">
+    <value>图表标题</value>
+</data>
+<data name="DefaultDataSeriesName"  xml:space="preserve">
+    <value>系列</value>
+</data>
+<data name="deleteFloatingObj"  xml:space="preserve">
+    <value>清除浮动对象</value>
+</data>
+<data name="dragFloatingObj"  xml:space="preserve">
+    <value>复制浮动对象</value>
+</data>
+<data name="Filter_Blanks"  xml:space="preserve">
+    <value>（空白）</value>
+</data>
+<data name="Filter_SelectAll"  xml:space="preserve">
+    <value>（全选）</value>
+</data>
+<data name="FormulaBar_FunctionInformation"  xml:space="preserve">
+    <value>FormulaBar_FunctionInformation.zh_CN.xml</value>
+</data>
+<data name="gcSpreadExcelOpenExcelFileNotFound"  xml:space="preserve">
+    <value>找不到文件{0}。</value>
+</data>
+<data name="gcSpreadInvalidHorizontalPosition"  xml:space="preserve">
+    <value>水平位置不合法。</value>
+</data>
+<data name="gcSpreadInvalidVerticalPosition"  xml:space="preserve">
+    <value>垂直位置不合法。</value>
+</data>
+<data name="gcSpreadSaveXMLInvalidFileName"  xml:space="preserve">
+    <value>文件名称不能为空。</value>
+</data>
+<data name="GrapeCitySilverlightSpreadSheetUIAssemblyName"  xml:space="preserve">
+    <value>/GrapeCity.Silverlight.SpreadSheet.UI</value>
+</data>
+<data name="GrapeCityWPFSpreadSheetUIAssemblyName"  xml:space="preserve">
+    <value>/GrapeCity.WPF.SpreadSheet.UI</value>
+</data>
+<data name="HorizentalScroll"  xml:space="preserve">
+    <value>列：{0}</value>
+</data>
+<data name="Loader"  xml:space="preserve">
+    <value>Windows.ApplicationModel.Resources.ResourceLoader</value>
+</data>
+<data name="moveFloatingObj"  xml:space="preserve">
+    <value>移动浮动对象</value>
+</data>
+<data name="NotSupportExceptionBorderIndexError"  xml:space="preserve">
+    <value>边框索引错误。</value>
+</data>
+<data name="OK"  xml:space="preserve">
+    <value>确定</value>
+</data>
+<data name="resizeFloatingObj"  xml:space="preserve">
+    <value>改变浮动对象大小</value>
+</data>
+<data name="RowResize"  xml:space="preserve">
+    <value>高度：{0} 像素</value>
+</data>
+<data name="SheetViewClipboardArgumentException"  xml:space="preserve">
+    <value>范围</value>
+</data>
+<data name="SheetViewDragDropChangePartOChangePartOfAnArray"  xml:space="preserve">
+    <value>不能更改数组的某一部分。</value>
+</data>
+<data name="SheetViewDragDropChangePartOfMergedCell"  xml:space="preserve">
+    <value>不能更改合并单元格的某一部分。</value>
+</data>
+<data name="SheetViewDragDropChangePartOfTable"  xml:space="preserve">
+    <value>无法完成操作:修改表的一部分行和列是不允许的。</value>
+</data>
+<data name="SheetViewDragDropChangeProtectCell"  xml:space="preserve">
+    <value>您想修改的单元格是受保护的，因此是只读的。</value>
+</data>
+<data name="SheetViewDragDropChangeProtectColumn"  xml:space="preserve">
+    <value>您想修改的列是受保护的，因此是只读的。</value>
+</data>
+<data name="SheetViewDragDropChangeProtectRow"  xml:space="preserve">
+    <value>您想修改的行是受保护的，因此是只读的。</value>
+</data>
+<data name="SheetViewDragDropShiftTableCell"  xml:space="preserve">
+    <value>操作不合法。此操作视图转移工作表中的一个表的单元格。</value>
+</data>
+<data name="SheetViewDragFillChangePartOfMergeCell"  xml:space="preserve">
+    <value>不能填充带合并单元格的区域。</value>
+</data>
+<data name="SheetViewDragFillChangeProtectCell"  xml:space="preserve">
+    <value>您想填充的单元格是受保护的，因此是只读的。</value>
+</data>
+<data name="SheetViewDragFillInvalidOperation"  xml:space="preserve">
+    <value>自动填充失败，如果填充的单元格中含有数组，不能更改数组的某一部分。</value>
+</data>
+<data name="SheetViewPasteChangeMergeCell"  xml:space="preserve">
+    <value>不能修改合并单元格的一部分。</value>
+</data>
+<data name="SheetViewPasteChangePartOfArrayFormula"  xml:space="preserve">
+    <value>不能修改数组的一部分。</value>
+</data>
+<data name="SheetViewPasteDestinationSheetCellsAreLocked"  xml:space="preserve">
+    <value>您想修改的单元格是受保护的，因此是只读的。</value>
+</data>
+<data name="SheetViewPasteSouceSheetCellsAreLocked"  xml:space="preserve">
+    <value>源工作表单元格被锁定。</value>
+</data>
+<data name="SheetViewTheCopyAreaAndPasteAreaAreNotTheSameSize"  xml:space="preserve">
+    <value>复制和粘贴区域大小不同。</value>
+</data>
+<data name="SortCommandInvalidOperation"  xml:space="preserve">
+    <value>不能改变数组的一部分。</value>
+</data>
+<data name="SortDropdownItemSortAscend"  xml:space="preserve">
+    <value>升序</value>
+</data>
+<data name="SortDropdownItemSortDescend"  xml:space="preserve">
+    <value>降序</value>
+</data>
+<data name="spreadActionCopyMultiplySelection"  xml:space="preserve">
+    <value>不能对多重选定区域使用此命令。</value>
+</data>
+<data name="spreadActionCutMultipleSelections"  xml:space="preserve">
+    <value>不能对多重选定区域使用此命令。选择一片区域，再次单击命令。</value>
+</data>
+<data name="spreadActionPasteSizeDifferent"  xml:space="preserve">
+    <value>粘贴区域大小必须和复制或者剪贴区域大小相同。</value>
+</data>
+<data name="TabStrip_NewSheet"  xml:space="preserve">
+    <value>新建…</value>
+</data>
+<data name="UIFill_CopyCells"  xml:space="preserve">
+    <value>复制单元格</value>
+</data>
+<data name="UIFill_FillFormattingOnly"  xml:space="preserve">
+    <value>仅填充格式</value>
+</data>
+<data name="UIFill_FillSeries"  xml:space="preserve">
+    <value>填充序列</value>
+</data>
+<data name="UIFill_FillWithOutFormatting"  xml:space="preserve">
+    <value>不带格式填充</value>
+</data>
+<data name="UIFill_None"  xml:space="preserve">
+    <value>无</value>
+</data>
+<data name="undoActionActionFailed"  xml:space="preserve">
+    <value>操作失败</value>
+</data>
+<data name="undoActionArrayFormula"  xml:space="preserve">
+    <value>设置数组公式</value>
+</data>
+<data name="undoActionAutoFill"  xml:space="preserve">
+    <value>自动填充</value>
+</data>
+<data name="undoActionCannotApplyFormula"  xml:space="preserve">
+    <value>公式 '{0}' 不能应用。</value>
+</data>
+<data name="undoActionCannotApplyValue"  xml:space="preserve">
+    <value>值不能应用。</value>
+</data>
+<data name="undoActionCellEditInvalidValidationFlag"  xml:space="preserve">
+    <value>不支持此类校验标记。</value>
+</data>
+<data name="undoActionClear"  xml:space="preserve">
+    <value>清除</value>
+</data>
+<data name="undoActionClipboardPaste"  xml:space="preserve">
+    <value>剪贴板粘贴</value>
+</data>
+<data name="undoActionColumnAutoFit"  xml:space="preserve">
+    <value>列自适应</value>
+</data>
+<data name="undoActionColumnGroup"  xml:space="preserve">
+    <value>列分组</value>
+</data>
+<data name="undoActionColumnGroupExpand"  xml:space="preserve">
+    <value>展开列分组</value>
+</data>
+<data name="undoActionColumnGroupHeaderExpand"  xml:space="preserve">
+    <value>展开列分组标题</value>
+</data>
+<data name="undoActionColumnResize"  xml:space="preserve">
+    <value>调整列宽度</value>
+</data>
+<data name="undoActionColumnUngroup"  xml:space="preserve">
+    <value>列分组</value>
+</data>
+<data name="undoActionDragDrop"  xml:space="preserve">
+    <value>拖拽</value>
+</data>
+<data name="undoActionEditingCell"  xml:space="preserve">
+    <value>编辑单元格</value>
+</data>
+<data name="undoActionPasteTargetEmptyError"  xml:space="preserve">
+    <value>目标区域不能为空。</value>
+</data>
+<data name="undoActionRowAutoFit"  xml:space="preserve">
+    <value>行自适应</value>
+</data>
+<data name="undoActionRowGroup"  xml:space="preserve">
+    <value>行分组</value>
+</data>
+<data name="undoActionRowGroupExpand"  xml:space="preserve">
+    <value>展开行分组</value>
+</data>
+<data name="undoActionRowGroupHeaderExpand"  xml:space="preserve">
+    <value>展开行分组标题</value>
+</data>
+<data name="undoActionRowResize"  xml:space="preserve">
+    <value>调整行高度</value>
+</data>
+<data name="undoActionRowUngroup"  xml:space="preserve">
+    <value>取消行分组</value>
+</data>
+<data name="undoActionSheetRename"  xml:space="preserve">
+    <value>工作表重命名</value>
+</data>
+<data name="undoActionTypingInCell"  xml:space="preserve">
+    <value>在 {1}键入'{0}'  </value>
+</data>
+<data name="undoActionZoom"  xml:space="preserve">
+    <value>缩放</value>
+</data>
+<data name="VerticalScroll"  xml:space="preserve">
+    <value>行：{0}</value>
+</data>
+
+</root>

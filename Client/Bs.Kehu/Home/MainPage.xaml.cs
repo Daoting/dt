@@ -177,6 +177,11 @@ namespace Dt.Kehu
             AtPlan.Add();
         }
 
+        void OnPtPlan(object sender, RoutedEventArgs e)
+        {
+            AtApp.OpenWin(typeof(PtMain));
+        }
+
         #region 文章行交互
         uint? _pointerID;
         Point _ptLast;
@@ -233,5 +238,6 @@ namespace Dt.Kehu
         }
         #endregion
 
+        
     }
 }

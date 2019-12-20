@@ -1,0 +1,11 @@
+﻿<a:PageWin
+    x:Class="Dt.Kehu.PtStep2"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="训练">
+
+    <Grid Background="Black">
+        <MediaPlayerElement x:Name="_player" AutoPlay="True" Source="http://mapp.wicp.net/oa/mov.mp4" />
+    </Grid>
+</a:PageWin>

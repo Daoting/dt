@@ -47,5 +47,9 @@ namespace Dt.Kehu
             }
         }
 
+        void OnTest(object sender, RoutedEventArgs e)
+        {
+            AtPlan.Add();
+        }
     }
 }

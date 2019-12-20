@@ -67,7 +67,7 @@
                 <Button Content="&#xE080;" Click="OnAddPlan" Style="{StaticResource 字符按钮}" HorizontalAlignment="Right" />
             </Grid>
 
-            <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Grid.Row="2">
+            <Button Click="OnPtPlan" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Grid.Row="2">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -81,7 +81,7 @@
                 </Grid>
             </Button>
 
-            <Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Grid.Row="3">
+            <Button Click="OnPtPlan" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Grid.Row="3">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />

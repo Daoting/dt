@@ -7,6 +7,14 @@
   <Import Project="..\Common\dtc.props" />
 
   <ItemGroup>
+    <None Remove="Assets\u406.png" />
+    <None Remove="Assets\u455.png" />
+    <None Remove="Plan\PtStep1.xaml" />
+    <None Remove="Plan\PtStep2.xaml" />
+    <None Remove="Plan\PtStep3.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Assets\cal.png" />
     <Content Include="Assets\header.png" />
     <Content Include="Assets\test1.png" />
@@ -19,6 +27,8 @@
     <Content Include="Assets\u360.png" />
     <Content Include="Assets\u364.png" />
     <Content Include="Assets\u366.png" />
+    <Content Include="Assets\u406.png" />
+    <Content Include="Assets\u455.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -53,6 +63,15 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Plan\PlanTest4.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Plan\PtStep1.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Plan\PtStep2.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Plan\PtStep3.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

@@ -1,0 +1,123 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras/2.0.31">
+
+  <PropertyGroup>
+    <TargetFrameworks>uap10.0.17763;MonoAndroid81;xamarinios10</TargetFrameworks>
+    <Authors>hdt</Authors>
+    <Product>DT业务基础平台</Product>
+    <Copyright>Copyright ©  2018</Copyright>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
+    <Version>2.0.0</Version>
+    <Description>DT平台Excel控件</Description>
+  </PropertyGroup>
+  
+  <Import Project="..\Common\dtc.props" />
+
+  <ItemGroup>
+    <Content Include="Icons\Ascend.png" />
+    <Content Include="Icons\AutoFillIndicator.png" />
+    <Content Include="Icons\BottomCenterGrip.png" />
+    <Content Include="Icons\BottomLeftGrip.png" />
+    <Content Include="Icons\BottomRightGrip.png" />
+    <Content Include="Icons\ConditionalFormats\Arrow45GrayDown.png" />
+    <Content Include="Icons\ConditionalFormats\Arrow45GrayUp.png" />
+    <Content Include="Icons\ConditionalFormats\Arrow45YellowDown.png" />
+    <Content Include="Icons\ConditionalFormats\Arrow45YellowUp.png" />
+    <Content Include="Icons\ConditionalFormats\ArrowBlueUp.png" />
+    <Content Include="Icons\ConditionalFormats\ArrowGrayDown.png" />
+    <Content Include="Icons\ConditionalFormats\ArrowGrayRight.png" />
+    <Content Include="Icons\ConditionalFormats\ArrowGrayUp.png" />
+    <Content Include="Icons\ConditionalFormats\ArrowRedDown.png" />
+    <Content Include="Icons\ConditionalFormats\ArrowYellowRight.png" />
+    <Content Include="Icons\ConditionalFormats\BlackCircle.png" />
+    <Content Include="Icons\ConditionalFormats\BlackFillCircles.png" />
+    <Content Include="Icons\ConditionalFormats\Box0.png" />
+    <Content Include="Icons\ConditionalFormats\Box1.png" />
+    <Content Include="Icons\ConditionalFormats\Box2.png" />
+    <Content Include="Icons\ConditionalFormats\Box3.png" />
+    <Content Include="Icons\ConditionalFormats\Box4.png" />
+    <Content Include="Icons\ConditionalFormats\GrayFillCicle.png" />
+    <Content Include="Icons\ConditionalFormats\GreenCheck.png" />
+    <Content Include="Icons\ConditionalFormats\GreenCheckSymbol.png" />
+    <Content Include="Icons\ConditionalFormats\GreenCircle.png" />
+    <Content Include="Icons\ConditionalFormats\GreenFlag.png" />
+    <Content Include="Icons\ConditionalFormats\GreenTraficLight.png" />
+    <Content Include="Icons\ConditionalFormats\PinkFillCircle.png" />
+    <Content Include="Icons\ConditionalFormats\Quarter0.png" />
+    <Content Include="Icons\ConditionalFormats\Quarter1.png" />
+    <Content Include="Icons\ConditionalFormats\Quarter2.png" />
+    <Content Include="Icons\ConditionalFormats\Quarter3.png" />
+    <Content Include="Icons\ConditionalFormats\Quarter4.png" />
+    <Content Include="Icons\ConditionalFormats\Rating0.png" />
+    <Content Include="Icons\ConditionalFormats\Rating1.png" />
+    <Content Include="Icons\ConditionalFormats\Rating2.png" />
+    <Content Include="Icons\ConditionalFormats\Rating3.png" />
+    <Content Include="Icons\ConditionalFormats\Rating4.png" />
+    <Content Include="Icons\ConditionalFormats\RedCircle.png" />
+    <Content Include="Icons\ConditionalFormats\RedCross.png" />
+    <Content Include="Icons\ConditionalFormats\RedCrossSymbol.png" />
+    <Content Include="Icons\ConditionalFormats\RedDiamond.png" />
+    <Content Include="Icons\ConditionalFormats\RedFillCircle.png" />
+    <Content Include="Icons\ConditionalFormats\RedFlag.png" />
+    <Content Include="Icons\ConditionalFormats\RedTraficLight.png" />
+    <Content Include="Icons\ConditionalFormats\Star0.png" />
+    <Content Include="Icons\ConditionalFormats\Star1.png" />
+    <Content Include="Icons\ConditionalFormats\Star2.png" />
+    <Content Include="Icons\ConditionalFormats\TriangleGreenUp.png" />
+    <Content Include="Icons\ConditionalFormats\TriangleRedDown.png" />
+    <Content Include="Icons\ConditionalFormats\TriangleYellow.png" />
+    <Content Include="Icons\ConditionalFormats\YellowCircle.png" />
+    <Content Include="Icons\ConditionalFormats\YellowExclamation.png" />
+    <Content Include="Icons\ConditionalFormats\YellowExclamationSymbol.png" />
+    <Content Include="Icons\ConditionalFormats\YellowFlag.png" />
+    <Content Include="Icons\ConditionalFormats\YellowTraficLight.png" />
+    <Content Include="Icons\ConditionalFormats\YellowTrangle.png" />
+    <Content Include="Icons\Descend.png" />
+    <Content Include="Icons\DragCell_CtrlDragCursor.png" />
+    <Content Include="Icons\DragCell_DragCursor.png" />
+    <Content Include="Icons\DragFill_CtrlDragCursor.png" />
+    <Content Include="Icons\DragFill_DragCursor.png" />
+    <Content Include="Icons\Filter.png" />
+    <Content Include="Icons\FilterAscend.png" />
+    <Content Include="Icons\FilterDescend.png" />
+    <Content Include="Icons\MiddleLeftGrip.png" />
+    <Content Include="Icons\MiddleRightGrip.png" />
+    <Content Include="Icons\NoSortFilter.png" />
+    <Content Include="Icons\ResizeGripperHor.png" />
+    <Content Include="Icons\ResizeGripperHor_dark.png" />
+    <Content Include="Icons\ResizeGripperVer.png" />
+    <Content Include="Icons\ResizeGripperVer_dark.png" />
+    <Content Include="Icons\Resize_HorizontalCursor.png" />
+    <Content Include="Icons\Resize_HorizontalCursor_dark.png" />
+    <Content Include="Icons\Resize_HorizontalSplitCursor.png" />
+    <Content Include="Icons\Resize_HorizontalSplitCursor_dark.png" />
+    <Content Include="Icons\Resize_VerticalCursor.png" />
+    <Content Include="Icons\Resize_VerticalCursor_dark.png" />
+    <Content Include="Icons\Resize_VerticalSplitCursor.png" />
+    <Content Include="Icons\Resize_VerticalSplitCursor_dark.png" />
+    <Content Include="Icons\SortAscending.png" />
+    <Content Include="Icons\SortDescending.png" />
+    <Content Include="Icons\TopCenterGrip.png" />
+    <Content Include="Icons\TopLeftGrip.png" />
+    <Content Include="Icons\TopRightGrip.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Res\FunctionInformation.xml" />
+    <EmbeddedResource Include="Res\FunctionInformation.zh_CN.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Dt.CalcEngine\Dt.CalcEngine.csproj" />
+    <ProjectReference Include="..\Dt.Xls\Dt.Xls.csproj" />
+    <ProjectReference Include="..\Dt.Pdf\Dt.Pdf.csproj" />
+    <ProjectReference Include="..\Dt.Charts\Dt.Charts.csproj" />
+     <ProjectReference Include="..\Dt.Cells.Data\Dt.Cells.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Include="Themes\DataLableTemplate.xaml" />
+    <Page Include="Themes\Generic.xaml" />
+  </ItemGroup>
+ 
+</Project>

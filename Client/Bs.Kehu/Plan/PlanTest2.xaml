@@ -5,7 +5,7 @@
     xmlns:a="using:Dt.Base"
     Title="测试">
 
-    <Grid Background="Black">
-        <MediaPlayerElement x:Name="_player" AutoPlay="True" Source="http://mapp.wicp.net/oa/mov.mp4" />
+    <Grid>
+        <MediaPlayerElement x:Name="_player" AreTransportControlsEnabled="True" />
     </Grid>
 </a:PageWin>

@@ -38,6 +38,6 @@
                 </Grid>
             </Grid>
         </ScrollViewer>
-        <Button Content="自测" Background="{StaticResource 主题蓝色}" Foreground="White" HorizontalAlignment="Stretch" Grid.Row="1"/>
+        <Button Content="自测" Click="OnTest" Background="{StaticResource 主题蓝色}" Foreground="White" HorizontalAlignment="Stretch" Grid.Row="1"/>
     </Grid>
 </a:PageWin>

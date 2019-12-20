@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Functions>
+    <Function Name="ABS" Param="value" Description="This function calculates the absolute value of the specified value."/>
+    <Function Name="ACCRINT" Param="issue,first,settle,rate,par,frequency,basis" Description="This function calculates the accrued interest for a security that pays periodic interest."/>
+    <Function Name="ACCRINTM" Param="issue,maturity,rate,par,basis" Description="This function calculates the accrued interest at maturity for a security that pays periodic interest."/>
+    <Function Name="ACOS" Param="value" Description="This function calculates the arccosine, that is, the angle whose cosine is the specified value."/>
+    <Function Name="ACOSH" Param="value" Description="This function calculates the inverse hyperbolic cosine of the specified value."/>
+	<Function Name="ADDRESS" Param="row,column,absnum,a1style,sheettext" Description="This function uses the row and column numbers to create a cell address in text."/>
+    <Function Name="AMORDEGRC" Param="cost,datepurchased,firstperiod,salvage,period,drate,basis" Description="This function returns the depreciation for an accounting period, taking into consideration prorated depreciation, and applies a depreciation coefficient in the calculation based on the life of the assets."/>
+    <Function Name="AMORLINC" Param="cost,datepurchased,firstperiod,salvage,period,drate,basis" Description="This function calculates the depreciation for an accounting period, taking into account prorated depreciation."/>
+    <Function Name="AND" Param="logical1,logical2" Description="Check whether all argumengts are True,and returns True if all argements are True."/>
+    <Function Name="ASIN" Param="value" Description="This function calculates the arcsine, that is, the angle whose sine is the specified value."/>
+	<Function Name="ASINH" Param="value" Description="This function calculates the inverse hyperbolic sine of a number."/>
+    <Function Name="ATAN" Param="value" Description="This function calculates the arctangent, that is, the angle whose tangent is the specified value."/>
+    <Function Name="ATAN2" Param="x,y" Description="This function calculates the arctangent of the specified x- and y-coordinates."/>  
+    <Function Name="ATANH" Param="value" Description="This function calculates the inverse hyperbolic tangent of a number."/>
+    <Function Name="AVEDEV" Param="value1,value2,..." Description="This function calculates the average of the absolute deviations of the specified values from their mean."/>
+    <Function Name="AVERAGE" Param="value1,value2,..." Description="This function calculates the average of the specified numeric values."/>
+    <Function Name="AVERAGEA" Param="value1,value2,..." Description="This function calculates the average of the specified values, including text or logical values as well as numeric values."/>	
+    <Function Name="AVERAGEIF" Param="value1,value2,...,condition" Description="This function calculates the average of the specified numeric values provided that they meet the specified criteria."/>
+    <Function Name="AVERAGEIFS" Param="value1,condition1,value2,...,condition2..." Description="This function calculates the average of all cells that meet multiple specified criteria."/>	
+    <Function Name="BESSELI" Param="value,order" Description="This function calculates the modified Bessel function of the first kind evaluated for purely imaginary arguments."/>	
+    <Function Name="BESSELJ" Param="value,order" Description="This function calculates the Bessel function of the first kind."/>
+    <Function Name="BESSELK" Param="value,order" Description="This function calculates the modified Bessel function of the second kind evaluated for purely imaginary arguments."/>
+    <Function Name="BESSELY" Param="value,order" Description="This function calculates the Bessel function of the second kind."/>
+    <Function Name="BETADIST" Param="x,alpha,beta,lower,upper" Description="This function calculates the cumulative beta distribution function."/>	
+	<Function Name="BETAINV" Param="prob,alpha,beta,lower,upper" Description="This function calculates the inverse of the cumulative beta distribution function."/>
+    <Function Name="BIN2DEC" Param="number" Description="This function converts a binary number to a decimal number"/>
+    <Function Name="BIN2HEX" Param="number,places" Description="This function converts a binary number to a hexadecimal number."/>	
+    <Function Name="BIN2OCT" Param="number,places" Description="This function converts a binary number to an octal number."/>
+    <Function Name="BINOMDIST" Param="x,n,p,cumulative" Description="This function calculates the individual term binomial distribution probability."/>	
+    <Function Name="CEILING" Param="value,signif" Description="This function rounds a number up to the nearest multiple of a specified value."/>	
+    <Function Name="CHAR" Param="value" Description="This function returns the character specified by a number."/>
+    <Function Name="CHIDIST" Param="value,deg" Description="This function calculates the one-tailed probability of the chi-squared distribution."/>
+    <Function Name="CHIINV" Param="prob,deg" Description="This function calculates the inverse of the one-tailed probability of the chi-squared distribution"/>	   
+	<Function Name="CHITEST" Param="obs_array,exp_array" Description="This function calculates the test for independence from the chi-squared distribution."/>
+    <Function Name="CHOOSE" Param="index,value1,value2,..." Description="This function returns a value from a list of values."/>
+    <Function Name="CLEAN" Param="text" Description="This function removes all non-printable characters from text."/>	
+    <Function Name="CODE" Param="text" Description="This function returns a numeric code to represent the first character in a text string. The returned code corresponds to the Windows character set (ANSI)."/>
+    <Function Name="COLUMN" Param="reference" Description="This function returns the column number of a reference."/>	
+    <Function Name="COLUMNS" Param="array" Description="This function returns the number of columns in an array."/>	
+    <Function Name="COMBIN" Param="k,n" Description="This function calculates the number of possible combinations for a specified number of items."/>
+    <Function Name="COMPLEX" Param="realcoeff,imagcoeff,suffix" Description="This function converts real and imaginary coefficients into a complex number."/>
+    <Function Name="CONCATENATE" Param="text1,text2,...." Description="This function combines multiple text strings or numbers into one text string."/>
+    <Function Name="CONFIDENCE" Param="alpha,stdev,size" Description="This function returns confidence interval for a population mean."/>	    
+	<Function Name="CONVERT" Param="number,from-unit,to-unit" Description="This function converts a number from one measurement system to its equivalent in another measurement system."/>
+    <Function Name="CORREL" Param="array1,array2" Description="This function returns the correlation coefficient of the two sets of data."/>
+    <Function Name="COS" Param="angle" Description="This function returns the cosine of the specified angle."/>	
+    <Function Name="COSH" Param="value" Description="This function returns the hyperbolic cosine of the specified value."/>
+    <Function Name="COUNT" Param="value1,value2,..." Description="This function returns the number of cells that contain numbers."/>	
+    <Function Name="COUNTA" Param="value1,value2,..." Description="This function returns the number of number of cells that contain numbers, text, or logical values."/>	
+    <Function Name="COUNTBLANK" Param="cellrange" Description="This function returns the number of empty (or blank) cells in a range of cells on a sheet."/>
+    <Function Name="COUNTIF" Param="cellrange,condition" Description="This function returns the number of cells that meet a certain condition"/>
+    <Function Name="COUNTIFS" Param="cellrange,condition" Description="This function returns the number of cells that meet multiple conditions."/>
+    <Function Name="COUPDAYBS" Param="settlement,maturity,frequency,basis" Description="This function calculates the number of days from the beginning of the coupon period to the settlement date."/>	
+    <Function Name="COUPDAYS" Param="settlement,maturity,frequency,basis" Description="This function returns the number of days in the coupon period that contains the settlement date."/>
+    <Function Name="COUPDAYSNC" Param="settlement,maturity,frequency,basis" Description="This function calculates the number of days from the settlement date to the next coupon date."/>
+    <Function Name="COUPNCD" Param="settlement,maturity,frequency,basi" Description="This function returns a date number of the next coupon date after the settlement date."/>
+    <Function Name="COUPNUM" Param="settlement,maturity,frequency,basis" Description="This function returns the number of coupons due between the settlement date and maturity date."/>	    
+	<Function Name="COUPPCD" Param="settlement,maturity,frequency,basis" Description="This function returns a date number of the previous coupon date before the settlement date."/>
+    <Function Name="COVAR" Param="array1,array2" Description="This function returns the covariance, which is the average of the products of deviations for each data point pair in two sets of numbers."/>
+    <Function Name="CRITBINOM" Param="n,p,alpha" Description="This function returns the criterion binomial, the smallest value for which the cumulative binomial distribution is greater than or equal to a criterion value."/>	
+    <Function Name="CUMIPMT" Param="rate,nper,pval,startperiod,endperiod,paytype" Description="This function returns the cumulative interest paid on a loan between the starting and ending periods."/>	
+    <Function Name="CUMPRINC" Param="rate,nper,pval,startperiod,endperiod,paytype" Description="This function returns the cumulative principal paid on a loan between the start and end periods."/>
+    <Function Name="DATE" Param="year,month,day" Description="This function returns the DateTime object for a particular date, specified by the year, month, and day."/>
+    <Function Name="DATEDIF" Param="date1,date2,outputcode" Description="This function returns the number of days, months, or years between two dates."/>
+    <Function Name="DATEVALUE" Param="date_string" Description="This function returns a DateTime object of the specified date."/>		
+    <Function Name="DAVERAGE" Param="database, field, criteria" Description="This function calculates the average of values in a column of a list or database that match the specified conditions."/>
+    <Function Name="DAY" Param="date" Description="This function returns the day number of the month (integer 1 to 31) that corresponds to the specified date."/>
+    <Function Name="DAYS360" Param="startdate,enddate,method" Description="This function returns the number of days between two dates based on a 360-day year."/>
+    <Function Name="DB" Param="cost,salvage,life,period,month" Description="This function calculates the depreciation of an asset for a specified period using the fixed‑declining balance method"/>	    
+	<Function Name="DCOUNT" Param="database, field, criteria" Description="This function counts the cells that contain numbers in a column of a list or database that match the specified conditions"/>
+    <Function Name="DCOUNTA" Param="database, field, criteria" Description="This function counts the non-blank cells in a column of a list or database that match the specified conditions"/>
+    <Function Name="DDB" Param="cost,salvage,life,period,factor" Description="This function calculates the depreciation of an asset for a specified period using the double-declining balance method or another method you specify."/>	
+    <Function Name="DEC2BIN" Param="number,places" Description="This function converts a decimal number to a binary number."/>
+    <Function Name="DEC2HEX" Param="number,places" Description="This function converts a decimal number to a hexadecimal number"/>	
+    <Function Name="DEC2OCT" Param="number,places" Description="This function converts a decimal number to an octal number"/>	
+    <Function Name="DEGREES" Param="angle" Description="This function converts the specified value from radians to degrees"/>
+    <Function Name="DELTA" Param="value1,value2" Description="This function identifies whether two values are equal. Returns 1 if they are equal; returns 0 otherwise."/>
+    <Function Name="DEVSQ" Param="value1,value2, ..." Description="This function calculates the sum of the squares of deviations of data points (or of an array of data points) from their sample mean."/>
+    <Function Name="DGET" Param="database, field, criteria" Description="This function extracts a single value from a column of a list or database that matches the specified conditions."/>		
+    <Function Name="DISC" Param="settle,mature,pricep,redeem,basis" Description="This function calculates the discount rate for a security."/>
+    <Function Name="DMAX" Param="database, field, criteria" Description="This function returns the largest number in a column of a list or database that matches the specified conditions."/>
+    <Function Name="DMIN" Param="database, field, criteria" Description="This function returns the smallest number in a column of a list or database that matches the specified conditions."/>
+    <Function Name="DOLLAR" Param="value,digits" Description="This function converts a number to text using currency format, with the decimals rounded to the specified place."/>	    
+	<Function Name="DOLLARDE" Param="fractionaldollar,fraction" Description="This function converts a fraction dollar price to a decimal dollar price."/>
+    <Function Name="DOLLARFR" Param="decimaldollar,fraction" Description="This function converts a decimal number dollar price to a fraction dollar price."/>
+    <Function Name="DPRODUCT" Param="database, field, criteria" Description="This function multiplies the values in a column of a list or database that match the specified conditions."/>	
+    <Function Name="DSTDEV" Param="database, field, criteria" Description="This function estimates the standard deviation of a population based on a sample by using the numbers in a column of a list or database that match the specified conditions."/>
+    <Function Name="DSTDEVP" Param="database, field, criteria" Description="This function calculates the standard deviation of a population based on the entire population using the numbers in a column of a list or database that match the specified conditions."/>	
+    <Function Name="DSUM" Param="database, field, criteria" Description="This function adds the numbers in a column of a list or database that match the specified conditions."/>	
+    <Function Name="DURATION" Param="settlement,maturity,coupon,yield,frequency,basis" Description="This function returns the Macauley duration for an assumed par value of $100."/>
+    <Function Name="DVAR" Param="database, field, criteria" Description="This function estimates the variance of a population based on a sample by using the numbers in a column of a list or database that match the specified conditions."/>
+    <Function Name="DVARP" Param="database, field, criteria" Description="This function calculates the variance of a population based on the entire population by using the numbers in a column of a list or database that match the specified conditions."/>
+    <Function Name="EDATE" Param="startdate,months" Description="This function calculates the date that is the indicated number of months before or after a specified date."/>		
+    <Function Name="EFFECT" Param="nomrate,comper" Description="This function calculates the effective annual interest rate for a given nominal annual interest rate and the number of compounding periods per year."/>
+    <Function Name="EOMONTH" Param="startdate,months" Description="This function calculates the date for the last day of the month (end of month) that is the indicated number of months before or after the starting date."/>
+    <Function Name="ERF" Param="limit,upperlimit" Description="This function calculates the error function integrated between a lower and an upper limit."/>
+    <Function Name="ERFC" Param="lowerlimit" Description="This function calculates the complementary error function integrated between a lower limit and infinity."/>	
+    <Function Name="ERROR.TYPE" Param="errorvalue" Description="This function returns a number corresponding to one of the error values."/>
+    <Function Name="EURO" Param="code" Description="This function returns the equivalent of one Euro based on the ISO currency code."/>	
+    <Function Name="EUROCONVERT" Param="currency,source,target,fullprecision,triangulation" Description="This function converts currency from a Euro member currency (including Euros) to another Euro member currency (including Euros)."/>	
+    <Function Name="EVEN" Param="value" Description="This function rounds the specified value up to the nearest even integer."/>
+    <Function Name="EXACT" Param="text1,text2" Description="This function returns true if two strings are the same; otherwise, false."/>
+    <Function Name="EXP" Param="value" Description="This function returns e raised to the power of the specified value."/>
+    <Function Name="EXPONDIST" Param="value,lambda,cumulative" Description="This function returns the exponential distribution or the probability density"/>	
+	<Function Name="FACT" Param="number" Description="This function calculates the factorial of the specified number."/>
+    <Function Name="FACTDOUBLE" Param="number" Description="This function calculates the double factorial of the specified number."/>	    
+	<Function Name="FALSE" Param="" Description="This function returns the value for logical FALSE."/>
+    <Function Name="FDIST" Param="value,degnum,degden" Description="This function calculates the F probability distribution, to see degrees of diversity between two sets of data."/>
+    <Function Name="FIND" Param="findtext,intext,start" Description="This function finds one text value within another and returns the text value’s position in the text you searched."/>	
+    <Function Name="FINV" Param="p,degnum,degden" Description="This function returns the inverse of the F probability distribution."/>
+    <Function Name="FISHER" Param="value" Description="This function returns the Fisher transformation for a specified value"/>	
+    <Function Name="FISHERINV" Param="value" Description="This function returns the inverse of the Fisher transformation for a specified value."/>	
+    <Function Name="FIXED" Param="num,digits,notcomma" Description="This function rounds a number to the specified number of decimal places, formats the number in decimal format using a period and commas (if so specified), and returns the result as text."/>
+    <Function Name="FLOOR" Param="value,signif" Description="This function rounds a number down to the nearest multiple of a specified value."/>
+    <Function Name="FORECAST" Param="value,Yarray,Xarray" Description="This function calculates a future value using existing values."/>		
+    <Function Name="FREQUENCY" Param="dataarray,binarray" Description="This function calculates how often values occur within a range of values. This function returns a vertical array of numbers"/>
+    <Function Name="FTEST" Param="array1,array2" Description="This function returns the result of an F-test, which returns the one-tailed probability that the variances in two arrays are not significantly different."/>
+    <Function Name="FV" Param="rate,numper,paymt,pval,type" Description="This function returns the future value of an investment based on a present value, periodic payments, and a specified interest rate."/>
+    <Function Name="FVSCHEDULE" Param="principal,schedule" Description="This function returns the future value of an initial principal after applying a series of compound interest rates. Calculate future value of an investment with a variable or adjustable rate."/>
+    <Function Name="GAMMADIST" Param="x,alpha,beta,cumulative" Description="This function returns the gamma distribution."/>
+    <Function Name="GAMMAINV" Param="p,alpha,beta" Description="This function returns the inverse of the gamma cumulative distribution."/>	
+    <Function Name="GAMMALN" Param="value" Description="This function returns the natural logarithm of the Gamma function, G(x)."/>
+    <Function Name="GCD" Param="number1,number2" Description="This function returns the greatest common divisor of two numbers."/>	
+    <Function Name="GEOMEAN" Param="value1,value2,..." Description="This function returns the geometric mean of a set of positive data."/>	
+    <Function Name="GESTEP" Param="number,step" Description="This function, greater than or equal to step, returns an indication of whether a number is equal to a threshold."/>
+    <Function Name="GROWTH" Param="y,x,newx,constant" Description="This function calculates predicted exponential growth. This function returns the y values for a series of new x values that are specified by using existing x and y values."/>
+    <Function Name="HARMEAN" Param="value1,value2,..." Description="This function returns the harmonic mean of a data set."/>
+    <Function Name="HEX2BIN" Param="number, places" Description="This function converts a hexadecimal number to a binary number."/>	
+    <Function Name="HEX2DEC" Param="number" Description="This function converts a hexadecimal number to a decimal number."/>
+    <Function Name="HEX2OCT" Param="number, places" Description="This function converts a hexadecimal number to an octal number."/>
+    <Function Name="HLOOKUP" Param="value,array,row,approx" Description="This function searches for a value in the top row and then returns a value in the same column from a specified row."/>
+    <Function Name="HOUR" Param="time" Description="This function returns the hour that corresponds to a specified time."/>	    
+	<Function Name="HYPGEOMDIST" Param="x,n,M,N" Description="This function returns the hypergeometric distribution."/>
+    <Function Name="IF" Param="valueTest,valueTrue,valueFalse" Description="This function performs a comparison and returns one of two provided values based on that comparison."/>
+    <Function Name="IFERROR" Param="value,error" Description="This function evaluates a formula and returns a value you provide if there is an error or the formula result."/>	
+    <Function Name="IMABS" Param="complexnum" Description="This function returns the absolute value or modulus of a complex number."/>
+    <Function Name="IMAGINARY" Param="complexnum" Description="This function returns the imaginary coefficient of a complex number."/>	
+    <Function Name="IMARGUMENT" Param="complexnum" Description="This function returns the argument theta, which is an angle expressed in radians."/>	
+    <Function Name="IMCONJUGATE" Param="complexnum" Description="This function returns the complex conjugate of a complex number."/>
+    <Function Name="IMCOS" Param="complexnum" Description="This function returns the cosine of a complex number."/>
+    <Function Name="IMDIV" Param="complexnum,complexdenom" Description="This function returns the quotient of two complex numbers."/>
+    <Function Name="IMEXP" Param="complexnum" Description="This function returns the exponential of a complex number."/>	  
+	<Function Name="IMLN" Param="complexnum" Description="This function returns the natural logarithm of a complex number."/>
+    <Function Name="IMLOG2" Param="complexnum" Description="This function returns the base-2 logarithm of a complex number."/>
+    <Function Name="IMLOG10" Param="complexnum" Description="This function returns the common logarithm of a complex number."/>
+    <Function Name="IMPOWER" Param="complexnum,powernum" Description="This function returns a complex number raised to a power."/>	    
+	<Function Name="IMPRODUCT" Param="complexnum1,complexnum2, ..." Description="This function returns the product of up to 29 complex numbers in the x+yi or x+yj text format"/>
+    <Function Name="IMREAL" Param="complexnum" Description="This function returns the real coefficient of a complex number in the x+yi or x+yj text format."/>
+    <Function Name="IMSIN" Param="complexnum" Description="This function returns the sine of a complex number in the x+yi or x+yj text format."/>	
+    <Function Name="IMSQRT" Param="complexnum" Description="This function returns the square root of a complex number in the x+yi or x+yj text format."/>
+    <Function Name="IMSUB" Param="complexnum1,complexnum2" Description="This function returns the difference of two complex numbers in the x+yi or x+yj text format."/>	
+    <Function Name="IMSUM" Param="complexnum1,complexnum2, ..." Description="This function returns the sum of two or more complex numbers in the x+yi or x+yj text format."/>	
+    <Function Name="INDEX" Param="return,row,col,area" Description="This function returns a value or the reference to a value from within an array or range."/>
+    <Function Name="INT" Param="value" Description="This function rounds a specified number down to the nearest integer."/>
+    <Function Name="INTERCEPT" Param="dependent,independent" Description="This function returns the coordinates of a point at which a line intersects the y-axis, by using existing x values and y values."/>
+    <Function Name="INTRATE" Param="settle,mature,invest,redeem,basis" Description="This function calculates the interest rate for a fully invested security."/>	
+    <Function Name="IPMT" Param="rate,per,nper,pval,fval,type" Description="This function calculates the payment of interest on a loan."/>
+    <Function Name="IRR" Param="arrayvals,estimate" Description="This function returns the internal rate of return for a series of cash flows represented by the numbers in an array."/>
+    <Function Name="ISBLANK" Param="cellreference" Description="This function tests whether a value, an expression, or contents of a referenced cell is empty."/>
+    <Function Name="ISERR" Param="cellreference" Description="This function, Is Error Other Than Not Available, tests whether a value, an expression, or contents of a referenced cell has an error other than not available (#N/A)."/>	    
+	<Function Name="ISERROR" Param="cellreference" Description="This function, Is Error of Any Kind, tests whether a value, an expression, or contents of a referenced cell has an error of any kind."/>
+    <Function Name="ISEVEN" Param="cellreference" Description="This function, Is Number Even, tests whether a value, an expression, or contents of a referenced cell is even."/>
+    <Function Name="ISLOGICAL" Param="cellreference" Description="This function tests whether a value, an expression, or contents of a referenced cell is a logical (Boolean) value."/>	
+    <Function Name="ISNA" Param="cellreference" Description="This function, Is Not Available, tests whether a value, an expression, or contents of a referenced cell has the not available (#N/A) error value."/>
+    <Function Name="ISNONTEXT" Param="cellreference" Description="This function tests whether a value, an expression, or contents of a referenced cell has any data type other than text."/>	
+    <Function Name="ISNUMBER" Param="cellreference" Description="This function tests whether a value, an expression, or contents of a referenced cell has numeric data."/>	
+    <Function Name="ISODD" Param="cellreference" Description="This function, Is Number Odd, tests whether a value, an expression, or contents of a referenced cell has numeric data."/>
+    <Function Name="ISPMT" Param="rate,per,nper,pv" Description="This function calculates the interest paid during a specific period of an investment."/>
+    <Function Name="ISREF" Param="cellreference" Description="This function, Is Reference, tests whether a value, an expression, or contents of a referenced cell is a reference to another cell."/>
+    <Function Name="ISTEXT" Param="cellreference" Description="This function tests whether a value, an expression, or contents of a referenced cell has text data."/>	
+    <Function Name="KURT" Param="value1,value2,value3,value4,..." Description="This function returns the kurtosis of a data set."/>
+    <Function Name="LARGE" Param="array,n" Description="This function returns the nth largest value in a data set, where n is specified."/>
+    <Function Name="LCM" Param="number1,number2" Description="This function returns the least common multiple of two numbers."/>
+    <Function Name="LEFT" Param="mytext,num_chars" Description="This function returns the specified leftmost characters from a text value."/>	    
+	<Function Name="LEN" Param="value" Description="This function returns the length of, the number of characters in, a text string."/>
+    <Function Name="LINEST" Param="y,x,constant,stats" Description="This function calculates the statistics for a line."/>
+    <Function Name="LN" Param="value" Description="This function returns the natural logarithm of the specified number."/>	
+    <Function Name="LOG" Param="number,base" Description="This function returns the logarithm base Y of a number X."/>
+    <Function Name="LOG10" Param="value" Description="This function returns the logarithm base 10 of the number given."/>	
+    <Function Name="LOGEST" Param="y,x,constant,stats" Description="This function calculates an exponential curve that fits the data and returns an array of values that describes the curve."/>	
+    <Function Name="LOGINV" Param="prob,mean,stdev" Description="This function returns the inverse of the lognormal cumulative distribution function of x, where LN(x) is normally distributed with the specified mean and standard deviation."/>
+    <Function Name="LOGNORMDIST" Param="x,mean,stdev" Description="This function returns the cumulative natural log normal distribution of x, where LN(x) is normally distributed with the specified mean and standard deviation. Analyze data that has been logarithmically transformed with this function."/>
+    <Function Name="LOOKUP" Param="lookupvalue,lookupvector,resultvector" Description="This function searches for a value and returns a value from the same location in a second area."/>
+    <Function Name="LOWER" Param="string" Description="This function converts text to lower case letters."/>
+    <Function Name="MATCH" Param="value1,array,type" Description="This function returns the relative position of a specified item in a range."/>
+    <Function Name="MAX" Param="value1,value2,..." Description="This function returns the maximum value, the greatest value, of all the values in the arguments."/>	    
+	<Function Name="MAXA" Param="value1,value2,..." Description="This function returns the largest value in a list of arguments, including text and logical values."/>
+    <Function Name="MDETERM" Param="array" Description="This function returns the matrix determinant of an array."/>
+    <Function Name="MDURATION" Param="settlement,maturity,coupon,yield,frequency,basis" Description="This function calculates the modified Macauley duration of a security with an assumed par value of $100."/>	
+    <Function Name="MEDIAN" Param="value1,value2,..." Description="This function returns the median, the number in the middle of the provided set of numbers; that is, half the numbers have values that are greater than the median, and half have values that are less than the median."/>
+    <Function Name="MID" Param="text,start_num,num_chars" Description="This function returns the requested number of characters from a text string starting at the position you specify."/>	
+    <Function Name="MIN" Param="value1,value2,..." Description="This function returns the minimum value, the least value, of all the values in the arguments"/>	
+    <Function Name="MINA" Param="value1,value2,..." Description="This function returns the minimum value in a list of arguments, including text and logical values."/>
+    <Function Name="MINUTE" Param="time" Description="This function returns the minute corresponding to a specified time."/>
+    <Function Name="MINVERSE" Param="array" Description="This function returns the inverse matrix for the matrix stored in an array."/>
+    <Function Name="MIRR" Param="arrayvals,payment_int,income_int" Description="This function returns the modified internal rate of return for a series of periodic cash flows."/>	
+    <Function Name="MMULT" Param="array1,array2" Description="This function returns the matrix product for two arrays."/>
+    <Function Name="MOD" Param="dividend,divisor" Description="This function returns the remainder of a division operation."/>	    
+	<Function Name="MODE" Param="value1,value2,..." Description="This function returns the most frequently occurring value in a set of data."/>
+    <Function Name="MONTH" Param="date" Description="This function returns the month corresponding to the specified date value."/>
+    <Function Name="MROUND" Param="number,multiple" Description="This function returns a number rounded to the desired multiple."/>	
+    <Function Name="MULTINOMIAL" Param="value1,value2,..." Description="This function calculates the ratio of the factorial of a sum of values to the product of factorials."/>
+    <Function Name="N" Param="value" Description="This function returns a value converted to a number."/>	
+    <Function Name="NA" Param="" Description="This function returns the error value #N/A that means not available."/>	
+    <Function Name="NEGBINOMDIST" Param="x,r,p" Description="This function returns the negative binomial distribution."/>
+    <Function Name="NETWORKDAYS" Param="startdate,enddate,holidays" Description="This function returns the total number of complete working days between the start and end dates."/>
+    <Function Name="NOMINAL" Param="effrate,comper" Description="This function returns the nominal annual interest rate for a given effective rate and number of compounding periods per year."/>
+    <Function Name="NORMDIST" Param="x,mean,stdev,cumulative" Description="This function returns the normal cumulative distribution for the specified mean and standard deviation."/>	
+    <Function Name="NORMINV" Param="prob,mean,stdev" Description="This function returns the inverse of the normal cumulative distribution for the given mean and standard deviation."/>
+    <Function Name="NORMSDIST" Param="value" Description="This function returns the standard normal cumulative distribution function."/>	    
+	<Function Name="NORMSINV" Param="prob" Description="This function returns the inverse of the standard normal cumulative distribution. The distribution has a mean of zero and a standard deviation of one."/>
+    <Function Name="NOT" Param="value" Description="This function reverses the logical value of its argument."/>
+    <Function Name="NOW" Param="" Description="This function returns the current date and time."/>	
+    <Function Name="NPER" Param="rate,paymt,pval,fval,type" Description="This function returns the number of periods for an investment based on a present value, future value, periodic payments, and a specified interest rate."/>
+    <Function Name="NPV" Param="discount,value1,value2,..." Description="This function calculates the net present value of an investment by using a discount rate and a series of future payments and income."/>	
+    <Function Name="OCT2BIN" Param="number,places" Description="This function converts an octal number to a binary number."/>	
+    <Function Name="OCT2DEC" Param="number" Description="This function converts an octal number to a decimal number."/>
+    <Function Name="OCT2HEX" Param="number,places" Description="This function converts an octal number to a hexadecimal number."/>
+    <Function Name="ODD" Param="value" Description="This function rounds the specified value up to the nearest odd integer."/>
+    <Function Name="ODDFPRICE" Param="settle,maturity,issue,first,rate,yield,redeem,freq,basis" Description="This function calculates the price per $100 face value of a security with an odd first period."/>	
+    <Function Name="ODDFYIELD" Param="settle,maturity,issue,first,rate,price,redeem,freq,basis" Description="This function calculates the yield of a security with an odd first period."/>
+    <Function Name="ODDLPRICE" Param="settle,maturity,last,rate,yield,redeem,freq,basis" Description="This function calculates the price per $100 face value of a security with an odd last coupon period."/>	    
+	<Function Name="ODDLYIELD" Param="settle,maturity,last,rate,price,redeem,freq,basis" Description="This function calculates the yield of a security with an odd last period."/>
+    <Function Name="OFFSET" Param="reference,rows,cols,height,width" Description="This function returns a reference to a range. The range is a specified number of rows and columns from a cell or range of cells. The function returns a single cell or a range of cells."/>
+    <Function Name="OR" Param="argument1,argument2..." Description="This function calculates logical OR. It returns TRUE if any of its arguments are true; otherwise, returns FALSE if all arguments are false."/>	
+    <Function Name="PEARSON" Param="array_ind,array_dep" Description="This function returns the Pearson product moment correlation coefficient, a dimensionless index between -1.0 to 1.0 inclusive indicative of the linear relationship of two data sets."/>
+    <Function Name="PERCENTILE" Param="array,n" Description="This function returns the nth percentile of values in a range."/>	
+    <Function Name="PERCENTRANK" Param="array,n,sigdig" Description="This function returns the rank of a value in a data set as a percentage of the data set."/>	
+    <Function Name="PERMUT" Param="k,n" Description="This function returns the number of possible permutations for a specified number of items."/>
+    <Function Name="PI" Param="" Description="This function returns PI as 3.1415926536."/>
+    <Function Name="PMT" Param="rate,nper,pval,fval,type" Description="This function returns the payment amount for a loan given the present value, specified interest rate, and number of terms."/>
+    <Function Name="POISSON" Param="nevents,mean,cumulative" Description="This function returns the Poisson distribution."/>	
+    <Function Name="POWER" Param="number,power" Description="This function raises the specified number to the specified power."/>
+    <Function Name="PPMT" Param="rate,per,nper,pval,fval,type" Description="This function returns the amount of payment of principal for a loan given the present value, specified interest rate, and number of terms."/>	    
+	<Function Name="PRICE" Param="settlement,maturity,rate,yield,redeem,frequency,basis" Description="This function calculates the price per $100 face value of a periodic interest security"/>
+    <Function Name="PRICEDISC" Param="settle,mature,discount,redeem,basis" Description="This function returns the price per $100 face value of a discounted security."/>
+    <Function Name="PRICEMAT" Param="settle,mature,issue,rate,yield,basis" Description="This function returns the price at maturity per $100 face value of a security that pays interest."/>	
+    <Function Name="PROB" Param="array,probs,lower,upper" Description="This function returns the probability that values in a range are between two limits."/>
+    <Function Name="PRODUCT" Param="value1,value2,..." Description="This function multiplies all the arguments and returns the product."/>	
+    <Function Name="PROPER" Param="text" Description="This function capitalizes the first letter in each word of a text string."/>	
+    <Function Name="PV" Param="rate,numper,paymt,fval,type" Description="This function returns the present value of an investment based on the interest rate, number and amount of periodic payments, and future value. The present value is the total amount that a series of future payments is worth now."/>
+    <Function Name="QUARTILE" Param="array,quart" Description="This function returns which quartile (which quarter or 25 percent) of a data set a value is."/>
+    <Function Name="QUOTIENT" Param="numerator,denominator" Description="This function returns the integer portion of a division. Use this to ignore the remainder of a division."/>
+    <Function Name="RADIANS" Param="value" Description="This function converts the specified number from degrees to radians."/>	
+    <Function Name="RADIANS" Param="value" Description="This function converts the specified number from degrees to radians."/>	
+    <Function Name="RAND" Param="" Description="This function returns an evenly distributed random number between 0 and 1."/>
+    <Function Name="RANDBETWEEN" Param="lower,upper" Description="This function returns a random number between the numbers you specify."/>	    
+	<Function Name="RANK" Param="number,array,order" Description="This function returns the rank of a number in a set of numbers. If you were to sort the set, the rank of the number would be its position in the list."/>
+    <Function Name="RATE" Param="nper,pmt,pval,fval,type,guess" Description="This function returns the interest rate per period of an annuity."/>
+    <Function Name="RECEIVED" Param="settle,mature,invest,discount,basis" Description="This function returns the amount received at maturity for a fully invested security."/>	
+    <Function Name="REPLACE" Param="old_text,start_char,num_chars,new_text" Description="This function replaces part of a text string with a different text string."/>
+    <Function Name="REPT" Param="text,number" Description="This function repeats text a specified number of times."/>	
+    <Function Name="RIGHT" Param="text,num_chars" Description="This function returns the specified rightmost characters from a text value."/>	
+    <Function Name="ROMAN" Param="number,style" Description="This function converts an arabic numeral to a roman numeral text equivalent."/>
+    <Function Name="ROUND" Param="value,places" Description="This function rounds the specified value to the nearest number, using the specified number of decimal places."/>
+    <Function Name="ROUNDDOWN" Param="value,places" Description="This function rounds the specified number down to the nearest number, using the specified number of decimal places."/>
+    <Function Name="ROUNDUP" Param="value,places" Description="This function rounds the specified number up to the nearest number, using the specified number of decimal places."/>	
+	<Function Name="ROW" Param="reference" Description="This function returns the number of a row from a reference."/>	
+    <Function Name="ROWS" Param="array" Description="This function returns the number of rows in an array."/>
+    <Function Name="RSQ" Param="array_dep,array_ind" Description="This function returns the square of the Pearson product moment correlation coefficient (R‑squared) through data points in known y’s and known x’s."/>	    
+	<Function Name="SEARCH" Param="string1,string2" Description="This function finds one text string in another text string and returns the index of the starting position of the found text."/>
+    <Function Name="SECOND" Param="time" Description="This function returns the seconds (0 to 59) value for a specified time."/>
+    <Function Name="SERIESSUM" Param="x,n,m,coeff" Description="This function returns the sum of a power series."/>	
+    <Function Name="SIGN" Param="cellreference" Description="This function returns the sign of a number or expression."/>
+    <Function Name="SIN" Param="angle" Description="This function returns the sine of the specified angle."/>	
+    <Function Name="SINH" Param="value" Description="This function returns the hyperbolic sine of the specified number."/>	
+    <Function Name="SKEW" Param="number1,number2,..." Description="This function returns the skewness of a distribution."/>
+    <Function Name="SLN" Param="cost,salvage,life" Description="This function returns the straight-line depreciation of an asset for one period."/>
+    <Function Name="SLOPE" Param="array_dep,array_ind" Description="This function calculates the slope of a linear regression."/>
+    <Function Name="SMALL" Param="array,n" Description="This function returns the nth smallest value in a data set, where n is specified."/>	 
+	<Function Name="SQRT" Param="value" Description="This function returns the positive square root of the specified number."/>	
+    <Function Name="SQRTPI" Param="multiple" Description="This function returns the positive square root of a multiple of pi (p)."/>
+    <Function Name="STANDARDIZE" Param="x,mean,stdev" Description="This function returns a normalized value from a distribution characterized by mean and standard deviation."/>	    
+	<Function Name="STDEVA" Param="value1,value2,..." Description="This function returns the standard deviation for a set of numbers, text, or logical values."/>
+    <Function Name="STDEVP" Param="value1,value2,..." Description="This function returns the standard deviation for an entire specified population (of numeric values)."/>
+    <Function Name="STDEVPA" Param="value1,value2,..." Description="This function returns the standard deviation for an entire specified population, including text or logical values as well as numeric values."/>	
+    <Function Name="STEYX" Param="array_dep,array_ind" Description="This function returns the standard error of the predicted y value for each x. The standard error is a measure of the amount of error in the prediction of y for a value of x."/>
+    <Function Name="SUBSTITUTE" Param="text,old_piece,new_piece,instance" Description="This function substitutes a new string for specified characters in an existing string."/>	
+    <Function Name="SUBTOTAL" Param="functioncode,value1,value2,..." Description="This function calculates a subtotal of a list of numbers using a specified built-in function."/>	
+    <Function Name="SUM" Param="value1,value2,..." Description="This function returns the sum of cells or range of cells."/>
+    <Function Name="SUMIF" Param="array,condition,sumrange" Description="This function adds the cells using a given criteria."/>
+    <Function Name="SUMIFS" Param="array,conditionarray,condition,..." Description="This function adds the cells in a range using multiple criteria."/>
+    <Function Name="SUMPRODUCT" Param="array1,array2,..." Description="This function returns the sum of products of cells. Multiplies corresponding components in the given arrays, and returns the sum of those products."/>	
+    <Function Name="SUMSQ" Param="value1,value2,..." Description="This function returns the sum of the squares of the arguments."/>	 
+	<Function Name="SUMX2MY2" Param="array_x,array_y" Description="This function returns the sum of the difference of the squares of corresponding values in two arrays."/>	
+    <Function Name="SUMX2PY2" Param="array_x,array_y" Description="This function returns the sum of the sum of squares of corresponding values in two arrays."/>
+    <Function Name="SUMXMY2" Param="array_x,array_y" Description="This function returns the sum of the square of the differences of corresponding values in two arrays."/>	    
+	<Function Name="SYD" Param="cost,salvage,life,period" Description="This function returns the sum-of-years’ digits depreciation of an asset for a specified period."/>
+    <Function Name="T" Param="value" Description="This function returns the text in a specified cell."/>
+    <Function Name="TAN" Param="angle" Description="This function returns the tangent of the specified angle."/>	
+    <Function Name="TANH" Param="value" Description="This function returns the hyperbolic tangent of the specified number."/>
+    <Function Name="TBILLEQ" Param="settle,mature,discount" Description="This function returns the equivalent yield for a Treasury bill (or T-bill)"/>	
+    <Function Name="TBILLPRICE" Param="settle,mature,discount" Description="This function returns the price per $100 face value for a Treasury bill (or T-bill)."/>	
+    <Function Name="TBILLYIELD" Param="settle,mature,priceper" Description="This function returns the yield for a Treasury bill (or T-bill)."/>
+    <Function Name="TDIST" Param="x,deg,tails" Description="This function returns the probability for the t-distribution."/>
+    <Function Name="TEXT" Param="value,text" Description="This function formats a number and converts it to text."/>
+    <Function Name="TIME" Param="hour,minutes,seconds" Description="This function returns the TimeSpan object for a specified time."/>		
+    <Function Name="TIMEVALUE" Param="time_string" Description="This function returns the TimeSpan object of the time represented by a text string."/>	 
+	<Function Name="TINV" Param="prog,deg" Description="This function returns the t-value of the student's t-distribution as a function of the probability and the degrees of freedom."/>	
+    <Function Name="TODAY" Param="" Description="This function returns the date and time of the current date."/>
+    <Function Name="TRANSPOSE" Param="array" Description="This function returns a vertical range of cells as a horizontal range or a horizontal range of cells as a vertical range."/>	    
+	<Function Name="TREND" Param="y,x,newx,constant" Description="This function returns values along a linear trend. This function fits a straight line to the arrays known x and y values. Trend returns the y values along that line for the array of specified new x values."/>
+    <Function Name="TRIM" Param="text" Description="This function removes extra spaces from a string and leaves single spaces between words."/>
+    <Function Name="TRIMMEAN" Param="array,percent" Description="This function returns the mean of a subset of data excluding the top and bottom data."/>	
+    <Function Name="TRUE" Param="" Description="This function returns the value for logical TRUE."/>
+    <Function Name="TRUNC" Param="value,precision" Description="This function removes the specified fractional part of the specified number."/>	
+    <Function Name="TTEST" Param="array1,array2,tails,type" Description="This function returns the probability associated with a t-test."/>	
+    <Function Name="TYPE" Param="value" Description="This function returns the type of value."/>
+    <Function Name="UPPER" Param="string" Description="This function converts text to uppercase letters."/>
+    <Function Name="VALUE" Param="text" Description="This function converts a text string that is a number to a numeric value."/>
+    <Function Name="VAR" Param="value1,value2,..." Description="This function returns the variance based on a sample of a population, which uses only numeric values."/>		
+    <Function Name="VARA" Param="value1,value2,..." Description="This function returns the variance based on a sample of a population, which includes numeric, logical, or text values."/>	 
+	<Function Name="VARP" Param="value1,value2,..." Description="This function returns variance based on the entire population, which uses only numeric values."/>	
+    <Function Name="VARPA" Param="value1,value2,..." Description="This function returns variance based on the entire population, which includes numeric, logical, or text values."/>
+    <Function Name="VDB" Param="cost,salvage,life,start,end,factor,switchnot" Description="This function returns the depreciation of an asset for any period you specify using the variable declining balance method."/>	    
+	<Function Name="VLOOKUP" Param="value,array,colindex,approx" Description="This function searches for a value in the leftmost column and returns a value in the same row from a column you specify."/>
+    <Function Name="WEEKDAY" Param="date,type" Description="This function returns the number corresponding to the day of the week for a specified date."/>
+    <Function Name="WEEKNUM" Param="date,weektype" Description="This function returns a number that indicates the week of the year numerically."/>	
+    <Function Name="WEIBULL" Param="x,alpha,beta,cumulative" Description="This function returns the two-parameter Weibull distribution, often used in reliability analysis."/>
+    <Function Name="WORKDAY" Param="startdate,numdays,holidays" Description="This function returns the number of working days before or after the starting date."/>	
+    <Function Name="XIRR" Param="values,dates,guess" Description="This function calculates the internal rate of return for a schedule of cash flows that may not be periodic."/>	
+    <Function Name="XNPV" Param="rate,values,dates" Description="This function calculates the net present value for a schedule of cash flows that may not be periodic."/>
+    <Function Name="YEAR" Param="date" Description="This function returns the year as an integer for a specified date."/>
+    <Function Name="YEARFRAC" Param="startdate,enddate,basis" Description="This function returns the fraction of the year represented by the number of whole days between the start and end dates."/>
+    <Function Name="YIELD" Param="settle,maturity,rate,price,redeem,frequency,basis" Description="This function calculates the yield on a security that pays periodic interest."/>	
+	<Function Name="YIELDDISC" Param="settle,maturity,price,redeem,basis" Description="This function calculates the annual yield for a discounted security."/>
+    <Function Name="YIELDMAT" Param="settle,maturity,issue,issrate,price,basis" Description="This function calculates the annual yield of a security that pays interest at maturity."/>
+    <Function Name="ZTEST" Param="array,x,sigma" Description="This function returns the significance value of a z-test. The z-test generates a standard score for x with respect to the set of data and returns the two-tailed probability for the normal distribution."/>		
+</Functions>

@@ -334,6 +334,20 @@ namespace Dt.Base
                 LaunchManager.LoadDesktop();
         }
 
+        public static void GoBackToHome()
+        {
+            var frame = SysVisual.RootFrame;
+            while (frame.BackStackDepth > 0)
+            {
+                frame.GoBack();
+            }
+        }
+
+        public static void GoBack()
+        {
+            InputManager.GoBack();
+        }
+
         /// <summary>
         /// PhoneUI模式的根Frame
         /// </summary>

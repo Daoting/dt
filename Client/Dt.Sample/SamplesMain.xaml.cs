@@ -108,6 +108,12 @@ namespace Dt.Sample
                 },
                 new DataCmd
                 {
+                    Title = "数据图表",
+                    Note = "支持柱线饼等9大类40种不同图表，每种图表提供多种不同的主题样式和调色板，支持交互操作",
+                    Tag = typeof(ChartHome)
+                },
+                new DataCmd
+                {
                     Title = "数据访问与Rpc",
                     Note = "包括数据表操作、数据序列化、远程/本地数据的增删改查、远程过程调用等",
                     Tag = typeof(DataAccessHome)

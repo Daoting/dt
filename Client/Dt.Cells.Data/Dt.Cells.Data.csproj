@@ -1,0 +1,27 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras/2.0.31">
+
+  <PropertyGroup>
+    <TargetFrameworks>uap10.0.17763;MonoAndroid81;xamarinios10</TargetFrameworks>
+    <Authors>hdt</Authors>
+    <Product>DT业务基础平台</Product>
+    <Copyright>Copyright ©  2018</Copyright>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
+    <Version>2.0.0</Version>
+    <Description>DT平台Excel模型库</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Dt.CalcEngine\Dt.CalcEngine.csproj" />
+    <ProjectReference Include="..\Dt.Xls\Dt.Xls.csproj" />
+    <ProjectReference Include="..\Dt.Pdf\Dt.Pdf.csproj" />
+    <ProjectReference Include="..\Dt.Charts\Dt.Charts.csproj" />
+  </ItemGroup>
+  
+  <Import Project="..\Common\dtc.props" />
+  
+  <ItemGroup>
+    <PRIResource Include="Res\Resources.resw" />
+  </ItemGroup>
+  
+</Project>

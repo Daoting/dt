@@ -618,6 +618,8 @@ namespace Dt.Shell
 			global::Bs.Kehu.Resource.Drawable.u360 = global::Dt.Shell.Resource.Drawable.u360;
 			global::Bs.Kehu.Resource.Drawable.u364 = global::Dt.Shell.Resource.Drawable.u364;
 			global::Bs.Kehu.Resource.Drawable.u366 = global::Dt.Shell.Resource.Drawable.u366;
+			global::Bs.Kehu.Resource.Drawable.u406 = global::Dt.Shell.Resource.Drawable.u406;
+			global::Bs.Kehu.Resource.Drawable.u455 = global::Dt.Shell.Resource.Drawable.u455;
 			global::Bs.Kehu.Resource.Id.ALT = global::Dt.Shell.Resource.Id.ALT;
 			global::Bs.Kehu.Resource.Id.CTRL = global::Dt.Shell.Resource.Id.CTRL;
 			global::Bs.Kehu.Resource.Id.FUNCTION = global::Dt.Shell.Resource.Id.FUNCTION;
@@ -5123,11 +5125,11 @@ namespace Dt.Shell
 			// aapt resource value: 0x7f02005e
 			public const int notification_icon_background = 2130837598;
 			
-			// aapt resource value: 0x7f02006f
-			public const int notification_template_icon_bg = 2130837615;
+			// aapt resource value: 0x7f020071
+			public const int notification_template_icon_bg = 2130837617;
 			
-			// aapt resource value: 0x7f020070
-			public const int notification_template_icon_low_bg = 2130837616;
+			// aapt resource value: 0x7f020072
+			public const int notification_template_icon_low_bg = 2130837618;
 			
 			// aapt resource value: 0x7f02005f
 			public const int notification_tile_bg = 2130837599;
@@ -5176,6 +5178,12 @@ namespace Dt.Shell
 			
 			// aapt resource value: 0x7f02006e
 			public const int u366 = 2130837614;
+			
+			// aapt resource value: 0x7f02006f
+			public const int u406 = 2130837615;
+			
+			// aapt resource value: 0x7f020070
+			public const int u455 = 2130837616;
 			
 			static Drawable()
 			{

@@ -24,10 +24,14 @@ namespace Dt.Kehu
     public partial class PtMain : PageWin
     {
 
-        public PtMain(long p_id)
+        public PtMain()
         {
             InitializeComponent();
         }
 
+        void OnStart(object sender, RoutedEventArgs e)
+        {
+            AtApp.OpenWin(typeof(PtStep1));
+        }
     }
 }
