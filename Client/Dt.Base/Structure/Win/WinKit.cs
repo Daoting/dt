@@ -35,7 +35,7 @@ namespace Dt.Base
             if (p_elem == null || p_win == null)
                 return;
 
-            p_elem.Tapped += (s, e) =>
+            p_elem.DoubleTapped += (s, e) =>
             {
                 if (_menu == null)
                 {

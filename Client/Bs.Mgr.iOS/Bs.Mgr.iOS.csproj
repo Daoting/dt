@@ -174,22 +174,22 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Uno, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Uno.UI.1.45.0\lib\xamarinios10\Uno.dll</HintPath>
+      <HintPath>..\packages\Uno.UI.2.0.528\lib\xamarinios10\Uno.dll</HintPath>
     </Reference>
     <Reference Include="Uno.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Uno.Core.1.28.0\lib\netstandard2.0\Uno.Core.dll</HintPath>
+      <HintPath>..\packages\Uno.Core.1.29.0\lib\netstandard2.0\Uno.Core.dll</HintPath>
     </Reference>
     <Reference Include="Uno.Foundation, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Uno.UI.1.45.0\lib\xamarinios10\Uno.Foundation.dll</HintPath>
+      <HintPath>..\packages\Uno.UI.2.0.528\lib\xamarinios10\Uno.Foundation.dll</HintPath>
     </Reference>
     <Reference Include="Uno.UI, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Uno.UI.1.45.0\lib\xamarinios10\Uno.UI.dll</HintPath>
+      <HintPath>..\packages\Uno.UI.2.0.528\lib\xamarinios10\Uno.UI.dll</HintPath>
     </Reference>
     <Reference Include="Uno.UI.Toolkit, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Uno.UI.1.45.0\lib\xamarinios10\Uno.UI.Toolkit.dll</HintPath>
+      <HintPath>..\packages\Uno.UI.2.0.528\lib\xamarinios10\Uno.UI.Toolkit.dll</HintPath>
     </Reference>
     <Reference Include="Uno.Xaml, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Uno.UI.1.45.0\lib\xamarinios10\Uno.Xaml.dll</HintPath>
+      <HintPath>..\packages\Uno.UI.2.0.528\lib\xamarinios10\Uno.Xaml.dll</HintPath>
     </Reference>
     <Reference Include="Xamarin.iOS" />
   </ItemGroup>
@@ -215,15 +215,15 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
-  <Import Project="..\packages\Uno.Core.Build.1.28.0\build\Uno.Core.Build.targets" Condition="Exists('..\packages\Uno.Core.Build.1.28.0\build\Uno.Core.Build.targets')" />
+  <Import Project="..\packages\Uno.Core.Build.1.29.0\build\Uno.Core.Build.targets" Condition="Exists('..\packages\Uno.Core.Build.1.29.0\build\Uno.Core.Build.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Uno.Core.Build.1.28.0\build\Uno.Core.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Uno.Core.Build.1.28.0\build\Uno.Core.Build.targets'))" />
-    <Error Condition="!Exists('..\packages\Uno.SourceGenerationTasks.1.31.0\build\netstandard1.0\Uno.SourceGenerationTasks.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Uno.SourceGenerationTasks.1.31.0\build\netstandard1.0\Uno.SourceGenerationTasks.targets'))" />
-    <Error Condition="!Exists('..\packages\Uno.UI.1.45.0\build\xamarinios10\uno.ui.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Uno.UI.1.45.0\build\xamarinios10\uno.ui.targets'))" />
+    <Error Condition="!Exists('..\packages\Uno.Core.Build.1.29.0\build\Uno.Core.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Uno.Core.Build.1.29.0\build\Uno.Core.Build.targets'))" />
+    <Error Condition="!Exists('..\packages\Uno.SourceGenerationTasks.1.32.0\build\netstandard1.0\Uno.SourceGenerationTasks.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Uno.SourceGenerationTasks.1.32.0\build\netstandard1.0\Uno.SourceGenerationTasks.targets'))" />
+    <Error Condition="!Exists('..\packages\Uno.UI.2.0.528\build\xamarinios10\uno.ui.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Uno.UI.2.0.528\build\xamarinios10\uno.ui.targets'))" />
   </Target>
-  <Import Project="..\packages\Uno.SourceGenerationTasks.1.31.0\build\netstandard1.0\Uno.SourceGenerationTasks.targets" Condition="Exists('..\packages\Uno.SourceGenerationTasks.1.31.0\build\netstandard1.0\Uno.SourceGenerationTasks.targets')" />
-  <Import Project="..\packages\Uno.UI.1.45.0\build\xamarinios10\uno.ui.targets" Condition="Exists('..\packages\Uno.UI.1.45.0\build\xamarinios10\uno.ui.targets')" />
+  <Import Project="..\packages\Uno.SourceGenerationTasks.1.32.0\build\netstandard1.0\Uno.SourceGenerationTasks.targets" Condition="Exists('..\packages\Uno.SourceGenerationTasks.1.32.0\build\netstandard1.0\Uno.SourceGenerationTasks.targets')" />
+  <Import Project="..\packages\Uno.UI.2.0.528\build\xamarinios10\uno.ui.targets" Condition="Exists('..\packages\Uno.UI.2.0.528\build\xamarinios10\uno.ui.targets')" />
 </Project>
