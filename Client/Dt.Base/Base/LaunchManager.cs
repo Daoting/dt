@@ -7,16 +7,11 @@
 #endregion
 
 #region 引用命名
-using Dt.Base.Tools;
 using Dt.Core;
 using System;
 using System.Text.Json;
 using System.Xml.Linq;
-using Windows.System;
-using Windows.UI.Core;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
 #endregion
 
 namespace Dt.Base

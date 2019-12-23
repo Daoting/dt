@@ -1,7 +1,13 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:a="using:Dt.Base">
+    xmlns:a="using:Dt.Base"
+    xmlns:ios="http://uno.ui/ios"
+    xmlns:android="http://uno.ui/android"
+    xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:wasm="http://uno.ui/wasm"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="ios android wasm">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/Dt.Base/Themes/Global.xaml"/>
@@ -252,8 +258,54 @@
         </Setter>
     </Style>
 
-    <!--****************************** CommandBar ******************************-->
+    <!--****************************** Frame ******************************-->
+    <ios:Style x:Key="NativeDefaultFrame" TargetType="Frame">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Frame">
+                    <NativeFramePresenter Background="{TemplateBinding Background}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </ios:Style>
 
+    <android:Style x:Key="NativeDefaultFrame" TargetType="Frame">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Frame">
+                    <NativeFramePresenter Background="{TemplateBinding Background}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </android:Style>
+
+    <win:Style x:Key="NativeDefaultFrame" TargetType="Frame">
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Frame">
+                    <ContentPresenter Content="{TemplateBinding Content}"
+									  ContentTemplate="{TemplateBinding ContentTemplate}"
+									  ContentTransitions="{TemplateBinding ContentTransitions}"
+									  Background="{TemplateBinding Background}"
+									  BorderBrush="{TemplateBinding BorderBrush}"
+									  BorderThickness="{TemplateBinding BorderThickness}"
+									  Padding="{TemplateBinding Padding}"
+									  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+									  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </win:Style>
+
+    <wasm:Style x:Key="NativeDefaultFrame" TargetType="Frame">
+    </wasm:Style>
+
+    <!--默认Frame，不同平台不同style，含页面动画-->
+    <Style TargetType="Frame" BasedOn="{StaticResource NativeDefaultFrame}" />
+    
     <!--****************************** FlyoutPresenter ******************************-->
     <Style TargetType="FlyoutPresenter">
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />

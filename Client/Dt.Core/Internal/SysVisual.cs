@@ -58,6 +58,7 @@ namespace Dt.Core
             TextBlock tb = new TextBlock
             {
                 Text = "正在启动...",
+                FontSize = 15,
                 Foreground = new SolidColorBrush(Windows.UI.Colors.White),
                 Margin = new Thickness(40, 0, 40, 0),
                 HorizontalAlignment = HorizontalAlignment.Center,
@@ -67,10 +68,7 @@ namespace Dt.Core
 
             // 对话框层
             _dlgCanvas = new Canvas();
-            if (AtSys.IsPhoneUI)
-                _dlgCanvas.PointerPressed += _pressedHandler;
-            else
-                _rootGrid.AddHandler(UIElement.PointerPressedEvent, _pressedHandler, true);
+            _rootGrid.AddHandler(UIElement.PointerPressedEvent, _pressedHandler, true);
             _rootGrid.Children.Add(_dlgCanvas);
 
             // 提示信息层
