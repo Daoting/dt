@@ -18,8 +18,7 @@
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
-                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                            >
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
@@ -40,9 +39,7 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <Border Grid.Row="1" Grid.Column="1" x:Name="view"  Padding="0,0,0,6">
-                                    <ContentControl x:Name="viewContent"
-                                                      Content="{TemplateBinding Content}"
-                                                      ContentTemplate="{TemplateBinding ContentTemplate}"/>
+                                    <ContentControl x:Name="viewContent" Content="{TemplateBinding Content}" />
                                 </Border>
                             </Grid>
                         </Grid>
@@ -114,7 +111,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="charts:AxisScrollBar">
-                    <ScrollBar x:Name="ScrollBar" IndicatorMode="TouchIndicator"  Orientation="Horizontal" Minimum="0" Maximum="1"/>
+                    <ScrollBar x:Name="ScrollBar" IndicatorMode="TouchIndicator" Orientation="Horizontal" Minimum="0" Maximum="1"/>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

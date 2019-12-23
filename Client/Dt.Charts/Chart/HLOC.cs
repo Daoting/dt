@@ -279,6 +279,9 @@ namespace Dt.Charts
             }
         }
 
+#if IOS
+    new
+#endif
         public HLOCAppearance Appearance
         {
             get { return  app; }

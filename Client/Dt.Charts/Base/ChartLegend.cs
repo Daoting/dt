@@ -25,15 +25,6 @@ namespace Dt.Base
         /// <summary>
         /// 
         /// </summary>
-        public static readonly DependencyProperty CornerRadiusProperty = DependencyProperty.Register(
-            "CornerRadius", 
-            (Type)typeof(CornerRadius), 
-            (Type)typeof(ChartLegend),
-            null);
-
-        /// <summary>
-        /// 
-        /// </summary>
         public static readonly DependencyProperty OrientationProperty = DependencyProperty.Register(
             "Orientation", 
             (Type)typeof(Orientation), 
@@ -112,22 +103,8 @@ namespace Dt.Base
                 {
                     _position = value;
                     UpdatePosition();
-                    if (DesignMode.DesignModeEnabled && (Chart != null))
-                    {
-                        Chart.UpdateLayout();
-                        Chart.LayoutUpdatedInternal();
-                    }
                 }
             }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public CornerRadius CornerRadius
-        {
-            get { return (CornerRadius)base.GetValue(CornerRadiusProperty); }
-            set { base.SetValue(CornerRadiusProperty, value); }
         }
 
         /// <summary>
@@ -191,11 +168,6 @@ namespace Dt.Base
         {
             ChartLegend legend = (ChartLegend)obj;
             legend.UpdatePosition();
-            if (DesignMode.DesignModeEnabled && (legend.Chart != null))
-            {
-                legend.Chart.UpdateLayout();
-                legend.Chart.LayoutUpdatedInternal();
-            }
         }
 
         private static void OnTitleChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)

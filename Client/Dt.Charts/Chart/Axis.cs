@@ -131,6 +131,9 @@ namespace Dt.Charts
 
         public event AnnoCreatedEventHandler AnnoCreated;
 
+#if !UWP
+    new
+#endif
         internal event PropertyChangedEventHandler PropertyChanged;
 
         event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged
@@ -268,6 +271,9 @@ namespace Dt.Charts
             set { base.SetValue(FontSizeProperty, (double)value); }
         }
 
+#if ANDROID
+    new
+#endif
         public Brush Foreground
         {
             get { return (Brush)base.GetValue(ForegroundProperty); }
@@ -500,7 +506,7 @@ namespace Dt.Charts
             set { base.SetValue(ReversedProperty, (bool)value); }
         }
 
-        public double Scale
+        new public double Scale
         {
             get { return (double)((double)base.GetValue(ScaleProperty)); }
             set { base.SetValue(ScaleProperty, (double)value); }

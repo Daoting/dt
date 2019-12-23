@@ -60,15 +60,6 @@ namespace Dt.Base
         /// <summary>
         /// 
         /// </summary>
-        public static readonly DependencyProperty CornerRadiusProperty = DependencyProperty.Register(
-            "CornerRadius",
-            (Type)typeof(Windows.UI.Xaml.CornerRadius), 
-            (Type)typeof(Chart),
-            new PropertyMetadata(new Windows.UI.Xaml.CornerRadius(), new PropertyChangedCallback(Chart.OnCornerRadiusChanged)));
-       
-        /// <summary>
-        /// 
-        /// </summary>
         public static readonly DependencyProperty CustomPaletteProperty = DependencyProperty.Register(
             "CustomPalette", 
             (Type)typeof(IEnumerable), 
@@ -211,7 +202,9 @@ namespace Dt.Base
         /// <summary>
         /// 
         /// </summary>
-        [EditorBrowsable((EditorBrowsableState)EditorBrowsableState.Never)]
+#if !UWP
+    new
+#endif
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
@@ -338,12 +331,6 @@ namespace Dt.Base
         {
             get { return (bool)((bool)base.GetValue(ClipToBoundsProperty)); }
             set { base.SetValue(ClipToBoundsProperty, (bool)value); }
-        }
-
-        public Windows.UI.Xaml.CornerRadius CornerRadius
-        {
-            get { return (Windows.UI.Xaml.CornerRadius)base.GetValue(CornerRadiusProperty); }
-            set { base.SetValue(CornerRadiusProperty, value); }
         }
 
         public IEnumerable CustomPalette
@@ -926,10 +913,6 @@ namespace Dt.Base
         private static void OnClipToBoundsChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             ((Chart)obj).InvalidateArrange();
-        }
-
-        private static void OnCornerRadiusChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
-        {
         }
 
         private static void OnCustomPaletteChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
