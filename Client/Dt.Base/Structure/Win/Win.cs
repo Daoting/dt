@@ -364,7 +364,7 @@ namespace Dt.Base
                 for (int i = frame.BackStackDepth - 1; i >= _frameStartIndex; i--)
                 {
                     var pageEntry = frame.BackStack[i];
-                    if (pageEntry.Parameter is PhonePage.PageParameter param
+                    if (pageEntry.Parameter is PhonePageParameter param
                         && param.Content == tab)
                     {
                         // 后退位置
@@ -408,7 +408,7 @@ namespace Dt.Base
                 for (int i = frame.BackStackDepth - 1; i >= _frameStartIndex; i--)
                 {
                     var pageEntry = frame.BackStack[i];
-                    if (pageEntry.Parameter is PhonePage.PageParameter param
+                    if (pageEntry.Parameter is PhonePageParameter param
                         && param.Content is PhoneTabs pts
                         && pts.NaviID == p_tabTitle)
                     {

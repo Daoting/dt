@@ -783,20 +783,6 @@ namespace Dt.Base
                 ChangeState(MenuItemState.Normal);
         }
 
-        /// <summary>
-        /// iOS中Released和Tapped事件只触发一个
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnTapped(TappedRoutedEventArgs e)
-        {
-            e.Handled = true;
-#if IOS
-            _pointerID = null;
-            IsMouseOver = false;
-            OnClickMi();
-#endif
-        }
-
         protected override void OnPointerEntered(PointerRoutedEventArgs e)
         {
             // 触摸时不自动打开下级菜单

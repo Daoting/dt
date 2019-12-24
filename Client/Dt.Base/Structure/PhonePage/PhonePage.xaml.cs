@@ -26,14 +26,29 @@ namespace Dt.Base
         /// <summary>
         /// 导航到新页时的页面参数
         /// </summary>
-        static PageParameter _newParam;
+        static PhonePageParameter _newParam;
 
-        PageParameter _param;
+        PhonePageParameter _param;
 
         public PhonePage()
         {
             _param = _newParam;
-            Content = (UIElement)_param.Content;
+
+            // 原来在OnNavigatedFrom方法中卸载内容以便下次重用，但会造成页面返回时无动画！！！
+            // 因此再次加载时需要卸载旧页面的内容！
+            // elem.Parent在uno中仍然有效，uwp中因不在可视树无值，通过附加属性记录所属页面！
+            var elem = _param.Content as FrameworkElement;
+#if UWP
+            PhonePage oldPage = PhonePageEx.GetParentPage(elem);
+            if (oldPage != null)
+                oldPage.Content = null;
+            PhonePageEx.SetParentPage(elem, this);
+#else
+            if (elem.Parent is PhonePage oldPage)
+                oldPage.Content = null;
+#endif
+
+            Content = elem;
         }
 
         /// <summary>
@@ -42,8 +57,10 @@ namespace Dt.Base
         /// <param name="p_content">页面内容</param>
         public static void Show(IPhonePage p_content)
         {
-            PrepareContent(p_content);
-            _newParam = new PageParameter(p_content, null);
+            if (p_content == null || !(p_content is FrameworkElement))
+                throw new Exception("PhonePage内容不是可视元素！");
+
+            _newParam = new PhonePageParameter(p_content, null);
             SysVisual.RootFrame.Navigate(typeof(PhonePage), _newParam);
         }
 
@@ -53,23 +70,13 @@ namespace Dt.Base
         /// <param name="p_content">页面内容</param>
         public static Task ShowAsync(IPhonePage p_content)
         {
-            PrepareContent(p_content);
-            var taskSrc = new TaskCompletionSource<bool>();
-            _newParam = new PageParameter(p_content, taskSrc);
-            SysVisual.RootFrame.Navigate(typeof(PhonePage), _newParam);
-            return taskSrc.Task;
-        }
-
-        static void PrepareContent(IPhonePage p_content)
-        {
-            FrameworkElement elem = p_content as FrameworkElement;
-            if (elem == null)
+            if (p_content == null || !(p_content is FrameworkElement))
                 throw new Exception("PhonePage内容不是可视元素！");
 
-            // 原来在OnNavigatedFrom方法中卸载内容以便下次重用，但会造成页面返回时无动画！！！
-            // 因此再次加载时需要卸载旧页面的内容！
-            if (elem.Parent is PhonePage page)
-                page.Content = null;
+            var taskSrc = new TaskCompletionSource<bool>();
+            _newParam = new PhonePageParameter(p_content, taskSrc);
+            SysVisual.RootFrame.Navigate(typeof(PhonePage), _newParam);
+            return taskSrc.Task;
         }
 
         /// <summary>
@@ -87,7 +94,7 @@ namespace Dt.Base
         {
             // UWP页面未缓存，后退时为下一页准备页面参数
             if (e.NavigationMode == NavigationMode.Back)
-                _newParam = (PageParameter)e.Parameter;
+                _newParam = (PhonePageParameter)e.Parameter;
         }
 #endif
 
@@ -104,28 +111,6 @@ namespace Dt.Base
                 // 触发Closed事件
                 _param.Content.OnClosed();
             }
-        }
-
-        /// <summary>
-        /// 页面参数
-        /// </summary>
-        internal class PageParameter
-        {
-            public PageParameter(IPhonePage p_content, TaskCompletionSource<bool> p_taskSource)
-            {
-                Content = p_content;
-                TaskSource = p_taskSource;
-            }
-
-            /// <summary>
-            /// 页面内容
-            /// </summary>
-            public IPhonePage Content;
-
-            /// <summary>
-            /// 可等待页面关闭的任务
-            /// </summary>
-            public TaskCompletionSource<bool> TaskSource;
         }
     }
 }

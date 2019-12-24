@@ -39,7 +39,7 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <Border Grid.Row="1" Grid.Column="1" x:Name="view"  Padding="0,0,0,6">
-                                    <ContentControl x:Name="viewContent" Content="{TemplateBinding Content}" />
+                                    <ContentPresenter x:Name="viewContent" Content="{TemplateBinding Content}" />
                                 </Border>
                             </Grid>
                         </Grid>
@@ -62,7 +62,7 @@
                     <StackPanel Orientation="Horizontal" Margin="0,-2,0,-2">
                         <Canvas Width="24" Height="24" Background="Transparent">
                             <ContentControl Canvas.Top="2" Content="{Binding Line}" Width="24" Height="20"/>
-                            <ContentControl Canvas.Left="5" 
+                            <ContentControl Canvas.Left="5"
                                               Canvas.Top="5"
                                               Content="{Binding Path=Symbol}"
                                               Width="14" 
