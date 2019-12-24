@@ -1,7 +1,7 @@
 ﻿# 版本说明
 
 ### 功能 
-* 
+* 增加页面导航动画
 
 ### 变更 
 *  移除Newtonsoft.Json，使用System.Text.Json 

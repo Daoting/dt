@@ -326,6 +326,8 @@ namespace Dt.Base
         Dictionary<string, Tab> _tabs;
         // 主页在Frame中的索引
         int _frameStartIndex;
+        // 多页PhoneTabs缓存
+        List<PhoneTabs> _cacheMultiTabs;
 
         /// <summary>
         /// 导航到指定页，支持多页Tab形式
@@ -429,22 +431,43 @@ namespace Dt.Base
             }
 
             // 向前导航
-            string[] names = p_tabTitle.Split(',');
-            PhoneTabs tabs = new PhoneTabs();
+            PhoneTabs tabs;
+            if (_cacheMultiTabs != null)
+            {
+                tabs = (from t in _cacheMultiTabs
+                        where t.NaviID == p_tabTitle
+                        select t).FirstOrDefault();
+                if (tabs != null)
+                {
+                    // 缓存中存在
+                    PhonePage.Show(tabs);
+                    return;
+                }
+            }
+
+            tabs = new PhoneTabs();
             tabs.NaviID = p_tabTitle;
             if (p_tabTitle == Home)
                 tabs.OwnerWin = this;
+
             Tab tab;
+            string[] names = p_tabTitle.Split(',');
             foreach (var name in names)
             {
                 if (!_tabs.TryGetValue(name, out tab))
                     throw new Exception($"导航出错，缺少{name}Tab页！");
                 tabs.AddItem(tab);
             }
+            
             // 起始页隐藏返回按钮
             if (frame.Content == null)
                 tabs.HideBackButton();
             tabs.SelectFirstItem();
+
+            if (_cacheMultiTabs == null)
+                _cacheMultiTabs = new List<PhoneTabs>();
+            _cacheMultiTabs.Add(tabs);
+
             PhonePage.Show(tabs);
         }
 

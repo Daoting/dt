@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Dt.Core;
+using System;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -41,9 +42,7 @@ namespace Dt.Base
         /// <param name="p_content">页面内容</param>
         public static void Show(IPhonePage p_content)
         {
-            if (!(p_content is UIElement))
-                return;
-
+            PrepareContent(p_content);
             _newParam = new PageParameter(p_content, null);
             SysVisual.RootFrame.Navigate(typeof(PhonePage), _newParam);
         }
@@ -54,13 +53,23 @@ namespace Dt.Base
         /// <param name="p_content">页面内容</param>
         public static Task ShowAsync(IPhonePage p_content)
         {
-            if (!(p_content is UIElement))
-                return Task.CompletedTask;
-
+            PrepareContent(p_content);
             var taskSrc = new TaskCompletionSource<bool>();
             _newParam = new PageParameter(p_content, taskSrc);
             SysVisual.RootFrame.Navigate(typeof(PhonePage), _newParam);
             return taskSrc.Task;
+        }
+
+        static void PrepareContent(IPhonePage p_content)
+        {
+            FrameworkElement elem = p_content as FrameworkElement;
+            if (elem == null)
+                throw new Exception("PhonePage内容不是可视元素！");
+
+            // 原来在OnNavigatedFrom方法中卸载内容以便下次重用，但会造成页面返回时无动画！！！
+            // 因此再次加载时需要卸载旧页面的内容！
+            if (elem.Parent is PhonePage page)
+                page.Content = null;
         }
 
         /// <summary>
@@ -69,6 +78,7 @@ namespace Dt.Base
         /// <returns></returns>
         internal Task<bool> IsAllowBack()
         {
+            // 触发Closing事件，确定是否允许后退
             return _param.Content.OnClosing();
         }
 
@@ -85,30 +95,15 @@ namespace Dt.Base
         {
             if (e.NavigationMode == NavigationMode.Back)
             {
+                // 结束异步等待
                 if (_param.TaskSource != null && !_param.TaskSource.Task.IsCompleted)
                 {
                     _param.TaskSource.SetResult(true);
                     _param.TaskSource = null;
                 }
+                // 触发Closed事件
                 _param.Content.OnClosed();
-
-#if !UWP
-                // 手机上页面被缓存
-                // 前进时不卸载内容，以备后退
-                // 后退过后页面被丢弃，卸载内容以便下次重用
-                if (Content is PhoneTabs tabs)
-                    tabs.Unload();
-                Content = null;
-#endif
             }
-
-#if UWP
-            // UWP页面未缓存
-            // 每次离开页面都需要卸载内容，以便下次重用
-            if (Content is PhoneTabs tabs)
-                tabs.Unload();
-            Content = null;
-#endif
         }
 
         /// <summary>

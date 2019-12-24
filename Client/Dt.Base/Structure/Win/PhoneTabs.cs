@@ -7,14 +7,10 @@
 #endregion
 
 #region 引用命名
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Animation;
 #endregion
 
 namespace Dt.Base
@@ -84,20 +80,6 @@ namespace Dt.Base
                 SelectItem((Button)_grid.Children[0]);
         }
 
-        /// <summary>
-        /// 卸载内容
-        /// </summary>
-        internal void Unload()
-        {
-            if (_root != null && _root.Children.Count > 1)
-                _root.Children.RemoveAt(1);
-
-#if UWP
-            // UWP每次离开页面都卸载内容，再次加载时恢复内容
-            Loaded += OnLoaded;
-#endif
-        }
-
         #region 实现接口
         /// <summary>
         /// 关闭或后退之前，返回false表示禁止关闭
@@ -130,19 +112,6 @@ namespace Dt.Base
             _root.Children.Add(_grid);
             if (_selected != null)
                 SelectItem(_selected);
-        }
-
-        void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            Loaded -= OnLoaded;
-            foreach (var btn in _grid.Children.OfType<Button>())
-            {
-                if (!btn.IsEnabled)
-                {
-                    SelectItem(btn);
-                    break;
-                }
-            }
         }
 
         void OnBtnClick(object sender, RoutedEventArgs e)
