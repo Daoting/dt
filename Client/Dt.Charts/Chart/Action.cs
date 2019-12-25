@@ -15,8 +15,8 @@ namespace Dt.Charts
 {
     public abstract partial class Action : DependencyObject
     {
-        private Dt.Charts.ActionType _atype;
-        private VirtualKeyModifiers _mkeys;
+        Dt.Charts.ActionType _atype;
+        VirtualKeyModifiers _mkeys;
 
         internal Action(Dt.Charts.ActionType atype)
         {

@@ -26,10 +26,10 @@ namespace Dt.Base
         /// <summary>
         /// 
         /// </summary>
-        private static DependencyProperty CloseValuesProperty = DependencyProperty.Register(
+        static DependencyProperty CloseValuesProperty = DependencyProperty.Register(
            "CloseValues",
-           (Type)typeof(DoubleCollection),
-           (Type)typeof(HighLowOpenCloseSeries),
+           typeof(DoubleCollection),
+           typeof(HighLowOpenCloseSeries),
            new PropertyMetadata(null, new PropertyChangedCallback(HighLowOpenCloseSeries.CloseValuesChanged)));
 
         /// <summary>
@@ -44,10 +44,10 @@ namespace Dt.Base
         /// <summary>
         /// 
         /// </summary>
-        private static DependencyProperty OpenValuesProperty = DependencyProperty.Register(
+        static DependencyProperty OpenValuesProperty = DependencyProperty.Register(
             "OpenValues",
-            (Type)typeof(DoubleCollection),
-            (Type)typeof(HighLowOpenCloseSeries),
+            typeof(DoubleCollection),
+            typeof(HighLowOpenCloseSeries),
             new PropertyMetadata(null, new PropertyChangedCallback(HighLowOpenCloseSeries.OpenValuesChanged)));
 
         /// <summary>
@@ -59,13 +59,13 @@ namespace Dt.Base
             typeof(HighLowOpenCloseSeries),
             new PropertyChangedCallback(DataSeries.OnChangeValues));
 
-        private Binding _closeValuesBinding;
-        private Binding _openValuesBinding;
+        Binding _closeValuesBinding;
+        Binding _openValuesBinding;
         protected List<object> alCl = new List<object>();
         protected List<object> alOp = new List<object>();
        
 
-        private static void CloseValuesChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        static void CloseValuesChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             ((DataSeries) obj).FirePropertyChanged("CloseValues");
         }
@@ -146,7 +146,7 @@ namespace Dt.Base
             return base.datavalues;
         }
 
-        private static void OpenValuesChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        static void OpenValuesChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             ((DataSeries) obj).FirePropertyChanged("OpenValues");
         }

@@ -26,10 +26,10 @@ namespace Dt.Base
         /// <summary>
         /// 
         /// </summary>
-        private static DependencyProperty HighValuesProperty = DependencyProperty.Register(
+        static DependencyProperty HighValuesProperty = DependencyProperty.Register(
            "HighValues",
-           (Type)typeof(DoubleCollection),
-           (Type)typeof(HighLowSeries),
+           typeof(DoubleCollection),
+           typeof(HighLowSeries),
            new PropertyMetadata(null, new PropertyChangedCallback(HighLowSeries.HighValuesChanged)));
 
         /// <summary>
@@ -44,10 +44,10 @@ namespace Dt.Base
         /// <summary>
         /// 
         /// </summary>
-        private static DependencyProperty LowValuesProperty = DependencyProperty.Register(
+        static DependencyProperty LowValuesProperty = DependencyProperty.Register(
             "LowValues",
-            (Type)typeof(DoubleCollection),
-            (Type)typeof(HighLowSeries),
+            typeof(DoubleCollection),
+            typeof(HighLowSeries),
             new PropertyMetadata(null, new PropertyChangedCallback(HighLowSeries.LowValuesChanged)));
 
         /// <summary>
@@ -59,8 +59,8 @@ namespace Dt.Base
             typeof(HighLowSeries),
             new PropertyChangedCallback(DataSeries.OnChangeValues));
 
-        private Binding _highValuesBinding;
-        private Binding _lowValuesBinding;
+        Binding _highValuesBinding;
+        Binding _lowValuesBinding;
         protected List<object> alHi = new List<object>();
         protected List<object> alLo = new List<object>();
         internal int Index;
@@ -138,12 +138,12 @@ namespace Dt.Base
             return base.datavalues;
         }
 
-        private static void HighValuesChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        static void HighValuesChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             ((DataSeries) obj).FirePropertyChanged("HighValues");
         }
 
-        private static void LowValuesChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        static void LowValuesChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             ((DataSeries) obj).FirePropertyChanged("LowValues");
         }

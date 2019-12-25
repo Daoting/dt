@@ -17,8 +17,8 @@ namespace Dt.Charts
 {
     internal class ConverterHelper : Dictionary<string, object>
     {
-        private const char delim = ';';
-        private const char pair_delim = '=';
+        const char delim = ';';
+        const char pair_delim = '=';
 
         public string ConvertToString()
         {

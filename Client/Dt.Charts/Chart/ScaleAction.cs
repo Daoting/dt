@@ -13,7 +13,7 @@ namespace Dt.Charts
 {
     public class ScaleAction : Action
     {
-        private double _wheelFactor;
+        double _wheelFactor;
 
         public ScaleAction() : base(ActionType.Scale)
         {

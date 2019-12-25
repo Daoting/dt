@@ -14,9 +14,9 @@ namespace Dt.Charts
 {
     internal class ChartTypes
     {
-        private static Dictionary<int, List<ChartTypeInfo>> _galleries = new Dictionary<int, List<ChartTypeInfo>>();
+        static Dictionary<int, List<ChartTypeInfo>> _galleries = new Dictionary<int, List<ChartTypeInfo>>();
 
-        private ChartTypes()
+        ChartTypes()
         {
         }
 

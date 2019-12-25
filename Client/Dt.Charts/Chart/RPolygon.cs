@@ -46,7 +46,7 @@ namespace Dt.Charts
             return clone;
         }
 
-        private static void OnNumVerticesChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        static void OnNumVerticesChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             RPolygon polygon = (RPolygon) obj;
             polygon.UpdateGeometry(null, polygon.Size);

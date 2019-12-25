@@ -30,86 +30,48 @@ namespace Dt.Base
     [ContentProperty(Name = "Children")]
     public partial class Chart : ContentControl, IDisposable
     {
-        /// <summary>
-        /// 
-        /// </summary>
+        #region 静态内容
         public static readonly DependencyProperty AggregateProperty = DependencyProperty.Register(
             "Aggregate",
-            (Type)typeof(Aggregate), 
-            (Type)typeof(Chart),
+            typeof(Aggregate),
+            typeof(Chart),
             new PropertyMetadata(Aggregate.None, new PropertyChangedCallback(Chart.OnAggregateChanged)));
 
-        /// <summary>
-        /// 
-        /// </summary>
         public static readonly DependencyProperty ChartTypeProperty = Utils.RegisterProperty(
             "ChartType",
-            typeof(ChartType), 
+            typeof(ChartType),
             typeof(Chart),
             new PropertyChangedCallback(Chart.OnChartTypeChanged), ChartType.Column);
 
-        /// <summary>
-        /// 
-        /// </summary>
         public static readonly DependencyProperty ClipToBoundsProperty = DependencyProperty.Register(
-            "ClipToBounds", 
-            (Type)typeof(bool), 
-            (Type)typeof(Chart),
+            "ClipToBounds",
+            typeof(bool),
+            typeof(Chart),
             new PropertyMetadata((bool)false, new PropertyChangedCallback(Chart.OnClipToBoundsChanged)));
 
-        /// <summary>
-        /// 
-        /// </summary>
         public static readonly DependencyProperty CustomPaletteProperty = DependencyProperty.Register(
-            "CustomPalette", 
-            (Type)typeof(IEnumerable), 
-            (Type)typeof(Chart),
+            "CustomPalette",
+            typeof(IEnumerable),
+            typeof(Chart),
             new PropertyMetadata(null, new PropertyChangedCallback(Chart.OnCustomPaletteChanged)));
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public static DependencyProperty CustomThemeProperty = DependencyProperty.Register(
-            "CustomTheme",
-            (Type)typeof(ResourceDictionary), 
-            (Type)typeof(Chart), 
-            new PropertyMetadata(null, new PropertyChangedCallback(Chart.OnCustomThemeChanged)));
-
-        /// <summary>
-        /// 
-        /// </summary>
         public static readonly DependencyProperty DataProperty = Utils.RegisterProperty(
             "Data",
             typeof(ChartData),
             typeof(Chart),
             new PropertyChangedCallback(Chart.OnDataChanged));
 
-        /// <summary>
-        /// 
-        /// </summary>
-        private static readonly DependencyProperty ForegroundInternalProperty = DependencyProperty.Register(
-            "ForegroundInternal", 
-            (Type)typeof(Brush),
-            (Type)typeof(Chart), 
+        static readonly DependencyProperty ForegroundInternalProperty = DependencyProperty.Register(
+            "ForegroundInternal",
+            typeof(Brush),
+            typeof(Chart),
             new PropertyMetadata(null, new PropertyChangedCallback(Chart.OnForegroundInternalChanged)));
 
-        /// <summary>
-        /// 
-        /// </summary>
         public static readonly DependencyProperty LegendItemsProperty = DependencyProperty.Register(
-            "LegendItems", 
-            (Type)typeof(LegendItemCollection),
-            (Type)typeof(Chart), 
-            new PropertyMetadata(null, new PropertyChangedCallback(Chart.OnLegendItemsChanged)));
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public static DependencyProperty ThemeProperty = DependencyProperty.Register(
-            "Theme", 
-            typeof(ChartTheme), 
+            "LegendItems",
+            typeof(LegendItemCollection),
             typeof(Chart),
-            new PropertyMetadata(ChartTheme.None, new PropertyChangedCallback(Chart.OnThemeChanged)));
+            new PropertyMetadata(null, new PropertyChangedCallback(Chart.OnLegendItemsChanged)));
 
         /// <summary>
         /// 标题
@@ -120,726 +82,14 @@ namespace Dt.Base
             typeof(Chart),
             new PropertyMetadata(null));
 
-        /// <summary>
-        /// 
-        /// </summary>
         public static readonly DependencyProperty ViewProperty = Utils.RegisterProperty(
-            "View", 
-            typeof(ChartView), 
-            typeof(Chart), 
+            "View",
+            typeof(ChartView),
+            typeof(Chart),
             new PropertyChangedCallback(Chart.OnViewChanged));
 
-        private ActionCollection _actions;
-        private bool _autoSeries;
-        private ChartBindings _bindings;
-        private ObservableCollection<UIElement> _children;
-        private UIElement _content;
-        private ResourceDictionary _customTheme = new ResourceDictionary();
-        private bool _dirtyChildren = true;
-        private GradientMethod _gradientMethod;
-        private bool _inBuild;
-        private List<INotifyPropertyChanged> _inps = new List<INotifyPropertyChanged>();
-        private ChartLegend _legend;
-        private LegendItems _litems;
-        private LegendItemCollection _litemsRO;
-        private bool _loaded = true;
-        private Renderers _renderers;
-        private StyleGenerator _stgen;
-        private bool _templated;
-        private static ThemeConverter _themeConverter = new ThemeConverter();
-        private int _updateCount;
-        private FrameworkElement _viewElement;
-        private bool dataChanged = true;
-        internal bool forceRebuild = true;
-        private Point pinchCenter = new Point();
-        internal bool rebuilding = false;
-        private Size sz = new Size();
-        
-        public Chart()
-        {
-            base.DefaultStyleKey = typeof(Chart);
 
-            BubbleOptions.SetMinSize(this, Size.Empty);
-            BubbleOptions.SetMaxSize(this, Size.Empty);
-            Data = new ChartData();
-            View = new ChartView();
-            
-            Binding binding = new Binding();
-            binding.Source = this;
-            binding.Path = new PropertyPath("Foreground");
-            SetBinding(ForegroundInternalProperty, binding);
-
-            _litems = new LegendItems();
-            _litemsRO = new LegendItemCollection(_litems);
-            LegendItems = _litemsRO;
-
-            LayoutUpdated += C1Chart_LayoutUpdated;
-            PointerPressed += C1Chart_PointerPressed;
-            PointerReleased += C1Chart_PointerReleased;
-            PointerMoved += C1Chart_PointerMoved;
-            ManipulationStarted += C1Chart_ManipulationStarted;
-            ManipulationDelta += C1Chart_ManipulationDelta;
-            ManipulationCompleted += C1Chart_ManipulationCompleted;
-            Loaded += C1Chart_Loaded;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public event EventHandler ActionEnter;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public event EventHandler ActionLeave;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [EditorBrowsable((EditorBrowsableState)EditorBrowsableState.Never)]
-        public event EventHandler LegendChanged;
-
-        /// <summary>
-        /// 
-        /// </summary>
-#if !UWP
-    new
-#endif
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        /// 获取设置图表类型
-        /// </summary>
-        public ChartType ChartType
-        {
-            get { return (ChartType)base.GetValue(ChartTypeProperty); }
-            set { base.SetValue(ChartTypeProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取设置图表数据
-        /// </summary>
-        public ChartData Data
-        {
-            get { return (ChartData)base.GetValue(DataProperty); }
-            set { base.SetValue(DataProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取设置图表主题样式
-        /// </summary>
-        public ChartTheme Theme
-        {
-            get { return (ChartTheme)base.GetValue(ThemeProperty); }
-            set { base.SetValue(ThemeProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取设置图表标题内容
-        /// </summary>
-        public object Header
-        {
-            get { return GetValue(HeaderProperty); }
-            set { SetValue(HeaderProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取设置图表调色板
-        /// </summary>
-        [DefaultValue(0)]
-        public Palette Palette
-        {
-            get { return StyleGenerator.Palette; }
-            set
-            {
-                StyleGenerator.Palette = value;
-                forceRebuild = true;
-                InvalidateChart();
-            }
-        }
-
-        internal ActionCollection Actions
-        {
-            get
-            {
-                if (_actions == null)
-                {
-                    _actions = new ActionCollection(this);
-                    _actions.CollectionChanged += _actions_CollectionChanged;
-                }
-                return _actions;
-            }
-        }
-
-        [DefaultValue(40)]
-        public double ActionUpdateDelay
-        {
-            get { return Actions.UpdateDelay; }
-            set { Actions.UpdateDelay = value; }
-        }
-
-        public Aggregate Aggregate
-        {
-            get { return (Aggregate)base.GetValue(AggregateProperty); }
-            set { base.SetValue(AggregateProperty, value); }
-        }
-
-        public bool AutoGenerateSeries
-        {
-            get { return _autoSeries; }
-            set
-            {
-                if (_autoSeries != value)
-                {
-                    _autoSeries = value;
-                    dataChanged = true;
-                    InvalidateChart();
-                }
-            }
-        }
-
-        public ChartBindings Bindings
-        {
-            get { return _bindings; }
-            set
-            {
-                if (_bindings != value)
-                {
-                    _bindings = value;
-                    dataChanged = true;
-                    InvalidateChart();
-                }
-            }
-        }
-
-        public ObservableCollection<UIElement> Children
-        {
-            get
-            {
-                if (_children == null)
-                {
-                    ChartObservableCollection observables = new ChartObservableCollection();
-                    observables.OnClear += new EventHandler(_children_Clear);
-                    _children = observables;
-                    _children.CollectionChanged += _children_CollectionChanged;
-                }
-                return _children;
-            }
-        }
-
-        public bool ClipToBounds
-        {
-            get { return (bool)((bool)base.GetValue(ClipToBoundsProperty)); }
-            set { base.SetValue(ClipToBoundsProperty, (bool)value); }
-        }
-
-        public IEnumerable CustomPalette
-        {
-            get { return (IEnumerable)base.GetValue(CustomPaletteProperty); }
-            set { base.SetValue(CustomPaletteProperty, value); }
-        }
-
-        public ResourceDictionary CustomTheme
-        {
-            get { return (ResourceDictionary)base.GetValue(CustomThemeProperty); }
-            set { base.SetValue(CustomThemeProperty, value); }
-        }
-
-        public GestureDoubleTapAction GestureDoubleTap { get; set; }
-
-        public GesturePinchAction GesturePinch { get; set; }
-
-        public GestureSlideAction GestureSlide { get; set; }
-
-        public GradientMethod GradientMethod
-        {
-            get { return _gradientMethod; }
-            set
-            {
-                if (_gradientMethod != value)
-                {
-                    _gradientMethod = value;
-                    InvalidateChart();
-                }
-            }
-        }
-
-        public LegendItemCollection LegendItems
-        {
-            get { return (LegendItemCollection)base.GetValue(LegendItemsProperty); }
-            private set { base.SetValue(LegendItemsProperty, value); }
-        }
-
-        internal LegendItems LegendItemsInternal
-        {
-            get { return _litems; }
-        }
-
-        internal Renderers Renderers
-        {
-            get
-            {
-                if (_renderers == null)
-                {
-                    _renderers = new Renderers();
-                }
-                return _renderers;
-            }
-        }
-
-        private StyleGenerator StyleGenerator
-        {
-            get
-            {
-                if (_stgen == null)
-                {
-                    _stgen = new StyleGenerator();
-                    _stgen.CustomBrushConverter = new Dt.Charts.Converter<Brush, Brush>(BrushConverter);
-                }
-                return _stgen;
-            }
-        }
-
-        internal int UpdateCount
-        {
-            get { return _updateCount; }
-            set
-            {
-                if (value <= 0)
-                {
-                    _updateCount = 0;
-                    InvalidateChart();
-                }
-                else
-                {
-                    _updateCount = value;
-                }
-            }
-        }
-
-        public ChartView View
-        {
-            get { return (ChartView)base.GetValue(ViewProperty); }
-            set { base.SetValue(ViewProperty, value); }
-        }
-
-        internal FrameworkElement ViewElement
-        {
-            get { return _viewElement; }
-            set
-            {
-                try
-                {
-                    if (_viewElement != value)
-                    {
-                        _viewElement = value;
-                        base.Content = _viewElement;
-                    }
-                }
-                catch (Exception)
-                {
-                }
-            }
-        }
-
-        private void _actions_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-        }
-
-        private void _children_Clear(object sender, EventArgs e)
-        {
-            RemoveChildren((IList)Children);
-        }
-
-        private void _children_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            if (e.Action != ((NotifyCollectionChangedAction)((int)NotifyCollectionChangedAction.Reset)))
-            {
-                RemoveChildren(e.OldItems);
-            }
-            UpdateChildren();
-        }
-
-        private void _data_DataChanged(object sender, EventArgs e)
-        {
-            if (!rebuilding)
-            {
-                if ((Data != null) && (Data.Children.Count == 0))
-                {
-                    StyleGenerator.Reset();
-                }
-                forceRebuild = true;
-                dataChanged = true;
-                InvalidateChart();
-            }
-        }
-
-        private void AddINP(INotifyPropertyChanged inp)
-        {
-            inp.PropertyChanged += inp_PropertyChanged;
-            _inps.Add(inp);
-        }
-
-        internal void AddLogicalChild(object child)
-        {
-        }
-
-        internal void ApplyChartType(ChartType chartType)
-        {
-            ApplyChartType(chartType.ToString());
-        }
-
-        private void ApplyChartType(string type)
-        {
-            if (!string.IsNullOrEmpty(type))
-            {
-                ChartSubtype subtype = ChartTypes.GetSubtype(type);
-                if (subtype != null)
-                {
-                    subtype.Apply(this);
-                }
-            }
-        }
-
-        protected override Size ArrangeOverride(Size finalSize)
-        {
-            if (_content != null)
-            {
-                if (ClipToBounds)
-                {
-                    RectangleGeometry geometry = new RectangleGeometry();
-                    geometry.Rect = new Rect(0.0, 0.0, finalSize.Width, finalSize.Height);
-                    _content.Clip = geometry;
-                }
-                else
-                {
-                    _content.Clip = null;
-                }
-            }
-            return base.ArrangeOverride(finalSize);
-        }
-
-        public void BeginUpdate()
-        {
-            UpdateCount++;
-        }
-
-        private Brush BrushConverter(Brush brush)
-        {
-            if (GradientMethod == GradientMethod.None)
-            {
-                return brush;
-            }
-            return brush;
-        }
-
-        private void C1Chart_LayoutUpdated(object sender, object e)
-        {
-            LayoutUpdatedInternal();
-        }
-
-        private void C1Chart_Loaded(object sender, RoutedEventArgs e)
-        {
-            _loaded = true;
-            if (!_templated)
-            {
-                base.ApplyTemplate();
-            }
-            UpdateChildren();
-            RebuildChart();
-            if (ViewElement != null)
-            {
-                ViewElement.Width = base.Width;
-                ViewElement.Height = base.Height;
-            }
-        }
-
-        private void C1Chart_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
-        {
-            if ((GesturePinch == GesturePinchAction.Scale) && (Data.Renderer is Renderer2D))
-            {
-                if (Actions.State == ActionType.Pinch)
-                {
-                    Actions.State = ActionType.None;
-                    e.Handled = true;
-                    Actions.FireLeave();
-                }
-            }
-            else if (((GestureSlide == GestureSlideAction.Translate) && (Data.Renderer is Renderer2D)) && (Actions.State == ActionType.Translate))
-            {
-                Actions.State = ActionType.None;
-                e.Handled = true;
-                Actions.FireLeave();
-            }
-        }
-
-        private void C1Chart_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
-        {
-            if (e.Delta.Scale != 1.0)
-            {
-                if ((GesturePinch == GesturePinchAction.Scale) && (Data.Renderer is Renderer2D))
-                {
-                    Actions.FireEnter();
-                    Actions.State = ActionType.Pinch;
-                    float scale = e.Delta.Scale;
-                    Actions.PerformScale(pinchCenter, (double)scale, (double)scale);
-                    e.Handled = true;
-                }
-            }
-            else if (((e.Delta.Translation.X != 0.0) || (e.Delta.Translation.Y != 0.0)) && ((GestureSlide == GestureSlideAction.Translate) && (Data.Renderer is Renderer2D)))
-            {
-                Actions.FireEnter();
-                Actions.State = ActionType.Translate;
-                Actions.PerformTranslate(new Point(), e.Delta.Translation);
-            }
-        }
-
-        private void C1Chart_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
-        {
-            pinchCenter = e.Position;
-        }
-
-        private void C1Chart_PointerMoved(object sender, PointerRoutedEventArgs e)
-        {
-            if (GestureSlide == GestureSlideAction.Zoom)
-            {
-                Actions.OnMouseMove(e);
-            }
-        }
-
-        private void C1Chart_PointerPressed(object sender, PointerRoutedEventArgs e)
-        {
-            if (GestureSlide == GestureSlideAction.Zoom)
-            {
-                Actions.OnMouseDown(e);
-            }
-        }
-
-        private void C1Chart_PointerReleased(object sender, PointerRoutedEventArgs e)
-        {
-            if (GestureSlide == GestureSlideAction.Zoom)
-            {
-                Actions.OnMouseUp(e);
-            }
-        }
-
-        private void ClearAllINP()
-        {
-            int num = _inps.Count;
-            if (num > 0)
-            {
-                for (int i = 0; i < num; i++)
-                {
-                    _inps[i].PropertyChanged -= inp_PropertyChanged;
-                }
-                _inps.Clear();
-            }
-        }
-
-        internal void ClearLegendBindings()
-        {
-            if (_legend != null)
-            {
-                ClearValue(_legend, Control.BackgroundProperty);
-                ClearValue(_legend, Control.ForegroundProperty);
-                ClearValue(_legend, Control.BorderBrushProperty);
-                ClearValue(_legend, Control.BorderThicknessProperty);
-                ClearValue(_legend, ChartLegend.CornerRadiusProperty);
-            }
-        }
-
-        private void ClearThemeBindings()
-        {
-            FrameworkElement templateChild = base.GetTemplateChild("view") as FrameworkElement;
-            if (templateChild != null)
-            {
-                ClearValue(templateChild, Border.BackgroundProperty);
-                ClearValue(templateChild, Border.BorderBrushProperty);
-                ClearValue(templateChild, Border.BorderThicknessProperty);
-                ClearValue(templateChild, Border.CornerRadiusProperty);
-                ClearValue(templateChild, Border.PaddingProperty);
-            }
-            ClearValue(View, ChartView.PlotBackgroundProperty);
-            ClearValue(this, Control.BackgroundProperty);
-            ClearValue(this, Control.ForegroundProperty);
-            ClearValue(this, Control.BorderThicknessProperty);
-            ClearValue(this, Control.BorderBrushProperty);
-            ClearValue(this, FrameworkElement.MarginProperty);
-            ClearValue(this, Control.PaddingProperty);
-            ClearValue(this, CornerRadiusProperty);
-            ClearValue(this, CustomPaletteProperty);
-            ClearLegendBindings();
-        }
-
-        private static void ClearValue(FrameworkElement fe, DependencyProperty dp)
-        {
-            if (fe != null)
-            {
-                object obj2 = fe.ReadLocalValue(dp);
-                if (dp == CustomPaletteProperty)
-                {
-                    fe.ClearValue(dp);
-                }
-                if (obj2 is BindingBase)
-                {
-                    fe.ClearValue(dp);
-                }
-            }
-        }
-
-        private void ContentSizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            if (DesignMode.DesignModeEnabled)
-            {
-                InvalidateChart();
-            }
-        }
-
-        private void EffectChanged(object sender, EventArgs e)
-        {
-            InvalidateChart();
-        }
-
-        public void EndUpdate()
-        {
-            UpdateCount--;
-        }
-
-        public object FindPlotElement(string name)
-        {
-            return ViewElement.FindName(name);
-        }
-
-        internal void FireActionEnter(object sender, EventArgs args)
-        {
-            if (ActionEnter != null)
-            {
-                ActionEnter(sender, args);
-            }
-        }
-
-        internal void FireActionLeave(object sender, EventArgs args)
-        {
-            if (ActionLeave != null)
-            {
-                ActionLeave(sender, args);
-            }
-        }
-
-        internal void InitLegendBindings(ChartLegend legend)
-        {
-            _legend = legend;
-            if (legend != null)
-            {
-                InitThemeBinding(legend, Control.BackgroundProperty, "C1Chart_LegendBackground_Brush");
-                InitThemeBinding(legend, Control.ForegroundProperty, "C1Chart_LegendForeground_Brush");
-                InitThemeBinding(legend, Control.BorderBrushProperty, "C1Chart_LegendBorder_Brush");
-                InitThemeBinding(legend, Control.BorderThicknessProperty, "C1Chart_LegendBorder_Thickness");
-                InitThemeBinding(legend, ChartLegend.CornerRadiusProperty, "C1Chart_Legend_CornerRadius");
-            }
-        }
-
-        private void InitThemeBinding(FrameworkElement fe, DependencyProperty property, string key)
-        {
-            if (((CustomTheme != null) && (fe != null)) && ((CustomTheme == null) || CustomTheme.ContainsKey(key)))
-            {
-                if (property == CustomPaletteProperty)
-                {
-                    fe.SetValue(property, CustomTheme[key]);
-                }
-                if (fe.ReadLocalValue(property) == DependencyProperty.UnsetValue)
-                {
-                    Binding binding2 = new Binding();
-                    binding2.Source = this;
-                    binding2.Path = new PropertyPath("CustomTheme");
-                    Binding binding = binding2;
-                    binding.Mode = BindingMode.OneWay;
-                    binding.Converter = _themeConverter;
-                    binding.ConverterParameter = new object[] { key, fe };
-                    fe.SetBinding(property, binding);
-                }
-            }
-        }
-
-        private void InitThemeBindings()
-        {
-            FrameworkElement templateChild = base.GetTemplateChild("view") as FrameworkElement;
-            if (templateChild != null)
-            {
-                InitThemeBinding(templateChild, Border.BackgroundProperty, "C1Chart_ChartAreaBackground_Brush");
-                InitThemeBinding(templateChild, Border.BorderBrushProperty, "C1Chart_ChartAreaBorder_Brush");
-                InitThemeBinding(templateChild, Border.BorderThicknessProperty, "C1Chart_ChartAreaBorder_Thickness");
-                InitThemeBinding(templateChild, Border.CornerRadiusProperty, "C1Chart_ChartArea_CornerRadius");
-                InitThemeBinding(templateChild, Border.PaddingProperty, "C1Chart_ChartArea_Padding");
-            }
-            InitThemeBinding(View, ChartView.PlotBackgroundProperty, "C1Chart_PlotAreaBackground_Brush");
-            InitThemeBinding(this, Control.BackgroundProperty, "C1Chart_Background_Brush");
-            InitThemeBinding(this, Control.ForegroundProperty, "C1Chart_Foreground_Brush");
-            InitThemeBinding(this, Control.BorderThicknessProperty, "C1Chart_Border_Thickness");
-            InitThemeBinding(this, Control.BorderBrushProperty, "C1Chart_Border_Brush");
-            InitThemeBinding(this, FrameworkElement.MarginProperty, "C1Chart_Margin");
-            InitThemeBinding(this, Control.PaddingProperty, "C1Chart_Padding");
-            InitThemeBinding(this, CornerRadiusProperty, "C1Chart_CornerRadius");
-            InitThemeBinding(this, CustomPaletteProperty, "C1Chart_CustomPalette");
-            InitLegendBindings(_legend);
-        }
-
-        private void inp_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            _data_DataChanged(this, EventArgs.Empty);
-        }
-
-        internal void InvalidateChart()
-        {
-            if ((UpdateCount <= 0) && (((UpdateCount <= 0) && _loaded) && _templated))
-            {
-                forceRebuild = true;
-                RebuildChart();
-            }
-        }
-
-        internal void LayoutUpdatedInternal()
-        {
-            if (((base.ActualWidth != 0.0) && (base.ActualHeight != 0.0)) && _loaded)
-            {
-                if (!_templated)
-                {
-                    base.ApplyTemplate();
-                }
-                if (_dirtyChildren)
-                {
-                    UpdateChildren();
-                }
-                Size size = new Size(base.ActualWidth, base.ActualHeight);
-                if (size != sz)
-                {
-                    sz = size;
-                    forceRebuild = true;
-                    RebuildChart();
-                }
-                else if ((ViewElement != null) && (ViewElement.Parent is FrameworkElement))
-                {
-                    FrameworkElement templateChild = base.GetTemplateChild("viewContent") as FrameworkElement;
-                    if ((templateChild != null) && ((templateChild.ActualHeight != ViewElement.Height) || (templateChild.ActualWidth != ViewElement.Width)))
-                    {
-                        Data.Renderer.Dirty = true;
-                        forceRebuild = true;
-                        RebuildChart();
-                    }
-                }
-            }
-        }
-
-        protected override Size MeasureOverride(Size availableSize)
-        {
-            if (View != null)
-            {
-                ViewElement = View.ViewElement;
-            }
-            return base.MeasureOverride(availableSize);
-        }
-
-        private static void OnAggregateChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        static void OnAggregateChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             Chart chart = (Chart)obj;
             if (chart.Data != null)
@@ -857,27 +107,6 @@ namespace Dt.Base
             chart.InvalidateChart();
         }
 
-        protected override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-            if (CustomTheme != null)
-            {
-                InitThemeBindings();
-            }
-            _templated = true;
-            _dirtyChildren = true;
-            FrameworkElement element = _content as FrameworkElement;
-            if (element != null)
-            {
-                element.SizeChanged -= ContentSizeChanged;
-            }
-            _content = base.GetTemplateChild("content") as UIElement;
-            element = _content as FrameworkElement;
-            if (element != null)
-            {
-                element.SizeChanged += ContentSizeChanged;
-            }
-        }
 
         internal static void OnAttachedPropertyChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
@@ -900,22 +129,22 @@ namespace Dt.Base
             }
         }
 
-        private static void OnChartTypeChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        static void OnChartTypeChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             Chart chart = (Chart)obj;
             ChartType newValue = (ChartType)args.NewValue;
-            if (chart._loaded && chart._templated)
+            if (chart._loaded)
             {
                 chart.ApplyChartType(newValue);
             }
         }
 
-        private static void OnClipToBoundsChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        static void OnClipToBoundsChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             ((Chart)obj).InvalidateArrange();
         }
 
-        private static void OnCustomPaletteChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        static void OnCustomPaletteChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             Chart chart = (Chart)obj;
             chart.StyleGenerator.Reset();
@@ -955,7 +184,7 @@ namespace Dt.Base
                 if (dictionary != null)
                 {
                     List<Brush> list3 = new List<Brush>();
-                    foreach (object obj3 in Enumerable.OrderBy<object, object>((IEnumerable<object>)dictionary.Keys, delegate(object key)
+                    foreach (object obj3 in Enumerable.OrderBy<object, object>((IEnumerable<object>)dictionary.Keys, delegate (object key)
                     {
                         return key;
                     }))
@@ -997,27 +226,7 @@ namespace Dt.Base
             chart.InvalidateChart();
         }
 
-        private static void OnCustomThemeChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
-        {
-            Chart chart = (Chart)obj;
-            chart.BeginUpdate();
-            if (chart.PropertyChanged != null)
-            {
-                chart.PropertyChanged(chart, new PropertyChangedEventArgs("CustomTheme"));
-            }
-            if ((chart.Data != null) && (chart.Data.Renderer != null))
-            {
-                chart.Data.Renderer.Dirty = true;
-            }
-            chart.EndUpdate();
-            ResourceDictionary newValue = args.NewValue as ResourceDictionary;
-            if (!Themes.IsStandard(newValue))
-            {
-                chart.Theme = ChartTheme.Custom;
-            }
-        }
-
-        private static void OnDataChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        static void OnDataChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             Chart chart = (Chart)obj;
             chart.ClearAllINP();
@@ -1029,7 +238,6 @@ namespace Dt.Base
                     oldValue.Renderer = null;
                 }
                 oldValue.DataChanged -= new EventHandler(chart._data_DataChanged);
-                chart.RemoveLogicalChild(oldValue);
             }
             oldValue = (ChartData)args.NewValue;
             if (oldValue != null)
@@ -1040,28 +248,17 @@ namespace Dt.Base
             if (oldValue != null)
             {
                 oldValue.Renderer = null;
-                chart.AddLogicalChild(oldValue);
             }
             chart.InvalidateChart();
         }
 
-        protected override void OnDoubleTapped(DoubleTappedRoutedEventArgs e)
-        {
-            base.OnDoubleTapped(e);
-            if ((GestureDoubleTap == GestureDoubleTapAction.Scale) && (Data.Renderer is Renderer2D))
-            {
-                Actions.FireEnter();
-                Actions.PerformScale(e.GetPosition(this));
-                Actions.FireLeave();
-            }
-        }
 
-        private static void OnForegroundInternalChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        static void OnForegroundInternalChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             ((Chart)obj).InvalidateChart();
         }
 
-        private static void OnLegendItemsChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        static void OnLegendItemsChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             Chart chart = (Chart)obj;
             if (args.NewValue != chart._litemsRO)
@@ -1070,35 +267,12 @@ namespace Dt.Base
             }
         }
 
-        private static void OnThemeChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
-        {
-            Chart chart = (Chart)obj;
-            ChartTheme oldValue = (ChartTheme)args.OldValue;
-            ChartTheme newValue = (ChartTheme)args.NewValue;
-            if (newValue != ChartTheme.Custom)
-            {
-                chart.CustomTheme = Themes.GetThemes((ChartTheme)args.NewValue);
-            }
-            chart.ClearThemeBindings();
-            if (newValue != ChartTheme.None)
-            {
-                chart.InitThemeBindings();
-            }
-            chart.InvalidateChart();
-            if (DesignMode.DesignModeEnabled)
-            {
-                chart.UpdateLayout();
-                chart.LayoutUpdatedInternal();
-            }
-        }
-
-        private static void OnViewChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        static void OnViewChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             Chart chart = (Chart)obj;
             ChartView oldValue = (ChartView)args.OldValue;
             if (oldValue != null)
             {
-                chart.RemoveLogicalChild(oldValue);
                 oldValue.Chart = null;
             }
             oldValue = (ChartView)args.NewValue;
@@ -1109,98 +283,606 @@ namespace Dt.Base
             chart.InvalidateChart();
         }
 
-        private void RebuildChart()
+        static void ClearValue(FrameworkElement fe, DependencyProperty dp)
         {
-            if (!_inBuild)
+            if (fe != null)
+            {
+                object obj2 = fe.ReadLocalValue(dp);
+                if (dp == CustomPaletteProperty)
+                {
+                    fe.ClearValue(dp);
+                }
+                if (obj2 is BindingBase)
+                {
+                    fe.ClearValue(dp);
+                }
+            }
+        }
+
+        #endregion
+
+        #region 成员变量
+        readonly ChartObservableCollection _children = new ChartObservableCollection();
+        Grid _contentGrid;
+        ContentPresenter _viewPresenter;
+        ActionCollection _actions;
+        bool _autoSeries;
+        ChartBindings _bindings;
+        ResourceDictionary _customTheme = new ResourceDictionary();
+        GradientMethod _gradientMethod;
+        bool _inBuild;
+        List<INotifyPropertyChanged> _inps = new List<INotifyPropertyChanged>();
+        LegendItems _litems;
+        LegendItemCollection _litemsRO;
+        bool _loaded;
+        Renderers _renderers;
+        StyleGenerator _stgen;
+        int _updateCount;
+        FrameworkElement _viewElement;
+        bool dataChanged = true;
+        internal bool forceRebuild = true;
+        Point pinchCenter = new Point();
+        #endregion
+
+        #region 构造方法
+        public Chart()
+        {
+            DefaultStyleKey = typeof(Chart);
+
+            BubbleOptions.SetMinSize(this, Size.Empty);
+            BubbleOptions.SetMaxSize(this, Size.Empty);
+            Data = new ChartData();
+            View = new ChartView();
+
+            Binding binding = new Binding();
+            binding.Source = this;
+            binding.Path = new PropertyPath("Foreground");
+            SetBinding(ForegroundInternalProperty, binding);
+
+            _litems = new LegendItems();
+            _litemsRO = new LegendItemCollection(_litems);
+            LegendItems = _litemsRO;
+
+            PointerPressed += C1Chart_PointerPressed;
+            PointerReleased += C1Chart_PointerReleased;
+            PointerMoved += C1Chart_PointerMoved;
+            ManipulationStarted += C1Chart_ManipulationStarted;
+            ManipulationDelta += C1Chart_ManipulationDelta;
+            ManipulationCompleted += C1Chart_ManipulationCompleted;
+            Loaded += C1Chart_Loaded;
+        }
+        #endregion
+
+        #region 事件
+        /// <summary>
+        /// 
+        /// </summary>
+        public event EventHandler ActionEnter;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public event EventHandler ActionLeave;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public event EventHandler LegendChanged;
+        #endregion
+
+        #region 属性
+        /// <summary>
+        /// 获取设置图表类型
+        /// </summary>
+        public ChartType ChartType
+        {
+            get { return (ChartType)GetValue(ChartTypeProperty); }
+            set { SetValue(ChartTypeProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置图表数据
+        /// </summary>
+        public ChartData Data
+        {
+            get { return (ChartData)GetValue(DataProperty); }
+            set { SetValue(DataProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置图表标题内容
+        /// </summary>
+        public object Header
+        {
+            get { return GetValue(HeaderProperty); }
+            set { SetValue(HeaderProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置图表调色板
+        /// </summary>
+        [DefaultValue(0)]
+        public Palette Palette
+        {
+            get { return StyleGenerator.Palette; }
+            set
+            {
+                StyleGenerator.Palette = value;
+                forceRebuild = true;
+                InvalidateChart();
+            }
+        }
+
+        internal ActionCollection Actions
+        {
+            get
+            {
+                if (_actions == null)
+                {
+                    _actions = new ActionCollection(this);
+                }
+                return _actions;
+            }
+        }
+
+        [DefaultValue(40)]
+        public double ActionUpdateDelay
+        {
+            get { return Actions.UpdateDelay; }
+            set { Actions.UpdateDelay = value; }
+        }
+
+        public Aggregate Aggregate
+        {
+            get { return (Aggregate)GetValue(AggregateProperty); }
+            set { SetValue(AggregateProperty, value); }
+        }
+
+        public bool AutoGenerateSeries
+        {
+            get { return _autoSeries; }
+            set
+            {
+                if (_autoSeries != value)
+                {
+                    _autoSeries = value;
+                    dataChanged = true;
+                    InvalidateChart();
+                }
+            }
+        }
+
+        public ChartBindings Bindings
+        {
+            get { return _bindings; }
+            set
+            {
+                if (_bindings != value)
+                {
+                    _bindings = value;
+                    dataChanged = true;
+                    InvalidateChart();
+                }
+            }
+        }
+
+        public ObservableCollection<UIElement> Children
+        {
+            get { return _children; }
+        }
+
+        public bool ClipToBounds
+        {
+            get { return (bool)GetValue(ClipToBoundsProperty); }
+            set { SetValue(ClipToBoundsProperty, value); }
+        }
+
+        public IEnumerable CustomPalette
+        {
+            get { return (IEnumerable)GetValue(CustomPaletteProperty); }
+            set { SetValue(CustomPaletteProperty, value); }
+        }
+
+        public GestureDoubleTapAction GestureDoubleTap { get; set; }
+
+        public GesturePinchAction GesturePinch { get; set; }
+
+        public GestureSlideAction GestureSlide { get; set; }
+
+        public GradientMethod GradientMethod
+        {
+            get { return _gradientMethod; }
+            set
+            {
+                if (_gradientMethod != value)
+                {
+                    _gradientMethod = value;
+                    InvalidateChart();
+                }
+            }
+        }
+
+        public LegendItemCollection LegendItems
+        {
+            get { return (LegendItemCollection)GetValue(LegendItemsProperty); }
+            set { SetValue(LegendItemsProperty, value); }
+        }
+
+        internal LegendItems LegendItemsInternal
+        {
+            get { return _litems; }
+        }
+
+        internal Renderers Renderers
+        {
+            get
+            {
+                if (_renderers == null)
+                {
+                    _renderers = new Renderers();
+                }
+                return _renderers;
+            }
+        }
+
+        StyleGenerator StyleGenerator
+        {
+            get
+            {
+                if (_stgen == null)
+                {
+                    _stgen = new StyleGenerator();
+                    _stgen.CustomBrushConverter = new Dt.Charts.Converter<Brush, Brush>(BrushConverter);
+                }
+                return _stgen;
+            }
+        }
+
+        internal int UpdateCount
+        {
+            get { return _updateCount; }
+            set
+            {
+                if (value <= 0)
+                {
+                    _updateCount = 0;
+                    InvalidateChart();
+                }
+                else
+                {
+                    _updateCount = value;
+                }
+            }
+        }
+
+        public ChartView View
+        {
+            get { return (ChartView)GetValue(ViewProperty); }
+            set { SetValue(ViewProperty, value); }
+        }
+
+        internal FrameworkElement ViewElement
+        {
+            get { return _viewElement; }
+            set
             {
                 try
                 {
-                    BaseRenderer renderer;
-                    _inBuild = true;
-                    if (Data != null)
+                    if (_viewElement != value)
                     {
-                        IRenderer renderer2 = Data.Renderer;
+                        _viewElement = value;
+                        Content = _viewElement;
+                    }
+                }
+                catch (Exception)
+                {
+                }
+            }
+        }
+        #endregion
+
+        void _data_DataChanged(object sender, EventArgs e)
+        {
+            if ((Data != null) && (Data.Children.Count == 0))
+            {
+                StyleGenerator.Reset();
+            }
+            forceRebuild = true;
+            dataChanged = true;
+            InvalidateChart();
+        }
+
+        void AddINP(INotifyPropertyChanged inp)
+        {
+            inp.PropertyChanged += inp_PropertyChanged;
+            _inps.Add(inp);
+        }
+
+        internal void ApplyChartType(ChartType chartType)
+        {
+            ApplyChartType(chartType.ToString());
+        }
+
+        void ApplyChartType(string type)
+        {
+            if (!string.IsNullOrEmpty(type))
+            {
+                ChartSubtype subtype = ChartTypes.GetSubtype(type);
+                if (subtype != null)
+                {
+                    subtype.Apply(this);
+                }
+            }
+        }
+
+        public void BeginUpdate()
+        {
+            UpdateCount++;
+        }
+
+        Brush BrushConverter(Brush brush)
+        {
+            if (GradientMethod == GradientMethod.None)
+            {
+                return brush;
+            }
+            return brush;
+        }
+
+        void C1Chart_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
+        {
+            if ((GesturePinch == GesturePinchAction.Scale) && (Data.Renderer is Renderer2D))
+            {
+                if (Actions.State == ActionType.Pinch)
+                {
+                    Actions.State = ActionType.None;
+                    e.Handled = true;
+                    Actions.FireLeave();
+                }
+            }
+            else if (((GestureSlide == GestureSlideAction.Translate) && (Data.Renderer is Renderer2D)) && (Actions.State == ActionType.Translate))
+            {
+                Actions.State = ActionType.None;
+                e.Handled = true;
+                Actions.FireLeave();
+            }
+        }
+
+        void C1Chart_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+        {
+            if (e.Delta.Scale != 1.0)
+            {
+                if ((GesturePinch == GesturePinchAction.Scale) && (Data.Renderer is Renderer2D))
+                {
+                    Actions.FireEnter();
+                    Actions.State = ActionType.Pinch;
+                    float scale = e.Delta.Scale;
+                    Actions.PerformScale(pinchCenter, (double)scale, (double)scale);
+                    e.Handled = true;
+                }
+            }
+            else if (((e.Delta.Translation.X != 0.0) || (e.Delta.Translation.Y != 0.0)) && ((GestureSlide == GestureSlideAction.Translate) && (Data.Renderer is Renderer2D)))
+            {
+                Actions.FireEnter();
+                Actions.State = ActionType.Translate;
+                Actions.PerformTranslate(new Point(), e.Delta.Translation);
+            }
+        }
+
+        void C1Chart_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
+        {
+            pinchCenter = e.Position;
+        }
+
+        void C1Chart_PointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            if (GestureSlide == GestureSlideAction.Zoom)
+            {
+                Actions.OnMouseMove(e);
+            }
+        }
+
+        void C1Chart_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            if (GestureSlide == GestureSlideAction.Zoom)
+            {
+                Actions.OnMouseDown(e);
+            }
+        }
+
+        void C1Chart_PointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+            if (GestureSlide == GestureSlideAction.Zoom)
+            {
+                Actions.OnMouseUp(e);
+            }
+        }
+
+        void ClearAllINP()
+        {
+            int num = _inps.Count;
+            if (num > 0)
+            {
+                for (int i = 0; i < num; i++)
+                {
+                    _inps[i].PropertyChanged -= inp_PropertyChanged;
+                }
+                _inps.Clear();
+            }
+        }
+
+        void EffectChanged(object sender, EventArgs e)
+        {
+            InvalidateChart();
+        }
+
+        public void EndUpdate()
+        {
+            UpdateCount--;
+        }
+
+        public object FindPlotElement(string name)
+        {
+            return ViewElement.FindName(name);
+        }
+
+        internal void FireActionEnter(object sender, EventArgs args)
+        {
+            if (ActionEnter != null)
+            {
+                ActionEnter(sender, args);
+            }
+        }
+
+        internal void FireActionLeave(object sender, EventArgs args)
+        {
+            if (ActionLeave != null)
+            {
+                ActionLeave(sender, args);
+            }
+        }
+
+        void inp_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            _data_DataChanged(this, EventArgs.Empty);
+        }
+
+        void C1Chart_Loaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= C1Chart_Loaded;
+            _loaded = true;
+            UpdateChildren();
+
+            _children.OnClear += _children_Clear;
+            _children.CollectionChanged += _children_CollectionChanged;
+        }
+
+        #region 重写
+        protected override void OnApplyTemplate()
+        {
+            _contentGrid = (Grid)GetTemplateChild("grid");
+
+            if (_viewPresenter != null)
+                _viewPresenter.SizeChanged -= OnPresenterSizeChanged;
+            _viewPresenter = (ContentPresenter)GetTemplateChild("ViewPresenter");
+            if (_viewPresenter != null)
+                _viewPresenter.SizeChanged += OnPresenterSizeChanged;
+        }
+
+        protected override void OnDoubleTapped(DoubleTappedRoutedEventArgs e)
+        {
+            OnDoubleTapped(e);
+            if ((GestureDoubleTap == GestureDoubleTapAction.Scale) && (Data.Renderer is Renderer2D))
+            {
+                Actions.FireEnter();
+                Actions.PerformScale(e.GetPosition(this));
+                Actions.FireLeave();
+            }
+        }
+        #endregion
+
+        #region 绘制
+
+        internal void InvalidateChart()
+        {
+            if (UpdateCount <= 0 && _loaded)
+            {
+                forceRebuild = true;
+                RebuildChart();
+            }
+        }
+
+        void RebuildChart()
+        {
+            if (_inBuild)
+                return;
+
+            try
+            {
+                BaseRenderer renderer;
+                _inBuild = true;
+                if (Data != null)
+                {
+                    IRenderer renderer2 = Data.Renderer;
+                    if (renderer2 == null)
+                    {
+                        ApplyChartType(ChartType);
+                        renderer2 = Data.Renderer;
                         if (renderer2 == null)
                         {
-                            ApplyChartType(ChartType);
-                            renderer2 = Data.Renderer;
-                            if (renderer2 == null)
-                            {
-                                Data.Renderer = renderer2 = new Renderer2D();
-                            }
-                        }
-                        renderer = renderer2 as BaseRenderer;
-                        if (renderer != null)
-                        {
-                            renderer.StyleGen = StyleGenerator;
-                        }
-                        renderer2.Visual = this;
-                        if (renderer2.Dirty)
-                        {
-                            forceRebuild = true;
+                            Data.Renderer = renderer2 = new Renderer2D();
                         }
                     }
-                    if (forceRebuild)
+                    renderer = renderer2 as BaseRenderer;
+                    if (renderer != null)
                     {
-                        forceRebuild = false;
-                        if (Data != null)
-                        {
-                            IRenderer renderer3 = Data.Renderer;
-                            if (renderer3 != null)
-                            {
-                                renderer = renderer3 as BaseRenderer;
-                                if (renderer != null)
-                                {
-                                    renderer.ChartType = ChartType;
-                                    renderer.StyleGen.Reset();
-                                }
-                                renderer3.Dirty = false;
-                                View.Renderer = renderer3;
-                                if (dataChanged)
-                                {
-                                    dataChanged = false;
-                                    renderer3.Clear();
-                                    RebuildRenderer(renderer3);
-                                }
-                                if (renderer != null)
-                                {
-                                    object[] itemNamesInternal = Data.ItemNamesInternal;
-                                    if ((Data.Aggregate != Aggregate.None) && (itemNamesInternal != null))
-                                    {
-                                        renderer.ItemNames = Enumerable.ToArray<object>(Enumerable.Distinct<object>(itemNamesInternal));
-                                    }
-                                    else
-                                    {
-                                        renderer.ItemNames = itemNamesInternal;
-                                    }
-                                    renderer.UpdateLegend((IList<LegendItem>)LegendItemsInternal);
-                                }
-                            }
-                        }
-                        if (View != null)
-                        {
-                            ViewElement = View.ViewElement;
-                            FrameworkElement templateChild = base.GetTemplateChild("viewContent") as FrameworkElement;
-                            if (templateChild != null)
-                            {
-                                double actualWidth = templateChild.ActualWidth;
-                                double actualHeight = templateChild.ActualHeight;
-                                ViewElement.Width = actualWidth;
-                                ViewElement.Height = actualHeight;
-                                View.Rebuild(actualWidth, actualHeight);
-                            }
-                            if (LegendChanged != null)
-                            {
-                                LegendChanged(this, EventArgs.Empty);
-                            }
-                            ViewElement.InvalidateArrange();
-                        }
+                        renderer.StyleGen = StyleGenerator;
+                    }
+                    renderer2.Visual = this;
+                    if (renderer2.Dirty)
+                    {
+                        forceRebuild = true;
                     }
                 }
-                finally
+                if (forceRebuild)
                 {
-                    _inBuild = false;
+                    forceRebuild = false;
+                    if (Data != null)
+                    {
+                        IRenderer renderer3 = Data.Renderer;
+                        if (renderer3 != null)
+                        {
+                            renderer = renderer3 as BaseRenderer;
+                            if (renderer != null)
+                            {
+                                renderer.ChartType = ChartType;
+                                renderer.StyleGen.Reset();
+                            }
+                            renderer3.Dirty = false;
+                            View.Renderer = renderer3;
+                            if (dataChanged)
+                            {
+                                dataChanged = false;
+                                renderer3.Clear();
+                                RebuildRenderer(renderer3);
+                            }
+                            if (renderer != null)
+                            {
+                                object[] itemNamesInternal = Data.ItemNamesInternal;
+                                if ((Data.Aggregate != Aggregate.None) && (itemNamesInternal != null))
+                                {
+                                    renderer.ItemNames = Enumerable.ToArray<object>(Enumerable.Distinct<object>(itemNamesInternal));
+                                }
+                                else
+                                {
+                                    renderer.ItemNames = itemNamesInternal;
+                                }
+                                renderer.UpdateLegend((IList<LegendItem>)LegendItemsInternal);
+                            }
+                        }
+                    }
+                    if (View != null)
+                    {
+                        ViewElement = View.ViewElement;
+                        if (_viewPresenter != null)
+                        {
+                            double actualWidth = _viewPresenter.ActualWidth;
+                            double actualHeight = _viewPresenter.ActualHeight;
+                            ViewElement.Width = actualWidth;
+                            ViewElement.Height = actualHeight;
+                            View.Rebuild(actualWidth, actualHeight);
+                        }
+                        if (LegendChanged != null)
+                        {
+                            LegendChanged(this, EventArgs.Empty);
+                        }
+                        ViewElement.InvalidateArrange();
+                    }
                 }
+            }
+            finally
+            {
+                _inBuild = false;
             }
         }
 
@@ -1208,13 +890,13 @@ namespace Dt.Base
         /// 绘制图表
         /// </summary>
         /// <param name="renderer"></param>
-        private void RebuildRenderer(IRenderer renderer)
+        void RebuildRenderer(IRenderer renderer)
         {
             IEnumerable itemsSource = Data.ItemsSource;
             ClearAllINP();
             if (itemsSource == null)
             {
-                itemsSource = base.DataContext as IEnumerable;
+                itemsSource = DataContext as IEnumerable;
             }
 
             if (itemsSource != null)
@@ -1319,27 +1001,11 @@ namespace Dt.Base
             }
         }
 
-        private void RemoveChildren(IList items)
+        void OnPresenterSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (items != null)
-            {
-                Panel templateChild = base.GetTemplateChild("grid") as Panel;
-                if (templateChild != null)
-                {
-                    foreach (UIElement element in items)
-                    {
-                        if (templateChild.Children.Contains(element))
-                        {
-                            templateChild.Children.Remove(element);
-                        }
-                    }
-                }
-            }
+            InvalidateChart();
         }
-
-        internal void RemoveLogicalChild(object child)
-        {
-        }
+        #endregion
 
         public void Reset(bool clearData)
         {
@@ -1364,13 +1030,11 @@ namespace Dt.Base
             EndUpdate();
         }
 
-        [EditorBrowsable((EditorBrowsableState)EditorBrowsableState.Never)]
         public void ResetData()
         {
             Data = null;
         }
 
-        [EditorBrowsable((EditorBrowsableState)EditorBrowsableState.Never)]
         public bool ShouldSerializeData()
         {
             return (Data != null);
@@ -1381,54 +1045,59 @@ namespace Dt.Base
             ClearAllINP();
         }
 
-        private void UpdateChildren()
+        #region 同步Children
+        void _children_Clear(object sender, EventArgs e)
         {
-            Panel templateChild = base.GetTemplateChild("grid") as Panel;
-            if (templateChild != null)
+            RemoveChildren((IList)Children);
+        }
+
+        void _children_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action != ((NotifyCollectionChangedAction)((int)NotifyCollectionChangedAction.Reset)))
             {
-                foreach (UIElement element in Children)
+                RemoveChildren(e.OldItems);
+            }
+            UpdateChildren();
+        }
+
+        void RemoveChildren(IList p_items)
+        {
+            if (p_items != null && _contentGrid != null)
+            {
+                foreach (UIElement element in p_items)
                 {
-                    ChartLegend legend = element as ChartLegend;
-                    FrameworkElement element2 = element as FrameworkElement;
-                    if (element2 != null)
-                    {
-                        if (legend != null)
-                        {
-                            legend.Chart = this;
-                        }
-                        else
-                        {
-                            Grid.SetColumn(element2, 1);
-                            Grid.SetRow(element2, 1);
-                        }
-                        try
-                        {
-                            if (!templateChild.Children.Contains(element))
-                            {
-                                if (element2.Parent == null)
-                                {
-                                    templateChild.Children.Add(element);
-                                }
-                                else
-                                {
-                                    Panel parent = element2.Parent as Panel;
-                                    if (parent != null)
-                                    {
-                                        parent.Children.Remove(element2);
-                                        templateChild.Children.Add(element2);
-                                    }
-                                }
-                            }
-                        }
-                        catch
-                        {
-                        }
-                    }
+                    _contentGrid.Children.Remove(element);
                 }
-                _dirtyChildren = false;
             }
         }
 
+        void UpdateChildren()
+        {
+            if (_contentGrid == null)
+                return;
+
+            foreach (var elem in Children.OfType<FrameworkElement>())
+            {
+                ChartLegend legend = elem as ChartLegend;
+                if (legend != null)
+                {
+                    legend.Chart = this;
+                }
+                else
+                {
+                    Grid.SetColumn(elem, 1);
+                    Grid.SetRow(elem, 1);
+                }
+
+                if (!_contentGrid.Children.Contains(elem))
+                {
+                    if (elem.Parent is Panel pnl)
+                        pnl.Children.Remove(elem);
+                    _contentGrid.Children.Add(elem);
+                }
+            }
+        }
+        #endregion
     }
 }
 

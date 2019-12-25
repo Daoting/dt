@@ -19,7 +19,7 @@ namespace Dt.Charts
     public partial class HLOC : PlotElement, ICustomClipping
     {
         protected HLOCAppearance app;
-        private PathGeometry _geometry;
+        PathGeometry _geometry;
 
         public HLOC()
         {
@@ -36,7 +36,7 @@ namespace Dt.Charts
             return clone;
         }
 
-        private static PathFigure CreateRectFigure(Rect rect, bool isStroked)
+        static PathFigure CreateRectFigure(Rect rect, bool isStroked)
         {
             PathFigure figure = new PathFigure();
             figure.StartPoint = new Point(rect.Left, rect.Top);
@@ -189,7 +189,7 @@ namespace Dt.Charts
             }
         }
 
-        private void RenderDefault(RenderContext rc)
+        void RenderDefault(RenderContext rc)
         {
             base.Fill = new SolidColorBrush(Colors.Transparent);
             double d = rc["HighValues"];

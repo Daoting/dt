@@ -15,7 +15,7 @@ namespace Dt.Charts
 {
     public partial class PlotAreaColumnDefinition : DependencyObject
     {
-        public static readonly DependencyProperty WidthProperty = DependencyProperty.Register("Width", (Type) typeof(Windows.UI.Xaml.GridLength), (Type) typeof(PlotAreaColumnDefinition), new PropertyMetadata(Windows.UI.Xaml.GridLength.Auto));
+        public static readonly DependencyProperty WidthProperty = DependencyProperty.Register("Width",  typeof(Windows.UI.Xaml.GridLength),  typeof(PlotAreaColumnDefinition), new PropertyMetadata(Windows.UI.Xaml.GridLength.Auto));
 
         public Windows.UI.Xaml.GridLength Width
         {

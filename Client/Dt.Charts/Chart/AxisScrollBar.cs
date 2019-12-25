@@ -17,11 +17,11 @@ namespace Dt.Charts
 {
     public partial class AxisScrollBar : ContentControl, IAxisScrollBar
     {
-        private Axis _axis;
-        private ScrollBar _sb;
-        private double _scale;
-        private double _value;
-        private bool notify;
+        Axis _axis;
+        ScrollBar _sb;
+        double _scale;
+        double _value;
+        bool notify;
         internal const string ScrollBarElementName = "ScrollBar";
 
         public Axis Axis
@@ -48,7 +48,7 @@ namespace Dt.Charts
             }
         }
 
-        private double AxisScale
+        double AxisScale
         {
             get { return  _scale; }
             set
@@ -62,7 +62,7 @@ namespace Dt.Charts
             }
         }
 
-        private double AxisValue
+        double AxisValue
         {
             get
             {
@@ -103,7 +103,7 @@ namespace Dt.Charts
             base.DefaultStyleKey = typeof(AxisScrollBar);
         }
 
-        private void InitScrollBar()
+        void InitScrollBar()
         {
             if (_sb != null)
             {
@@ -126,7 +126,7 @@ namespace Dt.Charts
         }
 
 
-        private void OnAxisRangeChanged()
+        void OnAxisRangeChanged()
         {
             if (notify && (AxisRangeChanged != null))
             {
@@ -135,7 +135,7 @@ namespace Dt.Charts
         }
 
 
-        private void UpdateScale()
+        void UpdateScale()
         {
             if (_scale == 1.0)
             {
@@ -152,7 +152,7 @@ namespace Dt.Charts
         }
 
 
-        private void UpdateValue()
+        void UpdateValue()
         {
             if ((Axis != null) && (Axis.AxisType == AxisType.Y))
             {
@@ -164,7 +164,7 @@ namespace Dt.Charts
             }
         }
 
-        private void _axis_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void _axis_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             notify = false;
             try

@@ -17,7 +17,7 @@ namespace Dt.Charts
 {
     public partial class Area : Lines
     {
-        private double _origin;
+        double _origin;
 
         public Area()
         {
@@ -33,7 +33,7 @@ namespace Dt.Charts
             return clone;
         }
 
-        private static Point[] InitPrevious(RenderContext rc, bool inverted, Point[] pts, double[] prev)
+        static Point[] InitPrevious(RenderContext rc, bool inverted, Point[] pts, double[] prev)
         {
             int length = pts.Length;
             Point[] pointArray = new Point[length];
@@ -222,7 +222,7 @@ namespace Dt.Charts
             return figure;
         }
 
-        private PathFigure RenderSegment(PointCollection pts)
+        PathFigure RenderSegment(PointCollection pts)
         {
             PathFigure figure = new PathFigure();
             figure.StartPoint = pts[0];

@@ -22,46 +22,47 @@ namespace Dt.Base
     /// </summary>
     public partial class ChartLegend : ItemsControl
     {
-        /// <summary>
-        /// 
-        /// </summary>
+        #region 静态内容
+        public static readonly DependencyProperty PositionProperty = DependencyProperty.Register(
+            "Position",
+            typeof(LegendPosition),
+            typeof(ChartLegend),
+            new PropertyMetadata(LegendPosition.Bottom, OnPositionChanged));
+
         public static readonly DependencyProperty OrientationProperty = DependencyProperty.Register(
-            "Orientation", 
-            (Type)typeof(Orientation), 
-            (Type)typeof(ChartLegend),
-            new PropertyMetadata(Orientation.Vertical, new PropertyChangedCallback(ChartLegend.OnOrientationChanged)));
+            "Orientation",
+            typeof(Orientation),
+            typeof(ChartLegend),
+            new PropertyMetadata(Orientation.Horizontal));
 
-        /// <summary>
-        /// 
-        /// </summary>
         public static readonly DependencyProperty OverlapChartProperty = DependencyProperty.Register(
-            "OverlapChart", 
-            (Type)typeof(bool),
-            (Type)typeof(ChartLegend), 
-            new PropertyMetadata((bool)false, new PropertyChangedCallback(ChartLegend.OnOverlapChartChanged)));
+            "OverlapChart",
+            typeof(bool),
+            typeof(ChartLegend),
+            new PropertyMetadata(false, OnOverlapChartChanged));
 
-        /// <summary>
-        /// 
-        /// </summary>
         public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
-            "Title", 
-            (Type)typeof(object), 
-            (Type)typeof(ChartLegend),
-            new PropertyMetadata(null, new PropertyChangedCallback(ChartLegend.OnTitleChanged)));
+            "Title",
+            typeof(object),
+            typeof(ChartLegend),
+            new PropertyMetadata(null));
 
-        private Chart _parent;
-        private LegendPosition _position;
-        private StackPanel sp;
-        
+        static void OnOverlapChartChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        {
+            ((ChartLegend)obj).UpdatePosition();
+        }
+
+        static void OnPositionChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        {
+            ((ChartLegend)obj).UpdatePosition();
+        }
+        #endregion
+
+        Chart _parent;
+
         public ChartLegend()
         {
             DefaultStyleKey = typeof(ChartLegend);
-            _position = LegendPosition.Right;
-            Loaded += (sender, e) => { UpdatePosition(); };
-            if (DesignMode.DesignModeEnabled)
-            {
-                SizeChanged += C1ChartLegend_SizeChanged;
-            }
         }
 
         /// <summary>
@@ -69,8 +70,8 @@ namespace Dt.Base
         /// </summary>
         public object Title
         {
-            get { return base.GetValue(TitleProperty); }
-            set { base.SetValue(TitleProperty, value); }
+            get { return GetValue(TitleProperty); }
+            set { SetValue(TitleProperty, value); }
         }
 
         /// <summary>
@@ -78,8 +79,8 @@ namespace Dt.Base
         /// </summary>
         public Orientation Orientation
         {
-            get { return (Orientation)base.GetValue(OrientationProperty); }
-            set { base.SetValue(OrientationProperty, value); }
+            get { return (Orientation)GetValue(OrientationProperty); }
+            set { SetValue(OrientationProperty, value); }
         }
 
         /// <summary>
@@ -87,8 +88,8 @@ namespace Dt.Base
         /// </summary>
         public bool OverlapChart
         {
-            get { return (bool)((bool)base.GetValue(OverlapChartProperty)); }
-            set { base.SetValue(OverlapChartProperty, (bool)value); }
+            get { return (bool)GetValue(OverlapChartProperty); }
+            set { SetValue(OverlapChartProperty, value); }
         }
 
         /// <summary>
@@ -96,15 +97,8 @@ namespace Dt.Base
         /// </summary>
         public LegendPosition Position
         {
-            get { return _position; }
-            set
-            {
-                if (_position != value)
-                {
-                    _position = value;
-                    UpdatePosition();
-                }
-            }
+            get { return (LegendPosition)GetValue(PositionProperty); }
+            set { SetValue(PositionProperty, value); }
         }
 
         /// <summary>
@@ -118,135 +112,93 @@ namespace Dt.Base
                 if (_parent != value)
                 {
                     if (_parent != null)
-                    {
-                        _parent.LegendChanged -= new EventHandler(_parent_LegendChanged);
-                    }
+                        _parent.LegendChanged -= _parent_LegendChanged;
                     _parent = value;
                     if (_parent != null)
-                    {
-                        _parent.LegendChanged += new EventHandler(_parent_LegendChanged);
-                    }
-                    else
-                    {
-                        base.ItemsSource = null;
-                    }
-                    _parent.InitLegendBindings(this);
+                        _parent.LegendChanged += _parent_LegendChanged;
                 }
             }
         }
 
-        private void _parent_LegendChanged(object sender, EventArgs e)
+        protected override void OnApplyTemplate()
         {
-            while (base.Items.Count > 0)
-            {
-                base.Items.RemoveAt(0);
-            }
+            // 为绑定Orientation
+            var pre = (ItemsPresenter)GetTemplateChild("Presenter");
+            if (pre != null)
+                pre.DataContext = this;
+
+            UpdatePosition();
+        }
+
+        void _parent_LegendChanged(object sender, EventArgs e)
+        {
+            Items.Clear();
             foreach (LegendItem item in _parent.LegendItems)
             {
-                base.Items.Add(item);
+                Items.Add(item);
             }
         }
 
-        private void C1ChartLegend_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            if (Chart != null)
-            {
-                Chart.InvalidateChart();
-            }
-        }
-
-        private static void OnOrientationChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
-        {
-            ChartLegend legend = (ChartLegend)obj;
-            if (legend.sp != null)
-            {
-                legend.sp.Orientation = legend.Orientation;
-            }
-        }
-
-        private static void OnOverlapChartChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
-        {
-            ChartLegend legend = (ChartLegend)obj;
-            legend.UpdatePosition();
-        }
-
-        private static void OnTitleChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
-        {
-        }
-
-        protected override void PrepareContainerForItemOverride(DependencyObject element, object item)
-        {
-            if (element != null)
-            {
-                sp = VisualTreeHelper.GetParent(element) as StackPanel;
-                if ((sp != null) && (sp.Orientation != Orientation))
-                {
-                    sp.Orientation = Orientation;
-                }
-            }
-            base.PrepareContainerForItemOverride(element, item);
-        }
-
-        private void UpdatePosition()
+        void UpdatePosition()
         {
             switch (Position)
             {
                 case LegendPosition.Left:
                     Grid.SetColumn(this, OverlapChart ? 1 : 0);
                     Grid.SetRow(this, 1);
-                    base.HorizontalAlignment = HorizontalAlignment.Left;
-                    base.VerticalAlignment = VerticalAlignment.Center;
+                    HorizontalAlignment = HorizontalAlignment.Left;
+                    VerticalAlignment = VerticalAlignment.Center;
                     return;
 
                 case LegendPosition.Right:
                     Grid.SetColumn(this, OverlapChart ? 1 : 2);
                     Grid.SetRow(this, 1);
-                    base.HorizontalAlignment = HorizontalAlignment.Right;
-                    base.VerticalAlignment = VerticalAlignment.Center;
+                    HorizontalAlignment = HorizontalAlignment.Right;
+                    VerticalAlignment = VerticalAlignment.Center;
                     return;
 
                 case LegendPosition.Top:
                 case LegendPosition.TopCenter:
                     Grid.SetColumn(this, 1);
                     Grid.SetRow(this, OverlapChart ? 1 : 0);
-                    base.HorizontalAlignment = HorizontalAlignment.Center;
-                    base.VerticalAlignment = VerticalAlignment.Top;
+                    HorizontalAlignment = HorizontalAlignment.Center;
+                    VerticalAlignment = VerticalAlignment.Top;
                     return;
 
                 case LegendPosition.Bottom:
                 case LegendPosition.BottomCenter:
                     Grid.SetColumn(this, 1);
                     Grid.SetRow(this, OverlapChart ? 1 : 2);
-                    base.HorizontalAlignment = HorizontalAlignment.Center;
-                    base.VerticalAlignment = VerticalAlignment.Bottom;
+                    HorizontalAlignment = HorizontalAlignment.Center;
+                    VerticalAlignment = VerticalAlignment.Bottom;
                     return;
 
                 case LegendPosition.TopLeft:
                     Grid.SetColumn(this, 1);
                     Grid.SetRow(this, OverlapChart ? 1 : 0);
-                    base.HorizontalAlignment = HorizontalAlignment.Left;
-                    base.VerticalAlignment = VerticalAlignment.Top;
+                    HorizontalAlignment = HorizontalAlignment.Left;
+                    VerticalAlignment = VerticalAlignment.Top;
                     return;
 
                 case LegendPosition.TopRight:
                     Grid.SetColumn(this, 1);
                     Grid.SetRow(this, OverlapChart ? 1 : 0);
-                    base.HorizontalAlignment = HorizontalAlignment.Right;
-                    base.VerticalAlignment = VerticalAlignment.Top;
+                    HorizontalAlignment = HorizontalAlignment.Right;
+                    VerticalAlignment = VerticalAlignment.Top;
                     return;
 
                 case LegendPosition.BottomLeft:
                     Grid.SetColumn(this, 1);
                     Grid.SetRow(this, OverlapChart ? 1 : 2);
-                    base.HorizontalAlignment = HorizontalAlignment.Left;
-                    base.VerticalAlignment = VerticalAlignment.Bottom;
+                    HorizontalAlignment = HorizontalAlignment.Left;
+                    VerticalAlignment = VerticalAlignment.Bottom;
                     return;
 
                 case LegendPosition.BottomRight:
                     Grid.SetColumn(this, 1);
                     Grid.SetRow(this, OverlapChart ? 1 : 2);
-                    base.HorizontalAlignment = HorizontalAlignment.Right;
-                    base.VerticalAlignment = VerticalAlignment.Bottom;
+                    HorizontalAlignment = HorizontalAlignment.Right;
+                    VerticalAlignment = VerticalAlignment.Bottom;
                     return;
             }
         }

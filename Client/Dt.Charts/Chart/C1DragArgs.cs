@@ -91,11 +91,11 @@ namespace Dt.Charts
         }
 
         // Properties
-        public Point CumulativeTranslation { get; private set; }
+        public Point CumulativeTranslation { get; set; }
 
-        public Point DeltaTranslation { get; private set; }
+        public Point DeltaTranslation { get; set; }
 
-        public bool IsInertial { get; private set; }
+        public bool IsInertial { get; set; }
     }
 
     public class C1DragInertiaStartedEventArgs : C1DragEventArgs
@@ -111,7 +111,7 @@ namespace Dt.Charts
         // Properties
         public double DesiredDeceleration { get; set; }
 
-        public Point Velocity { get; private set; }
+        public Point Velocity { get; set; }
     }
 
     public class C1DragStartedEventArgs : C1DragEventArgs
@@ -125,9 +125,9 @@ namespace Dt.Charts
         }
 
         // Properties
-        internal C1DragDirection Direction { get; private set; }
+        internal C1DragDirection Direction { get; set; }
 
-        public Point Origin { get; private set; }
+        public Point Origin { get; set; }
     }
 
     public class C1DragStartingEventArgs : C1DragEventArgs
@@ -162,7 +162,7 @@ namespace Dt.Charts
         }
 
         // Properties
-        public C1DragHelper DragHelper { get; private set; }
+        public C1DragHelper DragHelper { get; set; }
     }
 
     public abstract class C1InputEventArgs : EventArgs
@@ -367,16 +367,16 @@ namespace Dt.Charts
             set { SetIsHandled(OriginalEventArgs, value); }
         }
 
-        public RoutedEventArgs OriginalEventArgs { get; private set; }
+        public RoutedEventArgs OriginalEventArgs { get; set; }
 
         public object OriginalSource
         {
             get { return  null; }
         }
 
-        public C1PointerDeviceType PointerDeviceType { get; private set; }
+        public C1PointerDeviceType PointerDeviceType { get; set; }
 
-        private static GeneralTransform DoTransform(UIElement element, UIElement visual)
+        static GeneralTransform DoTransform(UIElement element, UIElement visual)
         {
             try
             {

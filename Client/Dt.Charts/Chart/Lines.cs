@@ -19,8 +19,8 @@ namespace Dt.Charts
 {
     public partial class Lines : PlotElement
     {
-        private bool _smoothed;
-        private bool _xinc = false;
+        bool _smoothed;
+        bool _xinc = false;
         protected PathGeometry _geometry;
 
         public Lines()
@@ -35,7 +35,7 @@ namespace Dt.Charts
             base.StrokeStartLineCap = cap;
         }
 
-        private static Point[] ClipPoints(Rect bnds, Point[] pts)
+        static Point[] ClipPoints(Rect bnds, Point[] pts)
         {
             int num = -1;
             int num2 = -1;

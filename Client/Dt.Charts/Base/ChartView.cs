@@ -32,8 +32,8 @@ namespace Dt.Charts
         /// </summary>
         public static readonly DependencyProperty InvertedProperty = DependencyProperty.Register(
             "Inverted",
-            (Type)typeof(bool),
-            (Type)typeof(ChartView),
+            typeof(bool),
+            typeof(ChartView),
             new PropertyMetadata((bool)false, new PropertyChangedCallback(ChartView.OnInvertedChanged)));
 
         /// <summary>
@@ -45,18 +45,18 @@ namespace Dt.Charts
             typeof(ChartView), 
             new PropertyChangedCallback(ChartView.OnPlotBackgroundChanged));
 
-        private PlotAreaCollection _areas;
-        private Axis _ax;
-        private AxisCollection _axes = new AxisCollection();
-        private Axis _ay;
-        private Chart _chart;
-        private Dictionary<UIElement, Point> _childPoints = new Dictionary<UIElement, Point>();
-        private ObservableCollection<UIElement> _children;
-        private ObservableCollection<IChartLayer> _layers;
-        private Shape _plotShape;
-        private IRenderer _renderer;
-        private SolidColorBrush _transparentBrush = new SolidColorBrush(Colors.Transparent);
-        private ChartViewport2D _vp2;
+        PlotAreaCollection _areas;
+        Axis _ax;
+        AxisCollection _axes = new AxisCollection();
+        Axis _ay;
+        Chart _chart;
+        Dictionary<UIElement, Point> _childPoints = new Dictionary<UIElement, Point>();
+        ObservableCollection<UIElement> _children;
+        ObservableCollection<IChartLayer> _layers;
+        Shape _plotShape;
+        IRenderer _renderer;
+        SolidColorBrush _transparentBrush = new SolidColorBrush(Colors.Transparent);
+        ChartViewport2D _vp2;
         
         public ChartView()
         {
@@ -249,7 +249,7 @@ namespace Dt.Charts
             get { return _vp2; }
         }
 
-        private void _areas_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        void _areas_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (Chart != null)
             {
@@ -257,7 +257,7 @@ namespace Dt.Charts
             }
         }
 
-        private void _axis_Changed(object sender, EventArgs e)
+        void _axis_Changed(object sender, EventArgs e)
         {
             ILayout viewElement = ViewElement as ILayout;
             if (viewElement != null)
@@ -266,7 +266,7 @@ namespace Dt.Charts
             }
         }
 
-        private void _children_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        void _children_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (_vp2 != null)
             {
@@ -295,7 +295,7 @@ namespace Dt.Charts
             }
         }
 
-        private void _layers_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        void _layers_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
             {
@@ -476,7 +476,7 @@ namespace Dt.Charts
             return _childPoints[visual];
         }
 
-        private static void OnInvertedChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        static void OnInvertedChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             ChartView view = (ChartView)obj;
             Chart chart = view._chart;
@@ -486,7 +486,7 @@ namespace Dt.Charts
             }
         }
 
-        private static void OnPlotBackgroundChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        static void OnPlotBackgroundChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
             ChartView view = obj as ChartView;
             if (view.PlotShape != null)
@@ -509,7 +509,7 @@ namespace Dt.Charts
             return new Point(_vp2.ConvertX(pt.X), _vp2.ConvertY(pt.Y));
         }
 
-        private PointD PointFromData(DataSeries ds, PointD pt)
+        PointD PointFromData(DataSeries ds, PointD pt)
         {
             return PointFromData(ds.AxisX, ds.AxisY, pt);
         }
@@ -567,12 +567,12 @@ namespace Dt.Charts
             return new Point(_vp2.ConvertBackX(pt.X), _vp2.ConvertBackY(pt.Y));
         }
 
-        private PointD PointToData(DataSeries ds, PointD pt)
+        PointD PointToData(DataSeries ds, PointD pt)
         {
             return PointToData(ds.AxisX, ds.AxisY, pt);
         }
 
-        private PointD PointToData(DataSeries ds, Point pt)
+        PointD PointToData(DataSeries ds, Point pt)
         {
             return PointToData(ds.AxisX, ds.AxisY, new PointD(pt.X, pt.Y));
         }
@@ -633,7 +633,7 @@ namespace Dt.Charts
             ax.PropertyChanged -= new PropertyChangedEventHandler(_axis_Changed);
         }
 
-        private void ReplaceAxis(Axis oldAxis, Axis newAxis)
+        void ReplaceAxis(Axis oldAxis, Axis newAxis)
         {
             if ((oldAxis != null) && (newAxis != null))
             {

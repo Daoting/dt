@@ -77,24 +77,24 @@ namespace Dt.Charts
         public static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(double), typeof(Axis), new PropertyMetadata((double)0.0, new PropertyChangedCallback(Axis.OnValueChanged)));
         public static readonly DependencyProperty VisibleProperty = DependencyProperty.Register("Visible", typeof(bool), typeof(Axis), new PropertyMetadata((bool)true, new PropertyChangedCallback(Axis.OnDPChanged)));
 
-        private double _actualMax;
-        private double _actualMin;
-        private IAxisScrollBar _asb;
-        private Dt.Charts.AxisType _axType;
-        private Func<double, double> _dependentConverter;
-        private bool _fixedType;
-        private bool _isDependent;
-        private bool? _isTime;
-        private double _minScale;
-        private const double _MinScale = 1E-05;
-        private DispatcherTimer _timer;
-        private double _tmpScale;
-        private double _tmpValue;
+        double _actualMax;
+        double _actualMin;
+        IAxisScrollBar _asb;
+        Dt.Charts.AxisType _axType;
+        Func<double, double> _dependentConverter;
+        bool _fixedType;
+        bool _isDependent;
+        bool? _isTime;
+        double _minScale;
+        const double _MinScale = 1E-05;
+        DispatcherTimer _timer;
+        double _tmpScale;
+        double _tmpValue;
         internal double Change;
         internal IAxis iax;
         internal bool IsValidFmt;
         internal bool IsValidTimeFmt;
-        private bool notify;
+        bool notify;
 
         public Axis() : this(Dt.Charts.AxisType.Y)
         {
@@ -116,7 +116,7 @@ namespace Dt.Charts
             _axType = atype;
         }
 
-        private void _timer_Tick(object sender, object e)
+        void _timer_Tick(object sender, object e)
         {
             _timer.Stop();
             if ((_tmpValue != Value) || (_tmpScale != Scale))
@@ -533,7 +533,7 @@ namespace Dt.Charts
             }
         }
 
-        private DispatcherTimer Timer
+        DispatcherTimer Timer
         {
             get
             {
@@ -602,7 +602,7 @@ namespace Dt.Charts
             return true;
         }
 
-        private static void OnAnnoFormatChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        static void OnAnnoFormatChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             Axis axis = (Axis)obj;
             axis.IsValidFmt = TestFormat(axis.AnnoFormat, false);
@@ -610,7 +610,7 @@ namespace Dt.Charts
             axis.OnPropertyChanged(args.Property.ToString());
         }
 
-        private static void OnAutoMaxChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        static void OnAutoMaxChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             Axis axis = (Axis)obj;
             if ((bool)args.NewValue)
@@ -629,7 +629,7 @@ namespace Dt.Charts
             axis.OnPropertyChanged("AutoMax");
         }
 
-        private static void OnAutoMinChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        static void OnAutoMinChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             Axis axis = (Axis)obj;
             if ((bool)args.NewValue)
@@ -648,12 +648,12 @@ namespace Dt.Charts
             axis.OnPropertyChanged("AutoMin");
         }
 
-        private static void OnDPChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        static void OnDPChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             ((Axis)obj).OnPropertyChanged(args.Property.ToString());
         }
 
-        private static void OnIsTimeChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        static void OnIsTimeChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
             Axis axis = (Axis)obj;
             axis._isTime = new bool?((bool)((bool)e.NewValue));
@@ -662,7 +662,7 @@ namespace Dt.Charts
             axis.OnPropertyChanged("IsTime");
         }
 
-        private static void OnLogBaseChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        static void OnLogBaseChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             Axis axis = (Axis)obj;
             if (((axis.LogBase <= 0.0) || (axis.LogBase > 3.4028234663852886E+38)) || (axis.LogBase == 1.0))
@@ -675,7 +675,7 @@ namespace Dt.Charts
             }
         }
 
-        private static void OnMaxChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        static void OnMaxChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
             Axis axis = (Axis)obj;
             if (axis.notify)
@@ -691,7 +691,7 @@ namespace Dt.Charts
             axis.OnPropertyChanged("Max");
         }
 
-        private static void OnMinChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        static void OnMinChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
             Axis axis = (Axis)obj;
             if (axis.notify)
@@ -707,7 +707,7 @@ namespace Dt.Charts
             axis.OnPropertyChanged("Min");
         }
 
-        private void OnPropertyChanged(string name)
+        void OnPropertyChanged(string name)
         {
             if (notify && (PropertyChanged != null))
             {
@@ -715,17 +715,17 @@ namespace Dt.Charts
             }
         }
 
-        private static void OnRadarLabelVisibilityChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        static void OnRadarLabelVisibilityChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             ((Axis)obj).OnPropertyChanged("RadarLabelVisibility");
         }
 
-        private static void OnRadarPointIndicesChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        static void OnRadarPointIndicesChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             ((Axis)obj).OnPropertyChanged("RadarPointIndices");
         }
 
-        private static void OnScaleChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        static void OnScaleChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             Axis axis = (Axis)obj;
             if (axis.Scale < axis.MinScale)
@@ -742,7 +742,7 @@ namespace Dt.Charts
             }
         }
 
-        private static void OnValueChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        static void OnValueChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
             Axis axis = (Axis)obj;
             if (axis.Value > 1.0)
@@ -893,7 +893,7 @@ namespace Dt.Charts
             MinorGridStrokeThickness = 0.25;
         }
 
-        private void ScrollBar_AxisRangeChanged(object sender, AxisRangeChangedEventArgs e)
+        void ScrollBar_AxisRangeChanged(object sender, AxisRangeChangedEventArgs e)
         {
             _tmpValue = e.Value;
             _tmpScale = e.Scale;
@@ -935,7 +935,7 @@ namespace Dt.Charts
             }
         }
 
-        private static bool TestFormat(string fmt, bool time)
+        static bool TestFormat(string fmt, bool time)
         {
             try
             {

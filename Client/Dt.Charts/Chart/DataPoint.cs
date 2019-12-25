@@ -18,16 +18,16 @@ namespace Dt.Charts
 {
     public class DataPoint
     {
-        private DataSeries _ds;
-        private object _item;
-        private Dt.Charts.Keywords _kwords;
-        private string _name;
-        private string[] _names;
-        private int _pi;
-        private int _si;
-        private double _val;
+        DataSeries _ds;
+        object _item;
+        Dt.Charts.Keywords _kwords;
+        string _name;
+        string[] _names;
+        int _pi;
+        int _si;
+        double _val;
         internal Point LabelPoint;
-        private static object NoValue = double.NaN;
+        static object NoValue = double.NaN;
         internal Point Point;
 
         internal DataPoint(double value, object item)
@@ -49,7 +49,7 @@ namespace Dt.Charts
             _names = names;
         }
 
-        private void InitKeywords()
+        void InitKeywords()
         {
             int num = (_names != null) ? _names.Length : 0;
             for (int i = 0; i < num; i++)

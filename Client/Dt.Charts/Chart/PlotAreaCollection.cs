@@ -15,8 +15,8 @@ namespace Dt.Charts
 {
     public class PlotAreaCollection : ObservableCollection<PlotArea>
     {
-        private ObservableCollection<PlotAreaColumnDefinition> _cols = new ObservableCollection<PlotAreaColumnDefinition>();
-        private ObservableCollection<PlotAreaRowDefinition> _rows = new ObservableCollection<PlotAreaRowDefinition>();
+        ObservableCollection<PlotAreaColumnDefinition> _cols = new ObservableCollection<PlotAreaColumnDefinition>();
+        ObservableCollection<PlotAreaRowDefinition> _rows = new ObservableCollection<PlotAreaRowDefinition>();
 
         internal PlotAreaCollection()
         {

@@ -19,12 +19,12 @@ namespace Dt.Charts
 {
     public partial class PieSlice : PlotElement
     {
-        public static readonly DependencyProperty OffsetProperty = DependencyProperty.Register("Offset", (Type) typeof(double), (Type) typeof(PieSlice), new PropertyMetadata((double) 0.0, new PropertyChangedCallback(PieSlice.OnOffsetChanged)));
+        public static readonly DependencyProperty OffsetProperty = DependencyProperty.Register("Offset",  typeof(double),  typeof(PieSlice), new PropertyMetadata((double) 0.0, new PropertyChangedCallback(PieSlice.OnOffsetChanged)));
 
-        private Rect _lrect = new Rect();
+        Rect _lrect = new Rect();
         internal PieInfo _pi = new PieInfo();
         internal PathGeometry _geometry;
-        private Point offset0 = new Point();
+        Point offset0 = new Point();
 
         public PieSlice()
         {
@@ -177,7 +177,7 @@ namespace Dt.Charts
             return figure;
         }
 
-        private static PathFigure CreatePieWithHole(PieInfo pi)
+        static PathFigure CreatePieWithHole(PieInfo pi)
         {
             Point point = new Point();
             double radiusX = pi.RadiusX;
@@ -296,7 +296,7 @@ namespace Dt.Charts
             return clone;
         }
 
-        private static void OnOffsetChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        static void OnOffsetChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             PieSlice slice = (PieSlice) obj;
             slice._pi.Offset = slice.Offset;

@@ -14,10 +14,10 @@ namespace Dt.Charts
 {
     public class LegendItem
     {
-        private object _item;
-        private string _lbl;
-        private Shape _line;
-        private Shape _sym;
+        object _item;
+        string _lbl;
+        Shape _line;
+        Shape _sym;
 
         internal LegendItem(Shape sym, Shape line, string lbl, object item)
         {

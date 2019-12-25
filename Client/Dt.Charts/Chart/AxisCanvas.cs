@@ -26,29 +26,29 @@ namespace Dt.Charts
     [EditorBrowsable((EditorBrowsableState) EditorBrowsableState.Never)]
     public partial class AxisCanvas : Canvas, IAxis
     {
-        private UIElement[] _albls;
-        private Size _annoSize = new Size();
+        UIElement[] _albls;
+        Size _annoSize = new Size();
         internal Dt.Charts.Axis _axis;
-        private Chart _chart;
-        private Size _desiredSize = Size.Empty;
-        private List<object> _lbls = new List<object>();
-        private Rect _lrect = Extensions.EmptyRect;
+        Chart _chart;
+        Size _desiredSize = Size.Empty;
+        List<object> _lbls = new List<object>();
+        Rect _lrect = Extensions.EmptyRect;
         internal double _max = double.NaN;
-        private double _max0 = double.NaN;
+        double _max0 = double.NaN;
         internal double _min = double.NaN;
-        private double _min0 = double.NaN;
+        double _min0 = double.NaN;
         internal Rect _plot = new Rect();
-        private Rect _r = Extensions.EmptyRect;
-        private double _scale = 1.0;
-        private TextBlock _tbtitle;
+        Rect _r = Extensions.EmptyRect;
+        double _scale = 1.0;
+        TextBlock _tbtitle;
         internal UIElement[] _ticks;
-        private Size _titleDesiredSize = Size.Empty;
-        private TransformGroup _trg;
-        private RotateTransform _trot;
-        private TranslateTransform _trtr;
-        private List<double> _vals = new List<double>();
-        private const string fmt100pc = "0'%'";
-        private const string fmtDate = "d";
+        Size _titleDesiredSize = Size.Empty;
+        TransformGroup _trg;
+        RotateTransform _trot;
+        TranslateTransform _trtr;
+        List<double> _vals = new List<double>();
+        const string fmt100pc = "0'%'";
+        const string fmtDate = "d";
 
         internal AxisCanvas(Dt.Charts.Axis axis)
         {
@@ -178,7 +178,7 @@ namespace Dt.Charts
             }
         }
 
-        private double Convert(double val)
+        double Convert(double val)
         {
             if (_max == _min)
             {
@@ -801,7 +801,7 @@ namespace Dt.Charts
             }
         }
 
-        private void CreateMinorTick(double val, bool near)
+        void CreateMinorTick(double val, bool near)
         {
             double num3;
             Line line = new Line();
@@ -844,7 +844,7 @@ namespace Dt.Charts
             }
         }
 
-        private void CreateMinorTicksAndGrid(double[] vals)
+        void CreateMinorTicksAndGrid(double[] vals)
         {
             if ((Axis.ItemsSource == null) || !double.IsNaN(_axis.MinorUnit))
             {
@@ -932,7 +932,7 @@ namespace Dt.Charts
             }
         }
 
-        private void CreateYAxis(AxisCanvas ay, RadarView rv, bool haslabel, bool hasGrid, double angle, double angle0, double cos, double sin)
+        void CreateYAxis(AxisCanvas ay, RadarView rv, bool haslabel, bool hasGrid, double angle, double angle0, double cos, double sin)
         {
             if (ay._vals != null)
             {
@@ -972,7 +972,7 @@ namespace Dt.Charts
             }
         }
 
-        private void CreateYAxisTicks(RadarView rv, AxisCanvas ay, double sin, double cos)
+        void CreateYAxisTicks(RadarView rv, AxisCanvas ay, double sin, double cos)
         {
             UIElement[] elementArray = ay._ticks;
             if (elementArray != null)
@@ -998,7 +998,7 @@ namespace Dt.Charts
             }
         }
 
-        private void DrawGridLine(Brush stroke, double thickness, double val, bool near, DoubleCollection dashes)
+        void DrawGridLine(Brush stroke, double thickness, double val, bool near, DoubleCollection dashes)
         {
             double num = 0.0;
             double num2 = 0.0;
@@ -1070,7 +1070,7 @@ namespace Dt.Charts
             return ((double) val).ToString((IFormatProvider) CultureInfo.CurrentCulture);
         }
 
-        private Dt.Charts.Axis GetAxis(int pointIndex)
+        Dt.Charts.Axis GetAxis(int pointIndex)
         {
             foreach (Dt.Charts.Axis axis in Chart.View.Axes)
             {
@@ -1086,12 +1086,12 @@ namespace Dt.Charts
             return null;
         }
 
-        private object[] GetItemsAsObjects()
+        object[] GetItemsAsObjects()
         {
             return _lbls.ToArray();
         }
 
-        private static Size GetMaxSize(params UIElement[] els)
+        static Size GetMaxSize(params UIElement[] els)
         {
             Size size = new Size();
             int length = els.Length;
@@ -1114,7 +1114,7 @@ namespace Dt.Charts
             return size;
         }
 
-        private Rect GetRect(UIElement ui)
+        Rect GetRect(UIElement ui)
         {
             Size size = Utils.GetSize(ui);
             return new Rect(Canvas.GetLeft(ui), Canvas.GetTop(ui), size.Width, size.Height);
@@ -1181,7 +1181,7 @@ namespace Dt.Charts
             return size;
         }
 
-        private double GetTickOffset(bool inner = false)
+        double GetTickOffset(bool inner = false)
         {
             double num = 0.0;
             if (inner)
@@ -1199,7 +1199,7 @@ namespace Dt.Charts
             return num;
         }
 
-        private void InitElement(UIElement el)
+        void InitElement(UIElement el)
         {
             if ((_axis != null) && (_chart != null))
             {
@@ -1223,7 +1223,7 @@ namespace Dt.Charts
             }
         }
 
-        private bool Intersect(Point[] pts1, Point[] pts2)
+        bool Intersect(Point[] pts1, Point[] pts2)
         {
             return ((Utils.FindIntersection(pts1[0], pts1[1], pts2[1], pts2[2]) != 0) || ((Utils.FindIntersection(pts1[2], pts1[3], pts2[1], pts2[2]) != 0) || ((Utils.FindIntersection(pts1[0], pts1[1], pts2[0], pts2[3]) != 0) || ((Utils.FindIntersection(pts1[2], pts1[3], pts2[0], pts2[3]) != 0) || ((Utils.FindIntersection(pts1[1], pts1[2], pts2[0], pts2[1]) != 0) || ((Utils.FindIntersection(pts1[0], pts1[3], pts2[0], pts2[1]) != 0) || ((Utils.FindIntersection(pts1[1], pts1[2], pts2[2], pts2[3]) != 0) || (Utils.FindIntersection(pts1[0], pts1[3], pts2[2], pts2[3]) != 0))))))));
         }
@@ -1399,7 +1399,7 @@ namespace Dt.Charts
             }
         }
 
-        private void PositionLabel(UIElement el, double x, double y, double angle)
+        void PositionLabel(UIElement el, double x, double y, double angle)
         {
             Size size = Utils.GetSize(el);
             Math.Atan2(size.Width, size.Height);
@@ -1568,7 +1568,7 @@ namespace Dt.Charts
             }
         }
 
-        private static void SetProperty(DependencyObject obj, DependencyProperty prop, object value)
+        static void SetProperty(DependencyObject obj, DependencyProperty prop, object value)
         {
             if (obj.ReadLocalValue(prop) == DependencyProperty.UnsetValue)
             {
@@ -1576,7 +1576,7 @@ namespace Dt.Charts
             }
         }
 
-        private void UpdateAnnosize(IEnumerable items)
+        void UpdateAnnosize(IEnumerable items)
         {
             if (_axis.ItemsSource != null)
             {

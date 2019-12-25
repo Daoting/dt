@@ -20,15 +20,15 @@ namespace Dt.Charts
 {
     internal class SystemInfoEstimate
     {
-        private const string DeviceClassKey = "{A45C254E-DF1C-4EFD-8020-67D146A850E0},10";
-        private const string DeviceDriverVersionKey = "{A8B865DD-2E3D-4094-AD97-E593A70C75D6},3";
-        private const string HalDeviceClass = "4d36e966-e325-11ce-bfc1-08002be10318";
-        private const string ItemNameKey = "System.ItemNameDisplay";
-        private const string ManufacturerKey = "System.Devices.Manufacturer";
-        private const string ModelNameKey = "System.Devices.ModelName";
-        private const string PrimaryCategoryKey = "{78C34FC8-104A-4ACA-9EA4-524D52996E57},97";
-        private const string RootContainer = "{00000000-0000-0000-FFFF-FFFFFFFFFFFF}";
-        private const string RootQuery = "System.Devices.ContainerId:=\"{00000000-0000-0000-FFFF-FFFFFFFFFFFF}\"";
+        const string DeviceClassKey = "{A45C254E-DF1C-4EFD-8020-67D146A850E0},10";
+        const string DeviceDriverVersionKey = "{A8B865DD-2E3D-4094-AD97-E593A70C75D6},3";
+        const string HalDeviceClass = "4d36e966-e325-11ce-bfc1-08002be10318";
+        const string ItemNameKey = "System.ItemNameDisplay";
+        const string ManufacturerKey = "System.Devices.Manufacturer";
+        const string ModelNameKey = "System.Devices.ModelName";
+        const string PrimaryCategoryKey = "{78C34FC8-104A-4ACA-9EA4-524D52996E57},97";
+        const string RootContainer = "{00000000-0000-0000-FFFF-FFFFFFFFFFFF}";
+        const string RootQuery = "System.Devices.ContainerId:=\"{00000000-0000-0000-FFFF-FFFFFFFFFFFF}\"";
 
         public static Task<string> GetDeviceCategoryAsync()
         {
@@ -50,7 +50,7 @@ namespace Dt.Charts
         /// </summary>
         /// <param name="properties"></param>
         /// <returns></returns>
-        private static Task<PnpObject> GetHalDevice(params string[] properties)
+        static Task<PnpObject> GetHalDevice(params string[] properties)
         {
             PnpObject result = null;
             var actualProperties = Enumerable.Concat<string>(properties, new string[] { "{A45C254E-DF1C-4EFD-8020-67D146A850E0},10" });
@@ -104,7 +104,7 @@ namespace Dt.Charts
         /// </summary>
         /// <param name="propertyKey"></param>
         /// <returns></returns>
-        private static Task<string> GetRootDeviceInfoAsync(string propertyKey)
+        static Task<string> GetRootDeviceInfoAsync(string propertyKey)
         {
             TaskAwaiter<PnpObject> awaiter;
             awaiter = WindowsRuntimeSystemExtensions.GetAwaiter<PnpObject>(PnpObject.CreateFromIdAsync(PnpObjectType.DeviceContainer, "{00000000-0000-0000-FFFF-FFFFFFFFFFFF}", new string[] { propertyKey }));

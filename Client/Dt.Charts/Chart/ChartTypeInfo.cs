@@ -17,8 +17,8 @@ namespace Dt.Charts
     [ContentProperty(Name="Subtypes"), EditorBrowsable((EditorBrowsableState) EditorBrowsableState.Never)]
     public class ChartTypeInfo
     {
-        private string _name;
-        private List<ChartSubtype> _stypes;
+        string _name;
+        List<ChartSubtype> _stypes;
 
         public ChartTypeInfo()
         {

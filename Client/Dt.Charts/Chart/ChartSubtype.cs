@@ -17,11 +17,11 @@ namespace Dt.Charts
     [EditorBrowsable((EditorBrowsableState) EditorBrowsableState.Never)]
     public class ChartSubtype
     {
-        private object _conn;
-        private string _name;
-        private string _rname;
-        private string _ropts;
-        private object _sym;
+        object _conn;
+        string _name;
+        string _rname;
+        string _ropts;
+        object _sym;
 
         public ChartSubtype()
         {

@@ -15,7 +15,7 @@ namespace Dt.Charts
 {
     public partial class PlotAreaRowDefinition : DependencyObject
     {
-        public static readonly DependencyProperty HeightProperty = DependencyProperty.Register("Height", (Type) typeof(Windows.UI.Xaml.GridLength), (Type) typeof(PlotAreaRowDefinition), new PropertyMetadata(Windows.UI.Xaml.GridLength.Auto));
+        public static readonly DependencyProperty HeightProperty = DependencyProperty.Register("Height",  typeof(Windows.UI.Xaml.GridLength),  typeof(PlotAreaRowDefinition), new PropertyMetadata(Windows.UI.Xaml.GridLength.Auto));
 
         public Windows.UI.Xaml.GridLength Height
         {

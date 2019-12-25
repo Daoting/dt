@@ -21,11 +21,11 @@ namespace Dt.Charts
     [EditorBrowsable((EditorBrowsableState) EditorBrowsableState.Never)]
     public class ShapeStyle
     {
-        private DoubleCollection _dashArray;
-        private Brush _fill;
-        private Brush _stroke;
-        private double _thickness;
-        private Transform _transform;
+        DoubleCollection _dashArray;
+        Brush _fill;
+        Brush _stroke;
+        double _thickness;
+        Transform _transform;
         internal bool DarkOutline;
         internal Brush FillAuto;
         internal Brush StrokeAuto;
@@ -152,7 +152,7 @@ namespace Dt.Charts
             return helper.ConvertToString();
         }
 
-        private void FireChanged(object sender, EventArgs e)
+        void FireChanged(object sender, EventArgs e)
         {
             if (Changed != null)
             {

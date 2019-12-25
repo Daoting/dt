@@ -40,7 +40,7 @@ namespace Dt.Charts
             ((INotifyPropertyChanged)items).PropertyChanged += LegendItemCollection_PropertyChanged;
         }
 
-        private void items_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        void items_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (CollectionChanged != null)
             {
@@ -48,7 +48,7 @@ namespace Dt.Charts
             }
         }
 
-        private void LegendItemCollection_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void LegendItemCollection_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (PropertyChanged != null)
             {

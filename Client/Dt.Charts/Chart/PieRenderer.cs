@@ -20,10 +20,10 @@ namespace Dt.Charts
 {
     public class PieRenderer : BasePieRenderer, IView2DRenderer, IRenderer
     {
-        private int _ncols;
-        private int _nrows;
-        private Size _sz = new Size();
-        private object DefSymbol = new PieSlice();
+        int _ncols;
+        int _nrows;
+        Size _sz = new Size();
+        object DefSymbol = new PieSlice();
 
         public PieRenderer()
         {
@@ -233,7 +233,7 @@ namespace Dt.Charts
             return rect;
         }
 
-        private bool PerformLayout(int nPies, Size sz)
+        bool PerformLayout(int nPies, Size sz)
         {
             _ncols = nPies;
             _nrows = 1;

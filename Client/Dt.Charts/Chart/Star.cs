@@ -36,7 +36,7 @@ namespace Dt.Charts
             return clone;
         }
 
-        private static void OnInnerRadiusChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        static void OnInnerRadiusChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             Star star = (Star) obj;
             star.UpdateGeometry(null, star.Size);

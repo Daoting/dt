@@ -21,10 +21,10 @@ namespace Dt.Charts
 {
     public partial class ChartPanel : Panel, IChartLayer
     {
-        private Chart _chart;
-        private ChartPanelObjectCollection _children;
-        private ChartPanelObject moving;
-        private Point offset = new Point();
+        Chart _chart;
+        ChartPanelObjectCollection _children;
+        ChartPanelObject moving;
+        Point offset = new Point();
 
         public ChartPanel()
         {
@@ -34,7 +34,7 @@ namespace Dt.Charts
             panel.PointerMoved += ChartPanel_MouseMove;
         }
 
-        private void _dragHelper_DragCompleted(object sender, C1DragCompletedEventArgs e)
+        void _dragHelper_DragCompleted(object sender, C1DragCompletedEventArgs e)
         {
             if (moving != null)
             {
@@ -42,7 +42,7 @@ namespace Dt.Charts
             }
         }
 
-        private void _dragHelper_DragDelta(object sender, C1DragDeltaEventArgs e)
+        void _dragHelper_DragDelta(object sender, C1DragDeltaEventArgs e)
         {
             if (moving != null)
             {
@@ -74,7 +74,7 @@ namespace Dt.Charts
             }
         }
 
-        private void _dragHelper_DragStarted(object sender, C1DragStartedEventArgs e)
+        void _dragHelper_DragStarted(object sender, C1DragStartedEventArgs e)
         {
             ChartPanelObject relativeTo = sender as ChartPanelObject;
             if (relativeTo != null)
@@ -193,7 +193,7 @@ namespace Dt.Charts
             }
         }
         
-        private void ClearDragHelper(ChartPanelObject obj)
+        void ClearDragHelper(ChartPanelObject obj)
         {
             C1DragHelper dragHelper = obj.DragHelper;
             if (dragHelper != null)
@@ -207,7 +207,7 @@ namespace Dt.Charts
             }
         }
 
-        private void ChartPanel_MouseMove(object sender, PointerRoutedEventArgs e)
+        void ChartPanel_MouseMove(object sender, PointerRoutedEventArgs e)
         {
             int num = Children.Count;
             bool flag = false;
@@ -247,7 +247,7 @@ namespace Dt.Charts
             }
         }
 
-        private double DataDistanceFromPoint(Point pt, MeasureOption measureOption, out int seriesIndex, out int pointIndex)
+        double DataDistanceFromPoint(Point pt, MeasureOption measureOption, out int seriesIndex, out int pointIndex)
         {
             int num = Chart.Data.Children.Count;
             double naN = double.NaN;

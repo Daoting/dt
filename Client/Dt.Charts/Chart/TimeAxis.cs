@@ -15,7 +15,7 @@ namespace Dt.Charts
 {
     internal class TimeAxis
     {
-        private static long getNiceInc(int[] tik, long ts, long mult)
+        static long getNiceInc(int[] tik, long ts, long mult)
         {
             for (int i = 0; i < tik.Length; i++)
             {
@@ -84,7 +84,7 @@ namespace Dt.Charts
             return str;
         }
 
-        private static tmInc manualTimeInc(string manualformat)
+        static tmInc manualTimeInc(string manualformat)
         {
             tmInc second = tmInc.second;
             if ((manualformat == null) || (manualformat.Length == 0))
@@ -311,7 +311,7 @@ namespace Dt.Charts
             return (totalSeconds + num4);
         }
 
-        private static TimeSpan TimeSpanFromTmInc(tmInc ti)
+        static TimeSpan TimeSpanFromTmInc(tmInc ti)
         {
             TimeSpan span = TimeSpan.FromSeconds(1.0);
             if (ti.Equals(tmInc.maxtime))
@@ -331,7 +331,7 @@ namespace Dt.Charts
             return new TimeSpan(ticks);
         }
 
-        private static int tround(int tval, long tunit, bool roundup)
+        static int tround(int tval, long tunit, bool roundup)
         {
             int num = (int)((((long) tval) / tunit) * tunit);
             if (roundup && (num != tval))
@@ -341,7 +341,7 @@ namespace Dt.Charts
             return num;
         }
 
-        private class timeHelper
+        class timeHelper
         {
             public int day;
             public int hour;
@@ -410,7 +410,7 @@ namespace Dt.Charts
                 return getTimeAsDateTime().ToOADate();
             }
 
-            private void init(DateTime dt)
+            void init(DateTime dt)
             {
                 year = dt.Year;
                 month = dt.Month;

@@ -14,9 +14,9 @@ namespace Dt.Charts
 {
     public class AxisPoint
     {
-        private Dt.Charts.Axis _axis;
-        private object _item;
-        private double _value;
+        Dt.Charts.Axis _axis;
+        object _item;
+        double _value;
 
         internal AxisPoint(Dt.Charts.Axis axis, double value, object item)
         {

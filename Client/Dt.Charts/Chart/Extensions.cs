@@ -108,7 +108,7 @@ namespace Dt.Charts
             return rect1;
         }
 
-        private static bool IntersectsWith(Rect rect1, Rect rect2)
+        static bool IntersectsWith(Rect rect1, Rect rect2)
         {
             return ((((!rect1.IsEmptyRect() && !rect2.IsEmptyRect()) && ((rect2.Left <= rect1.Right) && (rect2.Right >= rect1.Left))) && (rect2.Top <= rect1.Bottom)) && (rect2.Bottom >= rect1.Top));
         }
@@ -123,7 +123,7 @@ namespace Dt.Charts
             return IsInVisualTree(element, Window.Current.Content);
         }
 
-        private static bool IsInVisualTree(DependencyObject element, DependencyObject ancestor)
+        static bool IsInVisualTree(DependencyObject element, DependencyObject ancestor)
         {
             for (DependencyObject obj2 = element; obj2 != null; obj2 = VisualTreeHelper.GetParent(obj2))
             {
@@ -135,7 +135,7 @@ namespace Dt.Charts
             return false;
         }
 
-        private static double TicksToOADate(long value)
+        static double TicksToOADate(long value)
         {
             if (value == 0L)
             {

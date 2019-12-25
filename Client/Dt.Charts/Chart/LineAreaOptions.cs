@@ -19,7 +19,7 @@ namespace Dt.Charts
     {
         public static DependencyProperty ClippingProperty = Utils.RegisterAttachedProperty("Clipping", typeof(Clipping), typeof(LineAreaOptions), new PropertyChangedCallback(Chart.OnAttachedPropertyChanged), Clipping.Auto);
         public static DependencyProperty OptimizationRadiusProperty = Utils.RegisterAttachedProperty("OptimizationRadius", typeof(double), typeof(LineAreaOptions), new PropertyChangedCallback(Chart.OnAttachedPropertyChanged), (double) double.NaN);
-        public static readonly DependencyProperty OptimizationRadiusScopeProperty = DependencyProperty.RegisterAttached("OptimizationRadiusScope", (Type) typeof(OptimizationRadiusScope), (Type) typeof(LineAreaOptions), new PropertyMetadata(OptimizationRadiusScope.Lines));
+        public static readonly DependencyProperty OptimizationRadiusScopeProperty = DependencyProperty.RegisterAttached("OptimizationRadiusScope",  typeof(OptimizationRadiusScope),  typeof(LineAreaOptions), new PropertyMetadata(OptimizationRadiusScope.Lines));
 
         [EditorBrowsable((EditorBrowsableState) EditorBrowsableState.Advanced), AttachedPropertyBrowsableForType(typeof(Chart))]
         public static Clipping GetClipping(Chart chart)

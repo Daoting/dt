@@ -13,7 +13,7 @@ namespace Dt.Charts
 {
     public class TranslateAction : Action
     {
-        private double _wheelFactor;
+        double _wheelFactor;
 
         public TranslateAction() : base(ActionType.Translate)
         {

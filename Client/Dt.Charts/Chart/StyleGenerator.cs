@@ -16,13 +16,13 @@ namespace Dt.Charts
 {
     internal class StyleGenerator
     {
-        private Dt.Charts.Palette _colorGen;
-        private Brush[] _customBrushes;
-        private List<ShapeStyle> _list = new List<ShapeStyle>();
-        private List<ShapeStyle> _list2 = new List<ShapeStyle>();
+        Dt.Charts.Palette _colorGen;
+        Brush[] _customBrushes;
+        List<ShapeStyle> _list = new List<ShapeStyle>();
+        List<ShapeStyle> _list2 = new List<ShapeStyle>();
         public Converter<Brush, Brush> CustomBrushConverter;
 
-        private Brush GetCustomBrush(int i)
+        Brush GetCustomBrush(int i)
         {
             if (CustomBrushes == null)
             {
@@ -54,7 +54,7 @@ namespace Dt.Charts
             return _list2[i];
         }
 
-        private static void InitStyle(ShapeStyle ss, Windows.UI.Color clr, bool dark)
+        static void InitStyle(ShapeStyle ss, Windows.UI.Color clr, bool dark)
         {
             SolidColorBrush fill = ss.Fill as SolidColorBrush;
             if (fill == null)
@@ -83,7 +83,7 @@ namespace Dt.Charts
             }
         }
 
-        private static void InitStyle(ShapeStyle ss, Brush brush, bool dark)
+        static void InitStyle(ShapeStyle ss, Brush brush, bool dark)
         {
             ss.FillAuto = ss.Fill = brush;
             Windows.UI.Color clr = Colors.Gray;
@@ -143,7 +143,7 @@ namespace Dt.Charts
             _list2.Clear();
         }
 
-        private void SetColors(Dt.Charts.Palette cg)
+        void SetColors(Dt.Charts.Palette cg)
         {
             int num = _list.Count;
             if (cg == Dt.Charts.Palette.Default)
@@ -168,7 +168,7 @@ namespace Dt.Charts
             }
         }
 
-        private void SyncStyle(int i)
+        void SyncStyle(int i)
         {
             _list2[i].Fill = _list2[i].FillAuto = _list[i].FillAuto;
             _list2[i].Stroke = _list2[i].StrokeAuto = _list[i].StrokeAuto;

@@ -17,22 +17,22 @@ namespace Dt.Charts
 {
     public partial class ChartPanelObject : ContentControl
     {
-        private static Point EmptyPoint = new Point(double.NaN, double.NaN);
+        static Point EmptyPoint = new Point(double.NaN, double.NaN);
 
-        public static readonly DependencyProperty ActionProperty = DependencyProperty.Register("Action", (Type)typeof(ChartPanelAction), (Type)typeof(ChartPanelObject), new PropertyMetadata(ChartPanelAction.None, new PropertyChangedCallback(ChartPanelObject.OnActionChanged)));
-        public static readonly DependencyProperty AttachProperty = DependencyProperty.Register("Attach", (Type)typeof(ChartPanelAttach), (Type)typeof(ChartPanelObject), new PropertyMetadata(ChartPanelAttach.None));
-        public static readonly DependencyProperty AxisXProperty = DependencyProperty.Register("AxisX", (Type)typeof(string), (Type)typeof(ChartPanelObject), new PropertyMetadata("", new PropertyChangedCallback(ChartPanelObject.OnAxisXChanged)));
-        public static readonly DependencyProperty AxisYProperty = DependencyProperty.Register("AxisY", (Type)typeof(string), (Type)typeof(ChartPanelObject), new PropertyMetadata("", new PropertyChangedCallback(ChartPanelObject.OnAxisYChanged)));
-        public static readonly DependencyProperty DataPointProperty = DependencyProperty.Register("DataPoint", (Type)typeof(Point), (Type)typeof(ChartPanelObject), new PropertyMetadata(EmptyPoint, new PropertyChangedCallback(ChartPanelObject.OnDataPointChanged)));
-        public static readonly DependencyProperty UseAxisLimitsProperty = DependencyProperty.Register("UseAxisLimits", (Type)typeof(bool), (Type)typeof(ChartPanelObject), new PropertyMetadata((bool)true));
+        public static readonly DependencyProperty ActionProperty = DependencyProperty.Register("Action", typeof(ChartPanelAction), typeof(ChartPanelObject), new PropertyMetadata(ChartPanelAction.None, new PropertyChangedCallback(ChartPanelObject.OnActionChanged)));
+        public static readonly DependencyProperty AttachProperty = DependencyProperty.Register("Attach", typeof(ChartPanelAttach), typeof(ChartPanelObject), new PropertyMetadata(ChartPanelAttach.None));
+        public static readonly DependencyProperty AxisXProperty = DependencyProperty.Register("AxisX", typeof(string), typeof(ChartPanelObject), new PropertyMetadata("", new PropertyChangedCallback(ChartPanelObject.OnAxisXChanged)));
+        public static readonly DependencyProperty AxisYProperty = DependencyProperty.Register("AxisY", typeof(string), typeof(ChartPanelObject), new PropertyMetadata("", new PropertyChangedCallback(ChartPanelObject.OnAxisYChanged)));
+        public static readonly DependencyProperty DataPointProperty = DependencyProperty.Register("DataPoint", typeof(Point), typeof(ChartPanelObject), new PropertyMetadata(EmptyPoint, new PropertyChangedCallback(ChartPanelObject.OnDataPointChanged)));
+        public static readonly DependencyProperty UseAxisLimitsProperty = DependencyProperty.Register("UseAxisLimits", typeof(bool), typeof(ChartPanelObject), new PropertyMetadata((bool)true));
 
-        private C1DragHelper _dragHelper;
-        private ChartPanel _panel;
-        private bool notify = true;
+        C1DragHelper _dragHelper;
+        ChartPanel _panel;
+        bool notify = true;
         
         public event EventHandler DataPointChanged;
 
-        private Point AdjustPoint(Point pt)
+        Point AdjustPoint(Point pt)
         {
             if ((Panel != null) && (Panel.Chart != null))
             {
@@ -113,7 +113,7 @@ namespace Dt.Charts
             return pt;
         }
 
-        private static void OnActionChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        static void OnActionChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             ChartPanelObject obj2 = (ChartPanelObject) obj;
             if (obj2.Panel != null)
@@ -123,12 +123,12 @@ namespace Dt.Charts
             }
         }
 
-        private static void OnAxisXChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        static void OnAxisXChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             ((ChartPanelObject) obj).InvalidateMeasure();
         }
 
-        private static void OnAxisYChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        static void OnAxisYChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             ((ChartPanelObject) obj).InvalidateMeasure();
         }
@@ -145,7 +145,7 @@ namespace Dt.Charts
             }
         }
 
-        private static void OnDataPointChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        static void OnDataPointChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             ((ChartPanelObject) obj).OnDataPointChanged(args);
         }

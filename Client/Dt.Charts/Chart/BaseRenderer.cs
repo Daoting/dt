@@ -24,28 +24,28 @@ namespace Dt.Charts
     [EditorBrowsable((EditorBrowsableState) EditorBrowsableState.Advanced)]
     public abstract class BaseRenderer : IRenderer, IAxisController
     {
-        private bool _analyzed;
-        private Dt.Charts.ColorScheme _clrScheme;
-        private object _conn;
-        private ICoordConverter _coordConverter;
+        bool _analyzed;
+        Dt.Charts.ColorScheme _clrScheme;
+        object _conn;
+        ICoordConverter _coordConverter;
         internal DataInfo _dataInfo;
-        private bool _dirty;
-        private bool _inverted;
-        private object[] _itemnames;
-        private List<string> _optbag;
-        private List<IDataSeriesInfo> _series;
-        private double _sizeX = 0.7;
-        private double _sizeY = 0.7;
-        private StackedOptions _stacked;
-        private StyleGenerator _stgen;
-        private ResourceDictionary _styles;
-        private object _symbol;
-        private PlotElement _symbolCash;
-        private UIElement _visual;
+        bool _dirty;
+        bool _inverted;
+        object[] _itemnames;
+        List<string> _optbag;
+        List<IDataSeriesInfo> _series;
+        double _sizeX = 0.7;
+        double _sizeY = 0.7;
+        StackedOptions _stacked;
+        StyleGenerator _stgen;
+        ResourceDictionary _styles;
+        object _symbol;
+        PlotElement _symbolCash;
+        UIElement _visual;
         internal Dt.Charts.ChartType ChartType;
-        private bool clear = true;
-        private const char delim = ';';
-        private const char pair_delim = '=';
+        bool clear = true;
+        const char delim = ';';
+        const char pair_delim = '=';
 
         event EventHandler IRenderer.Changed
         {
@@ -83,7 +83,7 @@ namespace Dt.Charts
         {
         }
 
-        private void AnalyseNDimNPts()
+        void AnalyseNDimNPts()
         {
             int num = 0;
             int num2 = 0;
@@ -782,7 +782,7 @@ namespace Dt.Charts
                     Inverted = bool.Parse(value);
                     return;
                 }
-                Stacked = (StackedOptions) Enum.Parse((Type) typeof(StackedOptions), value, true);
+                Stacked = (StackedOptions) Enum.Parse( typeof(StackedOptions), value, true);
             }
         }
 

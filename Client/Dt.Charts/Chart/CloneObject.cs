@@ -20,7 +20,7 @@ namespace Dt.Charts
 {
     internal static class CloneObject
     {
-        private static TT CloneCreate<TT>(TT source)
+        static TT CloneCreate<TT>(TT source)
         {
             try
             {
@@ -45,7 +45,7 @@ namespace Dt.Charts
             return default(TT);
         }
 
-        private static void CloneDependencyProperty(DependencyObject sourceObject, DependencyObject cloneObject, FieldInfo field)
+        static void CloneDependencyProperty(DependencyObject sourceObject, DependencyObject cloneObject, FieldInfo field)
         {
             try
             {
@@ -81,7 +81,7 @@ namespace Dt.Charts
             }
         }
 
-        private static void CloneList(IList sourceList, IList cloneList)
+        static void CloneList(IList sourceList, IList cloneList)
         {
             try
             {
@@ -126,7 +126,7 @@ namespace Dt.Charts
             }
         }
 
-        private static void CloneProperties(object source, object clone)
+        static void CloneProperties(object source, object clone)
         {
             if (source is DependencyObject)
             {
@@ -143,7 +143,7 @@ namespace Dt.Charts
             }
         }
 
-        private static void CloneProperty(object source, object clone, PropertyInfo property)
+        static void CloneProperty(object source, object clone, PropertyInfo property)
         {
             try
             {
@@ -184,7 +184,7 @@ namespace Dt.Charts
             }
         }
 
-        private static TT CloneRecursive<TT>(TT source)
+        static TT CloneRecursive<TT>(TT source)
         {
             if ((source == null) || IsValueType(source.GetType()))
             {
@@ -218,12 +218,12 @@ namespace Dt.Charts
             return local;
         }
 
-        private static FieldInfo[] GetFields(Type type)
+        static FieldInfo[] GetFields(Type type)
         {
             return Enumerable.ToArray<FieldInfo>(RuntimeReflectionExtensions.GetRuntimeFields(type));
         }
 
-        private static Type GetInterface(Type type, string name)
+        static Type GetInterface(Type type, string name)
         {
             foreach (Type type2 in IntrospectionExtensions.GetTypeInfo(type).ImplementedInterfaces)
             {
@@ -235,22 +235,22 @@ namespace Dt.Charts
             return null;
         }
 
-        private static MethodInfo GetMethod(Type type, string name, Type parameterType)
+        static MethodInfo GetMethod(Type type, string name, Type parameterType)
         {
             return RuntimeReflectionExtensions.GetRuntimeMethod(type, name, new Type[] { parameterType });
         }
 
-        private static PropertyInfo[] GetProperties(Type type)
+        static PropertyInfo[] GetProperties(Type type)
         {
             return Enumerable.ToArray<PropertyInfo>(RuntimeReflectionExtensions.GetRuntimeProperties(type));
         }
 
-        private static bool IsValueType(Type type)
+        static bool IsValueType(Type type)
         {
             return IntrospectionExtensions.GetTypeInfo(type).IsValueType;
         }
 
-        private static string SimpleType(Type type)
+        static string SimpleType(Type type)
         {
             string str = type.ToString();
             int startIndex = str.LastIndexOf('[');

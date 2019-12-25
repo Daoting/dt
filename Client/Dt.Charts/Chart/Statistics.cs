@@ -15,11 +15,11 @@ namespace Dt.Charts
 {
     internal class Statistics
     {
-        private int _cnt;
-        private double _max;
-        private double _min;
-        private double _sum;
-        private double _sum2;
+        int _cnt;
+        double _max;
+        double _min;
+        double _sum;
+        double _sum2;
 
         public Statistics(IList<double> list)
         {
@@ -47,7 +47,7 @@ namespace Dt.Charts
             }
         }
 
-        private static bool IsValid(double val)
+        static bool IsValid(double val)
         {
             return (!double.IsInfinity(val) && !double.IsNaN(val));
         }

@@ -19,13 +19,13 @@ namespace Dt.Charts
 {
     public partial class PlotArea : DependencyObject
     {
-        public static readonly DependencyProperty BackgroundProperty = DependencyProperty.Register("Background", (Type) typeof(Brush), (Type) typeof(PlotArea), new PropertyMetadata(null));
-        public static readonly DependencyProperty ColumnProperty = DependencyProperty.Register("Column", (Type) typeof(int), (Type) typeof(PlotArea), new PropertyMetadata((int) 0));
-        private Rect plotRect = new Rect();
-        private Rectangle rect;
-        public static readonly DependencyProperty RowProperty = DependencyProperty.Register("Row", (Type) typeof(int), (Type) typeof(PlotArea), new PropertyMetadata((int) 0));
-        public static readonly DependencyProperty StrokeProperty = DependencyProperty.Register("Stroke", (Type) typeof(Brush), (Type) typeof(PlotArea), new PropertyMetadata(null));
-        public static readonly DependencyProperty StrokeThicknessProperty = DependencyProperty.Register("StrokeThickness", (Type) typeof(double), (Type) typeof(PlotArea), new PropertyMetadata((double) 1.0));
+        public static readonly DependencyProperty BackgroundProperty = DependencyProperty.Register("Background",  typeof(Brush),  typeof(PlotArea), new PropertyMetadata(null));
+        public static readonly DependencyProperty ColumnProperty = DependencyProperty.Register("Column",  typeof(int),  typeof(PlotArea), new PropertyMetadata((int) 0));
+        Rect plotRect = new Rect();
+        Rectangle rect;
+        public static readonly DependencyProperty RowProperty = DependencyProperty.Register("Row",  typeof(int),  typeof(PlotArea), new PropertyMetadata((int) 0));
+        public static readonly DependencyProperty StrokeProperty = DependencyProperty.Register("Stroke",  typeof(Brush),  typeof(PlotArea), new PropertyMetadata(null));
+        public static readonly DependencyProperty StrokeThicknessProperty = DependencyProperty.Register("StrokeThickness",  typeof(double),  typeof(PlotArea), new PropertyMetadata((double) 1.0));
 
         internal void SetPlotX(double x, double w)
         {

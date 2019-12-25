@@ -17,7 +17,7 @@ namespace Dt.Charts
     [ContentProperty(Name="SeriesBindings")]
     public class ChartBindings
     {
-        private List<Binding> _seriesBindings = new List<Binding>();
+        List<Binding> _seriesBindings = new List<Binding>();
 
         public Binding ItemNameBinding { get; set; }
 

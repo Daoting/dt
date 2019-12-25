@@ -16,9 +16,9 @@ namespace Dt.Charts
 {
     public partial class PlotElementAnimation : DependencyObject
     {
-        public static readonly DependencyProperty IndexDelayProperty = DependencyProperty.RegisterAttached("IndexDelay", (Type) typeof(double), (Type) typeof(PlotElementAnimation), new PropertyMetadata((double) 0.0));
-        public static readonly DependencyProperty StoryboardProperty = DependencyProperty.Register("Storyboard", (Type) typeof(Windows.UI.Xaml.Media.Animation.Storyboard), (Type) typeof(PlotElementAnimation), new PropertyMetadata(null));
-        public static readonly DependencyProperty SymbolStyleProperty = DependencyProperty.Register("SymbolStyle", (Type) typeof(Style), (Type) typeof(PlotElementAnimation), new PropertyMetadata(null));
+        public static readonly DependencyProperty IndexDelayProperty = DependencyProperty.RegisterAttached("IndexDelay",  typeof(double),  typeof(PlotElementAnimation), new PropertyMetadata((double) 0.0));
+        public static readonly DependencyProperty StoryboardProperty = DependencyProperty.Register("Storyboard",  typeof(Windows.UI.Xaml.Media.Animation.Storyboard),  typeof(PlotElementAnimation), new PropertyMetadata(null));
+        public static readonly DependencyProperty SymbolStyleProperty = DependencyProperty.Register("SymbolStyle",  typeof(Style),  typeof(PlotElementAnimation), new PropertyMetadata(null));
 
         public static double GetIndexDelay(DependencyObject obj)
         {

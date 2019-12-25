@@ -14,7 +14,7 @@ namespace Dt.Charts
 {
     public class AxisCollection : Collection<Axis>
     {
-        private ChartView _view;
+        ChartView _view;
 
         protected override void ClearItems()
         {
@@ -24,7 +24,7 @@ namespace Dt.Charts
             }
         }
 
-        private string GetUniqueName(string prefix)
+        string GetUniqueName(string prefix)
         {
             string str = "";
             int num = 1;
@@ -67,7 +67,7 @@ namespace Dt.Charts
             }
         }
 
-        private void UpdateChart()
+        void UpdateChart()
         {
             if (_view.Chart != null)
             {

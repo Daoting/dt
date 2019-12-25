@@ -14,8 +14,8 @@ namespace Dt.Charts
 {
     public class ZoomAction : Action
     {
-        private Brush _fill;
-        private Brush _stroke;
+        Brush _fill;
+        Brush _stroke;
 
         public ZoomAction() : base(ActionType.Zoom)
         {

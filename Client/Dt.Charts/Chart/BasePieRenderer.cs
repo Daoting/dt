@@ -15,9 +15,9 @@ namespace Dt.Charts
 {
     public class BasePieRenderer : BaseRenderer
     {
-        private double _innerRadius;
-        private double _offset;
-        private double _radius = 0.8;
+        double _innerRadius;
+        double _offset;
+        double _radius = 0.8;
 
         internal BasePieRenderer()
         {

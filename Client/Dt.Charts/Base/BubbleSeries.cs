@@ -27,7 +27,7 @@ namespace Dt.Base
         /// <summary>
         /// 
         /// </summary>
-        private static DependencyProperty SizeValuesProperty = Utils.RegisterProperty(
+        static DependencyProperty SizeValuesProperty = Utils.RegisterProperty(
            "SizeValues",
            typeof(DoubleCollection),
            typeof(BubbleSeries),
@@ -42,9 +42,9 @@ namespace Dt.Base
             typeof(BubbleSeries),
             new PropertyChangedCallback(DataSeries.OnChangeValues));
 
-        private Binding _sizeValuesBinding;
-        private static Size DefMaxSize = new Size(50.0, 50.0);
-        private static Size DefMinSize = new Size(5.0, 5.0);
+        Binding _sizeValuesBinding;
+        static Size DefMaxSize = new Size(50.0, 50.0);
+        static Size DefMinSize = new Size(5.0, 5.0);
         protected List<object> listSize = new List<object>();
        
 

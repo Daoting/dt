@@ -14,8 +14,8 @@ namespace Dt.Charts
 {
     internal static class Extension
     {
-        private static Windows.UI.Xaml.CornerRadius DefaultCornerRadius = new Windows.UI.Xaml.CornerRadius();
-        private static Windows.UI.Xaml.Thickness DefaultThickness = new Windows.UI.Xaml.Thickness();
+        static Windows.UI.Xaml.CornerRadius DefaultCornerRadius = new Windows.UI.Xaml.CornerRadius();
+        static Windows.UI.Xaml.Thickness DefaultThickness = new Windows.UI.Xaml.Thickness();
 
         public static bool IsDefault(this Windows.UI.Xaml.CornerRadius cr)
         {

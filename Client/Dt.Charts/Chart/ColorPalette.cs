@@ -16,12 +16,12 @@ namespace Dt.Charts
 {
     internal class ColorPalette
     {
-        private int _accentIndex = 4;
-        private static Dictionary<Office2007Themes, ColorPalette> _builtIns;
-        private Windows.UI.Color[] _colors;
-        private const int _cycleCount = 6;
-        private const int _firstAccent = 4;
-        private string _name;
+        int _accentIndex = 4;
+        static Dictionary<Office2007Themes, ColorPalette> _builtIns;
+        Windows.UI.Color[] _colors;
+        const int _cycleCount = 6;
+        const int _firstAccent = 4;
+        string _name;
 
         public ColorPalette(string name, params Windows.UI.Color[] colors)
         {
@@ -29,7 +29,7 @@ namespace Dt.Charts
             _colors = colors;
         }
 
-        private static void BuildThemeTable()
+        static void BuildThemeTable()
         {
             _builtIns = new Dictionary<Office2007Themes, ColorPalette>();
             Windows.UI.Color[] colors = new Windows.UI.Color[] { Windows.UI.Color.FromArgb(0xff, 0xbd, 0, 0), Windows.UI.Color.FromArgb(0xff, 0xff, 0, 0), Windows.UI.Color.FromArgb(0xff, 0xff, 190, 0), Windows.UI.Color.FromArgb(0xff, 0xff, 0xff, 0), Windows.UI.Color.FromArgb(0xff, 0x94, 0xd7, 0x52), Windows.UI.Color.FromArgb(0xff, 0, 0xb6, 0x52), Windows.UI.Color.FromArgb(0xff, 0, 0xb6, 0xef), Windows.UI.Color.FromArgb(0xff, 0, 0x75, 0xc6), Windows.UI.Color.FromArgb(0xff, 0, 0x22, 0x63), Windows.UI.Color.FromArgb(0xff, 0x73, 0x35, 0x9c) };
@@ -133,7 +133,7 @@ namespace Dt.Charts
             return ColorFromHSL((double) hue, (double) saturation, (double) num3);
         }
 
-        private bool ExtendThemeColors(int maxAccentColors)
+        bool ExtendThemeColors(int maxAccentColors)
         {
             if ((_colors == null) || (_colors.Length < 10))
             {

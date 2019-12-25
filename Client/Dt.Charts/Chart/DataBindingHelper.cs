@@ -22,7 +22,7 @@ namespace Dt.Charts
 {
     internal class DataBindingHelper
     {
-        private static Type[] _supportedTypes = new Type[] { typeof(double), typeof(float), typeof(decimal), typeof(byte), typeof(short), typeof(int), typeof(long), typeof(ushort), typeof(uint), typeof(ulong), typeof(DateTime), typeof(Point) };
+        static Type[] _supportedTypes = new Type[] { typeof(double), typeof(float), typeof(decimal), typeof(byte), typeof(short), typeof(int), typeof(long), typeof(ushort), typeof(uint), typeof(ulong), typeof(DateTime), typeof(Point) };
 
         public static void AutoCreateSeries(Chart chart, IEnumerable items)
         {
@@ -141,7 +141,7 @@ namespace Dt.Charts
             }
         }
 
-        private static void DefaultProcess(Chart chart, PropertyInfo[] props)
+        static void DefaultProcess(Chart chart, PropertyInfo[] props)
         {
             int length = props.Length;
             for (int i = 0; i < length; i++)
@@ -161,7 +161,7 @@ namespace Dt.Charts
             }
         }
 
-        private static Type GetItemType(IEnumerable items)
+        static Type GetItemType(IEnumerable items)
         {
             IEnumerator enumerator = items.GetEnumerator();
             DataUtils.TryReset(enumerator);
@@ -172,7 +172,7 @@ namespace Dt.Charts
             return null;
         }
 
-        private static bool IsSupported(Type type)
+        static bool IsSupported(Type type)
         {
             int length = _supportedTypes.Length;
             for (int i = 0; i < length; i++)
@@ -185,7 +185,7 @@ namespace Dt.Charts
             return false;
         }
 
-        private static void XYPlotProcess(Chart chart, PropertyInfo[] props)
+        static void XYPlotProcess(Chart chart, PropertyInfo[] props)
         {
             int length = props.Length;
             XYDataSeries series = null;

@@ -18,9 +18,9 @@ namespace Dt.Charts
     public partial class PieOptions : DependencyObject
     {
         public static DependencyProperty DirectionProperty = Utils.RegisterAttachedProperty("Direction", typeof(SweepDirection), typeof(PieOptions), new PropertyChangedCallback(Chart.OnAttachedPropertyChanged), SweepDirection.Clockwise);
-        public static readonly DependencyProperty InnerRadiusProperty = DependencyProperty.RegisterAttached("InnerRadius", (Type) typeof(double), (Type) typeof(PieOptions), new PropertyMetadata((double) 0.0, new PropertyChangedCallback(Chart.OnAttachedPropertyChanged)));
-        public static readonly DependencyProperty OffsetProperty = DependencyProperty.RegisterAttached("Offset", (Type) typeof(double), (Type) typeof(PieOptions), new PropertyMetadata((double) double.NaN, new PropertyChangedCallback(Chart.OnAttachedPropertyChanged)));
-        public static readonly DependencyProperty SeriesLabelTemplateProperty = DependencyProperty.RegisterAttached("SeriesLabelTemplate", (Type) typeof(DataTemplate), (Type) typeof(PieOptions), new PropertyMetadata(null));
+        public static readonly DependencyProperty InnerRadiusProperty = DependencyProperty.RegisterAttached("InnerRadius",  typeof(double),  typeof(PieOptions), new PropertyMetadata((double) 0.0, new PropertyChangedCallback(Chart.OnAttachedPropertyChanged)));
+        public static readonly DependencyProperty OffsetProperty = DependencyProperty.RegisterAttached("Offset",  typeof(double),  typeof(PieOptions), new PropertyMetadata((double) double.NaN, new PropertyChangedCallback(Chart.OnAttachedPropertyChanged)));
+        public static readonly DependencyProperty SeriesLabelTemplateProperty = DependencyProperty.RegisterAttached("SeriesLabelTemplate",  typeof(DataTemplate),  typeof(PieOptions), new PropertyMetadata(null));
         public static DependencyProperty StartingAngleProperty = Utils.RegisterAttachedProperty("StartingAngle", typeof(double), typeof(PieOptions), new PropertyChangedCallback(Chart.OnAttachedPropertyChanged), (double) 0.0);
 
         [AttachedPropertyBrowsableForType(typeof(Chart))]

@@ -27,7 +27,7 @@ namespace Dt.Charts
         public const double RadToDeg = 57.295779513082323;
         public static Visibility VisHidden = Visibility.Collapsed;
 
-        private Utils()
+        Utils()
         {
         }
 
@@ -333,7 +333,7 @@ namespace Dt.Charts
             return DependencyProperty.Register(name, propertyType, ownerType, new PropertyMetadata(defaultValue, propertyChangedCallback));
         }
 
-        private static double SignedFloor(double val)
+        static double SignedFloor(double val)
         {
             if (val < 0.0)
             {

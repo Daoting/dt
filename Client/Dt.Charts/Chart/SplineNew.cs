@@ -17,13 +17,13 @@ namespace Dt.Charts
 {
     internal class SplineNew
     {
-        private Point[] _a;
-        private Point[] _b;
-        private Point[] _c;
-        private Point[] _d;
-        private int _len;
-        private Point[] _pts;
-        private static double[,] m = new double[,] { { -0.5, 1.5, -1.5, 0.5 }, { 1.0, -2.5, 2.0, -0.5 }, { -0.5, 0.0, 0.5, 0.0 }, { 0.0, 1.0, 0.0, 0.0 } };
+        Point[] _a;
+        Point[] _b;
+        Point[] _c;
+        Point[] _d;
+        int _len;
+        Point[] _pts;
+        static double[,] m = new double[,] { { -0.5, 1.5, -1.5, 0.5 }, { 1.0, -2.5, 2.0, -0.5 }, { -0.5, 0.0, 0.5, 0.0 }, { 0.0, 1.0, 0.0, 0.0 } };
 
         public SplineNew(Point[] pts)
         {

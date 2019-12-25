@@ -10,30 +10,30 @@ namespace Dt.Charts
 {
     public class C1DragHelper
     {
-        private bool _actualCaptureElementOnMouseDown;
-        private double _actualInitialThreshold;
-        private C1DragHelperMode _actualMode;
-        private bool _captureElementOnMouseDown;
-        private Point _cumulativeTranslation;
-        private double _deceleration = double.NaN;
-        private C1DragDirection _direction = C1DragDirection.None;
-        private bool _dragStarted;
-        private UIElement _element;
-        private bool _handledEventsToo;
-        private double _initialThreshold = 16.0;
-        private DateTime _initialTimeStamp;
-        private Point _lastPos = new Point();
-        private DateTime _lastTimeStamp;
-        private bool _listenManipulationEvents;
-        private bool _listenPointerEvents;
-        private bool _manipulationStarted;
-        private C1DragHelperMode _mode;
-        private Point _origin;
-        private bool _pointerPressed;
-        private C1PointerDeviceType _pointerType;
-        private Stack<KeyValuePair<DateTime, Point>> _points = new Stack<KeyValuePair<DateTime, Point>>();
-        private bool _useRightButton;
-        private Point _velocity;
+        bool _actualCaptureElementOnMouseDown;
+        double _actualInitialThreshold;
+        C1DragHelperMode _actualMode;
+        bool _captureElementOnMouseDown;
+        Point _cumulativeTranslation;
+        double _deceleration = double.NaN;
+        C1DragDirection _direction = C1DragDirection.None;
+        bool _dragStarted;
+        UIElement _element;
+        bool _handledEventsToo;
+        double _initialThreshold = 16.0;
+        DateTime _initialTimeStamp;
+        Point _lastPos = new Point();
+        DateTime _lastTimeStamp;
+        bool _listenManipulationEvents;
+        bool _listenPointerEvents;
+        bool _manipulationStarted;
+        C1DragHelperMode _mode;
+        Point _origin;
+        bool _pointerPressed;
+        C1PointerDeviceType _pointerType;
+        Stack<KeyValuePair<DateTime, Point>> _points = new Stack<KeyValuePair<DateTime, Point>>();
+        bool _useRightButton;
+        Point _velocity;
 
         public event EventHandler<C1DragCompletedEventArgs> DragCompleted;
 
@@ -103,14 +103,14 @@ namespace Dt.Charts
             }
         }
 
-        private double Decelerate(double velocity, double elapsedTimeMilliseconds)
+        double Decelerate(double velocity, double elapsedTimeMilliseconds)
         {
             double num = double.IsNaN(_deceleration) ? 0.0039780645161290326 : _deceleration;
             double num2 = num * elapsedTimeMilliseconds;
             return (Math.Sign(velocity) * Math.Max((double)0.0, (double)(Math.Abs(velocity) - num2)));
         }
 
-        private void InitializeDrag()
+        void InitializeDrag()
         {
             _dragStarted = false;
             if (_listenPointerEvents)
@@ -145,7 +145,7 @@ namespace Dt.Charts
             }
         }
 
-        private Point GetFinalVelocities()
+        Point GetFinalVelocities()
         {
             if (_points.Count >= 2)
             {
@@ -184,7 +184,7 @@ namespace Dt.Charts
             return new Point();
         }
 
-        private bool IsMovingByInertia()
+        bool IsMovingByInertia()
         {
             if (_velocity.X == 0.0)
             {
@@ -193,7 +193,7 @@ namespace Dt.Charts
             return true;
         }
 
-        private void OnManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
+        void OnManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
         {
             if (_dragStarted)
             {
@@ -201,7 +201,7 @@ namespace Dt.Charts
             }
         }
 
-        private void OnManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+        void OnManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
         {
             if (_manipulationStarted)
             {
@@ -219,7 +219,7 @@ namespace Dt.Charts
             }
         }
 
-        private void OnManipulationInertiaStarting(object sender, ManipulationInertiaStartingRoutedEventArgs e)
+        void OnManipulationInertiaStarting(object sender, ManipulationInertiaStartingRoutedEventArgs e)
         {
             if (_dragStarted)
             {
@@ -232,7 +232,7 @@ namespace Dt.Charts
             }
         }
 
-        private void OnManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
+        void OnManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
         {
             _pointerType = C1InputEventArgs.GetPointerType(e);
             if ((_pointerType == C1PointerDeviceType.Touch) || !_listenPointerEvents)
@@ -247,11 +247,11 @@ namespace Dt.Charts
             }
         }
 
-        private void OnPointerCanceled(object sender, PointerRoutedEventArgs e)
+        void OnPointerCanceled(object sender, PointerRoutedEventArgs e)
         {
         }
 
-        private void OnPointerCaptureLost(object sender, PointerRoutedEventArgs e)
+        void OnPointerCaptureLost(object sender, PointerRoutedEventArgs e)
         {
             if (!_useRightButton && (_dragStarted && !IsMovingByInertia()))
             {
@@ -259,7 +259,7 @@ namespace Dt.Charts
             }
         }
 
-        private void OnPointerMoved(object sender, PointerRoutedEventArgs e)
+        void OnPointerMoved(object sender, PointerRoutedEventArgs e)
         {
             if (_pointerPressed)
             {
@@ -290,7 +290,7 @@ namespace Dt.Charts
             }
         }
 
-        private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
+        void OnPointerPressed(object sender, PointerRoutedEventArgs e)
         {
             _pointerType = C1InputEventArgs.GetPointerType(e);
             if (_pointerType != C1PointerDeviceType.Touch)
@@ -316,7 +316,7 @@ namespace Dt.Charts
             }
         }
 
-        private void OnPointerReleased(object sender, PointerRoutedEventArgs e)
+        void OnPointerReleased(object sender, PointerRoutedEventArgs e)
         {
             if (_pointerPressed)
             {
@@ -340,7 +340,7 @@ namespace Dt.Charts
             }
         }
 
-        private void OnRendering(object sender, object e)
+        void OnRendering(object sender, object e)
         {
             double num = 0.001;
             DateTime time = DateTime.Now;
@@ -365,7 +365,7 @@ namespace Dt.Charts
             }
         }
 
-        private void RaiseDragCompleted(RoutedEventArgs originalArgs, Point cumulativeTranslation)
+        void RaiseDragCompleted(RoutedEventArgs originalArgs, Point cumulativeTranslation)
         {
             if (DragCompleted != null)
             {
@@ -373,7 +373,7 @@ namespace Dt.Charts
             }
         }
 
-        private void RaiseDragDelta(RoutedEventArgs originalArgs, Point cumulativeTranslation, Point deltaTranslation, bool isInertial)
+        void RaiseDragDelta(RoutedEventArgs originalArgs, Point cumulativeTranslation, Point deltaTranslation, bool isInertial)
         {
             if (DragDelta != null)
             {
@@ -383,7 +383,7 @@ namespace Dt.Charts
             }
         }
 
-        private double RaiseDragInertiaStarted(RoutedEventArgs originalArgs, Point velocity, double desiredDeceleration = 0.00096)
+        double RaiseDragInertiaStarted(RoutedEventArgs originalArgs, Point velocity, double desiredDeceleration = 0.00096)
         {
             if (DragInertiaStarted != null)
             {
@@ -396,7 +396,7 @@ namespace Dt.Charts
             return desiredDeceleration;
         }
 
-        private void RaiseDragStarted(RoutedEventArgs originalArgs)
+        void RaiseDragStarted(RoutedEventArgs originalArgs)
         {
             if (DragStarted != null)
             {
@@ -404,7 +404,7 @@ namespace Dt.Charts
             }
         }
 
-        private bool RaiseDragStarting(RoutedEventArgs e)
+        bool RaiseDragStarting(RoutedEventArgs e)
         {
             C1DragStartingEventArgs args = new C1DragStartingEventArgs(this, e, _pointerType, _mode, _captureElementOnMouseDown, _initialThreshold);
             if (DragStarting != null)
@@ -417,7 +417,7 @@ namespace Dt.Charts
             return !args.Cancel;
         }
 
-        private void ReleaseMouseCapture()
+        void ReleaseMouseCapture()
         {
             if (_element != null)
             {
@@ -425,7 +425,7 @@ namespace Dt.Charts
             }
         }
 
-        private void Start(RoutedEventArgs originalArgs)
+        void Start(RoutedEventArgs originalArgs)
         {
             Complete(originalArgs);
             _cumulativeTranslation = new Point();
@@ -434,7 +434,7 @@ namespace Dt.Charts
             RaiseDragStarted(originalArgs);
         }
 
-        private void StartInertia(RoutedEventArgs originalArgs, Point velocities)
+        void StartInertia(RoutedEventArgs originalArgs, Point velocities)
         {
             _deceleration = RaiseDragInertiaStarted(originalArgs, velocities, 0.00096);
             CompositionTarget.Rendering += OnRendering;
@@ -442,7 +442,7 @@ namespace Dt.Charts
             _initialTimeStamp = _lastTimeStamp = DateTime.Now;
         }
 
-        private bool TryCaptureMouse(RoutedEventArgs e)
+        bool TryCaptureMouse(RoutedEventArgs e)
         {
             if (e is PointerRoutedEventArgs)
             {
@@ -451,7 +451,7 @@ namespace Dt.Charts
             return true;
         }
 
-        private void UpdateGestureDirection(RoutedEventArgs originalArgs)
+        void UpdateGestureDirection(RoutedEventArgs originalArgs)
         {
             if (_direction == C1DragDirection.None)
             {
@@ -479,7 +479,7 @@ namespace Dt.Charts
             }
         }
 
-        private void UpdateManipulationMode()
+        void UpdateManipulationMode()
         {
             ManipulationModes modes = (_element.ManipulationMode == (ManipulationModes.None | ManipulationModes.System)) ? ManipulationModes.None : _element.ManipulationMode;
             if (_mode.TranslateRailX())

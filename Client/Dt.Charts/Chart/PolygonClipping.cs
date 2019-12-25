@@ -15,19 +15,19 @@ namespace Dt.Charts
 {
     internal class PolygonClipping
     {
-        private int ExtraVertices = 20;
-        private Point[] _inVertexArray;
-        private Point[] _outVertexArray;
+        int ExtraVertices = 20;
+        Point[] _inVertexArray;
+        Point[] _outVertexArray;
 
-        private PolygonClipping()
+        PolygonClipping()
         {
         }
 
         public Point[] ClipPolygonByRect(Point[] inArray, Rect clipRect)
         {
-            Point[] clipBoundary = (Point[]) Array.CreateInstance((Type) typeof(Point), new int[] { 2 });
-            _outVertexArray = (Point[]) Array.CreateInstance((Type) typeof(Point), new int[] { inArray.Length + ExtraVertices });
-            _inVertexArray = (Point[]) Array.CreateInstance((Type) typeof(Point), new int[] { inArray.Length + ExtraVertices });
+            Point[] clipBoundary = (Point[]) Array.CreateInstance( typeof(Point), new int[] { 2 });
+            _outVertexArray = (Point[]) Array.CreateInstance( typeof(Point), new int[] { inArray.Length + ExtraVertices });
+            _inVertexArray = (Point[]) Array.CreateInstance( typeof(Point), new int[] { inArray.Length + ExtraVertices });
             Array.Copy(inArray, _inVertexArray, inArray.Length);
             clipBoundary[0] = new Point(clipRect.Left, clipRect.Top);
             clipBoundary[1] = new Point(clipRect.Left, clipRect.Bottom);
@@ -68,7 +68,7 @@ namespace Dt.Charts
             {
                 return null;
             }
-            Point[] pointArray2 = (Point[]) Array.CreateInstance((Type) typeof(Point), new int[] { outLength });
+            Point[] pointArray2 = (Point[]) Array.CreateInstance( typeof(Point), new int[] { outLength });
             for (int i = 0; i < outLength; i++)
             {
                 pointArray2[i] = _outVertexArray[i];
@@ -76,12 +76,12 @@ namespace Dt.Charts
             return pointArray2;
         }
 
-        private bool Inside(Point testVertex, Point[] clipBoundary)
+        bool Inside(Point testVertex, Point[] clipBoundary)
         {
             return (((clipBoundary[1].X > clipBoundary[0].X) && (testVertex.Y <= clipBoundary[0].Y)) || (((clipBoundary[1].X < clipBoundary[0].X) && (testVertex.Y >= clipBoundary[0].Y)) || (((clipBoundary[1].Y < clipBoundary[0].Y) && (testVertex.X <= clipBoundary[1].X)) || ((clipBoundary[1].Y > clipBoundary[0].Y) && (testVertex.X >= clipBoundary[1].X)))));
         }
 
-        private Point Intersect(Point first, Point second, Point[] clipBoundary)
+        Point Intersect(Point first, Point second, Point[] clipBoundary)
         {
             Point point = new Point();
             if (clipBoundary[0].Y == clipBoundary[1].Y)
@@ -95,7 +95,7 @@ namespace Dt.Charts
             return point;
         }
 
-        private int Output(Point newVertex, int outLength)
+        int Output(Point newVertex, int outLength)
         {
             outLength++;
             if (outLength >= _outVertexArray.Length)
@@ -108,7 +108,7 @@ namespace Dt.Charts
             return outLength;
         }
 
-        private void OutputToInput(int inLength, int outLength)
+        void OutputToInput(int inLength, int outLength)
         {
             if ((inLength == 2) && (outLength == 3))
             {
@@ -147,7 +147,7 @@ namespace Dt.Charts
             return clipping.ClipPolygonByRect(inArray, clipRect);
         }
 
-        private int SutherlandHodgmanPolygoClip(int inLength, Point[] clipBoundary)
+        int SutherlandHodgmanPolygoClip(int inLength, Point[] clipBoundary)
         {
             int outLength = 0;
             Point testVertex = _inVertexArray[inLength - 1];

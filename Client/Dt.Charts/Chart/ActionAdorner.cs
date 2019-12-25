@@ -16,8 +16,8 @@ namespace Dt.Charts
 {
     internal class ActionAdorner
     {
-        private ActionCollection _actions;
-        private Rectangle _rectangle = new Rectangle();
+        ActionCollection _actions;
+        Rectangle _rectangle = new Rectangle();
 
         public ActionAdorner(ActionCollection actions)
         {

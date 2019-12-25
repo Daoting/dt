@@ -18,25 +18,25 @@ namespace Dt.Charts
     [EditorBrowsable((EditorBrowsableState)EditorBrowsableState.Never)]
     public class RenderContext
     {
-        private Axis _ax;
-        private Axis _ay;
-        private Rect _bounds;
-        private Rect _clipBounds;
-        private Point _cur;
-        private Point _curView;
-        private Axis _defax;
-        private Axis _defay;
-        private IDataSeriesInfo _ds;
-        private double[] _dvals;
-        private bool _excludeHoles;
-        private bool _isStacked;
-        private string[] _names;
-        private int _pi;
-        private Point _prev;
-        private List<Point> _pts;
-        private Rect _rect;
-        private IRenderer _rendrerer;
-        private List<double> _stacked;
+        Axis _ax;
+        Axis _ay;
+        Rect _bounds;
+        Rect _clipBounds;
+        Point _cur;
+        Point _curView;
+        Axis _defax;
+        Axis _defay;
+        IDataSeriesInfo _ds;
+        double[] _dvals;
+        bool _excludeHoles;
+        bool _isStacked;
+        string[] _names;
+        int _pi;
+        Point _prev;
+        List<Point> _pts;
+        Rect _rect;
+        IRenderer _rendrerer;
+        List<double> _stacked;
         internal Chart Chart;
         internal int ClusterPlotAreaIndex;
         internal bool hasNan;
@@ -177,7 +177,7 @@ namespace Dt.Charts
             }
         }
 
-        private void CalcClipBounds()
+        void CalcClipBounds()
         {
             _clipBounds = new Rect(Bounds.X, Bounds.Y, Bounds2D.Width, Bounds2D.Height);
             Axis axis = _ax;

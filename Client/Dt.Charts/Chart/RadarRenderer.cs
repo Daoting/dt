@@ -23,7 +23,7 @@ namespace Dt.Charts
     [EditorBrowsable((EditorBrowsableState) EditorBrowsableState.Never)]
     public class RadarRenderer : BaseRenderer, IView2DRenderer, IRenderer
     {
-        private Brush TransparentBrush = new SolidColorBrush(Colors.Transparent);
+        Brush TransparentBrush = new SolidColorBrush(Colors.Transparent);
 
         UIElement[] IView2DRenderer.Generate()
         {
@@ -201,7 +201,7 @@ namespace Dt.Charts
             return rect;
         }
 
-        private Axis GetAuxAxis(int pointIndex)
+        Axis GetAuxAxis(int pointIndex)
         {
             foreach (Axis axis in base.Chart.View.Axes)
             {

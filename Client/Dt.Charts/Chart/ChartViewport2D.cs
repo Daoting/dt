@@ -701,10 +701,6 @@ namespace Dt.Charts
             _axes.Insert(num2, _ay);
         }
 
-        internal void UpdateCacheMode()
-        {
-        }
-
         internal void UpdateLayout(Size arrangeSize)
         {
             _ax.Axis = _view.AxisX;

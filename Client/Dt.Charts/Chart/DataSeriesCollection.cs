@@ -16,7 +16,7 @@ namespace Dt.Charts
 {
     public class DataSeriesCollection : ObservableCollection<DataSeries>
     {
-        private ChartData _data;
+        ChartData _data;
 
         internal event EventHandler Changed;
 
@@ -42,7 +42,7 @@ namespace Dt.Charts
             FireChanged(this, EventArgs.Empty);
         }
 
-        private void FireChanged(object sender, EventArgs e)
+        void FireChanged(object sender, EventArgs e)
         {
             if (Changed != null)
             {

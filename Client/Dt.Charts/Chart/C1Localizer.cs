@@ -13,7 +13,7 @@ namespace Dt.Charts
 {
     internal class C1Localizer
     {
-        private C1Localizer()
+        C1Localizer()
         {
         }
 

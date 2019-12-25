@@ -215,7 +215,7 @@ namespace Dt.Charts
             return list.ToArray();
         }
 
-        private static int CScode(Rect rect, Point pt)
+        static int CScode(Rect rect, Point pt)
         {
             int num = 0;
             if (pt.X < rect.Left)
@@ -237,7 +237,7 @@ namespace Dt.Charts
             return num;
         }
 
-        private static int CScode(Rect rect, double x, double y)
+        static int CScode(Rect rect, double x, double y)
         {
             int num = 0;
             if (x < rect.Left)

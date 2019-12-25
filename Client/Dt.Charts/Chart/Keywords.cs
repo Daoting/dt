@@ -16,7 +16,7 @@ namespace Dt.Charts
 {
     internal class Keywords
     {
-        private Dictionary<string, object> _words = new Dictionary<string, object>();
+        Dictionary<string, object> _words = new Dictionary<string, object>();
 
         internal string Replace(string s)
         {

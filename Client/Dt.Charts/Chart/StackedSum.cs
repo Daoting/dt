@@ -15,8 +15,8 @@ namespace Dt.Charts
 {
     internal class StackedSum
     {
-        private Dictionary<double, double>[] _dicts;
-        private int _nsg;
+        Dictionary<double, double>[] _dicts;
+        int _nsg;
 
         public StackedSum(int nsg)
         {
@@ -44,7 +44,7 @@ namespace Dt.Charts
             }
         }
 
-        private bool Check(int sg, bool throwException = false)
+        bool Check(int sg, bool throwException = false)
         {
             if ((sg >= 0) && (sg < _nsg))
             {

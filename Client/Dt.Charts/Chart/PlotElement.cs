@@ -22,17 +22,17 @@ namespace Dt.Charts
 {
     public partial class PlotElement : Path, IPlotElement
     {
-        private Point _center = new Point();
-        private Rect _rect = new Rect();
-        private Windows.UI.Xaml.Shapes.Shape _shape;
-        private Size _sz = new Size(10.0, 10.0);
-        private Dt.Charts.TransformMode _tmode;
+        Point _center = new Point();
+        Rect _rect = new Rect();
+        Windows.UI.Xaml.Shapes.Shape _shape;
+        Size _sz = new Size(10.0, 10.0);
+        Dt.Charts.TransformMode _tmode;
         protected ShapeStyle autoStyle;
         public static readonly DependencyProperty DataPointProperty = Utils.RegisterProperty("DataPoint", typeof(Dt.Charts.DataPoint), typeof(PlotElement), new PropertyChangedCallback(PlotElement.OnChanged));
         protected List<UIElement> effects;
-        public static readonly DependencyProperty LabelAlignmentProperty = DependencyProperty.RegisterAttached("LabelAlignment", (Type)typeof(LabelAlignment), (Type)typeof(PlotElement), new PropertyMetadata(LabelAlignment.Auto));
-        public static readonly DependencyProperty LabelLineProperty = DependencyProperty.RegisterAttached("LabelLine", (Type)typeof(Line), (Type)typeof(PlotElement), null);
-        public static readonly DependencyProperty LabelOffsetProperty = DependencyProperty.RegisterAttached("LabelOffset", (Type)typeof(Point), (Type)typeof(PlotElement), new PropertyMetadata(new Point(0.0, 0.0)));
+        public static readonly DependencyProperty LabelAlignmentProperty = DependencyProperty.RegisterAttached("LabelAlignment", typeof(LabelAlignment), typeof(PlotElement), new PropertyMetadata(LabelAlignment.Auto));
+        public static readonly DependencyProperty LabelLineProperty = DependencyProperty.RegisterAttached("LabelLine", typeof(Line), typeof(PlotElement), null);
+        public static readonly DependencyProperty LabelOffsetProperty = DependencyProperty.RegisterAttached("LabelOffset", typeof(Point), typeof(PlotElement), new PropertyMetadata(new Point(0.0, 0.0)));
         internal static readonly DependencyProperty LabelProperty = Utils.RegisterProperty("Label", typeof(UIElement), typeof(PlotElement), new PropertyChangedCallback(PlotElement.OnChanged), null);
         protected bool m_isFilled = true;
 
@@ -53,16 +53,11 @@ namespace Dt.Charts
         internal PlotElement()
         {
             Shape = new Path();
-            Path path = this;
-            path.Loaded += FireLoaded;
-            Path path2 = this;
-            path2.PointerEntered += FireMouseEnter;
-            Path path3 = this;
-            path3.PointerExited += FireMouseLeave;
-            Path path4 = this;
-            path4.PointerPressed += FireMouseLeftButtonDown;
-            Path path5 = this;
-            path5.PointerReleased += FireMouseLeftButtonUp;
+            Loaded += FireLoaded;
+            PointerEntered += FireMouseEnter;
+            PointerExited += FireMouseLeave;
+            PointerPressed += FireMouseLeftButtonDown;
+            PointerReleased += FireMouseLeftButtonUp;
         }
 
         protected void AdjustLegendShape(Windows.UI.Xaml.Shapes.Shape shape)
@@ -143,7 +138,7 @@ namespace Dt.Charts
             }
         }
 
-        private void fe_SizeChanged(object sender, SizeChangedEventArgs e)
+        void fe_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if ((e.NewSize.Width > 0.0) && (e.NewSize.Height > 0.0))
             {
@@ -151,7 +146,7 @@ namespace Dt.Charts
             }
         }
 
-        private void FireLoaded(object sender, RoutedEventArgs e)
+        void FireLoaded(object sender, RoutedEventArgs e)
         {
             if (Loaded != null)
             {
@@ -168,7 +163,7 @@ namespace Dt.Charts
             }
         }
 
-        private void FireMouseEnter(object sender, PointerRoutedEventArgs e)
+        void FireMouseEnter(object sender, PointerRoutedEventArgs e)
         {
             if (MouseEnter != null)
             {
@@ -176,7 +171,7 @@ namespace Dt.Charts
             }
         }
 
-        private void FireMouseLeave(object sender, PointerRoutedEventArgs e)
+        void FireMouseLeave(object sender, PointerRoutedEventArgs e)
         {
             if (MouseLeave != null)
             {
@@ -184,7 +179,7 @@ namespace Dt.Charts
             }
         }
 
-        private void FireMouseLeftButtonDown(object sender, PointerRoutedEventArgs e)
+        void FireMouseLeftButtonDown(object sender, PointerRoutedEventArgs e)
         {
             if (MouseLeftButtonDown != null)
             {
@@ -192,7 +187,7 @@ namespace Dt.Charts
             }
         }
 
-        private void FireMouseLeftButtonUp(object sender, PointerRoutedEventArgs e)
+        void FireMouseLeftButtonUp(object sender, PointerRoutedEventArgs e)
         {
             if (MouseLeftButtonUp != null)
             {
@@ -229,7 +224,7 @@ namespace Dt.Charts
             return (rend is Renderer2D);
         }
 
-        private static void OnChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        static void OnChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
         }
 

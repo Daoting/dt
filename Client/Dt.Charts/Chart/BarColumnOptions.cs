@@ -19,9 +19,9 @@ namespace Dt.Charts
         public static DependencyProperty OriginProperty = Utils.RegisterAttachedProperty("Origin", typeof(double), typeof(BarColumnOptions), new PropertyChangedCallback(Chart.OnAttachedPropertyChanged), (double) 0.0);
         public static readonly DependencyProperty RadiusXProperty = Utils.RegisterAttachedProperty("RadiusX", typeof(double), typeof(BarColumnOptions), new PropertyChangedCallback(Chart.OnAttachedPropertyChanged), (double) 0.0);
         public static DependencyProperty RadiusYProperty = Utils.RegisterAttachedProperty("RadiusY", typeof(double), typeof(BarColumnOptions), new PropertyChangedCallback(Chart.OnAttachedPropertyChanged), (double) 0.0);
-        public static readonly DependencyProperty SeriesOverlapProperty = DependencyProperty.RegisterAttached("SeriesOverlap", (Type) typeof(double), (Type) typeof(BarColumnOptions), new PropertyMetadata((double) 0.0, new PropertyChangedCallback(Chart.OnAttachedPropertyChanged)));
+        public static readonly DependencyProperty SeriesOverlapProperty = DependencyProperty.RegisterAttached("SeriesOverlap",  typeof(double),  typeof(BarColumnOptions), new PropertyMetadata((double) 0.0, new PropertyChangedCallback(Chart.OnAttachedPropertyChanged)));
         public static DependencyProperty SizeProperty = Utils.RegisterAttachedProperty("Size", typeof(double), typeof(BarColumnOptions), new PropertyChangedCallback(Chart.OnAttachedPropertyChanged), (double) 0.7);
-        public static readonly DependencyProperty StackGroupProperty = DependencyProperty.RegisterAttached("StackGroup", (Type) typeof(int), (Type) typeof(BarColumnOptions), new PropertyMetadata((int) 0));
+        public static readonly DependencyProperty StackGroupProperty = DependencyProperty.RegisterAttached("StackGroup",  typeof(int),  typeof(BarColumnOptions), new PropertyMetadata((int) 0));
 
         [AttachedPropertyBrowsableForType(typeof(Chart))]
         public static double GetOrigin(Chart chart)

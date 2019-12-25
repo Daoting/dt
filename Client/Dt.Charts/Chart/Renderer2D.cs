@@ -21,11 +21,11 @@ namespace Dt.Charts
 {
     public class Renderer2D : BaseRenderer, IView2DRenderer, IRenderer
     {
-        private Rect _rect = new Rect();
-        private static double cosPi6 = Math.Cos(0.52359877559829882);
-        private static object DefSymbol = new DotSymbol();
-        private static double sinPi6 = Math.Sin(0.52359877559829882);
-        private Brush TransparentBrush = new SolidColorBrush(Colors.Transparent);
+        Rect _rect = new Rect();
+        static double cosPi6 = Math.Cos(0.52359877559829882);
+        static object DefSymbol = new DotSymbol();
+        static double sinPi6 = Math.Sin(0.52359877559829882);
+        Brush TransparentBrush = new SolidColorBrush(Colors.Transparent);
         internal string[] ValidAuxAxes;
 
         public Renderer2D()
@@ -703,7 +703,7 @@ namespace Dt.Charts
             return _rect;
         }
 
-        private double GetMaxSymbolWidth()
+        double GetMaxSymbolWidth()
         {
             double num = 0.0;
             foreach (DataSeries series in base.Series)

@@ -21,33 +21,33 @@ namespace Dt.Charts
 {
     public class ActionCollection : ObservableCollection<Action>
     {
-        private Action _activeAction;
-        private ActionAdorner _adorner;
-        private Chart _chart;
-        private Point _pt0 = new Point();
-        private Rect _rect = new Rect();
-        private double _scalex;
-        private double _scaley;
-        private ActionType _state;
-        private Storyboard _stb;
-        private bool _stb_finished;
-        private double _updateDelay = 40.0;
-        private double _valx;
-        private double _valy;
-        private const double minScale = 1E-05;
+        Action _activeAction;
+        ActionAdorner _adorner;
+        Chart _chart;
+        Point _pt0 = new Point();
+        Rect _rect = new Rect();
+        double _scalex;
+        double _scaley;
+        ActionType _state;
+        Storyboard _stb;
+        bool _stb_finished;
+        double _updateDelay = 40.0;
+        double _valx;
+        double _valy;
+        const double minScale = 1E-05;
 
         internal ActionCollection(Chart chart)
         {
             _chart = chart;
         }
 
-        private void _stb_Completed(object sender, object e)
+        void _stb_Completed(object sender, object e)
         {
             UpdateAxesDirect();
             _stb_finished = true;
         }
 
-        private ActionType FindAction(PointerRoutedEventArgs e)
+        ActionType FindAction(PointerRoutedEventArgs e)
         {
             _activeAction = null;
             ActionType none = ActionType.None;
@@ -101,7 +101,7 @@ namespace Dt.Charts
             return null;
         }
 
-        private Point GetPosition(PointerRoutedEventArgs e)
+        Point GetPosition(PointerRoutedEventArgs e)
         {
             return e.GetCurrentPoint(Chart.ViewElement).Position;
         }
@@ -278,7 +278,7 @@ namespace Dt.Charts
             UpdateAxes(scalex, valx, scaley, valy, false);
         }
 
-        private void PerformScale(ScaleAction sa, double delta)
+        void PerformScale(ScaleAction sa, double delta)
         {
             if (sa != null)
             {
@@ -323,7 +323,7 @@ namespace Dt.Charts
             }
         }
 
-        private void PerformScale(Point pt0, Point pt1)
+        void PerformScale(Point pt0, Point pt1)
         {
             Axis axisX = Chart.View.AxisX;
             Axis axisY = Chart.View.AxisY;
@@ -387,7 +387,7 @@ namespace Dt.Charts
             UpdateAxes(scalex, valx, scaley, valy, false);
         }
 
-        private void PerformTranslate(TranslateAction ta, double delta)
+        void PerformTranslate(TranslateAction ta, double delta)
         {
             if (ta != null)
             {
@@ -498,7 +498,7 @@ namespace Dt.Charts
             _scaley = axisY.Scale;
         }
 
-        private static double TranslateUpdateAxis(Axis ax, double delta, double val)
+        static double TranslateUpdateAxis(Axis ax, double delta, double val)
         {
             if (ax.Scale == 1.0)
             {
@@ -519,7 +519,7 @@ namespace Dt.Charts
             return num4;
         }
 
-        private void UpdateAxes(double scalex, double valx, double scaley, double valy, bool immediate)
+        void UpdateAxes(double scalex, double valx, double scaley, double valy, bool immediate)
         {
             _scalex = scalex;
             _valx = valx;
@@ -547,7 +547,7 @@ namespace Dt.Charts
             }
         }
 
-        private void UpdateAxesDirect()
+        void UpdateAxesDirect()
         {
             Axis axisX = Chart.View.AxisX;
             Axis axisY = Chart.View.AxisY;
@@ -559,7 +559,7 @@ namespace Dt.Charts
             Chart.EndUpdate();
         }
 
-        private static void ZoomUpdateAxis(Axis ax, double min, double max)
+        static void ZoomUpdateAxis(Axis ax, double min, double max)
         {
             if (ax.ActualMin != ax.ActualMax)
             {
@@ -579,7 +579,7 @@ namespace Dt.Charts
             }
         }
 
-        private ActionAdorner Adorner
+        ActionAdorner Adorner
         {
             get
             {
@@ -599,7 +599,7 @@ namespace Dt.Charts
         internal Rect Rect
         {
             get { return  _rect; }
-            private set { _rect = value; }
+            set { _rect = value; }
         }
 
         internal ActionType State

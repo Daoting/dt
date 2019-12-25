@@ -20,7 +20,7 @@ namespace Dt.Charts
     {
         public double[] Vals;
         public string[] Lbls;
-        private static long zero_ticks;
+        static long zero_ticks;
         public static ValueLabels CreateTime(double min, double max, IAxis ax)
         {
             DateTime time = FromOADate(min);
@@ -90,14 +90,14 @@ namespace Dt.Charts
             return labels;
         }
 
-        private static double ToOADate(DateTime dt)
+        static double ToOADate(DateTime dt)
         {
             decimal num = dt.Ticks - zero_ticks;
             num /= 864000000000M;
             return (double) ((double) num);
         }
 
-        private static DateTime FromOADate(double val)
+        static DateTime FromOADate(double val)
         {
             decimal num = (decimal)((((decimal)val) * 864000000000M) + zero_ticks);
             return new DateTime((long) num);
@@ -271,7 +271,7 @@ namespace Dt.Charts
             return labels;
         }
 
-        private static bool isPowerOf(double lb, double v)
+        static bool isPowerOf(double lb, double v)
         {
             if ((lb % v) != 0.0)
             {

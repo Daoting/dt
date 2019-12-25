@@ -13,9 +13,9 @@ namespace Dt.Charts
 {
     internal class Renderers
     {
-        private PieRenderer _p2;
-        private Dt.Charts.Renderer2D _r2;
-        private RadarRenderer _rr;
+        PieRenderer _p2;
+        Dt.Charts.Renderer2D _r2;
+        RadarRenderer _rr;
 
         public IRenderer GetRenderer(string name)
         {

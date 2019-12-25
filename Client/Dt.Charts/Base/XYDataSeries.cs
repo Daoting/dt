@@ -27,10 +27,10 @@ namespace Dt.Base
         /// <summary>
         /// 
         /// </summary>
-        private static DependencyProperty XValuesProperty = DependencyProperty.Register(
+        static DependencyProperty XValuesProperty = DependencyProperty.Register(
             "XValues",
-            (Type)typeof(DoubleCollection),
-            (Type)typeof(XYDataSeries),
+            typeof(DoubleCollection),
+            typeof(XYDataSeries),
             new PropertyMetadata(null, new PropertyChangedCallback(XYDataSeries.XValuesChanged)));
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace Dt.Base
             typeof(XYDataSeries),
             new PropertyChangedCallback(DataSeries.OnChangeValues));
 
-        private Binding _xvaluesBinding;
+        Binding _xvaluesBinding;
         protected List<object> listX = new List<object>();
         
 
@@ -113,7 +113,7 @@ namespace Dt.Base
             }
         }
 
-        private static void XValuesChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        static void XValuesChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             ((DataSeries) obj).FirePropertyChanged("XValues");
         }

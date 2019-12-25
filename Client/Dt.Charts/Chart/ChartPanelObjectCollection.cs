@@ -14,7 +14,7 @@ namespace Dt.Charts
 {
     public class ChartPanelObjectCollection : ObservableCollection<ChartPanelObject>
     {
-        private ChartPanel _panel;
+        ChartPanel _panel;
 
         internal ChartPanelObjectCollection(ChartPanel panel)
         {

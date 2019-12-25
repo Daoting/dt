@@ -47,8 +47,8 @@ namespace Dt.Base
         /// </summary>
         public static readonly DependencyProperty LoadAnimationProperty = DependencyProperty.Register(
             "LoadAnimation", 
-            (Type)typeof(PlotElementAnimation),
-            (Type)typeof(ChartData), 
+            typeof(PlotElementAnimation),
+            typeof(ChartData), 
             new PropertyMetadata(null));
 
         /// <summary>
@@ -65,8 +65,8 @@ namespace Dt.Base
         /// </summary>
         public static readonly DependencyProperty SelectionActionProperty = DependencyProperty.Register(
             "SelectionAction", 
-            (Type)typeof(Dt.Charts.SelectionAction), 
-            (Type)typeof(ChartData), 
+            typeof(Dt.Charts.SelectionAction), 
+            typeof(ChartData), 
             new PropertyMetadata(Dt.Charts.SelectionAction.None, new PropertyChangedCallback(ChartData.OnSelectionActionChanged)));
 
         /// <summary>
@@ -74,8 +74,8 @@ namespace Dt.Base
         /// </summary>
         public static readonly DependencyProperty SeriesItemsSourceProperty = DependencyProperty.Register(
             "SeriesItemsSource",
-            (Type)typeof(IEnumerable), 
-            (Type)typeof(ChartData),
+            typeof(IEnumerable), 
+            typeof(ChartData),
             new PropertyMetadata(null, new PropertyChangedCallback(ChartData.OnSeriesItemsSourceChanged)));
 
         /// <summary>
@@ -83,15 +83,15 @@ namespace Dt.Base
         /// </summary>
         public static readonly DependencyProperty SeriesItemTemplateProperty = DependencyProperty.Register(
             "SeriesItemTemplate",
-            (Type)typeof(DataTemplate), 
-            (Type)typeof(ChartData), 
+            typeof(DataTemplate), 
+            typeof(ChartData), 
             new PropertyMetadata(null, new PropertyChangedCallback(ChartData.OnSeriesItemTemplateChanged)));
 
-        private DataSeriesCollection _children;
-        private Binding _nameBinding;
-        private object[] _namesInternal;
-        private int currentIndex = -1;
-        private Chart _handlers;
+        DataSeriesCollection _children;
+        Binding _nameBinding;
+        object[] _namesInternal;
+        int currentIndex = -1;
+        Chart _handlers;
         internal bool notify = true;
         
         /// <summary>
@@ -203,7 +203,7 @@ namespace Dt.Base
             set { SetValue(RendererProperty, value); }
         }
 
-        private void _children_Changed(object sender, EventArgs e)
+        void _children_Changed(object sender, EventArgs e)
         {
             FireDataChanged(this, (EventArgs)new PropertyChangedEventArgs("Children"));
         }
@@ -215,7 +215,7 @@ namespace Dt.Base
             series.PropertyChanged += new PropertyChangedEventHandler(ChartData_PropertyChanged);
         }
 
-        private void AttachHandlers()
+        void AttachHandlers()
         {
             if (((_handlers == null) && (SelectionAction != Dt.Charts.SelectionAction.None)) && (Renderer != null))
             {
@@ -228,7 +228,7 @@ namespace Dt.Base
             }
         }
 
-        private void chart_Tapped(object sender, TappedRoutedEventArgs e)
+        void chart_Tapped(object sender, TappedRoutedEventArgs e)
         {
             if (SelectionAction == Dt.Charts.SelectionAction.Tap)
             {
@@ -236,17 +236,17 @@ namespace Dt.Base
             }
         }
 
-        private void ChartData_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        void ChartData_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             FireDataChanged(this, EventArgs.Empty);
         }
 
-        private void ChartData_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void ChartData_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             FireDataChanged(this, EventArgs.Empty);
         }
 
-        private void CollectionViewCurrentChanged(object sender, object e)
+        void CollectionViewCurrentChanged(object sender, object e)
         {
             UpdateSelection(true);
         }
@@ -274,7 +274,7 @@ namespace Dt.Base
             return flag;
         }
 
-        private void DetachHandlers()
+        void DetachHandlers()
         {
             if (_handlers != null)
             {
@@ -283,7 +283,7 @@ namespace Dt.Base
             }
         }
 
-        private void FireDataChanged(object sender, EventArgs e)
+        void FireDataChanged(object sender, EventArgs e)
         {
             if (notify)
             {
@@ -306,7 +306,7 @@ namespace Dt.Base
             }
         }
 
-        private Chart GetChart()
+        Chart GetChart()
         {
             Chart visual = null;
             if (Renderer != null)
@@ -337,7 +337,7 @@ namespace Dt.Base
             return num;
         }
 
-        private void HandleMouseEvent(object sender, TappedRoutedEventArgs e)
+        void HandleMouseEvent(object sender, TappedRoutedEventArgs e)
         {
             ICollectionView itemsSource = ItemsSource as ICollectionView;
             PlotElement originalSource = e.OriginalSource as PlotElement;
@@ -359,12 +359,12 @@ namespace Dt.Base
             }
         }
 
-        private void ItemsSource_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void ItemsSource_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             FireDataChanged(this, EventArgs.Empty);
         }
 
-        private static void OnItemNamesChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        static void OnItemNamesChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
             ChartData sender = (ChartData)obj;
             sender.FireDataChanged(sender, EventArgs.Empty);
@@ -404,7 +404,7 @@ namespace Dt.Base
             FireDataChanged(this, EventArgs.Empty);
         }
 
-        private static void OnItemsSourceChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        static void OnItemsSourceChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
             ((ChartData)obj).OnItemsSourceChanged(e);
         }
@@ -434,12 +434,12 @@ namespace Dt.Base
             FireDataChanged(this, EventArgs.Empty);
         }
 
-        private static void OnRendererChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
+        static void OnRendererChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
         {
             ((ChartData)obj).OnRendererChanged(e);
         }
 
-        private static void OnSelectionActionChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        static void OnSelectionActionChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             ChartData data = (ChartData)obj;
             if (data.SelectionAction == Dt.Charts.SelectionAction.None)
@@ -452,7 +452,7 @@ namespace Dt.Base
             }
         }
 
-        private static void OnSeriesItemsSourceChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        static void OnSeriesItemsSourceChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             ChartData data = (ChartData)obj;
             INotifyCollectionChanged oldValue = args.OldValue as INotifyCollectionChanged;
@@ -468,7 +468,7 @@ namespace Dt.Base
             data.SyncSeries();
         }
 
-        private static void OnSeriesItemTemplateChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
+        static void OnSeriesItemTemplateChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             ((ChartData)obj).SyncSeries();
         }
@@ -480,7 +480,7 @@ namespace Dt.Base
             series.PropertyChanged -= new PropertyChangedEventHandler(ChartData_PropertyChanged);
         }
 
-        private void rend_Rendered(object sender, EventArgs e)
+        void rend_Rendered(object sender, EventArgs e)
         {
             UpdateSelection(false);
             AttachHandlers();
@@ -495,7 +495,7 @@ namespace Dt.Base
             ItemNamesInternal = null;
         }
 
-        private void SeriesItemsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        void SeriesItemsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             SyncSeries();
         }
@@ -506,7 +506,7 @@ namespace Dt.Base
             return true;
         }
 
-        private void SyncSeries()
+        void SyncSeries()
         {
             Chart chart = GetChart();
             if (chart != null)

@@ -20,7 +20,7 @@ namespace Dt.Charts
 {
     internal class ThemeConverter : IValueConverter
     {
-        private static Brush DefaultForeground = new SolidColorBrush(Colors.Black);
+        static Brush DefaultForeground = new SolidColorBrush(Colors.Black);
 
         public object Convert(object value, Type targetType, object parameter, string culture)
         {
@@ -94,7 +94,7 @@ namespace Dt.Charts
             throw new NotImplementedException();
         }
 
-        private static Brush FindParentForeground(FrameworkElement fe)
+        static Brush FindParentForeground(FrameworkElement fe)
         {
             Brush foreground = null;
             while (fe != null)
@@ -115,7 +115,7 @@ namespace Dt.Charts
             return foreground;
         }
 
-        private static Windows.UI.Xaml.CornerRadius ParseCornerRadius(string s)
+        static Windows.UI.Xaml.CornerRadius ParseCornerRadius(string s)
         {
             Windows.UI.Xaml.CornerRadius radius = new Windows.UI.Xaml.CornerRadius();
             if (string.IsNullOrEmpty(s))
@@ -134,7 +134,7 @@ namespace Dt.Charts
             return new Windows.UI.Xaml.CornerRadius(double.Parse(strArray[0], (IFormatProvider) CultureInfo.InvariantCulture), double.Parse(strArray[1], (IFormatProvider) CultureInfo.InvariantCulture), double.Parse(strArray[2], (IFormatProvider) CultureInfo.InvariantCulture), double.Parse(strArray[3], (IFormatProvider) CultureInfo.InvariantCulture));
         }
 
-        private static Windows.UI.Xaml.Thickness ParseThickness(string s)
+        static Windows.UI.Xaml.Thickness ParseThickness(string s)
         {
             Windows.UI.Xaml.Thickness thickness = new Windows.UI.Xaml.Thickness();
             if (string.IsNullOrEmpty(s))
