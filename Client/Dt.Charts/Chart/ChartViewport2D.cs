@@ -44,6 +44,440 @@ namespace Dt.Charts
             InternalChildren.Add(_ay);
         }
 
+        #region 布局
+        internal void UpdateLayout(Size arrangeSize)
+        {
+            _ax.Axis = _view.AxisX;
+            _ay.Axis = _view.AxisY;
+            List<string> list = new List<string>();
+            foreach (Axis axis in _axes)
+            {
+                if ((axis.PositionInternal & AxisPosition.OverData) > AxisPosition.Near)
+                {
+                    Canvas.SetZIndex(axis, 1);
+                }
+                else
+                {
+                    Canvas.SetZIndex(axis, 0);
+                }
+                ((IAxis)axis).ClearLabels();
+                axis.ResetLimits();
+                if (_view != null)
+                {
+                    axis.Chart = _view.Chart;
+                }
+                if (((axis != _ax) && (axis != _ay)) && !string.IsNullOrEmpty(axis.AxisName))
+                {
+                    list.Add(axis.AxisName);
+                }
+            }
+            if (_view.Renderer != null)
+            {
+                Rect emptyRect = Extensions.EmptyRect;
+                IView2DRenderer renderer = _view.Renderer as IView2DRenderer;
+                if (renderer == null)
+                {
+                    return;
+                }
+                _ast = renderer.Axis;
+                Size sz = new Size(base.Width, base.Height);
+                Renderer2D rendererd = renderer as Renderer2D;
+                if (rendererd != null)
+                {
+                    rendererd.ValidAuxAxes = list.ToArray();
+                    if (_plot.Width > 0.0)
+                    {
+                        sz.Width = _plot.Width;
+                    }
+                    if (_plot.Height > 0.0)
+                    {
+                        sz.Height = _plot.Height;
+                    }
+                }
+                Rect rect = renderer.Measure(sz);
+                if (emptyRect.IsEmptyRect())
+                {
+                    emptyRect = rect;
+                }
+                else
+                {
+                    emptyRect.Union(rect);
+                }
+                if (emptyRect.Width > 0.0)
+                {
+                    _ax.SetLimits(emptyRect.X, emptyRect.X + emptyRect.Width);
+                }
+                if (emptyRect.Height > 0.0)
+                {
+                    _ay.SetLimits(emptyRect.Y, emptyRect.Y + emptyRect.Height);
+                }
+            }
+            switch (_ast)
+            {
+                case AxisStyle.None:
+                    if ((base.Width > 10.0) && (base.Height > 10.0))
+                    {
+                        _plot = new Rect(5.0, 5.0, base.Width - 10.0, base.Height - 10.0);
+                    }
+                    using (List<Axis>.Enumerator enumerator3 = _axes.GetEnumerator())
+                    {
+                        while (enumerator3.MoveNext())
+                        {
+                            enumerator3.Current.Visibility = Utils.VisHidden;
+                        }
+                    }
+                    break;
+
+                case AxisStyle.Cartesian:
+                    UpdateLayoutCartesian(arrangeSize);
+                    break;
+
+                case AxisStyle.Radar:
+                    using (List<Axis>.Enumerator enumerator2 = _axes.GetEnumerator())
+                    {
+                        while (enumerator2.MoveNext())
+                        {
+                            enumerator2.Current.Visibility = Visibility.Collapsed;
+                        }
+                    }
+                    UpdateLayoutRadar(arrangeSize);
+                    break;
+            }
+            Shape plotShape = _view.PlotShape;
+            if (plotShape != null)
+            {
+                Canvas.SetLeft(plotShape, _view.PlotRect.Left);
+                Canvas.SetTop(plotShape, _view.PlotRect.Top);
+                plotShape.Width = _view.PlotRect.Width;
+                plotShape.Height = _view.PlotRect.Height;
+                if (_ast == AxisStyle.None)
+                {
+                    plotShape.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    plotShape.Visibility = Visibility.Visible;
+                }
+            }
+            _rebuild = true;
+            Background = null;
+            RebuildTree();
+        }
+
+        private void UpdateLayoutCartesian(Size arrangeSize)
+        {
+            if (arrangeSize.Width == 0.0 || arrangeSize.Height == 0.0)
+                return;
+
+            int num = _axes.Count;
+            PrepareAxes();
+            bool hasPlotAreas = _view.HasPlotAreas;
+            PlotArea area = _view.UpdateMainPlotArea(hasPlotAreas);
+            if (hasPlotAreas)
+            {
+                PerformPlotAreaLayout(arrangeSize);
+            }
+            else
+            {
+                Renderer2D renderer = _view.Renderer as Renderer2D;
+                Size size = new Size(arrangeSize.Width, 0.3 * arrangeSize.Height);
+                Size size2 = new Size(arrangeSize.Height, 0.3 * arrangeSize.Width);
+                double num2 = 0.0;
+                double num3 = 0.0;
+                double width = arrangeSize.Width;
+                double height = arrangeSize.Height;
+                double left = 0.0;
+                double top = 0.0;
+                double right = arrangeSize.Width;
+                double bottom = arrangeSize.Height;
+                for (int i = 0; i < num; i++)
+                {
+                    Axis ax = _axes[i];
+                    double origin = ax.Axis.Origin;
+                    if (ax.AxisType == AxisType.X)
+                    {
+                        Size size3 = ax.GetSize(GetItems(renderer, ax), false);
+                        if (size3.Height > size.Height)
+                        {
+                            size3.Height = size.Height;
+                        }
+                        size3.Width = size.Width;
+                        ax.DesiredSize = size3;
+                        bool flag2 = (!double.IsNaN(origin) && (origin <= _ay.Max0)) && (origin >= _ay.Min0);
+                        if (ax.IsNear)
+                        {
+                            num2 = Math.Max(num2, ax.AnnoSize.Width * 0.5);
+                            width = Math.Min(width, arrangeSize.Width - (ax.AnnoSize.Width * 0.5));
+                            if (flag2)
+                            {
+                                double num12 = ConvertY(origin, top, bottom);
+                                bottom -= Math.Max((double)0.0, (double)((num12 + size3.Height) - bottom));
+                            }
+                            else
+                            {
+                                bottom -= size3.Height;
+                            }
+                        }
+                        else if (ax.IsFar)
+                        {
+                            num2 = Math.Max(num2, ax.AnnoSize.Width * 0.5);
+                            width = Math.Min(width, arrangeSize.Width - (ax.AnnoSize.Width * 0.5));
+                            if (flag2)
+                            {
+                                double num13 = ConvertY(origin, top, bottom);
+                                top += Math.Max((double)0.0, (double)(top - (num13 - size3.Height)));
+                            }
+                            else
+                            {
+                                top += size3.Height;
+                            }
+                        }
+                    }
+                    else if (ax.AxisType == AxisType.Y)
+                    {
+                        Size size4 = ax.GetSize(GetItems(renderer, ax), false);
+                        if (size4.Height > size2.Height)
+                        {
+                            size4.Height = size2.Height;
+                        }
+                        size4.Width = size2.Width;
+                        ax.DesiredSize = size4;
+                        bool flag3 = (!double.IsNaN(origin) && (origin <= _ax.Max0)) && (origin >= _ax.Min0);
+                        if (ax.IsNear)
+                        {
+                            num3 = Math.Max(num3, ax.AnnoSize.Width * 0.5);
+                            height = Math.Min(height, arrangeSize.Height - (ax.AnnoSize.Width * 0.5));
+                            if (flag3)
+                            {
+                                double num14 = ConvertX(origin, left, right);
+                                left += Math.Max((double)0.0, (double)(left - (num14 - size4.Height)));
+                            }
+                            else
+                            {
+                                left += size4.Height;
+                            }
+                        }
+                        else if (ax.IsFar)
+                        {
+                            num3 = Math.Max(num3, ax.AnnoSize.Width * 0.5);
+                            height = Math.Min(height, arrangeSize.Height - (ax.AnnoSize.Width * 0.5));
+                            if (flag3)
+                            {
+                                double num15 = ConvertX(origin, left, right);
+                                right -= Math.Max((double)0.0, (double)((num15 + size4.Height) - right));
+                            }
+                            else
+                            {
+                                right -= size4.Height;
+                            }
+                        }
+                    }
+                }
+                double w = 0.0;
+                double h = 0.0;
+                AdjustMargins(arrangeSize, ref num2, ref width, ref num3, ref height, ref w, ref h, ref left, ref right, ref top, ref bottom);
+                _plot = _plot0 = new Rect(num2, num3, w, h);
+                if (area != null)
+                {
+                    area.SetPlotX(_plot.X, _plot.Width);
+                    area.SetPlotY(_plot.Y, _plot.Height);
+                    UIElement uIElement = area.UIElement;
+                    if ((uIElement != null) && !InternalChildren.Contains(uIElement))
+                    {
+                        InternalChildren.Insert(0, uIElement);
+                    }
+                }
+                for (int j = 0; j < num; j++)
+                {
+                    Axis axis2 = _axes[j];
+                    axis2._plot = _plot0;
+                    double d = axis2.Axis.Origin;
+                    if (axis2.AxisType == AxisType.X)
+                    {
+                        Rect r = new Rect();
+                        if ((double.IsNaN(d) || (d > _ay.Max0)) || (d < _ay.Min0))
+                        {
+                            if (axis2.IsNear)
+                            {
+                                r = new Rect(num2, bottom, w, axis2.DesiredSize.Height);
+                                bottom += axis2.DesiredSize.Height;
+                            }
+                            else if (axis2.IsFar)
+                            {
+                                r = new Rect(num2, top - axis2.DesiredSize.Height, w, axis2.DesiredSize.Height);
+                                top -= axis2.DesiredSize.Height;
+                            }
+                        }
+                        else
+                        {
+                            double y = ConvertY(d, _plot.Top, _plot.Bottom);
+                            if (axis2.IsNear)
+                            {
+                                r = new Rect(num2, y, w, axis2.DesiredSize.Height);
+                                bottom += Math.Max((double)0.0, (double)(r.Bottom - _plot.Bottom));
+                            }
+                            else if (axis2.IsFar)
+                            {
+                                r = new Rect(num2, y - axis2.DesiredSize.Height, w, axis2.DesiredSize.Height);
+                                top -= Math.Max((double)0.0, (double)(_plot.Top - r.Top));
+                            }
+                        }
+                        axis2.Layout(r);
+                    }
+                    else if (axis2.AxisType == AxisType.Y)
+                    {
+                        Rect rect2 = new Rect();
+                        if ((double.IsNaN(d) || (d > _ax.Max0)) || (d < _ax.Min0))
+                        {
+                            if (axis2.IsNear)
+                            {
+                                rect2 = new Rect(left - axis2.DesiredSize.Height, num3, h, axis2.DesiredSize.Height);
+                                left -= axis2.DesiredSize.Height;
+                            }
+                            else if (axis2.IsFar)
+                            {
+                                rect2 = new Rect(right, num3, h, axis2.DesiredSize.Height);
+                                right += axis2.DesiredSize.Height;
+                            }
+                        }
+                        else
+                        {
+                            double x = ConvertX(d, _plot.Left, _plot.Right);
+                            if (axis2.IsNear)
+                            {
+                                rect2 = new Rect(x - axis2.DesiredSize.Height, num3, h, axis2.DesiredSize.Height);
+                                left -= axis2.DesiredSize.Height;
+                            }
+                            else if (axis2.IsFar)
+                            {
+                                rect2 = new Rect(x, num3, h, axis2.DesiredSize.Height);
+                                right += axis2.DesiredSize.Height;
+                            }
+                        }
+                        axis2.Layout(rect2);
+                    }
+                    if (((axis2 == _ax) && (renderer != null)) && !renderer.Inverted)
+                    {
+                        axis2.CreateLabels(renderer.ItemNames);
+                    }
+                    else if (((axis2 == _ay) && (renderer != null)) && renderer.Inverted)
+                    {
+                        axis2.CreateLabels(renderer.ItemNames);
+                    }
+                    else
+                    {
+                        axis2.CreateLabels(null);
+                    }
+                    axis2.CreateAnnosAndTicks(false);
+                }
+            }
+        }
+
+        private void UpdateLayoutRadar(Size arrangeSize)
+        {
+            RadarRenderer renderer = _view.Renderer as RadarRenderer;
+            List<int> list = new List<int>();
+            foreach (Axis axis in _axes)
+            {
+                if (((axis != _ax) && (axis != _ay)) && ((axis.AxisType == AxisType.Y) && (axis.Axis.RadarPointIndices != null)))
+                {
+                    double naN = double.NaN;
+                    double ymax = double.NaN;
+                    foreach (int num3 in axis.Axis.RadarPointIndices)
+                    {
+                        if (!list.Contains(num3))
+                        {
+                            list.Add(num3);
+                        }
+                        renderer.GetMinMaxY(num3, ref naN, ref ymax);
+                    }
+                    if (double.IsNaN(axis._min))
+                    {
+                        axis.Min0 = axis._min = naN;
+                    }
+                    if (double.IsNaN(axis._max))
+                    {
+                        axis.Max0 = axis._max = ymax;
+                    }
+                    axis.RoundLimits();
+                }
+            }
+            if (list.Count > 0)
+            {
+                double ymin = double.NaN;
+                double num5 = double.NaN;
+                int npts = ((BaseRenderer)_view.Renderer)._dataInfo.npts;
+                for (int i = 0; i < npts; i++)
+                {
+                    if (!list.Contains(i))
+                    {
+                        renderer.GetMinMaxY(i, ref ymin, ref num5);
+                    }
+                }
+                if (double.IsNaN(_ay.Axis.Min))
+                {
+                    _ay.Min0 = _ay._min = ymin;
+                }
+                if (double.IsNaN(_ay.Axis.Max))
+                {
+                    _ay.Max0 = _ay._max = num5;
+                }
+                _ay.RoundLimits();
+            }
+            Canvas.SetLeft(_ay, 0.0);
+            Canvas.SetTop(_ay, 0.0);
+            Canvas.SetLeft(_ax, 0.0);
+            Canvas.SetTop(_ax, 0.0);
+            using (List<Axis>.Enumerator enumerator3 = _axes.GetEnumerator())
+            {
+                while (enumerator3.MoveNext())
+                {
+                    enumerator3.Current.Children.Clear();
+                }
+            }
+            Size size = _ay.GetSize(null, false);
+            _ax.GetSize(renderer.ItemNames, true);
+            double width = base.Width;
+            double height = base.Height;
+            if (double.IsNaN(width))
+            {
+                width = arrangeSize.Width;
+            }
+            if (double.IsNaN(height))
+            {
+                height = arrangeSize.Height;
+            }
+            Size annoSize = _ax.AnnoSize;
+            _plot = new Rect(1.1 * annoSize.Width, 1.1 * annoSize.Height, Math.Max((double)8.0, (double)(width - (2.2 * annoSize.Width))), Math.Max((double)8.0, (double)(height - (2.2 * annoSize.Height))));
+            Chart chart = _view.Chart;
+            if (chart != null)
+            {
+                _radarView.Angle = PolarRadarOptions.GetStartingAngle(chart);
+                _radarView.Direction = PolarRadarOptions.GetDirection(chart);
+            }
+            _radarView.IsPolar = renderer.IsPolar;
+            _radarView.Init(_plot);
+            _ay.Layout(_radarView.GetAxisYRect(size.Height));
+            _ay.CreateLabels(null);
+            _ay.CreateAnnosAndTicks(true);
+            _ay.Visibility = Visibility.Collapsed;
+            foreach (Axis axis3 in _axes)
+            {
+                if ((axis3 != _ay) && (axis3.AxisType == AxisType.Y))
+                {
+                    axis3.Layout(_radarView.GetAxisYRect(size.Height));
+                    axis3.CreateLabels(null);
+                    axis3.CreateAnnosAndTicks(true);
+                    axis3.Visibility = Visibility.Collapsed;
+                }
+            }
+            _ax.Visibility = Visibility.Visible;
+            _ax.CreateLabels(renderer.ItemNames, renderer.IsPolar ? ((double)0x2d) : ((double)0));
+            _ax.CreateAnnosAndTicksRadar(_radarView, _ay);
+            _plot0 = _plot = new Rect(0.1 * annoSize.Width, 0.1 * annoSize.Height, Math.Max((double)8.0, (double)(width - (0.2 * annoSize.Width))), Math.Max((double)8.0, (double)(height - (0.2 * annoSize.Height))));
+        }
+        #endregion
+
         internal void AddAxis(Axis ax)
         {
             Axis axis = ax;
@@ -112,7 +546,7 @@ namespace Dt.Charts
             _axes.Add(_ax);
             _axes.Add(_ay);
         }
-        
+
         public double ConvertBackX(double x)
         {
             return ((IAxis)_ax).ToData(x);
@@ -290,7 +724,7 @@ namespace Dt.Charts
                 }
             }
         }
-        
+
         private object[] GetItems(Renderer2D rend, AxisCanvas ax)
         {
             if (rend != null)
@@ -699,438 +1133,6 @@ namespace Dt.Charts
             _ay = ay;
             InternalChildren.Insert(index, _ay);
             _axes.Insert(num2, _ay);
-        }
-
-        internal void UpdateLayout(Size arrangeSize)
-        {
-            _ax.Axis = _view.AxisX;
-            _ay.Axis = _view.AxisY;
-            List<string> list = new List<string>();
-            foreach (Axis axis in _axes)
-            {
-                if ((axis.PositionInternal & AxisPosition.OverData) > AxisPosition.Near)
-                {
-                    Canvas.SetZIndex(axis, 1);
-                }
-                else
-                {
-                    Canvas.SetZIndex(axis, 0);
-                }
-                ((IAxis)axis).ClearLabels();
-                axis.ResetLimits();
-                if (_view != null)
-                {
-                    axis.Chart = _view.Chart;
-                }
-                if (((axis != _ax) && (axis != _ay)) && !string.IsNullOrEmpty(axis.AxisName))
-                {
-                    list.Add(axis.AxisName);
-                }
-            }
-            if (_view.Renderer != null)
-            {
-                Rect emptyRect = Extensions.EmptyRect;
-                IView2DRenderer renderer = _view.Renderer as IView2DRenderer;
-                if (renderer == null)
-                {
-                    return;
-                }
-                _ast = renderer.Axis;
-                Size sz = new Size(base.Width, base.Height);
-                Renderer2D rendererd = renderer as Renderer2D;
-                if (rendererd != null)
-                {
-                    rendererd.ValidAuxAxes = list.ToArray();
-                    if (_plot.Width > 0.0)
-                    {
-                        sz.Width = _plot.Width;
-                    }
-                    if (_plot.Height > 0.0)
-                    {
-                        sz.Height = _plot.Height;
-                    }
-                }
-                Rect rect = renderer.Measure(sz);
-                if (emptyRect.IsEmptyRect())
-                {
-                    emptyRect = rect;
-                }
-                else
-                {
-                    emptyRect.Union(rect);
-                }
-                if (emptyRect.Width > 0.0)
-                {
-                    _ax.SetLimits(emptyRect.X, emptyRect.X + emptyRect.Width);
-                }
-                if (emptyRect.Height > 0.0)
-                {
-                    _ay.SetLimits(emptyRect.Y, emptyRect.Y + emptyRect.Height);
-                }
-            }
-            switch (_ast)
-            {
-                case AxisStyle.None:
-                    if ((base.Width > 10.0) && (base.Height > 10.0))
-                    {
-                        _plot = new Rect(5.0, 5.0, base.Width - 10.0, base.Height - 10.0);
-                    }
-                    using (List<Axis>.Enumerator enumerator3 = _axes.GetEnumerator())
-                    {
-                        while (enumerator3.MoveNext())
-                        {
-                            enumerator3.Current.Visibility = Utils.VisHidden;
-                        }
-                    }
-                    break;
-
-                case AxisStyle.Cartesian:
-                    UpdateLayoutCartesian(arrangeSize);
-                    break;
-
-                case AxisStyle.Radar:
-                    using (List<Axis>.Enumerator enumerator2 = _axes.GetEnumerator())
-                    {
-                        while (enumerator2.MoveNext())
-                        {
-                            enumerator2.Current.Visibility = Visibility.Collapsed;
-                        }
-                    }
-                    UpdateLayoutRadar(arrangeSize);
-                    break;
-            }
-            Shape plotShape = _view.PlotShape;
-            if (plotShape != null)
-            {
-                Canvas.SetLeft(plotShape, _view.PlotRect.Left);
-                Canvas.SetTop(plotShape, _view.PlotRect.Top);
-                plotShape.Width = _view.PlotRect.Width;
-                plotShape.Height = _view.PlotRect.Height;
-                if (_ast == AxisStyle.None)
-                {
-                    plotShape.Visibility = Visibility.Collapsed;
-                }
-                else
-                {
-                    plotShape.Visibility = Visibility.Visible;
-                }
-            }
-            _rebuild = true;
-            Background = null;
-            RebuildTree();
-        }
-
-        private void UpdateLayoutCartesian(Size arrangeSize)
-        {
-            if ((arrangeSize.Width != 0.0) && (arrangeSize.Height != 0.0))
-            {
-                int num = _axes.Count;
-                PrepareAxes();
-                bool hasPlotAreas = _view.HasPlotAreas;
-                PlotArea area = _view.UpdateMainPlotArea(hasPlotAreas);
-                if (hasPlotAreas)
-                {
-                    PerformPlotAreaLayout(arrangeSize);
-                }
-                else
-                {
-                    Renderer2D renderer = _view.Renderer as Renderer2D;
-                    Size size = new Size(arrangeSize.Width, 0.3 * arrangeSize.Height);
-                    Size size2 = new Size(arrangeSize.Height, 0.3 * arrangeSize.Width);
-                    double num2 = 0.0;
-                    double num3 = 0.0;
-                    double width = arrangeSize.Width;
-                    double height = arrangeSize.Height;
-                    double left = 0.0;
-                    double top = 0.0;
-                    double right = arrangeSize.Width;
-                    double bottom = arrangeSize.Height;
-                    for (int i = 0; i < num; i++)
-                    {
-                        Axis ax = _axes[i];
-                        double origin = ax.Axis.Origin;
-                        if (ax.AxisType == AxisType.X)
-                        {
-                            Size size3 = ax.GetSize(GetItems(renderer, ax), false);
-                            if (size3.Height > size.Height)
-                            {
-                                size3.Height = size.Height;
-                            }
-                            size3.Width = size.Width;
-                            ax.DesiredSize = size3;
-                            bool flag2 = (!double.IsNaN(origin) && (origin <= _ay.Max0)) && (origin >= _ay.Min0);
-                            if (ax.IsNear)
-                            {
-                                num2 = Math.Max(num2, ax.AnnoSize.Width * 0.5);
-                                width = Math.Min(width, arrangeSize.Width - (ax.AnnoSize.Width * 0.5));
-                                if (flag2)
-                                {
-                                    double num12 = ConvertY(origin, top, bottom);
-                                    bottom -= Math.Max((double)0.0, (double)((num12 + size3.Height) - bottom));
-                                }
-                                else
-                                {
-                                    bottom -= size3.Height;
-                                }
-                            }
-                            else if (ax.IsFar)
-                            {
-                                num2 = Math.Max(num2, ax.AnnoSize.Width * 0.5);
-                                width = Math.Min(width, arrangeSize.Width - (ax.AnnoSize.Width * 0.5));
-                                if (flag2)
-                                {
-                                    double num13 = ConvertY(origin, top, bottom);
-                                    top += Math.Max((double)0.0, (double)(top - (num13 - size3.Height)));
-                                }
-                                else
-                                {
-                                    top += size3.Height;
-                                }
-                            }
-                        }
-                        else if (ax.AxisType == AxisType.Y)
-                        {
-                            Size size4 = ax.GetSize(GetItems(renderer, ax), false);
-                            if (size4.Height > size2.Height)
-                            {
-                                size4.Height = size2.Height;
-                            }
-                            size4.Width = size2.Width;
-                            ax.DesiredSize = size4;
-                            bool flag3 = (!double.IsNaN(origin) && (origin <= _ax.Max0)) && (origin >= _ax.Min0);
-                            if (ax.IsNear)
-                            {
-                                num3 = Math.Max(num3, ax.AnnoSize.Width * 0.5);
-                                height = Math.Min(height, arrangeSize.Height - (ax.AnnoSize.Width * 0.5));
-                                if (flag3)
-                                {
-                                    double num14 = ConvertX(origin, left, right);
-                                    left += Math.Max((double)0.0, (double)(left - (num14 - size4.Height)));
-                                }
-                                else
-                                {
-                                    left += size4.Height;
-                                }
-                            }
-                            else if (ax.IsFar)
-                            {
-                                num3 = Math.Max(num3, ax.AnnoSize.Width * 0.5);
-                                height = Math.Min(height, arrangeSize.Height - (ax.AnnoSize.Width * 0.5));
-                                if (flag3)
-                                {
-                                    double num15 = ConvertX(origin, left, right);
-                                    right -= Math.Max((double)0.0, (double)((num15 + size4.Height) - right));
-                                }
-                                else
-                                {
-                                    right -= size4.Height;
-                                }
-                            }
-                        }
-                    }
-                    double w = 0.0;
-                    double h = 0.0;
-                    AdjustMargins(arrangeSize, ref num2, ref width, ref num3, ref height, ref w, ref h, ref left, ref right, ref top, ref bottom);
-                    _plot = _plot0 = new Rect(num2, num3, w, h);
-                    if (area != null)
-                    {
-                        area.SetPlotX(_plot.X, _plot.Width);
-                        area.SetPlotY(_plot.Y, _plot.Height);
-                        UIElement uIElement = area.UIElement;
-                        if ((uIElement != null) && !InternalChildren.Contains(uIElement))
-                        {
-                            InternalChildren.Insert(0, uIElement);
-                        }
-                    }
-                    for (int j = 0; j < num; j++)
-                    {
-                        Axis axis2 = _axes[j];
-                        axis2._plot = _plot0;
-                        double d = axis2.Axis.Origin;
-                        if (axis2.AxisType == AxisType.X)
-                        {
-                            Rect r = new Rect();
-                            if ((double.IsNaN(d) || (d > _ay.Max0)) || (d < _ay.Min0))
-                            {
-                                if (axis2.IsNear)
-                                {
-                                    r = new Rect(num2, bottom, w, axis2.DesiredSize.Height);
-                                    bottom += axis2.DesiredSize.Height;
-                                }
-                                else if (axis2.IsFar)
-                                {
-                                    r = new Rect(num2, top - axis2.DesiredSize.Height, w, axis2.DesiredSize.Height);
-                                    top -= axis2.DesiredSize.Height;
-                                }
-                            }
-                            else
-                            {
-                                double y = ConvertY(d, _plot.Top, _plot.Bottom);
-                                if (axis2.IsNear)
-                                {
-                                    r = new Rect(num2, y, w, axis2.DesiredSize.Height);
-                                    bottom += Math.Max((double)0.0, (double)(r.Bottom - _plot.Bottom));
-                                }
-                                else if (axis2.IsFar)
-                                {
-                                    r = new Rect(num2, y - axis2.DesiredSize.Height, w, axis2.DesiredSize.Height);
-                                    top -= Math.Max((double)0.0, (double)(_plot.Top - r.Top));
-                                }
-                            }
-                            axis2.Layout(r);
-                        }
-                        else if (axis2.AxisType == AxisType.Y)
-                        {
-                            Rect rect2 = new Rect();
-                            if ((double.IsNaN(d) || (d > _ax.Max0)) || (d < _ax.Min0))
-                            {
-                                if (axis2.IsNear)
-                                {
-                                    rect2 = new Rect(left - axis2.DesiredSize.Height, num3, h, axis2.DesiredSize.Height);
-                                    left -= axis2.DesiredSize.Height;
-                                }
-                                else if (axis2.IsFar)
-                                {
-                                    rect2 = new Rect(right, num3, h, axis2.DesiredSize.Height);
-                                    right += axis2.DesiredSize.Height;
-                                }
-                            }
-                            else
-                            {
-                                double x = ConvertX(d, _plot.Left, _plot.Right);
-                                if (axis2.IsNear)
-                                {
-                                    rect2 = new Rect(x - axis2.DesiredSize.Height, num3, h, axis2.DesiredSize.Height);
-                                    left -= axis2.DesiredSize.Height;
-                                }
-                                else if (axis2.IsFar)
-                                {
-                                    rect2 = new Rect(x, num3, h, axis2.DesiredSize.Height);
-                                    right += axis2.DesiredSize.Height;
-                                }
-                            }
-                            axis2.Layout(rect2);
-                        }
-                        if (((axis2 == _ax) && (renderer != null)) && !renderer.Inverted)
-                        {
-                            axis2.CreateLabels(renderer.ItemNames);
-                        }
-                        else if (((axis2 == _ay) && (renderer != null)) && renderer.Inverted)
-                        {
-                            axis2.CreateLabels(renderer.ItemNames);
-                        }
-                        else
-                        {
-                            axis2.CreateLabels(null);
-                        }
-                        axis2.CreateAnnosAndTicks(false);
-                    }
-                }
-            }
-        }
-
-        private void UpdateLayoutRadar(Size arrangeSize)
-        {
-            RadarRenderer renderer = _view.Renderer as RadarRenderer;
-            List<int> list = new List<int>();
-            foreach (Axis axis in _axes)
-            {
-                if (((axis != _ax) && (axis != _ay)) && ((axis.AxisType == AxisType.Y) && (axis.Axis.RadarPointIndices != null)))
-                {
-                    double naN = double.NaN;
-                    double ymax = double.NaN;
-                    foreach (int num3 in axis.Axis.RadarPointIndices)
-                    {
-                        if (!list.Contains(num3))
-                        {
-                            list.Add(num3);
-                        }
-                        renderer.GetMinMaxY(num3, ref naN, ref ymax);
-                    }
-                    if (double.IsNaN(axis._min))
-                    {
-                        axis.Min0 = axis._min = naN;
-                    }
-                    if (double.IsNaN(axis._max))
-                    {
-                        axis.Max0 = axis._max = ymax;
-                    }
-                    axis.RoundLimits();
-                }
-            }
-            if (list.Count > 0)
-            {
-                double ymin = double.NaN;
-                double num5 = double.NaN;
-                int npts = ((BaseRenderer)_view.Renderer)._dataInfo.npts;
-                for (int i = 0; i < npts; i++)
-                {
-                    if (!list.Contains(i))
-                    {
-                        renderer.GetMinMaxY(i, ref ymin, ref num5);
-                    }
-                }
-                if (double.IsNaN(_ay.Axis.Min))
-                {
-                    _ay.Min0 = _ay._min = ymin;
-                }
-                if (double.IsNaN(_ay.Axis.Max))
-                {
-                    _ay.Max0 = _ay._max = num5;
-                }
-                _ay.RoundLimits();
-            }
-            Canvas.SetLeft(_ay, 0.0);
-            Canvas.SetTop(_ay, 0.0);
-            Canvas.SetLeft(_ax, 0.0);
-            Canvas.SetTop(_ax, 0.0);
-            using (List<Axis>.Enumerator enumerator3 = _axes.GetEnumerator())
-            {
-                while (enumerator3.MoveNext())
-                {
-                    enumerator3.Current.Children.Clear();
-                }
-            }
-            Size size = _ay.GetSize(null, false);
-            _ax.GetSize(renderer.ItemNames, true);
-            double width = base.Width;
-            double height = base.Height;
-            if (double.IsNaN(width))
-            {
-                width = arrangeSize.Width;
-            }
-            if (double.IsNaN(height))
-            {
-                height = arrangeSize.Height;
-            }
-            Size annoSize = _ax.AnnoSize;
-            _plot = new Rect(1.1 * annoSize.Width, 1.1 * annoSize.Height, Math.Max((double)8.0, (double)(width - (2.2 * annoSize.Width))), Math.Max((double)8.0, (double)(height - (2.2 * annoSize.Height))));
-            Chart chart = _view.Chart;
-            if (chart != null)
-            {
-                _radarView.Angle = PolarRadarOptions.GetStartingAngle(chart);
-                _radarView.Direction = PolarRadarOptions.GetDirection(chart);
-            }
-            _radarView.IsPolar = renderer.IsPolar;
-            _radarView.Init(_plot);
-            _ay.Layout(_radarView.GetAxisYRect(size.Height));
-            _ay.CreateLabels(null);
-            _ay.CreateAnnosAndTicks(true);
-            _ay.Visibility = Visibility.Collapsed;
-            foreach (Axis axis3 in _axes)
-            {
-                if ((axis3 != _ay) && (axis3.AxisType == AxisType.Y))
-                {
-                    axis3.Layout(_radarView.GetAxisYRect(size.Height));
-                    axis3.CreateLabels(null);
-                    axis3.CreateAnnosAndTicks(true);
-                    axis3.Visibility = Visibility.Collapsed;
-                }
-            }
-            _ax.Visibility = Visibility.Visible;
-            _ax.CreateLabels(renderer.ItemNames, renderer.IsPolar ? ((double)0x2d) : ((double)0));
-            _ax.CreateAnnosAndTicksRadar(_radarView, _ay);
-            _plot0 = _plot = new Rect(0.1 * annoSize.Width, 0.1 * annoSize.Height, Math.Max((double)8.0, (double)(width - (0.2 * annoSize.Width))), Math.Max((double)8.0, (double)(height - (0.2 * annoSize.Height))));
         }
 
         internal AxisCanvasCollection Axes

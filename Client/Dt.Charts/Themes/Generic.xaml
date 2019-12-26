@@ -6,7 +6,7 @@
 
     <!-- 有文本内容时显示，无文本内容时隐藏(不占空间) -->
     <dt:TextVisibleConverter x:Key="CvTextToVisible" Visible="True" />
-    
+
     <Style TargetType="dt:Chart">
         <Setter Property="Background" Value="#FFe3f4fe"/>
         <Setter Property="Foreground" Value="#FF15428b"/>
@@ -71,51 +71,18 @@
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="FontSize" Value="12"/>
         <Setter Property="Margin" Value="2"/>
-        <Setter Property ="ItemTemplate">
-            <Setter.Value>
-                <DataTemplate >
-                    <StackPanel Orientation="Horizontal" Margin="0,-2,0,-2">
-                        <Canvas Width="24" Height="24" Background="Transparent">
-                            <ContentControl Canvas.Top="2"
-                                            Content="{Binding Line}"
-                                            HorizontalContentAlignment="Stretch"
-                                            VerticalContentAlignment="Stretch"
-                                            Width="24"
-                                            Height="20"/>
-                            <ContentControl Canvas.Left="5"
-                                            Canvas.Top="5"
-                                            Content="{Binding Symbol}"
-                                            HorizontalContentAlignment="Stretch"
-                                            VerticalContentAlignment="Stretch"
-                                            Width="14"
-                                            Height="14"/>
-                        </Canvas>
-                        <TextBlock Text="{Binding Label}" Margin="2" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </DataTemplate>
-            </Setter.Value>
-        </Setter>
+        <Setter Property="Padding" Value="2"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="dt:ChartLegend">
-                    <Border x:Name="bdr"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            Padding="{TemplateBinding Padding}">
-                        <StackPanel Orientation="Vertical">
-                            <ContentPresenter Foreground="{TemplateBinding Foreground}" HorizontalContentAlignment="Center" Content="{TemplateBinding Title}"/>
-                            <ItemsPresenter x:Name="Presenter" />
-                        </StackPanel>
-                    </Border>
+                    <StackPanel Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Foreground="{TemplateBinding Foreground}" HorizontalContentAlignment="Center" Content="{TemplateBinding Title}"/>
+                        <StackPanel x:Name="ItemPanel" Orientation="{TemplateBinding Orientation}" />
+                    </StackPanel>
                 </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-        <Setter Property="ItemsPanel">
-            <Setter.Value>
-                <ItemsPanelTemplate>
-                    <StackPanel Orientation="{Binding Orientation}" />
-                </ItemsPanelTemplate>
             </Setter.Value>
         </Setter>
     </Style>

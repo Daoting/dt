@@ -20,7 +20,7 @@ namespace Dt.Base
     /// <summary>
     /// 图例说明
     /// </summary>
-    public partial class ChartLegend : ItemsControl
+    public partial class ChartLegend : Control
     {
         #region 静态内容
         public static readonly DependencyProperty PositionProperty = DependencyProperty.Register(
@@ -59,6 +59,7 @@ namespace Dt.Base
         #endregion
 
         Chart _parent;
+        StackPanel _pnl;
 
         public ChartLegend()
         {
@@ -112,30 +113,55 @@ namespace Dt.Base
                 if (_parent != value)
                 {
                     if (_parent != null)
-                        _parent.LegendChanged -= _parent_LegendChanged;
+                        _parent.LegendChanged -= OnLegendChanged;
                     _parent = value;
                     if (_parent != null)
-                        _parent.LegendChanged += _parent_LegendChanged;
+                        _parent.LegendChanged += OnLegendChanged;
                 }
             }
         }
 
         protected override void OnApplyTemplate()
         {
-            // 为绑定Orientation
-            var pre = (ItemsPresenter)GetTemplateChild("Presenter");
-            if (pre != null)
-                pre.DataContext = this;
-
+            _pnl = (StackPanel)GetTemplateChild("ItemPanel");
             UpdatePosition();
+            OnLegendChanged(null, null);
         }
 
-        void _parent_LegendChanged(object sender, EventArgs e)
+        void OnLegendChanged(object sender, EventArgs e)
         {
-            Items.Clear();
+            if (_pnl == null)
+                return;
+
+            if (_pnl.Children.Count > 0)
+                _pnl.Children.Clear();
             foreach (LegendItem item in _parent.LegendItems)
             {
-                Items.Add(item);
+                Grid grid = new Grid
+                {
+                    Height = 24,
+                    ColumnDefinitions =
+                    {
+                        new ColumnDefinition { Width = new GridLength(24) },
+                        new ColumnDefinition { Width = GridLength.Auto },
+                    }
+                };
+
+                if (item.Symbol != null)
+                {
+                    item.Symbol.Margin = new Thickness(5);
+                    grid.Children.Add(item.Symbol);
+                }
+                else if (item.Line != null)
+                {
+                    grid.Children.Add(item.Line);
+                }
+
+                TextBlock tb = new TextBlock { Text = item.Label == null ? "无" : item.Label, VerticalAlignment = VerticalAlignment.Center };
+                Grid.SetColumn(tb, 1);
+                grid.Children.Add(tb);
+
+                _pnl.Children.Add(grid);
             }
         }
 

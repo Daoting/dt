@@ -771,7 +771,7 @@ namespace Dt.Base
 
         protected override void OnDoubleTapped(DoubleTappedRoutedEventArgs e)
         {
-            OnDoubleTapped(e);
+            base.OnDoubleTapped(e);
             if ((GestureDoubleTap == GestureDoubleTapAction.Scale) && (Data.Renderer is Renderer2D))
             {
                 Actions.FireEnter();
@@ -872,10 +872,7 @@ namespace Dt.Base
                             ViewElement.Height = actualHeight;
                             View.Rebuild(actualWidth, actualHeight);
                         }
-                        if (LegendChanged != null)
-                        {
-                            LegendChanged(this, EventArgs.Empty);
-                        }
+                        LegendChanged?.Invoke(this, EventArgs.Empty);
                         ViewElement.InvalidateArrange();
                     }
                 }
