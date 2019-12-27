@@ -1,0 +1,28 @@
+﻿<a:Win
+    x:Class="Dt.Sample.PlotAreas"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Home="图表样例,属性">
+
+    <a:WinCenter>
+        <a:Tabs>
+            <a:Tab Title="图表样例">
+                <a:Chart x:Name="_chart" />
+            </a:Tab>
+        </a:Tabs>
+    </a:WinCenter>
+    <a:WinItem DockState="DockedRight">
+        <a:Tabs>
+            <a:Tab Title="属性">
+                <StackPanel>
+                    <a:Fv>
+                        <a:CFree Title="聚合方法">
+                            <ComboBox x:Name="_cb" />
+                        </a:CFree>
+                    </a:Fv>
+                </StackPanel>
+            </a:Tab>
+        </a:Tabs>
+    </a:WinItem>
+</a:Win>

@@ -26,6 +26,7 @@
   
   <ItemGroup>
     <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
+    <ProjectReference Include="..\Dt.Charts\Dt.Charts.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -8,7 +8,7 @@
     <a:WinCenter>
         <a:Tabs>
             <a:Tab Title="图表样例">
-                <a:Chart x:Name="_chart" Palette="Flow">
+                <a:Chart x:Name="_chart">
                     <a:ChartLegend x:Name="_legend" />
                 </a:Chart>
             </a:Tab>

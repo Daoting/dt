@@ -25,15 +25,19 @@ namespace Dt.Sample
             InitializeComponent();
             NaviData = new List<NaviRow>
             {
-                new NaviRow(Icons.汉堡, "图表预览", typeof(BaseChart), "三类视图，两种数据源，三种选择模式，支持分组"),
-                new NaviRow(Icons.分组, "表格视图", typeof(LvTable), "传统二维表格"),
-                new NaviRow(Icons.详细, "列表视图", typeof(LvList), "水平填充式列表，只垂直滚动"),
-                new NaviRow(Icons.日历, "磁贴视图", typeof(LvTile), "平铺式磁贴，一行多格，只垂直滚动"),
-                new NaviRow(Icons.修改, "视图扩展", typeof(LvViewEx), "定义行样式、扩展列"),
-                new NaviRow(Icons.划卡, "列表行模板选择", typeof(LvListSelector), "根据数据动态选择模板"),
-                new NaviRow(Icons.排列, "磁贴模板选择", typeof(LvTileSelector), "根据数据动态选择模板"),
-                new NaviRow(Icons.录音, "分组模板", typeof(LvGroupTemplate), "设置分组模板"),
-                new NaviRow(Icons.公告, "上下文菜单", typeof(LvContextMenu), "触发上下文菜单的方式：右键、悬停、点击标识按钮"),
+                new NaviRow(Icons.汉堡, "图表预览", typeof(BaseChart), "图表类型、X轴、Y轴、调色板、图例等设置"),
+                new NaviRow(Icons.分组, "数据图表", typeof(DataChart), "Table数据图表"),
+                new NaviRow(Icons.详细, "标注", typeof(MarkersChart), "跟踪鼠标，显示标注"),
+                new NaviRow(Icons.日历, "组合图表", typeof(ComplexChart), "多图表组合方式"),
+                new NaviRow(Icons.修改, "聚合", typeof(AggregateChart), "支持多种聚合方法"),
+                new NaviRow(Icons.划卡, "标签", typeof(ChartLabel), "自定义数据标签"),
+                new NaviRow(Icons.排列, "饼图", typeof(StackedPie), "csv统计结果"),
+                new NaviRow(Icons.录音, "交互", typeof(InteractiveChart), "图表交互"),
+                new NaviRow(Icons.公告, "实时", typeof(LiveChart), "实时图表"),
+                new NaviRow(Icons.详细, "财务", typeof(FinancialChart), ""),
+                new NaviRow(Icons.日历, "甘特图", typeof(GanttChart), ""),
+                new NaviRow(Icons.修改, "多轴", typeof(PlotAreas), ""),
+                new NaviRow(Icons.划卡, "动画", typeof(LoadAnimation), ""),
             };
         }
     }

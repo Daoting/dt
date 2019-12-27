@@ -1,0 +1,33 @@
+﻿<a:PageWin
+    x:Class="Dt.Sample.GanttChart"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:PageWin.Resources>
+        <DataTemplate x:Key="label">
+            <StackPanel>
+                <TextBlock FontFamily="Global User Interface">
+                        <Run Text="Series:" />
+                        <Run Text="{Binding Series}" FontFamily="Global User Interface" />
+                </TextBlock>
+                <TextBlock FontFamily="Global User Interface">
+                        <Run Text="Day:" FontFamily="Global User Interface" />
+                        <Run Text="{Binding [XValues]}" />
+                </TextBlock>
+                <TextBlock FontFamily="Global User Interface">
+                        <Run Text="Low:" />
+                        <Run Text="{Binding [LowValues]}" />
+                </TextBlock>
+                <TextBlock FontFamily="Global User Interface">
+                        <Run Text="High:" FontFamily="Global User Interface" />
+                        <Run Text="{Binding [HighValues]}" />
+                </TextBlock>
+            </StackPanel>
+        </DataTemplate>
+    </a:PageWin.Resources>
+
+    <a:Chart x:Name="_chart" ChartType="Gantt">
+        <a:ChartLegend x:Name="_legend" />
+    </a:Chart>
+</a:PageWin>

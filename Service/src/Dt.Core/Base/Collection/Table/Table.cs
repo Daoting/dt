@@ -7,13 +7,15 @@
 #endregion
 
 #region 引用命名
-using System.Text.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Text;
+using System.Text.Json;
 #endregion
 
 namespace Dt.Core
@@ -95,7 +97,13 @@ namespace Dt.Core
 
         #region 创建表结构
         /// <summary>
-        /// 添加列，主要为支持手动创建Table时初始化器的写法！
+        /// 添加列，主要为支持手动创建Table时初始化器的写法！如：
+        /// Table tbl = new Table
+        /// {
+        ///     { "id" },
+        ///     { "xm" },
+        ///     { "bh", typeof(int)
+        /// };
         /// </summary>
         /// <param name="p_colName">列名</param>
         /// <param name="p_colType">列数据类型, 默认typeof(string)</param>
@@ -137,6 +145,73 @@ namespace Dt.Core
                     tbl._columns.Add(new Column(cell.ID, cell.Type));
                 }
             }
+            return tbl;
+        }
+
+        /// <summary>
+        /// 根据json文件流内容创建Table对象
+        /// </summary>
+        /// <param name="p_stream">json流</param>
+        /// <returns></returns>
+        public static Table Create(Stream p_stream)
+        {
+            return Create<Table>(p_stream);
+        }
+
+        /// <summary>
+        /// 根据json流内容创建Table对象
+        /// </summary>
+        /// <typeparam name="T">Table类型</typeparam>
+        /// <param name="p_stream"></param>
+        /// <returns></returns>
+        public static T Create<T>(Stream p_stream)
+            where T : Table
+        {
+            if (p_stream == null)
+                return null;
+
+            using (var sr = new StreamReader(p_stream))
+            {
+                return ParseJsonData<T>(Encoding.UTF8.GetBytes(sr.ReadToEnd()));
+            }
+        }
+
+        /// <summary>
+        /// 根据json字符串创建Table对象
+        /// </summary>
+        /// <param name="p_json"></param>
+        /// <returns></returns>
+        public static Table CreateFromJson(string p_json)
+        {
+            if (string.IsNullOrEmpty(p_json))
+                return null;
+            return ParseJsonData<Table>(Encoding.UTF8.GetBytes(p_json));
+        }
+
+        /// <summary>
+        /// 根据json字符串创建Table对象
+        /// </summary>
+        /// <typeparam name="T">Table类型</typeparam>
+        /// <param name="p_json"></param>
+        /// <returns></returns>
+        public static T CreateFromJson<T>(string p_json)
+            where T : Table
+        {
+            if (string.IsNullOrEmpty(p_json))
+                return null;
+            return ParseJsonData<T>(Encoding.UTF8.GetBytes(p_json));
+        }
+
+        static T ParseJsonData<T>(byte[] p_data)
+            where T : Table
+        {
+            var tbl = Activator.CreateInstance<T>();
+            Utf8JsonReader reader = new Utf8JsonReader(p_data);
+            // [
+            reader.Read();
+            // "#tbl"
+            reader.Read();
+            ((IRpcJson)tbl).ReadRpcJson(ref reader);
             return tbl;
         }
         #endregion
@@ -528,6 +603,70 @@ namespace Dt.Core
                 return typeof(Nullable<>).MakeGenericType(tp);
             }
             return Type.GetType("System." + p_name, true, false);
+        }
+        #endregion
+
+        #region 外部方法
+        /// <summary>
+        /// 将当前表数据转成矩阵形式的表，如：
+        /// xm       subject    score
+        /// 张建国   语文       35
+        /// 张建国   数学       78
+        /// 张建国   外语       87
+        /// 于凤琴   语文       98
+        /// 于凤琴   数学       86
+        /// 于凤琴   外语       68
+        /// 
+        /// 转成
+        /// 
+        /// xm       语文    数学    外语
+        /// 张建国   35      78      87
+        /// 于凤琴   98      86      68
+        /// </summary>
+        /// <param name="p_rowHeader">行头列名</param>
+        /// <param name="p_colHeader">自动创建列的列名</param>
+        /// <param name="p_valCol">取值列名</param>
+        /// <returns>转置后的Table</returns>
+        public Table CreateMatrix(string p_rowHeader, string p_colHeader, string p_valCol)
+        {
+            if (string.IsNullOrEmpty(p_rowHeader)
+                || !_columns.Contains(p_rowHeader)
+                || string.IsNullOrEmpty(p_colHeader)
+                || !_columns.Contains(p_colHeader)
+                || string.IsNullOrEmpty(p_valCol)
+                || !_columns.Contains(p_valCol))
+                return null;
+
+            Row dr;
+            Dictionary<string, Row> rowDict = new Dictionary<string, Row>();
+
+            Table tbl = new Table();
+            // 添加行头列
+            tbl._columns.Add(new Column(p_rowHeader, typeof(string)));
+            Type valColType = _columns[p_valCol].Type;
+
+            foreach (Row row in this)
+            {
+                string rowHeader = row.Str(p_rowHeader);
+                if (string.IsNullOrEmpty(rowHeader))
+                    continue;
+
+                if (!rowDict.TryGetValue(rowHeader, out dr))
+                {
+                    dr = tbl.AddRow();
+                    dr[0] = rowHeader;
+                    rowDict[rowHeader] = dr;
+                }
+
+                string colHeader = row.Str(p_colHeader);
+                if (string.IsNullOrEmpty(colHeader))
+                    continue;
+
+                if (!tbl._columns.Contains(colHeader))
+                    tbl._columns.Add(new Column(colHeader, valColType));
+                dr.Cells[colHeader].InitVal(row[p_valCol]);
+            }
+            return tbl;
         }
         #endregion
 
