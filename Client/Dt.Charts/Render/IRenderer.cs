@@ -14,7 +14,6 @@ using Windows.UI.Xaml;
 
 namespace Dt.Charts
 {
-    [EditorBrowsable((EditorBrowsableState) EditorBrowsableState.Never)]
     public interface IRenderer
     {
         event EventHandler Changed;

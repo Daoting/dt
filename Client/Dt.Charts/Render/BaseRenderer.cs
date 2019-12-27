@@ -21,7 +21,6 @@ using Windows.UI.Xaml.Shapes;
 
 namespace Dt.Charts
 {
-    [EditorBrowsable((EditorBrowsableState) EditorBrowsableState.Advanced)]
     public abstract class BaseRenderer : IRenderer, IAxisController
     {
         bool _analyzed;

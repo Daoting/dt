@@ -32,6 +32,9 @@ namespace Dt.Sample
             _chart.View.AxisY.Title = "成绩";
             _data = new ChartSampleData();
 
+            _cbType.ItemsSource = EnumDataSource.FromType(typeof(ChartType));
+            _cbType.SelectionChanged += OnChartTypeSelectionChanged;
+
             _chart.Data = _data.GetData(ChartType.Column);
             _chart.ChartType = ChartType.Column;
         }

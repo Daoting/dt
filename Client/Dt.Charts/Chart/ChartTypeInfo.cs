@@ -14,7 +14,6 @@ using Windows.UI.Xaml.Markup;
 
 namespace Dt.Charts
 {
-    [ContentProperty(Name="Subtypes"), EditorBrowsable((EditorBrowsableState) EditorBrowsableState.Never)]
     public class ChartTypeInfo
     {
         string _name;

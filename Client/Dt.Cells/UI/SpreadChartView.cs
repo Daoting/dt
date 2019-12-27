@@ -250,11 +250,6 @@ namespace Dt.Cells.UI
                         num2 = i;
                     }
                 }
-                if (legend.Items != null)
-                {
-                    ItemCollection items = legend.Items;
-                    items.VectorChanged += LegendItemsCollectionChanged;
-                }
                 if (num2 >= 0)
                 {
                     C1Chart.Children.RemoveAt(num2);
@@ -1080,19 +1075,6 @@ namespace Dt.Cells.UI
         private bool IsZero(double value)
         {
             return ((!double.IsNaN(value) && !double.IsInfinity(value)) && (Math.Abs((double)(value - 0.0)) < 1E-07));
-        }
-
-        private void LegendItemsCollectionChanged(IObservableVector<object> sender, IVectorChangedEventArgs e)
-        {
-            if ((((e.CollectionChange == CollectionChange.ItemInserted) && (SpreadChart.ChartType == SpreadChartType.StockHighLowOpenClose)) && ((e.Index == 0) && (SpreadChart.ChartType == SpreadChartType.StockHighLowOpenClose))) && ((sender as ItemCollection).Count > 0))
-            {
-                LegendItem item = (sender as ItemCollection)[0] as LegendItem;
-                if (item.Symbol != null)
-                {
-                    item.Symbol.Fill = new SolidColorBrush(Colors.Transparent);
-                    item.Symbol.Stroke = new SolidColorBrush(Colors.Transparent);
-                }
-            }
         }
 
         private double[] LimitDataSeriesValues(double?[] xVlues, double[] values)

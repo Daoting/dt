@@ -40,26 +40,28 @@ namespace Dt.Charts
         /// 
         /// </summary>
         public static readonly DependencyProperty PlotBackgroundProperty = Utils.RegisterProperty(
-            "PlotBackground", 
-            typeof(Brush), 
-            typeof(ChartView), 
+            "PlotBackground",
+            typeof(Brush),
+            typeof(ChartView),
             new PropertyChangedCallback(ChartView.OnPlotBackgroundChanged));
 
+        readonly ChartViewport2D _viewport;
+        readonly Chart _chart;
         PlotAreaCollection _areas;
         Axis _ax;
-        AxisCollection _axes = new AxisCollection();
+        readonly AxisCollection _axes = new AxisCollection();
         Axis _ay;
-        Chart _chart;
         Dictionary<UIElement, Point> _childPoints = new Dictionary<UIElement, Point>();
         ObservableCollection<UIElement> _children;
         ObservableCollection<IChartLayer> _layers;
         Shape _plotShape;
         IRenderer _renderer;
         SolidColorBrush _transparentBrush = new SolidColorBrush(Colors.Transparent);
-        ChartViewport2D _vp2;
-        
-        public ChartView()
+
+
+        public ChartView(Chart p_chart)
         {
+            _chart = p_chart;
             _axes.View = this;
             AxisX = new Axis();
             AxisY = new Axis();
@@ -67,13 +69,17 @@ namespace Dt.Charts
             AxisY.SetFixedType(AxisType.Y);
             _axes.Add(AxisX);
             _axes.Add(AxisY);
+
+            _viewport = new ChartViewport2D(this);
+
             _plotShape = new Rectangle();
             _plotShape.Fill = new SolidColorBrush(Colors.Transparent);
+
             _areas = new PlotAreaCollection();
             _areas.CollectionChanged += _areas_CollectionChanged;
+
             _layers = new ObservableCollection<IChartLayer>();
             _layers.CollectionChanged += _layers_CollectionChanged;
-            _vp2 = new ChartViewport2D(this);
         }
 
         /// <summary>
@@ -81,8 +87,8 @@ namespace Dt.Charts
         /// </summary>
         public bool Inverted
         {
-            get { return (bool)((bool)base.GetValue(InvertedProperty)); }
-            set { base.SetValue(InvertedProperty, (bool)value); }
+            get { return (bool)GetValue(InvertedProperty); }
+            set { SetValue(InvertedProperty, value); }
         }
 
         /// <summary>
@@ -99,10 +105,7 @@ namespace Dt.Charts
                     _ax = value;
                     _ax.SetFixedType(AxisType.X);
                     _ax.PropertyChanged += new PropertyChangedEventHandler(_axis_Changed);
-                    if (_vp2 != null)
-                    {
-                        _vp2.SetAxisX(_ax);
-                    }
+                    _viewport?.SetAxisX(_ax);
                 }
             }
         }
@@ -121,10 +124,7 @@ namespace Dt.Charts
                     _ay = value;
                     _ay.SetFixedType(AxisType.Y);
                     _ay.PropertyChanged += new PropertyChangedEventHandler(_axis_Changed);
-                    if (_vp2 != null)
-                    {
-                        _vp2.SetAxisY(_ay);
-                    }
+                    _viewport?.SetAxisY(_ay);
                 }
             }
         }
@@ -137,33 +137,6 @@ namespace Dt.Charts
         internal Chart Chart
         {
             get { return _chart; }
-            set
-            {
-                if (_chart != value)
-                {
-                    _chart = value;
-                    if (_layers != null)
-                    {
-                        using (IEnumerator<IChartLayer> enumerator = _layers.GetEnumerator())
-                        {
-                            while (enumerator.MoveNext())
-                            {
-                                enumerator.Current.Chart = _chart;
-                            }
-                        }
-                    }
-                    if (_axes != null)
-                    {
-                        using (IEnumerator<Axis> enumerator2 = _axes.GetEnumerator())
-                        {
-                            while (enumerator2.MoveNext())
-                            {
-                                enumerator2.Current.Chart = _chart;
-                            }
-                        }
-                    }
-                }
-            }
         }
 
         public ObservableCollection<UIElement> Children
@@ -223,7 +196,7 @@ namespace Dt.Charts
 
         public Rect PlotRect
         {
-            get { return _vp2.PlotRect; }
+            get { return _viewport.PlotRect; }
         }
 
         public Shape PlotShape
@@ -239,57 +212,50 @@ namespace Dt.Charts
                 if (_renderer != value)
                 {
                     _renderer = value;
-                    _vp2.Reset();
+                    _viewport.Reset();
                 }
             }
         }
 
-        internal FrameworkElement ViewElement
+        /// <summary>
+        /// 图表实际的可视内容
+        /// </summary>
+        internal FrameworkElement ViewPort
         {
-            get { return _vp2; }
+            get { return _viewport; }
         }
 
         void _areas_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (Chart != null)
-            {
-                Chart.InvalidateChart();
-            }
+            _chart.InvalidateChart();
         }
 
         void _axis_Changed(object sender, EventArgs e)
         {
-            ILayout viewElement = ViewElement as ILayout;
-            if (viewElement != null)
-            {
-                viewElement.UpdateLayout();
-            }
+            _viewport.InvalidateArrange();
         }
 
         void _children_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (_vp2 != null)
+            if (e.OldItems != null)
             {
-                if (e.OldItems != null)
+                foreach (object obj2 in e.OldItems)
                 {
-                    foreach (object obj2 in e.OldItems)
+                    UIElement element = obj2 as UIElement;
+                    if (_viewport.Children.Contains(element))
                     {
-                        UIElement element = obj2 as UIElement;
-                        if (_vp2.Children.Contains(element))
-                        {
-                            _vp2.Children.Remove(element);
-                        }
+                        _viewport.Children.Remove(element);
                     }
                 }
-                if (e.NewItems != null)
+            }
+            if (e.NewItems != null)
+            {
+                foreach (object obj3 in e.NewItems)
                 {
-                    foreach (object obj3 in e.NewItems)
+                    UIElement element2 = obj3 as UIElement;
+                    if (!_viewport.Children.Contains(element2))
                     {
-                        UIElement element2 = obj3 as UIElement;
-                        if (!_vp2.Children.Contains(element2))
-                        {
-                            _vp2.Children.Add(element2);
-                        }
+                        _viewport.Children.Add(element2);
                     }
                 }
             }
@@ -414,12 +380,12 @@ namespace Dt.Charts
             {
                 if (option == MeasureOption.X)
                 {
-                    distance = _vp2.ConvertX(distance) - _vp2.ConvertX(0.0);
+                    distance = _viewport.ConvertX(distance) - _viewport.ConvertX(0.0);
                     return num3;
                 }
                 if (option == MeasureOption.Y)
                 {
-                    distance = _vp2.ConvertY(distance) - _vp2.ConvertY(0.0);
+                    distance = _viewport.ConvertY(distance) - _viewport.ConvertY(0.0);
                 }
             }
             return num3;
@@ -479,11 +445,7 @@ namespace Dt.Charts
         static void OnInvertedChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             ChartView view = (ChartView)obj;
-            Chart chart = view._chart;
-            if (chart != null)
-            {
-                chart.ApplyChartType(chart.ChartType);
-            }
+            view._chart.ApplyChartType(view._chart.ChartType);
         }
 
         static void OnPlotBackgroundChanged(DependencyObject obj, DependencyPropertyChangedEventArgs e)
@@ -501,12 +463,12 @@ namespace Dt.Charts
 
         internal PointD PointFromData(PointD pt)
         {
-            return new PointD(_vp2.ConvertX(pt.X), _vp2.ConvertY(pt.Y));
+            return new PointD(_viewport.ConvertX(pt.X), _viewport.ConvertY(pt.Y));
         }
 
         public Point PointFromData(Point pt)
         {
-            return new Point(_vp2.ConvertX(pt.X), _vp2.ConvertY(pt.Y));
+            return new Point(_viewport.ConvertX(pt.X), _viewport.ConvertY(pt.Y));
         }
 
         PointD PointFromData(DataSeries ds, PointD pt)
@@ -559,12 +521,12 @@ namespace Dt.Charts
 
         internal PointD PointToData(PointD pt)
         {
-            return new PointD(_vp2.ConvertBackX(pt.X), _vp2.ConvertBackY(pt.Y));
+            return new PointD(_viewport.ConvertBackX(pt.X), _viewport.ConvertBackY(pt.Y));
         }
 
         public Point PointToData(Point pt)
         {
-            return new Point(_vp2.ConvertBackX(pt.X), _vp2.ConvertBackY(pt.Y));
+            return new Point(_viewport.ConvertBackX(pt.X), _viewport.ConvertBackY(pt.Y));
         }
 
         PointD PointToData(DataSeries ds, PointD pt)
@@ -618,14 +580,6 @@ namespace Dt.Charts
         {
             PointD td = PointToData(axisx, axisy, new PointD(pt.X, pt.Y));
             return new Point(td.X, td.Y);
-        }
-
-        internal void Rebuild(double w, double h)
-        {
-            if ((w > 0.0) && (h > 0.0))
-            {
-                _vp2.UpdateLayout(new Size(w, h));
-            }
         }
 
         internal void RemoveAxis(Axis ax)

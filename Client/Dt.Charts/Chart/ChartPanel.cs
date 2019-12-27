@@ -29,9 +29,8 @@ namespace Dt.Charts
         public ChartPanel()
         {
             _children = new ChartPanelObjectCollection(this);
-            base.Background = new SolidColorBrush(Colors.Transparent);
-            ChartPanel panel = this;
-            panel.PointerMoved += ChartPanel_MouseMove;
+            Background = new SolidColorBrush(Colors.Transparent);
+            PointerMoved += ChartPanel_MouseMove;
         }
 
         void _dragHelper_DragCompleted(object sender, C1DragCompletedEventArgs e)
@@ -46,7 +45,7 @@ namespace Dt.Charts
         {
             if (moving != null)
             {
-                Point position = e.GetPosition(Chart.ViewElement);
+                Point position = e.GetPosition(Chart.ViewPort);
                 position.X -= offset.X;
                 position.Y -= offset.Y;
                 if (moving.Attach != ChartPanelAttach.None)
@@ -216,7 +215,7 @@ namespace Dt.Charts
                 ChartPanelObject obj2 = Children[i];
                 if (obj2.Action == ChartPanelAction.MouseMove)
                 {
-                    Point position = e.GetPosition(Chart.ViewElement);
+                    Point position = e.GetPosition(Chart.ViewPort);
                     if (obj2.Attach != ChartPanelAttach.None)
                     {
                         int num3;
@@ -276,7 +275,7 @@ namespace Dt.Charts
         {
             if (Chart != null)
             {
-                Point position = args.GetPosition(Chart.ViewElement);
+                Point position = args.GetPosition(Chart.ViewPort);
                 return Chart.View.PointToData(position);
             }
             return new Point(double.NaN, double.NaN);

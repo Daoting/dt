@@ -20,7 +20,6 @@ using Windows.UI.Xaml.Media;
 
 namespace Dt.Charts
 {
-    [EditorBrowsable((EditorBrowsableState) EditorBrowsableState.Never)]
     public class RadarRenderer : BaseRenderer, IView2DRenderer, IRenderer
     {
         Brush TransparentBrush = new SolidColorBrush(Colors.Transparent);

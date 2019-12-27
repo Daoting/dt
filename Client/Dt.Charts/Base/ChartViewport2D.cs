@@ -18,24 +18,25 @@ using Windows.UI.Xaml.Shapes;
 
 namespace Dt.Charts
 {
-    internal partial class ChartViewport2D : Canvas, ICoordConverter, ILayout
+    internal partial class ChartViewport2D : Canvas, ICoordConverter
     {
-        private AxisStyle _ast;
+        readonly ChartView _view;
+        AxisStyle _ast;
         internal Axis _ax;
-        private AxisCanvasCollection _axes = new AxisCanvasCollection();
+        AxisCanvasCollection _axes = new AxisCanvasCollection();
         internal Axis _ay;
-        private Canvas _intCanvas = new Canvas();
-        private Rect _plot = new Rect();
-        private Rect _plot0 = new Rect();
-        private RadarView _radarView = new RadarView();
-        internal bool _rebuild = true;
-        private int _startDataIdx = -1;
-        private ChartView _view;
+        Canvas _intCanvas = new Canvas();
+        Rect _plot = new Rect();
+        Rect _plot0 = new Rect();
+        RadarView _radarView = new RadarView();
+        int _startDataIdx = -1;
+
 
         internal ChartViewport2D(ChartView view)
         {
-            base.Children.Add(_intCanvas);
             _view = view;
+            Children.Add(_intCanvas);
+
             _ax = view.AxisX;
             _ay = view.AxisY;
             _axes.Add(_ax);
@@ -44,8 +45,17 @@ namespace Dt.Charts
             InternalChildren.Add(_ay);
         }
 
-        #region 布局
-        internal void UpdateLayout(Size arrangeSize)
+        #region 测量布局
+        protected override Size MeasureOverride(Size availableSize)
+        {
+            if (availableSize.Width > 0 && availableSize.Height > 0)
+            {
+                UpdateLayout(availableSize);
+            }
+            return base.MeasureOverride(availableSize);
+        }
+
+        void UpdateLayout(Size arrangeSize)
         {
             _ax.Axis = _view.AxisX;
             _ay.Axis = _view.AxisY;
@@ -62,25 +72,21 @@ namespace Dt.Charts
                 }
                 ((IAxis)axis).ClearLabels();
                 axis.ResetLimits();
-                if (_view != null)
-                {
-                    axis.Chart = _view.Chart;
-                }
+                axis.Chart = _view.Chart;
                 if (((axis != _ax) && (axis != _ay)) && !string.IsNullOrEmpty(axis.AxisName))
                 {
                     list.Add(axis.AxisName);
                 }
             }
+
             if (_view.Renderer != null)
             {
-                Rect emptyRect = Extensions.EmptyRect;
                 IView2DRenderer renderer = _view.Renderer as IView2DRenderer;
                 if (renderer == null)
-                {
                     return;
-                }
+
                 _ast = renderer.Axis;
-                Size sz = new Size(base.Width, base.Height);
+                Size sz = new Size(arrangeSize.Width, arrangeSize.Height);
                 Renderer2D rendererd = renderer as Renderer2D;
                 if (rendererd != null)
                 {
@@ -94,24 +100,18 @@ namespace Dt.Charts
                         sz.Height = _plot.Height;
                     }
                 }
+
                 Rect rect = renderer.Measure(sz);
-                if (emptyRect.IsEmptyRect())
+                if (rect.Width > 0.0)
                 {
-                    emptyRect = rect;
+                    _ax.SetLimits(rect.X, rect.X + rect.Width);
                 }
-                else
+                if (rect.Height > 0.0)
                 {
-                    emptyRect.Union(rect);
-                }
-                if (emptyRect.Width > 0.0)
-                {
-                    _ax.SetLimits(emptyRect.X, emptyRect.X + emptyRect.Width);
-                }
-                if (emptyRect.Height > 0.0)
-                {
-                    _ay.SetLimits(emptyRect.Y, emptyRect.Y + emptyRect.Height);
+                    _ay.SetLimits(rect.Y, rect.Y + rect.Height);
                 }
             }
+
             switch (_ast)
             {
                 case AxisStyle.None:
@@ -143,6 +143,7 @@ namespace Dt.Charts
                     UpdateLayoutRadar(arrangeSize);
                     break;
             }
+
             Shape plotShape = _view.PlotShape;
             if (plotShape != null)
             {
@@ -159,12 +160,10 @@ namespace Dt.Charts
                     plotShape.Visibility = Visibility.Visible;
                 }
             }
-            _rebuild = true;
-            Background = null;
             RebuildTree();
         }
 
-        private void UpdateLayoutCartesian(Size arrangeSize)
+        void UpdateLayoutCartesian(Size arrangeSize)
         {
             if (arrangeSize.Width == 0.0 || arrangeSize.Height == 0.0)
                 return;
@@ -373,7 +372,7 @@ namespace Dt.Charts
             }
         }
 
-        private void UpdateLayoutRadar(Size arrangeSize)
+        void UpdateLayoutRadar(Size arrangeSize)
         {
             RadarRenderer renderer = _view.Renderer as RadarRenderer;
             List<int> list = new List<int>();
@@ -476,6 +475,93 @@ namespace Dt.Charts
             _ax.CreateAnnosAndTicksRadar(_radarView, _ay);
             _plot0 = _plot = new Rect(0.1 * annoSize.Width, 0.1 * annoSize.Height, Math.Max((double)8.0, (double)(width - (0.2 * annoSize.Width))), Math.Max((double)8.0, (double)(height - (0.2 * annoSize.Height))));
         }
+
+        void RebuildTree()
+        {
+            if (_view.Chart.UpdateCount <= 0 && _view.Renderer != null)
+            {
+                CreateDataObjects(_view.Renderer);
+                _view.Renderer.Dirty = false;
+            }
+        }
+
+        void CreateDataObjects(IRenderer renders)
+        {
+            if (_startDataIdx >= 0)
+            {
+                int num = InternalChildren.Count - _startDataIdx;
+                for (int j = 0; j < num; j++)
+                {
+                    PlotElement sender = InternalChildren[_startDataIdx] as PlotElement;
+                    InternalChildren.RemoveAt(_startDataIdx);
+                    if (((sender != null) && (sender.DataPoint != null)) && (sender.DataPoint.Series != null))
+                    {
+                        sender.DataPoint.Series.FirePlotElementUnloaded(sender, EventArgs.Empty);
+                    }
+                }
+            }
+            Shape plotShape = _view.PlotShape;
+            if ((plotShape != null) && !InternalChildren.Contains(plotShape))
+            {
+                InternalChildren.Insert(0, plotShape);
+            }
+            _startDataIdx = InternalChildren.Count;
+            IView2DRenderer renderer = renders as IView2DRenderer;
+            if (renderer != null)
+            {
+                renderer.CoordConverter = this;
+                UIElement[] elementArray = renderer.Generate();
+
+                if (renders is BaseRenderer br)
+                    br.FireRendered(this, EventArgs.Empty);
+
+                if (elementArray == null)
+                {
+                    while (Children.Count > 1)
+                    {
+                        Children.RemoveAt(base.Children.Count - 1);
+                    }
+                }
+                else
+                {
+                    int length = elementArray.Length;
+                    for (int k = 0; k < length; k++)
+                    {
+                        var elem = elementArray[k];
+                        if (elem == null || InternalChildren.Contains(elem))
+                            continue;
+
+                        if (elem is FrameworkElement fe && fe.Parent is Panel pnl)
+                            pnl.Children.Remove(elem);
+                        InternalChildren.Add(elem);
+                    }
+                    while (Children.Count > 1)
+                    {
+                        Children.RemoveAt(Children.Count - 1);
+                    }
+                }
+            }
+            int num5 = _view.Layers.Count;
+            for (int i = 0; i < num5; i++)
+            {
+                FrameworkElement element = _view.Layers[i] as FrameworkElement;
+                if (element != null)
+                {
+                    Canvas.SetLeft(element, PlotRect.X);
+                    Canvas.SetTop(element, PlotRect.Y);
+                    element.Width = PlotRect.Width;
+                    element.Height = PlotRect.Height;
+                    Children.Add(element);
+                }
+            }
+            foreach (UIElement element5 in _view.Children)
+            {
+                if (!Children.Contains(element5))
+                {
+                    Children.Add(element5);
+                }
+            }
+        }
         #endregion
 
         internal void AddAxis(Axis ax)
@@ -492,7 +578,7 @@ namespace Dt.Charts
             }
         }
 
-        private void AdjustMargins(Size arrangeSize, ref double left, ref double right, ref double top, ref double bottom, ref double w, ref double h, ref double l0, ref double r0, ref double t0, ref double b0)
+        void AdjustMargins(Size arrangeSize, ref double left, ref double right, ref double top, ref double bottom, ref double w, ref double h, ref double l0, ref double r0, ref double t0, ref double b0)
         {
             Windows.UI.Xaml.Thickness thickness = _view.Margin;
             l0 = left = (thickness.Left != 0.0) ? thickness.Left : Math.Max(left, l0);
@@ -509,28 +595,6 @@ namespace Dt.Charts
             {
                 h = 1.0;
             }
-        }
-
-        void ILayout.UpdateLayout()
-        {
-            if (CanUpdate())
-            {
-                UpdateLayout(new Size(base.ActualWidth, base.ActualHeight));
-            }
-        }
-
-        private bool CanUpdate()
-        {
-            Chart chart = null;
-            for (FrameworkElement element = base.Parent as FrameworkElement; element != null; element = element.Parent as FrameworkElement)
-            {
-                chart = element as Chart;
-                if (chart != null)
-                {
-                    break;
-                }
-            }
-            return ((chart != null) && (chart.UpdateCount <= 0));
         }
 
         internal void ClearAxes()
@@ -590,7 +654,7 @@ namespace Dt.Charts
             return _ax.ConvertEx(x);
         }
 
-        private double ConvertX(double x, double left, double right)
+        double ConvertX(double x, double left, double right)
         {
             if (_ax.ReversedInternal)
             {
@@ -604,7 +668,7 @@ namespace Dt.Charts
             return _ay.ConvertEx(y);
         }
 
-        private double ConvertY(double y, double top, double bottom)
+        double ConvertY(double y, double top, double bottom)
         {
             if (_ay.ReversedInternal)
             {
@@ -618,114 +682,7 @@ namespace Dt.Charts
             throw new NotImplementedException("The method or operation is not implemented.");
         }
 
-        private void CreateDataObjects(IRenderer renders)
-        {
-            if (_startDataIdx >= 0)
-            {
-                int num = InternalChildren.Count - _startDataIdx;
-                for (int j = 0; j < num; j++)
-                {
-                    PlotElement sender = InternalChildren[_startDataIdx] as PlotElement;
-                    InternalChildren.RemoveAt(_startDataIdx);
-                    if (((sender != null) && (sender.DataPoint != null)) && (sender.DataPoint.Series != null))
-                    {
-                        sender.DataPoint.Series.FirePlotElementUnloaded(sender, EventArgs.Empty);
-                    }
-                }
-            }
-            Shape plotShape = _view.PlotShape;
-            if ((plotShape != null) && !InternalChildren.Contains(plotShape))
-            {
-                InternalChildren.Insert(0, plotShape);
-            }
-            _startDataIdx = InternalChildren.Count;
-            IView2DRenderer renderer = renders as IView2DRenderer;
-            if (renderer != null)
-            {
-                renderer.CoordConverter = this;
-                UIElement[] elementArray = renderer.Generate();
-                BaseRenderer renderer2 = renders as BaseRenderer;
-                if (renderer2 != null)
-                {
-                    renderer2.FireRendered(this, EventArgs.Empty);
-                }
-                if ((_view != null) && (_view.Chart != null))
-                {
-                    Chart chart = _view.Chart;
-                }
-                if (elementArray == null)
-                {
-                    while (base.Children.Count > 1)
-                    {
-                        base.Children.RemoveAt(base.Children.Count - 1);
-                    }
-                }
-                else
-                {
-                    int length = elementArray.Length;
-                    bool flag = false;
-                    for (int k = 0; k < length; k++)
-                    {
-                        if (elementArray[k] != null)
-                        {
-                            if (flag)
-                            {
-                                elementArray[k].Measure(new Size(10000.0, 10000.0));
-                                elementArray[k].Arrange(new Rect(0.0, 0.0, 10000.0, 10000.0));
-                                Canvas canvas = elementArray[k] as Canvas;
-                                if (canvas != null)
-                                {
-                                    foreach (UIElement element2 in canvas.Children)
-                                    {
-                                        element2.Measure(new Size(10000.0, 10000.0));
-                                        element2.Arrange(new Rect(0.0, 0.0, 10000.0, 10000.0));
-                                    }
-                                }
-                            }
-                            if (!InternalChildren.Contains(elementArray[k]))
-                            {
-                                FrameworkElement element3 = elementArray[k] as FrameworkElement;
-                                if (element3 != null)
-                                {
-                                    Panel parent = element3.Parent as Panel;
-                                    if (parent != null)
-                                    {
-                                        parent.Children.Remove(elementArray[k]);
-                                    }
-                                }
-                                InternalChildren.Add(elementArray[k]);
-                            }
-                        }
-                    }
-                    while (base.Children.Count > 1)
-                    {
-                        base.Children.RemoveAt(base.Children.Count - 1);
-                    }
-                }
-            }
-            int num5 = _view.Layers.Count;
-            for (int i = 0; i < num5; i++)
-            {
-                FrameworkElement element = _view.Layers[i] as FrameworkElement;
-                if (element != null)
-                {
-                    Canvas.SetLeft(element, PlotRect.X);
-                    Canvas.SetTop(element, PlotRect.Y);
-                    element.Width = PlotRect.Width;
-                    element.Height = PlotRect.Height;
-                    base.Children.Add(element);
-                }
-            }
-            foreach (UIElement element5 in _view.Children)
-            {
-                if (!base.Children.Contains(element5))
-                {
-                    base.Children.Add(element5);
-                }
-            }
-        }
-
-        private object[] GetItems(Renderer2D rend, AxisCanvas ax)
+        object[] GetItems(Renderer2D rend, AxisCanvas ax)
         {
             if (rend != null)
             {
@@ -744,7 +701,7 @@ namespace Dt.Charts
             return null;
         }
 
-        private void PerformPlotAreaLayout(Size arrangeSize)
+        void PerformPlotAreaLayout(Size arrangeSize)
         {
             List<AreaDef> list = new List<AreaDef>();
             List<AreaDef> list2 = new List<AreaDef>();
@@ -968,7 +925,7 @@ namespace Dt.Charts
             }
         }
 
-        private void PrepareAxes()
+        void PrepareAxes()
         {
             Renderer2D renderer = _view.Renderer as Renderer2D;
             int num = _axes.Count;
@@ -1078,23 +1035,6 @@ namespace Dt.Charts
             }
         }
 
-        private void RebuildTree()
-        {
-            if (CanUpdate())
-            {
-                if ((_view.Renderer != null) && _view.Renderer.Dirty)
-                {
-                    _rebuild = true;
-                }
-                if (_rebuild && (_view.Renderer != null))
-                {
-                    CreateDataObjects(_view.Renderer);
-                    _rebuild = false;
-                    _view.Renderer.Dirty = false;
-                }
-            }
-        }
-
         internal void RemoveAxis(Axis ax)
         {
             foreach (Axis axis in _axes)
@@ -1165,9 +1105,9 @@ namespace Dt.Charts
             get { return new Rect(_plot.X, _plot.Y, _plot.Width, _plot.Height); }
         }
 
-        private class AreaDef
+        class AreaDef
         {
-            private List<Axis> _axes = new List<Axis>();
+            List<Axis> _axes = new List<Axis>();
             public double Bottom;
             public double Left;
             public double Right;

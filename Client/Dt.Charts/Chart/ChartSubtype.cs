@@ -14,24 +14,17 @@ using System.ComponentModel;
 
 namespace Dt.Charts
 {
-    [EditorBrowsable((EditorBrowsableState) EditorBrowsableState.Never)]
     public class ChartSubtype
     {
-        object _conn;
-        string _name;
-        string _rname;
-        string _ropts;
-        object _sym;
-
         public ChartSubtype()
         {
         }
 
         internal ChartSubtype(string name, string rend, string rendopts)
         {
-            _name = name;
-            _rname = rend;
-            _ropts = rendopts;
+            Name = name;
+            Renderer = rend;
+            RendererOptions = rendopts;
         }
 
         internal void Apply(Chart chart)
@@ -66,35 +59,15 @@ namespace Dt.Charts
             chart.EndUpdate();
         }
 
-        public object Connection
-        {
-            get { return  _conn; }
-            set { _conn = value; }
-        }
+        public object Connection { get; set; }
 
-        public string Name
-        {
-            get { return  _name; }
-            set { _name = value; }
-        }
+        public string Name { get; set; }
 
-        public string Renderer
-        {
-            get { return  _rname; }
-            set { _rname = value; }
-        }
+        public string Renderer { get; set; }
 
-        public string RendererOptions
-        {
-            get { return  _ropts; }
-            set { _ropts = value; }
-        }
+        public string RendererOptions { get; set; }
 
-        public object Symbol
-        {
-            get { return  _sym; }
-            set { _sym = value; }
-        }
+        public object Symbol { get; set; }
     }
 }
 

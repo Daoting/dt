@@ -109,7 +109,7 @@ namespace Dt.Charts
                     bool flag2 = !string.IsNullOrEmpty(axisY);
                     if (visual != null)
                     {
-                        ChartViewport2D viewElement = visual.ViewElement as ChartViewport2D;
+                        ChartViewport2D viewElement = visual.ViewPort as ChartViewport2D;
                         if (viewElement != null)
                         {
                             if (flag || flag2)

@@ -28,7 +28,7 @@ using Windows.UI.Xaml.Media;
 namespace Dt.Base
 {
     [ContentProperty(Name = "Children")]
-    public partial class Chart : ContentControl, IDisposable
+    public partial class Chart : Control, IDisposable
     {
         #region 静态内容
         public static readonly DependencyProperty AggregateProperty = DependencyProperty.Register(
@@ -61,12 +61,6 @@ namespace Dt.Base
             typeof(Chart),
             new PropertyChangedCallback(Chart.OnDataChanged));
 
-        static readonly DependencyProperty ForegroundInternalProperty = DependencyProperty.Register(
-            "ForegroundInternal",
-            typeof(Brush),
-            typeof(Chart),
-            new PropertyMetadata(null, new PropertyChangedCallback(Chart.OnForegroundInternalChanged)));
-
         public static readonly DependencyProperty LegendItemsProperty = DependencyProperty.Register(
             "LegendItems",
             typeof(LegendItemCollection),
@@ -82,13 +76,6 @@ namespace Dt.Base
             typeof(Chart),
             new PropertyMetadata(null));
 
-        public static readonly DependencyProperty ViewProperty = Utils.RegisterProperty(
-            "View",
-            typeof(ChartView),
-            typeof(Chart),
-            new PropertyChangedCallback(Chart.OnViewChanged));
-
-
         static void OnAggregateChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             Chart chart = (Chart)obj;
@@ -103,7 +90,7 @@ namespace Dt.Base
                 }
             }
             chart.dataChanged = true;
-            chart.forceRebuild = true;
+            chart._forceRebuild = true;
             chart.InvalidateChart();
         }
 
@@ -115,7 +102,7 @@ namespace Dt.Base
             {
                 if (args.NewValue != args.OldValue)
                 {
-                    chart.forceRebuild = true;
+                    chart._forceRebuild = true;
                     chart.InvalidateChart();
                 }
             }
@@ -230,28 +217,22 @@ namespace Dt.Base
         {
             Chart chart = (Chart)obj;
             chart.ClearAllINP();
-            ChartData oldValue = (ChartData)args.OldValue;
-            if (oldValue != null)
+            ChartData cd = (ChartData)args.OldValue;
+            if (cd != null)
             {
-                if (((oldValue.Renderer == chart.Renderers.Pie) || (oldValue.Renderer == chart.Renderers.Radar)) || (oldValue.Renderer == chart.Renderers.Renderer2D))
-                {
-                    oldValue.Renderer = null;
-                }
-                oldValue.DataChanged -= new EventHandler(chart._data_DataChanged);
+                cd.Renderer = null;
+                cd.DataChanged -= chart._data_DataChanged;
             }
-            oldValue = (ChartData)args.NewValue;
-            if (oldValue != null)
+
+            cd = (ChartData)args.NewValue;
+            if (cd != null)
             {
-                oldValue.DataChanged += new EventHandler(chart._data_DataChanged);
+                cd.Renderer = null;
+                cd.DataChanged += chart._data_DataChanged;
             }
             chart.StyleGenerator.Reset();
-            if (oldValue != null)
-            {
-                oldValue.Renderer = null;
-            }
             chart.InvalidateChart();
         }
-
 
         static void OnForegroundInternalChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
@@ -265,22 +246,6 @@ namespace Dt.Base
             {
                 chart.LegendItems = chart._litemsRO;
             }
-        }
-
-        static void OnViewChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
-        {
-            Chart chart = (Chart)obj;
-            ChartView oldValue = (ChartView)args.OldValue;
-            if (oldValue != null)
-            {
-                oldValue.Chart = null;
-            }
-            oldValue = (ChartView)args.NewValue;
-            if (oldValue != null)
-            {
-                oldValue.Chart = chart;
-            }
-            chart.InvalidateChart();
         }
 
         static void ClearValue(FrameworkElement fe, DependencyProperty dp)
@@ -304,7 +269,6 @@ namespace Dt.Base
         #region 成员变量
         readonly ChartObservableCollection _children = new ChartObservableCollection();
         Grid _contentGrid;
-        ContentPresenter _viewPresenter;
         ActionCollection _actions;
         bool _autoSeries;
         ChartBindings _bindings;
@@ -315,12 +279,10 @@ namespace Dt.Base
         LegendItems _litems;
         LegendItemCollection _litemsRO;
         bool _loaded;
-        Renderers _renderers;
         StyleGenerator _stgen;
         int _updateCount;
-        FrameworkElement _viewElement;
         bool dataChanged = true;
-        internal bool forceRebuild = true;
+        internal bool _forceRebuild = true;
         Point pinchCenter = new Point();
         #endregion
 
@@ -332,12 +294,7 @@ namespace Dt.Base
             BubbleOptions.SetMinSize(this, Size.Empty);
             BubbleOptions.SetMaxSize(this, Size.Empty);
             Data = new ChartData();
-            View = new ChartView();
-
-            Binding binding = new Binding();
-            binding.Source = this;
-            binding.Path = new PropertyPath("Foreground");
-            SetBinding(ForegroundInternalProperty, binding);
+            View = new ChartView(this);
 
             _litems = new LegendItems();
             _litemsRO = new LegendItemCollection(_litems);
@@ -390,6 +347,17 @@ namespace Dt.Base
         }
 
         /// <summary>
+        /// 获取图表的视图对象
+        /// </summary>
+        public ChartView View { get; }
+
+        public Aggregate Aggregate
+        {
+            get { return (Aggregate)GetValue(AggregateProperty); }
+            set { SetValue(AggregateProperty, value); }
+        }
+
+        /// <summary>
         /// 获取设置图表标题内容
         /// </summary>
         public object Header
@@ -408,7 +376,7 @@ namespace Dt.Base
             set
             {
                 StyleGenerator.Palette = value;
-                forceRebuild = true;
+                _forceRebuild = true;
                 InvalidateChart();
             }
         }
@@ -430,12 +398,6 @@ namespace Dt.Base
         {
             get { return Actions.UpdateDelay; }
             set { Actions.UpdateDelay = value; }
-        }
-
-        public Aggregate Aggregate
-        {
-            get { return (Aggregate)GetValue(AggregateProperty); }
-            set { SetValue(AggregateProperty, value); }
         }
 
         public bool AutoGenerateSeries
@@ -513,17 +475,7 @@ namespace Dt.Base
             get { return _litems; }
         }
 
-        internal Renderers Renderers
-        {
-            get
-            {
-                if (_renderers == null)
-                {
-                    _renderers = new Renderers();
-                }
-                return _renderers;
-            }
-        }
+        internal Renderers Renderers { get; } = new Renderers();
 
         StyleGenerator StyleGenerator
         {
@@ -538,46 +490,9 @@ namespace Dt.Base
             }
         }
 
-        internal int UpdateCount
+        public FrameworkElement ViewPort
         {
-            get { return _updateCount; }
-            set
-            {
-                if (value <= 0)
-                {
-                    _updateCount = 0;
-                    InvalidateChart();
-                }
-                else
-                {
-                    _updateCount = value;
-                }
-            }
-        }
-
-        public ChartView View
-        {
-            get { return (ChartView)GetValue(ViewProperty); }
-            set { SetValue(ViewProperty, value); }
-        }
-
-        internal FrameworkElement ViewElement
-        {
-            get { return _viewElement; }
-            set
-            {
-                try
-                {
-                    if (_viewElement != value)
-                    {
-                        _viewElement = value;
-                        Content = _viewElement;
-                    }
-                }
-                catch (Exception)
-                {
-                }
-            }
+            get { return View.ViewPort; }
         }
         #endregion
 
@@ -587,7 +502,7 @@ namespace Dt.Base
             {
                 StyleGenerator.Reset();
             }
-            forceRebuild = true;
+            _forceRebuild = true;
             dataChanged = true;
             InvalidateChart();
         }
@@ -615,10 +530,34 @@ namespace Dt.Base
             }
         }
 
+        #region UpdateCount
         public void BeginUpdate()
         {
             UpdateCount++;
         }
+
+        public void EndUpdate()
+        {
+            UpdateCount--;
+        }
+
+        internal int UpdateCount
+        {
+            get { return _updateCount; }
+            set
+            {
+                if (value <= 0)
+                {
+                    _updateCount = 0;
+                    InvalidateChart();
+                }
+                else
+                {
+                    _updateCount = value;
+                }
+            }
+        }
+        #endregion
 
         Brush BrushConverter(Brush brush)
         {
@@ -627,75 +566,6 @@ namespace Dt.Base
                 return brush;
             }
             return brush;
-        }
-
-        void C1Chart_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
-        {
-            if ((GesturePinch == GesturePinchAction.Scale) && (Data.Renderer is Renderer2D))
-            {
-                if (Actions.State == ActionType.Pinch)
-                {
-                    Actions.State = ActionType.None;
-                    e.Handled = true;
-                    Actions.FireLeave();
-                }
-            }
-            else if (((GestureSlide == GestureSlideAction.Translate) && (Data.Renderer is Renderer2D)) && (Actions.State == ActionType.Translate))
-            {
-                Actions.State = ActionType.None;
-                e.Handled = true;
-                Actions.FireLeave();
-            }
-        }
-
-        void C1Chart_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
-        {
-            if (e.Delta.Scale != 1.0)
-            {
-                if ((GesturePinch == GesturePinchAction.Scale) && (Data.Renderer is Renderer2D))
-                {
-                    Actions.FireEnter();
-                    Actions.State = ActionType.Pinch;
-                    float scale = e.Delta.Scale;
-                    Actions.PerformScale(pinchCenter, (double)scale, (double)scale);
-                    e.Handled = true;
-                }
-            }
-            else if (((e.Delta.Translation.X != 0.0) || (e.Delta.Translation.Y != 0.0)) && ((GestureSlide == GestureSlideAction.Translate) && (Data.Renderer is Renderer2D)))
-            {
-                Actions.FireEnter();
-                Actions.State = ActionType.Translate;
-                Actions.PerformTranslate(new Point(), e.Delta.Translation);
-            }
-        }
-
-        void C1Chart_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
-        {
-            pinchCenter = e.Position;
-        }
-
-        void C1Chart_PointerMoved(object sender, PointerRoutedEventArgs e)
-        {
-            if (GestureSlide == GestureSlideAction.Zoom)
-            {
-                Actions.OnMouseMove(e);
-            }
-        }
-
-        void C1Chart_PointerPressed(object sender, PointerRoutedEventArgs e)
-        {
-            if (GestureSlide == GestureSlideAction.Zoom)
-            {
-                Actions.OnMouseDown(e);
-            }
-        }
-
-        void C1Chart_PointerReleased(object sender, PointerRoutedEventArgs e)
-        {
-            if (GestureSlide == GestureSlideAction.Zoom)
-            {
-                Actions.OnMouseUp(e);
-            }
         }
 
         void ClearAllINP()
@@ -716,14 +586,9 @@ namespace Dt.Base
             InvalidateChart();
         }
 
-        public void EndUpdate()
-        {
-            UpdateCount--;
-        }
-
         public object FindPlotElement(string name)
         {
-            return ViewElement.FindName(name);
+            return ViewPort.FindName(name);
         }
 
         internal void FireActionEnter(object sender, EventArgs args)
@@ -750,9 +615,6 @@ namespace Dt.Base
         void C1Chart_Loaded(object sender, RoutedEventArgs e)
         {
             Loaded -= C1Chart_Loaded;
-            _loaded = true;
-            UpdateChildren();
-
             _children.OnClear += _children_Clear;
             _children.CollectionChanged += _children_CollectionChanged;
         }
@@ -761,12 +623,9 @@ namespace Dt.Base
         protected override void OnApplyTemplate()
         {
             _contentGrid = (Grid)GetTemplateChild("grid");
-
-            if (_viewPresenter != null)
-                _viewPresenter.SizeChanged -= OnPresenterSizeChanged;
-            _viewPresenter = (ContentPresenter)GetTemplateChild("ViewPresenter");
-            if (_viewPresenter != null)
-                _viewPresenter.SizeChanged += OnPresenterSizeChanged;
+            UpdateChildren();
+            RebuildChart();
+            _loaded = true;
         }
 
         protected override void OnDoubleTapped(DoubleTappedRoutedEventArgs e)
@@ -782,12 +641,11 @@ namespace Dt.Base
         #endregion
 
         #region 绘制
-
         internal void InvalidateChart()
         {
             if (UpdateCount <= 0 && _loaded)
             {
-                forceRebuild = true;
+                _forceRebuild = true;
                 RebuildChart();
             }
         }
@@ -797,84 +655,74 @@ namespace Dt.Base
             if (_inBuild)
                 return;
 
+            IRenderer irender;
+            BaseRenderer renderer;
+            _inBuild = true;
+
             try
             {
-                BaseRenderer renderer;
-                _inBuild = true;
                 if (Data != null)
                 {
-                    IRenderer renderer2 = Data.Renderer;
-                    if (renderer2 == null)
+                    irender = Data.Renderer;
+                    if (irender == null)
                     {
                         ApplyChartType(ChartType);
-                        renderer2 = Data.Renderer;
-                        if (renderer2 == null)
+                        irender = Data.Renderer;
+                        if (irender == null)
                         {
-                            Data.Renderer = renderer2 = new Renderer2D();
+                            Data.Renderer = irender = new Renderer2D();
                         }
                     }
-                    renderer = renderer2 as BaseRenderer;
+
+                    renderer = irender as BaseRenderer;
                     if (renderer != null)
                     {
                         renderer.StyleGen = StyleGenerator;
                     }
-                    renderer2.Visual = this;
-                    if (renderer2.Dirty)
+                    irender.Visual = this;
+                    if (irender.Dirty)
                     {
-                        forceRebuild = true;
+                        _forceRebuild = true;
                     }
                 }
-                if (forceRebuild)
+
+                if (_forceRebuild)
                 {
-                    forceRebuild = false;
-                    if (Data != null)
+                    _forceRebuild = false;
+                    if (Data != null && (irender = Data.Renderer) != null)
                     {
-                        IRenderer renderer3 = Data.Renderer;
-                        if (renderer3 != null)
+                        renderer = irender as BaseRenderer;
+                        if (renderer != null)
                         {
-                            renderer = renderer3 as BaseRenderer;
-                            if (renderer != null)
+                            renderer.ChartType = ChartType;
+                            renderer.StyleGen.Reset();
+                        }
+                        irender.Dirty = false;
+                        View.Renderer = irender;
+                        if (dataChanged)
+                        {
+                            dataChanged = false;
+                            irender.Clear();
+                            RebuildRenderer(irender);
+                        }
+
+                        if (renderer != null)
+                        {
+                            object[] itemNamesInternal = Data.ItemNamesInternal;
+                            if ((Data.Aggregate != Aggregate.None) && (itemNamesInternal != null))
                             {
-                                renderer.ChartType = ChartType;
-                                renderer.StyleGen.Reset();
+                                renderer.ItemNames = Enumerable.ToArray<object>(Enumerable.Distinct<object>(itemNamesInternal));
                             }
-                            renderer3.Dirty = false;
-                            View.Renderer = renderer3;
-                            if (dataChanged)
+                            else
                             {
-                                dataChanged = false;
-                                renderer3.Clear();
-                                RebuildRenderer(renderer3);
+                                renderer.ItemNames = itemNamesInternal;
                             }
-                            if (renderer != null)
-                            {
-                                object[] itemNamesInternal = Data.ItemNamesInternal;
-                                if ((Data.Aggregate != Aggregate.None) && (itemNamesInternal != null))
-                                {
-                                    renderer.ItemNames = Enumerable.ToArray<object>(Enumerable.Distinct<object>(itemNamesInternal));
-                                }
-                                else
-                                {
-                                    renderer.ItemNames = itemNamesInternal;
-                                }
-                                renderer.UpdateLegend((IList<LegendItem>)LegendItemsInternal);
-                            }
+                            renderer.UpdateLegend((IList<LegendItem>)LegendItemsInternal);
                         }
                     }
-                    if (View != null)
-                    {
-                        ViewElement = View.ViewElement;
-                        if (_viewPresenter != null)
-                        {
-                            double actualWidth = _viewPresenter.ActualWidth;
-                            double actualHeight = _viewPresenter.ActualHeight;
-                            ViewElement.Width = actualWidth;
-                            ViewElement.Height = actualHeight;
-                            View.Rebuild(actualWidth, actualHeight);
-                        }
-                        LegendChanged?.Invoke(this, EventArgs.Empty);
-                        ViewElement.InvalidateArrange();
-                    }
+
+                    LegendChanged?.Invoke(this, EventArgs.Empty);
+                    ViewPort.InvalidateMeasure();
                 }
             }
             finally
@@ -997,11 +845,6 @@ namespace Dt.Base
                 renderer.AddSeries(seriesInfo);
             }
         }
-
-        void OnPresenterSizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            InvalidateChart();
-        }
         #endregion
 
         public void Reset(bool clearData)
@@ -1016,25 +859,12 @@ namespace Dt.Base
                 Bindings = null;
                 StyleGenerator.Reset();
             }
-            if (View != null)
-            {
-                View.ResetInternal();
-            }
+            View.ResetInternal();
             BarColumnOptions.Reset(this);
             PieOptions.Reset(this);
             LineAreaOptions.Reset(this);
             PolarRadarOptions.Reset(this);
             EndUpdate();
-        }
-
-        public void ResetData()
-        {
-            Data = null;
-        }
-
-        public bool ShouldSerializeData()
-        {
-            return (Data != null);
         }
 
         void IDisposable.Dispose()
@@ -1075,8 +905,7 @@ namespace Dt.Base
 
             foreach (var elem in Children.OfType<FrameworkElement>())
             {
-                ChartLegend legend = elem as ChartLegend;
-                if (legend != null)
+                if (elem is ChartLegend legend)
                 {
                     legend.Chart = this;
                 }
@@ -1092,6 +921,77 @@ namespace Dt.Base
                         pnl.Children.Remove(elem);
                     _contentGrid.Children.Add(elem);
                 }
+            }
+        }
+        #endregion
+
+        #region 鼠标事件
+        void C1Chart_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
+        {
+            if ((GesturePinch == GesturePinchAction.Scale) && (Data.Renderer is Renderer2D))
+            {
+                if (Actions.State == ActionType.Pinch)
+                {
+                    Actions.State = ActionType.None;
+                    e.Handled = true;
+                    Actions.FireLeave();
+                }
+            }
+            else if (((GestureSlide == GestureSlideAction.Translate) && (Data.Renderer is Renderer2D)) && (Actions.State == ActionType.Translate))
+            {
+                Actions.State = ActionType.None;
+                e.Handled = true;
+                Actions.FireLeave();
+            }
+        }
+
+        void C1Chart_ManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+        {
+            if (e.Delta.Scale != 1.0)
+            {
+                if ((GesturePinch == GesturePinchAction.Scale) && (Data.Renderer is Renderer2D))
+                {
+                    Actions.FireEnter();
+                    Actions.State = ActionType.Pinch;
+                    float scale = e.Delta.Scale;
+                    Actions.PerformScale(pinchCenter, (double)scale, (double)scale);
+                    e.Handled = true;
+                }
+            }
+            else if (((e.Delta.Translation.X != 0.0) || (e.Delta.Translation.Y != 0.0)) && ((GestureSlide == GestureSlideAction.Translate) && (Data.Renderer is Renderer2D)))
+            {
+                Actions.FireEnter();
+                Actions.State = ActionType.Translate;
+                Actions.PerformTranslate(new Point(), e.Delta.Translation);
+            }
+        }
+
+        void C1Chart_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
+        {
+            pinchCenter = e.Position;
+        }
+
+        void C1Chart_PointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            if (GestureSlide == GestureSlideAction.Zoom)
+            {
+                Actions.OnMouseMove(e);
+            }
+        }
+
+        void C1Chart_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            if (GestureSlide == GestureSlideAction.Zoom)
+            {
+                Actions.OnMouseDown(e);
+            }
+        }
+
+        void C1Chart_PointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+            if (GestureSlide == GestureSlideAction.Zoom)
+            {
+                Actions.OnMouseUp(e);
             }
         }
         #endregion

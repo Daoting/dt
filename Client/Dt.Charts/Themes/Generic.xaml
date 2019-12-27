@@ -5,7 +5,7 @@
     xmlns:charts="using:Dt.Charts">
 
     <!-- 有文本内容时显示，无文本内容时隐藏(不占空间) -->
-    <dt:TextVisibleConverter x:Key="CvTextToVisible" Visible="True" />
+    <dt:TextToVisibleConverter x:Key="CvTextToVisible" Visible="True" />
 
     <Style TargetType="dt:Chart">
         <Setter Property="Background" Value="#FFe3f4fe"/>
@@ -55,7 +55,7 @@
                                         Grid.Row="1"
                                         Grid.Column="1"
                                         Padding="10">
-                                    <ContentPresenter x:Name="ViewPresenter" Content="{TemplateBinding Content}" />
+                                    <ContentPresenter Content="{Binding ViewPort, RelativeSource={RelativeSource TemplatedParent}}" />
                                 </Border>
                             </Grid>
                         </Grid>

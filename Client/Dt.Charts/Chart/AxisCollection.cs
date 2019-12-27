@@ -43,7 +43,7 @@ namespace Dt.Charts
         {
             base.InsertItem(index, item);
             _view.AddAxis(item);
-            ChartViewport2D viewElement = _view.ViewElement as ChartViewport2D;
+            ChartViewport2D viewElement = _view.ViewPort as ChartViewport2D;
             if (viewElement != null)
             {
                 viewElement.AddAxis(item);
@@ -55,7 +55,7 @@ namespace Dt.Charts
         {
             if (index >= 2)
             {
-                ChartViewport2D viewElement = _view.ViewElement as ChartViewport2D;
+                ChartViewport2D viewElement = _view.ViewPort as ChartViewport2D;
                 if (viewElement != null)
                 {
                     Axis ax = base[index];
@@ -71,7 +71,7 @@ namespace Dt.Charts
         {
             if (_view.Chart != null)
             {
-                _view.Chart.forceRebuild = true;
+                _view.Chart._forceRebuild = true;
                 _view.Chart.InvalidateChart();
             }
         }
