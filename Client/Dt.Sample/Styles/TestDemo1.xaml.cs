@@ -21,6 +21,8 @@ using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Shapes;
 using Xamarin.Essentials;
 #endregion
 
@@ -31,6 +33,15 @@ namespace Dt.Sample
         public TestDemo1()
         {
             InitializeComponent();
+
+            Path path = new Path();
+            var rc = new PathGeometry();
+            path.Data = rc;
+            rc.Figures = new PathFigureCollection();
+            path.Fill = AtRes.RedBrush;
+            Canvas.SetLeft(path, 30);
+            Canvas.SetTop(path, 250);
+            _cv.Children.Add(path);
         }
     }
 }

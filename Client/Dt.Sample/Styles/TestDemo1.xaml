@@ -7,4 +7,5 @@
     mc:Ignorable="d"
     xmlns:a="using:Dt.Base">
 
+    <Canvas x:Name="_cv" />
 </a:PageWin>
