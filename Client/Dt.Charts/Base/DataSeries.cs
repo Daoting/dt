@@ -274,7 +274,6 @@ namespace Dt.Base
 
         public DataSeries()
         {
-            base.Opacity = 1.0;
         }
 
         /// <summary>

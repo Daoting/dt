@@ -81,6 +81,7 @@ namespace Dt.Charts
             {
                 return null;
             }
+
             List<UIElement> objects = new List<UIElement>();
             Rect dataBounds = CoordConverter.DataBounds;
             bool isStacked = base.IsStacked;
@@ -95,12 +96,14 @@ namespace Dt.Charts
                 sum2 = new StackedSum(nsg);
                 sum3 = new StackedSum(nsg);
             }
+
             double num4 = GetClusterWidth() * _dataInfo.DeltaX;
             IPlotElement defel = null;
             if (base.Symbol is PlotElement)
             {
                 defel = ((PlotElement) base.Symbol).Clone() as IPlotElement;
             }
+
             bool defval = (defel != null) ? defel.IsClustered : false;
             bool inverted = base.Inverted;
             int num5 = 0;
@@ -116,6 +119,7 @@ namespace Dt.Charts
                 numArray2 = new int[numArray.Length];
                 num5 = numArray[0];
             }
+
             double d = 0.0;
             double origin = 0.0;
             double seriesOverlap = 0.0;
@@ -141,6 +145,7 @@ namespace Dt.Charts
                     seriesOverlap = -1.0;
                 }
             }
+
             int si = 0;
             int num10 = 0;
             while (si < nser)

@@ -21,7 +21,7 @@ namespace Dt.Charts
 
         public Bar()
         {
-            ((Path) base.Shape).Data = geometry;
+            Data = geometry;
         }
 
         internal override object Clone()

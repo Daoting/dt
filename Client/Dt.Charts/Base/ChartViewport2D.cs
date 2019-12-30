@@ -160,7 +160,13 @@ namespace Dt.Charts
                     plotShape.Visibility = Visibility.Visible;
                 }
             }
-            RebuildTree();
+
+
+            if (_view.Chart.UpdateCount <= 0 && _view.Renderer != null)
+            {
+                CreateDataObjects();
+                _view.Renderer.Dirty = false;
+            }
         }
 
         void UpdateLayoutCartesian(Size arrangeSize)
@@ -476,16 +482,7 @@ namespace Dt.Charts
             _plot0 = _plot = new Rect(0.1 * annoSize.Width, 0.1 * annoSize.Height, Math.Max((double)8.0, (double)(width - (0.2 * annoSize.Width))), Math.Max((double)8.0, (double)(height - (0.2 * annoSize.Height))));
         }
 
-        void RebuildTree()
-        {
-            if (_view.Chart.UpdateCount <= 0 && _view.Renderer != null)
-            {
-                CreateDataObjects(_view.Renderer);
-                _view.Renderer.Dirty = false;
-            }
-        }
-
-        void CreateDataObjects(IRenderer renders)
+        void CreateDataObjects()
         {
             if (_startDataIdx >= 0)
             {
@@ -500,26 +497,28 @@ namespace Dt.Charts
                     }
                 }
             }
+
             Shape plotShape = _view.PlotShape;
             if ((plotShape != null) && !InternalChildren.Contains(plotShape))
             {
                 InternalChildren.Insert(0, plotShape);
             }
             _startDataIdx = InternalChildren.Count;
-            IView2DRenderer renderer = renders as IView2DRenderer;
+
+            IView2DRenderer renderer = _view.Renderer as IView2DRenderer;
             if (renderer != null)
             {
                 renderer.CoordConverter = this;
                 UIElement[] elementArray = renderer.Generate();
 
-                if (renders is BaseRenderer br)
+                if (_view.Renderer is BaseRenderer br)
                     br.FireRendered(this, EventArgs.Empty);
 
                 if (elementArray == null)
                 {
                     while (Children.Count > 1)
                     {
-                        Children.RemoveAt(base.Children.Count - 1);
+                        Children.RemoveAt(Children.Count - 1);
                     }
                 }
                 else
@@ -535,12 +534,14 @@ namespace Dt.Charts
                             pnl.Children.Remove(elem);
                         InternalChildren.Add(elem);
                     }
+
                     while (Children.Count > 1)
                     {
                         Children.RemoveAt(Children.Count - 1);
                     }
                 }
             }
+
             int num5 = _view.Layers.Count;
             for (int i = 0; i < num5; i++)
             {
@@ -554,6 +555,7 @@ namespace Dt.Charts
                     Children.Add(element);
                 }
             }
+
             foreach (UIElement element5 in _view.Children)
             {
                 if (!Children.Contains(element5))
