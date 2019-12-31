@@ -45,7 +45,7 @@ namespace Dt.Charts
         {
             if (moving != null)
             {
-                Point position = e.GetPosition(Chart.ViewPort);
+                Point position = e.GetPosition(Chart.Viewport);
                 position.X -= offset.X;
                 position.Y -= offset.Y;
                 if (moving.Attach != ChartPanelAttach.None)
@@ -215,7 +215,7 @@ namespace Dt.Charts
                 ChartPanelObject obj2 = Children[i];
                 if (obj2.Action == ChartPanelAction.MouseMove)
                 {
-                    Point position = e.GetPosition(Chart.ViewPort);
+                    Point position = e.GetPosition(Chart.Viewport);
                     if (obj2.Attach != ChartPanelAttach.None)
                     {
                         int num3;
@@ -275,7 +275,7 @@ namespace Dt.Charts
         {
             if (Chart != null)
             {
-                Point position = args.GetPosition(Chart.ViewPort);
+                Point position = args.GetPosition(Chart.Viewport);
                 return Chart.View.PointToData(position);
             }
             return new Point(double.NaN, double.NaN);

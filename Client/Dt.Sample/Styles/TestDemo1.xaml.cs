@@ -35,9 +35,16 @@ namespace Dt.Sample
             InitializeComponent();
 
             Path path = new Path();
-            var rc = new PathGeometry();
-            path.Data = rc;
-            rc.Figures = new PathFigureCollection();
+            var geo = new PathGeometry();
+            geo.Figures = new PathFigureCollection();
+            path.Data = geo;
+            PathFigure pf = new PathFigure { IsFilled = true };
+            pf.Segments.Add(new LineSegment { Point = new Point(60, 0) });
+            pf.Segments.Add(new LineSegment { Point = new Point(60, 200) });
+            pf.Segments.Add(new LineSegment { Point = new Point(0, 200) });
+            pf.Segments.Add(new LineSegment { Point = new Point() });
+            geo.Figures.Add(pf);
+
             path.Fill = AtRes.RedBrush;
             Canvas.SetLeft(path, 30);
             Canvas.SetTop(path, 250);

@@ -23,10 +23,6 @@ namespace Dt.Charts
 
         public RPolygon()
         {
-            PathGeometry geometry = new PathGeometry();
-            geometry.Figures = new PathFigureCollection();
-            base.geometry = geometry;
-            base.Data = base.geometry;
             NumVertices = 3;
         }
 

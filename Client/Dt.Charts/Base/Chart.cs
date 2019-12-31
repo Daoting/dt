@@ -268,7 +268,7 @@ namespace Dt.Base
 
         #region 成员变量
         readonly ChartObservableCollection _children = new ChartObservableCollection();
-        Grid _contentGrid;
+        Grid _rootGrid;
         ActionCollection _actions;
         bool _autoSeries;
         ChartBindings _bindings;
@@ -490,9 +490,9 @@ namespace Dt.Base
             }
         }
 
-        public FrameworkElement ViewPort
+        public FrameworkElement Viewport
         {
-            get { return View.ViewPort; }
+            get { return View.Viewport; }
         }
         #endregion
 
@@ -588,7 +588,7 @@ namespace Dt.Base
 
         public object FindPlotElement(string name)
         {
-            return ViewPort.FindName(name);
+            return Viewport.FindName(name);
         }
 
         internal void FireActionEnter(object sender, EventArgs args)
@@ -622,7 +622,13 @@ namespace Dt.Base
         #region 重写
         protected override void OnApplyTemplate()
         {
-            _contentGrid = (Grid)GetTemplateChild("grid");
+            _rootGrid = (Grid)GetTemplateChild("RootGrid");
+
+            var vp = View.Viewport;
+            Grid.SetRow(vp, 2);
+            Grid.SetColumn(vp, 1);
+            _rootGrid.Children.Add(vp);
+
             UpdateChildren();
             RebuildChart();
             _loaded = true;
@@ -722,7 +728,7 @@ namespace Dt.Base
                     }
 
                     LegendChanged?.Invoke(this, EventArgs.Empty);
-                    ViewPort.InvalidateMeasure();
+                    Viewport.InvalidateMeasure();
                 }
             }
             finally
@@ -889,18 +895,18 @@ namespace Dt.Base
 
         void RemoveChildren(IList p_items)
         {
-            if (p_items != null && _contentGrid != null)
+            if (p_items != null && _rootGrid != null)
             {
                 foreach (UIElement element in p_items)
                 {
-                    _contentGrid.Children.Remove(element);
+                    _rootGrid.Children.Remove(element);
                 }
             }
         }
 
         void UpdateChildren()
         {
-            if (_contentGrid == null)
+            if (_rootGrid == null)
                 return;
 
             foreach (var elem in Children.OfType<FrameworkElement>())
@@ -912,14 +918,14 @@ namespace Dt.Base
                 else
                 {
                     Grid.SetColumn(elem, 1);
-                    Grid.SetRow(elem, 1);
+                    Grid.SetRow(elem, 2);
                 }
 
-                if (!_contentGrid.Children.Contains(elem))
+                if (!_rootGrid.Children.Contains(elem))
                 {
                     if (elem.Parent is Panel pnl)
                         pnl.Children.Remove(elem);
-                    _contentGrid.Children.Add(elem);
+                    _rootGrid.Children.Add(elem);
                 }
             }
         }

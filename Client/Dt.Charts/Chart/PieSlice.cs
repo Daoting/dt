@@ -23,15 +23,11 @@ namespace Dt.Charts
 
         Rect _lrect = new Rect();
         internal PieInfo _pi = new PieInfo();
-        internal PathGeometry _geometry;
         Point offset0 = new Point();
 
         public PieSlice()
         {
-            _geometry = new PathGeometry();
-            _geometry.Figures = new PathFigureCollection();
-            ((Path)base.Shape).Data = _geometry;
-            base.StrokeLineJoin = PenLineJoin.Round;
+            StrokeLineJoin = PenLineJoin.Round;
         }
 
         protected override LabelAlignment AutoPosition(Size labelSize, ref Point hot, ref Point offset)
@@ -274,9 +270,9 @@ namespace Dt.Charts
             }
             Canvas.SetLeft(this, offset0.X + point.X);
             Canvas.SetTop(this, offset0.Y + point.Y);
-            if ((base.effects != null) && (base.Shape != null))
+            if (_effects != null)
             {
-                foreach (UIElement element in base.effects)
+                foreach (UIElement element in base._effects)
                 {
                     Canvas.SetLeft(element, point.X + offset0.X);
                     Canvas.SetTop(element, point.Y + offset0.Y);

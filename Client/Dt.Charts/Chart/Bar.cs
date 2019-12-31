@@ -10,24 +10,22 @@
 using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Shapes;
 #endregion
 
 namespace Dt.Charts
 {
     public partial class Bar : PlotElement, ICustomClipping
     {
-        protected RectangleGeometry geometry = new RectangleGeometry();
+        Rect _labelRect;
 
         public Bar()
         {
-            Data = geometry;
         }
 
         internal override object Clone()
         {
             Bar clone = new Bar();
-            base.CloneAttributes(clone);
+            CloneAttributes(clone);
             return clone;
         }
 
@@ -55,13 +53,29 @@ namespace Dt.Charts
             {
                 return false;
             }
-            geometry.Rect = new Rect(0.0, 0.0, rect.Width, rect.Height);
+
+            // uno不支持Path.Data为非PathGeometry！
+            PathFigure pf = new PathFigure();
+            pf.Segments.Add(new LineSegment { Point = new Point() });
+            pf.Segments.Add(new LineSegment { Point = new Point(rect.Width, 0) });
+            pf.Segments.Add(new LineSegment { Point = new Point(rect.Width, rect.Height) });
+            pf.Segments.Add(new LineSegment { Point = new Point(0, rect.Height) });
+            pf.Segments.Add(new LineSegment { Point = new Point() });
+            _geometry.Figures.Add(pf);
+
             Canvas.SetLeft(this, rect.X);
             Canvas.SetTop(this, rect.Y);
+
             RectangleGeometry geometry2 = new RectangleGeometry();
-            geometry2.Rect = new Rect(-1.0, -1.0, rect.Width + 2.0, rect.Height + 2.0);
-            base.Clip = geometry2;
+            _labelRect = new Rect(-1.0, -1.0, rect.Width + 2.0, rect.Height + 2.0);
+            geometry2.Rect = _labelRect;
+            Clip = geometry2;
             return true;
+        }
+
+        internal override Rect LabelRect
+        {
+            get { return _labelRect; }
         }
 
         protected override bool IsClustered

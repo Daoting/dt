@@ -58,8 +58,7 @@ namespace Dt.Charts
         {
             get
             {
-                PlotElement element = (PlotElement) Clone();
-                return element.Shape;
+                return (PlotElement)Clone();
             }
         }
 

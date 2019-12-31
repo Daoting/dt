@@ -103,7 +103,7 @@ namespace Dt.Charts
 
         Point GetPosition(PointerRoutedEventArgs e)
         {
-            return e.GetCurrentPoint(Chart.ViewPort).Position;
+            return e.GetCurrentPoint(Chart.Viewport).Position;
         }
 
         internal void OnMouseDown(PointerRoutedEventArgs e)

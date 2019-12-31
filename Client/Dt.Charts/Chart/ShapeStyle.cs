@@ -18,7 +18,6 @@ using Windows.UI.Xaml.Shapes;
 
 namespace Dt.Charts
 {
-    [EditorBrowsable((EditorBrowsableState) EditorBrowsableState.Never)]
     public class ShapeStyle
     {
         DoubleCollection _dashArray;
@@ -53,23 +52,16 @@ namespace Dt.Charts
             Apply(null, sh, new Point(double.NaN, double.NaN), Extensions.EmptyRect, double.NaN, true);
         }
 
-        internal void Apply(UIElement parent, Shape sh)
+        internal void Apply(UIElement parent, Shape sh, Point center, Rect bounds, double radius, bool fill = true)
         {
-            Apply(parent, sh, new Point(double.NaN, double.NaN), Extensions.EmptyRect, double.NaN, true);
-        }
-
-        internal void Apply(UIElement parent, Shape sh, Point center, Rect bounds, double radius)
-        {
-            Apply(parent, sh, center, bounds, radius, true);
-        }
-
-        internal void Apply(UIElement parent, Shape sh, Point center, Rect bounds, double radius, bool fill)
-        {
-            if ((sh.Fill == null) && fill)
+            // uno 中Path.Fill默认为 SolidColorBrush(0, 255, 255, 255)
+            // 删除sh.Fill == null
+            if (fill)
             {
                 Brush brush = Fill;
                 sh.Fill = brush;
             }
+
             if (sh.Stroke == null)
             {
                 UIElement tag = parent;
@@ -77,6 +69,7 @@ namespace Dt.Charts
                 {
                     tag = sh.Tag as UIElement;
                 }
+
                 if (((tag is Lines) && !(tag is Area)) && (Stroke == StrokeAuto))
                 {
                     if (((Lines) tag).IsFilled)
@@ -93,10 +86,12 @@ namespace Dt.Charts
                     sh.Stroke = Stroke;
                 }
             }
+
             if (StrokeThickness != 0.0)
             {
                 sh.StrokeThickness = StrokeThickness;
             }
+
             if (StrokeDashArray != null)
             {
                 DoubleCollection strokeDashArray = sh.StrokeDashArray;
@@ -115,6 +110,7 @@ namespace Dt.Charts
                     strokeDashArray.Add(StrokeDashArray[i]);
                 }
             }
+
             if (RenderTransform != null)
             {
                 sh.RenderTransform = RenderTransform;

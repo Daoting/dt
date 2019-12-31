@@ -21,7 +21,7 @@ namespace Dt.Charts
 
         public Area()
         {
-            base.m_isFilled = true;
+            base._isFilled = true;
         }
 
         internal override object Clone()

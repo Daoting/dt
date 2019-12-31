@@ -19,13 +19,9 @@ namespace Dt.Charts
     public partial class HLOC : PlotElement, ICustomClipping
     {
         protected HLOCAppearance app;
-        PathGeometry _geometry;
 
         public HLOC()
         {
-            _geometry = new PathGeometry();
-            _geometry.Figures = new PathFigureCollection();
-            ((Path)base.Shape).Data = _geometry;
         }
 
         internal override object Clone()

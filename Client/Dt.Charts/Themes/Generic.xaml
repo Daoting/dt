@@ -8,9 +8,9 @@
     <dt:TextToVisibleConverter x:Key="CvTextToVisible" Visible="True" />
 
     <Style TargetType="dt:Chart">
-        <Setter Property="Background" Value="#FFe3f4fe"/>
-        <Setter Property="Foreground" Value="#FF15428b"/>
-        <Setter Property="Padding" Value="6"/>
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="Padding" Value="10"/>
         <Setter Property="VerticalContentAlignment" Value="Stretch"/>
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
         <Setter Property="MinWidth" Value="24"/>
@@ -18,55 +18,39 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="dt:Chart">
-                    <Border Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            Padding="{TemplateBinding Padding}"
-                            CornerRadius="{TemplateBinding CornerRadius}"
-                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
-                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition />
-                            </Grid.RowDefinitions>
-                            <ContentPresenter Content="{TemplateBinding Header}"
-                                              FontSize="15"
-                                              HorizontalContentAlignment="Center"
-                                              VerticalContentAlignment="Stretch"
-                                              Visibility="{Binding Header, Converter={StaticResource CvTextToVisible}, RelativeSource={RelativeSource TemplatedParent}}"
-                                              Padding="6,0,6,6"/>
-                            <Grid x:Name="grid" Grid.Row="1">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition />
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition />
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <Border x:Name="view"
-                                        Background="#90ffffff"
-                                        BorderBrush="#FF7eadd3"
-                                        BorderThickness="1"
-                                        CornerRadius="5"
-                                        Grid.Row="1"
-                                        Grid.Column="1"
-                                        Padding="10">
-                                    <ContentPresenter Content="{Binding ViewPort, RelativeSource={RelativeSource TemplatedParent}}" />
-                                </Border>
-                            </Grid>
-                        </Grid>
-                    </Border>
+                    <Grid x:Name="RootGrid"
+                          Background="{TemplateBinding Background}"
+                          BorderBrush="{TemplateBinding BorderBrush}"
+                          BorderThickness="{TemplateBinding BorderThickness}"
+                          Padding="{TemplateBinding Padding}"
+                          CornerRadius="{TemplateBinding CornerRadius}"
+                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <ContentPresenter Content="{TemplateBinding Header}"
+                                          FontSize="15"
+                                          HorizontalContentAlignment="Center"
+                                          VerticalContentAlignment="Stretch"
+                                          Visibility="{Binding Header, Converter={StaticResource CvTextToVisible}, RelativeSource={RelativeSource TemplatedParent}}"
+                                          Padding="6,0,6,6"
+                                          Grid.ColumnSpan="3" />
+                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
 
     <Style TargetType="dt:ChartLegend" >
-        <Setter Property="Background" Value="#ffdce8f8"/>
         <Setter Property="BorderBrush" Value="#FF7eadd3"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="FontSize" Value="12"/>

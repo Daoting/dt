@@ -21,15 +21,11 @@ namespace Dt.Charts
     {
         bool _smoothed;
         bool _xinc = false;
-        protected PathGeometry _geometry;
 
         public Lines()
         {
             PenLineCap cap;
-            _geometry = new PathGeometry();
-            _geometry.Figures = new PathFigureCollection();
-            ((Path)base.Shape).Data = _geometry;
-            base.m_isFilled = false;
+            base._isFilled = false;
             base.StrokeLineJoin = PenLineJoin.Bevel;
             base.StrokeEndLineCap = cap = PenLineCap.Round;
             base.StrokeStartLineCap = cap;

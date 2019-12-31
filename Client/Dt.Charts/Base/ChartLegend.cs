@@ -10,6 +10,7 @@
 using Dt.Charts;
 using System;
 using Windows.ApplicationModel;
+using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -27,13 +28,13 @@ namespace Dt.Base
             "Position",
             typeof(LegendPosition),
             typeof(ChartLegend),
-            new PropertyMetadata(LegendPosition.Bottom, OnPositionChanged));
+            new PropertyMetadata(LegendPosition.Right, OnPositionChanged));
 
         public static readonly DependencyProperty OrientationProperty = DependencyProperty.Register(
             "Orientation",
             typeof(Orientation),
             typeof(ChartLegend),
-            new PropertyMetadata(Orientation.Horizontal));
+            new PropertyMetadata(Orientation.Vertical));
 
         public static readonly DependencyProperty OverlapChartProperty = DependencyProperty.Register(
             "OverlapChart",
@@ -171,14 +172,14 @@ namespace Dt.Base
             {
                 case LegendPosition.Left:
                     Grid.SetColumn(this, OverlapChart ? 1 : 0);
-                    Grid.SetRow(this, 1);
+                    Grid.SetRow(this, 2);
                     HorizontalAlignment = HorizontalAlignment.Left;
                     VerticalAlignment = VerticalAlignment.Center;
                     return;
 
                 case LegendPosition.Right:
                     Grid.SetColumn(this, OverlapChart ? 1 : 2);
-                    Grid.SetRow(this, 1);
+                    Grid.SetRow(this, 2);
                     HorizontalAlignment = HorizontalAlignment.Right;
                     VerticalAlignment = VerticalAlignment.Center;
                     return;
@@ -186,7 +187,7 @@ namespace Dt.Base
                 case LegendPosition.Top:
                 case LegendPosition.TopCenter:
                     Grid.SetColumn(this, 1);
-                    Grid.SetRow(this, OverlapChart ? 1 : 0);
+                    Grid.SetRow(this, OverlapChart ? 2 : 1);
                     HorizontalAlignment = HorizontalAlignment.Center;
                     VerticalAlignment = VerticalAlignment.Top;
                     return;
@@ -194,35 +195,35 @@ namespace Dt.Base
                 case LegendPosition.Bottom:
                 case LegendPosition.BottomCenter:
                     Grid.SetColumn(this, 1);
-                    Grid.SetRow(this, OverlapChart ? 1 : 2);
+                    Grid.SetRow(this, OverlapChart ? 2 : 3);
                     HorizontalAlignment = HorizontalAlignment.Center;
                     VerticalAlignment = VerticalAlignment.Bottom;
                     return;
 
                 case LegendPosition.TopLeft:
                     Grid.SetColumn(this, 1);
-                    Grid.SetRow(this, OverlapChart ? 1 : 0);
+                    Grid.SetRow(this, OverlapChart ? 2 : 1);
                     HorizontalAlignment = HorizontalAlignment.Left;
                     VerticalAlignment = VerticalAlignment.Top;
                     return;
 
                 case LegendPosition.TopRight:
                     Grid.SetColumn(this, 1);
-                    Grid.SetRow(this, OverlapChart ? 1 : 0);
+                    Grid.SetRow(this, OverlapChart ? 2 : 1);
                     HorizontalAlignment = HorizontalAlignment.Right;
                     VerticalAlignment = VerticalAlignment.Top;
                     return;
 
                 case LegendPosition.BottomLeft:
                     Grid.SetColumn(this, 1);
-                    Grid.SetRow(this, OverlapChart ? 1 : 2);
+                    Grid.SetRow(this, OverlapChart ? 2 : 3);
                     HorizontalAlignment = HorizontalAlignment.Left;
                     VerticalAlignment = VerticalAlignment.Bottom;
                     return;
 
                 case LegendPosition.BottomRight:
                     Grid.SetColumn(this, 1);
-                    Grid.SetRow(this, OverlapChart ? 1 : 2);
+                    Grid.SetRow(this, OverlapChart ? 2 : 3);
                     HorizontalAlignment = HorizontalAlignment.Right;
                     VerticalAlignment = VerticalAlignment.Bottom;
                     return;

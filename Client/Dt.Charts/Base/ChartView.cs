@@ -220,7 +220,7 @@ namespace Dt.Charts
         /// <summary>
         /// 图表实际的可视内容
         /// </summary>
-        internal FrameworkElement ViewPort
+        internal FrameworkElement Viewport
         {
             get { return _viewport; }
         }
@@ -636,26 +636,19 @@ namespace Dt.Charts
             }
         }
 
-        internal PlotArea UpdateMainPlotArea(bool hasPlotAreas)
+        internal PlotArea UpdateMainPlotArea()
         {
-            if (!hasPlotAreas)
+            PlotArea area = null;
+            int num = PlotAreas.Count;
+            for (int i = 0; i < num; i++)
             {
-                PlotArea area = null;
-                int num = PlotAreas.Count;
-                for (int i = 0; i < num; i++)
+                if ((PlotAreas[i].Column == AxisX.PlotAreaIndex) && (PlotAreas[i].Row == AxisY.PlotAreaIndex))
                 {
-                    if ((PlotAreas[i].Column == AxisX.PlotAreaIndex) && (PlotAreas[i].Row == AxisY.PlotAreaIndex))
-                    {
-                        area = PlotAreas[i];
-                        break;
-                    }
-                }
-                if (area != null)
-                {
-                    return area;
+                    area = PlotAreas[i];
+                    break;
                 }
             }
-            return null;
+            return area;
         }
     }
 }
