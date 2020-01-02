@@ -45,13 +45,11 @@ namespace Dt.Charts
         protected override void UpdateGeometry(PathGeometry pg, Size sz)
         {
             if (pg == null)
-            {
-                pg = (PathGeometry) base.geometry;
-            }
+                pg = _geometry;
+
             if (sz.IsEmpty)
-            {
                 sz = Size;
-            }
+
             pg.Figures.Clear();
             double rx = 0.5 * sz.Width;
             double ry = 0.5 * sz.Height;
@@ -90,8 +88,8 @@ namespace Dt.Charts
             }
             base.AddFakeEllipse(pg, center, rx, ry, num3);
             pg.Figures.Add(figure);
-            Canvas.SetLeft(this, (symCenter.X - rx) - num3);
-            Canvas.SetTop(this, (symCenter.Y - ry) - num3);
+            Canvas.SetLeft(this, (_symCenter.X - rx) - num3);
+            Canvas.SetTop(this, (_symCenter.Y - ry) - num3);
         }
 
         public double InnerRadius

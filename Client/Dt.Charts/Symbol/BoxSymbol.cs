@@ -19,9 +19,6 @@ namespace Dt.Charts
     {
         public BoxSymbol()
         {
-            Geometry geometry;
-            base.Data = geometry = new RectangleGeometry();
-            base.geometry = geometry;
         }
 
         internal override object Clone()
@@ -35,10 +32,19 @@ namespace Dt.Charts
         {
             double num = 0.5 * Size.Width;
             double num2 = 0.5 * Size.Height;
-            double x = 0.5 * base.StrokeThickness;
-            ((RectangleGeometry) base.geometry).Rect = new Rect(x, x, Size.Width, Size.Height);
-            Canvas.SetLeft(this, (symCenter.X - num) - x);
-            Canvas.SetTop(this, (symCenter.Y - num2) - x);
+            double x = 0.5 * StrokeThickness;
+
+            // uno不支持Path.Data为非PathGeometry！
+            PathFigure pf = new PathFigure();
+            pf.Segments.Add(new LineSegment { Point = new Point(x, x) });
+            pf.Segments.Add(new LineSegment { Point = new Point(x + Size.Width, 0) });
+            pf.Segments.Add(new LineSegment { Point = new Point(x + Size.Width, x + Size.Height) });
+            pf.Segments.Add(new LineSegment { Point = new Point(x, x + Size.Height) });
+            pf.Segments.Add(new LineSegment { Point = new Point(x, x) });
+            _geometry.Figures.Add(pf);
+
+            Canvas.SetLeft(this, (_symCenter.X - num) - x);
+            Canvas.SetTop(this, (_symCenter.Y - num2) - x);
         }
 
         protected override Shape LegendShape

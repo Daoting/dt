@@ -20,9 +20,7 @@
                 <StackPanel>
                     <a:Fv Data="{Binding ElementName=_chart}">
                         <a:CBar Title="图表属性" />
-                        <a:CFree Title="图表类型">
-                            <ComboBox x:Name="_cbType" />
-                        </a:CFree>
+                        <a:CList ID="ChartType" Title="图表类型" Changed="OnChartTypeChanged" />
                         <a:CList ID="Palette" Title="调色板" />
                         <a:CText ID="Header" Title="大标题" />
                         <a:CBool ID="View.Inverted" Title="转换XY轴" />

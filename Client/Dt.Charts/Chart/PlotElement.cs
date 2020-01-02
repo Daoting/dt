@@ -105,7 +105,7 @@ namespace Dt.Charts
                 Point hot = new Point();
                 if (labelAlignment == LabelAlignment.Auto)
                 {
-                    labelAlignment = pe.AutoPosition(labelSize, ref hot, ref labelOffset);
+                    labelAlignment = pe.AutoPosition(ref hot, ref labelOffset);
                 }
                 switch (labelAlignment)
                 {
@@ -404,7 +404,7 @@ namespace Dt.Charts
             }
         }
 
-        protected virtual LabelAlignment AutoPosition(Size labelSize, ref Point hot, ref Point offset)
+        protected virtual LabelAlignment AutoPosition(ref Point hot, ref Point offset)
         {
             return LabelAlignment.TopCenter;
         }
@@ -424,11 +424,7 @@ namespace Dt.Charts
             if ((_autoStyle == null) && (ss != null))
             {
                 _autoStyle = ss;
-                PieSlice slice = this as PieSlice;
-                Point center = (slice != null) ? slice._pi.Center : new Point(double.NaN, double.NaN);
-                Rect bounds = (slice != null) ? slice._geometry.Bounds : Extensions.EmptyRect;
-                double radius = (slice != null) ? slice._pi.RadiusX : double.NaN;
-                _autoStyle.Apply(null, this, center, bounds, radius);
+                _autoStyle.Apply(this);
             }
         }
 

@@ -51,9 +51,9 @@ namespace Dt.Sample
         {
             _chart.BeginUpdate();
 
-            AnimationTransform at = (AnimationTransform)((EnumMember)_cbTrans.SelectedItem).Value;
-            AnimationOrigin ao = (AnimationOrigin)((EnumMember)_cbOrigin.SelectedItem).Value;
-            Easing ea = (Easing)((EnumMember)_cbEasing.SelectedItem).Value;
+            AnimationTransform at = (AnimationTransform)_cbTrans.SelectedIndex;
+            AnimationOrigin ao = (AnimationOrigin)_cbOrigin.SelectedIndex;
+            Easing ea = (Easing)_cbEasing.SelectedIndex;
             _chart.Data.LoadAnimation = CreateAnimation(at, ao, _cbDelay.IsChecked == true, ea);
 
             int nser = _rnd.Next(2, 6);

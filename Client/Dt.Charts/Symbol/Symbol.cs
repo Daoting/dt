@@ -16,8 +16,7 @@ namespace Dt.Charts
 {
     public partial class Symbol : PlotElement
     {
-        protected Geometry geometry;
-        protected Point symCenter = new Point();
+        protected Point _symCenter = new Point();
 
         protected override bool IsCompatible(IRenderer rend)
         {
@@ -36,8 +35,8 @@ namespace Dt.Charts
 
         protected override bool Render(RenderContext rc)
         {
-            symCenter.X = rc.Current.X;
-            symCenter.Y = rc.Current.Y;
+            _symCenter.X = rc.Current.X;
+            _symCenter.Y = rc.Current.Y;
             return true;
         }
 

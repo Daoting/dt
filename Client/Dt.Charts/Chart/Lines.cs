@@ -189,10 +189,7 @@ namespace Dt.Charts
             {
                 naN = rc.OptimizationRadius;
             }
-            if (IsFilled)
-            {
-                geometry.FillRule = FillRule.Nonzero;
-            }
+
             if (rc.hasNan)
             {
                 List<Point[]> list = SplitPointsWithHoles(points);

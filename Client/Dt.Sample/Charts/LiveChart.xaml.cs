@@ -55,12 +55,13 @@ namespace Dt.Sample
             _dt = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(0.2) };
             _dt.Tick += (s, e) => Update();
 
-            Loaded += LiveChart_Loaded;
-            Unloaded += LiveChart_Unloaded;
+            _chart.Loaded += LiveChart_Loaded;
+            _chart.Unloaded += LiveChart_Unloaded;
         }
 
         void LiveChart_Loaded(object sender, RoutedEventArgs e)
         {
+            _chart.Loaded -= LiveChart_Loaded;
             _dt.Start();
             btnTimer.Content = "Stop";
         }

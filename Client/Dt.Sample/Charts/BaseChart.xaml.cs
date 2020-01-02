@@ -32,18 +32,13 @@ namespace Dt.Sample
             _chart.View.AxisY.Title = "成绩";
             _data = new ChartSampleData();
 
-            _cbType.ItemsSource = EnumDataSource.FromType(typeof(ChartType));
-            _cbType.SelectionChanged += OnChartTypeSelectionChanged;
-
             _chart.Data = _data.GetData(ChartType.Column);
             _chart.ChartType = ChartType.Column;
         }
 
-        private void OnChartTypeSelectionChanged(object sender, SelectionChangedEventArgs e)
+        void OnChartTypeChanged(object sender, object e)
         {
-            ChartType tp = (ChartType)((EnumMember)_cbType.SelectedItem).Value;
-            _chart.Data = _data.GetData(tp);
-            _chart.ChartType = tp;
+            _chart.Data = _data.GetData((ChartType)e);
         }
 
         private async void OnSnapshot(object sender, RoutedEventArgs e)

@@ -60,10 +60,11 @@ namespace Dt.Charts
             {
                 RenderDefault(rc);
             }
-            if (_geometry.Bounds.IntersectRect(rc.Bounds2D).IsEmpty)
-            {
-                return false;
-            }
+            // uno中未实现Bounds
+            //if (_geometry.Bounds.IntersectRect(rc.Bounds2D).IsEmpty)
+            //{
+            //    return false;
+            //}
             RectangleGeometry geometry = new RectangleGeometry();
             geometry.Rect = rc.Bounds2D;
             base.Clip = geometry;
@@ -187,91 +188,89 @@ namespace Dt.Charts
 
         void RenderDefault(RenderContext rc)
         {
-            base.Fill = new SolidColorBrush(Colors.Transparent);
-            double d = rc["HighValues"];
-            double num2 = rc["LowValues"];
-            double num3 = rc["OpenValues"];
-            double num4 = rc["CloseValues"];
-            PathGeometry geometry = _geometry;
+            Fill = new SolidColorBrush(Colors.Transparent);
+            double high = rc["HighValues"];
+            double low = rc["LowValues"];
+            double open = rc["OpenValues"];
+            double close = rc["CloseValues"];
             double width = Size.Width;
             double x = rc.Current.X - (0.5 * width);
             double num7 = x + width;
             bool inverted = false;
+
             if (rc.Renderer is BaseRenderer)
             {
                 inverted = ((BaseRenderer) rc.Renderer).Inverted;
             }
-            if (!double.IsNaN(num2) && !double.IsNaN(d))
+
+            PathFigure figure;
+            LineSegment segment;
+            if (!double.IsNaN(low) && !double.IsNaN(high))
             {
-                PathFigure figure2 = new PathFigure();
-                figure2.IsFilled = false;
-                PathFigure figure = figure2;
-                LineSegment segment = new LineSegment();
+                figure = new PathFigure();
+                figure.IsFilled = true;
+                segment = new LineSegment();
                 if (inverted)
                 {
-                    num2 = rc.ConvertX(num2);
-                    d = rc.ConvertX(d);
-                    figure.StartPoint = new Point(num2, rc.Current.Y);
-                    segment.Point = new Point(d, rc.Current.Y);
+                    low = rc.ConvertX(low);
+                    high = rc.ConvertX(high);
+                    figure.StartPoint = new Point(low, rc.Current.Y);
+                    segment.Point = new Point(high, rc.Current.Y);
                 }
                 else
                 {
-                    num2 = rc.ConvertY(num2);
-                    d = rc.ConvertY(d);
-                    figure.StartPoint = new Point(rc.Current.X, num2);
-                    segment.Point = new Point(rc.Current.X, d);
+                    low = rc.ConvertY(low);
+                    high = rc.ConvertY(high);
+                    figure.StartPoint = new Point(rc.Current.X, low);
+                    segment.Point = new Point(rc.Current.X, high);
                 }
                 figure.Segments = new PathSegmentCollection();
                 figure.Segments.Add(segment);
-                geometry.Figures.Add(figure);
+                _geometry.Figures.Add(figure);
             }
-            if (!double.IsNaN(num3))
+
+            if (!double.IsNaN(open))
             {
-                PathFigure figure4 = new PathFigure();
-                figure4.IsFilled = false;
-                PathFigure figure3 = figure4;
-                LineSegment segment2 = new LineSegment();
-                if (inverted)
-                {
-                    num3 = rc.ConvertX(num3);
-                    figure3.StartPoint = new Point(num3, rc.Current.Y + (0.5 * Size.Height));
-                    segment2.Point = new Point(num3, rc.Current.Y);
-                }
-                else
-                {
-                    num3 = rc.ConvertY(num3);
-                    figure3.StartPoint = new Point(x, num3);
-                    segment2.Point = new Point(rc.Current.X, num3);
-                }
-                figure3.Segments = new PathSegmentCollection();
-                figure3.Segments.Add(segment2);
-                geometry.Figures.Add(figure3);
-            }
-            if (!double.IsNaN(num4))
-            {
-                PathFigure figure6 = new PathFigure();
-                figure6.IsFilled = false;
-                PathFigure figure5 = figure6;
-                LineSegment segment3 = new LineSegment();
-                if (inverted)
-                {
-                    num4 = rc.ConvertX(num4);
-                    figure5.StartPoint = new Point(num4, rc.Current.Y - (0.5 * Size.Height));
-                    segment3.Point = new Point(num4, rc.Current.Y);
-                }
-                else
-                {
-                    num4 = rc.ConvertY(num4);
-                    figure5.StartPoint = new Point(num7, num4);
-                    segment3.Point = new Point(rc.Current.X, num4);
-                }
-                figure5.Segments = new PathSegmentCollection();
-                figure5.Segments.Add(segment3);
-                geometry.Figures.Add(figure5);
-            }
-            foreach(PathFigure figure in geometry.Figures)
-            {
+                figure = new PathFigure();
                 figure.IsFilled = true;
+                segment = new LineSegment();
+                if (inverted)
+                {
+                    open = rc.ConvertX(open);
+                    figure.StartPoint = new Point(open, rc.Current.Y + (0.5 * Size.Height));
+                    segment.Point = new Point(open, rc.Current.Y);
+                }
+                else
+                {
+                    open = rc.ConvertY(open);
+                    figure.StartPoint = new Point(x, open);
+                    segment.Point = new Point(rc.Current.X, open);
+                }
+                figure.Segments = new PathSegmentCollection();
+                figure.Segments.Add(segment);
+                _geometry.Figures.Add(figure);
+            }
+
+            if (!double.IsNaN(close))
+            {
+                figure = new PathFigure();
+                figure.IsFilled = true;
+                segment = new LineSegment();
+                if (inverted)
+                {
+                    close = rc.ConvertX(close);
+                    figure.StartPoint = new Point(close, rc.Current.Y - (0.5 * Size.Height));
+                    segment.Point = new Point(close, rc.Current.Y);
+                }
+                else
+                {
+                    close = rc.ConvertY(close);
+                    figure.StartPoint = new Point(num7, close);
+                    segment.Point = new Point(rc.Current.X, close);
+                }
+                figure.Segments = new PathSegmentCollection();
+                figure.Segments.Add(segment);
+                _geometry.Figures.Add(figure);
             }
         }
 

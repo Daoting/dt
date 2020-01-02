@@ -49,10 +49,10 @@ namespace Dt.Charts
 
         internal void Apply(Shape sh)
         {
-            Apply(null, sh, new Point(double.NaN, double.NaN), Extensions.EmptyRect, double.NaN, true);
+            Apply(null, sh, true);
         }
 
-        internal void Apply(UIElement parent, Shape sh, Point center, Rect bounds, double radius, bool fill = true)
+        internal void Apply(UIElement parent, Shape sh, bool fill = true)
         {
             // uno 中Path.Fill默认为 SolidColorBrush(0, 255, 255, 255)
             // 删除sh.Fill == null

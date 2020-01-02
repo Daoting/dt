@@ -19,9 +19,6 @@ namespace Dt.Charts
     {
         public DotSymbol()
         {
-            Geometry geometry;
-            base.Data = geometry = new EllipseGeometry();
-            base.geometry = geometry;
         }
 
         internal override object Clone()
@@ -35,13 +32,24 @@ namespace Dt.Charts
         {
             double num = 0.5 * Size.Width;
             double num2 = 0.5 * Size.Height;
-            double num3 = 0.5 * base.StrokeThickness;
-            EllipseGeometry geometry = (EllipseGeometry) base.geometry;
+            double num3 = 0.5 * StrokeThickness;
+
+#if UWP
+            var geometry = new EllipseGeometry();
             geometry.RadiusX = num;
             geometry.RadiusY = num2;
             geometry.Center = new Point(num + num3, num2 + num3);
-            Canvas.SetLeft(this, (symCenter.X - num) - num3);
-            Canvas.SetTop(this, (symCenter.Y - num2) - num3);
+            Data = geometry;
+#else
+            // uno不支持Path.Data为非PathGeometry！
+            // 起点StartPoint终点Point画圆弧，两点不能重叠
+            PathFigure pf = new PathFigure { StartPoint = new Point(StrokeThickness, num2 - 0.01) };
+            pf.Segments.Add(new ArcSegment { Point = new Point(StrokeThickness, num2), Size = new Size(num - num3, num2 - num3), IsLargeArc = true, SweepDirection = SweepDirection.Clockwise });
+            _geometry.Figures.Add(pf);
+#endif
+
+            Canvas.SetLeft(this, _symCenter.X - num - num3);
+            Canvas.SetTop(this, _symCenter.Y - num2 - num3);
         }
 
         protected override Shape LegendShape

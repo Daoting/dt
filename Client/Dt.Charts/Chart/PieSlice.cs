@@ -30,7 +30,7 @@ namespace Dt.Charts
             StrokeLineJoin = PenLineJoin.Round;
         }
 
-        protected override LabelAlignment AutoPosition(Size labelSize, ref Point hot, ref Point offset)
+        protected override LabelAlignment AutoPosition(ref Point hot, ref Point offset)
         {
             hot = _pi.GetRadiusCenter();
             _pi.RadiusX += offset.X;
