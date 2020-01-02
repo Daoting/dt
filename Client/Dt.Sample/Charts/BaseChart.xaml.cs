@@ -28,7 +28,7 @@ namespace Dt.Sample
         {
             InitializeComponent();
 
-            _chart.View.AxisX.Title = "课程";
+            //_chart.View.AxisX.Title = "课程";
             _chart.View.AxisY.Title = "成绩";
             _data = new ChartSampleData();
 

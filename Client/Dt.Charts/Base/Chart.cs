@@ -623,11 +623,9 @@ namespace Dt.Base
         protected override void OnApplyTemplate()
         {
             _rootGrid = (Grid)GetTemplateChild("RootGrid");
-
-            var vp = View.Viewport;
-            Grid.SetRow(vp, 2);
-            Grid.SetColumn(vp, 1);
-            _rootGrid.Children.Add(vp);
+            var pre = (ContentPresenter)GetTemplateChild("ViewPresenter");
+            pre.Content = View.Viewport;
+            pre.SizeChanged += OnPresenterSizeChanged;
 
             UpdateChildren();
             RebuildChart();
@@ -850,6 +848,13 @@ namespace Dt.Base
                 }
                 renderer.AddSeries(seriesInfo);
             }
+        }
+
+        void OnPresenterSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            // 确保ChartViewport2D的MeasureOverride时尺寸正常！
+            Viewport.Width = e.NewSize.Width;
+            Viewport.Height = e.NewSize.Height;
         }
         #endregion
 

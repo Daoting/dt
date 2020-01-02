@@ -7,5 +7,19 @@
     mc:Ignorable="d"
     xmlns:a="using:Dt.Base">
 
-    <Canvas x:Name="_cv" />
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Canvas x:Name="_cv" Grid.Row="1" Grid.Column="1" />
+        <TextBlock Text="啊手动阀" FontSize="20" Grid.Row="2" Grid.Column="1" />
+    </Grid>
+    
 </a:PageWin>

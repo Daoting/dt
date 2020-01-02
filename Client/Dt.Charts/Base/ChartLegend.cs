@@ -28,13 +28,13 @@ namespace Dt.Base
             "Position",
             typeof(LegendPosition),
             typeof(ChartLegend),
-            new PropertyMetadata(LegendPosition.Right, OnPositionChanged));
+            new PropertyMetadata(LegendPosition.Bottom, OnPositionChanged));
 
         public static readonly DependencyProperty OrientationProperty = DependencyProperty.Register(
             "Orientation",
             typeof(Orientation),
             typeof(ChartLegend),
-            new PropertyMetadata(Orientation.Vertical));
+            new PropertyMetadata(Orientation.Horizontal));
 
         public static readonly DependencyProperty OverlapChartProperty = DependencyProperty.Register(
             "OverlapChart",

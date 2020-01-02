@@ -232,7 +232,7 @@ namespace Dt.Charts
 
         void _axis_Changed(object sender, EventArgs e)
         {
-            _viewport.InvalidateArrange();
+            _viewport.InvalidateMeasure();
         }
 
         void _children_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

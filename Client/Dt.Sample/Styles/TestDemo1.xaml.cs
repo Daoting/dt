@@ -46,9 +46,11 @@ namespace Dt.Sample
             geo.Figures.Add(pf);
 
             path.Fill = AtRes.RedBrush;
-            Canvas.SetLeft(path, 30);
-            Canvas.SetTop(path, 250);
+            Canvas.SetLeft(path, 0);
+            Canvas.SetTop(path, 0);
             _cv.Children.Add(path);
+
+
         }
     }
 }

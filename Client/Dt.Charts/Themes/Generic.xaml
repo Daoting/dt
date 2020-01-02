@@ -44,6 +44,7 @@
                                           Visibility="{Binding Header, Converter={StaticResource CvTextToVisible}, RelativeSource={RelativeSource TemplatedParent}}"
                                           Padding="6,0,6,6"
                                           Grid.ColumnSpan="3" />
+                        <ContentPresenter x:Name="ViewPresenter" Grid.Row="2" Grid.Column="1" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -51,7 +52,7 @@
     </Style>
 
     <Style TargetType="dt:ChartLegend" >
-        <Setter Property="BorderBrush" Value="#FF7eadd3"/>
+        <Setter Property="BorderBrush" Value="#FF969696"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="FontSize" Value="12"/>
         <Setter Property="Margin" Value="2"/>

@@ -11,7 +11,6 @@ using Dt.Base;
 using System;
 using System.Collections;
 using System.Globalization;
-using Windows.Foundation;
 #endregion
 
 namespace Dt.Charts
@@ -26,9 +25,6 @@ namespace Dt.Charts
         int _pi;
         int _si;
         double _val;
-        internal Point LabelPoint;
-        static object NoValue = double.NaN;
-        internal Point Point;
 
         internal DataPoint(double value, object item)
         {
@@ -125,7 +121,7 @@ namespace Dt.Charts
                         return Series.GetValue(i, PointIndex);
                     }
                 }
-                return NoValue;
+                return double.NaN;
             }
         }
 
@@ -138,7 +134,7 @@ namespace Dt.Charts
                 {
                     return Series.GetValue(index, PointIndex);
                 }
-                return NoValue;
+                return double.NaN;
             }
         }
 
@@ -158,7 +154,7 @@ namespace Dt.Charts
                         }
                     }
                 }
-                return NoValue;
+                return double.NaN;
             }
         }
 
@@ -237,7 +233,7 @@ namespace Dt.Charts
                 {
                     return ((DateTime) obj2).ToOADate();
                 }
-                return (double) ((double) NoValue);
+                return double.NaN;
             }
         }
     }

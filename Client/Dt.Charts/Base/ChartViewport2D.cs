@@ -47,7 +47,8 @@ namespace Dt.Charts
         #region 测量布局
         protected override Size MeasureOverride(Size availableSize)
         {
-            // uno中当ChartLegend放在Top或Bottom时，availableSize未减该尺寸！等uno修改
+            // uno中当ChartLegend放在Top或Bottom时，availableSize未减该尺寸！
+            // 已在Chart.OnPresenterSizeChanged中设置尺寸解决！
             if (availableSize.Width > 0 && availableSize.Height > 0)
             {
                 UpdateLayout(availableSize);
