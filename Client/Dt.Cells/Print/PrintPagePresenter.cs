@@ -58,10 +58,10 @@ namespace Dt.Cells.UI
             _excel.ActiveSheetIndex = _printer.SheetIndex;
             _sheet = _excel.Sheets[_printer.SheetIndex];
             _pageInfo = p_pageInfo;
-            Init();
+            OnInit();
         }
 
-        private void Init()
+        private void OnInit()
         {
             AddHeaderFooter();
 

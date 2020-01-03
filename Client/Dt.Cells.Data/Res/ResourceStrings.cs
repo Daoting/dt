@@ -1667,7 +1667,7 @@ namespace Dt.Cells.Data
             {
                 if (_loader == null)
                 {
-                    _loader = ResourceLoader.GetForCurrentView("Dt.Cells.Data/Res");
+                    _loader = ResourceLoader.GetForCurrentView("Dt.Cells.Data/Resources");
                 }
                 return _loader;
             }

@@ -49,21 +49,21 @@ namespace Dt.Sample
             ds.XValuesSource = new DateTime[] { new DateTime(2013, 10, 1), new DateTime(2013, 10, 1) };
             ds.LowValuesSource = new double[] { 10, 30 };
             ds.HighValuesSource = new double[] { 20, 50 };
-            ds.PointTooltipTemplate = this.Resources["label"] as DataTemplate;
+            ds.PointTooltipTemplate = Resources["label"] as DataTemplate;
             _chart.Data.Children.Add(ds);
 
             ds = new HighLowSeries() { Label = "Left Early" };
             ds.XValuesSource = new DateTime[] { new DateTime(2013, 9, 15), new DateTime(2013, 10, 11), new DateTime(2013, 10, 16) };
             ds.LowValuesSource = new double[] { 40, 53, 46 };
             ds.HighValuesSource = new double[] { 60, 60, 60 };
-            ds.PointTooltipTemplate = this.Resources["label"] as DataTemplate;
+            ds.PointTooltipTemplate = Resources["label"] as DataTemplate;
             _chart.Data.Children.Add(ds);
 
             ds = new HighLowSeries() { Label = "Arrived Late" };
             ds.XValuesSource = new DateTime[] { new DateTime(2013, 9, 5), new DateTime(2013, 10, 16) };
             ds.LowValuesSource = new double[] { 0, 2 };
             ds.HighValuesSource = new double[] { 10, 20 };
-            ds.PointTooltipTemplate = this.Resources["label"] as DataTemplate;
+            ds.PointTooltipTemplate = Resources["label"] as DataTemplate;
             ds.SymbolSize = new Size(30, 30);
             _chart.Data.Children.Add(ds);
         }

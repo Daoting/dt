@@ -34,27 +34,7 @@ namespace Dt.Sample
         {
             InitializeComponent();
 
-            Path path = new Path();
-            var geo = new PathGeometry();
-            geo.Figures = new PathFigureCollection();
-            path.Data = geo;
-            PathFigure pf = new PathFigure { StartPoint = new Point(0, 50), IsFilled = true };
-
-            ArcSegment arcSeg = new ArcSegment();
-            arcSeg.Point = new Point(0, 50);
-            arcSeg.Size = new Size(100, 100);
-            arcSeg.IsLargeArc = true;
-            arcSeg.SweepDirection = SweepDirection.Clockwise;
-            //arcSeg.RotationAngle = 180;
-
-            pf.Segments.Add(arcSeg);
-            geo.Figures.Add(pf);
-
-            path.Fill = AtRes.RedBrush;
-            Canvas.SetLeft(path, 400);
-            Canvas.SetTop(path, 200);
-            _cv.Children.Add(path);
-
+            //Excel excel = new Excel();
 
         }
     }

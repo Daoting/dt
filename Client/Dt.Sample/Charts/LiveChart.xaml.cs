@@ -92,7 +92,7 @@ namespace Dt.Sample
             _chart.EndUpdate();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        void Button_Click(object sender, RoutedEventArgs e)
         {
             Button btn = (Button)sender;
 

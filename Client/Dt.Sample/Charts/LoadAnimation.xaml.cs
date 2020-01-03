@@ -47,7 +47,7 @@ namespace Dt.Sample
             _chart.Loaded += (s, e) => NewData();
         }
 
-        private void NewData()
+        void NewData()
         {
             _chart.BeginUpdate();
 
@@ -190,9 +190,9 @@ namespace Dt.Sample
             return new PlotElementAnimation() { Storyboard = sb, SymbolStyle = style };
         }
 
-        private void OnPieAnimation(object sender, RoutedEventArgs e)
+        void OnPieAnimation(object sender, RoutedEventArgs e)
         {
-            //this.GoTo(new PieAnimation(), "饼图动画");
+            //GoTo(new PieAnimation(), "饼图动画");
         }
     }
 

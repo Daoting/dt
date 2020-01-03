@@ -1,0 +1,26 @@
+﻿<a:Win
+    x:Class="Dt.Sample.FormulaTextBox"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:ui="using:Dt.Cells.UI"
+    Home="Excel,属性">
+
+    <a:WinCenter>
+        <a:Tabs>
+            <a:Tab Title="Excel">
+                <a:Excel x:Name="_excel" />
+            </a:Tab>
+        </a:Tabs>
+    </a:WinCenter>
+    <a:WinItem DockState="DockedRight">
+        <a:Tabs>
+            <a:Tab Title="属性">
+                <a:Fv>
+                    <a:CBar Title="请输入&quot;=&quot;,并尝试在工作表中选择一片区域." />
+                    <ui:FormulaTextBox x:Name="_ftBox" VerticalAlignment="Top" />
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:WinItem>
+</a:Win>

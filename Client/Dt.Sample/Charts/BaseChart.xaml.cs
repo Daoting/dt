@@ -41,7 +41,7 @@ namespace Dt.Sample
             _chart.Data = _data.GetData((ChartType)e);
         }
 
-        private async void OnSnapshot(object sender, RoutedEventArgs e)
+        async void OnSnapshot(object sender, RoutedEventArgs e)
         {
             var file = await _chart.SaveSnapshot();
             if (file != null)

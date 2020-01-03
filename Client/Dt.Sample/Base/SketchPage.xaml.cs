@@ -25,7 +25,7 @@ namespace Dt.Sample
             _sketch.Tapped += OnSketchTapped;
         }
        
-        private void OnSketchTapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        void OnSketchTapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
            
         }
@@ -50,17 +50,17 @@ namespace Dt.Sample
             }
         }
 
-        private void Button_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        void Button_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
            
         }
 
-        private void Item_Click(object sender, System.EventArgs e)
+        void Item_Click(object sender, System.EventArgs e)
         {
             int i = _sketch.Container.Children.IndexOf(sender as SNode);
         }
 
-        private void Item_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        void Item_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
             int i = _sketch.Container.Children.IndexOf(sender as SNode);
         }

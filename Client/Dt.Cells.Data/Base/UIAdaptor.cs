@@ -17,19 +17,11 @@ namespace Dt.Cells.Data
 {
     internal static class UIAdaptor
     {
-        private static readonly bool _designMode;
-        private static readonly CoreDispatcher _dispatcher;
-
-        static UIAdaptor()
-        {
-            _designMode = DesignMode.DesignModeEnabled;
-            if (!_designMode)
-                _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
-        }
+        private static readonly CoreDispatcher _dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
 
         public static async void InvokeAsync(Action action)
         {
-            if (_designMode || _dispatcher.HasThreadAccess)
+            if (_dispatcher.HasThreadAccess)
                 action();
             else
                 await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, new DispatchedHandler(action));
@@ -37,7 +29,7 @@ namespace Dt.Cells.Data
 
         public static void InvokeSync(Action action)
         {
-            if (_designMode || _dispatcher.HasThreadAccess)
+            if (_dispatcher.HasThreadAccess)
                 action();
             else
                 WindowsRuntimeSystemExtensions.AsTask(_dispatcher.RunAsync(CoreDispatcherPriority.Normal, new DispatchedHandler(action))).Wait();

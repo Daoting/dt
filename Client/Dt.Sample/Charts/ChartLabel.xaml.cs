@@ -36,7 +36,7 @@ namespace Dt.Sample
             _cbType.ItemsSource = new List<string> { "Column", "LineSymbols", "Pie" };
         }
 
-        private void OnChartTypeSelectionChanged(object sender, SelectionChangedEventArgs e)
+        void OnChartTypeSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             _chart.ChartType = (ChartType)Enum.Parse(typeof(ChartType), _cbType.SelectedItem.ToString(), false);
         }

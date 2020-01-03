@@ -25,7 +25,29 @@
     <None Remove="Charts\MarkersChart.xaml" />
     <None Remove="Charts\PlotAreas.xaml" />
     <None Remove="Charts\StackedPie.xaml" />
+    <None Remove="Excels\BaseExcel.xaml" />
+    <None Remove="Excels\ChartExcel.xaml" />
+    <None Remove="Excels\ChartPicture.xaml" />
+    <None Remove="Excels\DataExcel.xaml" />
+    <None Remove="Excels\ExcelHome.xaml" />
+    <None Remove="Excels\ExcelTheme.xaml" />
+    <None Remove="Excels\FilterExcel.xaml" />
+    <None Remove="Excels\FloatingObject.xaml" />
+    <None Remove="Excels\Formatter.xaml" />
+    <None Remove="Excels\FormulaTextBox.xaml" />
+    <None Remove="Excels\ImgExcel.xaml" />
+    <None Remove="Excels\PrintExcel.xaml" />
+    <None Remove="Excels\RangeGroup.xaml" />
+    <None Remove="Excels\Sparkline.xaml" />
+    <None Remove="Excels\UseCase.xaml" />
     <None Remove="Resource\browsers.csv" />
+    <None Remove="Resource\Excel\1040.ssxml" />
+    <None Remove="Resource\Excel\Car repair tracker.ssxml" />
+    <None Remove="Resource\Excel\Expense trends budget.ssxml" />
+    <None Remove="Resource\Excel\MonthProfit.ssxml" />
+    <None Remove="Resource\Excel\StudentCalendar.ssxml" />
+    <None Remove="Resource\Excel\Wedding budget.ssxml" />
+    <None Remove="Resource\Logo.png" />
     <None Remove="Resource\健康档案1000.json" />
     <None Remove="Resource\健康档案200.json" />
     <None Remove="Resource\健康档案50.json" />
@@ -34,7 +56,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Include="Excels\Sparkline.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Content Include="Resource\Excel\1040.ssxml" />
+    <Content Include="Resource\Excel\Car repair tracker.ssxml" />
+    <Content Include="Resource\Excel\Expense trends budget.ssxml" />
+    <Content Include="Resource\Excel\MonthProfit.ssxml" />
+    <Content Include="Resource\Excel\StudentCalendar.ssxml" />
+    <Content Include="Resource\Excel\Wedding budget.ssxml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="Resource\browsers.csv" />
+    <EmbeddedResource Include="Resource\Logo.png" />
     <EmbeddedResource Include="Resource\健康档案50.json" />
     <EmbeddedResource Include="Resource\健康档案200.json" />
     <EmbeddedResource Include="Resource\健康档案1000.json" />
@@ -90,6 +125,48 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Charts\StackedPie.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Excels\BaseExcel.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Excels\ChartExcel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Excels\ChartPicture.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Excels\DataExcel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Excels\ExcelHome.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Excels\ExcelTheme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Excels\FilterExcel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Excels\FloatingObject.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Excels\Formatter.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Excels\FormulaTextBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Excels\ImgExcel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Excels\PrintExcel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Excels\RangeGroup.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Excels\UseCase.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SamplesMain.xaml" />
@@ -165,6 +242,9 @@
   <ItemGroup>
     <Compile Update="Charts\ChartHome.xaml.cs">
       <DependentUpon>ChartHome.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Excels\ExcelHome.xaml.cs">
+      <DependentUpon>ExcelHome.xaml</DependentUpon>
     </Compile>
     <Compile Update="SamplesMain.xaml.cs">
       <DependentUpon>SamplesMain.xaml</DependentUpon>

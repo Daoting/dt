@@ -29,7 +29,7 @@ namespace Dt.Sample
                 _tb.Warn("文本框内容不可以含有4！");
         }
 
-        private void OnMsgClick(object sender, RoutedEventArgs e)
+        void OnMsgClick(object sender, RoutedEventArgs e)
         {
             _btn.Msg("在目标元素上部显示提示信息，提示信息内容过长时换行");
         }

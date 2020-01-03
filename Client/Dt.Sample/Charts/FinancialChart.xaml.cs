@@ -88,12 +88,12 @@ namespace Dt.Sample
             _chart.EndUpdate();
         }
 
-        private void btnNew_Click(object sender, RoutedEventArgs e)
+        void btnNew_Click(object sender, RoutedEventArgs e)
         {
             NewData();
         }
 
-        private void btnPrice_Click(object sender, RoutedEventArgs e)
+        void btnPrice_Click(object sender, RoutedEventArgs e)
         {
             Button btn = (Button)sender;
             if ((string)btn.Content == "Standard")
@@ -108,7 +108,7 @@ namespace Dt.Sample
             }
         }
 
-        private void btnVol_Click(object sender, RoutedEventArgs e)
+        void btnVol_Click(object sender, RoutedEventArgs e)
         {
             _chart.BeginUpdate();
             Button btn = (Button)sender;
@@ -125,7 +125,7 @@ namespace Dt.Sample
             _chart.EndUpdate();
         }
 
-        private static double TicksToOADate(long value)
+        static double TicksToOADate(long value)
         {
             if (value == 0L)
             {

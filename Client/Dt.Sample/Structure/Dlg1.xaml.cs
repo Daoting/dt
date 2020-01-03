@@ -28,7 +28,7 @@ namespace Dt.Sample
 
         public string Result { get { return _tbResult.Text; } }
 
-        private void OnCloseClick(object sender, RoutedEventArgs e)
+        void OnCloseClick(object sender, RoutedEventArgs e)
         {
             Close();
         }

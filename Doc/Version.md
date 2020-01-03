@@ -2,6 +2,8 @@
 
 ### 功能 
 * 增加页面导航动画
+* 增加Chart
+* 增加Excel
 
 ### 变更 
 *  移除Newtonsoft.Json，使用System.Text.Json 
@@ -9,6 +11,9 @@
 
 ### Bug修改 
 * 设置窗口自启动时参数序列化问题
+* Chart饼图在android不正常
+* Excel 添加/删除列时bug
+* Excel 导出pdf的bug
 
 ## Release 1.0 
 

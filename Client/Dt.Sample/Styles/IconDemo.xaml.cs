@@ -115,12 +115,12 @@ namespace Dt.Sample
         /// </summary>
         void GenColmns()
         {
-            if (this.ActualWidth <= 0)
+            if (ActualWidth <= 0)
                 return;
 
             _container.ColumnDefinitions.Clear();
-            int colCount = (int)(this.ActualWidth / (ItemWidth + _container.ColumnSpacing));
-            double colWidth = this.ActualWidth / colCount - _container.ColumnSpacing;
+            int colCount = (int)(ActualWidth / (ItemWidth + _container.ColumnSpacing));
+            double colWidth = ActualWidth / colCount - _container.ColumnSpacing;
             for (int i = 0; i < colCount; i++)
             {
                 _container.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(colWidth) });

@@ -136,8 +136,8 @@ namespace Dt.Sample
 
     public class CSVData
     {
-        private List<string> _fields = new List<string>();
-        private List<string[]> _records = new List<string[]>();
+        List<string> _fields = new List<string>();
+        List<string[]> _records = new List<string[]>();
 
         List<string> Fields
         {

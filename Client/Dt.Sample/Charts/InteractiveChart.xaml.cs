@@ -83,7 +83,7 @@ namespace Dt.Sample
             _chart.EndUpdate();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        void Button_Click(object sender, RoutedEventArgs e)
         {
             _chart.BeginUpdate();
             _chart.View.AxisX.Scale = 1;
@@ -95,7 +95,7 @@ namespace Dt.Sample
             _chart.EndUpdate();
         }
 
-        private void rb_Checked(object sender, RoutedEventArgs e)
+        void rb_Checked(object sender, RoutedEventArgs e)
         {
             if (_chart == null)
                 return;
@@ -129,7 +129,7 @@ namespace Dt.Sample
             _chart.EndUpdate();
         }
 
-        private void UpdateScrollbars()
+        void UpdateScrollbars()
         {
             double sx = _chart.View.AxisX.Scale;
             AxisScrollBar sbx = (AxisScrollBar)_chart.View.AxisX.ScrollBar;

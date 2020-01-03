@@ -6,7 +6,7 @@ namespace Dt.Sample
     {
         public SplitterDemo()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
     }
 }

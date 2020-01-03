@@ -114,6 +114,12 @@ namespace Dt.Sample
                 },
                 new DataCmd
                 {
+                    Title = "Excel",
+                    Note = "包含类似Excel编辑的常用功能，报表模板设计的基础",
+                    Tag = typeof(ExcelHome)
+                },
+                new DataCmd
+                {
                     Title = "数据访问与Rpc",
                     Note = "包括数据表操作、数据序列化、远程/本地数据的增删改查、远程过程调用等",
                     Tag = typeof(DataAccessHome)
