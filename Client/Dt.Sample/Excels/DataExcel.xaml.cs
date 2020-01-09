@@ -45,7 +45,7 @@ namespace Dt.Sample
 
         void InitializeSpread()
         {
-            _excel.ValueChanged += new System.EventHandler<CellEventArgs>(gcSpreadSheet1_ValueChanged);
+            _excel.ValueChanged += gcSpreadSheet1_ValueChanged;
             _excel.TabStripVisibility = Visibility.Collapsed;
             _excel.AutoClipboard = false;
             _excel.CanCellOverflow = false;

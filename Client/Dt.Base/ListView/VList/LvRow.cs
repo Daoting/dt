@@ -91,9 +91,9 @@ namespace Dt.Base.ListView
         protected Button AttachContextMenu(Menu p_menu)
         {
             Button _btnMenu = null;
-            if (AtSys.IsTouchMode)
+            if (AtSys.IsPhoneUI)
             {
-                // 触摸模式
+                // PhoneUI模式
                 if (p_menu.TouchTrigger == TouchTriggerEvent.Custom)
                 {
                     _btnMenu = CreateMenuButton(p_menu);
@@ -116,7 +116,7 @@ namespace Dt.Base.ListView
             }
             else
             {
-                // 鼠标模式
+                // WindowsUI模式
                 if (p_menu.MouseTrigger == MouseTriggerEvent.RightTapped)
                     RightTapped += (s, e) => OpenContextMenu(e.GetPosition(null));
                 else if (p_menu.MouseTrigger == MouseTriggerEvent.LeftTapped)

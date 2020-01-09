@@ -13,6 +13,7 @@ using System;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 #endregion
 
@@ -21,19 +22,12 @@ namespace Dt.Kehu
     /// <summary>
     /// 
     /// </summary>
-    public partial class JieHuMain : PageWin
+    public partial class AddressList : PageWin
     {
 
-        public JieHuMain(long p_id)
+        public AddressList()
         {
             InitializeComponent();
-            Title = "胡志强";
-            _img.Source = new BitmapImage(new Uri("ms-appx:///Bs.Kehu/Assets/header.png"));
-        }
-
-        void OnService(object sender, RoutedEventArgs e)
-        {
-            AtApp.OpenWin(typeof(SelectSvcItem));
         }
     }
 }

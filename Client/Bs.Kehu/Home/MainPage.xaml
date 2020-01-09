@@ -17,6 +17,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
+                <!--分隔栏-->
                 <Rectangle Fill="{StaticResource 浅灰边框}" Height="10" IsHitTestVisible="False" />
                 <Button Click="OnJieHuClick" Grid.Row="1">
                     <Grid>
@@ -32,13 +33,15 @@
                         </StackPanel>
                     </Grid>
                 </Button>
-                <Button Content="&#xE0DC;"
-                        Click="OnShowContextMenu"
-                        Style="{StaticResource 字符按钮}"
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Right"
-                        Foreground="{StaticResource 深灰边框}"
-                        Grid.Row="1" />
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Grid.Row="1">
+                    <Button Content="上门服务"
+                            Click="OnService"
+                            Margin="0,0,30,0" />
+                    <Button Content="&#xE0DC;"
+                            Click="OnShowContextMenu"
+                            Style="{StaticResource 字符按钮}"
+                            Foreground="{StaticResource 深灰边框}" />
+                </StackPanel>
 
                 <TextBlock Text="{x:Bind Title}" TextWrapping="Wrap" Margin="10,0,10,10" Grid.Row="2" />
                 <Image Source="{x:Bind Img}" Height="150" Margin="10,0,10,10" Stretch="UniformToFill" Grid.Row="3" />

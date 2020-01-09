@@ -125,6 +125,11 @@ namespace Dt.Kehu
             AtJieHu.ShowDetail((((Button)sender).DataContext as Article).AuthorID);
         }
 
+        void OnService(object sender, RoutedEventArgs e)
+        {
+            AtApp.OpenWin(typeof(SelectSvcItem));
+        }
+
         void OnShowContextMenu(object sender, RoutedEventArgs e)
         {
             if (_menu == null)
@@ -236,8 +241,7 @@ namespace Dt.Kehu
             if (_gridLast != null)
                 ((Rectangle)_gridLast.Children[_gridLast.Children.Count - 1]).Fill = null;
         }
-        #endregion
 
-        
+        #endregion
     }
 }

@@ -433,18 +433,14 @@
                                     Content="&#xE085;"
                                     VerticalAlignment="Stretch"
                                     Width="50" />
-                            <!--标题-->
-                            <StackPanel VerticalAlignment="Center" Orientation="Horizontal" Margin="10,0,10,0" Grid.Column="1">
-                                <TextBlock Text="{TemplateBinding Title}"
-                                           Foreground="{StaticResource 默认背景}"
-                                           TextTrimming="CharacterEllipsis"
-                                           TextWrapping="NoWrap" />
-                                <TextBlock Text=" - " Foreground="{StaticResource 默认背景}" />
-                                <TextBlock Text="{Binding OwnerWin.Title, RelativeSource={RelativeSource TemplatedParent}}"
-                                           Foreground="{StaticResource 默认背景}"
-                                           TextTrimming="CharacterEllipsis"
-                                           TextWrapping="NoWrap" />
-                            </StackPanel>
+                            <!--标题，不再加窗口标题作为后缀-->
+                            <TextBlock Text="{TemplateBinding Title}"
+                                       Foreground="{StaticResource 默认背景}"
+                                       TextTrimming="CharacterEllipsis"
+                                       TextWrapping="NoWrap"
+                                       Margin="10,0,10,0"
+                                       VerticalAlignment="Center"
+                                       Grid.Column="1" />
                             <!--菜单-->
                             <ContentPresenter Content="{TemplateBinding Menu}"
                                               Foreground="{StaticResource 默认背景}"

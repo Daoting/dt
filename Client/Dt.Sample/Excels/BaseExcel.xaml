@@ -104,7 +104,7 @@
 
                     <a:CBar Title="打开文件" />
                     <a:CFree Title="打开选项">
-                        <ComboBox x:Name="openFlags" SelectedIndex="0">
+                        <ComboBox x:Name="_openFlags" SelectedIndex="0">
                             <ComboBoxItem Content="NoFlagsSet" />
                             <ComboBoxItem Content="DataOnly" />
                             <ComboBoxItem Content="DataAndFormulasOnly" />
@@ -118,7 +118,7 @@
 
                     <a:CBar Title="保存为Excel" />
                     <a:CFree Title="保存选项">
-                        <ComboBox x:Name="saveFlags" SelectedIndex="0">
+                        <ComboBox x:Name="_saveFlags" SelectedIndex="0">
                             <ComboBoxItem>NoFlagsSet</ComboBoxItem>
                             <ComboBoxItem>NoFormulas</ComboBoxItem>
                             <ComboBoxItem>SaveCustomRowHeaders</ComboBoxItem>

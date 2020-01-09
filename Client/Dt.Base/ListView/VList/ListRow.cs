@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using System;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -44,15 +45,17 @@ namespace Dt.Base.ListView
 
             // 内容
             var elem = (UIElement)Children[index++];
+            if (_btnMenu != null)
+                width += _flagWidth;
             if (_owner.ItemHeight > 0)
             {
                 height = _owner.ItemHeight;
-                elem.Measure(new Size(availableSize.Width - width, height));
+                elem.Measure(new Size(Math.Max(availableSize.Width - width, 0), height));
             }
             else
             {
                 // 自动行高
-                elem.Measure(new Size(availableSize.Width - width, availableSize.Height));
+                elem.Measure(new Size(Math.Max(availableSize.Width - width, 0), availableSize.Height));
                 if (elem.DesiredSize.Height > height)
                     height = elem.DesiredSize.Height;
             }
@@ -88,13 +91,14 @@ namespace Dt.Base.ListView
             }
 
             // 内容
-            ((UIElement)Children[index++]).Arrange(new Rect(left, 0, finalSize.Width - left, finalSize.Height));
+            double right = (_btnMenu != null) ? _flagWidth : 0;
+            ((UIElement)Children[index++]).Arrange(new Rect(left, 0, Math.Max(finalSize.Width - left - right, 0), finalSize.Height));
 
-            // 上下文菜单
+            // 上下文菜单，垂直居中
             if (_btnMenu != null)
             {
                 index++;
-                _btnMenu.Arrange(new Rect(finalSize.Width - _flagWidth, 0, _flagWidth, _flagWidth));
+                _btnMenu.Arrange(new Rect(finalSize.Width - _flagWidth, (finalSize.Height - _flagWidth) / 2, _flagWidth, _flagWidth));
             }
 
             // 选择背景

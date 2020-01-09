@@ -9,9 +9,22 @@
   <ItemGroup>
     <None Remove="Assets\u406.png" />
     <None Remove="Assets\u455.png" />
+    <None Remove="Assets\u7878.png" />
+    <None Remove="Assets\u7884.png" />
+    <None Remove="Assets\u915.png" />
+    <None Remove="Chat\AddFriend.xaml" />
+    <None Remove="Chat\ChatHome.xaml" />
+    <None Remove="JieHu\PaySvcItem.xaml" />
+    <None Remove="JieHu\SelectSvcItem.xaml" />
+    <None Remove="Setting\AddressList.xaml" />
+    <None Remove="Setting\FollowList.xaml" />
+    <None Remove="Setting\MyInfoEdit.xaml" />
+    <None Remove="Setting\MyMain.xaml" />
+    <None Remove="Setting\OrderList.xaml" />
     <None Remove="Plan\PtStep1.xaml" />
     <None Remove="Plan\PtStep2.xaml" />
     <None Remove="Plan\PtStep3.xaml" />
+    <None Remove="TempPage.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,10 +42,20 @@
     <Content Include="Assets\u366.png" />
     <Content Include="Assets\u406.png" />
     <Content Include="Assets\u455.png" />
+    <Content Include="Assets\u7878.png" />
+    <Content Include="Assets\u7884.png" />
+    <Content Include="Assets\u915.png" />
   </ItemGroup>
 
   <ItemGroup>
     <Page Include="Article\ArticlePage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Chat\ChatHome.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Chat\AddFriend.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Home\Login.xaml">
@@ -48,6 +71,30 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="JieHu\JieHuMain.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="JieHu\PaySvcItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="JieHu\SelectSvcItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TempPage.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Setting\MyMain.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Setting\MyInfoEdit.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Setting\FollowList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Setting\OrderList.xaml">
+      <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Plan\PtMain.xaml">
@@ -73,6 +120,10 @@
     </Page>
     <Page Include="Plan\PtStep3.xaml">
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Setting\AddressList.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   
@@ -103,6 +154,12 @@
     </Compile>
     <Compile Update="JieHu\JieHuMain.xaml.cs">
       <DependentUpon>JieHuMain.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="TempPage.xaml.cs">
+      <DependentUpon>TempPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Setting\MyMain.xaml.cs">
+      <DependentUpon>MyMain.xaml</DependentUpon>
     </Compile>
     <Compile Update="Plan\PlanTest1.xaml.cs">
       <DependentUpon>PlanTest1.xaml</DependentUpon>

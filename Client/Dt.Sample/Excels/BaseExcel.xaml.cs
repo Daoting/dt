@@ -36,8 +36,8 @@ namespace Dt.Sample
     {
         BorderLineStyle[] LineStyleArray = new BorderLineStyle[] { BorderLineStyle.DashDotDot, BorderLineStyle.Medium, BorderLineStyle.Thick, BorderLineStyle.Double };
         //插入图形用到的变量
-        int ellipseCount = 1;
-        int rectangleCount = 1;
+        int _cntEllipse = 1;
+        int _cntRect = 1;
         MyShape _myRectangle;
 
         public BaseExcel()
@@ -644,7 +644,7 @@ namespace Dt.Sample
 
         void AddRectangle(Point point, Color fillColor)
         {
-            MyShape myShape = new MyShape("Rectuangle" + rectangleCount, point.X, point.Y, 200, 200);
+            MyShape myShape = new MyShape("Rectuangle" + _cntRect, point.X, point.Y, 200, 200);
             Rectangle rectangle = new Rectangle()
             {
                 Fill = new SolidColorBrush(fillColor),
@@ -654,12 +654,12 @@ namespace Dt.Sample
             (myShape.Content as Grid).Children.Add(rectangle);
             _excel.ActiveSheet.FloatingObjects.Add(myShape);
 
-            rectangleCount++;
+            _cntRect++;
         }
 
         void AddEllipse(Point point, Color fillColor)
         {
-            MyShape myShape = new MyShape("Ellipse" + ellipseCount, point.X, point.Y, 200, 200);
+            MyShape myShape = new MyShape("Ellipse" + _cntEllipse, point.X, point.Y, 200, 200);
             Ellipse ellipse = new Ellipse()
             {
                 Fill = new SolidColorBrush(fillColor),
@@ -668,7 +668,7 @@ namespace Dt.Sample
             };
             (myShape.Content as Grid).Children.Add(ellipse);
             _excel.ActiveSheet.FloatingObjects.Add(myShape);
-            ellipseCount++;
+            _cntEllipse++;
         }
 
         class MyShape : CustomFloatingObject, IXmlSerializable
@@ -871,7 +871,7 @@ namespace Dt.Sample
 
         ExcelOpenFlags GetOpenFlag()
         {
-            var flagText = (openFlags.SelectedItem as ComboBoxItem).Content.ToString();
+            var flagText = (_openFlags.SelectedItem as ComboBoxItem).Content.ToString();
             var result = ExcelOpenFlags.NoFlagsSet;
             Enum.TryParse<ExcelOpenFlags>(flagText, true, out result);
             return result;
@@ -879,7 +879,7 @@ namespace Dt.Sample
 
         ExcelSaveFlags GetSaveFlag()
         {
-            var flagText = (saveFlags.SelectedItem as ComboBoxItem).Content.ToString();
+            var flagText = (_saveFlags.SelectedItem as ComboBoxItem).Content.ToString();
             var result = ExcelSaveFlags.NoFlagsSet;
             Enum.TryParse<ExcelSaveFlags>(flagText, true, out result);
             return result;

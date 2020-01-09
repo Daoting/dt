@@ -1,0 +1,31 @@
+﻿<a:PageWin
+    x:Class="Dt.Kehu.MyInfoEdit"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Title="个人信息">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <a:Fv x:Name="_fv">
+            <a:CIcon ID="头像" />
+            <a:CText ID="名字" />
+            <a:CList ID="性别">
+                <a:CList.Items>
+                    <x:String>男</x:String>
+                    <x:String>女</x:String>
+                </a:CList.Items>
+            </a:CList>
+            <a:CBar Title="可选" />
+            <a:CText ID="年龄" />
+            <a:CText ID="真实姓名" />
+            <a:CText ID="身份证号" />
+            <a:CText ID="身高(cm)" />
+            <a:CText ID="体重(kg)" />
+        </a:Fv>
+        <Button Content="保存" Click="OnNext" Background="{StaticResource 主题蓝色}" Foreground="White" HorizontalAlignment="Stretch" Grid.Row="1"/>
+    </Grid>
+</a:PageWin>

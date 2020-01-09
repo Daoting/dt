@@ -107,6 +107,8 @@ namespace Dt.Base.TreeView
 
             // 内容
             elem = (UIElement)Children[index++];
+            if (_btnMenu != null)
+                usedWidth += _btnWidth;
             elem.Measure(new Size(Math.Max(availableSize.Width - usedWidth, 0), availableSize.Height));
             if (elem.DesiredSize.Height > height)
                 height = elem.DesiredSize.Height;
@@ -146,14 +148,15 @@ namespace Dt.Base.TreeView
             }
 
             // 内容
+            double right = (_btnMenu != null) ? _btnWidth : 0;
             elem = (UIElement)Children[index++];
-            elem.Arrange(new Rect(left, 0, Math.Max(finalSize.Width - left, 0), finalSize.Height));
+            elem.Arrange(new Rect(left, 0, Math.Max(finalSize.Width - left - right, 0), finalSize.Height));
 
-            // 上下文菜单
+            // 上下文菜单，垂直居中
             if (_btnMenu != null)
             {
                 index++;
-                _btnMenu.Arrange(new Rect(finalSize.Width - _btnWidth, 0, _btnWidth, _btnWidth));
+                _btnMenu.Arrange(new Rect(finalSize.Width - _btnWidth, (finalSize.Height - _btnWidth) / 2, _btnWidth, _btnWidth));
             }
 
             // 选择背景
@@ -337,9 +340,9 @@ namespace Dt.Base.TreeView
         /// <param name="p_menu"></param>
         void AttachContextMenu(Menu p_menu)
         {
-            if (AtSys.IsTouchMode)
+            if (AtSys.IsPhoneUI)
             {
-                // 触摸模式
+                // PhoneUI模式
                 if (p_menu.TouchTrigger == TouchTriggerEvent.Custom)
                 {
                     CreateMenuButton(p_menu);
@@ -362,7 +365,7 @@ namespace Dt.Base.TreeView
             }
             else
             {
-                // 鼠标模式
+                // WindowsUI模式
                 if (p_menu.MouseTrigger == MouseTriggerEvent.RightTapped)
                     RightTapped += (s, e) => OpenContextMenu(e.GetPosition(null));
                 else if (p_menu.MouseTrigger == MouseTriggerEvent.LeftTapped)

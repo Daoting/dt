@@ -21,19 +21,22 @@ namespace Dt.Kehu
     /// <summary>
     /// 
     /// </summary>
-    public partial class JieHuMain : PageWin
+    public partial class PaySvcItem : PageWin
     {
 
-        public JieHuMain(long p_id)
+        public PaySvcItem()
         {
             InitializeComponent();
-            Title = "胡志强";
-            _img.Source = new BitmapImage(new Uri("ms-appx:///Bs.Kehu/Assets/header.png"));
         }
 
-        void OnService(object sender, RoutedEventArgs e)
+        void OnReturn(object sender, RoutedEventArgs e)
         {
-            AtApp.OpenWin(typeof(SelectSvcItem));
+            AtApp.GoBack();
+        }
+
+        void OnOK(object sender, RoutedEventArgs e)
+        {
+            AtApp.GoBackToHome();
         }
     }
 }

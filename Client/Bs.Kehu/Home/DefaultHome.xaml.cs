@@ -30,9 +30,9 @@ namespace Dt.Kehu
             InitializeComponent();
         }
 
-        void OnInit(object sender, RoutedEventArgs e)
+        void OnAddFriend(object sender, Mi e)
         {
-            AtLocal.DeleteCookie("ShowGuide");
+            AtApp.OpenWin(typeof(AddFriend));
         }
     }
 }

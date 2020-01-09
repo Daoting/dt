@@ -13,6 +13,7 @@ using System;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 #endregion
 
@@ -21,19 +22,27 @@ namespace Dt.Kehu
     /// <summary>
     /// 
     /// </summary>
-    public partial class JieHuMain : PageWin
+    public partial class MyInfoEdit : PageWin
     {
 
-        public JieHuMain(long p_id)
+        public MyInfoEdit()
         {
             InitializeComponent();
-            Title = "胡志强";
-            _img.Source = new BitmapImage(new Uri("ms-appx:///Bs.Kehu/Assets/header.png"));
+
+            var tbl = new Table
+            {
+                { "头像",typeof(Icons) },
+                { "名字" },
+                { "性别" },
+                { "年龄" },
+                { "真实姓名" },
+            };
+            _fv.Data = tbl.AddRow(new { 头像 = Icons.个人信息, 名字 = "李世杰", 性别 = "男" });
         }
 
-        void OnService(object sender, RoutedEventArgs e)
+        void OnNext(object sender, RoutedEventArgs e)
         {
-            AtApp.OpenWin(typeof(SelectSvcItem));
+            
         }
     }
 }
