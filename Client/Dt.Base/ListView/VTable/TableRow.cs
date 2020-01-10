@@ -126,11 +126,7 @@ namespace Dt.Base.ListView
             foreach (var col in cols)
             {
                 ContentPresenter pre = new ContentPresenter { Padding = TextMargin, BorderBrush = AtRes.浅灰边框, BorderThickness = borderLine, HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Stretch };
-                pre.SetBinding(ContentPresenter.ContentProperty, new Binding { Path = new PropertyPath($"[{col.ID}]"), Mode = BindingMode.OneTime });
-                pre.SetBinding(ContentPresenter.ForegroundProperty, new Binding { Path = new PropertyPath("Foreground") });
-                pre.SetBinding(ContentPresenter.FontWeightProperty, new Binding { Path = new PropertyPath("FontWeight") });
-                pre.SetBinding(ContentPresenter.FontStyleProperty, new Binding { Path = new PropertyPath("FontStyle") });
-                pre.SetBinding(ContentPresenter.FontSizeProperty, new Binding { Path = new PropertyPath("FontSize") });
+                SetContentBinding(col, pre);
                 Children.Add(pre);
                 _cells[col.ID] = pre;
             }

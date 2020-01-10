@@ -17,6 +17,7 @@ using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Shapes;
 #endregion
 
@@ -85,7 +86,7 @@ namespace Dt.Base
         }
         #endregion
 
-        protected Dictionary<string, UIElement> _cacheUI;
+        protected Dictionary<string, object> _cacheUI;
         object _data;
 
         /// <summary>
@@ -159,54 +160,28 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取单元格界面元素，绑定用
+        /// 获取单元格值，外部绑定用
         /// </summary>
         /// <param name="p_colName">列名</param>
         /// <returns></returns>
-        public UIElement this[string p_colName]
+        public object this[string p_colName]
         {
             get
             {
-                UIElement elem = null;
-                // 从缓存取
-                if (_cacheUI != null && _cacheUI.TryGetValue(p_colName, out elem))
-                    return elem;
-
-                MethodInfo mi = Host.GetViewExMethod(p_colName);
-                if (mi != null)
-                {
-                    // 从外部扩展方法中获取
-                    // 扩展列方法原型： object ColName(ViewItem p_vr)
-                    object obj = mi.Invoke(null, new object[] { this });
-                    if (obj != null)
-                    {
-                        elem = obj as UIElement;
-                        if (elem == null)
-                            elem = new TextBlock { Style = AtRes.LvTextBlock, Text = obj.ToString(), };
-                    }
-                }
-                else if (Data is Row dr && dr.Contains(p_colName))
+                object val = null;
+                if (_data is Row dr && dr.Contains(p_colName))
                 {
                     // 从Row取
-                    elem = CreateCellUI(dr.Cells[p_colName]);
-                }
-                else if (p_colName == "#")
-                {
-                    // # 直接输出对象
-                    elem = CreateObjectUI(Data);
+                    val = dr[p_colName];
                 }
                 else
                 {
-                    // 输出对象属性
-                    object val;
+                    // 对象属性
                     var pi = Data.GetType().GetProperty(p_colName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
-                    if (pi != null && (val = pi.GetValue(Data)) != null)
-                        elem = CreatePropertyUI(pi, val);
+                    if (pi != null)
+                        val = pi.GetValue(Data);
                 }
-
-                if (_cacheUI != null)
-                    _cacheUI[p_colName] = elem;
-                return elem;
+                return val;
             }
         }
 
@@ -221,6 +196,75 @@ namespace Dt.Base
         protected abstract IViewItemHost Host { get; }
 
         /// <summary>
+        /// 获取单元格界面元素，提供给单元格容器ContentPresenter或Dot绑定用
+        /// </summary>
+        /// <param name="p_cell"></param>
+        /// <returns></returns>
+        internal object GetCellUI(ICellUI p_cell)
+        {
+            object elem = null;
+            // 从缓存取
+            if (_cacheUI != null && _cacheUI.TryGetValue(p_cell.ID, out elem))
+                return elem;
+
+            object val;
+            MethodInfo mi = Host.GetViewExMethod(p_cell.ID);
+            if (mi != null)
+            {
+                // 从外部扩展方法中获取
+                // 扩展列方法原型： object ColName(ViewItem p_vr)
+                object obj = mi.Invoke(null, new object[] { this });
+                if (obj != null)
+                {
+                    elem = obj as UIElement;
+                    if (elem == null)
+                        elem = new TextBlock { Style = AtRes.LvTextBlock, Text = obj.ToString(), };
+                }
+            }
+            else if (p_cell.UIType == CellUIType.Default)
+            {
+                // 默认方式：根据数据类型生成可视元素
+                if (Data is Row dr && dr.Contains(p_cell.ID))
+                {
+                    // 从Row取
+                    elem = CreateCellUI(dr.Cells[p_cell.ID]);
+                }
+                else if (p_cell.ID == "#")
+                {
+                    // # 直接输出对象
+                    elem = CreateObjectUI(Data);
+                }
+                else
+                {
+                    // 输出对象属性
+                    var pi = Data.GetType().GetProperty(p_cell.ID, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                    if (pi != null && (val = pi.GetValue(Data)) != null)
+                        elem = CreatePropertyUI(pi, val);
+                }
+            }
+            else if ((val = this[p_cell.ID]) != null)
+            {
+                // 自定义方式：按设置的内容类型生成可视元素
+                switch (p_cell.UIType)
+                {
+                    case CellUIType.Icon:
+                        elem = CreateIcon(val);
+                        break;
+                    case CellUIType.CheckBox:
+                        elem = CreateCheckBox(val);
+                        break;
+                    case CellUIType.Image:
+                        elem = CreateImage(val);
+                        break;
+                }
+            }
+
+            if (_cacheUI != null)
+                _cacheUI[p_cell.ID] = elem;
+            return elem;
+        }
+
+        /// <summary>
         /// 值变化
         /// </summary>
         void OnValueChanged()
@@ -233,6 +277,7 @@ namespace Dt.Base
             ValueChanged?.Invoke();
         }
 
+        #region 默认UI
         /// <summary>
         /// 根据Cell创建UI
         /// </summary>
@@ -459,6 +504,67 @@ namespace Dt.Base
             tb.IsTextTrimmedChanged += OnIsTextTrimmedChanged;
             return tb;
         }
+        #endregion
+
+        #region 自定义UI
+        TextBlock CreateIcon(object p_val)
+        {
+            var tb = new TextBlock
+            {
+                Style = AtRes.LvTextBlock,
+                FontFamily = AtRes.IconFont,
+                TextAlignment = TextAlignment.Center,
+            };
+
+            if (p_val is int)
+                tb.Text = AtRes.GetIconChar((Icons)p_val);
+            else
+                tb.Text = AtRes.ParseIconChar(p_val.ToString());
+            return tb;
+        }
+
+        TextBlock CreateCheckBox(object p_val)
+        {
+            // 字符模拟CheckBox
+            var tb = new TextBlock
+            {
+                Style = AtRes.LvTextBlock,
+                FontFamily = AtRes.IconFont,
+                TextAlignment = TextAlignment.Center,
+            };
+
+            bool b;
+            if (p_val is bool)
+            {
+                b = (bool)p_val;
+            }
+            else
+            {
+                string temp = p_val.ToString().ToLower();
+                b = (temp == "1" || temp == "true");
+            }
+            tb.Text = b ? "\uE06A" : "\uE068";
+            return tb;
+        }
+
+        Image CreateImage(object p_val)
+        {
+            Image img = new Image();
+            if (p_val is string str)
+            {
+                img.Source = new BitmapImage(new Uri(str));
+            }
+            else if (p_val is Uri uri)
+            {
+                img.Source = new BitmapImage(uri);
+            }
+            else
+            {
+                throw new Exception($"无法显示{p_val.GetType().FullName}类型的图片！");
+            }
+            return img;
+        }
+        #endregion
 
         /// <summary>
         /// 提示被截断的长文本

@@ -8,7 +8,6 @@
 
 #region 引用命名
 using Dt.Base.ListView;
-using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
@@ -19,62 +18,33 @@ namespace Dt.Base
     /// <summary>
     /// 列表中行模板的占位格
     /// </summary>
-    public partial class Dot : ContentPresenter
+    public partial class Dot : ContentPresenter, ICellUI
     {
-        static DotContentConverter _uiConverter = new DotContentConverter();
-        public static readonly DependencyProperty ToProperty = DependencyProperty.Register(
-            "To",
-            typeof(DotContentType),
+        static CellUIConverter _uiConverter = new CellUIConverter();
+        public static readonly DependencyProperty UITypeProperty = DependencyProperty.Register(
+            "UIType",
+            typeof(CellUIType),
             typeof(Dot),
-            new PropertyMetadata(DotContentType.Default, OnToPropertyChanged));
-
-        static void OnToPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            ((Dot)d).UpdateBinding();
-        }
-
-        string _id;
+            new PropertyMetadata(CellUIType.Default));
 
         public Dot()
         {
+            SetBinding(ContentProperty, new Binding { Converter = _uiConverter, ConverterParameter = this, Mode = BindingMode.OneTime });
             Loaded += OnLoaded;
         }
 
         /// <summary>
         /// 获取设置列名(字段名)
         /// </summary>
-        public string ID
-        {
-            get { return _id; }
-            set
-            {
-                if (!string.IsNullOrEmpty(value) && _id != value)
-                {
-                    _id = value;
-                    UpdateBinding();
-                }
-            }
-        }
+        public string ID { get; set; }
 
         /// <summary>
-        /// 获取设置Dot内容类型
+        /// 获取设置单元格UI类型
         /// </summary>
-        public DotContentType To
+        public CellUIType UIType
         {
-            get { return (DotContentType)GetValue(ToProperty); }
-            set { SetValue(ToProperty, value); }
-        }
-
-        void UpdateBinding()
-        {
-            // 实时绑定，加载时再绑定会造成初次测量时不准！！！
-            if (!string.IsNullOrEmpty(_id))
-            {
-                if (To == DotContentType.Default)
-                    SetBinding(ContentProperty, new Binding { Path = new PropertyPath($"[{_id}]"), Mode = BindingMode.OneTime });
-                else
-                    SetBinding(ContentProperty, new Binding { Path = new PropertyPath($"Data"), Converter = _uiConverter, ConverterParameter = this, Mode = BindingMode.OneTime });
-            }
+            get { return (CellUIType)GetValue(UITypeProperty); }
+            set { SetValue(UITypeProperty, value); }
         }
 
         void OnLoaded(object sender, RoutedEventArgs e)

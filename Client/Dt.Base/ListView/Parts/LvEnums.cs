@@ -54,9 +54,9 @@ namespace Dt.Base
     }
 
     /// <summary>
-    /// Dot内容类型
+    /// 单元格UI类型
     /// </summary>
-    public enum DotContentType
+    public enum CellUIType
     {
         /// <summary>
         /// 默认
@@ -64,13 +64,18 @@ namespace Dt.Base
         Default,
 
         /// <summary>
-        /// 转换为图标字符
+        /// 显示为图标字符
         /// </summary>
         Icon,
 
         /// <summary>
         /// 显示为CheckBox字符
         /// </summary>
-        CheckBox
+        CheckBox,
+
+        /// <summary>
+        /// 显示为图片
+        /// </summary>
+        Image
     }
 }

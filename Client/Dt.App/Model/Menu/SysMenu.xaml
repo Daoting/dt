@@ -18,7 +18,7 @@
                     </a:Ex.Menu>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">
-                            <a:Dot ID="icon" To="Icon" Margin="4,0,4,0" />
+                            <a:Dot ID="icon" UIType="Icon" Margin="4,0,4,0" />
                             <a:Dot ID="name" />
                         </StackPanel>
                     </DataTemplate>

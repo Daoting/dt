@@ -20,6 +20,7 @@ namespace Dt.Core
     /// <summary>
     /// 数据行管理类
     /// </summary>
+    [Bindable(true)]
     public class Row : INotifyPropertyChanged, IRpcJson
     {
         #region 成员变量

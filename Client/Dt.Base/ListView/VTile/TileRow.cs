@@ -21,13 +21,13 @@ using Windows.UI.Xaml.Shapes;
 namespace Dt.Base.ListView
 {
     /// <summary>
-    /// 普通列表的行
+    /// 磁贴的行
     /// </summary>
-    public partial class TileItem : LvRow
+    public partial class TileRow : LvRow
     {
         Button _btnMenu;
 
-        public TileItem(Lv p_owner, DataTemplate p_temp) : base(p_owner)
+        public TileRow(Lv p_owner, DataTemplate p_temp) : base(p_owner)
         {
             LoadTemplate(p_temp);
             AttachEvent();

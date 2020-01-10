@@ -13,12 +13,12 @@
             </a:Menu>
         </a:Ex.Menu>
         <DataTemplate>
-            <Grid Padding="10" Height="80">
+            <Grid Padding="10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <!--<Image Source="{Binding Data[icon]}" Width="50" Height="50" Margin="0,0,10,0" Stretch="Uniform" />-->
+                <a:Dot ID="icon" UIType="Image" Width="50" Height="50" Margin="0,0,10,0" />
                 <StackPanel VerticalAlignment="Center" Grid.Column="1">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -27,10 +27,10 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <a:Dot ID="name" />
-                        <!--<Ellipse Visibility="{Binding Data[unread], Converter={StaticResource CvBoolToVisible}}" Fill="Red" Height="8" Width="8" Margin="4,4,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Column="1" />-->
-                        <a:Dot ID="stime" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Column="2" />
+                        <Ellipse Visibility="{Binding [unread], Converter={StaticResource CvBoolToVisible}}" Fill="Red" Height="8" Width="8" Margin="4,4,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.Column="1" />
+                        <a:Dot ID="stime" Foreground="{StaticResource 深灰边框}" FontSize="12" VerticalAlignment="Center" Grid.Column="2" />
                     </Grid>
-                    <TextBlock Text="{Binding [msg]}" TextWrapping="NoWrap" TextTrimming="WordEllipsis" Foreground="{StaticResource 深灰边框}" FontSize="12" />
+                    <a:Dot ID="msg" Foreground="{StaticResource 深灰边框}" FontSize="12" Height="15" />
                 </StackPanel>
             </Grid>
         </DataTemplate>

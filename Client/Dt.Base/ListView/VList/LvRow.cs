@@ -14,6 +14,7 @@ using Windows.UI.Core;
 using Windows.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Shapes;
 #endregion
@@ -25,6 +26,7 @@ namespace Dt.Base.ListView
     /// </summary>
     public partial class LvRow : Panel
     {
+        static CellUIConverter _uiConverter = new CellUIConverter();
         protected const double _flagWidth = 40;
 
         protected Lv _owner;
@@ -64,6 +66,20 @@ namespace Dt.Base.ListView
                 SetDataContextAsync();
             else
                 DataContext = _row;
+        }
+
+        /// <summary>
+        /// 绑定单元格，数据源为ViewItem
+        /// </summary>
+        /// <param name="p_col"></param>
+        /// <param name="p_pre"></param>
+        protected void SetContentBinding(Col p_col, ContentPresenter p_pre)
+        {
+            p_pre.SetBinding(ContentPresenter.ContentProperty, new Binding { Converter = _uiConverter, ConverterParameter = p_col, Mode = BindingMode.OneTime });
+            p_pre.SetBinding(ContentPresenter.ForegroundProperty, new Binding { Path = new PropertyPath("Foreground") });
+            p_pre.SetBinding(ContentPresenter.FontWeightProperty, new Binding { Path = new PropertyPath("FontWeight") });
+            p_pre.SetBinding(ContentPresenter.FontStyleProperty, new Binding { Path = new PropertyPath("FontStyle") });
+            p_pre.SetBinding(ContentPresenter.FontSizeProperty, new Binding { Path = new PropertyPath("FontSize") });
         }
 
         /// <summary>

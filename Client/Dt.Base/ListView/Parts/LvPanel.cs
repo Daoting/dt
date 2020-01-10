@@ -432,7 +432,7 @@ namespace Dt.Base.ListView
         /// <returns></returns>
         FrameworkElement CreateTileFormItem(LvItem p_item)
         {
-            var row = new TileFormItem(_owner);
+            var row = new TileFormRow(_owner);
             if (p_item != null)
                 row.SetViewRow(p_item, false);
             return row;
@@ -458,7 +458,7 @@ namespace Dt.Base.ListView
         /// <returns></returns>
         FrameworkElement CreateTileItemByTemplate(LvItem p_item)
         {
-            var row = new TileItem(_owner, (DataTemplate)_owner.View);
+            var row = new TileRow(_owner, (DataTemplate)_owner.View);
             if (p_item != null)
                 row.SetViewRow(p_item, false);
             return row;
@@ -492,7 +492,7 @@ namespace Dt.Base.ListView
             if (temp == null)
                 throw new Exception("未指定行模板！");
 
-            var row = new TileItem(_owner, temp);
+            var row = new TileRow(_owner, temp);
             if (p_item != null)
                 row.SetViewRow(p_item, false);
             return row;

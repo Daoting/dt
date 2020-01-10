@@ -14,7 +14,7 @@ namespace Dt.Base
     /// <summary>
     /// 列定义
     /// </summary>
-    public class Col
+    public class Col : ICellUI
     {
         /// <summary>
         /// 获取设置列名(字段名)
@@ -40,6 +40,11 @@ namespace Dt.Base
         /// 获取设置点击列头是否可以排序
         /// </summary>
         public bool AllowSorting { get; set; } = true;
+
+        /// <summary>
+        /// 获取设置单元格UI类型
+        /// </summary>
+        public CellUIType UIType { get; set; }
 
         /// <summary>
         /// 水平位置

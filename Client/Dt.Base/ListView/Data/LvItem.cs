@@ -46,7 +46,7 @@ namespace Dt.Base
             Data = p_data;
             _index = p_index;
             if (_owner.IsVir)
-                _cacheUI = new Dictionary<string, UIElement>(StringComparer.OrdinalIgnoreCase);
+                _cacheUI = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
         }
         #endregion
 

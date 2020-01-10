@@ -44,6 +44,11 @@ namespace Dt.Kehu
             tbl.AddRow(new { icon = "ms-appx:///Bs.Kehu/Assets/u7884.png", name = "二舅", unread = false, stime = "52分钟前", msg = "[照片]" });
             tbl.AddRow(new { icon = "ms-appx:///Bs.Kehu/Assets/u7878.png", name = "大姑", unread = false, stime = "昨天", msg = "好多了" });
             tbl.AddRow(new { icon = "ms-appx:///Bs.Kehu/Assets/u7884.png", name = "老叔", unread = true, stime = "10分钟前", msg = "拉的有点疼" });
+
+            tbl.AddRow(new { icon = "ms-appx:///Bs.Kehu/Assets/u7878.png", name = "阿伟", unread = false });
+            tbl.AddRow(new { icon = "ms-appx:///Bs.Kehu/Assets/u7884.png", name = "阿珍", unread = false,  });
+            tbl.AddRow(new { icon = "ms-appx:///Bs.Kehu/Assets/u7878.png", name = "包拯", unread = false, });
+            tbl.AddRow(new { icon = "ms-appx:///Bs.Kehu/Assets/u7884.png", name = "三叔", unread = false, });
             _lv.Data = tbl;
         }
     }
