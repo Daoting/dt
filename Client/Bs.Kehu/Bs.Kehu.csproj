@@ -7,6 +7,7 @@
   <Import Project="..\Common\dtc.props" />
 
   <ItemGroup>
+    <None Remove="Assets\chart.png" />
     <None Remove="Assets\u406.png" />
     <None Remove="Assets\u455.png" />
     <None Remove="Assets\u7878.png" />
@@ -14,6 +15,9 @@
     <None Remove="Assets\u915.png" />
     <None Remove="Chat\AddFriend.xaml" />
     <None Remove="Chat\ChatHome.xaml" />
+    <None Remove="Chat\ChatLetter.xaml" />
+    <None Remove="Chat\FriendPtMain.xaml" />
+    <None Remove="Chat\SettingFriend.xaml" />
     <None Remove="JieHu\PaySvcItem.xaml" />
     <None Remove="JieHu\SelectSvcItem.xaml" />
     <None Remove="Setting\AddressList.xaml" />
@@ -56,6 +60,15 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Chat\AddFriend.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Chat\ChatLetter.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Chat\SettingFriend.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Chat\FriendPtMain.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Home\Login.xaml">
@@ -137,8 +150,18 @@
   </ItemGroup>
   
   <ItemGroup>
+    <Content Include="Assets\chart.png" />
+  </ItemGroup>
+  
+  <ItemGroup>
     <Compile Update="Article\ArticlePage.xaml.cs">
       <DependentUpon>ArticlePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Chat\ChatLetter.xaml.cs">
+      <DependentUpon>ChatLetter.xaml</DependentUpon>
+    </Compile>
+    <Compile Update="Chat\SettingFriend.xaml.cs">
+      <DependentUpon>SettingFriend.xaml</DependentUpon>
     </Compile>
     <Compile Update="Home\Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>

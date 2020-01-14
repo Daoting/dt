@@ -5,7 +5,7 @@
     xmlns:a="using:Dt.Base"
     xmlns:home="using:Dt.Kehu"
     AutoSaveLayout="False"
-    Home="关心,百岁,我的">
+    Home="百岁,关心,我的">
 
     <a:WinItem DockState="DockedLeft">
         <a:Tabs>

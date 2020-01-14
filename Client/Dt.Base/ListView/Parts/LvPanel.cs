@@ -293,6 +293,21 @@ namespace Dt.Base.ListView
         protected abstract void ArrangeRealRows(Size p_finalSize);
 
         protected abstract void ArrangeGroupRealRows(Size p_finalSize);
+
+        /// <summary>
+        /// 获取当前滚动栏可视区域底部的 Y 值
+        /// </summary>
+        /// <returns></returns>
+        protected double GetViewBottom()
+        {
+            // uno初次ArrangeOverride时 ViewportHeight == 0！
+            if (_owner.Scroll.ViewportHeight == 0)
+            {
+                double maxHeight = double.IsInfinity(AvailableSize.Height) ? SysVisual.ViewHeight : AvailableSize.Height;
+                return _owner.Scroll.VerticalOffset + maxHeight;
+            }
+            return _owner.Scroll.VerticalOffset + _owner.Scroll.ViewportHeight;
+        }
         #endregion
 
         #region 增删元素

@@ -187,7 +187,16 @@ namespace Dt.Base
             Cols cols = e.NewValue as Cols;
             if (cols != null)
                 cols.FixWidth();
-            ((Lv)d).Reload();
+
+            if (e.OldValue == null)
+            {
+                // 初次设置View
+                ((Lv)d).LoadPanel();
+            }
+            else
+            {
+                ((Lv)d).Reload();
+            }
         }
 
         static void OnViewModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

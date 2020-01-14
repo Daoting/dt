@@ -378,7 +378,7 @@ namespace Dt.Base.ListView
             int index = 0;
             double totalHeight = 0;
             double scrollY = _owner.Scroll.VerticalOffset;
-            double bottomY = scrollY + _owner.Scroll.ViewportHeight;
+            double bottomY = GetViewBottom();
 
             ArrangeHeader();
             // 布局滚动后不可见行
@@ -426,7 +426,7 @@ namespace Dt.Base.ListView
             double totalHeight = 0;
             double scrollX = _owner.Scroll.HorizontalOffset;
             double scrollY = _owner.Scroll.VerticalOffset;
-            double bottomY = scrollY + _owner.Scroll.ViewportHeight;
+            double bottomY = GetViewBottom();
 
             ArrangeHeader();
             // 有垂直滚动时，计算以上变量值

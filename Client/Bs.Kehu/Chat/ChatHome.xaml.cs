@@ -51,5 +51,10 @@ namespace Dt.Kehu
             tbl.AddRow(new { icon = "ms-appx:///Bs.Kehu/Assets/u7884.png", name = "三叔", unread = false, });
             _lv.Data = tbl;
         }
+
+        void OnItemClick(object sender, ItemClickArgs e)
+        {
+            AtApp.OpenWin(typeof(ChatLetter));
+        }
     }
 }

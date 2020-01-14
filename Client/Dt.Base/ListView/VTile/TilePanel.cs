@@ -379,7 +379,7 @@ namespace Dt.Base.ListView
             int index = 0;
             double totalHeight = 0;
             double scrollY = _owner.Scroll.VerticalOffset;
-            double bottomY = scrollY + _owner.Scroll.ViewportHeight;
+            double bottomY = GetViewBottom();
 
             // 布局滚动后不可见行
             if (scrollY > 0)
@@ -427,7 +427,7 @@ namespace Dt.Base.ListView
             GroupRow lastGroup = null;
             double totalHeight = 0;
             double scrollY = _owner.Scroll.VerticalOffset;
-            double bottomY = scrollY + _owner.Scroll.ViewportHeight;
+            double bottomY = GetViewBottom();
             // 分组内的项目索引
             int indexInGroup = 0;
 

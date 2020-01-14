@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Core;
 using System;
 using Windows.Foundation;
 using Windows.UI.Xaml;
@@ -312,7 +313,7 @@ namespace Dt.Base.ListView
             int index = 0;
             double totalHeight = 0;
             double scrollY = _owner.Scroll.VerticalOffset;
-            double bottomY = scrollY + _owner.Scroll.ViewportHeight;
+            double bottomY = GetViewBottom();
 
             // 布局滚动后不可见行
             if (scrollY > 0)
@@ -357,7 +358,7 @@ namespace Dt.Base.ListView
             GroupRow lastGroup = null;
             double totalHeight = 0;
             double scrollY = _owner.Scroll.VerticalOffset;
-            double bottomY = scrollY + _owner.Scroll.ViewportHeight;
+            double bottomY = GetViewBottom();
 
             // 有垂直滚动时，计算以上变量值
             if (scrollY > 0)

@@ -5,4 +5,54 @@
     xmlns:a="using:Dt.Base"
     Title="添加朋友">
 
+    <a:PageWin.Resources>
+        <Style x:Key="ToRight" TargetType="TextBlock">
+            <Setter Property="Text" Value="&#xE086;" />
+            <Setter Property="FontFamily" Value="{StaticResource IconFont}" />
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="{StaticResource 深灰边框}" />
+        </Style>
+    </a:PageWin.Resources>
+    
+    <StackPanel>
+        <TextBox PlaceholderText="搜索手机号" BorderThickness="1" />
+        <Rectangle Fill="{StaticResource 浅灰边框}" Height="10" IsHitTestVisible="False" />
+        
+        <Button Foreground="Black" HorizontalAlignment="Stretch" Height="50" HorizontalContentAlignment="Stretch">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="我的百岁号：18701988504" VerticalAlignment="Center" />
+                <TextBlock Style="{StaticResource ToRight}" Grid.Column="1" />
+            </Grid>
+        </Button>
+        <Rectangle Fill="{StaticResource 浅灰边框}" Height="10" IsHitTestVisible="False" />
+
+        <Button Foreground="Black" HorizontalAlignment="Stretch" Height="50" HorizontalContentAlignment="Stretch">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="扫描二维码名片" VerticalAlignment="Center" />
+                <TextBlock Style="{StaticResource ToRight}" Grid.Column="1" />
+            </Grid>
+        </Button>
+        <Rectangle Fill="{StaticResource 浅灰边框}" Height="10" IsHitTestVisible="False" />
+
+        <Button Foreground="Black" HorizontalAlignment="Stretch" Height="50" HorizontalContentAlignment="Stretch">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="手机联系人" VerticalAlignment="Center" />
+                <TextBlock Style="{StaticResource ToRight}" Grid.Column="1" />
+            </Grid>
+        </Button>
+        <Rectangle Fill="{StaticResource 浅灰边框}" Height="10" IsHitTestVisible="False" />
+    </StackPanel>
 </a:PageWin>
