@@ -14,7 +14,6 @@ using System.Threading;
 using Dt.Base;
 using Dt.Core;
 using Dt.Core.Rpc;
-using Uno;
 using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Pickers;
@@ -23,7 +22,6 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
-using Xamarin.Essentials;
 #endregion
 
 namespace Dt.Sample

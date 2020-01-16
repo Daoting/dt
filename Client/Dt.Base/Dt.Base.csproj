@@ -1,24 +1,10 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras/2.0.31">
+﻿<Project Sdk="MSBuild.Sdk.Extras/2.0.54">
 
   <PropertyGroup>
-    <TargetFrameworks>uap10.0.17763;MonoAndroid81;xamarinios10</TargetFrameworks>
-    <Authors>hdt</Authors>
-    <Product>DT业务基础平台</Product>
     <Description>DT控件库</Description>
-    <Copyright>Copyright ©  2018</Copyright>
   </PropertyGroup>
 
   <Import Project="..\Common\dtc.props" />
-
-  <ItemGroup>
-    <Compile Remove="Model\**" />
-    <EmbeddedResource Remove="Model\**" />
-    <None Remove="Model\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0007" />
-  </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'xamarinios10' ">
     <PackageReference Include="GMImagePicker.Xamarin" Version="2.3.4" />
@@ -27,81 +13,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
     <ProjectReference Include="..\Dt.Charts\Dt.Charts.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Include="FormView\Cells\CTree\TreeDlg.xaml" />
-    <Page Include="Structure\Menu\Parts\SubMenuDlg.xaml" />
-    <Page Include="Themes\Generic.xaml" />
-    <Page Include="Themes\Global.xaml" />
-    <Page Include="Themes\Styles\FileList.xaml" />
-    <Page Include="Themes\Styles\ListView.xaml" />
-    <Page Include="Themes\Styles\FormView.xaml" />
-    <Page Include="Themes\Styles\TreeView.xaml" />
-    <Page Include="Themes\Styles\Win.xaml" />
-    <Page Include="Themes\Styles\Menu.xaml" />
-    <Page Include="Themes\Styles\Default.xaml" />
-    <Page Include="Themes\Styles\Base.xaml" />
-    <Page Include="Themes\Styles\Desk.xaml" />
-    <Page Include="Themes\Styles\Dialog.xaml" />
-    <Page Include="Themes\Styles\Sketch.xaml" />
-    <Page Include="Structure\PhonePage\PhonePage.xaml" />
-    <Page Include="Structure\Notify\NotifyItem.xaml" />
-    <Page Include="Structure\Tools\LocalDbView.xaml" />
-    <Page Include="Structure\Tools\SysTrace.xaml" />
-    <Page Include="Structure\Tools\StateDb.xaml" />
-    <Page Include="Structure\Tools\ModelDb.xaml" />
-    <Page Include="Structure\Tools\StateDbBackup.xaml" />
-    <Page Include="Structure\Tools\StateDbUpdate.xaml" />            
-    <Page Include="FormView\Cells\CColor\ColorDlg.xaml" />
-    <Page Include="FormView\Cells\CIcon\IconDlg.xaml" />
-    <Page Include="FormView\Cells\CDate\CalendarDlg.xaml" />
-    <Page Include="FormView\Cells\CList\ListDlg.xaml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="FormView\Cells\CTree\TreeDlg.xaml.cs">
-      <DependentUpon>TreeDlg.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Structure\Menu\Parts\SubMenuDlg.xaml.cs">
-      <DependentUpon>SubMenuDlg.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Structure\PhonePage\PhonePage.xaml.cs">
-      <DependentUpon>PhonePage.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Structure\Notify\NotifyItem.xaml.cs">
-      <DependentUpon>NotifyItem.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Structure\Tools\LocalDbView.xaml.cs">
-      <DependentUpon>LocalDbView.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Structure\Tools\SysTrace.xaml.cs">
-      <DependentUpon>SysTrace.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Structure\Tools\StateDb.xaml.cs">
-      <DependentUpon>StateDb.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Structure\Tools\ModelDb.xaml.cs">
-      <DependentUpon>ModelDb.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Structure\Tools\StateDbBackup.xaml.cs">
-      <DependentUpon>StateDbBackup.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Structure\Tools\StateDbUpdate.xaml.cs">
-      <DependentUpon>StateDbUpdate.xaml</DependentUpon>
-    </Compile>        
-    <Compile Update="FormView\Cells\CColor\ColorDlg.xaml.cs">
-      <DependentUpon>ColorDlg.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="FormView\Cells\CIcon\IconDlg.xaml.cs">
-      <DependentUpon>IconDlg.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="FormView\Cells\CDate\CalendarDlg.xaml.cs">
-      <DependentUpon>CalendarDlg.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="FormView\Cells\CList\ListDlg.xaml.cs">
-      <DependentUpon>ListDlg.xaml</DependentUpon>
-    </Compile>
   </ItemGroup>
 
 </Project>

@@ -1,7 +1,7 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras/2.0.31">
+﻿<Project Sdk="MSBuild.Sdk.Extras/2.0.54">
 
   <PropertyGroup>
-    <TargetFrameworks>uap10.0.17763;MonoAndroid81;xamarinios10</TargetFrameworks>
+    <TargetFrameworks>uap10.0.18362;monoandroid90;xamarinios10</TargetFrameworks>
     <Authors>hdt</Authors>
     <Product>DT业务基础平台</Product>
     <Description>DT平台Excel计算引擎</Description>

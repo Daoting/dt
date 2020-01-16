@@ -1,11 +1,7 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras/2.0.31">
+﻿<Project Sdk="MSBuild.Sdk.Extras/2.0.54">
 
   <PropertyGroup>
-    <TargetFrameworks>uap10.0.17763;MonoAndroid81;xamarinios10</TargetFrameworks>
-    <Authors>hdt</Authors>
-    <Product>DT业务基础平台</Product>
     <Description>DT内核库</Description>
-    <Copyright>Copyright ©  2018</Copyright>
   </PropertyGroup>
 
   <Import Project="..\Common\dtc.props" />
@@ -14,7 +10,7 @@
     <PackageReference Include="Microsoft.Data.Sqlite" Version="2.1.0" />
   </ItemGroup>
   
-  <ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid81' ">
+  <ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid90' ">
     <PackageReference Include="Square.OkHttp3" Version="3.12.3" />
     <PackageReference Include="Square.OkIO" version="1.17.4" />
   </ItemGroup>

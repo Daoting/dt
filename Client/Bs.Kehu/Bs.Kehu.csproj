@@ -1,36 +1,12 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras/2.0.31">
-
-  <PropertyGroup>
-    <TargetFrameworks>uap10.0.17763;MonoAndroid81;xamarinios10</TargetFrameworks>
-  </PropertyGroup>
+﻿<Project Sdk="MSBuild.Sdk.Extras/2.0.54">
 
   <Import Project="..\Common\dtc.props" />
 
   <ItemGroup>
-    <None Remove="Assets\chart.png" />
-    <None Remove="Assets\u406.png" />
-    <None Remove="Assets\u455.png" />
-    <None Remove="Assets\u7878.png" />
-    <None Remove="Assets\u7884.png" />
-    <None Remove="Assets\u915.png" />
-    <None Remove="Chat\AddFriend.xaml" />
-    <None Remove="Chat\ChatHome.xaml" />
-    <None Remove="Chat\ChatLetter.xaml" />
-    <None Remove="Chat\FriendPtMain.xaml" />
-    <None Remove="Chat\SettingFriend.xaml" />
-    <None Remove="JieHu\PaySvcItem.xaml" />
-    <None Remove="JieHu\SelectSvcItem.xaml" />
-    <None Remove="Setting\AddressList.xaml" />
-    <None Remove="Setting\FollowList.xaml" />
-    <None Remove="Setting\MyInfoEdit.xaml" />
-    <None Remove="Setting\MyMain.xaml" />
-    <None Remove="Setting\OrderList.xaml" />
-    <None Remove="Plan\PtStep1.xaml" />
-    <None Remove="Plan\PtStep2.xaml" />
-    <None Remove="Plan\PtStep3.xaml" />
-    <None Remove="TempPage.xaml" />
+    <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
+    <ProjectReference Include="..\Dt.Base\Dt.Base.csproj" />
   </ItemGroup>
-
+  
   <ItemGroup>
     <Content Include="Assets\cal.png" />
     <Content Include="Assets\header.png" />
@@ -49,177 +25,8 @@
     <Content Include="Assets\u7878.png" />
     <Content Include="Assets\u7884.png" />
     <Content Include="Assets\u915.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Include="Article\ArticlePage.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Chat\ChatHome.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Chat\AddFriend.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Chat\ChatLetter.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Chat\SettingFriend.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Chat\FriendPtMain.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Home\Login.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Home\GuidePage.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Home\DefaultHome.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Home\MainPage.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="JieHu\JieHuMain.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="JieHu\PaySvcItem.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="JieHu\SelectSvcItem.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="TempPage.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Setting\MyMain.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Setting\MyInfoEdit.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Setting\FollowList.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Setting\OrderList.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Plan\PtMain.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Plan\PlanTest1.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Plan\PlanTest2.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Plan\PlanTest3.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Plan\PlanTest4.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Plan\PtStep1.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Plan\PtStep2.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Plan\PtStep3.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Setting\AddressList.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
-  
-  <ItemGroup>
-    <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
-    <ProjectReference Include="..\Dt.Base\Dt.Base.csproj" />
-  </ItemGroup>
-  
-  <ItemGroup>
     <Content Include="Assets\u354.png" />
-  </ItemGroup>
-  
-  <ItemGroup>
     <Content Include="Assets\chart.png" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <Compile Update="Article\ArticlePage.xaml.cs">
-      <DependentUpon>ArticlePage.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Chat\ChatLetter.xaml.cs">
-      <DependentUpon>ChatLetter.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Chat\SettingFriend.xaml.cs">
-      <DependentUpon>SettingFriend.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Home\Login.xaml.cs">
-      <DependentUpon>Login.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Home\GuidePage.xaml.cs">
-      <DependentUpon>GuidePage.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Home\DefaultHome.xaml.cs">
-      <DependentUpon>DefaultHome.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Home\MainPage.xaml.cs">
-      <DependentUpon>MainPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="JieHu\JieHuMain.xaml.cs">
-      <DependentUpon>JieHuMain.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="TempPage.xaml.cs">
-      <DependentUpon>TempPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Setting\MyMain.xaml.cs">
-      <DependentUpon>MyMain.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Plan\PlanTest1.xaml.cs">
-      <DependentUpon>PlanTest1.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Plan\PlanTest2.xaml.cs">
-      <DependentUpon>PlanTest2.xaml</DependentUpon>
-    </Compile>
-    <Compile Update="Plan\PtMain.xaml.cs">
-      <DependentUpon>PtMain.xaml</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  
-  <ItemGroup>
-    <None Update="Article\ArticlePage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Home\DefaultHome.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Home\MainPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="JieHu\JieHuMain.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Plan\PlanTest1.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Plan\PlanTest3.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Plan\PlanTest4.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
-    <None Update="Plan\PtMain.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </None>
   </ItemGroup>
 
 </Project>
