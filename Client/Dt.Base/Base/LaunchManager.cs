@@ -33,8 +33,7 @@ namespace Dt.Base
         /// </summary>
         public static void LoadRootFrame()
         {
-            // uno中默认字体大小11
-            SysVisual.RootContent = new Frame { FontSize = 15 };
+            SysVisual.RootContent = new Frame();
 
             // 主页作为根
             Type tp = AtApp.GetViewType(_homeView);

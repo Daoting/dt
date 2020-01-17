@@ -220,7 +220,7 @@ namespace Dt.Charts
         /// <summary>
         /// 图表实际的可视内容
         /// </summary>
-        internal FrameworkElement Viewport
+        internal ChartViewport2D Viewport
         {
             get { return _viewport; }
         }

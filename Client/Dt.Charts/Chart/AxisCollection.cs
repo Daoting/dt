@@ -43,10 +43,9 @@ namespace Dt.Charts
         {
             base.InsertItem(index, item);
             _view.AddAxis(item);
-            ChartViewport2D viewElement = _view.Viewport as ChartViewport2D;
-            if (viewElement != null)
+            if (_view.Viewport != null)
             {
-                viewElement.AddAxis(item);
+                _view.Viewport.AddAxis(item);
             }
             UpdateChart();
         }
@@ -55,11 +54,10 @@ namespace Dt.Charts
         {
             if (index >= 2)
             {
-                ChartViewport2D viewElement = _view.Viewport as ChartViewport2D;
-                if (viewElement != null)
+                if (_view.Viewport != null)
                 {
                     Axis ax = base[index];
-                    viewElement.RemoveAxis(ax);
+                    _view.Viewport.RemoveAxis(ax);
                 }
                 _view.RemoveAxis(base[index]);
                 base.RemoveItem(index);

@@ -45,20 +45,23 @@ namespace Dt.Charts
         }
 
         #region 测量布局
-        protected override Size MeasureOverride(Size availableSize)
-        {
-            // uno中当ChartLegend放在Top或Bottom时，availableSize未减该尺寸！
-            // 已在Chart.OnPresenterSizeChanged中设置尺寸解决！
-            if (availableSize.Width > 0 && availableSize.Height > 0)
-            {
-                UpdateLayout(availableSize);
-            }
-            return base.MeasureOverride(availableSize);
-        }
+        /*********************************************************************************************************/
+        // MeasureOverride中尽可能不增删Children元素，uno中每增删一个元素会重复一次MeasureOverride，严重时死循环！！！
+        // UWP和uno的调用顺序不同！
+        // UWP：MeasureOverride > _owner.SizeChanged > SizeChanged > Loaded
+        // uno：Loaded > MeasureOverride > SizeChanged > _owner.SizeChanged
+        /*********************************************************************************************************/
 
+        /// <summary>
+        /// 当前视口大小
+        /// </summary>
+        internal Size CurrentSize { get; set; }
 
-        void UpdateLayout(Size arrangeSize)
+        internal void Refresh()
         {
+            if (CurrentSize.Width == 0 || CurrentSize.Height == 0)
+                return;
+
             _ax.Axis = _view.AxisX;
             _ay.Axis = _view.AxisY;
             List<string> list = new List<string>();
@@ -88,7 +91,7 @@ namespace Dt.Charts
                     return;
 
                 _ast = renderer.Axis;
-                Size sz = new Size(arrangeSize.Width, arrangeSize.Height);
+                Size sz = new Size(CurrentSize.Width, CurrentSize.Height);
                 Renderer2D rendererd = renderer as Renderer2D;
                 if (rendererd != null)
                 {
@@ -131,7 +134,7 @@ namespace Dt.Charts
                     break;
 
                 case AxisStyle.Cartesian:
-                    UpdateLayoutCartesian(arrangeSize);
+                    UpdateLayoutCartesian();
                     break;
 
                 case AxisStyle.Radar:
@@ -142,7 +145,7 @@ namespace Dt.Charts
                             enumerator2.Current.Visibility = Visibility.Collapsed;
                         }
                     }
-                    UpdateLayoutRadar(arrangeSize);
+                    UpdateLayoutRadar();
                     break;
             }
 
@@ -171,15 +174,12 @@ namespace Dt.Charts
             }
         }
 
-        void UpdateLayoutCartesian(Size arrangeSize)
+        void UpdateLayoutCartesian()
         {
-            if (arrangeSize.Width == 0.0 || arrangeSize.Height == 0.0)
-                return;
-
             PrepareAxes();
             if (_view.HasPlotAreas)
             {
-                PerformPlotAreaLayout(arrangeSize);
+                PerformPlotAreaLayout();
                 return;
             }
 
@@ -190,10 +190,10 @@ namespace Dt.Charts
             double xTop = 0.0;
             double yLeft = 0.0;
             double yTop = 0.0;
-            double width = arrangeSize.Width;
-            double height = arrangeSize.Height;
-            double right = arrangeSize.Width;
-            double bottom = arrangeSize.Height;
+            double width = CurrentSize.Width;
+            double height = CurrentSize.Height;
+            double right = CurrentSize.Width;
+            double bottom = CurrentSize.Height;
 
             for (int i = 0; i < num; i++)
             {
@@ -201,7 +201,7 @@ namespace Dt.Charts
                 double origin = ax.Axis.Origin;
                 if (ax.AxisType == AxisType.X)
                 {
-                    Size size = new Size(arrangeSize.Width, 0.3 * arrangeSize.Height);
+                    Size size = new Size(CurrentSize.Width, 0.3 * CurrentSize.Height);
                     Size size3 = ax.GetSize(GetItems(renderer, ax), false);
                     if (size3.Height > size.Height)
                     {
@@ -213,7 +213,7 @@ namespace Dt.Charts
                     if (ax.IsNear)
                     {
                         xLeft = Math.Max(xLeft, ax.AnnoSize.Width * 0.5);
-                        width = Math.Min(width, arrangeSize.Width - (ax.AnnoSize.Width * 0.5));
+                        width = Math.Min(width, CurrentSize.Width - (ax.AnnoSize.Width * 0.5));
                         if (flag2)
                         {
                             double num12 = ConvertY(origin, xTop, bottom);
@@ -227,7 +227,7 @@ namespace Dt.Charts
                     else if (ax.IsFar)
                     {
                         xLeft = Math.Max(xLeft, ax.AnnoSize.Width * 0.5);
-                        width = Math.Min(width, arrangeSize.Width - (ax.AnnoSize.Width * 0.5));
+                        width = Math.Min(width, CurrentSize.Width - (ax.AnnoSize.Width * 0.5));
                         if (flag2)
                         {
                             double num13 = ConvertY(origin, xTop, bottom);
@@ -241,7 +241,7 @@ namespace Dt.Charts
                 }
                 else if (ax.AxisType == AxisType.Y)
                 {
-                    Size size2 = new Size(arrangeSize.Height, 0.3 * arrangeSize.Width);
+                    Size size2 = new Size(CurrentSize.Height, 0.3 * CurrentSize.Width);
                     Size size4 = ax.GetSize(GetItems(renderer, ax), false);
                     if (size4.Height > size2.Height)
                     {
@@ -253,7 +253,7 @@ namespace Dt.Charts
                     if (ax.IsNear)
                     {
                         yTop = Math.Max(yTop, ax.AnnoSize.Width * 0.5);
-                        height = Math.Min(height, arrangeSize.Height - (ax.AnnoSize.Width * 0.5));
+                        height = Math.Min(height, CurrentSize.Height - (ax.AnnoSize.Width * 0.5));
                         if (flag3)
                         {
                             double num14 = ConvertX(origin, yLeft, right);
@@ -267,7 +267,7 @@ namespace Dt.Charts
                     else if (ax.IsFar)
                     {
                         yTop = Math.Max(yTop, ax.AnnoSize.Width * 0.5);
-                        height = Math.Min(height, arrangeSize.Height - (ax.AnnoSize.Width * 0.5));
+                        height = Math.Min(height, CurrentSize.Height - (ax.AnnoSize.Width * 0.5));
                         if (flag3)
                         {
                             double num15 = ConvertX(origin, yLeft, right);
@@ -283,7 +283,7 @@ namespace Dt.Charts
 
             double w = 0.0;
             double h = 0.0;
-            AdjustMargins(arrangeSize, ref xLeft, ref width, ref yTop, ref height, ref w, ref h, ref yLeft, ref right, ref xTop, ref bottom);
+            AdjustMargins(ref xLeft, ref width, ref yTop, ref height, ref w, ref h, ref yLeft, ref right, ref xTop, ref bottom);
             _plot = _plot0 = new Rect(xLeft, yTop, w, h);
             if (area != null)
             {
@@ -381,7 +381,7 @@ namespace Dt.Charts
             }
         }
 
-        void UpdateLayoutRadar(Size arrangeSize)
+        void UpdateLayoutRadar()
         {
             RadarRenderer renderer = _view.Renderer as RadarRenderer;
             List<int> list = new List<int>();
@@ -449,11 +449,11 @@ namespace Dt.Charts
             double height = base.Height;
             if (double.IsNaN(width))
             {
-                width = arrangeSize.Width;
+                width = CurrentSize.Width;
             }
             if (double.IsNaN(height))
             {
-                height = arrangeSize.Height;
+                height = CurrentSize.Height;
             }
             Size annoSize = _ax.AnnoSize;
             _plot = new Rect(1.1 * annoSize.Width, 1.1 * annoSize.Height, Math.Max((double)8.0, (double)(width - (2.2 * annoSize.Width))), Math.Max((double)8.0, (double)(height - (2.2 * annoSize.Height))));
@@ -584,7 +584,6 @@ namespace Dt.Charts
         }
 
         void AdjustMargins(
-            Size arrangeSize,
             ref double left,
             ref double right,
             ref double top,
@@ -598,9 +597,9 @@ namespace Dt.Charts
         {
             Windows.UI.Xaml.Thickness thickness = _view.Margin;
             l0 = left = (thickness.Left != 0.0) ? thickness.Left : Math.Max(left, l0);
-            r0 = right = (thickness.Right != 0.0) ? (arrangeSize.Width - thickness.Right) : Math.Min(right, r0);
+            r0 = right = (thickness.Right != 0.0) ? (CurrentSize.Width - thickness.Right) : Math.Min(right, r0);
             t0 = top = (thickness.Top != 0.0) ? thickness.Top : Math.Max(top, t0);
-            b0 = bottom = (thickness.Bottom != 0.0) ? (arrangeSize.Height - thickness.Bottom) : Math.Min(bottom, b0);
+            b0 = bottom = (thickness.Bottom != 0.0) ? (CurrentSize.Height - thickness.Bottom) : Math.Min(bottom, b0);
             w = right - left;
             h = bottom - top;
             if (w < 1.0)
@@ -717,7 +716,7 @@ namespace Dt.Charts
             return null;
         }
 
-        void PerformPlotAreaLayout(Size arrangeSize)
+        void PerformPlotAreaLayout()
         {
             List<AreaDef> list = new List<AreaDef>();
             List<AreaDef> list2 = new List<AreaDef>();
@@ -745,17 +744,17 @@ namespace Dt.Charts
             int ncols = list.Count;
             int nrows = list2.Count;
             Renderer2D renderer = _view.Renderer as Renderer2D;
-            Size size = new Size(arrangeSize.Width, 0.3 * arrangeSize.Height);
-            Size size2 = new Size(arrangeSize.Height, 0.3 * arrangeSize.Width);
+            Size size = new Size(CurrentSize.Width, 0.3 * CurrentSize.Height);
+            Size size2 = new Size(CurrentSize.Height, 0.3 * CurrentSize.Width);
             double left = 0.0;
             double top = 0.0;
-            double width = arrangeSize.Width;
-            double height = arrangeSize.Height;
+            double width = CurrentSize.Width;
+            double height = CurrentSize.Height;
             for (int j = 0; j < ncols; j++)
             {
                 AreaDef def = list[j];
-                def.Right = arrangeSize.Width;
-                def.Bottom = arrangeSize.Height;
+                def.Right = CurrentSize.Width;
+                def.Bottom = CurrentSize.Height;
                 for (int num10 = 0; num10 < def.Axes.Count; num10++)
                 {
                     AxisCanvas iax = def.Axes[num10].iax as AxisCanvas;
@@ -772,7 +771,7 @@ namespace Dt.Charts
                     }
                     if (j == (ncols - 1))
                     {
-                        def.Right = Math.Min(def.Right, arrangeSize.Width - (iax.AnnoSize.Width * 0.5));
+                        def.Right = Math.Min(def.Right, CurrentSize.Width - (iax.AnnoSize.Width * 0.5));
                     }
                     if (iax.IsNear)
                     {
@@ -787,8 +786,8 @@ namespace Dt.Charts
             for (int k = 0; k < nrows; k++)
             {
                 AreaDef def2 = list2[k];
-                def2.Right = arrangeSize.Width;
-                def2.Bottom = arrangeSize.Height;
+                def2.Right = CurrentSize.Width;
+                def2.Bottom = CurrentSize.Height;
                 for (int num12 = 0; num12 < def2.Axes.Count; num12++)
                 {
                     AxisCanvas ax = def2.Axes[num12].iax as AxisCanvas;
@@ -805,7 +804,7 @@ namespace Dt.Charts
                     }
                     if (k == (nrows - 1))
                     {
-                        def2.Bottom = Math.Min(def2.Bottom, arrangeSize.Height - (ax.AnnoSize.Width * 0.5));
+                        def2.Bottom = Math.Min(def2.Bottom, CurrentSize.Height - (ax.AnnoSize.Width * 0.5));
                     }
                     if (ax.IsNear)
                     {
@@ -819,8 +818,8 @@ namespace Dt.Charts
             }
             double num13 = 0.0;
             double num14 = 0.0;
-            double num15 = arrangeSize.Width;
-            double num16 = arrangeSize.Height;
+            double num15 = CurrentSize.Width;
+            double num16 = CurrentSize.Height;
             for (int m = 0; m < ncols; m++)
             {
                 AreaDef def3 = list[m];
@@ -839,7 +838,7 @@ namespace Dt.Charts
             }
             double w = 0.0;
             double h = 0.0;
-            AdjustMargins(arrangeSize, ref left, ref width, ref top, ref height, ref w, ref h, ref num13, ref num15, ref num14, ref num16);
+            AdjustMargins(ref left, ref width, ref top, ref height, ref w, ref h, ref num13, ref num15, ref num14, ref num16);
             _plot = _plot0 = new Rect(left, top, w, h);
             double x = left;
             double[] numArray = _view.PlotAreas.CalculateWidths(w, ncols);

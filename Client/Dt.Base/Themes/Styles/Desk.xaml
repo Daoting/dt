@@ -18,6 +18,8 @@
     <Style TargetType="a:Desktop">
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
         <Setter Property="Background" Value="{StaticResource 默认背景}" />
+        <!--Control默认11，系统默认15-->
+        <Setter Property="FontSize" Value="{StaticResource 中字号}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="a:Desktop">

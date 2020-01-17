@@ -15,7 +15,6 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using Windows.ApplicationModel;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -55,18 +54,6 @@ namespace Dt.Base
             typeof(Chart),
             new PropertyMetadata(null, new PropertyChangedCallback(Chart.OnCustomPaletteChanged)));
 
-        public static readonly DependencyProperty DataProperty = Utils.RegisterProperty(
-            "Data",
-            typeof(ChartData),
-            typeof(Chart),
-            new PropertyChangedCallback(Chart.OnDataChanged));
-
-        public static readonly DependencyProperty LegendItemsProperty = DependencyProperty.Register(
-            "LegendItems",
-            typeof(LegendItemCollection),
-            typeof(Chart),
-            new PropertyMetadata(null, new PropertyChangedCallback(Chart.OnLegendItemsChanged)));
-
         /// <summary>
         /// 标题
         /// </summary>
@@ -79,17 +66,15 @@ namespace Dt.Base
         static void OnAggregateChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             Chart chart = (Chart)obj;
-            if (chart.Data != null)
+            using (IEnumerator<DataSeries> enumerator = chart._data.Children.GetEnumerator())
             {
-                using (IEnumerator<DataSeries> enumerator = chart.Data.Children.GetEnumerator())
+                while (enumerator.MoveNext())
                 {
-                    while (enumerator.MoveNext())
-                    {
-                        enumerator.Current.Dirty = true;
-                    }
+                    enumerator.Current.Dirty = true;
                 }
             }
-            chart.dataChanged = true;
+
+            chart._dataChanged = true;
             chart._forceRebuild = true;
             chart.InvalidateChart();
         }
@@ -213,60 +198,10 @@ namespace Dt.Base
             chart.InvalidateChart();
         }
 
-        static void OnDataChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
-        {
-            Chart chart = (Chart)obj;
-            chart.ClearAllINP();
-            ChartData cd = (ChartData)args.OldValue;
-            if (cd != null)
-            {
-                cd.Renderer = null;
-                cd.DataChanged -= chart._data_DataChanged;
-            }
-
-            cd = (ChartData)args.NewValue;
-            if (cd != null)
-            {
-                cd.Renderer = null;
-                cd.DataChanged += chart._data_DataChanged;
-            }
-            chart.StyleGenerator.Reset();
-            chart.InvalidateChart();
-        }
-
-        static void OnForegroundInternalChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
-        {
-            ((Chart)obj).InvalidateChart();
-        }
-
-        static void OnLegendItemsChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
-        {
-            Chart chart = (Chart)obj;
-            if (args.NewValue != chart._litemsRO)
-            {
-                chart.LegendItems = chart._litemsRO;
-            }
-        }
-
-        static void ClearValue(FrameworkElement fe, DependencyProperty dp)
-        {
-            if (fe != null)
-            {
-                object obj2 = fe.ReadLocalValue(dp);
-                if (dp == CustomPaletteProperty)
-                {
-                    fe.ClearValue(dp);
-                }
-                if (obj2 is BindingBase)
-                {
-                    fe.ClearValue(dp);
-                }
-            }
-        }
-
         #endregion
 
         #region 成员变量
+        ChartData _data;
         readonly ChartObservableCollection _children = new ChartObservableCollection();
         Grid _rootGrid;
         ActionCollection _actions;
@@ -276,14 +211,12 @@ namespace Dt.Base
         GradientMethod _gradientMethod;
         bool _inBuild;
         List<INotifyPropertyChanged> _inps = new List<INotifyPropertyChanged>();
-        LegendItems _litems;
-        LegendItemCollection _litemsRO;
         bool _loaded;
         StyleGenerator _stgen;
         int _updateCount;
-        bool dataChanged = true;
+        bool _dataChanged = true;
         internal bool _forceRebuild = true;
-        Point pinchCenter = new Point();
+        Point _pinchCenter = new Point();
         #endregion
 
         #region 构造方法
@@ -293,12 +226,12 @@ namespace Dt.Base
 
             BubbleOptions.SetMinSize(this, Size.Empty);
             BubbleOptions.SetMaxSize(this, Size.Empty);
-            Data = new ChartData();
-            View = new ChartView(this);
 
-            _litems = new LegendItems();
-            _litemsRO = new LegendItemCollection(_litems);
-            LegendItems = _litemsRO;
+            _data = new ChartData();
+            _data.DataChanged += _data_DataChanged;
+            
+            View = new ChartView(this);
+            LegendItems = new LegendItems();
 
             PointerPressed += C1Chart_PointerPressed;
             PointerReleased += C1Chart_PointerReleased;
@@ -337,13 +270,34 @@ namespace Dt.Base
             set { SetValue(ChartTypeProperty, value); }
         }
 
+        
         /// <summary>
-        /// 获取设置图表数据
+        /// 获取设置图表数据，始终不为null！
         /// </summary>
         public ChartData Data
         {
-            get { return (ChartData)GetValue(DataProperty); }
-            set { SetValue(DataProperty, value); }
+            get { return _data; }
+            set
+            {
+                if (value == null)
+                    throw new Exception("图表数据对象不可为空！");
+
+                if (_data == value)
+                    return;
+
+                ClearAllINP();
+                if (_data != null)
+                {
+                    _data.Renderer = null;
+                    _data.DataChanged -= _data_DataChanged;
+                }
+
+                _data = value;
+                _data.Renderer = null;
+                _data.DataChanged += _data_DataChanged;
+                StyleGenerator.Reset();
+                InvalidateChart();
+            }
         }
 
         /// <summary>
@@ -408,7 +362,7 @@ namespace Dt.Base
                 if (_autoSeries != value)
                 {
                     _autoSeries = value;
-                    dataChanged = true;
+                    _dataChanged = true;
                     InvalidateChart();
                 }
             }
@@ -422,7 +376,7 @@ namespace Dt.Base
                 if (_bindings != value)
                 {
                     _bindings = value;
-                    dataChanged = true;
+                    _dataChanged = true;
                     InvalidateChart();
                 }
             }
@@ -464,16 +418,7 @@ namespace Dt.Base
             }
         }
 
-        public LegendItemCollection LegendItems
-        {
-            get { return (LegendItemCollection)GetValue(LegendItemsProperty); }
-            set { SetValue(LegendItemsProperty, value); }
-        }
-
-        internal LegendItems LegendItemsInternal
-        {
-            get { return _litems; }
-        }
+        internal LegendItems LegendItems { get; }
 
         internal Renderers Renderers { get; } = new Renderers();
 
@@ -489,21 +434,16 @@ namespace Dt.Base
                 return _stgen;
             }
         }
-
-        public FrameworkElement Viewport
-        {
-            get { return View.Viewport; }
-        }
         #endregion
 
         void _data_DataChanged(object sender, EventArgs e)
         {
-            if ((Data != null) && (Data.Children.Count == 0))
+            if (_data.Children.Count == 0)
             {
                 StyleGenerator.Reset();
             }
             _forceRebuild = true;
-            dataChanged = true;
+            _dataChanged = true;
             InvalidateChart();
         }
 
@@ -588,7 +528,7 @@ namespace Dt.Base
 
         public object FindPlotElement(string name)
         {
-            return Viewport.FindName(name);
+            return View.Viewport.FindName(name);
         }
 
         internal void FireActionEnter(object sender, EventArgs args)
@@ -635,7 +575,7 @@ namespace Dt.Base
         protected override void OnDoubleTapped(DoubleTappedRoutedEventArgs e)
         {
             base.OnDoubleTapped(e);
-            if ((GestureDoubleTap == GestureDoubleTapAction.Scale) && (Data.Renderer is Renderer2D))
+            if ((GestureDoubleTap == GestureDoubleTapAction.Scale) && (_data.Renderer is Renderer2D))
             {
                 Actions.FireEnter();
                 Actions.PerformScale(e.GetPosition(this));
@@ -659,74 +599,57 @@ namespace Dt.Base
             if (_inBuild)
                 return;
 
-            IRenderer irender;
-            BaseRenderer renderer;
             _inBuild = true;
-
             try
             {
-                if (Data != null)
+                IRenderer irender = _data.Renderer;
+                if (irender == null)
                 {
-                    irender = Data.Renderer;
+                    ApplyChartType(ChartType);
+                    irender = _data.Renderer;
                     if (irender == null)
                     {
-                        ApplyChartType(ChartType);
-                        irender = Data.Renderer;
-                        if (irender == null)
-                        {
-                            Data.Renderer = irender = new Renderer2D();
-                        }
+                        _data.Renderer = irender = new Renderer2D();
                     }
+                }
 
-                    renderer = irender as BaseRenderer;
-                    if (renderer != null)
-                    {
-                        renderer.StyleGen = StyleGenerator;
-                    }
-                    irender.Visual = this;
-                    if (irender.Dirty)
-                    {
-                        _forceRebuild = true;
-                    }
+                BaseRenderer renderer = irender as BaseRenderer;
+                if (renderer != null)
+                {
+                    renderer.StyleGen = StyleGenerator;
+                }
+
+                irender.Visual = this;
+                if (irender.Dirty)
+                {
+                    _forceRebuild = true;
                 }
 
                 if (_forceRebuild)
                 {
                     _forceRebuild = false;
-                    if (Data != null && (irender = Data.Renderer) != null)
+                    if (renderer != null && _dataChanged)
                     {
-                        renderer = irender as BaseRenderer;
-                        if (renderer != null)
-                        {
-                            renderer.ChartType = ChartType;
-                            renderer.StyleGen.Reset();
-                        }
-                        irender.Dirty = false;
-                        View.Renderer = irender;
-                        if (dataChanged)
-                        {
-                            dataChanged = false;
-                            irender.Clear();
-                            RebuildRenderer(irender);
-                        }
+                        _dataChanged = false;
+                        renderer.StyleGen.Reset();
+                        irender.Clear();
+                        RebuildRenderer(irender);
 
-                        if (renderer != null)
+                        object[] itemNamesInternal = _data.ItemNamesInternal;
+                        if ((_data.Aggregate != Aggregate.None) && (itemNamesInternal != null))
                         {
-                            object[] itemNamesInternal = Data.ItemNamesInternal;
-                            if ((Data.Aggregate != Aggregate.None) && (itemNamesInternal != null))
-                            {
-                                renderer.ItemNames = Enumerable.ToArray<object>(Enumerable.Distinct<object>(itemNamesInternal));
-                            }
-                            else
-                            {
-                                renderer.ItemNames = itemNamesInternal;
-                            }
-                            renderer.UpdateLegend((IList<LegendItem>)LegendItemsInternal);
+                            renderer.ItemNames = Enumerable.ToArray<object>(Enumerable.Distinct<object>(itemNamesInternal));
                         }
+                        else
+                        {
+                            renderer.ItemNames = itemNamesInternal;
+                        }
+                        renderer.UpdateLegend(LegendItems);
+                        LegendChanged?.Invoke(this, EventArgs.Empty);
                     }
-
-                    LegendChanged?.Invoke(this, EventArgs.Empty);
-                    Viewport.InvalidateMeasure();
+                    irender.Dirty = false;
+                    View.Renderer = irender;
+                    View.Viewport.Refresh();
                 }
             }
             finally
@@ -741,7 +664,7 @@ namespace Dt.Base
         /// <param name="renderer"></param>
         void RebuildRenderer(IRenderer renderer)
         {
-            IEnumerable itemsSource = Data.ItemsSource;
+            IEnumerable itemsSource = _data.ItemsSource;
             ClearAllINP();
             if (itemsSource == null)
             {
@@ -752,24 +675,24 @@ namespace Dt.Base
             {
                 DataBindingHelper.AutoCreateSeries(this, itemsSource);
                 List<object> list = null;
-                Binding itemNameBinding = Data.ItemNameBinding;
+                Binding itemNameBinding = _data.ItemNameBinding;
                 if ((itemNameBinding == null) && (Bindings != null))
                 {
                     itemNameBinding = Bindings.ItemNameBinding;
                 }
-                if ((itemNameBinding != null) && (Data.ItemNames == null))
+                if ((itemNameBinding != null) && (_data.ItemNames == null))
                 {
                     list = new List<object>();
                 }
 
-                int num = Data.Children.Count;
+                int num = _data.Children.Count;
                 Dictionary<IDataSeriesInfo, Binding[]> dictionary = new Dictionary<IDataSeriesInfo, Binding[]>();
                 int num2 = 0;
                 for (int j = 0; j < num; j++)
                 {
-                    IDataSeriesInfo info = Data.Children[j];
+                    IDataSeriesInfo info = _data.Children[j];
                     Binding[] memberPaths = info.MemberPaths;
-                    if ((memberPaths != null) && (Data.Children[j].ItemsSource == null))
+                    if ((memberPaths != null) && (_data.Children[j].ItemsSource == null))
                     {
                         dictionary.Add(info, memberPaths);
                         num2 += memberPaths.Length;
@@ -834,14 +757,14 @@ namespace Dt.Base
 
                 if ((list != null) && (list.Count > 0))
                 {
-                    Data.ItemNamesInternal = list.ToArray();
+                    _data.ItemNamesInternal = list.ToArray();
                 }
             }
 
-            Data.Aggregate = Aggregate;
-            for (int i = 0; i < Data.Children.Count; i++)
+            _data.Aggregate = Aggregate;
+            for (int i = 0; i < _data.Children.Count; i++)
             {
-                DataSeries seriesInfo = Data.Children[i];
+                DataSeries seriesInfo = _data.Children[i];
                 if (seriesInfo.ItemsSource != null)
                 {
                     seriesInfo.PerformBinding(new Action<INotifyPropertyChanged>(AddINP));
@@ -852,9 +775,8 @@ namespace Dt.Base
 
         void OnPresenterSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            // 确保ChartViewport2D的MeasureOverride时尺寸正常！
-            Viewport.Width = e.NewSize.Width;
-            Viewport.Height = e.NewSize.Height;
+            View.Viewport.CurrentSize = e.NewSize;
+            InvalidateChart();
         }
         #endregion
 
@@ -864,9 +786,9 @@ namespace Dt.Base
             _autoSeries = false;
             Actions.Clear();
             ActionUpdateDelay = 40.0;
-            if ((Data != null) && clearData)
+            if (clearData)
             {
-                Data.Reset();
+                _data.Reset();
                 Bindings = null;
                 StyleGenerator.Reset();
             }
@@ -939,7 +861,7 @@ namespace Dt.Base
         #region 鼠标事件
         void C1Chart_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
         {
-            if ((GesturePinch == GesturePinchAction.Scale) && (Data.Renderer is Renderer2D))
+            if ((GesturePinch == GesturePinchAction.Scale) && (_data.Renderer is Renderer2D))
             {
                 if (Actions.State == ActionType.Pinch)
                 {
@@ -948,7 +870,7 @@ namespace Dt.Base
                     Actions.FireLeave();
                 }
             }
-            else if (((GestureSlide == GestureSlideAction.Translate) && (Data.Renderer is Renderer2D)) && (Actions.State == ActionType.Translate))
+            else if (((GestureSlide == GestureSlideAction.Translate) && (_data.Renderer is Renderer2D)) && (Actions.State == ActionType.Translate))
             {
                 Actions.State = ActionType.None;
                 e.Handled = true;
@@ -960,16 +882,16 @@ namespace Dt.Base
         {
             if (e.Delta.Scale != 1.0)
             {
-                if ((GesturePinch == GesturePinchAction.Scale) && (Data.Renderer is Renderer2D))
+                if ((GesturePinch == GesturePinchAction.Scale) && (_data.Renderer is Renderer2D))
                 {
                     Actions.FireEnter();
                     Actions.State = ActionType.Pinch;
                     float scale = e.Delta.Scale;
-                    Actions.PerformScale(pinchCenter, (double)scale, (double)scale);
+                    Actions.PerformScale(_pinchCenter, (double)scale, (double)scale);
                     e.Handled = true;
                 }
             }
-            else if (((e.Delta.Translation.X != 0.0) || (e.Delta.Translation.Y != 0.0)) && ((GestureSlide == GestureSlideAction.Translate) && (Data.Renderer is Renderer2D)))
+            else if (((e.Delta.Translation.X != 0.0) || (e.Delta.Translation.Y != 0.0)) && ((GestureSlide == GestureSlideAction.Translate) && (_data.Renderer is Renderer2D)))
             {
                 Actions.FireEnter();
                 Actions.State = ActionType.Translate;
@@ -979,7 +901,7 @@ namespace Dt.Base
 
         void C1Chart_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
         {
-            pinchCenter = e.Position;
+            _pinchCenter = e.Position;
         }
 
         void C1Chart_PointerMoved(object sender, PointerRoutedEventArgs e)

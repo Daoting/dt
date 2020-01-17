@@ -63,9 +63,7 @@ namespace Dt.Charts
                 {
                     ss.FillAuto = ss.Fill = new SolidColorBrush(clr);
                 }
-                catch
-                {
-                }
+                catch { }
             }
             else
             {

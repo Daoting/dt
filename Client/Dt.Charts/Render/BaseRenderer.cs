@@ -41,7 +41,6 @@ namespace Dt.Charts
         object _symbol;
         PlotElement _symbolCash;
         UIElement _visual;
-        internal Dt.Charts.ChartType ChartType;
         bool clear = true;
         const char delim = ';';
         const char pair_delim = '=';
@@ -91,7 +90,7 @@ namespace Dt.Charts
                 IDataSeriesInfo info = Series[i];
                 if (info is HighLowSeries)
                 {
-                    if (ChartType == Dt.Charts.ChartType.Gantt)
+                    if (Chart.ChartType == Dt.Charts.ChartType.Gantt)
                     {
                         ((HighLowSeries) info).IsGantt = true;
                         ((HighLowSeries) info).Index = i;
@@ -936,7 +935,7 @@ namespace Dt.Charts
 
         internal Chart Chart
         {
-            get { return  (((IRenderer) this).Visual as Chart); }
+            get { return _visual as Chart; }
         }
 
         public Dt.Charts.ColorScheme ColorScheme

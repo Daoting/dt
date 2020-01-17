@@ -666,7 +666,7 @@ namespace Dt.Charts
                 {
                     minY = _dataInfo.MinY;
                     maxY = _dataInfo.MaxY;
-                    if ((base.ChartType == ChartType.Column) || (base.ChartType == ChartType.Bar))
+                    if ((Chart.ChartType == ChartType.Column) || (Chart.ChartType == ChartType.Bar))
                     {
                         Chart visual = Chart;
                         if (visual != null)
