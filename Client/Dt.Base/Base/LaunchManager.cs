@@ -42,7 +42,8 @@ namespace Dt.Base
                 IWin win = Activator.CreateInstance(tp) as IWin;
                 if (win != null)
                 {
-                    win.Title = _homeView;
+                    if (string.IsNullOrEmpty(win.Title))
+                        win.Title = _homeView;
                     win.Icon = Icons.主页;
                     win.NaviToHome();
                 }
@@ -107,7 +108,8 @@ namespace Dt.Base
                 IWin win = Activator.CreateInstance(tp) as IWin;
                 if (win != null)
                 {
-                    win.Title = _homeView;
+                    if (string.IsNullOrEmpty(win.Title))
+                        win.Title = _homeView;
                     win.Icon = Icons.主页;
                     desktop.HomeWin = win;
                 }

@@ -82,6 +82,12 @@ namespace Dt.Base
             typeof(NaviWin),
             new PropertyMetadata(null));
 
+        public static readonly DependencyProperty BackButtonVisibilityProperty = DependencyProperty.Register(
+            "BackButtonVisibility",
+            typeof(Visibility),
+            typeof(NaviWin),
+            new PropertyMetadata(Visibility.Visible));
+
         static void OnNaviDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((NaviWin)d).OnNaviDataChanged();
@@ -191,6 +197,15 @@ namespace Dt.Base
             get { return GetValue(ParamsProperty); }
             set { SetValue(ParamsProperty, value); }
         }
+
+        /// <summary>
+        /// 获取设置是否显示返回按钮
+        /// </summary>
+        internal Visibility BackButtonVisibility
+        {
+            get { return (Visibility)GetValue(BackButtonVisibilityProperty); }
+            set { SetValue(BackButtonVisibilityProperty, value); }
+        }
         #endregion
 
         /// <summary>
@@ -225,6 +240,9 @@ namespace Dt.Base
         /// </summary>
         void IWin.NaviToHome()
         {
+            // 起始页隐藏返回按钮
+            if (SysVisual.RootFrame.Content == null)
+                BackButtonVisibility = Visibility.Collapsed;
             PhonePage.Show(this);
         }
 

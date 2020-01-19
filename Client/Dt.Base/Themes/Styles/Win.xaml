@@ -84,6 +84,7 @@
                             </Grid.ColumnDefinitions>
                             <!--后退-->
                             <Button x:Name="BackButton"
+                                    Visibility="{TemplateBinding BackButtonVisibility}"
                                     Style="{StaticResource 字符按钮}"
                                     Foreground="{StaticResource 默认背景}"
                                     Content="&#xE085;"

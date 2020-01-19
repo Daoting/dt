@@ -7,5 +7,7 @@
     mc:Ignorable="d"
     xmlns:a="using:Dt.Base">
 
-    <a:Excel x:Name="_excel" />
+    <Border Background="{StaticResource 主题蓝色}" Height="1024" Width="1024">
+        <TextBlock Text="&#xE0AA;" FontFamily="{StaticResource IconFont}" Foreground="White" FontSize="900" VerticalAlignment="Center" HorizontalAlignment="Center" />
+    </Border>
 </a:PageWin>
