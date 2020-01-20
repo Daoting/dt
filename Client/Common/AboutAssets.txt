@@ -1,3 +1,0 @@
-
-icon.ttf：自定义矢量字体库
-winjs-symbols.ttf：android缺少的win矢量字体库

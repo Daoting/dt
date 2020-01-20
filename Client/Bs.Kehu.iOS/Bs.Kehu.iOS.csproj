@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
-    <ProjectGuid>{80A96B52-6758-4BDB-B0B4-CEA4CA155333}</ProjectGuid>
+    <ProjectGuid>{0F562C31-7764-4B2D-AF5A-B393AEF99A02}</ProjectGuid>
     <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TemplateGuid>{440aa056-593a-4519-8708-27081dee632f}</TemplateGuid>
     <OutputType>Exe</OutputType>
@@ -88,25 +88,25 @@
     </ImageAsset>
     <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\Icon-20%402x.png">
       <Visible>false</Visible>
-    </ImageAsset> 
+    </ImageAsset>
     <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\Icon-20%403x.png">
       <Visible>false</Visible>
-    </ImageAsset>     
+    </ImageAsset>
     <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\Icon-120.png">
       <Visible>false</Visible>
     </ImageAsset>
     <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\Icon-60%403x.png">
       <Visible>false</Visible>
-    </ImageAsset> 
+    </ImageAsset>
     <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\Icon-29%402x.png">
       <Visible>false</Visible>
     </ImageAsset>
     <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\Icon-29%403x.png">
       <Visible>false</Visible>
-    </ImageAsset> 
+    </ImageAsset>
     <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\Icon-40%402x.png">
       <Visible>false</Visible>
-    </ImageAsset> 
+    </ImageAsset>
     <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\Icon-1024.png">
       <Visible>false</Visible>
     </ImageAsset>
@@ -141,17 +141,17 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Bs.Kehu\Bs.Kehu.csproj">
+      <Project>{4d2cae1e-4b4b-443d-921a-bc9b5a3a404b}</Project>
+      <Name>Bs.Kehu</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Dt.Base\Dt.Base.csproj">
-      <Project>{13a270fb-825a-4fb3-ae13-01dfd7c7a147}</Project>
+      <Project>{1d204eff-ce8e-4618-9f1e-b61a80bc03df}</Project>
       <Name>Dt.Base</Name>
     </ProjectReference>
     <ProjectReference Include="..\Dt.Core\Dt.Core.csproj">
-      <Project>{89b073f7-81dd-4e5d-a093-f73121b1f406}</Project>
+      <Project>{36afb125-e5ff-4bbe-b960-f6e7802106a7}</Project>
       <Name>Dt.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Dt.Sample\Dt.Sample.csproj">
-      <Project>{25744ee1-b117-4141-b9a8-5ca1cbebcd98}</Project>
-      <Name>Dt.Sample</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

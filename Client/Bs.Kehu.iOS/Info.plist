@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDisplayName</key>
-	<string>搬运工</string>
+	<string>百岁</string>
 	<key>CFBundleIdentifier</key>
-	<string>dt.Shell</string>
+	<string>dt.Bs.Kehu</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>

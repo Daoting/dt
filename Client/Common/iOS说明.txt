@@ -1,0 +1,22 @@
+1. 各项目之间为避免冗余的文件，将相同文件放置在 Common 目录下，各项目采取文件链接方式
+
+
+2. 项目目录说明：
+\Assets.xcassets 图标资源，可通过控件样例的工具生成
+
+\Resources
+    \SplashScreen@x.png 启动图片，配合 LaunchScreen.storyboard 实现启动动画
+
+    \Fonts
+        \icon.ttf  自定义矢量字体库
+        \winjs-symbols.ttf ios缺少的win矢量字体库
+
+\App.xaml  全局公共
+
+\Entitlements.plist  需要权限列表
+
+\Info.plist  项目间只有顶部的 CFBundleIdentifier CFBundleDisplayName 不同
+
+\LaunchScreen.storyboard 启动动画定义
+
+\Main.cs 入口

@@ -42,7 +42,7 @@
     <WarningLevel>4</WarningLevel>
     <AndroidManagedSymbols>true</AndroidManagedSymbols>
     <AndroidUseSharedRuntime>False</AndroidUseSharedRuntime>
-    <AndroidLinkMode>Full</AndroidLinkMode>
+    <AndroidLinkMode>SdkOnly</AndroidLinkMode>
     <AndroidCreatePackagePerAbi>false</AndroidCreatePackagePerAbi>
     <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
     <AotAssemblies>true</AotAssemblies>
@@ -65,7 +65,9 @@
       <Link>App.xaml.cs</Link>
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MainActivity.cs" />
+    <Compile Include="..\Common\MainActivity.cs">
+      <Link>MainActivity.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
   </ItemGroup>
@@ -131,15 +133,11 @@
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Common\AboutResources.txt">
-      <Link>Resources\AboutResources.txt</Link>
-    </None>
+    <Content Include="..\Common\Android说明.txt">
+      <Link>Android说明.txt</Link>
+    </Content>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="..\Common\AboutAssets.txt">
-      <Link>Assets\AboutAssets.txt</Link>
-    </None>
-  </ItemGroup>
+
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- This will force the generation of the APK when not building inside visual studio -->
   <Target Name="GenerateBuild" DependsOnTargets="SignAndroidPackage" AfterTargets="Build" Condition="'$(BuildingInsideVisualStudio)'==''" />

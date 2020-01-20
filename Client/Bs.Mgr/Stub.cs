@@ -15,7 +15,6 @@ using Dt.Base.Docking;
 using Dt.Base.FormView;
 using Dt.Core;
 using Dt.Core.Model;
-using Dt.Sample;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -108,7 +107,6 @@ namespace Dt.Shell
             { "参数定义", typeof(UserParams) },
             { "用户账号", typeof(UserAccount) },
             { "主页", typeof(DefaultHome) },
-            { "控件样例", typeof(SamplesMain) },
         };
 
         /// <summary>
@@ -124,9 +122,6 @@ namespace Dt.Shell
         /// </summary>
         public Dictionary<string, Type> SerializeTypes => new Dictionary<string, Type>
         {
-            { "产品", typeof(Product) },
-            { "学生", typeof(Student) },
-            { "部门", typeof(Department) },
         };
 
         /// <summary>
