@@ -166,7 +166,6 @@ namespace Dt.Charts
                 }
             }
 
-
             if (_view.Chart.UpdateCount <= 0 && _view.Renderer != null)
             {
                 CreateDataObjects();

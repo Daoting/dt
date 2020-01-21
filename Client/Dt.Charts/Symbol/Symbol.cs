@@ -27,16 +27,20 @@ namespace Dt.Charts
             return true;
         }
 
-        protected override Size MeasureOverride(Size constraint)
-        {
-            UpdateGeometry(null, Size);
-            return base.MeasureOverride(constraint);
-        }
+        /*********************************************************************************************************/
+        // MeasureOverride中尽可能不增删Children元素，uno中每增删一个元素会重复一次MeasureOverride，严重时死循环！！！
+        // UWP和uno的调用顺序不同！
+        // UWP：MeasureOverride > _owner.SizeChanged > SizeChanged > Loaded
+        // uno：Loaded > MeasureOverride > SizeChanged > _owner.SizeChanged
+        /*********************************************************************************************************/
 
         protected override bool Render(RenderContext rc)
         {
             _symCenter.X = rc.Current.X;
             _symCenter.Y = rc.Current.Y;
+
+            // 放在MeasureOverride中造成 iOS 上死循环！！！
+            UpdateGeometry(null, Size);
             return true;
         }
 
