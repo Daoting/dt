@@ -14,8 +14,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 #endregion
 
 namespace Dt.Sample
@@ -30,6 +32,7 @@ namespace Dt.Sample
 
             //_chart.View.AxisX.Title = "课程";
             _chart.View.AxisY.Title = "成绩";
+
             _data = new ChartSampleData();
 
             _chart.Data = _data.GetData(ChartType.Column);
@@ -46,6 +49,16 @@ namespace Dt.Sample
             var file = await _chart.SaveSnapshot();
             if (file != null)
                 AtKit.Msg(string.Format("截图【{0}】保存成功！", file.Name));
+        }
+
+        void OnMajorGrid(object sender, RoutedEventArgs e)
+        {
+            _chart.BeginUpdate();
+            if (_chart.View.AxisY.MajorGridFill == null)
+                _chart.View.AxisY.MajorGridFill = new SolidColorBrush(Colors.Yellow);
+            else
+                _chart.View.AxisY.MajorGridFill = null;
+            _chart.EndUpdate();
         }
     }
 }

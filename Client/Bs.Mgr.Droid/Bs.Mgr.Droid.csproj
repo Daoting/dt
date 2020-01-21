@@ -105,9 +105,25 @@
       <Project>{0a0f8195-6734-45bc-a4f6-2621054c1eab}</Project>
       <Name>Bs.Mgr</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Dt.App\Dt.App.csproj">
+      <Project>{0bba6785-9986-4a2e-b8b3-961d143894e4}</Project>
+      <Name>Dt.App</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Dt.Base\Dt.Base.csproj">
       <Project>{e3f3c994-17dc-4b65-8a66-f2c70537df7d}</Project>
       <Name>Dt.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dt.Cells.Data\Dt.Cells.Data.csproj">
+      <Project>{7ce3ed41-685e-46bd-ab2f-ab25467cbe35}</Project>
+      <Name>Dt.Cells.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dt.Cells\Dt.Cells.csproj">
+      <Project>{97eac2fe-30d6-40d8-9fec-a568774d1058}</Project>
+      <Name>Dt.Cells</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dt.Charts\Dt.Charts.csproj">
+      <Project>{a77e5063-ff97-49f3-aa5e-814baa7a929d}</Project>
+      <Name>Dt.Charts</Name>
     </ProjectReference>
     <ProjectReference Include="..\Dt.Core\Dt.Core.csproj">
       <Project>{7e933aca-685d-4a54-979c-ce83c5cfd2fc}</Project>

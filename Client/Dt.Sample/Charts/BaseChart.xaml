@@ -30,6 +30,7 @@
 
                         <a:CBar Title="Y轴设置" />
                         <a:CText ID="View.AxisY.Title" Title="标题" />
+                        <Button Content="显示/隐藏Y轴刻度区间" Click="OnMajorGrid" />
                         <!--<a:CText ID="View.AxisY.MajorUnit" Title="坐标轴单位" />-->
                     </a:Fv>
                     <a:Fv Data="{Binding ElementName=_legend}">

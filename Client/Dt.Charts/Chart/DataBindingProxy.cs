@@ -13,7 +13,8 @@ using Windows.UI.Xaml.Data;
 
 namespace Dt.Charts
 {
-    internal partial class DataBindingProxy : FrameworkElement
+    [Bindable]
+    public partial class DataBindingProxy : FrameworkElement
     {
         public static readonly DependencyProperty ObjectProperty = Utils.RegisterProperty("Object", typeof(object), typeof(DataBindingProxy));
 

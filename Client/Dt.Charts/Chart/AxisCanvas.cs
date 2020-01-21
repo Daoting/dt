@@ -32,7 +32,6 @@ namespace Dt.Charts
         Chart _chart;
         Size _desiredSize = Size.Empty;
         List<object> _lbls = new List<object>();
-        Rect _lrect = Extensions.EmptyRect;
         internal double _max = double.NaN;
         double _max0 = double.NaN;
         internal double _min = double.NaN;
@@ -43,9 +42,6 @@ namespace Dt.Charts
         TextBlock _tbtitle;
         internal UIElement[] _ticks;
         Size _titleDesiredSize = Size.Empty;
-        TransformGroup _trg;
-        RotateTransform _trot;
-        TranslateTransform _trtr;
         List<double> _vals = new List<double>();
         const string fmt100pc = "0'%'";
         const string fmtDate = "d";
@@ -284,272 +280,280 @@ namespace Dt.Charts
 
         internal void CreateAnnosAndTicks(bool isRadar)
         {
-            if (!_r.IsEmptyRect() && _axis.Visible)
+            if (_r.IsEmptyRect() || !_axis.Visible)
+                return;
+
+            double[] vals = _vals.ToArray();
+            object[] itemsAsObjects = GetItemsAsObjects();
+            int num = (vals != null) ? vals.Length : 0;
+            int num2 = (itemsAsObjects != null) ? itemsAsObjects.Length : 0;
+            int num3 = Math.Min(num, num2);
+            _albls = new UIElement[num3];
+            _ticks = new UIElement[num3];
+            CreateMinorTicksAndGrid(vals);
+            bool isNear = IsNear;
+            double majorTickOverlap = Axis.MajorTickOverlap;
+            bool flag2 = !double.IsNaN(_axis.LogBase);
+            Brush majorGridStroke = _axis.MajorGridStroke;
+            bool inner = (Axis.Position & AxisPosition.Inner) > AxisPosition.Near;
+            double tickOffset = GetTickOffset(inner);
+            int num6 = 0;
+            Point[] pointArray = null;
+
+            for (int i = num6; i < num3; i++)
             {
-                double[] vals = _vals.ToArray();
-                object[] itemsAsObjects = GetItemsAsObjects();
-                int num = (vals != null) ? vals.Length : 0;
-                int num2 = (itemsAsObjects != null) ? itemsAsObjects.Length : 0;
-                int num3 = Math.Min(num, num2);
-                _albls = new UIElement[num3];
-                _ticks = new UIElement[num3];
-                CreateMinorTicksAndGrid(vals);
-                bool isNear = IsNear;
-                double majorTickOverlap = Axis.MajorTickOverlap;
-                bool flag2 = !double.IsNaN(_axis.LogBase);
-                Brush majorGridStroke = _axis.MajorGridStroke;
-                bool inner = (Axis.Position & AxisPosition.Inner) > AxisPosition.Near;
-                double tickOffset = GetTickOffset(inner);
-                int num6 = 0;
-                Point[] pointArray = null;
-                for (int i = num6; i < num3; i++)
+                if (vals[i] < _min || vals[i] > _max)
+                    continue;
+
+                if (flag2 && (vals[i] <= 0.0))
+                    continue;
+
+                double d = Convert(vals[i]);
+                if (double.IsInfinity(d) || double.IsNaN(d))
+                    continue;
+
+                // 刻度值TextBlock
+                UIElement el = (isRadar || (_axis.AnnoPosition == AnnoPosition.None)) ? null : CreateAnno(vals[i], itemsAsObjects[i]);
+                Size size = new Size();
+                if (el != null)
                 {
-                    if ((vals[i] >= _min) && (vals[i] <= _max))
+                    size = Utils.GetSize(el);
+                    double annoAngleInternal = AnnoAngleInternal;
+                    double num10 = 0.0;
+                    double num11 = 0.0;
+                    Size size2 = size;
+                    double num12 = 0.0;
+                    double num13 = 1.0;
+                    bool flag4 = (inner && isNear) || (!inner && !isNear);
+                    if (annoAngleInternal != 0.0)
                     {
-                        double num29;
-                        if (flag2 && (vals[i] <= 0.0))
+                        double a = annoAngleInternal * 0.017453292519943295;
+                        num12 = Math.Abs(Math.Sin(a));
+                        num13 = Math.Abs(Math.Cos(a));
+                        double width = size.Width;
+                        double height = size.Height;
+                        double num17 = 0.5 * Math.Abs((double)((width * num13) + (height * num12)));
+                        double num18 = 0.5 * Math.Abs((double)((width * num12) + (height * num13)));
+                        num10 = num18 - (0.5 * height);
+                        if (flag4)
                         {
-                            continue;
+                            num10 = -num10;
                         }
-                        double d = Convert(vals[i]);
-                        if (double.IsInfinity(d) || double.IsNaN(d))
+                        num11 = num17 - (0.5 * width);
+                        size.Width = 2.0 * num17;
+                        size.Height = 2.0 * num18;
+                    }
+                    double length = 0.0;
+                    if (inner)
+                    {
+                        length = isNear ? (-((size.Height + tickOffset) + num10) * _scale) : (((_r.Height + num10) + tickOffset) * _scale);
+                    }
+                    else
+                    {
+                        length = isNear ? ((tickOffset + num10) * _scale) : (_r.Height - (((tickOffset + size.Height) + num10) * _scale));
+                    }
+                    Canvas.SetTop(el, length);
+                    double num20 = d + num11;
+                    if (_axis.AnnoPosition == AnnoPosition.Auto)
+                    {
+                        if ((Math.Abs(num12) > 0.01) && (_axis.AnnoAngle != 0.0))
                         {
-                            continue;
-                        }
-                        UIElement el = (isRadar || (_axis.AnnoPosition == AnnoPosition.None)) ? null : CreateAnno(vals[i], itemsAsObjects[i]);
-                        Size size = new Size();
-                        if (el != null)
-                        {
-                            size = Utils.GetSize(el);
-                            double annoAngleInternal = AnnoAngleInternal;
-                            double num10 = 0.0;
-                            double num11 = 0.0;
-                            Size size2 = size;
-                            double num12 = 0.0;
-                            double num13 = 1.0;
-                            bool flag4 = (inner && isNear) || (!inner && !isNear);
-                            if (annoAngleInternal != 0.0)
+                            double num21 = annoAngleInternal * 0.017453292519943295;
+                            num12 = Math.Sin(num21);
+                            if (_axis.AxisType == AxisType.X)
                             {
-                                double a = annoAngleInternal * 0.017453292519943295;
-                                num12 = Math.Abs(Math.Sin(a));
-                                num13 = Math.Abs(Math.Cos(a));
-                                double width = size.Width;
-                                double height = size.Height;
-                                double num17 = 0.5 * Math.Abs((double)((width * num13) + (height * num12)));
-                                double num18 = 0.5 * Math.Abs((double)((width * num12) + (height * num13)));
-                                num10 = num18 - (0.5 * height);
                                 if (flag4)
                                 {
-                                    num10 = -num10;
+                                    num12 = -num12;
                                 }
-                                num11 = num17 - (0.5 * width);
-                                size.Width = 2.0 * num17;
-                                size.Height = 2.0 * num18;
-                            }
-                            double length = 0.0;
-                            if (inner)
-                            {
-                                length = isNear ? (-((size.Height + tickOffset) + num10) * _scale) : (((_r.Height + num10) + tickOffset) * _scale);
-                            }
-                            else
-                            {
-                                length = isNear ? ((tickOffset + num10) * _scale) : (_r.Height - (((tickOffset + size.Height) + num10) * _scale));
-                            }
-                            Canvas.SetTop(el, length);
-                            double num20 = d + num11;
-                            if (_axis.AnnoPosition == AnnoPosition.Auto)
-                            {
-                                if ((Math.Abs(num12) > 0.01) && (_axis.AnnoAngle != 0.0))
+                                if (num12 > 0.0)
                                 {
-                                    double num21 = annoAngleInternal * 0.017453292519943295;
-                                    num12 = Math.Sin(num21);
-                                    if (_axis.AxisType == AxisType.X)
-                                    {
-                                        if (flag4)
-                                        {
-                                            num12 = -num12;
-                                        }
-                                        if (num12 > 0.0)
-                                        {
-                                            num20 -= ((0.5 * size2.Height) * _scale) * num12;
-                                        }
-                                        else
-                                        {
-                                            num20 -= size.Width * _scale;
-                                            num20 -= ((0.5 * size2.Height) * _scale) * num12;
-                                        }
-                                    }
-                                    else if (_axis.AxisType == AxisType.Y)
-                                    {
-                                        num12 = Math.Abs(num12);
-                                        if (!flag4)
-                                        {
-                                            if (_axis.AnnoAngle > 0.0)
-                                            {
-                                                num20 -= size.Height * _scale;
-                                                num20 += ((0.5 * size2.Height) * _scale) * num12;
-                                            }
-                                            else
-                                            {
-                                                num20 -= ((0.5 * size2.Height) * _scale) * num12;
-                                            }
-                                        }
-                                        else if (_axis.AnnoAngle < 0.0)
-                                        {
-                                            num20 -= size.Height * _scale;
-                                            num20 += ((0.5 * size2.Height) * _scale) * num12;
-                                        }
-                                        else
-                                        {
-                                            num20 -= ((0.5 * size2.Height) * _scale) * num12;
-                                        }
-                                    }
+                                    num20 -= ((0.5 * size2.Height) * _scale) * num12;
                                 }
                                 else
                                 {
-                                    num20 -= (0.5 * size.Width) * _scale;
+                                    num20 -= size.Width * _scale;
+                                    num20 -= ((0.5 * size2.Height) * _scale) * num12;
                                 }
                             }
-                            if (_axis.AnnoPosition == AnnoPosition.Far)
+                            else if (_axis.AxisType == AxisType.Y)
                             {
-                                num20 -= size.Width * _scale;
-                            }
-                            Canvas.SetLeft(el, num20);
-                            if (_scale != 1.0)
-                            {
-                                double num28;
-                                ScaleTransform transform = new ScaleTransform();
-                                transform.ScaleY = num28 = _scale;
-                                transform.ScaleX = num28;
-                                el.RenderTransform = transform;
-                            }
-                            if (annoAngleInternal != 0.0)
-                            {
-                                RotateTransform transform2 = new RotateTransform();
-                                transform2.Angle = annoAngleInternal;
-                                transform2.CenterX = (0.5 * size2.Width) * _scale;
-                                transform2.CenterY = (0.5 * size2.Height) * _scale;
-                                el.RenderTransform = transform2;
-                            }
-                            if (inner && ((num20 < 0.0) || ((num20 + size.Width) > _r.Width)))
-                            {
-                                el = null;
-                            }
-                            if (((Axis.Position & AxisPosition.DisableLastLabelOverflow) > AxisPosition.Near) && ((num20 + size.Width) > _r.Width))
-                            {
-                                el = null;
-                            }
-                            Point[] pointArray2 = null;
-                            if ((Axis.AnnoVisibility == AnnoVisibility.HideOverlapped) && (el != null))
-                            {
-                                Point point = new Point(num20 + ((0.5 * size2.Width) * _scale), length + ((0.5 * size2.Height) * _scale));
-                                pointArray2 = new Point[] { new Point(point.X - (0.5 * size2.Width), point.Y - (0.5 * size2.Height)), new Point(point.X + (0.5 * size2.Width), point.Y - (0.5 * size2.Height)), new Point(point.X + (0.5 * size2.Width), point.Y + (0.5 * size2.Height)), new Point(point.X - (0.5 * size2.Width), point.Y + (0.5 * size2.Height)) };
-                                if (annoAngleInternal != 0.0)
+                                num12 = Math.Abs(num12);
+                                if (!flag4)
                                 {
-                                    RotateTransform transform4 = new RotateTransform();
-                                    transform4.Angle = annoAngleInternal;
-                                    transform4.CenterX = point.X;
-                                    transform4.CenterY = point.Y;
-                                    RotateTransform transform3 = transform4;
-                                    for (int j = 0; j < 4; j++)
+                                    if (_axis.AnnoAngle > 0.0)
                                     {
-                                        pointArray2[j] = transform3.TransformPoint(pointArray2[j]);
+                                        num20 -= size.Height * _scale;
+                                        num20 += ((0.5 * size2.Height) * _scale) * num12;
+                                    }
+                                    else
+                                    {
+                                        num20 -= ((0.5 * size2.Height) * _scale) * num12;
                                     }
                                 }
-                                if ((pointArray != null) && Intersect(pointArray, pointArray2))
+                                else if (_axis.AnnoAngle < 0.0)
                                 {
-                                    el = null;
-                                }
-                            }
-                            if (el != null)
-                            {
-                                AnnoCreatedEventArgs args = new AnnoCreatedEventArgs(this, el, i, vals[i]);
-                                Axis.FireAnnoCreated(args);
-                                if (args.Cancel)
-                                {
-                                    el = null;
+                                    num20 -= size.Height * _scale;
+                                    num20 += ((0.5 * size2.Height) * _scale) * num12;
                                 }
                                 else
                                 {
-                                    el = args.Label;
+                                    num20 -= ((0.5 * size2.Height) * _scale) * num12;
                                 }
                             }
-                            if ((el != null) && !base.Children.Contains(el))
-                            {
-                                base.Children.Add(el);
-                            }
-                            if (el != null)
-                            {
-                                pointArray = pointArray2;
-                            }
-                            _albls[i] = el;
-                        }
-                        Line line = new Line();
-                        line.Stroke = _axis.MajorTickStroke;
-                        if (line.Stroke == null)
-                        {
-                            line.Stroke = _axis.ForegroundInternal;
-                        }
-                        if (line.Stroke == null)
-                        {
-                            if (_chart != null)
-                            {
-                                line.Stroke = _chart.Foreground;
-                            }
-                            else
-                            {
-                                line.Stroke = new SolidColorBrush(Colors.Black);
-                            }
-                        }
-                        line.StrokeThickness = _axis.MajorTickThickness;
-                        line.X2 = num29 = d;
-                        line.X1 = num29;
-                        double num23 = MajorTickHeightInternal * _scale;
-                        if (isNear)
-                        {
-                            line.Y1 = -num23 * majorTickOverlap;
-                            line.Y2 = num23 * (1.0 - majorTickOverlap);
                         }
                         else
                         {
-                            line.Y1 = _r.Height - (num23 * (1.0 - majorTickOverlap));
-                            line.Y2 = _r.Height + (num23 * majorTickOverlap);
+                            num20 -= (0.5 * size.Width) * _scale;
                         }
-                        base.Children.Add(line);
-                        _ticks[i] = line;
                     }
-                    if ((((_axis.MajorGridFill != null) && ((i % 2) == 1)) && ((vals[i - 1] >= _min) || (vals[i - 1] >= _min))) && ((vals[i - 1] <= _max) || (vals[i - 1] <= _max)))
+                    if (_axis.AnnoPosition == AnnoPosition.Far)
                     {
-                        double num24 = 0.0;
-                        double num25 = 0.0;
-                        double num26 = 0.0;
-                        double num27 = 0.0;
-                        if (_axis.AxisType == AxisType.X)
-                        {
-                            num24 = Convert(Math.Max(vals[i - 1], _min));
-                            num25 = Convert(Math.Min(_max, vals[i]));
-                            num26 = _plot.Top - _r.Top;
-                            num27 = _plot.Bottom - _r.Top;
-                        }
-                        else if (_axis.AxisType == AxisType.Y)
-                        {
-                            num24 = Convert(vals[i - 1]);
-                            num25 = Convert(Math.Min(_max, vals[i]));
-                            num26 = ((_r.Left + ((_trtr != null) ? _trtr.X : 0.0)) - _plot.Left) - _plot.Width;
-                            num27 = num26 + _plot.Width;
-                        }
-                        Rectangle element = new Rectangle();
-                        element.Width = Math.Abs((double)(num25 - num24));
-                        element.Height = Math.Abs((double)(num27 - num26));
-                        element.Fill = Utils.Clone(_axis.MajorGridFill);
-                        Canvas.SetLeft(element, Math.Min(num24, num25));
-                        Canvas.SetTop(element, Math.Min(num26, num27));
-                        base.Children.Add(element);
+                        num20 -= size.Width * _scale;
                     }
-                    if ((!isRadar && (vals[i] >= _min)) && ((vals[i] <= _max) && (majorGridStroke != null)))
+                    Canvas.SetLeft(el, num20);
+                    if (_scale != 1.0)
                     {
-                        DrawGridLine(majorGridStroke, _axis.MajorGridStrokeThickness, vals[i], isNear, _axis.MajorGridStrokeDashes);
+                        double num28;
+                        ScaleTransform transform = new ScaleTransform();
+                        transform.ScaleY = num28 = _scale;
+                        transform.ScaleX = num28;
+                        el.RenderTransform = transform;
                     }
+                    if (annoAngleInternal != 0.0)
+                    {
+                        RotateTransform transform2 = new RotateTransform();
+                        transform2.Angle = annoAngleInternal;
+                        transform2.CenterX = (0.5 * size2.Width) * _scale;
+                        transform2.CenterY = (0.5 * size2.Height) * _scale;
+                        el.RenderTransform = transform2;
+                    }
+                    if (inner && ((num20 < 0.0) || ((num20 + size.Width) > _r.Width)))
+                    {
+                        el = null;
+                    }
+                    if (((Axis.Position & AxisPosition.DisableLastLabelOverflow) > AxisPosition.Near) && ((num20 + size.Width) > _r.Width))
+                    {
+                        el = null;
+                    }
+                    Point[] pointArray2 = null;
+                    if ((Axis.AnnoVisibility == AnnoVisibility.HideOverlapped) && (el != null))
+                    {
+                        Point point = new Point(num20 + ((0.5 * size2.Width) * _scale), length + ((0.5 * size2.Height) * _scale));
+                        pointArray2 = new Point[] { new Point(point.X - (0.5 * size2.Width), point.Y - (0.5 * size2.Height)), new Point(point.X + (0.5 * size2.Width), point.Y - (0.5 * size2.Height)), new Point(point.X + (0.5 * size2.Width), point.Y + (0.5 * size2.Height)), new Point(point.X - (0.5 * size2.Width), point.Y + (0.5 * size2.Height)) };
+                        if (annoAngleInternal != 0.0)
+                        {
+                            RotateTransform transform4 = new RotateTransform();
+                            transform4.Angle = annoAngleInternal;
+                            transform4.CenterX = point.X;
+                            transform4.CenterY = point.Y;
+                            RotateTransform transform3 = transform4;
+                            for (int j = 0; j < 4; j++)
+                            {
+                                pointArray2[j] = transform3.TransformPoint(pointArray2[j]);
+                            }
+                        }
+                        if ((pointArray != null) && Intersect(pointArray, pointArray2))
+                        {
+                            el = null;
+                        }
+                    }
+                    if (el != null)
+                    {
+                        AnnoCreatedEventArgs args = new AnnoCreatedEventArgs(this, el, i, vals[i]);
+                        Axis.FireAnnoCreated(args);
+                        if (args.Cancel)
+                        {
+                            el = null;
+                        }
+                        else
+                        {
+                            el = args.Label;
+                        }
+                    }
+                    if ((el != null) && !base.Children.Contains(el))
+                    {
+                        base.Children.Add(el);
+                    }
+                    if (el != null)
+                    {
+                        pointArray = pointArray2;
+                    }
+                    _albls[i] = el;
+                }
+
+                // 刻度线
+                Line line = new Line();
+                line.Stroke = _axis.MajorTickStroke;
+                if (line.Stroke == null)
+                {
+                    line.Stroke = _axis.ForegroundInternal;
+                }
+                if (line.Stroke == null)
+                {
+                    if (_chart != null)
+                    {
+                        line.Stroke = _chart.Foreground;
+                    }
+                    else
+                    {
+                        line.Stroke = new SolidColorBrush(Colors.Black);
+                    }
+                }
+                line.StrokeThickness = _axis.MajorTickThickness;
+                line.X2 = d;
+                line.X1 = d;
+                double num23 = MajorTickHeightInternal * _scale;
+                if (isNear)
+                {
+                    line.Y1 = -num23 * majorTickOverlap;
+                    line.Y2 = num23 * (1.0 - majorTickOverlap);
+                }
+                else
+                {
+                    line.Y1 = _r.Height - (num23 * (1.0 - majorTickOverlap));
+                    line.Y2 = _r.Height + (num23 * majorTickOverlap);
+                }
+                base.Children.Add(line);
+                _ticks[i] = line;
+
+                // 网格区间背景
+                if (_axis.MajorGridFill != null
+                    && (i % 2) == 1
+                    && vals[i - 1] >= _min
+                    && vals[i - 1] <= _max)
+                {
+                    double num24 = 0.0;
+                    double num25 = 0.0;
+                    double num26 = 0.0;
+                    double num27 = 0.0;
+                    if (_axis.AxisType == AxisType.X)
+                    {
+                        num24 = Convert(Math.Max(vals[i - 1], _min));
+                        num25 = Convert(Math.Min(_max, vals[i]));
+                        num26 = _plot.Top - _r.Top;
+                        num27 = _plot.Bottom - _r.Top;
+                    }
+                    else if (_axis.AxisType == AxisType.Y)
+                    {
+                        num24 = Convert(vals[i - 1]);
+                        num25 = Convert(Math.Min(_max, vals[i]));
+                        num26 = _r.Left - _plot.Width;
+                        num27 = num26 + _plot.Width;
+                    }
+                    Rectangle element = new Rectangle();
+                    element.Width = Math.Abs((double)(num25 - num24));
+                    element.Height = Math.Abs((double)(num27 - num26));
+                    element.Fill = Utils.Clone(_axis.MajorGridFill);
+                    Canvas.SetLeft(element, Math.Min(num24, num25));
+                    Canvas.SetTop(element, Math.Min(num26, num27));
+                    base.Children.Add(element);
+                }
+
+                // 网格线
+                if (!isRadar && majorGridStroke != null)
+                {
+                    DrawGridLine(majorGridStroke, _axis.MajorGridStrokeThickness, vals[i], isNear, _axis.MajorGridStrokeDashes);
                 }
             }
         }
@@ -1000,29 +1004,31 @@ namespace Dt.Charts
 
         void DrawGridLine(Brush stroke, double thickness, double val, bool near, DoubleCollection dashes)
         {
-            double num = 0.0;
-            double num2 = 0.0;
-            double num3 = 0.0;
-            double num4 = 0.0;
+            double left = 0.0;
+            double top = 0.0;
+            double right = 0.0;
+            double bottom = 0.0;
+
             if (_axis.AxisType == AxisType.X)
             {
-                num = num3 = Convert(val);
-                num2 = _plot.Top - _r.Top;
-                num4 = _plot.Bottom - _r.Top;
+                left = right = Convert(val);
+                top = _plot.Top - _r.Top;
+                bottom = _plot.Bottom - _r.Top;
             }
             else if (_axis.AxisType == AxisType.Y)
             {
-                num = num3 = Convert(val);
-                num2 = ((_r.Left + ((_trtr != null) ? _trtr.X : 0.0)) - _plot.Left) - _plot.Width;
-                num4 = num2 + _plot.Width;
+                left = right = Convert(val);
+                top = _r.Left - _plot.Width;
+                bottom = top + _plot.Width;
             }
+
             if ((dashes != null) && (dashes.Count > 0))
             {
                 Line line2 = new Line();
-                line2.X1 = num;
-                line2.Y1 = num2;
-                line2.X2 = num3;
-                line2.Y2 = num4;
+                line2.X1 = left;
+                line2.Y1 = top;
+                line2.X2 = right;
+                line2.Y2 = bottom;
                 Line line = line2;
                 line.Stroke = stroke;
                 line.StrokeThickness = thickness;
@@ -1038,15 +1044,15 @@ namespace Dt.Charts
                 {
                     element.Width = thickness;
                     element.Height = Math.Round(_plot.Height);
-                    Canvas.SetLeft(element, Math.Round((double)(num - (0.5 * thickness))));
-                    Canvas.SetTop(element, Math.Round(num2));
+                    Canvas.SetLeft(element, Math.Round((double)(left - (0.5 * thickness))));
+                    Canvas.SetTop(element, Math.Round(top));
                 }
                 else if (_axis.AxisType == AxisType.Y)
                 {
                     element.Width = thickness;
                     element.Height = Math.Round(_plot.Width);
-                    Canvas.SetLeft(element, Math.Round((double)(num - (0.5 * thickness))));
-                    Canvas.SetTop(element, num2);
+                    Canvas.SetLeft(element, Math.Round((double)(left - (0.5 * thickness))));
+                    Canvas.SetTop(element, top);
                 }
                 base.Children.Add(element);
             }
@@ -1234,34 +1240,13 @@ namespace Dt.Charts
                 return;
 
             if ((Axis.Position & AxisPosition.OverData) > AxisPosition.Near)
-            {
                 Canvas.SetZIndex(this, 1);
-            }
             else
-            {
                 Canvas.SetZIndex(this, 0);
-            }
-
-            if ((_axis.AxisType == AxisType.Y) && (_trg == null))
-            {
-                _trot = new RotateTransform();
-                _trtr = new TranslateTransform();
-                _trg = new TransformGroup();
-                _trg.Children.Add(_trot);
-                _trg.Children.Add(_trtr);
-            }
-
-            if (_axis.AxisType != AxisType.Y)
-            {
-                _trg = null;
-            }
 
             _r = r;
-            Canvas.SetLeft(this, r.X);
-            Canvas.SetTop(this, r.Y);
             Width = r.Width;
             Height = r.Height;
-            double tickOffset = GetTickOffset(false);
             if (!_axis.Visible || r.IsEmptyRect())
             {
                 if (TitleInternal != null)
@@ -1272,137 +1257,138 @@ namespace Dt.Charts
                 {
                     _axis.AxisLine.Visibility = Utils.VisHidden;
                 }
+                return;
+            }
+
+            Visibility = Visibility.Visible;
+            Canvas.SetTop(this, r.Y);
+            if (_axis.AxisType == AxisType.Y)
+            {
+                Canvas.SetLeft(this, r.X + r.Height);
+                RenderTransform = new RotateTransform { Angle = 90.0 };
             }
             else
             {
-                Visibility = Visibility.Visible;
-                bool isNear = IsNear;
-                if (_trg != null)
+                Canvas.SetLeft(this, r.X);
+            }
+
+            // 坐标轴线
+            bool isNear = IsNear;
+            Line axisLine = _axis.AxisLine;
+            if (axisLine != null)
+            {
+                axisLine.Visibility = Visibility.Visible;
+                axisLine.X1 = 0.0;
+                axisLine.X2 = r.Width;
+                if (isNear)
                 {
-                    _trot.Angle = 90.0;
-                    _trtr.X = r.Height;
-                    _trtr.Y = 0.0;
-                    base.RenderTransform = _trg;
+                    double num3;
+                    axisLine.Y2 = num3 = 0.0;
+                    axisLine.Y1 = num3;
                 }
                 else
                 {
-                    base.ClearValue(UIElement.RenderTransformProperty);
-                }
-                Line axisLine = _axis.AxisLine;
-                if (axisLine != null)
-                {
-                    axisLine.Visibility = Visibility.Visible;
-                    axisLine.X1 = 0.0;
-                    axisLine.X2 = r.Width;
-                    if (isNear)
-                    {
-                        double num3;
-                        axisLine.Y2 = num3 = 0.0;
-                        axisLine.Y1 = num3;
-                    }
-                    else
-                    {
-                        double num4;
-                        axisLine.Y2 = num4 = r.Height;
-                        axisLine.Y1 = num4;
-                    }
-                }
-                Size size = new Size();
-                if (TitleInternal != null)
-                {
-                    size = _titleDesiredSize;
-                }
-
-                _scale = 1.0;
-                FrameworkElement scrollBarInternal = ScrollBarInternal as FrameworkElement;
-                Size size2 = new Size();
-                if (scrollBarInternal != null)
-                {
-                    Windows.UI.Xaml.Thickness scrollBarMargin = _axis.ScrollBar.ScrollBarMargin;
-                    if (isNear)
-                    {
-                        Canvas.SetTop(scrollBarInternal, tickOffset + AnnoSize.Height);
-                    }
-                    else
-                    {
-                        Canvas.SetTop(scrollBarInternal, size.Height);
-                    }
-                    Canvas.SetLeft(scrollBarInternal, scrollBarMargin.Left);
-                    scrollBarInternal.Width = (r.Width - scrollBarMargin.Left) - scrollBarMargin.Right;
-                    size2 = Utils.GetSize(scrollBarInternal);
-                }
-
-                if (TitleInternal != null)
-                {
-                    TitleInternal.Visibility = Visibility.Visible;
-                    if ((_axis.AxisType == AxisType.Y) && IsNear)
-                    {
-                        RotateTransform transform = new RotateTransform();
-                        transform.Angle = 180.0;
-                        TitleInternal.RenderTransform = transform;
-                        if (TitleInternal is TextBlock)
-                        {
-                            transform.CenterX = 0.5 * size.Width;
-                        }
-                        else
-                        {
-                            TitleInternal.RenderTransformOrigin = new Point(0.5, 0.5);
-                        }
-                    }
-                    else
-                    {
-                        TitleInternal.RenderTransform = null;
-                    }
-                    FrameworkElement titleInternal = TitleInternal as FrameworkElement;
-                    if (titleInternal != null)
-                    {
-                        switch (titleInternal.HorizontalAlignment)
-                        {
-                            case HorizontalAlignment.Left:
-                                Canvas.SetLeft(TitleInternal, 0.0);
-                                break;
-
-                            case HorizontalAlignment.Center:
-                                Canvas.SetLeft(TitleInternal, 0.5 * (r.Width - size.Width));
-                                break;
-
-                            case HorizontalAlignment.Right:
-                                Canvas.SetLeft(TitleInternal, r.Width - size.Width);
-                                break;
-
-                            case HorizontalAlignment.Stretch:
-                                {
-                                    double width = r.Width;
-                                    width -= titleInternal.Margin.Left + titleInternal.Margin.Right;
-                                    Canvas.SetLeft(TitleInternal, 0.0);
-                                    titleInternal.Width = width;
-                                    break;
-                                }
-                        }
-                    }
-                    else
-                    {
-                        Canvas.SetLeft(TitleInternal, 0.5 * (r.Width - size.Width));
-                    }
-
-                    if (isNear)
-                    {
-                        if ((_axis.AxisType == AxisType.Y) && (TitleInternal is TextBlock))
-                        {
-                            Canvas.SetTop(TitleInternal, ((tickOffset + AnnoSize.Height) + size.Height) + size2.Height);
-                        }
-                        else
-                        {
-                            Canvas.SetTop(TitleInternal, (tickOffset + AnnoSize.Height) + size2.Height);
-                        }
-                    }
-                    else
-                    {
-                        Canvas.SetTop(TitleInternal, 0.0);
-                    }
+                    double num4;
+                    axisLine.Y2 = num4 = r.Height;
+                    axisLine.Y1 = num4;
                 }
             }
-            _lrect = r;
+
+            Size size = new Size();
+            if (TitleInternal != null)
+            {
+                size = _titleDesiredSize;
+            }
+
+            double tickOffset = GetTickOffset(false);
+            _scale = 1.0;
+            FrameworkElement scrollBarInternal = ScrollBarInternal as FrameworkElement;
+            Size size2 = new Size();
+            if (scrollBarInternal != null)
+            {
+                Windows.UI.Xaml.Thickness scrollBarMargin = _axis.ScrollBar.ScrollBarMargin;
+                if (isNear)
+                {
+                    Canvas.SetTop(scrollBarInternal, tickOffset + AnnoSize.Height);
+                }
+                else
+                {
+                    Canvas.SetTop(scrollBarInternal, size.Height);
+                }
+                Canvas.SetLeft(scrollBarInternal, scrollBarMargin.Left);
+                scrollBarInternal.Width = (r.Width - scrollBarMargin.Left) - scrollBarMargin.Right;
+                size2 = Utils.GetSize(scrollBarInternal);
+            }
+
+            if (TitleInternal != null)
+            {
+                TitleInternal.Visibility = Visibility.Visible;
+                if ((_axis.AxisType == AxisType.Y) && IsNear)
+                {
+                    RotateTransform transform = new RotateTransform();
+                    transform.Angle = 180.0;
+                    TitleInternal.RenderTransform = transform;
+                    if (TitleInternal is TextBlock)
+                    {
+                        transform.CenterX = 0.5 * size.Width;
+                    }
+                    else
+                    {
+                        TitleInternal.RenderTransformOrigin = new Point(0.5, 0.5);
+                    }
+                }
+                else
+                {
+                    TitleInternal.RenderTransform = null;
+                }
+                FrameworkElement titleInternal = TitleInternal as FrameworkElement;
+                if (titleInternal != null)
+                {
+                    switch (titleInternal.HorizontalAlignment)
+                    {
+                        case HorizontalAlignment.Left:
+                            Canvas.SetLeft(TitleInternal, 0.0);
+                            break;
+
+                        case HorizontalAlignment.Center:
+                            Canvas.SetLeft(TitleInternal, 0.5 * (r.Width - size.Width));
+                            break;
+
+                        case HorizontalAlignment.Right:
+                            Canvas.SetLeft(TitleInternal, r.Width - size.Width);
+                            break;
+
+                        case HorizontalAlignment.Stretch:
+                            {
+                                double width = r.Width;
+                                width -= titleInternal.Margin.Left + titleInternal.Margin.Right;
+                                Canvas.SetLeft(TitleInternal, 0.0);
+                                titleInternal.Width = width;
+                                break;
+                            }
+                    }
+                }
+                else
+                {
+                    Canvas.SetLeft(TitleInternal, 0.5 * (r.Width - size.Width));
+                }
+
+                if (isNear)
+                {
+                    if ((_axis.AxisType == AxisType.Y) && (TitleInternal is TextBlock))
+                    {
+                        Canvas.SetTop(TitleInternal, ((tickOffset + AnnoSize.Height) + size.Height) + size2.Height);
+                    }
+                    else
+                    {
+                        Canvas.SetTop(TitleInternal, (tickOffset + AnnoSize.Height) + size2.Height);
+                    }
+                }
+                else
+                {
+                    Canvas.SetTop(TitleInternal, 0.0);
+                }
+            }
         }
 
         void PositionLabel(UIElement el, double x, double y, double angle)
@@ -1715,7 +1701,7 @@ namespace Dt.Charts
         {
             get
             {
-                Rect rect = _lrect;
+                Rect rect = _r;
                 if (!rect.IsEmptyRect() && (_axis.AxisType == AxisType.Y))
                 {
                     return new Rect(rect.X, rect.Y, rect.Height, rect.Width);

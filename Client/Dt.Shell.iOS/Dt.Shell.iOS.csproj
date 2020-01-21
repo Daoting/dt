@@ -88,25 +88,25 @@
     </ImageAsset>
     <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\Icon-20%402x.png">
       <Visible>false</Visible>
-    </ImageAsset> 
+    </ImageAsset>
     <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\Icon-20%403x.png">
       <Visible>false</Visible>
-    </ImageAsset>     
+    </ImageAsset>
     <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\Icon-120.png">
       <Visible>false</Visible>
     </ImageAsset>
     <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\Icon-60%403x.png">
       <Visible>false</Visible>
-    </ImageAsset> 
+    </ImageAsset>
     <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\Icon-29%402x.png">
       <Visible>false</Visible>
     </ImageAsset>
     <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\Icon-29%403x.png">
       <Visible>false</Visible>
-    </ImageAsset> 
+    </ImageAsset>
     <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\Icon-40%402x.png">
       <Visible>false</Visible>
-    </ImageAsset> 
+    </ImageAsset>
     <ImageAsset Include="Assets.xcassets\AppIcons.appiconset\Icon-1024.png">
       <Visible>false</Visible>
     </ImageAsset>
@@ -141,9 +141,25 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Dt.App\Dt.App.csproj">
+      <Project>{0bba6785-9986-4a2e-b8b3-961d143894e4}</Project>
+      <Name>Dt.App</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Dt.Base\Dt.Base.csproj">
       <Project>{13a270fb-825a-4fb3-ae13-01dfd7c7a147}</Project>
       <Name>Dt.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dt.Cells.Data\Dt.Cells.Data.csproj">
+      <Project>{7ce3ed41-685e-46bd-ab2f-ab25467cbe35}</Project>
+      <Name>Dt.Cells.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dt.Cells\Dt.Cells.csproj">
+      <Project>{97eac2fe-30d6-40d8-9fec-a568774d1058}</Project>
+      <Name>Dt.Cells</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dt.Charts\Dt.Charts.csproj">
+      <Project>{a77e5063-ff97-49f3-aa5e-814baa7a929d}</Project>
+      <Name>Dt.Charts</Name>
     </ProjectReference>
     <ProjectReference Include="..\Dt.Core\Dt.Core.csproj">
       <Project>{89b073f7-81dd-4e5d-a093-f73121b1f406}</Project>

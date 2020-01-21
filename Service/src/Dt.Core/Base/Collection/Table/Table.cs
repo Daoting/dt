@@ -23,6 +23,9 @@ namespace Dt.Core
     /// <summary>
     /// 数据表，行集合(行为同构)，提供简单的数据表管理功能
     /// </summary>
+#if !SERVER
+    [Windows.UI.Xaml.Data.Bindable]
+#endif
     public partial class Table : ObservableCollection<Row>, IRpcJson
     {
         #region 成员变量

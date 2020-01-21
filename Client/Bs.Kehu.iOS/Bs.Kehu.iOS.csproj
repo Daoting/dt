@@ -146,11 +146,23 @@
       <Name>Bs.Kehu</Name>
     </ProjectReference>
     <ProjectReference Include="..\Dt.Base\Dt.Base.csproj">
-      <Project>{1d204eff-ce8e-4618-9f1e-b61a80bc03df}</Project>
+      <Project>{e3f3c994-17dc-4b65-8a66-f2c70537df7d}</Project>
       <Name>Dt.Base</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Dt.Cells.Data\Dt.Cells.Data.csproj">
+      <Project>{7ce3ed41-685e-46bd-ab2f-ab25467cbe35}</Project>
+      <Name>Dt.Cells.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dt.Cells\Dt.Cells.csproj">
+      <Project>{97eac2fe-30d6-40d8-9fec-a568774d1058}</Project>
+      <Name>Dt.Cells</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dt.Charts\Dt.Charts.csproj">
+      <Project>{a77e5063-ff97-49f3-aa5e-814baa7a929d}</Project>
+      <Name>Dt.Charts</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Dt.Core\Dt.Core.csproj">
-      <Project>{36afb125-e5ff-4bbe-b960-f6e7802106a7}</Project>
+      <Project>{7e933aca-685d-4a54-979c-ce83c5cfd2fc}</Project>
       <Name>Dt.Core</Name>
     </ProjectReference>
   </ItemGroup>

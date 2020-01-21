@@ -17,6 +17,9 @@ namespace Dt.Core
     /// 基础数据项，不可独立构造使用
     /// 注意：string类型时值空为string.Empty，使用时无需考虑null的情况
     /// </summary>
+#if !SERVER
+    [Windows.UI.Xaml.Data.Bindable]
+#endif
     public partial class Cell : INotifyPropertyChanged
     {
         #region 成员变量

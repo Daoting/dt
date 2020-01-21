@@ -7,12 +7,12 @@
 #endregion
 
 #region 引用命名
-using System.Text.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 #endregion
 
 namespace Dt.Core
@@ -20,7 +20,9 @@ namespace Dt.Core
     /// <summary>
     /// 数据行管理类
     /// </summary>
-    [Bindable(true)]
+#if !SERVER
+    [Windows.UI.Xaml.Data.Bindable]
+#endif
     public class Row : INotifyPropertyChanged, IRpcJson
     {
         #region 成员变量
