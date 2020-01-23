@@ -209,7 +209,14 @@ namespace Dt.Sample
                     Note = "",
                     Tag = typeof(BrushDemo),
                     Callback = OnNaviTo
-                }
+                },
+                new DataCmd
+                {
+                    Title = "生成App图片",
+                    Note = "生成 android 和 iOS 中用到的app图片",
+                    Tag = typeof(AppIcon),
+                    Callback = OnNaviTo
+                },
             };
             group.Title = "样式资源";
             ds.Add(group);

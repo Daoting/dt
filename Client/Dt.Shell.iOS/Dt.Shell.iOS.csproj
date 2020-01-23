@@ -8,7 +8,7 @@
     <TemplateGuid>{440aa056-593a-4519-8708-27081dee632f}</TemplateGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>Blank</RootNamespace>
-    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+    <IPhoneResourcePrefix>Assets</IPhoneResourcePrefix>
     <AssemblyName>Blank</AssemblyName>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
@@ -73,13 +73,14 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <BundleResource Include="..\Common\icon.ttf">
-      <Link>Resources\Fonts\icon.ttf</Link>
+      <Link>Assets\Fonts\icon.ttf</Link>
     </BundleResource>
     <BundleResource Include="..\Common\winjs-symbols.ttf">
-      <Link>Resources\Fonts\winjs-symbols.ttf</Link>
+      <Link>Assets\Fonts\winjs-symbols.ttf</Link>
     </BundleResource>
-    <BundleResource Include="Resources\SplashScreen%402x.png" />
-    <BundleResource Include="Resources\SplashScreen%403x.png" />
+    <BundleResource Include="Assets\SplashScreen%402x.png" />
+    <BundleResource Include="Assets\SplashScreen%403x.png" />
+    <BundleResource Include="Assets\logo.png" />
     <Content Include="..\Common\iOS说明.txt">
       <Link>iOS说明.txt</Link>
     </Content>

@@ -47,7 +47,7 @@
     <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
     <AotAssemblies>true</AotAssemblies>
     <EnableLLVM>false</EnableLLVM>
-    <AndroidEnableSGenConcurrent>true</AndroidEnableSGenConcurrent>   
+    <AndroidEnableSGenConcurrent>true</AndroidEnableSGenConcurrent>
     <AndroidSupportedAbis />
     <BundleAssemblies>true</BundleAssemblies>
   </PropertyGroup>
@@ -140,19 +140,14 @@
     <AndroidResource Include="Resources\drawable\back.png" />
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\drawable\StoreLogo.png">
-      <Generator>MSBuild:UpdateGeneratedFiles</Generator>
-    </AndroidResource>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="..\Common\Android说明.txt">
       <Link>Android说明.txt</Link>
     </Content>
+    <AndroidResource Include="Resources\drawable\logo.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
-   <!-- This will force the generation of the APK when not building inside visual studio -->
+  <!-- This will force the generation of the APK when not building inside visual studio -->
   <Target Name="GenerateBuild" DependsOnTargets="SignAndroidPackage" AfterTargets="Build" Condition="'$(BuildingInsideVisualStudio)'==''" />
-
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
 		Other similar extension points exist, see Microsoft.Common.targets.
 		<Target Name="BeforeBuild">

@@ -6,7 +6,7 @@
     <Grid x:Name="_grid" MinHeight="50">
         <Rectangle x:Name="_rc" IsHitTestVisible="False" />
         <StackPanel x:Name="_sp" Margin="20,10" VerticalAlignment="Center">
-            <TextBlock x:Name="_tb" Foreground="White" />
+            <TextBlock x:Name="_tb" Foreground="White" TextWrapping="Wrap" />
         </StackPanel>
     </Grid>
 </UserControl>

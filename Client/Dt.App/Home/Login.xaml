@@ -27,8 +27,8 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Image Source="ms-appx:///Assets/StoreLogo.png" Height="50" Width="50" Stretch="None" />
-            <TextBlock x:Name="_tbTitle" FontSize="{StaticResource 大字号}" Padding="5,8,0,0" TextWrapping="Wrap" Grid.Column="1"/>
+            <Image Source="ms-appx:///Assets/logo.png" Height="50" Width="50" Stretch="None" />
+            <TextBlock x:Name="_tbTitle" FontSize="{StaticResource 大字号}" Margin="5,8,5,8" TextWrapping="Wrap" Grid.Column="1"/>
         </Grid>
 
         <Grid x:Name="InfoPanel" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed" Grid.Row="2">

@@ -10,7 +10,7 @@ The Bindable attribute is missing and the type [T] is not known by the MetadataP
 
 \Resources\drawable\back.png  快速启动背景
                     icon.png  app不同分辨率图标
-                    StoreLogo：程序中用到的50X50图标
+                    logo：程序中用到的50X50图标
 
 \Resources\values\string.xml  定义App标题
                   styles.xml  定义样式参数
