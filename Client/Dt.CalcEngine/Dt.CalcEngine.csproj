@@ -6,6 +6,8 @@
     <Product>DT业务基础平台</Product>
     <Description>DT平台Excel计算引擎</Description>
     <Copyright>Copyright © 2020</Copyright>
+    <!-- 打包.nupkg时包含pdb文件，用于调试 -->
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
 
 </Project>

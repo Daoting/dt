@@ -3,8 +3,8 @@
   <Import Project="..\Common\dtc.props" />
 
   <ItemGroup>
-    <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
-    <ProjectReference Include="..\Dt.Base\Dt.Base.csproj" />
+    <PackageReference Include="Dt.Base" Version="1.0.0" />
+    <PackageReference Include="Dt.Core" Version="1.0.0" />
   </ItemGroup>
   
   <ItemGroup>

@@ -5,7 +5,9 @@
     <Authors>hdt</Authors>
     <Product>DT业务基础平台</Product>
     <Description>DT平台Pdf文件格式</Description>
-    <Copyright>Copyright ©  2014</Copyright>
+    <Copyright>Copyright © 2020</Copyright>
+    <!-- 打包.nupkg时包含pdb文件，用于调试 -->
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
 
   <ItemGroup>
