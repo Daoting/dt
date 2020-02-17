@@ -39,6 +39,7 @@ namespace Dt.Core
             // 客户端UWP Release版无法反序列化，因Native无法调用ToArray方法！！！
             //_typeCache["objarr"] = typeof(object[]);
             _typeCache["msg"] = typeof(MsgInfo);
+            _typeCache["letter"] = typeof(LetterInfo);
         }
 
         /// <summary>

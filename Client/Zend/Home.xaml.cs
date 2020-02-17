@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Dt.Base;
+using Dt.Core;
 using System;
 using System.Collections.Generic;
 using Windows.UI.Xaml;
@@ -16,14 +17,13 @@ using Windows.UI.Xaml.Controls;
 
 namespace Dt.Zend
 {
-    /// <summary>
-    /// 
-    /// </summary>
+    [View("主页")]
     public partial class Home : NaviWin
     {
         public Home()
         {
             InitializeComponent();
+            RefreshInfo();
         }
 
         void OnNavi(object sender, RoutedEventArgs e)
@@ -33,13 +33,14 @@ namespace Dt.Zend
                 LoadWin(win);
         }
 
-        void OnNaviData(object sender, RoutedEventArgs e)
+        void RefreshInfo()
         {
-            //NaviData = new List<NaviRow>
-            //{
-            //    new NaviRow(Icons.备注, "普通窗口", typeof(WinDemo), "右侧加载普通窗口内容"),
-            //    new NaviRow(Icons.个人信息, "页面窗口", typeof(PageWinDemo), "右侧加载页面窗口内容"),
-            //};
+            _btnPwd.Desc = AtLocal.GetScalar<string>("select count(1) from pwdlog");
+        }
+
+        void OnRefresh(object sender, Mi e)
+        {
+            RefreshInfo();
         }
     }
 }

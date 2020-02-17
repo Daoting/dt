@@ -31,17 +31,18 @@ namespace Dt.Msg
     {
         public async Task Handle(OnlinePushEvent p_event)
         {
-            if (p_event.Receivers != null && p_event.Receivers.Count > 0)
+            if (p_event.Receivers == null || p_event.Receivers.Count == 0)
+                return;
+
+            StringCache cache = new StringCache(p_event.PrefixKey);
+            foreach (var id in p_event.Receivers)
             {
-                StringCache cache = new StringCache(p_event.PrefixKey);
-                foreach (var id in p_event.Receivers)
+                var ci = Online.GetClient(id);
+                // 在线推送成功
+                if (ci != null && ci.AddMsg(p_event.Msg))
                 {
-                    if (Online.All.TryGetValue(id, out var ci))
-                    {
-                        ci.AddMsg(p_event.Msg);
-                        // 设置处理标志： 6位id前缀:userid = true
-                        await cache.Set(id.ToString(), true);
-                    }
+                    // 设置处理标志： 6位id前缀:userid = true
+                    await cache.Set(id.ToString(), true);
                 }
             }
         }

@@ -6,4 +6,8 @@
     <PackageReference Include="Dt.Base" Version="1.0.0" />
     <PackageReference Include="Dt.Core" Version="1.0.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="BankDoc\" />
+  </ItemGroup>
 </Project>

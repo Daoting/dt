@@ -33,11 +33,6 @@ namespace Dt.Core
         public List<object> Params { get; set; }
 
         /// <summary>
-        /// 消息推送方式
-        /// </summary>
-        public MsgPushMode PushMode { get; set; }
-
-        /// <summary>
         /// 离线推送时的消息标题
         /// </summary>
         public string Title { get; set; }
@@ -46,29 +41,6 @@ namespace Dt.Core
         /// 离线推送时的消息内容
         /// </summary>
         public string Content { get; set; }
-
-        /// <summary>
-        /// 校验消息内容是否有效
-        /// </summary>
-        /// <returns></returns>
-        public string Validate()
-        {
-            if (PushMode == MsgPushMode.All)
-            {
-                if (string.IsNullOrEmpty(MethodName)
-                    || string.IsNullOrEmpty(Title)
-                    || string.IsNullOrEmpty(Content))
-                    return "推送时MethodName, Title, Content不可为空！";
-                return null;
-            }
-
-            if (PushMode == MsgPushMode.Online)
-                return string.IsNullOrEmpty(MethodName) ? "在线推送的MethodName不可为空！" : null;
-
-            if (string.IsNullOrEmpty(Title) || string.IsNullOrEmpty(Content))
-                return "离线推送时Title, Content不可为空！";
-            return null;
-        }
 
         /// <summary>
         /// 获取在线推送的内容
@@ -132,8 +104,6 @@ namespace Dt.Core
             }
 
             p_reader.Read();
-            PushMode = (MsgPushMode)p_reader.GetInt32();
-            p_reader.Read();
             Title = p_reader.GetString();
             p_reader.Read();
             Content = p_reader.GetString();
@@ -159,33 +129,11 @@ namespace Dt.Core
             }
             p_writer.WriteEndArray();
 
-            p_writer.WriteNumberValue((int)PushMode);
             p_writer.WriteStringValue(Title);
             p_writer.WriteStringValue(Content);
 
             p_writer.WriteEndArray();
         }
         #endregion
-    }
-
-    /// <summary>
-    /// 消息推送方式
-    /// </summary>
-    public enum MsgPushMode
-    {
-        /// <summary>
-        /// 优先推送在线，不在线时离线推送
-        /// </summary>
-        All,
-
-        /// <summary>
-        /// 只推送在线
-        /// </summary>
-        Online,
-
-        /// <summary>
-        /// 只推送离线
-        /// </summary>
-        Offline
     }
 }

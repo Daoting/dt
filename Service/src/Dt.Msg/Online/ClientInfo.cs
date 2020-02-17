@@ -26,7 +26,6 @@ namespace Dt.Msg
         readonly BlockingCollection<string> _queue;
         readonly LobContext _c;
         readonly ResponseWriter _writer;
-        bool _closed;
 
         public ClientInfo(LobContext p_context, ClientSystem p_system, ResponseWriter p_writer)
         {
@@ -36,6 +35,22 @@ namespace Dt.Msg
 
             _queue = new BlockingCollection<string>();
             StartTime = DateTime.Now;
+        }
+
+        /// <summary>
+        /// 会话上下文
+        /// </summary>
+        public LobContext Context
+        {
+            get { return _c; }
+        }
+
+        /// <summary>
+        /// 当前用户标识
+        /// </summary>
+        public long UserID
+        {
+            get { return _c.UserID; }
         }
 
         /// <summary>
@@ -49,12 +64,29 @@ namespace Dt.Msg
         public DateTime StartTime { get; }
 
         /// <summary>
+        /// 发送当前用户的离线信息
+        /// </summary>
+        /// <returns></returns>
+        public async Task SendOfflineMsg()
+        {
+            // 所有离线信息
+            var ls = await Redis.Db.ListRangeAsync(MsgKit.MsgQueueKey + _c.UserID.ToString());
+            if (ls != null && ls.Length > 0)
+            {
+                foreach (var mi in ls)
+                {
+                    await _writer.Write((string)mi);
+                }
+            }
+        }
+
+        /// <summary>
         /// 增加待推送信息
         /// </summary>
         /// <param name="p_msg"></param>
-        public void AddMsg(string p_msg)
+        public bool AddMsg(string p_msg)
         {
-            _queue.TryAdd(p_msg);
+            return _queue.TryAdd(p_msg);
         }
 
         /// <summary>
@@ -67,29 +99,20 @@ namespace Dt.Msg
             {
                 // 客户端取消请求时触发 OperationCanceledException 异常，推送结束
                 var msg = _queue.Take(_c.Context.RequestAborted);
-                Log.Debug($"向{_c.UserID}推送：{msg}");
+                Log.Debug($"推送：{_c.UserID}  {msg}");
                 return _writer.Write(msg);
             }
             catch { }
 
-            // 未关闭时需要删除会话
-            if (!_closed)
-            {
-                Online.All.TryRemove(_c.UserID, out var ci);
-                _closed = true;
-            }
-
             _queue.Dispose();
-            Log.Debug($"用户{_c.UserID}退出推送");
             return Task.FromResult(false);
         }
 
         /// <summary>
-        /// 关闭推送，调用前已删除会话！
+        /// 关闭推送
         /// </summary>
         public void Close()
         {
-            _closed = true;
             // 通知客户端退出
             _queue.TryAdd("[\"SysPushApi.StopPush\"]");
             // 触发_queue.Take()异常，会话结束

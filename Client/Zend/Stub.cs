@@ -89,8 +89,7 @@ namespace Dt.Shell
         /// 获取自定义可序列化类型字典
         /// </summary>
         public Dictionary<string, Type> SerializeTypes => new Dictionary<string, Type>
-        {
-        };
+        { };
 
         /// <summary>
         /// 获取状态库表类型
@@ -103,12 +102,14 @@ namespace Dt.Shell
             { "searchfvhis", typeof(SearchFvHis) },
             { "clientlog", typeof(ClientLog) },
             { "clientcookie", typeof(ClientCookie) },
+            { "bankdoc", typeof(BankDoc) },
+            { "pwdlog", typeof(PwdLog) },
         };
 
         /// <summary>
         /// 获取状态库版本号，和本地不同时自动更新
         /// </summary>
-        public string StateDbVer => "a9d6f73f1508bf8a2e8f00486b1a6d77";
+        public string StateDbVer => "2afd9418e4deebfd85f099c9b6c427df";
         #endregion
     }
 }

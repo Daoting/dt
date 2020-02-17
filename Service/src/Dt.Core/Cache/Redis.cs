@@ -91,6 +91,24 @@ namespace Dt.Core.Caches
         }
 
         /// <summary>
+        /// 将HashEntry[]数组转为内部类型Dict
+        /// </summary>
+        /// <param name="p_arr"></param>
+        /// <returns></returns>
+        public static Dict ToDict(this HashEntry[] p_arr)
+        {
+            if (p_arr == null)
+                return null;
+
+            Dict dt = new Dict(p_arr.Length);
+            for (int i = 0; i < p_arr.Length; i++)
+            {
+                dt[p_arr[i].Name] = p_arr[i].Value;
+            }
+            return dt;
+        }
+
+        /// <summary>
         /// 清空当前库
         /// </summary>
         internal static void ClearDb()

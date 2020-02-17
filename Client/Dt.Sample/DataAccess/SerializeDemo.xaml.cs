@@ -136,13 +136,23 @@ namespace Dt.Sample
 
         async void GetMsgInfo(object sender, RoutedEventArgs e)
         {
-            var result = await AtTest.GetMsgInfo();
-            _tbInfo.Text = result != null ? "调用成功！" : "调用不成功！";
+            //var result = await AtTest.GetMsgInfo();
+            //_tbInfo.Text = result != null ? "调用成功！" : "调用不成功！";
+
+            try
+            {
+                var reader = await AtMsg.Register((int)AtSys.System);
+                while (await reader.MoveNext())
+                {
+                    _tbInfo.Text = reader.Val<string>();
+                }
+            }
+            catch { }
         }
 
         async void SetMsgInfo(object sender, RoutedEventArgs e)
         {
-            var result = await AtTest.SetMsgInfo(new MsgInfo { PushMode = MsgPushMode.Offline, Title = "abc", Content = "message" });
+            var result = await AtTest.SetMsgInfo(new MsgInfo { Title = "abc", Content = "message" });
             _tbInfo.Text = result != null ? "调用成功！" : "调用不成功！";
         }
         #endregion

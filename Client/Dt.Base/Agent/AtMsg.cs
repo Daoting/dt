@@ -21,7 +21,7 @@ namespace Dt.Base
     /// </summary>
     public static class AtMsg
     {
-        #region PushMsg
+        #region Pusher
         /// <summary>
         /// 客户端注册在线推送
         /// </summary>
@@ -32,40 +32,20 @@ namespace Dt.Base
         {
             return new ServerStreamRpc(
                 "msg",
-                "PushMsg.Register",
+                "Pusher.Register",
                 p_clientSys
             ).Call();
         }
 
         /// <summary>
-        /// 向某用户的客户端推送信息
+        /// 实时获取所有在线用户，测试用
         /// </summary>
-        /// <param name="p_userID"></param>
-        /// <param name="p_msg"></param>
         /// <returns></returns>
-        public static Task<string> Send(long p_userID, MsgInfo p_msg)
+        public static Task<string> GetAllOnline()
         {
             return new UnaryRpc(
                 "msg",
-                "PushMsg.Send",
-                p_userID,
-                p_msg
-            ).Call<string>();
-        }
-
-        /// <summary>
-        /// 向用户列表的所有客户端推送信息
-        /// </summary>
-        /// <param name="p_userIDs">用户列表</param>
-        /// <param name="p_msg">待推送信息</param>
-        /// <returns></returns>
-        public static Task<string> BatchSend(List<long> p_userIDs, MsgInfo p_msg)
-        {
-            return new UnaryRpc(
-                "msg",
-                "PushMsg.BatchSend",
-                p_userIDs,
-                p_msg
+                "Pusher.GetAllOnline"
             ).Call<string>();
         }
         #endregion

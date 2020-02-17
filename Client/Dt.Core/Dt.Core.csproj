@@ -30,6 +30,7 @@
     <Compile Include="..\..\Service\src\Dt.Core\Domain\Repository\ChildEntitySchema.cs" Link="Base\Domain\Repository\ChildEntitySchema.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Domain\Repository\EntitySchema.cs" Link="Base\Domain\Repository\EntitySchema.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\Check.cs" Link="Base\Check.cs" />
+    <Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\LetterInfo.cs" Link="Base\LetterInfo.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\MsgInfo.cs" Link="Base\MsgInfo.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Serialize\IRpcJson.cs" Link="Internal\Serialize\IRpcJson.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Serialize\JsonOptions.cs" Link="Internal\Serialize\JsonOptions.cs" />

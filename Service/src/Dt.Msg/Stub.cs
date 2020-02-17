@@ -38,7 +38,6 @@ namespace Dt.Msg
         /// <param name="p_handlers">注册自定义请求处理</param>
         public void Configure(IApplicationBuilder p_app, IDictionary<string, RequestDelegate> p_handlers)
         {
-            Offline.Init();
         }
     }
 }

@@ -160,7 +160,6 @@ namespace Dt.Cm
             {
                 MethodName = "abc.fun",
                 Params = new List<object> { 1, "a", true },
-                PushMode = MsgPushMode.Online,
             };
         }
 

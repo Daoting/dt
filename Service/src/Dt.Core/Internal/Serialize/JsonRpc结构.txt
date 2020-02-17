@@ -83,6 +83,17 @@
 	"Content"
 ]
 
+12.LetterInfo
+[
+    "#letter",
+	"ID",
+    SenderID, // long
+    "SenderName",
+    LetterType, // int
+    "Content",
+    "SendTime"
+]
+
 ----------------------------------------------------------------------------------------------------------------
 ※※※ 集合类型
 1. List<string>
