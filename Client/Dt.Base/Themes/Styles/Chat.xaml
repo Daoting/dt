@@ -1,0 +1,161 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/Dt.Base/Themes/Global.xaml"/>
+        <ResourceDictionary Source="/Dt.Base/Themes/Styles/Default.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style x:Key="ChatButton" TargetType="Button" BasedOn="{StaticResource 字符按钮}">
+        <Setter Property="Background" Value="{StaticResource 浅灰背景}" />
+        <Setter Property="BorderBrush" Value="{StaticResource 浅灰边框}" />
+        <Setter Property="Width" Value="60" />
+        <Setter Property="Margin" Value="-1,0,-1,0" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+    </Style>
+    
+    <!--ChatDetail-->
+    <Style TargetType="a:ChatDetail">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:ChatDetail">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <a:Lv x:Name="Lv" SelectionMode="None" ShowItemBorder="False" />
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Button x:Name="BtnVoice" Content="&#xE070;" Style="{StaticResource ChatButton}" />
+                            <TextBox x:Name="MsgBox" TextWrapping="Wrap" BorderThickness="0" Padding="10" Background="White" Grid.Column="1" />
+                            <Rectangle Stroke="{StaticResource 浅灰边框}" IsHitTestVisible="False" Grid.Column="1" />
+                            <Button x:Name="BtnFace" Content="&#xE08F;" Style="{StaticResource ChatButton}" Grid.Column="2" />
+                            <Button x:Name="BtnAdd" Content="&#xE080;" Style="{StaticResource ChatButton}" Grid.Column="3" />
+                        </Grid>
+                        <ContentPresenter Content="{TemplateBinding BottomContent}" Grid.Row="2" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="OtherPath" TargetType="Path">
+        <Setter Property="Fill" Value="{StaticResource 绿色背景}" />
+        <Setter Property="Stretch" Value="Fill" />
+        <Setter Property="Width" Value="10" />
+        <Setter Property="Height" Value="10" />
+        <Setter Property="Margin" Value="0,10,0,0" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Grid.Column" Value="1" />
+    </Style>
+
+    <Style x:Key="MyPath" TargetType="Path">
+        <Setter Property="Fill" Value="{StaticResource 主题蓝色}" />
+        <Setter Property="Stretch" Value="Fill" />
+        <Setter Property="Width" Value="10" />
+        <Setter Property="Height" Value="10" />
+        <Setter Property="Margin" Value="0,10,0,0" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Grid.Column" Value="2" />
+    </Style>
+
+    <DataTemplate x:Key="OtherMsgTemplate">
+        <Grid Padding="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="60" />
+            </Grid.ColumnDefinitions>
+            <a:Dot ID="Icon" UIType="Image" Width="30" Height="30" VerticalAlignment="Top" />
+            <!--Data不能写在Style中-->
+            <Path Data="M0,3 L4,0 L4,6" Style="{StaticResource OtherPath}" />
+            <StackPanel HorizontalAlignment="Left" Grid.Column="2">
+                <a:Dot ID="Content" Foreground="White" Background="{StaticResource 绿色背景}" Padding="10,6" />
+                <TextBlock Text="{Binding [stime], Converter={StaticResource CvAutoDate}}"
+                               Style="{StaticResource 小字}"
+                               Foreground="{StaticResource 深灰边框}" />
+            </StackPanel>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="OtherFileTemplate">
+        <Grid Padding="10">
+
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="OtherLinkTemplate">
+        <Grid Padding="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="60" />
+            </Grid.ColumnDefinitions>
+            <a:Dot ID="Icon" UIType="Image" Width="30" Height="30" VerticalAlignment="Top" />
+            <Path Data="M0,3 L4,0 L4,6" Style="{StaticResource OtherPath}" />
+            <StackPanel HorizontalAlignment="Left" Grid.Column="2">
+                <StackPanel Padding="10" BorderBrush="{StaticResource 绿色背景}" BorderThickness="1">
+                    <TextBlock Text="我已完成今天的拉伸脊柱训练" HorizontalAlignment="Center" />
+                    <Image Source="ms-appx:///Bs.Kehu/Assets/chart.png" />
+                </StackPanel>
+                <TextBlock Text="{Binding [stime], Converter={StaticResource CvAutoDate}}"
+                               Style="{StaticResource 小字}"
+                               Foreground="{StaticResource 深灰边框}" />
+            </StackPanel>
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="OtherUndoTemplate">
+        <Grid>
+
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="MyMsgTemplate">
+        <Grid Padding="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="60" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel HorizontalAlignment="Right" Grid.Column="1">
+                <a:Dot ID="Content" Foreground="White" Background="{StaticResource 主题蓝色}" Padding="10,6" />
+                <TextBlock Text="{Binding [stime], Converter={StaticResource CvAutoDate}}"
+                               Style="{StaticResource 小字}"
+                               Foreground="{StaticResource 深灰边框}" />
+            </StackPanel>
+            <Path Data="M0,0 L4,3 L0,6" Style="{StaticResource MyPath}" />
+            <a:Dot ID="Icon" UIType="Image" Width="30" Height="30" VerticalAlignment="Top" Grid.Column="3" />
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="MyFileTemplate">
+        <Grid>
+
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="MyLinkTemplate">
+        <Grid>
+
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="MyUndoTemplate">
+        <Grid>
+
+        </Grid>
+    </DataTemplate>
+</ResourceDictionary>

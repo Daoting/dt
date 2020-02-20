@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using Windows.Foundation;
 using Windows.System;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -136,8 +137,8 @@ namespace Dt.Base.ListView
         /// <summary>
         /// 批量插入数据行
         /// </summary>
-        /// <param name="p_index"></param>
-        /// <param name="p_count"></param>
+        /// <param name="p_index">开始插入位置</param>
+        /// <param name="p_count">共插入行数</param>
         internal void OnInsertRows(int p_index, int p_count)
         {
             if (_owner.IsVir)
@@ -159,18 +160,25 @@ namespace Dt.Base.ListView
         /// 滚动到指定的数据行
         /// </summary>
         /// <param name="p_index">-1 表示最后</param>
-        internal void ScrollInto(int p_index)
+        internal async void ScrollInto(int p_index)
         {
             // 最后
             if (p_index < 0 || p_index >= _owner.Rows.Count - 1)
             {
-                _owner.Scroll.ChangeView(null, _owner.Scroll.ScrollableHeight, null);
+                // 不使用Dispatcher初次加载数据后滚出无效！
+                await Dispatcher.RunAsync(
+                    CoreDispatcherPriority.Normal,
+                    new DispatchedHandler(() => _owner.Scroll.ChangeView(null, _owner.Scroll.ScrollableHeight, null))
+                    );
                 return;
             }
 
             double height = GetRowVerPos(p_index);
             double offset = Math.Max(height - _owner.Scroll.ViewportHeight, 0);
-            _owner.Scroll.ChangeView(null, offset, null);
+            await Dispatcher.RunAsync(
+                    CoreDispatcherPriority.Normal,
+                    new DispatchedHandler(() => _owner.Scroll.ChangeView(null, offset, null))
+                    );
         }
 
         /// <summary>
@@ -518,15 +526,27 @@ namespace Dt.Base.ListView
         async void OnScrollViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
             var page = _owner.PageData;
-            if (page != null)
+            if (page != null && page.HasMorePages)
             {
                 if (page.InsertTop && _owner.Scroll.VerticalOffset == 0)
                 {
                     // 插入顶部
                     _owner.Scroll.ViewChanged -= OnScrollViewChanged;
+                    int cnt = _owner.Data.Count;
                     await page.GotoNextPage();
-                    double height = GetRowVerPos(page.PageSize);
-                    _owner.Scroll.ChangeView(null, height, null, true);
+                    cnt = _owner.Data.Count - cnt - 1;
+                    if (cnt > 0)
+                    {
+                        // 滚动到当前行的位置
+                        await Dispatcher.RunAsync(
+                            CoreDispatcherPriority.Normal,
+                            new DispatchedHandler(() =>
+                            {
+                                double height = GetRowVerPos(cnt);
+                                _owner.Scroll.ChangeView(null, height, null, true);
+                            })
+                            );
+                    }
                     _owner.Scroll.ViewChanged += OnScrollViewChanged;
                 }
                 else if (!page.InsertTop && _owner.Scroll.VerticalOffset == _owner.Scroll.ScrollableHeight)

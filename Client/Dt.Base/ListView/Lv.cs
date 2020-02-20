@@ -1154,8 +1154,8 @@ namespace Dt.Base
         /// 批量插入数据行
         /// </summary>
         /// <param name="p_tbl"></param>
-        /// <param name="p_start"></param>
-        /// <param name="p_count"></param>
+        /// <param name="p_start">开始插入位置</param>
+        /// <param name="p_count">共插入行数</param>
         internal void BatchInsertRows(IList p_tbl, int p_start, int p_count)
         {
             if (p_start < 0 || p_start > _rows.Count)
@@ -1194,7 +1194,7 @@ namespace Dt.Base
 
             if (_panel != null)
             {
-                _panel.OnInsertRows(p_start, p_tbl.Count);
+                _panel.OnInsertRows(p_start, p_count);
                 OnLoadedRows();
             }
         }

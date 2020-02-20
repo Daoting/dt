@@ -8,19 +8,6 @@
 
 #region 引用命名
 using Dt.Core;
-using Dt.Core.Rpc;
-using System.Text.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
-using System.Reflection;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-using Windows.ApplicationModel.Activation;
-using Windows.UI.Core;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 #endregion
 
 namespace Dt.Base
@@ -32,6 +19,24 @@ namespace Dt.Base
     public class SysPushApi
     {
         /// <summary>
+        /// 接收服务器推送的聊天信息
+        /// </summary>
+        /// <param name="p_letter"></param>
+        public void ReceiveLetter(LetterInfo p_letter)
+        {
+            LetterManager.ReceiveLetter(p_letter);
+        }
+
+        /// <summary>
+        /// 系统警告提示
+        /// </summary>
+        /// <param name="p_msg"></param>
+        public void ShowSysWarning(string p_msg)
+        {
+            AtKit.Warn($"【系统通知】\r\n{p_msg}");
+        }
+
+        /// <summary>
         /// 该账户从其它位置登录时停止接收推送
         /// </summary>
         public void StopPush()
@@ -39,7 +44,5 @@ namespace Dt.Base
             PushHandler.StopPush = true;
             AtKit.Msg("您已从其它位置登录！");
         }
-
-
     }
 }

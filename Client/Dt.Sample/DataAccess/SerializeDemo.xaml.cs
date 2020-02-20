@@ -136,18 +136,8 @@ namespace Dt.Sample
 
         async void GetMsgInfo(object sender, RoutedEventArgs e)
         {
-            //var result = await AtTest.GetMsgInfo();
-            //_tbInfo.Text = result != null ? "调用成功！" : "调用不成功！";
-
-            try
-            {
-                var reader = await AtMsg.Register((int)AtSys.System);
-                while (await reader.MoveNext())
-                {
-                    _tbInfo.Text = reader.Val<string>();
-                }
-            }
-            catch { }
+            var result = await AtTest.GetMsgInfo();
+            _tbInfo.Text = result != null ? "调用成功！" : "调用不成功！";
         }
 
         async void SetMsgInfo(object sender, RoutedEventArgs e)

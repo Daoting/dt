@@ -99,7 +99,7 @@ namespace Dt.Msg
         {
             var mi = new MsgInfo
             {
-                MethodName = "",
+                MethodName = "SysPushApi.ReceiveLetter",
                 Params = new List<object> { p_letter },
             };
 

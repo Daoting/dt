@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Dt.App;
+using Dt.App.Chat;
 using Dt.App.Home;
 using Dt.App.Model;
 using Dt.Base;
@@ -118,6 +119,7 @@ namespace Dt.Shell
             { "用户账号", typeof(UserAccount) },
             { "主页", typeof(DefaultHome) },
             //{ "主页", typeof(SamplesMain) },
+            { "通讯录", typeof(ChatHome) },
             { "控件样例", typeof(SamplesMain) },
         };
 
@@ -145,6 +147,7 @@ namespace Dt.Shell
         public Dictionary<string, Type> StateTbls => new Dictionary<string, Type>
         {
             { "menufav", typeof(MenuFav) },
+            { "letter", typeof(Letter) },
             { "filereadlog", typeof(FileReadLog) },
             { "docklayout", typeof(DockLayout) },
             { "celllastval", typeof(CellLastVal) },
@@ -156,7 +159,7 @@ namespace Dt.Shell
         /// <summary>
         /// 获取状态库版本号，和本地不同时自动更新
         /// </summary>
-        public string StateDbVer => "a9d6f73f1508bf8a2e8f00486b1a6d77";
+        public string StateDbVer => "5d818d8d71a5b97bb474d6b44955bddf";
         #endregion
     }
 }

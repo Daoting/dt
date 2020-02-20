@@ -37,126 +37,84 @@ namespace Dt.Base
     public partial class FileItem : Control, IUploadFile
     {
         #region 静态成员
-        /// <summary>
-        /// 文件名称，不包括扩展名
-        /// </summary>
         public static readonly DependencyProperty FileNameProperty = DependencyProperty.Register(
             "FileName",
             typeof(string),
             typeof(FileItem),
             new PropertyMetadata(null));
 
-        /// <summary>
-        /// 文件种类
-        /// </summary>
         public static readonly DependencyProperty FileTypeProperty = DependencyProperty.Register(
             "FileType",
             typeof(FileItemType),
             typeof(FileItem),
             new PropertyMetadata(FileItemType.File, OnFileTypePropertyChanged));
 
-        /// <summary>
-        /// 文件扩展名
-        /// </summary>
         public static readonly DependencyProperty ExtProperty = DependencyProperty.Register(
             "Ext",
             typeof(string),
             typeof(FileItem),
             new PropertyMetadata(null));
 
-        /// <summary>
-        /// 未读标志
-        /// </summary>
         public static readonly DependencyProperty UnreadProperty = DependencyProperty.Register(
             "Unread",
             typeof(bool),
             typeof(FileItem),
             new PropertyMetadata(false));
 
-        /// <summary>
-        /// 文件类型及说明
-        /// </summary>
         public static readonly DependencyProperty FileDescProperty = DependencyProperty.Register(
             "FileDesc",
             typeof(string),
             typeof(FileItem),
             new PropertyMetadata(null));
 
-        /// <summary>
-        /// 文件大小
-        /// </summary>
         public static readonly DependencyProperty LengthProperty = DependencyProperty.Register(
             "Length",
             typeof(ulong),
             typeof(FileItem),
             new PropertyMetadata(0));
 
-        /// <summary>
-        /// 上传文件用户
-        /// </summary>
         public static readonly DependencyProperty UploaderProperty = DependencyProperty.Register(
             "Uploader",
             typeof(string),
             typeof(FileItem),
             new PropertyMetadata(null));
 
-        /// <summary>
-        /// 文件上传日期
-        /// </summary>
         public static readonly DependencyProperty DateProperty = DependencyProperty.Register(
             "Date",
             typeof(string),
             typeof(FileItem),
             new PropertyMetadata(null));
 
-        /// <summary>
-        /// 图标
-        /// </summary>
         public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
             "Icon",
             typeof(object),
             typeof(FileItem),
             new PropertyMetadata(null));
 
-        /// <summary>
-        /// 当前状态
-        /// </summary>
         public static readonly DependencyProperty StateProperty = DependencyProperty.Register(
             "State",
             typeof(FileItemState),
             typeof(FileItem),
             new PropertyMetadata(FileItemState.None, OnStatePropertyChanged));
 
-        /// <summary>
-        /// 进度条进度
-        /// </summary>
         public static readonly DependencyProperty ProgressWidthProperty = DependencyProperty.Register(
             "ProgressWidth",
             typeof(double),
             typeof(FileItem),
             new PropertyMetadata(0));
 
-        /// <summary>
-        /// 进度百分比
-        /// </summary>
         public static readonly DependencyProperty PercentProperty = DependencyProperty.Register(
             "Percent",
             typeof(string),
             typeof(FileItem),
             new PropertyMetadata(null));
 
-        /// <summary>
-        /// 源图像
-        /// </summary>
         public static readonly DependencyProperty BitmapProperty = DependencyProperty.Register(
             "Bitmap",
             typeof(ImageSource),
             typeof(FileItem),
             new PropertyMetadata(null));
 
-        /// <summary>
-        /// 播放器
-        /// </summary>
         public static readonly DependencyProperty MediaPlayerProperty = DependencyProperty.Register(
             "MediaPlayer",
             typeof(object),
