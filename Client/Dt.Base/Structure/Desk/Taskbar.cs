@@ -26,7 +26,7 @@ namespace Dt.Base
         #region 成员变量
         const double _maxWidth = 260;
         double _itemWidth;
-        static IWin _autoStartWin;
+        static Win _autoStartWin;
 
         /// <summary>
         /// 获取桌面实例
@@ -66,7 +66,7 @@ namespace Dt.Base
         /// 加载并激活窗口对应的任务栏按扭
         /// </summary>
         /// <param name="p_win"></param>
-        internal static void LoadTaskItem(IWin p_win)
+        internal static void LoadTaskItem(Win p_win)
         {
             if (Inst == null)
             {
@@ -90,7 +90,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_win"></param>
         /// <returns></returns>
-        internal IWin GetNextActiveItem(IWin p_win)
+        internal Win GetNextActiveItem(Win p_win)
         {
             if (TaskItems.Count <= 1)
                 return null;
@@ -99,7 +99,7 @@ namespace Dt.Base
             for (int i = 0; i < TaskItems.Count; i++)
             {
                 var item = TaskItems[i];
-                if ((IWin)item.DataContext == p_win)
+                if ((Win)item.DataContext == p_win)
                 {
                     if (item.IsActive)
                         next = i + 1;
@@ -113,7 +113,7 @@ namespace Dt.Base
             // 最后位置
             if (next >= TaskItems.Count)
                 next = TaskItems.Count - 2;
-            return (IWin)TaskItems[next].DataContext;
+            return (Win)TaskItems[next].DataContext;
         }
 
         /// <summary>
@@ -121,11 +121,11 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_win"></param>
         /// <returns></returns>
-        internal void RemoveTaskItem(IWin p_win)
+        internal void RemoveTaskItem(Win p_win)
         {
             for (int i = 0; i < TaskItems.Count; i++)
             {
-                if ((IWin)TaskItems[i].DataContext == p_win)
+                if ((Win)TaskItems[i].DataContext == p_win)
                 {
                     TaskItems.RemoveAt(i);
                     break;
@@ -137,11 +137,11 @@ namespace Dt.Base
         /// 激活指定的任务栏按扭
         /// </summary>
         /// <param name="p_win"></param>
-        internal void ActiveTaskItem(IWin p_win)
+        internal void ActiveTaskItem(Win p_win)
         {
             foreach (var item in TaskItems)
             {
-                item.IsActive = ((IWin)item.DataContext == p_win);
+                item.IsActive = ((Win)item.DataContext == p_win);
             }
         }
 
@@ -173,7 +173,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_id"></param>
         /// <returns></returns>
-        TaskbarItem GetTaskItem(IWin p_win)
+        TaskbarItem GetTaskItem(Win p_win)
         {
             return (from elem in TaskItems
                     where elem != null && elem.DataContext == p_win

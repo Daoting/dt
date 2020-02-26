@@ -18,15 +18,15 @@ using Windows.UI.Xaml.Controls;
 
 namespace Dt.Sample
 {
-    public sealed partial class MenuHome : NaviWin
+    public sealed partial class MenuHome : Win
     {
         public MenuHome()
         {
             InitializeComponent();
-            NaviData = new List<NaviRow>
+            _lv.Data = new List<CenterInfo>
             {
-                new NaviRow(Icons.保存, "工具栏菜单", typeof(MenuDemo), "工具栏样式，支持单选、多层"),
-                new NaviRow(Icons.日历, "上下文菜单", typeof(ContextMenuDemo), "附加到可视元素，支持继承数据源"),
+                new CenterInfo(Icons.保存, "工具栏菜单", typeof(MenuDemo), "工具栏样式，支持单选、多层"),
+                new CenterInfo(Icons.日历, "上下文菜单", typeof(ContextMenuDemo), "附加到可视元素，支持继承数据源"),
             };
         }
     }

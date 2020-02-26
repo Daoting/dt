@@ -21,7 +21,7 @@ namespace Dt.Kehu
     /// <summary>
     /// 
     /// </summary>
-    public partial class SettingFriend : PageWin
+    public partial class SettingFriend : Win
     {
         public SettingFriend()
         {

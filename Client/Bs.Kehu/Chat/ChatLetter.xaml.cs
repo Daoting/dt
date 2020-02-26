@@ -22,7 +22,7 @@ namespace Dt.Kehu
     /// <summary>
     /// 
     /// </summary>
-    public partial class ChatLetter : PageWin
+    public partial class ChatLetter : Win
     {
         public ChatLetter()
         {

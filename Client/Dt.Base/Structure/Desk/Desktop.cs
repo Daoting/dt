@@ -33,7 +33,7 @@ namespace Dt.Base
         /// </summary>
         public readonly static DependencyProperty MainWinProperty = DependencyProperty.Register(
             "MainWin",
-            typeof(IWin),
+            typeof(Win),
             typeof(Desktop),
             new PropertyMetadata(null));
 
@@ -42,7 +42,7 @@ namespace Dt.Base
         /// </summary>
         public readonly static DependencyProperty LeftWinProperty = DependencyProperty.Register(
             "LeftWin",
-            typeof(IWin),
+            typeof(Win),
             typeof(Desktop),
             new PropertyMetadata(null, OnLeftWinChanged));
 
@@ -51,7 +51,7 @@ namespace Dt.Base
         /// </summary>
         public readonly static DependencyProperty RightWinProperty = DependencyProperty.Register(
             "RightWin",
-            typeof(IWin),
+            typeof(Win),
             typeof(Desktop),
             new PropertyMetadata(null, OnRightWinChanged));
 
@@ -61,7 +61,7 @@ namespace Dt.Base
             if (dt._grid == null)
                 return;
 
-            IWin win = (IWin)e.NewValue;
+            Win win = (Win)e.NewValue;
             if (win != null)
             {
                 if (win == dt.RightWin)
@@ -83,7 +83,7 @@ namespace Dt.Base
             if (dt._grid == null)
                 return;
 
-            var win = (IWin)e.NewValue;
+            var win = (Win)e.NewValue;
             if (win != null)
             {
                 if (win == dt.LeftWin)
@@ -106,7 +106,7 @@ namespace Dt.Base
         #endregion
 
         #region 成员变量
-        readonly HashSet<IWin> _winCache = new HashSet<IWin>();
+        readonly HashSet<Win> _winCache = new HashSet<Win>();
         Grid _grid;
         Splitter _spLeft;
         Splitter _spRight;
@@ -129,32 +129,32 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置内部主窗口
         /// </summary>
-        public IWin MainWin
+        public Win MainWin
         {
-            get { return (IWin)GetValue(MainWinProperty); }
+            get { return (Win)GetValue(MainWinProperty); }
             internal set { SetValue(MainWinProperty, value); }
         }
 
         /// <summary>
         /// 获取主页窗口
         /// </summary>
-        public IWin HomeWin { get; internal set; }
+        public Win HomeWin { get; internal set; }
 
         /// <summary>
         /// 获取设置停靠在左侧的窗口
         /// </summary>
-        public IWin LeftWin
+        public Win LeftWin
         {
-            get { return (IWin)GetValue(LeftWinProperty); }
+            get { return (Win)GetValue(LeftWinProperty); }
             internal set { SetValue(LeftWinProperty, value); }
         }
 
         /// <summary>
         /// 获取设置停靠在右侧的窗口
         /// </summary>
-        public IWin RightWin
+        public Win RightWin
         {
-            get { return (IWin)GetValue(RightWinProperty); }
+            get { return (Win)GetValue(RightWinProperty); }
             internal set { SetValue(RightWinProperty, value); }
         }
         #endregion
@@ -165,7 +165,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_win">窗口</param>
         /// <param name="p_width">宽度，null表默认</param>
-        public static void SetLeftWin(IWin p_win, double? p_width = null)
+        public static void SetLeftWin(Win p_win, double? p_width = null)
         {
             if (p_win == null)
                 return;
@@ -188,7 +188,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_win">窗口</param>
         /// <param name="p_width">宽度，null表默认</param>
-        public static void SetRightWin(IWin p_win, double? p_width = null)
+        public static void SetRightWin(Win p_win, double? p_width = null)
         {
             if (p_win == null)
                 return;
@@ -210,7 +210,7 @@ namespace Dt.Base
         /// 显示新窗口并缓存
         /// </summary>
         /// <param name="p_win">窗口</param>
-        internal bool ShowNewWin(IWin p_win)
+        internal bool ShowNewWin(Win p_win)
         {
             if (_winCache.Add(p_win))
             {
@@ -225,7 +225,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_win">窗口</param>
         /// <returns>是否激活成功</returns>
-        internal bool ActiveWin(IWin p_win)
+        internal bool ActiveWin(Win p_win)
         {
             if (_winCache.Contains(p_win))
             {
@@ -241,7 +241,7 @@ namespace Dt.Base
         /// <param name="p_type">窗口类型</param>
         /// <param name="p_params">初始参数</param>
         /// <returns>激活的窗口</returns>
-        internal IWin ActiveWin(Type p_type, object p_params)
+        internal Win ActiveWin(Type p_type, object p_params)
         {
             foreach (var win in _winCache)
             {
@@ -265,7 +265,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_win">窗口</param>
         /// <param name="p_nextWin">下一个待激活的窗口</param>
-        internal async Task<bool> CloseWin(IWin p_win, IWin p_nextWin)
+        internal async Task<bool> CloseWin(Win p_win, Win p_nextWin)
         {
             if (!_winCache.Contains(p_win))
                 return false;
@@ -313,13 +313,13 @@ namespace Dt.Base
         /// 关闭其他窗口
         /// </summary>
         /// <param name="p_win"></param>
-        internal async Task<List<IWin>> CloseExcept(IWin p_win)
+        internal async Task<List<Win>> CloseExcept(Win p_win)
         {
             LeftWin = null;
             RightWin = null;
             MainWin = p_win;
 
-            List<IWin> ls = new List<IWin>();
+            List<Win> ls = new List<Win>();
             foreach (var win in _winCache)
             {
                 if (win == p_win)
@@ -356,7 +356,7 @@ namespace Dt.Base
         /// 重置停靠在两侧的窗口宽度
         /// </summary>
         /// <param name="p_win"></param>
-        internal void ResetSideWidth(IWin p_win)
+        internal void ResetSideWidth(Win p_win)
         {
             if (_grid != null)
             {
@@ -400,7 +400,7 @@ namespace Dt.Base
         /// 激活指定窗口
         /// </summary>
         /// <param name="p_win"></param>
-        void ActiveWinInternal(IWin p_win)
+        void ActiveWinInternal(Win p_win)
         {
             if (p_win == RightWin)
                 RightWin = null;

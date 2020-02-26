@@ -12,7 +12,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace Dt.Sample
 {
-    public sealed partial class FileTransDemo : PageWin
+    public sealed partial class FileTransDemo : Win
     {
         public FileTransDemo()
         {

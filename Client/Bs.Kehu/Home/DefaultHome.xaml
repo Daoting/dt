@@ -22,13 +22,6 @@
             </a:Tab>
         </a:Tabs>
     </a:WinItem>
-    <!--<a:WinCenter>
-        <a:Tabs>
-            <a:Tab Title="福袋" Icon="购物车">
-                
-            </a:Tab>
-        </a:Tabs>
-    </a:WinCenter>-->
     <a:WinItem DockState="DockedRight">
         <a:Tabs>
             <a:Tab Title="我的" Icon="个人信息"  HideTitleBar="True">

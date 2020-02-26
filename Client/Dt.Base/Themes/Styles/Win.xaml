@@ -9,204 +9,6 @@
         <ResourceDictionary Source="/Dt.Base/Themes/Styles/Default.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
-    <!--NaviWin windows默认-->
-    <Style TargetType="a:NaviWin">
-        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
-        <Setter Property="Background" Value="{StaticResource 默认背景}" />
-        <Setter Property="BorderBrush" Value="{StaticResource 浅灰边框}"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="a:NaviWin">
-                    <Grid Background="{TemplateBinding Background}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{Binding NaviWidth, RelativeSource={RelativeSource TemplatedParent}}" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="*" />
-                            </Grid.RowDefinitions>
-                            <Grid Background="{StaticResource 浅灰背景}"
-                                  BorderBrush="{TemplateBinding BorderBrush}"
-                                  BorderThickness="1,1,1,0"
-                                  Visibility="{Binding HideTitleBar, Converter={StaticResource CvBoolToCollapsed}, RelativeSource={RelativeSource TemplatedParent}}"
-                                  Height="{StaticResource RowOuterHeight}">
-                                <!--标题-->
-                                <TextBlock Text="{TemplateBinding Title}"
-                                           VerticalAlignment="Center"
-                                           TextTrimming="CharacterEllipsis"
-                                           TextWrapping="NoWrap"
-                                           Margin="10,0,10,0"/>
-                                <!--菜单-->
-                                <ContentPresenter Content="{TemplateBinding Menu}"
-                                                  Foreground="{StaticResource 默认前景}"
-                                                  Background="{StaticResource 浅灰背景}"
-                                                  HorizontalAlignment="Right"
-                                                  Margin="100,0,0,0" />
-                            </Grid>
-                            <Border Background="{TemplateBinding Background}"
-                                    BorderBrush="{TemplateBinding BorderBrush}"
-                                    BorderThickness="1"
-                                    Grid.Row="1">
-                                <ContentPresenter Content="{TemplateBinding NaviContent}" />
-                            </Border>
-                        </Grid>
-                        <a:Splitter Grid.Column="1" />
-                        <ContentPresenter Content="{TemplateBinding MainWin}" Grid.Column="2" />
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <!--NaviWin Phone-->
-    <Style x:Key="PhoneNaviWin" TargetType="a:NaviWin">
-        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
-        <Setter Property="Background" Value="{StaticResource 默认背景}" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="a:NaviWin">
-                    <Grid Background="{TemplateBinding Background}">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                        <Grid x:Name="HeaderGrid"
-                              Background="{StaticResource 主题蓝色}"
-                              Visibility="{Binding HideTitleBar, Converter={StaticResource CvBoolToCollapsed}, RelativeSource={RelativeSource TemplatedParent}}"
-                              Height="50">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <!--后退-->
-                            <Button x:Name="BackButton"
-                                    Visibility="{TemplateBinding BackButtonVisibility}"
-                                    Style="{StaticResource 字符按钮}"
-                                    Foreground="{StaticResource 默认背景}"
-                                    Content="&#xE085;"
-                                    VerticalAlignment="Stretch"
-                                    Width="50" />
-                            <!--标题-->
-                            <TextBlock Text="{TemplateBinding Title}"
-                                       VerticalAlignment="Center"
-                                       Foreground="{StaticResource 默认背景}"
-                                       TextTrimming="CharacterEllipsis"
-                                       TextWrapping="NoWrap"
-                                       Margin="10,0,10,0"
-                                       Grid.Column="1" />
-                            <!--菜单-->
-                            <ContentPresenter Content="{TemplateBinding Menu}"
-                                              Foreground="{StaticResource 默认背景}"
-                                              Grid.Column="2" />
-                        </Grid>
-                        <ContentPresenter Content="{TemplateBinding NaviContent}" Grid.Row="1" />
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <!--PageWin windows默认-->
-    <Style TargetType="a:PageWin">
-        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
-        <Setter Property="Background" Value="{StaticResource 默认背景}" />
-        <Setter Property="BorderBrush" Value="{StaticResource 浅灰边框}"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="a:PageWin">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                        <Grid Background="{StaticResource 浅灰背景}"
-                              BorderBrush="{TemplateBinding BorderBrush}"
-                              BorderThickness="1,1,1,0"
-                              Margin="0,0,-1,0"
-                              Visibility="{Binding HideTitleBar, Converter={StaticResource CvBoolToCollapsed}, RelativeSource={RelativeSource TemplatedParent}}"
-                              Height="{StaticResource RowOuterHeight}">
-                            <!--标题-->
-                            <TextBlock Text="{TemplateBinding Title}"
-                                       VerticalAlignment="Center"
-                                       TextTrimming="CharacterEllipsis"
-                                       TextWrapping="NoWrap"
-                                       Margin="10,0,10,0" />
-                            <!--菜单-->
-                            <ContentPresenter Content="{TemplateBinding Menu}"
-                                              Foreground="{StaticResource 默认前景}"
-                                              Background="{StaticResource 浅灰背景}"
-                                              HorizontalAlignment="Right"
-                                              Margin="100,0,0,0" />
-                        </Grid>
-                        <Border Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="1"
-                                Margin="0,0,-1,0"
-                                Grid.Row="1">
-                            <ContentPresenter Content="{TemplateBinding Content}" />
-                        </Border>
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <!--PageWin Phone-->
-    <Style x:Key="PhonePageWin" TargetType="a:PageWin">
-        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
-        <Setter Property="Background" Value="{StaticResource 默认背景}" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="a:PageWin">
-                    <Grid Background="{TemplateBinding Background}">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                        <Grid x:Name="HeaderGrid"
-                              Background="{StaticResource 主题蓝色}"
-                              Visibility="{Binding HideTitleBar, Converter={StaticResource CvBoolToCollapsed}, RelativeSource={RelativeSource TemplatedParent}}"
-                              Height="50">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <!--后退-->
-                            <Button x:Name="BackButton"
-                                    Visibility="{TemplateBinding BackButtonVisibility}"
-                                    Style="{StaticResource 字符按钮}"
-                                    Foreground="{StaticResource 默认背景}"
-                                    Content="&#xE085;"
-                                    VerticalAlignment="Stretch"
-                                    Width="50" />
-                            <!--标题-->
-                            <TextBlock Text="{TemplateBinding Title}"
-                                       VerticalAlignment="Center"
-                                       Foreground="{StaticResource 默认背景}"
-                                       TextTrimming="CharacterEllipsis"
-                                       TextWrapping="NoWrap"
-                                       Margin="10,0,10,0"
-                                       Grid.Column="1" />
-                            <!--菜单-->
-                            <ContentPresenter Content="{TemplateBinding Menu}"
-                                              Foreground="{StaticResource 默认背景}"
-                                              Grid.Column="2" />
-                        </Grid>
-                        <ContentPresenter Content="{TemplateBinding Content}"
-                                          HorizontalContentAlignment="Stretch"
-                                          VerticalContentAlignment="Stretch"
-                                          Grid.Row="1" />
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
     <!--Win-->
     <Style TargetType="a:Win">
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
@@ -477,6 +279,29 @@
         </Setter>
     </Style>
 
+    <!--窗口主区内容描述列表-->
+    <Style x:Key="CenterInfoLv" TargetType="a:Lv">
+        <Setter Property="View">
+            <Setter.Value>
+                <DataTemplate>
+                    <Grid Padding="6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Border Background="{StaticResource 主题蓝色}" Height="50" Width="50" VerticalAlignment="Center">
+                            <a:Dot ID="Icon" FontSize="30" Foreground="White" />
+                        </Border>
+                        <StackPanel Margin="10,0,0,0" VerticalAlignment="Center" Grid.Column="1">
+                            <a:Dot ID="Title" />
+                            <a:Dot ID="Desc" Foreground="{StaticResource 深灰边框}" VerticalAlignment="Top" HorizontalAlignment="Left" FontSize="12" />
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
     <!--PhoneTabs底部按钮-->
     <Style x:Key="PhoneTabsBtn" TargetType="Button">
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />

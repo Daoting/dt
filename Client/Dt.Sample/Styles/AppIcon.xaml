@@ -1,4 +1,4 @@
-﻿<a:PageWin
+﻿<a:Win
     x:Class="Dt.Sample.AppIcon"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -16,4 +16,4 @@
             <TextBlock x:Name="_tb" FontFamily="{StaticResource IconFont}" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" />
         </Border>
     </StackPanel>
-</a:PageWin>
+</a:Win>

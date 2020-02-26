@@ -24,7 +24,7 @@ namespace Dt.Sample
     /// <summary>
     /// 
     /// </summary>
-    public partial class AppIcon : PageWin
+    public partial class AppIcon : Win
     {
         public AppIcon()
         {

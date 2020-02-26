@@ -1,4 +1,4 @@
-﻿<a:PageWin
+﻿<a:Win
     x:Class="Dt.Kehu.PtMain"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -83,4 +83,4 @@
             <Button Content="开始训练" Click="OnStart" Background="{StaticResource 醒目蓝色}" Foreground="White" HorizontalAlignment="Stretch" Grid.Column="3" />
         </Grid>
     </Grid>
-</a:PageWin>
+</a:Win>

@@ -477,7 +477,7 @@ namespace Dt.Base
         /// </summary>
         internal void RemoveUnused()
         {
-            if (Items.Count == 0)
+            if (Items.Count == 0 && !IsInCenter)
             {
                 _recicled = true;
                 RemoveFromParent();

@@ -20,18 +20,18 @@ namespace Dt.Base.Tools
     /// <summary>
     /// 系统工具列表
     /// </summary>
-    public sealed partial class LocalDbView : NaviWin
+    public sealed partial class LocalDbView : Win
     {
         public LocalDbView()
         {
             InitializeComponent();
             Title = "本地库";
-            NaviData = new List<NaviRow>
+            _lv.Data = new List<CenterInfo>
             {
-                new NaviRow(Icons.分组, "状态库", typeof(StateDb), "State.db"),
-                new NaviRow(Icons.详细, "模型库", typeof(ModelDb), "xxxx.db"),
-                new NaviRow(Icons.排列, "状态库备份", typeof(StateDbBackup), "将数据文件State.db复制到指定位置"),
-                new NaviRow(Icons.排列, "状态库恢复", typeof(StateDbUpdate), "选择加载已备份的数据文件恢复到当前系统"),
+                new CenterInfo(Icons.分组, "状态库", typeof(StateDb), "State.db"),
+                new CenterInfo(Icons.详细, "模型库", typeof(ModelDb), "xxxx.db"),
+                new CenterInfo(Icons.排列, "状态库备份", typeof(StateDbBackup), "将数据文件State.db复制到指定位置"),
+                new CenterInfo(Icons.排列, "状态库恢复", typeof(StateDbUpdate), "选择加载已备份的数据文件恢复到当前系统"),
             };
         }
     }

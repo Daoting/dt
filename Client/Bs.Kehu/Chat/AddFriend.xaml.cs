@@ -21,7 +21,7 @@ namespace Dt.Kehu
     /// <summary>
     /// 
     /// </summary>
-    public partial class AddFriend : PageWin
+    public partial class AddFriend : Win
     {
         public AddFriend()
         {

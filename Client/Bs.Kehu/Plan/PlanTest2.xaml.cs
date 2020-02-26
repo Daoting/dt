@@ -24,7 +24,7 @@ namespace Dt.Kehu
     /// <summary>
     /// 
     /// </summary>
-    public partial class PlanTest2 : PageWin
+    public partial class PlanTest2 : Win
     {
 
         public PlanTest2()

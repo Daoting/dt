@@ -185,7 +185,7 @@ namespace Dt.Base
         #region 构造方法
         public Tab()
         {
-            // 和NaviWin, PageWin写法不同！uno设置Style同时OnApplyTemplate，Tab只在显示时才！
+            // uno设置Style同时OnApplyTemplate，Tab只在显示时才！
             if (AtSys.IsPhoneUI)
                 DefaultStyleKey = typeof(Tab);
             else
@@ -403,7 +403,7 @@ namespace Dt.Base
         {
             // 只在首页时处理
             if (OwnerWin != null && OwnerWin.Home == Title)
-                return ((IWin)OwnerWin).OnClosing();
+                return OwnerWin.OnClosing();
             return Task.FromResult(true);
         }
 
@@ -414,7 +414,7 @@ namespace Dt.Base
         {
             // 只在首页时处理
             if (OwnerWin != null && OwnerWin.Home == Title)
-                ((IWin)OwnerWin).OnClosed();
+                OwnerWin.OnClosed();
         }
         #endregion
 
@@ -537,10 +537,19 @@ namespace Dt.Base
     /// </summary>
     public interface ITabContent
     {
+        /// <summary>
+        /// 所属Tab
+        /// </summary>
         Tab Tab { get; set; }
 
+        /// <summary>
+        /// Tab.Menu
+        /// </summary>
         Menu Menu { get; }
 
+        /// <summary>
+        /// Tab的标题
+        /// </summary>
         string Title { get; }
     }
 }

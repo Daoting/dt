@@ -39,7 +39,7 @@ namespace Dt.Base
             Type tp = AtApp.GetViewType(_homeView);
             if (tp != null)
             {
-                IWin win = Activator.CreateInstance(tp) as IWin;
+                Win win = Activator.CreateInstance(tp) as Win;
                 if (win != null)
                 {
                     if (string.IsNullOrEmpty(win.Title))
@@ -66,15 +66,15 @@ namespace Dt.Base
                 {
                     try
                     {
-                        IWin win = null;
+                        Win win = null;
                         if (string.IsNullOrEmpty(autoStart.Params))
                         {
-                            win = (IWin)Activator.CreateInstance(type);
+                            win = (Win)Activator.CreateInstance(type);
                         }
                         else
                         {
                             var par = JsonSerializer.Deserialize(autoStart.Params, Type.GetType(autoStart.ParamsType));
-                            win = (IWin)Activator.CreateInstance(type, par);
+                            win = (Win)Activator.CreateInstance(type, par);
                         }
 
                         if (win != null)
@@ -105,7 +105,7 @@ namespace Dt.Base
             Type tp = AtApp.GetViewType(_homeView);
             if (tp != null)
             {
-                IWin win = Activator.CreateInstance(tp) as IWin;
+                Win win = Activator.CreateInstance(tp) as Win;
                 if (win != null)
                 {
                     if (string.IsNullOrEmpty(win.Title))
@@ -132,15 +132,15 @@ namespace Dt.Base
                 {
                     try
                     {
-                        IWin win = null;
+                        Win win = null;
                         if (string.IsNullOrEmpty(autoStart.Params))
                         {
-                            win = (IWin)Activator.CreateInstance(type);
+                            win = (Win)Activator.CreateInstance(type);
                         }
                         else
                         {
                             var par = JsonSerializer.Deserialize(autoStart.Params, Type.GetType(autoStart.ParamsType));
-                            win = (IWin)Activator.CreateInstance(type, par);
+                            win = (Win)Activator.CreateInstance(type, par);
                         }
 
                         if (win != null)
@@ -214,7 +214,7 @@ namespace Dt.Base
         /// 设置自启动
         /// </summary>
         /// <param name="p_win"></param>
-        public static void SetAutoStart(IWin p_win)
+        public static void SetAutoStart(Win p_win)
         {
             if (p_win == null)
                 return;

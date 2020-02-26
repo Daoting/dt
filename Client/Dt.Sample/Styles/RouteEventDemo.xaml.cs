@@ -20,7 +20,7 @@ using Windows.UI.Xaml.Input;
 
 namespace Dt.Sample
 {
-    public sealed partial class RouteEventDemo : PageWin
+    public sealed partial class RouteEventDemo : Win
     {
         bool _lastEventIsMoved = false;
 

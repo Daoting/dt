@@ -25,7 +25,7 @@ namespace Dt.Kehu
     /// <summary>
     /// 
     /// </summary>
-    public partial class FriendPtMain : PageWin
+    public partial class FriendPtMain : Win
     {
         ObservableCollection<Point> _pts = new ObservableCollection<Point>();
         int _counter = 0;

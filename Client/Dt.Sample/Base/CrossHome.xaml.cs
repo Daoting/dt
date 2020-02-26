@@ -18,15 +18,15 @@ using Windows.UI.Xaml.Controls;
 
 namespace Dt.Sample
 {
-    public sealed partial class CrossHome : NaviWin
+    public sealed partial class CrossHome : Win
     {
         public CrossHome()
         {
             InitializeComponent();
-            NaviData = new List<NaviRow>
+            _lv.Data = new List<CenterInfo>
             {
-                new NaviRow(Icons.保存, "文件选择", typeof(FilePickerDemo), "文件类型过滤、单选、多选"),
-                new NaviRow(Icons.日历, "上传下载", typeof(FileTransDemo), "跨平台文件上传下载"),
+                new CenterInfo(Icons.保存, "文件选择", typeof(FilePickerDemo), "文件类型过滤、单选、多选"),
+                new CenterInfo(Icons.日历, "上传下载", typeof(FileTransDemo), "跨平台文件上传下载"),
             };
         }
     }

@@ -117,7 +117,7 @@ namespace Dt.Base
                     item.Click += (s, a) => LaunchManager.DelAutoStart();
                     menu.Items.Add(item);
                     item = new MenuFlyoutItem { Text = "设置自启动" };
-                    item.Click += (s, a) => LaunchManager.SetAutoStart((IWin)DataContext);
+                    item.Click += (s, a) => LaunchManager.SetAutoStart((Win)DataContext);
                     menu.Items.Add(item);
                     item = new MenuFlyoutItem { Text = "关闭其他" };
                     item.Click += CloseOtherWin;
@@ -132,7 +132,7 @@ namespace Dt.Base
                 }
 
                 var autoStart = AtLocal.GetAutoStart();
-                IWin win = (IWin)DataContext;
+                Win win = (Win)DataContext;
                 if (autoStart != null
                     && win != null
                     && autoStart.WinType == win.GetType().AssemblyQualifiedName
@@ -201,7 +201,7 @@ namespace Dt.Base
             if (this.ContainPoint(pt) && !IsActive)
             {
                 // 释放时鼠标在内部
-                IWin win = (IWin)DataContext;
+                Win win = (Win)DataContext;
                 if (Desktop.Inst.ActiveWin(win))
                     Taskbar.Inst.ActiveTaskItem(this);
             }
@@ -221,7 +221,7 @@ namespace Dt.Base
         #region 内部方法
         async void CloseOtherWin(object sender, RoutedEventArgs e)
         {
-            var ls = await Desktop.Inst.CloseExcept((IWin)DataContext);
+            var ls = await Desktop.Inst.CloseExcept((Win)DataContext);
             if (ls != null && ls.Count > 0)
             {
                 var items = Taskbar.Inst.TaskItems;
@@ -245,18 +245,18 @@ namespace Dt.Base
 
         void DockLeft(object sender, RoutedEventArgs e)
         {
-            Desktop.SetLeftWin((IWin)DataContext);
+            Desktop.SetLeftWin((Win)DataContext);
         }
 
         void DockRight(object sender, RoutedEventArgs e)
         {
-            Desktop.SetRightWin((IWin)DataContext);
+            Desktop.SetRightWin((Win)DataContext);
         }
 
         void OnCloseItem(object sender, RoutedEventArgs e)
         {
             ((Button)sender).PointerCaptureLost -= OnBtnPointerCaptureLost;
-            ((IWin)DataContext).Close();
+            ((Win)DataContext).Close();
         }
 
         void OnBtnPointerCaptureLost(object sender, PointerRoutedEventArgs e)

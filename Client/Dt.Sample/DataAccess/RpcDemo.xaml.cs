@@ -19,7 +19,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace Dt.Sample
 {
-    public partial class RpcDemo : PageWin
+    public partial class RpcDemo : Win
     {
         public RpcDemo()
         {

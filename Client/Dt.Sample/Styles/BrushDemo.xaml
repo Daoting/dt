@@ -1,16 +1,16 @@
-﻿<a:PageWin
+﻿<a:Win
     x:Class="Dt.Sample.BrushDemo"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base">
 
-    <a:PageWin.Resources>
+    <a:Win.Resources>
         <Style x:Key="DefaultBlock" TargetType="TextBlock">
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="IsTextSelectionEnabled" Value="True" />
         </Style>
-    </a:PageWin.Resources>
+    </a:Win.Resources>
     
     <a:Fv>
         <Border Background="{StaticResource 主题蓝色}">
@@ -64,4 +64,4 @@
             <TextBlock Text="醒目红色" Style="{StaticResource DefaultBlock}" />
         </Border>
     </a:Fv>
-</a:PageWin>
+</a:Win>

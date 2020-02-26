@@ -47,24 +47,6 @@ namespace Dt.Base
             typeof(string),
             typeof(BtnItem),
             null);
-
-        /// <summary>
-        /// 附加的类型名称
-        /// </summary>
-        public readonly static DependencyProperty ClsProperty = DependencyProperty.Register(
-            "Cls",
-            typeof(string),
-            typeof(BtnItem),
-            null);
-
-        /// <summary>
-        /// 根据附加类型名称创建的类型实例
-        /// </summary>
-        public readonly static DependencyProperty ClsObjProperty = DependencyProperty.Register(
-            "ClsObj",
-            typeof(object),
-            typeof(BtnItem),
-            null);
         #endregion
 
         /// <summary>
@@ -100,72 +82,6 @@ namespace Dt.Base
         {
             get { return (string)GetValue(DescProperty); }
             set { SetValue(DescProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取设置附加的类型名称，包括命名空间，不同程序集引用时需要提供程序集名称
-        /// </summary>
-        public string Cls
-        {
-            get { return (string)GetValue(ClsProperty); }
-            set { SetValue(ClsProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取根据类型名称Cls创建的类型实例
-        /// </summary>
-        /// <param name="p_newObj">是否每次调用都实例化新对象</param>
-        /// <returns></returns>
-        public object GetClsObj(bool p_newObj = false)
-        {
-            string name = Cls;
-            if (string.IsNullOrEmpty(name))
-                return null;
-
-            object obj = null;
-            if (!p_newObj)
-            {
-                obj = GetValue(ClsObjProperty);
-                if (obj != null)
-                    return obj;
-            }
-
-            // 不可替换成GetClsType()！
-            if (!name.Contains(","))
-            {
-                // 未提供程序集名称时，按调用类型所在的程序集
-                var mth = new StackTrace().GetFrame(1).GetMethod();
-                string str = mth.ReflectedType.AssemblyQualifiedName;
-                name = name + str.Substring(str.IndexOf(','));
-            }
-            Type tp = Type.GetType(name, false);
-
-            if (tp != null)
-            {
-                obj = Activator.CreateInstance(tp);
-                if (!p_newObj)
-                    SetValue(ClsObjProperty, obj);
-            }
-            return obj;
-        }
-
-        /// <summary>
-        /// 根据设置的Cls获取类型
-        /// </summary>
-        public Type GetClsType()
-        {
-            string name = Cls;
-            if (string.IsNullOrEmpty(name))
-                return null;
-
-            if (!name.Contains(","))
-            {
-                // 未提供程序集名称时，按调用类型所在的程序集
-                var mth = new StackTrace().GetFrame(1).GetMethod();
-                string str = mth.ReflectedType.AssemblyQualifiedName;
-                name = name + str.Substring(str.IndexOf(','));
-            }
-            return Type.GetType(name, false);
         }
     }
 }

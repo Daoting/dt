@@ -21,7 +21,7 @@ namespace Dt.Kehu
     /// <summary>
     /// 
     /// </summary>
-    public partial class PaySvcItem : PageWin
+    public partial class PaySvcItem : Win
     {
 
         public PaySvcItem()

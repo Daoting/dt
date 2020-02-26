@@ -21,7 +21,7 @@ namespace Dt.Kehu
     /// <summary>
     /// 
     /// </summary>
-    public partial class JieHuMain : PageWin
+    public partial class JieHuMain : Win
     {
 
         public JieHuMain(long p_id)

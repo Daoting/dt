@@ -21,7 +21,7 @@ namespace Dt.Kehu
     /// <summary>
     /// 
     /// </summary>
-    public partial class TempPage : PageWin
+    public partial class TempPage : Win
     {
         public TempPage()
         {

@@ -24,7 +24,7 @@ using Dt.Core.Rpc;
 
 namespace Dt.Sample
 {
-    public partial class SerializeDemo : PageWin
+    public partial class SerializeDemo : Win
     {
         Table _tbl;
         public SerializeDemo()

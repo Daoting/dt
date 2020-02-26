@@ -10,6 +10,7 @@
 using Dt.Base;
 using Dt.Core;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -17,11 +18,12 @@ using Windows.UI.Xaml.Controls;
 
 namespace Dt.Sample
 {
-    public partial class WinDemo : Win
+    public partial class SingleViewWin : Win
     {
-        WinDemo _nextWin;
+        ParamsWin _nextWin;
+        int _rnd = 0;
 
-        public WinDemo()
+        public SingleViewWin()
         {
             InitializeComponent();
             Closing += OnClosing;
@@ -40,12 +42,22 @@ namespace Dt.Sample
         {
             if (_nextWin == null)
             {
-                _nextWin = new WinDemo();
+                _nextWin = new ParamsWin();
                 string rnd = new Random().Next(1000).ToString();
                 _nextWin.Title = "窗口" + rnd;
                 ((Button)sender).Content = "子窗口" + rnd;
             }
             _nextWin.Open();
+        }
+
+        void OnParamsWin(object sender, RoutedEventArgs e)
+        {
+            if (_rnd == 0)
+            {
+                _rnd = new Random().Next(1000);
+                ((Button)sender).Content = "参数子窗口" + _rnd.ToString();
+            }
+            AtApp.OpenWin(typeof(ParamsWin), $"参数窗口{_rnd}", Icons.None, _rnd);
         }
 
         void OnClosing(object sender, AsyncCancelEventArgs e)
@@ -58,11 +70,6 @@ namespace Dt.Sample
         void OnClosed(object sender, EventArgs e)
         {
             AtKit.Msg($"{Title} - 关闭后事件");
-        }
-
-        void OnNavi(object sender, RoutedEventArgs e)
-        {
-            NaviTo((string)((Button)sender).Content);
         }
     }
 }

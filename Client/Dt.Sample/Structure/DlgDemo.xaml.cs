@@ -21,7 +21,7 @@ using Windows.UI.Xaml.Shapes;
 
 namespace Dt.Sample
 {
-    public sealed partial class DlgDemo : PageWin
+    public sealed partial class DlgDemo : Win
     {
         Random _rnd = new Random();
         Dlg _dlg;

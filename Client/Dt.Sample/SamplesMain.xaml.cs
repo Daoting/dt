@@ -22,7 +22,7 @@ namespace Dt.Sample
     /// 控件样例
     /// </summary>
     [View("控件样例")]
-    public sealed partial class SamplesMain : NaviWin
+    public sealed partial class SamplesMain : Win
     {
         /// <summary>
         /// 构造方法
@@ -43,21 +43,27 @@ namespace Dt.Sample
             {
                 new DataCmd
                 {
-                    Title = "页面窗口",
-                    Note = "继承自PageWin，基础内容控件，包括标题、图标、工具栏和页面内容；手机上承载在PhonePage内进行导航",
-                    Tag = typeof(PageWinDemo)
+                    Title = "窗口布局",
+                    Note = "Windows模式：窗口分上下左右和主区五个区域，由Tab承载内容，拖动时自动停靠",
+                    Tag = typeof(WinLayout)
                 },
                 new DataCmd
                 {
-                    Title = "普通窗口",
-                    Note = "继承自Win，窗口在PC上分上下左右和主区五个区域，由Tab承载内容，拖动时自动停靠；手机上自适应为可导航多页面",
-                    Tag = typeof(WinDemo)
+                    Title = "窗口内导航",
+                    Note = "Phone模式：窗口内所有区域的Tab自适应为可导航的页面，多个Tab可组合成多Tab页，页面之间支持循环导航",
+                    Tag = typeof(WinNavi)
                 },
                 new DataCmd
                 {
-                    Title = "导航窗口",
-                    Note = "停靠式窗口包含多个子Tab，手机上在Tab之间实现页面导航，将Tab承载在PhonePage内",
-                    Tag = typeof(NaviWinDemo)
+                    Title = "切换窗口主区",
+                    Note = "动态切换窗口主区的内容",
+                    Tag = typeof(ToggleWinCenter)
+                },
+                new DataCmd
+                {
+                    Title = "单视图窗口",
+                    Note = "只在主区显示一个Tab内容的窗口，整个窗口相当于一个页面",
+                    Tag = typeof(SingleViewWin)
                 },
                 new DataCmd
                 {
@@ -264,19 +270,16 @@ namespace Dt.Sample
 
         void OnNaviTo(DataCmd p_cmd)
         {
-            IWin win;
             if (p_cmd.Tag is Type tp)
             {
-                win = Activator.CreateInstance(tp) as IWin;
+                Win win = Activator.CreateInstance(tp) as Win;
                 if (win != null)
                 {
                     win.Title = p_cmd.Title;
                     p_cmd.Tag = win;
                 }
             }
-            win = p_cmd.Tag as IWin;
-            if (win != null)
-                LoadWin(win);
+            LoadCenter(p_cmd.Tag);
         }
     }
 }

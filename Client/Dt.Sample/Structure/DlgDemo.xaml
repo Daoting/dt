@@ -1,10 +1,10 @@
-﻿<a:PageWin
+﻿<a:Win
     x:Class="Dt.Sample.DlgDemo"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base">
 
-    <StackPanel Margin="10,0,0,0">
+    <StackPanel Margin="10">
         <TextBlock Text="显示位置" />
         <ComboBox x:Name="_cbPlacement" />
         <TextBox x:Name="_tbTarget" PlaceholderText="相对目标" Width="300" />
@@ -27,4 +27,4 @@
         <ComboBox x:Name="_shapes" />
         <Button Content="自定义形状对话框" Click="OnClicked4" />
     </StackPanel>
-</a:PageWin>
+</a:Win>

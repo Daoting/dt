@@ -25,21 +25,15 @@ namespace Dt.Base
     /// <summary>
     /// 可停靠多区域窗口
     /// </summary>
-    public partial class Win : ItemsControl, IWin
+    public partial class Win : ItemsControl
     {
         #region 静态内容
-        /// <summary>
-        /// 页面标题
-        /// </summary>
         public readonly static DependencyProperty TitleProperty = DependencyProperty.Register(
             "Title",
             typeof(string),
             typeof(Win),
             null);
 
-        /// <summary>
-        /// 图标名称
-        /// </summary>
         public readonly static DependencyProperty IconProperty = DependencyProperty.Register(
             "Icon",
             typeof(Icons),
@@ -52,32 +46,35 @@ namespace Dt.Base
             typeof(Win),
             new PropertyMetadata(null));
 
-        /// <summary>
-        /// PhoneUI模式的首页Title
-        /// </summary>
         public static readonly DependencyProperty HomeProperty = DependencyProperty.Register(
             "Home",
             typeof(string),
             typeof(Win),
             new PropertyMetadata(null));
 
-        /// <summary>
-        /// 是否自动保存布局状态
-        /// </summary>
         public static readonly DependencyProperty AutoSaveLayoutProperty = DependencyProperty.Register(
             "AutoSaveLayout",
             typeof(bool),
             typeof(Win),
             new PropertyMetadata(true));
 
-        /// <summary>
-        /// 是否显示恢复默认布局按钮
-        /// </summary>
         public static readonly DependencyProperty LayoutButtonVisibleProperty = DependencyProperty.Register(
             "LayoutButtonVisible",
             typeof(Visibility),
             typeof(Win),
             new PropertyMetadata(Visibility.Collapsed));
+
+        static readonly DependencyProperty CenterTabsProperty = DependencyProperty.Register(
+            "CenterTabs",
+            typeof(Tabs),
+            typeof(Win),
+            new PropertyMetadata(null));
+
+        static readonly DependencyProperty PhoneCenterTabProperty = DependencyProperty.Register(
+            "PhoneCenterTab",
+            typeof(Tab),
+            typeof(Win),
+            new PropertyMetadata(null));
 
 #if UWP
         static Win()
@@ -219,7 +216,7 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置PhoneUI模式的首页Title，首页为多个页面时用逗号隔开(自动以Tab形式显示)
+        /// 获取设置Phone模式的首页，为多个页面时用逗号隔开(自动以Tab形式显示)，null时自动为第一个Tab
         /// </summary>
         public string Home
         {
@@ -330,19 +327,49 @@ namespace Dt.Base
         List<PhoneTabs> _cacheMultiTabs;
 
         /// <summary>
+        /// 导航到窗口主页
+        /// </summary>
+        public void NaviToHome()
+        {
+            if (!AtSys.IsPhoneUI)
+                return;
+
+            if (_tabs == null)
+            {
+                _tabs = new Dictionary<string, Tab>(StringComparer.OrdinalIgnoreCase);
+                ExtractItems(this);
+            }
+            // 记录起始索引
+            _frameStartIndex = SysVisual.RootFrame.BackStackDepth;
+            NaviTo(Home);
+        }
+
+        /// <summary>
         /// 导航到指定页，支持多页Tab形式
         /// </summary>
-        /// <param name="p_tabTitle">多个页面时用逗号隔开(自动以Tab形式显示)</param>
+        /// <param name="p_tabTitle">多个页面时用逗号隔开(自动以Tab形式显示)，null时自动导航到第一个Tab</param>
         public void NaviTo(string p_tabTitle)
         {
-            if (!AtSys.IsPhoneUI || string.IsNullOrEmpty(p_tabTitle))
+            if (!AtSys.IsPhoneUI)
                 return;
 
             // 导航到单页或多页Tab
-            if (!p_tabTitle.Contains(','))
+            if (string.IsNullOrEmpty(p_tabTitle))
+                NaviToFirstTab();
+            else if (!p_tabTitle.Contains(','))
                 NaviToSingleTab(p_tabTitle);
             else
                 NaviToMultiTabs(p_tabTitle);
+        }
+
+        /// <summary>
+        /// 导航到第一个Tab
+        /// </summary>
+        void NaviToFirstTab()
+        {
+            Tab tab = _tabs.Values.FirstOrDefault();
+            if (tab != null)
+                NaviToSingleTab(tab);
         }
 
         /// <summary>
@@ -354,7 +381,15 @@ namespace Dt.Base
             Tab tab;
             if (!_tabs.TryGetValue(p_tabTitle, out tab))
                 throw new Exception($"导航出错，缺少{p_tabTitle}Tab页！");
+            NaviToSingleTab(tab);
+        }
 
+        /// <summary>
+        /// 导航到单页Tab
+        /// </summary>
+        /// <param name="p_tab"></param>
+        void NaviToSingleTab(Tab p_tab)
+        {
             // 判断是否为向后导航
             var frame = SysVisual.RootFrame;
             if (frame.BackStackDepth > _frameStartIndex)
@@ -365,7 +400,7 @@ namespace Dt.Base
                 {
                     var pageEntry = frame.BackStack[i];
                     if (pageEntry.Parameter is PhonePageParameter param
-                        && param.Content == tab)
+                        && param.Content == p_tab)
                     {
                         // 后退位置
                         index = i;
@@ -387,10 +422,10 @@ namespace Dt.Base
 
             // 起始页隐藏返回按钮
             if (frame.Content == null)
-                tab.PinButtonVisibility = Visibility.Collapsed;
+                p_tab.PinButtonVisibility = Visibility.Collapsed;
 
             // 向前导航
-            PhonePage.Show(tab);
+            PhonePage.Show(p_tab);
         }
 
         /// <summary>
@@ -458,7 +493,7 @@ namespace Dt.Base
                     throw new Exception($"导航出错，缺少{name}Tab页！");
                 tabs.AddItem(tab);
             }
-            
+
             // 起始页隐藏返回按钮
             if (frame.Content == null)
                 tabs.HideBackButton();
@@ -477,70 +512,40 @@ namespace Dt.Base
         /// <param name="p_items"></param>
         void ExtractItems(ItemsControl p_items)
         {
-            foreach (var item in p_items.Items.OfType<ItemsControl>())
+            foreach (var obj in p_items.Items)
             {
-                Tabs tabs = item as Tabs;
-                if (tabs != null)
+                if (obj is Tabs tabs)
                 {
                     foreach (var tab in tabs.Items.OfType<Tab>())
                     {
-                        if (tab == null || string.IsNullOrEmpty(tab.Title))
-                            continue;
-
+                        string title = tab.Title;
+                        if (string.IsNullOrEmpty(title))
+                        {
+                            // Tab未设置标题时使用窗口标题
+                            tab.Title = Title;
+                            title = AtKit.NewID;
+                        }
                         tab.OwnerWin = this;
-                        _tabs[tab.Title] = tab;
+                        _tabs[title] = tab;
                     }
                     tabs.Items.Clear();
                 }
+                else if (obj is ItemsControl ic)
+                {
+                    ExtractItems(ic);
+                }
                 else
                 {
-                    ExtractItems(item);
+                    // 普通界面元素，一般为单视图窗口
+                    Tab tab = new Tab
+                    {
+                        Content = obj,
+                        Title = Title,
+                        OwnerWin = this
+                    };
+                    _tabs[AtKit.NewID] = tab;
                 }
             }
-        }
-        #endregion
-
-        #region 实现接口
-        /// <summary>
-        /// 导航到窗口主页
-        /// </summary>
-        void IWin.NaviToHome()
-        {
-            if (!AtSys.IsPhoneUI)
-                return;
-
-            if (_tabs == null)
-            {
-                _tabs = new Dictionary<string, Tab>(StringComparer.OrdinalIgnoreCase);
-                ExtractItems(this);
-            }
-            // 记录起始索引
-            _frameStartIndex = SysVisual.RootFrame.BackStackDepth;
-            NaviTo(Home);
-        }
-
-        /// <summary>
-        /// 关闭或后退之前，返回false表示禁止关闭
-        /// </summary>
-        /// <returns>true 表允许关闭</returns>
-        async Task<bool> IPhonePage.OnClosing()
-        {
-            if (Closing != null)
-            {
-                var args = new AsyncCancelEventArgs();
-                Closing(this, args);
-                await args.EnsureAllCompleted();
-                return !args.Cancel;
-            }
-            return true;
-        }
-
-        /// <summary>
-        /// 关闭或后退之后
-        /// </summary>
-        void IPhonePage.OnClosed()
-        {
-            Closed?.Invoke(this, EventArgs.Empty);
         }
         #endregion
 
@@ -571,7 +576,7 @@ namespace Dt.Base
                     _popupPanel.Children.RemoveAt(index);
                     WinItem di = win.Content as WinItem;
                     if (di != null)
-                        _layout.ClearItems(di);
+                        LayoutManager.ClearItems(di);
                 }
                 else
                 {
@@ -662,6 +667,11 @@ namespace Dt.Base
             _layout.Init();
             SizeChanged -= OnSizeChanged;
             SizeChanged += OnSizeChanged;
+
+            // 已设置主区内容
+            object centerTabs = GetValue(CenterTabsProperty);
+            if (centerTabs != null)
+                _centerItem.Items.Add(centerTabs);
         }
 
         /// <summary>
@@ -1055,10 +1065,6 @@ namespace Dt.Base
         #endregion
 
         #region Pin状态切换
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="item"></param>
         void OnPinChange(Tab item)
         {
             if (item.IsPinned)
@@ -1153,6 +1159,87 @@ namespace Dt.Base
         }
         #endregion
 
+        #region 主区切换内容
+        /// <summary>
+        /// 动态切换主区内容
+        /// </summary>
+        /// <param name="p_content"></param>
+        public void LoadCenter(object p_content)
+        {
+            if (AtSys.IsPhoneUI)
+                LoadPhoneCenter(p_content);
+            else
+                LoadWinCenter(p_content);
+        }
+
+        void LoadPhoneCenter(object p_content)
+        {
+            // 未加载win的Home页前不导航
+            if (_tabs == null)
+                return;
+
+            // 内容相同也需导航
+            if (p_content is Win win)
+            {
+                win.NaviToHome();
+            }
+            else
+            {
+                Tab tab = (Tab)GetValue(PhoneCenterTabProperty);
+                if (tab == null)
+                {
+                    tab = new Tab();
+                    SetValue(PhoneCenterTabProperty, tab);
+                }
+                tab.Content = p_content;
+                PhonePage.Show(tab);
+            }
+        }
+
+        void LoadWinCenter(object p_content)
+        {
+            Tab tab;
+            Tabs tabs = (Tabs)GetValue(CenterTabsProperty);
+            if (tabs == null || tabs.Items.Count == 0)
+            {
+                // 初次加载 或 恢复默认布局后
+                tabs = new Tabs { ShowHeader = false };
+                tab = new Tab();
+                tabs.Items.Add(tab);
+                SetValue(CenterTabsProperty, tabs);
+
+                // 已应用模板
+                if (_centerItem != null)
+                    _centerItem.Items.Add(tabs);
+            }
+            else
+            {
+                tab = (Tab)tabs.Items[0];
+            }
+
+            // 切换内容
+            if (tab.Content != p_content)
+            {
+                // 为重合边线
+                if (p_content is Win win)
+                    win.Margin = new Thickness(-1, -1, 0, 0);
+                tab.Content = p_content;
+            }
+        }
+
+        /// <summary>
+        /// Lv中数据源为CenterInfo列表时，ItemClick默认事件处理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void OnCenterInfoClick(object sender, ItemClickArgs e)
+        {
+            var info = e.Data as CenterInfo;
+            if (info != null)
+                LoadCenter(info.GetCenter());
+        }
+        #endregion
+
         #region 内部方法
         void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
@@ -1209,6 +1296,32 @@ namespace Dt.Base
         void OnDefaultLayoutClick(object sender, RoutedEventArgs e)
         {
             _layout.LoadDefaultLayout();
+        }
+        #endregion
+
+        #region 触发事件
+        /// <summary>
+        /// 关闭或后退之前，返回false表示禁止关闭
+        /// </summary>
+        /// <returns>true 表允许关闭</returns>
+        internal async Task<bool> OnClosing()
+        {
+            if (Closing != null)
+            {
+                var args = new AsyncCancelEventArgs();
+                Closing(this, args);
+                await args.EnsureAllCompleted();
+                return !args.Cancel;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// 关闭或后退之后
+        /// </summary>
+        internal void OnClosed()
+        {
+            Closed?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>

@@ -19,7 +19,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace Dt.Sample
 {
-    public partial class TableAccess : PageWin
+    public partial class TableAccess : Win
     {
         int _index;
 

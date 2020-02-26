@@ -19,7 +19,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace Dt.Sample
 {
-    public partial class ContextMenuDemo : PageWin
+    public partial class ContextMenuDemo : Win
     {
         public ContextMenuDemo()
         {

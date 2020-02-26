@@ -22,7 +22,7 @@ namespace Dt.Kehu
     /// <summary>
     /// 
     /// </summary>
-    public partial class MyInfoEdit : PageWin
+    public partial class MyInfoEdit : Win
     {
 
         public MyInfoEdit()

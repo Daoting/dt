@@ -18,7 +18,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace Dt.Sample
 {
-    public partial class DbAccess : PageWin
+    public partial class DbAccess : Win
     {
         public DbAccess()
         {

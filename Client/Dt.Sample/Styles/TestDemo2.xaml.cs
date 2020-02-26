@@ -14,7 +14,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace Dt.Sample
 {
-    public sealed partial class TestDemo2 : PageWin
+    public sealed partial class TestDemo2 : Win
     {
         public TestDemo2()
         {

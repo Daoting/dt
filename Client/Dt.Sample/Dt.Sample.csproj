@@ -32,5 +32,4 @@
     <ProjectReference Include="..\Dt.Cells\Dt.Cells.csproj" />
     <ProjectReference Include="..\Dt.Charts\Dt.Charts.csproj" />
   </ItemGroup>
-
 </Project>

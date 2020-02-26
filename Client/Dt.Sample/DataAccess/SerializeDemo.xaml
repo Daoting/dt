@@ -1,4 +1,4 @@
-﻿<a:PageWin
+﻿<a:Win
     x:Class="Dt.Sample.SerializeDemo"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -119,4 +119,4 @@
                      ScrollViewer.VerticalScrollBarVisibility="Auto" />
         </a:CFree>
     </a:Fv>
-</a:PageWin>
+</a:Win>

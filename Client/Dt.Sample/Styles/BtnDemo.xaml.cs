@@ -13,7 +13,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace Dt.Sample
 {
-    public sealed partial class BtnDemo : PageWin
+    public sealed partial class BtnDemo : Win
     {
         public BtnDemo()
         {

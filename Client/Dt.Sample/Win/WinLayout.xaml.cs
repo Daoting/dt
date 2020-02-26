@@ -10,31 +10,22 @@
 using Dt.Base;
 using Dt.Core;
 using System;
-using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 #endregion
 
 namespace Dt.Sample
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public partial class PageWinDemo : PageWin
+    public partial class WinLayout : Win
     {
-        PageWinDemo _nextWin;
+        ParamsWin _nextWin;
         int _rnd = 0;
 
-        public PageWinDemo()
+        public WinLayout()
         {
             InitializeComponent();
             Closing += OnClosing;
             Closed += OnClosed;
-        }
-
-        public PageWinDemo(int p_params)
-            : this()
-        {
         }
 
         void OnToggleIcon(object sender, RoutedEventArgs e)
@@ -49,7 +40,7 @@ namespace Dt.Sample
         {
             if (_nextWin == null)
             {
-                _nextWin = new PageWinDemo();
+                _nextWin = new ParamsWin();
                 string rnd = new Random().Next(1000).ToString();
                 _nextWin.Title = "窗口" + rnd;
                 ((Button)sender).Content = "子窗口" + rnd;
@@ -64,18 +55,14 @@ namespace Dt.Sample
                 _rnd = new Random().Next(1000);
                 ((Button)sender).Content = "参数子窗口" + _rnd.ToString();
             }
-            AtApp.OpenWin(typeof(PageWinDemo), $"参数窗口{_rnd}", Icons.None, _rnd);
+            AtApp.OpenWin(typeof(ParamsWin), $"参数窗口{_rnd}", Icons.None, _rnd);
         }
 
-        async void OnClosing(object sender, AsyncCancelEventArgs e)
+        void OnClosing(object sender, AsyncCancelEventArgs e)
         {
-            using (e.Wait())
-            {
-                await Task.Delay(100);
-                e.Cancel = (bool)_cbClosing.IsChecked;
-                if (e.Cancel)
-                    AtKit.Msg($"{Title} - 事件中设置禁止关闭");
-            }
+            e.Cancel = (bool)_cbClosing.IsChecked;
+            if (e.Cancel)
+                AtKit.Msg($"{Title} - 事件中设置禁止关闭");
         }
 
         void OnClosed(object sender, EventArgs e)

@@ -23,7 +23,7 @@ namespace Dt.Kehu
     /// <summary>
     /// 
     /// </summary>
-    public partial class PtStep2 : PageWin
+    public partial class PtStep2 : Win
     {
 
         public PtStep2()

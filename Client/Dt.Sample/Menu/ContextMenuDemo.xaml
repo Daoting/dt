@@ -1,11 +1,11 @@
-﻿<a:PageWin
+﻿<a:Win
     x:Class="Dt.Sample.ContextMenuDemo"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"
     Title="上下文菜单">
 
-    <StackPanel>
+    <StackPanel Margin="10">
         <Button Content="按钮只在click时触发">
             <a:Ex.Menu>
                 <a:Menu WinPlacement="BottomLeft">
@@ -26,4 +26,4 @@
             </a:Ex.Menu>
         </Border>
     </StackPanel>
-</a:PageWin>
+</a:Win>

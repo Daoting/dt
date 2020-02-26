@@ -5,6 +5,7 @@
 * 增加Chart
 * 增加Excel
 * Fv增加ios选择格样式
+* NaviWin和PageWin功能合并到Win，移除NaviWin和PageWin
 
 ### 变更 
 *  移除Newtonsoft.Json，使用System.Text.Json 

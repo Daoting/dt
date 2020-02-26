@@ -21,7 +21,7 @@ namespace Dt.Kehu
     /// <summary>
     /// 
     /// </summary>
-    public partial class SelectSvcItem : PageWin
+    public partial class SelectSvcItem : Win
     {
 
         public SelectSvcItem()

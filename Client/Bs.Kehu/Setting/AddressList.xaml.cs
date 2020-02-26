@@ -22,7 +22,7 @@ namespace Dt.Kehu
     /// <summary>
     /// 
     /// </summary>
-    public partial class AddressList : PageWin
+    public partial class AddressList : Win
     {
 
         public AddressList()

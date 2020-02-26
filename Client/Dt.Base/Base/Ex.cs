@@ -9,12 +9,16 @@
 #region 引用命名
 using Dt.Core;
 using System;
+using System.Diagnostics;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 #endregion
 
 namespace Dt.Base
 {
+    /// <summary>
+    /// 附件依赖项属性
+    /// </summary>
     public static class Ex
     {
         #region 上下文菜单
@@ -100,6 +104,105 @@ namespace Dt.Base
         public static void SetLvMultiSelect(this Mi d, Lv value)
         {
             d.SetValue(LvMultiSelectProperty, value);
+        }
+        #endregion
+
+        #region 标签类型
+        /// <summary>
+        /// 附加标签的类型名称，包括命名空间，不同程序集引用时需要提供程序集名称，不提供按调用方所在的程序集
+        /// </summary>
+        public static readonly DependencyProperty TagClsProperty = DependencyProperty.RegisterAttached(
+            "TagCls",
+            typeof(string),
+            typeof(Ex),
+            new PropertyMetadata(null));
+
+        /// <summary>
+        /// 获取附加标签的类型名称
+        /// </summary>
+        public static string GetTagCls(DependencyObject element)
+        {
+            return (string)element.GetValue(TagClsProperty);
+        }
+
+        /// <summary>
+        /// 设置附加标签的类型名称
+        /// </summary>
+        public static void SetTagCls(DependencyObject element, string value)
+        {
+            element.SetValue(TagClsProperty, value);
+        }
+
+        /// <summary>
+        /// 内部保存标签实例
+        /// </summary>
+        static readonly DependencyProperty TagObjProperty = DependencyProperty.RegisterAttached(
+            "TagObj",
+            typeof(object),
+            typeof(Ex),
+            new PropertyMetadata(null));
+
+        /// <summary>
+        /// 根据附加标签的类型名称创建类型实例
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="p_newObj">是否每次调用都实例化新对象</param>
+        /// <returns></returns>
+        public static object GetTagClsObj(this DependencyObject element, bool p_newObj = false)
+        {
+            Check.NotNull(element);
+            string name = GetTagCls(element);
+            if (string.IsNullOrEmpty(name))
+                return null;
+
+            object obj = null;
+            if (!p_newObj)
+            {
+                // 可复用实例
+                obj = element.GetValue(TagObjProperty);
+                if (obj != null)
+                    return obj;
+            }
+
+            // 不可替换成GetClsType()！
+            if (!name.Contains(","))
+            {
+                // 未提供程序集名称时，按调用类型所在的程序集
+                var mth = new StackTrace().GetFrame(1).GetMethod();
+                string str = mth.ReflectedType.AssemblyQualifiedName;
+                name = name + str.Substring(str.IndexOf(','));
+            }
+            Type tp = Type.GetType(name, false);
+
+            if (tp != null)
+            {
+                obj = Activator.CreateInstance(tp);
+                if (!p_newObj)
+                    element.SetValue(TagObjProperty, obj);
+            }
+            return obj;
+        }
+
+        /// <summary>
+        /// 根据附加标签的类型名称获取类型
+        /// </summary>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        public static Type GetTagClsType(this DependencyObject element)
+        {
+            Check.NotNull(element);
+            string name = GetTagCls(element);
+            if (string.IsNullOrEmpty(name))
+                return null;
+
+            if (!name.Contains(","))
+            {
+                // 未提供程序集名称时，按调用类型所在的程序集
+                var mth = new StackTrace().GetFrame(1).GetMethod();
+                string str = mth.ReflectedType.AssemblyQualifiedName;
+                name = name + str.Substring(str.IndexOf(','));
+            }
+            return Type.GetType(name, false);
         }
         #endregion
     }

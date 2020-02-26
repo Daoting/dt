@@ -22,7 +22,7 @@ namespace Dt.Kehu
     /// <summary>
     /// 
     /// </summary>
-    public partial class ArticlePage : PageWin
+    public partial class ArticlePage : Win
     {
 
         public ArticlePage(long p_id)

@@ -16,7 +16,7 @@ using Windows.UI.Xaml.Shapes;
 
 namespace Dt.Sample
 {
-    public sealed partial class SketchPage : PageWin
+    public sealed partial class SketchPage : Win
     {
         public SketchPage()
         {

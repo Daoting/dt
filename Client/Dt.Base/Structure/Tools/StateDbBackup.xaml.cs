@@ -18,7 +18,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace Dt.Base.Tools
 {
-    public partial class StateDbBackup : PageWin
+    public partial class StateDbBackup : Win
     {
         public StateDbBackup()
         {

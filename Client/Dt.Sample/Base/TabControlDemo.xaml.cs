@@ -18,13 +18,13 @@ namespace Dt.Sample
     /// <summary>
     /// 
     /// </summary>
-    public partial class TabControlDemo : PageWin
+    public partial class TabControlDemo : Win
     {
-
         public TabControlDemo()
         {
             InitializeComponent();
         }
+
         void OnAddTabItem(object sender, RoutedEventArgs e)
         {
             TabItem item = new TabItem();

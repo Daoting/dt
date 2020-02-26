@@ -27,7 +27,7 @@ using Windows.UI.Xaml.Media;
 
 namespace Dt.Sample
 {
-    public partial class StackedPie : PageWin
+    public partial class StackedPie : Win
     {
         public StackedPie()
         {

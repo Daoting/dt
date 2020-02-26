@@ -2,7 +2,7 @@
 
 namespace Dt.Sample
 {
-    public sealed partial class SplitterDemo : PageWin
+    public sealed partial class SplitterDemo : Win
     {
         public SplitterDemo()
         {

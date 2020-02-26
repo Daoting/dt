@@ -256,7 +256,7 @@ namespace Dt.Base
                 AtKit.Throw("待显示的窗口类型不可为空！");
 
             // 激活旧窗口，比较窗口类型和初始参数
-            IWin win;
+            Win win;
             if (!AtSys.IsPhoneUI && (win = Desktop.Inst.ActiveWin(p_type, p_params)) != null)
             {
                 Taskbar.Inst.ActiveTaskItem(win);
@@ -264,13 +264,12 @@ namespace Dt.Base
             }
 
             // 打开新窗口
-            TypeInfo info = p_type.GetTypeInfo();
-            if (info.ImplementedInterfaces.Contains(typeof(IWin)))
+            if (typeof(Win).IsAssignableFrom(p_type))
             {
                 if (p_params == null)
-                    win = (IWin)Activator.CreateInstance(p_type);
+                    win = (Win)Activator.CreateInstance(p_type);
                 else
-                    win = (IWin)Activator.CreateInstance(p_type, p_params);
+                    win = (Win)Activator.CreateInstance(p_type, p_params);
 
                 if (string.IsNullOrEmpty(win.Title) && string.IsNullOrEmpty(p_title))
                     win.Title = "无标题";
@@ -297,14 +296,14 @@ namespace Dt.Base
             }
 
             // 处理自定义启动情况
-            if (info.ImplementedInterfaces.Contains(typeof(IView)))
+            if (p_type.GetTypeInfo().ImplementedInterfaces.Contains(typeof(IView)))
             {
                 IView viewer = Activator.CreateInstance(p_type) as IView;
                 viewer.Run(p_params);
                 return viewer;
             }
 
-            AtKit.Msg("打开窗口失败，窗口类型需要实现IWin或IView接口！");
+            AtKit.Msg("打开窗口失败，窗口类型继承自Win或实现IView接口！");
             return null;
         }
 

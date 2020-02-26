@@ -7,7 +7,7 @@ using Windows.UI.Xaml;
 
 namespace Dt.Sample
 {
-    public sealed partial class SysTraceDemo : PageWin
+    public sealed partial class SysTraceDemo : Win
     {
         public SysTraceDemo()
         {

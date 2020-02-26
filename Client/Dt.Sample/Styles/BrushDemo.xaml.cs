@@ -13,7 +13,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace Dt.Sample
 {
-    public sealed partial class BrushDemo : PageWin
+    public sealed partial class BrushDemo : Win
     {
         public BrushDemo()
         {

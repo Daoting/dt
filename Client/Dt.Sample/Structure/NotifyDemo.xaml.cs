@@ -15,7 +15,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace Dt.Sample
 {
-    public sealed partial class NotifyDemo : PageWin
+    public sealed partial class NotifyDemo : Win
     {
         public NotifyDemo()
         {

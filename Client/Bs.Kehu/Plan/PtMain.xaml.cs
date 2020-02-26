@@ -21,7 +21,7 @@ namespace Dt.Kehu
     /// <summary>
     /// 
     /// </summary>
-    public partial class PtMain : PageWin
+    public partial class PtMain : Win
     {
 
         public PtMain()

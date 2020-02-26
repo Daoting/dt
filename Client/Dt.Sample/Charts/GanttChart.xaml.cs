@@ -26,7 +26,7 @@ using Windows.UI.Xaml.Media;
 
 namespace Dt.Sample
 {
-    public partial class GanttChart : PageWin
+    public partial class GanttChart : Win
     {
         public GanttChart()
         {

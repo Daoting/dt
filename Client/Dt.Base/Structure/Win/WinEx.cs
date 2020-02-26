@@ -21,7 +21,7 @@ namespace Dt.Base
         /// 激活旧窗口或打开新窗口
         /// </summary>
         /// <param name="p_win">窗口对象</param>
-        public static void Open(this IWin p_win)
+        public static void Open(this Win p_win)
         {
             if (p_win == null)
                 AtKit.Throw("显示窗口不可为空！");
@@ -48,11 +48,11 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_win"></param>
         /// <returns></returns>
-        public static async void Close(this IWin p_win)
+        public static async void Close(this Win p_win)
         {
             if (!AtSys.IsPhoneUI)
             {
-                IWin nextWin = Taskbar.Inst.GetNextActiveItem(p_win);
+                Win nextWin = Taskbar.Inst.GetNextActiveItem(p_win);
                 if (await Desktop.Inst.CloseWin(p_win, nextWin))
                 {
                     Taskbar.Inst.RemoveTaskItem(p_win);

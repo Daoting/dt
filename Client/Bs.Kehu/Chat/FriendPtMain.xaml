@@ -1,4 +1,4 @@
-﻿<a:PageWin
+﻿<a:Win
     x:Class="Dt.Kehu.FriendPtMain"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -15,4 +15,4 @@
             <a:ChartLegend x:Name="_legend" />
         </a:Chart>
     </Grid>
-</a:PageWin>
+</a:Win>

@@ -22,7 +22,7 @@ namespace Dt.Kehu
     /// <summary>
     /// 
     /// </summary>
-    public partial class FollowList : PageWin
+    public partial class FollowList : Win
     {
 
         public FollowList()

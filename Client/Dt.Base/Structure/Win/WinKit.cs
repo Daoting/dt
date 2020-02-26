@@ -30,7 +30,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_elem">标题元素</param>
         /// <param name="p_win">所属窗口</param>
-        public static void OnPhoneTitleTapped(FrameworkElement p_elem, IWin p_win)
+        public static void OnPhoneTitleTapped(FrameworkElement p_elem, Win p_win)
         {
             if (p_elem == null || p_win == null)
                 return;

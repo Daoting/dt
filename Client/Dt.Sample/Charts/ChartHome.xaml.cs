@@ -18,26 +18,26 @@ using Windows.UI.Xaml.Controls;
 
 namespace Dt.Sample
 {
-    public sealed partial class ChartHome : NaviWin
+    public sealed partial class ChartHome : Win
     {
         public ChartHome()
         {
             InitializeComponent();
-            NaviData = new List<NaviRow>
+            _lv.Data = new List<CenterInfo>
             {
-                new NaviRow(Icons.汉堡, "图表预览", typeof(BaseChart), "图表类型、X轴、Y轴、调色板、图例等设置"),
-                new NaviRow(Icons.分组, "数据图表", typeof(DataChart), "Table数据图表"),
-                new NaviRow(Icons.详细, "标注", typeof(MarkersChart), "跟踪鼠标，显示标注"),
-                new NaviRow(Icons.日历, "组合图表", typeof(ComplexChart), "多图表组合方式"),
-                new NaviRow(Icons.修改, "聚合", typeof(AggregateChart), "支持多种聚合方法"),
-                new NaviRow(Icons.划卡, "标签", typeof(ChartLabel), "自定义数据标签"),
-                new NaviRow(Icons.排列, "饼图", typeof(StackedPie), "csv统计结果"),
-                new NaviRow(Icons.录音, "交互", typeof(InteractiveChart), "图表交互"),
-                new NaviRow(Icons.公告, "实时", typeof(LiveChart), "实时图表"),
-                new NaviRow(Icons.详细, "财务", typeof(FinancialChart), ""),
-                new NaviRow(Icons.日历, "甘特图", typeof(GanttChart), ""),
-                new NaviRow(Icons.修改, "多轴", typeof(PlotAreas), ""),
-                new NaviRow(Icons.划卡, "动画", typeof(LoadAnimation), ""),
+                new CenterInfo(Icons.汉堡, "图表预览", typeof(BaseChart), "图表类型、X轴、Y轴、调色板、图例等设置"),
+                new CenterInfo(Icons.分组, "数据图表", typeof(DataChart), "Table数据图表"),
+                new CenterInfo(Icons.详细, "标注", typeof(MarkersChart), "跟踪鼠标，显示标注"),
+                new CenterInfo(Icons.日历, "组合图表", typeof(ComplexChart), "多图表组合方式"),
+                new CenterInfo(Icons.修改, "聚合", typeof(AggregateChart), "支持多种聚合方法"),
+                new CenterInfo(Icons.划卡, "标签", typeof(ChartLabel), "自定义数据标签"),
+                new CenterInfo(Icons.排列, "饼图", typeof(StackedPie), "csv统计结果"),
+                new CenterInfo(Icons.录音, "交互", typeof(InteractiveChart), "图表交互"),
+                new CenterInfo(Icons.公告, "实时", typeof(LiveChart), "实时图表"),
+                new CenterInfo(Icons.详细, "财务", typeof(FinancialChart), ""),
+                new CenterInfo(Icons.日历, "甘特图", typeof(GanttChart), ""),
+                new CenterInfo(Icons.修改, "多轴", typeof(PlotAreas), ""),
+                new CenterInfo(Icons.划卡, "动画", typeof(LoadAnimation), ""),
             };
         }
     }

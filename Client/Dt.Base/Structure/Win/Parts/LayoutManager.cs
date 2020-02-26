@@ -175,7 +175,7 @@ namespace Dt.Base.Docking
         /// 深度清除所有子项
         /// </summary>
         /// <param name="p_items"></param>
-        public void ClearItems(ItemsControl p_items)
+        public static void ClearItems(ItemsControl p_items)
         {
             // 不可使用Items.Clear
             while (p_items.Items.Count > 0)
@@ -680,10 +680,10 @@ namespace Dt.Base.Docking
             List<Tab> bottomHide = new List<Tab>();
             while (_owner.Items.Count > 0)
             {
-                WinCenter center;
                 object obj = _owner.Items[0];
-                WinItem di = obj as WinItem;
-                if (di != null)
+                _owner.Items.RemoveAt(0);
+
+                if (obj is WinItem di)
                 {
                     ExtractItems(di);
                     if (di.DockState == WinItemState.Floating)
@@ -718,12 +718,26 @@ namespace Dt.Base.Docking
                         }
                     }
                 }
-                else if ((center = obj as WinCenter) != null)
+                else if (obj is WinCenter center)
                 {
                     ExtractItems(center);
                     centers.Add(center);
                 }
-                _owner.Items.RemoveAt(0);
+                else
+                {
+                    // 包含普通界面元素时：
+                    // 1. 将其放于主区
+                    // 2. 不显示标题栏
+                    // 3. 不自动保存布局状态
+                    // 4. 不显示恢复默认布局按钮
+                    // 5. 一般为单视图窗口
+                    _owner.AutoSaveLayout = false;
+                    WinCenter wc = new WinCenter();
+                    Tabs tabs = new Tabs { ShowHeader = false };
+                    tabs.Items.Add(new Tab { Content = obj });
+                    wc.Items.Add(tabs);
+                    centers.Add(wc);
+                }
             }
 
             StringBuilder xml = new StringBuilder();

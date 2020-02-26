@@ -37,7 +37,7 @@ namespace Dt.Base
         /// <summary>
         /// 只有是首页时才有值
         /// </summary>
-        internal IPhonePage OwnerWin { get; set; }
+        internal Win OwnerWin { get; set; }
 
         /// <summary>
         /// 导航时的标识，所有Tab标题逗号隔开

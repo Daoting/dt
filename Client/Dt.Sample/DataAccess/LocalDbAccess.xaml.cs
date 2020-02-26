@@ -18,7 +18,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace Dt.Sample
 {
-    public partial class LocalDbAccess : PageWin
+    public partial class LocalDbAccess : Win
     {
         public LocalDbAccess()
         {

@@ -9,7 +9,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace Dt.Sample
 {
-    public sealed partial class FilePickerDemo : PageWin
+    public sealed partial class FilePickerDemo : Win
     {
         public FilePickerDemo()
         {

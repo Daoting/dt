@@ -26,7 +26,7 @@ using Windows.UI.Xaml.Media;
 
 namespace Dt.Sample
 {
-    public partial class ComplexChart : PageWin
+    public partial class ComplexChart : Win
     {
         Random _rnd = new Random();
         public ComplexChart()

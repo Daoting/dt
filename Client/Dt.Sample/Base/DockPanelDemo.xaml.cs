@@ -6,7 +6,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace Dt.Sample
 {
-    public sealed partial class DockPanelDemo : PageWin
+    public sealed partial class DockPanelDemo : Win
     {
         public DockPanelDemo()
         {

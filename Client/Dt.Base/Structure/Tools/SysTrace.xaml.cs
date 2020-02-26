@@ -29,7 +29,7 @@ namespace Dt.Base.Tools
     /// <summary>
     /// 监视输出面板
     /// </summary>
-    public sealed partial class SysTrace : PageWin
+    public sealed partial class SysTrace : Win
     {
         static SysTrace _win;
         static Dlg _dlg;

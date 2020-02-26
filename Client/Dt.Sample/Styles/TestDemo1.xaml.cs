@@ -26,7 +26,7 @@ using Windows.UI.Xaml.Shapes;
 
 namespace Dt.Sample
 {
-    public sealed partial class TestDemo1 : PageWin
+    public sealed partial class TestDemo1 : Win
     {
         public TestDemo1()
         {

@@ -16,7 +16,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace Dt.Sample
 {
-    public sealed partial class IconDemo : PageWin
+    public sealed partial class IconDemo : Win
     {
         const int ItemWidth = 50;
         const int ItemHeight = 80;
