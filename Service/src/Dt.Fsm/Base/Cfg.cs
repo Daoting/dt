@@ -9,6 +9,7 @@
 #region 引用命名
 using Dt.Core.Caches;
 using Serilog;
+using System;
 using System.Collections.Generic;
 using System.IO;
 #endregion
@@ -50,7 +51,7 @@ namespace Dt.Fsm
         /// </summary>
         public static void Init()
         {
-            Root = Path.Combine(Directory.GetCurrentDirectory(), "etc", "drive");
+            Root = Path.Combine(AppContext.BaseDirectory, "etc", "drive");
             var dir = new DirectoryInfo(Root);
             if (!dir.Exists)
                 dir.Create();

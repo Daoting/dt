@@ -146,7 +146,7 @@ namespace Dt.Base
         {
             try
             {
-                var tempPath = Path.Combine(AtSys.DocPath, AtKit.NewID + p_file.Ext);
+                var tempPath = Path.Combine(AtLocal.CachePath, AtKit.NewID + p_file.Ext);
                 System.IO.File.Copy(p_file.FilePath, tempPath);
                 return Task.FromResult(tempPath);
             }

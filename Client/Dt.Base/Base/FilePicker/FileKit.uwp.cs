@@ -146,7 +146,7 @@ namespace Dt.Base
             try
             {
                 var sf = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(p_file.FilePath);
-                var tempPath = Path.Combine(AtSys.DocPath, AtKit.NewID + p_file.Ext);
+                var tempPath = Path.Combine(AtLocal.CachePath, AtKit.NewID + p_file.Ext);
                 using (var fs = File.Create(tempPath))
                 {
                     await (await sf.OpenStreamForReadAsync()).CopyToAsync(fs);
@@ -264,7 +264,7 @@ namespace Dt.Base
             // 生成缩略图
             if (existThumb)
             {
-                fd.ThumbPath = Path.Combine(AtSys.DocPath, AtKit.NewID + "-t.jpg");
+                fd.ThumbPath = Path.Combine(AtLocal.CachePath, AtKit.NewID + "-t.jpg");
                 using (var fs = File.Create(fd.ThumbPath))
                 {
                     // 默认根据DPI调整缩略图大小

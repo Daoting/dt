@@ -41,7 +41,7 @@ namespace Dt.Core.Sqlite
         /// <summary>
         /// 模型文件路径
         /// </summary>
-        public static string ModelPath => System.IO.Path.Combine(Directory.GetCurrentDirectory(), "etc/model");
+        public static string ModelPath => System.IO.Path.Combine(AppContext.BaseDirectory, "etc/model");
 
         /// <summary>
         /// 初始化SQLite模型文件

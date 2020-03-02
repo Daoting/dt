@@ -107,7 +107,7 @@ namespace Dt.Base
             return Task.Run(() =>
             {
                 _uploadFiles.Clear();
-                var multiPartPath = Path.Combine(AtSys.DocPath, AtKit.NewID);
+                var multiPartPath = Path.Combine(AtLocal.CachePath, AtKit.NewID);
                 using (var fs = new FileStream(multiPartPath, FileMode.Create, FileAccess.Write, FileShare.Read))
                 {
                     // UTF8.GetBytes的结果只一字节10，诡异！

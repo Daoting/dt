@@ -15,7 +15,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
-
+using System.Threading.Tasks;
+using Windows.Storage;
 #endregion
 
 namespace Dt.Core
@@ -25,6 +26,27 @@ namespace Dt.Core
     /// </summary>
     public static class AtLocal
     {
+        #region 成员变量
+        /// <summary>
+        /// 状态库文件名称
+        /// </summary>
+        public const string StateDbName = "State.db";
+        static SqliteConnectionEx _modelDb;
+        static SqliteConnectionEx _stateDb;
+        #endregion
+
+        #region 构造方法
+        static AtLocal()
+        {
+            // 初始化不同平台的包绑定！V2支持类型和属性的绑定
+            SQLitePCL.Batteries_V2.Init();
+
+            // 创建本地文件存放目录
+            if (!Directory.Exists(CachePath))
+                Directory.CreateDirectory(CachePath);
+        }
+        #endregion
+
         #region 状态库
         #region ORM
         /// <summary>
@@ -408,6 +430,89 @@ namespace Dt.Core
         }
         #endregion
 
+        #region 本地文件
+        /* 在uno保存文件时只支持以下路径，形如：
+         * LocalFolder
+         * uwp：C:\Users\hdt\AppData\Local\Packages\4e169f82-ed49-494f-8c23-7dab11228222_dm57000t4aqw0\LocalState
+         * android：/data/user/0/App.Droid/files
+         * 
+         * RoamingFolder
+         * android：/data/user/0/App.Droid/files/.config
+         * 
+         * SharedLocalFolder
+         * android：/data/user/0/App.Droid/files/.local/share
+         * 
+         * TemporaryFolder 缓存路径，app关闭时删除，不可用于保存文件！
+         */
+
+        /// <summary>
+        /// 本地文件的根路径
+        /// uwp：C:\Users\...\LocalState
+        /// android：/data/user/0/App.Droid/files
+        /// </summary>
+        public static string RootPath
+        {
+            get
+            {
+#if UWP
+                return ApplicationData.Current.LocalFolder.Path;
+#else
+                return Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+#endif
+            }
+        }
+
+        /// <summary>
+        /// 本地缓存文件的存放路径
+        /// uwp：C:\Users\...\LocalState\.doc
+        /// android：/data/user/0/App.Droid/files/.doc
+        /// </summary>
+        public static string CachePath { get; } =
+#if UWP
+            Path.Combine(ApplicationData.Current.LocalFolder.Path, ".doc");
+#else
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), ".doc");
+#endif
+
+        /// <summary>
+        /// 清空所有存放在.doc路径的缓存文件
+        /// </summary>
+        public static void ClearAllFiles()
+        {
+            try
+            {
+                if (Directory.Exists(CachePath))
+                    Directory.Delete(CachePath, true);
+                Directory.CreateDirectory(CachePath);
+            }
+            catch { }
+        }
+
+        /// <summary>
+        /// 删除存放在.doc路径的本地文件
+        /// </summary>
+        /// <param name="p_fileName">文件名</param>
+        public static void DeleteFile(string p_fileName)
+        {
+            try
+            {
+                File.Delete(Path.Combine(CachePath, p_fileName));
+            }
+            catch { }
+        }
+
+        /// <summary>
+        /// 获取存放在.doc路径的本地文件(仅uwp可用)
+        /// </summary>
+        /// <param name="p_fileName"></param>
+        /// <returns></returns>
+        public static async Task<StorageFile> GetStorageFile(string p_fileName)
+        {
+            var folder = await StorageFolder.GetFolderFromPathAsync(CachePath);
+            return await folder.TryGetItemAsync(p_fileName) as StorageFile;
+        }
+        #endregion
+
         #region 内部方法
         /// <summary>
         /// 打开状态库 
@@ -416,7 +521,7 @@ namespace Dt.Core
         {
             try
             {
-                _stateDb = new SqliteConnectionEx("Data Source=" + Path.Combine(AtSys.LocalDbPath, StateDbName));
+                _stateDb = new SqliteConnectionEx("Data Source=" + Path.Combine(RootPath, StateDbName));
                 _stateDb.Open();
 
                 // 初次运行、状态库版本变化或文件被删除时创建库表结构
@@ -441,7 +546,7 @@ namespace Dt.Core
         /// </summary>
         public static void ReopenStateDb()
         {
-            _stateDb = new SqliteConnectionEx("Data Source=" + Path.Combine(AtSys.LocalDbPath, StateDbName));
+            _stateDb = new SqliteConnectionEx("Data Source=" + Path.Combine(RootPath, StateDbName));
             _stateDb.Open();
             _stateDb.InitStateDb();
         }
@@ -474,7 +579,7 @@ namespace Dt.Core
         {
             if (_modelDb != null)
                 _modelDb.Close();
-            _modelDb = new SqliteConnectionEx("Data Source=" + Path.Combine(AtSys.LocalDbPath, p_dbName));
+            _modelDb = new SqliteConnectionEx("Data Source=" + Path.Combine(RootPath, p_dbName));
             _modelDb.Open();
         }
 
@@ -505,7 +610,7 @@ namespace Dt.Core
                 p_sb.Append("表");
                 try
                 {
-                    FileInfo fi = new FileInfo(Path.Combine(AtSys.LocalDbPath, StateDbName));
+                    FileInfo fi = new FileInfo(Path.Combine(RootPath, StateDbName));
                     p_sb.Append("，");
                     p_sb.Append(AtKit.GetFileSizeDesc((ulong)fi.Length));
                 }
@@ -521,7 +626,7 @@ namespace Dt.Core
                 p_sb.Append("表");
                 try
                 {
-                    FileInfo fi = new FileInfo(Path.Combine(AtSys.LocalDbPath, _modelDb.DataSource));
+                    FileInfo fi = new FileInfo(Path.Combine(RootPath, _modelDb.DataSource));
                     p_sb.Append("，");
                     p_sb.Append(AtKit.GetFileSizeDesc((ulong)fi.Length));
                 }
@@ -529,15 +634,6 @@ namespace Dt.Core
                 p_sb.AppendLine();
             }
         }
-        #endregion
-
-        #region 成员变量
-        /// <summary>
-        /// 状态库文件名称
-        /// </summary>
-        public const string StateDbName = "State.db";
-        static SqliteConnectionEx _modelDb;
-        static SqliteConnectionEx _stateDb;
         #endregion
     }
 }

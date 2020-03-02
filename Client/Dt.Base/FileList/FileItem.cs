@@ -341,13 +341,13 @@ namespace Dt.Base
 
             // 打开本地文件
             string name = GetFileName();
-            StorageFile file = await AtSys.GetUwpDocFile(name);
+            StorageFile file = await AtLocal.GetStorageFile(name);
             if (file == null)
             {
                 // 先下载再打开
                 bool suc = await Download();
                 if (suc)
-                    file = await AtSys.GetUwpDocFile(name);
+                    file = await AtLocal.GetStorageFile(name);
             }
             if (file == null)
                 return;
@@ -391,7 +391,7 @@ namespace Dt.Base
                 return;
 
             // 复制本地文件
-            StorageFile temp = await AtSys.GetUwpDocFile(name);
+            StorageFile temp = await AtLocal.GetStorageFile(name);
             if (temp != null)
             {
                 await temp.CopyAndReplaceAsync(file);
@@ -402,7 +402,7 @@ namespace Dt.Base
             // 先下载再另存
             if (await Download())
             {
-                temp = await AtSys.GetUwpDocFile(name);
+                temp = await AtLocal.GetStorageFile(name);
                 if (temp != null)
                 {
                     await temp.CopyAndReplaceAsync(file);
@@ -559,7 +559,7 @@ namespace Dt.Base
                 // 删除服务器端旧文件
                 await AtFile.Delete(ID);
                 // 删除本地旧文件
-                AtSys.DeleteDocFile(GetFileName());
+                AtLocal.DeleteFile(GetFileName());
             }
 
             ID = p_id;
@@ -570,14 +570,14 @@ namespace Dt.Base
             try
             {
                 var file = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(File.FilePath);
-                await file.CopyAsync(await StorageFolder.GetFolderFromPathAsync(AtSys.DocPath), fileName, NameCollisionOption.ReplaceExisting);
+                await file.CopyAsync(await StorageFolder.GetFolderFromPathAsync(AtLocal.CachePath), fileName, NameCollisionOption.ReplaceExisting);
             }
             catch { }
 #else
             try
             {
                 FileInfo fi = new FileInfo(File.FilePath);
-                fi.CopyTo(Path.Combine(AtSys.DocPath, fileName), true);
+                fi.CopyTo(Path.Combine(AtLocal.CachePath, fileName), true);
             }
             catch { }
 #endif
@@ -640,7 +640,7 @@ namespace Dt.Base
             string b = ApplicationData.Current.LocalFolder.Path;
 
             string name = p_isThumbnail ? GetThumbName() : GetFileName();
-            string path = Path.Combine(AtSys.DocPath, name);
+            string path = Path.Combine(AtLocal.CachePath, name);
             FileStream stream = null;
             try
             {
@@ -808,20 +808,20 @@ namespace Dt.Base
         async void LoadImage()
         {
             string thumbName = GetThumbName();
-            StorageFile file = await AtSys.GetUwpDocFile(thumbName);
+            StorageFile file = await AtLocal.GetStorageFile(thumbName);
             if (file == null)
             {
                 bool existThumbnail = ExistThumbnail();
 
                 // 无缩略图时取原始图片
                 if (!existThumbnail)
-                    file = await AtSys.GetUwpDocFile(GetFileName());
+                    file = await AtLocal.GetStorageFile(GetFileName());
 
                 if (file == null)
                 {
                     // 下载缩略图或原始图
                     if (await Download(existThumbnail, false))
-                        file = await AtSys.GetUwpDocFile(existThumbnail ? thumbName : GetFileName());
+                        file = await AtLocal.GetStorageFile(existThumbnail ? thumbName : GetFileName());
                 }
             }
 
@@ -839,20 +839,20 @@ namespace Dt.Base
         async void LoadImage()
         {
             string thumbName = GetThumbName();
-            FileInfo fi = new FileInfo(Path.Combine(AtSys.DocPath, thumbName));
+            FileInfo fi = new FileInfo(Path.Combine(AtLocal.CachePath, thumbName));
             if (!fi.Exists)
             {
                 bool existThumbnail = ExistThumbnail();
 
                 // 无缩略图时取原始图片
                 if (!existThumbnail)
-                    fi = new FileInfo(Path.Combine(AtSys.DocPath, GetFileName()));
+                    fi = new FileInfo(Path.Combine(AtLocal.CachePath, GetFileName()));
 
                 if (!fi.Exists)
                 {
                     // 下载缩略图或原始图
                     if (await Download(existThumbnail, false))
-                        fi = new FileInfo(Path.Combine(AtSys.DocPath, existThumbnail ? thumbName : GetFileName()));
+                        fi = new FileInfo(Path.Combine(AtLocal.CachePath, existThumbnail ? thumbName : GetFileName()));
                 }
             }
 

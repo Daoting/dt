@@ -3,15 +3,16 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"
+    xmlns:chat="using:Dt.App.Chat"
     Home="消息,联系人">
 
     <a:WinItem DockState="DockedLeft">
         <a:Tabs>
             <a:Tab Title="消息">
-                <a:ChatList x:Name="_list" />
+                <a:ChatList ItemClick="OnItemClick" />
             </a:Tab>
             <a:Tab Title="联系人">
-
+                <chat:ChatMemberList ItemClick="OnItemClick" />
             </a:Tab>
         </a:Tabs>
     </a:WinItem>

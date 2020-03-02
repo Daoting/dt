@@ -25,6 +25,7 @@ namespace Dt.Base
     /// </summary>
     public sealed partial class ChatList : UserControl
     {
+        public event EventHandler<long> ItemClick;
 
         public ChatList()
         {
@@ -58,6 +59,11 @@ namespace Dt.Base
                 "         group by OtherID)" +
                 " order by stime desc",
                 new Dict { { "loginid", AtUser.ID } });
+        }
+
+        void OnItemClick(object sender, ItemClickArgs e)
+        {
+
         }
     }
 }

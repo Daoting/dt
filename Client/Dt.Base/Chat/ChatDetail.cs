@@ -27,17 +27,11 @@ namespace Dt.Base
     public partial class ChatDetail : Control
     {
         #region 静态成员
-        public static readonly DependencyProperty RecvIDProperty = DependencyProperty.Register(
-            "RecvID",
+        public static readonly DependencyProperty OtherIDProperty = DependencyProperty.Register(
+            "OtherID",
             typeof(long),
             typeof(ChatDetail),
-            new PropertyMetadata(1L, OnRecvIDChanged));
-
-        public static readonly DependencyProperty RecvNameProperty = DependencyProperty.Register(
-            "RecvName",
-            typeof(string),
-            typeof(ChatDetail),
-            new PropertyMetadata("abc"));
+            new PropertyMetadata(-1L, OnOtherIDChanged));
 
         public static readonly DependencyProperty BottomContentProperty = DependencyProperty.Register(
             "BottomContent",
@@ -45,7 +39,7 @@ namespace Dt.Base
             typeof(ChatDetail),
             new PropertyMetadata(null));
 
-        static void OnRecvIDChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        static void OnOtherIDChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((ChatDetail)d).LoadMsg();
         }
@@ -53,6 +47,8 @@ namespace Dt.Base
 
         Lv _lv;
         TextBox _tbMsg;
+        Grid _inputGrid;
+        ChatMember _other;
 
         #region 构造方法
         public ChatDetail()
@@ -66,21 +62,12 @@ namespace Dt.Base
 
         #region 属性
         /// <summary>
-        /// 获取接收者ID
+        /// 获取对方ID
         /// </summary>
-        public long RecvID
+        public long OtherID
         {
-            get { return (long)GetValue(RecvIDProperty); }
-            set { SetValue(RecvIDProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取接收者姓名
-        /// </summary>
-        public string RecvName
-        {
-            get { return (string)GetValue(RecvNameProperty); }
-            set { SetValue(RecvNameProperty, value); }
+            get { return (long)GetValue(OtherIDProperty); }
+            set { SetValue(OtherIDProperty, value); }
         }
 
         /// <summary>
@@ -101,6 +88,7 @@ namespace Dt.Base
             _lv = (Lv)GetTemplateChild("Lv");
             _lv.View = new MsgItemSelector();
 
+            _inputGrid = (Grid)GetTemplateChild("InputGrid");
             var btn = (Button)GetTemplateChild("BtnVoice");
             if (btn != null)
             {
@@ -147,10 +135,14 @@ namespace Dt.Base
         /// </summary>
         void LoadMsg()
         {
-            if (_lv == null || RecvID < 0)
+            if (_lv == null || OtherID < 0)
                 return;
 
-            LetterManager.ClearUnreadFlag(RecvID);
+            _other = AtLocal.GetFirst<ChatMember>("select * from ChatMember where id=@id", new Dict { { "id", OtherID } });
+            // 不是好友时无法发送
+            _inputGrid.Visibility = (_other == null) ? Visibility.Collapsed : Visibility.Visible;
+
+            LetterManager.ClearUnreadFlag(OtherID);
             _lv.PageData = new PageData { NextPage = OnNextPage, InsertTop = true };
         }
 
@@ -163,7 +155,7 @@ namespace Dt.Base
             int cnt = AtLocal.GetScalar<int>("select count(*) from Letter where otherid=@otherid and loginid=@loginid",
                 new Dict
                 {
-                    { "otherid", RecvID },
+                    { "otherid", OtherID },
                     { "loginid",  AtUser.ID }
                 });
 
@@ -171,7 +163,7 @@ namespace Dt.Base
             int limit = e.PageSize;
             if (start < 0)
                 limit = cnt - e.PageNo * e.PageSize;
-            var data = AtLocal.Query<Letter>($"select * from Letter where otherid={RecvID} and loginid={AtUser.ID} order by stime limit {limit} offset {start}");
+            var data = AtLocal.Query<Letter>($"select * from Letter where otherid={OtherID} and loginid={AtUser.ID} order by stime limit {limit} offset {start}");
             e.LoadPageData(data);
             if (data != null && data.Count == 0)
                 _lv.Data = data;
@@ -188,7 +180,7 @@ namespace Dt.Base
             if (p_letter.IsReceived)
             {
                 // 是否为当前聊天人
-                if (p_letter.OtherID == RecvID)
+                if (p_letter.OtherID == OtherID)
                 {
                     // 已读标志
                     p_letter.Unread = false;
@@ -252,7 +244,7 @@ namespace Dt.Base
             string msg = _tbMsg.Text.Trim();
             if (!string.IsNullOrEmpty(msg))
             {
-                await LetterManager.SendLetter(RecvID, RecvName, msg, LetterType.Text);
+                await LetterManager.SendLetter(OtherID, _other.Name, msg, LetterType.Text);
                 _tbMsg.Text = "";
             }
         }

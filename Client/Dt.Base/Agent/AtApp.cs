@@ -84,14 +84,14 @@ namespace Dt.Base
 
             // 更新模型文件
             string modelFile = cfg.Str("ver") + ".db";
-            bool existFile = File.Exists(Path.Combine(AtSys.LocalDbPath, modelFile));
+            bool existFile = File.Exists(Path.Combine(AtLocal.RootPath, modelFile));
             if (!existFile)
             {
                 // 关闭模型库，打开时无法删除文件
                 AtLocal.CloseModelDb();
 
                 // 删除旧版的模型文件
-                foreach (var file in new DirectoryInfo(AtSys.LocalDbPath).GetFiles())
+                foreach (var file in new DirectoryInfo(AtLocal.RootPath).GetFiles())
                 {
                     if (file.Extension == ".db" && file.Name != "State.db")
                         try { file.Delete(); } catch { }
@@ -103,7 +103,7 @@ namespace Dt.Base
                     using (var response = await BaseRpc.Client.GetAsync($"{AtSys.Stub.ServerUrl.TrimEnd('/')}/{p_svcName}/.model"))
                     using (var stream = await response.Content.ReadAsStreamAsync())
                     using (var gzipStream = new GZipStream(stream, CompressionMode.Decompress))
-                    using (var fs = File.Create(Path.Combine(AtSys.LocalDbPath, modelFile), 262140, FileOptions.WriteThrough))
+                    using (var fs = File.Create(Path.Combine(AtLocal.RootPath, modelFile), 262140, FileOptions.WriteThrough))
                     {
                         gzipStream.CopyTo(fs);
                         fs.Flush();
@@ -113,7 +113,7 @@ namespace Dt.Base
                 {
                     try
                     {
-                        File.Delete(Path.Combine(AtSys.LocalDbPath, modelFile));
+                        File.Delete(Path.Combine(AtLocal.RootPath, modelFile));
                     }
                     catch { }
                     return "下载模型文件失败！" + ex.Message;

@@ -118,7 +118,6 @@ namespace Dt.Shell
             { "参数定义", typeof(UserParams) },
             { "用户账号", typeof(UserAccount) },
             { "主页", typeof(DefaultHome) },
-            //{ "主页", typeof(SamplesMain) },
             { "通讯录", typeof(ChatHome) },
             { "控件样例", typeof(SamplesMain) },
         };
@@ -147,6 +146,7 @@ namespace Dt.Shell
         public Dictionary<string, Type> StateTbls => new Dictionary<string, Type>
         {
             { "menufav", typeof(MenuFav) },
+            { "chatmember", typeof(ChatMember) },
             { "letter", typeof(Letter) },
             { "filereadlog", typeof(FileReadLog) },
             { "docklayout", typeof(DockLayout) },
@@ -159,7 +159,7 @@ namespace Dt.Shell
         /// <summary>
         /// 获取状态库版本号，和本地不同时自动更新
         /// </summary>
-        public string StateDbVer => "5d818d8d71a5b97bb474d6b44955bddf";
+        public string StateDbVer => "bf59ea78a267cba7da132d086b0fe9ab";
         #endregion
     }
 }

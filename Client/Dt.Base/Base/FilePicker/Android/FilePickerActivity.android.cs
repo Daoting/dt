@@ -221,7 +221,7 @@ namespace Dt.Base
                     options.InPurgeable = true;
                     Bitmap bmp = BitmapFactory.DecodeFile(filePath, options);
 
-                    fd.ThumbPath = System.IO.Path.Combine(AtSys.DocPath, AtKit.NewID + "-t.jpg");
+                    fd.ThumbPath = System.IO.Path.Combine(AtLocal.CachePath, AtKit.NewID + "-t.jpg");
                     using (var fs = System.IO.File.Create(fd.ThumbPath))
                     {
                         await bmp.CompressAsync(Android.Graphics.Bitmap.CompressFormat.Jpeg, 100, fs);
@@ -248,7 +248,7 @@ namespace Dt.Base
 
                 // 帧缩略图
                 var bmp = await ThumbnailUtils.CreateVideoThumbnailAsync(filePath, ThumbnailKind.MiniKind);
-                fd.ThumbPath = System.IO.Path.Combine(AtSys.DocPath, AtKit.NewID + "-t.jpg");
+                fd.ThumbPath = System.IO.Path.Combine(AtLocal.CachePath, AtKit.NewID + "-t.jpg");
                 using (var fs = System.IO.File.Create(fd.ThumbPath))
                 {
                     await bmp.CompressAsync(Android.Graphics.Bitmap.CompressFormat.Jpeg, 100, fs);

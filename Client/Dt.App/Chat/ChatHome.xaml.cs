@@ -28,7 +28,12 @@ namespace Dt.App.Chat
         public ChatHome()
         {
             InitializeComponent();
-            
+        }
+
+        void OnItemClick(object sender, long e)
+        {
+            _detail.OtherID = e;
+            NaviTo("聊天内容");
         }
     }
 }

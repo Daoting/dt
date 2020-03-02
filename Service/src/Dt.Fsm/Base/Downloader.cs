@@ -9,6 +9,7 @@
 #region 引用命名
 using Dt.Core;
 using Microsoft.AspNetCore.Http;
+using Serilog;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
@@ -36,9 +37,11 @@ namespace Dt.Fsm
             if (!fileInfo.Exists)
             {
                 _context.Response.Headers["error"] = WebUtility.UrlEncode("😢下载失败，文件不存在！");
+                Log.Information("文件不存在：" + path);
                 return;
             }
 
+            Log.Information("下载：" + path);
             await new Db().Exec("增加下载次数", new { path = path });
             var response = _context.Response;
             response.Headers["Content-Type"] = "application/octet-stream";

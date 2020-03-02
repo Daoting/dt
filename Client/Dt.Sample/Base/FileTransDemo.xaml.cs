@@ -39,7 +39,7 @@ namespace Dt.Sample
 
         void OnDelTemp(object sender, RoutedEventArgs e)
         {
-            AtSys.ClearDoc();
+            AtLocal.ClearAllFiles();
         }
     }
 }

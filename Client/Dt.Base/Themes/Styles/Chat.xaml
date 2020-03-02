@@ -28,7 +28,7 @@
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <a:Lv x:Name="Lv" SelectionMode="None" ShowItemBorder="False" />
-                        <Grid Grid.Row="1">
+                        <Grid x:Name="InputGrid" Visibility="Collapsed" Grid.Row="1">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />

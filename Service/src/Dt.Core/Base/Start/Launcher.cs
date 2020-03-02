@@ -57,7 +57,7 @@ namespace Dt.Core
             {
                 // 支持动态调整
                 var cfg = new ConfigurationBuilder()
-                    .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "etc/config"))
+                    .SetBasePath(Path.Combine(AppContext.BaseDirectory, "etc/config"))
                     .AddJsonFile("logger.json", false, true)
                     .Build();
 
@@ -65,7 +65,7 @@ namespace Dt.Core
                 // k8s：服务名 -服务实例ID-日期.txt，避免部署在k8s挂载宿主目录时文件名重复
                 // windows：服务名-日期.txt
                 string fileName = Glb.IsInDocker ? $"{Glb.SvcName}-{Glb.ID}-.txt" : $"{Glb.SvcName}-.txt";
-                string path = Path.Combine(Directory.GetCurrentDirectory(), "etc/log", fileName);
+                string path = Path.Combine(AppContext.BaseDirectory, "etc/log", fileName);
                 Log.Logger = new LoggerConfiguration()
                     .ReadFrom.Configuration(cfg)
                     .WriteTo.Console()
@@ -92,7 +92,7 @@ namespace Dt.Core
             try
             {
                 Glb.Config = new ConfigurationBuilder()
-                    .SetBasePath(Path.Combine(Directory.GetCurrentDirectory(), "etc/config"))
+                    .SetBasePath(Path.Combine(AppContext.BaseDirectory, "etc/config"))
                     .AddJsonFile("service.json", false, true)
                     .AddJsonFile("global.json", false, true)
                     .Build();

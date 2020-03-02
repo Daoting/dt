@@ -216,7 +216,8 @@ namespace Dt.Base
                 object obj = mi.Invoke(null, new object[] { this });
                 if (obj != null)
                 {
-                    elem = obj as UIElement;
+                    // uno中的Image不是继承UIElement！
+                    elem = obj as DependencyObject;
                     if (elem == null)
                         elem = new TextBlock { Style = AtRes.LvTextBlock, Text = obj.ToString(), };
                 }

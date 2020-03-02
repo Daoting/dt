@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base">
 
-    <a:Lv x:Name="_lv">
+    <a:Lv x:Name="_lv" ItemClick="OnItemClick">
         <a:Ex.Menu>
             <a:Menu>
                 <a:Mi ID="清空聊天" Icon="垃圾箱" />
