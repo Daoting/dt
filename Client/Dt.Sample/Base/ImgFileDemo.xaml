@@ -1,0 +1,13 @@
+﻿<a:Win
+    x:Class="Dt.Sample.ImgFileDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <StackPanel Margin="10">
+        <TextBlock Text="图片为内容文件" />
+        <Image Source="ms-appx:///Assets/logo.png" Width="50" HorizontalAlignment="Left" />
+        <TextBlock Text="图片在ApplicationData.LocalFolder" Margin="0,20,0,0" />
+        <Image Source="ms-appdata:///local/.doc/logo.png" Width="50" HorizontalAlignment="Left" />
+    </StackPanel>
+</a:Win>

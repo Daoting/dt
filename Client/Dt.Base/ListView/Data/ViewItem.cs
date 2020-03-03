@@ -86,8 +86,11 @@ namespace Dt.Base
         }
         #endregion
 
+        #region 成员变量
+        static readonly AsyncLocker _locker = new AsyncLocker();
         protected Dictionary<string, object> _cacheUI;
         object _data;
+        #endregion
 
         /// <summary>
         /// 获取视图项数据
@@ -551,19 +554,50 @@ namespace Dt.Base
         Image CreateImage(object p_val)
         {
             Image img = new Image();
-            if (p_val is string str)
+            string path = p_val.ToString();
+
+            if (path.StartsWith("ms-appx:", StringComparison.OrdinalIgnoreCase))
             {
-                img.Source = new BitmapImage(new Uri(str));
-            }
-            else if (p_val is Uri uri)
-            {
-                img.Source = new BitmapImage(uri);
+                // 因 uno 中的 Image.Source 目前只支持ms-appx，故 ms-appdata 和 http都暂不支持！！！
+                img.Source = new BitmapImage(new Uri(path));
             }
             else
             {
-                throw new Exception($"无法显示{p_val.GetType().FullName}类型的图片！");
+                // 文件服务的路径
+                LoadImage(path, img);
             }
             return img;
+        }
+
+        /// <summary>
+        /// 加载文件服务图片的过程：
+        /// 1. 本地.doc目录是否存在
+        /// 2. 不存在从文件服务下载文件，缓存到本地.doc目录
+        /// 3. 下载不成功删除缓存文件
+        /// 4. 下载成功，加载本地图片
+        /// </summary>
+        /// <param name="p_path"></param>
+        /// <param name="p_img"></param>
+        async void LoadImage(string p_path, Image p_img)
+        {
+            // 文件服务的路径肯定含/
+            int index = p_path.LastIndexOf('/');
+            if (index <= 0)
+                return;
+
+            // 减轻并发下载时服务端的压力，避免异步下载、显示同一图片时异常
+            using (await _locker.LockAsync())
+            {
+                string fileName = p_path.Substring(index + 1);
+                string path = System.IO.Path.Combine(AtLocal.CachePath, fileName);
+                if (!System.IO.File.Exists(path))
+                {
+                    if (!await Downloader.GetAndCacheFile(p_path))
+                        return;
+                }
+
+                p_img.Source = await AtLocal.GetImage(fileName);
+            }
         }
         #endregion
 

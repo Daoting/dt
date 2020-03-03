@@ -7,7 +7,7 @@ The Bindable attribute is missing and the type [T] is not known by the MetadataP
 》项目目录说明：
 \Assets.xcassets 图标资源，可通过控件样例的工具生成
 
-\Resources
+\Assets
     \SplashScreen@x.png 启动图片，配合 LaunchScreen.storyboard 实现启动动画
 
     \Fonts

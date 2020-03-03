@@ -159,7 +159,7 @@ namespace Dt.Shell
         /// <summary>
         /// 获取状态库版本号，和本地不同时自动更新
         /// </summary>
-        public string StateDbVer => "bf59ea78a267cba7da132d086b0fe9ab";
+        public string StateDbVer => "cfe061dec371ded2b7692c2c00bc9a40";
         #endregion
     }
 }

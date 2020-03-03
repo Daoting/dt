@@ -45,5 +45,10 @@ namespace Dt.Base
         /// 修改时间
         /// </summary>
         public DateTime Mtime { get; set; }
+
+        /// <summary>
+        /// 是否有头像
+        /// </summary>
+        public bool HasPhoto { get; set; }
     }
 }

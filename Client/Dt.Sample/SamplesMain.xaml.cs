@@ -146,6 +146,12 @@ namespace Dt.Sample
                 },
                 new DataCmd
                 {
+                    Title = "文件与图像",
+                    Note = "文件选择、上传下载文件、不同类型图像资源",
+                    Tag = typeof(FileAndImgHome),
+                },
+                new DataCmd
+                {
                     Title = "可停靠面板",
                     Note = "停靠式窗口的布局面板",
                     Tag = typeof(DockPanelDemo),
@@ -180,12 +186,6 @@ namespace Dt.Sample
                 {
                     Title = "基础事件",
                     Tag = typeof(RouteEventDemo)
-                },
-                new DataCmd
-                {
-                    Title = "跨平台",
-                    Note = "文件选择、上传下载文件",
-                    Tag = typeof(CrossHome),
                 },
             };
             group.Title = "基础控件";

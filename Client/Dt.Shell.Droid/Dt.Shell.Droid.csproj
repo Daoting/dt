@@ -69,7 +69,6 @@
       <Link>MainActivity.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resources\Resource.Designer.cs" />
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="..\Common\icon.ttf">
@@ -149,9 +148,9 @@
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Common\Android说明.txt">
+    <None Include="..\Common\Android说明.txt">
       <Link>Android说明.txt</Link>
-    </Content>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- This will force the generation of the APK when not building inside visual studio -->

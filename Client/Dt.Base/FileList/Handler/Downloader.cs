@@ -16,7 +16,6 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.Storage;
 #endregion
 
 namespace Dt.Base
@@ -111,6 +110,53 @@ namespace Dt.Base
                 return false;
             }
             return true;
+        }
+
+        /// <summary>
+        /// 下载文件并缓存到本地
+        /// </summary>
+        /// <param name="p_path">要下载的文件路径，以原有文件名缓存到本地</param>
+        /// <returns>false 下载失败，缓存文件已删除</returns>
+        public static async Task<bool> GetAndCacheFile(string p_path)
+        {
+            if (string.IsNullOrEmpty(p_path))
+                return false;
+
+            // 路径肯定含/
+            int index = p_path.LastIndexOf('/');
+            if (index <= 0)
+                return false;
+
+            string path = Path.Combine(AtLocal.CachePath, p_path.Substring(index + 1));
+            FileStream stream = File.Create(path);
+            DownloadInfo info = new DownloadInfo
+            {
+                Path = p_path,
+                TgtStream = stream,
+            };
+
+            bool suc = false;
+            try
+            {
+                suc = await Handle(info, CancellationToken.None);
+            }
+            finally
+            {
+                stream.Close();
+            }
+
+            if (!suc)
+            {
+                // 未成功，删除缓存文件，避免打开时出错
+                try
+                {
+                    // mono中 FileInfo 的 Exists 状态不同步！
+                    if (System.IO.File.Exists(path))
+                        System.IO.File.Delete(path);
+                }
+                catch { }
+            }
+            return suc;
         }
 
         static HttpRequestMessage CreateRequestMessage(string p_act)
