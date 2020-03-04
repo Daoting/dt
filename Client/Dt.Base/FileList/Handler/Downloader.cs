@@ -16,6 +16,8 @@ using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.Storage.Streams;
+using Windows.UI.Xaml.Media.Imaging;
 #endregion
 
 namespace Dt.Base
@@ -38,12 +40,12 @@ namespace Dt.Base
 #endif
 
         /// <summary>
-        /// 执行下载
+        /// 下载文件，将下载内容写入目标流
         /// </summary>
         /// <param name="p_info">下载描述</param>
         /// <param name="p_token"></param>
         /// <returns>是否成功</returns>
-        public static async Task<bool> Handle(DownloadInfo p_info, CancellationToken p_token)
+        public static async Task<bool> GetFile(DownloadInfo p_info, CancellationToken p_token)
         {
             if (p_info == null || string.IsNullOrEmpty(p_info.Path) || p_info.TgtStream == null)
                 return false;
@@ -138,7 +140,7 @@ namespace Dt.Base
             bool suc = false;
             try
             {
-                suc = await Handle(info, CancellationToken.None);
+                suc = await GetFile(info, CancellationToken.None);
             }
             finally
             {
@@ -157,6 +159,54 @@ namespace Dt.Base
                 catch { }
             }
             return suc;
+        }
+
+        /// <summary>
+        /// 下载图片，不在本地缓存文件，直接返回BitmapImage对象
+        /// </summary>
+        /// <param name="p_path">要下载的文件路径</param>
+        /// <returns></returns>
+        public static async Task<BitmapImage> GetImage(string p_path)
+        {
+            if (string.IsNullOrEmpty(p_path))
+                return null;
+
+            // 路径肯定含/
+            int index = p_path.LastIndexOf('/');
+            if (index <= 0)
+                return null;
+
+            MemoryStream stream = new MemoryStream();
+            DownloadInfo info = new DownloadInfo
+            {
+                Path = p_path,
+                TgtStream = stream,
+            };
+
+            bool suc = false;
+            try
+            {
+                suc = await GetFile(info, CancellationToken.None);
+                if (suc)
+                {
+                    stream.Seek(0, SeekOrigin.Begin);
+                    BitmapImage bmp = new BitmapImage();
+#if UWP
+                    var randomStream = new InMemoryRandomAccessStream();
+                    var outputStream = randomStream.GetOutputStreamAt(0);
+                    await RandomAccessStream.CopyAsync(stream.AsInputStream(), outputStream);
+                    await bmp.SetSourceAsync(randomStream);
+#else
+                    await bmp.SetSourceAsync(stream);
+#endif
+                    return bmp;
+                }
+            }
+            finally
+            {
+                stream.Close();
+            }
+            return null;
         }
 
         static HttpRequestMessage CreateRequestMessage(string p_act)

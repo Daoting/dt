@@ -669,7 +669,7 @@ namespace Dt.Base
             _ctsDownload = new CancellationTokenSource();
             try
             {
-                suc = await Downloader.Handle(info, _ctsDownload.Token);
+                suc = await Downloader.GetFile(info, _ctsDownload.Token);
             }
             catch (Exception ex)
             {

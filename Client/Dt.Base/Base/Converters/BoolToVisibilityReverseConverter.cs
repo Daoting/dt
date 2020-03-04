@@ -19,27 +19,17 @@ namespace Dt.Base
     /// </summary>
     public class BoolToVisibilityReverseConverter : IValueConverter
     {
-        /// <summary>
-        /// 先将bool值取反，再转换成Visibility
-        /// </summary>
-        /// <param name="value">正传递到目标的源数据</param>
-        /// <param name="targetType">目标依赖项属性需要的数据的 Type</param>
-        /// <param name="parameter">要在转换器逻辑中使用的可选参数</param>
-        /// <param name="language">语言</param>
-        /// <returns>要传递到目标依赖项属性的值</returns>
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            return (((bool) value) ?  Visibility.Collapsed : Visibility.Visible);
+            if (value is bool b)
+                return b ? Visibility.Collapsed : Visibility.Visible;
+
+            if (value is IConvertible)
+                return (bool)System.Convert.ChangeType(value, typeof(bool)) ? Visibility.Collapsed : Visibility.Visible;
+
+            throw new Exception($"{value}不是bool类型");
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="value">正传递到源的目标数据</param>
-        /// <param name="targetType">源对象需要的数据的 Type</param>
-        /// <param name="parameter">要在转换器逻辑中使用的可选参数</param>
-        /// <param name="language">语言</param>
-        /// <returns>要传递到源对象的值</returns>
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             return ((value is Visibility) && (((Visibility)value) == Visibility.Collapsed));

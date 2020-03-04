@@ -24,7 +24,7 @@ namespace Dt.App.Chat
     public sealed partial class ChatMemberList : UserControl
     {
         const string _refreshKey = "LastRefreshChatMember";
-        const string _defaultPhoto = "sys/photo/profilephoto.png";
+        const string _defaultPhoto = "sys/photo/profilephoto.jpg";
 
         public event EventHandler<long> ItemClick;
 
@@ -57,10 +57,7 @@ namespace Dt.App.Chat
         {
             // 暂时取所有，后续增加好友功能
             var newTbl = await AtCm.Query("select * from cm_user");
-
-            // 添加多余列
             newTbl.Columns.Add(new Column("photo"));
-            newTbl.Columns.Add(new Column("hasphoto", typeof(bool)));
             _lv.Data = newTbl;
 
             if (newTbl != null && newTbl.Count > 0)
@@ -68,25 +65,18 @@ namespace Dt.App.Chat
                 foreach (Row row in newTbl)
                 {
                     long id = row.ID;
-                    string path = $"sys/photo/{id}.png";
+                    string path = $"sys/photo/{id}.jpg";
                     var mem = AtLocal.GetFirst<ChatMember>("select id,mtime from ChatMember where id=@id", new Dict { { "id", id } });
-                    if (mem == null || mem.Mtime != row.Date("mtime"))
+
+                    // 有头像 且 本地无记录或最后修改时间不同时，下载头像文件
+                    if (row.Bool("hasphoto")
+                        && (mem == null || mem.Mtime != row.Date("mtime")))
                     {
-                        // 本地无记录或最后修改时间不同时，下载头像文件
                         await Downloader.GetAndCacheFile(path);
                     }
 
-                    // 检查是否存在头像文件
-                    if (File.Exists(Path.Combine(AtLocal.CachePath, id + ".png")))
-                    {
-                        row["hasphoto"] = true;
-                        row["photo"] = path;
-                    }
-                    else
-                    {
-                        row["hasphoto"] = false;
-                        row["photo"] = _defaultPhoto;
-                    }
+                    // 无头像文件显示缺省
+                    row["photo"] = File.Exists(Path.Combine(AtLocal.CachePath, id + ".jpg")) ? path : _defaultPhoto;
                 }
             }
 
@@ -101,7 +91,14 @@ namespace Dt.App.Chat
 
         void LoadLocalList()
         {
-            _lv.Data = AtLocal.Query("select id, name, (case HasPhoto when 1 then 'sys/photo/'||id||'.png' else 'sys/photo/profilephoto.png' end) as photo from ChatMember");
+            _lv.Data = AtLocal.Query(
+                "select id, \n" +
+                "       name, \n" +
+                "       ( case hasphoto \n" +
+                "           when 1 then 'sys/photo/' || id || '.jpg' \n" +
+                "           else 'sys/photo/profilephoto.jpg' \n" +
+                "         end ) as photo \n" +
+                "from   chatmember");
         }
 
         void OnItemClick(object sender, ItemClickArgs e)

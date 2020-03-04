@@ -38,32 +38,38 @@ namespace Dt.Base
         /// </summary>
         void LoadData()
         {
-            _lv.Data = AtLocal.Query<Letter>(
-                "select *" +
-                "  from (select id," +
-                "               otherid," +
-                "               othername," +
-                "               unread," +
-                "               max(stime) stime," +
-                "               (case LetterType" +
-                "                 when 0 then content" +
-                "                 when 1 then '【文件】'" +
-                "                 when 2 then '【照片】'" +
-                "                 when 3 then '【语音】'" +
-                "                 when 4 then '【视频】'" +
-                "                 when 5 then '【链接】'" +
-                "                 when 6 then '【撤回了一条消息】'" +
-                "               end) as msg" +
-                "          from Letter" +
-                "         where loginid = @loginid" +
-                "         group by OtherID)" +
-                " order by stime desc",
+            _lv.Data = AtLocal.Query(
+                "select l.*, \n" +
+                "       ( case m.hasphoto \n" +
+                "           when 1 then 'sys/photo/' || m.id || '.jpg' \n" +
+                "           else 'sys/photo/profilephoto.jpg' \n" +
+                "         end ) as photo \n" +
+                "from   (select id, \n" +
+                "               otherid, \n" +
+                "               othername, \n" +
+                "               unread, \n" +
+                "               Max(stime) stime, \n" +
+                "               ( case lettertype \n" +
+                "                   when 0 then content \n" +
+                "                   when 1 then '【文件】' \n" +
+                "                   when 2 then '【照片】' \n" +
+                "                   when 3 then '【语音】' \n" +
+                "                   when 4 then '【视频】' \n" +
+                "                   when 5 then '【链接】' \n" +
+                "                   when 6 then '【撤回了一条消息】' \n" +
+                "                 end )    as msg \n" +
+                "        from   letter \n" +
+                "        where  loginid = 1 \n" +
+                "        group  by otherid) l \n" +
+                "       left join chatmember m \n" +
+                "              on l.otherid = m.id \n" +
+                "order  by stime desc",
                 new Dict { { "loginid", AtUser.ID } });
         }
 
         void OnItemClick(object sender, ItemClickArgs e)
         {
-
+            ItemClick?.Invoke(this, e.Row.Long("otherid"));
         }
     }
 }

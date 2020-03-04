@@ -17,6 +17,15 @@ namespace Dt.Sample
         public ImgFileDemo()
         {
             InitializeComponent();
+            LoadImg();
+        }
+
+        async void LoadImg()
+        {
+            if (await Downloader.GetAndCacheFile("sys/photo/profilephoto.jpg"))
+                _imgFsm.Source = await AtLocal.GetImage("profilephoto.jpg");
+            _imgData.Source = await AtLocal.GetImage("profilephoto.jpg");
+            _imgFsmNoCache.Source = await Downloader.GetImage("sys/photo/profilephoto.jpg");
         }
     }
 }

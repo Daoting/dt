@@ -43,6 +43,7 @@ namespace Dt.Fsm
 
             Log.Information("下载：" + path);
             await new Db().Exec("增加下载次数", new { path = path });
+
             var response = _context.Response;
             response.Headers["Content-Type"] = "application/octet-stream";
             response.Headers["Content-Transfer-Encoding"] = "binary";
