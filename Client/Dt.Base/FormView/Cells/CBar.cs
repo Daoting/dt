@@ -63,7 +63,7 @@ namespace Dt.Base
         #endregion
 
         #region 成员变量
-        Grid _root;
+        protected Grid _root;
         #endregion
 
         public CBar()
@@ -122,7 +122,7 @@ namespace Dt.Base
         /// <summary>
         /// 切换内容
         /// </summary>
-        void LoadContent()
+        protected virtual void LoadContent()
         {
             if (_root == null)
                 return;
@@ -139,7 +139,6 @@ namespace Dt.Base
                 tb = new TextBlock { Text = title, TextWrapping = TextWrapping.NoWrap, VerticalAlignment = VerticalAlignment.Center };
                 sp.Children.Add(tb);
                 _root.Children.Insert(0, sp);
-                Background = AtRes.浅灰背景;
             }
             else if (Content is FrameworkElement con)
             {
@@ -148,11 +147,6 @@ namespace Dt.Base
                 var margin = con.Margin;
                 con.Margin = new Thickness(margin.Left + 1, margin.Top + 1, margin.Right, margin.Bottom);
                 _root.Children.Insert(0, con);
-                Background = AtRes.默认背景;
-            }
-            else
-            {
-                Background = AtRes.默认背景;
             }
         }
     }

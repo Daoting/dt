@@ -24,7 +24,7 @@
     <a:WinItem DockState="DockedRight">
         <a:Tabs>
             <a:Tab Title="设置">
-                
+                <home:MyMain />
             </a:Tab>
         </a:Tabs>
     </a:WinItem>

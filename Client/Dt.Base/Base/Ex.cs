@@ -226,5 +226,4 @@ namespace Dt.Base
             return SelectionMode.Single;
         }
     }
-
 }

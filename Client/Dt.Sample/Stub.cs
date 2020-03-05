@@ -72,8 +72,7 @@ namespace Dt.Shell
                     if (dt.Bool("valid"))
                     {
                         // 登录成功
-                        MenuKit.InitRoles(dt.Str("roles"));
-                        AtApp.LoginSuccess(dt.Long("userid"), phone, dt.Str("name"));
+                        AtApp.LoginSuccess(dt);
                         return;
                     }
                 }

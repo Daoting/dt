@@ -27,8 +27,6 @@ namespace Dt.App
     public static class MenuKit
     {
         #region 成员变量
-        static List<string> _prvs;
-
         // 所有菜单项 = _rootPageMenus + _leaveMenus
         static List<GroupData<OmMenu>> _rootPageMenus;
         static List<OmMenu> _leaveMenus;
@@ -36,67 +34,7 @@ namespace Dt.App
         static List<OmMenu> _defaultFixedMenus;
         #endregion
 
-        #region 角色
-        /// <summary>
-        /// 用户角色列表
-        /// </summary>
-        public static List<long> Roles { get; private set; }
-
-        /// <summary>
-        /// 用在sql中的角色串，格式 1,2,3
-        /// </summary>
-        public static string SqlRoles { get; private set; }
-
-        public static void InitRoles(string p_roles)
-        {
-            // 任何人角色ID
-            if (string.IsNullOrEmpty(p_roles))
-                p_roles = "1";
-
-            List<long> ls = new List<long>();
-            long roleid;
-            foreach (string id in p_roles.Split(','))
-            {
-                if (long.TryParse(id, out roleid))
-                    ls.Add(roleid);
-            }
-            Roles = ls;
-            SqlRoles = p_roles;
-        }
-        #endregion
-
-        #region 权限
-        /// <summary>
-        /// 获取当前登录用户的权限列表
-        /// </summary>
-        public static List<string> Prvs
-        {
-            get
-            {
-                if (_prvs == null)
-                {
-                    _prvs = new List<string>();
-                    foreach (var rp in AtLocal.DeferredQueryModel<RolePrv>(string.Format("select * from roleprv where roleid in ({0})", SqlRoles)))
-                    {
-                        _prvs.Add(rp.PrvID);
-                    }
-                }
-                return _prvs;
-            }
-        }
-
-        /// <summary>
-        /// 判断当前登录用户是否具有指定权限
-        /// </summary>
-        /// <param name="p_id">权限ID</param>
-        /// <returns>true 表示有权限</returns>
-        public static bool HasPrv(string p_id)
-        {
-            return Prvs.Contains(p_id);
-        }
-        #endregion
-
-        #region 菜单相关
+        #region 属性
         /// <summary>
         /// 获取当前登录用户的根页面菜单（包含一二级）
         /// </summary>
@@ -130,7 +68,9 @@ namespace Dt.App
                 return _defaultFixedMenus;
             }
         }
+        #endregion
 
+        #region 菜单相关
         /// <summary>
         /// 打开菜单项窗口，可以由点击菜单项或直接代码构造Menu的方式调用
         /// </summary>
@@ -219,7 +159,7 @@ namespace Dt.App
         {
             // 所有可访问项
             List<long> idsAll = new List<long>();
-            var ids = AtLocal.DeferredQueryModel<RoleMenu>(string.Format("select distinct(menuid) from RoleMenu where roleid in ({0})", SqlRoles));
+            var ids = AtLocal.DeferredQueryModel<RoleMenu>(string.Format("select distinct(menuid) from RoleMenu where roleid in ({0})", AtUser.SqlRoles));
             foreach (var rm in ids)
             {
                 idsAll.Add(rm.MenuID);

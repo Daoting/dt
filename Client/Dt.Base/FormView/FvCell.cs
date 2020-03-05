@@ -193,12 +193,14 @@ namespace Dt.Base
                 Binding bind = (Binding)e.NewValue;
                 if (bind != null && bind.Source != null)
                 {
-                    cell._panel.Child.ClearValue(VisibilityProperty);
+                    if (cell._panel != null && cell._panel.Child != null)
+                        cell._panel.Child.ClearValue(VisibilityProperty);
+
                     if (cell.ValConverter != null)
                         bind.Converter = cell.ValConverter;
                     cell.SetValBinding();
                 }
-                else
+                else if (cell._panel != null && cell._panel.Child != null)
                 {
                     // 未设置数据源时隐藏编辑器
                     cell._panel.Child.Visibility = Visibility.Collapsed;
@@ -405,7 +407,7 @@ namespace Dt.Base
             {
                 WinPlacement = DlgPlacement.TargetOuterTop,
                 PhonePlacement = DlgPlacement.TargetOuterTop,
-                PlacementTarget = _panel.Child,
+                PlacementTarget = (_panel == null ? this : _panel.Child),
                 HideTitleBar = true,
                 Background = null,
                 Foreground = AtRes.WhiteBrush,
@@ -459,7 +461,7 @@ namespace Dt.Base
             base.OnApplyTemplate();
 
             _panel = (CellPanel)GetTemplateChild("Panel");
-            _panel.SetOwner(this);
+            _panel?.SetOwner(this);
         }
         #endregion
 
@@ -485,7 +487,7 @@ namespace Dt.Base
                         ValBinding.Converter = ValConverter;
                     SetValBinding();
                 }
-                else
+                else if (_panel != null && _panel.Child != null)
                 {
                     // 未设置数据源时隐藏编辑器
                     _panel.Child.Visibility = Visibility.Collapsed;

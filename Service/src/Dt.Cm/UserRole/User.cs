@@ -25,6 +25,7 @@ namespace Dt.Cm
             string Name = default,
             string Pwd = default,
             bool Sex = true,
+            bool HasPhoto = default,
             bool Expired = false,
             DateTime Ctime = default,
             DateTime Mtime = default)
@@ -34,6 +35,7 @@ namespace Dt.Cm
             AddCell<string>("Name", Name);
             AddCell<string>("Pwd", Pwd);
             AddCell<bool>("Sex", Sex);
+            AddCell<bool>("HasPhoto", HasPhoto);
             AddCell<bool>("Expired", Expired);
             AddCell<DateTime>("Ctime", Ctime);
             AddCell<DateTime>("Mtime", Mtime);
@@ -74,6 +76,15 @@ namespace Dt.Cm
         {
             get { return (bool)_cells["Sex"].Val; }
             private set { _cells["Sex"].Val = value; }
+        }
+
+        /// <summary>
+        /// 是否有头像，0无 1有，头像在Fsm，路径sys/photo/id.jpg
+        /// </summary>
+        public bool HasPhoto
+        {
+            get { return (bool)_cells["HasPhoto"].Val; }
+            private set { _cells["HasPhoto"].Val = value; }
         }
 
         /// <summary>

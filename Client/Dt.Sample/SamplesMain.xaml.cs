@@ -233,11 +233,6 @@ namespace Dt.Sample
             {
                 new DataCmd
                 {
-                    Title = "注销",
-                    Callback = (e) => AtSys.Logout()
-                },
-                new DataCmd
-                {
                     Title = "测试1",
                     Note = "Daoting测试",
                     Tag = typeof(TestDemo1)

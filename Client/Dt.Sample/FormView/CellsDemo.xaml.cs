@@ -293,5 +293,11 @@ namespace Dt.Sample
         {
             _fv["date"].Msg("提示消息内容");
         }
+
+        int _cnt = 0;
+        void OnToggleLink(object sender, EventArgs e)
+        {
+            _link.Title = $"切换内容{++_cnt}";
+        }
     }
 }

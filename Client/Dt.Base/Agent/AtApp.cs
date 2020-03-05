@@ -169,17 +169,19 @@ namespace Dt.Base
         /// <param name="p_name"></param>
         /// <param name="p_pwd"></param>
         /// <param name="p_dlg"></param>
-        public static void LoginSuccess(long p_id, string p_phone, string p_name, string p_pwd = null, Dlg p_dlg = null)
+        public static void LoginSuccess(Dict p_userInfo, string p_pwd = null, Dlg p_dlg = null)
         {
             // 登录后初始化用户信息
-            AtUser.ID = p_id;
-            AtUser.Phone = p_phone;
-            AtUser.Name = p_name;
+            AtUser.ID = p_userInfo.Long("userid");
+            AtUser.Phone = p_userInfo.Str("phone");
+            AtUser.Name = p_userInfo.Str("name");
+            AtUser.HasPhoto = p_userInfo.Bool("hasphoto");
+            AtUser.InitRoles(p_userInfo.Str("roles"));
 
             // 初次登录
             if (!string.IsNullOrEmpty(p_pwd))
             {
-                AtLocal.SaveCookie("LoginPhone", p_phone);
+                AtLocal.SaveCookie("LoginPhone", AtUser.Phone);
                 AtLocal.SaveCookie("LoginPwd", p_pwd);
             }
             BaseRpc.RefreshHeader();

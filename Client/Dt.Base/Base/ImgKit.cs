@@ -1,0 +1,101 @@
+﻿#region 文件描述
+/******************************************************************************
+* 创建: Daoting
+* 摘要: 
+* 日志: 2020-03-05 创建
+******************************************************************************/
+#endregion
+
+#region 引用命名
+using Dt.Core;
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Threading.Tasks;
+using Windows.Storage;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Media.Imaging;
+#endregion
+
+namespace Dt.Base
+{
+    /// <summary>
+    /// 附件依赖项属性
+    /// </summary>
+    public static class ImgKit
+    {
+        static readonly AsyncLocker _locker = new AsyncLocker();
+
+        /// <summary>
+        /// 加载文件服务图片的过程：
+        /// 1. 本地.doc目录是否存在
+        /// 2. 不存在从文件服务下载文件，缓存到本地.doc目录
+        /// 3. 下载不成功删除缓存文件
+        /// 4. 下载成功，加载本地图片
+        /// </summary>
+        /// <param name="p_path"></param>
+        /// <param name="p_img"></param>
+        public static async Task LoadImage(string p_path, Image p_img)
+        {
+            // 文件服务的路径肯定含/
+            int index = p_path.LastIndexOf('/');
+            if (index <= 0)
+                return;
+
+            // 减轻并发下载时服务端的压力，避免异步下载、显示同一图片时异常
+            using (await _locker.LockAsync())
+            {
+                string fileName = p_path.Substring(index + 1);
+                string path = System.IO.Path.Combine(AtLocal.CachePath, fileName);
+                if (!System.IO.File.Exists(path))
+                {
+                    if (!await Downloader.GetAndCacheFile(p_path))
+                        return;
+                }
+
+                p_img.Source = await GetLocalImage(fileName);
+            }
+        }
+
+        /// <summary>
+        /// 获取存放在.doc路径的本地图片
+        /// </summary>
+        /// <param name="p_fileName">文件名</param>
+        /// <returns></returns>
+        public static async Task<BitmapImage> GetLocalImage(string p_fileName)
+        {
+            string path = Path.Combine(AtLocal.CachePath, p_fileName);
+            if (!File.Exists(path))
+                return null;
+
+            BitmapImage bmp = new BitmapImage();
+#if UWP
+            StorageFile sf = await StorageFile.GetFileFromPathAsync(path);
+            if (sf != null)
+            {
+                try
+                {
+                    using (var stream = await sf.OpenAsync(FileAccessMode.Read))
+                    {
+                        await bmp.SetSourceAsync(stream);
+                    }
+                }
+                catch { }
+            }
+#elif ANDROID
+            using (var stream = System.IO.File.OpenRead(path))
+            {
+                await bmp.SetSourceAsync(stream);
+            }
+#elif IOS
+            using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            {
+                await bmp.SetSourceAsync(stream);
+            }
+#endif
+            return bmp;
+        }
+    }
+}

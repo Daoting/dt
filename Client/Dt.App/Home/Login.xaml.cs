@@ -96,8 +96,7 @@ namespace Dt.App
                         return;
                     }
 
-                    MenuKit.InitRoles(dt.Str("roles"));
-                    AtApp.LoginSuccess(dt.Long("userid"), phone, dt.Str("name"), pwd, this.FindParentByType<Dlg>());
+                    AtApp.LoginSuccess(dt, pwd, this.FindParentByType<Dlg>());
                 }
                 catch
                 {

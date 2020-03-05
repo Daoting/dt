@@ -62,7 +62,9 @@ namespace Dt.Cm
 
             res["valid"] = true;
             res["userid"] = user.ID;
+            res["phone"] = p_phone;
             res["name"] = user.Name;
+            res["hasphoto"] = user.HasPhoto;
             res["roles"] = await new UserRoleCache().GetRoles(user.ID);
             return res;
         }
@@ -100,9 +102,11 @@ namespace Dt.Cm
             if (user != null)
             {
                 res["userid"] = user.ID;
+                res["phone"] = p_phone;
                 res["name"] = user.Name;
                 res["roles"] = await new UserRoleCache().GetRoles(user.ID);
                 res["pwd"] = user.Pwd;
+                res["hasphoto"] = user.HasPhoto;
                 return res;
             }
 
@@ -111,9 +115,11 @@ namespace Dt.Cm
             await repo.Save(user);
 
             res["userid"] = user.ID;
+            res["phone"] = p_phone;
             res["name"] = user.Name;
             res["roles"] = "1"; // 任何人
             res["pwd"] = user.Pwd;
+            res["hasphoto"] = user.HasPhoto;
             return res;
         }
 

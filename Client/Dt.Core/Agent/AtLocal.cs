@@ -17,7 +17,6 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Windows.Storage;
-using Windows.UI.Xaml.Media.Imaging;
 #endregion
 
 namespace Dt.Core
@@ -500,45 +499,6 @@ namespace Dt.Core
                 File.Delete(Path.Combine(CachePath, p_fileName));
             }
             catch { }
-        }
-
-        /// <summary>
-        /// 获取存放在.doc路径的本地图片
-        /// </summary>
-        /// <param name="p_fileName">文件名</param>
-        /// <returns></returns>
-        public static async Task<BitmapImage> GetImage(string p_fileName)
-        {
-            string path = Path.Combine(CachePath, p_fileName);
-            if (!File.Exists(path))
-                return null;
-
-            BitmapImage bmp = new BitmapImage();
-#if UWP
-            StorageFile sf = await StorageFile.GetFileFromPathAsync(path);
-            if (sf != null)
-            {
-                try
-                {
-                    using (var stream = await sf.OpenAsync(FileAccessMode.Read))
-                    {
-                        await bmp.SetSourceAsync(stream);
-                    }
-                }
-                catch { }
-            }
-#elif ANDROID
-            using (var stream = System.IO.File.OpenRead(path))
-            {
-                await bmp.SetSourceAsync(stream);
-            }
-#elif IOS
-            using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read))
-            {
-                await bmp.SetSourceAsync(stream);
-            }
-#endif
-            return bmp;
         }
 
         /// <summary>

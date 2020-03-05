@@ -24,7 +24,6 @@ namespace Dt.App.Chat
     public sealed partial class ChatMemberList : UserControl
     {
         const string _refreshKey = "LastRefreshChatMember";
-        const string _defaultPhoto = "sys/photo/profilephoto.jpg";
 
         public event EventHandler<long> ItemClick;
 
@@ -65,7 +64,7 @@ namespace Dt.App.Chat
                 foreach (Row row in newTbl)
                 {
                     long id = row.ID;
-                    string path = $"sys/photo/{id}.jpg";
+                    string path = AtUser.GetPhotoPath(id);
                     var mem = AtLocal.GetFirst<ChatMember>("select id,mtime from ChatMember where id=@id", new Dict { { "id", id } });
 
                     // 有头像 且 本地无记录或最后修改时间不同时，下载头像文件
@@ -76,7 +75,7 @@ namespace Dt.App.Chat
                     }
 
                     // 无头像文件显示缺省
-                    row["photo"] = File.Exists(Path.Combine(AtLocal.CachePath, id + ".jpg")) ? path : _defaultPhoto;
+                    row["photo"] = File.Exists(Path.Combine(AtLocal.CachePath, id + ".jpg")) ? path : AtUser.DefaultPhotoPath;
                 }
             }
 

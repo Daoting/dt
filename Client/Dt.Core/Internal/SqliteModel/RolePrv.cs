@@ -7,11 +7,10 @@
 #endregion
 
 #region 引用命名
-using Dt.Core;
 using Dt.Core.Sqlite;
 #endregion
 
-namespace Dt.App
+namespace Dt.Core.Model
 {
     /// <summary>
     /// 角色关联的权限
