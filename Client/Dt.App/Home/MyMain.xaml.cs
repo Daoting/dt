@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.App.Model;
 using Dt.Base;
 using Dt.Core;
 using Dt.Core.Model;
@@ -32,10 +33,10 @@ namespace Dt.App.Home
         public MyMain()
         {
             InitializeComponent();
-            Init();
+            LoadInfo();
         }
 
-        async void Init()
+        async void LoadInfo()
         {
             _tbName.Text = AtUser.Name;
             _tbPhone.Text = AtUser.Phone.Substring(0, 3) + "****" + AtUser.Phone.Substring(7, 4);
@@ -59,9 +60,14 @@ namespace Dt.App.Home
 
         async void OnEditInfo(object sender, EventArgs e)
         {
-            if (await new MyInfoDlg().ShowAsync())
+            var dlg = new EditUserDlg();
+            if (await dlg.Show(AtUser.ID, false))
             {
-
+                Row row = dlg.Info;
+                AtUser.Name = row.Str("name");
+                AtUser.Phone = row.Str("phone");
+                AtUser.HasPhoto = row.Bool("hasphoto");
+                LoadInfo();
             }
         }
     }

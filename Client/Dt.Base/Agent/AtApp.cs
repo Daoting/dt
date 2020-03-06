@@ -164,27 +164,11 @@ namespace Dt.Base
         /// <summary>
         /// 登录成功后的处理
         /// </summary>
-        /// <param name="p_id"></param>
-        /// <param name="p_phone"></param>
-        /// <param name="p_name"></param>
-        /// <param name="p_pwd"></param>
+        /// <param name="p_info">用户信息</param>
         /// <param name="p_dlg"></param>
-        public static void LoginSuccess(Dict p_userInfo, string p_pwd = null, Dlg p_dlg = null)
+        public static void LoginSuccess(Dict p_info, Dlg p_dlg = null)
         {
-            // 登录后初始化用户信息
-            AtUser.ID = p_userInfo.Long("userid");
-            AtUser.Phone = p_userInfo.Str("phone");
-            AtUser.Name = p_userInfo.Str("name");
-            AtUser.HasPhoto = p_userInfo.Bool("hasphoto");
-            AtUser.InitRoles(p_userInfo.Str("roles"));
-
-            // 初次登录
-            if (!string.IsNullOrEmpty(p_pwd))
-            {
-                AtLocal.SaveCookie("LoginPhone", AtUser.Phone);
-                AtLocal.SaveCookie("LoginPwd", p_pwd);
-            }
-            BaseRpc.RefreshHeader();
+            AtUser.Init(p_info);
 
             // 正常登录后切换到主页，中途登录后关闭对话框
             if (p_dlg == null)
@@ -203,13 +187,10 @@ namespace Dt.Base
         static async void Logout()
         {
             // 注销时清空用户信息
-            AtUser.ID = -1;
-            AtUser.Name = null;
-            AtUser.Phone = null;
+            AtUser.Reset();
 
             AtLocal.DeleteCookie("LoginPhone");
             AtLocal.DeleteCookie("LoginPwd");
-            BaseRpc.RefreshHeader();
 
             await AtSys.Stub.OnLogout();
             SysVisual.RootContent = AtSys.Stub.LoginPage;

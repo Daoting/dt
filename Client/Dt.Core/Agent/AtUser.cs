@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Core.Rpc;
 using System.Collections.Generic;
 #endregion
 
@@ -21,7 +22,7 @@ namespace Dt.Core
         /// <summary>
         /// 用户ID
         /// </summary>
-        public static long ID { get; set; } = -1;
+        public static long ID { get; private set; } = -1;
 
         /// <summary>
         /// 姓名
@@ -42,6 +43,35 @@ namespace Dt.Core
         /// 是否已登录
         /// </summary>
         public static bool IsLogon => ID > 0;
+
+        /// <summary>
+        /// 登录后初始化用户信息
+        /// </summary>
+        /// <param name="p_info"></param>
+        public static void Init(Dict p_info)
+        {
+            ID = p_info.Long("userid");
+            Phone = p_info.Str("phone");
+            Name = p_info.Str("name");
+            HasPhoto = p_info.Bool("hasphoto");
+
+            if (p_info.TryGetValue("roles", out var r))
+                InitRoles((string)r);
+            BaseRpc.RefreshHeader();
+        }
+
+        /// <summary>
+        /// 注销时清空用户信息
+        /// </summary>
+        public static void Reset()
+        {
+            ID = -1;
+            Name = null;
+            Phone = null;
+            HasPhoto = false;
+
+            BaseRpc.RefreshHeader();
+        }
         #endregion
 
         #region 头像路径
@@ -72,7 +102,7 @@ namespace Dt.Core
         /// </summary>
         public static string SqlRoles { get; private set; }
 
-        internal static void InitRoles(string p_roles)
+        static void InitRoles(string p_roles)
         {
             // 任何人角色ID
             if (string.IsNullOrEmpty(p_roles))

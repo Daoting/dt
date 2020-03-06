@@ -96,7 +96,10 @@ namespace Dt.App
                         return;
                     }
 
-                    AtApp.LoginSuccess(dt, pwd, this.FindParentByType<Dlg>());
+                    // 保存以备自动登录
+                    AtLocal.SaveCookie("LoginPhone", phone);
+                    AtLocal.SaveCookie("LoginPwd", pwd);
+                    AtApp.LoginSuccess(dt, this.FindParentByType<Dlg>());
                 }
                 catch
                 {

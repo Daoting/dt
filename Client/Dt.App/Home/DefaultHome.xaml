@@ -5,7 +5,7 @@
     xmlns:a="using:Dt.Base"
     xmlns:home="using:Dt.App.Home"
     AutoSaveLayout="False"
-    Home="开始,动态,设置">
+    Home="开始,动态,我的">
 
     <a:WinItem DockState="DockedLeft">
         <a:Tabs>
@@ -23,7 +23,7 @@
     </a:WinCenter>
     <a:WinItem DockState="DockedRight">
         <a:Tabs>
-            <a:Tab Title="设置">
+            <a:Tab Title="我的">
                 <home:MyMain />
             </a:Tab>
         </a:Tabs>

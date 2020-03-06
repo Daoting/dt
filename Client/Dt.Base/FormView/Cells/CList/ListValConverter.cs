@@ -14,7 +14,7 @@ using Windows.UI.Xaml.Data;
 namespace Dt.Base
 {
     /// <summary>
-    /// 源CList.Data，目标CList.Value
+    /// 源Cell.Val，目标CList.Value
     /// </summary>
     class ListValConverter : IValueConverter
     {
@@ -35,6 +35,10 @@ namespace Dt.Base
 
             if (value.GetType() == dataType)
                 return value;
+
+            // 从ListDlg选择对象后回填数据时
+            if (dataType == typeof(string))
+                return value.ToString();
 
             object result = null;
             try

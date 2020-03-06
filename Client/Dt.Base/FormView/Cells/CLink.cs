@@ -34,7 +34,7 @@ namespace Dt.Base
 #if ANDROID
         new
 #endif
-        public event EventHandler<EventArgs> Click;
+        public event EventHandler Click;
         #endregion
 
         #region 重写方法

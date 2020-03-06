@@ -9,8 +9,10 @@
 #region 引用命名
 using Dt.Base;
 using Dt.Core;
+using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
 #endregion
 
 namespace Dt.App.Model
@@ -25,14 +27,29 @@ namespace Dt.App.Model
             InitializeComponent();
         }
 
-        public async Task<bool> Show(long p_userID)
+        public async Task<bool> Show(long p_userID, bool p_enableAdd = true)
         {
             if (p_userID > 0)
-                _fv.Data = await AtCm.GetRow("用户-编辑", new { id = p_userID });
+            {
+                Row row = await AtCm.GetRow("用户-编辑", new { id = p_userID });
+                _fv.Data = row;
+                string photo = row.Bool("hasphoto") ? AtUser.GetPhotoPath(row.Long("id")) : AtUser.DefaultPhotoPath;
+                await ImgKit.LoadImage(photo, _img);
+            }
             else
+            {
                 CreateUser();
+            }
+
+            if (!p_enableAdd)
+                _miAdd.Visibility = Visibility.Collapsed;
             await ShowAsync();
             return _needRefresh;
+        }
+
+        public Row Info
+        {
+            get { return _fv.Row; }
         }
 
         void CreateUser()
@@ -75,8 +92,17 @@ namespace Dt.App.Model
             {
                 _needRefresh = true;
                 AtKit.Msg("保存成功！");
-                CreateUser();
-                _fv.GotoFirstCell();
+
+                if (_miAdd.Visibility == Visibility.Visible)
+                {
+                    CreateUser();
+                    _fv.GotoFirstCell();
+                }
+                else
+                {
+                    row.AcceptChanges();
+                    Close();
+                }
             }
             else
             {
@@ -87,6 +113,11 @@ namespace Dt.App.Model
         void OnAdd(object sender, Mi e)
         {
             CreateUser();
+        }
+
+        void OnChangePhoto(object sender, EventArgs e)
+        {
+
         }
 
         protected override Task<bool> OnClosing()

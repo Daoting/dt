@@ -61,6 +61,8 @@ namespace Dt.Sample
                 { "listint" },
                 { "listobj", typeof(Person) },
                 { "listrow" },
+                { "sex" },
+                { "sexname" },
 
                 { "tree" },
                 { "treedata" },
@@ -110,6 +112,8 @@ namespace Dt.Sample
                 listint = "2",
                 listobj = default(Person),
                 listrow = "",
+                sex = 1,
+                sexname = "男",
 
                 tree = "抗微生物药物",
                 treedata = "消化系统药",

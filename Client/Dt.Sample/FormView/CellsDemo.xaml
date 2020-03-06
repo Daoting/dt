@@ -79,6 +79,12 @@
                             </Grid>
                         </DataTemplate>
                     </a:CList>
+                    <a:CList ID="sexname" Title="性别" SrcID="id" TgtID="sex">
+                        <a:CList.Items>
+                            <a:IDStr ID="1" Str="男" />
+                            <a:IDStr ID="0" Str="女" />
+                        </a:CList.Items>
+                    </a:CList>
                     <a:CList ID="listrow" Title="模拟IDString" SrcID="id" TgtID="listrowid" LoadData="OnLoadDataTable" AfterSelect="OnSelectedRow" />
 
                     <a:CBar Title="树形格" />
