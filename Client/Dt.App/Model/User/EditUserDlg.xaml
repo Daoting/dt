@@ -13,17 +13,7 @@
     </a:Dlg.Menu>
 
     <a:Fv x:Name="_fv">
-        <a:CLink Click="OnChangePhoto" RowSpan="2">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <TextBlock Text="头像" VerticalAlignment="Center" />
-                <Image x:Name="_img" Width="50" Height="50" Grid.Column="2" />
-            </Grid>
-        </a:CLink>
+        <a:CImage ID="photo" Title="头像" RowSpan="2" />
         <a:CText ID="name" Title="姓名" />
         <a:CText ID="phone" Title="手机号" />
         <a:CList ID="sexname" Title="性别" SrcID="id" TgtID="sex">

@@ -55,34 +55,13 @@ namespace Dt.App.Chat
         async void RefreshList()
         {
             // 暂时取所有，后续增加好友功能
-            var newTbl = await AtCm.Query("select * from cm_user");
-            newTbl.Columns.Add(new Column("photo"));
-            _lv.Data = newTbl;
-
-            if (newTbl != null && newTbl.Count > 0)
-            {
-                foreach (Row row in newTbl)
-                {
-                    long id = row.ID;
-                    string path = AtUser.GetPhotoPath(id);
-                    var mem = AtLocal.GetFirst<ChatMember>("select id,mtime from ChatMember where id=@id", new Dict { { "id", id } });
-
-                    // 有头像 且 本地无记录或最后修改时间不同时，下载头像文件
-                    if (row.Bool("hasphoto")
-                        && (mem == null || mem.Mtime != row.Date("mtime")))
-                    {
-                        await Downloader.GetAndCacheFile(path);
-                    }
-
-                    // 无头像文件显示缺省
-                    row["photo"] = File.Exists(Path.Combine(AtLocal.CachePath, id + ".jpg")) ? path : AtUser.DefaultPhotoPath;
-                }
-            }
+            var tbl = await AtCm.Query("select id,name,phone,sex,(case photo when '' then 'photo/profilephoto.jpg' else photo end) as photo, mtime from cm_user");
+            _lv.Data = tbl;
 
             // 将新列表缓存到本地库
             AtLocal.Execute("delete from ChatMember");
-            if (newTbl != null && newTbl.Count > 0)
-                AtLocal.Save(newTbl, "ChatMember");
+            if (tbl != null && tbl.Count > 0)
+                AtLocal.Save(tbl, "ChatMember");
 
             // 记录刷新时间
             AtLocal.SaveCookie(_refreshKey, AtSys.Now.ToString());
@@ -90,14 +69,7 @@ namespace Dt.App.Chat
 
         void LoadLocalList()
         {
-            _lv.Data = AtLocal.Query(
-                "select id, \n" +
-                "       name, \n" +
-                "       ( case hasphoto \n" +
-                "           when 1 then 'sys/photo/' || id || '.jpg' \n" +
-                "           else 'sys/photo/profilephoto.jpg' \n" +
-                "         end ) as photo \n" +
-                "from   chatmember");
+            _lv.Data = AtLocal.Query("select * from chatmember");
         }
 
         void OnItemClick(object sender, ItemClickArgs e)

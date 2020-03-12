@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base">
 
-    <a:Fv>
+    <a:Fv x:Name="_fv">
         <a:CBar Title="Trace输出" />
         <Button Content="普通信息" Click="OnNormal" />
         <Button Content="Http请求" Click="OnRequest" />

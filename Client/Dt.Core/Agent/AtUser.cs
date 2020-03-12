@@ -35,9 +35,9 @@ namespace Dt.Core
         public static string Phone { get; set; }
 
         /// <summary>
-        /// 是否有头像，头像在Fsm，路径sys/photo/id.jpg
+        /// 头像
         /// </summary>
-        public static bool HasPhoto { get; set; }
+        public static string Photo { get; set; }
 
         /// <summary>
         /// 是否已登录
@@ -53,7 +53,7 @@ namespace Dt.Core
             ID = p_info.Long("userid");
             Phone = p_info.Str("phone");
             Name = p_info.Str("name");
-            HasPhoto = p_info.Bool("hasphoto");
+            Photo = p_info.Str("photo");
 
             if (p_info.TryGetValue("roles", out var r))
                 InitRoles((string)r);
@@ -68,7 +68,7 @@ namespace Dt.Core
             ID = -1;
             Name = null;
             Phone = null;
-            HasPhoto = false;
+            Photo = null;
 
             BaseRpc.RefreshHeader();
         }
@@ -78,17 +78,7 @@ namespace Dt.Core
         /// <summary>
         /// 缺省头像文件的路径
         /// </summary>
-        public const string DefaultPhotoPath = "photo/profilephoto.jpg";
-
-        /// <summary>
-        /// 获取用户头像文件的路径
-        /// </summary>
-        /// <param name="p_userID"></param>
-        /// <returns></returns>
-        public static string GetPhotoPath(long p_userID)
-        {
-            return $"sys/photo/{p_userID}.jpg";
-        }
+        public const string DefaultPhoto = "photo/profilephoto.jpg";
         #endregion
 
         #region 角色

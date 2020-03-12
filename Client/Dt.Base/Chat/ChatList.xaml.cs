@@ -40,10 +40,7 @@ namespace Dt.Base
         {
             _lv.Data = AtLocal.Query(
                 "select l.*, \n" +
-                "       ( case m.hasphoto \n" +
-                "           when 1 then 'sys/photo/' || m.id || '.jpg' \n" +
-                "           else 'sys/photo/profilephoto.jpg' \n" +
-                "         end ) as photo \n" +
+                "       m.photo \n" +
                 "from   (select id, \n" +
                 "               otherid, \n" +
                 "               othername, \n" +

@@ -29,16 +29,31 @@ namespace Dt.Base
         static readonly AsyncLocker _locker = new AsyncLocker();
 
         /// <summary>
-        /// 加载文件服务图片的过程：
-        /// 1. 本地.doc目录是否存在
-        /// 2. 不存在从文件服务下载文件，缓存到本地.doc目录
-        /// 3. 下载不成功删除缓存文件
-        /// 4. 下载成功，加载本地图片
+        /// 加载文件服务的图片，优先加载缓存，支持路径 或 FileList中json格式
         /// </summary>
-        /// <param name="p_path"></param>
+        /// <param name="p_path">路径或FileList中json格式</param>
         /// <param name="p_img"></param>
         public static async Task<BitmapImage> LoadImage(string p_path, Image p_img = null)
         {
+            // 加载过程：
+            // 1. 本地.doc目录是否存在
+            // 2. 不存在从文件服务下载文件，缓存到本地.doc目录
+            // 3. 下载不成功删除缓存文件
+            // 4. 下载成功，加载本地图片
+            // 
+            if (string.IsNullOrEmpty(p_path))
+                return null;
+
+            // 按照FileList中json格式获取路径，如：
+            // [["photo/E3/18/58108158862553088.jpg","未标题-2","300 x 300 (.jpg)",49179,"daoting","2020-03-09 16:21"]]
+            if (p_path.StartsWith('['))
+            {
+                int i = p_path.IndexOf("\",");
+                if (i <= 3)
+                    return null;
+                p_path = p_path.Substring(3, i - 3);
+            }
+
             // 文件服务的路径肯定含/
             int index = p_path.LastIndexOf('/');
             if (index <= 0)

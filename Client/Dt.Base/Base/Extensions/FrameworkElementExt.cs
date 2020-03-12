@@ -255,7 +255,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="source"></param>
         /// <param name="p_action"></param>
-        public static void LoadAsync(this FrameworkElement source, Action p_action)
+        public static void AfterLoad(this FrameworkElement source, Action p_action)
         {
             if (source == null || p_action == null)
                 return;

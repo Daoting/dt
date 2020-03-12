@@ -191,11 +191,6 @@ namespace Dt.Base
             _linkClerk = new SketchLinkManager(this);
             //  在andriod中，点击节点事件会无限触发SizeChanged事件。
             //SizeChanged += OnSizeChanged;
-            this.LoadAsync(() =>
-            {
-                if (IsReadOnly)
-                    ScrollIntoHorCenter();
-            });
         }
 
         #endregion

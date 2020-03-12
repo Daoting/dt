@@ -17,7 +17,7 @@ namespace Dt.Sample
         public FileTransDemo()
         {
             InitializeComponent();
-            this.LoadAsync(() =>
+            _trans.AfterLoad(() =>
             {
                 var xml = AtLocal.GetCookie("FileTransDemo");
                 if (!string.IsNullOrEmpty(xml))

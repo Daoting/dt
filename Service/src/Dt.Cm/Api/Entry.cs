@@ -64,7 +64,7 @@ namespace Dt.Cm
             res["userid"] = user.ID;
             res["phone"] = p_phone;
             res["name"] = user.Name;
-            res["hasphoto"] = user.HasPhoto;
+            res["photo"] = user.Photo;
             res["roles"] = await new UserRoleCache().GetRoles(user.ID);
             return res;
         }
@@ -106,7 +106,7 @@ namespace Dt.Cm
                 res["name"] = user.Name;
                 res["roles"] = await new UserRoleCache().GetRoles(user.ID);
                 res["pwd"] = user.Pwd;
-                res["hasphoto"] = user.HasPhoto;
+                res["photo"] = user.Photo;
                 return res;
             }
 
@@ -119,7 +119,7 @@ namespace Dt.Cm
             res["name"] = user.Name;
             res["roles"] = "1"; // 任何人
             res["pwd"] = user.Pwd;
-            res["hasphoto"] = user.HasPhoto;
+            res["photo"] = user.Photo;
             return res;
         }
 

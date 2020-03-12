@@ -42,13 +42,13 @@ namespace Dt.Base
         public bool Sex { get; set; }
 
         /// <summary>
+        /// 头像
+        /// </summary>
+        public string Photo { get; set; }
+
+        /// <summary>
         /// 修改时间
         /// </summary>
         public DateTime Mtime { get; set; }
-
-        /// <summary>
-        /// 是否有头像
-        /// </summary>
-        public bool HasPhoto { get; set; }
     }
 }

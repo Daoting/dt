@@ -12,7 +12,7 @@ namespace Dt.Sample
         public SysTraceDemo()
         {
             InitializeComponent();
-            this.LoadAsync(() => SysTrace.ShowBox());
+            _fv.AfterLoad(() => SysTrace.ShowBox());
         }
 
         void OnNormal(object sender, RoutedEventArgs e)

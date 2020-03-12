@@ -13,12 +13,11 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="a:FileList">
-                    <Border BorderBrush="{TemplateBinding BorderBrush}"
+                    <Border Child="{Binding Panel, RelativeSource={RelativeSource TemplatedParent}}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             Padding="{TemplateBinding Padding}"
-                            VerticalAlignment="Top">
-                        <ContentPresenter Content="{Binding Panel, RelativeSource={RelativeSource TemplatedParent}}" Padding="{TemplateBinding Padding}" />
-                    </Border>
+                            VerticalAlignment="Top" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

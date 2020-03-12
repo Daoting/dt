@@ -31,10 +31,7 @@ namespace Dt.App.Model
         {
             if (p_userID > 0)
             {
-                Row row = await AtCm.GetRow("用户-编辑", new { id = p_userID });
-                _fv.Data = row;
-                string photo = row.Bool("hasphoto") ? AtUser.GetPhotoPath(row.Long("id")) : AtUser.DefaultPhotoPath;
-                await ImgKit.LoadImage(photo, _img);
+                _fv.Data = await AtCm.GetRow("用户-编辑", new { id = p_userID });
             }
             else
             {
@@ -113,11 +110,6 @@ namespace Dt.App.Model
         void OnAdd(object sender, Mi e)
         {
             CreateUser();
-        }
-
-        void OnChangePhoto(object sender, EventArgs e)
-        {
-
         }
 
         protected override Task<bool> OnClosing()

@@ -40,7 +40,7 @@ namespace Dt.App.Home
         {
             _tbName.Text = AtUser.Name;
             _tbPhone.Text = AtUser.Phone.Substring(0, 3) + "****" + AtUser.Phone.Substring(7, 4);
-            string photo = AtUser.HasPhoto ? AtUser.GetPhotoPath(AtUser.ID) : AtUser.DefaultPhotoPath;
+            string photo = string.IsNullOrEmpty(AtUser.Photo) ? AtUser.DefaultPhoto : AtUser.Photo;
             await ImgKit.LoadImage(photo, _img);
         }
 
@@ -66,7 +66,7 @@ namespace Dt.App.Home
                 Row row = dlg.Info;
                 AtUser.Name = row.Str("name");
                 AtUser.Phone = row.Str("phone");
-                AtUser.HasPhoto = row.Bool("hasphoto");
+                AtUser.Photo = row.Str("photo");
                 LoadInfo();
             }
         }
