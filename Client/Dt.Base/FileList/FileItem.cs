@@ -9,11 +9,11 @@
 #region 引用命名
 using Dt.Core;
 using Dt.Core.Rpc;
-using System.Text.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Devices.Input;
@@ -34,7 +34,7 @@ namespace Dt.Base
     /// <summary>
     /// 上传下载文件描述
     /// </summary>
-    public partial class FileItem : Control, IUploadFile
+    public partial class FileItem : Control, IUploadUI
     {
         #region 静态成员
         public static readonly DependencyProperty FileNameProperty = DependencyProperty.Register(
@@ -431,195 +431,6 @@ namespace Dt.Base
         }
         #endregion
 
-        #region 上传
-        /// <summary>
-        /// 获取设置待上传的文件
-        /// </summary>
-        public FileData File { get; set; }
-
-        /// <summary>
-        /// 获取上传进度处理对象
-        /// </summary>
-        public ProgressDelegate UploadProgress
-        {
-            get { return OnUploadProgress; }
-        }
-
-        /// <summary>
-        /// 准备上传，初始化文件属性
-        /// </summary>
-        /// <param name="p_file"></param>
-        /// <param name="p_date"></param>
-        /// <returns></returns>
-        internal async Task InitUpload(FileData p_file, string p_date)
-        {
-            State = FileItemState.UploadWaiting;
-            File = p_file;
-
-            // 基础属性
-            FileName = p_file.DisplayName;
-            var ext = p_file.Ext;
-            Ext = ext;
-            FileDesc = p_file.Desc;
-            Length = p_file.Size;
-            Uploader = AtUser.Name;
-            Date = p_date;
-
-            // 类型及文件描述
-            if (FileFilter.UwpImage.Contains(ext))
-            {
-                FileType = FileItemType.Image;
-            }
-            else if (FileFilter.UwpVideo.Contains(ext))
-            {
-                FileType = FileItemType.Video;
-            }
-            else if (FileFilter.UwpAudio.Contains(ext))
-            {
-                FileType = FileItemType.Sound;
-            }
-            else
-            {
-                UpdateIcon();
-            }
-
-            // 含缩略图
-            if (FileType == FileItemType.Image || FileType == FileItemType.Video)
-            {
-                BitmapImage bmp = new BitmapImage();
-#if UWP
-                StorageFile sf = null;
-                if (!string.IsNullOrEmpty(p_file.ThumbPath))
-                {
-                    // 缩略图
-                    sf = await StorageFile.GetFileFromPathAsync(p_file.ThumbPath);
-                }
-                else if (FileType == FileItemType.Image)
-                {
-                    // 原始图
-                    sf = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(p_file.FilePath);
-                }
-
-                if (sf != null)
-                {
-                    using (var stream = await sf.OpenAsync(FileAccessMode.Read))
-                    {
-                        await bmp.SetSourceAsync(stream);
-                    }
-                }
-#elif ANDROID
-                if (!string.IsNullOrEmpty(p_file.ThumbPath))
-                {
-                    // 缩略图
-                    using (var stream = System.IO.File.OpenRead(p_file.ThumbPath))
-                    {
-                        await bmp.SetSourceAsync(stream);
-                    }
-                }
-                else
-                {
-                    // 原始图
-                    using (var stream = await p_file.GetStream())
-                    {
-                        await bmp.SetSourceAsync(stream);
-                    }
-                }
-#elif IOS
-                if (!string.IsNullOrEmpty(p_file.ThumbPath))
-                {
-                    // 缩略图
-                    using (var stream = new FileStream(p_file.ThumbPath, FileMode.Open, FileAccess.Read))
-                    {
-                        await bmp.SetSourceAsync(stream);
-                    }
-                }
-                else
-                {
-                    // 原始图
-                    using (var stream = await p_file.GetStream())
-                    {
-                        await bmp.SetSourceAsync(stream);
-                    }
-                }
-#endif
-                Bitmap = bmp;
-            }
-        }
-
-        /// <summary>
-        /// 上传成功后
-        /// </summary>
-        /// <param name="p_id">文件上传路径</param>
-        /// <returns></returns>
-        internal async Task UploadSuccess(string p_id)
-        {
-            // 更新时删除旧文件
-            if (!string.IsNullOrEmpty(ID))
-            {
-                // 删除服务器端旧文件
-                await AtFile.Delete(ID);
-                // 删除本地旧文件
-                AtLocal.DeleteFile(GetFileName());
-            }
-
-            ID = p_id;
-            string fileName = GetFileName();
-
-            // 复制到临时文件夹，免去再次下载
-#if UWP
-            try
-            {
-                var file = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(File.FilePath);
-                await file.CopyAsync(await StorageFolder.GetFolderFromPathAsync(AtLocal.CachePath), fileName, NameCollisionOption.ReplaceExisting);
-            }
-            catch { }
-#else
-            try
-            {
-                FileInfo fi = new FileInfo(File.FilePath);
-                fi.CopyTo(Path.Combine(AtLocal.CachePath, fileName), true);
-            }
-            catch { }
-#endif
-
-            // 缩略图重命名
-            if (!string.IsNullOrEmpty(File.ThumbPath))
-            {
-                string thumbName = GetThumbName();
-#if UWP
-                try
-                {
-                    var sf = await StorageFile.GetFileFromPathAsync(File.ThumbPath);
-                    await sf.RenameAsync(thumbName);
-                }
-                catch { }
-#else
-                try
-                {
-                    FileInfo fi = new FileInfo(File.ThumbPath);
-                    if (fi.Exists)
-                    {
-                        string newPath = Path.Combine(File.ThumbPath.Substring(0, File.ThumbPath.LastIndexOf('/')), thumbName);
-                        fi.MoveTo(newPath);
-                    }
-                }
-                catch { }
-#endif
-            }
-
-            File = null;
-        }
-
-        /// <summary>
-        /// 上传失败
-        /// </summary>
-        internal void UploadFail()
-        {
-            File.DeleteThumbnail();
-            File = null;
-        }
-        #endregion
-
         #region 下载
         /// <summary>
         /// 执行下载
@@ -784,6 +595,211 @@ namespace Dt.Base
         {
             base.OnRightTapped(e);
             Owner.Current = this;
+        }
+        #endregion
+
+        #region IUploadUI 上传过程
+        /// <summary>
+        /// 上传进度回调
+        /// </summary>
+        ProgressDelegate IUploadUI.UploadProgress => OnUploadProgress;
+
+        /// <summary>
+        /// 准备上传
+        /// </summary>
+        /// <param name="p_file">待上传文件对象</param>
+        /// <returns></returns>
+        async Task IUploadUI.InitUpload(FileData p_file)
+        {
+            State = FileItemState.UploadWaiting;
+
+            // 基础属性
+            FileName = p_file.DisplayName;
+            var ext = p_file.Ext;
+            Ext = ext;
+            FileDesc = p_file.Desc;
+            Length = p_file.Size;
+            Uploader = AtUser.Name;
+            Date = AtSys.Now.ToString("yyyy-MM-dd HH:mm");
+
+            // 类型及文件描述
+            if (FileFilter.UwpImage.Contains(ext))
+            {
+                FileType = FileItemType.Image;
+            }
+            else if (FileFilter.UwpVideo.Contains(ext))
+            {
+                FileType = FileItemType.Video;
+            }
+            else if (FileFilter.UwpAudio.Contains(ext))
+            {
+                FileType = FileItemType.Sound;
+            }
+            else
+            {
+                UpdateIcon();
+            }
+
+            // 含缩略图
+            if (FileType == FileItemType.Image || FileType == FileItemType.Video)
+            {
+                BitmapImage bmp = new BitmapImage();
+#if UWP
+                StorageFile sf = null;
+                if (!string.IsNullOrEmpty(p_file.ThumbPath))
+                {
+                    // 缩略图
+                    sf = await StorageFile.GetFileFromPathAsync(p_file.ThumbPath);
+                }
+                else if (FileType == FileItemType.Image)
+                {
+                    // 原始图
+                    sf = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(p_file.FilePath);
+                }
+
+                if (sf != null)
+                {
+                    using (var stream = await sf.OpenAsync(FileAccessMode.Read))
+                    {
+                        await bmp.SetSourceAsync(stream);
+                    }
+                }
+#elif ANDROID
+                if (!string.IsNullOrEmpty(p_file.ThumbPath))
+                {
+                    // 缩略图
+                    using (var stream = System.IO.File.OpenRead(p_file.ThumbPath))
+                    {
+                        await bmp.SetSourceAsync(stream);
+                    }
+                }
+                else
+                {
+                    // 原始图
+                    using (var stream = await p_file.GetStream())
+                    {
+                        await bmp.SetSourceAsync(stream);
+                    }
+                }
+#elif IOS
+                if (!string.IsNullOrEmpty(p_file.ThumbPath))
+                {
+                    // 缩略图
+                    using (var stream = new FileStream(p_file.ThumbPath, FileMode.Open, FileAccess.Read))
+                    {
+                        await bmp.SetSourceAsync(stream);
+                    }
+                }
+                else
+                {
+                    // 原始图
+                    using (var stream = await p_file.GetStream())
+                    {
+                        await bmp.SetSourceAsync(stream);
+                    }
+                }
+#endif
+                Bitmap = bmp;
+            }
+        }
+
+        /// <summary>
+        /// 上传成功后
+        /// </summary>
+        /// <param name="p_id">文件上传路径</param>
+        /// <param name="p_file">已上传文件对象</param>
+        /// <returns></returns>
+        async Task IUploadUI.UploadSuccess(string p_id, FileData p_file)
+        {
+            // 更新时删除旧文件
+            if (!string.IsNullOrEmpty(ID))
+            {
+                // 删除服务器端旧文件
+                await AtFile.Delete(ID);
+                // 删除本地旧文件
+                AtLocal.DeleteFile(GetFileName());
+            }
+
+            ID = p_id;
+            string fileName = GetFileName();
+
+            // 复制到临时文件夹，免去再次下载
+            //#if UWP
+            //            try
+            //            {
+            //                var file = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(p_file.FilePath);
+            //                await file.CopyAsync(await StorageFolder.GetFolderFromPathAsync(AtLocal.CachePath), fileName, NameCollisionOption.ReplaceExisting);
+            //            }
+            //            catch { }
+            //#else
+            //            try
+            //            {
+            //                FileInfo fi = new FileInfo(p_file.FilePath);
+            //                fi.CopyTo(Path.Combine(AtLocal.CachePath, fileName), true);
+            //            }
+            //            catch { }
+            //#endif
+
+            // 缩略图重命名
+            if (!string.IsNullOrEmpty(p_file.ThumbPath))
+            {
+                string thumbName = GetThumbName();
+#if UWP
+                try
+                {
+                    var sf = await StorageFile.GetFileFromPathAsync(p_file.ThumbPath);
+                    await sf.RenameAsync(thumbName);
+                }
+                catch { }
+#else
+                try
+                {
+                    FileInfo fi = new FileInfo(p_file.ThumbPath);
+                    if (fi.Exists)
+                    {
+                        string newPath = Path.Combine(p_file.ThumbPath.Substring(0, p_file.ThumbPath.LastIndexOf('/')), thumbName);
+                        fi.MoveTo(newPath);
+                    }
+                }
+                catch { }
+#endif
+            }
+        }
+
+        /// <summary>
+        /// 上传失败后
+        /// </summary>
+        /// <param name="p_file"></param>
+        void IUploadUI.UploadFail(FileData p_file)
+        {
+            p_file.DeleteThumbnail();
+        }
+
+        /// <summary>
+        /// 上传进度回调
+        /// </summary>
+        /// <param name="p_bytesStep">本次发送字节数</param>
+        /// <param name="p_bytesSent">共发送字节数</param>
+        /// <param name="p_totalBytesToSend">总字节数</param>
+        async void OnUploadProgress(long p_bytesStep, long p_bytesSent, long p_totalBytesToSend)
+        {
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, new DispatchedHandler(() =>
+            {
+                // 开始发送
+                if (p_bytesStep == p_bytesSent)
+                    State = FileItemState.Uploading;
+
+                double percent = p_bytesSent * 100 / p_totalBytesToSend;
+                Percent = string.Format("{0}%", percent);
+                ProgressWidth = Math.Ceiling(percent / 100 * ActualWidth);
+
+                // 完成
+                if (p_bytesSent == p_totalBytesToSend)
+                {
+                    State = FileItemState.None;
+                    ClearValue(PercentProperty);
+                }
+            }));
         }
         #endregion
 
@@ -1024,8 +1040,7 @@ namespace Dt.Base
             ID = p_reader.ReadAsString();
             FileName = p_reader.ReadAsString();
             FileDesc = p_reader.ReadAsString();
-            if (ulong.TryParse(p_reader.ReadAsString(), out ulong length))
-                Length = length;
+            Length = (ulong)p_reader.ReadAsLong();
             Uploader = p_reader.ReadAsString();
             Date = p_reader.ReadAsString();
 
@@ -1074,34 +1089,7 @@ namespace Dt.Base
         }
         #endregion
 
-        #region 上传下载进度
-        /// <summary>
-        /// 上传进度回调
-        /// </summary>
-        /// <param name="p_bytesStep">本次发送字节数</param>
-        /// <param name="p_bytesSent">共发送字节数</param>
-        /// <param name="p_totalBytesToSend">总字节数</param>
-        async void OnUploadProgress(long p_bytesStep, long p_bytesSent, long p_totalBytesToSend)
-        {
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, new DispatchedHandler(() =>
-            {
-                // 开始发送
-                if (p_bytesStep == p_bytesSent)
-                    State = FileItemState.Uploading;
-
-                double percent = p_bytesSent * 100 / p_totalBytesToSend;
-                Percent = string.Format("{0}%", percent);
-                ProgressWidth = Math.Ceiling(percent / 100 * ActualWidth);
-
-                // 完成
-                if (p_bytesSent == p_totalBytesToSend)
-                {
-                    State = FileItemState.None;
-                    ClearValue(PercentProperty);
-                }
-            }));
-        }
-
+        #region 下载进度
         /// <summary>
         /// 下载进度回调
         /// </summary>

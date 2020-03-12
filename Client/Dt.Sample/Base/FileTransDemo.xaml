@@ -34,7 +34,7 @@
                       VerticalScrollMode="Enabled"
                       VerticalScrollBarVisibility="Auto"
                       Grid.Row="3">
-            <a:FileList x:Name="_trans" UploadFinished="OnUploadFinished" />
+            <a:FileList x:Name="_trans" FixedVolume="photo" UploadFinished="OnUploadFinished" />
         </ScrollViewer>
     </Grid>
 </a:Win>

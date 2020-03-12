@@ -23,7 +23,7 @@ using Windows.UI.Xaml.Markup;
 namespace Dt.Base
 {
     /// <summary>
-    /// 下拉选择格
+    /// 列表选择格
     /// 数据源优先级：
     /// 1. 外部直接设置Data
     /// 2. 基础代码

@@ -78,7 +78,7 @@ namespace Dt.Core
         /// <summary>
         /// 缺省头像文件的路径
         /// </summary>
-        public const string DefaultPhotoPath = "sys/photo/profilephoto.jpg";
+        public const string DefaultPhotoPath = "photo/profilephoto.jpg";
 
         /// <summary>
         /// 获取用户头像文件的路径

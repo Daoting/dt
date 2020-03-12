@@ -64,6 +64,8 @@ namespace Dt.Sample
                 { "sex" },
                 { "sexname" },
 
+                { "img1" },
+
                 { "tree" },
                 { "treedata" },
                 { "treefill" },
@@ -114,6 +116,8 @@ namespace Dt.Sample
                 listrow = "",
                 sex = 1,
                 sexname = "男",
+
+                img1 = "[[\"sys/photo/profilephoto.jpg\", \"头像\", \".jpg\", 1140, \"hdt\", null]]",
 
                 tree = "抗微生物药物",
                 treedata = "消化系统药",

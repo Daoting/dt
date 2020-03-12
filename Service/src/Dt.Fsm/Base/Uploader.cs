@@ -9,10 +9,10 @@
 #region 引用命名
 using Dt.Core;
 using Dt.Core.Caches;
+using Dt.Core.Rpc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.WebUtilities;
-using System.Text.Json;
 using Serilog;
 using System;
 using System.Buffers;
@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using Dt.Core.Rpc;
 #endregion
 
 namespace Dt.Fsm
@@ -35,12 +34,42 @@ namespace Dt.Fsm
         readonly HttpContext _context;
         readonly List<string> _result;
         string _volume;
+        Db _db;
 
         public Uploader(HttpContext p_context)
         {
             _context = p_context;
             _result = new List<string>();
         }
+
+        /************************ Section 结构 ************************
+        Content-Length: 60408
+        Content-Type:multipart/form-data; boundary=ZnGpDtePMx0KrHh_G0X99Yef9r8JZsRJSXC
+
+        --ZnGpDtePMx0KrHh_G0X99Yef9r8JZsRJSXC
+        Content-Disposition: form-data; name="fixedvolume"
+
+        photo
+        --ZnGpDtePMx0KrHh_G0X99Yef9r8JZsRJSXC
+        Content-Disposition: form-data;name="72 x 72 (.png)"; filename="photo.jpg"
+        Content-Type: application/octet-stream
+        Content-Transfer-Encoding: binary
+
+        ... binary data of the jpg ...
+        --ZnGpDtePMx0KrHh_G0X99Yef9r8JZsRJSXC
+        Content-Disposition: form-data;name="thumbnail"; filename="thumbnail.jpg"
+        Content-Type: application/octet-stream
+        Content-Transfer-Encoding: binary
+
+        ... binary data of the jpg ...
+        --ZnGpDtePMx0KrHh_G0X99Yef9r8JZsRJSXC
+        Content-Disposition: form-data;name="00:00:06 (480 x 288)"; filename="ImageStabilization.wmv"
+        Content-Type: application/octet-stream
+        Content-Transfer-Encoding: binary
+
+        ... binary data ...
+        --ZnGpDtePMx0KrHh_G0X99Yef9r8JZsRJSXC--
+        ****************************/
 
         public async Task Handle()
         {
@@ -50,24 +79,46 @@ namespace Dt.Fsm
             {
                 // 不支持的媒体类型
                 _context.Response.StatusCode = 415;
+                Log.Information("无Boundary，上传失败");
                 return;
             }
 
-            Db db = new Db(false);
+            SortedSetCache cache = null;
+            _db = new Db(false);
+
+            // 记录已成功接收的文件，以备后续异常时删除这些文件
             List<FileDesc> sucFiles = new List<FileDesc>();
-            SortedSetCache cache = new SortedSetCache(Cfg.VolumeKey);
             try
             {
-                // 选择使用率最低的卷
-                _volume = await cache.GetMin();
-                // 增加使用次数
-                await cache.Increment(_volume);
-
-                // Section顺序：文件，文件，缩略图，文件
-                // 缩略图由客户端生成，因提取视频帧耗资源，属于前面的文件
-                FileDesc lastFile = null;
                 var reader = new MultipartReader(boundary, _context.Request.Body);
                 var section = await reader.ReadNextSectionAsync(_context.RequestAborted);
+
+                var fmSection = section.AsFormDataSection();
+                if (fmSection != null && fmSection.Name == "fixedvolume")
+                {
+                    // 选择固定卷
+                    _volume = (await fmSection.GetValueAsync()).ToLower();
+                    if (!Cfg.FixedVolumes.Contains(_volume))
+                    {
+                        // 无此固定卷，状态码：未满足前提条件
+                        _context.Response.StatusCode = 412;
+                        Log.Information($"不存在固定卷 {_volume}，上传失败");
+                        return;
+                    }
+                    section = await reader.ReadNextSectionAsync(_context.RequestAborted);
+                }
+                else
+                {
+                    // 选择正在使用数最低的卷
+                    cache = new SortedSetCache(Cfg.VolumeKey);
+                    _volume = await cache.GetMin();
+                    // 该卷使用数加1
+                    await cache.Increment(_volume);
+                }
+
+                // Section顺序：固定路径(可无)，文件，文件，缩略图，文件
+                // 缩略图由客户端生成，因提取视频帧耗资源，属于前面的文件
+                FileDesc lastFile = null;
                 while (section != null)
                 {
                     var fileSection = section.AsFileSection();
@@ -93,7 +144,7 @@ namespace Dt.Fsm
                         }
                         else
                         {
-                            lastFile = await ReceiveFile(fileSection, db);
+                            lastFile = await ReceiveFile(fileSection);
                             sucFiles.Add(lastFile);
                         }
                     }
@@ -126,16 +177,17 @@ namespace Dt.Fsm
 
                     try
                     {
-                        await db.Exec($"delete from fsm_file where id in ({sb.ToString().TrimStart(',')})");
+                        await _db.Exec($"delete from fsm_file where id in ({sb.ToString().TrimStart(',')})");
                     }
                     catch { }
                 }
             }
             finally
             {
-                await db.Close(true);
-                // 移除使用标志
-                await cache.Decrement(_volume);
+                await _db.Close(true);
+                // 卷使用数减1
+                if (cache != null)
+                    await cache.Decrement(_volume);
             }
 
             await Response();
@@ -145,27 +197,27 @@ namespace Dt.Fsm
         /// 接收文件、保存记录
         /// </summary>
         /// <param name="p_section"></param>
-        /// <param name="p_db"></param>
         /// <returns></returns>
-        async Task<FileDesc> ReceiveFile(FileMultipartSection p_section, Db p_db)
+        async Task<FileDesc> ReceiveFile(FileMultipartSection p_section)
         {
             FileDesc desc = new FileDesc();
             desc.ID = Id.New();
             desc.Name = p_section.FileName;
             if (long.TryParse(_context.Request.Headers["uid"], out var id))
                 desc.Uploader = id;
-            desc.UserType = 3;
             desc.Info = p_section.Name;
+
+            // 扩展名
+            int pt = desc.Name.LastIndexOf('.');
+            string ext = pt > -1 ? desc.Name.Substring(pt).ToLower() : "";
 
             // 根据文件名获取两级目录
             string dir = GetDir(desc.Name);
-            int pt = desc.Name.LastIndexOf('.');
-            string ext = pt > -1 ? desc.Name.Substring(pt).ToLower() : "";
             desc.Path = Path.Combine(_volume, dir, desc.ID + ext).Replace('\\', '/');
-            _result.Add(desc.Path);
             EnsurePathExist(dir);
-
             string fullPath = Path.Combine(Cfg.Root, _volume, dir, desc.ID + ext);
+            _result.Add(desc.Path);
+
             try
             {
                 using (var writeStream = File.Create(fullPath))
@@ -174,7 +226,7 @@ namespace Dt.Fsm
                     await p_section.FileStream.CopyToAsync(writeStream, _bufferSize, _context.RequestAborted);
                     desc.Size = writeStream.Length;
                 }
-                await p_db.Exec("上传文件", desc);
+                await _db.Exec("上传文件", desc);
             }
             catch (Exception ex)
             {
@@ -199,6 +251,7 @@ namespace Dt.Fsm
 
             _context.Response.BodyWriter.Write(RpcKit.GetObjectBytes(_result));
             await _context.Response.BodyWriter.FlushAsync();
+            Log.Information($"接收 {_result.Count} 个文件");
         }
 
         /// <summary>
@@ -239,18 +292,34 @@ namespace Dt.Fsm
 
     public class FileDesc
     {
+        /// <summary>
+        /// 文件标识
+        /// </summary>
         public long ID { get; set; }
 
+        /// <summary>
+        /// 文件名称
+        /// </summary>
         public string Name { get; set; }
 
+        /// <summary>
+        /// 存放路径：卷/两级目录/id.ext
+        /// </summary>
         public string Path { get; set; }
 
+        /// <summary>
+        /// 文件长度
+        /// </summary>
         public long Size { get; set; }
 
+        /// <summary>
+        /// 上传人id
+        /// </summary>
         public long Uploader { get; set; }
 
-        public int UserType { get; set; }
-
+        /// <summary>
+        /// 文件描述
+        /// </summary>
         public string Info { get; set; }
     }
 }

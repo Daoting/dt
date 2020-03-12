@@ -7,9 +7,8 @@
 #endregion
 
 #region 引用命名
-#endregion
-
 using Windows.UI.Xaml.Data;
+#endregion
 
 namespace Dt.Base
 {
@@ -23,9 +22,16 @@ namespace Dt.Base
         /// </summary>
         FvCell Owner { get; set; }
 
-
+        /// <summary>
+        /// 数据源绑定编辑器
+        /// </summary>
+        /// <param name="p_bind"></param>
         void SetValBinding(Binding p_bind);
 
+        /// <summary>
+        /// 设置编辑焦点
+        /// </summary>
+        /// <returns></returns>
         bool SetFocus();
     }
 }

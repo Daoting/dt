@@ -35,19 +35,23 @@ namespace Dt.Base
         /// <summary>
         /// 执行上传
         /// </summary>
-        /// <param name="p_uploadFiles"></param>
+        /// <param name="p_uploadFiles">待上传文件</param>
+        /// <param name="p_fixedvolume">要上传的固定卷名，null表示上传到普通卷</param>
         /// <param name="p_token"></param>
         /// <returns></returns>
-        public new static async Task<List<string>> Handle(List<IUploadFile> p_uploadFiles, CancellationToken p_token)
+        public static async Task<List<string>> Send(IList<FileData> p_uploadFiles, string p_fixedvolume, CancellationToken p_token)
         {
-            if (p_uploadFiles == null || p_uploadFiles.Count == 0)
+            // 列表内容不可为null
+            if (p_uploadFiles == null
+                || p_uploadFiles.Count == 0
+                || p_uploadFiles.Contains(null))
                 return null;
 
             using (await _locker.LockAsync())
             {
                 try
                 {
-                    return await _uploader.Upload(p_uploadFiles, p_token);
+                    return await _uploader.Upload(p_uploadFiles, p_fixedvolume, p_token);
                 }
                 catch (Exception ex)
                 {
@@ -75,7 +79,7 @@ namespace Dt.Base
             _uploadFiles = new List<IosUploadFile>();
         }
 
-        async Task<List<string>> Upload(List<IUploadFile> p_uploadFiles, CancellationToken p_token)
+        async Task<List<string>> Upload(IList<FileData> p_uploadFiles, string p_fixedvolume, CancellationToken p_token)
         {
             _cancelToken = p_token;
             _boundary = AtKit.NewID;
@@ -85,11 +89,13 @@ namespace Dt.Base
             _result = new TaskCompletionSource<List<string>>();
             _cancelToken.Register(() => _result.TrySetCanceled());
 
-            _tempFile = await SaveToFile(p_uploadFiles);
+            _tempFile = await SaveToFile(p_uploadFiles, p_fixedvolume);
 
             var request = new NSMutableUrlRequest(NSUrl.FromString($"{AtSys.Stub.ServerUrl.TrimEnd('/')}/fsm/.u"));
             request.HttpMethod = "POST";
             request["Content-Type"] = "multipart/form-data; boundary=" + _boundary;
+            if (AtUser.IsLogon)
+                request.Headers["uid"] = (NSString)AtUser.ID.ToString();
 
             var uploadTask = _session.CreateUploadTask(request, new NSUrl(_tempFile, false));
             uploadTask.Resume();
@@ -100,9 +106,10 @@ namespace Dt.Base
         /// <summary>
         /// 将所有要上传的文件按照 multipart/form-data 格式合并成一个文件，上传结束时删除
         /// </summary>
-        /// <param name="p_uploadFiles"></param>
+        /// <param name="p_uploadFiles">待上传文件</param>
+        /// <param name="p_fixedvolume">要上传的固定卷名，null表示上传到普通卷</param>
         /// <returns></returns>
-        Task<string> SaveToFile(List<IUploadFile> p_uploadFiles)
+        Task<string> SaveToFile(IList<FileData> p_uploadFiles, string p_fixedvolume)
         {
             return Task.Run(() =>
             {
@@ -112,34 +119,43 @@ namespace Dt.Base
                 {
                     // UTF8.GetBytes的结果只一字节10，诡异！
                     byte[] line = new byte[] { 13, 10 }; // Encoding.UTF8.GetBytes("\r\n");
+
+                    if (!string.IsNullOrEmpty(p_fixedvolume))
+                    {
+                        // 固定上传路径放在最前
+                        byte[] data = Encoding.UTF8.GetBytes($"--{_boundary}\r\nContent-Disposition: form-data; name=\"fixedvolume\"\r\n\r\n{p_fixedvolume}");
+                        fs.Write(data, 0, data.Length);
+                    }
+
                     foreach (var uf in p_uploadFiles)
                     {
                         // section头
-                        byte[] data = Encoding.UTF8.GetBytes(string.Format(_sectionHeader, _boundary, uf.File.Desc, uf.File.FileName));
+                        byte[] data = Encoding.UTF8.GetBytes(string.Format(_sectionHeader, _boundary, uf.Desc, uf.FileName));
                         fs.Write(data, 0, data.Length);
 
                         // 内容
-                        data = File.ReadAllBytes(uf.File.FilePath);
+                        data = File.ReadAllBytes(uf.FilePath);
                         fs.Write(data, 0, data.Length);
 
                         // 结束行
                         fs.Write(line, 0, line.Length);
 
                         // 含缩略图
-                        if (!string.IsNullOrEmpty(uf.File.ThumbPath))
+                        if (!string.IsNullOrEmpty(uf.ThumbPath))
                         {
                             // section头
                             data = Encoding.UTF8.GetBytes(string.Format(_sectionHeader, _boundary, "thumbnail", "thumbnail.jpg"));
                             fs.Write(data, 0, data.Length);
 
                             // 内容
-                            data = File.ReadAllBytes(uf.File.ThumbPath);
+                            data = File.ReadAllBytes(uf.ThumbPath);
                             fs.Write(data, 0, data.Length);
 
                             // 结束行
                             fs.Write(line, 0, line.Length);
                         }
 
+                        // 记录位置为上传进度用
                         _uploadFiles.Add(new IosUploadFile { File = uf, EndPosition = fs.Position, });
                     }
 
@@ -177,14 +193,14 @@ namespace Dt.Base
                     // 上传完毕
                     uf.IsCompleted = true;
                     // 可能会跨文件
-                    uf.File.UploadProgress(size, size, size);
+                    uf.File.UploadUI?.UploadProgress?.Invoke(size, size, size);
                     startPos = uf.EndPosition;
                 }
                 else
                 {
                     // 上传部分，
                     long len = totalBytesSent - startPos;
-                    uf.File.UploadProgress(len, len, size);
+                    uf.File.UploadUI?.UploadProgress?.Invoke(len, len, size);
                     break;
                 }
             }
@@ -259,7 +275,7 @@ namespace Dt.Base
 
     class IosUploadFile
     {
-        public IUploadFile File { get; set; }
+        public FileData File { get; set; }
 
         public long EndPosition { get; set; }
 

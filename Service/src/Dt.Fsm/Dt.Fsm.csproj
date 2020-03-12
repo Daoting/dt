@@ -10,15 +10,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="etc\drive\sys\photo\1.jpg" />
-    <None Remove="etc\drive\sys\photo\profilephoto.jpg" />
+    <None Remove="etc\drive\photo\1.jpg" />
+    <None Remove="etc\drive\photo\profilephoto.jpg" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="etc\drive\sys\photo\1.jpg">
+    <Content Include="etc\drive\photo\1.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="etc\drive\sys\photo\profilephoto.jpg">
+    <Content Include="etc\drive\photo\profilephoto.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

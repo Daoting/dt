@@ -212,6 +212,33 @@
         <a:Dot ID="#" Margin="10,0,10,0" />
     </DataTemplate>
 
+    <!--CImage-->
+    <Style TargetType="a:CImage">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Background" Value="{StaticResource 默认背景}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:CImage">
+                    <fv:CellPanel x:Name="Panel" Background="{TemplateBinding Background}">
+                        <Grid x:Name="Grid" Background="Transparent">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Image x:Name="Image" />
+                            <TextBlock Text="&#xE086;"
+                                       FontFamily="{StaticResource IconFont}"
+                                       FontSize="20"
+                                       Margin="10,0,10,0"
+                                       VerticalAlignment="Center"
+                                       Grid.Column="1" />
+                        </Grid>
+                    </fv:CellPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
     <!--CIcon-->
     <Style TargetType="a:CIcon">
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />

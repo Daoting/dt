@@ -9,19 +9,15 @@
 #region 引用命名
 using Dt.Base.Transfer;
 using Dt.Core;
-using System.Text.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml;
 using Windows.Foundation;
-using Windows.Storage;
-using Windows.Storage.FileProperties;
-using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 #endregion
@@ -45,6 +41,12 @@ namespace Dt.Base
             typeof(bool),
             typeof(FileList),
             new PropertyMetadata(true));
+
+        public static readonly DependencyProperty FixedVolumeProperty = DependencyProperty.Register(
+            "FixedVolume",
+            typeof(string),
+            typeof(FileList),
+            new PropertyMetadata(null));
 
         static void OnDataPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -117,6 +119,15 @@ namespace Dt.Base
         {
             get { return (bool)GetValue(AllowMultipleProperty); }
             set { SetValue(AllowMultipleProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置要上传的固定卷名，默认null表示上传到普通卷
+        /// </summary>
+        public string FixedVolume
+        {
+            get { return (string)GetValue(FixedVolumeProperty); }
+            set { SetValue(FixedVolumeProperty, value); }
         }
 
         /// <summary>
@@ -357,30 +368,30 @@ namespace Dt.Base
         /// <param name="p_files"></param>
         public async Task UploadFiles(IList<FileData> p_files)
         {
-            if (p_files == null || p_files.Count == 0)
+            if (p_files == null
+                || p_files.Count == 0
+                || p_files.Contains(null))
                 return;
 
-            List<IUploadFile> vfs = new List<IUploadFile>();
-            string date = AtSys.Now.ToString("yyyy-MM-dd HH:mm");
-            foreach (var file in p_files)
+            var overlength = (from f in p_files
+                              where f.Size > AtKit.GB
+                              select f).Any();
+            if (overlength)
             {
-                if (file.Size > AtKit.GB)
-                {
-                    AtKit.Warn(string.Format("【{0}】\r\n文件超过1GB限制！", file.FileName));
-                    continue;
-                }
-
-                FileItem vf = new FileItem();
-                vf.Owner = this;
-                await vf.InitUpload(file, date);
-                _pnl.Children.Add(vf);
-                vfs.Add(vf);
+                AtKit.Warn("上传文件超过1GB限制！");
+                return;
             }
 
-            if (vfs.Count > 0)
-                await HandleUpload(vfs);
-            else
-                UploadFinished?.Invoke(this, false);
+            foreach (var file in p_files)
+            {
+                FileItem vf = new FileItem();
+                vf.Owner = this;
+                file.UploadUI = vf;
+                await file.UploadUI.InitUpload(file);
+                _pnl.Children.Add(vf);
+            }
+
+            await HandleUpload(p_files);
         }
 
         /// <summary>
@@ -401,16 +412,16 @@ namespace Dt.Base
             }
 
             // 新文件属性
-            var date = AtSys.Now.ToString("yyyy-MM-dd HH:mm");
-            await p_vf.InitUpload(p_file, date);
-            await HandleUpload(new List<IUploadFile> { p_vf });
+            p_file.UploadUI = p_vf;
+            await p_file.UploadUI.InitUpload(p_file);
+            await HandleUpload(new List<FileData> { p_file });
         }
 
         /// <summary>
         /// 处理多文件上传
         /// </summary>
         /// <param name="p_vfs"></param>
-        async Task HandleUpload(List<IUploadFile> p_vfs)
+        async Task HandleUpload(IList<FileData> p_files)
         {
             UploadStarted?.Invoke(this, EventArgs.Empty);
 
@@ -419,7 +430,7 @@ namespace Dt.Base
             _cts = new CancellationTokenSource();
             try
             {
-                result = await Uploader.Handle(p_vfs, _cts.Token);
+                result = await Uploader.Send(p_files, FixedVolume, _cts.Token);
             }
             catch (Exception ex)
             {
@@ -431,23 +442,24 @@ namespace Dt.Base
             }
 
             bool suc = false;
-            if (result == null || result.Count != p_vfs.Count)
+            if (result == null || result.Count != p_files.Count)
             {
                 // 全部失败
                 AtKit.Warn("😢上传失败，请重新上传！");
-                foreach (var vf in p_vfs.Cast<FileItem>())
+                foreach (var vf in p_files)
                 {
-                    vf.UploadFail();
-                    _pnl.Children.Remove(vf);
+                    vf.UploadUI.UploadFail(vf);
                 }
+                // 加载旧列表
                 ReadData(Data);
             }
             else
             {
                 suc = true;
-                for (int i = 0; i < p_vfs.Count; i++)
+                for (int i = 0; i < p_files.Count; i++)
                 {
-                    await (p_vfs[i] as FileItem).UploadSuccess(result[i]);
+                    var vf = p_files[i];
+                    await vf.UploadUI.UploadSuccess(result[i], vf);
                 }
                 WriteData();
             }

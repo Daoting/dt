@@ -13,7 +13,6 @@ using Dt.Core.Rpc;
 using Java.Security;
 using Java.Util.Concurrent;
 using Javax.Net.Ssl;
-using System.Text.Json;
 using Square.OkHttp3;
 using Square.OkIO;
 using System;
@@ -22,6 +21,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -70,27 +70,38 @@ namespace Dt.Base
         /// <summary>
         /// 执行上传
         /// </summary>
-        /// <param name="p_uploadFiles"></param>
+        /// <param name="p_uploadFiles">待上传文件</param>
+        /// <param name="p_fixedvolume">要上传的固定卷名，null表示上传到普通卷</param>
         /// <param name="p_token"></param>
         /// <returns></returns>
-        public static async Task<List<string>> Handle(List<IUploadFile> p_uploadFiles, CancellationToken p_token)
+        public static async Task<List<string>> Send(IList<FileData> p_uploadFiles, string p_fixedvolume, CancellationToken p_token)
         {
-            if (p_uploadFiles == null || p_uploadFiles.Count == 0)
+            // 列表内容不可为null
+            if (p_uploadFiles == null
+                || p_uploadFiles.Count == 0
+                || p_uploadFiles.Contains(null))
                 return null;
 
             var bodyBuilder = new MultipartBody.Builder().SetType(MultipartBody.Form);
+
+            if (!string.IsNullOrEmpty(p_fixedvolume))
+            {
+                // 固定上传路径放在最前
+                bodyBuilder.AddFormDataPart("fixedvolume", p_fixedvolume);
+            }
+
             foreach (var uf in p_uploadFiles)
             {
-                Java.IO.File file = new Java.IO.File(uf.File.FilePath);
+                Java.IO.File file = new Java.IO.File(uf.FilePath);
                 RequestBody rb = RequestBody.Create(MediaType.Parse("application/octet-stream"), file);
                 // 包一层实现进度
-                ProgressRequestBody progress = new ProgressRequestBody(rb, uf.UploadProgress);
-                bodyBuilder.AddFormDataPart(uf.File.Desc, uf.File.FileName, progress);
+                ProgressRequestBody progress = new ProgressRequestBody(rb, uf.UploadUI.UploadProgress);
+                bodyBuilder.AddFormDataPart(uf.Desc, uf.FileName, progress);
 
                 // 含缩略图
-                if (!string.IsNullOrEmpty(uf.File.ThumbPath))
+                if (!string.IsNullOrEmpty(uf.ThumbPath))
                 {
-                    var thumbFile = new Java.IO.File(uf.File.ThumbPath);
+                    var thumbFile = new Java.IO.File(uf.ThumbPath);
                     var thumb = RequestBody.Create(MediaType.Parse("application/octet-stream"), thumbFile);
                     bodyBuilder.AddFormDataPart("thumbnail", "thumbnail.jpg", thumb);
                 }
@@ -99,9 +110,11 @@ namespace Dt.Base
 
             var request = new Request.Builder()
                 .Post(body)
-                .Url($"{AtSys.Stub.ServerUrl.TrimEnd('/')}/fsm/.u")
-                .Build();
-            var call = _client.NewCall(request);
+                .Url($"{AtSys.Stub.ServerUrl.TrimEnd('/')}/fsm/.u");
+            if (AtUser.IsLogon)
+                request.Header("uid", AtUser.ID.ToString());
+
+            var call = _client.NewCall(request.Build());
             p_token.Register(() => Task.Run(() => call.Cancel()));
 
             Response resp;

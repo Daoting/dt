@@ -24,7 +24,7 @@ namespace Dt.Sample
         {
             await ImgKit.LoadImage(AtUser.DefaultPhotoPath, _imgFsm);
             _imgData.Source = await ImgKit.GetLocalImage("profilephoto.jpg");
-            _imgFsmNoCache.Source = await Downloader.GetImage("sys/photo/profilephoto.jpg");
+            _imgFsmNoCache.Source = await Downloader.GetImage("photo/profilephoto.jpg");
         }
     }
 }

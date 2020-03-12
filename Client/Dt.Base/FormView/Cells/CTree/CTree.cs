@@ -80,7 +80,7 @@ namespace Dt.Base
         public event EventHandler<object> AfterSelect;
         #endregion
 
-        #region Lv属性
+        #region Tv属性
         /// <summary>
         /// 获取设置数据源对象，Table已实现ITreeData
         /// </summary>

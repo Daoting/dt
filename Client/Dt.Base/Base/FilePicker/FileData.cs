@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Core.Rpc;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -86,6 +87,11 @@ namespace Dt.Base
         /// 缩略图路径
         /// </summary>
         public string ThumbPath { get; set; }
+
+        /// <summary>
+        /// 文件上传过程的UI
+        /// </summary>
+        public IUploadUI UploadUI { get; set; }
 
 #if UWP
         /// <summary>

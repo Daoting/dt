@@ -37,12 +37,12 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_path"></param>
         /// <param name="p_img"></param>
-        public static async Task LoadImage(string p_path, Image p_img)
+        public static async Task<BitmapImage> LoadImage(string p_path, Image p_img = null)
         {
             // 文件服务的路径肯定含/
             int index = p_path.LastIndexOf('/');
             if (index <= 0)
-                return;
+                return null;
 
             // 减轻并发下载时服务端的压力，避免异步下载、显示同一图片时异常
             using (await _locker.LockAsync())
@@ -52,10 +52,13 @@ namespace Dt.Base
                 if (!System.IO.File.Exists(path))
                 {
                     if (!await Downloader.GetAndCacheFile(p_path))
-                        return;
+                        return null;
                 }
 
-                p_img.Source = await GetLocalImage(fileName);
+                var bmp = await GetLocalImage(fileName);
+                if (p_img != null)
+                    p_img.Source = bmp;
+                return bmp;
             }
         }
 

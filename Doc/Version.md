@@ -7,6 +7,7 @@
 * NaviWin和PageWin功能合并到Win，移除NaviWin和PageWin
 * Lv的ICellUI.UIType支持自动加载文件服务的Image
 * Fv增加链接格
+* Fv增加图像格
 
 ### 变更 
 *  移除Newtonsoft.Json，使用System.Text.Json 

@@ -83,7 +83,7 @@ namespace Dt.Base
         TextBox _tb;
 
         /// <summary>
-        /// 获取设置是否允许多行显示
+        /// 获取设置是否允许多行显示，默认false
         /// </summary>
         [CellParam("允许多行")]
         public bool AcceptsReturn
@@ -93,7 +93,7 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置可在文本框中键入或粘贴的最大字符数
+        /// 获取设置可在文本框中键入或粘贴的最大字符数，默认0无限制
         /// </summary>
         [CellParam("最大字符数")]
         public int MaxLength
@@ -103,7 +103,7 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置是否实时更新值
+        /// 获取设置是否实时更新值，默认true实时更新
         /// </summary>
         [CellParam("实时更新值")]
         public bool UpdateTimely

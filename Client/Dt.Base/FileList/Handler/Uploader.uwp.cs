@@ -20,6 +20,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
+using System.Text;
 #endregion
 
 namespace Dt.Base
@@ -39,12 +40,16 @@ namespace Dt.Base
         /// <summary>
         /// 执行上传
         /// </summary>
-        /// <param name="p_uploadFiles"></param>
+        /// <param name="p_uploadFiles">待上传文件</param>
+        /// <param name="p_fixedvolume">要上传的固定卷名，null表示上传到普通卷</param>
         /// <param name="p_token"></param>
         /// <returns></returns>
-        public static async Task<List<string>> Handle(List<IUploadFile> p_uploadFiles, CancellationToken p_token)
+        public static async Task<List<string>> Send(IList<FileData> p_uploadFiles, string p_fixedvolume, CancellationToken p_token)
         {
-            if (p_uploadFiles == null || p_uploadFiles.Count == 0)
+            // 列表内容不可为null
+            if (p_uploadFiles == null
+                || p_uploadFiles.Count == 0
+                || p_uploadFiles.Contains(null))
                 return null;
 
             // 排队避免服务器压力
@@ -53,20 +58,23 @@ namespace Dt.Base
             using (var request = CreateRequestMessage())
             using (var content = new MultipartFormDataContent())
             {
-                foreach (var uf in p_uploadFiles)
+                if (!string.IsNullOrEmpty(p_fixedvolume))
                 {
-                    if (uf == null || uf.File == null)
-                        continue;
+                    // 固定上传路径放在最前
+                    content.Add(new StringContent(p_fixedvolume, Encoding.UTF8), "fixedvolume");
+                }
 
+                foreach (var file in p_uploadFiles)
+                {
                     // 带进度的流内容
-                    var streamContent = new ProgressStreamContent(await uf.File.GetStream(), CancellationToken.None);
-                    streamContent.Progress = uf.UploadProgress;
-                    content.Add(streamContent, uf.File.Desc, uf.File.FileName);
+                    var streamContent = new ProgressStreamContent(await file.GetStream(), CancellationToken.None);
+                    streamContent.Progress = file.UploadUI.UploadProgress;
+                    content.Add(streamContent, file.Desc, file.FileName);
 
                     // 含缩略图
-                    if (!string.IsNullOrEmpty(uf.File.ThumbPath))
+                    if (!string.IsNullOrEmpty(file.ThumbPath))
                     {
-                        var sf = await StorageFile.GetFileFromPathAsync(uf.File.ThumbPath);
+                        var sf = await StorageFile.GetFileFromPathAsync(file.ThumbPath);
                         var thumb = new StreamContent(await sf.OpenStreamForReadAsync());
                         content.Add(thumb, "thumbnail", "thumbnail.jpg");
                     }
@@ -78,6 +86,7 @@ namespace Dt.Base
                     using (var response = await _client.SendAsync(request, p_token).ConfigureAwait(false))
                     {
                         result = await response.Content.ReadAsByteArrayAsync();
+                        // response.StatusCode：412 表示不存在固定卷；415 无Boundary
                     }
                 }
                 catch (Exception ex)
@@ -103,12 +112,16 @@ namespace Dt.Base
         static HttpRequestMessage CreateRequestMessage()
         {
             // 使用http2协议Post方法
-            return new HttpRequestMessage
+            var req = new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
                 Version = new Version(2, 0),
                 RequestUri = new Uri($"{AtSys.Stub.ServerUrl.TrimEnd('/')}/fsm/.u")
             };
+
+            if (AtUser.IsLogon)
+                req.Headers.Add("uid", AtUser.ID.ToString());
+            return req;
         }
     }
 }

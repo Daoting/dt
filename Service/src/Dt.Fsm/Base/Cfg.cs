@@ -7,17 +7,19 @@
 #endregion
 
 #region 引用命名
+using Dt.Core;
 using Dt.Core.Caches;
 using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 #endregion
 
 namespace Dt.Fsm
 {
     /// <summary>
-    /// 
+    /// 配置相关
     /// </summary>
     public static class Cfg
     {
@@ -42,41 +44,78 @@ namespace Dt.Fsm
         public static string Root { get; private set; }
 
         /// <summary>
-        /// 所有卷列表
+        /// 普通卷列表
         /// </summary>
         public static List<string> Volumes { get; } = new List<string>();
+
+        /// <summary>
+        /// 固定卷表
+        /// </summary>
+        public static List<string> FixedVolumes { get; } = new List<string>();
 
         /// <summary>
         /// 初始化文件服务
         /// </summary>
         public static void Init()
         {
+            // BaseDirectory程序集所在的目录，不可用Directory.GetCurrentDirectory()！
             Root = Path.Combine(AppContext.BaseDirectory, "etc", "drive");
             var dir = new DirectoryInfo(Root);
             if (!dir.Exists)
                 dir.Create();
 
+            // 固定卷
+            var fv = Glb.GetCfg<string>("FixedVolume");
+            StringBuilder sb = new StringBuilder("初始化固定卷");
+            if (!string.IsNullOrEmpty(fv))
+            {
+                var vols = fv.Split(';');
+                foreach (var vol in vols)
+                {
+                    var v = vol.Trim().ToLower();
+                    if (v != string.Empty)
+                    {
+                        string path = Path.Combine(Root, v);
+                        if (!Directory.Exists(path))
+                            Directory.CreateDirectory(path);
+                        FixedVolumes.Add(v);
+                        sb.Append(" ");
+                        sb.Append(v);
+                    }
+                }
+            }
+            sb.Append("，普通卷");
+
+            // 普通卷
             SortedSetCache cache = new SortedSetCache(VolumeKey);
             var subs = dir.GetDirectories();
-            if (subs == null || subs.Length == 0)
+            if (subs != null && subs.Length > 0)
+            {
+                foreach (var sub in subs)
+                {
+                    // 非固定卷
+                    string v = sub.Name.ToLower();
+                    if (!FixedVolumes.Contains(v))
+                    {
+                        Volumes.Add(sub.Name);
+                        // 加入缓存
+                        cache.Increment(v, 0).Wait();
+                        sb.Append(" ");
+                        sb.Append(v);
+                    }
+                }
+            }
+            // 无普通卷时创建默认卷v0
+            if (Volumes.Count == 0)
             {
                 Volumes.Add(_defaultVol);
                 Directory.CreateDirectory(Path.Combine(Root, _defaultVol));
                 cache.Increment(_defaultVol, 0).Wait();
-                Log.Warning("无文件存储卷，创建默认卷 " + _defaultVol);
+                sb.Append(" ");
+                sb.Append(_defaultVol);
             }
-            else
-            {
-                string vol = "";
-                foreach (var sub in subs)
-                {
-                    Volumes.Add(sub.Name);
-                    vol += sub.Name + " ";
-                    // 加入缓存
-                    cache.Increment(sub.Name, 0).Wait();
-                }
-                Log.Information("文件存储卷 " + vol);
-            }
+
+            Log.Information(sb.ToString());
         }
 
         /// <summary>

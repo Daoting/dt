@@ -48,8 +48,6 @@
                             <x:String>选项六</x:String>
                         </a:CList.Items>
                     </a:CList>
-                    <a:CList ID="listenum1" Title="自动枚举列表" />
-                    <a:CList ID="listenum2" Title="手动设置枚举" Enum="Dt.Base.DlgPlacement,Dt.Base" />
                     <a:CList ID="listint" Title="整数列表">
                         <a:CList.Items>
                             <x:Int32>1</x:Int32>
@@ -57,6 +55,8 @@
                             <x:Int32>3</x:Int32>
                         </a:CList.Items>
                     </a:CList>
+                    <a:CList ID="listenum1" Title="自动枚举列表" />
+                    <a:CList ID="listenum2" Title="手动设置枚举" Enum="Dt.Base.DlgPlacement,Dt.Base" />
                     <a:CList ID="listobj" Title="对象列表" LoadData="OnLoadPersons">
                         <DataTemplate>
                             <Grid Padding="6">
@@ -87,6 +87,9 @@
                     </a:CList>
                     <a:CList ID="listrow" Title="模拟IDString" SrcID="id" TgtID="listrowid" LoadData="OnLoadDataTable" AfterSelect="OnSelectedRow" />
 
+                    <a:CBar Title="图像格" />
+                    <a:CImage ID="img1" Title="图像" />
+                    
                     <a:CBar Title="树形格" />
                     <a:CTree ID="tree" Title="普通树" LoadData="OnLoadTreeData" />
                     <a:CTree ID="treedata" Title="动态树" RefreshData="true" LoadData="OnLoadTreeData" />
