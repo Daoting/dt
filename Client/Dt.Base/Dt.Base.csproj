@@ -11,29 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="FormView\Cells\CImage\ImageBoxDlg.xaml" />
-    <None Remove="FormView\Cells\CImage\ListDlg.xaml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="FormView\Cells\CImage\ImageBoxDlg.xaml" />
-    <UpToDateCheckInput Remove="FormView\Cells\CImage\ListDlg.xaml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
     <ProjectReference Include="..\Dt.Charts\Dt.Charts.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="FormView\Cells\CImage\ImageBoxDlg.xaml.cs">
-      <DependentUpon>%(Filename)</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="FormView\Cells\CImage\ListDlg.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
 </Project>

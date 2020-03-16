@@ -147,7 +147,6 @@ namespace Dt.Shell
             { "menufav", typeof(MenuFav) },
             { "chatmember", typeof(ChatMember) },
             { "letter", typeof(Letter) },
-            { "filereadlog", typeof(FileReadLog) },
             { "docklayout", typeof(DockLayout) },
             { "celllastval", typeof(CellLastVal) },
             { "searchfvhis", typeof(SearchFvHis) },

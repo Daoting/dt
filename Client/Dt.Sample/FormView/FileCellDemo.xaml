@@ -1,0 +1,38 @@
+﻿<a:Win
+    x:Class="Dt.Sample.FileCellDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Home="格,属性">
+
+    <a:WinCenter>
+        <a:Tabs>
+            <a:Tab Title="格">
+                <a:Fv x:Name="_fv">
+                    <a:CBar Title="文件格" />
+                    <a:CFile ID="file1" Title="单个文件" RowSpan="2" />
+                    
+                    <a:CBar Title="图像格" />
+                    <a:CImage ID="img1" Title="图像" />
+                </a:Fv>
+            </a:Tab>
+        </a:Tabs>
+    </a:WinCenter>
+    <a:WinItem DockState="DockedRight">
+        <a:Tabs>
+            <a:Tab Title="属性">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <a:Fv x:Name="_pbFv">
+                        <a:CBool Title="表单只读" ID="IsReadOnly" />
+                        <a:CBar Title="单元格" />
+                    </a:Fv>
+                    <a:Fv x:Name="_pbCell" Grid.Row="1" />
+                </Grid>
+            </a:Tab>
+        </a:Tabs>
+    </a:WinItem>
+</a:Win>

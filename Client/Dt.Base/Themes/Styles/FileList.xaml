@@ -16,8 +16,7 @@
                     <Border Child="{Binding Panel, RelativeSource={RelativeSource TemplatedParent}}"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            Padding="{TemplateBinding Padding}"
-                            VerticalAlignment="Top" />
+                            Padding="{TemplateBinding Padding}" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -39,13 +38,16 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <ContentPresenter Content="{TemplateBinding Icon}" Padding="0,0,10,0" VerticalAlignment="Center" />
+                <TextBlock x:Name="IconBlock"
+                           Text="{TemplateBinding Icon}"
+                           FontFamily="{StaticResource IconFont}"
+                           Foreground="{StaticResource 深灰边框}"
+                           FontSize="30"
+                           Margin="0,0,10,0"
+                           VerticalAlignment="Center" />
                 <StackPanel Grid.Column="1">
                     <TextBlock Text="{TemplateBinding FileName}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
-                    <TextBlock Text="{TemplateBinding FileDesc}" Style="{StaticResource VirFileNoteStyle}"/>
-                    <TextBlock Text="{Binding Length, Converter={StaticResource CvFileLength}, RelativeSource={RelativeSource TemplatedParent}}" Style="{StaticResource VirFileNoteStyle}"/>
-                    <TextBlock Text="{TemplateBinding Date}" Style="{StaticResource VirFileNoteStyle}"/>
-                    <TextBlock Text="{TemplateBinding Uploader}" Style="{StaticResource VirFileNoteStyle}"/>
+                    <TextBlock Text="{TemplateBinding ExtInfo}" Style="{StaticResource VirFileNoteStyle}"/>
                 </StackPanel>
             </Grid>
             <!--上传下载状态-->
@@ -56,16 +58,7 @@
             </Grid>
             <!--分隔线-->
             <Border BorderBrush="{StaticResource 浅灰边框}" BorderThickness="0,0,0,1" IsHitTestVisible="False" />
-            <!--未读标志-->
-            <Ellipse Visibility="{Binding Unread, Converter={StaticResource CvBoolToVisible}, RelativeSource={RelativeSource TemplatedParent}}"
-                     Fill="Red"
-                     Height="10"
-                     Width="10"
-                     Margin="20,15,0,0"
-                     VerticalAlignment="Top"
-                     HorizontalAlignment="Left"
-                     IsHitTestVisible="False"/>
-
+            
             <VisualStateManager.VisualStateGroups>
                 <VisualStateGroup x:Name="CommonStates">
                     <VisualState x:Name="Normal" />
@@ -99,6 +92,14 @@
                         </VisualState.Setters>
                     </VisualState>
                 </VisualStateGroup>
+                <VisualStateGroup x:Name="CachedStates">
+                    <VisualState x:Name="NoCache" />
+                    <VisualState x:Name="Cached">
+                        <VisualState.Setters>
+                            <Setter Target="IconBlock.Foreground" Value="{StaticResource 主题蓝色}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
             </VisualStateManager.VisualStateGroups>
         </Grid>
     </ControlTemplate>
@@ -107,12 +108,7 @@
     <ControlTemplate x:Key="VirImageTemplate" TargetType="a:FileItem">
         <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
             <ToolTipService.ToolTip>
-                <StackPanel>
-                    <TextBlock Text="{TemplateBinding FileDesc}" FontSize="{StaticResource 小字号}"/>
-                    <TextBlock Text="{Binding Length, Converter={StaticResource CvFileLength}, RelativeSource={RelativeSource TemplatedParent}}" FontSize="{StaticResource 小字号}"/>
-                    <TextBlock Text="{TemplateBinding Date}" FontSize="{StaticResource 小字号}"/>
-                    <TextBlock Text="{TemplateBinding Uploader}" FontSize="{StaticResource 小字号}"/>
-                </StackPanel>
+                <TextBlock Text="{TemplateBinding ExtInfo}" FontSize="{StaticResource 小字号}"/>
             </ToolTipService.ToolTip>
             <TextBlock Text="图片" Foreground="{StaticResource 深灰边框}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <Image x:Name="Image" Source="{TemplateBinding Bitmap}" MaxHeight="180" MaxWidth="180" Stretch="Uniform"/>
@@ -239,12 +235,7 @@
     <ControlTemplate x:Key="VirVideoTemplate" TargetType="a:FileItem">
         <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
             <ToolTipService.ToolTip>
-                <StackPanel>
-                    <TextBlock Text="{TemplateBinding FileDesc}" FontSize="{StaticResource 小字号}"/>
-                    <TextBlock Text="{Binding Length, Converter={StaticResource CvFileLength}, RelativeSource={RelativeSource TemplatedParent}}" FontSize="{StaticResource 小字号}"/>
-                    <TextBlock Text="{TemplateBinding Date}" FontSize="{StaticResource 小字号}"/>
-                    <TextBlock Text="{TemplateBinding Uploader}" FontSize="{StaticResource 小字号}"/>
-                </StackPanel>
+                <TextBlock Text="{TemplateBinding ExtInfo}" FontSize="{StaticResource 小字号}"/>
             </ToolTipService.ToolTip>
             <TextBlock Text="视频" Foreground="{StaticResource 深灰边框}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <Image x:Name="Image" Source="{TemplateBinding Bitmap}" MaxHeight="180" MaxWidth="180" Stretch="Uniform"/>
@@ -261,14 +252,6 @@
             </Grid>
             <!--分隔线-->
             <Border BorderBrush="{StaticResource 浅灰边框}" BorderThickness="0,0,0,1" IsHitTestVisible="False"/>
-            <!--未读标志-->
-            <Ellipse Visibility="{Binding Unread, Converter={StaticResource CvBoolToVisible}, RelativeSource={RelativeSource TemplatedParent}}"
-                     Fill="Red"
-                     Height="10"
-                     Width="10"
-                     Margin="0,20,20,0"
-                     VerticalAlignment="Top"
-                     HorizontalAlignment="Right" />
 
             <VisualStateManager.VisualStateGroups>
                 <VisualStateGroup x:Name="CommonStates">

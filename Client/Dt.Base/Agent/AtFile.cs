@@ -20,9 +20,23 @@ namespace Dt.Base
     {
         #region FileMgr
         /// <summary>
+        /// 判断文件是否存在
+        /// </summary>
+        /// <param name="p_filePath">文件ID：卷名/两级目录/xxx.ext</param>
+        /// <returns></returns>
+        public static Task<bool> Exists(string p_filePath)
+        {
+            return new UnaryRpc(
+                "fsm",
+                "FileMgr.Exists",
+                p_filePath
+            ).Call<bool>();
+        }
+
+        /// <summary>
         /// 删除文件
         /// </summary>
-        /// <param name="p_filePath"></param>
+        /// <param name="p_filePath">文件ID：卷名/两级目录/xxx.ext</param>
         /// <returns></returns>
         public static Task<bool> Delete(string p_filePath)
         {

@@ -8,9 +8,6 @@
 
 #region 引用命名
 using Dt.Core;
-using Dt.Core.Rpc;
-using Serilog;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 #endregion
@@ -24,9 +21,19 @@ namespace Dt.Fsm
     public class FileMgr : BaseApi
     {
         /// <summary>
+        /// 判断文件是否存在
+        /// </summary>
+        /// <param name="p_filePath">文件ID：卷名/两级目录/xxx.ext</param>
+        /// <returns></returns>
+        public bool Exists(string p_filePath)
+        {
+            return File.Exists(Path.Combine(Cfg.Root, p_filePath));
+        }
+
+        /// <summary>
         /// 删除文件
         /// </summary>
-        /// <param name="p_filePath"></param>
+        /// <param name="p_filePath">文件ID：卷名/两级目录/xxx.ext</param>
         /// <returns></returns>
         public async Task<bool> Delete(string p_filePath)
         {

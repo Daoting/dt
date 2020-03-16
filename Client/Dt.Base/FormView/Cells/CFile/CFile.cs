@@ -29,23 +29,19 @@ using Windows.UI.Xaml.Media.Animation;
 namespace Dt.Base
 {
     /// <summary>
-    /// 图像格
+    /// 文件格
     /// </summary>
-    public partial class CImage : FvCell
+    public partial class CFile : FvCell
     {
-        #region 静态内容
-        
-        #endregion
-
         #region 成员变量
         readonly FileList _fl;
-        ImageBoxDlg _dlg;
+        FileBoxDlg _dlg;
         #endregion
 
         #region 构造方法
-        public CImage()
+        public CFile()
         {
-            DefaultStyleKey = typeof(CImage);
+            DefaultStyleKey = typeof(CFile);
             _fl = new FileList();
         }
         #endregion
@@ -66,8 +62,6 @@ namespace Dt.Base
 
             var grid = (Grid)GetTemplateChild("Grid");
             grid.Children.Add(_fl);
-            grid.Tapped -= OnShowDlg;
-            grid.Tapped += OnShowDlg;
         }
 
         protected override void SetValBinding()
@@ -75,32 +69,5 @@ namespace Dt.Base
             _fl.SetBinding(FileList.DataProperty, ValBinding);
         }
         #endregion
-
-        /// <summary>
-        /// 更新选择结果
-        /// </summary>
-        /// <param name="p_icon"></param>
-        internal void UpdateValue(string p_json)
-        {
-            SetVal(p_json);
-            LoadImages(p_json);
-        }
-
-        void OnShowDlg(object sender, TappedRoutedEventArgs e)
-        {
-            if (ReadOnlyBinding || (_dlg != null && _dlg.IsOpened))
-                return;
-
-            if (_dlg == null)
-            {
-                _dlg = new ImageBoxDlg(this);
-            }
-            _dlg.ShowDlg();
-        }
-
-        void LoadImages(string p_json)
-        {
-
-        }
     }
 }
