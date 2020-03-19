@@ -751,11 +751,6 @@ namespace Dt.Base
         internal static ControlTemplate VirImageTemplate => (ControlTemplate)_dict["VirImageTemplate"];
 
         /// <summary>
-        /// FileItem音频模板
-        /// </summary>
-        internal static ControlTemplate VirSoundTemplate => (ControlTemplate)_dict["VirSoundTemplate"];
-
-        /// <summary>
         /// FileItem视频模板
         /// </summary>
         internal static ControlTemplate VirVideoTemplate => (ControlTemplate)_dict["VirVideoTemplate"];

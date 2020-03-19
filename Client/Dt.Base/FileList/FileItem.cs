@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Base.FileLists;
 using Dt.Core;
 using Dt.Core.Rpc;
 using System;
@@ -17,6 +18,8 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Devices.Input;
+using Windows.Foundation;
+using Windows.Media.Core;
 using Windows.Storage;
 using Windows.Storage.AccessCache;
 using Windows.Storage.Pickers;
@@ -27,6 +30,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
+using Xamarin.Essentials;
 #endregion
 
 namespace Dt.Base
@@ -91,9 +95,9 @@ namespace Dt.Base
             typeof(FileItem),
             new PropertyMetadata(null));
 
-        public static readonly DependencyProperty MediaPlayerProperty = DependencyProperty.Register(
-            "MediaPlayer",
-            typeof(object),
+        public static readonly DependencyProperty OwnerProperty = DependencyProperty.Register(
+            "Owner",
+            typeof(FileList),
             typeof(FileItem),
             new PropertyMetadata(null));
 
@@ -103,8 +107,6 @@ namespace Dt.Base
             FileItemType tp = (FileItemType)e.NewValue;
             if (tp == FileItemType.Image)
                 vf.Template = AtRes.VirImageTemplate;
-            else if (tp == FileItemType.Sound)
-                vf.Template = AtRes.VirSoundTemplate;
             else if (tp == FileItemType.Video)
                 vf.Template = AtRes.VirVideoTemplate;
             else
@@ -124,10 +126,11 @@ namespace Dt.Base
         #endregion
 
         #region 成员变量
-        static MediaElement _player;
+        static MediaPlayerElement _mediaPlayer;
         static FileItem _playerHost;
 
         readonly FileExtInfo _extInfo = new FileExtInfo();
+        Grid _rootGrid;
         bool _loaded;
         uint? _pointerID;
         CancellationTokenSource _ctsDownload;
@@ -158,11 +161,13 @@ namespace Dt.Base
             get { return (string)GetValue(FileNameProperty); }
             set { SetValue(FileNameProperty, value); }
         }
+        #endregion
 
+        #region 内部属性
         /// <summary>
         /// 获取设置文件种类
         /// </summary>
-        public FileItemType FileType
+        internal FileItemType FileType
         {
             get { return (FileItemType)GetValue(FileTypeProperty); }
             set { SetValue(FileTypeProperty, value); }
@@ -171,7 +176,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置上传下载的当前状态
         /// </summary>
-        public FileItemState State
+        internal FileItemState State
         {
             get { return (FileItemState)GetValue(StateProperty); }
             set { SetValue(StateProperty, value); }
@@ -180,10 +185,12 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置所属FileList
         /// </summary>
-        public FileList Owner { get; internal set; }
-        #endregion
+        internal FileList Owner
+        {
+            get { return (FileList)GetValue(OwnerProperty); }
+            set { SetValue(OwnerProperty, value); }
+        }
 
-        #region 绑定用属性
         /// <summary>
         /// 获取设置文件扩展信息
         /// </summary>
@@ -237,49 +244,42 @@ namespace Dt.Base
             get { return (ImageSource)GetValue(BitmapProperty); }
             set { SetValue(BitmapProperty, value); }
         }
-
-        /// <summary>
-        /// 获取设置播放器
-        /// </summary>
-        internal object MediaPlayer
-        {
-            get { return GetValue(MediaPlayerProperty); }
-            set { SetValue(MediaPlayerProperty, value); }
-        }
         #endregion
 
         #region 文件操作
         /// <summary>
         /// 打开文件
         /// <para>先检查本地有没有，有打开本地，没有先下载；</para>
-        /// <para>内部支持图片和音视频的预览，其它类型文件用默认关联程序打开；</para>
+        /// <para>内部支持音视频的预览，其它类型文件用默认关联程序打开；</para>
         /// </summary>
         public async void Open()
         {
             if (State != FileItemState.None || string.IsNullOrEmpty(ID))
-            {
-                AtKit.Warn("当前状态不允许打开文件！");
                 return;
-            }
 
             // 打开本地文件
-            string name = GetFileName();
-            StorageFile file = await AtLocal.GetStorageFile(name);
-            if (file == null)
+            string fileName = Path.Combine(AtLocal.CachePath, GetFileName());
+            if (!File.Exists(fileName))
             {
-                // 先下载再打开
+                // 先下载
                 bool suc = await Download();
-                if (suc)
-                    file = await AtLocal.GetStorageFile(name);
+                if (!suc)
+                    return;
             }
-            if (file == null)
-                return;
 
-            //var tp = FileType;
-            //if (tp == FileItemType.Sound || tp == FileItemType.Video)
-            //    Play(file);
-            //else
-            //    AtKit.OpenFile(file);
+            var tp = FileType;
+            if (tp == FileItemType.Sound || tp == FileItemType.Video)
+            {
+                Play(fileName);
+            }
+            else
+            {
+                // 默认关联程序打开
+                await Launcher.OpenAsync(new OpenFileRequest
+                {
+                    File = new ReadOnlyFile(fileName)
+                });
+            }
         }
 
         /// <summary>
@@ -344,96 +344,13 @@ namespace Dt.Base
         }
         #endregion
 
-        #region 下载
-        /// <summary>
-        /// 执行下载
-        /// </summary>
-        /// <param name="p_priorThumbnail">是否优先下载缩略图</param>
-        /// <param name="p_prompt">是否提示下载失败信息</param>
-        /// <returns></returns>
-        internal async Task<bool> Download(bool p_priorThumbnail = false, bool p_prompt = true)
-        {
-            if (State != FileItemState.None || string.IsNullOrEmpty(ID))
-            {
-                if (p_prompt)
-                    AtKit.Warn("当前状态不可下载！");
-                return false;
-            }
-
-            bool downloadThumb = false;
-            if (p_priorThumbnail)
-            {
-                // 优先下载缩略图时，先判断是否存在
-                downloadThumb = await AtFile.Exists(ID.Substring(0, ID.LastIndexOf('.')) + "-t.jpg");
-            }
-
-            string name = downloadThumb ? GetThumbName() : GetFileName();
-            string path = Path.Combine(AtLocal.CachePath, name);
-            FileStream stream = null;
-            try
-            {
-                if (System.IO.File.Exists(path))
-                    System.IO.File.Delete(path);
-                stream = System.IO.File.Create(path);
-            }
-            catch (Exception ex)
-            {
-                if (p_prompt)
-                    AtKit.Warn("创建文件出错！");
-                Log.Error(ex, "下载前创建文件出错！");
-                return false;
-            }
-
-            State = FileItemState.Downloading;
-            DownloadInfo info = new DownloadInfo
-            {
-                Path = downloadThumb ? ID.Substring(0, ID.LastIndexOf('.')) + "-t.jpg" : ID,
-                TgtStream = stream,
-                Progress = OnDownloadProgress,
-            };
-
-            bool suc = false;
-            _ctsDownload?.Dispose();
-            _ctsDownload = new CancellationTokenSource();
-            try
-            {
-                suc = await Downloader.GetFile(info, _ctsDownload.Token);
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "下载出错");
-            }
-            finally
-            {
-                _ctsDownload?.Dispose();
-                info.TgtStream.Close();
-                State = FileItemState.None;
-            }
-
-            if (!suc)
-            {
-                if (p_prompt)
-                    AtKit.Warn(info.Error);
-
-                // 未成功，删除缓存文件，避免打开时出错
-                try
-                {
-                    // mono中 FileInfo 的 Exists 状态不同步！
-                    if (System.IO.File.Exists(path))
-                        System.IO.File.Delete(path);
-                }
-                catch { }
-            }
-            return suc;
-        }
-        #endregion
-
         #region 重写方法
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
 
             _loaded = true;
+            _rootGrid = (Grid)GetTemplateChild("RootGrid");
             VisualStateManager.GoToState(this, State.ToString(), true);
             UpdateCachedFlag();
         }
@@ -706,6 +623,120 @@ namespace Dt.Base
         }
         #endregion
 
+        #region 下载
+        /// <summary>
+        /// 执行下载
+        /// </summary>
+        /// <param name="p_priorThumbnail">是否优先下载缩略图</param>
+        /// <param name="p_prompt">是否提示下载失败信息</param>
+        /// <returns></returns>
+        internal async Task<bool> Download(bool p_priorThumbnail = false, bool p_prompt = true)
+        {
+            if (State != FileItemState.None || string.IsNullOrEmpty(ID))
+            {
+                if (p_prompt)
+                    AtKit.Warn("当前状态不可下载！");
+                return false;
+            }
+
+            bool downloadThumb = false;
+            if (p_priorThumbnail)
+            {
+                // 优先下载缩略图时，先判断是否存在
+                downloadThumb = await AtFile.Exists(ID.Substring(0, ID.LastIndexOf('.')) + "-t.jpg");
+                // 缩略图不存在时，若为视频文件不下载
+                if (!downloadThumb && FileType != FileItemType.Image)
+                    return false;
+            }
+
+            string name = downloadThumb ? GetThumbName() : GetFileName();
+            string path = Path.Combine(AtLocal.CachePath, name);
+            FileStream stream = null;
+            try
+            {
+                if (System.IO.File.Exists(path))
+                    System.IO.File.Delete(path);
+                stream = System.IO.File.Create(path);
+            }
+            catch (Exception ex)
+            {
+                if (p_prompt)
+                    AtKit.Warn("创建文件出错！");
+                Log.Error(ex, "下载前创建文件出错！");
+                return false;
+            }
+
+            State = FileItemState.Downloading;
+            DownloadInfo info = new DownloadInfo
+            {
+                Path = downloadThumb ? ID.Substring(0, ID.LastIndexOf('.')) + "-t.jpg" : ID,
+                TgtStream = stream,
+                Progress = OnDownloadProgress,
+            };
+
+            bool suc = false;
+            _ctsDownload?.Dispose();
+            _ctsDownload = new CancellationTokenSource();
+            try
+            {
+                suc = await Downloader.GetFile(info, _ctsDownload.Token);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "下载出错");
+            }
+            finally
+            {
+                _ctsDownload?.Dispose();
+                info.TgtStream.Close();
+                State = FileItemState.None;
+            }
+
+            if (!suc)
+            {
+                if (p_prompt)
+                    AtKit.Warn(info.Error);
+
+                // 未成功，删除缓存文件，避免打开时出错
+                try
+                {
+                    // mono中 FileInfo 的 Exists 状态不同步！
+                    if (System.IO.File.Exists(path))
+                        System.IO.File.Delete(path);
+                }
+                catch { }
+            }
+            else
+            {
+                VisualStateManager.GoToState(this, "Cached", true);
+            }
+            return suc;
+        }
+
+        /// <summary>
+        /// 下载进度回调
+        /// </summary>
+        /// <param name="p_bytesStep"></param>
+        /// <param name="p_bytesSent"></param>
+        /// <param name="p_totalBytesToSend"></param>
+        async void OnDownloadProgress(long p_bytesStep, long p_bytesSent, long p_totalBytesToSend)
+        {
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, new DispatchedHandler(() =>
+            {
+                double percent = p_bytesSent * 100 / p_totalBytesToSend;
+                Percent = string.Format("{0}%", percent);
+                ProgressWidth = Math.Ceiling(percent / 100 * ActualWidth);
+
+                // 完成
+                if (p_bytesStep == 0 && p_bytesSent == p_totalBytesToSend)
+                {
+                    State = FileItemState.None;
+                    ClearValue(PercentProperty);
+                }
+            }));
+        }
+        #endregion
+
         #region 加载后
         void OnLoaded(object sender, RoutedEventArgs e)
         {
@@ -718,43 +749,6 @@ namespace Dt.Base
             }
         }
 
-#if UWP
-        /// <summary>
-        /// 加载图像
-        /// </summary>
-        async void LoadImage()
-        {
-            string thumbName = GetThumbName();
-            string fileName = GetFileName();
-            StorageFile file = await AtLocal.GetStorageFile(thumbName);
-            if (file == null)
-            {
-                // 无缩略图时取原始图片
-                file = await AtLocal.GetStorageFile(fileName);
-
-                if (file == null)
-                {
-                    // 优先下载缩略图，无缩略图下载原始图
-                    if (await Download(true, false))
-                    {
-                        file = await AtLocal.GetStorageFile(thumbName);
-                        if (file == null)
-                            file = await AtLocal.GetStorageFile(fileName);
-                    }
-                }
-            }
-
-            if (file != null)
-            {
-                using (var fs = await file.OpenAsync(FileAccessMode.Read))
-                {
-                    BitmapImage bmp = new BitmapImage();
-                    await bmp.SetSourceAsync(fs);
-                    Bitmap = bmp;
-                }
-            }
-        }
-#else
         async void LoadImage()
         {
             string thumbName = Path.Combine(AtLocal.CachePath, GetThumbName());
@@ -765,7 +759,7 @@ namespace Dt.Base
                 // 缩略图
                 path = thumbName;
             }
-            else if (File.Exists(fileName))
+            else if (FileType == FileItemType.Image && File.Exists(fileName))
             {
                 // 无缩略图时取原始图片
                 path = fileName;
@@ -775,21 +769,13 @@ namespace Dt.Base
                 // 优先下载缩略图，无缩略图下载原始图
                 if (File.Exists(thumbName))
                     path = thumbName;
-                else if (File.Exists(fileName))
+                else if (FileType == FileItemType.Image && File.Exists(fileName))
                     path = fileName;
             }
 
             if (!string.IsNullOrEmpty(path))
-            {
-                using (var fs = System.IO.File.OpenRead(path))
-                {
-                    BitmapImage bmp = new BitmapImage();
-                    await bmp.SetSourceAsync(fs);
-                    Bitmap = bmp;
-                }
-            }
+                Bitmap = new BitmapImage(new Uri(path));
         }
-#endif
         #endregion
 
         #region 更新UI
@@ -800,21 +786,30 @@ namespace Dt.Base
         void UpdateTemplate(string p_ext)
         {
             // 更新控件模板
-            if (!string.IsNullOrEmpty(p_ext))
+            if (FileFilter.UwpImage.Contains(p_ext))
             {
-                if (FileFilter.UwpImage.Contains(p_ext))
-                    FileType = FileItemType.Image;
-                else if (FileFilter.UwpAudio.Contains(p_ext))
-                    FileType = FileItemType.Sound;
-                else if (FileFilter.UwpVideo.Contains(p_ext))
-                    FileType = FileItemType.Video;
-                else
-                    UpdateIcon(p_ext);
+                FileType = FileItemType.Image;
+            }
+            else if (FileFilter.UwpAudio.Contains(p_ext))
+            {
+                Icon = "\uE078";
+                FileType = FileItemType.Sound;
+                FileName = _extInfo.FileDesc;
+                ExtInfo = $"{AtKit.GetFileSizeDesc(_extInfo.Length)}\r\n{_extInfo.Uploader}\r\n{_extInfo.Date}";
+            }
+            else if (FileFilter.UwpVideo.Contains(p_ext))
+            {
+                FileType = FileItemType.Video;
+                ExtInfo = _extInfo.FileDesc;
+            }
+            else
+            {
+                UpdateIcon(p_ext);
+                ExtInfo = $"{_extInfo.FileDesc}\r\n{AtKit.GetFileSizeDesc(_extInfo.Length)}  {_extInfo.Uploader}\r\n{_extInfo.Date}";
             }
 
             if (_loaded)
                 UpdateCachedFlag();
-            ExtInfo = $"{_extInfo.FileDesc}  {AtKit.GetFileSizeDesc(_extInfo.Length)}\r\n{_extInfo.Uploader}\r\n{_extInfo.Date}";
         }
 
         /// <summary>
@@ -827,31 +822,31 @@ namespace Dt.Base
             {
                 case ".doc":
                 case ".docx":
-                    Icon = AtRes.GetIconChar(Icons.审核);
+                    Icon = AtRes.GetIconChar(Icons.Word);
                     break;
                 case ".xls":
                 case ".xlsx":
-                    Icon = AtRes.GetIconChar(Icons.审核);
+                    Icon = AtRes.GetIconChar(Icons.Excel);
                     break;
                 case ".zip":
-                    Icon = AtRes.GetIconChar(Icons.审核);
+                    Icon = AtRes.GetIconChar(Icons.Zip);
                     break;
                 case ".rar":
-                    Icon = AtRes.GetIconChar(Icons.审核);
+                    Icon = AtRes.GetIconChar(Icons.Rar);
                     break;
                 case ".txt":
-                    Icon = AtRes.GetIconChar(Icons.审核);
+                    Icon = AtRes.GetIconChar(Icons.文件);
                     break;
                 case ".ppt":
                 case ".pptx":
-                    Icon = AtRes.GetIconChar(Icons.审核);
+                    Icon = AtRes.GetIconChar(Icons.Ppt);
                     break;
                 case ".htm":
                 case ".html":
-                    Icon = AtRes.GetIconChar(Icons.审核);
+                    Icon = AtRes.GetIconChar(Icons.Html);
                     break;
                 case ".exe":
-                    Icon = AtRes.GetIconChar(Icons.审核);
+                    Icon = AtRes.GetIconChar(Icons.Exe);
                     break;
                 default:
                     Icon = AtRes.GetIconChar(Icons.文件);
@@ -877,45 +872,6 @@ namespace Dt.Base
         #endregion
 
         #region 内部方法
-        /// <summary>
-        /// 播放声音或视频
-        /// </summary>
-        /// <param name="p_file">待播放文件</param>
-        async void Play(StorageFile p_file)
-        {
-            if (_playerHost == this || p_file == null)
-                return;
-
-            if (_player == null)
-            {
-                // 初始化播放器
-                _player = new MediaElement();
-                _player.AutoPlay = true;
-                _player.MediaEnded += (sender, e) => StopPlayer();
-                _player.MediaFailed += (sender, e) => StopPlayer();
-
-                // 自定义播放器内容
-                _player.AreTransportControlsEnabled = true;
-                var con = _player.TransportControls;
-                con.IsCompact = true;
-                con.IsVolumeButtonVisible = false;
-                con.IsVolumeEnabled = false;
-                con.IsZoomButtonVisible = false;
-                con.IsZoomEnabled = false;
-            }
-            else
-            {
-                StopPlayer();
-            }
-
-            _player.Height = ActualHeight;
-            _player.TransportControls.IsFullWindowButtonVisible = (FileType == FileItemType.Video);
-            var stream = await p_file.OpenAsync(FileAccessMode.Read);
-            _player.SetSource(stream, p_file.FileType);
-            _playerHost = this;
-            MediaPlayer = _player;
-        }
-
         string GetFileName()
         {
             if (!string.IsNullOrEmpty(ID))
@@ -963,18 +919,93 @@ namespace Dt.Base
             }
             return _extInfo.FileDesc;
         }
+        #endregion
 
+        #region 播放音视频
         /// <summary>
-        /// 关闭卸载播放器
+        /// 播放声音或视频
         /// </summary>
-        static void StopPlayer()
+        /// <param name="p_file">待播放文件</param>
+        async void Play(string p_file)
+        {
+            if (_playerHost == this)
+            {
+                var player = _mediaPlayer.MediaPlayer;
+                if (player.PlaybackSession.PlaybackState == Windows.Media.Playback.MediaPlaybackState.Playing)
+                {
+                    _mediaPlayer.AreTransportControlsEnabled = true;
+                    player.Pause();
+                }
+                else if (player.PlaybackSession.PlaybackState == Windows.Media.Playback.MediaPlaybackState.Paused)
+                {
+                    _mediaPlayer.AreTransportControlsEnabled = false;
+                    player.Play();
+                }
+                return;
+            }
+
+            if (_mediaPlayer == null)
+            {
+                // 初始化播放器
+                _mediaPlayer = new MediaPlayerElement();
+                _mediaPlayer.AutoPlay = true;
+
+                var player = _mediaPlayer.MediaPlayer;
+                if (player == null)
+                {
+                    player = new Windows.Media.Playback.MediaPlayer();
+                    _mediaPlayer.SetMediaPlayer(player);
+                }
+                player.MediaEnded += (sender, e) => StopPlayer();
+                player.MediaFailed += (sender, e) => StopPlayer();
+
+                // 自定义播放器内容
+                //_mediaPlayer.AreTransportControlsEnabled = true;
+                //var con = _mediaPlayer.TransportControls;
+                //con.IsCompact = true;
+                //con.IsVolumeButtonVisible = false;
+                //con.IsVolumeEnabled = false;
+                //con.IsZoomButtonVisible = false;
+                //con.IsZoomEnabled = false;
+            }
+            else
+            {
+                await StopPlayer();
+            }
+
+            LoadPlayer();
+            _mediaPlayer.Source = MediaSource.CreateFromUri(new Uri(p_file));
+        }
+
+        void LoadPlayer()
+        {
+            if (_rootGrid != null
+                && _rootGrid.Children[_rootGrid.Children.Count - 1] != _mediaPlayer)
+            {
+                _mediaPlayer.Height = ActualHeight;
+                _rootGrid.Children.Add(_mediaPlayer);
+                _playerHost = this;
+            }
+        }
+
+        Task UnloadPlayer()
+        {
+            return Dispatcher.RunAsync(CoreDispatcherPriority.Normal, new DispatchedHandler(() =>
+            {
+                if (_rootGrid != null
+                    && _rootGrid.Children[_rootGrid.Children.Count - 1] == _mediaPlayer)
+                {
+                    _rootGrid.Children.RemoveAt(_rootGrid.Children.Count - 1);
+                }
+                _playerHost = null;
+            })).AsTask();
+        }
+
+        static Task StopPlayer()
         {
             if (_playerHost != null)
-            {
-                _player.Stop();
-                _playerHost.MediaPlayer = null;
-                _playerHost = null;
-            }
+                return _playerHost.UnloadPlayer();
+            return Task.CompletedTask;
         }
         #endregion
 
@@ -1013,31 +1044,6 @@ namespace Dt.Base
             p_writer.WriteStringValue(_extInfo.Uploader);
             p_writer.WriteStringValue(_extInfo.Date);
             p_writer.WriteEndArray();
-        }
-        #endregion
-
-        #region 下载进度
-        /// <summary>
-        /// 下载进度回调
-        /// </summary>
-        /// <param name="p_bytesStep"></param>
-        /// <param name="p_bytesSent"></param>
-        /// <param name="p_totalBytesToSend"></param>
-        async void OnDownloadProgress(long p_bytesStep, long p_bytesSent, long p_totalBytesToSend)
-        {
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, new DispatchedHandler(() =>
-            {
-                double percent = p_bytesSent * 100 / p_totalBytesToSend;
-                Percent = string.Format("{0}%", percent);
-                ProgressWidth = Math.Ceiling(percent / 100 * ActualWidth);
-
-                // 完成
-                if (p_bytesStep == 0 && p_bytesSent == p_totalBytesToSend)
-                {
-                    State = FileItemState.None;
-                    ClearValue(PercentProperty);
-                }
-            }));
         }
         #endregion
     }

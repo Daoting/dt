@@ -18,9 +18,10 @@ namespace Dt.Sample
 {
     public sealed partial class IconDemo : Win
     {
-        const int ItemWidth = 50;
-        const int ItemHeight = 80;
+        const int ItemWidth = 70;
+        const int ItemHeight = 100;
         List<StackPanel> _icons = new List<StackPanel>();
+
         public IconDemo()
         {
             InitializeComponent();
@@ -99,7 +100,7 @@ namespace Dt.Sample
                 if (string.IsNullOrEmpty(tmpIcon))
                     continue;
 
-                StackPanel stackPanel = new StackPanel() { Orientation = Orientation.Vertical };
+                StackPanel stackPanel = new StackPanel() { Orientation = Orientation.Vertical, VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Center };
                 TextBlock tName = new TextBlock() { Text = item, FontSize = 12 };
                 TextBlock tIcon = new TextBlock() { Text = tmpIcon, Style = AtRes.字符, FontSize = 40 };
                 TextBlock tCode = new TextBlock() { Text = Convert.ToString((Int32)tmpIcon.ToCharArray()[0], 16), FontSize = 12 };
@@ -115,12 +116,13 @@ namespace Dt.Sample
         /// </summary>
         void GenColmns()
         {
-            if (ActualWidth <= 0)
+            double width = ActualWidth - 20;
+            if (width <= 0)
                 return;
 
             _container.ColumnDefinitions.Clear();
-            int colCount = (int)(ActualWidth / (ItemWidth + _container.ColumnSpacing));
-            double colWidth = ActualWidth / colCount - _container.ColumnSpacing;
+            int colCount = (int)(width / ItemWidth);
+            double colWidth = width / colCount;
             for (int i = 0; i < colCount; i++)
             {
                 _container.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(colWidth) });

@@ -53,10 +53,10 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置是否允许多个图像文件，默认false
         /// </summary>
-        public bool AllowMultiple
+        public int MaxFileCount
         {
-            get { return _fl.AllowMultiple; }
-            set { _fl.AllowMultiple = value; }
+            get { return _fl.MaxFileCount; }
+            set { _fl.MaxFileCount = value; }
         }
 
         #region 重写方法

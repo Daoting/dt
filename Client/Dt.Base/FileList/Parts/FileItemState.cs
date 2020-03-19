@@ -9,12 +9,12 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base.FileLists
 {
     /// <summary>
     /// 上传下载文件的状态
     /// </summary>
-    public enum FileItemState
+    enum FileItemState
     {
         /// <summary>
         /// 普通状态，无正在上传下载

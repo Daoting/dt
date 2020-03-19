@@ -3,8 +3,8 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base">
-    
-    <ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalScrollMode="Auto">
-        <Grid x:Name="_container" Margin="10" ColumnSpacing="1" RowSpacing="1"/>
+
+    <ScrollViewer HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
+        <Grid x:Name="_container" Margin="10" />
     </ScrollViewer>
 </a:Win>

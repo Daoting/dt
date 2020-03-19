@@ -9,11 +9,13 @@
         <a:Tabs>
             <a:Tab Title="格">
                 <a:Fv x:Name="_fv">
-                    <a:CBar Title="文件格" />
-                    <a:CFile ID="file1" Title="单个文件" RowSpan="2" />
-                    
-                    <a:CBar Title="图像格" />
-                    <a:CImage ID="img1" Title="图像" />
+                    <a:CFile ID="file0" Title="无文件" />
+                    <a:CFile ID="file1" Title="单个文件" />
+                    <a:CFile ID="file2" Title="多文件" />
+                    <!--<a:CFile ID="file3" Title="多类型文件" />-->
+
+                    <!--<a:CBar Title="图像格" />
+                    <a:CImage ID="img1" Title="图像" />-->
                 </a:Fv>
             </a:Tab>
         </a:Tabs>

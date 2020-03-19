@@ -35,7 +35,6 @@ namespace Dt.Base
     {
         #region 成员变量
         readonly FileList _fl;
-        FileBoxDlg _dlg;
         #endregion
 
         #region 构造方法
@@ -43,16 +42,18 @@ namespace Dt.Base
         {
             DefaultStyleKey = typeof(CFile);
             _fl = new FileList();
+            // 自动行高
+            RowSpan = -1;
         }
         #endregion
 
         /// <summary>
         /// 获取设置是否允许多个图像文件，默认false
         /// </summary>
-        public bool AllowMultiple
+        public int MaxFileCount
         {
-            get { return _fl.AllowMultiple; }
-            set { _fl.AllowMultiple = value; }
+            get { return _fl.MaxFileCount; }
+            set { _fl.MaxFileCount = value; }
         }
 
         #region 重写方法
@@ -60,7 +61,8 @@ namespace Dt.Base
         {
             base.OnApplyTemplate();
 
-            var grid = (Grid)GetTemplateChild("Grid");
+            var grid = (Grid)GetTemplateChild("RootGrid");
+            Grid.SetRow(_fl, 1);
             grid.Children.Add(_fl);
         }
 
@@ -69,5 +71,6 @@ namespace Dt.Base
             _fl.SetBinding(FileList.DataProperty, ValBinding);
         }
         #endregion
+
     }
 }

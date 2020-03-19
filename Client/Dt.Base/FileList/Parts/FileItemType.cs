@@ -9,12 +9,12 @@
 #region 引用命名
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base.FileLists
 {
     /// <summary>
     /// 文件种类
     /// </summary>
-    public enum FileItemType
+    enum FileItemType
     {
         /// <summary>
         /// 文件

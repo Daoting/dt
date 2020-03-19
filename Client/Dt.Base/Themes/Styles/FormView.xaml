@@ -241,24 +241,31 @@
     <!--CFile-->
     <Style TargetType="a:CFile">
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
-        <Setter Property="Background" Value="{StaticResource 默认背景}" />
+        <Setter Property="Background" Value="{StaticResource 浅灰背景}" />
+        <Setter Property="BorderBrush" Value="{StaticResource 浅灰边框}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="a:CFile">
-                    <fv:CellPanel x:Name="Panel" Background="{TemplateBinding Background}">
-                        <Grid x:Name="Grid" Background="Transparent">
+                    <Grid x:Name="RootGrid" Background="White" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" Margin="0,0,-1,-1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Grid BorderBrush="{TemplateBinding BorderBrush}"
+                              BorderThickness="0,0,0,1"
+                              Margin="0,0,0,-1"
+                              Background="{TemplateBinding Background}"
+                              Height="{StaticResource RowOuterHeight}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Text="&#xE086;"
-                                       FontFamily="{StaticResource IconFont}"
-                                       FontSize="20"
-                                       Margin="10,0,10,0"
-                                       VerticalAlignment="Center"
-                                       Grid.Column="1" />
+                            <TextBlock Text="{TemplateBinding Title}" Margin="10,0,0,0" VerticalAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                            <StackPanel Orientation="Horizontal" Grid.Column="1">
+                                <Button Content="&#xE080;" Style="{StaticResource 字符按钮}" />
+                            </StackPanel>
                         </Grid>
-                    </fv:CellPanel>
+                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

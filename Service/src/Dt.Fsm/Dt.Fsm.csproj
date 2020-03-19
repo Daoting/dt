@@ -12,10 +12,10 @@
   <ItemGroup>
     <None Remove="etc\drive\photo\1.jpg" />
     <None Remove="etc\drive\photo\Logon.wav" />
+    <None Remove="etc\drive\photo\mov-t.jpg" />
     <None Remove="etc\drive\photo\mov.mp4" />
     <None Remove="etc\drive\photo\profilephoto.jpg" />
     <None Remove="etc\drive\photo\文本文档.txt" />
-    <None Remove="etc\drive\photo\苍蝇.wmv" />
     <None Remove="etc\drive\photo\项目文档.docx" />
   </ItemGroup>
 
@@ -26,6 +26,9 @@
     <Content Include="etc\drive\photo\Logon.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="etc\drive\photo\mov-t.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="etc\drive\photo\mov.mp4">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -33,9 +36,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="etc\drive\photo\文本文档.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="etc\drive\photo\苍蝇.wmv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="etc\drive\photo\项目文档.docx">

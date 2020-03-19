@@ -236,6 +236,13 @@ namespace Dt.Base
         导出,
         向下,
         向上,
-        等等
+        等等,
+        Word,
+        Excel,
+        Rar,
+        Zip,
+        Ppt,
+        Html,
+        Exe
     }
 }

@@ -146,9 +146,9 @@ namespace Dt.Sample
                 },
                 new DataCmd
                 {
-                    Title = "文件与图像",
-                    Note = "文件选择、上传下载文件、不同类型图像资源",
-                    Tag = typeof(FileAndImgHome),
+                    Title = "文件",
+                    Note = "跨平台文件选择、上传下载文件、不同类型图像资源",
+                    Tag = typeof(FileHome),
                 },
                 new DataCmd
                 {

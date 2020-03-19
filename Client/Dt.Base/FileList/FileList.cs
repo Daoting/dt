@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Base.FileLists;
 using Dt.Base.Transfer;
 using Dt.Core;
 using System;
@@ -36,11 +37,11 @@ namespace Dt.Base
             typeof(FileList),
             new PropertyMetadata(null, OnDataPropertyChanged));
 
-        public static readonly DependencyProperty AllowMultipleProperty = DependencyProperty.Register(
-            "AllowMultiple",
-            typeof(bool),
+        public static readonly DependencyProperty MaxFileCountProperty = DependencyProperty.Register(
+            "MaxFileCount",
+            typeof(int),
             typeof(FileList),
-            new PropertyMetadata(true));
+            new PropertyMetadata(int.MaxValue));
 
         public static readonly DependencyProperty FixedVolumeProperty = DependencyProperty.Register(
             "FixedVolume",
@@ -48,16 +49,39 @@ namespace Dt.Base
             typeof(FileList),
             new PropertyMetadata(null));
 
+        public static readonly DependencyProperty ColCountProperty = DependencyProperty.Register(
+            "ColCount",
+            typeof(int),
+            typeof(FileList),
+            new PropertyMetadata(1, OnRefreshPanel));
+
+        public static readonly DependencyProperty ItemPaddingProperty = DependencyProperty.Register(
+            "ItemPadding",
+            typeof(Thickness),
+            typeof(FileList),
+            new PropertyMetadata(new Thickness(0)));
+
+        public static readonly DependencyProperty ImageHeightProperty = DependencyProperty.Register(
+            "ImageHeight",
+            typeof(double),
+            typeof(FileList),
+            new PropertyMetadata(82d, OnRefreshPanel));
+
         static void OnDataPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             FileList ft = (FileList)d;
             if (!ft._lockData)
                 ft.ReadData((string)e.NewValue);
         }
+
+        static void OnRefreshPanel(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((FileList)d)._pnl.InvalidateMeasure();
+        }
         #endregion
 
         #region 成员变量
-        readonly StackPanel _pnl;
+        readonly FileListPanel _pnl;
         bool _lockData;
         CancellationTokenSource _cts;
         UpdateFileCmd _cmdUpdate;
@@ -81,7 +105,7 @@ namespace Dt.Base
         public FileList()
         {
             DefaultStyleKey = typeof(FileList);
-            _pnl = new StackPanel();
+            _pnl = new FileListPanel(this);
         }
         #endregion
 
@@ -113,12 +137,12 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置是否允许多文件，只在文件选择时控制
+        /// 获取设置文件数量上限，默认int.MaxValue
         /// </summary>
-        public bool AllowMultiple
+        public int MaxFileCount
         {
-            get { return (bool)GetValue(AllowMultipleProperty); }
-            set { SetValue(AllowMultipleProperty, value); }
+            get { return (int)GetValue(MaxFileCountProperty); }
+            set { SetValue(MaxFileCountProperty, value); }
         }
 
         /// <summary>
@@ -131,6 +155,33 @@ namespace Dt.Base
         }
 
         /// <summary>
+        /// 获取设置列数，默认1列
+        /// </summary>
+        public int ColCount
+        {
+            get { return (int)GetValue(ColCountProperty); }
+            set { SetValue(ColCountProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置项的内边距，默认0
+        /// </summary>
+        public Thickness ItemPadding
+        {
+            get { return (Thickness)GetValue(ItemPaddingProperty); }
+            set { SetValue(ItemPaddingProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置图像的显示高度，默认82，0表示和宽度相同
+        /// </summary>
+        public double ImageHeight
+        {
+            get { return (double)GetValue(ImageHeightProperty); }
+            set { SetValue(ImageHeightProperty, value); }
+        }
+
+        /// <summary>
         /// 获取当前选择的文件
         /// </summary>
         public FileItem Current { get; internal set; }
@@ -138,7 +189,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取面板，内部绑定用
         /// </summary>
-        public StackPanel Panel
+        public FileListPanel Panel
         {
             get { return _pnl; }
         }
@@ -373,6 +424,12 @@ namespace Dt.Base
                 || p_files.Contains(null))
                 return;
 
+            if (p_files.Count + _pnl.Children.Count > MaxFileCount)
+            {
+                AtKit.Warn($"最多可上传 {MaxFileCount} 个文件！");
+                return;
+            }
+
             var overlength = (from f in p_files
                               where f.Size > AtKit.GB
                               select f).Any();
@@ -468,7 +525,7 @@ namespace Dt.Base
 
         async Task AppendFile(Func<Task<List<FileData>>> p_funMulti, Func<Task<FileData>> p_funSingle)
         {
-            if (AllowMultiple)
+            if (MaxFileCount > 1)
             {
                 var files = await p_funMulti();
                 if (files != null && files.Count > 0)
