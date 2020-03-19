@@ -38,13 +38,15 @@
                         <Button Content="删除上传历史Cookie" Click="OnClear" />
                     </StackPanel>
                     <a:CNum Title="列数" ID="ColCount" IsInteger="True" Minimum="1" />
-                    <StackPanel Orientation="Horizontal">
-                        <Button Content="增加项边距" Click="OnAddPadding" />
-                        <Button Content="减小项边距" Click="OnDelPadding" />
-                    </StackPanel>
-                    <a:CNum Title="图像高度" ID="ImageHeight" Minimum="0" />
+                    
                     <a:CNum Title="文件数量上限" ID="MaxFileCount" IsInteger="True" Minimum="1" />
                     <a:CText Title="固定卷名" ID="FixedVolume" />
+                    <a:CBar Title="图像" />
+                    <a:CNum Title="图像高度" ID="ImageHeight" Minimum="0" />
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="增加图像边距" Click="OnAddPadding" />
+                        <Button Content="减小图像边距" Click="OnDelPadding" />
+                    </StackPanel>
                 </a:Fv>
             </a:Tab>
         </a:Tabs>

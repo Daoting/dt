@@ -177,7 +177,8 @@ namespace Dt.Base.FormView
                     {
                         // 自动行高，计算占用行数，uno中无法使用double.MaxValue！
                         cell.Measure(new Size(p_colWidth, CellMaxHeight));
-                        rowSpan = (int)Math.Ceiling(cell.DesiredSize.Height / AtRes.RowOuterHeight);
+                        // uno中高度莫名多出小数点后的
+                        rowSpan = (int)Math.Ceiling(Math.Floor(cell.DesiredSize.Height) / AtRes.RowOuterHeight);
                     }
 
                     // 测量

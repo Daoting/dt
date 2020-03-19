@@ -55,8 +55,8 @@ namespace Dt.Base
             typeof(FileList),
             new PropertyMetadata(1, OnRefreshPanel));
 
-        public static readonly DependencyProperty ItemPaddingProperty = DependencyProperty.Register(
-            "ItemPadding",
+        public static readonly DependencyProperty ImagePaddingProperty = DependencyProperty.Register(
+            "ImagePadding",
             typeof(Thickness),
             typeof(FileList),
             new PropertyMetadata(new Thickness(0)));
@@ -164,21 +164,21 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置项的内边距，默认0
-        /// </summary>
-        public Thickness ItemPadding
-        {
-            get { return (Thickness)GetValue(ItemPaddingProperty); }
-            set { SetValue(ItemPaddingProperty, value); }
-        }
-
-        /// <summary>
         /// 获取设置图像的显示高度，默认82，0表示和宽度相同
         /// </summary>
         public double ImageHeight
         {
             get { return (double)GetValue(ImageHeightProperty); }
             set { SetValue(ImageHeightProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置图像边距，默认0
+        /// </summary>
+        public Thickness ImagePadding
+        {
+            get { return (Thickness)GetValue(ImagePaddingProperty); }
+            set { SetValue(ImagePaddingProperty, value); }
         }
 
         /// <summary>

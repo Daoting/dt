@@ -387,8 +387,7 @@ namespace Dt.Base
         {
             base.OnPointerCaptureLost(e);
             _pointerID = null;
-            if (e.Pointer.PointerDeviceType != PointerDeviceType.Touch && this.ContainPoint(e.GetCurrentPoint(null).Position))
-                VisualStateManager.GoToState(this, "PointerOver", true);
+            VisualStateManager.GoToState(this, "Normal", true);
         }
 
         protected override void OnPointerExited(PointerRoutedEventArgs e)
@@ -396,13 +395,6 @@ namespace Dt.Base
             base.OnPointerExited(e);
             if (_pointerID != e.Pointer.PointerId)
                 VisualStateManager.GoToState(this, "Normal", true);
-        }
-
-        protected override void OnHolding(HoldingRoutedEventArgs e)
-        {
-            base.OnHolding(e);
-            if (e.HoldingState == HoldingState.Started)
-                Owner.Current = this;
         }
 
         protected override void OnTapped(TappedRoutedEventArgs e)
@@ -426,12 +418,6 @@ namespace Dt.Base
                     }
                     break;
             }
-        }
-
-        protected override void OnRightTapped(RightTappedRoutedEventArgs e)
-        {
-            base.OnRightTapped(e);
-            Owner.Current = this;
         }
         #endregion
 

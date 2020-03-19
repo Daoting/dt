@@ -48,15 +48,15 @@ namespace Dt.Sample
 
         void OnAddPadding(object sender, RoutedEventArgs e)
         {
-            var padding = _fl.ItemPadding;
-            _fl.ItemPadding = new Thickness(padding.Top + 10);
+            var padding = _fl.ImagePadding;
+            _fl.ImagePadding = new Thickness(padding.Top + 10);
         }
 
         void OnDelPadding(object sender, RoutedEventArgs e)
         {
-            var padding = _fl.ItemPadding;
+            var padding = _fl.ImagePadding;
             if (padding.Top >= 10)
-                _fl.ItemPadding = new Thickness(padding.Top - 10);
+                _fl.ImagePadding = new Thickness(padding.Top - 10);
         }
     }
 }

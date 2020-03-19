@@ -37,8 +37,8 @@
     <!--FileItem默认模板-->
     <ControlTemplate x:Key="VirFileTemplate" TargetType="a:FileItem">
         <!--Fv中两行高度-->
-        <Grid x:Name="RootGrid" Background="{TemplateBinding Background}" MinHeight="82">
-            <Grid Padding="10,0,10,0" Margin="{Binding Owner.ItemPadding, RelativeSource={RelativeSource TemplatedParent}}" VerticalAlignment="Center">
+        <Grid x:Name="RootGrid" MinHeight="82" Background="{TemplateBinding Background}">
+            <Grid Padding="10,0,10,0" VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
@@ -61,9 +61,8 @@
                 <TextBlock x:Name="MsgBlock" Text="{TemplateBinding Percent}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <TextBlock x:Name="NoteBlock" Text="点击可取消" Foreground="White" FontSize="{StaticResource 小字号}" Margin="0,0,0,6" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
             </Grid>
-            <!--分隔线-->
-            <Border BorderBrush="{StaticResource 浅灰边框}" BorderThickness="0,0,0,1" Margin="0,0,0,-1" IsHitTestVisible="False" />
-
+            <Rectangle Stroke="{StaticResource 浅灰边框}" Margin="0,0,-1,-1" IsHitTestVisible="False" />
+            
             <VisualStateManager.VisualStateGroups>
                 <VisualStateGroup x:Name="CommonStates">
                     <VisualState x:Name="Normal" />
@@ -113,16 +112,15 @@
     <ControlTemplate x:Key="VirImageTemplate" TargetType="a:FileItem">
         <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
 
-            <Image Source="{TemplateBinding Bitmap}" Margin="{Binding Owner.ItemPadding, RelativeSource={RelativeSource TemplatedParent}}" />
+            <Image Source="{TemplateBinding Bitmap}" Margin="{Binding Owner.ImagePadding, RelativeSource={RelativeSource TemplatedParent}}" />
             <!--上传下载状态-->
             <Grid x:Name="ProgressGrid" Visibility="Collapsed" Background="{StaticResource 深暗遮罩}">
                 <Rectangle x:Name="ProgressRect" Width="{TemplateBinding ProgressWidth}" Height="4" Fill="Red" StrokeThickness="0" HorizontalAlignment="Left" VerticalAlignment="Top" IsHitTestVisible="False"/>
                 <TextBlock x:Name="MsgBlock" Text="{TemplateBinding Percent}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <TextBlock x:Name="NoteBlock" Text="点击可取消" Foreground="White" FontSize="{StaticResource 小字号}" Margin="0,0,0,6" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
             </Grid>
-            <!--分隔线-->
-            <Border BorderBrush="{StaticResource 浅灰边框}" BorderThickness="0,0,0,1" IsHitTestVisible="False"/>
-
+            <Rectangle Stroke="{StaticResource 浅灰边框}" Margin="0,0,-1,-1" IsHitTestVisible="False" />
+            
             <VisualStateManager.VisualStateGroups>
                 <VisualStateGroup x:Name="CommonStates">
                     <VisualState x:Name="Normal" />
@@ -164,12 +162,7 @@
     <ControlTemplate x:Key="VirVideoTemplate" TargetType="a:FileItem">
         <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
             <!--视频主流比例-->
-            <Grid Width="327"
-                  Height="184"
-                  Margin="{Binding Owner.ItemPadding, RelativeSource={RelativeSource TemplatedParent}}"
-                  Background="Black"
-                  VerticalAlignment="Center"
-                  HorizontalAlignment="Center">
+            <Grid Width="327" Height="184" Background="Black" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <Image Source="{TemplateBinding Bitmap}" />
                 <Grid Width="60" Height="60" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Ellipse Stroke="White" StrokeThickness="2" IsHitTestVisible="False" />
@@ -183,9 +176,8 @@
                 <TextBlock x:Name="MsgBlock" Text="{TemplateBinding Percent}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <TextBlock x:Name="NoteBlock" Text="点击可取消" Foreground="White" FontSize="{StaticResource 小字号}" Margin="0,0,0,6" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
             </Grid>
-            <!--分隔线-->
-            <Border BorderBrush="{StaticResource 浅灰边框}" BorderThickness="0,0,0,1" IsHitTestVisible="False"/>
-
+            <Rectangle Stroke="{StaticResource 浅灰边框}" Margin="0,0,-1,-1" IsHitTestVisible="False" />
+            
             <VisualStateManager.VisualStateGroups>
                 <VisualStateGroup x:Name="CommonStates">
                     <VisualState x:Name="Normal" />

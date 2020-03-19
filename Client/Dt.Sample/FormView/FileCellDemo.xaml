@@ -10,10 +10,10 @@
             <a:Tab Title="格">
                 <a:Fv x:Name="_fv">
                     <a:CFile ID="file0" Title="无文件" />
+                    <a:CText ID="txt" Title="文本框" />
                     <a:CFile ID="file1" Title="单个文件" />
                     <a:CFile ID="file2" Title="多文件" />
-                    <!--<a:CFile ID="file3" Title="多类型文件" />-->
-
+                    <a:CFile ID="file3" Title="多图像" ImageHeight="0" ColCount="2" />
                     <!--<a:CBar Title="图像格" />
                     <a:CImage ID="img1" Title="图像" />-->
                 </a:Fv>
