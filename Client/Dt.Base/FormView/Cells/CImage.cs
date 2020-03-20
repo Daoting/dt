@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Dt.Base.FormView;
+using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -33,6 +34,8 @@ namespace Dt.Base
             _fl.MaxFileCount = 1;
             // 确保无图像时保证高度
             _fl.MinHeight = _fl.ImageHeight;
+            // 凑左上边框1
+            _fl.Margin = new Thickness(-1, -1, 0, 0);
 
             // 自动行高
             RowSpan = -1;
@@ -84,6 +87,13 @@ namespace Dt.Base
 
             var grid = (Grid)GetTemplateChild("Grid");
             grid.Children.Add(_fl);
+
+            var btn = (Button)GetTemplateChild("BtnAdd");
+            if (btn != null)
+            {
+                btn.Click -= OnAddImage;
+                btn.Click += OnAddImage;
+            }
         }
 
         protected override void OnPointerPressed(PointerRoutedEventArgs e)
@@ -98,5 +108,11 @@ namespace Dt.Base
             _fl.SetBinding(FileList.DataProperty, ValBinding);
         }
         #endregion
+
+
+        void OnAddImage(object sender, RoutedEventArgs e)
+        {
+            _fl.AddImage();
+        }
     }
 }

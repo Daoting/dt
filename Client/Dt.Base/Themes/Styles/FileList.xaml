@@ -24,7 +24,6 @@
 
     <!--FileItem-->
     <Style TargetType="a:FileItem">
-        <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Template" Value="{StaticResource VirFileTemplate}" />
     </Style>
 
@@ -37,7 +36,7 @@
     <!--FileItem默认模板-->
     <ControlTemplate x:Key="VirFileTemplate" TargetType="a:FileItem">
         <!--Fv中两行高度-->
-        <Grid x:Name="RootGrid" MinHeight="82" Background="{TemplateBinding Background}">
+        <Grid x:Name="RootGrid" MinHeight="82" Background="Transparent">
             <Grid Padding="10,0,10,0" VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -110,9 +109,11 @@
 
     <!--FileItem图片模板-->
     <ControlTemplate x:Key="VirImageTemplate" TargetType="a:FileItem">
-        <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
+        <Grid x:Name="RootGrid">
             <TextBlock Text="&#xE054;" Foreground="{StaticResource 深灰边框}" FontFamily="{StaticResource IconFont}" FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" />
-            <Image Source="{TemplateBinding Bitmap}" Margin="{Binding Owner.ImagePadding, RelativeSource={RelativeSource TemplatedParent}}" />
+            <Grid x:Name="ContentGrid" Margin="{Binding Owner.ImagePadding, RelativeSource={RelativeSource TemplatedParent}}" Background="Transparent" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Image x:Name="Image" Source="{TemplateBinding Bitmap}" />
+            </Grid>
             <!--上传下载状态-->
             <Grid x:Name="ProgressGrid" Visibility="Collapsed" Background="{StaticResource 深暗遮罩}">
                 <Rectangle x:Name="ProgressRect" Width="{TemplateBinding ProgressWidth}" Height="4" Fill="Red" StrokeThickness="0" HorizontalAlignment="Left" VerticalAlignment="Top" IsHitTestVisible="False"/>
@@ -122,19 +123,6 @@
             <Rectangle Stroke="{StaticResource 浅灰边框}" Margin="0,0,-1,-1" IsHitTestVisible="False" />
             
             <VisualStateManager.VisualStateGroups>
-                <VisualStateGroup x:Name="CommonStates">
-                    <VisualState x:Name="Normal" />
-                    <VisualState x:Name="PointerOver">
-                        <VisualState.Setters>
-                            <Setter Target="RootGrid.Background" Value="{StaticResource 暗遮罩}" />
-                        </VisualState.Setters>
-                    </VisualState>
-                    <VisualState x:Name="Pressed">
-                        <VisualState.Setters>
-                            <Setter Target="RootGrid.Background" Value="{StaticResource 深暗遮罩}" />
-                        </VisualState.Setters>
-                    </VisualState>
-                </VisualStateGroup>
                 <VisualStateGroup x:Name="VirFileStates">
                     <VisualState x:Name="None" />
                     <VisualState x:Name="UploadWaiting">
@@ -154,15 +142,19 @@
                         </VisualState.Setters>
                     </VisualState>
                 </VisualStateGroup>
+                <VisualStateGroup x:Name="CachedStates">
+                    <VisualState x:Name="NoCache" />
+                    <VisualState x:Name="Cached" />
+                </VisualStateGroup>
             </VisualStateManager.VisualStateGroups>
         </Grid>
     </ControlTemplate>
 
     <!--FileItem视频模板-->
     <ControlTemplate x:Key="VirVideoTemplate" TargetType="a:FileItem">
-        <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
+        <Grid x:Name="RootGrid">
             <!--视频主流比例-->
-            <Grid x:Name="PlayerGrid" Width="327" Height="184" Margin="{Binding Owner.VideoPadding, RelativeSource={RelativeSource TemplatedParent}}" Background="Black" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Grid x:Name="ContentGrid" Width="327" Height="184" Margin="{Binding Owner.VideoPadding, RelativeSource={RelativeSource TemplatedParent}}" Background="Black" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <Image Source="{TemplateBinding Bitmap}" />
                 <Grid Width="60" Height="60" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Ellipse Stroke="White" StrokeThickness="2" IsHitTestVisible="False" />
@@ -179,11 +171,6 @@
             <Rectangle Stroke="{StaticResource 浅灰边框}" Margin="0,0,-1,-1" IsHitTestVisible="False" />
             
             <VisualStateManager.VisualStateGroups>
-                <VisualStateGroup x:Name="CommonStates">
-                    <VisualState x:Name="Normal" />
-                    <VisualState x:Name="PointerOver" />
-                    <VisualState x:Name="Pressed" />
-                </VisualStateGroup>
                 <VisualStateGroup x:Name="VirFileStates">
                     <VisualState x:Name="None" />
                     <VisualState x:Name="UploadWaiting">

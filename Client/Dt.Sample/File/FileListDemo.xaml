@@ -9,7 +9,14 @@
         <a:Tabs>
             <a:Tab Title="文件列表">
                 <ScrollViewer HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
-                    <a:FileList x:Name="_fl" UploadFinished="OnUploadFinished" />
+                    <a:FileList x:Name="_fl" UploadFinished="OnUploadFinished">
+                        <a:Ex.Menu>
+                            <a:Menu>
+                                <a:Mi ID="保存" Icon="保存" Cmd="{Binding CmdUpdate}" />
+                                <a:Mi ID="搜索" Icon="搜索" />
+                            </a:Menu>
+                        </a:Ex.Menu>
+                    </a:FileList>
                 </ScrollViewer>
             </a:Tab>
         </a:Tabs>

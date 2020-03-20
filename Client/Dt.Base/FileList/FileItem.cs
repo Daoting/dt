@@ -131,8 +131,15 @@ namespace Dt.Base
 
         readonly FileExtInfo _extInfo = new FileExtInfo();
         bool _loaded;
-        uint? _pointerID;
         CancellationTokenSource _ctsDownload;
+        uint? _pointerID;
+        Point _ptLast;
+
+        BaseCommand _cmdUpdate;
+        BaseCommand _cmdDelete;
+        BaseCommand _cmdDownload;
+        BaseCommand _cmdOpenFile;
+        BaseCommand _cmdSaveAs;
         #endregion
 
         #region 构造方法
@@ -159,6 +166,73 @@ namespace Dt.Base
         {
             get { return (string)GetValue(FileNameProperty); }
             set { SetValue(FileNameProperty, value); }
+        }
+        #endregion
+
+        #region 命令
+        /// <summary>
+        /// 获取更新文件命令
+        /// </summary>
+        public BaseCommand CmdUpdate
+        {
+            get
+            {
+                if (_cmdUpdate == null)
+                    _cmdUpdate = new BaseCommand((e) => UpdateFile());
+                return _cmdUpdate;
+            }
+        }
+
+        /// <summary>
+        /// 获取删除上传文件
+        /// </summary>
+        public BaseCommand CmdDelete
+        {
+            get
+            {
+                if (_cmdDelete == null)
+                    _cmdDelete = new BaseCommand((e) => _ = Delete());
+                return _cmdDelete;
+            }
+        }
+
+        /// <summary>
+        /// 获取打开文件命令
+        /// </summary>
+        public BaseCommand CmdOpen
+        {
+            get
+            {
+                if (_cmdOpenFile == null)
+                    _cmdOpenFile = new BaseCommand((e) => Open());
+                return _cmdOpenFile;
+            }
+        }
+
+        /// <summary>
+        /// 获取另存为命令
+        /// </summary>
+        public BaseCommand CmdSaveAs
+        {
+            get
+            {
+                if (_cmdSaveAs == null)
+                    _cmdSaveAs = new BaseCommand((e) => SaveAs());
+                return _cmdSaveAs;
+            }
+        }
+
+        /// <summary>
+        /// 获取下载命令
+        /// </summary>
+        public BaseCommand CmdDownload
+        {
+            get
+            {
+                if (_cmdDownload == null)
+                    _cmdDownload = new BaseCommand((e) => _ = Download());
+                return _cmdDownload;
+            }
         }
         #endregion
 
@@ -282,6 +356,19 @@ namespace Dt.Base
         }
 
         /// <summary>
+        /// 更新文件
+        /// </summary>
+        public async void UpdateFile()
+        {
+            if (State != FileItemState.None)
+                return;
+
+            var file = await FileKit.PickFile();
+            if (file != null)
+                await Owner.UpdateFile(file, this);
+        }
+
+        /// <summary>
         /// 文件另存为
         /// 过程和打开文件相同，先检查本地
         /// </summary>
@@ -336,7 +423,7 @@ namespace Dt.Base
 
             bool suc = await AtFile.Delete(ID);
             if (suc)
-                Owner.RemoveChild(this);
+                Owner.AfterDeleteItem(this);
             else
                 AtKit.Warn("删除失败！");
             return suc;
@@ -349,73 +436,37 @@ namespace Dt.Base
             base.OnApplyTemplate();
 
             _loaded = true;
+
+            // 上下文菜单
+            Menu menu = Ex.GetMenu(Owner);
+            if (menu != null)
+            {
+                var btn = AttachContextMenu(menu);
+                if (btn != null)
+                {
+                    Grid grid = (Grid)GetTemplateChild("RootGrid");
+                    grid.Children.Insert(grid.Children.Count - 2, btn);
+                }
+            }
+
+            // 交互事件
+            if (FileType == FileItemType.Image || FileType == FileItemType.Video)
+            {
+                Grid pg = (Grid)GetTemplateChild("ContentGrid");
+                pg.Tapped += OnTapped;
+            }
+            else
+            {
+                Grid rg = (Grid)GetTemplateChild("RootGrid");
+                rg.PointerEntered += OnPointerEntered;
+                rg.PointerPressed += OnPointerPressed;
+                rg.PointerReleased += OnPointerReleased;
+                rg.PointerCaptureLost += OnPointerCaptureLost;
+                rg.PointerExited += OnPointerExited;
+            }
+            
             VisualStateManager.GoToState(this, State.ToString(), true);
             UpdateCachedFlag();
-        }
-
-        protected override void OnPointerEntered(PointerRoutedEventArgs e)
-        {
-            base.OnPointerEntered(e);
-            if (_pointerID != e.Pointer.PointerId)
-                VisualStateManager.GoToState(this, "PointerOver", true);
-        }
-
-        protected override void OnPointerPressed(PointerRoutedEventArgs e)
-        {
-            base.OnPointerPressed(e);
-            if (CapturePointer(e.Pointer))
-            {
-                e.Handled = true;
-                _pointerID = e.Pointer.PointerId;
-                VisualStateManager.GoToState(this, "Pressed", true);
-            }
-        }
-
-        protected override void OnPointerReleased(PointerRoutedEventArgs e)
-        {
-            base.OnPointerReleased(e);
-            if (_pointerID == e.Pointer.PointerId)
-            {
-                ReleasePointerCapture(e.Pointer);
-                e.Handled = true;
-            }
-        }
-
-        protected override void OnPointerCaptureLost(PointerRoutedEventArgs e)
-        {
-            base.OnPointerCaptureLost(e);
-            _pointerID = null;
-            VisualStateManager.GoToState(this, "Normal", true);
-        }
-
-        protected override void OnPointerExited(PointerRoutedEventArgs e)
-        {
-            base.OnPointerExited(e);
-            if (_pointerID != e.Pointer.PointerId)
-                VisualStateManager.GoToState(this, "Normal", true);
-        }
-
-        protected override void OnTapped(TappedRoutedEventArgs e)
-        {
-            base.OnTapped(e);
-            switch (State)
-            {
-                case FileItemState.None:
-                    Open();
-                    break;
-                case FileItemState.UploadWaiting:
-                case FileItemState.Uploading:
-                    Owner.CancelTransfer();
-                    break;
-                case FileItemState.Downloading:
-                    if (_ctsDownload != null)
-                    {
-                        _ctsDownload.Cancel();
-                        _ctsDownload.Dispose();
-                        _ctsDownload = null;
-                    }
-                    break;
-            }
         }
         #endregion
 
@@ -905,6 +956,78 @@ namespace Dt.Base
         }
         #endregion
 
+        #region 交互事件
+        void TappedItem()
+        {
+            switch (State)
+            {
+                case FileItemState.None:
+                    Open();
+                    break;
+                case FileItemState.UploadWaiting:
+                case FileItemState.Uploading:
+                    Owner.CancelTransfer();
+                    break;
+                case FileItemState.Downloading:
+                    if (_ctsDownload != null)
+                    {
+                        _ctsDownload.Cancel();
+                        _ctsDownload.Dispose();
+                        _ctsDownload = null;
+                    }
+                    break;
+            }
+        }
+
+        void OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            TappedItem();
+        }
+
+        void OnPointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            VisualStateManager.GoToState(this, "PointerOver", true);
+        }
+
+        void OnPointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            // 右键无效
+            if (e.IsRightButton())
+                return;
+
+            if (((UIElement)sender).CapturePointer(e.Pointer))
+            {
+                e.Handled = true;
+                _pointerID = e.Pointer.PointerId;
+                _ptLast = e.GetCurrentPoint(null).Position;
+                VisualStateManager.GoToState(this, "Pressed", true);
+            }
+        }
+
+        void OnPointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+            if (_pointerID != e.Pointer.PointerId)
+                return;
+
+            e.Handled = true;
+            ((UIElement)sender).ReleasePointerCapture(e.Pointer);
+            _pointerID = null;
+            Point cur = e.GetCurrentPoint(null).Position;
+            if (Math.Abs(cur.X - _ptLast.X) < 6 && Math.Abs(cur.Y - _ptLast.Y) < 6)
+                TappedItem();
+        }
+
+        void OnPointerCaptureLost(object sender, PointerRoutedEventArgs e)
+        {
+            VisualStateManager.GoToState(this, "Normal", true);
+        }
+
+        void OnPointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            VisualStateManager.GoToState(this, "Normal", true);
+        }
+        #endregion
+
         #region 播放音视频
         /// <summary>
         /// 播放声音或视频
@@ -967,7 +1090,7 @@ namespace Dt.Base
 
         void LoadPlayer()
         {
-            Grid grid = (Grid)GetTemplateChild(FileType == FileItemType.Video ? "PlayerGrid" : "RootGrid");
+            Grid grid = (Grid)GetTemplateChild(FileType == FileItemType.Video ? "ContentGrid" : "RootGrid");
             if (grid != null
                 && grid.Children[grid.Children.Count - 1] != _mediaPlayer)
             {
@@ -981,7 +1104,7 @@ namespace Dt.Base
         {
             return Dispatcher.RunAsync(CoreDispatcherPriority.Normal, new DispatchedHandler(() =>
             {
-                Grid grid = (Grid)GetTemplateChild(FileType == FileItemType.Video ? "PlayerGrid" : "RootGrid");
+                Grid grid = (Grid)GetTemplateChild(FileType == FileItemType.Video ? "ContentGrid" : "RootGrid");
                 if (grid != null
                     && grid.Children[grid.Children.Count - 1] == _mediaPlayer)
                 {
@@ -996,6 +1119,73 @@ namespace Dt.Base
             if (_playerHost != null)
                 return _playerHost.UnloadPlayer();
             return Task.CompletedTask;
+        }
+        #endregion
+
+        #region 上下文菜单
+        /// <summary>
+        /// 附加上下文菜单触发事件
+        /// </summary>
+        /// <param name="p_menu"></param>
+        /// <returns></returns>
+        Button AttachContextMenu(Menu p_menu)
+        {
+            Button btn = null;
+            if (AtSys.IsPhoneUI)
+            {
+                // PhoneUI模式
+                if (p_menu.TouchTrigger == TouchTriggerEvent.Custom)
+                {
+                    btn = CreateMenuButton(p_menu);
+                }
+                else if (p_menu.TouchTrigger == TouchTriggerEvent.Holding)
+                {
+                    Holding += (s, e) =>
+                    {
+                        if (e.HoldingState == HoldingState.Started)
+                            OpenContextMenu(default);
+                    };
+                    // win上触摸模式使用鼠标时不触发Holding事件！
+                    if (AtSys.System == TargetSystem.Windows)
+                        RightTapped += (s, e) => OpenContextMenu(e.GetPosition(null));
+                }
+                else
+                {
+                    Tapped += (s, e) => OpenContextMenu(default);
+                }
+            }
+            else
+            {
+                // WindowsUI模式
+                if (p_menu.MouseTrigger == MouseTriggerEvent.RightTapped)
+                    RightTapped += (s, e) => OpenContextMenu(e.GetPosition(null));
+                else if (p_menu.MouseTrigger == MouseTriggerEvent.LeftTapped)
+                    Tapped += (s, e) => OpenContextMenu(e.GetPosition(null));
+                else
+                    btn = CreateMenuButton(p_menu);
+            }
+            return btn;
+        }
+
+        Button CreateMenuButton(Menu p_menu)
+        {
+            // 自定义按钮触发
+            var btn = new Button { Content = "\uE0DC", Style = AtRes.字符按钮, Foreground = AtRes.深灰边框, HorizontalAlignment = HorizontalAlignment.Right };
+            btn.Click += (s, e) => OpenContextMenu(new Point(), (Button)s);
+            if (AtSys.System == TargetSystem.Windows)
+                p_menu.WinPlacement = MenuPosition.OuterLeftTop;
+            return btn;
+        }
+
+        void OpenContextMenu(Point p_pos, FrameworkElement p_tgt = null)
+        {
+            Menu menu = Ex.GetMenu(Owner);
+            if (menu != null)
+            {
+                menu.TargetData = this;
+                menu.DataContext = this;
+                menu.OpenContextMenu(p_pos, p_tgt);
+            }
         }
         #endregion
 

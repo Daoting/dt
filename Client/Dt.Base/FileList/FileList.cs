@@ -8,7 +8,6 @@
 
 #region 引用命名
 using Dt.Base.FileLists;
-using Dt.Base.Transfer;
 using Dt.Core;
 using System;
 using System.Collections.Generic;
@@ -28,7 +27,7 @@ namespace Dt.Base
     /// <summary>
     /// 文件上传下载编辑器
     /// </summary>
-    public partial class FileList : Control
+    public partial class FileList : Control, IMenuHost
     {
         #region 静态成员
         public static readonly DependencyProperty DataProperty = DependencyProperty.Register(
@@ -90,11 +89,7 @@ namespace Dt.Base
         readonly FileListPanel _pnl;
         bool _lockData;
         CancellationTokenSource _cts;
-        UpdateFileCmd _cmdUpdate;
-        DeleteFileCmd _cmdDelete;
-        DownloadFileCmd _cmdDownload;
-        OpenFileCmd _cmdOpenFile;
-        SaveAsCmd _cmdSaveAs;
+        
         BaseCommand _cmdAddImage;
         BaseCommand _cmdAddVideo;
         BaseCommand _cmdAddAudio;
@@ -197,11 +192,6 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取当前选择的文件
-        /// </summary>
-        public FileItem Current { get; internal set; }
-
-        /// <summary>
         /// 获取面板，内部绑定用
         /// </summary>
         public FileListPanel Panel
@@ -225,71 +215,6 @@ namespace Dt.Base
         #endregion
 
         #region 命令
-        /// <summary>
-        /// 获取更新文件命令
-        /// </summary>
-        public UpdateFileCmd CmdUpdate
-        {
-            get
-            {
-                if (_cmdUpdate == null)
-                    _cmdUpdate = new UpdateFileCmd(this);
-                return _cmdUpdate;
-            }
-        }
-
-        /// <summary>
-        /// 获取删除上传文件
-        /// </summary>
-        public DeleteFileCmd CmdDelete
-        {
-            get
-            {
-                if (_cmdDelete == null)
-                    _cmdDelete = new DeleteFileCmd(this);
-                return _cmdDelete;
-            }
-        }
-
-        /// <summary>
-        /// 获取下载命令
-        /// </summary>
-        public DownloadFileCmd CmdDownload
-        {
-            get
-            {
-                if (_cmdDownload == null)
-                    _cmdDownload = new DownloadFileCmd(this);
-                return _cmdDownload;
-            }
-        }
-
-        /// <summary>
-        /// 获取打开文件命令
-        /// </summary>
-        public OpenFileCmd CmdOpen
-        {
-            get
-            {
-                if (_cmdOpenFile == null)
-                    _cmdOpenFile = new OpenFileCmd(this);
-                return _cmdOpenFile;
-            }
-        }
-
-        /// <summary>
-        /// 获取另存为命令
-        /// </summary>
-        public SaveAsCmd CmdSaveAs
-        {
-            get
-            {
-                if (_cmdSaveAs == null)
-                    _cmdSaveAs = new SaveAsCmd(this);
-                return _cmdSaveAs;
-            }
-        }
-
         /// <summary>
         /// 获取添加图片命令
         /// </summary>
@@ -587,49 +512,6 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 下载文件
-        /// </summary>
-        /// <param name="p_vf"></param>
-        public async void DownloadFile(FileItem p_vf)
-        {
-            if (p_vf != null && await p_vf.Download())
-                AtKit.Msg("下载成功！");
-        }
-
-        /// <summary>
-        /// 打开文件
-        /// </summary>
-        /// <param name="p_vf"></param>
-        public void OpenFile(FileItem p_vf)
-        {
-            if (p_vf != null)
-                p_vf.Open();
-        }
-
-        /// <summary>
-        /// 文件另存为
-        /// </summary>
-        /// <param name="p_vf"></param>
-        public void SaveAs(FileItem p_vf)
-        {
-            if (p_vf != null)
-                p_vf.SaveAs();
-        }
-
-        /// <summary>
-        /// 删除已上传的文件
-        /// </summary>
-        /// <param name="p_vf"></param>
-        public async void DeleteFile(FileItem p_vf)
-        {
-            if (p_vf != null && await p_vf.Delete())
-            {
-                WriteData();
-                Deleted?.Invoke(this, EventArgs.Empty);
-            }
-        }
-
-        /// <summary>
         /// 取消上传或下载
         /// </summary>
         internal void CancelTransfer()
@@ -646,11 +528,28 @@ namespace Dt.Base
         /// 移除子项
         /// </summary>
         /// <param name="p_vf"></param>
-        internal void RemoveChild(FileItem p_vf)
+        internal void AfterDeleteItem(FileItem p_vf)
         {
             _pnl.ChildrenTransitions = AtRes.AddDeleteTransition;
             _pnl.Children.Remove(p_vf);
             _pnl.ChildrenTransitions = null;
+
+            WriteData();
+            Deleted?.Invoke(this, EventArgs.Empty);
+        }
+        #endregion
+
+        #region IViewItemHost
+        /// <summary>
+        /// 切换上下文菜单或修改触发事件种类时通知宿主刷新
+        /// </summary>
+        void IMenuHost.UpdateContextMenu()
+        {
+            if (_pnl.Children.Count > 0 && ((FileItem)_pnl.Children[0]).IsLoaded)
+            {
+                // 重新加载所有项
+                ReadData(Data);
+            }
         }
         #endregion
 

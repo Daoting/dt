@@ -222,11 +222,11 @@ namespace Dt.Base.ListView
         Button CreateMenuButton(Menu p_menu)
         {
             // 自定义按钮触发
-            var _btnMenu = new Button { Content = "\uE0DC", Style = AtRes.字符按钮, Foreground = AtRes.深灰边框 };
-            _btnMenu.Click += (s, e) => OpenContextMenu(new Point(), (Button)s);
+            var btn = new Button { Content = "\uE0DC", Style = AtRes.字符按钮, Foreground = AtRes.深灰边框 };
+            btn.Click += (s, e) => OpenContextMenu(new Point(), (Button)s);
             if (AtSys.System == TargetSystem.Windows)
                 p_menu.WinPlacement = MenuPosition.OuterLeftTop;
-            return _btnMenu;
+            return btn;
         }
 
         void OnMenuClosed(object sender, EventArgs e)

@@ -71,5 +71,10 @@ namespace Dt.Sample
             if (padding.Top >= 10)
                 _fl.VideoPadding = new Thickness(padding.Top - 10);
         }
+
+        void OnSave(object sender, Mi e)
+        {
+
+        }
     }
 }
