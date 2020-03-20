@@ -130,7 +130,6 @@ namespace Dt.Base
         static FileItem _playerHost;
 
         readonly FileExtInfo _extInfo = new FileExtInfo();
-        Grid _rootGrid;
         bool _loaded;
         uint? _pointerID;
         CancellationTokenSource _ctsDownload;
@@ -350,7 +349,6 @@ namespace Dt.Base
             base.OnApplyTemplate();
 
             _loaded = true;
-            _rootGrid = (Grid)GetTemplateChild("RootGrid");
             VisualStateManager.GoToState(this, State.ToString(), true);
             UpdateCachedFlag();
         }
@@ -916,16 +914,19 @@ namespace Dt.Base
         {
             if (_playerHost == this)
             {
-                var player = _mediaPlayer.MediaPlayer;
-                if (player.PlaybackSession.PlaybackState == Windows.Media.Playback.MediaPlaybackState.Playing)
+                if (FileType == FileItemType.Video)
                 {
-                    _mediaPlayer.AreTransportControlsEnabled = true;
-                    player.Pause();
-                }
-                else if (player.PlaybackSession.PlaybackState == Windows.Media.Playback.MediaPlaybackState.Paused)
-                {
-                    _mediaPlayer.AreTransportControlsEnabled = false;
-                    player.Play();
+                    var player = _mediaPlayer.MediaPlayer;
+                    if (player.PlaybackSession.PlaybackState == Windows.Media.Playback.MediaPlaybackState.Playing)
+                    {
+                        _mediaPlayer.AreTransportControlsEnabled = true;
+                        player.Pause();
+                    }
+                    else if (player.PlaybackSession.PlaybackState == Windows.Media.Playback.MediaPlaybackState.Paused)
+                    {
+                        _mediaPlayer.AreTransportControlsEnabled = false;
+                        player.Play();
+                    }
                 }
                 return;
             }
@@ -959,17 +960,19 @@ namespace Dt.Base
                 await StopPlayer();
             }
 
+            _mediaPlayer.AreTransportControlsEnabled = (FileType == FileItemType.Sound);
             LoadPlayer();
             _mediaPlayer.Source = MediaSource.CreateFromUri(new Uri(p_file));
         }
 
         void LoadPlayer()
         {
-            if (_rootGrid != null
-                && _rootGrid.Children[_rootGrid.Children.Count - 1] != _mediaPlayer)
+            Grid grid = (Grid)GetTemplateChild(FileType == FileItemType.Video ? "PlayerGrid" : "RootGrid");
+            if (grid != null
+                && grid.Children[grid.Children.Count - 1] != _mediaPlayer)
             {
                 _mediaPlayer.Height = ActualHeight;
-                _rootGrid.Children.Add(_mediaPlayer);
+                grid.Children.Add(_mediaPlayer);
                 _playerHost = this;
             }
         }
@@ -978,10 +981,11 @@ namespace Dt.Base
         {
             return Dispatcher.RunAsync(CoreDispatcherPriority.Normal, new DispatchedHandler(() =>
             {
-                if (_rootGrid != null
-                    && _rootGrid.Children[_rootGrid.Children.Count - 1] == _mediaPlayer)
+                Grid grid = (Grid)GetTemplateChild(FileType == FileItemType.Video ? "PlayerGrid" : "RootGrid");
+                if (grid != null
+                    && grid.Children[grid.Children.Count - 1] == _mediaPlayer)
                 {
-                    _rootGrid.Children.RemoveAt(_rootGrid.Children.Count - 1);
+                    grid.Children.RemoveAt(grid.Children.Count - 1);
                 }
                 _playerHost = null;
             })).AsTask();

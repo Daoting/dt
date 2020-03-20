@@ -41,11 +41,14 @@
                     
                     <a:CNum Title="文件数量上限" ID="MaxFileCount" IsInteger="True" Minimum="1" />
                     <a:CText Title="固定卷名" ID="FixedVolume" />
-                    <a:CBar Title="图像" />
                     <a:CNum Title="图像高度" ID="ImageHeight" Minimum="0" />
                     <StackPanel Orientation="Horizontal">
                         <Button Content="增加图像边距" Click="OnAddPadding" />
                         <Button Content="减小图像边距" Click="OnDelPadding" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="增加视频边距" Click="OnAddVideoPadding" />
+                        <Button Content="减小视频边距" Click="OnDelVideoPadding" />
                     </StackPanel>
                 </a:Fv>
             </a:Tab>

@@ -221,16 +221,10 @@
                 <ControlTemplate TargetType="a:CImage">
                     <fv:CellPanel x:Name="Panel" Background="{TemplateBinding Background}">
                         <Grid x:Name="Grid" Background="Transparent">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Text="&#xE086;"
-                                       FontFamily="{StaticResource IconFont}"
-                                       FontSize="20"
-                                       Margin="10,0,10,0"
-                                       VerticalAlignment="Center"
-                                       Grid.Column="1" />
+                            <Button Content="&#xE080;"
+                                    Style="{StaticResource 字符按钮}"
+                                    HorizontalAlignment="Center"
+                                    Visibility="{Binding ReadOnlyBinding,Converter={StaticResource CvBoolToCollapsed},RelativeSource={RelativeSource TemplatedParent}}" />
                         </Grid>
                     </fv:CellPanel>
                 </ControlTemplate>

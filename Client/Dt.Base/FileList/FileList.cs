@@ -59,7 +59,13 @@ namespace Dt.Base
             "ImagePadding",
             typeof(Thickness),
             typeof(FileList),
-            new PropertyMetadata(new Thickness(0)));
+            new PropertyMetadata(new Thickness(6)));
+
+        public static readonly DependencyProperty VideoPaddingProperty = DependencyProperty.Register(
+            "VideoPadding",
+            typeof(Thickness),
+            typeof(FileList),
+            new PropertyMetadata(new Thickness(0, 10, 0, 11)));
 
         public static readonly DependencyProperty ImageHeightProperty = DependencyProperty.Register(
             "ImageHeight",
@@ -173,12 +179,21 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置图像边距，默认0
+        /// 获取设置图像边距，默认6
         /// </summary>
         public Thickness ImagePadding
         {
             get { return (Thickness)GetValue(ImagePaddingProperty); }
             set { SetValue(ImagePaddingProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置视频边距，默认10
+        /// </summary>
+        public Thickness VideoPadding
+        {
+            get { return (Thickness)GetValue(VideoPaddingProperty); }
+            set { SetValue(VideoPaddingProperty, value); }
         }
 
         /// <summary>

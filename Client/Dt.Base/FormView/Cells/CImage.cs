@@ -8,41 +8,32 @@
 
 #region 引用命名
 using Dt.Base.FormView;
-using Dt.Core;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Devices.Input;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Animation;
 #endregion
 
 namespace Dt.Base
 {
     /// <summary>
-    /// 文件格
+    /// 图像格
     /// </summary>
-    public partial class CFile : FvCell
+    public partial class CImage : FvCell
     {
         #region 成员变量
         readonly FileList _fl;
         #endregion
 
         #region 构造方法
-        public CFile()
+        public CImage()
         {
-            DefaultStyleKey = typeof(CFile);
+            DefaultStyleKey = typeof(CImage);
 
             _fl = new FileList();
+            _fl.MaxFileCount = 1;
+            // 确保无图像时保证高度
+            _fl.MinHeight = _fl.ImageHeight;
+
             // 自动行高
             RowSpan = -1;
         }
@@ -50,33 +41,29 @@ namespace Dt.Base
 
         #region 属性
         /// <summary>
-        /// 获取设置列数，默认1列
-        /// </summary>
-        [CellParam("每行文件数")]
-        public int ColCount
-        {
-            get { return _fl.ColCount; }
-            set { _fl.ColCount = value; }
-        }
-
-        /// <summary>
         /// 获取设置图像的显示高度，默认82，0表示和宽度相同
         /// </summary>
         [CellParam("图像高度")]
         public double ImageHeight
         {
             get { return _fl.ImageHeight; }
-            set { _fl.ImageHeight = value; }
+            set
+            {
+                if (value >= 0 && value != _fl.ImageHeight)
+                {
+                    _fl.MinHeight = value;
+                    _fl.ImageHeight = value;
+                }
+            }
         }
 
         /// <summary>
-        /// 获取设置文件数量上限，默认int.MaxValue
+        /// 获取设置图像边距，默认6
         /// </summary>
-        [CellParam("文件数量上限")]
-        public int MaxFileCount
+        public Thickness ImagePadding
         {
-            get { return _fl.MaxFileCount; }
-            set { _fl.MaxFileCount = value; }
+            get { return _fl.ImagePadding; }
+            set { _fl.ImagePadding = value; }
         }
 
         /// <summary>
@@ -95,8 +82,7 @@ namespace Dt.Base
         {
             base.OnApplyTemplate();
 
-            var grid = (Grid)GetTemplateChild("RootGrid");
-            Grid.SetRow(_fl, 1);
+            var grid = (Grid)GetTemplateChild("Grid");
             grid.Children.Add(_fl);
         }
 
@@ -112,6 +98,5 @@ namespace Dt.Base
             _fl.SetBinding(FileList.DataProperty, ValBinding);
         }
         #endregion
-
     }
 }

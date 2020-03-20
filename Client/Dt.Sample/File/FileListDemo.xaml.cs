@@ -58,5 +58,18 @@ namespace Dt.Sample
             if (padding.Top >= 10)
                 _fl.ImagePadding = new Thickness(padding.Top - 10);
         }
+
+        void OnAddVideoPadding(object sender, RoutedEventArgs e)
+        {
+            var padding = _fl.VideoPadding;
+            _fl.VideoPadding = new Thickness(padding.Top + 10);
+        }
+
+        void OnDelVideoPadding(object sender, RoutedEventArgs e)
+        {
+            var padding = _fl.VideoPadding;
+            if (padding.Top >= 10)
+                _fl.VideoPadding = new Thickness(padding.Top - 10);
+        }
     }
 }
