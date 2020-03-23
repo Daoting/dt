@@ -12,8 +12,10 @@
                     <a:FileList x:Name="_fl" UploadFinished="OnUploadFinished">
                         <a:Ex.Menu>
                             <a:Menu>
-                                <a:Mi ID="保存" Icon="保存" Cmd="{Binding CmdUpdate}" />
-                                <a:Mi ID="搜索" Icon="搜索" />
+                                <a:Mi ID="分享" Icon="分享" Cmd="{Binding CmdShare}" />
+                                <a:Mi ID="保存" Icon="保存" Cmd="{Binding CmdSaveAs}" />
+                                <a:Mi ID="更新" Icon="刷新" Cmd="{Binding CmdUpdate}" />
+                                <a:Mi ID="删除" Icon="删除" Cmd="{Binding CmdDelete}" />
                             </a:Menu>
                         </a:Ex.Menu>
                     </a:FileList>
@@ -33,15 +35,12 @@
                         <Button Content="上传音频" Command="{Binding CmdAddAudio}" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <Button Content="更新文件" Command="{Binding CmdUpdate}" />
-                        <Button Content="删除文件" Command="{Binding CmdDelete}" />
-                        <Button Content="另存为" Command="{Binding CmdSaveAs}" />
-                        <Button Content="删除所有缓存文件" Click="OnDelTemp" />
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
                         <Button Content="录音" Command="{Binding CmdCaptureVoice}" />
                         <Button Content="拍照" Command="{Binding CmdTakePhoto}" />
                         <Button Content="录视频" Command="{Binding CmdRecordVideo}" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <Button Content="删除所有缓存文件" Click="OnDelTemp" />
                         <Button Content="删除上传历史Cookie" Click="OnClear" />
                     </StackPanel>
                     <a:CNum Title="列数" ID="ColCount" IsInteger="True" Minimum="1" />

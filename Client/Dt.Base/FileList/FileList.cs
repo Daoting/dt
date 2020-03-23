@@ -539,7 +539,7 @@ namespace Dt.Base
         }
         #endregion
 
-        #region IViewItemHost
+        #region IMenuHost
         /// <summary>
         /// 切换上下文菜单或修改触发事件种类时通知宿主刷新
         /// </summary>

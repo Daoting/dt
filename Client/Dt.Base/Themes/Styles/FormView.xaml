@@ -253,9 +253,7 @@
                             </Grid.ColumnDefinitions>
                             <Rectangle Stroke="{TemplateBinding BorderBrush}" Margin="0,0,-1,-1" IsHitTestVisible="False" Grid.ColumnSpan="2" />
                             <TextBlock Text="{TemplateBinding Title}" Margin="10,0,0,0" VerticalAlignment="Center" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
-                            <StackPanel Orientation="Horizontal" Grid.Column="1">
-                                <Button Content="&#xE080;" Style="{StaticResource 字符按钮}" />
-                            </StackPanel>
+                            <ContentPresenter Content="{TemplateBinding Toolbar}" Grid.Column="1" />
                         </Grid>
                         <Rectangle Stroke="{TemplateBinding BorderBrush}" Margin="0,0,-1,-1" IsHitTestVisible="False" Grid.RowSpan="2" />
                     </Grid>

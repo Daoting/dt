@@ -17,7 +17,6 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.Devices.Input;
 using Windows.Foundation;
 using Windows.Media.Core;
 using Windows.Storage;
@@ -135,6 +134,7 @@ namespace Dt.Base
         uint? _pointerID;
         Point _ptLast;
 
+        BaseCommand _cmdShare;
         BaseCommand _cmdUpdate;
         BaseCommand _cmdDelete;
         BaseCommand _cmdDownload;
@@ -171,6 +171,19 @@ namespace Dt.Base
 
         #region 命令
         /// <summary>
+        /// 获取共享文件命令
+        /// </summary>
+        public BaseCommand CmdShare
+        {
+            get
+            {
+                if (_cmdShare == null)
+                    _cmdShare = new BaseCommand((e) => _ = ShareFile());
+                return _cmdShare;
+            }
+        }
+
+        /// <summary>
         /// 获取更新文件命令
         /// </summary>
         public BaseCommand CmdUpdate
@@ -178,7 +191,7 @@ namespace Dt.Base
             get
             {
                 if (_cmdUpdate == null)
-                    _cmdUpdate = new BaseCommand((e) => UpdateFile());
+                    _cmdUpdate = new BaseCommand((e) => _ = UpdateFile());
                 return _cmdUpdate;
             }
         }
@@ -204,7 +217,7 @@ namespace Dt.Base
             get
             {
                 if (_cmdOpenFile == null)
-                    _cmdOpenFile = new BaseCommand((e) => Open());
+                    _cmdOpenFile = new BaseCommand((e) => _ = Open());
                 return _cmdOpenFile;
             }
         }
@@ -325,7 +338,7 @@ namespace Dt.Base
         /// <para>先检查本地有没有，有打开本地，没有先下载；</para>
         /// <para>内部支持音视频的预览，其它类型文件用默认关联程序打开；</para>
         /// </summary>
-        public async void Open()
+        public async Task Open()
         {
             if (State != FileItemState.None || string.IsNullOrEmpty(ID))
                 return;
@@ -356,9 +369,38 @@ namespace Dt.Base
         }
 
         /// <summary>
+        /// 共享文件
+        /// </summary>
+        public async Task ShareFile()
+        {
+            string title;
+            switch (FileType)
+            {
+                case FileItemType.Image:
+                    title = "分享图片";
+                    break;
+                case FileItemType.Video:
+                    title = "分享视频";
+                    break;
+                case FileItemType.Sound:
+                    title = "分享音乐";
+                    break;
+                default:
+                    title = "分享文件";
+                    break;
+            }
+
+            await Share.RequestAsync(new ShareFileRequest
+            {
+                Title = title,
+                File = new ShareFile(Path.Combine(AtLocal.CachePath, GetFileName()))
+            });
+        }
+
+        /// <summary>
         /// 更新文件
         /// </summary>
-        public async void UpdateFile()
+        public async Task UpdateFile()
         {
             if (State != FileItemState.None)
                 return;
@@ -375,39 +417,109 @@ namespace Dt.Base
         public async void SaveAs()
         {
             if (State != FileItemState.None || string.IsNullOrEmpty(ID))
-            {
-                AtKit.Warn("当前状态不允许文件另存！");
                 return;
+
+            string fileName = Path.Combine(AtLocal.CachePath, GetFileName());
+            if (!File.Exists(fileName))
+            {
+                // 先下载
+                bool suc = await Download();
+                if (!suc)
+                    return;
             }
 
-            string name = GetFileName();
+#if UWP
             FileSavePicker picker = new FileSavePicker();
             picker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
             picker.FileTypeChoices.Add(GetSaveDesc(), new List<string>() { GetExtName() });
             picker.SuggestedFileName = FileName;
             StorageFile file = await picker.PickSaveFileAsync();
-            if (file == null)
-                return;
-
-            // 复制本地文件
-            StorageFile temp = await AtLocal.GetStorageFile(name);
-            if (temp != null)
+            if (file != null)
             {
-                await temp.CopyAndReplaceAsync(file);
-                AtKit.Msg("文件另存成功！");
-                return;
-            }
-
-            // 先下载再另存
-            if (await Download())
-            {
-                temp = await AtLocal.GetStorageFile(name);
+                StorageFile temp = await AtLocal.GetStorageFile(GetFileName());
                 if (temp != null)
                 {
                     await temp.CopyAndReplaceAsync(file);
-                    AtKit.Msg("下载完毕，文件另存成功！");
+                    AtKit.Msg("文件另存成功！");
+                    return;
                 }
             }
+#elif ANDROID
+            string savePath;
+            string msg;
+            if (FileType == FileItemType.Image)
+            {
+                savePath = Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryPictures).AbsolutePath;
+                msg = "照片";
+            }
+            else if (FileType == FileItemType.Video)
+            {
+                savePath = Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryMovies).AbsolutePath;
+                msg = "电影";
+            }
+            else if (FileType == FileItemType.Sound)
+            {
+                savePath = Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryMusic).AbsolutePath;
+                msg = "音乐";
+            }
+            else
+            {
+                savePath = Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDocuments).AbsolutePath;
+                msg = "文件目录";
+            }
+
+            // 复制本地文件
+            try
+            {
+                File.Copy(fileName, Path.Combine(savePath, GetFileName()), true);
+                AtKit.Msg($"已保存到{msg}！");
+            }
+            catch
+            {
+                AtKit.Warn("文件保存失败！");
+            }
+#elif IOS
+            if (FileType == FileItemType.Image || FileType == FileItemType.Video)
+            {
+                var status = await Permissions.CheckStatusAsync<Permissions.Photos>();
+                if (status != PermissionStatus.Granted)
+                    status = await Permissions.RequestAsync<Permissions.Photos>();
+
+                if (status == PermissionStatus.Granted)
+                {
+                    if (FileType == FileItemType.Image)
+                    {
+                        var imageData = System.IO.File.ReadAllBytes(fileName);
+                        var myImage = new UIKit.UIImage(Foundation.NSData.FromArray(imageData));
+                        myImage.SaveToPhotosAlbum((image, error) =>
+                        {
+                            if (error == null)
+                                AtKit.Msg("已保存到照片！");
+                        });
+                    }
+                    else
+                    {
+                        UIKit.UIVideo.SaveToPhotosAlbum(fileName, (image, error) =>
+                        {
+                            if (error == null)
+                                AtKit.Msg("已保存到照片！");
+                        });
+                    }
+                }
+                return;
+            }
+            // 如何存到"文件"？
+            //var doc = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), GetFileName());
+            //try
+            //{
+            //    File.Copy(fileName, doc, true);
+            //    AtKit.Msg($"已保存到文件！");
+            //}
+            //catch
+            //{
+            //    AtKit.Warn("文件保存失败！");
+            //}
+#endif
         }
 
         /// <summary>
@@ -464,7 +576,7 @@ namespace Dt.Base
                 rg.PointerCaptureLost += OnPointerCaptureLost;
                 rg.PointerExited += OnPointerExited;
             }
-            
+
             VisualStateManager.GoToState(this, State.ToString(), true);
             UpdateCachedFlag();
         }
