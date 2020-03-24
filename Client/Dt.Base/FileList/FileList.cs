@@ -122,9 +122,9 @@ namespace Dt.Base
         public event TypedEventHandler<FileList, bool> UploadFinished;
 
         /// <summary>
-        /// 文件成功删除后事件
+        /// 文件列表变化事件
         /// </summary>
-        public event EventHandler Deleted;
+        public event EventHandler Changed;
         #endregion
 
         #region 属性
@@ -535,7 +535,6 @@ namespace Dt.Base
             _pnl.ChildrenTransitions = null;
 
             WriteData();
-            Deleted?.Invoke(this, EventArgs.Empty);
         }
         #endregion
 
@@ -594,25 +593,27 @@ namespace Dt.Base
                 _lockData = true;
                 Data = null;
                 _lockData = false;
-                return;
             }
-
-            using (var stream = new MemoryStream())
+            else
             {
-                using (var writer = new Utf8JsonWriter(stream, JsonOptions.UnsafeWriter))
+                using (var stream = new MemoryStream())
                 {
-                    writer.WriteStartArray();
-                    foreach (var obj in _pnl.Children)
+                    using (var writer = new Utf8JsonWriter(stream, JsonOptions.UnsafeWriter))
                     {
-                        if (obj is FileItem vf)
-                            vf.WriteData(writer);
+                        writer.WriteStartArray();
+                        foreach (var obj in _pnl.Children)
+                        {
+                            if (obj is FileItem vf)
+                                vf.WriteData(writer);
+                        }
+                        writer.WriteEndArray();
                     }
-                    writer.WriteEndArray();
+                    _lockData = true;
+                    Data = Encoding.UTF8.GetString(stream.ToArray());
+                    _lockData = false;
                 }
-                _lockData = true;
-                Data = Encoding.UTF8.GetString(stream.ToArray());
-                _lockData = false;
             }
+            Changed?.Invoke(this, EventArgs.Empty);
         }
         #endregion
     }

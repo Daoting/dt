@@ -373,6 +373,15 @@ namespace Dt.Base
         /// </summary>
         public async Task ShareFile()
         {
+            string fileName = Path.Combine(AtLocal.CachePath, GetFileName());
+            if (!File.Exists(fileName))
+            {
+                // 先下载
+                bool suc = await Download();
+                if (!suc)
+                    return;
+            }
+
             string title;
             switch (FileType)
             {
@@ -393,7 +402,7 @@ namespace Dt.Base
             await Share.RequestAsync(new ShareFileRequest
             {
                 Title = title,
-                File = new ShareFile(Path.Combine(AtLocal.CachePath, GetFileName()))
+                File = new ShareFile(fileName)
             });
         }
 
@@ -1074,7 +1083,7 @@ namespace Dt.Base
             switch (State)
             {
                 case FileItemState.None:
-                    Open();
+                    _ = Open();
                     break;
                 case FileItemState.UploadWaiting:
                 case FileItemState.Uploading:

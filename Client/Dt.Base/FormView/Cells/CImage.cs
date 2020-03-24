@@ -11,6 +11,7 @@ using Dt.Base.FormView;
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 #endregion
 
@@ -19,8 +20,28 @@ namespace Dt.Base
     /// <summary>
     /// 图像格
     /// </summary>
-    public partial class CImage : FvCell
+    public partial class CImage : FvCell, IMenuHost
     {
+        #region 静态内容
+        public static readonly DependencyProperty ShowDefaultMenuProperty = DependencyProperty.Register(
+            "ShowDefaultMenu",
+            typeof(bool),
+            typeof(CFile),
+            new PropertyMetadata(true, OnShowMenuChanged));
+
+        static void OnShowMenuChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            CImage c = (CImage)d;
+            if (Ex.GetMenu(c) == null)
+            {
+                if ((bool)e.NewValue)
+                    c.UpdateDefaultMenu();
+                else
+                    c._fl.ClearValue(Ex.MenuProperty);
+            }
+        }
+        #endregion
+
         #region 成员变量
         readonly FileList _fl;
         #endregion
@@ -78,6 +99,16 @@ namespace Dt.Base
             get { return _fl.FixedVolume; }
             set { _fl.FixedVolume = value; }
         }
+
+        /// <summary>
+        /// 获取设置是否显示默认菜单，默认true
+        /// </summary>
+        [CellParam("显示默认菜单")]
+        public bool ShowDefaultMenu
+        {
+            get { return (bool)GetValue(ShowDefaultMenuProperty); }
+            set { SetValue(ShowDefaultMenuProperty, value); }
+        }
         #endregion
 
         #region 重写方法
@@ -94,6 +125,7 @@ namespace Dt.Base
                 btn.Click -= OnAddImage;
                 btn.Click += OnAddImage;
             }
+            UpdateDefaultMenu();
         }
 
         protected override void OnPointerPressed(PointerRoutedEventArgs e)
@@ -109,10 +141,52 @@ namespace Dt.Base
         }
         #endregion
 
+        #region IMenuHost
+        /// <summary>
+        /// 切换上下文菜单或修改触发事件种类时通知宿主刷新
+        /// </summary>
+        void IMenuHost.UpdateContextMenu()
+        {
+            Menu menu = Ex.GetMenu(this);
+            if (menu != null)
+                Ex.SetMenu(_fl, menu);
+            else
+                UpdateDefaultMenu();
+        }
+        #endregion
+
+        #region 内部方法
+        void UpdateDefaultMenu()
+        {
+            if (Ex.GetMenu(this) != null || !ShowDefaultMenu)
+                return;
+
+            Menu menu = new Menu();
+            Mi mi = new Mi { ID = "分享", Icon = Icons.分享 };
+            mi.SetBinding(Mi.CmdProperty, new Binding { Path = new PropertyPath("CmdShare") });
+            menu.Items.Add(mi);
+
+            mi = new Mi { ID = "保存", Icon = Icons.保存 };
+            mi.SetBinding(Mi.CmdProperty, new Binding { Path = new PropertyPath("CmdSaveAs") });
+            menu.Items.Add(mi);
+
+            if (!ReadOnlyBinding)
+            {
+                mi = new Mi { ID = "更新", Icon = Icons.刷新 };
+                mi.SetBinding(Mi.CmdProperty, new Binding { Path = new PropertyPath("CmdUpdate") });
+                menu.Items.Add(mi);
+
+                mi = new Mi { ID = "删除", Icon = Icons.删除 };
+                mi.SetBinding(Mi.CmdProperty, new Binding { Path = new PropertyPath("CmdDelete") });
+                menu.Items.Add(mi);
+            }
+            Ex.SetMenu(_fl, menu);
+        }
 
         void OnAddImage(object sender, RoutedEventArgs e)
         {
             _fl.AddImage();
         }
+        #endregion
     }
 }

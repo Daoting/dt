@@ -24,9 +24,9 @@ namespace Dt.Base
         #region 静态内容
         public static readonly DependencyProperty ToolbarProperty = DependencyProperty.Register(
             "Toolbar",
-            typeof(UIElement),
+            typeof(FrameworkElement),
             typeof(CFile),
-            new PropertyMetadata(null));
+            new PropertyMetadata(null, OnToolbarChanged));
 
         public static readonly DependencyProperty ShowDefaultToolbarProperty = DependencyProperty.Register(
             "ShowDefaultToolbar",
@@ -39,6 +39,14 @@ namespace Dt.Base
             typeof(bool),
             typeof(CFile),
             new PropertyMetadata(true, OnShowMenuChanged));
+
+        static void OnToolbarChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            CFile c = (CFile)d;
+            var bar = (FrameworkElement)e.NewValue;
+            if (bar != null)
+                bar.DataContext = c._fl;
+        }
 
         static void OnShowToolbarChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -60,7 +68,7 @@ namespace Dt.Base
 
         #region 成员变量
         readonly FileList _fl;
-        UIElement _toolbar;
+        FrameworkElement _toolbar;
         #endregion
 
         #region 构造方法
@@ -127,9 +135,9 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置工具栏内容
         /// </summary>
-        public UIElement Toolbar
+        public FrameworkElement Toolbar
         {
-            get { return (UIElement)GetValue(ToolbarProperty); }
+            get { return (FrameworkElement)GetValue(ToolbarProperty); }
             set { SetValue(ToolbarProperty, value); }
         }
 
