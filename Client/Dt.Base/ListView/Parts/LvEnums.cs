@@ -76,6 +76,11 @@ namespace Dt.Base
         /// <summary>
         /// 显示为图片
         /// </summary>
-        Image
+        Image,
+
+        /// <summary>
+        /// 显示为文件列表链接
+        /// </summary>
+        File
     }
 }

@@ -54,7 +54,30 @@ namespace Dt.App.Model
             _fv.Data = Table.NewRow(_tblName);
         }
 
-        async void OnSave(object sender, Mi e)
+        void OnSave(object sender, Mi e)
+        {
+            Save();
+        }
+        
+
+        void OnAdd(object sender, Mi e)
+        {
+            CreateUser();
+        }
+
+        protected override Task<bool> OnClosing()
+        {
+            if (_fv.Row.IsChanged)
+                return AtKit.Confirm("数据未保存，要放弃修改吗？");
+            return Task.FromResult(true);
+        }
+
+        void OnPhotoChanged(object sender, object e)
+        {
+            Save();
+        }
+
+        async void Save()
         {
             if (_fv.ExistNull("name", "phone"))
                 return;
@@ -105,18 +128,6 @@ namespace Dt.App.Model
             {
                 AtKit.Warn("保存失败！");
             }
-        }
-
-        void OnAdd(object sender, Mi e)
-        {
-            CreateUser();
-        }
-
-        protected override Task<bool> OnClosing()
-        {
-            if (_fv.Row.IsChanged)
-                return AtKit.Confirm("数据未保存，要放弃修改吗？");
-            return Task.FromResult(true);
         }
     }
 }

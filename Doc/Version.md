@@ -6,8 +6,11 @@
 * 增加Excel
 * NaviWin和PageWin功能合并到Win，移除NaviWin和PageWin
 * Lv的ICellUI.UIType支持自动加载文件服务的Image
+* 增加FileList, FileItem
 * Fv增加链接格
-* Fv增加图像格
+* Fv增加图像格、文件格
+* Lv的ICellUI.UIType 增加File类型
+* Chat发送各类型文件功能
 
 ### 变更 
 *  移除Newtonsoft.Json，使用System.Text.Json 

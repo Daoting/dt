@@ -16,6 +16,7 @@ using Windows.UI;
 using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Shapes;
@@ -258,6 +259,9 @@ namespace Dt.Base
                         break;
                     case CellUIType.Image:
                         elem = CreateImage(val);
+                        break;
+                    case CellUIType.File:
+                        elem = CreateFileLink(val);
                         break;
                 }
             }
@@ -566,6 +570,64 @@ namespace Dt.Base
                 _ = ImgKit.LoadImage(path, img);
             }
             return img;
+        }
+
+        TextBlock CreateFileLink(object p_val)
+        {
+            int cnt = p_val.ToString().Split("[\"").Length - 1;
+            if (cnt <= 0)
+                return null;
+
+            TextBlock tb = new TextBlock
+            {
+                VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                Foreground = AtRes.主题蓝色,
+                Text = $"共{cnt}个文件",
+                Tag = p_val,
+            };
+
+            tb.PointerPressed += OnFileLinkPressed;
+            return tb;
+        }
+
+        void OnFileLinkPressed(object sender, PointerRoutedEventArgs e)
+        {
+            var tb = sender as TextBlock;
+            if (tb == null || tb.Tag == null)
+                return;
+
+            Dlg dlg;
+            e.Handled = true;
+            if (AtSys.IsPhoneUI)
+            {
+                dlg = new Dlg { ClipElement = tb, Title = "文件列表", };
+            }
+            else
+            {
+                dlg = new Dlg()
+                {
+                    WinPlacement = DlgPlacement.TargetBottomLeft,
+                    PlacementTarget = tb,
+                    ClipElement = tb,
+                    MaxHeight = 500,
+                    MaxWidth = 400,
+                    Title = "文件列表",
+                };
+            }
+            FileList fl = new FileList();
+            fl.Data = (string)tb.Tag;
+
+            ScrollViewer sv = new ScrollViewer
+            {
+                VerticalScrollMode = ScrollMode.Auto,
+                VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+                HorizontalScrollMode = ScrollMode.Disabled,
+                HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled
+            };
+            sv.Content = fl;
+            dlg.Content = sv;
+            dlg.Show();
         }
         #endregion
 

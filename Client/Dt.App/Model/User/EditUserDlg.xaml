@@ -13,7 +13,7 @@
     </a:Dlg.Menu>
 
     <a:Fv x:Name="_fv">
-        <a:CImage ID="photo" Title="头像" RowSpan="2" />
+        <a:CImage ID="photo" Title="头像" Changed="OnPhotoChanged" />
         <a:CText ID="name" Title="姓名" />
         <a:CText ID="phone" Title="手机号" />
         <a:CList ID="sexname" Title="性别" SrcID="id" TgtID="sex">
