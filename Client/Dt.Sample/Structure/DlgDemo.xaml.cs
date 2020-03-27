@@ -25,18 +25,21 @@ namespace Dt.Sample
     {
         Random _rnd = new Random();
         Dlg _dlg;
+
         public DlgDemo()
         {
             InitializeComponent();
 
-            _cbPlacement.ItemsSource = EnumDataSource.FromType<DlgPlacement>();
-            if (AtSys.IsPhoneUI)
-                _cbPlacement.SelectedIndex = 1;
-            else
-                _cbPlacement.SelectedIndex = 0;
-
+            Table tbl = new Table
+            {
+                { "Placement", typeof(DlgPlacement) },
+                { "Target" },
+                { "Pin", typeof(bool) },
+                { "HideBar", typeof(bool) },
+                { "Resize", typeof(bool) },
+            };
+            _fv.Data = tbl.AddRow(new { Placement = DlgPlacement.CenterScreen });
             Closed += OnClosed;
-            GenShapeOps();
         }
 
         void OnShow(object sender, RoutedEventArgs e)
@@ -53,7 +56,20 @@ namespace Dt.Sample
 
         void OnShowPos(object sender, RoutedEventArgs e)
         {
-            //GetDlg().ShowAt(_rnd.Next(0, 1000), _rnd.Next(0, 800));
+            var dlg = GetDlg();
+            if (AtSys.IsPhoneUI)
+            {
+                dlg.PhonePlacement = DlgPlacement.CenterScreen;
+                dlg.Top = _rnd.Next(0, 500);
+                dlg.Left = _rnd.Next(0, 400);
+            }
+            else
+            {
+                dlg.WinPlacement = DlgPlacement.CenterScreen;
+                dlg.Top = _rnd.Next(0, 1000);
+                dlg.Left = _rnd.Next(0, 800);
+            }
+            dlg.Show();
         }
 
         async void OnClicked1(object sender, RoutedEventArgs e)
@@ -75,25 +91,34 @@ namespace Dt.Sample
             AtKit.Msg(result);
         }
 
-        async void OnClicked4(object sender, RoutedEventArgs e)
+        void OnClicked4(object sender, RoutedEventArgs e)
         {
             if (_dlg == null)
-                CreateDlg();
+            {
+                _dlg = new Dlg
+                {
+                    Background = null,
+                    Resizeable = false,
+                    HideTitleBar = true,
+                    BorderThickness = new Thickness(0),
+                    PhonePlacement = DlgPlacement.CenterScreen,
+                    WinPlacement = DlgPlacement.CenterScreen,
+                };
 
-            await _dlg.ShowAsync();
-        }
-
-        void OnTapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
-        {
-            _dlg.Close();
-        }
-
-        void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (_dlg == null) return;
-            Path path = (Path)_dlg.Content;
-            if (path == null) return;
-            path.Data = GenPathData();
+                // 通过data描述的方式构建发杂path的方式如下行注释掉的方式调用
+                //Path path = AtRes.ParsePath("M30,15 C30,23.2843 23.2843,30 15,30 C6.71573,30 0,23.2843 0,15 C0,6.71573 6.71573,0 15,0 C23.2843,0 30,6.71573 30,15 z");
+                Ellipse path = new Ellipse
+                {
+                    Height = 200,
+                    Width = 140,
+                    StrokeThickness = 4,
+                    IsHitTestVisible = true,
+                    Fill = new SolidColorBrush(Colors.Green),
+                    Stroke = new SolidColorBrush(Colors.Red),
+                };
+                _dlg.Content = path;
+            }
+            _dlg.Show();
         }
 
         void OnClosed(object sender, EventArgs e)
@@ -105,68 +130,17 @@ namespace Dt.Sample
         Dlg1 GetDlg()
         {
             Dlg1 dlg = new Dlg1();
-            var placement = (DlgPlacement)((EnumMember)_cbPlacement.SelectedItem).Value;
+            Row row = _fv.Row;
+            var placement = (DlgPlacement)row["Placement"];
             if (AtSys.IsPhoneUI)
                 dlg.PhonePlacement = placement;
             else
                 dlg.WinPlacement = placement;
-            dlg.PlacementTarget = _tbTarget;
-            if ((bool)_cbPin.IsChecked)
-                dlg.IsPinned = true;
-            if ((bool)_cbHideBar.IsChecked)
-                dlg.HideTitleBar = true;
-            if ((bool)_cbResize.IsChecked)
-                dlg.Resizeable = false;
+            dlg.PlacementTarget = _tgt;
+            dlg.IsPinned = row.Bool("Pin");
+            dlg.HideTitleBar = row.Bool("HideBar");
+            dlg.Resizeable = row.Bool("Resize");
             return dlg;
-        }
-
-        void GenShapeOps()
-        {
-            List<string> shape = new List<string> { "方形", "椭圆", };
-
-            _shapes.ItemsSource = shape;
-            _shapes.SelectedIndex = 0;
-            _shapes.SelectionChanged += OnSelectionChanged;
-        }
-
-        Geometry GenPathData()
-        {
-            if (_shapes.SelectedIndex == 0)
-            {
-                return new RectangleGeometry { Rect = new Windows.Foundation.Rect { Width = 160, Height = 100 } };
-            }
-            else
-            {
-                return new EllipseGeometry { RadiusX = 70, RadiusY = 100 };
-            }
-        }
-
-        void CreateDlg()
-        {
-            _dlg = new Dlg
-            {
-                IsPinned = true,
-                Background = null,
-                Resizeable = false,
-                HideTitleBar = true,
-                BorderThickness = new Thickness(0),
-                PhonePlacement = DlgPlacement.CenterScreen,
-                WinPlacement = DlgPlacement.CenterScreen,
-            };
-
-            // 通过data描述的方式构建发杂path的方式如下行注释掉的方式调用
-            //Path path = AtRes.ParsePath("M30,15 C30,23.2843 23.2843,30 15,30 C6.71573,30 0,23.2843 0,15 C0,6.71573 6.71573,0 15,0 C23.2843,0 30,6.71573 30,15 z");
-            Path path = new Path
-            {
-                Data = GenPathData(),
-                StrokeThickness = 4,
-                IsHitTestVisible = true,
-                Fill = new SolidColorBrush(Colors.Green),
-                Stroke = new SolidColorBrush(Colors.Red),
-            };
-
-            path.Tapped += OnTapped;
-            _dlg.Content = path;
         }
     }
 }

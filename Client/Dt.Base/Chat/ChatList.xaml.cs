@@ -30,7 +30,25 @@ namespace Dt.Base
         public ChatList()
         {
             InitializeComponent();
-            Loaded += (sender, e) => LoadData();
+            Loaded += OnLoaded;
+            Unloaded += OnUnloaded;
+        }
+
+        void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            LoadData();
+            LetterManager.StateChanged += OnStateChanged;
+        }
+
+        void OnUnloaded(object sender, RoutedEventArgs e)
+        {
+            // 页面卸载停止接收新信息
+            LetterManager.StateChanged -= OnStateChanged;
+        }
+
+        void OnStateChanged(long obj)
+        {
+            LoadData();
         }
 
         /// <summary>
@@ -56,7 +74,7 @@ namespace Dt.Base
                 "                   when 6 then '【撤回了一条消息】' \n" +
                 "                 end )    as msg \n" +
                 "        from   letter \n" +
-                "        where  loginid = 1 \n" +
+                "        where  loginid = @loginid \n" +
                 "        group  by otherid) l \n" +
                 "       left join chatmember m \n" +
                 "              on l.otherid = m.id \n" +
@@ -67,6 +85,16 @@ namespace Dt.Base
         void OnItemClick(object sender, ItemClickArgs e)
         {
             ItemClick?.Invoke(this, e.Row.Long("otherid"));
+        }
+
+        async void OnDelMsg(object sender, Mi e)
+        {
+            Row row = e.Row;
+            if (await AtKit.Confirm($"确认要清空与{row.Str("othername")}的聊天记录吗？"))
+            {
+                AtLocal.Execute($"delete from letter where otherid={row.Str("otherid")} and loginid={AtUser.ID}");
+                LoadData();
+            }
         }
     }
 }

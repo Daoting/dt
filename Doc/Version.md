@@ -22,6 +22,7 @@
 * Excel 添加/删除列时bug
 * Excel 导出pdf的bug
 * mono 中 The Bindable attribute is missing and the type [Dt.Base.XXX] is not known
+* Fv 手机加载慢
 
 ## Release 1.0 
 

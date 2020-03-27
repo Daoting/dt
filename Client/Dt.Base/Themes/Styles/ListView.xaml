@@ -12,10 +12,14 @@
     <!--Lv-->
     <Style TargetType="a:Lv">
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Background" Value="Transparent" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="a:Lv">
                     <ScrollViewer x:Name="ScrollViewer"
+                                  Background="{TemplateBinding Background}"
+                                  BorderBrush="{TemplateBinding BorderBrush}"
+                                  BorderThickness="{TemplateBinding BorderThickness}"
                                   HorizontalScrollMode="Auto"
                                   HorizontalScrollBarVisibility="Auto"
                                   VerticalScrollMode="Auto"

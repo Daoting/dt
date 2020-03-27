@@ -32,6 +32,7 @@ namespace Dt.Base
     /// </summary>
     public static class LetterManager
     {
+        #region 事件
         /// <summary>
         /// 增加一条聊天信息事件
         /// </summary>
@@ -41,6 +42,7 @@ namespace Dt.Base
         /// 未读消息状态变化事件，参数为对方的userid
         /// </summary>
         public static event Action<long> StateChanged;
+        #endregion
 
         #region 接收信息
         /// <summary>
@@ -99,34 +101,31 @@ namespace Dt.Base
             }
         }
 
-        static NotifyInfo _notify;
-
         /// <summary>
         /// 显示未读提示
         /// </summary>
         /// <param name="p_letter"></param>
         static void ShowUnreadNotify(Letter p_letter)
         {
-            if (_notify == null)
+            // 避免过多
+            if (SysVisual.NotifyList.Count > 5)
+                return;
+
+            var notify = new NotifyInfo();
+            // 不自动关闭
+            notify.DelaySeconds = 0;
+            notify.Link = "查看内容";
+            notify.LinkCallback = (e) =>
             {
-                _notify = new NotifyInfo();
-                // 不自动关闭
-                _notify.DelaySeconds = 0;
-                _notify.Link = "查看内容";
-                _notify.LinkCallback = (e) =>
+                Letter l = (Letter)e.Tag;
+                // 关闭所有对方为同一人的提示
+                foreach (var ni in SysVisual.NotifyList)
                 {
-                    AtKit.CloseNotify(_notify);
-                    AtKit.RunAsync(() =>
-                    {
-                        //Type tp = AtSys.GetViewType(AtKit.ChatView);
-                        //if (tp != null)
-                        //{
-                        //    IView viewer = Activator.CreateInstance(tp) as IView;
-                        //    viewer.Run(e.Tag);
-                        //}
-                    });
-                };
-            }
+                    if (ni.Tag is Letter letter && letter.OtherID == l.OtherID)
+                        AtKit.CloseNotify(ni);
+                }
+                AtKit.RunAsync(() => ChatDetail.ShowDlg(l.OtherID, l.OtherName));
+            };
 
             switch (p_letter.LetterType)
             {
@@ -136,29 +135,29 @@ namespace Dt.Base
                         msg = p_letter.Content.Substring(0, 9) + "…";
                     else
                         msg = p_letter.Content;
-                    _notify.Message = string.Format("💡 {0}\r\n{1}", p_letter.OtherName, msg);
+                    notify.Message = string.Format("💡 {0}\r\n{1}", p_letter.OtherName, msg);
                     break;
                 case LetterType.File:
-                    _notify.Message = string.Format("🏬 {0}发来文件", p_letter.OtherName);
+                    notify.Message = string.Format("🏬 {0}发来文件", p_letter.OtherName);
                     break;
                 case LetterType.Image:
-                    _notify.Message = string.Format("🌄 {0}发来图片", p_letter.OtherName);
+                    notify.Message = string.Format("🌄 {0}发来图片", p_letter.OtherName);
                     break;
                 case LetterType.Video:
-                    _notify.Message = string.Format("🌉 {0}发来视频", p_letter.OtherName);
+                    notify.Message = string.Format("🌉 {0}发来视频", p_letter.OtherName);
                     break;
                 case LetterType.Voice:
-                    _notify.Message = string.Format("📢 {0}发来语音", p_letter.OtherName);
+                    notify.Message = string.Format("📢 {0}发来语音", p_letter.OtherName);
                     break;
                 case LetterType.Link:
-                    _notify.Message = string.Format("💨 {0}发来链接", p_letter.OtherName);
+                    notify.Message = string.Format("💨 {0}发来链接", p_letter.OtherName);
                     break;
                 default:
                     break;
             }
-            _notify.Tag = p_letter;
-            if (!SysVisual.NotifyList.Contains(_notify))
-                AtKit.Notify(_notify);
+            notify.Tag = p_letter;
+            SysVisual.NotifyList.Add(notify);
+            //await SysVisual.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, new DispatchedHandler(() => SysVisual.NotifyList.Add(notify)));
         }
 
         /// <summary>

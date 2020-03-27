@@ -9,11 +9,10 @@
     </ResourceDictionary.MergedDictionaries>
 
     <Style x:Key="ChatButton" TargetType="Button" BasedOn="{StaticResource 字符按钮}">
-        <Setter Property="Background" Value="{StaticResource 浅灰背景}" />
-        <Setter Property="BorderBrush" Value="{StaticResource 浅灰边框}" />
         <Setter Property="Width" Value="60" />
+        <Setter Property="Height" Value="50" />
         <Setter Property="Margin" Value="-1,0,-1,0" />
-        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Bottom" />
     </Style>
     
     <!--ChatDetail-->
@@ -25,29 +24,58 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <a:Lv x:Name="Lv" SelectionMode="None" ShowItemBorder="False" />
-                        <Grid x:Name="InputGrid" Visibility="Collapsed" Grid.Row="1">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <Button x:Name="BtnVoice" Content="&#xE070;" Style="{StaticResource ChatButton}" />
-                            <TextBox x:Name="MsgBox" TextWrapping="Wrap" BorderThickness="0" Padding="10" Background="White" Grid.Column="1" />
-                            <Rectangle Stroke="{StaticResource 浅灰边框}" IsHitTestVisible="False" Grid.Column="1" />
-                            <Button x:Name="BtnFace" Content="&#xE08F;" Style="{StaticResource ChatButton}" Grid.Column="2" />
-                            <Button x:Name="BtnAdd" Content="&#xE080;" Style="{StaticResource ChatButton}" Grid.Column="3" />
-                        </Grid>
-                        <ContentPresenter Content="{TemplateBinding BottomContent}" Grid.Row="2" />
+                        <a:ChatInputBar x:Name="InputBar" Visibility="Collapsed" Grid.Row="1" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
 
+    <!--ChatInputBar-->
+    <Style TargetType="a:ChatInputBar">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:ChatInputBar">
+                    <Grid x:Name="RootGrid" Background="{StaticResource 浅灰背景}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid BorderThickness="0,1,0,1" BorderBrush="{StaticResource 浅灰边框}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <!--TextBox背景放最下层-->
+                            <Rectangle Fill="White" IsHitTestVisible="False" Grid.Column="1" />
+                            <!-- 操蛋的TextBox
+                            AcceptsReturn：true在android上自动增高，但无法接收KeyUp事件
+                            VerticalAlignment：ios上Stretch时高为MaxHeight
+                            -->
+                            <TextBox x:Name="MsgBox"
+                                     TextWrapping="Wrap"
+                                     VerticalAlignment="Center"
+                                     BorderThickness="0"
+                                     MaxHeight="200"
+                                     ScrollViewer.HorizontalScrollMode="Disabled"
+                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                     ScrollViewer.VerticalScrollMode="Auto"
+                                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                     Grid.Column="1" />
+                            <Button x:Name="BtnVoice" Content="&#xE070;" Style="{StaticResource ChatButton}" />
+                            <Button x:Name="BtnFace" Content="&#xE08F;" Style="{StaticResource ChatButton}" Grid.Column="2" />
+                            <Button x:Name="BtnAdd" Content="&#xE080;" Style="{StaticResource ChatButton}" Grid.Column="3" />
+                        </Grid>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
     <Style x:Key="OtherPath" TargetType="Path">
         <Setter Property="Fill" Value="{StaticResource 绿色背景}" />
         <Setter Property="Stretch" Value="Fill" />
@@ -76,9 +104,9 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="60" />
             </Grid.ColumnDefinitions>
-            <a:Dot ID="Icon" UIType="Image" Width="30" Height="30" VerticalAlignment="Top" />
+            <a:Dot ID="Photo" UIType="Image" Width="30" Height="30" VerticalAlignment="Top" />
             <!--Data不能写在Style中-->
-            <Path Data="M0,3 L4,0 L4,6" Style="{StaticResource OtherPath}" />
+            <Path Data="M0,3 L4,0 L4,6" Style="{StaticResource OtherPath}" Grid.Column="1" />
             <StackPanel HorizontalAlignment="Left" Grid.Column="2">
                 <a:Dot ID="Content" Foreground="White" Background="{StaticResource 绿色背景}" Padding="10,6" />
                 <TextBlock Text="{Binding [stime], Converter={StaticResource CvAutoDate}}"
@@ -156,6 +184,17 @@
     <DataTemplate x:Key="MyUndoTemplate">
         <Grid>
 
+        </Grid>
+    </DataTemplate>
+
+    <DataTemplate x:Key="InputBarExtTemplate">
+        <Grid Width="90" Padding="0,10,0,10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <a:Dot ID="icon" UIType="Icon" Padding="10" FontSize="30" HorizontalAlignment="Center" CornerRadius="10" Foreground="Black" Background="White" />
+            <a:Dot ID="title" HorizontalAlignment="Center" FontSize="12" Margin="0,10,0,0" Grid.Row="1" />
         </Grid>
     </DataTemplate>
 </ResourceDictionary>

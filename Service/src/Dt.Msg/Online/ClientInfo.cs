@@ -70,12 +70,23 @@ namespace Dt.Msg
         public async Task SendOfflineMsg()
         {
             // 所有离线信息
-            var ls = await Redis.Db.ListRangeAsync(MsgKit.MsgQueueKey + _c.UserID.ToString());
+            string key = MsgKit.MsgQueueKey + _c.UserID.ToString();
+            var db = Redis.Db;
+            var ls = await db.ListRangeAsync(key);
             if (ls != null && ls.Length > 0)
             {
-                foreach (var mi in ls)
+                try
                 {
-                    await _writer.Write((string)mi);
+                    foreach (var mi in ls)
+                    {
+                        await _writer.Write((string)mi);
+                    }
+                    // 删除避免重复推送
+                    await db.KeyDeleteAsync(key);
+                }
+                catch (Exception ex)
+                {
+                    Log.Warning(ex, $"向{_c.UserID}发送离线信息异常");
                 }
             }
         }

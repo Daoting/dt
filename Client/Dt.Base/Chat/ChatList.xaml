@@ -7,10 +7,7 @@
     <a:Lv x:Name="_lv" ItemClick="OnItemClick">
         <a:Ex.Menu>
             <a:Menu>
-                <a:Mi ID="清空聊天" Icon="垃圾箱" />
-                <a:Mi ID="置顶" Icon="向上" />
-                <a:Mi ID="置底" Icon="向下" />
-                <a:Mi ID="删除" Icon="删除" />
+                <a:Mi ID="清空聊天" Icon="垃圾箱" Click="OnDelMsg" />
             </a:Menu>
         </a:Ex.Menu>
         <DataTemplate>

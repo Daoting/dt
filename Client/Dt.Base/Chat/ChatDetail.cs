@@ -8,12 +8,9 @@
 
 #region 引用命名
 using Dt.Core;
-using Dt.Core.Sqlite;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -33,22 +30,17 @@ namespace Dt.Base
             typeof(ChatDetail),
             new PropertyMetadata(-1L, OnOtherIDChanged));
 
-        public static readonly DependencyProperty BottomContentProperty = DependencyProperty.Register(
-            "BottomContent",
-            typeof(object),
-            typeof(ChatDetail),
-            new PropertyMetadata(null));
-
         static void OnOtherIDChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((ChatDetail)d).LoadMsg();
         }
         #endregion
 
+        #region 成员变量
         Lv _lv;
-        TextBox _tbMsg;
-        Grid _inputGrid;
+        ChatInputBar _inputBar;
         ChatMember _other;
+        #endregion
 
         #region 构造方法
         public ChatDetail()
@@ -69,16 +61,39 @@ namespace Dt.Base
             get { return (long)GetValue(OtherIDProperty); }
             set { SetValue(OtherIDProperty, value); }
         }
+        #endregion
 
         /// <summary>
-        /// 发送栏底部的内容，表情符或扩展内容，内部绑定用
+        /// 显示聊天对话框
         /// </summary>
-        internal object BottomContent
+        /// <param name="p_otherID">对方ID</param>
+        /// <param name="p_otherName">null时自动查询</param>
+        public static void ShowDlg(long p_otherID, string p_otherName = null)
         {
-            get { return GetValue(BottomContentProperty); }
-            set { SetValue(BottomContentProperty, value); }
+            if (string.IsNullOrEmpty(p_otherName))
+                p_otherName = AtLocal.GetScalar<string>($"select name from ChatMember where id={p_otherID}");
+
+            Dlg dlg;
+            if (AtSys.IsPhoneUI)
+            {
+                dlg = new Dlg { Title = p_otherName, };
+            }
+            else
+            {
+                dlg = new Dlg()
+                {
+                    IsPinned = true,
+                    Height = 500,
+                    Width = 400,
+                    Title = p_otherName,
+                };
+            }
+
+            ChatDetail chat = new ChatDetail();
+            chat.OtherID = p_otherID;
+            dlg.Content = chat;
+            dlg.Show();
         }
-        #endregion
 
         #region 重写方法
         protected override void OnApplyTemplate()
@@ -88,36 +103,12 @@ namespace Dt.Base
             _lv = (Lv)GetTemplateChild("Lv");
             _lv.View = new MsgItemSelector();
 
-            _inputGrid = (Grid)GetTemplateChild("InputGrid");
-            var btn = (Button)GetTemplateChild("BtnVoice");
-            if (btn != null)
-            {
-                btn.Click -= OnAudioCapture;
-                btn.Click += OnAudioCapture;
-            }
-
-            btn = (Button)GetTemplateChild("BtnFace");
-            if (btn != null)
-            {
-                btn.Click -= OnShowFacePanel;
-                btn.Click += OnShowFacePanel;
-            }
-
-            btn = (Button)GetTemplateChild("BtnAdd");
-            if (btn != null)
-            {
-                btn.Click -= OnShowExtPanel;
-                btn.Click += OnShowExtPanel;
-            }
-
-            if (_tbMsg != null)
-                _tbMsg.KeyDown -= OnMsgKeyDown;
-            _tbMsg = (TextBox)GetTemplateChild("MsgBox");
-            if (_tbMsg != null)
-                _tbMsg.KeyDown += OnMsgKeyDown;
+            _inputBar = (ChatInputBar)GetTemplateChild("InputBar");
+            _inputBar.Owner = this;
         }
         #endregion
 
+        #region 加载消息
         void OnLoaded(object sender, RoutedEventArgs e)
         {
             LoadMsg();
@@ -140,7 +131,7 @@ namespace Dt.Base
 
             _other = AtLocal.GetFirst<ChatMember>("select * from ChatMember where id=@id", new Dict { { "id", OtherID } });
             // 不是好友时无法发送
-            _inputGrid.Visibility = (_other == null) ? Visibility.Collapsed : Visibility.Visible;
+            _inputBar.Visibility = (_other == null) ? Visibility.Collapsed : Visibility.Visible;
 
             LetterManager.ClearUnreadFlag(OtherID);
             _lv.PageData = new PageData { NextPage = OnNextPage, InsertTop = true };
@@ -163,49 +154,58 @@ namespace Dt.Base
             int limit = e.PageSize;
             if (start < 0)
                 limit = cnt - e.PageNo * e.PageSize;
-            var data = AtLocal.Query<Letter>($"select * from Letter where otherid={OtherID} and loginid={AtUser.ID} order by stime limit {limit} offset {start}");
+
+            List<Letter> data = new List<Letter>();
+            var ls = AtLocal.DeferredQuery<Letter>($"select * from Letter where otherid={OtherID} and loginid={AtUser.ID} order by stime limit {limit} offset {start}");
+            foreach (var l in ls)
+            {
+                l.Photo = l.IsReceived ? _other.Photo : AtUser.Photo;
+                data.Add(l);
+            }
+
             e.LoadPageData(data);
             if (data != null && data.Count == 0)
                 _lv.Data = data;
             if (e.PageNo == 0)
                 _lv.ScrollBottom();
         }
+        #endregion
 
+        #region 接收新消息
         /// <summary>
         /// 增加聊天消息事件
         /// </summary>
         /// <param name="p_letter"></param>
         void OnNewLetter(Letter p_letter)
         {
+            // 是否为当前聊天人
+            if (p_letter.OtherID != OtherID)
+                return;
+
             if (p_letter.IsReceived)
             {
-                // 是否为当前聊天人
-                if (p_letter.OtherID == OtherID)
+                // 已读标志
+                p_letter.Unread = false;
+                if (p_letter.LetterType == LetterType.Undo)
                 {
-                    // 已读标志
-                    p_letter.Unread = false;
-                    if (p_letter.LetterType == LetterType.Undo)
+                    // 对方撤回消息
+                    var ls = (List<Letter>)_lv.Data;
+                    var letter = ls.FirstOrDefault(l => l.ID == p_letter.ID);
+                    if (letter != null)
                     {
-                        // 对方撤回消息
-                        var ls = (List<Letter>)_lv.Data;
-                        var letter = ls.FirstOrDefault(l => l.ID == p_letter.ID);
-                        if (letter != null)
-                        {
-                            letter.LetterType = LetterType.Undo;
-                            int index = ls.IndexOf(letter);
-                            ls.RemoveAt(index);
-                            _lv.InsertRow(letter, index);
-                        }
-                        return;
+                        letter.LetterType = LetterType.Undo;
+                        int index = ls.IndexOf(letter);
+                        ls.RemoveAt(index);
+                        _lv.InsertRow(letter, index);
                     }
-                    AddLetter(p_letter);
+                    return;
                 }
+                AddLetter(p_letter);
             }
-            else
+            else if (p_letter.LetterType == LetterType.Text)
             {
                 // 当前登录人发出的，文件类型的行已经添加！
-                if (p_letter.LetterType == LetterType.Text)
-                    AddLetter(p_letter);
+                AddLetter(p_letter);
             }
         }
 
@@ -218,37 +218,83 @@ namespace Dt.Base
             _lv.InsertRow(p_letter);
             _lv.ScrollBottom();
         }
+        #endregion
 
-
-        #region 发送栏
-        void OnAudioCapture(object sender, RoutedEventArgs e)
+        #region 发送消息
+        /// <summary>
+        /// 发送普通消息
+        /// </summary>
+        /// <param name="p_msg"></param>
+        public async void SendMsg(string p_msg)
         {
-
+            await LetterManager.SendLetter(OtherID, _other.Name, p_msg, LetterType.Text);
         }
 
-        void OnShowFacePanel(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// 发送文件
+        /// </summary>
+        /// <param name="p_files"></param>
+        public async void SendFiles(List<FileData> p_files)
         {
-
-        }
-
-        void OnShowExtPanel(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        async void OnMsgKeyDown(object sender, KeyRoutedEventArgs e)
-        {
-            if (e.Key != VirtualKey.Enter)
-                return;
-
-            string msg = _tbMsg.Text.Trim();
-            if (!string.IsNullOrEmpty(msg))
+            Letter l = new Letter
             {
-                await LetterManager.SendLetter(OtherID, _other.Name, msg, LetterType.Text);
-                _tbMsg.Text = "";
+                OtherID = OtherID,
+                OtherName = _other.Name,
+                IsReceived = false,
+                Unread = false,
+                LetterType = GetLetterType(p_files),
+            };
+            _lv.InsertRow(l);
+
+
+        }
+
+        LetterType GetLetterType(List<FileData> p_files)
+        {
+            LetterType type = LetterType.File;
+            if (p_files.All(p_file => FileFilter.UwpImage.Contains(p_file.Ext.ToLower())))
+            {
+                type = LetterType.Image;
             }
+            else if (p_files.All(p_file => FileFilter.UwpVideo.Contains(p_file.Ext.ToLower())))
+            {
+                type = LetterType.Video;
+            }
+            else if (p_files.All(p_file => FileFilter.UwpAudio.Contains(p_file.Ext.ToLower())))
+            {
+                type = LetterType.Voice;
+            }
+            return type;
         }
         #endregion
 
+        #region 隐藏底部
+        PointerEventHandler _pressedHandler;
+        internal void AttachPressedEvent()
+        {
+            if (_pressedHandler == null)
+                _pressedHandler = new PointerEventHandler(OnPanelPointerPressed);
+#if IOS
+            // iOS的ScrollViewer无法AddHandler，暂时取内容，bug
+            (_lv.Scroll.Content as UIElement).AddHandler(PointerPressedEvent, _pressedHandler, true);
+#else
+            _lv.AddHandler(PointerPressedEvent, _pressedHandler, true);
+#endif
+        }
+
+        internal void DetachPressedEvent()
+        {
+#if IOS
+            (_lv.Scroll.Content as UIElement).RemoveHandler(PointerPressedEvent, _pressedHandler);
+#else
+            _lv.RemoveHandler(PointerPressedEvent, _pressedHandler);
+#endif
+        }
+
+        void OnPanelPointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            _inputBar.ClearBottom();
+        }
+        #endregion
     }
 }

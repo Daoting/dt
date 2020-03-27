@@ -4,27 +4,23 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base">
 
-    <StackPanel Margin="10">
-        <TextBlock Text="显示位置" />
-        <ComboBox x:Name="_cbPlacement" />
-        <TextBox x:Name="_tbTarget" PlaceholderText="相对目标" Width="300" />
-        <CheckBox x:Name="_cbPin" Content="固定，固定时点击外部不自动关闭" />
-        <CheckBox x:Name="_cbHideBar" Content="隐藏标题栏" />
-        <CheckBox x:Name="_cbResize" Content="禁止调整大小" />
+    <a:Fv x:Name="_fv">
+        <a:CList ID="Placement" Title="显示位置" />
+        <a:CText x:Name="_tgt" ID="Target" Title="相对目标" />
+        <a:CBool ID="Pin" Title="固定不自动关闭" />
+        <a:CBool ID="HideBar" Title="隐藏标题栏" />
+        <a:CBool ID="Resize" Title="禁止调整大小" />
         <StackPanel Orientation="Horizontal">
             <Button Content="显示对话框" Click="OnShow" />
             <Button Content="异步等待对话框" Click="OnShowAsync" />
             <Button Content="随机位置显示" Click="OnShowPos" />
         </StackPanel>
-
-        <TextBlock Text="系统对话框" Margin="0,40,0,0" />
+        <a:CBar Title="系统对话框" />
         <StackPanel Orientation="Horizontal">
             <Button Content="确认对话框" Click="OnClicked1" />
             <Button Content="错误对话框" Click="OnClicked2" />
             <Button Content="多选项对话框" Click="OnClicked3" />
         </StackPanel>
-        <TextBlock Text="自定义形状对话框" Margin="0,40,0,0" />
-        <ComboBox x:Name="_shapes" />
-        <Button Content="自定义形状对话框" Click="OnClicked4" />
-    </StackPanel>
+        <Button Content="椭圆形对话框" Click="OnClicked4" />
+    </a:Fv>
 </a:Win>

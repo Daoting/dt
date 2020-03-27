@@ -75,5 +75,11 @@ namespace Dt.Base
         /// 收发时间
         /// </summary>
         public DateTime STime { get; set; }
+
+        /// <summary>
+        /// 照片
+        /// </summary>
+        [Ignore]
+        public string Photo { get; set; }
     }
 }
