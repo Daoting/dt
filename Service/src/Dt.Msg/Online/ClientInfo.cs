@@ -32,6 +32,7 @@ namespace Dt.Msg
             _c = p_context;
             System = p_system;
             _writer = p_writer;
+            Serilog.Log.Debug(_c.Context.TraceIdentifier);
 
             _queue = new BlockingCollection<string>();
             StartTime = DateTime.Now;
@@ -120,14 +121,20 @@ namespace Dt.Msg
         }
 
         /// <summary>
+        /// 通知客户端退出
+        /// </summary>
+        public void StopPush()
+        {
+            _queue.TryAdd("[\"SysPushApi.StopPush\"]");
+        }
+
+        /// <summary>
         /// 关闭推送
         /// </summary>
+        /// <returns></returns>
         public void Close()
         {
-            // 通知客户端退出
-            _queue.TryAdd("[\"SysPushApi.StopPush\"]");
-            // 触发_queue.Take()异常，会话结束
-            _queue.CompleteAdding();
+            _c.Context.Abort();
         }
     }
 }

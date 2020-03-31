@@ -33,9 +33,6 @@ namespace Dt.Core.Rpc
         /// <returns></returns>
         public async Task<bool> MoveNext()
         {
-            if (_responseStream == null)
-                return false;
-
             try
             {
                 _val = RpcKit.ParseBytes<object>(await RpcClientKit.ReadFrame(_responseStream));
@@ -54,6 +51,14 @@ namespace Dt.Core.Rpc
         public T Val<T>()
         {
             return RpcKit.GetVal<T>(_val);
+        }
+
+        /// <summary>
+        /// 关闭流
+        /// </summary>
+        public void Close()
+        {
+            _responseStream.Close();
         }
     }
 }

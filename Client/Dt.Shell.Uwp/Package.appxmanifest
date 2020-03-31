@@ -3,7 +3,8 @@
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
   xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
-  IgnorableNamespaces="uap mp">
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  IgnorableNamespaces="uap mp rescap">
   <Identity
     Name="4e169f82-ed49-494f-8c23-7dab11228000"
     Publisher="CN=hdt"
@@ -35,6 +36,7 @@
     <uap:Capability Name="videosLibrary" />
     <uap:Capability Name="picturesLibrary" />
     <uap:Capability Name="musicLibrary" />
+    <rescap:Capability Name="confirmAppClose"/>
     <DeviceCapability Name="microphone" />
     <DeviceCapability Name="webcam" />
   </Capabilities>

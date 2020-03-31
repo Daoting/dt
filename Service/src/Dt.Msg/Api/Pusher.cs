@@ -53,6 +53,28 @@ namespace Dt.Msg
         }
 
         /// <summary>
+        /// 注销客户端，因客户端直接关闭app时会造成http2连接关闭，该连接下的所有Register推送都结束！！！只能从服务端Abort
+        /// </summary>
+        /// <returns></returns>
+        public Task Unregister()
+        {
+            ClientInfo ci = Online.GetClient(_.UserID);
+            if (ci != null)
+            {
+                ci.Close();
+                return Task.CompletedTask;
+            }
+
+            // 查询所有其他副本
+            if (MsgKit.IsMultipleReplicas)
+            {
+
+                return Task.Delay(50);
+            }
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
         /// 判断用户是否在线，查询所有副本
         /// </summary>
         /// <param name="p_userID"></param>

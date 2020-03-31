@@ -13,9 +13,8 @@
 
         <a:CBar Title="流模式" />
         <StackPanel Orientation="Horizontal">
-            <Button Content="ServerStream" Click="OnServerStream" />
-            <Button Content="ClientStream" Click="OnClientStream" />
-            <Button Content="DuplexStream" Click="OnDuplexStream" />
+            <Button Content="启动ServerStream" Click="OnServerStream" />
+            <Button Content="停止ServerStream" Click="OnStopStream" />
         </StackPanel>
         <a:CFree RowSpan="8" ShowTitle="False">
             <TextBox x:Name="_tbInfo"

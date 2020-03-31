@@ -40,6 +40,8 @@ namespace Dt.Msg
             // 同一用户在一个服务副本最后注册的有效，在不同副本时都有效！！！
             if (_all.TryRemove(userID, out var ci))
             {
+                // 旧会话
+                ci.StopPush();
                 ci.Close();
                 Log.Debug($"替换会话：{userID}");
             }
