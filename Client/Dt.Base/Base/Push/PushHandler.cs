@@ -29,9 +29,9 @@ namespace Dt.Base
         static int _retryTimes;
 
         /// <summary>
-        /// 该账户从其它位置登录时停止接收推送
+        /// 服务器推送连接断开后的重连策略
         /// </summary>
-        public static bool StopPush;
+        public static PushRetryState RetryState = PushRetryState.Enable;
 
         /// <summary>
         /// 处理服务器推送
@@ -51,7 +51,7 @@ namespace Dt.Base
             catch { }
 
             // 未停止接收推送时重连
-            if (!StopPush && _retryTimes < 5)
+            if (RetryState == PushRetryState.Enable && _retryTimes < 5)
             {
                 _retryTimes++;
                 _ = Task.Delay(TimeSpan.FromSeconds(Math.Pow(2, _retryTimes))).ContinueWith((t) => Register());
@@ -133,5 +133,26 @@ namespace Dt.Base
             }
             return null;
         }
+    }
+
+    /// <summary>
+    /// 服务器推送连接断开后的重连策略
+    /// </summary>
+    enum PushRetryState
+    {
+        /// <summary>
+        /// 允许重连
+        /// </summary>
+        Enable,
+
+        /// <summary>
+        /// 停止重连
+        /// </summary>
+        Stop,
+
+        /// <summary>
+        /// 禁止重连
+        /// </summary>
+        Disable
     }
 }

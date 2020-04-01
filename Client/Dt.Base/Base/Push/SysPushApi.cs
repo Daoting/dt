@@ -41,7 +41,7 @@ namespace Dt.Base
         /// </summary>
         public void StopPush()
         {
-            PushHandler.StopPush = true;
+            PushHandler.RetryState = PushRetryState.Disable;
             AtKit.Msg("您已从其它位置登录！");
         }
     }

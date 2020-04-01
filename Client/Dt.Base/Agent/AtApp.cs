@@ -46,6 +46,8 @@ namespace Dt.Base
                 return;
             }
 
+            AtSys.Suspending = OnSuspending;
+            AtSys.Resuming = OnResuming;
             AtSys.Login = Login;
             AtSys.Logout = Logout;
             InputManager.Init();
@@ -194,6 +196,34 @@ namespace Dt.Base
 
             await AtSys.Stub.OnLogout();
             SysVisual.RootContent = AtSys.Stub.LoginPage;
+        }
+        #endregion
+
+        #region 挂起恢复
+        /// <summary>
+        /// 挂起时的处理，必须耗时小！
+        /// 手机或PC平板模式下不占据屏幕时触发，此时不确定被终止还是可恢复
+        /// </summary>
+        /// <returns></returns>
+        static async Task OnSuspending()
+        {
+            if (AtUser.IsLogon && PushHandler.RetryState == PushRetryState.Enable)
+            {
+                PushHandler.RetryState = PushRetryState.Stop;
+                await AtMsg.Unregister();
+            }
+        }
+
+        /// <summary>
+        /// 恢复会话时的处理，手机或PC平板模式下再次占据屏幕时触发
+        /// </summary>
+        static async void OnResuming()
+        {
+            if (AtUser.IsLogon && PushHandler.RetryState != PushRetryState.Disable)
+            {
+                PushHandler.RetryState = PushRetryState.Enable;
+                await PushHandler.Register();
+            }
         }
         #endregion
 

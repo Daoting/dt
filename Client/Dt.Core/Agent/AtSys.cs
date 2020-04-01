@@ -8,6 +8,7 @@
 
 #region 引用命名
 using System;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
@@ -133,9 +134,19 @@ namespace Dt.Core
 
         #region App事件方法
         /// <summary>
+        /// 挂起时的回调
+        /// </summary>
+        internal static Func<Task> Suspending { get; set; }
+
+        /// <summary>
+        /// 恢复时的回调
+        /// </summary>
+        internal static Action Resuming { get; set; }
+
+        /// <summary>
+        /// 三平台都能正常触发！必须耗时小！
         /// Running -> Suspended    手机或PC平板模式下不占据屏幕时触发
         /// 此时不知道应用程序将被终止还是可恢复
-        /// 执行保存应用程序状态、注销等操作
         /// </summary>
         /// <param name="sender">挂起的请求的源。</param>
         /// <param name="e">有关挂起的请求的详细信息。</param>
@@ -144,17 +155,15 @@ namespace Dt.Core
             var deferral = e.SuspendingOperation.GetDeferral();
             try
             {
-                // 外部系统关闭处理
-                await Stub.OnShutDown();
+                await Suspending();
+                await Stub.OnSuspending();
             }
             catch { }
-
-            // 保存状态，10586版本后发现不用处理挂起恢复了！真的？
-            //await SuspensionManager.SaveAsync();
             deferral.Complete();
         }
 
         /// <summary>
+        /// 三平台都能正常触发！
         /// Suspended -> Running    手机或PC平板模式下再次占据屏幕时触发
         /// 执行恢复状态、恢复会话等操作
         /// </summary>
@@ -162,16 +171,12 @@ namespace Dt.Core
         /// <param name="e"></param>
         static void OnResuming(object sender, object e)
         {
-            if (AtUser.IsLogon)
+            try
             {
-                // 挂起前为已登录状态时恢复会话记录
-
-                // 获取离线私信
-                //await AtIM.LoadOfflines();
+                Resuming();
+                Stub.OnResuming();
             }
-
-            // 恢复状态，不需要了？
-            //await SuspensionManager.RestoreAsync();
+            catch { }
         }
 
         /// <summary>
@@ -222,8 +227,8 @@ namespace Dt.Core
                         {
                             try
                             {
-                                // 外部系统关闭处理
-                                await Stub.OnShutDown();
+                                await Suspending();
+                                await Stub.OnSuspending();
                             }
                             catch { }
 
