@@ -22,10 +22,10 @@
 * Excel 添加/删除列时bug
 * Excel 导出pdf的bug
 * mono 中 The Bindable attribute is missing and the type [Dt.Base.XXX] is not known
-
 * ServerStream模式结束时为避免关闭连接，只能服务器端Abort
+* Fsm客户端上传过程中关闭时未处理 
+
 * Fv 手机加载慢
-* Fsm客户端上传过程中关闭时未处理
 
 ## Release 1.0 
 

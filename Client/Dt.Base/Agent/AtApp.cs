@@ -207,8 +207,12 @@ namespace Dt.Base
         /// <returns></returns>
         static async Task OnSuspending()
         {
+            // 取消正在进行的上传
+            Uploader.Cancel();
+
             if (AtUser.IsLogon && PushHandler.RetryState == PushRetryState.Enable)
             {
+                // 停止在线推送
                 PushHandler.RetryState = PushRetryState.Stop;
                 await AtMsg.Unregister();
             }
@@ -221,6 +225,7 @@ namespace Dt.Base
         {
             if (AtUser.IsLogon && PushHandler.RetryState != PushRetryState.Disable)
             {
+                // 启动在线推送
                 PushHandler.RetryState = PushRetryState.Enable;
                 await PushHandler.Register();
             }

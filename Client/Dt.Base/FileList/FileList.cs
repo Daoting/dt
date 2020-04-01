@@ -427,7 +427,7 @@ namespace Dt.Base
             _cts = new CancellationTokenSource();
             try
             {
-                result = await Uploader.Send(p_files, FixedVolume, _cts.Token);
+                result = await Uploader.Send(p_files, FixedVolume, _cts);
             }
             catch (Exception ex)
             {

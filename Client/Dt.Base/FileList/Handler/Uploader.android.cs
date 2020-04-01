@@ -35,6 +35,8 @@ namespace Dt.Base
     public static class Uploader
     {
         static readonly OkHttpClient _client = new OkHttpClient();
+        // 取消上传的令牌
+        static CancellationTokenSource _tokenSource;
 
         static Uploader()
         {
@@ -72,9 +74,9 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_uploadFiles">待上传文件</param>
         /// <param name="p_fixedvolume">要上传的固定卷名，null表示上传到普通卷</param>
-        /// <param name="p_token"></param>
+        /// <param name="p_tokenSource">取消上传的令牌，不负责释放</param>
         /// <returns></returns>
-        public static async Task<List<string>> Send(IList<FileData> p_uploadFiles, string p_fixedvolume, CancellationToken p_token)
+        public static async Task<List<string>> Send(IList<FileData> p_uploadFiles, string p_fixedvolume, CancellationTokenSource p_tokenSource)
         {
             // 列表内容不可为null
             if (p_uploadFiles == null
@@ -115,7 +117,8 @@ namespace Dt.Base
                 request.Header("uid", AtUser.ID.ToString());
 
             var call = _client.NewCall(request.Build());
-            p_token.Register(() => Task.Run(() => call.Cancel()));
+            p_tokenSource.Token.Register(() => Task.Run(() => call.Cancel()));
+            _tokenSource = p_tokenSource;
 
             Response resp;
             try
@@ -126,11 +129,28 @@ namespace Dt.Base
             {
                 return null;
             }
+            finally
+            {
+                _tokenSource = null;
+            }
 
             var result = resp.Body().Bytes();
             if (result == null || result.Length == 0)
                 return null;
             return ParseResult(result);
+        }
+
+        /// <summary>
+        /// 取消上传
+        /// </summary>
+        internal static void Cancel()
+        {
+            if (_tokenSource != null)
+            {
+                _tokenSource.Cancel();
+                _tokenSource.Dispose();
+                _tokenSource = null;
+            }
         }
 
         static List<string> ParseResult(byte[] p_data)

@@ -36,15 +36,17 @@ namespace Dt.Base
             // 验证时服务端证书始终有效！
             ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
         });
+        // 取消上传的令牌
+        static CancellationTokenSource _tokenSource;
 
         /// <summary>
         /// 执行上传
         /// </summary>
         /// <param name="p_uploadFiles">待上传文件</param>
         /// <param name="p_fixedvolume">要上传的固定卷名，null表示上传到普通卷</param>
-        /// <param name="p_token"></param>
+        /// <param name="p_tokenSource">取消上传的令牌，不负责释放</param>
         /// <returns></returns>
-        public static async Task<List<string>> Send(IList<FileData> p_uploadFiles, string p_fixedvolume, CancellationToken p_token)
+        public static async Task<List<string>> Send(IList<FileData> p_uploadFiles, string p_fixedvolume, CancellationTokenSource p_tokenSource)
         {
             // 列表内容不可为null
             if (p_uploadFiles == null
@@ -80,10 +82,11 @@ namespace Dt.Base
                     }
                 }
                 request.Content = content;
+                _tokenSource = p_tokenSource;
 
                 try
                 {
-                    using (var response = await _client.SendAsync(request, p_token).ConfigureAwait(false))
+                    using (var response = await _client.SendAsync(request, p_tokenSource.Token).ConfigureAwait(false))
                     {
                         result = await response.Content.ReadAsByteArrayAsync();
                         // response.StatusCode：412 表示不存在固定卷；415 无Boundary
@@ -94,11 +97,28 @@ namespace Dt.Base
                     Log.Error(ex, "上传异常");
                     return null;
                 }
+                finally
+                {
+                    _tokenSource = null;
+                }
             }
 
             if (result == null || result.Length == 0)
                 return null;
             return ParseResult(result);
+        }
+
+        /// <summary>
+        /// 取消上传
+        /// </summary>
+        internal static void Cancel()
+        {
+            if (_tokenSource != null)
+            {
+                _tokenSource.Cancel();
+                _tokenSource.Dispose();
+                _tokenSource = null;
+            }
         }
 
         static List<string> ParseResult(byte[] p_data)
