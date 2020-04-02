@@ -243,10 +243,34 @@ namespace Dt.Base
                 IsReceived = false,
                 Unread = false,
                 LetterType = GetLetterType(p_files),
+                STime = AtSys.Now,
             };
             _lv.InsertRow(l);
 
-            //_lv.Rows
+            FileList fl;
+            var elem = _lv.GetRowUI(_lv.Data.Count - 1);
+            if (elem == null || (fl = elem.FindChildByType<FileList>()) == null)
+            {
+                _lv.DeleteRows(new List<Letter> { l });
+                return;
+            }
+
+            EventHandler<bool> handler = null;
+            handler = async delegate (object s, bool suc)
+            {
+                fl.UploadFinished -= handler;
+                if (suc)
+                {
+                    var nl = await LetterManager.SendLetter(OtherID, _other.Name, fl.Data, l.LetterType);
+                    l.ID = nl.ID;
+                }
+                else
+                {
+                    _lv.DeleteRows(new List<Letter> { l });
+                }
+            };
+            fl.UploadFinished += handler;
+            await fl.UploadFiles(p_files);
         }
 
         LetterType GetLetterType(List<FileData> p_files)

@@ -29,7 +29,7 @@ namespace Dt.Sample
             }
         }
 
-        void OnUploadFinished(FileList sender, bool suc)
+        void OnUploadFinished(object sender, bool suc)
         {
             if (suc)
                 AtLocal.SaveCookie("FileTransDemo", _fl.Data);

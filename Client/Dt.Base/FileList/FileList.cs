@@ -89,7 +89,7 @@ namespace Dt.Base
         readonly FileListPanel _pnl;
         bool _lockData;
         CancellationTokenSource _cts;
-        
+
         BaseCommand _cmdAddImage;
         BaseCommand _cmdAddVideo;
         BaseCommand _cmdAddAudio;
@@ -119,7 +119,7 @@ namespace Dt.Base
         /// <summary>
         /// 上传结束事件
         /// </summary>
-        public event TypedEventHandler<FileList, bool> UploadFinished;
+        public event EventHandler<bool> UploadFinished;
 
         /// <summary>
         /// 文件列表变化事件
@@ -441,8 +441,12 @@ namespace Dt.Base
             bool suc = false;
             if (result == null || result.Count != p_files.Count)
             {
-                // 全部失败
-                AtKit.Warn("😢上传失败，请重新上传！");
+                // 失败
+                if (_cts == null)
+                    AtKit.Msg("已取消上传！");
+                else
+                    AtKit.Warn("😢上传失败，请重新上传！");
+
                 foreach (var vf in p_files)
                 {
                     vf.UploadUI.UploadFail(vf);

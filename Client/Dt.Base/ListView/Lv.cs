@@ -892,6 +892,18 @@ namespace Dt.Base
         {
             _dataView.Delete(p_rows);
         }
+
+        /// <summary>
+        /// 获取行UI，不支持虚拟行的情况！使用场景少
+        /// </summary>
+        /// <param name="p_index">行索引</param>
+        /// <returns></returns>
+        public FrameworkElement GetRowUI(int p_index)
+        {
+            if (!IsVir && _panel != null)
+                return _panel.GetLvRow(p_index);
+            return null;
+        }
         #endregion
 
         #region 选择

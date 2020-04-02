@@ -74,11 +74,14 @@ namespace Dt.Base.ListView
         }
         #endregion
 
+        #region 属性
         /// <summary>
         /// 通过Lv获取有效高度，因在ScrollViewer内！
         /// </summary>
         internal Size AvailableSize { get; set; }
+        #endregion
 
+        #region 外部方法
         /// <summary>
         /// 切换模板、调整自动行高时重新加载
         /// </summary>
@@ -247,6 +250,19 @@ namespace Dt.Base.ListView
             if (Children.Count > 0 && Children[Children.Count - 1] is Control con)
                 con.Focus(FocusState.Programmatic);
         }
+
+        /// <summary>
+        /// 获取行UI，不支持虚拟行的情况
+        /// </summary>
+        /// <param name="p_index"></param>
+        /// <returns></returns>
+        internal FrameworkElement GetLvRow(int p_index)
+        {
+            if (p_index >= 0 && p_index < _dataRows.Count)
+                return _dataRows[p_index];
+            return null;
+        }
+        #endregion
 
         #region 测量布局
         /// <summary>
