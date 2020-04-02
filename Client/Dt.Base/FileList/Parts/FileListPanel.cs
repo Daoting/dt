@@ -11,6 +11,7 @@ using Dt.Core;
 using System.Collections.Generic;
 using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml;
 #endregion
 
 namespace Dt.Base.FileLists
@@ -39,6 +40,10 @@ namespace Dt.Base.FileLists
                 || availableSize.Width == 0
                 || availableSize.Height == 0)
                 return base.MeasureOverride(availableSize);
+
+            // 单列不自动填充
+            if (_owner.ColCount == 1 && _owner.HorizontalAlignment != HorizontalAlignment.Stretch)
+                return MeasureOneCol(availableSize);
 
             double maxWidth = double.IsInfinity(availableSize.Width) ? SysVisual.ViewWidth : availableSize.Width;
             double colWidth = maxWidth / _owner.ColCount;
@@ -85,6 +90,9 @@ namespace Dt.Base.FileLists
             if (Children.Count == 0)
                 return base.ArrangeOverride(finalSize);
 
+            if (_owner.ColCount == 1 && _owner.HorizontalAlignment != HorizontalAlignment.Stretch)
+                return ArrangeOneCol(finalSize);
+
             double totalHeight = 0;
             double colWidth = finalSize.Width / _owner.ColCount;
             for (int i = 0; i < Children.Count; i++)
@@ -99,6 +107,41 @@ namespace Dt.Base.FileLists
                     // 行尾
                     totalHeight += _linesHeight[row];
                 }
+            }
+            return finalSize;
+        }
+
+        /// <summary>
+        /// 单列不自动填充
+        /// </summary>
+        /// <param name="availableSize"></param>
+        /// <returns></returns>
+        Size MeasureOneCol(Size availableSize)
+        {
+            double maxWidth = double.IsInfinity(availableSize.Width) ? SysVisual.ViewWidth : availableSize.Width;
+            Size itemSize = new Size(maxWidth, PanelMaxHeight);
+            Size imgSize = new Size(maxWidth, _owner.ImageHeight > 0 ? _owner.ImageHeight : maxWidth);
+            double width = 0;
+            double height = 0;
+            for (int i = 0; i < Children.Count; i++)
+            {
+                var item = Children[i] as FileItem;
+                item.Measure(item.FileType == FileItemType.Image ? imgSize : itemSize);
+                if (item.DesiredSize.Width > width)
+                    width = item.DesiredSize.Width;
+                height += item.DesiredSize.Height;
+            }
+            return new Size(width, height);
+        }
+
+        Size ArrangeOneCol(Size finalSize)
+        {
+            double height = 0;
+            for (int i = 0; i < Children.Count; i++)
+            {
+                var item = Children[i] as FileItem;
+                item.Arrange(new Rect(0, height, finalSize.Width, item.DesiredSize.Height));
+                height += item.DesiredSize.Height;
             }
             return finalSize;
         }

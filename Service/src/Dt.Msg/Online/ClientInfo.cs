@@ -32,7 +32,7 @@ namespace Dt.Msg
             _c = p_context;
             System = p_system;
             _writer = p_writer;
-            Serilog.Log.Debug(_c.Context.TraceIdentifier);
+            //Serilog.Log.Debug(_c.Context.TraceIdentifier);
 
             _queue = new BlockingCollection<string>();
             StartTime = DateTime.Now;

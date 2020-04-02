@@ -93,32 +93,47 @@
         <Setter Property="Height" Value="10" />
         <Setter Property="Margin" Value="0,10,0,0" />
         <Setter Property="VerticalAlignment" Value="Top" />
-        <Setter Property="Grid.Column" Value="2" />
+        <Setter Property="Grid.Column" Value="1" />
     </Style>
 
+    <Style x:Key="MsgFileList" TargetType="a:FileList">
+        <Setter Property="FixedVolume" Value="chat" />
+        <Setter Property="ImagePadding" Value="0" />
+        <Setter Property="VideoPadding" Value="0" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+    </Style>
+    
     <DataTemplate x:Key="OtherMsgTemplate">
         <Grid Padding="10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="60" />
             </Grid.ColumnDefinitions>
-            <a:Dot ID="Photo" UIType="Image" Width="30" Height="30" VerticalAlignment="Top" />
+            <a:Dot ID="Photo" UIType="Image" Width="40" Height="40" VerticalAlignment="Top" />
             <!--Data不能写在Style中-->
-            <Path Data="M0,3 L4,0 L4,6" Style="{StaticResource OtherPath}" Grid.Column="1" />
-            <StackPanel HorizontalAlignment="Left" Grid.Column="2">
-                <a:Dot ID="Content" Foreground="White" Background="{StaticResource 绿色背景}" Padding="10,6" />
-                <TextBlock Text="{Binding [stime], Converter={StaticResource CvAutoDate}}"
-                               Style="{StaticResource 小字}"
-                               Foreground="{StaticResource 深灰边框}" />
+            <Path Data="M0,3 L4,0 L4,6" Style="{StaticResource OtherPath}" />
+            <StackPanel HorizontalAlignment="Left" Margin="0,0,100,0" Grid.Column="2">
+                <a:Dot ID="Content" Foreground="White" Background="{StaticResource 绿色背景}" Padding="10" />
+                <TextBlock Text="{Binding [stime], Converter={StaticResource CvAutoDate}}" FontSize="12" Foreground="{StaticResource 深灰边框}" />
             </StackPanel>
         </Grid>
     </DataTemplate>
 
     <DataTemplate x:Key="OtherFileTemplate">
         <Grid Padding="10">
-
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <a:Dot ID="Photo" UIType="Image" Width="40" Height="40" VerticalAlignment="Top" />
+            <!--Data不能写在Style中-->
+            <Path Data="M0,3 L4,0 L4,6" Style="{StaticResource OtherPath}" />
+            <StackPanel HorizontalAlignment="Left" Margin="0,0,100,0" Grid.Column="2">
+                <a:FileList Data="{Binding [Content]}" Style="{StaticResource MsgFileList}" BorderBrush="{StaticResource 绿色背景}" />
+                <TextBlock Text="{Binding [stime], Converter={StaticResource CvAutoDate}}" FontSize="12" Foreground="{StaticResource 深灰边框}" />
+            </StackPanel>
         </Grid>
     </DataTemplate>
 
@@ -153,25 +168,34 @@
     <DataTemplate x:Key="MyMsgTemplate">
         <Grid Padding="10">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="60" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <StackPanel HorizontalAlignment="Right" Grid.Column="1">
-                <a:Dot ID="Content" Foreground="White" Background="{StaticResource 主题蓝色}" Padding="10,6" />
-                <TextBlock Text="{Binding [stime], Converter={StaticResource CvAutoDate}}"
-                               Style="{StaticResource 小字}"
-                               Foreground="{StaticResource 深灰边框}" />
+            <StackPanel HorizontalAlignment="Right" Margin="100,0,0,0">
+                <a:Dot ID="Content" Foreground="White" Background="{StaticResource 主题蓝色}" Padding="10" />
+                <TextBlock Text="{Binding [stime], Converter={StaticResource CvAutoDate}}" FontSize="12" Foreground="{StaticResource 深灰边框}" />
             </StackPanel>
+            <!--Data不能写在Style中-->
             <Path Data="M0,0 L4,3 L0,6" Style="{StaticResource MyPath}" />
-            <a:Dot ID="Icon" UIType="Image" Width="30" Height="30" VerticalAlignment="Top" Grid.Column="3" />
+            <a:Dot ID="Photo" UIType="Image" Width="40" Height="40" VerticalAlignment="Top" Grid.Column="2" />
         </Grid>
     </DataTemplate>
 
     <DataTemplate x:Key="MyFileTemplate">
-        <Grid>
-
+        <Grid Padding="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel HorizontalAlignment="Right" Margin="100,0,0,0">
+                <a:FileList Data="{Binding [Content]}" Style="{StaticResource MsgFileList}" BorderBrush="{StaticResource 主题蓝色}" />
+                <TextBlock Text="{Binding [stime], Converter={StaticResource CvAutoDate}}" FontSize="12" Foreground="{StaticResource 深灰边框}" />
+            </StackPanel>
+            <!--Data不能写在Style中-->
+            <Path Data="M0,0 L4,3 L0,6" Style="{StaticResource MyPath}" />
+            <a:Dot ID="Photo" UIType="Image" Width="40" Height="40" VerticalAlignment="Top" Grid.Column="2" />
         </Grid>
     </DataTemplate>
 
@@ -187,6 +211,7 @@
         </Grid>
     </DataTemplate>
 
+    <!--底部扩展项-->
     <DataTemplate x:Key="InputBarExtTemplate">
         <Grid Width="90" Padding="0,10,0,10">
             <Grid.RowDefinitions>

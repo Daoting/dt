@@ -84,26 +84,7 @@ namespace Dt.Base
         }
         #endregion
 
-        #region 发送栏
-        void OnAudioCapture(object sender, RoutedEventArgs e)
-        {
-            ClearBottom();
-        }
-
-        void OnShowFacePanel(object sender, RoutedEventArgs e)
-        {
-            if (_lvFaces == null)
-                CreateFaces();
-            SetBottom(_lvFaces);
-        }
-
-        void OnShowExtPanel(object sender, RoutedEventArgs e)
-        {
-            if (_lvExt == null)
-                CreateExtLv();
-            SetBottom(_lvExt);
-        }
-
+        #region 消息框
         void OnMsgKeyUp(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key != VirtualKey.Enter)
@@ -123,11 +104,12 @@ namespace Dt.Base
         }
         #endregion
 
-
-        void CreateFaces()
+        #region +按钮
+        void OnShowExtPanel(object sender, RoutedEventArgs e)
         {
-            _lvFaces = new Lv();
-            Grid.SetRow(_lvFaces, 1);
+            if (_lvExt == null)
+                CreateExtLv();
+            SetBottom(_lvExt);
         }
 
         void CreateExtLv()
@@ -159,14 +141,52 @@ namespace Dt.Base
             Grid.SetRow(_lvExt, 1);
         }
 
-        void OnExtClick(object sender, ItemClickArgs e)
+        async void OnExtClick(object sender, ItemClickArgs e)
+        {
+            ClearBottom();
+            List<FileData> files = null;
+            switch (e.Row.Str("title"))
+            {
+                case "图片":
+                    files = await FileKit.PickImages();
+                    break;
+                case "视频":
+                    files = await FileKit.PickMedias();
+                    break;
+                case "文件":
+                    files = await FileKit.PickFiles();
+                    break;
+            }
+            if (files != null && files.Count > 0)
+                Owner.SendFiles(files);
+        }
+        #endregion
+
+        #region 表情
+        void OnShowFacePanel(object sender, RoutedEventArgs e)
+        {
+            if (_lvFaces == null)
+                CreateFaces();
+            SetBottom(_lvFaces);
+        }
+
+        void CreateFaces()
+        {
+            _lvFaces = new Lv();
+            Grid.SetRow(_lvFaces, 1);
+        }
+        #endregion
+
+        #region 录音
+        void OnAudioCapture(object sender, RoutedEventArgs e)
         {
             ClearBottom();
         }
+        #endregion
 
         #region 底部扩展
         /// <summary>
-        /// 用ContentPresenter方式绑定属性在IOS上区域不释放，因此采用直接增删方式！！！
+        /// 用ContentPresenter方式绑定属性在IOS上区域大小不变化，因此采用直接增删方式！！！
         /// </summary>
         /// <param name="p_elem"></param>
         void SetBottom(FrameworkElement p_elem)

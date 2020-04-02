@@ -246,7 +246,7 @@ namespace Dt.Base
             };
             _lv.InsertRow(l);
 
-
+            //_lv.Rows
         }
 
         LetterType GetLetterType(List<FileData> p_files)

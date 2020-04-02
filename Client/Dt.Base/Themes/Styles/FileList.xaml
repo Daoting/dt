@@ -10,12 +10,12 @@
 
     <!--FileList-->
     <Style TargetType="a:FileList">
+        <Setter Property="BorderBrush" Value="{StaticResource 浅灰边框}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="a:FileList">
+                    <!--边框在项中绑定-->
                     <Border Child="{Binding Panel, RelativeSource={RelativeSource TemplatedParent}}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
                             Padding="{TemplateBinding Padding}" />
                 </ControlTemplate>
             </Setter.Value>
@@ -60,7 +60,7 @@
                 <TextBlock x:Name="MsgBlock" Text="{TemplateBinding Percent}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <TextBlock x:Name="NoteBlock" Text="点击可取消" Foreground="White" FontSize="{StaticResource 小字号}" Margin="0,0,0,6" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
             </Grid>
-            <Rectangle Stroke="{StaticResource 浅灰边框}" Margin="0,0,-1,-1" IsHitTestVisible="False" />
+            <Rectangle Stroke="{Binding Owner.BorderBrush, RelativeSource={RelativeSource TemplatedParent}}" Margin="0,0,-1,-1" IsHitTestVisible="False" />
             
             <VisualStateManager.VisualStateGroups>
                 <VisualStateGroup x:Name="CommonStates">
@@ -120,8 +120,8 @@
                 <TextBlock x:Name="MsgBlock" Text="{TemplateBinding Percent}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <TextBlock x:Name="NoteBlock" Text="点击可取消" Foreground="White" FontSize="{StaticResource 小字号}" Margin="0,0,0,6" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
             </Grid>
-            <Rectangle Stroke="{StaticResource 浅灰边框}" Margin="0,0,-1,-1" IsHitTestVisible="False" />
-            
+            <Rectangle Stroke="{Binding Owner.BorderBrush, RelativeSource={RelativeSource TemplatedParent}}" Margin="0,0,-1,-1" IsHitTestVisible="False" />
+
             <VisualStateManager.VisualStateGroups>
                 <VisualStateGroup x:Name="VirFileStates">
                     <VisualState x:Name="None" />
@@ -168,8 +168,8 @@
                 <TextBlock x:Name="MsgBlock" Text="{TemplateBinding Percent}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 <TextBlock x:Name="NoteBlock" Text="点击可取消" Foreground="White" FontSize="{StaticResource 小字号}" Margin="0,0,0,6" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
             </Grid>
-            <Rectangle Stroke="{StaticResource 浅灰边框}" Margin="0,0,-1,-1" IsHitTestVisible="False" />
-            
+            <Rectangle Stroke="{Binding Owner.BorderBrush, RelativeSource={RelativeSource TemplatedParent}}" Margin="0,0,-1,-1" IsHitTestVisible="False" />
+
             <VisualStateManager.VisualStateGroups>
                 <VisualStateGroup x:Name="VirFileStates">
                     <VisualState x:Name="None" />
