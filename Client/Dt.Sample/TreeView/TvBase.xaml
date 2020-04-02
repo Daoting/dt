@@ -25,14 +25,31 @@
                         <Button Content="Table" Click="OnLoadTbl" />
                         <Button Content="对象树" Click="OnLoadData" />
                     </StackPanel>
+                    
                     <a:CBar Title="属性" />
                     <a:CList Title="选择模式" ID="SelectionMode" />
                     <a:CBool ID="ShowRowLine" Title="显示行分割线" />
                     <a:CBool ID="IsVirtualized" Title="采用虚拟化" />
                     <a:CNum ID="Indent" Title="层缩进值" />
+                    <a:CFree Title="鼠标进入背景色">
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="无色" Click="OnNoEnteredBrush" />
+                            <Button Content="深黄色" Click="OnEnteredBrush" />
+                            <Button Content="默认色" Click="OnDefEnteredBrush" />
+                        </StackPanel>
+                    </a:CFree>
+                    <a:CFree Title="点击时背景色">
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="无色" Click="OnNoPressedBrush" />
+                            <Button Content="深色" Click="OnPressedBrush" />
+                            <Button Content="默认色" Click="OnDefPressedBrush" />
+                        </StackPanel>
+                    </a:CFree>
+                    
                     <a:CBar Title="附加事件" />
                     <CheckBox Content="行单击事件" Click="OnRowClick" />
                     <CheckBox Content="选择变化事件" Click="OnSelectionChangedClick" />
+                    
                     <a:CBar Title="操作" />
                     <StackPanel Orientation="Horizontal">
                         <Button Content="折叠所有节点" Click="OnCollapseAll" />

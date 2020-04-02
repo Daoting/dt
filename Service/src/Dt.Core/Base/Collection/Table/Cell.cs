@@ -192,7 +192,7 @@ namespace Dt.Core
                 // 类型的默认值，等同于default
                 _val = p_tgtType.IsValueType ? Activator.CreateInstance(p_tgtType) : null;
             }
-            else if (_val.GetType() == p_tgtType)
+            else if (p_tgtType.IsAssignableFrom(_val.GetType()))
             {
                 // 类型相同
             }
@@ -245,7 +245,7 @@ namespace Dt.Core
                 // 类型的默认值，等同于default
                 _val = Type.IsValueType ? Activator.CreateInstance(Type) : null;
             }
-            else if (p_val.GetType() == Type)
+            else if (Type.IsAssignableFrom(p_val.GetType()))
             {
                 // 类型相同
                 _val = p_val;
@@ -324,7 +324,7 @@ namespace Dt.Core
             }
 
             // 若指定类型和当前类型匹配
-            if (p_tgtType == p_val.GetType())
+            if (p_tgtType.IsAssignableFrom(p_val.GetType()))
                 return p_val;
 
             // 枚举类型

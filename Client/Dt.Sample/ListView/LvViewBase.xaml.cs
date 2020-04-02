@@ -226,5 +226,35 @@ namespace Dt.Sample
         {
             _lv.ItemHeight = double.NaN;
         }
+
+        void OnNoEnteredBrush(object sender, RoutedEventArgs e)
+        {
+            _lv.EnteredBrush = null;
+        }
+
+        void OnEnteredBrush(object sender, RoutedEventArgs e)
+        {
+            _lv.EnteredBrush = AtRes.深黄遮罩;
+        }
+
+        void OnDefEnteredBrush(object sender, RoutedEventArgs e)
+        {
+            _lv.ClearValue(Lv.EnteredBrushProperty);
+        }
+
+        void OnNoPressedBrush(object sender, RoutedEventArgs e)
+        {
+            _lv.PressedBrush = null;
+        }
+
+        void OnPressedBrush(object sender, RoutedEventArgs e)
+        {
+            _lv.PressedBrush = AtRes.深暗遮罩;
+        }
+
+        void OnDefPressedBrush(object sender, RoutedEventArgs e)
+        {
+            _lv.ClearValue(Lv.PressedBrushProperty);
+        }
     }
 }

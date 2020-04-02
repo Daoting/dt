@@ -253,7 +253,7 @@ namespace Dt.Base.TreeView
             if (e.IsRightButton())
                 return;
 
-            _rcPointer.Fill = AtRes.暗遮罩;
+            _rcPointer.Fill = _owner.PressedBrush;
             if (CapturePointer(e.Pointer))
             {
                 e.Handled = true;
@@ -297,7 +297,7 @@ namespace Dt.Base.TreeView
                 && e.IsMouse()
                 && _row.IsSelected.HasValue
                 && !_row.IsSelected.Value)
-                _rcPointer.Fill = AtRes.黄遮罩;
+                _rcPointer.Fill = _owner.EnteredBrush;
         }
 
         void OnPointerExited(object sender, PointerRoutedEventArgs e)

@@ -119,12 +119,28 @@
                         <Button Content="按部门分组" Click="OnGroup" />
                         <Button Content="删除分组" Click="OnDelGroup" />
                     </StackPanel>
+                    
                     <a:CBar Title="属性" />
                     <a:CList Title="选择模式" ID="SelectionMode" />
                     <a:CBool Title="显示分组导航" ID="ShowGroupHeader" />
                     <a:CBool Title="显示行分割线" ID="ShowItemBorder" />
                     <a:CNum Title="行/项目高" ID="ItemHeight" />
+                    <a:CFree Title="鼠标进入背景色">
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="无色" Click="OnNoEnteredBrush" />
+                            <Button Content="深黄色" Click="OnEnteredBrush" />
+                            <Button Content="默认色" Click="OnDefEnteredBrush" />
+                        </StackPanel>
+                    </a:CFree>
+                    <a:CFree Title="点击时背景色">
+                        <StackPanel Orientation="Horizontal">
+                            <Button Content="无色" Click="OnNoPressedBrush" />
+                            <Button Content="深色" Click="OnPressedBrush" />
+                            <Button Content="默认色" Click="OnDefPressedBrush" />
+                        </StackPanel>
+                    </a:CFree>
                     <Button Content="自动行高" Click="OnAutoHeight" />
+                    
                     <a:CBar Title="附加事件" />
                     <CheckBox Content="行单击事件" Click="OnRowClick" />
                     <CheckBox Content="选择变化事件" Click="OnSelectionChangedClick" />

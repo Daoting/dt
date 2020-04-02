@@ -103,5 +103,35 @@ namespace Dt.Sample
                 AtKit.Msg($"已选择 {tbl[index].Str("name")}");
             }
         }
+
+        void OnNoEnteredBrush(object sender, RoutedEventArgs e)
+        {
+            _tv.EnteredBrush = null;
+        }
+
+        void OnEnteredBrush(object sender, RoutedEventArgs e)
+        {
+            _tv.EnteredBrush = AtRes.深黄遮罩;
+        }
+
+        void OnDefEnteredBrush(object sender, RoutedEventArgs e)
+        {
+            _tv.ClearValue(Tv.EnteredBrushProperty);
+        }
+
+        void OnNoPressedBrush(object sender, RoutedEventArgs e)
+        {
+            _tv.PressedBrush = null;
+        }
+
+        void OnPressedBrush(object sender, RoutedEventArgs e)
+        {
+            _tv.PressedBrush = AtRes.深暗遮罩;
+        }
+
+        void OnDefPressedBrush(object sender, RoutedEventArgs e)
+        {
+            _tv.ClearValue(Tv.PressedBrushProperty);
+        }
     }
 }

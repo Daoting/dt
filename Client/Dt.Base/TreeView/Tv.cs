@@ -18,10 +18,12 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.System;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Markup;
+using Windows.UI.Xaml.Media;
 #endregion
 
 namespace Dt.Base
@@ -80,6 +82,18 @@ namespace Dt.Base
             typeof(int),
             typeof(Tv),
             new PropertyMetadata(20));
+
+        public static readonly DependencyProperty EnteredBrushProperty = DependencyProperty.Register(
+            "EnteredBrush",
+            typeof(Brush),
+            typeof(Tv),
+            new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0x19, 0xff, 0xff, 0x00))));
+
+        public static readonly DependencyProperty PressedBrushProperty = DependencyProperty.Register(
+            "PressedBrush",
+            typeof(Brush),
+            typeof(Tv),
+            new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0x19, 0x00, 0x00, 0x00))));
 
         public static readonly DependencyProperty IsDynamicLoadingProperty = DependencyProperty.Register(
             "IsDynamicLoading",
@@ -323,6 +337,24 @@ namespace Dt.Base
         {
             get { return (int)GetValue(IndentProperty); }
             set { SetValue(IndentProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置鼠标进入行/项目时的背景色
+        /// </summary>
+        public Brush EnteredBrush
+        {
+            get { return (Brush)GetValue(EnteredBrushProperty); }
+            set { SetValue(EnteredBrushProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置点击行/项目时的背景色
+        /// </summary>
+        public Brush PressedBrush
+        {
+            get { return (Brush)GetValue(PressedBrushProperty); }
+            set { SetValue(PressedBrushProperty, value); }
         }
 
         /// <summary>

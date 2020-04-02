@@ -92,7 +92,7 @@ namespace Dt.Base
             {
                 SetVal(p_brush.Color);
             }
-            else if (type == typeof(SolidColorBrush))
+            else if (type == typeof(SolidColorBrush) || type == typeof(Brush))
             {
                 SetVal(p_brush);
             }

@@ -68,7 +68,7 @@ namespace Dt.Base.FormView
                     return;
 
                 object val;
-                if (value != null && value.GetType() != _info.PropertyType)
+                if (value != null && !_info.PropertyType.IsAssignableFrom(value.GetType()))
                 {
                     try
                     {

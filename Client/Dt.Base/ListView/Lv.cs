@@ -17,9 +17,11 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Reflection;
 using Windows.Foundation;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Markup;
+using Windows.UI.Xaml.Media;
 #endregion
 
 namespace Dt.Base
@@ -84,6 +86,18 @@ namespace Dt.Base
             typeof(bool),
             typeof(Lv),
             new PropertyMetadata(true, OnReload));
+
+        public static readonly DependencyProperty EnteredBrushProperty = DependencyProperty.Register(
+            "EnteredBrush",
+            typeof(Brush),
+            typeof(Lv),
+            new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0x19, 0xff, 0xff, 0x00))));
+
+        public static readonly DependencyProperty PressedBrushProperty = DependencyProperty.Register(
+            "PressedBrush",
+            typeof(Brush),
+            typeof(Lv),
+            new PropertyMetadata(new SolidColorBrush(Color.FromArgb(0x19, 0x00, 0x00, 0x00))));
 
         public readonly static DependencyProperty GroupTemplateProperty = DependencyProperty.Register(
             "GroupTemplate",
@@ -429,6 +443,24 @@ namespace Dt.Base
         {
             get { return (bool)GetValue(ShowItemBorderProperty); }
             set { SetValue(ShowItemBorderProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置鼠标进入行/项目时的背景色
+        /// </summary>
+        public Brush EnteredBrush
+        {
+            get { return (Brush)GetValue(EnteredBrushProperty); }
+            set { SetValue(EnteredBrushProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置点击行/项目时的背景色
+        /// </summary>
+        public Brush PressedBrush
+        {
+            get { return (Brush)GetValue(PressedBrushProperty); }
+            set { SetValue(PressedBrushProperty, value); }
         }
 
         /// <summary>

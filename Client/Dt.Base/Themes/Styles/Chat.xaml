@@ -25,7 +25,7 @@
                             <RowDefinition Height="*" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <a:Lv x:Name="Lv" SelectionMode="None" ShowItemBorder="False" />
+                        <a:Lv x:Name="Lv" SelectionMode="None" ShowItemBorder="False" EnteredBrush="{x:Null}" PressedBrush="{x:Null}" />
                         <a:ChatInputBar x:Name="InputBar" Visibility="Collapsed" Grid.Row="1" />
                     </Grid>
                 </ControlTemplate>
