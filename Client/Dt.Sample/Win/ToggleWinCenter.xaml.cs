@@ -23,7 +23,7 @@ namespace Dt.Sample
         {
             InitializeComponent();
 
-            _lv.Data = new List<CenterInfo>
+            _lv.Data = new Nl<CenterInfo>
             {
                 new CenterInfo(Icons.公告, "内容为窗口", typeof(SingleViewWin), null),
                 new CenterInfo(Icons.田字格, "内容为嵌套窗口", typeof(ToggleWinCenter), null),

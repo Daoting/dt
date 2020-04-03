@@ -23,7 +23,7 @@ namespace Dt.Sample
         public FvHome()
         {
             InitializeComponent();
-            _lv.Data = new List<CenterInfo>
+            _lv.Data = new Nl<CenterInfo>
             {
                 new CenterInfo(Icons.词典, "基础格", typeof(BaseCellDemo), "基本格、日期格、布尔格、链接格，可通过属性编辑器动态设置格属"),
                 new CenterInfo(Icons.分组, "选择格", typeof(SelectionCellDemo), "列表格、树形格、图标格、颜色格"),

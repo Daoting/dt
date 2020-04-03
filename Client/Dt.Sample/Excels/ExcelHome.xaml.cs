@@ -23,7 +23,7 @@ namespace Dt.Sample
         public ExcelHome()
         {
             InitializeComponent();
-            _lv.Data = new List<CenterInfo>
+            _lv.Data = new Nl<CenterInfo>
             {
                 new CenterInfo(Icons.汉堡, "基本操作", typeof(BaseExcel), "Excel基本编辑功能及设置"),
                 new CenterInfo(Icons.分组, "用例", typeof(UseCase), "常见使用用例"),

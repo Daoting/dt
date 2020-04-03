@@ -35,7 +35,7 @@ namespace Dt.Base
         #region 静态内容
         public readonly static DependencyProperty DataProperty = DependencyProperty.Register(
             "Data",
-            typeof(IList),
+            typeof(INotifyList),
             typeof(Lv),
             new PropertyMetadata(null, OnDataChanged));
 
@@ -185,13 +185,13 @@ namespace Dt.Base
             {
                 if (lv.AutoCreateCol)
                     lv.OnAutoCreateCol(tbl);
-                lv._dataView = new DataTableView(lv, tbl);
+                lv._dataView = new LvDataView(lv, tbl);
             }
-            else if (e.NewValue is IList ls)
+            else if (e.NewValue is INotifyList ls)
             {
                 if (lv.AutoCreateCol && ls.Count > 0)
                     lv.OnAutoCreateProp(ls[0].GetType());
-                lv._dataView = new DataListView(lv, ls);
+                lv._dataView = new LvDataView(lv, ls);
             }
             lv.OnDataChanged();
         }
@@ -322,7 +322,7 @@ namespace Dt.Base
 
         #region 成员变量
         LvPanel _panel;
-        ILvDataView _dataView;
+        LvDataView _dataView;
         readonly List<LvItem> _rows;
         readonly ObservableCollection<LvItem> _selectedRows;
         Dictionary<string, MethodInfo> _exMethod;
@@ -365,11 +365,11 @@ namespace Dt.Base
 
         #region 属性
         /// <summary>
-        /// 获取设置数据源对象，Table或集合对象
+        /// 获取设置数据源对象，需实现INotifyList接口，Table 和 Nl 为常用类型
         /// </summary>
-        public IList Data
+        public INotifyList Data
         {
-            get { return (IList)GetValue(DataProperty); }
+            get { return (INotifyList)GetValue(DataProperty); }
             set { SetValue(DataProperty, value); }
         }
 
@@ -840,58 +840,6 @@ namespace Dt.Base
             if (_panel != null)
                 _panel.ReceiveFocus();
         }
-        #endregion
-
-        #region 行操作
-        /// <summary>
-        /// 将外部数据行在指定的索引处插入，未参加过滤排序和分组！
-        /// </summary>
-        /// <param name="p_row">外部数据行</param>
-        /// <param name="p_index">插入位置，-1表示添加到最后</param>
-        public void InsertRow(object p_row, int p_index = -1)
-        {
-            if (p_row != null && _dataView != null)
-            {
-                int index = _dataView.Insert(new List<object> { p_row }, p_index);
-                if (_panel != null)
-                {
-                    _panel.UpdateLayout();
-                    _panel.ScrollInto(index);
-                }
-            }
-        }
-
-        /// <summary>
-        /// 批量插入数据行
-        /// </summary>
-        /// <param name="p_rows"></param>
-        /// <param name="p_index"></param>
-        public void InsertRows(IEnumerable p_rows, int p_index = -1)
-        {
-            if (p_rows != null && _dataView != null)
-                _dataView.Insert(p_rows, p_index);
-        }
-
-        /// <summary>
-        /// 删除所有选择行
-        /// </summary>
-        /// <param name="p_isConfirm"></param>
-        /// <returns></returns>
-        public void DeleteSelection()
-        {
-            if (_dataView != null && _selectedRows.Count > 0)
-                _dataView.Delete(from row in _selectedRows
-                                 select row.Data);
-        }
-
-        /// <summary>
-        /// 删除数据行
-        /// </summary>
-        /// <param name="p_rows"></param>
-        public void DeleteRows(IEnumerable p_rows)
-        {
-            _dataView.Delete(p_rows);
-        }
 
         /// <summary>
         /// 获取行UI，不支持虚拟行的情况！使用场景少
@@ -1012,6 +960,21 @@ namespace Dt.Base
 
             if (removes.Count > 0 && SelectionChanged != null)
                 SelectionChanged(this, new SelectionChangedEventArgs(removes, new List<object>()));
+        }
+
+        /// <summary>
+        /// 删除所有选择行
+        /// </summary>
+        /// <param name="p_isConfirm"></param>
+        /// <returns></returns>
+        public void DeleteSelection()
+        {
+            var data = Data;
+            if (data != null && _selectedRows.Count > 0)
+            {
+                data.RemoveRange((from row in _selectedRows
+                                  select row.Data).ToList());
+            }
         }
         #endregion
 
@@ -1424,11 +1387,10 @@ namespace Dt.Base
         /// </summary>
         void OnLoadedRows()
         {
-            if (LoadedRows != null)
-            {
-                _panel.UpdateLayout();
-                LoadedRows.Invoke(this, EventArgs.Empty);
-            }
+            // 共四种行加载情况：LoadRows LoadGroupRows BatchInsertRows ClearAllRows
+            // 数据变化 -> 行加载 -> UI完成布局 -> 触发完毕事件
+            _panel.UpdateLayout();
+            LoadedRows?.Invoke(this, EventArgs.Empty);
         }
         #endregion
     }

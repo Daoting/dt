@@ -201,7 +201,7 @@ namespace Dt.Core
         /// <param name="p_notify"></param>
         public static void CloseNotify(NotifyInfo p_notify)
         {
-            if (p_notify != null && SysVisual.NotifyList.Contains(p_notify))
+            if (p_notify != null)
                 RunAsync(() => SysVisual.NotifyList.Remove(p_notify));
         }
 

@@ -115,7 +115,7 @@ namespace Dt.Base
         #region 成员变量
         readonly Lv _lv;
         Grid _grid;
-        List<object> _items;
+        Nl<object> _items;
         ListDlg _dlg;
         #endregion
 
@@ -144,7 +144,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置数据源对象，Table或集合对象
         /// </summary>
-        public IList Data
+        public INotifyList Data
         {
             get { return _lv.Data; }
             set { _lv.Data = value; }
@@ -254,12 +254,12 @@ namespace Dt.Base
         /// <summary>
         /// 外部(xaml中)定义的对象列表
         /// </summary>
-        public List<object> Items
+        public Nl<object> Items
         {
             get
             {
                 if (_items == null)
-                    _items = new List<object>();
+                    _items = new Nl<object>();
                 return _items;
             }
         }

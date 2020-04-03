@@ -155,7 +155,7 @@ namespace Dt.Base
             if (start < 0)
                 limit = cnt - e.PageNo * e.PageSize;
 
-            List<Letter> data = new List<Letter>();
+            Nl<Letter> data = new Nl<Letter>();
             var ls = AtLocal.DeferredQuery<Letter>($"select * from Letter where otherid={OtherID} and loginid={AtUser.ID} order by stime limit {limit} offset {start}");
             foreach (var l in ls)
             {
@@ -186,37 +186,17 @@ namespace Dt.Base
             {
                 // 已读标志
                 p_letter.Unread = false;
-                if (p_letter.LetterType == LetterType.Undo)
-                {
-                    // 对方撤回消息
-                    var ls = (List<Letter>)_lv.Data;
-                    var letter = ls.FirstOrDefault(l => l.ID == p_letter.ID);
-                    if (letter != null)
-                    {
-                        letter.LetterType = LetterType.Undo;
-                        int index = ls.IndexOf(letter);
-                        ls.RemoveAt(index);
-                        _lv.InsertRow(letter, index);
-                    }
-                    return;
-                }
-                AddLetter(p_letter);
+                p_letter.Photo = _other.Photo;
+                _lv.Data.Add(p_letter);
+                _lv.ScrollBottom();
             }
             else if (p_letter.LetterType == LetterType.Text)
             {
                 // 当前登录人发出的，文件类型的行已经添加！
-                AddLetter(p_letter);
+                p_letter.Photo = AtUser.Photo;
+                _lv.Data.Add(p_letter);
+                _lv.ScrollBottom();
             }
-        }
-
-        /// <summary>
-        /// 添加信息行
-        /// </summary>
-        /// <param name="p_letter"></param>
-        void AddLetter(Letter p_letter)
-        {
-            _lv.InsertRow(p_letter);
-            _lv.ScrollBottom();
         }
         #endregion
 
@@ -244,33 +224,30 @@ namespace Dt.Base
                 Unread = false,
                 LetterType = GetLetterType(p_files),
                 STime = AtSys.Now,
+                Photo = AtUser.Photo,
             };
-            _lv.InsertRow(l);
+            _lv.Data.Add(l);
+            _lv.ScrollBottom();
 
             FileList fl;
             var elem = _lv.GetRowUI(_lv.Data.Count - 1);
             if (elem == null || (fl = elem.FindChildByType<FileList>()) == null)
             {
-                _lv.DeleteRows(new List<Letter> { l });
+                _lv.Data.Remove(l);
                 return;
             }
 
-            EventHandler<bool> handler = null;
-            handler = async delegate (object s, bool suc)
+            bool suc = await fl.UploadFiles(p_files);
+            if (suc)
             {
-                fl.UploadFinished -= handler;
-                if (suc)
-                {
-                    var nl = await LetterManager.SendLetter(OtherID, _other.Name, fl.Data, l.LetterType);
-                    l.ID = nl.ID;
-                }
-                else
-                {
-                    _lv.DeleteRows(new List<Letter> { l });
-                }
-            };
-            fl.UploadFinished += handler;
-            await fl.UploadFiles(p_files);
+                var nl = await LetterManager.SendLetter(OtherID, _other.Name, fl.Data, l.LetterType);
+                l.ID = nl.ID;
+            }
+            else
+            {
+                _lv.Data.Remove(l);
+            }
+            _lv.ScrollBottom();
         }
 
         LetterType GetLetterType(List<FileData> p_files)

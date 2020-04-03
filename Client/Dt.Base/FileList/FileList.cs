@@ -17,7 +17,6 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 #endregion
@@ -357,17 +356,17 @@ namespace Dt.Base
         /// 批量上传文件
         /// </summary>
         /// <param name="p_files"></param>
-        public async Task UploadFiles(IList<FileData> p_files)
+        public async Task<bool> UploadFiles(IList<FileData> p_files)
         {
             if (p_files == null
                 || p_files.Count == 0
                 || p_files.Contains(null))
-                return;
+                return false;
 
             if (p_files.Count + _pnl.Children.Count > MaxFileCount)
             {
                 AtKit.Warn($"最多可上传 {MaxFileCount} 个文件！");
-                return;
+                return false;
             }
 
             var overlength = (from f in p_files
@@ -376,7 +375,7 @@ namespace Dt.Base
             if (overlength)
             {
                 AtKit.Warn("上传文件超过1GB限制！");
-                return;
+                return false;
             }
 
             foreach (var file in p_files)
@@ -388,7 +387,7 @@ namespace Dt.Base
                 _pnl.Children.Add(vf);
             }
 
-            await HandleUpload(p_files);
+            return await HandleUpload(p_files);
         }
 
         /// <summary>
@@ -397,28 +396,28 @@ namespace Dt.Base
         /// <param name="p_file">新文件</param>
         /// <param name="p_vf">待更新的旧文件</param>
         /// <returns></returns>
-        public async Task UpdateFile(FileData p_file, FileItem p_vf)
+        public async Task<bool> UpdateFile(FileData p_file, FileItem p_vf)
         {
             if (p_file == null || p_vf == null)
-                return;
+                return false;
 
             if (p_file.Size > AtKit.GB)
             {
                 AtKit.Warn(string.Format("【{0}】\r\n文件超过1GB限制！", p_file.DisplayName));
-                return;
+                return false;
             }
 
             // 新文件属性
             p_file.UploadUI = p_vf;
             await p_file.UploadUI.InitUpload(p_file);
-            await HandleUpload(new List<FileData> { p_file });
+            return await HandleUpload(new List<FileData> { p_file });
         }
 
         /// <summary>
         /// 处理多文件上传
         /// </summary>
         /// <param name="p_vfs"></param>
-        async Task HandleUpload(IList<FileData> p_files)
+        async Task<bool> HandleUpload(IList<FileData> p_files)
         {
             UploadStarted?.Invoke(this, EventArgs.Empty);
 
@@ -465,6 +464,7 @@ namespace Dt.Base
                 WriteData();
             }
             UploadFinished?.Invoke(this, suc);
+            return suc;
         }
 
         async Task AppendFile(Func<Task<List<FileData>>> p_funMulti, Func<Task<FileData>> p_funSingle)

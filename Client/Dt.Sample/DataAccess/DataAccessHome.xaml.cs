@@ -23,7 +23,7 @@ namespace Dt.Sample
         public DataAccessHome()
         {
             InitializeComponent();
-            _lv.Data = new List<CenterInfo>
+            _lv.Data = new Nl<CenterInfo>
             {
                 new CenterInfo(Icons.分组, "数据表操作", typeof(TableAccess), "Table, Row, Column, Cell的常用方法"),
                 new CenterInfo(Icons.详细, "序列化类型", typeof(SerializeDemo), ""),

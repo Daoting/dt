@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace Dt.Base.FormView
 {
     public sealed partial class IconDlg : Dlg
     {
-        static List<IconItem> _icons;
+        static Nl<IconItem> _icons;
 
         public IconDlg()
         {
@@ -37,11 +38,11 @@ namespace Dt.Base.FormView
             Close();
         }
 
-        static List<IconItem> GetIconList()
+        static Nl<IconItem> GetIconList()
         {
             if (_icons == null)
             {
-                _icons = new List<IconItem>();
+                _icons = new Nl<IconItem>();
                 Type type = typeof(Icons);
                 foreach (var fi in from f in type.GetRuntimeFields()
                                    where f.IsLiteral

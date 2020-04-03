@@ -23,7 +23,7 @@ namespace Dt.Sample
         public FileHome()
         {
             InitializeComponent();
-            _lv.Data = new List<CenterInfo>
+            _lv.Data = new Nl<CenterInfo>
             {
                 new CenterInfo(Icons.保存, "文件选择", typeof(FilePickerDemo), "文件类型过滤、单选、多选"),
                 new CenterInfo(Icons.日历, "FileList上传下载", typeof(FileListDemo), "跨平台文件上传下载"),

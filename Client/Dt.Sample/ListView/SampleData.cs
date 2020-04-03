@@ -56,11 +56,11 @@ namespace Dt.Sample
             return tbl;
         }
 
-        public static List<Person> CreatePersonsList(int p_count)
+        public static Nl<Person> CreatePersonsList(int p_count)
         {
             DateTime birth = new DateTime(1950, 8, 22);
             var persons = Person.Persons;
-            List<Person> pers = new List<Person>();
+            Nl<Person> pers = new Nl<Person>();
             for (int i = 0; i < p_count; i++)
             {
                 var per = persons[i % persons.Length];
@@ -83,10 +83,10 @@ namespace Dt.Sample
             return pers;
         }
 
-        public static List<string> CreateXmList(int p_count)
+        public static Nl<string> CreateXmList(int p_count)
         {
             var persons = Person.Persons;
-            List<string> pers = new List<string>();
+            Nl<string> pers = new Nl<string>();
             for (int i = 0; i < p_count; i++)
             {
                 var per = persons[i % persons.Length];

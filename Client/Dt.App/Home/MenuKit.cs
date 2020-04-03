@@ -28,7 +28,7 @@ namespace Dt.App
     {
         #region 成员变量
         // 所有菜单项 = _rootPageMenus + _leaveMenus
-        static List<GroupData<OmMenu>> _rootPageMenus;
+        static Nl<GroupData<OmMenu>> _rootPageMenus;
         static List<OmMenu> _leaveMenus;
         static readonly GroupData<OmMenu> _favMenus = new GroupData<OmMenu>("常用");
         static List<OmMenu> _defaultFixedMenus;
@@ -38,7 +38,7 @@ namespace Dt.App
         /// <summary>
         /// 获取当前登录用户的根页面菜单（包含一二级）
         /// </summary>
-        public static List<GroupData<OmMenu>> RootPageMenus
+        public static Nl<GroupData<OmMenu>> RootPageMenus
         {
             get { return _rootPageMenus; }
         }
@@ -184,7 +184,7 @@ namespace Dt.App
             }
 
             // 根页面菜单
-            _rootPageMenus = new List<GroupData<OmMenu>>();
+            _rootPageMenus = new Nl<GroupData<OmMenu>>();
             // 除根页面的剩余项
             _leaveMenus = new List<OmMenu>();
             // 所有一级项
@@ -266,12 +266,12 @@ namespace Dt.App
         /// </summary>
         /// <param name="p_parentMenu"></param>
         /// <returns></returns>
-        public static List<OmMenu> LoadGroupMenus(OmMenu p_parentMenu)
+        public static Nl<OmMenu> LoadGroupMenus(OmMenu p_parentMenu)
         {
             // 确保子菜单项的顺序
             return (from om in _leaveMenus
                     where om.ParentID == p_parentMenu.ID
-                    select om).ToList();
+                    select om).ToNl();
         }
 
         /// <summary>
@@ -279,9 +279,9 @@ namespace Dt.App
         /// </summary>
         /// <param name="p_filter"></param>
         /// <returns></returns>
-        public static List<OmMenu> LoadMenusByName(string p_filter)
+        public static Nl<OmMenu> LoadMenusByName(string p_filter)
         {
-            List<OmMenu> ls = new List<OmMenu>();
+            Nl<OmMenu> ls = new Nl<OmMenu>();
             List<OmMenu> last = new List<OmMenu>();
             foreach (var grp in _rootPageMenus)
             {

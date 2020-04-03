@@ -251,9 +251,9 @@ namespace Dt.Base.FormView
         /// </summary>
         /// <param name="p_type"></param>
         /// <returns></returns>
-        List<object> CreateEnumData(Type p_type)
+        Nl<object> CreateEnumData(Type p_type)
         {
-            List<object> ls = new List<object>();
+            Nl<object> ls = new Nl<object>();
             foreach (var fi in from f in p_type.GetRuntimeFields()
                                where f.IsLiteral
                                select f)

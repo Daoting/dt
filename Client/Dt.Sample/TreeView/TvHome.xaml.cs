@@ -23,7 +23,7 @@ namespace Dt.Sample
         public TvHome()
         {
             InitializeComponent();
-            _lv.Data = new List<CenterInfo>
+            _lv.Data = new Nl<CenterInfo>
             {
                 new CenterInfo(Icons.向下, "树", typeof(TvBase), "树控件基础功能"),
                 new CenterInfo(Icons.顺时针, "动态加载子节点", typeof(TvDynamicLoading), "常用的加载方式"),

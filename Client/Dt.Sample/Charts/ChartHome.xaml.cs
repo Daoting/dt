@@ -23,7 +23,7 @@ namespace Dt.Sample
         public ChartHome()
         {
             InitializeComponent();
-            _lv.Data = new List<CenterInfo>
+            _lv.Data = new Nl<CenterInfo>
             {
                 new CenterInfo(Icons.汉堡, "图表预览", typeof(BaseChart), "图表类型、X轴、Y轴、调色板、图例等设置"),
                 new CenterInfo(Icons.分组, "数据图表", typeof(DataChart), "Table数据图表"),

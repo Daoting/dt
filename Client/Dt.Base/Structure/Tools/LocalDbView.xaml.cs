@@ -26,7 +26,7 @@ namespace Dt.Base.Tools
         {
             InitializeComponent();
             Title = "本地库";
-            _lv.Data = new List<CenterInfo>
+            _lv.Data = new Nl<CenterInfo>
             {
                 new CenterInfo(Icons.分组, "状态库", typeof(StateDb), "State.db"),
                 new CenterInfo(Icons.详细, "模型库", typeof(ModelDb), "xxxx.db"),

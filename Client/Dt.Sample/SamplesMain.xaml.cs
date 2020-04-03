@@ -35,7 +35,7 @@ namespace Dt.Sample
 
         void LoadSampleList()
         {
-            List<GroupData<DataCmd>> ds = new List<GroupData<DataCmd>>();
+            Nl<GroupData<DataCmd>> ds = new Nl<GroupData<DataCmd>>();
             GroupData<DataCmd> group = null;
 
             #region 框架结构

@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Core;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -20,7 +21,7 @@ namespace Dt.Base.FormView
 {
     public sealed partial class ColorDlg : Dlg
     {
-        static List<ColorItem> _colors;
+        static Nl<ColorItem> _colors;
 
         public ColorDlg()
         {
@@ -37,12 +38,12 @@ namespace Dt.Base.FormView
             Close();
         }
 
-        static List<ColorItem> GetColorList()
+        static Nl<ColorItem> GetColorList()
         {
             if (_colors == null)
             {
                 Type type = typeof(Windows.UI.Colors);
-                _colors = new List<ColorItem>();
+                _colors = new Nl<ColorItem>();
                 _colors.Add(new ColorItem(new Color(), "无"));
 #if UWP
                 foreach (PropertyInfo info in type.GetProperties())

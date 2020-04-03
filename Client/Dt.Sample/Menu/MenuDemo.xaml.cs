@@ -24,7 +24,7 @@ namespace Dt.Sample
         public MenuDemo()
         {
             InitializeComponent();
-            _lv.Data = _m.AllItems.ToList();
+            _lv.Data = _m.AllItems.ToNl();
             _lv.ItemClick += OnSelectMi;
         }
 

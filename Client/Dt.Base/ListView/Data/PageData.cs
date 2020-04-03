@@ -179,7 +179,7 @@ namespace Dt.Base
         /// 加载当前页面数据
         /// </summary>
         /// <param name="p_pageData">当前页面数据</param>
-        public void LoadPageData(IList p_pageData)
+        public void LoadPageData(INotifyList p_pageData)
         {
             if (p_pageData == null || p_pageData.Count == 0)
             {
@@ -200,9 +200,13 @@ namespace Dt.Base
                 _owner.Data = p_pageData;
                 _loading = false;
             }
+            else if (InsertTop)
+            {
+                _owner.Data.InsertRange(0, p_pageData);
+            }
             else
             {
-                _owner.InsertRows(p_pageData, InsertTop ? 0 : -1);
+                _owner.Data.AddRange(p_pageData);
             }
         }
 

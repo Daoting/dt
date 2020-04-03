@@ -22,31 +22,6 @@ namespace Dt.Sample
         public LvGroupTemplate()
         {
             InitializeComponent();
-
-            _lv.View = new TraceItemSelector
-            {
-#if UWP
-                Male = (DataTemplate)Resources["Male"],
-                Lady = (DataTemplate)Resources["Lady"],
-#else
-                Male = StaticResources.Male,
-                Lady = StaticResources.Lady,
-#endif
-            };
-            _lv.Data = SampleData.CreatePersonsTbl(50);
-        }
-    }
-
-    public class TraceItemSelector : DataTemplateSelector
-    {
-        public DataTemplate Male { get; set; }
-        public DataTemplate Lady { get; set; }
-
-        protected override DataTemplate SelectTemplateCore(object item)
-        {
-            if (((LvItem)item).Row.Str("xb") == "男")
-                return Male;
-            return Lady;
         }
     }
 }

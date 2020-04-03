@@ -108,11 +108,11 @@ namespace Dt.Sample
             if (tbl != null)
             {
                 Row row = tbl.NewRow(new { xm = "数据行" });
-                _lv.InsertRow(row);
+                _lv.Data.Add(row);
             }
             else
             {
-                _lv.InsertRow(new Person { Xm = "对象行" });
+                _lv.Data.Add(new Person { Xm = "对象行" });
             }
         }
 
@@ -125,7 +125,7 @@ namespace Dt.Sample
                 {
                     row.InitVal("xm", "新行");
                 }
-                _lv.InsertRows(data, 0);
+                _lv.Data.InsertRange(0, data);
             }
             else
             {
@@ -134,7 +134,7 @@ namespace Dt.Sample
                 {
                     per.Xm = "新对象行";
                 }
-                _lv.InsertRows(ls, 0);
+                _lv.Data.InsertRange(0, ls);
             }
         }
 
@@ -214,7 +214,7 @@ namespace Dt.Sample
 
         void OnNextPage(PageData p_pd)
         {
-            IList ls;
+            INotifyList ls;
             if (_isTbl)
                 ls = SampleData.CreatePersonsTbl(p_pd.PageSize);
             else

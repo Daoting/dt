@@ -32,7 +32,6 @@ namespace Dt.Core
         protected readonly ColumnList _columns;
         bool _isChanged = false;
         bool _delayCheckChanges = false;
-        int _updating;
         #endregion
 
         #region 构造方法
@@ -508,71 +507,6 @@ namespace Dt.Core
         protected virtual Row CreateRowInstance()
         {
             return new Row();
-        }
-        #endregion
-
-        #region 延迟更新
-        /// <summary>
-        /// 延迟触发CollectionChanged事件
-        /// </summary>
-        /// <returns></returns>
-        /// <example>
-        /// <code>
-        /// using (tbl.Defer())
-        /// {
-        ///     foreach (var row in data)
-        ///     {
-        ///         tbl.Add(row);
-        ///     }
-        /// }
-        /// </code>
-        /// </example>
-        public IDisposable Defer()
-        {
-            return new InternalCls(this);
-        }
-
-        /// <summary>
-        /// 通过Defer实现延时更新
-        /// </summary>
-        int Updating
-        {
-            get { return _updating; }
-            set
-            {
-                _updating = value;
-                if (_updating == 0)
-                    OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-            }
-        }
-
-        /// <summary>
-        /// 重新触发CollectionChanged的方法
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
-        {
-            if (_updating <= 0)
-            {
-                // 符合更新条件，触发基类事件，否则延迟更新
-                base.OnCollectionChanged(e);
-            }
-        }
-
-        class InternalCls : IDisposable
-        {
-            Table _owner;
-
-            public InternalCls(Table p_owner)
-            {
-                _owner = p_owner;
-                _owner.Updating = _owner.Updating + 1;
-            }
-
-            public void Dispose()
-            {
-                _owner.Updating = _owner.Updating - 1;
-            }
         }
         #endregion
 
