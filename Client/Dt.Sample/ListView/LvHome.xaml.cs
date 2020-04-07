@@ -33,6 +33,7 @@ namespace Dt.Sample
                 new CenterInfo(Icons.划卡, "列表行模板选择", typeof(LvListSelector), "根据数据动态选择模板"),
                 new CenterInfo(Icons.录音, "分组模板", typeof(LvGroupTemplate), "设置分组模板"),
                 new CenterInfo(Icons.公告, "上下文菜单", typeof(LvContextMenu), "触发上下文菜单的方式：右键、悬停、点击标识按钮"),
+                new CenterInfo(Icons.乐谱, "外部ScrollViewer", typeof(LvInScrollViewer), "外部嵌套ScrollViewer，和其他元素一起滚动"),
             };
         }
     }

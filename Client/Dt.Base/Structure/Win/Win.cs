@@ -64,7 +64,7 @@ namespace Dt.Base
             typeof(Win),
             new PropertyMetadata(Visibility.Collapsed));
 
-        static readonly DependencyProperty CenterTabsProperty = DependencyProperty.Register(
+        internal static readonly DependencyProperty CenterTabsProperty = DependencyProperty.Register(
             "CenterTabs",
             typeof(Tabs),
             typeof(Win),

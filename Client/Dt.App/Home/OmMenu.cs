@@ -9,6 +9,7 @@
 #region 引用命名
 using Dt.Core;
 using Dt.Core.Sqlite;
+using Windows.UI.Xaml.Data;
 #endregion
 
 namespace Dt.App
@@ -16,6 +17,7 @@ namespace Dt.App
     /// <summary>
     /// 业务菜单
     /// </summary>
+    [Bindable]
     [Table]
     public class OmMenu : ViewModel
     {

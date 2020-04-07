@@ -219,6 +219,18 @@ namespace Dt.Base
             if (p_win == null)
                 return;
 
+            if (!AtSys.IsPhoneUI)
+            {
+                Tabs tabs = (Tabs)p_win.GetValue(Win.CenterTabsProperty);
+                if (tabs != null
+                    && tabs.Items.Count > 0
+                    && ((Tab)tabs.Items[0]).Content is Win win)
+                {
+                    // 设置主区窗口为自启动
+                    p_win = win;
+                }
+            }
+
             AutoStartInfo info = new AutoStartInfo();
             info.WinType = p_win.GetType().AssemblyQualifiedName;
             info.Title = p_win.Title;
