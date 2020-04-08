@@ -8,7 +8,7 @@
     <a:WinCenter>
         <a:Tabs>
             <a:Tab Title="列表">
-                <ScrollViewer HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
+                <!--<ScrollViewer HorizontalScrollMode="Auto" HorizontalScrollBarVisibility="Auto" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">-->
                     <StackPanel>
                         <Border Height="300" Background="Gray" />
                         <a:Lv x:Name="_lv">
@@ -52,7 +52,7 @@
                             </DataTemplate>
                         </a:Lv>
                     </StackPanel>
-                </ScrollViewer>
+                <!--</ScrollViewer>-->
             </a:Tab>
         </a:Tabs>
     </a:WinCenter>

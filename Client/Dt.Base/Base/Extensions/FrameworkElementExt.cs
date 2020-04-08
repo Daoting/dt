@@ -40,8 +40,9 @@ namespace Dt.Base
             where T : FrameworkElement
         {
             return (from item in source.FindChildren(p_checkItself)
-                    where item is T
-                    select item as T).FirstOrDefault<T>();
+                    let elem = item as T
+                    where elem != null
+                    select elem).FirstOrDefault();
         }
 
         /// <summary>
@@ -55,8 +56,9 @@ namespace Dt.Base
             where T : FrameworkElement
         {
             return (from item in source.FindChildren(p_checkItself)
-                    where item is T
-                    select item as T).Distinct();
+                    let elem = item as T
+                    where elem != null
+                    select elem).Distinct();
         }
 
         /// <summary>
@@ -161,7 +163,7 @@ namespace Dt.Base
             FrameworkElement parent = source;
             do
             {
-                parent = parent.GetParent();
+                parent = VisualTreeHelper.GetParent(parent) as FrameworkElement;
                 if (parent == null || parent == p_endParent)
                 {
                     break;
@@ -205,7 +207,7 @@ namespace Dt.Base
             FrameworkElement parent = source;
             do
             {
-                parent = parent.GetParent();
+                parent = VisualTreeHelper.GetParent(parent) as FrameworkElement;
                 if (parent == null || parent == p_endParent)
                     break;
                 yield return parent;
@@ -223,6 +225,32 @@ namespace Dt.Base
             if (source != null)
                 return VisualTreeHelper.GetParent(source) as FrameworkElement;
             return null;
+        }
+
+        /// <summary>
+        /// 在Win内查询第一个匹配类型的父元素
+        /// </summary>
+        /// <typeparam name="T">父元素类型</typeparam>
+        /// <param name="source"></param>
+        /// <returns>找到返回父元素，否则返回 null</returns>
+        public static T FindParentInWin<T>(this FrameworkElement source)
+        {
+            Type type = AtSys.IsPhoneUI ? typeof(Tab) : typeof(Tabs);
+            DependencyObject parent = source;
+            while (true)
+            {
+                parent = VisualTreeHelper.GetParent(parent);
+                if (parent == null)
+                    break;
+
+                // 也可查询Tab Tabs
+                if (parent is T tgt)
+                    return tgt;
+
+                if (parent.GetType() == type)
+                    break;
+            }
+            return default;
         }
         #endregion
 

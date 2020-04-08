@@ -34,7 +34,7 @@ namespace Dt.Base.ListView
         }
 
         #region 虚拟行
-        protected override Size MeasureVirRows(double p_maxWidth, double p_maxHeight)
+        protected override Size MeasureVirRows()
         {
             // 数据行
             if (!_initVirRow && _owner.Rows.Count > 0)
@@ -47,18 +47,18 @@ namespace Dt.Base.ListView
 
                 // 测量行高
                 // 给最大高度才能测量出内容的实际高度
-                Size testSize = new Size(p_maxWidth, PanelMaxHeight);
+                Size testSize = new Size(_maxSize.Width, PanelMaxHeight);
                 virRow.Measure(testSize);
                 _rowHeight = virRow.DesiredSize.Height;
 
                 if (_rowHeight > 0)
                 {
                     // 确保子元素刚好摆满可见区域，计算所需行数
-                    int rowCount = (int)Math.Ceiling(p_maxHeight / _rowHeight) + 1;
+                    int rowCount = (int)Math.Ceiling(_maxSize.Height / _rowHeight) + 1;
                     _pageHeight = rowCount * _rowHeight;
 
                     // 补充子元素
-                    testSize = new Size(p_maxWidth, _rowHeight);
+                    testSize = new Size(_maxSize.Width, _rowHeight);
                     for (int i = 1; i < rowCount; i++)
                     {
                         virRow = _createLvRow(null);
@@ -72,7 +72,7 @@ namespace Dt.Base.ListView
             else if (_dataRows.Count > 0)
             {
                 // 重新测量
-                Size testSize = new Size(p_maxWidth, _rowHeight);
+                Size testSize = new Size(_maxSize.Width, _rowHeight);
                 // 只在创建虚拟行时确定宽度，重新测量时不重置，避免不一样时死循环！
                 foreach (var row in _dataRows)
                 {
@@ -82,14 +82,13 @@ namespace Dt.Base.ListView
             double height = _rowHeight * _owner.Rows.Count;
 
             // 分组行
-            Size size = new Size(p_maxWidth, p_maxHeight);
             if (_owner.GroupRows != null)
             {
                 double top = 0;
                 foreach (var grp in _owner.GroupRows)
                 {
                     grp.Top = top;
-                    grp.Measure(size);
+                    grp.Measure(_maxSize);
                     height += grp.DesiredSize.Height;
                     top += grp.DesiredSize.Height;
                     top += grp.Data.Count * _rowHeight;
@@ -97,18 +96,18 @@ namespace Dt.Base.ListView
             }
 
             // 分组导航头，出现垂直滚动栏时才显示
-            if (_groupHeader != null && height > p_maxHeight)
+            if (_groupHeader != null && height > _maxSize.Height)
             {
-                _groupHeader.Measure(size);
+                _groupHeader.Measure(_maxSize);
                 height += _groupHeader.DesiredSize.Height;
                 // 增加高度使最底部分组能够滚动到顶部，确保和导航位置同步！
                 var group = _owner.GroupRows[_owner.GroupRows.Count - 1];
-                double delta = p_maxHeight - _groupHeader.DesiredSize.Height - group.DesiredSize.Height - group.Data.Count * _rowHeight;
+                double delta = _maxSize.Height - _groupHeader.DesiredSize.Height - group.DesiredSize.Height - group.Data.Count * _rowHeight;
                 // 因uno加1
                 if (delta > 0)
                     height += delta + 1;
             }
-            return new Size(p_maxWidth, height);
+            return new Size(_maxSize.Width, height);
         }
 
         protected override void ArrangeVirRows(Size p_finalSize)
@@ -253,10 +252,10 @@ namespace Dt.Base.ListView
         #endregion
 
         #region 真实行
-        protected override Size MeasureRealRows(double p_maxWidth, double p_maxHeight)
+        protected override Size MeasureRealRows()
         {
             double height = 0;
-            Size size = new Size(p_maxWidth, PanelMaxHeight);
+            Size size = new Size(_maxSize.Width, PanelMaxHeight);
             if (_owner.MapRows != null)
             {
                 // 有分组行
@@ -289,7 +288,7 @@ namespace Dt.Base.ListView
             }
 
             // 分组导航头，出现垂直滚动栏时才显示
-            if (_groupHeader != null && height > p_maxHeight)
+            if (_groupHeader != null && height > _maxSize.Height)
             {
                 _groupHeader.Measure(size);
                 height += _groupHeader.DesiredSize.Height;
@@ -300,12 +299,12 @@ namespace Dt.Base.ListView
                 {
                     bottomHeight += _dataRows[_dataRows.Count - i].DesiredSize.Height;
                 }
-                double delta = p_maxHeight - _groupHeader.DesiredSize.Height - group.DesiredSize.Height - bottomHeight;
+                double delta = _maxSize.Height - _groupHeader.DesiredSize.Height - group.DesiredSize.Height - bottomHeight;
                 // 因uno加1
                 if (delta > 0)
                     height += delta + 1;
             }
-            return new Size(p_maxWidth, height);
+            return new Size(_maxSize.Width, height);
         }
 
         protected override void ArrangeRealRows(Size p_finalSize)

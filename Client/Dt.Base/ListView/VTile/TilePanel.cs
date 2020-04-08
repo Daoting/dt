@@ -44,23 +44,23 @@ namespace Dt.Base.ListView
         }
 
         #region 虚拟行
-        protected override Size MeasureVirRows(double p_maxWidth, double p_maxHeight)
+        protected override Size MeasureVirRows()
         {
             // 数据行
             if (!_initVirRow && _owner.Rows.Count > 0)
             {
                 // 确定列数和列宽
-                if (p_maxWidth < _owner.MinItemWidth * 2)
+                if (_maxSize.Width < _owner.MinItemWidth * 2)
                 {
                     // 有效宽度无法放两列
-                    _itemWidth = p_maxWidth;
+                    _itemWidth = _maxSize.Width;
                     _colCount = 1;
                 }
                 else
                 {
                     // >= 2列，确保始终铺满，列宽: <= 3/2 * MinItemWidth
-                    _colCount = (int)Math.Floor(p_maxWidth / _owner.MinItemWidth);
-                    double leave = p_maxWidth % _owner.MinItemWidth;
+                    _colCount = (int)Math.Floor(_maxSize.Width / _owner.MinItemWidth);
+                    double leave = _maxSize.Width % _owner.MinItemWidth;
                     _itemWidth = _owner.MinItemWidth + leave / _colCount;
                 }
 
@@ -79,7 +79,7 @@ namespace Dt.Base.ListView
                 if (_rowHeight > 0)
                 {
                     // 确保子元素刚好摆满可见区域，计算所需行数
-                    int rowCount = (int)Math.Ceiling(p_maxHeight / _rowHeight) + 1;
+                    int rowCount = (int)Math.Ceiling(_maxSize.Height / _rowHeight) + 1;
                     _pageHeight = rowCount * _rowHeight;
                     _pageItemCount = rowCount * _colCount;
 
@@ -107,14 +107,13 @@ namespace Dt.Base.ListView
             }
 
             double height = 0;
-            Size size = new Size(p_maxWidth, p_maxHeight);
             if (_owner.GroupRows != null)
             {
                 // 有分组行
                 foreach (var grp in _owner.GroupRows)
                 {
                     grp.Top = height;
-                    grp.Measure(size);
+                    grp.Measure(_maxSize);
                     height += grp.DesiredSize.Height;
                     height += Math.Ceiling((double)grp.Data.Count / _colCount) * _rowHeight;
                 }
@@ -126,18 +125,18 @@ namespace Dt.Base.ListView
             }
 
             // 分组导航头，出现垂直滚动栏时才显示
-            if (_groupHeader != null && height > p_maxHeight)
+            if (_groupHeader != null && height > _maxSize.Height)
             {
-                _groupHeader.Measure(size);
+                _groupHeader.Measure(_maxSize);
                 height += _groupHeader.DesiredSize.Height;
                 // 增加高度使最底部分组能够滚动到顶部，确保和导航位置同步！
                 var group = _owner.GroupRows[_owner.GroupRows.Count - 1];
-                double delta = p_maxHeight - _groupHeader.DesiredSize.Height - group.DesiredSize.Height - Math.Ceiling((double)group.Data.Count / _colCount) * _rowHeight;
+                double delta = _maxSize.Height - _groupHeader.DesiredSize.Height - group.DesiredSize.Height - Math.Ceiling((double)group.Data.Count / _colCount) * _rowHeight;
                 // 因uno加1
                 if (delta > 0)
                     height += delta + 1;
             }
-            return new Size(p_maxWidth, height);
+            return new Size(_maxSize.Width, height);
         }
 
         protected override void ArrangeVirRows(Size p_finalSize)
@@ -313,20 +312,20 @@ namespace Dt.Base.ListView
         #endregion
 
         #region 真实行
-        protected override Size MeasureRealRows(double p_maxWidth, double p_maxHeight)
+        protected override Size MeasureRealRows()
         {
             // 确定列数和列宽
-            if (p_maxWidth < _owner.MinItemWidth * 2)
+            if (_maxSize.Width < _owner.MinItemWidth * 2)
             {
                 // 有效宽度无法放两列
-                _itemWidth = p_maxWidth;
+                _itemWidth = _maxSize.Width;
                 _colCount = 1;
             }
             else
             {
                 // >= 2列，确保始终铺满，列宽: <= 3/2 * MinItemWidth
-                _colCount = (int)Math.Floor(p_maxWidth / _owner.MinItemWidth);
-                double leave = p_maxWidth % _owner.MinItemWidth;
+                _colCount = (int)Math.Floor(_maxSize.Width / _owner.MinItemWidth);
+                double leave = _maxSize.Width % _owner.MinItemWidth;
                 _itemWidth = _owner.MinItemWidth + leave / _colCount;
             }
 
@@ -341,7 +340,7 @@ namespace Dt.Base.ListView
             }
 
             double height = 0;
-            Size grpSize = new Size(p_maxWidth, PanelMaxHeight);
+            Size grpSize = new Size(_maxSize.Width, PanelMaxHeight);
             if (_owner.GroupRows != null)
             {
                 // 有分组行
@@ -360,18 +359,18 @@ namespace Dt.Base.ListView
             }
 
             // 分组导航头，出现垂直滚动栏时才显示
-            if (_groupHeader != null && height > p_maxHeight)
+            if (_groupHeader != null && height > _maxSize.Height)
             {
                 _groupHeader.Measure(grpSize);
                 height += _groupHeader.DesiredSize.Height;
                 // 增加高度使最底部分组能够滚动到顶部，确保和导航位置同步！
                 var group = _owner.GroupRows[_owner.GroupRows.Count - 1];
-                double delta = p_maxHeight - _groupHeader.DesiredSize.Height - group.DesiredSize.Height - Math.Ceiling((double)group.Data.Count / _colCount) * _rowHeight;
+                double delta = _maxSize.Height - _groupHeader.DesiredSize.Height - group.DesiredSize.Height - Math.Ceiling((double)group.Data.Count / _colCount) * _rowHeight;
                 // 因uno加1
                 if (delta > 0)
                     height += delta + 1;
             }
-            return new Size(p_maxWidth, height);
+            return new Size(_maxSize.Width, height);
         }
 
         protected override void ArrangeRealRows(Size p_finalSize)

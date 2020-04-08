@@ -321,6 +321,7 @@ namespace Dt.Base
         #endregion
 
         #region 成员变量
+        Border _root;
         LvPanel _panel;
         LvDataView _dataView;
         readonly List<LvItem> _rows;
@@ -338,6 +339,9 @@ namespace Dt.Base
             _rows = new List<LvItem>();
             _selectedRows = new ObservableCollection<LvItem>();
             _selectedRows.CollectionChanged += OnSelectedItemsChanged;
+#if !UWP
+            Loaded += OnLoaded;
+#endif
         }
         #endregion
 
@@ -765,6 +769,14 @@ namespace Dt.Base
 
         internal ScrollViewer Scroll { get; private set; }
 
+        /// <summary>
+        /// 滚动栏是否在内部
+        /// </summary>
+        internal bool IsInnerScroll
+        {
+            get { return _root.Child is ScrollViewer; }
+        }
+
         internal Cols Cols
         {
             get { return View as Cols; }
@@ -1034,28 +1046,84 @@ namespace Dt.Base
         #endregion
 
         #region 重写方法
+        /*********************************************************************************************************/
+        // 平台调用顺序不同：
+        // UWP：OnApplyTemplate > MeasureOverride > ArrangeOverride > SizeChanged > Loaded
+        // Adr：OnApplyTemplate > Loaded > MeasureOverride > ArrangeOverride > SizeChanged
+        // iOS：OnApplyTemplate > Loaded > MeasureOverride > SizeChanged > ArrangeOverride
+        // uno中OnApplyTemplate时不一定在可视树上，uwp的OnApplyTemplate时已在可视树上
+        // 为了动态构造控件内容，uwp在OnApplyTemplate中处理，uno在Loaded时处理 ！
+        /*********************************************************************************************************/
+#if UWP
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            Scroll = (ScrollViewer)GetTemplateChild("ScrollViewer");
-            LoadPanel();
+            InitTemplate();
         }
+#endif
 
         protected override Size MeasureOverride(Size availableSize)
         {
             if (_panel != null)
-                _panel.AvailableSize = availableSize;
+            {
+                if (!double.IsInfinity(availableSize.Width) && !double.IsInfinity(availableSize.Height))
+                {
+                    // 外部无ScrollViewer StackPanel的情况
+                    _panel.SetMaxSize(availableSize);
+                }
+                else if (AtSys.IsPhoneUI)
+                {
+                    // 此时所属的Tab无有效大小，故无穷大时以手机页面为准
+                    double width = double.IsInfinity(availableSize.Width) ? SysVisual.ViewWidth : availableSize.Width;
+                    double height = double.IsInfinity(availableSize.Height) ? SysVisual.ViewHeight : availableSize.Height;
+                    _panel.SetMaxSize(new Size(width, height));
+                }
+                else
+                {
+                    // ContentPresenter为Tabs的SelectedContent，见win.xaml的133行
+                    var pre = IsInnerScroll ? this.FindParentInWin<ContentPresenter>() : Scroll.FindParentInWin<ContentPresenter>();
+                    double width = double.IsInfinity(availableSize.Width) ? pre.ActualWidth : availableSize.Width;
+                    double height = double.IsInfinity(availableSize.Height) ? pre.ActualHeight : availableSize.Height;
+                    _panel.SetMaxSize(new Size(width, height));
+                }
+            }
             return base.MeasureOverride(availableSize);
         }
         #endregion
 
         #region 加载过程
         /// <summary>
+        /// 动态构造控件内容
+        /// uwp在OnApplyTemplate中调用，Lv已在可视树上
+        /// uno在Loaded时调用，OnApplyTemplate时不一定在可视树上
+        /// </summary>
+        void InitTemplate()
+        {
+            _root = (Border)GetTemplateChild("Border");
+
+            // win模式查询范围限制在Tabs内，phone模式限制在Tab内
+            Scroll = this.FindParentInWin<ScrollViewer>();
+            if (Scroll == null)
+            {
+                // 内部滚动栏
+                Scroll = new ScrollViewer
+                {
+                    HorizontalScrollMode = ScrollMode.Auto,
+                    HorizontalScrollBarVisibility = ScrollBarVisibility.Auto,
+                    VerticalScrollMode = ScrollMode.Auto,
+                    VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
+                };
+                _root.Child = Scroll;
+            }
+            LoadPanel();
+        }
+
+        /// <summary>
         /// 动态加载面板
         /// </summary>
         void LoadPanel()
         {
-            if (Scroll == null || View == null)
+            if (_root == null || View == null)
                 return;
 
             LvPanel pnl;
@@ -1078,11 +1146,16 @@ namespace Dt.Base
 
             if (_panel != null)
             {
-                pnl.AvailableSize = _panel.AvailableSize;
+                pnl.SetMaxSize(_panel.GetMaxSize());
                 _panel.Unload();
             }
             _panel = pnl;
-            Scroll.Content = _panel;
+
+            // 内部有滚动栏时，面板放在滚动栏内
+            if (_root.Child == Scroll)
+                Scroll.Content = _panel;
+            else
+                _root.Child = _panel;
         }
 
         /// <summary>
@@ -1227,6 +1300,19 @@ namespace Dt.Base
                 _panel.OnRowsChanged(existGroup);
                 OnLoadedRows();
             }
+        }
+
+        /// <summary>
+        /// uno时的处理
+        /// uno中OnApplyTemplate时不一定在可视树上，uwp的OnApplyTemplate时已在可视树上
+        /// 为了动态构造控件内容，uwp在OnApplyTemplate中处理，uno在Loaded时处理 ！
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= OnLoaded;
+            InitTemplate();
         }
 
         /// <summary>

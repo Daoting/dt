@@ -37,6 +37,8 @@ namespace Dt.Base.ListView
         protected static Rect _rcEmpty = new Rect();
 
         protected Lv _owner;
+        // 面板最大尺寸，宽高始终不为无穷大！
+        protected Size _maxSize;
         protected Func<LvItem, FrameworkElement> _createLvRow;
         protected readonly List<FrameworkElement> _dataRows = new List<FrameworkElement>();
         protected bool _initVirRow;
@@ -74,14 +76,16 @@ namespace Dt.Base.ListView
         }
         #endregion
 
-        #region 属性
-        /// <summary>
-        /// 通过Lv获取有效高度，因在ScrollViewer内！
-        /// </summary>
-        internal Size AvailableSize { get; set; }
-        #endregion
-
         #region 外部方法
+        /// <summary>
+        /// 设置Lv面板的最大尺寸，宽高始终不为无穷大！
+        /// 在Lv.MeasureOverride时获取，已处理父元素为ScrollViewer StackPanel时造成的无穷大情况！
+        /// </summary>
+        internal void SetMaxSize(Size p_size)
+        {
+            _maxSize = p_size;
+        }
+
         /// <summary>
         /// 切换模板、调整自动行高时重新加载
         /// </summary>
@@ -262,6 +266,11 @@ namespace Dt.Base.ListView
                 return _dataRows[p_index];
             return null;
         }
+
+        internal Size GetMaxSize()
+        {
+            return _maxSize;
+        }
         #endregion
 
         #region 测量布局
@@ -276,17 +285,20 @@ namespace Dt.Base.ListView
             if (_owner.View == null)
                 return new Size();
 
-            double maxWidth = double.IsInfinity(AvailableSize.Width) ? SysVisual.ViewWidth : AvailableSize.Width;
-            double maxHeight = double.IsInfinity(AvailableSize.Height) ? SysVisual.ViewHeight : AvailableSize.Height;
+            Log.Debug("LvPanel MeasureOverride");
             // 虚拟行/真实行
-            return _owner.IsVir ? MeasureVirRows(maxWidth, maxHeight) : MeasureRealRows(maxWidth, maxHeight);
+            return _owner.IsVir ? MeasureVirRows() : MeasureRealRows();
         }
 
         protected override Size ArrangeOverride(Size finalSize)
         {
+            var w = _owner.DesiredSize;
+            var h = _owner.Scroll.ViewportHeight;
             if (Children.Count == 0)
                 return finalSize;
 
+            var pt = this.TransformToVisual(_owner.Scroll).TransformPoint(new Point());
+            Log.Debug("LvPanel ArrangeOverride");
             if (_owner.IsVir)
             {
                 // 虚拟行
@@ -306,13 +318,13 @@ namespace Dt.Base.ListView
             return finalSize;
         }
 
-        protected abstract Size MeasureVirRows(double p_maxWidth, double p_maxHeight);
+        protected abstract Size MeasureVirRows();
 
         protected abstract void ArrangeVirRows(Size p_finalSize);
 
         protected abstract void ArrangeGroupVirRows(Size p_finalSize);
 
-        protected abstract Size MeasureRealRows(double p_maxWidth, double p_maxHeight);
+        protected abstract Size MeasureRealRows();
 
         protected abstract void ArrangeRealRows(Size p_finalSize);
 
@@ -327,7 +339,7 @@ namespace Dt.Base.ListView
             // uno初次ArrangeOverride时 ViewportHeight == 0！
             if (_owner.Scroll.ViewportHeight == 0)
             {
-                double maxHeight = double.IsInfinity(AvailableSize.Height) ? SysVisual.ViewHeight : AvailableSize.Height;
+                double maxHeight = double.IsInfinity(_maxSize.Height) ? SysVisual.ViewHeight : _maxSize.Height;
                 return _owner.Scroll.VerticalOffset + maxHeight;
             }
             return _owner.Scroll.VerticalOffset + _owner.Scroll.ViewportHeight;

@@ -19,22 +19,33 @@ namespace Dt.Core
     public static class Log
     {
         /// <summary>
-        /// 保存调试级别日志
+        /// 输出调试级别日志，不保存
         /// </summary>
         /// <param name="p_msg"></param>
         public static void Debug(string p_msg)
         {
-            Save(LogEventLevel.Debug, p_msg, null);
+#if UWP
+            System.Diagnostics.Debug.WriteLine(p_msg);
+#else
+            Console.WriteLine(p_msg);
+#endif
         }
 
         /// <summary>
-        /// 保存调试级别日志
+        /// 输出调试级别日志，不保存
         /// </summary>
         /// <param name="p_ex"></param>
         /// <param name="p_msg"></param>
         public static void Debug(Exception p_ex, string p_msg = null)
         {
-            Save(LogEventLevel.Debug, p_msg, p_ex);
+            string msg = p_msg == null ? "" : p_msg + "\r\n";
+            if (p_ex != null)
+                msg += p_ex.Message;
+#if UWP
+            System.Diagnostics.Debug.WriteLine(msg);
+#else
+            Console.WriteLine(msg);
+#endif
         }
 
         /// <summary>

@@ -16,14 +16,11 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="a:Lv">
-                    <ScrollViewer x:Name="ScrollViewer"
-                                  Background="{TemplateBinding Background}"
-                                  BorderBrush="{TemplateBinding BorderBrush}"
-                                  BorderThickness="{TemplateBinding BorderThickness}"
-                                  HorizontalScrollMode="Auto"
-                                  HorizontalScrollBarVisibility="Auto"
-                                  VerticalScrollMode="Auto"
-                                  VerticalScrollBarVisibility="Auto" />
+                    <Border x:Name="Border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -104,7 +101,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
     <!--GroupRow-->
     <Style TargetType="lv:GroupRow">
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
