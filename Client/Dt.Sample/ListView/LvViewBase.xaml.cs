@@ -26,6 +26,7 @@ namespace Dt.Sample
             InitializeComponent();
             _lv.View = GetResource("TableView");
             _lv.ViewMode = ViewMode.Table;
+            _lv.GroupName = "bumen";
             _lv.Data = SampleData.CreatePersonsTbl(100);
         }
 

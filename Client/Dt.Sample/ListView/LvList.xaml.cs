@@ -60,7 +60,7 @@ namespace Dt.Sample
 
         void OnScroll(object sender, RoutedEventArgs e)
         {
-            int index = new Random().Next(0, ((IList)_lv.Data).Count);
+            int index = new Random().Next(0, _lv.Data.Count);
             _lv.ScrollInto(index);
             AtKit.Msg($"滚动到第 {index + 1} 行");
         }

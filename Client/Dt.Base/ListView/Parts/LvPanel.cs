@@ -37,14 +37,39 @@ namespace Dt.Base.ListView
         protected static Rect _rcEmpty = new Rect();
 
         protected Lv _owner;
-        // 面板最大尺寸，宽高始终不为无穷大！
-        protected Size _maxSize;
         protected Func<LvItem, FrameworkElement> _createLvRow;
-        protected readonly List<FrameworkElement> _dataRows = new List<FrameworkElement>();
         protected bool _initVirRow;
-        protected double _rowHeight;
-        protected double _pageHeight;
         protected GroupHeader _groupHeader;
+
+        /// <summary>
+        /// 虚拟行时：能填充可视区域的UI行列表(可看作一页)，真实行时：与数据行一一对应的UI行列表，
+        /// </summary>
+        protected readonly List<FrameworkElement> _dataRows = new List<FrameworkElement>();
+
+        /// <summary>
+        /// 采用虚拟行时使用，_dataRows的所有行总高度，看作页面高度
+        /// </summary>
+        protected double _pageHeight;
+
+        /// <summary>
+        /// 虚拟行的行高
+        /// </summary>
+        protected double _rowHeight;
+
+        /// <summary>
+        /// 面板最大尺寸，宽高始终不为无穷大！
+        /// </summary>
+        protected Size _maxSize;
+
+        /// <summary>
+        /// 以滚动栏为参照物，面板与滚动栏的水平距离，面板在右侧时为正数
+        /// </summary>
+        protected double _deltaX;
+
+        /// <summary>
+        /// 以滚动栏为参照物，面板与滚动栏的垂直距离，面板在下方时为正数
+        /// </summary>
+        protected double _deltaY;
         #endregion
 
         #region 构造方法
@@ -292,13 +317,24 @@ namespace Dt.Base.ListView
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            var w = _owner.DesiredSize;
-            var h = _owner.Scroll.ViewportHeight;
             if (Children.Count == 0)
                 return finalSize;
 
-            var pt = this.TransformToVisual(_owner.Scroll).TransformPoint(new Point());
-            Log.Debug("LvPanel ArrangeOverride");
+            //Log.Debug("LvPanel ArrangeOverride");
+            if (!_owner.IsInnerScroll)
+            {
+                // 面板与ScrollViewer的相对距离，以滚动栏为参照物，面板在右下方时为正数
+                var pt = TransformToVisual(_owner.Scroll).TransformPoint(new Point());
+                _deltaX = pt.X;
+                _deltaY = pt.Y;
+            }
+            else
+            {
+                // 内置滚动栏时，垂直距离始终 <= 0
+                _deltaX = -_owner.Scroll.HorizontalOffset;
+                _deltaY = -_owner.Scroll.VerticalOffset;
+            }
+
             if (_owner.IsVir)
             {
                 // 虚拟行
@@ -598,9 +634,15 @@ namespace Dt.Base.ListView
             if (e.PreviousSize.Width > 0 && e.PreviousSize.Height > 0)
             {
                 if (_owner.IsVir)
+                {
                     ClearVirRows();
+                    // 高度变化时重新生成虚拟行
+                    _owner.InvalidateMeasure();
+                }
                 else
+                {
                     InvalidateArrange();
+                }
             }
         }
 

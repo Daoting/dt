@@ -1038,10 +1038,26 @@ namespace Dt.Base
             }
         }
 
+        /// <summary>
+        /// 点击分组导航头链接，滚动到指定的分组
+        /// </summary>
+        /// <param name="p_group"></param>
         internal void ScrollIntoGroup(GroupRow p_group)
         {
-            // uno上有时和导航不同步，故多滚动些
-            Scroll.ChangeView(null, p_group.Top > 0 ? p_group.Top + 1 : 0, null, true);
+            if (IsInnerScroll)
+            {
+                // 16为分组行上部的间隔高度
+                Scroll.ChangeView(null, p_group.IsFirst ? 0 : p_group.Top + 16, null, true);
+            }
+            else
+            {
+                // 不能用p_group计算相对位置，因不可见时被布局在空区域
+                var pt = _panel.TransformToVisual(Scroll).TransformPoint(new Point());
+                double y = Scroll.VerticalOffset + pt.Y + p_group.Top;
+                if (!p_group.IsFirst)
+                    y += 16;
+                Scroll.ChangeView(null, y, null, true);
+            }
         }
         #endregion
 
@@ -1081,9 +1097,10 @@ namespace Dt.Base
                 else
                 {
                     // ContentPresenter为Tabs的SelectedContent，见win.xaml的133行
+                    Size oldSize = _panel.GetMaxSize();
                     var pre = IsInnerScroll ? this.FindParentInWin<ContentPresenter>() : Scroll.FindParentInWin<ContentPresenter>();
-                    double width = double.IsInfinity(availableSize.Width) ? pre.ActualWidth : availableSize.Width;
-                    double height = double.IsInfinity(availableSize.Height) ? pre.ActualHeight : availableSize.Height;
+                    double width = !double.IsInfinity(availableSize.Width) ? availableSize.Width : (pre.ActualWidth > 0 ? pre.ActualWidth : (oldSize.Width > 0 ? oldSize.Width : SysVisual.ViewWidth));
+                    double height = !double.IsInfinity(availableSize.Height) ? availableSize.Height : (pre.ActualHeight > 0 ? pre.ActualHeight : (oldSize.Height > 0 ? oldSize.Height : SysVisual.ViewHeight));
                     _panel.SetMaxSize(new Size(width, height));
                 }
             }
@@ -1114,6 +1131,13 @@ namespace Dt.Base
                     VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
                 };
                 _root.Child = Scroll;
+            }
+            else
+            {
+                Scroll.HorizontalScrollMode = ScrollMode.Auto;
+                Scroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
+                Scroll.VerticalScrollMode = ScrollMode.Auto;
+                Scroll.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
             }
             LoadPanel();
         }
