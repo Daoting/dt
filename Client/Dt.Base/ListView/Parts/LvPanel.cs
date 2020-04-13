@@ -37,14 +37,14 @@ namespace Dt.Base.ListView
         protected static Rect _rcEmpty = new Rect();
 
         protected Lv _owner;
-        protected Func<LvItem, FrameworkElement> _createLvRow;
+        protected Func<LvItem, LvRow> _createLvRow;
         protected bool _initVirRow;
         protected GroupHeader _groupHeader;
 
         /// <summary>
         /// 虚拟行时：能填充可视区域的UI行列表(可看作一页)，真实行时：与数据行一一对应的UI行列表，
         /// </summary>
-        protected readonly List<FrameworkElement> _dataRows = new List<FrameworkElement>();
+        protected readonly List<LvRow> _dataRows = new List<LvRow>();
 
         /// <summary>
         /// 采用虚拟行时使用，_dataRows的所有行总高度，看作页面高度
@@ -182,7 +182,7 @@ namespace Dt.Base.ListView
             for (int i = 0; i < p_count; i++)
             {
                 int index = p_index + i;
-                FrameworkElement row = _createLvRow(_owner.Rows[index]);
+                var row = _createLvRow(_owner.Rows[index]);
                 Children.Insert(index, row);
                 _dataRows.Insert(index, row);
             }
@@ -324,9 +324,13 @@ namespace Dt.Base.ListView
             if (!_owner.IsInnerScroll)
             {
                 // 面板与ScrollViewer的相对距离，以滚动栏为参照物，面板在右下方时为正数
-                var pt = TransformToVisual(_owner.Scroll).TransformPoint(new Point());
-                _deltaX = pt.X;
-                _deltaY = pt.Y;
+                if (_owner.Scroll.ActualHeight > 0)
+                {
+                    // 当切换win时，再次显示Scroll时ActualHeight为0，计算相对位置错误！采用切换前的相对位置
+                    var pt = TransformToVisual(_owner.Scroll).TransformPoint(new Point());
+                    _deltaX = pt.X;
+                    _deltaY = pt.Y;
+                }
             }
             else
             {
@@ -356,6 +360,12 @@ namespace Dt.Base.ListView
 
         protected abstract Size MeasureVirRows();
 
+        /*********************************************************************************************************/
+        // 1. 整个面板不在滚动栏可视区(_deltaY >= _maxSize.Height 或 _deltaY <= -p_finalSize.Height）时，布局到空区域
+        // 2. 面板可见且在滚动栏下方(0 <= _deltaY < _maxSize.Height)时，按虚拟行顺序布局，下方超出的行布局到空区域
+        // 3. 面板顶部超出滚动栏 并且 没有整个面板都超出(-p_finalSize.Height < _deltaY < 0)时，按分页算法布局所有虚拟行
+        /*********************************************************************************************************/
+
         protected abstract void ArrangeVirRows(Size p_finalSize);
 
         protected abstract void ArrangeGroupVirRows(Size p_finalSize);
@@ -365,21 +375,6 @@ namespace Dt.Base.ListView
         protected abstract void ArrangeRealRows(Size p_finalSize);
 
         protected abstract void ArrangeGroupRealRows(Size p_finalSize);
-
-        /// <summary>
-        /// 获取当前滚动栏可视区域底部的 Y 值
-        /// </summary>
-        /// <returns></returns>
-        protected double GetViewBottom()
-        {
-            // uno初次ArrangeOverride时 ViewportHeight == 0！
-            if (_owner.Scroll.ViewportHeight == 0)
-            {
-                double maxHeight = double.IsInfinity(_maxSize.Height) ? SysVisual.ViewHeight : _maxSize.Height;
-                return _owner.Scroll.VerticalOffset + maxHeight;
-            }
-            return _owner.Scroll.VerticalOffset + _owner.Scroll.ViewportHeight;
-        }
         #endregion
 
         #region 增删元素
@@ -403,10 +398,9 @@ namespace Dt.Base.ListView
             // 数据行
             if (_owner.Rows.Count > 0)
             {
-                FrameworkElement elem;
                 foreach (var row in _owner.Rows)
                 {
-                    elem = _createLvRow(row);
+                    var elem = _createLvRow(row);
                     Children.Add(elem);
                     _dataRows.Add(elem);
                 }
@@ -491,7 +485,7 @@ namespace Dt.Base.ListView
         /// </summary>
         /// <param name="p_item"></param>
         /// <returns></returns>
-        FrameworkElement CreateTableRow(LvItem p_item)
+        LvRow CreateTableRow(LvItem p_item)
         {
             var row = new TableRow(_owner);
             if (p_item != null)
@@ -504,7 +498,7 @@ namespace Dt.Base.ListView
         /// </summary>
         /// <param name="p_item"></param>
         /// <returns></returns>
-        FrameworkElement CreateListFormRow(LvItem p_item)
+        LvRow CreateListFormRow(LvItem p_item)
         {
             var row = new ListFormRow(_owner);
             if (p_item != null)
@@ -517,7 +511,7 @@ namespace Dt.Base.ListView
         /// </summary>
         /// <param name="p_item"></param>
         /// <returns></returns>
-        FrameworkElement CreateTileFormItem(LvItem p_item)
+        LvRow CreateTileFormItem(LvItem p_item)
         {
             var row = new TileFormRow(_owner);
             if (p_item != null)
@@ -530,7 +524,7 @@ namespace Dt.Base.ListView
         /// </summary>
         /// <param name="p_item"></param>
         /// <returns></returns>
-        FrameworkElement CreateListRowByTemplate(LvItem p_item)
+        LvRow CreateListRowByTemplate(LvItem p_item)
         {
             var row = new ListRow(_owner, (DataTemplate)_owner.View);
             if (p_item != null)
@@ -543,7 +537,7 @@ namespace Dt.Base.ListView
         /// </summary>
         /// <param name="p_item"></param>
         /// <returns></returns>
-        FrameworkElement CreateTileItemByTemplate(LvItem p_item)
+        LvRow CreateTileItemByTemplate(LvItem p_item)
         {
             var row = new TileRow(_owner, (DataTemplate)_owner.View);
             if (p_item != null)
@@ -556,7 +550,7 @@ namespace Dt.Base.ListView
         /// </summary>
         /// <param name="p_item"></param>
         /// <returns></returns>
-        FrameworkElement CreateListRowBySelector(LvItem p_item)
+        LvRow CreateListRowBySelector(LvItem p_item)
         {
             var temp = ((DataTemplateSelector)_owner.View).SelectTemplate(p_item);
             if (temp == null)
@@ -573,7 +567,7 @@ namespace Dt.Base.ListView
         /// </summary>
         /// <param name="p_item"></param>
         /// <returns></returns>
-        FrameworkElement CreateTileItemBySelector(LvItem p_item)
+        LvRow CreateTileItemBySelector(LvItem p_item)
         {
             var temp = ((DataTemplateSelector)_owner.View).SelectTemplate(p_item);
             if (temp == null)

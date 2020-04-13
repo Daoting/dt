@@ -22,11 +22,29 @@ namespace Dt.Sample
         public LvInScrollViewer()
         {
             InitializeComponent();
-            _lv.View = GetResource("TableView");
-            _lv.ViewMode = ViewMode.Table;
+            _lv.View = GetResource("ListView");
             _lv.GroupName = "bumen";
-            _lv.ItemHeight = double.NaN;
             _lv.Data = SampleData.CreatePersonsTbl(50);
+        }
+
+        void OnRowHeight(object sender, RoutedEventArgs e)
+        {
+            _lv.ItemHeight = 0;
+        }
+
+        void OnGridView(object sender, RoutedEventArgs e)
+        {
+            _lv.ChangeView(GetResource("TableView"), ViewMode.Table);
+        }
+
+        void OnListView(object sender, RoutedEventArgs e)
+        {
+            _lv.ChangeView(GetResource("ListView"), ViewMode.List);
+        }
+
+        void OnTileView(object sender, RoutedEventArgs e)
+        {
+            _lv.ChangeView(GetResource("TileView"), ViewMode.Tile);
         }
 
         void OnLoadData(object sender, RoutedEventArgs e)

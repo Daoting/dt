@@ -95,6 +95,11 @@
             <a:Tab Title="属性">
                 <a:Fv Data="{Binding ElementName=_lv}">
                     <StackPanel Orientation="Horizontal">
+                        <Button Content="表格" Click="OnGridView" />
+                        <Button Content="列表" Click="OnListView" />
+                        <Button Content="磁贴" Click="OnTileView" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
                         <Button Content="5行" Tag="5" Click="OnLoadData" />
                         <Button Content="100行" Tag="100" Click="OnLoadData" />
                         <Button Content="1000行" Tag="1000" Click="OnLoadData" />
@@ -106,7 +111,12 @@
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Button Content="自动行高" Click="OnAutoHeight" />
+                        <Button Content="行等高" Click="OnRowHeight" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
                         <Button Content="随机滚动" Click="OnScroll" />
+                        <Button Content="滚动到顶端" Click="OnScroll" />
+                        <Button Content="滚动到底端" Click="OnScroll" />
                     </StackPanel>
                     <a:CBar Title="顶部区域高度" />
                     <StackPanel Orientation="Horizontal">

@@ -830,8 +830,17 @@ namespace Dt.Base
 
                 if (p_viewMode.HasValue && ViewMode != p_viewMode.Value)
                 {
+                    _rows.Clear();
+                    if (_selectedRows.Count > 0)
+                        _selectedRows.Clear();
+                    if (GroupRows != null)
+                    {
+                        GroupRows.Clear();
+                        GroupRows = null;
+                        MapRows = null;
+                    }
                     ViewMode = p_viewMode.Value;
-                    LoadPanel();
+                    Refresh();
                 }
                 else if (_panel != null)
                 {
@@ -1125,8 +1134,6 @@ namespace Dt.Base
                 // 内部滚动栏
                 Scroll = new ScrollViewer
                 {
-                    HorizontalScrollMode = ScrollMode.Auto,
-                    HorizontalScrollBarVisibility = ScrollBarVisibility.Auto,
                     VerticalScrollMode = ScrollMode.Auto,
                     VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
                 };
@@ -1134,8 +1141,6 @@ namespace Dt.Base
             }
             else
             {
-                Scroll.HorizontalScrollMode = ScrollMode.Auto;
-                Scroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
                 Scroll.VerticalScrollMode = ScrollMode.Auto;
                 Scroll.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
             }
@@ -1174,6 +1179,17 @@ namespace Dt.Base
                 _panel.Unload();
             }
             _panel = pnl;
+
+            if (mode == ViewMode.Table)
+            {
+                Scroll.HorizontalScrollMode = ScrollMode.Auto;
+                Scroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
+            }
+            else
+            {
+                Scroll.HorizontalScrollMode = ScrollMode.Disabled;
+                Scroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
+            }
 
             // 内部有滚动栏时，面板放在滚动栏内
             if (_root.Child == Scroll)

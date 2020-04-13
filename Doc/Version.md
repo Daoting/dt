@@ -21,6 +21,8 @@
 *  移除Newtonsoft.Json，使用System.Text.Json 
 *  AtUI合并到AtApp
 
+* 调整TabControl继承自Control 
+
 ### Bug修改 
 * 设置窗口自启动时参数序列化问题
 * Chart饼图在android不正常

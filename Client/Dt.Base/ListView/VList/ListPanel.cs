@@ -41,7 +41,7 @@ namespace Dt.Base.ListView
             {
                 // 创建等高的虚拟行，时机：初次、切换行模板、面板大小变化
                 // 先添加一行，作为行高标准
-                FrameworkElement virRow = _createLvRow(_owner.Rows[0]);
+                var virRow = _createLvRow(_owner.Rows[0]);
                 Children.Insert(0, virRow);
                 _dataRows.Add(virRow);
 
@@ -103,6 +103,8 @@ namespace Dt.Base.ListView
                 // 增加高度使最底部分组能够滚动到顶部，确保和导航位置同步！
                 var group = _owner.GroupRows[_owner.GroupRows.Count - 1];
                 double delta = _maxSize.Height - _groupHeader.DesiredSize.Height - group.DesiredSize.Height - group.Data.Count * _rowHeight;
+                if (_owner.GroupRows.Count > 1)
+                    delta += 16;
                 // 因uno加1
                 if (delta > 0)
                     height += delta + 1;
@@ -128,18 +130,29 @@ namespace Dt.Base.ListView
             // 面板可见，在滚动栏下方，按正常顺序布局
             if (_deltaY >= 0 && _deltaY < _maxSize.Height)
             {
+                int iDataRow = _dataRows.Count;
                 for (int i = 0; i < _dataRows.Count; i++)
                 {
                     var item = _dataRows[i];
-                    if (i < _owner.Rows.Count)
+                    double top = i * _rowHeight;
+
+                    // 数据行已结束 或 剩下行不可见，结束布局
+                    if (i >= _owner.Rows.Count || _deltaY + top > _maxSize.Height)
                     {
-                        item.Arrange(new Rect(0, i * _rowHeight, p_finalSize.Width, _rowHeight));
-                        ((LvRow)item).SetViewRow(_owner.Rows[i], true);
+                        iDataRow = i;
+                        break;
                     }
-                    else
+
+                    item.Arrange(new Rect(0, top, p_finalSize.Width, _rowHeight));
+                    item.SetViewRow(_owner.Rows[i], true);
+                }
+
+                // 将剩余的虚拟行布局到空区域
+                if (iDataRow < _dataRows.Count)
+                {
+                    for (int i = iDataRow; i < _dataRows.Count; i++)
                     {
-                        // 多余的行布局在外部
-                        item.Arrange(_rcEmpty);
+                        _dataRows[i].Arrange(_rcEmpty);
                     }
                 }
                 return;
@@ -165,7 +178,7 @@ namespace Dt.Base.ListView
                     // 布局虚拟行
                     double top = iVirRow * _rowHeight + deltaTop;
                     item.Arrange(new Rect(0, top, p_finalSize.Width, _rowHeight));
-                    ((LvRow)item).SetViewRow(_owner.Rows[iRow + i], true);
+                    item.SetViewRow(_owner.Rows[iRow + i], true);
                 }
                 else
                 {
@@ -247,7 +260,7 @@ namespace Dt.Base.ListView
                         // 布局数据行
                         var row = _dataRows[iDataRow];
                         row.Arrange(new Rect(0, totalHeight, p_finalSize.Width, _rowHeight));
-                        ((LvRow)row).SetViewRow(_owner.Rows[i - iGrpRow], true);
+                        row.SetViewRow(_owner.Rows[i - iGrpRow], true);
                         totalHeight += _rowHeight;
 
                         // 虚拟行都已布局时退出
@@ -358,7 +371,7 @@ namespace Dt.Base.ListView
                 {
                     var row = _dataRows[iDataRow];
                     row.Arrange(new Rect(0, totalHeight, p_finalSize.Width, _rowHeight));
-                    ((LvRow)row).SetViewRow(_owner.Rows[i - iGrpRow], true);
+                    row.SetViewRow(_owner.Rows[i - iGrpRow], true);
                     totalHeight += _rowHeight;
 
                     iDataRow++;
@@ -513,7 +526,7 @@ namespace Dt.Base.ListView
             for (int i = 0; i < _owner.MapRows.Count; i++)
             {
                 // 按顺序取分组行或数据行
-                row = _owner.MapRows[i] ? _owner.GroupRows[iGrpRow++] : _dataRows[iDataRow++];
+                row = _owner.MapRows[i] ? (FrameworkElement)_owner.GroupRows[iGrpRow++] : _dataRows[iDataRow++];
 
                 // top为行的上侧和滚动栏上侧的距离，bottom为行的下侧距离
                 double top = totalHeight + _deltaY;
