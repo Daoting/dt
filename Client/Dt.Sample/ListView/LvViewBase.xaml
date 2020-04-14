@@ -153,8 +153,10 @@
                         <Button Content="无选择行" Click="OnSelectNull" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
-                        <Button Content="修改列值" Click="OnChangedVal" />
                         <Button Content="随机滚动" Click="OnScroll" />
+                        <Button Content="滚动到顶端" Click="OnScrollTop" />
+                        <Button Content="滚动到底端" Click="OnScrollBottom" />
+                        <Button Content="修改列值" Click="OnChangedVal" />
                     </StackPanel>
                 </a:Fv>
             </a:Tab>

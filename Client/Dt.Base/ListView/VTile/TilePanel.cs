@@ -39,6 +39,96 @@ namespace Dt.Base.ListView
                 con.Focus(FocusState.Programmatic);
         }
 
+        /// <summary>
+        /// 获取数据行的垂直位置
+        /// </summary>
+        /// <param name="p_index"></param>
+        /// <returns></returns>
+        protected override double GetRowVerPos(int p_index)
+        {
+            double height = 0;
+            if (_owner.IsVir)
+            {
+                // 虚拟行，等高
+                height = Math.Floor((double)p_index / _colCount) * _rowHeight;
+                if (_owner.MapRows != null)
+                {
+                    // 等高有分组
+                    int cnt = 0, iGrpRow = 0;
+                    for (int i = 0; i < _owner.MapRows.Count; i++)
+                    {
+                        if (_owner.MapRows[i])
+                            height += _owner.GroupRows[iGrpRow++].DesiredSize.Height;
+                        else
+                            cnt++;
+
+                        if (cnt > p_index)
+                            break;
+                    }
+                }
+            }
+            else
+            {
+                // 真实行
+                if (_owner.MapRows == null)
+                {
+                    // 无分组
+                    for (int i = 0; i < p_index; i++)
+                    {
+                        // 行末尾项
+                        bool isRowLast = ((i + 1) % _colCount == 0);
+                        if (isRowLast)
+                            height += _rowHeight;
+                    }
+                }
+                else
+                {
+                    // 有分组
+                    int iDataRow = 0, iGrpRow = 0;
+                    // 分组内的项目索引
+                    int indexInGroup = 0;
+                    LvRow lastRow = null;
+                    for (int i = 0; i < _owner.MapRows.Count; i++)
+                    {
+                        if (_owner.MapRows[i])
+                        {
+                            if (lastRow != null)
+                            {
+                                // 上个分组最后未摆满一行
+                                height += _rowHeight;
+                                lastRow = null;
+                            }
+                            height += _owner.GroupRows[iGrpRow++].DesiredSize.Height;
+                        }
+                        else
+                        {
+                            bool isRowLast = ((indexInGroup + 1) % _colCount == 0);
+                            if (isRowLast)
+                            {
+                                // 摆满一行
+                                height += _rowHeight;
+                                lastRow = null;
+                            }
+                            else
+                            {
+                                // 记录最后一项
+                                lastRow = _dataRows[iDataRow];
+                            }
+                            iDataRow++;
+                            indexInGroup++;
+                        }
+
+                        if (iDataRow >= p_index)
+                            break;
+                    }
+                }
+            }
+
+            if (_groupHeader != null)
+                height -= _groupHeader.DesiredSize.Height;
+            return Math.Max(height, 0);
+        }
+
         #region 虚拟行
         protected override Size MeasureVirRows()
         {
@@ -401,7 +491,7 @@ namespace Dt.Base.ListView
             iDataRow = iDataRow % _pageItemCount;
 
             // 分组导航头
-            if (_groupHeader != null && _owner.Scroll.ScrollableHeight > 0)
+            if (_groupHeader != null)
             {
                 if (iAllRow < _owner.MapRows.Count)
                 {
@@ -559,6 +649,7 @@ namespace Dt.Base.ListView
             }
 
             double totalHeight = 0;
+            int iDataRow = _dataRows.Count;
             for (int i = 0; i < _dataRows.Count; i++)
             {
                 var row = _dataRows[i];
@@ -566,6 +657,13 @@ namespace Dt.Base.ListView
                 // top为行的上侧和滚动栏上侧的距离，bottom为行的下侧距离
                 double top = totalHeight + _deltaY;
                 double bottom = top + _rowHeight;
+
+                // 剩下行都不可见，结束布局
+                if (top >= _maxSize.Height)
+                {
+                    iDataRow = i;
+                    break;
+                }
 
                 // 行末尾项宽度加1为隐藏右边框
                 bool isRowLast = ((i + 1) % _colCount == 0);
@@ -585,6 +683,15 @@ namespace Dt.Base.ListView
 
                 if (isRowLast)
                     totalHeight += _rowHeight;
+            }
+
+            // 将剩余的虚拟行布局到空区域
+            if (iDataRow < _dataRows.Count)
+            {
+                for (int i = iDataRow; i < _dataRows.Count; i++)
+                {
+                    _dataRows[i].Arrange(_rcEmpty);
+                }
             }
         }
 
@@ -631,10 +738,15 @@ namespace Dt.Base.ListView
                         lastRow = null;
                     }
 
-                    var gr = _owner.GroupRows[iGrpRow++];
-
-                    // top为行的上侧和滚动栏上侧的距离，bottom为行的下侧距离
+                    // top为行的上侧和滚动栏上侧的距离
                     top = totalHeight + _deltaY;
+
+                    // 剩下行都不可见，结束布局
+                    if (top >= _maxSize.Height)
+                        break;
+
+                    var gr = _owner.GroupRows[iGrpRow++];
+                    // bottom为行的下侧距离
                     bottom = top + gr.DesiredSize.Height;
 
                     // 可见区域：0 - _maxSize.Height
@@ -664,6 +776,11 @@ namespace Dt.Base.ListView
                 {
                     var row = _dataRows[iDataRow];
                     top = totalHeight + _deltaY;
+
+                    // 剩下行都不可见，结束布局
+                    if (top >= _maxSize.Height)
+                        break;
+
                     bottom = top + _rowHeight;
                     bool isRowLast = ((indexInGroup + 1) % _colCount == 0);
 
@@ -693,6 +810,22 @@ namespace Dt.Base.ListView
                     }
                     iDataRow++;
                     indexInGroup++;
+                }
+            }
+
+            // 将剩余的虚拟行和分组行布局到空区域
+            if (iDataRow < _dataRows.Count)
+            {
+                for (int i = iDataRow; i < _dataRows.Count; i++)
+                {
+                    _dataRows[i].Arrange(_rcEmpty);
+                }
+            }
+            if (iGrpRow < _owner.GroupRows.Count)
+            {
+                for (int i = iGrpRow; i < _owner.GroupRows.Count; i++)
+                {
+                    _owner.GroupRows[i].Arrange(_rcEmpty);
                 }
             }
 

@@ -828,6 +828,7 @@ namespace Dt.Base
                 if (p_viewEx != null)
                     ViewEx = p_viewEx;
 
+                Scroll.ChangeView(0, 0, null);
                 if (p_viewMode.HasValue && ViewMode != p_viewMode.Value)
                 {
                     _rows.Clear();
@@ -1055,6 +1056,7 @@ namespace Dt.Base
         {
             if (IsInnerScroll)
             {
+                // 启用动画会界面抖动！
                 // 16为分组行上部的间隔高度
                 Scroll.ChangeView(null, p_group.IsFirst ? 0 : p_group.Top + 16, null, true);
             }
@@ -1155,6 +1157,15 @@ namespace Dt.Base
             if (_root == null || View == null)
                 return;
 
+            if (_panel != null)
+            {
+                _panel.Unload();
+                if (_root.Child == Scroll)
+                    Scroll.Content = null;
+                else
+                    _root.Child = null;
+            }
+
             LvPanel pnl;
             ViewMode mode = CurrentViewMode;
             if (mode == ViewMode.List)
@@ -1174,10 +1185,7 @@ namespace Dt.Base
             }
 
             if (_panel != null)
-            {
                 pnl.SetMaxSize(_panel.GetMaxSize());
-                _panel.Unload();
-            }
             _panel = pnl;
 
             if (mode == ViewMode.Table)

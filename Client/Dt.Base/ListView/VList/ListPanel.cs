@@ -470,6 +470,7 @@ namespace Dt.Base.ListView
             }
 
             double totalHeight = 0;
+            int iDataRow = _dataRows.Count;
             for (int i = 0; i < _dataRows.Count; i++)
             {
                 var row = _dataRows[i];
@@ -477,6 +478,13 @@ namespace Dt.Base.ListView
                 // top为行的上侧和滚动栏上侧的距离，bottom为行的下侧距离
                 double top = totalHeight + _deltaY;
                 double bottom = top + row.DesiredSize.Height;
+
+                // 剩下行都不可见，结束布局
+                if (top >= _maxSize.Height)
+                {
+                    iDataRow = i;
+                    break;
+                }
 
                 // 可见区域：0 - _maxSize.Height
                 if ((top > 0 && top < _maxSize.Height)
@@ -491,6 +499,15 @@ namespace Dt.Base.ListView
                     row.Arrange(_rcEmpty);
                 }
                 totalHeight += row.DesiredSize.Height;
+            }
+
+            // 将剩余的虚拟行布局到空区域
+            if (iDataRow < _dataRows.Count)
+            {
+                for (int i = iDataRow; i < _dataRows.Count; i++)
+                {
+                    _dataRows[i].Arrange(_rcEmpty);
+                }
             }
         }
 
@@ -532,6 +549,16 @@ namespace Dt.Base.ListView
                 double top = totalHeight + _deltaY;
                 double bottom = top + row.DesiredSize.Height;
 
+                // 剩下行都不可见，结束布局
+                if (top >= _maxSize.Height)
+                {
+                    if (_owner.MapRows[i])
+                        iGrpRow--;
+                    else
+                        iDataRow--;
+                    break;
+                }
+
                 // 可见区域：0 - _maxSize.Height
                 if ((top > 0 && top < _maxSize.Height)
                     || (bottom > 0 && bottom < _maxSize.Height))
@@ -552,6 +579,22 @@ namespace Dt.Base.ListView
                     row.Arrange(_rcEmpty);
                 }
                 totalHeight += row.DesiredSize.Height;
+            }
+
+            // 将剩余的虚拟行和分组行布局到空区域
+            if (iDataRow < _dataRows.Count)
+            {
+                for (int i = iDataRow; i < _dataRows.Count; i++)
+                {
+                    _dataRows[i].Arrange(_rcEmpty);
+                }
+            }
+            if (iGrpRow < _owner.GroupRows.Count)
+            {
+                for (int i = iGrpRow; i < _owner.GroupRows.Count; i++)
+                {
+                    _owner.GroupRows[i].Arrange(_rcEmpty);
+                }
             }
 
             // 分组导航头

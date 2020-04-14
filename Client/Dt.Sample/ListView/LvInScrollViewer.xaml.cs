@@ -121,5 +121,15 @@ namespace Dt.Sample
             return StaticResources.TableView;
 #endif
         }
+
+        void OnScrollTop(object sender, RoutedEventArgs e)
+        {
+            _lv.ScrollTop();
+        }
+
+        void OnScrollBottom(object sender, RoutedEventArgs e)
+        {
+            _lv.ScrollBottom();
+        }
     }
 }

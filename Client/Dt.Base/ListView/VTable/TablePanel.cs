@@ -535,14 +535,23 @@ namespace Dt.Base.ListView
                 return;
             }
 
+            double colHeaderHeight = _colHeader.DesiredSize.Height;
             double totalHeight = 0;
+            int iDataRow = _dataRows.Count;
             for (int i = 0; i < _dataRows.Count; i++)
             {
                 var row = _dataRows[i];
 
                 // top为行的上侧和滚动栏上侧的距离，bottom为行的下侧距离
-                double top = totalHeight + _deltaY;
+                double top = totalHeight + _deltaY + colHeaderHeight;
                 double bottom = top + row.DesiredSize.Height;
+
+                // 剩下行都不可见，结束布局
+                if (top >= _maxSize.Height)
+                {
+                    iDataRow = i;
+                    break;
+                }
 
                 // 可见区域：0 - _maxSize.Height
                 if ((top > 0 && top < _maxSize.Height)
@@ -557,6 +566,15 @@ namespace Dt.Base.ListView
                     row.Arrange(_rcEmpty);
                 }
                 totalHeight += row.DesiredSize.Height;
+            }
+
+            // 将剩余的虚拟行布局到空区域
+            if (iDataRow < _dataRows.Count)
+            {
+                for (int i = iDataRow; i < _dataRows.Count; i++)
+                {
+                    _dataRows[i].Arrange(_rcEmpty);
+                }
             }
         }
 
@@ -601,8 +619,18 @@ namespace Dt.Base.ListView
                 row = _owner.MapRows[i] ? (FrameworkElement)_owner.GroupRows[iGrpRow++] : _dataRows[iDataRow++];
 
                 // top为行的上侧和滚动栏上侧的距离，bottom为行的下侧距离
-                double top = totalHeight + _deltaY - colHeaderHeight;
+                double top = totalHeight + _deltaY + colHeaderHeight;
                 double bottom = top + row.DesiredSize.Height;
+
+                // 剩下行都不可见，结束布局
+                if (top >= _maxSize.Height)
+                {
+                    if (_owner.MapRows[i])
+                        iGrpRow--;
+                    else
+                        iDataRow--;
+                    break;
+                }
 
                 // 可见区域：0 - _maxSize.Height
                 if ((top > 0 && top < _maxSize.Height)
@@ -627,6 +655,22 @@ namespace Dt.Base.ListView
                     row.Arrange(_rcEmpty);
                 }
                 totalHeight += row.DesiredSize.Height;
+            }
+
+            // 将剩余的虚拟行和分组行布局到空区域
+            if (iDataRow < _dataRows.Count)
+            {
+                for (int i = iDataRow; i < _dataRows.Count; i++)
+                {
+                    _dataRows[i].Arrange(_rcEmpty);
+                }
+            }
+            if (iGrpRow < _owner.GroupRows.Count)
+            {
+                for (int i = iGrpRow; i < _owner.GroupRows.Count; i++)
+                {
+                    _owner.GroupRows[i].Arrange(_rcEmpty);
+                }
             }
 
             // 分组导航头

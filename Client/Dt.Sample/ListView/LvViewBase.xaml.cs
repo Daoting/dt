@@ -169,6 +169,16 @@ namespace Dt.Sample
             AtKit.Msg($"滚动到第 {index + 1} 行");
         }
 
+        void OnScrollTop(object sender, RoutedEventArgs e)
+        {
+            _lv.ScrollTop();
+        }
+
+        void OnScrollBottom(object sender, RoutedEventArgs e)
+        {
+            _lv.ScrollBottom();
+        }
+
         void OnGroup(object sender, RoutedEventArgs e)
         {
             _lv.GroupName = "bumen";

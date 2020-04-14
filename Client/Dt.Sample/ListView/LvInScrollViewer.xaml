@@ -115,8 +115,8 @@
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <Button Content="随机滚动" Click="OnScroll" />
-                        <Button Content="滚动到顶端" Click="OnScroll" />
-                        <Button Content="滚动到底端" Click="OnScroll" />
+                        <Button Content="滚动到顶端" Click="OnScrollTop" />
+                        <Button Content="滚动到底端" Click="OnScrollBottom" />
                     </StackPanel>
                     <a:CBar Title="顶部区域高度" />
                     <StackPanel Orientation="Horizontal">

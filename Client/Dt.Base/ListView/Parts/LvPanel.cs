@@ -194,37 +194,43 @@ namespace Dt.Base.ListView
         /// <param name="p_index">-1 表示最后</param>
         internal async void ScrollInto(int p_index)
         {
-            // 最后
             if (p_index < 0 || p_index >= _owner.Rows.Count - 1)
             {
-                // 不使用Dispatcher初次加载数据后滚出无效！
-                await Dispatcher.RunAsync(
-                    CoreDispatcherPriority.Normal,
-                    new DispatchedHandler(() => _owner.Scroll.ChangeView(null, _owner.Scroll.ScrollableHeight, null))
-                    );
-                return;
+                // 最后
+                p_index = _owner.Rows.Count - 1;
             }
 
-            double height = GetRowVerPos(p_index);
-            double offset = Math.Max(height - _owner.Scroll.ViewportHeight, 0);
+            double offset;
+            if (_owner.IsInnerScroll)
+            {
+                offset = (p_index == _owner.Rows.Count - 1) ? _owner.Scroll.ScrollableHeight : GetRowVerPos(p_index);
+            }
+            else
+            {
+                double rowHeight = GetRowVerPos(p_index);
+                // 计算与滚动栏的相对位置
+                var pt = TransformToVisual(_owner.Scroll).TransformPoint(new Point());
+                offset = _owner.Scroll.VerticalOffset + pt.Y + rowHeight;
+            }
+
+            // 不使用Dispatcher初次加载数据后滚出无效！
             await Dispatcher.RunAsync(
-                    CoreDispatcherPriority.Normal,
-                    new DispatchedHandler(() => _owner.Scroll.ChangeView(null, offset, null))
-                    );
+                CoreDispatcherPriority.Normal,
+                new DispatchedHandler(() => _owner.Scroll.ChangeView(null, offset, null)));
         }
 
         /// <summary>
-        /// 获取数据行的垂直位置
+        /// 获取数据行的垂直位置，只适用于列表和表格模式
         /// </summary>
         /// <param name="p_index"></param>
         /// <returns></returns>
-        internal double GetRowVerPos(int p_index)
+        protected virtual double GetRowVerPos(int p_index)
         {
             double height = 0;
             if (_owner.IsVir)
             {
                 // 虚拟行，等高
-                height += (p_index + 1) * _rowHeight;
+                height = p_index * _rowHeight;
                 if (_owner.MapRows != null)
                 {
                     // 等高有分组
@@ -247,7 +253,7 @@ namespace Dt.Base.ListView
                 if (_owner.MapRows == null)
                 {
                     // 无分组
-                    for (int i = 0; i <= p_index; i++)
+                    for (int i = 0; i < p_index; i++)
                     {
                         height += _dataRows[i].DesiredSize.Height;
                     }
@@ -263,12 +269,15 @@ namespace Dt.Base.ListView
                         else
                             height += _dataRows[iDataRow++].DesiredSize.Height;
 
-                        if (iDataRow > p_index)
+                        if (iDataRow >= p_index)
                             break;
                     }
                 }
             }
-            return height;
+
+            if (_groupHeader != null)
+                height -= _groupHeader.DesiredSize.Height;
+            return Math.Max(height, 0);
         }
 
         /// <summary>
@@ -361,6 +370,7 @@ namespace Dt.Base.ListView
         protected abstract Size MeasureVirRows();
 
         /*********************************************************************************************************/
+        // 虚拟行布局
         // 1. 整个面板不在滚动栏可视区(_deltaY >= _maxSize.Height 或 _deltaY <= -p_finalSize.Height）时，布局到空区域
         // 2. 面板可见且在滚动栏下方(0 <= _deltaY < _maxSize.Height)时，按虚拟行顺序布局，下方超出的行布局到空区域
         // 3. 面板顶部超出滚动栏 并且 没有整个面板都超出(-p_finalSize.Height < _deltaY < 0)时，按分页算法布局所有虚拟行
@@ -371,6 +381,12 @@ namespace Dt.Base.ListView
         protected abstract void ArrangeGroupVirRows(Size p_finalSize);
 
         protected abstract Size MeasureRealRows();
+
+        /*********************************************************************************************************/
+        // 真实行布局
+        // 1. 整个面板不在滚动栏可视区(_deltaY >= _maxSize.Height 或 _deltaY <= -p_finalSize.Height）时，布局到空区域
+        // 2. 按真实行顺序布局，行超出下方时的将剩余行布局到空区域，其余的行可见时正常布局，超出上方的行布局到空区域
+        /*********************************************************************************************************/
 
         protected abstract void ArrangeRealRows(Size p_finalSize);
 
