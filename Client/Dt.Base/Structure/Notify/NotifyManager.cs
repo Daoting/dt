@@ -32,15 +32,16 @@ namespace Dt.Base
 
         static void OnItemsChanged(ItemList<NotifyInfo> sender, ItemListChangedArgs e)
         {
-            if (e.CollectionChange == CollectionChange.ItemRemoved || e.CollectionChange == CollectionChange.ItemChanged)
-                SysVisual.RemoveNotifyItem(e.Index);
-
             if (e.CollectionChange == CollectionChange.ItemInserted || e.CollectionChange == CollectionChange.ItemChanged)
             {
                 var info = sender[e.Index];
                 SysVisual.InsertNotifyItem(e.Index, new NotifyItem(info));
             }
-            else if (e.CollectionChange == CollectionChange.Reset)
+            else if (e.CollectionChange == CollectionChange.ItemRemoved)
+            {
+                SysVisual.RemoveNotifyItem(e.Index);
+            }
+            else
             {
                 SysVisual.ClearAllNotify();
             }

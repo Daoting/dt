@@ -17,51 +17,23 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="a:Win">
-                    <Grid>
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <!--四周停靠-->
-                            <docking:AutoHideTab x:Name="LeftAutoHide" TabStripPlacement="Left" Grid.RowSpan="3" Grid.Column="0"/>
-                            <docking:AutoHideTab x:Name="RightAutoHide" TabStripPlacement="Right" Grid.RowSpan="3" Grid.Column="2"/>
-                            <docking:AutoHideTab x:Name="TopAutoHide" TabStripPlacement="Top" Grid.Row="0" Grid.Column="1" />
-                            <docking:AutoHideTab x:Name="BottomAutoHide" TabStripPlacement="Bottom" Grid.Row="2" Grid.Column="1" />
-                            <!--内容区域-->
-                            <docking:WinItemPanel x:Name="ContentDockPanel" Grid.Row="1" Grid.Column="1">
-                                <docking:WinItemPanel.CenterItem>
-                                    <a:WinItem x:Name="CenterDockItem" IsInCenter="True" />
-                                </docking:WinItemPanel.CenterItem>
-                            </docking:WinItemPanel>
-                        </Grid>
-                        <Canvas x:Name="PopupPanel">
-                            <!--停靠区域提示-->
-                            <Border x:Name="DragCue"
-                                    Background="{StaticResource 暗遮罩}"
-                                    BorderBrush="{StaticResource 深暗遮罩}"
-                                    BorderThickness="2"
-                                    Visibility="Collapsed"
-                                    Canvas.ZIndex="999997"/>
-                            <!--动态导航-->
-                            <docking:Compass x:Name="Compass" Visibility="Collapsed" Canvas.ZIndex="999998" />
-                            <!--四方向导航-->
-                            <docking:RootCompass x:Name="RootCompass" Visibility="Collapsed" Canvas.ZIndex="999999" />
-                        </Canvas>
-                        <Button x:Name="DefaultLayoutButton"
-                                Content="&#xE0A9;"
-                                Visibility="{TemplateBinding LayoutButtonVisible}"
-                                ToolTipService.ToolTip="恢复默认布局"
-                                ToolTipService.Placement="Top"
-                                Style="{StaticResource 字符按钮}"
-                                HorizontalAlignment="Right"
-                                VerticalAlignment="Bottom"/>
+                    <Grid x:Name="RootGrid">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <!--内容区域-->
+                        <docking:WinItemPanel x:Name="ContentDockPanel" Grid.Row="1" Grid.Column="1">
+                            <docking:WinItemPanel.CenterItem>
+                                <a:WinItem x:Name="CenterDockItem" IsInCenter="True" />
+                            </docking:WinItemPanel.CenterItem>
+                        </docking:WinItemPanel>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -96,13 +68,6 @@
         <Setter Property="Padding" Value="0"/>
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="VerticalContentAlignment" Value="Stretch" />
-        <Setter Property="ItemsPanel">
-            <Setter.Value>
-                <ItemsPanelTemplate>
-                    <StackPanel Orientation="Horizontal" />
-                </ItemsPanelTemplate>
-            </Setter.Value>
-        </Setter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="a:Tabs">
@@ -125,23 +90,17 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <Grid x:Name="ContentGrid"
-                                  BorderThickness="1"
-                                  BorderBrush="{TemplateBinding BorderBrush}"
-                                  Margin="0,0,-1,0"
-                                  Grid.ColumnSpan="2">
-                                <ContentPresenter Content="{TemplateBinding SelectedContent}"
-                                                  ContentTemplate="{TemplateBinding ContentTemplate}"
-                                                  ContentTransitions="{TemplateBinding ContentTransitions}"
-                                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                  Margin="{TemplateBinding Padding}" />
-                            </Grid>
+                            <ContentPresenter x:Name="TabContent"
+                                              Content="{TemplateBinding SelectedContent}"
+                                              ContentTransitions="{TemplateBinding ContentTransitions}"
+                                              BorderThickness="1"
+                                              BorderBrush="{TemplateBinding BorderBrush}"
+                                              Margin="0,0,-1,0"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              Grid.ColumnSpan="2" />
                             <!--标签-->
-                            <ItemsPresenter x:Name="ItemsPresenter"
-                                            Visibility="{Binding ShowStrip, Converter={StaticResource CvBoolToVisible}, RelativeSource={RelativeSource TemplatedParent}}"
-                                            Grid.Row="1"
-                                            Grid.ColumnSpan="2" />
+                            <StackPanel x:Name="ItemsPanel" Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2" />
                         </Grid>
 
                         <docking:GridResizer x:Name="DockResizer" Grid.RowSpan="2" Placement="{TemplateBinding ResizerPlacement}" />
@@ -301,7 +260,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
     <!--PhoneTabs底部按钮-->
     <Style x:Key="PhoneTabsBtn" TargetType="Button">
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
@@ -659,7 +618,7 @@
                                 Content="{Binding Owner.SelectedItem.HeaderButtonText, RelativeSource={RelativeSource TemplatedParent}}"
                                 Style="{StaticResource 字符按钮}"
                                 Foreground="{StaticResource 深灰背景}" />
-                        
+
                         <!--标题-->
                         <TextBlock Text="{Binding Owner.SelectedItem.Title, RelativeSource={RelativeSource TemplatedParent}}"
                                    VerticalAlignment="Center"
@@ -709,17 +668,9 @@
 
     <!--AutoHideTab-->
     <Style TargetType="docking:AutoHideTab">
-        <Setter Property="IsAutoHide" Value="True"/>
         <Setter Property="Padding" Value="0" />
         <Setter Property="BorderBrush" Value="{StaticResource 浅灰边框}"/>
         <Setter Property="Background" Value="{StaticResource 默认背景}" />
-        <Setter Property="ItemsPanel">
-            <Setter.Value>
-                <ItemsPanelTemplate>
-                    <StackPanel Orientation="Horizontal" />
-                </ItemsPanelTemplate>
-            </Setter.Value>
-        </Setter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="docking:AutoHideTab">
@@ -732,10 +683,8 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-
-                        <Grid x:Name="ContentGrid" Grid.ColumnSpan="2" />
                         <!--标签-->
-                        <ItemsPresenter x:Name="ItemsPresenter" Grid.Row="1" Grid.ColumnSpan="2" />
+                        <StackPanel x:Name="ItemsPanel" Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

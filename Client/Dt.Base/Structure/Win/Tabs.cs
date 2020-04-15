@@ -36,15 +36,6 @@ namespace Dt.Base
             new PropertyMetadata(true));
 
         /// <summary>
-        /// 是否显示标签
-        /// </summary>
-        public static readonly DependencyProperty ShowStripProperty = DependencyProperty.Register(
-            "ShowStrip",
-            typeof(bool),
-            typeof(Tabs),
-            new PropertyMetadata(true));
-
-        /// <summary>
         /// 尺寸调节器的位置，由父容器WinItem的Orientation决定
         /// </summary>
         public static readonly DependencyProperty ResizerPlacementProperty = DependencyProperty.Register(
@@ -52,15 +43,6 @@ namespace Dt.Base
             typeof(ItemPlacement?),
             typeof(Tabs),
             new PropertyMetadata(null));
-
-        /// <summary>
-        /// 是否显示切换Outlook样式的按钮
-        /// </summary>
-        public static readonly DependencyProperty OutlookButtonVisibleProperty = DependencyProperty.Register(
-            "OutlookButtonVisible",
-            typeof(Visibility),
-            typeof(Tabs),
-            new PropertyMetadata(Visibility.Collapsed));
 
         /// <summary> 
         /// 初始宽度
@@ -110,7 +92,6 @@ namespace Dt.Base
         public Tabs()
         {
             DefaultStyleKey = typeof(Tabs);
-            Loaded += OnLoaded;
         }
         #endregion
 
@@ -125,30 +106,12 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取是否显示标签
-        /// </summary>
-        public bool ShowStrip
-        {
-            get { return (bool)GetValue(ShowStripProperty); }
-            internal set { SetValue(ShowStripProperty, value); }
-        }
-
-        /// <summary>
         /// 获取尺寸调节器的位置，由父容器WinItem的Orientation决定
         /// </summary>
         public ItemPlacement? ResizerPlacement
         {
             get { return (ItemPlacement?)GetValue(ResizerPlacementProperty); }
             internal set { SetValue(ResizerPlacementProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取是否显示切换Outlook样式的按钮
-        /// </summary>
-        public Visibility OutlookButtonVisible
-        {
-            get { return (Visibility)GetValue(OutlookButtonVisibleProperty); }
-            internal set { SetValue(OutlookButtonVisibleProperty, value); }
         }
 
         /// <summary>
@@ -188,12 +151,9 @@ namespace Dt.Base
                 if (_isInCenter != value)
                 {
                     _isInCenter = value;
-                    foreach (object item in Items)
+                    foreach (var item in Items)
                     {
                         Tab sect = item as Tab;
-                        if (sect == null)
-                            sect = ContainerFromItem(item) as Tab;
-
                         if (sect != null)
                             sect.IsInCenter = _isInCenter;
                     }
@@ -212,11 +172,9 @@ namespace Dt.Base
                 if (_isInWindow != value)
                 {
                     _isInWindow = value;
-                    foreach (object item in Items)
+                    foreach (var item in Items)
                     {
                         Tab sect = item as Tab;
-                        if (sect == null)
-                            sect = ContainerFromItem(item) as Tab;
                         if (sect != null)
                             sect.IsInWindow = _isInWindow;
                     }
@@ -261,27 +219,6 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 移除指定的子项
-        /// </summary>
-        /// <param name="p_item"></param>
-        public void RemoveItem(Tab p_item)
-        {
-            if (Items.Contains(p_item))
-            {
-                Items.Remove(p_item);
-            }
-            else if (!p_item.IsPinned)
-            {
-                AutoHideTab parentArea = p_item.Parent as AutoHideTab;
-                if ((parentArea != null) && parentArea.Items.Contains(p_item))
-                {
-                    //parentArea.Remove(p_item);
-                    //this.UnpinnedPanesInternal.Remove(p_item);
-                }
-            }
-        }
-
-        /// <summary>
         /// 从父容器中移除当前Tabs
         /// </summary>
         public void RemoveFromParent()
@@ -301,80 +238,29 @@ namespace Dt.Base
             TabHeader header = GetTemplateChild("HeaderElement") as TabHeader;
             if (header != null)
                 header.Owner = this;
+            UpdateTabStrip();
         }
 
         /// <summary>
         /// 增删子项
         /// </summary>
         /// <param name="e"></param>
-        protected override void OnItemsChanged(object e)
+        protected override void OnItemsChanged()
         {
-            base.OnItemsChanged(e);
-
-            if (_isLoaded)
-            {
-                UpdateTabStrip();
-                if (Items.Count == 0)
-                    RemoveFromParent();
-            }
+            UpdateTabStrip();
+            if (Items.Count == 0)
+                RemoveFromParent();
         }
 
-        /// <summary>
-        /// 准备指定元素以显示指定项
-        /// </summary>
-        /// <param name="element"></param>
-        /// <param name="item"></param>
-        protected override void PrepareContainerForItemOverride(DependencyObject element, object item)
+        protected override void InitItem(TabItem p_item)
         {
-            base.PrepareContainerForItemOverride(element, item);
-            Tab pane = element as Tab;
+            base.InitItem(p_item);
+            Tab pane = p_item as Tab;
             if (pane != null)
             {
                 pane.IsInCenter = IsInCenter;
                 pane.IsInWindow = IsInWindow;
             }
-        }
-
-        /// <summary>
-        /// 确定指定项是否为子项的容器
-        /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        protected override bool IsItemItsOwnContainerOverride(object item)
-        {
-            return (item is Tab);
-        }
-
-        /// <summary>
-        /// 创建或标识用于显示给定项的元素
-        /// </summary>
-        /// <returns></returns>
-        protected override DependencyObject GetContainerForItemOverride()
-        {
-            return new Tab();
-        }
-
-        /// <summary>
-        /// 清除子项
-        /// </summary>
-        /// <param name="element"></param>
-        /// <param name="item"></param>
-        protected override void ClearContainerForItemOverride(DependencyObject element, object item)
-        {
-            base.ClearContainerForItemOverride(element, item);
-            Tab pane = element as Tab;
-            if (pane != null)
-            {
-                pane.IsInCenter = false;
-                pane.IsInWindow = false;
-            }
-        }
-
-        /// <summary>
-        /// IsAutoHide变化时不做操作
-        /// </summary>
-        protected override void OnIsAutoHideChanged()
-        {
         }
         #endregion
 
@@ -534,32 +420,9 @@ namespace Dt.Base
         #endregion
 
         #region 内部方法
-        /// <summary>
-        /// 加载事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            Loaded -= OnLoaded;
-            UpdateTabStrip();
-        }
-
-        /// <summary>
-        /// 更新标签显示状态、边距、Outlook样式切换按钮
-        /// </summary>
         void UpdateTabStrip()
         {
-            if (Items.Count > 1)
-            {
-                ShowStrip = true;
-                OutlookButtonVisible = Visibility.Visible;
-            }
-            else
-            {
-                ShowStrip = false;
-                OutlookButtonVisible = Visibility.Collapsed;
-            }
+            _itemsPanel.Visibility = Items.Count > 1 ? Visibility.Visible : Visibility.Collapsed;
         }
 
         /// <summary>

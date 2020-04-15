@@ -7,7 +7,6 @@
 #endregion
 
 #region 引用命名
-using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
@@ -29,17 +28,6 @@ namespace Dt.Base.Docking
         public AutoHideTab()
         {
             DefaultStyleKey = typeof(AutoHideTab);
-            Loaded += OnLoaded;
-        }
-        #endregion
-
-        #region 属性
-        /// <summary>
-        /// 获取是否显示切换Outlook样式的按钮
-        /// </summary>
-        public Visibility OutlookButtonVisible
-        {
-            get { return Visibility.Collapsed; }
         }
         #endregion
 
@@ -111,24 +99,16 @@ namespace Dt.Base.Docking
             TabHeader header = GetTemplateChild("HeaderElement") as TabHeader;
             if (header != null)
                 header.Owner = this;
+            ResetMargin();
         }
 
         /// <summary>
         /// 增删子项
         /// </summary>
         /// <param name="e"></param>
-        protected override void OnItemsChanged(object e)
+        protected override void OnItemsChanged()
         {
-            base.OnItemsChanged(e);
-            if (_isLoaded)
-                ResetMargin();
-        }
-
-        /// <summary>
-        /// IsAutoHide变化时不做操作
-        /// </summary>
-        protected override void OnIsAutoHideChanged()
-        {
+            ResetMargin();
         }
 
         protected override object LoadDlgContent()
@@ -148,17 +128,6 @@ namespace Dt.Base.Docking
             return sp;
         }
         #endregion
-
-        /// <summary>
-        /// 加载事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            Loaded -= OnLoaded;
-            ResetMargin();
-        }
 
         void ResetMargin()
         {

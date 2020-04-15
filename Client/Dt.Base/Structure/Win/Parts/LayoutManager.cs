@@ -8,7 +8,6 @@
 
 #region 引用命名
 using Dt.Core;
-using Dt.Core.Model;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -83,13 +82,13 @@ namespace Dt.Base.Docking
                     // 加载历史布局
                     if (ApplyLayout(cookie.Layout))
                     {
-                        _owner.LayoutButtonVisible = Visibility.Visible;
+                        _owner.AllowResetLayout = true;
                     }
                     else
                     {
                         // 历史布局加载失败，重载默认布局
                         ApplyLayout(_default);
-                        _owner.LayoutButtonVisible = Visibility.Collapsed;
+                        _owner.AllowResetLayout = false;
                     }
                 }
             }
@@ -104,7 +103,7 @@ namespace Dt.Base.Docking
         {
             AtLocal.Execute($"delete from DockLayout where BaseUri=\"{_owner.BaseUri.AbsolutePath}\"");
             ApplyLayout(_default);
-            _owner.LayoutButtonVisible = Visibility.Collapsed;
+            _owner.AllowResetLayout = false;
         }
 
         /// <summary>
@@ -122,7 +121,7 @@ namespace Dt.Base.Docking
                 cookie.BaseUri = _owner.BaseUri.AbsolutePath;
                 cookie.Layout = WriteXml();
                 AtLocal.Save(cookie);
-                _owner.LayoutButtonVisible = Visibility.Visible;
+                _owner.AllowResetLayout = true;
             });
         }
 
@@ -155,19 +154,19 @@ namespace Dt.Base.Docking
                     && (cookie = AtLocal.GetFirst<DockLayout>($"select * from DockLayout where BaseUri=\"{_owner.BaseUri.AbsolutePath}\"")) != null
                     && ApplyLayout(cookie.Layout))
                 {
-                    _owner.LayoutButtonVisible = Visibility.Visible;
+                    _owner.AllowResetLayout = true;
                 }
                 else
                 {
                     ApplyLayout(_default);
-                    _owner.LayoutButtonVisible = Visibility.Collapsed;
+                    _owner.AllowResetLayout = false;
                 }
             }
             else
             {
                 // 自动隐藏两侧
                 ApplyAutoHide();
-                _owner.LayoutButtonVisible = Visibility.Collapsed;
+                _owner.AllowResetLayout = false;
             }
         }
 
@@ -183,9 +182,10 @@ namespace Dt.Base.Docking
                 // 先移除当前项，再清除子项，不可颠倒！
                 object item = p_items.Items[0];
                 p_items.Items.RemoveAt(0);
-                ItemsControl child = item as ItemsControl;
-                if (child != null)
+                if (item is ItemsControl child)
                     ClearItems(child);
+                else if (item is TabControl tabs)
+                    tabs.Items.Clear();
             }
         }
         #endregion
@@ -257,6 +257,8 @@ namespace Dt.Base.Docking
                     elem = doc.Root.Element("Left");
                     if (elem != null)
                     {
+                        if (_owner.LeftAutoHide == null)
+                            _owner.CreateLeftAutoHideTab();
                         foreach (XElement item in elem.Elements())
                         {
                             _owner.LeftAutoHide.Unpin(CreateSectItem(item));
@@ -267,6 +269,8 @@ namespace Dt.Base.Docking
                     elem = doc.Root.Element("Right");
                     if (elem != null)
                     {
+                        if (_owner.RightAutoHide == null)
+                            _owner.CreateRightAutoHideTab();
                         foreach (XElement item in elem.Elements())
                         {
                             _owner.RightAutoHide.Unpin(CreateSectItem(item));
@@ -277,6 +281,8 @@ namespace Dt.Base.Docking
                     elem = doc.Root.Element("Top");
                     if (elem != null)
                     {
+                        if (_owner.TopAutoHide == null)
+                            _owner.CreateTopAutoHideTab();
                         foreach (XElement item in elem.Elements())
                         {
                             _owner.TopAutoHide.Unpin(CreateSectItem(item));
@@ -287,6 +293,8 @@ namespace Dt.Base.Docking
                     elem = doc.Root.Element("Bottom");
                     if (elem != null)
                     {
+                        if (_owner.BottomAutoHide == null)
+                            _owner.CreateBottomAutoHideTab();
                         foreach (XElement item in elem.Elements())
                         {
                             _owner.BottomAutoHide.Unpin(CreateSectItem(item));
@@ -369,6 +377,8 @@ namespace Dt.Base.Docking
                     elem = doc.Root.Element("Left");
                     if (elem != null)
                     {
+                        if (_owner.LeftAutoHide == null)
+                            _owner.CreateLeftAutoHideTab();
                         foreach (XElement item in elem.Elements())
                         {
                             _owner.LeftAutoHide.Unpin(CreateSectItem(item));
@@ -379,6 +389,8 @@ namespace Dt.Base.Docking
                     elem = doc.Root.Element("Right");
                     if (elem != null)
                     {
+                        if (_owner.RightAutoHide == null)
+                            _owner.CreateRightAutoHideTab();
                         foreach (XElement item in elem.Elements())
                         {
                             _owner.RightAutoHide.Unpin(CreateSectItem(item));
@@ -389,6 +401,8 @@ namespace Dt.Base.Docking
                     elem = doc.Root.Element("Top");
                     if (elem != null)
                     {
+                        if (_owner.TopAutoHide == null)
+                            _owner.CreateTopAutoHideTab();
                         foreach (XElement item in elem.Elements())
                         {
                             _owner.TopAutoHide.Unpin(CreateSectItem(item));
@@ -399,6 +413,8 @@ namespace Dt.Base.Docking
                     elem = doc.Root.Element("Bottom");
                     if (elem != null)
                     {
+                        if (_owner.BottomAutoHide == null)
+                            _owner.CreateBottomAutoHideTab();
                         foreach (XElement item in elem.Elements())
                         {
                             _owner.BottomAutoHide.Unpin(CreateSectItem(item));
@@ -492,11 +508,7 @@ namespace Dt.Base.Docking
         Tabs CreateSect(XElement p_elem)
         {
             Tabs sect = new Tabs();
-            XAttribute attr = p_elem.Attribute("IsOutlookStyle");
-            if (attr != null)
-                sect.IsOutlookStyle = true;
-
-            attr = p_elem.Attribute("InitWidth");
+            XAttribute attr = p_elem.Attribute("InitWidth");
             if (attr != null && !string.IsNullOrEmpty(attr.Value))
                 sect.InitWidth = Convert.ToDouble(attr.Value);
 
@@ -604,7 +616,7 @@ namespace Dt.Base.Docking
                 }
 
                 // 左侧隐藏项
-                if (_owner.LeftAutoHide.Items.Count > 0)
+                if (_owner.LeftAutoHide?.Items.Count > 0)
                 {
                     writer.WriteStartElement("Left");
                     foreach (Tab sectItem in _owner.LeftAutoHide.Items.OfType<Tab>())
@@ -615,7 +627,7 @@ namespace Dt.Base.Docking
                 }
 
                 // 右侧隐藏项
-                if (_owner.RightAutoHide.Items.Count > 0)
+                if (_owner.RightAutoHide?.Items.Count > 0)
                 {
                     writer.WriteStartElement("Right");
                     foreach (Tab sectItem in _owner.RightAutoHide.Items.OfType<Tab>())
@@ -626,7 +638,7 @@ namespace Dt.Base.Docking
                 }
 
                 // 上侧隐藏项
-                if (_owner.TopAutoHide.Items.Count > 0)
+                if (_owner.TopAutoHide?.Items.Count > 0)
                 {
                     writer.WriteStartElement("Top");
                     foreach (Tab sectItem in _owner.TopAutoHide.Items.OfType<Tab>())
@@ -637,7 +649,7 @@ namespace Dt.Base.Docking
                 }
 
                 // 下侧隐藏项
-                if (_owner.BottomAutoHide.Items.Count > 0)
+                if (_owner.BottomAutoHide?.Items.Count > 0)
                 {
                     writer.WriteStartElement("Bottom");
                     foreach (Tab sectItem in _owner.BottomAutoHide.Items.OfType<Tab>())
@@ -804,6 +816,8 @@ namespace Dt.Base.Docking
                 if (leftHide.Count > 0)
                 {
                     writer.WriteStartElement("Left");
+                    if (_owner.LeftAutoHide == null)
+                        _owner.CreateLeftAutoHideTab();
                     foreach (Tab sectItem in leftHide)
                     {
                         WriteSectItem(sectItem, writer);
@@ -816,6 +830,8 @@ namespace Dt.Base.Docking
                 if (rightHide.Count > 0)
                 {
                     writer.WriteStartElement("Right");
+                    if (_owner.RightAutoHide == null)
+                        _owner.CreateRightAutoHideTab();
                     foreach (Tab sectItem in rightHide)
                     {
                         WriteSectItem(sectItem, writer);
@@ -828,6 +844,8 @@ namespace Dt.Base.Docking
                 if (topHide.Count > 0)
                 {
                     writer.WriteStartElement("Top");
+                    if (_owner.TopAutoHide == null)
+                        _owner.CreateTopAutoHideTab();
                     foreach (Tab sectItem in topHide)
                     {
                         WriteSectItem(sectItem, writer);
@@ -840,6 +858,8 @@ namespace Dt.Base.Docking
                 if (bottomHide.Count > 0)
                 {
                     writer.WriteStartElement("Bottom");
+                    if (_owner.BottomAutoHide == null)
+                        _owner.CreateBottomAutoHideTab();
                     foreach (Tab sectItem in bottomHide)
                     {
                         WriteSectItem(sectItem, writer);
@@ -949,9 +969,6 @@ namespace Dt.Base.Docking
             if (p_sect.ReadLocalValue(TabControl.SelectedIndexProperty) != DependencyProperty.UnsetValue)
                 p_writer.WriteAttributeString("SelectedIndex", p_sect.SelectedIndex.ToString());
 
-            if (p_sect.IsOutlookStyle)
-                p_writer.WriteAttributeString("IsOutlookStyle", "True");
-
             if (!double.IsNaN(p_sect.ActualWidth) && p_sect.ActualWidth > 0)
                 p_writer.WriteAttributeString("InitWidth", p_sect.ActualWidth.ToString());
             else if (p_sect.ReadLocalValue(Tabs.InitWidthProperty) != DependencyProperty.UnsetValue)
@@ -1041,10 +1058,10 @@ namespace Dt.Base.Docking
         {
             ClearItems(_owner.CenterItem);
             ClearItems(_owner);
-            ClearItems(_owner.LeftAutoHide);
-            ClearItems(_owner.RightAutoHide);
-            ClearItems(_owner.TopAutoHide);
-            ClearItems(_owner.BottomAutoHide);
+            _owner.LeftAutoHide?.Items.Clear();
+            _owner.RightAutoHide?.Items.Clear();
+            _owner.TopAutoHide?.Items.Clear();
+            _owner.BottomAutoHide?.Items.Clear();
             _owner.DockPanel.Clear();
             _owner.ClearWindows();
         }
@@ -1108,9 +1125,17 @@ namespace Dt.Base.Docking
                         {
                             sect.Items.RemoveAt(index);
                             if (p_state == WinItemState.DockedLeft)
+                            {
+                                if (_owner.LeftAutoHide == null)
+                                    _owner.CreateLeftAutoHideTab();
                                 _owner.LeftAutoHide.Unpin(si);
+                            }
                             else if (p_state == WinItemState.DockedRight)
+                            {
+                                if (_owner.RightAutoHide == null)
+                                    _owner.CreateRightAutoHideTab();
                                 _owner.RightAutoHide.Unpin(si);
+                            }
                         }
                         else
                         {

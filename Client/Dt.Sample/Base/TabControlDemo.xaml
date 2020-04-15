@@ -16,12 +16,10 @@
         </a:TabControl>
         <a:Fv Data="{Binding ElementName=_tab}" Grid.Column="1">
             <a:CList Title="标签头位置" ID="TabStripPlacement" />
-            <a:CBool Title="弹出式标签" ID="IsAutoHide" />
             <a:CText Title="当前标签索引" ID="SelectedIndex" />
             <a:CBool Title="可拖拽调整位置" ID="AllowSwapItem" />
             <a:CNum Title="弹出面板宽度" ID="PopWidth" />
             <a:CNum Title="弹出面板高度" ID="PopHeight" />
-            <a:CBool Title="显示动画" ID="AllowAnimate" />
             <StackPanel Orientation="Horizontal">
                 <Button Content="添加标签" Click="OnAddTabItem" />
                 <Button Content="移除标签" Click="OnRemoveTabItem" />

@@ -87,51 +87,6 @@
         </Setter>
     </Style>
 
-    <!--TabControl默认-->
-    <ControlTemplate x:Key="DefaultTabControlTemplate" TargetType="a:TabControl">
-        <Grid x:Name="MainGrid" Background="{TemplateBinding Background}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <Grid x:Name="ContentGrid"
-                  BorderThickness="1"
-                  BorderBrush="{TemplateBinding BorderBrush}"
-                  Margin="0,0,-1,0"
-                  Grid.ColumnSpan="2">
-                <ContentPresenter Content="{TemplateBinding SelectedContent}"
-                                  ContentTemplate="{TemplateBinding ContentTemplate}"
-                                  ContentTransitions="{TemplateBinding ContentTransitions}"
-                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                  Margin="{TemplateBinding Padding}" />
-            </Grid>
-            <!--标签-->
-            <ItemsPresenter x:Name="ItemsPresenter" Grid.Row="1" Grid.ColumnSpan="2" />
-        </Grid>
-    </ControlTemplate>
-
-    <!--TabControl弹出式-->
-    <ControlTemplate x:Key="PopTabControlTemplate" TargetType="a:TabControl">
-        <Grid x:Name="MainGrid" Background="{TemplateBinding Background}">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <Grid x:Name="ContentGrid" Grid.ColumnSpan="2" />
-            <!--标签-->
-            <ItemsPresenter x:Name="ItemsPresenter" Grid.Row="1" Grid.ColumnSpan="2" />
-        </Grid>
-    </ControlTemplate>
-
     <!--TabControl-->
     <Style TargetType="a:TabControl">
         <Setter Property="BorderBrush" Value="{StaticResource 浅灰边框}"/>
@@ -139,16 +94,33 @@
         <Setter Property="Padding" Value="0"/>
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="VerticalContentAlignment" Value="Stretch" />
-        <Setter Property="ItemsPanel">
+        <Setter Property="Template">
             <Setter.Value>
-                <ItemsPanelTemplate>
-                    <StackPanel Orientation="Horizontal" />
-                </ItemsPanelTemplate>
+                <ControlTemplate TargetType="a:TabControl">
+                    <Grid x:Name="MainGrid" Background="{TemplateBinding Background}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <ContentPresenter x:Name="TabContent"
+                                          Content="{TemplateBinding SelectedContent}"
+                                          ContentTransitions="{TemplateBinding ContentTransitions}"
+                                          BorderThickness="1"
+                                          BorderBrush="{TemplateBinding BorderBrush}"
+                                          Margin="0,0,-1,0"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          Grid.ColumnSpan="2" />
+                        <!--标签-->
+                        <StackPanel x:Name="ItemsPanel" Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2" />
+                    </Grid>
+                </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="PopTemplate" Value="{StaticResource PopTabControlTemplate}"/>
-        <Setter Property="DefaultTemplate" Value="{StaticResource DefaultTabControlTemplate}"/>
-        <Setter Property="Template" Value="{StaticResource DefaultTabControlTemplate}"/>
     </Style>
 
     <!--TabItem-->

@@ -331,7 +331,7 @@ namespace Dt.Base
         /// </summary>
         public Tabs Container
         {
-            get { return (Parent as Tabs); }
+            get { return (Owner as Tabs); }
         }
 
         /// <summary>
@@ -386,10 +386,10 @@ namespace Dt.Base
         /// </summary>
         public void RemoveFromParent()
         {
-            if (Container != null)
+            if (Owner != null)
             {
                 ClearValue(TabItemPanel.SplitterChangeProperty);
-                Container.RemoveItem(this);
+                Owner.Items.Remove(this);
             }
         }
         #endregion

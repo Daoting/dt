@@ -12,15 +12,15 @@
 * Lv的ICellUI.UIType 增加File类型
 * Chat发送各类型文件功能
 * Lv.Data类型调整为INotifyList
-
 * Lv外部有ScrollViewer的处理
+* 优化Win结构
+
 * Chat 撤回消息功能
 
 
 ### 变更 
 *  移除Newtonsoft.Json，使用System.Text.Json 
 *  AtUI合并到AtApp
-
 * 调整TabControl继承自Control 
 
 ### Bug修改 

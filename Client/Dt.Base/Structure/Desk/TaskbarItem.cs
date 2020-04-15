@@ -119,6 +119,9 @@ namespace Dt.Base
                     item = new MenuFlyoutItem { Text = "设置自启动" };
                     item.Click += (s, a) => LaunchManager.SetAutoStart((Win)DataContext);
                     menu.Items.Add(item);
+                    item = new MenuFlyoutItem { Text = "恢复窗口默认布局" };
+                    item.Click += ResetWinLayout;
+                    menu.Items.Add(item);
                     item = new MenuFlyoutItem { Text = "关闭其他" };
                     item.Click += CloseOtherWin;
                     menu.Items.Add(item);
@@ -147,9 +150,37 @@ namespace Dt.Base
                     menu.Items[1].Visibility = Visibility.Visible;
                 }
 
-                menu.Items[2].Visibility = (Taskbar.Inst.TaskItems.Count > 1) ? Visibility.Visible : Visibility.Collapsed;
-                menu.Items[3].Visibility = !IsActive ? Visibility.Visible : Visibility.Collapsed;
+                if (win != null)
+                {
+                    if (win.AllowResetLayout)
+                    {
+                        menu.Items[2].Visibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        // 主区内容为Win
+                        Tabs tabs = (Tabs)win.GetValue(Win.CenterTabsProperty);
+                        if (tabs != null
+                            && tabs.Items.Count > 0
+                            && tabs.Items[0].Content is Win cw
+                            && cw.AllowResetLayout)
+                        {
+                            menu.Items[2].Visibility = Visibility.Visible;
+                        }
+                        else
+                        {
+                            menu.Items[2].Visibility = Visibility.Collapsed;
+                        }
+                    }
+                }
+                else
+                {
+                    menu.Items[2].Visibility = Visibility.Collapsed;
+                }
+
+                menu.Items[3].Visibility = (Taskbar.Inst.TaskItems.Count > 1) ? Visibility.Visible : Visibility.Collapsed;
                 menu.Items[4].Visibility = !IsActive ? Visibility.Visible : Visibility.Collapsed;
+                menu.Items[5].Visibility = !IsActive ? Visibility.Visible : Visibility.Collapsed;
 #endif
             }
         }
@@ -219,6 +250,22 @@ namespace Dt.Base
         #endregion
 
         #region 内部方法
+        void ResetWinLayout(object sender, RoutedEventArgs e)
+        {
+            Win win = (Win)DataContext;
+
+            // 主区内容为Win时，先恢复
+            Tabs tabs = (Tabs)win.GetValue(Win.CenterTabsProperty);
+            if (tabs != null
+                && tabs.Items.Count > 0
+                && tabs.Items[0].Content is Win cw
+                && cw.AllowResetLayout)
+                cw.LoadDefaultLayout();
+
+            if (win.AllowResetLayout)
+                win.LoadDefaultLayout();
+        }
+
         async void CloseOtherWin(object sender, RoutedEventArgs e)
         {
             var ls = await Desktop.Inst.CloseExcept((Win)DataContext);

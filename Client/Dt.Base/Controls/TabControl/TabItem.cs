@@ -176,10 +176,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取所属TabControl
         /// </summary>
-        public TabControl Owner
-        {
-            get { return Parent as TabControl; }
-        }
+        public TabControl Owner { get; internal set; }
         #endregion
 
         #region 重写方法
@@ -335,8 +332,7 @@ namespace Dt.Base
             {
                 _header.ClearValue(RotateContent.RotateProperty);
                 _rcOuter.Margin = new Thickness(0, -1, -1, 0);
-                TabControl tab = Parent as TabControl;
-                if (tab != null && tab.IsOutlookStyle)
+                if (Owner != null && Owner.IsOutlookStyle)
                     _rcSelected.Margin = new Thickness(1, 0, 0, 1);
                 else
                     _rcSelected.Margin = new Thickness(1, -1, 0, 1);
@@ -346,8 +342,7 @@ namespace Dt.Base
             {
                 _header.ClearValue(RotateContent.RotateProperty);
                 _rcOuter.Margin = new Thickness(0, 0, -1, -1);
-                TabControl tab = Parent as TabControl;
-                if (tab != null && tab.IsOutlookStyle)
+                if (Owner != null && Owner.IsOutlookStyle)
                     _rcSelected.Margin = new Thickness(1, 1, 0, 0);
                 else
                     _rcSelected.Margin = new Thickness(1, 1, 0, -1);

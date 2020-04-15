@@ -58,11 +58,11 @@ namespace Dt.Base
             typeof(Win),
             new PropertyMetadata(true));
 
-        public static readonly DependencyProperty LayoutButtonVisibleProperty = DependencyProperty.Register(
-            "LayoutButtonVisible",
-            typeof(Visibility),
+        public static readonly DependencyProperty AllowResetLayoutProperty = DependencyProperty.Register(
+            "AllowResetLayout",
+            typeof(bool),
             typeof(Win),
-            new PropertyMetadata(Visibility.Collapsed));
+            new PropertyMetadata(false));
 
         internal static readonly DependencyProperty CenterTabsProperty = DependencyProperty.Register(
             "CenterTabs",
@@ -126,7 +126,10 @@ namespace Dt.Base
             {
                 dock.UpdateLayout();
                 if (resizer.Preview.OffsetX != 0 || resizer.Preview.OffsetY != 0)
+                {
                     dock.OnLayoutChanged();
+                    e.Handled = true;
+                }
             }
         }
 
@@ -147,10 +150,6 @@ namespace Dt.Base
         Compass _compass;
         RootCompass _rootCompass;
         Border _dragCue;
-        AutoHideTab _leftAutoHide;
-        AutoHideTab _rightAutoHide;
-        AutoHideTab _topAutoHide;
-        AutoHideTab _bottomAutoHide;
         WinItemPanel _dockPanel;
         WinItem _centerItem;
         bool _isReseting = true;
@@ -234,12 +233,12 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取是否显示恢复默认布局按钮
+        /// 获取是否允许恢复默认布局
         /// </summary>
-        public Visibility LayoutButtonVisible
+        internal bool AllowResetLayout
         {
-            get { return (Visibility)GetValue(LayoutButtonVisibleProperty); }
-            internal set { SetValue(LayoutButtonVisibleProperty, value); }
+            get { return (bool)GetValue(AllowResetLayoutProperty); }
+            set { SetValue(AllowResetLayoutProperty, value); }
         }
 
         /// <summary>
@@ -272,34 +271,22 @@ namespace Dt.Base
         /// <summary>
         /// 获取左侧隐藏面板
         /// </summary>
-        internal AutoHideTab LeftAutoHide
-        {
-            get { return _leftAutoHide; }
-        }
+        internal AutoHideTab LeftAutoHide { get; private set; }
 
         /// <summary>
         /// 获取右侧隐藏面板
         /// </summary>
-        internal AutoHideTab RightAutoHide
-        {
-            get { return _rightAutoHide; }
-        }
+        internal AutoHideTab RightAutoHide { get; private set; }
 
         /// <summary>
         /// 获取上侧隐藏面板
         /// </summary>
-        internal AutoHideTab TopAutoHide
-        {
-            get { return _topAutoHide; }
-        }
+        internal AutoHideTab TopAutoHide { get; private set; }
 
         /// <summary>
         /// 获取下侧隐藏面板
         /// </summary>
-        internal AutoHideTab BottomAutoHide
-        {
-            get { return _bottomAutoHide; }
-        }
+        internal AutoHideTab BottomAutoHide { get; private set; }
 
         /// <summary>
         /// 获取是否正在重置布局
@@ -647,31 +634,16 @@ namespace Dt.Base
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            _popupPanel = GetTemplateChild("PopupPanel") as Canvas;
-            _compass = GetTemplateChild("Compass") as Compass;
-            _rootCompass = GetTemplateChild("RootCompass") as RootCompass;
-            _dragCue = GetTemplateChild("DragCue") as Border;
-            _leftAutoHide = GetTemplateChild("LeftAutoHide") as AutoHideTab;
-            _rightAutoHide = GetTemplateChild("RightAutoHide") as AutoHideTab;
-            _topAutoHide = GetTemplateChild("TopAutoHide") as AutoHideTab;
-            _bottomAutoHide = GetTemplateChild("BottomAutoHide") as AutoHideTab;
-            _dockPanel = GetTemplateChild("ContentDockPanel") as WinItemPanel;
-            _centerItem = GetTemplateChild("CenterDockItem") as WinItem;
-
-            Button btn = GetTemplateChild("DefaultLayoutButton") as Button;
-            if (btn != null)
-            {
-                btn.Click -= OnDefaultLayoutClick;
-                btn.Click += OnDefaultLayoutClick;
-            }
-            _layout.Init();
-            SizeChanged -= OnSizeChanged;
-            SizeChanged += OnSizeChanged;
+            _dockPanel = (WinItemPanel)GetTemplateChild("ContentDockPanel");
+            _centerItem = (WinItem)GetTemplateChild("CenterDockItem");
 
             // 已设置主区内容
             object centerTabs = GetValue(CenterTabsProperty);
             if (centerTabs != null)
                 _centerItem.Items.Add(centerTabs);
+
+            _layout.Init();
+            SizeChanged += OnSizeChanged;
         }
 
         /// <summary>
@@ -716,7 +688,6 @@ namespace Dt.Base
                 throw new Exception("Win不支持子项重置！");
             }
         }
-
         #endregion
 
         #region 开始拖动
@@ -726,38 +697,38 @@ namespace Dt.Base
         /// <param name="e"></param>
         void OnDragStarted(DragInfoEventArgs e)
         {
-            Tab sectItem;
+            Tab tab;
             TabHeader header = null;
             FrameworkElement element = null;
-            Tabs sect = null;
+            Tabs tabs = null;
 
-            if ((sectItem = e.OriginalSource as Tab) != null)
+            if ((tab = e.OriginalSource as Tab) != null)
             {
-                element = sectItem;
-                sect = sectItem.Container;
+                element = tab;
+                tabs = tab.Container;
             }
             else if ((header = e.OriginalSource as TabHeader) != null)
             {
                 element = header;
-                sect = header.Owner as Tabs;
+                tabs = header.Owner as Tabs;
             }
             else
             {
-                throw new Exception("拖动时异常，拖动对象只可能是Tab或PaneHeader！");
+                throw new Exception("拖动时异常，拖动对象只可能是Tab或TabHeader！");
             }
 
             // 水平位置所占比例
-            Point offset = e.PointerArgs.GetCurrentPoint(sect).Position;
-            double offsetX = offset.X / sect.RenderSize.Width;
+            Point offset = e.PointerArgs.GetCurrentPoint(tabs).Position;
+            double offsetX = offset.X / tabs.RenderSize.Width;
 
             ToolWindow win = null;
-            if (sectItem != null)
+            if (tab != null)
             {
-                win = OpenInWindow(sectItem);
+                win = OpenInWindow(tab);
             }
             else
             {
-                win = OpenInWindow(sect);
+                win = OpenInWindow(tabs);
             }
 
             Point winPos = e.PointerArgs.GetCurrentPoint(this).Position;
@@ -770,13 +741,13 @@ namespace Dt.Base
         /// <summary>
         /// 构造ToolWindow承载Tab，结构 ToolWindow -> WinItem -> Tabs -> Tab
         /// </summary>
-        /// <param name="p_sectItem"></param>
+        /// <param name="p_tab"></param>
         /// <returns></returns>
-        ToolWindow OpenInWindow(Tab p_sectItem)
+        ToolWindow OpenInWindow(Tab p_tab)
         {
             Point initPos = new Point();
             Size initSize = _defaultFloatSize;
-            ToolWindow oldWin = GetParentWindow(p_sectItem);
+            ToolWindow oldWin = GetParentWindow(p_tab);
             if (oldWin != null)
             {
                 initPos = new Point(oldWin.HorizontalOffset, oldWin.VerticalOffset);
@@ -785,8 +756,8 @@ namespace Dt.Base
             else
             {
                 WinItem oldContainer = null;
-                if (p_sectItem.Container != null)
-                    oldContainer = p_sectItem.Container.Parent as WinItem;
+                if (p_tab.Container != null)
+                    oldContainer = p_tab.Container.Parent as WinItem;
 
                 if (oldContainer != null)
                 {
@@ -794,13 +765,13 @@ namespace Dt.Base
                     initSize = oldContainer.FloatSize;
                 }
             }
-            p_sectItem.RemoveFromParent();
+            p_tab.RemoveFromParent();
 
             ToolWindow win = CreateWindow(initSize, initPos);
             WinItem dockItem = new WinItem();
             dockItem.DockState = WinItemState.Floating;
             Tabs sect = new Tabs();
-            sect.Items.Add(p_sectItem);
+            sect.Items.Add(p_tab);
             dockItem.Items.Add(sect);
             win.Content = dockItem;
             win.Show();
@@ -810,13 +781,13 @@ namespace Dt.Base
         /// <summary>
         /// 构造ToolWindow承载Tabs，直接将Tabs移动到新WinItem
         /// </summary>
-        /// <param name="p_sect"></param>
+        /// <param name="p_tabs"></param>
         /// <returns></returns>
-        ToolWindow OpenInWindow(Tabs p_sect)
+        ToolWindow OpenInWindow(Tabs p_tabs)
         {
             Point initPos = new Point();
             Size initSize = _defaultFloatSize;
-            ToolWindow oldWin = GetParentWindow(p_sect);
+            ToolWindow oldWin = GetParentWindow(p_tabs);
             if (oldWin != null)
             {
                 initPos = new Point(oldWin.HorizontalOffset, oldWin.VerticalOffset);
@@ -826,8 +797,8 @@ namespace Dt.Base
             ToolWindow win = CreateWindow(initSize, initPos);
             WinItem dockItem = new WinItem();
             dockItem.DockState = WinItemState.Floating;
-            p_sect.RemoveFromParent();
-            dockItem.Items.Add(p_sect);
+            p_tabs.RemoveFromParent();
+            dockItem.Items.Add(p_tabs);
             win.Content = dockItem;
             win.Show();
             return win;
@@ -835,6 +806,9 @@ namespace Dt.Base
 
         internal ToolWindow CreateWindow(Size p_size, Point p_location)
         {
+            if (_popupPanel == null)
+                CreatePopupCanvas();
+
             ToolWindow win = new ToolWindow();
             win.Owner = _popupPanel;
             win.Width = p_size.Width;
@@ -842,6 +816,33 @@ namespace Dt.Base
             win.HorizontalOffset = p_location.X;
             win.VerticalOffset = p_location.Y;
             return win;
+        }
+
+        void CreatePopupCanvas()
+        {
+            _popupPanel = new Canvas();
+
+            // 停靠区域提示
+            _dragCue = new Border { Background = AtRes.暗遮罩, BorderBrush = AtRes.深暗遮罩, BorderThickness = new Thickness(2), Visibility = Visibility.Collapsed };
+            Canvas.SetZIndex(_dragCue, 999997);
+            _popupPanel.Children.Add(_dragCue);
+
+            // 动态导航
+            _compass = new Compass { Visibility = Visibility.Collapsed };
+            Canvas.SetZIndex(_compass, 999998);
+            _popupPanel.Children.Add(_compass);
+
+            // 四方向导航
+            _rootCompass = new RootCompass { Visibility = Visibility.Collapsed };
+            Canvas.SetZIndex(_rootCompass, 999999);
+            if (ActualWidth > 0)
+                _rootCompass.Width = ActualWidth;
+            if (ActualHeight > 0)
+                _rootCompass.Height = ActualHeight;
+            _popupPanel.Children.Add(_rootCompass);
+
+            Grid grid = (Grid)GetTemplateChild("RootGrid");
+            grid.Children.Add(_popupPanel);
         }
         #endregion
 
@@ -1064,101 +1065,6 @@ namespace Dt.Base
         }
         #endregion
 
-        #region Pin状态切换
-        void OnPinChange(Tab item)
-        {
-            if (item.IsPinned)
-            {
-                AutoHideTab autoHide = item.Parent as AutoHideTab;
-                if (autoHide != null)
-                {
-                    autoHide.Pin(item);
-                    WinItemState dockState = GetDockState(autoHide.TabStripPlacement);
-                    Tabs sect = FindPinSect(dockState);
-                    if (sect != null)
-                    {
-                        // 直接停靠
-                        sect.Items.Add(item);
-                    }
-                    else
-                    {
-                        WinItem dockItem = new WinItem();
-                        dockItem.DockState = dockState;
-                        sect = new Tabs();
-                        dockItem.Items.Add(sect);
-                        sect.Items.Add(item);
-                        Items.Add(dockItem);
-                    }
-                }
-            }
-            else
-            {
-                Tabs sect = item.Parent as Tabs;
-                WinItem dockItem;
-                if (sect != null && (dockItem = sect.Container) != null)
-                {
-                    AutoHideTab autoHide = null;
-                    switch (dockItem.DockState)
-                    {
-                        case WinItemState.DockedLeft:
-                            autoHide = _leftAutoHide;
-                            break;
-                        case WinItemState.DockedBottom:
-                            autoHide = _bottomAutoHide;
-                            break;
-                        case WinItemState.DockedRight:
-                            autoHide = _rightAutoHide;
-                            break;
-                        case WinItemState.DockedTop:
-                            autoHide = _topAutoHide;
-                            break;
-                    }
-                    if (autoHide != null)
-                        autoHide.Unpin(item);
-                }
-            }
-            OnLayoutChanged();
-        }
-
-        /// <summary>
-        /// 查找停靠位置的Tabs
-        /// </summary>
-        /// <param name="p_dockState"></param>
-        /// <returns></returns>
-        Tabs FindPinSect(WinItemState p_dockState)
-        {
-            Tabs sect = null;
-            WinItem item = (from dockItem in Items.OfType<WinItem>()
-                            where dockItem.DockState == p_dockState
-                            select dockItem).FirstOrDefault();
-            if (item != null)
-            {
-                sect = (from obj in item.GetAllTabs()
-                        select obj).FirstOrDefault();
-            }
-            return sect;
-        }
-
-        WinItemState GetDockState(ItemPlacement p_dockState)
-        {
-            switch (p_dockState)
-            {
-                case ItemPlacement.Left:
-                    return WinItemState.DockedLeft;
-
-                case ItemPlacement.Right:
-                    return WinItemState.DockedRight;
-
-                case ItemPlacement.Top:
-                    return WinItemState.DockedTop;
-
-                case ItemPlacement.Bottom:
-                    return WinItemState.DockedBottom;
-            }
-            return WinItemState.DockedLeft;
-        }
-        #endregion
-
         #region 主区切换内容
         /// <summary>
         /// 动态切换主区内容
@@ -1243,19 +1149,15 @@ namespace Dt.Base
         #region 内部方法
         void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            // 关闭自动隐藏项
-            _leftAutoHide.SelectedIndex = -1;
-            _rightAutoHide.SelectedIndex = -1;
-            _topAutoHide.SelectedIndex = -1;
-            _bottomAutoHide.SelectedIndex = -1;
+            if (e.NewSize.Width != e.PreviousSize.Width)
+                _layout.OnWidthChanged(e.NewSize.Width);
 
-            // 更新RootCompass的大小，因在Canvas中不能自动伸展
-            Size size = e.NewSize;
-            _rootCompass.Width = size.Width;
-            _rootCompass.Height = size.Height;
-
-            if (size.Width != e.PreviousSize.Width)
-                _layout.OnWidthChanged(size.Width);
+            if (_rootCompass != null)
+            {
+                // 更新RootCompass的大小，因在Canvas中不能自动伸展
+                _rootCompass.Width = e.NewSize.Width;
+                _rootCompass.Height = e.NewSize.Height;
+            }
         }
 
         static ToolWindow GetParentWindow(Tab p_sectItem)
@@ -1287,15 +1189,143 @@ namespace Dt.Base
         {
             return element.TransformToVisual(this).TransformPoint(new Point());
         }
+        #endregion
+
+        #region 四周停靠
+        void OnPinChange(Tab item)
+        {
+            if (item.IsPinned)
+            {
+                AutoHideTab autoHide = item.Owner as AutoHideTab;
+                if (autoHide != null)
+                {
+                    autoHide.Pin(item);
+                    WinItemState dockState = GetDockState(autoHide.TabStripPlacement);
+                    Tabs sect = FindPinSect(dockState);
+                    if (sect != null)
+                    {
+                        // 直接停靠
+                        sect.Items.Add(item);
+                    }
+                    else
+                    {
+                        WinItem dockItem = new WinItem();
+                        dockItem.DockState = dockState;
+                        sect = new Tabs();
+                        dockItem.Items.Add(sect);
+                        sect.Items.Add(item);
+                        Items.Add(dockItem);
+                    }
+                }
+            }
+            else
+            {
+                Tabs sect = item.Owner as Tabs;
+                WinItem dockItem;
+                if (sect != null && (dockItem = sect.Container) != null)
+                {
+                    switch (dockItem.DockState)
+                    {
+                        case WinItemState.DockedLeft:
+                            if (LeftAutoHide == null)
+                                CreateLeftAutoHideTab();
+                            LeftAutoHide.Unpin(item);
+                            break;
+                        case WinItemState.DockedBottom:
+                            if (BottomAutoHide == null)
+                                CreateBottomAutoHideTab();
+                            BottomAutoHide.Unpin(item);
+                            break;
+                        case WinItemState.DockedRight:
+                            if (RightAutoHide == null)
+                                CreateRightAutoHideTab();
+                            RightAutoHide.Unpin(item);
+                            break;
+                        case WinItemState.DockedTop:
+                            if (TopAutoHide == null)
+                                CreateTopAutoHideTab();
+                            TopAutoHide.Unpin(item);
+                            break;
+                    }
+                }
+            }
+            OnLayoutChanged();
+        }
 
         /// <summary>
-        /// 恢复默认布局
+        /// 查找停靠位置的Tabs
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void OnDefaultLayoutClick(object sender, RoutedEventArgs e)
+        /// <param name="p_dockState"></param>
+        /// <returns></returns>
+        Tabs FindPinSect(WinItemState p_dockState)
         {
-            _layout.LoadDefaultLayout();
+            Tabs sect = null;
+            WinItem item = (from dockItem in Items.OfType<WinItem>()
+                            where dockItem.DockState == p_dockState
+                            select dockItem).FirstOrDefault();
+            if (item != null)
+            {
+                sect = (from obj in item.GetAllTabs()
+                        select obj).FirstOrDefault();
+            }
+            return sect;
+        }
+
+        WinItemState GetDockState(ItemPlacement p_dockState)
+        {
+            switch (p_dockState)
+            {
+                case ItemPlacement.Left:
+                    return WinItemState.DockedLeft;
+
+                case ItemPlacement.Right:
+                    return WinItemState.DockedRight;
+
+                case ItemPlacement.Top:
+                    return WinItemState.DockedTop;
+
+                case ItemPlacement.Bottom:
+                    return WinItemState.DockedBottom;
+            }
+            return WinItemState.DockedLeft;
+        }
+
+        internal void CreateLeftAutoHideTab()
+        {
+            var tab = new AutoHideTab { TabStripPlacement = ItemPlacement.Left };
+            Grid.SetRowSpan(tab, 3);
+            Grid grid = (Grid)GetTemplateChild("RootGrid");
+            grid.Children.Insert(0, tab);
+            LeftAutoHide = tab;
+        }
+
+        internal void CreateRightAutoHideTab()
+        {
+            var tab = new AutoHideTab { TabStripPlacement = ItemPlacement.Right };
+            Grid.SetRowSpan(tab, 3);
+            Grid.SetColumn(tab, 2);
+            Grid grid = (Grid)GetTemplateChild("RootGrid");
+            grid.Children.Insert(0, tab);
+            RightAutoHide = tab;
+        }
+
+        internal void CreateTopAutoHideTab()
+        {
+            var tab = new AutoHideTab { TabStripPlacement = ItemPlacement.Top };
+            Grid.SetColumn(tab, 1);
+            Grid grid = (Grid)GetTemplateChild("RootGrid");
+            grid.Children.Insert(0, tab);
+            TopAutoHide = tab;
+        }
+
+        internal void CreateBottomAutoHideTab()
+        {
+            var tab = new AutoHideTab { TabStripPlacement = ItemPlacement.Bottom };
+            Grid.SetRow(tab, 2);
+            Grid.SetColumn(tab, 1);
+            Grid grid = (Grid)GetTemplateChild("RootGrid");
+            grid.Children.Insert(0, tab);
+            BottomAutoHide = tab;
         }
         #endregion
 

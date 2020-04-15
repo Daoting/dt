@@ -7,14 +7,15 @@
 #endregion
 
 #region 引用命名
+using Dt.Core;
 using System;
 using System.Linq;
-using System.Reflection;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 #endregion
@@ -24,125 +25,57 @@ namespace Dt.Base
     /// <summary>
     /// 选项卡控件
     /// </summary>
-    public partial class TabControl : ItemsControl
+    [ContentProperty(Name = nameof(Items))]
+    public partial class TabControl : Control
     {
         #region 静态内容
-        /// <summary>
-        /// TabItem 标题相对于内容的对齐方式
-        /// </summary>
         public static readonly DependencyProperty TabStripPlacementProperty = DependencyProperty.Register(
             "TabStripPlacement",
             typeof(ItemPlacement),
             typeof(TabControl),
             new PropertyMetadata(ItemPlacement.Bottom, new PropertyChangedCallback(OnTabStripPlacementChanged)));
 
-        /// <summary>
-        /// TabItem是否可拖拽调整位置
-        /// </summary>
         public readonly static DependencyProperty AllowSwapItemProperty = DependencyProperty.Register(
             "AllowSwapItem",
             typeof(bool),
             typeof(TabControl),
             new PropertyMetadata(true));
 
-        /// <summary>
-        /// 点击标签时是否以弹出方式显示内容，平时自动隐藏
-        /// </summary>
-        public readonly static DependencyProperty IsAutoHideProperty = DependencyProperty.Register(
-            "IsAutoHide",
-            typeof(bool),
-            typeof(TabControl),
-            new PropertyMetadata(false, OnIsAutoHideChanged));
-
-        /// <summary>
-        /// 是否采用outlook导航样式
-        /// </summary>
-        public readonly static DependencyProperty IsOutlookStyleProperty = DependencyProperty.Register(
-            "IsOutlookStyle",
-            typeof(bool),
-            typeof(TabControl),
-            new PropertyMetadata(false, OnTabStripPlacementChanged));
-
-        /// <summary>
-        /// 当前选定的 TabItem 的索引
-        /// </summary>
         public static readonly DependencyProperty SelectedIndexProperty = DependencyProperty.Register(
             "SelectedIndex",
             typeof(int),
             typeof(TabControl),
             new CoercePropertyMetadata(-1, OnSelectedIndexChanged, CoerceSelectedIndex));
 
-        /// <summary>
-        /// 当前选定的 TabItem
-        /// </summary>
         public static readonly DependencyProperty SelectedItemProperty = DependencyProperty.Register(
             "SelectedItem",
-            typeof(object),
+            typeof(TabItem),
             typeof(TabControl),
             new PropertyMetadata(null, OnSelectedItemChanged));
 
-        /// <summary>
-        /// 面板内容的宽度
-        /// </summary>
         public static readonly DependencyProperty PopWidthProperty = DependencyProperty.Register(
             "PopWidth",
             typeof(double),
             typeof(TabControl),
             new PropertyMetadata(double.NaN, OnPopSizeChanged));
 
-        /// <summary>
-        /// 面板内容的高度
-        /// </summary>
         public static readonly DependencyProperty PopHeightProperty = DependencyProperty.Register(
             "PopHeight",
             typeof(double),
             typeof(TabControl),
             new PropertyMetadata(double.NaN, OnPopSizeChanged));
 
-        /// <summary>
-        /// 内容模板
-        /// </summary>
-        public static readonly DependencyProperty ContentTemplateProperty = DependencyProperty.Register(
-            "ContentTemplate",
-            typeof(object),
-            typeof(TabControl),
-            new PropertyMetadata(null));
-
-        /// <summary>
-        /// 切换内容时的转换
-        /// </summary>
-        public static readonly DependencyProperty ContentTransitionsProperty = DependencyProperty.Register(
-            "ContentTransitions",
-            typeof(TransitionCollection),
-            typeof(TabControl),
-            new PropertyMetadata(null));
-
-        /// <summary>
-        /// 当前选择的 TabItem 的内容
-        /// </summary>
         public static readonly DependencyProperty SelectedContentProperty = DependencyProperty.Register(
             "SelectedContent",
             typeof(object),
             typeof(TabControl),
             new PropertyMetadata(null));
 
-        /// <summary>
-        /// 默认控件模板
-        /// </summary>
-        public static readonly DependencyProperty DefaultTemplateProperty = DependencyProperty.Register(
-            "DefaultTemplate",
-            typeof(ControlTemplate),
+        public static readonly DependencyProperty ContentTransitionsProperty = DependencyProperty.Register(
+            "ContentTransitions",
+            typeof(TransitionCollection),
             typeof(TabControl),
             new PropertyMetadata(null));
-
-        /// <summary>
-        /// 弹出式模板
-        /// </summary>
-        public static readonly DependencyProperty PopTemplateProperty = DependencyProperty.Register(
-            "PopTemplate",
-            typeof(ControlTemplate),
-            typeof(TabControl),
-            new PropertyMetadata(null, OnPopTemplateChanged));
 
         static void OnSelectedIndexChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -156,7 +89,7 @@ namespace Dt.Base
                 }
                 else if (newValue > -1 && newValue < tab.Items.Count)
                 {
-                    tab._selector.Select(tab.ContainerFromIndex(newValue));
+                    tab._selector.Select(tab.Items[newValue]);
                 }
             }
         }
@@ -180,7 +113,7 @@ namespace Dt.Base
             {
                 if (e.NewValue != null)
                 {
-                    tab._selector.Select(tab.ContainerFromItem(e.NewValue));
+                    tab._selector.Select((TabItem)e.NewValue);
                 }
                 else
                 {
@@ -193,14 +126,6 @@ namespace Dt.Base
         {
             TabControl tab = (TabControl)d;
             tab.OnPlacementChanged();
-            if (tab._isLoaded)
-                tab.AffirmOutLook();
-        }
-
-        static void OnIsAutoHideChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            TabControl tab = (TabControl)d;
-            tab.OnIsAutoHideChanged();
         }
 
         static void OnPopSizeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -208,36 +133,18 @@ namespace Dt.Base
             TabControl tab = (TabControl)d;
             tab.ApplyPopStyle();
         }
-
-        static void OnPopTemplateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            TabControl tab = (TabControl)d;
-            ControlTemplate temp = (ControlTemplate)e.NewValue;
-            if (tab.IsAutoHide && temp != null)
-                tab.Template = temp;
-        }
         #endregion
 
         #region 成员变量
         SelectionChanger _selector;
 
-        StackPanel _panel;
+        protected StackPanel _itemsPanel;
         Grid _mainGrid;
-        ItemsPresenter _strip;
-        Grid _contentGrid;
+        ContentPresenter _contentPresenter;
         Dlg _dlg;
 
         protected bool _isLoaded;
         bool _updatingSelection;
-        bool _swapping;
-        #endregion
-
-        #region 事件
-        /// <summary>
-        /// 当选定的 TabItem 更改时发生
-        /// </summary>
-        public event EventHandler<SelectedChangedEventArgs> SelectedChanged;
-
         #endregion
 
         #region 构造方法
@@ -247,12 +154,24 @@ namespace Dt.Base
         public TabControl()
         {
             DefaultStyleKey = typeof(TabControl);
+            Items = new ItemList<TabItem>();
             _selector = new SelectionChanger(this);
-            Loaded += OnLoaded;
         }
         #endregion
 
+        #region 事件
+        /// <summary>
+        /// 当选定的 TabItem 更改时发生
+        /// </summary>
+        public event EventHandler<SelectedChangedEventArgs> SelectedChanged;
+        #endregion
+
         #region 属性
+        /// <summary>
+        /// 获取子菜单集合
+        /// </summary>
+        public ItemList<TabItem> Items { get; }
+
         /// <summary>
         /// 获取或设置 TabItem 标题相对于内容的对齐方式
         /// </summary>
@@ -269,24 +188,6 @@ namespace Dt.Base
         {
             get { return (bool)GetValue(AllowSwapItemProperty); }
             set { SetValue(AllowSwapItemProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取设置点击标签时是否以弹出方式显示内容，平时自动隐藏
-        /// </summary>
-        public bool IsAutoHide
-        {
-            get { return (bool)GetValue(IsAutoHideProperty); }
-            set { SetValue(IsAutoHideProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取设置是否采用outlook导航样式，只在标签在上下侧时有效
-        /// </summary>
-        public bool IsOutlookStyle
-        {
-            get { return (bool)GetValue(IsOutlookStyleProperty); }
-            set { SetValue(IsOutlookStyleProperty, value); }
         }
 
         /// <summary>
@@ -312,16 +213,16 @@ namespace Dt.Base
         /// </summary>
         public int SelectedIndex
         {
-            get { return (int)((int)GetValue(SelectedIndexProperty)); }
+            get { return (int)GetValue(SelectedIndexProperty); }
             set { SetValue(SelectedIndexProperty, (int)value); }
         }
 
         /// <summary>
         /// 获取或设置当前选定的 TabItem
         /// </summary>
-        public object SelectedItem
+        public TabItem SelectedItem
         {
-            get { return GetValue(SelectedItemProperty); }
+            get { return (TabItem)GetValue(SelectedItemProperty); }
             set { SetValue(SelectedItemProperty, value); }
         }
 
@@ -335,15 +236,6 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取或设置内容模板
-        /// </summary>
-        public object ContentTemplate
-        {
-            get { return GetValue(ContentTemplateProperty); }
-            set { SetValue(ContentTemplateProperty, value); }
-        }
-
-        /// <summary>
         /// 获取或设置切换内容时的转换
         /// </summary>
         public TransitionCollection ContentTransitions
@@ -353,25 +245,168 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置默认控件模板
+        /// 获取是否显示当前选择的 TabItem 的内容，false时在弹出面板显示
         /// </summary>
-        public ControlTemplate DefaultTemplate
+        public bool ShowContent
         {
-            get { return (ControlTemplate)GetValue(DefaultTemplateProperty); }
-            set { SetValue(DefaultTemplateProperty, value); }
+            get { return _contentPresenter != null; }
         }
 
         /// <summary>
-        /// 获取设置弹出式模板
+        /// 获取设置是否采用outlook导航样式，只在标签在上下侧时有效
         /// </summary>
-        public ControlTemplate PopTemplate
+        public bool IsOutlookStyle
         {
-            get { return (ControlTemplate)GetValue(PopTemplateProperty); }
-            set { SetValue(PopTemplateProperty, value); }
+            get { return _itemsPanel?.Orientation == Orientation.Vertical; }
         }
         #endregion
 
-        #region 外部方法
+        #region 重写方法
+        protected override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            _mainGrid = (Grid)GetTemplateChild("MainGrid");
+            _itemsPanel = (StackPanel)GetTemplateChild("ItemsPanel");
+            _contentPresenter = (ContentPresenter)GetTemplateChild("TabContent");
+            _isLoaded = true;
+
+            if (TabStripPlacement != ItemPlacement.Bottom)
+                OnPlacementChanged();
+
+            LoadAllItems();
+            InitSelection();
+            Items.ItemsChanged += OnItemsChanged;
+            SizeChanged += OnSizeChanged;
+        }
+        #endregion
+
+        #region Items管理
+        void OnItemsChanged(ItemList<TabItem> sender, ItemListChangedArgs e)
+        {
+            if (e.CollectionChange == CollectionChange.ItemInserted)
+            {
+                var item = Items[e.Index];
+                InitItem(item);
+                _itemsPanel.Children.Insert(e.Index, item);
+            }
+            else if (e.CollectionChange == CollectionChange.ItemRemoved)
+            {
+                ((TabItem)_itemsPanel.Children[e.Index]).IsSelected = false;
+                _itemsPanel.Children.RemoveAt(e.Index);
+            }
+            else
+            {
+                for (int i = 0; i < Items.Count; i++)
+                {
+                    var item = Items[i];
+                    if (_itemsPanel.Children.Count > i)
+                    {
+                        var elem = _itemsPanel.Children[i];
+
+                        // 内容没变
+                        if (item == elem)
+                            continue;
+
+                        // 变了移除旧元素
+                        _itemsPanel.Children.RemoveAt(i);
+                    }
+                    InitItem(item);
+                    _itemsPanel.Children.Insert(i, item);
+                }
+
+                // 移除多余的元素
+                while (_itemsPanel.Children.Count > Items.Count)
+                {
+                    _itemsPanel.Children.RemoveAt(_itemsPanel.Children.Count - 1);
+                }
+            }
+
+            if (!ShowContent)
+            {
+                _selector.Select(null);
+            }
+            else if (e.CollectionChange == CollectionChange.ItemInserted)
+            {
+                _selector.Select(Items[e.Index]);
+            }
+            else
+            {
+                _selector.ResetSelection();
+            }
+            ApplyOutlookStyle();
+            OnItemsChanged();
+        }
+
+        void LoadAllItems()
+        {
+            foreach (var item in Items)
+            {
+                InitItem(item);
+                _itemsPanel.Children.Add(item);
+            }
+        }
+
+        protected virtual void InitItem(TabItem p_item)
+        {
+            p_item.Owner = this;
+            p_item.TabStripPlacement = TabStripPlacement;
+            p_item.BorderBrush = BorderBrush;
+        }
+
+        protected virtual void OnItemsChanged()
+        { }
+        #endregion
+
+        #region 内部方法
+        void OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            ApplyOutlookStyle();
+        }
+
+        /// <summary>
+        /// 弹出面板关闭时清除选择项
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void OnPopClosed(object sender, object e)
+        {
+            SelectedIndex = -1;
+        }
+
+        /// <summary>
+        /// 初始选择状态，优先级：SelectedIndex > SelectedItem > TabItem.IsSelected
+        /// </summary>
+        void InitSelection()
+        {
+            if (_contentPresenter == null)
+                return;
+
+            if (SelectedIndex >= 0 && SelectedIndex < Items.Count)
+            {
+                _selector.Select(Items[SelectedIndex]);
+            }
+            else if (SelectedItem != null)
+            {
+                _selector.Select(SelectedItem);
+            }
+            else if (Items.Count == 1)
+            {
+                _selector.Select(Items[0]);
+            }
+            else if (Items.Count > 0)
+            {
+                TabItem item = (from it in Items
+                                where it.IsSelected
+                                select it).FirstOrDefault();
+                if (item != null)
+                    _selector.Select(item);
+                else
+                    _selector.Select(Items[0]);
+            }
+        }
+        #endregion
+
+        #region 拖拽调序
         /// <summary>
         /// 内部元素拖拽过程
         /// </summary>
@@ -380,16 +415,9 @@ namespace Dt.Base
         /// <returns>false 表示不在有效区域</returns>
         internal bool DoSwap(TabItem p_src, Point p_pt)
         {
-            TabItem target = null;
-            foreach (object item in Items)
-            {
-                TabItem tabItem = ContainerFromItem(item) as TabItem;
-                if (tabItem != null && tabItem.ContainPoint(p_pt))
-                {
-                    target = tabItem;
-                    break;
-                }
-            }
+            TabItem target = (from item in Items
+                              where item.ContainPoint(p_pt)
+                              select item).FirstOrDefault();
 
             // 交换位置
             if (target != null && target != p_src)
@@ -401,13 +429,21 @@ namespace Dt.Base
                         return true;
                 }
 
-                _swapping = true;
-                SetupTransitions();
-                int srcIndex = IndexFromContainer(p_src);
-                int tgtIndex = IndexFromContainer(target);
-                Items.RemoveAt(tgtIndex);
-                Items.Insert(srcIndex, target);
-                _swapping = false;
+                try
+                {
+                    Items.ItemsChanged -= OnItemsChanged;
+                    int srcIndex = Items.IndexOf(p_src);
+                    int tgtIndex = Items.IndexOf(target);
+                    Items.RemoveAt(tgtIndex);
+                    _itemsPanel.Children.RemoveAt(tgtIndex);
+
+                    Items.Insert(srcIndex, target);
+                    _itemsPanel.Children.Insert(srcIndex, target);
+                }
+                finally
+                {
+                    Items.ItemsChanged += OnItemsChanged;
+                }
             }
             return target != null;
         }
@@ -443,235 +479,7 @@ namespace Dt.Base
         }
         #endregion
 
-        #region 重写方法
-        /// <summary>
-        /// 
-        /// </summary>
-        protected override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-            _mainGrid = GetTemplateChild("MainGrid") as Grid;
-            _strip = (ItemsPresenter)GetTemplateChild("ItemsPresenter");
-            _contentGrid = GetTemplateChild("ContentGrid") as Grid;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnItemsChanged(object e)
-        {
-            base.OnItemsChanged(e);
-
-            if (_isLoaded && !_swapping)
-            {
-                IVectorChangedEventArgs args = (IVectorChangedEventArgs)e;
-                if (IsAutoHide)
-                {
-                    _selector.Select(null);
-                }
-                else
-                {
-                    int index = (int)args.Index;
-                    if (args.CollectionChange == CollectionChange.ItemInserted)
-                    {
-                        _selector.Select(ContainerFromIndex(index));
-                    }
-                    else
-                    {
-                        _selector.ResetSelection();
-                    }
-                }
-                AffirmOutLook();
-            }
-        }
-
-        /// <summary>
-        /// 准备指定元素以显示指定项
-        /// </summary>
-        /// <param name="p_element"></param>
-        /// <param name="p_item"></param>
-        protected override void PrepareContainerForItemOverride(DependencyObject p_element, object p_item)
-        {
-            TabItem tabItem = p_element as TabItem;
-            if (tabItem != null)
-            {
-                tabItem.TabStripPlacement = TabStripPlacement;
-                Binding bind = new Binding();
-                bind.Path = new PropertyPath("BorderBrush");
-                bind.Source = this;
-                tabItem.SetBinding(Control.BorderBrushProperty, bind);
-            }
-
-            if (p_item is TabItem)
-            {
-                base.PrepareContainerForItemOverride(tabItem, p_item);
-            }
-            else
-            {
-                if (tabItem != null)
-                {
-                    if (!string.IsNullOrEmpty(DisplayMemberPath))
-                    {
-                        if ((ItemTemplate == null) && (ItemTemplateSelector == null))
-                        {
-                            PropertyInfo runtimeProperty = RuntimeReflectionExtensions.GetRuntimeProperty(p_item.GetType(), DisplayMemberPath);
-                            if (runtimeProperty != null)
-                            {
-                                object obj = runtimeProperty.GetValue(p_item);
-                                if (obj != null)
-                                {
-                                    tabItem.Title = obj.ToString();
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        tabItem.Title = p_item.ToString();
-                    }
-                    tabItem.Content = p_item;
-                }
-                base.PrepareContainerForItemOverride(tabItem, tabItem);
-            }
-        }
-
-        /// <summary>
-        /// 创建或标识用于显示给定项的元素
-        /// </summary>
-        /// <returns></returns>
-        protected override DependencyObject GetContainerForItemOverride()
-        {
-            return new TabItem();
-        }
-
-        /// <summary>
-        /// 确定指定项是否是其自己的容器
-        /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        protected override bool IsItemItsOwnContainerOverride(object item)
-        {
-            return (item is TabItem);
-        }
-
-        /// <summary>
-        /// 清除子项
-        /// </summary>
-        /// <param name="element"></param>
-        /// <param name="item"></param>
-        protected override void ClearContainerForItemOverride(DependencyObject element, object item)
-        {
-            base.ClearContainerForItemOverride(element, item);
-            TabItem tabItem = element as TabItem;
-            if (tabItem != null)
-            {
-                tabItem.IsSelected = false;
-            }
-        }
-        #endregion
-
-        #region 虚方法
-        /// <summary>
-        /// 触发选择变化事件
-        /// </summary>
-        /// <param name="e"></param>
-        protected virtual void OnSelectionChanged(SelectedChangedEventArgs e)
-        {
-
-            SelectedChanged?.Invoke(this, e);
-        }
-
-        /// <summary>
-        /// IsAutoHide变化时切换样式
-        /// </summary>
-        protected virtual void OnIsAutoHideChanged()
-        {
-            if (IsAutoHide && PopTemplate != null)
-                Template = PopTemplate;
-            else if (!IsAutoHide && DefaultTemplate != null)
-                Template = DefaultTemplate;
-
-            if (_isLoaded)
-            {
-                SelectedIndex = -1;
-                Loaded += OnLoaded;
-            }
-        }
-        #endregion
-
-        #region 内部方法
-        /// <summary>
-        /// 加载
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            Loaded -= OnLoaded;
-            Unloaded += OnTabUnloaded;
-            SizeChanged += OnSizeChanged;
-            Loaded += (s, args) => _isLoaded = true;
-            _isLoaded = true;
-
-            AffirmOutLook();
-            _panel = this.FindChildByType<StackPanel>();
-            OnPlacementChanged();
-
-            // 初始选择状态，优先级：SelectedIndex > SelectedItem > TabItem.IsSelected
-            if (SelectedIndex >= 0 && SelectedIndex < Items.Count)
-            {
-                _selector.Select(ContainerFromIndex(SelectedIndex));
-            }
-            else if (SelectedItem != null)
-            {
-                _selector.Select(ContainerFromItem(SelectedItem));
-            }
-            else if (!IsAutoHide && Items.Count > 0)
-            {
-                TabItem item = null;
-                for (int i = 0; i < Items.Count; i++)
-                {
-                    item = ContainerFromIndex(i) as TabItem;
-                    if (item != null && item.IsSelected)
-                        break;
-                    item = null;
-                }
-                if (item != null)
-                    _selector.Select(item);
-                else
-                    _selector.Select(ContainerFromIndex(0));
-            }
-        }
-
-        /// <summary>
-        /// 卸载时移除动画
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void OnTabUnloaded(object sender, RoutedEventArgs e)
-        {
-            if (ItemContainerTransitions != null)
-                ItemContainerTransitions = null;
-            _isLoaded = false;
-        }
-
-        void OnSizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            if (_isLoaded)
-                AffirmOutLook();
-        }
-
-        /// <summary>
-        /// 弹出面板关闭时清除选择项
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void OnPopClosed(object sender, object e)
-        {
-            SelectedIndex = -1;
-        }
-
+        #region 布局样式
         /// <summary>
         /// 切换标签相对于内容的对齐方式
         /// </summary>
@@ -687,15 +495,18 @@ namespace Dt.Base
                 _mainGrid.RowDefinitions[0].Height = new GridLength(1.0, GridUnitType.Auto);
                 _mainGrid.RowDefinitions[1].Height = new GridLength(1.0, GridUnitType.Star);
 
-                Grid.SetColumn(_strip, 0);
-                Grid.SetColumn(_contentGrid, 1);
-                Grid.SetColumnSpan(_strip, 1);
-                Grid.SetColumnSpan(_contentGrid, 1);
+                Grid.SetColumn(_itemsPanel, 0);
+                Grid.SetColumnSpan(_itemsPanel, 1);
+                Grid.SetRow(_itemsPanel, 0);
+                Grid.SetRowSpan(_itemsPanel, 2);
 
-                Grid.SetRow(_strip, 0);
-                Grid.SetRow(_contentGrid, 0);
-                Grid.SetRowSpan(_strip, 2);
-                Grid.SetRowSpan(_contentGrid, 2);
+                if (_contentPresenter != null)
+                {
+                    Grid.SetColumn(_contentPresenter, 1);
+                    Grid.SetColumnSpan(_contentPresenter, 1);
+                    Grid.SetRow(_contentPresenter, 0);
+                    Grid.SetRowSpan(_contentPresenter, 2);
+                }
             }
             else if (TabStripPlacement == ItemPlacement.Right)
             {
@@ -704,15 +515,18 @@ namespace Dt.Base
                 _mainGrid.RowDefinitions[0].Height = new GridLength(1.0, GridUnitType.Auto);
                 _mainGrid.RowDefinitions[1].Height = new GridLength(1.0, GridUnitType.Star);
 
-                Grid.SetColumn(_strip, 1);
-                Grid.SetColumn(_contentGrid, 0);
-                Grid.SetColumnSpan(_strip, 1);
-                Grid.SetColumnSpan(_contentGrid, 1);
+                Grid.SetColumn(_itemsPanel, 1);
+                Grid.SetColumnSpan(_itemsPanel, 1);
+                Grid.SetRow(_itemsPanel, 0);
+                Grid.SetRowSpan(_itemsPanel, 2);
 
-                Grid.SetRow(_strip, 0);
-                Grid.SetRow(_contentGrid, 0);
-                Grid.SetRowSpan(_strip, 2);
-                Grid.SetRowSpan(_contentGrid, 2);
+                if (_contentPresenter != null)
+                {
+                    Grid.SetColumn(_contentPresenter, 0);
+                    Grid.SetColumnSpan(_contentPresenter, 1);
+                    Grid.SetRow(_contentPresenter, 0);
+                    Grid.SetRowSpan(_contentPresenter, 2);
+                }
             }
             else if (TabStripPlacement == ItemPlacement.Bottom)
             {
@@ -721,15 +535,18 @@ namespace Dt.Base
                 _mainGrid.ColumnDefinitions[0].Width = new GridLength(1.0, GridUnitType.Auto);
                 _mainGrid.ColumnDefinitions[1].Width = new GridLength(1.0, GridUnitType.Star);
 
-                Grid.SetRow(_strip, 1);
-                Grid.SetRow(_contentGrid, 0);
-                Grid.SetRowSpan(_strip, 1);
-                Grid.SetRowSpan(_contentGrid, 1);
+                Grid.SetRow(_itemsPanel, 1);
+                Grid.SetRowSpan(_itemsPanel, 1);
+                Grid.SetColumn(_itemsPanel, 0);
+                Grid.SetColumnSpan(_itemsPanel, 2);
 
-                Grid.SetColumn(_strip, 0);
-                Grid.SetColumn(_contentGrid, 0);
-                Grid.SetColumnSpan(_strip, 2);
-                Grid.SetColumnSpan(_contentGrid, 2);
+                if (_contentPresenter != null)
+                {
+                    Grid.SetColumn(_contentPresenter, 0);
+                    Grid.SetColumnSpan(_contentPresenter, 2);
+                    Grid.SetRow(_contentPresenter, 0);
+                    Grid.SetRowSpan(_contentPresenter, 1);
+                }
             }
             else if (TabStripPlacement == ItemPlacement.Top)
             {
@@ -738,42 +555,61 @@ namespace Dt.Base
                 _mainGrid.ColumnDefinitions[0].Width = new GridLength(1.0, GridUnitType.Auto);
                 _mainGrid.ColumnDefinitions[1].Width = new GridLength(1.0, GridUnitType.Star);
 
-                Grid.SetRow(_strip, 0);
-                Grid.SetRow(_contentGrid, 1);
-                Grid.SetRowSpan(_strip, 1);
-                Grid.SetRowSpan(_contentGrid, 1);
+                Grid.SetRow(_itemsPanel, 0);
+                Grid.SetRowSpan(_itemsPanel, 1);
+                Grid.SetColumn(_itemsPanel, 0);
+                Grid.SetColumnSpan(_itemsPanel, 2);
 
-                Grid.SetColumn(_strip, 0);
-                Grid.SetColumn(_contentGrid, 0);
-                Grid.SetColumnSpan(_strip, 2);
-                Grid.SetColumnSpan(_contentGrid, 2);
+                if (_contentPresenter != null)
+                {
+                    Grid.SetColumn(_contentPresenter, 0);
+                    Grid.SetColumnSpan(_contentPresenter, 2);
+                    Grid.SetRow(_contentPresenter, 1);
+                    Grid.SetRowSpan(_contentPresenter, 1);
+                }
             }
 
             ApplyPopStyle();
-            if (_panel != null)
-            {
-                if (TabStripPlacement == ItemPlacement.Left || TabStripPlacement == ItemPlacement.Right)
-                    _panel.Orientation = Orientation.Vertical;
-                else
-                    _panel.Orientation = IsOutlookStyle ? Orientation.Vertical : Orientation.Horizontal;
-            }
 
-            for (int i = 0; i < Items.Count; i++)
+            if (TabStripPlacement == ItemPlacement.Left || TabStripPlacement == ItemPlacement.Right)
+                _itemsPanel.Orientation = Orientation.Vertical;
+            else
+                ApplyOutlookStyle();
+
+            foreach (var item in Items)
             {
-                TabItem item = ContainerFromIndex(i) as TabItem;
-                if (item != null)
-                {
-                    item.TabStripPlacement = TabStripPlacement;
-                }
+                item.TabStripPlacement = TabStripPlacement;
             }
+        }
+
+        /// <summary>
+        /// 自适应outlook模式
+        /// </summary>
+        void ApplyOutlookStyle()
+        {
+            if (!_isLoaded
+                || ActualWidth == 0
+                || TabStripPlacement == ItemPlacement.Left
+                || TabStripPlacement == ItemPlacement.Right)
+                return;
+
+            // 20 是默认stripborder的留白
+            double width = 20;
+            Size size = new Size(5000, 100);
+            foreach (TabItem item in Items)
+            {
+                item.Measure(size);
+                width += item.DesiredSize.Width;
+            }
+            _itemsPanel.Orientation = ActualWidth < width ? Orientation.Vertical : Orientation.Horizontal;
         }
 
         /// <summary>
         /// 弹出式标签属性设置
         /// </summary>
-        internal void ApplyPopStyle()
+        void ApplyPopStyle()
         {
-            if (!IsAutoHide || _dlg == null)
+            if (ShowContent || _dlg == null)
                 return;
 
             if (TabStripPlacement == ItemPlacement.Left)
@@ -805,49 +641,6 @@ namespace Dt.Base
                 _dlg.Width = double.NaN;
             }
         }
-
-        /// <summary>
-        /// 添加ReorderThemeTransition
-        /// </summary>
-        void SetupTransitions()
-        {
-            if (ItemContainerTransitions == null)
-            {
-                ItemContainerTransitions = new TransitionCollection();
-                ItemContainerTransitions.Add(new ReorderThemeTransition());
-            }
-        }
-
-        /// <summary>
-        /// 自适应outlook模式
-        /// </summary>
-        void AffirmOutLook()
-        {
-            // 20 是默认stripborder的留白
-            double max = 20;
-            Size size = this.GetSize();
-
-            if (TabStripPlacement == ItemPlacement.Bottom || TabStripPlacement == ItemPlacement.Top)
-            {
-                foreach (TabItem item in Items)
-                {
-                    if (item.ActualWidth <= 0)
-                        item.Measure(size);
-                    max += item.DesiredSize.Width;
-                }
-                IsOutlookStyle = ActualWidth < max;
-            }
-            else
-            {
-                foreach (TabItem item in Items)
-                {
-                    if (item.ActualHeight <= 0)
-                        item.Measure(size);
-                    max += item.DesiredSize.Height;
-                }
-                IsOutlookStyle = ActualHeight < max;
-            }
-        }
         #endregion
 
         #region 选择相关
@@ -856,7 +649,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_container"></param>
         /// <param name="p_selected"></param>
-        internal void NotifyIsSelectedChanged(object p_container, bool p_selected)
+        internal void NotifyIsSelectedChanged(TabItem p_container, bool p_selected)
         {
             if (_isLoaded && !_selector.Locked && p_container != null)
             {
@@ -901,19 +694,15 @@ namespace Dt.Base
         /// </summary>
         /// <param name="item"></param>
         /// <param name="value"></param>
-        void SetItemIsSelected(object item, bool value)
+        void SetItemIsSelected(TabItem item, bool value)
         {
-            if (item != null)
-            {
-                TabItem element = ContainerFromItem(item) as TabItem;
-                if (element != null && element.IsSelected != value)
-                    element.IsSelected = value;
-            }
+            if (item != null && item.IsSelected != value)
+                item.IsSelected = value;
         }
 
         void CreateDlg()
         {
-            _dlg = new Dlg() { ClipElement = _strip, PlacementTarget = _strip, Resizeable = false, HideTitleBar = true };
+            _dlg = new Dlg() { ClipElement = _itemsPanel, PlacementTarget = _itemsPanel, Resizeable = false, HideTitleBar = true };
             _dlg.Content = LoadDlgContent();
             switch (TabStripPlacement)
             {
@@ -952,16 +741,16 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_unselectItem"></param>
         /// <param name="p_selectItem"></param>
-        void AfterSelectionChanged(object p_unselectItem, object p_selectItem)
+        void AfterSelectionChanged(TabItem p_unselectItem, TabItem p_selectItem)
         {
             // 设置内容
-            TabItem item = ContainerFromItem(SelectedItem) as TabItem;
+            TabItem item = SelectedItem;
             if (item != null)
             {
                 SelectedContent = item.Content;
-                // 弹出式
-                if (IsAutoHide)
+                if (!ShowContent)
                 {
+                    // 弹出式
                     if (_dlg == null)
                         CreateDlg();
 
@@ -970,7 +759,7 @@ namespace Dt.Base
                         if (item.ReadLocalValue(TabItem.PopWidthProperty) != DependencyProperty.UnsetValue)
                         {
                             _dlg.Width = item.PopWidth;
-                            _dlg.Height = _strip.ActualHeight;
+                            _dlg.Height = _itemsPanel.ActualHeight;
                         }
                     }
                     else
@@ -978,7 +767,7 @@ namespace Dt.Base
                         if (item.ReadLocalValue(TabItem.PopHeightProperty) != DependencyProperty.UnsetValue)
                         {
                             _dlg.Height = item.PopHeight;
-                            _dlg.Width = _strip.ActualWidth;
+                            _dlg.Width = _itemsPanel.ActualWidth;
                         }
                     }
 
@@ -988,11 +777,11 @@ namespace Dt.Base
             else
             {
                 SelectedContent = null;
-                if (IsAutoHide && _dlg != null)
+                if (!ShowContent && _dlg != null)
                     _dlg.Close();
             }
 
-            OnSelectionChanged(new SelectedChangedEventArgs(p_unselectItem, p_selectItem));
+            SelectedChanged?.Invoke(this, new SelectedChangedEventArgs(p_unselectItem, p_selectItem));
         }
 
         /// <summary>
@@ -1002,9 +791,9 @@ namespace Dt.Base
         {
             TabControl _tab;
             bool _locked;
-            object _internalSelection;
-            object _itemToSelect;
-            object _itemToUnselect;
+            TabItem _internalSelection;
+            TabItem _itemToSelect;
+            TabItem _itemToUnselect;
 
             public SelectionChanger(TabControl p_tab)
             {
@@ -1019,7 +808,7 @@ namespace Dt.Base
             /// 选择指定项
             /// </summary>
             /// <param name="p_item"></param>
-            internal void Select(object p_item)
+            internal void Select(TabItem p_item)
             {
                 if (_internalSelection != p_item)
                 {
@@ -1034,18 +823,17 @@ namespace Dt.Base
             /// 取消指定项的选择状态
             /// </summary>
             /// <param name="p_item"></param>
-            internal void Unselect(object p_item)
+            internal void Unselect(TabItem p_item)
             {
                 if (p_item != null && _internalSelection == p_item)
                 {
                     Begin();
                     _itemToUnselect = _internalSelection;
-                    foreach (object item in _tab.Items)
+                    foreach (var item in _tab.Items)
                     {
-                        DependencyObject con = _tab.ContainerFromItem(item);
-                        if (con != _internalSelection)
+                        if (item != _internalSelection)
                         {
-                            _itemToSelect = con;
+                            _itemToSelect = item;
                             break;
                         }
                     }
@@ -1062,13 +850,12 @@ namespace Dt.Base
                     return;
 
                 bool exist = (from item in _tab.Items
-                              let con = _tab.ContainerFromItem(item)
-                              where con == _internalSelection
+                              where item == _internalSelection
                               select item).Any();
                 if (!exist)
                 {
                     Begin();
-                    _itemToSelect = _tab.ContainerFromIndex(0);
+                    _itemToSelect = _tab.Items[0];
                     _itemToUnselect = _internalSelection;
                     End();
                 }
@@ -1115,7 +902,7 @@ namespace Dt.Base
                 get { return _locked; }
             }
 
-            internal object Selection
+            internal TabItem Selection
             {
                 get { return _internalSelection; }
             }
@@ -1128,15 +915,15 @@ namespace Dt.Base
     /// </summary>
     public class SelectedChangedEventArgs : EventArgs
     {
-        object _unselectItem;
-        object _selectItem;
+        TabItem _unselectItem;
+        TabItem _selectItem;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="p_unselect"></param>
         /// <param name="p_select"></param>
-        public SelectedChangedEventArgs(object p_unselect, object p_select)
+        public SelectedChangedEventArgs(TabItem p_unselect, TabItem p_select)
         {
             _unselectItem = p_unselect;
             _selectItem = p_select;
@@ -1145,7 +932,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取要取消的选择项
         /// </summary>
-        public object UnselectItem
+        public TabItem UnselectItem
         {
             get { return _unselectItem; }
         }
@@ -1153,7 +940,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取新的选择项
         /// </summary>
-        public object SelectItem
+        public TabItem SelectItem
         {
             get { return _selectItem; }
         }

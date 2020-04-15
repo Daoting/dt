@@ -155,14 +155,15 @@ namespace Dt.Base.MenuView
 
         void OnContextItemsChanged(object sender, ItemListChangedArgs e)
         {
-            if (e.CollectionChange == CollectionChange.ItemRemoved || e.CollectionChange == CollectionChange.ItemChanged)
-                Children.RemoveAt(e.Index);
-
-            if (e.CollectionChange == CollectionChange.ItemInserted || e.CollectionChange == CollectionChange.ItemChanged)
+            if (e.CollectionChange == CollectionChange.ItemInserted)
             {
                 Mi mi = _owner.Items[e.Index];
                 mi.UpdateOwner(_owner, null);
                 Children.Insert(e.Index, mi);
+            }
+            else if (e.CollectionChange == CollectionChange.ItemRemoved)
+            {
+                Children.RemoveAt(e.Index);
             }
             else if (e.CollectionChange == CollectionChange.Reset)
             {

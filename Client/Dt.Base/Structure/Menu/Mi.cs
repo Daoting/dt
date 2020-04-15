@@ -510,7 +510,7 @@ namespace Dt.Base
 
         void OnItemsChanged(ItemList<Mi> sender, ItemListChangedArgs e)
         {
-            if (e.CollectionChange == CollectionChange.ItemInserted || e.CollectionChange == CollectionChange.ItemChanged)
+            if (e.CollectionChange == CollectionChange.ItemInserted)
             {
                 Mi mi = sender[e.Index];
                 mi.InitOwner(Owner, this);
