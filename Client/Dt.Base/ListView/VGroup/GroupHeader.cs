@@ -67,9 +67,9 @@ namespace Dt.Base.ListView
                     _left -= _cellSelected.Left;
                     InvalidateArrange();
                 }
-                else if (ActualWidth > 0 && _cellSelected.Left + _cellSelected.DesiredSize.Width > ActualWidth)
+                else if (_cellSelected.Left + _cellSelected.DesiredSize.Width > DesiredSize.Width)
                 {
-                    _left -= _cellSelected.Left + _cellSelected.DesiredSize.Width - ActualWidth;
+                    _left -= _cellSelected.Left + _cellSelected.DesiredSize.Width - DesiredSize.Width;
                     InvalidateArrange();
                 }
             }

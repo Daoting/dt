@@ -58,6 +58,12 @@ namespace Dt.Base.ListView
                 _topLeft = null;
             }
         }
+
+        protected override void OnScrollViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        {
+            // 始终刷新布局
+            InvalidateArrange();
+        }
         #endregion
 
         #region 虚拟行
@@ -518,6 +524,12 @@ namespace Dt.Base.ListView
             }
             return new Size(_finalWidth, height);
         }
+
+        /*********************************************************************************************************/
+        // 真实行布局
+        // 1. 整个面板不在滚动栏可视区(_deltaY >= _maxSize.Height 或 _deltaY <= -p_finalSize.Height）时，布局到空区域
+        // 2. 按真实行顺序布局，行超出下方时的将剩余行布局到空区域，其余的行可见时正常布局，超出上方的行布局到空区域
+        /*********************************************************************************************************/
 
         protected override void ArrangeRealRows(Size p_finalSize)
         {

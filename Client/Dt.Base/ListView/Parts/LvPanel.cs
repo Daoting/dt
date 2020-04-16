@@ -70,6 +70,11 @@ namespace Dt.Base.ListView
         /// 以滚动栏为参照物，面板与滚动栏的垂直距离，面板在下方时为正数
         /// </summary>
         protected double _deltaY;
+
+        /// <summary>
+        /// 当前是否正在滚动中
+        /// </summary>
+        protected bool _isScrolling;
         #endregion
 
         #region 构造方法
@@ -224,7 +229,7 @@ namespace Dt.Base.ListView
         /// </summary>
         /// <param name="p_index"></param>
         /// <returns></returns>
-        protected virtual double GetRowVerPos(int p_index)
+        internal virtual double GetRowVerPos(int p_index)
         {
             double height = 0;
             if (_owner.IsVir)
@@ -381,12 +386,6 @@ namespace Dt.Base.ListView
         protected abstract void ArrangeGroupVirRows(Size p_finalSize);
 
         protected abstract Size MeasureRealRows();
-
-        /*********************************************************************************************************/
-        // 真实行布局
-        // 1. 整个面板不在滚动栏可视区(_deltaY >= _maxSize.Height 或 _deltaY <= -p_finalSize.Height）时，布局到空区域
-        // 2. 按真实行顺序布局，行超出下方时的将剩余行布局到空区域，其余的行可见时正常布局，超出上方的行布局到空区域
-        /*********************************************************************************************************/
 
         protected abstract void ArrangeRealRows(Size p_finalSize);
 
@@ -597,39 +596,36 @@ namespace Dt.Base.ListView
         #endregion
 
         #region 事件处理
-        async void OnScrollViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        /// <summary>
+        /// 表格：始终刷新布局，已重写方法
+        /// 列表：虚拟行刷新布局，真实行无分组时不刷新，有分组时只在开始、结束时刷新
+        /// 磁贴：同列表
+        /// 本方法适用于列表和磁贴
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected virtual void OnScrollViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
-            var page = _owner.PageData;
-            if (page != null && page.HasMorePages)
+            if (_owner.IsVir)
             {
-                if (page.InsertTop && _owner.Scroll.VerticalOffset == 0)
+                // 虚拟行始终刷新布局
+                _isScrolling = e.IsIntermediate;
+                InvalidateArrange();
+            }
+            else if (_owner.MapRows != null)
+            {
+                // 开始滚动或结束滚动时刷新布局，为了隐藏/显示分组导航头
+                if (!e.IsIntermediate)
                 {
-                    // 插入顶部
-                    _owner.Scroll.ViewChanged -= OnScrollViewChanged;
-                    int cnt = _owner.Data.Count;
-                    await page.GotoNextPage();
-                    cnt = _owner.Data.Count - cnt - 1;
-                    if (cnt > 0)
-                    {
-                        // 滚动到当前行的位置
-                        await Dispatcher.RunAsync(
-                            CoreDispatcherPriority.Normal,
-                            new DispatchedHandler(() =>
-                            {
-                                double height = GetRowVerPos(cnt);
-                                _owner.Scroll.ChangeView(null, height, null, true);
-                            })
-                            );
-                    }
-                    _owner.Scroll.ViewChanged += OnScrollViewChanged;
+                    _isScrolling = false;
+                    InvalidateArrange();
                 }
-                else if (!page.InsertTop && _owner.Scroll.VerticalOffset == _owner.Scroll.ScrollableHeight)
+                else if (!_isScrolling)
                 {
-                    // 插入底部
-                    await page.GotoNextPage();
+                    _isScrolling = true;
+                    InvalidateArrange();
                 }
             }
-            InvalidateArrange();
         }
 
         /// <summary>

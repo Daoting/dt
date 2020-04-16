@@ -18,6 +18,7 @@ using System.Linq;
 using System.Reflection;
 using Windows.Foundation;
 using Windows.UI;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Markup;
@@ -301,9 +302,12 @@ namespace Dt.Base
             }
         }
 
-        static void OnPageDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        static async void OnPageDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             Lv lv = (Lv)d;
+            if (lv.Scroll != null)
+                lv.Scroll.ViewChanged -= lv.OnScrollViewChanged;
+
             var pd = (PageData)e.NewValue;
             if (pd != null)
             {
@@ -315,7 +319,10 @@ namespace Dt.Base
                     pd.Loading = false;
                 }
                 pd.SetOwner(lv);
-                pd.GotoFirstPage();
+                await pd.GotoFirstPage();
+
+                if (lv.Scroll != null)
+                    lv.Scroll.ViewChanged += lv.OnScrollViewChanged;
             }
         }
         #endregion
@@ -1134,18 +1141,15 @@ namespace Dt.Base
             if (Scroll == null)
             {
                 // 内部滚动栏
-                Scroll = new ScrollViewer
-                {
-                    VerticalScrollMode = ScrollMode.Auto,
-                    VerticalScrollBarVisibility = ScrollBarVisibility.Auto,
-                };
+                Scroll = new ScrollViewer();
                 _root.Child = Scroll;
             }
-            else
-            {
-                Scroll.VerticalScrollMode = ScrollMode.Auto;
-                Scroll.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
-            }
+            Scroll.VerticalScrollMode = ScrollMode.Auto;
+            Scroll.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+            // 滚动到顶部或底部时添加分页数据
+            if (PageData != null)
+                Scroll.ViewChanged += OnScrollViewChanged;
+
             LoadPanel();
         }
 
@@ -1361,6 +1365,48 @@ namespace Dt.Base
         {
             Loaded -= OnLoaded;
             InitTemplate();
+        }
+
+        /// <summary>
+        /// 滚动到顶部或底部时添加分页数据
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        async void OnScrollViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        {
+            if (e.IsIntermediate || !PageData.HasMorePages)
+                return;
+
+            var page = PageData;
+            if (page.InsertTop && Scroll.VerticalOffset == 0)
+            {
+                // 插入顶部
+                Scroll.ViewChanged -= OnScrollViewChanged;
+                int cnt = 0;
+                if (Data != null)
+                    cnt = Data.Count;
+                await page.GotoNextPage();
+                cnt = Data.Count - cnt - 1;
+
+                if (cnt > 0)
+                {
+                    // 滚动到当前行的位置
+                    await Dispatcher.RunAsync(
+                        CoreDispatcherPriority.Normal,
+                        new DispatchedHandler(() =>
+                        {
+                            double height = _panel.GetRowVerPos(cnt);
+                            Scroll.ChangeView(null, height, null, true);
+                        })
+                        );
+                }
+                Scroll.ViewChanged += OnScrollViewChanged;
+            }
+            else if (!page.InsertTop && Scroll.VerticalOffset == Scroll.ScrollableHeight)
+            {
+                // 插入底部
+                await page.GotoNextPage();
+            }
         }
 
         /// <summary>

@@ -24,6 +24,7 @@ namespace Dt.Sample
             InitializeComponent();
             _lv.View = GetResource("ListView");
             _lv.GroupName = "bumen";
+            //_lv.ItemHeight = double.NaN;
             _lv.Data = SampleData.CreatePersonsTbl(50);
         }
 

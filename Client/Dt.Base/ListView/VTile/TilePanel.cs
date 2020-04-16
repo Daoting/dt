@@ -30,6 +30,7 @@ namespace Dt.Base.ListView
         public TilePanel(Lv p_owner) : base(p_owner)
         { }
 
+        #region 重写方法
         protected override void LoadOtherRows()
         {
             // 只为获得输入焦点！
@@ -44,7 +45,7 @@ namespace Dt.Base.ListView
         /// </summary>
         /// <param name="p_index"></param>
         /// <returns></returns>
-        protected override double GetRowVerPos(int p_index)
+        internal override double GetRowVerPos(int p_index)
         {
             double height = 0;
             if (_owner.IsVir)
@@ -128,6 +129,7 @@ namespace Dt.Base.ListView
                 height -= _groupHeader.DesiredSize.Height;
             return Math.Max(height, 0);
         }
+        #endregion
 
         #region 虚拟行
         protected override Size MeasureVirRows()
@@ -352,7 +354,7 @@ namespace Dt.Base.ListView
                 // 分组导航头
                 if (_groupHeader != null)
                 {
-                    if (_deltaY < _groupHeader.DesiredSize.Height)
+                    if (!_isScrolling && _deltaY < _groupHeader.DesiredSize.Height)
                     {
                         // 离滚动栏顶部距离小于分组导航头高度时显示
                         // 分组导航头高度可能为0！
@@ -493,7 +495,7 @@ namespace Dt.Base.ListView
             // 分组导航头
             if (_groupHeader != null)
             {
-                if (iAllRow < _owner.MapRows.Count)
+                if (!_isScrolling && iAllRow < _owner.MapRows.Count)
                 {
                     _groupHeader.SetCurrentGroup(lastGroup);
                     // -_deltaY确保始终在滚动栏顶部位置
@@ -636,90 +638,23 @@ namespace Dt.Base.ListView
 
         protected override void ArrangeRealRows(Size p_finalSize)
         {
-            // 无数据 或 整个面板不在滚动栏可视区时，也要重新布局
-            if (_owner.Rows.Count == 0
-                || _deltaY >= _maxSize.Height       // 面板在滚动栏下方外部
-                || _deltaY <= -p_finalSize.Height)  // 面板在滚动栏上方外部
-            {
-                foreach (var elem in _dataRows)
-                {
-                    elem.Arrange(_rcEmpty);
-                }
-                return;
-            }
-
             double totalHeight = 0;
-            int iDataRow = _dataRows.Count;
             for (int i = 0; i < _dataRows.Count; i++)
             {
                 var row = _dataRows[i];
 
-                // top为行的上侧和滚动栏上侧的距离，bottom为行的下侧距离
-                double top = totalHeight + _deltaY;
-                double bottom = top + _rowHeight;
-
-                // 剩下行都不可见，结束布局
-                if (top >= _maxSize.Height)
-                {
-                    iDataRow = i;
-                    break;
-                }
-
                 // 行末尾项宽度加1为隐藏右边框
                 bool isRowLast = ((i + 1) % _colCount == 0);
-
-                // 可见区域：0 - _maxSize.Height
-                if ((top > 0 && top < _maxSize.Height)
-                    || (bottom > 0 && bottom < _maxSize.Height))
-                {
-                    // 在可见区域
-                    row.Arrange(new Rect((i % _colCount) * _itemWidth, totalHeight, isRowLast ? _itemWidth + 1 : _itemWidth, _rowHeight));
-                }
-                else
-                {
-                    // 不可见
-                    row.Arrange(_rcEmpty);
-                }
-
+                row.Arrange(new Rect((i % _colCount) * _itemWidth, totalHeight, isRowLast ? _itemWidth + 1 : _itemWidth, _rowHeight));
                 if (isRowLast)
                     totalHeight += _rowHeight;
-            }
-
-            // 将剩余的虚拟行布局到空区域
-            if (iDataRow < _dataRows.Count)
-            {
-                for (int i = iDataRow; i < _dataRows.Count; i++)
-                {
-                    _dataRows[i].Arrange(_rcEmpty);
-                }
             }
         }
 
         protected override void ArrangeGroupRealRows(Size p_finalSize)
         {
-            // 整个面板不在滚动栏可视区时，布局到空区域
-            if (_deltaY >= _maxSize.Height          // 面板在滚动栏下方外部
-                || _deltaY <= -p_finalSize.Height)  // 面板在滚动栏上方外部
-            {
-                // 数据行
-                foreach (var elem in _dataRows)
-                {
-                    elem.Arrange(_rcEmpty);
-                }
-
-                // 分组行
-                foreach (var grp in _owner.GroupRows)
-                {
-                    grp.Arrange(_rcEmpty);
-                }
-
-                // 分组导航头
-                _groupHeader?.Arrange(_rcEmpty);
-                return;
-            }
-
             int iGrpRow = 0, iDataRow = 0;
-            double totalHeight = 0, top, bottom;
+            double totalHeight = 0;
             GroupRow lastGroup = null;
             bool firstVisible = true;
             LvRow lastRow = null;
@@ -737,65 +672,51 @@ namespace Dt.Base.ListView
                         totalHeight += _rowHeight;
                         lastRow = null;
                     }
-
-                    // top为行的上侧和滚动栏上侧的距离
-                    top = totalHeight + _deltaY;
-
-                    // 剩下行都不可见，结束布局
-                    if (top >= _maxSize.Height)
-                        break;
-
                     var gr = _owner.GroupRows[iGrpRow++];
-                    // bottom为行的下侧距离
-                    bottom = top + gr.DesiredSize.Height;
 
-                    // 可见区域：0 - _maxSize.Height
-                    if ((top > 0 && top < _maxSize.Height)
-                        || (bottom > 0 && bottom < _maxSize.Height))
+                    // 若未进入可视区
+                    if (firstVisible)
                     {
-                        // 在可见区域
-                        gr.Arrange(new Rect(0, totalHeight, p_finalSize.Width, gr.DesiredSize.Height));
+                        // top为行的上侧和滚动栏上侧的距离，bottom为行的下侧距离
+                        double top = totalHeight + _deltaY;
+                        double bottom = top + gr.DesiredSize.Height;
 
-                        // 初次进入可见区，确定可见区顶端行所属分组
-                        if (firstVisible)
+                        // 可见区域：0 - _maxSize.Height
+                        if ((top > 0 && top < _maxSize.Height)
+                            || (bottom > 0 && bottom < _maxSize.Height))
                         {
+                            // 初次进入可见区，确定可见区顶端行所属分组
                             firstVisible = false;
                             lastGroup = _owner.GroupRows[iGrpRow - 1];
                         }
                     }
-                    else
-                    {
-                        // 不可见
-                        gr.Arrange(_rcEmpty);
-                    }
 
+                    gr.Arrange(new Rect(0, totalHeight, p_finalSize.Width, gr.DesiredSize.Height));
                     totalHeight += gr.DesiredSize.Height;
                     indexInGroup = 0;
                 }
                 else
                 {
-                    var row = _dataRows[iDataRow];
-                    top = totalHeight + _deltaY;
+                    var row = _dataRows[iDataRow++];
 
-                    // 剩下行都不可见，结束布局
-                    if (top >= _maxSize.Height)
-                        break;
+                    // 若未进入可视区
+                    if (firstVisible)
+                    {
+                        double top = totalHeight + _deltaY;
+                        double bottom = top + row.DesiredSize.Height;
 
-                    bottom = top + _rowHeight;
+                        // 可见区域：0 - _maxSize.Height
+                        if ((top > 0 && top < _maxSize.Height)
+                            || (bottom > 0 && bottom < _maxSize.Height))
+                        {
+                            // 初次进入可见区，确定可见区顶端行所属分组
+                            firstVisible = false;
+                            lastGroup = _owner.GroupRows[iGrpRow - 1];
+                        }
+                    }
+
                     bool isRowLast = ((indexInGroup + 1) % _colCount == 0);
-
-                    // 可见区域：0 - _maxSize.Height
-                    if ((top > 0 && top < _maxSize.Height)
-                        || (bottom > 0 && bottom < _maxSize.Height))
-                    {
-                        // 在可见区域
-                        row.Arrange(new Rect((indexInGroup % _colCount) * _itemWidth, totalHeight, isRowLast ? _itemWidth + 1 : _itemWidth, _rowHeight));
-                    }
-                    else
-                    {
-                        // 不可见
-                        row.Arrange(_rcEmpty);
-                    }
+                    row.Arrange(new Rect((indexInGroup % _colCount) * _itemWidth, totalHeight, isRowLast ? _itemWidth + 1 : _itemWidth, _rowHeight));
 
                     if (isRowLast)
                     {
@@ -808,31 +729,16 @@ namespace Dt.Base.ListView
                         // 记录最后一项
                         lastRow = row;
                     }
-                    iDataRow++;
                     indexInGroup++;
-                }
-            }
-
-            // 将剩余的虚拟行和分组行布局到空区域
-            if (iDataRow < _dataRows.Count)
-            {
-                for (int i = iDataRow; i < _dataRows.Count; i++)
-                {
-                    _dataRows[i].Arrange(_rcEmpty);
-                }
-            }
-            if (iGrpRow < _owner.GroupRows.Count)
-            {
-                for (int i = iGrpRow; i < _owner.GroupRows.Count; i++)
-                {
-                    _owner.GroupRows[i].Arrange(_rcEmpty);
                 }
             }
 
             // 分组导航头
             if (_groupHeader != null)
             {
-                if (_deltaY < _groupHeader.DesiredSize.Height && lastGroup != null)
+                if (!_isScrolling
+                    && _deltaY < _groupHeader.DesiredSize.Height
+                    && lastGroup != null)
                 {
                     // 离滚动栏顶部距离小于分组导航头高度时显示
                     // 分组导航头高度可能为0！
