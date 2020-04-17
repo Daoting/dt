@@ -140,7 +140,7 @@ namespace Dt.Base
 
         protected StackPanel _itemsPanel;
         Grid _mainGrid;
-        ContentPresenter _contentPresenter;
+        SizedPresenter _contentPresenter;
         Dlg _dlg;
 
         protected bool _isLoaded;
@@ -267,7 +267,7 @@ namespace Dt.Base
             base.OnApplyTemplate();
             _mainGrid = (Grid)GetTemplateChild("MainGrid");
             _itemsPanel = (StackPanel)GetTemplateChild("ItemsPanel");
-            _contentPresenter = (ContentPresenter)GetTemplateChild("TabContent");
+            _contentPresenter = (SizedPresenter)GetTemplateChild("TabContent");
             _isLoaded = true;
 
             if (TabStripPlacement != ItemPlacement.Bottom)

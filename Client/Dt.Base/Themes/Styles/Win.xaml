@@ -90,7 +90,7 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            <ContentPresenter x:Name="TabContent"
+                            <a:SizedPresenter x:Name="TabContent"
                                               Content="{TemplateBinding SelectedContent}"
                                               ContentTransitions="{TemplateBinding ContentTransitions}"
                                               BorderThickness="1"
@@ -210,9 +210,9 @@
                                               Grid.Column="2" />
                         </Grid>
                         <!--搜索栏-->
-                        <ContentPresenter Content="{TemplateBinding PhoneBar}"
-                                          HorizontalAlignment="Stretch"
-                                          Grid.Row="1" />
+                        <ContentPresenter Content="{TemplateBinding PhoneBar}" Grid.Row="1" />
+                        <!--内容-->
+                        <a:SizedPresenter Content="{TemplateBinding Content}" Grid.Row="2" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

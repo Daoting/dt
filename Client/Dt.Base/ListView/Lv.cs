@@ -336,6 +336,7 @@ namespace Dt.Base
         Dictionary<string, MethodInfo> _exMethod;
         MethodInfo _styleMethod;
         bool _updatingView;
+        SizedPresenter _sizedPresenter;
         #endregion
 
         #region 构造方法
@@ -1098,6 +1099,7 @@ namespace Dt.Base
 
         protected override Size MeasureOverride(Size availableSize)
         {
+            // 准确获取可见区大小！
             if (_panel != null)
             {
                 if (!double.IsInfinity(availableSize.Width) && !double.IsInfinity(availableSize.Height))
@@ -1105,20 +1107,16 @@ namespace Dt.Base
                     // 外部无ScrollViewer StackPanel的情况
                     _panel.SetMaxSize(availableSize);
                 }
-                else if (AtSys.IsPhoneUI)
+                else if (_sizedPresenter != null)
                 {
-                    // 此时所属的Tab无有效大小，故无穷大时以手机页面为准
-                    double width = double.IsInfinity(availableSize.Width) ? SysVisual.ViewWidth : availableSize.Width;
-                    double height = double.IsInfinity(availableSize.Height) ? SysVisual.ViewHeight : availableSize.Height;
-                    _panel.SetMaxSize(new Size(width, height));
+                    // 外部有ScrollViewer时，取父级有效大小，参见win.xaml：win模式在Tabs定义，phone模式在Tab定义
+                    _panel.SetMaxSize(_sizedPresenter.AvailableSize);
                 }
                 else
                 {
-                    // ContentPresenter为Tabs的SelectedContent，见win.xaml的133行
-                    Size oldSize = _panel.GetMaxSize();
-                    var pre = IsInnerScroll ? this.FindParentInWin<ContentPresenter>() : Scroll.FindParentInWin<ContentPresenter>();
-                    double width = !double.IsInfinity(availableSize.Width) ? availableSize.Width : (pre.ActualWidth > 0 ? pre.ActualWidth : (oldSize.Width > 0 ? oldSize.Width : SysVisual.ViewWidth));
-                    double height = !double.IsInfinity(availableSize.Height) ? availableSize.Height : (pre.ActualHeight > 0 ? pre.ActualHeight : (oldSize.Height > 0 ? oldSize.Height : SysVisual.ViewHeight));
+                    // 无有效大小时以窗口大小为准
+                    double width = double.IsInfinity(availableSize.Width) ? SysVisual.ViewWidth : availableSize.Width;
+                    double height = double.IsInfinity(availableSize.Height) ? SysVisual.ViewHeight : availableSize.Height;
                     _panel.SetMaxSize(new Size(width, height));
                 }
             }
@@ -1137,18 +1135,24 @@ namespace Dt.Base
             _root = (Border)GetTemplateChild("Border");
 
             // win模式查询范围限制在Tabs内，phone模式限制在Tab内
-            Scroll = this.FindParentInWin<ScrollViewer>();
-            if (Scroll == null)
+            var scroll = this.FindParentInWin<ScrollViewer>();
+            if (scroll == null)
             {
                 // 内部滚动栏
-                Scroll = new ScrollViewer();
-                _root.Child = Scroll;
+                scroll = new ScrollViewer();
+                _root.Child = scroll;
             }
-            Scroll.VerticalScrollMode = ScrollMode.Auto;
-            Scroll.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+            else
+            {
+                // 参见win.xaml：win模式在Tabs定义，phone模式在Tab定义
+                _sizedPresenter = scroll.FindParentInWin<SizedPresenter>();
+            }
+            scroll.VerticalScrollMode = ScrollMode.Auto;
+            scroll.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
             // 滚动到顶部或底部时添加分页数据
             if (PageData != null)
-                Scroll.ViewChanged += OnScrollViewChanged;
+                scroll.ViewChanged += OnScrollViewChanged;
+            Scroll = scroll;
 
             LoadPanel();
         }

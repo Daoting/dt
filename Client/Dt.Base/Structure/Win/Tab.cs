@@ -178,7 +178,6 @@ namespace Dt.Base
         #endregion
 
         #region 成员变量
-        Grid _root;
         Stack<ITabContent> _naviCache;
         #endregion
 
@@ -435,8 +434,6 @@ namespace Dt.Base
                     btn.Click += InputManager.OnBackClick;
             }
 
-            _root = (Grid)GetTemplateChild("RootGrid");
-            OnContentChanged();
         }
 
         /// <summary>
@@ -446,19 +443,6 @@ namespace Dt.Base
         {
             if (AtSys.IsPhoneUI)
             {
-                // 为uno节省一级ContentPresenter！
-                if (_root != null)
-                {
-                    // 第一行标题栏，第二行搜索栏，第三行内容
-                    if (_root.Children.Count > 2)
-                        _root.Children.RemoveAt(2);
-                    FrameworkElement con = Content as FrameworkElement;
-                    if (con != null)
-                    {
-                        Grid.SetRow(con, 2);
-                        _root.Children.Add(con);
-                    }
-                }
                 // 自定义Tab内容
                 if (Content is ITabContent tc)
                 {

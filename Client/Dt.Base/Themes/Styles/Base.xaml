@@ -106,7 +106,7 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <ContentPresenter x:Name="TabContent"
+                        <a:SizedPresenter x:Name="TabContent"
                                           Content="{TemplateBinding SelectedContent}"
                                           ContentTransitions="{TemplateBinding ContentTransitions}"
                                           BorderThickness="1"
