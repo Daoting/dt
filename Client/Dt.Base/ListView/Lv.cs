@@ -1167,11 +1167,11 @@ namespace Dt.Base
 
             if (_panel != null)
             {
-                _panel.Unload();
                 if (_root.Child == Scroll)
                     Scroll.Content = null;
                 else
                     _root.Child = null;
+                _panel.RemoveFromTree();
             }
 
             LvPanel pnl;
@@ -1191,9 +1191,6 @@ namespace Dt.Base
             {
                 pnl = new TilePanel(this);
             }
-
-            if (_panel != null)
-                pnl.SetMaxSize(_panel.GetMaxSize());
             _panel = pnl;
 
             if (mode == ViewMode.Table)
@@ -1212,6 +1209,7 @@ namespace Dt.Base
                 Scroll.Content = _panel;
             else
                 _root.Child = _panel;
+            _panel.AddToTree();
         }
 
         /// <summary>
@@ -1330,7 +1328,7 @@ namespace Dt.Base
 
             if (_panel != null)
             {
-                _panel.OnInsertRows(p_start, p_count);
+                _panel.OnRowsChanged(MapRows != null);
                 OnLoadedRows();
             }
         }

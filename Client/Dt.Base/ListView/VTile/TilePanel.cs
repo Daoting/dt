@@ -9,8 +9,6 @@
 #region 引用命名
 using System;
 using Windows.Foundation;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 #endregion
 
 namespace Dt.Base.ListView
@@ -31,15 +29,6 @@ namespace Dt.Base.ListView
         { }
 
         #region 重写方法
-        protected override void LoadOtherRows()
-        {
-            // 只为获得输入焦点！
-            var con = new ContentControl();
-            Children.Add(con);
-            if (_owner.AutoFocus)
-                con.Focus(FocusState.Programmatic);
-        }
-
         /// <summary>
         /// 获取数据行的垂直位置
         /// </summary>
@@ -132,58 +121,63 @@ namespace Dt.Base.ListView
         #endregion
 
         #region 虚拟行
+        protected override void CreateVirRows()
+        {
+            if (_owner.Rows.Count == 0)
+            {
+                _initVirRow = false;
+                return;
+            }
+
+            // 确定列数和列宽
+            if (_maxSize.Width < _owner.MinItemWidth * 2)
+            {
+                // 有效宽度无法放两列
+                _itemWidth = _maxSize.Width;
+                _colCount = 1;
+            }
+            else
+            {
+                // >= 2列，确保始终铺满，列宽: <= 3/2 * MinItemWidth
+                _colCount = (int)Math.Floor(_maxSize.Width / _owner.MinItemWidth);
+                double leave = _maxSize.Width % _owner.MinItemWidth;
+                _itemWidth = _owner.MinItemWidth + leave / _colCount;
+            }
+
+            // 创建等高的虚拟行，时机：初次、切换行模板、面板大小变化
+            // 先添加一行，作为行高标准
+            var virRow = _createLvRow(_owner.Rows[0]);
+            Children.Add(virRow);
+            _dataRows.Add(virRow);
+
+            // 测量行高
+            // 给最大高度才能测量出内容的实际高度
+            Size testSize = new Size(_itemWidth, PanelMaxHeight);
+            virRow.Measure(testSize);
+            _rowHeight = virRow.DesiredSize.Height;
+
+            if (_rowHeight > 0)
+            {
+                // 确保子元素刚好摆满可见区域，计算所需行数
+                int rowCount = (int)Math.Ceiling(_maxSize.Height / _rowHeight) + 1;
+                _pageHeight = rowCount * _rowHeight;
+                _pageItemCount = rowCount * _colCount;
+
+                // 补充子元素
+                for (int i = 1; i < _pageItemCount; i++)
+                {
+                    virRow = _createLvRow(null);
+                    Children.Add(virRow);
+                    _dataRows.Add(virRow);
+                }
+            }
+            _initVirRow = true;
+        }
+
         protected override Size MeasureVirRows()
         {
             // 数据行
-            if (!_initVirRow && _owner.Rows.Count > 0)
-            {
-                // 确定列数和列宽
-                if (_maxSize.Width < _owner.MinItemWidth * 2)
-                {
-                    // 有效宽度无法放两列
-                    _itemWidth = _maxSize.Width;
-                    _colCount = 1;
-                }
-                else
-                {
-                    // >= 2列，确保始终铺满，列宽: <= 3/2 * MinItemWidth
-                    _colCount = (int)Math.Floor(_maxSize.Width / _owner.MinItemWidth);
-                    double leave = _maxSize.Width % _owner.MinItemWidth;
-                    _itemWidth = _owner.MinItemWidth + leave / _colCount;
-                }
-
-                // 创建等高的虚拟行，时机：初次、切换行模板、面板大小变化
-                // 先添加一行，作为行高标准
-                var virRow = _createLvRow(_owner.Rows[0]);
-                Children.Insert(0, virRow);
-                _dataRows.Add(virRow);
-
-                // 测量行高
-                // 给最大高度才能测量出内容的实际高度
-                Size testSize = new Size(_itemWidth, PanelMaxHeight);
-                virRow.Measure(testSize);
-                _rowHeight = virRow.DesiredSize.Height;
-
-                if (_rowHeight > 0)
-                {
-                    // 确保子元素刚好摆满可见区域，计算所需行数
-                    int rowCount = (int)Math.Ceiling(_maxSize.Height / _rowHeight) + 1;
-                    _pageHeight = rowCount * _rowHeight;
-                    _pageItemCount = rowCount * _colCount;
-
-                    // 补充子元素
-                    testSize = new Size(_itemWidth, _rowHeight);
-                    for (int i = 1; i < _pageItemCount; i++)
-                    {
-                        virRow = _createLvRow(null);
-                        Children.Insert(i, virRow);
-                        _dataRows.Add(virRow);
-                        virRow.Measure(testSize);
-                    }
-                }
-                _initVirRow = true;
-            }
-            else if (_dataRows.Count > 0)
+            if (_dataRows.Count > 0)
             {
                 // 重新测量
                 Size testSize = new Size(_itemWidth, _rowHeight);

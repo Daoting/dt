@@ -35,5 +35,39 @@ namespace Dt.Sample
             //Excel excel = new Excel();
 
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            _pnl.InvalidateMeasure();
+        }
+    }
+
+    public sealed partial class My1 : StackPanel
+    {
+        protected override Size MeasureOverride(Size availableSize)
+        {
+            var my = (My2)Children[1];
+            for (int i = 0; i < 5; i++)
+            {
+                var tb = new Button { Content = i.ToString() };
+                my.Children.Add(tb);
+                tb.Measure(new Size(40, 100));
+            }
+            
+            return base.MeasureOverride(availableSize);
+        }
+    }
+
+    public sealed partial class My2 : StackPanel
+    {
+        protected override Size MeasureOverride(Size availableSize)
+        {
+            Log.Debug("my2");
+            foreach (var elem in Children)
+            {
+                ((Button)elem).Measure(new Size(40, 100));
+            }
+            return new Size(40, Children.Count * 50);
+        }
     }
 }

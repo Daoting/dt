@@ -33,7 +33,7 @@ namespace Dt.Base.ListView
         #endregion
 
         #region 重写方法
-        protected override void LoadOtherRows()
+        protected override void LoadColHeader()
         {
             // 列头
             if (_colHeader == null)
@@ -50,13 +50,10 @@ namespace Dt.Base.ListView
                 ((Control)_colHeader.Children[0]).Focus(FocusState.Programmatic);
         }
 
-        protected override void ClearOtherRows()
+        protected override void ClearColHeader()
         {
-            if (_colHeader != null)
-            {
-                _colHeader = null;
-                _topLeft = null;
-            }
+            _colHeader = null;
+            _topLeft = null;
         }
 
         protected override void OnScrollViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
@@ -67,57 +64,59 @@ namespace Dt.Base.ListView
         #endregion
 
         #region 虚拟行
+        protected override void CreateVirRows()
+        {
+            if (_owner.Rows.Count == 0)
+            {
+                _initVirRow = false;
+                return;
+            }
+
+            double topLeftWidth = (_owner.SelectionMode == SelectionMode.Multiple) ? 81 : 40;
+            // 超过宽度时水平滚动
+            double maxWidth = Math.Max(_maxSize.Width, _owner.Cols.TotalWidth + topLeftWidth);
+
+            // 创建等高的虚拟行，时机：初次、切换行模板、面板大小变化
+            // 先添加一行，作为行高标准
+            var virRow = _createLvRow(_owner.Rows[0]);
+            Children.Add(virRow);
+            _dataRows.Add(virRow);
+
+            // 测量行高
+            // 给最大高度才能测量出内容的实际高度
+            Size testSize = new Size(maxWidth, PanelMaxHeight);
+            virRow.Measure(testSize);
+            _rowHeight = virRow.DesiredSize.Height;
+
+            if (_rowHeight > 0)
+            {
+                // 确保子元素刚好摆满可见区域，计算所需行数
+                int rowCount = (int)Math.Ceiling(_maxSize.Height / _rowHeight) + 1;
+                _pageHeight = rowCount * _rowHeight;
+
+                // 补充子元素
+                for (int i = 1; i < rowCount; i++)
+                {
+                    virRow = _createLvRow(null);
+                    Children.Add(virRow);
+                    _dataRows.Add(virRow);
+                }
+            }
+            _initVirRow = true;
+        }
+
         protected override Size MeasureVirRows()
         {
-            double maxWidth = _maxSize.Width;
-
             // 列头
-            _colHeader.Measure(new Size(maxWidth - _topLeftWidth, _maxSize.Height));
+            _colHeader.Measure(new Size(_maxSize.Width - _topLeftWidth, _maxSize.Height));
             _topLeft.Measure(new Size(_topLeftWidth, _colHeader.DesiredSize.Height));
+
             double height = _colHeader.DesiredSize.Height;
-            double w = _owner.Cols.TotalWidth + _topLeftWidth;
             // 超过宽度时水平滚动
-            if (w > maxWidth)
-                maxWidth = w;
+            double maxWidth = Math.Max(_maxSize.Width, _owner.Cols.TotalWidth + _topLeftWidth);
 
             // 数据行
-            if (!_initVirRow && _owner.Rows.Count > 0)
-            {
-                // 创建等高的虚拟行，时机：初次、切换行模板、面板大小变化
-                // 先添加一行，作为行高标准
-                var virRow = _createLvRow(_owner.Rows[0]);
-                Children.Insert(0, virRow);
-                _dataRows.Add(virRow);
-
-                // 测量行高
-                // 给最大高度才能测量出内容的实际高度
-                Size testSize = new Size(maxWidth, PanelMaxHeight);
-                virRow.Measure(testSize);
-                _rowHeight = virRow.DesiredSize.Height;
-                _finalWidth = virRow.DesiredSize.Width;
-
-                if (_rowHeight > 0)
-                {
-                    // 确保子元素刚好摆满可见区域，计算所需行数
-                    int rowCount = (int)Math.Ceiling(_maxSize.Height / _rowHeight) + 1;
-                    _pageHeight = rowCount * _rowHeight;
-
-                    // 补充子元素
-                    testSize = new Size(maxWidth, _rowHeight);
-                    for (int i = 1; i < rowCount; i++)
-                    {
-                        virRow = _createLvRow(null);
-                        Children.Insert(i, virRow);
-                        _dataRows.Add(virRow);
-                        virRow.Measure(testSize);
-
-                        if (virRow.DesiredSize.Width > _finalWidth)
-                            _finalWidth = virRow.DesiredSize.Width;
-                    }
-                }
-                _initVirRow = true;
-            }
-            else if (_dataRows.Count > 0)
+            if (_dataRows.Count > 0)
             {
                 // 重新测量
                 Size testSize = new Size(maxWidth, _rowHeight);

@@ -59,7 +59,7 @@ namespace Dt.Base.ListView
         /// <summary>
         /// 面板最大尺寸，宽高始终不为无穷大！
         /// </summary>
-        protected Size _maxSize;
+        protected Size _maxSize = Size.Empty;
 
         /// <summary>
         /// 以滚动栏为参照物，面板与滚动栏的水平距离，面板在右侧时为正数
@@ -82,17 +82,23 @@ namespace Dt.Base.ListView
         {
             _owner = p_owner;
             Background = AtRes.TransparentBrush;
+        }
+        #endregion
 
+        #region 外部方法
+        /// <summary>
+        /// 初次加载到可视树
+        /// </summary>
+        internal void AddToTree()
+        {
             // 为高效
             DefineCreateRowFunc();
 
             // Children中的元素顺序：数据行、分组行、列头，后面的元素部署在上层！
-            // 虚拟行时，初次只生成分组和列头，第一次测量时才添加虚拟行
+            // 虚拟行时，第一次测量时才可添加虚拟行、分组、列头，在SetMaxSize第一次调用时
             // 真实行时，初次生成所有行
-            if (_owner.IsVir)
-                LoadGroupRows();
-            else
-                LoaAllRows();
+            if (!_owner.IsVir)
+                LoaRealRows();
 
             _owner.Scroll.ViewChanged += OnScrollViewChanged;
             if (AtSys.System == TargetSystem.Windows)
@@ -104,43 +110,13 @@ namespace Dt.Base.ListView
                 KeyDown += OnKeyDown;
             }
         }
-        #endregion
-
-        #region 外部方法
-        /// <summary>
-        /// 设置Lv面板的最大尺寸，宽高始终不为无穷大！
-        /// 在Lv.MeasureOverride时获取，已处理父元素为ScrollViewer StackPanel时造成的无穷大情况！
-        /// </summary>
-        internal void SetMaxSize(Size p_size)
-        {
-            _maxSize = p_size;
-        }
 
         /// <summary>
-        /// 切换模板、调整自动行高时重新加载
+        /// 从可视树卸载，不可重复使用！ViewMode切换时卸载旧面板，其它无需卸载
         /// </summary>
-        internal void Reload()
+        internal void RemoveFromTree()
         {
-            // 清空旧元素
-            Children.Clear();
-            _dataRows.Clear();
-            ClearOtherRows();
-            _initVirRow = false;
-
-            DefineCreateRowFunc();
-            if (_owner.IsVir)
-                LoadGroupRows();
-            else
-                LoaAllRows();
-        }
-
-        /// <summary>
-        /// ViewMode切换时卸载所有元素
-        /// </summary>
-        internal void Unload()
-        {
-            Children.Clear();
-            _dataRows.Clear();
+            ClearAllRows();
             _owner.Scroll.ViewChanged -= OnScrollViewChanged;
             if (AtSys.System == TargetSystem.Windows)
             {
@@ -151,6 +127,38 @@ namespace Dt.Base.ListView
         }
 
         /// <summary>
+        /// 设置Lv面板的最大尺寸，宽高始终不为无穷大！
+        /// 在Lv.MeasureOverride时获取，已处理父元素为ScrollViewer StackPanel时造成的无穷大情况！
+        /// </summary>
+        internal void SetMaxSize(Size p_size)
+        {
+            if (_maxSize.Width == p_size.Width && _maxSize.Height == p_size.Height)
+                return;
+
+            _maxSize = p_size;
+            if (_owner.IsVir)
+            {
+                ClearAllRows();
+                LoadVirRows();
+            }
+        }
+
+        /// <summary>
+        /// View ViewEx ItemHeight ShowGroupHeader ShowItemBorder GroupTemplate SelectionMode 或上下文菜单 变化时重新加载
+        /// </summary>
+        internal void Reload()
+        {
+            DefineCreateRowFunc();
+            ClearAllRows();
+            ClearColHeader();
+
+            if (_owner.IsVir)
+                LoadVirRows();
+            else
+                LoaRealRows();
+        }
+
+        /// <summary>
         /// 切换数据源时，调整所有分组行和数据行
         /// </summary>
         /// <param name="p_existGroup">是否有分组行</param>
@@ -158,41 +166,39 @@ namespace Dt.Base.ListView
         {
             if (_owner.IsVir)
             {
-                // 含分组时需清除
-                if (p_existGroup)
-                    ClearVirRows();
-                InvalidateMeasure();
+                if (p_existGroup || !_initVirRow)
+                {
+                    // 含分组 或 第一次加载数据源时需重绘
+                    ClearAllRows();
+                    LoadVirRows();
+                }
+                else
+                {
+                    // 无分组时只需重新测量布局
+                    InvalidateMeasure();
+                }
             }
             else
             {
-                Children.Clear();
-                _dataRows.Clear();
-                LoaAllRows();
+                ClearAllRows();
+                LoaRealRows();
             }
         }
 
         /// <summary>
-        /// 批量插入数据行
+        /// 获取行UI，不支持虚拟行的情况
         /// </summary>
-        /// <param name="p_index">开始插入位置</param>
-        /// <param name="p_count">共插入行数</param>
-        internal void OnInsertRows(int p_index, int p_count)
+        /// <param name="p_index"></param>
+        /// <returns></returns>
+        internal FrameworkElement GetLvRow(int p_index)
         {
-            if (_owner.IsVir)
-            {
-                InvalidateMeasure();
-                return;
-            }
-
-            for (int i = 0; i < p_count; i++)
-            {
-                int index = p_index + i;
-                var row = _createLvRow(_owner.Rows[index]);
-                Children.Insert(index, row);
-                _dataRows.Insert(index, row);
-            }
+            if (p_index >= 0 && p_index < _dataRows.Count)
+                return _dataRows[p_index];
+            return null;
         }
+        #endregion
 
+        #region 滚动到
         /// <summary>
         /// 滚动到指定的数据行
         /// </summary>
@@ -293,23 +299,6 @@ namespace Dt.Base.ListView
             if (Children.Count > 0 && Children[Children.Count - 1] is Control con)
                 con.Focus(FocusState.Programmatic);
         }
-
-        /// <summary>
-        /// 获取行UI，不支持虚拟行的情况
-        /// </summary>
-        /// <param name="p_index"></param>
-        /// <returns></returns>
-        internal FrameworkElement GetLvRow(int p_index)
-        {
-            if (p_index >= 0 && p_index < _dataRows.Count)
-                return _dataRows[p_index];
-            return null;
-        }
-
-        internal Size GetMaxSize()
-        {
-            return _maxSize;
-        }
         #endregion
 
         #region 测量布局
@@ -394,20 +383,20 @@ namespace Dt.Base.ListView
 
         #region 增删元素
         /// <summary>
-        /// 清除所有行，重新加入列头、分组行
+        /// 加载虚拟模式的所有行：虚拟数据行、分组行、列头
         /// </summary>
-        void ClearVirRows()
+        void LoadVirRows()
         {
-            Children.Clear();
-            _dataRows.Clear();
+            // 按顺序添加，后面的元素部署在上层！
+            CreateVirRows();
             LoadGroupRows();
-            _initVirRow = false;
+            LoadColHeader();
         }
 
         /// <summary>
-        /// 自动行高时生成所有行
+        /// 加载真实模式的所有行：数据行、分组行、列头
         /// </summary>
-        void LoaAllRows()
+        void LoaRealRows()
         {
             // 添加元素顺序：数据行、分组行、列头，后面的元素部署在上层！
             // 数据行
@@ -421,8 +410,18 @@ namespace Dt.Base.ListView
                 }
             }
 
-            // 列头、分组行
             LoadGroupRows();
+            LoadColHeader();
+        }
+
+        /// <summary>
+        /// 清除所有UI行
+        /// </summary>
+        void ClearAllRows()
+        {
+            if (Children.Count > 0)
+                Children.Clear();
+            _dataRows.Clear();
         }
 
         /// <summary>
@@ -445,19 +444,23 @@ namespace Dt.Base.ListView
                     Children.Add(_groupHeader);
                 }
             }
-            LoadOtherRows();
         }
 
         /// <summary>
-        /// 生成其他行，如列头
+        /// 生成虚拟行
         /// </summary>
-        protected virtual void LoadOtherRows()
+        protected abstract void CreateVirRows();
+
+        /// <summary>
+        /// 加载表格的列头
+        /// </summary>
+        protected virtual void LoadColHeader()
         { }
 
         /// <summary>
-        /// 清除其他行，如列头
+        /// 清除表格的列头
         /// </summary>
-        protected virtual void ClearOtherRows()
+        protected virtual void ClearColHeader()
         { }
         #endregion
 
@@ -641,7 +644,6 @@ namespace Dt.Base.ListView
             {
                 if (_owner.IsVir)
                 {
-                    ClearVirRows();
                     // 高度变化时重新生成虚拟行
                     _owner.InvalidateMeasure();
                 }
