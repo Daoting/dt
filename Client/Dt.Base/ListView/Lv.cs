@@ -1081,14 +1081,25 @@ namespace Dt.Base
         #endregion
 
         #region 重写方法
-        /*********************************************************************************************************/
+        /************************************************************************************************************************************/
         // 平台调用顺序不同：
-        // UWP：OnApplyTemplate > MeasureOverride > ArrangeOverride > SizeChanged > Loaded
-        // Adr：OnApplyTemplate > Loaded > MeasureOverride > ArrangeOverride > SizeChanged
-        // iOS：OnApplyTemplate > Loaded > MeasureOverride > SizeChanged > ArrangeOverride
-        // uno中OnApplyTemplate时不一定在可视树上，uwp的OnApplyTemplate时已在可视树上
-        // 为了动态构造控件内容，uwp在OnApplyTemplate中处理，uno在Loaded时处理 ！
-        /*********************************************************************************************************/
+        // UWP：父OnApplyTemplate > 父MeasureOverride > 子MeasureOverride > 父ArrangeOverride > 子ArrangeOverride > 父SizeChanged > 子SizeChanged > 父Loaded > 子Loaded
+        // Adr：父OnApplyTemplate > 父Loaded > 子Loaded > 父MeasureOverride > 子MeasureOverride > 父ArrangeOverride > 子ArrangeOverride > 子SizeChanged > 父SizeChanged
+        // iOS：父OnApplyTemplate > 子Loaded > 父Loaded > 父MeasureOverride > 子MeasureOverride > 父SizeChanged > 子SizeChanged > 父ArrangeOverride > 子ArrangeOverride
+        //
+        // uwp的OnApplyTemplate时控件已在可视树上，可查询父元素；uno此时不在可视树上，只能在Loaded时查询父元素！！！
+        // 
+        // 在MeasureOverride中尽可能不增删Children元素，uno中每增删一个元素会重复一次MeasureOverride，严重时死循环！！！
+        // 采用虚拟行模式时，需要根据可视区大小确定生成的虚拟行行数，可视区大小在MeasureOverride时才能确定，故解决方法：
+        // 在Lv.MeasureOverride时准确获取可见区大小，若大小变化则重新生成虚拟行，添加虚拟行会造成多次MeasureOverride，未发现其他好方法！！！
+        // 若放在SizeChanged中生成虚拟行时uno会警告 requestLayout() improperly called by xxx: posting in next frame！！！
+        //
+        // 重新生成虚拟行的场景：
+        // 1. 可视区大小变化时 LvPanel.SetMaxSize
+        // 2. View ViewEx ItemHeight等属性变化时的重新加载 LvPanel.Reload
+        // 3. 切换数据源时 LvPanel.OnRowsChanged
+        /************************************************************************************************************************************/
+
 #if UWP
         protected override void OnApplyTemplate()
         {
@@ -1109,8 +1120,14 @@ namespace Dt.Base
                 }
                 else if (_sizedPresenter != null)
                 {
-                    // 外部有ScrollViewer时，取父级有效大小，参见win.xaml：win模式在Tabs定义，phone模式在Tab定义
+                    // Phone模式Lv外部有ScrollViewer时，取父级SizedPresenter有效大小
                     _panel.SetMaxSize(_sizedPresenter.AvailableSize);
+                }
+                else if (!IsInnerScroll)
+                {
+                    // Win模式外部有ScrollViewer时，动态获取父级，因所属Tabs在Win中恢复布局时变化
+                    var pre = Scroll.FindParentInWin<SizedPresenter>();
+                    _panel.SetMaxSize(pre.AvailableSize);
                 }
                 else
                 {
@@ -1142,9 +1159,10 @@ namespace Dt.Base
                 scroll = new ScrollViewer();
                 _root.Child = scroll;
             }
-            else
+            else if (AtSys.IsPhoneUI)
             {
                 // 参见win.xaml：win模式在Tabs定义，phone模式在Tab定义
+                // 因phone模式Lv所属的Tab始终不变
                 _sizedPresenter = scroll.FindParentInWin<SizedPresenter>();
             }
             scroll.VerticalScrollMode = ScrollMode.Auto;
@@ -1171,7 +1189,7 @@ namespace Dt.Base
                     Scroll.Content = null;
                 else
                     _root.Child = null;
-                _panel.RemoveFromTree();
+                _panel.Unload();
             }
 
             LvPanel pnl;
@@ -1209,7 +1227,6 @@ namespace Dt.Base
                 Scroll.Content = _panel;
             else
                 _root.Child = _panel;
-            _panel.AddToTree();
         }
 
         /// <summary>
@@ -1356,6 +1373,7 @@ namespace Dt.Base
             }
         }
 
+#if !UWP
         /// <summary>
         /// uno时的处理
         /// uno中OnApplyTemplate时不一定在可视树上，uwp的OnApplyTemplate时已在可视树上
@@ -1368,7 +1386,7 @@ namespace Dt.Base
             Loaded -= OnLoaded;
             InitTemplate();
         }
-
+#endif
         /// <summary>
         /// 滚动到顶部或底部时添加分页数据
         /// </summary>

@@ -23,13 +23,10 @@ namespace Dt.Base.ListView
         { }
 
         #region 虚拟行
-        protected override void CreateVirRows()
+        protected override bool CreateVirRows()
         {
             if (_owner.Rows.Count == 0)
-            {
-                _initVirRow = false;
-                return;
-            }
+                return false;
 
             // 创建等高的虚拟行，时机：初次、切换行模板、面板大小变化
             // 先添加一行，作为行高标准
@@ -57,7 +54,7 @@ namespace Dt.Base.ListView
                     _dataRows.Add(virRow);
                 }
             }
-            _initVirRow = true;
+            return true;
         }
 
         protected override Size MeasureVirRows()

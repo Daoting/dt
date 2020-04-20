@@ -121,13 +121,10 @@ namespace Dt.Base.ListView
         #endregion
 
         #region 虚拟行
-        protected override void CreateVirRows()
+        protected override bool CreateVirRows()
         {
             if (_owner.Rows.Count == 0)
-            {
-                _initVirRow = false;
-                return;
-            }
+                return false;
 
             // 确定列数和列宽
             if (_maxSize.Width < _owner.MinItemWidth * 2)
@@ -171,7 +168,7 @@ namespace Dt.Base.ListView
                     _dataRows.Add(virRow);
                 }
             }
-            _initVirRow = true;
+            return true;
         }
 
         protected override Size MeasureVirRows()

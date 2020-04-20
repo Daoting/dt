@@ -235,7 +235,6 @@ namespace Dt.Base
         /// <returns>找到返回父元素，否则返回 null</returns>
         public static T FindParentInWin<T>(this FrameworkElement source)
         {
-            Type type = AtSys.IsPhoneUI ? typeof(Tab) : typeof(Tabs);
             DependencyObject parent = source;
             while (true)
             {
@@ -243,11 +242,12 @@ namespace Dt.Base
                 if (parent == null)
                     break;
 
-                // 也可查询Tab Tabs
+                // 也可查询SizedPresenter
                 if (parent is T tgt)
                     return tgt;
 
-                if (parent.GetType() == type)
+                // 查询范围SizedPresenter，参见win.xaml：win模式在Tabs定义，phone模式在Tab定义
+                if (parent.GetType() == typeof(SizedPresenter))
                     break;
             }
             return default;

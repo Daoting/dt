@@ -25,12 +25,24 @@ namespace Dt.Base.ListView
     /// </summary>
     public abstract partial class LvPanel : Panel
     {
-        /*********************************************************************************************************/
-        // MeasureOverride中尽可能不增删Children元素，uno中每增删一个元素会重复一次MeasureOverride，严重时死循环！！！
-        // UWP和uno的调用顺序不同！
-        // UWP：MeasureOverride > _owner.SizeChanged > SizeChanged > Loaded
-        // uno：Loaded > MeasureOverride > SizeChanged > _owner.SizeChanged
-        /*********************************************************************************************************/
+        /************************************************************************************************************************************/
+        // 平台调用顺序不同：
+        // UWP：父OnApplyTemplate > 父MeasureOverride > 子MeasureOverride > 父ArrangeOverride > 子ArrangeOverride > 父SizeChanged > 子SizeChanged > 父Loaded > 子Loaded
+        // Adr：父OnApplyTemplate > 父Loaded > 子Loaded > 父MeasureOverride > 子MeasureOverride > 父ArrangeOverride > 子ArrangeOverride > 子SizeChanged > 父SizeChanged
+        // iOS：父OnApplyTemplate > 子Loaded > 父Loaded > 父MeasureOverride > 子MeasureOverride > 父SizeChanged > 子SizeChanged > 父ArrangeOverride > 子ArrangeOverride
+        //
+        // uwp的OnApplyTemplate时控件已在可视树上，可查询父元素；uno此时不在可视树上，只能在Loaded时查询父元素！！！
+        // 
+        // 在MeasureOverride中尽可能不增删Children元素，uno中每增删一个元素会重复一次MeasureOverride，严重时死循环！！！
+        // 采用虚拟行模式时，需要根据可视区大小确定生成的虚拟行行数，可视区大小在MeasureOverride时才能确定，故解决方法：
+        // 在Lv.MeasureOverride时准确获取可见区大小，若大小变化则重新生成虚拟行，添加虚拟行会造成多次MeasureOverride，未发现其他好方法！！！
+        // 若放在SizeChanged中生成虚拟行时uno会警告 requestLayout() improperly called by xxx: posting in next frame！！！
+        //
+        // 重新生成虚拟行的场景：
+        // 1. 可视区大小变化时 LvPanel.SetMaxSize
+        // 2. View ViewEx ItemHeight等属性变化时的重新加载 LvPanel.Reload
+        // 3. 切换数据源时 LvPanel.OnRowsChanged
+        /************************************************************************************************************************************/
 
         #region 成员变量
         protected const double PanelMaxHeight = 5000;
@@ -38,8 +50,12 @@ namespace Dt.Base.ListView
 
         protected Lv _owner;
         protected Func<LvItem, LvRow> _createLvRow;
-        protected bool _initVirRow;
         protected GroupHeader _groupHeader;
+
+        /// <summary>
+        /// 是否已生成虚拟行
+        /// </summary>
+        bool _initVirRow;
 
         /// <summary>
         /// 虚拟行时：能填充可视区域的UI行列表(可看作一页)，真实行时：与数据行一一对应的UI行列表，
@@ -82,20 +98,10 @@ namespace Dt.Base.ListView
         {
             _owner = p_owner;
             Background = AtRes.TransparentBrush;
-        }
-        #endregion
 
-        #region 外部方法
-        /// <summary>
-        /// 初次加载到可视树
-        /// </summary>
-        internal void AddToTree()
-        {
             // 为高效
             DefineCreateRowFunc();
 
-            // Children中的元素顺序：数据行、分组行、列头，后面的元素部署在上层！
-            // 虚拟行时，第一次测量时才可添加虚拟行、分组、列头，在SetMaxSize第一次调用时
             // 真实行时，初次生成所有行
             if (!_owner.IsVir)
                 LoaRealRows();
@@ -105,41 +111,23 @@ namespace Dt.Base.ListView
             {
                 // 屏蔽鼠标滚轮引起的抖动
                 PointerWheelChanged += OnPointerWheelChanged;
-                // 处理大小变化，uno上Loaded后触发！
-                _owner.SizeChanged += OnSizeChanged;
                 KeyDown += OnKeyDown;
             }
         }
+        #endregion
 
-        /// <summary>
-        /// 从可视树卸载，不可重复使用！ViewMode切换时卸载旧面板，其它无需卸载
-        /// </summary>
-        internal void RemoveFromTree()
-        {
-            ClearAllRows();
-            _owner.Scroll.ViewChanged -= OnScrollViewChanged;
-            if (AtSys.System == TargetSystem.Windows)
-            {
-                PointerWheelChanged -= OnPointerWheelChanged;
-                _owner.SizeChanged -= OnSizeChanged;
-                KeyDown -= OnKeyDown;
-            }
-        }
-
+        #region 外部方法
         /// <summary>
         /// 设置Lv面板的最大尺寸，宽高始终不为无穷大！
         /// 在Lv.MeasureOverride时获取，已处理父元素为ScrollViewer StackPanel时造成的无穷大情况！
         /// </summary>
         internal void SetMaxSize(Size p_size)
         {
-            if (_maxSize.Width == p_size.Width && _maxSize.Height == p_size.Height)
-                return;
-
-            _maxSize = p_size;
-            if (_owner.IsVir)
+            if (_maxSize.Width != p_size.Width || _maxSize.Height != p_size.Height)
             {
-                ClearAllRows();
-                LoadVirRows();
+                _maxSize = p_size;
+                if (_owner.IsVir)
+                    LoadVirRows();
             }
         }
 
@@ -149,7 +137,6 @@ namespace Dt.Base.ListView
         internal void Reload()
         {
             DefineCreateRowFunc();
-            ClearAllRows();
             ClearColHeader();
 
             if (_owner.IsVir)
@@ -169,7 +156,6 @@ namespace Dt.Base.ListView
                 if (p_existGroup || !_initVirRow)
                 {
                     // 含分组 或 第一次加载数据源时需重绘
-                    ClearAllRows();
                     LoadVirRows();
                 }
                 else
@@ -180,8 +166,21 @@ namespace Dt.Base.ListView
             }
             else
             {
-                ClearAllRows();
                 LoaRealRows();
+            }
+        }
+
+        /// <summary>
+        /// 从可视树卸载，不可重复使用！ViewMode切换时卸载旧面板，其它无需卸载
+        /// </summary>
+        internal void Unload()
+        {
+            ClearAllRows();
+            _owner.Scroll.ViewChanged -= OnScrollViewChanged;
+            if (AtSys.System == TargetSystem.Windows)
+            {
+                PointerWheelChanged -= OnPointerWheelChanged;
+                KeyDown -= OnKeyDown;
             }
         }
 
@@ -313,7 +312,7 @@ namespace Dt.Base.ListView
             if (_owner.View == null)
                 return new Size();
 
-            Log.Debug("LvPanel MeasureOverride");
+            //Log.Debug($"{_owner.BaseUri} LvPanel MeasureOverride");
             // 虚拟行/真实行
             return _owner.IsVir ? MeasureVirRows() : MeasureRealRows();
         }
@@ -323,7 +322,7 @@ namespace Dt.Base.ListView
             if (Children.Count == 0)
                 return finalSize;
 
-            //Log.Debug("LvPanel ArrangeOverride");
+            //Log.Debug($"{_owner.BaseUri} LvPanel ArrangeOverride");
             if (!_owner.IsInnerScroll)
             {
                 // 面板与ScrollViewer的相对距离，以滚动栏为参照物，面板在右下方时为正数
@@ -387,10 +386,15 @@ namespace Dt.Base.ListView
         /// </summary>
         void LoadVirRows()
         {
+            ClearAllRows();
+
             // 按顺序添加，后面的元素部署在上层！
-            CreateVirRows();
+            _initVirRow = CreateVirRows();
             LoadGroupRows();
             LoadColHeader();
+
+            //if (_initVirRow)
+            //    Log.Debug($"{_owner.BaseUri} 生成{_dataRows.Count}个虚拟行");
         }
 
         /// <summary>
@@ -398,6 +402,8 @@ namespace Dt.Base.ListView
         /// </summary>
         void LoaRealRows()
         {
+            ClearAllRows();
+
             // 添加元素顺序：数据行、分组行、列头，后面的元素部署在上层！
             // 数据行
             if (_owner.Rows.Count > 0)
@@ -449,7 +455,7 @@ namespace Dt.Base.ListView
         /// <summary>
         /// 生成虚拟行
         /// </summary>
-        protected abstract void CreateVirRows();
+        protected abstract bool CreateVirRows();
 
         /// <summary>
         /// 加载表格的列头
@@ -626,29 +632,6 @@ namespace Dt.Base.ListView
                 else if (!_isScrolling)
                 {
                     _isScrolling = true;
-                    InvalidateArrange();
-                }
-            }
-        }
-
-        /// <summary>
-        /// 面板大小变化
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void OnSizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            // 过滤初次加载或从可视树卸载后再加载的情况，造成切换任务栏时非常慢！！！
-            // 频繁调整大小时会异常！！！修改Dlg调整大小的方式
-            if (e.PreviousSize.Width > 0 && e.PreviousSize.Height > 0)
-            {
-                if (_owner.IsVir)
-                {
-                    // 高度变化时重新生成虚拟行
-                    _owner.InvalidateMeasure();
-                }
-                else
-                {
                     InvalidateArrange();
                 }
             }
