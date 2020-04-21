@@ -1143,9 +1143,7 @@ namespace Dt.Base
 
         #region 加载过程
         /// <summary>
-        /// 动态构造控件内容
-        /// uwp在OnApplyTemplate中调用，Lv已在可视树上
-        /// uno在Loaded时调用，OnApplyTemplate时不一定在可视树上
+        /// 动态构造控件内容，uwp在OnApplyTemplate中处理，uno在Loaded时处理
         /// </summary>
         void InitTemplate()
         {
@@ -1165,6 +1163,8 @@ namespace Dt.Base
                 // 因phone模式Lv所属的Tab始终不变
                 _sizedPresenter = scroll.FindParentInWin<SizedPresenter>();
             }
+            scroll.HorizontalScrollMode = ScrollMode.Auto;
+            scroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
             scroll.VerticalScrollMode = ScrollMode.Auto;
             scroll.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
             // 滚动到顶部或底部时添加分页数据
@@ -1376,7 +1376,7 @@ namespace Dt.Base
 #if !UWP
         /// <summary>
         /// uno时的处理
-        /// uno中OnApplyTemplate时不一定在可视树上，uwp的OnApplyTemplate时已在可视树上
+        /// uno中OnApplyTemplate时不一定在可视树上，无法查询父元素，uwp的OnApplyTemplate时已在可视树上
         /// 为了动态构造控件内容，uwp在OnApplyTemplate中处理，uno在Loaded时处理 ！
         /// </summary>
         /// <param name="sender"></param>

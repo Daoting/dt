@@ -15,17 +15,11 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="a:Fv">
-                    <ScrollViewer x:Name="ScrollViewer"
-                                  HorizontalScrollMode="Disabled"
-                                  HorizontalScrollBarVisibility="Disabled"
-                                  VerticalScrollMode="Auto"
-                                  VerticalScrollBarVisibility="Auto">
-                        <!--为uno节省级数，边框在内部画-->
-                        <fv:FormPanel x:Name="FormPanel"
-                                      Background="{StaticResource 浅灰背景}"
-                                      HorizontalAlignment="Left"
-                                      VerticalAlignment="Top" />
-                    </ScrollViewer>
+                    <Border x:Name="Border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

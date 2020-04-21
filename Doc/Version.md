@@ -14,6 +14,7 @@
 * Lv.Data类型调整为INotifyList
 * Lv外部有ScrollViewer的处理
 * 优化Win结构
+* Fv外部有ScrollViewer的处理 
 
 * Chat 撤回消息功能
 

@@ -522,7 +522,7 @@ namespace Dt.Base
                 && _panel != null
                 && _panel.Child != null)
             {
-                Owner.ScrollIntoView(this);
+                Owner.ScrollInto(this);
                 return SetFocus();
             }
             return false;

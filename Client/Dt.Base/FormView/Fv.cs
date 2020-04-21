@@ -100,7 +100,7 @@ namespace Dt.Base
 
         #region 成员变量
         readonly FvItems _items;
-        FormPanel _panel;
+        readonly FormPanel _panel;
         ScrollViewer _scroll;
         bool _isLoaded;
         FvUndoCmd _cmdUndo;
@@ -111,7 +111,10 @@ namespace Dt.Base
         {
             DefaultStyleKey = typeof(Fv);
             _items = new FvItems();
+            _panel = new FormPanel();
+#if !UWP
             Loaded += OnLoaded;
+#endif
         }
         #endregion
 
@@ -238,11 +241,6 @@ namespace Dt.Base
                     _cmdUndo = new FvUndoCmd(this);
                 return _cmdUndo;
             }
-        }
-
-        internal ScrollViewer Scroll
-        {
-            get { return _scroll; }
         }
 
         /// <summary>
@@ -499,30 +497,256 @@ namespace Dt.Base
         }
         #endregion
 
+        #region 焦点处理
+        /// <summary>
+        /// 自动跳入第一个可接收焦点的列
+        /// </summary>
+        public void GotoFirstCell()
+        {
+            foreach (var item in _panel.Children)
+            {
+                FvCell cell = item as FvCell;
+                if (cell != null && cell.ReceiveFocus())
+                    return;
+            }
+        }
+
+        /// <summary>
+        /// 最后一个非只读单元格获得焦点
+        /// </summary>
+        public void GotoLastCell()
+        {
+            for (int i = _panel.Children.Count - 1; i >= 0; i--)
+            {
+                FvCell cell = _panel.Children[i] as FvCell;
+                if (cell != null && cell.ReceiveFocus())
+                    return;
+            }
+        }
+
+        /// <summary>
+        /// 跳到指定单元格
+        /// </summary>
+        /// <param name="p_cellName">要跳到的格名称</param>
+        /// <returns>true 跳成功</returns>
+        public void GotoCell(string p_cellName)
+        {
+            FvCell cell = this[p_cellName];
+            if (cell != null)
+            {
+                if (!cell.ReceiveFocus())
+                    AtKit.Msg(string.Format("要跳入的单元格({0})无法获得焦点！", p_cellName));
+            }
+            else
+            {
+                AtKit.Msg(string.Format("未找到要跳入的单元格({0})！", p_cellName));
+            }
+        }
+
+        /// <summary>
+        /// 移向下一编辑器
+        /// </summary>
+        /// <param name="p_cell">当前格</param>
+        internal void GotoNextCell(FvCell p_cell)
+        {
+            int index = _panel.Children.IndexOf(p_cell);
+            if (index == -1)
+                return;
+
+            int preIndex = index;
+            while (true)
+            {
+                index++;
+                if (index >= _panel.Children.Count)
+                    index = 0;
+
+                // 避免只一个可编辑格
+                if (index == preIndex)
+                    break;
+
+                FvCell cell = _panel.Children[index] as FvCell;
+                if (cell != null && cell.ReceiveFocus())
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// 移向上一编辑器
+        /// </summary>
+        /// <param name="p_cell">当前格</param>
+        internal void GotoPreviousCell(FvCell p_cell)
+        {
+            int index = _panel.Children.IndexOf(p_cell);
+            if (index == -1)
+                return;
+
+            while (true)
+            {
+                index--;
+                if (index < 0)
+                    break;
+
+                FvCell cell = _panel.Children[index] as FvCell;
+                if (cell != null && cell.ReceiveFocus())
+                    break;
+            }
+        }
+        #endregion
+
+        #region 滚动到
+        /// <summary>
+        /// 滚动到最顶端
+        /// </summary>
+        public void ScrollTop()
+        {
+            if (_panel.Children.Count > 0)
+                ScrollInto((FrameworkElement)_panel.Children[0]);
+        }
+
+        /// <summary>
+        /// 滚动到最底端
+        /// </summary>
+        public void ScrollBottom()
+        {
+            // 末尾为边框
+            if (_panel.Children.Count > 1)
+                ScrollInto((FrameworkElement)_panel.Children[_panel.Children.Count - 2]);
+        }
+
+        /// <summary>
+        /// 将指定格滚动到可视区域
+        /// </summary>
+        /// <param name="p_index">格索引</param>
+        public void ScrollInto(int p_index)
+        {
+            if (p_index >= 0 && p_index < _panel.Children.Count)
+                ScrollInto((FrameworkElement)_panel.Children[p_index]);
+        }
+
+        /// <summary>
+        /// 将指定单元格滚动到可视范围
+        /// </summary>
+        /// <param name="p_elem"></param>
+        public void ScrollInto(FrameworkElement p_elem)
+        {
+            if (_scroll == null || p_elem == null)
+                return;
+
+            // 单元格相对面板位置
+            Point pt = p_elem.TransformToVisual(_panel).TransformPoint(new Point());
+            if (_scroll.Content == _panel)
+            {
+                // 内部滚动栏
+                if (pt.Y < _scroll.VerticalOffset)
+                {
+                    // 超出上部
+                    _scroll.ChangeView(null, pt.Y, null);
+                }
+                else if ((pt.Y + p_elem.ActualHeight) > (_scroll.VerticalOffset + _scroll.ViewportHeight))
+                {
+                    // 超出下部
+                    _scroll.ChangeView(null, pt.Y + p_elem.ActualHeight - _scroll.ViewportHeight, null);
+                }
+            }
+            else
+            {
+                // 外部滚动栏
+                // 面板相对滚动栏位置
+                Point ptScroll = _panel.TransformToVisual(_scroll).TransformPoint(new Point());
+                if (pt.Y + ptScroll.Y < 0)
+                {
+                    // 超出上部
+                    _scroll.ChangeView(null, pt.Y + ptScroll.Y + _scroll.VerticalOffset, null);
+                }
+                else if (pt.Y + ptScroll.Y + p_elem.ActualHeight > _scroll.ViewportHeight)
+                {
+                    // 超出下部
+                    _scroll.ChangeView(null, pt.Y + ptScroll.Y + p_elem.ActualHeight + _scroll.VerticalOffset - _scroll.ViewportHeight, null);
+                }
+            }
+        }
+        #endregion
+
         #region 重写方法
+        /************************************************************************************************************************************/
+        // 平台调用顺序不同：
+        // UWP：父OnApplyTemplate > 父MeasureOverride > 子MeasureOverride > 父ArrangeOverride > 子ArrangeOverride > 父SizeChanged > 子SizeChanged > 父Loaded > 子Loaded
+        // Adr：父OnApplyTemplate > 父Loaded > 子Loaded > 父MeasureOverride > 子MeasureOverride > 父ArrangeOverride > 子ArrangeOverride > 子SizeChanged > 父SizeChanged
+        // iOS：父OnApplyTemplate > 子Loaded > 父Loaded > 父MeasureOverride > 子MeasureOverride > 父SizeChanged > 子SizeChanged > 父ArrangeOverride > 子ArrangeOverride
+        //
+        // uwp的OnApplyTemplate时控件已在可视树上，可查询父元素；uno此时不在可视树上，只能在Loaded时查询父元素！！！
+        //
+        /************************************************************************************************************************************/
+
+#if UWP
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-
-            _panel = (FormPanel)GetTemplateChild("FormPanel");
-            LoadAllItems();
-            _items.ItemsChanged += OnItemsChanged;
-
-            _scroll = (ScrollViewer)GetTemplateChild("ScrollViewer");
+            InitTemplate();
         }
+#endif
 
         protected override Size MeasureOverride(Size availableSize)
         {
+            // 准确获取高度
             if (_panel != null)
-                _panel.AvailableHeight = availableSize.Height;
+            {
+                if (!double.IsInfinity(availableSize.Width) && !double.IsInfinity(availableSize.Height))
+                {
+                    // 外部无ScrollViewer StackPanel的情况
+                    _panel.SetMaxSize(availableSize);
+                }
+                else
+                {
+                    // 和Lv相似，参见win.xaml：win模式在Tabs定义，phone模式在Tab定义
+                    var pre = _scroll.FindParentInWin<SizedPresenter>();
+                    if (pre != null)
+                    {
+                        _panel.SetMaxSize(pre.AvailableSize);
+                    }
+                    else
+                    {
+                        // 无有效大小时以窗口大小为准
+                        double width = double.IsInfinity(availableSize.Width) ? SysVisual.ViewWidth : availableSize.Width;
+                        double height = double.IsInfinity(availableSize.Height) ? SysVisual.ViewHeight : availableSize.Height;
+                        _panel.SetMaxSize(new Size(width, height));
+                    }
+                }
+            }
             return base.MeasureOverride(availableSize);
         }
         #endregion
 
-        #region 数据源
-        void OnLoaded(object sender, RoutedEventArgs e)
+        #region 加载过程
+        /// <summary>
+        /// 动态构造控件内容，uwp在OnApplyTemplate中处理，uno在Loaded时处理
+        /// </summary>
+        void InitTemplate()
         {
-            Loaded -= OnLoaded;
+            var root = (Border)GetTemplateChild("Border");
+
+            // win模式查询范围限制在Tabs内，phone模式限制在Tab内
+            _scroll = this.FindParentInWin<ScrollViewer>();
+            if (_scroll == null)
+            {
+                // 内部滚动栏
+                _scroll = new ScrollViewer();
+                _scroll.Content = _panel;
+                root.Child = _scroll;
+            }
+            else
+            {
+                // 外部滚动栏
+                root.Child = _panel;
+            }
+            _scroll.HorizontalScrollMode = ScrollMode.Disabled;
+            _scroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
+            _scroll.VerticalScrollMode = ScrollMode.Auto;
+            _scroll.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+
+            LoadAllItems();
+            _items.ItemsChanged += OnItemsChanged;
+
             _isLoaded = true;
 
             // 初次加载时首次执行切换数据源操作，避免在不可见Tab页内时异常
@@ -530,6 +754,23 @@ namespace Dt.Base
                 OnDataChanged();
         }
 
+#if !UWP
+        /// <summary>
+        /// uno时的处理
+        /// uno中OnApplyTemplate时不在可视树上，无法查询父元素，uwp的OnApplyTemplate时已在可视树上
+        /// 为了动态构造控件内容，uwp在OnApplyTemplate中处理，uno在Loaded时处理 ！
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= OnLoaded;
+            InitTemplate();
+        }
+#endif
+        #endregion
+
+        #region 数据源
         /// <summary>
         /// 切换数据源，Row或普通对象
         /// </summary>
@@ -631,7 +872,7 @@ namespace Dt.Base
                     if (_panel.Children.Count > i)
                     {
                         var elem = _panel.Children[i];
-                        
+
                         // 内容没变
                         if (item == elem
                             || (elem is CFree f && f.Content == item))
@@ -676,130 +917,6 @@ namespace Dt.Base
                 elem = c;
             }
             _panel.Children.Insert(p_index, elem);
-        }
-        #endregion
-
-        #region 焦点处理
-        
-        /// <summary>
-        /// 自动跳入第一个可接收焦点的列
-        /// </summary>
-        public void GotoFirstCell()
-        {
-            foreach (var item in _panel.Children)
-            {
-                FvCell cell = item as FvCell;
-                if (cell != null && cell.ReceiveFocus())
-                    return;
-            }
-        }
-
-        /// <summary>
-        /// 最后一个非只读单元格获得焦点
-        /// </summary>
-        public void GotoLastCell()
-        {
-            for (int i = _panel.Children.Count - 1; i >= 0; i--)
-            {
-                FvCell cell = _panel.Children[i] as FvCell;
-                if (cell != null && cell.ReceiveFocus())
-                    return;
-            }
-        }
-
-        /// <summary>
-        /// 跳到指定单元格
-        /// </summary>
-        /// <param name="p_cellName">要跳到的格名称</param>
-        /// <returns>true 跳成功</returns>
-        public void GotoCell(string p_cellName)
-        {
-            FvCell cell = this[p_cellName];
-            if (cell != null)
-            {
-                if (!cell.ReceiveFocus())
-                    AtKit.Msg(string.Format("要跳入的单元格({0})无法获得焦点！", p_cellName));
-            }
-            else
-            {
-                AtKit.Msg(string.Format("未找到要跳入的单元格({0})！", p_cellName));
-            }
-        }
-
-        /// <summary>
-        /// 移向下一编辑器
-        /// </summary>
-        /// <param name="p_cell">当前格</param>
-        internal void GotoNextCell(FvCell p_cell)
-        {
-            int index = _panel.Children.IndexOf(p_cell);
-            if (index == -1)
-                return;
-
-            int preIndex = index;
-            while (true)
-            {
-                index++;
-                if (index >= _panel.Children.Count)
-                    index = 0;
-
-                // 避免只一个可编辑格
-                if (index == preIndex)
-                    break;
-
-                FvCell cell = _panel.Children[index] as FvCell;
-                if (cell != null && cell.ReceiveFocus())
-                    break;
-            }
-        }
-
-        /// <summary>
-        /// 移向上一编辑器
-        /// </summary>
-        /// <param name="p_cell">当前格</param>
-        internal void GotoPreviousCell(FvCell p_cell)
-        {
-            int index = _panel.Children.IndexOf(p_cell);
-            if (index == -1)
-                return;
-
-            while (true)
-            {
-                index--;
-                if (index < 0)
-                    break;
-
-                FvCell cell = _panel.Children[index] as FvCell;
-                if (cell != null && cell.ReceiveFocus())
-                    break;
-            }
-        }
-
-        /// <summary>
-        /// 单元格获得焦点后，滚动到可视范围
-        /// </summary>
-        /// <param name="p_cell"></param>
-        public void ScrollIntoView(FvCell p_cell)
-        {
-            if (_scroll == null || _panel == null)
-                return;
-
-            double availHeight = _scroll.ViewportHeight;
-            double verticalOffset = double.NaN;
-            Point pt = p_cell.TransformToVisual(_panel).TransformPoint(new Point());
-            if (pt.Y < _scroll.VerticalOffset)
-            {
-                verticalOffset = pt.Y;
-            }
-            else if ((pt.Y + p_cell.ActualHeight) > (_scroll.VerticalOffset + availHeight))
-            {
-                verticalOffset = pt.Y + p_cell.ActualHeight - availHeight;
-            }
-
-            if (!double.IsNaN(verticalOffset))
-            {
-                _scroll.ChangeView(null, verticalOffset, null);
-            }
         }
         #endregion
 

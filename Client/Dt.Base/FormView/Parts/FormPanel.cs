@@ -30,12 +30,21 @@ namespace Dt.Base.FormView
         const double CellMinWidth = 296;
         const double CellMaxHeight = 5000;
 
+        /// <summary>
+        /// 面板最大尺寸，宽高始终不为无穷大！
+        /// </summary>
+        Size _maxSize = Size.Empty;
+
         // 为uno节省可视树级数
         readonly Rectangle _border = new Rectangle { Stroke = AtRes.浅灰边框, IsHitTestVisible = false };
         #endregion
 
         public FormPanel()
         {
+            Background = AtRes.浅灰背景;
+            HorizontalAlignment = HorizontalAlignment.Left;
+            VerticalAlignment = VerticalAlignment.Top;
+
             // 左上边距和容器凑成边框1的效果
             if (!AtSys.IsPhoneUI)
                 Margin = new Thickness(-1, -1, 0, 0);
@@ -47,9 +56,12 @@ namespace Dt.Base.FormView
         }
 
         /// <summary>
-        /// 通过Fv获取有效高度，因ScrollViewer内容高度Infinity！
+        /// 设置面板的最大尺寸，宽高始终不为无穷大！
         /// </summary>
-        internal double AvailableHeight { get; set; }
+        internal void SetMaxSize(Size p_size)
+        {
+            _maxSize = p_size;
+        }
 
         /// <summary>
         /// 清空子元素，自动添加边框
@@ -69,7 +81,7 @@ namespace Dt.Base.FormView
 
             int colCount;
             double colWidth, width;
-            double maxWidth = double.IsInfinity(availableSize.Width) ? SysVisual.ViewWidth : availableSize.Width;
+            double maxWidth = _maxSize.Width;
 
             // 确定列数和列宽
             if (maxWidth < CellMinWidth * 2)
@@ -81,9 +93,7 @@ namespace Dt.Base.FormView
             else
             {
                 // 可视高度的80%
-                double maxHeight = double.IsInfinity(AvailableHeight) ?
-                    Math.Floor(SysVisual.ViewHeight * 0.8) : Math.Floor(AvailableHeight * 0.8);
-
+                double maxHeight = Math.Floor(_maxSize.Height * 0.8);
                 if (maxHeight >= GetTotalHeight(1, CellMaxWidth, false))
                 {
                     // 一列在可视高度的80%以内，仍一列
