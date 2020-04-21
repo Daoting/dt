@@ -129,7 +129,7 @@ namespace Dt.Base
         {
             Tv tv = (Tv)d;
             if (tv._isLoaded)
-                tv._panel.ReloadAllRows();
+                tv._panel.Reload();
         }
 
         static void OnViewExChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -168,7 +168,7 @@ namespace Dt.Base
             }
 
             if (tv._isLoaded)
-                tv._panel.ReloadAllRows();
+                tv._panel.Reload();
         }
 
         static void OnViewChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -179,7 +179,7 @@ namespace Dt.Base
                 if (tv.IsVirtualized && e.NewValue is DataTemplateSelector)
                     tv.IsVirtualized = false;
                 else if (tv._isLoaded)
-                    tv._panel.ReloadAllRows();
+                    tv._panel.Reload();
             }
         }
 
@@ -191,7 +191,7 @@ namespace Dt.Base
                 tv.Scroll.ViewChanged -= tv.OnScrollViewChanged;
                 if ((bool)e.NewValue)
                     tv.Scroll.ViewChanged += tv.OnScrollViewChanged;
-                tv._panel.ReloadAllRows();
+                tv._panel.Reload();
             }
         }
 
@@ -219,7 +219,7 @@ namespace Dt.Base
                         tv._selectedRows.CollectionChanged += tv.OnSelectedItemsChanged;
                     }
                 }
-                tv._panel.ReloadAllRows();
+                tv._panel.Reload();
             }
         }
         #endregion
@@ -495,6 +495,14 @@ namespace Dt.Base
         {
             get { return _selectedRows; }
         }
+
+        /// <summary>
+        /// 滚动栏是否在内部
+        /// </summary>
+        internal bool IsInnerScroll
+        {
+            get { return Scroll.Content == _panel; }
+        }
         #endregion
 
         #region 外部方法
@@ -561,22 +569,6 @@ namespace Dt.Base
                 }
             }
             RootItems.Invalidate();
-        }
-
-        /// <summary>
-        /// 滚动到指定的节点
-        /// </summary>
-        /// <param name="p_item"></param>
-        public void ScrollInto(object p_item)
-        {
-            if (_panel != null)
-            {
-                var item = (from row in RootItems.GetAllItems()
-                            where row.Data == p_item
-                            select row).FirstOrDefault();
-                if (item != null)
-                    _panel.ScrollIntoItem(item);
-            }
         }
 
         /// <summary>
@@ -665,33 +657,152 @@ namespace Dt.Base
         }
         #endregion
 
+        #region 滚动到
+        /// <summary>
+        /// 滚动到最顶端
+        /// </summary>
+        public void ScrollTop()
+        {
+            if (_panel == null)
+                return;
+
+            if (Scroll.Content == _panel)
+            {
+                // 内部滚动栏
+                Scroll.ChangeView(null, 0, null);
+            }
+            else
+            {
+                // 外部滚动栏
+                Point pt = _panel.TransformToVisual(Scroll).TransformPoint(new Point());
+                Scroll.ChangeView(null, Scroll.VerticalOffset + pt.Y, null);
+            }
+        }
+
+        /// <summary>
+        /// 滚动到最底端
+        /// </summary>
+        public void ScrollBottom()
+        {
+            if (_panel == null)
+                return;
+
+            if (Scroll.Content == _panel)
+            {
+                // 内部滚动栏
+                Scroll.ChangeView(null, Scroll.ScrollableHeight, null);
+            }
+            else
+            {
+                // 外部滚动栏
+                Point pt = _panel.TransformToVisual(Scroll).TransformPoint(new Point());
+                Scroll.ChangeView(null, Scroll.VerticalOffset + pt.Y + _panel.ActualHeight - Scroll.ViewportHeight, null);
+            }
+        }
+
+        /// <summary>
+        /// 滚动到指定的节点
+        /// </summary>
+        /// <param name="p_item"></param>
+        public void ScrollInto(object p_item)
+        {
+            if (_panel != null)
+            {
+                var item = (from row in RootItems.GetAllItems()
+                            where row.Data == p_item
+                            select row).FirstOrDefault();
+                if (item != null)
+                    _panel.ScrollIntoItem(item);
+            }
+        }
+        #endregion
+
         #region 重写方法
+#if UWP
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            Scroll = (ScrollViewer)GetTemplateChild("ScrollViewer");
-            _panel = (TvPanel)GetTemplateChild("Panel");
-            _panel.SetOwner(this);
-            _isLoaded = true;
+            InitTemplate();
         }
+#endif
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            if (_panel != null)
-                _panel.AvailableSize = availableSize;
+            // 准确获取高度
+            if (!double.IsInfinity(availableSize.Width) && !double.IsInfinity(availableSize.Height))
+            {
+                // 外部无ScrollViewer StackPanel的情况
+                _panel.SetMaxSize(availableSize);
+            }
+            else
+            {
+                // 和Lv相似，参见win.xaml：win模式在Tabs定义，phone模式在Tab定义
+                var pre = Scroll.FindParentInWin<SizedPresenter>();
+                if (pre != null)
+                {
+                    _panel.SetMaxSize(pre.AvailableSize);
+                }
+                else
+                {
+                    // 无有效大小时以窗口大小为准
+                    double width = double.IsInfinity(availableSize.Width) ? SysVisual.ViewWidth : availableSize.Width;
+                    double height = double.IsInfinity(availableSize.Height) ? SysVisual.ViewHeight : availableSize.Height;
+                    _panel.SetMaxSize(new Size(width, height));
+                }
+            }
             return base.MeasureOverride(availableSize);
         }
         #endregion
 
         #region 加载过程
+        /// <summary>
+        /// 动态构造控件内容，uwp在OnApplyTemplate中处理，uno在Loaded时处理
+        /// </summary>
+        void InitTemplate()
+        {
+            _panel = new TvPanel(this);
+            var root = (Border)GetTemplateChild("Border");
+
+            // win模式查询范围限制在Tabs内，phone模式限制在Tab内
+            var scroll = this.FindParentInWin<ScrollViewer>();
+            if (scroll == null)
+            {
+                // 内部滚动栏
+                scroll = new ScrollViewer();
+                scroll.Content = _panel;
+                root.Child = scroll;
+            }
+            else
+            {
+                // 外部滚动栏
+                root.Child = _panel;
+            }
+            scroll.HorizontalScrollMode = ScrollMode.Auto;
+            scroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
+            scroll.VerticalScrollMode = ScrollMode.Auto;
+            scroll.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+            if (IsVirtualized)
+                scroll.ViewChanged += OnScrollViewChanged;
+            Scroll = scroll;
+
+            _isLoaded = true;
+        }
+
+        /// <summary>
+        /// uno中OnApplyTemplate时不在可视树上，无法查询父元素，uwp的OnApplyTemplate时已在可视树上
+        /// 为了动态构造控件内容，uwp在OnApplyTemplate中处理，uno在Loaded时处理 ！
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void OnLoaded(object sender, RoutedEventArgs e)
         {
             Loaded -= OnLoaded;
-            if (IsVirtualized)
-                Scroll.ViewChanged += OnScrollViewChanged;
+
 #if UWP
             Focus(FocusState.Programmatic);
             KeyDown += OnKeyDown;
+#else
+            InitTemplate();
 #endif
         }
 
@@ -1008,7 +1119,7 @@ namespace Dt.Base
         void IMenuHost.UpdateContextMenu()
         {
             if (_isLoaded)
-                _panel.ReloadAllRows();
+                _panel.Reload();
         }
         #endregion
 

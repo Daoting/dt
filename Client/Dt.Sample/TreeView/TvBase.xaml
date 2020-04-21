@@ -54,7 +54,11 @@
                     <StackPanel Orientation="Horizontal">
                         <Button Content="折叠所有节点" Click="OnCollapseAll" />
                         <Button Content="展开所有节点" Click="OnExpandAll" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
                         <Button Content="随机选择节点" Click="OnScroll" />
+                        <Button Content="滚动到顶端" Click="OnScrollTop" />
+                        <Button Content="滚动到底端" Click="OnScrollBottom" />
                     </StackPanel>
                 </a:Fv>
             </a:Tab>

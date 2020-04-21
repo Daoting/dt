@@ -94,16 +94,6 @@ namespace Dt.Sample
             _tv.CollapseAll();
         }
 
-        void OnScroll(object sender, RoutedEventArgs e)
-        {
-            if (_tv.Data is Table tbl)
-            {
-                int index = new Random().Next(0, tbl.Count);
-                _tv.SelectedItem = tbl[index];
-                AtKit.Msg($"已选择 {tbl[index].Str("name")}");
-            }
-        }
-
         void OnNoEnteredBrush(object sender, RoutedEventArgs e)
         {
             _tv.EnteredBrush = null;
@@ -132,6 +122,26 @@ namespace Dt.Sample
         void OnDefPressedBrush(object sender, RoutedEventArgs e)
         {
             _tv.ClearValue(Tv.PressedBrushProperty);
+        }
+
+        void OnScroll(object sender, RoutedEventArgs e)
+        {
+            if (_tv.Data is Table tbl)
+            {
+                int index = new Random().Next(0, tbl.Count);
+                _tv.SelectedItem = tbl[index];
+                AtKit.Msg($"已选择 {tbl[index].Str("name")}");
+            }
+        }
+
+        void OnScrollTop(object sender, RoutedEventArgs e)
+        {
+            _tv.ScrollTop();
+        }
+
+        void OnScrollBottom(object sender, RoutedEventArgs e)
+        {
+            _tv.ScrollBottom();
         }
     }
 }

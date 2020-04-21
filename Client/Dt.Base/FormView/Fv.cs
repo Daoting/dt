@@ -689,28 +689,25 @@ namespace Dt.Base
         protected override Size MeasureOverride(Size availableSize)
         {
             // 准确获取高度
-            if (_panel != null)
+            if (!double.IsInfinity(availableSize.Width) && !double.IsInfinity(availableSize.Height))
             {
-                if (!double.IsInfinity(availableSize.Width) && !double.IsInfinity(availableSize.Height))
+                // 外部无ScrollViewer StackPanel的情况
+                _panel.SetMaxSize(availableSize);
+            }
+            else
+            {
+                // 和Lv相似，参见win.xaml：win模式在Tabs定义，phone模式在Tab定义
+                var pre = _scroll.FindParentInWin<SizedPresenter>();
+                if (pre != null)
                 {
-                    // 外部无ScrollViewer StackPanel的情况
-                    _panel.SetMaxSize(availableSize);
+                    _panel.SetMaxSize(pre.AvailableSize);
                 }
                 else
                 {
-                    // 和Lv相似，参见win.xaml：win模式在Tabs定义，phone模式在Tab定义
-                    var pre = _scroll.FindParentInWin<SizedPresenter>();
-                    if (pre != null)
-                    {
-                        _panel.SetMaxSize(pre.AvailableSize);
-                    }
-                    else
-                    {
-                        // 无有效大小时以窗口大小为准
-                        double width = double.IsInfinity(availableSize.Width) ? SysVisual.ViewWidth : availableSize.Width;
-                        double height = double.IsInfinity(availableSize.Height) ? SysVisual.ViewHeight : availableSize.Height;
-                        _panel.SetMaxSize(new Size(width, height));
-                    }
+                    // 无有效大小时以窗口大小为准
+                    double width = double.IsInfinity(availableSize.Width) ? SysVisual.ViewWidth : availableSize.Width;
+                    double height = double.IsInfinity(availableSize.Height) ? SysVisual.ViewHeight : availableSize.Height;
+                    _panel.SetMaxSize(new Size(width, height));
                 }
             }
             return base.MeasureOverride(availableSize);

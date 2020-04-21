@@ -30,6 +30,7 @@ namespace Dt.Sample
                 new CenterInfo(Icons.详细, "视图扩展", typeof(TvViewEx), "自定义节点样式、节点内容"),
                 new CenterInfo(Icons.排列, "节点模板选择器", typeof(TvViewSelector), "动态设置节点模板，节点非虚拟化"),
                 new CenterInfo(Icons.公告, "上下文菜单", typeof(TvContextMenu), "触发上下文菜单的方式：右键、悬停、点击标识按钮"),
+                new CenterInfo(Icons.乐谱, "外部ScrollViewer", typeof(TvInScrollViewer), "外部嵌套ScrollViewer，和其他元素一起滚动"),
             };
         }
     }
