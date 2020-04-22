@@ -113,12 +113,14 @@ namespace Dt.Base
         {
             LoadMsg();
             LetterManager.NewLetter += OnNewLetter;
+            LetterManager.UndoLetter += OnRecvUndoLetter;
         }
 
         void OnUnloaded(object sender, RoutedEventArgs e)
         {
             // 页面卸载停止接收新信息
             LetterManager.NewLetter -= OnNewLetter;
+            LetterManager.UndoLetter += OnRecvUndoLetter;
         }
 
         /// <summary>
@@ -196,6 +198,26 @@ namespace Dt.Base
                 p_letter.Photo = AtUser.Photo;
                 _lv.Data.Add(p_letter);
                 _lv.ScrollBottom();
+            }
+        }
+
+        /// <summary>
+        /// 收到撤回消息
+        /// </summary>
+        /// <param name="p_letter"></param>
+        void OnRecvUndoLetter(Letter p_letter)
+        {
+            if (p_letter.OtherID != OtherID)
+                return;
+
+            for (int i = 0; i < _lv.Data.Count; i++)
+            {
+                var l = (Letter)_lv.Data[i];
+                if (l.ID == p_letter.ID)
+                {
+                    _lv.Data.RemoveAt(i);
+                    break;
+                }
             }
         }
         #endregion

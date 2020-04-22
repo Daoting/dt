@@ -24,6 +24,7 @@
 *  移除Newtonsoft.Json，使用System.Text.Json 
 *  AtUI合并到AtApp
 * 调整TabControl继承自Control 
+* uno升级到2.2.0，Holding事件可用
 
 ### Bug修改 
 * 设置窗口自启动时参数序列化问题

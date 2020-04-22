@@ -22,12 +22,10 @@ namespace Dt.Base
         static readonly DataTemplate _myMsg;
         static readonly DataTemplate _myFile;
         static readonly DataTemplate _myLink;
-        static readonly DataTemplate _myUndoMsg;
 
         static readonly DataTemplate _otherMsg;
         static readonly DataTemplate _otherFile;
         static readonly DataTemplate _otherLink;
-        static readonly DataTemplate _otherUndoMsg;
 
         static MsgItemSelector()
         {
@@ -35,11 +33,9 @@ namespace Dt.Base
             _myMsg = (DataTemplate)dict["MyMsgTemplate"];
             _myFile = (DataTemplate)dict["MyFileTemplate"];
             _myLink = (DataTemplate)dict["MyLinkTemplate"];
-            _myUndoMsg = (DataTemplate)dict["MyUndoTemplate"];
             _otherMsg = (DataTemplate)dict["OtherMsgTemplate"];
             _otherFile = (DataTemplate)dict["OtherFileTemplate"];
             _otherLink = (DataTemplate)dict["OtherLinkTemplate"];
-            _otherUndoMsg = (DataTemplate)dict["OtherUndoTemplate"];
         }
 
         protected override DataTemplate SelectTemplateCore(object item)
@@ -51,8 +47,6 @@ namespace Dt.Base
                     return l.IsReceived ? _otherMsg : _myMsg;
                 case LetterType.Link:
                     return l.IsReceived ? _otherLink : _myLink;
-                case LetterType.Undo:
-                    return l.IsReceived ? _otherUndoMsg : _myUndoMsg;
                 default:
                     return l.IsReceived ? _otherFile : _myFile;
             }

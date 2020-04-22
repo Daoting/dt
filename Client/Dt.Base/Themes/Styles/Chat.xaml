@@ -159,12 +159,6 @@
         </Grid>
     </DataTemplate>
 
-    <DataTemplate x:Key="OtherUndoTemplate">
-        <Grid>
-
-        </Grid>
-    </DataTemplate>
-
     <DataTemplate x:Key="MyMsgTemplate">
         <Grid Padding="10">
             <Grid.ColumnDefinitions>
@@ -200,12 +194,6 @@
     </DataTemplate>
 
     <DataTemplate x:Key="MyLinkTemplate">
-        <Grid>
-
-        </Grid>
-    </DataTemplate>
-
-    <DataTemplate x:Key="MyUndoTemplate">
         <Grid>
 
         </Grid>

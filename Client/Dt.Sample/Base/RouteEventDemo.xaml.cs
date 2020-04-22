@@ -67,6 +67,8 @@ namespace Dt.Sample
             _bdAddChild.PointerReleased += PointerReleasedHandler;
             _bdAddChild.Tapped += TappedHandler;
             _bdAddChild.DoubleTapped += DoubleTappedHandler;
+
+            _bdHold.Holding += _bdHold_Holding;
         }
 
         #region 父子事件路由
@@ -234,6 +236,11 @@ namespace Dt.Sample
             _tbSingle.Text += " DoubleTapped";
         }
         #endregion
+
+        void _bdHold_Holding(object sender, HoldingRoutedEventArgs e)
+        {
+            _tbHold.Text = "Holding:" + DateTime.Now.ToString("ss");
+        }
 
         static string GetName(object element)
         {

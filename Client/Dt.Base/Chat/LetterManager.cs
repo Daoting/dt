@@ -39,6 +39,11 @@ namespace Dt.Base
         public static event Action<Letter> NewLetter;
 
         /// <summary>
+        /// 收到撤回消息事件
+        /// </summary>
+        public static event Action<Letter> UndoLetter;
+
+        /// <summary>
         /// 未读消息状态变化事件，参数为对方的userid
         /// </summary>
         public static event Action<long> StateChanged;
@@ -60,10 +65,9 @@ namespace Dt.Base
                 var letter = AtLocal.GetFirst<Letter>("select * from Letter where MsgID=@msgid and LoginID=@loginid and IsReceived=1", new Dict { { "msgid", p_letter.ID }, { "loginid", AtUser.ID } });
                 if (letter != null)
                 {
-                    letter.LetterType = LetterType.Undo;
-                    AtLocal.Save(letter);
-
-                    NewLetter?.Invoke(letter);
+                    // 删除
+                    AtLocal.Execute($"delete from Letter where ID={letter.ID}");
+                    UndoLetter?.Invoke(letter);
                 }
                 return;
             }
@@ -274,11 +278,11 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_id">待撤消息主键</param>
         /// <returns></returns>
-        public static async Task SendUndoLetter(int p_id)
+        public static async Task<bool> SendUndoLetter(int p_id)
         {
             Letter l = AtLocal.GetFirst<Letter>($"select * from Letter where ID={p_id}");
             if (l == null)
-                return;
+                return false;
 
             LetterInfo li = new LetterInfo
             {
@@ -288,12 +292,10 @@ namespace Dt.Base
                 LetterType = LetterType.Undo,
                 SendTime = AtSys.Now
             };
-            bool isOnline = await AtMsg.SendLetter(l.OtherID, li);
-
-            l.LetterType = LetterType.Undo;
-            AtLocal.Save(l);
+            await AtMsg.SendLetter(l.OtherID, li);
+            AtLocal.Execute($"delete from Letter where ID={p_id}");
+            return true;
         }
-
         #endregion
 
     }

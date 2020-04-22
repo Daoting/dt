@@ -60,10 +60,7 @@ namespace Dt.Base.FileLists
                 if (item.FileType == FileItemType.Image)
                 {
                     item.Measure(imgSize);
-                    if (_owner.ImageHeight > 0)
-                        height = _owner.ImageHeight;
-                    else
-                        height = item.DesiredSize.Height;
+                    height = imgSize.Height;
                 }
                 else
                 {
@@ -126,10 +123,18 @@ namespace Dt.Base.FileLists
             for (int i = 0; i < Children.Count; i++)
             {
                 var item = Children[i] as FileItem;
-                item.Measure(item.FileType == FileItemType.Image ? imgSize : itemSize);
+                if (item.FileType == FileItemType.Image)
+                {
+                    item.Measure(imgSize);
+                    height += imgSize.Height;
+                }
+                else
+                {
+                    item.Measure(itemSize);
+                    height += item.DesiredSize.Height;
+                }
                 if (item.DesiredSize.Width > width)
                     width = item.DesiredSize.Width;
-                height += item.DesiredSize.Height;
             }
             return new Size(width, height);
         }
