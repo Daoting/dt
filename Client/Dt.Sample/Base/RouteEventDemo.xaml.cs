@@ -239,7 +239,8 @@ namespace Dt.Sample
 
         void _bdHold_Holding(object sender, HoldingRoutedEventArgs e)
         {
-            _tbHold.Text = "Holding:" + DateTime.Now.ToString("ss");
+            if (e.HoldingState == Windows.UI.Input.HoldingState.Started)
+                _tbHold.Text = "Holding:" + DateTime.Now.ToString("ss");
         }
 
         static string GetName(object element)

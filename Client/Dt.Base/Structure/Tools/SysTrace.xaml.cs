@@ -210,19 +210,11 @@ namespace Dt.Base.Tools
         void OnLoaded(object sender, RoutedEventArgs e)
         {
             AtSys.TraceRpc = true;
-            _lv.LoadedRows += OnLoadedRows;
-            _lv.ScrollBottom();
         }
 
         void OnUnloaded(object sender, RoutedEventArgs e)
         {
             AtSys.TraceRpc = false;
-            _lv.LoadedRows -= OnLoadedRows;
-        }
-
-        void OnLoadedRows(object sender, EventArgs e)
-        {
-            _lv.ScrollBottom();
         }
 
         #region 生成存根代码

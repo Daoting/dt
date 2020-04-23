@@ -87,7 +87,7 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <a:Lv x:Name="_lv" ShowItemBorder="False" />
+                    <a:Lv x:Name="_lv" ShowItemBorder="False" AutoScrollBottom="True" />
                     <Grid Background="{StaticResource 浅灰背景}"
                           BorderBrush="{StaticResource 浅灰边框}"
                           BorderThickness="1"

@@ -21,8 +21,8 @@
 
 
 ### 变更 
-*  移除Newtonsoft.Json，使用System.Text.Json 
-*  AtUI合并到AtApp
+* 移除Newtonsoft.Json，使用System.Text.Json 
+* AtUI合并到AtApp
 * 调整TabControl继承自Control 
 * uno升级到2.2.0，Holding事件可用
 
@@ -34,8 +34,11 @@
 * mono 中 The Bindable attribute is missing and the type [Dt.Base.XXX] is not known
 * ServerStream模式结束时为避免关闭连接，只能服务器端Abort
 * Fsm客户端上传过程中关闭时未处理 
-
 * Fv 手机加载慢
+* Lv 初次加载无法滚动到底部，增加AutoScrollBottom 属性
+
+* Lv在分页数据源顶部插入虚拟模式时，uwp出现无刷新现象，暂无使用场景
+
 
 ## Release 1.0 
 

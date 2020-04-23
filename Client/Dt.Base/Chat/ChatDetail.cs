@@ -106,6 +106,7 @@ namespace Dt.Base
             _inputBar = (ChatInputBar)GetTemplateChild("InputBar");
             _inputBar.Owner = this;
         }
+
         #endregion
 
         #region 加载消息
@@ -120,7 +121,7 @@ namespace Dt.Base
         {
             // 页面卸载停止接收新信息
             LetterManager.NewLetter -= OnNewLetter;
-            LetterManager.UndoLetter += OnRecvUndoLetter;
+            LetterManager.UndoLetter -= OnRecvUndoLetter;
         }
 
         /// <summary>
@@ -164,12 +165,7 @@ namespace Dt.Base
                 l.Photo = l.IsReceived ? _other.Photo : AtUser.Photo;
                 data.Add(l);
             }
-
             e.LoadPageData(data);
-            if (data != null && data.Count == 0)
-                _lv.Data = data;
-            if (e.PageNo == 0)
-                _lv.ScrollBottom();
         }
         #endregion
 
@@ -190,14 +186,12 @@ namespace Dt.Base
                 p_letter.Unread = false;
                 p_letter.Photo = _other.Photo;
                 _lv.Data.Add(p_letter);
-                _lv.ScrollBottom();
             }
             else if (p_letter.LetterType == LetterType.Text)
             {
                 // 当前登录人发出的，文件类型的行已经添加！
                 p_letter.Photo = AtUser.Photo;
                 _lv.Data.Add(p_letter);
-                _lv.ScrollBottom();
             }
         }
 
@@ -249,7 +243,6 @@ namespace Dt.Base
                 Photo = AtUser.Photo,
             };
             _lv.Data.Add(l);
-            _lv.ScrollBottom();
 
             FileList fl;
             var elem = _lv.GetRowUI(_lv.Data.Count - 1);
@@ -269,7 +262,6 @@ namespace Dt.Base
             {
                 _lv.Data.Remove(l);
             }
-            _lv.ScrollBottom();
         }
 
         LetterType GetLetterType(List<FileData> p_files)

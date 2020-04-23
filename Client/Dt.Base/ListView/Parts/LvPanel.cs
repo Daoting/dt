@@ -107,6 +107,7 @@ namespace Dt.Base.ListView
                 LoaRealRows();
 
             _owner.Scroll.ViewChanged += OnScrollViewChanged;
+            SizeChanged += OnSizeChanged;
             if (AtSys.System == TargetSystem.Windows)
             {
                 // 屏蔽鼠标滚轮引起的抖动
@@ -167,6 +168,42 @@ namespace Dt.Base.ListView
             else
             {
                 LoaRealRows();
+                // 确保数据变化后可立即访问行UI
+                UpdateLayout();
+            }
+        }
+
+        /// <summary>
+        /// 批量插入数据行，无排序过滤分组时！
+        /// </summary>
+        /// <param name="p_index">开始插入位置</param>
+        /// <param name="p_count">共插入行数</param>
+        internal void OnInsertRows(int p_index, int p_count)
+        {
+            if (_owner.IsVir)
+            {
+                if (!_initVirRow)
+                {
+                    // 第一次加载数据源时需重绘
+                    LoadVirRows();
+                }
+                else
+                {
+                    // 只需重新测量布局
+                    InvalidateMeasure();
+                }
+            }
+            else
+            {
+                for (int i = 0; i < p_count; i++)
+                {
+                    int index = p_index + i;
+                    var row = _createLvRow(_owner.Rows[index]);
+                    Children.Insert(index, row);
+                    _dataRows.Insert(index, row);
+                }
+                // 确保数据变化后可立即访问行UI
+                UpdateLayout();
             }
         }
 
@@ -177,6 +214,7 @@ namespace Dt.Base.ListView
         {
             ClearAllRows();
             _owner.Scroll.ViewChanged -= OnScrollViewChanged;
+            SizeChanged -= OnSizeChanged;
             if (AtSys.System == TargetSystem.Windows)
             {
                 PointerWheelChanged -= OnPointerWheelChanged;
@@ -195,6 +233,11 @@ namespace Dt.Base.ListView
                 return _dataRows[p_index];
             return null;
         }
+
+        internal Size GetMaxSize()
+        {
+            return _maxSize;
+        }
         #endregion
 
         #region 滚动到
@@ -204,7 +247,7 @@ namespace Dt.Base.ListView
         /// <param name="p_index">-1 表示最后</param>
         internal async void ScrollInto(int p_index)
         {
-            if (p_index < 0 || p_index >= _owner.Rows.Count - 1)
+            if (p_index < 0 || p_index > _owner.Rows.Count - 1)
             {
                 // 最后
                 p_index = _owner.Rows.Count - 1;
@@ -635,6 +678,40 @@ namespace Dt.Base.ListView
                     InvalidateArrange();
                 }
             }
+        }
+
+        /// <summary>
+        /// 面板大小变化时处理 自动滚到底部、分页插入
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        async void OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            var pd = _owner.PageData;
+            if (pd == null || pd.State == PageDataState.LoadingFirstPage)
+            {
+                // 未使用分页 或 首页时，自动滚动到底部才有效
+                if (_owner.AutoScrollBottom)
+                {
+                    await Dispatcher.RunAsync(
+                        CoreDispatcherPriority.Normal,
+                        new DispatchedHandler(() => _owner.Scroll.ChangeView(null, _owner.Scroll.ScrollableHeight, null)));
+                }
+            }
+            else if (pd.State == PageDataState.Loading && pd.InsertTop)
+            {
+                // 插入顶部时，滚动到当前行的位置
+                await Dispatcher.RunAsync(
+                    CoreDispatcherPriority.Normal,
+                    new DispatchedHandler(() =>
+                    {
+                        double height = GetRowVerPos(pd.LastPageCount);
+                        _owner.Scroll.ChangeView(null, height, null, true);
+                    }));
+            }
+
+            if (pd != null)
+                pd.State = PageDataState.Normal;
         }
 
         /// <summary>

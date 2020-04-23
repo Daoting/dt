@@ -130,6 +130,12 @@ namespace Dt.Base
             typeof(Lv),
             new PropertyMetadata(null, OnDataViewPropertyChanged));
 
+        public static readonly DependencyProperty AutoScrollBottomProperty = DependencyProperty.Register(
+            "AutoScrollBottom",
+            typeof(bool),
+            typeof(Lv),
+            new PropertyMetadata(false));
+
         public static readonly DependencyProperty AutoFocusProperty = DependencyProperty.Register(
             "AutoFocus",
             typeof(bool),
@@ -170,8 +176,7 @@ namespace Dt.Base
             Lv lv = (Lv)d;
 
             // 重新指定数据源时，清除分页数据源
-            var pd = lv.PageData;
-            if (pd != null && !pd.Loading)
+            if (lv.PageData != null && lv.PageData.State == PageDataState.Normal)
                 lv.ClearValue(PageDataProperty);
 
             if (lv._dataView != null)
@@ -302,7 +307,7 @@ namespace Dt.Base
             }
         }
 
-        static async void OnPageDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        static void OnPageDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             Lv lv = (Lv)d;
             if (lv.Scroll != null)
@@ -311,15 +316,8 @@ namespace Dt.Base
             var pd = (PageData)e.NewValue;
             if (pd != null)
             {
-                if (lv.ExistLocalValue(DataProperty))
-                {
-                    // 防止清空数据源时删除分页
-                    pd.Loading = true;
-                    lv.ClearValue(DataProperty);
-                    pd.Loading = false;
-                }
                 pd.SetOwner(lv);
-                await pd.GotoFirstPage();
+                pd.GotoFirstPage();
 
                 if (lv.Scroll != null)
                     lv.Scroll.ViewChanged += lv.OnScrollViewChanged;
@@ -367,12 +365,7 @@ namespace Dt.Base
         /// <summary>
         /// 切换数据源事件
         /// </summary>
-        public event EventHandler<object> DataChanged;
-
-        /// <summary>
-        /// 行加载完毕事件，行变化时始终触发(增删排序分组过滤)，如用于自动滚动到底部
-        /// </summary>
-        public event EventHandler LoadedRows;
+        public event EventHandler<INotifyList> DataChanged;
         #endregion
 
         #region 属性
@@ -518,6 +511,15 @@ namespace Dt.Base
         {
             get { return (SortDescription)GetValue(SortDescProperty); }
             set { SetValue(SortDescProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置数据变化时是否自动滚动到最底端，默认false
+        /// </summary>
+        public bool AutoScrollBottom
+        {
+            get { return (bool)GetValue(AutoScrollBottomProperty); }
+            set { SetValue(AutoScrollBottomProperty, value); }
         }
 
         /// <summary>
@@ -831,12 +833,12 @@ namespace Dt.Base
             _updatingView = true;
             try
             {
+                Scroll.ChangeView(0, 0, null, true);
                 if (p_view != null)
                     View = p_view;
                 if (p_viewEx != null)
                     ViewEx = p_viewEx;
 
-                Scroll.ChangeView(0, 0, null);
                 if (p_viewMode.HasValue && ViewMode != p_viewMode.Value)
                 {
                     _rows.Clear();
@@ -1098,6 +1100,10 @@ namespace Dt.Base
         // 1. 可视区大小变化时 LvPanel.SetMaxSize
         // 2. View ViewEx ItemHeight等属性变化时的重新加载 LvPanel.Reload
         // 3. 切换数据源时 LvPanel.OnRowsChanged
+        //
+        // 调用UpdateLayout的不同：
+        // UWP：UpdateLayout内部会依次 > MeasureOverride > ArrangeOverride > SizeChanged
+        // uno: UpdateLayout调用后才测量布局
         /************************************************************************************************************************************/
 
 #if UWP
@@ -1209,6 +1215,9 @@ namespace Dt.Base
             {
                 pnl = new TilePanel(this);
             }
+            // 切换面板时保留大小
+            if (_panel != null)
+                pnl.SetMaxSize(_panel.GetMaxSize());
             _panel = pnl;
 
             if (mode == ViewMode.Table)
@@ -1261,11 +1270,7 @@ namespace Dt.Base
                 _rows.Add(new LvItem(this, row, i++));
             }
 
-            if (_panel != null)
-            {
-                _panel.OnRowsChanged(existGroup);
-                OnLoadedRows();
-            }
+            _panel?.OnRowsChanged(existGroup);
         }
 
         /// <summary>
@@ -1294,15 +1299,11 @@ namespace Dt.Base
             if (GroupRows.Count > 0)
                 GroupRows[0].IsFirst = true;
 
-            if (_panel != null)
-            {
-                _panel.OnRowsChanged(true);
-                OnLoadedRows();
-            }
+            _panel?.OnRowsChanged(true);
         }
 
         /// <summary>
-        /// 批量插入数据行
+        /// 批量插入数据行，无排序过滤分组时直接插入！
         /// </summary>
         /// <param name="p_tbl"></param>
         /// <param name="p_start">开始插入位置</param>
@@ -1320,8 +1321,6 @@ namespace Dt.Base
                 for (int i = 0; i < p_count; i++)
                 {
                     _rows.Add(new LvItem(this, p_tbl[i + p_start], index++));
-                    if (MapRows != null)
-                        MapRows.Add(false);
                 }
             }
             else
@@ -1331,8 +1330,6 @@ namespace Dt.Base
                 for (int i = 0; i < p_count; i++)
                 {
                     _rows.Insert(index, new LvItem(this, p_tbl[index], index + 1));
-                    if (MapRows != null)
-                        MapRows.Insert(index, false);
                     index++;
                 }
 
@@ -1342,12 +1339,7 @@ namespace Dt.Base
                     _rows[i].Index = i + 1;
                 }
             }
-
-            if (_panel != null)
-            {
-                _panel.OnRowsChanged(MapRows != null);
-                OnLoadedRows();
-            }
+            _panel?.OnInsertRows(p_start, p_count);
         }
 
         /// <summary>
@@ -1366,11 +1358,7 @@ namespace Dt.Base
                 MapRows = null;
                 existGroup = true;
             }
-            if (_panel != null)
-            {
-                _panel.OnRowsChanged(existGroup);
-                OnLoadedRows();
-            }
+            _panel?.OnRowsChanged(existGroup);
         }
 
 #if !UWP
@@ -1392,40 +1380,15 @@ namespace Dt.Base
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        async void OnScrollViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        void OnScrollViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
         {
-            if (e.IsIntermediate || !PageData.HasMorePages)
-                return;
-
             var page = PageData;
-            if (page.InsertTop && Scroll.VerticalOffset == 0)
+            if (page.HasMorePages
+                && page.State == PageDataState.Normal
+                && ((page.InsertTop && Scroll.VerticalOffset == 0)
+                    || (!page.InsertTop && Scroll.VerticalOffset > Scroll.ScrollableHeight * 0.9)))
             {
-                // 插入顶部
-                Scroll.ViewChanged -= OnScrollViewChanged;
-                int cnt = 0;
-                if (Data != null)
-                    cnt = Data.Count;
-                await page.GotoNextPage();
-                cnt = Data.Count - cnt - 1;
-
-                if (cnt > 0)
-                {
-                    // 滚动到当前行的位置
-                    await Dispatcher.RunAsync(
-                        CoreDispatcherPriority.Normal,
-                        new DispatchedHandler(() =>
-                        {
-                            double height = _panel.GetRowVerPos(cnt);
-                            Scroll.ChangeView(null, height, null, true);
-                        })
-                        );
-                }
-                Scroll.ViewChanged += OnScrollViewChanged;
-            }
-            else if (!page.InsertTop && Scroll.VerticalOffset == Scroll.ScrollableHeight)
-            {
-                // 插入底部
-                await page.GotoNextPage();
+                page.GotoNextPage();
             }
         }
 
@@ -1580,17 +1543,6 @@ namespace Dt.Base
         void OnDataChanged()
         {
             DataChanged?.Invoke(this, Data);
-        }
-
-        /// <summary>
-        /// 触发行加载完毕事件
-        /// </summary>
-        void OnLoadedRows()
-        {
-            // 共四种行加载情况：LoadRows LoadGroupRows BatchInsertRows ClearAllRows
-            // 数据变化 -> 行加载 -> UI完成布局 -> 触发完毕事件
-            _panel.UpdateLayout();
-            LoadedRows?.Invoke(this, EventArgs.Empty);
         }
         #endregion
     }

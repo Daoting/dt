@@ -12,6 +12,7 @@ using Dt.Core.Rpc;
 using System;
 using System.Collections;
 using System.Threading.Tasks;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 #endregion
 
@@ -69,15 +70,6 @@ namespace Dt.Base
             new PropertyMetadata(30));
 
         /// <summary>
-        /// 是否还有未加载的页面
-        /// </summary>
-        public static readonly DependencyProperty HasMorePagesProperty = DependencyProperty.Register(
-            "HasMorePages",
-            typeof(bool),
-            typeof(PageData),
-            new PropertyMetadata(false));
-
-        /// <summary>
         /// 是否将新页面数据插入到头部
         /// </summary>
         public static readonly DependencyProperty InsertTopProperty = DependencyProperty.Register(
@@ -90,7 +82,6 @@ namespace Dt.Base
         #region 成员变量
         Lv _owner;
         int _pageNo;
-        bool _loading;
         #endregion
 
         #region 属性
@@ -122,7 +113,8 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置进入下一页面的回调方法
+        /// 获取设置进入下一页面的回调方法，通过方法内调用LoadPageData加载下页数据。
+        /// 未采用返回下页数据的方式，因获取数据可能异步且需要转INotifyList写法麻烦！
         /// </summary>
         public Action<PageData> NextPage
         {
@@ -142,11 +134,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置是否还有未加载的页面
         /// </summary>
-        public bool HasMorePages
-        {
-            get { return (bool)GetValue(HasMorePagesProperty); }
-            set { SetValue(HasMorePagesProperty, value); }
-        }
+        public bool HasMorePages { get; private set; }
 
         /// <summary>
         /// 获取设置是否将新页面数据插入到头部
@@ -166,13 +154,11 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 是否正在加载数据
+        /// 当前状态
         /// </summary>
-        public bool Loading
-        {
-            get { return _loading; }
-            internal set { _loading = value; }
-        }
+        internal PageDataState State { get; set; }
+
+        internal int LastPageCount { get; set; }
         #endregion
 
         /// <summary>
@@ -181,33 +167,31 @@ namespace Dt.Base
         /// <param name="p_pageData">当前页面数据</param>
         public void LoadPageData(INotifyList p_pageData)
         {
-            if (p_pageData == null || p_pageData.Count == 0)
-            {
-                ClearValue(HasMorePagesProperty);
-                return;
-            }
-
             // 不满一页时认为无下一页，正好满页且无下页是特殊情况！未处理，使用中应该不在意！
-            if (p_pageData.Count < PageSize)
-                ClearValue(HasMorePagesProperty);
-            else
-                HasMorePages = true;
+            HasMorePages = (p_pageData != null && p_pageData.Count >= PageSize);
 
+            // uno中数据变化调用UpdateLayout并未测量布局，因此状态在LvPanel.OnSizeChanged中重置！
             if (_pageNo == 0)
             {
-                // 首页
-                _loading = true;
+                // 首页，可能为空行
                 _owner.Data = p_pageData;
-                _loading = false;
             }
-            else if (InsertTop)
+            else if (p_pageData != null && p_pageData.Count > 0)
             {
-                _owner.Data.InsertRange(0, p_pageData);
+                if (InsertTop)
+                {
+                    LastPageCount = p_pageData.Count;
+                    _owner.Data.InsertRange(0, p_pageData);
+                }
+                else
+                {
+                    _owner.Data.AddRange(p_pageData);
+                }
             }
-            else
-            {
-                _owner.Data.AddRange(p_pageData);
-            }
+
+            // 无数据时未触发LvPanel.SizeChanged，直接重置状态
+            if (p_pageData == null || p_pageData.Count == 0)
+                State = PageDataState.Normal;
         }
 
         internal void SetOwner(Lv p_owner)
@@ -239,6 +223,7 @@ namespace Dt.Base
         /// <param name="p_pageNo"></param>
         async Task GotoPage(int p_pageNo)
         {
+            State = (p_pageNo == 0) ? PageDataState.LoadingFirstPage : PageDataState.Loading;
             _pageNo = p_pageNo;
             int start = _pageNo * PageSize + 1;
             if (NextPage != null)
@@ -264,5 +249,12 @@ namespace Dt.Base
             else
                 throw new Exception("未指定获取页面数据源的方法！");
         }
+    }
+
+    internal enum PageDataState
+    {
+        Normal,
+        LoadingFirstPage,
+        Loading
     }
 }

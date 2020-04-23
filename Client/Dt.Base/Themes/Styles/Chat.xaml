@@ -25,7 +25,12 @@
                             <RowDefinition Height="*" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
-                        <a:Lv x:Name="Lv" SelectionMode="None" ShowItemBorder="False" EnteredBrush="{x:Null}" PressedBrush="{x:Null}" />
+                        <a:Lv x:Name="Lv"
+                              SelectionMode="None"
+                              ShowItemBorder="False"
+                              AutoScrollBottom="True"
+                              EnteredBrush="{x:Null}"
+                              PressedBrush="{x:Null}" />
                         <a:ChatInputBar x:Name="InputBar" Visibility="Collapsed" Grid.Row="1" />
                     </Grid>
                 </ControlTemplate>
@@ -131,7 +136,14 @@
             <!--Data不能写在Style中-->
             <Path Data="M0,3 L4,0 L4,6" Style="{StaticResource OtherPath}" />
             <StackPanel HorizontalAlignment="Left" Margin="0,0,100,0" Grid.Column="2">
-                <a:FileList Data="{Binding [Content]}" Style="{StaticResource MsgFileList}" BorderBrush="{StaticResource 绿色背景}" />
+                <a:FileList Data="{Binding [Content]}" Style="{StaticResource MsgFileList}" BorderBrush="{StaticResource 绿色背景}">
+                    <a:Ex.Menu>
+                        <a:Menu>
+                            <a:Mi ID="保存" Icon="保存" Cmd="{Binding CmdSaveAs}" />
+                            <a:Mi ID="分享" Icon="分享" Cmd="{Binding CmdShare}" />
+                        </a:Menu>
+                    </a:Ex.Menu>
+                </a:FileList>
                 <TextBlock Text="{Binding [stime], Converter={StaticResource CvAutoDate}}" FontSize="12" Foreground="{StaticResource 深灰边框}" />
             </StackPanel>
         </Grid>

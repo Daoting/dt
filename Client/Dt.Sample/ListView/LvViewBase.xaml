@@ -32,8 +32,7 @@
                         Height="50"
                         Width="50"
                         VerticalAlignment="Center">
-                    <TextBlock Text="&#xE03C;"
-                               FontFamily="{StaticResource IconFont}"
+                    <TextBlock Text="{Binding Index}"
                                FontSize="30"
                                Foreground="White"
                                VerticalAlignment="Center"
@@ -123,6 +122,7 @@
                     <a:CBar Title="属性" />
                     <a:CList Title="选择模式" ID="SelectionMode" />
                     <a:CBool Title="显示分组导航" ID="ShowGroupHeader" />
+                    <a:CBool Title="自动滚动到底端" ID="AutoScrollBottom" />
                     <a:CBool Title="显示行分割线" ID="ShowItemBorder" />
                     <a:CNum Title="行/项目高" ID="ItemHeight" />
                     <a:CFree Title="鼠标进入背景色">
@@ -142,8 +142,10 @@
                     <Button Content="自动行高" Click="OnAutoHeight" />
                     
                     <a:CBar Title="附加事件" />
-                    <CheckBox Content="行单击事件" Click="OnRowClick" />
-                    <CheckBox Content="选择变化事件" Click="OnSelectionChangedClick" />
+                    <StackPanel Orientation="Horizontal">
+                        <CheckBox Content="行单击事件" Click="OnRowClick" />
+                        <CheckBox Content="选择变化事件" Click="OnSelectionChangedClick" />
+                    </StackPanel>
                     
                     <a:CBar Title="行操作" />
                     <StackPanel Orientation="Horizontal">
