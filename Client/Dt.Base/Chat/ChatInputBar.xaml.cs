@@ -22,66 +22,26 @@ using Windows.UI.Xaml.Input;
 namespace Dt.Base
 {
     /// <summary>
-    /// 消息发送栏
+    /// 聊天目录
     /// </summary>
-    public partial class ChatInputBar : Control
+    public sealed partial class ChatInputBar : UserControl
     {
         #region 成员变量
-        TextBox _tbMsg;
         Lv _lvExt;
         Lv _lvFaces;
-        Grid _rootGrid;
         #endregion
 
         #region 构造方法
         public ChatInputBar()
         {
-            DefaultStyleKey = typeof(ChatInputBar);
+            InitializeComponent();
+
         }
         #endregion
 
         #region 属性
 
         internal ChatDetail Owner { get; set; }
-        #endregion
-
-        #region 重写方法
-        protected override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-
-            _rootGrid = (Grid)GetTemplateChild("RootGrid");
-            var btn = (Button)GetTemplateChild("BtnVoice");
-            if (btn != null)
-            {
-                btn.Click -= OnAudioCapture;
-                btn.Click += OnAudioCapture;
-            }
-
-            btn = (Button)GetTemplateChild("BtnFace");
-            if (btn != null)
-            {
-                btn.Click -= OnShowFacePanel;
-                btn.Click += OnShowFacePanel;
-            }
-
-            btn = (Button)GetTemplateChild("BtnAdd");
-            if (btn != null)
-            {
-                btn.Click -= OnShowExtPanel;
-                btn.Click += OnShowExtPanel;
-            }
-
-            // android屏幕键盘只支持KeyUp为Enter的情况，并且AcceptsReturn不能为true！
-            if (_tbMsg != null)
-            {
-                _tbMsg.KeyUp -= OnMsgKeyUp;
-                _tbMsg.GotFocus -= OnMsgGotFocus;
-            }
-            _tbMsg = (TextBox)GetTemplateChild("MsgBox");
-            _tbMsg.KeyUp += OnMsgKeyUp;
-            _tbMsg.GotFocus += OnMsgGotFocus;
-        }
         #endregion
 
         #region 消息框
@@ -120,7 +80,7 @@ namespace Dt.Base
                 ShowItemBorder = false,
                 SelectionMode = SelectionMode.None,
                 MinItemWidth = 90,
-                View = Application.Current.Resources["InputBarExtTemplate"],
+                View = GetResource("InputBarExtTemplate"),
             };
             if (!AtSys.IsPhoneUI)
             {
@@ -213,6 +173,15 @@ namespace Dt.Base
                 _rootGrid.Children.RemoveAt(1);
                 Owner.DetachPressedEvent();
             }
+        }
+
+        object GetResource(string p_key)
+        {
+#if UWP
+            return Resources[p_key];
+#else
+            return StaticResources.FindResource(p_key);
+#endif
         }
         #endregion
     }

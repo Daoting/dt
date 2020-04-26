@@ -276,24 +276,23 @@ namespace Dt.Base
         /// <summary>
         /// 撤回发出的消息
         /// </summary>
-        /// <param name="p_id">待撤消息主键</param>
+        /// <param name="p_letter">待撤消息</param>
         /// <returns></returns>
-        public static async Task<bool> SendUndoLetter(int p_id)
+        public static async Task<bool> SendUndoLetter(Letter p_letter)
         {
-            Letter l = AtLocal.GetFirst<Letter>($"select * from Letter where ID={p_id}");
-            if (l == null)
+            if (p_letter == null)
                 return false;
 
             LetterInfo li = new LetterInfo
             {
-                ID = l.MsgID,
+                ID = p_letter.MsgID,
                 SenderID = AtUser.ID,
                 SenderName = AtUser.Name,
                 LetterType = LetterType.Undo,
                 SendTime = AtSys.Now
             };
-            await AtMsg.SendLetter(l.OtherID, li);
-            AtLocal.Execute($"delete from Letter where ID={p_id}");
+            await AtMsg.SendLetter(p_letter.OtherID, li);
+            AtLocal.Execute($"delete from Letter where ID={p_letter.ID}");
             return true;
         }
         #endregion

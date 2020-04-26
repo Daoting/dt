@@ -77,8 +77,7 @@ namespace Dt.Base
             if (!AtSys.IsPhoneUI)
             {
                 // 显示上边框
-                var panel = (FormPanel)GetTemplateChild("FormPanel");
-                panel.Margin = new Thickness(-1, 0, 0, 0);
+                _panel.Margin = new Thickness(-1, 0, 0, 0);
             }
         }
 

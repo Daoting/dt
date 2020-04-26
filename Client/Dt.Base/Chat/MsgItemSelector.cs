@@ -19,23 +19,22 @@ namespace Dt.Base
     /// </summary>
     internal class MsgItemSelector : DataTemplateSelector
     {
-        static readonly DataTemplate _myMsg;
-        static readonly DataTemplate _myFile;
-        static readonly DataTemplate _myLink;
+        readonly DataTemplate _myMsg;
+        readonly DataTemplate _myFile;
+        readonly DataTemplate _myLink;
 
-        static readonly DataTemplate _otherMsg;
-        static readonly DataTemplate _otherFile;
-        static readonly DataTemplate _otherLink;
+        readonly DataTemplate _otherMsg;
+        readonly DataTemplate _otherFile;
+        readonly DataTemplate _otherLink;
 
-        static MsgItemSelector()
+        public MsgItemSelector(ChatDetail p_owner)
         {
-            var dict = Application.Current.Resources;
-            _myMsg = (DataTemplate)dict["MyMsgTemplate"];
-            _myFile = (DataTemplate)dict["MyFileTemplate"];
-            _myLink = (DataTemplate)dict["MyLinkTemplate"];
-            _otherMsg = (DataTemplate)dict["OtherMsgTemplate"];
-            _otherFile = (DataTemplate)dict["OtherFileTemplate"];
-            _otherLink = (DataTemplate)dict["OtherLinkTemplate"];
+            _myMsg = (DataTemplate)p_owner.GetResource("MyMsgTemplate");
+            _myFile = (DataTemplate)p_owner.GetResource("MyFileTemplate");
+            _myLink = (DataTemplate)p_owner.GetResource("MyLinkTemplate");
+            _otherMsg = (DataTemplate)p_owner.GetResource("OtherMsgTemplate");
+            _otherFile = (DataTemplate)p_owner.GetResource("OtherFileTemplate");
+            _otherLink = (DataTemplate)p_owner.GetResource("OtherLinkTemplate");
         }
 
         protected override DataTemplate SelectTemplateCore(object item)

@@ -99,11 +99,7 @@ namespace Dt.Sample
 #if UWP
             return Resources[p_key];
 #else
-            if (p_key == "ListView")
-                return StaticResources.ListView;
-            if (p_key == "TileView")
-                return StaticResources.TileView;
-            return StaticResources.TableView;
+            return StaticResources.FindResource(p_key);
 #endif
         }
     }

@@ -167,11 +167,7 @@ namespace Dt.App.Model
 #if UWP
             return Resources[p_key];
 #else
-            if (p_key == "TableView")
-                return StaticResources.TableView;
-            if (p_key == "TileView")
-                return StaticResources.TileView;
-            return StaticResources.TableView;
+            return StaticResources.FindResource(p_key);
 #endif
         }
 

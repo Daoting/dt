@@ -543,15 +543,14 @@ namespace Dt.Base.ListView
                 return;
             }
 
-            double colHeaderHeight = _colHeader.DesiredSize.Height;
-            double totalHeight = 0;
+            double totalHeight = _colHeader.DesiredSize.Height;
             int iDataRow = _dataRows.Count;
             for (int i = 0; i < _dataRows.Count; i++)
             {
                 var row = _dataRows[i];
 
                 // top为行的上侧和滚动栏上侧的距离，bottom为行的下侧距离
-                double top = totalHeight + _deltaY + colHeaderHeight;
+                double top = totalHeight + _deltaY;
                 double bottom = top + row.DesiredSize.Height;
 
                 // 剩下行都不可见，结束布局
@@ -616,7 +615,7 @@ namespace Dt.Base.ListView
             // 列头高
             double colHeaderHeight = _colHeader.DesiredSize.Height;
             int iGrpRow = 0, iDataRow = 0;
-            double totalHeight = 0;
+            double totalHeight = colHeaderHeight;
             FrameworkElement row;
             GroupRow lastGroup = null;
             bool firstVisible = true;
@@ -627,7 +626,7 @@ namespace Dt.Base.ListView
                 row = _owner.MapRows[i] ? (FrameworkElement)_owner.GroupRows[iGrpRow++] : _dataRows[iDataRow++];
 
                 // top为行的上侧和滚动栏上侧的距离，bottom为行的下侧距离
-                double top = totalHeight + _deltaY + colHeaderHeight;
+                double top = totalHeight + _deltaY;
                 double bottom = top + row.DesiredSize.Height;
 
                 // 剩下行都不可见，结束布局

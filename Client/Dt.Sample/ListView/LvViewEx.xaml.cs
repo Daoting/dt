@@ -51,9 +51,7 @@ namespace Dt.Sample
 #if UWP
             return Resources[p_key];
 #else
-            if (p_key == "ListView")
-                return StaticResources.ListView;
-            return StaticResources.GridView;
+            return StaticResources.FindResource(p_key);
 #endif
         }
 

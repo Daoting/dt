@@ -61,19 +61,13 @@
                                      Padding="10" />
                             <Button x:Name="CloseButton" Content="取消" Grid.Column="1" />
                         </Grid>
-                        
-                        <ScrollViewer x:Name="ScrollViewer"
-                                      HorizontalScrollMode="Disabled"
-                                      HorizontalScrollBarVisibility="Disabled"
-                                      VerticalScrollMode="Auto"
-                                      VerticalScrollBarVisibility="Auto"
-                                      Grid.Row="1">
-                            <!--为uno节省级数，边框在内部画-->
-                            <fv:FormPanel x:Name="FormPanel"
-                                          Background="{StaticResource 浅灰背景}"
-                                          HorizontalAlignment="Left"
-                                          VerticalAlignment="Top" />
-                        </ScrollViewer>
+                        <!--Fv根-->
+                        <Border x:Name="Border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}" 
+                                Grid.Row="1"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

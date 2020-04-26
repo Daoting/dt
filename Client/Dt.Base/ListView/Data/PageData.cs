@@ -253,8 +253,19 @@ namespace Dt.Base
 
     internal enum PageDataState
     {
+        /// <summary>
+        /// 未加载数据
+        /// </summary>
         Normal,
+
+        /// <summary>
+        /// 正在加载首页数据
+        /// </summary>
         LoadingFirstPage,
+
+        /// <summary>
+        /// 正在加载普通页数据
+        /// </summary>
         Loading
     }
 }

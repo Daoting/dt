@@ -86,13 +86,26 @@ namespace Dt.Base.ListView
         #region 集合变化
         void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs args)
         {
-            // 新增且无排序过滤分组时直接插入，高效
-            if (args.Action == NotifyCollectionChangedAction.Add
+            // 新增或删除 且 无排序过滤分组时直接操作，高效
+            if ((args.Action == NotifyCollectionChangedAction.Add || args.Action == NotifyCollectionChangedAction.Remove)
                 && _owner.SortDesc == null
                 && string.IsNullOrEmpty(_owner.GroupName)
                 && _owner.Filter == null)
             {
-                _owner.BatchInsertRows(_data, args.NewStartingIndex, args.NewItems.Count);
+                if (args.Action == NotifyCollectionChangedAction.Add)
+                {
+                    _owner.BatchInsertRows(_data, args.NewStartingIndex, args.NewItems.Count);
+                }
+                else if (args.OldStartingIndex < 0)
+                {
+                    // 批量删除时，参数为从小到大排序的索引列表
+                    _owner.BatchRemoveRows(args.OldItems);
+                }
+                else
+                {
+                    // 删除一个时
+                    _owner.BatchRemoveRows(new List<int> { args.OldStartingIndex });
+                }
             }
             else
             {
@@ -175,7 +188,7 @@ namespace Dt.Base.ListView
                     object obj = pi.GetValue(row);
                     name = (obj == null) ? "" : obj.ToString();
                 }
-                
+
                 if (groupRows.Contains(name))
                 {
                     group = groupRows[name];

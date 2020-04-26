@@ -16,8 +16,7 @@
 * 优化Win结构
 * Fv外部有ScrollViewer的处理 
 * Tv外部有ScrollViewer的处理
- 
-* Chat 撤回消息功能
+ * Chat 撤回消息功能
 
 
 ### 变更 
@@ -25,6 +24,7 @@
 * AtUI合并到AtApp
 * 调整TabControl继承自Control 
 * uno升级到2.2.0，Holding事件可用
+
 
 ### Bug修改 
 * 设置窗口自启动时参数序列化问题
@@ -36,7 +36,6 @@
 * Fsm客户端上传过程中关闭时未处理 
 * Fv 手机加载慢
 * Lv 初次加载无法滚动到底部，增加AutoScrollBottom 属性
-
 * Lv在分页数据源顶部插入虚拟模式时，uwp出现无刷新现象，暂无使用场景
 
 

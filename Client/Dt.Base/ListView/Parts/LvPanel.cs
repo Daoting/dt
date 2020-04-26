@@ -9,6 +9,7 @@
 #region 引用命名
 using Dt.Core;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Windows.Foundation;
 using Windows.System;
@@ -201,6 +202,31 @@ namespace Dt.Base.ListView
                     var row = _createLvRow(_owner.Rows[index]);
                     Children.Insert(index, row);
                     _dataRows.Insert(index, row);
+                }
+                // 确保数据变化后可立即访问行UI
+                UpdateLayout();
+            }
+        }
+
+        /// <summary>
+        /// 批量删除数据行，无排序过滤分组！
+        /// </summary>
+        /// <param name="p_items">所有删除项的索引列表，索引已按从小到大排序</param>
+        internal void OnRemoveRows(IList p_items)
+        {
+            if (_owner.IsVir)
+            {
+                // 只需重新测量布局
+                InvalidateMeasure();
+            }
+            else
+            {
+                // 从后向前删除
+                for (int i = p_items.Count - 1; i >= 0; i--)
+                {
+                    int index = (int)p_items[i];
+                    Children.RemoveAt(index);
+                    _dataRows.RemoveAt(index);
                 }
                 // 确保数据变化后可立即访问行UI
                 UpdateLayout();
@@ -688,9 +714,9 @@ namespace Dt.Base.ListView
         async void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             var pd = _owner.PageData;
-            if (pd == null || pd.State == PageDataState.LoadingFirstPage)
+            if (pd == null || pd.State != PageDataState.Loading)
             {
-                // 未使用分页 或 首页时，自动滚动到底部才有效
+                // 未使用分页 或 未加载普通页数据时，自动滚动到底部才有效
                 if (_owner.AutoScrollBottom)
                 {
                     await Dispatcher.RunAsync(

@@ -11,6 +11,10 @@ using Dt.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Devices.Input;
+using Windows.Foundation;
+using Windows.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -21,7 +25,7 @@ namespace Dt.Base
     /// <summary>
     /// 聊天内容
     /// </summary>
-    public partial class ChatDetail : Control
+    public sealed partial class ChatDetail : UserControl
     {
         #region 静态成员
         public static readonly DependencyProperty OtherIDProperty = DependencyProperty.Register(
@@ -37,15 +41,17 @@ namespace Dt.Base
         #endregion
 
         #region 成员变量
-        Lv _lv;
-        ChatInputBar _inputBar;
         ChatMember _other;
+        Menu _msgMenu;
         #endregion
 
         #region 构造方法
         public ChatDetail()
         {
-            DefaultStyleKey = typeof(ChatDetail);
+            InitializeComponent();
+
+            _lv.View = new MsgItemSelector(this);
+            _inputBar.Owner = this;
 
             Loaded += OnLoaded;
             Unloaded += OnUnloaded;
@@ -63,6 +69,7 @@ namespace Dt.Base
         }
         #endregion
 
+        #region 外部方法
         /// <summary>
         /// 显示聊天对话框
         /// </summary>
@@ -95,18 +102,14 @@ namespace Dt.Base
             dlg.Show();
         }
 
-        #region 重写方法
-        protected override void OnApplyTemplate()
+        internal object GetResource(string p_key)
         {
-            base.OnApplyTemplate();
-
-            _lv = (Lv)GetTemplateChild("Lv");
-            _lv.View = new MsgItemSelector();
-
-            _inputBar = (ChatInputBar)GetTemplateChild("InputBar");
-            _inputBar.Owner = this;
+#if UWP
+            return Resources[p_key];
+#else
+            return StaticResources.FindResource(p_key);
+#endif
         }
-
         #endregion
 
         #region 加载消息
@@ -311,5 +314,97 @@ namespace Dt.Base
             _inputBar.ClearBottom();
         }
         #endregion
+
+        #region 菜单
+        void OnOtherMsgTapped(object sender, TappedRoutedEventArgs e)
+        {
+            ShowOtherMsgMenu(((Dot)sender).DataContext, e.GetPosition(null));
+        }
+
+        void OnOtherMsgRightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            ShowOtherMsgMenu(((Dot)sender).DataContext, e.GetPosition(null));
+        }
+
+        void OnMyMsgTapped(object sender, TappedRoutedEventArgs e)
+        {
+            ShowMyMsgMenu(((Dot)sender).DataContext, e.GetPosition(null));
+        }
+
+        void OnMyMsgRightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            ShowMyMsgMenu(((Dot)sender).DataContext, e.GetPosition(null));
+        }
+
+        void ShowOtherMsgMenu(object p_lvItem, Point p_pos)
+        {
+            if (_msgMenu == null)
+                CreateMsgMenu();
+
+            _msgMenu.Hide("撤回");
+            _msgMenu.DataContext = p_lvItem;
+            if (AtSys.IsPhoneUI)
+                _msgMenu.OpenContextMenu();
+            else
+                _msgMenu.OpenContextMenu(p_pos);
+        }
+
+        void ShowMyMsgMenu(object p_lvItem, Point p_pos)
+        {
+            if (_msgMenu == null)
+                CreateMsgMenu();
+
+            _msgMenu.Show("撤回");
+            _msgMenu.DataContext = p_lvItem;
+            if (AtSys.IsPhoneUI)
+                _msgMenu.OpenContextMenu();
+            else
+                _msgMenu.OpenContextMenu(p_pos);
+        }
+
+        void CreateMsgMenu()
+        {
+            _msgMenu = new Menu { IsContextMenu = true };
+            Mi mi = new Mi { ID = "复制", Icon = Icons.复制 };
+            mi.Click += OnCopyMsg;
+            _msgMenu.Items.Add(mi);
+
+            mi = new Mi { ID = "转发", Icon = Icons.分享 };
+            mi.Click += OnRelayMsg;
+            _msgMenu.Items.Add(mi);
+
+            mi = new Mi { ID = "撤回", Icon = Icons.撤销 };
+            mi.Click += OnUndoMsg;
+            _msgMenu.Items.Add(mi);
+        }
+
+        void OnCopyMsg(object sender, Mi e)
+        {
+            var l = (Letter)((LvItem)e.DataContext).Data;
+            DataPackage data = new DataPackage();
+            data.SetText(l.Content);
+            Clipboard.SetContent(data);
+        }
+
+        async void OnUndoMsg(object sender, Mi e)
+        {
+            var l = (Letter)((LvItem)e.DataContext).Data;
+            if ((AtSys.Now - l.STime).TotalMinutes > 2)
+            {
+                AtKit.Warn("超过2分钟无法撤回");
+            }
+            else if (await LetterManager.SendUndoLetter(l))
+            {
+                _lv.Data.Remove(l);
+            }
+        }
+
+        void OnRelayMsg(object sender, Mi e)
+        {
+
+        }
+        #endregion
+
+        
     }
 }

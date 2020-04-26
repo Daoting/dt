@@ -1343,6 +1343,28 @@ namespace Dt.Base
         }
 
         /// <summary>
+        /// 批量删除数据行，无排序过滤分组！
+        /// </summary>
+        /// <param name="p_items">所有删除项的索引列表，索引已按从小到大排序</param>
+        internal void BatchRemoveRows(IList p_items)
+        {
+            if (p_items == null || p_items.Count == 0)
+                return;
+
+            // 从后向前删除
+            for (int i = p_items.Count - 1; i >= 0; i--)
+            {
+                _rows.RemoveAt((int)p_items[i]);
+            }
+            // 更新后续行号
+            for (int i = (int)p_items[0]; i < _rows.Count; i++)
+            {
+                _rows[i].Index = i + 1;
+            }
+            _panel?.OnRemoveRows(p_items);
+        }
+
+        /// <summary>
         /// 清空所有行
         /// </summary>
         internal void ClearAllRows()

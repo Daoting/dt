@@ -27,7 +27,6 @@ namespace Dt.Sample
             _lv.View = GetResource("TableView");
             _lv.ViewMode = ViewMode.Table;
             LoadData();
-            
         }
 
         void LoadData()
@@ -60,9 +59,7 @@ namespace Dt.Sample
 #if UWP
             return Resources[p_key];
 #else
-            if (p_key == "ListView")
-                return StaticResources.ListView;
-            return StaticResources.TableView;
+            return StaticResources.FindResource(p_key);
 #endif
         }
     }

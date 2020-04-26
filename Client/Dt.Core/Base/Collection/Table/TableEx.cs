@@ -96,26 +96,28 @@ namespace Dt.Core
             if (p_index < 0 || p_index > Count)
                 throw new Exception("数据待插入的索引超出范围！");
 
-            using (Defer())
+            // 支持外部嵌套Defer()
+            int old = _updating;
+            _updating = 1;
+            for (int i = 0; i < p_items.Count; i++)
             {
-                _collectionChangedArgs = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, p_items, p_index);
-                for (int i = 0; i < p_items.Count; i++)
+                if (p_items[i] is Row row)
                 {
-                    if (p_items[i] is Row row)
-                    {
-                        row.Table = this;
-                        base.Insert(i + p_index, row);
-                    }
-                    else
-                    {
-                        throw new Exception("插入数据类型应为Row");
-                    }
+                    row.Table = this;
+                    base.Insert(i + p_index, row);
+                }
+                else
+                {
+                    throw new Exception("插入数据类型应为Row");
                 }
             }
+            _updating = 0;
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Add, p_items, p_index));
+            _updating = old;
         }
 
         /// <summary>
-        /// 批量删除给定的行，统一触发 NotifyCollectionChangedAction.Remove
+        /// 批量删除给定的行，统一触发 NotifyCollectionChangedAction.Reset
         /// </summary>
         /// <param name="p_items">数据行</param>
         /// <returns>实际删除的行数</returns>
@@ -127,21 +129,31 @@ namespace Dt.Core
             // 支持外部嵌套Defer()
             int old = _updating;
             _updating = 1;
-            int cnt = 0;
+            List<int> ls = new List<int>();
             foreach (var row in p_items.OfType<Row>())
             {
                 row.Table = null;
-                if (base.Remove(row))
-                    cnt++;
+                int index = base.IndexOf(row);
+                if (index > -1)
+                    ls.Add(index);
+            }
+
+            if (ls.Count > 0)
+            {
+                // 删除行按索引排序
+                ls.Sort();
+                // 从后向前删除
+                for (int i = ls.Count - 1; i >= 0; i--)
+                {
+                    base.RemoveAt(ls[i]);
+                }
+                    
+                CheckChanges();
+                _updating = 0;
+                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, ls));
             }
             _updating = old;
-
-            if (cnt > 0)
-            {
-                CheckChanges();
-                OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-            }
-            return cnt;
+            return ls.Count;
         }
 
         /// <summary>
@@ -157,14 +169,20 @@ namespace Dt.Core
                 || p_index + p_count >= Count)
                 throw new Exception("删除范围的索引超出范围！");
 
-            using (Defer())
+            // 支持外部嵌套Defer()
+            int old = _updating;
+            _updating = 1;
+            List<int> ls = new List<int>();
+            // 从后向前删除
+            for (int i = p_count - 1; i >= 0; i--)
             {
-                for (int i = 0; i < p_count; i++)
-                {
-                    base.RemoveAt(p_index);
-                }
-                CheckChanges();
+                ls.Insert(0, p_index + i);
+                base.RemoveAt(p_index + i);
             }
+            CheckChanges();
+            _updating = 0;
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Remove, ls));
+            _updating = old;
         }
 
         /// <summary>

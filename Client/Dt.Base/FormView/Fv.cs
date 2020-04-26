@@ -100,7 +100,7 @@ namespace Dt.Base
 
         #region 成员变量
         readonly FvItems _items;
-        readonly FormPanel _panel;
+        protected readonly FormPanel _panel;
         ScrollViewer _scroll;
         bool _isLoaded;
         FvUndoCmd _cmdUndo;

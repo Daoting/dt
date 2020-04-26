@@ -90,6 +90,7 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
+                            <!--用在win模式的Tabs、phone模式的Tab、Dlg，为Lv Fv等内容提供区域大小-->
                             <a:SizedPresenter x:Name="TabContent"
                                               Content="{TemplateBinding SelectedContent}"
                                               ContentTransitions="{TemplateBinding ContentTransitions}"
@@ -212,6 +213,7 @@
                         <!--搜索栏-->
                         <ContentPresenter Content="{TemplateBinding PhoneBar}" Grid.Row="1" />
                         <!--内容-->
+                        <!--用在win模式的Tabs、phone模式的Tab、Dlg，为Lv Fv等内容提供区域大小-->
                         <a:SizedPresenter Content="{TemplateBinding Content}" Grid.Row="2" />
                     </Grid>
                 </ControlTemplate>
