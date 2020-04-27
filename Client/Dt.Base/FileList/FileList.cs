@@ -7,7 +7,6 @@
 #endregion
 
 #region 引用命名
-using Dt.Base.FileLists;
 using Dt.Core;
 using System;
 using System.Collections.Generic;
@@ -74,18 +73,20 @@ namespace Dt.Base
         static void OnDataPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             FileList ft = (FileList)d;
-            if (!ft._lockData)
+            if (!ft._lockData && ft.IsLoaded)
                 ft.ReadData((string)e.NewValue);
         }
 
         static void OnRefreshPanel(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ((FileList)d)._pnl.InvalidateMeasure();
+            FileList ft = (FileList)d;
+            if (ft.IsLoaded)
+                ft._pnl.InvalidateMeasure();
         }
         #endregion
 
         #region 成员变量
-        readonly FileListPanel _pnl;
+        FileListPanel _pnl;
         bool _lockData;
         CancellationTokenSource _cts;
 
@@ -105,7 +106,7 @@ namespace Dt.Base
         public FileList()
         {
             DefaultStyleKey = typeof(FileList);
-            _pnl = new FileListPanel(this);
+            Loaded += OnLoaded;
         }
         #endregion
 
@@ -188,14 +189,6 @@ namespace Dt.Base
         {
             get { return (Thickness)GetValue(VideoPaddingProperty); }
             set { SetValue(VideoPaddingProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取面板，内部绑定用
-        /// </summary>
-        public FileListPanel Panel
-        {
-            get { return _pnl; }
         }
 
         /// <summary>
@@ -380,8 +373,7 @@ namespace Dt.Base
 
             foreach (var file in p_files)
             {
-                FileItem vf = new FileItem();
-                vf.Owner = this;
+                FileItem vf = new FileItem(this);
                 file.UploadUI = vf;
                 await file.UploadUI.InitUpload(file);
                 _pnl.Children.Add(vf);
@@ -542,13 +534,32 @@ namespace Dt.Base
         }
         #endregion
 
+        #region 加载过程
+        protected override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            _pnl = (FileListPanel)GetTemplateChild("Panel");
+            _pnl.Owner = this;
+        }
+
+        void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= OnLoaded;
+            // 初次加载
+            if (!string.IsNullOrEmpty(Data))
+                ReadData(Data);
+        }
+        #endregion
+
         #region IMenuHost
         /// <summary>
         /// 切换上下文菜单或修改触发事件种类时通知宿主刷新
         /// </summary>
         void IMenuHost.UpdateContextMenu()
         {
-            if (_pnl.Children.Count > 0 && ((FileItem)_pnl.Children[0]).IsLoaded)
+            if (_pnl != null
+                && _pnl.Children.Count > 0
+                && ((FileItem)_pnl.Children[0]).IsLoaded)
             {
                 // 重新加载所有项
                 ReadData(Data);
@@ -579,8 +590,7 @@ namespace Dt.Base
                 if (reader.TokenType == JsonTokenType.EndArray)
                     break;
 
-                FileItem vf = new FileItem();
-                vf.Owner = this;
+                FileItem vf = new FileItem(this);
                 vf.ReadData(ref reader);
                 _pnl.Children.Add(vf);
             }

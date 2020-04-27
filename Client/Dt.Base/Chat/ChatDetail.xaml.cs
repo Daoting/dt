@@ -17,6 +17,7 @@ using Windows.Foundation;
 using Windows.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 #endregion
 
@@ -43,6 +44,7 @@ namespace Dt.Base
         #region 成员变量
         ChatMember _other;
         Menu _msgMenu;
+        Menu _fileMenu;
         #endregion
 
         #region 构造方法
@@ -132,7 +134,7 @@ namespace Dt.Base
         /// </summary>
         void LoadMsg()
         {
-            if (_lv == null || OtherID < 0)
+            if (OtherID < 0)
                 return;
 
             _other = AtLocal.GetFirst<ChatMember>("select * from ChatMember where id=@id", new Dict { { "id", OtherID } });
@@ -260,6 +262,7 @@ namespace Dt.Base
             {
                 var nl = await LetterManager.SendLetter(OtherID, _other.Name, fl.Data, l.LetterType);
                 l.ID = nl.ID;
+                l.MsgID = nl.MsgID;
             }
             else
             {
@@ -316,71 +319,52 @@ namespace Dt.Base
         #endregion
 
         #region 菜单
-        void OnOtherMsgTapped(object sender, TappedRoutedEventArgs e)
+        void OnMsgTapped(object sender, TappedRoutedEventArgs e)
         {
-            ShowOtherMsgMenu(((Dot)sender).DataContext, e.GetPosition(null));
+            ShowMsgMenu((Letter)((LvItem)((Dot)sender).DataContext).Data, e.GetPosition(null));
         }
 
-        void OnOtherMsgRightTapped(object sender, RightTappedRoutedEventArgs e)
+        void OnMsgRightTapped(object sender, RightTappedRoutedEventArgs e)
         {
-            ShowOtherMsgMenu(((Dot)sender).DataContext, e.GetPosition(null));
+            ShowMsgMenu((Letter)((LvItem)((Dot)sender).DataContext).Data, e.GetPosition(null));
         }
 
-        void OnMyMsgTapped(object sender, TappedRoutedEventArgs e)
-        {
-            ShowMyMsgMenu(((Dot)sender).DataContext, e.GetPosition(null));
-        }
-
-        void OnMyMsgRightTapped(object sender, RightTappedRoutedEventArgs e)
-        {
-            ShowMyMsgMenu(((Dot)sender).DataContext, e.GetPosition(null));
-        }
-
-        void ShowOtherMsgMenu(object p_lvItem, Point p_pos)
+        void ShowMsgMenu(Letter p_letter, Point p_pos)
         {
             if (_msgMenu == null)
-                CreateMsgMenu();
+            {
+                _msgMenu = new Menu { IsContextMenu = true };
+                Mi mi = new Mi { ID = "复制", Icon = Icons.复制 };
+                mi.Click += OnCopyMsg;
+                _msgMenu.Items.Add(mi);
 
-            _msgMenu.Hide("撤回");
-            _msgMenu.DataContext = p_lvItem;
+                mi = new Mi { ID = "撤回", Icon = Icons.撤销 };
+                mi.Click += OnUndoMsg;
+                _msgMenu.Items.Add(mi);
+
+                mi = new Mi { ID = "转发", Icon = Icons.分享 };
+                mi.Click += OnRelayMsg;
+                _msgMenu.Items.Add(mi);
+
+                mi = new Mi { ID = "删除", Icon = Icons.删除 };
+                mi.Click += OnDelMsg;
+                _msgMenu.Items.Add(mi);
+            }
+
+            if (p_letter.IsReceived)
+                _msgMenu.Hide("撤回");
+            else
+                _msgMenu.Show("撤回");
+            _msgMenu.DataContext = p_letter;
             if (AtSys.IsPhoneUI)
                 _msgMenu.OpenContextMenu();
             else
                 _msgMenu.OpenContextMenu(p_pos);
-        }
-
-        void ShowMyMsgMenu(object p_lvItem, Point p_pos)
-        {
-            if (_msgMenu == null)
-                CreateMsgMenu();
-
-            _msgMenu.Show("撤回");
-            _msgMenu.DataContext = p_lvItem;
-            if (AtSys.IsPhoneUI)
-                _msgMenu.OpenContextMenu();
-            else
-                _msgMenu.OpenContextMenu(p_pos);
-        }
-
-        void CreateMsgMenu()
-        {
-            _msgMenu = new Menu { IsContextMenu = true };
-            Mi mi = new Mi { ID = "复制", Icon = Icons.复制 };
-            mi.Click += OnCopyMsg;
-            _msgMenu.Items.Add(mi);
-
-            mi = new Mi { ID = "转发", Icon = Icons.分享 };
-            mi.Click += OnRelayMsg;
-            _msgMenu.Items.Add(mi);
-
-            mi = new Mi { ID = "撤回", Icon = Icons.撤销 };
-            mi.Click += OnUndoMsg;
-            _msgMenu.Items.Add(mi);
         }
 
         void OnCopyMsg(object sender, Mi e)
         {
-            var l = (Letter)((LvItem)e.DataContext).Data;
+            var l = (Letter)e.DataContext;
             DataPackage data = new DataPackage();
             data.SetText(l.Content);
             Clipboard.SetContent(data);
@@ -388,7 +372,7 @@ namespace Dt.Base
 
         async void OnUndoMsg(object sender, Mi e)
         {
-            var l = (Letter)((LvItem)e.DataContext).Data;
+            var l = (Letter)e.DataContext;
             if ((AtSys.Now - l.STime).TotalMinutes > 2)
             {
                 AtKit.Warn("超过2分钟无法撤回");
@@ -399,12 +383,84 @@ namespace Dt.Base
             }
         }
 
+        void OnDelMsg(object sender, Mi e)
+        {
+            var l = (Letter)e.DataContext;
+            AtLocal.Execute($"delete from Letter where ID={l.ID}");
+            _lv.Data.Remove(l);
+        }
+
         void OnRelayMsg(object sender, Mi e)
         {
 
         }
-        #endregion
 
-        
+        void OnFileHolding(object sender, HoldingRoutedEventArgs e)
+        {
+            if (e.HoldingState == HoldingState.Started)
+                ShowFileMsgMenu((FileList)sender, e.GetPosition(null));
+        }
+
+        void OnFileRightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            ShowFileMsgMenu((FileList)sender, e.GetPosition(null));
+        }
+
+        void ShowFileMsgMenu(FileList p_fileList, Point p_pos)
+        {
+            FileItem item = null;
+            foreach (var fi in p_fileList.Items)
+            {
+                if (fi.ContainPoint(p_pos))
+                {
+                    item = fi;
+                    break;
+                }
+            }
+            if (item == null)
+                return;
+
+            Mi mi;
+            if (_fileMenu == null)
+            {
+                _fileMenu = new Menu { IsContextMenu = true };
+                mi = new Mi { ID = "保存", Icon = Icons.保存 };
+                mi.SetBinding(Mi.CmdProperty, new Binding { Path = new PropertyPath("CmdSaveAs") });
+                _fileMenu.Items.Add(mi);
+
+                mi = new Mi { ID = "撤回", Icon = Icons.撤销 };
+                mi.Click += OnUndoMsg;
+                _fileMenu.Items.Add(mi);
+
+                mi = new Mi { ID = "分享", Icon = Icons.分享 };
+                mi.SetBinding(Mi.CmdProperty, new Binding { Path = new PropertyPath("CmdShare") });
+                _fileMenu.Items.Add(mi);
+
+                mi = new Mi { ID = "删除", Icon = Icons.删除 };
+                mi.Click += OnDelMsg;
+                _fileMenu.Items.Add(mi);
+            }
+
+            _fileMenu.DataContext = item;
+            Letter letter = (Letter)((LvItem)p_fileList.DataContext).Data;
+            _fileMenu["删除"].DataContext = letter;
+            mi = _fileMenu["撤回"];
+            if (letter.IsReceived)
+            {
+                mi.Visibility = Visibility.Collapsed;
+                mi.DataContext = null;
+            }
+            else
+            {
+                mi.Visibility = Visibility.Visible;
+                mi.DataContext = letter;
+            }
+
+            if (AtSys.IsPhoneUI)
+                _fileMenu.OpenContextMenu();
+            else
+                _fileMenu.OpenContextMenu(p_pos);
+        }
+        #endregion
     }
 }

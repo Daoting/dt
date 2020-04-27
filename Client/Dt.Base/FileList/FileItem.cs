@@ -94,12 +94,6 @@ namespace Dt.Base
             typeof(FileItem),
             new PropertyMetadata(null));
 
-        public static readonly DependencyProperty OwnerProperty = DependencyProperty.Register(
-            "Owner",
-            typeof(FileList),
-            typeof(FileItem),
-            new PropertyMetadata(null));
-
         static void OnFileTypePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             FileItem vf = (FileItem)d;
@@ -128,6 +122,7 @@ namespace Dt.Base
         static MediaPlayerElement _mediaPlayer;
         static FileItem _playerHost;
 
+        readonly FileList _owner;
         readonly FileExtInfo _extInfo = new FileExtInfo();
         bool _loaded;
         CancellationTokenSource _ctsDownload;
@@ -143,12 +138,10 @@ namespace Dt.Base
         #endregion
 
         #region 构造方法
-        /// <summary>
-        /// 构造方法
-        /// </summary>
-        public FileItem()
+        public FileItem(FileList p_owner)
         {
             DefaultStyleKey = typeof(FileItem);
+            _owner = p_owner;
             Loaded += OnLoaded;
         }
         #endregion
@@ -266,15 +259,6 @@ namespace Dt.Base
         {
             get { return (FileItemState)GetValue(StateProperty); }
             set { SetValue(StateProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取设置所属FileList
-        /// </summary>
-        internal FileList Owner
-        {
-            get { return (FileList)GetValue(OwnerProperty); }
-            set { SetValue(OwnerProperty, value); }
         }
 
         /// <summary>
@@ -416,7 +400,7 @@ namespace Dt.Base
 
             var file = await FileKit.PickFile();
             if (file != null)
-                await Owner.UpdateFile(file, this);
+                await _owner.UpdateFile(file, this);
         }
 
         /// <summary>
@@ -544,7 +528,7 @@ namespace Dt.Base
 
             bool suc = await AtFile.Delete(ID);
             if (suc)
-                Owner.AfterDeleteItem(this);
+                _owner.AfterDeleteItem(this);
             else
                 AtKit.Warn("删除失败！");
             return suc;
@@ -559,7 +543,7 @@ namespace Dt.Base
             _loaded = true;
 
             // 上下文菜单
-            Menu menu = Ex.GetMenu(Owner);
+            Menu menu = Ex.GetMenu(_owner);
             if (menu != null)
             {
                 var btn = AttachContextMenu(menu);
@@ -586,6 +570,8 @@ namespace Dt.Base
                 rg.PointerExited += OnPointerExited;
             }
 
+            // 绑定BorderBrush VideoPadding ImagePadding等，通过Owner.XXX的方式在uno中总是重置FileList.DataContext为null！
+            DataContext = _owner;
             VisualStateManager.GoToState(this, State.ToString(), true);
             UpdateCachedFlag();
         }
@@ -1087,7 +1073,7 @@ namespace Dt.Base
                     break;
                 case FileItemState.UploadWaiting:
                 case FileItemState.Uploading:
-                    Owner.CancelTransfer();
+                    _owner.CancelTransfer();
                     break;
                 case FileItemState.Downloading:
                     if (_ctsDownload != null)
@@ -1300,7 +1286,7 @@ namespace Dt.Base
 
         void OpenContextMenu(Point p_pos, FrameworkElement p_tgt = null)
         {
-            Menu menu = Ex.GetMenu(Owner);
+            Menu menu = Ex.GetMenu(_owner);
             if (menu != null)
             {
                 menu.TargetData = this;
