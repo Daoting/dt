@@ -142,6 +142,8 @@ namespace Dt.Base
         {
             DefaultStyleKey = typeof(FileItem);
             _owner = p_owner;
+            // 绑定BorderBrush VideoPadding ImagePadding等，通过Owner.XXX的方式在uno中总是重置FileList.DataContext为null！
+            DataContext = _owner;
             Loaded += OnLoaded;
         }
         #endregion
@@ -555,23 +557,17 @@ namespace Dt.Base
             }
 
             // 交互事件
+            Grid pg;
             if (FileType == FileItemType.Image || FileType == FileItemType.Video)
-            {
-                Grid pg = (Grid)GetTemplateChild("ContentGrid");
-                pg.Tapped += OnTapped;
-            }
+                pg = (Grid)GetTemplateChild("ContentGrid");
             else
-            {
-                Grid rg = (Grid)GetTemplateChild("RootGrid");
-                rg.PointerEntered += OnPointerEntered;
-                rg.PointerPressed += OnPointerPressed;
-                rg.PointerReleased += OnPointerReleased;
-                rg.PointerCaptureLost += OnPointerCaptureLost;
-                rg.PointerExited += OnPointerExited;
-            }
+                pg = (Grid)GetTemplateChild("RootGrid");
+            pg.PointerEntered += OnPointerEntered;
+            pg.PointerPressed += OnPointerPressed;
+            pg.PointerReleased += OnPointerReleased;
+            pg.PointerCaptureLost += OnPointerCaptureLost;
+            pg.PointerExited += OnPointerExited;
 
-            // 绑定BorderBrush VideoPadding ImagePadding等，通过Owner.XXX的方式在uno中总是重置FileList.DataContext为null！
-            DataContext = _owner;
             VisualStateManager.GoToState(this, State.ToString(), true);
             UpdateCachedFlag();
         }
@@ -1086,11 +1082,6 @@ namespace Dt.Base
             }
         }
 
-        void OnTapped(object sender, TappedRoutedEventArgs e)
-        {
-            TappedItem();
-        }
-
         void OnPointerEntered(object sender, PointerRoutedEventArgs e)
         {
             VisualStateManager.GoToState(this, "PointerOver", true);
@@ -1104,7 +1095,6 @@ namespace Dt.Base
 
             if (((UIElement)sender).CapturePointer(e.Pointer))
             {
-                e.Handled = true;
                 _pointerID = e.Pointer.PointerId;
                 _ptLast = e.GetCurrentPoint(null).Position;
                 VisualStateManager.GoToState(this, "Pressed", true);
@@ -1116,11 +1106,10 @@ namespace Dt.Base
             if (_pointerID != e.Pointer.PointerId)
                 return;
 
-            e.Handled = true;
             ((UIElement)sender).ReleasePointerCapture(e.Pointer);
             _pointerID = null;
             Point cur = e.GetCurrentPoint(null).Position;
-            if (Math.Abs(cur.X - _ptLast.X) < 6 && Math.Abs(cur.Y - _ptLast.Y) < 6)
+            if (Math.Abs(cur.X - _ptLast.X) < 3 && Math.Abs(cur.Y - _ptLast.Y) < 3)
                 TappedItem();
         }
 

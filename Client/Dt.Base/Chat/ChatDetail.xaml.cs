@@ -321,15 +321,15 @@ namespace Dt.Base
         #region 菜单
         void OnMsgTapped(object sender, TappedRoutedEventArgs e)
         {
-            ShowMsgMenu((Letter)((LvItem)((Dot)sender).DataContext).Data, e.GetPosition(null));
+            ShowMsgMenu((Letter)((LvItem)((Dot)sender).DataContext).Data, e);
         }
 
         void OnMsgRightTapped(object sender, RightTappedRoutedEventArgs e)
         {
-            ShowMsgMenu((Letter)((LvItem)((Dot)sender).DataContext).Data, e.GetPosition(null));
+            ShowMsgMenu((Letter)((LvItem)((Dot)sender).DataContext).Data, e);
         }
 
-        void ShowMsgMenu(Letter p_letter, Point p_pos)
+        void ShowMsgMenu(Letter p_letter, RoutedEventArgs e)
         {
             if (_msgMenu == null)
             {
@@ -357,9 +357,20 @@ namespace Dt.Base
                 _msgMenu.Show("撤回");
             _msgMenu.DataContext = p_letter;
             if (AtSys.IsPhoneUI)
+            {
                 _msgMenu.OpenContextMenu();
+            }
             else
-                _msgMenu.OpenContextMenu(p_pos);
+            {
+                Point pos;
+                if (e is TappedRoutedEventArgs t)
+                    pos = t.GetPosition(null);
+                else if (e is RightTappedRoutedEventArgs rt)
+                    pos = rt.GetPosition(null);
+                else
+                    pos = new Point();
+                _msgMenu.OpenContextMenu(pos);
+            }
         }
 
         void OnCopyMsg(object sender, Mi e)
@@ -398,12 +409,12 @@ namespace Dt.Base
         void OnFileHolding(object sender, HoldingRoutedEventArgs e)
         {
             if (e.HoldingState == HoldingState.Started)
-                ShowFileMsgMenu((FileList)sender, e.GetPosition(null));
+                ShowFileMsgMenu((FileList)sender, e.GetPosition(SysVisual.RootContent));
         }
 
         void OnFileRightTapped(object sender, RightTappedRoutedEventArgs e)
         {
-            ShowFileMsgMenu((FileList)sender, e.GetPosition(null));
+            ShowFileMsgMenu((FileList)sender, e.GetPosition(SysVisual.RootContent));
         }
 
         void ShowFileMsgMenu(FileList p_fileList, Point p_pos)
@@ -411,7 +422,11 @@ namespace Dt.Base
             FileItem item = null;
             foreach (var fi in p_fileList.Items)
             {
-                if (fi.ContainPoint(p_pos))
+                Point pt = fi.TransformToVisual(SysVisual.RootContent).TransformPoint(new Point());
+                if (p_pos.X > pt.X
+                    && p_pos.X < pt.X + fi.ActualWidth
+                    && p_pos.Y > pt.Y
+                    && p_pos.Y < pt.Y + fi.ActualHeight)
                 {
                     item = fi;
                     break;
