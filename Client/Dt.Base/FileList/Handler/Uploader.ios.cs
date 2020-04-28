@@ -143,7 +143,7 @@ namespace Dt.Base
                     if (!string.IsNullOrEmpty(p_fixedvolume))
                     {
                         // 固定上传路径放在最前
-                        byte[] data = Encoding.UTF8.GetBytes($"--{_boundary}\r\nContent-Disposition: form-data; name=\"fixedvolume\"\r\n\r\n{p_fixedvolume}");
+                        byte[] data = Encoding.UTF8.GetBytes($"--{_boundary}\r\nContent-Disposition: form-data; name=\"fixedvolume\"\r\n\r\n{p_fixedvolume}\r\n");
                         fs.Write(data, 0, data.Length);
                     }
 

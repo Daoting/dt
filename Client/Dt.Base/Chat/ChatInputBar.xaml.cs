@@ -8,11 +8,7 @@
 
 #region 引用命名
 using Dt.Core;
-using Dt.Core.Sqlite;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -65,11 +61,21 @@ namespace Dt.Base
         #endregion
 
         #region +按钮
-        void OnShowExtPanel(object sender, RoutedEventArgs e)
+        async void OnShowExtPanel(object sender, RoutedEventArgs e)
         {
-            if (_lvExt == null)
-                CreateExtLv();
-            SetBottom(_lvExt);
+            if (AtSys.IsPhoneUI)
+            {
+                if (_lvExt == null)
+                    CreateExtLv();
+                SetBottom(_lvExt);
+            }
+            else
+            {
+                // 直接选择文件
+                var files = await FileKit.PickFiles();
+                if (files != null && files.Count > 0)
+                    Owner.SendFiles(files);
+            }
         }
 
         void CreateExtLv()
@@ -82,22 +88,14 @@ namespace Dt.Base
                 MinItemWidth = 90,
                 View = GetResource("InputBarExtTemplate"),
             };
-            if (!AtSys.IsPhoneUI)
-            {
-                _lvExt.MaxWidth = 360;
-                _lvExt.HorizontalAlignment = HorizontalAlignment.Right;
-            }
 
             Table tbl = new Table { { "icon", typeof(int) }, { "title" } };
             tbl.AddRow(new { icon = Icons.图片, title = "图片" });
             tbl.AddRow(new { icon = Icons.视频, title = "视频" });
             tbl.AddRow(new { icon = Icons.文件, title = "文件" });
-
-            tbl.AddRow(new { icon = Icons.图片, title = "图片" });
-            tbl.AddRow(new { icon = Icons.视频, title = "视频" });
-            tbl.AddRow(new { icon = Icons.文件, title = "文件" });
             _lvExt.Data = tbl;
             _lvExt.ItemClick += OnExtClick;
+
             Grid.SetRow(_lvExt, 1);
         }
 
