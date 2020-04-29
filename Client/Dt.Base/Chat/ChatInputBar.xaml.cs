@@ -8,11 +8,13 @@
 
 #region 引用命名
 using Dt.Core;
+using System;
 using System.Collections.Generic;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 #endregion
 
 namespace Dt.Base
@@ -23,20 +25,20 @@ namespace Dt.Base
     public sealed partial class ChatInputBar : UserControl
     {
         #region 成员变量
-        Lv _lvExt;
-        Lv _lvFaces;
+        Menu _menu;
         #endregion
 
         #region 构造方法
         public ChatInputBar()
         {
             InitializeComponent();
-
+#if IOS
+            _tbMsg.GotFocus += OnMsgGotFocus;
+#endif
         }
         #endregion
 
         #region 属性
-
         internal ChatDetail Owner { get; set; }
         #endregion
 
@@ -46,17 +48,13 @@ namespace Dt.Base
             if (e.Key != VirtualKey.Enter)
                 return;
 
+            e.Handled = true;
             string msg = _tbMsg.Text.Trim();
             if (!string.IsNullOrEmpty(msg))
             {
                 Owner.SendMsg(msg);
                 _tbMsg.Text = "";
             }
-        }
-
-        void OnMsgGotFocus(object sender, RoutedEventArgs e)
-        {
-            ClearBottom();
         }
         #endregion
 
@@ -65,9 +63,25 @@ namespace Dt.Base
         {
             if (AtSys.IsPhoneUI)
             {
-                if (_lvExt == null)
-                    CreateExtLv();
-                SetBottom(_lvExt);
+#if IOS
+                ResetTransform();
+#endif
+                if (_menu == null)
+                {
+                    _menu = new Menu { IsContextMenu = true };
+                    Mi mi = new Mi { ID = "图片", Icon = Icons.图片 };
+                    mi.Click += OnAddPhoto;
+                    _menu.Items.Add(mi);
+
+                    mi = new Mi { ID = "视频", Icon = Icons.视频 };
+                    mi.Click += OnAddVideo;
+                    _menu.Items.Add(mi);
+
+                    mi = new Mi { ID = "文件", Icon = Icons.文件 };
+                    mi.Click += OnAddFile;
+                    _menu.Items.Add(mi);
+                }
+                _menu.OpenContextMenu();
             }
             else
             {
@@ -78,109 +92,74 @@ namespace Dt.Base
             }
         }
 
-        void CreateExtLv()
+        async void OnAddPhoto(object sender, Mi e)
         {
-            _lvExt = new Lv
-            {
-                ViewMode = ViewMode.Tile,
-                ShowItemBorder = false,
-                SelectionMode = SelectionMode.None,
-                MinItemWidth = 90,
-                View = GetResource("InputBarExtTemplate"),
-            };
-
-            Table tbl = new Table { { "icon", typeof(int) }, { "title" } };
-            tbl.AddRow(new { icon = Icons.图片, title = "图片" });
-            tbl.AddRow(new { icon = Icons.视频, title = "视频" });
-            tbl.AddRow(new { icon = Icons.文件, title = "文件" });
-            _lvExt.Data = tbl;
-            _lvExt.ItemClick += OnExtClick;
-
-            Grid.SetRow(_lvExt, 1);
-        }
-
-        async void OnExtClick(object sender, ItemClickArgs e)
-        {
-            ClearBottom();
-            List<FileData> files = null;
-            switch (e.Row.Str("title"))
-            {
-                case "图片":
-                    files = await FileKit.PickImages();
-                    break;
-                case "视频":
-                    files = await FileKit.PickMedias();
-                    break;
-                case "文件":
-                    files = await FileKit.PickFiles();
-                    break;
-            }
+            var files = await FileKit.PickImages();
             if (files != null && files.Count > 0)
                 Owner.SendFiles(files);
         }
-        #endregion
 
-        #region 表情
-        void OnShowFacePanel(object sender, RoutedEventArgs e)
+        async void OnAddVideo(object sender, Mi e)
         {
-            if (_lvFaces == null)
-                CreateFaces();
-            SetBottom(_lvFaces);
+            var files = await FileKit.PickMedias();
+            if (files != null && files.Count > 0)
+                Owner.SendFiles(files);
         }
 
-        void CreateFaces()
+        async void OnAddFile(object sender, Mi e)
         {
-            _lvFaces = new Lv();
-            Grid.SetRow(_lvFaces, 1);
+            var files = await FileKit.PickFiles();
+            if (files != null && files.Count > 0)
+                Owner.SendFiles(files);
         }
         #endregion
 
         #region 录音
         void OnAudioCapture(object sender, RoutedEventArgs e)
         {
-            ClearBottom();
+#if IOS
+            ResetTransform();
+#endif
+
         }
         #endregion
 
-        #region 底部扩展
-        /// <summary>
-        /// 用ContentPresenter方式绑定属性在IOS上区域大小不变化，因此采用直接增删方式！！！
-        /// </summary>
-        /// <param name="p_elem"></param>
-        void SetBottom(FrameworkElement p_elem)
+        #region iOS软键盘
+#if IOS
+        void OnMsgGotFocus(object sender, RoutedEventArgs e)
         {
-            if (_rootGrid.Children.Count > 1)
-            {
-                if (_rootGrid.Children[1] == p_elem)
-                    return;
-
-                _rootGrid.Children.RemoveAt(1);
-                _rootGrid.Children.Add(p_elem);
-            }
-            else
-            {
-                _rootGrid.Children.Add(p_elem);
-                Owner.AttachPressedEvent();
-            }
+            // iOS中TextBox只有在ScrollViewer中获得焦点输入时不会被软键盘盖住
+            // 此处因外部无法使用ScrollViewer，整个内容区域向上串软键盘高度，如何获取软键盘高度？
+            AttachPressedEvent();
+            Owner.RenderTransform = new TranslateTransform { Y = -300 };
+            //UIKit.UIApplication.SharedApplication.KeyWindow.RootViewController.PresentViewController(alert, true, null);
         }
 
-        internal void ClearBottom()
+        void ResetTransform()
         {
-            if (_rootGrid.Children.Count > 1)
-            {
-                _rootGrid.Children.RemoveAt(1);
-                Owner.DetachPressedEvent();
-            }
+            Owner.RenderTransform = null;
+            DetachPressedEvent();
         }
 
-        object GetResource(string p_key)
+        PointerEventHandler _pressedHandler;
+        void AttachPressedEvent()
         {
-#if UWP
-            return Resources[p_key];
-#else
-            return StaticResources.FindResource(p_key);
+            if (_pressedHandler == null)
+                _pressedHandler = new PointerEventHandler(OnPanelPointerPressed);
+            // iOS的ScrollViewer无法AddHandler，暂时取内容，bug
+            (Owner.Lv.Scroll.Content as UIElement).AddHandler(PointerPressedEvent, _pressedHandler, true);
+        }
+
+        void DetachPressedEvent()
+        {
+            (Owner.Lv.Scroll.Content as UIElement).RemoveHandler(PointerPressedEvent, _pressedHandler);
+        }
+
+        void OnPanelPointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            ResetTransform();
+        }
 #endif
-        }
         #endregion
     }
 }

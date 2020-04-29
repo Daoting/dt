@@ -114,6 +114,7 @@
     <InterfaceDefinition Include="..\Common\LaunchScreen.storyboard">
       <Link>LaunchScreen.storyboard</Link>
     </InterfaceDefinition>
+    <Content Include="Entitlements.plist" />
     <None Include="Info.plist">
       <SubType>Designer</SubType>
     </None>
@@ -121,9 +122,6 @@
       <Link>Main.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Content Include="..\Common\Entitlements.plist">
-      <Link>Entitlements.plist</Link>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

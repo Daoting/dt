@@ -69,6 +69,11 @@ namespace Dt.Base
             get { return (long)GetValue(OtherIDProperty); }
             set { SetValue(OtherIDProperty, value); }
         }
+
+        internal Lv Lv
+        {
+            get { return _lv; }
+        }
         #endregion
 
         #region 外部方法
@@ -286,35 +291,6 @@ namespace Dt.Base
                 type = LetterType.Voice;
             }
             return type;
-        }
-        #endregion
-
-        #region 隐藏底部
-        PointerEventHandler _pressedHandler;
-        internal void AttachPressedEvent()
-        {
-            if (_pressedHandler == null)
-                _pressedHandler = new PointerEventHandler(OnPanelPointerPressed);
-#if IOS
-            // iOS的ScrollViewer无法AddHandler，暂时取内容，bug
-            (_lv.Scroll.Content as UIElement).AddHandler(PointerPressedEvent, _pressedHandler, true);
-#else
-            _lv.AddHandler(PointerPressedEvent, _pressedHandler, true);
-#endif
-        }
-
-        internal void DetachPressedEvent()
-        {
-#if IOS
-            (_lv.Scroll.Content as UIElement).RemoveHandler(PointerPressedEvent, _pressedHandler);
-#else
-            _lv.RemoveHandler(PointerPressedEvent, _pressedHandler);
-#endif
-        }
-
-        void OnPanelPointerPressed(object sender, PointerRoutedEventArgs e)
-        {
-            _inputBar.ClearBottom();
         }
         #endregion
 
