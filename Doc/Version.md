@@ -17,8 +17,9 @@
 * Fv外部有ScrollViewer的处理 
 * Tv外部有ScrollViewer的处理
  * Chat 撤回消息功能
-
 * Chat 发送语音
+* FileList增加录音文件
+
 * Chat 拍照和录视频发送
 
 ### 变更 

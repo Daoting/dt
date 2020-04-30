@@ -486,9 +486,13 @@ namespace Dt.Base
         /// <summary>
         /// 增加录音
         /// </summary>
-        public void CaptureVoice()
+        public async void CaptureVoice()
         {
-            AtKit.Msg("录音");
+            var fileData = await AudioRecorder.Start(this);
+            if (fileData != null)
+            {
+                await UploadFiles(new List<FileData> { fileData });
+            }
         }
 
         /// <summary>

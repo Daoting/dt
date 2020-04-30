@@ -10,6 +10,7 @@
 using Dt.Core;
 using System;
 using System.Threading.Tasks;
+using Windows.UI.Xaml;
 using Xamarin.Essentials;
 #endregion
 
@@ -27,14 +28,21 @@ namespace Dt.Base
         /// <summary>
         /// 开始录音
         /// </summary>
-        /// <returns></returns>
-        public static async Task Start()
+        /// <param name="p_target">计时对话框居中的目标</param>
+        /// <returns>录音文件信息，失败或放弃时返回null</returns>
+        public static async Task<FileData> Start(FrameworkElement p_target)
         {
             if (IsRecording)
-                throw new InvalidOperationException("已启动录音");
+            {
+                AtKit.Warn("已启动录音");
+                return null;
+            }
 
             if (!await CanRecordAudio)
-                throw new InvalidOperationException("设备禁止录音！");
+            {
+                AtKit.Warn("无麦克风设备，无法录音！");
+                return null;
+            }
 
             try
             {
@@ -42,22 +50,23 @@ namespace Dt.Base
             }
             catch
             {
-                throw new InvalidOperationException("设备禁止录音！");
+                AtKit.Warn("设备禁止录音！");
+                return null;
             }
 
-            await PlatformRecordAsync();
             IsRecording = true;
-        }
+            await PlatformRecordAsync();
 
-        /// <summary>
-        /// 停止录音，返回录音文件信息
-        /// </summary>
-        /// <returns>录音文件信息</returns>
-        public static async Task<FileData> Stop()
-        {
+            // 显示计时框
+            var dlg = new AudioRecordDlg();
+            dlg.PlacementTarget = p_target;
+            bool isOk = await dlg.ShowAsync();
+
+            // 计时框关闭，停止录音
             var recording = await PlatformStopAsync();
             IsRecording = false;
-            return recording;
+
+            return isOk ? recording : null;
         }
     }
 }
