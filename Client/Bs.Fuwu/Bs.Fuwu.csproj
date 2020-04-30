@@ -1,9 +1,0 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras/2.0.54">
-
-  <Import Project="..\Common\dtc.props" />
-
-  <ItemGroup>
-    <PackageReference Include="Dt.Base" Version="1.0.0" />
-    <PackageReference Include="Dt.Core" Version="1.0.0" />
-  </ItemGroup>
-</Project>

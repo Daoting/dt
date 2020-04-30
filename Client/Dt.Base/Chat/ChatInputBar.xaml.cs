@@ -10,6 +10,7 @@
 using Dt.Core;
 using System;
 using System.Collections.Generic;
+using Windows.Media.Capture;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -26,6 +27,7 @@ namespace Dt.Base
     {
         #region 成员变量
         Menu _menu;
+        bool _isRecording;
         #endregion
 
         #region 构造方法
@@ -115,12 +117,39 @@ namespace Dt.Base
         #endregion
 
         #region 录音
-        void OnAudioCapture(object sender, RoutedEventArgs e)
+        async void OnAudioCapture(object sender, RoutedEventArgs e)
         {
 #if IOS
             ResetTransform();
 #endif
+            if (_isRecording)
+                return;
 
+            _isRecording = true;
+            try
+            {
+                if (AudioRecorder.IsRecording)
+                    await AudioRecorder.Stop();
+                await AudioRecorder.Start();
+
+                var dlg = new AudioRecordDlg();
+                dlg.PlacementTarget = Owner;
+                bool isSend = await dlg.ShowAsync();
+
+                var fileData = await AudioRecorder.Stop();
+                if (isSend)
+                {
+                    Owner.SendFiles(new List<FileData> { fileData });
+                }
+            }
+            catch (Exception ex)
+            {
+                AtKit.Warn(ex.Message);
+            }
+            finally
+            {
+                _isRecording = false;
+            }
         }
         #endregion
 

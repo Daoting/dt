@@ -18,6 +18,8 @@
 * Tv外部有ScrollViewer的处理
  * Chat 撤回消息功能
 
+* Chat 发送语音
+* Chat 拍照和录视频发送
 
 ### 变更 
 * 移除Newtonsoft.Json，使用System.Text.Json 

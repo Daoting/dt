@@ -51,5 +51,7 @@
   <string>LaunchScreen</string>
   <key>LSSupportsOpeningDocumentsInPlace</key>
   <true/>
+  <key>NSMicrophoneUsageDescription</key>
+  <string>请求使用麦克风进行录音</string>
 </dict>
 </plist>

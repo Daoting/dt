@@ -679,48 +679,48 @@ namespace Dt.Base
             }
 
             ID = p_id;
-            string fileName = GetFileName();
 
-            // 复制到临时文件夹，免去再次下载
-            //#if UWP
-            //            try
-            //            {
-            //                var file = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(p_file.FilePath);
-            //                await file.CopyAsync(await StorageFolder.GetFolderFromPathAsync(AtLocal.CachePath), fileName, NameCollisionOption.ReplaceExisting);
-            //            }
-            //            catch { }
-            //#else
-            //            try
-            //            {
-            //                FileInfo fi = new FileInfo(p_file.FilePath);
-            //                fi.CopyTo(Path.Combine(AtLocal.CachePath, fileName), true);
-            //            }
-            //            catch { }
-            //#endif
+            // 若文件已在CachePath，重命名免去再次下载，如录音、拍照、录视频等临时文件已在CachePath
+            string filePath = p_file.FilePath;
+#if UWP
+            // 为安全访问ID
+            if (filePath.StartsWith("{"))
+            {
+                try
+                {
+                    var file = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(filePath);
+                    filePath = file.Path;
+                }
+                catch { }
+            }
+#endif
+            if (filePath.StartsWith(AtLocal.CachePath))
+            {
+                try
+                {
+                    FileInfo fi = new FileInfo(filePath);
+                    if (fi.Exists)
+                    {
+                        string newPath = Path.Combine(AtLocal.CachePath, GetFileName());
+                        fi.MoveTo(newPath);
+                    }
+                }
+                catch { }
+            }
 
             // 缩略图重命名
             if (!string.IsNullOrEmpty(p_file.ThumbPath))
             {
-                string thumbName = GetThumbName();
-#if UWP
-                try
-                {
-                    var sf = await StorageFile.GetFileFromPathAsync(p_file.ThumbPath);
-                    await sf.RenameAsync(thumbName);
-                }
-                catch { }
-#else
                 try
                 {
                     FileInfo fi = new FileInfo(p_file.ThumbPath);
                     if (fi.Exists)
                     {
-                        string newPath = Path.Combine(p_file.ThumbPath.Substring(0, p_file.ThumbPath.LastIndexOf('/')), thumbName);
+                        string newPath = Path.Combine(AtLocal.CachePath, GetThumbName());
                         fi.MoveTo(newPath);
                     }
                 }
                 catch { }
-#endif
             }
         }
 
