@@ -400,7 +400,7 @@ namespace Dt.Base
             if (State != FileItemState.None)
                 return;
 
-            var file = await FileKit.PickFile();
+            var file = await CrossKit.PickFile();
             if (file != null)
                 await _owner.UpdateFile(file, this);
         }
@@ -1156,7 +1156,7 @@ namespace Dt.Base
             {
                 // 初始化播放器
                 _mediaPlayer = new MediaPlayerElement();
-                //_mediaPlayer.AutoPlay = true;
+                _mediaPlayer.AutoPlay = true;
 
                 var player = _mediaPlayer.MediaPlayer;
                 if (player == null)

@@ -20,14 +20,22 @@ using Windows.Storage;
 
 namespace Dt.Base
 {
-    public static partial class AudioRecorder
+    class AudioRecorder
     {
-        static Task<bool> PlatformCanRecordAudio => Task.FromResult(true);
+        MediaCapture _mediaCapture;
+        string _audioFilePath;
 
-        static MediaCapture _mediaCapture;
-        static string _audioFilePath;
+        /// <summary>
+        /// 是否有麦克风
+        /// </summary>
+        public Task<bool> CanRecordAudio = Task.FromResult(true);
 
-        static async Task PlatformRecordAsync()
+        /// <summary>
+        /// 是否正在录音
+        /// </summary>
+        public bool IsRecording { get; set; }
+
+        public async Task PlatformRecordAsync()
         {
             try
             {
@@ -56,7 +64,7 @@ namespace Dt.Base
             }
         }
 
-        static async Task<FileData> PlatformStopAsync()
+        public async Task<FileData> PlatformStopAsync()
         {
             if (_mediaCapture == null)
                 return null;
@@ -68,7 +76,7 @@ namespace Dt.Base
             return new FileData(_audioFilePath, file.Name, (await file.GetBasicPropertiesAsync()).Size); ;
         }
 
-        static void DeleteMediaCapture()
+        public void DeleteMediaCapture()
         {
             _mediaCapture?.Dispose();
             try

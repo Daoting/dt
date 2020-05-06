@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Dt.Core;
+using System;
 using System.Collections.Generic;
 using Windows.System;
 using Windows.UI.Xaml;
@@ -72,8 +73,16 @@ namespace Dt.Base
                     mi.Click += OnAddPhoto;
                     _menu.Items.Add(mi);
 
+                    mi = new Mi { ID = "拍照", Icon = Icons.拍照 };
+                    mi.Click += OnTakePhoto;
+                    _menu.Items.Add(mi);
+
                     mi = new Mi { ID = "视频", Icon = Icons.视频 };
                     mi.Click += OnAddVideo;
+                    _menu.Items.Add(mi);
+
+                    mi = new Mi { ID = "录像", Icon = Icons.录像 };
+                    mi.Click += OnTakeVideo;
                     _menu.Items.Add(mi);
 
                     mi = new Mi { ID = "文件", Icon = Icons.文件 };
@@ -85,7 +94,7 @@ namespace Dt.Base
             else
             {
                 // 直接选择文件
-                var files = await FileKit.PickFiles();
+                var files = await CrossKit.PickFiles();
                 if (files != null && files.Count > 0)
                     Owner.SendFiles(files);
             }
@@ -93,21 +102,31 @@ namespace Dt.Base
 
         async void OnAddPhoto(object sender, Mi e)
         {
-            var files = await FileKit.PickImages();
+            var files = await CrossKit.PickImages();
             if (files != null && files.Count > 0)
                 Owner.SendFiles(files);
         }
 
         async void OnAddVideo(object sender, Mi e)
         {
-            var files = await FileKit.PickMedias();
+            var files = await CrossKit.PickMedias();
             if (files != null && files.Count > 0)
                 Owner.SendFiles(files);
         }
 
+        void OnTakeVideo(object sender, Mi e)
+        {
+            
+        }
+
+        void OnTakePhoto(object sender, Mi e)
+        {
+            
+        }
+
         async void OnAddFile(object sender, Mi e)
         {
-            var files = await FileKit.PickFiles();
+            var files = await CrossKit.PickFiles();
             if (files != null && files.Count > 0)
                 Owner.SendFiles(files);
         }
@@ -119,7 +138,7 @@ namespace Dt.Base
 #if IOS
             ResetTransform();
 #endif
-            var fileData = await AudioRecorder.Start(Owner);
+            var fileData = await CrossKit.StartRecording(Owner);
             if (fileData != null)
             {
                 Owner.SendFiles(new List<FileData> { fileData });

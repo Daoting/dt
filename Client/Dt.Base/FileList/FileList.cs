@@ -305,7 +305,7 @@ namespace Dt.Base
         /// </summary>
         public void AddImage()
         {
-            _ = AppendFile(() => FileKit.PickImages(), () => FileKit.PickImage());
+            _ = AppendFile(() => CrossKit.PickImages(), () => CrossKit.PickImage());
         }
 
         /// <summary>
@@ -313,7 +313,7 @@ namespace Dt.Base
         /// </summary>
         public void AddVideo()
         {
-            _ = AppendFile(() => FileKit.PickVideos(), () => FileKit.PickVideo());
+            _ = AppendFile(() => CrossKit.PickVideos(), () => CrossKit.PickVideo());
         }
 
         /// <summary>
@@ -321,7 +321,7 @@ namespace Dt.Base
         /// </summary>
         public void AddAudio()
         {
-            _ = AppendFile(() => FileKit.PickAudios(), () => FileKit.PickAudio());
+            _ = AppendFile(() => CrossKit.PickAudios(), () => CrossKit.PickAudio());
         }
 
         /// <summary>
@@ -329,7 +329,7 @@ namespace Dt.Base
         /// </summary>
         public void AddMedia()
         {
-            _ = AppendFile(() => FileKit.PickMedias(), () => FileKit.PickMedia());
+            _ = AppendFile(() => CrossKit.PickMedias(), () => CrossKit.PickMedia());
         }
 
         /// <summary>
@@ -341,8 +341,22 @@ namespace Dt.Base
         public void AddFile(string[] p_uwpFileTypes = null, string[] p_androidFileTypes = null, string[] p_iosFileTypes = null)
         {
             _ = AppendFile(
-                () => FileKit.PickFiles(p_uwpFileTypes, p_androidFileTypes, p_iosFileTypes),
-                () => FileKit.PickFile(p_uwpFileTypes, p_androidFileTypes, p_iosFileTypes));
+                () =>
+#if UWP
+                CrossKit.PickFiles(p_uwpFileTypes),
+#elif ANDROID
+                CrossKit.PickFiles(p_androidFileTypes),
+#elif IOS
+                CrossKit.PickFiles(p_iosFileTypes),
+#endif
+                () =>
+#if UWP
+                CrossKit.PickFile(p_uwpFileTypes));
+#elif ANDROID
+                CrossKit.PickFile(p_androidFileTypes));
+#elif IOS
+                CrossKit.PickFile(p_iosFileTypes));
+#endif
         }
 
         /// <summary>
@@ -488,7 +502,7 @@ namespace Dt.Base
         /// </summary>
         public async void CaptureVoice()
         {
-            var fileData = await AudioRecorder.Start(this);
+            var fileData = await CrossKit.StartRecording(this);
             if (fileData != null)
             {
                 await UploadFiles(new List<FileData> { fileData });

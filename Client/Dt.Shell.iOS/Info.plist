@@ -53,5 +53,7 @@
   <true/>
   <key>NSMicrophoneUsageDescription</key>
   <string>请求使用麦克风进行录音</string>
+  <key>NSCameraUsageDescription</key>
+  <string>请求使用摄像头进行拍照</string>
 </dict>
 </plist>

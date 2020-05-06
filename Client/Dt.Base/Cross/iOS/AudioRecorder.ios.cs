@@ -8,26 +8,34 @@
 #endregion
 
 #region 引用命名
-using System;
-using System.IO;
-using System.Threading.Tasks;
 using AVFoundation;
 using Dt.Core;
 using Foundation;
+using System;
+using System.IO;
+using System.Threading.Tasks;
 using UIKit;
 using Xamarin.Essentials;
 #endregion
 
 namespace Dt.Base
 {
-    public static partial class AudioRecorder
+    class AudioRecorder
     {
-        static Task<bool> PlatformCanRecordAudio => Task.FromResult(AVAudioSession.SharedInstance().InputAvailable);
+        AVAudioRecorder _recorder;
+        string _audioFilePath;
 
-        static AVAudioRecorder _recorder;
-        static string _audioFilePath;
+        /// <summary>
+        /// 是否有麦克风
+        /// </summary>
+        public Task<bool> CanRecordAudio = Task.FromResult(AVAudioSession.SharedInstance().InputAvailable);
 
-        static Task PlatformRecordAsync()
+        /// <summary>
+        /// 是否正在录音
+        /// </summary>
+        public bool IsRecording { get; set; }
+
+        public Task PlatformRecordAsync()
         {
             InitAudioSession();
 
@@ -40,7 +48,7 @@ namespace Dt.Base
             return Task.CompletedTask;
         }
 
-        static Task<FileData> PlatformStopAsync()
+        public Task<FileData> PlatformStopAsync()
         {
             if (_recorder == null)
                 return Task.FromResult(default(FileData));
@@ -54,7 +62,7 @@ namespace Dt.Base
             return Task.FromResult(new FileData(_audioFilePath, fi.Name, (ulong)fi.Length));
         }
 
-        static void InitAudioSession()
+        void InitAudioSession()
         {
             var audioSession = AVAudioSession.SharedInstance();
             var err = audioSession.SetCategory(AVAudioSessionCategory.Record);

@@ -21,14 +21,22 @@ using Encoding = Android.Media.Encoding;
 
 namespace Dt.Base
 {
-    public static partial class AudioRecorder
+    class AudioRecorder
     {
-        static Task<bool> PlatformCanRecordAudio => Task.FromResult(Platform.AppContext.PackageManager.HasSystemFeature(PackageManager.FeatureMicrophone));
+        MediaRecorder _recorder;
+        string _audioFilePath;
 
-        static MediaRecorder _recorder;
-        static string _audioFilePath;
+        /// <summary>
+        /// 是否有麦克风
+        /// </summary>
+        public Task<bool> CanRecordAudio = Task.FromResult(Platform.AppContext.PackageManager.HasSystemFeature(PackageManager.FeatureMicrophone));
 
-        static Task PlatformRecordAsync()
+        /// <summary>
+        /// 是否正在录音
+        /// </summary>
+        public bool IsRecording { get; set; }
+
+        public Task PlatformRecordAsync()
         {
             _recorder = new MediaRecorder();
             _recorder.SetAudioSource(AudioSource.Mic);
@@ -41,7 +49,7 @@ namespace Dt.Base
             return Task.CompletedTask;
         }
 
-        static Task<FileData> PlatformStopAsync()
+        public Task<FileData> PlatformStopAsync()
         {
             if (_recorder == null)
                 return Task.FromResult(default(FileData));

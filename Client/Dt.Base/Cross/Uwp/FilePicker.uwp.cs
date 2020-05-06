@@ -26,13 +26,13 @@ namespace Dt.Base
     /// <summary>
     /// Uwp版文件选择
     /// </summary>
-    public static class FileKit
+    class FilePicker
     {
         /// <summary>
         /// 选择单个图片
         /// </summary>
         /// <returns></returns>
-        public static Task<FileData> PickImage()
+        public Task<FileData> PickImage()
         {
             var picker = CreatePicker(PickerLocationId.PicturesLibrary, FileFilter.UwpImage);
             picker.ViewMode = PickerViewMode.Thumbnail;
@@ -43,7 +43,7 @@ namespace Dt.Base
         /// 选择多个图片
         /// </summary>
         /// <returns></returns>
-        public static Task<List<FileData>> PickImages()
+        public Task<List<FileData>> PickImages()
         {
             var picker = CreatePicker(PickerLocationId.PicturesLibrary, FileFilter.UwpImage);
             picker.ViewMode = PickerViewMode.Thumbnail;
@@ -54,7 +54,7 @@ namespace Dt.Base
         /// 选择单个视频
         /// </summary>
         /// <returns></returns>
-        public static Task<FileData> PickVideo()
+        public Task<FileData> PickVideo()
         {
             var picker = CreatePicker(PickerLocationId.VideosLibrary, FileFilter.UwpVideo);
             picker.ViewMode = PickerViewMode.Thumbnail;
@@ -65,7 +65,7 @@ namespace Dt.Base
         /// 选择多个视频
         /// </summary>
         /// <returns></returns>
-        public static Task<List<FileData>> PickVideos()
+        public Task<List<FileData>> PickVideos()
         {
             var picker = CreatePicker(PickerLocationId.VideosLibrary, FileFilter.UwpVideo);
             picker.ViewMode = PickerViewMode.Thumbnail;
@@ -76,7 +76,7 @@ namespace Dt.Base
         /// 选择单个音频文件
         /// </summary>
         /// <returns></returns>
-        public static Task<FileData> PickAudio()
+        public Task<FileData> PickAudio()
         {
             return PickFile(CreatePicker(PickerLocationId.MusicLibrary, FileFilter.UwpAudio));
         }
@@ -85,7 +85,7 @@ namespace Dt.Base
         /// 选择多个音频文件
         /// </summary>
         /// <returns></returns>
-        public static Task<List<FileData>> PickAudios()
+        public Task<List<FileData>> PickAudios()
         {
             return PickFiles(CreatePicker(PickerLocationId.MusicLibrary, FileFilter.UwpAudio));
         }
@@ -94,7 +94,7 @@ namespace Dt.Base
         /// 选择单个媒体文件
         /// </summary>
         /// <returns></returns>
-        public static Task<FileData> PickMedia()
+        public Task<FileData> PickMedia()
         {
             var picker = CreatePicker(PickerLocationId.DocumentsLibrary, FileFilter.UwpMedia);
             picker.ViewMode = PickerViewMode.Thumbnail;
@@ -105,7 +105,7 @@ namespace Dt.Base
         /// 选择多个媒体文件
         /// </summary>
         /// <returns></returns>
-        public static Task<List<FileData>> PickMedias()
+        public Task<List<FileData>> PickMedias()
         {
             var picker = CreatePicker(PickerLocationId.DocumentsLibrary, FileFilter.UwpMedia);
             picker.ViewMode = PickerViewMode.Thumbnail;
@@ -115,101 +115,21 @@ namespace Dt.Base
         /// <summary>
         /// 选择单个文件
         /// </summary>
-        /// <param name="p_uwpFileTypes">uwp文件过滤类型，如 .png .docx，null时不过滤</param>
-        /// <param name="p_androidFileTypes">android文件过滤类型，如 image/png image/*，null时不过滤</param>
-        /// <param name="p_iosFileTypes">ios文件过滤类型，如 UTType.Image，null时不过滤</param>
+        /// <param name="p_fileTypes">uwp文件过滤类型，如 .png .docx，null时不过滤</param>
         /// <returns></returns>
-        public static Task<FileData> PickFile(string[] p_uwpFileTypes = null, string[] p_androidFileTypes = null, string[] p_iosFileTypes = null)
+        public Task<FileData> PickFile(string[] p_fileTypes)
         {
-            return PickFile(CreatePicker(PickerLocationId.DocumentsLibrary, p_uwpFileTypes));
+            return PickFile(CreatePicker(PickerLocationId.DocumentsLibrary, p_fileTypes));
         }
 
         /// <summary>
         /// 选择多个文件
         /// </summary>
-        /// <param name="p_uwpFileTypes">uwp文件过滤类型，如 .png .docx，null时不过滤</param>
-        /// <param name="p_androidFileTypes">android文件过滤类型，如 image/png image/*，null时不过滤</param>
-        /// <param name="p_iosFileTypes">ios文件过滤类型，如 UTType.Image，null时不过滤</param>
+        /// <param name="p_fileTypes">uwp文件过滤类型，如 .png .docx，null时不过滤</param>
         /// <returns></returns>
-        public static Task<List<FileData>> PickFiles(string[] p_uwpFileTypes = null, string[] p_androidFileTypes = null, string[] p_iosFileTypes = null)
+        public Task<List<FileData>> PickFiles(string[] p_fileTypes)
         {
-            return PickFiles(CreatePicker(PickerLocationId.DocumentsLibrary, p_uwpFileTypes));
-        }
-
-        /// <summary>
-        /// 将选择的文件保存到.doc目录
-        /// </summary>
-        /// <param name="p_file">待另存的文件信息</param>
-        /// <returns>文件完整路径</returns>
-        public static async Task<string> SaveFile(FileData p_file)
-        {
-            try
-            {
-                var sf = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(p_file.FilePath);
-                var tempPath = Path.Combine(AtLocal.CachePath, AtKit.NewID + p_file.Ext);
-                using (var fs = File.Create(tempPath))
-                {
-                    await (await sf.OpenStreamForReadAsync()).CopyToAsync(fs);
-                }
-                return tempPath;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Android implementation of OpenFile(), opening a file already stored on external
-        /// storage.
-        /// </summary>
-        /// <param name="fileToOpen">relative filename of file to open</param>
-        public static async void OpenFile(string fileToOpen)
-        {
-            try
-            {
-                var file = await ApplicationData.Current.LocalFolder.GetFileAsync(fileToOpen);
-
-                if (file != null)
-                {
-                    await Launcher.LaunchFileAsync(file);
-                }
-            }
-            catch (FileNotFoundException)
-            {
-                // ignore exceptions
-            }
-            catch (Exception)
-            {
-                // ignore exceptions
-            }
-        }
-
-        /// <summary>
-        /// Android implementation of OpenFile(), opening a picked file in an external viewer. The
-        /// picked file is saved to external storage before opening.
-        /// </summary>
-        /// <param name="fileToOpen">picked file data</param>
-        public static async void OpenFile(FileData fileToOpen)
-        {
-            try
-            {
-                var file = await ApplicationData.Current.LocalFolder.GetFileAsync(fileToOpen.FileName);
-
-                if (file != null)
-                {
-                    await Launcher.LaunchFileAsync(file);
-                }
-            }
-            catch (FileNotFoundException)
-            {
-                await SaveFile(fileToOpen);
-                OpenFile(fileToOpen);
-            }
-            catch (Exception)
-            {
-                // ignore exceptions
-            }
+            return PickFiles(CreatePicker(PickerLocationId.DocumentsLibrary, p_fileTypes));
         }
 
         #region 内部方法

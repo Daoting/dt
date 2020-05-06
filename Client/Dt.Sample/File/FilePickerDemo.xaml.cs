@@ -18,42 +18,42 @@ namespace Dt.Sample
 
         void OnPickPhoto(object sender, RoutedEventArgs e)
         {
-            Write(FileKit.PickImage());
+            Write(CrossKit.PickImage());
         }
 
         void OnPickPhotos(object sender, RoutedEventArgs e)
         {
-            Write(FileKit.PickImages());
+            Write(CrossKit.PickImages());
         }
 
         void OnPickVideo(object sender, RoutedEventArgs e)
         {
-            Write(FileKit.PickVideo());
+            Write(CrossKit.PickVideo());
         }
 
         void OnPickVideos(object sender, RoutedEventArgs e)
         {
-            Write(FileKit.PickVideos());
+            Write(CrossKit.PickVideos());
         }
 
         void OnPickMedia(object sender, RoutedEventArgs e)
         {
-            Write(FileKit.PickMedia());
+            Write(CrossKit.PickMedia());
         }
 
         void OnPickMedias(object sender, RoutedEventArgs e)
         {
-            Write(FileKit.PickMedias());
+            Write(CrossKit.PickMedias());
         }
 
         void OnPickFile(object sender, RoutedEventArgs e)
         {
-            Write(FileKit.PickFile(null));
+            Write(CrossKit.PickFile(null));
         }
 
         void OnPickFiles(object sender, RoutedEventArgs e)
         {
-            Write(FileKit.PickFiles(null));
+            Write(CrossKit.PickFiles(null));
         }
 
         async void Write(Task<FileData> p_file)
