@@ -49,7 +49,7 @@
                            Margin="0,0,10,0"
                            VerticalAlignment="Center" />
                 <StackPanel Grid.Column="1">
-                    <TextBlock Text="{TemplateBinding FileName}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
+                    <TextBlock Text="{TemplateBinding Title}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
                     <TextBlock Text="{TemplateBinding ExtInfo}" Style="{StaticResource VirFileNoteStyle}"/>
                 </StackPanel>
             </Grid>

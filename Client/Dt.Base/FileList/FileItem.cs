@@ -40,8 +40,8 @@ namespace Dt.Base
     public partial class FileItem : Control, IUploadUI
     {
         #region 静态成员
-        public static readonly DependencyProperty FileNameProperty = DependencyProperty.Register(
-            "FileName",
+        public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
+            "Title",
             typeof(string),
             typeof(FileItem),
             new PropertyMetadata(null));
@@ -123,7 +123,7 @@ namespace Dt.Base
         static FileItem _playerHost;
 
         readonly FileList _owner;
-        readonly FileExtInfo _extInfo = new FileExtInfo();
+        readonly FileItemInfo _itemInfo = new FileItemInfo();
         bool _loaded;
         CancellationTokenSource _ctsDownload;
         uint? _pointerID;
@@ -155,12 +155,12 @@ namespace Dt.Base
         public string ID { get; set; }
 
         /// <summary>
-        /// 获取设置文件名称，不包括扩展名
+        /// 获取设置标题，普通文件未名称，音频文件为时长
         /// </summary>
-        public string FileName
+        public string Title
         {
-            get { return (string)GetValue(FileNameProperty); }
-            set { SetValue(FileNameProperty, value); }
+            get { return (string)GetValue(TitleProperty); }
+            set { SetValue(TitleProperty, value); }
         }
         #endregion
 
@@ -427,7 +427,7 @@ namespace Dt.Base
             FileSavePicker picker = new FileSavePicker();
             picker.SuggestedStartLocation = PickerLocationId.DocumentsLibrary;
             picker.FileTypeChoices.Add(GetSaveDesc(), new List<string>() { GetExtName() });
-            picker.SuggestedFileName = FileName;
+            picker.SuggestedFileName = _itemInfo.FileName;
             StorageFile file = await picker.PickSaveFileAsync();
             if (file != null)
             {
@@ -589,11 +589,11 @@ namespace Dt.Base
             State = FileItemState.UploadWaiting;
 
             // 基础属性
-            FileName = p_file.DisplayName;
-            _extInfo.FileDesc = p_file.Desc;
-            _extInfo.Length = p_file.Size;
-            _extInfo.Uploader = AtUser.Name;
-            _extInfo.Date = AtSys.Now.ToString("yyyy-MM-dd HH:mm");
+            _itemInfo.FileName = p_file.DisplayName;
+            _itemInfo.FileDesc = p_file.Desc;
+            _itemInfo.Length = p_file.Size;
+            _itemInfo.Uploader = AtUser.Name;
+            _itemInfo.Date = AtSys.Now.ToString("yyyy-MM-dd HH:mm");
 
             // 更新控件模板及扩展信息
             UpdateTemplate(p_file.Ext);
@@ -703,6 +703,7 @@ namespace Dt.Base
                     {
                         string newPath = Path.Combine(AtLocal.CachePath, GetFileName());
                         fi.MoveTo(newPath);
+                        UpdateCachedFlag();
                     }
                 }
                 catch { }
@@ -930,20 +931,21 @@ namespace Dt.Base
             }
             else if (FileFilter.UwpAudio.Contains(p_ext))
             {
-                Icon = "\uE078";
                 FileType = FileItemType.Sound;
-                FileName = _extInfo.FileDesc;
-                ExtInfo = $"{AtKit.GetFileSizeDesc(_extInfo.Length)}\r\n{_extInfo.Uploader}\r\n{_extInfo.Date}";
+                Icon = "\uE078";
+                Title = _itemInfo.FileDesc;
+                ExtInfo = $"{AtKit.GetFileSizeDesc(_itemInfo.Length)}\r\n{_itemInfo.Uploader}\r\n{_itemInfo.Date}";
             }
             else if (FileFilter.UwpVideo.Contains(p_ext))
             {
                 FileType = FileItemType.Video;
-                ExtInfo = _extInfo.FileDesc;
+                ExtInfo = _itemInfo.FileDesc;
             }
             else
             {
                 UpdateIcon(p_ext);
-                ExtInfo = $"{_extInfo.FileDesc}\r\n{AtKit.GetFileSizeDesc(_extInfo.Length)}  {_extInfo.Uploader}\r\n{_extInfo.Date}";
+                Title = _itemInfo.FileName;
+                ExtInfo = $"{_itemInfo.FileDesc}\r\n{AtKit.GetFileSizeDesc(_itemInfo.Length)}  {_itemInfo.Uploader}\r\n{_itemInfo.Date}";
             }
 
             if (_loaded)
@@ -1055,7 +1057,7 @@ namespace Dt.Base
                 case FileItemType.Video:
                     return "视频";
             }
-            return _extInfo.FileDesc;
+            return _itemInfo.FileDesc;
         }
         #endregion
 
@@ -1154,7 +1156,7 @@ namespace Dt.Base
             {
                 // 初始化播放器
                 _mediaPlayer = new MediaPlayerElement();
-                _mediaPlayer.AutoPlay = true;
+                //_mediaPlayer.AutoPlay = true;
 
                 var player = _mediaPlayer.MediaPlayer;
                 if (player == null)
@@ -1294,11 +1296,11 @@ namespace Dt.Base
         internal void ReadData(ref Utf8JsonReader p_reader)
         {
             ID = p_reader.ReadAsString();
-            FileName = p_reader.ReadAsString();
-            _extInfo.FileDesc = p_reader.ReadAsString();
-            _extInfo.Length = (ulong)p_reader.ReadAsLong();
-            _extInfo.Uploader = p_reader.ReadAsString();
-            _extInfo.Date = p_reader.ReadAsString();
+            _itemInfo.FileName = p_reader.ReadAsString();
+            _itemInfo.FileDesc = p_reader.ReadAsString();
+            _itemInfo.Length = (ulong)p_reader.ReadAsLong();
+            _itemInfo.Uploader = p_reader.ReadAsString();
+            _itemInfo.Date = p_reader.ReadAsString();
 
             // FileItem ]
             p_reader.Read();
@@ -1314,11 +1316,11 @@ namespace Dt.Base
         {
             p_writer.WriteStartArray();
             p_writer.WriteStringValue(ID);
-            p_writer.WriteStringValue(FileName);
-            p_writer.WriteStringValue(_extInfo.FileDesc);
-            p_writer.WriteNumberValue(_extInfo.Length);
-            p_writer.WriteStringValue(_extInfo.Uploader);
-            p_writer.WriteStringValue(_extInfo.Date);
+            p_writer.WriteStringValue(_itemInfo.FileName);
+            p_writer.WriteStringValue(_itemInfo.FileDesc);
+            p_writer.WriteNumberValue(_itemInfo.Length);
+            p_writer.WriteStringValue(_itemInfo.Uploader);
+            p_writer.WriteStringValue(_itemInfo.Date);
             p_writer.WriteEndArray();
         }
         #endregion

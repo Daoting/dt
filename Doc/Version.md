@@ -20,7 +20,9 @@
 * Chat 发送语音
 * FileList增加录音文件
 
+* 调整Chat 录音文件模板样式
 * Chat 拍照和录视频发送
+*  Msg服务增加心跳包包
 
 ### 变更 
 * 移除Newtonsoft.Json，使用System.Text.Json 
@@ -41,6 +43,7 @@
 * Lv 初次加载无法滚动到底部，增加AutoScrollBottom 属性
 * Lv在分页数据源顶部插入虚拟模式时，uwp出现无刷新现象，暂无使用场景
 
+*  MediaPlayerElement 在android无法播放音频，bug已提交uno
 
 ## Release 1.0 
 

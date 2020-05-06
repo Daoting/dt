@@ -63,10 +63,12 @@ namespace Dt.Base
             bool isOk = await dlg.ShowAsync();
 
             // 计时框关闭，停止录音
-            var recording = await PlatformStopAsync();
+            FileData fd = await PlatformStopAsync();
+            // 录音时长
+            fd.Desc = dlg.Duration;
             IsRecording = false;
 
-            return isOk ? recording : null;
+            return isOk ? fd : null;
         }
     }
 }

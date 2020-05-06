@@ -14,8 +14,13 @@ namespace Dt.Base.FileLists
     /// <summary>
     /// 文件扩展信息
     /// </summary>
-    class FileExtInfo
+    class FileItemInfo
     {
+        /// <summary>
+        /// 获取设置原始文件名称，不包括扩展名
+        /// </summary>
+        public string FileName { get; set; }
+
         /// <summary>
         /// 获取设置文件类型及说明，绑定用，形如：文本文件 (.txt)
         /// </summary>

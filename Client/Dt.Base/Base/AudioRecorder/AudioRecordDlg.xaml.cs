@@ -32,6 +32,14 @@ namespace Dt.Base
             StartTimer();
         }
 
+        /// <summary>
+        /// 录音时长
+        /// </summary>
+        public string Duration
+        {
+            get { return _tbTimer.Text; }
+        }
+
         void OnSend(object sender, RoutedEventArgs e)
         {
             _timer.Stop();
