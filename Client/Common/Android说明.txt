@@ -15,7 +15,7 @@ The Bindable attribute is missing and the type [T] is not known by the MetadataP
 \Resources\values\string.xml  定义App标题
                   styles.xml  定义样式参数
 
-\Resources\Resource.Designer.cs 自动生成的资源代码
+\Resources\xml\file_paths.xml 共享路径配置
 
 \App.xaml  全局公共
 

@@ -106,41 +106,41 @@ namespace Dt.Base.Sketches
         /// <param name="e"></param>
         void OnPointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            //_isCaptured = _grid.CapturePointer(e.Pointer);
-            //if (!_isCaptured)
-            //    return;
+            _isCaptured = _grid.CapturePointer(e.Pointer);
+            if (!_isCaptured)
+                return;
 
-            //FrameworkElement hit;
-            //var clerk = _owner.SelectionClerk;
-            //e.Handled = true;
-            //_owner.Focus(FocusState.Programmatic);
-            //_pointerId = e.Pointer.PointerId;
-            //_ptStart = e.GetCurrentPoint(_grid).Position;
-            //_ptOld = _ptStart;
-            
-            //if (clerk.IsInSelectionRect(_ptStart) && !AtUI.IsCtrlPressed)
-            //{
-            //    // 在多选矩形内部
-            //    _isDragging = true;
-            //    clerk.ShowTipLines();
-            //    _selectionStart = clerk.GetCurrentPos();
-            //}
-            //else if ((hit = _owner.GetItemByPosition(_ptStart)) != null)
-            //{
-            //    // 在图元内部
-            //    _isDragging = true;
-            //    clerk.Select(hit, AtUI.IsCtrlPressed);
-            //    clerk.ShowTipLines();
-            //    _selectionStart = clerk.GetCurrentPos();
-            //}
-            //else
-            //{
-            //    // 空白区域
-            //    _isDragging = false;
-            //    _rect.Visibility = Visibility.Visible;
-            //    if (!AtUI.IsCtrlPressed)
-            //        clerk.Clear();
-            //}
+            FrameworkElement hit;
+            var clerk = _owner.SelectionClerk;
+            e.Handled = true;
+            _owner.Focus(FocusState.Programmatic);
+            _pointerId = e.Pointer.PointerId;
+            _ptStart = e.GetCurrentPoint(_grid).Position;
+            _ptOld = _ptStart;
+
+            if (clerk.IsInSelectionRect(_ptStart) && !InputManager.IsCtrlPressed)
+            {
+                // 在多选矩形内部
+                _isDragging = true;
+                clerk.ShowTipLines();
+                _selectionStart = clerk.GetCurrentPos();
+            }
+            else if ((hit = _owner.GetItemByPosition(_ptStart)) != null)
+            {
+                // 在图元内部
+                _isDragging = true;
+                clerk.Select(hit, InputManager.IsCtrlPressed);
+                clerk.ShowTipLines();
+                _selectionStart = clerk.GetCurrentPos();
+            }
+            else
+            {
+                // 空白区域
+                _isDragging = false;
+                _rect.Visibility = Visibility.Visible;
+                if (!InputManager.IsCtrlPressed)
+                    clerk.Clear();
+            }
         }
 
         /// <summary>

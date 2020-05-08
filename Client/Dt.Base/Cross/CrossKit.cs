@@ -126,6 +126,30 @@ namespace Dt.Base
         }
         #endregion
 
+        #region 拍照录像
+        static readonly CameraCapture _capture = new CameraCapture();
+
+        /// <summary>
+        /// 拍照
+        /// </summary>
+        /// <param name="p_options">选项</param>
+        /// <returns>照片文件信息，失败或放弃时返回null</returns>
+        public static Task<FileData> TakePhoto(CapturePhotoOptions p_options)
+        {
+            return _capture.TakePhoto(p_options);
+        }
+
+        /// <summary>
+        /// 录像
+        /// </summary>
+        /// <param name="p_options">选项</param>
+        /// <returns>视频文件信息，失败或放弃时返回null</returns>
+        public static Task<FileData> TakeVideo(CaptureVideoOptions p_options)
+        {
+            return _capture.TakeVideo(p_options);
+        }
+        #endregion
+
         #region 录音
         static AudioRecorder _audioRecorder;
 
