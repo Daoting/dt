@@ -20,7 +20,7 @@
                                 <Button Content="音频" Command="{Binding CmdAddAudio}" />
                                 <Button Content="录音" Command="{Binding CmdCaptureVoice}" />
                                 <Button Content="拍照" Command="{Binding CmdTakePhoto}" />
-                                <Button Content="视频" Command="{Binding CmdRecordVideo}" />
+                                <Button Content="录像" Command="{Binding CmdRecordVideo}" />
                             </StackPanel>
                         </a:CFile.Toolbar>
                         <a:Ex.Menu>

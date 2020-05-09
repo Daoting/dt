@@ -114,14 +114,18 @@ namespace Dt.Base
                 Owner.SendFiles(files);
         }
 
-        void OnTakeVideo(object sender, Mi e)
+        async void OnTakeVideo(object sender, Mi e)
         {
-            
+            var fd = await CrossKit.TakeVideo();
+            if (fd != null)
+                Owner.SendFiles(new List<FileData> { fd });
         }
 
-        void OnTakePhoto(object sender, Mi e)
+        async void OnTakePhoto(object sender, Mi e)
         {
-            
+            var fd = await CrossKit.TakePhoto();
+            if (fd != null)
+                Owner.SendFiles(new List<FileData> { fd });
         }
 
         async void OnAddFile(object sender, Mi e)

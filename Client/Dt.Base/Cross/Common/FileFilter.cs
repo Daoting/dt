@@ -39,7 +39,7 @@ namespace Dt.Base
         /// <summary>
         /// uwp视频格式
         /// </summary>
-        public static readonly string[] UwpVideo = new string[] { ".mp4", ".wmv" };
+        public static readonly string[] UwpVideo = new string[] { ".mp4", ".wmv", ".mov" };
 
         /// <summary>
         /// android视频格式

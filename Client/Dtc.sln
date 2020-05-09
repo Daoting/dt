@@ -318,7 +318,7 @@ Global
 		{CD97CCD6-E470-48F3-A69F-C6E434AB7333}.Release|x86.ActiveCfg = Release|Any CPU
 		{CD97CCD6-E470-48F3-A69F-C6E434AB7333}.Release|x86.Build.0 = Release|Any CPU
 		{CD97CCD6-E470-48F3-A69F-C6E434AB7333}.Release|x86.Deploy.0 = Release|Any CPU
-		{80A96B52-6758-4BDB-B0B4-CEA4CA155333}.Debug|Any CPU.ActiveCfg = Debug|iPhone
+		{80A96B52-6758-4BDB-B0B4-CEA4CA155333}.Debug|Any CPU.ActiveCfg = Debug|iPhoneSimulator
 		{80A96B52-6758-4BDB-B0B4-CEA4CA155333}.Debug|ARM.ActiveCfg = Debug|iPhone
 		{80A96B52-6758-4BDB-B0B4-CEA4CA155333}.Debug|iPhone.ActiveCfg = Debug|iPhone
 		{80A96B52-6758-4BDB-B0B4-CEA4CA155333}.Debug|iPhone.Build.0 = Debug|iPhone

@@ -502,27 +502,29 @@ namespace Dt.Base
         /// </summary>
         public async void CaptureVoice()
         {
-            var fileData = await CrossKit.StartRecording(this);
-            if (fileData != null)
-            {
-                await UploadFiles(new List<FileData> { fileData });
-            }
+            var fd = await CrossKit.StartRecording(this);
+            if (fd != null)
+                await UploadFiles(new List<FileData> { fd });
         }
 
         /// <summary>
         /// 增加拍照
         /// </summary>
-        public void TakePhoto()
+        public async void TakePhoto()
         {
-            AtKit.Msg("拍照");
+            var fd = await CrossKit.TakePhoto();
+            if (fd != null)
+                await UploadFiles(new List<FileData> { fd });
         }
 
         /// <summary>
         /// 增加录视频
         /// </summary>
-        public void RecordVideo()
+        public async void RecordVideo()
         {
-            AtKit.Msg("录视频");
+            var fd = await CrossKit.TakeVideo();
+            if (fd != null)
+                await UploadFiles(new List<FileData> { fd });
         }
 
         /// <summary>

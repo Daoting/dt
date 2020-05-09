@@ -39,9 +39,18 @@ namespace Dt.Sample
 
             var fd = await CrossKit.TakeVideo(op);
             if (fd != null)
+            {
                 _mp.Source = MediaSource.CreateFromUri(new Uri(fd.FilePath));
+                if (!string.IsNullOrEmpty(fd.ThumbPath))
+                    _img.Source = new BitmapImage(new Uri(fd.ThumbPath));
+                else
+                    _img.Source = null;
+            }
             else
+            {
                 _mp.Source = null;
+                _img.Source = null;
+            }
         }
     }
 }

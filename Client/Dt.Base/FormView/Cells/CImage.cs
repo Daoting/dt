@@ -26,7 +26,7 @@ namespace Dt.Base
         public static readonly DependencyProperty ShowDefaultMenuProperty = DependencyProperty.Register(
             "ShowDefaultMenu",
             typeof(bool),
-            typeof(CFile),
+            typeof(CImage),
             new PropertyMetadata(true, OnShowMenuChanged));
 
         static void OnShowMenuChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

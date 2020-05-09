@@ -136,7 +136,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_options">选项</param>
         /// <returns>照片文件信息，失败或放弃时返回null</returns>
-        public static Task<FileData> TakePhoto(CapturePhotoOptions p_options)
+        public static Task<FileData> TakePhoto(CapturePhotoOptions p_options = null)
         {
             return _capture.TakePhoto(p_options);
         }
@@ -146,7 +146,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_options">选项</param>
         /// <returns>视频文件信息，失败或放弃时返回null</returns>
-        public static Task<FileData> TakeVideo(CaptureVideoOptions p_options)
+        public static Task<FileData> TakeVideo(CaptureVideoOptions p_options = null)
         {
             return _capture.TakeVideo(p_options);
         }

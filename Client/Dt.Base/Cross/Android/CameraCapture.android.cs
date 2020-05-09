@@ -13,13 +13,10 @@ using Android.Content;
 using Android.Content.PM;
 using Android.Provider;
 using Dt.Core;
-using Dt.Core.Rpc;
 using System;
 using System.Diagnostics;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Windows.Storage.AccessCache;
 using Xamarin.Essentials;
 #endregion
 
@@ -32,14 +29,14 @@ namespace Dt.Base
         public async Task<FileData> TakePhoto(CapturePhotoOptions p_options)
         {
             if (await IsCameraAvailable())
-                return await TakeMedia(true, p_options);
+                return await TakeMedia(true, p_options ?? new CapturePhotoOptions());
             return null;
         }
 
         public async Task<FileData> TakeVideo(CaptureVideoOptions p_options)
         {
             if (await IsCameraAvailable())
-                return await TakeMedia(false, p_options);
+                return await TakeMedia(false, p_options ?? new CaptureVideoOptions());
             return null;
         }
 
@@ -53,18 +50,15 @@ namespace Dt.Base
             try
             {
                 var intent = new Intent(Application.Context, typeof(CameraCaptureActivity));
-                if (p_options != null)
+                intent.PutExtra(CameraCaptureActivity.ExtraIsPhoto, p_isPhoto);
+                intent.PutExtra(CameraCaptureActivity.ExtraFront, p_options.UseFrontCamera);
+                intent.PutExtra(MediaStore.ExtraVideoQuality, p_options.VideoQuality);
+                if (p_options is CaptureVideoOptions vo)
                 {
-                    intent.PutExtra(CameraCaptureActivity.ExtraIsPhoto, p_isPhoto);
-                    intent.PutExtra(CameraCaptureActivity.ExtraFront, p_options.UseFrontCamera);
-                    intent.PutExtra(MediaStore.ExtraVideoQuality, p_options.VideoQuality);
-                    if (p_options is CaptureVideoOptions vo)
-                    {
-                        // 一定要转成int，否正无法按int获取值！
-                        intent.PutExtra(MediaStore.ExtraDurationLimit, (int)vo.DesiredLength.TotalSeconds);
-                        if (vo.DesiredSize > 0)
-                            intent.PutExtra(MediaStore.ExtraSizeLimit, vo.DesiredSize);
-                    }
+                    // 一定要转成int，否正无法按int获取值！
+                    intent.PutExtra(MediaStore.ExtraDurationLimit, (int)vo.DesiredLength.TotalSeconds);
+                    if (vo.DesiredSize > 0)
+                        intent.PutExtra(MediaStore.ExtraSizeLimit, vo.DesiredSize);
                 }
                 intent.SetFlags(ActivityFlags.NewTask);
                 

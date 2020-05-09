@@ -25,14 +25,14 @@ namespace Dt.Base
         public async Task<FileData> TakePhoto(CapturePhotoOptions p_options)
         {
             if (await IsCameraAvailable())
-                return await TakeMedia(true, p_options);
+                return await TakeMedia(true, p_options ?? new CapturePhotoOptions());
             return null;
         }
 
         public async Task<FileData> TakeVideo(CaptureVideoOptions p_options)
         {
 			if (await IsCameraAvailable())
-				return await TakeMedia(false, p_options);
+				return await TakeMedia(false, p_options ?? new CaptureVideoOptions());
 			return null;
 		}
 
@@ -51,7 +51,21 @@ namespace Dt.Base
 			if (od != null)
 				throw new InvalidOperationException("同一时间只可激活一次");
 
-			var view = SetupController(ndelegate, p_isPhoto, p_options);
+			var view = new CaptureController(ndelegate);
+			view.MediaTypes = new[] { p_isPhoto ? "public.image" : "public.movie" };
+			view.SourceType = UIImagePickerControllerSourceType.Camera;
+			view.CameraDevice = p_options.UseFrontCamera ? UIImagePickerControllerCameraDevice.Front : UIImagePickerControllerCameraDevice.Rear;
+			view.AllowsEditing = p_options.AllowCropping;
+			if (p_isPhoto)
+			{
+				view.CameraCaptureMode = UIImagePickerControllerCameraCaptureMode.Photo;
+			}
+			else if (p_options is CaptureVideoOptions voptions)
+			{
+				view.CameraCaptureMode = UIImagePickerControllerCameraCaptureMode.Video;
+				view.VideoQuality = (voptions.VideoQuality == 0) ? UIImagePickerControllerQualityType.Low : UIImagePickerControllerQualityType.High;
+				view.VideoMaximumDuration = voptions.DesiredLength.TotalSeconds;
+			}
 			viewController.PresentViewController(view, true, null);
 
 			return ndelegate.Task.ContinueWith(t =>
@@ -59,29 +73,6 @@ namespace Dt.Base
 				Dismiss(view);
 				return t.Result;
 			});
-		}
-
-		static CaptureController SetupController(CaptureDelegate p_delegate, bool p_isPhoto, CapturePhotoOptions p_options)
-		{
-			var picker = new CaptureController(p_delegate);
-			picker.MediaTypes = new[] { p_isPhoto ? "public.image" : "public.movie" };
-			picker.SourceType = UIImagePickerControllerSourceType.Camera;
-
-			var options = p_options ?? new CapturePhotoOptions();
-			picker.CameraDevice = options.UseFrontCamera ? UIImagePickerControllerCameraDevice.Front : UIImagePickerControllerCameraDevice.Rear;
-			picker.AllowsEditing = options.AllowCropping;
-
-			if (p_isPhoto)
-			{
-				picker.CameraCaptureMode = UIImagePickerControllerCameraCaptureMode.Photo;
-			}
-			else if (p_options is CaptureVideoOptions voptions)
-			{
-				picker.CameraCaptureMode = UIImagePickerControllerCameraCaptureMode.Video;
-				picker.VideoQuality = (voptions.VideoQuality == 0) ? UIImagePickerControllerQualityType.Low : UIImagePickerControllerQualityType.High;
-				picker.VideoMaximumDuration = voptions.DesiredLength.TotalSeconds;
-			}
-			return picker;
 		}
 
 		UIImagePickerControllerDelegate _pickerDelegate;
