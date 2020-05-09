@@ -129,6 +129,8 @@ namespace Dt.Base
         #region 拍照录像
         static readonly CameraCapture _capture = new CameraCapture();
 
+        // 参加 https://github.com/jamesmontemagno/MediaPlugin
+
         /// <summary>
         /// 拍照
         /// </summary>

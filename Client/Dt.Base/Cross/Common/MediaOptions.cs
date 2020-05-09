@@ -26,6 +26,13 @@ namespace Dt.Base
         /// 视频/图片品质，1高品质，0普通
         /// </summary>
         public int VideoQuality { get; set; } = 1;
+
+        /// <summary>
+        /// 是否允许编辑视频或照片
+        /// Photo: UWP cropping can only be disabled on full size
+        /// Video: UWP trimming when disabled won't allow time limit to be set
+        /// </summary>
+        public bool AllowCropping { get; set; }
     }
 
     /// <summary>
