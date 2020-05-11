@@ -701,6 +701,7 @@ namespace Dt.Base
                     FileInfo fi = new FileInfo(filePath);
                     if (fi.Exists)
                     {
+                        // 重命名免去再次下载
                         string newPath = Path.Combine(AtLocal.CachePath, GetFileName());
                         fi.MoveTo(newPath);
                         UpdateCachedFlag();

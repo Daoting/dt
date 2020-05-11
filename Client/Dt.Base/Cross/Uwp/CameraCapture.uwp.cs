@@ -14,7 +14,10 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Devices.Enumeration;
+using Windows.Media.Capture;
+using Windows.Storage;
 using Windows.Storage.AccessCache;
+using Windows.Storage.FileProperties;
 using Xamarin.Essentials;
 #endregion
 
@@ -22,27 +25,77 @@ namespace Dt.Base
 {
     class CameraCapture
     {
-        
-
         public async Task<FileData> TakePhoto(CapturePhotoOptions p_options)
         {
             if (!await IsCameraAvailable())
-            {
-                AtKit.Warn("无摄像头设备");
                 return null;
-            }
 
-            return null;
+            var options = p_options ?? new CapturePhotoOptions();
+            var capture = new CameraCaptureUI();
+            capture.PhotoSettings.Format = CameraCaptureUIPhotoFormat.Jpeg;
+            capture.PhotoSettings.MaxResolution = (options.VideoQuality == 1) ? CameraCaptureUIMaxPhotoResolution.HighestAvailable : CameraCaptureUIMaxPhotoResolution.SmallVga;
+            // we can only disable cropping if resolution is set to max
+            if (capture.PhotoSettings.MaxResolution == CameraCaptureUIMaxPhotoResolution.HighestAvailable)
+                capture.PhotoSettings.AllowCropping = options.AllowCropping;
+
+            var result = await capture.CaptureFileAsync(CameraCaptureUIMode.Photo);
+            if (result == null)
+                return null;
+
+            // 将文件移动到CachePath
+            await result.MoveAsync(await StorageFolder.GetFolderFromPathAsync(AtLocal.CachePath), AtKit.NewID + ".jpg");
+
+            var fd = new FileData(result.Path, result.Name, (await result.GetBasicPropertiesAsync()).Size);
+            var prop = await result.Properties.GetImagePropertiesAsync();
+            fd.Desc = $"{prop.Width} x {prop.Height} (jpg)";
+
+            // 生成缩略图
+            if (prop.Width > FileData.ThumbSize || prop.Height > FileData.ThumbSize)
+            {
+                fd.ThumbPath = Path.Combine(AtLocal.CachePath, AtKit.NewID + "-t.jpg");
+                using (var fs = File.Create(fd.ThumbPath))
+                {
+                    // 默认根据DPI调整缩略图大小
+                    var fl = await result.GetThumbnailAsync(ThumbnailMode.SingleItem, FileData.ThumbSize, ThumbnailOptions.ResizeThumbnail);
+                    await fl.AsStreamForRead().CopyToAsync(fs);
+                }
+            }
+            return fd;
         }
 
         public async Task<FileData> TakeVideo(CaptureVideoOptions p_options)
         {
             if (!await IsCameraAvailable())
-            {
-                AtKit.Warn("无摄像头设备");
                 return null;
+
+            var options = p_options ?? new CaptureVideoOptions();
+            var capture = new CameraCaptureUI();
+            capture.VideoSettings.Format = CameraCaptureUIVideoFormat.Mp4;
+            capture.VideoSettings.MaxResolution = (options.VideoQuality == 1) ? CameraCaptureUIMaxVideoResolution.HighDefinition : CameraCaptureUIMaxVideoResolution.LowDefinition;
+            capture.VideoSettings.AllowTrimming = options.AllowCropping;
+            if (capture.VideoSettings.AllowTrimming)
+                capture.VideoSettings.MaxDurationInSeconds = (float)options.DesiredLength.TotalSeconds;
+
+            var result = await capture.CaptureFileAsync(CameraCaptureUIMode.Video);
+            if (result == null)
+                return null;
+
+            // 将文件移动到CachePath
+            await result.MoveAsync(await StorageFolder.GetFolderFromPathAsync(AtLocal.CachePath), AtKit.NewID + ".mp4");
+
+            var fd = new FileData(result.Path, result.Name, (await result.GetBasicPropertiesAsync()).Size);
+            var prop = await result.Properties.GetVideoPropertiesAsync();
+            fd.Desc = string.Format("{0:HH:mm:ss} ({1} x {2})", new DateTime(prop.Duration.Ticks), prop.Width, prop.Height);
+
+            // 生成缩略图
+            fd.ThumbPath = Path.Combine(AtLocal.CachePath, AtKit.NewID + "-t.jpg");
+            using (var fs = File.Create(fd.ThumbPath))
+            {
+                // 默认根据DPI调整缩略图大小
+                var fl = await result.GetThumbnailAsync(ThumbnailMode.SingleItem, FileData.ThumbSize, ThumbnailOptions.ResizeThumbnail);
+                await fl.AsStreamForRead().CopyToAsync(fs);
             }
-            return null;
+            return fd;
         }
 
         async Task<bool> IsCameraAvailable()
@@ -57,6 +110,8 @@ namespace Dt.Base
                 }
             }
             catch { }
+
+            AtKit.Warn("无摄像头设备");
             return false;
         }
     }

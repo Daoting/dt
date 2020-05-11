@@ -11,6 +11,7 @@ using Dt.Core.Rpc;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Windows.Storage;
 using Windows.Storage.AccessCache;
 #endregion
 
@@ -41,7 +42,7 @@ namespace Dt.Base
         public string FileName { get; }
 
         /// <summary>
-        /// 完整路径，UWP为安全访问ID
+        /// 完整路径，UWP时若不在AtLocal.CachePath则为安全访问ID
         /// </summary>
         public string FilePath { get; }
 
@@ -100,12 +101,16 @@ namespace Dt.Base
         /// <returns></returns>
         public async Task<Stream> GetStream()
         {
-            if (!string.IsNullOrEmpty(FilePath))
-            {
-                var file = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(FilePath);
-                return await file.OpenStreamForReadAsync();
-            }
-            return null;
+            if (string.IsNullOrEmpty(FilePath))
+                return null;
+
+            StorageFile file;
+            // 安全访问ID
+            if (FilePath.StartsWith("{"))
+                file = await StorageApplicationPermissions.FutureAccessList.GetFileAsync(FilePath);
+            else
+                file = await StorageFile.GetFileFromPathAsync(FilePath);
+            return await file.OpenStreamForReadAsync();
         }
 #elif ANDROID
         /// <summary>
