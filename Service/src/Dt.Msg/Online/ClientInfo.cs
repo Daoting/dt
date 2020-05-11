@@ -33,7 +33,6 @@ namespace Dt.Msg
             _c = p_context;
             _deviceInfo = p_deviceInfo;
             _writer = p_writer;
-            //Serilog.Log.Debug(_c.Context.TraceIdentifier);
 
             _queue = new BlockingCollection<string>();
             StartTime = DateTime.Now;

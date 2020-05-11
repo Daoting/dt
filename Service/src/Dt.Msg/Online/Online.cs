@@ -45,18 +45,18 @@ namespace Dt.Msg
                 {
                     // 同一设备多次注册
                     old.Exit();
-                    Log.Debug($"重复注册：{userID}");
+                    Log.Debug($"重复注册：{userID}  旧连接({old.Context.Context.Connection.Id})  新连接({p_client.Context.Context.Connection.Id})");
                 }
                 else
                 {
                     old.StopPush();
                     old.Close();
-                    Log.Debug($"替换：{userID}");
+                    Log.Debug($"替换：{userID}  旧连接({old.Context.Context.Connection.Id})  新连接({p_client.Context.Context.Connection.Id})");
                 }
             }
             else
             {
-                Log.Debug($"新增：{userID}");
+                Log.Debug($"+{p_client.Context.Context.Connection.Id}：{userID}  ");
             }
 
             _all[userID] = p_client;

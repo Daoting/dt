@@ -49,7 +49,7 @@ namespace Dt.Msg
                 Online.RemoveClient(_.UserID);
             }
 
-            Log.Debug($"结束会话：{_.UserID}");
+            Log.Debug("离线：" + _.UserID);
         }
 
         /// <summary>
