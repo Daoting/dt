@@ -14,6 +14,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 #endregion
 
 namespace Dt.Base
@@ -41,7 +42,14 @@ namespace Dt.Base
         {
             try
             {
-                var reader = await AtMsg.Register((int)AtSys.System);
+                Dict dt = new Dict
+                {
+                    { "model", DeviceInfo.Model },
+                    { "name", DeviceInfo.Name },
+                    { "platform", DeviceInfo.Platform.ToString() },
+                    { "version", DeviceInfo.VersionString },
+                };
+                var reader = await AtMsg.Register(dt);
                 _retryTimes = 0;
                 while (await reader.MoveNext())
                 {

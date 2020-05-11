@@ -34,11 +34,14 @@ namespace Dt.Msg
             if (ci != null)
             {
                 var db = Redis.Db;
-                HashEntry[] hash = new HashEntry[4];
+                HashEntry[] hash = new HashEntry[7];
                 hash[0] = new HashEntry("userid", ci.UserID);
                 hash[1] = new HashEntry("svcid", Glb.ID);
                 hash[2] = new HashEntry("starttime", ci.StartTime.ToString());
-                hash[3] = new HashEntry("system", (int)ci.System);
+                hash[3] = new HashEntry("platform", ci.Platform);
+                hash[4] = new HashEntry("version", ci.Version);
+                hash[5] = new HashEntry("devicename", ci.DeviceName);
+                hash[6] = new HashEntry("devicemodel", ci.DeviceModel);
                 return db.HashSetAsync(p_event.CacheKey, hash);
             }
             return Task.CompletedTask;

@@ -27,12 +27,12 @@ namespace Dt.Msg
         /// <summary>
         /// 客户端注册在线推送
         /// </summary>
-        /// <param name="p_clientSys">客户端系统</param>
+        /// <param name="p_deviceInfo">客户端设备信息</param>
         /// <param name="p_writer"></param>
         /// <returns></returns>
-        public async Task Register(int p_clientSys, ResponseWriter p_writer)
+        public async Task Register(Dict p_deviceInfo, ResponseWriter p_writer)
         {
-            var ci = new ClientInfo(_, (ClientSystem)p_clientSys, p_writer);
+            var ci = new ClientInfo(_, p_deviceInfo, p_writer);
             // 注册新会话，注销同一用户的旧会话，向新会话发送离线信息
             await Online.Register(ci);
 
@@ -87,9 +87,12 @@ namespace Dt.Msg
                 return new Dict
                 {
                     { "userid", ci.UserID },
-                    {"svcid", Glb.ID  },
+                    { "svcid", Glb.ID },
                     { "starttime", ci.StartTime.ToString() },
-                    { "system", (int)ci.System }
+                    { "platform", ci.Platform },
+                    { "version", ci.Version },
+                    { "devicename", ci.DeviceName },
+                    { "devicemodel", ci.DeviceModel },
                 };
             }
 

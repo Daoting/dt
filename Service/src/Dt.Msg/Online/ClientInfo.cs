@@ -26,11 +26,12 @@ namespace Dt.Msg
         readonly BlockingCollection<string> _queue;
         readonly LobContext _c;
         readonly ResponseWriter _writer;
+        readonly Dict _deviceInfo;
 
-        public ClientInfo(LobContext p_context, ClientSystem p_system, ResponseWriter p_writer)
+        public ClientInfo(LobContext p_context, Dict p_deviceInfo, ResponseWriter p_writer)
         {
             _c = p_context;
-            System = p_system;
+            _deviceInfo = p_deviceInfo;
             _writer = p_writer;
             //Serilog.Log.Debug(_c.Context.TraceIdentifier);
 
@@ -57,7 +58,22 @@ namespace Dt.Msg
         /// <summary>
         /// 客户端系统
         /// </summary>
-        public ClientSystem System { get; }
+        public string Platform => _deviceInfo.Str("platform");
+
+        /// <summary>
+        /// 客户端系统版本
+        /// </summary>
+        public string Version => _deviceInfo.Str("version");
+
+        /// <summary>
+        /// 客户端设备名称
+        /// </summary>
+        public string DeviceName => _deviceInfo.Str("name");
+
+        /// <summary>
+        /// 客户端设备
+        /// </summary>
+        public string DeviceModel => _deviceInfo.Str("model");
 
         /// <summary>
         /// 开始时间
@@ -129,12 +145,21 @@ namespace Dt.Msg
         }
 
         /// <summary>
-        /// 关闭推送
+        /// 关闭推送，取消本次请求
         /// </summary>
         /// <returns></returns>
         public void Close()
         {
             _c.Context.Abort();
+        }
+
+        /// <summary>
+        /// 会话结束，未通知客户端退出，也未取消本次请求，只是SendMsg()方法返回false结束长连接会话
+        /// </summary>
+        public void Exit()
+        {
+            // 触发_queue.Take()异常，会话结束
+            _queue.CompleteAdding();
         }
     }
 }

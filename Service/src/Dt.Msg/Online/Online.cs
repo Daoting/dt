@@ -38,16 +38,25 @@ namespace Dt.Msg
 
             // 通知已注册的客户端关闭会话
             // 同一用户在一个服务副本最后注册的有效，在不同副本时都有效！！！
-            if (_all.TryRemove(userID, out var ci))
+            if (_all.TryRemove(userID, out var old))
             {
                 // 旧会话
-                ci.StopPush();
-                ci.Close();
-                Log.Debug($"替换会话：{userID}");
+                if (old.DeviceModel == p_client.DeviceModel && old.DeviceName == p_client.DeviceName)
+                {
+                    // 同一设备多次注册
+                    old.Exit();
+                    Log.Debug($"重复注册：{userID}");
+                }
+                else
+                {
+                    old.StopPush();
+                    old.Close();
+                    Log.Debug($"替换：{userID}");
+                }
             }
             else
             {
-                Log.Debug($"新增会话：{userID}");
+                Log.Debug($"新增：{userID}");
             }
 
             _all[userID] = p_client;
