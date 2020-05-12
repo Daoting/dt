@@ -5,8 +5,16 @@
     xmlns:a="using:Dt.Base"
     xmlns:s="using:Dt.Sample">
 
-    <s:My1 x:Name="_pnl">
-        <Button Content="Test" Click="Button_Click" />
-        <s:My2 x:Name="_child" />
-    </s:My1>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="Save" Click="OnSave" />
+            <Button Content="SetHtml" Click="OnSetHtml" />
+        </StackPanel>
+        
+        <WebView x:Name="_wv" Grid.Row="1" />
+    </Grid>
 </a:Win>

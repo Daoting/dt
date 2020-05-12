@@ -32,6 +32,7 @@
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.startMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stopMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnCm = new System.Windows.Forms.Button();
             this.tbCm = new System.Windows.Forms.RichTextBox();
@@ -46,13 +47,16 @@
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tbTraefik = new System.Windows.Forms.RichTextBox();
             this.btnTraefix = new System.Windows.Forms.Button();
-            this.stopMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.tbWs = new System.Windows.Forms.RichTextBox();
+            this.btnWs = new System.Windows.Forms.Button();
             this.contextMenuStrip.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
+            this.tabPage5.SuspendLayout();
             this.SuspendLayout();
             // 
             // notifyIcon
@@ -69,19 +73,26 @@
             this.stopMenuItem,
             this.closeMenuItem});
             this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new System.Drawing.Size(181, 92);
+            this.contextMenuStrip.Size = new System.Drawing.Size(149, 70);
             // 
             // startMenuItem
             // 
             this.startMenuItem.Name = "startMenuItem";
-            this.startMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.startMenuItem.Size = new System.Drawing.Size(148, 22);
             this.startMenuItem.Text = "启动所有服务";
             this.startMenuItem.Click += new System.EventHandler(this.startMenuItem_Click);
+            // 
+            // stopMenuItem
+            // 
+            this.stopMenuItem.Name = "stopMenuItem";
+            this.stopMenuItem.Size = new System.Drawing.Size(148, 22);
+            this.stopMenuItem.Text = "停止所有服务";
+            this.stopMenuItem.Click += new System.EventHandler(this.stopMenuItem_Click);
             // 
             // closeMenuItem
             // 
             this.closeMenuItem.Name = "closeMenuItem";
-            this.closeMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.closeMenuItem.Size = new System.Drawing.Size(148, 22);
             this.closeMenuItem.Text = "退出";
             this.closeMenuItem.Click += new System.EventHandler(this.closeMenuItem_Click);
             // 
@@ -109,6 +120,7 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
@@ -222,12 +234,36 @@
             this.btnTraefix.UseVisualStyleBackColor = true;
             this.btnTraefix.Click += new System.EventHandler(this.btnTraefix_Click);
             // 
-            // stopMenuItem
+            // tabPage5
             // 
-            this.stopMenuItem.Name = "stopMenuItem";
-            this.stopMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.stopMenuItem.Text = "停止所有服务";
-            this.stopMenuItem.Click += new System.EventHandler(this.stopMenuItem_Click);
+            this.tabPage5.Controls.Add(this.tbWs);
+            this.tabPage5.Controls.Add(this.btnWs);
+            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage5.Size = new System.Drawing.Size(616, 495);
+            this.tabPage5.TabIndex = 4;
+            this.tabPage5.Text = "Ws";
+            this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // tbWs
+            // 
+            this.tbWs.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.tbWs.Location = new System.Drawing.Point(3, 49);
+            this.tbWs.Name = "tbWs";
+            this.tbWs.Size = new System.Drawing.Size(610, 443);
+            this.tbWs.TabIndex = 3;
+            this.tbWs.Text = "";
+            // 
+            // btnWs
+            // 
+            this.btnWs.Location = new System.Drawing.Point(20, 20);
+            this.btnWs.Name = "btnWs";
+            this.btnWs.Size = new System.Drawing.Size(75, 23);
+            this.btnWs.TabIndex = 2;
+            this.btnWs.Text = "启动";
+            this.btnWs.UseVisualStyleBackColor = true;
+            this.btnWs.Click += new System.EventHandler(this.btnWs_Click);
             // 
             // Form1
             // 
@@ -248,6 +284,7 @@
             this.tabPage2.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
+            this.tabPage5.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -272,6 +309,9 @@
         private System.Windows.Forms.RichTextBox tbTraefik;
         private System.Windows.Forms.ToolStripMenuItem startMenuItem;
         private System.Windows.Forms.ToolStripMenuItem stopMenuItem;
+        private System.Windows.Forms.TabPage tabPage5;
+        private System.Windows.Forms.RichTextBox tbWs;
+        private System.Windows.Forms.Button btnWs;
     }
 }
 

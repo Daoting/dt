@@ -16,7 +16,7 @@
 * 优化Win结构
 * Fv外部有ScrollViewer的处理 
 * Tv外部有ScrollViewer的处理
- * Chat 撤回消息功能
+* Chat 撤回消息功能
 * Chat 发送语音
 * FileList增加录音文件
 * 调整Chat 录音文件模板样式

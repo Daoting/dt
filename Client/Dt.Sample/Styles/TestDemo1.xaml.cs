@@ -31,43 +31,18 @@ namespace Dt.Sample
         public TestDemo1()
         {
             InitializeComponent();
+            _wv.Source = new Uri($"{AtSys.Stub.ServerUrl.TrimEnd('/')}/ws/editor/default.html");
+        }
 
-            //Excel excel = new Excel();
+        async void OnSave(object sender, RoutedEventArgs e)
+        {
+            var ret = await _wv.InvokeScriptAsync("getHtml", null);
 
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        async void OnSetHtml(object sender, RoutedEventArgs e)
         {
-            _pnl.InvalidateMeasure();
-        }
-    }
-
-    public sealed partial class My1 : StackPanel
-    {
-        protected override Size MeasureOverride(Size availableSize)
-        {
-            var my = (My2)Children[1];
-            for (int i = 0; i < 5; i++)
-            {
-                var tb = new Button { Content = i.ToString() };
-                my.Children.Add(tb);
-                tb.Measure(new Size(40, 100));
-            }
-            
-            return base.MeasureOverride(availableSize);
-        }
-    }
-
-    public sealed partial class My2 : StackPanel
-    {
-        protected override Size MeasureOverride(Size availableSize)
-        {
-            Log.Debug("my2");
-            foreach (var elem in Children)
-            {
-                ((Button)elem).Measure(new Size(40, 100));
-            }
-            return new Size(40, Children.Count * 50);
+            await _wv.InvokeScriptAsync("setHtml", new string[] { "<p>12345</p>" });
         }
     }
 }

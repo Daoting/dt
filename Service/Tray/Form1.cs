@@ -39,6 +39,11 @@ namespace Tray
             Exec((Button)sender, tbFsm, @"D:\BaiSui\Service\src\Dt.Fsm\bin\Debug\netcoreapp3.1", "Dt.Fsm.exe", "--urls http://*:50003");
         }
 
+        private void btnWs_Click(object sender, EventArgs e)
+        {
+            Exec((Button)sender, tbWs, @"D:\BaiSui\Service\src\Dt.Ws\bin\Debug\netcoreapp3.1", "Dt.Ws.exe", "--urls http://*:50004");
+        }
+
         private void btnTraefix_Click(object sender, EventArgs e)
         {
             Exec((Button)sender, tbTraefik, @"E:\Software\Last\Traefik", "traefik.exe", "-c traefik.toml --debug");
@@ -49,25 +54,31 @@ namespace Tray
             if (btnTraefix.Tag == null)
             {
                 btnTraefix_Click(btnTraefix, null);
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
             }
 
             if (btnCm.Tag == null)
             {
                 btnCm_Click(btnCm, null);
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
             }
 
             if (btnMsg.Tag == null)
             {
                 btnMsg_Click(btnMsg, null);
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
             }
 
             if (btnFsm.Tag == null)
             {
                 btnFsm_Click(btnFsm, null);
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
+            }
+
+            if (btnWs.Tag == null)
+            {
+                btnWs_Click(btnWs, null);
+                Thread.Sleep(500);
             }
             notifyIcon.ShowBalloonTip(1, "消息", "所有服务启动完毕", ToolTipIcon.Info);
         }
@@ -90,6 +101,9 @@ namespace Tray
 
             if (btnFsm.Tag != null)
                 btnFsm_Click(btnFsm, null);
+
+            if (btnWs.Tag != null)
+                btnWs_Click(btnWs, null);
         }
 
         void Exec(Button btn, RichTextBox tb, string path, string exeFile, string exeParams)
@@ -164,7 +178,7 @@ namespace Tray
             else
             {
                 CloseAllSvcs();
-                
+
             }
         }
 
