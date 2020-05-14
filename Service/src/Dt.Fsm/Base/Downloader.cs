@@ -32,7 +32,7 @@ namespace Dt.Fsm
         public Task Handle()
         {
             // 截取路径
-            string path = _context.Request.Path.Value.ToLower().Substring(4);
+            string path = _context.Request.Path.Value.Substring(4);
             if (path.EndsWith("-t.jpg"))
                 return DownloadThumbnail(path);
             return DownloadFile(path);

@@ -10,44 +10,30 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="etc\drive\photo\1.jpg" />
-    <None Remove="etc\drive\photo\Logon.wav" />
-    <None Remove="etc\drive\photo\mov-t.jpg" />
-    <None Remove="etc\drive\photo\mov.mp4" />
-    <None Remove="etc\drive\photo\profilephoto.jpg" />
-    <None Remove="etc\drive\photo\文本文档.txt" />
-    <None Remove="etc\drive\photo\项目文档.docx" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="etc\drive\photo\1.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="etc\drive\photo\Logon.wav">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="etc\drive\photo\mov-t.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="etc\drive\photo\mov.mp4">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="etc\drive\photo\profilephoto.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="etc\drive\photo\文本文档.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="etc\drive\photo\项目文档.docx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="drive\photo\1.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="drive\photo\Logon.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="drive\photo\mov-t.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="drive\photo\mov.mp4">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="drive\photo\profilephoto.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="drive\photo\文本文档.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="drive\photo\项目文档.docx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

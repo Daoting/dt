@@ -46,10 +46,9 @@ namespace Dt.Core
             // 外部中间件
             Glb.Configure(p_app);
 
-            // 默认页
-            p_app.UseDefaultFiles();
-            // 静态文件
-            p_app.UseStaticFiles();
+            // 默认页和静态页面改为在外部启用！
+            //p_app.UseDefaultFiles();
+            //p_app.UseStaticFiles();
 
             // 末尾中间件，显示自定义404页面
             p_app.UseMiddleware<EndMiddleware>();

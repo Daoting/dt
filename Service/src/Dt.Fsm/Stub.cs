@@ -9,13 +9,11 @@
 #region 引用命名
 using Dt.Core;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Fsm
@@ -37,6 +35,9 @@ namespace Dt.Fsm
                 x.ValueLengthLimit = int.MaxValue;
                 x.MultipartBodyLengthLimit = int.MaxValue;
             });
+
+            // 增加浏览目录功能，测试用
+            p_services.AddDirectoryBrowser();
         }
 
         /// <summary>
@@ -51,6 +52,19 @@ namespace Dt.Fsm
             // 注册请求路径处理
             p_handlers["/.u"] = (p_context) => new Uploader(p_context).Handle();
             p_handlers["/.d"] = (p_context) => new Downloader(p_context).Handle();
+
+            // 设置可浏览目录的根目录，测试用
+            var dir = new DirectoryBrowserOptions();
+            dir.FileProvider = new PhysicalFileProvider(Cfg.Root);
+            p_app.UseDirectoryBrowser(dir);
+
+            // 增加浏览次数
+            p_app.UseMiddleware<AddBrowseCount>();
+
+            // 指定根目录，代替wwwroot
+            var fileOption = new StaticFileOptions();
+            fileOption.FileProvider = new PhysicalFileProvider(Cfg.Root);
+            p_app.UseStaticFiles(fileOption);
         }
     }
 }

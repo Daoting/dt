@@ -59,7 +59,7 @@ namespace Dt.Fsm
         public static void Init()
         {
             // BaseDirectory程序集所在的目录，不可用Directory.GetCurrentDirectory()！
-            Root = Path.Combine(AppContext.BaseDirectory, "etc", "drive");
+            Root = Path.Combine(AppContext.BaseDirectory, "drive");
             var dir = new DirectoryInfo(Root);
             if (!dir.Exists)
                 dir.Create();
