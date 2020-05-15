@@ -44,19 +44,19 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tbFsm = new System.Windows.Forms.RichTextBox();
             this.btnFsm = new System.Windows.Forms.Button();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.tbPub = new System.Windows.Forms.RichTextBox();
+            this.btnPub = new System.Windows.Forms.Button();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tbTraefik = new System.Windows.Forms.RichTextBox();
             this.btnTraefix = new System.Windows.Forms.Button();
-            this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.tbWs = new System.Windows.Forms.RichTextBox();
-            this.btnWs = new System.Windows.Forms.Button();
             this.contextMenuStrip.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabPage3.SuspendLayout();
-            this.tabPage4.SuspendLayout();
             this.tabPage5.SuspendLayout();
+            this.tabPage4.SuspendLayout();
             this.SuspendLayout();
             // 
             // notifyIcon
@@ -203,6 +203,37 @@
             this.btnFsm.UseVisualStyleBackColor = true;
             this.btnFsm.Click += new System.EventHandler(this.btnFsm_Click);
             // 
+            // tabPage5
+            // 
+            this.tabPage5.Controls.Add(this.tbPub);
+            this.tabPage5.Controls.Add(this.btnPub);
+            this.tabPage5.Location = new System.Drawing.Point(4, 22);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage5.Size = new System.Drawing.Size(616, 495);
+            this.tabPage5.TabIndex = 4;
+            this.tabPage5.Text = "Pub";
+            this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // tbPub
+            // 
+            this.tbPub.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.tbPub.Location = new System.Drawing.Point(3, 49);
+            this.tbPub.Name = "tbPub";
+            this.tbPub.Size = new System.Drawing.Size(610, 443);
+            this.tbPub.TabIndex = 3;
+            this.tbPub.Text = "";
+            // 
+            // btnPub
+            // 
+            this.btnPub.Location = new System.Drawing.Point(20, 20);
+            this.btnPub.Name = "btnPub";
+            this.btnPub.Size = new System.Drawing.Size(75, 23);
+            this.btnPub.TabIndex = 2;
+            this.btnPub.Text = "启动";
+            this.btnPub.UseVisualStyleBackColor = true;
+            this.btnPub.Click += new System.EventHandler(this.btnPub_Click);
+            // 
             // tabPage4
             // 
             this.tabPage4.Controls.Add(this.tbTraefik);
@@ -234,37 +265,6 @@
             this.btnTraefix.UseVisualStyleBackColor = true;
             this.btnTraefix.Click += new System.EventHandler(this.btnTraefix_Click);
             // 
-            // tabPage5
-            // 
-            this.tabPage5.Controls.Add(this.tbWs);
-            this.tabPage5.Controls.Add(this.btnWs);
-            this.tabPage5.Location = new System.Drawing.Point(4, 22);
-            this.tabPage5.Name = "tabPage5";
-            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage5.Size = new System.Drawing.Size(616, 495);
-            this.tabPage5.TabIndex = 4;
-            this.tabPage5.Text = "Ws";
-            this.tabPage5.UseVisualStyleBackColor = true;
-            // 
-            // tbWs
-            // 
-            this.tbWs.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.tbWs.Location = new System.Drawing.Point(3, 49);
-            this.tbWs.Name = "tbWs";
-            this.tbWs.Size = new System.Drawing.Size(610, 443);
-            this.tbWs.TabIndex = 3;
-            this.tbWs.Text = "";
-            // 
-            // btnWs
-            // 
-            this.btnWs.Location = new System.Drawing.Point(20, 20);
-            this.btnWs.Name = "btnWs";
-            this.btnWs.Size = new System.Drawing.Size(75, 23);
-            this.btnWs.TabIndex = 2;
-            this.btnWs.Text = "启动";
-            this.btnWs.UseVisualStyleBackColor = true;
-            this.btnWs.Click += new System.EventHandler(this.btnWs_Click);
-            // 
             // Form1
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -283,8 +283,8 @@
             this.tabPage1.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
-            this.tabPage4.ResumeLayout(false);
             this.tabPage5.ResumeLayout(false);
+            this.tabPage4.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -310,8 +310,8 @@
         private System.Windows.Forms.ToolStripMenuItem startMenuItem;
         private System.Windows.Forms.ToolStripMenuItem stopMenuItem;
         private System.Windows.Forms.TabPage tabPage5;
-        private System.Windows.Forms.RichTextBox tbWs;
-        private System.Windows.Forms.Button btnWs;
+        private System.Windows.Forms.RichTextBox tbPub;
+        private System.Windows.Forms.Button btnPub;
     }
 }
 

@@ -39,9 +39,9 @@ namespace Tray
             Exec((Button)sender, tbFsm, @"D:\BaiSui\Service\src\Dt.Fsm\bin\Debug\netcoreapp3.1", "Dt.Fsm.exe", "--urls http://*:50003");
         }
 
-        private void btnWs_Click(object sender, EventArgs e)
+        private void btnPub_Click(object sender, EventArgs e)
         {
-            Exec((Button)sender, tbWs, @"D:\BaiSui\Service\src\Dt.Ws\bin\Debug\netcoreapp3.1", "Dt.Ws.exe", "--urls http://*:50004");
+            Exec((Button)sender, tbPub, @"D:\BaiSui\Service\src\Dt.Pub\bin\Debug\netcoreapp3.1", "Dt.Pub.exe", "--urls http://*:50004");
         }
 
         private void btnTraefix_Click(object sender, EventArgs e)
@@ -75,9 +75,9 @@ namespace Tray
                 Thread.Sleep(500);
             }
 
-            if (btnWs.Tag == null)
+            if (btnPub.Tag == null)
             {
-                btnWs_Click(btnWs, null);
+                btnPub_Click(btnPub, null);
                 Thread.Sleep(500);
             }
             notifyIcon.ShowBalloonTip(1, "消息", "所有服务启动完毕", ToolTipIcon.Info);
@@ -102,8 +102,8 @@ namespace Tray
             if (btnFsm.Tag != null)
                 btnFsm_Click(btnFsm, null);
 
-            if (btnWs.Tag != null)
-                btnWs_Click(btnWs, null);
+            if (btnPub.Tag != null)
+                btnPub_Click(btnPub, null);
         }
 
         void Exec(Button btn, RichTextBox tb, string path, string exeFile, string exeParams)

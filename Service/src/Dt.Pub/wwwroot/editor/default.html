@@ -1,0 +1,76 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0" />
+    <title>富文本编辑</title>
+    <link rel="stylesheet" href="../css/froala_editor.pkgd.min.css">
+</head>
+
+<body>
+    <div id="edit"></div>
+
+    <script type="text/javascript" src="../js/froala_editor.pkgd.min.js"></script>
+    <script type="text/javascript" src="../js/languages/zh_cn.js"></script>
+
+    <script>
+        var editor = new FroalaEditor("#edit",
+            {
+                language: 'zh_cn',
+                toolbarButtons:
+                {
+                    moreText:
+                    {
+                        buttons: ['undo', 'redo', 'clearFormatting', 'fontSize', 'bold', 'italic', 'underline', 'strikeThrough', 'textColor', 'backgroundColor', 'fontFamily', 'inlineClass', 'inlineStyle', 'subscript', 'superscript'],
+                        buttonsVisible: 9
+                    },
+                    moreParagraph:
+                    {
+                        buttons: ['alignLeft', 'alignCenter', 'formatOLSimple', 'alignRight', 'alignJustify', 'formatOL', 'formatUL', 'paragraphFormat', 'paragraphStyle', 'lineHeight', 'outdent', 'indent', 'quote'],
+                        align: 'left',
+                        buttonsVisible: 3
+                    },
+                    moreRich:
+                    {
+                        buttons: ['insertHR', 'emoticons', 'insertLink', 'insertTable'],
+                        align: 'left',
+                        buttonsVisible: 2
+                    },
+                    moreMisc:
+                    {
+                        buttons: ['html'],
+                        align: 'left',
+                        buttonsVisible: 2
+                    }
+                },
+            },
+            function ()
+            {
+                // 初始最大化
+                editor.fullscreen.toggle();
+            });
+
+        function getHtml()
+        {
+            return editor.html.get();
+        }
+
+        function setHtml(content)
+        {
+            editor.html.set(content);
+        }
+
+        function insertImage(imgUrl)
+        {
+            // false: 不处理imgUrl格式
+            editor.image.insert(imgUrl, false);
+        }
+
+        function insertVideo(html)
+        {
+            editor.video.insert(html);
+        }
+    </script>
+</body>
+</html>

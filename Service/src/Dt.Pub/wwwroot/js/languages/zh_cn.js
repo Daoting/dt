@@ -40,7 +40,9 @@
       // Colors
       'Colors': '颜色',
       'Background': '背景',
+      'Background Color': '背景颜色',
       'Text': '字体',
+      'Text Color': '字体颜色',
       'HEX Color': '十六进制颜色',
       // Paragraphs
       'Paragraph Format': '段落格式',

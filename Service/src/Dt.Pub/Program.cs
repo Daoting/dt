@@ -1,6 +1,6 @@
 ﻿using Dt.Core;
 
-namespace Dt.Ws
+namespace Dt.Pub
 {
     public class Program
     {

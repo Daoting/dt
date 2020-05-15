@@ -15,7 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
 #endregion
 
-namespace Dt.Ws
+namespace Dt.Pub
 {
     /// <summary>
     /// 服务存根
@@ -38,7 +38,9 @@ namespace Dt.Ws
         /// <param name="p_handlers">注册自定义请求处理</param>
         public void Configure(IApplicationBuilder p_app, IDictionary<string, RequestDelegate> p_handlers)
         {
-            
+            // 默认页和静态页面
+            p_app.UseDefaultFiles();
+            p_app.UseStaticFiles();
         }
     }
 }
