@@ -108,6 +108,12 @@ namespace Dt.Base
             typeof(Dlg),
             new PropertyMetadata(null));
 
+        public static readonly DependencyProperty ShowWinVeilProperty = DependencyProperty.Register(
+            "ShowWinVeil",
+            typeof(bool),
+            typeof(Dlg),
+            new PropertyMetadata(false, OnShowWinVeilChanged));
+
         static void OnWinPlacementChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             if (!AtSys.IsPhoneUI)
@@ -128,6 +134,12 @@ namespace Dt.Base
         static void OnTopPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             Canvas.SetTop((Dlg)d, (double)e.NewValue);
+        }
+
+        static void OnShowWinVeilChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (!AtSys.IsPhoneUI)
+                SysVisual.ToggleDlgWinVeil((Dlg)d);
         }
         #endregion
 
@@ -287,6 +299,15 @@ namespace Dt.Base
         {
             get { return GetValue(ContentProperty); }
             set { SetValue(ContentProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置win模式是否显示遮罩，默认为false
+        /// </summary>
+        public bool ShowWinVeil
+        {
+            get { return (bool)GetValue(ShowWinVeilProperty); }
+            set { SetValue(ShowWinVeilProperty, value); }
         }
 
         /// <summary>

@@ -37,6 +37,7 @@ namespace Dt.Sample
                 { "Pin", typeof(bool) },
                 { "HideBar", typeof(bool) },
                 { "Resize", typeof(bool) },
+                { "ShowWinVeil", typeof(bool) },
             };
             _fv.Data = tbl.AddRow(new { Placement = DlgPlacement.CenterScreen });
             Closed += OnClosed;
@@ -140,6 +141,7 @@ namespace Dt.Sample
             dlg.IsPinned = row.Bool("Pin");
             dlg.HideTitleBar = row.Bool("HideBar");
             dlg.Resizeable = row.Bool("Resize");
+            dlg.ShowWinVeil = row.Bool("ShowWinVeil");
             return dlg;
         }
     }

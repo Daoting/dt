@@ -200,6 +200,21 @@
         <a:Dot ID="#" Margin="10,0,10,0" />
     </DataTemplate>
 
+    <!--CHtml-->
+    <Style TargetType="a:CHtml">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Background" Value="{StaticResource 默认背景}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:CHtml">
+                    <fv:CellPanel x:Name="Panel" Background="{TemplateBinding Background}">
+                        <Button x:Name="BtnEdit" Content="&#xE0C3;" Style="{StaticResource 字符按钮}" HorizontalAlignment="Center" />
+                    </fv:CellPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
     <!--CImage-->
     <Style TargetType="a:CImage">
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />

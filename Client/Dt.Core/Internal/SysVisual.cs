@@ -168,16 +168,15 @@ namespace Dt.Core
         /// <returns></returns>
         public static bool AddDlg(UIElement p_dlg)
         {
-            if (p_dlg == null || !(p_dlg is IDlgOuterPressed))
+            if (p_dlg == null
+                || !(p_dlg is IDlgOuterPressed)
+                || _dlgCanvas.Children.Contains(p_dlg))
                 return false;
 
-            // Phone模式遮罩
-            if (!_dlgCanvas.Children.Contains(p_dlg))
-            {
-                if (AtSys.IsPhoneUI && _dlgCanvas.Children.Count == 0)
-                    _dlgCanvas.Background = _veilBrush;
-                _dlgCanvas.Children.Add(p_dlg);
-            }
+            // 遮罩
+            if (AtSys.IsPhoneUI || ((IDlgOuterPressed)p_dlg).ShowWinVeil)
+                _dlgCanvas.Background = _veilBrush;
+            _dlgCanvas.Children.Add(p_dlg);
             return true;
         }
 
@@ -193,9 +192,60 @@ namespace Dt.Core
                 return;
 
             _dlgCanvas.Children.Remove(p_dlg);
-            // 移除Phone模式遮罩
-            if (AtSys.IsPhoneUI && _dlgCanvas.Children.Count == 0)
-                _dlgCanvas.ClearValue(Panel.BackgroundProperty);
+
+            // 移除遮罩
+            if (AtSys.IsPhoneUI)
+            {
+                if (_dlgCanvas.Children.Count == 0)
+                    _dlgCanvas.ClearValue(Panel.BackgroundProperty);
+            }
+            else if (((IDlgOuterPressed)p_dlg).ShowWinVeil)
+            {
+                bool otherVeil = false;
+                foreach (var dlg in _dlgCanvas.Children.OfType<IDlgOuterPressed>())
+                {
+                    if (dlg.ShowWinVeil)
+                    {
+                        // 其他对话框有遮罩
+                        otherVeil = true;
+                        break;
+                    }
+                }
+                if (!otherVeil)
+                    _dlgCanvas.ClearValue(Panel.BackgroundProperty);
+            }
+        }
+
+        /// <summary>
+        /// 切换win模式下遮罩
+        /// </summary>
+        /// <param name="p_dlg"></param>
+        public static void ToggleDlgWinVeil(UIElement p_dlg)
+        {
+            if (p_dlg == null
+                || !(p_dlg is IDlgOuterPressed)
+                || !_dlgCanvas.Children.Contains(p_dlg))
+                return;
+
+            if (((IDlgOuterPressed)p_dlg).ShowWinVeil)
+            {
+                _dlgCanvas.Background = _veilBrush;
+            }
+            else
+            {
+                bool otherVeil = false;
+                foreach (var dlg in _dlgCanvas.Children.OfType<IDlgOuterPressed>())
+                {
+                    if (p_dlg != dlg && dlg.ShowWinVeil)
+                    {
+                        // 其他对话框有遮罩
+                        otherVeil = true;
+                        break;
+                    }
+                }
+                if (!otherVeil)
+                    _dlgCanvas.ClearValue(Panel.BackgroundProperty);
+            }
         }
 
         /// <summary>
@@ -386,6 +436,11 @@ namespace Dt.Core
     /// </summary>
     public interface IDlgOuterPressed
     {
+        /// <summary>
+        /// 获取设置win模式是否显示遮罩
+        /// </summary>
+        bool ShowWinVeil { get; }
+
         /// <summary>
         /// 点击对话框外部
         /// </summary>

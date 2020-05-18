@@ -17,6 +17,7 @@
                     <a:CNum ID="num" Title="数值" />
                     <a:CMask ID="mask" Title="掩码" />
                     <a:CPassword ID="pwd" Title="密码" />
+                    <a:CHtml ID="html" Title="富文本" />
 
                     <a:CBar Title="日期格" />
                     <a:CDate ID="date" Title="日期"/>

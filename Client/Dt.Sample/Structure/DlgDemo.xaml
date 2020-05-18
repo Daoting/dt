@@ -10,6 +10,7 @@
         <a:CBool ID="Pin" Title="固定不自动关闭" />
         <a:CBool ID="HideBar" Title="隐藏标题栏" />
         <a:CBool ID="Resize" Title="禁止调整大小" />
+        <a:CBool ID="ShowWinVeil" Title="win模式显示遮罩" />
         <StackPanel Orientation="Horizontal">
             <Button Content="显示对话框" Click="OnShow" />
             <Button Content="异步等待对话框" Click="OnShowAsync" />

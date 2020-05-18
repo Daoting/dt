@@ -43,6 +43,7 @@ namespace Dt.Sample
                 { "num", typeof(double) },
                 { "mask" },
                 { "pwd" },
+                { "html" },
 
                 { "date", typeof(DateTime) },
                 { "time", typeof(DateTime) },
@@ -143,6 +144,7 @@ namespace Dt.Sample
             public double Num { get; set; }
             public string Mask { get; set; }
             public string Pwd { get; set; }
+            public string Html { get; set; }
 
             public DateTime Date { get; set; }
             public DateTime Time { get; set; }

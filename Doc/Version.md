@@ -21,6 +21,9 @@
 * FileList增加录音文件
 * 调整Chat 录音文件模板样式
 * Chat 拍照和录视频发送
+* Fsm增加直接按路径浏览的功能
+* 增加Pub服务，引用Froala Editor
+* Fv 增加CHtml
 
 *  Msg服务增加心跳包包
 

@@ -18,6 +18,7 @@
         <CheckBox Content="可以调整大小" IsChecked="{Binding Resizeable,Mode=TwoWay,ElementName=_dlg}" />
         <CheckBox Content="固定，固定时点击外部不自动关闭" IsChecked="{Binding IsPinned,Mode=TwoWay,ElementName=_dlg}" />
         <CheckBox x:Name="_cbClosing" Content="禁止关闭" />
+        <CheckBox Content="win模式显示遮罩" IsChecked="{Binding ShowWinVeil,Mode=TwoWay,ElementName=_dlg}" />
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="返回值" VerticalAlignment="Center" Margin="0,0,10,0"/>
             <TextBox x:Name="_tbResult" Text="Hello" />
