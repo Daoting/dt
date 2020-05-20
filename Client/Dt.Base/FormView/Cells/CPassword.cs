@@ -64,9 +64,8 @@ namespace Dt.Base
             set { SetValue(MaxLengthProperty, value); }
         }
 
-        protected override void OnApplyTemplate()
+        protected override void OnApplyCellTemplate()
         {
-            base.OnApplyTemplate();
             _pb = (PasswordBox)GetTemplateChild("PasswordBox");
         }
 

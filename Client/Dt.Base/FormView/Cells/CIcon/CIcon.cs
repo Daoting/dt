@@ -83,9 +83,8 @@ namespace Dt.Base
             LoadIconUI(p_icon);
         }
 
-        protected override void OnApplyTemplate()
+        protected override void OnApplyCellTemplate()
         {
-            base.OnApplyTemplate();
             _grid = (Grid)GetTemplateChild("Grid");
 #if UWP
             // TextBlock可复制

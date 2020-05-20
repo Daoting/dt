@@ -47,9 +47,8 @@ namespace Dt.Base
         public event EventHandler Saved;
         #endregion
 
-        protected override void OnApplyTemplate()
+        protected override void OnApplyCellTemplate()
         {
-            base.OnApplyTemplate();
             var btn = (Button)GetTemplateChild("BtnEdit");
             btn.Click += OnShowDlg;
         }

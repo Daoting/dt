@@ -82,6 +82,13 @@ namespace Dt.Base
 
         TextBox _tb;
 
+        #region 构造方法
+        public CText()
+        {
+            DefaultStyleKey = typeof(CText);
+        }
+        #endregion
+
         /// <summary>
         /// 获取设置是否允许多行显示，默认false
         /// </summary>
@@ -112,10 +119,8 @@ namespace Dt.Base
             set { SetValue(UpdateTimelyProperty, value); }
         }
 
-        protected override void OnApplyTemplate()
+        protected override void OnApplyCellTemplate()
         {
-            base.OnApplyTemplate();
-
             _tb = (TextBox)GetTemplateChild("TextBox");
             if (UpdateTimely)
                 _tb.TextChanged += OnUpdateSource;

@@ -25,6 +25,8 @@ namespace Dt.Base.FormView
     public partial class FormPanel : Panel
     {
         #region 成员变量
+        static Rect _rcEmpty = new Rect();
+
         // 单元格宽度范围
         const double CellMaxWidth = 456;
         const double CellMinWidth = 296;
@@ -151,8 +153,7 @@ namespace Dt.Base.FormView
 
             foreach (var cell in Children.OfType<IFvCell>())
             {
-                if (cell.Visibility == Visibility.Visible)
-                    cell.Arrange(cell.Bounds);
+                cell.Arrange((cell.Visibility == Visibility.Visible) ? cell.Bounds : _rcEmpty);
             }
             _border.Arrange(new Rect(0, 0, finalSize.Width, finalSize.Height));
             return finalSize;
@@ -168,6 +169,7 @@ namespace Dt.Base.FormView
         double GetTotalHeight(int p_colCount, double p_colWidth, bool p_measure)
         {
             int rowIndex = 0;
+            Size szCollapsed = new Size(p_colWidth, AtRes.RowOuterHeight);
 
             // 只一列
             if (p_colCount == 1)
@@ -175,7 +177,10 @@ namespace Dt.Base.FormView
                 foreach (var cell in Children.OfType<IFvCell>())
                 {
                     if (cell.Visibility == Visibility.Collapsed)
+                    {
+                        cell.Measure(szCollapsed);
                         continue;
+                    }
 
                     // 确定行数
                     int rowSpan;
@@ -215,7 +220,10 @@ namespace Dt.Base.FormView
             foreach (var cell in Children.OfType<IFvCell>())
             {
                 if (cell.Visibility == Visibility.Collapsed)
+                {
+                    cell.Measure(szCollapsed);
                     continue;
+                }
 
                 if (cell.IsHorStretch)
                 {

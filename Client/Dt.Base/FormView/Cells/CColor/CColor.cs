@@ -99,9 +99,8 @@ namespace Dt.Base
             LoadColorUI(p_brush);
         }
 
-        protected override void OnApplyTemplate()
+        protected override void OnApplyCellTemplate()
         {
-            base.OnApplyTemplate();
             _grid = (Grid)GetTemplateChild("Grid");
 #if UWP
             // TextBlock可复制

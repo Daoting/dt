@@ -223,7 +223,6 @@ namespace Dt.Base
         public FvCell()
         {
             DefaultStyleKey = typeof(FvCell);
-            Loaded += OnLoaded;
         }
         #endregion
 
@@ -459,22 +458,11 @@ namespace Dt.Base
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-
             _panel = (CellPanel)GetTemplateChild("Panel");
             _panel?.SetOwner(this);
-        }
-        #endregion
 
-        #region 内部方法
-        /// <summary>
-        /// 加载单元格
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            Loaded -= OnLoaded;
-            _isLoaded = true;
+            // 后面SetValBinding时需要内部元素
+            OnApplyCellTemplate();
 
             if (IsReadOnly || Owner.IsReadOnly)
                 ReadOnlyBinding = true;
@@ -497,8 +485,11 @@ namespace Dt.Base
                 if (ReadLocalValue(TitleProperty) == DependencyProperty.UnsetValue)
                     SetValue(TitleProperty, ID);
             }
+            _isLoaded = true;
         }
+        #endregion
 
+        #region 内部方法
         /// <summary>
         /// 综合Fv.IsReadOnly、FvCell.IsReadOnly，确定是否只读
         /// </summary>
@@ -720,6 +711,13 @@ namespace Dt.Base
         #endregion
 
         #region 虚方法
+        /// <summary>
+        /// 应用单元格模板
+        /// </summary>
+        protected virtual void OnApplyCellTemplate()
+        {
+        }
+
         /// <summary>
         /// 数据源绑定编辑器
         /// </summary>

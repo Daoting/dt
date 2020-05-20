@@ -93,9 +93,8 @@ namespace Dt.Base
             set { SetValue(FalseValProperty, value); }
         }
 
-        protected override void OnApplyTemplate()
+        protected override void OnApplyCellTemplate()
         {
-            base.OnApplyTemplate();
             LoadBoolUI();
         }
 

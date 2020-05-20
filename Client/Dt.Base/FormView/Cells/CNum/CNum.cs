@@ -488,10 +488,8 @@ namespace Dt.Base
         #endregion
 
         #region 重写方法
-        protected override void OnApplyTemplate()
+        protected override void OnApplyCellTemplate()
         {
-            base.OnApplyTemplate();
-
             _textBox = (TextBox)GetTemplateChild("TextBox");
             _textBox.TextChanged += OnTextBoxTextChanged;
             UpdateText();
