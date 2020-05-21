@@ -248,10 +248,16 @@ namespace Dt.Core
                         for (int i = 0; i < reader.FieldCount; i++)
                         {
                             var col = cols[i];
+
+                            // 可为null的值类型
+                            Type colType = col.DataType;
+                            if (col.AllowDBNull.HasValue && col.AllowDBNull.Value && col.DataType.IsValueType)
+                                colType = typeof(Nullable<>).MakeGenericType(col.DataType);
+
                             if (reader.IsDBNull(i))
-                                new Cell(row, col.ColumnName, col.DataType);
+                                new Cell(row, col.ColumnName, colType);
                             else
-                                new Cell(row, col.ColumnName, col.DataType, reader.GetValue(i));
+                                new Cell(row, col.ColumnName, colType, reader.GetValue(i));
                         }
                         yield return row;
                     }

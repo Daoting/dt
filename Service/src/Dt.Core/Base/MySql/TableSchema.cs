@@ -275,7 +275,7 @@ namespace Dt.Core
                                           select row[col.Name]).ToArray();
                 }
 
-                if (update && updateCols.Contains(col.Name))
+                if (update && updateCols.Contains(col.Name, StringComparer.OrdinalIgnoreCase))
                 {
                     if (updateVal.Length > 0)
                         updateVal.Append(", ");

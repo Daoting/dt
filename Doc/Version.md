@@ -24,6 +24,7 @@
 * Fsm增加直接按路径浏览的功能
 * 增加Pub服务，引用Froala Editor
 * Fv 增加CHtml
+*  CTree增加清空功能
 
 *  Msg服务增加心跳包包
 
@@ -46,6 +47,7 @@
 * Lv 初次加载无法滚动到底部，增加AutoScrollBottom 属性
 * Lv在分页数据源顶部插入虚拟模式时，uwp出现无刷新现象，暂无使用场景
 * Msg同一设备可能多次注册
+* Fv初始隐藏Cell时的bug
 
 *  MediaPlayerElement 在android无法播放音频，bug已提交uno
 

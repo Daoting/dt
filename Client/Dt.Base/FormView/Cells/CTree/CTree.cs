@@ -222,7 +222,6 @@ namespace Dt.Base
                         WinPlacement = DlgPlacement.TargetBottomLeft,
                         PlacementTarget = _grid,
                         ClipElement = _grid,
-                        HideTitleBar = (_tv.SelectionMode != SelectionMode.Multiple),
                         MinHeight = 200,
                         MaxHeight = 400,
                         MaxWidth = 400,

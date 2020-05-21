@@ -76,7 +76,7 @@ namespace Dt.App.Model
             {
                 // 根节点
                 _m.HideExcept("新建", "刷新模型");
-                _fv.HideExcept("name", "icon", "parentid");
+                _fv.HideExcept("name", "icon", "parentname");
                 _mRole.IsEnabled = false;
                 _lvRole.Data = null;
                 return;
@@ -85,7 +85,7 @@ namespace Dt.App.Model
             if (m.IsGroup)
             {
                 _m.ShowExcept("打开菜单");
-                _fv.HideExcept("name", "icon", "parentid");
+                _fv.HideExcept("name", "icon", "parentname");
             }
             else
             {

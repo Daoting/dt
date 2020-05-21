@@ -31,19 +31,21 @@ namespace Dt.Base.FormView
             InitializeComponent();
             Title = "选择";
             _owner = p_owner;
-            Tv tv = _owner.Tv;
-            Content = tv;
+            Content = _owner.Tv;
+        }
 
+        public async void ShowDlg()
+        {
+            Tv tv = _owner.Tv;
+
+            tv.ItemClick -= OnSingleClick;
             if (tv.SelectionMode == SelectionMode.Multiple)
             {
-                Mi mi = new Mi { ID = "确定", Icon = Icons.保存 };
-                mi.Click += OnMultipleOK;
-                Menu menu = new Menu();
-                menu.Items.Add(mi);
-                Menu = menu;
+                _menu.Show("确定");
             }
             else
             {
+                _menu.Hide("确定");
                 tv.ItemClick += OnSingleClick;
             }
 
@@ -59,11 +61,7 @@ namespace Dt.Base.FormView
                     AtKit.Error("数据填充：源列表、目标列表列个数不一致！");
                 }
             }
-        }
 
-        public async void ShowDlg()
-        {
-            Tv tv = _owner.Tv;
             // 第一次或动态加载数据源时
             if (tv.Data == null || _owner.RefreshData)
                 await _owner.OnLoadData();
@@ -175,6 +173,31 @@ namespace Dt.Base.FormView
             _owner.Text = sb.ToString();
             Close();
             _owner.OnSelected(ls);
+        }
+
+        void OnClear(object sender, Mi e)
+        {
+            _owner.Text = null;
+            if (_tgtIDs != null)
+            {
+                object tgtObj = _owner.Owner.Data;
+                Row tgtRow = tgtObj as Row;
+                foreach (var tgtID in _tgtIDs)
+                {
+                    if (tgtRow != null)
+                    {
+                        tgtRow[tgtID] = null;
+                    }
+                    else
+                    {
+                        var tgtPi = tgtObj.GetType().GetProperty(tgtID, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                        if (tgtPi != null)
+                            tgtPi.SetValue(tgtObj, null);
+                    }
+                }
+            }
+            Close();
+            _owner.OnSelected(null);
         }
 
         protected override void OnKeyDown(KeyRoutedEventArgs e)
