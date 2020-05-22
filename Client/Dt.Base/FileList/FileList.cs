@@ -106,7 +106,6 @@ namespace Dt.Base
         public FileList()
         {
             DefaultStyleKey = typeof(FileList);
-            Loaded += OnLoaded;
         }
         #endregion
 
@@ -560,11 +559,7 @@ namespace Dt.Base
             base.OnApplyTemplate();
             _pnl = (FileListPanel)GetTemplateChild("Panel");
             _pnl.Owner = this;
-        }
 
-        void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            Loaded -= OnLoaded;
             // 初次加载
             if (!string.IsNullOrEmpty(Data))
                 ReadData(Data);
@@ -595,6 +590,9 @@ namespace Dt.Base
         /// <returns></returns>
         void ReadData(string p_json)
         {
+            if (_pnl == null)
+                return;
+
             _pnl.Children.Clear();
             if (string.IsNullOrEmpty(p_json))
                 return;

@@ -54,7 +54,7 @@ namespace Dt.Base
             _fl = new FileList();
             _fl.MaxFileCount = 1;
             // 确保无图像时保证高度
-            _fl.MinHeight = _fl.ImageHeight;
+            MinHeight = _fl.ImageHeight;
             // 凑左上边框1
             _fl.Margin = new Thickness(-1, -1, 0, 0);
 
@@ -75,7 +75,7 @@ namespace Dt.Base
             {
                 if (value >= 0 && value != _fl.ImageHeight)
                 {
-                    _fl.MinHeight = value;
+                    MinHeight = value;
                     _fl.ImageHeight = value;
                 }
             }

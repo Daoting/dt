@@ -187,7 +187,7 @@ namespace Dt.Base.FormView
                 child.Measure(new Size(conWidth - 1, height - 1));
                 // 自动行高
                 if (_owner.RowSpan == -1)
-                    height = child.DesiredSize.Height;
+                    height = child.DesiredSize.Height > 0 ? child.DesiredSize.Height : AtRes.RowOuterHeight;
             }
 
             // 内容外框

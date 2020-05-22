@@ -35,6 +35,35 @@ namespace Dt.Pub
             "</body>\n" +
             "</html>";
 
+        public async Task<string> SavePost(Post p_post)
+        {
+            if (p_post == null)
+                return "待保存的文章对象为null";
+
+            if (!p_post.IsAdded && !p_post.IsChanged)
+                return "文章对象不需要保存";
+
+            if (!p_post.IsAdded
+                && (p_post.Cells["title"].IsChanged || p_post.Cells["content"].IsChanged))
+            {
+                if (!string.IsNullOrEmpty(p_post.Url))
+                {
+                    // 删除旧文件
+                }
+
+                string url = null;
+                if (!string.IsNullOrEmpty(p_post.Title) && !string.IsNullOrEmpty(p_post.Content))
+                {
+                    url = await BuildHtmlPage(p_post.Title, p_post.Content, Glb.Now.ToString("yyyyMM"));
+                }
+                p_post.SetUrl(url);
+            }
+            
+            Repo<Post> repo = new Repo<Post>();
+            bool suc = await repo.Save(p_post);
+            return "";
+        }
+
         /// <summary>
         /// 创建静态页面
         /// </summary>

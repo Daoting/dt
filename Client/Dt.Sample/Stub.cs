@@ -11,6 +11,7 @@ using Dt.App;
 using Dt.App.Chat;
 using Dt.App.Home;
 using Dt.App.Model;
+using Dt.App.Pub;
 using Dt.Base;
 using Dt.Base.Docking;
 using Dt.Base.FormView;
@@ -127,6 +128,7 @@ namespace Dt.Shell
             { "主页", typeof(DefaultHome) },
             { "通讯录", typeof(ChatHome) },
             { "控件样例", typeof(SamplesMain) },
+            { "文章管理", typeof(PostMgr) },
         };
 
         /// <summary>

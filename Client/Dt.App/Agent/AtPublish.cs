@@ -7,11 +7,12 @@
 #endregion
 
 #region 引用命名
+using Dt.Core;
 using Dt.Core.Rpc;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Base
+namespace Dt.App
 {
     /// <summary>
     /// 发布服务Api代理类（自动生成）
@@ -19,6 +20,15 @@ namespace Dt.Base
     public static class AtPublish
     {
         #region Publish
+        public static Task<string> SavePost(Row p_post)
+        {
+            return new UnaryRpc(
+                "pub",
+                "Publish.SavePost",
+                p_post
+            ).Call<string>();
+        }
+
         /// <summary>
         /// 创建静态页面
         /// </summary>

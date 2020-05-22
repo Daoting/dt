@@ -11,8 +11,4 @@
     <ProjectReference Include="..\Dt.Base\Dt.Base.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Publish\" />
-  </ItemGroup>
-
 </Project>
