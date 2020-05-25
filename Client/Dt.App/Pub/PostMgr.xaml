@@ -61,13 +61,13 @@
                     <a:CBool ID="AddCatLink" Title="添加相同分类链接" />
                     <a:CBool ID="IsPublish" Title="发布" />
                     <a:CBar Title="其他" />
-                    <a:CText ID="Url" Title="文章地址" IsReadOnly="True" />
-                    <a:CText ID="creator" Title="创建人" IsReadOnly="True" />
-                    <a:CDate ID="ctime" Title="创建时间" IsReadOnly="True" />
-                    <a:CText ID="lasteditor" Title="修改人" IsReadOnly="True" />
-                    <a:CDate ID="mtime" Title="修改时间" IsReadOnly="True" />
-                    <a:CText ID="ReadCount" Title="阅读次数" IsReadOnly="True" />
-                    <a:CText ID="CommentCount" Title="评论次数" IsReadOnly="True" />
+                    <a:CTip ID="Url" Title="文章地址" />
+                    <a:CTip ID="creator" Title="创建人" />
+                    <a:CTip ID="ctime" Title="创建时间" />
+                    <a:CTip ID="lasteditor" Title="修改人" />
+                    <a:CTip ID="mtime" Title="修改时间" />
+                    <a:CTip ID="ReadCount" Title="阅读次数" />
+                    <a:CTip ID="CommentCount" Title="评论次数" />
                 </a:Fv>
             </a:Tab>
         </a:Tabs>

@@ -24,7 +24,8 @@
 * Fsm增加直接按路径浏览的功能
 * 增加Pub服务，引用Froala Editor
 * Fv 增加CHtml
-*  CTree增加清空功能
+* CTree增加清空功能
+* 增加CTip格
 
 *  Msg服务增加心跳包包
 

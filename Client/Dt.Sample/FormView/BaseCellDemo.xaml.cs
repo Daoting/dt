@@ -55,6 +55,10 @@ namespace Dt.Sample
                 { "checkint", typeof(int) },
                 { "checkstr" },
                 { "checkswitch", typeof(bool) },
+
+                { "tip" },
+                { "tipdate", typeof(DateTime) },
+                { "tipnum", typeof(double) },
             };
         }
 
@@ -81,6 +85,10 @@ namespace Dt.Sample
                 checkint = 1,
                 checkstr = "男",
                 checkswitch = true,
+
+                tip = "只读信息内容",
+                tipdate = now,
+                tipnum = 367d,
             });
         }
 
@@ -106,6 +114,10 @@ namespace Dt.Sample
                 CheckInt = 1,
                 Checkstr = "男",
                 CheckSwitch = true,
+
+                Tip = "只读信息内容",
+                TipDate = now,
+                TipNum = 367d,
             };
         }
 
@@ -156,6 +168,10 @@ namespace Dt.Sample
             public int CheckInt { get; set; }
             public string Checkstr { get; set; }
             public bool CheckSwitch { get; set; }
+
+            public string Tip { get; set; }
+            public DateTime TipDate { get; set; }
+            public double TipNum { get; set; }
         }
     }
 }

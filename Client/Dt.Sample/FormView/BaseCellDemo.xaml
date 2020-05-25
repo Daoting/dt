@@ -51,6 +51,11 @@
                         </StackPanel>
                     </a:CLink>
                     <a:CLink x:Name="_link" Title="切换内容" IsHorStretch="False" Click="OnToggleLink" />
+
+                    <a:CBar Title="提示信息格" />
+                    <a:CTip ID="tip" Title="普通只读信息" />
+                    <a:CTip ID="tipdate" Title="日期信息" />
+                    <a:CTip ID="tipnum" Title="数字信息" Format="N2" />
                 </a:Fv>
             </a:Tab>
         </a:Tabs>

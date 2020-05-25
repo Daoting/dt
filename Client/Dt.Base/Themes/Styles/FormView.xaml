@@ -127,6 +127,21 @@
         </Setter>
     </Style>
 
+    <!--CTip-->
+    <Style TargetType="a:CTip">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
+        <Setter Property="Background" Value="{StaticResource 默认背景}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="a:CTip">
+                    <fv:CellPanel x:Name="Panel" Background="{TemplateBinding Background}">
+                        <TextBlock x:Name="Block" Padding="10" />
+                    </fv:CellPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
     <!--CNum-->
     <Style TargetType="a:CNum">
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
