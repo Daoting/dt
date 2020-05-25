@@ -8,38 +8,26 @@
 
 #region 引用命名
 using Dt.Core;
-using Dt.Core.Rpc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
-using Windows.System;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Navigation;
 #endregion
 
 namespace Dt.Base.FormView
 {
     public sealed partial class HtmlEditDlg : Dlg
     {
-        const string _insertVideo = "<video src=\"../../fsm/{0}\" poster=\"../../fsm/{1}\" preload=\"none\" width=\"640\" height=\"360\" controls=\"controls\"></video>";
-        const string _insertImg = "../../fsm/{0}";
         CHtml _owner;
         bool _saved;
 
-        public HtmlEditDlg(CHtml p_owner)
+        public HtmlEditDlg()
         {
             InitializeComponent();
-
-            _owner = p_owner;
             _wv.Source = new Uri($"{AtSys.Stub.ServerUrl.TrimEnd('/')}/pub/editor/default.html");
         }
 
-        public async void ShowDlg()
+        public async void ShowDlg(CHtml p_owner)
         {
+            _owner = p_owner;
             Show();
 
             // WebView事件无法捕捉到初始化html的时机，延时
@@ -55,16 +43,6 @@ namespace Dt.Base.FormView
             _owner.OnSaved();
             Close(true);
             _saved = true;
-        }
-
-        async void OnInsertImg(object sender, Mi e)
-        {
-            await _wv.InvokeScriptAsync("insertImage", new string[] { string.Format(_insertImg, "photo/1.jpg") });
-        }
-
-        async void OnInsertVideo(object sender, Mi e)
-        {
-            await _wv.InvokeScriptAsync("insertVideo", new string[] { string.Format(_insertVideo, "photo/mov.mp4", "photo/mov-t.jpg") });
         }
 
         protected override async Task<bool> OnClosing()

@@ -223,7 +223,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="a:CHtml">
                     <fv:CellPanel x:Name="Panel" Background="{TemplateBinding Background}">
-                        <Button x:Name="BtnEdit" Content="&#xE0C3;" Style="{StaticResource 字符按钮}" HorizontalAlignment="Center" />
+                        <Button x:Name="BtnEdit" Content="&#xE00A;" Style="{StaticResource 字符按钮}" HorizontalAlignment="Center" />
                     </fv:CellPanel>
                 </ControlTemplate>
             </Setter.Value>

@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2018-10-29 创建
+* 日志: 2020-05-20 创建
 ******************************************************************************/
 #endregion
 
@@ -10,20 +10,8 @@
 using Dt.Base.FormView;
 using Dt.Core;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.Devices.Input;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Animation;
 #endregion
 
 namespace Dt.Base
@@ -56,16 +44,26 @@ namespace Dt.Base
         void OnShowDlg(object sender, RoutedEventArgs e)
         {
             if (ReadOnlyBinding)
-                return;
-
-            var dlg = new HtmlEditDlg(this);
-            if (!AtSys.IsPhoneUI)
             {
-                dlg.ShowWinVeil = true;
-                dlg.Height = SysVisual.ViewHeight - 140;
-                dlg.Width = Math.Min(800, SysVisual.ViewWidth - 200);
+                var dlg = new HtmlViewDlg();
+                if (!AtSys.IsPhoneUI)
+                {
+                    dlg.Height = SysVisual.ViewHeight - 140;
+                    dlg.Width = Math.Min(800, SysVisual.ViewWidth - 200);
+                }
+                dlg.ShowDlg(this);
             }
-            dlg.ShowDlg();
+            else
+            {
+                var dlg = new HtmlEditDlg();
+                if (!AtSys.IsPhoneUI)
+                {
+                    dlg.ShowWinVeil = true;
+                    dlg.Height = SysVisual.ViewHeight - 140;
+                    dlg.Width = Math.Min(900, SysVisual.ViewWidth - 200);
+                }
+                dlg.ShowDlg(this);
+            }
         }
 
         internal void OnSaved()
