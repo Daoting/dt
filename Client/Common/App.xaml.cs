@@ -37,11 +37,6 @@ namespace Dt.Shell
         /// <param name="e">有关启动请求和过程的详细信息。</param>
         protected override void OnLaunched(LaunchActivatedEventArgs p_args)
         {
-#if __IOS__
-            Resources["StatusBarHeight"] = (int)UIKit.UIApplication.SharedApplication.StatusBarFrame.Height;
-            // 状态栏字体设置白色，配合info.plist中的UIViewControllerBasedStatusBarAppearance
-            UIKit.UIApplication.SharedApplication.StatusBarStyle = UIKit.UIStatusBarStyle.LightContent;
-#endif
             AtApp.Run(p_args);
         }
     }

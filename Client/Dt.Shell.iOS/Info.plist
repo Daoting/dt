@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDisplayName</key>
-	<string>搬运工</string>
+	<string>福祉堂</string>
 	<key>CFBundleIdentifier</key>
 	<string>dt.Shell</string>
 	<key>CFBundleShortVersionString</key>
@@ -45,6 +45,8 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+  <key>UIStatusBarStyle</key>
+  <string>UIStatusBarStyleLightContent</string>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/AppIcons.appiconset</string>
   <key>UILaunchStoryboardName</key>

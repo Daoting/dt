@@ -93,7 +93,7 @@ namespace Dt.Core
             _rootGrid.SizeChanged += OnSizeChanged;
 #elif IOS
             // 状态栏边距
-            StatusBarHeight = (int)Application.Current.Resources["StatusBarHeight"];
+            StatusBarHeight = (int)UIKit.UIApplication.SharedApplication.StatusBarFrame.Height;
             _rootGrid.Padding = new Thickness(0, StatusBarHeight, 0, 0);
 #endif
             // 主题蓝色
