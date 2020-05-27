@@ -202,7 +202,7 @@ namespace Dt.Base
             string p_content,
             LetterType p_type)
         {
-            Check.NotNullOrEmpty(p_content);
+            Throw.IfNullOrEmpty(p_content);
 
             LetterInfo li = new LetterInfo
             {

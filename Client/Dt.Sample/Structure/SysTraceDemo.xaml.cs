@@ -55,11 +55,6 @@ namespace Dt.Sample
             AtKit.Trace(TraceOutType.UnhandledException, "未处理异常信息", "异常信息详细内容！");
         }
 
-        void OnAssertExcept(object sender, RoutedEventArgs e)
-        {
-            AtKit.Throw("断言异常");
-        }
-
         void OnDebugExcept(object sender, RoutedEventArgs e)
         {
             throw new Exception("未处理异常信息");
@@ -67,7 +62,7 @@ namespace Dt.Sample
 
         void OnExcept(object sender, RoutedEventArgs e)
         {
-            throw new FriendlyException("业务警告");
+            Throw.Msg("业务警告");
         }
     }
 }

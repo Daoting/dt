@@ -15,7 +15,6 @@
         <Button Content="远程异常信息" Click="OnRpcException" />
         <Button Content="未处理异常" Click="OnUnhandled" />
         <a:CBar Title="异常与断言警告" />
-        <Button Content="断言异常" Click="OnAssertExcept" />
         <Button Content="业务警告" Click="OnExcept" />
         <Button Content="未处理异常" Click="OnDebugExcept" />
     </a:Fv>

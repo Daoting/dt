@@ -50,8 +50,7 @@ namespace Dt.Base
         static void OnContextMenuChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             FrameworkElement element = d as FrameworkElement;
-            if (element == null)
-                AtKit.Throw("上下文菜单的目标为空！");
+            Throw.IfNull(element, "上下文菜单的目标为空！");
 
             if (e.OldValue is Menu oldMenu)
                 oldMenu.UnloadContextMenu();
@@ -150,7 +149,7 @@ namespace Dt.Base
         /// <returns></returns>
         public static object GetTagClsObj(this DependencyObject element, bool p_newObj = false)
         {
-            Check.NotNull(element);
+            Throw.IfNull(element);
             string name = GetTagCls(element);
             if (string.IsNullOrEmpty(name))
                 return null;
@@ -190,7 +189,7 @@ namespace Dt.Base
         /// <returns></returns>
         public static Type GetTagClsType(this DependencyObject element)
         {
-            Check.NotNull(element);
+            Throw.IfNull(element);
             string name = GetTagCls(element);
             if (string.IsNullOrEmpty(name))
                 return null;

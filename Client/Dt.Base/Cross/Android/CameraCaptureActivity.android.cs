@@ -98,7 +98,7 @@ namespace Dt.Base
                 {
                     // 将访问受限的 file:// URI 转化为可以授权共享的 content:// URI
                     // 已将AtLocal.CachePath共享，配置见：AndroidManifest.xml 和 Resources\xml\file_path.xml
-                    var uri = Android.Support.V4.Content.FileProvider.GetUriForFile(this, _context.PackageName + ".fileprovider", file);
+                    var uri = FileProvider.GetUriForFile(this, _context.PackageName + ".fileprovider", file);
                     GrantUriPermissionsForIntent(intent, uri);
                     intent.AddFlags(ActivityFlags.GrantReadUriPermission);
                     intent.AddFlags(ActivityFlags.GrantWriteUriPermission);
@@ -177,7 +177,8 @@ namespace Dt.Base
                         // 直接按缩放比例加载
                         options.InJustDecodeBounds = false;
                         options.InSampleSize = maxSize / FileData.ThumbSize;
-                        options.InPurgeable = true;
+                        // v29 弃用
+                        //options.InPurgeable = true;
                         Bitmap bmp = BitmapFactory.DecodeFile(_path, options);
 
                         fd.ThumbPath = System.IO.Path.Combine(AtLocal.CachePath, AtKit.NewID + "-t.jpg");

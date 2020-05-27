@@ -53,6 +53,11 @@ namespace Dt.App.Pub
         #endregion
 
         #region 文章
+        internal Post Post
+        {
+            get { return (Post)_fv.Data; }
+        }
+
         async void LoadPost(long p_id)
         {
             _fv.Data = await _repoPost.Get("文章-编辑", new { id = p_id });
@@ -71,8 +76,12 @@ namespace Dt.App.Pub
             _fv.Data = post;
         }
 
-        async Task<bool> SavePost()
+        internal async Task<bool> SavePost()
         {
+            Post post = (Post)_fv.Data;
+            if (post == null || !post.IsValid())
+                return false;
+
             var ret = await AtPublish.SavePost(_fv.Row);
             if (!string.IsNullOrEmpty(ret))
             {
@@ -91,19 +100,11 @@ namespace Dt.App.Pub
             _ = SavePost();
         }
 
-        async void OnEditContent(object sender, Mi e)
+        void OnEditContent(object sender, Mi e)
         {
             Post post = (Post)_fv.Data;
-            if (post == null)
-                return;
-
-            if (post.IsAdded || post.IsChanged)
-            {
-                // 先保存
-                if (!await SavePost())
-                    return;
-            }
-            new EditPostDlg().ShowDlg(post.ID);
+            if (post != null)
+                new EditPostDlg().ShowDlg(this);
         }
 
         async void OnDelPost(object sender, Mi e)

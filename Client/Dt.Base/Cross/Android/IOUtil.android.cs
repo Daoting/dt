@@ -48,7 +48,7 @@ namespace Dt.Base
 
                     if ("primary".Equals(type, StringComparison.OrdinalIgnoreCase))
                     {
-                        return Android.OS.Environment.ExternalStorageDirectory + "/" + split[1];
+                        return context.GetExternalFilesDir(null) + "/" + split[1];
                     }
 
                     // TODO handle non-primary volumes
@@ -154,7 +154,9 @@ namespace Dt.Base
         public static string GetDataColumn(Context context, Android.Net.Uri uri, string selection, string[] selectionArgs)
         {
             ICursor cursor = null;
-            string column = MediaStore.Files.FileColumns.Data;
+            // v29 弃用
+            //string column = MediaStore.Files.FileColumns.Data;
+            string column = "_data";
             string[] projection = { column };
 
             try

@@ -33,7 +33,7 @@ namespace Dt.Msg
         /// <returns></returns>
         public static Task Register(ClientInfo p_client)
         {
-            Check.NotNull(p_client);
+            Throw.IfNull(p_client);
             long userID = p_client.Context.UserID;
 
             // 通知已注册的客户端关闭会话

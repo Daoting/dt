@@ -91,7 +91,7 @@ namespace Dt.Core
 
 #if UWP || WASM
             _rootGrid.SizeChanged += OnSizeChanged;
-#else
+#elif IOS
             // 状态栏边距
             StatusBarHeight = (int)Application.Current.Resources["StatusBarHeight"];
             _rootGrid.Padding = new Thickness(0, StatusBarHeight, 0, 0);

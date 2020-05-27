@@ -10,14 +10,14 @@
 using System;
 #endregion
 
-namespace Dt.Core.Rpc
+namespace Dt.Core
 {
     /// <summary>
-    /// 业务处理异常类型
+    /// 程序中已做判断的异常
     /// </summary>
-    public class RpcException : Exception
+    public class KnownException : Exception
     {
-        public RpcException(string p_message)
+        public KnownException(string p_message)
             : base(p_message)
         {
         }

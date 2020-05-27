@@ -218,7 +218,8 @@ namespace Dt.Base
                     // 直接按缩放比例加载
                     options.InJustDecodeBounds = false;
                     options.InSampleSize = maxSize / FileData.ThumbSize;
-                    options.InPurgeable = true;
+                    // v29 弃用
+                    //options.InPurgeable = true;
                     Bitmap bmp = BitmapFactory.DecodeFile(filePath, options);
 
                     fd.ThumbPath = System.IO.Path.Combine(AtLocal.CachePath, AtKit.NewID + "-t.jpg");

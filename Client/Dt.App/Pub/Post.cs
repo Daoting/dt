@@ -13,8 +13,33 @@ using System;
 
 namespace Dt.App.Pub
 {
+    public partial class Post
+    {
+        protected override void SetContent(string p_value)
+        {
+            Throw.If(string.IsNullOrEmpty(p_value) && IsPublish, "发布的文章内容不能为空");
+            base.SetContent(p_value);
+        }
+
+        public bool IsValid()
+        {
+            if (string.IsNullOrEmpty(Title))
+            {
+                return false;
+            }
+
+            if (IsPublish && string.IsNullOrEmpty(Content))
+            {
+                AtKit.Warn("发布的文章内容不能为空");
+                return false;
+            }
+            return true;
+        }
+    }
+
+    #region PostEntity
     [Tbl("pub_post", "pub")]
-    public partial class Post : Entity
+    public partial class Post : PostEntity
     {
         public Post()
         { }
@@ -59,14 +84,22 @@ namespace Dt.App.Pub
             AddCell<int>("CommentCount", CommentCount);
             IsAdded = true;
         }
+    }
 
+    public abstract class PostEntity : Entity
+    {
         /// <summary>
         /// 标题
         /// </summary>
         public string Title
         {
             get { return (string)_cells["Title"].Val; }
-            private set { _cells["Title"].Val = value; }
+            set { SetTitle(value); }
+        }
+
+        protected virtual void SetTitle(string p_value)
+        {
+            _cells["Title"].Val = p_value;
         }
 
         /// <summary>
@@ -75,7 +108,12 @@ namespace Dt.App.Pub
         public string Cover
         {
             get { return (string)_cells["Cover"].Val; }
-            private set { _cells["Cover"].Val = value; }
+            set { SetCover(value); }
+        }
+
+        protected virtual void SetCover(string p_value)
+        {
+            _cells["Cover"].Val = p_value;
         }
 
         /// <summary>
@@ -84,7 +122,12 @@ namespace Dt.App.Pub
         public string Content
         {
             get { return (string)_cells["Content"].Val; }
-            private set { _cells["Content"].Val = value; }
+            set { SetContent(value); }
+        }
+
+        protected virtual void SetContent(string p_value)
+        {
+            _cells["Content"].Val = p_value;
         }
 
         /// <summary>
@@ -93,7 +136,12 @@ namespace Dt.App.Pub
         public bool IsPublish
         {
             get { return (bool)_cells["IsPublish"].Val; }
-            private set { _cells["IsPublish"].Val = value; }
+            set { SetIsPublish(value); }
+        }
+
+        protected virtual void SetIsPublish(bool p_value)
+        {
+            _cells["IsPublish"].Val = p_value;
         }
 
         /// <summary>
@@ -102,7 +150,12 @@ namespace Dt.App.Pub
         public bool AllowComment
         {
             get { return (bool)_cells["AllowComment"].Val; }
-            private set { _cells["AllowComment"].Val = value; }
+            set { SetAllowComment(value); }
+        }
+
+        protected virtual void SetAllowComment(bool p_value)
+        {
+            _cells["AllowComment"].Val = p_value;
         }
 
         /// <summary>
@@ -111,7 +164,12 @@ namespace Dt.App.Pub
         public bool AddAlbumLink
         {
             get { return (bool)_cells["AddAlbumLink"].Val; }
-            private set { _cells["AddAlbumLink"].Val = value; }
+            set { SetAddAlbumLink(value); }
+        }
+
+        protected virtual void SetAddAlbumLink(bool p_value)
+        {
+            _cells["AddAlbumLink"].Val = p_value;
         }
 
         /// <summary>
@@ -120,7 +178,12 @@ namespace Dt.App.Pub
         public bool AddCatLink
         {
             get { return (bool)_cells["AddCatLink"].Val; }
-            private set { _cells["AddCatLink"].Val = value; }
+            set { SetAddCatLink(value); }
+        }
+
+        protected virtual void SetAddCatLink(bool p_value)
+        {
+            _cells["AddCatLink"].Val = p_value;
         }
 
         /// <summary>
@@ -129,7 +192,12 @@ namespace Dt.App.Pub
         public string Url
         {
             get { return (string)_cells["Url"].Val; }
-            private set { _cells["Url"].Val = value; }
+            set { SetUrl(value); }
+        }
+
+        protected virtual void SetUrl(string p_value)
+        {
+            _cells["Url"].Val = p_value;
         }
 
         /// <summary>
@@ -138,7 +206,12 @@ namespace Dt.App.Pub
         public int Dispidx
         {
             get { return (int)_cells["Dispidx"].Val; }
-            private set { _cells["Dispidx"].Val = value; }
+            set { SetDispidx(value); }
+        }
+
+        protected virtual void SetDispidx(int p_value)
+        {
+            _cells["Dispidx"].Val = p_value;
         }
 
         /// <summary>
@@ -147,7 +220,12 @@ namespace Dt.App.Pub
         public long CreatorID
         {
             get { return (long)_cells["CreatorID"].Val; }
-            private set { _cells["CreatorID"].Val = value; }
+            set { SetCreatorID(value); }
+        }
+
+        protected virtual void SetCreatorID(long p_value)
+        {
+            _cells["CreatorID"].Val = p_value;
         }
 
         /// <summary>
@@ -156,7 +234,12 @@ namespace Dt.App.Pub
         public string Creator
         {
             get { return (string)_cells["Creator"].Val; }
-            private set { _cells["Creator"].Val = value; }
+            set { SetCreator(value); }
+        }
+
+        protected virtual void SetCreator(string p_value)
+        {
+            _cells["Creator"].Val = p_value;
         }
 
         /// <summary>
@@ -165,7 +248,12 @@ namespace Dt.App.Pub
         public DateTime Ctime
         {
             get { return (DateTime)_cells["Ctime"].Val; }
-            private set { _cells["Ctime"].Val = value; }
+            set { SetCtime(value); }
+        }
+
+        protected virtual void SetCtime(DateTime p_value)
+        {
+            _cells["Ctime"].Val = p_value;
         }
 
         /// <summary>
@@ -174,7 +262,12 @@ namespace Dt.App.Pub
         public long? LastEditorID
         {
             get { return (long?)_cells["LastEditorID"].Val; }
-            private set { _cells["LastEditorID"].Val = value; }
+            set { SetLastEditorID(value); }
+        }
+
+        protected virtual void SetLastEditorID(long? p_value)
+        {
+            _cells["LastEditorID"].Val = p_value;
         }
 
         /// <summary>
@@ -183,7 +276,12 @@ namespace Dt.App.Pub
         public string LastEditor
         {
             get { return (string)_cells["LastEditor"].Val; }
-            private set { _cells["LastEditor"].Val = value; }
+            set { SetLastEditor(value); }
+        }
+
+        protected virtual void SetLastEditor(string p_value)
+        {
+            _cells["LastEditor"].Val = p_value;
         }
 
         /// <summary>
@@ -192,7 +290,12 @@ namespace Dt.App.Pub
         public DateTime? Mtime
         {
             get { return (DateTime?)_cells["Mtime"].Val; }
-            private set { _cells["Mtime"].Val = value; }
+            set { SetMtime(value); }
+        }
+
+        protected virtual void SetMtime(DateTime? p_value)
+        {
+            _cells["Mtime"].Val = p_value;
         }
 
         /// <summary>
@@ -201,7 +304,12 @@ namespace Dt.App.Pub
         public int ReadCount
         {
             get { return (int)_cells["ReadCount"].Val; }
-            private set { _cells["ReadCount"].Val = value; }
+            set { SetReadCount(value); }
+        }
+
+        protected virtual void SetReadCount(int p_value)
+        {
+            _cells["ReadCount"].Val = p_value;
         }
 
         /// <summary>
@@ -210,7 +318,13 @@ namespace Dt.App.Pub
         public int CommentCount
         {
             get { return (int)_cells["CommentCount"].Val; }
-            private set { _cells["CommentCount"].Val = value; }
+            set { SetCommentCount(value); }
+        }
+
+        protected virtual void SetCommentCount(int p_value)
+        {
+            _cells["CommentCount"].Val = p_value;
         }
     }
+    #endregion
 }

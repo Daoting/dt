@@ -107,9 +107,6 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\Common\icon.ttf">
-      <Link>Assets\Fonts\icon.ttf</Link>
-    </Content>
     <Content Include="Assets\SplashScreen.scale-200.png" />
     <Content Include="Assets\Square150x150Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.scale-200.png" />
@@ -164,6 +161,11 @@
       <Project>{25744ee1-b117-4141-b9a8-5ca1cbebcd98}</Project>
       <Name>Dt.Sample</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\Common\Fonts\icon.ttf">
+      <Link>Assets\Fonts\icon.ttf</Link>
+    </Content>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

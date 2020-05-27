@@ -35,7 +35,8 @@ namespace Dt.Cm
         /// <returns></returns>
         public string ThrowRpcException()
         {
-            throw new RpcException("业务异常测试，在客户端作为提示消息。");
+            Throw.Msg("业务异常测试，在客户端作为警告消息。");
+            return "test";
         }
 
         /// <summary>

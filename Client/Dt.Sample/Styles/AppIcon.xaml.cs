@@ -74,22 +74,62 @@ namespace Dt.Sample
                 return;
             }
 
-            _bd.Background = AtRes.主题蓝色;
             var root = await OpenFolder($"{icon}_android");
 
+            // 旧图标
+            //var folder = await root.CreateFolderAsync("drawable", CreationCollisionOption.OpenIfExists);
+            //await SaveIcon(640, 1136, 326, icon, "back.png", folder);
+            //await SaveIcon(72, 72, 58, icon, "icon.png", folder);
+            //await SaveIcon(50, 50, 40, icon, "logo.png", folder);
+
+            //folder = await root.CreateFolderAsync("drawable-hdpi", CreationCollisionOption.OpenIfExists);
+            //await SaveIcon(72, 72, 58, icon, "icon.png", folder);
+
+            //folder = await root.CreateFolderAsync("drawable-xhdpi", CreationCollisionOption.OpenIfExists);
+            //await SaveIcon(96, 96, 76, icon, "icon.png", folder);
+
+            //folder = await root.CreateFolderAsync("drawable-xxhdpi", CreationCollisionOption.OpenIfExists);
+            //await SaveIcon(144, 144, 115, icon, "icon.png", folder);
+
+            _bd.Background = AtRes.主题蓝色;
             var folder = await root.CreateFolderAsync("drawable", CreationCollisionOption.OpenIfExists);
             await SaveIcon(640, 1136, 326, icon, "back.png", folder);
-            await SaveIcon(72, 72, 58, icon, "icon.png", folder);
             await SaveIcon(50, 50, 40, icon, "logo.png", folder);
 
-            folder = await root.CreateFolderAsync("drawable-hdpi", CreationCollisionOption.OpenIfExists);
-            await SaveIcon(72, 72, 58, icon, "icon.png", folder);
+            folder = await root.CreateFolderAsync("mipmap-hdpi", CreationCollisionOption.OpenIfExists);
+            await SaveIcon(72, 72, 58, icon, "ic_launcher.png", folder);
+            await SaveIcon(72, 72, 58, icon, "ic_launcher_round.png", folder);
+            _bd.Background = null;
+            await SaveIcon(162, 162, 80, icon, "ic_launcher_foreground.png", folder);
 
-            folder = await root.CreateFolderAsync("drawable-xhdpi", CreationCollisionOption.OpenIfExists);
-            await SaveIcon(96, 96, 76, icon, "icon.png", folder);
+            folder = await root.CreateFolderAsync("mipmap-mdpi", CreationCollisionOption.OpenIfExists);
+            _bd.Background = AtRes.主题蓝色;
+            await SaveIcon(48, 48, 38, icon, "ic_launcher.png", folder);
+            await SaveIcon(48, 48, 38, icon, "ic_launcher_round.png", folder);
+            _bd.Background = null;
+            await SaveIcon(108, 108, 54, icon, "ic_launcher_foreground.png", folder);
 
-            folder = await root.CreateFolderAsync("drawable-xxhdpi", CreationCollisionOption.OpenIfExists);
-            await SaveIcon(144, 144, 115, icon, "icon.png", folder);
+            folder = await root.CreateFolderAsync("mipmap-xhdpi", CreationCollisionOption.OpenIfExists);
+            _bd.Background = AtRes.主题蓝色;
+            await SaveIcon(96, 96, 76, icon, "ic_launcher.png", folder);
+            await SaveIcon(96, 96, 76, icon, "ic_launcher_round.png", folder);
+            _bd.Background = null;
+            await SaveIcon(216, 216, 108, icon, "ic_launcher_foreground.png", folder);
+
+            folder = await root.CreateFolderAsync("mipmap-xxhdpi", CreationCollisionOption.OpenIfExists);
+            _bd.Background = AtRes.主题蓝色;
+            await SaveIcon(144, 144, 96, icon, "ic_launcher.png", folder);
+            await SaveIcon(144, 144, 96, icon, "ic_launcher_round.png", folder);
+            _bd.Background = null;
+            await SaveIcon(324, 324, 162, icon, "ic_launcher_foreground.png", folder);
+
+            folder = await root.CreateFolderAsync("mipmap-xxxhdpi", CreationCollisionOption.OpenIfExists);
+            _bd.Background = AtRes.主题蓝色;
+            await SaveIcon(192, 192, 130, icon, "ic_launcher.png", folder);
+            await SaveIcon(192, 192, 130, icon, "ic_launcher_round.png", folder);
+            _bd.Background = null;
+            await SaveIcon(432, 432, 216, icon, "ic_launcher_foreground.png", folder);
+
             AtKit.Msg("生成成功，路径: " + folder.Path);
         }
 

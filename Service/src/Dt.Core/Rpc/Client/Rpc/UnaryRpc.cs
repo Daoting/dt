@@ -127,7 +127,7 @@ namespace Dt.Core.Rpc
             AtKit.Trace(TraceOutType.RpcRecv, string.Format("{0}—{1}ms", _methodName, result.Elapsed), content, _svcName);
 
             if (result.ResultType == RpcResultType.Message)
-                throw new FriendlyException(result.Info);
+                throw new KnownException(result.Info);
 #endif
 
             if (result.ResultType == RpcResultType.Value)

@@ -23,8 +23,7 @@ namespace Dt.Base
         /// <param name="p_win">窗口对象</param>
         public static void Open(this Win p_win)
         {
-            if (p_win == null)
-                AtKit.Throw("显示窗口不可为空！");
+            Throw.IfNull(p_win, "显示窗口不可为空！");
 
             if (!AtSys.IsPhoneUI && Desktop.Inst.ActiveWin(p_win))
             {

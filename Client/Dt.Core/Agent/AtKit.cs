@@ -247,26 +247,6 @@ namespace Dt.Core
         }
 
         /// <summary>
-        /// 抛出友好异常信息，同时保存到客户端日志
-        /// </summary>
-        /// <param name="p_msg">异常信息内容</param>
-        /// <param name="p_memberName">发生异常的方法名称</param>
-        /// <param name="p_filePath">源文件路径</param>
-        /// <param name="p_lineNumber">行号</param>
-        public static void Throw(string p_msg = null,
-            [CallerMemberName] string p_memberName = "",
-            [CallerFilePath] string p_filePath = "",
-            [CallerLineNumber] int p_lineNumber = 0)
-        {
-            string note = string.Format("位置：{0}\r\n➡{1}\r\n➡{2}行", p_memberName, p_filePath, p_lineNumber);
-            Log.Error(note + (p_msg == null ? "" : "\r\n" + p_msg));
-            if (string.IsNullOrEmpty(p_msg))
-                throw new FriendlyException(note);
-            else
-                throw new FriendlyException(string.Format("{0}\r\n\r\n{1}", p_msg, note));
-        }
-
-        /// <summary>
         /// 向监视窗口输出信息
         /// </summary>
         /// <param name="p_row">数据行</param>
@@ -759,7 +739,7 @@ namespace Dt.Core
         {
             ValExp exp;
             if (!Enum.TryParse(p_exp, true, out exp))
-                throw new FriendlyException(string.Format("无法识别内置表达式【{0}】!", p_exp));
+                Throw.Msg($"无法识别内置表达式【{p_exp}】!");
 
             switch (exp)
             {

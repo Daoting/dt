@@ -273,7 +273,7 @@ namespace Dt.Core
         /// <returns>实际删除行数</returns>
         public async Task<int> Delete(TEntity p_entity)
         {
-            Check.NotNull(p_entity);
+            Throw.IfNull(p_entity);
             Dict dt = _model.Schema.GetDeleteSql(new List<Row> { p_entity });
             int cnt = await _.Db.Exec((string)dt["text"], ((List<Dict>)dt["params"])[0]);
             if (cnt == 1)

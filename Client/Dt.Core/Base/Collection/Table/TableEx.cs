@@ -31,7 +31,7 @@ namespace Dt.Core
         /// <returns></returns>
         public static Table Create(string p_tblName)
         {
-            Check.NotNullOrEmpty(p_tblName);
+            Throw.IfNullOrEmpty(p_tblName);
             Table tbl = new Table();
             foreach (var col in AtLocal.QueryColumns(p_tblName))
             {
@@ -50,7 +50,7 @@ namespace Dt.Core
         /// <returns>返回独立行</returns>
         public static Row NewRow(string p_tblName, object p_init = null)
         {
-            Check.NotNullOrEmpty(p_tblName);
+            Throw.IfNullOrEmpty(p_tblName);
             string tblName = p_tblName.ToLower();
             Table tbl;
             if (!_tblTemplate.TryGetValue(tblName, out tbl))
@@ -68,7 +68,7 @@ namespace Dt.Core
         /// <returns></returns>
         public static Table CreateLocal(string p_tblName)
         {
-            Check.NotNullOrEmpty(p_tblName);
+            Throw.IfNullOrEmpty(p_tblName);
             return AtLocal.Query($"select * from {p_tblName} where 1!=1");
         }
         #endregion

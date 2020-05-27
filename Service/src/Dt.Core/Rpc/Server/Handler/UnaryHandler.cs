@@ -62,7 +62,7 @@ namespace Dt.Core.Rpc
             {
                 isSuc = false;
                 // 将异常记录日志
-                RpcException rpcEx = ex.InnerException as RpcException;
+                KnownException rpcEx = ex.InnerException as KnownException;
                 if (rpcEx != null)
                 {
                     // 业务异常，在客户端作为提示消息，不记日志

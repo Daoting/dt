@@ -109,7 +109,7 @@ namespace Dt.Msg
         /// <param name="p_msg"></param>
         public static void PushToOnline(MsgInfo p_msg)
         {
-            Check.NotNull(p_msg);
+            Throw.IfNull(p_msg);
 
             // 单副本也统一走 RemoteEventBus
             Glb.GetSvc<RemoteEventBus>().Multicast(new BroadcastEvent { Msg = p_msg.GetOnlineMsg() }, Glb.SvcName);

@@ -26,6 +26,7 @@
 * Fv 增加CHtml
 * CTree增加清空功能
 * 增加CTip格
+* 升级到 uno2.4.0, vs16.6, android10
 
 *  Msg服务增加心跳包包
 

@@ -188,8 +188,7 @@ namespace Dt.Core
         {
             try
             {
-                FriendlyException friendlyEx = e.Exception as FriendlyException;
-                if (friendlyEx != null)
+                if (e.Exception is KnownException friendlyEx)
                 {
                     // 输出到监视窗口
                     string msg = friendlyEx.Message;
@@ -200,11 +199,9 @@ namespace Dt.Core
                     else
                         title = msg.Length > 20 ? msg.Substring(0, 20) : msg;
                     AtKit.Trace(TraceOutType.Normal, title, msg);
-                    // 显示Assert警告对话框
-                    AtKit.RunAsync(async () =>
-                    {
-                        await new MessageDialog(msg, "警告").ShowAsync();
-                    });
+
+                    // 显示警告提示
+                    AtKit.Warn(msg);
                 }
                 else
                 {

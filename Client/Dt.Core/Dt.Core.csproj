@@ -10,7 +10,7 @@
     <PackageReference Include="Microsoft.Data.Sqlite" Version="2.1.0" />
   </ItemGroup>
   
-  <ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid90' ">
+  <ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid10.0' ">
     <PackageReference Include="Square.OkHttp3" Version="3.12.3" />
     <PackageReference Include="Square.OkIO" version="1.17.4" />
   </ItemGroup>
@@ -29,9 +29,10 @@
     <Compile Include="..\..\Service\src\Dt.Core\Domain\Entity\TblAttribute.cs" Link="Base\Domain\Entity\TblAttribute.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Domain\Repository\ChildEntitySchema.cs" Link="Base\Domain\Repository\ChildEntitySchema.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Domain\Repository\EntitySchema.cs" Link="Base\Domain\Repository\EntitySchema.cs" />
-    <Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\Check.cs" Link="Base\Check.cs" />
+    <Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\KnownException.cs" Link="Base\KnownException.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\LetterInfo.cs" Link="Base\LetterInfo.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\MsgInfo.cs" Link="Base\MsgInfo.cs" />
+    <Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\Throw.cs" Link="Base\Throw.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Serialize\IRpcJson.cs" Link="Internal\Serialize\IRpcJson.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Serialize\JsonOptions.cs" Link="Internal\Serialize\JsonOptions.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Serialize\JsonRpcSerializer.cs" Link="Internal\Serialize\JsonRpcSerializer.cs" />

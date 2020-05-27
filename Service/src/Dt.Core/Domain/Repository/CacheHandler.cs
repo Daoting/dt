@@ -99,7 +99,7 @@ namespace Dt.Core
 
         public Task Cache(TEntity p_entity)
         {
-            Check.NotNull(p_entity);
+            Throw.IfNull(p_entity);
             string val = RpcKit.GetObjectString(p_entity);
             string id = p_entity.Str(_primaryKey);
 
@@ -149,7 +149,7 @@ namespace Dt.Core
 
         public Task Remove(TEntity p_entity)
         {
-            Check.NotNull(p_entity);
+            Throw.IfNull(p_entity);
             // 实体信息可能不全，多键时根据缓存实体执行删除！
             string id = p_entity.Str(_primaryKey);
             return RemoveByID(id);

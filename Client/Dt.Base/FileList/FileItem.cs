@@ -444,22 +444,22 @@ namespace Dt.Base
             string msg;
             if (FileType == FileItemType.Image)
             {
-                savePath = Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryPictures).AbsolutePath;
+                savePath = Android.App.Application.Context.GetExternalFilesDir(Android.OS.Environment.DirectoryPictures).AbsolutePath;
                 msg = "照片";
             }
             else if (FileType == FileItemType.Video)
             {
-                savePath = Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryMovies).AbsolutePath;
+                savePath = Android.App.Application.Context.GetExternalFilesDir(Android.OS.Environment.DirectoryMovies).AbsolutePath;
                 msg = "电影";
             }
             else if (FileType == FileItemType.Sound)
             {
-                savePath = Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryMusic).AbsolutePath;
+                savePath = Android.App.Application.Context.GetExternalFilesDir(Android.OS.Environment.DirectoryMusic).AbsolutePath;
                 msg = "音乐";
             }
             else
             {
-                savePath = Android.OS.Environment.GetExternalStoragePublicDirectory(Android.OS.Environment.DirectoryDocuments).AbsolutePath;
+                savePath = Android.App.Application.Context.GetExternalFilesDir(Android.OS.Environment.DirectoryDocuments).AbsolutePath;
                 msg = "文件目录";
             }
 

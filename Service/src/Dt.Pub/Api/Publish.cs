@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Dt.Core;
+using Dt.Core.Rpc;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -37,31 +38,36 @@ namespace Dt.Pub
 
         public async Task<string> SavePost(Post p_post)
         {
-            if (p_post == null)
-                return "待保存的文章对象为null";
+            Throw.IfNull(p_post, "待保存的文章对象为null");
+            Throw.If(!p_post.IsAdded && !p_post.IsChanged, "文章对象不需要保存");
 
-            if (!p_post.IsAdded && !p_post.IsChanged)
-                return "文章对象不需要保存";
+            if (p_post.IsPublish
+                && (string.IsNullOrEmpty(p_post.Title) || string.IsNullOrEmpty(p_post.Content)))
+            {
+                Throw.Msg("发布的文章标题和内容不能为空");
+            }
 
-            if (!p_post.IsAdded
-                && (p_post.Cells["title"].IsChanged || p_post.Cells["content"].IsChanged))
+            if (p_post.Cells["title"].IsChanged || p_post.Cells["content"].IsChanged)
             {
                 if (!string.IsNullOrEmpty(p_post.Url))
                 {
                     // 删除旧文件
                 }
 
-                string url = null;
                 if (!string.IsNullOrEmpty(p_post.Title) && !string.IsNullOrEmpty(p_post.Content))
                 {
-                    url = await BuildHtmlPage(p_post.Title, p_post.Content, Glb.Now.ToString("yyyyMM"));
+                    string url = null;
+                    if (!string.IsNullOrEmpty(p_post.Title) && !string.IsNullOrEmpty(p_post.Content))
+                    {
+                        url = await BuildHtmlPage(p_post.Title, p_post.Content, Glb.Now.ToString("yyyyMM"));
+                    }
+                    p_post.SetUrl(url);
                 }
-                p_post.SetUrl(url);
             }
-            
+
             Repo<Post> repo = new Repo<Post>();
             bool suc = await repo.Save(p_post);
-            return "";
+            return null;
         }
 
         /// <summary>

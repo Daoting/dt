@@ -29,7 +29,7 @@ namespace Dt.Core
         /// <returns>返回实体对象或null</returns>
         public async Task<Row> GetByKey(string p_keyName, string p_keyVal, string p_tblName)
         {
-            Check.NotNullOrEmpty(p_keyName);
+            Throw.IfNullOrEmpty(p_keyName);
             return (Row)await InvokeRepo(p_tblName, "GetByKey", (type) => new object[] { p_keyName, p_keyVal, false });
         }
 
@@ -41,7 +41,7 @@ namespace Dt.Core
         /// <returns>true 成功</returns>
         public async Task<bool> SaveRow(Row p_row, string p_tblName)
         {
-            Check.NotNull(p_row);
+            Throw.IfNull(p_row);
             return (bool)await InvokeRepo(p_tblName, "Save", (type) => new object[] { p_row.CloneTo(type) });
         }
 
@@ -54,7 +54,7 @@ namespace Dt.Core
         [Transaction]
         public async Task<bool> SaveRows(Table p_entities, string p_tblName)
         {
-            Check.NotNull(p_entities);
+            Throw.IfNull(p_entities);
             return (bool)await InvokeRepo(p_tblName, "BatchSave", (type) => new object[] { p_entities.CloneTo(type) });
         }
 
@@ -66,7 +66,7 @@ namespace Dt.Core
         /// <returns>删除行数</returns>
         public async Task<int> DelRow(Row p_row, string p_tblName)
         {
-            Check.NotNull(p_row);
+            Throw.IfNull(p_row);
             return (int)await InvokeRepo(p_tblName, "Delete", (type) => new object[] { p_row.CloneTo(type) });
         }
 
@@ -79,7 +79,7 @@ namespace Dt.Core
         [Transaction]
         public async Task<int> DelRows(Table p_entities, string p_tblName)
         {
-            Check.NotNull(p_entities);
+            Throw.IfNull(p_entities);
             return (int)await InvokeRepo(p_tblName, "BatchDelete", (type) => new object[] { p_entities.CloneTo(type) });
         }
 
@@ -91,7 +91,7 @@ namespace Dt.Core
         /// <returns>删除行数</returns>
         public async Task<int> DelRowByKey(string p_id, string p_tblName)
         {
-            Check.NotNullOrEmpty(p_id);
+            Throw.IfNullOrEmpty(p_id);
             return (int)await InvokeRepo(p_tblName, "DelByID", (type) => new object[] { p_id });
         }
 
@@ -104,7 +104,7 @@ namespace Dt.Core
         /// <returns></returns>
         async Task<object> InvokeRepo(string p_tblName, string p_methodName, Func<Type, object[]> p_params)
         {
-            Check.NotNullOrEmpty(p_tblName);
+            Throw.IfNullOrEmpty(p_tblName);
 
             Type type = Silo.GetEntityType(p_tblName);
             Type repoType = typeof(Repo<>).MakeGenericType(type);

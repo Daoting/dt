@@ -22,7 +22,7 @@ namespace Dt.App.Pub
         const string _insertVideo = "<video src=\"../../fsm/{0}\" poster=\"../../fsm/{1}\" preload=\"none\" width=\"640\" height=\"360\" controls=\"controls\"></video>";
         const string _insertImg = "../../fsm/{0}";
         static Repo<Post> _repo = new Repo<Post>();
-        Post _post;
+        PostMgr _owner;
         bool _saved;
 
         public EditPostDlg()
@@ -31,8 +31,9 @@ namespace Dt.App.Pub
             _wv.Source = new Uri($"{AtSys.Stub.ServerUrl.TrimEnd('/')}/pub/editor/default.html");
         }
 
-        public async void ShowDlg(long p_id)
+        public async void ShowDlg(PostMgr p_owner)
         {
+            _owner = p_owner;
             if (!AtSys.IsPhoneUI)
             {
                 ShowWinVeil = true;
@@ -41,30 +42,20 @@ namespace Dt.App.Pub
             }
             Show();
 
-            _post = await _repo.Get("文章-编辑内容", new { id = p_id });
-
             // WebView事件无法捕捉到初始化html的时机，延时
             await Task.Delay(500);
-            await _wv.InvokeScriptAsync("setHtml", new string[] { _post.Content });
+            await _wv.InvokeScriptAsync("setHtml", new string[] { _owner.Post.Content });
         }
 
         async void OnSave(object sender, Mi e)
         {
-            _post["Content"] = await _wv.InvokeScriptAsync("getHtml", null);
-            if (_post.IsChanged)
+            _owner.Post.Content = await _wv.InvokeScriptAsync("getHtml", null);
+            bool suc = await _owner.SavePost();
+            if (suc)
             {
-                var ret = await AtPublish.SavePost(_post);
-                if (!string.IsNullOrEmpty(ret))
-                {
-                    AtKit.Warn("保存失败：" + ret);
-                    return;
-                }
-
-                _post.AcceptChanges();
-                AtKit.Msg("保存成功");
+                _saved = true;
+                Close(true);
             }
-            _saved = true;
-            Close(true);
         }
 
         async void OnInsertImg(object sender, Mi e)
@@ -82,7 +73,7 @@ namespace Dt.App.Pub
             if (!_saved)
             {
                 var html = await _wv.InvokeScriptAsync("getHtml", null);
-                if (html != _post.Content)
+                if (html != _owner.Post.Content)
                     return await AtKit.Confirm("关闭将丢失已修改的内容，确认要关闭？");
             }
             return true;

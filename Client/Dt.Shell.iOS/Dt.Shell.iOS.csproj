@@ -72,12 +72,6 @@
       <Link>App.xaml.cs</Link>
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <BundleResource Include="..\Common\icon.ttf">
-      <Link>Assets\Fonts\icon.ttf</Link>
-    </BundleResource>
-    <BundleResource Include="..\Common\winjs-symbols.ttf">
-      <Link>Assets\Fonts\winjs-symbols.ttf</Link>
-    </BundleResource>
     <BundleResource Include="Assets\SplashScreen%402x.png" />
     <BundleResource Include="Assets\SplashScreen%403x.png" />
     <BundleResource Include="Assets\logo.png" />
@@ -115,6 +109,12 @@
       <Link>LaunchScreen.storyboard</Link>
     </InterfaceDefinition>
     <Content Include="Entitlements.plist" />
+    <BundleResource Include="..\Common\Fonts\icon.ttf">
+      <Link>Assets\Fonts\icon.ttf</Link>
+    </BundleResource>
+    <BundleResource Include="..\Common\Fonts\winjs-symbols.ttf">
+      <Link>Assets\Fonts\winjs-symbols.ttf</Link>
+    </BundleResource>
     <None Include="Info.plist">
       <SubType>Designer</SubType>
     </None>
@@ -130,7 +130,7 @@
     <Reference Include="Xamarin.iOS" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Uno.UI" Version="2.2.0" />
+    <PackageReference Include="Uno.UI" Version="2.4.0" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="..\Common\App.xaml">

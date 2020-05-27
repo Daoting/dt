@@ -39,7 +39,7 @@ namespace Dt.Shell
         /// <summary>
         /// 系统标题
         /// </summary>
-        public string Title => "搬运工";
+        public string Title => "福祉堂";
 
         /// <summary>
         /// 登录页面

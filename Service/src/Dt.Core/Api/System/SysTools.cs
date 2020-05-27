@@ -35,7 +35,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_tblName">表名</param>
         /// <returns></returns>
-        public string GetEntityCls(string p_tblName)
+        public string 表名生成实体类(string p_tblName)
         {
             if (string.IsNullOrEmpty(p_tblName))
                 return null;
@@ -47,17 +47,24 @@ namespace Dt.Core
                 clsName = SetFirstToUpper(arr[1]);
             else
                 clsName = SetFirstToUpper(tblName);
+            string entityClsName = clsName + "Entity";
             var schema = DbSchema.GetTableSchema(tblName);
 
             StringBuilder sb = new StringBuilder();
 
+            AppendTabSpace(sb, 1);
+            sb.Append("#region ");
+            sb.Append(entityClsName);
+            sb.AppendLine();
+
+            #region 第一个类
             // Tbl标签
             AppendTabSpace(sb, 1);
             sb.Append($"[Tbl(\"{tblName}\", \"{Glb.SvcName}\")]");
 
             sb.AppendLine();
             AppendTabSpace(sb, 1);
-            sb.Append($"public partial class {clsName} : Entity");
+            sb.Append($"public partial class {clsName} : {entityClsName}");
             sb.AppendLine();
             AppendTabSpace(sb, 1);
             sb.AppendLine("{");
@@ -131,6 +138,17 @@ namespace Dt.Core
             AppendTabSpace(sb, 2);
             sb.AppendLine("}");
 
+            AppendTabSpace(sb, 1);
+            sb.AppendLine("}");
+            #endregion
+
+            sb.AppendLine();
+            AppendTabSpace(sb, 1);
+            sb.Append($"public abstract class {entityClsName} : Entity");
+            sb.AppendLine();
+            AppendTabSpace(sb, 1);
+            sb.Append("{");
+
             // 主键属性
             bool existID = false;
             foreach (var col in schema.PrimaryKey)
@@ -164,6 +182,7 @@ namespace Dt.Core
             }
             AppendTabSpace(sb, 1);
             sb.AppendLine("}");
+            sb.AppendLine("#endregion");
             return sb.ToString();
         }
 
@@ -199,8 +218,19 @@ namespace Dt.Core
             AppendTabSpace(p_sb, 3);
             p_sb.AppendLine($"get {{ return ({tpName})_cells[\"{p_col.Name}\"].Val; }}");
             AppendTabSpace(p_sb, 3);
-            // 私有，确保外部只能通过统一方法设置，DDD规范
-            p_sb.AppendLine($"private set {{ _cells[\"{p_col.Name}\"].Val = value; }}");
+            // 确保外部只能通过统一方法设置，DDD规范
+            p_sb.AppendLine($"set {{ Set{p_col.Name}(value); }}");
+            AppendTabSpace(p_sb, 2);
+            p_sb.AppendLine("}");
+
+            // SetXXX虚方法
+            p_sb.AppendLine();
+            AppendTabSpace(p_sb, 2);
+            p_sb.AppendLine($"protected virtual void Set{p_col.Name}({tpName} p_value)");
+            AppendTabSpace(p_sb, 2);
+            p_sb.AppendLine("{");
+            AppendTabSpace(p_sb, 3);
+            p_sb.AppendLine($"_cells[\"{p_col.Name}\"].Val = p_value;");
             AppendTabSpace(p_sb, 2);
             p_sb.AppendLine("}");
         }

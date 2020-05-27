@@ -270,8 +270,7 @@ namespace Dt.Base
             Icons p_icon = Icons.None,
             object p_params = null)
         {
-            if (p_type == null)
-                AtKit.Throw("待显示的窗口类型不可为空！");
+            Throw.IfNull(p_type, "待显示的窗口类型不可为空！");
 
             // 激活旧窗口，比较窗口类型和初始参数
             Win win;
