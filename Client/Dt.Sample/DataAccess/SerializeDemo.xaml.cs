@@ -736,13 +736,18 @@ namespace Dt.Sample
         public string Col1
         {
             get { return GetVal<string>("col1"); }
-            set { _cells["col1"].Val = value; }
+            set { this["col1"] = value; }
         }
 
         public string Col2
         {
             get { return GetVal<string>("col2"); }
-            set { _cells["col2"].Val = value; }
+            set { this["col2"] = value; }
+        }
+
+        void SetCol1(string p_value)
+        {
+
         }
     }
 }

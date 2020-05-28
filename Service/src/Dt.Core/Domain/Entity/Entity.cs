@@ -8,7 +8,9 @@
 
 #region 引用命名
 using Dt.Core.EventBus;
+using System;
 using System.Collections.Generic;
+using System.Reflection;
 #endregion
 
 namespace Dt.Core
@@ -47,6 +49,20 @@ namespace Dt.Core
         internal void ClearDomainEvents()
         {
             _events?.Clear();
+        }
+
+        /// <summary>
+        /// 反序列化时附加Hook方法
+        /// </summary>
+        protected override void AttachHook()
+        {
+            Type tp = GetType();
+            foreach (var cell in _cells)
+            {
+                var mi = tp.GetMethod("Set" + cell.ID, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.IgnoreCase);
+                if (mi != null)
+                    cell.Hook = (e) => mi.Invoke(this, new object[] { e });
+            }
         }
 
         /// <summary>

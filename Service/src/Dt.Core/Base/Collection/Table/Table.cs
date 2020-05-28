@@ -671,7 +671,7 @@ namespace Dt.Core
                             p_reader.Read();
                             row.Cells[index].OriginalVal = JsonRpcSerializer.Deserialize(ref p_reader, _columns[index].Type);
                             p_reader.Read();
-                            row.Cells[index].Val = JsonRpcSerializer.Deserialize(ref p_reader, _columns[index].Type);
+                            row.Cells[index].SetVal(JsonRpcSerializer.Deserialize(ref p_reader, _columns[index].Type));
                             // 两值 ]
                             p_reader.Read();
                         }

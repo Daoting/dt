@@ -60,7 +60,7 @@ namespace Dt.Core
         public object this[string p_colName]
         {
             get { return _cells[p_colName].Val; }
-            set { _cells[p_colName].Val = value; }
+            set { _cells[p_colName].SetVal(value); }
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace Dt.Core
             {
                 if (p_index < 0 || p_index >= _cells.Count)
                     throw new Exception(string.Format(_indexError, p_index, _cells.Count));
-                _cells[p_index].Val = value;
+                _cells[p_index].SetVal(value);
             }
         }
 
@@ -92,7 +92,7 @@ namespace Dt.Core
         public long ID
         {
             get { return (long)_cells["id"].Val; }
-            protected set { _cells["id"].Val = value; }
+            set { _cells["id"].SetVal(value); }
         }
 
         /// <summary>
@@ -222,11 +222,11 @@ namespace Dt.Core
         /// <typeparam name="T">Cell的数据类型</typeparam>
         /// <param name="p_cellName">字段名，不可为空，作为键值</param>
         /// <param name="p_value">初始值</param>
-        public void AddCell<T>(string p_cellName, T p_value = default)
+        public Cell AddCell<T>(string p_cellName, T p_value = default)
         {
             if (Contains(p_cellName))
                 throw new Exception($"已包含{p_cellName}列！");
-            new Cell(this, p_cellName, typeof(T), p_value);
+            return new Cell(this, p_cellName, typeof(T), p_value);
         }
 
         /// <summary>
@@ -262,7 +262,7 @@ namespace Dt.Core
             foreach (var item in _cells)
             {
                 if (item.IsChanged)
-                    new Cell(row, item.ID, item.Type, item.OriginalVal).Val = item.Val;
+                    new Cell(row, item.ID, item.Type, item.OriginalVal).SetVal(item.Val);
                 else
                     new Cell(row, item.ID, item.Type, item.OriginalVal);
             }
@@ -674,7 +674,7 @@ namespace Dt.Core
                         // 当前值
                         p_reader.Read();
                         object val = JsonRpcSerializer.Deserialize(ref p_reader, type);
-                        
+
                         p_reader.Read();
                         if (p_reader.TokenType == JsonTokenType.EndArray)
                         {
@@ -684,7 +684,7 @@ namespace Dt.Core
                         else
                         {
                             // 值变化时传递完整信息 ["类型", "当前值", "原始值"]
-                            new Cell(this, id, type, JsonRpcSerializer.Deserialize(ref p_reader, type)).Val = val;
+                            new Cell(this, id, type, JsonRpcSerializer.Deserialize(ref p_reader, type)).SetVal(val);
                             // ]
                             p_reader.Read();
                         }
@@ -697,11 +697,19 @@ namespace Dt.Core
                 }
                 // 最外层 ]
                 p_reader.Read();
+                AttachHook();
             }
             catch (Exception ex)
             {
                 throw new Exception($"反序列化Row时异常: {ex.Message}");
             }
+        }
+
+        /// <summary>
+        /// 反序列化时Entity附加Hook方法
+        /// </summary>
+        protected virtual void AttachHook()
+        {
         }
 
         void IRpcJson.WriteRpcJson(Utf8JsonWriter p_writer)
