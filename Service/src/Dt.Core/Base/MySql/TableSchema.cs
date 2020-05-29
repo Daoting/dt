@@ -21,7 +21,6 @@ namespace Dt.Core
     public class TableSchema
     {
         #region 成员变量
-        const string _saveError = "数据源不可为空！";
         const string _primaryError = "实体【{0}】中不包含主键列【{1}】！";
         string _sqlSelect;
         string _sqlDelete;
@@ -84,14 +83,15 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_row">待保存的行</param>
         /// <returns>返回提交参数</returns>
-        public Dict GetSaveSql(Row p_row)
+        internal Dict GetSaveSql(Row p_row)
         {
-            if (p_row == null)
-                throw new Exception(_saveError);
+            // 不再重复判断
+            //if (p_row == null)
+            //    throw new Exception(_saveError);
 
-            // 无需保存
-            if (!p_row.IsAdded && !p_row.IsChanged)
-                return null;
+            //// 无需保存
+            //if (!p_row.IsAdded && !p_row.IsChanged)
+            //    return null;
 
             // 检查是否包含主键
             foreach (var col in PrimaryKey)
@@ -187,11 +187,12 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_rows">实体列表</param>
         /// <returns></returns>
-        public List<Dict> GetBatchSaveSql<TEntity>(IList<TEntity> p_rows)
+        internal List<Dict> GetBatchSaveSql<TEntity>(IList<TEntity> p_rows)
             where TEntity : Row
         {
-            if (p_rows == null || p_rows.Count == 0)
-                throw new Exception(_saveError);
+            // 不再重复判断
+            //if (p_rows == null || p_rows.Count == 0)
+            //    throw new Exception(_saveError);
 
             // 检查是否包含主键
             var first = p_rows[0];
@@ -355,11 +356,12 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_rows"></param>
         /// <returns></returns>
-        public Dict GetDeleteSql<TEntity>(IList<TEntity> p_rows)
+        internal Dict GetDeleteSql<TEntity>(IList<TEntity> p_rows)
             where TEntity : Row
         {
-            if (p_rows == null || p_rows.Count == 0)
-                throw new Exception(_saveError);
+            // 不再重复判断
+            //if (p_rows == null || p_rows.Count == 0)
+            //    throw new Exception(_saveError);
 
             Dict dtParams = new Dict();
             StringBuilder whereVal = new StringBuilder();

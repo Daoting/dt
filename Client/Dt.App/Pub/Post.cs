@@ -9,6 +9,7 @@
 #region 引用命名
 using Dt.Core;
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 #endregion
@@ -17,27 +18,9 @@ namespace Dt.App.Pub
 {
     public partial class Post
     {
-        void SetTitle(string p_value)
-        {
-            Throw.IfNullOrEmpty(p_value, "不能为空");
-            //if (p_value == "1")
-            //{
-            //    IsPublish = !IsPublish;
-            //    //Throw.Msg("不能为空");
-            //}
-        }
-
         void SetIsPublish(bool p_value)
         {
             Throw.If(p_value && string.IsNullOrEmpty(Content), "发布的文章内容不能为空");
-            //if (p_value && string.IsNullOrEmpty(Content))
-            //{
-            //    Title = "abc";
-            //    Throw.Msg("发布的文章内容不能为空");
-            //    //AtKit.RunAsync(() => Title = "abc");
-            //}
-            //if (Title == "1")
-            //    Throw.Msg("发布的文章内容不能为空");
         }
 
         void SetContent(string p_value)
@@ -45,19 +28,15 @@ namespace Dt.App.Pub
             Throw.If(string.IsNullOrEmpty(p_value) && IsPublish, "发布的文章内容不能为空");
         }
 
-        public bool IsValid()
+        public void OnSaving()
         {
-            if (string.IsNullOrEmpty(Title))
-            {
-                return false;
-            }
+            Throw.IfNullOrEmpty(Title, "标题不可为空");
+            Throw.If(IsPublish && string.IsNullOrEmpty(Content), "发布的文章内容不能为空");
+        }
 
-            if (IsPublish && string.IsNullOrEmpty(Content))
-            {
-                AtKit.Warn("发布的文章内容不能为空");
-                return false;
-            }
-            return true;
+        void OnDeleting()
+        {
+            Throw.If(!IsPublish, "已发布的文章不可删除");
         }
     }
 

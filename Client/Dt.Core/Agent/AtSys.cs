@@ -188,10 +188,12 @@ namespace Dt.Core
         {
             try
             {
-                if (e.Exception is KnownException friendlyEx)
+                var ex = e.Exception;
+                KnownException kex;
+                if ((kex = ex as KnownException) != null || (kex = ex.InnerException as KnownException) != null)
                 {
                     // 输出到监视窗口
-                    string msg = friendlyEx.Message;
+                    string msg = kex.Message;
                     string title;
                     int index = msg.IndexOf("\r\n");
                     if (index > 0)

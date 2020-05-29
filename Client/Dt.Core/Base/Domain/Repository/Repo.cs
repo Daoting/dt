@@ -202,16 +202,13 @@ namespace Dt.Core
         /// <returns>是否成功</returns>
         public async Task<bool> Save(TEntity p_entity, bool p_isNotify = true)
         {
-            // p_entity为null时已触发异常
-            Dict dt = _model.Schema.GetSaveSql(p_entity);
+            Throw.If(p_entity == null || (!p_entity.IsAdded && !p_entity.IsChanged), _unchangedMsg);
 
-            // 无需保存
-            if (dt == null)
-            {
-                if (p_isNotify)
-                    AtKit.Warn(_unchangedMsg);
-                return true;
-            }
+            // 保存前外部校验，不合格在外部抛出异常
+            if (_model.OnSaving != null)
+                await OnSaving(p_entity);
+
+            Dict dt = _model.Schema.GetSaveSql(p_entity);
 
             if (_model.ExistChild)
             {
@@ -263,6 +260,17 @@ namespace Dt.Core
         /// <returns>true 保存成功</returns>
         public async Task<bool> BatchSave(IList<TEntity> p_entities, bool p_isNotify = true)
         {
+            Throw.If(p_entities == null || p_entities.Count == 0, _unchangedMsg);
+
+            // 保存前外部校验，不合格在外部抛出异常
+            if (_model.OnSaving != null)
+            {
+                foreach (var item in p_entities)
+                {
+                    await OnSaving(item);
+                }
+            }
+
             List<Dict> dts = _model.Schema.GetBatchSaveSql(p_entities);
             if (dts == null)
                 dts = new List<Dict>();
@@ -320,6 +328,7 @@ namespace Dt.Core
         /// <returns>返回执行后影响的行数</returns>
         public Task<int> Exec(string p_keyOrSql, object p_params = null)
         {
+            Throw.IfNullOrEmpty(p_keyOrSql);
             return new UnaryRpc(
                 _model.Svc,
                 "Da.Exec",
@@ -335,6 +344,7 @@ namespace Dt.Core
         /// <returns>true 成功</returns>
         public Task<bool> BatchExec(List<Dict> p_dts)
         {
+            Throw.If(p_dts == null || p_dts.Count == 0);
             return new UnaryRpc(
                 _model.Svc,
                 "Da.BatchExec",
@@ -352,7 +362,12 @@ namespace Dt.Core
         /// <returns>true 删除成功</returns>
         public async Task<bool> Delete(TEntity p_entity, bool p_isNotify = true)
         {
-            Throw.IfNull(p_entity);
+            Throw.IfNull(p_entity, _saveError);
+
+            // 删除前外部校验，不合格在外部抛出异常
+            if (_model.OnDeleting != null)
+                await OnDeleting(p_entity);
+
             Dict dt = _model.Schema.GetDeleteSql(new List<Row> { p_entity });
             bool suc = await Exec((string)dt["text"], ((List<Dict>)dt["params"])[0]) == 1;
             if (p_isNotify)
@@ -373,11 +388,15 @@ namespace Dt.Core
         /// <returns>true 删除成功</returns>
         public async Task<bool> BatchDelete(IList<TEntity> p_entities, bool p_isNotify = true)
         {
-            if (p_entities == null || p_entities.Count == 0)
+            Throw.If(p_entities == null || p_entities.Count == 0, _saveError);
+
+            // 删除前外部校验，不合格在外部抛出异常
+            if (_model.OnDeleting != null)
             {
-                if (p_isNotify)
-                    AtKit.Warn(_saveError);
-                return false;
+                foreach (var item in p_entities)
+                {
+                    await OnDeleting(item);
+                }
             }
 
             Dict dt = _model.Schema.GetDeleteSql(p_entities);
@@ -417,12 +436,11 @@ namespace Dt.Core
         /// <returns>true 成功</returns>
         public async Task<bool> SaveRow(TEntity p_entity, bool p_isNotify = true)
         {
-            if (p_entity == null || (!p_entity.IsAdded && !p_entity.IsChanged))
-            {
-                if (p_isNotify)
-                    AtKit.Msg(_unchangedMsg);
-                return false;
-            }
+            Throw.If(p_entity == null || (!p_entity.IsAdded && !p_entity.IsChanged), _unchangedMsg);
+
+            // 保存前外部校验，不合格在外部抛出异常
+            if (_model.OnSaving != null)
+                await OnSaving(p_entity);
 
             bool suc = await new UnaryRpc(
                 _model.Svc,
@@ -452,11 +470,15 @@ namespace Dt.Core
         /// <returns>true 成功</returns>
         public async Task<bool> SaveRows(Table<TEntity> p_entities, bool p_isNotify = true)
         {
-            if (p_entities == null || p_entities.Count == 0)
+            Throw.If(p_entities == null || p_entities.Count == 0, _unchangedMsg);
+
+            // 保存前外部校验，不合格在外部抛出异常
+            if (_model.OnSaving != null)
             {
-                if (p_isNotify)
-                    AtKit.Msg(_unchangedMsg);
-                return false;
+                foreach (var item in p_entities)
+                {
+                    await OnSaving(item);
+                }
             }
 
             bool suc = await new UnaryRpc(
@@ -487,12 +509,11 @@ namespace Dt.Core
         /// <returns>true 删除成功</returns>
         public async Task<bool> DelRow(TEntity p_entity, bool p_isNotify = true)
         {
-            if (p_entity == null)
-            {
-                if (p_isNotify)
-                    AtKit.Msg(_saveError);
-                return false;
-            }
+            Throw.IfNull(p_entity, _saveError);
+
+            // 删除前外部校验，不合格在外部抛出异常
+            if (_model.OnDeleting != null)
+                await OnDeleting(p_entity);
 
             bool suc = await new UnaryRpc(
                 _model.Svc,
@@ -517,13 +538,17 @@ namespace Dt.Core
         /// <param name="p_entities">实体列表</param>
         /// <param name="p_isNotify">是否提示删除结果</param>
         /// <returns>true 删除成功</returns>
-        public async Task<bool> DelRows(Table p_entities, bool p_isNotify = true)
+        public async Task<bool> DelRows(IList<TEntity> p_entities, bool p_isNotify = true)
         {
-            if (p_entities == null || p_entities.Count == 0)
+            Throw.If(p_entities == null || p_entities.Count == 0, _saveError);
+
+            // 删除前外部校验，不合格在外部抛出异常
+            if (_model.OnDeleting != null)
             {
-                if (p_isNotify)
-                    AtKit.Msg(_saveError);
-                return false;
+                foreach (var item in p_entities)
+                {
+                    await OnDeleting(item);
+                }
             }
 
             bool suc = await new UnaryRpc(
@@ -613,6 +638,32 @@ namespace Dt.Core
         #endregion
 
         #region 内部方法
+        /// <summary>
+        /// 调用Entity中的OnSaving方法
+        /// </summary>
+        /// <param name="p_entity"></param>
+        /// <returns></returns>
+        async Task OnSaving(TEntity p_entity)
+        {
+            if (_model.OnSaving.ReturnType == typeof(Task))
+                await (Task)_model.OnSaving.Invoke(p_entity, null);
+            else
+                _model.OnSaving.Invoke(p_entity, null);
+        }
+
+        /// <summary>
+        /// 调用Entity中的OnDeleting方法
+        /// </summary>
+        /// <param name="p_entity"></param>
+        /// <returns></returns>
+        async Task OnDeleting(TEntity p_entity)
+        {
+            if (_model.OnDeleting.ReturnType == typeof(Task))
+                await (Task)_model.OnDeleting.Invoke(p_entity, null);
+            else
+                _model.OnDeleting.Invoke(p_entity, null);
+        }
+
         /// <summary>
         /// 生成保存子实体的sql
         /// </summary>

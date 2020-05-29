@@ -25,6 +25,9 @@ namespace Dt.Core
         where TEntity : Entity
     {
         #region 静态内容
+        const string _unchangedMsg = "没有需要保存的数据！";
+        const string _saveError = "数据源不可为空！";
+
         protected static readonly EntitySchema _model;
         static readonly CacheHandler<TEntity> _cache;
         static readonly CudEvent _cudEvent;
@@ -179,13 +182,13 @@ namespace Dt.Core
         /// <returns>是否成功</returns>
         public async Task<bool> Save(TEntity p_entity)
         {
-            // p_entity为null时已触发异常
+            Throw.If(p_entity == null || (!p_entity.IsAdded && !p_entity.IsChanged), _unchangedMsg);
+
+            // 保存前外部校验，不合格在外部抛出异常
+            if (_model.OnSaving != null)
+                await OnSaving(p_entity);
+
             Dict dt = _model.Schema.GetSaveSql(p_entity);
-
-            // 无需保存
-            if (dt == null)
-                return true;
-
             bool isBatch = false;
             if (_model.ExistChild)
             {
@@ -228,6 +231,17 @@ namespace Dt.Core
         /// <returns>true 保存成功</returns>
         public async Task<bool> BatchSave(IList<TEntity> p_entities)
         {
+            Throw.If(p_entities == null || p_entities.Count == 0, _unchangedMsg);
+
+            // 保存前外部校验，不合格在外部抛出异常
+            if (_model.OnSaving != null)
+            {
+                foreach (var item in p_entities)
+                {
+                    await OnSaving(item);
+                }
+            }
+
             List<Dict> dts = _model.Schema.GetBatchSaveSql(p_entities);
             if (dts == null)
                 dts = new List<Dict>();
@@ -273,7 +287,12 @@ namespace Dt.Core
         /// <returns>实际删除行数</returns>
         public async Task<int> Delete(TEntity p_entity)
         {
-            Throw.IfNull(p_entity);
+            Throw.IfNull(p_entity, _saveError);
+
+            // 删除前外部校验，不合格在外部抛出异常
+            if (_model.OnDeleting != null)
+                await OnDeleting(p_entity);
+
             Dict dt = _model.Schema.GetDeleteSql(new List<Row> { p_entity });
             int cnt = await _.Db.Exec((string)dt["text"], ((List<Dict>)dt["params"])[0]);
             if (cnt == 1)
@@ -294,8 +313,16 @@ namespace Dt.Core
         /// <returns>实际删除行数</returns>
         public async Task<int> BatchDelete(IList<TEntity> p_entities)
         {
-            if (p_entities == null || p_entities.Count == 0)
-                return 0;
+            Throw.If(p_entities == null || p_entities.Count == 0, _saveError);
+
+            // 删除前外部校验，不合格在外部抛出异常
+            if (_model.OnDeleting != null)
+            {
+                foreach (var item in p_entities)
+                {
+                    await OnDeleting(item);
+                }
+            }
 
             int cnt = 0;
             Dict dt = _model.Schema.GetDeleteSql(p_entities);
@@ -379,6 +406,32 @@ namespace Dt.Core
         #endregion
 
         #region 内部方法
+        /// <summary>
+        /// 调用Entity中的OnSaving方法
+        /// </summary>
+        /// <param name="p_entity"></param>
+        /// <returns></returns>
+        async Task OnSaving(TEntity p_entity)
+        {
+            if (_model.OnSaving.ReturnType == typeof(Task))
+                await (Task)_model.OnSaving.Invoke(p_entity, null);
+            else
+                _model.OnSaving.Invoke(p_entity, null);
+        }
+
+        /// <summary>
+        /// 调用Entity中的OnDeleting方法
+        /// </summary>
+        /// <param name="p_entity"></param>
+        /// <returns></returns>
+        async Task OnDeleting(TEntity p_entity)
+        {
+            if (_model.OnDeleting.ReturnType == typeof(Task))
+                await (Task)_model.OnDeleting.Invoke(p_entity, null);
+            else
+                _model.OnDeleting.Invoke(p_entity, null);
+        }
+
         /// <summary>
         /// 生成保存子实体的sql
         /// </summary>

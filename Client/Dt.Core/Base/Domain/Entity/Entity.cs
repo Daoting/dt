@@ -8,7 +8,6 @@
 
 #region 引用命名
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 #endregion
 
@@ -27,9 +26,9 @@ namespace Dt.Core
             Type tp = GetType();
             foreach (var cell in _cells)
             {
-                var mi = tp.GetMethod("Set" + cell.ID, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.IgnoreCase);
+                var mi = tp.GetMethod("Set" + cell.ID, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.IgnoreCase | BindingFlags.DeclaredOnly);
                 if (mi != null)
-                    cell.Hook = (e) => mi.Invoke(this, new object[] { e });
+                    cell.Hook = mi;
             }
         }
 
@@ -56,7 +55,7 @@ namespace Dt.Core
             var other = (Entity)obj;
             if (Contains("id") && other.Contains("id"))
                 return GetVal<string>("id") == other.GetVal<string>("id");
-            
+
             return false;
         }
 

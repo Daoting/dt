@@ -29,6 +29,9 @@ namespace Dt.Core
             if (Schema.PrimaryKey.Count == 0)
                 throw new Exception($"实体{p_type.Name}的映射表{Schema.Name}无主键！");
             Extract(p_type);
+
+            OnSaving = p_type.GetMethod("OnSaving", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.IgnoreCase | BindingFlags.DeclaredOnly);
+            OnDeleting = p_type.GetMethod("OnDeleting", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.IgnoreCase | BindingFlags.DeclaredOnly);
             Svc = tbl.Svc;
         }
 
@@ -54,6 +57,16 @@ namespace Dt.Core
         /// 实体所属的服务，客户端用
         /// </summary>
         public string Svc { get; }
+
+        /// <summary>
+        /// 保存前的处理，抛出异常时取消保存，实体中的方法名OnSaving，返回值void 或 Task
+        /// </summary>
+        public MethodInfo OnSaving { get; }
+
+        /// <summary>
+        /// 删除前的处理，抛出异常时取消删除，实体中的方法名OnDeleting，返回值void 或 Task
+        /// </summary>
+        public MethodInfo OnDeleting { get; }
 
 #if SERVER
         internal static TableSchema GetTableSchema(string p_tblName)

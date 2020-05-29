@@ -9,6 +9,7 @@
 #region 引用命名
 using System;
 using System.ComponentModel;
+using System.Reflection;
 #endregion
 
 namespace Dt.Core
@@ -117,7 +118,7 @@ namespace Dt.Core
         /// <summary>
         /// 外部钩子，通常为业务处理方法，可通过触发异常的方式使赋值失败
         /// </summary>
-        public Action<object> Hook { get; set; }
+        public MethodInfo Hook { get; set; }
         #endregion
 
         #region 外部方法
@@ -263,7 +264,7 @@ namespace Dt.Core
             {
 #if SERVER
                 // 服务端无绑定
-                Hook(val);
+                Hook.Invoke(Row, new object[] { val });
 #else
                 if (p_isBinding)
                 {
@@ -274,7 +275,7 @@ namespace Dt.Core
                 else
                 {
                     // 无绑定时不catch钩子抛出的异常，统一在 AtSys.OnUnhandledException 中提示警告信息
-                    Hook(val);
+                    Hook.Invoke(Row, new object[] { val });
                 }
 #endif
             }
@@ -365,7 +366,7 @@ namespace Dt.Core
             try
             {
                 // 绑定时钩子抛出的异常被UWP内部catch，无法统一提示警告信息，故先catch
-                Hook(p_val);
+                Hook.Invoke(Row, new object[] { p_val });
             }
             catch (Exception ex)
             {

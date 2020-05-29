@@ -79,9 +79,10 @@ namespace Dt.App.Pub
         internal async Task<bool> SavePost()
         {
             Post post = (Post)_fv.Data;
-            if (post == null || !post.IsValid())
+            if (post == null)
                 return false;
 
+            post.OnSaving();
             var ret = await AtPublish.SavePost(_fv.Row);
             if (!string.IsNullOrEmpty(ret))
             {
