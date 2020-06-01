@@ -603,23 +603,6 @@ namespace Dt.Sample
         }
         #endregion
 
-        #region 服务端异常
-        async void TestException(object sender, RoutedEventArgs e)
-        {
-            await AtTest.ThrowException();
-        }
-
-        async void TestSerializeException(object sender, RoutedEventArgs e)
-        {
-            await AtTest.ThrowSerializeException();
-        }
-
-        async void TestRpcException(object sender, RoutedEventArgs e)
-        {
-            await AtTest.ThrowRpcException();
-        }
-        #endregion
-
         void OutDict(Dict p_dt)
         {
             int level = 0;

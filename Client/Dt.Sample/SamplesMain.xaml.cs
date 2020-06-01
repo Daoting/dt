@@ -126,7 +126,7 @@ namespace Dt.Sample
                 },
                 new DataCmd
                 {
-                    Title = "数据访问与Rpc",
+                    Title = "数据访问与异常",
                     Note = "包括数据表操作、数据序列化、远程/本地数据的增删改查、远程过程调用等",
                     Tag = typeof(DataAccessHome)
                 },

@@ -27,6 +27,7 @@ namespace Dt.Sample
             {
                 new CenterInfo(Icons.分组, "数据表操作", typeof(TableAccess), "Table, Row, Column, Cell的常用方法"),
                 new CenterInfo(Icons.详细, "序列化类型", typeof(SerializeDemo), ""),
+                new CenterInfo(Icons.耳麦, "异常处理", typeof(ExceptionDemo), ""),
                 new CenterInfo(Icons.小图标, "增删改查", typeof(DbAccess), ""),
                 new CenterInfo(Icons.排列, "本地库操作", typeof(LocalDbAccess), ""),
                 new CenterInfo(Icons.耳麦, "远程过程调用", typeof(RpcDemo), ""),

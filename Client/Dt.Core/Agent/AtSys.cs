@@ -10,7 +10,6 @@
 using System;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
-using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 #endregion
@@ -115,7 +114,15 @@ namespace Dt.Core
             Application app = Application.Current;
             app.Suspending += OnSuspending;
             app.Resuming += OnResuming;
-            app.UnhandledException += OnUnhandledException;
+
+            // 异常处理
+#if UWP
+            app.UnhandledException += OnUwpUnhandledException;
+#elif ANDROID
+            Android.Runtime.AndroidEnvironment.UnhandledExceptionRaiser += OnAndroidUnhandledException;
+#elif IOS
+            ObjCRuntime.Runtime.MarshalManagedException += OnIOSUnhandledException;
+#endif
 
             // 打开状态库
             AtLocal.OpenStateDb();
@@ -178,79 +185,53 @@ namespace Dt.Core
             }
             catch { }
         }
+        #endregion
 
-        /// <summary>
-        /// 未处理异常
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        static void OnUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
+        #region 异常处理
+        static void OnUnhandledException(Exception p_ex)
         {
             try
             {
-                var ex = e.Exception;
                 KnownException kex;
-                if ((kex = ex as KnownException) != null || (kex = ex.InnerException as KnownException) != null)
+                if ((kex = p_ex as KnownException) != null || (kex = p_ex.InnerException as KnownException) != null)
                 {
-                    // 输出到监视窗口
-                    string msg = kex.Message;
-                    string title;
-                    int index = msg.IndexOf("\r\n");
-                    if (index > 0)
-                        title = msg.Substring(0, index);
-                    else
-                        title = msg.Length > 20 ? msg.Substring(0, 20) : msg;
-                    AtKit.Trace(TraceOutType.Normal, title, msg);
-
                     // 显示警告提示
-                    AtKit.Warn(msg);
+                    AtKit.Warn(kex.Message);
                 }
                 else
                 {
+                    string msg = $"异常消息：{p_ex.Message}\r\n堆栈信息：{p_ex.StackTrace}";
                     // 输出到监视窗口
-                    string msg = e.Message;
-                    string title;
-                    int index = msg.IndexOf("\r\n");
-                    if (index > 0)
-                        title = msg.Substring(0, index);
-                    else
-                        title = msg.Length > 20 ? msg.Substring(0, 20) : msg;
-                    AtKit.Trace(TraceOutType.UnhandledException, title, e.Message);
+                    AtKit.Trace(TraceOutType.UnhandledException, "未处理异常", msg);
                     // 保存日志
-                    Log.Error("未处理异常：" + e.Message);
-                    // 显示异常错误对话框
-                    AtKit.RunAsync(async () =>
-                    {
-                        MessageDialog dlg = new MessageDialog(e.Message, "程序异常");
-                        dlg.Commands.Add(new UICommand("终止", new UICommandInvokedHandler(async (cmd) =>
-                        {
-                            try
-                            {
-                                await Suspending();
-                                await Stub.OnSuspending();
-                            }
-                            catch { }
-
-                            // 调用Exit直接关闭时不走Suspending事件
-                            // 以此方式关闭应用时，系统会将此视为应用崩溃，变态！！！
-                            Application.Current.Exit();
-                        })));
-                        dlg.Commands.Add(new UICommand("继续", null));
-                        dlg.DefaultCommandIndex = 1;
-                        dlg.CancelCommandIndex = 1;
-                        await dlg.ShowAsync();
-                    });
+                    Log.Error(msg);
                 }
             }
-            catch (Exception ex)
-            {
-                AtKit.Trace(TraceOutType.UnhandledException, "未处理异常", ex.Message);
-            }
-            finally
-            {
-                e.Handled = true;
-            }
+            catch { }
         }
+
+        static void OnUwpUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
+        {
+            e.Handled = true;
+            OnUnhandledException(e.Exception);
+        }
+
+#if ANDROID
+        static void OnAndroidUnhandledException(object sender, Android.Runtime.RaiseThrowableEventArgs e)
+        {
+            e.Handled = true;
+            OnUnhandledException(e.Exception);
+        }
+#endif
+
+#if IOS
+        static void OnIOSUnhandledException(object sender, ObjCRuntime.MarshalManagedExceptionEventArgs args)
+        {
+            // iOS 只要未处理异常就闪退，无解，操操操
+            args.ExceptionMode = ObjCRuntime.MarshalManagedExceptionMode.Disable;
+            OnUnhandledException(args.Exception);
+        }
+#endif
         #endregion
     }
 }

@@ -106,11 +106,6 @@
         <Button Content="返回自定义中包含自定义" Click="GetContainCustom" />
         <Button Content="发送自定义中包含自定义" Click="SetContainCustom" />
 
-        <a:CBar Title="服务端" />
-        <Button Content="服务端普通异常" Click="TestException" />
-        <Button Content="服务端业务异常消息" Click="TestRpcException" />
-        <Button Content="服务端序列化异常" Click="TestSerializeException" />
-
         <a:CFree RowSpan="5" IsHorStretch="True" ShowTitle="False">
             <TextBox x:Name="_tbInfo"
                      AcceptsReturn="True"
