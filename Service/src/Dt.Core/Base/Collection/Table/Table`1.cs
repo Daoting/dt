@@ -26,7 +26,8 @@ namespace Dt.Core
         /// <returns></returns>
         protected override Row CreateRowInstance()
         {
-            return Activator.CreateInstance<TEntity>();
+            // 实体的无参数构造方法为private
+            return (TEntity)Activator.CreateInstance(typeof(TEntity), true);
         }
 
         /// <summary>

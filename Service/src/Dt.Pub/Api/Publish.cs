@@ -26,8 +26,9 @@ namespace Dt.Pub
             "<!DOCTYPE html>\n" +
             "<html>\n" +
             "<head>\n" +
+            "    <meta charset=\"utf-8\">\n" +
             "    <title>{0}</title>\n" +
-            "    <link rel=\"stylesheet\" href=\"../css/froala_editor.pkgd.min.css\">\n" +
+            "    <link rel=\"stylesheet\" href=\"../css/froala.pkgd.min.css\">\n" +
             "</head>\n" +
             "<body>\n" +
             "    <div class=\"fr-element fr-view\">\n" +
@@ -36,6 +37,11 @@ namespace Dt.Pub
             "</body>\n" +
             "</html>";
 
+        /// <summary>
+        /// 保存文章，返回文章地址
+        /// </summary>
+        /// <param name="p_post"></param>
+        /// <returns></returns>
         public async Task<string> SavePost(Post p_post)
         {
             Throw.IfNull(p_post, "待保存的文章对象为null");
@@ -52,6 +58,14 @@ namespace Dt.Pub
                 if (!string.IsNullOrEmpty(p_post.Url))
                 {
                     // 删除旧文件
+                    try
+                    {
+                        string path = Path.Combine(AppContext.BaseDirectory, "wwwroot", p_post.Url);
+                        if (!File.Exists(path))
+                            File.Delete(path);
+                        p_post.Url = null;
+                    }
+                    catch { }
                 }
 
                 if (!string.IsNullOrEmpty(p_post.Title) && !string.IsNullOrEmpty(p_post.Content))
@@ -61,13 +75,13 @@ namespace Dt.Pub
                     {
                         url = await BuildHtmlPage(p_post.Title, p_post.Content, Glb.Now.ToString("yyyyMM"));
                     }
-                    p_post.SetUrl(url);
+                    p_post.Url = url;
                 }
             }
 
-            Repo<Post> repo = new Repo<Post>();
-            bool suc = await repo.Save(p_post);
-            return null;
+            bool suc = await new Repo<Post>().Save(p_post);
+            Throw.If(!suc, "文章保存失败");
+            return p_post.Url;
         }
 
         /// <summary>

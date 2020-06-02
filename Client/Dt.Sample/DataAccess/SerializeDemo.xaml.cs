@@ -716,6 +716,9 @@ namespace Dt.Sample
 
     public class MyRow : Entity
     {
+        MyRow()
+        { }
+
         public string Col1
         {
             get { return GetVal<string>("col1"); }
@@ -726,11 +729,6 @@ namespace Dt.Sample
         {
             get { return GetVal<string>("col2"); }
             set { this["col2"] = value; }
-        }
-
-        void SetCol1(string p_value)
-        {
-
         }
     }
 }

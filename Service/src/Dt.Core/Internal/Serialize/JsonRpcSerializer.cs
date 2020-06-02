@@ -334,7 +334,8 @@ namespace Dt.Core
             // 自定义序列化
             if (type.GetInterface("IRpcJson") != null)
             {
-                object tgt = Activator.CreateInstance(type);
+                // 无参数构造方法可能为private，如实体类型
+                object tgt = Activator.CreateInstance(type, true);
                 ((IRpcJson)tgt).ReadRpcJson(ref p_reader);
                 return tgt;
             }

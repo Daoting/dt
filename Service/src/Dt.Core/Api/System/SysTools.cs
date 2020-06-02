@@ -65,12 +65,12 @@ namespace Dt.Core
             AppendTabSpace(sb, 1);
             sb.AppendLine("{");
 
-            // 默认构造方法
             AppendTabSpace(sb, 2);
-            sb.Append($"public {clsName}()");
-            sb.AppendLine();
+            sb.AppendLine("#region 构造方法");
+
+            // 默认构造方法，私有为避免外部使用，内部在反序列化时使用
             AppendTabSpace(sb, 2);
-            sb.AppendLine("{ }");
+            sb.AppendLine($"{clsName}() {{ }}");
             sb.AppendLine();
 
             // 构造方法
@@ -135,6 +135,12 @@ namespace Dt.Core
             sb.AppendLine("AttachHook();");
             AppendTabSpace(sb, 2);
             sb.AppendLine("}");
+            AppendTabSpace(sb, 2);
+            sb.AppendLine("#endregion");
+
+            sb.AppendLine();
+            AppendTabSpace(sb, 2);
+            sb.Append("#region 属性");
 
             // 主键属性
             bool existID = false;
@@ -167,6 +173,12 @@ namespace Dt.Core
             {
                 AppendColumn(col, sb, false);
             }
+            AppendTabSpace(sb, 2);
+            sb.AppendLine("#endregion");
+
+            // 添加可复制注释
+            AppendComment(sb, schema);
+
             AppendTabSpace(sb, 1);
             sb.AppendLine("}");
             AppendTabSpace(sb, 1);
@@ -210,6 +222,52 @@ namespace Dt.Core
             p_sb.AppendLine($"set {{ this[\"{p_col.Name}\"] = value; }}");
             AppendTabSpace(p_sb, 2);
             p_sb.AppendLine("}");
+        }
+
+        void AppendComment(StringBuilder p_sb, TableSchema schema)
+        {
+            p_sb.AppendLine();
+            AppendTabSpace(p_sb, 2);
+            p_sb.AppendLine("#region 可复制");
+            AppendTabSpace(p_sb, 2);
+            p_sb.AppendLine("/*");
+
+            AppendTabSpace(p_sb, 2);
+            p_sb.AppendLine("void OnSaving()");
+            AppendTabSpace(p_sb, 2);
+            p_sb.AppendLine("{");
+            p_sb.AppendLine();
+            AppendTabSpace(p_sb, 2);
+            p_sb.AppendLine("}");
+            p_sb.AppendLine();
+
+            AppendTabSpace(p_sb, 2);
+            p_sb.AppendLine("void OnDeleting()");
+            AppendTabSpace(p_sb, 2);
+            p_sb.AppendLine("{");
+            p_sb.AppendLine();
+            AppendTabSpace(p_sb, 2);
+            p_sb.AppendLine("}");
+
+            foreach (var col in schema.PrimaryKey.Concat(schema.Columns))
+            {
+                // 注释SetXXX方法，提供复制
+                p_sb.AppendLine();
+                AppendTabSpace(p_sb, 2);
+                string tpName = GetTypeName(col.Type);
+                p_sb.AppendLine($"{tpName} Set{col.Name}({tpName} p_value)");
+                AppendTabSpace(p_sb, 2);
+                p_sb.AppendLine("{");
+                AppendTabSpace(p_sb, 3);
+                p_sb.AppendLine("return p_value;");
+                AppendTabSpace(p_sb, 2);
+                p_sb.AppendLine("}");
+            }
+
+            AppendTabSpace(p_sb, 2);
+            p_sb.AppendLine("*/");
+            AppendTabSpace(p_sb, 2);
+            p_sb.AppendLine("#endregion");
         }
 
         string GetTypeName(Type p_type)

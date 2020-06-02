@@ -13,39 +13,69 @@ using System;
 
 namespace Dt.App.Model
 {
+    #region 自动生成
     [Tbl("cm_roleprv", "cm")]
     public partial class RolePrv : Entity
     {
-        public RolePrv()
-        { }
+        #region 构造方法
+        RolePrv() { }
 
         public RolePrv(
-            long roleid,
-            string prvid)
+            long RoleID,
+            string PrvID)
         {
-            AddCell<long>("roleid", roleid);
-            AddCell<string>("prvid", prvid);
+            AddCell<long>("RoleID", RoleID);
+            AddCell<string>("PrvID", PrvID);
             IsAdded = true;
+            AttachHook();
         }
+        #endregion
 
+        #region 属性
         /// <summary>
         /// 角色标识
         /// </summary>
-        public long roleid
+        public long RoleID
         {
-            get { return (long)_cells["roleid"].Val; }
-            private set { _cells["roleid"].Val = value; }
+            get { return (long)this["RoleID"]; }
+            set { this["RoleID"] = value; }
         }
 
         /// <summary>
         /// 权限标识
         /// </summary>
-        public string prvid
+        public string PrvID
         {
-            get { return (string)_cells["prvid"].Val; }
-            private set { _cells["prvid"].Val = value; }
+            get { return (string)this["PrvID"]; }
+            set { this["PrvID"] = value; }
         }
 
         new public long ID { get { return -1; } }
+        #endregion
+
+        #region 可复制
+        /*
+        void OnSaving()
+        {
+
+        }
+
+        void OnDeleting()
+        {
+
+        }
+
+        long SetRoleID(long p_value)
+        {
+            return p_value;
+        }
+
+        string SetPrvID(string p_value)
+        {
+            return p_value;
+        }
+        */
+        #endregion
     }
+    #endregion
 }

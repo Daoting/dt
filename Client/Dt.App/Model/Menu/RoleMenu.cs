@@ -13,11 +13,12 @@ using System;
 
 namespace Dt.App.Model
 {
+    #region 自动生成
     [Tbl("cm_rolemenu", "cm")]
     public partial class RoleMenu : Entity
     {
-        public RoleMenu()
-        { }
+        #region 构造方法
+        RoleMenu() { }
 
         public RoleMenu(
             long RoleID,
@@ -26,15 +27,18 @@ namespace Dt.App.Model
             AddCell<long>("RoleID", RoleID);
             AddCell<long>("MenuID", MenuID);
             IsAdded = true;
+            AttachHook();
         }
+        #endregion
 
+        #region 属性
         /// <summary>
         /// 角色标识
         /// </summary>
         public long RoleID
         {
-            get { return (long)_cells["RoleID"].Val; }
-            private set { _cells["RoleID"].Val = value; }
+            get { return (long)this["RoleID"]; }
+            set { this["RoleID"] = value; }
         }
 
         /// <summary>
@@ -42,10 +46,36 @@ namespace Dt.App.Model
         /// </summary>
         public long MenuID
         {
-            get { return (long)_cells["MenuID"].Val; }
-            private set { _cells["MenuID"].Val = value; }
+            get { return (long)this["MenuID"]; }
+            set { this["MenuID"] = value; }
         }
 
         new public long ID { get { return -1; } }
+        #endregion
+
+        #region 可复制
+        /*
+        void OnSaving()
+        {
+
+        }
+
+        void OnDeleting()
+        {
+
+        }
+
+        long SetRoleID(long p_value)
+        {
+            return p_value;
+        }
+
+        long SetMenuID(long p_value)
+        {
+            return p_value;
+        }
+        */
+        #endregion
     }
+    #endregion
 }

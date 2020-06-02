@@ -116,7 +116,11 @@ namespace Dt.Core
         public object Tag { get; set; }
 
         /// <summary>
-        /// 外部钩子，通常为业务处理方法，可通过触发异常的方式使赋值失败
+        /// 设置值时的外部钩子，通常为业务处理方法，可通过触发异常的方式使赋值失败
+        /// 钩子方法规范：
+        /// 私有方法：SetXXX
+        /// 入参：一个，和cell.Type相同
+        /// 返回值：和cell.Type相同
         /// </summary>
         public MethodInfo Hook { get; set; }
         #endregion
@@ -259,23 +263,50 @@ namespace Dt.Core
             // 类型不同时转换
             object val = GetValInternal(p_val, Type);
 
-            // 外部钩子通常为业务判断，可通过触发异常的方式使赋值失败
+            // 外部钩子通常为业务校验、领域事件等，校验失败时触发异常使赋值失败
             if (Hook != null)
             {
 #if SERVER
                 // 服务端无绑定
-                Hook.Invoke(Row, new object[] { val });
+                val = Hook.Invoke(Row, new object[] { val });
 #else
-                if (p_isBinding)
+                if (!p_isBinding)
                 {
-                    // 绑定时钩子抛出的异常被UWP内部catch，先catch
-                    if (CatchHook(val))
-                        return;
+                    // 无绑定时不catch钩子抛出的异常，统一在未处理异常中提示警告信息
+                    val = Hook.Invoke(Row, new object[] { val });
                 }
                 else
                 {
-                    // 无绑定时不catch钩子抛出的异常，统一在 AtSys.OnUnhandledException 中提示警告信息
-                    Hook.Invoke(Row, new object[] { val });
+                    try
+                    {
+                        // 绑定时钩子抛出的异常被UWP内部catch，无法统一提示警告信息，故先catch
+                        val = Hook.Invoke(Row, new object[] { p_val });
+                    }
+                    catch (Exception ex)
+                    {
+                        if (ex.InnerException is KnownException kex)
+                            AtKit.Warn(kex.Message);
+                        else
+                            AtKit.Warn(ex.Message);
+
+                        // 通知UI重置原值
+                        if (PropertyChanged != null)
+                        {
+#if !UWP
+                            // uno变态，必须完整执行一遍赋值，触发两次属性值变化，否则UI不重置！！！浪费半天
+                            var old = OriginalVal;
+                            OriginalVal = _val;
+                            _val = p_val;
+                            PropertyChanged(this, new PropertyChangedEventArgs("Val"));
+                            _val = OriginalVal;
+                            OriginalVal = old;
+#endif
+                            // 立即调用时无效！
+                            AtKit.RunAsync(() => PropertyChanged(this, new PropertyChangedEventArgs("Val")));
+                        }
+                        // 直接返回，赋值失败
+                        return;
+                    }
                 }
 #endif
             }
@@ -359,42 +390,6 @@ namespace Dt.Core
 
             throw new Exception($"【{ID}】列值转换异常：无法将【{p_val}】转换到【{p_tgtType.Name}】类型！");
         }
-
-#if !SERVER
-        bool CatchHook(object p_val)
-        {
-            try
-            {
-                // 绑定时钩子抛出的异常被UWP内部catch，无法统一提示警告信息，故先catch
-                Hook.Invoke(Row, new object[] { p_val });
-            }
-            catch (Exception ex)
-            {
-                if (ex.InnerException is KnownException kex)
-                    AtKit.Warn(kex.Message);
-                else
-                    AtKit.Warn(ex.Message);
-
-                // 通知UI重置原值
-                if (PropertyChanged != null)
-                {
-#if !UWP
-                    // uno变态，必须完整执行一遍赋值，触发两次属性值变化，否则UI不重置！！！浪费半天
-                    var old = OriginalVal;
-                    OriginalVal = _val;
-                    _val = p_val;
-                    PropertyChanged(this, new PropertyChangedEventArgs("Val"));
-                    _val = OriginalVal;
-                    OriginalVal = old;
-#endif
-                    // 立即调用时无效！
-                    AtKit.RunAsync(() => PropertyChanged(this, new PropertyChangedEventArgs("Val")));
-                }
-                return true;
-            }
-            return false;
-        }
-#endif
         #endregion
     }
 }

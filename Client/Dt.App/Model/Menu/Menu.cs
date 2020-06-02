@@ -13,11 +13,12 @@ using System;
 
 namespace Dt.App.Model
 {
+    #region 自动生成
     [Tbl("cm_menu", "cm")]
     public partial class Menu : Entity
     {
-        public Menu()
-        { }
+        #region 构造方法
+        Menu() { }
 
         public Menu(
             long ID,
@@ -48,15 +49,18 @@ namespace Dt.App.Model
             AddCell<DateTime>("Ctime", Ctime);
             AddCell<DateTime>("Mtime", Mtime);
             IsAdded = true;
+            AttachHook();
         }
+        #endregion
 
+        #region 属性
         /// <summary>
         /// 父菜单标识
         /// </summary>
         public long? ParentID
         {
-            get { return (long?)_cells["ParentID"].Val; }
-            private set { _cells["ParentID"].Val = value; }
+            get { return (long?)this["ParentID"]; }
+            set { this["ParentID"] = value; }
         }
 
         /// <summary>
@@ -64,8 +68,8 @@ namespace Dt.App.Model
         /// </summary>
         public string Name
         {
-            get { return (string)_cells["Name"].Val; }
-            private set { _cells["Name"].Val = value; }
+            get { return (string)this["Name"]; }
+            set { this["Name"] = value; }
         }
 
         /// <summary>
@@ -73,8 +77,8 @@ namespace Dt.App.Model
         /// </summary>
         public bool IsGroup
         {
-            get { return (bool)_cells["IsGroup"].Val; }
-            private set { _cells["IsGroup"].Val = value; }
+            get { return (bool)this["IsGroup"]; }
+            set { this["IsGroup"] = value; }
         }
 
         /// <summary>
@@ -82,8 +86,8 @@ namespace Dt.App.Model
         /// </summary>
         public string ViewName
         {
-            get { return (string)_cells["ViewName"].Val; }
-            private set { _cells["ViewName"].Val = value; }
+            get { return (string)this["ViewName"]; }
+            set { this["ViewName"] = value; }
         }
 
         /// <summary>
@@ -91,8 +95,8 @@ namespace Dt.App.Model
         /// </summary>
         public string Params
         {
-            get { return (string)_cells["Params"].Val; }
-            private set { _cells["Params"].Val = value; }
+            get { return (string)this["Params"]; }
+            set { this["Params"] = value; }
         }
 
         /// <summary>
@@ -100,8 +104,8 @@ namespace Dt.App.Model
         /// </summary>
         public string Icon
         {
-            get { return (string)_cells["Icon"].Val; }
-            private set { _cells["Icon"].Val = value; }
+            get { return (string)this["Icon"]; }
+            set { this["Icon"] = value; }
         }
 
         /// <summary>
@@ -109,8 +113,8 @@ namespace Dt.App.Model
         /// </summary>
         public string SrvName
         {
-            get { return (string)_cells["SrvName"].Val; }
-            private set { _cells["SrvName"].Val = value; }
+            get { return (string)this["SrvName"]; }
+            set { this["SrvName"] = value; }
         }
 
         /// <summary>
@@ -118,8 +122,8 @@ namespace Dt.App.Model
         /// </summary>
         public string Note
         {
-            get { return (string)_cells["Note"].Val; }
-            private set { _cells["Note"].Val = value; }
+            get { return (string)this["Note"]; }
+            set { this["Note"] = value; }
         }
 
         /// <summary>
@@ -127,8 +131,8 @@ namespace Dt.App.Model
         /// </summary>
         public int Dispidx
         {
-            get { return (int)_cells["Dispidx"].Val; }
-            private set { _cells["Dispidx"].Val = value; }
+            get { return (int)this["Dispidx"]; }
+            set { this["Dispidx"] = value; }
         }
 
         /// <summary>
@@ -136,8 +140,8 @@ namespace Dt.App.Model
         /// </summary>
         public bool IsLocked
         {
-            get { return (bool)_cells["IsLocked"].Val; }
-            private set { _cells["IsLocked"].Val = value; }
+            get { return (bool)this["IsLocked"]; }
+            set { this["IsLocked"] = value; }
         }
 
         /// <summary>
@@ -145,8 +149,8 @@ namespace Dt.App.Model
         /// </summary>
         public DateTime Ctime
         {
-            get { return (DateTime)_cells["Ctime"].Val; }
-            private set { _cells["Ctime"].Val = value; }
+            get { return (DateTime)this["Ctime"]; }
+            set { this["Ctime"] = value; }
         }
 
         /// <summary>
@@ -154,8 +158,89 @@ namespace Dt.App.Model
         /// </summary>
         public DateTime Mtime
         {
-            get { return (DateTime)_cells["Mtime"].Val; }
-            private set { _cells["Mtime"].Val = value; }
+            get { return (DateTime)this["Mtime"]; }
+            set { this["Mtime"] = value; }
         }
+        #endregion
+
+        #region 可复制
+        /*
+        void OnSaving()
+        {
+
+        }
+
+        void OnDeleting()
+        {
+
+        }
+
+        long SetID(long p_value)
+        {
+            return p_value;
+        }
+
+        long? SetParentID(long? p_value)
+        {
+            return p_value;
+        }
+
+        string SetName(string p_value)
+        {
+            return p_value;
+        }
+
+        bool SetIsGroup(bool p_value)
+        {
+            return p_value;
+        }
+
+        string SetViewName(string p_value)
+        {
+            return p_value;
+        }
+
+        string SetParams(string p_value)
+        {
+            return p_value;
+        }
+
+        string SetIcon(string p_value)
+        {
+            return p_value;
+        }
+
+        string SetSrvName(string p_value)
+        {
+            return p_value;
+        }
+
+        string SetNote(string p_value)
+        {
+            return p_value;
+        }
+
+        int SetDispidx(int p_value)
+        {
+            return p_value;
+        }
+
+        bool SetIsLocked(bool p_value)
+        {
+            return p_value;
+        }
+
+        DateTime SetCtime(DateTime p_value)
+        {
+            return p_value;
+        }
+
+        DateTime SetMtime(DateTime p_value)
+        {
+            return p_value;
+        }
+        */
+        #endregion
     }
+    #endregion
 }

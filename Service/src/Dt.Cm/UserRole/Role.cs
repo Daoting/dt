@@ -12,11 +12,12 @@ using Dt.Core;
 
 namespace Dt.Cm
 {
+    #region 自动生成
     [Tbl("cm_role", "cm")]
     public partial class Role : Entity
     {
-        public Role()
-        { }
+        #region 构造方法
+        Role() { }
 
         public Role(
             long ID,
@@ -27,15 +28,18 @@ namespace Dt.Cm
             AddCell<string>("Name", Name);
             AddCell<string>("Note", Note);
             IsAdded = true;
+            AttachHook();
         }
+        #endregion
 
+        #region 属性
         /// <summary>
         /// 角色名称
         /// </summary>
         public string Name
         {
-            get { return (string)_cells["Name"].Val; }
-            private set { _cells["Name"].Val = value; }
+            get { return (string)this["Name"]; }
+            set { this["Name"] = value; }
         }
 
         /// <summary>
@@ -43,8 +47,39 @@ namespace Dt.Cm
         /// </summary>
         public string Note
         {
-            get { return (string)_cells["Note"].Val; }
-            private set { _cells["Note"].Val = value; }
+            get { return (string)this["Note"]; }
+            set { this["Note"] = value; }
         }
+        #endregion
+
+        #region 可复制
+        /*
+        void OnSaving()
+        {
+
+        }
+
+        void OnDeleting()
+        {
+
+        }
+
+        long SetID(long p_value)
+        {
+            return p_value;
+        }
+
+        string SetName(string p_value)
+        {
+            return p_value;
+        }
+
+        string SetNote(string p_value)
+        {
+            return p_value;
+        }
+        */
+        #endregion
     }
+    #endregion
 }

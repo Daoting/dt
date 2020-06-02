@@ -13,11 +13,27 @@ using System;
 
 namespace Dt.Cm
 {
+    [CudEvent(CudEvent.LocalDelete)]
+    [Cache(PrefixKey = "user", OtherKey = "Phone")]
+    public partial class User
+    {
+        public static User CreateByPhone(string p_phone)
+        {
+            // cm用户标志0
+            return new User(
+                ID: Id.New(0),
+                Phone: p_phone,
+                Name: p_phone,
+                Pwd: Kit.GetMD5(p_phone.Substring(p_phone.Length - 4)));
+        }
+    }
+
+    #region 自动生成
     [Tbl("cm_user", "cm")]
     public partial class User : Entity
     {
-        public User()
-        { }
+        #region 构造方法
+        User() { }
 
         public User(
             long ID,
@@ -40,15 +56,18 @@ namespace Dt.Cm
             AddCell<DateTime>("Ctime", Ctime);
             AddCell<DateTime>("Mtime", Mtime);
             IsAdded = true;
+            AttachHook();
         }
+        #endregion
 
+        #region 属性
         /// <summary>
         /// 手机号，唯一
         /// </summary>
         public string Phone
         {
-            get { return (string)_cells["Phone"].Val; }
-            private set { _cells["Phone"].Val = value; }
+            get { return (string)this["Phone"]; }
+            set { this["Phone"] = value; }
         }
 
         /// <summary>
@@ -56,8 +75,8 @@ namespace Dt.Cm
         /// </summary>
         public string Name
         {
-            get { return (string)_cells["Name"].Val; }
-            private set { _cells["Name"].Val = value; }
+            get { return (string)this["Name"]; }
+            set { this["Name"] = value; }
         }
 
         /// <summary>
@@ -65,8 +84,8 @@ namespace Dt.Cm
         /// </summary>
         public string Pwd
         {
-            get { return (string)_cells["Pwd"].Val; }
-            private set { _cells["Pwd"].Val = value; }
+            get { return (string)this["Pwd"]; }
+            set { this["Pwd"] = value; }
         }
 
         /// <summary>
@@ -74,8 +93,8 @@ namespace Dt.Cm
         /// </summary>
         public bool Sex
         {
-            get { return (bool)_cells["Sex"].Val; }
-            private set { _cells["Sex"].Val = value; }
+            get { return (bool)this["Sex"]; }
+            set { this["Sex"] = value; }
         }
 
         /// <summary>
@@ -83,8 +102,8 @@ namespace Dt.Cm
         /// </summary>
         public string Photo
         {
-            get { return (string)_cells["Photo"].Val; }
-            private set { _cells["Photo"].Val = value; }
+            get { return (string)this["Photo"]; }
+            set { this["Photo"] = value; }
         }
 
         /// <summary>
@@ -92,8 +111,8 @@ namespace Dt.Cm
         /// </summary>
         public bool Expired
         {
-            get { return (bool)_cells["Expired"].Val; }
-            private set { _cells["Expired"].Val = value; }
+            get { return (bool)this["Expired"]; }
+            set { this["Expired"] = value; }
         }
 
         /// <summary>
@@ -101,8 +120,8 @@ namespace Dt.Cm
         /// </summary>
         public DateTime Ctime
         {
-            get { return (DateTime)_cells["Ctime"].Val; }
-            private set { _cells["Ctime"].Val = value; }
+            get { return (DateTime)this["Ctime"]; }
+            set { this["Ctime"] = value; }
         }
 
         /// <summary>
@@ -110,8 +129,69 @@ namespace Dt.Cm
         /// </summary>
         public DateTime Mtime
         {
-            get { return (DateTime)_cells["Mtime"].Val; }
-            private set { _cells["Mtime"].Val = value; }
+            get { return (DateTime)this["Mtime"]; }
+            set { this["Mtime"] = value; }
         }
+        #endregion
+
+        #region 可复制
+        /*
+        void OnSaving()
+        {
+
+        }
+
+        void OnDeleting()
+        {
+
+        }
+
+        long SetID(long p_value)
+        {
+            return p_value;
+        }
+
+        string SetPhone(string p_value)
+        {
+            return p_value;
+        }
+
+        string SetName(string p_value)
+        {
+            return p_value;
+        }
+
+        string SetPwd(string p_value)
+        {
+            return p_value;
+        }
+
+        bool SetSex(bool p_value)
+        {
+            return p_value;
+        }
+
+        string SetPhoto(string p_value)
+        {
+            return p_value;
+        }
+
+        bool SetExpired(bool p_value)
+        {
+            return p_value;
+        }
+
+        DateTime SetCtime(DateTime p_value)
+        {
+            return p_value;
+        }
+
+        DateTime SetMtime(DateTime p_value)
+        {
+            return p_value;
+        }
+        */
+        #endregion
     }
+    #endregion
 }

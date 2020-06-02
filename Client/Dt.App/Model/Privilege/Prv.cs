@@ -13,11 +13,12 @@ using System;
 
 namespace Dt.App.Model
 {
+    #region 自动生成
     [Tbl("cm_prv", "cm")]
     public partial class Prv : Entity
     {
-        public Prv()
-        { }
+        #region 构造方法
+        Prv() { }
 
         public Prv(
             string ID,
@@ -26,15 +27,18 @@ namespace Dt.App.Model
             AddCell<string>("ID", ID);
             AddCell<string>("Note", Note);
             IsAdded = true;
+            AttachHook();
         }
+        #endregion
 
+        #region 属性
         /// <summary>
         /// 权限名称
         /// </summary>
         new public string ID
         {
-            get { return (string)_cells["ID"].Val; }
-            private set { _cells["ID"].Val = value; }
+            get { return (string)this["ID"]; }
+            set { this["ID"] = value; }
         }
 
         /// <summary>
@@ -42,8 +46,34 @@ namespace Dt.App.Model
         /// </summary>
         public string Note
         {
-            get { return (string)_cells["Note"].Val; }
-            private set { _cells["Note"].Val = value; }
+            get { return (string)this["Note"]; }
+            set { this["Note"] = value; }
         }
+        #endregion
+
+        #region 可复制
+        /*
+        void OnSaving()
+        {
+
+        }
+
+        void OnDeleting()
+        {
+
+        }
+
+        string SetID(string p_value)
+        {
+            return p_value;
+        }
+
+        string SetNote(string p_value)
+        {
+            return p_value;
+        }
+        */
+        #endregion
     }
+    #endregion
 }

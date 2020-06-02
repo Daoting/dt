@@ -51,6 +51,7 @@
                         <a:Mi ID="保存" Icon="保存" Click="OnSavePost" IsEnabled="{Binding IsDirty,ElementName=_fv}" />
                         <a:Mi ID="删除" Icon="删除" Click="OnDelPost" />
                         <a:Mi ID="编辑内容" Icon="铅笔" Click="OnEditContent" />
+                        <a:Mi ID="预览" Icon="公告" Click="OnExplore" />
                     </a:Menu>
                 </a:Tab.Menu>
                 <a:Fv x:Name="_fv">

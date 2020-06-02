@@ -26,9 +26,21 @@ namespace Dt.Core
             Type tp = GetType();
             foreach (var cell in _cells)
             {
+                // 私有方法：SetXXX
+                // 入参：一个，和cell类型相同
+                // 返回值：和cell类型相同
                 var mi = tp.GetMethod("Set" + cell.ID, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.IgnoreCase | BindingFlags.DeclaredOnly);
                 if (mi != null)
-                    cell.Hook = mi;
+                {
+                    var input = mi.GetParameters();
+                    if (input != null
+                        && input.Length == 1
+                        && input[0].ParameterType == cell.Type
+                        && mi.ReturnType == cell.Type)
+                    {
+                        cell.Hook = mi;
+                    }
+                }
             }
         }
 

@@ -10,6 +10,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Core
@@ -30,11 +31,11 @@ namespace Dt.Core
                 throw new Exception($"实体{p_type.Name}的映射表{Schema.Name}无主键！");
             Extract(p_type);
 
-            OnSaving = p_type.GetMethod("OnSaving", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.IgnoreCase | BindingFlags.DeclaredOnly);
-            OnDeleting = p_type.GetMethod("OnDeleting", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.IgnoreCase | BindingFlags.DeclaredOnly);
+            OnSaving = GetMethod(p_type, "OnSaving");
+            OnDeleting = GetMethod(p_type, "OnDeleting");
             Svc = tbl.Svc;
         }
-
+        
         /// <summary>
         /// 表结构
         /// </summary>
@@ -59,12 +60,12 @@ namespace Dt.Core
         public string Svc { get; }
 
         /// <summary>
-        /// 保存前的处理，抛出异常时取消保存，实体中的方法名OnSaving，返回值void 或 Task
+        /// 保存前的处理，抛出异常时取消保存，实体中的方法规范：私有方法OnSaving，无入参，返回值void 或 Task
         /// </summary>
         public MethodInfo OnSaving { get; }
 
         /// <summary>
-        /// 删除前的处理，抛出异常时取消删除，实体中的方法名OnDeleting，返回值void 或 Task
+        /// 删除前的处理，抛出异常时取消删除，实体中的方法规范：私有方法OnDeleting，无入参，返回值void 或 Task
         /// </summary>
         public MethodInfo OnDeleting { get; }
 
@@ -114,6 +115,18 @@ namespace Dt.Core
             }
             if (ls.Count > 0)
                 Children = ls;
+        }
+
+        static MethodInfo GetMethod(Type p_type, string p_name)
+        {
+            var mi = p_type.GetMethod(p_name, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.IgnoreCase | BindingFlags.DeclaredOnly);
+            if (mi != null
+                && (mi.ReturnType == typeof(void) || mi.ReturnType == typeof(Task))
+                && mi.GetParameters().Length == 0)
+            {
+                return mi;
+            }
+            return null;
         }
     }
 }

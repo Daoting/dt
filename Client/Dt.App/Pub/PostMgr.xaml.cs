@@ -82,14 +82,16 @@ namespace Dt.App.Pub
             if (post == null)
                 return false;
 
-            post.OnSaving();
-            var ret = await AtPublish.SavePost(_fv.Row);
-            if (!string.IsNullOrEmpty(ret))
+            if (_fv.ExistNull("Title"))
+                return false;
+
+            if (post.IsPublish && string.IsNullOrEmpty(post.Content))
             {
-                AtKit.Warn("保存失败：" + ret);
+                AtKit.Warn("发布的文章内容不能为空");
                 return false;
             }
 
+            post.Url = await AtPublish.SavePost(_fv.Row);
             _fv.Row.AcceptChanges();
             LoadAll();
             AtKit.Msg("保存成功");
@@ -126,6 +128,18 @@ namespace Dt.App.Pub
             else
             {
                 AtKit.Warn("删除失败！");
+            }
+        }
+
+        void OnExplore(object sender, Mi e)
+        {
+            Post post = (Post)_fv.Data;
+            if (post != null)
+            {
+                if (string.IsNullOrEmpty(post.Url))
+                    AtKit.Warn("文章的标题和内容不可为空！");
+                else
+                    AtApp.OpenWin(typeof(WebViewWin), post.Title, Icons.公告, post.Url);
             }
         }
 
