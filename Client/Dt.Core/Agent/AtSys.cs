@@ -121,7 +121,7 @@ namespace Dt.Core
 #elif ANDROID
             Android.Runtime.AndroidEnvironment.UnhandledExceptionRaiser += OnAndroidUnhandledException;
 #elif IOS
-            ObjCRuntime.Runtime.MarshalManagedException += OnIOSUnhandledException;
+            // 在iOS项目的Main函数处理
 #endif
 
             // 打开状态库
@@ -188,7 +188,7 @@ namespace Dt.Core
         #endregion
 
         #region 异常处理
-        static void OnUnhandledException(Exception p_ex)
+        public static void OnUnhandledException(Exception p_ex)
         {
             try
             {
@@ -221,15 +221,6 @@ namespace Dt.Core
         {
             e.Handled = true;
             OnUnhandledException(e.Exception);
-        }
-#endif
-
-#if IOS
-        static void OnIOSUnhandledException(object sender, ObjCRuntime.MarshalManagedExceptionEventArgs args)
-        {
-            // iOS 只要未处理异常就闪退，无解，操操操
-            args.ExceptionMode = ObjCRuntime.MarshalManagedExceptionMode.Disable;
-            OnUnhandledException(args.Exception);
         }
 #endif
         #endregion
