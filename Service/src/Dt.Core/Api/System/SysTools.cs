@@ -236,7 +236,6 @@ namespace Dt.Core
             p_sb.AppendLine("void OnSaving()");
             AppendTabSpace(p_sb, 2);
             p_sb.AppendLine("{");
-            p_sb.AppendLine();
             AppendTabSpace(p_sb, 2);
             p_sb.AppendLine("}");
             p_sb.AppendLine();
@@ -245,7 +244,6 @@ namespace Dt.Core
             p_sb.AppendLine("void OnDeleting()");
             AppendTabSpace(p_sb, 2);
             p_sb.AppendLine("{");
-            p_sb.AppendLine();
             AppendTabSpace(p_sb, 2);
             p_sb.AppendLine("}");
 
@@ -255,11 +253,9 @@ namespace Dt.Core
                 p_sb.AppendLine();
                 AppendTabSpace(p_sb, 2);
                 string tpName = GetTypeName(col.Type);
-                p_sb.AppendLine($"{tpName} Set{col.Name}({tpName} p_value)");
+                p_sb.AppendLine($"void Set{col.Name}({tpName} p_value)");
                 AppendTabSpace(p_sb, 2);
                 p_sb.AppendLine("{");
-                AppendTabSpace(p_sb, 3);
-                p_sb.AppendLine("return p_value;");
                 AppendTabSpace(p_sb, 2);
                 p_sb.AppendLine("}");
             }

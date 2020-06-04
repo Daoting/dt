@@ -55,22 +55,18 @@ namespace Dt.App.Model
         /*
         void OnSaving()
         {
-
         }
 
         void OnDeleting()
         {
-
         }
 
-        string SetID(string p_value)
+        void SetID(string p_value)
         {
-            return p_value;
         }
 
-        string SetNote(string p_value)
+        void SetNote(string p_value)
         {
-            return p_value;
         }
         */
         #endregion

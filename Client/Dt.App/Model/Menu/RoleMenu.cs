@@ -57,22 +57,18 @@ namespace Dt.App.Model
         /*
         void OnSaving()
         {
-
         }
 
         void OnDeleting()
         {
-
         }
 
-        long SetRoleID(long p_value)
+        void SetRoleID(long p_value)
         {
-            return p_value;
         }
 
-        long SetMenuID(long p_value)
+        void SetMenuID(long p_value)
         {
-            return p_value;
         }
         */
         #endregion

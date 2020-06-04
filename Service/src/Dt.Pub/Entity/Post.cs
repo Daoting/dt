@@ -227,102 +227,82 @@ namespace Dt.Pub
         /*
         void OnSaving()
         {
-
         }
 
         void OnDeleting()
         {
-
         }
 
-        long SetID(long p_value)
+        void SetID(long p_value)
         {
-            return p_value;
         }
 
-        string SetTitle(string p_value)
+        void SetTitle(string p_value)
         {
-            return p_value;
         }
 
-        string SetCover(string p_value)
+        void SetCover(string p_value)
         {
-            return p_value;
         }
 
-        string SetContent(string p_value)
+        void SetContent(string p_value)
         {
-            return p_value;
         }
 
-        bool SetIsPublish(bool p_value)
+        void SetIsPublish(bool p_value)
         {
-            return p_value;
         }
 
-        bool SetAllowComment(bool p_value)
+        void SetAllowComment(bool p_value)
         {
-            return p_value;
         }
 
-        bool SetAddAlbumLink(bool p_value)
+        void SetAddAlbumLink(bool p_value)
         {
-            return p_value;
         }
 
-        bool SetAddCatLink(bool p_value)
+        void SetAddCatLink(bool p_value)
         {
-            return p_value;
         }
 
-        string SetUrl(string p_value)
+        void SetUrl(string p_value)
         {
-            return p_value;
         }
 
-        int SetDispidx(int p_value)
+        void SetDispidx(int p_value)
         {
-            return p_value;
         }
 
-        long SetCreatorID(long p_value)
+        void SetCreatorID(long p_value)
         {
-            return p_value;
         }
 
-        string SetCreator(string p_value)
+        void SetCreator(string p_value)
         {
-            return p_value;
         }
 
-        DateTime SetCtime(DateTime p_value)
+        void SetCtime(DateTime p_value)
         {
-            return p_value;
         }
 
-        long? SetLastEditorID(long? p_value)
+        void SetLastEditorID(long? p_value)
         {
-            return p_value;
         }
 
-        string SetLastEditor(string p_value)
+        void SetLastEditor(string p_value)
         {
-            return p_value;
         }
 
-        DateTime? SetMtime(DateTime? p_value)
+        void SetMtime(DateTime? p_value)
         {
-            return p_value;
         }
 
-        int SetReadCount(int p_value)
+        void SetReadCount(int p_value)
         {
-            return p_value;
         }
 
-        int SetCommentCount(int p_value)
+        void SetCommentCount(int p_value)
         {
-            return p_value;
         }
         */
         #endregion

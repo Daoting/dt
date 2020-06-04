@@ -138,57 +138,46 @@ namespace Dt.Cm
         /*
         void OnSaving()
         {
-
         }
 
         void OnDeleting()
         {
-
         }
 
-        long SetID(long p_value)
+        void SetID(long p_value)
         {
-            return p_value;
         }
 
-        string SetPhone(string p_value)
+        void SetPhone(string p_value)
         {
-            return p_value;
         }
 
-        string SetName(string p_value)
+        void SetName(string p_value)
         {
-            return p_value;
         }
 
-        string SetPwd(string p_value)
+        void SetPwd(string p_value)
         {
-            return p_value;
         }
 
-        bool SetSex(bool p_value)
+        void SetSex(bool p_value)
         {
-            return p_value;
         }
 
-        string SetPhoto(string p_value)
+        void SetPhoto(string p_value)
         {
-            return p_value;
         }
 
-        bool SetExpired(bool p_value)
+        void SetExpired(bool p_value)
         {
-            return p_value;
         }
 
-        DateTime SetCtime(DateTime p_value)
+        void SetCtime(DateTime p_value)
         {
-            return p_value;
         }
 
-        DateTime SetMtime(DateTime p_value)
+        void SetMtime(DateTime p_value)
         {
-            return p_value;
         }
         */
         #endregion

@@ -1,0 +1,13 @@
+﻿<a:Win
+    x:Class="Dt.Sample.EntityDemo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Fv x:Name="_fv">
+        <a:CText ID="MaxLength" Title="最大长度3" />
+        <a:CText ID="Src" Title="联动源" />
+        <a:CTip ID="Tgt" Title="联动目标" />
+        <a:CBool ID="IsCheck" Title="联动源不为空" />
+    </a:Fv>
+</a:Win>

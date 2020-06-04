@@ -118,9 +118,9 @@ namespace Dt.Core
         /// <summary>
         /// 设置值时的外部钩子，通常为业务处理方法，可通过触发异常的方式使赋值失败
         /// 钩子方法规范：
-        /// 私有方法：SetXXX
-        /// 入参：一个，和cell.Type相同
-        /// 返回值：和cell.Type相同
+        /// 私有方法，SetXXX中的XXX为Cell.ID
+        /// 一个入参，和Cell.Type相同
+        /// 无返回值
         /// </summary>
         public MethodInfo Hook { get; set; }
         #endregion
@@ -268,19 +268,19 @@ namespace Dt.Core
             {
 #if SERVER
                 // 服务端无绑定
-                val = Hook.Invoke(Row, new object[] { val });
+                Hook.Invoke(Row, new object[] { val });
 #else
                 if (!p_isBinding)
                 {
                     // 无绑定时不catch钩子抛出的异常，统一在未处理异常中提示警告信息
-                    val = Hook.Invoke(Row, new object[] { val });
+                    Hook.Invoke(Row, new object[] { val });
                 }
                 else
                 {
                     try
                     {
                         // 绑定时钩子抛出的异常被UWP内部catch，无法统一提示警告信息，故先catch
-                        val = Hook.Invoke(Row, new object[] { p_val });
+                        Hook.Invoke(Row, new object[] { p_val });
                     }
                     catch (Exception ex)
                     {

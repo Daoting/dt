@@ -167,77 +167,62 @@ namespace Dt.App.Model
         /*
         void OnSaving()
         {
-
         }
 
         void OnDeleting()
         {
-
         }
 
-        long SetID(long p_value)
+        void SetID(long p_value)
         {
-            return p_value;
         }
 
-        long? SetParentID(long? p_value)
+        void SetParentID(long? p_value)
         {
-            return p_value;
         }
 
-        string SetName(string p_value)
+        void SetName(string p_value)
         {
-            return p_value;
         }
 
-        bool SetIsGroup(bool p_value)
+        void SetIsGroup(bool p_value)
         {
-            return p_value;
         }
 
-        string SetViewName(string p_value)
+        void SetViewName(string p_value)
         {
-            return p_value;
         }
 
-        string SetParams(string p_value)
+        void SetParams(string p_value)
         {
-            return p_value;
         }
 
-        string SetIcon(string p_value)
+        void SetIcon(string p_value)
         {
-            return p_value;
         }
 
-        string SetSrvName(string p_value)
+        void SetSrvName(string p_value)
         {
-            return p_value;
         }
 
-        string SetNote(string p_value)
+        void SetNote(string p_value)
         {
-            return p_value;
         }
 
-        int SetDispidx(int p_value)
+        void SetDispidx(int p_value)
         {
-            return p_value;
         }
 
-        bool SetIsLocked(bool p_value)
+        void SetIsLocked(bool p_value)
         {
-            return p_value;
         }
 
-        DateTime SetCtime(DateTime p_value)
+        void SetCtime(DateTime p_value)
         {
-            return p_value;
         }
 
-        DateTime SetMtime(DateTime p_value)
+        void SetMtime(DateTime p_value)
         {
-            return p_value;
         }
         */
         #endregion

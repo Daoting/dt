@@ -56,27 +56,22 @@ namespace Dt.Cm
         /*
         void OnSaving()
         {
-
         }
 
         void OnDeleting()
         {
-
         }
 
-        long SetID(long p_value)
+        void SetID(long p_value)
         {
-            return p_value;
         }
 
-        string SetName(string p_value)
+        void SetName(string p_value)
         {
-            return p_value;
         }
 
-        string SetNote(string p_value)
+        void SetNote(string p_value)
         {
-            return p_value;
         }
         */
         #endregion

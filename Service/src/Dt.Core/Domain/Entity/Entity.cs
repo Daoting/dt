@@ -59,9 +59,9 @@ namespace Dt.Core
             Type tp = GetType();
             foreach (var cell in _cells)
             {
-                // 私有方法：SetXXX
-                // 入参：一个，和cell类型相同
-                // 返回值：和cell类型相同
+                // 私有方法，SetXXX中的XXX为Cell.ID
+                // 一个入参，和Cell.Type相同
+                // 无返回值
                 var mi = tp.GetMethod("Set" + cell.ID, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.IgnoreCase | BindingFlags.DeclaredOnly);
                 if (mi != null)
                 {
@@ -69,7 +69,7 @@ namespace Dt.Core
                     if (input != null
                         && input.Length == 1
                         && input[0].ParameterType == cell.Type
-                        && mi.ReturnType == cell.Type)
+                        && mi.ReturnType == typeof(void))
                     {
                         cell.Hook = mi;
                     }
