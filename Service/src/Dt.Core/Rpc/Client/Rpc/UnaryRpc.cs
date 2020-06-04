@@ -51,7 +51,7 @@ namespace Dt.Core.Rpc
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception($"调用【{_methodName}】时服务器连接失败！\r\n{ex.Message}");
+                    throw new ServerException("服务器连接失败", $"调用【{_methodName}】时服务器连接失败！\r\n{ex.Message}");
                 }
 
                 if (response.StatusCode != System.Net.HttpStatusCode.OK)
@@ -64,7 +64,7 @@ namespace Dt.Core.Rpc
                         return default(T);
                     }
 #endif
-                    throw new Exception($"调用【{_methodName}】时返回状态码：{response.StatusCode}");
+                    throw new ServerException($"服务器返回状态码：{response.StatusCode}", $"调用【{_methodName}】时返回状态码：{response.StatusCode}");
                 }
 
                 var stream = await response.Content.ReadAsStreamAsync();
@@ -126,13 +126,14 @@ namespace Dt.Core.Rpc
             }
             AtKit.Trace(TraceOutType.RpcRecv, string.Format("{0}—{1}ms", _methodName, result.Elapsed), content, _svcName);
 
+            // ⚡ 为服务器标志
             if (result.ResultType == RpcResultType.Message)
-                throw new KnownException(result.Info);
+                throw new KnownException("⚡" + result.Info);
 #endif
 
             if (result.ResultType == RpcResultType.Value)
                 return val;
-            throw new Exception($"调用【{_methodName}】异常：\r\n{result.Info}");
+            throw new ServerException("服务器异常", result.Info);
         }
     }
 }

@@ -75,9 +75,15 @@ namespace Dt.Core.Rpc
                     responseType = ApiResponseType.Error;
                     error = $"调用{_invoker.ApiName}出错";
                     if (ex.InnerException != null && !string.IsNullOrEmpty(ex.InnerException.Message))
+                    {
                         _invoker.Log.Error(ex.InnerException, error);
+                        error += "\r\n" + ex.InnerException.Message;
+                    }
                     else
+                    {
                         _invoker.Log.Error(ex, error);
+                        error += "\r\n" + ex.Message;
+                    }
                 }
             }
             finally

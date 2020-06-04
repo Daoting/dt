@@ -46,6 +46,11 @@ namespace Dt.Core
         /// 点击链接时的回调方法
         /// </summary>
         public Action<NotifyInfo> LinkCallback { get; set; }
+
+        /// <summary>
+        /// 关闭消息提示
+        /// </summary>
+        public Action Close { get; internal set; }
     }
 
     /// <summary>

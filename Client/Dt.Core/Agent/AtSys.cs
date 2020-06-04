@@ -88,7 +88,7 @@ namespace Dt.Core
         internal static bool TraceRpc { get; set; }
         #endregion
 
-        #region 登录注销
+        #region 外部UI方法
         /// <summary>
         /// 显示登录页面，参数：是否为弹出式
         /// </summary>
@@ -98,6 +98,11 @@ namespace Dt.Core
         /// 注销后重新登录
         /// </summary>
         public static Action Logout { get; internal set; }
+
+        /// <summary>
+        /// 显示监视窗口
+        /// </summary>
+        public static Action ShowTraceBox { get; internal set; }
         #endregion
 
         #region 平台方法
@@ -195,15 +200,39 @@ namespace Dt.Core
                 KnownException kex;
                 if ((kex = p_ex as KnownException) != null || (kex = p_ex.InnerException as KnownException) != null)
                 {
-                    // 显示警告提示
+                    // 只警告，不保存日志
                     AtKit.Warn(kex.Message);
                 }
                 else
                 {
-                    string msg = $"异常消息：{p_ex.Message}\r\n堆栈信息：{p_ex.StackTrace}";
-                    // 输出到监视窗口
-                    AtKit.Trace(TraceOutType.UnhandledException, "未处理异常", msg);
-                    // 保存日志
+                    string title;
+                    string msg;
+                    if (p_ex is ServerException se)
+                    {
+                        title = se.Title;
+                        msg = se.Message;
+                    }
+                    else
+                    {
+                        title = "未处理异常";
+                        msg = $"异常消息：{p_ex.Message}\r\n堆栈信息：{p_ex.StackTrace}";
+                    }
+
+                    // 警告、输出监视、保存日志
+                    var notify = new NotifyInfo
+                    {
+                        NotifyType = NotifyType.Warning,
+                        Message = title,
+                        DelaySeconds = 5,
+                        Link = "查看详细",
+                    };
+                    notify.LinkCallback = (e) =>
+                    {
+                        ShowTraceBox();
+                        notify.Close();
+                    };
+                    SysVisual.NotifyList.Add(notify);
+                    AtKit.Trace(TraceOutType.UnhandledException, title, msg);
                     Log.Error(msg);
                 }
             }

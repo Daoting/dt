@@ -20,29 +20,23 @@ namespace Dt.Cm
     [Api(GroupName = "功能测试")]
     public class TestException : BaseApi
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         public string ThrowException()
         {
-            throw new Exception("普通异常测试");
+            throw new Exception("服务器端普通异常内容");
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public string ThrowRpcException()
+        public string ThrowBusinessException()
         {
-            Throw.Msg("业务异常测试，在客户端作为警告消息。");
+            Throw.Msg("服务器端返回的业务警告");
             return "test";
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
+        public string ThrowPostionException()
+        {
+            Throw.If(true);
+            return "test";
+        }
+
         public Dict ThrowSerializeException()
         {
             Dict dt = new Dict();

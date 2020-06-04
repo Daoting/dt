@@ -15,6 +15,7 @@
         <a:CBar Title="服务端" />
         <Button Content="服务端普通异常" Click="TestException" />
         <Button Content="服务端业务异常消息" Click="TestRpcException" />
+        <Button Content="服务端业务位置异常" Click="TestPosException" />
         <Button Content="服务端序列化异常" Click="TestSerializeException" />
     </a:Fv>
 </a:Win>

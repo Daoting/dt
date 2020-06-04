@@ -41,6 +41,7 @@ namespace Dt.Base
             _grid.PointerExited += OnPointerExited;
 
             _tb.Text = _info.Message;
+            _info.Close = CloseInternal;
             if (!string.IsNullOrEmpty(_info.Link))
             {
                 Button btn = new Button { Content = _info.Link, Style = AtRes.浅色按钮, HorizontalAlignment = HorizontalAlignment.Right };

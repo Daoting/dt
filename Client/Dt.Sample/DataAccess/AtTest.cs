@@ -673,10 +673,6 @@ namespace Dt.Sample
         #endregion
 
         #region TestException
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         public static Task<string> ThrowException()
         {
             return new UnaryRpc(
@@ -685,22 +681,22 @@ namespace Dt.Sample
             ).Call<string>();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public static Task<string> ThrowRpcException()
+        public static Task<string> ThrowBusinessException()
         {
             return new UnaryRpc(
                 "cm",
-                "TestException.ThrowRpcException"
+                "TestException.ThrowBusinessException"
             ).Call<string>();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
+        public static Task<string> ThrowPostionException()
+        {
+            return new UnaryRpc(
+                "cm",
+                "TestException.ThrowPostionException"
+            ).Call<string>();
+        }
+
         public static Task<Dict> ThrowSerializeException()
         {
             return new UnaryRpc(

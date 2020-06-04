@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Dt.Base.Tools;
 #endregion
 
 namespace Dt.Base
@@ -50,6 +51,7 @@ namespace Dt.Base
             AtSys.Resuming = OnResuming;
             AtSys.Login = Login;
             AtSys.Logout = Logout;
+            AtSys.ShowTraceBox = SysTrace.ShowBox;
             InputManager.Init();
             NotifyManager.Init();
             LaunchManager.Arguments = args.Arguments;
@@ -79,9 +81,9 @@ namespace Dt.Base
                 cfg = await new UnaryRpc(p_svcName, "Entry.GetConfig").Call<Dict>();
                 AtSys.SyncTime(cfg.Date("now"));
             }
-            catch (Exception ex)
+            catch
             {
-                return "服务器连接失败！" + ex.Message;
+                return "服务器连接失败！";
             }
 
             // 更新模型文件

@@ -27,13 +27,14 @@ namespace Dt.Sample
         }
 
 
-        void ThrowIf(object sender, RoutedEventArgs e)
+        async void ThrowIf(object sender, RoutedEventArgs e)
         {
             Throw.If(true, "业务条件true时的异常警告");
             int b = 12;
             string str = "avb";
             b += str.Length;
             AtKit.Msg(b.ToString());
+            await Task.CompletedTask;
         }
 
         void ThrowIfNull(object sender, RoutedEventArgs e)
@@ -71,7 +72,12 @@ namespace Dt.Sample
 
         async void TestRpcException(object sender, RoutedEventArgs e)
         {
-            await AtTest.ThrowRpcException();
+            await AtTest.ThrowBusinessException();
+        }
+
+        async void TestPosException(object sender, RoutedEventArgs e)
+        {
+            await AtTest.ThrowPostionException();
         }
         #endregion
     }
