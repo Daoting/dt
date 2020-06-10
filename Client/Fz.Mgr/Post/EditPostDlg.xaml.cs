@@ -9,13 +9,14 @@
 #region 引用命名
 using Dt.Base;
 using Dt.Core;
+using Dt.Fz.Base;
 using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 #endregion
 
-namespace Dt.App.Pub
+namespace Dt.Fz.Mgr
 {
     public sealed partial class EditPostDlg : Dlg
     {
@@ -37,19 +38,19 @@ namespace Dt.App.Pub
             if (!AtSys.IsPhoneUI)
             {
                 ShowWinVeil = true;
-                Height = SysVisual.ViewHeight - 140;
-                Width = Math.Min(900, SysVisual.ViewWidth - 200);
+                Height = AtApp.ViewHeight - 140;
+                Width = Math.Min(900, AtApp.ViewWidth - 200);
             }
             Show();
 
             // WebView事件无法捕捉到初始化html的时机，延时
             await Task.Delay(500);
-            await _wv.InvokeScriptAsync("setHtml", new string[] { _owner.Post.Content });
+            await _wv.InvokeScriptAsync("setHtml", new string[] { _owner.CurrentPost.Content });
         }
 
         async void OnSave(object sender, Mi e)
         {
-            _owner.Post.Content = await _wv.InvokeScriptAsync("getHtml", null);
+            _owner.CurrentPost.Content = await _wv.InvokeScriptAsync("getHtml", null);
             bool suc = await _owner.SavePost();
             if (suc)
             {
@@ -73,7 +74,7 @@ namespace Dt.App.Pub
             if (!_saved)
             {
                 var html = await _wv.InvokeScriptAsync("getHtml", null);
-                if (html != _owner.Post.Content)
+                if (html != _owner.CurrentPost.Content)
                     return await AtKit.Confirm("关闭将丢失已修改的内容，确认要关闭？");
             }
             return true;

@@ -10,6 +10,7 @@
 using Dt.Base;
 using Dt.Core;
 using Dt.Core.Model;
+using Dt.Fz.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 #endregion
 
-namespace Dt.App.Pub
+namespace Dt.Fz.Mgr
 {
     [View("文章管理")]
     public partial class PostMgr : Win
@@ -53,7 +54,7 @@ namespace Dt.App.Pub
         #endregion
 
         #region 文章
-        internal Post Post
+        internal Post CurrentPost
         {
             get { return (Post)_fv.Data; }
         }
@@ -139,7 +140,7 @@ namespace Dt.App.Pub
                 if (string.IsNullOrEmpty(post.Url))
                     AtKit.Warn("文章的标题和内容不可为空！");
                 else
-                    AtApp.OpenWin(typeof(WebViewWin), post.Title, Icons.公告, post.Url);
+                    new ViewPostDlg(this).Show();
             }
         }
 

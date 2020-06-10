@@ -12,6 +12,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 #endregion
 
 namespace Dt.Base
@@ -110,6 +111,15 @@ namespace Dt.Base
         {
             get { return _fl.ImagePadding; }
             set { _fl.ImagePadding = value; }
+        }
+
+        /// <summary>
+        ///  获取设置图像填充模式，默认Uniform
+        /// </summary>
+        public Stretch ImageStretch
+        {
+            get { return _fl.ImageStretch; }
+            set { _fl.ImageStretch = value; }
         }
 
         /// <summary>

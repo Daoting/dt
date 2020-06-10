@@ -1,0 +1,14 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras/2.0.54">
+
+  <PropertyGroup>
+    <Description>福祉堂</Description>
+  </PropertyGroup>
+
+  <Import Project="..\Common\dtc.props" />
+
+  <ItemGroup>
+    <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
+    <ProjectReference Include="..\Dt.Base\Dt.Base.csproj" />
+    <ProjectReference Include="..\Dt.App\Dt.App.csproj" />
+  </ItemGroup>
+</Project>

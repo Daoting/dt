@@ -374,5 +374,21 @@ namespace Dt.Base
             get { return SysVisual.RootFrame; }
         }
         #endregion
+
+        #region 可视区域
+        /// <summary>
+        /// 可视区域宽度
+        /// 手机：页面宽度
+        /// PC上：除标题栏和外框的窗口内部宽度
+        /// </summary>
+        public static double ViewWidth => SysVisual.ViewWidth;
+
+        /// <summary>
+        /// 可视区域高度
+        /// 手机：不包括状态栏的高度
+        /// PC上：除标题栏和外框的窗口内部高度
+        /// </summary>
+        public static double ViewHeight => SysVisual.ViewHeight;
+        #endregion
     }
 }

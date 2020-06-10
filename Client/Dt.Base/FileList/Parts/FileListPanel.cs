@@ -40,14 +40,22 @@ namespace Dt.Base
             if (Owner.ColCount == 1 && Owner.HorizontalAlignment != HorizontalAlignment.Stretch)
                 return MeasureOneCol(availableSize);
 
+            int colCount = Owner.ColCount;
+            if (Owner.HorizontalAlignment == HorizontalAlignment.Stretch
+                && Owner.ColCount > Children.Count)
+            {
+                // 水平填充 且 项数不够一行时，按项数平均分配宽度
+                colCount = Children.Count;
+            }
+
             double maxWidth = double.IsInfinity(availableSize.Width) ? SysVisual.ViewWidth : availableSize.Width;
-            double colWidth = maxWidth / Owner.ColCount;
+            double colWidth = maxWidth / colCount;
 
             double totalHeight = 0;
             double lineHeight = 0;
             _linesHeight.Clear();
             Size itemSize = new Size(colWidth, PanelMaxHeight);
-            Size imgSize = new Size(colWidth, Owner.ImageHeight > 0 ? Owner.ImageHeight : colWidth);
+            Size imgSize = new Size(colWidth, Owner.ImageHeight > 0 ? Owner.ImageHeight : maxWidth / Owner.ColCount);
             for (int i = 0; i < Children.Count; i++)
             {
                 var item = Children[i] as FileItem;
@@ -67,7 +75,7 @@ namespace Dt.Base
                     lineHeight = height;
 
                 // 行尾或最后一项
-                if ((i + 1) % Owner.ColCount == 0 || i == Children.Count - 1)
+                if ((i + 1) % colCount == 0 || i == Children.Count - 1)
                 {
                     totalHeight += lineHeight;
                     _linesHeight.Add(lineHeight);
@@ -85,16 +93,25 @@ namespace Dt.Base
             if (Owner.ColCount == 1 && Owner.HorizontalAlignment != HorizontalAlignment.Stretch)
                 return ArrangeOneCol(finalSize);
 
+            int colCount = Owner.ColCount;
+            if (Owner.HorizontalAlignment == HorizontalAlignment.Stretch
+                && Owner.ColCount > Children.Count)
+            {
+                // 水平填充 且 项数不够一行时，按项数平均分配宽度
+                colCount = Children.Count;
+            }
+
+            double colWidth = finalSize.Width / colCount;
             double totalHeight = 0;
-            double colWidth = finalSize.Width / Owner.ColCount;
+
             for (int i = 0; i < Children.Count; i++)
             {
                 var item = Children[i] as FileItem;
-                int col = i % Owner.ColCount;
-                int row = i / Owner.ColCount;
+                int col = i % colCount;
+                int row = i / colCount;
                 item.Arrange(new Rect(col * colWidth, totalHeight, colWidth, _linesHeight[row]));
 
-                if ((i + 1) % Owner.ColCount == 0)
+                if ((i + 1) % colCount == 0)
                 {
                     // 行尾
                     totalHeight += _linesHeight[row];

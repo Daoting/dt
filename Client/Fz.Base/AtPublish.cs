@@ -7,17 +7,18 @@
 #endregion
 
 #region 引用命名
+using Dt.App;
 using Dt.Core;
 using Dt.Core.Rpc;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.App
+namespace Dt.Fz.Base
 {
     /// <summary>
     /// 发布服务Api代理类（自动生成）
     /// </summary>
-    public static class AtPublish
+    public class AtPublish : SrvAgent<pub>
     {
         #region Publish
         public static Task<string> SavePost(Row p_post)
@@ -62,4 +63,9 @@ namespace Dt.App
         }
         #endregion
     }
+
+    /// <summary>
+    /// 只为规范服务名称
+    /// </summary>
+    public class pub { }
 }

@@ -120,7 +120,7 @@ namespace Dt.Core
         /// 钩子方法规范：
         /// 私有方法，SetXXX中的XXX为Cell.ID
         /// 一个入参，和Cell.Type相同
-        /// 无返回值
+        /// 无返回值，不允许外部动态改变赋值，因出问题不好查找，绑定时UI也未回绑
         /// </summary>
         public MethodInfo Hook { get; set; }
         #endregion

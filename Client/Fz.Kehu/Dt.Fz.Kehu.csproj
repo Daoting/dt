@@ -1,0 +1,17 @@
+﻿<Project Sdk="MSBuild.Sdk.Extras/2.0.54">
+
+  <PropertyGroup>
+    <Description>福祉堂客户端</Description>
+  </PropertyGroup>
+
+  <Import Project="..\Common\dtc.props" />
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
+    <ProjectReference Include="..\Dt.Base\Dt.Base.csproj" />
+    <ProjectReference Include="..\Dt.App\Dt.App.csproj" />
+    <ProjectReference Include="..\Fz.Base\Dt.Fz.Base.csproj" />
+    <ProjectReference Include="..\Fz.Mgr\Dt.Fz.Mgr.csproj" />
+  </ItemGroup>
+  
+</Project>

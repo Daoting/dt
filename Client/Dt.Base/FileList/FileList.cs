@@ -18,6 +18,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 #endregion
 
 namespace Dt.Base
@@ -58,6 +59,12 @@ namespace Dt.Base
             typeof(FileList),
             new PropertyMetadata(new Thickness(6)));
 
+        public static readonly DependencyProperty ImageStretchProperty = DependencyProperty.Register(
+            "ImageStretch",
+            typeof(Stretch),
+            typeof(FileList),
+            new PropertyMetadata(Stretch.Uniform));
+
         public static readonly DependencyProperty VideoPaddingProperty = DependencyProperty.Register(
             "VideoPadding",
             typeof(Thickness),
@@ -73,14 +80,14 @@ namespace Dt.Base
         static void OnDataPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             FileList ft = (FileList)d;
-            if (!ft._lockData && ft.IsLoaded)
+            if (!ft._lockData && ft._pnl != null)
                 ft.ReadData((string)e.NewValue);
         }
 
         static void OnRefreshPanel(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             FileList ft = (FileList)d;
-            if (ft.IsLoaded)
+            if (ft._pnl != null)
                 ft._pnl.InvalidateMeasure();
         }
         #endregion
@@ -179,6 +186,15 @@ namespace Dt.Base
         {
             get { return (Thickness)GetValue(ImagePaddingProperty); }
             set { SetValue(ImagePaddingProperty, value); }
+        }
+
+        /// <summary>
+        ///  获取设置图像填充模式，默认Uniform
+        /// </summary>
+        public Stretch ImageStretch
+        {
+            get { return (Stretch)GetValue(ImageStretchProperty); }
+            set { SetValue(ImageStretchProperty, value); }
         }
 
         /// <summary>

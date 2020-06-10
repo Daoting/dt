@@ -14,7 +14,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.App.Pub
+namespace Dt.Fz.Base
 {
     public partial class Post
     {

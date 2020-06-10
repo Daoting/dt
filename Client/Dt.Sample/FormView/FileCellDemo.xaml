@@ -31,7 +31,7 @@
                         </a:Ex.Menu>
                     </a:CFile>
                     <a:CFile ID="file3" Title="多类型文件" />
-                    <a:CFile ID="file4" Title="多图像" ImageHeight="0" ImagePadding="0" ColCount="2" />
+                    <a:CFile ID="file4" Title="多图像" ImageHeight="82" ImagePadding="0" ColCount="2" ImageStretch="UniformToFill" />
                     <a:CBar Title="图像格" />
                     <a:CImage ID="img1" Title="图像" />
                     <a:CImage ID="img2" Title="无图像" />

@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2020-06-02 创建
+* 日志: 2020-06-08 创建
 ******************************************************************************/
 #endregion
 
@@ -17,14 +17,19 @@ using Windows.UI.Xaml.Controls;
 using Xamarin.Essentials;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Fz.Kehu
 {
-    public partial class WebViewWin : Win
+    public partial class PostDetail : Win
     {
-        public WebViewWin(string p_url)
+        public PostDetail()
         {
             InitializeComponent();
-            _wv.Source = new Uri($"{AtSys.Stub.ServerUrl.TrimEnd('/')}/pub/{p_url}");
+        }
+
+        public void Refresh(Row p_row)
+        {
+            _tab.Title = p_row.Str("title");
+            _wv.Source = new Uri($"{AtSys.Stub.ServerUrl.Replace("https:", "http:").TrimEnd('/')}/pub/{p_row.Str("url")}");
         }
 
         async void OnShare(object sender, Mi e)

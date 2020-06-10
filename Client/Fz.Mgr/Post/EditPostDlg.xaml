@@ -1,5 +1,5 @@
 ﻿<a:Dlg
-    x:Class="Dt.App.Pub.EditPostDlg"
+    x:Class="Dt.Fz.Mgr.EditPostDlg"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"

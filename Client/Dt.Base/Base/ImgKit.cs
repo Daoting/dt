@@ -22,7 +22,7 @@ using Windows.UI.Xaml.Media.Imaging;
 namespace Dt.Base
 {
     /// <summary>
-    /// 附件依赖项属性
+    /// 加载图片工具类
     /// </summary>
     public static class ImgKit
     {

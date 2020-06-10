@@ -26,6 +26,7 @@ using Windows.UI.Core;
 using Windows.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
@@ -94,6 +95,24 @@ namespace Dt.Base
             typeof(FileItem),
             new PropertyMetadata(null));
 
+        public static readonly DependencyProperty ImagePaddingProperty = DependencyProperty.Register(
+            "ImagePadding",
+            typeof(Thickness),
+            typeof(FileItem),
+            new PropertyMetadata(new Thickness(6)));
+
+        public static readonly DependencyProperty ImageStretchProperty = DependencyProperty.Register(
+            "ImageStretch",
+            typeof(Stretch),
+            typeof(FileItem),
+            new PropertyMetadata(Stretch.Uniform));
+
+        public static readonly DependencyProperty VideoPaddingProperty = DependencyProperty.Register(
+            "VideoPadding",
+            typeof(Thickness),
+            typeof(FileItem),
+            new PropertyMetadata(new Thickness(0, 10, 0, 11)));
+
         static void OnFileTypePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             FileItem vf = (FileItem)d;
@@ -142,8 +161,6 @@ namespace Dt.Base
         {
             DefaultStyleKey = typeof(FileItem);
             _owner = p_owner;
-            // 绑定BorderBrush VideoPadding ImagePadding等，通过Owner.XXX的方式在uno中总是重置FileList.DataContext为null！
-            DataContext = _owner;
             Loaded += OnLoaded;
         }
         #endregion
@@ -315,6 +332,33 @@ namespace Dt.Base
         {
             get { return (ImageSource)GetValue(BitmapProperty); }
             set { SetValue(BitmapProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置图像边距，默认6
+        /// </summary>
+        internal Thickness ImagePadding
+        {
+            get { return (Thickness)GetValue(ImagePaddingProperty); }
+            set { SetValue(ImagePaddingProperty, value); }
+        }
+
+        /// <summary>
+        ///  获取设置图像填充模式，默认Uniform
+        /// </summary>
+        internal Stretch ImageStretch
+        {
+            get { return (Stretch)GetValue(ImageStretchProperty); }
+            set { SetValue(ImageStretchProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置视频边距，默认10
+        /// </summary>
+        internal Thickness VideoPadding
+        {
+            get { return (Thickness)GetValue(VideoPaddingProperty); }
+            set { SetValue(VideoPaddingProperty, value); }
         }
         #endregion
 
@@ -878,18 +922,27 @@ namespace Dt.Base
         #endregion
 
         #region 加载后
-        void OnLoaded(object sender, RoutedEventArgs e)
+        async void OnLoaded(object sender, RoutedEventArgs e)
         {
             Loaded -= OnLoaded;
             if ((FileType == FileItemType.Image || FileType == FileItemType.Video)
                 && !string.IsNullOrEmpty(ID)
                 && Bitmap == null)
             {
-                LoadImage();
+                await LoadImage();
             }
+
+            // 控件中的尽可能避免使用设置DataContext方式！！！
+            // 采用DataContext设置为_owner时，uno存在的问题：
+            // 通过Owner.XXX的方式总是重置FileList.DataContext为null！
+            // 不可将此赋值放在LoadImage之前，否则无法显示图片
+            SetBinding(BorderBrushProperty, new Binding { Path = new PropertyPath("BorderBrush"), Source = _owner, Mode = BindingMode.OneWay });
+            SetBinding(ImagePaddingProperty, new Binding { Path = new PropertyPath("ImagePadding"), Source = _owner, Mode = BindingMode.OneWay });
+            SetBinding(ImageStretchProperty, new Binding { Path = new PropertyPath("ImageStretch"), Source = _owner, Mode = BindingMode.OneWay });
+            SetBinding(VideoPaddingProperty, new Binding { Path = new PropertyPath("VideoPadding"), Source = _owner, Mode = BindingMode.OneWay });
         }
 
-        async void LoadImage()
+        async Task LoadImage()
         {
             string thumbName = Path.Combine(AtLocal.CachePath, GetThumbName());
             string fileName = Path.Combine(AtLocal.CachePath, GetFileName());
