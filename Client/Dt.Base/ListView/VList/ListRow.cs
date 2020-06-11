@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Core;
 using System;
 using Windows.Foundation;
 using Windows.UI.Xaml;
@@ -26,7 +27,13 @@ namespace Dt.Base.ListView
 
         public ListRow(Lv p_owner, DataTemplate p_temp) : base(p_owner)
         {
-            LoadTemplate(p_temp);
+            LoadContent(p_temp.LoadContent() as UIElement);
+            AttachEvent();
+        }
+
+        public ListRow(Lv p_owner, IRowView p_rowView, LvItem p_item) : base(p_owner)
+        {
+            LoadContent(p_rowView.Create(p_item));
             AttachEvent();
         }
 
@@ -109,8 +116,9 @@ namespace Dt.Base.ListView
             return finalSize;
         }
 
-        void LoadTemplate(DataTemplate p_template)
+        void LoadContent(UIElement p_content)
         {
+            Throw.IfNull(p_content);
             // 背景
             SetBinding(BackgroundProperty, new Binding { Path = new PropertyPath("Background") });
 
@@ -127,7 +135,7 @@ namespace Dt.Base.ListView
             }
 
             // 内容
-            Children.Add(p_template.LoadContent() as UIElement);
+            Children.Add(p_content);
 
             // 上下文菜单
             Menu menu = Ex.GetMenu(_owner);

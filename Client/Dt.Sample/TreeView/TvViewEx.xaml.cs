@@ -24,7 +24,7 @@ namespace Dt.Sample
         public TvViewEx()
         {
             InitializeComponent();
-            _tv.ViewEx = typeof(TvViewEx1);
+            _tv.CellEx = typeof(TvViewEx1);
             _tv.Data = TvData.GetTbl();
         }
     }

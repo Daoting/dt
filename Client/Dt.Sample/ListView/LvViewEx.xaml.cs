@@ -25,7 +25,7 @@ namespace Dt.Sample
         public LvViewEx()
         {
             InitializeComponent();
-            _lv.ViewEx = typeof(ViewEx1);
+            _lv.CellEx = typeof(ViewEx1);
             _lv.Data = SampleData.CreatePersonsTbl(100);
         }
 

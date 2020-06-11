@@ -149,7 +149,7 @@
     <ProjectReference Include="..\Dt.Core\Dt.Core.csproj">
       <Project>{89b073f7-81dd-4e5d-a093-f73121b1f406}</Project>
       <Name>Dt.Core</Name>
-    </ProjectReference>    
+    </ProjectReference>
     <ProjectReference Include="..\Fz.Base\Dt.Fz.Base.csproj">
       <Project>{521cf420-0bed-4e47-bdba-9789f0d78361}</Project>
       <Name>Dt.Fz.Base</Name>

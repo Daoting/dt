@@ -40,6 +40,7 @@ namespace Dt.Fz.Base
             long ID,
             string Title = default,
             string Cover = default,
+            string Summary = default,
             string Content = default,
             bool IsPublish = default,
             bool AllowComment = default,
@@ -59,6 +60,7 @@ namespace Dt.Fz.Base
             AddCell<long>("ID", ID);
             AddCell<string>("Title", Title);
             AddCell<string>("Cover", Cover);
+            AddCell<string>("Summary", Summary);
             AddCell<string>("Content", Content);
             AddCell<bool>("IsPublish", IsPublish);
             AddCell<bool>("AllowComment", AllowComment);
@@ -96,6 +98,15 @@ namespace Dt.Fz.Base
         {
             get { return (string)this["Cover"]; }
             set { this["Cover"] = value; }
+        }
+
+        /// <summary>
+        /// 摘要
+        /// </summary>
+        public string Summary
+        {
+            get { return (string)this["Summary"]; }
+            set { this["Summary"] = value; }
         }
 
         /// <summary>
@@ -253,6 +264,10 @@ namespace Dt.Fz.Base
         }
 
         void SetCover(string p_value)
+        {
+        }
+
+        void SetSummary(string p_value)
         {
         }
 

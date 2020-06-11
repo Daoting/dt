@@ -46,40 +46,28 @@
             </Setter>
         </Style>
     </UserControl.Resources>
-    
-    <ScrollViewer>
-        <Grid x:Name="_grid">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
-            <Image x:Name="_imgBanner" Height="200" Stretch="UniformToFill" />
 
-            <a:Lv x:Name="_lv" ItemClick="OnPostClick" EnteredBrush="{x:Null}" SelectionMode="None" ItemHeight="NaN" Grid.Row="1">
-                <DataTemplate>
-                    <StackPanel>
-                        <!--分隔栏-->
-                        <Rectangle Fill="{StaticResource 浅灰边框}" Height="10" IsHitTestVisible="False" />
-                        <StackPanel Padding="10,10,10,0">
-                            <a:Dot ID="Title" Margin="0,0,0,10" FontWeight="Bold" />
-                            <a:FileList Data="{Binding [cover]}" ImageStretch="UniformToFill" ImageHeight="0" ColCount="3" BorderBrush="Transparent" />
+    <a:Lv x:Name="_lv" ItemClick="OnPostClick" EnteredBrush="{x:Null}" SelectionMode="None" ItemHeight="NaN">
+        <DataTemplate>
+            <StackPanel>
+                <StackPanel Padding="10,10,10,0">
+                    <a:Dot ID="Title" FontWeight="Bold" />
+                    <a:Dot ID="Summary" Visibility="{Binding [Summary],Converter={StaticResource CvTextToVisible}}" Margin="0,2,0,0" />
+                    <a:FileList Data="{Binding [cover]}" ImageStretch="UniformToFill" ImageHeight="0" ColCount="3" BorderBrush="Transparent" />
 
-                            <Grid BorderThickness="0,1,0,0" BorderBrush="{StaticResource 浅灰边框}" Margin="0,6,0,0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <Button Content="&#xE038;" Tag="分享" Style="{StaticResource ExBtn}" />
-                                <Button Content="&#xE072;" Tag="评论" Style="{StaticResource ExBtn}" Grid.Column="1" />
-                                <Button Content="&#xE031;" Tag="收藏" Style="{StaticResource ExBtn}" Grid.Column="2" />
-                            </Grid>
-                        </StackPanel>
-                    </StackPanel>
-                </DataTemplate>
-            </a:Lv>
-        </Grid>
-    </ScrollViewer>
+                    <Grid BorderThickness="0,1,0,0" BorderBrush="{StaticResource 浅灰边框}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button Content="&#xE038;" Tag="分享" Style="{StaticResource ExBtn}" />
+                        <Button Content="&#xE072;" Tag="评论" Style="{StaticResource ExBtn}" Grid.Column="1" />
+                        <Button Content="&#xE031;" Tag="收藏" Style="{StaticResource ExBtn}" Grid.Column="2" />
+                    </Grid>
+                </StackPanel>
+                <Rectangle Fill="{StaticResource 浅灰边框}" Height="10" IsHitTestVisible="False" />
+            </StackPanel>
+        </DataTemplate>
+    </a:Lv>
 </UserControl>

@@ -41,7 +41,7 @@ namespace Dt.Base.ListView
         //
         // 重新生成虚拟行的场景：
         // 1. 可视区大小变化时 LvPanel.SetMaxSize
-        // 2. View ViewEx ItemHeight等属性变化时的重新加载 LvPanel.Reload
+        // 2. View CellEx ItemHeight等属性变化时的重新加载 LvPanel.Reload
         // 3. 切换数据源时 LvPanel.OnRowsChanged
         /************************************************************************************************************************************/
 
@@ -134,7 +134,7 @@ namespace Dt.Base.ListView
         }
 
         /// <summary>
-        /// View ViewEx ItemHeight ShowGroupHeader ShowItemBorder GroupTemplate SelectionMode 或上下文菜单 变化时重新加载
+        /// View CellEx ItemHeight ShowGroupHeader ShowItemBorder GroupTemplate SelectionMode 或上下文菜单 变化时重新加载
         /// </summary>
         internal void Reload()
         {
@@ -571,6 +571,14 @@ namespace Dt.Base.ListView
                 else
                     _createLvRow = CreateTileItemBySelector;
             }
+            else if (_owner.View is IRowView)
+            {
+                // 动态创建行UI
+                if (_owner.ViewMode == ViewMode.List)
+                    _createLvRow = CreateListRowByRowView;
+                else
+                    _createLvRow = CreateTileItemByRowView;
+            }
         }
 
         /// <summary>
@@ -671,6 +679,32 @@ namespace Dt.Base.ListView
                 row.SetViewRow(p_item, false);
             return row;
         }
+
+        /// <summary>
+        /// 动态创建行内容
+        /// </summary>
+        /// <param name="p_item"></param>
+        /// <returns></returns>
+        LvRow CreateListRowByRowView(LvItem p_item)
+        {
+            var row = new ListRow(_owner, (IRowView)_owner.View, p_item);
+            if (p_item != null)
+                row.SetViewRow(p_item, false);
+            return row;
+        }
+
+        /// <summary>
+        /// 动态创建磁贴项内容
+        /// </summary>
+        /// <param name="p_item"></param>
+        /// <returns></returns>
+        LvRow CreateTileItemByRowView(LvItem p_item)
+        {
+            var row = new TileRow(_owner, (IRowView)_owner.View, p_item);
+            if (p_item != null)
+                row.SetViewRow(p_item, false);
+            return row;
+        }
         #endregion
 
         #region 事件处理
@@ -736,7 +770,8 @@ namespace Dt.Base.ListView
                     }));
             }
 
-            if (pd != null)
+            // 避免首页加载时先重置状态造成无后续页！
+            if (pd != null && _owner.Data != null)
                 pd.State = PageDataState.Normal;
         }
 

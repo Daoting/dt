@@ -151,7 +151,7 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置行/项目模板，DataTemplate、DataTemplateSelector 或 Cols列定义
+        /// 获取设置行视图，DataTemplate、DataTemplateSelector、Cols列定义 或 IRowView
         /// </summary>
         public object View
         {
@@ -169,12 +169,12 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置视图扩展，包括定义行/项目样式和扩展列
+        /// 获取设置外部自定义单元格的类型，方法名和Dot或Col的ID相同，SetStyle方法控制行样式
         /// </summary>
-        public Type ViewEx
+        public Type CellEx
         {
-            get { return _lv.ViewEx; }
-            set { _lv.ViewEx = value; }
+            get { return _lv.CellEx; }
+            set { _lv.CellEx = value; }
         }
 
         /// <summary>

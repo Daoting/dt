@@ -27,7 +27,7 @@ namespace Dt.App.Model
         {
             InitializeComponent();
             _lvUser.View = GetResource(AtSys.IsPhoneUI ? "TileView" : "TableView");
-            _lvUser.ViewEx = typeof(UserViewEx);
+            _lvUser.CellEx = typeof(UserViewEx);
             LoadAll();
         }
 

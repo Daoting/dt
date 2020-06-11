@@ -47,8 +47,8 @@ namespace Dt.Base
             typeof(Tv),
             new PropertyMetadata(null, OnViewChanged));
 
-        public readonly static DependencyProperty ViewExProperty = DependencyProperty.Register(
-            "ViewEx",
+        public readonly static DependencyProperty CellExProperty = DependencyProperty.Register(
+            "CellEx",
             typeof(Type),
             typeof(Tv),
             new PropertyMetadata(null, OnViewExChanged));
@@ -286,12 +286,12 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置节点视图扩展类型，包括定义节点样式、节点内容
+        /// 获取设置外部自定义单元格的类型，方法名和Dot的ID相同，SetStyle方法控制行样式
         /// </summary>
-        public Type ViewEx
+        public Type CellEx
         {
-            get { return (Type)GetValue(ViewExProperty); }
-            set { SetValue(ViewExProperty, value); }
+            get { return (Type)GetValue(CellExProperty); }
+            set { SetValue(CellExProperty, value); }
         }
 
         /// <summary>

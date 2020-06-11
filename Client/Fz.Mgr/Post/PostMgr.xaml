@@ -14,26 +14,37 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <a:SearchBox Placeholder="请输入标题包含的文字..." Search="OnSearch" />
-                    <a:Lv x:Name="_lvPost" ItemClick="OnPostClick" Grid.Row="1">
+                    <a:Lv x:Name="_lvPost" ItemClick="OnPostClick" EnteredBrush="{x:Null}" SelectionMode="None" ItemHeight="NaN" Grid.Row="1">
                         <a:Ex.Menu>
                             <a:Menu>
                                 <a:Mi ID="编辑" Icon="铅笔" Click="OnAddPost" />
                             </a:Menu>
                         </a:Ex.Menu>
                         <DataTemplate>
-                            <StackPanel Padding="10">
-                                <a:Dot ID="Title" Margin="0,0,0,10" HorizontalAlignment="Center" />
-                                <a:Dot ID="Cover" UIType="Image" Height="164" />
-                                <StackPanel Orientation="Horizontal" Margin="0,10,0,0" HorizontalAlignment="Center">
-                                    <a:Dot ID="Creator" Foreground="{StaticResource 深灰边框}" FontSize="12" />
-                                    <a:Dot ID="Ctime" Foreground="{StaticResource 深灰边框}" FontSize="12" Margin="20,0,20,0" />
-                                    <TextBlock Text="&#xE057;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" Foreground="{StaticResource 深灰边框}" FontSize="12" />
-                                    <a:Dot ID="ReadCount" Foreground="{StaticResource 深灰边框}" FontSize="12" Margin="2,0,20,0" />
-                                    <TextBlock Text="&#xE072;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" Foreground="{StaticResource 深灰边框}" FontSize="12" />
-                                    <a:Dot ID="CommentCount" Foreground="{StaticResource 深灰边框}" FontSize="12" Margin="2,0,20,0" />
-                                    <TextBlock Text="发布" VerticalAlignment="Center" Foreground="{StaticResource 深灰边框}" FontSize="12" />
-                                    <a:Dot ID="IsPublish" UIType="CheckBox" Foreground="{StaticResource 深灰边框}" FontSize="12" Margin="2,0,0,0" />
+                            <StackPanel>
+                                <StackPanel Padding="10">
+                                    <a:Dot ID="Title" FontWeight="Bold" />
+                                    <a:Dot ID="Summary" Visibility="{Binding [Summary],Converter={StaticResource CvTextToVisible}}" Margin="0,2,0,0" />
+                                    <a:FileList Data="{Binding [cover]}" ImageStretch="UniformToFill" ImageHeight="0" ColCount="3" BorderBrush="Transparent" />
+
+                                    <StackPanel Orientation="Horizontal" Spacing="30" BorderThickness="0,1,0,0" BorderBrush="{StaticResource 浅灰边框}" Padding="10,10,10,0">
+                                        <a:Dot ID="Creator" Foreground="{StaticResource 深灰边框}" FontSize="12" />
+                                        <a:Dot ID="Ctime" Foreground="{StaticResource 深灰边框}" FontSize="12" />
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="&#xE057;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" Foreground="{StaticResource 深灰边框}" />
+                                            <a:Dot ID="ReadCount" Foreground="{StaticResource 深灰边框}" FontSize="12" Margin="4,0,0,0" />
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="&#xE072;" FontFamily="{StaticResource IconFont}" VerticalAlignment="Center" Foreground="{StaticResource 深灰边框}" />
+                                            <a:Dot ID="CommentCount" Foreground="{StaticResource 深灰边框}" FontSize="12" Margin="4,0,0,0" />
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <a:Dot ID="IsPublish" UIType="CheckBox" Foreground="{StaticResource 深灰边框}" />
+                                            <TextBlock Text="发布" VerticalAlignment="Center" Foreground="{StaticResource 深灰边框}" FontSize="12" Margin="4,0,0,0" />
+                                        </StackPanel>
+                                    </StackPanel>
                                 </StackPanel>
+                                <Rectangle Fill="{StaticResource 浅灰边框}" Height="10" IsHitTestVisible="False" />
                             </StackPanel>
                         </DataTemplate>
                     </a:Lv>
@@ -56,7 +67,8 @@
                 </a:Tab.Menu>
                 <a:Fv x:Name="_fv">
                     <a:CText ID="Title" Title="标题" />
-                    <a:CFile ID="Cover" Title="封面" ImageHeight="0" ImagePadding="0" />
+                    <a:CFile ID="Cover" Title="封面" ColCount="3" />
+                    <a:CText ID="Summary" Title="摘要" RowSpan="3" AcceptsReturn="True" />
                     <a:CBool ID="AllowComment" Title="允许评论" />
                     <a:CBool ID="AddAlbumLink" Title="添加相同专辑链接" />
                     <a:CBool ID="AddCatLink" Title="添加相同分类链接" />

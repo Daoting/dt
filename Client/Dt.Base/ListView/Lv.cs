@@ -52,8 +52,8 @@ namespace Dt.Base
             typeof(Lv),
             new PropertyMetadata(ViewMode.List, OnViewModeChanged));
 
-        public readonly static DependencyProperty ViewExProperty = DependencyProperty.Register(
-            "ViewEx",
+        public readonly static DependencyProperty CellExProperty = DependencyProperty.Register(
+            "CellEx",
             typeof(Type),
             typeof(Lv),
             new PropertyMetadata(null, OnViewExChanged));
@@ -379,7 +379,7 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置行/项目模板，DataTemplate、DataTemplateSelector 或 Cols列定义
+        /// 获取设置行视图，DataTemplate、DataTemplateSelector、Cols列定义 或 IRowView
         /// </summary>
         public object View
         {
@@ -397,12 +397,12 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置视图扩展，包括定义行/项目样式和扩展列
+        /// 获取设置外部自定义单元格的类型，方法名和Dot或Col的ID相同，SetStyle方法控制行样式
         /// </summary>
-        public Type ViewEx
+        public Type CellEx
         {
-            get { return (Type)GetValue(ViewExProperty); }
-            set { SetValue(ViewExProperty, value); }
+            get { return (Type)GetValue(CellExProperty); }
+            set { SetValue(CellExProperty, value); }
         }
 
         /// <summary>
@@ -769,7 +769,7 @@ namespace Dt.Base
         /// </summary>
         internal bool IsVir
         {
-            get { return !(View is DataTemplateSelector || double.IsNaN(ItemHeight)); }
+            get { return !(View is DataTemplateSelector || double.IsNaN(ItemHeight) || View is IRowView); }
         }
 
         internal ViewMode CurrentViewMode
@@ -827,8 +827,8 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_view">null时不切换</param>
         /// <param name="p_viewMode">null时不切换</param>
-        /// <param name="p_viewEx">null时不切换</param>
-        public void ChangeView(object p_view, ViewMode? p_viewMode, Type p_viewEx = null)
+        /// <param name="p_cellEx">null时不切换</param>
+        public void ChangeView(object p_view, ViewMode? p_viewMode, Type p_cellEx = null)
         {
             _updatingView = true;
             try
@@ -836,8 +836,8 @@ namespace Dt.Base
                 Scroll.ChangeView(0, 0, null, true);
                 if (p_view != null)
                     View = p_view;
-                if (p_viewEx != null)
-                    ViewEx = p_viewEx;
+                if (p_cellEx != null)
+                    CellEx = p_cellEx;
 
                 if (p_viewMode.HasValue && ViewMode != p_viewMode.Value)
                 {
@@ -1098,7 +1098,7 @@ namespace Dt.Base
         //
         // 重新生成虚拟行的场景：
         // 1. 可视区大小变化时 LvPanel.SetMaxSize
-        // 2. View ViewEx ItemHeight等属性变化时的重新加载 LvPanel.Reload
+        // 2. View CellEx ItemHeight等属性变化时的重新加载 LvPanel.Reload
         // 3. 切换数据源时 LvPanel.OnRowsChanged
         //
         // 调用UpdateLayout的不同：

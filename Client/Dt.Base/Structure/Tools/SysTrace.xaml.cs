@@ -52,7 +52,7 @@ namespace Dt.Base.Tools
                 Exception = StaticResources.Exception,
 #endif
             };
-            _lv.ViewEx = typeof(TraceViewEx);
+            _lv.CellEx = typeof(TraceViewEx);
             _lv.Data = AtKit.TraceList;
             _lv.ItemClick += OnOutputClick;
 

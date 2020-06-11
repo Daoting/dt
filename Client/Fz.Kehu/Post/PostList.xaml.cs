@@ -11,6 +11,7 @@ using Dt.Base;
 using Dt.Core;
 using Dt.Fz.Base;
 using System;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 #endregion
@@ -24,7 +25,6 @@ namespace Dt.Fz.Kehu
         {
             InitializeComponent();
             _lv.PageData = new PageData { NextPage = OnNextPage, PageSize = 5 };
-            ImgKit.LoadImage("photo/banner.png", _imgBanner);
         }
 
         public Win Win { get; set; }
@@ -39,7 +39,7 @@ namespace Dt.Fz.Kehu
 
         async void OnNextPage(PageData e)
         {
-            var ls = await AtPublish.Query("select id,title,cover,url from pub_post where IsPublish=1 order by Dispidx desc");
+            var ls = await AtPublish.Query("select id,Title,Cover,Summary,Url from pub_post where IsPublish=1 order by Dispidx desc");
             e.LoadPageData(ls);
         }
     }
