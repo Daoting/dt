@@ -116,10 +116,21 @@ namespace Dt.Base
         /// <summary>
         ///  获取设置图像填充模式，默认Uniform
         /// </summary>
+        [CellParam("图像填充模式")]
         public Stretch ImageStretch
         {
             get { return _fl.ImageStretch; }
             set { _fl.ImageStretch = value; }
+        }
+
+        /// <summary>
+        /// 获取设置文件项是否可点击，默认true
+        /// </summary>
+        [CellParam("文件项可点击")]
+        public bool EnableClick
+        {
+            get { return _fl.EnableClick; }
+            set { _fl.EnableClick = value; }
         }
 
         /// <summary>

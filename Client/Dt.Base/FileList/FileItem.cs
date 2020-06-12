@@ -1140,13 +1140,14 @@ namespace Dt.Base
 
         void OnPointerEntered(object sender, PointerRoutedEventArgs e)
         {
-            VisualStateManager.GoToState(this, "PointerOver", true);
+            if (_owner.EnableClick)
+                VisualStateManager.GoToState(this, "PointerOver", true);
         }
 
         void OnPointerPressed(object sender, PointerRoutedEventArgs e)
         {
             // 右键无效
-            if (e.IsRightButton())
+            if (!_owner.EnableClick || e.IsRightButton())
                 return;
 
             if (((UIElement)sender).CapturePointer(e.Pointer))
@@ -1159,7 +1160,7 @@ namespace Dt.Base
 
         void OnPointerReleased(object sender, PointerRoutedEventArgs e)
         {
-            if (_pointerID != e.Pointer.PointerId)
+            if (!_owner.EnableClick || _pointerID != e.Pointer.PointerId)
                 return;
 
             ((UIElement)sender).ReleasePointerCapture(e.Pointer);
@@ -1176,7 +1177,8 @@ namespace Dt.Base
 
         void OnPointerExited(object sender, PointerRoutedEventArgs e)
         {
-            VisualStateManager.GoToState(this, "Normal", true);
+            if (_owner.EnableClick)
+                VisualStateManager.GoToState(this, "Normal", true);
         }
         #endregion
 

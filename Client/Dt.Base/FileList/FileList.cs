@@ -77,6 +77,12 @@ namespace Dt.Base
             typeof(FileList),
             new PropertyMetadata(82d, OnRefreshPanel));
 
+        public static readonly DependencyProperty EnableClickProperty = DependencyProperty.Register(
+            "EnableClick",
+            typeof(bool),
+            typeof(FileList),
+            new PropertyMetadata(true));
+
         static void OnDataPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             FileList ft = (FileList)d;
@@ -204,6 +210,15 @@ namespace Dt.Base
         {
             get { return (Thickness)GetValue(VideoPaddingProperty); }
             set { SetValue(VideoPaddingProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置文件项是否可点击，默认true
+        /// </summary>
+        public bool EnableClick
+        {
+            get { return (bool)GetValue(EnableClickProperty); }
+            set { SetValue(EnableClickProperty, value); }
         }
 
         /// <summary>

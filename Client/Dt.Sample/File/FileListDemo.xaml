@@ -48,6 +48,7 @@
                     <a:CNum Title="文件数量上限" ID="MaxFileCount" IsInteger="True" Minimum="1" />
                     <a:CText Title="固定卷名" ID="FixedVolume" />
                     <a:CNum Title="图像高度" ID="ImageHeight" Minimum="0" />
+                    <a:CBool Title="可交互" ID="EnableClick" />
                     <StackPanel Orientation="Horizontal">
                         <Button Content="增加图像边距" Click="OnAddPadding" />
                         <Button Content="减小图像边距" Click="OnDelPadding" />

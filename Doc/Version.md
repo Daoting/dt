@@ -30,6 +30,7 @@
 * 增加CTip格
 * 升级到 uno2.4.0, vs16.6, android Q, 福祉堂
 * 各平台的未处理异常日志
+* Lv增加IRowView支持
 
 * Dot不同UIType无法设置属性
 *  Msg服务增加心跳包包
