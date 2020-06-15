@@ -12,7 +12,7 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/Dt.Base/Themes/Global.xaml"/>
     </ResourceDictionary.MergedDictionaries>
-    
+
     <!--
     *****************************************************************
     系统控件样式
@@ -58,12 +58,13 @@
         <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
         <Setter Property="TextWrapping" Value="Wrap"/>
     </Style>
-    
+
     <!--**************************** Button ****************************-->
     <Style x:Key="默认按钮" TargetType="Button">
         <Setter Property="Background" Value="{StaticResource 默认背景}" />
         <Setter Property="Foreground" Value="{StaticResource 主题蓝色}"/>
         <Setter Property="FontSize" Value="{StaticResource 中字号}"/>
+        <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Padding" Value="10" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Center" />
@@ -71,7 +72,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
-                        <Rectangle x:Name="Rect" Stroke="{TemplateBinding BorderBrush}" IsHitTestVisible="False" />
+                        <Border x:Name="Rect" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" IsHitTestVisible="False" />
                         <ContentPresenter x:Name="ContentPresenter"
                                           Content="{TemplateBinding Content}"
                                           Margin="{TemplateBinding Padding}"
@@ -83,13 +84,13 @@
                                 <VisualState x:Name="Normal" />
                                 <VisualState x:Name="PointerOver">
                                     <VisualState.Setters>
-                                        <Setter Target="Rect.Fill" Value="{StaticResource 暗遮罩}" />
-                                        <Setter Target="Rect.Stroke" Value="{StaticResource 深暗遮罩}" />
+                                        <Setter Target="Rect.Background" Value="{StaticResource 暗遮罩}" />
+                                        <Setter Target="Rect.BorderBrush" Value="{StaticResource 深暗遮罩}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
                                     <VisualState.Setters>
-                                        <Setter Target="Rect.Fill" Value="{StaticResource 深暗遮罩}" />
+                                        <Setter Target="Rect.Background" Value="{StaticResource 深暗遮罩}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Disabled">
@@ -105,47 +106,51 @@
         </Setter>
     </Style>
     <Style TargetType="Button" BasedOn="{StaticResource 默认按钮}"/>
-    
+
     <!--字符按钮-->
     <Style x:Key="字符按钮" TargetType="Button">
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
         <Setter Property="Background" Value="Transparent" />
-        <Setter Property="FontFamily" Value="{StaticResource IconFont}" />
         <Setter Property="FontSize" Value="20" />
+        <Setter Property="BorderThickness" Value="1" />
         <!--宽高 40 X 40-->
         <Setter Property="Padding" Value="10" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="UseSystemFocusVisuals" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
-                        <Rectangle x:Name="Rect" Stroke="{TemplateBinding BorderBrush}" IsHitTestVisible="False" />
-                        <TextBlock Text="{TemplateBinding Content}"
-                                   TextAlignment="Center"
-                                   FontFamily="{TemplateBinding FontFamily}"
-                                   FontSize="{TemplateBinding FontSize}"
-                                   Foreground="{TemplateBinding Foreground}"
-                                   Margin="{TemplateBinding Padding}"
-                                   HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                   AutomationProperties.AccessibilityView="Raw" />
-
+                        <Border x:Name="Rect" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" IsHitTestVisible="False" />
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                    Margin="{TemplateBinding Padding}">
+                            <TextBlock Text="{TemplateBinding Content}"
+                                       FontFamily="{StaticResource IconFont}"
+                                       FontSize="{TemplateBinding FontSize}"
+                                       VerticalAlignment="Center" />
+                            <TextBlock Text="{TemplateBinding Tag}"
+                                       Visibility="{Binding Tag,RelativeSource={RelativeSource TemplatedParent},Converter={StaticResource CvTextToVisible}}"
+                                       FontSize="{TemplateBinding FontSize}"
+                                       Margin="4,0,0,0"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+                        
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualState x:Name="Normal"/>
                                 <VisualState x:Name="PointerOver">
                                     <VisualState.Setters>
-                                        <Setter Target="Rect.Fill" Value="{StaticResource 暗遮罩}" />
-                                        <Setter Target="Rect.Stroke" Value="{StaticResource 深暗遮罩}" />
+                                        <Setter Target="Rect.Background" Value="{StaticResource 暗遮罩}" />
+                                        <Setter Target="Rect.BorderBrush" Value="{StaticResource 深暗遮罩}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
                                     <VisualState.Setters>
-                                        <Setter Target="Rect.Fill" Value="{StaticResource 深暗遮罩}" />
+                                        <Setter Target="Rect.Background" Value="{StaticResource 深暗遮罩}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Disabled">
@@ -166,6 +171,7 @@
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="FontSize" Value="{StaticResource 中字号}"/>
+        <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Padding" Value="10" />
         <Setter Property="HorizontalAlignment" Value="Left" />
         <Setter Property="VerticalAlignment" Value="Center" />
@@ -173,7 +179,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Grid x:Name="RootGrid" Background="{TemplateBinding Background}">
-                        <Rectangle x:Name="Rect" Stroke="{TemplateBinding BorderBrush}" IsHitTestVisible="False" />
+                        <Border x:Name="Rect" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" IsHitTestVisible="False" />
                         <ContentPresenter x:Name="ContentPresenter"
                                           Content="{TemplateBinding Content}"
                                           ContentTransitions="{TemplateBinding ContentTransitions}"
@@ -182,19 +188,19 @@
                                           HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                                           VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
                                           AutomationProperties.AccessibilityView="Raw"/>
-                        
+
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualState x:Name="Normal" />
                                 <VisualState x:Name="PointerOver">
                                     <VisualState.Setters>
-                                        <Setter Target="Rect.Fill" Value="{StaticResource 亮遮罩}" />
-                                        <Setter Target="Rect.Stroke" Value="{StaticResource 深亮遮罩}" />
+                                        <Setter Target="Rect.Background" Value="{StaticResource 亮遮罩}" />
+                                        <Setter Target="Rect.BorderBrush" Value="{StaticResource 深亮遮罩}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
                                     <VisualState.Setters>
-                                        <Setter Target="Rect.Fill" Value="{StaticResource 深亮遮罩}" />
+                                        <Setter Target="Rect.Background" Value="{StaticResource 深亮遮罩}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Disabled">
@@ -305,7 +311,7 @@
 
     <!--默认Frame，不同平台不同style，含页面动画-->
     <Style TargetType="Frame" BasedOn="{StaticResource NativeDefaultFrame}" />
-    
+
     <!--****************************** FlyoutPresenter ******************************-->
     <Style TargetType="FlyoutPresenter">
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />

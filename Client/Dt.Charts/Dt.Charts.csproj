@@ -4,6 +4,6 @@
     <Description>DT平台图表控件库</Description>
   </PropertyGroup>
 
-  <Import Project="..\Common\dtc.props" />
+  <Import Project="..\Common\Dtc-Stable.props" />
   
 </Project>

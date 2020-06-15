@@ -61,8 +61,6 @@
                     <a:FileList Data="{Binding [Content]}"
                                 Holding="OnFileHolding"
                                 RightTapped="OnFileRightTapped"
-                                ImagePadding="0"
-                                VideoPadding="0"
                                 HorizontalAlignment="Left"
                                 BorderBrush="{StaticResource 绿色背景}" />
                     <TextBlock Text="{Binding [stime], Converter={StaticResource CvAutoDate}}" FontSize="12" Foreground="{StaticResource 深灰边框}" />
@@ -110,8 +108,6 @@
                                 Holding="OnFileHolding"
                                 RightTapped="OnFileRightTapped"
                                 FixedVolume="chat"
-                                ImagePadding="0"
-                                VideoPadding="0"
                                 HorizontalAlignment="Left"
                                 BorderBrush="{StaticResource 主题蓝色}" />
                     <TextBlock Text="{Binding [stime], Converter={StaticResource CvAutoDate}}" FontSize="12" Foreground="{StaticResource 深灰边框}" />

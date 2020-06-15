@@ -53,23 +53,17 @@ namespace Dt.Base
             typeof(FileList),
             new PropertyMetadata(1, OnRefreshPanel));
 
-        public static readonly DependencyProperty ImagePaddingProperty = DependencyProperty.Register(
-            "ImagePadding",
-            typeof(Thickness),
+        public static readonly DependencyProperty SpacingProperty = DependencyProperty.Register(
+            "Spacing",
+            typeof(double),
             typeof(FileList),
-            new PropertyMetadata(new Thickness(6)));
+            new PropertyMetadata(0d, OnRefreshPanel));
 
         public static readonly DependencyProperty ImageStretchProperty = DependencyProperty.Register(
             "ImageStretch",
             typeof(Stretch),
             typeof(FileList),
             new PropertyMetadata(Stretch.Uniform));
-
-        public static readonly DependencyProperty VideoPaddingProperty = DependencyProperty.Register(
-            "VideoPadding",
-            typeof(Thickness),
-            typeof(FileList),
-            new PropertyMetadata(new Thickness(0, 10, 0, 11)));
 
         public static readonly DependencyProperty ImageHeightProperty = DependencyProperty.Register(
             "ImageHeight",
@@ -177,6 +171,15 @@ namespace Dt.Base
         }
 
         /// <summary>
+        /// 获取设置文件项之间的间隔距离，默认0
+        /// </summary>
+        public double Spacing
+        {
+            get { return (double)GetValue(SpacingProperty); }
+            set { SetValue(SpacingProperty, value); }
+        }
+
+        /// <summary>
         /// 获取设置图像的显示高度，默认82，0表示和宽度相同
         /// </summary>
         public double ImageHeight
@@ -186,30 +189,12 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置图像边距，默认6
-        /// </summary>
-        public Thickness ImagePadding
-        {
-            get { return (Thickness)GetValue(ImagePaddingProperty); }
-            set { SetValue(ImagePaddingProperty, value); }
-        }
-
-        /// <summary>
         ///  获取设置图像填充模式，默认Uniform
         /// </summary>
         public Stretch ImageStretch
         {
             get { return (Stretch)GetValue(ImageStretchProperty); }
             set { SetValue(ImageStretchProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取设置视频边距，默认10
-        /// </summary>
-        public Thickness VideoPadding
-        {
-            get { return (Thickness)GetValue(VideoPaddingProperty); }
-            set { SetValue(VideoPaddingProperty, value); }
         }
 
         /// <summary>

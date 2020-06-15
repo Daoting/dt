@@ -31,7 +31,9 @@ namespace Dt.Pub
             string Cover = default,
             string Summary = default,
             string Content = default,
+            SByte TempType = default,
             bool IsPublish = default,
+            bool AllowCoverClick = default,
             bool AllowComment = default,
             bool AddAlbumLink = default,
             bool AddCatLink = default,
@@ -51,7 +53,9 @@ namespace Dt.Pub
             AddCell<string>("Cover", Cover);
             AddCell<string>("Summary", Summary);
             AddCell<string>("Content", Content);
+            AddCell<SByte>("TempType", TempType);
             AddCell<bool>("IsPublish", IsPublish);
+            AddCell<bool>("AllowCoverClick", AllowCoverClick);
             AddCell<bool>("AllowComment", AllowComment);
             AddCell<bool>("AddAlbumLink", AddAlbumLink);
             AddCell<bool>("AddCatLink", AddCatLink);
@@ -108,12 +112,30 @@ namespace Dt.Pub
         }
 
         /// <summary>
+        /// 在列表中显示时的模板类型
+        /// </summary>
+        public SByte TempType
+        {
+            get { return (SByte)this["TempType"]; }
+            set { this["TempType"] = value; }
+        }
+
+        /// <summary>
         /// 是否发布
         /// </summary>
         public bool IsPublish
         {
             get { return (bool)this["IsPublish"]; }
             set { this["IsPublish"] = value; }
+        }
+
+        /// <summary>
+        /// 封面可点击
+        /// </summary>
+        public bool AllowCoverClick
+        {
+            get { return (bool)this["AllowCoverClick"]; }
+            set { this["AllowCoverClick"] = value; }
         }
 
         /// <summary>
@@ -264,7 +286,15 @@ namespace Dt.Pub
         {
         }
 
+        void SetTempType(SByte p_value)
+        {
+        }
+
         void SetIsPublish(bool p_value)
+        {
+        }
+
+        void SetAllowCoverClick(bool p_value)
         {
         }
 

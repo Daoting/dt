@@ -25,7 +25,7 @@ namespace Dt.Base
         /// <summary>
         /// 缩略图宽或高的最大尺寸
         /// </summary>
-        public const int ThumbSize = 180;
+        public const int ThumbSize = 360;
 
         public FileData(string p_filePath, string p_fileName, ulong p_size)
         {

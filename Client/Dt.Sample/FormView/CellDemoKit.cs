@@ -7,21 +7,10 @@
 #endregion
 
 #region 引用命名
-using Dt.App;
-using Dt.App.Chat;
-using Dt.App.Home;
-using Dt.App.Model;
 using Dt.Base;
-using Dt.Base.Docking;
 using Dt.Base.FormView;
 using Dt.Core;
-using Dt.Core.Model;
-using Dt.Sample;
-using System;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Threading.Tasks;
-using Windows.UI.Xaml;
 #endregion
 
 namespace Dt.Sample

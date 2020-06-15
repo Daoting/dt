@@ -1,0 +1,60 @@
+<Project ToolsVersion="Current">
+  <PropertyGroup>
+    <TargetFrameworks>uap10.0.18362;monoandroid10.0;xamarinios10;netstandard2.0</TargetFrameworks>
+    <Authors>hdt</Authors>
+    <Product>DT业务基础平台</Product>
+    <Copyright>Copyright © 2020</Copyright>
+    <NoWarn>$(NoWarn);NU1701;Uno0001</NoWarn>
+    <!-- Ensures the .xr.xml files are generated in a proper layout folder -->
+    <GenerateLibraryLayout>true</GenerateLibraryLayout>
+    <!-- 打包.nupkg时包含pdb文件，用于调试 -->
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'uap10.0.18362' ">
+    <DefineConstants>$(DefineConstants);UWP</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'xamarinios10'">
+    <DefineConstants>$(DefineConstants);IOS</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'monoandroid10.0'">
+    <DefineConstants>$(DefineConstants);ANDROID</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+    <DefineConstants>$(DefineConstants);WASM;__WASM__</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)'=='xamarinios10' or '$(TargetFramework)'=='monoandroid10.0' or '$(TargetFramework)'=='netstandard2.0' ">
+    <PackageReference Include="Uno.UI" Version="2.4.0" />
+  </ItemGroup>
+  
+  <ItemGroup Condition="'$(TargetFramework)'=='xamarinios10' or '$(TargetFramework)'=='monoandroid10.0' ">
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'xamarinios10' ">
+    <Reference Include="Xamarin.iOS" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'monoandroid10.0' ">
+    <Reference Include="Mono.Android" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+    <Compile Update="**\*.xaml.cs">
+      <DependentUpon>%(Filename)</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <UpToDateCheckInput Include="**\*.xaml" Exclude="bin\**\*.xaml;obj\**\*.xaml" />
+  </ItemGroup>
+</Project>

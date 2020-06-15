@@ -110,7 +110,7 @@
     <ControlTemplate x:Key="VirImageTemplate" TargetType="a:FileItem">
         <Grid x:Name="RootGrid">
             <TextBlock Text="&#xE054;" Foreground="{StaticResource 深灰边框}" FontFamily="{StaticResource IconFont}" FontSize="40" HorizontalAlignment="Center" VerticalAlignment="Center" />
-            <Grid x:Name="ContentGrid" Margin="{TemplateBinding ImagePadding}" Background="Transparent" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Grid x:Name="ContentGrid" Background="Transparent" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Image x:Name="Image" Source="{TemplateBinding Bitmap}" Stretch="{TemplateBinding ImageStretch}" />
             </Grid>
             <!--上传下载状态-->
@@ -153,7 +153,7 @@
     <ControlTemplate x:Key="VirVideoTemplate" TargetType="a:FileItem">
         <Grid x:Name="RootGrid">
             <!--视频主流比例-->
-            <Grid x:Name="ContentGrid" Width="327" Height="184" Margin="{TemplateBinding VideoPadding}" Background="Black" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Grid x:Name="ContentGrid" Width="327" Height="184" Background="Black" VerticalAlignment="Center" HorizontalAlignment="Center">
                 <Image Source="{TemplateBinding Bitmap}" />
                 <Grid Width="60" Height="60" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Ellipse Stroke="White" StrokeThickness="2" IsHitTestVisible="False" />

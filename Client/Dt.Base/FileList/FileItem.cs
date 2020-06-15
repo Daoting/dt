@@ -95,23 +95,11 @@ namespace Dt.Base
             typeof(FileItem),
             new PropertyMetadata(null));
 
-        public static readonly DependencyProperty ImagePaddingProperty = DependencyProperty.Register(
-            "ImagePadding",
-            typeof(Thickness),
-            typeof(FileItem),
-            new PropertyMetadata(new Thickness(6)));
-
         public static readonly DependencyProperty ImageStretchProperty = DependencyProperty.Register(
             "ImageStretch",
             typeof(Stretch),
             typeof(FileItem),
             new PropertyMetadata(Stretch.Uniform));
-
-        public static readonly DependencyProperty VideoPaddingProperty = DependencyProperty.Register(
-            "VideoPadding",
-            typeof(Thickness),
-            typeof(FileItem),
-            new PropertyMetadata(new Thickness(0, 10, 0, 11)));
 
         static void OnFileTypePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -335,30 +323,12 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置图像边距，默认6
-        /// </summary>
-        internal Thickness ImagePadding
-        {
-            get { return (Thickness)GetValue(ImagePaddingProperty); }
-            set { SetValue(ImagePaddingProperty, value); }
-        }
-
-        /// <summary>
         ///  获取设置图像填充模式，默认Uniform
         /// </summary>
         internal Stretch ImageStretch
         {
             get { return (Stretch)GetValue(ImageStretchProperty); }
             set { SetValue(ImageStretchProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取设置视频边距，默认10
-        /// </summary>
-        internal Thickness VideoPadding
-        {
-            get { return (Thickness)GetValue(VideoPaddingProperty); }
-            set { SetValue(VideoPaddingProperty, value); }
         }
         #endregion
 
@@ -937,9 +907,7 @@ namespace Dt.Base
             // 通过Owner.XXX的方式总是重置FileList.DataContext为null！
             // 不可将此赋值放在LoadImage之前，否则无法显示图片
             SetBinding(BorderBrushProperty, new Binding { Path = new PropertyPath("BorderBrush"), Source = _owner, Mode = BindingMode.OneWay });
-            SetBinding(ImagePaddingProperty, new Binding { Path = new PropertyPath("ImagePadding"), Source = _owner, Mode = BindingMode.OneWay });
             SetBinding(ImageStretchProperty, new Binding { Path = new PropertyPath("ImageStretch"), Source = _owner, Mode = BindingMode.OneWay });
-            SetBinding(VideoPaddingProperty, new Binding { Path = new PropertyPath("VideoPadding"), Source = _owner, Mode = BindingMode.OneWay });
         }
 
         async Task LoadImage()
@@ -1167,7 +1135,10 @@ namespace Dt.Base
             _pointerID = null;
             Point cur = e.GetCurrentPoint(null).Position;
             if (Math.Abs(cur.X - _ptLast.X) < 3 && Math.Abs(cur.Y - _ptLast.Y) < 3)
+            {
+                e.Handled = true;
                 TappedItem();
+            }
         }
 
         void OnPointerCaptureLost(object sender, PointerRoutedEventArgs e)

@@ -31,7 +31,6 @@ namespace Dt.App
         static Nl<GroupData<OmMenu>> _rootPageMenus;
         static List<OmMenu> _leaveMenus;
         static readonly GroupData<OmMenu> _favMenus = new GroupData<OmMenu>("常用");
-        static List<OmMenu> _defaultFixedMenus;
         #endregion
 
         #region 属性
@@ -54,18 +53,18 @@ namespace Dt.App
         /// <summary>
         /// 获取默认固定菜单项
         /// </summary>
-        public static List<OmMenu> DefaultFixedMenus
+        public static List<OmMenu> FixedMenus { get; set; }
+
+        /// <summary>
+        /// 获取默认固定菜单项数
+        /// </summary>
+        public static int FixedMenusCount
         {
             get
             {
-                if (_defaultFixedMenus == null)
-                {
-                    _defaultFixedMenus = new List<OmMenu>
-                    {
-                        CreateChatItem(),
-                    };
-                }
-                return _defaultFixedMenus;
+                if (FixedMenus != null)
+                    return FixedMenus.Count;
+                return 0;
             }
         }
         #endregion
@@ -138,24 +137,9 @@ namespace Dt.App
         }
 
         /// <summary>
-        /// 创建通讯录菜单项
-        /// </summary>
-        /// <returns></returns>
-        public static OmMenu CreateChatItem()
-        {
-            OmMenu item = new OmMenu();
-            item.ID = 1110;
-            item.Name = "通讯录";
-            item.Icon = "留言";
-            item.ViewName = "通讯录";
-            return item;
-        }
-
-        /// <summary>
         /// 加载当前登录用户的菜单，性能已调优
         /// </summary>
-        /// <param name="p_fixedMenus">固定菜单项</param>
-        public static void LoadMenus(List<OmMenu> p_fixedMenus)
+        public static void LoadMenus()
         {
             // 所有可访问项
             List<long> idsAll = new List<long>();
@@ -175,9 +159,9 @@ namespace Dt.App
 
             // 常用组的固定项
             _favMenus.Clear();
-            if (p_fixedMenus != null)
+            if (FixedMenus != null)
             {
-                foreach (var om in p_fixedMenus)
+                foreach (var om in FixedMenus)
                 {
                     _favMenus.Add(om);
                 }

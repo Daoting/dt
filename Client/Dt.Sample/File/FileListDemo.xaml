@@ -9,7 +9,7 @@
         <a:Tabs>
             <a:Tab Title="文件列表">
                 <ScrollViewer HorizontalScrollMode="Disabled" HorizontalScrollBarVisibility="Disabled" VerticalScrollMode="Auto" VerticalScrollBarVisibility="Auto">
-                    <a:FileList x:Name="_fl" UploadFinished="OnUploadFinished">
+                    <a:FileList x:Name="_fl" UploadFinished="OnUploadFinished" ColCount="3" >
                         <a:Ex.Menu>
                             <a:Menu>
                                 <a:Mi ID="分享" Icon="分享" Cmd="{Binding CmdShare}" />
@@ -50,12 +50,8 @@
                     <a:CNum Title="图像高度" ID="ImageHeight" Minimum="0" />
                     <a:CBool Title="可交互" ID="EnableClick" />
                     <StackPanel Orientation="Horizontal">
-                        <Button Content="增加图像边距" Click="OnAddPadding" />
-                        <Button Content="减小图像边距" Click="OnDelPadding" />
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Button Content="增加视频边距" Click="OnAddVideoPadding" />
-                        <Button Content="减小视频边距" Click="OnDelVideoPadding" />
+                        <Button Content="增加文件项间距" Click="OnAddPadding" />
+                        <Button Content="减小文件项间距" Click="OnDelPadding" />
                     </StackPanel>
                 </a:Fv>
             </a:Tab>

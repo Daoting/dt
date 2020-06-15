@@ -1,15 +1,11 @@
 ﻿<Project Sdk="MSBuild.Sdk.Extras/2.0.54">
 
   <PropertyGroup>
-    <TargetFrameworks>uap10.0.18362;monoandroid10.0;xamarinios10</TargetFrameworks>
-    <Authors>hdt</Authors>
-    <Product>DT业务基础平台</Product>
     <Description>DT平台Pdf文件格式</Description>
-    <Copyright>Copyright © 2020</Copyright>
-    <!-- 打包.nupkg时包含pdb文件，用于调试 -->
-    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
 
+  <Import Project="..\Common\Dtc-Stable.props" />
+  
   <ItemGroup>
     <EmbeddedResource Include="Fonts\arial.sfont" />
     <EmbeddedResource Include="Fonts\arialn.sfont" />

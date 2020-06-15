@@ -83,15 +83,6 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置图像边距，默认6
-        /// </summary>
-        public Thickness ImagePadding
-        {
-            get { return _fl.ImagePadding; }
-            set { _fl.ImagePadding = value; }
-        }
-
-        /// <summary>
         ///  获取设置图像填充模式，默认Uniform
         /// </summary>
         [CellParam("图像填充模式")]

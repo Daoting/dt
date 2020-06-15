@@ -48,28 +48,12 @@ namespace Dt.Sample
 
         void OnAddPadding(object sender, RoutedEventArgs e)
         {
-            var padding = _fl.ImagePadding;
-            _fl.ImagePadding = new Thickness(padding.Top + 10);
+            _fl.Spacing = _fl.Spacing + 4;
         }
 
         void OnDelPadding(object sender, RoutedEventArgs e)
         {
-            var padding = _fl.ImagePadding;
-            if (padding.Top >= 10)
-                _fl.ImagePadding = new Thickness(padding.Top - 10);
-        }
-
-        void OnAddVideoPadding(object sender, RoutedEventArgs e)
-        {
-            var padding = _fl.VideoPadding;
-            _fl.VideoPadding = new Thickness(padding.Top + 10);
-        }
-
-        void OnDelVideoPadding(object sender, RoutedEventArgs e)
-        {
-            var padding = _fl.VideoPadding;
-            if (padding.Top >= 10)
-                _fl.VideoPadding = new Thickness(padding.Top - 10);
+            _fl.Spacing = (_fl.Spacing - 4) >= 0 ? _fl.Spacing - 4 : 0;
         }
     }
 }

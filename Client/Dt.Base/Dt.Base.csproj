@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
-    <ProjectReference Include="..\Dt.Charts\Dt.Charts.csproj" />
+    <PackageReference Include="Dt.Charts" Version="1.0.0" />
   </ItemGroup>
 
 </Project>

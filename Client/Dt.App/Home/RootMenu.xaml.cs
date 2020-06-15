@@ -26,14 +26,12 @@ namespace Dt.App.Home
     /// </summary>
     public sealed partial class RootMenu : UserControl, ITabContent
     {
-        List<OmMenu> _fixedMenus;
         DateTime _dtLast;
 
         public RootMenu()
         {
             InitializeComponent();
-            _fixedMenus = MenuKit.DefaultFixedMenus;
-            MenuKit.LoadMenus(_fixedMenus);
+            MenuKit.LoadMenus();
             _lv.Data = MenuKit.RootPageMenus;
             _lv.Loaded += OnLoaded;
         }
@@ -57,12 +55,12 @@ namespace Dt.App.Home
 
         void OnReset(object sender, Mi e)
         {
-            if (MenuKit.FavMenus.Count > _fixedMenus.Count)
+            if (MenuKit.FavMenus.Count > MenuKit.FixedMenusCount)
             {
                 var cnt = AtLocal.Execute($"delete from menufav where userid={AtUser.ID}");
                 if (cnt > 0)
                 {
-                    MenuKit.LoadMenus(_fixedMenus);
+                    MenuKit.LoadMenus();
                     _lv.Data = MenuKit.RootPageMenus;
                     e.Visibility = Visibility.Collapsed;
                     AtKit.Msg("重置常用菜单成功！");
@@ -140,7 +138,7 @@ namespace Dt.App.Home
                     Mi mi = new Mi { ID = "搜索", Icon = Icons.搜索, ShowInPhone = VisibleInPhone.Icon };
                     mi.Click += OnSearch;
                     _menu.Items.Add(mi);
-                    if (MenuKit.FavMenus.Count > _fixedMenus.Count)
+                    if (MenuKit.FavMenus.Count > MenuKit.FixedMenusCount)
                     {
                         mi = new Mi { ID = "重置常用", Icon = Icons.刷新, ShowInPhone = VisibleInPhone.Icon };
                         mi.Click += OnReset;

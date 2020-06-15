@@ -95,6 +95,16 @@ namespace Dt.Base
         }
 
         /// <summary>
+        /// 获取设置文件项之间的间隔距离，默认0
+        /// </summary>
+        [CellParam("文件项间距")]
+        public double Spacing
+        {
+            get { return _fl.Spacing; }
+            set { _fl.Spacing = value; }
+        }
+
+        /// <summary>
         /// 获取设置图像的显示高度，默认82，0表示和宽度相同
         /// </summary>
         [CellParam("图像高度")]
@@ -102,15 +112,6 @@ namespace Dt.Base
         {
             get { return _fl.ImageHeight; }
             set { _fl.ImageHeight = value; }
-        }
-
-        /// <summary>
-        /// 获取设置图像边距，默认6
-        /// </summary>
-        public Thickness ImagePadding
-        {
-            get { return _fl.ImagePadding; }
-            set { _fl.ImagePadding = value; }
         }
 
         /// <summary>

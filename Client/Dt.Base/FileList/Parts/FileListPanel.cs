@@ -49,7 +49,7 @@ namespace Dt.Base
             }
 
             double maxWidth = double.IsInfinity(availableSize.Width) ? SysVisual.ViewWidth : availableSize.Width;
-            double colWidth = maxWidth / colCount;
+            double colWidth = (maxWidth - (colCount - 1) * Owner.Spacing) / colCount;
 
             double totalHeight = 0;
             double lineHeight = 0;
@@ -82,7 +82,7 @@ namespace Dt.Base
                     lineHeight = 0;
                 }
             }
-            return new Size(maxWidth, totalHeight);
+            return new Size(maxWidth, totalHeight + (_linesHeight.Count - 1) * Owner.Spacing);
         }
 
         protected override Size ArrangeOverride(Size finalSize)
@@ -101,7 +101,7 @@ namespace Dt.Base
                 colCount = Children.Count;
             }
 
-            double colWidth = finalSize.Width / colCount;
+            double colWidth = (finalSize.Width - (colCount - 1) * Owner.Spacing) / colCount;
             double totalHeight = 0;
 
             for (int i = 0; i < Children.Count; i++)
@@ -109,12 +109,12 @@ namespace Dt.Base
                 var item = Children[i] as FileItem;
                 int col = i % colCount;
                 int row = i / colCount;
-                item.Arrange(new Rect(col * colWidth, totalHeight, colWidth, _linesHeight[row]));
+                item.Arrange(new Rect(col * (colWidth + Owner.Spacing), totalHeight, colWidth, _linesHeight[row]));
 
                 if ((i + 1) % colCount == 0)
                 {
                     // 行尾
-                    totalHeight += _linesHeight[row];
+                    totalHeight += _linesHeight[row] + Owner.Spacing;
                 }
             }
             return finalSize;
@@ -148,7 +148,7 @@ namespace Dt.Base
                 if (item.DesiredSize.Width > width)
                     width = item.DesiredSize.Width;
             }
-            return new Size(width, height);
+            return new Size(width, height + (Children.Count - 1) * Owner.Spacing);
         }
 
         Size ArrangeOneCol(Size finalSize)
@@ -158,7 +158,7 @@ namespace Dt.Base
             {
                 var item = Children[i] as FileItem;
                 item.Arrange(new Rect(0, height, finalSize.Width, item.DesiredSize.Height));
-                height += item.DesiredSize.Height;
+                height += item.DesiredSize.Height + Owner.Spacing;
             }
             return finalSize;
         }

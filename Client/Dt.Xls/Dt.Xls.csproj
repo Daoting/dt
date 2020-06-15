@@ -4,7 +4,7 @@
     <Description>DT平台Xls文件格式</Description>
   </PropertyGroup>
 
-  <Import Project="..\Common\dtc.props" />
+  <Import Project="..\Common\Dtc-Stable.props" />
   
   <ItemGroup>
     <Content Include="BuiltInStyles.xml" />

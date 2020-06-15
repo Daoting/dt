@@ -1,0 +1,33 @@
+﻿<a:Win
+    x:Class="Dt.Fz.ClientHome"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    xmlns:fz="using:Dt.Fz"
+    AutoSaveLayout="False"
+    Home="主页,训练,关心,我的">
+
+    <a:WinItem DockState="DockedLeft">
+        <a:Tabs>
+            <a:Tab Title="主页" Icon="主页" HideTitleBar="True">
+                <fz:PostList x:Name="_post" />
+            </a:Tab>
+            <a:Tab Title="训练" Icon="步行">
+
+            </a:Tab>
+            <a:Tab Title="关心" Icon="心电">
+
+            </a:Tab>
+        </a:Tabs>
+    </a:WinItem>
+    <a:WinItem DockState="DockedRight">
+        <a:Tabs>
+            <a:Tab Title="我的" Icon="个人信息" HideTitleBar="True">
+                <StackPanel>
+                    <fz:MyMain x:Name="_my" />
+                    <Button Content="文章管理" Click="OnPost" />
+                </StackPanel>
+            </a:Tab>
+        </a:Tabs>
+    </a:WinItem>
+</a:Win>

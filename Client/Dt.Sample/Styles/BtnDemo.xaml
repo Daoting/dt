@@ -17,13 +17,26 @@
             <StackPanel Orientation="Horizontal" Spacing="10">
                 <Button Content="默认按钮" />
                 <Button Content="不可用状态" IsEnabled="False" />
+                <Button Content="按 钮" Foreground="White" Background="{StaticResource 主题蓝色}" BorderThickness="4" />
             </StackPanel>
             <TextBlock Text="字符按钮" />
             <StackPanel Orientation="Horizontal" Spacing="10">
-                <Button Content="&#xE11A;" Style="{StaticResource 字符按钮}" />
-                <Button Content="&#xE11A;" Style="{StaticResource 字符按钮}" IsEnabled="False" />
-                <Button Content="&#xE139;" Style="{StaticResource 字符按钮}" Foreground="Green" />
-                <Button Content="&#xE10F;" Style="{StaticResource 字符按钮}" FontSize="60" />
+                <Button Content="&#xE00B;" Style="{StaticResource 字符按钮}" />
+                <Button Content="&#xE005;" Style="{StaticResource 字符按钮}" IsEnabled="False" />
+                <Button Content="&#xE005;" Style="{StaticResource 字符按钮}" Foreground="Green" FontSize="60" />
+
+                <Button Content="&#xE038;" Tag="分享" Style="{StaticResource 字符按钮}" />
+                <Button Content="&#xE038;" Tag="分享" Style="{StaticResource 字符按钮}" Foreground="{StaticResource 深灰边框}" BorderThickness="0" FontSize="15" />
+            </StackPanel>
+            <TextBlock Text="浅色按钮" />
+            <StackPanel Orientation="Horizontal" Spacing="10" Background="Black">
+                <Button Content="按 钮" Style="{StaticResource 浅色按钮}" />
+                <Button Content="不可用状态" Style="{StaticResource 浅色按钮}" IsEnabled="False" />
+            </StackPanel>
+            <TextBlock Text="Phone模式的搜索栏按钮" />
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <Button Content="按 钮" Style="{StaticResource PhonSearchButton}" />
+                <Button Content="不可用状态" Style="{StaticResource PhonSearchButton}" IsEnabled="False" />
             </StackPanel>
             <TextBlock Text="列表项按钮" />
             <StackPanel>
