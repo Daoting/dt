@@ -300,7 +300,7 @@ namespace Dt.Core
                 else
                 {
                     Type tp;
-                    if (tpName.EndsWith('?'))
+                    if (tpName.EndsWith("?"))
                     {
                         tp = Type.GetType("System." + tpName.TrimEnd('?'), true, false);
                         tp = typeof(Nullable<>).MakeGenericType(tp);

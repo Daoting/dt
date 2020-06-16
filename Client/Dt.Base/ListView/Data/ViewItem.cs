@@ -574,7 +574,7 @@ namespace Dt.Base
 
         TextBlock CreateFileLink(object p_val)
         {
-            int cnt = p_val.ToString().Split("[\"").Length - 1;
+            int cnt = p_val.ToString().Split(new string[] { "[\"" }, StringSplitOptions.None).Length - 1;
             if (cnt <= 0)
                 return null;
 

@@ -46,7 +46,7 @@ namespace Dt.Base
 
             // 按照FileList中json格式获取路径，如：
             // [["photo/E3/18/58108158862553088.jpg","未标题-2","300 x 300 (.jpg)",49179,"daoting","2020-03-09 16:21"]]
-            if (p_path.StartsWith('['))
+            if (p_path.StartsWith("["))
             {
                 int i = p_path.IndexOf("\",");
                 if (i <= 3)
@@ -112,6 +112,8 @@ namespace Dt.Base
             {
                 await bmp.SetSourceAsync(stream);
             }
+#elif WASM
+
 #endif
             return bmp;
         }

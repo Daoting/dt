@@ -135,6 +135,15 @@ namespace Dt.Base
         {
             return Task.FromResult((Stream)new FileStream(FilePath, FileMode.Open, FileAccess.Read));
         }
+#elif WASM
+        /// <summary>
+        /// 获取文件流
+        /// </summary>
+        /// <returns></returns>
+        public Task<Stream> GetStream()
+        {
+            return Task.FromResult((Stream)new FileStream(FilePath, FileMode.Open, FileAccess.Read));
+        }
 #endif
 
         /// <summary>

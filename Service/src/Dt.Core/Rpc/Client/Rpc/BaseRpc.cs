@@ -47,8 +47,10 @@ namespace Dt.Core.Rpc
             // 内部用户标识
             _client.DefaultRequestHeaders.Add("uid", "110");
 #endif
-#else
+#elif ANDROID || IOS
             _client = new HttpClient(new NativeMessageHandler());
+#elif WASM
+            _client = new HttpClient();
 #endif
         }
 

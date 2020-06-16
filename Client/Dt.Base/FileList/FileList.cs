@@ -356,21 +356,25 @@ namespace Dt.Base
         public void AddFile(string[] p_uwpFileTypes = null, string[] p_androidFileTypes = null, string[] p_iosFileTypes = null)
         {
             _ = AppendFile(
-                () =>
+
 #if UWP
-                CrossKit.PickFiles(p_uwpFileTypes),
+                () => CrossKit.PickFiles(p_uwpFileTypes),
 #elif ANDROID
-                CrossKit.PickFiles(p_androidFileTypes),
+                () => CrossKit.PickFiles(p_androidFileTypes),
 #elif IOS
-                CrossKit.PickFiles(p_iosFileTypes),
+                () => CrossKit.PickFiles(p_iosFileTypes),
+#elif WASM
+                () => Task.FromResult((List<FileData>)null),
 #endif
-                () =>
+
 #if UWP
-                CrossKit.PickFile(p_uwpFileTypes));
+                () => CrossKit.PickFile(p_uwpFileTypes));
 #elif ANDROID
-                CrossKit.PickFile(p_androidFileTypes));
+                () => CrossKit.PickFile(p_androidFileTypes));
 #elif IOS
-                CrossKit.PickFile(p_iosFileTypes));
+                () => CrossKit.PickFile(p_iosFileTypes));
+#elif WASM
+                () => Task.FromResult((FileData)null));
 #endif
         }
 

@@ -66,12 +66,10 @@
       <Link>App.xaml.cs</Link>
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="..\Common\MainActivity.cs">
-      <Link>MainActivity.cs</Link>
-    </Compile>
-    <Compile Include="..\Dt.Shell.Uwp\Stub.cs">
+    <Compile Include="..\Common\Stub.cs">
       <Link>Stub.cs</Link>
     </Compile>
+    <Compile Include="MainActivity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -91,6 +89,9 @@
   <ItemGroup>
     <PackageReference Include="Uno.UI" Version="2.4.0" />
     <PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData" Version="2.1.0" />
+    <PackageReference Include="Dt.Cells" Version="1.0.0" />
+    <PackageReference Include="Dt.Cells.Data" Version="1.0.0" />
+    <PackageReference Include="Dt.Charts" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Dt.App\Dt.App.csproj">
@@ -100,18 +101,6 @@
     <ProjectReference Include="..\Dt.Base\Dt.Base.csproj">
       <Project>{e3f3c994-17dc-4b65-8a66-f2c70537df7d}</Project>
       <Name>Dt.Base</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Dt.Cells.Data\Dt.Cells.Data.csproj">
-      <Project>{7ce3ed41-685e-46bd-ab2f-ab25467cbe35}</Project>
-      <Name>Dt.Cells.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Dt.Cells\Dt.Cells.csproj">
-      <Project>{97eac2fe-30d6-40d8-9fec-a568774d1058}</Project>
-      <Name>Dt.Cells</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Dt.Charts\Dt.Charts.csproj">
-      <Project>{a77e5063-ff97-49f3-aa5e-814baa7a929d}</Project>
-      <Name>Dt.Charts</Name>
     </ProjectReference>
     <ProjectReference Include="..\Dt.Core\Dt.Core.csproj">
       <Project>{7e933aca-685d-4a54-979c-ce83c5cfd2fc}</Project>
@@ -140,11 +129,6 @@
     <AndroidResource Include="Resources\drawable\logo.png">
       <Generator>MSBuild:UpdateGeneratedFiles</Generator>
     </AndroidResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\Common\Android说明.txt">
-      <Link>Android说明.txt</Link>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\xml\file_paths.xml" />
@@ -243,6 +227,9 @@
     <Folder Include="Resources\drawable-hdpi\" />
     <Folder Include="Resources\drawable-xhdpi\" />
     <Folder Include="Resources\drawable-xxhdpi\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Android说明.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- This will force the generation of the APK when not building inside visual studio -->

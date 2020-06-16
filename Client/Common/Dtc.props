@@ -1,6 +1,10 @@
 <Project ToolsVersion="Current">
   <PropertyGroup>
-    <TargetFrameworks>uap10.0.18362;monoandroid10.0;xamarinios10</TargetFrameworks>
+    <TargetFramework Condition=" '$(SolutionFileName)' == 'Dtc-Uwp.sln' ">uap10.0.18362</TargetFramework>
+    <TargetFrameworks Condition=" '$(SolutionFileName)' == 'Dtc-Android.sln' ">monoandroid10.0</TargetFrameworks>
+    <TargetFramework Condition=" '$(SolutionFileName)' == 'Dtc-iOS.sln' ">xamarinios10</TargetFramework>
+    <TargetFramework Condition=" '$(SolutionFileName)' == 'Dtc-Wasm.sln' ">netstandard2.0</TargetFramework>
+    <TargetFrameworks Condition=" '$(SolutionFileName)' == 'Dtc-All.sln' ">uap10.0.18362;monoandroid10.0;xamarinios10</TargetFrameworks>
     <Authors>hdt</Authors>
     <Product>DT业务基础平台</Product>
     <Copyright>Copyright © 2020</Copyright>

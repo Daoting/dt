@@ -534,7 +534,7 @@ namespace Dt.Core
         /// <returns></returns>
         public static Type GetColType(string p_name)
         {
-            if (p_name.EndsWith('?'))
+            if (p_name.EndsWith("?"))
             {
                 Type tp = Type.GetType("System." + p_name.TrimEnd('?'), true, false);
                 return typeof(Nullable<>).MakeGenericType(tp);

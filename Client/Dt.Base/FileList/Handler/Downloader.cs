@@ -29,7 +29,7 @@ namespace Dt.Base
     {
         static readonly AsyncLocker _locker = new AsyncLocker();
 
-#if UWP
+#if UWP || WASM
         readonly static HttpClient _client = new HttpClient(new HttpClientHandler
         {
             // 验证时服务端证书始终有效！
