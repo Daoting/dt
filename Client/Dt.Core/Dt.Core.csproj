@@ -7,7 +7,7 @@
   <Import Project="..\Common\dtc.props" />
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="2.1.0" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="3.1.5" />
   </ItemGroup>
   
   <ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid10.0' ">

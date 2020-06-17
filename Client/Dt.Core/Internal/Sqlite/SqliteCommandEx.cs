@@ -225,7 +225,8 @@ namespace Dt.Core.Sqlite
             if (type == typeof(byte[]))
             {
                 //return p_dataReader.GetBlob(ordinal);getBlob不可访问。
-                return raw.sqlite3_column_blob(p_dataReader.Handle, p_ordinal);
+                // Microsoft.Data.Sqlite升级到3.1.5后
+                return raw.sqlite3_column_blob(p_dataReader.Handle, p_ordinal).ToArray();
             }
             if (type == typeof(char))
             {

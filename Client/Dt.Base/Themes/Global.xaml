@@ -1,7 +1,12 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:a="using:Dt.Base">
+    xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:wasm="http://uno.ui/wasm"
+    xmlns:not_wasm="http://uno.ui/not_wasm"
+    xmlns:a="using:Dt.Base"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="wasm not_wasm">
 
     <!-- 全局公共部分，包括常量、公共画刷、转换器 -->
 
@@ -16,7 +21,9 @@
     <x:Double x:Key="小字号">12</x:Double>
 
     <!--自定义图标字体库-->
-    <FontFamily x:Key="IconFont">ms-appx:///Assets/Fonts/icon.ttf#DtIcon</FontFamily>
+    <win:FontFamily x:Key="IconFont">ms-appx:///Assets/Fonts/icon.ttf#DtIcon</win:FontFamily>
+    <not_wasm:FontFamily x:Key="IconFont">ms-appx:///Assets/Fonts/icon.ttf#DtIcon</not_wasm:FontFamily>
+    <wasm:FontFamily x:Key="IconFont">DtIcon</wasm:FontFamily>
 
     <!-- 行外高，含边框1 -->
     <x:Double x:Key="RowOuterHeight">41</x:Double>

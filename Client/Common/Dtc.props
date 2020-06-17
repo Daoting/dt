@@ -1,9 +1,10 @@
 <Project ToolsVersion="Current">
   <PropertyGroup>
     <TargetFramework Condition=" '$(SolutionFileName)' == 'Dtc-Uwp.sln' ">uap10.0.18362</TargetFramework>
-    <TargetFrameworks Condition=" '$(SolutionFileName)' == 'Dtc-Android.sln' ">monoandroid10.0</TargetFrameworks>
-    <TargetFramework Condition=" '$(SolutionFileName)' == 'Dtc-iOS.sln' ">xamarinios10</TargetFramework>
-    <TargetFramework Condition=" '$(SolutionFileName)' == 'Dtc-Wasm.sln' ">netstandard2.0</TargetFramework>
+     <!-- 加uap为xaml智能提示 -->
+    <TargetFrameworks Condition=" '$(SolutionFileName)' == 'Dtc-Android.sln' ">uap10.0.18362;monoandroid10.0</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(SolutionFileName)' == 'Dtc-iOS.sln' ">uap10.0.18362;xamarinios10</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(SolutionFileName)' == 'Dtc-Wasm.sln' ">uap10.0.18362;netstandard2.0</TargetFrameworks>
     <TargetFrameworks Condition=" '$(SolutionFileName)' == 'Dtc-All.sln' ">uap10.0.18362;monoandroid10.0;xamarinios10</TargetFrameworks>
     <Authors>hdt</Authors>
     <Product>DT业务基础平台</Product>
@@ -33,7 +34,7 @@
 
   <ItemGroup>
     <PackageReference Include="System.Text.Json" Version="4.7.0" />
-    <PackageReference Include="Xamarin.Essentials" Version="1.5.1" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)'=='xamarinios10' or '$(TargetFramework)'=='monoandroid10.0' or '$(TargetFramework)'=='netstandard2.0' ">
