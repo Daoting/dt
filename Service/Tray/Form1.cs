@@ -26,22 +26,22 @@ namespace Tray
 
         private void btnCm_Click(object sender, EventArgs e)
         {
-            Exec((Button)sender, tbCm, @"D:\BaiSui\Service\src\Dt.Cm\bin\Debug\netcoreapp3.1", "Dt.Cm.exe", "--urls http://*:50001");
+            Exec((Button)sender, tbCm, @"D:\BaiSui\Service\src\Dt.Cm\bin\Debug\netcoreapp3.1", "Dt.Cm.exe", "--urls http://*:20201");
         }
 
         private void btnMsg_Click(object sender, EventArgs e)
         {
-            Exec((Button)sender, tbMsg, @"D:\BaiSui\Service\src\Dt.Msg\bin\Debug\netcoreapp3.1", "Dt.Msg.exe", "--urls http://*:50002");
+            Exec((Button)sender, tbMsg, @"D:\BaiSui\Service\src\Dt.Msg\bin\Debug\netcoreapp3.1", "Dt.Msg.exe", "--urls http://*:20202");
         }
 
         private void btnFsm_Click(object sender, EventArgs e)
         {
-            Exec((Button)sender, tbFsm, @"D:\BaiSui\Service\src\Dt.Fsm\bin\Debug\netcoreapp3.1", "Dt.Fsm.exe", "--urls http://*:50003");
+            Exec((Button)sender, tbFsm, @"D:\BaiSui\Service\src\Dt.Fsm\bin\Debug\netcoreapp3.1", "Dt.Fsm.exe", "--urls http://*:20203");
         }
 
         private void btnPub_Click(object sender, EventArgs e)
         {
-            Exec((Button)sender, tbPub, @"D:\BaiSui\Service\src\Dt.Pub\bin\Debug\netcoreapp3.1", "Dt.Pub.exe", "--urls http://*:50004");
+            Exec((Button)sender, tbPub, @"D:\BaiSui\Service\src\Dt.Pub\bin\Debug\netcoreapp3.1", "Dt.Pub.exe", "--urls http://*:20204");
         }
 
         private void btnTraefix_Click(object sender, EventArgs e)

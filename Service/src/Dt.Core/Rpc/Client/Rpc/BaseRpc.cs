@@ -51,6 +51,7 @@ namespace Dt.Core.Rpc
             _client = new HttpClient(new NativeMessageHandler());
 #elif WASM
             _client = new HttpClient();
+            _client.DefaultRequestHeaders.Add("uid", "110");
 #endif
         }
 
@@ -101,12 +102,7 @@ namespace Dt.Core.Rpc
             {
                 Method = HttpMethod.Post,
                 Version = new Version(2, 0),
-#if SERVER
-                // 部署在k8s时内部DNS通过服务名即可
-                RequestUri = new Uri(Glb.IsInDocker ? $"https://{Glb.AppName}-{_svcName}/.c" : $"https://localhost/{Glb.AppName}/{_svcName}/.c"),
-#else
-                RequestUri = new Uri($"{AtSys.Stub.ServerUrl.TrimEnd('/')}/{_svcName}/.c"),
-#endif
+                RequestUri = new Uri("http://localhost/baisui/cm/.c"),
             };
         }
 
@@ -122,7 +118,7 @@ namespace Dt.Core.Rpc
 
 #if !SERVER
             // 输出监视信息
-            AtKit.Trace(TraceOutType.RpcCall, p_methodName, Encoding.UTF8.GetString(data), _svcName);
+            //AtKit.Trace(TraceOutType.RpcCall, p_methodName, Encoding.UTF8.GetString(data), _svcName);
 #endif
 
             // 超过长度限制时执行压缩

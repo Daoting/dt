@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <Description>DT内核库</Description>
+    <!-- wasm SQLite3Provider用到unsafe-->
+    <AllowUnsafeBlocks Condition="'$(TargetFramework)' == 'netstandard2.0' ">true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <Import Project="..\Common\dtc.props" />
@@ -13,6 +15,10 @@
   <ItemGroup Condition="'$(TargetFramework)' == 'MonoAndroid10.0' ">
     <PackageReference Include="Square.OkHttp3" Version="3.12.3" />
     <PackageReference Include="Square.OkIO" version="1.17.4" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' ">
+    <PackageReference Include="Uno.sqlite-wasm" Version="1.1.0-dev.15811" ExcludeAssets="contentFiles" />
   </ItemGroup>
   
   <ItemGroup>
