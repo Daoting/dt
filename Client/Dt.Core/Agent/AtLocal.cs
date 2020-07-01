@@ -1,4 +1,5 @@
-﻿#region 文件描述
+﻿#if !WASM
+#region 文件描述
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
@@ -38,12 +39,8 @@ namespace Dt.Core
         #region 构造方法
         static AtLocal()
         {
-#if WASM
-            SQLitePCL.raw.SetProvider(new SQLite3Provider_WebAssembly());
-#else
             // 初始化不同平台的包绑定！V2支持类型和属性的绑定
             SQLitePCL.Batteries_V2.Init();
-#endif
 
             // 创建本地文件存放目录
             if (!Directory.Exists(CachePath))
@@ -641,3 +638,4 @@ namespace Dt.Core
         #endregion
     }
 }
+#endif
