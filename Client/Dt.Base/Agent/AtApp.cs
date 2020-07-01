@@ -19,6 +19,7 @@ using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Dt.Base.Tools;
+using Windows.UI.ViewManagement;
 #endregion
 
 namespace Dt.Base
@@ -34,6 +35,10 @@ namespace Dt.Base
         /// </param>
         public static void Run(LaunchActivatedEventArgs args)
         {
+#if WASM
+            ApplicationView.GetForCurrentView().Title = AtSys.Stub.Title;
+#endif
+
             // 初始根元素用来提示信息
             TextBlock info = SysVisual.RootContent as TextBlock;
             Window.Current.Activate();

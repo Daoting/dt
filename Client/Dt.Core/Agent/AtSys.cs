@@ -110,19 +110,19 @@ namespace Dt.Core
         /// 系统初始化
         /// </summary>
         /// <param name="p_stub">系统存根</param>
-        public static void Startup(IStub p_stub)
+        /// <param name="p_app"></param>
+        public static void Startup(IStub p_stub, Application p_app)
         {
             Stub = p_stub;
             if (Stub.SerializeTypes != null)
                 SerializeTypeAlias.Merge(Stub.SerializeTypes);
 
-            Application app = Application.Current;
-            app.Suspending += OnSuspending;
-            app.Resuming += OnResuming;
+            p_app.Suspending += OnSuspending;
+            p_app.Resuming += OnResuming;
 
             // 异常处理
-#if UWP
-            app.UnhandledException += OnUwpUnhandledException;
+#if UWP || WASM
+            p_app.UnhandledException += OnUwpUnhandledException;
 #elif ANDROID
             Android.Runtime.AndroidEnvironment.UnhandledExceptionRaiser += OnAndroidUnhandledException;
 #elif IOS

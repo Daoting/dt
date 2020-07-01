@@ -27,7 +27,7 @@ namespace Dt.Shell
         public App()
         {
             InitializeComponent();
-            AtSys.Startup(new Stub());
+            AtSys.Startup(new Stub(), this);
         }
 
         /// <summary>

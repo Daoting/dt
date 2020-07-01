@@ -632,7 +632,8 @@ namespace Dt.Base
         void OnLoaded(object sender, RoutedEventArgs e)
         {
             Loaded -= OnLoaded;
-            _itemsPanel = this.FindChildByType<TabItemPanel>();
+            // 不再使用FindChildByType，uwp在Loaded事件可获取，uno在OnApplyTemplate时已可获得
+            _itemsPanel = (TabItemPanel)ItemsPanelRoot;
             _itemsPanel.Orientation = Orientation;
             _owner = this.FindParentByType<Win>();
             _isLoaded = true;

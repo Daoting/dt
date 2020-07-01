@@ -53,48 +53,19 @@ namespace Dt.Shell
         /// <param name="p_info">提示信息</param>
         public void OnStartup(StartupInfo p_info)
         {
-            var root = SysVisual.RootContent;
-            var fm = new Frame();
-            SysVisual.RootFrame = fm;
-            SingleViewWin win = new SingleViewWin();
-            win.NaviToHome();
+            Grid _rootGrid = Window.Current.Content as Grid;
+            if (_rootGrid.Children.Count > 2)
+                _rootGrid.Children.RemoveAt(0);
 
-            //// 设置固定菜单项
-            //CreateFixedMenus();
+            //Desktop desktop = new Desktop();
+            //var win = new SingleViewWin();
+            //desktop.SetValue(Desktop.MainWinProperty, win);
 
-            //if (ViewTypes["主页"] == typeof(DefaultHome))
-            //{
-            //    // 联网模式
-            //    // 更新打开模型库
-            //    string error = await AtApp.OpenModelDb("cm");
-            //    if (!string.IsNullOrEmpty(error))
-            //    {
-            //        p_info.SetMessage(error);
-            //        return;
-            //    }
+            //_rootGrid.Children.Insert(0, desktop);
 
-            //    string phone = AtLocal.GetCookie("LoginPhone");
-            //    string pwd = AtLocal.GetCookie("LoginPwd");
-            //    if (!string.IsNullOrEmpty(phone) && !string.IsNullOrEmpty(pwd))
-            //    {
-            //        // 自动登录
-            //        Dict dt = await AtCm.LoginByPwd(phone, pwd);
-            //        if (dt.Bool("valid"))
-            //        {
-            //            // 登录成功
-            //            AtApp.LoginSuccess(dt);
-            //            return;
-            //        }
-            //    }
 
-            //    // 未登录或登录失败
-            //    AtSys.Login(false);
-            //}
-            //else
-            //{
-            //    // 单机模式
-            //    AtApp.LoadRootUI();
-            //}
+            var win = new SingleViewWin();
+            _rootGrid.Children.Insert(0, win);
         }
 
         /// <summary>
