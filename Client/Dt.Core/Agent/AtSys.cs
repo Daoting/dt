@@ -48,11 +48,7 @@ namespace Dt.Core
         /// <summary>
         /// 获取系统是否采用手机的UI模式
         /// </summary>
-#if IOS || ANDROID
-        public static bool IsPhoneUI { get { return true; } }
-#else
         public static bool IsPhoneUI { get; internal set; }
-#endif
 
         /// <summary>
         /// 获取系统是否为触摸模式

@@ -27,6 +27,11 @@ namespace Dt.Core
     {
         #region 成员变量
         /// <summary>
+        /// PhoneUI模式的最大宽度
+        /// </summary>
+        const double _maxPhoneUIWidth = 600;
+
+        /// <summary>
         /// Window.Current.Content内容，根Grid
         /// </summary>
         static readonly Grid _rootGrid;
@@ -51,8 +56,11 @@ namespace Dt.Core
 
         static SysVisual()
         {
-            // 根Grid
-            _rootGrid = new Grid();
+            Window win = Window.Current;
+            AtSys.IsPhoneUI = win.Bounds.Width < _maxPhoneUIWidth;
+
+            // 根Grid，背景主题蓝色
+            _rootGrid = new Grid { Background = new SolidColorBrush(Windows.UI.Color.FromArgb(0xFF, 0x1B, 0xA1, 0xE2)) };
 
             // 桌面层/页面层，此层调整为动态添加！为uno节省级数！启动时为临时提示信息
             TextBlock tb = new TextBlock
@@ -89,16 +97,14 @@ namespace Dt.Core
                 _rootGrid.Children.Add(_notifyPanel);
             }
 
-#if UWP || WASM
-            _rootGrid.SizeChanged += OnSizeChanged;
-#elif IOS
+#if IOS
             // 状态栏边距
             StatusBarHeight = (int)UIKit.UIApplication.SharedApplication.StatusBarFrame.Height;
             _rootGrid.Padding = new Thickness(0, StatusBarHeight, 0, 0);
 #endif
-            // 主题蓝色
-            _rootGrid.Background = new SolidColorBrush(Windows.UI.Color.FromArgb(0xFF, 0x1B, 0xA1, 0xE2));
-            Window.Current.Content = _rootGrid;
+
+            win.Content = _rootGrid;
+            win.SizeChanged += OnWindowSizeChanged;
         }
 
         /// <summary>
@@ -388,47 +394,45 @@ namespace Dt.Core
         }
         #endregion
 
-#if UWP || WASM
         /// <summary>
         /// 系统区域大小变化时UI自适应
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        static void OnSizeChanged(object sender, SizeChangedEventArgs e)
+        static void OnWindowSizeChanged(object sender, WindowSizeChangedEventArgs e)
         {
-            bool isPhoneUI = e.NewSize.Width < 600;
-            if (isPhoneUI != AtSys.IsPhoneUI)
+            bool isPhoneUI = e.Size.Width < _maxPhoneUIWidth;
+            if (isPhoneUI == AtSys.IsPhoneUI)
+                return;
+
+            AtSys.IsPhoneUI = isPhoneUI;
+
+            // 调整对话框层
+            _dlgCanvas.Children.Clear();
+            _dlgCanvas.ClearValue(Panel.BackgroundProperty);
+            _dlgCanvas.PointerPressed -= _pressedHandler;
+            _rootGrid.RemoveHandler(UIElement.PointerPressedEvent, _pressedHandler);
+            if (AtSys.IsPhoneUI)
+                _dlgCanvas.PointerPressed += _pressedHandler;
+            else
+                _rootGrid.AddHandler(UIElement.PointerPressedEvent, _pressedHandler, true);
+
+            // 调整提示信息层
+            if (AtSys.IsPhoneUI)
             {
-                AtSys.IsPhoneUI = isPhoneUI;
-
-                // 调整对话框层
-                _dlgCanvas.Children.Clear();
-                _dlgCanvas.ClearValue(Panel.BackgroundProperty);
-                _dlgCanvas.PointerPressed -= _pressedHandler;
-                _rootGrid.RemoveHandler(UIElement.PointerPressedEvent, _pressedHandler);
-                if (AtSys.IsPhoneUI)
-                    _dlgCanvas.PointerPressed += _pressedHandler;
-                else
-                    _rootGrid.AddHandler(UIElement.PointerPressedEvent, _pressedHandler, true);
-
-                // 调整提示信息层
-                if (AtSys.IsPhoneUI)
-                {
-                    _notifyPanel.Width = double.NaN;
-                    _notifyPanel.HorizontalAlignment = HorizontalAlignment.Stretch;
-                    _notifyPanel.VerticalAlignment = VerticalAlignment.Top;
-                }
-                else
-                {
-                    _notifyPanel.Width = 240;
-                    _notifyPanel.HorizontalAlignment = HorizontalAlignment.Right;
-                    _notifyPanel.VerticalAlignment = VerticalAlignment.Bottom;
-                }
-
-                UIModeChanged?.Invoke();
+                _notifyPanel.Width = double.NaN;
+                _notifyPanel.HorizontalAlignment = HorizontalAlignment.Stretch;
+                _notifyPanel.VerticalAlignment = VerticalAlignment.Top;
             }
+            else
+            {
+                _notifyPanel.Width = 240;
+                _notifyPanel.HorizontalAlignment = HorizontalAlignment.Right;
+                _notifyPanel.VerticalAlignment = VerticalAlignment.Bottom;
+            }
+
+            UIModeChanged?.Invoke();
         }
-#endif
     }
 
     /// <summary>

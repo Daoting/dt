@@ -153,7 +153,7 @@ namespace Dt.Base
         WinItemPanel _dockPanel;
         WinItem _centerItem;
         bool _isReseting = true;
-        readonly LayoutManager _layout;
+        LayoutManager _layout;
         Tabs _sectWithCompass;
         bool _isDragDelta;
         #endregion
@@ -161,10 +161,12 @@ namespace Dt.Base
         #region 构造方法
         public Win()
         {
+            // PhoneUI模式Win始终不在可视树
             if (!AtSys.IsPhoneUI)
             {
-                DefaultStyleKey = typeof(Win);
-                _layout = new LayoutManager(this);
+                // 若用DefaultStyleKey，当前控件在xaml文件有子元素时，uno中不调用OnApplyTemplate！
+                // uno中设置Style时同步调用OnApplyTemplate，即构造方法直接调用了OnApplyTemplate！
+                Style = (Style)Application.Current.Resources["DefaultWin"];
             }
         }
         #endregion
@@ -542,7 +544,7 @@ namespace Dt.Base
         /// </summary>
         public void LoadDefaultLayout()
         {
-            _layout.LoadDefaultLayout();
+            _layout?.LoadDefaultLayout();
         }
 
         /// <summary>
@@ -642,6 +644,7 @@ namespace Dt.Base
             if (centerTabs != null)
                 _centerItem.Items.Add(centerTabs);
 
+            _layout = new LayoutManager(this);
             _layout.Init();
             SizeChanged += OnSizeChanged;
         }
@@ -1150,7 +1153,7 @@ namespace Dt.Base
         void OnSizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (e.NewSize.Width != e.PreviousSize.Width)
-                _layout.OnWidthChanged(e.NewSize.Width);
+                _layout?.OnWidthChanged(e.NewSize.Width);
 
             if (_rootCompass != null)
             {
@@ -1359,7 +1362,7 @@ namespace Dt.Base
         /// </summary>
         void OnLayoutChanged()
         {
-            _layout.SaveCurrentLayout();
+            _layout?.SaveCurrentLayout();
             LayoutChanged?.Invoke(this, EventArgs.Empty);
         }
         #endregion

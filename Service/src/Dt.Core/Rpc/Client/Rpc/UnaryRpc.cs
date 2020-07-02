@@ -44,18 +44,14 @@ namespace Dt.Core.Rpc
             using (var content = new PushStreamContent((ws) => RpcClientKit.WriteFrame(ws, _data, _isCompressed)))
             {
                 request.Content = content;
-                HttpResponseMessage response = null;
+                HttpResponseMessage response;
                 try
                 {
-                    Console.WriteLine("abdebug");
-                    Console.WriteLine(request.RequestUri.ToString());
                     response = await _client.SendAsync(request).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
-                    //throw new ServerException("服务器连接失败", $"调用【{_methodName}】时服务器连接失败！\r\n{ex.Message}");
-                    return default(T);
+                    throw new ServerException("服务器连接失败", $"调用【{_methodName}】时服务器连接失败！\r\n{ex.Message}");
                 }
 
                 if (response.StatusCode != System.Net.HttpStatusCode.OK)
@@ -119,6 +115,21 @@ namespace Dt.Core.Rpc
                 result.ResultType = RpcResultType.Error;
                 result.Info = "返回Json内容结构不正确！";
             }
+
+#if !SERVER
+            // 输出监视信息
+            string content = null;
+            if (AtSys.TraceRpc || result.ResultType == RpcResultType.Error)
+            {
+                // 输出详细内容
+                content = Encoding.UTF8.GetString(p_data);
+            }
+            AtKit.Trace(TraceOutType.RpcRecv, string.Format("{0}—{1}ms", _methodName, result.Elapsed), content, _svcName);
+
+            // ⚡ 为服务器标志
+            if (result.ResultType == RpcResultType.Message)
+                throw new KnownException("⚡" + result.Info);
+#endif
 
             if (result.ResultType == RpcResultType.Value)
                 return val;

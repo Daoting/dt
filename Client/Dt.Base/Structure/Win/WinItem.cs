@@ -151,7 +151,9 @@ namespace Dt.Base
         /// </summary>
         public WinItem()
         {
-            DefaultStyleKey = typeof(WinItem);
+            // 若用DefaultStyleKey，当前控件在xaml文件有子元素时，uno中不调用OnApplyTemplate！
+            // uno中设置Style时同步调用OnApplyTemplate，即构造方法直接调用了OnApplyTemplate！
+            Style = (Style)Application.Current.Resources["DefaultWinItem"];
             Loaded += OnLoaded;
         }
         #endregion

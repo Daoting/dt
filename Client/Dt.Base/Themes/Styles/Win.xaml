@@ -10,7 +10,7 @@
     </ResourceDictionary.MergedDictionaries>
 
     <!--Win-->
-    <Style TargetType="a:Win">
+    <Style x:Key="DefaultWin" TargetType="a:Win">
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
         <Setter Property="Background" Value="{StaticResource 默认背景}" />
         <Setter Property="BorderBrush" Value="{StaticResource 浅灰边框}" />
@@ -41,7 +41,7 @@
     </Style>
 
     <!--WinItem-->
-    <Style TargetType="a:WinItem">
+    <Style x:Key="DefaultWinItem" TargetType="a:WinItem">
         <Setter Property="ItemsPanel">
             <Setter.Value>
                 <ItemsPanelTemplate>
@@ -62,7 +62,7 @@
     </Style>
 
     <!--Tabs-->
-    <Style TargetType="a:Tabs">
+    <Style x:Key="DefaultTabs" TargetType="a:Tabs">
         <Setter Property="BorderBrush" Value="{StaticResource 浅灰边框}"/>
         <Setter Property="Background" Value="{StaticResource 默认背景}" />
         <Setter Property="Padding" Value="0"/>
@@ -164,7 +164,7 @@
     </Style>
 
     <!--Tab Phone-->
-    <Style TargetType="a:Tab">
+    <Style x:Key="PhoneTab" TargetType="a:Tab">
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
         <Setter Property="Background" Value="{StaticResource 默认背景}" />
         <Setter Property="Template">

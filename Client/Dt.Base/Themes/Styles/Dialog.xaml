@@ -8,8 +8,8 @@
         <ResourceDictionary Source="/Dt.Base/Themes/Styles/Default.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
-    <!--Dlg windows默认-->
-    <Style TargetType="a:Dlg">
+    <!--Dlg windows-->
+    <Style x:Key="WinDlg" TargetType="a:Dlg">
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
         <Setter Property="Background" Value="{StaticResource 默认背景}" />
         <Setter Property="BorderBrush" Value="{StaticResource 主题蓝色}" />
@@ -31,6 +31,7 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <!--关闭-->
                             <Button x:Name="CloseButton"
@@ -48,9 +49,7 @@
                             <ContentPresenter Content="{TemplateBinding Menu}"
                                               Foreground="{StaticResource 默认前景}"
                                               Background="{StaticResource 浅灰背景}"
-                                              HorizontalAlignment="Right"
-                                              Margin="100,0,0,0"
-                                              Grid.Column="1"/>
+                                              Grid.Column="2"/>
                         </Grid>
                         <!--用在win模式的Tabs、phone模式的Tab、Dlg，为Lv Fv等内容提供区域大小-->
                         <a:SizedPresenter Content="{TemplateBinding Content}"
@@ -107,7 +106,8 @@
                                               Foreground="{StaticResource 默认背景}"
                                               Grid.Column="2"/>
                         </Grid>
-                        <ContentPresenter Content="{TemplateBinding Content}"
+                        <!--用在win模式的Tabs、phone模式的Tab、Dlg，为Lv Fv等内容提供区域大小-->
+                        <a:SizedPresenter Content="{TemplateBinding Content}"
                                           HorizontalContentAlignment="Stretch"
                                           VerticalContentAlignment="Stretch"
                                           Grid.Row="1" />

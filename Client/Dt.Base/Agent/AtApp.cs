@@ -7,19 +7,19 @@
 #endregion
 
 #region 引用命名
+using Dt.Base.Tools;
 using Dt.Core;
 using Dt.Core.Rpc;
 using System;
 using System.IO;
-using System.Linq;
 using System.IO.Compression;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Dt.Base.Tools;
-using Windows.UI.ViewManagement;
 #endregion
 
 namespace Dt.Base
@@ -61,10 +61,8 @@ namespace Dt.Base
             NotifyManager.Init();
             LaunchManager.Arguments = args.Arguments;
 
-#if UWP
-            // 支持响应式UI模式切换
-            UIModeManager.Init();
-#endif
+            // WinUI模式与PhoneUI模式切换
+            SysVisual.UIModeChanged = OnUIModeChanged;
 
             // 从存根启动，因uno中无法在一个根UI的Loaded事件中切换到另一根UI，所以未采用启动页方式
             AtSys.Stub.OnStartup(new StartupInfo());
@@ -394,6 +392,29 @@ namespace Dt.Base
         /// PC上：除标题栏和外框的窗口内部高度
         /// </summary>
         public static double ViewHeight => SysVisual.ViewHeight;
+        #endregion
+
+        #region UI模式切换
+        /// <summary>
+        /// WinUI模式 <-> PhoneUI模式切换
+        /// </summary>
+        static void OnUIModeChanged()
+        {
+#if UWP
+            // 显示/隐藏后退按钮
+            SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AtSys.IsPhoneUI ? AppViewBackButtonVisibility.Visible : AppViewBackButtonVisibility.Collapsed;
+#endif
+            if (AtSys.IsPhoneUI)
+            {
+                // WinUI模式 -> PhoneUI模式
+                Desktop.Inst = null;
+                Taskbar.Inst = null;
+            }
+
+            // 重构根元素
+            if (SysVisual.RootContent is Frame || SysVisual.RootContent is Desktop)
+                LoadRootUI();
+        }
         #endregion
     }
 }

@@ -158,10 +158,11 @@ namespace Dt.Base
         #region 构造方法
         public Dlg()
         {
-            if (AtSys.IsPhoneUI)
-                Style = (Style)Application.Current.Resources["PhoneDlg"];
-            else
-                DefaultStyleKey = typeof(Dlg);
+            // 直接设置Style的原因：
+            // 1. 两种UI模式样式不同
+            // 2. 若用DefaultStyleKey，当前控件在xaml文件有子元素时，uno中不调用OnApplyTemplate！
+            // uno中设置Style时同步调用OnApplyTemplate，即构造方法直接调用了OnApplyTemplate！
+            Style = AtSys.IsPhoneUI ? (Style)Application.Current.Resources["PhoneDlg"] : (Style)Application.Current.Resources["WinDlg"];
         }
         #endregion
 
@@ -390,12 +391,6 @@ namespace Dt.Base
                 }
             }
 
-            if (_headerGrid != null)
-            {
-                _headerGrid.PointerPressed -= OnHeaderPointerPressed;
-                _headerGrid.PointerMoved -= OnHeaderPointerMoved;
-                _headerGrid.PointerReleased -= OnHeaderPointerReleased;
-            }
             _headerGrid = (Grid)GetTemplateChild("HeaderGrid");
             if (_headerGrid != null)
             {

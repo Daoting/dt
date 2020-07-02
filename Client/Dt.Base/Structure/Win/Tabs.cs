@@ -86,12 +86,11 @@ namespace Dt.Base
         #endregion
 
         #region 构造方法
-        /// <summary>
-        /// 
-        /// </summary>
         public Tabs()
         {
-            DefaultStyleKey = typeof(Tabs);
+            // 若用DefaultStyleKey，当前控件在xaml文件有子元素时，uno中不调用OnApplyTemplate！
+            // uno中设置Style时同步调用OnApplyTemplate，即构造方法直接调用了OnApplyTemplate！
+            Style = (Style)Application.Current.Resources["DefaultTabs"];
         }
         #endregion
 
