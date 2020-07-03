@@ -38,17 +38,17 @@ namespace Dt.Base.Docking
         /// <param name="p_sectItem"></param>
         internal void Unpin(Tab p_sectItem)
         {
-            if (p_sectItem.Container != null)
+            if (p_sectItem.OwnerTabs != null)
             {
                 if (TabStripPlacement == ItemPlacement.Left || TabStripPlacement == ItemPlacement.Right)
                 {
                     if (p_sectItem.ReadLocalValue(TabItem.PopWidthProperty) == DependencyProperty.UnsetValue)
-                        p_sectItem.PopWidth = p_sectItem.Container.ActualWidth;
+                        p_sectItem.PopWidth = p_sectItem.OwnerTabs.ActualWidth;
                 }
                 else
                 {
                     if (p_sectItem.ReadLocalValue(TabItem.PopHeightProperty) == DependencyProperty.UnsetValue)
-                        p_sectItem.PopHeight = p_sectItem.Container.ActualHeight;
+                        p_sectItem.PopHeight = p_sectItem.OwnerTabs.ActualHeight;
                 }
                 p_sectItem.RemoveFromParent();
             }

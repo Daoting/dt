@@ -42,19 +42,12 @@
 
     <!--WinItem-->
     <Style x:Key="DefaultWinItem" TargetType="a:WinItem">
-        <Setter Property="ItemsPanel">
-            <Setter.Value>
-                <ItemsPanelTemplate>
-                    <docking:TabItemPanel />
-                </ItemsPanelTemplate>
-            </Setter.Value>
-        </Setter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="a:WinItem">
                     <Grid>
-                        <ItemsPresenter />
-                        <docking:GridResizer x:Name="DockResizer" Placement="{TemplateBinding ResizerPlacement}" />
+                        <docking:TabItemPanel x:Name="TabItemPanel" Orientation="{TemplateBinding Orientation}" />
+                        <docking:GridResizer Placement="{TemplateBinding ResizerPlacement}" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

@@ -16,7 +16,7 @@ using Windows.UI.Xaml.Controls;
 namespace Dt.Base.Docking
 {
     /// <summary>
-    /// WinItem布局面板，内部用
+    /// WinItem布局面板，内部子元素为 WinItem
     /// </summary>
     public partial class WinItemPanel : Panel
     {

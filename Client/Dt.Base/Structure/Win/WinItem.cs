@@ -8,20 +8,24 @@
 
 #region 引用命名
 using Dt.Base.Docking;
+using Dt.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.Foundation;
+using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Markup;
 #endregion
 
 namespace Dt.Base
 {
     /// <summary>
-    /// 可停靠项，内部子项为Tabs或WinItem
+    /// 可停靠项，内部子项为 Tabs 或 WinItem
     /// </summary>
-    public partial class WinItem : ItemsControl
+    [ContentProperty(Name = nameof(Items))]
+    public partial class WinItem : Control, IItemsControl
     {
         #region 静态内容
         public static readonly DependencyProperty DockStateProperty = DependencyProperty.Register(
@@ -125,36 +129,38 @@ namespace Dt.Base
 
         static void OnPreviewResize(object sender, ResizeEventArgs e)
         {
-            WinItem container = sender as WinItem;
-            e.ResizedTgt = container;
-            WinItem parent = container.Container;
-            if (parent != null)
+            WinItem winItem = sender as WinItem;
+            e.ResizedTgt = winItem;
+            if (winItem.Parent is TabItemPanel pnl && pnl.Owner != null)
             {
-                e.AffectedTgt = parent.GetNextVisibleElement(container);
+                e.AffectedTgt = pnl.Owner.GetNextVisibleElement(winItem);
             }
         }
 
         #endregion
 
         #region 成员变量
+        readonly WinItemList _items = new WinItemList();
         TabItemPanel _itemsPanel;
         Win _owner;
         bool _isLoaded;
         bool _isInCenter;
         bool _isInWindow;
-        bool _recicled;
         #endregion
 
         #region 构造方法
-        /// <summary>
-        /// 
-        /// </summary>
         public WinItem()
         {
-            // 若用DefaultStyleKey，当前控件在xaml文件有子元素时，uno中不调用OnApplyTemplate！
-            // uno中设置Style时同步调用OnApplyTemplate，即构造方法直接调用了OnApplyTemplate！
-            Style = (Style)Application.Current.Resources["DefaultWinItem"];
-            Loaded += OnLoaded;
+            // PhoneUI模式时不在可视树
+            if (!AtSys.IsPhoneUI)
+            {
+                // 若用DefaultStyleKey，当前控件在xaml文件有子元素时，uno中不调用OnApplyTemplate！
+                // uno中设置Style时同步调用OnApplyTemplate，即构造方法直接调用了OnApplyTemplate！
+                Style = (Style)Application.Current.Resources["DefaultWinItem"];
+#if !UWP
+                Loaded += OnLoaded;
+#endif
+            }
         }
         #endregion
 
@@ -232,11 +238,11 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取父容器
+        /// 获取内容元素集合
         /// </summary>
-        public WinItem Container
+        public WinItemList Items
         {
-            get { return (Parent as WinItem); }
+            get { return _items; }
         }
 
         /// <summary>
@@ -250,19 +256,15 @@ namespace Dt.Base
                 if (_isInCenter != value)
                 {
                     _isInCenter = value;
-
-                    Tabs sect;
-                    WinItem dockItem;
-                    foreach (object item in Items)
+                    foreach (var item in _items)
                     {
-                        DependencyObject con = ContainerFromItem(item);
-                        if ((sect = con as Tabs) != null)
+                        if (item is Tabs tabs)
                         {
-                            sect.IsInCenter = _isInCenter;
+                            tabs.IsInCenter = _isInCenter;
                         }
-                        else if ((dockItem = con as WinItem) != null)
+                        else if (item is WinItem wi)
                         {
-                            dockItem.IsInCenter = _isInCenter;
+                            wi.IsInCenter = _isInCenter;
                         }
                     }
                 }
@@ -280,19 +282,15 @@ namespace Dt.Base
                 if (_isInWindow != value)
                 {
                     _isInWindow = value;
-
-                    Tabs sect;
-                    WinItem dockItem;
-                    foreach (object item in Items)
+                    foreach (var item in _items)
                     {
-                        DependencyObject con = ContainerFromItem(item);
-                        if ((sect = con as Tabs) != null)
+                        if (item is Tabs tabs)
                         {
-                            sect.IsInWindow = _isInWindow;
+                            tabs.IsInWindow = _isInWindow;
                         }
-                        else if ((dockItem = con as WinItem) != null)
+                        else if (item is WinItem wi)
                         {
-                            dockItem.IsInWindow = _isInWindow;
+                            wi.IsInWindow = _isInWindow;
                         }
                     }
                 }
@@ -371,47 +369,47 @@ namespace Dt.Base
             // 调整排序方式
             if (Orientation == Orientation.Vertical
                 && (p_dockPosition == DockPosition.Left || p_dockPosition == DockPosition.Right)
-                && Items.Count == 1)
+                && _items.Count == 1)
             {
                 Orientation = Orientation.Horizontal;
             }
             else if (Orientation == Orientation.Horizontal
                 && (p_dockPosition == DockPosition.Top || p_dockPosition == DockPosition.Bottom)
-                && Items.Count == 1)
+                && _items.Count == 1)
             {
                 Orientation = Orientation.Vertical;
             }
 
             WinItem newItem;
-            int index = Items.IndexOf(p_relativeTo);
+            int index = _items.IndexOf(p_relativeTo);
             if (Orientation == Orientation.Vertical)
             {
                 switch (p_dockPosition)
                 {
                     case DockPosition.Top:
-                        Items.Insert(index, p_dockItem);
+                        _items.Insert(index, p_dockItem);
                         return;
 
                     case DockPosition.Bottom:
-                        Items.Insert(index + 1, p_dockItem);
+                        _items.Insert(index + 1, p_dockItem);
                         return;
 
                     case DockPosition.Left:
-                        Items.Remove(p_relativeTo);
+                        _items.Remove(p_relativeTo);
                         newItem = new WinItem();
                         newItem.Orientation = Orientation.Horizontal;
                         newItem.Items.Add(p_dockItem);
                         newItem.Items.Add(p_relativeTo);
-                        Items.Insert(index, newItem);
+                        _items.Insert(index, newItem);
                         return;
 
                     case DockPosition.Right:
-                        Items.Remove(p_relativeTo);
+                        _items.Remove(p_relativeTo);
                         newItem = new WinItem();
                         newItem.Orientation = Orientation.Horizontal;
                         newItem.Items.Add(p_relativeTo);
                         newItem.Items.Add(p_dockItem);
-                        Items.Insert(index, newItem);
+                        _items.Insert(index, newItem);
                         return;
                 }
             }
@@ -420,29 +418,29 @@ namespace Dt.Base
                 switch (p_dockPosition)
                 {
                     case DockPosition.Top:
-                        Items.Remove(p_relativeTo);
+                        _items.Remove(p_relativeTo);
                         newItem = new WinItem();
                         newItem.Orientation = Orientation.Vertical;
                         newItem.Items.Add(p_dockItem);
                         newItem.Items.Add(p_relativeTo);
-                        Items.Insert(index, newItem);
+                        _items.Insert(index, newItem);
                         return;
 
                     case DockPosition.Bottom:
-                        Items.Remove(p_relativeTo);
+                        _items.Remove(p_relativeTo);
                         newItem = new WinItem();
                         newItem.Orientation = Orientation.Vertical;
                         newItem.Items.Add(p_relativeTo);
                         newItem.Items.Add(p_dockItem);
-                        Items.Insert(index, newItem);
+                        _items.Insert(index, newItem);
                         return;
 
                     case DockPosition.Left:
-                        Items.Insert(index, p_dockItem);
+                        _items.Insert(index, p_dockItem);
                         return;
 
                     case DockPosition.Right:
-                        Items.Insert(index + 1, p_dockItem);
+                        _items.Insert(index + 1, p_dockItem);
                         //Items.RemoveAt(index + 1);
                         //Items.Insert(index, p_relativeTo);
                         return;
@@ -453,84 +451,33 @@ namespace Dt.Base
         /// <summary>
         /// 从父容器中移除当前WinItem
         /// </summary>
-        internal void RemoveFromParent()
+        void RemoveFromParent()
         {
-            ItemsControl itemsControl;
-            Panel panel;
-            ContentControl control;
             ClearValue(TabItemPanel.SplitterChangeProperty);
 
-            if ((itemsControl = Parent as ItemsControl) != null)
+            if (Parent is TabItemPanel panel)
             {
-                itemsControl.Items.Remove(this);
+                panel.Owner?.Items.Remove(this);
             }
-            else if ((panel = Parent as Panel) != null)
+            else if (Parent is WinItemPanel winPnl)
             {
-                panel.Children.Remove(this);
+                _owner.Items.Remove(this);
             }
-            else if ((control = base.Parent as ContentControl) != null)
+            else if (Parent is ContentControl control)
             {
                 control.ClearValue(ContentControl.ContentProperty);
             }
         }
 
         /// <summary>
-        /// 无子项时直接移除当前WinItem，只一个子项时将子项向上级合并并移除当前WinItem
+        /// 无子项时直接移除当前WinItem
         /// </summary>
         internal void RemoveUnused()
         {
-            if (Items.Count == 0 && !IsInCenter)
+            if (_items.Count == 0 && !IsInCenter)
             {
-                _recicled = true;
                 RemoveFromParent();
             }
-
-            // 当WinItem的子项个数多于一个，且最后一个子项为也为WinItem的情况下，
-            // 在调整Win布局后,恢复初始布局时，要调用LayoutManager类中的ClearAllItems()方法，
-            // 在ClearItems(_owner)时，会进入此方法,当Item.Count == 1时，进入到parentPanel != null分支时，出错。
-
-            //else if (Items.Count == 1)
-            //{
-            //    // 重新整合子项
-            //    Tabs childSect = Items[0] as Tabs;
-            //    WinItem childDockItem = Items[0] as WinItem;
-
-            //    if (Container != null)
-            //    {
-            //        // 父容器为WinItem，将子项移动到父容器
-            //        _recicled = true;
-            //        int index = Container.Items.IndexOf(this);
-            //        if (childSect != null)
-            //        {
-            //            Items.Remove(childSect);
-            //            Container.Items.Insert(index, childSect);
-            //        }
-            //        else if (childDockItem != null)
-            //        {
-            //            Items.Remove(childDockItem);
-            //            Container.Items.Insert(index, childDockItem);
-            //        }
-            //        Container.Items.Remove(this);
-            //    }
-            //    else if (childDockItem != null)
-            //    {
-            //        Panel parentPanel = Parent as Panel;
-            //        ToolWindow parentWin = Parent as ToolWindow;
-            //        // 子项为WinItem，将子项提到上级
-            //        if (parentWin != null)
-            //        {
-            //            _recicled = true;
-            //            Items.Remove(childDockItem);
-            //            parentWin.Content = childDockItem;
-            //        }
-            //        else if (parentPanel != null)
-            //        {
-            //            int index = parentPanel.Children.IndexOf(this);
-            //            parentPanel.Children.RemoveAt(index);
-            //            parentPanel.Children.Insert(index, childDockItem);
-            //        }
-            //    }
-            //}
         }
 
         /// <summary>
@@ -541,129 +488,129 @@ namespace Dt.Base
         {
             Tabs.RelativeSizes size = new Tabs.RelativeSizes();
             bool horizontal = this.Orientation == Orientation.Horizontal;
-            foreach (object item in Items)
+            foreach (var item in _items)
             {
-                FrameworkElement con = item as FrameworkElement;
-                if (con != null && con.Visibility != Visibility.Collapsed)
-                {
-                    double splitterChange = TabItemPanel.GetSplitterChange(con);
-                    double length = TabItemPanel.GetLength(con, horizontal);
+                if (item.Visibility == Visibility.Collapsed)
+                    continue;
 
-                    size.LengthSum += length;
-                    if (splitterChange == 0.0)
-                    {
-                        size.WithoutChange += length;
-                    }
-                    else
-                    {
-                        size.ChangesSum += splitterChange;
-                        size.WithChangeSet += length;
-                    }
+                double splitterChange = TabItemPanel.GetSplitterChange(item);
+                double length = TabItemPanel.GetLength(item, horizontal);
+
+                size.LengthSum += length;
+                if (splitterChange == 0.0)
+                {
+                    size.WithoutChange += length;
+                }
+                else
+                {
+                    size.ChangesSum += splitterChange;
+                    size.WithChangeSet += length;
                 }
             }
             return size;
         }
-
         #endregion
 
-        #region 重写方法
-        /// <summary>
-        /// 增删子项
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnItemsChanged(object e)
+        #region 加载过程
+        /************************************************************************************************************************************/
+        // uno在构造方法中设置Style时直接调用了OnApplyTemplate，只能在Loaded事件中加载Items
+        // UWP仍在OnApplyTemplate中加载Items
+        /************************************************************************************************************************************/
+
+#if UWP
+        protected override void OnApplyTemplate()
         {
-            base.OnItemsChanged(e);
-            if (!_recicled && _isLoaded)
+            base.OnApplyTemplate();
+            InitTemplate();
+        }
+#else
+        void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= OnLoaded;
+            InitTemplate();
+        }
+#endif
+
+        void InitTemplate()
+        {
+            _itemsPanel = (TabItemPanel)GetTemplateChild("TabItemPanel");
+            _itemsPanel.Owner = this;
+            _owner = this.FindParentByType<Win>();
+            _isLoaded = true;
+            UpdateChildrenResizer();
+            LoadAllItems();
+            _items.ItemsChanged += OnItemsChanged;
+        }
+
+        void LoadAllItems()
+        {
+            for (int i = 0; i < _items.Count; i++)
             {
+                AddItem(_items[i], i);
+            }
+        }
+
+        void AddItem(FrameworkElement p_item, int p_index)
+        {
+            FrameworkElement elem = p_item;
+            if (p_item is Tabs tabs)
+            {
+                tabs.IsInCenter = _isInCenter;
+                tabs.IsInWindow = _isInWindow;
+            }
+            else if (p_item is WinItem wi)
+            {
+                wi.IsInCenter = _isInCenter;
+                wi.IsInWindow = _isInWindow;
+            }
+            else
+            {
+                throw new Exception("WinItem子项类型为Tabs或WinItem！");
+            }
+            _itemsPanel.Children.Insert(p_index, elem);
+        }
+
+        void OnItemsChanged(object sender, ItemListChangedArgs e)
+        {
+            if (e.CollectionChange == CollectionChange.ItemRemoved)
+            {
+                _itemsPanel.Children.RemoveAt(e.Index);
                 RemoveUnused();
-                if (Parent != null)
-                    RefreshInternal();
+                RefreshInternal();
             }
-        }
-
-        /// <summary>
-        /// 准备指定元素以显示指定项
-        /// </summary>
-        /// <param name="element"></param>
-        /// <param name="item"></param>
-        protected override void PrepareContainerForItemOverride(DependencyObject element, object item)
-        {
-            base.PrepareContainerForItemOverride(element, item);
-
-            WinItem dockItem;
-            Tabs sect;
-            if ((sect = element as Tabs) != null)
+            else if (e.CollectionChange == CollectionChange.ItemInserted)
             {
-                sect.IsInCenter = _isInCenter;
-                sect.IsInWindow = _isInWindow;
+                AddItem(_items[e.Index], e.Index);
+                RefreshInternal();
             }
-            else if ((dockItem = element as WinItem) != null)
+            else
             {
-                dockItem.IsInCenter = _isInCenter;
-                dockItem.IsInWindow = _isInWindow;
+                throw new Exception("WinItem不支持子项重置！");
             }
-        }
-
-        /// <summary>
-        /// 确定指定项是否为子项的容器
-        /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        protected override bool IsItemItsOwnContainerOverride(object item)
-        {
-            return (item is Tabs || item is WinItem);
-        }
-
-        /// <summary>
-        /// 创建或标识用于显示给定项的元素
-        /// </summary>
-        /// <returns></returns>
-        protected override DependencyObject GetContainerForItemOverride()
-        {
-            return new Tabs();
         }
         #endregion
 
         #region 内部方法
-        /// <summary>
-        /// 加载
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            Loaded -= OnLoaded;
-            // 不再使用FindChildByType，uwp在Loaded事件可获取，uno在OnApplyTemplate时已可获得
-            _itemsPanel = (TabItemPanel)ItemsPanelRoot;
-            _itemsPanel.Orientation = Orientation;
-            _owner = this.FindParentByType<Win>();
-            _isLoaded = true;
-            UpdateChildrenResizer();
-        }
-
         /// <summary>
         /// 子项集合变化时刷新
         /// </summary>
         void RefreshInternal()
         {
             UpdateWindowHeader();
-            int count = (from item in Items.OfType<UIElement>()
+            int count = (from item in _items
                          where item.Visibility == Visibility.Visible
                          select item).Count();
             Visibility visibility = (count == 0) ? Visibility.Collapsed : Visibility.Visible;
             if (Visibility != visibility)
             {
                 Visibility = visibility;
-                if (Container != null)
+                if (Parent is TabItemPanel pnl)
                 {
-                    Container.RefreshInternal();
+                    pnl.Owner?.RefreshInternal();
                 }
-                else
+                else if (Parent is ToolWindow win && visibility == Visibility.Collapsed)
                 {
-                    ToolWindow win = Parent as ToolWindow;
-                    if ((win != null) && (visibility == Visibility.Collapsed))
-                        win.Close();
+                    win.Close();
                 }
             }
             UpdateChildrenResizer();
@@ -675,35 +622,33 @@ namespace Dt.Base
         void UpdateChildrenResizer()
         {
             bool isFirst = true;
-            foreach (UIElement element in _itemsPanel.Children)
+            foreach (var element in _itemsPanel.Children)
             {
                 if (element.Visibility == Visibility.Collapsed)
                     continue;
 
-                Tabs sect = element as Tabs;
-                WinItem dockItem = element as WinItem;
-                if (sect != null)
+                if (element is Tabs tabs)
                 {
                     if (!isFirst)
                     {
-                        sect.ResizerPlacement = (Orientation == Orientation.Horizontal) ? ItemPlacement.Left : ItemPlacement.Top;
+                        tabs.ResizerPlacement = (Orientation == Orientation.Horizontal) ? ItemPlacement.Left : ItemPlacement.Top;
                     }
                     else
                     {
                         isFirst = false;
-                        sect.ResizerPlacement = null;
+                        tabs.ResizerPlacement = null;
                     }
                 }
-                else if (dockItem != null)
+                else if (element is WinItem wi)
                 {
                     if (!isFirst)
                     {
-                        dockItem.ResizerPlacement = (Orientation == Orientation.Horizontal) ? ItemPlacement.Left : ItemPlacement.Top;
+                        wi.ResizerPlacement = (Orientation == Orientation.Horizontal) ? ItemPlacement.Left : ItemPlacement.Top;
                     }
                     else
                     {
                         isFirst = false;
-                        dockItem.ResizerPlacement = null;
+                        wi.ResizerPlacement = null;
                     }
                 }
             }
@@ -714,14 +659,13 @@ namespace Dt.Base
         /// </summary>
         void UpdateWindowHeader()
         {
-            ToolWindow window = Parent as ToolWindow;
-            if (window != null)
+            if (Parent is ToolWindow win)
             {
-                window.UpdateHeader();
+                win.UpdateHeader();
             }
-            else if (Container != null)
+            else if (Parent is TabItemPanel pnl)
             {
-                Container.UpdateWindowHeader();
+                pnl.Owner?.UpdateWindowHeader();
             }
         }
 
@@ -732,17 +676,13 @@ namespace Dt.Base
         /// <returns></returns>
         FrameworkElement GetNextVisibleElement(WinItem p_container)
         {
-            for (int i = IndexFromContainer(p_container) - 1; i > -1; i--)
+            for (int i = _items.IndexOf(p_container) - 1; i > -1; i--)
             {
-                UIElement nextElement = ContainerFromIndex(i) as UIElement;
-                if ((nextElement != null) && (nextElement.Visibility == Visibility.Visible))
-                {
-                    return (nextElement as FrameworkElement);
-                }
+                if (_items[i].Visibility == Visibility.Visible)
+                    return _items[i];
             }
             return null;
         }
-
         #endregion
     }
 }

@@ -150,8 +150,8 @@ namespace Dt.Base
         /// </summary>
         public bool IsSelected
         {
-            get { return (bool)((bool)GetValue(IsSelectedProperty)); }
-            set { SetValue(IsSelectedProperty, (bool)value); }
+            get { return (bool)GetValue(IsSelectedProperty); }
+            set { SetValue(IsSelectedProperty, value); }
         }
 
         /// <summary>

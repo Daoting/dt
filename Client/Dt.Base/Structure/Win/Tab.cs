@@ -326,9 +326,9 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取父容器
+        /// 获取所属的Tabs
         /// </summary>
-        public Tabs Container
+        public Tabs OwnerTabs
         {
             get { return (Owner as Tabs); }
         }
@@ -363,7 +363,7 @@ namespace Dt.Base
                 // 内容切换动画
                 var ls = new TransitionCollection();
                 ls.Add(new ContentThemeTransition { VerticalOffset = 60 });
-                Container.ContentTransitions = ls;
+                OwnerTabs.ContentTransitions = ls;
             }
             _naviCache.Push(current);
             Content = p_tabContent;

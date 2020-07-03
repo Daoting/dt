@@ -7,15 +7,27 @@
 #endregion
 
 #region 引用命名
+using Dt.Base.Docking;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Markup;
 #endregion
 
 namespace Dt.Base
 {
     /// <summary>
-    /// 中部停靠项列表
+    /// 中部停靠项列表，在xaml中标志作用，不加载到可视树
     /// </summary>
-    public partial class WinCenter : ItemsControl
+    [ContentProperty(Name = nameof(Items))]
+    public partial class WinCenter : Control, IItemsControl
     {
+        readonly WinItemList _items = new WinItemList();
+
+        /// <summary>
+        /// 获取内容元素集合
+        /// </summary>
+        public WinItemList Items
+        {
+            get { return _items; }
+        }
     }
 }

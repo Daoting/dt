@@ -235,9 +235,11 @@ namespace Dt.Base.Docking
         /// </summary>
         public Orientation Orientation
         {
-            get { return (Orientation)base.GetValue(OrientationProperty); }
-            set { base.SetValue(OrientationProperty, value); }
+            get { return (Orientation)GetValue(OrientationProperty); }
+            set { SetValue(OrientationProperty, value); }
         }
+
+        internal WinItem Owner { get; set; }
 
         bool IsHorizontal
         {

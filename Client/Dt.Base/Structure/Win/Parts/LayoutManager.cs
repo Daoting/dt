@@ -174,15 +174,15 @@ namespace Dt.Base.Docking
         /// 深度清除所有子项
         /// </summary>
         /// <param name="p_items"></param>
-        public static void ClearItems(ItemsControl p_items)
+        public static void ClearItems(IItemsControl p_items)
         {
             // 不可使用Items.Clear
             while (p_items.Items.Count > 0)
             {
                 // 先移除当前项，再清除子项，不可颠倒！
-                object item = p_items.Items[0];
+                var item = p_items.Items[0];
                 p_items.Items.RemoveAt(0);
-                if (item is ItemsControl child)
+                if (item is IItemsControl child)
                     ClearItems(child);
                 else if (item is TabControl tabs)
                     tabs.Items.Clear();
@@ -235,7 +235,7 @@ namespace Dt.Base.Docking
                     XElement elem = doc.Root.Element("Win");
                     foreach (XElement item in elem.Elements())
                     {
-                        WinItem dockItem = CreateDockItem(item);
+                        WinItem dockItem = CreateWinItem(item);
                         _owner.Items.Add(dockItem);
                         _owner.DockPanel.Children.Insert(index++, dockItem);
                     }
@@ -247,9 +247,9 @@ namespace Dt.Base.Docking
                         foreach (XElement item in elem.Elements())
                         {
                             if (item.Name == "Tabs")
-                                _owner.CenterItem.Items.Add(CreateSect(item));
+                                _owner.CenterItem.Items.Add(CreateTabs(item));
                             else if (item.Name == "WinItem")
-                                _owner.CenterItem.Items.Add(CreateDockItem(item));
+                                _owner.CenterItem.Items.Add(CreateWinItem(item));
                         }
                     }
 
@@ -261,7 +261,7 @@ namespace Dt.Base.Docking
                             _owner.CreateLeftAutoHideTab();
                         foreach (XElement item in elem.Elements())
                         {
-                            _owner.LeftAutoHide.Unpin(CreateSectItem(item));
+                            _owner.LeftAutoHide.Unpin(CreateTab(item));
                         }
                     }
 
@@ -273,7 +273,7 @@ namespace Dt.Base.Docking
                             _owner.CreateRightAutoHideTab();
                         foreach (XElement item in elem.Elements())
                         {
-                            _owner.RightAutoHide.Unpin(CreateSectItem(item));
+                            _owner.RightAutoHide.Unpin(CreateTab(item));
                         }
                     }
 
@@ -285,7 +285,7 @@ namespace Dt.Base.Docking
                             _owner.CreateTopAutoHideTab();
                         foreach (XElement item in elem.Elements())
                         {
-                            _owner.TopAutoHide.Unpin(CreateSectItem(item));
+                            _owner.TopAutoHide.Unpin(CreateTab(item));
                         }
                     }
 
@@ -297,7 +297,7 @@ namespace Dt.Base.Docking
                             _owner.CreateBottomAutoHideTab();
                         foreach (XElement item in elem.Elements())
                         {
-                            _owner.BottomAutoHide.Unpin(CreateSectItem(item));
+                            _owner.BottomAutoHide.Unpin(CreateTab(item));
                         }
                     }
 
@@ -307,7 +307,7 @@ namespace Dt.Base.Docking
                     {
                         foreach (XElement item in elem.Elements())
                         {
-                            OpenInWindow(CreateDockItem(item));
+                            OpenInWindow(CreateWinItem(item));
                         }
                     }
                 }
@@ -346,7 +346,7 @@ namespace Dt.Base.Docking
                     var pnl = _owner.DockPanel.Children;
                     foreach (XElement item in elem.Elements())
                     {
-                        WinItem di = CreateDockItem(item);
+                        WinItem di = CreateWinItem(item);
                         if (index >= start && index < end)
                         {
                             // 范围之内的放入两侧自动隐藏
@@ -367,9 +367,9 @@ namespace Dt.Base.Docking
                         foreach (XElement item in elem.Elements())
                         {
                             if (item.Name == "Tabs")
-                                _owner.CenterItem.Items.Add(CreateSect(item));
+                                _owner.CenterItem.Items.Add(CreateTabs(item));
                             else if (item.Name == "WinItem")
-                                _owner.CenterItem.Items.Add(CreateDockItem(item));
+                                _owner.CenterItem.Items.Add(CreateWinItem(item));
                         }
                     }
 
@@ -381,7 +381,7 @@ namespace Dt.Base.Docking
                             _owner.CreateLeftAutoHideTab();
                         foreach (XElement item in elem.Elements())
                         {
-                            _owner.LeftAutoHide.Unpin(CreateSectItem(item));
+                            _owner.LeftAutoHide.Unpin(CreateTab(item));
                         }
                     }
 
@@ -393,7 +393,7 @@ namespace Dt.Base.Docking
                             _owner.CreateRightAutoHideTab();
                         foreach (XElement item in elem.Elements())
                         {
-                            _owner.RightAutoHide.Unpin(CreateSectItem(item));
+                            _owner.RightAutoHide.Unpin(CreateTab(item));
                         }
                     }
 
@@ -405,7 +405,7 @@ namespace Dt.Base.Docking
                             _owner.CreateTopAutoHideTab();
                         foreach (XElement item in elem.Elements())
                         {
-                            _owner.TopAutoHide.Unpin(CreateSectItem(item));
+                            _owner.TopAutoHide.Unpin(CreateTab(item));
                         }
                     }
 
@@ -417,7 +417,7 @@ namespace Dt.Base.Docking
                             _owner.CreateBottomAutoHideTab();
                         foreach (XElement item in elem.Elements())
                         {
-                            _owner.BottomAutoHide.Unpin(CreateSectItem(item));
+                            _owner.BottomAutoHide.Unpin(CreateTab(item));
                         }
                     }
 
@@ -427,7 +427,7 @@ namespace Dt.Base.Docking
                     {
                         foreach (XElement item in elem.Elements())
                         {
-                            OpenInWindow(CreateDockItem(item));
+                            OpenInWindow(CreateWinItem(item));
                         }
                     }
                 }
@@ -438,7 +438,7 @@ namespace Dt.Base.Docking
             }
         }
 
-        WinItem CreateDockItem(XElement p_elem)
+        WinItem CreateWinItem(XElement p_elem)
         {
             WinItem item = new WinItem();
             XAttribute attr = p_elem.Attribute("DockState");
@@ -490,9 +490,9 @@ namespace Dt.Base.Docking
             foreach (XElement elem in p_elem.Elements())
             {
                 if (elem.Name == "Tabs")
-                    item.Items.Add(CreateSect(elem));
+                    item.Items.Add(CreateTabs(elem));
                 else if (elem.Name == "WinItem")
-                    item.Items.Add(CreateDockItem(elem));
+                    item.Items.Add(CreateWinItem(elem));
             }
 
             attr = p_elem.Attribute("IsInCenter");
@@ -505,16 +505,16 @@ namespace Dt.Base.Docking
             return item;
         }
 
-        Tabs CreateSect(XElement p_elem)
+        Tabs CreateTabs(XElement p_elem)
         {
-            Tabs sect = new Tabs();
+            Tabs tabs = new Tabs();
             XAttribute attr = p_elem.Attribute("InitWidth");
             if (attr != null && !string.IsNullOrEmpty(attr.Value))
-                sect.InitWidth = Convert.ToDouble(attr.Value);
+                tabs.InitWidth = Convert.ToDouble(attr.Value);
 
             attr = p_elem.Attribute("InitHeight");
             if (attr != null && !string.IsNullOrEmpty(attr.Value))
-                sect.InitHeight = Convert.ToDouble(attr.Value);
+                tabs.InitHeight = Convert.ToDouble(attr.Value);
 
             attr = p_elem.Attribute("Padding");
             if (attr != null && !string.IsNullOrEmpty(attr.Value))
@@ -526,23 +526,25 @@ namespace Dt.Base.Docking
                     double top = Convert.ToDouble(padding[1]);
                     double right = Convert.ToDouble(padding[2]);
                     double bottom = Convert.ToDouble(padding[3]);
-                    sect.Padding = new Thickness(left, top, right, bottom);
+                    tabs.Padding = new Thickness(left, top, right, bottom);
                 }
             }
 
             foreach (XElement elem in p_elem.Elements("Tab"))
             {
-                sect.Items.Add(CreateSectItem(elem));
+                tabs.Items.Add(CreateTab(elem));
             }
 
             // 索引需后设置
             attr = p_elem.Attribute("SelectedIndex");
-            if (attr != null && !string.IsNullOrEmpty(attr.Value))
-                sect.SelectedIndex = Convert.ToInt32(attr.Value);
-            return sect;
+            if (attr != null && int.TryParse(attr.Value, out int index))
+                tabs.SelectedIndex = index;
+            else
+                tabs.SelectedIndex = 0;
+            return tabs;
         }
 
-        Tab CreateSectItem(XElement p_elem)
+        Tab CreateTab(XElement p_elem)
         {
             Tab tab;
             XAttribute attr = p_elem.Attribute("Title");
@@ -559,6 +561,8 @@ namespace Dt.Base.Docking
             attr = p_elem.Attribute("IsPinned");
             if (attr != null && !string.IsNullOrEmpty(attr.Value))
                 tab.IsPinned = Convert.ToBoolean(attr.Value);
+            else
+                tab.ClearValue(Tab.IsPinnedProperty);
 
             attr = p_elem.Attribute("CanDockInCenter");
             if (attr != null && !string.IsNullOrEmpty(attr.Value))
@@ -579,10 +583,19 @@ namespace Dt.Base.Docking
             attr = p_elem.Attribute("PopHeight");
             if (attr != null && !string.IsNullOrEmpty(attr.Value))
                 tab.PopHeight = Convert.ToDouble(attr.Value);
+            else
+                tab.ClearValue(Tab.PopHeightProperty);
 
             attr = p_elem.Attribute("PopWidth");
             if (attr != null && !string.IsNullOrEmpty(attr.Value))
                 tab.PopWidth = Convert.ToDouble(attr.Value);
+            else
+                tab.ClearValue(Tab.PopWidthProperty);
+
+            // 避免旧Tabs的影响
+            tab.Owner = null;
+            // 清除旧的选择标志
+            tab.ClearValue(Tab.IsSelectedProperty);
             return tab;
         }
         #endregion
@@ -603,7 +616,7 @@ namespace Dt.Base.Docking
                 writer.WriteStartElement("Win");
                 foreach (WinItem dockItem in _owner.Items.OfType<WinItem>())
                 {
-                    WriteDockItem(dockItem, writer);
+                    WriteWinItem(dockItem, writer);
                 }
                 writer.WriteEndElement();
 
@@ -621,7 +634,7 @@ namespace Dt.Base.Docking
                     writer.WriteStartElement("Left");
                     foreach (Tab sectItem in _owner.LeftAutoHide.Items.OfType<Tab>())
                     {
-                        WriteSectItem(sectItem, writer);
+                        WriteTab(sectItem, writer);
                     }
                     writer.WriteEndElement();
                 }
@@ -632,7 +645,7 @@ namespace Dt.Base.Docking
                     writer.WriteStartElement("Right");
                     foreach (Tab sectItem in _owner.RightAutoHide.Items.OfType<Tab>())
                     {
-                        WriteSectItem(sectItem, writer);
+                        WriteTab(sectItem, writer);
                     }
                     writer.WriteEndElement();
                 }
@@ -643,7 +656,7 @@ namespace Dt.Base.Docking
                     writer.WriteStartElement("Top");
                     foreach (Tab sectItem in _owner.TopAutoHide.Items.OfType<Tab>())
                     {
-                        WriteSectItem(sectItem, writer);
+                        WriteTab(sectItem, writer);
                     }
                     writer.WriteEndElement();
                 }
@@ -654,7 +667,7 @@ namespace Dt.Base.Docking
                     writer.WriteStartElement("Bottom");
                     foreach (Tab sectItem in _owner.BottomAutoHide.Items.OfType<Tab>())
                     {
-                        WriteSectItem(sectItem, writer);
+                        WriteTab(sectItem, writer);
                     }
                     writer.WriteEndElement();
                 }
@@ -663,7 +676,7 @@ namespace Dt.Base.Docking
                 writer.WriteStartElement("Float");
                 foreach (WinItem dockItem in _owner.FloatItems)
                 {
-                    WriteDockItem(dockItem, writer);
+                    WriteWinItem(dockItem, writer);
                 }
                 writer.WriteEndElement();
 
@@ -767,7 +780,7 @@ namespace Dt.Base.Docking
                 {
                     foreach (var di in lefts)
                     {
-                        WriteDockItem(di, writer);
+                        WriteWinItem(di, writer);
                         _owner.Items.Add(di);
                         _owner.DockPanel.Children.Insert(index++, di);
                         _colsWidth.Add(di.InitWidth);
@@ -777,7 +790,7 @@ namespace Dt.Base.Docking
                 {
                     foreach (var di in rights)
                     {
-                        WriteDockItem(di, writer);
+                        WriteWinItem(di, writer);
                         _owner.Items.Add(di);
                         _owner.DockPanel.Children.Insert(index++, di);
                         _colsWidth.Add(di.InitWidth);
@@ -787,7 +800,7 @@ namespace Dt.Base.Docking
                 {
                     foreach (var di in topBottom)
                     {
-                        WriteDockItem(di, writer);
+                        WriteWinItem(di, writer);
                         _owner.Items.Add(di);
                         _owner.DockPanel.Children.Insert(index++, di);
                     }
@@ -804,7 +817,7 @@ namespace Dt.Base.Docking
                         // 挪到CenterItem，特殊处理！
                         while (center.Items.Count > 0)
                         {
-                            object centerItem = center.Items[0];
+                            var centerItem = center.Items[0];
                             center.Items.RemoveAt(0);
                             _owner.CenterItem.Items.Add(centerItem);
                         }
@@ -820,7 +833,7 @@ namespace Dt.Base.Docking
                         _owner.CreateLeftAutoHideTab();
                     foreach (Tab sectItem in leftHide)
                     {
-                        WriteSectItem(sectItem, writer);
+                        WriteTab(sectItem, writer);
                         _owner.LeftAutoHide.Unpin(sectItem);
                     }
                     writer.WriteEndElement();
@@ -834,7 +847,7 @@ namespace Dt.Base.Docking
                         _owner.CreateRightAutoHideTab();
                     foreach (Tab sectItem in rightHide)
                     {
-                        WriteSectItem(sectItem, writer);
+                        WriteTab(sectItem, writer);
                         _owner.RightAutoHide.Unpin(sectItem);
                     }
                     writer.WriteEndElement();
@@ -848,7 +861,7 @@ namespace Dt.Base.Docking
                         _owner.CreateTopAutoHideTab();
                     foreach (Tab sectItem in topHide)
                     {
-                        WriteSectItem(sectItem, writer);
+                        WriteTab(sectItem, writer);
                         _owner.TopAutoHide.Unpin(sectItem);
                     }
                     writer.WriteEndElement();
@@ -862,7 +875,7 @@ namespace Dt.Base.Docking
                         _owner.CreateBottomAutoHideTab();
                     foreach (Tab sectItem in bottomHide)
                     {
-                        WriteSectItem(sectItem, writer);
+                        WriteTab(sectItem, writer);
                         _owner.BottomAutoHide.Unpin(sectItem);
                     }
                     writer.WriteEndElement();
@@ -874,7 +887,7 @@ namespace Dt.Base.Docking
                     writer.WriteStartElement("Float");
                     foreach (WinItem dockItem in floats)
                     {
-                        WriteDockItem(dockItem, writer);
+                        WriteWinItem(dockItem, writer);
                         OpenInWindow(dockItem);
                     }
                     writer.WriteEndElement();
@@ -887,24 +900,22 @@ namespace Dt.Base.Docking
             _owner.IsReseting = false;
         }
 
-        void WriteCenter(XmlWriter p_writer, ItemCollection p_items)
+        void WriteCenter(XmlWriter p_writer, WinItemList p_items)
         {
-            foreach (object obj in p_items)
+            foreach (var obj in p_items)
             {
-                Tabs sect;
-                WinItem dockItem;
-                if ((sect = obj as Tabs) != null)
+                if (obj is Tabs tabs)
                 {
-                    WriteSect(sect, p_writer);
+                    WriteTabs(tabs, p_writer);
                 }
-                else if ((dockItem = obj as WinItem) != null)
+                else if (obj is WinItem wi)
                 {
-                    WriteDockItem(dockItem, p_writer);
+                    WriteWinItem(wi, p_writer);
                 }
             }
         }
 
-        void WriteDockItem(WinItem p_item, XmlWriter p_writer)
+        void WriteWinItem(WinItem p_item, XmlWriter p_writer)
         {
             p_writer.WriteStartElement("WinItem");
 
@@ -953,17 +964,17 @@ namespace Dt.Base.Docking
                 WinItem dockItem;
                 if ((sect = obj as Tabs) != null)
                 {
-                    WriteSect(sect, p_writer);
+                    WriteTabs(sect, p_writer);
                 }
                 else if ((dockItem = obj as WinItem) != null)
                 {
-                    WriteDockItem(dockItem, p_writer);
+                    WriteWinItem(dockItem, p_writer);
                 }
             }
             p_writer.WriteEndElement();
         }
 
-        void WriteSect(Tabs p_sect, XmlWriter p_writer)
+        void WriteTabs(Tabs p_sect, XmlWriter p_writer)
         {
             p_writer.WriteStartElement("Tabs");
             if (p_sect.ReadLocalValue(TabControl.SelectedIndexProperty) != DependencyProperty.UnsetValue)
@@ -986,12 +997,12 @@ namespace Dt.Base.Docking
             {
                 // 不输出自动隐藏的项
                 if (tab.IsPinned && !string.IsNullOrEmpty(tab.Title))
-                    WriteSectItem(tab, p_writer);
+                    WriteTab(tab, p_writer);
             }
             p_writer.WriteEndElement();
         }
 
-        void WriteSectItem(Tab p_item, XmlWriter p_writer)
+        void WriteTab(Tab p_item, XmlWriter p_writer)
         {
             p_writer.WriteStartElement("Tab");
             p_writer.WriteAttributeString("Title", p_item.Title);
@@ -1029,22 +1040,20 @@ namespace Dt.Base.Docking
         /// 深度查找所有Tab项，构造以Tab.Title为键以Tab为值的字典，Title不为空
         /// </summary>
         /// <param name="p_items"></param>
-        void ExtractItems(ItemsControl p_items)
+        void ExtractItems(IItemsControl p_items)
         {
-            foreach (object item in p_items.Items)
+            foreach (var item in p_items.Items)
             {
-                ItemsControl child;
-                Tabs sect = item as Tabs;
-                if (sect != null)
+                if (item is Tabs tabs)
                 {
-                    foreach (var obj in sect.Items)
+                    foreach (var obj in tabs.Items)
                     {
                         Tab si = obj as Tab;
                         if (si != null && !string.IsNullOrEmpty(si.Title))
                             _tabs[si.Title] = si;
                     }
                 }
-                else if ((child = item as ItemsControl) != null)
+                else if (item is IItemsControl child)
                 {
                     ExtractItems(child);
                 }
@@ -1071,21 +1080,19 @@ namespace Dt.Base.Docking
         /// </summary>
         /// <param name="p_items"></param>
         /// <returns></returns>
-        IEnumerable<Tab> GetHideItems(ItemsControl p_items)
+        IEnumerable<Tab> GetHideItems(IItemsControl p_items)
         {
-            foreach (object item in p_items.Items)
+            foreach (var item in p_items.Items)
             {
-                ItemsControl child;
-                Tabs sect = item as Tabs;
-                if (sect != null)
+                if (item is Tabs tabs)
                 {
                     int index = 0;
-                    while (index < sect.Items.Count)
+                    while (index < tabs.Items.Count)
                     {
-                        Tab si = sect.Items[index] as Tab;
+                        Tab si = tabs.Items[index] as Tab;
                         if (si != null && !si.IsPinned)
                         {
-                            sect.Items.RemoveAt(index);
+                            tabs.Items.RemoveAt(index);
                             yield return si;
                         }
                         else
@@ -1094,7 +1101,7 @@ namespace Dt.Base.Docking
                         }
                     }
                 }
-                else if ((child = item as ItemsControl) != null)
+                else if (item is IItemsControl child)
                 {
                     foreach (Tab si in GetHideItems(child))
                     {
@@ -1109,21 +1116,19 @@ namespace Dt.Base.Docking
         /// </summary>
         /// <param name="p_items"></param>
         /// <param name="p_state"></param>
-        void MoveToAutoHide(ItemsControl p_items, WinItemState p_state)
+        void MoveToAutoHide(IItemsControl p_items, WinItemState p_state)
         {
-            foreach (object item in p_items.Items)
+            foreach (var item in p_items.Items)
             {
-                ItemsControl child;
-                Tabs sect = item as Tabs;
-                if (sect != null)
+                if (item is Tabs tabs)
                 {
                     int index = 0;
-                    while (index < sect.Items.Count)
+                    while (index < tabs.Items.Count)
                     {
-                        Tab si = sect.Items[index] as Tab;
+                        Tab si = tabs.Items[index] as Tab;
                         if (si != null)
                         {
-                            sect.Items.RemoveAt(index);
+                            tabs.Items.RemoveAt(index);
                             if (p_state == WinItemState.DockedLeft)
                             {
                                 if (_owner.LeftAutoHide == null)
@@ -1143,7 +1148,7 @@ namespace Dt.Base.Docking
                         }
                     }
                 }
-                else if ((child = item as ItemsControl) != null)
+                else if (item is IItemsControl child)
                 {
                     MoveToAutoHide(child, p_state);
                 }
