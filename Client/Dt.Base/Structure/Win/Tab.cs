@@ -417,15 +417,27 @@ namespace Dt.Base
         }
         #endregion
 
-        #region 重写方法
+        #region 加载过程
+#if UWP
         protected override void OnApplyTemplate()
         {
-            if (!AtSys.IsPhoneUI)
-            {
+            if (AtSys.IsPhoneUI)
+                InitPhoneUITemplate();
+            else
                 base.OnApplyTemplate();
-                return;
-            }
+        }
+#else
+        protected override void OnUnoLoaded()
+        {
+            if (AtSys.IsPhoneUI)
+                InitPhoneUITemplate();
+            else
+                base.OnUnoLoaded();
+        }
+#endif
 
+        void InitPhoneUITemplate()
+        {
             if (PinButtonVisibility == Visibility.Visible)
             {
                 WinKit.OnPhoneTitleTapped((Grid)GetTemplateChild("HeaderGrid"), OwnerWin);
@@ -434,7 +446,9 @@ namespace Dt.Base
                     btn.Click += InputManager.OnBackClick;
             }
         }
+        #endregion
 
+        #region 重写方法
         /// <summary>
         /// 切换内容
         /// </summary>

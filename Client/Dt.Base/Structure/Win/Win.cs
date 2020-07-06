@@ -27,7 +27,7 @@ namespace Dt.Base
     /// 可停靠多区域窗口
     /// </summary>
     [ContentProperty(Name = nameof(Items))]
-    public partial class Win : Control, IItemsControl
+    public partial class Win : Control, IWinItemList
     {
         #region 静态内容
         public readonly static DependencyProperty TitleProperty = DependencyProperty.Register(
@@ -513,7 +513,7 @@ namespace Dt.Base
         /// 深度查找所有Tab项，构造以Tab.Title为键名以Tab为值的字典
         /// </summary>
         /// <param name="p_items"></param>
-        void ExtractItems(IItemsControl p_items)
+        void ExtractItems(IWinItemList p_items)
         {
             foreach (var obj in p_items.Items)
             {
@@ -533,7 +533,7 @@ namespace Dt.Base
                     }
                     tabs.Items.Clear();
                 }
-                else if (obj is IItemsControl ic)
+                else if (obj is IWinItemList ic)
                 {
                     ExtractItems(ic);
                 }

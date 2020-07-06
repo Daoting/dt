@@ -88,9 +88,13 @@ namespace Dt.Base
         #region 构造方法
         public Tabs()
         {
-            // 若用DefaultStyleKey，当前控件在xaml文件有子元素时，uno中不调用OnApplyTemplate！
-            // uno中设置Style时同步调用OnApplyTemplate，即构造方法直接调用了OnApplyTemplate！
-            Style = (Style)Application.Current.Resources["DefaultTabs"];
+            // PhoneUI模式时不在可视树
+            if (!AtSys.IsPhoneUI)
+            {
+                // 若用DefaultStyleKey，当前控件在xaml文件有子元素时，uno中不调用OnApplyTemplate！
+                // uno中设置Style时同步调用OnApplyTemplate，即构造方法直接调用了OnApplyTemplate！
+                Style = (Style)Application.Current.Resources["DefaultTabs"];
+            }
         }
         #endregion
 
@@ -234,15 +238,6 @@ namespace Dt.Base
         #endregion
 
         #region 重写方法
-        protected override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-            TabHeader header = GetTemplateChild("HeaderElement") as TabHeader;
-            if (header != null)
-                header.Owner = this;
-            UpdateTabStrip();
-        }
-
         /// <summary>
         /// 增删子项
         /// </summary>
@@ -418,6 +413,29 @@ namespace Dt.Base
             rs.WithChangeSet = 0.0;
             rs.WithoutChange = sum;
             return rs;
+        }
+        #endregion
+
+        #region 加载过程
+#if UWP
+        protected override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            InitTemplate();
+        }
+#else
+        protected override void OnUnoLoaded()
+        {
+            InitTemplate();
+        }
+#endif
+
+        void InitTemplate()
+        {
+            TabHeader header = GetTemplateChild("HeaderElement") as TabHeader;
+            if (header != null)
+                header.Owner = this;
+            UpdateTabStrip();
         }
         #endregion
 

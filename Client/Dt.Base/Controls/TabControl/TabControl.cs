@@ -136,14 +136,12 @@ namespace Dt.Base
         #endregion
 
         #region 成员变量
-        SelectionChanger _selector;
-
+        readonly SelectionChanger _selector;
         protected StackPanel _itemsPanel;
+        protected bool _isLoaded;
         Grid _mainGrid;
         SizedPresenter _contentPresenter;
         Dlg _dlg;
-
-        protected bool _isLoaded;
         bool _updatingSelection;
         #endregion
 
@@ -156,6 +154,9 @@ namespace Dt.Base
             DefaultStyleKey = typeof(TabControl);
             Items = new ItemList<TabItem>();
             _selector = new SelectionChanger(this);
+#if !UWP
+            Loaded += OnLoaded;
+#endif
         }
         #endregion
 
@@ -261,10 +262,29 @@ namespace Dt.Base
         }
         #endregion
 
-        #region 重写方法
+        #region 加载过程
+        /************************************************************************************************************************************/
+        // uno在构造方法中设置Style时直接调用了OnApplyTemplate，只能在Loaded事件中加载Items
+        // UWP仍在OnApplyTemplate中加载Items
+        /************************************************************************************************************************************/
+
+#if UWP
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
+            InitTemplate();
+        }
+#else
+        void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= OnLoaded;
+            InitTemplate();
+            OnUnoLoaded();
+        }
+#endif
+
+        void InitTemplate()
+        {
             _mainGrid = (Grid)GetTemplateChild("MainGrid");
             _itemsPanel = (StackPanel)GetTemplateChild("ItemsPanel");
             _contentPresenter = (SizedPresenter)GetTemplateChild("TabContent");
@@ -277,6 +297,10 @@ namespace Dt.Base
             InitSelection();
             Items.ItemsChanged += OnItemsChanged;
             SizeChanged += OnSizeChanged;
+        }
+
+        protected virtual void OnUnoLoaded()
+        {
         }
         #endregion
 

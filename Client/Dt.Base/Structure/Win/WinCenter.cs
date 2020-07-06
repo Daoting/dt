@@ -18,7 +18,7 @@ namespace Dt.Base
     /// 中部停靠项列表，在xaml中标志作用，不加载到可视树
     /// </summary>
     [ContentProperty(Name = nameof(Items))]
-    public partial class WinCenter : Control, IItemsControl
+    public partial class WinCenter : Control, IWinItemList
     {
         readonly WinItemList _items = new WinItemList();
 

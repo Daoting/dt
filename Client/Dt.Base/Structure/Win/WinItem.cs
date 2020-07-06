@@ -25,7 +25,7 @@ namespace Dt.Base
     /// 可停靠项，内部子项为 Tabs 或 WinItem
     /// </summary>
     [ContentProperty(Name = nameof(Items))]
-    public partial class WinItem : Control, IItemsControl
+    public partial class WinItem : Control, IWinItemList
     {
         #region 静态内容
         public static readonly DependencyProperty DockStateProperty = DependencyProperty.Register(
@@ -622,7 +622,7 @@ namespace Dt.Base
         void UpdateChildrenResizer()
         {
             bool isFirst = true;
-            foreach (var element in _itemsPanel.Children)
+            foreach (UIElement element in _itemsPanel.Children)
             {
                 if (element.Visibility == Visibility.Collapsed)
                     continue;

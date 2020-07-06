@@ -40,8 +40,7 @@ namespace Dt.Base.Docking
             get { return _list[p_index]; }
             set
             {
-                var originalValue = _list[p_index];
-                if (!ReferenceEquals(originalValue, value))
+                if (!ReferenceEquals(_list[p_index], value))
                 {
                     _list[p_index] = value;
                     RaiseVectorChanged(CollectionChange.ItemChanged, p_index);

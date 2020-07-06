@@ -174,7 +174,7 @@ namespace Dt.Base.Docking
         /// 深度清除所有子项
         /// </summary>
         /// <param name="p_items"></param>
-        public static void ClearItems(IItemsControl p_items)
+        public static void ClearItems(IWinItemList p_items)
         {
             // 不可使用Items.Clear
             while (p_items.Items.Count > 0)
@@ -182,7 +182,7 @@ namespace Dt.Base.Docking
                 // 先移除当前项，再清除子项，不可颠倒！
                 var item = p_items.Items[0];
                 p_items.Items.RemoveAt(0);
-                if (item is IItemsControl child)
+                if (item is IWinItemList child)
                     ClearItems(child);
                 else if (item is TabControl tabs)
                     tabs.Items.Clear();
@@ -718,16 +718,16 @@ namespace Dt.Base.Docking
                     else
                     {
                         // 在停靠中挑出自动隐藏项
-                        foreach (Tab sectItem in GetHideItems(di))
+                        foreach (Tab tab in GetHideItems(di))
                         {
                             if (di.DockState == WinItemState.DockedLeft)
-                                leftHide.Add(sectItem);
+                                leftHide.Add(tab);
                             else if (di.DockState == WinItemState.DockedRight)
-                                rightHide.Add(sectItem);
+                                rightHide.Add(tab);
                             else if (di.DockState == WinItemState.DockedTop)
-                                topHide.Add(sectItem);
+                                topHide.Add(tab);
                             else if (di.DockState == WinItemState.DockedBottom)
-                                bottomHide.Add(sectItem);
+                                bottomHide.Add(tab);
                         }
 
                         if (!IsRemoved(di))
@@ -1040,7 +1040,7 @@ namespace Dt.Base.Docking
         /// 深度查找所有Tab项，构造以Tab.Title为键以Tab为值的字典，Title不为空
         /// </summary>
         /// <param name="p_items"></param>
-        void ExtractItems(IItemsControl p_items)
+        void ExtractItems(IWinItemList p_items)
         {
             foreach (var item in p_items.Items)
             {
@@ -1053,7 +1053,7 @@ namespace Dt.Base.Docking
                             _tabs[si.Title] = si;
                     }
                 }
-                else if (item is IItemsControl child)
+                else if (item is IWinItemList child)
                 {
                     ExtractItems(child);
                 }
@@ -1080,7 +1080,7 @@ namespace Dt.Base.Docking
         /// </summary>
         /// <param name="p_items"></param>
         /// <returns></returns>
-        IEnumerable<Tab> GetHideItems(IItemsControl p_items)
+        IEnumerable<Tab> GetHideItems(IWinItemList p_items)
         {
             foreach (var item in p_items.Items)
             {
@@ -1101,7 +1101,7 @@ namespace Dt.Base.Docking
                         }
                     }
                 }
-                else if (item is IItemsControl child)
+                else if (item is IWinItemList child)
                 {
                     foreach (Tab si in GetHideItems(child))
                     {
@@ -1116,7 +1116,7 @@ namespace Dt.Base.Docking
         /// </summary>
         /// <param name="p_items"></param>
         /// <param name="p_state"></param>
-        void MoveToAutoHide(IItemsControl p_items, WinItemState p_state)
+        void MoveToAutoHide(IWinItemList p_items, WinItemState p_state)
         {
             foreach (var item in p_items.Items)
             {
@@ -1148,7 +1148,7 @@ namespace Dt.Base.Docking
                         }
                     }
                 }
-                else if (item is IItemsControl child)
+                else if (item is IWinItemList child)
                 {
                     MoveToAutoHide(child, p_state);
                 }
@@ -1226,10 +1226,10 @@ namespace Dt.Base.Docking
             foreach (object item in p_di.Items)
             {
                 WinItem di;
-                Tabs sect = item as Tabs;
+                Tabs tabs = item as Tabs;
 
                 // 因之前已将IsPinned = false的所有Tab移除
-                if (sect != null && sect.Items.Count > 0)
+                if (tabs != null && tabs.Items.Count > 0)
                     return false;
                 else if ((di = item as WinItem) != null)
                 {

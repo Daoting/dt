@@ -113,7 +113,11 @@ namespace Dt.Base
         #region 构造方法
         public TabItem()
         {
+            // 两种UI模式样式相同
             DefaultStyleKey = typeof(TabItem);
+#if !UWP
+            Loaded += OnLoaded;
+#endif
         }
         #endregion
 
@@ -179,13 +183,23 @@ namespace Dt.Base
         public TabControl Owner { get; internal set; }
         #endregion
 
-        #region 重写方法
-        /// <summary>
-        /// 应用模版
-        /// </summary>
+        #region 加载过程
+#if UWP
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
+            InitTemplate();
+        }
+#else
+        void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= OnLoaded;
+            OnUnoLoaded();
+        }
+#endif
+
+        void InitTemplate()
+        {
             _isLoaded = true;
             _header = (RotateContent)GetTemplateChild("ElementHeader");
             _rcOuter = (Rectangle)GetTemplateChild("NormalBorder");
@@ -195,6 +209,13 @@ namespace Dt.Base
             ChangeVisualState();
         }
 
+        protected virtual void OnUnoLoaded()
+        {
+            InitTemplate();
+        }
+        #endregion
+
+        #region 重写方法
         /// <summary>
         /// 鼠标进入状态
         /// </summary>
