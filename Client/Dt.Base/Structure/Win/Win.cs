@@ -78,7 +78,6 @@ namespace Dt.Base
             typeof(Win),
             new PropertyMetadata(null));
 
-#if UWP
         static Win()
         {
             EventManager.RegisterClassHandler(typeof(Win), Tab.DragStartedEvent, new DragInfoEventHandler(OnDragStarted));
@@ -90,7 +89,6 @@ namespace Dt.Base
 
             EventManager.RegisterClassHandler(typeof(Win), Tab.PinChangeEvent, new EventHandler<PinChangeEventArgs>(OnPinChange));
         }
-#endif
 
         static void OnDragStarted(object sender, DragInfoEventArgs e)
         {

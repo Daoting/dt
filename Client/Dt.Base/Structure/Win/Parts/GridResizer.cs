@@ -47,7 +47,6 @@ namespace Dt.Base.Docking
             ((GridResizer)d).ChangeVisualState();
         }
 
-#if UWP
         static GridResizer()
         {
             PreviewResizeStartEvent = EventManager.RegisterRoutedEvent(
@@ -62,7 +61,6 @@ namespace Dt.Base.Docking
                 typeof(EventHandler<BaseRoutedEventArgs>),
                 typeof(GridResizer));
         }
-#endif
         #endregion
 
         #region 成员变量

@@ -26,7 +26,7 @@ namespace Dt.Base
     /// 菜单项
     /// </summary>
     [ContentProperty(Name = nameof(Items))]
-    public partial class Mi : Control, IBubbleItem
+    public partial class Mi : Control
     {
         #region 静态内容
         public static readonly DependencyProperty IDProperty = DependencyProperty.Register(
@@ -170,61 +170,10 @@ namespace Dt.Base
                 if (item.IsSubmenuOpen)
                     item.CloseSubMenu();
             }
-#if UWP
-            item.RaiseEvent(new PhiRoutedPropertyChangedEventArgs<Boolean>((bool)e.OldValue, (bool)e.NewValue, Menu.IsSelectedChangedEvent));
-#endif
-        }
-        #endregion
 
-        #region IsSelected冒泡事件
-#if UWP
-        static Mi()
-        {
-            EventManager.RegisterClassHandler(typeof(Mi), Menu.IsSelectedChangedEvent, new PhiRoutedPropertyChangedEventHandler<bool>(OnIsSelectedChanged));
-        }
-
-        static void OnIsSelectedChanged(object sender, PhiRoutedPropertyChangedEventArgs<Boolean> e)
-        {
-            Mi curMi = (Mi)sender;
-            Mi originalMi = e.OriginalSource as Mi;
-            if (originalMi == null || curMi == originalMi)
-                return;
-
-            if (e.NewValue)
-            {
-                if (curMi.SelectedMi != originalMi && originalMi.ParentMi == curMi)
-                {
-                    if (curMi.SelectedMi != null)
-                    {
-                        curMi.SelectedMi.CloseSubMenu();
-                        curMi.SelectedMi.IsSelected = false;
-                    }
-
-                    curMi.SelectedMi = originalMi;
-                    if (!curMi.IsSelected)
-                        curMi.IsSelected = true;
-                }
-            }
-            else if (curMi.SelectedMi == originalMi)
-            {
-                curMi.SelectedMi = null;
-                Mi parentMi = curMi.ParentMi;
-                if (parentMi != null && !parentMi.IsSelected)
-                    curMi.CloseSubMenu();
-            }
-            e.Handled = true;
-        }
-#endif
-
-        /// <summary>
-        /// 冒泡事件时获取父元素
-        /// </summary>
-        /// <returns></returns>
-        FrameworkElement IBubbleItem.GetBubbleParent()
-        {
-            if (ParentMi != null)
-                return ParentMi;
-            return Owner;
+            // 冒泡处理，只处理转为选择状态的
+            if (newValue)
+                item.Owner?.OnItemIsSelected(item);
         }
         #endregion
 
@@ -712,6 +661,25 @@ namespace Dt.Base
             }
             if (IsSubmenuOpen)
                 IsSubmenuOpen = false;
+        }
+        #endregion
+
+        #region IsSelected冒泡事件
+        internal void OnChildIsSelected(Mi p_mi)
+        {
+            // 子菜单项为选择状态
+            if (SelectedMi != p_mi)
+            {
+                if (SelectedMi != null)
+                {
+                    SelectedMi.CloseSubMenu();
+                    SelectedMi.IsSelected = false;
+                }
+
+                SelectedMi = p_mi;
+                if (!IsSelected)
+                    IsSelected = true;
+            }
         }
         #endregion
 

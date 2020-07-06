@@ -46,7 +46,6 @@ namespace Dt.Base
         /// </summary>
         internal static BaseRoutedEvent PinChangeEvent;
 
-#if UWP
         static Tab()
         {
             DragStartedEvent = EventManager.RegisterRoutedEvent(
@@ -73,7 +72,6 @@ namespace Dt.Base
                 typeof(EventHandler<PinChangeEventArgs>),
                 typeof(Tab));
         }
-#endif
         #endregion
 
         #region 静态内容

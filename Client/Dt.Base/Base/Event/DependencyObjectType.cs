@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 #endregion
 
 namespace Dt.Base
@@ -150,7 +151,7 @@ namespace Dt.Base
                 type = new DependencyObjectType();
                 type.SystemType = systemType;
                 _dependencyTypeFromCLRType[systemType] = type;
-                if (systemType != typeof(DependencyObject))
+                if (systemType != typeof(Control))
                 {
                     // 将递归注册父类型
                     type._baseDType = FromSystemTypeRecursive(systemType.GetTypeInfo().BaseType);

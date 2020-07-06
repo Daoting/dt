@@ -122,25 +122,6 @@ namespace Dt.Base
         }
 
         #endregion
-
-        #region EventHandlersStore
-        /// <summary>
-        /// 存储某依赖对象的事件回调列表
-        /// </summary>
-        internal static readonly DependencyProperty EventHandlersStoreProperty = DependencyProperty.RegisterAttached("EventHandlersStore", typeof(ObjectHandlersStore), typeof(Attached), null);
-
-        internal static ObjectHandlersStore GetEventHandlersStore(DependencyObject element)
-        {
-            return (element.GetValue(EventHandlersStoreProperty) as ObjectHandlersStore);
-        }
-
-        internal static void SetEventHandlersStore(DependencyObject element, ObjectHandlersStore store)
-        {
-            element.SetValue(EventHandlersStoreProperty, store);
-        }
-
-        #endregion
-
         #endregion
     }
 

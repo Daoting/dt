@@ -164,20 +164,6 @@ namespace Dt.Base
                     _routeItemList.Add(item);
                 }
             }
-
-            ObjectHandlersStore eventHandlersStore = Attached.GetEventHandlersStore(element);
-            if (eventHandlersStore != null)
-            {
-                List<RoutedEventHandlerInfo> list2 = eventHandlersStore[_eventArgs.RoutedEvent];
-                if (list2 != null)
-                {
-                    for (int j = 0; j < list2.Count; j++)
-                    {
-                        RouteItem item = new RouteItem(element, new RoutedEventHandlerInfo(list2[j].Handler, list2[j].InvokeHandledEventsToo));
-                        _routeItemList.Add(item);
-                    }
-                }
-            }
         }
 
         /// <summary>

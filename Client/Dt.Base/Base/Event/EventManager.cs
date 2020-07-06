@@ -15,6 +15,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 using System.Runtime.InteropServices;
 using System.Reflection;
+using Windows.UI.Xaml.Controls;
 #endregion
 
 namespace Dt.Base
@@ -32,29 +33,20 @@ namespace Dt.Base
         static Dictionary<DependencyObjectType, List<BaseRoutedEvent>> _dependencyEvents = new Dictionary<DependencyObjectType, List<BaseRoutedEvent>>();
 
         /// <summary>
-        /// 非DependencyObject子类型的事件列表
-        /// 类型声明为键，值为该类型的所有事件列表
-        /// </summary>
-        static Dictionary<Type, List<BaseRoutedEvent>> _classEvents = new Dictionary<Type, List<BaseRoutedEvent>>();
-
-        /// <summary>
         /// 类型对事件的回调字典
         /// </summary>
         static Dictionary<DependencyObjectType, ClassHandlersStore> _classHandlers = new Dictionary<DependencyObjectType, ClassHandlersStore>();
 
-        static DependencyObjectType _dependencyObjectType = DependencyObjectType.FromSystemType(typeof(DependencyObject));
-
         /// <summary>
-        /// 路由事件索引记数器
+        /// 原为DependencyObject，修改为Control
         /// </summary>
-        static int _routedEventsCount;
-        static object _synchronized = new object();
+        static DependencyObjectType _dependencyObjectType = DependencyObjectType.FromSystemType(typeof(Control));
 
+        static object _synchronized = new object();
         #endregion
 
         /// <summary>
-        /// 在uno中异常！！！
-        /// 在内部事件系统中注册新路由事件，必须在静态构造方法中调用
+        /// 在内部事件系统中注册新路由事件，必须在静态构造方法中调用，已支持uno
         /// </summary>
         /// <param name="name">
         /// 路由事件名称，必须保证在同一类型内唯一，不可为null或空
@@ -78,7 +70,6 @@ namespace Dt.Base
             lock (_synchronized)
             {
                 BaseRoutedEvent routedEvent = new BaseRoutedEvent(name, routingStrategy, handlerType, ownerType);
-                _routedEventsCount++;
                 AddOwner(routedEvent, ownerType);
                 return routedEvent;
             }
@@ -114,30 +105,11 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 注册依赖对象的事件回调，该回调为对象实例所有
-        /// </summary>
-        /// <param name="element">要注册的依赖对象</param>
-        /// <param name="routedEvent">路由事件</param>
-        /// <param name="handler">回调方法</param>
-        /// <param name="handledEventsToo">是否始终回调</param>
-        internal static void RegisterObjectHandler(DependencyObject element, BaseRoutedEvent routedEvent, Delegate handler, bool handledEventsToo)
-        {
-            CheckParameters(routedEvent, handler);
-            ObjectHandlersStore store = Attached.GetEventHandlersStore(element);
-            if (store == null)
-            {
-                store = new ObjectHandlersStore();
-                Attached.SetEventHandlersStore(element, store);
-            }
-            store.AddRoutedEventHandler(routedEvent, handler, handledEventsToo);
-        }
-
-        /// <summary>
         /// 触发路由事件
         /// </summary>
         /// <param name="element">事件源对象</param>
         /// <param name="args">事件参数</param>
-        internal static void RaiseEvent(DependencyObject element, BaseRoutedEventArgs args)
+        internal static void RaiseEvent(this Control element, BaseRoutedEventArgs args)
         {
             if (args == null || element == null)
             {
@@ -148,61 +120,28 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 为指定的依赖对象移除事件回调方法
-        /// </summary>
-        /// <param name="element">要移除回调方法的对象</param>
-        /// <param name="routedEvent">路由事件</param>
-        /// <param name="handler">回调方法</param>
-        internal static void RemoveEventHandler(DependencyObject element, BaseRoutedEvent routedEvent, Delegate handler)
-        {
-            CheckParameters(routedEvent, handler);
-            ObjectHandlersStore eventHandlersStore = Attached.GetEventHandlersStore(element);
-            if (eventHandlersStore != null)
-            {
-                eventHandlersStore.RemoveRoutedEventHandler(routedEvent, handler);
-                if (eventHandlersStore.Count == 0)
-                {
-                    Attached.SetEventHandlersStore(element, null);
-                }
-            }
-        }
-
-        /// <summary>
         /// 将指定的路由事件添加到对应的字典列表中
         /// </summary>
         /// <param name="routedEvent">路由事件</param>
         /// <param name="ownerType">路由事件的所有者</param>
         internal static void AddOwner(BaseRoutedEvent routedEvent, Type ownerType)
         {
-            // 该类型的事件种类列表
-            List<BaseRoutedEvent> list;
-
-            // 若为依赖项类型
-            if (ownerType == typeof(DependencyObject) || ownerType.GetTypeInfo().IsSubclassOf(typeof(DependencyObject)))
+            // 类型需继承自Control
+            if (!ownerType.IsSubclassOf(typeof(Control)))
             {
-                DependencyObjectType type = DependencyObjectType.FromSystemType(ownerType);
-                if (_dependencyEvents.ContainsKey(type))
-                {
-                    list = _dependencyEvents[type]; ;
-                }
-                else
-                {
-                    list = new List<BaseRoutedEvent>();
-                    _dependencyEvents[type] = list;
-                }
+                throw new Exception("因支持uno，路由事件所有者需继承自Control");
+            }
+
+            List<BaseRoutedEvent> list;
+            DependencyObjectType type = DependencyObjectType.FromSystemType(ownerType);
+            if (_dependencyEvents.ContainsKey(type))
+            {
+                list = _dependencyEvents[type]; ;
             }
             else
             {
-                // 非DependencyObject子类型的事件列表
-                if (_classEvents.ContainsKey(ownerType))
-                {
-                    list = _classEvents[ownerType];
-                }
-                else
-                {
-                    list = new List<BaseRoutedEvent>();
-                    _classEvents[ownerType] = list;
-                }
+                list = new List<BaseRoutedEvent>();
+                _dependencyEvents[type] = list;
             }
 
             if (!list.Contains(routedEvent))
@@ -297,113 +236,22 @@ namespace Dt.Base
         /// <returns></returns>
         internal static BaseRoutedEvent GetRoutedEventFromName(string name, Type ownerType, bool includeSupers)
         {
-            if ((ownerType != typeof(DependencyObject)) && !ownerType.GetTypeInfo().IsSubclassOf(typeof(DependencyObject)))
+            for (var type = DependencyObjectType.FromSystemType(ownerType); type != null; type = includeSupers ? type.BaseType : null)
             {
-                while (ownerType != null)
-                {
-                    if (_classEvents.ContainsKey(ownerType))
-                    {
-                        List<BaseRoutedEvent> list = _classEvents[ownerType];
-                        if (list != null)
-                        {
-                            for (int i = 0; i < list.Count; i++)
-                            {
-                                BaseRoutedEvent event2 = list[i];
-                                if (event2.Name.Equals(name))
-                                {
-                                    return event2;
-                                }
-                            }
-                        }
-                    }
-                    ownerType = includeSupers ? ownerType.GetTypeInfo().BaseType : null;
-                }
-            }
-            else
-            {
-                for (DependencyObjectType type = DependencyObjectType.FromSystemType(ownerType); type != null; type = includeSupers ? type.BaseType : null)
-                {
-                    if (_dependencyEvents.ContainsKey(type))
-                    {
-                        List<BaseRoutedEvent> list = _dependencyEvents[type];
-                        if (list != null)
-                        {
-                            for (int j = 0; j < list.Count; j++)
-                            {
-                                BaseRoutedEvent re = list[j];
-                                if (re.Name.Equals(name))
-                                {
-                                    return re;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// 获取所有的路由事件列表
-        /// </summary>
-        /// <returns></returns>
-        internal static BaseRoutedEvent[] GetRoutedEvents()
-        {
-            BaseRoutedEvent[] eventArray;
-            lock (_synchronized)
-            {
-                eventArray = new BaseRoutedEvent[_routedEventsCount];
-                int index = 0;
-                foreach (KeyValuePair<DependencyObjectType, List<BaseRoutedEvent>> item in _dependencyEvents)
-                {
-                    foreach (BaseRoutedEvent re in item.Value)
-                    {
-                        if (Array.IndexOf<BaseRoutedEvent>(eventArray, re) < 0)
-                        {
-                            eventArray[index++] = re;
-                        }
-                    }
-                }
-
-                foreach (KeyValuePair<Type, List<BaseRoutedEvent>> item in _classEvents)
-                {
-                    foreach (BaseRoutedEvent re in item.Value)
-                    {
-                        if (Array.IndexOf<BaseRoutedEvent>(eventArray, re) < 0)
-                        {
-                            eventArray[index++] = re;
-                        }
-                    }
-                }
-            }
-            return eventArray;
-        }
-
-        /// <summary>
-        /// 获取给定类型的所有路由事件
-        /// </summary>
-        /// <param name="ownerType">路由事件的所有者</param>
-        /// <returns></returns>
-        internal static BaseRoutedEvent[] GetRoutedEventsForOwner(Type ownerType)
-        {
-            if (ownerType == typeof(DependencyObject) || ownerType.GetTypeInfo().IsSubclassOf(typeof(DependencyObject)))
-            {
-                DependencyObjectType type = DependencyObjectType.FromSystemType(ownerType);
                 if (_dependencyEvents.ContainsKey(type))
                 {
                     List<BaseRoutedEvent> list = _dependencyEvents[type];
                     if (list != null)
                     {
-                        return list.ToArray();
+                        for (int j = 0; j < list.Count; j++)
+                        {
+                            BaseRoutedEvent re = list[j];
+                            if (re.Name.Equals(name))
+                            {
+                                return re;
+                            }
+                        }
                     }
-                }
-            }
-            else if (_classEvents.ContainsKey(ownerType))
-            {
-                List<BaseRoutedEvent> list = _classEvents[ownerType];
-                if (list != null)
-                {
-                    return list.ToArray();
                 }
             }
             return null;

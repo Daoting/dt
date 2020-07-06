@@ -36,19 +36,6 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 关联另外的事件所有者，并且所有者可以路由事件和处理事件
-        /// </summary>
-        /// <param name="ownerType">待添加事件所有者的类型.</param>
-        /// <returns>
-        /// 返回的路由事件应该是静态只读变量，为public类型以便实例对象通过AddHandler方法附加事件
-        /// </returns>
-        public BaseRoutedEvent AddOwner(Type ownerType)
-        {
-            EventManager.AddOwner(this, ownerType);
-            return this;
-        }
-
-        /// <summary>
         /// 返回表明当前事件的完整名称
         /// </summary>
         /// <returns>限定事件名称</returns>

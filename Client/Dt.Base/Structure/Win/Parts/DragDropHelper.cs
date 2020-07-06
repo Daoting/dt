@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 #endregion
@@ -24,17 +25,17 @@ namespace Dt.Base.Docking
         /// </summary>
         /// <param name="target"></param>
         /// <param name="e"></param>
-        public static void StartDrag(this UIElement target, PointerRoutedEventArgs e)
+        public static void StartDrag(this Control target, PointerRoutedEventArgs e)
         {
             target.RaiseEvent(new DragInfoEventArgs(Tab.DragStartedEvent, e));
         }
 
-        public static void DragDelta(this UIElement target, PointerRoutedEventArgs e)
+        public static void DragDelta(this Control target, PointerRoutedEventArgs e)
         {
             target.RaiseEvent(new DragInfoEventArgs(Tab.DragDeltaEvent, e));
         }
 
-        public static void EndDrag(this UIElement target, PointerRoutedEventArgs e)
+        public static void EndDrag(this Control target, PointerRoutedEventArgs e)
         {
             target.RaiseEvent(new DragInfoEventArgs(Tab.DragCompletedEvent, e));
         }

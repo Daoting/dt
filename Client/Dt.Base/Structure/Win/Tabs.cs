@@ -62,12 +62,11 @@ namespace Dt.Base
             typeof(Tabs),
             new PropertyMetadata(200.0));
 
-#if UWP
         static Tabs()
         {
             EventManager.RegisterClassHandler(typeof(Tabs), GridResizer.PreviewResizeStartEvent, new EventHandler<ResizeEventArgs>(OnPreviewResize));
         }
-#endif
+
         static void OnPreviewResize(object sender, ResizeEventArgs e)
         {
             Tabs tabs = sender as Tabs;

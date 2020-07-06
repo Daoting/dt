@@ -12,12 +12,8 @@ using Dt.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Windows.Devices.Input;
-using Windows.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Markup;
 #endregion
 
@@ -29,46 +25,6 @@ namespace Dt.Base
     [ContentProperty(Name = nameof(Items))]
     public partial class Menu : Control
     {
-        #region IsSelected冒泡事件
-#if UWP
-        internal static readonly BaseRoutedEvent IsSelectedChangedEvent = EventManager.RegisterRoutedEvent(
-                "IsSelectedChanged",
-                RoutingStrategy.Bubble,
-                typeof(PhiRoutedPropertyChangedEventHandler<bool>),
-                typeof(Menu));
-
-        static Menu()
-        {
-            EventManager.RegisterClassHandler(typeof(Menu), IsSelectedChangedEvent, new PhiRoutedPropertyChangedEventHandler<bool>(OnIsSelectedChanged));
-        }
-
-        static void OnIsSelectedChanged(object sender, PhiRoutedPropertyChangedEventArgs<bool> e)
-        {
-            e.Handled = true;
-            Mi originalMi = e.OriginalSource as Mi;
-            if (originalMi == null)
-                return;
-
-            Menu menu = (Menu)sender;
-            if (e.NewValue)
-            {
-                // 新选择的为一级菜单项
-                if (menu.SelectedMi != originalMi && originalMi.ParentMi == null)
-                {
-                    // 关闭上一菜单项的子项窗口
-                    if (menu.SelectedMi != null)
-                        menu.SelectedMi.CloseSubMenu();
-                    menu.SelectedMi = originalMi;
-                }
-            }
-            else if (menu.SelectedMi == originalMi)
-            {
-                menu.SelectedMi = null;
-            }
-        }
-#endif
-        #endregion
-
         #region 成员变量
         MenuPanel _panel;
         Mi _selectedMi;
@@ -337,6 +293,37 @@ namespace Dt.Base
             // 上下文菜单
             if (_dlg != null && _dlg.IsOpened)
                 _dlg.Close();
+        }
+        #endregion
+
+        #region Mi.IsSelected变化
+        bool _isBubbling;
+
+        internal void OnItemIsSelected(Mi p_mi)
+        {
+            if (_isBubbling)
+                return;
+
+            // 冒泡处理
+            _isBubbling = true;
+            Mi child = p_mi;
+            Mi par = p_mi.ParentMi;
+            while (par != null)
+            {
+                par.OnChildIsSelected(child);
+                child = par;
+                par = par.ParentMi;
+            }
+
+            // 新选择的为一级菜单项
+            if (SelectedMi != p_mi && p_mi.ParentMi == null)
+            {
+                // 关闭上一菜单项的子项窗口
+                if (SelectedMi != null)
+                    SelectedMi.CloseSubMenu();
+                SelectedMi = p_mi;
+            }
+            _isBubbling = false;
         }
         #endregion
 

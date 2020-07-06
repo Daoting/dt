@@ -120,12 +120,10 @@ namespace Dt.Base
             }
         }
 
-#if UWP
         static WinItem()
         {
             EventManager.RegisterClassHandler(typeof(WinItem), GridResizer.PreviewResizeStartEvent, new EventHandler<ResizeEventArgs>(OnPreviewResize));
         }
-#endif
 
         static void OnPreviewResize(object sender, ResizeEventArgs e)
         {
@@ -136,7 +134,6 @@ namespace Dt.Base
                 e.AffectedTgt = pnl.Owner.GetNextVisibleElement(winItem);
             }
         }
-
         #endregion
 
         #region 成员变量
