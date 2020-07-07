@@ -132,11 +132,14 @@ namespace Dt.Base
             get { return _selectedMi; }
             set
             {
-                if (_selectedMi != null)
-                    _selectedMi.IsSelected = false;
-                _selectedMi = value;
-                if (_selectedMi != null)
-                    _selectedMi.IsSelected = true;
+                if (_selectedMi != value)
+                {
+                    if (_selectedMi != null)
+                        _selectedMi.IsSelected = false;
+                    _selectedMi = value;
+                    if (_selectedMi != null)
+                        _selectedMi.IsSelected = true;
+                }
             }
         }
         #endregion
@@ -299,6 +302,10 @@ namespace Dt.Base
         #region Mi.IsSelected变化
         bool _isBubbling;
 
+        /// <summary>
+        /// 选择某个菜单项时的处理
+        /// </summary>
+        /// <param name="p_mi"></param>
         internal void OnItemIsSelected(Mi p_mi)
         {
             if (_isBubbling)

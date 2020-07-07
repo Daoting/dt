@@ -196,7 +196,7 @@ namespace Dt.Base
             _rootGrid.MaxWidth = SysVisual.ViewWidth;
             _rootGrid.MaxHeight = SysVisual.ViewHeight;
 
-            Rect rect = Target.GetBounds(null);
+            Rect rect = Target.GetBounds();
             switch (Placement)
             {
                 case FlyoutPlacementMode.Left:

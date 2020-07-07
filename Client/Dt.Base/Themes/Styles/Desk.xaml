@@ -91,7 +91,6 @@
 
     <!--任务栏关闭按钮-->
     <Style x:Key="TaskbarCloseButton" TargetType="Button">
-        <Setter Property="FontSize" Value="16" />
         <Setter Property="Width" Value="16" />
         <Setter Property="Height" Value="16" />
         <Setter Property="VerticalAlignment" Value="Center" />
@@ -100,10 +99,9 @@
                 <ControlTemplate TargetType="ButtonBase">
                     <Grid x:Name="RootGrid" Background="Transparent">
                         <TextBlock x:Name="ElementTitle"
-                                   Text="{TemplateBinding Content}"
-                                   TextAlignment="Center"
-                                   FontFamily="{StaticResource SymbolThemeFontFamily}"
-                                   FontSize="{TemplateBinding FontSize}"
+                                   Text="&#xE018;"
+                                   FontFamily="{StaticResource IconFont}"
+                                   FontSize="16"
                                    Foreground="{StaticResource 深灰背景}" />
 
                         <VisualStateManager.VisualStateGroups>
@@ -158,7 +156,7 @@
                                        Foreground="{StaticResource 深灰背景}"
                                        Margin="5,0,5,0"
                                        Grid.Column="1" />
-                            <Button x:Name="CloseButton" Content="&#xE711;" Style="{StaticResource TaskbarCloseButton}" Opacity="0" Grid.Column="2" />
+                            <Button x:Name="CloseButton" Style="{StaticResource TaskbarCloseButton}" Opacity="0" Grid.Column="2" />
                         </Grid>
 
                         <VisualStateManager.VisualStateGroups>

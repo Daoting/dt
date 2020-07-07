@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Base.MenuView;
 using Dt.Core;
 using System;
 using Windows.Foundation;
@@ -74,7 +75,7 @@ namespace Dt.Base
         #endregion
 
         #region 成员变量
-        Dlg _dlg;
+        ContextMenuDlg _dlg;
         #endregion
 
         #region 属性
@@ -164,16 +165,7 @@ namespace Dt.Base
 
             if (_dlg == null)
             {
-                _dlg = new Dlg
-                {
-                    HideTitleBar = true,
-                    Resizeable = false,
-                    Content = this,
-                    Background = AtRes.浅灰背景,
-                    MinWidth = 160,
-                };
-                if (AtSys.IsPhoneUI)
-                    _dlg.PhonePlacement = DlgPlacement.FromBottom;
+                _dlg = new ContextMenuDlg(this);
                 _dlg.Closed += (s, e) => Closed?.Invoke(this, EventArgs.Empty);
             }
 

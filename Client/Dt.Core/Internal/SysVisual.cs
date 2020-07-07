@@ -49,9 +49,14 @@ namespace Dt.Core
         static readonly SolidColorBrush _veilBrush = new SolidColorBrush(Color.FromArgb(0x66, 0, 0, 0));
 
         /// <summary>
+        /// 内容元素，桌面、Frame、登录页面等，在最底层
+        /// </summary>
+        static UIElement _rootContent;
+
+        /// <summary>
         /// phone状态栏高度
         /// </summary>
-        public static readonly int StatusBarHeight;
+        public static int StatusBarHeight;
         #endregion
 
         static SysVisual()
@@ -72,6 +77,7 @@ namespace Dt.Core
                 HorizontalAlignment = HorizontalAlignment.Center,
                 VerticalAlignment = VerticalAlignment.Center
             };
+            _rootContent = tb;
             _rootGrid.Children.Add(tb);
 
             // 对话框层
@@ -83,19 +89,8 @@ namespace Dt.Core
             NotifyList = new ItemList<NotifyInfo>();
             _notifyPanel = new StackPanel();
             _notifyPanel.Spacing = 10;
-            if (AtSys.IsPhoneUI)
-            {
-                _notifyPanel.HorizontalAlignment = HorizontalAlignment.Stretch;
-                _notifyPanel.VerticalAlignment = VerticalAlignment.Top;
-                _rootGrid.Children.Add(_notifyPanel);
-            }
-            else
-            {
-                _notifyPanel.Width = 240;
-                _notifyPanel.HorizontalAlignment = HorizontalAlignment.Right;
-                _notifyPanel.VerticalAlignment = VerticalAlignment.Bottom;
-                _rootGrid.Children.Add(_notifyPanel);
-            }
+            ApplyNotifyStyle();
+            _rootGrid.Children.Add(_notifyPanel);
 
 #if IOS
             // 状态栏边距
@@ -112,18 +107,16 @@ namespace Dt.Core
         /// </summary>
         public static UIElement RootContent
         {
-            get
-            {
-                if (_rootGrid.Children.Count > 2)
-                    return (UIElement)_rootGrid.Children[0];
-                return null;
-            }
+            get { return _rootContent; }
             set
             {
                 if (_rootGrid.Children.Count > 2)
                     _rootGrid.Children.RemoveAt(0);
                 if (value != null)
+                {
+                    _rootContent = value;
                     _rootGrid.Children.Insert(0, value);
+                }
             }
         }
 
@@ -132,12 +125,7 @@ namespace Dt.Core
         /// </summary>
         public static Frame RootFrame
         {
-            get
-            {
-                if (_rootGrid.Children.Count > 2)
-                    return (Frame)_rootGrid.Children[0];
-                return null;
-            }
+            get { return (Frame)_rootContent; }
         }
 
         /// <summary>
@@ -305,6 +293,19 @@ namespace Dt.Core
         }
 
         /// <summary>
+        /// 在空白处点击(所有对话框外部)，如打开多个菜单项对话框，点击空白处关闭所有
+        /// </summary>
+        public static Action BlankPressed { get; set; }
+
+        /// <summary>
+        /// 对话框个数
+        /// </summary>
+        public static int DlgCount
+        {
+            get { return _dlgCanvas.Children.Count; }
+        }
+
+        /// <summary>
         /// 始终处理所有点击事件，以便处理点击对话框外部
         /// </summary>
         /// <param name="sender"></param>
@@ -314,6 +315,7 @@ namespace Dt.Core
             if (_dlgCanvas.Children.Count == 0)
                 return;
 
+            int cntOuter = 0;
             var pt = e.GetCurrentPoint(null).Position;
             // 临时列表，循环内部会删除_dlgCanvas的元素！
             var ls = _dlgCanvas.Children.OfType<IDlgOuterPressed>().ToList();
@@ -326,15 +328,23 @@ namespace Dt.Core
 
                 double offsetX = trans.Matrix.OffsetX;
                 double offsetY = trans.Matrix.OffsetY;
-                // 对话框内部不处理
                 if (pt.X > offsetX
                     && pt.X < offsetX + elem.ActualWidth
                     && pt.Y > offsetY
                     && pt.Y < offsetY + elem.ActualHeight)
-                    continue;
-
-                dlg.OnOuterPressed(pt);
+                {
+                    // 对话框内部不处理
+                }
+                else
+                {
+                    cntOuter++;
+                    dlg.OnOuterPressed(pt);
+                }
             }
+
+            // 在所有对话框外部，即空白处
+            if (BlankPressed != null && cntOuter == ls.Count)
+                BlankPressed();
         }
         #endregion
 
@@ -388,12 +398,13 @@ namespace Dt.Core
             get
             {
                 // ApplicationView.GetForCurrentView().VisibleBounds在uno中大小不正确！！！
-                // Android上高度多50
+                // Android上已设置不占用顶部状态栏和底部导航栏，StatusBarHeight为0
                 return _rootGrid.ActualHeight - StatusBarHeight;
             }
         }
         #endregion
 
+        #region UI自适应
         /// <summary>
         /// 系统区域大小变化时UI自适应
         /// </summary>
@@ -410,14 +421,16 @@ namespace Dt.Core
             // 调整对话框层
             _dlgCanvas.Children.Clear();
             _dlgCanvas.ClearValue(Panel.BackgroundProperty);
-            _dlgCanvas.PointerPressed -= _pressedHandler;
-            _rootGrid.RemoveHandler(UIElement.PointerPressedEvent, _pressedHandler);
-            if (AtSys.IsPhoneUI)
-                _dlgCanvas.PointerPressed += _pressedHandler;
-            else
-                _rootGrid.AddHandler(UIElement.PointerPressedEvent, _pressedHandler, true);
 
-            // 调整提示信息层
+            ApplyNotifyStyle();
+            UIModeChanged?.Invoke();
+        }
+
+        /// <summary>
+        /// 调整提示信息层样式
+        /// </summary>
+        static void ApplyNotifyStyle()
+        {
             if (AtSys.IsPhoneUI)
             {
                 _notifyPanel.Width = double.NaN;
@@ -430,9 +443,30 @@ namespace Dt.Core
                 _notifyPanel.HorizontalAlignment = HorizontalAlignment.Right;
                 _notifyPanel.VerticalAlignment = VerticalAlignment.Bottom;
             }
-
-            UIModeChanged?.Invoke();
         }
+
+        //#if ANDROID
+        //static void RefreshStatusBarHeight()
+        //{
+        //    // android项目的styles.xml 中已设置不占用顶部状态栏和底部导航栏，windowTranslucentStatus windowTranslucentNavigation
+        //    // 竖屏StatusBarHeight为0，但横屏为实际高度
+        //    // 但横屏时ViewHeight需要去掉状态栏高度，诡异
+        //    if (AtSys.IsPhoneUI)
+        //    {
+        //        // 竖屏为0
+        //        StatusBarHeight = 0;
+        //    }
+        //    else
+        //    {
+        //        // 横屏为实际高度
+        //        var res = Android.App.Application.Context.Resources;
+        //        int resourceId = res.GetIdentifier("status_bar_height", "dimen", "android");
+        //        if (resourceId > 0)
+        //            StatusBarHeight = (int)(res.GetDimensionPixelSize(resourceId) / res.DisplayMetrics.Density);
+        //    }
+        //}
+        //#endif
+        #endregion
     }
 
     /// <summary>

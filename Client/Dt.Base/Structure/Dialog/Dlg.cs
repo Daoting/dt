@@ -515,7 +515,7 @@ namespace Dt.Base
 
                 // 相对目标元素
                 case DlgPlacement.TargetTopLeft:
-                    rcTarget = PlacementTarget.GetBounds(null);
+                    rcTarget = PlacementTarget.GetBounds();
                     if (AutoAdjustPosition)
                     {
                         Left = rcTarget.Left < 0 ? 0 : (rcTarget.Left + actWidth > maxWidth ? maxWidth - actWidth : rcTarget.Left);
@@ -529,7 +529,7 @@ namespace Dt.Base
                     break;
 
                 case DlgPlacement.TargetTopRight:
-                    rcTarget = PlacementTarget.GetBounds(null);
+                    rcTarget = PlacementTarget.GetBounds();
                     if (AutoAdjustPosition)
                     {
                         Left = rcTarget.Right < 0 ? 0 : (rcTarget.Right + actWidth > maxWidth ? maxWidth - actWidth : rcTarget.Right);
@@ -543,13 +543,13 @@ namespace Dt.Base
                     break;
 
                 case DlgPlacement.TargetCenter:
-                    rcTarget = PlacementTarget.GetBounds(null);
+                    rcTarget = PlacementTarget.GetBounds();
                     Left = rcTarget.Left + (rcTarget.Width - actWidth) / 2;
                     Top = rcTarget.Top + (rcTarget.Height - actHeight) / 2;
                     break;
 
                 case DlgPlacement.TargetBottomLeft:
-                    rcTarget = PlacementTarget.GetBounds(null);
+                    rcTarget = PlacementTarget.GetBounds();
                     if (AutoAdjustPosition)
                     {
                         Left = rcTarget.Left < 0 ? 0 : (rcTarget.Left + actWidth > maxWidth ? maxWidth - actWidth : rcTarget.Left);
@@ -563,7 +563,7 @@ namespace Dt.Base
                     break;
 
                 case DlgPlacement.TargetBottomRight:
-                    rcTarget = PlacementTarget.GetBounds(null);
+                    rcTarget = PlacementTarget.GetBounds();
                     if (AutoAdjustPosition)
                     {
                         Left = rcTarget.Right < 0 ? 0 : (rcTarget.Right + actWidth > maxWidth ? maxWidth - actWidth : rcTarget.Right);
@@ -577,7 +577,7 @@ namespace Dt.Base
                     break;
 
                 case DlgPlacement.TargetOuterLeftTop:
-                    rcTarget = PlacementTarget.GetBounds(null);
+                    rcTarget = PlacementTarget.GetBounds();
                     double left = rcTarget.Left - actWidth;
                     if (AutoAdjustPosition)
                     {
@@ -592,7 +592,7 @@ namespace Dt.Base
                     break;
 
                 case DlgPlacement.TargetOuterTop:
-                    rcTarget = PlacementTarget.GetBounds(null);
+                    rcTarget = PlacementTarget.GetBounds();
                     double top = rcTarget.Top - actHeight;
                     if (AutoAdjustPosition)
                     {
@@ -689,6 +689,15 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_point">外部点击位置</param>
         void IDlgOuterPressed.OnOuterPressed(Point p_point)
+        {
+            OnOuterPressed(p_point);
+        }
+
+        /// <summary>
+        /// 点击对话框外部
+        /// </summary>
+        /// <param name="p_point">外部点击位置</param>
+        protected virtual void OnOuterPressed(Point p_point)
         {
             if (!IsPinned
                 && (ClipElement == null || !ClipElement.ContainPoint(p_point)))

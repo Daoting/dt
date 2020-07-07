@@ -405,15 +405,10 @@ namespace Dt.Base
         /// <param name="source"></param>
         /// <param name="p_relativeTo">基准元素</param>
         /// <returns>矩形</returns>
-        public static Rect GetBounds(this FrameworkElement source, FrameworkElement p_relativeTo)
+        public static Rect GetBounds(this FrameworkElement source, FrameworkElement p_relativeTo = null)
         {
-            Point ptMap;
-            if (source.TransformToVisual(p_relativeTo).TryTransform(new Point(), out ptMap))
-            {
-                // 
-                double y = (p_relativeTo == null) ? ptMap.Y - SysVisual.StatusBarHeight : ptMap.Y;
-                return new Rect(ptMap.X, y, source.ActualWidth, source.ActualHeight);
-            }
+            if (source.TransformToVisual(p_relativeTo?? SysVisual.RootContent).TryTransform(new Point(), out var ptMap))
+                return new Rect(ptMap, new Size(source.ActualWidth, source.ActualHeight));
             return new Rect();
         }
 

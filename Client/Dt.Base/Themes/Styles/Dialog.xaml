@@ -13,6 +13,7 @@
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
         <Setter Property="Background" Value="{StaticResource 默认背景}" />
         <Setter Property="BorderBrush" Value="{StaticResource 主题蓝色}" />
+        <Setter Property="FontSize" Value="{StaticResource 中字号}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Template">
             <Setter.Value>
@@ -67,7 +68,6 @@
     <Style x:Key="PhoneDlg" TargetType="a:Dlg">
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
         <Setter Property="Background" Value="{StaticResource 默认背景}" />
-        <!--uno中默认11-->
         <Setter Property="FontSize" Value="{StaticResource 中字号}" />
         <Setter Property="Template">
             <Setter.Value>

@@ -9,6 +9,7 @@
 #region 引用命名
 using Dt.Core;
 using System;
+using Windows.Foundation;
 #endregion
 
 namespace Dt.Base.MenuView
@@ -36,19 +37,43 @@ namespace Dt.Base.MenuView
                 }
             }
 
-            if (AtSys.IsPhoneUI)
+            if (_mi.Owner.IsContextMenu)
             {
-                PhonePlacement = (_mi.ParentMi == null) ? DlgPlacement.TargetBottomLeft : DlgPlacement.FromBottom;
+                if (AtSys.IsPhoneUI)
+                {
+                    PhonePlacement = DlgPlacement.FromBottom;
+                }
+                else
+                {
+                    // 默认放右侧，不能完全显示放左侧
+                    if (_mi.GetBounds().Right + MinWidth > SysVisual.ViewWidth)
+                        WinPlacement = DlgPlacement.TargetOuterLeftTop;
+                    else
+                        WinPlacement = DlgPlacement.TargetTopRight;
+
+                    // 打开多级后点击空白时一起关闭
+                    SysVisual.BlankPressed = OnBlankPressed;
+                }
             }
             else
             {
-                // 一级放左下方，多级默认放左侧，不能完全显示放右侧
-                if (_mi.ParentMi == null && !_mi.Owner.IsContextMenu)
-                    WinPlacement = DlgPlacement.TargetBottomLeft;
-                else if (_mi.GetBounds(null).Right + MinWidth > SysVisual.ViewWidth)
-                    WinPlacement = DlgPlacement.TargetOuterLeftTop;
+                if (AtSys.IsPhoneUI)
+                {
+                    PhonePlacement = (_mi.ParentMi == null) ? DlgPlacement.TargetBottomLeft : DlgPlacement.FromBottom;
+                }
                 else
-                    WinPlacement = DlgPlacement.TargetTopRight;
+                {
+                    // 一级放左下方，多级默认放右侧，不能完全显示放左侧
+                    if (_mi.ParentMi == null && !_mi.Owner.IsContextMenu)
+                        WinPlacement = DlgPlacement.TargetBottomLeft;
+                    else if (_mi.GetBounds().Right + MinWidth > SysVisual.ViewWidth)
+                        WinPlacement = DlgPlacement.TargetOuterLeftTop;
+                    else
+                        WinPlacement = DlgPlacement.TargetTopRight;
+
+                    // 打开多级后点击空白时一起关闭
+                    SysVisual.BlankPressed = OnBlankPressed;
+                }
             }
 
             Closed -= OnClosed;
@@ -67,6 +92,27 @@ namespace Dt.Base.MenuView
         void OnItemsChanged(ItemList<Mi> sender, ItemListChangedArgs e)
         {
             _panel.Children.Clear();
+        }
+
+        /// <summary>
+        /// 在空白处点击(所有对话框外部)
+        /// </summary>
+        void OnBlankPressed()
+        {
+            _mi.Owner?.Close();
+            SysVisual.BlankPressed = null;
+        }
+
+        /// <summary>
+        /// 点击对话框外部时
+        /// </summary>
+        /// <param name="p_point">外部点击位置</param>
+        protected override void OnOuterPressed(Point p_point)
+        {
+            if (AtSys.IsPhoneUI)
+                base.OnOuterPressed(p_point);
+
+            // WinUI模式不自动关闭
         }
     }
 }

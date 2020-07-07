@@ -599,9 +599,9 @@ namespace Dt.Base
             if (Items.Count == 0 || IsSubmenuOpen)
                 return;
 
-            // 关闭同级已打开的菜单
             if (ParentMi != null)
             {
+                // 关闭同级已打开的菜单
                 if (AtSys.IsPhoneUI && ParentMi.IsSubmenuOpen)
                 {
                     // phone模式关闭上级窗口
@@ -617,6 +617,10 @@ namespace Dt.Base
                     }
                 }
                 ParentMi._lastSelected = this;
+            }
+            else if (AtSys.IsPhoneUI && Owner.IsContextMenu)
+            {
+                Owner.Close();
             }
 
             IsSelected = true;
@@ -754,7 +758,7 @@ namespace Dt.Base
         protected override void OnPointerEntered(PointerRoutedEventArgs e)
         {
             // 触摸时不自动打开下级菜单
-            if (e.IsTouch() || Owner == null)
+            if (Owner == null || AtSys.IsPhoneUI || e.IsTouch())
                 return;
 
             IsMouseOver = true;
