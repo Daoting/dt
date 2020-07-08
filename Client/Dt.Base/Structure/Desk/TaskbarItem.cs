@@ -41,7 +41,11 @@ namespace Dt.Base
         }
         #endregion
 
+        #region 成员变量
+        static Menu _menu;
+        static TaskbarItem _currentItem;
         bool _isDragging = false;
+        #endregion
 
         #region 构造方法
         public TaskbarItem()
@@ -60,27 +64,18 @@ namespace Dt.Base
         }
 
         #region 重写方法
-        /// <summary>
-        /// 应用模板
-        /// </summary>
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
             Button btn = (Button)GetTemplateChild("CloseButton");
             if (btn != null)
             {
-                btn.Click -= OnCloseItem;
                 btn.Click += OnCloseItem;
-                btn.PointerCaptureLost -= OnBtnPointerCaptureLost;
                 btn.PointerCaptureLost += OnBtnPointerCaptureLost;
             }
             ToggleSelectedState();
         }
 
-        /// <summary>
-        /// 鼠标进入
-        /// </summary>
-        /// <param name="e"></param>
         protected override void OnPointerEntered(PointerRoutedEventArgs e)
         {
             if (!_isDragging)
@@ -90,14 +85,9 @@ namespace Dt.Base
             }
         }
 
-        /// <summary>
-        /// 鼠标点击
-        /// </summary>
-        /// <param name="e"></param>
         protected override void OnPointerPressed(PointerRoutedEventArgs e)
         {
-            var props = e.GetCurrentPoint(null).Properties;
-            if (props.IsLeftButtonPressed)
+            if (e.GetCurrentPoint(null).Properties.IsLeftButtonPressed)
             {
                 if (CapturePointer(e.Pointer))
                 {
@@ -106,89 +96,32 @@ namespace Dt.Base
                     _isDragging = true;
                 }
             }
-            else if (props.IsRightButtonPressed)
-            {
-#if UWP
-                MenuFlyout menu = ContextFlyout as MenuFlyout;
-                if (menu == null)
-                {
-                    menu = new MenuFlyout();
-                    var item = new MenuFlyoutItem { Text = "取消自启动" };
-                    item.Click += (s, a) => LaunchManager.DelAutoStart();
-                    menu.Items.Add(item);
-                    item = new MenuFlyoutItem { Text = "设置自启动" };
-                    item.Click += (s, a) => LaunchManager.SetAutoStart((Win)DataContext);
-                    menu.Items.Add(item);
-                    item = new MenuFlyoutItem { Text = "恢复窗口默认布局" };
-                    item.Click += ResetWinLayout;
-                    menu.Items.Add(item);
-                    item = new MenuFlyoutItem { Text = "关闭其他" };
-                    item.Click += CloseOtherWin;
-                    menu.Items.Add(item);
-                    item = new MenuFlyoutItem { Text = "停靠在左侧" };
-                    item.Click += DockLeft;
-                    menu.Items.Add(item);
-                    item = new MenuFlyoutItem { Text = "停靠在右侧" };
-                    item.Click += DockRight;
-                    menu.Items.Add(item);
-                    ContextFlyout = menu;
-                }
-
-                var autoStart = AtLocal.GetAutoStart();
-                Win win = (Win)DataContext;
-                if (autoStart != null
-                    && win != null
-                    && autoStart.WinType == win.GetType().AssemblyQualifiedName
-                    && (win.Params == null || autoStart.Params == JsonSerializer.Serialize(win.Params, JsonOptions.UnsafeSerializer)))
-                {
-                    menu.Items[0].Visibility = Visibility.Visible;
-                    menu.Items[1].Visibility = Visibility.Collapsed;
-                }
-                else
-                {
-                    menu.Items[0].Visibility = Visibility.Collapsed;
-                    menu.Items[1].Visibility = Visibility.Visible;
-                }
-
-                if (win != null)
-                {
-                    if (win.AllowResetLayout)
-                    {
-                        menu.Items[2].Visibility = Visibility.Visible;
-                    }
-                    else
-                    {
-                        // 主区内容为Win
-                        Tabs tabs = (Tabs)win.GetValue(Win.CenterTabsProperty);
-                        if (tabs != null
-                            && tabs.Items.Count > 0
-                            && tabs.Items[0].Content is Win cw
-                            && cw.AllowResetLayout)
-                        {
-                            menu.Items[2].Visibility = Visibility.Visible;
-                        }
-                        else
-                        {
-                            menu.Items[2].Visibility = Visibility.Collapsed;
-                        }
-                    }
-                }
-                else
-                {
-                    menu.Items[2].Visibility = Visibility.Collapsed;
-                }
-
-                menu.Items[3].Visibility = (Taskbar.Inst.TaskItems.Count > 1) ? Visibility.Visible : Visibility.Collapsed;
-                menu.Items[4].Visibility = !IsActive ? Visibility.Visible : Visibility.Collapsed;
-                menu.Items[5].Visibility = !IsActive ? Visibility.Visible : Visibility.Collapsed;
-#endif
-            }
         }
 
-        /// <summary>
-        /// 拖动过程中
-        /// </summary>
-        /// <param name="e"></param>
+        protected override void OnRightTapped(RightTappedRoutedEventArgs e)
+        {
+            e.Handled = true;
+            _currentItem = this;
+            ShowMenu(e.GetPosition(SysVisual.RootContent));
+        }
+
+        protected override void OnDoubleTapped(DoubleTappedRoutedEventArgs e)
+        {
+            e.Handled = true;
+            _currentItem = this;
+            ShowMenu(e.GetPosition(SysVisual.RootContent));
+        }
+
+        // 容易与拖拽混
+        //protected override void OnHolding(HoldingRoutedEventArgs e)
+        //{
+        //    if (e.HoldingState == Windows.UI.Input.HoldingState.Started)
+        //    {
+        //        e.Handled = true;
+        //        ShowMenu(e.GetPosition(SysVisual.RootContent));
+        //    }
+        //}
+
         protected override void OnPointerMoved(PointerRoutedEventArgs e)
         {
             if (!_isDragging)
@@ -249,10 +182,86 @@ namespace Dt.Base
         }
         #endregion
 
-        #region 内部方法
-        void ResetWinLayout(object sender, RoutedEventArgs e)
+        #region 上下文菜单
+        static void ShowMenu(Point p_pos)
         {
-            Win win = (Win)DataContext;
+            if (_menu == null)
+            {
+                _menu = new Menu { IsContextMenu = true };
+                var item = new Mi { ID = "取消自启动" };
+                item.Click += (s, a) => LaunchManager.DelAutoStart();
+                _menu.Items.Add(item);
+                item = new Mi { ID = "设置自启动" };
+                item.Click += (s, a) => LaunchManager.SetAutoStart((Win)_currentItem.DataContext);
+                _menu.Items.Add(item);
+                item = new Mi { ID = "恢复窗口默认布局" };
+                item.Click += ResetWinLayout;
+                _menu.Items.Add(item);
+                item = new Mi { ID = "关闭其他" };
+                item.Click += CloseOtherWin;
+                _menu.Items.Add(item);
+                item = new Mi { ID = "停靠在左侧" };
+                item.Click += DockLeft;
+                _menu.Items.Add(item);
+                item = new Mi { ID = "停靠在右侧" };
+                item.Click += DockRight;
+                _menu.Items.Add(item);
+            }
+
+            var autoStart = AtLocal.GetAutoStart();
+            Win win = (Win)_currentItem.DataContext;
+            if (autoStart != null
+                && win != null
+                && autoStart.WinType == win.GetType().AssemblyQualifiedName
+                && (win.Params == null || autoStart.Params == JsonSerializer.Serialize(win.Params, JsonOptions.UnsafeSerializer)))
+            {
+                _menu.Items[0].Visibility = Visibility.Visible;
+                _menu.Items[1].Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                _menu.Items[0].Visibility = Visibility.Collapsed;
+                _menu.Items[1].Visibility = Visibility.Visible;
+            }
+
+            if (win != null)
+            {
+                if (win.AllowResetLayout)
+                {
+                    _menu.Items[2].Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    // 主区内容为Win
+                    Tabs tabs = (Tabs)win.GetValue(Win.CenterTabsProperty);
+                    if (tabs != null
+                        && tabs.Items.Count > 0
+                        && tabs.Items[0].Content is Win cw
+                        && cw.AllowResetLayout)
+                    {
+                        _menu.Items[2].Visibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        _menu.Items[2].Visibility = Visibility.Collapsed;
+                    }
+                }
+            }
+            else
+            {
+                _menu.Items[2].Visibility = Visibility.Collapsed;
+            }
+
+            _menu.Items[3].Visibility = (Taskbar.Inst.TaskItems.Count > 1) ? Visibility.Visible : Visibility.Collapsed;
+            _menu.Items[4].Visibility = !_currentItem.IsActive ? Visibility.Visible : Visibility.Collapsed;
+            _menu.Items[5].Visibility = !_currentItem.IsActive ? Visibility.Visible : Visibility.Collapsed;
+
+            _menu.OpenContextMenu(p_pos);
+        }
+
+        static void ResetWinLayout(object sender, Mi e)
+        {
+            Win win = (Win)_currentItem.DataContext;
 
             // 主区内容为Win时，先恢复
             Tabs tabs = (Tabs)win.GetValue(Win.CenterTabsProperty);
@@ -266,9 +275,9 @@ namespace Dt.Base
                 win.LoadDefaultLayout();
         }
 
-        async void CloseOtherWin(object sender, RoutedEventArgs e)
+        static async void CloseOtherWin(object sender, Mi e)
         {
-            var ls = await Desktop.Inst.CloseExcept((Win)DataContext);
+            var ls = await Desktop.Inst.CloseExcept((Win)_currentItem.DataContext);
             if (ls != null && ls.Count > 0)
             {
                 var items = Taskbar.Inst.TaskItems;
@@ -276,7 +285,7 @@ namespace Dt.Base
                 {
                     // 其他全部都可关闭
                     items.Clear();
-                    items.Add(this);
+                    items.Add(_currentItem);
                 }
                 else
                 {
@@ -286,20 +295,22 @@ namespace Dt.Base
                         Taskbar.Inst.RemoveTaskItem(win);
                     }
                 }
-                IsActive = true;
+                _currentItem.IsActive = true;
             }
         }
 
-        void DockLeft(object sender, RoutedEventArgs e)
+        static void DockLeft(object sender, Mi e)
         {
-            Desktop.SetLeftWin((Win)DataContext);
+            Desktop.SetLeftWin((Win)_currentItem.DataContext);
         }
 
-        void DockRight(object sender, RoutedEventArgs e)
+        static void DockRight(object sender, Mi e)
         {
-            Desktop.SetRightWin((Win)DataContext);
+            Desktop.SetRightWin((Win)_currentItem.DataContext);
         }
+        #endregion
 
+        #region 内部方法
         void OnCloseItem(object sender, RoutedEventArgs e)
         {
             ((Button)sender).PointerCaptureLost -= OnBtnPointerCaptureLost;
