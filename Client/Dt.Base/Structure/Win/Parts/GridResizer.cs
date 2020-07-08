@@ -27,39 +27,17 @@ namespace Dt.Base.Docking
     {
         #region 静态内容
         /// <summary>
-        /// 开始调整事件
-        /// </summary>
-        public static BaseRoutedEvent PreviewResizeStartEvent;
-
-        internal static BaseRoutedEvent LayoutChangeEndedEvent;
-
-        /// <summary>
         /// 放置位置
         /// </summary>
         public static readonly DependencyProperty PlacementProperty = DependencyProperty.Register(
-            "Placement", 
-            typeof(ItemPlacement?), 
-            typeof(GridResizer), 
+            "Placement",
+            typeof(ItemPlacement?),
+            typeof(GridResizer),
             new PropertyMetadata(null, OnPlacementChanged));
 
         static void OnPlacementChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             ((GridResizer)d).ChangeVisualState();
-        }
-
-        static GridResizer()
-        {
-            PreviewResizeStartEvent = EventManager.RegisterRoutedEvent(
-                "PreviewResizeStart",
-                RoutingStrategy.Tunnel,
-                typeof(EventHandler<ResizeEventArgs>),
-                typeof(GridResizer));
-
-            LayoutChangeEndedEvent = EventManager.RegisterRoutedEvent(
-                "LayoutChangeEnded",
-                RoutingStrategy.Bubble,
-                typeof(EventHandler<BaseRoutedEventArgs>),
-                typeof(GridResizer));
         }
         #endregion
 
@@ -120,6 +98,11 @@ namespace Dt.Base.Docking
                 return _preview;
             }
         }
+
+        /// <summary>
+        /// 父容器，WinItem或Tabs
+        /// </summary>
+        internal Control Owner { get; set; }
         #endregion
 
         #region 重写方法
@@ -221,7 +204,6 @@ namespace Dt.Base.Docking
                     return;
             }
         }
-
         #endregion
 
         #region 内部方法
@@ -230,23 +212,63 @@ namespace Dt.Base.Docking
         /// </summary>
         void InitializeData()
         {
-            ResizeEventArgs args = new ResizeEventArgs(PreviewResizeStartEvent, this);
-            this.RaiseEvent(args);
             Panel parent = Parent as Panel;
-            if (parent != null)
+            if (parent == null)
+                return;
+
+            _resizeData = new ResizeData();
+            _resizeData.ResizedTgt = Owner;
+            _resizeData.Placement = Placement ?? ItemPlacement.Left;
+
+            Win win;
+            FrameworkElement affectedTgt = null;
+            if (Owner is Tabs tabs)
             {
-                _resizeData = new ResizeData();
-                _resizeData.ResizedTgt = args.ResizedTgt ?? parent;
-                _resizeData.Placement = Placement ?? ItemPlacement.Left;
-                _resizeData.MaxSize = args.AvailableSize;
-                _resizeData.MinSize = args.MinSize;
-                if (args.AffectedTgt != null)
+                win = tabs.OwnerWin;
+                if (tabs.OwnerWinItem != null)
                 {
-                    _resizeData.AffectedTgt = args.AffectedTgt;
-                    _resizeData.ResizeBehavior = ResizeBehavior.Split;
+                    for (int i = tabs.OwnerWinItem.Items.IndexOf(tabs) - 1; i > -1; i--)
+                    {
+                        var brother = tabs.OwnerWinItem.Items[i];
+                        if (brother.Visibility == Visibility.Visible)
+                        {
+                            affectedTgt = brother;
+                            break;
+                        }
+                    }
                 }
-                _resizeData.Init();
             }
+            else if (Owner is WinItem wi)
+            {
+                win = wi.OwnerWin;
+                if (wi.Parent is TabItemPanel pnl && pnl.Owner != null)
+                {
+                    for (int i = pnl.Owner.Items.IndexOf(wi) - 1; i > -1; i--)
+                    {
+                        var brother = pnl.Owner.Items[i];
+                        if (brother.Visibility == Visibility.Visible)
+                        {
+                            affectedTgt = brother;
+                            break;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                throw new Exception("GridResizer只放在Tabs或WinItem中");
+            }
+
+            var center = win.CenterItem;
+            _resizeData.MinSize = new Size(center.MinWidth, center.MinHeight);
+            _resizeData.MaxSize = new Size(center.ActualWidth, center.ActualHeight);
+
+            if (affectedTgt != null)
+            {
+                _resizeData.AffectedTgt = affectedTgt;
+                _resizeData.ResizeBehavior = ResizeBehavior.Split;
+            }
+            _resizeData.Init();
         }
 
         /// <summary>
@@ -392,7 +414,7 @@ namespace Dt.Base.Docking
 
         void OnLayoutChangeEnded()
         {
-            this.RaiseEvent(new BaseRoutedEventArgs(LayoutChangeEndedEvent, this));
+            //this.RaiseEvent(new BaseRoutedEventArgs(LayoutChangeEndedEvent, this));
         }
         #endregion
 
@@ -464,7 +486,7 @@ namespace Dt.Base.Docking
                 {
                     if (Placement == ItemPlacement.Left || Placement == ItemPlacement.Top)
                         p_change = -p_change;
-                    
+
                     if (ResizeBehavior == GridResizer.ResizeBehavior.Split)
                     {
                         SplitItems(p_change);

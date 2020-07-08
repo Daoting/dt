@@ -99,7 +99,6 @@ namespace Dt.Base
         #endregion
 
         #region 成员变量
-        readonly FvItems _items;
         protected readonly FormPanel _panel;
         ScrollViewer _scroll;
         bool _isLoaded;
@@ -110,7 +109,6 @@ namespace Dt.Base
         public Fv()
         {
             DefaultStyleKey = typeof(Fv);
-            _items = new FvItems();
             _panel = new FormPanel();
 #if !UWP
             Loaded += OnLoaded;
@@ -191,10 +189,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取单元格集合
         /// </summary>
-        public FvItems Items
-        {
-            get { return _items; }
-        }
+        public FvItems Items { get; } = new FvItems();
 
         /// <summary>
         /// 获取具有指定id的单元格
@@ -203,7 +198,7 @@ namespace Dt.Base
         /// <returns></returns>
         public FvCell this[string p_id]
         {
-            get { return _items[p_id]; }
+            get { return Items[p_id]; }
         }
 
         /// <summary>
@@ -213,7 +208,7 @@ namespace Dt.Base
         /// <returns></returns>
         public FvCell this[int p_index]
         {
-            get { return _items[p_index] as FvCell; }
+            get { return Items[p_index] as FvCell; }
         }
 
         /// <summary>
@@ -223,7 +218,7 @@ namespace Dt.Base
         {
             get
             {
-                return from obj in _items
+                return from obj in Items
                        let cell = obj as FvCell
                        where cell != null && !string.IsNullOrEmpty(cell.ID)
                        select cell;
@@ -265,7 +260,7 @@ namespace Dt.Base
                 if (string.IsNullOrEmpty(name))
                     continue;
 
-                var item = _items[name];
+                var item = Items[name];
                 if (item != null)
                     item.Visibility = Visibility.Collapsed;
             }
@@ -277,7 +272,7 @@ namespace Dt.Base
         /// <param name="p_names">无值时隐藏所有</param>
         public void HideExcept(params string[] p_names)
         {
-            foreach (var item in _items)
+            foreach (var item in Items)
             {
                 if (item is FvCell cell && p_names.Contains(cell.ID))
                     item.Visibility = Visibility.Visible;
@@ -297,7 +292,7 @@ namespace Dt.Base
                 if (string.IsNullOrEmpty(name))
                     continue;
 
-                var item = _items[name];
+                var item = Items[name];
                 if (item != null)
                     item.Visibility = Visibility.Visible;
             }
@@ -309,7 +304,7 @@ namespace Dt.Base
         /// <param name="p_names">无值时显示所有</param>
         public void ShowExcept(params string[] p_names)
         {
-            foreach (var item in _items)
+            foreach (var item in Items)
             {
                 if (item is FvCell cell && p_names.Contains(cell.ID))
                     item.Visibility = Visibility.Collapsed;
@@ -331,7 +326,7 @@ namespace Dt.Base
                 if (string.IsNullOrEmpty(name))
                     continue;
 
-                var item = _items[name];
+                var item = Items[name];
                 if (item != null && !item.IsEnabled)
                     item.IsEnabled = true;
             }
@@ -342,7 +337,7 @@ namespace Dt.Base
         /// </summary>
         public void EnableExcept(params string[] p_names)
         {
-            foreach (var item in _items)
+            foreach (var item in Items)
             {
                 if (item is FvCell cell && p_names.Contains(cell.ID))
                     cell.IsEnabled = false;
@@ -362,7 +357,7 @@ namespace Dt.Base
                 if (string.IsNullOrEmpty(name))
                     continue;
 
-                var item = _items[name];
+                var item = Items[name];
                 if (item != null && item.IsEnabled)
                     item.IsEnabled = false;
             }
@@ -373,7 +368,7 @@ namespace Dt.Base
         /// </summary>
         public void DisableExcept(params string[] p_names)
         {
-            foreach (var item in _items)
+            foreach (var item in Items)
             {
                 if (item is FvCell cell && p_names.Contains(cell.ID))
                     cell.IsEnabled = true;
@@ -408,7 +403,7 @@ namespace Dt.Base
                 if (string.IsNullOrEmpty(name))
                     continue;
 
-                var item = _items[name];
+                var item = Items[name];
                 if (item != null)
                 {
                     object val = item.GetVal();
@@ -742,7 +737,7 @@ namespace Dt.Base
             _scroll.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
 
             LoadAllItems();
-            _items.ItemsChanged += OnItemsChanged;
+            Items.ItemsChanged += OnItemsChanged;
 
             _isLoaded = true;
 
@@ -802,16 +797,16 @@ namespace Dt.Base
             if (AutoCreateCell)
             {
                 // 根据数据源自动生成格
-                using (_items.Defer())
+                using (Items.Defer())
                 {
-                    _items.Clear();
+                    Items.Clear();
                     if (row != null)
                     {
                         foreach (var dc in row.Cells)
                         {
                             FvCell cell = CreateCell(dc.Type, dc.ID);
                             cell.OnDataChanged(data);
-                            _items.Add(cell);
+                            Items.Add(cell);
                         }
                     }
                     else if (data != null)
@@ -822,7 +817,7 @@ namespace Dt.Base
                             FvCell cell = CreateCell(pi.PropertyType, pi.Name);
                             cell.Title = pi.Name;
                             cell.OnDataChanged(data);
-                            _items.Add(cell);
+                            Items.Add(cell);
                         }
                     }
                 }
@@ -859,13 +854,13 @@ namespace Dt.Base
 
             if (e.CollectionChange == CollectionChange.ItemInserted || e.CollectionChange == CollectionChange.ItemChanged)
             {
-                AddItem(_items[e.Index], e.Index);
+                AddItem(Items[e.Index], e.Index);
             }
             else if (e.CollectionChange == CollectionChange.Reset)
             {
-                for (int i = 0; i < _items.Count; i++)
+                for (int i = 0; i < Items.Count; i++)
                 {
-                    var item = _items[i];
+                    var item = Items[i];
                     if (_panel.Children.Count > i)
                     {
                         var elem = _panel.Children[i];
@@ -882,7 +877,7 @@ namespace Dt.Base
                 }
 
                 // 移除多余的元素
-                while (_panel.Children.Count > _items.Count)
+                while (_panel.Children.Count > Items.Count)
                 {
                     _panel.Children.RemoveAt(_panel.Children.Count - 1);
                 }
@@ -891,9 +886,9 @@ namespace Dt.Base
 
         protected virtual void LoadAllItems()
         {
-            for (int i = 0; i < _items.Count; i++)
+            for (int i = 0; i < Items.Count; i++)
             {
-                AddItem(_items[i], i);
+                AddItem(Items[i], i);
             }
         }
 

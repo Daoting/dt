@@ -11,6 +11,7 @@ using Dt.Base.Docking;
 using Dt.Core;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -61,22 +62,6 @@ namespace Dt.Base
             typeof(double),
             typeof(Tabs),
             new PropertyMetadata(200.0));
-
-        static Tabs()
-        {
-            EventManager.RegisterClassHandler(typeof(Tabs), GridResizer.PreviewResizeStartEvent, new EventHandler<ResizeEventArgs>(OnPreviewResize));
-        }
-
-        static void OnPreviewResize(object sender, ResizeEventArgs e)
-        {
-            Tabs tabs = sender as Tabs;
-            e.ResizedTgt = tabs;
-            WinItem wi = tabs.Owner;
-            if (wi != null)
-            {
-                e.AffectedTgt = tabs.GetNextVisibleElement(wi, tabs);
-            }
-        }
         #endregion
 
         #region 成员变量
@@ -135,19 +120,6 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取所属的WinItem
-        /// </summary>
-        public WinItem Owner
-        {
-            get
-            {
-                if (Parent is TabItemPanel pnl)
-                    return pnl.Owner;
-                return null;
-            }
-        }
-
-        /// <summary>
         /// 获取设置当前Tabs是否停靠在中部
         /// </summary>
         public bool IsInCenter
@@ -193,6 +165,27 @@ namespace Dt.Base
                 }
             }
         }
+
+        /// <summary>
+        /// 所属WinItem
+        /// </summary>
+        internal WinItem OwnerWinItem
+        {
+            get
+            {
+                if (Parent is TabItemPanel pnl)
+                    return pnl.Owner;
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 所属Win
+        /// </summary>
+        internal Win OwnerWin
+        {
+            get { return OwnerWinItem?.OwnerWin; }
+        }
         #endregion
 
         #region 外部方法
@@ -209,7 +202,9 @@ namespace Dt.Base
             if (p_dockPosition == DockPosition.Center)
             {
                 // 停靠在中部，合并WinItem中的所有标签项
-                foreach (Tab item in GetAndRemoveItems(p_winItem))
+                var ls = GetAllChildTab(p_winItem);
+                LayoutManager.ClearItems(p_winItem);
+                foreach (Tab item in ls)
                 {
                     Items.Add(item);
                 }
@@ -217,7 +212,7 @@ namespace Dt.Base
             else
             {
                 // 停靠在当前Tabs的一边
-                Owner.AddItem(p_winItem, p_dockPosition, this);
+                OwnerWinItem.AddItem(p_winItem, p_dockPosition, this);
                 p_winItem.RemoveUnused();
             }
         }
@@ -227,7 +222,7 @@ namespace Dt.Base
         /// </summary>
         public void RemoveFromParent()
         {
-            var par = Owner;
+            var par = OwnerWinItem;
             if (par != null && par.Items.Contains(this))
             {
                 ClearValue(TabItemPanel.SplitterChangeProperty);
@@ -273,11 +268,11 @@ namespace Dt.Base
             Size parentSize = Size.Empty;
             Size size = new Size(0.0, 0.0);
             bool isHor = false;
-            if (Owner != null)
+            if (OwnerWinItem != null)
             {
-                parentSize = Owner.RenderSize;
-                isHor = Owner.Orientation == Orientation.Horizontal;
-                RelativeSizes sumOfSizes = Owner.GetSumOfRelativeSizes();
+                parentSize = OwnerWinItem.RenderSize;
+                isHor = OwnerWinItem.Orientation == Orientation.Horizontal;
+                RelativeSizes sumOfSizes = OwnerWinItem.GetSumOfRelativeSizes();
 
                 if (isHor)
                 {
@@ -304,7 +299,7 @@ namespace Dt.Base
             if (p_dock != DockPosition.Center)
             {
                 bool isDockHor = (p_dock == DockPosition.Left) || (p_dock == DockPosition.Right);
-                bool isParentHor = Owner.Orientation == Orientation.Horizontal;
+                bool isParentHor = OwnerWinItem.Orientation == Orientation.Horizontal;
                 bool findHorizontal = isParentHor == (isDockHor == isParentHor);
                 double length = 0.0;
 
@@ -336,14 +331,14 @@ namespace Dt.Base
             bool shouldTransform = true;
             if (dock != DockPosition.Center)
             {
-                int index = Owner.Items.IndexOf(this);
+                int index = OwnerWinItem.Items.IndexOf(this);
                 if ((dock == DockPosition.Right) || (dock == DockPosition.Bottom))
                 {
                     index++;
                 }
 
                 bool isDockHor = (dock == DockPosition.Left) || (dock == DockPosition.Right);
-                bool isParentHor = Owner.Orientation == Orientation.Horizontal;
+                bool isParentHor = OwnerWinItem.Orientation == Orientation.Horizontal;
                 double length = 0.0;
 
                 if (isParentHor != isDockHor)
@@ -357,7 +352,7 @@ namespace Dt.Base
                 {
                     for (int i = 0; i < index; i++)
                     {
-                        FrameworkElement element = Owner.Items[i] as FrameworkElement;
+                        FrameworkElement element = OwnerWinItem.Items[i] as FrameworkElement;
                         if (element.Visibility == Visibility.Visible)
                         {
                             length += GetRenderLength(
@@ -380,10 +375,10 @@ namespace Dt.Base
             }
             if (shouldTransform)
             {
-                return base.TransformToVisual(Owner).TransformPoint(topLeft);
+                return base.TransformToVisual(OwnerWinItem).TransformPoint(topLeft);
             }
-            UIElement firstChild = Owner.Items[0] as UIElement;
-            return firstChild.TransformToVisual(Owner).TransformPoint(topLeft);
+            UIElement firstChild = OwnerWinItem.Items[0] as UIElement;
+            return firstChild.TransformToVisual(OwnerWinItem).TransformPoint(topLeft);
         }
 
         static double GetRenderLength(double splitterChange, double p_length, double p_availableLength, RelativeSizes relativeSizes)
@@ -431,9 +426,10 @@ namespace Dt.Base
 
         void InitTemplate()
         {
-            TabHeader header = GetTemplateChild("HeaderElement") as TabHeader;
-            if (header != null)
-                header.Owner = this;
+            var header = (TabHeader)GetTemplateChild("HeaderElement");
+            header.Owner = this;
+            var resizer = (GridResizer)GetTemplateChild("Resizer");
+            resizer.Owner = this;
             UpdateTabStrip();
         }
         #endregion
@@ -445,40 +441,28 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取容器的所有子项并从容器移除
+        /// 获取容器内所有的Tab所有子项并从容器移除
         /// </summary>
         /// <param name="p_winItem"></param>
         /// <returns></returns>
-        IEnumerable<Tab> GetAndRemoveItems(WinItem p_winItem)
+        List<Tab> GetAllChildTab(WinItem p_winItem)
         {
-            foreach (var item in p_winItem.Items)
+            List<Tab> ls = new List<Tab>();
+            if (p_winItem != null && p_winItem.Items.Count > 0)
             {
-                if (item is Tabs childTabs)
+                foreach (var item in p_winItem.Items)
                 {
-                    int index = 0;
-                    while (index < childTabs.Items.Count)
+                    if (item is Tabs childTabs)
                     {
-                        Tab child = childTabs.Items[index] as Tab;
-                        if (child != null)
-                        {
-                            childTabs.Items.RemoveAt(index);
-                            yield return child;
-                        }
-                        else
-                        {
-                            index++;
-                        }
+                        ls.AddRange(childTabs.Items.OfType<Tab>());
                     }
-                }
-                else if (item is WinItem childWinItem)
-                {
-                    foreach (Tab child in GetAndRemoveItems(childWinItem))
+                    else if (item is WinItem childWinItem)
                     {
-                        if (child != null)
-                            yield return child;
+                        ls.AddRange(GetAllChildTab(childWinItem));
                     }
                 }
             }
+            return ls;
         }
 
         internal struct RelativeSizes
@@ -487,18 +471,6 @@ namespace Dt.Base
             internal double WithChangeSet;
             internal double ChangesSum;
             internal double LengthSum;
-        }
-
-        FrameworkElement GetNextVisibleElement(WinItem p_container, Tabs p_sect)
-        {
-            for (int i = p_container.Items.IndexOf(p_sect) - 1; i > -1; i--)
-            {
-                if (p_container.Items[i].Visibility == Visibility.Visible)
-                {
-                    return p_container.Items[i];
-                }
-            }
-            return null;
         }
         #endregion
     }

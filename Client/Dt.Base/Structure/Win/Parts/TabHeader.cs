@@ -23,18 +23,14 @@ namespace Dt.Base.Docking
     public partial class TabHeader : Control
     {
         #region 静态内容
-        /// <summary> 
-        /// 所属Tabs
-        /// </summary>
         public static readonly DependencyProperty OwnerProperty = DependencyProperty.Register(
             "Owner",
             typeof(object), 
             typeof(TabHeader), 
             null);
-
         #endregion
 
-        double _minOffset = 8;
+        double _minOffset = 12;
         bool _dragging;
         Point _start;
 
@@ -91,7 +87,8 @@ namespace Dt.Base.Docking
                 {
                     _dragging = false;
                     ReleasePointerCapture(e.Pointer);
-                    this.StartDrag(e);
+                    if (Owner is Tabs tabs && tabs.SelectedItem is Tab tab)
+                        tab.OwnerWin.OnDragStarted(this, e);
                 }
             }
         }

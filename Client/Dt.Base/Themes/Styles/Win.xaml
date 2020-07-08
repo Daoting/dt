@@ -47,7 +47,7 @@
                 <ControlTemplate TargetType="a:WinItem">
                     <Grid>
                         <docking:TabItemPanel x:Name="TabItemPanel" Orientation="{TemplateBinding Orientation}" />
-                        <docking:GridResizer Placement="{TemplateBinding ResizerPlacement}" />
+                        <docking:GridResizer x:Name="Resizer" Placement="{TemplateBinding ResizerPlacement}" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -97,7 +97,7 @@
                             <StackPanel x:Name="ItemsPanel" Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2" />
                         </Grid>
 
-                        <docking:GridResizer x:Name="DockResizer" Grid.RowSpan="2" Placement="{TemplateBinding ResizerPlacement}" />
+                        <docking:GridResizer x:Name="Resizer" Grid.RowSpan="2" Placement="{TemplateBinding ResizerPlacement}" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

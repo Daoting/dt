@@ -67,7 +67,8 @@ namespace Dt.Base.Docking
         #endregion
 
         #region 成员变量
-        Canvas _owner;
+        Win _owner;
+        Canvas _panel;
         UIElement _headerElement;
         UIElement _rootGrid;
         bool _isHeadPressed;
@@ -78,10 +79,11 @@ namespace Dt.Base.Docking
         #endregion
 
         #region 构造方法
-        public ToolWindow()
+        public ToolWindow(Win p_win, Canvas p_panel)
         {
             DefaultStyleKey = typeof(ToolWindow);
-            _isHeadPressed = false;
+            _owner = p_win;
+            _panel = p_panel;
         }
         #endregion
 
@@ -127,15 +129,6 @@ namespace Dt.Base.Docking
                 return dockItem.GetAllTabItems().All((item) => item.CanDockInCenter);
             }
         }
-
-        /// <summary>
-        /// 获取设置所属面板
-        /// </summary>
-        internal Canvas Owner
-        {
-            get { return _owner; }
-            set { _owner = value; }
-        }
         #endregion
 
         #region 外部方法
@@ -143,7 +136,7 @@ namespace Dt.Base.Docking
         /// 直接设置标题为按下状态
         /// </summary>
         /// <param name="e"></param>
-        public void StartDrag(PointerRoutedEventArgs e)
+        internal void StartDrag(PointerRoutedEventArgs e)
         {
             OnheaderElementPointerPressed(this, e);
         }
@@ -151,19 +144,19 @@ namespace Dt.Base.Docking
         /// <summary>
         /// 显示窗口
         /// </summary>
-        public void Show()
+        internal void Show()
         {
-            if (!_owner.Children.Contains(this))
-                _owner.Children.Add(this);
+            if (!_panel.Children.Contains(this))
+                _panel.Children.Add(this);
         }
 
         /// <summary>
         /// 关闭窗口
         /// </summary>
-        public void Close()
+        internal void Close()
         {
-            if (_owner.Children.Contains(this))
-                _owner.Children.Remove(this);
+            if (_panel.Children.Contains(this))
+                _panel.Children.Remove(this);
         }
 
         /// <summary>
@@ -178,7 +171,7 @@ namespace Dt.Base.Docking
             IEnumerable<Tabs> sects = from sect in dockItem.GetAllTabs()
                                       where sect != null && sect.Visibility == Visibility.Visible
                                       select sect;
-            
+
             if (sects.Count() == 1)
             {
                 // 窗口中只一个Tabs时，隐藏Tabs标题，在窗口标题显示
@@ -251,46 +244,30 @@ namespace Dt.Base.Docking
                 UpdateHeader();
         }
 
-        /// <summary>
-        /// 获取焦点
-        /// </summary>
-        /// <param name="e"></param>
         protected override void OnGotFocus(RoutedEventArgs e)
         {
             base.OnGotFocus(e);
             BringToFront(this);
         }
 
-        /// <summary>
-        /// 按下
-        /// </summary>
-        /// <param name="e"></param>
         protected override void OnPointerPressed(PointerRoutedEventArgs e)
         {
             base.OnPointerPressed(e);
             BringToFront(this);
         }
 
-        /// <summary>
-        /// 移动
-        /// </summary>
-        /// <param name="e"></param>
         protected override void OnPointerMoved(PointerRoutedEventArgs e)
         {
             base.OnPointerMoved(e);
             if (_isHeadPressed)
             {
-                PointerPoint position = e.GetCurrentPoint(_owner);
+                PointerPoint position = e.GetCurrentPoint(_panel);
                 HorizontalOffset = position.Position.X - _startPoint.X;
                 VerticalOffset = position.Position.Y - _startPoint.Y;
-                this.DragDelta(e);
+                _owner.OnDragDelta(this, e);
             }
         }
 
-        /// <summary>
-        /// 抬起
-        /// </summary>
-        /// <param name="e"></param>
         protected override void OnPointerReleased(PointerRoutedEventArgs e)
         {
             base.OnPointerReleased(e);
@@ -299,7 +276,7 @@ namespace Dt.Base.Docking
                 _isHeadPressed = false;
                 ReleasePointerCapture(e.Pointer);
             }
-            this.EndDrag(e);
+            _owner.OnDragCompleted(this);
         }
         #endregion
 
@@ -311,7 +288,7 @@ namespace Dt.Base.Docking
         /// <param name="e"></param>
         void OnheaderElementPointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            Point pt1 = e.GetCurrentPoint(_owner).Position;
+            Point pt1 = e.GetCurrentPoint(_panel).Position;
             if (GetResizeDirection(pt1) == ResizeDirection.None)
             {
                 _isHeadPressed = true;
@@ -327,12 +304,12 @@ namespace Dt.Base.Docking
         /// <param name="e"></param>
         void OnRootGridPointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            Point mousePosition = e.GetCurrentPoint(_owner).Position;
+            Point mousePosition = e.GetCurrentPoint(_panel).Position;
             if (GetResizeDirection(mousePosition) != ResizeDirection.None)
             {
                 _isHeadPressed = false;
                 ReleasePointerCapture(e.Pointer);
-                Point offset = TransformToVisual(_owner).TransformPoint(new Point(0.0, 0.0));
+                Point offset = TransformToVisual(_panel).TransformPoint(new Point(0.0, 0.0));
                 _isResizing = true;
                 _resizeDirection = GetResizeDirection(mousePosition);
                 _startPoint = mousePosition;
@@ -351,7 +328,7 @@ namespace Dt.Base.Docking
         {
             if (!_isResizing)
             {
-                UpdateMouseCursor(GetResizeDirection(e.GetCurrentPoint(_owner).Position));
+                UpdateMouseCursor(GetResizeDirection(e.GetCurrentPoint(_panel).Position));
             }
             else
             {
@@ -364,51 +341,51 @@ namespace Dt.Base.Docking
                 switch (_resizeDirection)
                 {
                     case ResizeDirection.Left:
-                        newWidth = Math.Min(maxWidth, Math.Max(minWidth, (_initRect.Width + _startPoint.X) - e.GetCurrentPoint(_owner).Position.X));
+                        newWidth = Math.Min(maxWidth, Math.Max(minWidth, (_initRect.Width + _startPoint.X) - e.GetCurrentPoint(_panel).Position.X));
                         Width = newWidth;
                         HorizontalOffset = _initRect.Right - newWidth;
                         return;
 
                     case ResizeDirection.TopLeft:
-                        newWidth = Math.Min(maxWidth, Math.Max(minWidth, (_initRect.Width + _startPoint.X) - e.GetCurrentPoint(_owner).Position.X));
+                        newWidth = Math.Min(maxWidth, Math.Max(minWidth, (_initRect.Width + _startPoint.X) - e.GetCurrentPoint(_panel).Position.X));
                         Width = newWidth;
                         HorizontalOffset = _initRect.Right - newWidth;
-                        newHeight = Math.Min(maxHeight, Math.Max(minHeight, (_initRect.Height + _startPoint.Y) - e.GetCurrentPoint(_owner).Position.Y));
+                        newHeight = Math.Min(maxHeight, Math.Max(minHeight, (_initRect.Height + _startPoint.Y) - e.GetCurrentPoint(_panel).Position.Y));
                         Height = newHeight;
                         VerticalOffset = _initRect.Bottom - newHeight;
                         return;
 
                     case ResizeDirection.Top:
-                        newHeight = Math.Min(maxHeight, Math.Max(minHeight, (_initRect.Height + _startPoint.Y) - e.GetCurrentPoint(_owner).Position.Y));
+                        newHeight = Math.Min(maxHeight, Math.Max(minHeight, (_initRect.Height + _startPoint.Y) - e.GetCurrentPoint(_panel).Position.Y));
                         Height = newHeight;
                         VerticalOffset = _initRect.Bottom - newHeight;
                         return;
 
                     case ResizeDirection.TopRight:
-                        newHeight = Math.Min(maxHeight, Math.Max(minHeight, (_initRect.Height + _startPoint.Y) - e.GetCurrentPoint(_owner).Position.Y));
+                        newHeight = Math.Min(maxHeight, Math.Max(minHeight, (_initRect.Height + _startPoint.Y) - e.GetCurrentPoint(_panel).Position.Y));
                         Height = newHeight;
                         VerticalOffset = _initRect.Bottom - newHeight;
-                        Width = Math.Min(maxWidth, Math.Max(minWidth, (_initRect.Width + e.GetCurrentPoint(_owner).Position.X) - _startPoint.X));
+                        Width = Math.Min(maxWidth, Math.Max(minWidth, (_initRect.Width + e.GetCurrentPoint(_panel).Position.X) - _startPoint.X));
                         return;
 
                     case ResizeDirection.Right:
-                        Width = Math.Min(maxWidth, Math.Max(minWidth, (_initRect.Width + e.GetCurrentPoint(_owner).Position.X) - _startPoint.X));
+                        Width = Math.Min(maxWidth, Math.Max(minWidth, (_initRect.Width + e.GetCurrentPoint(_panel).Position.X) - _startPoint.X));
                         return;
 
                     case ResizeDirection.BottomRight:
-                        Height = Math.Min(maxHeight, Math.Max(minHeight, (_initRect.Height + e.GetCurrentPoint(_owner).Position.Y) - _startPoint.Y));
-                        Width = Math.Min(maxWidth, Math.Max(minWidth, (_initRect.Width + e.GetCurrentPoint(_owner).Position.X) - _startPoint.X));
+                        Height = Math.Min(maxHeight, Math.Max(minHeight, (_initRect.Height + e.GetCurrentPoint(_panel).Position.Y) - _startPoint.Y));
+                        Width = Math.Min(maxWidth, Math.Max(minWidth, (_initRect.Width + e.GetCurrentPoint(_panel).Position.X) - _startPoint.X));
                         return;
 
                     case ResizeDirection.Bottom:
-                        Height = Math.Min(maxHeight, Math.Max(minHeight, (_initRect.Height + e.GetCurrentPoint(_owner).Position.Y) - _startPoint.Y));
+                        Height = Math.Min(maxHeight, Math.Max(minHeight, (_initRect.Height + e.GetCurrentPoint(_panel).Position.Y) - _startPoint.Y));
                         return;
 
                     case ResizeDirection.BottomLeft:
-                        newWidth = Math.Min(maxWidth, Math.Max(minWidth, (_initRect.Width + _startPoint.X) - e.GetCurrentPoint(_owner).Position.X));
+                        newWidth = Math.Min(maxWidth, Math.Max(minWidth, (_initRect.Width + _startPoint.X) - e.GetCurrentPoint(_panel).Position.X));
                         Width = newWidth;
                         HorizontalOffset = _initRect.Right - newWidth;
-                        Height = Math.Min(maxHeight, Math.Max(minHeight, (_initRect.Height + e.GetCurrentPoint(_owner).Position.Y) - _startPoint.Y));
+                        Height = Math.Min(maxHeight, Math.Max(minHeight, (_initRect.Height + e.GetCurrentPoint(_panel).Position.Y) - _startPoint.Y));
                         return;
 
                     case ResizeDirection.None:
@@ -441,12 +418,12 @@ namespace Dt.Base.Docking
         {
             if (!_isResizing)
             {
-                UpdateMouseCursor(GetResizeDirection(e.GetCurrentPoint(_owner).Position));
+                UpdateMouseCursor(GetResizeDirection(e.GetCurrentPoint(_panel).Position));
             }
         }
         #endregion
 
-        #region 私有方法
+        #region 内部方法
         /// <summary>
         /// 获取当前位置状态
         /// </summary>
@@ -454,7 +431,7 @@ namespace Dt.Base.Docking
         /// <returns></returns>
         ResizeDirection GetResizeDirection(Point pointerPosition)
         {
-            Point offset = TransformToVisual(_owner).TransformPoint(new Point(0.0, 0.0));
+            Point offset = TransformToVisual(_panel).TransformPoint(new Point(0.0, 0.0));
             double resizerSize = 7.0;
             pointerPosition = new Point(Math.Abs(pointerPosition.X - offset.X), Math.Abs(pointerPosition.Y - offset.Y));
             if ((pointerPosition.X >= 0.0) && (pointerPosition.X < resizerSize))

@@ -17,6 +17,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media;
 #endregion
@@ -77,83 +78,14 @@ namespace Dt.Base
             typeof(Tab),
             typeof(Win),
             new PropertyMetadata(null));
-
-        static Win()
-        {
-            EventManager.RegisterClassHandler(typeof(Win), Tab.DragStartedEvent, new DragInfoEventHandler(OnDragStarted));
-            EventManager.RegisterClassHandler(typeof(Win), Tab.DragDeltaEvent, new DragInfoEventHandler(OnDragDelta));
-            EventManager.RegisterClassHandler(typeof(Win), Tab.DragCompletedEvent, new DragInfoEventHandler(OnDragCompleted));
-
-            EventManager.RegisterClassHandler(typeof(Win), GridResizer.PreviewResizeStartEvent, new EventHandler<ResizeEventArgs>(OnPreviewResize));
-            EventManager.RegisterClassHandler(typeof(Win), GridResizer.LayoutChangeEndedEvent, new EventHandler<BaseRoutedEventArgs>(OnLayoutChangeEnded));
-
-            EventManager.RegisterClassHandler(typeof(Win), Tab.PinChangeEvent, new EventHandler<PinChangeEventArgs>(OnPinChange));
-        }
-
-        static void OnDragStarted(object sender, DragInfoEventArgs e)
-        {
-            (sender as Win).OnDragStarted(e);
-        }
-
-        static void OnDragDelta(object sender, DragInfoEventArgs e)
-        {
-            (sender as Win).OnDragDelta(e);
-        }
-
-        static void OnDragCompleted(object sender, DragInfoEventArgs e)
-        {
-            (sender as Win).OnDragCompleted(e);
-        }
-
-        static void OnPreviewResize(object sender, ResizeEventArgs e)
-        {
-            Win dock = sender as Win;
-            FrameworkElement lastChild = (from item in dock._dockPanel.Children.OfType<FrameworkElement>()
-                                          where item.Visibility == Visibility.Visible
-                                          select item).LastOrDefault();
-            if (lastChild != null)
-            {
-                e.AvailableSize = new Size(lastChild.ActualWidth, lastChild.ActualHeight);
-                e.MinSize = new Size(lastChild.MinWidth, lastChild.MinHeight);
-            }
-        }
-
-        static void OnLayoutChangeEnded(object sender, BaseRoutedEventArgs e)
-        {
-            Win dock = sender as Win;
-            GridResizer resizer = e.OriginalSource as GridResizer;
-            if (resizer != null)
-            {
-                dock.UpdateLayout();
-                if (resizer.Preview.OffsetX != 0 || resizer.Preview.OffsetY != 0)
-                {
-                    dock.OnLayoutChanged();
-                    e.Handled = true;
-                }
-            }
-        }
-
-        static void OnPinChange(object sender, PinChangeEventArgs args)
-        {
-            args.Handled = true;
-            Win dock = sender as Win;
-            Tab item = args.OriginalSource as Tab;
-            if (dock != null && item != null && item.Parent != null)
-                dock.OnPinChange(item);
-        }
-
         #endregion
 
         #region 成员变量
         static Size _defaultFloatSize = new Size(300.0, 300.0);
-        readonly WinItemList _items = new WinItemList();
         Canvas _popupPanel;
         Compass _compass;
         RootCompass _rootCompass;
         Border _dragCue;
-        WinItemPanel _dockPanel;
-        WinItem _centerItem;
-        bool _isReseting = true;
         LayoutManager _layout;
         Tabs _sectWithCompass;
         bool _isDragDelta;
@@ -241,10 +173,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取内容元素集合
         /// </summary>
-        public WinItemList Items
-        {
-            get { return _items; }
-        }
+        public WinItemList Items { get; } = new WinItemList();
 
         /// <summary>
         /// 获取是否允许恢复默认布局
@@ -277,10 +206,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取内部停靠面板
         /// </summary>
-        internal WinItemPanel DockPanel
-        {
-            get { return _dockPanel; }
-        }
+        internal WinItemPanel RootPanel { get; private set; }
 
         /// <summary>
         /// 获取左侧隐藏面板
@@ -305,19 +231,12 @@ namespace Dt.Base
         /// <summary>
         /// 获取是否正在重置布局
         /// </summary>
-        internal bool IsReseting
-        {
-            get { return _isReseting; }
-            set { _isReseting = value; }
-        }
+        internal bool IsReseting { get; set; }
 
         /// <summary>
         /// 获取中部停靠容器
         /// </summary>
-        internal WinItem CenterItem
-        {
-            get { return _centerItem; }
-        }
+        internal WinItem CenterItem { get; private set; }
         #endregion
 
         #region PhoneUI
@@ -666,38 +585,37 @@ namespace Dt.Base
 
         void InitTemplate()
         {
-            _dockPanel = (WinItemPanel)GetTemplateChild("ContentDockPanel");
-            _centerItem = (WinItem)GetTemplateChild("CenterDockItem");
+            RootPanel = (WinItemPanel)GetTemplateChild("ContentDockPanel");
+            CenterItem = (WinItem)GetTemplateChild("CenterDockItem");
 
             // 已设置主区内容
             Tabs centerTabs = (Tabs)GetValue(CenterTabsProperty);
             if (centerTabs != null)
-                _centerItem.Items.Add(centerTabs);
+                CenterItem.Items.Add(centerTabs);
 
             _layout = new LayoutManager(this);
-            _layout.Init();
-            _items.ItemsChanged += OnItemsChanged;
+            Items.ItemsChanged += OnItemsChanged;
             SizeChanged += OnSizeChanged;
         }
 
         void OnItemsChanged(object sender, ItemListChangedArgs e)
         {
-            if (_isReseting || _dockPanel == null)
+            if (IsReseting || RootPanel == null)
                 return;
 
             if (e.CollectionChange == CollectionChange.ItemInserted)
             {
-                WinItem item = _items[e.Index] as WinItem;
+                WinItem item = Items[e.Index] as WinItem;
                 if (item != null
                     && item.DockState != WinItemState.Floating
-                    && !_dockPanel.Children.Contains(item))
+                    && !RootPanel.Children.Contains(item))
                 {
-                    _dockPanel.Children.Insert(e.Index, item);
+                    RootPanel.Children.Insert(e.Index, item);
                 }
             }
             else if (e.CollectionChange == CollectionChange.ItemRemoved)
             {
-                _dockPanel.Children.RemoveAt(e.Index);
+                RootPanel.Children.RemoveAt(e.Index);
             }
             else
             {
@@ -710,22 +628,20 @@ namespace Dt.Base
         /// <summary>
         /// 开始拖动
         /// </summary>
-        /// <param name="e"></param>
-        void OnDragStarted(DragInfoEventArgs e)
+        /// <param name="p_target"></param>
+        /// <param name="p_pointer"></param>
+        internal void OnDragStarted(object p_target, PointerRoutedEventArgs p_pointer)
         {
             Tab tab;
-            TabHeader header = null;
-            FrameworkElement element = null;
-            Tabs tabs = null;
+            TabHeader header;
+            Tabs tabs;
 
-            if ((tab = e.OriginalSource as Tab) != null)
+            if ((tab = p_target as Tab) != null)
             {
-                element = tab;
                 tabs = tab.OwnerTabs;
             }
-            else if ((header = e.OriginalSource as TabHeader) != null)
+            else if ((header = p_target as TabHeader) != null)
             {
-                element = header;
                 tabs = header.Owner as Tabs;
             }
             else
@@ -734,10 +650,10 @@ namespace Dt.Base
             }
 
             // 水平位置所占比例
-            Point offset = e.PointerArgs.GetCurrentPoint(tabs).Position;
+            Point offset = p_pointer.GetCurrentPoint(tabs).Position;
             double offsetX = offset.X / tabs.RenderSize.Width;
 
-            ToolWindow win = null;
+            ToolWindow win;
             if (tab != null)
             {
                 win = OpenInWindow(tab);
@@ -747,11 +663,11 @@ namespace Dt.Base
                 win = OpenInWindow(tabs);
             }
 
-            Point winPos = e.PointerArgs.GetCurrentPoint(this).Position;
+            Point winPos = p_pointer.GetCurrentPoint(this).Position;
             offsetX = offsetX > 0 ? Math.Round(offsetX * win.Width) : 10;
             win.HorizontalOffset = winPos.X - offsetX;
             win.VerticalOffset = winPos.Y - 20;
-            win.StartDrag(e.PointerArgs);
+            win.StartDrag(p_pointer);
         }
 
         /// <summary>
@@ -825,8 +741,7 @@ namespace Dt.Base
             if (_popupPanel == null)
                 CreatePopupCanvas();
 
-            ToolWindow win = new ToolWindow();
-            win.Owner = _popupPanel;
+            ToolWindow win = new ToolWindow(this, _popupPanel);
             win.Width = p_size.Width;
             win.Height = p_size.Height;
             win.HorizontalOffset = p_location.X;
@@ -866,19 +781,19 @@ namespace Dt.Base
         /// <summary>
         /// 拖拽中
         /// </summary>
-        /// <param name="e"></param>
-        void OnDragDelta(DragInfoEventArgs e)
+        /// <param name="p_toolWin"></param>
+        /// <param name="p_pointer"></param>
+        internal void OnDragDelta(ToolWindow p_toolWin, PointerRoutedEventArgs p_pointer)
         {
-            ToolWindow win = e.OriginalSource as ToolWindow;
-            if (win == null)
+            if (p_toolWin == null)
                 return;
 
-            if (CheckIsDockable(win))
+            if (CheckIsDockable(p_toolWin))
             {
-                Point pos = e.PointerArgs.GetCurrentPoint(_popupPanel).Position;
-                UpdateCompass(pos, win);
+                Point pos = p_pointer.GetCurrentPoint(_popupPanel).Position;
+                UpdateCompass(pos, p_toolWin);
                 UpdateRootCompass(pos);
-                AdjustCueSize(win);
+                AdjustCueSize(p_toolWin);
             }
             else
             {
@@ -954,7 +869,7 @@ namespace Dt.Base
             {
                 // 在WinItem内部停靠
                 rect = _sectWithCompass.GetRectDimenstion(_compass.DockPosition, p_win.Content as WinItem);
-                Point topLeft = GetElementPositionRelatedToPopup(_sectWithCompass.Owner);
+                Point topLeft = GetElementPositionRelatedToPopup(_sectWithCompass.OwnerWinItem);
                 rect.X += topLeft.X;
                 rect.Y += topLeft.Y;
                 showCue = true;
@@ -1018,7 +933,7 @@ namespace Dt.Base
             {
                 Point pt = p_subtree.TransformToVisual(null).TransformPoint(p_pos);
                 return (from sect in VisualTreeHelper.FindElementsInHostCoordinates(pt, p_subtree).OfType<Tabs>()
-                        where CheckIsDockable(sect) && !p_parent.IsAncestorOf(sect.Owner)
+                        where CheckIsDockable(sect) && !p_parent.IsAncestorOf(sect.OwnerWinItem)
                         select sect).FirstOrDefault();
             }
             return null;
@@ -1030,24 +945,23 @@ namespace Dt.Base
         /// <summary>
         /// 拖拽结束
         /// </summary>
-        /// <param name="e"></param>
-        void OnDragCompleted(DragInfoEventArgs e)
+        /// <param name="p_toolWin"></param>
+        internal void OnDragCompleted(ToolWindow p_toolWin)
         {
-            ToolWindow win = e.OriginalSource as ToolWindow;
-            if (win == null)
+            if (p_toolWin == null)
                 return;
 
-            WinItem winItem = win.Content as WinItem;
+            WinItem winItem = p_toolWin.Content as WinItem;
             if (_sectWithCompass != null && _compass.DockPosition != DockPosition.None)
             {
                 // 停靠在WinItem内部
-                win.ClearValue(ContentControl.ContentProperty);
+                p_toolWin.ClearValue(ContentControl.ContentProperty);
                 _sectWithCompass.AddItem(winItem, _compass.DockPosition);
             }
             else if (_rootCompass.DockPosition != DockPosition.None && _rootCompass.DockPosition != DockPosition.Center)
             {
                 // 停靠在四边
-                win.ClearValue(ContentControl.ContentProperty);
+                p_toolWin.ClearValue(ContentControl.ContentProperty);
                 switch (_rootCompass.DockPosition)
                 {
                     case DockPosition.Top:
@@ -1131,8 +1045,8 @@ namespace Dt.Base
                 SetValue(CenterTabsProperty, tabs);
 
                 // 已应用模板
-                if (_centerItem != null)
-                    _centerItem.Items.Add(tabs);
+                if (CenterItem != null)
+                    CenterItem.Items.Add(tabs);
             }
             else
             {
@@ -1178,12 +1092,12 @@ namespace Dt.Base
 
         static ToolWindow GetParentWindow(Tab p_sectItem)
         {
-            return GetParentWindow(p_sectItem?.OwnerTabs?.Owner);
+            return GetParentWindow(p_sectItem?.OwnerTabs?.OwnerWinItem);
         }
 
         static ToolWindow GetParentWindow(Tabs p_sect)
         {
-            return GetParentWindow(p_sect?.Owner);
+            return GetParentWindow(p_sect?.OwnerWinItem);
         }
 
         static ToolWindow GetParentWindow(WinItem p_winItem)
@@ -1206,7 +1120,7 @@ namespace Dt.Base
         #endregion
 
         #region 四周停靠
-        void OnPinChange(Tab item)
+        internal void OnPinChange(Tab item)
         {
             if (item.IsPinned)
             {
@@ -1236,7 +1150,7 @@ namespace Dt.Base
             {
                 Tabs sect = item.Owner as Tabs;
                 WinItem dockItem;
-                if (sect != null && (dockItem = sect.Owner) != null)
+                if (sect != null && (dockItem = sect.OwnerWinItem) != null)
                 {
                     switch (dockItem.DockState)
                     {
@@ -1340,6 +1254,24 @@ namespace Dt.Base
             Grid grid = (Grid)GetTemplateChild("RootGrid");
             grid.Children.Insert(0, tab);
             BottomAutoHide = tab;
+        }
+        #endregion
+
+        #region 调整区域大小
+        /// <summary>
+        /// 调整区域大小后刷新布局
+        /// </summary>
+        /// <param name="p_resizer"></param>
+        internal void OnLayoutChangeEnded(GridResizer p_resizer)
+        {
+            if (p_resizer != null)
+            {
+                UpdateLayout();
+                if (p_resizer.Preview.OffsetX != 0 || p_resizer.Preview.OffsetY != 0)
+                {
+                    OnLayoutChanged();
+                }
+            }
         }
         #endregion
 

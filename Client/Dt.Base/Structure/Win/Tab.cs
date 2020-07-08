@@ -25,55 +25,6 @@ namespace Dt.Base
     /// </summary>
     public partial class Tab : TabItem, IPhonePage
     {
-        #region 系统事件
-        /// <summary>
-        /// 开始拖动事件
-        /// </summary>
-        internal static BaseRoutedEvent DragStartedEvent;
-
-        /// <summary>
-        /// 拖拽移动事件
-        /// </summary>
-        internal static BaseRoutedEvent DragDeltaEvent;
-
-        /// <summary>
-        /// 拖动结束事件
-        /// </summary>
-        internal static BaseRoutedEvent DragCompletedEvent;
-
-        /// <summary>
-        /// Pin状态变化事件
-        /// </summary>
-        internal static BaseRoutedEvent PinChangeEvent;
-
-        static Tab()
-        {
-            DragStartedEvent = EventManager.RegisterRoutedEvent(
-                "DragStarted",
-                RoutingStrategy.Bubble,
-                typeof(DragInfoEventHandler),
-                typeof(Tab));
-
-            DragDeltaEvent = EventManager.RegisterRoutedEvent(
-                "DragDelta",
-                RoutingStrategy.Bubble,
-                typeof(DragInfoEventHandler),
-                typeof(Tab));
-
-            DragCompletedEvent = EventManager.RegisterRoutedEvent(
-                "DragCompleted",
-                RoutingStrategy.Bubble,
-                typeof(DragInfoEventHandler),
-                typeof(Tab));
-
-            PinChangeEvent = EventManager.RegisterRoutedEvent(
-                "PinChange",
-                RoutingStrategy.Tunnel,
-                typeof(EventHandler<PinChangeEventArgs>),
-                typeof(Tab));
-        }
-        #endregion
-
         #region 静态内容
         public readonly static DependencyProperty IconProperty = DependencyProperty.Register(
             "Icon",
@@ -332,9 +283,9 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 所属窗口，PhoneUI时用
+        /// 所属Win
         /// </summary>
-        public Win OwnerWin { get; internal set; }
+        internal Win OwnerWin { get; set; }
         #endregion
 
         #region 外部方法
@@ -496,7 +447,7 @@ namespace Dt.Base
         protected override void OnStartDrag(PointerRoutedEventArgs e)
         {
             if (IsPinned && CanFloat)
-                this.StartDrag(e);
+                OwnerWin.OnDragStarted(this, e);
         }
         #endregion
 
@@ -516,7 +467,7 @@ namespace Dt.Base
             {
                 if (!IsPinned && (IsFloating || IsInCenter))
                     throw new InvalidOperationException("浮动或在中部区域时无法自动隐藏！");
-                this.RaiseEvent(new PinChangeEventArgs(PinChangeEvent, this, IsPinned));
+                OwnerWin.OnPinChange(this);
             }
         }
 

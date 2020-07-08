@@ -102,27 +102,6 @@ namespace Dt.Base
             d.SetValue(CursorDisplayHandlerProperty, value);
         }
         #endregion
-
-        #region 内部附加属性
-
-        #region DependencyObjectType
-        /// <summary>
-        /// 为依赖对象存储依赖类型声明
-        /// </summary>
-        internal static readonly DependencyProperty DependencyObjectTypeProperty = DependencyProperty.RegisterAttached("DependencyObjectType", typeof(DependencyObjectType), typeof(Attached), null);
-
-        internal static DependencyObjectType GetDependencyObjectType(DependencyObject element)
-        {
-            return (element.GetValue(DependencyObjectTypeProperty) as DependencyObjectType);
-        }
-
-        internal static void SetDependencyObjectType(DependencyObject element, DependencyObjectType type)
-        {
-            element.SetValue(DependencyObjectTypeProperty, type);
-        }
-
-        #endregion
-        #endregion
     }
 
     /// <summary>

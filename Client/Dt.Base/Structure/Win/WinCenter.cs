@@ -20,14 +20,9 @@ namespace Dt.Base
     [ContentProperty(Name = nameof(Items))]
     public partial class WinCenter : Control, IWinItemList
     {
-        readonly WinItemList _items = new WinItemList();
-
         /// <summary>
         /// 获取内容元素集合
         /// </summary>
-        public WinItemList Items
-        {
-            get { return _items; }
-        }
+        public WinItemList Items { get; } = new WinItemList();
     }
 }

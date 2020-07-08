@@ -45,54 +45,11 @@ namespace Dt.Base.Docking
         {
             _owner = p_owner;
             _tabs = new Dictionary<string, Tab>();
+            Init();
         }
         #endregion
 
         #region 外部方法
-        /// <summary>
-        /// 初始化布局环境
-        /// 1. 记录默认布局
-        /// 2. 加载状态库中的历史布局
-        /// 3. 无历史布局则加载默认布局
-        /// </summary>
-        public void Init()
-        {
-            if (DesignMode.DesignModeEnabled)
-            {
-                // 设计模式下可视处理
-                WinItem dockItem;
-                WinCenter center;
-                for (int i = 0; i < _owner.Items.Count; i++)
-                {
-                    if ((dockItem = _owner.Items[i] as WinItem) != null)
-                        _owner.DockPanel.Children.Insert(i, dockItem);
-                    else if ((center = _owner.Items[i] as WinCenter) != null)
-                        _owner.DockPanel.CenterItem = center;
-                }
-                return;
-            }
-
-            // 记录默认布局
-            SaveDefaultXml();
-            if (_owner.AutoSaveLayout)
-            {
-                DockLayout cookie = AtLocal.GetFirst<DockLayout>($"select * from DockLayout where BaseUri=\"{_owner.BaseUri.AbsolutePath}\"");
-                if (cookie != null)
-                {
-                    // 加载历史布局
-                    if (ApplyLayout(cookie.Layout))
-                    {
-                        _owner.AllowResetLayout = true;
-                    }
-                    else
-                    {
-                        // 历史布局加载失败，重载默认布局
-                        ApplyLayout(_default);
-                        _owner.AllowResetLayout = false;
-                    }
-                }
-            }
-        }
 
         /// <summary>
         /// 恢复默认布局
@@ -190,6 +147,252 @@ namespace Dt.Base.Docking
         }
         #endregion
 
+        #region 初始化
+        /// <summary>
+        /// 初始化布局环境
+        /// 1. 记录默认布局
+        /// 2. 加载状态库中的历史布局
+        /// 3. 无历史布局则加载默认布局
+        /// </summary>
+        void Init()
+        {
+            // 记录默认布局
+            SaveDefaultXml();
+            if (_owner.AutoSaveLayout)
+            {
+                DockLayout cookie = AtLocal.GetFirst<DockLayout>($"select * from DockLayout where BaseUri=\"{_owner.BaseUri.AbsolutePath}\"");
+                if (cookie != null)
+                {
+                    // 加载历史布局
+                    if (ApplyLayout(cookie.Layout))
+                    {
+                        _owner.AllowResetLayout = true;
+                    }
+                    else
+                    {
+                        // 历史布局加载失败，重载默认布局
+                        ApplyLayout(_default);
+                        _owner.AllowResetLayout = false;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 保存初始布局，同步处理布局、提取Tab字典，已调优
+        /// </summary>
+        void SaveDefaultXml()
+        {
+            _owner.IsReseting = true;
+
+            // 按类型提取各项
+            List<WinCenter> centers = new List<WinCenter>();
+            List<WinItem> lefts = new List<WinItem>();
+            List<WinItem> rights = new List<WinItem>();
+            List<WinItem> topBottom = new List<WinItem>();
+            List<WinItem> floats = new List<WinItem>();
+            List<Tab> leftHide = new List<Tab>();
+            List<Tab> rightHide = new List<Tab>();
+            List<Tab> topHide = new List<Tab>();
+            List<Tab> bottomHide = new List<Tab>();
+            while (_owner.Items.Count > 0)
+            {
+                object obj = _owner.Items[0];
+                _owner.Items.RemoveAt(0);
+
+                if (obj is WinItem di)
+                {
+                    ExtractItems(di);
+                    if (di.DockState == WinItemState.Floating)
+                    {
+                        floats.Add(di);
+                    }
+                    else
+                    {
+                        // 在停靠中挑出自动隐藏项
+                        foreach (Tab tab in GetHideItems(di))
+                        {
+                            if (di.DockState == WinItemState.DockedLeft)
+                                leftHide.Add(tab);
+                            else if (di.DockState == WinItemState.DockedRight)
+                                rightHide.Add(tab);
+                            else if (di.DockState == WinItemState.DockedTop)
+                                topHide.Add(tab);
+                            else if (di.DockState == WinItemState.DockedBottom)
+                                bottomHide.Add(tab);
+                        }
+
+                        if (!IsRemoved(di))
+                        {
+                            RemoveUnused(di);
+
+                            if (di.DockState == WinItemState.DockedLeft)
+                                lefts.Add(di);
+                            else if (di.DockState == WinItemState.DockedRight)
+                                rights.Add(di);
+                            else
+                                topBottom.Add(di);
+                        }
+                    }
+                }
+                else if (obj is WinCenter center)
+                {
+                    ExtractItems(center);
+                    centers.Add(center);
+                }
+                else
+                {
+                    // 包含普通界面元素时：
+                    // 1. 将其放于主区
+                    // 2. 不显示标题栏
+                    // 3. 不自动保存布局状态
+                    // 4. 不显示恢复默认布局按钮
+                    // 5. 一般为单视图窗口
+                    _owner.AutoSaveLayout = false;
+                    WinCenter wc = new WinCenter();
+                    Tabs tabs = new Tabs { ShowHeader = false };
+                    tabs.Items.Add(new Tab { Content = obj });
+                    wc.Items.Add(tabs);
+                    centers.Add(wc);
+                }
+            }
+
+            StringBuilder xml = new StringBuilder();
+            using (XmlWriter writer = XmlWriter.Create(xml, AtKit.WriterSettings))
+            {
+                writer.WriteStartElement("Items");
+
+                // 停靠项，按左右上下顺序输出
+                writer.WriteStartElement("Win");
+                int index = 0;
+                _colsWidth = new List<double>();
+                // 首先Center宽度
+                _colsWidth.Add(centers.Count > 0 ? _centerWidth : 0);
+                if (lefts.Count > 0)
+                {
+                    foreach (var di in lefts)
+                    {
+                        WriteWinItem(di, writer);
+                        _owner.Items.Add(di);
+                        _owner.RootPanel.Children.Insert(index++, di);
+                        _colsWidth.Add(di.InitWidth);
+                    }
+                }
+                if (rights.Count > 0)
+                {
+                    foreach (var di in rights)
+                    {
+                        WriteWinItem(di, writer);
+                        _owner.Items.Add(di);
+                        _owner.RootPanel.Children.Insert(index++, di);
+                        _colsWidth.Add(di.InitWidth);
+                    }
+                }
+                if (topBottom.Count > 0)
+                {
+                    foreach (var di in topBottom)
+                    {
+                        WriteWinItem(di, writer);
+                        _owner.Items.Add(di);
+                        _owner.RootPanel.Children.Insert(index++, di);
+                    }
+                }
+                writer.WriteEndElement();
+
+                // 中部项
+                if (centers.Count > 0)
+                {
+                    writer.WriteStartElement("Center");
+                    foreach (WinCenter center in centers)
+                    {
+                        WriteCenter(writer, center.Items);
+                        // 挪到CenterItem，特殊处理！
+                        while (center.Items.Count > 0)
+                        {
+                            var centerItem = center.Items[0];
+                            center.Items.RemoveAt(0);
+                            _owner.CenterItem.Items.Add(centerItem);
+                        }
+                    }
+                    writer.WriteEndElement();
+                }
+
+                // 左侧隐藏项
+                if (leftHide.Count > 0)
+                {
+                    writer.WriteStartElement("Left");
+                    if (_owner.LeftAutoHide == null)
+                        _owner.CreateLeftAutoHideTab();
+                    foreach (Tab sectItem in leftHide)
+                    {
+                        WriteTab(sectItem, writer);
+                        _owner.LeftAutoHide.Unpin(sectItem);
+                    }
+                    writer.WriteEndElement();
+                }
+
+                // 右侧隐藏项
+                if (rightHide.Count > 0)
+                {
+                    writer.WriteStartElement("Right");
+                    if (_owner.RightAutoHide == null)
+                        _owner.CreateRightAutoHideTab();
+                    foreach (Tab sectItem in rightHide)
+                    {
+                        WriteTab(sectItem, writer);
+                        _owner.RightAutoHide.Unpin(sectItem);
+                    }
+                    writer.WriteEndElement();
+                }
+
+                // 上侧隐藏项
+                if (topHide.Count > 0)
+                {
+                    writer.WriteStartElement("Top");
+                    if (_owner.TopAutoHide == null)
+                        _owner.CreateTopAutoHideTab();
+                    foreach (Tab sectItem in topHide)
+                    {
+                        WriteTab(sectItem, writer);
+                        _owner.TopAutoHide.Unpin(sectItem);
+                    }
+                    writer.WriteEndElement();
+                }
+
+                // 下侧隐藏项
+                if (bottomHide.Count > 0)
+                {
+                    writer.WriteStartElement("Bottom");
+                    if (_owner.BottomAutoHide == null)
+                        _owner.CreateBottomAutoHideTab();
+                    foreach (Tab sectItem in bottomHide)
+                    {
+                        WriteTab(sectItem, writer);
+                        _owner.BottomAutoHide.Unpin(sectItem);
+                    }
+                    writer.WriteEndElement();
+                }
+
+                // 浮动项
+                if (floats.Count > 0)
+                {
+                    writer.WriteStartElement("Float");
+                    foreach (WinItem dockItem in floats)
+                    {
+                        WriteWinItem(dockItem, writer);
+                        OpenInWindow(dockItem);
+                    }
+                    writer.WriteEndElement();
+                }
+
+                writer.WriteEndElement();
+                writer.Flush();
+            }
+            _default = xml.ToString();
+            _owner.IsReseting = false;
+        }
+        #endregion
+
         #region 应用xml布局
         /// <summary>
         /// 将xml布局描述应用到当前布局，若应用过程中若异常从状态库中删除xml，已调优
@@ -237,7 +440,7 @@ namespace Dt.Base.Docking
                     {
                         WinItem dockItem = CreateWinItem(item);
                         _owner.Items.Add(dockItem);
-                        _owner.DockPanel.Children.Insert(index++, dockItem);
+                        _owner.RootPanel.Children.Insert(index++, dockItem);
                     }
 
                     // 中部项
@@ -343,7 +546,7 @@ namespace Dt.Base.Docking
                     int end = _colsWidth.Count - 1;
                     int index = 0;
                     XElement elem = doc.Root.Element("Win");
-                    var pnl = _owner.DockPanel.Children;
+                    var pnl = _owner.RootPanel.Children;
                     foreach (XElement item in elem.Elements())
                     {
                         WinItem di = CreateWinItem(item);
@@ -686,220 +889,6 @@ namespace Dt.Base.Docking
             return xml.ToString();
         }
 
-        /// <summary>
-        /// 保存初始布局，同步处理布局、提取Tab字典，已调优
-        /// </summary>
-        void SaveDefaultXml()
-        {
-            _owner.IsReseting = true;
-
-            // 按类型提取各项
-            List<WinCenter> centers = new List<WinCenter>();
-            List<WinItem> lefts = new List<WinItem>();
-            List<WinItem> rights = new List<WinItem>();
-            List<WinItem> topBottom = new List<WinItem>();
-            List<WinItem> floats = new List<WinItem>();
-            List<Tab> leftHide = new List<Tab>();
-            List<Tab> rightHide = new List<Tab>();
-            List<Tab> topHide = new List<Tab>();
-            List<Tab> bottomHide = new List<Tab>();
-            while (_owner.Items.Count > 0)
-            {
-                object obj = _owner.Items[0];
-                _owner.Items.RemoveAt(0);
-
-                if (obj is WinItem di)
-                {
-                    ExtractItems(di);
-                    if (di.DockState == WinItemState.Floating)
-                    {
-                        floats.Add(di);
-                    }
-                    else
-                    {
-                        // 在停靠中挑出自动隐藏项
-                        foreach (Tab tab in GetHideItems(di))
-                        {
-                            if (di.DockState == WinItemState.DockedLeft)
-                                leftHide.Add(tab);
-                            else if (di.DockState == WinItemState.DockedRight)
-                                rightHide.Add(tab);
-                            else if (di.DockState == WinItemState.DockedTop)
-                                topHide.Add(tab);
-                            else if (di.DockState == WinItemState.DockedBottom)
-                                bottomHide.Add(tab);
-                        }
-
-                        if (!IsRemoved(di))
-                        {
-                            RemoveUnused(di);
-
-                            if (di.DockState == WinItemState.DockedLeft)
-                                lefts.Add(di);
-                            else if (di.DockState == WinItemState.DockedRight)
-                                rights.Add(di);
-                            else
-                                topBottom.Add(di);
-                        }
-                    }
-                }
-                else if (obj is WinCenter center)
-                {
-                    ExtractItems(center);
-                    centers.Add(center);
-                }
-                else
-                {
-                    // 包含普通界面元素时：
-                    // 1. 将其放于主区
-                    // 2. 不显示标题栏
-                    // 3. 不自动保存布局状态
-                    // 4. 不显示恢复默认布局按钮
-                    // 5. 一般为单视图窗口
-                    _owner.AutoSaveLayout = false;
-                    WinCenter wc = new WinCenter();
-                    Tabs tabs = new Tabs { ShowHeader = false };
-                    tabs.Items.Add(new Tab { Content = obj });
-                    wc.Items.Add(tabs);
-                    centers.Add(wc);
-                }
-            }
-
-            StringBuilder xml = new StringBuilder();
-            using (XmlWriter writer = XmlWriter.Create(xml, AtKit.WriterSettings))
-            {
-                writer.WriteStartElement("Items");
-
-                // 停靠项，按左右上下顺序输出
-                writer.WriteStartElement("Win");
-                int index = 0;
-                _colsWidth = new List<double>();
-                // 首先Center宽度
-                _colsWidth.Add(centers.Count > 0 ? _centerWidth : 0);
-                if (lefts.Count > 0)
-                {
-                    foreach (var di in lefts)
-                    {
-                        WriteWinItem(di, writer);
-                        _owner.Items.Add(di);
-                        _owner.DockPanel.Children.Insert(index++, di);
-                        _colsWidth.Add(di.InitWidth);
-                    }
-                }
-                if (rights.Count > 0)
-                {
-                    foreach (var di in rights)
-                    {
-                        WriteWinItem(di, writer);
-                        _owner.Items.Add(di);
-                        _owner.DockPanel.Children.Insert(index++, di);
-                        _colsWidth.Add(di.InitWidth);
-                    }
-                }
-                if (topBottom.Count > 0)
-                {
-                    foreach (var di in topBottom)
-                    {
-                        WriteWinItem(di, writer);
-                        _owner.Items.Add(di);
-                        _owner.DockPanel.Children.Insert(index++, di);
-                    }
-                }
-                writer.WriteEndElement();
-
-                // 中部项
-                if (centers.Count > 0)
-                {
-                    writer.WriteStartElement("Center");
-                    foreach (WinCenter center in centers)
-                    {
-                        WriteCenter(writer, center.Items);
-                        // 挪到CenterItem，特殊处理！
-                        while (center.Items.Count > 0)
-                        {
-                            var centerItem = center.Items[0];
-                            center.Items.RemoveAt(0);
-                            _owner.CenterItem.Items.Add(centerItem);
-                        }
-                    }
-                    writer.WriteEndElement();
-                }
-
-                // 左侧隐藏项
-                if (leftHide.Count > 0)
-                {
-                    writer.WriteStartElement("Left");
-                    if (_owner.LeftAutoHide == null)
-                        _owner.CreateLeftAutoHideTab();
-                    foreach (Tab sectItem in leftHide)
-                    {
-                        WriteTab(sectItem, writer);
-                        _owner.LeftAutoHide.Unpin(sectItem);
-                    }
-                    writer.WriteEndElement();
-                }
-
-                // 右侧隐藏项
-                if (rightHide.Count > 0)
-                {
-                    writer.WriteStartElement("Right");
-                    if (_owner.RightAutoHide == null)
-                        _owner.CreateRightAutoHideTab();
-                    foreach (Tab sectItem in rightHide)
-                    {
-                        WriteTab(sectItem, writer);
-                        _owner.RightAutoHide.Unpin(sectItem);
-                    }
-                    writer.WriteEndElement();
-                }
-
-                // 上侧隐藏项
-                if (topHide.Count > 0)
-                {
-                    writer.WriteStartElement("Top");
-                    if (_owner.TopAutoHide == null)
-                        _owner.CreateTopAutoHideTab();
-                    foreach (Tab sectItem in topHide)
-                    {
-                        WriteTab(sectItem, writer);
-                        _owner.TopAutoHide.Unpin(sectItem);
-                    }
-                    writer.WriteEndElement();
-                }
-
-                // 下侧隐藏项
-                if (bottomHide.Count > 0)
-                {
-                    writer.WriteStartElement("Bottom");
-                    if (_owner.BottomAutoHide == null)
-                        _owner.CreateBottomAutoHideTab();
-                    foreach (Tab sectItem in bottomHide)
-                    {
-                        WriteTab(sectItem, writer);
-                        _owner.BottomAutoHide.Unpin(sectItem);
-                    }
-                    writer.WriteEndElement();
-                }
-
-                // 浮动项
-                if (floats.Count > 0)
-                {
-                    writer.WriteStartElement("Float");
-                    foreach (WinItem dockItem in floats)
-                    {
-                        WriteWinItem(dockItem, writer);
-                        OpenInWindow(dockItem);
-                    }
-                    writer.WriteEndElement();
-                }
-
-                writer.WriteEndElement();
-                writer.Flush();
-            }
-            _default = xml.ToString();
-            _owner.IsReseting = false;
-        }
-
         void WriteCenter(XmlWriter p_writer, WinItemList p_items)
         {
             foreach (var obj in p_items)
@@ -1048,9 +1037,11 @@ namespace Dt.Base.Docking
                 {
                     foreach (var obj in tabs.Items)
                     {
-                        Tab si = obj as Tab;
-                        if (si != null && !string.IsNullOrEmpty(si.Title))
-                            _tabs[si.Title] = si;
+                        if (obj is Tab tab && !string.IsNullOrEmpty(tab.Title))
+                        {
+                            tab.OwnerWin = _owner;
+                            _tabs[tab.Title] = tab;
+                        }
                     }
                 }
                 else if (item is IWinItemList child)
@@ -1071,7 +1062,7 @@ namespace Dt.Base.Docking
             _owner.RightAutoHide?.Items.Clear();
             _owner.TopAutoHide?.Items.Clear();
             _owner.BottomAutoHide?.Items.Clear();
-            _owner.DockPanel.Clear();
+            _owner.RootPanel.Clear();
             _owner.ClearWindows();
         }
 
