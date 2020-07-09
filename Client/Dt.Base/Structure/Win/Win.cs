@@ -663,6 +663,7 @@ namespace Dt.Base
                 win = OpenInWindow(tabs);
             }
 
+            ResetCompassSize();
             Point winPos = p_pointer.GetCurrentPoint(this).Position;
             offsetX = offsetX > 0 ? Math.Round(offsetX * win.Width) : 10;
             win.HorizontalOffset = winPos.X - offsetX;
@@ -766,14 +767,22 @@ namespace Dt.Base
             // 四方向导航
             _rootCompass = new RootCompass { Visibility = Visibility.Collapsed };
             Canvas.SetZIndex(_rootCompass, 999999);
-            if (ActualWidth > 0)
-                _rootCompass.Width = ActualWidth;
-            if (ActualHeight > 0)
-                _rootCompass.Height = ActualHeight;
             _popupPanel.Children.Add(_rootCompass);
 
             Grid grid = (Grid)GetTemplateChild("RootGrid");
+            Grid.SetRowSpan(_popupPanel, 3);
+            Grid.SetColumnSpan(_popupPanel, 3);
             grid.Children.Add(_popupPanel);
+        }
+
+        void ResetCompassSize()
+        {
+            // 需指定大小，不然uno中ToolWindow无法交互！
+            _popupPanel.Width = ActualWidth;
+            _popupPanel.Height = ActualHeight;
+
+            _rootCompass.Width = ActualWidth;
+            _rootCompass.Height = ActualHeight;
         }
         #endregion
 

@@ -316,7 +316,6 @@
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="MinHeight" Value="80" />
         <Setter Property="MinWidth" Value="80" />
-        <Setter Property="IsTabStop" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="docking:ToolWindow">

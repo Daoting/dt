@@ -110,8 +110,8 @@ namespace Dt.Base.Docking
         /// </summary>
         public DockPosition DockPosition
         {
-            get { return (DockPosition)base.GetValue(DockPositionProperty); }
-            internal set { base.SetValue(DockPositionProperty, value); }
+            get { return (DockPosition)GetValue(DockPositionProperty); }
+            internal set { SetValue(DockPositionProperty, value); }
         }
 
         /// <summary>
@@ -119,8 +119,8 @@ namespace Dt.Base.Docking
         /// </summary>
         public bool ShowBottomIndicator
         {
-            get { return (bool)base.GetValue(ShowBottomIndicatorProperty); }
-            set { base.SetValue(ShowBottomIndicatorProperty, value); }
+            get { return (bool)GetValue(ShowBottomIndicatorProperty); }
+            set { SetValue(ShowBottomIndicatorProperty, value); }
         }
 
         /// <summary>
@@ -128,8 +128,8 @@ namespace Dt.Base.Docking
         /// </summary>
         public bool ShowCenterIndicator
         {
-            get { return (bool)base.GetValue(ShowCenterIndicatorProperty); }
-            set { base.SetValue(ShowCenterIndicatorProperty, value); }
+            get { return (bool)GetValue(ShowCenterIndicatorProperty); }
+            set { SetValue(ShowCenterIndicatorProperty, value); }
         }
 
         /// <summary>
@@ -137,8 +137,8 @@ namespace Dt.Base.Docking
         /// </summary>
         public bool ShowLeftIndicator
         {
-            get { return (bool)base.GetValue(ShowLeftIndicatorProperty); }
-            set { base.SetValue(ShowLeftIndicatorProperty, value); }
+            get { return (bool)GetValue(ShowLeftIndicatorProperty); }
+            set { SetValue(ShowLeftIndicatorProperty, value); }
         }
 
         /// <summary>
@@ -146,8 +146,8 @@ namespace Dt.Base.Docking
         /// </summary>
         public bool ShowRightIndicator
         {
-            get { return (bool)base.GetValue(ShowRightIndicatorProperty); }
-            set { base.SetValue(ShowRightIndicatorProperty, value); }
+            get { return (bool)GetValue(ShowRightIndicatorProperty); }
+            set { SetValue(ShowRightIndicatorProperty, value); }
         }
 
         /// <summary>
@@ -155,8 +155,8 @@ namespace Dt.Base.Docking
         /// </summary>
         public bool ShowTopIndicator
         {
-            get { return (bool)base.GetValue(ShowTopIndicatorProperty); }
-            set { base.SetValue(ShowTopIndicatorProperty, value); }
+            get { return (bool)GetValue(ShowTopIndicatorProperty); }
+            set { SetValue(ShowTopIndicatorProperty, value); }
         }
         #endregion
 
@@ -168,7 +168,7 @@ namespace Dt.Base.Docking
         public void ChangeDockPosition(Point position)
         {
             DockPosition = (from dpElem in
-                                (from frElem in GetElementsInHostCoordinates((base.Parent as FrameworkElement), position)
+                                (from frElem in GetElementsInHostCoordinates((Parent as FrameworkElement), position)
                                  select GetCompassPosition(frElem))
                             where dpElem != DockPosition.None
                             select dpElem).FirstOrDefault();
