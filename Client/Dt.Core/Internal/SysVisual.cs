@@ -61,9 +61,6 @@ namespace Dt.Core
 
         static SysVisual()
         {
-            Window win = Window.Current;
-            AtSys.IsPhoneUI = win.Bounds.Width < _maxPhoneUIWidth;
-
             // 根Grid，背景主题蓝色
             _rootGrid = new Grid { Background = new SolidColorBrush(Windows.UI.Color.FromArgb(0xFF, 0x1B, 0xA1, 0xE2)) };
 
@@ -89,7 +86,6 @@ namespace Dt.Core
             NotifyList = new ItemList<NotifyInfo>();
             _notifyPanel = new StackPanel();
             _notifyPanel.Spacing = 10;
-            ApplyNotifyStyle();
             _rootGrid.Children.Add(_notifyPanel);
 
 #if IOS
@@ -98,8 +94,14 @@ namespace Dt.Core
             _rootGrid.Padding = new Thickness(0, StatusBarHeight, 0, 0);
 #endif
 
+            Window win = Window.Current;
             win.Content = _rootGrid;
+            win.Activate();
             win.SizeChanged += OnWindowSizeChanged;
+
+            // wasm上Window有内容且激活后Bounds才有效，其它平台一直有效！
+            AtSys.IsPhoneUI = win.Bounds.Width < _maxPhoneUIWidth;
+            ApplyNotifyStyle();
         }
 
         /// <summary>

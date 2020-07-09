@@ -18,6 +18,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Core;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 #endregion
@@ -38,13 +39,8 @@ namespace Dt.Base
 #if WASM
             ApplicationView.GetForCurrentView().Title = AtSys.Stub.Title;
 #endif
-
-            // 初始根元素用来提示信息
-            TextBlock info = SysVisual.RootContent as TextBlock;
-            Window.Current.Activate();
-
-            // 已启动过
-            if (info == null)
+            // 初始根元素用来提示信息，其他元素表示已启动过
+            if (!(SysVisual.RootContent is TextBlock))
             {
                 // 带参数启动
                 if (!string.IsNullOrEmpty(args.Arguments))
