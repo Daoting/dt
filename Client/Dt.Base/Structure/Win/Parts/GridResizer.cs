@@ -50,9 +50,6 @@ namespace Dt.Base.Docking
         Point _start;
         #endregion
 
-        /// <summary>
-        ///
-        /// </summary>
         public GridResizer()
         {
             DefaultStyleKey = typeof(GridResizer);
@@ -142,9 +139,6 @@ namespace Dt.Base.Docking
             {
                 _dragging = false;
                 ReleasePointerCapture(e.Pointer);
-
-                Point position = e.GetCurrentPoint(null).Position;
-                Point point = new Point(position.X - _start.X, position.Y - _start.Y);
 
                 if (_resizeData != null)
                 {
@@ -414,7 +408,14 @@ namespace Dt.Base.Docking
 
         void OnLayoutChangeEnded()
         {
-            //this.RaiseEvent(new BaseRoutedEventArgs(LayoutChangeEndedEvent, this));
+            if (Owner is Tabs tabs)
+            {
+                tabs.OwnerWin.OnLayoutChangeEnded(this);
+            }
+            else if (Owner is WinItem wi)
+            {
+                wi.OwnerWin.OnLayoutChangeEnded(this);
+            }
         }
         #endregion
 

@@ -28,6 +28,9 @@ namespace Dt.Base.Docking
         public AutoHideTab()
         {
             DefaultStyleKey = typeof(AutoHideTab);
+#if !UWP
+            Loaded += OnLoaded;
+#endif
         }
         #endregion
 
@@ -93,15 +96,6 @@ namespace Dt.Base.Docking
         #endregion
 
         #region 重写方法
-        protected override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-            TabHeader header = GetTemplateChild("HeaderElement") as TabHeader;
-            if (header != null)
-                header.Owner = this;
-            ResetMargin();
-        }
-
         /// <summary>
         /// 增删子项
         /// </summary>
@@ -126,6 +120,30 @@ namespace Dt.Base.Docking
             content.SetBinding(ContentPresenter.ContentProperty, contentBinding);
             sp.Children.Add(content);
             return sp;
+        }
+        #endregion
+
+        #region 加载过程
+#if UWP
+        protected override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+            InitTemplate();
+        }
+#else
+        void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= OnLoaded;
+            InitTemplate();
+        }
+#endif
+
+        void InitTemplate()
+        {
+            TabHeader header = GetTemplateChild("HeaderElement") as TabHeader;
+            if (header != null)
+                header.Owner = this;
+            ResetMargin();
         }
         #endregion
 

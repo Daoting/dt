@@ -62,7 +62,7 @@ namespace Dt.Base
             "ResizerPlacement",
             typeof(ItemPlacement?),
             typeof(WinItem),
-            new PropertyMetadata(null));
+            new PropertyMetadata(ItemPlacement.Right));
 
         public static readonly DependencyProperty FloatLocationProperty = DependencyProperty.Register(
             "FloatLocation",

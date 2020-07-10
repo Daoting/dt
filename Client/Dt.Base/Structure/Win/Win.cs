@@ -1273,13 +1273,9 @@ namespace Dt.Base
         /// <param name="p_resizer"></param>
         internal void OnLayoutChangeEnded(GridResizer p_resizer)
         {
-            if (p_resizer != null)
+            if (p_resizer.Preview.OffsetX != 0 || p_resizer.Preview.OffsetY != 0)
             {
-                UpdateLayout();
-                if (p_resizer.Preview.OffsetX != 0 || p_resizer.Preview.OffsetY != 0)
-                {
-                    OnLayoutChanged();
-                }
+                OnLayoutChanged();
             }
         }
         #endregion
