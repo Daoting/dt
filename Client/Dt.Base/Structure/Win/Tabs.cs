@@ -441,7 +441,7 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取容器内所有的Tab所有子项并从容器移除
+        /// 递归获取容器内所有的Tab
         /// </summary>
         /// <param name="p_winItem"></param>
         /// <returns></returns>

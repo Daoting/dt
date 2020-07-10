@@ -28,12 +28,8 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <!--内容区域-->
-                        <docking:WinItemPanel x:Name="ContentDockPanel" Grid.Row="1" Grid.Column="1">
-                            <docking:WinItemPanel.CenterItem>
-                                <a:WinItem x:Name="CenterDockItem" IsInCenter="True" />
-                            </docking:WinItemPanel.CenterItem>
-                        </docking:WinItemPanel>
+                        <!--内容区域面板-->
+                        <docking:WinItemPanel x:Name="RootPanel" Grid.Row="1" Grid.Column="1" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

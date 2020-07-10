@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Core;
 using System;
 using System.Linq;
 using Windows.Foundation;
@@ -20,26 +21,13 @@ namespace Dt.Base.Docking
     /// </summary>
     public partial class WinItemPanel : Panel
     {
-        Control _centerItem = null;
+        // 中部主区，始终在Children的0位置
+        WinItem _centerItem;
 
-        /// <summary>
-        /// 获取采用填充方式的WinItem
-        /// </summary>
-        public Control CenterItem
+        internal void Init(WinItem p_centerItem)
         {
-            get { return _centerItem; }
-            set
-            {
-                if (_centerItem != value && value != null)
-                {
-                    _centerItem = value;
-                    if (!Children.Contains(_centerItem))
-                    {
-                        _centerItem.Width = _centerItem.Height = double.NaN;
-                        Children.Add(_centerItem);
-                    }
-                }
-            }
+            _centerItem = p_centerItem;
+            Children.Add(_centerItem);
         }
 
         /// <summary>
@@ -48,129 +36,86 @@ namespace Dt.Base.Docking
         internal void Clear()
         {
             Children.Clear();
+            // 始终在Children的0位置
             if (_centerItem != null)
                 Children.Add(_centerItem);
         }
 
-        /// <summary>
-        /// 测量
-        /// </summary>
-        /// <param name="availableSize"></param>
-        /// <returns></returns>
         protected override Size MeasureOverride(Size availableSize)
         {
-            var otherChildren = from item in Children.OfType<WinItem>()
-                                where item != _centerItem
-                                select item;
-            foreach (WinItem item in otherChildren)
+            double width = double.IsInfinity(availableSize.Width) ? SysVisual.ViewWidth : availableSize.Width;
+            double height = double.IsInfinity(availableSize.Height) ? SysVisual.ViewWidth - 50 : availableSize.Height;
+            double usedLeft = 0.0;
+            double usedRight = 0.0;
+            double usedTop = 0.0;
+            double usedBottom = 0.0;
+
+            // 初始化时Children已按 中左右上下 的顺序，但拖拽调整后顺序打乱，只有_centerItem始终0位置
+            for (int i = 1; i < Children.Count; i++)
             {
+                WinItem item = (WinItem)Children[i];
+
+                // 根据停靠位置设置WinItem宽或高
                 switch (item.DockState)
                 {
                     case WinItemState.DockedLeft:
                     case WinItemState.DockedRight:
+                        if (double.IsNaN(item.Width))
                         {
-                            if (double.IsNaN(item.Width))
-                            {
-                                if (double.IsNaN(item.InitWidth) && !double.IsInfinity(availableSize.Width))
-                                    item.Width = availableSize.Width / 2;
-                                else
-                                    item.Width = item.InitWidth;
-                            }
-                            continue;
+                            if (double.IsNaN(item.InitWidth) && !double.IsInfinity(width))
+                                item.Width = width / 2;
+                            else
+                                item.Width = item.InitWidth;
                         }
+                        break;
                     case WinItemState.DockedTop:
                     case WinItemState.DockedBottom:
+                        if (double.IsNaN(item.Height))
                         {
-                            if (double.IsNaN(item.Height))
-                            {
-                                // 未设置初始高度时自动占一半
-                                if (double.IsNaN(item.InitHeight) && !double.IsInfinity(availableSize.Height))
-                                    item.Height = availableSize.Height / 2;
-                                else
-                                    item.Height = item.InitHeight;
-                            }
-                            continue;
+                            // 未设置初始高度时自动占一半
+                            if (double.IsNaN(item.InitHeight) && !double.IsInfinity(height))
+                                item.Height = height / 2;
+                            else
+                                item.Height = item.InitHeight;
                         }
+                        break;
                 }
-            }
 
-            double num = 0.0;
-            double num2 = 0.0;
-            double num3 = 0.0;
-            double num4 = 0.0;
-            int num5 = 0;
-            int count = Children.Count;
-            while (num5 < count)
-            {
-                WinItem item = Children[num5] as WinItem;
-                if (item != null)
+                item.Measure(new Size(Math.Max(0.0, width - usedLeft - usedRight), Math.Max(0.0, height - usedTop - usedBottom)));
+                switch (item.DockState)
                 {
-                    Size remainingSize = new Size(Math.Max(0.0, availableSize.Width - num3), Math.Max(0.0, availableSize.Height - num4));
-                    item.Measure(remainingSize);
-                    Size desiredSize = item.DesiredSize;
-                    switch (item.DockState)
-                    {
-                        case WinItemState.DockedLeft:
-                        case WinItemState.DockedRight:
-                            num2 = Math.Max(num2, num4 + desiredSize.Height);
-                            num3 += desiredSize.Width;
-                            break;
-
-                        case WinItemState.DockedTop:
-                        case WinItemState.DockedBottom:
-                            num = Math.Max(num, num3 + desiredSize.Width);
-                            num4 += desiredSize.Height;
-                            break;
-                    }
+                    case WinItemState.DockedLeft:
+                        item.Bounds = new Rect(usedLeft, usedTop, item.Width, height - usedTop - usedBottom);
+                        usedLeft += item.DesiredSize.Width;
+                        break;
+                    case WinItemState.DockedRight:
+                        usedRight += item.DesiredSize.Width;
+                        item.Bounds = new Rect(Math.Max(0.0, width - usedRight), usedTop, item.Width, height - usedTop - usedBottom);
+                        break;
+                    case WinItemState.DockedTop:
+                        item.Bounds = new Rect(usedLeft, usedTop, width - usedLeft - usedRight, item.Height);
+                        usedTop += item.DesiredSize.Height;
+                        break;
+                    case WinItemState.DockedBottom:
+                        usedBottom += item.DesiredSize.Height;
+                        item.Bounds = new Rect(usedLeft, Math.Max(0.0, height - usedBottom), width - usedLeft - usedRight, item.Height);
+                        break;
                 }
-                num5++;
             }
-            return new Size(Math.Max(num, num3), Math.Max(num2, num4));
+
+            // 中部主区填充剩余区域，始终在Children的0位置
+            Size leaveSize = new Size(Math.Max(0.0, width - usedLeft - usedRight), Math.Max(0.0, height - usedTop - usedBottom));
+            _centerItem.Measure(leaveSize);
+            _centerItem.Bounds = new Rect(new Point(usedLeft, usedTop), leaveSize);
+            return new Size(width, height);
         }
 
-        /// <summary>
-        /// 布局
-        /// </summary>
-        /// <param name="finalSize"></param>
-        /// <returns></returns>
         protected override Size ArrangeOverride(Size finalSize)
         {
-            double x = 0.0;
-            double y = 0.0;
-            double num5 = 0.0;
-            double num6 = 0.0;
-            foreach (WinItem item in Children.OfType<WinItem>())
+            for (int i = 0; i < Children.Count; i++)
             {
-                Size desiredSize = item.DesiredSize;
-                Rect finalRect = new Rect(x, y, Math.Max(0.0, (finalSize.Width - (x + num5))), Math.Max(0.0, (finalSize.Height - (y + num6))));
-                if (item != _centerItem)
-                {
-                    switch (item.DockState)
-                    {
-                        case WinItemState.DockedLeft:
-                            x += desiredSize.Width;
-                            finalRect.Width = desiredSize.Width;
-                            break;
-
-                        case WinItemState.DockedTop:
-                            y += desiredSize.Height;
-                            finalRect.Height = desiredSize.Height;
-                            break;
-
-                        case WinItemState.DockedRight:
-                            num5 += desiredSize.Width;
-                            finalRect.X = Math.Max(0.0, finalSize.Width - num5);
-                            finalRect.Width = desiredSize.Width;
-                            break;
-
-                        case WinItemState.DockedBottom:
-                            num6 += desiredSize.Height;
-                            finalRect.Y = Math.Max(0.0, finalSize.Height - num6);
-                            finalRect.Height = desiredSize.Height;
-                            break;
-                    }
-                }
-                item.Arrange(finalRect);
+                WinItem item = (WinItem)Children[i];
+                item.Arrange(item.Bounds);
             }
             return finalSize;
         }

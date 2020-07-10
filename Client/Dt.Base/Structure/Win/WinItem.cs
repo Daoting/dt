@@ -287,6 +287,11 @@ namespace Dt.Base
                 return _ownerWin;
             }
         }
+
+        /// <summary>
+        /// 在WinItemPanel中占的区域
+        /// </summary>
+        internal Rect Bounds { get; set; }
         #endregion
 
         #region 外部方法
@@ -659,21 +664,6 @@ namespace Dt.Base
             {
                 pnl.Owner?.UpdateWindowHeader();
             }
-        }
-
-        /// <summary>
-        /// 获取同一容器下的下一可见元素
-        /// </summary>
-        /// <param name="p_container"></param>
-        /// <returns></returns>
-        FrameworkElement GetNextVisibleElement(WinItem p_container)
-        {
-            for (int i = Items.IndexOf(p_container) - 1; i > -1; i--)
-            {
-                if (Items[i].Visibility == Visibility.Visible)
-                    return Items[i];
-            }
-            return null;
         }
         #endregion
     }

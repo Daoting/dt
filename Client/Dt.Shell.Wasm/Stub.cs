@@ -53,19 +53,20 @@ namespace Dt.Shell
         /// <param name="p_info">提示信息</param>
         public void OnStartup(StartupInfo p_info)
         {
-            Grid _rootGrid = Window.Current.Content as Grid;
-            if (_rootGrid.Children.Count > 2)
-                _rootGrid.Children.RemoveAt(0);
+            //Grid _rootGrid = Window.Current.Content as Grid;
+            //if (_rootGrid.Children.Count > 2)
+            //    _rootGrid.Children.RemoveAt(0);
 
             //Desktop desktop = new Desktop();
             //var win = new SingleViewWin();
             //desktop.SetValue(Desktop.MainWinProperty, win);
 
             //_rootGrid.Children.Insert(0, desktop);
-
-
-            var win = new SingleViewWin();
-            _rootGrid.Children.Insert(0, win);
+            Console.WriteLine("宽" + Window.Current.Bounds.Width.ToString());
+            //Console.WriteLine("宽" + Window.Current.CoreWindow.Bounds.Width.ToString());
+            AtApp.LoadRootUI();
+            //var win = new SingleViewWin();
+            //_rootGrid.Children.Insert(0, win);
         }
 
         /// <summary>
@@ -126,7 +127,7 @@ namespace Dt.Shell
             { "系统角色", typeof(SysRole) },
             { "参数定义", typeof(UserParams) },
             { "用户账号", typeof(UserAccount) },
-            { "主页", typeof(SingleViewWin) },
+            { "主页", typeof(SamplesMain) },
             { "通讯录", typeof(ChatHome) },
             { "控件样例", typeof(SamplesMain) },
             { "文章管理", typeof(Fz.PostMgr) },

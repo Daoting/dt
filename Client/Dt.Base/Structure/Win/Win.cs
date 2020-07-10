@@ -236,7 +236,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取中部停靠容器
         /// </summary>
-        internal WinItem CenterItem { get; private set; }
+        internal WinItem CenterItem { get; } = new WinItem { IsInCenter = true };
         #endregion
 
         #region PhoneUI
@@ -585,8 +585,8 @@ namespace Dt.Base
 
         void InitTemplate()
         {
-            RootPanel = (WinItemPanel)GetTemplateChild("ContentDockPanel");
-            CenterItem = (WinItem)GetTemplateChild("CenterDockItem");
+            RootPanel = (WinItemPanel)GetTemplateChild("RootPanel");
+            RootPanel.Init(CenterItem);
 
             // 已设置主区内容
             Tabs centerTabs = (Tabs)GetValue(CenterTabsProperty);
@@ -603,6 +603,7 @@ namespace Dt.Base
             if (IsReseting || RootPanel == null)
                 return;
 
+            // RootPanel.Children的0位置是CenterItem，比Items多一个元素！
             if (e.CollectionChange == CollectionChange.ItemInserted)
             {
                 WinItem item = Items[e.Index] as WinItem;
@@ -610,12 +611,12 @@ namespace Dt.Base
                     && item.DockState != WinItemState.Floating
                     && !RootPanel.Children.Contains(item))
                 {
-                    RootPanel.Children.Insert(e.Index, item);
+                    RootPanel.Children.Insert(e.Index + 1, item);
                 }
             }
             else if (e.CollectionChange == CollectionChange.ItemRemoved)
             {
-                RootPanel.Children.RemoveAt(e.Index);
+                RootPanel.Children.RemoveAt(e.Index + 1);
             }
             else
             {
@@ -1054,8 +1055,7 @@ namespace Dt.Base
                 SetValue(CenterTabsProperty, tabs);
 
                 // 已应用模板
-                if (CenterItem != null)
-                    CenterItem.Items.Add(tabs);
+                CenterItem.Items.Add(tabs);
             }
             else
             {

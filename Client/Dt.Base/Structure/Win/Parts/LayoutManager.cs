@@ -50,7 +50,6 @@ namespace Dt.Base.Docking
         #endregion
 
         #region 外部方法
-
         /// <summary>
         /// 恢复默认布局
         /// 1. 删除状态库的历史布局
@@ -264,7 +263,6 @@ namespace Dt.Base.Docking
 
                 // 停靠项，按左右上下顺序输出
                 writer.WriteStartElement("Win");
-                int index = 0;
                 _colsWidth = new List<double>();
                 // 首先Center宽度
                 _colsWidth.Add(centers.Count > 0 ? _centerWidth : 0);
@@ -274,7 +272,7 @@ namespace Dt.Base.Docking
                     {
                         WriteWinItem(di, writer);
                         _owner.Items.Add(di);
-                        _owner.RootPanel.Children.Insert(index++, di);
+                        _owner.RootPanel.Children.Add(di);
                         _colsWidth.Add(di.InitWidth);
                     }
                 }
@@ -284,7 +282,7 @@ namespace Dt.Base.Docking
                     {
                         WriteWinItem(di, writer);
                         _owner.Items.Add(di);
-                        _owner.RootPanel.Children.Insert(index++, di);
+                        _owner.RootPanel.Children.Add(di);
                         _colsWidth.Add(di.InitWidth);
                     }
                 }
@@ -294,7 +292,7 @@ namespace Dt.Base.Docking
                     {
                         WriteWinItem(di, writer);
                         _owner.Items.Add(di);
-                        _owner.RootPanel.Children.Insert(index++, di);
+                        _owner.RootPanel.Children.Add(di);
                     }
                 }
                 writer.WriteEndElement();
@@ -323,10 +321,10 @@ namespace Dt.Base.Docking
                     writer.WriteStartElement("Left");
                     if (_owner.LeftAutoHide == null)
                         _owner.CreateLeftAutoHideTab();
-                    foreach (Tab sectItem in leftHide)
+                    foreach (Tab tab in leftHide)
                     {
-                        WriteTab(sectItem, writer);
-                        _owner.LeftAutoHide.Unpin(sectItem);
+                        WriteTab(tab, writer);
+                        _owner.LeftAutoHide.Unpin(tab);
                     }
                     writer.WriteEndElement();
                 }
@@ -337,10 +335,10 @@ namespace Dt.Base.Docking
                     writer.WriteStartElement("Right");
                     if (_owner.RightAutoHide == null)
                         _owner.CreateRightAutoHideTab();
-                    foreach (Tab sectItem in rightHide)
+                    foreach (Tab tab in rightHide)
                     {
-                        WriteTab(sectItem, writer);
-                        _owner.RightAutoHide.Unpin(sectItem);
+                        WriteTab(tab, writer);
+                        _owner.RightAutoHide.Unpin(tab);
                     }
                     writer.WriteEndElement();
                 }
@@ -351,10 +349,10 @@ namespace Dt.Base.Docking
                     writer.WriteStartElement("Top");
                     if (_owner.TopAutoHide == null)
                         _owner.CreateTopAutoHideTab();
-                    foreach (Tab sectItem in topHide)
+                    foreach (Tab tab in topHide)
                     {
-                        WriteTab(sectItem, writer);
-                        _owner.TopAutoHide.Unpin(sectItem);
+                        WriteTab(tab, writer);
+                        _owner.TopAutoHide.Unpin(tab);
                     }
                     writer.WriteEndElement();
                 }
@@ -365,10 +363,10 @@ namespace Dt.Base.Docking
                     writer.WriteStartElement("Bottom");
                     if (_owner.BottomAutoHide == null)
                         _owner.CreateBottomAutoHideTab();
-                    foreach (Tab sectItem in bottomHide)
+                    foreach (Tab tab in bottomHide)
                     {
-                        WriteTab(sectItem, writer);
-                        _owner.BottomAutoHide.Unpin(sectItem);
+                        WriteTab(tab, writer);
+                        _owner.BottomAutoHide.Unpin(tab);
                     }
                     writer.WriteEndElement();
                 }
@@ -377,10 +375,10 @@ namespace Dt.Base.Docking
                 if (floats.Count > 0)
                 {
                     writer.WriteStartElement("Float");
-                    foreach (WinItem dockItem in floats)
+                    foreach (WinItem wi in floats)
                     {
-                        WriteWinItem(dockItem, writer);
-                        OpenInWindow(dockItem);
+                        WriteWinItem(wi, writer);
+                        OpenInWindow(wi);
                     }
                     writer.WriteEndElement();
                 }
@@ -434,13 +432,12 @@ namespace Dt.Base.Docking
                     }
 
                     // 停靠项
-                    int index = 0;
                     XElement elem = doc.Root.Element("Win");
                     foreach (XElement item in elem.Elements())
                     {
-                        WinItem dockItem = CreateWinItem(item);
-                        _owner.Items.Add(dockItem);
-                        _owner.RootPanel.Children.Insert(index++, dockItem);
+                        WinItem winItem = CreateWinItem(item);
+                        _owner.Items.Add(winItem);
+                        _owner.RootPanel.Children.Add(winItem);
                     }
 
                     // 中部项
@@ -546,7 +543,6 @@ namespace Dt.Base.Docking
                     int end = _colsWidth.Count - 1;
                     int index = 0;
                     XElement elem = doc.Root.Element("Win");
-                    var pnl = _owner.RootPanel.Children;
                     foreach (XElement item in elem.Elements())
                     {
                         WinItem di = CreateWinItem(item);
@@ -558,7 +554,7 @@ namespace Dt.Base.Docking
                         else
                         {
                             _owner.Items.Add(di);
-                            pnl.Insert(pnl.Count - 1, di);
+                            _owner.RootPanel.Children.Add(di);
                         }
                         index++;
                     }
@@ -817,9 +813,9 @@ namespace Dt.Base.Docking
 
                 // 停靠项
                 writer.WriteStartElement("Win");
-                foreach (WinItem dockItem in _owner.Items.OfType<WinItem>())
+                foreach (WinItem wi in _owner.Items.OfType<WinItem>())
                 {
-                    WriteWinItem(dockItem, writer);
+                    WriteWinItem(wi, writer);
                 }
                 writer.WriteEndElement();
 
@@ -835,9 +831,9 @@ namespace Dt.Base.Docking
                 if (_owner.LeftAutoHide?.Items.Count > 0)
                 {
                     writer.WriteStartElement("Left");
-                    foreach (Tab sectItem in _owner.LeftAutoHide.Items.OfType<Tab>())
+                    foreach (Tab tab in _owner.LeftAutoHide.Items.OfType<Tab>())
                     {
-                        WriteTab(sectItem, writer);
+                        WriteTab(tab, writer);
                     }
                     writer.WriteEndElement();
                 }
@@ -846,9 +842,9 @@ namespace Dt.Base.Docking
                 if (_owner.RightAutoHide?.Items.Count > 0)
                 {
                     writer.WriteStartElement("Right");
-                    foreach (Tab sectItem in _owner.RightAutoHide.Items.OfType<Tab>())
+                    foreach (Tab tab in _owner.RightAutoHide.Items.OfType<Tab>())
                     {
-                        WriteTab(sectItem, writer);
+                        WriteTab(tab, writer);
                     }
                     writer.WriteEndElement();
                 }
@@ -857,9 +853,9 @@ namespace Dt.Base.Docking
                 if (_owner.TopAutoHide?.Items.Count > 0)
                 {
                     writer.WriteStartElement("Top");
-                    foreach (Tab sectItem in _owner.TopAutoHide.Items.OfType<Tab>())
+                    foreach (Tab tab in _owner.TopAutoHide.Items.OfType<Tab>())
                     {
-                        WriteTab(sectItem, writer);
+                        WriteTab(tab, writer);
                     }
                     writer.WriteEndElement();
                 }
@@ -868,18 +864,18 @@ namespace Dt.Base.Docking
                 if (_owner.BottomAutoHide?.Items.Count > 0)
                 {
                     writer.WriteStartElement("Bottom");
-                    foreach (Tab sectItem in _owner.BottomAutoHide.Items.OfType<Tab>())
+                    foreach (Tab tab in _owner.BottomAutoHide.Items.OfType<Tab>())
                     {
-                        WriteTab(sectItem, writer);
+                        WriteTab(tab, writer);
                     }
                     writer.WriteEndElement();
                 }
 
                 // 浮动项
                 writer.WriteStartElement("Float");
-                foreach (WinItem dockItem in _owner.FloatItems)
+                foreach (WinItem wi in _owner.FloatItems)
                 {
-                    WriteWinItem(dockItem, writer);
+                    WriteWinItem(wi, writer);
                 }
                 writer.WriteEndElement();
 
@@ -949,15 +945,13 @@ namespace Dt.Base.Docking
 
             foreach (object obj in p_item.Items)
             {
-                Tabs sect;
-                WinItem dockItem;
-                if ((sect = obj as Tabs) != null)
+                if (obj is Tabs tabs)
                 {
-                    WriteTabs(sect, p_writer);
+                    WriteTabs(tabs, p_writer);
                 }
-                else if ((dockItem = obj as WinItem) != null)
+                else if (obj is WinItem wi)
                 {
-                    WriteWinItem(dockItem, p_writer);
+                    WriteWinItem(wi, p_writer);
                 }
             }
             p_writer.WriteEndElement();
@@ -1149,62 +1143,42 @@ namespace Dt.Base.Docking
         /// <summary>
         /// 构造ToolWindow承载WinItem
         /// </summary>
-        /// <param name="p_dockItem"></param>
+        /// <param name="p_winItem"></param>
         /// <returns></returns>
-        ToolWindow OpenInWindow(WinItem p_dockItem)
+        ToolWindow OpenInWindow(WinItem p_winItem)
         {
-            Point location = p_dockItem.FloatLocation;
-            ToolWindow win;
-            if (p_dockItem.ReadLocalValue(WinItem.FloatLocationProperty) == DependencyProperty.UnsetValue)
+            ToolWindow win = _owner.CreateWindow(p_winItem.FloatSize, p_winItem.FloatLocation);
+            if (p_winItem.ReadLocalValue(WinItem.FloatLocationProperty) == DependencyProperty.UnsetValue)
             {
-                win = _owner.CreateWindow(p_dockItem.FloatSize, new Point());
-                win.Loaded += OnWinLoaded;
+                // 默认位置
+                switch (p_winItem.FloatPos)
+                {
+                    case FloatPosition.Center:
+                        win.HorizontalOffset = Math.Ceiling((SysVisual.ViewWidth - p_winItem.FloatSize.Width) / 2);
+                        win.VerticalOffset = Math.Ceiling((SysVisual.ViewHeight - p_winItem.FloatSize.Height) / 2);
+                        break;
+                    case FloatPosition.TopLeft:
+                        win.HorizontalOffset = 0;
+                        win.VerticalOffset = 0;
+                        break;
+                    case FloatPosition.TopRight:
+                        win.HorizontalOffset = SysVisual.ViewWidth - p_winItem.FloatSize.Width;
+                        win.VerticalOffset = 0;
+                        break;
+                    case FloatPosition.BottomLeft:
+                        win.HorizontalOffset = 0;
+                        win.VerticalOffset = SysVisual.ViewHeight - p_winItem.FloatSize.Height;
+                        break;
+                    case FloatPosition.BottomRight:
+                        win.HorizontalOffset = SysVisual.ViewWidth - p_winItem.FloatSize.Width;
+                        win.VerticalOffset = SysVisual.ViewHeight - p_winItem.FloatSize.Height;
+                        break;
+                }
             }
-            else
-            {
-                win = _owner.CreateWindow(p_dockItem.FloatSize, location);
-            }
-            win.Content = p_dockItem;
+           
+            win.Content = p_winItem;
             win.Show();
             return win;
-        }
-
-        /// <summary>
-        /// 浮动窗口指定相对位置时加载时计算
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void OnWinLoaded(object sender, RoutedEventArgs e)
-        {
-            ToolWindow win = sender as ToolWindow;
-            WinItem item;
-            if (win == null || (item = win.Content as WinItem) == null)
-                return;
-
-            win.Loaded -= OnWinLoaded;
-            switch (item.FloatPos)
-            {
-                case FloatPosition.Center:
-                    win.HorizontalOffset = Math.Ceiling((_owner.ActualWidth - item.FloatSize.Width) / 2);
-                    win.VerticalOffset = Math.Ceiling((_owner.ActualHeight - item.FloatSize.Height) / 2);
-                    break;
-                case FloatPosition.TopLeft:
-                    win.HorizontalOffset = 0;
-                    win.VerticalOffset = 0;
-                    break;
-                case FloatPosition.TopRight:
-                    win.HorizontalOffset = _owner.ActualWidth - item.FloatSize.Width;
-                    win.VerticalOffset = 0;
-                    break;
-                case FloatPosition.BottomLeft:
-                    win.HorizontalOffset = 0;
-                    win.VerticalOffset = _owner.ActualHeight - item.FloatSize.Height;
-                    break;
-                case FloatPosition.BottomRight:
-                    win.HorizontalOffset = _owner.ActualWidth - item.FloatSize.Width;
-                    win.VerticalOffset = _owner.ActualHeight - item.FloatSize.Height;
-                    break;
-            }
         }
 
         /// <summary>
