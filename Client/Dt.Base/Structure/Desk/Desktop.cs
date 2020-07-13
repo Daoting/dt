@@ -13,10 +13,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 #endregion
 
 namespace Dt.Base
@@ -334,9 +336,43 @@ namespace Dt.Base
             GC.Collect();
         }
 
-        internal IEnumerable<TaskbarItem> GetAllTaskbarItems()
+        /// <summary>
+        /// 拖拽任务栏项
+        /// </summary>
+        /// <param name="p_src"></param>
+        /// <param name="e"></param>
+        internal void DoSwap(TaskbarItem p_src, PointerRoutedEventArgs e)
         {
-            return _taskbarPanel.Children.OfType<TaskbarItem>();
+            Point pt = e.GetCurrentPoint(null).Position;
+            TaskbarItem tgt = (from item in _taskbarPanel.Children.OfType<TaskbarItem>()
+                               where item.ContainPoint(pt)
+                               select item).FirstOrDefault();
+            if (tgt != null && tgt != p_src)
+            {
+                // 交换位置的最小移动控制
+                pt = e.GetCurrentPoint(tgt).Position;
+                double delta = tgt.ActualWidth / 2;
+                if ((pt.X < delta && pt.X > 20)
+                    || (pt.X > delta && pt.X < tgt.ActualWidth - 20))
+                {
+                    try
+                    {
+                        // 动画效果好
+                        Items.ItemsChanged -= OnItemsChanged;
+                        int srcIndex = _taskbarPanel.Children.IndexOf(p_src);
+                        int tgtIndex = _taskbarPanel.Children.IndexOf(tgt);
+                        Items.RemoveAt(tgtIndex);
+                        _taskbarPanel.Children.RemoveAt(tgtIndex);
+
+                        Items.Insert(srcIndex, (Win)tgt.DataContext);
+                        _taskbarPanel.Children.Insert(srcIndex, tgt);
+                    }
+                    finally
+                    {
+                        Items.ItemsChanged += OnItemsChanged;
+                    }
+                }
+            }
         }
         #endregion
 

@@ -101,25 +101,8 @@ namespace Dt.Base
 
         protected override void OnPointerMoved(PointerRoutedEventArgs e)
         {
-            if (!_isDragging)
-                return;
-
-            Point pt = e.GetCurrentPoint(null).Position;
-            TaskbarItem tgt = Desktop.Inst.GetAllTaskbarItems().FirstOrDefault(itm => itm.ContainPoint(pt));
-            if (tgt != null && tgt != this)
-            {
-                // 交换位置的最小移动控制
-                pt = e.GetCurrentPoint(tgt).Position;
-                double delta = tgt.ActualWidth / 2;
-                if ((pt.X < delta && pt.X > 20)
-                    || (pt.X > delta && pt.X < tgt.ActualWidth - 20))
-                {
-                    var items = Desktop.Inst.Items;
-                    int index = items.IndexOf(_win);
-                    items.Remove(tgt._win);
-                    items.Insert(index, tgt._win);
-                }
-            }
+            if (_isDragging)
+                Desktop.Inst.DoSwap(this, e);
         }
 
         /// <summary>

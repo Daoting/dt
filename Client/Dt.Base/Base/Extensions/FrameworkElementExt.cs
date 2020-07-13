@@ -342,10 +342,10 @@ namespace Dt.Base
                 {
                     double offsetX = trans.Matrix.OffsetX;
                     double offsetY = trans.Matrix.OffsetY;
-                    if (p_point.X > offsetX
-                        && p_point.X < offsetX + source.ActualWidth
-                        && p_point.Y > offsetY
-                        && p_point.Y < offsetY + source.ActualHeight)
+                    if (p_point.X >= offsetX
+                        && p_point.X <= offsetX + source.ActualWidth
+                        && p_point.Y >= offsetY
+                        && p_point.Y <= offsetY + source.ActualHeight)
                     {
                         result = true;
                     }

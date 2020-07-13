@@ -90,7 +90,13 @@
                                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                               Grid.ColumnSpan="2" />
                             <!--标签-->
-                            <StackPanel x:Name="ItemsPanel" Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2" />
+                            <StackPanel x:Name="ItemsPanel" Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2">
+                                <StackPanel.ChildrenTransitions>
+                                    <TransitionCollection>
+                                        <ReorderThemeTransition />
+                                    </TransitionCollection>
+                                </StackPanel.ChildrenTransitions>
+                            </StackPanel>
                         </Grid>
 
                         <docking:GridResizer x:Name="Resizer" Grid.RowSpan="2" Placement="{TemplateBinding ResizerPlacement}" />
@@ -102,7 +108,7 @@
 
     <!--Tab windows-->
     <Style x:Key="WinTab" TargetType="a:Tab">
-        <Setter Property="Foreground" Value="{StaticResource 深灰边框}" />
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Template">
             <Setter.Value>
@@ -112,7 +118,7 @@
                             <Grid x:Name="Container" Height="{StaticResource RowInnerHeight}">
                                 <Rectangle x:Name="NormalBorder" Margin="0,-1,-1,0" Stroke="{TemplateBinding BorderBrush}" Fill="{StaticResource 浅灰背景}" StrokeThickness="1" IsHitTestVisible="False"/>
                                 <Rectangle x:Name="SelectedBorder" Margin="1,-1,0,1" Fill="White" Visibility="Collapsed" IsHitTestVisible="False"/>
-                                <Rectangle x:Name="ElementLine" IsHitTestVisible="False" Height="4" VerticalAlignment="Bottom"/>
+                                <Rectangle x:Name="ElementLine" IsHitTestVisible="False" Height="2" VerticalAlignment="Bottom"/>
                                 <TextBlock x:Name="HeaderText"
                                            Text="{TemplateBinding Title}"
                                            VerticalAlignment="Center"
@@ -126,22 +132,19 @@
                                 <VisualState x:Name="UnSelected"/>
                                 <VisualState x:Name="PointerOver">
                                     <VisualState.Setters>
-                                        <Setter Target="NormalBorder.Fill" Value="{StaticResource 暗遮罩}" />
-                                        <Setter Target="ElementHeader.Foreground" Value="{StaticResource 醒目蓝色}" />
+                                        <Setter Target="NormalBorder.Fill" Value="{StaticResource 深黄遮罩}" />
                                         <Setter Target="ElementLine.Fill" Value="{StaticResource 醒目蓝色}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
                                     <VisualState.Setters>
-                                        <Setter Target="NormalBorder.Fill" Value="{StaticResource 深暗遮罩}" />
-                                        <Setter Target="ElementHeader.Foreground" Value="{StaticResource 醒目蓝色}" />
+                                        <Setter Target="NormalBorder.Fill" Value="{StaticResource 暗遮罩}" />
                                         <Setter Target="ElementLine.Fill" Value="{StaticResource 醒目蓝色}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Selected">
                                     <VisualState.Setters>
                                         <Setter Target="SelectedBorder.Visibility" Value="Visible" />
-                                        <Setter Target="ElementHeader.Foreground" Value="{StaticResource 默认前景}" />
                                     </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>

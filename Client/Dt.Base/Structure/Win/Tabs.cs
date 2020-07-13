@@ -253,6 +253,11 @@ namespace Dt.Base
                 pane.IsInWindow = IsInWindow;
             }
         }
+
+        protected override void OnSwappedItem()
+        {
+            OwnerWin?.OnLayoutChanged();
+        }
         #endregion
 
         #region 拖拽中可停靠区域

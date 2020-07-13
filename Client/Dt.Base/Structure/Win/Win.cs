@@ -1329,7 +1329,7 @@ namespace Dt.Base
         /// <summary>
         /// 触发布局变化结束事件
         /// </summary>
-        void OnLayoutChanged()
+        internal void OnLayoutChanged()
         {
             _layout?.SaveCurrentLayout();
             LayoutChanged?.Invoke(this, EventArgs.Empty);

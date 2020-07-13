@@ -446,7 +446,7 @@ namespace Dt.Base
             // 交换位置
             if (target != null && target != p_src)
             {
-                //防止两元素宽度不一致交换时的抖动问题
+                // 防止两元素宽度不一致交换时的抖动问题
                 if (p_src.ActualWidth < target.ActualWidth)
                 {
                     if (IsCriticalPoint(target, p_src, p_pt))
@@ -463,6 +463,7 @@ namespace Dt.Base
 
                     Items.Insert(srcIndex, target);
                     _itemsPanel.Children.Insert(srcIndex, target);
+                    OnSwappedItem();
                 }
                 finally
                 {
@@ -500,6 +501,13 @@ namespace Dt.Base
                 }
             }
             return critical;
+        }
+
+        /// <summary>
+        /// 拖拽调序后，提供Win保存布局
+        /// </summary>
+        protected virtual void OnSwappedItem()
+        {
         }
         #endregion
 
