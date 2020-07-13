@@ -204,6 +204,31 @@ namespace Dt.Base
             return Type.GetType(name, false);
         }
         #endregion
+
+        #region Win停靠在两侧时的宽度
+        internal static readonly DependencyProperty SplitWidthProperty =
+            DependencyProperty.RegisterAttached(
+                "SplitWidth",
+                typeof(double),
+                typeof(Ex),
+                new PropertyMetadata(0.0));
+
+        /// <summary>
+        /// 获取Win停靠在两侧时的宽度
+        /// </summary>
+        public static double GetSplitWidth(this Win d)
+        {
+            return (double)d.GetValue(SplitWidthProperty);
+        }
+
+        /// <summary>
+        /// 设置Win停靠在两侧时的宽度
+        /// </summary>
+        public static void SetSplitWidth(this Win d, double value)
+        {
+            d.SetValue(SplitWidthProperty, value);
+        }
+        #endregion
     }
 
     /// <summary>

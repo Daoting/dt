@@ -71,7 +71,11 @@ namespace Dt.Base.Tools
             {
                 // 桌面时停靠在左侧
                 if (_win == null)
+                {
                     _win = new SysTrace();
+                    _win.SetSplitWidth(400);
+                }
+
                 // 注销后再打开时可能异常！
                 Desktop.Inst.LeftWin = _win;
                 return;

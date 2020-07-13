@@ -17,7 +17,6 @@ using Windows.Foundation.Collections;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media.Animation;
 #endregion
 
 namespace Dt.Base
@@ -28,8 +27,9 @@ namespace Dt.Base
     public partial class Desktop : Control
     {
         #region 静态成员
-        const double _minSideSize = 250;
+        const double _minSideSize = 200;
         const double _maxItemWidth = 260;
+        const double _deltaSplitterWidth = 200;
 
         /// <summary>
         /// 内部主窗口
@@ -82,14 +82,18 @@ namespace Dt.Base
                 if (win == dt.RightWin)
                     dt.RightWin = null;
                 spLeft.Visibility = Visibility.Visible;
-                dt._grid.ColumnDefinitions[0].Width = new GridLength(SysVisual.ViewWidth / 2);
+                double width = win.GetSplitWidth();
+                if (width > _minSideSize)
+                    dt._grid.ColumnDefinitions[0].Width = new GridLength(width);
+                else
+                    dt._grid.ColumnDefinitions[0].Width = new GridLength(SysVisual.ViewWidth / 2 - _deltaSplitterWidth);
             }
             else
             {
                 spLeft.Visibility = Visibility.Collapsed;
                 dt._grid.ColumnDefinitions[0].Width = GridLength.Auto;
-                dt._grid.ColumnDefinitions[1].Width = GridLength.Auto;
             }
+            dt._grid.ColumnDefinitions[1].Width = GridLength.Auto;
         }
 
         static void OnRightWinChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -105,14 +109,18 @@ namespace Dt.Base
                 if (win == dt.LeftWin)
                     dt.LeftWin = null;
                 spRight.Visibility = Visibility.Visible;
-                dt._grid.ColumnDefinitions[4].Width = new GridLength(SysVisual.ViewWidth / 2);
+                double width = win.GetSplitWidth();
+                if (width > _minSideSize)
+                    dt._grid.ColumnDefinitions[4].Width = new GridLength(width);
+                else
+                    dt._grid.ColumnDefinitions[4].Width = new GridLength(SysVisual.ViewWidth / 2 - _deltaSplitterWidth);
             }
             else
             {
                 spRight.Visibility = Visibility.Collapsed;
-                dt._grid.ColumnDefinitions[3].Width = GridLength.Auto;
                 dt._grid.ColumnDefinitions[4].Width = GridLength.Auto;
             }
+            dt._grid.ColumnDefinitions[3].Width = GridLength.Auto;
         }
 
         /// <summary>
@@ -125,7 +133,6 @@ namespace Dt.Base
         Grid _grid;
         StackPanel _taskbarPanel;
         Win _homeWin;
-        double _itemWidth;
         #endregion
 
         #region 构造方法
@@ -427,16 +434,15 @@ namespace Dt.Base
         /// </summary>
         void ResizeAllItems()
         {
-            if (_taskbarPanel.ActualWidth < 300 || Items.Count == 0)
+            if (Items.Count == 0)
                 return;
 
             double width = Math.Floor((ActualWidth - 180) / Items.Count);
-            if (width < _maxItemWidth && width != _itemWidth)
+            if (width < _maxItemWidth && width != ((TaskbarItem)_taskbarPanel.Children[0]).Width)
             {
-                _itemWidth = width;
                 foreach (var item in _taskbarPanel.Children.OfType<TaskbarItem>())
                 {
-                    item.Width = _itemWidth;
+                    item.Width = width;
                 }
             }
         }
@@ -460,20 +466,13 @@ namespace Dt.Base
                     LeftWin = null;
                     Windows.UI.Xaml.Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 1);
                 }
-                else if (width.Value > SysVisual.ViewWidth / 2)
+                else if (_grid.ActualWidth - width.Value - 24 < _minSideSize)
                 {
                     // 主窗口太小时左变主
-                    double mainWidth = _grid.ActualWidth - width.Value - 24;
-                    var rightWidth = _grid.ColumnDefinitions[4].Width;
-                    if (rightWidth.IsAbsolute)
-                        mainWidth = mainWidth - rightWidth.Value - 24;
-                    if (mainWidth < _minSideSize)
-                    {
-                        var win = LeftWin;
-                        LeftWin = null;
-                        MainWin = win;
-                        Windows.UI.Xaml.Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 1);
-                    }
+                    var win = LeftWin;
+                    LeftWin = null;
+                    MainWin = win;
+                    Windows.UI.Xaml.Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 1);
                 }
             }
         }
@@ -496,19 +495,12 @@ namespace Dt.Base
                     RightWin = null;
                     Windows.UI.Xaml.Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 1);
                 }
-                else if (width.Value > SysVisual.ViewWidth / 2)
+                else if (_grid.ActualWidth - width.Value - 24 < _minSideSize)
                 {
-                    double mainWidth = _grid.ActualWidth - width.Value - 24;
-                    var leftWidth = _grid.ColumnDefinitions[0].Width;
-                    if (leftWidth.IsAbsolute)
-                        mainWidth = mainWidth - leftWidth.Value - 24;
-                    if (mainWidth < _minSideSize)
-                    {
-                        var win = RightWin;
-                        RightWin = null;
-                        MainWin = win;
-                        Windows.UI.Xaml.Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 1);
-                    }
+                    var win = RightWin;
+                    RightWin = null;
+                    MainWin = win;
+                    Windows.UI.Xaml.Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 1);
                 }
             }
         }
