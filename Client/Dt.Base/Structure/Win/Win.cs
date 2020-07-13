@@ -614,11 +614,6 @@ namespace Dt.Base
             RootPanel = (WinItemPanel)GetTemplateChild("RootPanel");
             RootPanel.Init(CenterItem);
 
-            // 已设置主区内容
-            Tabs centerTabs = (Tabs)GetValue(CenterTabsProperty);
-            if (centerTabs != null)
-                CenterItem.Items.Add(centerTabs);
-
             _layout = new LayoutManager(this);
             Items.ItemsChanged += OnItemsChanged;
             SizeChanged += OnSizeChanged;
