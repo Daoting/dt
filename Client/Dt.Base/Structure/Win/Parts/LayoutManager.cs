@@ -57,7 +57,8 @@ namespace Dt.Base.Docking
         /// </summary>
         public void LoadDefaultLayout()
         {
-            AtLocal.Execute($"delete from DockLayout where BaseUri=\"{_owner.BaseUri.AbsolutePath}\"");
+            if (AllowSaveLayout())
+                AtLocal.Execute($"delete from DockLayout where BaseUri=\"{_owner.BaseUri.AbsolutePath}\"");
             ApplyLayout(_default);
             _owner.AllowResetLayout = false;
         }
@@ -68,7 +69,7 @@ namespace Dt.Base.Docking
         public void SaveCurrentLayout()
         {
             // 宽度小时不保存
-            if (!_owner.AutoSaveLayout || _fitCols != -1)
+            if (!AllowSaveLayout())
                 return;
 
             AtKit.RunAsync(() =>
@@ -106,7 +107,7 @@ namespace Dt.Base.Docking
             {
                 // 宽度足够，加载历史布局或默认布局
                 DockLayout cookie;
-                if (_owner.AutoSaveLayout
+                if (AllowSaveLayout()
                     && (cookie = AtLocal.GetFirst<DockLayout>($"select * from DockLayout where BaseUri=\"{_owner.BaseUri.AbsolutePath}\"")) != null
                     && ApplyLayout(cookie.Layout))
                 {
@@ -157,7 +158,7 @@ namespace Dt.Base.Docking
         {
             // 记录默认布局
             SaveDefaultXml();
-            if (_owner.AutoSaveLayout)
+            if (AllowSaveLayout())
             {
                 DockLayout cookie = AtLocal.GetFirst<DockLayout>($"select * from DockLayout where BaseUri=\"{_owner.BaseUri.AbsolutePath}\"");
                 if (cookie != null)
@@ -515,7 +516,8 @@ namespace Dt.Base.Docking
             catch
             {
                 succ = false;
-                AtLocal.Execute($"delete from DockLayout where BaseUri=\"{_owner.BaseUri.AbsolutePath}\"");
+                if (AllowSaveLayout())
+                    AtLocal.Execute($"delete from DockLayout where BaseUri=\"{_owner.BaseUri.AbsolutePath}\"");
             }
             finally
             {
@@ -1175,7 +1177,7 @@ namespace Dt.Base.Docking
                         break;
                 }
             }
-           
+
             win.Content = p_winItem;
             win.Show();
             return win;
@@ -1222,6 +1224,11 @@ namespace Dt.Base.Docking
                 else
                     RemoveUnused(di);
             }
+        }
+
+        bool AllowSaveLayout()
+        {
+            return _owner.AutoSaveLayout && _owner.BaseUri != null && _fitCols == -1;
         }
         #endregion
     }

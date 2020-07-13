@@ -25,10 +25,25 @@
                 <ControlTemplate TargetType="a:Desktop">
                     <Grid Background="{StaticResource 默认背景}">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="50" />
+                            <RowDefinition Height="40" />
                             <RowDefinition />
                         </Grid.RowDefinitions>
-                        <a:Taskbar />
+                        <!--任务栏-->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Rectangle Fill="{StaticResource 浅灰背景}" Stroke="{StaticResource 浅灰边框}" IsHitTestVisible="False" Grid.ColumnSpan="2"/>
+                            <a:HomebarItem x:Name="HomeItem" />
+                            <StackPanel x:Name="TaskbarPanel" Orientation="Horizontal" Grid.Column="1">
+                                <StackPanel.ChildrenTransitions>
+                                    <TransitionCollection>
+                                        <ReorderThemeTransition />
+                                    </TransitionCollection>
+                                </StackPanel.ChildrenTransitions>
+                            </StackPanel>
+                        </Grid>
                         <!--留出右边距-1-->
                         <Grid x:Name="ContentGrid" Margin="0,4,1,0" Grid.Row="1">
                             <Grid.ColumnDefinitions>
@@ -51,38 +66,48 @@
         </Setter>
     </Style>
 
-    <!--Taskbar-->
-    <Style TargetType="a:Taskbar">
+    <!--主页按钮-->
+    <Style TargetType="a:HomebarItem">
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
-        <Setter Property="IsTabStop" Value="False"/>
+        <Setter Property="Width" Value="120" />
+        <Setter Property="Margin" Value="40,0,0,0" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="a:Taskbar">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <Rectangle Fill="{StaticResource 浅灰背景}" Stroke="{StaticResource 浅灰边框}" IsHitTestVisible="False" Grid.ColumnSpan="2"/>
-                        <Button x:Name="HomePageButton"
-                                Content="&#xE019;"
-                                FontSize="30"
-                                Style="{StaticResource 字符按钮}"
-                                ToolTipService.ToolTip="主页 (Alt + Home)"
-                                ToolTipService.Placement="Bottom"
-                                Margin="50,0,20,0"/>
-                        <ItemsControl x:Name="TaskItemsControl" Grid.Column="1">
-                            <ItemsControl.ItemContainerTransitions>
-                                <TransitionCollection>
-                                    <AddDeleteThemeTransition/>
-                                </TransitionCollection>
-                            </ItemsControl.ItemContainerTransitions>
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Horizontal" />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                        </ItemsControl>
+                <ControlTemplate TargetType="a:HomebarItem">
+                    <Grid Background="Transparent">
+                        <Rectangle x:Name="NormalBorder" Margin="0,0,-1,0" Stroke="{StaticResource 浅灰边框}" StrokeThickness="1" IsHitTestVisible="False"/>
+                        <Rectangle x:Name="SelectedBorder" Margin="1,1,0,0" Fill="White" Visibility="Collapsed" IsHitTestVisible="False"/>
+                        <Rectangle x:Name="LineRect" IsHitTestVisible="False" Height="2" VerticalAlignment="Top" />
+                        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                            <TextBlock Text="&#xE019;"
+                                       FontFamily="{StaticResource IconFont}"
+                                       FontSize="20"
+                                       VerticalAlignment="Center" />
+                            <TextBlock Text="主页" Margin="6,0,0,0" VerticalAlignment="Center" />
+                        </StackPanel>
+
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="SelectionStates">
+                                <VisualState x:Name="UnSelected"/>
+                                <VisualState x:Name="PointerOver">
+                                    <VisualState.Setters>
+                                        <Setter Target="NormalBorder.Fill" Value="{StaticResource 深黄遮罩}" />
+                                        <Setter Target="LineRect.Fill" Value="{StaticResource 醒目蓝色}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <VisualState.Setters>
+                                        <Setter Target="NormalBorder.Fill" Value="{StaticResource 暗遮罩}" />
+                                        <Setter Target="LineRect.Fill" Value="{StaticResource 醒目蓝色}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Selected">
+                                    <VisualState.Setters>
+                                        <Setter Target="SelectedBorder.Visibility" Value="Visible" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -102,7 +127,7 @@
                                    Text="&#xE018;"
                                    FontFamily="{StaticResource IconFont}"
                                    FontSize="16"
-                                   Foreground="{StaticResource 深灰背景}" />
+                                   Foreground="{StaticResource 灰色边框}" />
 
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
@@ -128,35 +153,28 @@
 
     <!--TaskbarItem-->
     <Style TargetType="a:TaskbarItem">
+        <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
         <Setter Property="Width" Value="260"/>
         <Setter Property="MaxWidth" Value="260"/>
-        <Setter Property="IsTabStop" Value="False"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="a:TaskbarItem">
                     <Grid Background="Transparent">
                         <Rectangle x:Name="NormalBorder" Margin="0,0,-1,0" Stroke="{StaticResource 浅灰边框}" StrokeThickness="1" IsHitTestVisible="False"/>
                         <Rectangle x:Name="SelectedBorder" Margin="1,1,0,0" Fill="White" Visibility="Collapsed" IsHitTestVisible="False"/>
-                        <Rectangle x:Name="LineRect" IsHitTestVisible="False" Height="4" VerticalAlignment="Top" />
+                        <Rectangle x:Name="LineRect" IsHitTestVisible="False" Height="2" VerticalAlignment="Top" />
                         <Grid x:Name="RootGrid" Margin="10,0,10,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock x:Name="ElementIcon"
-                                       Text="{Binding Icon, Converter={StaticResource CvIconToChar}}"
+                            <TextBlock Text="{Binding Icon, Converter={StaticResource CvIconToChar}}"
                                        FontFamily="{StaticResource IconFont}"
-                                       FontSize="30"
-                                       Foreground="{StaticResource 深灰边框}"
+                                       FontSize="20"
                                        VerticalAlignment="Center" />
-                            <TextBlock x:Name="ElementTitle"
-                                       Text="{Binding Title}"
-                                       VerticalAlignment="Center"
-                                       Foreground="{StaticResource 深灰背景}"
-                                       Margin="5,0,5,0"
-                                       Grid.Column="1" />
-                            <Button x:Name="CloseButton" Style="{StaticResource TaskbarCloseButton}" Opacity="0" Grid.Column="2" />
+                            <TextBlock Text="{Binding Title}" VerticalAlignment="Center" Margin="6,0,6,0" Grid.Column="1" />
+                            <Button x:Name="CloseButton" Style="{StaticResource TaskbarCloseButton}" Grid.Column="2" />
                         </Grid>
 
                         <VisualStateManager.VisualStateGroups>
@@ -164,26 +182,18 @@
                                 <VisualState x:Name="UnSelected"/>
                                 <VisualState x:Name="PointerOver">
                                     <VisualState.Setters>
-                                        <Setter Target="ElementIcon.Foreground" Value="{StaticResource 醒目蓝色}" />
-                                        <Setter Target="ElementTitle.Foreground" Value="{StaticResource 醒目蓝色}" />
-                                        <Setter Target="CloseButton.Opacity" Value="1" />
-                                        <Setter Target="NormalBorder.Fill" Value="{StaticResource 暗遮罩}" />
+                                        <Setter Target="NormalBorder.Fill" Value="{StaticResource 深黄遮罩}" />
                                         <Setter Target="LineRect.Fill" Value="{StaticResource 醒目蓝色}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
                                     <VisualState.Setters>
-                                        <Setter Target="ElementIcon.Foreground" Value="{StaticResource 醒目蓝色}" />
-                                        <Setter Target="ElementTitle.Foreground" Value="{StaticResource 醒目蓝色}" />
-                                        <Setter Target="NormalBorder.Fill" Value="{StaticResource 深暗遮罩}" />
+                                        <Setter Target="NormalBorder.Fill" Value="{StaticResource 暗遮罩}" />
                                         <Setter Target="LineRect.Fill" Value="{StaticResource 醒目蓝色}" />
                                     </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Selected">
                                     <VisualState.Setters>
-                                        <Setter Target="ElementIcon.Foreground" Value="{StaticResource 默认前景}" />
-                                        <Setter Target="ElementTitle.Foreground" Value="{StaticResource 默认前景}" />
-                                        <Setter Target="CloseButton.Opacity" Value="1" />
                                         <Setter Target="SelectedBorder.Visibility" Value="Visible" />
                                     </VisualState.Setters>
                                 </VisualState>

@@ -55,7 +55,7 @@ namespace Dt.Shell
             // 设置固定菜单项
             CreateFixedMenus();
 
-            if (ViewTypes["主页"] == typeof(DefaultHome))
+            if (ViewTypes.TryGetValue("主页", out var type) && type == typeof(DefaultHome))
             {
                 // 联网模式
                 // 更新打开模型库

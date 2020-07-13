@@ -73,7 +73,7 @@ namespace Dt.Base.Tools
                 if (_win == null)
                     _win = new SysTrace();
                 // 注销后再打开时可能异常！
-                Desktop.SetLeftWin(_win);
+                Desktop.Inst.LeftWin = _win;
                 return;
             }
 

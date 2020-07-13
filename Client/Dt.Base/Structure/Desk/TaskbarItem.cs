@@ -25,54 +25,31 @@ namespace Dt.Base
     /// </summary>
     public partial class TaskbarItem : Control
     {
-        #region 静态成员
-        /// <summary>
-        /// 是否为激活项
-        /// </summary>
-        public readonly static DependencyProperty IsActiveProperty = DependencyProperty.Register(
-            "IsActive",
-            typeof(bool),
-            typeof(TaskbarItem),
-            new PropertyMetadata(false, OnIsActiveChanged));
-
-        static void OnIsActiveChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            ((TaskbarItem)d).ToggleSelectedState();
-        }
-        #endregion
-
         #region 成员变量
         static Menu _menu;
         static TaskbarItem _currentItem;
+        Win _win;
         bool _isDragging = false;
         #endregion
 
         #region 构造方法
-        public TaskbarItem()
+        public TaskbarItem(Win p_win)
         {
             DefaultStyleKey = typeof(TaskbarItem);
+            _win = p_win;
+            _win.IsActivedChanged += OnIsActivedChanged;
+            DataContext = p_win;
         }
         #endregion
-
-        /// <summary>
-        /// 获取设置是否为激活项
-        /// </summary>
-        public bool IsActive
-        {
-            get { return (bool)GetValue(IsActiveProperty); }
-            set { SetValue(IsActiveProperty, value); }
-        }
 
         #region 重写方法
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
             Button btn = (Button)GetTemplateChild("CloseButton");
-            if (btn != null)
-            {
-                btn.Click += OnCloseItem;
-                btn.PointerCaptureLost += OnBtnPointerCaptureLost;
-            }
+            btn.Click += OnCloseItem;
+            btn.PointerCaptureLost += OnBtnPointerCaptureLost;
+
             ToggleSelectedState();
         }
 
@@ -81,7 +58,7 @@ namespace Dt.Base
             if (!_isDragging)
             {
                 e.Handled = true;
-                VisualStateManager.GoToState(this, IsActive ? "Selected" : "PointerOver", true);
+                VisualStateManager.GoToState(this, _win.IsActived ? "Selected" : "PointerOver", true);
             }
         }
 
@@ -92,7 +69,7 @@ namespace Dt.Base
                 if (CapturePointer(e.Pointer))
                 {
                     e.Handled = true;
-                    VisualStateManager.GoToState(this, IsActive ? "Selected" : "Pressed", true);
+                    VisualStateManager.GoToState(this, _win.IsActived ? "Selected" : "Pressed", true);
                     _isDragging = true;
                 }
             }
@@ -128,8 +105,7 @@ namespace Dt.Base
                 return;
 
             Point pt = e.GetCurrentPoint(null).Position;
-            var items = Taskbar.Inst.TaskItems;
-            TaskbarItem tgt = items.FirstOrDefault(itm => itm.ContainPoint(pt));
+            TaskbarItem tgt = Desktop.Inst.GetAllTaskbarItems().FirstOrDefault(itm => itm.ContainPoint(pt));
             if (tgt != null && tgt != this)
             {
                 // 交换位置的最小移动控制
@@ -138,9 +114,10 @@ namespace Dt.Base
                 if ((pt.X < delta && pt.X > 20)
                     || (pt.X > delta && pt.X < tgt.ActualWidth - 20))
                 {
-                    int index = items.IndexOf(this);
-                    items.Remove(tgt);
-                    items.Insert(index, tgt);
+                    var items = Desktop.Inst.Items;
+                    int index = items.IndexOf(_win);
+                    items.Remove(tgt._win);
+                    items.Insert(index, tgt._win);
                 }
             }
         }
@@ -162,12 +139,10 @@ namespace Dt.Base
             _isDragging = false;
 
             Point pt = e.GetCurrentPoint(null).Position;
-            if (this.ContainPoint(pt) && !IsActive)
+            if (this.ContainPoint(pt) && !_win.IsActived)
             {
                 // 释放时鼠标在内部
-                Win win = (Win)DataContext;
-                if (Desktop.Inst.ActiveWin(win))
-                    Taskbar.Inst.ActiveTaskItem(this);
+                Desktop.Inst.ActiveWin(_win);
             }
         }
 
@@ -192,7 +167,7 @@ namespace Dt.Base
                 item.Click += (s, a) => LaunchManager.DelAutoStart();
                 _menu.Items.Add(item);
                 item = new Mi { ID = "设置自启动" };
-                item.Click += (s, a) => LaunchManager.SetAutoStart((Win)_currentItem.DataContext);
+                item.Click += SetAutoStart;
                 _menu.Items.Add(item);
                 item = new Mi { ID = "恢复窗口默认布局" };
                 item.Click += ResetWinLayout;
@@ -209,7 +184,7 @@ namespace Dt.Base
             }
 
             var autoStart = AtLocal.GetAutoStart();
-            Win win = (Win)_currentItem.DataContext;
+            Win win = _currentItem._win;
             if (autoStart != null
                 && win != null
                 && autoStart.WinType == win.GetType().AssemblyQualifiedName
@@ -252,16 +227,21 @@ namespace Dt.Base
                 _menu.Items[2].Visibility = Visibility.Collapsed;
             }
 
-            _menu.Items[3].Visibility = (Taskbar.Inst.TaskItems.Count > 1) ? Visibility.Visible : Visibility.Collapsed;
-            _menu.Items[4].Visibility = !_currentItem.IsActive ? Visibility.Visible : Visibility.Collapsed;
-            _menu.Items[5].Visibility = !_currentItem.IsActive ? Visibility.Visible : Visibility.Collapsed;
+            _menu.Items[3].Visibility = (Desktop.Inst.Items.Count > 1) ? Visibility.Visible : Visibility.Collapsed;
+            _menu.Items[4].Visibility = !win.IsActived ? Visibility.Visible : Visibility.Collapsed;
+            _menu.Items[5].Visibility = !win.IsActived ? Visibility.Visible : Visibility.Collapsed;
 
             _menu.OpenContextMenu(p_pos);
         }
 
+        static void SetAutoStart(object sender, Mi e)
+        {
+            LaunchManager.SetAutoStart(_currentItem._win);
+        }
+
         static void ResetWinLayout(object sender, Mi e)
         {
-            Win win = (Win)_currentItem.DataContext;
+            Win win = _currentItem._win;
 
             // 主区内容为Win时，先恢复
             Tabs tabs = (Tabs)win.GetValue(Win.CenterTabsProperty);
@@ -275,38 +255,19 @@ namespace Dt.Base
                 win.LoadDefaultLayout();
         }
 
-        static async void CloseOtherWin(object sender, Mi e)
+        static void CloseOtherWin(object sender, Mi e)
         {
-            var ls = await Desktop.Inst.CloseExcept((Win)_currentItem.DataContext);
-            if (ls != null && ls.Count > 0)
-            {
-                var items = Taskbar.Inst.TaskItems;
-                if (ls.Count == items.Count - 1)
-                {
-                    // 其他全部都可关闭
-                    items.Clear();
-                    items.Add(_currentItem);
-                }
-                else
-                {
-                    // 只部分
-                    foreach (var win in ls)
-                    {
-                        Taskbar.Inst.RemoveTaskItem(win);
-                    }
-                }
-                _currentItem.IsActive = true;
-            }
+            Desktop.Inst.CloseExcept(_currentItem._win);
         }
 
         static void DockLeft(object sender, Mi e)
         {
-            Desktop.SetLeftWin((Win)_currentItem.DataContext);
+            Desktop.Inst.LeftWin = _currentItem._win;
         }
 
         static void DockRight(object sender, Mi e)
         {
-            Desktop.SetRightWin((Win)_currentItem.DataContext);
+            Desktop.Inst.RightWin = _currentItem._win;
         }
         #endregion
 
@@ -314,7 +275,7 @@ namespace Dt.Base
         void OnCloseItem(object sender, RoutedEventArgs e)
         {
             ((Button)sender).PointerCaptureLost -= OnBtnPointerCaptureLost;
-            ((Win)DataContext).Close();
+            _win.Close();
         }
 
         void OnBtnPointerCaptureLost(object sender, PointerRoutedEventArgs e)
@@ -323,9 +284,14 @@ namespace Dt.Base
             ToggleSelectedState();
         }
 
+        void OnIsActivedChanged(object sender, EventArgs e)
+        {
+            ToggleSelectedState();
+        }
+
         void ToggleSelectedState()
         {
-            if (IsActive)
+            if (_win.IsActived)
                 VisualStateManager.GoToState(this, "Selected", true);
             else
                 VisualStateManager.GoToState(this, "UnSelected", true);

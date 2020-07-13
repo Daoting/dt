@@ -275,9 +275,9 @@ namespace Dt.Base
 
             // 激活旧窗口，比较窗口类型和初始参数
             Win win;
-            if (!AtSys.IsPhoneUI && (win = Desktop.Inst.ActiveWin(p_type, p_params)) != null)
+            if (!AtSys.IsPhoneUI
+                && (win = Desktop.Inst.ActiveWin(p_type, p_params)) != null)
             {
-                Taskbar.Inst.ActiveTaskItem(win);
                 return win;
             }
 
@@ -302,14 +302,9 @@ namespace Dt.Base
                     win.Params = p_params;
 
                 if (AtSys.IsPhoneUI)
-                {
                     win.NaviToHome();
-                }
                 else
-                {
-                    Taskbar.LoadTaskItem(win);
                     Desktop.Inst.ShowNewWin(win);
-                }
                 return win;
             }
 
@@ -404,7 +399,6 @@ namespace Dt.Base
             {
                 // WinUI模式 -> PhoneUI模式
                 Desktop.Inst = null;
-                Taskbar.Inst = null;
             }
 
             // 重构根元素

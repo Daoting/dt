@@ -150,7 +150,6 @@ namespace Dt.Base
                             if (Enum.TryParse(autoStart.Icon, out icon))
                                 win.Icon = icon;
 
-                            Taskbar.LoadTaskItem(win);
                             desktop.ShowNewWin(win);
                             suc = true;
                         }

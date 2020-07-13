@@ -78,6 +78,18 @@ namespace Dt.Base
             typeof(Tab),
             typeof(Win),
             new PropertyMetadata(null));
+
+        public readonly static DependencyProperty IsActivedProperty = DependencyProperty.Register(
+            "IsActived",
+            typeof(bool),
+            typeof(Win),
+            new PropertyMetadata(false, OnIsActivedChanged));
+
+        static void OnIsActivedChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            Win win = (Win)d;
+            win.IsActivedChanged?.Invoke(win, EventArgs.Empty);
+        }
         #endregion
 
         #region 成员变量
@@ -122,6 +134,11 @@ namespace Dt.Base
         /// 布局变化结束事件
         /// </summary>
         public event EventHandler LayoutChanged;
+
+        /// <summary>
+        /// 窗口激活状态变化事件
+        /// </summary>
+        public event EventHandler IsActivedChanged;
         #endregion
 
         #region 属性
@@ -182,6 +199,15 @@ namespace Dt.Base
         {
             get { return (bool)GetValue(AllowResetLayoutProperty); }
             set { SetValue(AllowResetLayoutProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置是否为桌面的激活窗口
+        /// </summary>
+        public bool IsActived
+        {
+            get { return (bool)GetValue(IsActivedProperty); }
+            internal set { SetValue(IsActivedProperty, value); }
         }
 
         /// <summary>

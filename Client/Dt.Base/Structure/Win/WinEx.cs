@@ -26,20 +26,12 @@ namespace Dt.Base
             Throw.IfNull(p_win, "显示窗口不可为空！");
 
             if (!AtSys.IsPhoneUI && Desktop.Inst.ActiveWin(p_win))
-            {
-                Taskbar.Inst.ActiveTaskItem(p_win);
                 return;
-            }
 
             if (AtSys.IsPhoneUI)
-            {
                 p_win.NaviToHome();
-            }
             else
-            {
-                Taskbar.LoadTaskItem(p_win);
                 Desktop.Inst.ShowNewWin(p_win);
-            }
         }
 
         /// <summary>
@@ -51,13 +43,7 @@ namespace Dt.Base
         {
             if (!AtSys.IsPhoneUI)
             {
-                Win nextWin = Taskbar.Inst.GetNextActiveItem(p_win);
-                if (await Desktop.Inst.CloseWin(p_win, nextWin))
-                {
-                    Taskbar.Inst.RemoveTaskItem(p_win);
-                    if (nextWin != null)
-                        Taskbar.Inst.ActiveTaskItem(nextWin);
-                }
+                await Desktop.Inst.CloseWin(p_win);
             }
         }
     }

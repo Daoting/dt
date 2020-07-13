@@ -57,6 +57,7 @@
 * Msg同一设备可能多次注册
 * Fv初始隐藏Cell时的bug
 
+* 窗口切换主区样例出错
 *  MediaPlayerElement 在android无法播放音频，bug已提交uno
 
 ## Release 1.0 

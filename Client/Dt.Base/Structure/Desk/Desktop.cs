@@ -10,11 +10,14 @@
 using Dt.Core;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Windows.Foundation.Collections;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media.Animation;
 #endregion
 
 namespace Dt.Base
@@ -25,8 +28,8 @@ namespace Dt.Base
     public partial class Desktop : Control
     {
         #region 静态成员
-        const double _defaultSideSize = 400;
-        const double _minSideSize = 120;
+        const double _minSideSize = 250;
+        const double _maxItemWidth = 260;
 
         /// <summary>
         /// 内部主窗口
@@ -35,7 +38,7 @@ namespace Dt.Base
             "MainWin",
             typeof(Win),
             typeof(Desktop),
-            new PropertyMetadata(null));
+            new PropertyMetadata(null, OnMainWinChanged));
 
         /// <summary>
         /// 停靠在左侧的窗口
@@ -55,23 +58,35 @@ namespace Dt.Base
             typeof(Desktop),
             new PropertyMetadata(null, OnRightWinChanged));
 
+        static void OnMainWinChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            Win win = (Win)e.OldValue;
+            if (win != null)
+                win.IsActived = false;
+
+            win = (Win)e.NewValue;
+            if (win != null)
+                win.IsActived = true;
+        }
+
         static void OnLeftWinChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             Desktop dt = (Desktop)d;
             if (dt._grid == null)
                 return;
 
+            var spLeft = (Splitter)dt.GetTemplateChild("LeftSplitter");
             Win win = (Win)e.NewValue;
             if (win != null)
             {
                 if (win == dt.RightWin)
                     dt.RightWin = null;
-                dt._spLeft.Visibility = Visibility.Visible;
-                dt._grid.ColumnDefinitions[0].Width = new GridLength(dt._leftSize.HasValue ? dt._leftSize.Value : _defaultSideSize);
+                spLeft.Visibility = Visibility.Visible;
+                dt._grid.ColumnDefinitions[0].Width = new GridLength(SysVisual.ViewWidth / 2);
             }
             else
             {
-                dt._spLeft.Visibility = Visibility.Collapsed;
+                spLeft.Visibility = Visibility.Collapsed;
                 dt._grid.ColumnDefinitions[0].Width = GridLength.Auto;
                 dt._grid.ColumnDefinitions[1].Width = GridLength.Auto;
             }
@@ -83,17 +98,18 @@ namespace Dt.Base
             if (dt._grid == null)
                 return;
 
+            var spRight = (Splitter)dt.GetTemplateChild("RightSplitter");
             var win = (Win)e.NewValue;
             if (win != null)
             {
                 if (win == dt.LeftWin)
                     dt.LeftWin = null;
-                dt._spRight.Visibility = Visibility.Visible;
-                dt._grid.ColumnDefinitions[4].Width = new GridLength(dt._rightSize.HasValue ? dt._rightSize.Value : _defaultSideSize);
+                spRight.Visibility = Visibility.Visible;
+                dt._grid.ColumnDefinitions[4].Width = new GridLength(SysVisual.ViewWidth / 2);
             }
             else
             {
-                dt._spRight.Visibility = Visibility.Collapsed;
+                spRight.Visibility = Visibility.Collapsed;
                 dt._grid.ColumnDefinitions[3].Width = GridLength.Auto;
                 dt._grid.ColumnDefinitions[4].Width = GridLength.Auto;
             }
@@ -106,12 +122,10 @@ namespace Dt.Base
         #endregion
 
         #region 成员变量
-        readonly HashSet<Win> _winCache = new HashSet<Win>();
         Grid _grid;
-        Splitter _spLeft;
-        Splitter _spRight;
-        double? _leftSize;
-        double? _rightSize;
+        StackPanel _taskbarPanel;
+        Win _homeWin;
+        double _itemWidth;
         #endregion
 
         #region 构造方法
@@ -122,6 +136,9 @@ namespace Dt.Base
         {
             DefaultStyleKey = typeof(Desktop);
             Inst = this;
+#if !UWP
+            Loaded += OnLoaded;
+#endif
         }
         #endregion
 
@@ -138,7 +155,23 @@ namespace Dt.Base
         /// <summary>
         /// 获取主页窗口
         /// </summary>
-        public Win HomeWin { get; internal set; }
+        public Win HomeWin
+        {
+            get
+            {
+                if (_homeWin == null)
+                {
+                    _homeWin = new Win();
+                    _homeWin.Items.Add(new TextBlock { Text = "无主页", HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center });
+                }
+                return _homeWin;
+            }
+            internal set
+            {
+                if (_homeWin != value && value != null)
+                    _homeWin = value;
+            }
+        }
 
         /// <summary>
         /// 获取设置停靠在左侧的窗口
@@ -146,7 +179,7 @@ namespace Dt.Base
         public Win LeftWin
         {
             get { return (Win)GetValue(LeftWinProperty); }
-            internal set { SetValue(LeftWinProperty, value); }
+            set { SetValue(LeftWinProperty, value); }
         }
 
         /// <summary>
@@ -155,69 +188,25 @@ namespace Dt.Base
         public Win RightWin
         {
             get { return (Win)GetValue(RightWinProperty); }
-            internal set { SetValue(RightWinProperty, value); }
+            set { SetValue(RightWinProperty, value); }
         }
+
+        /// <summary>
+        /// 获取窗口集合
+        /// </summary>
+        public ItemList<Win> Items { get; } = new ItemList<Win>();
         #endregion
 
         #region 外部方法
         /// <summary>
-        /// 设置左侧分割栏窗口
-        /// </summary>
-        /// <param name="p_win">窗口</param>
-        /// <param name="p_width">宽度，null表默认</param>
-        public static void SetLeftWin(Win p_win, double? p_width = null)
-        {
-            if (p_win == null)
-                return;
-
-            Inst._leftSize = p_width;
-            Inst.LeftWin = p_win;
-        }
-
-        /// <summary>
-        /// 清除左侧分割栏
-        /// </summary>
-        public static void ClearLeftWin()
-        {
-            Inst._leftSize = null;
-            Inst.LeftWin = null;
-        }
-
-        /// <summary>
-        /// 设置右侧分割栏窗口
-        /// </summary>
-        /// <param name="p_win">窗口</param>
-        /// <param name="p_width">宽度，null表默认</param>
-        public static void SetRightWin(Win p_win, double? p_width = null)
-        {
-            if (p_win == null)
-                return;
-
-            Inst._rightSize = p_width;
-            Inst.RightWin = p_win;
-        }
-
-        /// <summary>
-        /// 清除右侧分割栏
-        /// </summary>
-        public static void ClearRightWin()
-        {
-            Inst._rightSize = null;
-            Inst.RightWin = null;
-        }
-
-        /// <summary>
         /// 显示新窗口并缓存
         /// </summary>
         /// <param name="p_win">窗口</param>
-        internal bool ShowNewWin(Win p_win)
+        internal void ShowNewWin(Win p_win)
         {
-            if (_winCache.Add(p_win))
-            {
-                MainWin = p_win;
-                return true;
-            }
-            return false;
+            // 不再判断是否包含
+            MainWin = p_win;
+            Items.Add(p_win);
         }
 
         /// <summary>
@@ -227,7 +216,7 @@ namespace Dt.Base
         /// <returns>是否激活成功</returns>
         internal bool ActiveWin(Win p_win)
         {
-            if (_winCache.Contains(p_win))
+            if (Items.Contains(p_win))
             {
                 ActiveWinInternal(p_win);
                 return true;
@@ -243,7 +232,7 @@ namespace Dt.Base
         /// <returns>激活的窗口</returns>
         internal Win ActiveWin(Type p_type, object p_params)
         {
-            foreach (var win in _winCache)
+            foreach (var win in Items)
             {
                 if (win.GetType() == p_type)
                 {
@@ -261,37 +250,40 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 关闭窗口并从缓存中移除
+        /// 关闭窗口并从缓存中移除，激活下一窗口
         /// </summary>
         /// <param name="p_win">窗口</param>
-        /// <param name="p_nextWin">下一个待激活的窗口</param>
-        internal async Task<bool> CloseWin(Win p_win, Win p_nextWin)
+        internal async Task<bool> CloseWin(Win p_win)
         {
-            if (!_winCache.Contains(p_win))
+            int index = Items.IndexOf(p_win);
+            if (index < 0)
                 return false;
 
             // 触发关闭前事件，外部判断是否允许关闭
             if (!await p_win.OnClosing())
                 return false;
 
-            _winCache.Remove(p_win);
+            Items.RemoveAt(index);
 
             // 若待关闭的窗口为激活状态
             if (MainWin == p_win)
             {
-                if (p_nextWin != null)
+                if (Items.Count > 0)
                 {
+                    // 激活下一窗口
+                    Win nextWin = index < Items.Count ? Items[index] : Items[Items.Count - 1];
+
                     // 若待激活窗口停靠状态，先移除停靠
-                    if (LeftWin == p_nextWin)
+                    if (LeftWin == nextWin)
                         LeftWin = null;
-                    else if (RightWin == p_nextWin)
+                    else if (RightWin == nextWin)
                         RightWin = null;
-                    MainWin = p_nextWin;
+                    MainWin = nextWin;
                 }
                 else
                 {
                     // 无激活窗口时显示主页
-                    ShowHomePage();
+                    MainWin = HomeWin;
                 }
             }
             else if (LeftWin == p_win)
@@ -313,85 +305,106 @@ namespace Dt.Base
         /// 关闭其他窗口
         /// </summary>
         /// <param name="p_win"></param>
-        internal async Task<List<Win>> CloseExcept(Win p_win)
+        internal async void CloseExcept(Win p_win)
         {
             LeftWin = null;
             RightWin = null;
             MainWin = p_win;
 
-            List<Win> ls = new List<Win>();
-            foreach (var win in _winCache)
+            foreach (var win in Items)
             {
                 if (win == p_win)
                     continue;
 
                 // 触发关闭前事件，外部判断是否允许关闭
                 if (await win.OnClosing())
-                    ls.Add(win);
-            }
-
-            if (ls.Count > 0)
-            {
-                foreach (var win in ls)
                 {
-                    _winCache.Remove(win);
+                    Items.Remove(win);
                     // 关闭后
                     win.OnClosed();
                 }
-                GC.Collect();
             }
-            return ls;
+            GC.Collect();
         }
 
-        /// <summary>
-        /// 显示主页
-        /// </summary>
-        internal void ShowHomePage()
+        internal IEnumerable<TaskbarItem> GetAllTaskbarItems()
         {
-            if (MainWin != HomeWin)
-                MainWin = HomeWin;
-        }
-
-        /// <summary>
-        /// 重置停靠在两侧的窗口宽度
-        /// </summary>
-        /// <param name="p_win"></param>
-        internal void ResetSideWidth(Win p_win)
-        {
-            if (_grid != null)
-            {
-                if (RightWin == p_win)
-                    _grid.ColumnDefinitions[4].Width = new GridLength(_defaultSideSize);
-                else if (LeftWin == p_win)
-                    _grid.ColumnDefinitions[0].Width = new GridLength(_defaultSideSize);
-            }
+            return _taskbarPanel.Children.OfType<TaskbarItem>();
         }
         #endregion
 
-        #region 重写方法
-        /// <summary>
-        /// 应用模板
-        /// </summary>
+        #region 加载过程
+        /************************************************************************************************************************************/
+        // uno在构造方法中设置Style时直接调用了OnApplyTemplate，只能在Loaded事件中加载Items
+        // UWP仍在OnApplyTemplate中加载Items
+        /************************************************************************************************************************************/
+
+#if UWP
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            _spLeft = (Splitter)GetTemplateChild("LeftSplitter");
-            _spLeft.DraggingCompleted += OnLeftSplitterDraggingCompleted;
-            _spRight = (Splitter)GetTemplateChild("RightSplitter");
-            _spRight.DraggingCompleted += OnRightSplitterDraggingCompleted;
+            InitTemplate();
+        }
+#else
+        void OnLoaded(object sender, RoutedEventArgs e)
+        {
+            Loaded -= OnLoaded;
+            InitTemplate();
+        }
+#endif
+
+        void InitTemplate()
+        {
             _grid = (Grid)GetTemplateChild("ContentGrid");
+            _taskbarPanel = (StackPanel)GetTemplateChild("TaskbarPanel");
+            var home = (HomebarItem)GetTemplateChild("HomeItem");
+            home.SetWin(HomeWin);
+
+            var spLeft = (Splitter)GetTemplateChild("LeftSplitter");
+            spLeft.DraggingCompleted += OnLeftSplitterDraggingCompleted;
+            var spRight = (Splitter)GetTemplateChild("RightSplitter");
+            spRight.DraggingCompleted += OnRightSplitterDraggingCompleted;
 
             // 初始化左右窗口
             if (RightWin != null)
             {
-                _spRight.Visibility = Visibility.Visible;
-                _grid.ColumnDefinitions[4].Width = new GridLength(_rightSize.HasValue ? _rightSize.Value : _defaultSideSize);
+                spRight.Visibility = Visibility.Visible;
+                _grid.ColumnDefinitions[4].Width = new GridLength(SysVisual.ViewWidth / 2);
             }
             if (LeftWin != null)
             {
-                _spLeft.Visibility = Visibility.Visible;
-                _grid.ColumnDefinitions[0].Width = new GridLength(_leftSize.HasValue ? _leftSize.Value : _defaultSideSize);
+                spLeft.Visibility = Visibility.Visible;
+                _grid.ColumnDefinitions[0].Width = new GridLength(SysVisual.ViewWidth / 2);
             }
+
+            LoadAllItems();
+            Items.ItemsChanged += OnItemsChanged;
+            _taskbarPanel.SizeChanged += (s, e) => ResizeAllItems();
+        }
+
+        void LoadAllItems()
+        {
+            foreach (var win in Items)
+            {
+                _taskbarPanel.Children.Add(new TaskbarItem(win));
+            }
+        }
+
+        void OnItemsChanged(object sender, ItemListChangedArgs e)
+        {
+            if (e.CollectionChange == CollectionChange.ItemInserted)
+            {
+                _taskbarPanel.Children.Insert(e.Index, new TaskbarItem(Items[e.Index]));
+            }
+            else if (e.CollectionChange == CollectionChange.ItemRemoved)
+            {
+                _taskbarPanel.Children.RemoveAt(e.Index);
+            }
+            else
+            {
+                throw new Exception("Win不支持子项集合重置！");
+            }
+            ResizeAllItems();
         }
         #endregion
 
@@ -407,6 +420,25 @@ namespace Dt.Base
             else if (p_win == LeftWin)
                 LeftWin = null;
             MainWin = p_win;
+        }
+
+        /// <summary>
+        /// 重置任务栏按扭的宽度
+        /// </summary>
+        void ResizeAllItems()
+        {
+            if (_taskbarPanel.ActualWidth < 300 || Items.Count == 0)
+                return;
+
+            double width = Math.Floor((ActualWidth - 180) / Items.Count);
+            if (width < _maxItemWidth && width != _itemWidth)
+            {
+                _itemWidth = width;
+                foreach (var item in _taskbarPanel.Children.OfType<TaskbarItem>())
+                {
+                    item.Width = _itemWidth;
+                }
+            }
         }
 
         /// <summary>
@@ -428,7 +460,7 @@ namespace Dt.Base
                     LeftWin = null;
                     Windows.UI.Xaml.Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 1);
                 }
-                else if (width.Value > _defaultSideSize)
+                else if (width.Value > SysVisual.ViewWidth / 2)
                 {
                     // 主窗口太小时左变主
                     double mainWidth = _grid.ActualWidth - width.Value - 24;
@@ -440,7 +472,6 @@ namespace Dt.Base
                         var win = LeftWin;
                         LeftWin = null;
                         MainWin = win;
-                        Taskbar.Inst.ActiveTaskItem(win);
                         Windows.UI.Xaml.Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 1);
                     }
                 }
@@ -465,7 +496,7 @@ namespace Dt.Base
                     RightWin = null;
                     Windows.UI.Xaml.Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 1);
                 }
-                else if (width.Value > _defaultSideSize)
+                else if (width.Value > SysVisual.ViewWidth / 2)
                 {
                     double mainWidth = _grid.ActualWidth - width.Value - 24;
                     var leftWidth = _grid.ColumnDefinitions[0].Width;
@@ -476,7 +507,6 @@ namespace Dt.Base
                         var win = RightWin;
                         RightWin = null;
                         MainWin = win;
-                        Taskbar.Inst.ActiveTaskItem(win);
                         Windows.UI.Xaml.Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 1);
                     }
                 }
