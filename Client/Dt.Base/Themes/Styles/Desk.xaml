@@ -79,9 +79,12 @@
                         <Rectangle x:Name="SelectedBorder" Margin="1,1,0,0" Fill="White" Visibility="Collapsed" IsHitTestVisible="False"/>
                         <Rectangle x:Name="LineRect" IsHitTestVisible="False" Height="2" VerticalAlignment="Top" />
                         <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                            <!--wasm中启动时测量的宽高不对，直接固定宽高-->
                             <TextBlock Text="&#xE019;"
                                        FontFamily="{StaticResource IconFont}"
                                        FontSize="20"
+                                       Width="20"
+                                       Height="20"
                                        VerticalAlignment="Center" />
                             <TextBlock Text="主页" Margin="6,0,0,0" VerticalAlignment="Center" />
                         </StackPanel>
@@ -172,6 +175,8 @@
                             <TextBlock Text="{Binding Icon, Converter={StaticResource CvIconToChar}}"
                                        FontFamily="{StaticResource IconFont}"
                                        FontSize="20"
+                                       Width="20"
+                                       Height="20"
                                        VerticalAlignment="Center" />
                             <TextBlock Text="{Binding Title}" VerticalAlignment="Center" Margin="6,0,6,0" Grid.Column="1" />
                             <Button x:Name="CloseButton" Style="{StaticResource TaskbarCloseButton}" Grid.Column="2" />
