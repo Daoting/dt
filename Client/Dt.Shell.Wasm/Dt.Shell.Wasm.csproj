@@ -41,6 +41,7 @@
 	</ItemGroup>
 
   <ItemGroup>
+    <!-- 能够反射出类型的dll都需要link -->
     <LinkerDescriptor Include="LinkerConfig.xml" />
   </ItemGroup>
 	

@@ -114,7 +114,7 @@ namespace Dt.Base
         /// </summary>
         public Row Row
         {
-            get { return Data as Row; }
+            get { return _data as Row; }
         }
 
         /// <summary>
@@ -180,9 +180,9 @@ namespace Dt.Base
                 else
                 {
                     // 对象属性
-                    var pi = Data.GetType().GetProperty(p_colName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                    var pi = _data.GetType().GetProperty(p_colName, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
                     if (pi != null)
-                        val = pi.GetValue(Data);
+                        val = pi.GetValue(_data);
                 }
                 return val;
             }
@@ -228,7 +228,7 @@ namespace Dt.Base
             else if (p_cell.UIType == CellUIType.Default)
             {
                 // 默认方式：根据数据类型生成可视元素
-                if (Data is Row dr && dr.Contains(p_cell.ID))
+                if (_data is Row dr && dr.Contains(p_cell.ID))
                 {
                     // 从Row取
                     elem = CreateCellUI(dr.Cells[p_cell.ID]);
@@ -236,13 +236,13 @@ namespace Dt.Base
                 else if (p_cell.ID == "#")
                 {
                     // # 直接输出对象
-                    elem = CreateObjectUI(Data);
+                    elem = CreateObjectUI(_data);
                 }
                 else
                 {
                     // 输出对象属性
-                    var pi = Data.GetType().GetProperty(p_cell.ID, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
-                    if (pi != null && (val = pi.GetValue(Data)) != null)
+                    var pi = _data.GetType().GetProperty(p_cell.ID, BindingFlags.IgnoreCase | BindingFlags.Public | BindingFlags.Instance);
+                    if (pi != null && (val = pi.GetValue(_data)) != null)
                         elem = CreatePropertyUI(pi, val);
                 }
             }
