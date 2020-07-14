@@ -1103,7 +1103,7 @@ namespace Dt.Base
         //
         // 调用UpdateLayout的不同：
         // UWP：UpdateLayout内部会依次 > MeasureOverride > ArrangeOverride > SizeChanged
-        // uno: UpdateLayout调用后才测量布局
+        // uno: UpdateLayout调用时未同步调用上述方法，内部异步测量布局，和InvalidateMeasure功能相似
         /************************************************************************************************************************************/
 
 #if UWP

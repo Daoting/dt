@@ -30,7 +30,8 @@ namespace Dt.Base
     {
         #region 静态成员
         const double _minSideSize = 200;
-        const double _maxItemWidth = 260;
+        // 和edge标签宽度相同
+        const double _maxItemWidth = 240;
         const double _deltaSplitterWidth = 200;
 
         /// <summary>
@@ -473,7 +474,8 @@ namespace Dt.Base
             if (Items.Count == 0)
                 return;
 
-            double width = Math.Floor((ActualWidth - 180) / Items.Count);
+            // 两边各空出20边距，主页按钮120
+            double width = Math.Floor((ActualWidth - 160) / Items.Count);
             if (width < _maxItemWidth && width != ((TaskbarItem)_taskbarPanel.Children[0]).Width)
             {
                 foreach (var item in _taskbarPanel.Children.OfType<TaskbarItem>())

@@ -1,0 +1,26 @@
+﻿平台调用顺序不同：
+UWP：
+父OnApplyTemplate -> 子OnApplyTemplate -> 父MeasureOverride -> 子MeasureOverride -> 父ArrangeOverride -> 子ArrangeOverride -> 父SizeChanged -> 子SizeChanged -> 父Loaded -> 子Loaded
+
+Android：
+子OnApplyTemplate -> 父OnApplyTemplate -> 父Loaded -> 子Loaded -> 父MeasureOverride -> 子MeasureOverride -> 父ArrangeOverride -> 子ArrangeOverride -> 子SizeChanged -> 父SizeChanged
+
+iOS：
+子OnApplyTemplate -> 父OnApplyTemplate -> 子Loaded -> 父Loaded -> 父MeasureOverride -> 子MeasureOverride -> 父SizeChanged -> 子SizeChanged -> 父ArrangeOverride -> 子ArrangeOverride
+
+uwp的OnApplyTemplate时控件已在可视树上，可查询父元素；uno此时不在可视树上，只能在Loaded时查询父元素！！！
+
+
+// 在MeasureOverride中尽可能不增删Children元素，uno中每增删一个元素会重复一次MeasureOverride，严重时死循环！！！
+// 采用虚拟行模式时，需要根据可视区大小确定生成的虚拟行行数，可视区大小在MeasureOverride时才能确定，故解决方法：
+// 在Lv.MeasureOverride时准确获取可见区大小，若大小变化则重新生成虚拟行，添加虚拟行会造成多次MeasureOverride，未发现其他好方法！！！
+// 若放在SizeChanged中生成虚拟行时uno会警告 requestLayout() improperly called by xxx: posting in next frame！！！
+
+
+// 调用UpdateLayout的不同：
+// UWP：UpdateLayout内部会依次 > MeasureOverride > ArrangeOverride > SizeChanged
+// uno: UpdateLayout调用时未同步调用上述方法，内部异步测量布局，和InvalidateMeasure功能相似
+
+
+// uno在构造方法中设置Style时直接调用了OnApplyTemplate，uwp没有，和设置DefaultStyleKey相同，
+// 当控件中有数据源Items需要同步到Panel时，uno只能在Loaded事件中加载, uwp仍在OnApplyTemplate中加载Items

@@ -677,7 +677,13 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <!--标签-->
-                        <StackPanel x:Name="ItemsPanel" Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2" />
+                        <StackPanel x:Name="ItemsPanel" Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2">
+                            <StackPanel.ChildrenTransitions>
+                                <TransitionCollection>
+                                    <ReorderThemeTransition />
+                                </TransitionCollection>
+                            </StackPanel.ChildrenTransitions>
+                        </StackPanel>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

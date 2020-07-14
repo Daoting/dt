@@ -36,14 +36,17 @@ namespace Dt.Base
         {
             _win = p_win;
             _win.IsActivedChanged += OnIsActivedChanged;
+            ToggleSelectedState();
         }
 
         #region 重写方法
+#if UWP
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
             ToggleSelectedState();
         }
+#endif
 
         protected override void OnPointerEntered(PointerRoutedEventArgs e)
         {

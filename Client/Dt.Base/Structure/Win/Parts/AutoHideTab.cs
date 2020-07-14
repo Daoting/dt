@@ -38,49 +38,49 @@ namespace Dt.Base.Docking
         /// <summary>
         /// 将指定Tab转为自动隐藏
         /// </summary>
-        /// <param name="p_sectItem"></param>
-        internal void Unpin(Tab p_sectItem)
+        /// <param name="p_tab"></param>
+        internal void Unpin(Tab p_tab)
         {
-            if (p_sectItem.OwnerTabs != null)
+            if (p_tab.OwnerTabs != null)
             {
                 if (TabStripPlacement == ItemPlacement.Left || TabStripPlacement == ItemPlacement.Right)
                 {
-                    if (p_sectItem.ReadLocalValue(TabItem.PopWidthProperty) == DependencyProperty.UnsetValue)
-                        p_sectItem.PopWidth = p_sectItem.OwnerTabs.ActualWidth;
+                    if (p_tab.ReadLocalValue(TabItem.PopWidthProperty) == DependencyProperty.UnsetValue)
+                        p_tab.PopWidth = p_tab.OwnerTabs.ActualWidth;
                 }
                 else
                 {
-                    if (p_sectItem.ReadLocalValue(TabItem.PopHeightProperty) == DependencyProperty.UnsetValue)
-                        p_sectItem.PopHeight = p_sectItem.OwnerTabs.ActualHeight;
+                    if (p_tab.ReadLocalValue(TabItem.PopHeightProperty) == DependencyProperty.UnsetValue)
+                        p_tab.PopHeight = p_tab.OwnerTabs.ActualHeight;
                 }
-                p_sectItem.RemoveFromParent();
+                p_tab.RemoveFromParent();
             }
             else
             {
                 if (TabStripPlacement == ItemPlacement.Left || TabStripPlacement == ItemPlacement.Right)
                 {
-                    if (p_sectItem.ReadLocalValue(TabItem.PopWidthProperty) == DependencyProperty.UnsetValue)
-                        p_sectItem.PopWidth = _defaultSize;
+                    if (p_tab.ReadLocalValue(TabItem.PopWidthProperty) == DependencyProperty.UnsetValue)
+                        p_tab.PopWidth = _defaultSize;
                 }
                 else
                 {
-                    if (p_sectItem.ReadLocalValue(TabItem.PopHeightProperty) == DependencyProperty.UnsetValue)
-                        p_sectItem.PopHeight = _defaultSize;
+                    if (p_tab.ReadLocalValue(TabItem.PopHeightProperty) == DependencyProperty.UnsetValue)
+                        p_tab.PopHeight = _defaultSize;
                 }
             }
-
-            Items.Add(p_sectItem);
+            p_tab.IsPinned = false;
+            Items.Add(p_tab);
         }
 
         /// <summary>
         /// 将指定Tab转为固定停靠
         /// </summary>
-        /// <param name="p_sectItem"></param>
-        internal void Pin(Tab p_sectItem)
+        /// <param name="p_tab"></param>
+        internal void Pin(Tab p_tab)
         {
-            Items.Remove(p_sectItem);
-            p_sectItem.ClearValue(TabItem.PopWidthProperty);
-            p_sectItem.ClearValue(TabItem.PopHeightProperty);
+            Items.Remove(p_tab);
+            p_tab.ClearValue(TabItem.PopWidthProperty);
+            p_tab.ClearValue(TabItem.PopHeightProperty);
         }
 
         /// <summary>
