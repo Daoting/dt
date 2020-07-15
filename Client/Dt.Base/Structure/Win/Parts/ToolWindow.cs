@@ -472,17 +472,17 @@ namespace Dt.Base.Docking
         /// <summary>
         /// 置顶
         /// </summary>
-        /// <param name="window"></param>
-        static void BringToFront(ToolWindow window)
+        /// <param name="p_window"></param>
+        static void BringToFront(ToolWindow p_window)
         {
-            Panel windowParent = window.Parent as Panel;
-            if (windowParent != null)
+            Panel pnl = p_window.Parent as Panel;
+            if (pnl != null)
             {
-                IEnumerable<UIElement> toolWindows = windowParent.FindChildrenByType<ToolWindow>(false);
+                IEnumerable<UIElement> toolWindows = pnl.FindChildrenByType<ToolWindow>(false);
                 int maxZIndex = toolWindows.Max(itm => Canvas.GetZIndex(itm));
-                if (Canvas.GetZIndex(window) <= maxZIndex)
+                if (Canvas.GetZIndex(p_window) <= maxZIndex)
                 {
-                    Canvas.SetZIndex(window, maxZIndex + 1);
+                    Canvas.SetZIndex(p_window, maxZIndex + 1);
                 }
             }
         }
