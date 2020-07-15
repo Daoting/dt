@@ -51,9 +51,11 @@ namespace Dt.Base
         {
             Loaded -= OnLoaded;
 
-            // 优先级：直接设置 > LvItem属性
+            // 优先级：直接设置 > ViewItem属性，未直接设置的绑定ViewItem中行样式
             if (ReadLocalValue(ForegroundProperty) == DependencyProperty.UnsetValue)
                 SetBinding(ForegroundProperty, new Binding { Path = new PropertyPath("Foreground") });
+            if (ReadLocalValue(BackgroundProperty) == DependencyProperty.UnsetValue)
+                SetBinding(BackgroundProperty, new Binding { Path = new PropertyPath("Background") });
             if (ReadLocalValue(FontWeightProperty) == DependencyProperty.UnsetValue)
                 SetBinding(FontWeightProperty, new Binding { Path = new PropertyPath("FontWeight") });
             if (ReadLocalValue(FontStyleProperty) == DependencyProperty.UnsetValue)

@@ -76,10 +76,32 @@ namespace Dt.Base.ListView
         protected void SetContentBinding(Col p_col, ContentPresenter p_pre)
         {
             p_pre.SetBinding(ContentPresenter.ContentProperty, new Binding { Converter = _uiConverter, ConverterParameter = p_col, Mode = BindingMode.OneTime });
-            p_pre.SetBinding(ContentPresenter.ForegroundProperty, new Binding { Path = new PropertyPath("Foreground") });
-            p_pre.SetBinding(ContentPresenter.FontWeightProperty, new Binding { Path = new PropertyPath("FontWeight") });
-            p_pre.SetBinding(ContentPresenter.FontStyleProperty, new Binding { Path = new PropertyPath("FontStyle") });
-            p_pre.SetBinding(ContentPresenter.FontSizeProperty, new Binding { Path = new PropertyPath("FontSize") });
+
+            // 优先级：直接设置 > ViewItem属性，未直接设置的绑定ViewItem中行样式
+            if (p_col.ReadLocalValue(Col.ForegroundProperty) == DependencyProperty.UnsetValue)
+                p_pre.SetBinding(ContentPresenter.ForegroundProperty, new Binding { Path = new PropertyPath("Foreground") });
+            else
+                p_pre.Foreground = p_col.Foreground;
+
+            if (p_col.ReadLocalValue(Col.BackgroundProperty) == DependencyProperty.UnsetValue)
+                p_pre.SetBinding(ContentPresenter.BackgroundProperty, new Binding { Path = new PropertyPath("Background") });
+            else
+                p_pre.Background = p_col.Background;
+
+            if (p_col.ReadLocalValue(Col.FontWeightProperty) == DependencyProperty.UnsetValue)
+                p_pre.SetBinding(ContentPresenter.FontWeightProperty, new Binding { Path = new PropertyPath("FontWeight") });
+            else
+                p_pre.FontWeight = p_col.FontWeight;
+
+            if (p_col.ReadLocalValue(Col.FontStyleProperty) == DependencyProperty.UnsetValue)
+                p_pre.SetBinding(ContentPresenter.FontStyleProperty, new Binding { Path = new PropertyPath("FontStyle") });
+            else
+                p_pre.FontStyle = p_col.FontStyle;
+
+            if (p_col.ReadLocalValue(Col.FontSizeProperty) == DependencyProperty.UnsetValue)
+                p_pre.SetBinding(ContentPresenter.FontSizeProperty, new Binding { Path = new PropertyPath("FontSize") });
+            else
+                p_pre.FontSize = p_col.FontSize;
         }
 
         /// <summary>

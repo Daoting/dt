@@ -82,7 +82,7 @@
                     <StackPanel Orientation="Horizontal">
                         <Button Content="表格" Click="OnGridView" />
                         <Button Content="普通列表" Click="OnListView" />
-                        <Button Content="表单列表" Click="OnFormView" />
+                        <Button Content="磁贴列表" Click="OnFormView" />
                     </StackPanel>
                     <a:CBar Title="分组统计" />
                     <StackPanel Orientation="Horizontal">

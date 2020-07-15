@@ -31,19 +31,17 @@ namespace Dt.Sample
 
         void OnGridView(object sender, RoutedEventArgs e)
         {
-            var cols = (Cols)GetResource("GridView");
-            _lv.View = cols;
+            _lv.ChangeView(GetResource("GridView"), ViewMode.Table);
         }
 
         void OnListView(object sender, RoutedEventArgs e)
         {
-            _lv.View = GetResource("ListView");
+            _lv.ChangeView(GetResource("ListView"), ViewMode.List);
         }
 
         void OnFormView(object sender, RoutedEventArgs e)
         {
-            var cols = (Cols)GetResource("GridView");
-            _lv.View = cols;
+            _lv.ChangeView(GetResource("ListView"), ViewMode.Tile);
         }
 
         object GetResource(string p_key)
