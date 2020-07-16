@@ -26,34 +26,7 @@ namespace Dt.Fz
 
         void OnTest(object sender, RoutedEventArgs e)
         {
-            //var dt = DateTime.Now;
-            //var cfg = await new UnaryRpc("cm", "Entry.GetConfig").Call<Dict>();
-            //Console.WriteLine(cfg.Str("ver"));
-
-#if WASM
-            try
-            {
-                var prv = new SQLite3P2();
-                SQLitePCL.raw.SetProvider(prv);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-
-            //
-            //try
-            //{
-            //    var _stateDb = new SqliteConnectionEx("Data Source=local.db");
-            //    _stateDb.Open();
-
-
-            //}
-            //catch (Exception ex)
-            //{
-            //    Console.WriteLine(ex.Message);
-            //}
-#endif
+            
         }
 
         ResponseReader _reader;

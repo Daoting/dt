@@ -75,6 +75,25 @@ namespace Dt.Base
             }
         }
 
+        protected override void OnPointerMoved(PointerRoutedEventArgs e)
+        {
+            if (_isDragging)
+                Desktop.Inst.DoSwap(this, e);
+        }
+
+        protected override void OnPointerReleased(PointerRoutedEventArgs e)
+        {
+            ReleasePointerCapture(e.Pointer);
+            _isDragging = false;
+        }
+
+        protected override void OnTapped(TappedRoutedEventArgs e)
+        {
+            e.Handled = true;
+            _isDragging = false;
+            Desktop.Inst.ActiveWin(_win);
+        }
+
         protected override void OnRightTapped(RightTappedRoutedEventArgs e)
         {
             e.Handled = true;
@@ -82,57 +101,6 @@ namespace Dt.Base
             ShowMenu(e.GetPosition(SysVisual.RootContent));
         }
 
-        protected override void OnDoubleTapped(DoubleTappedRoutedEventArgs e)
-        {
-            e.Handled = true;
-            _currentItem = this;
-            ShowMenu(e.GetPosition(SysVisual.RootContent));
-        }
-
-        // 容易与拖拽混
-        //protected override void OnHolding(HoldingRoutedEventArgs e)
-        //{
-        //    if (e.HoldingState == Windows.UI.Input.HoldingState.Started)
-        //    {
-        //        e.Handled = true;
-        //        ShowMenu(e.GetPosition(SysVisual.RootContent));
-        //    }
-        //}
-
-        protected override void OnPointerMoved(PointerRoutedEventArgs e)
-        {
-            if (_isDragging)
-                Desktop.Inst.DoSwap(this, e);
-        }
-
-        /// <summary>
-        /// 抬起时激活窗口
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnPointerReleased(PointerRoutedEventArgs e)
-        {
-            if (!_isDragging)
-            {
-                ToggleSelectedState();
-                return;
-            }
-
-            ReleasePointerCapture(e.Pointer);
-            e.Handled = true;
-            _isDragging = false;
-
-            Point pt = e.GetCurrentPoint(null).Position;
-            if (this.ContainPoint(pt) && !_win.IsActived)
-            {
-                // 释放时鼠标在内部
-                Desktop.Inst.ActiveWin(_win);
-            }
-        }
-
-        /// <summary>
-        /// 鼠标移出
-        /// </summary>
-        /// <param name="e"></param>
         protected override void OnPointerExited(PointerRoutedEventArgs e)
         {
             e.Handled = true;

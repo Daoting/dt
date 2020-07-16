@@ -7,7 +7,10 @@
 #endregion
 
 #region 引用命名
+using Dt.Base.Tools;
+using Dt.Core;
 using System;
+using Windows.Devices.Input;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -23,6 +26,7 @@ namespace Dt.Base
     {
         #region 成员变量
         Win _win;
+        Menu _menu;
         #endregion
 
         #region 构造方法
@@ -67,20 +71,38 @@ namespace Dt.Base
         protected override void OnPointerReleased(PointerRoutedEventArgs e)
         {
             ReleasePointerCapture(e.Pointer);
-            e.Handled = true;
+        }
 
-            Point pt = e.GetCurrentPoint(null).Position;
-            if (this.ContainPoint(pt) && !_win.IsActived)
-            {
-                // 释放时鼠标在内部
-                Desktop.Inst.MainWin = _win;
-            }
+        protected override void OnTapped(TappedRoutedEventArgs e)
+        {
+            e.Handled = true;
+            Desktop.Inst.MainWin = _win;
+        }
+
+        protected override void OnRightTapped(RightTappedRoutedEventArgs e)
+        {
+            e.Handled = true;
+            ShowMenu(e.GetPosition(SysVisual.RootContent));
         }
 
         protected override void OnPointerExited(PointerRoutedEventArgs e)
         {
             e.Handled = true;
             ToggleSelectedState();
+        }
+        #endregion
+
+        #region 上下文菜单
+        void ShowMenu(Point p_pos)
+        {
+            if (_menu == null)
+            {
+                _menu = new Menu { IsContextMenu = true };
+                var item = new Mi { ID = "系统监控" };
+                item.Click += (s, a) => SysTrace.ShowBox();
+                _menu.Items.Add(item);
+            }
+            _menu.OpenContextMenu(p_pos);
         }
         #endregion
 

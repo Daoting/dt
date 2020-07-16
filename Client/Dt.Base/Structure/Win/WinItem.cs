@@ -289,9 +289,9 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 在WinItemPanel中占的区域
+        /// 在WinItemPanel中占的区域，iOS中Bounds与基类重名
         /// </summary>
-        internal Rect Bounds { get; set; }
+        internal Rect Region { get; set; }
         #endregion
 
         #region 外部方法

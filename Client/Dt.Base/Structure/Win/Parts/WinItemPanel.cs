@@ -85,20 +85,20 @@ namespace Dt.Base.Docking
                 switch (item.DockState)
                 {
                     case WinItemState.DockedLeft:
-                        item.Bounds = new Rect(usedLeft, usedTop, item.Width, height - usedTop - usedBottom);
+                        item.Region = new Rect(usedLeft, usedTop, item.Width, height - usedTop - usedBottom);
                         usedLeft += item.DesiredSize.Width;
                         break;
                     case WinItemState.DockedRight:
                         usedRight += item.DesiredSize.Width;
-                        item.Bounds = new Rect(Math.Max(0.0, width - usedRight), usedTop, item.Width, height - usedTop - usedBottom);
+                        item.Region = new Rect(Math.Max(0.0, width - usedRight), usedTop, item.Width, height - usedTop - usedBottom);
                         break;
                     case WinItemState.DockedTop:
-                        item.Bounds = new Rect(usedLeft, usedTop, width - usedLeft - usedRight, item.Height);
+                        item.Region = new Rect(usedLeft, usedTop, width - usedLeft - usedRight, item.Height);
                         usedTop += item.DesiredSize.Height;
                         break;
                     case WinItemState.DockedBottom:
                         usedBottom += item.DesiredSize.Height;
-                        item.Bounds = new Rect(usedLeft, Math.Max(0.0, height - usedBottom), width - usedLeft - usedRight, item.Height);
+                        item.Region = new Rect(usedLeft, Math.Max(0.0, height - usedBottom), width - usedLeft - usedRight, item.Height);
                         break;
                 }
             }
@@ -106,7 +106,7 @@ namespace Dt.Base.Docking
             // 中部主区填充剩余区域，始终在Children的0位置
             Size leaveSize = new Size(Math.Max(0.0, width - usedLeft - usedRight), Math.Max(0.0, height - usedTop - usedBottom));
             _centerItem.Measure(leaveSize);
-            _centerItem.Bounds = new Rect(new Point(usedLeft, usedTop), leaveSize);
+            _centerItem.Region = new Rect(new Point(usedLeft, usedTop), leaveSize);
             return new Size(width, height);
         }
 
@@ -115,7 +115,7 @@ namespace Dt.Base.Docking
             for (int i = 0; i < Children.Count; i++)
             {
                 WinItem item = (WinItem)Children[i];
-                item.Arrange(item.Bounds);
+                item.Arrange(item.Region);
             }
             return finalSize;
         }

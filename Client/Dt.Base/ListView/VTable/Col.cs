@@ -17,7 +17,7 @@ namespace Dt.Base
     /// <summary>
     /// 列定义
     /// </summary>
-    public class Col : DependencyObject, ICellUI
+    public partial class Col : DependencyObject, ICellUI
     {
         #region 静态内容
         public static readonly DependencyProperty WidthProperty = DependencyProperty.Register(

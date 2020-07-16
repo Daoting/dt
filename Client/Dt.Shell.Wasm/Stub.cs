@@ -62,11 +62,13 @@ namespace Dt.Shell
             //desktop.SetValue(Desktop.MainWinProperty, win);
 
             //_rootGrid.Children.Insert(0, desktop);
-            Console.WriteLine("宽" + Window.Current.Bounds.Width.ToString());
+            //Console.WriteLine("宽" + Window.Current.Bounds.Width.ToString());
             //Console.WriteLine("宽" + Window.Current.CoreWindow.Bounds.Width.ToString());
-            AtApp.LoadRootUI();
+
             //var win = new SingleViewWin();
             //_rootGrid.Children.Insert(0, win);
+
+            AtApp.LoadRootUI();
         }
 
         /// <summary>

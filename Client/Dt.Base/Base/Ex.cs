@@ -119,7 +119,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取附加标签的类型名称
         /// </summary>
-        public static string GetTagCls(DependencyObject element)
+        public static string GetTagCls(this DependencyObject element)
         {
             return (string)element.GetValue(TagClsProperty);
         }
@@ -127,7 +127,7 @@ namespace Dt.Base
         /// <summary>
         /// 设置附加标签的类型名称
         /// </summary>
-        public static void SetTagCls(DependencyObject element, string value)
+        public static void SetTagCls(this DependencyObject element, string value)
         {
             element.SetValue(TagClsProperty, value);
         }

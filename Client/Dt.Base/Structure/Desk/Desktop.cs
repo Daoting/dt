@@ -11,6 +11,7 @@ using Dt.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Windows.Foundation;
@@ -29,10 +30,8 @@ namespace Dt.Base
     public partial class Desktop : Control
     {
         #region 静态成员
-        const double _minSideSize = 200;
         // 和edge标签宽度相同
         const double _maxItemWidth = 240;
-        const double _deltaSplitterWidth = 200;
 
         /// <summary>
         /// 内部主窗口
@@ -63,67 +62,17 @@ namespace Dt.Base
 
         static void OnMainWinChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            Win win = (Win)e.OldValue;
-            if (win != null)
-                win.IsActived = false;
-
-            win = (Win)e.NewValue;
-            if (win != null)
-                win.IsActived = true;
+            ((Desktop)d).ChangeMainWin((Win)e.OldValue, (Win)e.NewValue);
         }
 
         static void OnLeftWinChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            Desktop dt = (Desktop)d;
-            if (dt._grid == null)
-                return;
-
-            var spLeft = (Splitter)dt.GetTemplateChild("LeftSplitter");
-            Win win = (Win)e.NewValue;
-            if (win != null)
-            {
-                if (win == dt.RightWin)
-                    dt.RightWin = null;
-                spLeft.Visibility = Visibility.Visible;
-                double width = win.GetSplitWidth();
-                if (width > _minSideSize)
-                    dt._grid.ColumnDefinitions[0].Width = new GridLength(width);
-                else
-                    dt._grid.ColumnDefinitions[0].Width = new GridLength(SysVisual.ViewWidth / 2 - _deltaSplitterWidth);
-            }
-            else
-            {
-                spLeft.Visibility = Visibility.Collapsed;
-                dt._grid.ColumnDefinitions[0].Width = GridLength.Auto;
-            }
-            dt._grid.ColumnDefinitions[1].Width = GridLength.Auto;
+            ((Desktop)d).ChangeLeftWin((Win)e.OldValue, (Win)e.NewValue);
         }
 
         static void OnRightWinChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            Desktop dt = (Desktop)d;
-            if (dt._grid == null)
-                return;
-
-            var spRight = (Splitter)dt.GetTemplateChild("RightSplitter");
-            var win = (Win)e.NewValue;
-            if (win != null)
-            {
-                if (win == dt.LeftWin)
-                    dt.LeftWin = null;
-                spRight.Visibility = Visibility.Visible;
-                double width = win.GetSplitWidth();
-                if (width > _minSideSize)
-                    dt._grid.ColumnDefinitions[4].Width = new GridLength(width);
-                else
-                    dt._grid.ColumnDefinitions[4].Width = new GridLength(SysVisual.ViewWidth / 2 - _deltaSplitterWidth);
-            }
-            else
-            {
-                spRight.Visibility = Visibility.Collapsed;
-                dt._grid.ColumnDefinitions[4].Width = GridLength.Auto;
-            }
-            dt._grid.ColumnDefinitions[3].Width = GridLength.Auto;
+            ((Desktop)d).ChangeRightWin((Win)e.OldValue, (Win)e.NewValue);
         }
 
         /// <summary>
@@ -228,7 +177,7 @@ namespace Dt.Base
         {
             if (Items.Contains(p_win))
             {
-                ActiveWinInternal(p_win);
+                MainWin = p_win;
                 return true;
             }
             return false;
@@ -251,7 +200,7 @@ namespace Dt.Base
                             && win.Params != null
                             && JsonSerializer.Serialize(win.Params, JsonOptions.UnsafeSerializer) == JsonSerializer.Serialize(p_params, JsonOptions.UnsafeSerializer)))
                     {
-                        ActiveWinInternal(win);
+                        MainWin = win;
                         return win;
                     }
                 }
@@ -281,14 +230,7 @@ namespace Dt.Base
                 if (Items.Count > 0)
                 {
                     // 激活下一窗口
-                    Win nextWin = index < Items.Count ? Items[index] : Items[Items.Count - 1];
-
-                    // 若待激活窗口停靠状态，先移除停靠
-                    if (LeftWin == nextWin)
-                        LeftWin = null;
-                    else if (RightWin == nextWin)
-                        RightWin = null;
-                    MainWin = nextWin;
+                    MainWin = index < Items.Count ? Items[index] : Items[Items.Count - 1];
                 }
                 else
                 {
@@ -404,22 +346,12 @@ namespace Dt.Base
             var home = (HomebarItem)GetTemplateChild("HomeItem");
             home.SetWin(HomeWin);
 
-            var spLeft = (Splitter)GetTemplateChild("LeftSplitter");
-            spLeft.DraggingCompleted += OnLeftSplitterDraggingCompleted;
-            var spRight = (Splitter)GetTemplateChild("RightSplitter");
-            spRight.DraggingCompleted += OnRightSplitterDraggingCompleted;
-
-            // 初始化左右窗口
-            if (RightWin != null)
-            {
-                spRight.Visibility = Visibility.Visible;
-                _grid.ColumnDefinitions[4].Width = new GridLength(SysVisual.ViewWidth / 2);
-            }
+            if (MainWin != null)
+                ChangeMainWin(null, MainWin);
             if (LeftWin != null)
-            {
-                spLeft.Visibility = Visibility.Visible;
-                _grid.ColumnDefinitions[0].Width = new GridLength(SysVisual.ViewWidth / 2);
-            }
+                ChangeLeftWin(null, LeftWin);
+            if (RightWin != null)
+                ChangeRightWin(null, RightWin);
 
             LoadAllItems();
             Items.ItemsChanged += OnItemsChanged;
@@ -450,21 +382,6 @@ namespace Dt.Base
             }
             ResizeAllItems();
         }
-        #endregion
-
-        #region 内部方法
-        /// <summary>
-        /// 激活指定窗口
-        /// </summary>
-        /// <param name="p_win"></param>
-        void ActiveWinInternal(Win p_win)
-        {
-            if (p_win == RightWin)
-                RightWin = null;
-            else if (p_win == LeftWin)
-                LeftWin = null;
-            MainWin = p_win;
-        }
 
         /// <summary>
         /// 重置任务栏按扭的宽度
@@ -484,63 +401,184 @@ namespace Dt.Base
                 }
             }
         }
+        #endregion
 
-        /// <summary>
-        /// 左侧分隔栏宽度调整结束
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void OnLeftSplitterDraggingCompleted(object sender, EventArgs e)
+        #region 切换 MainWin
+        void ChangeMainWin(Win p_oldWin, Win p_newWin)
         {
-            if (_grid == null || LeftWin == null)
+            if (_grid == null)
                 return;
 
-            GridLength width = _grid.ColumnDefinitions[0].Width;
-            if (width.IsAbsolute)
+            if (p_oldWin != null)
             {
-                if (width.Value < _minSideSize)
-                {
-                    // 小于最小尺寸时移除内容
+                p_oldWin.IsActived = false;
+                _grid.Children.Remove(p_oldWin);
+            }
+
+            if (p_newWin != null)
+            {
+                // 若主窗口在两侧停靠，先移除停靠
+                if (p_newWin == LeftWin)
                     LeftWin = null;
-                    Windows.UI.Xaml.Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 1);
+                else if (p_newWin == RightWin)
+                    RightWin = null;
+
+                p_newWin.IsActived = true;
+                Grid.SetColumn(p_newWin, 2);
+                _grid.Children.Add(p_newWin);
+            }
+        }
+        #endregion
+
+        #region 两侧停靠
+        void ChangeLeftWin(Win p_oldWin, Win p_newWin)
+        {
+            if (_grid == null)
+                return;
+
+            Splitter splitter;
+            if (p_oldWin != null)
+            {
+                _grid.Children.Remove(p_oldWin);
+                splitter = (from item in _grid.Children.OfType<Splitter>()
+                            where Grid.GetColumn(item) == 1
+                            select item).FirstOrDefault();
+                if (splitter != null)
+                {
+                    splitter.CloseLeft -= OnLeftCloseLeftWin;
+                    splitter.CloseRight -= OnLeftCloseRightWin;
+                    _grid.Children.Remove(splitter);
+
                 }
-                else if (_grid.ActualWidth - width.Value - 24 < _minSideSize)
+                _grid.ColumnDefinitions[0].Width = new GridLength(0d);
+                _grid.ColumnDefinitions[1].Width = new GridLength(0d);
+            }
+
+            if (p_newWin != null)
+            {
+                // 若窗口已加载，先移除
+                if (p_newWin == RightWin)
+                    RightWin = null;
+                else if (p_newWin == MainWin)
+                    MainWin = null;
+
+                Grid.SetColumn(p_newWin, 0);
+                _grid.Children.Add(p_newWin);
+
+                splitter = new Splitter();
+                splitter.CloseLeft += OnLeftCloseLeftWin;
+                splitter.CloseRight += OnLeftCloseRightWin;
+                Grid.SetColumn(splitter, 1);
+                _grid.Children.Add(splitter);
+
+                double width = p_newWin.GetSplitWidth();
+                if (width > 0)
                 {
-                    // 主窗口太小时左变主
-                    var win = LeftWin;
+                    // 可通过SplitWidth附加属性自定义宽度
+                    _grid.ColumnDefinitions[0].Width = new GridLength(width);
+                }
+                else
+                {
+                    if (_grid.ColumnDefinitions[4].Width.Value > 0)
+                    {
+                        // 右侧已停靠
+                        _grid.ColumnDefinitions[0].Width = new GridLength(SysVisual.ViewWidth / 3);
+                        _grid.ColumnDefinitions[4].Width = new GridLength(SysVisual.ViewWidth / 3);
+                    }
+                    else
+                    {
+                        _grid.ColumnDefinitions[0].Width = new GridLength(SysVisual.ViewWidth / 2);
+                    }
+                }
+                _grid.ColumnDefinitions[1].Width = GridLength.Auto;
+            }
+        }
+
+        void OnLeftCloseLeftWin(object sender, EventArgs e)
+        {
+            LeftWin = null;
+        }
+
+        void OnLeftCloseRightWin(object sender, EventArgs e)
+        {
+            var win = LeftWin;
+            LeftWin = null;
+            MainWin = win;
+        }
+
+        void ChangeRightWin(Win p_oldWin, Win p_newWin)
+        {
+            if (_grid == null)
+                return;
+
+            Splitter splitter;
+            if (p_oldWin != null)
+            {
+                _grid.Children.Remove(p_oldWin);
+                splitter = (from item in _grid.Children.OfType<Splitter>()
+                            where Grid.GetColumn(item) == 3
+                            select item).FirstOrDefault();
+                if (splitter != null)
+                {
+                    splitter.CloseLeft -= OnRightCloseLeftWin;
+                    splitter.CloseRight -= OnRightCloseRightWin;
+                    _grid.Children.Remove(splitter);
+
+                }
+                _grid.ColumnDefinitions[3].Width = new GridLength(0d);
+                _grid.ColumnDefinitions[4].Width = new GridLength(0d);
+            }
+
+            if (p_newWin != null)
+            {
+                // 若窗口已加载，先移除
+                if (p_newWin == LeftWin)
                     LeftWin = null;
-                    MainWin = win;
-                    Windows.UI.Xaml.Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 1);
+                else if (p_newWin == MainWin)
+                    MainWin = null;
+
+                Grid.SetColumn(p_newWin, 4);
+                _grid.Children.Add(p_newWin);
+
+                splitter = new Splitter();
+                splitter.CloseLeft += OnRightCloseLeftWin;
+                splitter.CloseRight += OnRightCloseRightWin;
+                Grid.SetColumn(splitter, 3);
+                _grid.Children.Add(splitter);
+
+                _grid.ColumnDefinitions[3].Width = GridLength.Auto;
+                double width = p_newWin.GetSplitWidth();
+                if (width > 0)
+                {
+                    // 可通过SplitWidth附加属性自定义宽度
+                    _grid.ColumnDefinitions[4].Width = new GridLength(width);
+                }
+                else
+                {
+                    if (_grid.ColumnDefinitions[0].Width.Value > 0)
+                    {
+                        // 左侧已停靠
+                        _grid.ColumnDefinitions[0].Width = new GridLength(SysVisual.ViewWidth / 3);
+                        _grid.ColumnDefinitions[4].Width = new GridLength(SysVisual.ViewWidth / 3);
+                    }
+                    else
+                    {
+                        _grid.ColumnDefinitions[4].Width = new GridLength(SysVisual.ViewWidth / 2);
+                    }
                 }
             }
         }
 
-        /// <summary>
-        /// 右侧分隔栏宽度调整结束
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void OnRightSplitterDraggingCompleted(object sender, EventArgs e)
+        void OnRightCloseLeftWin(object sender, EventArgs e)
         {
-            if (_grid == null || RightWin == null)
-                return;
+            var win = RightWin;
+            RightWin = null;
+            MainWin = win;
+        }
 
-            GridLength width = _grid.ColumnDefinitions[4].Width;
-            if (width.IsAbsolute)
-            {
-                if (width.Value < _minSideSize)
-                {
-                    RightWin = null;
-                    Windows.UI.Xaml.Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 1);
-                }
-                else if (_grid.ActualWidth - width.Value - 24 < _minSideSize)
-                {
-                    var win = RightWin;
-                    RightWin = null;
-                    MainWin = win;
-                    Windows.UI.Xaml.Window.Current.CoreWindow.PointerCursor = new CoreCursor(CoreCursorType.Arrow, 1);
-                }
-            }
+        void OnRightCloseRightWin(object sender, EventArgs e)
+        {
+            RightWin = null;
         }
         #endregion
     }

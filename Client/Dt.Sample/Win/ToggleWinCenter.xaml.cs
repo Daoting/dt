@@ -37,7 +37,20 @@ namespace Dt.Sample
         void OnChanged(object sender, RoutedEventArgs e)
         {
             var btn = (BtnItem)sender;
-            LoadCenter(btn.GetTagClsObj());
+            if (btn.Tag != null)
+            {
+                LoadCenter(btn.Tag);
+            }
+            else
+            {
+                Type tp = Type.GetType(btn.GetTagCls(), false);
+                if (tp != null)
+                {
+                    var obj = Activator.CreateInstance(tp);
+                    btn.Tag = obj;
+                    LoadCenter(obj);
+                }
+            }
         }
 
         void OnCenterNull(object sender, RoutedEventArgs e)
