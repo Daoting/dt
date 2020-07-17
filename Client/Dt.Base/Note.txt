@@ -24,3 +24,8 @@ uwp的OnApplyTemplate时控件已在可视树上，可查询父元素；uno此�
 
 // uno在构造方法中设置Style时直接调用了OnApplyTemplate，uwp没有，和设置DefaultStyleKey相同，
 // 当控件中有数据源Items需要同步到Panel时，uno只能在Loaded事件中加载, uwp仍在OnApplyTemplate中加载Items
+
+uno中事件：
+点击时触发 Tapped，长按触发 RightTapped，但只附加Tapped事件时长按也触发Tapped，两事件都附加时长按只触发RightTapped！！！
+双击时触发 DoubleTapped，同时触发两次Tapped
+长按并短距离移动时触发 Holding

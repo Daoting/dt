@@ -582,6 +582,7 @@ namespace Dt.Base
             pg.PointerCaptureLost += OnPointerCaptureLost;
             pg.PointerExited += OnPointerExited;
             Tapped += OnTapped;
+            RightTapped += OnRightTapped;
 
             VisualStateManager.GoToState(this, State.ToString(), true);
             UpdateCachedFlag();
@@ -1109,6 +1110,12 @@ namespace Dt.Base
                     }
                     break;
             }
+        }
+
+        void OnRightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            // uno中只附加Tapped事件时长按也触发Tapped，两事件都附加时长按只触发RightTapped！！！
+            // 只为屏蔽长按时的Tapped
         }
 
         void OnPointerEntered(object sender, PointerRoutedEventArgs e)
