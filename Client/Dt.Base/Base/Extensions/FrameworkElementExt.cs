@@ -407,8 +407,13 @@ namespace Dt.Base
         /// <returns>矩形</returns>
         public static Rect GetBounds(this FrameworkElement source, FrameworkElement p_relativeTo = null)
         {
-            if (source.TransformToVisual(p_relativeTo?? SysVisual.RootContent).TryTransform(new Point(), out var ptMap))
-                return new Rect(ptMap, new Size(source.ActualWidth, source.ActualHeight));
+            try
+            {
+                var trans = source.TransformToVisual(p_relativeTo ?? SysVisual.RootContent) as MatrixTransform;
+                if (trans != null)
+                    return new Rect(trans.Matrix.OffsetX, trans.Matrix.OffsetY, source.ActualWidth, source.ActualHeight);
+            }
+            catch { }
             return new Rect();
         }
 

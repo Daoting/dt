@@ -129,39 +129,12 @@ namespace Dt.Base.ListView
         protected Button AttachContextMenu(Menu p_menu)
         {
             Button _btnMenu = null;
-            if (AtSys.IsPhoneUI)
-            {
-                // PhoneUI模式
-                if (p_menu.TouchTrigger == TouchTriggerEvent.Custom)
-                {
-                    _btnMenu = CreateMenuButton(p_menu);
-                }
-                else if (p_menu.TouchTrigger == TouchTriggerEvent.Holding)
-                {
-                    Holding += (s, e) =>
-                    {
-                        if (e.HoldingState == HoldingState.Started)
-                            OpenContextMenu(default);
-                    };
-                    // win上触摸模式使用鼠标时不触发Holding事件！
-                    if (AtSys.System == TargetSystem.Windows)
-                        RightTapped += (s, e) => OpenContextMenu(e.GetPosition(null));
-                }
-                else
-                {
-                    Tapped += (s, e) => OpenContextMenu(default);
-                }
-            }
+            if (p_menu.TriggerEvent == TriggerEvent.RightTapped)
+                RightTapped += (s, e) => OpenContextMenu(e.GetPosition(null));
+            else if (p_menu.TriggerEvent == TriggerEvent.LeftTapped)
+                Tapped += (s, e) => OpenContextMenu(e.GetPosition(null));
             else
-            {
-                // WindowsUI模式
-                if (p_menu.MouseTrigger == MouseTriggerEvent.RightTapped)
-                    RightTapped += (s, e) => OpenContextMenu(e.GetPosition(null));
-                else if (p_menu.MouseTrigger == MouseTriggerEvent.LeftTapped)
-                    Tapped += (s, e) => OpenContextMenu(e.GetPosition(null));
-                else
-                    _btnMenu = CreateMenuButton(p_menu);
-            }
+                _btnMenu = CreateMenuButton(p_menu);
             return _btnMenu;
         }
 
@@ -247,7 +220,7 @@ namespace Dt.Base.ListView
             var btn = new Button { Content = "\uE0DC", Style = AtRes.字符按钮, Foreground = AtRes.深灰边框 };
             btn.Click += (s, e) => OpenContextMenu(new Point(), (Button)s);
             if (AtSys.System == TargetSystem.Windows)
-                p_menu.WinPlacement = MenuPosition.OuterLeftTop;
+                p_menu.Placement = MenuPosition.OuterLeftTop;
             return btn;
         }
 

@@ -34,17 +34,17 @@ namespace Dt.Base
     }
 
     /// <summary>
-    /// 鼠标模式触发上下文菜单的事件种类
+    /// 触发上下文菜单的事件种类
     /// </summary>
-    public enum MouseTriggerEvent
+    public enum TriggerEvent
     {
         /// <summary>
-        /// 鼠标右键
+        /// 鼠标右键，触摸时长按
         /// </summary>
         RightTapped,
 
         /// <summary>
-        /// 鼠标左键
+        /// 鼠标左键，触摸时点击
         /// </summary>
         LeftTapped,
 
@@ -55,33 +55,12 @@ namespace Dt.Base
     }
 
     /// <summary>
-    /// 触摸模式触发上下文菜单的事件种类
-    /// </summary>
-    public enum TouchTriggerEvent
-    {
-        /// <summary>
-        /// 长按
-        /// </summary>
-        Holding,
-
-        /// <summary>
-        /// 触摸点击
-        /// </summary>
-        Tapped,
-
-        /// <summary>
-        /// 自定义触发方式
-        /// </summary>
-        Custom
-    }
-
-    /// <summary>
-    /// 上下文菜单的显示位置
+    /// 上下文菜单的显示位置，phone模式无固定位置显示功能
     /// </summary>
     public enum MenuPosition
     {
         /// <summary>
-        /// 在指定位置显示
+        /// win模式在指定位置显示，phone模式为FromBottom
         /// </summary>
         Default,
 

@@ -188,16 +188,10 @@ namespace Dt.Base.ListView
             Menu menu = Ex.GetMenu(_owner);
             if (menu != null)
             {
-                // 只支持右键或长按！
-                if (AtSys.IsTouchMode)
-                {
-                    Holding += (s, e) =>
-                    {
-                        if (e.HoldingState == HoldingState.Started)
-                            OpenContextMenu(e.GetPosition(null));
-                    };
-                }
-                if (AtSys.System == TargetSystem.Windows)
+                // 不支持自定义按钮！
+                if (menu.TriggerEvent == TriggerEvent.LeftTapped)
+                    Tapped += (s, e) => OpenContextMenu(e.GetPosition(null));
+                else
                     RightTapped += (s, e) => OpenContextMenu(e.GetPosition(null));
             }
         }

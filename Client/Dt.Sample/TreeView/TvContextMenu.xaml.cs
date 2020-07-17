@@ -32,8 +32,7 @@ namespace Dt.Sample
             var menu = Ex.GetMenu(_tv);
             if (menu != null)
             {
-                menu.MouseTrigger = MouseTriggerEvent.Custom;
-                menu.TouchTrigger = TouchTriggerEvent.Custom;
+                menu.TriggerEvent = TriggerEvent.Custom;
             }
         }
 
@@ -42,9 +41,8 @@ namespace Dt.Sample
             var menu = Ex.GetMenu(_tv);
             if (menu != null)
             {
-                menu.WinPlacement = MenuPosition.Default;
-                menu.MouseTrigger = MouseTriggerEvent.RightTapped;
-                menu.TouchTrigger = TouchTriggerEvent.Holding;
+                menu.Placement = MenuPosition.Default;
+                menu.TriggerEvent = TriggerEvent.RightTapped;
             }
         }
 
@@ -53,9 +51,8 @@ namespace Dt.Sample
             var menu = Ex.GetMenu(_tv);
             if (menu != null)
             {
-                menu.WinPlacement = MenuPosition.Default;
-                menu.MouseTrigger = MouseTriggerEvent.LeftTapped;
-                menu.TouchTrigger = TouchTriggerEvent.Tapped;
+                menu.Placement = MenuPosition.Default;
+                menu.TriggerEvent = TriggerEvent.LeftTapped;
             }
         }
 

@@ -8,7 +8,7 @@
     <StackPanel Margin="10">
         <Button Content="按钮只在click时触发">
             <a:Ex.Menu>
-                <a:Menu WinPlacement="BottomLeft">
+                <a:Menu Placement="BottomLeft">
                     <a:Mi ID="保存" Icon="保存" ShowInPhone="Icon" />
                     <a:Mi ID="搜索" Icon="搜索" />
                     <a:Mi ID="选择项" Icon="pos机" IsCheckable="True" />
@@ -27,9 +27,9 @@
             </a:Ex.Menu>
         </Button>
         <Border Height="50" Margin="0,20,0,0" HorizontalAlignment="Left" Background="Gray">
-            <TextBlock Text="鼠标右键，触摸点击" />
+            <TextBlock Text="鼠标右键或长按" />
             <a:Ex.Menu>
-                <a:Menu TouchTrigger="Tapped" WinPlacement="TopRight">
+                <a:Menu TriggerEvent="RightTapped" Placement="TopRight">
                     <a:Mi ID="保存" Icon="保存" ShowInPhone="Icon" />
                     <a:Mi ID="搜索" Icon="搜索" />
                     <a:Mi ID="选择项" Icon="pos机" IsCheckable="True" />

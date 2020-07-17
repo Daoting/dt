@@ -11,9 +11,6 @@ using Dt.Base.Tools;
 using Dt.Core;
 using System.Text.Json;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 #endregion
 
 namespace Dt.Base
@@ -23,7 +20,8 @@ namespace Dt.Base
     /// </summary>
     internal static class WinKit
     {
-        static MenuFlyout _menu;
+        static Menu _menu;
+        static Win _currentWin;
 
         /// <summary>
         /// Phone模式附加标题右键菜单
@@ -35,18 +33,21 @@ namespace Dt.Base
             if (p_elem == null || p_win == null)
                 return;
 
-            p_elem.DoubleTapped += (s, e) =>
+            p_elem.RightTapped += (s, e) =>
             {
                 if (_menu == null)
                 {
-                    _menu = new MenuFlyout();
-                    _menu.Placement = FlyoutPlacementMode.Bottom;
-                    var item = new MenuFlyoutItem { Text = "取消自启动" };
-                    item.Command = new BaseCommand((p_params) => LaunchManager.DelAutoStart());
+                    _menu = new Menu { IsContextMenu = true, Placement = MenuPosition.BottomLeft };
+                    var item = new Mi { ID = "取消自启动" };
+                    item.Click += (o, a) => LaunchManager.DelAutoStart();
                     _menu.Items.Add(item);
-                    _menu.Items.Add(new MenuFlyoutItem { Text = "设置自启动" });
-                    item = new MenuFlyoutItem { Text = "系统监视" };
-                    item.Command = new BaseCommand((p_params) => SysTrace.ShowBox());
+
+                    item = new Mi { ID = "设置自启动" };
+                    item.Click += SetAutoStart;
+                    _menu.Items.Add(item);
+
+                    item = new Mi { ID = "系统监视" };
+                    item.Click += (o, a) => SysTrace.ShowBox();
                     _menu.Items.Add(item);
                 }
 
@@ -62,10 +63,16 @@ namespace Dt.Base
                 {
                     _menu.Items[0].Visibility = Visibility.Collapsed;
                     _menu.Items[1].Visibility = Visibility.Visible;
-                    ((MenuFlyoutItem)_menu.Items[1]).Command = new BaseCommand((p_params) => LaunchManager.SetAutoStart(p_win));
+                    _currentWin = p_win;
                 }
-                _menu.ShowAt(p_elem);
+                _menu.OpenContextMenu(default, p_elem);
             };
+        }
+
+        static void SetAutoStart(object sender, Mi e)
+        {
+            LaunchManager.SetAutoStart(_currentWin);
+            _currentWin = null;
         }
     }
 }

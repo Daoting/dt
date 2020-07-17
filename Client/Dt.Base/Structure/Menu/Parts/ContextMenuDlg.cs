@@ -8,7 +8,6 @@
 
 #region 引用命名
 using Dt.Core;
-using System;
 using Windows.Foundation;
 #endregion
 
@@ -23,8 +22,6 @@ namespace Dt.Base.MenuView
             Content = p_menu;
             Background = AtRes.浅灰背景;
             MinWidth = 160;
-            if (AtSys.IsPhoneUI)
-                PhonePlacement = DlgPlacement.FromBottom;
         }
 
         /// <summary>

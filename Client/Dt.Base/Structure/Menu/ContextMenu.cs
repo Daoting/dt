@@ -31,23 +31,17 @@ namespace Dt.Base
             typeof(Menu),
             new PropertyMetadata(null));
 
-        public static readonly DependencyProperty WinPlacementProperty = DependencyProperty.Register(
-            "WinPlacement",
+        public static readonly DependencyProperty PlacementProperty = DependencyProperty.Register(
+            "Placement",
             typeof(MenuPosition),
             typeof(Menu),
             new PropertyMetadata(MenuPosition.Default));
 
-        public static readonly DependencyProperty MouseTriggerProperty = DependencyProperty.Register(
-            "MouseTrigger",
-            typeof(MouseTriggerEvent),
+        public static readonly DependencyProperty TriggerEventProperty = DependencyProperty.Register(
+            "TriggerEvent",
+            typeof(TriggerEvent),
             typeof(Menu),
-            new PropertyMetadata(MouseTriggerEvent.RightTapped, OnMouseTriggerEventChanged));
-
-        public static readonly DependencyProperty TouchTriggerProperty = DependencyProperty.Register(
-            "TouchTrigger",
-            typeof(TouchTriggerEvent),
-            typeof(Menu),
-            new PropertyMetadata(TouchTriggerEvent.Custom, OnTouchTriggerEventChanged));
+            new PropertyMetadata(TriggerEvent.RightTapped, OnTriggerEventChanged));
 
         public static readonly DependencyProperty TargetDataProperty = DependencyProperty.Register(
             "TargetData",
@@ -61,16 +55,9 @@ namespace Dt.Base
             typeof(Menu),
             new PropertyMetadata(false));
 
-        static void OnMouseTriggerEventChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        static void OnTriggerEventChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (!AtSys.IsTouchMode)
-                ((Menu)d).OnTriggerEventChanged();
-        }
-
-        static void OnTouchTriggerEventChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            if (AtSys.IsTouchMode)
-                ((Menu)d).OnTriggerEventChanged();
+            ((Menu)d).OnTriggerEventChanged();
         }
         #endregion
 
@@ -89,30 +76,21 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取设置win模式时上下文菜单的显示位置，默认为指定位置
+        /// 获取设置上下文菜单的显示位置，默认为Default，win模式在指定位置显示，phone模式为FromBottom
         /// </summary>
-        public MenuPosition WinPlacement
+        public MenuPosition Placement
         {
-            get { return (MenuPosition)GetValue(WinPlacementProperty); }
-            set { SetValue(WinPlacementProperty, value); }
+            get { return (MenuPosition)GetValue(PlacementProperty); }
+            set { SetValue(PlacementProperty, value); }
         }
 
         /// <summary>
-        /// 获取设置鼠标模式触发上下文菜单的事件种类，默认RightTapped
+        /// 获取设置触发上下文菜单的事件种类，默认RightTapped(鼠标右键，触摸时长按)
         /// </summary>
-        public MouseTriggerEvent MouseTrigger
+        public TriggerEvent TriggerEvent
         {
-            get { return (MouseTriggerEvent)GetValue(MouseTriggerProperty); }
-            set { SetValue(MouseTriggerProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取设置触摸模式触发上下文菜单的事件种类，默认Custom
-        /// </summary>
-        public TouchTriggerEvent TouchTrigger
-        {
-            get { return (TouchTriggerEvent)GetValue(TouchTriggerProperty); }
-            set { SetValue(TouchTriggerProperty, value); }
+            get { return (TriggerEvent)GetValue(TriggerEventProperty); }
+            set { SetValue(TriggerEventProperty, value); }
         }
 
         /// <summary>
@@ -170,14 +148,26 @@ namespace Dt.Base
             }
 
             // 相对位置显示
-            if (!AtSys.IsPhoneUI && WinPlacement != MenuPosition.Default)
+            if (AtSys.IsPhoneUI)
+            {
+                if (Placement == MenuPosition.Default)
+                {
+                    _dlg.PhonePlacement = DlgPlacement.FromBottom;
+                }
+                else
+                {
+                    _dlg.PlacementTarget = p_tgtPlacement ?? ContextTarget;
+                    _dlg.PhonePlacement = (DlgPlacement)Placement + 5;
+                }
+            }
+            else if (Placement != MenuPosition.Default)
             {
                 _dlg.PlacementTarget = p_tgtPlacement ?? ContextTarget;
-                _dlg.WinPlacement = (DlgPlacement)WinPlacement + 5;
+                _dlg.WinPlacement = (DlgPlacement)Placement + 5;
             }
             _dlg.Show();
 
-            if (!AtSys.IsPhoneUI && WinPlacement == MenuPosition.Default)
+            if (!AtSys.IsPhoneUI && Placement == MenuPosition.Default)
             {
                 // 计算显示位置
                 double width = _dlg.DesiredSize.Width;
@@ -241,27 +231,10 @@ namespace Dt.Base
                 return;
             }
 
-            if (AtSys.IsTouchMode)
-            {
-                if (TouchTrigger == TouchTriggerEvent.Holding)
-                {
-                    tgt.AddHandler(HoldingEvent, (HoldingEventHandler)OnTargetHolding, true);
-                    // win上触摸模式使用鼠标时不触发Holding事件！
-                    if (AtSys.System == TargetSystem.Windows)
-                        tgt.AddHandler(RightTappedEvent, (RightTappedEventHandler)OnTargetRightTapped, true);
-                }
-                else if (TouchTrigger == TouchTriggerEvent.Tapped)
-                {
-                    tgt.AddHandler(TappedEvent, (TappedEventHandler)OnTargetTapped, true);
-                }
-            }
-            else
-            {
-                if (MouseTrigger == MouseTriggerEvent.RightTapped)
-                    tgt.AddHandler(RightTappedEvent, (RightTappedEventHandler)OnTargetRightTapped, true);
-                else if (MouseTrigger == MouseTriggerEvent.LeftTapped)
-                    tgt.AddHandler(TappedEvent, (TappedEventHandler)OnTargetTapped, true);
-            }
+            if (TriggerEvent == TriggerEvent.RightTapped)
+                tgt.AddHandler(RightTappedEvent, (RightTappedEventHandler)OnTargetRightTapped, true);
+            else if (TriggerEvent == TriggerEvent.LeftTapped)
+                tgt.AddHandler(TappedEvent, (TappedEventHandler)OnTargetTapped, true);
         }
 
         void DetachTriggerEvent()
@@ -278,13 +251,12 @@ namespace Dt.Base
 
             tgt.RemoveHandler(TappedEvent, (TappedEventHandler)OnTargetTapped);
             tgt.RemoveHandler(RightTappedEvent, (RightTappedEventHandler)OnTargetRightTapped);
-            tgt.RemoveHandler(HoldingEvent, (HoldingEventHandler)OnTargetHolding);
         }
 
         void OnTargetRightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             e.Handled = true;
-            if (!AtSys.IsPhoneUI && WinPlacement == MenuPosition.Default)
+            if (!AtSys.IsPhoneUI && Placement == MenuPosition.Default)
                 OpenContextMenu(e.GetPosition(null));
             else
                 OpenContextMenu();
@@ -293,27 +265,15 @@ namespace Dt.Base
         void OnTargetTapped(object sender, TappedRoutedEventArgs e)
         {
             e.Handled = true;
-            if (!AtSys.IsPhoneUI && WinPlacement == MenuPosition.Default)
+            if (!AtSys.IsPhoneUI && Placement == MenuPosition.Default)
                 OpenContextMenu(e.GetPosition(null));
             else
                 OpenContextMenu();
         }
 
-        void OnTargetHolding(object sender, HoldingRoutedEventArgs e)
-        {
-            if (e.HoldingState == HoldingState.Started)
-            {
-                e.Handled = true;
-                if (!AtSys.IsPhoneUI && WinPlacement == MenuPosition.Default)
-                    OpenContextMenu(e.GetPosition(null));
-                else
-                    OpenContextMenu();
-            }
-        }
-
         void OnButtonClick(object sender, RoutedEventArgs e)
         {
-            if (!AtSys.IsPhoneUI && WinPlacement == MenuPosition.Default)
+            if (!AtSys.IsPhoneUI && Placement == MenuPosition.Default)
                 OpenContextMenu(((Button)sender).GetAbsolutePosition());
             else
                 OpenContextMenu();

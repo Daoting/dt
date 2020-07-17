@@ -59,7 +59,6 @@
                 <Path Data="M0,3 L4,0 L4,6" Style="{StaticResource OtherPath}" />
                 <StackPanel HorizontalAlignment="Left" Margin="0,0,100,0" Grid.Column="2">
                     <a:FileList Data="{Binding [Content]}"
-                                Holding="OnFileHolding"
                                 RightTapped="OnFileRightTapped"
                                 HorizontalAlignment="Left"
                                 BorderBrush="{StaticResource 绿色背景}" />
@@ -105,7 +104,6 @@
                 </Grid.ColumnDefinitions>
                 <StackPanel HorizontalAlignment="Right" Margin="100,0,0,0">
                     <a:FileList Data="{Binding [Content]}"
-                                Holding="OnFileHolding"
                                 RightTapped="OnFileRightTapped"
                                 FixedVolume="chat"
                                 HorizontalAlignment="Left"

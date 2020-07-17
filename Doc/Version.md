@@ -41,7 +41,8 @@
 * AtUI合并到AtApp
 * 调整TabControl继承自Control 
 * uno升级到2.2.0，Holding事件可用
-
+* uno升级到2.4.4
+* 所有Holding事件转换成RightTapped，长按效果好且能和Tapped分开
 
 ### Bug修改 
 * 设置窗口自启动时参数序列化问题

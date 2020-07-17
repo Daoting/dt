@@ -581,6 +581,7 @@ namespace Dt.Base
             pg.PointerReleased += OnPointerReleased;
             pg.PointerCaptureLost += OnPointerCaptureLost;
             pg.PointerExited += OnPointerExited;
+            Tapped += OnTapped;
 
             VisualStateManager.GoToState(this, State.ToString(), true);
             UpdateCachedFlag();
@@ -1084,8 +1085,12 @@ namespace Dt.Base
         #endregion
 
         #region 交互事件
-        void TappedItem()
+        void OnTapped(object sender, TappedRoutedEventArgs e)
         {
+            if (!_owner.EnableClick)
+                return;
+
+            e.Handled = true;
             switch (State)
             {
                 case FileItemState.None:
@@ -1133,12 +1138,6 @@ namespace Dt.Base
 
             ((UIElement)sender).ReleasePointerCapture(e.Pointer);
             _pointerID = null;
-            Point cur = e.GetCurrentPoint(null).Position;
-            if (Math.Abs(cur.X - _ptLast.X) < 3 && Math.Abs(cur.Y - _ptLast.Y) < 3)
-            {
-                e.Handled = true;
-                TappedItem();
-            }
         }
 
         void OnPointerCaptureLost(object sender, PointerRoutedEventArgs e)
@@ -1256,39 +1255,12 @@ namespace Dt.Base
         Button AttachContextMenu(Menu p_menu)
         {
             Button btn = null;
-            if (AtSys.IsPhoneUI)
-            {
-                // PhoneUI模式
-                if (p_menu.TouchTrigger == TouchTriggerEvent.Custom)
-                {
-                    btn = CreateMenuButton(p_menu);
-                }
-                else if (p_menu.TouchTrigger == TouchTriggerEvent.Holding)
-                {
-                    Holding += (s, e) =>
-                    {
-                        if (e.HoldingState == HoldingState.Started)
-                            OpenContextMenu(default);
-                    };
-                    // win上触摸模式使用鼠标时不触发Holding事件！
-                    if (AtSys.System == TargetSystem.Windows)
-                        RightTapped += (s, e) => OpenContextMenu(e.GetPosition(null));
-                }
-                else
-                {
-                    Tapped += (s, e) => OpenContextMenu(default);
-                }
-            }
+            if (p_menu.TriggerEvent == TriggerEvent.RightTapped)
+                RightTapped += (s, e) => OpenContextMenu(e.GetPosition(null));
+            else if (p_menu.TriggerEvent == TriggerEvent.LeftTapped)
+                Tapped += (s, e) => OpenContextMenu(e.GetPosition(null));
             else
-            {
-                // WindowsUI模式
-                if (p_menu.MouseTrigger == MouseTriggerEvent.RightTapped)
-                    RightTapped += (s, e) => OpenContextMenu(e.GetPosition(null));
-                else if (p_menu.MouseTrigger == MouseTriggerEvent.LeftTapped)
-                    Tapped += (s, e) => OpenContextMenu(e.GetPosition(null));
-                else
-                    btn = CreateMenuButton(p_menu);
-            }
+                btn = CreateMenuButton(p_menu);
             return btn;
         }
 
@@ -1298,7 +1270,7 @@ namespace Dt.Base
             var btn = new Button { Content = "\uE0DC", Style = AtRes.字符按钮, Foreground = AtRes.深灰边框, HorizontalAlignment = HorizontalAlignment.Right };
             btn.Click += (s, e) => OpenContextMenu(new Point(), (Button)s);
             if (AtSys.System == TargetSystem.Windows)
-                p_menu.WinPlacement = MenuPosition.OuterLeftTop;
+                p_menu.Placement = MenuPosition.OuterLeftTop;
             return btn;
         }
 

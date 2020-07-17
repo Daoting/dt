@@ -34,6 +34,7 @@ namespace Dt.Sample
             _bdSingle.PointerPressed += OnSinglePointerPressed;
             _bdSingle.PointerReleased += OnSinglePointerReleased;
             _bdSingle.Tapped += OnSingleTapped;
+            _bdSingle.RightTapped += OnSingleRightTapped;
             _bdSingle.DoubleTapped += OnSingleDoubleTapped;
 
             _bdParent.PointerEntered += OnRoutedPointerEntered;
@@ -228,6 +229,12 @@ namespace Dt.Sample
         {
             _lastEventIsMoved = false;
             _tbSingle.Text += " Tapped";
+        }
+
+        void OnSingleRightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            _lastEventIsMoved = false;
+            _tbSingle.Text += " RightTapped";
         }
 
         void OnSingleDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)

@@ -382,12 +382,6 @@ namespace Dt.Base
 
         }
 
-        void OnFileHolding(object sender, HoldingRoutedEventArgs e)
-        {
-            if (e.HoldingState == HoldingState.Started)
-                ShowFileMsgMenu((FileList)sender, e.GetPosition(SysVisual.RootContent));
-        }
-
         void OnFileRightTapped(object sender, RightTappedRoutedEventArgs e)
         {
             ShowFileMsgMenu((FileList)sender, e.GetPosition(SysVisual.RootContent));
