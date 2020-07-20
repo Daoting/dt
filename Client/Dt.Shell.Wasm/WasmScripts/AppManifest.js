@@ -1,6 +1,6 @@
 ﻿var UnoAppManifest = {
 
-    splashScreenImage: "Assets/SplashScreen.scale-200.png",
-    splashScreenColor: "#fff"
-
+    splashScreenImage: "Assets/SplashScreen.png",
+    splashScreenColor: "#1BA1E2",
+    displayName: "福祉堂"
 }

@@ -36,9 +36,6 @@ namespace Dt.Base
         /// </param>
         public static void Run(LaunchActivatedEventArgs args)
         {
-#if WASM
-            ApplicationView.GetForCurrentView().Title = AtSys.Stub.Title;
-#endif
             // 初始根元素用来提示信息，其他元素表示已启动过
             if (!(SysVisual.RootContent is TextBlock))
             {
