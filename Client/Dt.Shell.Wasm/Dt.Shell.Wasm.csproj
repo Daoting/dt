@@ -9,6 +9,9 @@
     <WasmHead>true</WasmHead>
     <DefineConstants>$(DefineConstants);__WASM__</DefineConstants>
     <NoWarn>NU1701</NoWarn>
+    <!--<WasmShellMonoRuntimeExecutionMode>InterpreterAndAOT</WasmShellMonoRuntimeExecutionMode>-->
+    <!--<WasmShellMonoRuntimeExecutionMode>FullAOT</WasmShellMonoRuntimeExecutionMode>-->
+    <!--<WasmShellGenerateAOTProfile>true</WasmShellGenerateAOTProfile>-->
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <MonoRuntimeDebuggerEnabled>true</MonoRuntimeDebuggerEnabled>
@@ -19,9 +22,13 @@
   <ItemGroup>
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Fonts\icon.woff2" />
-    <Content Include="Fonts\winjs-symbols.woff2" />
     <EmbeddedResource Include="WasmCSS\Fonts.css" />
     <EmbeddedResource Include="WasmScripts\AppManifest.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- InterpreterAndAOT模式时不AOT的dll -->
+    <MonoRuntimeMixedModeExcludedAssembly Include="Dt.Core" />
   </ItemGroup>
   
   <ItemGroup>
