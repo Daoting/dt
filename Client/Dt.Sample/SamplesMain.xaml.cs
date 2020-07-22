@@ -79,13 +79,6 @@ namespace Dt.Sample
                     Tag = typeof(NotifyDemo),
                     Callback = OnNaviTo
                 },
-                new DataCmd
-                {
-                    Title = "浮动面板",
-                    Note = "显示在最上层的面板容器，内部使用Popup实现，始终有遮罩",
-                    Tag = typeof(FlyoutDemo),
-                    Callback = OnNaviTo
-                },
             };
             group.Title = "框架结构";
             ds.Add(group);

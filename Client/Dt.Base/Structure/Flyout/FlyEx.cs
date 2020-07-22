@@ -14,42 +14,43 @@ using Windows.UI.Xaml.Media;
 
 namespace Dt.Base
 {
-    /// <summary>
-    /// 浮动面板扩展方法
-    /// </summary>
-    public static class FlyEx
-    {
-        /// <summary>
-        /// 显示提示消息
-        /// </summary>
-        /// <param name="p_target"></param>
-        /// <param name="p_content"></param>
-        public static void Msg(this FrameworkElement p_target, string p_content)
-        {
-            ShowFly(p_target, p_content, AtRes.主题蓝色);
-        }
+    // 移入DlgEx，使用Dlg作为浮动面板
+    ///// <summary>
+    ///// 浮动面板扩展方法
+    ///// </summary>
+    //public static class FlyEx
+    //{
+    //    /// <summary>
+    //    /// 显示提示消息
+    //    /// </summary>
+    //    /// <param name="p_target"></param>
+    //    /// <param name="p_content"></param>
+    //    public static void Msg(this FrameworkElement p_target, string p_content)
+    //    {
+    //        ShowFly(p_target, p_content, AtRes.主题蓝色);
+    //    }
 
-        /// <summary>
-        /// 显示警告信息
-        /// </summary>
-        /// <param name="p_target"></param>
-        /// <param name="p_content"></param>
-        public static void Warn(this FrameworkElement p_target, string p_content)
-        {
-            ShowFly(p_target, p_content, AtRes.RedBrush);
-        }
+    //    /// <summary>
+    //    /// 显示警告信息
+    //    /// </summary>
+    //    /// <param name="p_target"></param>
+    //    /// <param name="p_content"></param>
+    //    public static void Warn(this FrameworkElement p_target, string p_content)
+    //    {
+    //        ShowFly(p_target, p_content, AtRes.RedBrush);
+    //    }
 
-        static void ShowFly(FrameworkElement p_target, string p_content, SolidColorBrush p_brush)
-        {
-            if (p_target == null || string.IsNullOrEmpty(p_content))
-                return;
+    //    static void ShowFly(FrameworkElement p_target, string p_content, SolidColorBrush p_brush)
+    //    {
+    //        if (p_target == null || string.IsNullOrEmpty(p_content))
+    //            return;
 
-            Fly fly = new Fly();
-            Grid grid = new Grid { Background = p_brush, Padding = new Thickness(10), MinWidth = 80d, MaxWidth = 240d };
-            TextBlock tb = new TextBlock { Text = p_content, Foreground = AtRes.WhiteBrush };
-            grid.Children.Add(tb);
-            fly.Child = grid;
-            fly.ShowAt(p_target);
-        }
-    }
+    //        Fly fly = new Fly();
+    //        Grid grid = new Grid { Background = p_brush, Padding = new Thickness(10), MinWidth = 80d, MaxWidth = 240d };
+    //        TextBlock tb = new TextBlock { Text = p_content, Foreground = AtRes.WhiteBrush };
+    //        grid.Children.Add(tb);
+    //        fly.Child = grid;
+    //        fly.ShowAt(p_target);
+    //    }
+    //}
 }

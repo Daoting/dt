@@ -383,7 +383,7 @@ namespace Dt.Base
         /// <param name="p_msg"></param>
         public void Warn(string p_msg)
         {
-            ShowMessage(p_msg, AtRes.RedBrush);
+            DlgEx.ShowMessage((_panel == null ? this : _panel.Child), p_msg, AtRes.RedBrush);
         }
 
         /// <summary>
@@ -392,65 +392,7 @@ namespace Dt.Base
         /// <param name="p_msg"></param>
         public void Msg(string p_msg)
         {
-            ShowMessage(p_msg, AtRes.BlackBrush);
-        }
-
-        /// <summary>
-        /// 显示单元格提示信息
-        /// </summary>
-        /// <param name="p_msg"></param>
-        /// <param name="p_type"></param>
-        void ShowMessage(string p_msg, SolidColorBrush p_brush)
-        {
-            Dlg dlg = new Dlg
-            {
-                WinPlacement = DlgPlacement.TargetOuterTop,
-                PhonePlacement = DlgPlacement.TargetOuterTop,
-                PlacementTarget = (_panel == null ? this : _panel.Child),
-                HideTitleBar = true,
-                Background = null,
-                Foreground = AtRes.WhiteBrush,
-                BorderThickness = new Thickness(0),
-                Resizeable = false,
-                AutoAdjustPosition = false,
-            };
-
-            Grid grid = new Grid
-            {
-                RowDefinitions =
-                {
-                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
-                    new RowDefinition { Height = GridLength.Auto },
-                }
-            };
-
-            // 消息内容
-            grid.Children.Add(new Border
-            {
-                Background = p_brush,
-                BorderThickness = new Thickness(0),
-                MinHeight = 40,
-                MinWidth = 100,
-                MaxWidth = 200,
-                Child = new TextBlock { Text = p_msg, VerticalAlignment = VerticalAlignment.Center, TextWrapping = TextWrapping.Wrap, Margin = new Thickness(10) },
-            });
-
-            // 三角
-            Polygon poly = new Polygon
-            {
-                Points = new PointCollection { new Point(0, 0), new Point(10, 10), new Point(20, 0) },
-                Fill = p_brush,
-                Width = 18,
-                Height = 14,
-                HorizontalAlignment = HorizontalAlignment.Left,
-                Stretch = Stretch.Fill,
-                Margin = new Thickness(18, -2, 0, 0),
-            };
-            Grid.SetRow(poly, 1);
-            grid.Children.Add(poly);
-
-            dlg.Content = grid;
-            dlg.Show();
+            DlgEx.ShowMessage((_panel == null ? this : _panel.Child), p_msg, AtRes.BlackBrush);
         }
         #endregion
 

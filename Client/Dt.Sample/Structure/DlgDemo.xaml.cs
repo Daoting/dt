@@ -86,6 +86,17 @@ namespace Dt.Sample
             AtKit.Error("错误消息内容！");
         }
 
+        void OnTextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (_tb.Text.Contains("4"))
+                _tb.Warn("文本框内容不可以含有4！");
+        }
+
+        void OnMsgClick(object sender, RoutedEventArgs e)
+        {
+            _btn.Msg("在目标元素上部显示提示信息，提示信息内容过长时换行");
+        }
+
         void OnClicked4(object sender, RoutedEventArgs e)
         {
             if (_dlg == null)

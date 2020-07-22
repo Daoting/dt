@@ -8,7 +8,11 @@
 
 #region 引用命名
 using System.Threading.Tasks;
+using Windows.Foundation;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Shapes;
 #endregion
 
 namespace Dt.Base
@@ -18,6 +22,85 @@ namespace Dt.Base
     /// </summary>
     public static class DlgEx
     {
+        /// <summary>
+        /// 显示提示消息
+        /// </summary>
+        /// <param name="p_target"></param>
+        /// <param name="p_content"></param>
+        public static void Msg(this FrameworkElement p_target, string p_content)
+        {
+            ShowMessage(p_target, p_content, AtRes.BlackBrush);
+        }
+
+        /// <summary>
+        /// 显示警告信息
+        /// </summary>
+        /// <param name="p_target"></param>
+        /// <param name="p_content"></param>
+        public static void Warn(this FrameworkElement p_target, string p_content)
+        {
+            ShowMessage(p_target, p_content, AtRes.RedBrush);
+        }
+
+        /// <summary>
+        /// 显示提示信息
+        /// </summary>
+        /// <param name="p_target"></param>
+        /// <param name="p_msg"></param>
+        /// <param name="p_brush"></param>
+        public static void ShowMessage(FrameworkElement p_target, string p_msg, SolidColorBrush p_brush)
+        {
+            Dlg dlg = new Dlg
+            {
+                WinPlacement = DlgPlacement.TargetOuterTop,
+                PhonePlacement = DlgPlacement.TargetOuterTop,
+                PlacementTarget = p_target,
+                HideTitleBar = true,
+                Background = null,
+                Foreground = AtRes.WhiteBrush,
+                BorderThickness = new Thickness(0),
+                Resizeable = false,
+                AutoAdjustPosition = false,
+            };
+
+            Grid grid = new Grid
+            {
+                RowDefinitions =
+                {
+                    new RowDefinition { Height = new GridLength(1, GridUnitType.Star) },
+                    new RowDefinition { Height = GridLength.Auto },
+                }
+            };
+
+            // 消息内容
+            grid.Children.Add(new Border
+            {
+                Background = p_brush,
+                BorderThickness = new Thickness(0),
+                MinHeight = 40,
+                MinWidth = 100,
+                MaxWidth = 200,
+                Child = new TextBlock { Text = p_msg, VerticalAlignment = VerticalAlignment.Center, TextWrapping = TextWrapping.Wrap, Margin = new Thickness(10) },
+            });
+
+            // 三角
+            Polygon poly = new Polygon
+            {
+                Points = new PointCollection { new Point(0, 0), new Point(10, 10), new Point(20, 0) },
+                Fill = p_brush,
+                Width = 18,
+                Height = 14,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                Stretch = Stretch.Fill,
+                Margin = new Thickness(18, -2, 0, 0),
+            };
+            Grid.SetRow(poly, 1);
+            grid.Children.Add(poly);
+
+            dlg.Content = grid;
+            dlg.Show();
+        }
+
         /// <summary>
         /// 显示对话框
         /// </summary>
