@@ -800,11 +800,13 @@ namespace Dt.Base
                 using (Items.Defer())
                 {
                     Items.Clear();
+                    _panel.Children.Clear();
                     if (row != null)
                     {
                         foreach (var dc in row.Cells)
                         {
                             FvCell cell = CreateCell(dc.Type, dc.ID);
+                            cell.Owner = this;
                             cell.OnDataChanged(data);
                             Items.Add(cell);
                         }
@@ -815,6 +817,7 @@ namespace Dt.Base
                         foreach (var pi in pis)
                         {
                             FvCell cell = CreateCell(pi.PropertyType, pi.Name);
+                            cell.Owner = this;
                             cell.Title = pi.Name;
                             cell.OnDataChanged(data);
                             Items.Add(cell);

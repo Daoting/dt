@@ -129,7 +129,11 @@
             <Setter.Value>
                 <ControlTemplate TargetType="a:CTip">
                     <fv:CellPanel x:Name="Panel" Background="{TemplateBinding Background}">
-                        <TextBlock x:Name="Block" Padding="10" />
+                        <TextBlock x:Name="Block"
+                                   Margin="10,0,10,0"
+                                   VerticalAlignment="Center"
+                                   IsTextSelectionEnabled="True"
+                                   TextWrapping="Wrap" />
                     </fv:CellPanel>
                 </ControlTemplate>
             </Setter.Value>
