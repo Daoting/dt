@@ -379,7 +379,7 @@ namespace Dt.Base
             if (btn != null)
                 btn.Click += (s, e) => Close();
 
-            if (AtSys.System == TargetSystem.Windows)
+            if (AtSys.System == TargetSystem.Windows || AtSys.System == TargetSystem.Web)
             {
                 var grid = (Grid)GetTemplateChild("RootGrid");
                 if (grid != null)

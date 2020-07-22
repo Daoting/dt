@@ -191,12 +191,18 @@ namespace Dt.Base.TreeView
             if (!_owner.IsInnerScroll)
             {
                 // 面板与ScrollViewer的相对距离，以滚动栏为参照物，面板在右下方时为正数
+#if UWP
                 if (_owner.Scroll.ActualHeight > 0)
                 {
                     // 当切换win时，再次显示Scroll时ActualHeight为0，计算相对位置错误！采用切换前的相对位置
                     var pt = TransformToVisual(_owner.Scroll).TransformPoint(new Point());
                     deltaY = pt.Y;
                 }
+#else
+                // uno中面板与Scroll的相对距离始终为滚动栏未移动时之间的距离！
+                var pt = TransformToVisual(_owner.Scroll).TransformPoint(new Point());
+                deltaY = pt.Y - _owner.Scroll.VerticalOffset;
+#endif
             }
             else
             {
@@ -299,9 +305,9 @@ namespace Dt.Base.TreeView
             }
             tvItems.Dispose();
         }
-        #endregion
+#endregion
 
-        #region 真实行
+#region 真实行
         Size MeasureRealRows()
         {
             MeasureInfo info = new MeasureInfo();
@@ -400,9 +406,9 @@ namespace Dt.Base.TreeView
             public int Index;
             public Size FinalSize;
         }
-        #endregion
+#endregion
 
-        #region 内部方法
+#region 内部方法
         /// <summary>
         /// 加载虚拟模式的所有行
         /// </summary>
@@ -492,6 +498,6 @@ namespace Dt.Base.TreeView
                 row.SetItem(p_item, false);
             return row;
         }
-        #endregion
+#endregion
     }
 }

@@ -44,8 +44,7 @@ namespace Dt.Base.FormView
             if (con != null)
             {
                 pnl.Children.Remove(con);
-                if (AtSys.System == TargetSystem.Windows)
-                    con.KeyDown -= pnl.OnKeyDown;
+                con.KeyDown -= pnl.OnKeyDown;
             }
 
             con = (FrameworkElement)e.NewValue;
@@ -55,8 +54,7 @@ namespace Dt.Base.FormView
                     pnl.Children.Insert(0, con);
                 else if (pnl.Children.Count == 4)
                     pnl.Children.Insert(3, con);
-                if (AtSys.System == TargetSystem.Windows)
-                    con.KeyDown += pnl.OnKeyDown;
+                con.KeyDown += pnl.OnKeyDown;
             }
         }
         #endregion
