@@ -79,6 +79,11 @@ namespace Dt.Core
         public static IStub Stub { get; private set; }
 
         /// <summary>
+        /// 系统回调
+        /// </summary>
+        internal static ICallback Callback { get; set; }
+
+        /// <summary>
         /// 获取设置是否监控Rpc调用结果，TraceBox中控制输出
         /// </summary>
         internal static bool TraceRpc { get; set; }
@@ -88,17 +93,17 @@ namespace Dt.Core
         /// <summary>
         /// 显示登录页面，参数：是否为弹出式
         /// </summary>
-        public static Action<bool> Login { get; internal set; }
+        public static Action<bool> Login => Callback.Login;
 
         /// <summary>
         /// 注销后重新登录
         /// </summary>
-        public static Action Logout { get; internal set; }
+        public static Action Logout => Callback.Logout;
 
         /// <summary>
         /// 显示监视窗口
         /// </summary>
-        public static Action ShowTraceBox { get; internal set; }
+        public static Action ShowTraceBox => Callback.ShowTraceBox;
         #endregion
 
         #region 平台方法
@@ -142,16 +147,6 @@ namespace Dt.Core
 
         #region App事件方法
         /// <summary>
-        /// 挂起时的回调
-        /// </summary>
-        internal static Func<Task> Suspending { get; set; }
-
-        /// <summary>
-        /// 恢复时的回调
-        /// </summary>
-        internal static Action Resuming { get; set; }
-
-        /// <summary>
         /// 三平台都能正常触发！必须耗时小！
         /// Running -> Suspended    手机或PC平板模式下不占据屏幕时触发
         /// 此时不知道应用程序将被终止还是可恢复
@@ -163,7 +158,7 @@ namespace Dt.Core
             var deferral = e.SuspendingOperation.GetDeferral();
             try
             {
-                await Suspending();
+                await Callback.OnSuspending();
                 await Stub.OnSuspending();
             }
             catch { }
@@ -181,7 +176,7 @@ namespace Dt.Core
         {
             try
             {
-                Resuming();
+                Callback.OnResuming();
                 Stub.OnResuming();
             }
             catch { }

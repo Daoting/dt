@@ -288,46 +288,22 @@ namespace Dt.Core
         /// <summary>
         /// 显示确认对话框
         /// </summary>
-        /// <param name="p_content"></param>
-        public static async Task<bool> Confirm(string p_content)
-        {
-            MessageDialog dlg = new MessageDialog(p_content, "请确认");
-            dlg.Commands.Add(new UICommand("确认"));
-            dlg.Commands.Add(new UICommand("取消"));
-            dlg.DefaultCommandIndex = 0;
-            dlg.CancelCommandIndex = 1;
-            return (await dlg.ShowAsync() == dlg.Commands[0]);
-        }
-
-        /// <summary>
-        /// 显示多选项对话框
-        /// </summary>
+        /// <param name="p_content">消息内容</param>
         /// <param name="p_title">标题</param>
-        /// <param name="p_btns">多选项按钮标题</param>
-        /// <returns>被选中按钮的标题</returns>
-        public static async Task<string> Option(string p_title, params string[] p_btns)
+        /// <returns>true表确认</returns>
+        public static Task<bool> Confirm(string p_content, string p_title = null)
         {
-            MessageDialog dlg = new MessageDialog(p_title);
-            // 最多支持三个按钮！
-            int cnt = p_btns.Length > 3 ? 3 : p_btns.Length;
-            for (int i = 0; i < cnt; i++)
-            {
-                dlg.Commands.Add(new UICommand(p_btns[i]));
-            }
-            return ((UICommand)await dlg.ShowAsync()).Label;
+            return Callback.Confirm(p_content, string.IsNullOrEmpty(p_title) ? "请确认" : p_title);
         }
 
         /// <summary>
         /// 显示错误对话框
         /// </summary>
-        /// <param name="p_content"></param>
-        public static async void Error(string p_content)
+        /// <param name="p_content">消息内容</param>
+        /// <param name="p_title">标题</param>
+        public static void Error(string p_content, string p_title = null)
         {
-            MessageDialog dlg = new MessageDialog(p_content, "出错提示");
-            dlg.Commands.Add(new UICommand("关闭"));
-            dlg.DefaultCommandIndex = 0;
-            dlg.CancelCommandIndex = 0;
-            await dlg.ShowAsync();
+            Callback.Error(p_content, string.IsNullOrEmpty(p_title) ? "出错提示" : p_title);
         }
         #endregion
 

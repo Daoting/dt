@@ -75,7 +75,7 @@ namespace Dt.Sample
 
         async void OnClicked1(object sender, RoutedEventArgs e)
         {
-            if (await AtKit.Confirm("确认?"))
+            if (await AtKit.Confirm("确认要删除所有数据吗?"))
                 AtKit.Msg("Yes");
             else
                 AtKit.Msg("No");
@@ -84,12 +84,6 @@ namespace Dt.Sample
         void OnClicked2(object sender, RoutedEventArgs e)
         {
             AtKit.Error("错误消息内容！");
-        }
-
-        async void OnClicked3(object sender, RoutedEventArgs e)
-        {
-            string result = await AtKit.Option("选择哪项？", "选项一", "选项二", "选项三", "选项四", "选项五");
-            AtKit.Msg(result);
         }
 
         void OnClicked4(object sender, RoutedEventArgs e)

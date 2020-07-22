@@ -16,12 +16,10 @@
             <Button Content="异步等待对话框" Click="OnShowAsync" />
             <Button Content="随机位置显示" Click="OnShowPos" />
         </StackPanel>
-        <a:CBar Title="系统对话框" />
         <StackPanel Orientation="Horizontal">
             <Button Content="确认对话框" Click="OnClicked1" />
             <Button Content="错误对话框" Click="OnClicked2" />
-            <Button Content="多选项对话框" Click="OnClicked3" />
+            <Button Content="椭圆形对话框" Click="OnClicked4" />
         </StackPanel>
-        <Button Content="椭圆形对话框" Click="OnClicked4" />
     </a:Fv>
 </a:Win>

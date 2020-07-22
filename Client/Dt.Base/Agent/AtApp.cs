@@ -36,6 +36,9 @@ namespace Dt.Base
         /// </param>
         public static void Run(LaunchActivatedEventArgs args)
         {
+            // 系统回调
+            AtSys.Callback = new DefaultCallback();
+
             // 初始根元素用来提示信息，其他元素表示已启动过
             if (!(SysVisual.RootContent is TextBlock))
             {
@@ -45,11 +48,6 @@ namespace Dt.Base
                 return;
             }
 
-            AtSys.Suspending = OnSuspending;
-            AtSys.Resuming = OnResuming;
-            AtSys.Login = Login;
-            AtSys.Logout = Logout;
-            AtSys.ShowTraceBox = SysTrace.ShowBox;
             InputManager.Init();
             NotifyManager.Init();
             LaunchManager.Arguments = args.Arguments;
@@ -133,34 +131,7 @@ namespace Dt.Base
         }
         #endregion
 
-        #region 登录注销
-        /// <summary>
-        /// 显示登录页面
-        /// </summary>
-        /// <param name="p_isPopup">是否为弹出式</param>
-        static void Login(bool p_isPopup)
-        {
-            if (!p_isPopup)
-            {
-                SysVisual.RootContent = AtSys.Stub.LoginPage;
-                return;
-            }
-
-            // 弹出式登录页面在未登录遇到需要登录的功能时
-            AtKit.RunAsync(() =>
-            {
-                var dlg = new Dlg
-                {
-                    Resizeable = false,
-                    HideTitleBar = true,
-                    PhonePlacement = DlgPlacement.Maximized,
-                    WinPlacement = DlgPlacement.Maximized,
-                    Content = AtSys.Stub.LoginPage,
-                };
-                dlg.Show();
-            });
-        }
-
+        #region 登录成功后
         /// <summary>
         /// 登录成功后的处理
         /// </summary>
@@ -178,55 +149,6 @@ namespace Dt.Base
 
             // 接收服务器推送
             _ = PushHandler.Register();
-        }
-
-        /// <summary>
-        /// 注销后重新登录
-        /// </summary>
-        /// <returns></returns>
-        static async void Logout()
-        {
-            // 注销时清空用户信息
-            AtUser.Reset();
-
-            AtLocal.DeleteCookie("LoginPhone");
-            AtLocal.DeleteCookie("LoginPwd");
-
-            await AtSys.Stub.OnLogout();
-            SysVisual.RootContent = AtSys.Stub.LoginPage;
-        }
-        #endregion
-
-        #region 挂起恢复
-        /// <summary>
-        /// 挂起时的处理，必须耗时小！
-        /// 手机或PC平板模式下不占据屏幕时触发，此时不确定被终止还是可恢复
-        /// </summary>
-        /// <returns></returns>
-        static async Task OnSuspending()
-        {
-            // 取消正在进行的上传
-            Uploader.Cancel();
-
-            if (AtUser.IsLogon && PushHandler.RetryState == PushRetryState.Enable)
-            {
-                // 停止在线推送
-                PushHandler.RetryState = PushRetryState.Stop;
-                await AtMsg.Unregister();
-            }
-        }
-
-        /// <summary>
-        /// 恢复会话时的处理，手机或PC平板模式下再次占据屏幕时触发
-        /// </summary>
-        static async void OnResuming()
-        {
-            if (AtUser.IsLogon && PushHandler.RetryState != PushRetryState.Disable)
-            {
-                // 启动在线推送
-                PushHandler.RetryState = PushRetryState.Enable;
-                await PushHandler.Register();
-            }
         }
         #endregion
 
