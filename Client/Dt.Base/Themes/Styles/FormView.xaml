@@ -114,14 +114,8 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="a:CText">
-                    <fv:CellPanel x:Name="Panel" Background="{TemplateBinding Background}">
-                        <TextBox x:Name="TextBox"
-                                 IsReadOnly="{TemplateBinding ReadOnlyBinding}"
-                                 MaxLength="{TemplateBinding MaxLength}"
-                                 PlaceholderText="{TemplateBinding Placeholder}"
-                                 BorderThickness="0"
-                                 Padding="10" />
-                    </fv:CellPanel>
+                    <!-- TextBox原本放在控件模板中，因wasm中长文本对应textarea放入代码构造，跨平台就是一个妥协过程！-->
+                    <fv:CellPanel x:Name="Panel" Background="{TemplateBinding Background}" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -150,13 +144,12 @@
             <Setter.Value>
                 <ControlTemplate TargetType="a:CNum">
                     <fv:CellPanel x:Name="Panel" Background="{TemplateBinding Background}">
-                        <!--设置TextWrapping为不显示最后的删除按钮-->
+                        <!--设置TextWrapping为Wrap时不显示最后的删除按钮，但wasm会使用textarea，只能保留删除按钮-->
                         <TextBox x:Name="TextBox"
                                  IsReadOnly="{TemplateBinding ReadOnlyBinding}"
                                  PlaceholderText="{TemplateBinding Placeholder}"
                                  TextAlignment="Right"
                                  InputScope="Number"
-                                 TextWrapping="Wrap"
                                  BorderThickness="0"
                                  Padding="10" />
                     </fv:CellPanel>

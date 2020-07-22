@@ -214,7 +214,7 @@ namespace Dt.Core.Rpc
             return cb.Task;
         }
 
-        class OkTaskCallback : Java.Lang.Object, ICallback
+        class OkTaskCallback : Java.Lang.Object, Square.OkHttp3.ICallback
         {
             readonly TaskCompletionSource<Response> tcs = new TaskCompletionSource<Response>();
             public Task<Response> Task { get { return tcs.Task; } }

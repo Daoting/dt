@@ -174,7 +174,7 @@ namespace Dt.Base
         {
             DefaultStyleKey = typeof(MaskBox);
 
-            _tb = new TextBox { TextWrapping = TextWrapping.Wrap, BorderThickness = new Thickness(0), Padding = new Thickness(10) };
+            _tb = new TextBox { BorderThickness = new Thickness(0), Padding = new Thickness(10) };
             _tb.TextChanged += OnTextChanged;
             _tb.KeyDown += OnKeyDown;
             _tb.PointerWheelChanged += OnPointerWheelChanged;

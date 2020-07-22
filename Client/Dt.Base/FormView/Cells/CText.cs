@@ -121,7 +121,12 @@ namespace Dt.Base
 
         protected override void OnApplyCellTemplate()
         {
-            _tb = (TextBox)GetTemplateChild("TextBox");
+            // 原本放在控件模板中，因wasm中长文本对应textarea放入代码构造，跨平台就是一个妥协过程！
+            _tb = new TextBox { BorderThickness = new Thickness(0), Padding = new Thickness(10) };
+            _tb.SetBinding(TextBox.IsReadOnlyProperty, new Binding { Path = new PropertyPath("ReadOnlyBinding"), Source = this });
+            _tb.SetBinding(TextBox.MaxLengthProperty, new Binding { Path = new PropertyPath("MaxLength"), Source = this });
+            _tb.SetBinding(TextBox.PlaceholderTextProperty, new Binding { Path = new PropertyPath("Placeholder"), Source = this });
+
             if (UpdateTimely)
                 _tb.TextChanged += OnUpdateSource;
             if (AcceptsReturn)
@@ -129,6 +134,7 @@ namespace Dt.Base
                 _tb.AcceptsReturn = true;
                 _tb.TextWrapping = TextWrapping.Wrap;
             }
+            _panel.Child = _tb;
         }
 
         protected override void SetValBinding()
