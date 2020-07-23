@@ -28,7 +28,5 @@
   <ItemGroup>
     <ProjectReference Include="..\Dt.Core\Dt.Core.csproj" />
     <ProjectReference Include="..\Dt.Base\Dt.Base.csproj" />
-    <PackageReference Include="Dt.Cells" Version="1.0.0" />
-    <PackageReference Include="Dt.Charts" Version="1.0.0" />
   </ItemGroup>
 </Project>

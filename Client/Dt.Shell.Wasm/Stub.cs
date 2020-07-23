@@ -129,7 +129,7 @@ namespace Dt.Shell
             { "系统角色", typeof(SysRole) },
             { "参数定义", typeof(UserParams) },
             { "用户账号", typeof(UserAccount) },
-            { "主页", typeof(SamplesMain) },
+            { "主页", typeof(ChartHome) },
             { "通讯录", typeof(ChatHome) },
             { "控件样例", typeof(SamplesMain) },
             { "文章管理", typeof(Fz.PostMgr) },

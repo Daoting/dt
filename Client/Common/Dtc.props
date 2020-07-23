@@ -5,7 +5,7 @@
     <TargetFrameworks Condition=" '$(SolutionFileName)' == 'Dtc-Android.sln' ">uap10.0.18362;monoandroid10.0</TargetFrameworks>
     <TargetFrameworks Condition=" '$(SolutionFileName)' == 'Dtc-iOS.sln' ">uap10.0.18362;xamarinios10</TargetFrameworks>
     <TargetFrameworks Condition=" '$(SolutionFileName)' == 'Dtc-Wasm.sln' ">uap10.0.18362;netstandard2.0</TargetFrameworks>
-    <TargetFrameworks Condition=" '$(SolutionFileName)' == 'Dtc-All.sln' ">uap10.0.18362;monoandroid10.0;xamarinios10</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(SolutionFileName)' == 'Dtc-All.sln' ">uap10.0.18362;monoandroid10.0;xamarinios10;netstandard2.0</TargetFrameworks>
     <Authors>hdt</Authors>
     <Product>DT业务基础平台</Product>
     <Copyright>Copyright © 2020</Copyright>
@@ -35,6 +35,11 @@
   <ItemGroup>
     <PackageReference Include="System.Text.Json" Version="4.7.2" />
     <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />
+    
+    <!--<PackageReference Include="Dt.Charts" Version="1.0.0" />-->
+    <!--<PackageReference Include="Dt.Cells" Version="1.0.0" />-->
+    <ProjectReference Include="..\Dt.Charts\Dt.Charts.csproj" />
+    <ProjectReference Include="..\Dt.Cells\Dt.Cells.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)'=='xamarinios10' or '$(TargetFramework)'=='monoandroid10.0' or '$(TargetFramework)'=='netstandard2.0' ">

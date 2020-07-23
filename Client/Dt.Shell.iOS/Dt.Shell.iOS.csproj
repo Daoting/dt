@@ -128,9 +128,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Uno.UI" Version="2.4.4" />
-    <PackageReference Include="Dt.Cells" Version="1.0.0" />
-    <PackageReference Include="Dt.Cells.Data" Version="1.0.0" />
-    <PackageReference Include="Dt.Charts" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="..\Common\App.xaml">

@@ -131,7 +131,7 @@ namespace Dt.Charts
 
         public event AnnoCreatedEventHandler AnnoCreated;
 
-#if !UWP
+#if ANDROID || IOS
     new
 #endif
         internal event PropertyChangedEventHandler PropertyChanged;
