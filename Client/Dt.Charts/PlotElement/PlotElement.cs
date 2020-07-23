@@ -238,23 +238,17 @@ namespace Dt.Charts
         #endregion
 
         #region 成员变量
-        protected readonly PathGeometry _geometry;
         Point _center = new Point();
         Rect _rect = new Rect();
         Size _sz = new Size(10.0, 10.0);
         Dt.Charts.TransformMode _tmode;
         protected ShapeStyle _autoStyle;
-        protected bool _isFilled = true;
         protected List<UIElement> _effects;
         #endregion
 
         #region 构造方法
         internal PlotElement()
         {
-            _geometry = new PathGeometry();
-            _geometry.Figures = new PathFigureCollection();
-            Data = _geometry;
-
             Loaded += FireLoaded;
             PointerEntered += FireMouseEnter;
             PointerExited += FireMouseLeave;

@@ -28,7 +28,7 @@ namespace Dt.Charts
             return clone;
         }
 
-        protected override void UpdateGeometry(PathGeometry pg, Size sz)
+        protected override void UpdateGeometry(Size sz)
         {
             double num = 0.5 * Size.Width;
             double num2 = 0.5 * Size.Height;
@@ -43,9 +43,11 @@ namespace Dt.Charts
 #else
             // uno不支持Path.Data为非PathGeometry！
             // 起点StartPoint终点Point画圆弧，两点不能重叠
+            PathGeometry geometry = new PathGeometry();
             PathFigure pf = new PathFigure { StartPoint = new Point(StrokeThickness, num2 - 0.01) };
             pf.Segments.Add(new ArcSegment { Point = new Point(StrokeThickness, num2), Size = new Size(num - num3, num2 - num3), IsLargeArc = true, SweepDirection = SweepDirection.Clockwise });
-            _geometry.Figures.Add(pf);
+            geometry.Figures.Add(pf);
+            Data = geometry;
 #endif
 
             Canvas.SetLeft(this, _symCenter.X - num - num3);

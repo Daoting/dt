@@ -55,13 +55,16 @@ namespace Dt.Charts
             }
 
             // uno不支持Path.Data为非PathGeometry！
+            // wasm中在给Path.Data赋值前内容必须完整，后添加的Figures无效！众里寻他千百度，因为赋值没按顺序，操！
+            PathGeometry geometry = new PathGeometry();
             PathFigure pf = new PathFigure();
             pf.Segments.Add(new LineSegment { Point = new Point() });
             pf.Segments.Add(new LineSegment { Point = new Point(rect.Width, 0) });
             pf.Segments.Add(new LineSegment { Point = new Point(rect.Width, rect.Height) });
             pf.Segments.Add(new LineSegment { Point = new Point(0, rect.Height) });
             pf.Segments.Add(new LineSegment { Point = new Point() });
-            _geometry.Figures.Add(pf);
+            geometry.Figures.Add(pf);
+            Data = geometry;
 
             Canvas.SetLeft(this, rect.X);
             Canvas.SetTop(this, rect.Y);

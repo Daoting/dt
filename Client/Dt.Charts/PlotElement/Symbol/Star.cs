@@ -39,18 +39,14 @@ namespace Dt.Charts
         static void OnInnerRadiusChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             Star star = (Star) obj;
-            star.UpdateGeometry(null, star.Size);
+            star.UpdateGeometry(star.Size);
         }
 
-        protected override void UpdateGeometry(PathGeometry pg, Size sz)
+        protected override void UpdateGeometry(Size sz)
         {
-            if (pg == null)
-                pg = _geometry;
-
             if (sz.IsEmpty)
                 sz = Size;
 
-            pg.Figures.Clear();
             double rx = 0.5 * sz.Width;
             double ry = 0.5 * sz.Height;
             double num3 = 0.5 * base.StrokeThickness;
@@ -86,16 +82,21 @@ namespace Dt.Charts
                 segment2.Point = new Point(x, y);
                 figure.Segments.Add(segment2);
             }
-            base.AddFakeEllipse(pg, center, rx, ry, num3);
-            pg.Figures.Add(figure);
+
+            // uno不支持Path.Data为非PathGeometry！
+            // wasm中在给Path.Data赋值前内容必须完整，后添加的Figures无效！众里寻他千百度，因为赋值没按顺序，操！
+            PathGeometry geometry = new PathGeometry();
+            geometry.Figures.Add(figure);
+            Data = geometry;
+
             Canvas.SetLeft(this, (_symCenter.X - rx) - num3);
             Canvas.SetTop(this, (_symCenter.Y - ry) - num3);
         }
 
         public double InnerRadius
         {
-            get { return  (double) ((double) base.GetValue(InnerRadiusProperty)); }
-            set { base.SetValue(InnerRadiusProperty, (double) value); }
+            get { return (double)GetValue(InnerRadiusProperty); }
+            set { SetValue(InnerRadiusProperty, value); }
         }
 
         public override Size Size
@@ -104,7 +105,7 @@ namespace Dt.Charts
             set
             {
                 base.Size = value;
-                UpdateGeometry(null, Size.Empty);
+                UpdateGeometry(Size.Empty);
             }
         }
     }

@@ -28,20 +28,23 @@ namespace Dt.Charts
             return clone;
         }
 
-        protected override void UpdateGeometry(PathGeometry pg, Size sz)
+        protected override void UpdateGeometry(Size sz)
         {
             double num = 0.5 * Size.Width;
             double num2 = 0.5 * Size.Height;
             double x = 0.5 * StrokeThickness;
 
             // uno不支持Path.Data为非PathGeometry！
+            // wasm中在给Path.Data赋值前内容必须完整，后添加的Figures无效！众里寻他千百度，因为赋值没按顺序，操！
+            PathGeometry geometry = new PathGeometry();
             PathFigure pf = new PathFigure();
             pf.Segments.Add(new LineSegment { Point = new Point(x, x) });
             pf.Segments.Add(new LineSegment { Point = new Point(x + Size.Width, 0) });
             pf.Segments.Add(new LineSegment { Point = new Point(x + Size.Width, x + Size.Height) });
             pf.Segments.Add(new LineSegment { Point = new Point(x, x + Size.Height) });
             pf.Segments.Add(new LineSegment { Point = new Point(x, x) });
-            _geometry.Figures.Add(pf);
+            geometry.Figures.Add(pf);
+            Data = geometry;
 
             Canvas.SetLeft(this, (_symCenter.X - num) - x);
             Canvas.SetTop(this, (_symCenter.Y - num2) - x);

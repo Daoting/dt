@@ -7,8 +7,8 @@
     <a:WinCenter>
         <a:Tabs ShowHeader="False">
             <a:Tab>
-                <ContentControl x:Name="_con" />
-                <!--<Path Width="200" Height="200" Fill="Red" Data="M6.5,6 L11.125,6 L11.125,12 L5.125,12 L5.125,13 L25.125,13 L25.125,12 L16.875,12 L16.875,8.375 L22.75,8.375 L22.75,11.75 L26.125,9.425 L26.125,13 L30,13 L30,30 L0,30 L0,13 L4.125,13 L4.125,8.375 C4.125,7.06332 5.18832,6 6.5,6 z M23.25,0 L28.875,5.375 L23.375,10.75 L23.3387,7.625 L16,7.625 L16,12 L15.875,12 L12.125,12 L12,12 L12,7.625 L12,4 L12,3.625 L23.2922,3.625 z" />-->
+                <!--<ContentControl x:Name="_con" />-->
+                <Path Width="200" Height="200" Fill="Red" Data="M 45,155.368421052632 Z" />
             </a:Tab>
         </a:Tabs>
     </a:WinCenter>

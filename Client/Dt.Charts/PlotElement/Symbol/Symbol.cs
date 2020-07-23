@@ -40,11 +40,11 @@ namespace Dt.Charts
             _symCenter.Y = rc.Current.Y;
 
             // 放在MeasureOverride中造成 iOS 上死循环！！！
-            UpdateGeometry(null, Size);
+            UpdateGeometry(Size);
             return true;
         }
 
-        protected virtual void UpdateGeometry(PathGeometry pg, Size sz)
+        protected virtual void UpdateGeometry(Size sz)
         {
         }
 
@@ -52,7 +52,7 @@ namespace Dt.Charts
         {
             get
             {
-                UpdateGeometry(null, Size);
+                UpdateGeometry(Size);
                 return base.LabelRect;
             }
         }
@@ -73,7 +73,7 @@ namespace Dt.Charts
                 if (base.Size != value)
                 {
                     base.Size = value;
-                    UpdateGeometry(null, Size);
+                    UpdateGeometry(Size);
                 }
             }
         }

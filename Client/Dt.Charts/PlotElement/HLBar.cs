@@ -29,6 +29,9 @@ namespace Dt.Charts
             double left = 0.0;
             double top = 0.0;
 
+            // uno不支持Path.Data为非PathGeometry！
+            // wasm中在给Path.Data赋值前内容必须完整，后添加的Figures无效！众里寻他千百度，因为赋值没按顺序，操！
+            PathGeometry geometry = new PathGeometry();
             if (inverted)
             {
                 double num3 = rc.ConvertX(rc["HighValues"]);
@@ -46,7 +49,7 @@ namespace Dt.Charts
                 pf.Segments.Add(new LineSegment { Point = new Point(width, Size.Width) });
                 pf.Segments.Add(new LineSegment { Point = new Point(0, Size.Width) });
                 pf.Segments.Add(new LineSegment { Point = new Point() });
-                _geometry.Figures.Add(pf);
+                geometry.Figures.Add(pf);
 
                 left = num4;
                 top = rc.Current.Y - (0.5 * Size.Height);
@@ -68,11 +71,12 @@ namespace Dt.Charts
                 pf.Segments.Add(new LineSegment { Point = new Point(Size.Width, height) });
                 pf.Segments.Add(new LineSegment { Point = new Point(0, height) });
                 pf.Segments.Add(new LineSegment { Point = new Point() });
-                _geometry.Figures.Add(pf);
+                geometry.Figures.Add(pf);
 
                 left = rc.Current.X - (0.5 * Size.Width);
                 top = num8;
             }
+            Data = geometry;
 
             if (double.IsNaN(left) || double.IsNaN(top))
             {

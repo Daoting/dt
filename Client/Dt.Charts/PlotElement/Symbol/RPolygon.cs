@@ -26,14 +26,6 @@ namespace Dt.Charts
             NumVertices = 3;
         }
 
-        protected void AddFakeEllipse(PathGeometry pg, Point center, double rx, double ry, double w2)
-        {
-            EllipseGeometry geometry = new EllipseGeometry();
-            geometry.Center = center;
-            geometry.RadiusX = rx + w2;
-            geometry.RadiusY = ry + w2;
-        }
-
         internal override object Clone()
         {
             RPolygon clone = new RPolygon();
@@ -45,18 +37,14 @@ namespace Dt.Charts
         static void OnNumVerticesChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)
         {
             RPolygon polygon = (RPolygon) obj;
-            polygon.UpdateGeometry(null, polygon.Size);
+            polygon.UpdateGeometry(polygon.Size);
         }
 
-        protected override void UpdateGeometry(PathGeometry pg, Size sz)
+        protected override void UpdateGeometry(Size sz)
         {
-            if (pg == null)
-                pg = _geometry;
-
             if (sz.IsEmpty)
                 sz = Size;
 
-            pg.Figures.Clear();
             double rx = 0.5 * sz.Width;
             double ry = 0.5 * sz.Height;
             double num3 = 0.5 * base.StrokeThickness;
@@ -74,8 +62,13 @@ namespace Dt.Charts
                 segment.Point = new Point(x, y);
                 figure.Segments.Add(segment);
             }
-            AddFakeEllipse(pg, center, rx, ry, num3);
-            pg.Figures.Add(figure);
+
+            // uno不支持Path.Data为非PathGeometry！
+            // wasm中在给Path.Data赋值前内容必须完整，后添加的Figures无效！众里寻他千百度，因为赋值没按顺序，操！
+            PathGeometry geometry = new PathGeometry();
+            geometry.Figures.Add(figure);
+            Data = geometry;
+
             Canvas.SetLeft(this, (_symCenter.X - rx) - num3);
             Canvas.SetTop(this, (_symCenter.Y - ry) - num3);
         }
@@ -87,7 +80,6 @@ namespace Dt.Charts
                 Path path = new Path();
                 path.VerticalAlignment = VerticalAlignment.Center;
                 path.HorizontalAlignment = HorizontalAlignment.Center;
-                PathGeometry pg = new PathGeometry();
                 Size sz = Size;
                 if (sz.Width > 16.0)
                 {
@@ -97,18 +89,38 @@ namespace Dt.Charts
                 {
                     sz.Height = 16.0;
                 }
-                UpdateGeometry(pg, sz);
-                path.Data = pg;
-                path.RenderTransform = base.RenderTransform;
-                path.RenderTransformOrigin = base.RenderTransformOrigin;
+                path.RenderTransform = RenderTransform;
+                path.RenderTransformOrigin = RenderTransformOrigin;
+
+                double rx = 0.5 * sz.Width;
+                double ry = 0.5 * sz.Height;
+                double num3 = 0.5 * base.StrokeThickness;
+                Point center = new Point(rx + num3, ry + num3);
+                double numVertices = NumVertices;
+                PathFigure figure = new PathFigure();
+                figure.StartPoint = new Point(center.X + rx, center.Y);
+                figure.IsClosed = true;
+                for (int i = 1; i < numVertices; i++)
+                {
+                    double d = ((((double)i) / numVertices) * 2.0) * 3.1415926535897931;
+                    double x = center.X + (rx * Math.Cos(d));
+                    double y = center.Y + (ry * Math.Sin(d));
+                    LineSegment segment = new LineSegment();
+                    segment.Point = new Point(x, y);
+                    figure.Segments.Add(segment);
+                }
+                PathGeometry geometry = new PathGeometry();
+                geometry.Figures.Add(figure);
+                path.Data = geometry;
+
                 return path;
             }
         }
 
         public int NumVertices
         {
-            get { return  (int) ((int) base.GetValue(NumVerticesProperty)); }
-            set { base.SetValue(NumVerticesProperty, (int) value); }
+            get { return (int)GetValue(NumVerticesProperty); }
+            set { SetValue(NumVerticesProperty, value); }
         }
     }
 }

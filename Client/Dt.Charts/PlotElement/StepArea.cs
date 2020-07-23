@@ -31,6 +31,7 @@ namespace Dt.Charts
             {
                 return false;
             }
+
             BaseRenderer renderer = rc.Renderer as BaseRenderer;
             bool inverted = (renderer != null) && renderer.Inverted;
             bool flag2 = (renderer != null) && renderer.IsStacked;
@@ -46,6 +47,10 @@ namespace Dt.Charts
                 d = inverted ? (rc.XReversed ? (rc.Bounds2D.X + rc.Bounds2D.Width) : rc.Bounds2D.X) : (rc.YReversed ? rc.Bounds2D.Y : (rc.Bounds2D.Y + rc.Bounds2D.Height));
             }
             Rect cr = rc.IsCustomClipping ? new Rect(rc.Bounds2D.X - 2.0, rc.Bounds2D.Y - 2.0, rc.Bounds2D.Width + 4.0, rc.Bounds2D.Height + 4.0) : Extensions.EmptyRect;
+
+            // uno不支持Path.Data为非PathGeometry！
+            // wasm中在给Path.Data赋值前内容必须完整，后添加的Figures无效！众里寻他千百度，因为赋值没按顺序，操！
+            PathGeometry geometry = new PathGeometry();
             if (flag2 && (previousValues != null))
             {
                 points = Lines.CreateSteps(points, inverted);
@@ -66,7 +71,6 @@ namespace Dt.Charts
                 }
                 if (pts != null)
                 {
-                    PathGeometry geometry = base._geometry;
                     PathFigure figure = base.RenderSegment(pts);
                     geometry.Figures.Add(figure);
                 }
@@ -77,18 +81,19 @@ namespace Dt.Charts
                 List<Point[]> list = base.SplitPointsWithHoles(points);
                 if (list != null)
                 {
-                    PathGeometry geometry2 = base._geometry;
                     for (int j = 0; j < list.Count; j++)
                     {
                         PathFigure figure2 = null;
                         figure2 = base.RenderNonStacked(list[j], d, inverted, naN, cr);
                         if (figure2 != null)
                         {
-                            geometry2.Figures.Add(figure2);
+                            geometry.Figures.Add(figure2);
                         }
                     }
                 }
             }
+            Data = geometry;
+
             RectangleGeometry geometry3 = new RectangleGeometry();
             geometry3.Rect = rc.Bounds2D;
             base.Clip = geometry3;

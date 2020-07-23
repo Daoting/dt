@@ -21,7 +21,8 @@ namespace Dt.Charts
 
         public Area()
         {
-            base._isFilled = true;
+            IsFilled = true;
+            IsClosed = true;
         }
 
         internal override object Clone()
@@ -66,16 +67,18 @@ namespace Dt.Charts
             }
             bool inverted = renderer.Inverted;
             bool isStacked = renderer.IsStacked;
-            bool flag3 = renderer is RadarRenderer;
             double naN = double.NaN;
-            if ((rc.OptimizationRadiusScope & OptimizationRadiusScope.Lines) > ((OptimizationRadiusScope) 0))
+            if ((rc.OptimizationRadiusScope & OptimizationRadiusScope.Lines) > ((OptimizationRadiusScope)0))
             {
                 naN = rc.OptimizationRadius;
             }
             double[] previousValues = rc.PreviousValues;
             Point[] pts = null;
-            PathGeometry geometry = base._geometry;
-            if (isStacked && (previousValues != null))
+
+            // uno不支持Path.Data为非PathGeometry！
+            // wasm中在给Path.Data赋值前内容必须完整，后添加的Figures无效！众里寻他千百度，因为赋值没按顺序，操！
+            PathGeometry geometry = new PathGeometry();
+            if (isStacked && previousValues != null)
             {
                 int length = points.Length;
                 if ((previousValues != null) && (previousValues.Length == length))
@@ -138,29 +141,31 @@ namespace Dt.Charts
                     for (int k = 0; k < list.Count; k++)
                     {
                         Point[] pointArray4 = list[k];
-                        PathFigure figure2 = null;
-                        if (flag3)
+                        PathFigure figure;
+                        if (renderer is RadarRenderer)
                         {
-                            figure2 = RenderSegment(pointArray4);
+                            figure = RenderSegment(pointArray4);
                         }
                         else
                         {
-                            figure2 = RenderNonStacked(pointArray4, num5, inverted, naN, cr);
+                            figure = RenderNonStacked(pointArray4, num5, inverted, naN, cr);
                         }
-                        if (figure2 != null)
+                        if (figure != null)
                         {
-                            geometry.Figures.Add(figure2);
+                            geometry.Figures.Add(figure);
                         }
                     }
                 }
             }
+            Data = geometry;
+
             RectangleGeometry geometry2 = new RectangleGeometry();
             geometry2.Rect = new Rect(rc.Bounds.X, rc.Bounds.Y, rc.Bounds.Width, rc.Bounds.Height);
             base.Clip = geometry2;
             return true;
         }
 
-        internal PathFigure RenderNonStacked(Point[] pts, double origin, bool inverted, double optRadius, Rect cr)
+        protected PathFigure RenderNonStacked(Point[] pts, double origin, bool inverted, double optRadius, Rect cr)
         {
             PointCollection points = null;
             int length = pts.Length;
@@ -212,14 +217,7 @@ namespace Dt.Charts
 
         protected PathFigure RenderSegment(Point[] pts)
         {
-            PathFigure figure = new PathFigure();
-            figure.StartPoint = pts[0];
-            figure.IsClosed = true;
-            figure.Segments = new PathSegmentCollection();
-            PolyLineSegment segment = new PolyLineSegment();
-            segment.Points = pts.ToCollection();
-            figure.Segments.Add(segment);
-            return figure;
+            return RenderSegment(pts.ToCollection());
         }
 
         PathFigure RenderSegment(PointCollection pts)
@@ -227,21 +225,19 @@ namespace Dt.Charts
             PathFigure figure = new PathFigure();
             figure.StartPoint = pts[0];
             figure.IsClosed = true;
-            figure.Segments = new PathSegmentCollection();
-            PolyLineSegment segment = new PolyLineSegment();
-            segment.Points = pts;
-            figure.Segments.Add(segment);
+            figure.IsFilled = true;
+            figure.Segments.Add(new PolyLineSegment { Points = pts });
             return figure;
         }
 
         protected override Shape LegendShape
         {
-            get { return  base.DefaultLegendShape; }
+            get { return base.DefaultLegendShape; }
         }
 
         public double Origin
         {
-            get { return  _origin; }
+            get { return _origin; }
             set { _origin = value; }
         }
     }

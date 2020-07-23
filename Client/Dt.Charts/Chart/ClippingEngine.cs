@@ -198,16 +198,12 @@ namespace Dt.Charts
                 Point[] pointArray = ClipSegmentCS(r, pointArray2);
                 if (pointArray != null)
                 {
-                    PathFigure figure2 = new PathFigure();
-                    figure2.StartPoint = pointArray[0];
-                    figure2.IsClosed = false;
-                    figure2.IsFilled = false;
-                    figure2.Segments = new PathSegmentCollection();
-                    PathFigure figure = figure2;
+                    PathFigure figure = new PathFigure();
+                    figure.StartPoint = pointArray[0];
+                    figure.IsClosed = false;
                     figure.IsFilled = true;
-                    LineSegment segment2 = new LineSegment();
-                    segment2.Point = pointArray[1];
-                    LineSegment segment = segment2;
+                    LineSegment segment = new LineSegment();
+                    segment.Point = pointArray[1];
                     figure.Segments.Add(segment);
                     list.Add(figure);
                 }

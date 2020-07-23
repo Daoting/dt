@@ -44,7 +44,6 @@ namespace Dt.Charts
                 new Point(rect.Left, rect.Top)
             };
             segment.Points = points;
-            figure.Segments = new PathSegmentCollection();
             figure.Segments.Add(segment);
             figure.IsClosed = true;
             return figure;
@@ -76,114 +75,116 @@ namespace Dt.Charts
             bool inverted = false;
             if (rc.Renderer is BaseRenderer)
             {
-                inverted = ((BaseRenderer) rc.Renderer).Inverted;
+                inverted = ((BaseRenderer)rc.Renderer).Inverted;
             }
             double d = rc["HighValues"];
             double num2 = rc["LowValues"];
             double num3 = rc["OpenValues"];
             double num4 = rc["CloseValues"];
-            PathGeometry geometry = _geometry;
-            if (!double.IsNaN(num3) && !double.IsNaN(num4))
+            if (double.IsNaN(num3) || double.IsNaN(num4))
+                return;
+
+            bool flag2 = num3 > num4;
+            Rect rect;
+            if (inverted)
             {
-                bool flag2 = num3 > num4;
-                Rect rect = new Rect();
+                num4 = rc.ConvertX(num4);
+                num3 = rc.ConvertX(num3);
+                double height = Size.Height;
+                double y = rc.Current.Y - (0.5 * height);
+                double x = num4;
+                double width = num3 - num4;
+                if (width < 0.0)
+                {
+                    x = num3;
+                    width = -width;
+                }
+                rect = new Rect(x, y, width, height);
+            }
+            else
+            {
+                double num9 = Size.Width;
+                double num10 = rc.Current.X - (0.5 * num9);
+                num4 = rc.ConvertY(num4);
+                num3 = rc.ConvertY(num3);
+                double num11 = num4;
+                double num12 = num3 - num4;
+                if (num12 < 0.0)
+                {
+                    num11 = num3;
+                    num12 = -num12;
+                }
+                rect = new Rect(num10, num11, num9, num12);
+            }
+
+            // uno不支持Path.Data为非PathGeometry！
+            // wasm中在给Path.Data赋值前内容必须完整，后添加的Figures无效！众里寻他千百度，因为赋值没按顺序，操！
+            PathGeometry geometry = new PathGeometry();
+            PathFigure figure = CreateRectFigure(rect, true);
+            if (!flag2)
+            {
+                base.Fill = new SolidColorBrush(Colors.Transparent);
+            }
+            geometry.Figures.Add(figure);
+            if (!double.IsNaN(d))
+            {
+                PathFigure figure2 = new PathFigure();
+                LineSegment segment = new LineSegment();
                 if (inverted)
                 {
-                    num4 = rc.ConvertX(num4);
-                    num3 = rc.ConvertX(num3);
-                    double height = Size.Height;
-                    double y = rc.Current.Y - (0.5 * height);
-                    double x = num4;
-                    double width = num3 - num4;
-                    if (width < 0.0)
+                    d = rc.ConvertX(d);
+                    double num13 = num3;
+                    if (Math.Abs((double)(d - num4)) < Math.Abs((double)(d - num3)))
                     {
-                        x = num3;
-                        width = -width;
+                        num13 = num4;
                     }
-                    rect = new Rect(x, y, width, height);
+                    figure2.StartPoint = new Point(d, rc.Current.Y);
+                    segment.Point = new Point(num13, rc.Current.Y);
                 }
                 else
                 {
-                    double num9 = Size.Width;
-                    double num10 = rc.Current.X - (0.5 * num9);
-                    num4 = rc.ConvertY(num4);
-                    num3 = rc.ConvertY(num3);
-                    double num11 = num4;
-                    double num12 = num3 - num4;
-                    if (num12 < 0.0)
+                    d = rc.ConvertY(d);
+                    double num14 = num3;
+                    if (Math.Abs((double)(d - num4)) < Math.Abs((double)(d - num3)))
                     {
-                        num11 = num3;
-                        num12 = -num12;
+                        num14 = num4;
                     }
-                    rect = new Rect(num10, num11, num9, num12);
+                    figure2.StartPoint = new Point(rc.Current.X, d);
+                    segment.Point = new Point(rc.Current.X, num14);
                 }
-                PathFigure figure = CreateRectFigure(rect, true);
-                if (!flag2)
-                {
-                    base.Fill = new SolidColorBrush(Colors.Transparent);
-                }
-                geometry.Figures.Add(figure);
-                if (!double.IsNaN(d))
-                {
-                    PathFigure figure2 = new PathFigure();
-                    LineSegment segment = new LineSegment();
-                    if (inverted)
-                    {
-                        d = rc.ConvertX(d);
-                        double num13 = num3;
-                        if (Math.Abs((double) (d - num4)) < Math.Abs((double) (d - num3)))
-                        {
-                            num13 = num4;
-                        }
-                        figure2.StartPoint = new Point(d, rc.Current.Y);
-                        segment.Point = new Point(num13, rc.Current.Y);
-                    }
-                    else
-                    {
-                        d = rc.ConvertY(d);
-                        double num14 = num3;
-                        if (Math.Abs((double) (d - num4)) < Math.Abs((double) (d - num3)))
-                        {
-                            num14 = num4;
-                        }
-                        figure2.StartPoint = new Point(rc.Current.X, d);
-                        segment.Point = new Point(rc.Current.X, num14);
-                    }
-                    figure2.Segments = new PathSegmentCollection();
-                    figure2.Segments.Add(segment);
-                    geometry.Figures.Add(figure2);
-                }
-                if (!double.IsNaN(num2))
-                {
-                    PathFigure figure3 = new PathFigure();
-                    LineSegment segment2 = new LineSegment();
-                    if (inverted)
-                    {
-                        num2 = rc.ConvertX(num2);
-                        double num15 = num3;
-                        if (Math.Abs((double) (num2 - num4)) < Math.Abs((double) (num2 - num3)))
-                        {
-                            num15 = num4;
-                        }
-                        figure3.StartPoint = new Point(num2, rc.Current.Y);
-                        segment2.Point = new Point(num15, rc.Current.Y);
-                    }
-                    else
-                    {
-                        num2 = rc.ConvertY(num2);
-                        double num16 = num3;
-                        if (Math.Abs((double) (num2 - num4)) < Math.Abs((double) (num2 - num3)))
-                        {
-                            num16 = num4;
-                        }
-                        figure3.StartPoint = new Point(rc.Current.X, num2);
-                        segment2.Point = new Point(rc.Current.X, num16);
-                    }
-                    figure3.Segments = new PathSegmentCollection();
-                    figure3.Segments.Add(segment2);
-                    geometry.Figures.Add(figure3);
-                }
+                figure2.Segments.Add(segment);
+                geometry.Figures.Add(figure2);
             }
+            if (!double.IsNaN(num2))
+            {
+                PathFigure figure3 = new PathFigure();
+                LineSegment segment2 = new LineSegment();
+                if (inverted)
+                {
+                    num2 = rc.ConvertX(num2);
+                    double num15 = num3;
+                    if (Math.Abs((double)(num2 - num4)) < Math.Abs((double)(num2 - num3)))
+                    {
+                        num15 = num4;
+                    }
+                    figure3.StartPoint = new Point(num2, rc.Current.Y);
+                    segment2.Point = new Point(num15, rc.Current.Y);
+                }
+                else
+                {
+                    num2 = rc.ConvertY(num2);
+                    double num16 = num3;
+                    if (Math.Abs((double)(num2 - num4)) < Math.Abs((double)(num2 - num3)))
+                    {
+                        num16 = num4;
+                    }
+                    figure3.StartPoint = new Point(rc.Current.X, num2);
+                    segment2.Point = new Point(rc.Current.X, num16);
+                }
+                figure3.Segments.Add(segment2);
+                geometry.Figures.Add(figure3);
+            }
+            Data = geometry;
         }
 
         void RenderDefault(RenderContext rc)
@@ -200,9 +201,12 @@ namespace Dt.Charts
 
             if (rc.Renderer is BaseRenderer)
             {
-                inverted = ((BaseRenderer) rc.Renderer).Inverted;
+                inverted = ((BaseRenderer)rc.Renderer).Inverted;
             }
 
+            // uno不支持Path.Data为非PathGeometry！
+            // wasm中在给Path.Data赋值前内容必须完整，后添加的Figures无效！众里寻他千百度，因为赋值没按顺序，操！
+            PathGeometry geometry = new PathGeometry();
             PathFigure figure;
             LineSegment segment;
             if (!double.IsNaN(low) && !double.IsNaN(high))
@@ -224,9 +228,8 @@ namespace Dt.Charts
                     figure.StartPoint = new Point(rc.Current.X, low);
                     segment.Point = new Point(rc.Current.X, high);
                 }
-                figure.Segments = new PathSegmentCollection();
                 figure.Segments.Add(segment);
-                _geometry.Figures.Add(figure);
+                geometry.Figures.Add(figure);
             }
 
             if (!double.IsNaN(open))
@@ -246,9 +249,8 @@ namespace Dt.Charts
                     figure.StartPoint = new Point(x, open);
                     segment.Point = new Point(rc.Current.X, open);
                 }
-                figure.Segments = new PathSegmentCollection();
                 figure.Segments.Add(segment);
-                _geometry.Figures.Add(figure);
+                geometry.Figures.Add(figure);
             }
 
             if (!double.IsNaN(close))
@@ -268,10 +270,10 @@ namespace Dt.Charts
                     figure.StartPoint = new Point(num7, close);
                     segment.Point = new Point(rc.Current.X, close);
                 }
-                figure.Segments = new PathSegmentCollection();
                 figure.Segments.Add(segment);
-                _geometry.Figures.Add(figure);
+                geometry.Figures.Add(figure);
             }
+            Data = geometry;
         }
 
 #if IOS
@@ -279,7 +281,7 @@ namespace Dt.Charts
 #endif
         public HLOCAppearance Appearance
         {
-            get { return  app; }
+            get { return app; }
             set { app = value; }
         }
     }

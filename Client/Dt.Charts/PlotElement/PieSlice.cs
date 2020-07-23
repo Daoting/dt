@@ -23,7 +23,7 @@ namespace Dt.Charts
 
         Rect _lrect = new Rect();
         internal PieInfo _pi = new PieInfo();
-        Point offset0 = new Point();
+        Point _offset0 = new Point();
 
         public PieSlice()
         {
@@ -100,7 +100,6 @@ namespace Dt.Charts
             PathFigure figure = new PathFigure();
             figure.StartPoint = point2;
             figure.IsClosed = true;
-            figure.Segments = new PathSegmentCollection();
             figure.IsFilled = true;
             ArcSegment segment = new ArcSegment();
             segment.Point = point3;
@@ -112,7 +111,6 @@ namespace Dt.Charts
             figure = new PathFigure();
             figure.StartPoint = point4;
             figure.IsClosed = true;
-            figure.Segments = new PathSegmentCollection();
             figure.IsFilled = true;
             ArcSegment segment2 = new ArcSegment();
             segment2.Point = point5;
@@ -146,7 +144,6 @@ namespace Dt.Charts
             PathFigure figure = new PathFigure();
             figure.StartPoint = point;
             figure.IsClosed = true;
-            figure.Segments = new PathSegmentCollection();
             LineSegment segment = new LineSegment();
             segment.Point = point2;
             ArcSegment segment2 = new ArcSegment();
@@ -199,7 +196,6 @@ namespace Dt.Charts
             PathFigure figure = new PathFigure();
             figure.StartPoint = point5;
             figure.IsClosed = true;
-            figure.Segments = new PathSegmentCollection();
             LineSegment segment = new LineSegment();
             segment.Point = point2;
             ArcSegment segment2 = new ArcSegment();
@@ -234,17 +230,20 @@ namespace Dt.Charts
             {
                 return false;
             }
-            PathGeometry pg = _geometry;
-            PathFigure figure = null;
+
+
+            // uno不支持Path.Data为非PathGeometry！
+            // wasm中在给Path.Data赋值前内容必须完整，后添加的Figures无效！众里寻他千百度，因为赋值没按顺序，操！
+            PathGeometry geometry = new PathGeometry();
             PieInfo pieInfo = context.PieInfo;
             if ((pieInfo.InnerRadius > 0.0) && (pieInfo.Sweep == 360.0))
             {
-                CreateFullPieWithHole(pg, pieInfo);
+                CreateFullPieWithHole(geometry, pieInfo);
             }
             else
             {
-                figure = (context.PieInfo.InnerRadius > 0.0) ? CreatePieWithHole(pieInfo) : CreatePie(pieInfo);
-                pg.Figures.Add(figure);
+                var figure = (context.PieInfo.InnerRadius > 0.0) ? CreatePieWithHole(pieInfo) : CreatePie(pieInfo);
+                geometry.Figures.Add(figure);
             }
             Point radiusCenter = pieInfo.GetRadiusCenter();
             _lrect.X = radiusCenter.X;
@@ -253,8 +252,10 @@ namespace Dt.Charts
             TranslateTransform transform = new TranslateTransform();
             transform.X = _pi.Center.X;
             transform.Y = _pi.Center.Y;
-            _geometry.Transform = transform;
-            offset0 = new Point(Canvas.GetLeft(this), Canvas.GetTop(this));
+            geometry.Transform = transform;
+            Data = geometry;
+
+            _offset0 = new Point(Canvas.GetLeft(this), Canvas.GetTop(this));
             UpdateOffset();
             return true;
         }
@@ -268,14 +269,14 @@ namespace Dt.Charts
                 point.X = _pi.Offset * Math.Cos(d);
                 point.Y = _pi.Offset * Math.Sin(d);
             }
-            Canvas.SetLeft(this, offset0.X + point.X);
-            Canvas.SetTop(this, offset0.Y + point.Y);
+            Canvas.SetLeft(this, _offset0.X + point.X);
+            Canvas.SetTop(this, _offset0.Y + point.Y);
             if (_effects != null)
             {
                 foreach (UIElement element in base._effects)
                 {
-                    Canvas.SetLeft(element, point.X + offset0.X);
-                    Canvas.SetTop(element, point.Y + offset0.Y);
+                    Canvas.SetLeft(element, point.X + _offset0.X);
+                    Canvas.SetTop(element, point.Y + _offset0.Y);
                 }
             }
         }

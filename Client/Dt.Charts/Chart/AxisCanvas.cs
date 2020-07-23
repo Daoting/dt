@@ -676,7 +676,6 @@ namespace Dt.Charts
                     {
                         Path path5 = new Path();
                         PathGeometry geometry3 = new PathGeometry();
-                        geometry3.Figures = new PathFigureCollection();
                         PathFigure figure = new PathFigure();
                         figure.IsClosed = true;
                         figure.StartPoint = list[0];

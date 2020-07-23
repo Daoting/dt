@@ -24,11 +24,9 @@ namespace Dt.Charts
 
         public Lines()
         {
-            PenLineCap cap;
-            base._isFilled = false;
-            base.StrokeLineJoin = PenLineJoin.Bevel;
-            base.StrokeEndLineCap = cap = PenLineCap.Round;
-            base.StrokeStartLineCap = cap;
+            StrokeLineJoin = PenLineJoin.Bevel;
+            StrokeEndLineCap = PenLineCap.Round;
+            StrokeStartLineCap = PenLineCap.Round;
         }
 
         static Point[] ClipPoints(Rect bnds, Point[] pts)
@@ -183,13 +181,15 @@ namespace Dt.Charts
             }
             clipBounds = Utils.InflateRect(clipBounds, base.StrokeThickness, base.StrokeThickness);
             bool isCustomClipping = rc.IsCustomClipping;
-            PathGeometry geometry = _geometry;
             double naN = double.NaN;
             if ((rc.OptimizationRadiusScope & OptimizationRadiusScope.Lines) > ((OptimizationRadiusScope) 0))
             {
                 naN = rc.OptimizationRadius;
             }
 
+            // uno不支持Path.Data为非PathGeometry！
+            // wasm中在给Path.Data赋值前内容必须完整，后添加的Figures无效！众里寻他千百度，因为赋值没按顺序，操！
+            PathGeometry geometry = new PathGeometry();
             if (rc.hasNan)
             {
                 List<Point[]> list = SplitPointsWithHoles(points);
@@ -218,6 +218,8 @@ namespace Dt.Charts
                     }
                 }
             }
+            Data = geometry;
+
             if (!isCustomClipping)
             {
                 RectangleGeometry geometry2 = new RectangleGeometry();
@@ -247,8 +249,6 @@ namespace Dt.Charts
                 figure.StartPoint = pts[0];
                 figure.IsClosed = IsClosed;
                 figure.IsFilled = IsFilled;
-                figure.IsFilled = true;
-                figure.Segments = new PathSegmentCollection();
                 PolyLineSegment segment = new PolyLineSegment();
                 segment.Points = pts.ToCollection();
                 figure.Segments.Add(segment);
