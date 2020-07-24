@@ -17,11 +17,8 @@ namespace Dt.Charts
 {
     public partial class Area : Lines
     {
-        double _origin;
-
         public Area()
         {
-            IsFilled = true;
             IsClosed = true;
         }
 
@@ -30,7 +27,6 @@ namespace Dt.Charts
             Area clone = new Area();
             base.CloneAttributes(clone);
             clone.Smoothed = base.Smoothed;
-            clone.Origin = Origin;
             return clone;
         }
 
@@ -66,7 +62,6 @@ namespace Dt.Charts
                 return false;
             }
             bool inverted = renderer.Inverted;
-            bool isStacked = renderer.IsStacked;
             double naN = double.NaN;
             if ((rc.OptimizationRadiusScope & OptimizationRadiusScope.Lines) > ((OptimizationRadiusScope)0))
             {
@@ -78,7 +73,7 @@ namespace Dt.Charts
             // uno不支持Path.Data为非PathGeometry！
             // wasm中在给Path.Data赋值前内容必须完整，后添加的Figures无效！众里寻他千百度，因为赋值没按顺序，操！
             PathGeometry geometry = new PathGeometry();
-            if (isStacked && previousValues != null)
+            if (renderer.IsStacked && previousValues != null)
             {
                 int length = points.Length;
                 if ((previousValues != null) && (previousValues.Length == length))
@@ -121,15 +116,7 @@ namespace Dt.Charts
             }
             else
             {
-                double num5;
-                if (renderer.IsStacked100 || renderer.IsStacked)
-                {
-                    num5 = inverted ? rc.ConvertX(0.0) : rc.ConvertY(0.0);
-                }
-                else
-                {
-                    num5 = inverted ? rc.ConvertX(Origin) : rc.ConvertY(Origin);
-                }
+                double num5 = inverted ? rc.ConvertX(0.0) : rc.ConvertY(0.0);
                 if (double.IsNaN(num5))
                 {
                     num5 = inverted ? (rc.XReversed ? (rc.Bounds.X + rc.Bounds.Width) : rc.Bounds.X) : (rc.YReversed ? rc.Bounds.Y : (rc.Bounds.Y + rc.Bounds.Height));
@@ -233,12 +220,6 @@ namespace Dt.Charts
         protected override Shape LegendShape
         {
             get { return base.DefaultLegendShape; }
-        }
-
-        public double Origin
-        {
-            get { return _origin; }
-            set { _origin = value; }
         }
     }
 }

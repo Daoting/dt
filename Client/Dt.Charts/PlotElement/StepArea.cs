@@ -36,7 +36,7 @@ namespace Dt.Charts
             bool inverted = (renderer != null) && renderer.Inverted;
             bool flag2 = (renderer != null) && renderer.IsStacked;
             double[] previousValues = rc.PreviousValues;
-            double d = inverted ? rc.ConvertX(base.Origin) : rc.ConvertY(base.Origin);
+            double d = inverted ? rc.ConvertX(0.0) : rc.ConvertY(0.0);
             double naN = double.NaN;
             if ((rc.OptimizationRadiusScope & OptimizationRadiusScope.Lines) > ((OptimizationRadiusScope) 0))
             {
