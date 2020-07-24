@@ -1214,7 +1214,9 @@ namespace Dt.Base
         /// <summary>
         /// Gets the undo manager for the control. 
         /// </summary>
-        [Browsable(false)]
+#if IOS
+        new
+#endif
         public UndoManager UndoManager
         {
             get { return View.UndoManager; }
@@ -1667,6 +1669,9 @@ namespace Dt.Base
         /// <summary>
         /// Invalidates the measurement state (layout) and the arrangement state (layout) for the control. After the invalidation, the control layout and data are updated. 
         /// </summary>
+#if ANDROID
+    new
+#endif
         public void Invalidate()
         {
             View.InvalidateLayout();

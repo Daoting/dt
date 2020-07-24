@@ -7859,6 +7859,9 @@ namespace Dt.Cells.UI
             return new Windows.Foundation.Rect(x, y, width, height);
         }
 
+#if IOS
+        new
+#endif
         private void Init()
         {
             this._allowUserFormula = true;
@@ -8095,6 +8098,9 @@ namespace Dt.Cells.UI
         /// Invalidates the measurement state (layout) and the arranged state (layout) for the control.
         /// The view layout and data is updated after the invalidation.
         /// </summary>
+#if ANDROID
+        new
+#endif
         public void Invalidate()
         {
             Action action = null;
@@ -18300,6 +18306,9 @@ namespace Dt.Cells.UI
         /// <summary>
         /// Gets the undo manager for the control.
         /// </summary>
+#if IOS
+        new
+#endif
         public Dt.Cells.UI.UndoManager UndoManager
         {
             get

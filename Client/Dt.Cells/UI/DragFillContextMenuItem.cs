@@ -63,6 +63,9 @@ namespace Dt.Cells.UI
         public DragFillContextMenuItem()
         { }
 
+#if ANDROID
+        new
+#endif
         internal void Click()
         {
             this.IsChecked = true;

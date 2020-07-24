@@ -1436,15 +1436,12 @@ namespace Dt.Cells.UI
                 base.SaveHitTestInfo(null);
             }
             SpreadLayout spreadLayout = this.GetSpreadLayout();
-            List<UIElement> list = new List<UIElement>();
-            foreach (UIElement element in base.Children)
+            List<Image> list = new List<Image>();
+            foreach (var element in base.Children.OfType<Image>())
             {
-                if (element is Image)
-                {
-                    list.Add(element);
-                }
+                list.Add(element);
             }
-            foreach (UIElement element2 in list)
+            foreach (var element2 in list)
             {
                 base.Children.Remove(element2);
             }
@@ -3796,6 +3793,9 @@ namespace Dt.Cells.UI
         /// <summary>
         /// 
         /// </summary>
+#if IOS
+        new
+#endif
         private void Init()
         {
             Action action = null;

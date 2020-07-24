@@ -70,6 +70,9 @@ namespace Dt.Cells.UI
             set { _tb.FontWeight = value; }
         }
 
+#if ANDROID
+        new
+#endif
         public Brush Foreground
         {
             get { return _tb.Foreground; }

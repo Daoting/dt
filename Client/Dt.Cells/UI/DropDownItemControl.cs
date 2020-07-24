@@ -32,6 +32,9 @@ namespace Dt.Cells.UI
         /// <summary>
         /// Occurs when mouse click the item.
         /// </summary>
+#if ANDROID
+        new
+#endif
         public event RoutedEventHandler Click;
 
         /// <summary>

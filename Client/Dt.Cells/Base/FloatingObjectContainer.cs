@@ -44,8 +44,12 @@ namespace Dt.Cells.UI
         private Image _topRightRect;
         [ThreadStatic]
         private static readonly SolidColorBrush BlackGripBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(0xff, 0xae, 0xaf, 0xaf));
+
         [ThreadStatic]
-        private static readonly SolidColorBrush BorderBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(0xff, 0xd8, 0xd8, 0xd8));
+#if !UWP
+        new
+#endif
+        static readonly SolidColorBrush BorderBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(0xff, 0xd8, 0xd8, 0xd8));
         [ThreadStatic]
         private static readonly SolidColorBrush BorderGapBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(200, 0xeb, 0xeb, 0xeb));
         internal const int GrapStripSize = 8;

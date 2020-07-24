@@ -158,6 +158,9 @@ namespace Dt.Cells.UI
             return new Windows.Foundation.Point(point.X - this.Location.X, point.Y - this.Location.Y);
         }
 
+#if !UWP
+        new
+#endif
         internal Brush BorderBrush
         {
             get

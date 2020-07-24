@@ -243,6 +243,9 @@ namespace Dt.Cells.UI
             ((IThemeContextSupport) this._viewInfo).SetContext(context);
         }
 
+#if IOS
+        new
+#endif
         internal void Init()
         {
             this._dataPoints = null;

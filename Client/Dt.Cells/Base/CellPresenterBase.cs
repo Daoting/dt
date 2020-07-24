@@ -194,6 +194,9 @@ namespace Dt.Cells.UI
             }
         }
 
+#if ANDROID
+        new
+#endif
         internal virtual void Invalidate()
         {
             this._isInvalidating = true;
