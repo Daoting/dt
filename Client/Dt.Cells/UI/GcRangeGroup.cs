@@ -25,33 +25,33 @@ namespace Dt.Cells.UI
 {
     internal partial class GcRangeGroup : GcGroupBase
     {
-        private List<GroupButtonInfo> _groupButtonInfos;
-        private List<GroupDotInfo> _groupDotInfos;
-        private List<GroupLineInfo> _groupLineInfos;
-        private const double LINE_SIZE = 2.0;
-        private Brush paintedBrush;
-        private const double STARTLINE_SIZE = 6.0;
+        List<GroupButtonInfo> _groupButtonInfos;
+        List<GroupDotInfo> _groupDotInfos;
+        List<GroupLineInfo> _groupLineInfos;
+        const double LINE_SIZE = 2.0;
+        Brush paintedBrush;
+        const double STARTLINE_SIZE = 6.0;
 
         public GcRangeGroup(SheetView sheetView)
             : base(sheetView)
         {
-            this._groupLineInfos = new List<GroupLineInfo>();
-            this._groupDotInfos = new List<GroupDotInfo>();
+            _groupLineInfos = new List<GroupLineInfo>();
+            _groupDotInfos = new List<GroupDotInfo>();
         }
 
-        private void ArrangeColumnGroups(Windows.Foundation.Size finalSize)
+        void ArrangeColumnGroups(Windows.Foundation.Size finalSize)
         {
-            if (this.GetMaxLevel(this.Orientation) != -1)
+            if (GetMaxLevel(Orientation) != -1)
             {
-                double num2 = this.CalcMinWidthOrHeight(finalSize, this.Orientation);
+                double num2 = CalcMinWidthOrHeight(finalSize, Orientation);
                 if (num2 != 0.0)
                 {
                     double x;
                     double num5;
                     double num3 = Math.Max((double)0.0, (double)((num2 - 6.0) / 2.0)) + 2.0;
                     base._sheetView.GetSheetLayout();
-                    ColumnLayoutModel columnLayoutModel = base._sheetView.GetColumnLayoutModel(this.ViewportIndex, SheetArea.Cells);
-                    foreach (GroupDotInfo info in this._groupDotInfos)
+                    ColumnLayoutModel columnLayoutModel = base._sheetView.GetColumnLayoutModel(ViewportIndex, SheetArea.Cells);
+                    foreach (GroupDotInfo info in _groupDotInfos)
                     {
                         ColumnLayout layout = columnLayoutModel.FindColumn(info.Index);
                         if ((layout != null) && (layout.Width >= 2.0))
@@ -64,7 +64,7 @@ namespace Dt.Cells.UI
                         }
                     }
                     RangeGroupDirection direction = base._sheetView.Worksheet.ColumnRangeGroup.Direction;
-                    foreach (GroupLineInfo info2 in this._groupLineInfos)
+                    foreach (GroupLineInfo info2 in _groupLineInfos)
                     {
                         ColumnLayout layout2 = columnLayoutModel.FindColumn(info2.Start);
                         ColumnLayout layout3 = columnLayoutModel.FindColumn(info2.End);
@@ -104,7 +104,7 @@ namespace Dt.Cells.UI
                             }
                         }
                     }
-                    foreach (GroupButtonInfo info3 in this._groupButtonInfos)
+                    foreach (GroupButtonInfo info3 in _groupButtonInfos)
                     {
                         RangeGroupButtonPresenter button = info3.Button;
                         ColumnLayout layout4 = columnLayoutModel.FindColumn(button.Index);
@@ -136,37 +136,37 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void ArrangeGroups(Windows.Foundation.Size finalSize)
+        void ArrangeGroups(Windows.Foundation.Size finalSize)
         {
-            if (this.Orientation == Windows.UI.Xaml.Controls.Orientation.Horizontal)
+            if (Orientation == Windows.UI.Xaml.Controls.Orientation.Horizontal)
             {
-                this.ArrangeRowGroups(finalSize);
+                ArrangeRowGroups(finalSize);
             }
-            else if (this.Orientation == Windows.UI.Xaml.Controls.Orientation.Vertical)
+            else if (Orientation == Windows.UI.Xaml.Controls.Orientation.Vertical)
             {
-                this.ArrangeColumnGroups(finalSize);
+                ArrangeColumnGroups(finalSize);
             }
         }
 
         protected override Windows.Foundation.Size ArrangeOverride(Windows.Foundation.Size finalSize)
         {
-            this.ArrangeGroups(finalSize);
+            ArrangeGroups(finalSize);
             return base.ArrangeOverride(finalSize);
         }
 
-        private void ArrangeRowGroups(Windows.Foundation.Size finalSize)
+        void ArrangeRowGroups(Windows.Foundation.Size finalSize)
         {
-            if (this.GetMaxLevel(this.Orientation) != -1)
+            if (GetMaxLevel(Orientation) != -1)
             {
-                double num2 = this.CalcMinWidthOrHeight(finalSize, this.Orientation);
+                double num2 = CalcMinWidthOrHeight(finalSize, Orientation);
                 if (num2 != 0.0)
                 {
                     double num4;
                     double y;
                     double num3 = Math.Max((double)0.0, (double)((num2 - 6.0) / 2.0)) + 2.0;
                     base._sheetView.GetSheetLayout();
-                    RowLayoutModel rowLayoutModel = base._sheetView.GetRowLayoutModel(this.ViewportIndex, SheetArea.Cells);
-                    foreach (GroupDotInfo info in this._groupDotInfos)
+                    RowLayoutModel rowLayoutModel = base._sheetView.GetRowLayoutModel(ViewportIndex, SheetArea.Cells);
+                    foreach (GroupDotInfo info in _groupDotInfos)
                     {
                         RowLayout layout = rowLayoutModel.Find(info.Index);
                         if ((layout != null) && (layout.Height >= 2.0))
@@ -179,7 +179,7 @@ namespace Dt.Cells.UI
                         }
                     }
                     RangeGroupDirection direction = base._sheetView.Worksheet.RowRangeGroup.Direction;
-                    foreach (GroupLineInfo info2 in this._groupLineInfos)
+                    foreach (GroupLineInfo info2 in _groupLineInfos)
                     {
                         RowLayout layout2 = rowLayoutModel.FindRow(info2.Start);
                         RowLayout layout3 = rowLayoutModel.FindRow(info2.End);
@@ -219,7 +219,7 @@ namespace Dt.Cells.UI
                             }
                         }
                     }
-                    foreach (GroupButtonInfo info3 in this._groupButtonInfos)
+                    foreach (GroupButtonInfo info3 in _groupButtonInfos)
                     {
                         RowLayout layout4 = rowLayoutModel.FindRow(info3.Button.Index);
                         if (layout4 != null)
@@ -251,28 +251,28 @@ namespace Dt.Cells.UI
             }
         }
 
-        private RangeGroupDirection GetGroupDirection()
+        RangeGroupDirection GetGroupDirection()
         {
-            if (this.Orientation == Windows.UI.Xaml.Controls.Orientation.Horizontal)
+            if (Orientation == Windows.UI.Xaml.Controls.Orientation.Horizontal)
             {
                 return base._sheetView.Worksheet.RowRangeGroup.Direction;
             }
             return base._sheetView.Worksheet.ColumnRangeGroup.Direction;
         }
 
-        private List<RangeGroupInfo> GetGroupsByLevel(int level)
+        List<RangeGroupInfo> GetGroupsByLevel(int level)
         {
             List<RangeGroupInfo> list = new List<RangeGroupInfo>();
-            int rowOrColumnStartIndex = this.GetRowOrColumnStartIndex();
-            int rowOrColumnCount = this.GetRowOrColumnCount();
+            int rowOrColumnStartIndex = GetRowOrColumnStartIndex();
+            int rowOrColumnCount = GetRowOrColumnCount();
             while (rowOrColumnStartIndex < rowOrColumnCount)
             {
                 RangeGroupInfo info = null;
-                if (this.Orientation == Windows.UI.Xaml.Controls.Orientation.Horizontal)
+                if (Orientation == Windows.UI.Xaml.Controls.Orientation.Horizontal)
                 {
                     info = base._sheetView.Worksheet.RowRangeGroup.Find(rowOrColumnStartIndex, level);
                 }
-                else if (this.Orientation == Windows.UI.Xaml.Controls.Orientation.Vertical)
+                else if (Orientation == Windows.UI.Xaml.Controls.Orientation.Vertical)
                 {
                     info = base._sheetView.Worksheet.ColumnRangeGroup.Find(rowOrColumnStartIndex, level);
                 }
@@ -286,47 +286,47 @@ namespace Dt.Cells.UI
             return list;
         }
 
-        private int GetRowOrColumnCount()
+        int GetRowOrColumnCount()
         {
-            if (this.Orientation == Windows.UI.Xaml.Controls.Orientation.Horizontal)
+            if (Orientation == Windows.UI.Xaml.Controls.Orientation.Horizontal)
             {
-                int viewportBottomRow = base._sheetView.GetViewportBottomRow(this.ViewportIndex);
+                int viewportBottomRow = base._sheetView.GetViewportBottomRow(ViewportIndex);
                 return Math.Min(base._sheetView.Worksheet.RowCount, viewportBottomRow + 2);
             }
-            int viewportRightColumn = base._sheetView.GetViewportRightColumn(this.ViewportIndex);
+            int viewportRightColumn = base._sheetView.GetViewportRightColumn(ViewportIndex);
             return Math.Min(base._sheetView.Worksheet.ColumnCount, viewportRightColumn + 2);
         }
 
-        private int GetRowOrColumnStartIndex()
+        int GetRowOrColumnStartIndex()
         {
-            if (this.Orientation == Windows.UI.Xaml.Controls.Orientation.Horizontal)
+            if (Orientation == Windows.UI.Xaml.Controls.Orientation.Horizontal)
             {
-                int viewportTopRow = base._sheetView.GetViewportTopRow(this.ViewportIndex);
+                int viewportTopRow = base._sheetView.GetViewportTopRow(ViewportIndex);
                 return Math.Max(0, viewportTopRow - 1);
             }
-            int viewportLeftColumn = base._sheetView.GetViewportLeftColumn(this.ViewportIndex);
+            int viewportLeftColumn = base._sheetView.GetViewportLeftColumn(ViewportIndex);
             return Math.Min(0, viewportLeftColumn - 1);
         }
 
-        private int GetViewportEndIndex()
+        int GetViewportEndIndex()
         {
-            if (this.Orientation == Windows.UI.Xaml.Controls.Orientation.Horizontal)
+            if (Orientation == Windows.UI.Xaml.Controls.Orientation.Horizontal)
             {
-                return base._sheetView.GetViewportBottomRow(this.ViewportIndex);
+                return base._sheetView.GetViewportBottomRow(ViewportIndex);
             }
-            return base._sheetView.GetViewportRightColumn(this.ViewportIndex);
+            return base._sheetView.GetViewportRightColumn(ViewportIndex);
         }
 
-        private int GetViewportStartIndex()
+        int GetViewportStartIndex()
         {
-            if (this.Orientation == Windows.UI.Xaml.Controls.Orientation.Horizontal)
+            if (Orientation == Windows.UI.Xaml.Controls.Orientation.Horizontal)
             {
-                return base._sheetView.GetViewportTopRow(this.ViewportIndex);
+                return base._sheetView.GetViewportTopRow(ViewportIndex);
             }
-            return base._sheetView.GetViewportLeftColumn(this.ViewportIndex);
+            return base._sheetView.GetViewportLeftColumn(ViewportIndex);
         }
 
-        private void GroupButton_Click(object sender, RoutedEventArgs e)
+        void GroupButton_Click(object sender, RoutedEventArgs e)
         {
             RangeGroupButtonPresenter presenter = sender as RangeGroupButtonPresenter;
             if ((presenter != null) && !base._sheetView.IsEditing)
@@ -335,10 +335,10 @@ namespace Dt.Cells.UI
                 int index = presenter.Index;
                 if ((sheet != null) && (index >= 0))
                 {
-                    if (this.Orientation == Windows.UI.Xaml.Controls.Orientation.Horizontal)
+                    if (Orientation == Windows.UI.Xaml.Controls.Orientation.Horizontal)
                     {
                         bool collapsed = sheet.RowRangeGroup.Data.GetCollapsed(index);
-                        RowGroupExpandExtent rowExpandExtent = new RowGroupExpandExtent(index, presenter.Level, this.ViewportIndex, !collapsed);
+                        RowGroupExpandExtent rowExpandExtent = new RowGroupExpandExtent(index, presenter.Level, ViewportIndex, !collapsed);
                         RowGroupExpandUndoAction command = new RowGroupExpandUndoAction(sheet, rowExpandExtent);
                         int num2 = (base._sheetView.Worksheet.RowRangeGroup.Direction == RangeGroupDirection.Forward) ? (index - 1) : (index + 1);
                         base._sheetView.Worksheet.RowRangeGroup.Find(num2, presenter.Level);
@@ -348,10 +348,10 @@ namespace Dt.Cells.UI
                             base._sheetView.RaiseRangeGroupStateChanged(true, num2, presenter.Level);
                         }
                     }
-                    else if (this.Orientation == Windows.UI.Xaml.Controls.Orientation.Vertical)
+                    else if (Orientation == Windows.UI.Xaml.Controls.Orientation.Vertical)
                     {
                         bool flag3 = sheet.ColumnRangeGroup.Data.GetCollapsed(index);
-                        ColumnGroupExpandExtent columnExpandExtent = new ColumnGroupExpandExtent(index, presenter.Level, this.ViewportIndex, !flag3);
+                        ColumnGroupExpandExtent columnExpandExtent = new ColumnGroupExpandExtent(index, presenter.Level, ViewportIndex, !flag3);
                         ColumnGroupExpandUndoAction action2 = new ColumnGroupExpandUndoAction(sheet, columnExpandExtent);
                         int num3 = (base._sheetView.Worksheet.RowRangeGroup.Direction == RangeGroupDirection.Forward) ? (index - 1) : (index + 1);
                         if (!base._sheetView.RaiseRangeGroupStateChanging(false, num3, presenter.Level))
@@ -364,11 +364,11 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void MeasureGroups(Windows.Foundation.Size availableSize, RangeGroupInfo group, double buttonSize)
+        void MeasureGroups(Windows.Foundation.Size availableSize, RangeGroupInfo group, double buttonSize)
         {
-            RangeGroupDirection groupDirection = this.GetGroupDirection();
-            int viewportStartIndex = this.GetViewportStartIndex();
-            int viewportEndIndex = this.GetViewportEndIndex();
+            RangeGroupDirection groupDirection = GetGroupDirection();
+            int viewportStartIndex = GetViewportStartIndex();
+            int viewportEndIndex = GetViewportEndIndex();
             int start = group.Start;
             int end = group.End;
             if (group.State != GroupState.Expanded)
@@ -391,7 +391,7 @@ namespace Dt.Cells.UI
                                     button.Measure(new Windows.Foundation.Size(buttonSize, buttonSize));
                                     button.Index = num13;
                                     info6.LineDirection = RangeGroupDirection.Forward;
-                                    this._groupButtonInfos.Add(info6);
+                                    _groupButtonInfos.Add(info6);
                                     return;
                                 }
                                 break;
@@ -405,7 +405,7 @@ namespace Dt.Cells.UI
                                     button.Measure(new Windows.Foundation.Size(buttonSize, buttonSize));
                                     button.Index = num14;
                                     info6.LineDirection = RangeGroupDirection.Backward;
-                                    this._groupButtonInfos.Add(info6);
+                                    _groupButtonInfos.Add(info6);
                                 }
                                 break;
                             }
@@ -428,7 +428,7 @@ namespace Dt.Cells.UI
                     presenter.Level = group.Level;
                     GroupButtonInfo info2 = new GroupButtonInfo(presenter);
                     Rectangle rectangle = new Rectangle();
-                    rectangle.Fill = this.PaintedBrush;
+                    rectangle.Fill = PaintedBrush;
                     info2.Line = rectangle;
                     switch (groupDirection)
                     {
@@ -443,7 +443,7 @@ namespace Dt.Cells.UI
                                     presenter.Measure(new Windows.Foundation.Size(buttonSize, buttonSize));
                                     base.Children.Add(rectangle);
                                     rectangle.Measure(new Windows.Foundation.Size(availableSize.Width, availableSize.Height));
-                                    this._groupButtonInfos.Add(info2);
+                                    _groupButtonInfos.Add(info2);
                                 }
                                 break;
                             }
@@ -458,7 +458,7 @@ namespace Dt.Cells.UI
                                     presenter.Measure(new Windows.Foundation.Size(buttonSize, buttonSize));
                                     base.Children.Add(rectangle);
                                     rectangle.Measure(new Windows.Foundation.Size(availableSize.Width, availableSize.Height));
-                                    this._groupButtonInfos.Add(info2);
+                                    _groupButtonInfos.Add(info2);
                                 }
                                 break;
                             }
@@ -471,7 +471,7 @@ namespace Dt.Cells.UI
                     if (flag)
                     {
                         Rectangle line = new Rectangle();
-                        line.Fill = this.PaintedBrush;
+                        line.Fill = PaintedBrush;
                         GroupLineInfo info3 = new GroupLineInfo(line)
                         {
                             Start = num7,
@@ -483,12 +483,12 @@ namespace Dt.Cells.UI
                         if (((groupDirection == RangeGroupDirection.Forward) && (num7 == start)) || ((groupDirection == RangeGroupDirection.Backward) && (num8 == end)))
                         {
                             Rectangle rectangle3 = new Rectangle();
-                            rectangle3.Fill = this.PaintedBrush;
+                            rectangle3.Fill = PaintedBrush;
                             info3.StartLine = rectangle3;
                             base.Children.Add(rectangle3);
                             rectangle3.Measure(new Windows.Foundation.Size(availableSize.Width, availableSize.Height));
                         }
-                        this._groupLineInfos.Add(info3);
+                        _groupLineInfos.Add(info3);
                     }
                     List<int> list = new List<int>();
                     for (int i = num7; i <= num8; i++)
@@ -514,7 +514,7 @@ namespace Dt.Cells.UI
                                 list.Remove(info4.Start - 1);
                                 break;
                         }
-                        this.MeasureGroups(availableSize, info4, buttonSize);
+                        MeasureGroups(availableSize, info4, buttonSize);
                         if (((groupDirection == RangeGroupDirection.Backward) && (group.Start == info4.Start)) || ((groupDirection == RangeGroupDirection.Forward) && (group.End == info4.End)))
                         {
                             for (int k = info4.Start; k <= info4.End; k++)
@@ -528,7 +528,7 @@ namespace Dt.Cells.UI
                         foreach (int num12 in list)
                         {
                             Ellipse ellipse = new Ellipse();
-                            ellipse.Fill = this.PaintedBrush;
+                            ellipse.Fill = PaintedBrush;
                             GroupDotInfo info5 = new GroupDotInfo(ellipse)
                             {
                                 Index = num12,
@@ -536,39 +536,39 @@ namespace Dt.Cells.UI
                             };
                             base.Children.Add(ellipse);
                             ellipse.Measure(new Windows.Foundation.Size(availableSize.Width, availableSize.Height));
-                            this._groupDotInfos.Add(info5);
+                            _groupDotInfos.Add(info5);
                         }
                     }
                 }
             }
         }
 
-        private void MeasureInitialization()
+        void MeasureInitialization()
         {
-            this._groupLineInfos = new List<GroupLineInfo>();
-            this._groupDotInfos = new List<GroupDotInfo>();
-            if ((this._groupButtonInfos != null) && (this._groupButtonInfos.Count > 0))
+            _groupLineInfos = new List<GroupLineInfo>();
+            _groupDotInfos = new List<GroupDotInfo>();
+            if ((_groupButtonInfos != null) && (_groupButtonInfos.Count > 0))
             {
                 foreach (GroupButtonInfo info in _groupButtonInfos)
                 {
                     info.Button.Click -= GroupButton_Click;
                 }
             }
-            this._groupButtonInfos = new List<GroupButtonInfo>();
+            _groupButtonInfos = new List<GroupButtonInfo>();
             base.Children.Clear();
         }
 
         protected override Windows.Foundation.Size MeasureOverride(Windows.Foundation.Size availableSize)
         {
-            this.MeasureInitialization();
-            if (this.GetMaxLevel(this.Orientation) != -1)
+            MeasureInitialization();
+            if (GetMaxLevel(Orientation) != -1)
             {
-                double buttonSize = this.CalcMinWidthOrHeight(availableSize, this.Orientation);
-                foreach (RangeGroupInfo info in this.GetGroupsByLevel(0))
+                double buttonSize = CalcMinWidthOrHeight(availableSize, Orientation);
+                foreach (RangeGroupInfo info in GetGroupsByLevel(0))
                 {
-                    this.MeasureGroups(availableSize, info, buttonSize);
+                    MeasureGroups(availableSize, info, buttonSize);
                 }
-                switch (this.Orientation)
+                switch (Orientation)
                 {
                     case Windows.UI.Xaml.Controls.Orientation.Vertical:
                         base.MeasureBottomBorder(availableSize);
@@ -593,7 +593,7 @@ namespace Dt.Cells.UI
                 {
                     return base._sheetView.RangeGroupLineStroke;
                 }
-                if (this.paintedBrush == null)
+                if (paintedBrush == null)
                 {
                     if (action == null)
                     {
@@ -601,27 +601,27 @@ namespace Dt.Cells.UI
                         {
                             if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
                             {
-                                this.paintedBrush = new SolidColorBrush(Colors.Gray);
+                                paintedBrush = new SolidColorBrush(Colors.Gray);
                             }
                             else
                             {
-                                this.paintedBrush = new SolidColorBrush(Colors.Black);
+                                paintedBrush = new SolidColorBrush(Colors.Black);
                             }
                         };
                     }
                     Dt.Cells.Data.UIAdaptor.InvokeSync(action);
                 }
-                return this.paintedBrush;
+                return paintedBrush;
             }
         }
 
         public int ViewportIndex { get; set; }
 
-        private class GroupButtonInfo
+        class GroupButtonInfo
         {
             public GroupButtonInfo(RangeGroupButtonPresenter button)
             {
-                this.Button = button;
+                Button = button;
             }
 
             public RangeGroupButtonPresenter Button { get; private set; }
@@ -631,11 +631,11 @@ namespace Dt.Cells.UI
             public RangeGroupDirection LineDirection { get; set; }
         }
 
-        private class GroupDotInfo
+        class GroupDotInfo
         {
             public GroupDotInfo(Ellipse ellipse)
             {
-                this.Dot = ellipse;
+                Dot = ellipse;
             }
 
             public Ellipse Dot { get; private set; }
@@ -645,11 +645,11 @@ namespace Dt.Cells.UI
             public int Level { get; set; }
         }
 
-        private class GroupLineInfo
+        class GroupLineInfo
         {
             public GroupLineInfo(Rectangle line)
             {
-                this.Line = line;
+                Line = line;
             }
 
             public int End { get; set; }

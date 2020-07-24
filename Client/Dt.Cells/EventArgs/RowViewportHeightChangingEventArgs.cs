@@ -21,8 +21,8 @@ namespace Dt.Cells.UI
     {
         internal RowViewportHeightChangingEventArgs(int viewportIndex, double deltaViewportHeight)
         {
-            this.ViewportIndex = viewportIndex;
-            this.DeltaViewportHeight = deltaViewportHeight;
+            ViewportIndex = viewportIndex;
+            DeltaViewportHeight = deltaViewportHeight;
         }
 
         internal RowViewportHeightChangingEventArgs(int viewportIndex, double deltaViewportHeight, bool cancel) : this(viewportIndex, deltaViewportHeight)

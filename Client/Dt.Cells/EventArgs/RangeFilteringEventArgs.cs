@@ -21,8 +21,8 @@ namespace Dt.Cells.UI
     {
         internal RangeFilteringEventArgs(int column, object[] filterValues)
         {
-            this.Column = column;
-            this.FilterValues = filterValues;
+            Column = column;
+            FilterValues = filterValues;
         }
 
         internal RangeFilteringEventArgs(int column, object[] filterValues, bool cancel) : this(column, filterValues)

@@ -27,15 +27,6 @@ namespace Dt.Base
     public partial class Excel : Control
     {
         /// <summary>
-        /// 打印时的遮罩内容
-        /// </summary>
-        public static readonly DependencyProperty PrintMaskProperty = DependencyProperty.Register(
-            "PrintMask",
-            typeof(object),
-            typeof(Excel),
-            new PropertyMetadata(null));
-
-        /// <summary>
         /// 报表项开始拖放事件
         /// </summary>
         public event EventHandler ItemStartDrag
@@ -78,15 +69,6 @@ namespace Dt.Base
         {
             get { return View.DecorationRange; }
             set { View.DecorationRange = value; }
-        }
-
-        /// <summary>
-        /// 获取打印时的遮罩内容
-        /// </summary>
-        public object PrintMask
-        {
-            get { return GetValue(PrintMaskProperty); }
-            internal set { SetValue(PrintMaskProperty, value); }
         }
 
         /// <summary>

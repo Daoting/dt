@@ -18,10 +18,10 @@ namespace Dt.Cells.UndoRedo
     /// </summary>
     public class DragFillExtent
     {
-        private Dt.Cells.Data.AutoFillType _autoFillType;
-        private Dt.Cells.Data.FillDirection _fillDirection = Dt.Cells.Data.FillDirection.Down;
-        private CellRange _fillRange;
-        private CellRange _startRange;
+        Dt.Cells.Data.AutoFillType _autoFillType;
+        Dt.Cells.Data.FillDirection _fillDirection = Dt.Cells.Data.FillDirection.Down;
+        CellRange _fillRange;
+        CellRange _startRange;
 
         /// <summary>
         /// Creates a new instance of the <see cref="T:Dt.Cells.UndoRedo.DragFillExtent" /> class.
@@ -32,10 +32,10 @@ namespace Dt.Cells.UndoRedo
         /// <param name="fillDirection">The drag fill direction.</param>
         public DragFillExtent(CellRange startRange, CellRange fillRange, Dt.Cells.Data.AutoFillType autoFillType, Dt.Cells.Data.FillDirection fillDirection)
         {
-            this._startRange = startRange;
-            this._fillRange = fillRange;
-            this._autoFillType = autoFillType;
-            this._fillDirection = fillDirection;
+            _startRange = startRange;
+            _fillRange = fillRange;
+            _autoFillType = autoFillType;
+            _fillDirection = fillDirection;
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace Dt.Cells.UndoRedo
         /// </summary>
         public Dt.Cells.Data.AutoFillType AutoFillType
         {
-            get { return  this._autoFillType; }
+            get { return  _autoFillType; }
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Dt.Cells.UndoRedo
         /// </summary>
         public Dt.Cells.Data.FillDirection FillDirection
         {
-            get { return  this._fillDirection; }
+            get { return  _fillDirection; }
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace Dt.Cells.UndoRedo
         /// </summary>
         public CellRange FillRange
         {
-            get { return  this._fillRange; }
+            get { return  _fillRange; }
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Dt.Cells.UndoRedo
         /// </summary>
         public CellRange StartRange
         {
-            get { return  this._startRange; }
+            get { return  _startRange; }
         }
     }
 }

@@ -24,9 +24,9 @@ namespace Dt.Cells.UI
         /// </summary>
         internal HitTestInformation()
         {
-            this.HitTestType = Dt.Cells.UI.HitTestType.Empty;
-            this.RowViewportIndex = -2;
-            this.ColumnViewportIndex = -2;
+            HitTestType = Dt.Cells.UI.HitTestType.Empty;
+            RowViewportIndex = -2;
+            ColumnViewportIndex = -2;
         }
 
         /// <summary>

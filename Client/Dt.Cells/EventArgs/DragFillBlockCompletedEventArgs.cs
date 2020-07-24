@@ -21,9 +21,9 @@ namespace Dt.Cells.UI
     {
         internal DragFillBlockCompletedEventArgs(CellRange fillRange, Dt.Cells.Data.FillDirection fillDirection, Dt.Cells.Data.AutoFillType autoFillType)
         {
-            this.FillRange = fillRange;
-            this.AutoFillType = autoFillType;
-            this.FillDirection = fillDirection;
+            FillRange = fillRange;
+            AutoFillType = autoFillType;
+            FillDirection = fillDirection;
         }
 
         /// <summary>

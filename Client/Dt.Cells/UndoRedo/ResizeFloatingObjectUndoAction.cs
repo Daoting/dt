@@ -21,9 +21,9 @@ namespace Dt.Cells.UndoRedo
     /// </summary>
     internal class ResizeFloatingObjectUndoAction : ActionBase, IUndo
     {
-        private ResizeFloatingObjectExtent _resizingExtent;
-        private Windows.Foundation.Rect[] _savedRects;
-        private Worksheet _worksheet;
+        ResizeFloatingObjectExtent _resizingExtent;
+        Windows.Foundation.Rect[] _savedRects;
+        Worksheet _worksheet;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.UndoRedo.MoveFloatingObjectUndoAction" /> class.
@@ -32,8 +32,8 @@ namespace Dt.Cells.UndoRedo
         /// <param name="extent">The extent.</param>
         public ResizeFloatingObjectUndoAction(Worksheet worksheet, ResizeFloatingObjectExtent extent)
         {
-            this._worksheet = worksheet;
-            this._resizingExtent = extent;
+            _worksheet = worksheet;
+            _resizingExtent = extent;
         }
 
         /// <summary>
@@ -54,28 +54,28 @@ namespace Dt.Cells.UndoRedo
         /// <param name="parameter">Data used by the action. If the action does not require data to be passed, this object can be set to null.</param>
         public override void Execute(object parameter)
         {
-            if (this.CanExecute(parameter))
+            if (CanExecute(parameter))
             {
                 SheetView view = parameter as SheetView;
                 try
                 {
                     view.SuspendFloatingObjectsInvalidate();
-                    this.SaveState();
-                    for (int i = 0; i < this._resizingExtent.Names.Length; i++)
+                    SaveState();
+                    for (int i = 0; i < _resizingExtent.Names.Length; i++)
                     {
-                        string name = this._resizingExtent.Names[i];
-                        FloatingObject obj2 = this._worksheet.FindChart(name);
+                        string name = _resizingExtent.Names[i];
+                        FloatingObject obj2 = _worksheet.FindChart(name);
                         if (obj2 == null)
                         {
-                            obj2 = this._worksheet.FindPicture(name);
+                            obj2 = _worksheet.FindPicture(name);
                         }
                         if (obj2 == null)
                         {
-                            obj2 = this._worksheet.FindFloatingObject(name);
+                            obj2 = _worksheet.FindFloatingObject(name);
                         }
                         if (obj2 != null)
                         {
-                            Windows.Foundation.Rect rect = this._resizingExtent.ResizedRects[i];
+                            Windows.Foundation.Rect rect = _resizingExtent.ResizedRects[i];
                             obj2.Size = new Windows.Foundation.Size(rect.Width, rect.Height);
                             obj2.Location = new Windows.Foundation.Point(rect.X, rect.Y);
                         }
@@ -95,23 +95,23 @@ namespace Dt.Cells.UndoRedo
         public void SaveState()
         {
             List<Windows.Foundation.Rect> list = new List<Windows.Foundation.Rect>();
-            foreach (string str in this._resizingExtent.Names)
+            foreach (string str in _resizingExtent.Names)
             {
-                FloatingObject obj2 = this._worksheet.FindChart(str);
+                FloatingObject obj2 = _worksheet.FindChart(str);
                 if (obj2 == null)
                 {
-                    obj2 = this._worksheet.FindFloatingObject(str);
+                    obj2 = _worksheet.FindFloatingObject(str);
                 }
                 if (obj2 == null)
                 {
-                    obj2 = this._worksheet.FindPicture(str);
+                    obj2 = _worksheet.FindPicture(str);
                 }
                 if (obj2 != null)
                 {
                     list.Add(new Windows.Foundation.Rect(obj2.Location, obj2.Size));
                 }
             }
-            this._savedRects = list.ToArray();
+            _savedRects = list.ToArray();
         }
 
         public override string ToString()
@@ -132,21 +132,21 @@ namespace Dt.Cells.UndoRedo
             try
             {
                 view.SuspendFloatingObjectsInvalidate();
-                for (int i = 0; i < this._resizingExtent.Names.Length; i++)
+                for (int i = 0; i < _resizingExtent.Names.Length; i++)
                 {
-                    string name = this._resizingExtent.Names[i];
-                    FloatingObject obj2 = this._worksheet.FindChart(name);
+                    string name = _resizingExtent.Names[i];
+                    FloatingObject obj2 = _worksheet.FindChart(name);
                     if (obj2 == null)
                     {
-                        obj2 = this._worksheet.FindPicture(name);
+                        obj2 = _worksheet.FindPicture(name);
                     }
                     if (obj2 == null)
                     {
-                        obj2 = this._worksheet.FindFloatingObject(name);
+                        obj2 = _worksheet.FindFloatingObject(name);
                     }
                     if (obj2 != null)
                     {
-                        Windows.Foundation.Rect rect = this._savedRects[i];
+                        Windows.Foundation.Rect rect = _savedRects[i];
                         obj2.Location = new Windows.Foundation.Point(rect.X, rect.Y);
                         obj2.Size = new Windows.Foundation.Size(rect.Width, rect.Height);
                     }

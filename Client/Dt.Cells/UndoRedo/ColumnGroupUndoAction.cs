@@ -19,8 +19,8 @@ namespace Dt.Cells.UndoRedo
     /// </summary>
     public class ColumnGroupUndoAction : ActionBase, IUndo
     {
-        private ColumnGroupExtent _columnGroupExtent;
-        private Worksheet _sheet;
+        ColumnGroupExtent _columnGroupExtent;
+        Worksheet _sheet;
 
         /// <summary>
         /// Creates a new instance of the <see cref="T:Dt.Cells.UndoRedo.ColumnGroupUndoAction" /> class.
@@ -29,8 +29,8 @@ namespace Dt.Cells.UndoRedo
         /// <param name="columnGroupExtent">The column group extent information.</param>
         public ColumnGroupUndoAction(Worksheet sheet, ColumnGroupExtent columnGroupExtent)
         {
-            this._sheet = sheet;
-            this._columnGroupExtent = columnGroupExtent;
+            _sheet = sheet;
+            _columnGroupExtent = columnGroupExtent;
         }
 
         /// <summary>
@@ -51,14 +51,14 @@ namespace Dt.Cells.UndoRedo
         /// <param name="sender">Object on which the action occurred.</param>
         public override void Execute(object sender)
         {
-            if (((this._sheet != null) && (this._columnGroupExtent != null)) && (this._sheet.ColumnRangeGroup != null))
+            if (((_sheet != null) && (_columnGroupExtent != null)) && (_sheet.ColumnRangeGroup != null))
             {
                 base.SuspendInvalidate(sender);
                 try
                 {
-                    int index = this._columnGroupExtent.Index;
-                    int count = this._columnGroupExtent.Count;
-                    this._sheet.ColumnRangeGroup.Group(index, count);
+                    int index = _columnGroupExtent.Index;
+                    int count = _columnGroupExtent.Count;
+                    _sheet.ColumnRangeGroup.Group(index, count);
                 }
                 finally
                 {
@@ -101,15 +101,15 @@ namespace Dt.Cells.UndoRedo
         public bool Undo(object sender)
         {
             bool flag = false;
-            if (((this._sheet != null) && (this._columnGroupExtent != null)) && (this._sheet.ColumnRangeGroup != null))
+            if (((_sheet != null) && (_columnGroupExtent != null)) && (_sheet.ColumnRangeGroup != null))
             {
                 SheetView view = sender as SheetView;
                 base.SuspendInvalidate(sender);
                 try
                 {
-                    int index = this._columnGroupExtent.Index;
-                    int count = this._columnGroupExtent.Count;
-                    this._sheet.ColumnRangeGroup.Ungroup(index, count);
+                    int index = _columnGroupExtent.Index;
+                    int count = _columnGroupExtent.Count;
+                    _sheet.ColumnRangeGroup.Ungroup(index, count);
                     flag = true;
                 }
                 finally

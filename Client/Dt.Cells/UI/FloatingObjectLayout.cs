@@ -17,11 +17,11 @@ namespace Dt.Cells.UI
     {
         public FloatingObjectLayout(string name, double x, double y, double with, double height)
         {
-            this.Name = name;
-            this.X = x;
-            this.Y = y;
-            this.Width = with;
-            this.Height = height;
+            Name = name;
+            X = x;
+            Y = y;
+            Width = with;
+            Height = height;
         }
 
         public double Height { get; set; }

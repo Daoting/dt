@@ -22,14 +22,14 @@ namespace Dt.Cells.UI
     /// </summary>
     internal abstract class GestureAction
     {
-        private Windows.Foundation.Point _actionCurrentPosition;
-        private Windows.Foundation.Point _actionPreviousSamplePosition;
-        private Windows.Foundation.Point _actionStartingPosition;
-        private TapStatus _actionTapStatus;
-        private readonly DispatcherTimer _actionTimer = new DispatcherTimer();
-        private readonly UIElement _gestureElement;
-        private static readonly TimeSpan DoubleTapTimeout = TimeSpan.FromMilliseconds(250.0);
-        private static readonly TimeSpan TapAndHoldTimeout = TimeSpan.FromMilliseconds(800.0);
+        Windows.Foundation.Point _actionCurrentPosition;
+        Windows.Foundation.Point _actionPreviousSamplePosition;
+        Windows.Foundation.Point _actionStartingPosition;
+        TapStatus _actionTapStatus;
+        readonly DispatcherTimer _actionTimer = new DispatcherTimer();
+        readonly UIElement _gestureElement;
+        static readonly TimeSpan DoubleTapTimeout = TimeSpan.FromMilliseconds(250.0);
+        static readonly TimeSpan TapAndHoldTimeout = TimeSpan.FromMilliseconds(800.0);
 
         public event EventHandler ActionCompleted;
 
@@ -43,10 +43,10 @@ namespace Dt.Cells.UI
             {
                 throw new ArgumentNullException("gestureElement");
             }
-            this._gestureElement = gestureElement;
-            DispatcherTimer timer = this._actionTimer;
+            _gestureElement = gestureElement;
+            DispatcherTimer timer = _actionTimer;
             timer.Tick += OnActionTimerTick;
-            this.ActionGestureOrientation = DragOrientation.None;
+            ActionGestureOrientation = DragOrientation.None;
         }
 
         /// <summary>
@@ -55,56 +55,56 @@ namespace Dt.Cells.UI
         /// <param name="currentPosition">The current position.</param>
         public void HandleManipulationCompleted(Windows.Foundation.Point currentPosition)
         {
-            this._actionTimer.Stop();
-            switch (this.ActionTapStatus)
+            _actionTimer.Stop();
+            switch (ActionTapStatus)
             {
                 case TapStatus.HoldPending:
-                    this.ProcessManipulationEndForHoldPending();
-                    this._actionTimer.Interval = DoubleTapTimeout;
-                    this._actionTimer.Start();
+                    ProcessManipulationEndForHoldPending();
+                    _actionTimer.Interval = DoubleTapTimeout;
+                    _actionTimer.Start();
                     return;
 
                 case TapStatus.HoldOcurred:
-                    this.ProcessManipulationEndForHoldOccured();
-                    this._actionTimer.Interval = DoubleTapTimeout;
-                    this._actionTimer.Start();
+                    ProcessManipulationEndForHoldOccured();
+                    _actionTimer.Interval = DoubleTapTimeout;
+                    _actionTimer.Start();
                     return;
 
                 case TapStatus.DragOcurringFirstTime:
                 case TapStatus.DragOcurring:
-                    this.ProcessManipulationEndForDragOcurring(currentPosition);
-                    this._actionTimer.Stop();
-                    this.ActionCompleted(this, EventArgs.Empty);
+                    ProcessManipulationEndForDragOcurring(currentPosition);
+                    _actionTimer.Stop();
+                    ActionCompleted(this, EventArgs.Empty);
                     return;
 
                 case TapStatus.PinchOcurringFirstTime:
                 case TapStatus.PinchOcurring:
-                    this.ProcessManipulationEndForPinchOccurring(currentPosition);
-                    this._actionTimer.Stop();
-                    this.ActionCompleted(this, EventArgs.Empty);
+                    ProcessManipulationEndForPinchOccurring(currentPosition);
+                    _actionTimer.Stop();
+                    ActionCompleted(this, EventArgs.Empty);
                     return;
             }
-            this._actionTimer.Stop();
-            this.ActionCompleted(this, EventArgs.Empty);
+            _actionTimer.Stop();
+            ActionCompleted(this, EventArgs.Empty);
         }
 
         public void HandleMultipleManipulationDelta(Windows.Foundation.Point currentPosition, Windows.Foundation.Point scaleDelta)
         {
-            switch (this.ActionTapStatus)
+            switch (ActionTapStatus)
             {
                 case TapStatus.PinchOcurringFirstTime:
                 case TapStatus.PinchOcurring:
-                    this.ProcessManipulationDeltaForPinchOccurring(currentPosition, scaleDelta);
+                    ProcessManipulationDeltaForPinchOccurring(currentPosition, scaleDelta);
                     return;
 
                 case TapStatus.Pending:
-                    this.ProcessManipulationForPinchStart(currentPosition);
+                    ProcessManipulationForPinchStart(currentPosition);
                     return;
             }
-            this._actionTimer.Stop();
-            this.ActionCompleted(this, EventArgs.Empty);
-            this.ActionTapStatus = TapStatus.Pending;
-            this.HandleMultipleManipulationDelta(currentPosition, scaleDelta);
+            _actionTimer.Stop();
+            ActionCompleted(this, EventArgs.Empty);
+            ActionTapStatus = TapStatus.Pending;
+            HandleMultipleManipulationDelta(currentPosition, scaleDelta);
         }
 
         /// <summary>
@@ -114,31 +114,31 @@ namespace Dt.Cells.UI
         /// <param name="offsetFromOrigin">The offset from origin.</param>
         public void HandleSingleManipulationDelta(Windows.Foundation.Point currentPosition, Windows.Foundation.Point offsetFromOrigin)
         {
-            if (this.IsMoveAboveThreshold(offsetFromOrigin))
+            if (IsMoveAboveThreshold(offsetFromOrigin))
             {
-                this._actionTimer.Stop();
-                switch (this.ActionTapStatus)
+                _actionTimer.Stop();
+                switch (ActionTapStatus)
                 {
                     case TapStatus.HoldPending:
-                        this.ProcessManipulationDeltaForHoldPending(currentPosition);
+                        ProcessManipulationDeltaForHoldPending(currentPosition);
                         return;
 
                     case TapStatus.HoldOcurred:
-                        this.ProcessManipulationDeltaForHoldPending(currentPosition);
+                        ProcessManipulationDeltaForHoldPending(currentPosition);
                         return;
 
                     case TapStatus.DragOcurringFirstTime:
                     case TapStatus.DragOcurring:
-                        this.ProcessManipulationDeltaForDragOcurring(currentPosition);
+                        ProcessManipulationDeltaForDragOcurring(currentPosition);
                         return;
 
                     case TapStatus.PinchOcurringFirstTime:
                     case TapStatus.PinchOcurring:
-                        this.ProcessManipulationEndForPinchOccurring(currentPosition);
+                        ProcessManipulationEndForPinchOccurring(currentPosition);
                         return;
                 }
-                this._actionTimer.Stop();
-                this.ActionCompleted(this, EventArgs.Empty);
+                _actionTimer.Stop();
+                ActionCompleted(this, EventArgs.Empty);
             }
         }
 
@@ -148,22 +148,22 @@ namespace Dt.Cells.UI
         /// <param name="currentPosition">The current position.</param>
         public void HandleSingleManipulationStarted(Windows.Foundation.Point currentPosition)
         {
-            this._actionTimer.Stop();
-            TapStatus actionTapStatus = this.ActionTapStatus;
+            _actionTimer.Stop();
+            TapStatus actionTapStatus = ActionTapStatus;
             if (actionTapStatus == TapStatus.Pending)
             {
-                this.ProcessManipulationStartForPending(currentPosition);
-                this._actionTimer.Interval = TapAndHoldTimeout;
-                this._actionTimer.Start();
+                ProcessManipulationStartForPending(currentPosition);
+                _actionTimer.Interval = TapAndHoldTimeout;
+                _actionTimer.Start();
             }
             else if (actionTapStatus == TapStatus.DoubleTapPending)
             {
-                this.ProcessManipulationStartForDoubleTapPending();
-                this.ActionCompleted(this, EventArgs.Empty);
+                ProcessManipulationStartForDoubleTapPending();
+                ActionCompleted(this, EventArgs.Empty);
             }
             else
             {
-                this.ActionCompleted(this, EventArgs.Empty);
+                ActionCompleted(this, EventArgs.Empty);
             }
         }
 
@@ -173,25 +173,25 @@ namespace Dt.Cells.UI
         /// <returns></returns>
         public bool Initialize()
         {
-            return this.OnInitialize();
+            return OnInitialize();
         }
 
-        private bool IsMoveAboveThreshold(Windows.Foundation.Point offsetFromOrigin)
+        bool IsMoveAboveThreshold(Windows.Foundation.Point offsetFromOrigin)
         {
-            return (offsetFromOrigin.Offset() > this.MoveThreshold);
+            return (offsetFromOrigin.Offset() > MoveThreshold);
         }
 
-        private void OnActionTimerTick(object sender, object e)
+        void OnActionTimerTick(object sender, object e)
         {
-            this._actionTimer.Stop();
-            if (this.ActionTapStatus == TapStatus.HoldPending)
+            _actionTimer.Stop();
+            if (ActionTapStatus == TapStatus.HoldPending)
             {
-                this.ProcessGestureTimerForHoldPending();
+                ProcessGestureTimerForHoldPending();
             }
-            else if (this.ActionTapStatus == TapStatus.DoubleTapPending)
+            else if (ActionTapStatus == TapStatus.DoubleTapPending)
             {
-                this.ProcessGestureTimerForDoubleTapPending();
-                this.ActionCompleted(this, EventArgs.Empty);
+                ProcessGestureTimerForDoubleTapPending();
+                ActionCompleted(this, EventArgs.Empty);
             }
         }
 
@@ -204,22 +204,22 @@ namespace Dt.Cells.UI
         {
         }
 
-        private void ProcessGestures(GestureType gestureType)
+        void ProcessGestures(GestureType gestureType)
         {
-            if (((this.ActionGestureOrientation == DragOrientation.None) && ((this.ActionSampleDelta.X != 0.0) || (this.ActionSampleDelta.Y != 0.0))) && ((this.ActionGestureOrientation == DragOrientation.None) && ((this.ActionSampleDelta.X != 0.0) || (this.ActionSampleDelta.Y != 0.0))))
+            if (((ActionGestureOrientation == DragOrientation.None) && ((ActionSampleDelta.X != 0.0) || (ActionSampleDelta.Y != 0.0))) && ((ActionGestureOrientation == DragOrientation.None) && ((ActionSampleDelta.X != 0.0) || (ActionSampleDelta.Y != 0.0))))
             {
-                double num = Math.Atan(Math.Abs(this.ActionSampleDelta.Y) / Math.Abs(this.ActionSampleDelta.X)) * 57.295779513082323;
+                double num = Math.Atan(Math.Abs(ActionSampleDelta.Y) / Math.Abs(ActionSampleDelta.X)) * 57.295779513082323;
                 if (num > 55.0)
                 {
-                    this.ActionGestureOrientation = DragOrientation.Vertical;
+                    ActionGestureOrientation = DragOrientation.Vertical;
                 }
                 else if (num > 35.0)
                 {
-                    this.ActionGestureOrientation = DragOrientation.Horizontal | DragOrientation.Vertical;
+                    ActionGestureOrientation = DragOrientation.Horizontal | DragOrientation.Vertical;
                 }
                 else
                 {
-                    this.ActionGestureOrientation = DragOrientation.Horizontal;
+                    ActionGestureOrientation = DragOrientation.Horizontal;
                 }
             }
             switch (gestureType)
@@ -237,31 +237,31 @@ namespace Dt.Cells.UI
                     break;
 
                 case GestureType.Tap:
-                    if (this.View == null)
+                    if (View == null)
                     {
                         break;
                     }
-                    this.View.OnTouchTap(this.ActionCurrentPosition);
+                    View.OnTouchTap(ActionCurrentPosition);
                     return;
 
                 case GestureType.DoubleTap:
-                    if (this.View == null)
+                    if (View == null)
                     {
                         break;
                     }
-                    this.View.OnTouchTap(this.ActionCurrentPosition);
-                    this.View.OnTouchDoubleTap(this.ActionCurrentPosition);
+                    View.OnTouchTap(ActionCurrentPosition);
+                    View.OnTouchDoubleTap(ActionCurrentPosition);
                     return;
 
                 case GestureType.Hold:
-                    this.View.ProcessTouchHold(this.ActionCurrentPosition);
+                    View.ProcessTouchHold(ActionCurrentPosition);
                     return;
 
                 case GestureType.FreeDrag:
-                    if (this.View != null)
+                    if (View != null)
                     {
-                        this.View.ProcessTouchFreeDrag(this.ActionStartingPosition, this.ActionCurrentPosition, this.ActionSampleDelta, this.ActionGestureOrientation);
-                        this._actionPreviousSamplePosition = this.ActionCurrentPosition;
+                        View.ProcessTouchFreeDrag(ActionStartingPosition, ActionCurrentPosition, ActionSampleDelta, ActionGestureOrientation);
+                        _actionPreviousSamplePosition = ActionCurrentPosition;
                     }
                     break;
 
@@ -270,81 +270,81 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void ProcessGestureTimerForDoubleTapPending()
+        void ProcessGestureTimerForDoubleTapPending()
         {
-            this.ActionTapStatus = TapStatus.Tap;
-            this.ProcessGestures(GestureType.Tap);
+            ActionTapStatus = TapStatus.Tap;
+            ProcessGestures(GestureType.Tap);
         }
 
-        private void ProcessGestureTimerForHoldPending()
+        void ProcessGestureTimerForHoldPending()
         {
-            this.ActionTapStatus = TapStatus.HoldOcurred;
-            this.ProcessGestures(GestureType.Hold);
+            ActionTapStatus = TapStatus.HoldOcurred;
+            ProcessGestures(GestureType.Hold);
         }
 
-        private void ProcessManipulationDeltaForDragOcurring(Windows.Foundation.Point currentPosition)
+        void ProcessManipulationDeltaForDragOcurring(Windows.Foundation.Point currentPosition)
         {
-            this.ActionCurrentPosition = currentPosition;
-            this.ActionTapStatus = TapStatus.DragOcurring;
-            this.ProcessGestures(GestureType.FreeDrag);
+            ActionCurrentPosition = currentPosition;
+            ActionTapStatus = TapStatus.DragOcurring;
+            ProcessGestures(GestureType.FreeDrag);
         }
 
-        private void ProcessManipulationDeltaForHoldPending(Windows.Foundation.Point currentPosition)
+        void ProcessManipulationDeltaForHoldPending(Windows.Foundation.Point currentPosition)
         {
-            this.ActionCurrentPosition = currentPosition;
-            this.ActionTapStatus = TapStatus.DragOcurringFirstTime;
-            this.ProcessGestures(GestureType.FreeDrag);
+            ActionCurrentPosition = currentPosition;
+            ActionTapStatus = TapStatus.DragOcurringFirstTime;
+            ProcessGestures(GestureType.FreeDrag);
         }
 
-        private void ProcessManipulationDeltaForPinchOccurring(Windows.Foundation.Point currentPosition, Windows.Foundation.Point scaleDelta)
+        void ProcessManipulationDeltaForPinchOccurring(Windows.Foundation.Point currentPosition, Windows.Foundation.Point scaleDelta)
         {
-            this.ActionCurrentPosition = currentPosition;
-            this.ActionScaleDelta = scaleDelta;
-            this.ActionTapStatus = TapStatus.PinchOcurring;
-            this.ProcessGestures(GestureType.Pinch);
+            ActionCurrentPosition = currentPosition;
+            ActionScaleDelta = scaleDelta;
+            ActionTapStatus = TapStatus.PinchOcurring;
+            ProcessGestures(GestureType.Pinch);
         }
 
-        private void ProcessManipulationEndForDragOcurring(Windows.Foundation.Point currentPosition)
+        void ProcessManipulationEndForDragOcurring(Windows.Foundation.Point currentPosition)
         {
-            this.ActionCurrentPosition = currentPosition;
-            this.ActionTapStatus = TapStatus.DragOcurred;
-            this.ProcessGestures(GestureType.DragComplete);
+            ActionCurrentPosition = currentPosition;
+            ActionTapStatus = TapStatus.DragOcurred;
+            ProcessGestures(GestureType.DragComplete);
         }
 
-        private void ProcessManipulationEndForHoldOccured()
+        void ProcessManipulationEndForHoldOccured()
         {
-            this.ActionTapStatus = TapStatus.Pending;
+            ActionTapStatus = TapStatus.Pending;
         }
 
-        private void ProcessManipulationEndForHoldPending()
+        void ProcessManipulationEndForHoldPending()
         {
-            this.ActionTapStatus = TapStatus.DoubleTapPending;
+            ActionTapStatus = TapStatus.DoubleTapPending;
         }
 
-        private void ProcessManipulationEndForPinchOccurring(Windows.Foundation.Point currentPosition)
+        void ProcessManipulationEndForPinchOccurring(Windows.Foundation.Point currentPosition)
         {
-            this.ActionCurrentPosition = currentPosition;
-            this.ActionTapStatus = TapStatus.PinchOcurred;
-            this.ProcessGestures(GestureType.PinchComplete);
+            ActionCurrentPosition = currentPosition;
+            ActionTapStatus = TapStatus.PinchOcurred;
+            ProcessGestures(GestureType.PinchComplete);
         }
 
-        private void ProcessManipulationForPinchStart(Windows.Foundation.Point currentPosition)
+        void ProcessManipulationForPinchStart(Windows.Foundation.Point currentPosition)
         {
-            this.ActionCurrentPosition = currentPosition;
-            this.ActionTapStatus = TapStatus.PinchOcurringFirstTime;
-            this.ProcessGestures(GestureType.Pinch);
+            ActionCurrentPosition = currentPosition;
+            ActionTapStatus = TapStatus.PinchOcurringFirstTime;
+            ProcessGestures(GestureType.Pinch);
         }
 
-        private void ProcessManipulationStartForDoubleTapPending()
+        void ProcessManipulationStartForDoubleTapPending()
         {
-            this.ActionTapStatus = TapStatus.DoubleTapOcurred;
-            this.ProcessGestures(GestureType.DoubleTap);
+            ActionTapStatus = TapStatus.DoubleTapOcurred;
+            ProcessGestures(GestureType.DoubleTap);
         }
 
-        private void ProcessManipulationStartForPending(Windows.Foundation.Point startingPosition)
+        void ProcessManipulationStartForPending(Windows.Foundation.Point startingPosition)
         {
-            this.ActionStartingPosition = startingPosition;
-            this.ActionTapStatus = TapStatus.HoldPending;
+            ActionStartingPosition = startingPosition;
+            ActionTapStatus = TapStatus.HoldPending;
         }
 
         /// <summary>
@@ -352,7 +352,7 @@ namespace Dt.Cells.UI
         /// </summary>
         public void Release()
         {
-            this.OnRelease();
+            OnRelease();
         }
 
         /// <summary>
@@ -361,45 +361,45 @@ namespace Dt.Cells.UI
         /// <value>The action current position.</value>
         internal Windows.Foundation.Point ActionCurrentPosition
         {
-            get { return  this._actionCurrentPosition; }
-            private set
+            get { return  _actionCurrentPosition; }
+            set
             {
-                this._actionPreviousSamplePosition = this._actionCurrentPosition;
-                this._actionCurrentPosition = value;
+                _actionPreviousSamplePosition = _actionCurrentPosition;
+                _actionCurrentPosition = value;
             }
         }
 
-        private DragOrientation ActionGestureOrientation { get; set; }
+        DragOrientation ActionGestureOrientation { get; set; }
 
-        private Windows.Foundation.Point ActionPreviousSamplePosition
+        Windows.Foundation.Point ActionPreviousSamplePosition
         {
-            get { return  this._actionPreviousSamplePosition; }
-            set { this._actionPreviousSamplePosition = value; }
+            get { return  _actionPreviousSamplePosition; }
+            set { _actionPreviousSamplePosition = value; }
         }
 
         /// <summary>
         /// Gets the action sample offset from the previous sample's position.
         /// </summary>
         /// <value>The action sample delta.</value>
-        private Windows.Foundation.Point ActionSampleDelta
+        Windows.Foundation.Point ActionSampleDelta
         {
-            get { return  this.ActionCurrentPosition.Delta(this._actionPreviousSamplePosition); }
+            get { return  ActionCurrentPosition.Delta(_actionPreviousSamplePosition); }
         }
 
-        private Windows.Foundation.Point ActionScaleDelta { get; set; }
+        Windows.Foundation.Point ActionScaleDelta { get; set; }
 
         /// <summary>
         /// Gets or sets the starting position for this action.
         /// </summary>
         /// <value>The action starting position.</value>
-        private Windows.Foundation.Point ActionStartingPosition
+        Windows.Foundation.Point ActionStartingPosition
         {
-            get { return  this._actionStartingPosition; }
+            get { return  _actionStartingPosition; }
             set
             {
-                this._actionStartingPosition = value;
-                this._actionPreviousSamplePosition = value;
-                this._actionCurrentPosition = value;
+                _actionStartingPosition = value;
+                _actionPreviousSamplePosition = value;
+                _actionCurrentPosition = value;
             }
         }
 
@@ -407,10 +407,10 @@ namespace Dt.Cells.UI
         /// Gets the tap status for this action
         /// </summary>
         /// <value>The action tap status.</value>
-        private TapStatus ActionTapStatus
+        TapStatus ActionTapStatus
         {
-            get { return  this._actionTapStatus; }
-            set { this._actionTapStatus = value; }
+            get { return  _actionTapStatus; }
+            set { _actionTapStatus = value; }
         }
 
         protected virtual bool HasBeenInitialized
@@ -424,7 +424,7 @@ namespace Dt.Cells.UI
         /// <value><c>true</c> if this instance is valid; otherwise, <c>false</c>.</value>
         public bool IsValid
         {
-            get { return  this.HasBeenInitialized; }
+            get { return  HasBeenInitialized; }
         }
 
         protected abstract double MoveThreshold { get; }
@@ -433,15 +433,15 @@ namespace Dt.Cells.UI
         {
             get
             {
-                if (this._gestureElement is SpreadView)
+                if (_gestureElement is SpreadView)
                 {
-                    return (this._gestureElement as SpreadView);
+                    return (_gestureElement as SpreadView);
                 }
                 return null;
             }
         }
 
-        private enum TapStatus
+        enum TapStatus
         {
             Pending,
             HoldPending,

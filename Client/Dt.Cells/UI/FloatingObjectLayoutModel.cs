@@ -16,7 +16,7 @@ namespace Dt.Cells.UI
 {
     internal class FloatingObjectLayoutModel : IEnumerable<FloatingObjectLayout>, IEnumerable
     {
-        private Dictionary<string, FloatingObjectLayout> _items;
+        Dictionary<string, FloatingObjectLayout> _items;
 
         public FloatingObjectLayoutModel()
         {
@@ -26,25 +26,25 @@ namespace Dt.Cells.UI
         {
             if ((model != null) && (model.Count > 0))
             {
-                this._items = new Dictionary<string, FloatingObjectLayout>();
+                _items = new Dictionary<string, FloatingObjectLayout>();
                 foreach (FloatingObjectLayout layout in model)
                 {
-                    this._items.Add(layout.Name, new FloatingObjectLayout(layout.Name, layout.X, layout.Y, layout.Width, layout.Height));
+                    _items.Add(layout.Name, new FloatingObjectLayout(layout.Name, layout.X, layout.Y, layout.Width, layout.Height));
                 }
             }
         }
 
         public void Add(FloatingObjectLayout chartLayout)
         {
-            this.Items.Add(chartLayout.Name, chartLayout);
+            Items.Add(chartLayout.Name, chartLayout);
         }
 
         public FloatingObjectLayout Find(string name)
         {
-            if (this._items != null)
+            if (_items != null)
             {
                 FloatingObjectLayout layout = null;
-                if (this._items.TryGetValue(name, out layout))
+                if (_items.TryGetValue(name, out layout))
                 {
                     return layout;
                 }
@@ -54,40 +54,40 @@ namespace Dt.Cells.UI
 
         public IEnumerator<FloatingObjectLayout> GetEnumerator()
         {
-            return (IEnumerator<FloatingObjectLayout>) this.Items.Values.GetEnumerator();
+            return (IEnumerator<FloatingObjectLayout>) Items.Values.GetEnumerator();
         }
 
         public void Remove(string name)
         {
-            this.Items.Remove(name);
+            Items.Remove(name);
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return (IEnumerator) this.GetEnumerator();
+            return (IEnumerator) GetEnumerator();
         }
 
         public int Count
         {
             get
             {
-                if (this._items == null)
+                if (_items == null)
                 {
                     return 0;
                 }
-                return this.Items.Count;
+                return Items.Count;
             }
         }
 
-        private Dictionary<string, FloatingObjectLayout> Items
+        Dictionary<string, FloatingObjectLayout> Items
         {
             get
             {
-                if (this._items == null)
+                if (_items == null)
                 {
-                    this._items = new Dictionary<string, FloatingObjectLayout>();
+                    _items = new Dictionary<string, FloatingObjectLayout>();
                 }
-                return this._items;
+                return _items;
             }
         }
     }

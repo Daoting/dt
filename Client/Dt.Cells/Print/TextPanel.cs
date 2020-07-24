@@ -21,11 +21,11 @@ namespace Dt.Cells.UI
     internal partial class TextPanel : Panel
     {
         #region 成员变量
-        private bool _isStrikeThrough;
-        private bool _isUnderLine;
-        private Line _strikeLine;
-        private TextBlock _tb;
-        private Line _underLine;
+        bool _isStrikeThrough;
+        bool _isUnderLine;
+        Line _strikeLine;
+        TextBlock _tb;
+        Line _underLine;
         #endregion
 
         public TextPanel()

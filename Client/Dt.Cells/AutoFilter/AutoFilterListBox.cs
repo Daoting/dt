@@ -67,7 +67,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:System.Windows.RoutedEventArgs" /> that contains the event data.</param>
         protected override void OnGotFocus(RoutedEventArgs e)
         {
-            this.ProcessGotFocus(e);
+            ProcessGotFocus(e);
             base.OnGotFocus(e);
         }
 
@@ -98,7 +98,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void ProcessGotFocus(RoutedEventArgs e)
+        void ProcessGotFocus(RoutedEventArgs e)
         {
             if (base.SelectedIndex < 0)
             {

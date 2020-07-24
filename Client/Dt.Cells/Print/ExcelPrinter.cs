@@ -41,27 +41,27 @@ namespace Dt.Cells.UI
     internal class ExcelPrinter
     {
         #region 成员变量
-        private const string _rangeRegexStart = "start";
-        private const string _rangeRegexEnd = "end";
-        private static Regex _rangeRegex;
+        const string _rangeRegexStart = "start";
+        const string _rangeRegexEnd = "end";
+        static Regex _rangeRegex;
 
-        private readonly Excel _excel;
-        private readonly PrintInfo _info;
-        private readonly int _sheetIndex;
-        private readonly PrintDocument _printDoc;
-        private PrintPaginator _paginator;
-        private double _footerMargin;
-        private double _headerMargin;
-        private Rect _printArea;
-        private List<int> _pageIndexs;
-        private Size _pageSize;
-        private string _jobName;
+        readonly Excel _excel;
+        readonly PrintInfo _info;
+        readonly int _sheetIndex;
+        readonly PrintDocument _printDoc;
+        PrintPaginator _paginator;
+        double _footerMargin;
+        double _headerMargin;
+        Rect _printArea;
+        List<int> _pageIndexs;
+        Size _pageSize;
+        string _jobName;
 
-        private MemoryStream _cachedStream;
-        private SpreadView _content;
-        private readonly List<Rect> _pages;
-        private bool _hasPictures;
-        private bool _showDeco;
+        MemoryStream _cachedStream;
+        SpreadView _content;
+        readonly List<Rect> _pages;
+        bool _hasPictures;
+        bool _showDeco;
         #endregion
 
         public ExcelPrinter(Excel p_excel, PrintInfo p_printInfo, int p_sheetIndex)
@@ -135,7 +135,7 @@ namespace Dt.Cells.UI
             _jobName = p_jobName;
 
             // 打印遮罩
-            _excel.PrintMask = await CreatePrintMask(_excel);
+            //_excel.PrintMask = await CreatePrintMask(_excel);
             // 去掉excel默认选择
             Worksheet sheet = _excel.Sheets[_sheetIndex];
             sheet.ClearSelections();
@@ -148,7 +148,7 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnPrintTaskRequested(PrintManager sender, PrintTaskRequestedEventArgs e)
+        void OnPrintTaskRequested(PrintManager sender, PrintTaskRequestedEventArgs e)
         {
             sender.PrintTaskRequested -= OnPrintTaskRequested;
             PrintTask printTask = null;
@@ -204,7 +204,7 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnPaginate(object sender, PaginateEventArgs e)
+        void OnPaginate(object sender, PaginateEventArgs e)
         {
             var desc = e.PrintTaskOptions.GetPageDescription(0);
 
@@ -287,7 +287,7 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnGetPreviewPage(object sender, GetPreviewPageEventArgs e)
+        void OnGetPreviewPage(object sender, GetPreviewPageEventArgs e)
         {
             try
             {
@@ -302,7 +302,7 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnAddPages(object sender, AddPagesEventArgs e)
+        void OnAddPages(object sender, AddPagesEventArgs e)
         {
             for (int i = 0; i < _pages.Count; i++)
             {
@@ -316,7 +316,7 @@ namespace Dt.Cells.UI
         /// 获取PrintInfo中设置的页面范围
         /// </summary>
         /// <returns></returns>
-        private List<int> GetPageRange()
+        List<int> GetPageRange()
         {
             string pageRange = _info.PageRange;
             if (string.IsNullOrEmpty(pageRange))
@@ -377,7 +377,7 @@ namespace Dt.Cells.UI
             return list;
         }
 
-        private static bool CheckPageRange(string p_pageRange)
+        static bool CheckPageRange(string p_pageRange)
         {
             if (!string.IsNullOrEmpty(p_pageRange))
             {
@@ -395,7 +395,7 @@ namespace Dt.Cells.UI
             return true;
         }
 
-        private static Regex RangeRegex
+        static Regex RangeRegex
         {
             get
             {
@@ -410,7 +410,7 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="p_tgt"></param>
         /// <returns></returns>
-        private async Task<Grid> CreatePrintMask(FrameworkElement p_tgt)
+        async Task<Grid> CreatePrintMask(FrameworkElement p_tgt)
         {
             Grid grid = new Grid();
             grid.Background = new SolidColorBrush(Colors.White);
@@ -438,7 +438,7 @@ namespace Dt.Cells.UI
         /// <summary>
         /// 平铺打印内容
         /// </summary>
-        private void StretchContent()
+        void StretchContent()
         {
             Grid grid = VisualTreeHelper.GetParent(_content) as Grid;
             Worksheet sheet = _excel.Sheets[_sheetIndex];
@@ -462,7 +462,7 @@ namespace Dt.Cells.UI
         /// 打印设置
         /// </summary>
         /// <param name="p_memento"></param>
-        private void Init(Memento p_memento)
+        void Init(Memento p_memento)
         {
             Grid grid = VisualTreeHelper.GetParent(_content) as Grid;
             p_memento.Height = grid.Height;
@@ -495,7 +495,7 @@ namespace Dt.Cells.UI
         /// 恢复打印前设置
         /// </summary>
         /// <param name="p_memento"></param>
-        private void Resume(Memento p_memento)
+        void Resume(Memento p_memento)
         {
             _content.RenderTransform = null;
             _content.Clip = null;
@@ -510,7 +510,6 @@ namespace Dt.Cells.UI
             _excel.ShowRowRangeGroup = p_memento.ShowRowRangeGroup;
             _excel.ShowColumnRangeGroup = p_memento.ShowColumnRangeGroup;
             _excel.ShowFreezeLine = p_memento.ShowFreezeLine;
-            _excel.ClearValue(Excel.PrintMaskProperty);
             _excel.View.HideSelectionWhenPrinting = false;
             _excel.View.HideDecorationWhenPrinting = false;
         }
@@ -522,7 +521,7 @@ namespace Dt.Cells.UI
         /// <param name="p_count"></param>
         /// <param name="p_area"></param>
         /// <returns></returns>
-        private double GetTotalHeight(Worksheet p_sheet, int p_count, SheetArea p_area)
+        double GetTotalHeight(Worksheet p_sheet, int p_count, SheetArea p_area)
         {
             double height = 0.0;
             for (int i = 0; i < p_count; i++)
@@ -539,7 +538,7 @@ namespace Dt.Cells.UI
         /// <param name="p_count"></param>
         /// <param name="p_area"></param>
         /// <returns></returns>
-        private double GetTotalWidth(Worksheet p_sheet, int p_count, SheetArea p_area)
+        double GetTotalWidth(Worksheet p_sheet, int p_count, SheetArea p_area)
         {
             double width = 0.0;
             for (int i = 0; i < p_count; i++)
@@ -552,7 +551,7 @@ namespace Dt.Cells.UI
         /// <summary>
         /// 生成所有页
         /// </summary>
-        private void CreatePages()
+        void CreatePages()
         {
             Worksheet sheet = _excel.Sheets[_sheetIndex];
             double rowHeaderWidth = 0.0;
@@ -580,7 +579,7 @@ namespace Dt.Cells.UI
         /// 放置页面
         /// </summary>
         /// <param name="p_index"></param>
-        private void ArrangePage(int p_index)
+        void ArrangePage(int p_index)
         {
             var page = _pages[p_index];
 

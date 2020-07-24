@@ -17,12 +17,12 @@ namespace Dt.Cells.UndoRedo
     /// </summary>
     public class DragDropExtent
     {
-        private int _columnCount;
-        private int _fromColumn;
-        private int _fromRow;
-        private int _rowCount;
-        private int _toColumn;
-        private int _toRow;
+        int _columnCount;
+        int _fromColumn;
+        int _fromRow;
+        int _rowCount;
+        int _toColumn;
+        int _toRow;
 
         /// <summary>
         /// Creates a new instance of the <see cref="T:Dt.Cells.UndoRedo.DragDropExtent" /> class.
@@ -35,12 +35,12 @@ namespace Dt.Cells.UndoRedo
         /// <param name="columnCount">The drag drop column count.</param>
         public DragDropExtent(int fromRow, int fromColumn, int toRow, int toColumn, int rowCount, int columnCount)
         {
-            this._fromRow = fromRow;
-            this._fromColumn = fromColumn;
-            this._toRow = toRow;
-            this._toColumn = toColumn;
-            this._rowCount = rowCount;
-            this._columnCount = columnCount;
+            _fromRow = fromRow;
+            _fromColumn = fromColumn;
+            _toRow = toRow;
+            _toColumn = toColumn;
+            _rowCount = rowCount;
+            _columnCount = columnCount;
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace Dt.Cells.UndoRedo
         /// </summary>
         public int ColumnCount
         {
-            get { return  this._columnCount; }
+            get { return  _columnCount; }
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace Dt.Cells.UndoRedo
         /// </summary>
         public int FromColumn
         {
-            get { return  this._fromColumn; }
+            get { return  _fromColumn; }
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace Dt.Cells.UndoRedo
         /// </summary>
         public int FromRow
         {
-            get { return  this._fromRow; }
+            get { return  _fromRow; }
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace Dt.Cells.UndoRedo
         /// </summary>
         public int RowCount
         {
-            get { return  this._rowCount; }
+            get { return  _rowCount; }
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace Dt.Cells.UndoRedo
         /// </summary>
         public int ToColumn
         {
-            get { return  this._toColumn; }
+            get { return  _toColumn; }
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace Dt.Cells.UndoRedo
         /// </summary>
         public int ToRow
         {
-            get { return  this._toRow; }
+            get { return  _toRow; }
         }
     }
 }

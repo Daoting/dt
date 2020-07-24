@@ -26,10 +26,10 @@ namespace Dt.Cells.UI
     /// </summary>
     public abstract partial class SpreadChartBaseView : Panel
     {
-        private Control _c1ChartControl;
+        Control _c1ChartControl;
         internal ChartTitleView _chartTitleView;
         internal Rectangle _formatRect;
-        private Grid _rootLayoutGrid;
+        Grid _rootLayoutGrid;
         internal SpreadChartBase _spreadChartContent;
         internal ResourceDictionary resourceDictionary;
 
@@ -40,30 +40,30 @@ namespace Dt.Cells.UI
         /// <param name="c1Chart"></param>
         public SpreadChartBaseView(SpreadChartBase spreadChartContent, Control c1Chart)
         {
-            this._spreadChartContent = spreadChartContent;
-            this._formatRect = new Rectangle();
-            this._formatRect.Fill = new SolidColorBrush(Colors.Transparent);
-            base.Children.Add(this._formatRect);
-            this._rootLayoutGrid = new Grid();
+            _spreadChartContent = spreadChartContent;
+            _formatRect = new Rectangle();
+            _formatRect.Fill = new SolidColorBrush(Colors.Transparent);
+            base.Children.Add(_formatRect);
+            _rootLayoutGrid = new Grid();
             RowDefinition definition = new RowDefinition();
             definition.Height = new Windows.UI.Xaml.GridLength(0.0, Windows.UI.Xaml.GridUnitType.Auto);
-            this._rootLayoutGrid.RowDefinitions.Add(definition);
-            this._rootLayoutGrid.RowDefinitions.Add(new RowDefinition());
-            base.Children.Add(this._rootLayoutGrid);
-            this._chartTitleView = new ChartTitleView(this._spreadChartContent.ChartTitle, this);
-            this._chartTitleView.Margin = new Windows.UI.Xaml.Thickness(0.0, 3.0, 0.0, 3.0);
-            this._chartTitleView.HorizontalAlignment = HorizontalAlignment.Center;
-            this._rootLayoutGrid.Children.Add(this._chartTitleView);
-            Grid.SetRow(this._chartTitleView, 0);
-            this._c1ChartControl = c1Chart;
-            this._rootLayoutGrid.Children.Add(c1Chart);
+            _rootLayoutGrid.RowDefinitions.Add(definition);
+            _rootLayoutGrid.RowDefinitions.Add(new RowDefinition());
+            base.Children.Add(_rootLayoutGrid);
+            _chartTitleView = new ChartTitleView(_spreadChartContent.ChartTitle, this);
+            _chartTitleView.Margin = new Windows.UI.Xaml.Thickness(0.0, 3.0, 0.0, 3.0);
+            _chartTitleView.HorizontalAlignment = HorizontalAlignment.Center;
+            _rootLayoutGrid.Children.Add(_chartTitleView);
+            Grid.SetRow(_chartTitleView, 0);
+            _c1ChartControl = c1Chart;
+            _rootLayoutGrid.Children.Add(c1Chart);
             Grid.SetRow(c1Chart, 1);
             base.IsHitTestVisible = false;
 
             // hdt 原来放在Loaded事件中，无法打印
             Uri uri = new Uri("ms-appx:///Dt.Cells/Themes/DataLableTemplate.xaml");
-            this.resourceDictionary = new ResourceDictionary();
-            Application.LoadComponent(this.resourceDictionary, uri);
+            resourceDictionary = new ResourceDictionary();
+            Application.LoadComponent(resourceDictionary, uri);
         }
 
         /// <summary>
@@ -73,8 +73,8 @@ namespace Dt.Cells.UI
         /// <returns></returns>
         protected override Windows.Foundation.Size ArrangeOverride(Windows.Foundation.Size finalSize)
         {
-            this._formatRect.Arrange(new Windows.Foundation.Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
-            this._rootLayoutGrid.Arrange(new Windows.Foundation.Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
+            _formatRect.Arrange(new Windows.Foundation.Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
+            _rootLayoutGrid.Arrange(new Windows.Foundation.Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
             return base.ArrangeOverride(finalSize);
         }
 
@@ -85,7 +85,7 @@ namespace Dt.Cells.UI
             {
                 object textFormattingMode = null;
                 Dt.Cells.Data.UIAdaptor.InvokeSync(delegate {
-                    double fontSize = title.ActualFontSize * this.ZoomFactor;
+                    double fontSize = title.ActualFontSize * ZoomFactor;
                     if (fontSize < 0.0)
                     {
                         fontSize = new TextBlock().FontSize;
@@ -95,12 +95,12 @@ namespace Dt.Cells.UI
                     {
                         fontFamily = Dt.Cells.Data.Utility.DefaultFontFamily;
                     }
-                    chartTitleSize = MeasureHelper.MeasureTextBlock(title.Text, fontFamily, fontSize, title.ActualFontStretch, title.ActualFontStyle, title.FontWeight, new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity), false, textFormattingMode, this.UseLayoutRounding, this.ZoomFactor);
+                    chartTitleSize = MeasureHelper.MeasureTextBlock(title.Text, fontFamily, fontSize, title.ActualFontStretch, title.ActualFontStyle, title.FontWeight, new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity), false, textFormattingMode, UseLayoutRounding, ZoomFactor);
                 });
             }
             if (!chartTitleSize.IsEmpty)
             {
-                chartTitleSize = MeasureHelper.ConvertTextSizeToExcelCellSize(chartTitleSize, this.ZoomFactor);
+                chartTitleSize = MeasureHelper.ConvertTextSizeToExcelCellSize(chartTitleSize, ZoomFactor);
             }
             else
             {
@@ -116,9 +116,9 @@ namespace Dt.Cells.UI
         /// <returns></returns>
         protected override Windows.Foundation.Size MeasureOverride(Windows.Foundation.Size availableSize)
         {
-            this._formatRect.Measure(availableSize);
-            this._rootLayoutGrid.Measure(availableSize);
-            this.UpdateLayoutsOnMeasure(availableSize);
+            _formatRect.Measure(availableSize);
+            _rootLayoutGrid.Measure(availableSize);
+            UpdateLayoutsOnMeasure(availableSize);
             return base.MeasureOverride(availableSize);
         }
 
@@ -168,12 +168,12 @@ namespace Dt.Cells.UI
         
         internal void UpdateC1ChartControl(Control newC1Chart)
         {
-            if (this._rootLayoutGrid.Children.Contains(this._c1ChartControl))
+            if (_rootLayoutGrid.Children.Contains(_c1ChartControl))
             {
-                this._rootLayoutGrid.Children.Remove(this._c1ChartControl);
-                this._c1ChartControl = newC1Chart;
-                this._rootLayoutGrid.Children.Add(this._c1ChartControl);
-                Grid.SetRow(this._c1ChartControl, 1);
+                _rootLayoutGrid.Children.Remove(_c1ChartControl);
+                _c1ChartControl = newC1Chart;
+                _rootLayoutGrid.Children.Add(_c1ChartControl);
+                Grid.SetRow(_c1ChartControl, 1);
             }
         }
 
@@ -186,7 +186,7 @@ namespace Dt.Cells.UI
 
         internal Control C1ChartControl
         {
-            get { return  this._c1ChartControl; }
+            get { return  _c1ChartControl; }
         }
 
         internal GcViewport ParentViewport { get; set; }
@@ -195,9 +195,9 @@ namespace Dt.Cells.UI
         {
             get
             {
-                if ((this.ParentViewport != null) && (this.ParentViewport.Sheet != null))
+                if ((ParentViewport != null) && (ParentViewport.Sheet != null))
                 {
-                    return (double) this.ParentViewport.Sheet.ZoomFactor;
+                    return (double) ParentViewport.Sheet.ZoomFactor;
                 }
                 return 1.0;
             }

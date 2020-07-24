@@ -15,88 +15,88 @@ namespace Dt.Cells.UI
 {
     internal class HoverManager
     {
-        private HitTestInformation _oldHi;
-        private SheetView _view;
+        HitTestInformation _oldHi;
+        SheetView _view;
 
         public HoverManager(SheetView view)
         {
-            this._view = view;
-            this._oldHi = null;
+            _view = view;
+            _oldHi = null;
         }
 
-        private void DoColumnHeaderHover(HitTestInformation hi)
+        void DoColumnHeaderHover(HitTestInformation hi)
         {
-            this.IsMouseOverColumnHeaders = true;
-            this._view.MouseOverColumnIndex = hi.HeaderInfo.Column;
+            IsMouseOverColumnHeaders = true;
+            _view.MouseOverColumnIndex = hi.HeaderInfo.Column;
             if (hi.HeaderInfo.InColumnResize)
             {
-                this._view.MouseOverColumnIndex = -1;
+                _view.MouseOverColumnIndex = -1;
             }
-            this._view.UpdateColumnHeaderCellsState(this._view.Worksheet.ColumnHeader.RowCount - 1, hi.HeaderInfo.Column, 1, 1);
+            _view.UpdateColumnHeaderCellsState(_view.Worksheet.ColumnHeader.RowCount - 1, hi.HeaderInfo.Column, 1, 1);
         }
 
-        private void DoCornerHeaderHover(HitTestInformation hi)
+        void DoCornerHeaderHover(HitTestInformation hi)
         {
-            this.IsMouseOverCornerHeaders = true;
-            this._view.UpdateCornerHeaderCellState();
+            IsMouseOverCornerHeaders = true;
+            _view.UpdateCornerHeaderCellState();
         }
 
         public void DoHover(HitTestInformation hi)
         {
-            if (!object.ReferenceEquals(this._oldHi, hi))
+            if (!object.ReferenceEquals(_oldHi, hi))
             {
-                this.IsMouseOverCornerHeaders = false;
-                this.IsMouseOverRowHeaders = false;
-                this.IsMouseOverColumnHeaders = false;
-                this.IsMouseOverViewports = false;
-                if (this._oldHi != null)
+                IsMouseOverCornerHeaders = false;
+                IsMouseOverRowHeaders = false;
+                IsMouseOverColumnHeaders = false;
+                IsMouseOverViewports = false;
+                if (_oldHi != null)
                 {
-                    switch (this._oldHi.HitTestType)
+                    switch (_oldHi.HitTestType)
                     {
                         case HitTestType.RowHeader:
-                            this._view.UpdateRowHeaderCellsState(this._oldHi.HeaderInfo.Row, this._view.Worksheet.RowHeader.ColumnCount - 1, 1, 1);
+                            _view.UpdateRowHeaderCellsState(_oldHi.HeaderInfo.Row, _view.Worksheet.RowHeader.ColumnCount - 1, 1, 1);
                             break;
 
                         case HitTestType.ColumnHeader:
-                            this._view.UpdateColumnHeaderCellsState(this._view.Worksheet.ColumnHeader.RowCount - 1, this._oldHi.HeaderInfo.Column, 1, 1);
+                            _view.UpdateColumnHeaderCellsState(_view.Worksheet.ColumnHeader.RowCount - 1, _oldHi.HeaderInfo.Column, 1, 1);
                             break;
 
                         case HitTestType.Corner:
-                            this._view.UpdateCornerHeaderCellState();
+                            _view.UpdateCornerHeaderCellState();
                             break;
                     }
                 }
                 switch (hi.HitTestType)
                 {
                     case HitTestType.Corner:
-                        this.DoCornerHeaderHover(hi);
+                        DoCornerHeaderHover(hi);
                         break;
 
                     case HitTestType.RowHeader:
-                        this.DoRowHeaderHover(hi);
+                        DoRowHeaderHover(hi);
                         break;
 
                     case HitTestType.ColumnHeader:
-                        this.DoColumnHeaderHover(hi);
+                        DoColumnHeaderHover(hi);
                         break;
 
                     case HitTestType.Viewport:
-                        this.IsMouseOverViewports = true;
+                        IsMouseOverViewports = true;
                         break;
                 }
-                this._oldHi = hi;
+                _oldHi = hi;
             }
         }
 
-        private void DoRowHeaderHover(HitTestInformation hi)
+        void DoRowHeaderHover(HitTestInformation hi)
         {
-            this.IsMouseOverRowHeaders = true;
-            this._view.MouseOverRowIndex = hi.HeaderInfo.Row;
+            IsMouseOverRowHeaders = true;
+            _view.MouseOverRowIndex = hi.HeaderInfo.Row;
             if (hi.HeaderInfo.InRowResize)
             {
-                this._view.MouseOverRowIndex = -1;
+                _view.MouseOverRowIndex = -1;
             }
-            this._view.UpdateRowHeaderCellsState(hi.HeaderInfo.Row, this._view.Worksheet.RowHeader.ColumnCount - 1, 1, 1);
+            _view.UpdateRowHeaderCellsState(hi.HeaderInfo.Row, _view.Worksheet.RowHeader.ColumnCount - 1, 1, 1);
         }
 
         internal bool IsMouseOverColumnHeaders { get; set; }

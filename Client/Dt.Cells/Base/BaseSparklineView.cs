@@ -24,34 +24,34 @@ namespace Dt.Cells.UI
     /// </summary>
     public abstract partial class BaseSparklineView : Panel, IThemeContextSupport
     {
-        private BaseSparklineViewInfo _viewInfo;
-        private Windows.Foundation.Rect? _cachedClip;
-        private List<UIElement> _dataPoints;
+        BaseSparklineViewInfo _viewInfo;
+        Windows.Foundation.Rect? _cachedClip;
+        List<UIElement> _dataPoints;
 
         internal BaseSparklineView(BaseSparklineViewInfo viewInfo)
         {
-            this._viewInfo = viewInfo;
+            _viewInfo = viewInfo;
         }
 
         internal void ArrangeAxis(Windows.Foundation.Size finalSize)
         {
-            if (this._viewInfo.AxisLine != null)
+            if (_viewInfo.AxisLine != null)
             {
-                this._viewInfo.AxisLine.Arrange(new Windows.Foundation.Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
+                _viewInfo.AxisLine.Arrange(new Windows.Foundation.Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
             }
         }
 
         internal void ArrangeDataPoints(Windows.Foundation.Size finalSize)
         {
-            if (this._dataPoints != null)
+            if (_dataPoints != null)
             {
-                double actualMinValue = this._viewInfo.GetActualMinValue();
-                double actualMaxValue = this._viewInfo.GetActualMaxValue();
-                for (int i = 0; i < this._viewInfo.CachedIndexMaping.Count; i++)
+                double actualMinValue = _viewInfo.GetActualMinValue();
+                double actualMaxValue = _viewInfo.GetActualMaxValue();
+                for (int i = 0; i < _viewInfo.CachedIndexMaping.Count; i++)
                 {
                     Windows.Foundation.Rect rect;
-                    int valueIndexInValueCache = this._viewInfo.CachedIndexMaping[i];
-                    double? cachedValue = this._viewInfo.GetCachedValue(valueIndexInValueCache);
+                    int valueIndexInValueCache = _viewInfo.CachedIndexMaping[i];
+                    double? cachedValue = _viewInfo.GetCachedValue(valueIndexInValueCache);
                     if (cachedValue.HasValue)
                     {
                         double? nullable2 = cachedValue;
@@ -65,16 +65,16 @@ namespace Dt.Cells.UI
                                 goto Label_0099;
                             }
                         }
-                        if (!this.DrawDataPointsBeyondMaxAndMin())
+                        if (!DrawDataPointsBeyondMaxAndMin())
                         {
                             continue;
                         }
                     }
                 Label_0099:
-                    rect = this._viewInfo.GetDataPointPosition(valueIndexInValueCache, finalSize);
+                    rect = _viewInfo.GetDataPointPosition(valueIndexInValueCache, finalSize);
                     if ((rect.Width > 0.0) && (rect.Height > 0.0))
                     {
-                        this._dataPoints[i].Arrange(rect);
+                        _dataPoints[i].Arrange(rect);
                     }
                 }
             }
@@ -87,22 +87,22 @@ namespace Dt.Cells.UI
         /// <returns>The actual size used.</returns>
         protected override Windows.Foundation.Size ArrangeOverride(Windows.Foundation.Size finalSize)
         {
-            this.SetClipToBounds(finalSize);
-            this.ArrangeAxis(finalSize);
-            this.ArrangeDataPoints(finalSize);
+            SetClipToBounds(finalSize);
+            ArrangeAxis(finalSize);
+            ArrangeDataPoints(finalSize);
             return finalSize;
         }
 
-        private double CalcItemWidth(Windows.Foundation.Size availableSize)
+        double CalcItemWidth(Windows.Foundation.Size availableSize)
         {
-            double num = DateTimeExtension.ToOADate(this._viewInfo.GetMinDatetime());
-            double num2 = DateTimeExtension.ToOADate(this._viewInfo.GetMaxDatetime());
+            double num = DateTimeExtension.ToOADate(_viewInfo.GetMinDatetime());
+            double num2 = DateTimeExtension.ToOADate(_viewInfo.GetMaxDatetime());
             List<double> list = new List<double>();
-            for (int i = 0; i < this.CachedIndexMaping.Count; i++)
+            for (int i = 0; i < CachedIndexMaping.Count; i++)
             {
-                int num4 = this.CachedIndexMaping[i];
-                DateTime? nullable = this.CachedDatetimes[num4];
-                if ((nullable.HasValue && this.CachedDatetimesVisible[num4]) && (nullable.Value != DateTime.MinValue))
+                int num4 = CachedIndexMaping[i];
+                DateTime? nullable = CachedDatetimes[num4];
+                if ((nullable.HasValue && CachedDatetimesVisible[num4]) && (nullable.Value != DateTime.MinValue))
                 {
                     double num5 = DateTimeExtension.ToOADate(nullable.Value);
                     list.Add(num5);
@@ -111,7 +111,7 @@ namespace Dt.Cells.UI
             list.Sort();
             if ((list.Count <= 1) || (num == num2))
             {
-                return (((availableSize.Width - this.LeftSpace) - this.RightSpace) / 2.0);
+                return (((availableSize.Width - LeftSpace) - RightSpace) / 2.0);
             }
             double maxValue = double.MaxValue;
             double num7 = 0.0;
@@ -124,7 +124,7 @@ namespace Dt.Cells.UI
                 }
                 num7 += num10;
             }
-            double num11 = ((((availableSize.Width - this.LeftSpace) - this.RightSpace) * maxValue) / num7) / 2.0;
+            double num11 = ((((availableSize.Width - LeftSpace) - RightSpace) * maxValue) / num7) / 2.0;
             if (num11 < 2.0)
             {
                 num11 = 2.0;
@@ -132,13 +132,13 @@ namespace Dt.Cells.UI
             return num11;
         }
 
-        private List<UIElement> CreateDataPoints(Windows.Foundation.Size availableSize)
+        List<UIElement> CreateDataPoints(Windows.Foundation.Size availableSize)
         {
             List<UIElement> list = new List<UIElement>();
-            foreach (int num in this._viewInfo.CachedIndexMaping)
+            foreach (int num in _viewInfo.CachedIndexMaping)
             {
-                UIElement dataPoint = this.GetDataPoint(num, availableSize);
-                Canvas.SetZIndex(dataPoint, this.DataPointZIndex);
+                UIElement dataPoint = GetDataPoint(num, availableSize);
+                Canvas.SetZIndex(dataPoint, DataPointZIndex);
                 list.Add(dataPoint);
             }
             return list;
@@ -153,69 +153,69 @@ namespace Dt.Cells.UI
         internal Windows.UI.Color GetDataPointColor(int indexInValueCache)
         {
             Windows.UI.Color? markerColor = null;
-            double? cachedValue = this._viewInfo.GetCachedValue(indexInValueCache);
+            double? cachedValue = _viewInfo.GetCachedValue(indexInValueCache);
             if (cachedValue.HasValue)
             {
-                if ((this._viewInfo.CahcedMinValue == double.MaxValue) || (this._viewInfo.CachedMaxValue == double.MinValue))
+                if ((_viewInfo.CahcedMinValue == double.MaxValue) || (_viewInfo.CachedMaxValue == double.MinValue))
                 {
-                    this._viewInfo.GetMaxMinValue();
+                    _viewInfo.GetMaxMinValue();
                 }
-                double cahcedMinValue = this._viewInfo.CahcedMinValue;
+                double cahcedMinValue = _viewInfo.CahcedMinValue;
                 double? nullable3 = cachedValue;
                 double num5 = cahcedMinValue;
-                if (((((double) nullable3.GetValueOrDefault()) == num5) && nullable3.HasValue) && this.SparklineInfo.Setting.ShowLow)
+                if (((((double) nullable3.GetValueOrDefault()) == num5) && nullable3.HasValue) && SparklineInfo.Setting.ShowLow)
                 {
-                    markerColor = new Windows.UI.Color?(this._viewInfo.SparklineInfo.Setting.LowMarkerColor);
+                    markerColor = new Windows.UI.Color?(_viewInfo.SparklineInfo.Setting.LowMarkerColor);
                 }
                 if (!markerColor.HasValue)
                 {
-                    double cachedMaxValue = this._viewInfo.CachedMaxValue;
+                    double cachedMaxValue = _viewInfo.CachedMaxValue;
                     double? nullable4 = cachedValue;
                     double num6 = cachedMaxValue;
-                    if (((((double) nullable4.GetValueOrDefault()) == num6) && nullable4.HasValue) && this.SparklineInfo.Setting.ShowHigh)
+                    if (((((double) nullable4.GetValueOrDefault()) == num6) && nullable4.HasValue) && SparklineInfo.Setting.ShowHigh)
                     {
-                        markerColor = new Windows.UI.Color?(this._viewInfo.SparklineInfo.Setting.HighMarkerColor);
+                        markerColor = new Windows.UI.Color?(_viewInfo.SparklineInfo.Setting.HighMarkerColor);
                     }
                 }
                 if (!markerColor.HasValue)
                 {
-                    if (this.SparklineInfo.DisplayDateAxis)
+                    if (SparklineInfo.DisplayDateAxis)
                     {
-                        if ((this.CachedIndexMaping.IndexOf(indexInValueCache) == 0) && this.SparklineInfo.Setting.ShowFirst)
+                        if ((CachedIndexMaping.IndexOf(indexInValueCache) == 0) && SparklineInfo.Setting.ShowFirst)
                         {
-                            markerColor = new Windows.UI.Color?(this.SparklineInfo.Setting.FirstMarkerColor);
+                            markerColor = new Windows.UI.Color?(SparklineInfo.Setting.FirstMarkerColor);
                         }
                     }
-                    else if ((indexInValueCache == 0) && this.SparklineInfo.Setting.ShowFirst)
+                    else if ((indexInValueCache == 0) && SparklineInfo.Setting.ShowFirst)
                     {
-                        markerColor = new Windows.UI.Color?(this.SparklineInfo.Setting.FirstMarkerColor);
+                        markerColor = new Windows.UI.Color?(SparklineInfo.Setting.FirstMarkerColor);
                     }
                 }
                 if (!markerColor.HasValue)
                 {
-                    if (this.SparklineInfo.DisplayDateAxis)
+                    if (SparklineInfo.DisplayDateAxis)
                     {
-                        if ((this.CachedIndexMaping.IndexOf(indexInValueCache) == (this.CachedIndexMaping.Count - 1)) && this.SparklineInfo.Setting.ShowLast)
+                        if ((CachedIndexMaping.IndexOf(indexInValueCache) == (CachedIndexMaping.Count - 1)) && SparklineInfo.Setting.ShowLast)
                         {
-                            markerColor = new Windows.UI.Color?(this.SparklineInfo.Setting.LastMarkerColor);
+                            markerColor = new Windows.UI.Color?(SparklineInfo.Setting.LastMarkerColor);
                         }
                     }
-                    else if ((indexInValueCache == (this.CachedValues.Count - 1)) && this.SparklineInfo.Setting.ShowLast)
+                    else if ((indexInValueCache == (CachedValues.Count - 1)) && SparklineInfo.Setting.ShowLast)
                     {
-                        markerColor = new Windows.UI.Color?(this.SparklineInfo.Setting.LastMarkerColor);
+                        markerColor = new Windows.UI.Color?(SparklineInfo.Setting.LastMarkerColor);
                     }
                 }
                 if (!markerColor.HasValue)
                 {
                     double? nullable5 = cachedValue;
-                    if (((((double) nullable5.GetValueOrDefault()) < 0.0) && nullable5.HasValue) && this.SparklineInfo.Setting.ShowNegative)
+                    if (((((double) nullable5.GetValueOrDefault()) < 0.0) && nullable5.HasValue) && SparklineInfo.Setting.ShowNegative)
                     {
-                        markerColor = new Windows.UI.Color?(this.SparklineInfo.Setting.NegativeColor);
+                        markerColor = new Windows.UI.Color?(SparklineInfo.Setting.NegativeColor);
                     }
                 }
                 if (!markerColor.HasValue)
                 {
-                    markerColor = this.SparklineViewInfo.GetMarkerColor();
+                    markerColor = SparklineViewInfo.GetMarkerColor();
                 }
             }
             if (!markerColor.HasValue)
@@ -231,7 +231,7 @@ namespace Dt.Cells.UI
         /// <returns>The theme context.</returns>
         IThemeSupport IThemeContextSupport.GetContext()
         {
-            return ((IThemeContextSupport) this._viewInfo).GetContext();
+            return ((IThemeContextSupport) _viewInfo).GetContext();
         }
 
         /// <summary>
@@ -240,7 +240,7 @@ namespace Dt.Cells.UI
         /// <param name="context">The theme context.</param>
         void IThemeContextSupport.SetContext(IThemeSupport context)
         {
-            ((IThemeContextSupport) this._viewInfo).SetContext(context);
+            ((IThemeContextSupport) _viewInfo).SetContext(context);
         }
 
 #if IOS
@@ -248,22 +248,22 @@ namespace Dt.Cells.UI
 #endif
         internal void Init()
         {
-            this._dataPoints = null;
-            this._cachedClip = null;
-            this._viewInfo.Reset();
+            _dataPoints = null;
+            _cachedClip = null;
+            _viewInfo.Reset();
         }
 
         internal void MeasureAxis(Windows.Foundation.Size availableSize)
         {
-            this._viewInfo.MeasureAxis(availableSize);
-            if (this._viewInfo.AxisLine != null)
+            _viewInfo.MeasureAxis(availableSize);
+            if (_viewInfo.AxisLine != null)
             {
-                if (!base.Children.Contains(this._viewInfo.AxisLine))
+                if (!base.Children.Contains(_viewInfo.AxisLine))
                 {
-                    base.Children.Add(this._viewInfo.AxisLine);
-                    Canvas.SetZIndex(this._viewInfo.AxisLine, this.AxisZIndex);
+                    base.Children.Add(_viewInfo.AxisLine);
+                    Canvas.SetZIndex(_viewInfo.AxisLine, AxisZIndex);
                 }
-                this._viewInfo.AxisLine.Measure(availableSize);
+                _viewInfo.AxisLine.Measure(availableSize);
             }
         }
 
@@ -271,10 +271,10 @@ namespace Dt.Cells.UI
         {
             if (!double.IsInfinity(availableSize.Width) && !double.IsInfinity(availableSize.Height))
             {
-                if (this._dataPoints == null)
+                if (_dataPoints == null)
                 {
-                    this._dataPoints = this.CreateDataPoints(availableSize);
-                    foreach (UIElement element in this._dataPoints)
+                    _dataPoints = CreateDataPoints(availableSize);
+                    foreach (UIElement element in _dataPoints)
                     {
                         if (element != null)
                         {
@@ -282,9 +282,9 @@ namespace Dt.Cells.UI
                         }
                     }
                 }
-                if (this._dataPoints != null)
+                if (_dataPoints != null)
                 {
-                    foreach (UIElement element2 in this._dataPoints)
+                    foreach (UIElement element2 in _dataPoints)
                     {
                         if (element2 != null)
                         {
@@ -309,8 +309,8 @@ namespace Dt.Cells.UI
         {
             if (!double.IsInfinity(availableSize.Width) && !double.IsInfinity(availableSize.Height))
             {
-                this.MeasureDataPoints(availableSize);
-                this.MeasureAxis(availableSize);
+                MeasureDataPoints(availableSize);
+                MeasureAxis(availableSize);
                 return availableSize;
             }
             return base.MeasureOverride(availableSize);
@@ -318,16 +318,16 @@ namespace Dt.Cells.UI
 
         internal void SetClipToBounds(Windows.Foundation.Size finalSize)
         {
-            Windows.Foundation.Rect? clipBounds = this._viewInfo.GetClipBounds(finalSize);
-            Windows.Foundation.Rect? cachedClip = this._cachedClip;
+            Windows.Foundation.Rect? clipBounds = _viewInfo.GetClipBounds(finalSize);
+            Windows.Foundation.Rect? cachedClip = _cachedClip;
             Windows.Foundation.Rect? nullable3 = clipBounds;
             if ((cachedClip.HasValue != nullable3.HasValue) || (cachedClip.HasValue && (cachedClip.GetValueOrDefault() != nullable3.GetValueOrDefault())))
             {
-                this._cachedClip = clipBounds;
-                if (this._cachedClip.HasValue)
+                _cachedClip = clipBounds;
+                if (_cachedClip.HasValue)
                 {
                     RectangleGeometry geometry = new RectangleGeometry();
-                    geometry.Rect = this._cachedClip.Value;
+                    geometry.Rect = _cachedClip.Value;
                     base.Clip = geometry;
                 }
                 else
@@ -344,13 +344,13 @@ namespace Dt.Cells.UI
         /// <param name="zoomfactor">The zoom factor to update.</param>
         public virtual void Update(Windows.Foundation.Size size, double zoomfactor)
         {
-            if (this._viewInfo.AxisLine != null)
+            if (_viewInfo.AxisLine != null)
             {
-                base.Children.Remove(this._viewInfo.AxisLine);
+                base.Children.Remove(_viewInfo.AxisLine);
             }
-            if (this._dataPoints != null)
+            if (_dataPoints != null)
             {
-                foreach (UIElement element in this._dataPoints)
+                foreach (UIElement element in _dataPoints)
                 {
                     if (element != null)
                     {
@@ -358,9 +358,9 @@ namespace Dt.Cells.UI
                     }
                 }
             }
-            this.Init();
-            this.ZoomFactor = zoomfactor;
-            if (this.SparklineInfo.Setting.RightToLeft)
+            Init();
+            ZoomFactor = zoomfactor;
+            if (SparklineInfo.Setting.RightToLeft)
             {
                 base.RenderTransformOrigin = new Windows.Foundation.Point(0.5, 0.0);
                 ScaleTransform transform = new ScaleTransform();
@@ -382,27 +382,27 @@ namespace Dt.Cells.UI
 
         internal double BottomSpace
         {
-            get { return  this._viewInfo.BottomSpace; }
+            get { return  _viewInfo.BottomSpace; }
         }
 
         internal List<DateTime?> CachedDatetimes
         {
-            get { return  this._viewInfo.CachedDatetimes; }
+            get { return  _viewInfo.CachedDatetimes; }
         }
 
         internal List<bool> CachedDatetimesVisible
         {
-            get { return  this._viewInfo.CachedDatetimesVisible; }
+            get { return  _viewInfo.CachedDatetimesVisible; }
         }
 
         internal List<int> CachedIndexMaping
         {
-            get { return  this._viewInfo.CachedIndexMaping; }
+            get { return  _viewInfo.CachedIndexMaping; }
         }
 
         internal List<double?> CachedValues
         {
-            get { return  this._viewInfo.CachedValues; }
+            get { return  _viewInfo.CachedValues; }
         }
 
         internal virtual int DataPointZIndex
@@ -412,12 +412,12 @@ namespace Dt.Cells.UI
 
         internal double LeftSpace
         {
-            get { return  this._viewInfo.LeftSpace; }
+            get { return  _viewInfo.LeftSpace; }
         }
 
         internal double RightSpace
         {
-            get { return  this._viewInfo.RightSpace; }
+            get { return  _viewInfo.RightSpace; }
         }
 
         /// <summary>
@@ -425,8 +425,8 @@ namespace Dt.Cells.UI
         /// </summary>
         public Sparkline SparklineInfo
         {
-            get { return  this._viewInfo.SparklineInfo; }
-            set { this._viewInfo.SparklineInfo = value; }
+            get { return  _viewInfo.SparklineInfo; }
+            set { _viewInfo.SparklineInfo = value; }
         }
 
         /// <summary>
@@ -437,7 +437,7 @@ namespace Dt.Cells.UI
         /// </value>
         public Dt.Cells.Data.SparklineType SparklineType
         {
-            get { return  this._viewInfo.SparklineType; }
+            get { return  _viewInfo.SparklineType; }
         }
 
         /// <summary>
@@ -445,22 +445,22 @@ namespace Dt.Cells.UI
         /// </summary>
         public BaseSparklineViewInfo SparklineViewInfo
         {
-            get { return  this._viewInfo; }
+            get { return  _viewInfo; }
         }
 
         internal double TopSpace
         {
-            get { return  this._viewInfo.TopSpace; }
+            get { return  _viewInfo.TopSpace; }
         }
 
         internal double ZoomFactor
         {
-            get { return  this._viewInfo.ZoomFactor; }
+            get { return  _viewInfo.ZoomFactor; }
             set
             {
-                if (this._viewInfo.ZoomFactor != value)
+                if (_viewInfo.ZoomFactor != value)
                 {
-                    this._viewInfo.ZoomFactor = value;
+                    _viewInfo.ZoomFactor = value;
                     base.InvalidateMeasure();
                     base.InvalidateArrange();
                 }

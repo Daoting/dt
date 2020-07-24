@@ -20,9 +20,9 @@ namespace Dt.Cells.UI
     /// </summary>
     public class ValidationErrorEventArgs : EventArgs
     {
-        private int column;
-        private int row;
-        private DataValidator validator;
+        int column;
+        int row;
+        DataValidator validator;
 
         internal ValidationErrorEventArgs(int row, int column, DataValidator validator)
         {
@@ -37,7 +37,7 @@ namespace Dt.Cells.UI
         /// <value>The column index.</value>
         public int Column
         {
-            get { return  this.column; }
+            get { return  column; }
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace Dt.Cells.UI
         /// <value>The row index.</value>
         public int Row
         {
-            get { return  this.row; }
+            get { return  row; }
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace Dt.Cells.UI
         /// </summary>
         public DataValidator Validator
         {
-            get { return  this.validator; }
+            get { return  validator; }
         }
     }
 }

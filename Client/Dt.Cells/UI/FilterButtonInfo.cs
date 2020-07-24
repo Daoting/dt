@@ -18,33 +18,33 @@ namespace Dt.Cells.UI
     {
         public FilterButtonInfo(HideRowFilter rowFilter)
         {
-            this.RowViewportIndex = -2;
-            this.ColumnViewportIndex = -2;
-            this.RowFilter = rowFilter;
+            RowViewportIndex = -2;
+            ColumnViewportIndex = -2;
+            RowFilter = rowFilter;
         }
 
         public FilterButtonInfo(HideRowFilter rowFilter, int row, int column, Dt.Cells.Data.SheetArea sheetArea)
         {
-            this.RowFilter = rowFilter;
-            this.Row = row;
-            this.Column = column;
-            this.SheetArea = sheetArea;
-            this.RowViewportIndex = -2;
-            this.ColumnViewportIndex = -2;
+            RowFilter = rowFilter;
+            Row = row;
+            Column = column;
+            SheetArea = sheetArea;
+            RowViewportIndex = -2;
+            ColumnViewportIndex = -2;
         }
 
         public SortState GetSortState()
         {
-            if ((this.RowFilter != null) && (this.RowFilter.GetSorttedColumnIndex() == this.Column))
+            if ((RowFilter != null) && (RowFilter.GetSorttedColumnIndex() == Column))
             {
-                return this.RowFilter.GetColumnSortState();
+                return RowFilter.GetColumnSortState();
             }
             return SortState.None;
         }
 
         public bool IsFiltered()
         {
-            return ((this.RowFilter != null) && this.RowFilter.IsColumnFiltered(this.Column));
+            return ((RowFilter != null) && RowFilter.IsColumnFiltered(Column));
         }
 
         public int Column { get; set; }

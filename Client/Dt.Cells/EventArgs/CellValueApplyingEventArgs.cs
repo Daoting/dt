@@ -26,7 +26,7 @@ namespace Dt.Cells.UI
         /// <param name="value">The value.</param>
         public CellValueApplyingEventArgs(int row, int column, object value) : base(row, column)
         {
-            this.CellValue = value;
+            CellValue = value;
         }
 
         /// <summary>

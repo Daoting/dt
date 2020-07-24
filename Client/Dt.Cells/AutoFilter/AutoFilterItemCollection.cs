@@ -17,7 +17,7 @@ namespace Dt.Cells.UI
 {
     internal class AutoFilterItemCollection : Collection<AutoFilterItem>
     {
-        private bool _suspendItemPropertyChanged;
+        bool _suspendItemPropertyChanged;
 
         internal event EventHandler AllItemChecked;
 
@@ -26,32 +26,32 @@ namespace Dt.Cells.UI
         protected override void InsertItem(int index, AutoFilterItem item)
         {
             base.InsertItem(index, item);
-            item.PropertyChanged += new PropertyChangedEventHandler(this.OnItemPropertyChanged);
+            item.PropertyChanged += new PropertyChangedEventHandler(OnItemPropertyChanged);
         }
 
-        private void OnAllItemChecked()
+        void OnAllItemChecked()
         {
-            if (this.AllItemChecked != null)
+            if (AllItemChecked != null)
             {
-                this.AllItemChecked(this, EventArgs.Empty);
+                AllItemChecked(this, EventArgs.Empty);
             }
         }
 
-        private void OnAllItemUnchecked()
+        void OnAllItemUnchecked()
         {
-            if (this.AllItemUnchecked != null)
+            if (AllItemUnchecked != null)
             {
-                this.AllItemUnchecked(this, EventArgs.Empty);
+                AllItemUnchecked(this, EventArgs.Empty);
             }
         }
 
-        private void OnItemPropertyChanged(object sender, PropertyChangedEventArgs e)
+        void OnItemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (!this._suspendItemPropertyChanged)
+            if (!_suspendItemPropertyChanged)
             {
                 try
                 {
-                    this._suspendItemPropertyChanged = true;
+                    _suspendItemPropertyChanged = true;
                     if (e.PropertyName == "IsChecked")
                     {
                         if (base.IndexOf(sender as AutoFilterItem) == 0)
@@ -62,11 +62,11 @@ namespace Dt.Cells.UI
                             }
                             if (base.Items[0].IsChecked.HasValue && !base.Items[0].IsChecked.Value)
                             {
-                                this.OnAllItemUnchecked();
+                                OnAllItemUnchecked();
                             }
                             else
                             {
-                                this.OnAllItemChecked();
+                                OnAllItemChecked();
                             }
                         }
                         else
@@ -92,7 +92,7 @@ namespace Dt.Cells.UI
                             {
                                 base.Items[0].IsChecked = true;
                                 base.Items[0].IsChecked = null;
-                                this.OnAllItemChecked();
+                                OnAllItemChecked();
                             }
                             else
                             {
@@ -100,13 +100,13 @@ namespace Dt.Cells.UI
                                 {
                                     base.Items[0].IsChecked = false;
                                     base.Items[0].IsChecked = true;
-                                    this.OnAllItemChecked();
+                                    OnAllItemChecked();
                                 }
                                 if (flag2)
                                 {
                                     base.Items[0].IsChecked = true;
                                     base.Items[0].IsChecked = false;
-                                    this.OnAllItemUnchecked();
+                                    OnAllItemUnchecked();
                                 }
                             }
                         }
@@ -114,32 +114,32 @@ namespace Dt.Cells.UI
                 }
                 finally
                 {
-                    this._suspendItemPropertyChanged = false;
+                    _suspendItemPropertyChanged = false;
                 }
             }
         }
 
         protected override void RemoveItem(int index)
         {
-            base.Items[index].PropertyChanged -= new PropertyChangedEventHandler(this.OnItemPropertyChanged);
+            base.Items[index].PropertyChanged -= new PropertyChangedEventHandler(OnItemPropertyChanged);
             base.RemoveItem(index);
         }
 
         internal void ResumeItemPropertyChanged()
         {
-            this._suspendItemPropertyChanged = false;
+            _suspendItemPropertyChanged = false;
         }
 
         protected override void SetItem(int index, AutoFilterItem item)
         {
-            base.Items[index].PropertyChanged -= new PropertyChangedEventHandler(this.OnItemPropertyChanged);
+            base.Items[index].PropertyChanged -= new PropertyChangedEventHandler(OnItemPropertyChanged);
             base.SetItem(index, item);
-            base.Items[index].PropertyChanged += new PropertyChangedEventHandler(this.OnItemPropertyChanged);
+            base.Items[index].PropertyChanged += new PropertyChangedEventHandler(OnItemPropertyChanged);
         }
 
         internal void SuspendItemPropertyChanged()
         {
-            this._suspendItemPropertyChanged = true;
+            _suspendItemPropertyChanged = true;
         }
 
         internal bool IsAllUnChecked

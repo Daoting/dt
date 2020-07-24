@@ -51,9 +51,9 @@ namespace Dt.Cells.UndoRedo
         /// </summary>
         protected void RaiseCanExecuteChanged()
         {
-            if (this.CanExecuteChanged != null)
+            if (CanExecuteChanged != null)
             {
-                this.CanExecuteChanged(this, new EventArgs());
+                CanExecuteChanged(this, new EventArgs());
             }
         }
 

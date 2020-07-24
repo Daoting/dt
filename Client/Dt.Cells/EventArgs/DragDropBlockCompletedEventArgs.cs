@@ -21,15 +21,15 @@ namespace Dt.Cells.UI
     {
         internal DragDropBlockCompletedEventArgs(int fromRow, int fromColumn, int toRow, int toColumn, int rowCount, int columnCount, bool copy, bool insert, CopyToOption copyOption)
         {
-            this.FromRow = fromRow;
-            this.FromColumn = fromColumn;
-            this.ToRow = toRow;
-            this.ToColumn = toColumn;
-            this.RowCount = rowCount;
-            this.ColumnCount = columnCount;
-            this.Copy = copy;
-            this.Insert = insert;
-            this.CopyOption = copyOption;
+            FromRow = fromRow;
+            FromColumn = fromColumn;
+            ToRow = toRow;
+            ToColumn = toColumn;
+            RowCount = rowCount;
+            ColumnCount = columnCount;
+            Copy = copy;
+            Insert = insert;
+            CopyOption = copyOption;
         }
 
         /// <summary>

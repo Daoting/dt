@@ -21,11 +21,11 @@ namespace Dt.Cells.UI
 
         public SpreadCharBaseContainer(SpreadChartBase spreadChart, Control c1Chart, GcViewport parentViewport) : base(spreadChart, parentViewport)
         {
-            this._chartBaseView = this.CreateView(spreadChart, c1Chart);
-            this._chartBaseView.ParentViewport = base.ParentViewport;
-            this._chartBaseView.HorizontalAlignment = HorizontalAlignment.Stretch;
-            this._chartBaseView.VerticalAlignment = VerticalAlignment.Stretch;
-            base.Content = this._chartBaseView;
+            _chartBaseView = CreateView(spreadChart, c1Chart);
+            _chartBaseView.ParentViewport = base.ParentViewport;
+            _chartBaseView.HorizontalAlignment = HorizontalAlignment.Stretch;
+            _chartBaseView.VerticalAlignment = VerticalAlignment.Stretch;
+            base.Content = _chartBaseView;
         }
 
         internal virtual SpreadChartBaseView CreateView(SpreadChartBase spreadChart, Control c1Chart)
@@ -33,7 +33,7 @@ namespace Dt.Cells.UI
             return null;
         }
 
-        private bool NeedRefreshDataSeriesOnAxisChanged(Axis changedAxis, string changed)
+        bool NeedRefreshDataSeriesOnAxisChanged(Axis changedAxis, string changed)
         {
             if ((changed != "Items") || (changedAxis.AutoMin && changedAxis.AutoMax))
             {
@@ -47,62 +47,62 @@ namespace Dt.Cells.UI
             base.Refresh(parameter);
             if ((parameter == null) || !(parameter is ChartChangedBaseEventArgs))
             {
-                this._chartBaseView.RefreshChartContent();
+                _chartBaseView.RefreshChartContent();
             }
             else
             {
                 ChartChangedBaseEventArgs args = parameter as ChartChangedBaseEventArgs;
                 ChartArea chartArea = args.ChartArea;
-                if (this._chartBaseView != null)
+                if (_chartBaseView != null)
                 {
                     switch (chartArea)
                     {
                         case ChartArea.All:
-                            this._chartBaseView.RefreshChartContent();
+                            _chartBaseView.RefreshChartContent();
                             return;
 
                         case ChartArea.Chart:
                             if (!args.Property.ToString().ToLower().Contains("axis") && (args.Property != "DataOrientation"))
                             {
-                                this._chartBaseView.RefreshChartArea();
-                                this._chartBaseView.RefreshChartTitle();
+                                _chartBaseView.RefreshChartArea();
+                                _chartBaseView.RefreshChartTitle();
                                 return;
                             }
-                            this._chartBaseView.RefreshChartContent();
+                            _chartBaseView.RefreshChartContent();
                             return;
 
                         case ChartArea.PlotArea:
-                            this._chartBaseView.RefreshPlotArea();
+                            _chartBaseView.RefreshPlotArea();
                             return;
 
                         case ChartArea.DataSeries:
                         case ChartArea.DataPoint:
                         case ChartArea.DataLabel:
                         case ChartArea.DataMarker:
-                            this._chartBaseView.RefreshDataSeries();
+                            _chartBaseView.RefreshDataSeries();
                             return;
 
                         case ChartArea.AxisX:
-                            this._chartBaseView.RefreshAxisX();
-                            if (!(args.Chart is SpreadChart) || !this.NeedRefreshDataSeriesOnAxisChanged((args.Chart as SpreadChart).AxisX, args.Property))
+                            _chartBaseView.RefreshAxisX();
+                            if (!(args.Chart is SpreadChart) || !NeedRefreshDataSeriesOnAxisChanged((args.Chart as SpreadChart).AxisX, args.Property))
                             {
                                 break;
                             }
-                            this._chartBaseView.RefreshDataSeries();
+                            _chartBaseView.RefreshDataSeries();
                             return;
 
                         case ChartArea.AxisY:
                             if ((args.Property != "LogBase") && (args.Property != "UseLogBase"))
                             {
-                                this._chartBaseView.RefreshAxisY();
-                                if (!(args.Chart is SpreadChart) || !this.NeedRefreshDataSeriesOnAxisChanged((args.Chart as SpreadChart).AxisX, args.Property))
+                                _chartBaseView.RefreshAxisY();
+                                if (!(args.Chart is SpreadChart) || !NeedRefreshDataSeriesOnAxisChanged((args.Chart as SpreadChart).AxisX, args.Property))
                                 {
                                     break;
                                 }
-                                this._chartBaseView.RefreshDataSeries();
+                                _chartBaseView.RefreshDataSeries();
                                 return;
                             }
-                            this._chartBaseView.RefreshChartContent();
+                            _chartBaseView.RefreshChartContent();
                             return;
 
                         case ChartArea.AxisZ:
@@ -112,19 +112,19 @@ namespace Dt.Cells.UI
                             break;
 
                         case ChartArea.Lengend:
-                            this._chartBaseView.RefreshChartLegend();
+                            _chartBaseView.RefreshChartLegend();
                             return;
 
                         case ChartArea.ChartTitle:
-                            this._chartBaseView.RefreshChartTitle();
+                            _chartBaseView.RefreshChartTitle();
                             return;
 
                         case ChartArea.AxisTitle:
-                            this._chartBaseView.RefreshAxisesTitle();
+                            _chartBaseView.RefreshAxisesTitle();
                             return;
 
                         default:
-                            this._chartBaseView.RefreshChartContent();
+                            _chartBaseView.RefreshChartContent();
                             break;
                     }
                 }

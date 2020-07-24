@@ -17,8 +17,8 @@ namespace Dt.Cells.UndoRedo
     /// </summary>
     public class ColumnUngroupExtent
     {
-        private int _count;
-        private int _index;
+        int _count;
+        int _index;
 
         /// <summary>
         /// Creates a new instance of the <see cref="T:Dt.Cells.UndoRedo.ColumnUngroupExtent" /> class.
@@ -27,8 +27,8 @@ namespace Dt.Cells.UndoRedo
         /// <param name="count">The number of columns to remove.</param>
         public ColumnUngroupExtent(int index, int count)
         {
-            this._index = index;
-            this._count = count;
+            _index = index;
+            _count = count;
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace Dt.Cells.UndoRedo
         /// </summary>
         public int Count
         {
-            get { return  this._count; }
+            get { return  _count; }
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Dt.Cells.UndoRedo
         /// </summary>
         public int Index
         {
-            get { return  this._index; }
+            get { return  _index; }
         }
     }
 }

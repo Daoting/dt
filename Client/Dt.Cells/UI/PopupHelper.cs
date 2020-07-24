@@ -23,32 +23,32 @@ namespace Dt.Cells.UI
 {
     internal class PopupHelper
     {
-        private FrameworkElement _placeElement;
-        private PopupDirection _popDirection;
-        private Windows.UI.Xaml.Controls.Primitives.Popup _popup;
-        private Grid _popupChildGrid;
-        private Border _popupContentHost;
-        private Canvas _popupOutsideCanvas;
-        private Windows.Foundation.Point _relativePoint;
-        private const double BackgroundSize = 10000.0;
+        FrameworkElement _placeElement;
+        PopupDirection _popDirection;
+        Windows.UI.Xaml.Controls.Primitives.Popup _popup;
+        Grid _popupChildGrid;
+        Border _popupContentHost;
+        Canvas _popupOutsideCanvas;
+        Windows.Foundation.Point _relativePoint;
+        const double BackgroundSize = 10000.0;
 
         public PopupHelper(Windows.UI.Xaml.Controls.Primitives.Popup popup)
         {
-            this._popup = popup;
-            this._popupChildGrid = new Grid();
-            this._popup.Child = this._popupChildGrid;
-            this._popupOutsideCanvas = new Canvas();
-            this._popupChildGrid.Children.Add(this._popupOutsideCanvas);
-            this._popupContentHost = new Border();
-            this._popupContentHost.Style = null;
-            this._popupChildGrid.Children.Add(this._popupContentHost);
-            Canvas canvas = this._popupOutsideCanvas;
+            _popup = popup;
+            _popupChildGrid = new Grid();
+            _popup.Child = _popupChildGrid;
+            _popupOutsideCanvas = new Canvas();
+            _popupChildGrid.Children.Add(_popupOutsideCanvas);
+            _popupContentHost = new Border();
+            _popupContentHost.Style = null;
+            _popupChildGrid.Children.Add(_popupContentHost);
+            Canvas canvas = _popupOutsideCanvas;
             canvas.PointerPressed += OnOutsideCanvasMouseLeftButtonDown;
-            Border border = this._popupContentHost;
+            Border border = _popupContentHost;
             border.SizeChanged += OnPopupContentHostSizeChanged;
         }
 
-        private Windows.Foundation.Point CalcPlacementPosition(Windows.Foundation.Point basePoint, Windows.Foundation.Size popSize, PopupDirection popDirection)
+        Windows.Foundation.Point CalcPlacementPosition(Windows.Foundation.Point basePoint, Windows.Foundation.Size popSize, PopupDirection popDirection)
         {
             Windows.Foundation.Point point = new Windows.Foundation.Point();
             switch (popDirection)
@@ -78,22 +78,22 @@ namespace Dt.Cells.UI
 
         public void Close()
         {
-            this._popupContentHost.Child = null;
-            this._popup.IsOpen = false;
+            _popupContentHost.Child = null;
+            _popup.IsOpen = false;
         }
 
-        private void OnOutsideCanvasMouseLeftButtonDown(object sender, PointerRoutedEventArgs e)
+        void OnOutsideCanvasMouseLeftButtonDown(object sender, PointerRoutedEventArgs e)
         {
-            if (object.ReferenceEquals(e.OriginalSource, this._popupOutsideCanvas))
+            if (object.ReferenceEquals(e.OriginalSource, _popupOutsideCanvas))
             {
-                this.Close();
+                Close();
             }
         }
 
-        private void OnPopupContentHostSizeChanged(object sender, SizeChangedEventArgs e)
+        void OnPopupContentHostSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            Windows.Foundation.Point basePoint = this._relativePoint;
-            basePoint = this.CalcPlacementPosition(basePoint, new Windows.Foundation.Size(this._popupContentHost.ActualWidth, this._popupContentHost.ActualHeight), this._popDirection);
+            Windows.Foundation.Point basePoint = _relativePoint;
+            basePoint = CalcPlacementPosition(basePoint, new Windows.Foundation.Size(_popupContentHost.ActualWidth, _popupContentHost.ActualHeight), _popDirection);
             basePoint.X += 5.0;
             if (basePoint.X < 0.0)
             {
@@ -103,7 +103,7 @@ namespace Dt.Cells.UI
             {
                 basePoint.Y = 0.0;
             }
-            double num = (basePoint.X + this._popupContentHost.ActualWidth) - Window.Current.Bounds.Width;
+            double num = (basePoint.X + _popupContentHost.ActualWidth) - Window.Current.Bounds.Width;
             if (num > 0.0)
             {
                 basePoint.X -= num;
@@ -112,7 +112,7 @@ namespace Dt.Cells.UI
                     basePoint.X = 0.0;
                 }
             }
-            double num2 = (basePoint.Y + this._popupContentHost.ActualHeight) - Window.Current.Bounds.Height;
+            double num2 = (basePoint.Y + _popupContentHost.ActualHeight) - Window.Current.Bounds.Height;
             if (num2 > 0.0)
             {
                 basePoint.Y -= num2;
@@ -121,34 +121,34 @@ namespace Dt.Cells.UI
                     basePoint.Y = 0.0;
                 }
             }
-            this._popup.HorizontalOffset = Math.Floor(basePoint.X);
-            this._popup.VerticalOffset = Math.Floor(basePoint.Y);
+            _popup.HorizontalOffset = Math.Floor(basePoint.X);
+            _popup.VerticalOffset = Math.Floor(basePoint.Y);
         }
 
         public void ShowAsModal(FrameworkElement placeElement, Control contentElement, Windows.Foundation.Point relativePoint)
         {
-            this.ShowAsModal(placeElement, contentElement, relativePoint, PopupDirection.BottomLeft);
+            ShowAsModal(placeElement, contentElement, relativePoint, PopupDirection.BottomLeft);
         }
 
         public void ShowAsModal(FrameworkElement placeElement, Control contentElement, Windows.Foundation.Point relativePoint, PopupDirection popDirection)
         {
-            this.ShowAsModal(placeElement, contentElement, relativePoint, popDirection, true, true);
+            ShowAsModal(placeElement, contentElement, relativePoint, popDirection, true, true);
         }
 
         public void ShowAsModal(FrameworkElement placeElement, Control contentElement, Windows.Foundation.Point relativePoint, PopupDirection popDirection, bool capture, bool contentFocus)
         {
-            this._popupContentHost.Child = contentElement;
-            this._placeElement = placeElement;
-            this._relativePoint = relativePoint;
-            this._popDirection = popDirection;
+            _popupContentHost.Child = contentElement;
+            _placeElement = placeElement;
+            _relativePoint = relativePoint;
+            _popDirection = popDirection;
             Dt.Cells.Data.UIAdaptor.InvokeSync(delegate
             {
-                this._popupContentHost.Background = new SolidColorBrush(Colors.Transparent);
-                this._popupOutsideCanvas.Background = new SolidColorBrush(Colors.Transparent);
+                _popupContentHost.Background = new SolidColorBrush(Colors.Transparent);
+                _popupOutsideCanvas.Background = new SolidColorBrush(Colors.Transparent);
             });
-            this._popupOutsideCanvas.Margin = new Windows.UI.Xaml.Thickness(-10000.0);
+            _popupOutsideCanvas.Margin = new Windows.UI.Xaml.Thickness(-10000.0);
             placeElement.ReleasePointerCaptures();
-            this._popup.IsOpen = true;
+            _popup.IsOpen = true;
             if (contentFocus)
             {
                 contentElement.Focus(FocusState.Programmatic);
@@ -157,14 +157,14 @@ namespace Dt.Cells.UI
 
         internal Windows.Foundation.Point Location
         {
-            get { return new Windows.Foundation.Point(this._popup.HorizontalOffset, this._popup.VerticalOffset); }
+            get { return new Windows.Foundation.Point(_popup.HorizontalOffset, _popup.VerticalOffset); }
         }
 
         internal Windows.Foundation.Size Size
         {
             get
             {
-                Control child = this._popupContentHost.Child as Control;
+                Control child = _popupContentHost.Child as Control;
                 return new Windows.Foundation.Size(child.ActualWidth, child.ActualHeight);
             }
         }

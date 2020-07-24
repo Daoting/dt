@@ -20,9 +20,9 @@ namespace Dt.Cells.UI
     {
         internal TouchToolbarOpeningEventArgs(int x, int y, TouchToolbarShowingArea area)
         {
-            this.X = x;
-            this.Y = y;
-            this.Area = area;
+            X = x;
+            Y = y;
+            Area = area;
         }
 
         /// <summary>

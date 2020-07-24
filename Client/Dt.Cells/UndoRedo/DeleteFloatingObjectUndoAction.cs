@@ -21,11 +21,11 @@ namespace Dt.Cells.UndoRedo
     /// </summary>
     public class DeleteFloatingObjectUndoAction : ActionBase, IUndo
     {
-        private FloatingObjectExtent _deleteExtent;
-        private SpreadChart[] _savedCharts;
-        private FloatingObject[] _savedObjects;
-        private Picture[] _savedPictures;
-        private Worksheet _worksheet;
+        FloatingObjectExtent _deleteExtent;
+        SpreadChart[] _savedCharts;
+        FloatingObject[] _savedObjects;
+        Picture[] _savedPictures;
+        Worksheet _worksheet;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.UndoRedo.MoveFloatingObjectUndoAction" /> class.
@@ -34,8 +34,8 @@ namespace Dt.Cells.UndoRedo
         /// <param name="extent">The extent.</param>
         public DeleteFloatingObjectUndoAction(Worksheet worksheet, FloatingObjectExtent extent)
         {
-            this._worksheet = worksheet;
-            this._deleteExtent = extent;
+            _worksheet = worksheet;
+            _deleteExtent = extent;
         }
 
         /// <summary>
@@ -56,36 +56,36 @@ namespace Dt.Cells.UndoRedo
         /// <param name="parameter">Data used by the action. If the action does not require data to be passed, this object can be set to null.</param>
         public override void Execute(object parameter)
         {
-            if (this.CanExecute(parameter))
+            if (CanExecute(parameter))
             {
                 SheetView view = parameter as SheetView;
                 try
                 {
                     view.SuspendFloatingObjectsInvalidate();
-                    this.SaveState();
-                    for (int i = 0; i < this._deleteExtent.Names.Length; i++)
+                    SaveState();
+                    for (int i = 0; i < _deleteExtent.Names.Length; i++)
                     {
-                        string name = this._deleteExtent.Names[i];
-                        SpreadChart chart = this._worksheet.FindChart(name);
+                        string name = _deleteExtent.Names[i];
+                        SpreadChart chart = _worksheet.FindChart(name);
                         if (chart != null)
                         {
-                            this._worksheet.RemoveChart(name);
+                            _worksheet.RemoveChart(name);
                             chart.IsSelected = false;
                         }
                         else
                         {
-                            Picture picture = this._worksheet.FindPicture(name);
+                            Picture picture = _worksheet.FindPicture(name);
                             if (picture != null)
                             {
-                                this._worksheet.RemovePicture(name);
+                                _worksheet.RemovePicture(name);
                                 picture.IsSelected = false;
                             }
                             else
                             {
-                                FloatingObject obj2 = this._worksheet.FindFloatingObject(name);
+                                FloatingObject obj2 = _worksheet.FindFloatingObject(name);
                                 if (obj2 != null)
                                 {
-                                    this._worksheet.RemoveFloatingObject(name);
+                                    _worksheet.RemoveFloatingObject(name);
                                     obj2.IsSelected = false;
                                 }
                             }
@@ -95,7 +95,7 @@ namespace Dt.Cells.UndoRedo
                 finally
                 {
                     view.ResumeFloatingObjectsInvalidate();
-                    ReadOnlyCollection<CellRange> selections = this._worksheet.Selections;
+                    ReadOnlyCollection<CellRange> selections = _worksheet.Selections;
                     if (selections.Count != 0)
                     {
                         foreach (CellRange range in selections)
@@ -116,23 +116,23 @@ namespace Dt.Cells.UndoRedo
             List<SpreadChart> list = new List<SpreadChart>();
             List<FloatingObject> list2 = new List<FloatingObject>();
             List<Picture> list3 = new List<Picture>();
-            foreach (string str in this._deleteExtent.Names)
+            foreach (string str in _deleteExtent.Names)
             {
-                SpreadChart chart = this._worksheet.FindChart(str);
+                SpreadChart chart = _worksheet.FindChart(str);
                 if (chart != null)
                 {
                     list.Add(chart);
                 }
                 else
                 {
-                    Picture picture = this._worksheet.FindPicture(str);
+                    Picture picture = _worksheet.FindPicture(str);
                     if (picture != null)
                     {
                         list3.Add(picture);
                     }
                     else
                     {
-                        FloatingObject obj2 = this._worksheet.FindFloatingObject(str);
+                        FloatingObject obj2 = _worksheet.FindFloatingObject(str);
                         if (obj2 != null)
                         {
                             list2.Add(obj2);
@@ -140,9 +140,9 @@ namespace Dt.Cells.UndoRedo
                     }
                 }
             }
-            this._savedCharts = list.ToArray();
-            this._savedPictures = list3.ToArray();
-            this._savedObjects = list2.ToArray();
+            _savedCharts = list.ToArray();
+            _savedPictures = list3.ToArray();
+            _savedObjects = list2.ToArray();
         }
 
         /// <summary>
@@ -169,35 +169,35 @@ namespace Dt.Cells.UndoRedo
             try
             {
                 view.SuspendFloatingObjectsInvalidate();
-                if ((this._savedCharts != null) && (this._savedCharts.Length > 0))
+                if ((_savedCharts != null) && (_savedCharts.Length > 0))
                 {
-                    foreach (SpreadChart chart in this._savedCharts)
+                    foreach (SpreadChart chart in _savedCharts)
                     {
                         chart.IsSelected = true;
                     }
-                    this._worksheet.Charts.AddRange(this._savedCharts);
+                    _worksheet.Charts.AddRange(_savedCharts);
                 }
-                if ((this._savedPictures != null) && (this._savedPictures.Length > 0))
+                if ((_savedPictures != null) && (_savedPictures.Length > 0))
                 {
-                    foreach (Picture picture in this._savedPictures)
+                    foreach (Picture picture in _savedPictures)
                     {
                         picture.IsSelected = true;
                     }
-                    this._worksheet.Pictures.AddRange(this._savedPictures);
+                    _worksheet.Pictures.AddRange(_savedPictures);
                 }
-                if ((this._savedObjects != null) && (this._savedObjects.Length > 0))
+                if ((_savedObjects != null) && (_savedObjects.Length > 0))
                 {
-                    foreach (FloatingObject obj2 in this._savedObjects)
+                    foreach (FloatingObject obj2 in _savedObjects)
                     {
                         obj2.IsSelected = true;
                     }
-                    this._worksheet.FloatingObjects.AddRange(this._savedObjects);
+                    _worksheet.FloatingObjects.AddRange(_savedObjects);
                 }
             }
             finally
             {
                 view.ResumeFloatingObjectsInvalidate();
-                ReadOnlyCollection<CellRange> selections = this._worksheet.Selections;
+                ReadOnlyCollection<CellRange> selections = _worksheet.Selections;
                 if (selections.Count != 0)
                 {
                     foreach (CellRange range in selections)

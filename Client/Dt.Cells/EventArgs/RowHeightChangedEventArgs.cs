@@ -20,8 +20,8 @@ namespace Dt.Cells.UI
     {
         internal RowHeightChangedEventArgs(int[] rowList, bool header)
         {
-            this.RowList = rowList;
-            this.Header = header;
+            RowList = rowList;
+            Header = header;
         }
 
         /// <summary>

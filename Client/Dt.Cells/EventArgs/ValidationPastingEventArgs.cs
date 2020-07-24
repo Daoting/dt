@@ -21,12 +21,12 @@ namespace Dt.Cells.UI
     {
         internal ValidationPastingEventArgs(Worksheet fromsheet, CellRange fromRange, Worksheet toSheet, CellRange toRange, CellRange pastingRange, bool isCutting)
         {
-            this.FromSheet = fromsheet;
-            this.FromRange = fromRange;
-            this.ToWorksheet = toSheet;
-            this.ToRange = toRange;
-            this.PastingRange = pastingRange;
-            this.IsCutting = isCutting;
+            FromSheet = fromsheet;
+            FromRange = fromRange;
+            ToWorksheet = toSheet;
+            ToRange = toRange;
+            PastingRange = pastingRange;
+            IsCutting = isCutting;
         }
 
         /// <summary>

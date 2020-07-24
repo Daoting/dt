@@ -24,9 +24,9 @@ namespace Dt.Cells.UI
 
         internal InvalidOperationEventArgs(string message, string operation, object context)
         {
-            this.Message = message;
-            this.Operation = operation;
-            this.Context = context;
+            Message = message;
+            Operation = operation;
+            Context = context;
         }
 
         /// <summary>

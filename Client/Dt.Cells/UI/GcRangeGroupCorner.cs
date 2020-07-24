@@ -21,7 +21,7 @@ namespace Dt.Cells.UI
 
         protected override Windows.Foundation.Size MeasureOverride(Windows.Foundation.Size availableSize)
         {
-            this.MeasureBorderLines(availableSize);
+            MeasureBorderLines(availableSize);
             return base.MeasureOverride(availableSize);
         }
     }

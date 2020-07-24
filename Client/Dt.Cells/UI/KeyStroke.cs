@@ -31,10 +31,10 @@ namespace Dt.Cells.UI
         public KeyStroke(char keyChar)
         {
             this = new KeyStroke();
-            this.KeyChar = keyChar;
-            this.KeyCode = VirtualKey.None;
-            this.Modifiers = VirtualKeyModifiers.None;
-            this.OnKeyRelease = false;
+            KeyChar = keyChar;
+            KeyCode = VirtualKey.None;
+            Modifiers = VirtualKeyModifiers.None;
+            OnKeyRelease = false;
         }
 
         /// <summary>
@@ -51,10 +51,10 @@ namespace Dt.Cells.UI
         public KeyStroke(VirtualKey keyCode, VirtualKeyModifiers modifiers)
         {
             this = new KeyStroke();
-            this.KeyChar = '\0';
-            this.KeyCode = keyCode;
-            this.Modifiers = modifiers;
-            this.OnKeyRelease = false;
+            KeyChar = '\0';
+            KeyCode = keyCode;
+            Modifiers = modifiers;
+            OnKeyRelease = false;
         }
 
         /// <summary>
@@ -75,10 +75,10 @@ namespace Dt.Cells.UI
         public KeyStroke(VirtualKey keyCode, VirtualKeyModifiers modifiers, bool onKeyRelease)
         {
             this = new KeyStroke();
-            this.KeyChar = '\0';
-            this.KeyCode = keyCode;
-            this.Modifiers = modifiers;
-            this.OnKeyRelease = onKeyRelease;
+            KeyChar = '\0';
+            KeyCode = keyCode;
+            Modifiers = modifiers;
+            OnKeyRelease = onKeyRelease;
         }
 
         /// <summary>

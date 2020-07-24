@@ -20,18 +20,18 @@ namespace Dt.Cells.UI
 {
     internal static class MeasureHelper
     {
-        private static bool _cachedAllowWrap = false;
-        private static FontFamily _cachedFontFamily = null;
-        private static double _cachedFontSize = 0.0;
-        private static FontStretch _cachedFontStretch = FontStretch.Undefined;
-        private static FontStyle _cachedFontStyle = FontStyle.Normal;
-        private static FontWeight _cachedFontWeight = new FontWeight();
-        private static bool _cachedUseLayoutRounding = false;
+        static bool _cachedAllowWrap = false;
+        static FontFamily _cachedFontFamily = null;
+        static double _cachedFontSize = 0.0;
+        static FontStretch _cachedFontStretch = FontStretch.Undefined;
+        static FontStyle _cachedFontStyle = FontStyle.Normal;
+        static FontWeight _cachedFontWeight = new FontWeight();
+        static bool _cachedUseLayoutRounding = false;
         [ThreadStatic]
-        private static TextBlock _measure = null;
-        private static Windows.UI.Xaml.Thickness ExcelCellBlankThickness = new Windows.UI.Xaml.Thickness(3.0, 3.3, 3.0, 3.0);
-        private static Windows.UI.Xaml.Thickness TextBlockBlankThickness = new Windows.UI.Xaml.Thickness(1.0, 3.0, 1.0, 3.0);
-        private static Windows.UI.Xaml.Thickness TextBoxBlankThickness = new Windows.UI.Xaml.Thickness(4.0, 6.0, 5.0, 7.0);
+        static TextBlock _measure = null;
+        static Windows.UI.Xaml.Thickness ExcelCellBlankThickness = new Windows.UI.Xaml.Thickness(3.0, 3.3, 3.0, 3.0);
+        static Windows.UI.Xaml.Thickness TextBlockBlankThickness = new Windows.UI.Xaml.Thickness(1.0, 3.0, 1.0, 3.0);
+        static Windows.UI.Xaml.Thickness TextBoxBlankThickness = new Windows.UI.Xaml.Thickness(4.0, 6.0, 5.0, 7.0);
 
         public static Windows.Foundation.Size ConvertExcelCellSizeToTextSize(Windows.Foundation.Size excelCellSize, double zoomFactor)
         {
@@ -103,7 +103,7 @@ namespace Dt.Cells.UI
             return new Windows.UI.Xaml.Thickness(left, top, right, ExcelCellBlankThickness.Bottom);
         }
 
-        private static TextBlock GetTextBlock()
+        static TextBlock GetTextBlock()
         {
             if (_measure == null)
             {

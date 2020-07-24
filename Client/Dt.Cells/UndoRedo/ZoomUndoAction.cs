@@ -19,9 +19,9 @@ namespace Dt.Cells.UndoRedo
     /// </summary>
     public class ZoomUndoAction : ActionBase, IUndo
     {
-        private float prevZoomFactor;
-        private Worksheet worksheet;
-        private float zoomFactor;
+        float prevZoomFactor;
+        Worksheet worksheet;
+        float zoomFactor;
 
         /// <summary>
         /// Creates a new instance of the <see cref="T:Dt.Cells.UndoRedo.ZoomUndoAction" /> class.
@@ -30,7 +30,7 @@ namespace Dt.Cells.UndoRedo
         /// <param name="newZoomFactor">The new zoom factor on the worksheet.</param>
         public ZoomUndoAction(Worksheet sheet, float newZoomFactor)
         {
-            this.worksheet = sheet;
+            worksheet = sheet;
             if (newZoomFactor < 0.1f)
             {
                 newZoomFactor = 0.1f;
@@ -39,8 +39,8 @@ namespace Dt.Cells.UndoRedo
             {
                 newZoomFactor = 4f;
             }
-            this.zoomFactor = newZoomFactor;
-            this.prevZoomFactor = -1f;
+            zoomFactor = newZoomFactor;
+            prevZoomFactor = -1f;
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Dt.Cells.UndoRedo
         public override bool CanExecute(object parameter)
         {
             SheetView view = parameter as SheetView;
-            return (((view != null) && view.CanUserZoom) && (view.ZoomFactor != this.zoomFactor));
+            return (((view != null) && view.CanUserZoom) && (view.ZoomFactor != zoomFactor));
         }
 
         /// <summary>
@@ -62,9 +62,9 @@ namespace Dt.Cells.UndoRedo
         /// <param name="parameter">Object on which the undo action occurred.</param>
         public override void Execute(object parameter)
         {
-            this.SaveState();
+            SaveState();
             SheetView sheetView = parameter as SheetView;
-            if (((sheetView == null) || !sheetView.CanUserZoom) || (sheetView.ZoomFactor == this.zoomFactor))
+            if (((sheetView == null) || !sheetView.CanUserZoom) || (sheetView.ZoomFactor == zoomFactor))
             {
                 throw new ActionFailedException(this);
             }
@@ -75,16 +75,16 @@ namespace Dt.Cells.UndoRedo
             base.SuspendInvalidate(parameter);
             try
             {
-                this.worksheet.ZoomFactor = this.zoomFactor;
+                worksheet.ZoomFactor = zoomFactor;
             }
             finally
             {
                 base.ResumeInvalidate(parameter);
             }
-            this.RefreshUI(sheetView);
+            RefreshUI(sheetView);
         }
 
-        private void RefreshUI(object sheetView)
+        void RefreshUI(object sheetView)
         {
             SpreadView view = sheetView as SpreadView;
             if (view != null)
@@ -102,9 +102,9 @@ namespace Dt.Cells.UndoRedo
         /// </summary>
         public void SaveState()
         {
-            if (this.worksheet != null)
+            if (worksheet != null)
             {
-                this.prevZoomFactor = this.worksheet.ZoomFactor;
+                prevZoomFactor = worksheet.ZoomFactor;
             }
         }
 
@@ -128,14 +128,14 @@ namespace Dt.Cells.UndoRedo
         /// </returns>
         public bool Undo(object parameter)
         {
-            if (this.worksheet == null)
+            if (worksheet == null)
             {
                 return false;
             }
             base.SuspendInvalidate(parameter);
             try
             {
-                this.worksheet.ZoomFactor = this.prevZoomFactor;
+                worksheet.ZoomFactor = prevZoomFactor;
             }
             finally
             {
@@ -144,7 +144,7 @@ namespace Dt.Cells.UndoRedo
             SheetView sheetView = parameter as SheetView;
             if (sheetView != null)
             {
-                this.RefreshUI(sheetView);
+                RefreshUI(sheetView);
             }
             return true;
         }
@@ -154,7 +154,7 @@ namespace Dt.Cells.UndoRedo
         /// </summary>
         public bool CanUndo
         {
-            get { return  ((this.worksheet != null) && (this.prevZoomFactor > 0f)); }
+            get { return  ((worksheet != null) && (prevZoomFactor > 0f)); }
         }
     }
 }

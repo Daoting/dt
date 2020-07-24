@@ -22,12 +22,12 @@ namespace Dt.Cells.UndoRedo
     /// </summary>
     public class ClipboardPasteFloatingObjectUndoAction : ActionBase, IUndo
     {
-        private SpreadChart[] _savedCharts;
-        private FloatingObject[] _savedObjects;
-        private Picture[] _savedPictures;
-        private FloatingObject[] _sourceFloatingObjects;
-        private Worksheet _worksheet;
-        private const double OFFSET = 15.0;
+        SpreadChart[] _savedCharts;
+        FloatingObject[] _savedObjects;
+        Picture[] _savedPictures;
+        FloatingObject[] _sourceFloatingObjects;
+        Worksheet _worksheet;
+        const double OFFSET = 15.0;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.UndoRedo.MoveFloatingObjectUndoAction" /> class.
@@ -36,8 +36,8 @@ namespace Dt.Cells.UndoRedo
         /// <param name="sourceFloatingObjects">The floating objects.</param>
         public ClipboardPasteFloatingObjectUndoAction(Worksheet worksheet, FloatingObject[] sourceFloatingObjects)
         {
-            this._worksheet = worksheet;
-            this._sourceFloatingObjects = sourceFloatingObjects;
+            _worksheet = worksheet;
+            _sourceFloatingObjects = sourceFloatingObjects;
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace Dt.Cells.UndoRedo
         /// </returns>
         public override bool CanExecute(object parameter)
         {
-            return !this._worksheet.Protect;
+            return !_worksheet.Protect;
         }
 
         /// <summary>
@@ -58,35 +58,35 @@ namespace Dt.Cells.UndoRedo
         /// <param name="parameter">Data used by the action. If the action does not require data to be passed, this object can be set to null.</param>
         public override void Execute(object parameter)
         {
-            if (this.CanExecute(parameter))
+            if (CanExecute(parameter))
             {
                 SheetView view = parameter as SheetView;
                 try
                 {
                     view.SuspendFloatingObjectsInvalidate();
-                    if ((this._sourceFloatingObjects != null) && (this._sourceFloatingObjects.Length > 0))
+                    if ((_sourceFloatingObjects != null) && (_sourceFloatingObjects.Length > 0))
                     {
-                        Windows.Foundation.Point[] pointArray = new Windows.Foundation.Point[this._sourceFloatingObjects.Length];
+                        Windows.Foundation.Point[] pointArray = new Windows.Foundation.Point[_sourceFloatingObjects.Length];
                         if (view.HasSelectedFloatingObject())
                         {
-                            for (int j = 0; j < this._sourceFloatingObjects.Length; j++)
+                            for (int j = 0; j < _sourceFloatingObjects.Length; j++)
                             {
-                                pointArray[j] = new Windows.Foundation.Point(this._sourceFloatingObjects[j].Location.X + 15.0, this._sourceFloatingObjects[j].Location.Y + 15.0);
+                                pointArray[j] = new Windows.Foundation.Point(_sourceFloatingObjects[j].Location.X + 15.0, _sourceFloatingObjects[j].Location.Y + 15.0);
                             }
                         }
                         else
                         {
                             double maxValue = double.MaxValue;
                             double num3 = double.MaxValue;
-                            foreach (FloatingObject obj2 in this._sourceFloatingObjects)
+                            foreach (FloatingObject obj2 in _sourceFloatingObjects)
                             {
                                 maxValue = Math.Min(obj2.Location.X, maxValue);
                                 num3 = Math.Min(obj2.Location.Y, num3);
                             }
-                            Windows.Foundation.Point[] pointArray2 = new Windows.Foundation.Point[this._sourceFloatingObjects.Length];
-                            for (int k = 0; k < this._sourceFloatingObjects.Length; k++)
+                            Windows.Foundation.Point[] pointArray2 = new Windows.Foundation.Point[_sourceFloatingObjects.Length];
+                            for (int k = 0; k < _sourceFloatingObjects.Length; k++)
                             {
-                                pointArray2[k] = new Windows.Foundation.Point(this._sourceFloatingObjects[k].Location.X - maxValue, this._sourceFloatingObjects[k].Location.Y - num3);
+                                pointArray2[k] = new Windows.Foundation.Point(_sourceFloatingObjects[k].Location.X - maxValue, _sourceFloatingObjects[k].Location.Y - num3);
                             }
                             double num5 = 0.0;
                             double num6 = 0.0;
@@ -98,7 +98,7 @@ namespace Dt.Cells.UndoRedo
                             {
                                 num5 += view.Worksheet.GetActualColumnWidth(n, SheetArea.Cells);
                             }
-                            for (int num9 = 0; num9 < this._sourceFloatingObjects.Length; num9++)
+                            for (int num9 = 0; num9 < _sourceFloatingObjects.Length; num9++)
                             {
                                 pointArray[num9] = new Windows.Foundation.Point(num5 + pointArray2[num9].X, num6 + pointArray2[num9].Y);
                             }
@@ -107,50 +107,50 @@ namespace Dt.Cells.UndoRedo
                         List<FloatingObject> list2 = new List<FloatingObject>();
                         List<Picture> list3 = new List<Picture>();
                         List<FloatingObject> list4 = new List<FloatingObject>();
-                        for (int i = 0; i < this._sourceFloatingObjects.Length; i++)
+                        for (int i = 0; i < _sourceFloatingObjects.Length; i++)
                         {
-                            FloatingObject item = this._sourceFloatingObjects[i];
+                            FloatingObject item = _sourceFloatingObjects[i];
                             item.Location = pointArray[i];
                             item.IsSelected = true;
                             if (item is SpreadChart)
                             {
-                                item.Name = Dt.Cells.UndoRedo.GenerateNameHelper.GenerateChartName(this._worksheet);
-                                this._worksheet.Charts.Add(item as SpreadChart);
+                                item.Name = Dt.Cells.UndoRedo.GenerateNameHelper.GenerateChartName(_worksheet);
+                                _worksheet.Charts.Add(item as SpreadChart);
                                 list.Add(item as SpreadChart);
                             }
                             else if (item is Picture)
                             {
-                                item.Name = Dt.Cells.UndoRedo.GenerateNameHelper.GeneratePictureName(this._worksheet);
-                                this._worksheet.Pictures.Add(item as Picture);
+                                item.Name = Dt.Cells.UndoRedo.GenerateNameHelper.GeneratePictureName(_worksheet);
+                                _worksheet.Pictures.Add(item as Picture);
                                 list3.Add(item as Picture);
                             }
                             else
                             {
-                                item.Name = Dt.Cells.UndoRedo.GenerateNameHelper.GenerateFloatingObjectName(this._worksheet);
-                                this._worksheet.FloatingObjects.Add(item);
+                                item.Name = Dt.Cells.UndoRedo.GenerateNameHelper.GenerateFloatingObjectName(_worksheet);
+                                _worksheet.FloatingObjects.Add(item);
                                 list2.Add(item);
                             }
-                            view.RaiseFloatingObjectPasted(this._worksheet, item);
+                            view.RaiseFloatingObjectPasted(_worksheet, item);
                             list4.Add(item);
                         }
                         if (list.Count > 0)
                         {
-                            this._savedCharts = list.ToArray();
+                            _savedCharts = list.ToArray();
                         }
                         if (list3.Count > 0)
                         {
-                            this._savedPictures = list3.ToArray();
+                            _savedPictures = list3.ToArray();
                         }
                         if (list2.Count > 0)
                         {
-                            this._savedObjects = list2.ToArray();
+                            _savedObjects = list2.ToArray();
                         }
                     }
                 }
                 finally
                 {
                     view.ResumeFloatingObjectsInvalidate();
-                    ReadOnlyCollection<CellRange> selections = this._worksheet.Selections;
+                    ReadOnlyCollection<CellRange> selections = _worksheet.Selections;
                     if (selections.Count != 0)
                     {
                         foreach (CellRange range in selections)
@@ -171,7 +171,7 @@ namespace Dt.Cells.UndoRedo
             List<SpreadChart> list = new List<SpreadChart>();
             List<FloatingObject> list2 = new List<FloatingObject>();
             List<Picture> list3 = new List<Picture>();
-            foreach (FloatingObject obj2 in this._sourceFloatingObjects)
+            foreach (FloatingObject obj2 in _sourceFloatingObjects)
             {
                 if (obj2 is SpreadChart)
                 {
@@ -186,9 +186,9 @@ namespace Dt.Cells.UndoRedo
                     list2.Add(obj2);
                 }
             }
-            this._savedCharts = list.ToArray();
-            this._savedObjects = list2.ToArray();
-            this._savedPictures = list3.ToArray();
+            _savedCharts = list.ToArray();
+            _savedObjects = list2.ToArray();
+            _savedPictures = list3.ToArray();
         }
 
         /// <summary>
@@ -215,28 +215,28 @@ namespace Dt.Cells.UndoRedo
             try
             {
                 view.SuspendFloatingObjectsInvalidate();
-                if ((this._savedCharts != null) && (this._savedCharts.Length > 0))
+                if ((_savedCharts != null) && (_savedCharts.Length > 0))
                 {
-                    foreach (SpreadChart chart in this._savedCharts)
+                    foreach (SpreadChart chart in _savedCharts)
                     {
-                        this._worksheet.Charts.Remove(chart);
+                        _worksheet.Charts.Remove(chart);
                     }
                 }
-                if ((this._savedPictures != null) && (this._savedPictures.Length > 0))
+                if ((_savedPictures != null) && (_savedPictures.Length > 0))
                 {
-                    foreach (Picture picture in this._savedPictures)
+                    foreach (Picture picture in _savedPictures)
                     {
-                        this._worksheet.Pictures.Remove(picture);
+                        _worksheet.Pictures.Remove(picture);
                     }
                 }
-                if ((this._savedObjects != null) && (this._savedObjects.Length > 0))
+                if ((_savedObjects != null) && (_savedObjects.Length > 0))
                 {
-                    foreach (FloatingObject obj2 in this._savedObjects)
+                    foreach (FloatingObject obj2 in _savedObjects)
                     {
-                        this._worksheet.FloatingObjects.Remove(obj2);
+                        _worksheet.FloatingObjects.Remove(obj2);
                     }
                 }
-                foreach (FloatingObject obj3 in this._sourceFloatingObjects)
+                foreach (FloatingObject obj3 in _sourceFloatingObjects)
                 {
                     obj3.IsSelected = true;
                 }
@@ -244,7 +244,7 @@ namespace Dt.Cells.UndoRedo
             finally
             {
                 view.ResumeFloatingObjectsInvalidate();
-                ReadOnlyCollection<CellRange> selections = this._worksheet.Selections;
+                ReadOnlyCollection<CellRange> selections = _worksheet.Selections;
                 if (selections.Count != 0)
                 {
                     foreach (CellRange range in selections)

@@ -37,10 +37,10 @@ namespace Dt.Cells.UI
     /// </summary>
     public partial class SpreadChartView : SpreadChartBaseView
     {
-        private Dictionary<int, SpreadDataSeries> _cachedDataSeries;
-        private Dictionary<int, List<PlotElement>> _cachedPlotElement;
-        private int _cachedTotalDataPointCount;
-        private int _loadedDataPointCount;
+        Dictionary<int, SpreadDataSeries> _cachedDataSeries;
+        Dictionary<int, List<PlotElement>> _cachedPlotElement;
+        int _cachedTotalDataPointCount;
+        int _loadedDataPointCount;
 
         /// <summary>
         /// 
@@ -59,7 +59,7 @@ namespace Dt.Cells.UI
         /// <summary>
         /// 加载事件或刷新时绘制图表
         /// </summary>
-        private void SyncSpreadChartToC1Chart()
+        void SyncSpreadChartToC1Chart()
         {
             SyncC1ChartSettings();
             C1Chart.BeginUpdate();
@@ -72,7 +72,7 @@ namespace Dt.Cells.UI
             C1Chart.EndUpdate();
         }
 
-        private void SyncC1ChartSettings()
+        void SyncC1ChartSettings()
         {
             base.UpdateC1ChartControl(new Chart());
             C1Chart.Background = new SolidColorBrush(Colors.Transparent);
@@ -83,7 +83,7 @@ namespace Dt.Cells.UI
             BubbleOptions.SetMaxSize(C1Chart, new Windows.Foundation.Size(num2, num2));
         }
 
-        private void SyncChartTitle()
+        void SyncChartTitle()
         {
             Windows.Foundation.Size chartTitleSize = base.GetChartTitleSize(SpreadChart.ChartTitle);
             base._chartTitleView.Width = chartTitleSize.Width;
@@ -91,7 +91,7 @@ namespace Dt.Cells.UI
             base._chartTitleView.ChartTitle = SpreadChart.ChartTitle;
         }
 
-        private void SyncChartArea()
+        void SyncChartArea()
         {
             base._formatRect.Stroke = SpreadChart.ActualStroke;
             base._formatRect.StrokeDashArray = Dt.Cells.Data.StrokeDashHelper.GetStrokeDashes(SpreadChart.StrokeDashType);
@@ -147,7 +147,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void SyncLegend()
+        void SyncLegend()
         {
             if (SpreadChart.Legend != null)
             {
@@ -262,7 +262,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void SyncPlotArea()
+        void SyncPlotArea()
         {
             ChartView view = C1Chart.View;
             Dt.Cells.Data.PlotArea plotArea = SpreadChart.PlotArea;
@@ -303,7 +303,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void SyncAxises()
+        void SyncAxises()
         {
             if (SpreadChart.AxisX != null)
             {
@@ -316,7 +316,7 @@ namespace Dt.Cells.UI
             SyncAxisTile();
         }
 
-        private void SyncDataSeries()
+        void SyncDataSeries()
         {
             ChartData data = C1Chart.Data;
             data.Children.Clear();
@@ -369,7 +369,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void BindingItems(Dt.Charts.Axis c1Axis, Dt.Cells.Data.Axis axis, List<AxisAnnotation> labels)
+        void BindingItems(Dt.Charts.Axis c1Axis, Dt.Cells.Data.Axis axis, List<AxisAnnotation> labels)
         {
             c1Axis.ItemsSource = (IEnumerable)labels;
             Binding binding = new Binding();
@@ -382,7 +382,7 @@ namespace Dt.Cells.UI
             c1Axis.ItemsValueBinding = binding2;
         }
 
-        private void C1DataSeries_PlotElementLoaded(object sender, EventArgs e)
+        void C1DataSeries_PlotElementLoaded(object sender, EventArgs e)
         {
             PlotElement plotElement = sender as PlotElement;
             SpreadDataSeries dataSeries = null;
@@ -424,7 +424,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void CacheDataSeriesData(SpreadDataSeries spDataSeries, DataSeries c1DataSeries)
+        void CacheDataSeriesData(SpreadDataSeries spDataSeries, DataSeries c1DataSeries)
         {
             if (SpreadChart.ChartType == SpreadChartType.StockHighLowOpenClose)
             {
@@ -464,7 +464,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void CachVOHLCDataSeries(Dictionary<int, SpreadDataSeries> cachedDataSeries, SpreadOpenHighLowCloseSeries spDataSeries)
+        void CachVOHLCDataSeries(Dictionary<int, SpreadDataSeries> cachedDataSeries, SpreadOpenHighLowCloseSeries spDataSeries)
         {
             int index = GetDisplayingDataSeries().IndexOf(spDataSeries);
             if (index >= 0)
@@ -492,7 +492,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private double CalculateScale(double lineLength, int dataSeriseCount, int dataPointCount, double gapWidth, double plotElementWidth)
+        double CalculateScale(double lineLength, int dataSeriseCount, int dataPointCount, double gapWidth, double plotElementWidth)
         {
             double num = 1.0;
             if (plotElementWidth > 0.0)
@@ -504,7 +504,7 @@ namespace Dt.Cells.UI
             return num;
         }
 
-        private bool ContainsNaN(IEnumerable<double> values)
+        bool ContainsNaN(IEnumerable<double> values)
         {
             foreach (double num in values)
             {
@@ -516,7 +516,7 @@ namespace Dt.Cells.UI
             return false;
         }
 
-        private DataTemplate CreateAnnoTemplate(Dt.Cells.Data.Axis axis, Dt.Charts.Axis c1Axis, AxisAnnotation[] annotations, AxisXYZType xyzType)
+        DataTemplate CreateAnnoTemplate(Dt.Cells.Data.Axis axis, Dt.Charts.Axis c1Axis, AxisAnnotation[] annotations, AxisXYZType xyzType)
         {
             double minValue;
             double num2;
@@ -613,7 +613,7 @@ namespace Dt.Cells.UI
             return (XamlReader.Load(string.Concat((string[])new string[] { "<DataTemplate", " ", "xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'", " ", "xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml' >", " ", "BorderTemplateContent", " ", "</DataTemplate>" }).Replace("BorderTemplateContent", str5)) as DataTemplate);
         }
 
-        private DataSeries[] CreateC1DataSeries(Type spreadDataSeriesType)
+        DataSeries[] CreateC1DataSeries(Type spreadDataSeriesType)
         {
             if (spreadDataSeriesType == typeof(SpreadDataSeries))
             {
@@ -642,7 +642,7 @@ namespace Dt.Cells.UI
             return new DataSeries[1];
         }
 
-        private TransformGroup CreatTransformGroup(double scale, double offset, bool isTransFormOffset, bool isXScale)
+        TransformGroup CreatTransformGroup(double scale, double offset, bool isTransFormOffset, bool isXScale)
         {
             if (double.IsInfinity(scale))
             {
@@ -679,7 +679,7 @@ namespace Dt.Cells.UI
             return group;
         }
 
-        private DataSeries[] GenerateC1DataSeries()
+        DataSeries[] GenerateC1DataSeries()
         {
             if (SpreadChart == null)
             {
@@ -700,7 +700,7 @@ namespace Dt.Cells.UI
             return list.ToArray();
         }
 
-        private double[] GenerateValues(SpreadXYDataSeries dataSeries, double min)
+        double[] GenerateValues(SpreadXYDataSeries dataSeries, double min)
         {
             if (dataSeries == null)
             {
@@ -714,7 +714,7 @@ namespace Dt.Cells.UI
             return seriess.ToArray();
         }
 
-        private DoubleSeriesCollection GenerateXValues(SpreadOpenHighLowCloseSeries spOHLCSeries)
+        DoubleSeriesCollection GenerateXValues(SpreadOpenHighLowCloseSeries spOHLCSeries)
         {
             DoubleSeriesCollection seriess = new DoubleSeriesCollection();
             int count = 0;
@@ -741,7 +741,7 @@ namespace Dt.Cells.UI
             return seriess;
         }
 
-        private List<string> GetAxisCategories(Dt.Cells.Data.Axis axis, IList<object> items)
+        List<string> GetAxisCategories(Dt.Cells.Data.Axis axis, IList<object> items)
         {
             List<string> list = new List<string>();
             foreach (object obj2 in items)
@@ -755,7 +755,7 @@ namespace Dt.Cells.UI
             return list;
         }
 
-        private string GetBindingText(Dt.Cells.Data.Axis axis, object item)
+        string GetBindingText(Dt.Cells.Data.Axis axis, object item)
         {
             if (item == null)
             {
@@ -774,7 +774,7 @@ namespace Dt.Cells.UI
             return axis.LabelFormatter.Format(item);
         }
 
-        private string GetBrushXamlContent(Brush brush)
+        string GetBrushXamlContent(Brush brush)
         {
             string str = string.Empty;
             if (brush is SolidColorBrush)
@@ -829,7 +829,7 @@ namespace Dt.Cells.UI
             return 1;
         }
 
-        private double?[] GetDataSeriesXValues(SpreadDataSeries spreadDataSeries)
+        double?[] GetDataSeriesXValues(SpreadDataSeries spreadDataSeries)
         {
             double[] itemsOADate = null;
             double maxValue = double.MaxValue;
@@ -905,7 +905,7 @@ namespace Dt.Cells.UI
             return list.ToArray();
         }
 
-        private double[] GetDataSeriesYValues(SpreadDataSeries spreadDataSeries)
+        double[] GetDataSeriesYValues(SpreadDataSeries spreadDataSeries)
         {
             SpreadChartType chartType = (spreadDataSeries != null) ? spreadDataSeries.ChartType : SpreadChart.ChartType;
             if (!SpreadChartUtility.IsColumnChart(chartType) && !SpreadChartUtility.IsBarChart(chartType))
@@ -920,7 +920,7 @@ namespace Dt.Cells.UI
             return list.ToArray();
         }
 
-        private IList<SpreadDataSeries> GetDisplayingDataSeries()
+        IList<SpreadDataSeries> GetDisplayingDataSeries()
         {
             List<SpreadDataSeries> list = new List<SpreadDataSeries>();
             List<SpreadDataSeries> list2 = new List<SpreadDataSeries>();
@@ -945,7 +945,7 @@ namespace Dt.Cells.UI
             return (IList<SpreadDataSeries>)list;
         }
 
-        private string[] GetDisplayItems(Dt.Cells.Data.Axis axis)
+        string[] GetDisplayItems(Dt.Cells.Data.Axis axis)
         {
             List<string> list = new List<string>();
             if ((axis.Items != null) && (axis.Items.Count > 0))
@@ -960,12 +960,12 @@ namespace Dt.Cells.UI
             return list.ToArray();
         }
 
-        private double GetGapWidth()
+        double GetGapWidth()
         {
             return 1.5;
         }
 
-        private double[] GetItemsOADate(IEnumerable<object> items)
+        double[] GetItemsOADate(IEnumerable<object> items)
         {
             List<double> list = new List<double>();
             foreach (object obj2 in items)
@@ -979,7 +979,7 @@ namespace Dt.Cells.UI
             return list.ToArray();
         }
 
-        private int GetMaxDataPointCount()
+        int GetMaxDataPointCount()
         {
             if (((SpreadChart.ChartType != SpreadChartType.ColumnStacked) && (SpreadChart.ChartType != SpreadChartType.ColumnStacked100pc)) && ((SpreadChart.ChartType != SpreadChartType.BarStacked) && (SpreadChart.ChartType != SpreadChartType.BarStacked100pc)))
             {
@@ -988,7 +988,7 @@ namespace Dt.Cells.UI
             return 1;
         }
 
-        private double GetOffset(int currentIndex, int previousIndex, int startIndex, int endIndex, double[] scaleOffset, double[] offsetArray)
+        double GetOffset(int currentIndex, int previousIndex, int startIndex, int endIndex, double[] scaleOffset, double[] offsetArray)
         {
             double num = 0.0;
             double num2 = 0.0;
@@ -1012,7 +1012,7 @@ namespace Dt.Cells.UI
             return offsetArray[currentIndex];
         }
 
-        private double[] GetPointValuesSum()
+        double[] GetPointValuesSum()
         {
             Dictionary<int, double> dictionary = new Dictionary<int, double>();
             IList<SpreadDataSeries> displayingDataSeries = GetDisplayingDataSeries();
@@ -1043,7 +1043,7 @@ namespace Dt.Cells.UI
             return Enumerable.ToArray<double>((IEnumerable<double>)dictionary.Values);
         }
 
-        private bool HasTwoDimensionSeries()
+        bool HasTwoDimensionSeries()
         {
             using (IEnumerator<SpreadDataSeries> enumerator = GetDisplayingDataSeries().GetEnumerator())
             {
@@ -1058,7 +1058,7 @@ namespace Dt.Cells.UI
             return false;
         }
 
-        private bool IsCategoryValuesDateTime()
+        bool IsCategoryValuesDateTime()
         {
             if (SpreadChartUtility.IsBarChart(SpreadChart.ChartType))
             {
@@ -1067,17 +1067,17 @@ namespace Dt.Cells.UI
             return (SpreadChart.AxisX.AxisType == Dt.Cells.Data.AxisType.Date);
         }
 
-        private bool IsNumber(object value)
+        bool IsNumber(object value)
         {
             return ((((((value is double) || (value is float)) || ((value is decimal) || (value is long))) || (((value is int) || (value is short)) || ((value is sbyte) || (value is ulong)))) || (((value is uint) || (value is ushort)) || ((value is byte) || (value is DateTime)))) || (value is TimeSpan));
         }
 
-        private bool IsZero(double value)
+        bool IsZero(double value)
         {
             return ((!double.IsNaN(value) && !double.IsInfinity(value)) && (Math.Abs((double)(value - 0.0)) < 1E-07));
         }
 
-        private double[] LimitDataSeriesValues(double?[] xVlues, double[] values)
+        double[] LimitDataSeriesValues(double?[] xVlues, double[] values)
         {
             List<double> list = new List<double>();
             if (xVlues != null)
@@ -1097,7 +1097,7 @@ namespace Dt.Cells.UI
             return list.ToArray();
         }
 
-        private bool NeedInflateDateTimeAxis()
+        bool NeedInflateDateTimeAxis()
         {
             if ((((SpreadChart.ChartType != SpreadChartType.StockHighLowOpenClose) && (SpreadChart.ChartType != SpreadChartType.ColumnClustered)) && ((SpreadChart.ChartType != SpreadChartType.ColumnStacked) && (SpreadChart.ChartType != SpreadChartType.ColumnStacked100pc))) && ((SpreadChart.ChartType != SpreadChartType.BarClustered) && (SpreadChart.ChartType != SpreadChartType.BarStacked)))
             {
@@ -1106,7 +1106,7 @@ namespace Dt.Cells.UI
             return true;
         }
 
-        private bool NeedTransFormChart()
+        bool NeedTransFormChart()
         {
             if (!SpreadChartUtility.IsColumnChart(SpreadChart.ChartType) && !SpreadChartUtility.IsBarChart(SpreadChart.ChartType))
             {
@@ -1210,7 +1210,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void SetPointLabelTemplate(SpreadDataSeries spDataSeries, DataSeries c1DataSeries)
+        void SetPointLabelTemplate(SpreadDataSeries spDataSeries, DataSeries c1DataSeries)
         {
             if (base.resourceDictionary != null)
             {
@@ -1218,7 +1218,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private ChartType SpreadChartTypeToC1ChartType(SpreadChartType spChartType)
+        ChartType SpreadChartTypeToC1ChartType(SpreadChartType spChartType)
         {
             switch (spChartType)
             {
@@ -1318,7 +1318,7 @@ namespace Dt.Cells.UI
             return ChartType.Column;
         }
         
-        private Marker SpreadMarkerToC1Marker(Dt.Cells.Data.MarkerType spMarker)
+        Marker SpreadMarkerToC1Marker(Dt.Cells.Data.MarkerType spMarker)
         {
             switch (spMarker)
             {
@@ -1356,7 +1356,7 @@ namespace Dt.Cells.UI
             return Marker.Diamond;
         }
 
-        private static void SwitchDataSeries(DataSeries[] c1DataSeriesList, int i)
+        static void SwitchDataSeries(DataSeries[] c1DataSeriesList, int i)
         {
             if ((i + 5) < c1DataSeriesList.Length)
             {
@@ -1366,7 +1366,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void SyncAxis(Dt.Cells.Data.Axis spAxis, Dt.Charts.Axis c1Axis, AxisXYZType axisType)
+        void SyncAxis(Dt.Cells.Data.Axis spAxis, Dt.Charts.Axis c1Axis, AxisXYZType axisType)
         {
             SyncAxisStyle(spAxis, c1Axis, axisType);
             SyncAxisLabel(spAxis, c1Axis, axisType);
@@ -1378,17 +1378,17 @@ namespace Dt.Cells.UI
             SyncAxisMinorTick(spAxis, c1Axis);
         }
 
-        private void SyncAxisCategoryPosition(Dt.Cells.Data.Axis spAxis, Dt.Charts.Axis c1Axis, double crossAt)
+        void SyncAxisCategoryPosition(Dt.Cells.Data.Axis spAxis, Dt.Charts.Axis c1Axis, double crossAt)
         {
             c1Axis.Origin = crossAt;
         }
 
-        private void SyncAxisDatePosition(Dt.Cells.Data.Axis spAxis, Dt.Charts.Axis c1Axis, double crossAt)
+        void SyncAxisDatePosition(Dt.Cells.Data.Axis spAxis, Dt.Charts.Axis c1Axis, double crossAt)
         {
             c1Axis.Origin = crossAt;
         }
 
-        private void SyncAxisItems(Dt.Cells.Data.Axis axis, AxisXYZType axisType)
+        void SyncAxisItems(Dt.Cells.Data.Axis axis, AxisXYZType axisType)
         {
             AxisAnnotation[] annotations;
             Dt.Charts.Axis c1Axis = null;
@@ -1426,13 +1426,13 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void SyncAxisLabel(Dt.Cells.Data.Axis spAxis, Dt.Charts.Axis c1Axis, AxisXYZType axisType)
+        void SyncAxisLabel(Dt.Cells.Data.Axis spAxis, Dt.Charts.Axis c1Axis, AxisXYZType axisType)
         {
             c1Axis.AnnoAngle = spAxis.LabelAngle;
             SyncAxisItems(spAxis, axisType);
         }
 
-        private void SyncAxisLine(Dt.Cells.Data.Axis spAxis, Dt.Charts.Axis c1Axis)
+        void SyncAxisLine(Dt.Cells.Data.Axis spAxis, Dt.Charts.Axis c1Axis)
         {
             if (spAxis.UseLogBase)
             {
@@ -1465,7 +1465,7 @@ namespace Dt.Cells.UI
             c1Axis.AxisLine.StrokeLineJoin = spAxis.LineJoinType;
         }
 
-        private void SyncAxisMajorGridLine(Dt.Cells.Data.Axis spAxis, Dt.Charts.Axis c1Axis, AxisXYZType axisType)
+        void SyncAxisMajorGridLine(Dt.Cells.Data.Axis spAxis, Dt.Charts.Axis c1Axis, AxisXYZType axisType)
         {
             Brush actualMajorGridlinesStroke = spAxis.ActualMajorGridlinesStroke;
             if ((actualMajorGridlinesStroke != null) && spAxis.ShowMajorGridlines)
@@ -1496,7 +1496,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void SyncAxisMajorTick(Dt.Cells.Data.Axis spAxis, Dt.Charts.Axis c1Axis)
+        void SyncAxisMajorTick(Dt.Cells.Data.Axis spAxis, Dt.Charts.Axis c1Axis)
         {
             if (!double.IsNaN(spAxis.MajorTickHeight))
             {
@@ -1534,7 +1534,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void SyncAxisMinorGridLine(Dt.Cells.Data.Axis spAxis, Dt.Charts.Axis c1Axis)
+        void SyncAxisMinorGridLine(Dt.Cells.Data.Axis spAxis, Dt.Charts.Axis c1Axis)
         {
             Brush actualMinorGridlinesStroke = spAxis.ActualMinorGridlinesStroke;
             if ((actualMinorGridlinesStroke != null) && spAxis.ShowMinorGridlines)
@@ -1565,7 +1565,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void SyncAxisMinorTick(Dt.Cells.Data.Axis spAxis, Dt.Charts.Axis c1Axis)
+        void SyncAxisMinorTick(Dt.Cells.Data.Axis spAxis, Dt.Charts.Axis c1Axis)
         {
             if (!double.IsNaN(spAxis.MinorTickHeight))
             {
@@ -1607,7 +1607,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void SyncAxisPosition(Dt.Cells.Data.Axis spAxis, Dt.Charts.Axis c1Axis, AxisXYZType axisType)
+        void SyncAxisPosition(Dt.Cells.Data.Axis spAxis, Dt.Charts.Axis c1Axis, AxisXYZType axisType)
         {
             if (SpreadChartUtility.IsRadarChart(SpreadChart.ChartType))
             {
@@ -1631,7 +1631,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void SyncAxisStyle(Dt.Cells.Data.Axis spAxis, Dt.Charts.Axis c1Axis, AxisXYZType axisType)
+        void SyncAxisStyle(Dt.Cells.Data.Axis spAxis, Dt.Charts.Axis c1Axis, AxisXYZType axisType)
         {
             FontFamily actualFontFamily = spAxis.ActualFontFamily;
             if (actualFontFamily != null)
@@ -1648,7 +1648,7 @@ namespace Dt.Cells.UI
             c1Axis.Visible = spAxis.Visible;
         }
 
-        private void SyncAxisTile()
+        void SyncAxisTile()
         {
             if (SpreadChart.AxisX != null)
             {
@@ -1660,7 +1660,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void SyncAxisTitle(Dt.Cells.Data.Axis spAxis, Dt.Charts.Axis c1Axis, Dt.Charts.AxisType axisType)
+        void SyncAxisTitle(Dt.Cells.Data.Axis spAxis, Dt.Charts.Axis c1Axis, Dt.Charts.AxisType axisType)
         {
             if (spAxis.Title != null)
             {
@@ -1688,12 +1688,12 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void SyncAxisValuePosition(Dt.Cells.Data.Axis spAxis, Dt.Charts.Axis c1Axis, double crossAt)
+        void SyncAxisValuePosition(Dt.Cells.Data.Axis spAxis, Dt.Charts.Axis c1Axis, double crossAt)
         {
             c1Axis.Origin = crossAt;
         }
 
-        private void SyncCategoryItems(Dt.Charts.Axis c1Axis, Dt.Cells.Data.Axis axis, out AxisAnnotation[] annotations)
+        void SyncCategoryItems(Dt.Charts.Axis c1Axis, Dt.Cells.Data.Axis axis, out AxisAnnotation[] annotations)
         {
             if (SpreadChartUtility.IsPieChart(SpreadChart.ChartType))
             {
@@ -1756,7 +1756,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void SyncDataMarker(PlotElement plotElement, SpreadDataSeries dataSeries)
+        void SyncDataMarker(PlotElement plotElement, SpreadDataSeries dataSeries)
         {
             if ((plotElement != null) && (plotElement.DataPoint != null))
             {
@@ -1799,7 +1799,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void SyncDataPoint(PlotElement plotElement, SpreadDataSeries dataSeries)
+        void SyncDataPoint(PlotElement plotElement, SpreadDataSeries dataSeries)
         {
             if ((plotElement != null) && (plotElement.DataPoint != null))
             {
@@ -1854,7 +1854,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void SyncDataSeriesChartType(SpreadDataSeries spDataSeries, DataSeries c1DataSeries)
+        void SyncDataSeriesChartType(SpreadDataSeries spDataSeries, DataSeries c1DataSeries)
         {
             if (spDataSeries.ChartType != SpreadChartType.None)
             {
@@ -1866,7 +1866,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void SyncDataSeriesDataLabel(SpreadDataSeries spDataSeries, DataSeries c1DataSeries)
+        void SyncDataSeriesDataLabel(SpreadDataSeries spDataSeries, DataSeries c1DataSeries)
         {
             if (base.resourceDictionary != null)
             {
@@ -1884,14 +1884,14 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void SyncDataSeriesProperties(SpreadDataSeries spDataSeries, DataSeries c1DataSeries)
+        void SyncDataSeriesProperties(SpreadDataSeries spDataSeries, DataSeries c1DataSeries)
         {
             SyncDataSeriesChartType(spDataSeries, c1DataSeries);
             SyncDataSeriesDataLabel(spDataSeries, c1DataSeries);
             SyncDataSeriesSettings(spDataSeries, c1DataSeries);
         }
 
-        private void SyncDataSeriesSettings(SpreadDataSeries spDataSeries, DataSeries c1DataSeries)
+        void SyncDataSeriesSettings(SpreadDataSeries spDataSeries, DataSeries c1DataSeries)
         {
             SpreadChartType chartType = (spDataSeries != null) ? spDataSeries.ChartType : SpreadChart.ChartType;
             if (SpreadChartUtility.IsChartWithMarker(chartType))
@@ -2011,7 +2011,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void SyncDataSeriesValues(SpreadDataSeries spreadDataSeries, DataSeries c1DataSeries)
+        void SyncDataSeriesValues(SpreadDataSeries spreadDataSeries, DataSeries c1DataSeries)
         {
             double[] dataSeriesYValues;
             double?[] dataSeriesXValues = GetDataSeriesXValues(spreadDataSeries);
@@ -2073,7 +2073,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void SyncDateTimeItems(Dt.Charts.Axis c1Axis, Dt.Cells.Data.Axis axis, out AxisAnnotation[] annotations)
+        void SyncDateTimeItems(Dt.Charts.Axis c1Axis, Dt.Cells.Data.Axis axis, out AxisAnnotation[] annotations)
         {
             if (SpreadChartUtility.IsPieChart(SpreadChart.ChartType) || SpreadChartUtility.IsRadarChart(SpreadChart.ChartType))
             {
@@ -2116,7 +2116,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void SyncLineChartPlotElement(PlotElement plotElement, SpreadDataSeries dataSeries)
+        void SyncLineChartPlotElement(PlotElement plotElement, SpreadDataSeries dataSeries)
         {
             if (!(plotElement is Lines) && SpreadChartUtility.IsChartWithMarker(dataSeries.ChartType))
             {
@@ -2124,7 +2124,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void SyncMinAndMax(Dt.Charts.Axis c1Axis, Dt.Cells.Data.Axis axis)
+        void SyncMinAndMax(Dt.Charts.Axis c1Axis, Dt.Cells.Data.Axis axis)
         {
             if (axis.AxisType == Dt.Cells.Data.AxisType.Date)
             {
@@ -2181,7 +2181,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void SyncOHLCDataSeriesSettings(SpreadDataSeries spDataSeries, DataSeries c1DataSeries)
+        void SyncOHLCDataSeriesSettings(SpreadDataSeries spDataSeries, DataSeries c1DataSeries)
         {
             c1DataSeries.SymbolMarker = SpreadMarkerToC1Marker(spDataSeries.MarkerType);
             if (spDataSeries.ActualFill != null)
@@ -2252,7 +2252,7 @@ namespace Dt.Cells.UI
             c1DataSeries.Label = spDataSeries.Name;
         }
 
-        private void SyncOpenHighLowCloseSeries(DataSeries[] c1DataSeriesList, SpreadOpenHighLowCloseSeries spOHLCSeries)
+        void SyncOpenHighLowCloseSeries(DataSeries[] c1DataSeriesList, SpreadOpenHighLowCloseSeries spOHLCSeries)
         {
             HighLowOpenCloseSeries series = c1DataSeriesList[0] as HighLowOpenCloseSeries;
             if (base.resourceDictionary != null)
@@ -2382,7 +2382,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void SyncPieChartPaletteColor()
+        void SyncPieChartPaletteColor()
         {
             if ((SpreadChart != null) && (((SpreadChart.ChartType == SpreadChartType.Pie) || (SpreadChart.ChartType == SpreadChartType.PieDoughnut)) || ((SpreadChart.ChartType == SpreadChartType.PieExploded) || (SpreadChart.ChartType == SpreadChartType.PieExplodedDoughnut))))
             {
@@ -2404,7 +2404,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void SyncTimeAxis(Dt.Charts.Axis c1Axis, Dt.Cells.Data.Axis spAxis)
+        void SyncTimeAxis(Dt.Charts.Axis c1Axis, Dt.Cells.Data.Axis spAxis)
         {
             c1Axis.IsTime = true;
             int num = 1;
@@ -2429,7 +2429,7 @@ namespace Dt.Cells.UI
             c1Axis.Origin = spAxis.CrossAt * num;
         }
 
-        private void SyncValueItems(Dt.Charts.Axis c1Axis, Dt.Cells.Data.Axis axis, AxisXYZType axisType, out AxisAnnotation[] annotations)
+        void SyncValueItems(Dt.Charts.Axis c1Axis, Dt.Cells.Data.Axis axis, AxisXYZType axisType, out AxisAnnotation[] annotations)
         {
             List<AxisAnnotation> labels = new List<AxisAnnotation>();
             double? nullable = null;
@@ -2493,7 +2493,7 @@ namespace Dt.Cells.UI
             SyncMinAndMax(c1Axis, axis);
         }
 
-        private void SyncWholeDataPoint(PlotElement plotElement, SpreadDataSeries dataSeries)
+        void SyncWholeDataPoint(PlotElement plotElement, SpreadDataSeries dataSeries)
         {
             if ((plotElement != null) && (dataSeries != null))
             {
@@ -2522,7 +2522,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void TransformBarAndColumnChart(PlotElement plotElement, SpreadDataSeries dataSeries)
+        void TransformBarAndColumnChart(PlotElement plotElement, SpreadDataSeries dataSeries)
         {
             if (SpreadChartUtility.IsBarChart(dataSeries.ChartType) || SpreadChartUtility.IsColumnChart(dataSeries.ChartType))
             {
@@ -2547,7 +2547,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void TransformBarChart(double scale, bool reversed)
+        void TransformBarChart(double scale, bool reversed)
         {
             using (Dictionary<int, List<PlotElement>>.Enumerator enumerator = _cachedPlotElement.GetEnumerator())
             {
@@ -2562,7 +2562,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void TransformBarStack(double scale, List<PlotElement> list)
+        void TransformBarStack(double scale, List<PlotElement> list)
         {
             for (int i = 0; i < list.Count; i++)
             {
@@ -2572,7 +2572,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void TransformColumnChart(double scale, bool reversed)
+        void TransformColumnChart(double scale, bool reversed)
         {
             using (Dictionary<int, List<PlotElement>>.Enumerator enumerator = _cachedPlotElement.GetEnumerator())
             {
@@ -2594,7 +2594,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void TransformColumnClustered(List<PlotElement> list, double scale, bool reversed)
+        void TransformColumnClustered(List<PlotElement> list, double scale, bool reversed)
         {
             int num = reversed ? -1 : 1;
             int maxDataPointCount = GetMaxDataPointCount();
@@ -2670,7 +2670,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void TransformColumnStack(double scale, List<PlotElement> list)
+        void TransformColumnStack(double scale, List<PlotElement> list)
         {
             for (int i = 0; i < list.Count; i++)
             {
@@ -2680,7 +2680,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void TransformDataPointElement(PlotElement dataPointElement)
+        void TransformDataPointElement(PlotElement dataPointElement)
         {
             double scale = 1.0;
             double gapWidth = GetGapWidth();
@@ -2754,7 +2754,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private double? TryDouble(object val, bool useCulture = true)
+        double? TryDouble(object val, bool useCulture = true)
         {
             double num;
             CultureInfo info = useCulture ? CultureInfo.CurrentCulture : CultureInfo.InvariantCulture;
@@ -2800,7 +2800,7 @@ namespace Dt.Cells.UI
             return null;
         }
 
-        private List<object> UpdateAxisItems(Dt.Cells.Data.Axis axis)
+        List<object> UpdateAxisItems(Dt.Cells.Data.Axis axis)
         {
             double num = AxisValueUtility.CalculateMaximum(axis.Min, axis.Max, axis.LogBase, false);
             List<object> list = new List<object>();

@@ -36,27 +36,27 @@ namespace Dt.Cells.UI
             box4.Loaded += AutoFilterCheckBox_Loaded;
         }
 
-        private void AutoFilterCheckBox_Checked(object sender, RoutedEventArgs e)
+        void AutoFilterCheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            this.UpdateVisualState();
+            UpdateVisualState();
         }
 
-        private void AutoFilterCheckBox_Indeterminate(object sender, RoutedEventArgs e)
+        void AutoFilterCheckBox_Indeterminate(object sender, RoutedEventArgs e)
         {
-            this.UpdateVisualState();
+            UpdateVisualState();
         }
 
-        private void AutoFilterCheckBox_Loaded(object sender, RoutedEventArgs e)
+        void AutoFilterCheckBox_Loaded(object sender, RoutedEventArgs e)
         {
-            this.UpdateVisualState();
+            UpdateVisualState();
         }
 
-        private void AutoFilterCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        void AutoFilterCheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
-            this.UpdateVisualState();
+            UpdateVisualState();
         }
 
-        private void UpdateVisualState()
+        void UpdateVisualState()
         {
             AutoFilterItem dataContext = base.DataContext as AutoFilterItem;
             if (dataContext == null)

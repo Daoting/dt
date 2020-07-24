@@ -20,9 +20,9 @@ namespace Dt.Cells.UndoRedo
     /// </summary>
     public class ColumnUngroupUndoAction : ActionBase, IUndo
     {
-        private List<ColumnUngroupExtent> _cachedUngroups;
-        private ColumnUngroupExtent _columnUngroupExtent;
-        private Worksheet _sheet;
+        List<ColumnUngroupExtent> _cachedUngroups;
+        ColumnUngroupExtent _columnUngroupExtent;
+        Worksheet _sheet;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.UndoRedo.ColumnUngroupUndoAction" /> class.
@@ -31,9 +31,9 @@ namespace Dt.Cells.UndoRedo
         /// <param name="columnGroupExtent">The column ungroup extent information.</param>
         public ColumnUngroupUndoAction(Worksheet sheet, ColumnUngroupExtent columnGroupExtent)
         {
-            this._sheet = sheet;
-            this._columnUngroupExtent = columnGroupExtent;
-            this._cachedUngroups = null;
+            _sheet = sheet;
+            _columnUngroupExtent = columnGroupExtent;
+            _cachedUngroups = null;
         }
 
         /// <summary>
@@ -54,15 +54,15 @@ namespace Dt.Cells.UndoRedo
         /// <param name="sender">Object on which the action occurred.</param>
         public override void Execute(object sender)
         {
-            this.SaveState();
-            if ((this._cachedUngroups != null) && (this._cachedUngroups.Count > 0))
+            SaveState();
+            if ((_cachedUngroups != null) && (_cachedUngroups.Count > 0))
             {
                 base.SuspendInvalidate(sender);
                 try
                 {
-                    foreach (ColumnUngroupExtent extent in this._cachedUngroups)
+                    foreach (ColumnUngroupExtent extent in _cachedUngroups)
                     {
-                        this._sheet.ColumnRangeGroup.Ungroup(extent.Index, extent.Count);
+                        _sheet.ColumnRangeGroup.Ungroup(extent.Index, extent.Count);
                     }
                 }
                 finally
@@ -86,13 +86,13 @@ namespace Dt.Cells.UndoRedo
         public void SaveState()
         {
             List<ColumnUngroupExtent> list = new List<ColumnUngroupExtent>();
-            if (((this._sheet != null) && (this._columnUngroupExtent != null)) && (this._sheet.ColumnRangeGroup != null))
+            if (((_sheet != null) && (_columnUngroupExtent != null)) && (_sheet.ColumnRangeGroup != null))
             {
-                int index = this._columnUngroupExtent.Index;
-                int count = this._columnUngroupExtent.Count;
+                int index = _columnUngroupExtent.Index;
+                int count = _columnUngroupExtent.Count;
                 for (int i = index; i < (index + count); i++)
                 {
-                    RangeGroupInfo info = this._sheet.ColumnRangeGroup.Find(i, 0);
+                    RangeGroupInfo info = _sheet.ColumnRangeGroup.Find(i, 0);
                     if (info != null)
                     {
                         list.Add(new ColumnUngroupExtent(i, Math.Min((int) (index + count), (int) (info.End + 1)) - i));
@@ -100,7 +100,7 @@ namespace Dt.Cells.UndoRedo
                     }
                 }
             }
-            this._cachedUngroups = list;
+            _cachedUngroups = list;
         }
 
         /// <summary>
@@ -122,16 +122,16 @@ namespace Dt.Cells.UndoRedo
         public bool Undo(object sender)
         {
             bool flag = false;
-            if ((this._cachedUngroups == null) || (this._cachedUngroups.Count <= 0))
+            if ((_cachedUngroups == null) || (_cachedUngroups.Count <= 0))
             {
                 return flag;
             }
             base.SuspendInvalidate(sender);
             try
             {
-                foreach (ColumnUngroupExtent extent in this._cachedUngroups)
+                foreach (ColumnUngroupExtent extent in _cachedUngroups)
                 {
-                    this._sheet.ColumnRangeGroup.Group(extent.Index, extent.Count);
+                    _sheet.ColumnRangeGroup.Group(extent.Index, extent.Count);
                 }
             }
             finally

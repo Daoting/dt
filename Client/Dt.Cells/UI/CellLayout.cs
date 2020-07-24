@@ -21,29 +21,29 @@ namespace Dt.Cells.UI
     {
         public CellLayout(int row, int column, int rowCount, int columnCount, double x, double y, double width, double height)
         {
-            this.Row = row;
-            this.Column = column;
-            this.RowCount = rowCount;
-            this.ColumnCount = columnCount;
-            this.X = x;
-            this.Y = y;
-            this.Width = width;
-            this.Height = height;
+            Row = row;
+            Column = column;
+            RowCount = rowCount;
+            ColumnCount = columnCount;
+            X = x;
+            Y = y;
+            Width = width;
+            Height = height;
         }
 
         public bool ContainsCell(int row, int column)
         {
-            return ((((row >= this.Row) && (row < (this.Row + this.RowCount))) && (column >= this.Column)) && (column < (this.Column + this.ColumnCount)));
+            return ((((row >= Row) && (row < (Row + RowCount))) && (column >= Column)) && (column < (Column + ColumnCount)));
         }
 
         public bool ContainsPoint(double x, double y)
         {
-            return ((((x >= this.X) && (x < (this.X + this.Width))) && (y >= this.Y)) && (y < (this.Y + this.Height)));
+            return ((((x >= X) && (x < (X + Width))) && (y >= Y)) && (y < (Y + Height)));
         }
 
         public CellRange GetCellRange()
         {
-            return new CellRange(this.Row, this.Column, this.RowCount, this.ColumnCount);
+            return new CellRange(Row, Column, RowCount, ColumnCount);
         }
 
         public int Column { get; set; }

@@ -150,7 +150,7 @@ namespace Dt.Cells.UndoRedo
             }
         }
 
-        private static CellData? Remove(List<CellData> cellDatas, int row, int column)
+        static CellData? Remove(List<CellData> cellDatas, int row, int column)
         {
             CellData? nullable = null;
             int num = -1;

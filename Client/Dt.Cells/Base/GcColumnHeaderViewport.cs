@@ -17,11 +17,11 @@ namespace Dt.Cells.UI
 {
     internal partial class GcColumnHeaderViewport : GcViewport
     {
-        private List<RowPresenter> _recycledColHeaderRows;
+        List<RowPresenter> _recycledColHeaderRows;
 
         public GcColumnHeaderViewport(SheetView sheet) : base(sheet, SheetArea.ColumnHeader, false)
         {
-            this._recycledColHeaderRows = new List<RowPresenter>();
+            _recycledColHeaderRows = new List<RowPresenter>();
             base._sheetArea = SheetArea.ColumnHeader;
         }
 
@@ -63,11 +63,11 @@ namespace Dt.Cells.UI
         {
             get
             {
-                if (this._recycledColHeaderRows == null)
+                if (_recycledColHeaderRows == null)
                 {
-                    this._recycledColHeaderRows = new List<RowPresenter>();
+                    _recycledColHeaderRows = new List<RowPresenter>();
                 }
-                return this._recycledColHeaderRows;
+                return _recycledColHeaderRows;
             }
         }
 

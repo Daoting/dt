@@ -21,8 +21,8 @@ namespace Dt.Cells.UI
     {
         internal ColumnViewportWidthChangingEventArgs(int viewportIndex, double deltaViewportWidth)
         {
-            this.ViewportIndex = viewportIndex;
-            this.DeltaViewportWidth = deltaViewportWidth;
+            ViewportIndex = viewportIndex;
+            DeltaViewportWidth = deltaViewportWidth;
         }
 
         internal ColumnViewportWidthChangingEventArgs(int viewportIndex, double deltaViewportWidth, bool cancel) : this(viewportIndex, deltaViewportWidth)

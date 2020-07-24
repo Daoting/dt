@@ -19,11 +19,11 @@ namespace Dt.Cells.UI
     /// </summary>
     internal class UserErrorEventArgs : CancelEventArgs
     {
-        private int column;
-        private string errorMessage;
-        private System.Exception exception;
-        private object owner;
-        private int row;
+        int column;
+        string errorMessage;
+        System.Exception exception;
+        object owner;
+        int row;
 
         /// <summary>
         /// Creates a new object with the Error event arguments.
@@ -48,7 +48,7 @@ namespace Dt.Cells.UI
         /// <value>The column index of the cell with the editor that raised the event.</value>
         public int Column
         {
-            get { return  this.column; }
+            get { return  column; }
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace Dt.Cells.UI
         /// <value>The text description of the error.</value>
         public string ErrorMessage
         {
-            get { return  this.errorMessage; }
+            get { return  errorMessage; }
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace Dt.Cells.UI
         /// <value>The exception thrown by the error.</value>
         public System.Exception Exception
         {
-            get { return  this.exception; }
+            get { return  exception; }
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace Dt.Cells.UI
         /// <value>The view that contains the cell with the editor that raised the event.</value>
         public object Owner
         {
-            get { return  this.owner; }
+            get { return  owner; }
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Dt.Cells.UI
         /// <value>The row index of the cell with the editor that raised the event.</value>
         public int Row
         {
-            get { return  this.row; }
+            get { return  row; }
         }
     }
 }

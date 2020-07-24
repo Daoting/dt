@@ -16,20 +16,20 @@ namespace Dt.Cells.UI
     [StructLayout(LayoutKind.Sequential)]
     internal struct CompositeRange : IEquatable<CompositeRange>
     {
-        private DataSheetElementType _type;
-        private int _row;
-        private int _rowCount;
-        private int _column;
-        private int _columnCount;
+        DataSheetElementType _type;
+        int _row;
+        int _rowCount;
+        int _column;
+        int _columnCount;
         public static readonly CompositeRange Empty;
         public static readonly CompositeRange Sheet;
         public CompositeRange(DataSheetElementType type, int row, int column, int rowCount, int columnCount)
         {
-            this._type = type;
-            this._row = row;
-            this._rowCount = rowCount;
-            this._column = column;
-            this._columnCount = columnCount;
+            _type = type;
+            _row = row;
+            _rowCount = rowCount;
+            _column = column;
+            _columnCount = columnCount;
         }
 
         public static CompositeRange FromStartEnd(DataSheetElementType type, int startRow, int endRow, int startColumn, int endColumn)
@@ -39,57 +39,57 @@ namespace Dt.Cells.UI
 
         public DataSheetElementType Type
         {
-            get { return  this._type; }
+            get { return  _type; }
         }
         public int Row
         {
-            get { return  this._row; }
+            get { return  _row; }
         }
         public int RowCount
         {
-            get { return  this._rowCount; }
+            get { return  _rowCount; }
         }
         public int Column
         {
-            get { return  this._column; }
+            get { return  _column; }
         }
         public int ColumnCount
         {
-            get { return  this._columnCount; }
+            get { return  _columnCount; }
         }
         public int StartRow
         {
-            get { return  this._row; }
+            get { return  _row; }
         }
         public int EndRow
         {
             get
             {
-                if (this._row != -1)
+                if (_row != -1)
                 {
-                    return ((this._row + this._rowCount) - 1);
+                    return ((_row + _rowCount) - 1);
                 }
                 return -1;
             }
         }
         public int StartColumn
         {
-            get { return  this._column; }
+            get { return  _column; }
         }
         public int EndColumn
         {
             get
             {
-                if (this._column != -1)
+                if (_column != -1)
                 {
-                    return ((this._column + this._columnCount) - 1);
+                    return ((_column + _columnCount) - 1);
                 }
                 return -1;
             }
         }
         public bool IsEmpty
         {
-            get { return  (this._type == DataSheetElementType.Empty); }
+            get { return  (_type == DataSheetElementType.Empty); }
         }
         public static bool operator ==(CompositeRange _this, CompositeRange other)
         {
@@ -108,12 +108,12 @@ namespace Dt.Cells.UI
 
         public override bool Equals(object obj)
         {
-            return ((obj is CompositeRange) && this.Equals((CompositeRange) obj));
+            return ((obj is CompositeRange) && Equals((CompositeRange) obj));
         }
 
         public override int GetHashCode()
         {
-            return RangeHelper.GetHashCode(this._type, this._row, this._rowCount, this._column, this._columnCount);
+            return RangeHelper.GetHashCode(_type, _row, _rowCount, _column, _columnCount);
         }
 
         static CompositeRange()

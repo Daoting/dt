@@ -20,28 +20,28 @@ namespace Dt.Cells.UI
 {
     internal class FormulaSelectionItem : INotifyPropertyChanged
     {
-        private bool _canChangeBoundsByUI;
-        private Windows.UI.Color _color;
-        private bool _isFlickering;
-        private bool _isMouseOver;
-        private bool _isResizing;
-        private CellRange _range;
+        bool _canChangeBoundsByUI;
+        Windows.UI.Color _color;
+        bool _isFlickering;
+        bool _isMouseOver;
+        bool _isResizing;
+        CellRange _range;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public FormulaSelectionItem(CellRange range, bool isFlickering = true)
         {
-            this._range = range;
-            this._isFlickering = isFlickering;
+            _range = range;
+            _isFlickering = isFlickering;
         }
 
         public FormulaSelectionItem(int row, int column, int rowCount, int columnCount, bool isFlickering = true) : this(new CellRange(row, column, rowCount, columnCount), isFlickering)
         {
         }
 
-        private void OnPropertyChanged(string propertyName)
+        void OnPropertyChanged(string propertyName)
         {
-            PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            PropertyChangedEventHandler propertyChanged = PropertyChanged;
             if (propertyChanged != null)
             {
                 propertyChanged(this, new PropertyChangedEventArgs(propertyName));
@@ -50,26 +50,26 @@ namespace Dt.Cells.UI
 
         public bool CanChangeBoundsByUI
         {
-            get { return  this._canChangeBoundsByUI; }
+            get { return  _canChangeBoundsByUI; }
             set
             {
-                if (this._canChangeBoundsByUI != value)
+                if (_canChangeBoundsByUI != value)
                 {
-                    this._canChangeBoundsByUI = value;
-                    this.OnPropertyChanged("CanChangeBoundsByUI");
+                    _canChangeBoundsByUI = value;
+                    OnPropertyChanged("CanChangeBoundsByUI");
                 }
             }
         }
 
         public Windows.UI.Color Color
         {
-            get { return  this._color; }
+            get { return  _color; }
             set
             {
-                if (this._color != value)
+                if (_color != value)
                 {
-                    this._color = value;
-                    this.OnPropertyChanged("Color");
+                    _color = value;
+                    OnPropertyChanged("Color");
                 }
             }
         }
@@ -78,52 +78,52 @@ namespace Dt.Cells.UI
 
         public bool IsFlickering
         {
-            get { return  this._isFlickering; }
+            get { return  _isFlickering; }
             set
             {
-                if (this._isFlickering != value)
+                if (_isFlickering != value)
                 {
-                    this._isFlickering = value;
-                    this.OnPropertyChanged("IsFlickering");
+                    _isFlickering = value;
+                    OnPropertyChanged("IsFlickering");
                 }
             }
         }
 
         public bool IsMouseOver
         {
-            get { return  this._isMouseOver; }
+            get { return  _isMouseOver; }
             set
             {
-                if (this._isMouseOver != value)
+                if (_isMouseOver != value)
                 {
-                    this._isMouseOver = value;
-                    this.OnPropertyChanged("IsMouseOver");
+                    _isMouseOver = value;
+                    OnPropertyChanged("IsMouseOver");
                 }
             }
         }
 
         public bool IsResizing
         {
-            get { return  this._isResizing; }
+            get { return  _isResizing; }
             set
             {
-                if (this._isResizing != value)
+                if (_isResizing != value)
                 {
-                    this._isResizing = value;
-                    this.OnPropertyChanged("IsResizing");
+                    _isResizing = value;
+                    OnPropertyChanged("IsResizing");
                 }
             }
         }
 
         public CellRange Range
         {
-            get { return  this._range; }
+            get { return  _range; }
             set
             {
-                if (this._range != value)
+                if (_range != value)
                 {
-                    this._range = value;
-                    this.OnPropertyChanged("Range");
+                    _range = value;
+                    OnPropertyChanged("Range");
                 }
             }
         }

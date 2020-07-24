@@ -21,11 +21,11 @@ namespace Dt.Cells.UndoRedo
     /// </summary>
     public class AddFloatingObjectUndoAction : ActionBase, IUndo
     {
-        private FloatingObject[] _floatingObjects;
-        private SpreadChart[] _savedCharts;
-        private FloatingObject[] _savedObjects;
-        private Picture[] _savedPictures;
-        private Worksheet _worksheet;
+        FloatingObject[] _floatingObjects;
+        SpreadChart[] _savedCharts;
+        FloatingObject[] _savedObjects;
+        Picture[] _savedPictures;
+        Worksheet _worksheet;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.UndoRedo.MoveFloatingObjectUndoAction" /> class.
@@ -34,8 +34,8 @@ namespace Dt.Cells.UndoRedo
         /// <param name="floatingObjects">The floating objects.</param>
         public AddFloatingObjectUndoAction(Worksheet worksheet, FloatingObject[] floatingObjects)
         {
-            this._worksheet = worksheet;
-            this._floatingObjects = floatingObjects;
+            _worksheet = worksheet;
+            _floatingObjects = floatingObjects;
         }
 
         /// <summary>
@@ -56,30 +56,30 @@ namespace Dt.Cells.UndoRedo
         /// <param name="parameter">Data used by the action. If the action does not require data to be passed, this object can be set to null.</param>
         public override void Execute(object parameter)
         {
-            if (this.CanExecute(parameter))
+            if (CanExecute(parameter))
             {
                 SheetView view = parameter as SheetView;
                 try
                 {
                     view.SuspendFloatingObjectsInvalidate();
-                    this.SaveState();
-                    if ((this._savedCharts != null) && (this._savedCharts.Length > 0))
+                    SaveState();
+                    if ((_savedCharts != null) && (_savedCharts.Length > 0))
                     {
-                        this._worksheet.Charts.AddRange(this._savedCharts);
+                        _worksheet.Charts.AddRange(_savedCharts);
                     }
-                    if ((this._savedPictures != null) && (-this._savedPictures.Length > 0))
+                    if ((_savedPictures != null) && (-_savedPictures.Length > 0))
                     {
-                        this._worksheet.Pictures.AddRange(this._savedPictures);
+                        _worksheet.Pictures.AddRange(_savedPictures);
                     }
-                    if ((this._savedObjects != null) && (this._savedObjects.Length > 0))
+                    if ((_savedObjects != null) && (_savedObjects.Length > 0))
                     {
-                        this._worksheet.FloatingObjects.AddRange(this._savedObjects);
+                        _worksheet.FloatingObjects.AddRange(_savedObjects);
                     }
                 }
                 finally
                 {
                     view.ResumeFloatingObjectsInvalidate();
-                    ReadOnlyCollection<CellRange> selections = this._worksheet.Selections;
+                    ReadOnlyCollection<CellRange> selections = _worksheet.Selections;
                     if (selections.Count != 0)
                     {
                         foreach (CellRange range in selections)
@@ -100,7 +100,7 @@ namespace Dt.Cells.UndoRedo
             List<SpreadChart> list = new List<SpreadChart>();
             List<FloatingObject> list2 = new List<FloatingObject>();
             List<Picture> list3 = new List<Picture>();
-            foreach (FloatingObject obj2 in this._floatingObjects)
+            foreach (FloatingObject obj2 in _floatingObjects)
             {
                 if (obj2 is SpreadChart)
                 {
@@ -115,9 +115,9 @@ namespace Dt.Cells.UndoRedo
                     list2.Add(obj2);
                 }
             }
-            this._savedCharts = list.ToArray();
-            this._savedObjects = list2.ToArray();
-            this._savedPictures = list3.ToArray();
+            _savedCharts = list.ToArray();
+            _savedObjects = list2.ToArray();
+            _savedPictures = list3.ToArray();
         }
 
         /// <summary>
@@ -144,32 +144,32 @@ namespace Dt.Cells.UndoRedo
             try
             {
                 view.SuspendFloatingObjectsInvalidate();
-                if ((this._savedCharts != null) && (this._savedCharts.Length > 0))
+                if ((_savedCharts != null) && (_savedCharts.Length > 0))
                 {
-                    foreach (SpreadChart chart in this._savedCharts)
+                    foreach (SpreadChart chart in _savedCharts)
                     {
-                        this._worksheet.Charts.Remove(chart);
+                        _worksheet.Charts.Remove(chart);
                     }
                 }
-                if ((this._savedPictures != null) && (this._savedPictures.Length > 0))
+                if ((_savedPictures != null) && (_savedPictures.Length > 0))
                 {
-                    foreach (Picture picture in this._savedPictures)
+                    foreach (Picture picture in _savedPictures)
                     {
-                        this._worksheet.Pictures.Remove(picture);
+                        _worksheet.Pictures.Remove(picture);
                     }
                 }
-                if ((this._savedObjects != null) && (this._savedObjects.Length > 0))
+                if ((_savedObjects != null) && (_savedObjects.Length > 0))
                 {
-                    foreach (FloatingObject obj2 in this._savedObjects)
+                    foreach (FloatingObject obj2 in _savedObjects)
                     {
-                        this._worksheet.FloatingObjects.Remove(obj2);
+                        _worksheet.FloatingObjects.Remove(obj2);
                     }
                 }
             }
             finally
             {
                 view.ResumeFloatingObjectsInvalidate();
-                ReadOnlyCollection<CellRange> selections = this._worksheet.Selections;
+                ReadOnlyCollection<CellRange> selections = _worksheet.Selections;
                 if (selections.Count != 0)
                 {
                     foreach (CellRange range in selections)

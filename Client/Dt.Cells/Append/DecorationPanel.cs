@@ -27,18 +27,18 @@ namespace Dt.Cells.UI
     /// </summary>
     internal sealed partial class DecorationPanel : Panel
     {
-        private const double _thickness = 3;
-        private GcViewport _viewport;
-        private readonly List<Line> _horLines;
-        private readonly List<Line> _verLines;
-        private readonly Rectangle _rect;
-        private Rect _bounds;
-        private int _startRow;
-        private int _startCol;
-        private int _toRow;
-        private int _toCol;
-        private bool _moving;
-        private Rectangle _dragRect;
+        const double _thickness = 3;
+        GcViewport _viewport;
+        readonly List<Line> _horLines;
+        readonly List<Line> _verLines;
+        readonly Rectangle _rect;
+        Rect _bounds;
+        int _startRow;
+        int _startCol;
+        int _toRow;
+        int _toCol;
+        bool _moving;
+        Rectangle _dragRect;
 
         /// <summary>
         /// 构造方法
@@ -161,7 +161,7 @@ namespace Dt.Cells.UI
         /// <param name="p_height"></param>
         /// <param name="p_isHor"></param>
         /// <param name="p_paper"></param>
-        private void PrepareLines(double p_width, double p_height, bool p_isHor, Size p_paper)
+        void PrepareLines(double p_width, double p_height, bool p_isHor, Size p_paper)
         {
             int count;
             List<Line> lines;
@@ -214,7 +214,7 @@ namespace Dt.Cells.UI
         /// 创建分页线
         /// </summary>
         /// <returns></returns>
-        private Line CreateLine()
+        Line CreateLine()
         {
             Line line = new Line();
             line.StrokeDashArray = new DoubleCollection() { 3, 1 };
@@ -223,7 +223,7 @@ namespace Dt.Cells.UI
             return line;
         }
 
-        private void ClearLines(bool p_isHor)
+        void ClearLines(bool p_isHor)
         {
             List<Line> lines = p_isHor ? _horLines : _verLines;
             while (lines.Count > 0)
@@ -239,7 +239,7 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnPointerPressed(object sender, PointerRoutedEventArgs e)
+        void OnPointerPressed(object sender, PointerRoutedEventArgs e)
         {
             if (_viewport.Sheet == null
                 || _viewport.Sheet.DecorationRange == null
@@ -294,7 +294,7 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnPointerMoved(object sender, PointerRoutedEventArgs e)
+        void OnPointerMoved(object sender, PointerRoutedEventArgs e)
         {
             if (_viewport.Sheet == null
                 || _viewport.Sheet.DecorationRange == null)
@@ -329,14 +329,14 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void OnPointerExited(object sender, PointerRoutedEventArgs e)
+        void OnPointerExited(object sender, PointerRoutedEventArgs e)
         {
             e.Handled = true;
             if (!_moving)
                 _viewport.Sheet.ResetCursor();
         }
 
-        private void OnPointerReleased(object sender, PointerRoutedEventArgs e)
+        void OnPointerReleased(object sender, PointerRoutedEventArgs e)
         {
             if (_moving)
             {
@@ -349,7 +349,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void ReleasePointer(PointerRoutedEventArgs e)
+        void ReleasePointer(PointerRoutedEventArgs e)
         {
             _moving = false;
             _rect.ReleasePointerCapture(e.Pointer);
@@ -361,7 +361,7 @@ namespace Dt.Cells.UI
                 _dragRect.Visibility = Visibility.Collapsed;
         }
 
-        private void ShowIndicator()
+        void ShowIndicator()
         {
             if (_dragRect == null && _viewport.Sheet != null)
             {
@@ -370,7 +370,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void RefreshIndicator()
+        void RefreshIndicator()
         {
             if (_viewport.Sheet == null
                 || _viewport.Sheet.DecorationRange == null
@@ -387,7 +387,7 @@ namespace Dt.Cells.UI
             _dragRect.Width = rc.Width + _thickness;
         }
 
-        private Rectangle CreateRectangle()
+        Rectangle CreateRectangle()
         {
             Rectangle rect = new Rectangle();
             rect.Stroke = new SolidColorBrush(Color.FromArgb(0xFF, 0x1B, 0xA1, 0xE2));

@@ -20,8 +20,8 @@ namespace Dt.Cells.UI
     {
         internal ColumnWidthChangedEventArgs(int[] columnList, bool header)
         {
-            this.ColumnList = columnList;
-            this.Header = header;
+            ColumnList = columnList;
+            Header = header;
         }
 
         /// <summary>

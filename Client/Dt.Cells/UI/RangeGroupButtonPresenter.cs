@@ -35,8 +35,8 @@ namespace Dt.Cells.UI
         {
             base.DefaultStyleKey = typeof(RangeGroupButtonPresenter);
             base.IsTabStop = false;
-            this.Index = -1;
-            this.Level = -1;
+            Index = -1;
+            Level = -1;
         }
 
         /// <summary>
@@ -45,10 +45,10 @@ namespace Dt.Cells.UI
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            this.UpdateVisualState(false);
+            UpdateVisualState(false);
         }
 
-        private static void OnIsExpandedPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        static void OnIsExpandedPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             RangeGroupButtonPresenter presenter = d as RangeGroupButtonPresenter;
             if (presenter != null)
@@ -77,9 +77,9 @@ namespace Dt.Cells.UI
             e.Handled = false;
         }
 
-        private void UpdateVisualState(bool useTransitions)
+        void UpdateVisualState(bool useTransitions)
         {
-            if (this.IsExpanded)
+            if (IsExpanded)
             {
                 VisualStateManager.GoToState(this, "Expanded", useTransitions);
             }

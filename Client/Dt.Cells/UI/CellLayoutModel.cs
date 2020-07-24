@@ -19,25 +19,25 @@ namespace Dt.Cells.UI
     /// </summary>
     internal class CellLayoutModel : IEnumerable<CellLayout>, IEnumerable
     {
-        private List<CellLayout> innerList = new List<CellLayout>();
-        private Dictionary<int, List<CellLayout>> rowMappingCache = new Dictionary<int, List<CellLayout>>();
+        List<CellLayout> innerList = new List<CellLayout>();
+        Dictionary<int, List<CellLayout>> rowMappingCache = new Dictionary<int, List<CellLayout>>();
 
         public void Add(CellLayout item)
         {
-            this.innerList.Add(item);
-            this.AddToRowMapping(item);
+            innerList.Add(item);
+            AddToRowMapping(item);
         }
 
-        private void AddToRowMapping(CellLayout item)
+        void AddToRowMapping(CellLayout item)
         {
             for (int i = 0; i < item.RowCount; i++)
             {
                 int num2 = item.Row + i;
                 List<CellLayout> list = null;
-                if (!this.rowMappingCache.TryGetValue(num2, out list))
+                if (!rowMappingCache.TryGetValue(num2, out list))
                 {
                     list = new List<CellLayout>();
-                    this.rowMappingCache[num2] = list;
+                    rowMappingCache[num2] = list;
                 }
                 if (list != null)
                 {
@@ -49,7 +49,7 @@ namespace Dt.Cells.UI
         public CellLayout FindCell(int row, int column)
         {
             List<CellLayout> list = null;
-            if (this.rowMappingCache.TryGetValue(row, out list) && (list != null))
+            if (rowMappingCache.TryGetValue(row, out list) && (list != null))
             {
                 int num = list.Count;
                 for (int i = 0; i < num; i++)
@@ -66,10 +66,10 @@ namespace Dt.Cells.UI
 
         public CellLayout FindPoint(double x, double y)
         {
-            int num = this.innerList.Count;
+            int num = innerList.Count;
             for (int i = 0; i < num; i++)
             {
-                CellLayout layout = this.innerList[i];
+                CellLayout layout = innerList[i];
                 if (layout.ContainsPoint(x, y))
                 {
                     return layout;
@@ -80,12 +80,12 @@ namespace Dt.Cells.UI
 
         public IEnumerator<CellLayout> GetEnumerator()
         {
-            return (IEnumerator<CellLayout>) this.innerList.GetEnumerator();
+            return (IEnumerator<CellLayout>) innerList.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.innerList.GetEnumerator();
+            return innerList.GetEnumerator();
         }
     }
 }

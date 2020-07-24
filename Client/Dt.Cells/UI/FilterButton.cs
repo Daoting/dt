@@ -23,16 +23,16 @@ namespace Dt.Cells.UI
     [TemplateVisualState(GroupName="SortFilterStates", Name="FilterAscend"), TemplateVisualState(GroupName="SortFilterStates", Name="FilterAscend"), TemplateVisualState(GroupName="SortFilterStates", Name="Ascend"), TemplateVisualState(GroupName="SortFilterStates", Name="Filter"), TemplateVisualState(GroupName="SortFilterStates", Name="NoSortFilter"), TemplateVisualState(GroupName="SortFilterStates", Name="Descend")]
     public partial class FilterButton : Button
     {
-        private const string ASCEND_STATE = "Ascend";
-        private const string CHECK_GROUP = "CheckStates";
-        private const string CHECKED_STATE = "Checked";
-        private const string DESCEND_STATE = "Descend";
-        private const string FILTER_ASCEND_STATE = "FilterAscend";
-        private const string FILTER_DESCEND_STATE = "FilterDescend";
-        private const string FILTER_STATE = "Filter";
-        private const string NO_SORTFILTER_STATE = "NoSortFilter";
-        private const string SORTFILTER_GROUP = "SortFilterStates";
-        private const string UNCHECKED_STATE = "Unchecked";
+        const string ASCEND_STATE = "Ascend";
+        const string CHECK_GROUP = "CheckStates";
+        const string CHECKED_STATE = "Checked";
+        const string DESCEND_STATE = "Descend";
+        const string FILTER_ASCEND_STATE = "FilterAscend";
+        const string FILTER_DESCEND_STATE = "FilterDescend";
+        const string FILTER_STATE = "Filter";
+        const string NO_SORTFILTER_STATE = "NoSortFilter";
+        const string SORTFILTER_GROUP = "SortFilterStates";
+        const string UNCHECKED_STATE = "Unchecked";
 
         /// <summary>
         /// Creates a new instance of the control.
@@ -45,9 +45,9 @@ namespace Dt.Cells.UI
 
         internal void ApplyState()
         {
-            if ((this.CellView != null) && (this.CellView.SheetView != null))
+            if ((CellView != null) && (CellView.SheetView != null))
             {
-                FilterButtonInfo filterButtonInfo = this.CellView.FilterButtonInfo;
+                FilterButtonInfo filterButtonInfo = CellView.FilterButtonInfo;
                 if (filterButtonInfo == null)
                 {
                     VisualStateManager.GoToState(this, "NoSortFilter", true);
@@ -90,17 +90,17 @@ namespace Dt.Cells.UI
                         }
                     }
                     bool flag = false;
-                    if ((this.Area == SheetArea.ColumnHeader) && (filterButtonInfo.ColumnViewportIndex == this.CellView.OwningRow.OwningPresenter.ColumnViewportIndex))
+                    if ((Area == SheetArea.ColumnHeader) && (filterButtonInfo.ColumnViewportIndex == CellView.OwningRow.OwningPresenter.ColumnViewportIndex))
                     {
                         flag = true;
                     }
-                    else if (((this.Area == SheetArea.Cells) && (filterButtonInfo.RowViewportIndex == this.CellView.OwningRow.OwningPresenter.RowViewportIndex)) && (filterButtonInfo.ColumnViewportIndex == this.CellView.OwningRow.OwningPresenter.ColumnViewportIndex))
+                    else if (((Area == SheetArea.Cells) && (filterButtonInfo.RowViewportIndex == CellView.OwningRow.OwningPresenter.RowViewportIndex)) && (filterButtonInfo.ColumnViewportIndex == CellView.OwningRow.OwningPresenter.ColumnViewportIndex))
                     {
                         flag = true;
                     }
                     if (flag)
                     {
-                        if (this.CellView.SheetView.IsFilterDropDownOpen)
+                        if (CellView.SheetView.IsFilterDropDownOpen)
                         {
                             VisualStateManager.GoToState(this, "Checked", true);
                         }
@@ -119,7 +119,7 @@ namespace Dt.Cells.UI
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            this.ApplyState();
+            ApplyState();
         }
 
         /// <summary>

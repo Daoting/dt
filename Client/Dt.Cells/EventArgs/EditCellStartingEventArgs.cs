@@ -21,8 +21,8 @@ namespace Dt.Cells.UI
     {
         internal EditCellStartingEventArgs(int row, int column)
         {
-            this.Row = row;
-            this.Column = column;
+            Row = row;
+            Column = column;
         }
 
         internal EditCellStartingEventArgs(int row, int column, bool cancel) : this(row, column)

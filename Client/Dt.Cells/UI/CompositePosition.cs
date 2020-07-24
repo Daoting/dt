@@ -16,33 +16,33 @@ namespace Dt.Cells.UI
     [StructLayout(LayoutKind.Sequential)]
     internal struct CompositePosition : IEquatable<CompositePosition>
     {
-        private DataSheetElementType _type;
-        private int _row;
-        private int _column;
+        DataSheetElementType _type;
+        int _row;
+        int _column;
         public static readonly CompositePosition Empty;
         public static readonly CompositePosition Sheet;
         public CompositePosition(DataSheetElementType type, int row, int column)
         {
-            this._type = type;
-            this._row = row;
-            this._column = column;
+            _type = type;
+            _row = row;
+            _column = column;
         }
 
         public DataSheetElementType Type
         {
-            get { return  this._type; }
+            get { return  _type; }
         }
         public int Row
         {
-            get { return  this._row; }
+            get { return  _row; }
         }
         public int Column
         {
-            get { return  this._column; }
+            get { return  _column; }
         }
         public bool IsEmpty
         {
-            get { return  (this._type == DataSheetElementType.Empty); }
+            get { return  (_type == DataSheetElementType.Empty); }
         }
         public static bool operator ==(CompositePosition _this, CompositePosition other)
         {
@@ -61,12 +61,12 @@ namespace Dt.Cells.UI
 
         public override bool Equals(object obj)
         {
-            return ((obj is CompositePosition) && this.Equals((CompositePosition) obj));
+            return ((obj is CompositePosition) && Equals((CompositePosition) obj));
         }
 
         public override int GetHashCode()
         {
-            return PositionHelper.GetHashCode(this._type, this._row, this._column);
+            return PositionHelper.GetHashCode(_type, _row, _column);
         }
 
         static CompositePosition()

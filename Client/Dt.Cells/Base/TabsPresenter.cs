@@ -23,10 +23,10 @@ namespace Dt.Cells.UI
     internal partial class TabsPresenter : Panel
     {
         internal bool IsLastSheetVisible;
-        private Size _arrangeSize = new Size();
-        private List<double> _cachedTabsWidth = null;
-        private int _startIndex = 0;
-        private const double _OVERLAP_OFFSET = 4.0;
+        Size _arrangeSize = new Size();
+        List<double> _cachedTabsWidth = null;
+        int _startIndex = 0;
+        const double _OVERLAP_OFFSET = 4.0;
 
 #if ANDROID || IOS
         new
@@ -105,7 +105,7 @@ namespace Dt.Cells.UI
             return StartIndex;
         }
 
-        private List<double> GetTabsWidth()
+        List<double> GetTabsWidth()
         {
             if (_cachedTabsWidth == null)
             {
@@ -184,7 +184,7 @@ namespace Dt.Cells.UI
 #if ANDROID  || IOS
         new
 #endif
-        private void RaisePropertyChanged(string property)
+        void RaisePropertyChanged(string property)
         {
             if (PropertyChanged != null)
             {

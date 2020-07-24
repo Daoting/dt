@@ -29,13 +29,13 @@ namespace Dt.Cells.UI
     [TemplateVisualState(Name="Normal", GroupName="CommonStates")]
     public partial class DragFillSmartTag : Control
     {
-        private Windows.UI.Xaml.Controls.Primitives.Popup _autoFitContentMenuPopup;
-        private DragFillContextMenu _autoFitListBox;
-        private bool _closedByThis;
-        private PopupHelper _dragFillPopupManager;
-        private bool _isHover;
-        private bool _isPressed;
-        private SheetView _ownerSheet;
+        Windows.UI.Xaml.Controls.Primitives.Popup _autoFitContentMenuPopup;
+        DragFillContextMenu _autoFitListBox;
+        bool _closedByThis;
+        PopupHelper _dragFillPopupManager;
+        bool _isHover;
+        bool _isPressed;
+        SheetView _ownerSheet;
 
         /// <summary>
         /// Occurs when the automatic fill type has changed.
@@ -44,9 +44,9 @@ namespace Dt.Cells.UI
 
         internal DragFillSmartTag(SheetView ownerSheet)
         {
-            this._ownerSheet = ownerSheet;
-            this.InitializeContextMenu();
-            this._dragFillPopupManager = new PopupHelper(this._autoFitContentMenuPopup);
+            _ownerSheet = ownerSheet;
+            InitializeContextMenu();
+            _dragFillPopupManager = new PopupHelper(_autoFitContentMenuPopup);
             base.DefaultStyleKey = typeof(DragFillSmartTag);
             Loaded += DragFillSmartTag_Loaded;
         }
@@ -57,33 +57,33 @@ namespace Dt.Cells.UI
         public DragFillSmartTag()
         { }
 
-        private void _autoFitContentMenu_Closed(object sender, object e)
+        void _autoFitContentMenu_Closed(object sender, object e)
         {
-            this._isPressed = false;
-            this._isHover = this._closedByThis;
-            this._closedByThis = false;
-            this.UpdateVisualState(true);
+            _isPressed = false;
+            _isHover = _closedByThis;
+            _closedByThis = false;
+            UpdateVisualState(true);
         }
 
-        private void _autoFitListBox_SelectedAutoFitTypeChanged(object sender, EventArgs e)
+        void _autoFitListBox_SelectedAutoFitTypeChanged(object sender, EventArgs e)
         {
-            this._isPressed = false;
-            this._dragFillPopupManager.Close();
-            if (this.AutoFilterTypeChanged != null)
+            _isPressed = false;
+            _dragFillPopupManager.Close();
+            if (AutoFilterTypeChanged != null)
             {
-                this.AutoFilterTypeChanged(this, EventArgs.Empty);
+                AutoFilterTypeChanged(this, EventArgs.Empty);
             }
         }
 
         internal void CloseDragFillSmartTagPopup()
         {
-            if (this._dragFillPopupManager != null)
+            if (_dragFillPopupManager != null)
             {
-                this._dragFillPopupManager.Close();
+                _dragFillPopupManager.Close();
             }
         }
 
-        private void DragFillSmartTag_Loaded(object sender, RoutedEventArgs e)
+        void DragFillSmartTag_Loaded(object sender, RoutedEventArgs e)
         {
             DragFillSmartTag tag = this;
             tag.PointerEntered += OnDragFillSmartTagPointerEntered;
@@ -93,11 +93,11 @@ namespace Dt.Cells.UI
             tag3.PointerPressed += OnDragFillSmartTagPointerPressed;
             DragFillSmartTag tag4 = this;
             tag4.PointerReleased += OnDragFillSmartTagPointerReleased;
-            Windows.UI.Xaml.Controls.Primitives.Popup popup = this._autoFitContentMenuPopup;
+            Windows.UI.Xaml.Controls.Primitives.Popup popup = _autoFitContentMenuPopup;
             popup.Closed += _autoFitContentMenu_Closed;
-            this._isPressed = false;
-            this._isHover = false;
-            this.UpdateVisualState(true);
+            _isPressed = false;
+            _isHover = false;
+            UpdateVisualState(true);
         }
 
         internal void DragFillSmartTagTap(Windows.Foundation.Point point)
@@ -105,26 +105,26 @@ namespace Dt.Cells.UI
             double num = 0.0;
             double actualHeight = base.ActualHeight;
             Windows.Foundation.Point point2 = new Windows.Foundation.Point(num - 5.0, actualHeight);
-            point2 = base.TransformToVisual(this._ownerSheet).Transform(point2);
-            if (!this._isPressed)
+            point2 = base.TransformToVisual(_ownerSheet).Transform(point2);
+            if (!_isPressed)
             {
-                this._isPressed = true;
-                this.UpdateVisualState(true);
-                this._dragFillPopupManager.ShowAsModal(this._ownerSheet, this._autoFitListBox, point2, PopupDirection.BottomRight, true, false);
+                _isPressed = true;
+                UpdateVisualState(true);
+                _dragFillPopupManager.ShowAsModal(_ownerSheet, _autoFitListBox, point2, PopupDirection.BottomRight, true, false);
             }
             else
             {
-                this._closedByThis = true;
-                this._isPressed = false;
-                this._dragFillPopupManager.ShowAsModal(this._ownerSheet, this._autoFitListBox, point2, PopupDirection.BottomRight, true, false);
+                _closedByThis = true;
+                _isPressed = false;
+                _dragFillPopupManager.ShowAsModal(_ownerSheet, _autoFitListBox, point2, PopupDirection.BottomRight, true, false);
             }
         }
 
         internal DragFillContextMenuItem GetTappedDragFillContextMenu(Windows.Foundation.Point point)
         {
-            if (this.IsContextMenuOpened)
+            if (IsContextMenuOpened)
             {
-                Windows.Foundation.Rect rect = new Windows.Foundation.Rect(this._dragFillPopupManager.Location.X, this._dragFillPopupManager.Location.Y, this._dragFillPopupManager.Size.Width, this._dragFillPopupManager.Size.Height);
+                Windows.Foundation.Rect rect = new Windows.Foundation.Rect(_dragFillPopupManager.Location.X, _dragFillPopupManager.Location.Y, _dragFillPopupManager.Size.Width, _dragFillPopupManager.Size.Height);
                 if (!rect.Contains(point))
                 {
                     return null;
@@ -135,7 +135,7 @@ namespace Dt.Cells.UI
                 {
                     return null;
                 }
-                List<UIElement> list = Enumerable.ToList<UIElement>(VisualTreeHelper.FindElementsInHostCoordinates(this.TranslatePoint(point, content), content));
+                List<UIElement> list = Enumerable.ToList<UIElement>(VisualTreeHelper.FindElementsInHostCoordinates(TranslatePoint(point, content), content));
                 if ((list != null) && (list.Count > 0))
                 {
                     foreach (UIElement element2 in list)
@@ -150,71 +150,71 @@ namespace Dt.Cells.UI
             return null;
         }
 
-        private void InitializeContextMenu()
+        void InitializeContextMenu()
         {
-            this._autoFitContentMenuPopup = new Windows.UI.Xaml.Controls.Primitives.Popup();
+            _autoFitContentMenuPopup = new Windows.UI.Xaml.Controls.Primitives.Popup();
             AutoFillType[] items = new AutoFillType[4];
             items[1] = AutoFillType.FillSeries;
             items[2] = AutoFillType.FillFormattingOnly;
             items[3] = AutoFillType.FillWithoutFormatting;
-            this._autoFitListBox = new DragFillContextMenu(items, AutoFillType.CopyCells);
-            this._autoFitListBox.SelectedAutoFitTypeChanged += new EventHandler(this._autoFitListBox_SelectedAutoFitTypeChanged);
+            _autoFitListBox = new DragFillContextMenu(items, AutoFillType.CopyCells);
+            _autoFitListBox.SelectedAutoFitTypeChanged += new EventHandler(_autoFitListBox_SelectedAutoFitTypeChanged);
         }
 
-        private void OnDragFillSmartTagPointerEntered(object sender, PointerRoutedEventArgs e)
+        void OnDragFillSmartTagPointerEntered(object sender, PointerRoutedEventArgs e)
         {
-            this._isHover = true;
-            this.UpdateVisualState(true);
+            _isHover = true;
+            UpdateVisualState(true);
         }
 
-        private void OnDragFillSmartTagPointerExited(object sender, PointerRoutedEventArgs e)
+        void OnDragFillSmartTagPointerExited(object sender, PointerRoutedEventArgs e)
         {
-            this._isHover = false;
-            this.UpdateVisualState(true);
+            _isHover = false;
+            UpdateVisualState(true);
         }
 
-        private void OnDragFillSmartTagPointerPressed(object sender, PointerRoutedEventArgs e)
+        void OnDragFillSmartTagPointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            this.ProcessPointerDown();
+            ProcessPointerDown();
             e.Handled = true;
         }
 
-        private void OnDragFillSmartTagPointerReleased(object sender, PointerRoutedEventArgs e)
+        void OnDragFillSmartTagPointerReleased(object sender, PointerRoutedEventArgs e)
         {
         }
 
-        private void ProcessPointerDown()
+        void ProcessPointerDown()
         {
             double num = 0.0;
             double actualHeight = base.ActualHeight;
             Windows.Foundation.Point point = new Windows.Foundation.Point(num - 5.0, actualHeight);
-            point = base.TransformToVisual(this._ownerSheet).Transform(point);
-            if (!this._isPressed)
+            point = base.TransformToVisual(_ownerSheet).Transform(point);
+            if (!_isPressed)
             {
-                this._isPressed = true;
-                this.UpdateVisualState(true);
-                this._dragFillPopupManager.ShowAsModal(this._ownerSheet, this._autoFitListBox, point, PopupDirection.BottomRight, true, false);
+                _isPressed = true;
+                UpdateVisualState(true);
+                _dragFillPopupManager.ShowAsModal(_ownerSheet, _autoFitListBox, point, PopupDirection.BottomRight, true, false);
             }
             else
             {
-                this._closedByThis = true;
-                this._isPressed = false;
-                this._dragFillPopupManager.ShowAsModal(this._ownerSheet, this._autoFitListBox, point, PopupDirection.BottomRight, true, false);
+                _closedByThis = true;
+                _isPressed = false;
+                _dragFillPopupManager.ShowAsModal(_ownerSheet, _autoFitListBox, point, PopupDirection.BottomRight, true, false);
             }
         }
 
-        private Windows.Foundation.Point TranslatePoint(Windows.Foundation.Point point, UIElement element)
+        Windows.Foundation.Point TranslatePoint(Windows.Foundation.Point point, UIElement element)
         {
-            return this._ownerSheet.TransformToVisual(element).Transform(point);
+            return _ownerSheet.TransformToVisual(element).Transform(point);
         }
 
-        private void UpdateVisualState(bool useTransitions)
+        void UpdateVisualState(bool useTransitions)
         {
-            if (this._isPressed)
+            if (_isPressed)
             {
                 VisualStateManager.GoToState(this, "MouseLeftButtonPressed", useTransitions);
             }
-            else if (this._isHover)
+            else if (_isHover)
             {
                 VisualStateManager.GoToState(this, "MouseOver", useTransitions);
             }
@@ -232,19 +232,19 @@ namespace Dt.Cells.UI
         /// </value>
         public AutoFillType AutoFilterType
         {
-            get { return  this._autoFitListBox.SelectedAutoFitType; }
-            set { this._autoFitListBox.SelectedAutoFitType = value; }
+            get { return  _autoFitListBox.SelectedAutoFitType; }
+            set { _autoFitListBox.SelectedAutoFitType = value; }
         }
 
         internal bool IsContextMenuOpened
         {
             get
             {
-                if (this._autoFitContentMenuPopup == null)
+                if (_autoFitContentMenuPopup == null)
                 {
                     return false;
                 }
-                return this._autoFitContentMenuPopup.IsOpen;
+                return _autoFitContentMenuPopup.IsOpen;
             }
         }
     }

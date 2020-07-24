@@ -18,15 +18,15 @@ namespace Dt.Cells.UI
 {
     internal class PrintPaginator
     {
-        private double _horZoomFactor = 1.0;
-        private double _verZoomFactor = 1.0;
-        private Excel _excel;
-        private Worksheet _sheet;
-        private Size _pageSize;
-        private PrintInfo _info;
-        private List<PageInfo> _columnPages;
-        private int _pageCount = -1;
-        private List<PageInfo> _rowPages;
+        double _horZoomFactor = 1.0;
+        double _verZoomFactor = 1.0;
+        Excel _excel;
+        Worksheet _sheet;
+        Size _pageSize;
+        PrintInfo _info;
+        List<PageInfo> _columnPages;
+        int _pageCount = -1;
+        List<PageInfo> _rowPages;
 
         public PrintPaginator(Excel p_spread, int p_sheetIndex, PrintInfo p_printSettings, Size p_paperSize)
         {
@@ -122,14 +122,14 @@ namespace Dt.Cells.UI
             set { _verZoomFactor = value; }
         }
 
-        private void PaginateCore()
+        void PaginateCore()
         {
             VerticalPaginate();
             HorizontalPaginate();
             _pageCount = _rowPages.Count * _columnPages.Count;
         }
 
-        private void VerticalPaginate()
+        void VerticalPaginate()
         {
             int rowStart = (_info.RowStart != -1) ? _info.RowStart : 0;
             int rowEnd = (_info.RowEnd != -1) ? _info.RowEnd : _info.UseMax ? _sheet.GetLastDirtyRow() : (_sheet.RowCount - 1);
@@ -137,7 +137,7 @@ namespace Dt.Cells.UI
             ModifyPageInfo(_rowPages, rowStart);
         }
 
-        private void VerticalFitPaginate(double totalContentHeight, int vPageCount)
+        void VerticalFitPaginate(double totalContentHeight, int vPageCount)
         {
             double num = 1.0;
             if (_info.FitPagesTall < vPageCount)
@@ -160,7 +160,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private List<PageInfo> VerticalPaginateCore(int rowStart, int rowEnd, int repeatRowStart, int repetRowEnd, SheetArea sheetArea, double pageHeight)
+        List<PageInfo> VerticalPaginateCore(int rowStart, int rowEnd, int repeatRowStart, int repetRowEnd, SheetArea sheetArea, double pageHeight)
         {
             bool flag = repeatRowStart < rowStart;
             double num = 0.0;
@@ -256,7 +256,7 @@ namespace Dt.Cells.UI
             return list;
         }
 
-        private void HorizontalPaginate()
+        void HorizontalPaginate()
         {
             int columnStart = (_info.ColumnStart != -1) ? _info.ColumnStart : 0;
             int columnEnd = (_info.ColumnEnd != -1) ? _info.ColumnEnd : _info.UseMax ? _sheet.GetLastDirtyColumn() : (_sheet.ColumnCount - 1);
@@ -264,7 +264,7 @@ namespace Dt.Cells.UI
             ModifyPageInfo(_columnPages, columnStart);
         }
 
-        private void HorizontalFitPaginate(double totalContentWidth, int hPageCount)
+        void HorizontalFitPaginate(double totalContentWidth, int hPageCount)
         {
             double num = 1.0;
             if (_info.FitPagesWide < hPageCount)
@@ -287,7 +287,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private List<PageInfo> HorizontalPaginatorCore(int columnStart, int columnEnd, int repeatColumnStart, int repeatColumnEnd, SheetArea sheetArea, double pageWidth)
+        List<PageInfo> HorizontalPaginatorCore(int columnStart, int columnEnd, int repeatColumnStart, int repeatColumnEnd, SheetArea sheetArea, double pageWidth)
         {
             bool flag = repeatColumnStart < columnStart;
             double num = 0.0;
@@ -383,7 +383,7 @@ namespace Dt.Cells.UI
             return list;
         }
 
-        private double GetColumnWidth(int c, SheetArea sheetArea)
+        double GetColumnWidth(int c, SheetArea sheetArea)
         {
             bool columnVisible = _sheet.GetColumnVisible(c, sheetArea);
             if ((sheetArea == SheetArea.Cells) && (c < _sheet.ColumnCount))
@@ -408,7 +408,7 @@ namespace Dt.Cells.UI
             return ((num2 + 1.0) + 4.0);
         }
 
-        private double GetRowHeight(int r, SheetArea sheetArea)
+        double GetRowHeight(int r, SheetArea sheetArea)
         {
             bool rowVisible = _sheet.GetRowVisible(r, sheetArea);
             if ((sheetArea == SheetArea.Cells) && (r < _sheet.RowCount))
@@ -446,7 +446,7 @@ namespace Dt.Cells.UI
             return defaultRowHeight;
         }
 
-        private void ModifyPageInfo(List<PageInfo> pages, int itemStart)
+        void ModifyPageInfo(List<PageInfo> pages, int itemStart)
         {
             PageInfo info = null;
             for (int i = 0; i < pages.Count; i++)
@@ -470,12 +470,12 @@ namespace Dt.Cells.UI
             }
         }
 
-        private double ContentHeight
+        double ContentHeight
         {
             get { return (_pageSize.Height / VerZoomFactor); }
         }
 
-        private double ContentWidth
+        double ContentWidth
         {
             get { return (_pageSize.Width / HorZoomFactor); }
         }

@@ -26,7 +26,7 @@ namespace Dt.Cells.UI
         /// </returns>
         public override string ToString()
         {
-            return this.Label;
+            return Label;
         }
 
         /// <summary>

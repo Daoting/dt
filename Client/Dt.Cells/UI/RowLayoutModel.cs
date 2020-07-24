@@ -25,7 +25,7 @@ namespace Dt.Cells.UI
             RowLayout layout = null;
             if (base.Count > 0)
             {
-                layout = this.FindY(y);
+                layout = FindY(y);
                 if (layout == null)
                 {
                     layout = (y < Enumerable.ElementAt<RowLayout>((IEnumerable<RowLayout>) this, 0).Y) ? Enumerable.ElementAt<RowLayout>((IEnumerable<RowLayout>) this, 0) : Enumerable.ElementAt<RowLayout>((IEnumerable<RowLayout>) this, base.Count - 1);

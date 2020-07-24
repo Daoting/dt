@@ -30,58 +30,58 @@ namespace Dt.Cells.UI
     /// </summary>
     public partial class SpreadView : SheetView
     {
-        private Size _cachedLastAvailableSize;
-        private SpreadLayout _cachedSpreadLayout;
-        private SplitBoxAlignment _columnSplitBoxAlignment;
-        private SplitBoxPolicy _columnSplitBoxPolicy;
-        private Line _columnSplittingTracker;
-        private CrossSplitBar[,] _crossSplitBar;
-        private ScrollBar[] _horizontalScrollBar;
-        private double _horizontalScrollBarHeight;
-        private Style _horizontalScrollBarStyle;
-        private HorizontalSplitBar[] _horizontalSplitBar;
-        private HorizontalSplitBox[] _horizontalSplitBox;
-        private HashSet<int> _invisibleColumns;
-        private HashSet<int> _invisibleRows;
-        private bool _pendinging;
-        private Grid _progressGrid;
-        private ProgressRing _progressRing;
-        private SplitBoxAlignment _rowSplitBoxAlignment;
-        private SplitBoxPolicy _rowSplitBoxPolicy;
-        private Line _rowSplittingTracker;
-        private ScrollBarTrackPolicy _scrollBarTrackPolicy;
-        private int _scrollTo;
-        private bool _showScrollTip;
-        private Canvas _splittingTrackerContainer;
-        private TabStrip _tabStrip;
-        private bool _tabStripEditable;
-        private bool _tabStripInsertTab;
-        private double _tabStripRatio;
-        private Visibility _tabStripVisibility;
-        private ScrollBar[] _verticalScrollBar;
-        private Style _verticalScrollBarStyle;
-        private double _verticalScrollBarWidth;
-        private VerticalSplitBar[] _verticalSplitBar;
-        private VerticalSplitBox[] _verticalSplitBox;
+        Size _cachedLastAvailableSize;
+        SpreadLayout _cachedSpreadLayout;
+        SplitBoxAlignment _columnSplitBoxAlignment;
+        SplitBoxPolicy _columnSplitBoxPolicy;
+        Line _columnSplittingTracker;
+        CrossSplitBar[,] _crossSplitBar;
+        ScrollBar[] _horizontalScrollBar;
+        double _horizontalScrollBarHeight;
+        Style _horizontalScrollBarStyle;
+        HorizontalSplitBar[] _horizontalSplitBar;
+        HorizontalSplitBox[] _horizontalSplitBox;
+        HashSet<int> _invisibleColumns;
+        HashSet<int> _invisibleRows;
+        bool _pendinging;
+        Grid _progressGrid;
+        ProgressRing _progressRing;
+        SplitBoxAlignment _rowSplitBoxAlignment;
+        SplitBoxPolicy _rowSplitBoxPolicy;
+        Line _rowSplittingTracker;
+        ScrollBarTrackPolicy _scrollBarTrackPolicy;
+        int _scrollTo;
+        bool _showScrollTip;
+        Canvas _splittingTrackerContainer;
+        TabStrip _tabStrip;
+        bool _tabStripEditable;
+        bool _tabStripInsertTab;
+        double _tabStripRatio;
+        Visibility _tabStripVisibility;
+        ScrollBar[] _verticalScrollBar;
+        Style _verticalScrollBarStyle;
+        double _verticalScrollBarWidth;
+        VerticalSplitBar[] _verticalSplitBar;
+        VerticalSplitBox[] _verticalSplitBox;
         internal const double GCSPREAD_HorizontalScrollBarDefaultHeight = 25.0;
         internal const ScrollBarTrackPolicy GCSPREAD_ScrollBarTrackPolicy = ScrollBarTrackPolicy.Both;
         internal const double GCSPREAD_TabStripRatio = 0.5;
         internal const double GCSPREAD_VerticalScrollBarDefaultWidth = 25.0;
         internal static bool IsSwitchingSheet;
-        private bool IsTouchColumnSplitting;
-        private bool IsTouchRowSplitting;
-        private bool IsTouchTabStripScrolling;
-        private HorizontalSplitBox tabStripSplitBox;
-        private const double TABSTRIPSPLITBOX_WIDTH = 16.0;
+        bool IsTouchColumnSplitting;
+        bool IsTouchRowSplitting;
+        bool IsTouchTabStripScrolling;
+        HorizontalSplitBox tabStripSplitBox;
+        const double TABSTRIPSPLITBOX_WIDTH = 16.0;
 
         internal SpreadView(Excel owningSpread)
             : base(owningSpread)
         {
-            this._cachedLastAvailableSize = new Size(0.0, 0.0);
-            this._invisibleRows = new HashSet<int>();
-            this._invisibleColumns = new HashSet<int>();
-            this.SpreadSheet = owningSpread;
-            this.Init();
+            _cachedLastAvailableSize = new Size(0.0, 0.0);
+            _invisibleRows = new HashSet<int>();
+            _invisibleColumns = new HashSet<int>();
+            SpreadSheet = owningSpread;
+            Init();
         }
 
         /// <summary>
@@ -119,19 +119,19 @@ namespace Dt.Cells.UI
         /// </summary>
         public Worksheet ActiveSheet
         {
-            get { return this.SpreadSheet.ActiveSheet; }
+            get { return SpreadSheet.ActiveSheet; }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        private double ActualHorizontalScrollBarHeight
+        double ActualHorizontalScrollBarHeight
         {
             get
             {
-                if (this.SpreadSheet.HorizontalScrollBarHeight >= 0.0)
+                if (SpreadSheet.HorizontalScrollBarHeight >= 0.0)
                 {
-                    return this.SpreadSheet.HorizontalScrollBarHeight;
+                    return SpreadSheet.HorizontalScrollBarHeight;
                 }
                 return 25.0;
             }
@@ -140,13 +140,13 @@ namespace Dt.Cells.UI
         /// <summary>
         /// 
         /// </summary>
-        private double ActualVerticalScrollBarWidth
+        double ActualVerticalScrollBarWidth
         {
             get
             {
-                if (this.SpreadSheet.VerticalScrollBarWidth >= 0.0)
+                if (SpreadSheet.VerticalScrollBarWidth >= 0.0)
                 {
-                    return this.SpreadSheet.VerticalScrollBarWidth;
+                    return SpreadSheet.VerticalScrollBarWidth;
                 }
                 return 25.0;
             }
@@ -161,11 +161,11 @@ namespace Dt.Cells.UI
         [DefaultValue(0)]
         public SplitBoxAlignment ColumnSplitBoxAlignment
         {
-            get { return this._columnSplitBoxAlignment; }
+            get { return _columnSplitBoxAlignment; }
             set
             {
-                this._columnSplitBoxAlignment = value;
-                this.InvalidateLayout();
+                _columnSplitBoxAlignment = value;
+                InvalidateLayout();
                 base.InvalidateMeasure();
             }
         }
@@ -176,13 +176,13 @@ namespace Dt.Cells.UI
         [DefaultValue(0)]
         public SplitBoxPolicy ColumnSplitBoxPolicy
         {
-            get { return this._columnSplitBoxPolicy; }
+            get { return _columnSplitBoxPolicy; }
             set
             {
-                if (value != this._columnSplitBoxPolicy)
+                if (value != _columnSplitBoxPolicy)
                 {
-                    this._columnSplitBoxPolicy = value;
-                    this.InvalidateLayout();
+                    _columnSplitBoxPolicy = value;
+                    InvalidateLayout();
                     base.InvalidateMeasure();
                 }
             }
@@ -197,11 +197,11 @@ namespace Dt.Cells.UI
         [DefaultValue((double)25.0)]
         public double HorizontalScrollBarHeight
         {
-            get { return this._horizontalScrollBarHeight; }
+            get { return _horizontalScrollBarHeight; }
             set
             {
-                this._horizontalScrollBarHeight = value;
-                this.InvalidateLayout();
+                _horizontalScrollBarHeight = value;
+                InvalidateLayout();
                 base.InvalidateMeasure();
             }
         }
@@ -209,9 +209,9 @@ namespace Dt.Cells.UI
         /// <summary>
         /// 
         /// </summary>
-        private ScrollBarVisibility HorizontalScrollBarPolicy
+        ScrollBarVisibility HorizontalScrollBarPolicy
         {
-            get { return this.SpreadSheet.HorizontalScrollBarVisibility; }
+            get { return SpreadSheet.HorizontalScrollBarVisibility; }
         }
 
         /// <summary>
@@ -223,11 +223,11 @@ namespace Dt.Cells.UI
         [DefaultValue((string)null)]
         public Style HorizontalScrollBarStyle
         {
-            get { return this._horizontalScrollBarStyle; }
+            get { return _horizontalScrollBarStyle; }
             set
             {
-                this._horizontalScrollBarStyle = value;
-                this.InvalidateLayout();
+                _horizontalScrollBarStyle = value;
+                InvalidateLayout();
                 base.InvalidateMeasure();
             }
         }
@@ -235,7 +235,7 @@ namespace Dt.Cells.UI
         /// <summary>
         /// 
         /// </summary>
-        private bool IsColumnSplitting { get; set; }
+        bool IsColumnSplitting { get; set; }
 
         /// <summary>
         /// 
@@ -244,7 +244,7 @@ namespace Dt.Cells.UI
         {
             get
             {
-                if ((this._tabStrip != null) && this._tabStrip.IsEditing)
+                if ((_tabStrip != null) && _tabStrip.IsEditing)
                 {
                     return false;
                 }
@@ -256,12 +256,12 @@ namespace Dt.Cells.UI
         /// <summary>
         /// 
         /// </summary>
-        private bool IsRowSplitting { get; set; }
+        bool IsRowSplitting { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        private bool IsTabStripResizing { get; set; }
+        bool IsTabStripResizing { get; set; }
 
         /// <summary>
         /// Gets or sets the row split box alignment. 
@@ -272,11 +272,11 @@ namespace Dt.Cells.UI
         [DefaultValue(0)]
         public SplitBoxAlignment RowSplitBoxAlignment
         {
-            get { return this._rowSplitBoxAlignment; }
+            get { return _rowSplitBoxAlignment; }
             set
             {
-                this._rowSplitBoxAlignment = value;
-                this.InvalidateLayout();
+                _rowSplitBoxAlignment = value;
+                InvalidateLayout();
                 base.InvalidateMeasure();
             }
         }
@@ -287,13 +287,13 @@ namespace Dt.Cells.UI
         [DefaultValue(0)]
         public SplitBoxPolicy RowSplitBoxPolicy
         {
-            get { return this._rowSplitBoxPolicy; }
+            get { return _rowSplitBoxPolicy; }
             set
             {
-                if (value != this._rowSplitBoxPolicy)
+                if (value != _rowSplitBoxPolicy)
                 {
-                    this._rowSplitBoxPolicy = value;
-                    this.InvalidateLayout();
+                    _rowSplitBoxPolicy = value;
+                    InvalidateLayout();
                     base.InvalidateMeasure();
                 }
             }
@@ -308,11 +308,11 @@ namespace Dt.Cells.UI
         [DefaultValue(3)]
         public ScrollBarTrackPolicy ScrollBarTrackPolicy
         {
-            get { return this._scrollBarTrackPolicy; }
+            get { return _scrollBarTrackPolicy; }
             set
             {
-                this._scrollBarTrackPolicy = value;
-                this.InvalidateLayout();
+                _scrollBarTrackPolicy = value;
+                InvalidateLayout();
                 base.InvalidateMeasure();
             }
         }
@@ -320,16 +320,16 @@ namespace Dt.Cells.UI
         /// <summary>
         /// 
         /// </summary>
-        private Canvas SplittingTrackerContainer
+        Canvas SplittingTrackerContainer
         {
             get
             {
-                if (this._splittingTrackerContainer == null)
+                if (_splittingTrackerContainer == null)
                 {
-                    this._splittingTrackerContainer = new Canvas();
-                    Canvas.SetZIndex(this._splittingTrackerContainer, 0x63);
+                    _splittingTrackerContainer = new Canvas();
+                    Canvas.SetZIndex(_splittingTrackerContainer, 0x63);
                 }
-                return this._splittingTrackerContainer;
+                return _splittingTrackerContainer;
             }
         }
 
@@ -339,7 +339,7 @@ namespace Dt.Cells.UI
         public Excel SpreadSheet
         {
             get { return (base._host as Excel); }
-            private set { base._host = value; }
+            set { base._host = value; }
         }
 
         /// <summary>
@@ -347,7 +347,7 @@ namespace Dt.Cells.UI
         /// </summary>
         internal TabStrip TabStrip
         {
-            get { return this._tabStrip; }
+            get { return _tabStrip; }
         }
 
         /// <summary>
@@ -359,13 +359,13 @@ namespace Dt.Cells.UI
         [DefaultValue(true)]
         public bool TabStripEditable
         {
-            get { return this._tabStripEditable; }
+            get { return _tabStripEditable; }
             set
             {
-                this._tabStripEditable = value;
-                if ((!value && (this._tabStrip != null)) && this._tabStrip.IsEditing)
+                _tabStripEditable = value;
+                if ((!value && (_tabStrip != null)) && _tabStrip.IsEditing)
                 {
-                    this._tabStrip.StopTabEditing(false);
+                    _tabStrip.StopTabEditing(false);
                 }
             }
         }
@@ -376,16 +376,16 @@ namespace Dt.Cells.UI
         [DefaultValue(true)]
         public bool TabStripInsertTab
         {
-            get { return this._tabStripInsertTab; }
+            get { return _tabStripInsertTab; }
             set
             {
-                if (value != this._tabStripInsertTab)
+                if (value != _tabStripInsertTab)
                 {
-                    this._tabStripInsertTab = value;
-                    if ((this._tabStrip != null) && (value != this._tabStrip.HasInsertTab))
+                    _tabStripInsertTab = value;
+                    if ((_tabStrip != null) && (value != _tabStrip.HasInsertTab))
                     {
-                        this._tabStrip.HasInsertTab = value;
-                        this.InvalidateLayout();
+                        _tabStrip.HasInsertTab = value;
+                        InvalidateLayout();
                         base.InvalidateMeasure();
                     }
                 }
@@ -398,13 +398,13 @@ namespace Dt.Cells.UI
         [DefaultValue((double)0.5)]
         public double TabStripRatio
         {
-            get { return this._tabStripRatio; }
+            get { return _tabStripRatio; }
             set
             {
-                if (((value >= 0.0) && (value <= 1.0)) && (value != this._tabStripRatio))
+                if (((value >= 0.0) && (value <= 1.0)) && (value != _tabStripRatio))
                 {
-                    this._tabStripRatio = value;
-                    this.InvalidateLayout();
+                    _tabStripRatio = value;
+                    InvalidateLayout();
                     base.InvalidateMeasure();
                 }
             }
@@ -415,13 +415,13 @@ namespace Dt.Cells.UI
         /// </summary>
         public Visibility TabStripVisibility
         {
-            get { return this._tabStripVisibility; }
+            get { return _tabStripVisibility; }
             set
             {
-                if (value != this._tabStripVisibility)
+                if (value != _tabStripVisibility)
                 {
-                    this._tabStripVisibility = value;
-                    this.InvalidateLayout();
+                    _tabStripVisibility = value;
+                    InvalidateLayout();
                     base.InvalidateMeasure();
                 }
             }
@@ -430,9 +430,9 @@ namespace Dt.Cells.UI
         /// <summary>
         /// 
         /// </summary>
-        private ScrollBarVisibility VerticalScrollBarPolicy
+        ScrollBarVisibility VerticalScrollBarPolicy
         {
-            get { return this.SpreadSheet.VerticalScrollBarVisibility; }
+            get { return SpreadSheet.VerticalScrollBarVisibility; }
         }
 
         /// <summary>
@@ -444,11 +444,11 @@ namespace Dt.Cells.UI
         [DefaultValue((string)null)]
         public Style VerticalScrollBarStyle
         {
-            get { return this._verticalScrollBarStyle; }
+            get { return _verticalScrollBarStyle; }
             set
             {
-                this._verticalScrollBarStyle = value;
-                this.InvalidateLayout();
+                _verticalScrollBarStyle = value;
+                InvalidateLayout();
                 base.InvalidateMeasure();
             }
         }
@@ -462,11 +462,11 @@ namespace Dt.Cells.UI
         [DefaultValue((double)25.0)]
         public double VerticalScrollBarWidth
         {
-            get { return this._verticalScrollBarWidth; }
+            get { return _verticalScrollBarWidth; }
             set
             {
-                this._verticalScrollBarWidth = value;
-                this.InvalidateLayout();
+                _verticalScrollBarWidth = value;
+                InvalidateLayout();
                 base.InvalidateMeasure();
             }
         }
@@ -476,7 +476,7 @@ namespace Dt.Cells.UI
         /// </summary>
         public override Worksheet Worksheet
         {
-            get { return this.ActiveSheet; }
+            get { return ActiveSheet; }
         }
 
         /// <summary>
@@ -490,9 +490,9 @@ namespace Dt.Cells.UI
         {
             double headerX;
             double headerY;
-            SpreadLayout spreadLayout = this.GetSpreadLayout();
+            SpreadLayout spreadLayout = GetSpreadLayout();
             base.TrackersContainer.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
-            this.SplittingTrackerContainer.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
+            SplittingTrackerContainer.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
             base.ShapeDrawingContainer.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
             base.CursorsContainer.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
             if ((base.IsTouchZooming && (base._cornerPresenter != null)) && (base._cornerPresenter.Parent != null))
@@ -752,7 +752,7 @@ namespace Dt.Cells.UI
                     }
                 }
             }
-            if (this._horizontalScrollBar != null)
+            if (_horizontalScrollBar != null)
             {
                 for (int num31 = 0; num31 < spreadLayout.ColumnPaneCount; num31++)
                 {
@@ -762,28 +762,28 @@ namespace Dt.Cells.UI
                     double ornamentHeight = spreadLayout.OrnamentHeight;
                     horizontalScrollBarWidth = Math.Max(horizontalScrollBarWidth, 0.0);
                     ornamentHeight = Math.Max(ornamentHeight, 0.0);
-                    this._horizontalScrollBar[num31].Width = horizontalScrollBarWidth;
-                    this._horizontalScrollBar[num31].Height = ornamentHeight;
-                    this._horizontalScrollBar[num31].Arrange(new Rect(horizontalScrollBarX, ornamentY, horizontalScrollBarWidth, ornamentHeight));
+                    _horizontalScrollBar[num31].Width = horizontalScrollBarWidth;
+                    _horizontalScrollBar[num31].Height = ornamentHeight;
+                    _horizontalScrollBar[num31].Arrange(new Rect(horizontalScrollBarX, ornamentY, horizontalScrollBarWidth, ornamentHeight));
                 }
             }
-            if (this._tabStrip != null)
+            if (_tabStrip != null)
             {
                 double tabStripX = spreadLayout.TabStripX;
                 double tabStripY = spreadLayout.TabStripY;
                 double tabStripWidth = spreadLayout.TabStripWidth;
                 double tabStripHeight = spreadLayout.TabStripHeight;
-                this._tabStrip.Arrange(new Rect(tabStripX, tabStripY, tabStripWidth, tabStripHeight));
+                _tabStrip.Arrange(new Rect(tabStripX, tabStripY, tabStripWidth, tabStripHeight));
             }
-            if (this.tabStripSplitBox != null)
+            if (tabStripSplitBox != null)
             {
                 double tabSplitBoxX = spreadLayout.TabSplitBoxX;
                 double num41 = spreadLayout.OrnamentY;
                 double tabSplitBoxWidth = spreadLayout.TabSplitBoxWidth;
                 double num43 = spreadLayout.OrnamentHeight;
-                this.tabStripSplitBox.Arrange(new Rect(tabSplitBoxX, num41, tabSplitBoxWidth, num43));
+                tabStripSplitBox.Arrange(new Rect(tabSplitBoxX, num41, tabSplitBoxWidth, num43));
             }
-            if (this._horizontalSplitBox != null)
+            if (_horizontalSplitBox != null)
             {
                 for (int num44 = 0; num44 < spreadLayout.ColumnPaneCount; num44++)
                 {
@@ -791,10 +791,10 @@ namespace Dt.Cells.UI
                     double num46 = spreadLayout.OrnamentY;
                     double horizontalSplitBoxWidth = spreadLayout.GetHorizontalSplitBoxWidth(num44);
                     double num48 = spreadLayout.OrnamentHeight;
-                    this._horizontalSplitBox[num44].Arrange(new Rect(horizontalSplitBoxX, num46, horizontalSplitBoxWidth, num48));
+                    _horizontalSplitBox[num44].Arrange(new Rect(horizontalSplitBoxX, num46, horizontalSplitBoxWidth, num48));
                 }
             }
-            if (this._verticalScrollBar != null)
+            if (_verticalScrollBar != null)
             {
                 for (int num49 = 0; num49 < spreadLayout.RowPaneCount; num49++)
                 {
@@ -802,7 +802,7 @@ namespace Dt.Cells.UI
                     double verticalScrollBarY = spreadLayout.GetVerticalScrollBarY(num49);
                     double ornamentWidth = spreadLayout.OrnamentWidth;
                     double num53 = spreadLayout.GetViewportHeight(num49) - spreadLayout.GetVerticalSplitBoxHeight(num49);
-                    if (((base.IsTouching && (base._touchStartHitTestInfo != null)) && ((num49 == base._touchStartHitTestInfo.RowViewportIndex) && !this.IsZero(base._translateOffsetY))) && ((base._touchStartHitTestInfo != null) && (base._touchStartHitTestInfo.HitTestType == HitTestType.Viewport)))
+                    if (((base.IsTouching && (base._touchStartHitTestInfo != null)) && ((num49 == base._touchStartHitTestInfo.RowViewportIndex) && !IsZero(base._translateOffsetY))) && ((base._touchStartHitTestInfo != null) && (base._touchStartHitTestInfo.HitTestType == HitTestType.Viewport)))
                     {
                         num53 = base._cachedViewportHeights[num49 + 1] - spreadLayout.GetVerticalSplitBoxHeight(num49);
                     }
@@ -816,12 +816,12 @@ namespace Dt.Cells.UI
                     }
                     ornamentWidth = Math.Max(ornamentWidth, 0.0);
                     num53 = Math.Max(num53, 0.0);
-                    this._verticalScrollBar[num49].Width = ornamentWidth;
-                    this._verticalScrollBar[num49].Height = num53;
-                    this._verticalScrollBar[num49].Arrange(new Rect(ornamentX, verticalScrollBarY, ornamentWidth, num53));
+                    _verticalScrollBar[num49].Width = ornamentWidth;
+                    _verticalScrollBar[num49].Height = num53;
+                    _verticalScrollBar[num49].Arrange(new Rect(ornamentX, verticalScrollBarY, ornamentWidth, num53));
                 }
             }
-            if (this._verticalSplitBox != null)
+            if (_verticalSplitBox != null)
             {
                 for (int num54 = 0; num54 < spreadLayout.RowPaneCount; num54++)
                 {
@@ -829,14 +829,14 @@ namespace Dt.Cells.UI
                     double verticalSplitBoxY = spreadLayout.GetVerticalSplitBoxY(num54);
                     double num57 = spreadLayout.OrnamentWidth;
                     double verticalSplitBoxHeight = spreadLayout.GetVerticalSplitBoxHeight(num54);
-                    this._verticalSplitBox[num54].Arrange(new Rect(num55, verticalSplitBoxY, num57, verticalSplitBoxHeight));
+                    _verticalSplitBox[num54].Arrange(new Rect(num55, verticalSplitBoxY, num57, verticalSplitBoxHeight));
                 }
             }
-            if (this._horizontalSplitBar != null)
+            if (_horizontalSplitBar != null)
             {
                 for (int num59 = 0; num59 < (spreadLayout.ColumnPaneCount - 1); num59++)
                 {
-                    if ((this._horizontalSplitBar[num59] != null) && (this._horizontalSplitBar[num59].Parent != null))
+                    if ((_horizontalSplitBar[num59] != null) && (_horizontalSplitBar[num59].Parent != null))
                     {
                         double horizontalSplitBarX = spreadLayout.GetHorizontalSplitBarX(num59);
                         if (base.IsTouching && (base._cachedViewportSplitBarX != null))
@@ -846,15 +846,15 @@ namespace Dt.Cells.UI
                         double num61 = spreadLayout.Y;
                         double horizontalSplitBarWidth = spreadLayout.GetHorizontalSplitBarWidth(num59);
                         double num63 = base.AvailableSize.Height;
-                        this._horizontalSplitBar[num59].Arrange(new Rect(horizontalSplitBarX, num61, horizontalSplitBarWidth, num63));
+                        _horizontalSplitBar[num59].Arrange(new Rect(horizontalSplitBarX, num61, horizontalSplitBarWidth, num63));
                     }
                 }
             }
-            if (this._verticalSplitBar != null)
+            if (_verticalSplitBar != null)
             {
                 for (int num64 = 0; num64 < (spreadLayout.RowPaneCount - 1); num64++)
                 {
-                    if ((this._verticalSplitBar[num64] != null) && (this._verticalSplitBar[num64].Parent != null))
+                    if ((_verticalSplitBar[num64] != null) && (_verticalSplitBar[num64].Parent != null))
                     {
                         double num65 = spreadLayout.X;
                         double verticalSplitBarY = spreadLayout.GetVerticalSplitBarY(num64);
@@ -864,13 +864,13 @@ namespace Dt.Cells.UI
                         }
                         double num67 = base.AvailableSize.Width;
                         double verticalSplitBarHeight = spreadLayout.GetVerticalSplitBarHeight(num64);
-                        this._verticalSplitBar[num64].Arrange(new Rect(num65, verticalSplitBarY, num67, verticalSplitBarHeight));
+                        _verticalSplitBar[num64].Arrange(new Rect(num65, verticalSplitBarY, num67, verticalSplitBarHeight));
                     }
                 }
             }
-            if (this._crossSplitBar != null)
+            if (_crossSplitBar != null)
             {
-                for (int num69 = 0; num69 < this._crossSplitBar.GetLength(0); num69++)
+                for (int num69 = 0; num69 < _crossSplitBar.GetLength(0); num69++)
                 {
                     double num70 = spreadLayout.GetVerticalSplitBarY(num69);
                     if (base.IsTouching && (base._cachedViewportSplitBarY != null))
@@ -878,7 +878,7 @@ namespace Dt.Cells.UI
                         num70 = base._cachedViewportSplitBarY[num69];
                     }
                     double num71 = spreadLayout.GetVerticalSplitBarHeight(num69);
-                    for (int num72 = 0; num72 < this._crossSplitBar.GetLength(1); num72++)
+                    for (int num72 = 0; num72 < _crossSplitBar.GetLength(1); num72++)
                     {
                         double num73 = spreadLayout.GetHorizontalSplitBarX(num72);
                         if (base.IsTouching && (base._cachedViewportSplitBarX != null))
@@ -886,9 +886,9 @@ namespace Dt.Cells.UI
                             num73 = base._cachedViewportSplitBarX[num72];
                         }
                         double num74 = spreadLayout.GetHorizontalSplitBarWidth(num72);
-                        if ((this._crossSplitBar[num69, num72] != null) && (this._crossSplitBar[num69, num72].Parent != null))
+                        if ((_crossSplitBar[num69, num72] != null) && (_crossSplitBar[num69, num72].Parent != null))
                         {
-                            this._crossSplitBar[num69, num72].Arrange(new Rect(num73, num70, num74, num71));
+                            _crossSplitBar[num69, num72].Arrange(new Rect(num73, num70, num74, num71));
                         }
                     }
                 }
@@ -919,7 +919,7 @@ namespace Dt.Cells.UI
                 base._formulaSelectionGripperPanel.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
             }
             base.UpdateTouchSelectionGripper();
-            this._progressGrid.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
+            _progressGrid.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
             return finalSize;
         }
 
@@ -928,17 +928,17 @@ namespace Dt.Cells.UI
         /// </summary>
         internal override void ClearMouseLeftButtonDownStates()
         {
-            if (this.IsColumnSplitting)
+            if (IsColumnSplitting)
             {
-                this.EndColumnSplitting();
+                EndColumnSplitting();
             }
-            if (this.IsRowSplitting)
+            if (IsRowSplitting)
             {
-                this.EndRowSplitting();
+                EndRowSplitting();
             }
-            if (this.IsTabStripResizing)
+            if (IsTabStripResizing)
             {
-                this.EndTabStripResizing();
+                EndTabStripResizing();
             }
             base.ClearMouseLeftButtonDownStates();
         }
@@ -950,8 +950,8 @@ namespace Dt.Cells.UI
         internal override RowLayoutModel CreateColumnHeaderRowLayoutModel()
         {
             RowLayoutModel model = new RowLayoutModel();
-            SpreadLayout spreadLayout = this.GetSpreadLayout();
-            Worksheet activeSheet = this.ActiveSheet;
+            SpreadLayout spreadLayout = GetSpreadLayout();
+            Worksheet activeSheet = ActiveSheet;
             if (activeSheet != null)
             {
                 float zoomFactor = base.ZoomFactor;
@@ -975,11 +975,11 @@ namespace Dt.Cells.UI
         {
             if (base.ResizeZeroIndicator == ResizeZeroIndicator.Default)
             {
-                return this.CreateViewportColumnLayoutModel(columnViewportIndex);
+                return CreateViewportColumnLayoutModel(columnViewportIndex);
             }
-            SpreadLayout spreadLayout = this.GetSpreadLayout();
+            SpreadLayout spreadLayout = GetSpreadLayout();
             ColumnLayoutModel model = new ColumnLayoutModel();
-            Worksheet activeSheet = this.ActiveSheet;
+            Worksheet activeSheet = ActiveSheet;
             if (activeSheet != null)
             {
                 float zoomFactor = base.ZoomFactor;
@@ -1100,7 +1100,7 @@ namespace Dt.Cells.UI
                 if (columnViewportIndex == spreadLayout.ColumnPaneCount)
                 {
                     double num25 = spreadLayout.GetViewportX(spreadLayout.ColumnPaneCount - 1) + spreadLayout.GetViewportWidth(spreadLayout.ColumnPaneCount - 1);
-                    if ((base.IsTouching && (this.Worksheet.FrozenTrailingColumnCount > 0)) && ((base._touchStartHitTestInfo.ColumnViewportIndex == (spreadLayout.ColumnPaneCount - 1)) && (base._translateOffsetX < 0.0)))
+                    if ((base.IsTouching && (Worksheet.FrozenTrailingColumnCount > 0)) && ((base._touchStartHitTestInfo.ColumnViewportIndex == (spreadLayout.ColumnPaneCount - 1)) && (base._translateOffsetX < 0.0)))
                     {
                         num25 += base._translateOffsetX;
                     }
@@ -1128,21 +1128,21 @@ namespace Dt.Cells.UI
         {
             if (base.ResizeZeroIndicator == ResizeZeroIndicator.Default)
             {
-                return this.CreateViewportRowLayoutModel(rowViewportIndex);
+                return CreateViewportRowLayoutModel(rowViewportIndex);
             }
             RowLayoutModel model = new RowLayoutModel();
-            SpreadLayout spreadLayout = this.GetSpreadLayout();
-            Worksheet activeSheet = this.ActiveSheet;
+            SpreadLayout spreadLayout = GetSpreadLayout();
+            Worksheet activeSheet = ActiveSheet;
             if (activeSheet != null)
             {
                 float zoomFactor = base.ZoomFactor;
                 if (rowViewportIndex == -1)
                 {
                     double y = spreadLayout.HeaderY + spreadLayout.HeaderHeight;
-                    int frozenRowCount = this.Worksheet.FrozenRowCount;
-                    if (this.Worksheet.RowCount < frozenRowCount)
+                    int frozenRowCount = Worksheet.FrozenRowCount;
+                    if (Worksheet.RowCount < frozenRowCount)
                     {
-                        frozenRowCount = this.Worksheet.RowCount;
+                        frozenRowCount = Worksheet.RowCount;
                     }
                     for (int i = 0; i < frozenRowCount; i++)
                     {
@@ -1253,7 +1253,7 @@ namespace Dt.Cells.UI
                 if (rowViewportIndex == spreadLayout.RowPaneCount)
                 {
                     double num25 = spreadLayout.GetViewportY(spreadLayout.RowPaneCount - 1) + spreadLayout.GetViewportHeight(spreadLayout.RowPaneCount - 1);
-                    if ((base.IsTouching && (this.Worksheet.FrozenTrailingColumnCount > 0)) && ((base._touchStartHitTestInfo.RowViewportIndex == (spreadLayout.RowPaneCount - 1)) && (base._translateOffsetY < 0.0)))
+                    if ((base.IsTouching && (Worksheet.FrozenTrailingColumnCount > 0)) && ((base._touchStartHitTestInfo.RowViewportIndex == (spreadLayout.RowPaneCount - 1)) && (base._translateOffsetY < 0.0)))
                     {
                         num25 += base._translateOffsetY;
                     }
@@ -1275,8 +1275,8 @@ namespace Dt.Cells.UI
         internal override ColumnLayoutModel CreateRowHeaderColumnLayoutModel()
         {
             ColumnLayoutModel model = new ColumnLayoutModel();
-            SpreadLayout spreadLayout = this.GetSpreadLayout();
-            Worksheet activeSheet = this.ActiveSheet;
+            SpreadLayout spreadLayout = GetSpreadLayout();
+            Worksheet activeSheet = ActiveSheet;
             if (activeSheet != null)
             {
                 float zoomFactor = base.ZoomFactor;
@@ -1298,9 +1298,9 @@ namespace Dt.Cells.UI
         /// <returns></returns>
         internal override ColumnLayoutModel CreateViewportColumnLayoutModel(int columnViewportIndex)
         {
-            SpreadLayout spreadLayout = this.GetSpreadLayout();
+            SpreadLayout spreadLayout = GetSpreadLayout();
             ColumnLayoutModel model = new ColumnLayoutModel();
-            Worksheet activeSheet = this.ActiveSheet;
+            Worksheet activeSheet = ActiveSheet;
             if (activeSheet != null)
             {
                 float zoomFactor = base.ZoomFactor;
@@ -1336,7 +1336,7 @@ namespace Dt.Cells.UI
                 if (columnViewportIndex == spreadLayout.ColumnPaneCount)
                 {
                     double num10 = spreadLayout.GetViewportX(spreadLayout.ColumnPaneCount - 1) + spreadLayout.GetViewportWidth(spreadLayout.ColumnPaneCount - 1);
-                    if ((base.IsTouching && (this.Worksheet.FrozenTrailingColumnCount > 0)) && ((base._touchStartHitTestInfo.ColumnViewportIndex == (spreadLayout.ColumnPaneCount - 1)) && (base._translateOffsetX < 0.0)))
+                    if ((base.IsTouching && (Worksheet.FrozenTrailingColumnCount > 0)) && ((base._touchStartHitTestInfo.ColumnViewportIndex == (spreadLayout.ColumnPaneCount - 1)) && (base._translateOffsetX < 0.0)))
                     {
                         num10 += base._translateOffsetX;
                     }
@@ -1359,18 +1359,18 @@ namespace Dt.Cells.UI
         internal override RowLayoutModel CreateViewportRowLayoutModel(int rowViewportIndex)
         {
             RowLayoutModel model = new RowLayoutModel();
-            SpreadLayout spreadLayout = this.GetSpreadLayout();
-            Worksheet activeSheet = this.ActiveSheet;
+            SpreadLayout spreadLayout = GetSpreadLayout();
+            Worksheet activeSheet = ActiveSheet;
             if (activeSheet != null)
             {
                 float zoomFactor = base.ZoomFactor;
                 if (rowViewportIndex == -1)
                 {
                     double y = spreadLayout.HeaderY + spreadLayout.HeaderHeight;
-                    int frozenRowCount = this.Worksheet.FrozenRowCount;
-                    if (this.Worksheet.RowCount < frozenRowCount)
+                    int frozenRowCount = Worksheet.FrozenRowCount;
+                    if (Worksheet.RowCount < frozenRowCount)
                     {
-                        frozenRowCount = this.Worksheet.RowCount;
+                        frozenRowCount = Worksheet.RowCount;
                     }
                     for (int i = 0; i < frozenRowCount; i++)
                     {
@@ -1397,7 +1397,7 @@ namespace Dt.Cells.UI
                 if (rowViewportIndex == spreadLayout.RowPaneCount)
                 {
                     double num11 = spreadLayout.GetViewportY(spreadLayout.RowPaneCount - 1) + spreadLayout.GetViewportHeight(spreadLayout.RowPaneCount - 1);
-                    if ((base.IsTouching && (this.Worksheet.FrozenTrailingColumnCount > 0)) && ((base._touchStartHitTestInfo.RowViewportIndex == (spreadLayout.RowPaneCount - 1)) && (base._translateOffsetY < 0.0)))
+                    if ((base.IsTouching && (Worksheet.FrozenTrailingColumnCount > 0)) && ((base._touchStartHitTestInfo.RowViewportIndex == (spreadLayout.RowPaneCount - 1)) && (base._translateOffsetY < 0.0)))
                     {
                         num11 += base._translateOffsetY;
                     }
@@ -1425,17 +1425,17 @@ namespace Dt.Cells.UI
         {
             double viewportX;
             double viewportY;
-            if (this._cachedLastAvailableSize != availableSize)
+            if (_cachedLastAvailableSize != availableSize)
             {
-                this._cachedLastAvailableSize = availableSize;
+                _cachedLastAvailableSize = availableSize;
                 base.AvailableSize = availableSize;
-                this.InvalidateLayout();
+                InvalidateLayout();
             }
             if (!base.IsWorking)
             {
                 base.SaveHitTestInfo(null);
             }
-            SpreadLayout spreadLayout = this.GetSpreadLayout();
+            SpreadLayout spreadLayout = GetSpreadLayout();
             List<Image> list = new List<Image>();
             foreach (var element in base.Children.OfType<Image>())
             {
@@ -1445,29 +1445,29 @@ namespace Dt.Cells.UI
             {
                 base.Children.Remove(element2);
             }
-            this.UpdateHorizontalSplitBoxes();
-            this.UpdateVerticalSplitBoxes();
-            this.UpdateHorizontalSplitBars();
-            this.UpdateVerticalSplitBars();
-            this.UpdateCrossSplitBars();
+            UpdateHorizontalSplitBoxes();
+            UpdateVerticalSplitBoxes();
+            UpdateHorizontalSplitBars();
+            UpdateVerticalSplitBars();
+            UpdateCrossSplitBars();
             base.UpdateFreezeLines();
             if (!base.Children.Contains(base.TrackersContainer))
             {
                 base.Children.Add(base.TrackersContainer);
             }
             base.TrackersContainer.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-            if (!base.Children.Contains(this.SplittingTrackerContainer))
+            if (!base.Children.Contains(SplittingTrackerContainer))
             {
-                base.Children.Add(this.SplittingTrackerContainer);
+                base.Children.Add(SplittingTrackerContainer);
             }
-            this.SplittingTrackerContainer.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+            SplittingTrackerContainer.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
             if (!base.Children.Contains(base.CursorsContainer))
             {
                 base.Children.Add(base.CursorsContainer);
             }
             base.CursorsContainer.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
             GcViewport[,] viewportArray = null;
-            if ((base._viewportPresenters != null) && (((this.ActiveSheet == null) || (base._viewportPresenters.GetUpperBound(0) != (spreadLayout.RowPaneCount + 1))) || (base._viewportPresenters.GetUpperBound(1) != (spreadLayout.ColumnPaneCount + 1))))
+            if ((base._viewportPresenters != null) && (((ActiveSheet == null) || (base._viewportPresenters.GetUpperBound(0) != (spreadLayout.RowPaneCount + 1))) || (base._viewportPresenters.GetUpperBound(1) != (spreadLayout.ColumnPaneCount + 1))))
             {
                 GcViewport[,] viewportArray2 = base._viewportPresenters;
                 int upperBound = viewportArray2.GetUpperBound(0);
@@ -1530,7 +1530,7 @@ namespace Dt.Cells.UI
                     }
                 }
             }
-            if ((base._rowHeaderPresenters != null) && ((this.ActiveSheet == null) || (base._rowHeaderPresenters.Length != (spreadLayout.RowPaneCount + 2))))
+            if ((base._rowHeaderPresenters != null) && ((ActiveSheet == null) || (base._rowHeaderPresenters.Length != (spreadLayout.RowPaneCount + 2))))
             {
                 foreach (GcViewport viewport3 in base._rowHeaderPresenters)
                 {
@@ -1578,7 +1578,7 @@ namespace Dt.Cells.UI
                     base.Children.Remove(viewport5);
                 }
             }
-            if ((base._columnHeaderPresenters != null) && ((this.ActiveSheet == null) || (base._columnHeaderPresenters.Length != (spreadLayout.ColumnPaneCount + 2))))
+            if ((base._columnHeaderPresenters != null) && ((ActiveSheet == null) || (base._columnHeaderPresenters.Length != (spreadLayout.ColumnPaneCount + 2))))
             {
                 foreach (GcViewport viewport6 in base._columnHeaderPresenters)
                 {
@@ -1649,7 +1649,7 @@ namespace Dt.Cells.UI
             {
                 for (int num11 = 0; num11 < spreadLayout.ColumnPaneCount; num11++)
                 {
-                    ScrollBar bar = this._horizontalScrollBar[num11];
+                    ScrollBar bar = _horizontalScrollBar[num11];
                     if (spreadLayout.GetHorizontalScrollBarWidth(num11) > 0.0)
                     {
                         if (!base.Children.Contains(bar))
@@ -1661,7 +1661,7 @@ namespace Dt.Cells.UI
                     {
                         base.Children.Remove(bar);
                     }
-                    HorizontalSplitBox box = this._horizontalSplitBox[num11];
+                    HorizontalSplitBox box = _horizontalSplitBox[num11];
                     if (spreadLayout.GetHorizontalSplitBoxWidth(num11) > 0.0)
                     {
                         if (!base.Children.Contains(box))
@@ -1677,16 +1677,16 @@ namespace Dt.Cells.UI
             }
             else
             {
-                if (this._horizontalScrollBar != null)
+                if (_horizontalScrollBar != null)
                 {
-                    foreach (ScrollBar bar2 in this._horizontalScrollBar)
+                    foreach (ScrollBar bar2 in _horizontalScrollBar)
                     {
                         base.Children.Remove(bar2);
                     }
                 }
-                if (this._horizontalSplitBox != null)
+                if (_horizontalSplitBox != null)
                 {
-                    foreach (HorizontalSplitBox box2 in this._horizontalSplitBox)
+                    foreach (HorizontalSplitBox box2 in _horizontalSplitBox)
                     {
                         base.Children.Remove(box2);
                     }
@@ -1694,66 +1694,66 @@ namespace Dt.Cells.UI
             }
             if (spreadLayout.TabStripHeight > 0.0)
             {
-                if (this._tabStrip == null)
+                if (_tabStrip == null)
                 {
-                    this._tabStrip = new TabStrip();
+                    _tabStrip = new TabStrip();
                     // hdt 应用构造前的设置
                     if (_tabStripVisibility == Visibility.Collapsed)
                         _tabStrip.Visibility = Visibility.Collapsed;
-                    this._tabStrip.HasInsertTab = this.SpreadSheet.TabStripInsertTab;
-                    this._tabStrip.OwningView = this;
-                    Canvas.SetZIndex(this._tabStrip, 0x62);
+                    _tabStrip.HasInsertTab = SpreadSheet.TabStripInsertTab;
+                    _tabStrip.OwningView = this;
+                    Canvas.SetZIndex(_tabStrip, 0x62);
                 }
                 else
                 {
-                    this._tabStrip.Update();
+                    _tabStrip.Update();
                 }
-                this._tabStrip.ActiveTabChanging -= new EventHandler(this.OnTabStripActiveTabChanging);
-                this._tabStrip.ActiveTabChanged -= new EventHandler(this.OnTabStripActiveTabChanged);
-                this._tabStrip.NewTabNeeded -= new EventHandler(this.OnTabStripNewTabNeeded);
-                this._tabStrip.AddSheets(this.SpreadSheet.Sheets);
-                if (!base.Children.Contains(this._tabStrip))
+                _tabStrip.ActiveTabChanging -= new EventHandler(OnTabStripActiveTabChanging);
+                _tabStrip.ActiveTabChanged -= new EventHandler(OnTabStripActiveTabChanged);
+                _tabStrip.NewTabNeeded -= new EventHandler(OnTabStripNewTabNeeded);
+                _tabStrip.AddSheets(SpreadSheet.Sheets);
+                if (!base.Children.Contains(_tabStrip))
                 {
-                    base.Children.Add(this._tabStrip);
+                    base.Children.Add(_tabStrip);
                 }
-                int activeSheetIndex = this.SpreadSheet.ActiveSheetIndex;
-                if ((activeSheetIndex >= 0) && (activeSheetIndex < this.SpreadSheet.Sheets.Count))
+                int activeSheetIndex = SpreadSheet.ActiveSheetIndex;
+                if ((activeSheetIndex >= 0) && (activeSheetIndex < SpreadSheet.Sheets.Count))
                 {
-                    this._tabStrip.ActiveSheet(activeSheetIndex, false);
+                    _tabStrip.ActiveSheet(activeSheetIndex, false);
                 }
-                this._tabStrip.SetStartSheet(this.SpreadSheet.StartSheetIndex);
-                this._tabStrip.InvalidateMeasure();
-                this._tabStrip.Measure(new Size(spreadLayout.TabStripWidth, spreadLayout.TabStripHeight));
-                this._tabStrip.ActiveTabChanging += new EventHandler(this.OnTabStripActiveTabChanging);
-                this._tabStrip.ActiveTabChanged += new EventHandler(this.OnTabStripActiveTabChanged);
-                this._tabStrip.NewTabNeeded += new EventHandler(this.OnTabStripNewTabNeeded);
-                if (this.tabStripSplitBox == null)
+                _tabStrip.SetStartSheet(SpreadSheet.StartSheetIndex);
+                _tabStrip.InvalidateMeasure();
+                _tabStrip.Measure(new Size(spreadLayout.TabStripWidth, spreadLayout.TabStripHeight));
+                _tabStrip.ActiveTabChanging += new EventHandler(OnTabStripActiveTabChanging);
+                _tabStrip.ActiveTabChanged += new EventHandler(OnTabStripActiveTabChanged);
+                _tabStrip.NewTabNeeded += new EventHandler(OnTabStripNewTabNeeded);
+                if (tabStripSplitBox == null)
                 {
-                    this.tabStripSplitBox = new TabStripSplitBox();
-                    Canvas.SetZIndex(this.tabStripSplitBox, 0x62);
+                    tabStripSplitBox = new TabStripSplitBox();
+                    Canvas.SetZIndex(tabStripSplitBox, 0x62);
                 }
-                if (!base.Children.Contains(this.tabStripSplitBox))
+                if (!base.Children.Contains(tabStripSplitBox))
                 {
-                    base.Children.Add(this.tabStripSplitBox);
+                    base.Children.Add(tabStripSplitBox);
                 }
-                this.tabStripSplitBox.InvalidateMeasure();
-                this.tabStripSplitBox.Measure(new Size(spreadLayout.TabSplitBoxWidth, spreadLayout.OrnamentHeight));
+                tabStripSplitBox.InvalidateMeasure();
+                tabStripSplitBox.Measure(new Size(spreadLayout.TabSplitBoxWidth, spreadLayout.OrnamentHeight));
             }
-            else if (this._tabStrip != null)
+            else if (_tabStrip != null)
             {
-                base.Children.Remove(this._tabStrip);
-                this._tabStrip.ActiveTabChanging -= new EventHandler(this.OnTabStripActiveTabChanging);
-                this._tabStrip.ActiveTabChanged -= new EventHandler(this.OnTabStripActiveTabChanged);
-                this._tabStrip = null;
-                base.Children.Remove(this.tabStripSplitBox);
-                this.tabStripSplitBox = null;
+                base.Children.Remove(_tabStrip);
+                _tabStrip.ActiveTabChanging -= new EventHandler(OnTabStripActiveTabChanging);
+                _tabStrip.ActiveTabChanged -= new EventHandler(OnTabStripActiveTabChanged);
+                _tabStrip = null;
+                base.Children.Remove(tabStripSplitBox);
+                tabStripSplitBox = null;
             }
             if (spreadLayout.OrnamentWidth > 0.0)
             {
                 for (int num15 = 0; num15 < spreadLayout.RowPaneCount; num15++)
                 {
-                    ScrollBar bar3 = this._verticalScrollBar[num15];
-                    if (this.GetSpreadLayout().GetVerticalScrollBarHeight(num15) > 0.0)
+                    ScrollBar bar3 = _verticalScrollBar[num15];
+                    if (GetSpreadLayout().GetVerticalScrollBarHeight(num15) > 0.0)
                     {
                         if (!base.Children.Contains(bar3))
                         {
@@ -1764,7 +1764,7 @@ namespace Dt.Cells.UI
                     {
                         base.Children.Remove(bar3);
                     }
-                    VerticalSplitBox box3 = this._verticalSplitBox[num15];
+                    VerticalSplitBox box3 = _verticalSplitBox[num15];
                     if (spreadLayout.GetVerticalSplitBoxHeight(num15) > 0.0)
                     {
                         if (!base.Children.Contains(box3))
@@ -1780,16 +1780,16 @@ namespace Dt.Cells.UI
             }
             else
             {
-                if (this._verticalScrollBar != null)
+                if (_verticalScrollBar != null)
                 {
-                    foreach (ScrollBar bar4 in this._verticalScrollBar)
+                    foreach (ScrollBar bar4 in _verticalScrollBar)
                     {
                         base.Children.Remove(bar4);
                     }
                 }
-                if (this._verticalSplitBox != null)
+                if (_verticalSplitBox != null)
                 {
-                    foreach (VerticalSplitBox box4 in this._verticalSplitBox)
+                    foreach (VerticalSplitBox box4 in _verticalSplitBox)
                     {
                         base.Children.Remove(box4);
                     }
@@ -1797,7 +1797,7 @@ namespace Dt.Cells.UI
             }
             for (int j = 0; j < (spreadLayout.ColumnPaneCount - 1); j++)
             {
-                HorizontalSplitBar bar5 = this._horizontalSplitBar[j];
+                HorizontalSplitBar bar5 = _horizontalSplitBar[j];
                 double horizontalSplitBoxWidth = spreadLayout.GetHorizontalSplitBoxWidth(j);
                 double num20 = base.AvailableSize.Height;
                 if (!base.Children.Contains(bar5))
@@ -1808,7 +1808,7 @@ namespace Dt.Cells.UI
             }
             for (int k = 0; k < (spreadLayout.RowPaneCount - 1); k++)
             {
-                VerticalSplitBar bar6 = this._verticalSplitBar[k];
+                VerticalSplitBar bar6 = _verticalSplitBar[k];
                 double num22 = base.AvailableSize.Width;
                 double verticalSplitBarHeight = spreadLayout.GetVerticalSplitBarHeight(k);
                 if (!base.Children.Contains(bar6))
@@ -1821,7 +1821,7 @@ namespace Dt.Cells.UI
             {
                 for (int num25 = 0; num25 < (spreadLayout.ColumnPaneCount - 1); num25++)
                 {
-                    CrossSplitBar bar7 = this._crossSplitBar[m, num25];
+                    CrossSplitBar bar7 = _crossSplitBar[m, num25];
                     double num26 = spreadLayout.GetHorizontalSplitBoxWidth(num25);
                     double num27 = spreadLayout.GetVerticalSplitBarHeight(m);
                     if (!base.Children.Contains(bar7))
@@ -1832,11 +1832,11 @@ namespace Dt.Cells.UI
                 }
             }
             base.MeasureRangeGroup(spreadLayout.RowPaneCount, spreadLayout.ColumnPaneCount, spreadLayout);
-            if (!base.Children.Contains(this._progressGrid))
+            if (!base.Children.Contains(_progressGrid))
             {
-                base.Children.Add(this._progressGrid);
+                base.Children.Add(_progressGrid);
             }
-            this._progressGrid.Measure(availableSize);
+            _progressGrid.Measure(availableSize);
             base.Children.Remove(base._topLeftGripper);
             base.Children.Remove(base._bottomRightGripper);
             base.Children.Remove(base._resizerGripperContainer);
@@ -1885,14 +1885,14 @@ namespace Dt.Cells.UI
         {
             base.IsContinueTouchOperation = false;
             base.CachedGripperLocation = null;
-            this.ClearViewportsClip();
-            this.UpdateViewport();
-            if (this.IsTouchTabStripScrolling)
+            ClearViewportsClip();
+            UpdateViewport();
+            if (IsTouchTabStripScrolling)
             {
-                this.IsTouchTabStripScrolling = false;
-                this.TabStrip.TabsPresenter.Offset = 0.0;
-                this.TabStrip.TabsPresenter.InvalidateMeasure();
-                this.TabStrip.TabsPresenter.InvalidateArrange();
+                IsTouchTabStripScrolling = false;
+                TabStrip.TabsPresenter.Offset = 0.0;
+                TabStrip.TabsPresenter.InvalidateMeasure();
+                TabStrip.TabsPresenter.InvalidateArrange();
             }
             if (base.IsTouchZooming)
             {
@@ -1907,7 +1907,7 @@ namespace Dt.Cells.UI
                     TransformGroup group = base._cachedViewportTransform[base._zoomOriginHitTestInfo.RowViewportIndex + 1, base._zoomOriginHitTestInfo.ColumnViewportIndex + 1];
                     if (group != null)
                     {
-                        SpreadLayout spreadLayout = this.GetSpreadLayout();
+                        SpreadLayout spreadLayout = GetSpreadLayout();
                         Point newLocation = new Point(spreadLayout.HeaderWidth, spreadLayout.HeaderHeight);
                         Point reference = group.TransformPoint(newLocation);
                         int viewportLeftColumn = base.GetViewportLeftColumn(base._zoomOriginHitTestInfo.ColumnViewportIndex);
@@ -1916,46 +1916,46 @@ namespace Dt.Cells.UI
                         double x = point3.X;
                         if (x > 0.0)
                         {
-                            while ((x > 0.0) && (num2 < this.Worksheet.ColumnCount))
+                            while ((x > 0.0) && (num2 < Worksheet.ColumnCount))
                             {
-                                x -= Math.Floor((double)(this.Worksheet.Columns[num2].ActualWidth * base._touchZoomNewFactor));
+                                x -= Math.Floor((double)(Worksheet.Columns[num2].ActualWidth * base._touchZoomNewFactor));
                                 num2++;
                             }
                         }
                         else if (x < 0.0)
                         {
-                            while (((x < 0.0) && (num2 > 0)) && (num2 < this.Worksheet.ColumnCount))
+                            while (((x < 0.0) && (num2 > 0)) && (num2 < Worksheet.ColumnCount))
                             {
-                                x += Math.Floor((double)(this.Worksheet.Columns[num2].ActualWidth * base._touchZoomNewFactor));
+                                x += Math.Floor((double)(Worksheet.Columns[num2].ActualWidth * base._touchZoomNewFactor));
                                 num2--;
                             }
                         }
                         if (num2 != viewportLeftColumn)
                         {
-                            this.SetViewportLeftColumn(base._zoomOriginHitTestInfo.ColumnViewportIndex, num2);
+                            SetViewportLeftColumn(base._zoomOriginHitTestInfo.ColumnViewportIndex, num2);
                         }
                         int viewportTopRow = base.GetViewportTopRow(base._zoomOriginHitTestInfo.RowViewportIndex);
                         int num5 = viewportTopRow;
                         double y = point3.Y;
                         if (y > 0.0)
                         {
-                            while ((y > 0.0) && (num5 < this.Worksheet.RowCount))
+                            while ((y > 0.0) && (num5 < Worksheet.RowCount))
                             {
-                                y -= Math.Floor((double)(this.Worksheet.Rows[num5].ActualHeight * base._touchZoomNewFactor));
+                                y -= Math.Floor((double)(Worksheet.Rows[num5].ActualHeight * base._touchZoomNewFactor));
                                 num5++;
                             }
                         }
                         else if (y < 0.0)
                         {
-                            while (((y < 0.0) && (num5 > 0)) && (num5 < this.Worksheet.RowCount))
+                            while (((y < 0.0) && (num5 > 0)) && (num5 < Worksheet.RowCount))
                             {
-                                y += Math.Floor((double)(this.Worksheet.Rows[num5].ActualHeight * base._touchZoomNewFactor));
+                                y += Math.Floor((double)(Worksheet.Rows[num5].ActualHeight * base._touchZoomNewFactor));
                                 num5--;
                             }
                         }
                         if (num5 != viewportTopRow)
                         {
-                            this.SetViewportTopRow(base._zoomOriginHitTestInfo.RowViewportIndex, num5);
+                            SetViewportTopRow(base._zoomOriginHitTestInfo.RowViewportIndex, num5);
                         }
                     }
                 }
@@ -1963,30 +1963,30 @@ namespace Dt.Cells.UI
                 base._cachedRowHeaderViewportTransform = null;
                 base._cachedColumnHeaderViewportTransform = null;
                 base._cachedCornerViewportTransform = null;
-                float zoomFactor = this.Worksheet.ZoomFactor;
-                this.Worksheet.ZoomFactor = (float)base._touchZoomNewFactor;
-                base.RaiseUserZooming(zoomFactor, this.Worksheet.ZoomFactor);
+                float zoomFactor = Worksheet.ZoomFactor;
+                Worksheet.ZoomFactor = (float)base._touchZoomNewFactor;
+                base.RaiseUserZooming(zoomFactor, Worksheet.ZoomFactor);
                 base.InvalidateViewportColumnsLayout();
                 base.InvalidateViewportRowsLayout();
                 base.InvalidateFloatingObjects();
                 base.InvalidateMeasure();
-                if (((base._touchStartTopRow >= 0) && (base._touchStartTopRow < this.Worksheet.RowCount)) && (base._touchStartLeftColumn >= 0))
+                if (((base._touchStartTopRow >= 0) && (base._touchStartTopRow < Worksheet.RowCount)) && (base._touchStartLeftColumn >= 0))
                 {
-                    int columnCount = this.Worksheet.ColumnCount;
+                    int columnCount = Worksheet.ColumnCount;
                     int num14 = base._touchStartLeftColumn;
                 }
             }
-            if (this.IsTouchColumnSplitting)
+            if (IsTouchColumnSplitting)
             {
-                this.EndColumnSplitting();
+                EndColumnSplitting();
             }
-            if (this.IsTouchRowSplitting)
+            if (IsTouchRowSplitting)
             {
-                this.EndRowSplitting();
+                EndRowSplitting();
             }
             if (base.IsTouchTabStripResizing)
             {
-                this.EndTabStripResizing();
+                EndTabStripResizing();
             }
             base.fastScroll = false;
             base.GetViewportInfo();
@@ -2039,10 +2039,10 @@ namespace Dt.Cells.UI
             base.UpdateTouchHitTestInfo(new Point(point.X, point.Y));
             HitTestInformation savedHitTestInformation = base.GetSavedHitTestInformation();
             base._touchStartHitTestInfo = savedHitTestInformation;
-            base._touchZoomNewFactor = this.Worksheet.ZoomFactor;
+            base._touchZoomNewFactor = Worksheet.ZoomFactor;
             if ((savedHitTestInformation != null) && (savedHitTestInformation.HitTestType != HitTestType.Empty))
             {
-                this.InitTouchCacheInfomation();
+                InitTouchCacheInfomation();
             }
             base.OnManipulationStarted(point);
         }
@@ -2056,7 +2056,7 @@ namespace Dt.Cells.UI
         {
             if (e.Pointer.PointerDeviceType == 0)
             {
-                this.UpdateScrollBarIndicatorMode((ScrollingIndicatorMode)1);
+                UpdateScrollBarIndicatorMode((ScrollingIndicatorMode)1);
             }
             base.OnPointerMoved(sender, e);
         }
@@ -2071,31 +2071,31 @@ namespace Dt.Cells.UI
             if (e.Pointer.PointerDeviceType == 0)
             {
                 IList<PointerPoint> intermediatePoints = e.GetIntermediatePoints(this);
-                if ((this._primaryTouchDeviceId.HasValue && (intermediatePoints != null)) && (intermediatePoints.Count > 0))
+                if ((_primaryTouchDeviceId.HasValue && (intermediatePoints != null)) && (intermediatePoints.Count > 0))
                 {
                     using (IEnumerator<PointerPoint> enumerator = intermediatePoints.GetEnumerator())
                     {
                         while (enumerator.MoveNext())
                         {
-                            if (enumerator.Current.PointerId == this._primaryTouchDeviceId.Value)
+                            if (enumerator.Current.PointerId == _primaryTouchDeviceId.Value)
                             {
-                                if (this.IsTouchColumnSplitting)
+                                if (IsTouchColumnSplitting)
                                 {
-                                    this.EndColumnSplitting();
+                                    EndColumnSplitting();
                                 }
-                                if (this.IsTouchRowSplitting)
+                                if (IsTouchRowSplitting)
                                 {
-                                    this.EndRowSplitting();
+                                    EndRowSplitting();
                                 }
                             }
                         }
                     }
                 }
             }
-            if ((this.TabStrip != null) && this.TabStripEditable)
+            if ((TabStrip != null) && TabStripEditable)
             {
                 Point point = e.GetCurrentPoint(this).Position;
-                if ((this.HitTest(point.X, point.Y).HitTestType == HitTestType.TabStrip) && this.TabStrip.StayInEditing(point))
+                if ((HitTest(point.X, point.Y).HitTestType == HitTestType.TabStrip) && TabStrip.StayInEditing(point))
                 {
                     e.Handled = true;
                     return;
@@ -2113,19 +2113,19 @@ namespace Dt.Cells.UI
         {
             if (base.HorizontalScrollable)
             {
-                value = Math.Max(this.Worksheet.FrozenColumnCount, value);
-                value = Math.Min((this.Worksheet.ColumnCount - this.Worksheet.FrozenTrailingColumnCount) - 1, value);
+                value = Math.Max(Worksheet.FrozenColumnCount, value);
+                value = Math.Min((Worksheet.ColumnCount - Worksheet.FrozenTrailingColumnCount) - 1, value);
                 value = base.TryGetNextScrollableColumn(value);
                 base.SetViewportLeftColumn(columnViewportIndex, value);
-                if (this._horizontalScrollBar != null)
+                if (_horizontalScrollBar != null)
                 {
-                    this.GetSpreadLayout();
-                    if (((columnViewportIndex > -1) && (columnViewportIndex < this._horizontalScrollBar.Length)) && (this._horizontalScrollBar[columnViewportIndex].Value != value))
+                    GetSpreadLayout();
+                    if (((columnViewportIndex > -1) && (columnViewportIndex < _horizontalScrollBar.Length)) && (_horizontalScrollBar[columnViewportIndex].Value != value))
                     {
-                        int invisibleColumnsBeforeColumn = this.GetInvisibleColumnsBeforeColumn(this.ActiveSheet, value);
+                        int invisibleColumnsBeforeColumn = GetInvisibleColumnsBeforeColumn(ActiveSheet, value);
                         int num2 = value - invisibleColumnsBeforeColumn;
-                        this._horizontalScrollBar[columnViewportIndex].Value = (double)num2;
-                        this._horizontalScrollBar[columnViewportIndex].InvalidateArrange();
+                        _horizontalScrollBar[columnViewportIndex].Value = (double)num2;
+                        _horizontalScrollBar[columnViewportIndex].InvalidateArrange();
                     }
                 }
             }
@@ -2141,22 +2141,22 @@ namespace Dt.Cells.UI
             Action action = null;
             if (base.VerticalScrollable)
             {
-                value = Math.Max(this.Worksheet.FrozenRowCount, value);
-                value = Math.Min((this.Worksheet.RowCount - this.Worksheet.FrozenTrailingRowCount) - 1, value);
+                value = Math.Max(Worksheet.FrozenRowCount, value);
+                value = Math.Min((Worksheet.RowCount - Worksheet.FrozenTrailingRowCount) - 1, value);
                 value = base.TryGetNextScrollableRow(value);
-                if (this._verticalScrollBar != null)
+                if (_verticalScrollBar != null)
                 {
-                    this.GetSpreadLayout();
+                    GetSpreadLayout();
                     if (action == null)
                     {
                         action = delegate
                         {
-                            if (((rowViewportIndex > -1) && (rowViewportIndex < this._verticalScrollBar.Length)) && (value != this._verticalScrollBar[rowViewportIndex].Value))
+                            if (((rowViewportIndex > -1) && (rowViewportIndex < _verticalScrollBar.Length)) && (value != _verticalScrollBar[rowViewportIndex].Value))
                             {
-                                int invisibleRowsBeforeRow = this.GetInvisibleRowsBeforeRow(this.ActiveSheet, value);
+                                int invisibleRowsBeforeRow = GetInvisibleRowsBeforeRow(ActiveSheet, value);
                                 int num2 = value - invisibleRowsBeforeRow;
-                                this._verticalScrollBar[rowViewportIndex].Value = (double)num2;
-                                this._verticalScrollBar[rowViewportIndex].InvalidateArrange();
+                                _verticalScrollBar[rowViewportIndex].Value = (double)num2;
+                                _verticalScrollBar[rowViewportIndex].InvalidateArrange();
                             }
                         };
                     }
@@ -2173,8 +2173,8 @@ namespace Dt.Cells.UI
         /// <param name="viewportWidth"></param>
         internal void AddColumnViewport(int columnViewportIndex, double viewportWidth)
         {
-            this.Worksheet.AddColumnViewport(columnViewportIndex, viewportWidth / ((double)base.ZoomFactor));
-            this.InvalidateLayout();
+            Worksheet.AddColumnViewport(columnViewportIndex, viewportWidth / ((double)base.ZoomFactor));
+            InvalidateLayout();
             base.InvalidateMeasure();
         }
 
@@ -2185,20 +2185,20 @@ namespace Dt.Cells.UI
         /// <param name="viewportHeight"></param>
         internal void AddRowViewport(int rowViewportIndex, double viewportHeight)
         {
-            this.Worksheet.AddRowViewport(rowViewportIndex, viewportHeight / ((double)base.ZoomFactor));
-            this.InvalidateLayout();
+            Worksheet.AddRowViewport(rowViewportIndex, viewportHeight / ((double)base.ZoomFactor));
+            InvalidateLayout();
             base.InvalidateMeasure();
         }
 
         /// <summary>
         /// 
         /// </summary>
-        private void AdjustViewportLeftColumn()
+        void AdjustViewportLeftColumn()
         {
             if (base._translateOffsetX != 0.0)
             {
                 int viewportLeftColumn = base.GetViewportLeftColumn(base._touchStartHitTestInfo.ColumnViewportIndex);
-                if (viewportLeftColumn >= this.Worksheet.FrozenColumnCount)
+                if (viewportLeftColumn >= Worksheet.FrozenColumnCount)
                 {
                     ColumnLayout layout = base.GetColumnLayoutModel(base._touchStartHitTestInfo.ColumnViewportIndex, SheetArea.Cells).FindColumn(viewportLeftColumn);
                     if (layout != null)
@@ -2212,7 +2212,7 @@ namespace Dt.Cells.UI
                                 int nextScrollableColumn = base.GetNextScrollableColumn(viewportLeftColumn);
                                 if (nextScrollableColumn != -1)
                                 {
-                                    this.SetViewportLeftColumn(base._touchStartHitTestInfo.ColumnViewportIndex, nextScrollableColumn);
+                                    SetViewportLeftColumn(base._touchStartHitTestInfo.ColumnViewportIndex, nextScrollableColumn);
                                 }
                             }
                         }
@@ -2221,7 +2221,7 @@ namespace Dt.Cells.UI
                             int num5 = base.GetNextScrollableColumn(viewportLeftColumn);
                             if (num5 != -1)
                             {
-                                this.SetViewportLeftColumn(base._touchStartHitTestInfo.ColumnViewportIndex, num5);
+                                SetViewportLeftColumn(base._touchStartHitTestInfo.ColumnViewportIndex, num5);
                             }
                         }
                     }
@@ -2232,9 +2232,9 @@ namespace Dt.Cells.UI
         /// <summary>
         /// 
         /// </summary>
-        private void AdjustViewportSize()
+        void AdjustViewportSize()
         {
-            SpreadLayout spreadLayout = this.GetSpreadLayout();
+            SpreadLayout spreadLayout = GetSpreadLayout();
             if (spreadLayout != null)
             {
                 if (((base._cachedViewportWidths != null) && (base._touchStartHitTestInfo.ColumnViewportIndex != -1)) && (base._touchStartHitTestInfo.ColumnViewportIndex < spreadLayout.ColumnPaneCount))
@@ -2251,12 +2251,12 @@ namespace Dt.Cells.UI
         /// <summary>
         /// 
         /// </summary>
-        private void AdjustViewportTopRow()
+        void AdjustViewportTopRow()
         {
             if (base._translateOffsetY != 0.0)
             {
                 int viewportTopRow = base.GetViewportTopRow(base._touchStartHitTestInfo.RowViewportIndex);
-                if (viewportTopRow >= this.Worksheet.FrozenRowCount)
+                if (viewportTopRow >= Worksheet.FrozenRowCount)
                 {
                     RowLayout layout = base.GetRowLayoutModel(base._touchStartHitTestInfo.RowViewportIndex, SheetArea.Cells).FindRow(viewportTopRow);
                     if (layout != null)
@@ -2270,7 +2270,7 @@ namespace Dt.Cells.UI
                                 int nextScrollableRow = base.GetNextScrollableRow(viewportTopRow);
                                 if (nextScrollableRow != -1)
                                 {
-                                    this.SetViewportTopRow(base._touchStartHitTestInfo.RowViewportIndex, nextScrollableRow);
+                                    SetViewportTopRow(base._touchStartHitTestInfo.RowViewportIndex, nextScrollableRow);
                                 }
                             }
                         }
@@ -2279,7 +2279,7 @@ namespace Dt.Cells.UI
                             int num5 = base.GetNextScrollableRow(viewportTopRow);
                             if (num5 != -1)
                             {
-                                this.SetViewportTopRow(base._touchStartHitTestInfo.RowViewportIndex, num5);
+                                SetViewportTopRow(base._touchStartHitTestInfo.RowViewportIndex, num5);
                             }
                         }
                     }
@@ -2291,9 +2291,9 @@ namespace Dt.Cells.UI
         /// Sets the top row index async, for performance optimization 
         /// </summary>
         /// <param name="rowViewportIndex"></param>
-        private async void AsynSetViewportTopRow(int rowViewportIndex)
+        async void AsynSetViewportTopRow(int rowViewportIndex)
         {
-            if (!this._pendinging)
+            if (!_pendinging)
             {
                 _pendinging = true;
                 await base.Dispatcher.RunAsync(CoreDispatcherPriority.High, delegate
@@ -2310,9 +2310,9 @@ namespace Dt.Cells.UI
         /// <summary>
         /// 
         /// </summary>
-        private void ClearViewportsClip()
+        void ClearViewportsClip()
         {
-            SpreadLayout spreadLayout = this.GetSpreadLayout();
+            SpreadLayout spreadLayout = GetSpreadLayout();
             if (spreadLayout != null)
             {
                 if (base._viewportPresenters != null)
@@ -2357,79 +2357,79 @@ namespace Dt.Cells.UI
         /// <summary>
         /// 
         /// </summary>
-        private void ContinueColumnSplitting()
+        void ContinueColumnSplitting()
         {
             HitTestInformation savedHitTestInformation = base.GetSavedHitTestInformation();
-            SpreadLayout spreadLayout = this.GetSpreadLayout();
+            SpreadLayout spreadLayout = GetSpreadLayout();
             int columnViewportIndex = savedHitTestInformation.ColumnViewportIndex;
             switch (savedHitTestInformation.HitTestType)
             {
                 case HitTestType.RowSplitBar:
                 case HitTestType.ColumnSplitBar:
-                    if (base.MousePosition.X <= this._columnSplittingTracker.X1)
+                    if (base.MousePosition.X <= _columnSplittingTracker.X1)
                     {
-                        this._columnSplittingTracker.X1 = Math.Max(base.MousePosition.X, spreadLayout.GetViewportX(columnViewportIndex) + (spreadLayout.GetHorizontalSplitBarWidth(columnViewportIndex) / 2.0));
+                        _columnSplittingTracker.X1 = Math.Max(base.MousePosition.X, spreadLayout.GetViewportX(columnViewportIndex) + (spreadLayout.GetHorizontalSplitBarWidth(columnViewportIndex) / 2.0));
                         break;
                     }
-                    this._columnSplittingTracker.X1 = Math.Min(base.MousePosition.X, (spreadLayout.GetViewportX(columnViewportIndex + 1) + spreadLayout.GetViewportWidth(columnViewportIndex + 1)) - (spreadLayout.GetHorizontalSplitBarWidth(columnViewportIndex) / 2.0));
+                    _columnSplittingTracker.X1 = Math.Min(base.MousePosition.X, (spreadLayout.GetViewportX(columnViewportIndex + 1) + spreadLayout.GetViewportWidth(columnViewportIndex + 1)) - (spreadLayout.GetHorizontalSplitBarWidth(columnViewportIndex) / 2.0));
                     break;
 
                 case HitTestType.ColumnSplitBox:
-                    if (base.MousePosition.X <= this._columnSplittingTracker.X1)
+                    if (base.MousePosition.X <= _columnSplittingTracker.X1)
                     {
-                        this._columnSplittingTracker.X1 = Math.Max(base.MousePosition.X, spreadLayout.GetViewportX(columnViewportIndex) + (spreadLayout.GetHorizontalSplitBoxWidth(columnViewportIndex) / 2.0));
+                        _columnSplittingTracker.X1 = Math.Max(base.MousePosition.X, spreadLayout.GetViewportX(columnViewportIndex) + (spreadLayout.GetHorizontalSplitBoxWidth(columnViewportIndex) / 2.0));
                         break;
                     }
-                    this._columnSplittingTracker.X1 = Math.Min(base.MousePosition.X, (spreadLayout.GetViewportX(columnViewportIndex) + spreadLayout.GetViewportWidth(columnViewportIndex)) - (spreadLayout.GetHorizontalSplitBoxWidth(columnViewportIndex) / 2.0));
+                    _columnSplittingTracker.X1 = Math.Min(base.MousePosition.X, (spreadLayout.GetViewportX(columnViewportIndex) + spreadLayout.GetViewportWidth(columnViewportIndex)) - (spreadLayout.GetHorizontalSplitBoxWidth(columnViewportIndex) / 2.0));
                     break;
             }
-            this._columnSplittingTracker.X2 = this._columnSplittingTracker.X1;
+            _columnSplittingTracker.X2 = _columnSplittingTracker.X1;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        private void ContinueRowSplitting()
+        void ContinueRowSplitting()
         {
             HitTestInformation savedHitTestInformation = base.GetSavedHitTestInformation();
-            SpreadLayout spreadLayout = this.GetSpreadLayout();
+            SpreadLayout spreadLayout = GetSpreadLayout();
             int rowViewportIndex = savedHitTestInformation.RowViewportIndex;
             switch (savedHitTestInformation.HitTestType)
             {
                 case HitTestType.RowSplitBar:
                 case HitTestType.ColumnSplitBar:
-                    if (base.MousePosition.Y <= this._rowSplittingTracker.Y1)
+                    if (base.MousePosition.Y <= _rowSplittingTracker.Y1)
                     {
-                        this._rowSplittingTracker.Y1 = Math.Max(base.MousePosition.Y, spreadLayout.GetViewportY(rowViewportIndex) + (spreadLayout.GetVerticalSplitBarHeight(rowViewportIndex) / 2.0));
+                        _rowSplittingTracker.Y1 = Math.Max(base.MousePosition.Y, spreadLayout.GetViewportY(rowViewportIndex) + (spreadLayout.GetVerticalSplitBarHeight(rowViewportIndex) / 2.0));
                         break;
                     }
-                    this._rowSplittingTracker.Y1 = Math.Min(base.MousePosition.Y, (spreadLayout.GetViewportY(rowViewportIndex + 1) + spreadLayout.GetViewportHeight(rowViewportIndex + 1)) - (spreadLayout.GetVerticalSplitBarHeight(rowViewportIndex) / 2.0));
+                    _rowSplittingTracker.Y1 = Math.Min(base.MousePosition.Y, (spreadLayout.GetViewportY(rowViewportIndex + 1) + spreadLayout.GetViewportHeight(rowViewportIndex + 1)) - (spreadLayout.GetVerticalSplitBarHeight(rowViewportIndex) / 2.0));
                     break;
 
                 case HitTestType.RowSplitBox:
-                    if (base.MousePosition.Y <= this._rowSplittingTracker.Y1)
+                    if (base.MousePosition.Y <= _rowSplittingTracker.Y1)
                     {
-                        this._rowSplittingTracker.Y1 = Math.Max(base.MousePosition.Y, spreadLayout.GetViewportY(rowViewportIndex) + (spreadLayout.GetVerticalSplitBoxHeight(rowViewportIndex) / 2.0));
+                        _rowSplittingTracker.Y1 = Math.Max(base.MousePosition.Y, spreadLayout.GetViewportY(rowViewportIndex) + (spreadLayout.GetVerticalSplitBoxHeight(rowViewportIndex) / 2.0));
                         break;
                     }
-                    this._rowSplittingTracker.Y1 = Math.Min(base.MousePosition.Y, (spreadLayout.GetViewportY(rowViewportIndex) + spreadLayout.GetViewportHeight(rowViewportIndex)) - (spreadLayout.GetVerticalSplitBoxHeight(rowViewportIndex) / 2.0));
+                    _rowSplittingTracker.Y1 = Math.Min(base.MousePosition.Y, (spreadLayout.GetViewportY(rowViewportIndex) + spreadLayout.GetViewportHeight(rowViewportIndex)) - (spreadLayout.GetVerticalSplitBoxHeight(rowViewportIndex) / 2.0));
                     break;
             }
-            this._rowSplittingTracker.Y2 = this._rowSplittingTracker.Y1;
+            _rowSplittingTracker.Y2 = _rowSplittingTracker.Y1;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        private void ContinueTabStripResizing()
+        void ContinueTabStripResizing()
         {
-            SpreadLayout spreadLayout = this.GetSpreadLayout();
+            SpreadLayout spreadLayout = GetSpreadLayout();
             double tabStripX = spreadLayout.TabStripX;
             double tabStripHeight = spreadLayout.TabStripHeight;
             double num2 = spreadLayout.GetHorizontalScrollBarWidth(0) + spreadLayout.TabStripWidth;
             double num3 = Math.Min(Math.Max((double)0.0, (double)(base.MousePosition.X - tabStripX)), num2);
-            this._tabStripRatio = num3 / num2;
-            this.InvalidateLayout();
+            _tabStripRatio = num3 / num2;
+            InvalidateLayout();
             base.InvalidateMeasure();
         }
 
@@ -2439,7 +2439,7 @@ namespace Dt.Cells.UI
         /// <param name="child"></param>
         /// <param name="renderSize"></param>
         /// <returns></returns>
-        private BitmapSource CreateCachedIamge(UIElement child, Size renderSize)
+        BitmapSource CreateCachedIamge(UIElement child, Size renderSize)
         {
             return null;
         }
@@ -2450,10 +2450,10 @@ namespace Dt.Cells.UI
         /// <param name="image"></param>
         /// <param name="bounds"></param>
         /// <returns></returns>
-        private Image CreateCachedVisual(ImageSource image, Rect bounds)
+        Image CreateCachedVisual(ImageSource image, Rect bounds)
         {
 #if UWP
-            if (!this.IsZero(bounds.Width) && !this.IsZero(bounds.Height))
+            if (!IsZero(bounds.Width) && !IsZero(bounds.Height))
             {
                 WriteableBitmap bitmap = image as WriteableBitmap;
                 if (bitmap != null)
@@ -2487,14 +2487,14 @@ namespace Dt.Cells.UI
         /// <param name="viewportColumnIndex"></param>
         /// <param name="viewportRowIndex"></param>
         /// <returns></returns>
-        private Rect CreateClipRect(double columnX, double rowY, double viewportWidth, double viewportHeight, int viewportColumnIndex, int viewportRowIndex)
+        Rect CreateClipRect(double columnX, double rowY, double viewportWidth, double viewportHeight, int viewportColumnIndex, int viewportRowIndex)
         {
-            SpreadLayout spreadLayout = this.GetSpreadLayout();
+            SpreadLayout spreadLayout = GetSpreadLayout();
             double num = columnX;
             double num2 = rowY;
             double num3 = viewportWidth;
             double num4 = viewportHeight;
-            if ((this.Worksheet.FrozenColumnCount > 0) && base.ShowFreezeLine)
+            if ((Worksheet.FrozenColumnCount > 0) && base.ShowFreezeLine)
             {
                 if (viewportColumnIndex == 0)
                 {
@@ -2506,7 +2506,7 @@ namespace Dt.Cells.UI
                     num3 = Math.Max((double)0.0, (double)(num3 - 1.0));
                 }
             }
-            if ((this.Worksheet.FrozenRowCount > 0) && base.ShowFreezeLine)
+            if ((Worksheet.FrozenRowCount > 0) && base.ShowFreezeLine)
             {
                 if (viewportRowIndex == 0)
                 {
@@ -2518,7 +2518,7 @@ namespace Dt.Cells.UI
                     num4 = Math.Max((double)0.0, (double)(num4 - 1.0));
                 }
             }
-            if ((this.Worksheet.FrozenTrailingColumnCount > 0) && base.ShowFreezeLine)
+            if ((Worksheet.FrozenTrailingColumnCount > 0) && base.ShowFreezeLine)
             {
                 if (viewportColumnIndex == (spreadLayout.ColumnPaneCount - 1))
                 {
@@ -2530,7 +2530,7 @@ namespace Dt.Cells.UI
                     num3 = Math.Max((double)0.0, (double)(num3 - 1.0));
                 }
             }
-            if ((this.Worksheet.FrozenTrailingRowCount > 0) && base.ShowFreezeLine)
+            if ((Worksheet.FrozenTrailingRowCount > 0) && base.ShowFreezeLine)
             {
                 if (viewportRowIndex == (spreadLayout.RowPaneCount - 1))
                 {
@@ -2545,7 +2545,7 @@ namespace Dt.Cells.UI
             double num5 = 0.0;
             int viewportTopRow = base.GetViewportTopRow(viewportRowIndex);
             int viewportBottomRow = base.GetViewportBottomRow(viewportRowIndex);
-            if (((viewportTopRow >= 0) && (viewportBottomRow < this.Worksheet.RowCount)) && (viewportTopRow <= viewportBottomRow))
+            if (((viewportTopRow >= 0) && (viewportBottomRow < Worksheet.RowCount)) && (viewportTopRow <= viewportBottomRow))
             {
                 RowLayoutModel rowLayoutModel = base.GetRowLayoutModel(viewportRowIndex, SheetArea.Cells);
                 if (rowLayoutModel != null)
@@ -2575,7 +2575,7 @@ namespace Dt.Cells.UI
             double num9 = 0.0;
             int viewportLeftColumn = base.GetViewportLeftColumn(viewportColumnIndex);
             int viewportRightColumn = base.GetViewportRightColumn(viewportColumnIndex);
-            if (((viewportLeftColumn >= 0) && (viewportRightColumn < this.Worksheet.ColumnCount)) && (viewportLeftColumn <= viewportRightColumn))
+            if (((viewportLeftColumn >= 0) && (viewportRightColumn < Worksheet.ColumnCount)) && (viewportLeftColumn <= viewportRightColumn))
             {
                 ColumnLayoutModel columnLayoutModel = base.GetColumnLayoutModel(viewportColumnIndex, SheetArea.Cells);
                 if (columnLayoutModel != null)
@@ -2609,9 +2609,9 @@ namespace Dt.Cells.UI
         /// 
         /// </summary>
         /// <returns></returns>
-        private SpreadLayout CreateSpreadLayout()
+        SpreadLayout CreateSpreadLayout()
         {
-            Worksheet activeSheet = this.ActiveSheet;
+            Worksheet activeSheet = ActiveSheet;
             ViewportInfo viewportInfo = base.GetViewportInfo();
             double width = base.AvailableSize.Width;
             double height = base.AvailableSize.Height;
@@ -2682,22 +2682,22 @@ namespace Dt.Cells.UI
             }
             num5 += num3;
             num6 += num4;
-            bool flag = (this.HorizontalScrollBarPolicy == (ScrollBarVisibility)3) || (this.HorizontalScrollBarPolicy == 0);
-            if (this.HorizontalScrollBarPolicy == (ScrollBarVisibility)1)
+            bool flag = (HorizontalScrollBarPolicy == (ScrollBarVisibility)3) || (HorizontalScrollBarPolicy == 0);
+            if (HorizontalScrollBarPolicy == (ScrollBarVisibility)1)
             {
                 if (layout.ColumnPaneCount > 1)
                 {
                     flag = true;
                 }
-                else if ((this.VerticalScrollBarPolicy == (ScrollBarVisibility)3) || (this.VerticalScrollBarPolicy == 0))
+                else if ((VerticalScrollBarPolicy == (ScrollBarVisibility)3) || (VerticalScrollBarPolicy == 0))
                 {
-                    flag |= num5 > ((width - this.ActualVerticalScrollBarWidth) - groupLayout.Width);
+                    flag |= num5 > ((width - ActualVerticalScrollBarWidth) - groupLayout.Width);
                 }
-                else if (this.VerticalScrollBarPolicy == (ScrollBarVisibility)1)
+                else if (VerticalScrollBarPolicy == (ScrollBarVisibility)1)
                 {
                     if (num4 > height)
                     {
-                        flag |= num5 > ((width - this.ActualVerticalScrollBarWidth) - groupLayout.Width);
+                        flag |= num5 > ((width - ActualVerticalScrollBarWidth) - groupLayout.Width);
                     }
                     else
                     {
@@ -2711,11 +2711,11 @@ namespace Dt.Cells.UI
             }
             if (flag)
             {
-                layout.OrnamentHeight = this.ActualHorizontalScrollBarHeight;
+                layout.OrnamentHeight = ActualHorizontalScrollBarHeight;
                 height -= layout.OrnamentHeight;
                 height = Math.Max(0.0, height);
             }
-            if (this.TabStripVisibility == 0)
+            if (TabStripVisibility == 0)
             {
                 if (layout.OrnamentHeight > 0.0)
                 {
@@ -2728,10 +2728,10 @@ namespace Dt.Cells.UI
                     height = Math.Max(0.0, height);
                 }
             }
-            bool flag3 = ((this.VerticalScrollBarPolicy == (ScrollBarVisibility)3) || (this.VerticalScrollBarPolicy == 0)) || ((this.VerticalScrollBarPolicy == (ScrollBarVisibility)1) && ((layout.RowPaneCount > 1) || (num6 > (height - groupLayout.Height))));
+            bool flag3 = ((VerticalScrollBarPolicy == (ScrollBarVisibility)3) || (VerticalScrollBarPolicy == 0)) || ((VerticalScrollBarPolicy == (ScrollBarVisibility)1) && ((layout.RowPaneCount > 1) || (num6 > (height - groupLayout.Height))));
             if (flag3)
             {
-                layout.OrnamentWidth = this.ActualVerticalScrollBarWidth;
+                layout.OrnamentWidth = ActualVerticalScrollBarWidth;
                 width -= layout.OrnamentWidth;
                 width = Math.Max(0.0, width);
             }
@@ -2859,14 +2859,14 @@ namespace Dt.Cells.UI
             {
                 layout.OrnamentX = (layout.GetViewportX(layout.ColumnPaneCount - 1) + layout.GetViewportWidth(layout.ColumnPaneCount - 1)) + layout.FrozenTrailingWidth;
             }
-            double columnSplitBoxesWidth = this.GetColumnSplitBoxesWidth(layout.ColumnPaneCount);
+            double columnSplitBoxesWidth = GetColumnSplitBoxesWidth(layout.ColumnPaneCount);
             for (int num33 = 0; num33 < layout.ColumnPaneCount; num33++)
             {
                 if (num33 == 0)
                 {
                     double num34 = ((layout.HeaderX + layout.HeaderWidth) + layout.FrozenWidth) + layout.GetViewportWidth(num33);
                     double x = layout.X;
-                    if (this.ColumnSplitBoxAlignment == SplitBoxAlignment.Leading)
+                    if (ColumnSplitBoxAlignment == SplitBoxAlignment.Leading)
                     {
                         layout.SetHorizontalSplitBoxX(num33, x);
                         layout.SetHorizontalSplitBoxWidth(num33, Math.Min(num34, columnSplitBoxesWidth));
@@ -2885,7 +2885,7 @@ namespace Dt.Cells.UI
                 {
                     double viewportWidth = layout.GetViewportWidth(num33);
                     double viewportX = layout.GetViewportX(num33);
-                    if (this.ColumnSplitBoxAlignment == SplitBoxAlignment.Leading)
+                    if (ColumnSplitBoxAlignment == SplitBoxAlignment.Leading)
                     {
                         layout.SetHorizontalSplitBoxX(num33, viewportX);
                         layout.SetHorizontalSplitBoxWidth(num33, Math.Min(viewportWidth, columnSplitBoxesWidth));
@@ -2904,7 +2904,7 @@ namespace Dt.Cells.UI
                 {
                     double num38 = (((layout.GetViewportWidth(layout.ColumnPaneCount - 1) + layout.FrozenTrailingWidth) + ((layout.ColumnPaneCount == 1) ? layout.HeaderX : 0.0)) + ((layout.ColumnPaneCount == 1) ? layout.HeaderWidth : 0.0)) + ((layout.ColumnPaneCount == 1) ? layout.FrozenWidth : 0.0);
                     double num39 = (layout.ColumnPaneCount == 1) ? layout.X : layout.GetViewportX(layout.ColumnPaneCount - 1);
-                    if (this.ColumnSplitBoxAlignment == SplitBoxAlignment.Leading)
+                    if (ColumnSplitBoxAlignment == SplitBoxAlignment.Leading)
                     {
                         layout.SetHorizontalSplitBoxX(num33, num39);
                         layout.SetHorizontalSplitBoxWidth(num33, Math.Min(num38, columnSplitBoxesWidth));
@@ -2920,14 +2920,14 @@ namespace Dt.Cells.UI
                     }
                 }
             }
-            double rowSplitBoxesHeight = this.GetRowSplitBoxesHeight(layout.RowPaneCount);
+            double rowSplitBoxesHeight = GetRowSplitBoxesHeight(layout.RowPaneCount);
             for (int num41 = 0; num41 < layout.RowPaneCount; num41++)
             {
                 if (num41 == 0)
                 {
                     double num42 = ((layout.HeaderY + layout.HeaderHeight) + layout.FrozenHeight) + layout.GetViewportHeight(num41);
                     double y = layout.Y;
-                    if (this.RowSplitBoxAlignment == SplitBoxAlignment.Leading)
+                    if (RowSplitBoxAlignment == SplitBoxAlignment.Leading)
                     {
                         layout.SetVerticalSplitBoxY(num41, y);
                         layout.SetVerticalSplitBoxHeight(num41, Math.Min(num42, rowSplitBoxesHeight));
@@ -2946,7 +2946,7 @@ namespace Dt.Cells.UI
                 {
                     double viewportHeight = layout.GetViewportHeight(num41);
                     double viewportY = layout.GetViewportY(num41);
-                    if (this.RowSplitBoxAlignment == SplitBoxAlignment.Leading)
+                    if (RowSplitBoxAlignment == SplitBoxAlignment.Leading)
                     {
                         layout.SetVerticalSplitBoxY(num41, viewportY);
                         layout.SetVerticalSplitBoxHeight(num41, Math.Min(viewportHeight, rowSplitBoxesHeight));
@@ -2965,7 +2965,7 @@ namespace Dt.Cells.UI
                 {
                     double num46 = (((layout.GetViewportHeight(num41) + layout.FrozenTrailingHeight) + ((layout.RowPaneCount == 1) ? layout.HeaderY : 0.0)) + ((layout.RowPaneCount == 1) ? layout.HeaderHeight : 0.0)) + ((layout.RowPaneCount == 1) ? layout.FrozenHeight : 0.0);
                     double num47 = (layout.RowPaneCount == 1) ? layout.Y : layout.GetViewportY(layout.RowPaneCount - 1);
-                    if (this.RowSplitBoxAlignment == SplitBoxAlignment.Leading)
+                    if (RowSplitBoxAlignment == SplitBoxAlignment.Leading)
                     {
                         layout.SetVerticalSplitBoxY(num41, num47);
                         layout.SetVerticalSplitBoxHeight(num41, Math.Min(num46, rowSplitBoxesHeight));
@@ -2987,7 +2987,7 @@ namespace Dt.Cells.UI
                 {
                     layout.TabStripX = layout.GetHorizontalScrollBarX(0);
                     layout.TabStripY = layout.OrnamentY;
-                    layout.TabStripWidth = this.TabStripRatio * Math.Max((double)0.0, (double)(layout.GetHorizontalScrollBarWidth(0) - 16.0));
+                    layout.TabStripWidth = TabStripRatio * Math.Max((double)0.0, (double)(layout.GetHorizontalScrollBarWidth(0) - 16.0));
                     layout.TabSplitBoxX = layout.TabStripX + layout.TabStripWidth;
                     layout.TabSplitBoxWidth = 16.0;
                     layout.SetHorizontalScrollBarX(0, layout.TabSplitBoxX + layout.TabSplitBoxWidth);
@@ -3015,7 +3015,7 @@ namespace Dt.Cells.UI
                 num49 = 0.0;
                 if (flag3)
                 {
-                    num49 += this.ActualVerticalScrollBarWidth;
+                    num49 += ActualVerticalScrollBarWidth;
                 }
                 for (int num50 = 0; num50 < (layout.ColumnPaneCount - 1); num50++)
                 {
@@ -3032,7 +3032,7 @@ namespace Dt.Cells.UI
                 num52 = 0.0;
                 if (flag)
                 {
-                    num52 += this.ActualHorizontalScrollBarHeight;
+                    num52 += ActualHorizontalScrollBarHeight;
                 }
                 for (int num53 = 0; num53 < (layout.RowPaneCount - 1); num53++)
                 {
@@ -3054,15 +3054,15 @@ namespace Dt.Cells.UI
         /// <summary>
         /// 
         /// </summary>
-        private void EndColumnSplitting()
+        void EndColumnSplitting()
         {
             double num2;
             HitTestInformation savedHitTestInformation = base.GetSavedHitTestInformation();
-            SpreadLayout spreadLayout = this.GetSpreadLayout();
+            SpreadLayout spreadLayout = GetSpreadLayout();
             int columnViewportIndex = savedHitTestInformation.ColumnViewportIndex;
             base.IsWorking = false;
-            this.IsTouchColumnSplitting = false;
-            this.IsColumnSplitting = false;
+            IsTouchColumnSplitting = false;
+            IsColumnSplitting = false;
             switch (savedHitTestInformation.HitTestType)
             {
                 case HitTestType.RowSplitBar:
@@ -3077,18 +3077,18 @@ namespace Dt.Cells.UI
                     }
                     if (num2 != 0.0)
                     {
-                        double deltaViewportWidth = (this._columnSplittingTracker.X1 - spreadLayout.GetHorizontalSplitBarX(savedHitTestInformation.ColumnViewportIndex)) - (spreadLayout.GetHorizontalSplitBarWidth(savedHitTestInformation.ColumnViewportIndex) / 2.0);
+                        double deltaViewportWidth = (_columnSplittingTracker.X1 - spreadLayout.GetHorizontalSplitBarX(savedHitTestInformation.ColumnViewportIndex)) - (spreadLayout.GetHorizontalSplitBarWidth(savedHitTestInformation.ColumnViewportIndex) / 2.0);
                         int viewportIndex = savedHitTestInformation.ColumnViewportIndex;
-                        if (!this.RaiseColumnViewportWidthChanging(viewportIndex, deltaViewportWidth))
+                        if (!RaiseColumnViewportWidthChanging(viewportIndex, deltaViewportWidth))
                         {
                             base.AdjustColumnViewport(columnViewportIndex, deltaViewportWidth);
-                            this.RaiseColumnViewportWidthChanged(viewportIndex, deltaViewportWidth);
+                            RaiseColumnViewportWidthChanged(viewportIndex, deltaViewportWidth);
                         }
                     }
                     goto Label_0258;
 
                 case HitTestType.ColumnSplitBox:
-                    if (this.ColumnSplitBoxAlignment != SplitBoxAlignment.Leading)
+                    if (ColumnSplitBoxAlignment != SplitBoxAlignment.Leading)
                     {
                         num2 = Math.Max((double)0.0, (double)(((spreadLayout.GetViewportX(savedHitTestInformation.ColumnViewportIndex) + spreadLayout.GetViewportWidth(savedHitTestInformation.ColumnViewportIndex)) - base.MousePosition.X) - spreadLayout.GetHorizontalSplitBoxWidth(savedHitTestInformation.ColumnViewportIndex)));
                         break;
@@ -3101,17 +3101,17 @@ namespace Dt.Cells.UI
             }
             if (num2 > 0.0)
             {
-                double num3 = (this._columnSplittingTracker.X1 - spreadLayout.GetViewportX(columnViewportIndex)) - (spreadLayout.GetHorizontalSplitBoxWidth(columnViewportIndex) / 2.0);
-                int num4 = (this.ColumnSplitBoxAlignment == SplitBoxAlignment.Leading) ? 0 : (base.GetViewportInfo().ColumnViewportCount - 1);
-                if (!this.RaiseColumnViewportWidthChanging(num4, num3))
+                double num3 = (_columnSplittingTracker.X1 - spreadLayout.GetViewportX(columnViewportIndex)) - (spreadLayout.GetHorizontalSplitBoxWidth(columnViewportIndex) / 2.0);
+                int num4 = (ColumnSplitBoxAlignment == SplitBoxAlignment.Leading) ? 0 : (base.GetViewportInfo().ColumnViewportCount - 1);
+                if (!RaiseColumnViewportWidthChanging(num4, num3))
                 {
-                    this.AddColumnViewport(columnViewportIndex, num3);
-                    this.RaiseColumnViewportWidthChanged(num4, num3);
-                    base.ShowCell(base.GetActiveRowViewportIndex(), base.GetActiveColumnViewportIndex(), this.ActiveSheet.ActiveRowIndex, this.ActiveSheet.ActiveColumnIndex, VerticalPosition.Nearest, HorizontalPosition.Nearest);
+                    AddColumnViewport(columnViewportIndex, num3);
+                    RaiseColumnViewportWidthChanged(num4, num3);
+                    base.ShowCell(base.GetActiveRowViewportIndex(), base.GetActiveColumnViewportIndex(), ActiveSheet.ActiveRowIndex, ActiveSheet.ActiveColumnIndex, VerticalPosition.Nearest, HorizontalPosition.Nearest);
                 }
             }
         Label_0258:
-            this._columnSplittingTracker.Opacity = 0.0;
+            _columnSplittingTracker.Opacity = 0.0;
         }
 
         /// <summary>
@@ -3135,26 +3135,26 @@ namespace Dt.Cells.UI
         /// <returns></returns>
         internal int GetActiveRowViewportIndex(int sheetIndex)
         {
-            if ((sheetIndex < 0) || (sheetIndex >= this.SpreadSheet.SheetCount))
+            if ((sheetIndex < 0) || (sheetIndex >= SpreadSheet.SheetCount))
             {
                 throw new ArgumentOutOfRangeException("sheetIndex");
             }
-            Worksheet sheet = this.SpreadSheet.Sheets[sheetIndex];
-            return this.GetViewportInfo(sheet).ActiveRowViewport;
+            Worksheet sheet = SpreadSheet.Sheets[sheetIndex];
+            return GetViewportInfo(sheet).ActiveRowViewport;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        private void EndRowSplitting()
+        void EndRowSplitting()
         {
             double num2;
             HitTestInformation savedHitTestInformation = base.GetSavedHitTestInformation();
-            SpreadLayout spreadLayout = this.GetSpreadLayout();
+            SpreadLayout spreadLayout = GetSpreadLayout();
             int rowViewportIndex = savedHitTestInformation.RowViewportIndex;
             base.IsWorking = false;
-            this.IsRowSplitting = false;
-            this.IsTouchRowSplitting = false;
+            IsRowSplitting = false;
+            IsTouchRowSplitting = false;
             switch (savedHitTestInformation.HitTestType)
             {
                 case HitTestType.RowSplitBar:
@@ -3169,18 +3169,18 @@ namespace Dt.Cells.UI
                     }
                     if (num2 != 0.0)
                     {
-                        double deltaViewportHeight = (this._rowSplittingTracker.Y1 - spreadLayout.GetVerticalSplitBarY(rowViewportIndex)) - (spreadLayout.GetVerticalSplitBarHeight(rowViewportIndex) / 2.0);
+                        double deltaViewportHeight = (_rowSplittingTracker.Y1 - spreadLayout.GetVerticalSplitBarY(rowViewportIndex)) - (spreadLayout.GetVerticalSplitBarHeight(rowViewportIndex) / 2.0);
                         int viewportIndex = savedHitTestInformation.RowViewportIndex;
-                        if (!this.RaiseRowViewportHeightChanging(viewportIndex, deltaViewportHeight))
+                        if (!RaiseRowViewportHeightChanging(viewportIndex, deltaViewportHeight))
                         {
                             base.AdjustRowViewport(rowViewportIndex, deltaViewportHeight);
-                            this.RaiseRowViewportHeightChanged(viewportIndex, deltaViewportHeight);
+                            RaiseRowViewportHeightChanged(viewportIndex, deltaViewportHeight);
                         }
                     }
                     goto Label_021D;
 
                 case HitTestType.RowSplitBox:
-                    if (this.RowSplitBoxAlignment != SplitBoxAlignment.Leading)
+                    if (RowSplitBoxAlignment != SplitBoxAlignment.Leading)
                     {
                         num2 = Math.Max((double)0.0, (double)(((spreadLayout.GetViewportY(rowViewportIndex) + spreadLayout.GetViewportHeight(rowViewportIndex)) - base.MousePosition.Y) - spreadLayout.GetVerticalSplitBoxHeight(rowViewportIndex)));
                         break;
@@ -3193,25 +3193,25 @@ namespace Dt.Cells.UI
             }
             if (num2 > 0.0)
             {
-                double num3 = (this._rowSplittingTracker.Y1 - spreadLayout.GetViewportY(rowViewportIndex)) - (spreadLayout.GetVerticalSplitBoxHeight(rowViewportIndex) / 2.0);
-                int num4 = (this.RowSplitBoxAlignment == SplitBoxAlignment.Leading) ? 0 : (base.GetViewportInfo().RowViewportCount - 1);
-                if (!this.RaiseRowViewportHeightChanging(num4, num3))
+                double num3 = (_rowSplittingTracker.Y1 - spreadLayout.GetViewportY(rowViewportIndex)) - (spreadLayout.GetVerticalSplitBoxHeight(rowViewportIndex) / 2.0);
+                int num4 = (RowSplitBoxAlignment == SplitBoxAlignment.Leading) ? 0 : (base.GetViewportInfo().RowViewportCount - 1);
+                if (!RaiseRowViewportHeightChanging(num4, num3))
                 {
-                    this.AddRowViewport(rowViewportIndex, num3);
-                    this.RaiseRowViewportHeightChanged(num4, num3);
-                    base.ShowCell(base.GetActiveRowViewportIndex(), base.GetActiveColumnViewportIndex(), this.ActiveSheet.ActiveRowIndex, this.ActiveSheet.ActiveColumnIndex, VerticalPosition.Nearest, HorizontalPosition.Nearest);
+                    AddRowViewport(rowViewportIndex, num3);
+                    RaiseRowViewportHeightChanged(num4, num3);
+                    base.ShowCell(base.GetActiveRowViewportIndex(), base.GetActiveColumnViewportIndex(), ActiveSheet.ActiveRowIndex, ActiveSheet.ActiveColumnIndex, VerticalPosition.Nearest, HorizontalPosition.Nearest);
                 }
             }
         Label_021D:
-            this._rowSplittingTracker.Opacity = 0.0;
+            _rowSplittingTracker.Opacity = 0.0;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        private void EndTabStripResizing()
+        void EndTabStripResizing()
         {
-            this.IsTabStripResizing = false;
+            IsTabStripResizing = false;
             base.IsTouchTabStripResizing = false;
             base.IsWorking = false;
         }
@@ -3232,12 +3232,12 @@ namespace Dt.Cells.UI
 
         internal int GetActiveColumnViewportIndex(int sheetIndex)
         {
-            if ((sheetIndex < 0) || (sheetIndex >= this.SpreadSheet.SheetCount))
+            if ((sheetIndex < 0) || (sheetIndex >= SpreadSheet.SheetCount))
             {
                 throw new ArgumentOutOfRangeException("sheetIndex");
             }
-            Worksheet sheet = this.SpreadSheet.Sheets[sheetIndex];
-            return this.GetViewportInfo(sheet).ActiveColumnViewport;
+            Worksheet sheet = SpreadSheet.Sheets[sheetIndex];
+            return GetViewportInfo(sheet).ActiveColumnViewport;
         }
 
         internal int GetColumnPaneCount()
@@ -3250,11 +3250,11 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="columnPaneCount"></param>
         /// <returns></returns>
-        private double GetColumnSplitBoxesWidth(int columnPaneCount)
+        double GetColumnSplitBoxesWidth(int columnPaneCount)
         {
-            if (this._columnSplitBoxPolicy != SplitBoxPolicy.Always)
+            if (_columnSplitBoxPolicy != SplitBoxPolicy.Always)
             {
-                if (this._columnSplitBoxPolicy == SplitBoxPolicy.AsNeeded)
+                if (_columnSplitBoxPolicy == SplitBoxPolicy.AsNeeded)
                 {
                     if (columnPaneCount == 1)
                     {
@@ -3262,7 +3262,7 @@ namespace Dt.Cells.UI
                     }
                     return 0.0;
                 }
-                if (this._columnSplitBoxPolicy == SplitBoxPolicy.Never)
+                if (_columnSplitBoxPolicy == SplitBoxPolicy.Never)
                 {
                     return 0.0;
                 }
@@ -3275,9 +3275,9 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="columnViewportIndex"></param>
         /// <returns></returns>
-        private Rect GetHorizontalScrollBarRectangle(int columnViewportIndex)
+        Rect GetHorizontalScrollBarRectangle(int columnViewportIndex)
         {
-            SpreadLayout spreadLayout = this.GetSpreadLayout();
+            SpreadLayout spreadLayout = GetSpreadLayout();
             double horizontalScrollBarX = spreadLayout.GetHorizontalScrollBarX(columnViewportIndex);
             double ornamentY = spreadLayout.OrnamentY;
             double width = spreadLayout.GetHorizontalScrollBarWidth(columnViewportIndex) - 1.0;
@@ -3294,9 +3294,9 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="columnViewportIndex"></param>
         /// <returns></returns>
-        private Rect GetHorizontalSplitBarRectangle(int columnViewportIndex)
+        Rect GetHorizontalSplitBarRectangle(int columnViewportIndex)
         {
-            SpreadLayout spreadLayout = this.GetSpreadLayout();
+            SpreadLayout spreadLayout = GetSpreadLayout();
             double horizontalSplitBarX = spreadLayout.GetHorizontalSplitBarX(columnViewportIndex);
             double headerY = spreadLayout.HeaderY;
             double width = spreadLayout.GetHorizontalSplitBarWidth(columnViewportIndex) - 1.0;
@@ -3313,9 +3313,9 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="columnViewportIndex"></param>
         /// <returns></returns>
-        private Rect GetHorizontalSplitBoxRectangle(int columnViewportIndex)
+        Rect GetHorizontalSplitBoxRectangle(int columnViewportIndex)
         {
-            SpreadLayout spreadLayout = this.GetSpreadLayout();
+            SpreadLayout spreadLayout = GetSpreadLayout();
             double horizontalSplitBoxX = spreadLayout.GetHorizontalSplitBoxX(columnViewportIndex);
             double ornamentY = spreadLayout.OrnamentY;
             double width = spreadLayout.GetHorizontalSplitBoxWidth(columnViewportIndex) - 1.0;
@@ -3333,10 +3333,10 @@ namespace Dt.Cells.UI
         /// <param name="sheet"></param>
         /// <param name="beforeColumn"></param>
         /// <returns></returns>
-        private int GetInvisibleColumnsBeforeColumn(Worksheet sheet, int beforeColumn)
+        int GetInvisibleColumnsBeforeColumn(Worksheet sheet, int beforeColumn)
         {
             int num = 0;
-            using (HashSet<int>.Enumerator enumerator = this._invisibleColumns.GetEnumerator())
+            using (HashSet<int>.Enumerator enumerator = _invisibleColumns.GetEnumerator())
             {
                 while (enumerator.MoveNext())
                 {
@@ -3356,10 +3356,10 @@ namespace Dt.Cells.UI
         /// <param name="sheet"></param>
         /// <param name="beforeRow"></param>
         /// <returns></returns>
-        private int GetInvisibleRowsBeforeRow(Worksheet sheet, int beforeRow)
+        int GetInvisibleRowsBeforeRow(Worksheet sheet, int beforeRow)
         {
             int num = 0;
-            using (HashSet<int>.Enumerator enumerator = this._invisibleRows.GetEnumerator())
+            using (HashSet<int>.Enumerator enumerator = _invisibleRows.GetEnumerator())
             {
                 while (enumerator.MoveNext())
                 {
@@ -3382,11 +3382,11 @@ namespace Dt.Cells.UI
             return base.GetViewportInfo().RowViewportCount;
         }
 
-        private double GetRowSplitBoxesHeight(int rowPaneCount)
+        double GetRowSplitBoxesHeight(int rowPaneCount)
         {
-            if (this._rowSplitBoxPolicy != SplitBoxPolicy.Always)
+            if (_rowSplitBoxPolicy != SplitBoxPolicy.Always)
             {
-                if (this._rowSplitBoxPolicy == SplitBoxPolicy.AsNeeded)
+                if (_rowSplitBoxPolicy == SplitBoxPolicy.AsNeeded)
                 {
                     if (rowPaneCount == 1)
                     {
@@ -3394,7 +3394,7 @@ namespace Dt.Cells.UI
                     }
                     return 0.0;
                 }
-                if (this._rowSplitBoxPolicy == SplitBoxPolicy.Never)
+                if (_rowSplitBoxPolicy == SplitBoxPolicy.Never)
                 {
                     return 0.0;
                 }
@@ -3407,15 +3407,15 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="sheet"></param>
         /// <returns></returns>
-        private int GetSheetInvisibleColumns(Worksheet sheet)
+        int GetSheetInvisibleColumns(Worksheet sheet)
         {
             int num = 0;
-            this._invisibleColumns.Clear();
+            _invisibleColumns.Clear();
             for (int i = 0; i < sheet.ColumnCount; i++)
             {
                 if (!sheet.GetActualColumnVisible(i, SheetArea.Cells))
                 {
-                    this._invisibleColumns.Add(i);
+                    _invisibleColumns.Add(i);
                     num++;
                 }
             }
@@ -3427,15 +3427,15 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="sheet"></param>
         /// <returns></returns>
-        private int GetSheetInvisibleRows(Worksheet sheet)
+        int GetSheetInvisibleRows(Worksheet sheet)
         {
             int num = 0;
-            this._invisibleRows.Clear();
+            _invisibleRows.Clear();
             for (int i = 0; i < sheet.RowCount; i++)
             {
                 if (!sheet.GetActualRowVisible(i, SheetArea.Cells))
                 {
-                    this._invisibleRows.Add(i);
+                    _invisibleRows.Add(i);
                     num++;
                 }
             }
@@ -3448,7 +3448,7 @@ namespace Dt.Cells.UI
         /// <returns></returns>
         internal override SheetLayout GetSheetLayout()
         {
-            return this.GetSpreadLayout();
+            return GetSpreadLayout();
         }
 
         /// <summary>
@@ -3456,7 +3456,7 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="scale"></param>
         /// <returns></returns>
-        private double GetSmoothingScale(double scale)
+        double GetSmoothingScale(double scale)
         {
             if ((scale > 0.99) && (scale < 1.01))
             {
@@ -3471,13 +3471,13 @@ namespace Dt.Cells.UI
         /// <returns></returns>
         internal SpreadLayout GetSpreadLayout()
         {
-            if (this._cachedSpreadLayout == null)
+            if (_cachedSpreadLayout == null)
             {
-                this._cachedSpreadLayout = this.CreateSpreadLayout();
-                this.UpdateHorizontalScrollBars();
-                this.UpdateVerticalScrollBars();
+                _cachedSpreadLayout = CreateSpreadLayout();
+                UpdateHorizontalScrollBars();
+                UpdateVerticalScrollBars();
             }
-            return this._cachedSpreadLayout;
+            return _cachedSpreadLayout;
         }
 
         /// <summary>
@@ -3498,20 +3498,20 @@ namespace Dt.Cells.UI
         /// <returns></returns>
         public int GetStartIndexToBringTabIntoView(int tabIndex)
         {
-            if (this.TabStrip != null)
+            if (TabStrip != null)
             {
-                return this.TabStrip.GetStartIndexToBringTabIntoView(tabIndex);
+                return TabStrip.GetStartIndexToBringTabIntoView(tabIndex);
             }
-            return this.SpreadSheet.StartSheetIndex;
+            return SpreadSheet.StartSheetIndex;
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        private Rect GetTabSplitBoxRectangle()
+        Rect GetTabSplitBoxRectangle()
         {
-            SpreadLayout spreadLayout = this.GetSpreadLayout();
+            SpreadLayout spreadLayout = GetSpreadLayout();
             double tabSplitBoxX = spreadLayout.TabSplitBoxX;
             double ornamentY = spreadLayout.OrnamentY;
             double width = spreadLayout.TabSplitBoxWidth - 1.0;
@@ -3527,9 +3527,9 @@ namespace Dt.Cells.UI
         /// 
         /// </summary>
         /// <returns></returns>
-        private Rect GetTabStripRectangle()
+        Rect GetTabStripRectangle()
         {
-            SpreadLayout spreadLayout = this.GetSpreadLayout();
+            SpreadLayout spreadLayout = GetSpreadLayout();
             double tabStripX = spreadLayout.TabStripX;
             double tabStripY = spreadLayout.TabStripY;
             double width = spreadLayout.TabStripWidth - 1.0;
@@ -3546,9 +3546,9 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="rowViewportIndex"></param>
         /// <returns></returns>
-        private Rect GetVerticalScrollBarRectangle(int rowViewportIndex)
+        Rect GetVerticalScrollBarRectangle(int rowViewportIndex)
         {
-            SpreadLayout spreadLayout = this.GetSpreadLayout();
+            SpreadLayout spreadLayout = GetSpreadLayout();
             double ornamentX = spreadLayout.OrnamentX;
             double verticalScrollBarY = spreadLayout.GetVerticalScrollBarY(rowViewportIndex);
             double width = spreadLayout.OrnamentWidth - 1.0;
@@ -3565,9 +3565,9 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="rowViewportIndex"></param>
         /// <returns></returns>
-        private Rect GetVerticalSplitBarRectangle(int rowViewportIndex)
+        Rect GetVerticalSplitBarRectangle(int rowViewportIndex)
         {
-            SpreadLayout spreadLayout = this.GetSpreadLayout();
+            SpreadLayout spreadLayout = GetSpreadLayout();
             double headerX = spreadLayout.HeaderX;
             double verticalSplitBarY = spreadLayout.GetVerticalSplitBarY(rowViewportIndex);
             double width = base.AvailableSize.Width - 1.0;
@@ -3584,9 +3584,9 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="rowViewportIndex"></param>
         /// <returns></returns>
-        private Rect GetVerticalSplitBoxRectangle(int rowViewportIndex)
+        Rect GetVerticalSplitBoxRectangle(int rowViewportIndex)
         {
-            SpreadLayout spreadLayout = this.GetSpreadLayout();
+            SpreadLayout spreadLayout = GetSpreadLayout();
             double ornamentX = spreadLayout.OrnamentX;
             double verticalSplitBoxY = spreadLayout.GetVerticalSplitBoxY(rowViewportIndex);
             double width = spreadLayout.OrnamentWidth - 1.0;
@@ -3603,13 +3603,13 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="columnViewportIndex"></param>
         /// <returns></returns>
-        private int GetViewportInvisibleColumns(int columnViewportIndex)
+        int GetViewportInvisibleColumns(int columnViewportIndex)
         {
             ColumnLayoutModel viewportColumnLayoutModel = base.GetViewportColumnLayoutModel(columnViewportIndex);
             int num = 0;
             foreach (ColumnLayout layout in viewportColumnLayoutModel)
             {
-                if (!this.Worksheet.GetActualColumnVisible(layout.Column, SheetArea.Cells))
+                if (!Worksheet.GetActualColumnVisible(layout.Column, SheetArea.Cells))
                 {
                     num++;
                 }
@@ -3622,13 +3622,13 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="rowViewportIndex"></param>
         /// <returns></returns>
-        private int GetViewportInvisibleRows(int rowViewportIndex)
+        int GetViewportInvisibleRows(int rowViewportIndex)
         {
             RowLayoutModel viewportRowLayoutModel = base.GetViewportRowLayoutModel(rowViewportIndex);
             int num = 0;
             foreach (RowLayout layout in viewportRowLayoutModel)
             {
-                if (!this.Worksheet.GetActualRowVisible(layout.Row, SheetArea.Cells))
+                if (!Worksheet.GetActualRowVisible(layout.Row, SheetArea.Cells))
                 {
                     num++;
                 }
@@ -3641,10 +3641,10 @@ namespace Dt.Cells.UI
         /// </summary>
         internal void HideOpeningProgressRing()
         {
-            if (this._progressRing != null)
+            if (_progressRing != null)
             {
-                this._progressRing.Visibility = (Visibility)1;
-                this._progressRing.IsActive = false;
+                _progressRing.Visibility = (Visibility)1;
+                _progressRing.IsActive = false;
             }
         }
 
@@ -3653,10 +3653,10 @@ namespace Dt.Cells.UI
         /// </summary>
         internal void HideOpeningStatus()
         {
-            this.HideOpeningProgressRing();
-            if (this.TabStrip != null)
+            HideOpeningProgressRing();
+            if (TabStrip != null)
             {
-                this.TabStrip.Visibility = 0;
+                TabStrip.Visibility = 0;
             }
         }
 
@@ -3669,7 +3669,7 @@ namespace Dt.Cells.UI
         internal override HitTestInformation HitTest(double x, double y)
         {
             Point point = new Point(x, y);
-            SpreadLayout spreadLayout = this.GetSpreadLayout();
+            SpreadLayout spreadLayout = GetSpreadLayout();
             HitTestInformation information = new HitTestInformation
             {
                 HitTestType = HitTestType.Empty,
@@ -3677,13 +3677,13 @@ namespace Dt.Cells.UI
                 RowViewportIndex = -2,
                 HitPoint = point
             };
-            if (this.GetTabStripRectangle().Contains(point))
+            if (GetTabStripRectangle().Contains(point))
             {
                 information.ColumnViewportIndex = 0;
                 information.HitTestType = HitTestType.TabStrip;
                 return information;
             }
-            if (this.GetTabSplitBoxRectangle().Contains(point))
+            if (GetTabSplitBoxRectangle().Contains(point))
             {
                 information.ColumnViewportIndex = 0;
                 information.HitTestType = HitTestType.TabSplitBox;
@@ -3691,7 +3691,7 @@ namespace Dt.Cells.UI
             }
             for (int i = 0; i < spreadLayout.ColumnPaneCount; i++)
             {
-                if (this.GetHorizontalScrollBarRectangle(i).Contains(point))
+                if (GetHorizontalScrollBarRectangle(i).Contains(point))
                 {
                     information.ColumnViewportIndex = i;
                     information.HitTestType = HitTestType.HorizontalScrollBar;
@@ -3700,7 +3700,7 @@ namespace Dt.Cells.UI
             }
             for (int j = 0; j < spreadLayout.RowPaneCount; j++)
             {
-                if (this.GetVerticalScrollBarRectangle(j).Contains(point))
+                if (GetVerticalScrollBarRectangle(j).Contains(point))
                 {
                     information.HitTestType = HitTestType.VerticalScrollBar;
                     information.RowViewportIndex = j;
@@ -3709,7 +3709,7 @@ namespace Dt.Cells.UI
             }
             for (int k = 0; k < spreadLayout.ColumnPaneCount; k++)
             {
-                if (this.GetHorizontalSplitBoxRectangle(k).Contains(point))
+                if (GetHorizontalSplitBoxRectangle(k).Contains(point))
                 {
                     information.HitTestType = HitTestType.ColumnSplitBox;
                     information.ColumnViewportIndex = k;
@@ -3717,7 +3717,7 @@ namespace Dt.Cells.UI
             }
             for (int m = 0; m < spreadLayout.RowPaneCount; m++)
             {
-                if (this.GetVerticalSplitBoxRectangle(m).Contains(point))
+                if (GetVerticalSplitBoxRectangle(m).Contains(point))
                 {
                     information.HitTestType = HitTestType.RowSplitBox;
                     information.RowViewportIndex = m;
@@ -3725,7 +3725,7 @@ namespace Dt.Cells.UI
             }
             for (int n = 0; n < (spreadLayout.ColumnPaneCount - 1); n++)
             {
-                if (this.GetHorizontalSplitBarRectangle(n).Contains(point))
+                if (GetHorizontalSplitBarRectangle(n).Contains(point))
                 {
                     information.HitTestType = HitTestType.ColumnSplitBar;
                     information.ColumnViewportIndex = n;
@@ -3733,7 +3733,7 @@ namespace Dt.Cells.UI
             }
             for (int num6 = 0; num6 < (spreadLayout.RowPaneCount - 1); num6++)
             {
-                if (this.GetVerticalSplitBarRectangle(num6).Contains(point))
+                if (GetVerticalSplitBarRectangle(num6).Contains(point))
                 {
                     information.HitTestType = HitTestType.RowSplitBar;
                     information.RowViewportIndex = num6;
@@ -3751,24 +3751,24 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void HorizontalScrollbar_Scroll(object sender, ScrollEventArgs e)
+        void HorizontalScrollbar_Scroll(object sender, ScrollEventArgs e)
         {
             if ((base._touchToolbarPopup != null) && base._touchToolbarPopup.IsOpen)
             {
                 base._touchToolbarPopup.IsOpen = false;
             }
-            if (((this.ScrollBarTrackPolicy == ScrollBarTrackPolicy.Both) || (this.ScrollBarTrackPolicy == ScrollBarTrackPolicy.Horizontal)) || (base._isTouchScrolling || (e.ScrollEventType != (ScrollEventType)5)))
+            if (((ScrollBarTrackPolicy == ScrollBarTrackPolicy.Both) || (ScrollBarTrackPolicy == ScrollBarTrackPolicy.Horizontal)) || (base._isTouchScrolling || (e.ScrollEventType != (ScrollEventType)5)))
             {
-                for (int i = 0; i < this._horizontalScrollBar.Length; i++)
+                for (int i = 0; i < _horizontalScrollBar.Length; i++)
                 {
-                    if (sender == this._horizontalScrollBar[i])
+                    if (sender == _horizontalScrollBar[i])
                     {
                         if (base.HorizontalScrollable)
                         {
-                            this.ProcessHorizontalScroll(i, e);
+                            ProcessHorizontalScroll(i, e);
                             return;
                         }
-                        this._horizontalScrollBar[i].Value = (double)base.GetViewportLeftColumn(i);
+                        _horizontalScrollBar[i].Value = (double)base.GetViewportLeftColumn(i);
                         return;
                     }
                 }
@@ -3780,7 +3780,7 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="columnViewportIndex"></param>
         /// <param name="newValue"></param>
-        private void HorizontalScrollBarTouchSmallDecrement(int columnViewportIndex, int newValue)
+        void HorizontalScrollBarTouchSmallDecrement(int columnViewportIndex, int newValue)
         {
             int viewportLeftColumn = base.GetViewportLeftColumn(columnViewportIndex);
             int num2 = base.TryGetPreviousScrollableColumn(newValue);
@@ -3796,42 +3796,42 @@ namespace Dt.Cells.UI
 #if IOS
         new
 #endif
-        private void Init()
+        void Init()
         {
             Action action = null;
-            this._horizontalScrollBarHeight = 25.0;
-            this._verticalScrollBarWidth = 25.0;
-            this._horizontalScrollBarStyle = null;
-            this._verticalScrollBarStyle = null;
-            this._scrollBarTrackPolicy = ScrollBarTrackPolicy.Both;
-            this._columnSplitBoxAlignment = SplitBoxAlignment.Leading;
-            this._rowSplitBoxAlignment = SplitBoxAlignment.Leading;
-            this._tabStripEditable = true;
-            this._tabStripInsertTab = true;
-            this._tabStripVisibility = 0;
-            this._tabStripRatio = 0.5;
-            this._cachedLastAvailableSize = new Size(0.0, 0.0);
-            this._columnSplitBoxPolicy = SplitBoxPolicy.Always;
-            this._rowSplitBoxPolicy = SplitBoxPolicy.Always;
-            this._progressGrid = new Grid();
-            this._progressRing = new ProgressRing();
-            if (!this._progressGrid.Children.Contains(this._progressRing))
+            _horizontalScrollBarHeight = 25.0;
+            _verticalScrollBarWidth = 25.0;
+            _horizontalScrollBarStyle = null;
+            _verticalScrollBarStyle = null;
+            _scrollBarTrackPolicy = ScrollBarTrackPolicy.Both;
+            _columnSplitBoxAlignment = SplitBoxAlignment.Leading;
+            _rowSplitBoxAlignment = SplitBoxAlignment.Leading;
+            _tabStripEditable = true;
+            _tabStripInsertTab = true;
+            _tabStripVisibility = 0;
+            _tabStripRatio = 0.5;
+            _cachedLastAvailableSize = new Size(0.0, 0.0);
+            _columnSplitBoxPolicy = SplitBoxPolicy.Always;
+            _rowSplitBoxPolicy = SplitBoxPolicy.Always;
+            _progressGrid = new Grid();
+            _progressRing = new ProgressRing();
+            if (!_progressGrid.Children.Contains(_progressRing))
             {
                 if (action == null)
                 {
                     action = delegate
                     {
-                        this._progressRing.Foreground = new SolidColorBrush(Colors.Black);
+                        _progressRing.Foreground = new SolidColorBrush(Colors.Black);
                     };
                 }
                 UIAdaptor.InvokeSync(action);
-                this._progressRing.IsActive = true;
-                this._progressRing.Visibility = (Visibility)1;
-                this._progressRing.Width = 200.0;
-                this._progressRing.Height = 200.0;
-                this._progressGrid.Children.Add(this._progressRing);
+                _progressRing.IsActive = true;
+                _progressRing.Visibility = (Visibility)1;
+                _progressRing.Width = 200.0;
+                _progressRing.Height = 200.0;
+                _progressGrid.Children.Add(_progressRing);
             }
-            this._showScrollTip = false;
+            _showScrollTip = false;
             FormulaSelectionGripperContainerPanel panel = new FormulaSelectionGripperContainerPanel
             {
                 ParentSheet = this
@@ -3868,9 +3868,9 @@ namespace Dt.Cells.UI
         /// <summary>
         /// 
         /// </summary>
-        private void InitCachedTransform()
+        void InitCachedTransform()
         {
-            SpreadLayout spreadLayout = this.GetSpreadLayout();
+            SpreadLayout spreadLayout = GetSpreadLayout();
             if (base._cachedViewportTransform == null)
             {
                 base._cachedViewportTransform = new TransformGroup[spreadLayout.RowPaneCount + 2, spreadLayout.ColumnPaneCount + 2];
@@ -3878,7 +3878,7 @@ namespace Dt.Cells.UI
                 {
                     for (int j = -1; j <= spreadLayout.RowPaneCount; j++)
                     {
-                        base._cachedViewportTransform[j + 1, i + 1] = this.InitManipulationTransforms();
+                        base._cachedViewportTransform[j + 1, i + 1] = InitManipulationTransforms();
                     }
                 }
             }
@@ -3887,7 +3887,7 @@ namespace Dt.Cells.UI
                 base._cachedColumnHeaderViewportTransform = new TransformGroup[spreadLayout.ColumnPaneCount + 2];
                 for (int k = -1; k <= spreadLayout.ColumnPaneCount; k++)
                 {
-                    base._cachedColumnHeaderViewportTransform[k + 1] = this.InitManipulationTransforms();
+                    base._cachedColumnHeaderViewportTransform[k + 1] = InitManipulationTransforms();
                 }
             }
             if (base._cachedRowHeaderViewportTransform == null)
@@ -3895,22 +3895,22 @@ namespace Dt.Cells.UI
                 base._cachedRowHeaderViewportTransform = new TransformGroup[spreadLayout.RowPaneCount + 2];
                 for (int m = -1; m <= spreadLayout.RowPaneCount; m++)
                 {
-                    base._cachedRowHeaderViewportTransform[m + 1] = this.InitManipulationTransforms();
+                    base._cachedRowHeaderViewportTransform[m + 1] = InitManipulationTransforms();
                 }
             }
             if (base._cachedCornerViewportTransform == null)
             {
-                base._cachedCornerViewportTransform = this.InitManipulationTransforms();
+                base._cachedCornerViewportTransform = InitManipulationTransforms();
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        private void InitCachedVisual()
+        void InitCachedVisual()
         {
-            SpreadLayout spreadLayout = this.GetSpreadLayout();
-            BitmapSource image = this.CreateCachedIamge(this, base.RenderSize);
+            SpreadLayout spreadLayout = GetSpreadLayout();
+            BitmapSource image = CreateCachedIamge(this, base.RenderSize);
             if (base._cachedViewportVisual == null)
             {
                 base._cachedViewportVisual = new Image[spreadLayout.RowPaneCount + 2, spreadLayout.ColumnPaneCount + 2];
@@ -3922,7 +3922,7 @@ namespace Dt.Cells.UI
                     {
                         double viewportY = spreadLayout.GetViewportY(j);
                         double viewportHeight = spreadLayout.GetViewportHeight(j);
-                        base._cachedViewportVisual[j + 1, i + 1] = this.CreateCachedVisual(image, this.CreateClipRect(viewportX, viewportY, viewportWidth, viewportHeight, i, j));
+                        base._cachedViewportVisual[j + 1, i + 1] = CreateCachedVisual(image, CreateClipRect(viewportX, viewportY, viewportWidth, viewportHeight, i, j));
                     }
                 }
             }
@@ -3935,7 +3935,7 @@ namespace Dt.Cells.UI
                     double headerY = spreadLayout.HeaderY;
                     double num10 = spreadLayout.GetViewportWidth(k);
                     double headerHeight = spreadLayout.HeaderHeight;
-                    base._cachedColumnHeaderViewportVisual[k + 1] = this.CreateCachedVisual(image, this.CreateClipRect(columnX, headerY, num10, headerHeight, k, -2));
+                    base._cachedColumnHeaderViewportVisual[k + 1] = CreateCachedVisual(image, CreateClipRect(columnX, headerY, num10, headerHeight, k, -2));
                 }
             }
             if (base._cachedRowHeaderViewportVisual == null)
@@ -3947,16 +3947,16 @@ namespace Dt.Cells.UI
                     double rowY = spreadLayout.GetViewportY(m);
                     double headerWidth = spreadLayout.HeaderWidth;
                     double num16 = spreadLayout.GetViewportHeight(m);
-                    base._cachedRowHeaderViewportVisual[m + 1] = this.CreateCachedVisual(image, this.CreateClipRect(headerX, rowY, headerWidth, num16, -2, m));
+                    base._cachedRowHeaderViewportVisual[m + 1] = CreateCachedVisual(image, CreateClipRect(headerX, rowY, headerWidth, num16, -2, m));
                 }
             }
             if (base._cachedCornerViewportVisual == null)
             {
-                base._cachedCornerViewportVisual = this.CreateCachedVisual(image, new Rect(spreadLayout.HeaderX, spreadLayout.HeaderY, spreadLayout.HeaderWidth, spreadLayout.HeaderHeight));
+                base._cachedCornerViewportVisual = CreateCachedVisual(image, new Rect(spreadLayout.HeaderX, spreadLayout.HeaderY, spreadLayout.HeaderWidth, spreadLayout.HeaderHeight));
             }
             if (base._cachedBottomRightACornerVisual == null)
             {
-                base._cachedBottomRightACornerVisual = this.CreateCachedVisual(image, new Rect(spreadLayout.OrnamentX, spreadLayout.OrnamentY, spreadLayout.OrnamentWidth, spreadLayout.OrnamentHeight));
+                base._cachedBottomRightACornerVisual = CreateCachedVisual(image, new Rect(spreadLayout.OrnamentX, spreadLayout.OrnamentY, spreadLayout.OrnamentWidth, spreadLayout.OrnamentHeight));
             }
         }
 
@@ -3964,7 +3964,7 @@ namespace Dt.Cells.UI
         /// 
         /// </summary>
         /// <returns></returns>
-        private TransformGroup InitManipulationTransforms()
+        TransformGroup InitManipulationTransforms()
         {
             TransformGroup group = new TransformGroup();
             group.Children.Add(new CompositeTransform());
@@ -3977,9 +3977,9 @@ namespace Dt.Cells.UI
         /// <summary>
         /// 
         /// </summary>
-        private void InitTouchCacheInfomation()
+        void InitTouchCacheInfomation()
         {
-            SpreadLayout spreadLayout = this.GetSpreadLayout();
+            SpreadLayout spreadLayout = GetSpreadLayout();
             if (spreadLayout != null)
             {
                 if (base._cachedViewportHeights == null)
@@ -4024,7 +4024,7 @@ namespace Dt.Cells.UI
         /// </summary>
         internal override void InvalidateLayout()
         {
-            this._cachedSpreadLayout = null;
+            _cachedSpreadLayout = null;
             base.InvalidateLayout();
         }
 
@@ -4040,7 +4040,7 @@ namespace Dt.Cells.UI
                 base._rowHeaderPresenters = null;
                 base._columnHeaderPresenters = null;
                 base._viewportPresenters = null;
-                this.InvalidateLayout();
+                InvalidateLayout();
                 base.InvalidateMeasure();
                 base.InvalidateArrange();
             }
@@ -4053,7 +4053,7 @@ namespace Dt.Cells.UI
         {
             if (!base.IsSuspendInvalidate())
             {
-                this.RefreshTabStrip();
+                RefreshTabStrip();
             }
         }
 
@@ -4061,7 +4061,7 @@ namespace Dt.Cells.UI
         /// 
         /// </summary>
         /// <returns></returns>
-        private bool IsMouseInScrollBar()
+        bool IsMouseInScrollBar()
         {
             HitTestInformation savedHitTestInformation = base.GetSavedHitTestInformation();
             if ((savedHitTestInformation.HitTestType != HitTestType.HorizontalScrollBar) && (savedHitTestInformation.HitTestType != HitTestType.VerticalScrollBar))
@@ -4075,7 +4075,7 @@ namespace Dt.Cells.UI
         /// 
         /// </summary>
         /// <returns></returns>
-        private bool IsMouseInSplitBar()
+        bool IsMouseInSplitBar()
         {
             HitTestInformation savedHitTestInformation = base.GetSavedHitTestInformation();
             if ((savedHitTestInformation.HitTestType != HitTestType.RowSplitBar) && (savedHitTestInformation.HitTestType != HitTestType.ColumnSplitBar))
@@ -4089,7 +4089,7 @@ namespace Dt.Cells.UI
         /// 
         /// </summary>
         /// <returns></returns>
-        private bool IsMouseInSplitBox()
+        bool IsMouseInSplitBox()
         {
             HitTestInformation savedHitTestInformation = base.GetSavedHitTestInformation();
             if ((savedHitTestInformation.HitTestType != HitTestType.RowSplitBox) && (savedHitTestInformation.HitTestType != HitTestType.ColumnSplitBox))
@@ -4103,7 +4103,7 @@ namespace Dt.Cells.UI
         /// 
         /// </summary>
         /// <returns></returns>
-        private bool IsMouseInTabSplitBox()
+        bool IsMouseInTabSplitBox()
         {
             return (base.GetSavedHitTestInformation().HitTestType == HitTestType.TabSplitBox);
         }
@@ -4112,7 +4112,7 @@ namespace Dt.Cells.UI
         /// 
         /// </summary>
         /// <returns></returns>
-        private bool IsMouseInTabStrip()
+        bool IsMouseInTabStrip()
         {
             return (base.GetSavedHitTestInformation().HitTestType == HitTestType.TabStrip);
         }
@@ -4122,7 +4122,7 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        private bool IsZero(double value)
+        bool IsZero(double value)
         {
             return (Math.Abs(value) < 2.2204460492503131E-15);
         }
@@ -4133,12 +4133,12 @@ namespace Dt.Cells.UI
         /// <param name="sheet"></param>
         /// <param name="scrollValue"></param>
         /// <returns></returns>
-        private int MapScrollValueToColumnIndex(Worksheet sheet, int scrollValue)
+        int MapScrollValueToColumnIndex(Worksheet sheet, int scrollValue)
         {
             int num = 0;
             for (int i = 0; i < sheet.ColumnCount; i++)
             {
-                if (!this._invisibleColumns.Contains(i))
+                if (!_invisibleColumns.Contains(i))
                 {
                     num++;
                 }
@@ -4156,12 +4156,12 @@ namespace Dt.Cells.UI
         /// <param name="sheet"></param>
         /// <param name="scrollValue"></param>
         /// <returns></returns>
-        private int MapScrollValueToRowIndex(Worksheet sheet, int scrollValue)
+        int MapScrollValueToRowIndex(Worksheet sheet, int scrollValue)
         {
             int num = 0;
             for (int i = 0; i < sheet.RowCount; i++)
             {
-                if (!this._invisibleRows.Contains(i))
+                if (!_invisibleRows.Contains(i))
                 {
                     num++;
                 }
@@ -4179,12 +4179,12 @@ namespace Dt.Cells.UI
         /// <returns></returns>
         internal bool NavigationNextSheet()
         {
-            this.SaveDataForFormulaSelection();
+            SaveDataForFormulaSelection();
             if (!base.StopCellEditing(base.CanSelectFormula))
             {
                 return false;
             }
-            TabStrip tabStrip = this.TabStrip;
+            TabStrip tabStrip = TabStrip;
             if (tabStrip != null)
             {
                 tabStrip.ActiveNextTab();
@@ -4198,12 +4198,12 @@ namespace Dt.Cells.UI
         /// <returns></returns>
         internal bool NavigationPreviousSheet()
         {
-            this.SaveDataForFormulaSelection();
+            SaveDataForFormulaSelection();
             if (!base.StopCellEditing(base.CanSelectFormula))
             {
                 return false;
             }
-            TabStrip tabStrip = this.TabStrip;
+            TabStrip tabStrip = TabStrip;
             if (tabStrip != null)
             {
                 tabStrip.ActivePreviousTab();
@@ -4216,14 +4216,14 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnHorizontalScrollBarPointerExited(object sender, PointerRoutedEventArgs e)
+        void OnHorizontalScrollBarPointerExited(object sender, PointerRoutedEventArgs e)
         {
-            this._showScrollTip = false;
+            _showScrollTip = false;
             base._mouseDownPosition = e.GetCurrentPoint(this).Position;
             base.CloseTooltip();
         }
 
-        private void OnHorizontalScrollBarPointerPressed(object sender, PointerRoutedEventArgs e)
+        void OnHorizontalScrollBarPointerPressed(object sender, PointerRoutedEventArgs e)
         {
             if (e.Pointer.PointerDeviceType == 0)
             {
@@ -4235,7 +4235,7 @@ namespace Dt.Cells.UI
             }
             if ((ElementTreeHelper.GetParentOrSelf<Thumb>(e.OriginalSource as DependencyObject) != null) && ((base.ShowScrollTip == ShowScrollTip.Horizontal) || (base.ShowScrollTip == ShowScrollTip.Both)))
             {
-                this._showScrollTip = true;
+                _showScrollTip = true;
                 base._mouseDownPosition = e.GetCurrentPoint(this).Position;
                 base.UpdateScrollToolTip(false, -1);
             }
@@ -4246,9 +4246,9 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnHorizontalScrollBarPointerReleased(object sender, PointerRoutedEventArgs e)
+        void OnHorizontalScrollBarPointerReleased(object sender, PointerRoutedEventArgs e)
         {
-            this._showScrollTip = false;
+            _showScrollTip = false;
             base._mouseDownPosition = e.GetCurrentPoint(this).Position;
             base.CloseTooltip();
         }
@@ -4260,7 +4260,7 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnTabStripActiveTabChanged(object sender, EventArgs e)
+        void OnTabStripActiveTabChanged(object sender, EventArgs e)
         {
             TabStrip strip = sender as TabStrip;
             int sheetIndex = -1;
@@ -4268,22 +4268,22 @@ namespace Dt.Cells.UI
             {
                 sheetIndex = strip.ActiveTab.SheetIndex;
             }
-            if ((sheetIndex >= 0) && (sheetIndex < this.SpreadSheet.Sheets.Count))
+            if ((sheetIndex >= 0) && (sheetIndex < SpreadSheet.Sheets.Count))
             {
                 base.StopCellEditing(false);
-                if (sheetIndex != this.SpreadSheet.ActiveSheetIndex)
+                if (sheetIndex != SpreadSheet.ActiveSheetIndex)
                 {
-                    this.SpreadSheet.Workbook.ActiveSheetIndex = sheetIndex;
-                    this.RaiseActiveSheetIndexChanged();
-                    base._currentActiveRowIndex = this.SpreadSheet.ActiveSheet.ActiveRowIndex;
-                    base._currentActiveColumnIndex = this.SpreadSheet.ActiveSheet.ActiveColumnIndex;
+                    SpreadSheet.Workbook.ActiveSheetIndex = sheetIndex;
+                    RaiseActiveSheetIndexChanged();
+                    base._currentActiveRowIndex = SpreadSheet.ActiveSheet.ActiveRowIndex;
+                    base._currentActiveColumnIndex = SpreadSheet.ActiveSheet.ActiveColumnIndex;
                     base.Navigation.UpdateStartPosition(base._currentActiveRowIndex, base._currentActiveColumnIndex);
                     base.Invalidate();
                 }
             }
-            if (!this.IsEditing)
+            if (!IsEditing)
             {
-                this.SpreadSheet.Focus(FocusState.Programmatic);
+                SpreadSheet.Focus(FocusState.Programmatic);
             }
         }
 
@@ -4292,11 +4292,11 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnTabStripActiveTabChanging(object sender, EventArgs e)
+        void OnTabStripActiveTabChanging(object sender, EventArgs e)
         {
             if ((sender is TabStrip) && (e is CancelEventArgs))
             {
-                ((CancelEventArgs)e).Cancel = this.RaiseActiveSheetIndexChanging();
+                ((CancelEventArgs)e).Cancel = RaiseActiveSheetIndexChanging();
             }
         }
 
@@ -4305,12 +4305,12 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnTabStripNewTabNeeded(object sender, EventArgs e)
+        void OnTabStripNewTabNeeded(object sender, EventArgs e)
         {
             base.StopCellEditing(false);
             Worksheet item = new Worksheet();
-            this.SpreadSheet.Sheets.Add(item);
-            item.ReferenceStyle = this.SpreadSheet.Workbook.ReferenceStyle;
+            SpreadSheet.Sheets.Add(item);
+            item.ReferenceStyle = SpreadSheet.Workbook.ReferenceStyle;
             if (item.ReferenceStyle == ReferenceStyle.R1C1)
             {
                 item.ColumnHeader.AutoText = HeaderAutoText.Numbers;
@@ -4322,8 +4322,8 @@ namespace Dt.Cells.UI
             base._currentActiveRowIndex = item.ActiveRowIndex;
             base._currentActiveColumnIndex = item.ActiveColumnIndex;
             base.Navigation.UpdateStartPosition(base._currentActiveRowIndex, base._currentActiveColumnIndex);
-            (sender as TabStrip).NewTab(this.SpreadSheet.Sheets.Count - 1);
-            this.InvalidateSheetLayout();
+            (sender as TabStrip).NewTab(SpreadSheet.Sheets.Count - 1);
+            InvalidateSheetLayout();
         }
 
         /// <summary>
@@ -4331,9 +4331,9 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnVerticalScrollbarPointerExited(object sender, PointerRoutedEventArgs e)
+        void OnVerticalScrollbarPointerExited(object sender, PointerRoutedEventArgs e)
         {
-            this._showScrollTip = false;
+            _showScrollTip = false;
             base._mouseDownPosition = e.GetCurrentPoint(this).Position;
             base.CloseTooltip();
         }
@@ -4343,7 +4343,7 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnVerticalScrollbarPointerPressed(object sender, PointerRoutedEventArgs e)
+        void OnVerticalScrollbarPointerPressed(object sender, PointerRoutedEventArgs e)
         {
             if (e.Pointer.PointerDeviceType == 0)
             {
@@ -4355,7 +4355,7 @@ namespace Dt.Cells.UI
             }
             if ((ElementTreeHelper.GetParentOrSelf<Thumb>(e.OriginalSource as DependencyObject) != null) && ((base.ShowScrollTip == ShowScrollTip.Vertical) || (base.ShowScrollTip == ShowScrollTip.Both)))
             {
-                this._showScrollTip = true;
+                _showScrollTip = true;
                 base._mouseDownPosition = e.GetCurrentPoint(this).Position;
                 base.UpdateScrollToolTip(true, -1);
             }
@@ -4366,9 +4366,9 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnVerticalScrollbarPointerReleased(object sender, PointerRoutedEventArgs e)
+        void OnVerticalScrollbarPointerReleased(object sender, PointerRoutedEventArgs e)
         {
-            this._showScrollTip = false;
+            _showScrollTip = false;
             base._mouseDownPosition = e.GetCurrentPoint(this).Position;
             base.CloseTooltip();
         }
@@ -4381,21 +4381,21 @@ namespace Dt.Cells.UI
         {
             base.UpdateTouchHitTestInfo(point);
             HitTestInformation savedHitTestInformation = base.GetSavedHitTestInformation();
-            HitTestInformation hi = this.TouchHitTest(point.X, point.Y);
-            if (!this.IsEditing || ((hi.HitTestType != HitTestType.RowSplitBar) && (hi.HitTestType != HitTestType.ColumnSplitBar)))
+            HitTestInformation hi = TouchHitTest(point.X, point.Y);
+            if (!IsEditing || ((hi.HitTestType != HitTestType.RowSplitBar) && (hi.HitTestType != HitTestType.ColumnSplitBar)))
             {
                 if ((hi.HitTestType == HitTestType.RowSplitBar) || (hi.HitTestType == HitTestType.ColumnSplitBar))
                 {
-                    this.ProcessSplitBarDoubleTap(hi);
+                    ProcessSplitBarDoubleTap(hi);
                 }
                 else if ((savedHitTestInformation.HitTestType != HitTestType.Viewport) || !savedHitTestInformation.ViewportInfo.InSelectionDrag)
                 {
-                    if (((savedHitTestInformation.HitTestType == HitTestType.TabStrip) && (this._tabStrip != null)) && (this.TabStripEditable && !this.SpreadSheet.Workbook.Protect))
+                    if (((savedHitTestInformation.HitTestType == HitTestType.TabStrip) && (_tabStrip != null)) && (TabStripEditable && !SpreadSheet.Workbook.Protect))
                     {
-                        this._tabStrip.StartTabTouchEditing(point);
-                        if (this._tabStrip.IsEditing)
+                        _tabStrip.StartTabTouchEditing(point);
+                        if (_tabStrip.IsEditing)
                         {
-                            int sheetTabIndex = (this._tabStrip.ActiveTab != null) ? this._tabStrip.ActiveTab.SheetIndex : -1;
+                            int sheetTabIndex = (_tabStrip.ActiveTab != null) ? _tabStrip.ActiveTab.SheetIndex : -1;
                             base.RaiseSheetTabDoubleClick(sheetTabIndex);
                         }
                     }
@@ -4415,29 +4415,29 @@ namespace Dt.Cells.UI
         {
             if ((base._currentGestureAction != null) && base._currentGestureAction.IsValid)
             {
-                if (this.IsZero((double)(e.Cumulative.Scale - 1f)) || (base._touchProcessedPointIds.Count == 1))
+                if (IsZero((double)(e.Cumulative.Scale - 1f)) || (base._touchProcessedPointIds.Count == 1))
                 {
                     base._currentGestureAction.HandleSingleManipulationDelta(e.Position, new Point(e.Cumulative.Translation.X, e.Cumulative.Translation.Y));
                 }
-                else if ((!this.IsZero((double)(e.Cumulative.Scale - 1f)) && !base.IsTouchZooming) && base.CanUserZoom)
+                else if ((!IsZero((double)(e.Cumulative.Scale - 1f)) && !base.IsTouchZooming) && base.CanUserZoom)
                 {
                     base.IsContinueTouchOperation = true;
-                    base._touchZoomInitFactor = this.Worksheet.ZoomFactor;
+                    base._touchZoomInitFactor = Worksheet.ZoomFactor;
                     base.IsTouchZooming = true;
                     base._touchZoomOrigin = e.Position;
                     base.CloseTouchToolbar();
                     if (base._touchStartHitTestInfo == null)
                     {
-                        base._touchStartHitTestInfo = this.HitTest(e.Position.X, e.Position.Y);
+                        base._touchStartHitTestInfo = HitTest(e.Position.X, e.Position.Y);
                     }
                     if (base._zoomOriginHitTestInfo == null)
                     {
-                        base._zoomOriginHitTestInfo = this.HitTest(e.Position.X, e.Position.Y);
+                        base._zoomOriginHitTestInfo = HitTest(e.Position.X, e.Position.Y);
                     }
                     base._touchZoomOrigin = e.Position;
-                    this.InitCachedTransform();
+                    InitCachedTransform();
                 }
-                else if (base.IsTouchZooming && (((!base.IsTouchDragFilling && !base.IsTouchDrapDropping) && (!this.IsEditing && !base.IsTouchSelectingCells)) && ((!base.IsTouchSelectingColumns && !base.IsTouchSelectingRows) && ((!base.IsTouchResizingColumns && !base.IsTouchResizingRows) && base.CanUserZoom))))
+                else if (base.IsTouchZooming && (((!base.IsTouchDragFilling && !base.IsTouchDrapDropping) && (!IsEditing && !base.IsTouchSelectingCells)) && ((!base.IsTouchSelectingColumns && !base.IsTouchSelectingRows) && ((!base.IsTouchResizingColumns && !base.IsTouchResizingRows) && base.CanUserZoom))))
                 {
                     double num = ((base._touchZoomInitFactor * ((float)e.Cumulative.Scale)) * 100.0) / 100.0;
                     float scale = e.Delta.Scale;
@@ -4445,7 +4445,7 @@ namespace Dt.Cells.UI
                     {
                         scale = 1f;
                     }
-                    this.UpdateCachedImageTransform(e.Position, e.Delta.Translation, (double)scale);
+                    UpdateCachedImageTransform(e.Position, e.Delta.Translation, (double)scale);
                     if (num < 0.5)
                     {
                         num = 0.5;
@@ -4465,11 +4465,11 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="columnViewportIndex"></param>
         /// <param name="e"></param>
-        private void ProcessHorizontalScroll(int columnViewportIndex, ScrollEventArgs e)
+        void ProcessHorizontalScroll(int columnViewportIndex, ScrollEventArgs e)
         {
             int viewportLeftColumn = base.GetViewportLeftColumn(columnViewportIndex);
             int scrollValue = (int)Math.Round(e.NewValue);
-            scrollValue = this.MapScrollValueToColumnIndex(this.ActiveSheet, scrollValue);
+            scrollValue = MapScrollValueToColumnIndex(ActiveSheet, scrollValue);
             int num3 = scrollValue;
             if (e.ScrollEventType == (ScrollEventType)3)
             {
@@ -4509,18 +4509,18 @@ namespace Dt.Cells.UI
             {
                 base.SetViewportLeftColumn(columnViewportIndex, num3);
             }
-            if (((e.ScrollEventType != (ScrollEventType)5) && (num3 != e.NewValue)) && (this._horizontalScrollBar != null))
+            if (((e.ScrollEventType != (ScrollEventType)5) && (num3 != e.NewValue)) && (_horizontalScrollBar != null))
             {
-                this.GetSpreadLayout();
-                if (((columnViewportIndex > -1) && (columnViewportIndex < this._horizontalScrollBar.Length)) && (this._horizontalScrollBar[columnViewportIndex].Value != num3))
+                GetSpreadLayout();
+                if (((columnViewportIndex > -1) && (columnViewportIndex < _horizontalScrollBar.Length)) && (_horizontalScrollBar[columnViewportIndex].Value != num3))
                 {
-                    int invisibleColumnsBeforeColumn = this.GetInvisibleColumnsBeforeColumn(this.ActiveSheet, num3);
+                    int invisibleColumnsBeforeColumn = GetInvisibleColumnsBeforeColumn(ActiveSheet, num3);
                     num3 -= invisibleColumnsBeforeColumn;
-                    this._horizontalScrollBar[columnViewportIndex].Value = (num3 != -1) ? ((double)num3) : ((double)viewportLeftColumn);
-                    this._horizontalScrollBar[columnViewportIndex].InvalidateArrange();
+                    _horizontalScrollBar[columnViewportIndex].Value = (num3 != -1) ? ((double)num3) : ((double)viewportLeftColumn);
+                    _horizontalScrollBar[columnViewportIndex].InvalidateArrange();
                 }
             }
-            if (this._showScrollTip && ((base.ShowScrollTip == ShowScrollTip.Both) || (base.ShowScrollTip == ShowScrollTip.Horizontal)))
+            if (_showScrollTip && ((base.ShowScrollTip == ShowScrollTip.Both) || (base.ShowScrollTip == ShowScrollTip.Horizontal)))
             {
                 base.UpdateScrollToolTip(false, num3 + 1);
             }
@@ -4532,16 +4532,16 @@ namespace Dt.Cells.UI
         /// <param name="e"></param>
         internal override void ProcessKeyDown(KeyRoutedEventArgs e)
         {
-            if ((this._tabStrip != null) && this._tabStrip.IsEditing)
+            if ((_tabStrip != null) && _tabStrip.IsEditing)
             {
                 if ((e.Key == (VirtualKey)13) || (e.Key == (VirtualKey)9))
                 {
-                    this._tabStrip.StopTabEditing(false);
+                    _tabStrip.StopTabEditing(false);
                     e.Handled = true;
                 }
                 else if (e.Key == (VirtualKey)0x1b)
                 {
-                    this._tabStrip.StopTabEditing(true);
+                    _tabStrip.StopTabEditing(true);
                 }
             }
             else
@@ -4557,23 +4557,23 @@ namespace Dt.Cells.UI
         internal override void ProcessMouseLeftButtonDoubleClick(DoubleTappedRoutedEventArgs e)
         {
             HitTestInformation savedHitTestInformation = base.GetSavedHitTestInformation();
-            if ((!this.IsEditing || ((savedHitTestInformation.HitTestType != HitTestType.RowSplitBar) && (savedHitTestInformation.HitTestType != HitTestType.ColumnSplitBar))) && ((savedHitTestInformation.HitTestType != HitTestType.Viewport) || !savedHitTestInformation.ViewportInfo.InSelectionDrag))
+            if ((!IsEditing || ((savedHitTestInformation.HitTestType != HitTestType.RowSplitBar) && (savedHitTestInformation.HitTestType != HitTestType.ColumnSplitBar))) && ((savedHitTestInformation.HitTestType != HitTestType.Viewport) || !savedHitTestInformation.ViewportInfo.InSelectionDrag))
             {
                 switch (savedHitTestInformation.HitTestType)
                 {
                     case HitTestType.RowSplitBar:
                     case HitTestType.ColumnSplitBar:
-                        this.ProcessSplitBarDoubleClick(savedHitTestInformation);
+                        ProcessSplitBarDoubleClick(savedHitTestInformation);
                         return;
 
                     case HitTestType.TabStrip:
                         {
-                            if (((this._tabStrip == null) || !this.TabStripEditable) || (this.SpreadSheet.Workbook.Protect || (base._routedEventArgs == null)))
+                            if (((_tabStrip == null) || !TabStripEditable) || (SpreadSheet.Workbook.Protect || (base._routedEventArgs == null)))
                             {
                                 break;
                             }
-                            this._tabStrip.StartTabEditing(base._routedEventArgs.Instance);
-                            if (!this._tabStrip.IsEditing)
+                            _tabStrip.StartTabEditing(base._routedEventArgs.Instance);
+                            if (!_tabStrip.IsEditing)
                             {
                                 break;
                             }
@@ -4599,11 +4599,11 @@ namespace Dt.Cells.UI
         internal override void ProcessMouseLeftButtonDown(PointerMouseRoutedEventArgs e)
         {
             HitTestInformation savedHitTestInformation = base.GetSavedHitTestInformation();
-            this.GetSpreadLayout();
+            GetSpreadLayout();
             Point position = e.GetPosition(this);
             if (position != savedHitTestInformation.HitPoint)
             {
-                base.SaveHitTestInfo(savedHitTestInformation = this.HitTest(position.X, position.Y));
+                base.SaveHitTestInfo(savedHitTestInformation = HitTest(position.X, position.Y));
             }
             if (!base._isDoubleClick || ((savedHitTestInformation.HitTestType != HitTestType.ColumnSplitBar) && (savedHitTestInformation.HitTestType != HitTestType.RowSplitBar)))
             {
@@ -4612,36 +4612,36 @@ namespace Dt.Cells.UI
                     case HitTestType.TabStrip:
                         if (base._routedEventArgs != null)
                         {
-                            this._tabStrip.ProcessMouseClickSheetTab(base._routedEventArgs.Instance);
+                            _tabStrip.ProcessMouseClickSheetTab(base._routedEventArgs.Instance);
                         }
                         return;
 
                     case HitTestType.RowSplitBar:
-                        this.StartRowSplitting();
+                        StartRowSplitting();
                         if (savedHitTestInformation.ColumnViewportIndex >= 0)
                         {
-                            this.StartColumnSplitting();
+                            StartColumnSplitting();
                         }
                         return;
 
                     case HitTestType.ColumnSplitBar:
-                        this.StartColumnSplitting();
+                        StartColumnSplitting();
                         if (savedHitTestInformation.RowViewportIndex >= 0)
                         {
-                            this.StartRowSplitting();
+                            StartRowSplitting();
                         }
                         return;
 
                     case HitTestType.RowSplitBox:
-                        this.StartRowSplitting();
+                        StartRowSplitting();
                         return;
 
                     case HitTestType.ColumnSplitBox:
-                        this.StartColumnSplitting();
+                        StartColumnSplitting();
                         return;
 
                     case HitTestType.TabSplitBox:
-                        this.StartTabStripResizing();
+                        StartTabStripResizing();
                         return;
                 }
                 base.ProcessMouseLeftButtonDown(e);
@@ -4654,10 +4654,10 @@ namespace Dt.Cells.UI
         /// <param name="e"></param>
         internal override void ProcessMouseLeftButtonUp(PointerMouseRoutedEventArgs e)
         {
-            if ((this.IsColumnSplitting || this.IsRowSplitting) || this.IsTabStripResizing)
+            if ((IsColumnSplitting || IsRowSplitting) || IsTabStripResizing)
             {
-                this.ClearMouseLeftButtonDownStates();
-                if (!this.IsEditing)
+                ClearMouseLeftButtonDownStates();
+                if (!IsEditing)
                 {
                     base.FocusInternal();
                 }
@@ -4674,9 +4674,9 @@ namespace Dt.Cells.UI
         /// <param name="e"></param>
         internal override void ProcessMouseMove(PointerMouseRoutedEventArgs e)
         {
-            this.GetSpreadLayout();
+            GetSpreadLayout();
             base.MousePosition = e.GetPosition(this);
-            HitTestInformation hitTestInfo = this.HitTest(base.MousePosition.X, base.MousePosition.Y);
+            HitTestInformation hitTestInfo = HitTest(base.MousePosition.X, base.MousePosition.Y);
             if (!base.IsWorking)
             {
                 base.ResetCursor();
@@ -4685,7 +4685,7 @@ namespace Dt.Cells.UI
             switch (hitTestInfo.HitTestType)
             {
                 case HitTestType.RowSplitBar:
-                    if ((!base.IsWorking && !this.IsEditing) && !this.SpreadSheet.Workbook.Protect)
+                    if ((!base.IsWorking && !IsEditing) && !SpreadSheet.Workbook.Protect)
                     {
                         if (base.InputDeviceType != InputDeviceType.Touch)
                         {
@@ -4703,7 +4703,7 @@ namespace Dt.Cells.UI
                     goto Label_01B3;
 
                 case HitTestType.ColumnSplitBar:
-                    if ((base.IsWorking || this.IsEditing) || this.SpreadSheet.Workbook.Protect)
+                    if ((base.IsWorking || IsEditing) || SpreadSheet.Workbook.Protect)
                     {
                         goto Label_01B3;
                     }
@@ -4719,7 +4719,7 @@ namespace Dt.Cells.UI
                     break;
 
                 case HitTestType.RowSplitBox:
-                    if ((!base.IsWorking && !this.IsEditing) && !this.SpreadSheet.Workbook.Protect)
+                    if ((!base.IsWorking && !IsEditing) && !SpreadSheet.Workbook.Protect)
                     {
                         if (base.InputDeviceType != InputDeviceType.Touch)
                         {
@@ -4730,7 +4730,7 @@ namespace Dt.Cells.UI
                     goto Label_01B3;
 
                 case HitTestType.ColumnSplitBox:
-                    if ((!base.IsWorking && !this.IsEditing) && !this.SpreadSheet.Workbook.Protect)
+                    if ((!base.IsWorking && !IsEditing) && !SpreadSheet.Workbook.Protect)
                     {
                         if (base.InputDeviceType != InputDeviceType.Touch)
                         {
@@ -4741,7 +4741,7 @@ namespace Dt.Cells.UI
                     goto Label_01B3;
 
                 case HitTestType.TabSplitBox:
-                    if (!base.IsWorking && !this.IsEditing)
+                    if (!base.IsWorking && !IsEditing)
                     {
                         if (base.InputDeviceType != InputDeviceType.Touch)
                         {
@@ -4756,17 +4756,17 @@ namespace Dt.Cells.UI
             }
             flag = true;
         Label_01B3:
-            if (this.IsColumnSplitting)
+            if (IsColumnSplitting)
             {
-                this.ContinueColumnSplitting();
+                ContinueColumnSplitting();
             }
-            if (this.IsRowSplitting)
+            if (IsRowSplitting)
             {
-                this.ContinueRowSplitting();
+                ContinueRowSplitting();
             }
-            if (this.IsTabStripResizing)
+            if (IsTabStripResizing)
             {
-                this.ContinueTabStripResizing();
+                ContinueTabStripResizing();
             }
             if (flag)
             {
@@ -4780,38 +4780,38 @@ namespace Dt.Cells.UI
             {
                 base.ProcessMouseMove(e);
             }
-            this.UpdateScrollBarIndicatorMode((ScrollingIndicatorMode)2);
+            UpdateScrollBarIndicatorMode((ScrollingIndicatorMode)2);
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="hi"></param>
-        private void ProcessSplitBarDoubleClick(HitTestInformation hi)
+        void ProcessSplitBarDoubleClick(HitTestInformation hi)
         {
-            if (!this.SpreadSheet.Workbook.Protect)
+            if (!SpreadSheet.Workbook.Protect)
             {
                 int rowViewportIndex = hi.RowViewportIndex;
                 int columnViewportIndex = hi.ColumnViewportIndex;
                 if (rowViewportIndex >= 0)
                 {
                     double viewportHeight = base.GetViewportHeight(rowViewportIndex + 1);
-                    if (!this.RaiseRowViewportHeightChanging(rowViewportIndex, viewportHeight))
+                    if (!RaiseRowViewportHeightChanging(rowViewportIndex, viewportHeight))
                     {
-                        this.Worksheet.RemoveRowViewport(rowViewportIndex);
-                        this.RaiseRowViewportHeightChanged(rowViewportIndex, viewportHeight);
+                        Worksheet.RemoveRowViewport(rowViewportIndex);
+                        RaiseRowViewportHeightChanged(rowViewportIndex, viewportHeight);
                     }
                 }
                 if (columnViewportIndex >= 0)
                 {
                     double viewportWidth = base.GetViewportWidth(columnViewportIndex + 1);
-                    if (!this.RaiseColumnViewportWidthChanging(columnViewportIndex, viewportWidth))
+                    if (!RaiseColumnViewportWidthChanging(columnViewportIndex, viewportWidth))
                     {
-                        this.Worksheet.RemoveColumnViewport(columnViewportIndex);
-                        this.RaiseColumnViewportWidthChanged(columnViewportIndex, viewportWidth);
+                        Worksheet.RemoveColumnViewport(columnViewportIndex);
+                        RaiseColumnViewportWidthChanged(columnViewportIndex, viewportWidth);
                     }
                 }
-                this.InvalidateLayout();
+                InvalidateLayout();
                 base._positionInfo = null;
                 base.InvalidateMeasure();
             }
@@ -4821,9 +4821,9 @@ namespace Dt.Cells.UI
         /// 
         /// </summary>
         /// <param name="hi"></param>
-        private void ProcessSplitBarDoubleTap(HitTestInformation hi)
+        void ProcessSplitBarDoubleTap(HitTestInformation hi)
         {
-            this.ProcessSplitBarDoubleClick(hi);
+            ProcessSplitBarDoubleClick(hi);
         }
 
         /// <summary>
@@ -4831,9 +4831,9 @@ namespace Dt.Cells.UI
         /// </summary>
         internal override void ProcessStartSheetIndexChanged()
         {
-            if (((this.Worksheet != null) && (this.Worksheet.Workbook != null)) && (this._tabStrip != null))
+            if (((Worksheet != null) && (Worksheet.Workbook != null)) && (_tabStrip != null))
             {
-                this._tabStrip.SetStartSheet(this.Worksheet.Workbook.StartSheetIndex);
+                _tabStrip.SetStartSheet(Worksheet.Workbook.StartSheetIndex);
             }
         }
 
@@ -4850,17 +4850,17 @@ namespace Dt.Cells.UI
                 case HitTestType.HorizontalScrollBar:
                     {
                         int viewportLeftColumn = base.GetViewportLeftColumn(savedHitTestInformation.ColumnViewportIndex);
-                        this.HorizontalScrollBarTouchSmallDecrement(savedHitTestInformation.ColumnViewportIndex, viewportLeftColumn - 1);
+                        HorizontalScrollBarTouchSmallDecrement(savedHitTestInformation.ColumnViewportIndex, viewportLeftColumn - 1);
                         break;
                     }
                 case HitTestType.VerticalScrollBar:
                     {
                         int viewportTopRow = base.GetViewportTopRow(savedHitTestInformation.RowViewportIndex);
-                        this.VerticalScrollBarTouchSmallDecrement(savedHitTestInformation.RowViewportIndex, viewportTopRow - 1);
+                        VerticalScrollBarTouchSmallDecrement(savedHitTestInformation.RowViewportIndex, viewportTopRow - 1);
                         break;
                     }
                 case HitTestType.TabStrip:
-                    this._tabStrip.ProcessTap(point);
+                    _tabStrip.ProcessTap(point);
                     break;
             }
             base.ProcessTap(point);
@@ -4884,7 +4884,7 @@ namespace Dt.Cells.UI
             if (base.IsTouching)
             {
                 bool flag = ((base._touchStartHitTestInfo.HitTestType == HitTestType.FloatingObject) && (base._touchStartHitTestInfo.FloatingObjectInfo.FloatingObject != null)) && base._touchStartHitTestInfo.FloatingObjectInfo.FloatingObject.IsSelected;
-                if ((((!base.IsTouchDragFilling && !base.IsTouchDrapDropping) && (!base.IsTouchSelectingCells && !base.IsTouchTabStripResizing)) && ((!this.IsRowSplitting && !this.IsColumnSplitting) && ((!base.IsTouchSelectingColumns && !base.IsTouchSelectingRows) && (base._touchStartHitTestInfo.HitTestType == HitTestType.Viewport)))) || ((base._touchStartHitTestInfo.HitTestType == HitTestType.FloatingObject) && !flag))
+                if ((((!base.IsTouchDragFilling && !base.IsTouchDrapDropping) && (!base.IsTouchSelectingCells && !base.IsTouchTabStripResizing)) && ((!IsRowSplitting && !IsColumnSplitting) && ((!base.IsTouchSelectingColumns && !base.IsTouchSelectingRows) && (base._touchStartHitTestInfo.HitTestType == HitTestType.Viewport)))) || ((base._touchStartHitTestInfo.HitTestType == HitTestType.FloatingObject) && !flag))
                 {
                     base.IsContinueTouchOperation = true;
                     base.CloseTouchToolbar();
@@ -4898,12 +4898,12 @@ namespace Dt.Cells.UI
                         if (deltaPoint.X > 0.0)
                         {
                             base._isTouchScrolling = true;
-                            this.TouchScrollLeft(startPoint, currentPoint, deltaPoint);
+                            TouchScrollLeft(startPoint, currentPoint, deltaPoint);
                         }
                         if (deltaPoint.X < 0.0)
                         {
                             base._isTouchScrolling = true;
-                            this.TouchScrollRight(startPoint, currentPoint, deltaPoint);
+                            TouchScrollRight(startPoint, currentPoint, deltaPoint);
                         }
                     }
                     if ((deltaPoint.Y != 0.0) && ((orientation & DragOrientation.Vertical) == DragOrientation.Vertical))
@@ -4915,15 +4915,15 @@ namespace Dt.Cells.UI
                         if (deltaPoint.Y > 0.0)
                         {
                             base._isTouchScrolling = true;
-                            this.TouchScrollUp(startPoint, currentPoint, deltaPoint);
+                            TouchScrollUp(startPoint, currentPoint, deltaPoint);
                         }
                         if (deltaPoint.Y < 0.0)
                         {
                             base._isTouchScrolling = true;
-                            this.TouchScrollBottom(startPoint, currentPoint, deltaPoint);
+                            TouchScrollBottom(startPoint, currentPoint, deltaPoint);
                         }
                     }
-                    SpreadLayout spreadLayout = this.GetSpreadLayout();
+                    SpreadLayout spreadLayout = GetSpreadLayout();
                     if (base._translateOffsetX < 0.0)
                     {
                         if ((base._touchStartHitTestInfo.ColumnViewportIndex == -1) || (base._touchStartHitTestInfo.ColumnViewportIndex == spreadLayout.ColumnPaneCount))
@@ -4968,45 +4968,45 @@ namespace Dt.Cells.UI
                     }
                     base.InvalidateMeasure();
                 }
-                if ((savedHitTestInformation.HitTestType == HitTestType.ColumnSplitBox) && this.IsTouchColumnSplitting)
+                if ((savedHitTestInformation.HitTestType == HitTestType.ColumnSplitBox) && IsTouchColumnSplitting)
                 {
-                    this.ContinueColumnSplitting();
+                    ContinueColumnSplitting();
                 }
-                else if ((savedHitTestInformation.HitTestType == HitTestType.RowSplitBox) && this.IsTouchRowSplitting)
+                else if ((savedHitTestInformation.HitTestType == HitTestType.RowSplitBox) && IsTouchRowSplitting)
                 {
-                    this.ContinueRowSplitting();
+                    ContinueRowSplitting();
                 }
                 else if ((savedHitTestInformation.HitTestType == HitTestType.RowSplitBar) || (savedHitTestInformation.HitTestType == HitTestType.ColumnSplitBar))
                 {
-                    if (this.IsTouchRowSplitting)
+                    if (IsTouchRowSplitting)
                     {
-                        this.ContinueRowSplitting();
+                        ContinueRowSplitting();
                     }
-                    if (this.IsTouchColumnSplitting)
+                    if (IsTouchColumnSplitting)
                     {
-                        this.ContinueColumnSplitting();
+                        ContinueColumnSplitting();
                     }
                 }
                 else if (savedHitTestInformation.HitTestType == HitTestType.TabStrip)
                 {
-                    this.IsTouchTabStripScrolling = true;
+                    IsTouchTabStripScrolling = true;
                     if ((deltaPoint.X != 0.0) && ((orientation & DragOrientation.Horizontal) == DragOrientation.Horizontal))
                     {
                         if (deltaPoint.X > 0.0)
                         {
-                            this.TouchTabStripScrollLeft(startPoint, currentPoint, deltaPoint);
+                            TouchTabStripScrollLeft(startPoint, currentPoint, deltaPoint);
                         }
                         if (deltaPoint.X < 0.0)
                         {
-                            this.TouchTabStripScrollRight(startPoint, currentPoint, deltaPoint);
+                            TouchTabStripScrollRight(startPoint, currentPoint, deltaPoint);
                         }
-                        this.TabStrip.TabsPresenter.InvalidateMeasure();
-                        this.TabStrip.TabsPresenter.InvalidateArrange();
+                        TabStrip.TabsPresenter.InvalidateMeasure();
+                        TabStrip.TabsPresenter.InvalidateArrange();
                     }
                 }
                 else if ((savedHitTestInformation.HitTestType == HitTestType.TabSplitBox) && base.IsTouchTabStripResizing)
                 {
-                    this.ContinueTabStripResizing();
+                    ContinueTabStripResizing();
                 }
                 else
                 {
@@ -5028,11 +5028,11 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="rowViewportIndex"></param>
         /// <param name="e"></param>
-        private void ProcessVerticalScroll(int rowViewportIndex, ScrollEventArgs e)
+        void ProcessVerticalScroll(int rowViewportIndex, ScrollEventArgs e)
         {
             int viewportTopRow = base.GetViewportTopRow(rowViewportIndex);
             int scrollValue = (int)Math.Round(e.NewValue);
-            scrollValue = this.MapScrollValueToRowIndex(this.Worksheet, scrollValue);
+            scrollValue = MapScrollValueToRowIndex(Worksheet, scrollValue);
             int beforeRow = scrollValue;
             if (e.ScrollEventType == (ScrollEventType)1)
             {
@@ -5070,24 +5070,24 @@ namespace Dt.Cells.UI
             }
             if ((viewportTopRow != beforeRow) && (beforeRow != -1))
             {
-                this._scrollTo = beforeRow;
-                this.AsynSetViewportTopRow(rowViewportIndex);
+                _scrollTo = beforeRow;
+                AsynSetViewportTopRow(rowViewportIndex);
             }
-            if (((e.ScrollEventType != (ScrollEventType)5) && (beforeRow != e.NewValue)) && (this._verticalScrollBar != null))
+            if (((e.ScrollEventType != (ScrollEventType)5) && (beforeRow != e.NewValue)) && (_verticalScrollBar != null))
             {
-                this.GetSpreadLayout();
-                if (((rowViewportIndex > -1) && (rowViewportIndex < this._verticalScrollBar.Length)) && (beforeRow != this._verticalScrollBar[rowViewportIndex].Value))
+                GetSpreadLayout();
+                if (((rowViewportIndex > -1) && (rowViewportIndex < _verticalScrollBar.Length)) && (beforeRow != _verticalScrollBar[rowViewportIndex].Value))
                 {
-                    int invisibleRowsBeforeRow = this.GetInvisibleRowsBeforeRow(this.ActiveSheet, beforeRow);
+                    int invisibleRowsBeforeRow = GetInvisibleRowsBeforeRow(ActiveSheet, beforeRow);
                     beforeRow -= invisibleRowsBeforeRow;
-                    this._verticalScrollBar[rowViewportIndex].Value = (beforeRow != -1) ? ((double)beforeRow) : ((double)viewportTopRow);
-                    this._verticalScrollBar[rowViewportIndex].InvalidateMeasure();
-                    this._verticalScrollBar[rowViewportIndex].InvalidateArrange();
+                    _verticalScrollBar[rowViewportIndex].Value = (beforeRow != -1) ? ((double)beforeRow) : ((double)viewportTopRow);
+                    _verticalScrollBar[rowViewportIndex].InvalidateMeasure();
+                    _verticalScrollBar[rowViewportIndex].InvalidateArrange();
                 }
             }
-            if (this._showScrollTip && ((base.ShowScrollTip == ShowScrollTip.Both) || (base.ShowScrollTip == ShowScrollTip.Vertical)))
+            if (_showScrollTip && ((base.ShowScrollTip == ShowScrollTip.Both) || (base.ShowScrollTip == ShowScrollTip.Vertical)))
             {
-                base.UpdateScrollToolTip(true, this._scrollTo + 1);
+                base.UpdateScrollToolTip(true, _scrollTo + 1);
             }
         }
 
@@ -5096,9 +5096,9 @@ namespace Dt.Cells.UI
         /// </summary>
         internal void RaiseActiveSheetIndexChanged()
         {
-            if ((this.ActiveSheetChanged != null) && (base._eventSuspended == 0))
+            if ((ActiveSheetChanged != null) && (base._eventSuspended == 0))
             {
-                this.ActiveSheetChanged(this, new EventArgs());
+                ActiveSheetChanged(this, new EventArgs());
             }
         }
 
@@ -5108,10 +5108,10 @@ namespace Dt.Cells.UI
         /// <returns></returns>
         internal bool RaiseActiveSheetIndexChanging()
         {
-            if ((this.ActiveSheetChanging != null) && (base._eventSuspended == 0))
+            if ((ActiveSheetChanging != null) && (base._eventSuspended == 0))
             {
                 CancelEventArgs args = new CancelEventArgs();
-                this.ActiveSheetChanging(this, args);
+                ActiveSheetChanging(this, args);
                 if (args.Cancel)
                 {
                     return true;
@@ -5127,9 +5127,9 @@ namespace Dt.Cells.UI
         /// <param name="deltaViewportWidth"></param>
         internal void RaiseColumnViewportWidthChanged(int viewportIndex, double deltaViewportWidth)
         {
-            if ((this.ColumnViewportWidthChanged != null) && (base._eventSuspended == 0))
+            if ((ColumnViewportWidthChanged != null) && (base._eventSuspended == 0))
             {
-                this.ColumnViewportWidthChanged(this, new ColumnViewportWidthChangedEventArgs(viewportIndex, deltaViewportWidth));
+                ColumnViewportWidthChanged(this, new ColumnViewportWidthChangedEventArgs(viewportIndex, deltaViewportWidth));
             }
         }
 
@@ -5141,10 +5141,10 @@ namespace Dt.Cells.UI
         /// <returns></returns>
         internal bool RaiseColumnViewportWidthChanging(int viewportIndex, double deltaViewportWidth)
         {
-            if ((this.ColumnViewportWidthChanging != null) && (base._eventSuspended == 0))
+            if ((ColumnViewportWidthChanging != null) && (base._eventSuspended == 0))
             {
                 ColumnViewportWidthChangingEventArgs args = new ColumnViewportWidthChangingEventArgs(viewportIndex, deltaViewportWidth);
-                this.ColumnViewportWidthChanging(this, args);
+                ColumnViewportWidthChanging(this, args);
                 if (args.Cancel)
                 {
                     return true;
@@ -5160,9 +5160,9 @@ namespace Dt.Cells.UI
         /// <param name="deltaViewportHeight"></param>
         internal void RaiseRowViewportHeightChanged(int viewportIndex, double deltaViewportHeight)
         {
-            if ((this.RowViewportHeightChanged != null) && (base._eventSuspended == 0))
+            if ((RowViewportHeightChanged != null) && (base._eventSuspended == 0))
             {
-                this.RowViewportHeightChanged(this, new RowViewportHeightChangedEventArgs(viewportIndex, deltaViewportHeight));
+                RowViewportHeightChanged(this, new RowViewportHeightChangedEventArgs(viewportIndex, deltaViewportHeight));
             }
         }
 
@@ -5174,10 +5174,10 @@ namespace Dt.Cells.UI
         /// <returns></returns>
         internal bool RaiseRowViewportHeightChanging(int viewportIndex, double deltaViewportHeight)
         {
-            if ((this.RowViewportHeightChanging != null) && (base._eventSuspended == 0))
+            if ((RowViewportHeightChanging != null) && (base._eventSuspended == 0))
             {
                 RowViewportHeightChangingEventArgs args = new RowViewportHeightChangingEventArgs(viewportIndex, deltaViewportHeight);
-                this.RowViewportHeightChanging(this, args);
+                RowViewportHeightChanging(this, args);
                 if (args.Cancel)
                 {
                     return true;
@@ -5196,54 +5196,54 @@ namespace Dt.Cells.UI
             switch (reader.Name)
             {
                 case "ScrollBarTrackPolicy":
-                    this._scrollBarTrackPolicy = (ScrollBarTrackPolicy)Serializer.DeserializeObj(typeof(ScrollBarTrackPolicy), reader);
+                    _scrollBarTrackPolicy = (ScrollBarTrackPolicy)Serializer.DeserializeObj(typeof(ScrollBarTrackPolicy), reader);
                     return;
 
                 case "ColumnSplitBoxAlignment":
-                    this._columnSplitBoxAlignment = (SplitBoxAlignment)Serializer.DeserializeObj(typeof(SplitBoxAlignment), reader);
+                    _columnSplitBoxAlignment = (SplitBoxAlignment)Serializer.DeserializeObj(typeof(SplitBoxAlignment), reader);
                     return;
 
                 case "RowSplitBoxAlignment":
-                    this._rowSplitBoxAlignment = (SplitBoxAlignment)Serializer.DeserializeObj(typeof(SplitBoxAlignment), reader);
+                    _rowSplitBoxAlignment = (SplitBoxAlignment)Serializer.DeserializeObj(typeof(SplitBoxAlignment), reader);
                     return;
 
                 case "HorizontalScrollBarHeight":
-                    this._horizontalScrollBarHeight = (double)((double)Serializer.DeserializeObj(typeof(double), reader));
+                    _horizontalScrollBarHeight = (double)((double)Serializer.DeserializeObj(typeof(double), reader));
                     return;
 
                 case "VerticalScrollBarWidth":
-                    this._verticalScrollBarWidth = (double)((double)Serializer.DeserializeObj(typeof(double), reader));
+                    _verticalScrollBarWidth = (double)((double)Serializer.DeserializeObj(typeof(double), reader));
                     return;
 
                 case "TabStripVisibility":
-                    this._tabStripVisibility = (Visibility)Serializer.DeserializeObj(typeof(Visibility), reader);
+                    _tabStripVisibility = (Visibility)Serializer.DeserializeObj(typeof(Visibility), reader);
                     return;
 
                 case "TabStripEditable":
-                    this._tabStripEditable = (bool)((bool)Serializer.DeserializeObj(typeof(bool), reader));
+                    _tabStripEditable = (bool)((bool)Serializer.DeserializeObj(typeof(bool), reader));
                     return;
 
                 case "TabStripRadio":
-                    this._tabStripRatio = (double)((double)Serializer.DeserializeObj(typeof(double), reader));
+                    _tabStripRatio = (double)((double)Serializer.DeserializeObj(typeof(double), reader));
                     return;
 
                 case "TabStripInsertTab":
                     {
                         bool flag = (bool)((bool)Serializer.DeserializeObj(typeof(bool), reader));
-                        this._tabStripInsertTab = flag;
-                        if (this._tabStrip == null)
+                        _tabStripInsertTab = flag;
+                        if (_tabStrip == null)
                         {
                             break;
                         }
-                        this._tabStrip.HasInsertTab = flag;
+                        _tabStrip.HasInsertTab = flag;
                         return;
                     }
                 case "ColumnSplitBoxPolicy":
-                    this._columnSplitBoxPolicy = (SplitBoxPolicy)Serializer.DeserializeObj(typeof(SplitBoxPolicy), reader);
+                    _columnSplitBoxPolicy = (SplitBoxPolicy)Serializer.DeserializeObj(typeof(SplitBoxPolicy), reader);
                     return;
 
                 case "RowSplitBoxPolicy":
-                    this._rowSplitBoxPolicy = (SplitBoxPolicy)Serializer.DeserializeObj(typeof(SplitBoxPolicy), reader);
+                    _rowSplitBoxPolicy = (SplitBoxPolicy)Serializer.DeserializeObj(typeof(SplitBoxPolicy), reader);
                     break;
 
                 default:
@@ -5256,9 +5256,9 @@ namespace Dt.Cells.UI
         /// </summary>
         internal void RefreshTabStrip()
         {
-            if (this._tabStrip != null)
+            if (_tabStrip != null)
             {
-                this._tabStrip.Refresh();
+                _tabStrip.Refresh();
             }
         }
 
@@ -5268,8 +5268,8 @@ namespace Dt.Cells.UI
         /// <param name="columnViewportIndex"></param>
         internal void RemoveColumnViewport(int columnViewportIndex)
         {
-            this.Worksheet.RemoveColumnViewport(columnViewportIndex);
-            this.InvalidateLayout();
+            Worksheet.RemoveColumnViewport(columnViewportIndex);
+            InvalidateLayout();
             base.InvalidateMeasure();
         }
 
@@ -5279,8 +5279,8 @@ namespace Dt.Cells.UI
         /// <param name="rowViewportIndex"></param>
         internal void RemoveRowViewport(int rowViewportIndex)
         {
-            this.Worksheet.RemoveRowViewport(rowViewportIndex);
-            this.InvalidateLayout();
+            Worksheet.RemoveRowViewport(rowViewportIndex);
+            InvalidateLayout();
             base.InvalidateMeasure();
         }
 
@@ -5289,7 +5289,7 @@ namespace Dt.Cells.UI
         /// </summary>
         internal override void Reset()
         {
-            this.Init();
+            Init();
             base.Reset();
         }
 
@@ -5299,17 +5299,17 @@ namespace Dt.Cells.UI
         /// <param name="ps"></param>
         internal override void ResetTouchStates(IList<PointerPoint> ps)
         {
-            if (this.IsTouchColumnSplitting)
+            if (IsTouchColumnSplitting)
             {
-                this.EndColumnSplitting();
+                EndColumnSplitting();
             }
-            if (this.IsTouchRowSplitting)
+            if (IsTouchRowSplitting)
             {
-                this.EndRowSplitting();
+                EndRowSplitting();
             }
             if (base.IsTouchTabStripResizing)
             {
-                this.EndTabStripResizing();
+                EndTabStripResizing();
             }
             base.ResetTouchStates(ps);
         }
@@ -5326,9 +5326,9 @@ namespace Dt.Cells.UI
                 if (!base.EditorConnector.IsInOtherSheet)
                 {
                     base.EditorConnector.IsInOtherSheet = true;
-                    base.EditorConnector.SheetIndex = this.Worksheet.Workbook.ActiveSheetIndex;
-                    base.EditorConnector.RowIndex = this.Worksheet.ActiveRowIndex;
-                    base.EditorConnector.ColumnIndex = this.Worksheet.ActiveColumnIndex;
+                    base.EditorConnector.SheetIndex = Worksheet.Workbook.ActiveSheetIndex;
+                    base.EditorConnector.RowIndex = Worksheet.ActiveRowIndex;
+                    base.EditorConnector.ColumnIndex = Worksheet.ActiveColumnIndex;
                 }
             }
         }
@@ -5340,10 +5340,10 @@ namespace Dt.Cells.UI
         {
             UIAdaptor.InvokeAsync(delegate
             {
-                if (this._progressRing != null)
+                if (_progressRing != null)
                 {
-                    this._progressRing.Visibility = 0;
-                    this._progressRing.IsActive = true;
+                    _progressRing.Visibility = 0;
+                    _progressRing.IsActive = true;
                 }
             });
         }
@@ -5353,12 +5353,12 @@ namespace Dt.Cells.UI
         /// </summary>
         internal void ShowOpeningStatus()
         {
-            this.ShowOpeningProgressRing();
+            ShowOpeningProgressRing();
             UIAdaptor.InvokeAsync(delegate
             {
-                if (this.TabStrip != null)
+                if (TabStrip != null)
                 {
-                    this.TabStrip.Visibility = (Visibility)1;
+                    TabStrip.Visibility = (Visibility)1;
                 }
             });
         }
@@ -5366,22 +5366,22 @@ namespace Dt.Cells.UI
         /// <summary>
         /// 
         /// </summary>
-        private void StartColumnSplitting()
+        void StartColumnSplitting()
         {
-            if (!this.SpreadSheet.Workbook.Protect)
+            if (!SpreadSheet.Workbook.Protect)
             {
                 HitTestInformation savedHitTestInformation = base.GetSavedHitTestInformation();
-                SpreadLayout spreadLayout = this.GetSpreadLayout();
+                SpreadLayout spreadLayout = GetSpreadLayout();
                 if (!base.IsTouching)
                 {
-                    this.IsColumnSplitting = true;
+                    IsColumnSplitting = true;
                 }
                 else
                 {
-                    this.IsTouchColumnSplitting = true;
+                    IsTouchColumnSplitting = true;
                 }
                 base.IsWorking = true;
-                if (this._columnSplittingTracker == null)
+                if (_columnSplittingTracker == null)
                 {
                     SolidColorBrush brush = null;
                     UIAdaptor.InvokeSync(delegate
@@ -5391,39 +5391,39 @@ namespace Dt.Cells.UI
                     Line line = new Line();
                     line.Stroke = brush;
                     line.Opacity = 0.5;
-                    this._columnSplittingTracker = line;
-                    this.SplittingTrackerContainer.Children.Add(this._columnSplittingTracker);
+                    _columnSplittingTracker = line;
+                    SplittingTrackerContainer.Children.Add(_columnSplittingTracker);
                 }
                 int columnViewportIndex = savedHitTestInformation.ColumnViewportIndex;
                 int rowViewportIndex = savedHitTestInformation.RowViewportIndex;
-                this._columnSplittingTracker.Opacity = 0.5;
+                _columnSplittingTracker.Opacity = 0.5;
                 switch (savedHitTestInformation.HitTestType)
                 {
                     case HitTestType.RowSplitBar:
                     case HitTestType.ColumnSplitBar:
-                        this._columnSplittingTracker.StrokeThickness = spreadLayout.GetHorizontalSplitBarWidth(columnViewportIndex);
-                        this._columnSplittingTracker.X1 = spreadLayout.GetHorizontalSplitBarX(columnViewportIndex) + (spreadLayout.GetHorizontalSplitBarWidth(columnViewportIndex) / 2.0);
-                        this._columnSplittingTracker.Y1 = spreadLayout.Y;
-                        this._columnSplittingTracker.X2 = this._columnSplittingTracker.X1;
-                        this._columnSplittingTracker.Y2 = spreadLayout.HeaderY + base.AvailableSize.Height;
+                        _columnSplittingTracker.StrokeThickness = spreadLayout.GetHorizontalSplitBarWidth(columnViewportIndex);
+                        _columnSplittingTracker.X1 = spreadLayout.GetHorizontalSplitBarX(columnViewportIndex) + (spreadLayout.GetHorizontalSplitBarWidth(columnViewportIndex) / 2.0);
+                        _columnSplittingTracker.Y1 = spreadLayout.Y;
+                        _columnSplittingTracker.X2 = _columnSplittingTracker.X1;
+                        _columnSplittingTracker.Y2 = spreadLayout.HeaderY + base.AvailableSize.Height;
                         return;
 
                     case HitTestType.RowSplitBox:
                         return;
 
                     case HitTestType.ColumnSplitBox:
-                        this._columnSplittingTracker.StrokeThickness = spreadLayout.GetHorizontalSplitBoxWidth(columnViewportIndex);
-                        if (this.ColumnSplitBoxAlignment != SplitBoxAlignment.Leading)
+                        _columnSplittingTracker.StrokeThickness = spreadLayout.GetHorizontalSplitBoxWidth(columnViewportIndex);
+                        if (ColumnSplitBoxAlignment != SplitBoxAlignment.Leading)
                         {
-                            this._columnSplittingTracker.X1 = (spreadLayout.GetViewportX(columnViewportIndex) + spreadLayout.GetViewportWidth(columnViewportIndex)) - (spreadLayout.GetHorizontalSplitBoxWidth(columnViewportIndex) / 2.0);
+                            _columnSplittingTracker.X1 = (spreadLayout.GetViewportX(columnViewportIndex) + spreadLayout.GetViewportWidth(columnViewportIndex)) - (spreadLayout.GetHorizontalSplitBoxWidth(columnViewportIndex) / 2.0);
                         }
                         else
                         {
-                            this._columnSplittingTracker.X1 = spreadLayout.GetViewportX(columnViewportIndex) + (spreadLayout.GetHorizontalSplitBoxWidth(columnViewportIndex) / 2.0);
+                            _columnSplittingTracker.X1 = spreadLayout.GetViewportX(columnViewportIndex) + (spreadLayout.GetHorizontalSplitBoxWidth(columnViewportIndex) / 2.0);
                         }
-                        this._columnSplittingTracker.Y1 = spreadLayout.Y;
-                        this._columnSplittingTracker.X2 = this._columnSplittingTracker.X1;
-                        this._columnSplittingTracker.Y2 = spreadLayout.HeaderY + base.AvailableSize.Height;
+                        _columnSplittingTracker.Y1 = spreadLayout.Y;
+                        _columnSplittingTracker.X2 = _columnSplittingTracker.X1;
+                        _columnSplittingTracker.Y2 = spreadLayout.HeaderY + base.AvailableSize.Height;
                         return;
                 }
             }
@@ -5436,16 +5436,16 @@ namespace Dt.Cells.UI
         /// <returns></returns>
         internal override bool StartMouseClick(PointerMouseRoutedEventArgs e)
         {
-            if (this.IsMouseInScrollBar())
+            if (IsMouseInScrollBar())
             {
                 return false;
             }
-            if (this.IsEditing && ((this.IsMouseInSplitBar() || this.IsMouseInSplitBox()) || this.IsMouseInTabSplitBox()))
+            if (IsEditing && ((IsMouseInSplitBar() || IsMouseInSplitBox()) || IsMouseInTabSplitBox()))
             {
                 return false;
             }
             Point position = e.GetPosition(this);
-            if (!this.GetTabStripRectangle().Contains(position))
+            if (!GetTabStripRectangle().Contains(position))
             {
                 return base.StartMouseClick(e);
             }
@@ -5456,15 +5456,15 @@ namespace Dt.Cells.UI
                 if (!base.EditorConnector.IsInOtherSheet)
                 {
                     base.EditorConnector.IsInOtherSheet = true;
-                    base.EditorConnector.SheetIndex = this.Worksheet.Workbook.ActiveSheetIndex;
-                    base.EditorConnector.RowIndex = this.Worksheet.ActiveRowIndex;
-                    base.EditorConnector.ColumnIndex = this.Worksheet.ActiveColumnIndex;
+                    base.EditorConnector.SheetIndex = Worksheet.Workbook.ActiveSheetIndex;
+                    base.EditorConnector.RowIndex = Worksheet.ActiveRowIndex;
+                    base.EditorConnector.ColumnIndex = Worksheet.ActiveColumnIndex;
                 }
             }
             base.StopCellEditing(base.CanSelectFormula);
-            if (this._tabStrip != null)
+            if (_tabStrip != null)
             {
-                this._tabStrip.StopTabEditing(false);
+                _tabStrip.StopTabEditing(false);
             }
             base._lastClickPoint = new Point(position.X, position.Y);
             base._routedEventArgs = e;
@@ -5474,22 +5474,22 @@ namespace Dt.Cells.UI
         /// <summary>
         /// 
         /// </summary>
-        private void StartRowSplitting()
+        void StartRowSplitting()
         {
-            if (!this.SpreadSheet.Workbook.Protect)
+            if (!SpreadSheet.Workbook.Protect)
             {
                 HitTestInformation savedHitTestInformation = base.GetSavedHitTestInformation();
-                SpreadLayout spreadLayout = this.GetSpreadLayout();
+                SpreadLayout spreadLayout = GetSpreadLayout();
                 if (!base.IsTouching)
                 {
-                    this.IsRowSplitting = true;
+                    IsRowSplitting = true;
                 }
                 else
                 {
-                    this.IsTouchRowSplitting = true;
+                    IsTouchRowSplitting = true;
                 }
                 base.IsWorking = true;
-                if (this._rowSplittingTracker == null)
+                if (_rowSplittingTracker == null)
                 {
                     SolidColorBrush brush = null;
                     UIAdaptor.InvokeSync(delegate
@@ -5499,36 +5499,36 @@ namespace Dt.Cells.UI
                     Line line = new Line();
                     line.Stroke = brush;
                     line.Opacity = 0.5;
-                    this._rowSplittingTracker = line;
-                    this.SplittingTrackerContainer.Children.Add(this._rowSplittingTracker);
+                    _rowSplittingTracker = line;
+                    SplittingTrackerContainer.Children.Add(_rowSplittingTracker);
                 }
                 int columnViewportIndex = savedHitTestInformation.ColumnViewportIndex;
                 int rowViewportIndex = savedHitTestInformation.RowViewportIndex;
-                this._rowSplittingTracker.Opacity = 0.5;
+                _rowSplittingTracker.Opacity = 0.5;
                 switch (savedHitTestInformation.HitTestType)
                 {
                     case HitTestType.RowSplitBar:
                     case HitTestType.ColumnSplitBar:
-                        this._rowSplittingTracker.StrokeThickness = spreadLayout.GetVerticalSplitBarHeight(rowViewportIndex);
-                        this._rowSplittingTracker.Y1 = spreadLayout.GetVerticalSplitBarY(rowViewportIndex) + (spreadLayout.GetVerticalSplitBarHeight(rowViewportIndex) / 2.0);
-                        this._rowSplittingTracker.X1 = spreadLayout.X;
-                        this._rowSplittingTracker.Y2 = this._rowSplittingTracker.Y1;
-                        this._rowSplittingTracker.X2 = spreadLayout.X + base.AvailableSize.Width;
+                        _rowSplittingTracker.StrokeThickness = spreadLayout.GetVerticalSplitBarHeight(rowViewportIndex);
+                        _rowSplittingTracker.Y1 = spreadLayout.GetVerticalSplitBarY(rowViewportIndex) + (spreadLayout.GetVerticalSplitBarHeight(rowViewportIndex) / 2.0);
+                        _rowSplittingTracker.X1 = spreadLayout.X;
+                        _rowSplittingTracker.Y2 = _rowSplittingTracker.Y1;
+                        _rowSplittingTracker.X2 = spreadLayout.X + base.AvailableSize.Width;
                         return;
 
                     case HitTestType.RowSplitBox:
-                        this._rowSplittingTracker.StrokeThickness = spreadLayout.GetVerticalSplitBoxHeight(rowViewportIndex);
-                        if (this.RowSplitBoxAlignment != SplitBoxAlignment.Leading)
+                        _rowSplittingTracker.StrokeThickness = spreadLayout.GetVerticalSplitBoxHeight(rowViewportIndex);
+                        if (RowSplitBoxAlignment != SplitBoxAlignment.Leading)
                         {
-                            this._rowSplittingTracker.Y1 = (spreadLayout.GetViewportY(rowViewportIndex) + spreadLayout.GetViewportHeight(rowViewportIndex)) - (spreadLayout.GetVerticalSplitBoxHeight(rowViewportIndex) / 2.0);
+                            _rowSplittingTracker.Y1 = (spreadLayout.GetViewportY(rowViewportIndex) + spreadLayout.GetViewportHeight(rowViewportIndex)) - (spreadLayout.GetVerticalSplitBoxHeight(rowViewportIndex) / 2.0);
                         }
                         else
                         {
-                            this._rowSplittingTracker.Y1 = spreadLayout.GetViewportY(rowViewportIndex) + (spreadLayout.GetVerticalSplitBoxHeight(rowViewportIndex) / 2.0);
+                            _rowSplittingTracker.Y1 = spreadLayout.GetViewportY(rowViewportIndex) + (spreadLayout.GetVerticalSplitBoxHeight(rowViewportIndex) / 2.0);
                         }
-                        this._rowSplittingTracker.X1 = spreadLayout.X;
-                        this._rowSplittingTracker.Y2 = this._rowSplittingTracker.Y1;
-                        this._rowSplittingTracker.X2 = spreadLayout.X + base.AvailableSize.Width;
+                        _rowSplittingTracker.X1 = spreadLayout.X;
+                        _rowSplittingTracker.Y2 = _rowSplittingTracker.Y1;
+                        _rowSplittingTracker.X2 = spreadLayout.X + base.AvailableSize.Width;
                         return;
                 }
             }
@@ -5537,11 +5537,11 @@ namespace Dt.Cells.UI
         /// <summary>
         /// 
         /// </summary>
-        private void StartTabStripResizing()
+        void StartTabStripResizing()
         {
             if (!base.IsTouching)
             {
-                this.IsTabStripResizing = true;
+                IsTabStripResizing = true;
             }
             else
             {
@@ -5557,18 +5557,18 @@ namespace Dt.Cells.UI
         /// <returns></returns>
         internal override bool StartTouchTap(Point point)
         {
-            if (this.IsEditing && ((this.IsMouseInSplitBar() || this.IsMouseInSplitBox()) || this.IsMouseInTabSplitBox()))
+            if (IsEditing && ((IsMouseInSplitBar() || IsMouseInSplitBox()) || IsMouseInTabSplitBox()))
             {
                 return false;
             }
-            if (!this.GetTabStripRectangle().Contains(point) || base.CanSelectFormula)
+            if (!GetTabStripRectangle().Contains(point) || base.CanSelectFormula)
             {
                 return base.StartTouchTap(point);
             }
             base.StopCellEditing(false);
-            if (this._tabStrip != null)
+            if (_tabStrip != null)
             {
-                this._tabStrip.StopTabEditing(false);
+                _tabStrip.StopTabEditing(false);
             }
             base._lastClickPoint = point;
             return true;
@@ -5583,7 +5583,7 @@ namespace Dt.Cells.UI
         internal override HitTestInformation TouchHitTest(double x, double y)
         {
             Point point = new Point(x, y);
-            SpreadLayout spreadLayout = this.GetSpreadLayout();
+            SpreadLayout spreadLayout = GetSpreadLayout();
             HitTestInformation information = new HitTestInformation
             {
                 HitTestType = HitTestType.Empty,
@@ -5591,10 +5591,10 @@ namespace Dt.Cells.UI
                 RowViewportIndex = -2,
                 HitPoint = point
             };
-            bool flag = (this.RowSplitBoxAlignment == SplitBoxAlignment.Trailing) && (this.ColumnSplitBoxAlignment == SplitBoxAlignment.Trailing);
+            bool flag = (RowSplitBoxAlignment == SplitBoxAlignment.Trailing) && (ColumnSplitBoxAlignment == SplitBoxAlignment.Trailing);
             for (int i = 0; i < spreadLayout.ColumnPaneCount; i++)
             {
-                Rect horizontalSplitBoxRectangle = this.GetHorizontalSplitBoxRectangle(i);
+                Rect horizontalSplitBoxRectangle = GetHorizontalSplitBoxRectangle(i);
                 if (flag)
                 {
                     horizontalSplitBoxRectangle = horizontalSplitBoxRectangle.Expand(30, 0);
@@ -5612,7 +5612,7 @@ namespace Dt.Cells.UI
             }
             for (int j = 0; j < spreadLayout.RowPaneCount; j++)
             {
-                Rect verticalSplitBoxRectangle = this.GetVerticalSplitBoxRectangle(j);
+                Rect verticalSplitBoxRectangle = GetVerticalSplitBoxRectangle(j);
                 if (flag)
                 {
                     verticalSplitBoxRectangle = verticalSplitBoxRectangle.Expand(0, 30);
@@ -5630,7 +5630,7 @@ namespace Dt.Cells.UI
             }
             for (int k = 0; k < (spreadLayout.ColumnPaneCount - 1); k++)
             {
-                if (this.GetHorizontalSplitBarRectangle(k).Expand(10, 10).Contains(point) && (information.HitTestType != HitTestType.ColumnSplitBox))
+                if (GetHorizontalSplitBarRectangle(k).Expand(10, 10).Contains(point) && (information.HitTestType != HitTestType.ColumnSplitBox))
                 {
                     information.HitTestType = HitTestType.ColumnSplitBar;
                     information.ColumnViewportIndex = k;
@@ -5638,13 +5638,13 @@ namespace Dt.Cells.UI
             }
             for (int m = 0; m < (spreadLayout.RowPaneCount - 1); m++)
             {
-                if (this.GetVerticalSplitBarRectangle(m).Expand(10, 10).Contains(point) && (information.HitTestType != HitTestType.RowSplitBox))
+                if (GetVerticalSplitBarRectangle(m).Expand(10, 10).Contains(point) && (information.HitTestType != HitTestType.RowSplitBox))
                 {
                     information.HitTestType = HitTestType.RowSplitBar;
                     information.RowViewportIndex = m;
                 }
             }
-            if (this.GetTabSplitBoxRectangle().Expand(40, 10).Contains(point))
+            if (GetTabSplitBoxRectangle().Expand(40, 10).Contains(point))
             {
                 information.ColumnViewportIndex = 0;
                 information.HitTestType = HitTestType.TabSplitBox;
@@ -5652,7 +5652,7 @@ namespace Dt.Cells.UI
             }
             if (information.HitTestType == HitTestType.Empty)
             {
-                if (this.GetTabStripRectangle().Contains(point))
+                if (GetTabStripRectangle().Contains(point))
                 {
                     information.ColumnViewportIndex = 0;
                     information.HitTestType = HitTestType.TabStrip;
@@ -5660,7 +5660,7 @@ namespace Dt.Cells.UI
                 }
                 for (int n = 0; n < spreadLayout.ColumnPaneCount; n++)
                 {
-                    if (this.GetHorizontalScrollBarRectangle(n).Contains(point))
+                    if (GetHorizontalScrollBarRectangle(n).Contains(point))
                     {
                         information.ColumnViewportIndex = n;
                         information.HitTestType = HitTestType.HorizontalScrollBar;
@@ -5669,7 +5669,7 @@ namespace Dt.Cells.UI
                 }
                 for (int num6 = 0; num6 < spreadLayout.RowPaneCount; num6++)
                 {
-                    if (this.GetVerticalScrollBarRectangle(num6).Contains(point))
+                    if (GetVerticalScrollBarRectangle(num6).Contains(point))
                     {
                         information.HitTestType = HitTestType.VerticalScrollBar;
                         information.RowViewportIndex = num6;
@@ -5690,7 +5690,7 @@ namespace Dt.Cells.UI
         /// <param name="startPoint"></param>
         /// <param name="currentPoint"></param>
         /// <param name="deltaPoint"></param>
-        private void TouchScrollBottom(Point startPoint, Point currentPoint, Point deltaPoint)
+        void TouchScrollBottom(Point startPoint, Point currentPoint, Point deltaPoint)
         {
             int maxTopScrollableRow = base.GetMaxTopScrollableRow();
             int maxBottomScrollableRow = base.GetMaxBottomScrollableRow();
@@ -5738,7 +5738,7 @@ namespace Dt.Cells.UI
             int num6 = viewportTopRow - 1;
             while (true)
             {
-                if ((num6 < maxTopScrollableRow) || this.Worksheet.Rows[num6].ActualVisible)
+                if ((num6 < maxTopScrollableRow) || Worksheet.Rows[num6].ActualVisible)
                 {
                     break;
                 }
@@ -5759,20 +5759,20 @@ namespace Dt.Cells.UI
             }
             int num7 = viewportTopRow;
         Label_0201:
-            if (!this.Worksheet.Rows[num7].ActualVisible)
+            if (!Worksheet.Rows[num7].ActualVisible)
             {
                 num7--;
             }
-            if (((num7 >= maxTopScrollableRow) && (num7 >= 0)) && (num7 < this.Worksheet.RowCount))
+            if (((num7 >= maxTopScrollableRow) && (num7 >= 0)) && (num7 < Worksheet.RowCount))
             {
-                Row row = this.Worksheet.Rows[num7];
+                Row row = Worksheet.Rows[num7];
                 if (row.ActualVisible)
                 {
                     double num8 = row.Height * base.ZoomFactor;
                     if (num8 >= num3)
                     {
                         base._translateOffsetY = num3 - num8;
-                        this.GetSpreadLayout();
+                        GetSpreadLayout();
                         return;
                     }
                     num3 -= num8;
@@ -5795,7 +5795,7 @@ namespace Dt.Cells.UI
         /// <param name="startPoint"></param>
         /// <param name="currentPoint"></param>
         /// <param name="deltaPoint"></param>
-        private void TouchScrollLeft(Point startPoint, Point currentPoint, Point deltaPoint)
+        void TouchScrollLeft(Point startPoint, Point currentPoint, Point deltaPoint)
         {
             int maxRightScrollableColumn = base.GetMaxRightScrollableColumn();
             ColumnLayoutModel columnLayoutModel = base.GetColumnLayoutModel(base._touchStartHitTestInfo.ColumnViewportIndex, SheetArea.Cells);
@@ -5819,7 +5819,7 @@ namespace Dt.Cells.UI
             int num5 = viewportLeftColumn + 1;
             while (true)
             {
-                if ((num5 > maxRightScrollableColumn) || this.Worksheet.Columns[num5].ActualVisible)
+                if ((num5 > maxRightScrollableColumn) || Worksheet.Columns[num5].ActualVisible)
                 {
                     break;
                 }
@@ -5838,13 +5838,13 @@ namespace Dt.Cells.UI
             }
             int num6 = viewportLeftColumn;
         Label_010B:
-            if (num6 >= this.Worksheet.ColumnCount)
+            if (num6 >= Worksheet.ColumnCount)
             {
                 return;
             }
             if (num6 >= 0)
             {
-                Column column = this.Worksheet.Columns[num6];
+                Column column = Worksheet.Columns[num6];
                 if (column.ActualVisible)
                 {
                     double num7 = column.Width * base.ZoomFactor;
@@ -5873,7 +5873,7 @@ namespace Dt.Cells.UI
         /// <param name="startPoint"></param>
         /// <param name="currentPoint"></param>
         /// <param name="deltaPoint"></param>
-        private void TouchScrollRight(Point startPoint, Point currentPoint, Point deltaPoint)
+        void TouchScrollRight(Point startPoint, Point currentPoint, Point deltaPoint)
         {
             int maxLeftScrollableColumn = base.GetMaxLeftScrollableColumn();
             int maxRightScrollableColumn = base.GetMaxRightScrollableColumn();
@@ -5921,7 +5921,7 @@ namespace Dt.Cells.UI
             int num6 = viewportLeftColumn - 1;
             while (true)
             {
-                if ((num6 < maxLeftScrollableColumn) || this.Worksheet.Columns[num6].ActualVisible)
+                if ((num6 < maxLeftScrollableColumn) || Worksheet.Columns[num6].ActualVisible)
                 {
                     break;
                 }
@@ -5942,20 +5942,20 @@ namespace Dt.Cells.UI
             }
             int num7 = viewportLeftColumn;
         Label_0201:
-            if (num7 >= this.Worksheet.ColumnCount)
+            if (num7 >= Worksheet.ColumnCount)
             {
                 return;
             }
             if (num7 >= 0)
             {
-                Column column = this.Worksheet.Columns[num7];
+                Column column = Worksheet.Columns[num7];
                 if (column.ActualVisible)
                 {
                     double num8 = column.Width * base.ZoomFactor;
                     if (num8 >= num3)
                     {
                         base._translateOffsetX = num3 - num8;
-                        this.GetSpreadLayout();
+                        GetSpreadLayout();
                         return;
                     }
                     num3 -= num8;
@@ -5982,7 +5982,7 @@ namespace Dt.Cells.UI
         /// <param name="startPoint"></param>
         /// <param name="currentPoint"></param>
         /// <param name="deltaPoint"></param>
-        private void TouchScrollUp(Point startPoint, Point currentPoint, Point deltaPoint)
+        void TouchScrollUp(Point startPoint, Point currentPoint, Point deltaPoint)
         {
             base.GetMaxTopScrollableRow();
             int maxBottomScrollableRow = base.GetMaxBottomScrollableRow();
@@ -6007,7 +6007,7 @@ namespace Dt.Cells.UI
             int num5 = viewportTopRow + 1;
             while (true)
             {
-                if ((num5 > maxBottomScrollableRow) || this.Worksheet.Rows[num5].ActualVisible)
+                if ((num5 > maxBottomScrollableRow) || Worksheet.Rows[num5].ActualVisible)
                 {
                     break;
                 }
@@ -6030,9 +6030,9 @@ namespace Dt.Cells.UI
             {
                 return;
             }
-            if (num6 < this.Worksheet.RowCount)
+            if (num6 < Worksheet.RowCount)
             {
-                Row row = this.Worksheet.Rows[num6];
+                Row row = Worksheet.Rows[num6];
                 if (row.ActualVisible)
                 {
                     double num7 = row.ActualHeight * base.ZoomFactor;
@@ -6061,9 +6061,9 @@ namespace Dt.Cells.UI
         /// <param name="startPoint"></param>
         /// <param name="currentPoint"></param>
         /// <param name="deltaPoint"></param>
-        private void TouchTabStripScrollLeft(Point startPoint, Point currentPoint, Point deltaPoint)
+        void TouchTabStripScrollLeft(Point startPoint, Point currentPoint, Point deltaPoint)
         {
-            TabsPresenter tabsPresenter = this.TabStrip.TabsPresenter;
+            TabsPresenter tabsPresenter = TabStrip.TabsPresenter;
             int firstScrollableSheetIndex = tabsPresenter.FirstScrollableSheetIndex;
             int lastScrollableSheetIndex = tabsPresenter.LastScrollableSheetIndex;
             int startIndex = tabsPresenter.StartIndex;
@@ -6091,7 +6091,7 @@ namespace Dt.Cells.UI
             {
                 return;
             }
-            this.SpreadSheet.StartSheetIndex = num5;
+            SpreadSheet.StartSheetIndex = num5;
         Label_00F0:
             if (num5 >= tabsPresenter.LastScrollableSheetIndex)
             {
@@ -6110,7 +6110,7 @@ namespace Dt.Cells.UI
                     num5++;
                     if (num5 <= tabsPresenter.LastScrollableSheetIndex)
                     {
-                        this.SpreadSheet.StartSheetIndex = num5;
+                        SpreadSheet.StartSheetIndex = num5;
                         goto Label_00F0;
                     }
                 }
@@ -6123,11 +6123,11 @@ namespace Dt.Cells.UI
         /// <param name="startPoint"></param>
         /// <param name="currentPoint"></param>
         /// <param name="deltaPoint"></param>
-        private void TouchTabStripScrollRight(Point startPoint, Point currentPoint, Point deltaPoint)
+        void TouchTabStripScrollRight(Point startPoint, Point currentPoint, Point deltaPoint)
         {
             int num7;
             double num9;
-            TabsPresenter tabsPresenter = this.TabStrip.TabsPresenter;
+            TabsPresenter tabsPresenter = TabStrip.TabsPresenter;
             int firstScrollableSheetIndex = tabsPresenter.FirstScrollableSheetIndex;
             int lastScrollableSheetIndex = tabsPresenter.LastScrollableSheetIndex;
             int startIndex = tabsPresenter.StartIndex;
@@ -6166,7 +6166,7 @@ namespace Dt.Cells.UI
                     {
                         return;
                     }
-                    this.SpreadSheet.StartSheetIndex = num7;
+                    SpreadSheet.StartSheetIndex = num7;
                     goto Label_0154;
                 }
             }
@@ -6187,7 +6187,7 @@ namespace Dt.Cells.UI
                 }
                 else
                 {
-                    this.SpreadSheet.StartSheetIndex = num7;
+                    SpreadSheet.StartSheetIndex = num7;
                     goto Label_0154;
                 }
             }
@@ -6199,12 +6199,12 @@ namespace Dt.Cells.UI
         /// <param name="currentPoint"></param>
         /// <param name="translate"></param>
         /// <param name="scale"></param>
-        private void UpdateCachedImageTransform(Point currentPoint, Point translate, double scale)
+        void UpdateCachedImageTransform(Point currentPoint, Point translate, double scale)
         {
-            SpreadLayout spreadLayout = this.GetSpreadLayout();
+            SpreadLayout spreadLayout = GetSpreadLayout();
             if (base._cachedCornerViewportTransform != null)
             {
-                this.UpdateCachedImageTransform(base._cachedCornerViewportTransform, currentPoint, translate, scale, -1, -1, spreadLayout.HeaderX, spreadLayout.HeaderY);
+                UpdateCachedImageTransform(base._cachedCornerViewportTransform, currentPoint, translate, scale, -1, -1, spreadLayout.HeaderX, spreadLayout.HeaderY);
             }
             if (base._cachedColumnHeaderViewportTransform != null)
             {
@@ -6212,7 +6212,7 @@ namespace Dt.Cells.UI
                 {
                     double viewportX = spreadLayout.GetViewportX(i);
                     double headerY = spreadLayout.HeaderY;
-                    this.UpdateCachedImageTransform(base._cachedColumnHeaderViewportTransform[i + 1], currentPoint, translate, scale, i, -1, viewportX, headerY);
+                    UpdateCachedImageTransform(base._cachedColumnHeaderViewportTransform[i + 1], currentPoint, translate, scale, i, -1, viewportX, headerY);
                 }
             }
             if (base._cachedRowHeaderViewportTransform != null)
@@ -6221,7 +6221,7 @@ namespace Dt.Cells.UI
                 {
                     double headerX = spreadLayout.HeaderX;
                     double viewportY = spreadLayout.GetViewportY(j);
-                    this.UpdateCachedImageTransform(base._cachedRowHeaderViewportTransform[j + 1], currentPoint, translate, scale, -1, j, headerX, viewportY);
+                    UpdateCachedImageTransform(base._cachedRowHeaderViewportTransform[j + 1], currentPoint, translate, scale, -1, j, headerX, viewportY);
                 }
             }
             if (base._cachedViewportTransform != null)
@@ -6232,7 +6232,7 @@ namespace Dt.Cells.UI
                     for (int m = -1; m <= spreadLayout.RowPaneCount; m++)
                     {
                         double rowY = spreadLayout.GetViewportY(m);
-                        this.UpdateCachedImageTransform(base._cachedViewportTransform[m + 1, k + 1], currentPoint, translate, scale, k, m, columnX, rowY);
+                        UpdateCachedImageTransform(base._cachedViewportTransform[m + 1, k + 1], currentPoint, translate, scale, k, m, columnX, rowY);
                     }
                 }
             }
@@ -6249,7 +6249,7 @@ namespace Dt.Cells.UI
         /// <param name="rowViewportIndex"></param>
         /// <param name="columnX"></param>
         /// <param name="rowY"></param>
-        private void UpdateCachedImageTransform(TransformGroup transformGruop, Point currentPoint, Point translate, double scale, int columnViewportIndex, int rowViewportIndex, double columnX, double rowY)
+        void UpdateCachedImageTransform(TransformGroup transformGruop, Point currentPoint, Point translate, double scale, int columnViewportIndex, int rowViewportIndex, double columnX, double rowY)
         {
             MatrixTransform transform = null;
             CompositeTransform transform2 = null;
@@ -6270,7 +6270,7 @@ namespace Dt.Cells.UI
             double y = currentPoint.Y;
             double num3 = translate.X;
             double num4 = translate.Y;
-            SpreadLayout spreadLayout = this.GetSpreadLayout();
+            SpreadLayout spreadLayout = GetSpreadLayout();
             if ((columnViewportIndex < 0) || (columnViewportIndex < base._touchStartHitTestInfo.ColumnViewportIndex))
             {
                 x = 0.0;
@@ -6303,27 +6303,27 @@ namespace Dt.Cells.UI
         /// </summary>
         internal void UpdateCrossSplitBars()
         {
-            SpreadLayout spreadLayout = this.GetSpreadLayout();
-            if ((this._crossSplitBar != null) && (((this.ActiveSheet == null) || (this._crossSplitBar.GetLength(0) != (spreadLayout.RowPaneCount - 1))) || (this._crossSplitBar.GetLength(1) != (spreadLayout.ColumnPaneCount - 1))))
+            SpreadLayout spreadLayout = GetSpreadLayout();
+            if ((_crossSplitBar != null) && (((ActiveSheet == null) || (_crossSplitBar.GetLength(0) != (spreadLayout.RowPaneCount - 1))) || (_crossSplitBar.GetLength(1) != (spreadLayout.ColumnPaneCount - 1))))
             {
-                for (int i = 0; i < this._crossSplitBar.GetLength(0); i++)
+                for (int i = 0; i < _crossSplitBar.GetLength(0); i++)
                 {
-                    for (int j = 0; j < this._crossSplitBar.GetLength(1); j++)
+                    for (int j = 0; j < _crossSplitBar.GetLength(1); j++)
                     {
-                        base.Children.Remove(this._crossSplitBar[i, j]);
+                        base.Children.Remove(_crossSplitBar[i, j]);
                     }
                 }
-                this._crossSplitBar = null;
+                _crossSplitBar = null;
             }
-            if (((this.ActiveSheet != null) && (this._crossSplitBar == null)) && ((spreadLayout == null) || ((spreadLayout.RowPaneCount >= 1) && (spreadLayout.ColumnPaneCount >= 1))))
+            if (((ActiveSheet != null) && (_crossSplitBar == null)) && ((spreadLayout == null) || ((spreadLayout.RowPaneCount >= 1) && (spreadLayout.ColumnPaneCount >= 1))))
             {
-                this._crossSplitBar = new CrossSplitBar[spreadLayout.RowPaneCount - 1, spreadLayout.ColumnPaneCount - 1];
-                for (int k = 0; k < this._crossSplitBar.GetLength(0); k++)
+                _crossSplitBar = new CrossSplitBar[spreadLayout.RowPaneCount - 1, spreadLayout.ColumnPaneCount - 1];
+                for (int k = 0; k < _crossSplitBar.GetLength(0); k++)
                 {
-                    for (int m = 0; m < this._crossSplitBar.GetLength(1); m++)
+                    for (int m = 0; m < _crossSplitBar.GetLength(1); m++)
                     {
-                        this._crossSplitBar[k, m] = new CrossSplitBar();
-                        Canvas.SetZIndex(this._crossSplitBar[k, m], 2);
+                        _crossSplitBar[k, m] = new CrossSplitBar();
+                        Canvas.SetZIndex(_crossSplitBar[k, m], 2);
                     }
                 }
             }
@@ -6334,54 +6334,54 @@ namespace Dt.Cells.UI
         /// </summary>
         internal void UpdateHorizontalScrollBars()
         {
-            if (this.ActiveSheet != null)
+            if (ActiveSheet != null)
             {
-                SpreadLayout spreadLayout = this.GetSpreadLayout();
-                if ((this._horizontalScrollBar != null) && ((this.ActiveSheet == null) || (this._horizontalScrollBar.Length != spreadLayout.ColumnPaneCount)))
+                SpreadLayout spreadLayout = GetSpreadLayout();
+                if ((_horizontalScrollBar != null) && ((ActiveSheet == null) || (_horizontalScrollBar.Length != spreadLayout.ColumnPaneCount)))
                 {
-                    for (int j = 0; j < this._horizontalScrollBar.Length; j++)
+                    for (int j = 0; j < _horizontalScrollBar.Length; j++)
                     {
                         _horizontalScrollBar[j].Scroll -= HorizontalScrollbar_Scroll;
                         _horizontalScrollBar[j].PointerPressed -= OnHorizontalScrollBarPointerPressed;
                         _horizontalScrollBar[j].PointerReleased -= OnHorizontalScrollBarPointerReleased;
                         _horizontalScrollBar[j].PointerExited -= OnHorizontalScrollBarPointerExited;
-                        base.Children.Remove(this._horizontalScrollBar[j]);
+                        base.Children.Remove(_horizontalScrollBar[j]);
                     }
-                    this._horizontalScrollBar = null;
+                    _horizontalScrollBar = null;
                 }
-                if (this._horizontalScrollBar == null)
+                if (_horizontalScrollBar == null)
                 {
-                    this._horizontalScrollBar = new ScrollBar[spreadLayout.ColumnPaneCount];
+                    _horizontalScrollBar = new ScrollBar[spreadLayout.ColumnPaneCount];
                     for (int k = 0; k < spreadLayout.ColumnPaneCount; k++)
                     {
-                        this._horizontalScrollBar[k] = new ScrollBar();
-                        this._horizontalScrollBar[k].Orientation = (Orientation)1;
-                        this._horizontalScrollBar[k].IsTabStop = false;
-                        this._horizontalScrollBar[k].TypeSafeSetStyle(this.SpreadSheet.HorizontalScrollBarStyle);
+                        _horizontalScrollBar[k] = new ScrollBar();
+                        _horizontalScrollBar[k].Orientation = (Orientation)1;
+                        _horizontalScrollBar[k].IsTabStop = false;
+                        _horizontalScrollBar[k].TypeSafeSetStyle(SpreadSheet.HorizontalScrollBarStyle);
                         _horizontalScrollBar[k].Scroll += HorizontalScrollbar_Scroll;
                         _horizontalScrollBar[k].PointerPressed += OnHorizontalScrollBarPointerPressed;
                         _horizontalScrollBar[k].PointerReleased += OnHorizontalScrollBarPointerReleased;
                         _horizontalScrollBar[k].PointerExited += OnHorizontalScrollBarPointerExited;
-                        Canvas.SetZIndex(this._horizontalScrollBar[k], 0x62);
+                        Canvas.SetZIndex(_horizontalScrollBar[k], 0x62);
                     }
                 }
-                int sheetInvisibleColumns = this.GetSheetInvisibleColumns(this.ActiveSheet);
+                int sheetInvisibleColumns = GetSheetInvisibleColumns(ActiveSheet);
                 for (int i = 0; i < spreadLayout.ColumnPaneCount; i++)
                 {
                     double num8;
-                    int viewportInvisibleColumns = this.GetViewportInvisibleColumns(i);
-                    this._horizontalScrollBar[i].Minimum = (double)this.ActiveSheet.FrozenColumnCount;
-                    this._horizontalScrollBar[i].Maximum = (double)Math.Max(this.ActiveSheet.FrozenColumnCount, ((this.ActiveSheet.ColumnCount - this.ActiveSheet.FrozenTrailingColumnCount) - sheetInvisibleColumns) - 1);
-                    this._horizontalScrollBar[i].ViewportSize = num8 = base.GetViewportColumnLayoutModel(i).Count - viewportInvisibleColumns;
-                    this._horizontalScrollBar[i].LargeChange = num8;
-                    this._horizontalScrollBar[i].SmallChange = 1.0;
+                    int viewportInvisibleColumns = GetViewportInvisibleColumns(i);
+                    _horizontalScrollBar[i].Minimum = (double)ActiveSheet.FrozenColumnCount;
+                    _horizontalScrollBar[i].Maximum = (double)Math.Max(ActiveSheet.FrozenColumnCount, ((ActiveSheet.ColumnCount - ActiveSheet.FrozenTrailingColumnCount) - sheetInvisibleColumns) - 1);
+                    _horizontalScrollBar[i].ViewportSize = num8 = base.GetViewportColumnLayoutModel(i).Count - viewportInvisibleColumns;
+                    _horizontalScrollBar[i].LargeChange = num8;
+                    _horizontalScrollBar[i].SmallChange = 1.0;
                     int viewportLeftColumn = base.GetViewportLeftColumn(i);
                     viewportLeftColumn = base.TryGetNextScrollableColumn(viewportLeftColumn);
-                    int invisibleColumnsBeforeColumn = this.GetInvisibleColumnsBeforeColumn(this.Worksheet, viewportLeftColumn);
+                    int invisibleColumnsBeforeColumn = GetInvisibleColumnsBeforeColumn(Worksheet, viewportLeftColumn);
                     viewportLeftColumn -= invisibleColumnsBeforeColumn;
-                    this._horizontalScrollBar[i].Value = (double)viewportLeftColumn;
-                    this._horizontalScrollBar[i].InvalidateArrange();
-                    this._horizontalScrollBar[i].IsEnabled = this.HorizontalScrollBarPolicy != 0;
+                    _horizontalScrollBar[i].Value = (double)viewportLeftColumn;
+                    _horizontalScrollBar[i].InvalidateArrange();
+                    _horizontalScrollBar[i].IsEnabled = HorizontalScrollBarPolicy != 0;
                 }
             }
         }
@@ -6391,22 +6391,22 @@ namespace Dt.Cells.UI
         /// </summary>
         internal void UpdateHorizontalSplitBars()
         {
-            SpreadLayout spreadLayout = this.GetSpreadLayout();
-            if ((this._horizontalSplitBar != null) && ((this.ActiveSheet == null) || (this._horizontalSplitBar.Length != (spreadLayout.ColumnPaneCount - 1))))
+            SpreadLayout spreadLayout = GetSpreadLayout();
+            if ((_horizontalSplitBar != null) && ((ActiveSheet == null) || (_horizontalSplitBar.Length != (spreadLayout.ColumnPaneCount - 1))))
             {
-                foreach (HorizontalSplitBar bar in this._horizontalSplitBar)
+                foreach (HorizontalSplitBar bar in _horizontalSplitBar)
                 {
                     base.Children.Remove(bar);
                 }
-                this._horizontalSplitBar = null;
+                _horizontalSplitBar = null;
             }
-            if (((this.ActiveSheet != null) && (this._horizontalSplitBar == null)) && (spreadLayout.ColumnPaneCount >= 1))
+            if (((ActiveSheet != null) && (_horizontalSplitBar == null)) && (spreadLayout.ColumnPaneCount >= 1))
             {
-                this._horizontalSplitBar = new HorizontalSplitBar[spreadLayout.ColumnPaneCount - 1];
-                for (int i = 0; i < this._horizontalSplitBar.Length; i++)
+                _horizontalSplitBar = new HorizontalSplitBar[spreadLayout.ColumnPaneCount - 1];
+                for (int i = 0; i < _horizontalSplitBar.Length; i++)
                 {
-                    this._horizontalSplitBar[i] = new HorizontalSplitBar();
-                    Canvas.SetZIndex(this._horizontalSplitBar[i], 2);
+                    _horizontalSplitBar[i] = new HorizontalSplitBar();
+                    Canvas.SetZIndex(_horizontalSplitBar[i], 2);
                 }
             }
         }
@@ -6416,22 +6416,22 @@ namespace Dt.Cells.UI
         /// </summary>
         internal void UpdateHorizontalSplitBoxes()
         {
-            SpreadLayout spreadLayout = this.GetSpreadLayout();
-            if ((this._horizontalSplitBox != null) && ((this.ActiveSheet == null) || (this._horizontalSplitBox.Length != spreadLayout.ColumnPaneCount)))
+            SpreadLayout spreadLayout = GetSpreadLayout();
+            if ((_horizontalSplitBox != null) && ((ActiveSheet == null) || (_horizontalSplitBox.Length != spreadLayout.ColumnPaneCount)))
             {
-                for (int i = 0; i < this._horizontalSplitBox.Length; i++)
+                for (int i = 0; i < _horizontalSplitBox.Length; i++)
                 {
-                    base.Children.Remove(this._horizontalSplitBox[i]);
+                    base.Children.Remove(_horizontalSplitBox[i]);
                 }
-                this._horizontalSplitBox = null;
+                _horizontalSplitBox = null;
             }
-            if ((this.ActiveSheet != null) && (this._horizontalSplitBox == null))
+            if ((ActiveSheet != null) && (_horizontalSplitBox == null))
             {
-                this._horizontalSplitBox = new HorizontalSplitBox[spreadLayout.ColumnPaneCount];
+                _horizontalSplitBox = new HorizontalSplitBox[spreadLayout.ColumnPaneCount];
                 for (int j = 0; j < spreadLayout.ColumnPaneCount; j++)
                 {
-                    this._horizontalSplitBox[j] = new HorizontalSplitBox();
-                    Canvas.SetZIndex(this._horizontalSplitBox[j], 0x62);
+                    _horizontalSplitBox[j] = new HorizontalSplitBox();
+                    Canvas.SetZIndex(_horizontalSplitBox[j], 0x62);
                 }
             }
         }
@@ -6440,25 +6440,25 @@ namespace Dt.Cells.UI
         /// 
         /// </summary>
         /// <param name="ScrollingIndicatorMode"></param>
-        private void UpdateScrollBarIndicatorMode(ScrollingIndicatorMode ScrollingIndicatorMode)
+        void UpdateScrollBarIndicatorMode(ScrollingIndicatorMode ScrollingIndicatorMode)
         {
-            if (this._horizontalScrollBar != null)
+            if (_horizontalScrollBar != null)
             {
-                for (int i = 0; i < this._horizontalScrollBar.Length; i++)
+                for (int i = 0; i < _horizontalScrollBar.Length; i++)
                 {
-                    if (this._horizontalScrollBar[i] != null)
+                    if (_horizontalScrollBar[i] != null)
                     {
-                        this._horizontalScrollBar[i].IndicatorMode = ScrollingIndicatorMode;
+                        _horizontalScrollBar[i].IndicatorMode = ScrollingIndicatorMode;
                     }
                 }
             }
-            if (this._verticalScrollBar != null)
+            if (_verticalScrollBar != null)
             {
-                for (int j = 0; j < this._verticalScrollBar.Length; j++)
+                for (int j = 0; j < _verticalScrollBar.Length; j++)
                 {
-                    if (this._verticalScrollBar[j] != null)
+                    if (_verticalScrollBar[j] != null)
                     {
-                        this._verticalScrollBar[j].IndicatorMode = ScrollingIndicatorMode;
+                        _verticalScrollBar[j].IndicatorMode = ScrollingIndicatorMode;
                     }
                 }
             }
@@ -6469,10 +6469,10 @@ namespace Dt.Cells.UI
         /// </summary>
         internal override void UpdateTabStrip()
         {
-            if ((this._tabStrip != null) && (this._tabStrip.TabsPresenter != null))
+            if ((_tabStrip != null) && (_tabStrip.TabsPresenter != null))
             {
-                this._tabStrip.TabsPresenter.InvalidateMeasure();
-                this._tabStrip.TabsPresenter.InvalidateArrange();
+                _tabStrip.TabsPresenter.InvalidateMeasure();
+                _tabStrip.TabsPresenter.InvalidateArrange();
             }
         }
 
@@ -6481,56 +6481,56 @@ namespace Dt.Cells.UI
         /// </summary>
         internal void UpdateVerticalScrollBars()
         {
-            if (this.ActiveSheet != null)
+            if (ActiveSheet != null)
             {
-                SpreadLayout spreadLayout = this.GetSpreadLayout();
-                if ((this._verticalScrollBar != null) && ((this.ActiveSheet == null) || (this._verticalScrollBar.Length != spreadLayout.RowPaneCount)))
+                SpreadLayout spreadLayout = GetSpreadLayout();
+                if ((_verticalScrollBar != null) && ((ActiveSheet == null) || (_verticalScrollBar.Length != spreadLayout.RowPaneCount)))
                 {
-                    for (int j = 0; j < this._verticalScrollBar.Length; j++)
+                    for (int j = 0; j < _verticalScrollBar.Length; j++)
                     {
                         _verticalScrollBar[j].Scroll -= VerticalScrollbar_Scroll;
                         _verticalScrollBar[j].PointerPressed -= OnVerticalScrollbarPointerPressed;
                         _verticalScrollBar[j].PointerReleased -= OnVerticalScrollbarPointerReleased;
                         _verticalScrollBar[j].PointerExited -= OnVerticalScrollbarPointerExited;
-                        base.Children.Remove(this._verticalScrollBar[j]);
+                        base.Children.Remove(_verticalScrollBar[j]);
                     }
-                    this._verticalScrollBar = null;
+                    _verticalScrollBar = null;
                 }
-                if ((this.ActiveSheet != null) && (this._verticalScrollBar == null))
+                if ((ActiveSheet != null) && (_verticalScrollBar == null))
                 {
-                    this._verticalScrollBar = new ScrollBar[spreadLayout.RowPaneCount];
-                    for (int k = 0; k < this._verticalScrollBar.Length; k++)
+                    _verticalScrollBar = new ScrollBar[spreadLayout.RowPaneCount];
+                    for (int k = 0; k < _verticalScrollBar.Length; k++)
                     {
-                        this._verticalScrollBar[k] = new ScrollBar();
-                        this._verticalScrollBar[k].IsEnabled = true;
-                        this._verticalScrollBar[k].Orientation = 0;
-                        this._verticalScrollBar[k].ViewportSize = 25.0;
-                        this._verticalScrollBar[k].IsTabStop = false;
-                        this._verticalScrollBar[k].TypeSafeSetStyle(this.SpreadSheet.VerticalScrollBarStyle);
+                        _verticalScrollBar[k] = new ScrollBar();
+                        _verticalScrollBar[k].IsEnabled = true;
+                        _verticalScrollBar[k].Orientation = 0;
+                        _verticalScrollBar[k].ViewportSize = 25.0;
+                        _verticalScrollBar[k].IsTabStop = false;
+                        _verticalScrollBar[k].TypeSafeSetStyle(SpreadSheet.VerticalScrollBarStyle);
                         _verticalScrollBar[k].Scroll += VerticalScrollbar_Scroll;
                         _verticalScrollBar[k].PointerPressed += OnVerticalScrollbarPointerPressed;
                         _verticalScrollBar[k].PointerReleased += OnVerticalScrollbarPointerReleased;
                         _verticalScrollBar[k].PointerExited += OnVerticalScrollbarPointerExited;
-                        Canvas.SetZIndex(this._verticalScrollBar[k], 0x62);
+                        Canvas.SetZIndex(_verticalScrollBar[k], 0x62);
                     }
                 }
-                int sheetInvisibleRows = this.GetSheetInvisibleRows(this.ActiveSheet);
+                int sheetInvisibleRows = GetSheetInvisibleRows(ActiveSheet);
                 for (int i = 0; i < spreadLayout.RowPaneCount; i++)
                 {
                     double num8;
-                    int viewportInvisibleRows = this.GetViewportInvisibleRows(i);
-                    this._verticalScrollBar[i].Minimum = (double)this.ActiveSheet.FrozenRowCount;
-                    this._verticalScrollBar[i].Maximum = (double)Math.Max(this.ActiveSheet.FrozenRowCount, ((this.ActiveSheet.RowCount - this.ActiveSheet.FrozenTrailingRowCount) - sheetInvisibleRows) - 1);
-                    this._verticalScrollBar[i].ViewportSize = num8 = base.GetViewportRowLayoutModel(i).Count - viewportInvisibleRows;
-                    this._verticalScrollBar[i].LargeChange = num8;
-                    this._verticalScrollBar[i].SmallChange = 1.0;
+                    int viewportInvisibleRows = GetViewportInvisibleRows(i);
+                    _verticalScrollBar[i].Minimum = (double)ActiveSheet.FrozenRowCount;
+                    _verticalScrollBar[i].Maximum = (double)Math.Max(ActiveSheet.FrozenRowCount, ((ActiveSheet.RowCount - ActiveSheet.FrozenTrailingRowCount) - sheetInvisibleRows) - 1);
+                    _verticalScrollBar[i].ViewportSize = num8 = base.GetViewportRowLayoutModel(i).Count - viewportInvisibleRows;
+                    _verticalScrollBar[i].LargeChange = num8;
+                    _verticalScrollBar[i].SmallChange = 1.0;
                     int viewportTopRow = base.GetViewportTopRow(i);
                     viewportTopRow = base.TryGetNextScrollableRow(viewportTopRow);
-                    int invisibleRowsBeforeRow = this.GetInvisibleRowsBeforeRow(this.Worksheet, viewportTopRow);
+                    int invisibleRowsBeforeRow = GetInvisibleRowsBeforeRow(Worksheet, viewportTopRow);
                     viewportTopRow -= invisibleRowsBeforeRow;
-                    this._verticalScrollBar[i].Value = (double)viewportTopRow;
-                    this._verticalScrollBar[i].InvalidateArrange();
-                    this._verticalScrollBar[i].IsEnabled = this.VerticalScrollBarPolicy != 0;
+                    _verticalScrollBar[i].Value = (double)viewportTopRow;
+                    _verticalScrollBar[i].InvalidateArrange();
+                    _verticalScrollBar[i].IsEnabled = VerticalScrollBarPolicy != 0;
                 }
             }
         }
@@ -6540,22 +6540,22 @@ namespace Dt.Cells.UI
         /// </summary>
         internal void UpdateVerticalSplitBars()
         {
-            SpreadLayout spreadLayout = this.GetSpreadLayout();
-            if ((this._verticalSplitBar != null) && ((this.ActiveSheet == null) || (this._verticalSplitBar.Length != (spreadLayout.RowPaneCount - 1))))
+            SpreadLayout spreadLayout = GetSpreadLayout();
+            if ((_verticalSplitBar != null) && ((ActiveSheet == null) || (_verticalSplitBar.Length != (spreadLayout.RowPaneCount - 1))))
             {
-                foreach (VerticalSplitBar bar in this._verticalSplitBar)
+                foreach (VerticalSplitBar bar in _verticalSplitBar)
                 {
                     base.Children.Remove(bar);
                 }
-                this._verticalSplitBar = null;
+                _verticalSplitBar = null;
             }
-            if (((this.ActiveSheet != null) && (this._verticalSplitBar == null)) && (spreadLayout.RowPaneCount >= 1))
+            if (((ActiveSheet != null) && (_verticalSplitBar == null)) && (spreadLayout.RowPaneCount >= 1))
             {
-                this._verticalSplitBar = new VerticalSplitBar[spreadLayout.RowPaneCount - 1];
-                for (int i = 0; i < this._verticalSplitBar.Length; i++)
+                _verticalSplitBar = new VerticalSplitBar[spreadLayout.RowPaneCount - 1];
+                for (int i = 0; i < _verticalSplitBar.Length; i++)
                 {
-                    this._verticalSplitBar[i] = new VerticalSplitBar();
-                    Canvas.SetZIndex(this._verticalSplitBar[i], 2);
+                    _verticalSplitBar[i] = new VerticalSplitBar();
+                    Canvas.SetZIndex(_verticalSplitBar[i], 2);
                 }
             }
         }
@@ -6565,22 +6565,22 @@ namespace Dt.Cells.UI
         /// </summary>
         internal void UpdateVerticalSplitBoxes()
         {
-            SpreadLayout spreadLayout = this.GetSpreadLayout();
-            if ((this._verticalSplitBox != null) && ((this.ActiveSheet == null) || (this._verticalSplitBox.Length != spreadLayout.RowPaneCount)))
+            SpreadLayout spreadLayout = GetSpreadLayout();
+            if ((_verticalSplitBox != null) && ((ActiveSheet == null) || (_verticalSplitBox.Length != spreadLayout.RowPaneCount)))
             {
-                foreach (VerticalSplitBox box in this._verticalSplitBox)
+                foreach (VerticalSplitBox box in _verticalSplitBox)
                 {
                     base.Children.Remove(box);
                 }
-                this._verticalSplitBox = null;
+                _verticalSplitBox = null;
             }
-            if ((this.ActiveSheet != null) && (this._verticalSplitBox == null))
+            if ((ActiveSheet != null) && (_verticalSplitBox == null))
             {
-                this._verticalSplitBox = new VerticalSplitBox[spreadLayout.RowPaneCount];
+                _verticalSplitBox = new VerticalSplitBox[spreadLayout.RowPaneCount];
                 for (int i = 0; i < spreadLayout.RowPaneCount; i++)
                 {
-                    this._verticalSplitBox[i] = new VerticalSplitBox();
-                    Canvas.SetZIndex(this._verticalSplitBox[i], 0x62);
+                    _verticalSplitBox[i] = new VerticalSplitBox();
+                    Canvas.SetZIndex(_verticalSplitBox[i], 0x62);
                 }
             }
         }
@@ -6588,19 +6588,19 @@ namespace Dt.Cells.UI
         /// <summary>
         /// 
         /// </summary>
-        private void UpdateViewport()
+        void UpdateViewport()
         {
             bool flag = ((base._touchStartHitTestInfo.HitTestType == HitTestType.FloatingObject) && (base._touchStartHitTestInfo.FloatingObjectInfo.FloatingObject != null)) && base._touchStartHitTestInfo.FloatingObjectInfo.FloatingObject.IsSelected;
             if (((base._touchStartHitTestInfo != null) && (base._touchStartHitTestInfo.HitTestType == HitTestType.Viewport)) || ((base._touchStartHitTestInfo.HitTestType == HitTestType.FloatingObject) && !flag))
             {
-                this.AdjustViewportLeftColumn();
-                this.AdjustViewportTopRow();
-                this.AdjustViewportSize();
+                AdjustViewportLeftColumn();
+                AdjustViewportTopRow();
+                AdjustViewportSize();
                 base._translateOffsetY = 0.0;
                 base._translateOffsetX = 0.0;
                 if (base._updateViewportAfterTouch)
                 {
-                    this.InvalidateLayout();
+                    InvalidateLayout();
                     base.InvalidateMeasure();
                 }
             }
@@ -6611,24 +6611,24 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void VerticalScrollbar_Scroll(object sender, ScrollEventArgs e)
+        void VerticalScrollbar_Scroll(object sender, ScrollEventArgs e)
         {
             if ((base._touchToolbarPopup != null) && base._touchToolbarPopup.IsOpen)
             {
                 base._touchToolbarPopup.IsOpen = false;
             }
-            if (((this.ScrollBarTrackPolicy == ScrollBarTrackPolicy.Both) || (this.ScrollBarTrackPolicy == ScrollBarTrackPolicy.Vertical)) || (base._isTouchScrolling || (e.ScrollEventType != (ScrollEventType)5)))
+            if (((ScrollBarTrackPolicy == ScrollBarTrackPolicy.Both) || (ScrollBarTrackPolicy == ScrollBarTrackPolicy.Vertical)) || (base._isTouchScrolling || (e.ScrollEventType != (ScrollEventType)5)))
             {
-                for (int i = 0; i < this._verticalScrollBar.Length; i++)
+                for (int i = 0; i < _verticalScrollBar.Length; i++)
                 {
-                    if (sender == this._verticalScrollBar[i])
+                    if (sender == _verticalScrollBar[i])
                     {
                         if (base.VerticalScrollable)
                         {
-                            this.ProcessVerticalScroll(i, e);
+                            ProcessVerticalScroll(i, e);
                             return;
                         }
-                        this._verticalScrollBar[i].Value = (double)base.GetViewportTopRow(i);
+                        _verticalScrollBar[i].Value = (double)base.GetViewportTopRow(i);
                         return;
                     }
                 }
@@ -6640,7 +6640,7 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="rowViewportIndex"></param>
         /// <param name="newValue"></param>
-        private void VerticalScrollBarTouchSmallDecrement(int rowViewportIndex, int newValue)
+        void VerticalScrollBarTouchSmallDecrement(int rowViewportIndex, int newValue)
         {
             int viewportTopRow = base.GetViewportTopRow(rowViewportIndex);
             int num2 = base.TryGetPreviousScrollableRow(newValue);
@@ -6657,49 +6657,49 @@ namespace Dt.Cells.UI
         internal override void WriteXmlInternal(XmlWriter writer)
         {
             base.WriteXmlInternal(writer);
-            if (this._horizontalScrollBarHeight != 25.0)
+            if (_horizontalScrollBarHeight != 25.0)
             {
-                Serializer.SerializeObj((double)this._horizontalScrollBarHeight, "HorizontalScrollBarHeight", writer);
+                Serializer.SerializeObj((double)_horizontalScrollBarHeight, "HorizontalScrollBarHeight", writer);
             }
-            if (this._verticalScrollBarWidth != 25.0)
+            if (_verticalScrollBarWidth != 25.0)
             {
-                Serializer.SerializeObj((double)this._verticalScrollBarWidth, "VerticalScrollBarWidth", writer);
+                Serializer.SerializeObj((double)_verticalScrollBarWidth, "VerticalScrollBarWidth", writer);
             }
-            if (this._scrollBarTrackPolicy != ScrollBarTrackPolicy.Both)
+            if (_scrollBarTrackPolicy != ScrollBarTrackPolicy.Both)
             {
-                Serializer.SerializeObj(this._scrollBarTrackPolicy, "ScrollBarTrackPolicy", writer);
+                Serializer.SerializeObj(_scrollBarTrackPolicy, "ScrollBarTrackPolicy", writer);
             }
-            if (this._columnSplitBoxAlignment != SplitBoxAlignment.Leading)
+            if (_columnSplitBoxAlignment != SplitBoxAlignment.Leading)
             {
-                Serializer.SerializeObj(this._columnSplitBoxAlignment, "ColumnSplitBoxAlignment", writer);
+                Serializer.SerializeObj(_columnSplitBoxAlignment, "ColumnSplitBoxAlignment", writer);
             }
-            if (this._rowSplitBoxAlignment != SplitBoxAlignment.Leading)
+            if (_rowSplitBoxAlignment != SplitBoxAlignment.Leading)
             {
-                Serializer.SerializeObj(this._rowSplitBoxAlignment, "RowSplitBoxAlignment", writer);
+                Serializer.SerializeObj(_rowSplitBoxAlignment, "RowSplitBoxAlignment", writer);
             }
-            if (this._tabStripVisibility != 0)
+            if (_tabStripVisibility != 0)
             {
-                Serializer.SerializeObj(this._tabStripVisibility, "TabStripVisibility", writer);
+                Serializer.SerializeObj(_tabStripVisibility, "TabStripVisibility", writer);
             }
-            if (!this._tabStripEditable)
+            if (!_tabStripEditable)
             {
-                Serializer.SerializeObj((bool)this._tabStripEditable, "TabStripEditable", writer);
+                Serializer.SerializeObj((bool)_tabStripEditable, "TabStripEditable", writer);
             }
-            if (this._tabStripRatio != 0.5)
+            if (_tabStripRatio != 0.5)
             {
-                Serializer.SerializeObj((double)this._tabStripRatio, "TabStripRadio", writer);
+                Serializer.SerializeObj((double)_tabStripRatio, "TabStripRadio", writer);
             }
-            if (!this._tabStripInsertTab)
+            if (!_tabStripInsertTab)
             {
-                Serializer.SerializeObj((bool)this._tabStripInsertTab, "TabStripInsertTab", writer);
+                Serializer.SerializeObj((bool)_tabStripInsertTab, "TabStripInsertTab", writer);
             }
-            if (this._columnSplitBoxPolicy != SplitBoxPolicy.Always)
+            if (_columnSplitBoxPolicy != SplitBoxPolicy.Always)
             {
-                Serializer.SerializeObj(this._columnSplitBoxPolicy, "ColumnSplitBoxPolicy", writer);
+                Serializer.SerializeObj(_columnSplitBoxPolicy, "ColumnSplitBoxPolicy", writer);
             }
-            if (this._rowSplitBoxPolicy != SplitBoxPolicy.Always)
+            if (_rowSplitBoxPolicy != SplitBoxPolicy.Always)
             {
-                Serializer.SerializeObj(this._rowSplitBoxPolicy, "RowSplitBoxPolicy", writer);
+                Serializer.SerializeObj(_rowSplitBoxPolicy, "RowSplitBoxPolicy", writer);
             }
         }
     }

@@ -21,9 +21,9 @@ namespace Dt.Cells.UI
     {
         internal CellDoubleClickEventArgs(Dt.Cells.Data.SheetArea sheetArea, int row, int column)
         {
-            this.SheetArea = sheetArea;
-            this.Row = row;
-            this.Column = column;
+            SheetArea = sheetArea;
+            Row = row;
+            Column = column;
         }
 
         /// <summary>

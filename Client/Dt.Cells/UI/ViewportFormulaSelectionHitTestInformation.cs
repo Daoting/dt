@@ -22,9 +22,9 @@ namespace Dt.Cells.UI
         {
             get
             {
-                if (((this.Position != PositionInFormulaSelection.Left) && (this.Position != PositionInFormulaSelection.Right)) && (this.Position != PositionInFormulaSelection.Top))
+                if (((Position != PositionInFormulaSelection.Left) && (Position != PositionInFormulaSelection.Right)) && (Position != PositionInFormulaSelection.Top))
                 {
-                    return (this.Position == PositionInFormulaSelection.Bottom);
+                    return (Position == PositionInFormulaSelection.Bottom);
                 }
                 return true;
             }

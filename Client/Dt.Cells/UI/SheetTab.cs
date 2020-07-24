@@ -13,19 +13,19 @@ namespace Dt.Cells.UI
     /// </summary>
     public partial class SheetTab : Button
     {
-        private ContentControl _content;
-        private TextBlock _displayElement;
-        private TextBox _editingElement;
-        private static string _inser_TabName;
-        private bool _isEditing;
-        private int _sheetIndex;
-        private const double DEFAULT_FONTSIZE = 13.0;
-        private const double DEFAULT_HEIGHT = 18.0;
-        private const double DEFAULT_PADDING_LEFT = 12.0;
-        private const double DEFAULT_PADDING_RIGHT = 6.0;
+        ContentControl _content;
+        TextBlock _displayElement;
+        TextBox _editingElement;
+        static string _inser_TabName;
+        bool _isEditing;
+        int _sheetIndex;
+        const double DEFAULT_FONTSIZE = 13.0;
+        const double DEFAULT_HEIGHT = 18.0;
+        const double DEFAULT_PADDING_LEFT = 12.0;
+        const double DEFAULT_PADDING_RIGHT = 6.0;
         public static readonly DependencyProperty IsActiveProperty;
 
-        private static string INSER_TabName
+        static string INSER_TabName
         {
             get
             {
@@ -47,17 +47,17 @@ namespace Dt.Cells.UI
 
         public int SheetIndex
         {
-            get { return this._sheetIndex; }
+            get { return _sheetIndex; }
             internal set
             {
-                this._sheetIndex = value;
-                if (this._isEditing)
+                _sheetIndex = value;
+                if (_isEditing)
                 {
-                    this.GetEditingElement().Text = this.SheetName;
+                    GetEditingElement().Text = SheetName;
                 }
                 else
                 {
-                    this.GetDisplayElement().Text = this.SheetName;
+                    GetDisplayElement().Text = SheetName;
                 }
             }
         }
@@ -66,9 +66,9 @@ namespace Dt.Cells.UI
         {
             get
             {
-                if (((this.OwningStrip != null) && (this._sheetIndex != -1)) && (this._sheetIndex < this.OwningStrip.Workbook.SheetCount))
+                if (((OwningStrip != null) && (_sheetIndex != -1)) && (_sheetIndex < OwningStrip.Workbook.SheetCount))
                 {
-                    return this.OwningStrip.Workbook.Sheets[this._sheetIndex].Name;
+                    return OwningStrip.Workbook.Sheets[_sheetIndex].Name;
                 }
                 return INSER_TabName;
             }
@@ -78,15 +78,15 @@ namespace Dt.Cells.UI
         {
             get
             {
-                if (this.OwningStrip == null)
+                if (OwningStrip == null)
                 {
                     return false;
                 }
-                if (this._sheetIndex == -1)
+                if (_sheetIndex == -1)
                 {
-                    return this.OwningStrip.HasInsertTab;
+                    return OwningStrip.HasInsertTab;
                 }
-                return ((this._sheetIndex < this.OwningStrip.Workbook.SheetCount) && this.OwningStrip.Workbook.Sheets[this._sheetIndex].Visible);
+                return ((_sheetIndex < OwningStrip.Workbook.SheetCount) && OwningStrip.Workbook.Sheets[_sheetIndex].Visible);
             }
         }
 
@@ -108,42 +108,42 @@ namespace Dt.Cells.UI
 
         internal TextBlock GetDisplayElement()
         {
-            if (this._displayElement == null)
+            if (_displayElement == null)
             {
-                this._displayElement = new TextBlock();
-                this._displayElement.Padding = new Thickness(0.0);
-                this._displayElement.VerticalAlignment = (VerticalAlignment)1;
+                _displayElement = new TextBlock();
+                _displayElement.Padding = new Thickness(0.0);
+                _displayElement.VerticalAlignment = (VerticalAlignment)1;
                 _displayElement.FontSize = DEFAULT_FONTSIZE;
                 _displayElement.LineStackingStrategy = LineStackingStrategy.MaxHeight;
                 _displayElement.LineHeight = 0;
             }
-            return this._displayElement;
+            return _displayElement;
         }
 
         internal TextBox GetEditingElement()
         {
-            if (this._editingElement == null)
+            if (_editingElement == null)
             {
-                this._editingElement = new EditingElement();
-                this._editingElement.Padding = new Thickness(0.0);
-                this._editingElement.BorderThickness = new Thickness(0.0);
-                this._editingElement.VerticalAlignment = (VerticalAlignment)2;
-                this._editingElement.VerticalContentAlignment = (VerticalAlignment)1;
-                this._editingElement.FontSize = DEFAULT_FONTSIZE;
+                _editingElement = new EditingElement();
+                _editingElement.Padding = new Thickness(0.0);
+                _editingElement.BorderThickness = new Thickness(0.0);
+                _editingElement.VerticalAlignment = (VerticalAlignment)2;
+                _editingElement.VerticalContentAlignment = (VerticalAlignment)1;
+                _editingElement.FontSize = DEFAULT_FONTSIZE;
             }
-            return this._editingElement;
+            return _editingElement;
         }
 
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            this._content = base.GetTemplateChild("PART_ContentPresenter") as ContentControl;
+            _content = base.GetTemplateChild("PART_ContentPresenter") as ContentControl;
             base.FontSize = 13.0;
-            this.PrepareForDisplay();
-            this.UpdateActiveStates();
+            PrepareForDisplay();
+            UpdateActiveStates();
         }
 
-        private static void OnIsActiveChanged(object sender, DependencyPropertyChangedEventArgs e)
+        static void OnIsActiveChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             SheetTab tab = sender as SheetTab;
             if (tab != null)
@@ -153,13 +153,13 @@ namespace Dt.Cells.UI
         protected override void OnPointerEntered(PointerRoutedEventArgs e)
         {
             base.OnPointerEntered(e);
-            this.UpdateActiveStates();
+            UpdateActiveStates();
         }
 
         protected override void OnPointerExited(PointerRoutedEventArgs e)
         {
             base.OnPointerExited(e);
-            this.UpdateActiveStates();
+            UpdateActiveStates();
         }
 
         protected override void OnPointerPressed(PointerRoutedEventArgs e)
@@ -176,28 +176,28 @@ namespace Dt.Cells.UI
 
         internal void PrepareForDisplay()
         {
-            if (this._content != null)
+            if (_content != null)
             {
-                TextBlock txtDisplay = this.GetDisplayElement();
-                txtDisplay.Text = this.SheetName;
-                this._content.Content = txtDisplay;
-                this._isEditing = false;
+                TextBlock txtDisplay = GetDisplayElement();
+                txtDisplay.Text = SheetName;
+                _content.Content = txtDisplay;
+                _isEditing = false;
             }
         }
 
         internal void PrepareForEditing()
         {
-            if (this._content != null)
+            if (_content != null)
             {
-                TextBox editingElement = this.GetEditingElement();
-                editingElement.Text = this.SheetName;
-                this._content.Content = editingElement;
+                TextBox editingElement = GetEditingElement();
+                editingElement.Text = SheetName;
+                _content.Content = editingElement;
                 editingElement.KeyDown += txtEditor_KeyDown;
-                this._isEditing = true;
+                _isEditing = true;
             }
         }
 
-        private void txtEditor_KeyDown(object sender, KeyRoutedEventArgs e)
+        void txtEditor_KeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == (VirtualKey)0x20)
             {
@@ -211,9 +211,9 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void UpdateActiveStates()
+        void UpdateActiveStates()
         {
-            if (this.IsActive)
+            if (IsActive)
             {
                 VisualStateManager.GoToState(this, "Active", true);
             }

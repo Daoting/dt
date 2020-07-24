@@ -27,7 +27,7 @@ namespace Dt.Cells.UI
         /// <summary>
         /// SR will use it to reader string.
         /// </summary>
-        private static readonly ResourceManager _resources;
+        static readonly ResourceManager _resources;
 
         /// <summary>
         /// Static constructor.

@@ -20,9 +20,9 @@ namespace Dt.Cells.UI
     {
         internal RangeGroupStateChangedEventArgs(bool isRowGroup, int index, int level)
         {
-            this.IsRowGroup = isRowGroup;
-            this.Index = index;
-            this.Level = level;
+            IsRowGroup = isRowGroup;
+            Index = index;
+            Level = level;
         }
 
         /// <summary>

@@ -18,52 +18,52 @@ namespace Dt.Cells.UI
     internal struct TabularPosition
     {
         public static readonly TabularPosition Empty;
-        private readonly bool _isNotEmpty;
-        private readonly SheetArea _area;
-        private readonly int _row;
-        private readonly int _column;
+        readonly bool _isNotEmpty;
+        readonly SheetArea _area;
+        readonly int _row;
+        readonly int _column;
         public TabularPosition(SheetArea area, int row, int column)
         {
             this = new TabularPosition();
-            this._isNotEmpty = true;
-            this._area = area;
-            this._row = row;
-            this._column = column;
+            _isNotEmpty = true;
+            _area = area;
+            _row = row;
+            _column = column;
         }
 
         public bool IsEmpty
         {
-            get { return  !this._isNotEmpty; }
+            get { return  !_isNotEmpty; }
         }
         public SheetArea Area
         {
-            get { return  this._area; }
+            get { return  _area; }
         }
         public int Row
         {
             get
             {
-                if (this.IsEmpty)
+                if (IsEmpty)
                 {
                     return -1;
                 }
-                return this._row;
+                return _row;
             }
         }
         public int Column
         {
             get
             {
-                if (this.IsEmpty)
+                if (IsEmpty)
                 {
                     return -1;
                 }
-                return this._column;
+                return _column;
             }
         }
         public bool Equals(TabularPosition other)
         {
-            return ((((this._isNotEmpty == other._isNotEmpty) && (this._area == other._area)) && (this._row == other._row)) && (this._column == other._column));
+            return ((((_isNotEmpty == other._isNotEmpty) && (_area == other._area)) && (_row == other._row)) && (_column == other._column));
         }
 
         public override bool Equals(object obj)
@@ -73,16 +73,16 @@ namespace Dt.Cells.UI
                 return false;
             }
             TabularPosition other = (TabularPosition) obj;
-            return this.Equals(other);
+            return Equals(other);
         }
 
         public override int GetHashCode()
         {
-            if (!this._isNotEmpty)
+            if (!_isNotEmpty)
             {
                 return -1;
             }
-            return (int) (((((byte) this._area) << 0x1c) ^ (this._row << 14)) ^ this._column);
+            return (int) (((((byte) _area) << 0x1c) ^ (_row << 14)) ^ _column);
         }
 
         public static bool operator ==(TabularPosition left, TabularPosition right)

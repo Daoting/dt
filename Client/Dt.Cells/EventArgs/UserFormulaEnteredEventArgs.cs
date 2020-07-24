@@ -20,9 +20,9 @@ namespace Dt.Cells.UI
     {
         internal UserFormulaEnteredEventArgs(int row, int column, string formula)
         {
-            this.Row = row;
-            this.Column = column;
-            this.Formula = formula;
+            Row = row;
+            Column = column;
+            Formula = formula;
         }
 
         /// <summary>

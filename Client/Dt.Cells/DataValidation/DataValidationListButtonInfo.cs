@@ -18,19 +18,19 @@ namespace Dt.Cells.UI
     {
         public DataValidationListButtonInfo(DataValidator validator)
         {
-            this.RowViewportIndex = -2;
-            this.ColumnViewportIndex = -2;
-            this.Validator = validator;
+            RowViewportIndex = -2;
+            ColumnViewportIndex = -2;
+            Validator = validator;
         }
 
         public DataValidationListButtonInfo(DataValidator validator, int row, int column, Dt.Cells.Data.SheetArea sheetArea)
         {
-            this.Validator = validator;
-            this.Row = row;
-            this.Column = column;
-            this.SheetArea = sheetArea;
-            this.RowViewportIndex = -2;
-            this.ColumnViewportIndex = -2;
+            Validator = validator;
+            Row = row;
+            Column = column;
+            SheetArea = sheetArea;
+            RowViewportIndex = -2;
+            ColumnViewportIndex = -2;
         }
 
         public int Column { get; set; }

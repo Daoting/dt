@@ -22,7 +22,7 @@ namespace Dt.Cells.UI
         public const int Splitters = 0x63;
         public const int Trackers = 2;
 
-        private ZIndex()
+        ZIndex()
         {
         }
     }

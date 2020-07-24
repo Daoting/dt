@@ -30,14 +30,14 @@ namespace Dt.Cells.UI
     [TemplatePart(Name = "Root", Type = typeof(CellBackgroundPanel))]
     public partial class CellPresenter : CellPresenterBase
     {
-        private ConditionalFormatView _conditionalView;
-        private CustomDrawingObject _customDrawingObject;
-        private FrameworkElement _customDrawingObjectView;
-        private DataBarDrawingObject _dataBarObject;
-        private IconDrawingObject _iconObject;
-        private Sparkline _sparkInfo;
-        private BaseSparklineView _sparklineView;
-        private StrikethroughView _strikethroughView;
+        ConditionalFormatView _conditionalView;
+        CustomDrawingObject _customDrawingObject;
+        FrameworkElement _customDrawingObjectView;
+        DataBarDrawingObject _dataBarObject;
+        IconDrawingObject _iconObject;
+        Sparkline _sparkInfo;
+        BaseSparklineView _sparklineView;
+        StrikethroughView _strikethroughView;
 
         /// <summary>
         /// Creates a new instance of the <see cref="T:GrapeCity.Windows.SpreadSheet.UI.CellPresenter" /> class.
@@ -47,25 +47,25 @@ namespace Dt.Cells.UI
             base.DefaultStyleKey = typeof(CellPresenter);
         }
 
-        private void AttachSparklineEvents()
+        void AttachSparklineEvents()
         {
-            Sparkline sparkline = this._sparkInfo;
+            Sparkline sparkline = _sparkInfo;
             if (sparkline != null)
             {
-                sparkline.SparklineChanged += new EventHandler(this.sparkline_SparklineChanged);
+                sparkline.SparklineChanged += new EventHandler(sparkline_SparklineChanged);
             }
         }
 
         internal override void CleanUpBeforeDiscard()
         {
             base.CleanUpBeforeDiscard();
-            if (this._customDrawingObjectView != null)
+            if (_customDrawingObjectView != null)
             {
-                base.RootPanel.Children.Remove(this._customDrawingObjectView);
+                base.RootPanel.Children.Remove(_customDrawingObjectView);
             }
         }
 
-        private BaseSparklineView CreateSparkline(Sparkline info)
+        BaseSparklineView CreateSparkline(Sparkline info)
         {
             if (info.SparklineType == SparklineType.Column)
             {
@@ -81,166 +81,166 @@ namespace Dt.Cells.UI
         internal override void DetachEvents()
         {
             base.DetachEvents();
-            this.DettachSparklineEvents();
+            DettachSparklineEvents();
         }
 
-        private void DettachSparklineEvents()
+        void DettachSparklineEvents()
         {
-            Sparkline sparkline = this._sparkInfo;
+            Sparkline sparkline = _sparkInfo;
             if (sparkline != null)
             {
-                sparkline.SparklineChanged -= new EventHandler(this.sparkline_SparklineChanged);
+                sparkline.SparklineChanged -= new EventHandler(sparkline_SparklineChanged);
             }
         }
 
-        private void HideContent(bool visible)
+        void HideContent(bool visible)
         {
             base.SetContentVisible(visible);
         }
 
         internal override void Invalidate()
         {
-            if (this._sparklineView != null)
+            if (_sparklineView != null)
             {
-                this.UpdateSparkline();
+                UpdateSparkline();
             }
             base.Invalidate();
         }
 
-        private void sparkline_SparklineChanged(object sender, EventArgs e)
+        void sparkline_SparklineChanged(object sender, EventArgs e)
         {
             Sparkline sparkline = sender as Sparkline;
-            if ((this._sparklineView == null) || (this._sparklineView.SparklineType != sparkline.SparklineType))
+            if ((_sparklineView == null) || (_sparklineView.SparklineType != sparkline.SparklineType))
             {
-                if (this._sparklineView != null)
+                if (_sparklineView != null)
                 {
-                    base.RootPanel.Children.Remove(this._sparklineView);
-                    this._sparklineView = null;
+                    base.RootPanel.Children.Remove(_sparklineView);
+                    _sparklineView = null;
                 }
-                this.SynSparklineView();
+                SynSparklineView();
             }
             else
             {
-                this.UpdateSparkline();
+                UpdateSparkline();
             }
         }
 
-        private void SynContitionalView(out bool isContentVisible)
+        void SynContitionalView(out bool isContentVisible)
         {
             isContentVisible = true;
-            if ((this._dataBarObject != null) || (this._iconObject != null))
+            if ((_dataBarObject != null) || (_iconObject != null))
             {
-                if (this._conditionalView == null)
+                if (_conditionalView == null)
                 {
-                    this._conditionalView = new ConditionalFormatView(base.BindingCell);
-                    base.RootPanel.Children.Add(this._conditionalView);
-                    Canvas.SetZIndex(this._conditionalView, 500);
+                    _conditionalView = new ConditionalFormatView(base.BindingCell);
+                    base.RootPanel.Children.Add(_conditionalView);
+                    Canvas.SetZIndex(_conditionalView, 500);
                 }
-                this._conditionalView.SetDataBarObject(this._dataBarObject);
-                if (this._iconObject != null)
+                _conditionalView.SetDataBarObject(_dataBarObject);
+                if (_iconObject != null)
                 {
-                    this._conditionalView.SetImageContainer();
-                    this._conditionalView.SetIconObject(this._iconObject, base.SheetView.ZoomFactor, base.BindingCell);
+                    _conditionalView.SetImageContainer();
+                    _conditionalView.SetIconObject(_iconObject, base.SheetView.ZoomFactor, base.BindingCell);
                 }
                 bool flag = true;
-                if (flag && (this._dataBarObject != null))
+                if (flag && (_dataBarObject != null))
                 {
-                    flag = !this._dataBarObject.ShowBarOnly;
+                    flag = !_dataBarObject.ShowBarOnly;
                 }
-                if (flag && (this._iconObject != null))
+                if (flag && (_iconObject != null))
                 {
-                    flag = !this._iconObject.ShowIconOnly;
+                    flag = !_iconObject.ShowIconOnly;
                 }
                 isContentVisible = flag;
             }
             else
             {
-                if (this._conditionalView != null)
+                if (_conditionalView != null)
                 {
-                    base.RootPanel.Children.Remove(this._conditionalView);
-                    this._conditionalView = null;
+                    base.RootPanel.Children.Remove(_conditionalView);
+                    _conditionalView = null;
                 }
                 isContentVisible = true;
             }
         }
 
-        private void SynCustomDrawingObjectView(out bool isContentVisible)
+        void SynCustomDrawingObjectView(out bool isContentVisible)
         {
             isContentVisible = true;
-            if (this._customDrawingObject != null)
+            if (_customDrawingObject != null)
             {
-                isContentVisible = !this._customDrawingObject.ShowDrawingObjectOnly;
-                FrameworkElement rootElement = this._customDrawingObject.RootElement;
-                if (this._customDrawingObjectView != rootElement)
+                isContentVisible = !_customDrawingObject.ShowDrawingObjectOnly;
+                FrameworkElement rootElement = _customDrawingObject.RootElement;
+                if (_customDrawingObjectView != rootElement)
                 {
-                    if (this._customDrawingObjectView != null)
+                    if (_customDrawingObjectView != null)
                     {
-                        base.RootPanel.Children.Remove(this._customDrawingObjectView);
+                        base.RootPanel.Children.Remove(_customDrawingObjectView);
                     }
-                    this._customDrawingObjectView = rootElement;
-                    if (this._customDrawingObjectView != null)
+                    _customDrawingObjectView = rootElement;
+                    if (_customDrawingObjectView != null)
                     {
-                        Panel parent = this._customDrawingObjectView.Parent as Panel;
+                        Panel parent = _customDrawingObjectView.Parent as Panel;
                         if ((parent != null) && (parent != base.RootPanel))
                         {
-                            parent.Children.Remove(this._customDrawingObjectView);
+                            parent.Children.Remove(_customDrawingObjectView);
                         }
-                        if (!base.RootPanel.Children.Contains(this._customDrawingObjectView))
+                        if (!base.RootPanel.Children.Contains(_customDrawingObjectView))
                         {
-                            base.RootPanel.Children.Add(this._customDrawingObjectView);
+                            base.RootPanel.Children.Add(_customDrawingObjectView);
                         }
                     }
                 }
             }
-            else if (this._customDrawingObjectView != null)
+            else if (_customDrawingObjectView != null)
             {
-                base.RootPanel.Children.Remove(this._customDrawingObjectView);
-                this._customDrawingObjectView = null;
+                base.RootPanel.Children.Remove(_customDrawingObjectView);
+                _customDrawingObjectView = null;
             }
         }
 
-        private void SynSparklineView()
+        void SynSparklineView()
         {
             SheetView sheetView = base.SheetView;
             if (sheetView != null)
             {
-                if (this._sparkInfo != null)
+                if (_sparkInfo != null)
                 {
-                    if (this._sparklineView == null)
+                    if (_sparklineView == null)
                     {
-                        this._sparklineView = this.CreateSparkline(this._sparkInfo);
-                        this._sparklineView.ZoomFactor = base.OwningRow.OwningPresenter.Sheet.ZoomFactor;
-                        ((IThemeContextSupport)this._sparklineView).SetContext(sheetView.Worksheet);
-                        Canvas.SetZIndex(this._sparklineView, 0x3e8);
-                        base.RootPanel.Children.Add(this._sparklineView);
+                        _sparklineView = CreateSparkline(_sparkInfo);
+                        _sparklineView.ZoomFactor = base.OwningRow.OwningPresenter.Sheet.ZoomFactor;
+                        ((IThemeContextSupport)_sparklineView).SetContext(sheetView.Worksheet);
+                        Canvas.SetZIndex(_sparklineView, 0x3e8);
+                        base.RootPanel.Children.Add(_sparklineView);
                         if (base.SheetView != null)
                         {
-                            this._sparklineView.Update(new Windows.Foundation.Size(base.ActualWidth, base.ActualHeight), (double)base.SheetView.ZoomFactor);
+                            _sparklineView.Update(new Windows.Foundation.Size(base.ActualWidth, base.ActualHeight), (double)base.SheetView.ZoomFactor);
                         }
                     }
                 }
-                else if (this._sparklineView != null)
+                else if (_sparklineView != null)
                 {
-                    this.DettachSparklineEvents();
-                    base.RootPanel.Children.Remove(this._sparklineView);
-                    this._sparklineView = null;
+                    DettachSparklineEvents();
+                    base.RootPanel.Children.Remove(_sparklineView);
+                    _sparklineView = null;
                 }
             }
         }
 
-        private void SynStrikethroughView()
+        void SynStrikethroughView()
         {
             bool actualStrikethrough = base.BindingCell.ActualStrikethrough;
-            if (this._strikethroughView != null)
+            if (_strikethroughView != null)
             {
-                base.RootPanel.Children.Remove(this._strikethroughView);
-                this._strikethroughView = null;
+                base.RootPanel.Children.Remove(_strikethroughView);
+                _strikethroughView = null;
             }
-            if (actualStrikethrough && (this._strikethroughView == null))
+            if (actualStrikethrough && (_strikethroughView == null))
             {
-                this._strikethroughView = new StrikethroughView(base.BindingCell, base.RootPanel);
-                this._strikethroughView.SetLines(base.SheetView.ZoomFactor, base.BindingCell);
-                base.RootPanel.Children.Add(this._strikethroughView);
+                _strikethroughView = new StrikethroughView(base.BindingCell, base.RootPanel);
+                _strikethroughView.SetLines(base.SheetView.ZoomFactor, base.BindingCell);
+                base.RootPanel.Children.Add(_strikethroughView);
             }
         }
 
@@ -261,10 +261,10 @@ namespace Dt.Cells.UI
                 column = base.CellLayout.Column;
             }
             Sparkline objB = sheet.GetSparkline(row, column);
-            if (!object.Equals(this._sparkInfo, objB))
+            if (!object.Equals(_sparkInfo, objB))
             {
-                this.SparkLine = objB;
-                this.SynSparklineView();
+                SparkLine = objB;
+                SynSparklineView();
                 flag = true;
             }
             bool flag2 = false;
@@ -298,7 +298,7 @@ namespace Dt.Cells.UI
                         if (obj3 != null)
                         {
                             flag2 = true;
-                            this._dataBarObject = obj3;
+                            _dataBarObject = obj3;
                             flag = true;
                             continue;
                         }
@@ -309,7 +309,7 @@ namespace Dt.Cells.UI
                         if (obj4 != null)
                         {
                             flag3 = true;
-                            this._iconObject = obj4;
+                            _iconObject = obj4;
                             flag = true;
                             continue;
                         }
@@ -320,7 +320,7 @@ namespace Dt.Cells.UI
                         if (obj5 != null)
                         {
                             flag4 = true;
-                            this._customDrawingObject = obj5;
+                            _customDrawingObject = obj5;
                             flag = true;
                         }
                     }
@@ -328,25 +328,25 @@ namespace Dt.Cells.UI
             }
             if (!flag2)
             {
-                this._dataBarObject = null;
+                _dataBarObject = null;
             }
             if (!flag3)
             {
-                this._iconObject = null;
+                _iconObject = null;
             }
             bool flag5 = false;
             bool isContentVisible = true;
-            this.SynContitionalView(out isContentVisible);
+            SynContitionalView(out isContentVisible);
             flag5 |= !isContentVisible;
-            this.SynStrikethroughView();
+            SynStrikethroughView();
             if (!flag4)
             {
-                this._customDrawingObject = null;
+                _customDrawingObject = null;
             }
             bool flag7 = true;
-            this.SynCustomDrawingObjectView(out flag7);
+            SynCustomDrawingObjectView(out flag7);
             flag5 |= !flag7;
-            this.HideContent(!flag5);
+            HideContent(!flag5);
             bool flag8 = base.TryUpdateVisualTree();
             if (!flag)
             {
@@ -355,11 +355,11 @@ namespace Dt.Cells.UI
             return true;
         }
 
-        private void UpdateSparkline()
+        void UpdateSparkline()
         {
             if (base.SheetView != null)
             {
-                BaseSparklineView view = this._sparklineView;
+                BaseSparklineView view = _sparklineView;
                 if (view != null)
                 {
                     view.Update(new Windows.Foundation.Size(base.ActualWidth, base.ActualHeight), (double)base.SheetView.ZoomFactor);
@@ -393,7 +393,7 @@ namespace Dt.Cells.UI
 
         internal override bool IsRecylable
         {
-            get { return ((this._customDrawingObject == null) && base.IsRecylable); }
+            get { return ((_customDrawingObject == null) && base.IsRecylable); }
         }
 
         /// <summary>
@@ -404,21 +404,21 @@ namespace Dt.Cells.UI
             get { return base.OwningRow.OwningPresenter.Sheet.Worksheet.IsSelected(base.Row, base.Column); }
         }
 
-        private Sparkline SparkLine
+        Sparkline SparkLine
         {
-            get { return this._sparkInfo; }
+            get { return _sparkInfo; }
             set
             {
-                if (this._sparkInfo != value)
+                if (_sparkInfo != value)
                 {
-                    this.DettachSparklineEvents();
-                    if (this._sparklineView != null)
+                    DettachSparklineEvents();
+                    if (_sparklineView != null)
                     {
-                        base.RootPanel.Children.Remove(this._sparklineView);
-                        this._sparklineView = null;
+                        base.RootPanel.Children.Remove(_sparklineView);
+                        _sparklineView = null;
                     }
-                    this._sparkInfo = value;
-                    this.AttachSparklineEvents();
+                    _sparkInfo = value;
+                    AttachSparklineEvents();
                     base.InvalidateMeasure();
                 }
             }
@@ -426,105 +426,105 @@ namespace Dt.Cells.UI
     }
     internal partial class ConditionalFormatView : Panel
     {
-        private Canvas _axisCanvas;
-        private Windows.UI.Xaml.Shapes.Line _axisLine;
-        private Cell _bindingCell;
-        private double _cachedAxisPosition;
-        private Windows.UI.Color _cachedFillColor;
-        private GradientStop _cachedGradientEnd;
-        private GradientStop _cachedGradientStart;
-        private GradientStop _cachedGradientTransparentEnd;
-        private Image _cachedImage;
-        private double _cachedScale;
-        private float _cachedZoomFactor;
-        private LinearGradientBrush _dataBarBackground;
-        private DataBarDrawingObject _databarObject;
-        private Rectangle _dataBarRectangle;
-        private IconDrawingObject _iconObject;
-        private Border _imageContainer;
-        private const int AxisWidth = 1;
+        Canvas _axisCanvas;
+        Windows.UI.Xaml.Shapes.Line _axisLine;
+        Cell _bindingCell;
+        double _cachedAxisPosition;
+        Windows.UI.Color _cachedFillColor;
+        GradientStop _cachedGradientEnd;
+        GradientStop _cachedGradientStart;
+        GradientStop _cachedGradientTransparentEnd;
+        Image _cachedImage;
+        double _cachedScale;
+        float _cachedZoomFactor;
+        LinearGradientBrush _dataBarBackground;
+        DataBarDrawingObject _databarObject;
+        Rectangle _dataBarRectangle;
+        IconDrawingObject _iconObject;
+        Border _imageContainer;
+        const int AxisWidth = 1;
         public const int DatabarZIndex = 100;
-        private const int DefaultIcontHeight = 0x10;
-        private const int DefaultIconWidth = 0x10;
+        const int DefaultIcontHeight = 0x10;
+        const int DefaultIconWidth = 0x10;
         public const int IconSetZIndex = 200;
-        private const int ViewMargin = 1;
+        const int ViewMargin = 1;
 
         public ConditionalFormatView(Cell bindingCell)
         {
             base.Margin = new Windows.UI.Xaml.Thickness(1.0);
             base.UseLayoutRounding = true;
-            this._bindingCell = bindingCell;
-            this._axisCanvas = new Canvas();
+            _bindingCell = bindingCell;
+            _axisCanvas = new Canvas();
             Windows.UI.Xaml.Shapes.Line line = new Windows.UI.Xaml.Shapes.Line();
             line.StrokeThickness = 1.0;
             line.StrokeDashArray = new DoubleCollection { 2.0, 1.0 };
-            this._axisLine = line;
-            this._axisCanvas.Children.Add(this._axisLine);
-            base.Children.Add(this._axisCanvas);
-            this._databarObject = null;
-            this._dataBarRectangle = new Rectangle();
-            this._dataBarRectangle.UseLayoutRounding = true;
-            base.Children.Add(this._dataBarRectangle);
-            this._dataBarBackground = new LinearGradientBrush();
+            _axisLine = line;
+            _axisCanvas.Children.Add(_axisLine);
+            base.Children.Add(_axisCanvas);
+            _databarObject = null;
+            _dataBarRectangle = new Rectangle();
+            _dataBarRectangle.UseLayoutRounding = true;
+            base.Children.Add(_dataBarRectangle);
+            _dataBarBackground = new LinearGradientBrush();
             GradientStop stop = new GradientStop();
             stop.Color = Colors.Transparent;
             stop.Offset = 0.0;
-            this._cachedGradientStart = stop;
-            this._dataBarBackground.GradientStops.Add(this._cachedGradientStart);
+            _cachedGradientStart = stop;
+            _dataBarBackground.GradientStops.Add(_cachedGradientStart);
             GradientStop stop2 = new GradientStop();
             stop2.Color = Colors.Transparent;
             stop2.Offset = 0.0;
-            this._cachedGradientEnd = stop2;
-            this._dataBarBackground.GradientStops.Add(this._cachedGradientEnd);
+            _cachedGradientEnd = stop2;
+            _dataBarBackground.GradientStops.Add(_cachedGradientEnd);
             GradientStop stop3 = new GradientStop();
             stop3.Color = Colors.Transparent;
             stop3.Offset = 0.0;
-            this._cachedGradientTransparentEnd = stop3;
-            this._dataBarBackground.GradientStops.Add(this._cachedGradientTransparentEnd);
-            this._dataBarBackground.EndPoint = new Windows.Foundation.Point(1.0, 0.0);
-            this._dataBarRectangle.Fill = this._dataBarBackground;
-            this._iconObject = null;
-            this._imageContainer = new Border();
-            this._imageContainer.Style = null;
-            this._cachedImage = new Image();
-            this._cachedImage.HorizontalAlignment = HorizontalAlignment.Left;
-            this._imageContainer.Child = this._cachedImage;
+            _cachedGradientTransparentEnd = stop3;
+            _dataBarBackground.GradientStops.Add(_cachedGradientTransparentEnd);
+            _dataBarBackground.EndPoint = new Windows.Foundation.Point(1.0, 0.0);
+            _dataBarRectangle.Fill = _dataBarBackground;
+            _iconObject = null;
+            _imageContainer = new Border();
+            _imageContainer.Style = null;
+            _cachedImage = new Image();
+            _cachedImage.HorizontalAlignment = HorizontalAlignment.Left;
+            _imageContainer.Child = _cachedImage;
         }
 
-        private void ArrangeAxis(Windows.Foundation.Size availableSize)
+        void ArrangeAxis(Windows.Foundation.Size availableSize)
         {
-            this._axisCanvas.Width = availableSize.Width;
-            this._axisCanvas.Height = availableSize.Height;
-            double num = Math.Round((double)(availableSize.Width * this._cachedAxisPosition));
+            _axisCanvas.Width = availableSize.Width;
+            _axisCanvas.Height = availableSize.Height;
+            double num = Math.Round((double)(availableSize.Width * _cachedAxisPosition));
             if ((num > 0.0) && (num < availableSize.Width))
             {
-                this._axisLine.StrokeThickness = 1.0;
-                this._axisLine.X1 = num + 0.5;
-                this._axisLine.Y1 = -1.0;
-                this._axisLine.X2 = this._axisLine.X1;
-                this._axisLine.Y2 = availableSize.Height + 1.0;
+                _axisLine.StrokeThickness = 1.0;
+                _axisLine.X1 = num + 0.5;
+                _axisLine.Y1 = -1.0;
+                _axisLine.X2 = _axisLine.X1;
+                _axisLine.Y2 = availableSize.Height + 1.0;
             }
             else
             {
-                this._axisLine.StrokeThickness = 0.0;
-                this._axisLine.X1 = 0.0;
-                this._axisLine.Y1 = 0.0;
-                this._axisLine.X2 = 0.0;
-                this._axisLine.Y2 = 0.0;
+                _axisLine.StrokeThickness = 0.0;
+                _axisLine.X1 = 0.0;
+                _axisLine.Y1 = 0.0;
+                _axisLine.X2 = 0.0;
+                _axisLine.Y2 = 0.0;
             }
-            this._axisCanvas.Arrange(new Windows.Foundation.Rect(0.0, 0.0, availableSize.Width, availableSize.Height));
+            _axisCanvas.Arrange(new Windows.Foundation.Rect(0.0, 0.0, availableSize.Width, availableSize.Height));
         }
 
-        private void ArrangeDataBarRectangle(Windows.Foundation.Size availableSize)
+        void ArrangeDataBarRectangle(Windows.Foundation.Size availableSize)
         {
-            double num = Math.Round((double)(availableSize.Width * this._cachedAxisPosition));
-            double width = Math.Round((double)(availableSize.Width * Math.Abs(this._cachedScale)));
+            double num = Math.Round((double)(availableSize.Width * _cachedAxisPosition));
+            double width = Math.Round((double)(availableSize.Width * Math.Abs(_cachedScale)));
             Windows.Foundation.Rect empty = Windows.Foundation.Rect.Empty;
-            if ((this._cachedAxisPosition > 0.0) && (this._cachedAxisPosition < 1.0))
+            if ((_cachedAxisPosition > 0.0) && (_cachedAxisPosition < 1.0))
             {
-                if (this._cachedScale >= 0.0)
+                if (_cachedScale >= 0.0)
                 {
-                    double x = num + this._axisLine.StrokeThickness;
+                    double x = num + _axisLine.StrokeThickness;
                     empty = new Windows.Foundation.Rect(x, 0.0, width, availableSize.Height);
                 }
                 else
@@ -533,7 +533,7 @@ namespace Dt.Cells.UI
                     empty = new Windows.Foundation.Rect(num4, 0.0, width, availableSize.Height);
                 }
             }
-            else if (this._cachedScale >= 0.0)
+            else if (_cachedScale >= 0.0)
             {
                 empty = new Windows.Foundation.Rect(0.0, 0.0, width, availableSize.Height);
             }
@@ -542,61 +542,61 @@ namespace Dt.Cells.UI
                 empty = new Windows.Foundation.Rect(availableSize.Width - width, 0.0, width, availableSize.Height);
             }
             empty.Intersect(new Windows.Foundation.Rect(0.0, 0.0, availableSize.Width, availableSize.Height));
-            this._dataBarRectangle.Arrange(empty);
+            _dataBarRectangle.Arrange(empty);
         }
 
-        private void ArrangeIconSet(Windows.Foundation.Size availableSize)
+        void ArrangeIconSet(Windows.Foundation.Size availableSize)
         {
-            this._imageContainer.Arrange(new Windows.Foundation.Rect(0.0, 0.0, availableSize.Width, availableSize.Height));
+            _imageContainer.Arrange(new Windows.Foundation.Rect(0.0, 0.0, availableSize.Width, availableSize.Height));
         }
 
         protected override Windows.Foundation.Size ArrangeOverride(Windows.Foundation.Size finalSize)
         {
-            this.ArrangeAxis(finalSize);
-            this.ArrangeDataBarRectangle(finalSize);
-            this.ArrangeIconSet(finalSize);
+            ArrangeAxis(finalSize);
+            ArrangeDataBarRectangle(finalSize);
+            ArrangeIconSet(finalSize);
             return base.ArrangeOverride(finalSize);
         }
 
-        private void ClearDataBar()
+        void ClearDataBar()
         {
-            this._cachedAxisPosition = 0.0;
-            this._axisLine.Stroke = null;
-            this._axisLine.StrokeThickness = 0.0;
-            this._axisLine.X1 = 0.0;
-            this._axisLine.Y1 = 0.0;
-            this._axisLine.X2 = 0.0;
-            this._axisLine.Y2 = 0.0;
-            this._cachedGradientStart.Color = Colors.Transparent;
-            this._cachedGradientEnd.Color = Colors.Transparent;
-            this._cachedGradientTransparentEnd.Color = Colors.Transparent;
-            this._cachedScale = 0.0;
+            _cachedAxisPosition = 0.0;
+            _axisLine.Stroke = null;
+            _axisLine.StrokeThickness = 0.0;
+            _axisLine.X1 = 0.0;
+            _axisLine.Y1 = 0.0;
+            _axisLine.X2 = 0.0;
+            _axisLine.Y2 = 0.0;
+            _cachedGradientStart.Color = Colors.Transparent;
+            _cachedGradientEnd.Color = Colors.Transparent;
+            _cachedGradientTransparentEnd.Color = Colors.Transparent;
+            _cachedScale = 0.0;
         }
 
-        private void ClearIcon()
+        void ClearIcon()
         {
-            if (this._cachedImage != null)
+            if (_cachedImage != null)
             {
-                this._cachedImage.Source = null;
+                _cachedImage.Source = null;
             }
         }
 
         protected override Windows.Foundation.Size MeasureOverride(Windows.Foundation.Size availableSize)
         {
-            this._imageContainer.Measure(availableSize);
+            _imageContainer.Measure(availableSize);
             return base.MeasureOverride(availableSize);
         }
 
-        private void SetDataBarAxis()
+        void SetDataBarAxis()
         {
             Action action = null;
-            if (this._databarObject != null)
+            if (_databarObject != null)
             {
-                this._cachedAxisPosition = (this._databarObject.DataBarDirection == BarDirection.LeftToRight) ? this._databarObject.DataBarAxisPosition : (1.0 - this._databarObject.DataBarAxisPosition);
-                if ((this._cachedAxisPosition <= 0.0) || (this._cachedAxisPosition >= 1.0))
+                _cachedAxisPosition = (_databarObject.DataBarDirection == BarDirection.LeftToRight) ? _databarObject.DataBarAxisPosition : (1.0 - _databarObject.DataBarAxisPosition);
+                if ((_cachedAxisPosition <= 0.0) || (_cachedAxisPosition >= 1.0))
                 {
-                    this._axisLine.Stroke = null;
-                    this._axisLine.StrokeThickness = 0.0;
+                    _axisLine.Stroke = null;
+                    _axisLine.StrokeThickness = 0.0;
                 }
                 else
                 {
@@ -604,119 +604,119 @@ namespace Dt.Cells.UI
                     {
                         action = delegate
                         {
-                            this._axisLine.Stroke = new SolidColorBrush(this._databarObject.AxisColor);
+                            _axisLine.Stroke = new SolidColorBrush(_databarObject.AxisColor);
                         };
                     }
                     Dt.Cells.Data.UIAdaptor.InvokeSync(action);
-                    this._axisLine.StrokeThickness = 1.0;
+                    _axisLine.StrokeThickness = 1.0;
                 }
             }
         }
 
-        private void SetDataBarBorder()
+        void SetDataBarBorder()
         {
             Action action = null;
-            if ((this._databarObject != null) && this._databarObject.ShowBorder)
+            if ((_databarObject != null) && _databarObject.ShowBorder)
             {
-                this._dataBarRectangle.StrokeThickness = 1.0;
+                _dataBarRectangle.StrokeThickness = 1.0;
                 if (action == null)
                 {
                     action = delegate
                     {
-                        this._dataBarRectangle.Stroke = new SolidColorBrush(this._databarObject.BorderColor);
+                        _dataBarRectangle.Stroke = new SolidColorBrush(_databarObject.BorderColor);
                     };
                 }
                 Dt.Cells.Data.UIAdaptor.InvokeSync(action);
             }
             else
             {
-                this._dataBarRectangle.StrokeThickness = 0.0;
-                this._dataBarRectangle.Stroke = null;
+                _dataBarRectangle.StrokeThickness = 0.0;
+                _dataBarRectangle.Stroke = null;
             }
         }
 
-        private void SetDataBarColor()
+        void SetDataBarColor()
         {
-            if (this._databarObject != null)
+            if (_databarObject != null)
             {
-                this._cachedFillColor = this._databarObject.Color;
-                if (this._databarObject.Gradient)
+                _cachedFillColor = _databarObject.Color;
+                if (_databarObject.Gradient)
                 {
-                    this._cachedGradientStart.Color = this._cachedFillColor;
+                    _cachedGradientStart.Color = _cachedFillColor;
                     float num = 0.9f;
-                    this._cachedGradientEnd.Color = Windows.UI.Color.FromArgb(this._cachedFillColor.A, (byte)((255f * num) + (this._cachedFillColor.R * (1f - num))), (byte)((255f * num) + (this._cachedFillColor.G * (1f - num))), (byte)((255f * num) + (this._cachedFillColor.B * (1f - num))));
+                    _cachedGradientEnd.Color = Windows.UI.Color.FromArgb(_cachedFillColor.A, (byte)((255f * num) + (_cachedFillColor.R * (1f - num))), (byte)((255f * num) + (_cachedFillColor.G * (1f - num))), (byte)((255f * num) + (_cachedFillColor.B * (1f - num))));
                 }
                 else
                 {
-                    this._cachedGradientStart.Color = this._cachedFillColor;
-                    this._cachedGradientEnd.Color = this._cachedFillColor;
-                    this._cachedGradientTransparentEnd.Color = this._cachedFillColor;
+                    _cachedGradientStart.Color = _cachedFillColor;
+                    _cachedGradientEnd.Color = _cachedFillColor;
+                    _cachedGradientTransparentEnd.Color = _cachedFillColor;
                 }
             }
         }
 
         public void SetDataBarObject(DataBarDrawingObject databarObject)
         {
-            if (!object.Equals(this._databarObject, databarObject))
+            if (!object.Equals(_databarObject, databarObject))
             {
-                this._databarObject = databarObject;
-                if (this._databarObject != null)
+                _databarObject = databarObject;
+                if (_databarObject != null)
                 {
-                    this.SetDataBarAxis();
-                    this.SetDataBarScale();
-                    this.SetDataBarColor();
-                    this.SetDataBarBorder();
+                    SetDataBarAxis();
+                    SetDataBarScale();
+                    SetDataBarColor();
+                    SetDataBarBorder();
                 }
                 else
                 {
-                    this.ClearDataBar();
+                    ClearDataBar();
                 }
                 base.InvalidateMeasure();
                 base.InvalidateArrange();
             }
         }
 
-        private void SetDataBarScale()
+        void SetDataBarScale()
         {
-            if (this._databarObject != null)
+            if (_databarObject != null)
             {
-                this._cachedScale = (this._databarObject.DataBarDirection == BarDirection.LeftToRight) ? this._databarObject.Scale : -this._databarObject.Scale;
-                Math.Abs(this._cachedScale);
-                if (this._cachedScale >= 0.0)
+                _cachedScale = (_databarObject.DataBarDirection == BarDirection.LeftToRight) ? _databarObject.Scale : -_databarObject.Scale;
+                Math.Abs(_cachedScale);
+                if (_cachedScale >= 0.0)
                 {
-                    this._dataBarBackground.StartPoint = new Windows.Foundation.Point(0.0, 0.0);
-                    this._dataBarBackground.EndPoint = new Windows.Foundation.Point(1.0, 0.0);
+                    _dataBarBackground.StartPoint = new Windows.Foundation.Point(0.0, 0.0);
+                    _dataBarBackground.EndPoint = new Windows.Foundation.Point(1.0, 0.0);
                 }
                 else
                 {
-                    this._dataBarBackground.StartPoint = new Windows.Foundation.Point(1.0, 0.0);
-                    this._dataBarBackground.EndPoint = new Windows.Foundation.Point(0.0, 0.0);
+                    _dataBarBackground.StartPoint = new Windows.Foundation.Point(1.0, 0.0);
+                    _dataBarBackground.EndPoint = new Windows.Foundation.Point(0.0, 0.0);
                 }
-                this._cachedGradientEnd.Offset = 1.0;
-                this._cachedGradientTransparentEnd.Offset = 1.0;
+                _cachedGradientEnd.Offset = 1.0;
+                _cachedGradientTransparentEnd.Offset = 1.0;
             }
         }
 
         public void SetIconObject(IconDrawingObject iconObject, float zoomFactor, Cell bindingCell)
         {
-            if (!object.Equals(this._iconObject, iconObject))
+            if (!object.Equals(_iconObject, iconObject))
             {
                 if (iconObject != null)
                 {
-                    this._cachedImage.Source = ConditionalFormatIcons.GetIconSource(iconObject.IconSetType, iconObject.IndexOfIcon);
+                    _cachedImage.Source = ConditionalFormatIcons.GetIconSource(iconObject.IconSetType, iconObject.IndexOfIcon);
                 }
                 else
                 {
-                    this.ClearIcon();
+                    ClearIcon();
                 }
-                this._iconObject = iconObject;
+                _iconObject = iconObject;
                 base.InvalidateMeasure();
                 base.InvalidateArrange();
             }
-            if ((this._iconObject != null) && (this._cachedImage != null))
+            if ((_iconObject != null) && (_cachedImage != null))
             {
                 HorizontalAlignment left = HorizontalAlignment.Left;
-                if (this._iconObject.ShowIconOnly)
+                if (_iconObject.ShowIconOnly)
                 {
                     switch (bindingCell.ActualHorizontalAlignment)
                     {
@@ -729,15 +729,15 @@ namespace Dt.Cells.UI
                             break;
                     }
                 }
-                this._cachedImage.HorizontalAlignment = left;
+                _cachedImage.HorizontalAlignment = left;
                 VerticalAlignment alignment2 = bindingCell.ActualVerticalAlignment.ToVerticalAlignment();
-                this._cachedImage.VerticalAlignment = alignment2;
+                _cachedImage.VerticalAlignment = alignment2;
             }
-            if (this._cachedZoomFactor != zoomFactor)
+            if (_cachedZoomFactor != zoomFactor)
             {
-                this._cachedImage.Width = (double)(16f * zoomFactor);
-                this._cachedImage.Height = (double)(16f * zoomFactor);
-                this._cachedZoomFactor = zoomFactor;
+                _cachedImage.Width = (double)(16f * zoomFactor);
+                _cachedImage.Height = (double)(16f * zoomFactor);
+                _cachedZoomFactor = zoomFactor;
                 base.InvalidateMeasure();
                 base.InvalidateArrange();
             }
@@ -745,18 +745,18 @@ namespace Dt.Cells.UI
 
         public void SetImageContainer()
         {
-            if (!base.Children.Contains(this._imageContainer))
+            if (!base.Children.Contains(_imageContainer))
             {
-                base.Children.Add(this._imageContainer);
+                base.Children.Add(_imageContainer);
             }
         }
 
         public static class ConditionalFormatIcons
         {
             [ThreadStatic]
-            private static string[,] _cachedIconNames;
+            static string[,] _cachedIconNames;
             [ThreadStatic]
-            private static ImageSource[,] _cachedImageSources;
+            static ImageSource[,] _cachedImageSources;
 
             public static ImageSource GetIconSource(IconSetType iconType, int iconIndex)
             {
@@ -772,7 +772,7 @@ namespace Dt.Cells.UI
                 return source;
             }
 
-            private static string[,] CachedIconNames
+            static string[,] CachedIconNames
             {
                 get
                 {
@@ -860,7 +860,7 @@ namespace Dt.Cells.UI
                 }
             }
 
-            private static ImageSource[,] CachedImageSources
+            static ImageSource[,] CachedImageSources
             {
                 get
                 {

@@ -34,20 +34,20 @@ namespace Dt.Cells.UI
     /// </summary>
     public sealed partial class FormulaTextBox : TextBox, IFormulaEditor
     {
-        private DispatcherTimer _doubleClickTimer;
-        private string _footer;
-        private List<FormulaFunction> _functionList;
-        private ListBox _functionListBox = new ListBox();
-        private Windows.UI.Xaml.Controls.Primitives.Popup _functionPopup = new Windows.UI.Xaml.Controls.Primitives.Popup();
-        private TextBox _functionTextBlock = new TextBox();
-        private string _header;
-        private int _length;
-        private Windows.UI.Xaml.Controls.Primitives.Popup _namePopup = new Windows.UI.Xaml.Controls.Primitives.Popup();
-        private bool _selectionChanged;
-        private Excel _spreadSheet;
-        private int _startIndex = -1;
-        private bool _textChanged;
-        private DispatcherTimer _timer;
+        DispatcherTimer _doubleClickTimer;
+        string _footer;
+        List<FormulaFunction> _functionList;
+        ListBox _functionListBox = new ListBox();
+        Windows.UI.Xaml.Controls.Primitives.Popup _functionPopup = new Windows.UI.Xaml.Controls.Primitives.Popup();
+        TextBox _functionTextBlock = new TextBox();
+        string _header;
+        int _length;
+        Windows.UI.Xaml.Controls.Primitives.Popup _namePopup = new Windows.UI.Xaml.Controls.Primitives.Popup();
+        bool _selectionChanged;
+        Excel _spreadSheet;
+        int _startIndex = -1;
+        bool _textChanged;
+        DispatcherTimer _timer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.UI.FormulaTextBox" /> class.
@@ -55,96 +55,96 @@ namespace Dt.Cells.UI
         public FormulaTextBox()
         {
             base.AcceptsReturn = false;
-            this.WireEvents();
+            WireEvents();
             Border border = new Border();
             border.Padding = new Windows.UI.Xaml.Thickness(2.0);
             border.BorderBrush = new SolidColorBrush(Colors.Gray);
             border.BorderThickness = new Windows.UI.Xaml.Thickness(1.0);
             border.CornerRadius = new Windows.UI.Xaml.CornerRadius(2.0);
             border.Background = new SolidColorBrush(Colors.White);
-            border.Child = this._functionTextBlock;
-            this._functionPopup.Child = border;
-            this._functionPopup.Height = 35.0;
-            this._functionListBox.MaxHeight = 130.0;
-            this._functionListBox.Width = 200.0;
+            border.Child = _functionTextBlock;
+            _functionPopup.Child = border;
+            _functionPopup.Height = 35.0;
+            _functionListBox.MaxHeight = 130.0;
+            _functionListBox.Width = 200.0;
             ResourceDictionary dictionary = null;
             Uri uri = new Uri("ms-appx:///Dt.Cells/Themes/DataLableTemplate.xaml");
             dictionary = new ResourceDictionary();
             Application.LoadComponent(dictionary, uri);
-            this._functionListBox.ItemTemplate = dictionary["ListBoxItemTemplate"] as DataTemplate;
-            this._functionListBox.AddHandler(UIElement.PointerReleasedEvent, new PointerEventHandler(this.FunctionListBoxPointerReleased), true);
+            _functionListBox.ItemTemplate = dictionary["ListBoxItemTemplate"] as DataTemplate;
+            _functionListBox.AddHandler(UIElement.PointerReleasedEvent, new PointerEventHandler(FunctionListBoxPointerReleased), true);
             _functionListBox.KeyUp += FunctionListBoxKeyUp;
             Border border2 = new Border();
             border2.BorderBrush = new SolidColorBrush(Colors.Gray);
             border2.BorderThickness = new Windows.UI.Xaml.Thickness(1.0);
             border2.CornerRadius = new Windows.UI.Xaml.CornerRadius(2.0);
             border2.Background = new SolidColorBrush(Colors.White);
-            border2.Child = this._functionListBox;
-            this._namePopup.Child = border2;
+            border2.Child = _functionListBox;
+            _namePopup.Child = border2;
         }
 
-        private void ChooseFunctionName()
+        void ChooseFunctionName()
         {
-            if (this._functionListBox.SelectedItem != null)
+            if (_functionListBox.SelectedItem != null)
             {
-                string str = this._functionListBox.SelectedItem.ToString();
-                string str2 = base.Text.Remove(this._startIndex, this._length).Insert(this._startIndex, str + "(");
+                string str = _functionListBox.SelectedItem.ToString();
+                string str2 = base.Text.Remove(_startIndex, _length).Insert(_startIndex, str + "(");
                 base.Text = str2;
-                this._namePopup.IsOpen = false;
-                this.Focus(FocusState.Programmatic);
-                base.Select((this._startIndex + str.Length) + 1, 0);
-                this._functionTextBlock.Text = (this._functionListBox.SelectedItem as FormulaFunction).FullName;
+                _namePopup.IsOpen = false;
+                Focus(FocusState.Programmatic);
+                base.Select((_startIndex + str.Length) + 1, 0);
+                _functionTextBlock.Text = (_functionListBox.SelectedItem as FormulaFunction).FullName;
                 Windows.Foundation.Point point = new Windows.Foundation.Point(0.0, base.ActualHeight);
                 point = base.TransformToVisual(null).TransformPoint(point);
-                this._functionPopup.HorizontalOffset = point.X;
-                this._functionPopup.VerticalOffset = point.Y;
-                this._functionPopup.IsOpen = true;
+                _functionPopup.HorizontalOffset = point.X;
+                _functionPopup.VerticalOffset = point.Y;
+                _functionPopup.IsOpen = true;
             }
         }
 
-        private void DisposeDoubleClickTimer()
+        void DisposeDoubleClickTimer()
         {
-            if (this._doubleClickTimer != null)
+            if (_doubleClickTimer != null)
             {
-                this._doubleClickTimer.Stop();
-                this._doubleClickTimer = null;
+                _doubleClickTimer.Stop();
+                _doubleClickTimer = null;
             }
         }
 
-        private void FunctionListBoxKeyUp(object sender, KeyRoutedEventArgs e)
+        void FunctionListBoxKeyUp(object sender, KeyRoutedEventArgs e)
         {
             if (e.Key == VirtualKey.Enter)
             {
-                this.ChooseFunctionName();
-                this.MoveFocusToFormulaBar();
+                ChooseFunctionName();
+                MoveFocusToFormulaBar();
             }
         }
 
-        private void FunctionListBoxPointerReleased(object sender, PointerRoutedEventArgs e)
+        void FunctionListBoxPointerReleased(object sender, PointerRoutedEventArgs e)
         {
-            if (this._doubleClickTimer == null)
+            if (_doubleClickTimer == null)
             {
-                this._doubleClickTimer = new DispatcherTimer();
-                this._doubleClickTimer.Interval = new TimeSpan(0, 0, 0, 0, 400);
-                DispatcherTimer timer = this._doubleClickTimer;
+                _doubleClickTimer = new DispatcherTimer();
+                _doubleClickTimer.Interval = new TimeSpan(0, 0, 0, 0, 400);
+                DispatcherTimer timer = _doubleClickTimer;
                 _doubleClickTimer.Tick += (obj, ex) =>
                 {
                     DisposeDoubleClickTimer();
                 };
-                this._doubleClickTimer.Start();
+                _doubleClickTimer.Start();
             }
             else
             {
-                this.DisposeDoubleClickTimer();
-                this.ChooseFunctionName();
-                this.MoveFocusToFormulaBar();
+                DisposeDoubleClickTimer();
+                ChooseFunctionName();
+                MoveFocusToFormulaBar();
             }
         }
 
         /// <summary>
         /// 找到名字开端，从而从字符串中分离出名字，名字已在字符串末端
         /// </summary>
-        private int GetNameStartIndex(string s, bool forNamePopup)
+        int GetNameStartIndex(string s, bool forNamePopup)
         {
             bool flag = false;
             int num = 0;
@@ -154,12 +154,12 @@ namespace Dt.Cells.UI
                 num = s.Length - 1;
                 while (num >= 0)
                 {
-                    bool? nullable = this.IsNameChar(s[num]);
+                    bool? nullable = IsNameChar(s[num]);
                     if (!nullable.GetValueOrDefault() && nullable.HasValue)
                     {
                         return num;
                     }
-                    if (!this.IsNameChar(s[num]).HasValue)
+                    if (!IsNameChar(s[num]).HasValue)
                     {
                         flag = true;
                         break;
@@ -173,7 +173,7 @@ namespace Dt.Cells.UI
                         num -= 6;
                         while (num >= 0)
                         {
-                            bool? nullable3 = this.IsNameChar(s[num]);
+                            bool? nullable3 = IsNameChar(s[num]);
                             if (!nullable3.GetValueOrDefault() || !nullable3.HasValue)
                             {
                                 return num;
@@ -188,7 +188,7 @@ namespace Dt.Cells.UI
                     num -= 6;
                     while (num >= 0)
                     {
-                        bool? nullable4 = this.IsNameChar(s[num]);
+                        bool? nullable4 = IsNameChar(s[num]);
                         if (!nullable4.GetValueOrDefault() || !nullable4.HasValue)
                         {
                             return num;
@@ -200,7 +200,7 @@ namespace Dt.Cells.UI
             return num;
         }
 
-        private bool? IsNameChar(char c)
+        bool? IsNameChar(char c)
         {
             if ((c <= 'Z') && (c >= 'A'))
             {
@@ -217,47 +217,47 @@ namespace Dt.Cells.UI
             return false;
         }
 
-        private void MoveFocusToFormulaBar()
+        void MoveFocusToFormulaBar()
         {
-            this.Focus(FocusState.Programmatic);
+            Focus(FocusState.Programmatic);
         }
 
-        private void MoveFoucsToPopup()
+        void MoveFoucsToPopup()
         {
-            this._functionListBox.Focus(FocusState.Programmatic);
-            if (this._functionListBox.Items.Count > 0)
+            _functionListBox.Focus(FocusState.Programmatic);
+            if (_functionListBox.Items.Count > 0)
             {
-                this._functionListBox.SelectedIndex = 0;
+                _functionListBox.SelectedIndex = 0;
             }
         }
 
-        private void OnEditorConnectorFormulaChangedByUI(object sender, EventArgs e)
+        void OnEditorConnectorFormulaChangedByUI(object sender, EventArgs e)
         {
-            this.UpdateText();
+            UpdateText();
         }
 
-        private void OnFormulaTextBoxSelectionChanged(object sender, RoutedEventArgs e)
+        void OnFormulaTextBoxSelectionChanged(object sender, RoutedEventArgs e)
         {
-            if (this.SpreadSheet != null)
+            if (SpreadSheet != null)
             {
                 if (FocusManager.GetFocusedElement() == this)
                 {
-                    this.SpreadSheet.View.EditorConnector.Editor = this;
+                    SpreadSheet.View.EditorConnector.Editor = this;
                 }
-                this._selectionChanged = true;
-                this.StartTimer();
+                _selectionChanged = true;
+                StartTimer();
             }
         }
 
-        private void OnFormulaTextBoxTextChanged(object sender, TextChangedEventArgs e)
+        void OnFormulaTextBoxTextChanged(object sender, TextChangedEventArgs e)
         {
-            if (this.SpreadSheet != null)
+            if (SpreadSheet != null)
             {
-                this._textChanged = true;
-                this._selectionChanged = true;
-                this.ShowFunctionPopup();
-                this.ShowNamePopup();
-                this.StartTimer();
+                _textChanged = true;
+                _selectionChanged = true;
+                ShowFunctionPopup();
+                ShowNamePopup();
+                StartTimer();
             }
         }
 
@@ -268,9 +268,9 @@ namespace Dt.Cells.UI
         protected override void OnGotFocus(RoutedEventArgs e)
         {
             base.OnGotFocus(e);
-            if (this._spreadSheet != null)
+            if (_spreadSheet != null)
             {
-                if (this.IsArrayFormula)
+                if (IsArrayFormula)
                 {
                     Match match = new Regex(@"^\s*{\s*(=.*?)\s*}\s*$").Match(base.Text);
                     if (match.Success)
@@ -278,10 +278,10 @@ namespace Dt.Cells.UI
                         base.Text = match.Groups[1].Value;
                     }
                 }
-                this._spreadSheet.View.EditorConnector.Editor = this;
-                this._textChanged = true;
-                this._selectionChanged = true;
-                this.OnTimerTick(this, EventArgs.Empty);
+                _spreadSheet.View.EditorConnector.Editor = this;
+                _textChanged = true;
+                _selectionChanged = true;
+                OnTimerTick(this, EventArgs.Empty);
             }
         }
 
@@ -292,9 +292,9 @@ namespace Dt.Cells.UI
         protected override void OnKeyDown(KeyRoutedEventArgs e)
         {
             base.OnKeyDown(e);
-            if (((e.Key == VirtualKey.F4) && (this.SpreadSheet != null)) && ((this.SpreadSheet.View != null) && (this.SpreadSheet.View.EditorConnector.Editor == this)))
+            if (((e.Key == VirtualKey.F4) && (SpreadSheet != null)) && ((SpreadSheet.View != null) && (SpreadSheet.View.EditorConnector.Editor == this)))
             {
-                this.SpreadSheet.View.EditorConnector.ChangeRelative();
+                SpreadSheet.View.EditorConnector.ChangeRelative();
             }
         }
 
@@ -305,10 +305,10 @@ namespace Dt.Cells.UI
         protected override void OnKeyUp(KeyRoutedEventArgs e)
         {
             base.OnKeyUp(e);
-            this.ShowFunctionPopup();
-            if (this._namePopup.IsOpen && ((e.Key == VirtualKey.Up) || (VirtualKey.Down == e.Key)))
+            ShowFunctionPopup();
+            if (_namePopup.IsOpen && ((e.Key == VirtualKey.Up) || (VirtualKey.Down == e.Key)))
             {
-                this.MoveFoucsToPopup();
+                MoveFoucsToPopup();
             }
         }
 
@@ -319,79 +319,79 @@ namespace Dt.Cells.UI
         protected override void OnLostFocus(RoutedEventArgs e)
         {
             base.OnLostFocus(e);
-            if ((this._spreadSheet != null) && (this._spreadSheet.View.EditorConnector.Editor == this))
+            if ((_spreadSheet != null) && (_spreadSheet.View.EditorConnector.Editor == this))
             {
-                this._spreadSheet.View.EndFormulaSelection();
-                this._spreadSheet.View.EditorConnector.Editor = null;
+                _spreadSheet.View.EndFormulaSelection();
+                _spreadSheet.View.EditorConnector.Editor = null;
             }
         }
 
-        private void OnTimerTick(object sender, object e)
+        void OnTimerTick(object sender, object e)
         {
-            if (((this.SpreadSheet != null) && (this.SpreadSheet.View != null)) && (this.SpreadSheet.View.EditorConnector.Editor == this))
+            if (((SpreadSheet != null) && (SpreadSheet.View != null)) && (SpreadSheet.View.EditorConnector.Editor == this))
             {
                 string text = base.Text;
                 Match match = new Regex(@"(^\s*=\s*)(.*?)(\s*$)").Match(text);
                 if (!match.Success)
                 {
-                    this._header = string.Empty;
-                    this._footer = string.Empty;
-                    this._textChanged = false;
-                    this._selectionChanged = false;
-                    if (this._timer != null)
+                    _header = string.Empty;
+                    _footer = string.Empty;
+                    _textChanged = false;
+                    _selectionChanged = false;
+                    if (_timer != null)
                     {
-                        this._timer.Stop();
+                        _timer.Stop();
                     }
-                    this.SpreadSheet.View.EditorConnector.OnFormulaTextChanged(string.Empty);
-                    this.SpreadSheet.View.EndFormulaSelection();
+                    SpreadSheet.View.EditorConnector.OnFormulaTextChanged(string.Empty);
+                    SpreadSheet.View.EndFormulaSelection();
                     return;
                 }
-                if (this._textChanged)
+                if (_textChanged)
                 {
-                    this.SpreadSheet.View.BeginFormulaSelection(null);
-                    this._header = match.Groups[1].Value;
-                    this._footer = match.Groups[3].Value;
-                    this.SpreadSheet.View.EditorConnector.OnFormulaTextChanged(match.Groups[2].Value);
+                    SpreadSheet.View.BeginFormulaSelection(null);
+                    _header = match.Groups[1].Value;
+                    _footer = match.Groups[3].Value;
+                    SpreadSheet.View.EditorConnector.OnFormulaTextChanged(match.Groups[2].Value);
                 }
-                if (this._selectionChanged)
+                if (_selectionChanged)
                 {
-                    this._selectionChanged = false;
+                    _selectionChanged = false;
                     int selectionStart = base.SelectionStart;
                     int end = selectionStart + base.SelectionLength;
-                    if (this._header != null)
+                    if (_header != null)
                     {
-                        selectionStart -= this._header.Length;
-                        end -= this._header.Length;
+                        selectionStart -= _header.Length;
+                        end -= _header.Length;
                     }
-                    this.SpreadSheet.View.EditorConnector.OnCursorPositionChanged(selectionStart, end);
+                    SpreadSheet.View.EditorConnector.OnCursorPositionChanged(selectionStart, end);
                 }
-                if (this._textChanged)
+                if (_textChanged)
                 {
-                    this._textChanged = false;
+                    _textChanged = false;
                 }
             }
-            if (this._timer != null)
+            if (_timer != null)
             {
-                this._timer.Stop();
+                _timer.Stop();
             }
         }
 
-        private void ShowFunctionPopup()
+        void ShowFunctionPopup()
         {
             if (base.Text == null)
             {
-                this._functionPopup.IsOpen = false;
+                _functionPopup.IsOpen = false;
             }
             else if (base.SelectionStart < 0)
             {
-                this._functionPopup.IsOpen = false;
+                _functionPopup.IsOpen = false;
             }
             else
             {
                 string str = base.Text.Substring(0, base.SelectionStart);
                 if (str.Length < 2)
                 {
-                    this._functionPopup.IsOpen = false;
+                    _functionPopup.IsOpen = false;
                 }
                 else if (str[0] == '=')
                 {
@@ -418,28 +418,28 @@ namespace Dt.Cells.UI
                     if (length == 0)
                     {
                         str.IndexOf('(');
-                        this._functionPopup.IsOpen = false;
+                        _functionPopup.IsOpen = false;
                     }
                     else
                     {
                         s = s.Substring(0, length);
-                        int nameStartIndex = this.GetNameStartIndex(s, false);
+                        int nameStartIndex = GetNameStartIndex(s, false);
                         string objA = s.Substring(nameStartIndex + 1, (length - nameStartIndex) - 1);
-                        this._functionTextBlock.Text = "";
-                        this._functionPopup.IsOpen = false;
+                        _functionTextBlock.Text = "";
+                        _functionPopup.IsOpen = false;
                         objA = objA.ToUpper();
-                        for (int i = 0; i < this.FunctionList.Count; i++)
+                        for (int i = 0; i < FunctionList.Count; i++)
                         {
-                            if (object.Equals(objA, this.FunctionList[i].Name))
+                            if (object.Equals(objA, FunctionList[i].Name))
                             {
-                                this._functionTextBlock.Text = this.FunctionList[i].FullName.Replace(',', CultureInfo.CurrentCulture.TextInfo.ListSeparator[0]);
+                                _functionTextBlock.Text = FunctionList[i].FullName.Replace(',', CultureInfo.CurrentCulture.TextInfo.ListSeparator[0]);
                                 Windows.Foundation.Point point = new Windows.Foundation.Point(0.0, base.ActualHeight);
                                 point = base.TransformToVisual(null).TransformPoint(point);
-                                this._functionPopup.HorizontalOffset = point.X;
-                                this._functionPopup.VerticalOffset = point.Y;
+                                _functionPopup.HorizontalOffset = point.X;
+                                _functionPopup.VerticalOffset = point.Y;
                                 if (FocusManager.GetFocusedElement() == this)
                                 {
-                                    this._functionPopup.IsOpen = true;
+                                    _functionPopup.IsOpen = true;
                                     return;
                                 }
                                 break;
@@ -450,134 +450,134 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void ShowNamePopup()
+        void ShowNamePopup()
         {
             if (base.Text != null)
             {
                 if (base.Text.Length == 0)
                 {
-                    this._namePopup.IsOpen = false;
+                    _namePopup.IsOpen = false;
                 }
                 else if (base.Text[0] == '=')
                 {
                     string s = base.Text.Substring(0, base.SelectionStart).ToUpper();
-                    int nameStartIndex = this.GetNameStartIndex(s, true);
+                    int nameStartIndex = GetNameStartIndex(s, true);
                     if ((s.Length - nameStartIndex) == 1)
                     {
-                        this._namePopup.IsOpen = false;
+                        _namePopup.IsOpen = false;
                     }
                     else
                     {
-                        this._startIndex = nameStartIndex + 1;
-                        this._length = (base.SelectionStart - nameStartIndex) - 1;
-                        string objB = s.Substring(this._startIndex);
-                        this._functionListBox.Items.Clear();
-                        for (int i = 0; i < this.FunctionList.Count; i++)
+                        _startIndex = nameStartIndex + 1;
+                        _length = (base.SelectionStart - nameStartIndex) - 1;
+                        string objB = s.Substring(_startIndex);
+                        _functionListBox.Items.Clear();
+                        for (int i = 0; i < FunctionList.Count; i++)
                         {
                             int length = objB.Length;
-                            if (this.FunctionList[i].Name.Length < length)
+                            if (FunctionList[i].Name.Length < length)
                             {
-                                length = this.FunctionList[i].Name.Length;
+                                length = FunctionList[i].Name.Length;
                             }
-                            if (object.Equals(this.FunctionList[i].Name.Substring(0, length), objB))
+                            if (object.Equals(FunctionList[i].Name.Substring(0, length), objB))
                             {
-                                this._functionListBox.Items.Add(this.FunctionList[i]);
+                                _functionListBox.Items.Add(FunctionList[i]);
                             }
                         }
-                        if (this._functionListBox.Items.Count > 0)
+                        if (_functionListBox.Items.Count > 0)
                         {
                             Windows.Foundation.Point point = new Windows.Foundation.Point(0.0, base.ActualHeight);
-                            if (this._functionPopup.IsOpen)
+                            if (_functionPopup.IsOpen)
                             {
                                 point.Y += 37.0;
                             }
                             point = base.TransformToVisual(null).TransformPoint(point);
-                            this._namePopup.HorizontalOffset = point.X;
-                            this._namePopup.VerticalOffset = point.Y;
+                            _namePopup.HorizontalOffset = point.X;
+                            _namePopup.VerticalOffset = point.Y;
                             if (FocusManager.GetFocusedElement() == this)
                             {
-                                this._namePopup.IsOpen = true;
+                                _namePopup.IsOpen = true;
                             }
                         }
                         else
                         {
-                            this._namePopup.IsOpen = false;
+                            _namePopup.IsOpen = false;
                         }
                     }
                 }
             }
         }
 
-        private void StartTimer()
+        void StartTimer()
         {
-            if (this._timer == null)
+            if (_timer == null)
             {
-                this._timer = new DispatcherTimer();
-                this._timer.Interval = new TimeSpan(0, 0, 0, 0, 200);
+                _timer = new DispatcherTimer();
+                _timer.Interval = new TimeSpan(0, 0, 0, 0, 200);
                 _timer.Tick += OnTimerTick;
             }
-            this._timer.Stop();
-            this._timer.Start();
+            _timer.Stop();
+            _timer.Start();
         }
 
-        private void UnWireEvents()
-        {
-            this.TextChanged += OnFormulaTextBoxTextChanged;
-            this.SelectionChanged += OnFormulaTextBoxSelectionChanged;
-        }
-
-        private void UpdateText()
-        {
-            this.UnWireEvents();
-            try
-            {
-                IList<SheetView.ColoredText> coloredText = this.SpreadSheet.View.EditorConnector.GetColoredText(false);
-                StringBuilder builder = new StringBuilder();
-                if (string.IsNullOrEmpty(this._header) && (coloredText.Count > 0))
-                {
-                    this._header = "=";
-                }
-                if (!string.IsNullOrEmpty(this._header))
-                {
-                    builder.Append(this._header);
-                }
-                foreach (SheetView.ColoredText text in coloredText)
-                {
-                    builder.Append(text.Text);
-                }
-                if (!string.IsNullOrEmpty(this._footer))
-                {
-                    builder.Append(this._footer);
-                }
-                base.Text = builder.ToString();
-                int cursorPositionStart = this.SpreadSheet.View.EditorConnector.GetCursorPositionStart();
-                if (this._header != null)
-                {
-                    cursorPositionStart += this._header.Length;
-                }
-                base.Select(cursorPositionStart, 0);
-            }
-            finally
-            {
-                this.WireEvents();
-            }
-        }
-
-        private void WireEvents()
+        void UnWireEvents()
         {
             TextChanged += OnFormulaTextBoxTextChanged;
             SelectionChanged += OnFormulaTextBoxSelectionChanged;
         }
 
-        private List<FormulaFunction> FunctionList
+        void UpdateText()
+        {
+            UnWireEvents();
+            try
+            {
+                IList<SheetView.ColoredText> coloredText = SpreadSheet.View.EditorConnector.GetColoredText(false);
+                StringBuilder builder = new StringBuilder();
+                if (string.IsNullOrEmpty(_header) && (coloredText.Count > 0))
+                {
+                    _header = "=";
+                }
+                if (!string.IsNullOrEmpty(_header))
+                {
+                    builder.Append(_header);
+                }
+                foreach (SheetView.ColoredText text in coloredText)
+                {
+                    builder.Append(text.Text);
+                }
+                if (!string.IsNullOrEmpty(_footer))
+                {
+                    builder.Append(_footer);
+                }
+                base.Text = builder.ToString();
+                int cursorPositionStart = SpreadSheet.View.EditorConnector.GetCursorPositionStart();
+                if (_header != null)
+                {
+                    cursorPositionStart += _header.Length;
+                }
+                base.Select(cursorPositionStart, 0);
+            }
+            finally
+            {
+                WireEvents();
+            }
+        }
+
+        void WireEvents()
+        {
+            TextChanged += OnFormulaTextBoxTextChanged;
+            SelectionChanged += OnFormulaTextBoxSelectionChanged;
+        }
+
+        List<FormulaFunction> FunctionList
         {
             get
             {
-                if (this._functionList == null)
+                if (_functionList == null)
                 {
-                    this._functionList = new List<FormulaFunction>((IEnumerable<FormulaFunction>)FormulaFunctionList.AllFunctions.Values);
+                    _functionList = new List<FormulaFunction>((IEnumerable<FormulaFunction>)FormulaFunctionList.AllFunctions.Values);
                 }
-                return this._functionList;
+                return _functionList;
             }
         }
 
@@ -605,19 +605,19 @@ namespace Dt.Cells.UI
         /// </value>
         public Excel SpreadSheet
         {
-            get { return this._spreadSheet; }
+            get { return _spreadSheet; }
             set
             {
-                if (this._spreadSheet != value)
+                if (_spreadSheet != value)
                 {
-                    if (this._spreadSheet != null)
+                    if (_spreadSheet != null)
                     {
-                        this._spreadSheet.View.EditorConnector.FormulaChangedByUI -= new EventHandler(this.OnEditorConnectorFormulaChangedByUI);
+                        _spreadSheet.View.EditorConnector.FormulaChangedByUI -= new EventHandler(OnEditorConnectorFormulaChangedByUI);
                     }
-                    this._spreadSheet = value;
-                    if (this._spreadSheet != null)
+                    _spreadSheet = value;
+                    if (_spreadSheet != null)
                     {
-                        this._spreadSheet.View.EditorConnector.FormulaChangedByUI += new EventHandler(this.OnEditorConnectorFormulaChangedByUI);
+                        _spreadSheet.View.EditorConnector.FormulaChangedByUI += new EventHandler(OnEditorConnectorFormulaChangedByUI);
                     }
                 }
             }

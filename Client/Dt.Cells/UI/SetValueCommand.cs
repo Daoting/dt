@@ -17,16 +17,16 @@ namespace Dt.Cells.UI
 {
     internal class SetValueCommand : ICommand
     {
-        private DataValidationListButtonInfo _info;
-        private SheetView _sheetView;
-        private object _value;
+        DataValidationListButtonInfo _info;
+        SheetView _sheetView;
+        object _value;
 
         public event EventHandler CanExecuteChanged;
 
         public SetValueCommand(SheetView sheetView, DataValidationListButtonInfo info)
         {
-            this._info = info;
-            this._sheetView = sheetView;
+            _info = info;
+            _sheetView = sheetView;
         }
 
         public bool CanExecute(object parameter)
@@ -36,27 +36,27 @@ namespace Dt.Cells.UI
 
         public void Execute(object parameter)
         {
-            if (((this._sheetView != null) && (this._sheetView.Worksheet != null)) && ((this._info != null) && (this._info.Validator != null)))
+            if (((_sheetView != null) && (_sheetView.Worksheet != null)) && ((_info != null) && (_info.Validator != null)))
             {
                 if (parameter != null)
                 {
-                    this._value = parameter.ToString();
+                    _value = parameter.ToString();
                 }
                 else
                 {
-                    this._value = null;
+                    _value = null;
                 }
-                CellEditExtent extent = new CellEditExtent(this._info.Row, this._info.Column, (string) (this._value as string));
-                CellEditUndoAction command = new CellEditUndoAction(this._sheetView.Worksheet, extent);
-                this._sheetView.DoCommand(command);
+                CellEditExtent extent = new CellEditExtent(_info.Row, _info.Column, (string) (_value as string));
+                CellEditUndoAction command = new CellEditUndoAction(_sheetView.Worksheet, extent);
+                _sheetView.DoCommand(command);
             }
         }
 
         protected virtual void OnCanExecuteChanged()
         {
-            if (this.CanExecuteChanged != null)
+            if (CanExecuteChanged != null)
             {
-                this.CanExecuteChanged(this, EventArgs.Empty);
+                CanExecuteChanged(this, EventArgs.Empty);
             }
         }
     }

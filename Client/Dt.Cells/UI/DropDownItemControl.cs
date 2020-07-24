@@ -51,23 +51,23 @@ namespace Dt.Cells.UI
             base.DefaultStyleKey = typeof(DropDownItemControl);
         }
 
-        private void DropDownItemControl_PointerEntered(object sender, PointerRoutedEventArgs e)
+        void DropDownItemControl_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
             base.OnPointerEntered(e);
             base.ParentDropDownList.SelectItem(this);
         }
 
-        private void DropDownItemControl_PointerExited(object sender, PointerRoutedEventArgs e)
+        void DropDownItemControl_PointerExited(object sender, PointerRoutedEventArgs e)
         {
             base.OnPointerExited(e);
             base.ParentDropDownList.DeselectItem(this);
         }
 
-        private void DropDownItemControl_PointerReleased(object sender, PointerRoutedEventArgs e)
+        void DropDownItemControl_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
             if (!e.Handled)
             {
-                this.OnClick();
+                OnClick();
                 e.Handled = true;
             }
             base.OnPointerReleased(e);
@@ -78,7 +78,7 @@ namespace Dt.Cells.UI
         /// </summary>
         protected virtual void OnClick()
         {
-            RoutedEventHandler click = this.Click;
+            RoutedEventHandler click = Click;
             if (click != null)
             {
                 click(this, new RoutedEventArgs());
@@ -87,12 +87,12 @@ namespace Dt.Cells.UI
             {
                 base.ParentDropDownList.Close();
             }
-            this.ExecuteCommand();
+            ExecuteCommand();
         }
 
         internal override void OnIsSelectedChanged()
         {
-            this.UpdateVisualState(true);
+            UpdateVisualState(true);
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace Dt.Cells.UI
         {
             if (!e.Handled && (e.Key == VirtualKey.Enter))
             {
-                this.OnClick();
+                OnClick();
                 e.Handled = true;
             }
             base.OnKeyDown(e);
@@ -141,7 +141,7 @@ namespace Dt.Cells.UI
         /// <param name="useTransitions">if set to <c>true</c> to transition between states; otherwise <c>false</c>.</param>
         protected override void UpdateVisualState(bool useTransitions)
         {
-            base.IsEnabled = this.CanExecuteCommand();
+            base.IsEnabled = CanExecuteCommand();
             if (base.IsEnabled)
             {
                 VisualStateManager.GoToState(this, "Normal", useTransitions);

@@ -25,8 +25,8 @@ namespace Dt.Cells.UI
         /// <param name="action">The action.</param>
         public UndoRedoEventArgs(UndoRedoOperation undoRedo, string action)
         {
-            this.UndoRedo = undoRedo;
-            this.Action = action;
+            UndoRedo = undoRedo;
+            Action = action;
         }
 
         /// <summary>

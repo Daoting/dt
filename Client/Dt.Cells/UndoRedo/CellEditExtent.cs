@@ -28,17 +28,17 @@ namespace Dt.Cells.UndoRedo
         /// <param name="newValue">The edit cell's new value to apply.</param>
         public CellEditExtent(int row, int column, string newValue)
         {
-            this.RowIndex = row;
-            this.ColumnIndex = column;
-            this.NewValue = newValue;
+            RowIndex = row;
+            ColumnIndex = column;
+            NewValue = newValue;
         }
 
-        private string GetCoord(int row, int column)
+        string GetCoord(int row, int column)
         {
-            return (this.IndexToLetters(column) + ((int) row));
+            return (IndexToLetters(column) + ((int) row));
         }
 
-        private string IndexToLetters(int index)
+        string IndexToLetters(int index)
         {
             StringBuilder builder = new StringBuilder();
             while (index > 0)
@@ -63,9 +63,9 @@ namespace Dt.Cells.UndoRedo
         /// </returns>
         public override string ToString()
         {
-            if (this.NewValue != null)
+            if (NewValue != null)
             {
-                return string.Concat((string[]) new string[] { string.Format(ResourceStrings.undoActionTypingInCell, (object[]) new object[] { this.NewValue.ToString(), this.GetCoord(this.RowIndex + 1, this.ColumnIndex + 1) }) });
+                return string.Concat((string[]) new string[] { string.Format(ResourceStrings.undoActionTypingInCell, (object[]) new object[] { NewValue.ToString(), GetCoord(RowIndex + 1, ColumnIndex + 1) }) });
             }
             return ResourceStrings.undoActionEditingCell;
         }

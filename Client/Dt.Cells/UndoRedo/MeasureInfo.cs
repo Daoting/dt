@@ -26,15 +26,15 @@ namespace Dt.Cells.UndoRedo
 
         public MeasureInfo(Cell cell, Windows.Foundation.Size maxSize)
         {
-            this.FontFamily = cell.FontFamily;
+            FontFamily = cell.FontFamily;
             cell.CacheStyleObject(true);
-            this.FontSize = cell.FontSize;
-            this.FontStretch = cell.FontStretch;
-            this.FontStyle = cell.FontStyle;
-            this.FontWeight = cell.FontWeight;
-            this.WordWrap = cell.WordWrap;
+            FontSize = cell.FontSize;
+            FontStretch = cell.FontStretch;
+            FontStyle = cell.FontStyle;
+            FontWeight = cell.FontWeight;
+            WordWrap = cell.WordWrap;
             cell.CacheStyleObject(false);
-            this.MaximumSize = maxSize;
+            MaximumSize = maxSize;
         }
 
         public override bool Equals(object obj)
@@ -44,21 +44,21 @@ namespace Dt.Cells.UndoRedo
             {
                 return false;
             }
-            return (((((this.FontFamily == info.FontFamily) && (this.FontSize == info.FontSize)) && ((this.FontStretch == info.FontStretch) && (this.FontStyle == info.FontStyle))) && ((this.FontWeight.Weight == info.FontWeight.Weight) && (this.MaximumSize == info.MaximumSize))) && (this.WordWrap == info.WordWrap));
+            return (((((FontFamily == info.FontFamily) && (FontSize == info.FontSize)) && ((FontStretch == info.FontStretch) && (FontStyle == info.FontStyle))) && ((FontWeight.Weight == info.FontWeight.Weight) && (MaximumSize == info.MaximumSize))) && (WordWrap == info.WordWrap));
         }
 
         public override int GetHashCode()
         {
             StringBuilder builder = new StringBuilder();
-            if (this.FontFamily != null)
+            if (FontFamily != null)
             {
-                builder.Append(this.FontFamily.ToString());
+                builder.Append(FontFamily.ToString());
             }
-            builder.Append(this.FontStyle.ToString());
-            builder.Append(this.FontStretch.ToString());
-            builder.Append(((ushort) this.FontWeight.Weight).ToString());
-            builder.Append(this.WordWrap.ToString());
-            builder.Append(this.MaximumSize.ToString());
+            builder.Append(FontStyle.ToString());
+            builder.Append(FontStretch.ToString());
+            builder.Append(((ushort) FontWeight.Weight).ToString());
+            builder.Append(WordWrap.ToString());
+            builder.Append(MaximumSize.ToString());
             return builder.ToString().GetHashCode();
         }
 

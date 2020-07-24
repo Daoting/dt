@@ -21,8 +21,8 @@ namespace Dt.Cells.UndoRedo
     /// </summary>
     public class RowGroupExpandUndoAction : ActionBase, IUndo
     {
-        private RowGroupExpandExtent _rowExpandExtent;
-        private Worksheet _sheet;
+        RowGroupExpandExtent _rowExpandExtent;
+        Worksheet _sheet;
 
         /// <summary>
         /// Creates a new instance of the <see cref="T:Dt.Cells.UndoRedo.RowGroupExpandUndoAction" /> class.
@@ -31,8 +31,8 @@ namespace Dt.Cells.UndoRedo
         /// <param name="rowExpandExtent">The row expand extent information.</param>
         public RowGroupExpandUndoAction(Worksheet sheet, RowGroupExpandExtent rowExpandExtent)
         {
-            this._sheet = sheet;
-            this._rowExpandExtent = rowExpandExtent;
+            _sheet = sheet;
+            _rowExpandExtent = rowExpandExtent;
         }
 
         /// <summary>
@@ -53,14 +53,14 @@ namespace Dt.Cells.UndoRedo
         /// <param name="sender">Object on which the action occurred.</param>
         public override void Execute(object sender)
         {
-            if (((this._sheet != null) && (this._rowExpandExtent != null)) && (this._sheet.RowRangeGroup != null))
+            if (((_sheet != null) && (_rowExpandExtent != null)) && (_sheet.RowRangeGroup != null))
             {
                 base.SuspendInvalidate(sender);
                 try
                 {
-                    int index = this._rowExpandExtent.Index;
-                    bool collapsed = this._rowExpandExtent.Collapsed;
-                    this._sheet.RowRangeGroup.Data.SetCollapsed(index, collapsed);
+                    int index = _rowExpandExtent.Index;
+                    bool collapsed = _rowExpandExtent.Collapsed;
+                    _sheet.RowRangeGroup.Data.SetCollapsed(index, collapsed);
                 }
                 finally
                 {
@@ -79,7 +79,7 @@ namespace Dt.Cells.UndoRedo
                     {
                         sheetView.InvalidateFloatingObjects(Enumerable.ToArray<SpreadChartBase>((IEnumerable<SpreadChartBase>) chartShapeAffectedByRowRangeGroup));
                     }
-                    this.ShowRowRangeGroup(sheetView);
+                    ShowRowRangeGroup(sheetView);
                 }
             }
         }
@@ -91,21 +91,21 @@ namespace Dt.Cells.UndoRedo
         {
         }
 
-        private void ShowRowRangeGroup(SheetView sheetView)
+        void ShowRowRangeGroup(SheetView sheetView)
         {
-            int index = this._rowExpandExtent.Index;
-            if ((index >= 0) && (index < this._sheet.RowCount))
+            int index = _rowExpandExtent.Index;
+            if ((index >= 0) && (index < _sheet.RowCount))
             {
                 ViewportInfo viewportInfo = sheetView.GetViewportInfo();
                 if (sheetView.Worksheet.RowRangeGroup.Direction == RangeGroupDirection.Forward)
                 {
-                    RangeGroupInfo info2 = this._sheet.RowRangeGroup.Find(index - 1, this._rowExpandExtent.Level);
+                    RangeGroupInfo info2 = _sheet.RowRangeGroup.Find(index - 1, _rowExpandExtent.Level);
                     if (info2 != null)
                     {
                         int start = info2.Start;
                         int bottonRow = index;
-                        int viewportIndex = this._rowExpandExtent.ViewportIndex;
-                        if (this._sheet.RowRangeGroup.Data.GetCollapsed(index))
+                        int viewportIndex = _rowExpandExtent.ViewportIndex;
+                        if (_sheet.RowRangeGroup.Data.GetCollapsed(index))
                         {
                             if ((viewportIndex < 0) || (viewportIndex >= viewportInfo.RowViewportCount))
                             {
@@ -151,15 +151,15 @@ namespace Dt.Cells.UndoRedo
                         sheetView.SetViewportTopRow(viewportIndex, viewportTopRow);
                     }
                 }
-                else if (this._sheet.RowRangeGroup.Direction == RangeGroupDirection.Backward)
+                else if (_sheet.RowRangeGroup.Direction == RangeGroupDirection.Backward)
                 {
-                    RangeGroupInfo info3 = this._sheet.RowRangeGroup.Find(index + 1, this._rowExpandExtent.Level);
+                    RangeGroupInfo info3 = _sheet.RowRangeGroup.Find(index + 1, _rowExpandExtent.Level);
                     if (info3 != null)
                     {
                         int frozenRowCount = index;
                         int end = info3.End;
-                        int rowViewportIndex = this._rowExpandExtent.ViewportIndex;
-                        if (this._sheet.RowRangeGroup.Data.GetCollapsed(index))
+                        int rowViewportIndex = _rowExpandExtent.ViewportIndex;
+                        if (_sheet.RowRangeGroup.Data.GetCollapsed(index))
                         {
                             if ((rowViewportIndex < 0) || (rowViewportIndex >= viewportInfo.RowViewportCount))
                             {
@@ -230,14 +230,14 @@ namespace Dt.Cells.UndoRedo
         public bool Undo(object sender)
         {
             bool flag = false;
-            if (((this._sheet != null) && (this._rowExpandExtent != null)) && (this._sheet.RowRangeGroup != null))
+            if (((_sheet != null) && (_rowExpandExtent != null)) && (_sheet.RowRangeGroup != null))
             {
                 base.SuspendInvalidate(sender);
                 try
                 {
-                    int index = this._rowExpandExtent.Index;
-                    bool collapsed = this._rowExpandExtent.Collapsed;
-                    this._sheet.RowRangeGroup.Data.SetCollapsed(index, !collapsed);
+                    int index = _rowExpandExtent.Index;
+                    bool collapsed = _rowExpandExtent.Collapsed;
+                    _sheet.RowRangeGroup.Data.SetCollapsed(index, !collapsed);
                     flag = true;
                 }
                 finally
@@ -259,7 +259,7 @@ namespace Dt.Cells.UndoRedo
                 {
                     sheetView.InvalidateFloatingObjects(Enumerable.ToArray<SpreadChartBase>((IEnumerable<SpreadChartBase>) chartShapeAffectedByRowRangeGroup));
                 }
-                this.ShowRowRangeGroup(sheetView);
+                ShowRowRangeGroup(sheetView);
             }
             return flag;
         }

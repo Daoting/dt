@@ -30,7 +30,7 @@ namespace Dt.Cells.UI
             ColumnLayout layout = null;
             if (base.Count > 0)
             {
-                layout = this.FindX(x);
+                layout = FindX(x);
                 if (layout == null)
                 {
                     layout = (x < Enumerable.ElementAt<ColumnLayout>((IEnumerable<ColumnLayout>) this, 0).X) ? Enumerable.ElementAt<ColumnLayout>((IEnumerable<ColumnLayout>) this, 0) : Enumerable.ElementAt<ColumnLayout>((IEnumerable<ColumnLayout>) this, base.Count - 1);

@@ -14,16 +14,16 @@ namespace Dt.Cells.UI
 {
     internal class NavigationButtonClickEventArgs : EventArgs
     {
-        private ButtonType _type;
+        ButtonType _type;
 
         public NavigationButtonClickEventArgs(ButtonType type)
         {
-            this._type = type;
+            _type = type;
         }
 
         public ButtonType TabButton
         {
-            get { return  this._type; }
+            get { return  _type; }
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Dt.Cells.UI
     /// </summary>
     public partial class LineSparklineView : BaseSparklineView
     {
-        private List<Windows.UI.Xaml.Shapes.Line> lines;
+        List<Windows.UI.Xaml.Shapes.Line> lines;
 
         /// <summary>
         /// Creates a new instance of the class.
@@ -35,11 +35,11 @@ namespace Dt.Cells.UI
         {
         }
 
-        private void ArrangeLines(Windows.Foundation.Size finalSize)
+        void ArrangeLines(Windows.Foundation.Size finalSize)
         {
-            if (this.lines != null)
+            if (lines != null)
             {
-                using (List<Windows.UI.Xaml.Shapes.Line>.Enumerator enumerator = this.lines.GetEnumerator())
+                using (List<Windows.UI.Xaml.Shapes.Line>.Enumerator enumerator = lines.GetEnumerator())
                 {
                     while (enumerator.MoveNext())
                     {
@@ -58,7 +58,7 @@ namespace Dt.Cells.UI
         protected override Windows.Foundation.Size ArrangeOverride(Windows.Foundation.Size finalSize)
         {
             base.ArrangeOverride(finalSize);
-            this.ArrangeLines(finalSize);
+            ArrangeLines(finalSize);
             return finalSize;
         }
 
@@ -81,7 +81,7 @@ namespace Dt.Cells.UI
             return r;
         }
 
-        private void MeasureLines(Windows.Foundation.Size availableSize)
+        void MeasureLines(Windows.Foundation.Size availableSize)
         {
             LineSparklineViewInfo sparklineViewInfo = base.SparklineViewInfo as LineSparklineViewInfo;
             if (sparklineViewInfo != null)
@@ -90,14 +90,14 @@ namespace Dt.Cells.UI
                 sparklineViewInfo.MeasurelinePos(availableSize);
                 if ((linePos != null) && (linePos.Count != sparklineViewInfo.LinePos.Count))
                 {
-                    this.RemoveLines();
+                    RemoveLines();
                 }
             }
             if ((sparklineViewInfo.LinePos != null) && (sparklineViewInfo.LinePos.Count > 0))
             {
-                if (this.lines == null)
+                if (lines == null)
                 {
-                    this.lines = new List<Windows.UI.Xaml.Shapes.Line>();
+                    lines = new List<Windows.UI.Xaml.Shapes.Line>();
                 }
                 for (int i = 0; i < sparklineViewInfo.LinePos.Count; i++)
                 {
@@ -107,7 +107,7 @@ namespace Dt.Cells.UI
                     if (tuple != null)
                     {
                         line = null;
-                        if (i >= this.lines.Count)
+                        if (i >= lines.Count)
                         {
                             line = new Windows.UI.Xaml.Shapes.Line();
                             line.StrokeStartLineCap = PenLineCap.Round;
@@ -115,19 +115,19 @@ namespace Dt.Cells.UI
                             if (action == null)
                             {
                                 action = delegate {
-                                    line.Stroke = new SolidColorBrush(this.SparklineInfo.Setting.SeriesColor);
+                                    line.Stroke = new SolidColorBrush(SparklineInfo.Setting.SeriesColor);
                                 };
                             }
                             Dt.Cells.Data.UIAdaptor.InvokeSync(action);
                             double lineWeight = (base.SparklineViewInfo as LineSparklineViewInfo).GetLineWeight();
                             line.StrokeThickness = lineWeight;
-                            Canvas.SetZIndex(line, this.LineZIndex);
+                            Canvas.SetZIndex(line, LineZIndex);
                             base.Children.Add(line);
-                            this.lines.Add(line);
+                            lines.Add(line);
                         }
                         else
                         {
-                            line = this.lines[i];
+                            line = lines[i];
                         }
                         Windows.Foundation.Point point = tuple.Item1;
                         Windows.Foundation.Point point2 = tuple.Item2;
@@ -155,16 +155,16 @@ namespace Dt.Cells.UI
         {
             if (!double.IsInfinity(availableSize.Width) && !double.IsInfinity(availableSize.Height))
             {
-                this.MeasureLines(availableSize);
+                MeasureLines(availableSize);
             }
             return base.MeasureOverride(availableSize);
         }
 
-        private void RemoveLines()
+        void RemoveLines()
         {
-            if (this.lines != null)
+            if (lines != null)
             {
-                foreach (Windows.UI.Xaml.Shapes.Line line in this.lines)
+                foreach (Windows.UI.Xaml.Shapes.Line line in lines)
                 {
                     if (line != null)
                     {
@@ -172,7 +172,7 @@ namespace Dt.Cells.UI
                     }
                 }
             }
-            this.lines = null;
+            lines = null;
         }
 
         /// <summary>
@@ -182,8 +182,8 @@ namespace Dt.Cells.UI
         /// <param name="zoomfactor">The zoom factor used for the update.</param>
         public override void Update(Windows.Foundation.Size size, double zoomfactor)
         {
-            this.RemoveLines();
-            this.lines = null;
+            RemoveLines();
+            lines = null;
             (base.SparklineViewInfo as LineSparklineViewInfo).LinePos = null;
             base.Update(size, zoomfactor);
         }

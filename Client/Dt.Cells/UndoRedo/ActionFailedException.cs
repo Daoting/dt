@@ -27,7 +27,7 @@ namespace Dt.Cells.UndoRedo
         /// <param name="action">The <see cref="T:GrapeCity.Windows.SpreadSheet.UI.UndoRedo.ActionBase" />.</param>
         public ActionFailedException(ActionBase action) : base(ResourceStrings.undoActionActionFailed)
         {
-            this.Action = action;
+            Action = action;
         }
 
         /// <summary>

@@ -21,8 +21,8 @@ namespace Dt.Cells.UI
     {
         internal RangeSortingEventArgs(int column, bool ascending)
         {
-            this.Column = column;
-            this.Ascending = ascending;
+            Column = column;
+            Ascending = ascending;
         }
 
         internal RangeSortingEventArgs(int column, bool ascending, bool cancel) : this(column, ascending)

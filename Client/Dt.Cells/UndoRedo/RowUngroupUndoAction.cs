@@ -20,9 +20,9 @@ namespace Dt.Cells.UndoRedo
     /// </summary>
     public class RowUngroupUndoAction : ActionBase, IUndo
     {
-        private List<RowUngroupExtent> _cachedUngroups;
-        private RowUngroupExtent _rowUngroupExtent;
-        private Worksheet _sheet;
+        List<RowUngroupExtent> _cachedUngroups;
+        RowUngroupExtent _rowUngroupExtent;
+        Worksheet _sheet;
 
         /// <summary>
         /// Creates a new instance of the <see cref="T:Dt.Cells.UndoRedo.RowUngroupUndoAction" /> class.
@@ -31,9 +31,9 @@ namespace Dt.Cells.UndoRedo
         /// <param name="rowUngroupExtent">The row ungroup extent information.</param>
         public RowUngroupUndoAction(Worksheet sheet, RowUngroupExtent rowUngroupExtent)
         {
-            this._sheet = sheet;
-            this._rowUngroupExtent = rowUngroupExtent;
-            this._cachedUngroups = null;
+            _sheet = sheet;
+            _rowUngroupExtent = rowUngroupExtent;
+            _cachedUngroups = null;
         }
 
         /// <summary>
@@ -54,15 +54,15 @@ namespace Dt.Cells.UndoRedo
         /// <param name="sender">Object on which the action occurred.</param>
         public override void Execute(object sender)
         {
-            this.SaveState();
-            if ((this._cachedUngroups != null) && (this._cachedUngroups.Count > 0))
+            SaveState();
+            if ((_cachedUngroups != null) && (_cachedUngroups.Count > 0))
             {
                 base.SuspendInvalidate(sender);
                 try
                 {
-                    foreach (RowUngroupExtent extent in this._cachedUngroups)
+                    foreach (RowUngroupExtent extent in _cachedUngroups)
                     {
-                        this._sheet.RowRangeGroup.Ungroup(extent.Index, extent.Count);
+                        _sheet.RowRangeGroup.Ungroup(extent.Index, extent.Count);
                     }
                 }
                 finally
@@ -86,13 +86,13 @@ namespace Dt.Cells.UndoRedo
         public void SaveState()
         {
             List<RowUngroupExtent> list = new List<RowUngroupExtent>();
-            if (((this._sheet != null) && (this._rowUngroupExtent != null)) && (this._sheet.RowRangeGroup != null))
+            if (((_sheet != null) && (_rowUngroupExtent != null)) && (_sheet.RowRangeGroup != null))
             {
-                int index = this._rowUngroupExtent.Index;
-                int count = this._rowUngroupExtent.Count;
+                int index = _rowUngroupExtent.Index;
+                int count = _rowUngroupExtent.Count;
                 for (int i = index; i < (index + count); i++)
                 {
-                    RangeGroupInfo info = this._sheet.RowRangeGroup.Find(i, 0);
+                    RangeGroupInfo info = _sheet.RowRangeGroup.Find(i, 0);
                     if (info != null)
                     {
                         list.Add(new RowUngroupExtent(i, Math.Min((int) (index + count), (int) (info.End + 1)) - i));
@@ -100,7 +100,7 @@ namespace Dt.Cells.UndoRedo
                     }
                 }
             }
-            this._cachedUngroups = list;
+            _cachedUngroups = list;
         }
 
         /// <summary>
@@ -122,16 +122,16 @@ namespace Dt.Cells.UndoRedo
         public bool Undo(object sender)
         {
             bool flag = false;
-            if ((this._cachedUngroups == null) || (this._cachedUngroups.Count <= 0))
+            if ((_cachedUngroups == null) || (_cachedUngroups.Count <= 0))
             {
                 return flag;
             }
             base.ResumeInvalidate(sender);
             try
             {
-                foreach (RowUngroupExtent extent in this._cachedUngroups)
+                foreach (RowUngroupExtent extent in _cachedUngroups)
                 {
-                    this._sheet.RowRangeGroup.Group(extent.Index, extent.Count);
+                    _sheet.RowRangeGroup.Group(extent.Index, extent.Count);
                 }
             }
             finally

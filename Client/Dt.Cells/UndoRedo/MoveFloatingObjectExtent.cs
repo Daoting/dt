@@ -26,9 +26,9 @@ namespace Dt.Cells.UndoRedo
         /// <param name="offsetY">The Y offset.</param>
         public MoveFloatingObjectExtent(string[] names, double offsetX, double offsetY)
         {
-            this.Names = names;
-            this.OffsetX = offsetX;
-            this.OffsetY = offsetY;
+            Names = names;
+            OffsetX = offsetX;
+            OffsetY = offsetY;
         }
 
         /// <summary>

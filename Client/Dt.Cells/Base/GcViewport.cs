@@ -40,8 +40,8 @@ namespace Dt.Cells.UI
     {
         internal int _activeCol;
         internal int _activeRow;
-        private Panel _borderContainer;
-        private CellOverflowLayoutBuildEngine _buildEngine;
+        Panel _borderContainer;
+        CellOverflowLayoutBuildEngine _buildEngine;
         internal CellRange _cachedActiveSelection;
         internal Rect _cachedActiveSelectionLayout;
         internal Rect[] _cachedChartShapeMovingRects;
@@ -51,22 +51,22 @@ namespace Dt.Cells.UI
         internal Rect _cachedFocusCellLayout;
         internal Rect _cachedSelectionFrameLayout;
         internal List<Rect> _cachedSelectionLayout;
-        private SpanGraph _cachedSpanGraph;
-        private CellCachePool _cellCachePool;
-        private DataValidationPanel _dataValidationPanel;
-        private DragFillContainerPanel _dragFillContainer;
-        private Rect _editorBounds;
+        SpanGraph _cachedSpanGraph;
+        CellCachePool _cellCachePool;
+        DataValidationPanel _dataValidationPanel;
+        DragFillContainerPanel _dragFillContainer;
+        Rect _editorBounds;
         internal EditingPanel _editorPanel;
-        private FloatingObjectContainerPanel _floatingObjectContainerPanel;
-        private FloatingObjectMovingResizingContainerPanel _floatingObjectsMovingResizingContainer;
-        private FormulaSelectionContainerPanel _formulaSelectionContainer;
-        private List<RowPresenter> _recycledRows;
-        private RowsPanel _rowsContainer;
-        private SelectionContainerPanel _selectionContainer;
-        private Panel _shapeContainer;
+        FloatingObjectContainerPanel _floatingObjectContainerPanel;
+        FloatingObjectMovingResizingContainerPanel _floatingObjectsMovingResizingContainer;
+        FormulaSelectionContainerPanel _formulaSelectionContainer;
+        List<RowPresenter> _recycledRows;
+        RowsPanel _rowsContainer;
+        SelectionContainerPanel _selectionContainer;
+        Panel _shapeContainer;
         protected SheetArea _sheetArea;
-        private bool _supportShapes;
-        private DecorationPanel _decoratinPanel;
+        bool _supportShapes;
+        DecorationPanel _decoratinPanel;
 
         public GcViewport(SheetView sheet)
             : this(sheet, SheetArea.Cells, true)
@@ -143,7 +143,7 @@ namespace Dt.Cells.UI
             _cachedSpanGraph = new SpanGraph();
         }
 
-        private void _editorPanel_EdtingChanged(object sender, EventArgs e)
+        void _editorPanel_EdtingChanged(object sender, EventArgs e)
         {
             if (_editorPanel != null)
             {
@@ -334,7 +334,7 @@ namespace Dt.Cells.UI
             return viewportSize;
         }
 
-        private void BuildSpanGraph()
+        void BuildSpanGraph()
         {
             _cachedSpanGraph.Reset();
             SheetSpanModelBase spanModel = GetSpanModel();
@@ -412,7 +412,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void AttachEditorForActiveCell()
+        void AttachEditorForActiveCell()
         {
             if (SheetArea == SheetArea.Cells)
             {
@@ -460,7 +460,7 @@ namespace Dt.Cells.UI
         }
         #endregion
 
-        private void BuildSelection()
+        void BuildSelection()
         {
             _cachedSelectionLayout.Clear();
             UIAdaptor.InvokeAsync(() => SelectionContainer.FocusIndicator.Visibility = Visibility.Collapsed);
@@ -820,7 +820,7 @@ namespace Dt.Cells.UI
             return new Rect(location, new Size(rect2.Width, rect2.Height));
         }
 
-        private bool ContainsRect(Rect rect1, Rect rect2)
+        bool ContainsRect(Rect rect1, Rect rect2)
         {
             return ((((rect2.Left >= rect1.Left) && (rect2.Right <= rect1.Right)) && (rect2.Top >= rect1.Top)) && (rect2.Bottom <= rect1.Bottom));
         }
@@ -835,7 +835,7 @@ namespace Dt.Cells.UI
             return false;
         }
 
-        private void GcViewport_Loaded(object sender, RoutedEventArgs e)
+        void GcViewport_Loaded(object sender, RoutedEventArgs e)
         {
             int activeColumnViewportIndex = Sheet.GetActiveColumnViewportIndex();
             int activeRowViewportIndex = Sheet.GetActiveRowViewportIndex();
@@ -866,7 +866,7 @@ namespace Dt.Cells.UI
             return new RowPresenter(this);
         }
 
-        private CellRange GetActiveCellRange()
+        CellRange GetActiveCellRange()
         {
             if ((_activeRow < 0) || (_activeCol < 0))
             {
@@ -1342,7 +1342,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void RefreshChartsResizingFramesLayouts()
+        void RefreshChartsResizingFramesLayouts()
         {
             Rect[] floatingObjectsResizingRects = Sheet.GetFloatingObjectsResizingRects(RowViewportIndex, ColumnViewportIndex);
             if ((floatingObjectsResizingRects != null) && (floatingObjectsResizingRects.Length != 0))
@@ -1364,7 +1364,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void RefreshDragClearRect()
+        void RefreshDragClearRect()
         {
             CellRange dragClearRange = Sheet.GetDragClearRange();
             if (dragClearRange != null)
@@ -1389,13 +1389,13 @@ namespace Dt.Cells.UI
             DragFillContainer.InvalidateArrange();
         }
 
-        private void RefreshDragFillFrame()
+        void RefreshDragFillFrame()
         {
             RefreshDragFillFrameLayouts();
             RefreshDragFillFrameBorders();
         }
 
-        private void RefreshDragFillFrameBorders()
+        void RefreshDragFillFrameBorders()
         {
             CellRange dragFillFrameRange = Sheet.GetDragFillFrameRange();
             RowLayoutModel rowLayoutModel = GetRowLayoutModel();
@@ -1434,7 +1434,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void RefreshDragFillFrameLayouts()
+        void RefreshDragFillFrameLayouts()
         {
             CellRange dragFillFrameRange = Sheet.GetDragFillFrameRange();
             _cachedDragFillFrameRect = GetRangeBounds(dragFillFrameRange);
@@ -1506,7 +1506,7 @@ namespace Dt.Cells.UI
             FloatingObjectsMovingResizingContainer.InvalidateArrange();
         }
 
-        private void RefreshFloatingObjectMovingFramesLayouts()
+        void RefreshFloatingObjectMovingFramesLayouts()
         {
             Rect[] floatingObjectsMovingFrameRects = Sheet.GetFloatingObjectsMovingFrameRects(RowViewportIndex, ColumnViewportIndex);
             if ((floatingObjectsMovingFrameRects != null) && (floatingObjectsMovingFrameRects.Length != 0))
@@ -1789,7 +1789,7 @@ namespace Dt.Cells.UI
             return false;
         }
 
-        private async void ShowSheetCell(int row, int column)
+        async void ShowSheetCell(int row, int column)
         {
             await Sheet.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
@@ -1882,7 +1882,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void UpdateCellState(int row, int column)
+        void UpdateCellState(int row, int column)
         {
             RowPresenter presenter = RowsContainer.GetRow(row);
             if (presenter != null)
@@ -1985,7 +1985,7 @@ namespace Dt.Cells.UI
             get { return ((_editorPanel != null) && _editorPanel.EditorDirty); }
         }
 
-        private FloatingObjectMovingResizingContainerPanel FloatingObjectsMovingResizingContainer
+        FloatingObjectMovingResizingContainerPanel FloatingObjectsMovingResizingContainer
         {
             get { return _floatingObjectsMovingResizingContainer; }
         }
@@ -2055,15 +2055,15 @@ namespace Dt.Cells.UI
 
         internal sealed class CellCachePool : ICellSupport
         {
-            private Dictionary<ulong, Cell> _cache = new Dictionary<ulong, Cell>();
-            private GcViewport _parent;
+            Dictionary<ulong, Cell> _cache = new Dictionary<ulong, Cell>();
+            GcViewport _parent;
 
             public CellCachePool(GcViewport parentViewport)
             {
                 _parent = parentViewport;
             }
 
-            private Cell Add(int rowIndex, int columnIndex)
+            Cell Add(int rowIndex, int columnIndex)
             {
                 ICellsSupport dataContext = ParentViewport.GetDataContext();
                 if ((rowIndex < 0) || (rowIndex >= dataContext.Rows.Count))
@@ -2126,7 +2126,7 @@ namespace Dt.Cells.UI
                 return GetCachedCell(row, column);
             }
 
-            private GcViewport ParentViewport
+            GcViewport ParentViewport
             {
                 get { return _parent; }
             }
@@ -2135,11 +2135,11 @@ namespace Dt.Cells.UI
 
     internal partial class DataValidationPanel : Panel
     {
-        private DataValidationListButton _dataValidationListButton;
-        private DataValidationListButtonInfo _dataValidationListButtonInfo;
-        private DataValidationInputMessagePopUp _inputMessagePopUp;
-        private Dictionary<int, Dictionary<int, InvalidDataPresenter>> _presenters;
-        private DataValidator _validator;
+        DataValidationListButton _dataValidationListButton;
+        DataValidationListButtonInfo _dataValidationListButtonInfo;
+        DataValidationInputMessagePopUp _inputMessagePopUp;
+        Dictionary<int, Dictionary<int, InvalidDataPresenter>> _presenters;
+        DataValidator _validator;
         internal const double DATAVALIDATIONLISTBUTTONWIDTH = 16.0;
 
         public DataValidationPanel(GcViewport parent)
@@ -2286,7 +2286,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private Grid CreateDataValidationInputMessage(DataValidator validator)
+        Grid CreateDataValidationInputMessage(DataValidator validator)
         {
             Grid grid = new Grid
             {
@@ -2416,8 +2416,8 @@ namespace Dt.Cells.UI
 
     internal partial class DragFillContainerPanel : Panel
     {
-        private Rectangle _dragClearRectangle;
-        private DragFillFrame _dragFillFrame;
+        Rectangle _dragClearRectangle;
+        DragFillFrame _dragFillFrame;
 
         public DragFillContainerPanel()
         {
@@ -2514,10 +2514,10 @@ namespace Dt.Cells.UI
 
     internal partial class EditingPanel : Panel
     {
-        private Panel _backgroundPanel;
-        private CellPresenterBase _editingCell;
-        private FrameworkElement _editor1;
-        private FrameworkElement _editor2;
+        Panel _backgroundPanel;
+        CellPresenterBase _editingCell;
+        FrameworkElement _editor1;
+        FrameworkElement _editor2;
 
         public event EventHandler EditingChanged;
 
@@ -2605,7 +2605,7 @@ namespace Dt.Cells.UI
             return base.ArrangeOverride(finalSize);
         }
 
-        private void EditorTextChanged(object sender, TextChangedEventArgs e)
+        void EditorTextChanged(object sender, TextChangedEventArgs e)
         {
             if ((ParentViewport != null) && ParentViewport.IsEditing())
             {
@@ -2683,7 +2683,7 @@ namespace Dt.Cells.UI
             return _editor1;
         }
 
-        private object GetFocusedElement()
+        object GetFocusedElement()
         {
             return FocusManager.GetFocusedElement();
         }
@@ -2872,7 +2872,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void UpateScrollViewSize(TextBox tb)
+        void UpateScrollViewSize(TextBox tb)
         {
             string text = tb.Text;
             tb.Text = "Text";
@@ -2910,7 +2910,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void UpdateEditingElement(FrameworkElement editElement, bool isWrap)
+        void UpdateEditingElement(FrameworkElement editElement, bool isWrap)
         {
             EditingElement element = editElement as EditingElement;
             if (element != null)
@@ -2946,7 +2946,7 @@ namespace Dt.Cells.UI
 
     internal partial class FormulaSelectionContainerPanel : Panel
     {
-        private DispatcherTimer _timer;
+        DispatcherTimer _timer;
 
         protected override Size ArrangeOverride(Size finalSize)
         {
@@ -3036,7 +3036,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void StartTimer()
+        void StartTimer()
         {
             if (_timer == null)
             {
@@ -3047,7 +3047,7 @@ namespace Dt.Cells.UI
             _timer.Start();
         }
 
-        private void TimerTick(object sender, object e)
+        void TimerTick(object sender, object e)
         {
             foreach (FormulaSelectionFrame frame in base.Children)
             {
@@ -3055,7 +3055,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void EndTimer()
+        void EndTimer()
         {
             if (_timer != null)
             {
@@ -3069,31 +3069,31 @@ namespace Dt.Cells.UI
 
     internal partial class FormulaSelectionFrame : Panel
     {
-        private Line _bottom;
-        private Rectangle _bottomBackground;
-        private bool _canChangeBoundsByUI = true;
-        private bool _flag;
-        private Line _innerBottom;
-        private Line _innerLeft;
-        private Line _innerRight;
-        private Line _innerTop;
-        private bool _isBottomVisible;
-        private bool _isFlickering = true;
-        private bool _isLeftVisible;
-        private bool _isMouseOvering;
-        private bool _isRightVisible;
-        private bool _isTopVisible;
-        private Line _left;
-        private Rectangle _leftBackground;
-        private Rectangle _leftBottom;
-        private Rectangle _leftTop;
-        private Line _right;
-        private Rectangle _rightBackground;
-        private Rectangle _rightBottom;
-        private Rectangle _rightTop;
-        private FormulaSelectionItem _selectionItem;
-        private Line _top;
-        private Rectangle _topBackground;
+        Line _bottom;
+        Rectangle _bottomBackground;
+        bool _canChangeBoundsByUI = true;
+        bool _flag;
+        Line _innerBottom;
+        Line _innerLeft;
+        Line _innerRight;
+        Line _innerTop;
+        bool _isBottomVisible;
+        bool _isFlickering = true;
+        bool _isLeftVisible;
+        bool _isMouseOvering;
+        bool _isRightVisible;
+        bool _isTopVisible;
+        Line _left;
+        Rectangle _leftBackground;
+        Rectangle _leftBottom;
+        Rectangle _leftTop;
+        Line _right;
+        Rectangle _rightBackground;
+        Rectangle _rightBottom;
+        Rectangle _rightTop;
+        FormulaSelectionItem _selectionItem;
+        Line _top;
+        Rectangle _topBackground;
 
         public FormulaSelectionFrame(FormulaSelectionItem selectionItem)
         {
@@ -3171,7 +3171,7 @@ namespace Dt.Cells.UI
             return base.ArrangeOverride(finalSize);
         }
 
-        private void CreateBackground(FormulaSelectionItem selectionItem)
+        void CreateBackground(FormulaSelectionItem selectionItem)
         {
             SolidColorBrush brush = new SolidColorBrush(selectionItem.Color);
             Rectangle rectangle = new Rectangle();
@@ -3200,7 +3200,7 @@ namespace Dt.Cells.UI
             base.Children.Add(_bottomBackground);
         }
 
-        private void CreateCorners(FormulaSelectionItem selectionItem)
+        void CreateCorners(FormulaSelectionItem selectionItem)
         {
             SolidColorBrush brush = new SolidColorBrush(selectionItem.Color);
             Rectangle rectangle = new Rectangle();
@@ -3229,12 +3229,12 @@ namespace Dt.Cells.UI
             base.Children.Add(_rightBottom);
         }
 
-        private DoubleCollection CreateDoubleCollection()
+        DoubleCollection CreateDoubleCollection()
         {
             return new DoubleCollection { 1.0, 1.0 };
         }
 
-        private void CreateInnerBorders(FormulaSelectionItem selectionItem)
+        void CreateInnerBorders(FormulaSelectionItem selectionItem)
         {
             SolidColorBrush brush = new SolidColorBrush(Colors.Black);
             Line line = new Line();
@@ -3267,7 +3267,7 @@ namespace Dt.Cells.UI
             base.Children.Add(_innerBottom);
         }
 
-        private void CreateOutterBorders(FormulaSelectionItem selectionItem)
+        void CreateOutterBorders(FormulaSelectionItem selectionItem)
         {
             Color color = selectionItem.Color;
             SolidColorBrush brush = new SolidColorBrush(Color.FromArgb(0xff, (byte)(0xff - color.R), (byte)(0xff - color.G), (byte)(0xff - color.B)));
@@ -3336,7 +3336,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void SelectionItemPropertyChanged(object sender, PropertyChangedEventArgs e)
+        void SelectionItemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "Range")
             {
@@ -3378,7 +3378,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void UpdateVisibilities()
+        void UpdateVisibilities()
         {
             if (IsLeftVisible)
             {
@@ -3715,12 +3715,12 @@ namespace Dt.Cells.UI
 
     internal partial class FormulaSelectionGripperFrame : Panel
     {
-        private Ellipse _bottomRightGripper;
-        private Visibility _bottomRightVisibility;
-        private bool _canChangeBoundsByUI = true;
-        private FormulaSelectionItem _selectionItem;
-        private Ellipse _topLeftGripper;
-        private Visibility _topLeftVisibility;
+        Ellipse _bottomRightGripper;
+        Visibility _bottomRightVisibility;
+        bool _canChangeBoundsByUI = true;
+        FormulaSelectionItem _selectionItem;
+        Ellipse _topLeftGripper;
+        Visibility _topLeftVisibility;
 
         public FormulaSelectionGripperFrame(FormulaSelectionItem selectionItem)
         {
@@ -3737,7 +3737,7 @@ namespace Dt.Cells.UI
             return base.ArrangeOverride(finalSize);
         }
 
-        private void CreateTouchGrippers(FormulaSelectionItem selectionItem)
+        void CreateTouchGrippers(FormulaSelectionItem selectionItem)
         {
             SolidColorBrush brush = new SolidColorBrush(selectionItem.Color);
             Ellipse ellipse = new Ellipse();
@@ -3768,7 +3768,7 @@ namespace Dt.Cells.UI
             return base.MeasureOverride(availableSize);
         }
 
-        private void SelectionItemPropertyChanged(object sender, PropertyChangedEventArgs e)
+        void SelectionItemPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "Range")
             {
@@ -3802,7 +3802,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void UpdateGripperVisibility()
+        void UpdateGripperVisibility()
         {
             if (SheetView.FormulaSelectionFeature.IsTouching && _canChangeBoundsByUI)
             {
@@ -3863,9 +3863,9 @@ namespace Dt.Cells.UI
 
     internal partial class RowsPanel : Panel
     {
-        private HashSet<RowPresenter> _cachedChildren;
+        HashSet<RowPresenter> _cachedChildren;
         internal int _normalZIndexBase;
-        private Dictionary<int, RowPresenter> _rows;
+        Dictionary<int, RowPresenter> _rows;
         internal int _spanRowZIndexBase;
 
         public RowsPanel()
@@ -3918,7 +3918,7 @@ namespace Dt.Cells.UI
             return size;
         }
 
-        private RowPresenter GetNewRowWithRecyclingSupport(int rowIndex)
+        RowPresenter GetNewRowWithRecyclingSupport(int rowIndex)
         {
             RowPresenter recycledRow = null;
             recycledRow = GetRecycledRow();
@@ -3968,8 +3968,8 @@ namespace Dt.Cells.UI
             double x = ParentViewport.Location.X;
             double y = ParentViewport.Location.Y;
             RowLayoutModel rowLayoutModel = ParentViewport.GetRowLayoutModel();
-            Dictionary<int, RowPresenter> rows = this._rows;
-            this._rows = new Dictionary<int, RowPresenter>();
+            Dictionary<int, RowPresenter> rows = _rows;
+            _rows = new Dictionary<int, RowPresenter>();
             foreach (RowPresenter presenter in Enumerable.ToArray<RowPresenter>((IEnumerable<RowPresenter>)rows.Values))
             {
                 if ((rowLayoutModel.FindRow(presenter.Row) == null) && !TryRecycleRow(presenter))
@@ -4023,7 +4023,7 @@ namespace Dt.Cells.UI
                         }
                         num7 = num7 % 0x7ffe;
                         Canvas.SetZIndex(element, num7);
-                        this._rows.Add(row, element);
+                        _rows.Add(row, element);
                         element.Location = new Windows.Foundation.Point(x, y);
                         element.Measure(new Size(availableSize.Width, layout.Height));
                         y += layout.Height;
@@ -4054,7 +4054,7 @@ namespace Dt.Cells.UI
             return new Size(num5 + ParentViewport.Location.X, y);
         }
 
-        private bool TryRecycleRow(RowPresenter objRow)
+        bool TryRecycleRow(RowPresenter objRow)
         {
             if (objRow.IsRecyclable)
             {
@@ -4080,12 +4080,12 @@ namespace Dt.Cells.UI
 
     internal partial class SelectionContainerPanel : Panel
     {
-        private List<Rect> _activeSelectionLayouts;
-        private List<Rectangle> _activeSelectionRectangles;
-        private SelectionFrame _focusIndicator;
-        private Brush _selectionBackground;
-        private Path _selectionPath;
-        private const int ACTIVE_SELECTION_RECTANGLE_NUMBER = 4;
+        List<Rect> _activeSelectionLayouts;
+        List<Rectangle> _activeSelectionRectangles;
+        SelectionFrame _focusIndicator;
+        Brush _selectionBackground;
+        Path _selectionPath;
+        const int ACTIVE_SELECTION_RECTANGLE_NUMBER = 4;
 
         public SelectionContainerPanel(GcViewport parentViewport)
         {
@@ -4253,12 +4253,12 @@ namespace Dt.Cells.UI
             return finalSize;
         }
 
-        private bool ContainsRect(Rect rect1, Rect rect2)
+        bool ContainsRect(Rect rect1, Rect rect2)
         {
             return ((((rect2.Left >= rect1.Left) && (rect2.Right <= rect1.Right)) && (rect2.Top >= rect1.Top)) && (rect2.Bottom <= rect1.Bottom));
         }
 
-        private CellRange GetViewportRange()
+        CellRange GetViewportRange()
         {
             int viewportTopRow = ParentViewport.Sheet.GetViewportTopRow(ParentViewport.RowViewportIndex);
             int viewportLeftColumn = ParentViewport.Sheet.GetViewportLeftColumn(ParentViewport.ColumnViewportIndex);
@@ -4277,7 +4277,7 @@ namespace Dt.Cells.UI
             _focusIndicator.SetSelectionFrameStroke(brush);
         }
 
-        private void UpdateActiveSelectionLayouts()
+        void UpdateActiveSelectionLayouts()
         {
             Rect rect = ParentViewport._cachedActiveSelectionLayout;
             Rect rect2 = ParentViewport._cachedFocusCellLayout;
@@ -4366,7 +4366,7 @@ namespace Dt.Cells.UI
             get { return _focusIndicator; }
         }
 
-        private bool IsActiveCellBoundsValid
+        bool IsActiveCellBoundsValid
         {
             get { return ((!ParentViewport._cachedFocusCellLayout.IsEmpty && (ParentViewport._cachedFocusCellLayout.Width > 0.0)) && (ParentViewport._cachedFocusCellLayout.Height > 0.0)); }
         }
@@ -4379,26 +4379,26 @@ namespace Dt.Cells.UI
     internal partial class SelectionFrame : Panel
     {
         [ThreadStatic]
-        private static readonly Brush DefaultSelectionBorderBrush = new SolidColorBrush(Color.FromArgb(220, 0, 0, 0));
-        private const int BORDER_OFFSET = 4;
+        static readonly Brush DefaultSelectionBorderBrush = new SolidColorBrush(Color.FromArgb(220, 0, 0, 0));
+        const int BORDER_OFFSET = 4;
         internal const int FILL_WEIGHT = 5;
-        private const int SelectionBorderThickness = 3;
+        const int SelectionBorderThickness = 3;
 
-        private Rectangle _bottomRectangle;
-        private Color _currentBorderColor;
-        private Rectangle _fillIndicator;
-        private Rect _fillIndicatorBounds = Rect.Empty;
-        private FillIndicatorPosition _fillIndicatorPosition;
-        private bool _isBottomVisible = true;
-        private bool _isFillIndicatorVisible = true;
-        private bool _isLeftVisible = true;
-        private bool _isRightVisible = true;
-        private bool _isTopVisible = true;
-        private Rectangle _leftRectangle;
-        private Rectangle _rightRectangle;
-        private Color _selectionBorderColor;
-        private double _thickNess = 3.0;
-        private Rectangle _topRectangle;
+        Rectangle _bottomRectangle;
+        Color _currentBorderColor;
+        Rectangle _fillIndicator;
+        Rect _fillIndicatorBounds = Rect.Empty;
+        FillIndicatorPosition _fillIndicatorPosition;
+        bool _isBottomVisible = true;
+        bool _isFillIndicatorVisible = true;
+        bool _isLeftVisible = true;
+        bool _isRightVisible = true;
+        bool _isTopVisible = true;
+        Rectangle _leftRectangle;
+        Rectangle _rightRectangle;
+        Color _selectionBorderColor;
+        double _thickNess = 3.0;
+        Rectangle _topRectangle;
 
         public SelectionFrame(GcViewport owingViewport)
         {
@@ -4439,7 +4439,7 @@ namespace Dt.Cells.UI
             _fillIndicatorPosition = FillIndicatorPosition.BottomRight;
         }
 
-        private Rect ArrangeFillRect(Size finalSize)
+        Rect ArrangeFillRect(Size finalSize)
         {
             Rect empty = Rect.Empty;
             switch (_fillIndicatorPosition)
@@ -4589,7 +4589,7 @@ namespace Dt.Cells.UI
             return finalSize;
         }
 
-        private Color GetSelectionBorderColor(Color selectionBorderColor, string themeColor)
+        Color GetSelectionBorderColor(Color selectionBorderColor, string themeColor)
         {
             if (themeColor != null)
             {
@@ -4637,7 +4637,7 @@ namespace Dt.Cells.UI
             await base.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, new DispatchedHandler(InvalidateMeasure));
         }
 
-        private void SetSelectionStyle(Color currentBorderColor)
+        void SetSelectionStyle(Color currentBorderColor)
         {
             Action action = null;
             SolidColorBrush brush = new SolidColorBrush(currentBorderColor);

@@ -19,8 +19,8 @@ namespace Dt.Cells.UndoRedo
     /// </summary>
     public class RowGroupUndoAction : ActionBase, IUndo
     {
-        private RowGroupExtent _rowGroupExtent;
-        private Worksheet _sheet;
+        RowGroupExtent _rowGroupExtent;
+        Worksheet _sheet;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.UndoRedo.RowGroupUndoAction" /> class.
@@ -29,8 +29,8 @@ namespace Dt.Cells.UndoRedo
         /// <param name="rowGroupExtent">The row group extent information.</param>
         public RowGroupUndoAction(Worksheet sheet, RowGroupExtent rowGroupExtent)
         {
-            this._sheet = sheet;
-            this._rowGroupExtent = rowGroupExtent;
+            _sheet = sheet;
+            _rowGroupExtent = rowGroupExtent;
         }
 
         /// <summary>
@@ -51,14 +51,14 @@ namespace Dt.Cells.UndoRedo
         /// <param name="sender">Object on which the action occurred.</param>
         public override void Execute(object sender)
         {
-            if (((this._sheet != null) && (this._rowGroupExtent != null)) && (this._sheet.RowRangeGroup != null))
+            if (((_sheet != null) && (_rowGroupExtent != null)) && (_sheet.RowRangeGroup != null))
             {
                 base.SuspendInvalidate(sender);
                 try
                 {
-                    int index = this._rowGroupExtent.Index;
-                    int count = this._rowGroupExtent.Count;
-                    this._sheet.RowRangeGroup.Group(index, count);
+                    int index = _rowGroupExtent.Index;
+                    int count = _rowGroupExtent.Count;
+                    _sheet.RowRangeGroup.Group(index, count);
                 }
                 finally
                 {
@@ -101,14 +101,14 @@ namespace Dt.Cells.UndoRedo
         public bool Undo(object sender)
         {
             bool flag = false;
-            if (((this._sheet != null) && (this._rowGroupExtent != null)) && (this._sheet.RowRangeGroup != null))
+            if (((_sheet != null) && (_rowGroupExtent != null)) && (_sheet.RowRangeGroup != null))
             {
                 base.SuspendInvalidate(sender);
                 try
                 {
-                    int index = this._rowGroupExtent.Index;
-                    int count = this._rowGroupExtent.Count;
-                    this._sheet.RowRangeGroup.Ungroup(index, count);
+                    int index = _rowGroupExtent.Index;
+                    int count = _rowGroupExtent.Count;
+                    _sheet.RowRangeGroup.Ungroup(index, count);
                     flag = true;
                 }
                 finally

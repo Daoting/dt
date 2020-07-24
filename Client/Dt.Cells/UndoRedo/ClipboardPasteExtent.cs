@@ -18,10 +18,10 @@ namespace Dt.Cells.UndoRedo
     /// </summary>
     public class ClipboardPasteExtent
     {
-        private string _clipboardText;
-        private bool _isCutting;
-        private CellRange _sourceRange;
-        private CellRange[] _targetRanges;
+        string _clipboardText;
+        bool _isCutting;
+        CellRange _sourceRange;
+        CellRange[] _targetRanges;
 
         /// <summary>
         /// Creates a new instance of the <see cref="T:Dt.Cells.UndoRedo.ClipboardPasteExtent" /> class.
@@ -36,10 +36,10 @@ namespace Dt.Cells.UndoRedo
             {
                 throw new ArgumentException(ResourceStrings.undoActionPasteTargetEmptyError);
             }
-            this._sourceRange = sourceRange;
-            this._targetRanges = targetRanges;
-            this._isCutting = isCutting;
-            this._clipboardText = clipboardText;
+            _sourceRange = sourceRange;
+            _targetRanges = targetRanges;
+            _isCutting = isCutting;
+            _clipboardText = clipboardText;
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace Dt.Cells.UndoRedo
         /// </summary>
         public string ClipboardText
         {
-            get { return  this._clipboardText; }
+            get { return  _clipboardText; }
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace Dt.Cells.UndoRedo
         /// </value>
         public bool IsCutting
         {
-            get { return  this._isCutting; }
+            get { return  _isCutting; }
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace Dt.Cells.UndoRedo
         /// </summary>
         public CellRange SourceRange
         {
-            get { return  this._sourceRange; }
+            get { return  _sourceRange; }
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace Dt.Cells.UndoRedo
         /// </summary>
         public CellRange[] TargetRanges
         {
-            get { return  this._targetRanges; }
+            get { return  _targetRanges; }
         }
     }
 }

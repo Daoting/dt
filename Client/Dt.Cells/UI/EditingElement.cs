@@ -22,7 +22,7 @@ namespace Dt.Cells.UI
     public partial class EditingElement : TextBox
     {
         internal CellPresenterBase Owner;
-        private ScrollViewer scrollView;
+        ScrollViewer scrollView;
         /// <summary>
         /// Represents current editor status.
         /// </summary>
@@ -35,7 +35,7 @@ namespace Dt.Cells.UI
         {
             base.DefaultStyleKey = typeof(EditingElement);
             base.Padding = new Windows.UI.Xaml.Thickness(0.0);
-            this.Status = EditorStatus.Ready;
+            Status = EditorStatus.Ready;
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Dt.Cells.UI
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            this.scrollView = base.GetTemplateChild("ContentElement") as ScrollViewer;
+            scrollView = base.GetTemplateChild("ContentElement") as ScrollViewer;
         }
 
         /// <summary>
@@ -60,13 +60,13 @@ namespace Dt.Cells.UI
             KeyboardHelper.GetMetaKeyState(out shift, out ctrl, out alt);
             if ((!alt && !ctrl) && (!shift && (e.Key == VirtualKey.F2)))
             {
-                if (this.Status == EditorStatus.Edit)
+                if (Status == EditorStatus.Edit)
                 {
-                    this.Status = EditorStatus.Enter;
+                    Status = EditorStatus.Enter;
                 }
                 else
                 {
-                    this.Status = EditorStatus.Edit;
+                    Status = EditorStatus.Edit;
                 }
             }
         }
@@ -82,7 +82,7 @@ namespace Dt.Cells.UI
 
         internal ScrollViewer TextView
         {
-            get { return  this.scrollView; }
+            get { return  scrollView; }
         }
     }
 }

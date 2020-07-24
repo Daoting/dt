@@ -26,34 +26,34 @@ namespace Dt.Cells.CellTypes
 {
     internal class BaseCellType : ICellType, IZoomSupport, IFormulaEditingSupport
     {
-        private Cell _dataContext;
+        Cell _dataContext;
         protected FrameworkElement _displayElement;
         protected FrameworkElement _editingElement;
-        private double _zoomFactor = 1.0;
-        private FontFamily appliedFontFamily;
-        private double? appliedFontSize;
-        private FontStretch? appliedFontStretch = null;
-        private FontStyle? appliedFontStyle = null;
-        private FontWeight? appliedFontWeight = null;
-        private Brush appliedForeground;
-        private HorizontalAlignment? appliedHorizontalAlignment = null;
-        private Windows.UI.Xaml.Thickness? appliedMargin = null;
-        private double? appliedShrinkFactor = null;
-        private string appliedText = "";
-        private TextAlignment? appliedTextAlignment = TextAlignment.Left;
-        private bool? appliedTextWrapping = false;
-        private VerticalAlignment? appliedVerticalAlignment = null;
-        private Type cachedValueType;
+        double _zoomFactor = 1.0;
+        FontFamily appliedFontFamily;
+        double? appliedFontSize;
+        FontStretch? appliedFontStretch = null;
+        FontStyle? appliedFontStyle = null;
+        FontWeight? appliedFontWeight = null;
+        Brush appliedForeground;
+        HorizontalAlignment? appliedHorizontalAlignment = null;
+        Windows.UI.Xaml.Thickness? appliedMargin = null;
+        double? appliedShrinkFactor = null;
+        string appliedText = "";
+        TextAlignment? appliedTextAlignment = TextAlignment.Left;
+        bool? appliedTextWrapping = false;
+        VerticalAlignment? appliedVerticalAlignment = null;
+        Type cachedValueType;
 
         public virtual bool ApplyEditing(SheetView sheetView, bool allowFormula)
         {
-            TextBox box = this._editingElement as TextBox;
+            TextBox box = _editingElement as TextBox;
             if (box != null)
             {
                 bool isFormulaApplied = false;
                 string appliedFormula = null;
-                bool flag2 = ApplyValueToCell(sheetView, this.DataContext, allowFormula, box.Text, this.cachedValueType, out isFormulaApplied, out appliedFormula);
-                this.cachedValueType = null;
+                bool flag2 = ApplyValueToCell(sheetView, DataContext, allowFormula, box.Text, cachedValueType, out isFormulaApplied, out appliedFormula);
+                cachedValueType = null;
                 return flag2;
             }
             return false;
@@ -161,9 +161,9 @@ namespace Dt.Cells.CellTypes
             return element;
         }
 
-        private Windows.UI.Xaml.Thickness GetDefaultMarginForDisplay(double fontSize)
+        Windows.UI.Xaml.Thickness GetDefaultMarginForDisplay(double fontSize)
         {
-            double zoomFactor = this.ZoomFactor;
+            double zoomFactor = ZoomFactor;
             Windows.UI.Xaml.Thickness excelBlank = MeasureHelper.GetExcelBlank();
             Windows.UI.Xaml.Thickness textBlockBlank = MeasureHelper.GetTextBlockBlank(fontSize);
             double left = excelBlank.Left - textBlockBlank.Left;
@@ -172,9 +172,9 @@ namespace Dt.Cells.CellTypes
             return new Windows.UI.Xaml.Thickness(left, top, right, excelBlank.Bottom - textBlockBlank.Bottom);
         }
 
-        private Windows.UI.Xaml.Thickness GetDefaultPaddingForEdit(double fontSize)
+        Windows.UI.Xaml.Thickness GetDefaultPaddingForEdit(double fontSize)
         {
-            double zoomFactor = this.ZoomFactor;
+            double zoomFactor = ZoomFactor;
             Windows.UI.Xaml.Thickness excelBlank = MeasureHelper.GetExcelBlank();
             Windows.UI.Xaml.Thickness textBoxBlank = MeasureHelper.GetTextBoxBlank(fontSize);
             double left = excelBlank.Left - textBoxBlank.Left;
@@ -185,25 +185,25 @@ namespace Dt.Cells.CellTypes
 
         public virtual FrameworkElement GetDisplayElement()
         {
-            if (this._displayElement == null)
+            if (_displayElement == null)
             {
-                this._displayElement = this.CreateDisplayElement();
+                _displayElement = CreateDisplayElement();
             }
-            return this._displayElement;
+            return _displayElement;
         }
 
         public virtual FrameworkElement GetEditingElement()
         {
-            if (this._editingElement == null)
+            if (_editingElement == null)
             {
-                this._editingElement = this.CreateEditingElement();
+                _editingElement = CreateEditingElement();
             }
-            return this._editingElement;
+            return _editingElement;
         }
 
         public virtual bool HasEditingElement()
         {
-            return (this._editingElement != null);
+            return (_editingElement != null);
         }
 
         public virtual void InitDisplayElement(string text)
@@ -213,8 +213,8 @@ namespace Dt.Cells.CellTypes
             FontWeight weight;
             FontFamily family;
             Thickness thickness;
-            TextBlock displayElement = this.GetDisplayElement() as TextBlock;
-            Cell dataContext = this.DataContext;
+            TextBlock displayElement = GetDisplayElement() as TextBlock;
+            Cell dataContext = DataContext;
             if (dataContext == null)
             {
                 return;
@@ -223,13 +223,13 @@ namespace Dt.Cells.CellTypes
             {
                 return;
             }
-            if (this.appliedText != text)
+            if (appliedText != text)
             {
                 displayElement.Text = text;
-                this.appliedText = text;
+                appliedText = text;
             }
             HorizontalAlignment alignment = dataContext.ToHorizontalAlignment();
-            if (this.appliedHorizontalAlignment.HasValue)
+            if (appliedHorizontalAlignment.HasValue)
             {
                 HorizontalAlignment? appliedHorizontalAlignment = this.appliedHorizontalAlignment;
                 HorizontalAlignment alignment4 = alignment;
@@ -239,7 +239,7 @@ namespace Dt.Cells.CellTypes
                 }
             }
             displayElement.HorizontalAlignment = alignment;
-            this.appliedHorizontalAlignment = new HorizontalAlignment?(alignment);
+            appliedHorizontalAlignment = new HorizontalAlignment?(alignment);
         Label_0085:
             center = TextAlignment.Left;
             switch (alignment)
@@ -252,7 +252,7 @@ namespace Dt.Cells.CellTypes
                     center = TextAlignment.Right;
                     break;
             }
-            if (this.appliedTextAlignment.HasValue)
+            if (appliedTextAlignment.HasValue)
             {
                 TextAlignment? appliedTextAlignment = this.appliedTextAlignment;
                 TextAlignment alignment6 = center;
@@ -262,10 +262,10 @@ namespace Dt.Cells.CellTypes
                 }
             }
             displayElement.TextAlignment = center;
-            this.appliedTextAlignment = new TextAlignment?(center);
+            appliedTextAlignment = new TextAlignment?(center);
         Label_00E8:
             alignment3 = dataContext.ActualVerticalAlignment.ToVerticalAlignment();
-            if (this.appliedVerticalAlignment.HasValue)
+            if (appliedVerticalAlignment.HasValue)
             {
                 VerticalAlignment? appliedVerticalAlignment = this.appliedVerticalAlignment;
                 VerticalAlignment alignment7 = alignment3;
@@ -275,37 +275,37 @@ namespace Dt.Cells.CellTypes
                 }
             }
             displayElement.VerticalAlignment = alignment3;
-            this.appliedVerticalAlignment = new VerticalAlignment?(alignment3);
+            appliedVerticalAlignment = new VerticalAlignment?(alignment3);
         Label_013D:
-            if (string.IsNullOrWhiteSpace(this.appliedText))
+            if (string.IsNullOrWhiteSpace(appliedText))
             {
                 return;
             }
             Brush actualForeground = dataContext.ActualForeground;
             if (actualForeground != null)
             {
-                if (this.appliedForeground == null)
+                if (appliedForeground == null)
                 {
                     SolidColorBrush brush2 = actualForeground as SolidColorBrush;
                     if ((brush2 == null) || !(brush2.Color == Colors.Black))
                     {
                         displayElement.Foreground = actualForeground;
-                        this.appliedForeground = actualForeground;
+                        appliedForeground = actualForeground;
                     }
                 }
                 else
                 {
                     displayElement.Foreground = actualForeground;
-                    this.appliedForeground = actualForeground;
+                    appliedForeground = actualForeground;
                 }
             }
-            else if (this.appliedForeground != null)
+            else if (appliedForeground != null)
             {
                 displayElement.Foreground = actualForeground;
                 displayElement.ClearValue(TextBlock.ForegroundProperty);
             }
             FontStyle actualFontStyle = dataContext.ActualFontStyle;
-            if (this.appliedFontStyle.HasValue)
+            if (appliedFontStyle.HasValue)
             {
                 FontStyle? appliedFontStyle = this.appliedFontStyle;
                 FontStyle style2 = actualFontStyle;
@@ -315,16 +315,16 @@ namespace Dt.Cells.CellTypes
                 }
             }
             displayElement.FontStyle = actualFontStyle;
-            this.appliedFontStyle = new FontStyle?(actualFontStyle);
+            appliedFontStyle = new FontStyle?(actualFontStyle);
         Label_0210:
             weight = dataContext.ActualFontWeight;
-            if (!this.appliedFontWeight.HasValue || (this.appliedFontWeight.Value.Weight != weight.Weight))
+            if (!appliedFontWeight.HasValue || (appliedFontWeight.Value.Weight != weight.Weight))
             {
                 displayElement.FontWeight = weight;
-                this.appliedFontWeight = new FontWeight?(weight);
+                appliedFontWeight = new FontWeight?(weight);
             }
             FontStretch actualFontStretch = dataContext.ActualFontStretch;
-            if (this.appliedFontStretch.HasValue)
+            if (appliedFontStretch.HasValue)
             {
                 FontStretch? appliedFontStretch = this.appliedFontStretch;
                 FontStretch stretch2 = actualFontStretch;
@@ -334,24 +334,24 @@ namespace Dt.Cells.CellTypes
                 }
             }
             displayElement.FontStretch = actualFontStretch;
-            this.appliedFontStretch = new FontStretch?(actualFontStretch);
+            appliedFontStretch = new FontStretch?(actualFontStretch);
         Label_02A3:
             family = dataContext.ActualFontFamily;
             if (family != null)
             {
-                if (this.appliedFontFamily != family)
+                if (appliedFontFamily != family)
                 {
                     displayElement.FontFamily = family;
-                    this.appliedFontFamily = family;
+                    appliedFontFamily = family;
                 }
             }
-            else if (this.appliedFontFamily != null)
+            else if (appliedFontFamily != null)
             {
                 displayElement.ClearValue(TextBlock.FontFamilyProperty);
-                this.appliedFontFamily = family;
+                appliedFontFamily = family;
             }
             bool actualWordWrap = dataContext.ActualWordWrap;
-            if (this.appliedTextWrapping.HasValue)
+            if (appliedTextWrapping.HasValue)
             {
                 bool? appliedTextWrapping = this.appliedTextWrapping;
                 bool flag3 = actualWordWrap;
@@ -361,11 +361,11 @@ namespace Dt.Cells.CellTypes
                 }
             }
             displayElement.TextWrapping = actualWordWrap ? TextWrapping.Wrap : TextWrapping.NoWrap;
-            this.appliedTextWrapping = new bool?(actualWordWrap);
+            appliedTextWrapping = new bool?(actualWordWrap);
         Label_033C:
             if (!actualWordWrap && dataContext.ActualShrinkToFit)
             {
-                double fontSize = dataContext.ActualFontSize * this.ZoomFactor;
+                double fontSize = dataContext.ActualFontSize * ZoomFactor;
                 if (fontSize > 0.0)
                 {
                     double num2 = 1.0;
@@ -375,32 +375,32 @@ namespace Dt.Cells.CellTypes
                         fontFamily = displayElement.FontFamily;
                     }
                     object textFormattingMode = null;
-                    double width = MeasureHelper.MeasureText(this.appliedText, fontFamily, fontSize, this.appliedFontStretch.Value, this.appliedFontStyle.Value, this.appliedFontWeight.Value, new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity), false, textFormattingMode, displayElement.UseLayoutRounding, this.ZoomFactor).Width;
-                    double num4 = dataContext.ActualTextIndent * this.ZoomFactor;
-                    double num5 = dataContext.Worksheet.GetActualColumnWidth(dataContext.Column.Index, dataContext.ColumnSpan, dataContext.SheetArea) * this.ZoomFactor;
-                    num5 = MeasureHelper.ConvertExcelCellSizeToTextSize(new Windows.Foundation.Size(num5, double.PositiveInfinity), this.ZoomFactor).Width;
+                    double width = MeasureHelper.MeasureText(appliedText, fontFamily, fontSize, appliedFontStretch.Value, appliedFontStyle.Value, appliedFontWeight.Value, new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity), false, textFormattingMode, displayElement.UseLayoutRounding, ZoomFactor).Width;
+                    double num4 = dataContext.ActualTextIndent * ZoomFactor;
+                    double num5 = dataContext.Worksheet.GetActualColumnWidth(dataContext.Column.Index, dataContext.ColumnSpan, dataContext.SheetArea) * ZoomFactor;
+                    num5 = MeasureHelper.ConvertExcelCellSizeToTextSize(new Windows.Foundation.Size(num5, double.PositiveInfinity), ZoomFactor).Width;
                     num5 = Math.Max((double) 0.0, (double) (num5 - num4));
                     num2 = num5 / width;
                     if (num5 < width)
                     {
-                        this.appliedShrinkFactor = new double?(num2);
+                        appliedShrinkFactor = new double?(num2);
                     }
                     else
                     {
-                        this.appliedShrinkFactor = null;
+                        appliedShrinkFactor = null;
                     }
                 }
             }
             else
             {
-                this.appliedShrinkFactor = null;
+                appliedShrinkFactor = null;
             }
-            double num6 = dataContext.ActualFontSize * this.ZoomFactor;
-            if (this.appliedShrinkFactor.HasValue)
+            double num6 = dataContext.ActualFontSize * ZoomFactor;
+            if (appliedShrinkFactor.HasValue)
             {
-                num6 *= this.appliedShrinkFactor.Value;
+                num6 *= appliedShrinkFactor.Value;
             }
-            if (this.appliedFontSize.HasValue)
+            if (appliedFontSize.HasValue)
             {
                 double num8 = num6;
                 double? appliedFontSize = this.appliedFontSize;
@@ -412,21 +412,21 @@ namespace Dt.Cells.CellTypes
             if (num6 > 0.0)
             {
                 displayElement.FontSize = num6;
-                this.appliedFontSize = new double?(num6);
+                appliedFontSize = new double?(num6);
             }
             else if (num6 == 0.0)
             {
                 displayElement.Text = "";
-                this.appliedText = null;
+                appliedText = null;
             }
             else
             {
                 displayElement.ClearValue(TextBlock.FontSizeProperty);
-                this.appliedFontSize = null;
+                appliedFontSize = null;
             }
         Label_0554:
-            thickness = this.GetDefaultMarginForDisplay(num6);
-            double num7 = dataContext.ActualTextIndent * this.ZoomFactor;
+            thickness = GetDefaultMarginForDisplay(num6);
+            double num7 = dataContext.ActualTextIndent * ZoomFactor;
             switch (alignment)
             {
                 case HorizontalAlignment.Center:
@@ -441,7 +441,7 @@ namespace Dt.Cells.CellTypes
                     thickness.Right += num7;
                     break;
             }
-            if (this.appliedMargin.HasValue)
+            if (appliedMargin.HasValue)
             {
                 Windows.UI.Xaml.Thickness? appliedMargin = this.appliedMargin;
                 Windows.UI.Xaml.Thickness thickness2 = thickness;
@@ -451,7 +451,7 @@ namespace Dt.Cells.CellTypes
                 }
             }
             displayElement.Margin = thickness;
-            this.appliedMargin = new Windows.UI.Xaml.Thickness?(thickness);
+            appliedMargin = new Windows.UI.Xaml.Thickness?(thickness);
         Label_05F2:
             if (dataContext.ActualUnderline)
             {
@@ -476,8 +476,8 @@ namespace Dt.Cells.CellTypes
             IFormatter formatter2;
             Action action2 = null;
             IFormatter preferredEditingFormatter = null;
-            TextBox tbElement = this.GetEditingElement() as TextBox;
-            Cell bindingCell = this.DataContext;
+            TextBox tbElement = GetEditingElement() as TextBox;
+            Cell bindingCell = DataContext;
             StyleInfo info = bindingCell.Worksheet.GetActualStyleInfo(bindingCell.Row.Index, bindingCell.Column.Index, bindingCell.SheetArea, true);
             if ((tbElement == null) || (info == null))
             {
@@ -515,11 +515,11 @@ namespace Dt.Cells.CellTypes
             {
                 if (bindingCell.Value == null)
                 {
-                    this.cachedValueType = null;
+                    cachedValueType = null;
                 }
                 goto Label_0293;
             }
-            this.cachedValueType = bindingCell.Value.GetType();
+            cachedValueType = bindingCell.Value.GetType();
             preferredEditingFormatter = new GeneralFormatter().GetPreferredEditingFormatter(bindingCell.Value);
             if ((preferredEditingFormatter != null) && (info.Formatter is AutoFormatter))
             {
@@ -552,7 +552,7 @@ namespace Dt.Cells.CellTypes
             {
                 text = formatter2.Format(bindingCell.Value);
             }
-            if (((text != null) && text.StartsWith("=")) && this.CanUserEditFormula)
+            if (((text != null) && text.StartsWith("=")) && CanUserEditFormula)
             {
                 text = "'" + text;
             }
@@ -560,7 +560,7 @@ namespace Dt.Cells.CellTypes
             tbElement.Text = text;
             if (info.FontSize > 0.0)
             {
-                tbElement.FontSize = info.FontSize * this.ZoomFactor;
+                tbElement.FontSize = info.FontSize * ZoomFactor;
             }
             else
             {
@@ -649,14 +649,14 @@ namespace Dt.Cells.CellTypes
             {
                 tbElement.TextAlignment = TextAlignment.Left;
             }
-            Windows.UI.Xaml.Thickness defaultPaddingForEdit = this.GetDefaultPaddingForEdit(tbElement.FontSize);
+            Windows.UI.Xaml.Thickness defaultPaddingForEdit = GetDefaultPaddingForEdit(tbElement.FontSize);
             tbElement.Margin = defaultPaddingForEdit;
             tbElement.TextWrapping = TextWrapping.Wrap;
             bool actualUnderline = bindingCell.ActualUnderline;
             bool actualStrikethrough = bindingCell.ActualStrikethrough;
         }
 
-        private static void InitStrikethroughforDisplayElement(TextBlock tbElement, Cell cell)
+        static void InitStrikethroughforDisplayElement(TextBlock tbElement, Cell cell)
         {
             if (cell.ActualStrikethrough)
             {
@@ -683,13 +683,13 @@ namespace Dt.Cells.CellTypes
 
         public void SetEditingElement(FrameworkElement editingElement)
         {
-            if (!object.ReferenceEquals(this._editingElement, editingElement))
+            if (!object.ReferenceEquals(_editingElement, editingElement))
             {
-                this._editingElement = editingElement;
+                _editingElement = editingElement;
             }
         }
 
-        private static void UpdateFormatter(string text, Cell cell, Type cacheValueType)
+        static void UpdateFormatter(string text, Cell cell, Type cacheValueType)
         {
             object obj2 = null;
             GeneralFormatter preferredDisplayFormatter = new GeneralFormatter().GetPreferredDisplayFormatter(text, out obj2) as GeneralFormatter;
@@ -709,14 +709,14 @@ namespace Dt.Cells.CellTypes
 
         public Cell DataContext
         {
-            get { return  this._dataContext; }
-            set { this._dataContext = value; }
+            get { return  _dataContext; }
+            set { _dataContext = value; }
         }
 
         public double ZoomFactor
         {
-            get { return  this._zoomFactor; }
-            set { this._zoomFactor = value; }
+            get { return  _zoomFactor; }
+            set { _zoomFactor = value; }
         }
     }
 }

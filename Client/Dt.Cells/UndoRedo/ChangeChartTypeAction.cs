@@ -24,9 +24,9 @@ namespace Dt.Cells.UndoRedo
     /// </summary>
     public class ChangeChartTypeAction : ActionBase, IUndo
     {
-        private SpreadChart _chart;
-        private SpreadChartType _newType;
-        private SpreadChartType _oldType;
+        SpreadChart _chart;
+        SpreadChartType _newType;
+        SpreadChartType _oldType;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.UndoRedo.ChangeChartTypeAction" /> class.
@@ -35,9 +35,9 @@ namespace Dt.Cells.UndoRedo
         /// <param name="newType">The new type.</param>
         public ChangeChartTypeAction(SpreadChart chart, SpreadChartType newType)
         {
-            this._chart = chart;
-            this._oldType = chart.ChartType;
-            this._newType = newType;
+            _chart = chart;
+            _oldType = chart.ChartType;
+            _newType = newType;
         }
 
         /// <summary>
@@ -52,9 +52,9 @@ namespace Dt.Cells.UndoRedo
             return true;
         }
 
-        private bool ChangeChartType(SpreadChartType fromChartType, SpreadChartType toChartType)
+        bool ChangeChartType(SpreadChartType fromChartType, SpreadChartType toChartType)
         {
-            this._chart.SuspendEvents();
+            _chart.SuspendEvents();
             bool flag = false;
             try
             {
@@ -66,56 +66,56 @@ namespace Dt.Cells.UndoRedo
                 {
                     if (toChartType == SpreadChartType.StockHighLowOpenClose)
                     {
-                        flag = this.ChangeToStockChart(fromChartType, toChartType);
+                        flag = ChangeToStockChart(fromChartType, toChartType);
                     }
                     else if (fromChartType == SpreadChartType.StockHighLowOpenClose)
                     {
-                        flag = this.ChangeFromStockChart(fromChartType, toChartType);
+                        flag = ChangeFromStockChart(fromChartType, toChartType);
                     }
                     else if (num2 != 1)
                     {
-                        flag = this.ChangeChartTypeToMulti(fromChartType, toChartType);
+                        flag = ChangeChartTypeToMulti(fromChartType, toChartType);
                     }
                     else if (num2 == 1)
                     {
-                        flag = this.ChangeChartTypeOne(fromChartType, toChartType);
+                        flag = ChangeChartTypeOne(fromChartType, toChartType);
                     }
                 }
                 else
                 {
                     if (flag2 != flag3)
                     {
-                        AxisType axisType = this._chart.AxisY.AxisType;
-                        this._chart.AxisY.AxisType = this._chart.AxisX.AxisType;
-                        this._chart.AxisX.AxisType = axisType;
-                        string itemsFormula = this._chart.AxisY.ItemsFormula;
-                        this._chart.AxisY.ItemsFormula = this._chart.AxisX.ItemsFormula;
-                        this._chart.AxisX.ItemsFormula = itemsFormula;
+                        AxisType axisType = _chart.AxisY.AxisType;
+                        _chart.AxisY.AxisType = _chart.AxisX.AxisType;
+                        _chart.AxisX.AxisType = axisType;
+                        string itemsFormula = _chart.AxisY.ItemsFormula;
+                        _chart.AxisY.ItemsFormula = _chart.AxisX.ItemsFormula;
+                        _chart.AxisX.ItemsFormula = itemsFormula;
                     }
-                    this._chart.ChartType = toChartType;
+                    _chart.ChartType = toChartType;
                 }
                 if (flag2 != flag3)
                 {
                     if (flag3)
                     {
-                        if (this._chart.AxisX != null)
+                        if (_chart.AxisX != null)
                         {
-                            this._chart.AxisX.ShowMajorGridlines = true;
+                            _chart.AxisX.ShowMajorGridlines = true;
                         }
-                        if (this._chart.AxisY != null)
+                        if (_chart.AxisY != null)
                         {
-                            this._chart.AxisY.ShowMajorGridlines = false;
+                            _chart.AxisY.ShowMajorGridlines = false;
                         }
                     }
                     if (flag2)
                     {
-                        if (this._chart.AxisY != null)
+                        if (_chart.AxisY != null)
                         {
-                            this._chart.AxisY.ShowMajorGridlines = true;
+                            _chart.AxisY.ShowMajorGridlines = true;
                         }
-                        if (this._chart.AxisX != null)
+                        if (_chart.AxisX != null)
                         {
-                            this._chart.AxisX.ShowMajorGridlines = false;
+                            _chart.AxisX.ShowMajorGridlines = false;
                         }
                     }
                 }
@@ -123,7 +123,7 @@ namespace Dt.Cells.UndoRedo
                 {
                     return flag;
                 }
-                foreach (SpreadDataSeries series in this._chart.DataSeries)
+                foreach (SpreadDataSeries series in _chart.DataSeries)
                 {
                     if (series.MarkerType == MarkerType.None)
                     {
@@ -137,21 +137,21 @@ namespace Dt.Cells.UndoRedo
             }
             finally
             {
-                this._chart.ResumeEvents();
+                _chart.ResumeEvents();
             }
             return flag;
         }
 
-        private bool ChangeChartTypeOne(SpreadChartType fromChartType, SpreadChartType toChartType)
+        bool ChangeChartTypeOne(SpreadChartType fromChartType, SpreadChartType toChartType)
         {
             SpreadChartUtility.GetDataDimension(fromChartType);
             SpreadChartUtility.GetDataDimension(toChartType);
-            string itemsFormula = this._chart.ItemsFormula;
+            string itemsFormula = _chart.ItemsFormula;
             string xValueFormula = null;
-            this._chart.ChartType = toChartType;
-            this.ResetDataSeriesChartType();
+            _chart.ChartType = toChartType;
+            ResetDataSeriesChartType();
             List<SpreadDataSeries> list = new List<SpreadDataSeries>();
-            foreach (SpreadDataSeries series in this._chart.DataSeries)
+            foreach (SpreadDataSeries series in _chart.DataSeries)
             {
                 MemoryStream stream = new MemoryStream();
                 XmlWriter writer = XmlWriter.Create((Stream) stream);
@@ -179,32 +179,32 @@ namespace Dt.Cells.UndoRedo
             {
                 if (toChartType.ToString().ToLower().Contains("bar"))
                 {
-                    this._chart.AxisY.ItemsFormula = xValueFormula;
-                    this._chart.AxisX.ItemsFormula = null;
+                    _chart.AxisY.ItemsFormula = xValueFormula;
+                    _chart.AxisX.ItemsFormula = null;
                 }
                 else
                 {
-                    this._chart.AxisX.ItemsFormula = xValueFormula;
-                    this._chart.AxisY.ItemsFormula = null;
+                    _chart.AxisX.ItemsFormula = xValueFormula;
+                    _chart.AxisY.ItemsFormula = null;
                 }
             }
             if (list.Count > 0)
             {
-                this._chart.DataSeries.Clear();
-                this._chart.DataSeries.AddRange((IList<SpreadDataSeries>) list);
+                _chart.DataSeries.Clear();
+                _chart.DataSeries.AddRange((IList<SpreadDataSeries>) list);
             }
             return true;
         }
 
-        private bool ChangeChartTypeToMulti(SpreadChartType fromChartType, SpreadChartType toChartType)
+        bool ChangeChartTypeToMulti(SpreadChartType fromChartType, SpreadChartType toChartType)
         {
             Dt.Cells.Data.SpreadChartUtility.GetDataDimension(fromChartType);
             Dt.Cells.Data.SpreadChartUtility.GetDataDimension(toChartType);
-            string itemsFormula = this._chart.ItemsFormula;
-            this._chart.ChartType = toChartType;
-            this.ResetDataSeriesChartType();
+            string itemsFormula = _chart.ItemsFormula;
+            _chart.ChartType = toChartType;
+            ResetDataSeriesChartType();
             List<SpreadDataSeries> list = new List<SpreadDataSeries>();
-            foreach (SpreadDataSeries series in this._chart.DataSeries)
+            foreach (SpreadDataSeries series in _chart.DataSeries)
             {
                 MemoryStream stream = new MemoryStream();
                 XmlWriter writer = XmlWriter.Create((Stream) stream);
@@ -228,29 +228,29 @@ namespace Dt.Cells.UndoRedo
                     }
                 }
             }
-            this._chart.AxisX.ItemsFormula = null;
-            this._chart.AxisY.ItemsFormula = null;
+            _chart.AxisX.ItemsFormula = null;
+            _chart.AxisY.ItemsFormula = null;
             if (list.Count > 0)
             {
-                this._chart.DataSeries.Clear();
-                this._chart.DataSeries.AddRange((IList<SpreadDataSeries>) list);
+                _chart.DataSeries.Clear();
+                _chart.DataSeries.AddRange((IList<SpreadDataSeries>) list);
             }
             return true;
         }
 
-        private bool ChangeFromStockChart(SpreadChartType fromChartType, SpreadChartType toChartType)
+        bool ChangeFromStockChart(SpreadChartType fromChartType, SpreadChartType toChartType)
         {
             Dt.Cells.Data.SpreadChartUtility.GetDataDimension(fromChartType);
             int dataDimension = Dt.Cells.Data.SpreadChartUtility.GetDataDimension(toChartType);
-            if ((this._chart.DataSeries.Count <= 0) || !(this._chart.DataSeries[0] is SpreadOpenHighLowCloseSeries))
+            if ((_chart.DataSeries.Count <= 0) || !(_chart.DataSeries[0] is SpreadOpenHighLowCloseSeries))
             {
                 return false;
             }
-            string itemsFormula = this._chart.ItemsFormula;
-            this.ResetDataSeriesChartType();
-            this._chart.ChartType = toChartType;
+            string itemsFormula = _chart.ItemsFormula;
+            ResetDataSeriesChartType();
+            _chart.ChartType = toChartType;
             List<SpreadDataSeries> list = new List<SpreadDataSeries>();
-            SpreadOpenHighLowCloseSeries series = this._chart.DataSeries[0] as SpreadOpenHighLowCloseSeries;
+            SpreadOpenHighLowCloseSeries series = _chart.DataSeries[0] as SpreadOpenHighLowCloseSeries;
             for (int i = 0; i < 4; i++)
             {
                 SpreadDataSeries openSeries = null;
@@ -310,38 +310,38 @@ namespace Dt.Cells.UndoRedo
             {
                 if (toChartType.ToString().ToLower().Contains("bar"))
                 {
-                    this._chart.AxisY.ItemsFormula = series.XValueFormula;
-                    this._chart.AxisX.ItemsFormula = null;
+                    _chart.AxisY.ItemsFormula = series.XValueFormula;
+                    _chart.AxisX.ItemsFormula = null;
                 }
                 else
                 {
-                    this._chart.AxisX.ItemsFormula = series.XValueFormula;
-                    this._chart.AxisY.ItemsFormula = null;
+                    _chart.AxisX.ItemsFormula = series.XValueFormula;
+                    _chart.AxisY.ItemsFormula = null;
                 }
             }
             if (list.Count > 0)
             {
-                this._chart.DataSeries.Clear();
-                this._chart.DataSeries.AddRange((IList<SpreadDataSeries>) list);
+                _chart.DataSeries.Clear();
+                _chart.DataSeries.AddRange((IList<SpreadDataSeries>) list);
             }
             return true;
         }
 
-        private bool ChangeToStockChart(SpreadChartType fromChartType, SpreadChartType toChartType)
+        bool ChangeToStockChart(SpreadChartType fromChartType, SpreadChartType toChartType)
         {
             Dt.Cells.Data.SpreadChartUtility.GetDataDimension(fromChartType);
             Dt.Cells.Data.SpreadChartUtility.GetDataDimension(toChartType);
-            if (this._chart.DataSeries.Count < 4)
+            if (_chart.DataSeries.Count < 4)
             {
                 return false;
             }
-            string itemsFormula = this._chart.ItemsFormula;
-            this._chart.ChartType = toChartType;
+            string itemsFormula = _chart.ItemsFormula;
+            _chart.ChartType = toChartType;
             List<SpreadDataSeries> list = new List<SpreadDataSeries>();
-            SpreadDataSeries openSeries = this._chart.DataSeries[0];
-            SpreadDataSeries highSeries = this._chart.DataSeries[1];
-            SpreadDataSeries lowSeries = this._chart.DataSeries[2];
-            SpreadDataSeries closeSeries = this._chart.DataSeries[3];
+            SpreadDataSeries openSeries = _chart.DataSeries[0];
+            SpreadDataSeries highSeries = _chart.DataSeries[1];
+            SpreadDataSeries lowSeries = _chart.DataSeries[2];
+            SpreadDataSeries closeSeries = _chart.DataSeries[3];
             openSeries.Stroke = null;
             highSeries.Stroke = null;
             lowSeries.Stroke = null;
@@ -379,12 +379,12 @@ namespace Dt.Cells.UndoRedo
                     list.Add(series7);
                 }
             }
-            this._chart.AxisX.ItemsFormula = null;
-            this._chart.AxisY.ItemsFormula = null;
+            _chart.AxisX.ItemsFormula = null;
+            _chart.AxisY.ItemsFormula = null;
             if (list.Count > 0)
             {
-                this._chart.DataSeries.Clear();
-                this._chart.DataSeries.AddRange((IList<SpreadDataSeries>) list);
+                _chart.DataSeries.Clear();
+                _chart.DataSeries.AddRange((IList<SpreadDataSeries>) list);
             }
             return true;
         }
@@ -395,17 +395,17 @@ namespace Dt.Cells.UndoRedo
         /// <param name="parameter">Data used by the action. If the action does not require data to be passed, this object can be set to null.</param>
         public override void Execute(object parameter)
         {
-            this.ChangeChartType(this._oldType, this._newType);
+            ChangeChartType(_oldType, _newType);
             SheetView view = parameter as SheetView;
             if (view != null)
             {
-                view.InvalidateCharts(new SpreadChart[] { this._chart });
+                view.InvalidateCharts(new SpreadChart[] { _chart });
             }
         }
 
-        private void ResetDataSeriesChartType()
+        void ResetDataSeriesChartType()
         {
-            using (IEnumerator<SpreadDataSeries> enumerator = this._chart.DataSeries.GetEnumerator())
+            using (IEnumerator<SpreadDataSeries> enumerator = _chart.DataSeries.GetEnumerator())
             {
                 while (enumerator.MoveNext())
                 {
@@ -441,11 +441,11 @@ namespace Dt.Cells.UndoRedo
         /// </returns>
         public bool Undo(object parameter)
         {
-            this.ChangeChartType(this._newType, this._oldType);
+            ChangeChartType(_newType, _oldType);
             SheetView view = parameter as SheetView;
             if (view != null)
             {
-                view.InvalidateCharts(new SpreadChart[] { this._chart });
+                view.InvalidateCharts(new SpreadChart[] { _chart });
             }
             return true;
         }

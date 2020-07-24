@@ -21,10 +21,10 @@ namespace Dt.Cells.UI
     {
         internal CellClickEventArgs(Dt.Cells.Data.SheetArea sheetArea, int row, int column, MouseButtonType button)
         {
-            this.SheetArea = sheetArea;
-            this.Row = row;
-            this.Column = column;
-            this.ButtonType = button;
+            SheetArea = sheetArea;
+            Row = row;
+            Column = column;
+            ButtonType = button;
         }
 
         /// <summary>

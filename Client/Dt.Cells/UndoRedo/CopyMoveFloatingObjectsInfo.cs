@@ -18,9 +18,9 @@ namespace Dt.Cells.UndoRedo
     {
         public void SaveFloatingObjects(CellRange range, FloatingObject[] floatingObjects)
         {
-            this.Range = range;
-            this.SavedFloatingObjects = floatingObjects;
-            this.IsFloatingObjectsSaved = true;
+            Range = range;
+            SavedFloatingObjects = floatingObjects;
+            IsFloatingObjectsSaved = true;
         }
 
         public bool IsFloatingObjectsSaved { get; private set; }

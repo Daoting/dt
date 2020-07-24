@@ -15,10 +15,10 @@ namespace Dt.Cells.UndoRedo
 {
     internal class GenerateNameHelper
     {
-        private const string DefaultPrefixChartName = "Chart";
-        private const string DefaultPrefixFloatingObjectName = "FloatingObject";
-        private const string DefaultPrefixPictureName = "Pictrue";
-        private const string DefaultPrefixSurfaceChartName = "SurfaceChart";
+        const string DefaultPrefixChartName = "Chart";
+        const string DefaultPrefixFloatingObjectName = "FloatingObject";
+        const string DefaultPrefixPictureName = "Pictrue";
+        const string DefaultPrefixSurfaceChartName = "SurfaceChart";
 
         public static string GenerateChartName(Worksheet worksheet)
         {

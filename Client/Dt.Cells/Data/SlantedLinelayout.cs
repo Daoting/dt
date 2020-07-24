@@ -14,8 +14,8 @@ namespace Dt.Cells.Data
 {
     internal class SlantedLinelayout
     {
-        private const int HORIZONTAL = 0;
-        private const int VERTICAL = 1;
+        const int HORIZONTAL = 0;
+        const int VERTICAL = 1;
 
         public static void Layout(ComboLine comboLine, LineItem lineItem, double hOffset, double vOffset)
         {

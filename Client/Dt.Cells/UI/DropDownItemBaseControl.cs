@@ -21,7 +21,7 @@ namespace Dt.Cells.UI
     /// </summary>
     public abstract partial class DropDownItemBaseControl : ContentControl
     {
-        private bool _isSelected;
+        bool _isSelected;
         /// <summary>
         /// Indicates the command parameter dependency property.
         /// </summary>
@@ -47,7 +47,7 @@ namespace Dt.Cells.UI
         /// </returns>
         public virtual bool CanExecuteCommand()
         {
-            return ((this.Command != null) && this.Command.CanExecute(this.CommandParameter));
+            return ((Command != null) && Command.CanExecute(CommandParameter));
         }
 
         /// <summary>
@@ -55,15 +55,15 @@ namespace Dt.Cells.UI
         /// </summary>
         public virtual void ExecuteCommand()
         {
-            if ((this.Command != null) && this.Command.CanExecute(this.CommandParameter))
+            if ((Command != null) && Command.CanExecute(CommandParameter))
             {
-                this.Command.Execute(this.CommandParameter);
+                Command.Execute(CommandParameter);
             }
         }
 
-        private void HandleCanExecuteChanged(object sender, EventArgs e)
+        void HandleCanExecuteChanged(object sender, EventArgs e)
         {
-            this.UpdateIsEnabled();
+            UpdateIsEnabled();
         }
 
         /// <summary>
@@ -72,10 +72,10 @@ namespace Dt.Cells.UI
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            this.UpdateVisualState(true);
+            UpdateVisualState(true);
         }
 
-        private void OnCommandChanged(ICommand oldValue, ICommand newValue)
+        void OnCommandChanged(ICommand oldValue, ICommand newValue)
         {
             if (oldValue != null)
             {
@@ -85,20 +85,20 @@ namespace Dt.Cells.UI
             {
                 newValue.CanExecuteChanged += HandleCanExecuteChanged;
             }
-            this.UpdateIsEnabled();
+            UpdateIsEnabled();
         }
 
-        private static void OnCommandChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
+        static void OnCommandChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
         {
             ((DropDownItemBaseControl)o).OnCommandChanged((ICommand)e.OldValue, (ICommand)e.NewValue);
         }
 
-        private void OnCommandParameterChanged(object oldValue, object newValue)
+        void OnCommandParameterChanged(object oldValue, object newValue)
         {
-            this.UpdateIsEnabled();
+            UpdateIsEnabled();
         }
 
-        private static void OnCommandParameterChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
+        static void OnCommandParameterChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
         {
             ((DropDownItemBaseControl)o).OnCommandParameterChanged(e.OldValue, e.NewValue);
         }
@@ -111,7 +111,7 @@ namespace Dt.Cells.UI
         {
         }
 
-        private static void OnShowIconChangedChunk(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        static void OnShowIconChangedChunk(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
             (sender as DropDownItemBaseControl).OnShowIconChanged(e);
         }
@@ -120,9 +120,9 @@ namespace Dt.Cells.UI
         {
         }
 
-        private void UpdateIsEnabled()
+        void UpdateIsEnabled()
         {
-            this.UpdateVisualState(true);
+            UpdateVisualState(true);
         }
 
         /// <summary>
@@ -160,18 +160,18 @@ namespace Dt.Cells.UI
         {
             get
             {
-                if (!this.CanSelect)
+                if (!CanSelect)
                 {
                     return false;
                 }
-                return this._isSelected;
+                return _isSelected;
             }
             set
             {
-                if (this._isSelected != value)
+                if (_isSelected != value)
                 {
-                    this._isSelected = value;
-                    this.OnIsSelectedChanged();
+                    _isSelected = value;
+                    OnIsSelectedChanged();
                 }
             }
         }

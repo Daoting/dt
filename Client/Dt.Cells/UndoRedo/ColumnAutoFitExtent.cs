@@ -17,7 +17,7 @@ namespace Dt.Cells.UndoRedo
     /// </summary>
     public class ColumnAutoFitExtent
     {
-        private int _column;
+        int _column;
 
         /// <summary>
         /// Creates a new instance of the class.
@@ -25,7 +25,7 @@ namespace Dt.Cells.UndoRedo
         /// <param name="column">The column index.</param>
         public ColumnAutoFitExtent(int column)
         {
-            this._column = column;
+            _column = column;
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace Dt.Cells.UndoRedo
         /// </summary>
         public int Column
         {
-            get { return  this._column; }
+            get { return  _column; }
         }
     }
 }

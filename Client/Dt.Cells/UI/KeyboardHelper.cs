@@ -18,7 +18,7 @@ namespace Dt.Cells.UI
 {
     internal class KeyboardHelper
     {
-        private KeyboardHelper()
+        KeyboardHelper()
         {
         }
 

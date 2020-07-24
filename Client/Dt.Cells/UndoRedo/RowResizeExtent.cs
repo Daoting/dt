@@ -17,8 +17,8 @@ namespace Dt.Cells.UndoRedo
     /// </summary>
     public class RowResizeExtent
     {
-        private int firstRow;
-        private int lastRow;
+        int firstRow;
+        int lastRow;
 
         /// <summary>
         /// Creates a new RowResizeExtent object.
@@ -36,7 +36,7 @@ namespace Dt.Cells.UndoRedo
         /// </summary>
         public int FirstRow
         {
-            get { return  this.firstRow; }
+            get { return  firstRow; }
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Dt.Cells.UndoRedo
         /// </summary>
         public int LastRow
         {
-            get { return  this.lastRow; }
+            get { return  lastRow; }
         }
     }
 }

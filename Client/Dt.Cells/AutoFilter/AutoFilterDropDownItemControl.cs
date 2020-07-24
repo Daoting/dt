@@ -20,8 +20,8 @@ namespace Dt.Cells.UI
     /// </summary>
     public partial class AutoFilterDropDownItemControl : DropDownItemBaseControl
     {
-        private AutoFilterEditor _autoFilterEditor;
-        private AutoFilterItemCollection _filterItems;
+        AutoFilterEditor _autoFilterEditor;
+        AutoFilterItemCollection _filterItems;
 
         /// <summary>
         /// Creates a new instance of the <see cref="T:Dt.Cells.UI.AutoFilterDropDownItemControl" /> class.
@@ -31,24 +31,24 @@ namespace Dt.Cells.UI
             EventHandler handler = null;
             EventHandler handler2 = null;
             base.DefaultStyleKey = typeof(AutoFilterDropDownItemControl);
-            this._filterItems = new AutoFilterItemCollection();
-            this._autoFilterEditor = new AutoFilterEditor();
-            this._autoFilterEditor.AutoFilterItems = this._filterItems;
-            base.Content = this._autoFilterEditor;
+            _filterItems = new AutoFilterItemCollection();
+            _autoFilterEditor = new AutoFilterEditor();
+            _autoFilterEditor.AutoFilterItems = _filterItems;
+            base.Content = _autoFilterEditor;
             if (handler == null)
             {
                 handler = delegate (object param0, EventArgs param1) {
-                    if (!this.FilterItems[0].IsChecked.HasValue || this.FilterItems[0].IsChecked.Value)
+                    if (!FilterItems[0].IsChecked.HasValue || FilterItems[0].IsChecked.Value)
                     {
                         if (base.ParentDropDownList != null)
                         {
                             base.ParentDropDownList.Close();
                         }
-                        this.ExecuteCommand();
+                        ExecuteCommand();
                     }
                 };
             }
-            this._autoFilterEditor.OKClick += handler;
+            _autoFilterEditor.OKClick += handler;
             if (handler2 == null)
             {
                 handler2 = delegate (object param0, EventArgs param1) {
@@ -58,7 +58,7 @@ namespace Dt.Cells.UI
                     }
                 };
             }
-            this._autoFilterEditor.CancelClick += handler2;
+            _autoFilterEditor.CancelClick += handler2;
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace Dt.Cells.UI
         /// </returns>
         public override bool CanExecuteCommand()
         {
-            if (((this.FilterItems.Count > 0) && this.FilterItems[0].IsChecked.HasValue) && !this.FilterItems[0].IsChecked.Value)
+            if (((FilterItems.Count > 0) && FilterItems[0].IsChecked.HasValue) && !FilterItems[0].IsChecked.Value)
             {
                 return false;
             }
@@ -81,22 +81,22 @@ namespace Dt.Cells.UI
         /// </summary>
         public override void ExecuteCommand()
         {
-            base.CommandParameter = this.GetFilterCriterion();
+            base.CommandParameter = GetFilterCriterion();
             base.ExecuteCommand();
         }
 
-        private object[] GetFilterCriterion()
+        object[] GetFilterCriterion()
         {
-            if (this.FilterItems[0].IsChecked.HasValue && this.FilterItems[0].IsChecked.Value)
+            if (FilterItems[0].IsChecked.HasValue && FilterItems[0].IsChecked.Value)
             {
                 return null;
             }
             List<object> list = new List<object>();
-            for (int i = 1; i < this.FilterItems.Count; i++)
+            for (int i = 1; i < FilterItems.Count; i++)
             {
-                if (this.FilterItems[i].IsChecked.HasValue && this.FilterItems[i].IsChecked.Value)
+                if (FilterItems[i].IsChecked.HasValue && FilterItems[i].IsChecked.Value)
                 {
-                    list.Add(this.FilterItems[i].Criterion);
+                    list.Add(FilterItems[i].Criterion);
                 }
             }
             return list.ToArray();
@@ -119,7 +119,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void ProcessGotFocus()
+        void ProcessGotFocus()
         {
             int m = base.ParentDropDownList.IndexFromContainer(this);
             int num = base.ParentDropDownList.IndexFromContainer(this);
@@ -132,12 +132,12 @@ namespace Dt.Cells.UI
         internal override void SelectChild(bool forward)
         {
             base.SelectChild(forward);
-            this._autoFilterEditor.SelectChildElement(forward);
+            _autoFilterEditor.SelectChildElement(forward);
         }
 
         internal AutoFilterItemCollection FilterItems
         {
-            get { return  this._filterItems; }
+            get { return  _filterItems; }
         }
     }
 }

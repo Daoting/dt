@@ -22,12 +22,12 @@ namespace Dt.Cells.UI
     {
         internal ClipboardPastingEventArgs(Dt.Cells.Data.Worksheet sourceSheet, Dt.Cells.Data.CellRange sourceRange, Dt.Cells.Data.Worksheet worksheet, Dt.Cells.Data.CellRange cellRange, ClipboardPasteOptions pasteOption, bool isCutting)
         {
-            this.Worksheet = worksheet;
-            this.CellRange = cellRange;
-            this.SourceSheet = sourceSheet;
-            this.SourceRange = sourceRange;
-            this.PasteOption = pasteOption;
-            this.IsCutting = isCutting;
+            Worksheet = worksheet;
+            CellRange = cellRange;
+            SourceSheet = sourceSheet;
+            SourceRange = sourceRange;
+            PasteOption = pasteOption;
+            IsCutting = isCutting;
         }
 
         internal ClipboardPastingEventArgs(Dt.Cells.Data.Worksheet sourceSheet, Dt.Cells.Data.CellRange sourceRange, Dt.Cells.Data.Worksheet worksheet, Dt.Cells.Data.CellRange cellRange, ClipboardPasteOptions pasteOption, bool isCutting, bool cancel) : this(sourceSheet, sourceRange, worksheet, cellRange, pasteOption, isCutting)

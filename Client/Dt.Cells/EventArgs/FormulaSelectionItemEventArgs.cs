@@ -14,16 +14,16 @@ namespace Dt.Cells.UI
 {
     internal class FormulaSelectionItemEventArgs : EventArgs
     {
-        private FormulaSelectionItem _item;
+        FormulaSelectionItem _item;
 
         public FormulaSelectionItemEventArgs(FormulaSelectionItem item)
         {
-            this._item = item;
+            _item = item;
         }
 
         public FormulaSelectionItem Item
         {
-            get { return  this._item; }
+            get { return  _item; }
         }
     }
 }

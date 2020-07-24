@@ -22,40 +22,40 @@ namespace Dt.Cells.UI
 {
     internal partial class StrikethroughView : Panel
     {
-        private Cell _bindingCell;
-        private Border _border;
-        private CellBackgroundPanel _cellBackgroundPanel;
-        private Canvas _lineContainer;
-        private const int _ViewMargin = 1;
+        Cell _bindingCell;
+        Border _border;
+        CellBackgroundPanel _cellBackgroundPanel;
+        Canvas _lineContainer;
+        const int _ViewMargin = 1;
 
         public StrikethroughView(Cell bindingCell, CellBackgroundPanel backPanel)
         {
             base.Margin = new Windows.UI.Xaml.Thickness(1.0);
-            this._bindingCell = bindingCell;
-            this._border = new Border();
-            this._lineContainer = new Canvas();
-            this._cellBackgroundPanel = backPanel;
-            base.Children.Add(this._border);
+            _bindingCell = bindingCell;
+            _border = new Border();
+            _lineContainer = new Canvas();
+            _cellBackgroundPanel = backPanel;
+            base.Children.Add(_border);
         }
 
         protected override Windows.Foundation.Size ArrangeOverride(Windows.Foundation.Size availableSize)
         {
             Windows.Foundation.Size size = new Windows.Foundation.Size(availableSize.Width, availableSize.Height);
-            foreach (UIElement element in this._cellBackgroundPanel.Children)
+            foreach (UIElement element in _cellBackgroundPanel.Children)
             {
                 if (element is TextBlock)
                 {
                     size.Width = (element as TextBlock).DesiredSize.Width;
-                    foreach (Windows.UI.Xaml.Shapes.Line line in this._lineContainer.Children)
+                    foreach (Windows.UI.Xaml.Shapes.Line line in _lineContainer.Children)
                     {
                         line.Stroke = (element as TextBlock).Foreground;
                     }
-                    this._border.HorizontalAlignment = (element as TextBlock).HorizontalAlignment;
+                    _border.HorizontalAlignment = (element as TextBlock).HorizontalAlignment;
                     break;
                 }
             }
-            this._border.Arrange(new Windows.Foundation.Rect(new Windows.Foundation.Point(0.0, 0.0), availableSize));
-            if (this._bindingCell.Worksheet.Workbook.CanCellOverflow)
+            _border.Arrange(new Windows.Foundation.Rect(new Windows.Foundation.Point(0.0, 0.0), availableSize));
+            if (_bindingCell.Worksheet.Workbook.CanCellOverflow)
             {
                 double width = Math.Max(availableSize.Width, size.Width);
                 RectangleGeometry geometry = new RectangleGeometry();
@@ -71,7 +71,7 @@ namespace Dt.Cells.UI
             return base.ArrangeOverride(availableSize);
         }
 
-        private double GetLineHeight(Cell cell)
+        double GetLineHeight(Cell cell)
         {
             TextBlock block = new TextBlock();
             block.TextWrapping = TextWrapping.NoWrap;
@@ -79,7 +79,7 @@ namespace Dt.Cells.UI
             return MeasureHelper.MeasureText(block.Text, cell.ActualFontFamily, cell.ActualFontSize * cell.Worksheet.ZoomFactor, cell.ActualFontStretch, cell.ActualFontStyle, cell.ActualFontWeight, new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity), cell.ActualWordWrap, null, false, (double) cell.Worksheet.ZoomFactor).Height;
         }
 
-        private double GetLineSpacing(Cell cell)
+        double GetLineSpacing(Cell cell)
         {
             string text = "ABCabABC";
             string str2 = "ABC\r\nAB";
@@ -87,7 +87,7 @@ namespace Dt.Cells.UI
             return (MeasureHelper.MeasureText(str2, cell.ActualFontFamily, cell.ActualFontSize * cell.Worksheet.ZoomFactor, cell.ActualFontStretch, cell.ActualFontStyle, cell.ActualFontWeight, new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity), cell.ActualWordWrap, null, false, (double) cell.Worksheet.ZoomFactor).Height - (size.Height * 2.0));
         }
 
-        private static Windows.Foundation.Size GetTextSize(Cell cell)
+        static Windows.Foundation.Size GetTextSize(Cell cell)
         {
             Windows.Foundation.Size maxSize = new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity);
             if (cell.ActualWordWrap)
@@ -117,7 +117,7 @@ namespace Dt.Cells.UI
 
         protected override Windows.Foundation.Size MeasureOverride(Windows.Foundation.Size availableSize)
         {
-            this._border.Measure(availableSize);
+            _border.Measure(availableSize);
             return base.MeasureOverride(availableSize);
         }
 
@@ -140,15 +140,15 @@ namespace Dt.Cells.UI
             }
             else
             {
-                double lineSpacing = this.GetLineSpacing(cell);
-                double lineHeight = this.GetLineHeight(cell);
+                double lineSpacing = GetLineSpacing(cell);
+                double lineHeight = GetLineHeight(cell);
                 Windows.Foundation.Size textSize = GetTextSize(cell);
                 double a = (textSize.Height + lineSpacing) / (lineHeight + lineSpacing);
                 int num4 = (int) Math.Round(a);
                 double width = textSize.Width;
                 Windows.UI.Xaml.Thickness excelBlank = MeasureHelper.GetExcelBlank();
-                this._lineContainer.Height = textSize.Height + ((excelBlank.Top + excelBlank.Bottom) * cell.Worksheet.ZoomFactor);
-                this._lineContainer.Width = textSize.Width + ((excelBlank.Left + excelBlank.Right) * cell.Worksheet.ZoomFactor);
+                _lineContainer.Height = textSize.Height + ((excelBlank.Top + excelBlank.Bottom) * cell.Worksheet.ZoomFactor);
+                _lineContainer.Width = textSize.Width + ((excelBlank.Left + excelBlank.Right) * cell.Worksheet.ZoomFactor);
                 if (num4 > 0)
                 {
                     for (int i = 0; i < num4; i++)
@@ -160,11 +160,11 @@ namespace Dt.Cells.UI
                         line2.Y1 = ((((lineHeight + lineSpacing) * i) + (lineHeight / 2.0)) + (excelBlank.Top * cell.Worksheet.ZoomFactor)) + 2.0;
                         line2.X2 = excelBlank.Left + width;
                         line2.Y2 = line2.Y1;
-                        this._lineContainer.Children.Add(line2);
+                        _lineContainer.Children.Add(line2);
                         line2.Stroke = cell.ActualForeground;
                     }
                 }
-                this._border.Child = this._lineContainer;
+                _border.Child = _lineContainer;
                 HorizontalAlignment left = HorizontalAlignment.Left;
                 switch (cell.ActualHorizontalAlignment)
                 {
@@ -176,10 +176,10 @@ namespace Dt.Cells.UI
                         left = HorizontalAlignment.Right;
                         break;
                 }
-                this._lineContainer.HorizontalAlignment = left;
-                this._border.HorizontalAlignment = left;
+                _lineContainer.HorizontalAlignment = left;
+                _border.HorizontalAlignment = left;
                 VerticalAlignment alignment2 = cell.ActualVerticalAlignment.ToVerticalAlignment();
-                this._lineContainer.VerticalAlignment = alignment2;
+                _lineContainer.VerticalAlignment = alignment2;
                 base.InvalidateMeasure();
                 base.InvalidateArrange();
             }
@@ -187,7 +187,7 @@ namespace Dt.Cells.UI
 
         public Canvas LineContainer
         {
-            get { return  this._lineContainer; }
+            get { return  _lineContainer; }
         }
     }
 }

@@ -27,15 +27,15 @@ namespace Dt.Cells.UI
         {
             if (row == -1)
             {
-                return this.FrozenHeight;
+                return FrozenHeight;
             }
-            if ((row >= 0) && (row < this._viewportHeight.Length))
+            if ((row >= 0) && (row < _viewportHeight.Length))
             {
-                return this._viewportHeight[row];
+                return _viewportHeight[row];
             }
-            if (row == this._viewportHeight.Length)
+            if (row == _viewportHeight.Length)
             {
-                return this.FrozenTrailingHeight;
+                return FrozenTrailingHeight;
             }
             return 0.0;
         }
@@ -44,15 +44,15 @@ namespace Dt.Cells.UI
         {
             if (column == -1)
             {
-                return this.FrozenWidth;
+                return FrozenWidth;
             }
-            if ((column >= 0) && (column < this._viewportWidth.Length))
+            if ((column >= 0) && (column < _viewportWidth.Length))
             {
-                return this._viewportWidth[column];
+                return _viewportWidth[column];
             }
-            if (column == this._viewportWidth.Length)
+            if (column == _viewportWidth.Length)
             {
-                return this.FrozenTrailingWidth;
+                return FrozenTrailingWidth;
             }
             return 0.0;
         }
@@ -61,15 +61,15 @@ namespace Dt.Cells.UI
         {
             if (column == -1)
             {
-                return this.FrozenX;
+                return FrozenX;
             }
-            if ((column >= 0) && (column < this._viewportX.Length))
+            if ((column >= 0) && (column < _viewportX.Length))
             {
-                return this._viewportX[column];
+                return _viewportX[column];
             }
-            if ((column == this._viewportX.Length) && (this._viewportX.Length > 0))
+            if ((column == _viewportX.Length) && (_viewportX.Length > 0))
             {
-                return (this._viewportX[this._viewportX.Length - 1] + this._viewportWidth[this._viewportX.Length - 1]);
+                return (_viewportX[_viewportX.Length - 1] + _viewportWidth[_viewportX.Length - 1]);
             }
             return 0.0;
         }
@@ -78,53 +78,53 @@ namespace Dt.Cells.UI
         {
             if (row == -1)
             {
-                return this.FrozenY;
+                return FrozenY;
             }
-            if ((row >= 0) && (row < this._viewportY.Length))
+            if ((row >= 0) && (row < _viewportY.Length))
             {
-                return this._viewportY[row];
+                return _viewportY[row];
             }
-            if ((row == this._viewportY.Length) && (this._viewportY.Length > 0))
+            if ((row == _viewportY.Length) && (_viewportY.Length > 0))
             {
-                return (this._viewportY[this._viewportY.Length - 1] + this._viewportHeight[this._viewportY.Length - 1]);
+                return (_viewportY[_viewportY.Length - 1] + _viewportHeight[_viewportY.Length - 1]);
             }
             return 0.0;
         }
 
         public void SetViewportHeight(int row, double value)
         {
-            if ((row < 0) && (row >= this._viewportHeight.Length))
+            if ((row < 0) && (row >= _viewportHeight.Length))
             {
                 throw new ArgumentOutOfRangeException("row");
             }
-            this._viewportHeight[row] = value;
+            _viewportHeight[row] = value;
         }
 
         public void SetViewportWidth(int column, double value)
         {
-            if ((column < 0) || (column >= this._viewportWidth.Length))
+            if ((column < 0) || (column >= _viewportWidth.Length))
             {
                 throw new ArgumentOutOfRangeException("column");
             }
-            this._viewportWidth[column] = value;
+            _viewportWidth[column] = value;
         }
 
         public void SetViewportX(int column, double value)
         {
-            if ((column < 0) || (column >= this._viewportX.Length))
+            if ((column < 0) || (column >= _viewportX.Length))
             {
                 throw new ArgumentOutOfRangeException("column");
             }
-            this._viewportX[column] = value;
+            _viewportX[column] = value;
         }
 
         public void SetViewportY(int row, double value)
         {
-            if ((row < 0) || (row >= this._viewportY.Length))
+            if ((row < 0) || (row >= _viewportY.Length))
             {
                 throw new ArgumentOutOfRangeException("row");
             }
-            this._viewportY[row] = value;
+            _viewportY[row] = value;
         }
 
         public double FrozenHeight { get; set; }
@@ -135,12 +135,12 @@ namespace Dt.Cells.UI
 
         public double FrozenTrailingX
         {
-            get { return  (this._viewportX[this._viewportX.Length - 1] + this._viewportWidth[this._viewportX.Length - 1]); }
+            get { return  (_viewportX[_viewportX.Length - 1] + _viewportWidth[_viewportX.Length - 1]); }
         }
 
         public double FrozenTrailingY
         {
-            get { return  (this._viewportY[this._viewportY.Length - 1] + this._viewportHeight[this._viewportY.Length - 1]); }
+            get { return  (_viewportY[_viewportY.Length - 1] + _viewportHeight[_viewportY.Length - 1]); }
         }
 
         public double FrozenWidth { get; set; }

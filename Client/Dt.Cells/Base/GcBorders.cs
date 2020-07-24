@@ -22,50 +22,50 @@ namespace Dt.Cells.UI
 {
     internal sealed partial class GcBorders : Panel
     {
-        private Panel _borderLinesPanel = new Canvas();
-        private Dictionary<ulong, Windows.Foundation.Rect> _cellBoundsCache = new Dictionary<ulong, Windows.Foundation.Rect>();
-        private int _columnEnd = 0;
-        private int[] _columnIndexes = new int[0];
-        private int _columnStart = 0;
-        private BorderLine _gridLine = null;
-        private Dictionary<ulong, BorderLine> _hBorderLineCache = new Dictionary<ulong, BorderLine>();
-        private Dictionary<ComboLine, LineItem> _lineMap = new Dictionary<ComboLine, LineItem>();
-        private BorderLinesPool _linesPool;
-        private int _rowEnd = 0;
-        private int _rowEndDirty;
-        private int[] _rowIndexes = new int[0];
-        private int _rowStart = 0;
-        private int _rowStartDirty;
-        private Panel _scrollingGridlinesPanel = new Canvas();
-        private SheetView _sheetView = null;
-        private Dictionary<ulong, BorderLine> _vBorderLineCache = new Dictionary<ulong, BorderLine>();
-        private GcViewport _viewport = null;
-        private int _viewportBottomRow = -1;
-        private int _viewportLeftColumn = -1;
-        private int _viewportRightColumn = -1;
-        private int _viewportTopRow = -1;
-        private Worksheet _worksheet = null;
-        private float _zoomFactor;
-        private const int _HORIZONTAL = 0;
-        private const int _VERTICAL = 1;
+        Panel _borderLinesPanel = new Canvas();
+        Dictionary<ulong, Windows.Foundation.Rect> _cellBoundsCache = new Dictionary<ulong, Windows.Foundation.Rect>();
+        int _columnEnd = 0;
+        int[] _columnIndexes = new int[0];
+        int _columnStart = 0;
+        BorderLine _gridLine = null;
+        Dictionary<ulong, BorderLine> _hBorderLineCache = new Dictionary<ulong, BorderLine>();
+        Dictionary<ComboLine, LineItem> _lineMap = new Dictionary<ComboLine, LineItem>();
+        BorderLinesPool _linesPool;
+        int _rowEnd = 0;
+        int _rowEndDirty;
+        int[] _rowIndexes = new int[0];
+        int _rowStart = 0;
+        int _rowStartDirty;
+        Panel _scrollingGridlinesPanel = new Canvas();
+        SheetView _sheetView = null;
+        Dictionary<ulong, BorderLine> _vBorderLineCache = new Dictionary<ulong, BorderLine>();
+        GcViewport _viewport = null;
+        int _viewportBottomRow = -1;
+        int _viewportLeftColumn = -1;
+        int _viewportRightColumn = -1;
+        int _viewportTopRow = -1;
+        Worksheet _worksheet = null;
+        float _zoomFactor;
+        const int _HORIZONTAL = 0;
+        const int _VERTICAL = 1;
 
         public GcBorders(GcViewport viewport)
         {
-            this._viewport = viewport;
-            this._zoomFactor = 1f;
-            base.Children.Add(this._borderLinesPanel);
-            base.Children.Add(this._scrollingGridlinesPanel);
+            _viewport = viewport;
+            _zoomFactor = 1f;
+            base.Children.Add(_borderLinesPanel);
+            base.Children.Add(_scrollingGridlinesPanel);
         }
 
         protected override Windows.Foundation.Size ArrangeOverride(Windows.Foundation.Size finalSize)
         {
-            if (this._sheetView.fastScroll)
+            if (_sheetView.fastScroll)
             {
-                this._scrollingGridlinesPanel.Arrange(new Windows.Foundation.Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
+                _scrollingGridlinesPanel.Arrange(new Windows.Foundation.Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
                 return base.ArrangeOverride(finalSize);
             }
-            this._borderLinesPanel.Arrange(new Windows.Foundation.Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
-            foreach (KeyValuePair<ComboLine, LineItem> pair in this._lineMap)
+            _borderLinesPanel.Arrange(new Windows.Foundation.Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
+            foreach (KeyValuePair<ComboLine, LineItem> pair in _lineMap)
             {
                 ComboLine line = pair.Key;
                 line.Arrange(new Windows.Foundation.Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
@@ -73,30 +73,30 @@ namespace Dt.Cells.UI
             return base.ArrangeOverride(finalSize);
         }
 
-        private void BuildBordersInternal(ref int rIndex, ref int cIndex, int row, int column, int lineDirection, ref LineItem previousLineItem, ref BorderLine previousLine, ref BorderLine previousBreaker1, ref BorderLine previousBreaker2)
+        void BuildBordersInternal(ref int rIndex, ref int cIndex, int row, int column, int lineDirection, ref LineItem previousLineItem, ref BorderLine previousLine, ref BorderLine previousBreaker1, ref BorderLine previousBreaker2)
         {
             BorderLine line = null;
             if ((row != -1) || (column != -1))
             {
                 if ((row == -1) && (lineDirection == 1))
                 {
-                    previousBreaker1 = this.GetBorderLine(rIndex, cIndex, 0, column, Borders.TOP);
-                    previousBreaker2 = this.GetBorderLine(rIndex, cIndex, 0, this.NextColumn(cIndex), Borders.TOP);
+                    previousBreaker1 = GetBorderLine(rIndex, cIndex, 0, column, Borders.TOP);
+                    previousBreaker2 = GetBorderLine(rIndex, cIndex, 0, NextColumn(cIndex), Borders.TOP);
                 }
                 else if ((column != -1) || (lineDirection != 0))
                 {
                     if (column == -1)
                     {
-                        line = this.GetBorderLine(rIndex, cIndex, row, 0, Borders.LEFT);
+                        line = GetBorderLine(rIndex, cIndex, row, 0, Borders.LEFT);
                     }
                     else if (row == -1)
                     {
-                        line = this.GetBorderLine(rIndex, cIndex, 0, column, Borders.TOP);
+                        line = GetBorderLine(rIndex, cIndex, 0, column, Borders.TOP);
                     }
                     else
                     {
                         Borders borderIndex = (lineDirection == 0) ? Borders.BOTTOM : Borders.RIGHT;
-                        line = this.GetBorderLine(rIndex, cIndex, row, column, borderIndex);
+                        line = GetBorderLine(rIndex, cIndex, row, column, borderIndex);
                     }
                     bool flag = !BorderLineLayoutEngine.IsDoubleLine(line) && object.Equals(line, previousLine);
                     if (flag)
@@ -138,10 +138,10 @@ namespace Dt.Cells.UI
                         };
                         if (((item.Line != BorderLine.Empty) && (item.Line != BorderLine.NoBorder)) && (!item.IsGridLine || (line.Color.A != 0)))
                         {
-                            ((IThemeContextSupport) line).SetContext(this._worksheet);
-                            ComboLine line2 = ComboLine.Create(this._linesPool, line);
+                            ((IThemeContextSupport) line).SetContext(_worksheet);
+                            ComboLine line2 = ComboLine.Create(_linesPool, line);
                             ((IThemeContextSupport) line).SetContext(null);
-                            this._lineMap.Add(line2, item);
+                            _lineMap.Add(line2, item);
                         }
                     }
                     switch (lineDirection)
@@ -149,37 +149,37 @@ namespace Dt.Cells.UI
                         case 0:
                             if (row != -1)
                             {
-                                item.NextLine = this.GetBorderLine(rIndex, cIndex, row, this.NextColumn(cIndex), Borders.BOTTOM);
-                                item.NextBreaker1 = this.GetBorderLine(rIndex, cIndex, row, column, Borders.RIGHT);
-                                item.NextBreaker2 = this.GetBorderLine(rIndex, cIndex, this.NextRow(rIndex), column, Borders.RIGHT);
+                                item.NextLine = GetBorderLine(rIndex, cIndex, row, NextColumn(cIndex), Borders.BOTTOM);
+                                item.NextBreaker1 = GetBorderLine(rIndex, cIndex, row, column, Borders.RIGHT);
+                                item.NextBreaker2 = GetBorderLine(rIndex, cIndex, NextRow(rIndex), column, Borders.RIGHT);
                                 break;
                             }
-                            item.NextLine = this.GetBorderLine(rIndex, cIndex, 0, this.NextColumn(cIndex), Borders.TOP);
-                            item.NextBreaker1 = this._gridLine;
-                            item.NextBreaker2 = this.GetBorderLine(rIndex, cIndex, 0, column, Borders.RIGHT);
+                            item.NextLine = GetBorderLine(rIndex, cIndex, 0, NextColumn(cIndex), Borders.TOP);
+                            item.NextBreaker1 = _gridLine;
+                            item.NextBreaker2 = GetBorderLine(rIndex, cIndex, 0, column, Borders.RIGHT);
                             break;
 
                         case 1:
                             if (column != -1)
                             {
-                                item.NextLine = this.GetBorderLine(rIndex, cIndex, this.NextRow(rIndex), column, Borders.RIGHT);
-                                item.NextBreaker1 = this.GetBorderLine(rIndex, cIndex, row, column, Borders.BOTTOM);
-                                item.NextBreaker2 = this.GetBorderLine(rIndex, cIndex, row, this.NextColumn(cIndex), Borders.BOTTOM);
+                                item.NextLine = GetBorderLine(rIndex, cIndex, NextRow(rIndex), column, Borders.RIGHT);
+                                item.NextBreaker1 = GetBorderLine(rIndex, cIndex, row, column, Borders.BOTTOM);
+                                item.NextBreaker2 = GetBorderLine(rIndex, cIndex, row, NextColumn(cIndex), Borders.BOTTOM);
                                 break;
                             }
-                            item.NextLine = this.GetBorderLine(rIndex, cIndex, this.NextRow(rIndex), column, Borders.LEFT);
-                            item.NextBreaker1 = this._gridLine;
-                            item.NextBreaker2 = this.GetBorderLine(rIndex, cIndex, row, 0, Borders.BOTTOM);
+                            item.NextLine = GetBorderLine(rIndex, cIndex, NextRow(rIndex), column, Borders.LEFT);
+                            item.NextBreaker1 = _gridLine;
+                            item.NextBreaker2 = GetBorderLine(rIndex, cIndex, row, 0, Borders.BOTTOM);
                             break;
                     }
                     Windows.Foundation.Rect empty = Windows.Foundation.Rect.Empty;
                     ulong num = (ulong) row;
                     num = num << 0x20;
                     num |= (uint) column;
-                    if (!this._cellBoundsCache.TryGetValue(num, out empty))
+                    if (!_cellBoundsCache.TryGetValue(num, out empty))
                     {
-                        empty = this.GetCellBounds(row, column);
-                        this._cellBoundsCache.Add(num, empty);
+                        empty = GetCellBounds(row, column);
+                        _cellBoundsCache.Add(num, empty);
                     }
                     item.Bounds.Add(empty);
                     previousLine = line;
@@ -190,14 +190,14 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void BuildHorizontalBorders()
+        void BuildHorizontalBorders()
         {
-            if ((this._rowIndexes.Length != 1) || (this._rowIndexes[0] != -1))
+            if ((_rowIndexes.Length != 1) || (_rowIndexes[0] != -1))
             {
-                for (int i = 0; i < this._rowIndexes.Length; i++)
+                for (int i = 0; i < _rowIndexes.Length; i++)
                 {
-                    int row = this._rowIndexes[i];
-                    if (row > this._viewportBottomRow)
+                    int row = _rowIndexes[i];
+                    if (row > _viewportBottomRow)
                     {
                         return;
                     }
@@ -205,28 +205,28 @@ namespace Dt.Cells.UI
                     BorderLine previousLine = null;
                     BorderLine line2 = null;
                     BorderLine line3 = null;
-                    int length = this._columnIndexes.Length;
+                    int length = _columnIndexes.Length;
                     for (int j = 0; j < length; j++)
                     {
-                        int column = this._columnIndexes[j];
-                        if ((j == (length - 1)) && (column > this._viewportRightColumn))
+                        int column = _columnIndexes[j];
+                        if ((j == (length - 1)) && (column > _viewportRightColumn))
                         {
                             break;
                         }
-                        this.BuildBordersInternal(ref i, ref j, row, column, 0, ref previousLineItem, ref previousLine, ref line2, ref line3);
+                        BuildBordersInternal(ref i, ref j, row, column, 0, ref previousLineItem, ref previousLine, ref line2, ref line3);
                     }
                 }
             }
         }
 
-        private void BuildVerticalBorders()
+        void BuildVerticalBorders()
         {
-            if ((this._columnIndexes.Length != 1) || (this._columnIndexes[0] != -1))
+            if ((_columnIndexes.Length != 1) || (_columnIndexes[0] != -1))
             {
-                for (int i = 0; i < this._columnIndexes.Length; i++)
+                for (int i = 0; i < _columnIndexes.Length; i++)
                 {
-                    int column = this._columnIndexes[i];
-                    if (column > this._viewportRightColumn)
+                    int column = _columnIndexes[i];
+                    if (column > _viewportRightColumn)
                     {
                         return;
                     }
@@ -234,136 +234,136 @@ namespace Dt.Cells.UI
                     BorderLine previousLine = null;
                     BorderLine line2 = null;
                     BorderLine line3 = null;
-                    int length = this._rowIndexes.Length;
+                    int length = _rowIndexes.Length;
                     for (int j = 0; j < length; j++)
                     {
-                        int row = this._rowIndexes[j];
-                        if ((j == (length - 1)) && (row > this._viewportBottomRow))
+                        int row = _rowIndexes[j];
+                        if ((j == (length - 1)) && (row > _viewportBottomRow))
                         {
                             break;
                         }
-                        this.BuildBordersInternal(ref j, ref i, row, column, 1, ref previousLineItem, ref previousLine, ref line2, ref line3);
+                        BuildBordersInternal(ref j, ref i, row, column, 1, ref previousLineItem, ref previousLine, ref line2, ref line3);
                     }
                 }
             }
         }
 
-        private void CalcVisibleRowColumnIndexes()
+        void CalcVisibleRowColumnIndexes()
         {
-            switch (this._viewport.SheetArea)
+            switch (_viewport.SheetArea)
             {
                 case SheetArea.Cells:
-                    this._viewportTopRow = this._sheetView.GetViewportTopRow(this._viewport.RowViewportIndex);
-                    this._viewportBottomRow = this._sheetView.GetViewportBottomRow(this._viewport.RowViewportIndex);
-                    this._viewportLeftColumn = this._sheetView.GetViewportLeftColumn(this._viewport.ColumnViewportIndex);
-                    this._viewportRightColumn = this._sheetView.GetViewportRightColumn(this._viewport.ColumnViewportIndex);
+                    _viewportTopRow = _sheetView.GetViewportTopRow(_viewport.RowViewportIndex);
+                    _viewportBottomRow = _sheetView.GetViewportBottomRow(_viewport.RowViewportIndex);
+                    _viewportLeftColumn = _sheetView.GetViewportLeftColumn(_viewport.ColumnViewportIndex);
+                    _viewportRightColumn = _sheetView.GetViewportRightColumn(_viewport.ColumnViewportIndex);
                     break;
 
                 case (SheetArea.CornerHeader | SheetArea.RowHeader):
-                    this._viewportTopRow = this._sheetView.GetViewportTopRow(this._viewport.RowViewportIndex);
-                    this._viewportBottomRow = this._sheetView.GetViewportBottomRow(this._viewport.RowViewportIndex);
-                    this._viewportLeftColumn = 0;
-                    this._viewportRightColumn = this._worksheet.RowHeader.ColumnCount - 1;
+                    _viewportTopRow = _sheetView.GetViewportTopRow(_viewport.RowViewportIndex);
+                    _viewportBottomRow = _sheetView.GetViewportBottomRow(_viewport.RowViewportIndex);
+                    _viewportLeftColumn = 0;
+                    _viewportRightColumn = _worksheet.RowHeader.ColumnCount - 1;
                     break;
 
                 case SheetArea.ColumnHeader:
-                    this._viewportTopRow = 0;
-                    this._viewportBottomRow = this._worksheet.ColumnHeader.RowCount - 1;
-                    this._viewportLeftColumn = this._sheetView.GetViewportLeftColumn(this._viewport.ColumnViewportIndex);
-                    this._viewportRightColumn = this._sheetView.GetViewportRightColumn(this._viewport.ColumnViewportIndex);
+                    _viewportTopRow = 0;
+                    _viewportBottomRow = _worksheet.ColumnHeader.RowCount - 1;
+                    _viewportLeftColumn = _sheetView.GetViewportLeftColumn(_viewport.ColumnViewportIndex);
+                    _viewportRightColumn = _sheetView.GetViewportRightColumn(_viewport.ColumnViewportIndex);
                     break;
             }
-            this._columnEnd = this._viewportRightColumn;
-            this._rowEnd = this._viewportBottomRow;
-            this._rowStart = this._viewportTopRow;
-            this._columnStart = this._viewportLeftColumn;
-            if ((this._rowStart <= this._rowEnd) && (this._columnStart <= this._columnEnd))
+            _columnEnd = _viewportRightColumn;
+            _rowEnd = _viewportBottomRow;
+            _rowStart = _viewportTopRow;
+            _columnStart = _viewportLeftColumn;
+            if ((_rowStart <= _rowEnd) && (_columnStart <= _columnEnd))
             {
                 int num = -1;
-                for (int i = this._rowStart - 1; i > -1; i--)
+                for (int i = _rowStart - 1; i > -1; i--)
                 {
-                    if (this._worksheet.GetActualRowVisible(i, this._viewport.SheetArea))
+                    if (_worksheet.GetActualRowVisible(i, _viewport.SheetArea))
                     {
                         num = i;
                         break;
                     }
                 }
-                this._rowStart = num;
+                _rowStart = num;
                 int num3 = -1;
-                for (int j = this._columnStart - 1; j > -1; j--)
+                for (int j = _columnStart - 1; j > -1; j--)
                 {
-                    if (this._worksheet.GetActualColumnVisible(j, this._viewport.SheetArea))
+                    if (_worksheet.GetActualColumnVisible(j, _viewport.SheetArea))
                     {
                         num3 = j;
                         break;
                     }
                 }
-                this._columnStart = num3;
-                int count = this._viewport.GetDataContext().Rows.Count;
-                for (int k = this._rowEnd + 1; k < count; k++)
+                _columnStart = num3;
+                int count = _viewport.GetDataContext().Rows.Count;
+                for (int k = _rowEnd + 1; k < count; k++)
                 {
-                    if (this._worksheet.GetActualRowVisible(k, this._viewport.SheetArea))
+                    if (_worksheet.GetActualRowVisible(k, _viewport.SheetArea))
                     {
-                        this._rowEnd = k;
+                        _rowEnd = k;
                         break;
                     }
                 }
-                int num7 = this._viewport.GetDataContext().Columns.Count;
-                for (int m = this._columnEnd + 1; m < num7; m++)
+                int num7 = _viewport.GetDataContext().Columns.Count;
+                for (int m = _columnEnd + 1; m < num7; m++)
                 {
-                    if (this._worksheet.GetActualColumnVisible(m, this._viewport.SheetArea))
+                    if (_worksheet.GetActualColumnVisible(m, _viewport.SheetArea))
                     {
-                        this._columnEnd = m;
+                        _columnEnd = m;
                         break;
                     }
                 }
                 List<int> list = new List<int>();
-                for (int n = this._rowStart; n <= this._rowEnd; n++)
+                for (int n = _rowStart; n <= _rowEnd; n++)
                 {
-                    if (this._worksheet.GetActualRowVisible(n, this._viewport.SheetArea))
+                    if (_worksheet.GetActualRowVisible(n, _viewport.SheetArea))
                     {
                         list.Add(n);
                     }
-                    else if ((this._viewport.SheetArea == (SheetArea.CornerHeader | SheetArea.RowHeader)) && (this._viewport.Sheet.ResizeZeroIndicator == ResizeZeroIndicator.Enhanced))
+                    else if ((_viewport.SheetArea == (SheetArea.CornerHeader | SheetArea.RowHeader)) && (_viewport.Sheet.ResizeZeroIndicator == ResizeZeroIndicator.Enhanced))
                     {
                         int row = n + 1;
-                        while ((row <= this._rowEnd) && (this._worksheet.GetActualRowHeight(row, this._viewport.SheetArea) == 0.0))
+                        while ((row <= _rowEnd) && (_worksheet.GetActualRowHeight(row, _viewport.SheetArea) == 0.0))
                         {
                             row++;
                         }
                         list.Add(row - 1);
                     }
                 }
-                this._rowIndexes = list.ToArray();
+                _rowIndexes = list.ToArray();
                 list.Clear();
-                for (int num11 = this._columnStart; num11 <= this._columnEnd; num11++)
+                for (int num11 = _columnStart; num11 <= _columnEnd; num11++)
                 {
-                    if (this._worksheet.GetActualColumnVisible(num11, this._viewport.SheetArea))
+                    if (_worksheet.GetActualColumnVisible(num11, _viewport.SheetArea))
                     {
                         list.Add(num11);
                     }
-                    else if ((this._viewport.SheetArea == SheetArea.ColumnHeader) && (this._viewport.Sheet.ResizeZeroIndicator == ResizeZeroIndicator.Enhanced))
+                    else if ((_viewport.SheetArea == SheetArea.ColumnHeader) && (_viewport.Sheet.ResizeZeroIndicator == ResizeZeroIndicator.Enhanced))
                     {
                         int column = num11 + 1;
-                        while ((column <= this._columnEnd) && (this._worksheet.GetActualColumnWidth(column, this._viewport.SheetArea) == 0.0))
+                        while ((column <= _columnEnd) && (_worksheet.GetActualColumnWidth(column, _viewport.SheetArea) == 0.0))
                         {
                             column++;
                         }
                         list.Add(column - 1);
                     }
                 }
-                this._columnIndexes = list.ToArray();
+                _columnIndexes = list.ToArray();
             }
         }
 
-        private void ClearBorderLineCache()
+        void ClearBorderLineCache()
         {
-            this._vBorderLineCache.Clear();
-            this._hBorderLineCache.Clear();
-            this._cellBoundsCache.Clear();
+            _vBorderLineCache.Clear();
+            _hBorderLineCache.Clear();
+            _cellBoundsCache.Clear();
         }
 
-        private ulong ConverIndexToKey(int rIndex, int cIndex, int row, int column, Borders borderIndex)
+        ulong ConverIndexToKey(int rIndex, int cIndex, int row, int column, Borders borderIndex)
         {
             ulong num = 0L;
             if (borderIndex == Borders.RIGHT)
@@ -380,14 +380,14 @@ namespace Dt.Cells.UI
             }
             if (borderIndex == Borders.LEFT)
             {
-                int num2 = this.PreviousColumn(cIndex);
+                int num2 = PreviousColumn(cIndex);
                 num = (ulong) row;
                 num = num << 0x20;
                 return (num | ((uint)num2));
             }
             if (borderIndex == Borders.TOP)
             {
-                num = (ulong) this.PreviousRow(rIndex);
+                num = (ulong) PreviousRow(rIndex);
                 num = num << 0x20;
                 num |= (uint)column;
             }
@@ -397,7 +397,7 @@ namespace Dt.Cells.UI
         /// <summary>
         /// GetCachedBorderLine 
         /// </summary>
-        private BorderLine GetBorderLine(int rIndex, int cIndex, int row, int column, Borders borderIndex)
+        BorderLine GetBorderLine(int rIndex, int cIndex, int row, int column, Borders borderIndex)
         {
             if ((row == -1) && (borderIndex != Borders.BOTTOM))
             {
@@ -407,36 +407,36 @@ namespace Dt.Cells.UI
             {
                 return null;
             }
-            ulong num = this.ConverIndexToKey(rIndex, cIndex, row, column, borderIndex);
+            ulong num = ConverIndexToKey(rIndex, cIndex, row, column, borderIndex);
             BorderLine noBorder = null;
             if ((borderIndex == Borders.LEFT) || (borderIndex == Borders.RIGHT))
             {
-                if (this._vBorderLineCache.TryGetValue(num, out noBorder))
+                if (_vBorderLineCache.TryGetValue(num, out noBorder))
                 {
                     return noBorder;
                 }
             }
-            else if (this._hBorderLineCache.TryGetValue(num, out noBorder))
+            else if (_hBorderLineCache.TryGetValue(num, out noBorder))
             {
                 return noBorder;
             }
             bool isInCellflow = false;
-            noBorder = this.GetCellActualBorderLine(row, column, borderIndex, out isInCellflow);
+            noBorder = GetCellActualBorderLine(row, column, borderIndex, out isInCellflow);
             if (!isInCellflow)
             {
                 BorderLine line2 = null;
                 Borders borders = (Borders)(((int)borderIndex + 2) % 4);
                 if (borderIndex == Borders.LEFT)
                 {
-                    line2 = this.GetCellActualBorderLine(row, this.PreviousColumn(cIndex), borders, out isInCellflow);
+                    line2 = GetCellActualBorderLine(row, PreviousColumn(cIndex), borders, out isInCellflow);
                 }
                 else if (borderIndex == Borders.TOP)
                 {
-                    line2 = this.GetCellActualBorderLine(this.PreviousRow(rIndex), column, borders, out isInCellflow);
+                    line2 = GetCellActualBorderLine(PreviousRow(rIndex), column, borders, out isInCellflow);
                 }
                 else if (borderIndex == Borders.RIGHT)
                 {
-                    line2 = this.GetCellActualBorderLine(row, this.NextColumn(cIndex), borders, out isInCellflow);
+                    line2 = GetCellActualBorderLine(row, NextColumn(cIndex), borders, out isInCellflow);
                 }
                 else
                 {
@@ -444,7 +444,7 @@ namespace Dt.Cells.UI
                     {
                         throw new NotSupportedException(ResourceStrings.NotSupportExceptionBorderIndexError);
                     }
-                    line2 = this.GetCellActualBorderLine(this.NextRow(rIndex), column, borders, out isInCellflow);
+                    line2 = GetCellActualBorderLine(NextRow(rIndex), column, borders, out isInCellflow);
                 }
                 if (!IsDoubleLine(noBorder) && IsDoubleLine(line2))
                 {
@@ -461,26 +461,26 @@ namespace Dt.Cells.UI
             }
             if ((borderIndex == Borders.LEFT) || (borderIndex == Borders.RIGHT))
             {
-                this._vBorderLineCache.Add(num, noBorder);
+                _vBorderLineCache.Add(num, noBorder);
                 return noBorder;
             }
-            this._hBorderLineCache.Add(num, noBorder);
+            _hBorderLineCache.Add(num, noBorder);
             return noBorder;
         }
 
-        private BorderLine GetCellActualBorderLine(int row, int column, Borders borderIndex, out bool isInCellflow)
+        BorderLine GetCellActualBorderLine(int row, int column, Borders borderIndex, out bool isInCellflow)
         {
             isInCellflow = false;
             bool flag = false;
             BorderLine empty = null;
             Cell cachedCell = null;
-            byte state = this._viewport.CachedSpanGraph.GetState(row, column);
+            byte state = _viewport.CachedSpanGraph.GetState(row, column);
             switch (borderIndex)
             {
                 case Borders.LEFT:
                     if (state <= 0)
                     {
-                        CellOverflowLayoutModel model = this._viewport.CellOverflowLayoutBuildEngine.GetModel(row);
+                        CellOverflowLayoutModel model = _viewport.CellOverflowLayoutBuildEngine.GetModel(row);
                         if (model != null)
                         {
                             CellOverflowLayout cellOverflowLayout = model.GetCellOverflowLayout(column);
@@ -490,7 +490,7 @@ namespace Dt.Cells.UI
                                 {
                                     if (cellOverflowLayout.StartingColumn == column)
                                     {
-                                        empty = this.GetCellBorderByBorderIndex(row, column, borderIndex, ref cachedCell);
+                                        empty = GetCellBorderByBorderIndex(row, column, borderIndex, ref cachedCell);
                                     }
                                     else
                                     {
@@ -500,7 +500,7 @@ namespace Dt.Cells.UI
                                 }
                                 else if (cellOverflowLayout.Column == column)
                                 {
-                                    empty = this.GetCellBorderByBorderIndex(row, column, borderIndex, ref cachedCell);
+                                    empty = GetCellBorderByBorderIndex(row, column, borderIndex, ref cachedCell);
                                 }
                                 else
                                 {
@@ -510,12 +510,12 @@ namespace Dt.Cells.UI
                             }
                             else
                             {
-                                empty = this.GetCellBorderByBorderIndex(row, column, borderIndex, ref cachedCell);
+                                empty = GetCellBorderByBorderIndex(row, column, borderIndex, ref cachedCell);
                             }
                         }
                         else
                         {
-                            empty = this.GetCellBorderByBorderIndex(row, column, borderIndex, ref cachedCell);
+                            empty = GetCellBorderByBorderIndex(row, column, borderIndex, ref cachedCell);
                         }
                         break;
                     }
@@ -524,13 +524,13 @@ namespace Dt.Cells.UI
                         flag = true;
                         break;
                     }
-                    empty = this.GetCellBorderByBorderIndex(row, column, borderIndex, ref cachedCell);
+                    empty = GetCellBorderByBorderIndex(row, column, borderIndex, ref cachedCell);
                     break;
 
                 case Borders.TOP:
                     if (state <= 0)
                     {
-                        empty = this.GetCellBorderByBorderIndex(row, column, borderIndex, ref cachedCell);
+                        empty = GetCellBorderByBorderIndex(row, column, borderIndex, ref cachedCell);
                         break;
                     }
                     if ((state & 2) != 2)
@@ -538,13 +538,13 @@ namespace Dt.Cells.UI
                         flag = true;
                         break;
                     }
-                    empty = this.GetCellBorderByBorderIndex(row, column, borderIndex, ref cachedCell);
+                    empty = GetCellBorderByBorderIndex(row, column, borderIndex, ref cachedCell);
                     break;
 
                 case Borders.RIGHT:
                     if (state <= 0)
                     {
-                        CellOverflowLayoutModel model2 = this._viewport.CellOverflowLayoutBuildEngine.GetModel(row);
+                        CellOverflowLayoutModel model2 = _viewport.CellOverflowLayoutBuildEngine.GetModel(row);
                         if (model2 != null)
                         {
                             CellOverflowLayout layout2 = model2.GetCellOverflowLayout(column);
@@ -554,7 +554,7 @@ namespace Dt.Cells.UI
                                 {
                                     if (layout2.EndingColumn == column)
                                     {
-                                        empty = this.GetCellBorderByBorderIndex(row, column, borderIndex, ref cachedCell);
+                                        empty = GetCellBorderByBorderIndex(row, column, borderIndex, ref cachedCell);
                                     }
                                     else
                                     {
@@ -564,7 +564,7 @@ namespace Dt.Cells.UI
                                 }
                                 else if (layout2.Column == column)
                                 {
-                                    empty = this.GetCellBorderByBorderIndex(row, column, borderIndex, ref cachedCell);
+                                    empty = GetCellBorderByBorderIndex(row, column, borderIndex, ref cachedCell);
                                 }
                                 else
                                 {
@@ -574,12 +574,12 @@ namespace Dt.Cells.UI
                             }
                             else
                             {
-                                empty = this.GetCellBorderByBorderIndex(row, column, borderIndex, ref cachedCell);
+                                empty = GetCellBorderByBorderIndex(row, column, borderIndex, ref cachedCell);
                             }
                         }
                         else
                         {
-                            empty = this.GetCellBorderByBorderIndex(row, column, borderIndex, ref cachedCell);
+                            empty = GetCellBorderByBorderIndex(row, column, borderIndex, ref cachedCell);
                         }
                         break;
                     }
@@ -588,13 +588,13 @@ namespace Dt.Cells.UI
                         flag = true;
                         break;
                     }
-                    empty = this.GetCellBorderByBorderIndex(row, column, borderIndex, ref cachedCell);
+                    empty = GetCellBorderByBorderIndex(row, column, borderIndex, ref cachedCell);
                     break;
 
                 case Borders.BOTTOM:
                     if (state <= 0)
                     {
-                        empty = this.GetCellBorderByBorderIndex(row, column, borderIndex, ref cachedCell);
+                        empty = GetCellBorderByBorderIndex(row, column, borderIndex, ref cachedCell);
                         break;
                     }
                     if ((state & 8) != 8)
@@ -602,16 +602,16 @@ namespace Dt.Cells.UI
                         flag = true;
                         break;
                     }
-                    empty = this.GetCellBorderByBorderIndex(row, column, borderIndex, ref cachedCell);
+                    empty = GetCellBorderByBorderIndex(row, column, borderIndex, ref cachedCell);
                     break;
             }
             if ((!flag && !isInCellflow) && (empty == null))
             {
-                if ((this._viewport.SheetArea == SheetArea.Cells) && (this._zoomFactor < 0.4f))
+                if ((_viewport.SheetArea == SheetArea.Cells) && (_zoomFactor < 0.4f))
                 {
                     return BorderLine.Empty;
                 }
-                empty = this._gridLine;
+                empty = _gridLine;
                 if ((state & 0x20) == 0x20)
                 {
                     return BorderLine.Empty;
@@ -622,7 +622,7 @@ namespace Dt.Cells.UI
                 }
                 if (cachedCell == null)
                 {
-                    cachedCell = this._viewport.CellCache.GetCachedCell(row, column);
+                    cachedCell = _viewport.CellCache.GetCachedCell(row, column);
                 }
                 if ((cachedCell != null) && (cachedCell.ActualBackground != null))
                 {
@@ -632,9 +632,9 @@ namespace Dt.Cells.UI
             return empty;
         }
 
-        private BorderLine GetCellBorderByBorderIndex(int row, int column, Borders borderIndex, ref Cell cell)
+        BorderLine GetCellBorderByBorderIndex(int row, int column, Borders borderIndex, ref Cell cell)
         {
-            GcViewport viewport = this._viewport;
+            GcViewport viewport = _viewport;
             if (cell == null)
             {
                 cell = viewport.CellCache.GetCachedCell(row, column);
@@ -660,37 +660,37 @@ namespace Dt.Cells.UI
             return null;
         }
 
-        private Windows.Foundation.Rect GetCellBounds(int row, int column)
+        Windows.Foundation.Rect GetCellBounds(int row, int column)
         {
-            Windows.Foundation.Rect rect = this._viewport.GetCellBounds(row, column, true);
+            Windows.Foundation.Rect rect = _viewport.GetCellBounds(row, column, true);
             if (rect.X == -1.0)
             {
-                rect.X = this._viewport.Location.X;
+                rect.X = _viewport.Location.X;
             }
             if (rect.Y == -1.0)
             {
-                rect.Y = this._viewport.Location.Y;
+                rect.Y = _viewport.Location.Y;
             }
             return rect;
         }
 
-        private SheetView GetSheetView()
+        SheetView GetSheetView()
         {
-            if (this._viewport != null)
+            if (_viewport != null)
             {
-                return this._viewport.Sheet;
+                return _viewport.Sheet;
             }
             return null;
         }
 
-        private GcViewport GetViewport()
+        GcViewport GetViewport()
         {
-            return this._viewport;
+            return _viewport;
         }
 
-        private Worksheet GetWorksheet()
+        Worksheet GetWorksheet()
         {
-            GcViewport viewport = this._viewport;
+            GcViewport viewport = _viewport;
             if ((viewport != null) && (viewport.Sheet != null))
             {
                 return viewport.Sheet.Worksheet;
@@ -698,84 +698,84 @@ namespace Dt.Cells.UI
             return null;
         }
 
-        private void InitDirtyRange()
+        void InitDirtyRange()
         {
-            SheetArea sheetArea = this._viewport.SheetArea;
-            int num = this._worksheet.NextNonEmptyColumn(this._columnStart - 1, sheetArea);
-            if ((this._columnStart <= num) && (num <= this._columnEnd))
+            SheetArea sheetArea = _viewport.SheetArea;
+            int num = _worksheet.NextNonEmptyColumn(_columnStart - 1, sheetArea);
+            if ((_columnStart <= num) && (num <= _columnEnd))
             {
-                this._rowStartDirty = this._rowStart;
-                this._rowEndDirty = this._rowEnd;
+                _rowStartDirty = _rowStart;
+                _rowEndDirty = _rowEnd;
             }
             else
             {
-                this._rowEndDirty = this._rowStartDirty = this._worksheet.NextNonEmptyRow(this._rowStart - 1, sheetArea, StorageType.Style);
-                if (this._rowStartDirty > -1)
+                _rowEndDirty = _rowStartDirty = _worksheet.NextNonEmptyRow(_rowStart - 1, sheetArea, StorageType.Style);
+                if (_rowStartDirty > -1)
                 {
-                    int row = this._rowStartDirty;
-                    while (row <= this._rowEnd)
+                    int row = _rowStartDirty;
+                    while (row <= _rowEnd)
                     {
-                        row = this._worksheet.NextNonEmptyRow(row, sheetArea, StorageType.Style);
+                        row = _worksheet.NextNonEmptyRow(row, sheetArea, StorageType.Style);
                         if (row == -1)
                         {
                             break;
                         }
-                        this._rowEndDirty = row;
+                        _rowEndDirty = row;
                     }
                 }
                 else
                 {
-                    this._rowEndDirty = -1;
+                    _rowEndDirty = -1;
                 }
             }
-            if (this._rowStartDirty > -1)
+            if (_rowStartDirty > -1)
             {
-                this._rowStartDirty--;
+                _rowStartDirty--;
             }
-            if (this._rowEndDirty > -1)
+            if (_rowEndDirty > -1)
             {
-                this._rowEndDirty++;
+                _rowEndDirty++;
             }
         }
 
-        private static bool IsDoubleLine(BorderLine line)
+        static bool IsDoubleLine(BorderLine line)
         {
             return BorderLineLayoutEngine.IsDoubleLine(line);
         }
 
-        private void MeasureBorders(Windows.Foundation.Size availableSize)
+        void MeasureBorders(Windows.Foundation.Size availableSize)
         {
-            this._borderLinesPanel.Visibility = Visibility.Visible;
-            this._scrollingGridlinesPanel.Visibility = Visibility.Collapsed;
-            this.CalcVisibleRowColumnIndexes();
-            this.InitDirtyRange();
-            this.ClearBorderLineCache();
-            this.BuildHorizontalBorders();
-            this.BuildVerticalBorders();
-            this.ClearBorderLineCache();
+            _borderLinesPanel.Visibility = Visibility.Visible;
+            _scrollingGridlinesPanel.Visibility = Visibility.Collapsed;
+            CalcVisibleRowColumnIndexes();
+            InitDirtyRange();
+            ClearBorderLineCache();
+            BuildHorizontalBorders();
+            BuildVerticalBorders();
+            ClearBorderLineCache();
         }
 
-        private void MeasureGridLinesForScrolling()
+        void MeasureGridLinesForScrolling()
         {
             Action action = null;
-            this._borderLinesPanel.Visibility = Visibility.Collapsed;
-            this._scrollingGridlinesPanel.Visibility = Visibility.Visible;
-            this._scrollingGridlinesPanel.Children.Clear();
-            this.CalcVisibleRowColumnIndexes();
-            BorderLine gridBorderLine = this._worksheet.GetGridLine(this._viewport.SheetArea);
-            RowLayoutModel rowLayoutModel = this._sheetView.GetRowLayoutModel(this._viewport.RowViewportIndex, this._viewport.SheetArea);
-            ColumnLayoutModel columnLayoutModel = this._sheetView.GetColumnLayoutModel(this._viewport.ColumnViewportIndex, this._viewport.SheetArea);
-            int viewportBottomRow = this._sheetView.GetViewportBottomRow(this._viewport.RowViewportIndex);
-            int viewportRightColumn = this._sheetView.GetViewportRightColumn(this._viewport.ColumnViewportIndex);
+            _borderLinesPanel.Visibility = Visibility.Collapsed;
+            _scrollingGridlinesPanel.Visibility = Visibility.Visible;
+            _scrollingGridlinesPanel.Children.Clear();
+            CalcVisibleRowColumnIndexes();
+            BorderLine gridBorderLine = _worksheet.GetGridLine(_viewport.SheetArea);
+            RowLayoutModel rowLayoutModel = _sheetView.GetRowLayoutModel(_viewport.RowViewportIndex, _viewport.SheetArea);
+            ColumnLayoutModel columnLayoutModel = _sheetView.GetColumnLayoutModel(_viewport.ColumnViewportIndex, _viewport.SheetArea);
+            int viewportBottomRow = _sheetView.GetViewportBottomRow(_viewport.RowViewportIndex);
+            int viewportRightColumn = _sheetView.GetViewportRightColumn(_viewport.ColumnViewportIndex);
             RowLayout bottomRowLayout = rowLayoutModel.FindRow(viewportBottomRow);
             ColumnLayout rightColumnLayout = columnLayoutModel.FindColumn(viewportRightColumn);
-            Windows.Foundation.Point viewportLocation = this._viewport.Location;
-            if (((this._rowIndexes.Length != 1) || (this._rowIndexes[0] != -1)) && ((this._columnIndexes.Length != 1) || (this._columnIndexes[0] != -1)))
+            Windows.Foundation.Point viewportLocation = _viewport.Location;
+            if (((_rowIndexes.Length != 1) || (_rowIndexes[0] != -1)) && ((_columnIndexes.Length != 1) || (_columnIndexes[0] != -1)))
             {
                 if (action == null)
                 {
                     action = delegate {
-                        double viewportWidth = this._sheetView.GetViewportWidth(this._viewport.ColumnViewportIndex);
+                        double viewportWidth = _sheetView.GetViewportWidth(_viewport.ColumnViewportIndex);
                         SolidColorBrush brush = new SolidColorBrush(gridBorderLine.Color);
                         if ((rightColumnLayout != null) && (viewportWidth > ((rightColumnLayout.X + rightColumnLayout.Width) - viewportLocation.X)))
                         {
@@ -784,9 +784,9 @@ namespace Dt.Cells.UI
                             double num9 = viewportLocation.X;
                         }
                         double num2 = viewportLocation.Y + 0.5;
-                        for (int k = 0; k < this._rowIndexes.Length; k++)
+                        for (int k = 0; k < _rowIndexes.Length; k++)
                         {
-                            RowLayout layout = rowLayoutModel.FindRow(this._rowIndexes[k]);
+                            RowLayout layout = rowLayoutModel.FindRow(_rowIndexes[k]);
                             if (layout != null)
                             {
                                 Windows.UI.Xaml.Shapes.Line line = new Windows.UI.Xaml.Shapes.Line();
@@ -796,19 +796,19 @@ namespace Dt.Cells.UI
                                 line.Y2 = line.Y1;
                                 line.Stroke = brush;
                                 line.StrokeThickness = 1.0;
-                                this._scrollingGridlinesPanel.Children.Add(line);
+                                _scrollingGridlinesPanel.Children.Add(line);
                             }
                         }
-                        double viewportHeight = this._sheetView.GetViewportHeight(this._viewport.RowViewportIndex);
+                        double viewportHeight = _sheetView.GetViewportHeight(_viewport.RowViewportIndex);
                         double num5 = viewportLocation.X + 0.5;
                         double num6 = viewportHeight;
                         if ((bottomRowLayout != null) && (viewportHeight > ((bottomRowLayout.Y + bottomRowLayout.Height) - viewportLocation.Y)))
                         {
                             num6 = ((bottomRowLayout.Y + bottomRowLayout.Height) - viewportLocation.Y) - 0.5;
                         }
-                        for (int i = 0; i < this._columnIndexes.Length; i++)
+                        for (int i = 0; i < _columnIndexes.Length; i++)
                         {
-                            ColumnLayout layout2 = columnLayoutModel.FindColumn(this._columnIndexes[i]);
+                            ColumnLayout layout2 = columnLayoutModel.FindColumn(_columnIndexes[i]);
                             if (layout2 != null)
                             {
                                 Windows.UI.Xaml.Shapes.Line line2 = new Windows.UI.Xaml.Shapes.Line();
@@ -818,7 +818,7 @@ namespace Dt.Cells.UI
                                 line2.Y2 = num6;
                                 line2.Stroke = brush;
                                 line2.StrokeThickness = 1.0;
-                                this._scrollingGridlinesPanel.Children.Add(line2);
+                                _scrollingGridlinesPanel.Children.Add(line2);
                             }
                         }
                     };
@@ -829,72 +829,72 @@ namespace Dt.Cells.UI
 
         protected override Windows.Foundation.Size MeasureOverride(Windows.Foundation.Size availableSize)
         {
-            this._sheetView = this.GetSheetView();
-            if (this._sheetView.fastScroll)
+            _sheetView = GetSheetView();
+            if (_sheetView.fastScroll)
             {
-                this._scrollingGridlinesPanel.Measure(availableSize);
-                this.MeasureGridLinesForScrolling();
+                _scrollingGridlinesPanel.Measure(availableSize);
+                MeasureGridLinesForScrolling();
                 return base.MeasureOverride(availableSize);
             }
-            this._worksheet = this.GetWorksheet();
-            this._rowIndexes = new int[0];
-            this._columnIndexes = new int[0];
-            this._rowStart = 0;
-            this._rowEnd = 0;
-            this._columnStart = 0;
-            this._columnEnd = 0;
-            this._borderLinesPanel.Measure(availableSize);
-            this._lineMap = new Dictionary<ComboLine, LineItem>();
-            this._linesPool = new BorderLinesPool(this._borderLinesPanel.Children);
-            this._linesPool.Reset();
-            this._zoomFactor = this._sheetView.ZoomFactor;
-            if (this._worksheet != null)
+            _worksheet = GetWorksheet();
+            _rowIndexes = new int[0];
+            _columnIndexes = new int[0];
+            _rowStart = 0;
+            _rowEnd = 0;
+            _columnStart = 0;
+            _columnEnd = 0;
+            _borderLinesPanel.Measure(availableSize);
+            _lineMap = new Dictionary<ComboLine, LineItem>();
+            _linesPool = new BorderLinesPool(_borderLinesPanel.Children);
+            _linesPool.Reset();
+            _zoomFactor = _sheetView.ZoomFactor;
+            if (_worksheet != null)
             {
-                this._gridLine = this._worksheet.GetGridLine(this._viewport.SheetArea);
-                if (((this._viewport.SheetArea == SheetArea.ColumnHeader) || (this._viewport.SheetArea == (SheetArea.CornerHeader | SheetArea.RowHeader))) && this._viewport.Sheet.HeaderGridLineColor.HasValue)
+                _gridLine = _worksheet.GetGridLine(_viewport.SheetArea);
+                if (((_viewport.SheetArea == SheetArea.ColumnHeader) || (_viewport.SheetArea == (SheetArea.CornerHeader | SheetArea.RowHeader))) && _viewport.Sheet.HeaderGridLineColor.HasValue)
                 {
-                    this._gridLine = new BorderLine(this._viewport.Sheet.HeaderGridLineColor.Value, BorderLineStyle.Thin);
+                    _gridLine = new BorderLine(_viewport.Sheet.HeaderGridLineColor.Value, BorderLineStyle.Thin);
                 }
-                switch (this._viewport.SheetArea)
+                switch (_viewport.SheetArea)
                 {
                     case SheetArea.Cells:
                     {
-                        SheetSpanModel spanModel = this._worksheet.SpanModel;
+                        SheetSpanModel spanModel = _worksheet.SpanModel;
                         break;
                     }
                     case (SheetArea.CornerHeader | SheetArea.RowHeader):
                     {
-                        SheetSpanModel rowHeaderSpanModel = this._worksheet.RowHeaderSpanModel;
+                        SheetSpanModel rowHeaderSpanModel = _worksheet.RowHeaderSpanModel;
                         break;
                     }
                     case SheetArea.ColumnHeader:
                     {
-                        SheetSpanModel columnHeaderSpanModel = this._worksheet.ColumnHeaderSpanModel;
+                        SheetSpanModel columnHeaderSpanModel = _worksheet.ColumnHeaderSpanModel;
                         break;
                     }
                 }
-                this.MeasureBorders(availableSize);
+                MeasureBorders(availableSize);
             }
-            this._linesPool.Collect();
-            foreach (ComboLine line in this._lineMap.Keys)
+            _linesPool.Collect();
+            foreach (ComboLine line in _lineMap.Keys)
             {
-                LineItem lineItem = this._lineMap[line];
-                Windows.Foundation.Point point = this._viewport.PointToClient(new Windows.Foundation.Point(0.0, 0.0));
+                LineItem lineItem = _lineMap[line];
+                Windows.Foundation.Point point = _viewport.PointToClient(new Windows.Foundation.Point(0.0, 0.0));
                 line.Width = availableSize.Width;
                 line.Height = availableSize.Height;
-                ((IThemeContextSupport) lineItem).SetContext(this._worksheet);
+                ((IThemeContextSupport) lineItem).SetContext(_worksheet);
                 line.Layout(lineItem, -point.X, -point.Y);
                 ((IThemeContextSupport) lineItem).SetContext(null);
             }
             return base.MeasureOverride(availableSize);
         }
 
-        private int NextColumn(int cPos)
+        int NextColumn(int cPos)
         {
-            return NextIndex(this._columnIndexes, cPos);
+            return NextIndex(_columnIndexes, cPos);
         }
 
-        private static int NextIndex(int[] indexes, int rPos)
+        static int NextIndex(int[] indexes, int rPos)
         {
             if ((rPos >= -1) && (rPos < (indexes.Length - 1)))
             {
@@ -903,17 +903,17 @@ namespace Dt.Cells.UI
             return -1;
         }
 
-        private int NextRow(int rPos)
+        int NextRow(int rPos)
         {
-            return NextIndex(this._rowIndexes, rPos);
+            return NextIndex(_rowIndexes, rPos);
         }
 
-        private int PreviousColumn(int cPos)
+        int PreviousColumn(int cPos)
         {
-            return PreviousIndex(this._columnIndexes, cPos);
+            return PreviousIndex(_columnIndexes, cPos);
         }
 
-        private static int PreviousIndex(int[] indexes, int rPos)
+        static int PreviousIndex(int[] indexes, int rPos)
         {
             if ((rPos >= 1) && (rPos <= indexes.Length))
             {
@@ -922,9 +922,9 @@ namespace Dt.Cells.UI
             return -1;
         }
 
-        private int PreviousRow(int rPos)
+        int PreviousRow(int rPos)
         {
-            return PreviousIndex(this._rowIndexes, rPos);
+            return PreviousIndex(_rowIndexes, rPos);
         }
     }
 }

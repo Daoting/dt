@@ -25,7 +25,7 @@ namespace Dt.Cells.UI
     [TemplateVisualState(Name = "Normal", GroupName = "CheckHoverStates")]
     public partial class DragFillContextMenuItem : ContentControl
     {
-        private bool _isMouseOver;
+        bool _isMouseOver;
         /// <summary>
         /// Defines the IsChecked dependency property which indicates what automatic fill type is applied.
         /// </summary>
@@ -48,12 +48,12 @@ namespace Dt.Cells.UI
         public DragFillContextMenuItem(string text, AutoFillType fillType)
         {
             base.DefaultStyleKey = typeof(DragFillContextMenuItem);
-            this.PointerEntered += OnDragFillContextMenuItemPointerEntered;
-            this.PointerExited += OnDragFillContextMenuItemPointerExited;
-            this.PointerPressed += OnDragFillContextMenuItemPointerPressed;
-            this.PointerReleased += OnDragFillContextMenuItemPointerReleased;
-            this.Text = text;
-            this.FillType = fillType;
+            PointerEntered += OnDragFillContextMenuItemPointerEntered;
+            PointerExited += OnDragFillContextMenuItemPointerExited;
+            PointerPressed += OnDragFillContextMenuItemPointerPressed;
+            PointerReleased += OnDragFillContextMenuItemPointerReleased;
+            Text = text;
+            FillType = fillType;
             Loaded += DragFillContextMenuItem_Loaded;
         }
 
@@ -68,67 +68,67 @@ namespace Dt.Cells.UI
 #endif
         internal void Click()
         {
-            this.IsChecked = true;
-            this.UpdateVisualState();
-            this.OnChecked();
+            IsChecked = true;
+            UpdateVisualState();
+            OnChecked();
         }
 
-        private void DragFillContextMenuItem_Loaded(object sender, RoutedEventArgs e)
+        void DragFillContextMenuItem_Loaded(object sender, RoutedEventArgs e)
         {
-            this._isMouseOver = false;
-            this.UpdateVisualState();
+            _isMouseOver = false;
+            UpdateVisualState();
         }
 
-        private void OnChecked()
+        void OnChecked()
         {
-            if (this.Checked != null)
+            if (Checked != null)
             {
-                this.Checked(this, EventArgs.Empty);
+                Checked(this, EventArgs.Empty);
             }
         }
 
-        private void OnDragFillContextMenuItemPointerEntered(object sender, PointerRoutedEventArgs e)
+        void OnDragFillContextMenuItemPointerEntered(object sender, PointerRoutedEventArgs e)
         {
-            this._isMouseOver = true;
-            this.UpdateVisualState();
+            _isMouseOver = true;
+            UpdateVisualState();
         }
 
-        private void OnDragFillContextMenuItemPointerExited(object sender, PointerRoutedEventArgs e)
+        void OnDragFillContextMenuItemPointerExited(object sender, PointerRoutedEventArgs e)
         {
-            this._isMouseOver = false;
-            this.UpdateVisualState();
+            _isMouseOver = false;
+            UpdateVisualState();
         }
 
-        private void OnDragFillContextMenuItemPointerPressed(object sender, PointerRoutedEventArgs e)
+        void OnDragFillContextMenuItemPointerPressed(object sender, PointerRoutedEventArgs e)
         {
             e.Handled = true;
         }
 
-        private void OnDragFillContextMenuItemPointerReleased(object sender, PointerRoutedEventArgs e)
+        void OnDragFillContextMenuItemPointerReleased(object sender, PointerRoutedEventArgs e)
         {
             e.Handled = true;
-            this.IsChecked = true;
-            this.UpdateVisualState();
-            this.OnChecked();
+            IsChecked = true;
+            UpdateVisualState();
+            OnChecked();
         }
 
         internal void SetIsChecked(bool isChecked)
         {
-            this.IsChecked = isChecked;
-            this.UpdateVisualState();
+            IsChecked = isChecked;
+            UpdateVisualState();
         }
 
-        private void UpdateVisualState()
+        void UpdateVisualState()
         {
-            if (this.IsChecked && this._isMouseOver)
+            if (IsChecked && _isMouseOver)
             {
                 VisualStateManager.GoToState(this, "CheckedAndMouseOver", true);
             }
-            else if (this._isMouseOver)
+            else if (_isMouseOver)
             {
                 VisualStateManager.GoToState(this, "MouseOver", true);
             }
-            else if (this.IsChecked)
+            else if (IsChecked)
             {
                 VisualStateManager.GoToState(this, "Checked", true);
             }

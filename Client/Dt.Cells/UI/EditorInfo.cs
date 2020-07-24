@@ -18,11 +18,11 @@ namespace Dt.Cells.UI
     /// </summary>
     public class EditorInfo
     {
-        private SheetView _sheetView;
+        SheetView _sheetView;
 
         internal EditorInfo(SheetView sheetView)
         {
-            this._sheetView = sheetView;
+            _sheetView = sheetView;
         }
 
         /// <summary>
@@ -32,11 +32,11 @@ namespace Dt.Cells.UI
         {
             get
             {
-                if (this._sheetView.EditorConnector.IsInOtherSheet)
+                if (_sheetView.EditorConnector.IsInOtherSheet)
                 {
-                    return this._sheetView.EditorConnector.ColumnIndex;
+                    return _sheetView.EditorConnector.ColumnIndex;
                 }
-                return this._sheetView.Worksheet.ActiveColumnIndex;
+                return _sheetView.Worksheet.ActiveColumnIndex;
             }
         }
 
@@ -47,11 +47,11 @@ namespace Dt.Cells.UI
         {
             get
             {
-                if (this._sheetView.EditorConnector.IsInOtherSheet)
+                if (_sheetView.EditorConnector.IsInOtherSheet)
                 {
-                    return this._sheetView.EditorConnector.RowIndex;
+                    return _sheetView.EditorConnector.RowIndex;
                 }
-                return this._sheetView.Worksheet.ActiveRowIndex;
+                return _sheetView.Worksheet.ActiveRowIndex;
             }
         }
 
@@ -65,11 +65,11 @@ namespace Dt.Cells.UI
         {
             get
             {
-                if (this._sheetView.EditorConnector.IsInOtherSheet)
+                if (_sheetView.EditorConnector.IsInOtherSheet)
                 {
-                    return this._sheetView.Worksheet.Workbook.Sheets[this._sheetView.EditorConnector.SheetIndex];
+                    return _sheetView.Worksheet.Workbook.Sheets[_sheetView.EditorConnector.SheetIndex];
                 }
-                return this._sheetView.Worksheet.Workbook.ActiveSheet;
+                return _sheetView.Worksheet.Workbook.ActiveSheet;
             }
         }
     }

@@ -54,19 +54,19 @@ namespace Dt.Cells.UI
         /// </returns>
         public bool CanExecuteCommand()
         {
-            return ((this.Command != null) && this.Command.CanExecute(this.CommandParameter));
+            return ((Command != null) && Command.CanExecute(CommandParameter));
         }
 
         internal void Close()
         {
-            if (this.Popup != null)
+            if (Popup != null)
             {
-                this.Popup.Close();
-                this.Popup = null;
+                Popup.Close();
+                Popup = null;
             }
         }
 
-        private void DataValidationListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        void DataValidationListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             base.ScrollIntoView(base.SelectedItem);
         }
@@ -76,9 +76,9 @@ namespace Dt.Cells.UI
         /// </summary>
         public void ExecuteCommand()
         {
-            if ((this.Command != null) && this.Command.CanExecute(this.CommandParameter))
+            if ((Command != null) && Command.CanExecute(CommandParameter))
             {
-                this.Command.Execute(this.CommandParameter);
+                Command.Execute(CommandParameter);
             }
         }
 
@@ -113,7 +113,7 @@ namespace Dt.Cells.UI
         protected override Windows.Foundation.Size MeasureOverride(Windows.Foundation.Size constraint)
         {
             Windows.Foundation.Size size = base.MeasureOverride(constraint);
-            this.ProcessFocus();
+            ProcessFocus();
             return size;
         }
 
@@ -127,13 +127,13 @@ namespace Dt.Cells.UI
             {
                 if (e.Key == VirtualKey.Escape)
                 {
-                    this.Close();
+                    Close();
                 }
                 else
                 {
                     if (((e.Key == VirtualKey.Enter) || (e.Key == VirtualKey.Space)) && ((base.SelectedIndex >= 0) || ((base.SelectedIndex == -1) && (base.SelectedValue == null))))
                     {
-                        this.PerformSelectionChanged();
+                        PerformSelectionChanged();
                     }
                     base.OnKeyDown(e);
                 }
@@ -142,18 +142,18 @@ namespace Dt.Cells.UI
 
         internal void PerformSelectionChanged()
         {
-            this.Close();
-            if ((this.Command != null) && this.CanExecuteCommand())
+            Close();
+            if ((Command != null) && CanExecuteCommand())
             {
                 if (base.SelectedItem is DataValidationListItem)
                 {
-                    this.CommandParameter = (base.SelectedItem as DataValidationListItem).Value;
+                    CommandParameter = (base.SelectedItem as DataValidationListItem).Value;
                 }
                 else
                 {
-                    this.CommandParameter = base.SelectedItem;
+                    CommandParameter = base.SelectedItem;
                 }
-                this.ExecuteCommand();
+                ExecuteCommand();
             }
         }
 
@@ -172,7 +172,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void ProcessFocus()
+        void ProcessFocus()
         {
             if ((base.SelectedIndex < 0) && (base.Items.Count > 0))
             {
@@ -193,7 +193,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void ProcessGotFocus(RoutedEventArgs e)
+        void ProcessGotFocus(RoutedEventArgs e)
         {
         }
 

@@ -359,7 +359,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private static void ExecutePaste(ActionEventArgs e, SheetView gcSheetView, string clipboardText)
+        static void ExecutePaste(ActionEventArgs e, SheetView gcSheetView, string clipboardText)
         {
             CellRange range2;
             Worksheet sheet = SpreadXClipboard.Worksheet;
@@ -431,7 +431,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private static string[] GetSelectedFloatingObjectNames(SheetView gcSheetView)
+        static string[] GetSelectedFloatingObjectNames(SheetView gcSheetView)
         {
             List<string> list = new List<string>();
             foreach (FloatingObject obj2 in gcSheetView.GetAllSelectedFloatingObjects())

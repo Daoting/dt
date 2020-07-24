@@ -20,14 +20,14 @@ namespace Dt.Cells.UI
     {
         internal ValidationDragDropBlockEventArgs(int fromRow, int fromColumn, int toRow, int toColumn, int rowCount, int columnCount, bool copy, bool insert)
         {
-            this.FromRow = fromRow;
-            this.FromColumn = fromColumn;
-            this.ToRow = toRow;
-            this.ToColumn = toColumn;
-            this.RowCount = rowCount;
-            this.ColumnCount = columnCount;
-            this.Copy = copy;
-            this.Insert = insert;
+            FromRow = fromRow;
+            FromColumn = fromColumn;
+            ToRow = toRow;
+            ToColumn = toColumn;
+            RowCount = rowCount;
+            ColumnCount = columnCount;
+            Copy = copy;
+            Insert = insert;
         }
 
         /// <summary>

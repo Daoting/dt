@@ -32,10 +32,10 @@ namespace Dt.Cells.UI
         /// <param name="function"></param>
         public FormulaFunction(CalcFunction function)
         {
-            this.Function = function;
-            this.Name = function.Name;
-            this.MinArgs = function.MinArgs;
-            this.MaxArgs = function.MaxArgs;
+            Function = function;
+            Name = function.Name;
+            MinArgs = function.MinArgs;
+            MaxArgs = function.MaxArgs;
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Dt.Cells.UI
         /// <returns></returns>
         public override string ToString()
         {
-            return this.Name;
+            return Name;
         }
 
         /// <summary>

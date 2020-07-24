@@ -22,9 +22,9 @@ namespace Dt.Cells.Data
     /// </summary>
     internal class BorderLinesPool
     {
-        private Dictionary<Windows.UI.Color, SolidColorBrush> _brushCache = new Dictionary<Windows.UI.Color, SolidColorBrush>();
-        private UIElementCollection _elements;
-        private int _seek = -1;
+        Dictionary<Windows.UI.Color, SolidColorBrush> _brushCache = new Dictionary<Windows.UI.Color, SolidColorBrush>();
+        UIElementCollection _elements;
+        int _seek = -1;
 
         /// <summary>
         /// Creates a new instance of the <see cref="T:Dt.Cells.Data.BorderLinesPool" /> class.
@@ -32,7 +32,7 @@ namespace Dt.Cells.Data
         /// <param name="elements">The border line elements.</param>
         public BorderLinesPool(UIElementCollection elements)
         {
-            this._elements = elements;
+            _elements = elements;
         }
 
         /// <summary>
@@ -40,10 +40,10 @@ namespace Dt.Cells.Data
         /// </summary>
         public void Collect()
         {
-            int num = this._elements.Count;
-            for (int i = this._seek + 1; i < num; i++)
+            int num = _elements.Count;
+            for (int i = _seek + 1; i < num; i++)
             {
-                this._elements.RemoveAt(this._seek + 1);
+                _elements.RemoveAt(_seek + 1);
             }
         }
 
@@ -55,10 +55,10 @@ namespace Dt.Cells.Data
         public SolidColorBrush GetSolidBrush(Windows.UI.Color color)
         {
             SolidColorBrush brush;
-            if (!this._brushCache.TryGetValue(color, out brush))
+            if (!_brushCache.TryGetValue(color, out brush))
             {
                 brush = new SolidColorBrush(color);
-                this._brushCache.Add(color, brush);
+                _brushCache.Add(color, brush);
             }
             return brush;
         }
@@ -69,16 +69,16 @@ namespace Dt.Cells.Data
         /// <returns></returns>
         public UIElement Pop()
         {
-            int num = this._elements.Count;
-            if (this._seek >= (num - 1))
+            int num = _elements.Count;
+            if (_seek >= (num - 1))
             {
                 ComboLine line = new ComboLine();
-                this._elements.Add(line);
-                this._seek++;
+                _elements.Add(line);
+                _seek++;
                 return line;
             }
-            this._seek++;
-            return (UIElement)_elements[this._seek];
+            _seek++;
+            return (UIElement)_elements[_seek];
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace Dt.Cells.Data
         /// </summary>
         public void Reset()
         {
-            this._seek = -1;
+            _seek = -1;
         }
     }
 }

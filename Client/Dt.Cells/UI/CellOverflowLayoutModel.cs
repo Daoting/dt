@@ -32,18 +32,18 @@ namespace Dt.Cells.UI
                     return true;
                 }
             }
-            return (((this.HeadingOverflowlayout != null) && this.HeadingOverflowlayout.Contains(columnIndex)) || ((this.TrailingOverflowlayout != null) && this.TrailingOverflowlayout.Contains(columnIndex)));
+            return (((HeadingOverflowlayout != null) && HeadingOverflowlayout.Contains(columnIndex)) || ((TrailingOverflowlayout != null) && TrailingOverflowlayout.Contains(columnIndex)));
         }
 
         public CellOverflowLayout GetCellOverflowLayout(int columnIndex)
         {
-            if ((this.HeadingOverflowlayout != null) && this.HeadingOverflowlayout.Contains(columnIndex))
+            if ((HeadingOverflowlayout != null) && HeadingOverflowlayout.Contains(columnIndex))
             {
-                return this.HeadingOverflowlayout;
+                return HeadingOverflowlayout;
             }
-            if ((this.TrailingOverflowlayout != null) && this.TrailingOverflowlayout.Contains(columnIndex))
+            if ((TrailingOverflowlayout != null) && TrailingOverflowlayout.Contains(columnIndex))
             {
-                return this.TrailingOverflowlayout;
+                return TrailingOverflowlayout;
             }
             return Enumerable.FirstOrDefault<CellOverflowLayout>(this, delegate (CellOverflowLayout c) {
                 return c.Contains(columnIndex);
@@ -54,7 +54,7 @@ namespace Dt.Cells.UI
 
         public bool IsEmpty
         {
-            get { return  (((base.Count == 0) && (this.HeadingOverflowlayout == null)) && (this.TrailingOverflowlayout == null)); }
+            get { return  (((base.Count == 0) && (HeadingOverflowlayout == null)) && (TrailingOverflowlayout == null)); }
         }
 
         public CellOverflowLayout TrailingOverflowlayout { get; set; }

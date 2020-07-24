@@ -39,15 +39,15 @@ namespace Dt.Cells.UI
         /// </remarks>
         public UndoManager(object context, int maxLength, bool allowUndo)
         {
-            this.Context = context;
+            Context = context;
             if (maxLength < 0)
             {
                 maxLength = 0x7fffffff;
             }
-            this.MaxLength = maxLength;
-            this.UndoList = new Stack<ICommand>();
-            this.RedoList = new Stack<ICommand>();
-            this.AllowUndo = allowUndo;
+            MaxLength = maxLength;
+            UndoList = new Stack<ICommand>();
+            RedoList = new Stack<ICommand>();
+            AllowUndo = allowUndo;
         }
 
         /// <summary>
@@ -65,30 +65,30 @@ namespace Dt.Cells.UI
             bool flag = true;
             try
             {
-                action.Execute(this.Context);
+                action.Execute(Context);
             }
             catch
             {
                 flag = false;
             }
-            if (this.Context is SheetView)
+            if (Context is SheetView)
             {
-                (this.Context as SheetView).ResumeInvalidate();
+                (Context as SheetView).ResumeInvalidate();
             }
-            if (this.AllowUndo)
+            if (AllowUndo)
             {
                 IUndo undo = action as IUndo;
                 if (!flag || (undo == null))
                 {
                     return flag;
                 }
-                if ((this.MaxLength > 0) && (this.UndoList.Count >= this.MaxLength))
+                if ((MaxLength > 0) && (UndoList.Count >= MaxLength))
                 {
-                    this.ShrinkUndoList((this.UndoList.Count - this.MaxLength) + 1);
+                    ShrinkUndoList((UndoList.Count - MaxLength) + 1);
                 }
-                this.UndoList.Push(action);
-                this.RedoList.Clear();
-                this.RaiseChanged(UndoRedoOperation.Do, action.ToString());
+                UndoList.Push(action);
+                RedoList.Clear();
+                RaiseChanged(UndoRedoOperation.Do, action.ToString());
             }
             return flag;
         }
@@ -98,7 +98,7 @@ namespace Dt.Cells.UI
         /// </summary>
         public ICommand[] GetRedoList()
         {
-            return this.RedoList.ToArray();
+            return RedoList.ToArray();
         }
 
         /// <summary>
@@ -106,14 +106,14 @@ namespace Dt.Cells.UI
         /// </summary>
         public ICommand[] GetUndoList()
         {
-            return this.UndoList.ToArray();
+            return UndoList.ToArray();
         }
 
-        private void RaiseChanged(UndoRedoOperation undoRedo, string action)
+        void RaiseChanged(UndoRedoOperation undoRedo, string action)
         {
-            if (this.Changed != null)
+            if (Changed != null)
             {
-                this.Changed(this, new UndoRedoEventArgs(undoRedo, action));
+                Changed(this, new UndoRedoEventArgs(undoRedo, action));
             }
         }
 
@@ -126,12 +126,12 @@ namespace Dt.Cells.UI
         public bool Redo()
         {
             bool flag = true;
-            if (this.AllowUndo && this.CanRedo)
+            if (AllowUndo && CanRedo)
             {
-                ICommand command = this.RedoList.Peek();
+                ICommand command = RedoList.Peek();
                 try
                 {
-                    command.Execute(this.Context);
+                    command.Execute(Context);
                 }
                 catch
                 {
@@ -139,8 +139,8 @@ namespace Dt.Cells.UI
                 }
                 if (flag)
                 {
-                    this.UndoList.Push(this.RedoList.Pop());
-                    this.RaiseChanged(UndoRedoOperation.Redo, command.ToString());
+                    UndoList.Push(RedoList.Pop());
+                    RaiseChanged(UndoRedoOperation.Redo, command.ToString());
                 }
             }
             return flag;
@@ -152,15 +152,15 @@ namespace Dt.Cells.UI
         /// <param name="count">
         /// The specified count of items.
         /// </param>
-        private void ShrinkUndoList(int count)
+        void ShrinkUndoList(int count)
         {
-            ICommand[] commandArray = new ICommand[this.UndoList.Count];
-            this.UndoList.CopyTo(commandArray, 0);
+            ICommand[] commandArray = new ICommand[UndoList.Count];
+            UndoList.CopyTo(commandArray, 0);
             Array.Reverse(commandArray);
-            this.UndoList.Clear();
+            UndoList.Clear();
             for (int i = count; i < commandArray.Length; i++)
             {
-                this.UndoList.Push(commandArray[i]);
+                UndoList.Push(commandArray[i]);
             }
         }
 
@@ -173,28 +173,28 @@ namespace Dt.Cells.UI
         public bool Undo()
         {
             bool flag = true;
-            if (this.AllowUndo && this.CanUndo)
+            if (AllowUndo && CanUndo)
             {
-                IUndo undo = this.UndoList.Peek() as IUndo;
+                IUndo undo = UndoList.Peek() as IUndo;
                 try
                 {
                     if ((undo != null) && undo.CanUndo)
                     {
-                        flag = undo.Undo(this.Context);
+                        flag = undo.Undo(Context);
                     }
                 }
                 catch
                 {
                     flag = false;
                 }
-                if (this.Context is SheetView)
+                if (Context is SheetView)
                 {
-                    (this.Context as SheetView).ResumeInvalidate();
+                    (Context as SheetView).ResumeInvalidate();
                 }
                 if (flag)
                 {
-                    this.RedoList.Push(this.UndoList.Pop());
-                    this.RaiseChanged(UndoRedoOperation.Undo, undo.ToString());
+                    RedoList.Push(UndoList.Pop());
+                    RaiseChanged(UndoRedoOperation.Undo, undo.ToString());
                 }
             }
             return flag;
@@ -207,7 +207,7 @@ namespace Dt.Cells.UI
         /// </summary>
         public bool CanRedo
         {
-            get { return  (this.RedoList.Count > 0); }
+            get { return  (RedoList.Count > 0); }
         }
 
         /// <summary>
@@ -215,7 +215,7 @@ namespace Dt.Cells.UI
         /// </summary>
         public bool CanUndo
         {
-            get { return  (this.UndoList.Count > 0); }
+            get { return  (UndoList.Count > 0); }
         }
 
         /// <summary>

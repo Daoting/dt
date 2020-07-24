@@ -17,23 +17,23 @@ namespace Dt.Cells.UI
     {
         public CellOverflowLayout(int column, double width)
         {
-            this.Column = column;
-            this.BackgroundWidth = width;
-            this.StartingColumn = -1;
-            this.EndingColumn = -1;
+            Column = column;
+            BackgroundWidth = width;
+            StartingColumn = -1;
+            EndingColumn = -1;
         }
 
         public bool Contains(int columnIndex)
         {
-            int startingColumn = this.StartingColumn;
+            int startingColumn = StartingColumn;
             if (startingColumn == -1)
             {
-                startingColumn = this.Column;
+                startingColumn = Column;
             }
-            int endingColumn = this.EndingColumn;
+            int endingColumn = EndingColumn;
             if (endingColumn == -1)
             {
-                endingColumn = this.Column;
+                endingColumn = Column;
             }
             return ((columnIndex >= startingColumn) && (columnIndex <= endingColumn));
         }
@@ -45,12 +45,12 @@ namespace Dt.Cells.UI
             {
                 return base.Equals(obj);
             }
-            return (((((layout.BackgroundWidth == this.BackgroundWidth) && (layout.Column == this.Column)) && ((layout.ContentWidth == this.ContentWidth) && (layout.EndingColumn == this.EndingColumn))) && ((layout.LeftBackgroundWidth == this.LeftBackgroundWidth) && (layout.RightBackgroundWidth == this.RightBackgroundWidth))) && (layout.StartingColumn == this.StartingColumn));
+            return (((((layout.BackgroundWidth == BackgroundWidth) && (layout.Column == Column)) && ((layout.ContentWidth == ContentWidth) && (layout.EndingColumn == EndingColumn))) && ((layout.LeftBackgroundWidth == LeftBackgroundWidth) && (layout.RightBackgroundWidth == RightBackgroundWidth))) && (layout.StartingColumn == StartingColumn));
         }
 
         public override int GetHashCode()
         {
-            return ((((((((double) this.BackgroundWidth).GetHashCode() | ((int) this.Column).GetHashCode()) | ((double) this.ContentWidth).GetHashCode()) | ((int) this.EndingColumn).GetHashCode()) | ((double) this.LeftBackgroundWidth).GetHashCode()) | ((double) this.RightBackgroundWidth).GetHashCode()) | ((int) this.StartingColumn).GetHashCode());
+            return ((((((((double) BackgroundWidth).GetHashCode() | ((int) Column).GetHashCode()) | ((double) ContentWidth).GetHashCode()) | ((int) EndingColumn).GetHashCode()) | ((double) LeftBackgroundWidth).GetHashCode()) | ((double) RightBackgroundWidth).GetHashCode()) | ((int) StartingColumn).GetHashCode());
         }
 
         public double BackgroundWidth { get; set; }

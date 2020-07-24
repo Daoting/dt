@@ -21,27 +21,27 @@ namespace Dt.Cells.UndoRedo
     /// </summary>
     public class DragDropUndoAction : ActionBase, IUndo
     {
-        private bool _copy;
-        private Dt.Cells.UndoRedo.DragDropExtent _dragDropExtent;
-        private bool _insert;
-        private CopyToOption _option;
-        private int _savedAcitveColumnViewportIndex = -2;
-        private int _savedAcitveRowViewportIndex = -2;
-        private int _savedActiveColumn = -1;
-        private int _savedActiveRow = -1;
-        private CopyMoveCellsInfo _savedFromColumnHeaderCells;
-        private CopyMoveColumnsInfo _savedFromColumns;
-        private CopyMoveFloatingObjectsInfo _savedFromFloatingObjects;
-        private CopyMoveCellsInfo _savedFromRowHeaderCells;
-        private CopyMoveRowsInfo _savedFromRows;
-        private CopyMoveCellsInfo _savedFromViewportCells;
-        private CopyMoveCellsInfo _savedToColumnHeaderCells;
-        private CopyMoveColumnsInfo _savedToColumns;
-        private CopyMoveFloatingObjectsInfo _savedToFloatingObjects;
-        private CopyMoveCellsInfo _savedToRowHeaderCells;
-        private CopyMoveRowsInfo _savedToRows;
-        private CopyMoveCellsInfo _savedToViewportCells;
-        private Worksheet _sheet;
+        bool _copy;
+        Dt.Cells.UndoRedo.DragDropExtent _dragDropExtent;
+        bool _insert;
+        CopyToOption _option;
+        int _savedAcitveColumnViewportIndex = -2;
+        int _savedAcitveRowViewportIndex = -2;
+        int _savedActiveColumn = -1;
+        int _savedActiveRow = -1;
+        CopyMoveCellsInfo _savedFromColumnHeaderCells;
+        CopyMoveColumnsInfo _savedFromColumns;
+        CopyMoveFloatingObjectsInfo _savedFromFloatingObjects;
+        CopyMoveCellsInfo _savedFromRowHeaderCells;
+        CopyMoveRowsInfo _savedFromRows;
+        CopyMoveCellsInfo _savedFromViewportCells;
+        CopyMoveCellsInfo _savedToColumnHeaderCells;
+        CopyMoveColumnsInfo _savedToColumns;
+        CopyMoveFloatingObjectsInfo _savedToFloatingObjects;
+        CopyMoveCellsInfo _savedToRowHeaderCells;
+        CopyMoveRowsInfo _savedToRows;
+        CopyMoveCellsInfo _savedToViewportCells;
+        Worksheet _sheet;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.UndoRedo.DragDropUndoAction" /> class.
@@ -61,11 +61,11 @@ namespace Dt.Cells.UndoRedo
             {
                 throw new ArgumentNullException("dragMoveExtent");
             }
-            this._sheet = sheet;
-            this._dragDropExtent = dragMoveExtent;
-            this._copy = copy;
-            this._insert = insert;
-            this._option = option;
+            _sheet = sheet;
+            _dragDropExtent = dragMoveExtent;
+            _copy = copy;
+            _insert = insert;
+            _option = option;
         }
 
         /// <summary>
@@ -86,33 +86,33 @@ namespace Dt.Cells.UndoRedo
         /// <param name="sender">Object on which the action occurred.</param>
         public override void Execute(object sender)
         {
-            if (SheetView.IsValidRange(this._dragDropExtent.FromRow, this._dragDropExtent.FromColumn, this._dragDropExtent.RowCount, this._dragDropExtent.ColumnCount, this._sheet.RowCount, this._sheet.ColumnCount) && (this._insert || SheetView.IsValidRange(this._dragDropExtent.ToRow, this._dragDropExtent.ToColumn, this._dragDropExtent.RowCount, this._dragDropExtent.ColumnCount, this._sheet.RowCount, this._sheet.ColumnCount)))
+            if (SheetView.IsValidRange(_dragDropExtent.FromRow, _dragDropExtent.FromColumn, _dragDropExtent.RowCount, _dragDropExtent.ColumnCount, _sheet.RowCount, _sheet.ColumnCount) && (_insert || SheetView.IsValidRange(_dragDropExtent.ToRow, _dragDropExtent.ToColumn, _dragDropExtent.RowCount, _dragDropExtent.ColumnCount, _sheet.RowCount, _sheet.ColumnCount)))
             {
-                this.SaveState();
-                if (this._insert)
+                SaveState();
+                if (_insert)
                 {
-                    if ((this._dragDropExtent.FromColumn < 0) || (this._dragDropExtent.FromRow < 0))
+                    if ((_dragDropExtent.FromColumn < 0) || (_dragDropExtent.FromRow < 0))
                     {
-                        if (this._dragDropExtent.FromColumn < 0)
+                        if (_dragDropExtent.FromColumn < 0)
                         {
-                            if (this._dragDropExtent.FromRow >= 0)
+                            if (_dragDropExtent.FromRow >= 0)
                             {
-                                int fromRow = this._dragDropExtent.FromRow;
-                                int toRow = this._dragDropExtent.ToRow;
-                                int rowCount = this._dragDropExtent.RowCount;
-                                int row = this._dragDropExtent.ToRow;
+                                int fromRow = _dragDropExtent.FromRow;
+                                int toRow = _dragDropExtent.ToRow;
+                                int rowCount = _dragDropExtent.RowCount;
+                                int row = _dragDropExtent.ToRow;
                                 base.SuspendInvalidate(sender);
                                 try
                                 {
-                                    this._sheet.AddRows(toRow, rowCount);
-                                    if (this._copy)
+                                    _sheet.AddRows(toRow, rowCount);
+                                    if (_copy)
                                     {
-                                        this._sheet.CopyTo((toRow <= fromRow) ? (fromRow + rowCount) : fromRow, -1, toRow, -1, rowCount, -1, this._option);
+                                        _sheet.CopyTo((toRow <= fromRow) ? (fromRow + rowCount) : fromRow, -1, toRow, -1, rowCount, -1, _option);
                                     }
                                     else
                                     {
-                                        this._sheet.MoveTo((toRow <= fromRow) ? (fromRow + rowCount) : fromRow, -1, toRow, -1, rowCount, -1, this._option);
-                                        this._sheet.RemoveRows((toRow <= fromRow) ? (fromRow + rowCount) : fromRow, rowCount);
+                                        _sheet.MoveTo((toRow <= fromRow) ? (fromRow + rowCount) : fromRow, -1, toRow, -1, rowCount, -1, _option);
+                                        _sheet.RemoveRows((toRow <= fromRow) ? (fromRow + rowCount) : fromRow, rowCount);
                                         if (fromRow < toRow)
                                         {
                                             row = toRow - rowCount;
@@ -140,22 +140,22 @@ namespace Dt.Cells.UndoRedo
                         }
                         else
                         {
-                            int fromColumn = this._dragDropExtent.FromColumn;
-                            int toColumn = this._dragDropExtent.ToColumn;
-                            int columnCount = this._dragDropExtent.ColumnCount;
-                            int column = this._dragDropExtent.ToColumn;
+                            int fromColumn = _dragDropExtent.FromColumn;
+                            int toColumn = _dragDropExtent.ToColumn;
+                            int columnCount = _dragDropExtent.ColumnCount;
+                            int column = _dragDropExtent.ToColumn;
                             base.SuspendInvalidate(sender);
                             try
                             {
-                                this._sheet.AddColumns(toColumn, columnCount);
-                                if (this._copy)
+                                _sheet.AddColumns(toColumn, columnCount);
+                                if (_copy)
                                 {
-                                    this._sheet.CopyTo(-1, (toColumn <= fromColumn) ? (fromColumn + columnCount) : fromColumn, -1, toColumn, -1, columnCount, this._option);
+                                    _sheet.CopyTo(-1, (toColumn <= fromColumn) ? (fromColumn + columnCount) : fromColumn, -1, toColumn, -1, columnCount, _option);
                                 }
                                 else
                                 {
-                                    this._sheet.MoveTo(-1, (toColumn <= fromColumn) ? (fromColumn + columnCount) : fromColumn, -1, toColumn, -1, columnCount, this._option);
-                                    this._sheet.RemoveColumns((toColumn <= fromColumn) ? (fromColumn + columnCount) : fromColumn, columnCount);
+                                    _sheet.MoveTo(-1, (toColumn <= fromColumn) ? (fromColumn + columnCount) : fromColumn, -1, toColumn, -1, columnCount, _option);
+                                    _sheet.RemoveColumns((toColumn <= fromColumn) ? (fromColumn + columnCount) : fromColumn, columnCount);
                                     if (fromColumn < toColumn)
                                     {
                                         column = toColumn - columnCount;
@@ -184,23 +184,23 @@ namespace Dt.Cells.UndoRedo
                 }
                 else
                 {
-                    int num9 = this._dragDropExtent.FromRow;
-                    int num10 = this._dragDropExtent.FromColumn;
-                    int num11 = this._dragDropExtent.ToRow;
-                    int num12 = this._dragDropExtent.ToColumn;
-                    int num13 = this._dragDropExtent.RowCount;
-                    int num14 = this._dragDropExtent.ColumnCount;
+                    int num9 = _dragDropExtent.FromRow;
+                    int num10 = _dragDropExtent.FromColumn;
+                    int num11 = _dragDropExtent.ToRow;
+                    int num12 = _dragDropExtent.ToColumn;
+                    int num13 = _dragDropExtent.RowCount;
+                    int num14 = _dragDropExtent.ColumnCount;
                     SheetView sheetView = sender as SheetView;
                     base.SuspendInvalidate(sender);
                     try
                     {
-                        if (this._copy)
+                        if (_copy)
                         {
-                            this._sheet.CopyTo(num9, num10, num11, num12, num13, num14, this._option);
+                            _sheet.CopyTo(num9, num10, num11, num12, num13, num14, _option);
                         }
                         else
                         {
-                            this._sheet.MoveTo(num9, num10, num11, num12, num13, num14, this._option);
+                            _sheet.MoveTo(num9, num10, num11, num12, num13, num14, _option);
                         }
                         if (sheetView != null)
                         {
@@ -211,13 +211,13 @@ namespace Dt.Cells.UndoRedo
                                 sheetView.RaiseSelectionChanged();
                             }
                             sheetView.SetActiveCell(Math.Max(0, num11), Math.Max(0, num12), false);
-                            if ((!this._copy && (this._savedFromViewportCells != null)) && this._savedFromViewportCells.IsValueSaved())
+                            if ((!_copy && (_savedFromViewportCells != null)) && _savedFromViewportCells.IsValueSaved())
                             {
-                                CopyMoveHelper.RaiseValueChanged(sheetView, num9, num10, num13, num14, this._savedFromViewportCells.GetValues());
+                                CopyMoveHelper.RaiseValueChanged(sheetView, num9, num10, num13, num14, _savedFromViewportCells.GetValues());
                             }
-                            if ((this._savedToViewportCells != null) && this._savedToViewportCells.IsValueSaved())
+                            if ((_savedToViewportCells != null) && _savedToViewportCells.IsValueSaved())
                             {
-                                CopyMoveHelper.RaiseValueChanged(sheetView, num11, num12, num13, num14, this._savedToViewportCells.GetValues());
+                                CopyMoveHelper.RaiseValueChanged(sheetView, num11, num12, num13, num14, _savedToViewportCells.GetValues());
                             }
                         }
                     }
@@ -234,24 +234,24 @@ namespace Dt.Cells.UndoRedo
             }
         }
 
-        private void InitSaveState()
+        void InitSaveState()
         {
-            this._savedFromColumnHeaderCells = null;
-            this._savedFromColumns = null;
-            this._savedFromViewportCells = null;
-            this._savedFromRowHeaderCells = null;
-            this._savedFromRows = null;
-            this._savedFromFloatingObjects = null;
-            this._savedToColumnHeaderCells = null;
-            this._savedToColumns = null;
-            this._savedToViewportCells = null;
-            this._savedToRowHeaderCells = null;
-            this._savedToRows = null;
-            this._savedToFloatingObjects = null;
-            this._savedAcitveRowViewportIndex = -2;
-            this._savedAcitveColumnViewportIndex = -2;
-            this._savedActiveRow = -1;
-            this._savedActiveColumn = -1;
+            _savedFromColumnHeaderCells = null;
+            _savedFromColumns = null;
+            _savedFromViewportCells = null;
+            _savedFromRowHeaderCells = null;
+            _savedFromRows = null;
+            _savedFromFloatingObjects = null;
+            _savedToColumnHeaderCells = null;
+            _savedToColumns = null;
+            _savedToViewportCells = null;
+            _savedToRowHeaderCells = null;
+            _savedToRows = null;
+            _savedToFloatingObjects = null;
+            _savedAcitveRowViewportIndex = -2;
+            _savedAcitveColumnViewportIndex = -2;
+            _savedActiveRow = -1;
+            _savedActiveColumn = -1;
         }
 
         /// <summary>
@@ -259,89 +259,89 @@ namespace Dt.Cells.UndoRedo
         /// </summary>
         public void SaveState()
         {
-            this.InitSaveState();
-            int baseRow = (this._dragDropExtent.FromRow < 0) ? 0 : this._dragDropExtent.FromRow;
-            int baseColumn = (this._dragDropExtent.FromColumn < 0) ? 0 : this._dragDropExtent.FromColumn;
-            int row = (this._dragDropExtent.ToRow < 0) ? 0 : this._dragDropExtent.ToRow;
-            int num4 = (this._dragDropExtent.ToColumn < 0) ? 0 : this._dragDropExtent.ToColumn;
-            int rowCount = (this._dragDropExtent.FromRow < 0) ? this._sheet.RowCount : this._dragDropExtent.RowCount;
-            int columnCount = (this._dragDropExtent.FromColumn < 0) ? this._sheet.ColumnCount : this._dragDropExtent.ColumnCount;
-            if (this._insert)
+            InitSaveState();
+            int baseRow = (_dragDropExtent.FromRow < 0) ? 0 : _dragDropExtent.FromRow;
+            int baseColumn = (_dragDropExtent.FromColumn < 0) ? 0 : _dragDropExtent.FromColumn;
+            int row = (_dragDropExtent.ToRow < 0) ? 0 : _dragDropExtent.ToRow;
+            int num4 = (_dragDropExtent.ToColumn < 0) ? 0 : _dragDropExtent.ToColumn;
+            int rowCount = (_dragDropExtent.FromRow < 0) ? _sheet.RowCount : _dragDropExtent.RowCount;
+            int columnCount = (_dragDropExtent.FromColumn < 0) ? _sheet.ColumnCount : _dragDropExtent.ColumnCount;
+            if (_insert)
             {
-                if (((this._dragDropExtent.FromColumn < 0) || (this._dragDropExtent.FromRow < 0)) && (((this._dragDropExtent.FromColumn < 0) && (this._dragDropExtent.FromRow >= 0)) && (!this._copy && SheetView.HasTable(this._sheet, row, -1, 1, -1, true))))
+                if (((_dragDropExtent.FromColumn < 0) || (_dragDropExtent.FromRow < 0)) && (((_dragDropExtent.FromColumn < 0) && (_dragDropExtent.FromRow >= 0)) && (!_copy && SheetView.HasTable(_sheet, row, -1, 1, -1, true))))
                 {
-                    CopyMoveCellsInfo headerCellsInfo = new CopyMoveCellsInfo(rowCount, this._sheet.RowHeader.ColumnCount);
+                    CopyMoveCellsInfo headerCellsInfo = new CopyMoveCellsInfo(rowCount, _sheet.RowHeader.ColumnCount);
                     CopyMoveRowsInfo rowsInfo = new CopyMoveRowsInfo(rowCount);
-                    CopyMoveHelper.SaveRowHeaderInfo(this._sheet, headerCellsInfo, rowsInfo, baseRow, this._option);
-                    this._savedFromRowHeaderCells = headerCellsInfo;
-                    this._savedFromRows = rowsInfo;
+                    CopyMoveHelper.SaveRowHeaderInfo(_sheet, headerCellsInfo, rowsInfo, baseRow, _option);
+                    _savedFromRowHeaderCells = headerCellsInfo;
+                    _savedFromRows = rowsInfo;
                     CopyMoveCellsInfo cellsInfo = new CopyMoveCellsInfo(rowCount, columnCount);
-                    CopyMoveHelper.SaveViewportInfo(this._sheet, cellsInfo, baseRow, baseColumn, this._option);
-                    this._savedFromViewportCells = cellsInfo;
+                    CopyMoveHelper.SaveViewportInfo(_sheet, cellsInfo, baseRow, baseColumn, _option);
+                    _savedFromViewportCells = cellsInfo;
                 }
             }
             else
             {
-                if (this._dragDropExtent.FromRow < 0)
+                if (_dragDropExtent.FromRow < 0)
                 {
-                    CopyMoveCellsInfo info4 = new CopyMoveCellsInfo(this._sheet.ColumnHeader.RowCount, columnCount);
+                    CopyMoveCellsInfo info4 = new CopyMoveCellsInfo(_sheet.ColumnHeader.RowCount, columnCount);
                     CopyMoveColumnsInfo columnsInfo = new CopyMoveColumnsInfo(columnCount);
-                    CopyMoveHelper.SaveColumnHeaderInfo(this._sheet, info4, columnsInfo, num4, this._option);
-                    this._savedToColumnHeaderCells = info4;
-                    this._savedToColumns = columnsInfo;
-                    if (!this._copy)
+                    CopyMoveHelper.SaveColumnHeaderInfo(_sheet, info4, columnsInfo, num4, _option);
+                    _savedToColumnHeaderCells = info4;
+                    _savedToColumns = columnsInfo;
+                    if (!_copy)
                     {
-                        CopyMoveCellsInfo info6 = new CopyMoveCellsInfo(this._sheet.ColumnHeader.RowCount, columnCount);
+                        CopyMoveCellsInfo info6 = new CopyMoveCellsInfo(_sheet.ColumnHeader.RowCount, columnCount);
                         CopyMoveColumnsInfo info7 = new CopyMoveColumnsInfo(columnCount);
-                        CopyMoveHelper.SaveColumnHeaderInfo(this._sheet, info6, info7, baseColumn, this._option);
-                        this._savedFromColumnHeaderCells = info6;
-                        this._savedFromColumns = info7;
+                        CopyMoveHelper.SaveColumnHeaderInfo(_sheet, info6, info7, baseColumn, _option);
+                        _savedFromColumnHeaderCells = info6;
+                        _savedFromColumns = info7;
                     }
                 }
-                if (this._dragDropExtent.FromColumn < 0)
+                if (_dragDropExtent.FromColumn < 0)
                 {
-                    CopyMoveCellsInfo info8 = new CopyMoveCellsInfo(rowCount, this._sheet.RowHeader.ColumnCount);
+                    CopyMoveCellsInfo info8 = new CopyMoveCellsInfo(rowCount, _sheet.RowHeader.ColumnCount);
                     CopyMoveRowsInfo info9 = new CopyMoveRowsInfo(rowCount);
-                    CopyMoveHelper.SaveRowHeaderInfo(this._sheet, info8, info9, row, this._option);
-                    this._savedToRowHeaderCells = info8;
-                    this._savedToRows = info9;
-                    if (!this._copy)
+                    CopyMoveHelper.SaveRowHeaderInfo(_sheet, info8, info9, row, _option);
+                    _savedToRowHeaderCells = info8;
+                    _savedToRows = info9;
+                    if (!_copy)
                     {
-                        CopyMoveCellsInfo info10 = new CopyMoveCellsInfo(rowCount, this._sheet.RowHeader.ColumnCount);
+                        CopyMoveCellsInfo info10 = new CopyMoveCellsInfo(rowCount, _sheet.RowHeader.ColumnCount);
                         CopyMoveRowsInfo info11 = new CopyMoveRowsInfo(rowCount);
-                        CopyMoveHelper.SaveRowHeaderInfo(this._sheet, info10, info11, baseRow, this._option);
-                        this._savedFromRowHeaderCells = info10;
-                        this._savedFromRows = info11;
+                        CopyMoveHelper.SaveRowHeaderInfo(_sheet, info10, info11, baseRow, _option);
+                        _savedFromRowHeaderCells = info10;
+                        _savedFromRows = info11;
                     }
                 }
                 CopyMoveCellsInfo info12 = new CopyMoveCellsInfo(rowCount, columnCount);
-                CopyMoveHelper.SaveViewportInfo(this._sheet, info12, row, num4, this._option);
-                this._savedToViewportCells = info12;
-                if (!this._copy)
+                CopyMoveHelper.SaveViewportInfo(_sheet, info12, row, num4, _option);
+                _savedToViewportCells = info12;
+                if (!_copy)
                 {
                     CopyMoveCellsInfo info13 = new CopyMoveCellsInfo(rowCount, columnCount);
-                    CopyMoveHelper.SaveViewportInfo(this._sheet, info13, baseRow, baseColumn, this._option);
-                    this._savedFromViewportCells = info13;
-                    if ((this._option & CopyToOption.FloatingObject) > ((CopyToOption) 0))
+                    CopyMoveHelper.SaveViewportInfo(_sheet, info13, baseRow, baseColumn, _option);
+                    _savedFromViewportCells = info13;
+                    if ((_option & CopyToOption.FloatingObject) > ((CopyToOption) 0))
                     {
-                        CellRange range = new CellRange(this._dragDropExtent.FromRow, this._dragDropExtent.FromColumn, this._dragDropExtent.RowCount, this._dragDropExtent.ColumnCount);
-                        FloatingObject[] floatingObjectsInRange = CopyMoveHelper.GetFloatingObjectsInRange(CopyMoveHelper.AdjustRange(range, this._sheet.RowCount, this._sheet.ColumnCount), this._sheet);
-                        this._savedFromFloatingObjects = new CopyMoveFloatingObjectsInfo();
-                        this._savedFromFloatingObjects.SaveFloatingObjects(range, floatingObjectsInRange);
+                        CellRange range = new CellRange(_dragDropExtent.FromRow, _dragDropExtent.FromColumn, _dragDropExtent.RowCount, _dragDropExtent.ColumnCount);
+                        FloatingObject[] floatingObjectsInRange = CopyMoveHelper.GetFloatingObjectsInRange(CopyMoveHelper.AdjustRange(range, _sheet.RowCount, _sheet.ColumnCount), _sheet);
+                        _savedFromFloatingObjects = new CopyMoveFloatingObjectsInfo();
+                        _savedFromFloatingObjects.SaveFloatingObjects(range, floatingObjectsInRange);
                     }
                 }
-                if ((this._option & CopyToOption.FloatingObject) > ((CopyToOption) 0))
+                if ((_option & CopyToOption.FloatingObject) > ((CopyToOption) 0))
                 {
-                    CellRange range3 = new CellRange(this._dragDropExtent.ToRow, this._dragDropExtent.ToColumn, this._dragDropExtent.RowCount, this._dragDropExtent.ColumnCount);
-                    FloatingObject[] floatingObjects = CopyMoveHelper.GetFloatingObjectsInRange(CopyMoveHelper.AdjustRange(range3, this._sheet.RowCount, this._sheet.ColumnCount), this._sheet);
-                    this._savedToFloatingObjects = new CopyMoveFloatingObjectsInfo();
-                    this._savedToFloatingObjects.SaveFloatingObjects(range3, floatingObjects);
+                    CellRange range3 = new CellRange(_dragDropExtent.ToRow, _dragDropExtent.ToColumn, _dragDropExtent.RowCount, _dragDropExtent.ColumnCount);
+                    FloatingObject[] floatingObjects = CopyMoveHelper.GetFloatingObjectsInRange(CopyMoveHelper.AdjustRange(range3, _sheet.RowCount, _sheet.ColumnCount), _sheet);
+                    _savedToFloatingObjects = new CopyMoveFloatingObjectsInfo();
+                    _savedToFloatingObjects.SaveFloatingObjects(range3, floatingObjects);
                 }
             }
-            this._savedAcitveRowViewportIndex = this._sheet.GetActiveRowViewportIndex();
-            this._savedAcitveColumnViewportIndex = this._sheet.GetActiveColumnViewportIndex();
-            this._savedActiveRow = this._sheet.ActiveRowIndex;
-            this._savedActiveColumn = this._sheet.ActiveColumnIndex;
+            _savedAcitveRowViewportIndex = _sheet.GetActiveRowViewportIndex();
+            _savedAcitveColumnViewportIndex = _sheet.GetActiveColumnViewportIndex();
+            _savedActiveRow = _sheet.ActiveRowIndex;
+            _savedActiveColumn = _sheet.ActiveColumnIndex;
         }
 
         /// <summary>
@@ -364,46 +364,46 @@ namespace Dt.Cells.UndoRedo
         /// </returns>
         public bool Undo(object parameter)
         {
-            if (!SheetView.IsValidRange(this._dragDropExtent.FromRow, this._dragDropExtent.FromColumn, this._dragDropExtent.RowCount, this._dragDropExtent.ColumnCount, this._sheet.RowCount, this._sheet.ColumnCount))
+            if (!SheetView.IsValidRange(_dragDropExtent.FromRow, _dragDropExtent.FromColumn, _dragDropExtent.RowCount, _dragDropExtent.ColumnCount, _sheet.RowCount, _sheet.ColumnCount))
             {
                 return false;
             }
-            if (!this._insert && !SheetView.IsValidRange(this._dragDropExtent.ToRow, this._dragDropExtent.ToColumn, this._dragDropExtent.RowCount, this._dragDropExtent.ColumnCount, this._sheet.RowCount, this._sheet.ColumnCount))
+            if (!_insert && !SheetView.IsValidRange(_dragDropExtent.ToRow, _dragDropExtent.ToColumn, _dragDropExtent.RowCount, _dragDropExtent.ColumnCount, _sheet.RowCount, _sheet.ColumnCount))
             {
                 return false;
             }
             bool flag = false;
             SheetView sheetView = parameter as SheetView;
-            if (this._insert)
+            if (_insert)
             {
-                if ((this._dragDropExtent.FromColumn < 0) || (this._dragDropExtent.FromRow < 0))
+                if ((_dragDropExtent.FromColumn < 0) || (_dragDropExtent.FromRow < 0))
                 {
-                    if (this._dragDropExtent.FromColumn >= 0)
+                    if (_dragDropExtent.FromColumn >= 0)
                     {
-                        int fromColumn = this._dragDropExtent.FromColumn;
-                        int columnCount = this._dragDropExtent.ColumnCount;
+                        int fromColumn = _dragDropExtent.FromColumn;
+                        int columnCount = _dragDropExtent.ColumnCount;
                         base.SuspendInvalidate(parameter);
                         try
                         {
-                            if (this._copy)
+                            if (_copy)
                             {
-                                this._sheet.RemoveColumns(this._dragDropExtent.ToColumn, columnCount);
+                                _sheet.RemoveColumns(_dragDropExtent.ToColumn, columnCount);
                             }
                             else
                             {
-                                int toColumn = this._dragDropExtent.ToColumn;
-                                int column = this._dragDropExtent.FromColumn;
-                                if (this._dragDropExtent.FromColumn < this._dragDropExtent.ToColumn)
+                                int toColumn = _dragDropExtent.ToColumn;
+                                int column = _dragDropExtent.FromColumn;
+                                if (_dragDropExtent.FromColumn < _dragDropExtent.ToColumn)
                                 {
-                                    toColumn = this._dragDropExtent.ToColumn - columnCount;
+                                    toColumn = _dragDropExtent.ToColumn - columnCount;
                                 }
                                 else
                                 {
-                                    column = this._dragDropExtent.FromColumn + columnCount;
+                                    column = _dragDropExtent.FromColumn + columnCount;
                                 }
-                                this._sheet.AddColumns(column, columnCount);
-                                this._sheet.CopyTo(-1, (column <= toColumn) ? (toColumn + columnCount) : toColumn, -1, column, -1, columnCount, this._option);
-                                this._sheet.RemoveColumns((column <= toColumn) ? (toColumn + columnCount) : toColumn, columnCount);
+                                _sheet.AddColumns(column, columnCount);
+                                _sheet.CopyTo(-1, (column <= toColumn) ? (toColumn + columnCount) : toColumn, -1, column, -1, columnCount, _option);
+                                _sheet.RemoveColumns((column <= toColumn) ? (toColumn + columnCount) : toColumn, columnCount);
                                 if (toColumn < column)
                                 {
                                     fromColumn = column - columnCount;
@@ -427,50 +427,50 @@ namespace Dt.Cells.UndoRedo
                         }
                         flag = true;
                     }
-                    else if (this._dragDropExtent.FromRow >= 0)
+                    else if (_dragDropExtent.FromRow >= 0)
                     {
-                        int rowCount = this._dragDropExtent.RowCount;
-                        int fromRow = this._dragDropExtent.FromRow;
+                        int rowCount = _dragDropExtent.RowCount;
+                        int fromRow = _dragDropExtent.FromRow;
                         base.SuspendInvalidate(parameter);
                         try
                         {
-                            if (this._copy)
+                            if (_copy)
                             {
-                                this._sheet.RemoveRows(this._dragDropExtent.ToRow, rowCount);
+                                _sheet.RemoveRows(_dragDropExtent.ToRow, rowCount);
                             }
                             else
                             {
-                                int toRow = this._dragDropExtent.ToRow;
-                                int row = this._dragDropExtent.FromRow;
-                                if (this._dragDropExtent.FromRow < this._dragDropExtent.ToRow)
+                                int toRow = _dragDropExtent.ToRow;
+                                int row = _dragDropExtent.FromRow;
+                                if (_dragDropExtent.FromRow < _dragDropExtent.ToRow)
                                 {
-                                    toRow = this._dragDropExtent.ToRow - rowCount;
+                                    toRow = _dragDropExtent.ToRow - rowCount;
                                 }
                                 else
                                 {
-                                    row = this._dragDropExtent.FromRow + rowCount;
+                                    row = _dragDropExtent.FromRow + rowCount;
                                 }
-                                this._sheet.AddRows(row, rowCount);
-                                if (this._savedFromViewportCells != null)
+                                _sheet.AddRows(row, rowCount);
+                                if (_savedFromViewportCells != null)
                                 {
-                                    CopyMoveHelper.UndoCellsInfo(this._sheet, this._savedFromViewportCells, row, 0, SheetArea.Cells);
+                                    CopyMoveHelper.UndoCellsInfo(_sheet, _savedFromViewportCells, row, 0, SheetArea.Cells);
                                     flag = true;
                                 }
-                                if (this._savedFromRowHeaderCells != null)
+                                if (_savedFromRowHeaderCells != null)
                                 {
-                                    CopyMoveHelper.UndoCellsInfo(this._sheet, this._savedFromRowHeaderCells, row, 0, SheetArea.CornerHeader | SheetArea.RowHeader);
+                                    CopyMoveHelper.UndoCellsInfo(_sheet, _savedFromRowHeaderCells, row, 0, SheetArea.CornerHeader | SheetArea.RowHeader);
                                     flag = true;
                                 }
-                                if (this._savedFromRows != null)
+                                if (_savedFromRows != null)
                                 {
-                                    CopyMoveHelper.UndoRowsInfo(this._sheet, this._savedFromRows, row);
+                                    CopyMoveHelper.UndoRowsInfo(_sheet, _savedFromRows, row);
                                     flag = true;
                                 }
                                 if (!flag)
                                 {
-                                    this._sheet.MoveTo((row <= toRow) ? (toRow + rowCount) : toRow, -1, row, -1, rowCount, -1, this._option);
+                                    _sheet.MoveTo((row <= toRow) ? (toRow + rowCount) : toRow, -1, row, -1, rowCount, -1, _option);
                                 }
-                                this._sheet.RemoveRows((row <= toRow) ? (toRow + rowCount) : toRow, rowCount);
+                                _sheet.RemoveRows((row <= toRow) ? (toRow + rowCount) : toRow, rowCount);
                                 if (toRow < row)
                                 {
                                     fromRow = row - rowCount;
@@ -499,84 +499,84 @@ namespace Dt.Cells.UndoRedo
             }
             else
             {
-                int num9 = (this._dragDropExtent.FromRow < 0) ? 0 : this._dragDropExtent.FromRow;
-                int num10 = (this._dragDropExtent.FromColumn < 0) ? 0 : this._dragDropExtent.FromColumn;
-                int num11 = (this._dragDropExtent.ToRow < 0) ? 0 : this._dragDropExtent.ToRow;
-                int num12 = (this._dragDropExtent.ToColumn < 0) ? 0 : this._dragDropExtent.ToColumn;
-                int num13 = (this._dragDropExtent.FromRow < 0) ? this._sheet.RowCount : this._dragDropExtent.RowCount;
-                int num14 = (this._dragDropExtent.FromColumn < 0) ? this._sheet.ColumnCount : this._dragDropExtent.ColumnCount;
+                int num9 = (_dragDropExtent.FromRow < 0) ? 0 : _dragDropExtent.FromRow;
+                int num10 = (_dragDropExtent.FromColumn < 0) ? 0 : _dragDropExtent.FromColumn;
+                int num11 = (_dragDropExtent.ToRow < 0) ? 0 : _dragDropExtent.ToRow;
+                int num12 = (_dragDropExtent.ToColumn < 0) ? 0 : _dragDropExtent.ToColumn;
+                int num13 = (_dragDropExtent.FromRow < 0) ? _sheet.RowCount : _dragDropExtent.RowCount;
+                int num14 = (_dragDropExtent.FromColumn < 0) ? _sheet.ColumnCount : _dragDropExtent.ColumnCount;
                 List<CellData> oldValues = null;
                 List<CellData> list2 = null;
-                if ((!this._copy && (this._savedFromViewportCells != null)) && this._savedFromViewportCells.IsValueSaved())
+                if ((!_copy && (_savedFromViewportCells != null)) && _savedFromViewportCells.IsValueSaved())
                 {
-                    list2 = CopyMoveHelper.GetValues(this._sheet, num9, num10, num13, num14);
+                    list2 = CopyMoveHelper.GetValues(_sheet, num9, num10, num13, num14);
                 }
-                if ((this._savedToViewportCells != null) && this._savedToViewportCells.IsValueSaved())
+                if ((_savedToViewportCells != null) && _savedToViewportCells.IsValueSaved())
                 {
-                    oldValues = CopyMoveHelper.GetValues(this._sheet, num11, num12, num13, num14);
+                    oldValues = CopyMoveHelper.GetValues(_sheet, num11, num12, num13, num14);
                 }
                 base.SuspendInvalidate(parameter);
                 try
                 {
-                    if (this._savedToColumnHeaderCells != null)
+                    if (_savedToColumnHeaderCells != null)
                     {
-                        CopyMoveHelper.UndoCellsInfo(this._sheet, this._savedToColumnHeaderCells, 0, num12, SheetArea.ColumnHeader);
+                        CopyMoveHelper.UndoCellsInfo(_sheet, _savedToColumnHeaderCells, 0, num12, SheetArea.ColumnHeader);
                         flag = true;
                     }
-                    if (this._savedToColumns != null)
+                    if (_savedToColumns != null)
                     {
-                        CopyMoveHelper.UndoColumnsInfo(this._sheet, this._savedToColumns, num12);
+                        CopyMoveHelper.UndoColumnsInfo(_sheet, _savedToColumns, num12);
                         flag = true;
                     }
-                    if (this._savedToViewportCells != null)
+                    if (_savedToViewportCells != null)
                     {
-                        CopyMoveHelper.UndoCellsInfo(this._sheet, this._savedToViewportCells, num11, num12, SheetArea.Cells);
+                        CopyMoveHelper.UndoCellsInfo(_sheet, _savedToViewportCells, num11, num12, SheetArea.Cells);
                         flag = true;
                     }
-                    if (this._savedToRowHeaderCells != null)
+                    if (_savedToRowHeaderCells != null)
                     {
-                        CopyMoveHelper.UndoCellsInfo(this._sheet, this._savedToRowHeaderCells, num11, 0, SheetArea.CornerHeader | SheetArea.RowHeader);
+                        CopyMoveHelper.UndoCellsInfo(_sheet, _savedToRowHeaderCells, num11, 0, SheetArea.CornerHeader | SheetArea.RowHeader);
                         flag = true;
                     }
-                    if (this._savedToRows != null)
+                    if (_savedToRows != null)
                     {
-                        CopyMoveHelper.UndoRowsInfo(this._sheet, this._savedToRows, num11);
+                        CopyMoveHelper.UndoRowsInfo(_sheet, _savedToRows, num11);
                         flag = true;
                     }
-                    if (this._savedToFloatingObjects != null)
+                    if (_savedToFloatingObjects != null)
                     {
-                        CopyMoveHelper.UndoFloatingObjectsInfo(this._sheet, this._savedToFloatingObjects);
+                        CopyMoveHelper.UndoFloatingObjectsInfo(_sheet, _savedToFloatingObjects);
                         sheetView.InvalidateFloatingObjects();
                         flag = true;
                     }
-                    if (this._savedFromColumnHeaderCells != null)
+                    if (_savedFromColumnHeaderCells != null)
                     {
-                        CopyMoveHelper.UndoCellsInfo(this._sheet, this._savedFromColumnHeaderCells, 0, num10, SheetArea.ColumnHeader);
+                        CopyMoveHelper.UndoCellsInfo(_sheet, _savedFromColumnHeaderCells, 0, num10, SheetArea.ColumnHeader);
                         flag = true;
                     }
-                    if (this._savedFromColumns != null)
+                    if (_savedFromColumns != null)
                     {
-                        CopyMoveHelper.UndoColumnsInfo(this._sheet, this._savedFromColumns, num10);
+                        CopyMoveHelper.UndoColumnsInfo(_sheet, _savedFromColumns, num10);
                         flag = true;
                     }
-                    if (this._savedFromViewportCells != null)
+                    if (_savedFromViewportCells != null)
                     {
-                        CopyMoveHelper.UndoCellsInfo(this._sheet, this._savedFromViewportCells, num9, num10, SheetArea.Cells);
+                        CopyMoveHelper.UndoCellsInfo(_sheet, _savedFromViewportCells, num9, num10, SheetArea.Cells);
                         flag = true;
                     }
-                    if (this._savedFromRowHeaderCells != null)
+                    if (_savedFromRowHeaderCells != null)
                     {
-                        CopyMoveHelper.UndoCellsInfo(this._sheet, this._savedFromRowHeaderCells, num9, 0, SheetArea.CornerHeader | SheetArea.RowHeader);
+                        CopyMoveHelper.UndoCellsInfo(_sheet, _savedFromRowHeaderCells, num9, 0, SheetArea.CornerHeader | SheetArea.RowHeader);
                         flag = true;
                     }
-                    if (this._savedFromRows != null)
+                    if (_savedFromRows != null)
                     {
-                        CopyMoveHelper.UndoRowsInfo(this._sheet, this._savedFromRows, num9);
+                        CopyMoveHelper.UndoRowsInfo(_sheet, _savedFromRows, num9);
                         flag = true;
                     }
-                    if (this._savedFromFloatingObjects != null)
+                    if (_savedFromFloatingObjects != null)
                     {
-                        CopyMoveHelper.UndoFloatingObjectsInfo(this._sheet, this._savedFromFloatingObjects);
+                        CopyMoveHelper.UndoFloatingObjectsInfo(_sheet, _savedFromFloatingObjects);
                         sheetView.InvalidateFloatingObjects();
                         flag = true;
                     }
@@ -588,7 +588,7 @@ namespace Dt.Cells.UndoRedo
                 if (flag && (sheetView != null))
                 {
                     CellRange[] rangeArray3 = Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) sheetView.Worksheet.Selections);
-                    sheetView.SetSelection(this._dragDropExtent.FromRow, this._dragDropExtent.FromColumn, this._dragDropExtent.RowCount, this._dragDropExtent.ColumnCount);
+                    sheetView.SetSelection(_dragDropExtent.FromRow, _dragDropExtent.FromColumn, _dragDropExtent.RowCount, _dragDropExtent.ColumnCount);
                     if (sheetView.RaiseSelectionChanging(rangeArray3, Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) sheetView.Worksheet.Selections)))
                     {
                         sheetView.RaiseSelectionChanged();
@@ -607,26 +607,26 @@ namespace Dt.Cells.UndoRedo
             }
             if (flag && (sheetView != null))
             {
-                if ((this._savedAcitveRowViewportIndex != -2) && (this._savedAcitveColumnViewportIndex != -2))
+                if ((_savedAcitveRowViewportIndex != -2) && (_savedAcitveColumnViewportIndex != -2))
                 {
-                    sheetView.SetActiveRowViewportIndex(this._savedAcitveRowViewportIndex);
-                    sheetView.SetActiveColumnViewportIndex(this._savedAcitveColumnViewportIndex);
+                    sheetView.SetActiveRowViewportIndex(_savedAcitveRowViewportIndex);
+                    sheetView.SetActiveColumnViewportIndex(_savedAcitveColumnViewportIndex);
                 }
-                if ((this._savedActiveRow != -1) && (this._savedActiveColumn != -1))
+                if ((_savedActiveRow != -1) && (_savedActiveColumn != -1))
                 {
                     CellRange range = sheetView.Worksheet.Selections[0];
-                    if (range.Contains(this._savedActiveRow, this._savedActiveColumn))
+                    if (range.Contains(_savedActiveRow, _savedActiveColumn))
                     {
-                        sheetView.SetActiveCell(this._savedActiveRow, this._savedActiveColumn, false);
+                        sheetView.SetActiveCell(_savedActiveRow, _savedActiveColumn, false);
                     }
                     else
                     {
                         sheetView.SetActiveCell(Math.Max(0, range.Row), Math.Max(0, range.Column), false);
                     }
                 }
-                if (((this._savedAcitveRowViewportIndex != -2) && (this._savedAcitveColumnViewportIndex != -2)) && ((this._savedActiveRow != -1) && (this._savedActiveColumn != -1)))
+                if (((_savedAcitveRowViewportIndex != -2) && (_savedAcitveColumnViewportIndex != -2)) && ((_savedActiveRow != -1) && (_savedActiveColumn != -1)))
                 {
-                    sheetView.ShowCell(this._savedAcitveRowViewportIndex, this._savedAcitveColumnViewportIndex, this._savedActiveRow, this._savedActiveColumn, VerticalPosition.Nearest, HorizontalPosition.Nearest);
+                    sheetView.ShowCell(_savedAcitveRowViewportIndex, _savedAcitveColumnViewportIndex, _savedActiveRow, _savedActiveColumn, VerticalPosition.Nearest, HorizontalPosition.Nearest);
                 }
             }
             return flag;
@@ -648,7 +648,7 @@ namespace Dt.Cells.UndoRedo
         /// </value>
         public Dt.Cells.UndoRedo.DragDropExtent DragDropExtent
         {
-            get { return  this._dragDropExtent; }
+            get { return  _dragDropExtent; }
         }
     }
 }

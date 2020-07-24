@@ -20,8 +20,8 @@ namespace Dt.Cells.UI
     {
         internal RangeSortedEventArgs(int column, bool ascending)
         {
-            this.Column = column;
-            this.Ascending = ascending;
+            Column = column;
+            Ascending = ascending;
         }
 
         /// <summary>

@@ -20,7 +20,7 @@ namespace Dt.Cells.UI
     {
         internal SheetTabClickEventArgs(int sheetTabIndex)
         {
-            this.SheetTabIndex = sheetTabIndex;
+            SheetTabIndex = sheetTabIndex;
         }
 
         /// <summary>

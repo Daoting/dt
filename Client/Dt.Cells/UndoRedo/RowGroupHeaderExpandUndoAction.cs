@@ -20,9 +20,9 @@ namespace Dt.Cells.UndoRedo
     /// </summary>
     public class RowGroupHeaderExpandUndoAction : ActionBase, IUndo
     {
-        private Dictionary<int, bool> _oldStatus;
-        private RowGroupHeaderExpandExtent _rowGroupHeaderExpandExtent;
-        private Worksheet _sheet;
+        Dictionary<int, bool> _oldStatus;
+        RowGroupHeaderExpandExtent _rowGroupHeaderExpandExtent;
+        Worksheet _sheet;
 
         /// <summary>
         /// Creates a new instance of the <see cref="T:Dt.Cells.UndoRedo.RowGroupHeaderExpandUndoAction" /> class.
@@ -31,8 +31,8 @@ namespace Dt.Cells.UndoRedo
         /// <param name="rowGroupHeaderExpandExtent">The row group header expand extent information.</param>
         public RowGroupHeaderExpandUndoAction(Worksheet sheet, RowGroupHeaderExpandExtent rowGroupHeaderExpandExtent)
         {
-            this._sheet = sheet;
-            this._rowGroupHeaderExpandExtent = rowGroupHeaderExpandExtent;
+            _sheet = sheet;
+            _rowGroupHeaderExpandExtent = rowGroupHeaderExpandExtent;
         }
 
         /// <summary>
@@ -53,18 +53,18 @@ namespace Dt.Cells.UndoRedo
         /// <param name="sender">Object on which the action occurred.</param>
         public override void Execute(object sender)
         {
-            if (((this._sheet != null) && (this._rowGroupHeaderExpandExtent != null)) && (this._sheet.RowRangeGroup != null))
+            if (((_sheet != null) && (_rowGroupHeaderExpandExtent != null)) && (_sheet.RowRangeGroup != null))
             {
                 base.SuspendInvalidate(sender);
                 try
                 {
-                    this.SaveState();
-                    int level = this._rowGroupHeaderExpandExtent.Level;
+                    SaveState();
+                    int level = _rowGroupHeaderExpandExtent.Level;
                     for (int i = 0; i < level; i++)
                     {
-                        this._sheet.RowRangeGroup.Expand(i, true);
+                        _sheet.RowRangeGroup.Expand(i, true);
                     }
-                    this._sheet.RowRangeGroup.Expand(level, false);
+                    _sheet.RowRangeGroup.Expand(level, false);
                 }
                 finally
                 {
@@ -87,18 +87,18 @@ namespace Dt.Cells.UndoRedo
         public void SaveState()
         {
             Dictionary<int, bool> dictionary = null;
-            if (((this._sheet != null) && (this._rowGroupHeaderExpandExtent != null)) && (this._sheet.RowRangeGroup != null))
+            if (((_sheet != null) && (_rowGroupHeaderExpandExtent != null)) && (_sheet.RowRangeGroup != null))
             {
-                int level = this._rowGroupHeaderExpandExtent.Level;
+                int level = _rowGroupHeaderExpandExtent.Level;
                 dictionary = new Dictionary<int, bool>();
                 for (int i = 0; i <= level; i++)
                 {
                     int index = 0;
-                    int rowCount = this._sheet.RowCount;
-                    RangeGroupDirection direction = this._sheet.RowRangeGroup.Direction;
+                    int rowCount = _sheet.RowCount;
+                    RangeGroupDirection direction = _sheet.RowRangeGroup.Direction;
                     while (index < rowCount)
                     {
-                        RangeGroupInfo info = this._sheet.RowRangeGroup.Find(index, i);
+                        RangeGroupInfo info = _sheet.RowRangeGroup.Find(index, i);
                         if (info != null)
                         {
                             int num5 = -1;
@@ -123,7 +123,7 @@ namespace Dt.Cells.UndoRedo
                     }
                 }
             }
-            this._oldStatus = dictionary;
+            _oldStatus = dictionary;
         }
 
         /// <summary>
@@ -145,14 +145,14 @@ namespace Dt.Cells.UndoRedo
         public bool Undo(object sender)
         {
             bool flag = false;
-            if (((this._sheet != null) && (this._oldStatus != null)) && (this._sheet.RowRangeGroup != null))
+            if (((_sheet != null) && (_oldStatus != null)) && (_sheet.RowRangeGroup != null))
             {
                 base.SuspendInvalidate(sender);
                 try
                 {
-                    foreach (int num in this._oldStatus.Keys)
+                    foreach (int num in _oldStatus.Keys)
                     {
-                        this._sheet.RowRangeGroup.Data.SetCollapsed(num, this._oldStatus[num]);
+                        _sheet.RowRangeGroup.Data.SetCollapsed(num, _oldStatus[num]);
                         flag = true;
                     }
                 }

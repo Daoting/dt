@@ -21,9 +21,9 @@ namespace Dt.Cells.UndoRedo
     /// </summary>
     public class ClipboardPasteUndoAction : ActionBase, IUndo
     {
-        private ClipboardPasteRangeUndoAction[] _cachedActions;
-        private Worksheet _destSheet;
-        private Worksheet _sourceSheet;
+        ClipboardPasteRangeUndoAction[] _cachedActions;
+        Worksheet _destSheet;
+        Worksheet _sourceSheet;
 
         /// <summary>
         /// Creates a new instance of the <see cref="T:Dt.Cells.UndoRedo.ClipboardPasteUndoAction.ClipboardPasteRangeUndoAction" /> class.
@@ -42,15 +42,15 @@ namespace Dt.Cells.UndoRedo
             {
                 throw new ArgumentNullException("pasteExtent");
             }
-            this._sourceSheet = srcSheet;
-            this._destSheet = destSheet;
+            _sourceSheet = srcSheet;
+            _destSheet = destSheet;
             if ((pasteExtent.TargetRanges != null) && (pasteExtent.TargetRanges.Length > 0))
             {
-                this._cachedActions = new ClipboardPasteRangeUndoAction[pasteExtent.TargetRanges.Length];
+                _cachedActions = new ClipboardPasteRangeUndoAction[pasteExtent.TargetRanges.Length];
                 for (int i = 0; i < pasteExtent.TargetRanges.Length; i++)
                 {
                     ClipboardPasteRangeExtent extent = new ClipboardPasteRangeExtent(pasteExtent.SourceRange, pasteExtent.TargetRanges[i], pasteExtent.IsCutting, pasteExtent.ClipboardText);
-                    this._cachedActions[i] = new ClipboardPasteRangeUndoAction(srcSheet, destSheet, extent, option);
+                    _cachedActions[i] = new ClipboardPasteRangeUndoAction(srcSheet, destSheet, extent, option);
                 }
             }
         }
@@ -64,11 +64,11 @@ namespace Dt.Cells.UndoRedo
         /// </returns>
         public override bool CanExecute(object sender)
         {
-            if (this._cachedActions == null)
+            if (_cachedActions == null)
             {
                 return false;
             }
-            foreach (ClipboardPasteRangeUndoAction action in this._cachedActions)
+            foreach (ClipboardPasteRangeUndoAction action in _cachedActions)
             {
                 if (!action.CanExecute(sender))
                 {
@@ -84,10 +84,10 @@ namespace Dt.Cells.UndoRedo
         /// <param name="sender">Object on which the action occurred.</param>
         public override void Execute(object sender)
         {
-            if (this._cachedActions != null)
+            if (_cachedActions != null)
             {
                 SheetView view = sender as SheetView;
-                foreach (ClipboardPasteRangeUndoAction action in this._cachedActions)
+                foreach (ClipboardPasteRangeUndoAction action in _cachedActions)
                 {
                     if (view == null)
                     {
@@ -97,16 +97,16 @@ namespace Dt.Cells.UndoRedo
                     {
                         ClipboardPasteOptions options;
                         action.SaveState();
-                        if (!view.RaiseClipboardPasting(this._sourceSheet, action.SourceRange, this._destSheet, action.PasteRange, action.PasteOption, action.IsCutting, out options))
+                        if (!view.RaiseClipboardPasting(_sourceSheet, action.SourceRange, _destSheet, action.PasteRange, action.PasteOption, action.IsCutting, out options))
                         {
                             action.PasteOption = options;
                             action.Execute(sender);
-                            view.RaiseClipboardPasted(this._sourceSheet, action.SourceRange, this._destSheet, action.PasteRange, options);
+                            view.RaiseClipboardPasted(_sourceSheet, action.SourceRange, _destSheet, action.PasteRange, options);
                         }
                     }
                 }
-                this.RefreshSelection(sender);
-                this.RefreshUI(sender);
+                RefreshSelection(sender);
+                RefreshUI(sender);
                 if (view != null)
                 {
                     view.InvalidateFloatingObjects();
@@ -114,23 +114,23 @@ namespace Dt.Cells.UndoRedo
             }
         }
 
-        private void RefreshSelection(object sender)
+        void RefreshSelection(object sender)
         {
             SheetView view = sender as SheetView;
-            if ((view != null) && (this._cachedActions != null))
+            if ((view != null) && (_cachedActions != null))
             {
                 CellRange[] oldSelection = Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) view.Worksheet.Selections);
                 view.Worksheet.ClearSelections();
-                if (this._cachedActions.Length > 1)
+                if (_cachedActions.Length > 1)
                 {
-                    foreach (ClipboardPasteRangeUndoAction action in this._cachedActions)
+                    foreach (ClipboardPasteRangeUndoAction action in _cachedActions)
                     {
                         view.Worksheet.AddSelection(action.PasteRange, false);
                     }
                 }
-                else if (this._cachedActions.Length > 0)
+                else if (_cachedActions.Length > 0)
                 {
-                    CellRange pasteRange = this._cachedActions[0].PasteRange;
+                    CellRange pasteRange = _cachedActions[0].PasteRange;
                     view.Worksheet.AddSelection(pasteRange.Row, pasteRange.Column, pasteRange.RowCount, pasteRange.ColumnCount, false);
                     if (!pasteRange.Contains(view.Worksheet.ActiveRowIndex, view.Worksheet.ActiveColumnIndex))
                     {
@@ -144,7 +144,7 @@ namespace Dt.Cells.UndoRedo
             }
         }
 
-        private void RefreshUI(object sender)
+        void RefreshUI(object sender)
         {
             SheetView view = sender as SheetView;
             if (view != null)
@@ -158,9 +158,9 @@ namespace Dt.Cells.UndoRedo
         /// </summary>
         public void SaveState()
         {
-            if (this._cachedActions != null)
+            if (_cachedActions != null)
             {
-                foreach (ClipboardPasteRangeUndoAction action in this._cachedActions)
+                foreach (ClipboardPasteRangeUndoAction action in _cachedActions)
                 {
                     action.SaveState();
                 }
@@ -185,16 +185,16 @@ namespace Dt.Cells.UndoRedo
         /// <returns></returns>
         public bool Undo(object sender)
         {
-            if (this._cachedActions == null)
+            if (_cachedActions == null)
             {
                 return false;
             }
             bool flag = true;
-            foreach (ClipboardPasteRangeUndoAction action in this._cachedActions)
+            foreach (ClipboardPasteRangeUndoAction action in _cachedActions)
             {
                 flag &= action.Undo(sender);
             }
-            this.RefreshUI(sender);
+            RefreshUI(sender);
             return flag;
         }
 
@@ -205,11 +205,11 @@ namespace Dt.Cells.UndoRedo
         {
             get
             {
-                if (this._cachedActions == null)
+                if (_cachedActions == null)
                 {
                     return false;
                 }
-                foreach (ClipboardPasteRangeUndoAction action in this._cachedActions)
+                foreach (ClipboardPasteRangeUndoAction action in _cachedActions)
                 {
                     if (!action.CanUndo)
                     {
@@ -220,69 +220,69 @@ namespace Dt.Cells.UndoRedo
             }
         }
 
-        private class ClipboardPasteRangeExtent
+        class ClipboardPasteRangeExtent
         {
-            private string _clipboardText;
-            private bool _isCutting;
-            private CellRange _sourceRange;
-            private CellRange _targetRanges;
+            string _clipboardText;
+            bool _isCutting;
+            CellRange _sourceRange;
+            CellRange _targetRanges;
 
             public ClipboardPasteRangeExtent(CellRange sourceRange, CellRange targetRange, bool isCutting, string clipboardText)
             {
-                this._sourceRange = sourceRange;
-                this._targetRanges = targetRange;
-                this._isCutting = isCutting;
-                this._clipboardText = clipboardText;
+                _sourceRange = sourceRange;
+                _targetRanges = targetRange;
+                _isCutting = isCutting;
+                _clipboardText = clipboardText;
             }
 
             public string ClipboardText
             {
-                get { return  this._clipboardText; }
+                get { return  _clipboardText; }
             }
 
             public bool IsCutting
             {
-                get { return  this._isCutting; }
+                get { return  _isCutting; }
             }
 
             public CellRange SourceRange
             {
-                get { return  this._sourceRange; }
+                get { return  _sourceRange; }
             }
 
             public CellRange TargetRange
             {
-                get { return  this._targetRanges; }
+                get { return  _targetRanges; }
             }
         }
 
-        private class ClipboardPasteRangeUndoAction : ActionBase, IUndo
+        class ClipboardPasteRangeUndoAction : ActionBase, IUndo
         {
-            private Worksheet _fromSheet;
-            private ClipboardPasteUndoAction.ClipboardPasteRangeExtent _pasteExtent;
-            private ClipboardPasteOptions _pasteOption;
-            private CopyMoveCellsInfo _savedFromColumnHeaderCells;
-            private CopyMoveColumnsInfo _savedFromColumns;
-            private CopyMoveFloatingObjectsInfo _savedFromFloatingObjects;
-            private CopyMoveCellsInfo _savedFromRowHeaderCells;
-            private CopyMoveRowsInfo _savedFromRows;
-            private CopyMoveSheetInfo _savedFromSheetInfo;
-            private CopyMoveCellsInfo _savedFromViewportCells;
-            private CopyMoveCellsInfo _savedToColumnHeaderCells;
-            private CopyMoveColumnsInfo _savedToColumns;
-            private CopyMoveFloatingObjectsInfo _savedToFloatingObjects;
-            private CopyMoveCellsInfo _savedToRowHeaderCells;
-            private CopyMoveRowsInfo _savedToRows;
-            private CopyMoveSheetInfo _savedToSheetInfo;
-            private CopyMoveCellsInfo _savedToViewportCells;
-            private Worksheet _toSheet;
+            Worksheet _fromSheet;
+            ClipboardPasteUndoAction.ClipboardPasteRangeExtent _pasteExtent;
+            ClipboardPasteOptions _pasteOption;
+            CopyMoveCellsInfo _savedFromColumnHeaderCells;
+            CopyMoveColumnsInfo _savedFromColumns;
+            CopyMoveFloatingObjectsInfo _savedFromFloatingObjects;
+            CopyMoveCellsInfo _savedFromRowHeaderCells;
+            CopyMoveRowsInfo _savedFromRows;
+            CopyMoveSheetInfo _savedFromSheetInfo;
+            CopyMoveCellsInfo _savedFromViewportCells;
+            CopyMoveCellsInfo _savedToColumnHeaderCells;
+            CopyMoveColumnsInfo _savedToColumns;
+            CopyMoveFloatingObjectsInfo _savedToFloatingObjects;
+            CopyMoveCellsInfo _savedToRowHeaderCells;
+            CopyMoveRowsInfo _savedToRows;
+            CopyMoveSheetInfo _savedToSheetInfo;
+            CopyMoveCellsInfo _savedToViewportCells;
+            Worksheet _toSheet;
 
             public ClipboardPasteRangeUndoAction(Worksheet srcSheet, Worksheet destSheet, ClipboardPasteUndoAction.ClipboardPasteRangeExtent pasteExtent, ClipboardPasteOptions option)
             {
-                this._fromSheet = srcSheet;
-                this._toSheet = destSheet;
-                this._pasteExtent = pasteExtent;
-                this._pasteOption = option;
+                _fromSheet = srcSheet;
+                _toSheet = destSheet;
+                _pasteExtent = pasteExtent;
+                _pasteOption = option;
             }
 
             public override bool CanExecute(object sender)
@@ -292,24 +292,24 @@ namespace Dt.Cells.UndoRedo
 
             public override void Execute(object sender)
             {
-                CellRange sourceRange = this._pasteExtent.SourceRange;
-                CellRange targetRange = this._pasteExtent.TargetRange;
-                if (((((this._fromSheet == null) || (sourceRange == null)) || SheetView.IsValidRange(sourceRange.Row, sourceRange.Column, sourceRange.RowCount, sourceRange.ColumnCount, this._fromSheet.RowCount, this._fromSheet.ColumnCount)) && ((this._toSheet != null) && (targetRange != null))) && SheetView.IsValidRange(targetRange.Row, targetRange.Column, targetRange.RowCount, targetRange.ColumnCount, this._toSheet.RowCount, this._toSheet.ColumnCount))
+                CellRange sourceRange = _pasteExtent.SourceRange;
+                CellRange targetRange = _pasteExtent.TargetRange;
+                if (((((_fromSheet == null) || (sourceRange == null)) || SheetView.IsValidRange(sourceRange.Row, sourceRange.Column, sourceRange.RowCount, sourceRange.ColumnCount, _fromSheet.RowCount, _fromSheet.ColumnCount)) && ((_toSheet != null) && (targetRange != null))) && SheetView.IsValidRange(targetRange.Row, targetRange.Column, targetRange.RowCount, targetRange.ColumnCount, _toSheet.RowCount, _toSheet.ColumnCount))
                 {
                     base.SuspendInvalidate(sender);
                     try
                     {
-                        SheetView.ClipboardPaste(this._fromSheet, sourceRange, this._toSheet, targetRange, this._pasteExtent.IsCutting, this._pasteExtent.ClipboardText, this._pasteOption);
+                        SheetView.ClipboardPaste(_fromSheet, sourceRange, _toSheet, targetRange, _pasteExtent.IsCutting, _pasteExtent.ClipboardText, _pasteOption);
                         SheetView sheetView = sender as SheetView;
                         if (sheetView != null)
                         {
-                            if ((this._pasteExtent.IsCutting && (this._savedFromViewportCells != null)) && (this._savedFromViewportCells.IsValueSaved() && object.ReferenceEquals(sheetView.Worksheet, this._fromSheet)))
+                            if ((_pasteExtent.IsCutting && (_savedFromViewportCells != null)) && (_savedFromViewportCells.IsValueSaved() && object.ReferenceEquals(sheetView.Worksheet, _fromSheet)))
                             {
-                                CopyMoveHelper.RaiseValueChanged(sheetView, sourceRange.Row, sourceRange.Column, sourceRange.RowCount, sourceRange.ColumnCount, this._savedFromViewportCells.GetValues());
+                                CopyMoveHelper.RaiseValueChanged(sheetView, sourceRange.Row, sourceRange.Column, sourceRange.RowCount, sourceRange.ColumnCount, _savedFromViewportCells.GetValues());
                             }
-                            if (((this._savedToViewportCells != null) && this._savedToViewportCells.IsValueSaved()) && object.ReferenceEquals(sheetView.Worksheet, this._toSheet))
+                            if (((_savedToViewportCells != null) && _savedToViewportCells.IsValueSaved()) && object.ReferenceEquals(sheetView.Worksheet, _toSheet))
                             {
-                                CopyMoveHelper.RaiseValueChanged(sheetView, targetRange.Row, targetRange.Column, targetRange.RowCount, targetRange.ColumnCount, this._savedToViewportCells.GetValues());
+                                CopyMoveHelper.RaiseValueChanged(sheetView, targetRange.Row, targetRange.Column, targetRange.RowCount, targetRange.ColumnCount, _savedToViewportCells.GetValues());
                             }
                         }
                     }
@@ -320,129 +320,129 @@ namespace Dt.Cells.UndoRedo
                 }
             }
 
-            private void InitSaveState()
+            void InitSaveState()
             {
-                this._savedFromSheetInfo = null;
-                this._savedFromColumnHeaderCells = null;
-                this._savedFromColumns = null;
-                this._savedFromViewportCells = null;
-                this._savedFromRowHeaderCells = null;
-                this._savedFromRows = null;
-                this._savedFromFloatingObjects = null;
-                this._savedToSheetInfo = null;
-                this._savedToColumnHeaderCells = null;
-                this._savedToColumns = null;
-                this._savedToViewportCells = null;
-                this._savedToRowHeaderCells = null;
-                this._savedToRows = null;
-                this._savedToFloatingObjects = null;
+                _savedFromSheetInfo = null;
+                _savedFromColumnHeaderCells = null;
+                _savedFromColumns = null;
+                _savedFromViewportCells = null;
+                _savedFromRowHeaderCells = null;
+                _savedFromRows = null;
+                _savedFromFloatingObjects = null;
+                _savedToSheetInfo = null;
+                _savedToColumnHeaderCells = null;
+                _savedToColumns = null;
+                _savedToViewportCells = null;
+                _savedToRowHeaderCells = null;
+                _savedToRows = null;
+                _savedToFloatingObjects = null;
             }
 
             public void SaveState()
             {
-                this.InitSaveState();
-                bool isCutting = this._pasteExtent.IsCutting;
-                CopyToOption option = SheetView.ConvertPasteOption(this._pasteOption);
-                CellRange sourceRange = this._pasteExtent.SourceRange;
-                CellRange targetRange = this._pasteExtent.TargetRange;
-                if (((this._fromSheet != null) && (sourceRange != null)) && isCutting)
+                InitSaveState();
+                bool isCutting = _pasteExtent.IsCutting;
+                CopyToOption option = SheetView.ConvertPasteOption(_pasteOption);
+                CellRange sourceRange = _pasteExtent.SourceRange;
+                CellRange targetRange = _pasteExtent.TargetRange;
+                if (((_fromSheet != null) && (sourceRange != null)) && isCutting)
                 {
                     int num = (sourceRange.Row < 0) ? 0 : sourceRange.Row;
                     int num2 = (sourceRange.Column < 0) ? 0 : sourceRange.Column;
-                    int num3 = (sourceRange.Row < 0) ? this._fromSheet.RowCount : sourceRange.RowCount;
-                    int num4 = (sourceRange.Column < 0) ? this._fromSheet.ColumnCount : sourceRange.ColumnCount;
-                    if ((((sourceRange.Row < 0) && (sourceRange.Column < 0)) && ((targetRange.Row < 0) && (targetRange.Column < 0))) && !object.ReferenceEquals(this._fromSheet, this._toSheet))
+                    int num3 = (sourceRange.Row < 0) ? _fromSheet.RowCount : sourceRange.RowCount;
+                    int num4 = (sourceRange.Column < 0) ? _fromSheet.ColumnCount : sourceRange.ColumnCount;
+                    if ((((sourceRange.Row < 0) && (sourceRange.Column < 0)) && ((targetRange.Row < 0) && (targetRange.Column < 0))) && !object.ReferenceEquals(_fromSheet, _toSheet))
                     {
                         CopyMoveSheetInfo sheetInfo = new CopyMoveSheetInfo();
-                        CopyMoveHelper.SaveSheetInfo(this._fromSheet, sheetInfo, option);
-                        this._savedFromSheetInfo = sheetInfo;
+                        CopyMoveHelper.SaveSheetInfo(_fromSheet, sheetInfo, option);
+                        _savedFromSheetInfo = sheetInfo;
                     }
                     if (sourceRange.Row < 0)
                     {
-                        CopyMoveCellsInfo headerCellsInfo = new CopyMoveCellsInfo(this._fromSheet.ColumnHeader.RowCount, num4);
+                        CopyMoveCellsInfo headerCellsInfo = new CopyMoveCellsInfo(_fromSheet.ColumnHeader.RowCount, num4);
                         CopyMoveColumnsInfo columnsInfo = new CopyMoveColumnsInfo(num4);
-                        CopyMoveHelper.SaveColumnHeaderInfo(this._fromSheet, headerCellsInfo, columnsInfo, num2, option);
-                        this._savedFromColumnHeaderCells = headerCellsInfo;
-                        this._savedFromColumns = columnsInfo;
+                        CopyMoveHelper.SaveColumnHeaderInfo(_fromSheet, headerCellsInfo, columnsInfo, num2, option);
+                        _savedFromColumnHeaderCells = headerCellsInfo;
+                        _savedFromColumns = columnsInfo;
                     }
                     if (sourceRange.Column < 0)
                     {
-                        CopyMoveCellsInfo info4 = new CopyMoveCellsInfo(num3, this._fromSheet.RowHeader.ColumnCount);
+                        CopyMoveCellsInfo info4 = new CopyMoveCellsInfo(num3, _fromSheet.RowHeader.ColumnCount);
                         CopyMoveRowsInfo rowsInfo = new CopyMoveRowsInfo(num3);
-                        CopyMoveHelper.SaveRowHeaderInfo(this._fromSheet, info4, rowsInfo, num, option);
-                        this._savedFromRowHeaderCells = info4;
-                        this._savedFromRows = rowsInfo;
+                        CopyMoveHelper.SaveRowHeaderInfo(_fromSheet, info4, rowsInfo, num, option);
+                        _savedFromRowHeaderCells = info4;
+                        _savedFromRows = rowsInfo;
                     }
                     CopyMoveCellsInfo info6 = new CopyMoveCellsInfo(num3, num4);
-                    CopyMoveHelper.SaveViewportInfo(this._fromSheet, info6, num, num2, option);
-                    this._savedFromViewportCells = info6;
+                    CopyMoveHelper.SaveViewportInfo(_fromSheet, info6, num, num2, option);
+                    _savedFromViewportCells = info6;
                     if ((option & CopyToOption.FloatingObject) > ((CopyToOption) 0))
                     {
-                        FloatingObject[] floatingObjectsInRange = CopyMoveHelper.GetFloatingObjectsInRange(CopyMoveHelper.AdjustRange(sourceRange, this._fromSheet.RowCount, this._fromSheet.ColumnCount), this._fromSheet);
-                        this._savedFromFloatingObjects = new CopyMoveFloatingObjectsInfo();
-                        this._savedFromFloatingObjects.SaveFloatingObjects(sourceRange, floatingObjectsInRange);
+                        FloatingObject[] floatingObjectsInRange = CopyMoveHelper.GetFloatingObjectsInRange(CopyMoveHelper.AdjustRange(sourceRange, _fromSheet.RowCount, _fromSheet.ColumnCount), _fromSheet);
+                        _savedFromFloatingObjects = new CopyMoveFloatingObjectsInfo();
+                        _savedFromFloatingObjects.SaveFloatingObjects(sourceRange, floatingObjectsInRange);
                     }
                 }
                 int baseRow = (targetRange.Row < 0) ? 0 : targetRange.Row;
                 int baseColumn = (targetRange.Column < 0) ? 0 : targetRange.Column;
-                int rowCount = (targetRange.Row < 0) ? this._toSheet.RowCount : targetRange.RowCount;
-                int columnCount = (targetRange.Column < 0) ? this._toSheet.ColumnCount : targetRange.ColumnCount;
-                if ((this._fromSheet != null) && (sourceRange != null))
+                int rowCount = (targetRange.Row < 0) ? _toSheet.RowCount : targetRange.RowCount;
+                int columnCount = (targetRange.Column < 0) ? _toSheet.ColumnCount : targetRange.ColumnCount;
+                if ((_fromSheet != null) && (sourceRange != null))
                 {
-                    if ((((sourceRange.Row < 0) && (sourceRange.Column < 0)) && ((targetRange.Row < 0) && (targetRange.Column < 0))) && !object.ReferenceEquals(this._fromSheet, this._toSheet))
+                    if ((((sourceRange.Row < 0) && (sourceRange.Column < 0)) && ((targetRange.Row < 0) && (targetRange.Column < 0))) && !object.ReferenceEquals(_fromSheet, _toSheet))
                     {
                         CopyMoveSheetInfo info7 = new CopyMoveSheetInfo();
-                        CopyMoveHelper.SaveSheetInfo(this._toSheet, info7, option);
-                        this._savedToSheetInfo = info7;
+                        CopyMoveHelper.SaveSheetInfo(_toSheet, info7, option);
+                        _savedToSheetInfo = info7;
                     }
                     if (sourceRange.Row < 0)
                     {
-                        CopyMoveCellsInfo info8 = new CopyMoveCellsInfo(this._toSheet.ColumnHeader.RowCount, columnCount);
+                        CopyMoveCellsInfo info8 = new CopyMoveCellsInfo(_toSheet.ColumnHeader.RowCount, columnCount);
                         CopyMoveColumnsInfo info9 = new CopyMoveColumnsInfo(columnCount);
-                        CopyMoveHelper.SaveColumnHeaderInfo(this._toSheet, info8, info9, baseColumn, option);
-                        this._savedToColumnHeaderCells = info8;
-                        this._savedToColumns = info9;
+                        CopyMoveHelper.SaveColumnHeaderInfo(_toSheet, info8, info9, baseColumn, option);
+                        _savedToColumnHeaderCells = info8;
+                        _savedToColumns = info9;
                     }
                     if (sourceRange.Column < 0)
                     {
-                        CopyMoveCellsInfo info10 = new CopyMoveCellsInfo(rowCount, this._toSheet.RowHeader.ColumnCount);
+                        CopyMoveCellsInfo info10 = new CopyMoveCellsInfo(rowCount, _toSheet.RowHeader.ColumnCount);
                         CopyMoveRowsInfo info11 = new CopyMoveRowsInfo(rowCount);
-                        CopyMoveHelper.SaveRowHeaderInfo(this._toSheet, info10, info11, baseRow, option);
-                        this._savedToRowHeaderCells = info10;
-                        this._savedToRows = info11;
+                        CopyMoveHelper.SaveRowHeaderInfo(_toSheet, info10, info11, baseRow, option);
+                        _savedToRowHeaderCells = info10;
+                        _savedToRows = info11;
                     }
                     if ((option & CopyToOption.FloatingObject) > ((CopyToOption) 0))
                     {
-                        FloatingObject[] floatingObjects = CopyMoveHelper.GetFloatingObjectsInRange(CopyMoveHelper.AdjustRange(targetRange, this._toSheet.RowCount, this._toSheet.ColumnCount), this._toSheet);
-                        this._savedToFloatingObjects = new CopyMoveFloatingObjectsInfo();
-                        this._savedToFloatingObjects.SaveFloatingObjects(targetRange, floatingObjects);
+                        FloatingObject[] floatingObjects = CopyMoveHelper.GetFloatingObjectsInRange(CopyMoveHelper.AdjustRange(targetRange, _toSheet.RowCount, _toSheet.ColumnCount), _toSheet);
+                        _savedToFloatingObjects = new CopyMoveFloatingObjectsInfo();
+                        _savedToFloatingObjects.SaveFloatingObjects(targetRange, floatingObjects);
                     }
                 }
                 CopyMoveCellsInfo cellsInfo = new CopyMoveCellsInfo(rowCount, columnCount);
-                CopyMoveHelper.SaveViewportInfo(this._toSheet, cellsInfo, baseRow, baseColumn, option);
-                this._savedToViewportCells = cellsInfo;
+                CopyMoveHelper.SaveViewportInfo(_toSheet, cellsInfo, baseRow, baseColumn, option);
+                _savedToViewportCells = cellsInfo;
             }
 
             public bool Undo(object sender)
             {
-                CellRange sourceRange = this._pasteExtent.SourceRange;
-                CellRange targetRange = this._pasteExtent.TargetRange;
+                CellRange sourceRange = _pasteExtent.SourceRange;
+                CellRange targetRange = _pasteExtent.TargetRange;
                 SheetView sheetView = sender as SheetView;
-                if ((this._toSheet == null) || (targetRange == null))
+                if ((_toSheet == null) || (targetRange == null))
                 {
                     return false;
                 }
-                if (!SheetView.IsValidRange(targetRange.Row, targetRange.Column, targetRange.RowCount, targetRange.ColumnCount, this._toSheet.RowCount, this._toSheet.ColumnCount))
+                if (!SheetView.IsValidRange(targetRange.Row, targetRange.Column, targetRange.RowCount, targetRange.ColumnCount, _toSheet.RowCount, _toSheet.ColumnCount))
                 {
                     return false;
                 }
-                if ((this._fromSheet != null) && (sourceRange != null))
+                if ((_fromSheet != null) && (sourceRange != null))
                 {
-                    if (!SheetView.IsValidRange(sourceRange.Row, sourceRange.Column, sourceRange.RowCount, sourceRange.ColumnCount, this._fromSheet.RowCount, this._fromSheet.ColumnCount))
+                    if (!SheetView.IsValidRange(sourceRange.Row, sourceRange.Column, sourceRange.RowCount, sourceRange.ColumnCount, _fromSheet.RowCount, _fromSheet.ColumnCount))
                     {
                         return false;
                     }
-                    if (((this._fromSheet.Workbook != null) && object.ReferenceEquals(this._fromSheet.Workbook, this._toSheet.Workbook)) && !this._toSheet.Workbook.Sheets.Contains(this._fromSheet))
+                    if (((_fromSheet.Workbook != null) && object.ReferenceEquals(_fromSheet.Workbook, _toSheet.Workbook)) && !_toSheet.Workbook.Sheets.Contains(_fromSheet))
                     {
                         return false;
                     }
@@ -455,45 +455,45 @@ namespace Dt.Cells.UndoRedo
                     List<CellData> list2 = null;
                     int row = (targetRange.Row < 0) ? 0 : targetRange.Row;
                     int column = (targetRange.Column < 0) ? 0 : targetRange.Column;
-                    int rowCount = (targetRange.Row < 0) ? this._toSheet.RowCount : targetRange.RowCount;
-                    int columnCount = (targetRange.Column < 0) ? this._toSheet.ColumnCount : targetRange.ColumnCount;
-                    if (this._savedToSheetInfo != null)
+                    int rowCount = (targetRange.Row < 0) ? _toSheet.RowCount : targetRange.RowCount;
+                    int columnCount = (targetRange.Column < 0) ? _toSheet.ColumnCount : targetRange.ColumnCount;
+                    if (_savedToSheetInfo != null)
                     {
-                        CopyMoveHelper.UndoSheetInfo(this._toSheet, this._savedToSheetInfo);
+                        CopyMoveHelper.UndoSheetInfo(_toSheet, _savedToSheetInfo);
                         flag = true;
                     }
-                    if ((this._savedToViewportCells != null) && this._savedToViewportCells.IsValueSaved())
+                    if ((_savedToViewportCells != null) && _savedToViewportCells.IsValueSaved())
                     {
-                        oldValues = CopyMoveHelper.GetValues(this._toSheet, row, column, rowCount, columnCount);
+                        oldValues = CopyMoveHelper.GetValues(_toSheet, row, column, rowCount, columnCount);
                     }
-                    if (this._savedToColumnHeaderCells != null)
+                    if (_savedToColumnHeaderCells != null)
                     {
-                        CopyMoveHelper.UndoCellsInfo(this._toSheet, this._savedToColumnHeaderCells, 0, column, SheetArea.ColumnHeader);
+                        CopyMoveHelper.UndoCellsInfo(_toSheet, _savedToColumnHeaderCells, 0, column, SheetArea.ColumnHeader);
                         flag = true;
                     }
-                    if (this._savedToColumns != null)
+                    if (_savedToColumns != null)
                     {
-                        CopyMoveHelper.UndoColumnsInfo(this._toSheet, this._savedToColumns, column);
+                        CopyMoveHelper.UndoColumnsInfo(_toSheet, _savedToColumns, column);
                         flag = true;
                     }
-                    if (this._savedToViewportCells != null)
+                    if (_savedToViewportCells != null)
                     {
-                        CopyMoveHelper.UndoCellsInfo(this._toSheet, this._savedToViewportCells, row, column, SheetArea.Cells);
+                        CopyMoveHelper.UndoCellsInfo(_toSheet, _savedToViewportCells, row, column, SheetArea.Cells);
                         flag = true;
                     }
-                    if (this._savedToRowHeaderCells != null)
+                    if (_savedToRowHeaderCells != null)
                     {
-                        CopyMoveHelper.UndoCellsInfo(this._toSheet, this._savedToRowHeaderCells, row, 0, SheetArea.CornerHeader | SheetArea.RowHeader);
+                        CopyMoveHelper.UndoCellsInfo(_toSheet, _savedToRowHeaderCells, row, 0, SheetArea.CornerHeader | SheetArea.RowHeader);
                         flag = true;
                     }
-                    if (this._savedToRows != null)
+                    if (_savedToRows != null)
                     {
-                        CopyMoveHelper.UndoRowsInfo(this._toSheet, this._savedToRows, row);
+                        CopyMoveHelper.UndoRowsInfo(_toSheet, _savedToRows, row);
                         flag = true;
                     }
-                    if (this._savedToFloatingObjects != null)
+                    if (_savedToFloatingObjects != null)
                     {
-                        CopyMoveHelper.UndoFloatingObjectsInfo(this._toSheet, this._savedToFloatingObjects);
+                        CopyMoveHelper.UndoFloatingObjectsInfo(_toSheet, _savedToFloatingObjects);
                         sheetView.InvalidateFloatingObjects();
                         flag = true;
                     }
@@ -501,49 +501,49 @@ namespace Dt.Cells.UndoRedo
                     int num6 = 0;
                     int num7 = 0;
                     int num8 = 0;
-                    if ((this._fromSheet != null) && (sourceRange != null))
+                    if ((_fromSheet != null) && (sourceRange != null))
                     {
                         num5 = (sourceRange.Row < 0) ? 0 : sourceRange.Row;
                         num6 = (sourceRange.Column < 0) ? 0 : sourceRange.Column;
-                        num7 = (sourceRange.Row < 0) ? this._fromSheet.RowCount : sourceRange.RowCount;
-                        num8 = (sourceRange.Column < 0) ? this._fromSheet.ColumnCount : sourceRange.ColumnCount;
-                        if (this._savedFromSheetInfo != null)
+                        num7 = (sourceRange.Row < 0) ? _fromSheet.RowCount : sourceRange.RowCount;
+                        num8 = (sourceRange.Column < 0) ? _fromSheet.ColumnCount : sourceRange.ColumnCount;
+                        if (_savedFromSheetInfo != null)
                         {
-                            CopyMoveHelper.UndoSheetInfo(this._fromSheet, this._savedFromSheetInfo);
+                            CopyMoveHelper.UndoSheetInfo(_fromSheet, _savedFromSheetInfo);
                             flag = true;
                         }
-                        if ((this._savedFromViewportCells != null) && this._savedFromViewportCells.IsValueSaved())
+                        if ((_savedFromViewportCells != null) && _savedFromViewportCells.IsValueSaved())
                         {
-                            list2 = CopyMoveHelper.GetValues(this._fromSheet, num5, num6, num7, num8);
+                            list2 = CopyMoveHelper.GetValues(_fromSheet, num5, num6, num7, num8);
                         }
-                        if (this._savedFromColumnHeaderCells != null)
+                        if (_savedFromColumnHeaderCells != null)
                         {
-                            CopyMoveHelper.UndoCellsInfo(this._fromSheet, this._savedFromColumnHeaderCells, 0, num6, SheetArea.ColumnHeader);
+                            CopyMoveHelper.UndoCellsInfo(_fromSheet, _savedFromColumnHeaderCells, 0, num6, SheetArea.ColumnHeader);
                             flag = true;
                         }
-                        if (this._savedFromColumns != null)
+                        if (_savedFromColumns != null)
                         {
-                            CopyMoveHelper.UndoColumnsInfo(this._fromSheet, this._savedFromColumns, num6);
+                            CopyMoveHelper.UndoColumnsInfo(_fromSheet, _savedFromColumns, num6);
                             flag = true;
                         }
-                        if (this._savedFromViewportCells != null)
+                        if (_savedFromViewportCells != null)
                         {
-                            CopyMoveHelper.UndoCellsInfo(this._fromSheet, this._savedFromViewportCells, num5, num6, SheetArea.Cells);
+                            CopyMoveHelper.UndoCellsInfo(_fromSheet, _savedFromViewportCells, num5, num6, SheetArea.Cells);
                             flag = true;
                         }
-                        if (this._savedFromRowHeaderCells != null)
+                        if (_savedFromRowHeaderCells != null)
                         {
-                            CopyMoveHelper.UndoCellsInfo(this._fromSheet, this._savedFromRowHeaderCells, num5, 0, SheetArea.CornerHeader | SheetArea.RowHeader);
+                            CopyMoveHelper.UndoCellsInfo(_fromSheet, _savedFromRowHeaderCells, num5, 0, SheetArea.CornerHeader | SheetArea.RowHeader);
                             flag = true;
                         }
-                        if (this._savedFromRows != null)
+                        if (_savedFromRows != null)
                         {
-                            CopyMoveHelper.UndoRowsInfo(this._fromSheet, this._savedFromRows, num5);
+                            CopyMoveHelper.UndoRowsInfo(_fromSheet, _savedFromRows, num5);
                             flag = true;
                         }
-                        if (this._savedFromFloatingObjects != null)
+                        if (_savedFromFloatingObjects != null)
                         {
-                            CopyMoveHelper.UndoFloatingObjectsInfo(this._fromSheet, this._savedFromFloatingObjects);
+                            CopyMoveHelper.UndoFloatingObjectsInfo(_fromSheet, _savedFromFloatingObjects);
                             sheetView.InvalidateFloatingObjects();
                             flag = true;
                         }
@@ -552,11 +552,11 @@ namespace Dt.Cells.UndoRedo
                     {
                         return flag;
                     }
-                    if ((oldValues != null) && object.ReferenceEquals(sheetView.Worksheet, this._toSheet))
+                    if ((oldValues != null) && object.ReferenceEquals(sheetView.Worksheet, _toSheet))
                     {
                         CopyMoveHelper.RaiseValueChanged(sheetView, row, column, rowCount, columnCount, oldValues);
                     }
-                    if ((list2 != null) && object.ReferenceEquals(sheetView.Worksheet, this._fromSheet))
+                    if ((list2 != null) && object.ReferenceEquals(sheetView.Worksheet, _fromSheet))
                     {
                         CopyMoveHelper.RaiseValueChanged(sheetView, num5, num6, num7, num8, list2);
                     }
@@ -564,7 +564,7 @@ namespace Dt.Cells.UndoRedo
                 finally
                 {
                     base.ResumeInvalidate(sender);
-                    if (this._savedFromFloatingObjects != null)
+                    if (_savedFromFloatingObjects != null)
                     {
                         sheetView.InvalidateFloatingObjects();
                     }
@@ -579,23 +579,23 @@ namespace Dt.Cells.UndoRedo
 
             internal bool IsCutting
             {
-                get { return  this._pasteExtent.IsCutting; }
+                get { return  _pasteExtent.IsCutting; }
             }
 
             internal ClipboardPasteOptions PasteOption
             {
-                get { return  this._pasteOption; }
-                set { this._pasteOption = value; }
+                get { return  _pasteOption; }
+                set { _pasteOption = value; }
             }
 
             internal CellRange PasteRange
             {
-                get { return  this._pasteExtent.TargetRange; }
+                get { return  _pasteExtent.TargetRange; }
             }
 
             internal CellRange SourceRange
             {
-                get { return  this._pasteExtent.SourceRange; }
+                get { return  _pasteExtent.SourceRange; }
             }
         }
     }

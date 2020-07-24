@@ -21,14 +21,14 @@ namespace Dt.Cells.UndoRedo
     /// </summary>
     public class DragFillUndoAction : ActionBase, IUndo
     {
-        private List<SheetTable> _cachedTables;
-        private ClearValueUndoAction _clearValueUndoAction;
-        private DragFillExtent _dragFillExtent;
-        private FillSeries _fillSeries;
-        private CopyMoveCellsInfo _savedFilledViewportCells;
-        private CopyMoveCellsInfo _savedStartViewportCells;
-        private CellRange _wholeFillRange;
-        private Worksheet _workSheet;
+        List<SheetTable> _cachedTables;
+        ClearValueUndoAction _clearValueUndoAction;
+        DragFillExtent _dragFillExtent;
+        FillSeries _fillSeries;
+        CopyMoveCellsInfo _savedFilledViewportCells;
+        CopyMoveCellsInfo _savedStartViewportCells;
+        CellRange _wholeFillRange;
+        Worksheet _workSheet;
 
         /// <summary>
         /// Creates a new instance of the <see cref="T:Dt.Cells.UndoRedo.DragFillUndoAction" /> class.
@@ -37,32 +37,32 @@ namespace Dt.Cells.UndoRedo
         /// <param name="dragFillExtent">The drag fill extent information.</param>
         public DragFillUndoAction(Worksheet workSheet, DragFillExtent dragFillExtent)
         {
-            this._workSheet = workSheet;
-            this._dragFillExtent = dragFillExtent;
-            if (this._dragFillExtent.AutoFillType == AutoFillType.ClearValues)
+            _workSheet = workSheet;
+            _dragFillExtent = dragFillExtent;
+            if (_dragFillExtent.AutoFillType == AutoFillType.ClearValues)
             {
-                this._clearValueUndoAction = new ClearValueUndoAction(workSheet, new CellRange[] { this._dragFillExtent.FillRange });
+                _clearValueUndoAction = new ClearValueUndoAction(workSheet, new CellRange[] { _dragFillExtent.FillRange });
             }
             else
             {
-                this.InitWholeFilledRange();
+                InitWholeFilledRange();
             }
-            if ((this._dragFillExtent.FillDirection == FillDirection.Left) || (this._dragFillExtent.FillDirection == FillDirection.Right))
+            if ((_dragFillExtent.FillDirection == FillDirection.Left) || (_dragFillExtent.FillDirection == FillDirection.Right))
             {
-                this._fillSeries = FillSeries.Row;
+                _fillSeries = FillSeries.Row;
             }
             else
             {
-                this._fillSeries = FillSeries.Column;
+                _fillSeries = FillSeries.Column;
             }
         }
 
-        private CellRange AdjustRange(CellRange range)
+        CellRange AdjustRange(CellRange range)
         {
             int row = (range.Row != -1) ? range.Row : 0;
             int column = (range.Column != -1) ? range.Column : 0;
-            int rowCount = (range.RowCount != -1) ? range.RowCount : this._workSheet.RowCount;
-            return new CellRange(row, column, rowCount, (range.ColumnCount != -1) ? range.ColumnCount : this._workSheet.ColumnCount);
+            int rowCount = (range.RowCount != -1) ? range.RowCount : _workSheet.RowCount;
+            return new CellRange(row, column, rowCount, (range.ColumnCount != -1) ? range.ColumnCount : _workSheet.ColumnCount);
         }
 
         /// <summary>
@@ -74,39 +74,39 @@ namespace Dt.Cells.UndoRedo
         /// </returns>
         public override bool CanExecute(object parameter)
         {
-            if (this._dragFillExtent.AutoFillType == AutoFillType.ClearValues)
+            if (_dragFillExtent.AutoFillType == AutoFillType.ClearValues)
             {
-                return this.CanExecuteDragClear();
+                return CanExecuteDragClear();
             }
-            return this.CanExecuteDragFill();
+            return CanExecuteDragFill();
         }
 
-        private bool CanExecuteDragClear()
+        bool CanExecuteDragClear()
         {
             return true;
         }
 
-        private bool CanExecuteDragFill()
+        bool CanExecuteDragFill()
         {
-            CellRange startRange = this._dragFillExtent.StartRange;
-            if (this._dragFillExtent.FillRange.Intersects(startRange.Row, startRange.Column, startRange.RowCount, startRange.ColumnCount))
+            CellRange startRange = _dragFillExtent.StartRange;
+            if (_dragFillExtent.FillRange.Intersects(startRange.Row, startRange.Column, startRange.RowCount, startRange.ColumnCount))
             {
                 return false;
             }
             return true;
         }
 
-        private void ClearData(CellRange cellRange)
+        void ClearData(CellRange cellRange)
         {
             StorageType data = StorageType.Data;
-            this._workSheet.Clear(cellRange.Row, cellRange.Column, cellRange.RowCount, cellRange.ColumnCount, SheetArea.Cells, data);
+            _workSheet.Clear(cellRange.Row, cellRange.Column, cellRange.RowCount, cellRange.ColumnCount, SheetArea.Cells, data);
         }
 
-        private void CopyCells(CellRange fromRange, CellRange toRange, CopyToOption copyOption)
+        void CopyCells(CellRange fromRange, CellRange toRange, CopyToOption copyOption)
         {
-            CellRange range = this.AdjustRange(fromRange);
-            CellRange range2 = this.AdjustRange(toRange);
-            if (this._fillSeries == FillSeries.Column)
+            CellRange range = AdjustRange(fromRange);
+            CellRange range2 = AdjustRange(toRange);
+            if (_fillSeries == FillSeries.Column)
             {
                 int num = range2.RowCount / range.RowCount;
                 for (int i = 0; i < num; i++)
@@ -114,7 +114,7 @@ namespace Dt.Cells.UndoRedo
                     int num5;
                     int row = range.Row;
                     int column = range.Column;
-                    if (this._dragFillExtent.FillDirection == FillDirection.Down)
+                    if (_dragFillExtent.FillDirection == FillDirection.Down)
                     {
                         num5 = range2.Row + (i * range.RowCount);
                     }
@@ -126,14 +126,14 @@ namespace Dt.Cells.UndoRedo
                     int toColumn = range2.Column;
                     int rowCount = range.RowCount;
                     int columnCount = range.ColumnCount;
-                    this._workSheet.CopyTo(row, column, num5, toColumn, rowCount, columnCount, copyOption);
+                    _workSheet.CopyTo(row, column, num5, toColumn, rowCount, columnCount, copyOption);
                 }
                 int num10 = range2.RowCount % range.RowCount;
                 if (num10 != 0)
                 {
                     int num11;
                     int num14;
-                    if (this._dragFillExtent.FillDirection == FillDirection.Down)
+                    if (_dragFillExtent.FillDirection == FillDirection.Down)
                     {
                         num11 = range.Row;
                     }
@@ -143,7 +143,7 @@ namespace Dt.Cells.UndoRedo
                         num11 = range.Row + num12;
                     }
                     int fromColumn = range.Column;
-                    if (this._dragFillExtent.FillDirection == FillDirection.Down)
+                    if (_dragFillExtent.FillDirection == FillDirection.Down)
                     {
                         num14 = range2.Row + (range.RowCount * num);
                     }
@@ -155,7 +155,7 @@ namespace Dt.Cells.UndoRedo
                     int num16 = range2.Column;
                     int num17 = num10;
                     int num18 = range.ColumnCount;
-                    this._workSheet.CopyTo(num11, fromColumn, num14, num16, num17, num18, copyOption);
+                    _workSheet.CopyTo(num11, fromColumn, num14, num16, num17, num18, copyOption);
                 }
             }
             else
@@ -167,7 +167,7 @@ namespace Dt.Cells.UndoRedo
                     int fromRow = range.Row;
                     int num22 = range.Column;
                     int toRow = range2.Row;
-                    if (this._dragFillExtent.FillDirection == FillDirection.Right)
+                    if (_dragFillExtent.FillDirection == FillDirection.Right)
                     {
                         num24 = range2.Column + (j * range.ColumnCount);
                     }
@@ -178,7 +178,7 @@ namespace Dt.Cells.UndoRedo
                     }
                     int num26 = range.RowCount;
                     int num27 = range.ColumnCount;
-                    this._workSheet.CopyTo(fromRow, num22, toRow, num24, num26, num27, copyOption);
+                    _workSheet.CopyTo(fromRow, num22, toRow, num24, num26, num27, copyOption);
                 }
                 int num28 = range2.ColumnCount % range.ColumnCount;
                 if (num28 != 0)
@@ -186,7 +186,7 @@ namespace Dt.Cells.UndoRedo
                     int num30;
                     int num33;
                     int num29 = range.Row;
-                    if (this._dragFillExtent.FillDirection == FillDirection.Right)
+                    if (_dragFillExtent.FillDirection == FillDirection.Right)
                     {
                         num30 = range.Column;
                     }
@@ -196,7 +196,7 @@ namespace Dt.Cells.UndoRedo
                         num30 = range.Column + num31;
                     }
                     int num32 = range2.Row;
-                    if (this._dragFillExtent.FillDirection == FillDirection.Right)
+                    if (_dragFillExtent.FillDirection == FillDirection.Right)
                     {
                         num33 = range2.Column + (range.ColumnCount * num19);
                     }
@@ -207,28 +207,28 @@ namespace Dt.Cells.UndoRedo
                     }
                     int num35 = range.RowCount;
                     int num36 = num28;
-                    this._workSheet.CopyTo(num29, num30, num32, num33, num35, num36, copyOption);
+                    _workSheet.CopyTo(num29, num30, num32, num33, num35, num36, copyOption);
                 }
             }
         }
 
-        private void Execute(SheetView sheetView)
+        void Execute(SheetView sheetView)
         {
-            CellRange[] oldSelection = (this._workSheet.Selections != null) ? Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) this._workSheet.Selections) : null;
-            if (this._dragFillExtent.AutoFillType == AutoFillType.ClearValues)
+            CellRange[] oldSelection = (_workSheet.Selections != null) ? Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) _workSheet.Selections) : null;
+            if (_dragFillExtent.AutoFillType == AutoFillType.ClearValues)
             {
-                this.ExecuteDragFillClear(sheetView);
+                ExecuteDragFillClear(sheetView);
             }
             else
             {
-                this.ExecuteDragFill(sheetView);
+                ExecuteDragFill(sheetView);
             }
-            if (((this._savedFilledViewportCells != null) && this._savedFilledViewportCells.IsValueSaved()) && object.ReferenceEquals(sheetView.Worksheet, this._workSheet))
+            if (((_savedFilledViewportCells != null) && _savedFilledViewportCells.IsValueSaved()) && object.ReferenceEquals(sheetView.Worksheet, _workSheet))
             {
-                CellRange fillRange = this._dragFillExtent.FillRange;
-                CopyMoveHelper.RaiseValueChanged(sheetView, fillRange.Row, fillRange.Column, fillRange.RowCount, fillRange.ColumnCount, this._savedFilledViewportCells.GetValues());
+                CellRange fillRange = _dragFillExtent.FillRange;
+                CopyMoveHelper.RaiseValueChanged(sheetView, fillRange.Row, fillRange.Column, fillRange.RowCount, fillRange.ColumnCount, _savedFilledViewportCells.GetValues());
             }
-            CellRange[] newSelection = (this._workSheet.Selections != null) ? Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) this._workSheet.Selections) : null;
+            CellRange[] newSelection = (_workSheet.Selections != null) ? Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) _workSheet.Selections) : null;
             if (sheetView.RaiseSelectionChanging(oldSelection, newSelection))
             {
                 sheetView.RaiseSelectionChanged();
@@ -241,23 +241,23 @@ namespace Dt.Cells.UndoRedo
         /// <param name="parameter">Object on which the undo action occurred.</param>
         public override void Execute(object parameter)
         {
-            if (this.CanExecute(parameter))
+            if (CanExecute(parameter))
             {
                 SheetView sender = parameter as SheetView;
                 try
                 {
                     base.SuspendInvalidate(sender);
-                    this._workSheet.SuspendCalcService();
-                    this.SaveState();
-                    this.Execute(sender);
+                    _workSheet.SuspendCalcService();
+                    SaveState();
+                    Execute(sender);
                 }
                 finally
                 {
-                    this._workSheet.ResumeCalcService();
+                    _workSheet.ResumeCalcService();
                     base.ResumeInvalidate(sender);
                 }
                 sender.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
-                IList<SpreadChartBase> list = Dt.Cells.Data.SpreadChartUtility.GetChartShapeAffectedCellChanged(this._workSheet, this._dragFillExtent.FillRange.Row, this._dragFillExtent.FillRange.Column, this._dragFillExtent.FillRange.RowCount, this._dragFillExtent.FillRange.ColumnCount);
+                IList<SpreadChartBase> list = Dt.Cells.Data.SpreadChartUtility.GetChartShapeAffectedCellChanged(_workSheet, _dragFillExtent.FillRange.Row, _dragFillExtent.FillRange.Column, _dragFillExtent.FillRange.RowCount, _dragFillExtent.FillRange.ColumnCount);
                 if (list.Count > 0)
                 {
                     sender.InvalidateFloatingObjects(Enumerable.ToArray<SpreadChartBase>((IEnumerable<SpreadChartBase>) list));
@@ -269,98 +269,98 @@ namespace Dt.Cells.UndoRedo
             }
         }
 
-        private void ExecuteDragFill(SheetView sheetView)
+        void ExecuteDragFill(SheetView sheetView)
         {
-            CellRange startRange = this._dragFillExtent.StartRange;
-            CellRange fillRange = this._dragFillExtent.FillRange;
-            if (this._dragFillExtent.AutoFillType == AutoFillType.FillSeries)
+            CellRange startRange = _dragFillExtent.StartRange;
+            CellRange fillRange = _dragFillExtent.FillRange;
+            if (_dragFillExtent.AutoFillType == AutoFillType.FillSeries)
             {
-                this.ClearData(fillRange);
-                if ((this._dragFillExtent.FillDirection == FillDirection.Down) || (this._dragFillExtent.FillDirection == FillDirection.Right))
+                ClearData(fillRange);
+                if ((_dragFillExtent.FillDirection == FillDirection.Down) || (_dragFillExtent.FillDirection == FillDirection.Right))
                 {
-                    this._workSheet.FillAuto(this._wholeFillRange, this._fillSeries);
+                    _workSheet.FillAuto(_wholeFillRange, _fillSeries);
                 }
                 else
                 {
-                    this._workSheet.FillLinear(this._wholeFillRange, this._fillSeries);
+                    _workSheet.FillLinear(_wholeFillRange, _fillSeries);
                 }
             }
-            else if (this._dragFillExtent.AutoFillType == AutoFillType.CopyCells)
+            else if (_dragFillExtent.AutoFillType == AutoFillType.CopyCells)
             {
-                this.CopyCells(startRange, fillRange, CopyToOption.All);
+                CopyCells(startRange, fillRange, CopyToOption.All);
             }
-            else if (this._dragFillExtent.AutoFillType == AutoFillType.FillFormattingOnly)
+            else if (_dragFillExtent.AutoFillType == AutoFillType.FillFormattingOnly)
             {
-                this.CopyCells(startRange, fillRange, CopyToOption.Style);
+                CopyCells(startRange, fillRange, CopyToOption.Style);
             }
-            else if (this._dragFillExtent.AutoFillType == AutoFillType.FillWithoutFormatting)
+            else if (_dragFillExtent.AutoFillType == AutoFillType.FillWithoutFormatting)
             {
-                this.ClearData(fillRange);
+                ClearData(fillRange);
                 if ((((startRange.RowCount == 1) && (startRange.ColumnCount == 1)) && ((startRange.Row != -1) || (startRange.Column == -1))) && ((startRange.Column != -1) || (startRange.Row == -1)))
                 {
                     CopyToOption copyOption = CopyToOption.Tag | CopyToOption.Span | CopyToOption.Sparkline | CopyToOption.RangeGroup | CopyToOption.Formula | CopyToOption.Value;
-                    this.CopyCells(startRange, fillRange, copyOption);
+                    CopyCells(startRange, fillRange, copyOption);
                 }
                 else
                 {
-                    CellRange range3 = this.AdjustRange(this._wholeFillRange);
+                    CellRange range3 = AdjustRange(_wholeFillRange);
                     object[,] objArray = new object[range3.RowCount, range3.ColumnCount];
                     for (int i = 0; i < range3.RowCount; i++)
                     {
                         for (int k = 0; k < range3.ColumnCount; k++)
                         {
-                            objArray[i, k] = CopyMoveHelper.GetStyleObject(this._workSheet, range3.Row + i, range3.Column + k, SheetArea.Cells);
+                            objArray[i, k] = CopyMoveHelper.GetStyleObject(_workSheet, range3.Row + i, range3.Column + k, SheetArea.Cells);
                         }
                     }
-                    if ((this._dragFillExtent.FillDirection == FillDirection.Down) || (this._dragFillExtent.FillDirection == FillDirection.Right))
+                    if ((_dragFillExtent.FillDirection == FillDirection.Down) || (_dragFillExtent.FillDirection == FillDirection.Right))
                     {
-                        this._workSheet.FillAuto(this._wholeFillRange, this._fillSeries);
+                        _workSheet.FillAuto(_wholeFillRange, _fillSeries);
                     }
                     else
                     {
-                        this._workSheet.FillLinear(this._wholeFillRange, this._fillSeries);
+                        _workSheet.FillLinear(_wholeFillRange, _fillSeries);
                     }
                     for (int j = 0; j < range3.RowCount; j++)
                     {
                         for (int m = 0; m < range3.ColumnCount; m++)
                         {
-                            CopyMoveHelper.SetStyleObject(this._workSheet, range3.Row + j, range3.Column + m, SheetArea.Cells, objArray[j, m]);
+                            CopyMoveHelper.SetStyleObject(_workSheet, range3.Row + j, range3.Column + m, SheetArea.Cells, objArray[j, m]);
                         }
                     }
                 }
             }
-            sheetView.SetActiveCell(Math.Max(0, this._wholeFillRange.Row), Math.Max(0, this._wholeFillRange.Column), true);
-            this._workSheet.SetSelection(this._wholeFillRange);
+            sheetView.SetActiveCell(Math.Max(0, _wholeFillRange.Row), Math.Max(0, _wholeFillRange.Column), true);
+            _workSheet.SetSelection(_wholeFillRange);
         }
 
-        private void ExecuteDragFillClear(SheetView sheetView)
+        void ExecuteDragFillClear(SheetView sheetView)
         {
-            this._clearValueUndoAction.Execute(sheetView);
-            CellRange startRange = this._dragFillExtent.StartRange;
-            CellRange fillRange = this._dragFillExtent.FillRange;
+            _clearValueUndoAction.Execute(sheetView);
+            CellRange startRange = _dragFillExtent.StartRange;
+            CellRange fillRange = _dragFillExtent.FillRange;
             if (!startRange.Equals(fillRange))
             {
-                if (this._fillSeries == FillSeries.Column)
+                if (_fillSeries == FillSeries.Column)
                 {
                     CellRange range = new CellRange(startRange.Row, startRange.Column, startRange.RowCount - fillRange.RowCount, startRange.ColumnCount);
                     sheetView.SetActiveCell(Math.Max(0, range.Row), Math.Max(0, range.Column), true);
-                    this._workSheet.SetSelection(range);
+                    _workSheet.SetSelection(range);
                 }
                 else
                 {
                     CellRange range4 = new CellRange(startRange.Row, startRange.Column, startRange.RowCount, startRange.ColumnCount - fillRange.ColumnCount);
                     sheetView.SetActiveCell(Math.Max(0, range4.Row), Math.Max(0, range4.Column), true);
-                    this._workSheet.SetSelection(range4);
+                    _workSheet.SetSelection(range4);
                 }
             }
         }
 
-        private object GetCopyCellsValue(CellRange fromRange, CellRange toRange)
+        object GetCopyCellsValue(CellRange fromRange, CellRange toRange)
         {
             Dictionary<long, object> dictionary = new Dictionary<long, object>();
-            CellRange range = this.AdjustRange(fromRange);
-            CellRange range2 = this.AdjustRange(toRange);
-            if (this._fillSeries == FillSeries.Column)
+            CellRange range = AdjustRange(fromRange);
+            CellRange range2 = AdjustRange(toRange);
+            if (_fillSeries == FillSeries.Column)
             {
                 int num = range2.RowCount / range.RowCount;
                 for (int j = 0; j < num; j++)
@@ -368,7 +368,7 @@ namespace Dt.Cells.UndoRedo
                     int num5;
                     int row = range.Row;
                     int column = range.Column;
-                    if (this._dragFillExtent.FillDirection == FillDirection.Down)
+                    if (_dragFillExtent.FillDirection == FillDirection.Down)
                     {
                         num5 = range2.Row + (j * range.RowCount);
                     }
@@ -380,14 +380,14 @@ namespace Dt.Cells.UndoRedo
                     int num7 = range2.Column;
                     int rowCount = range.RowCount;
                     int columnCount = range.ColumnCount;
-                    dictionary[(long) ((num5 << 4) | num7)] = this._workSheet.GetText((row + rowCount) - 1, (column + columnCount) - 1);
+                    dictionary[(long) ((num5 << 4) | num7)] = _workSheet.GetText((row + rowCount) - 1, (column + columnCount) - 1);
                 }
                 int num10 = range2.RowCount % range.RowCount;
                 if (num10 != 0)
                 {
                     int num11;
                     int num14;
-                    if (this._dragFillExtent.FillDirection == FillDirection.Down)
+                    if (_dragFillExtent.FillDirection == FillDirection.Down)
                     {
                         num11 = range.Row;
                     }
@@ -397,7 +397,7 @@ namespace Dt.Cells.UndoRedo
                         num11 = range.Row + num12;
                     }
                     int num13 = range.Column;
-                    if (this._dragFillExtent.FillDirection == FillDirection.Down)
+                    if (_dragFillExtent.FillDirection == FillDirection.Down)
                     {
                         num14 = range2.Row + (range.RowCount * num);
                     }
@@ -409,7 +409,7 @@ namespace Dt.Cells.UndoRedo
                     int num16 = range2.Column;
                     int num17 = num10;
                     int num18 = range.ColumnCount;
-                    dictionary[(long) ((num14 << 4) | num16)] = this._workSheet.GetText((num11 + num17) - 1, (num13 + num18) - 1);
+                    dictionary[(long) ((num14 << 4) | num16)] = _workSheet.GetText((num11 + num17) - 1, (num13 + num18) - 1);
                 }
                 return dictionary;
             }
@@ -420,7 +420,7 @@ namespace Dt.Cells.UndoRedo
                 int num21 = range.Row;
                 int num22 = range.Column;
                 int num23 = range2.Row;
-                if (this._dragFillExtent.FillDirection == FillDirection.Right)
+                if (_dragFillExtent.FillDirection == FillDirection.Right)
                 {
                     num24 = range2.Column + (i * range.ColumnCount);
                 }
@@ -431,7 +431,7 @@ namespace Dt.Cells.UndoRedo
                 }
                 int num26 = range.RowCount;
                 int num27 = range.ColumnCount;
-                dictionary[(long) ((num23 << 4) | num24)] = this._workSheet.GetText((num21 + num26) - 1, (num22 + num27) - 1);
+                dictionary[(long) ((num23 << 4) | num24)] = _workSheet.GetText((num21 + num26) - 1, (num22 + num27) - 1);
             }
             int num28 = range2.ColumnCount % range.ColumnCount;
             if (num28 != 0)
@@ -439,7 +439,7 @@ namespace Dt.Cells.UndoRedo
                 int num30;
                 int num33;
                 int num29 = range.Row;
-                if (this._dragFillExtent.FillDirection == FillDirection.Right)
+                if (_dragFillExtent.FillDirection == FillDirection.Right)
                 {
                     num30 = range.Column;
                 }
@@ -449,7 +449,7 @@ namespace Dt.Cells.UndoRedo
                     num30 = range.Column + num31;
                 }
                 int num32 = range2.Row;
-                if (this._dragFillExtent.FillDirection == FillDirection.Right)
+                if (_dragFillExtent.FillDirection == FillDirection.Right)
                 {
                     num33 = range2.Column + (range.ColumnCount * num19);
                 }
@@ -460,20 +460,20 @@ namespace Dt.Cells.UndoRedo
                 }
                 int num35 = range.RowCount;
                 int num36 = num28;
-                dictionary[(long) ((num32 << 4) | num33)] = this._workSheet.GetText((num29 + num35) - 1, (num30 + num36) - 1);
+                dictionary[(long) ((num32 << 4) | num33)] = _workSheet.GetText((num29 + num35) - 1, (num30 + num36) - 1);
             }
             return dictionary;
         }
 
-        private void InitWholeFilledRange()
+        void InitWholeFilledRange()
         {
             int row = 0;
             int rowCount = 0;
             int column = 0;
             int columnCount = 0;
-            FillDirection fillDirection = this._dragFillExtent.FillDirection;
-            CellRange startRange = this._dragFillExtent.StartRange;
-            CellRange fillRange = this._dragFillExtent.FillRange;
+            FillDirection fillDirection = _dragFillExtent.FillDirection;
+            CellRange startRange = _dragFillExtent.StartRange;
+            CellRange fillRange = _dragFillExtent.FillRange;
             switch (fillDirection)
             {
                 case FillDirection.Left:
@@ -491,44 +491,44 @@ namespace Dt.Cells.UndoRedo
                     columnCount = startRange.ColumnCount;
                     break;
             }
-            this._wholeFillRange = new CellRange(row, column, rowCount, columnCount);
+            _wholeFillRange = new CellRange(row, column, rowCount, columnCount);
         }
 
-        private void SaveDragClearState()
+        void SaveDragClearState()
         {
-            this._clearValueUndoAction.SaveState();
-            this.SaveFillRangeTables();
+            _clearValueUndoAction.SaveState();
+            SaveFillRangeTables();
         }
 
-        private void SaveDragFillState()
+        void SaveDragFillState()
         {
-            CellRange fillRange = this._dragFillExtent.FillRange;
-            this._savedFilledViewportCells = this.SaveRangeStates(this._dragFillExtent.FillRange);
-            this._savedStartViewportCells = this.SaveRangeStates(this._dragFillExtent.StartRange);
-            this.SaveFillRangeTables();
+            CellRange fillRange = _dragFillExtent.FillRange;
+            _savedFilledViewportCells = SaveRangeStates(_dragFillExtent.FillRange);
+            _savedStartViewportCells = SaveRangeStates(_dragFillExtent.StartRange);
+            SaveFillRangeTables();
         }
 
-        private void SaveFillRangeTables()
+        void SaveFillRangeTables()
         {
-            this._cachedTables = new List<SheetTable>();
-            SheetTable[] tables = this._workSheet.GetTables();
+            _cachedTables = new List<SheetTable>();
+            SheetTable[] tables = _workSheet.GetTables();
             if ((tables != null) && (tables.Length > 0))
             {
                 foreach (SheetTable table in tables)
                 {
-                    if (this._dragFillExtent.FillRange.Contains(table.Range))
+                    if (_dragFillExtent.FillRange.Contains(table.Range))
                     {
-                        this._cachedTables.Add(table);
+                        _cachedTables.Add(table);
                     }
                 }
             }
         }
 
-        private CopyMoveCellsInfo SaveRangeStates(CellRange range)
+        CopyMoveCellsInfo SaveRangeStates(CellRange range)
         {
-            CellRange range2 = this.AdjustRange(range);
+            CellRange range2 = AdjustRange(range);
             CopyMoveCellsInfo cellsInfo = new CopyMoveCellsInfo(range2.RowCount, range2.ColumnCount);
-            CopyMoveHelper.SaveViewportInfo(this._workSheet, cellsInfo, range2.Row, range2.Column, CopyToOption.All);
+            CopyMoveHelper.SaveViewportInfo(_workSheet, cellsInfo, range2.Row, range2.Column, CopyToOption.All);
             return cellsInfo;
         }
 
@@ -537,13 +537,13 @@ namespace Dt.Cells.UndoRedo
         /// </summary>
         public void SaveState()
         {
-            if (this._dragFillExtent.AutoFillType == AutoFillType.ClearValues)
+            if (_dragFillExtent.AutoFillType == AutoFillType.ClearValues)
             {
-                this.SaveDragClearState();
+                SaveDragClearState();
             }
             else
             {
-                this.SaveDragFillState();
+                SaveDragFillState();
             }
         }
 
@@ -558,35 +558,35 @@ namespace Dt.Cells.UndoRedo
             return ResourceStrings.undoActionAutoFill;
         }
 
-        private bool Undo(SheetView sheetView)
+        bool Undo(SheetView sheetView)
         {
             bool flag;
-            CellRange[] oldSelection = (this._workSheet.Selections != null) ? Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) this._workSheet.Selections) : null;
+            CellRange[] oldSelection = (_workSheet.Selections != null) ? Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) _workSheet.Selections) : null;
             List<CellData> oldValues = null;
-            CellRange fillRange = this._dragFillExtent.FillRange;
-            if ((this._savedFilledViewportCells != null) && this._savedFilledViewportCells.IsValueSaved())
+            CellRange fillRange = _dragFillExtent.FillRange;
+            if ((_savedFilledViewportCells != null) && _savedFilledViewportCells.IsValueSaved())
             {
-                oldValues = CopyMoveHelper.GetValues(this._workSheet, fillRange.Row, fillRange.Column, fillRange.RowCount, fillRange.ColumnCount);
+                oldValues = CopyMoveHelper.GetValues(_workSheet, fillRange.Row, fillRange.Column, fillRange.RowCount, fillRange.ColumnCount);
             }
-            if (this._dragFillExtent.AutoFillType == AutoFillType.ClearValues)
+            if (_dragFillExtent.AutoFillType == AutoFillType.ClearValues)
             {
-                flag = this.UndoDragClear(sheetView);
+                flag = UndoDragClear(sheetView);
             }
             else
             {
-                flag = this.UndoDragFill(sheetView);
+                flag = UndoDragFill(sheetView);
             }
             sheetView.CloseDragFillPopup();
-            if ((oldValues != null) && object.ReferenceEquals(sheetView.Worksheet, this._workSheet))
+            if ((oldValues != null) && object.ReferenceEquals(sheetView.Worksheet, _workSheet))
             {
                 CopyMoveHelper.RaiseValueChanged(sheetView, fillRange.Row, fillRange.Column, fillRange.RowCount, fillRange.ColumnCount, oldValues);
             }
-            CellRange[] newSelection = (this._workSheet.Selections != null) ? Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) this._workSheet.Selections) : null;
+            CellRange[] newSelection = (_workSheet.Selections != null) ? Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) _workSheet.Selections) : null;
             if (sheetView.RaiseSelectionChanging(oldSelection, newSelection))
             {
                 sheetView.RaiseSelectionChanged();
             }
-            sheetView.RefreshCellAreaViewport(0, 0, this._workSheet.RowCount, this._workSheet.ColumnCount);
+            sheetView.RefreshCellAreaViewport(0, 0, _workSheet.RowCount, _workSheet.ColumnCount);
             return flag;
         }
 
@@ -603,15 +603,15 @@ namespace Dt.Cells.UndoRedo
             SheetView sheetView = parameter as SheetView;
             try
             {
-                flag = this.Undo(sheetView);
+                flag = Undo(sheetView);
             }
             finally
             {
-                this._workSheet.ResumeCalcService();
+                _workSheet.ResumeCalcService();
                 base.ResumeInvalidate(sheetView);
             }
             sheetView.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
-            IList<SpreadChartBase> list = Dt.Cells.Data.SpreadChartUtility.GetChartShapeAffectedCellChanged(this._workSheet, this._dragFillExtent.FillRange.Row, this._dragFillExtent.FillRange.Column, this._dragFillExtent.FillRange.RowCount, this._dragFillExtent.FillRange.ColumnCount);
+            IList<SpreadChartBase> list = Dt.Cells.Data.SpreadChartUtility.GetChartShapeAffectedCellChanged(_workSheet, _dragFillExtent.FillRange.Row, _dragFillExtent.FillRange.Column, _dragFillExtent.FillRange.RowCount, _dragFillExtent.FillRange.ColumnCount);
             if (list.Count > 0)
             {
                 sheetView.InvalidateFloatingObjects(Enumerable.ToArray<SpreadChartBase>((IEnumerable<SpreadChartBase>) list));
@@ -621,41 +621,41 @@ namespace Dt.Cells.UndoRedo
             return flag;
         }
 
-        private bool UndoDragClear(SheetView sheetView)
+        bool UndoDragClear(SheetView sheetView)
         {
-            bool flag = this._clearValueUndoAction.Undo(sheetView);
-            this.UndoFillRangeTables();
-            sheetView.SetActiveCell(Math.Max(0, this._dragFillExtent.StartRange.Row), Math.Max(0, this._dragFillExtent.StartRange.Column), true);
-            this._workSheet.SetSelection(this._dragFillExtent.StartRange);
+            bool flag = _clearValueUndoAction.Undo(sheetView);
+            UndoFillRangeTables();
+            sheetView.SetActiveCell(Math.Max(0, _dragFillExtent.StartRange.Row), Math.Max(0, _dragFillExtent.StartRange.Column), true);
+            _workSheet.SetSelection(_dragFillExtent.StartRange);
             return flag;
         }
 
-        private bool UndoDragFill(SheetView sheetView)
+        bool UndoDragFill(SheetView sheetView)
         {
             base.SuspendInvalidate(sheetView);
-            this._workSheet.SuspendCalcService();
+            _workSheet.SuspendCalcService();
             try
             {
-                this.UndoRangeStates(this._savedFilledViewportCells, this._dragFillExtent.FillRange);
-                this.UndoRangeStates(this._savedStartViewportCells, this._dragFillExtent.StartRange);
-                this.UndoFillRangeTables();
-                sheetView.SetActiveCell(Math.Max(0, this._dragFillExtent.StartRange.Row), Math.Max(0, this._dragFillExtent.StartRange.Column), true);
-                this._workSheet.SetSelection(this._dragFillExtent.StartRange);
+                UndoRangeStates(_savedFilledViewportCells, _dragFillExtent.FillRange);
+                UndoRangeStates(_savedStartViewportCells, _dragFillExtent.StartRange);
+                UndoFillRangeTables();
+                sheetView.SetActiveCell(Math.Max(0, _dragFillExtent.StartRange.Row), Math.Max(0, _dragFillExtent.StartRange.Column), true);
+                _workSheet.SetSelection(_dragFillExtent.StartRange);
             }
             finally
             {
-                this._workSheet.ResumeCalcService();
+                _workSheet.ResumeCalcService();
                 base.ResumeInvalidate(sheetView);
             }
             sheetView.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
             return true;
         }
 
-        private void UndoFillRangeTables()
+        void UndoFillRangeTables()
         {
-            if ((this._cachedTables != null) && (this._cachedTables.Count > 0))
+            if ((_cachedTables != null) && (_cachedTables.Count > 0))
             {
-                foreach (SheetTable table in this._cachedTables)
+                foreach (SheetTable table in _cachedTables)
                 {
                     CellRange range = table.Range;
                     int row = range.Row;
@@ -671,7 +671,7 @@ namespace Dt.Cells.UndoRedo
                     {
                         rowCount--;
                     }
-                    SheetTable table2 = this._workSheet.AddTable(table.Name, row, column, rowCount, columnCount, table.Style);
+                    SheetTable table2 = _workSheet.AddTable(table.Name, row, column, rowCount, columnCount, table.Style);
                     table2.BandedColumns = table.BandedColumns;
                     table2.BandedRows = table.BandedRows;
                     table2.HighlightFirstColumn = table.HighlightFirstColumn;
@@ -682,10 +682,10 @@ namespace Dt.Cells.UndoRedo
             }
         }
 
-        private void UndoRangeStates(CopyMoveCellsInfo savedInfo, CellRange range)
+        void UndoRangeStates(CopyMoveCellsInfo savedInfo, CellRange range)
         {
-            CellRange range2 = this.AdjustRange(range);
-            CopyMoveHelper.UndoCellsInfo(this._workSheet, savedInfo, range2.Row, range2.Column, SheetArea.Cells);
+            CellRange range2 = AdjustRange(range);
+            CopyMoveHelper.UndoCellsInfo(_workSheet, savedInfo, range2.Row, range2.Column, SheetArea.Cells);
         }
 
         /// <summary>

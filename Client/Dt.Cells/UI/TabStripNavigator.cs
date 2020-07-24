@@ -22,7 +22,7 @@ namespace Dt.Cells.UI
     /// </summary>
     public partial class TabStripNavigator : Control
     {
-        private string[] buttonNames = new string[] { "First", "Previous", "Next", "Last" };
+        string[] buttonNames = new string[] { "First", "Previous", "Next", "Last" };
 
         internal event EventHandler<NavigationButtonClickEventArgs> ButtonClick;
 
@@ -40,7 +40,7 @@ namespace Dt.Cells.UI
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            foreach (string str in this.buttonNames)
+            foreach (string str in buttonNames)
             {
                 ButtonBase templateChild = base.GetTemplateChild(str) as ButtonBase;
                 if (templateChild != null)
@@ -51,32 +51,32 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void OnButtonClick(object sender, RoutedEventArgs e)
+        void OnButtonClick(object sender, RoutedEventArgs e)
         {
             string name = ((ButtonBase)sender).Name;
             if ("First".Equals(name))
             {
-                this.RaiseButtonClick(new NavigationButtonClickEventArgs(ButtonType.First));
+                RaiseButtonClick(new NavigationButtonClickEventArgs(ButtonType.First));
             }
             else if ("Previous".Equals(name))
             {
-                this.RaiseButtonClick(new NavigationButtonClickEventArgs(ButtonType.Previous));
+                RaiseButtonClick(new NavigationButtonClickEventArgs(ButtonType.Previous));
             }
             else if ("Next".Equals(name))
             {
-                this.RaiseButtonClick(new NavigationButtonClickEventArgs(ButtonType.Next));
+                RaiseButtonClick(new NavigationButtonClickEventArgs(ButtonType.Next));
             }
             else if ("Last".Equals(name))
             {
-                this.RaiseButtonClick(new NavigationButtonClickEventArgs(ButtonType.Last));
+                RaiseButtonClick(new NavigationButtonClickEventArgs(ButtonType.Last));
             }
         }
 
-        private void RaiseButtonClick(NavigationButtonClickEventArgs e)
+        void RaiseButtonClick(NavigationButtonClickEventArgs e)
         {
-            if (this.ButtonClick != null)
+            if (ButtonClick != null)
             {
-                this.ButtonClick(this, e);
+                ButtonClick(this, e);
             }
         }
     }

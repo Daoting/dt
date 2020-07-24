@@ -25,17 +25,17 @@ namespace Dt.Cells.UI
         protected Rectangle _borderBottom;
         protected Rectangle _borderRight;
         protected SheetView _sheetView;
-        private Brush borderBrush;
+        Brush borderBrush;
         internal const double PADDING = 2.0;
 
         public GcGroupBase(SheetView sheetView)
         {
             Action action = null;
             Action action2 = null;
-            this._sheetView = sheetView;
-            if ((this._sheetView != null) && (this._sheetView.RangeGroupBackground != null))
+            _sheetView = sheetView;
+            if ((_sheetView != null) && (_sheetView.RangeGroupBackground != null))
             {
-                base.Background = this._sheetView.RangeGroupBackground;
+                base.Background = _sheetView.RangeGroupBackground;
             }
             else if (Application.Current.RequestedTheme == ApplicationTheme.Light)
             {
@@ -63,30 +63,30 @@ namespace Dt.Cells.UI
         {
             double x;
             double y;
-            if (this._borderRight != null)
+            if (_borderRight != null)
             {
-                x = (this.Location.X + finalSize.Width) - 1.0;
-                y = this.Location.Y;
-                this._borderRight.Arrange(new Windows.Foundation.Rect(this.PointToClient(new Windows.Foundation.Point(x, y)), new Windows.Foundation.Size(1.0, finalSize.Height)));
+                x = (Location.X + finalSize.Width) - 1.0;
+                y = Location.Y;
+                _borderRight.Arrange(new Windows.Foundation.Rect(PointToClient(new Windows.Foundation.Point(x, y)), new Windows.Foundation.Size(1.0, finalSize.Height)));
             }
-            if (this._borderBottom != null)
+            if (_borderBottom != null)
             {
-                x = this.Location.X;
-                y = (this.Location.Y + finalSize.Height) - 1.0;
-                this._borderBottom.Arrange(new Windows.Foundation.Rect(this.PointToClient(new Windows.Foundation.Point(x, y)), new Windows.Foundation.Size(finalSize.Width, 1.0)));
+                x = Location.X;
+                y = (Location.Y + finalSize.Height) - 1.0;
+                _borderBottom.Arrange(new Windows.Foundation.Rect(PointToClient(new Windows.Foundation.Point(x, y)), new Windows.Foundation.Size(finalSize.Width, 1.0)));
             }
         }
 
         protected override Windows.Foundation.Size ArrangeOverride(Windows.Foundation.Size finalSize)
         {
-            this.ArrangeBorderLines(finalSize);
+            ArrangeBorderLines(finalSize);
             return base.ArrangeOverride(finalSize);
         }
 
         protected virtual double CalcMinWidthOrHeight(Windows.Foundation.Size finalSize, Orientation orientation)
         {
             double num = 0.0;
-            int maxLevel = this.GetMaxLevel(orientation);
+            int maxLevel = GetMaxLevel(orientation);
             if (orientation == Orientation.Horizontal)
             {
                 num = (finalSize.Width - 4.0) / ((double) (maxLevel + 2));
@@ -101,15 +101,15 @@ namespace Dt.Cells.UI
         protected virtual int GetMaxLevel(Orientation orientation)
         {
             int maxLevel = -1;
-            if (this._sheetView.Worksheet != null)
+            if (_sheetView.Worksheet != null)
             {
                 if (orientation == Orientation.Horizontal)
                 {
-                    return this._sheetView.Worksheet.RowRangeGroup.GetMaxLevel();
+                    return _sheetView.Worksheet.RowRangeGroup.GetMaxLevel();
                 }
                 if (orientation == Orientation.Vertical)
                 {
-                    maxLevel = this._sheetView.Worksheet.ColumnRangeGroup.GetMaxLevel();
+                    maxLevel = _sheetView.Worksheet.ColumnRangeGroup.GetMaxLevel();
                 }
             }
             return maxLevel;
@@ -117,45 +117,45 @@ namespace Dt.Cells.UI
 
         protected virtual void MeasureBorderLines(Windows.Foundation.Size availableSize)
         {
-            this.MeasureRightBorder(availableSize);
-            this.MeasureBottomBorder(availableSize);
+            MeasureRightBorder(availableSize);
+            MeasureBottomBorder(availableSize);
         }
 
         protected void MeasureBottomBorder(Windows.Foundation.Size availableSize)
         {
-            if (this._borderBottom == null)
+            if (_borderBottom == null)
             {
-                this._borderBottom = new Rectangle();
+                _borderBottom = new Rectangle();
             }
             Dt.Cells.Data.UIAdaptor.InvokeSync(delegate {
-                this._borderBottom.Fill = this.BorderBrush;
+                _borderBottom.Fill = BorderBrush;
             });
-            if (!base.Children.Contains(this._borderBottom))
+            if (!base.Children.Contains(_borderBottom))
             {
-                base.Children.Add(this._borderBottom);
+                base.Children.Add(_borderBottom);
             }
-            this._borderBottom.Measure(new Windows.Foundation.Size(availableSize.Width, 1.0));
+            _borderBottom.Measure(new Windows.Foundation.Size(availableSize.Width, 1.0));
         }
 
         protected void MeasureRightBorder(Windows.Foundation.Size availableSize)
         {
-            if (this._borderRight == null)
+            if (_borderRight == null)
             {
-                this._borderRight = new Rectangle();
+                _borderRight = new Rectangle();
             }
             Dt.Cells.Data.UIAdaptor.InvokeSync(delegate {
-                this._borderRight.Fill = this.BorderBrush;
+                _borderRight.Fill = BorderBrush;
             });
-            if (!base.Children.Contains(this._borderRight))
+            if (!base.Children.Contains(_borderRight))
             {
-                base.Children.Add(this._borderRight);
+                base.Children.Add(_borderRight);
             }
-            this._borderRight.Measure(new Windows.Foundation.Size(1.0, availableSize.Height));
+            _borderRight.Measure(new Windows.Foundation.Size(1.0, availableSize.Height));
         }
 
         public Windows.Foundation.Point PointToClient(Windows.Foundation.Point point)
         {
-            return new Windows.Foundation.Point(point.X - this.Location.X, point.Y - this.Location.Y);
+            return new Windows.Foundation.Point(point.X - Location.X, point.Y - Location.Y);
         }
 
 #if !UWP
@@ -166,21 +166,21 @@ namespace Dt.Cells.UI
             get
             {
                 Action action = null;
-                if ((this._sheetView != null) && (this._sheetView.RangeGroupBorderBrush != null))
+                if ((_sheetView != null) && (_sheetView.RangeGroupBorderBrush != null))
                 {
-                    return this._sheetView.RangeGroupBorderBrush;
+                    return _sheetView.RangeGroupBorderBrush;
                 }
-                if (this.borderBrush == null)
+                if (borderBrush == null)
                 {
                     if (action == null)
                     {
                         action = delegate {
-                            this.borderBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(0xff, 160, 160, 160));
+                            borderBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(0xff, 160, 160, 160));
                         };
                     }
                     Dt.Cells.Data.UIAdaptor.InvokeSync(action);
                 }
-                return this.borderBrush;
+                return borderBrush;
             }
         }
 

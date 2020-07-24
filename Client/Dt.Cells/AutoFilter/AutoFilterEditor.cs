@@ -13,13 +13,13 @@ namespace Dt.Cells.UI
 {
     public partial class AutoFilterEditor :Control
     {
-        private Button CancelButton { get; set; }
-        private ItemsControl ItemsPresenter { get; set; }
-        private Button OKButton { get; set; }
+        Button CancelButton { get; set; }
+        ItemsControl ItemsPresenter { get; set; }
+        Button OKButton { get; set; }
 
         public event EventHandler CancelClick;
         public event EventHandler OKClick;
-        private AutoFilterItemCollection _filterItems;
+        AutoFilterItemCollection _filterItems;
  
         public AutoFilterEditor()
         {
@@ -27,17 +27,17 @@ namespace Dt.Cells.UI
             base.IsTabStop=false;
         }
 
-        private int GetFocusedItemIndex()
+        int GetFocusedItemIndex()
         {
-            if (ElementTreeHelper.IsKeyboardFocusWithin(this.ItemsPresenter))
+            if (ElementTreeHelper.IsKeyboardFocusWithin(ItemsPresenter))
             {
                 return 0;
             }
-            if (ElementTreeHelper.IsFocused(this.OKButton))
+            if (ElementTreeHelper.IsFocused(OKButton))
             {
                 return 1;
             }
-            if (ElementTreeHelper.IsFocused(this.CancelButton))
+            if (ElementTreeHelper.IsFocused(CancelButton))
             {
                 return 2;
             }
@@ -45,38 +45,38 @@ namespace Dt.Cells.UI
         }
 
  
-        private void OnAllFilterItemChecked(object sender, EventArgs e)
+        void OnAllFilterItemChecked(object sender, EventArgs e)
         {
-            if (this.OKButton != null)
+            if (OKButton != null)
             {
-                this.OKButton.IsEnabled=true;
+                OKButton.IsEnabled=true;
             }
         }
 
-        private void OnAllFilterItemUnchecked(object sender, EventArgs e)
+        void OnAllFilterItemUnchecked(object sender, EventArgs e)
         {
-            if (this.OKButton != null)
+            if (OKButton != null)
             {
-                this.OKButton.IsEnabled=false;
+                OKButton.IsEnabled=false;
             }
         }
 
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            this.ItemsPresenter = base.GetTemplateChild("ItemsPresenter") as ItemsControl;
-            if (this.ItemsPresenter != null)
+            ItemsPresenter = base.GetTemplateChild("ItemsPresenter") as ItemsControl;
+            if (ItemsPresenter != null)
             {
-                this.ItemsPresenter.ItemsSource=this._filterItems;
+                ItemsPresenter.ItemsSource=_filterItems;
             }
-            this.OKButton = base.GetTemplateChild("OKButton") as Button;
-            this.CancelButton = base.GetTemplateChild("CancelButton") as Button;
-            if (this.OKButton != null)
+            OKButton = base.GetTemplateChild("OKButton") as Button;
+            CancelButton = base.GetTemplateChild("CancelButton") as Button;
+            if (OKButton != null)
             {
-                this.OKButton.Content=ResourceStrings.OK;
-                if ((this.AutoFilterItems != null) && this.AutoFilterItems.IsAllUnChecked)
+                OKButton.Content=ResourceStrings.OK;
+                if ((AutoFilterItems != null) && AutoFilterItems.IsAllUnChecked)
                 {
-                    this.OKButton.IsEnabled = false;
+                    OKButton.IsEnabled = false;
                 }
                 //hdt
                 OKButton.Click += (sender,e)=>
@@ -84,9 +84,9 @@ namespace Dt.Cells.UI
                     OnOKClick();
                 };
             }
-            if (this.CancelButton != null)
+            if (CancelButton != null)
             {
-                this.CancelButton.Content = ResourceStrings.Cancel;
+                CancelButton.Content = ResourceStrings.Cancel;
                 //hdt
                 CancelButton.Click +=(sender ,e)=>
                 {
@@ -95,19 +95,19 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void OnOKClick()
+        void OnOKClick()
         {
-            if (this.OKClick != null)
+            if (OKClick != null)
             {
-                this.OKClick(this, EventArgs.Empty);
+                OKClick(this, EventArgs.Empty);
             }
         }
 
-        private void OnCancelClick()
+        void OnCancelClick()
         {
-            if (this.CancelClick != null)
+            if (CancelClick != null)
             {
-                this.CancelClick(this, EventArgs.Empty);
+                CancelClick(this, EventArgs.Empty);
             }
         } 
 
@@ -115,18 +115,18 @@ namespace Dt.Cells.UI
         {
             if (forward)
             {
-                this.ItemsPresenter.Focus(FocusState.Programmatic);
+                ItemsPresenter.Focus(FocusState.Programmatic);
             }
             else
             {
-                this.CancelButton.Focus(FocusState.Programmatic);
+                CancelButton.Focus(FocusState.Programmatic);
             }
         }
 
-        private bool SelectNextItem(bool forward)
+        bool SelectNextItem(bool forward)
         {
             int num = 3;
-            int focusedItemIndex = this.GetFocusedItemIndex();
+            int focusedItemIndex = GetFocusedItemIndex();
             if ((focusedItemIndex == -1) && !forward)
             {
                 focusedItemIndex = num;
@@ -135,19 +135,19 @@ namespace Dt.Cells.UI
             do
             {
                 num3 += forward ? 1 : -1;
-                if ((num3 == 0) && this.ItemsPresenter.IsEnabled)
+                if ((num3 == 0) && ItemsPresenter.IsEnabled)
                 {
-                    this.ItemsPresenter.Focus(FocusState.Programmatic);
+                    ItemsPresenter.Focus(FocusState.Programmatic);
                     return true;
                 }
-                if ((num3 == 1) && this.OKButton.IsEnabled)
+                if ((num3 == 1) && OKButton.IsEnabled)
                 {
-                    this.OKButton.Focus(FocusState.Programmatic);
+                    OKButton.Focus(FocusState.Programmatic);
                     return true;
                 }
-                if ((num3 == 2) && this.CancelButton.IsEnabled)
+                if ((num3 == 2) && CancelButton.IsEnabled)
                 {
-                    this.CancelButton.Focus(FocusState.Programmatic);
+                    CancelButton.Focus(FocusState.Programmatic);
                     return true;
                 }
             }
@@ -157,25 +157,25 @@ namespace Dt.Cells.UI
 
         internal AutoFilterItemCollection AutoFilterItems
         {
-            get { return  this._filterItems; }
+            get { return  _filterItems; }
             set
             {
-                if (!object.Equals(this._filterItems, value))
+                if (!object.Equals(_filterItems, value))
                 {
-                    if (this._filterItems != null)
+                    if (_filterItems != null)
                     {
-                        this._filterItems.AllItemUnchecked -= new EventHandler(this.OnAllFilterItemUnchecked);
-                        this._filterItems.AllItemChecked -= new EventHandler(this.OnAllFilterItemChecked);
+                        _filterItems.AllItemUnchecked -= new EventHandler(OnAllFilterItemUnchecked);
+                        _filterItems.AllItemChecked -= new EventHandler(OnAllFilterItemChecked);
                     }
-                    this._filterItems = value;
-                    if (this.ItemsPresenter != null)
+                    _filterItems = value;
+                    if (ItemsPresenter != null)
                     {
-                        this.ItemsPresenter.ItemsSource = value;
+                        ItemsPresenter.ItemsSource = value;
                     }
-                    if (this._filterItems != null)
+                    if (_filterItems != null)
                     {
-                        this._filterItems.AllItemUnchecked += new EventHandler(this.OnAllFilterItemUnchecked);
-                        this._filterItems.AllItemChecked += new EventHandler(this.OnAllFilterItemChecked);
+                        _filterItems.AllItemUnchecked += new EventHandler(OnAllFilterItemUnchecked);
+                        _filterItems.AllItemChecked += new EventHandler(OnAllFilterItemChecked);
                     }
                 }
             }

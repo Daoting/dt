@@ -22,7 +22,7 @@ namespace Dt.Cells.UI
 {
     internal class FormulaFunctionList
     {
-        private static Dictionary<string, FormulaFunction> _allList = new Dictionary<string, FormulaFunction>();
+        static Dictionary<string, FormulaFunction> _allList = new Dictionary<string, FormulaFunction>();
 
         static FormulaFunctionList()
         {
@@ -49,7 +49,7 @@ namespace Dt.Cells.UI
             ReadFormulaInformation();
         }
 
-        private static void ReadFormulaInformation()
+        static void ReadFormulaInformation()
         {
             Stream manifestResourceStream = typeof(FormulaFunctionList).GetTypeInfo().Assembly.GetManifestResourceStream("Dt.Cells.Res.FunctionInformation.zh_CN.xml");
             StreamReader reader = new StreamReader(manifestResourceStream);

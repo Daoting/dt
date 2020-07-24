@@ -16,7 +16,7 @@ namespace Dt.Cells.UI
 {
     internal class SR : SR<ResourceStrings>
     {
-        private static readonly string _resourcePrefix = "ms-appx:///Dt.Cells/Icons/";
+        static readonly string _resourcePrefix = "ms-appx:///Dt.Cells/Icons/";
 
         public static BitmapImage GetImage(string resourceId)
         {

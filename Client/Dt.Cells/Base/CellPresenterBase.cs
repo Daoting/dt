@@ -26,19 +26,19 @@ namespace Dt.Cells.UI
     [TemplateVisualState(Name="Unselected", GroupName="SelectionStates"), TemplatePart(Name="Root", Type=typeof(CellBackgroundPanel)), TemplateVisualState(Name="Selected", GroupName="SelectionStates")]
     public abstract partial class CellPresenterBase : Control
     {
-        private Cell _bindingCell;
-        private Brush _cachedBackground;
-        private Dt.Cells.UI.CellLayout _cellLayout;
-        private ICellType _cellType;
-        private int _column = -1;
-        private FrameworkElement _content;
-        private InvalidDataPresenterInfo _dataValidationInvalidPresenterInfo;
-        private FilterButton _filterButton;
-        private Dt.Cells.UI.FilterButtonInfo _filterButtonInfo;
-        private bool _isContentAddedToPanel;
-        private bool _isHiddenForEditing;
-        private bool _isInvalidating;
-        private Dt.Cells.UI.CellOverflowLayout _overflowLayout;
+        Cell _bindingCell;
+        Brush _cachedBackground;
+        Dt.Cells.UI.CellLayout _cellLayout;
+        ICellType _cellType;
+        int _column = -1;
+        FrameworkElement _content;
+        InvalidDataPresenterInfo _dataValidationInvalidPresenterInfo;
+        FilterButton _filterButton;
+        Dt.Cells.UI.FilterButtonInfo _filterButtonInfo;
+        bool _isContentAddedToPanel;
+        bool _isHiddenForEditing;
+        bool _isInvalidating;
+        Dt.Cells.UI.CellOverflowLayout _overflowLayout;
         internal CellBackgroundPanel _rootPanel;
         internal const int ConditionalZIndex = 500;
         internal const int ContentZIndex = 0x7d0;
@@ -54,27 +54,27 @@ namespace Dt.Cells.UI
         {
             base.DefaultStyleKey = typeof(CellPresenterBase);
             base.Padding = new Windows.UI.Xaml.Thickness(2.0, 0.0, 2.0, 0.0);
-            this._cellType = new BaseCellType();
-            this.ShowContent = true;
+            _cellType = new BaseCellType();
+            ShowContent = true;
         }
 
         internal virtual void ApplyState()
         {
-            this.SetBackground();
-            if (this._filterButton != null)
+            SetBackground();
+            if (_filterButton != null)
             {
-                this._filterButton.ApplyState();
+                _filterButton.ApplyState();
             }
         }
 
-        private Windows.Foundation.Size CalcStringSize(Windows.Foundation.Size maxSize, bool allowWrap, string text = null)
+        Windows.Foundation.Size CalcStringSize(Windows.Foundation.Size maxSize, bool allowWrap, string text = null)
         {
-            if (this._cellType.HasEditingElement())
+            if (_cellType.HasEditingElement())
             {
-                TextBox editingElement = this._cellType.GetEditingElement() as TextBox;
+                TextBox editingElement = _cellType.GetEditingElement() as TextBox;
                 if ((editingElement != null) && !string.IsNullOrEmpty(editingElement.Text))
                 {
-                    Cell bindingCell = this.BindingCell;
+                    Cell bindingCell = BindingCell;
                     if (bindingCell != null)
                     {
                         FontFamily actualFontFamily = bindingCell.ActualFontFamily;
@@ -83,12 +83,12 @@ namespace Dt.Cells.UI
                             actualFontFamily = editingElement.FontFamily;
                         }
                         object textFormattingMode = null;
-                        double fontSize = bindingCell.ActualFontSize * this.ZoomFactor;
+                        double fontSize = bindingCell.ActualFontSize * ZoomFactor;
                         if (fontSize < 0.0)
                         {
                             fontSize = editingElement.FontSize;
                         }
-                        return MeasureHelper.MeasureText((text == null) ? editingElement.Text : text, actualFontFamily, fontSize, bindingCell.ActualFontStretch, bindingCell.ActualFontStyle, bindingCell.ActualFontWeight, maxSize, allowWrap, textFormattingMode, this.SheetView.UseLayoutRounding, this.ZoomFactor);
+                        return MeasureHelper.MeasureText((text == null) ? editingElement.Text : text, actualFontFamily, fontSize, bindingCell.ActualFontStretch, bindingCell.ActualFontStyle, bindingCell.ActualFontWeight, maxSize, allowWrap, textFormattingMode, SheetView.UseLayoutRounding, ZoomFactor);
                     }
                 }
             }
@@ -97,12 +97,12 @@ namespace Dt.Cells.UI
 
         internal virtual void CleanUpBeforeDiscard()
         {
-            this.DetachEvents();
+            DetachEvents();
         }
 
         internal virtual FrameworkElement CreateContent()
         {
-            FrameworkElement displayElement = this._cellType.GetDisplayElement();
+            FrameworkElement displayElement = _cellType.GetDisplayElement();
             if (displayElement != null)
             {
                 Canvas.SetZIndex(displayElement, 0x7d0);
@@ -116,32 +116,32 @@ namespace Dt.Cells.UI
 
         internal Cell GetBindingCell()
         {
-            if ((this.OwningRow == null) || (this.OwningRow.OwningPresenter == null))
+            if ((OwningRow == null) || (OwningRow.OwningPresenter == null))
             {
                 return null;
             }
-            int row = this.Row;
-            int column = this.Column;
-            if (this._cellLayout != null)
+            int row = Row;
+            int column = Column;
+            if (_cellLayout != null)
             {
-                row = this._cellLayout.Row;
-                column = this._cellLayout.Column;
+                row = _cellLayout.Row;
+                column = _cellLayout.Column;
             }
-            return this.OwningRow.OwningPresenter.CellCache.GetCachedCell(row, column);
+            return OwningRow.OwningPresenter.CellCache.GetCachedCell(row, column);
         }
 
         internal virtual FrameworkElement GetEditingElement()
         {
-            if (this._cellType == null)
+            if (_cellType == null)
             {
                 return null;
             }
-            if (this._cellType is IFormulaEditingSupport)
+            if (_cellType is IFormulaEditingSupport)
             {
-                ((IFormulaEditingSupport) this._cellType).CanUserEditFormula = this.SheetView.CanUserEditFormula;
+                ((IFormulaEditingSupport) _cellType).CanUserEditFormula = SheetView.CanUserEditFormula;
             }
-            this._cellType.InitEditingElement();
-            FrameworkElement editingElement = this._cellType.GetEditingElement();
+            _cellType.InitEditingElement();
+            FrameworkElement editingElement = _cellType.GetEditingElement();
             if ((editingElement != null) && (editingElement is EditingElement))
             {
                 (editingElement as EditingElement).Owner = this;
@@ -151,19 +151,19 @@ namespace Dt.Cells.UI
 
         internal Windows.Foundation.Size GetPreferredEditorSize(Windows.Foundation.Size maxSize, Windows.Foundation.Size cellContentSize, HorizontalAlignment alignment, float indent)
         {
-            if (((this.OwningRow == null) ? null : this.OwningRow.OwningPresenter) == null)
+            if (((OwningRow == null) ? null : OwningRow.OwningPresenter) == null)
             {
                 return new Windows.Foundation.Size();
             }
-            if (!this.OwningRow.OwningPresenter.Sheet.CanEditOverflow || (this._cellType == null))
+            if (!OwningRow.OwningPresenter.Sheet.CanEditOverflow || (_cellType == null))
             {
                 return new Windows.Foundation.Size(cellContentSize.Width, cellContentSize.Height);
             }
             double num = Math.Min(maxSize.Width, cellContentSize.Width);
-            Windows.Foundation.Size size = MeasureHelper.ConvertTextSizeToExcelCellSize(this.CalcStringSize(maxSize, true, null), this.ZoomFactor);
+            Windows.Foundation.Size size = MeasureHelper.ConvertTextSizeToExcelCellSize(CalcStringSize(maxSize, true, null), ZoomFactor);
             size.Width += 2.0;
             string text = "T";
-            Windows.Foundation.Size size2 = this.CalcStringSize(new Windows.Foundation.Size(2147483647.0, 2147483647.0), false, text);
+            Windows.Foundation.Size size2 = CalcStringSize(new Windows.Foundation.Size(2147483647.0, 2147483647.0), false, text);
             size.Width += size2.Width;
             if (((alignment == HorizontalAlignment.Left) || (alignment == HorizontalAlignment.Right)) && (num < (size.Width + indent)))
             {
@@ -174,22 +174,22 @@ namespace Dt.Cells.UI
 
         internal void HideForEditing()
         {
-            if (!this._isHiddenForEditing)
+            if (!_isHiddenForEditing)
             {
-                this._isHiddenForEditing = true;
-                this.RootPanel.Visibility = Visibility.Collapsed;
+                _isHiddenForEditing = true;
+                RootPanel.Visibility = Visibility.Collapsed;
             }
         }
 
-        private void InitCellType()
+        void InitCellType()
         {
-            if (this._cellType != null)
+            if (_cellType != null)
             {
-                this._cellType.DataContext = this.BindingCell;
-                IZoomSupport support = this._cellType as IZoomSupport;
+                _cellType.DataContext = BindingCell;
+                IZoomSupport support = _cellType as IZoomSupport;
                 if (support != null)
                 {
-                    support.ZoomFactor = this.ZoomFactor;
+                    support.ZoomFactor = ZoomFactor;
                 }
             }
         }
@@ -199,18 +199,18 @@ namespace Dt.Cells.UI
 #endif
         internal virtual void Invalidate()
         {
-            this._isInvalidating = true;
+            _isInvalidating = true;
             base.InvalidateMeasure();
         }
 
         internal bool JudgeWordWrap(Windows.Foundation.Size maxSize, Windows.Foundation.Size cellContentSize, HorizontalAlignment alignment, float indent)
         {
-            if (((((this.OwningRow == null) ? null : this.OwningRow.OwningPresenter) == null) || !this.OwningRow.OwningPresenter.Sheet.CanEditOverflow) || (this._cellType == null))
+            if (((((OwningRow == null) ? null : OwningRow.OwningPresenter) == null) || !OwningRow.OwningPresenter.Sheet.CanEditOverflow) || (_cellType == null))
             {
                 return false;
             }
             double num = Math.Min(maxSize.Width, cellContentSize.Width);
-            Windows.Foundation.Size size = MeasureHelper.ConvertTextSizeToExcelCellSize(this.CalcStringSize(new Windows.Foundation.Size(2147483647.0, 2147483647.0), false, null), this.ZoomFactor);
+            Windows.Foundation.Size size = MeasureHelper.ConvertTextSizeToExcelCellSize(CalcStringSize(new Windows.Foundation.Size(2147483647.0, 2147483647.0), false, null), ZoomFactor);
             size.Width += 2.0;
             if (((alignment == HorizontalAlignment.Left) || (alignment == HorizontalAlignment.Right)) && (num < (size.Width + indent)))
             {
@@ -226,38 +226,38 @@ namespace Dt.Cells.UI
         /// <returns> The size of the control, up to the maximum specified by the constraint.</returns>
         protected override Windows.Foundation.Size MeasureOverride(Windows.Foundation.Size constraint)
         {
-            if (this._isHiddenForEditing)
+            if (_isHiddenForEditing)
             {
-                if (!this.OwningRow.OwningPresenter.IsEditing())
+                if (!OwningRow.OwningPresenter.IsEditing())
                 {
-                    this.UnHideForEditing();
+                    UnHideForEditing();
                 }
                 else
                 {
-                    int editingRowIndex = this.OwningRow.OwningPresenter.EditingContainer.EditingRowIndex;
-                    int editingColumnIndex = this.OwningRow.OwningPresenter.EditingContainer.EditingColumnIndex;
-                    if ((editingRowIndex != this.Row) || (editingColumnIndex != this.Column))
+                    int editingRowIndex = OwningRow.OwningPresenter.EditingContainer.EditingRowIndex;
+                    int editingColumnIndex = OwningRow.OwningPresenter.EditingContainer.EditingColumnIndex;
+                    if ((editingRowIndex != Row) || (editingColumnIndex != Column))
                     {
-                        this.UnHideForEditing();
+                        UnHideForEditing();
                     }
                 }
             }
-            if (this._isInvalidating)
+            if (_isInvalidating)
             {
-                this.Reset();
+                Reset();
             }
-            if (this._content != null)
+            if (_content != null)
             {
-                if (!this.ShowContent && (this._content.Visibility == Visibility.Visible))
+                if (!ShowContent && (_content.Visibility == Visibility.Visible))
                 {
-                    this._content.Visibility = Visibility.Collapsed;
+                    _content.Visibility = Visibility.Collapsed;
                 }
-                else if (this.ShowContent && (this._content.Visibility == Visibility.Collapsed))
+                else if (ShowContent && (_content.Visibility == Visibility.Collapsed))
                 {
-                    this._content.Visibility = Visibility.Visible;
+                    _content.Visibility = Visibility.Visible;
                 }
             }
-            this._isInvalidating = false;
+            _isInvalidating = false;
             return base.MeasureOverride(constraint);
         }
 
@@ -266,132 +266,132 @@ namespace Dt.Cells.UI
         /// </summary>
         protected override void OnApplyTemplate()
         {
-            if (this._rootPanel != null)
+            if (_rootPanel != null)
             {
-                this._rootPanel.Children.Clear();
-                this._isContentAddedToPanel = false;
+                _rootPanel.Children.Clear();
+                _isContentAddedToPanel = false;
             }
-            this._rootPanel = base.GetTemplateChild("Root") as CellBackgroundPanel;
-            if (this._rootPanel != null)
+            _rootPanel = base.GetTemplateChild("Root") as CellBackgroundPanel;
+            if (_rootPanel != null)
             {
-                this._rootPanel.OwneringCell = this;
+                _rootPanel.OwneringCell = this;
             }
-            this.PrepareCellForDisplay();
+            PrepareCellForDisplay();
             base.OnApplyTemplate();
         }
 
-        private void OnBindingValidationError(object sender, ValidationErrorEventArgs e)
+        void OnBindingValidationError(object sender, ValidationErrorEventArgs e)
         {
             throw new NotImplementedException();
         }
 
-        private void PrepareCellForDisplay()
+        void PrepareCellForDisplay()
         {
-            if (this.BindingCell != null)
+            if (BindingCell != null)
             {
-                string text = this.BindingCell.Text;
-                if (this.BindingCell.SheetArea == SheetArea.Cells)
+                string text = BindingCell.Text;
+                if (BindingCell.SheetArea == SheetArea.Cells)
                 {
-                    text = this.SheetView.RaiseCellTextRendering(this.BindingCell.Row.Index, this.BindingCell.Column.Index, text);
+                    text = SheetView.RaiseCellTextRendering(BindingCell.Row.Index, BindingCell.Column.Index, text);
                 }
                 if (string.IsNullOrEmpty(text))
                 {
-                    if (this._isContentAddedToPanel)
+                    if (_isContentAddedToPanel)
                     {
-                        if ((this._rootPanel != null) && (this._content != null))
+                        if ((_rootPanel != null) && (_content != null))
                         {
-                            this._rootPanel.Children.Remove(this._content);
+                            _rootPanel.Children.Remove(_content);
                         }
-                        this._isContentAddedToPanel = false;
+                        _isContentAddedToPanel = false;
                     }
                 }
-                else if (!this._isContentAddedToPanel && (this._rootPanel != null))
+                else if (!_isContentAddedToPanel && (_rootPanel != null))
                 {
-                    if (this._content == null)
+                    if (_content == null)
                     {
-                        this._content = this.CreateContent();
-                        if (!this.ShowContent)
+                        _content = CreateContent();
+                        if (!ShowContent)
                         {
-                            this._content.Visibility = Visibility.Collapsed;
+                            _content.Visibility = Visibility.Collapsed;
                         }
                     }
-                    if (this._content != null)
+                    if (_content != null)
                     {
-                        this._rootPanel.Children.Add(this._content);
-                        this._isContentAddedToPanel = true;
+                        _rootPanel.Children.Add(_content);
+                        _isContentAddedToPanel = true;
                     }
                 }
-                if (this._cellType != null)
+                if (_cellType != null)
                 {
-                    this.InitCellType();
-                    if (this._isContentAddedToPanel)
+                    InitCellType();
+                    if (_isContentAddedToPanel)
                     {
-                        this._cellType.InitDisplayElement(text);
+                        _cellType.InitDisplayElement(text);
                     }
                 }
-                if (this._rootPanel != null)
+                if (_rootPanel != null)
                 {
-                    if (this._isHiddenForEditing)
+                    if (_isHiddenForEditing)
                     {
-                        this.UnHideForEditing();
+                        UnHideForEditing();
                     }
-                    this.ApplyState();
+                    ApplyState();
                 }
             }
         }
 
         internal void RemoveInvalidDataPresenter()
         {
-            if (this._dataValidationInvalidPresenterInfo != null)
+            if (_dataValidationInvalidPresenterInfo != null)
             {
-                this.OwningRow.OwningPresenter.RemoveDataValidationInvalidDataPresenterInfo(this._dataValidationInvalidPresenterInfo);
-                this._dataValidationInvalidPresenterInfo = null;
+                OwningRow.OwningPresenter.RemoveDataValidationInvalidDataPresenterInfo(_dataValidationInvalidPresenterInfo);
+                _dataValidationInvalidPresenterInfo = null;
             }
         }
 
         internal virtual void Reset()
         {
-            if (this._content == null)
+            if (_content == null)
             {
                 base.ApplyTemplate();
             }
-            if (this._rootPanel != null)
+            if (_rootPanel != null)
             {
-                this._rootPanel.InvalidateMeasure();
+                _rootPanel.InvalidateMeasure();
             }
-            this.PrepareCellForDisplay();
+            PrepareCellForDisplay();
         }
 
         internal virtual void SetBackground()
         {
-            if ((this.BindingCell != null) && (this._rootPanel != null))
+            if ((BindingCell != null) && (_rootPanel != null))
             {
-                Brush actualBackground = this.BindingCell.ActualBackground;
-                if (this._cachedBackground != actualBackground)
+                Brush actualBackground = BindingCell.ActualBackground;
+                if (_cachedBackground != actualBackground)
                 {
-                    this._rootPanel.Background = actualBackground;
-                    this._cachedBackground = actualBackground;
+                    _rootPanel.Background = actualBackground;
+                    _cachedBackground = actualBackground;
                 }
             }
         }
 
         internal void SetContentPresenter(FrameworkElement content)
         {
-            if ((this.RootPanel != null) && !object.Equals(this._content, content))
+            if ((RootPanel != null) && !object.Equals(_content, content))
             {
-                if (this._content != null)
+                if (_content != null)
                 {
-                    this.RootPanel.Children.Remove(this._content);
+                    RootPanel.Children.Remove(_content);
                 }
-                this._content = content;
+                _content = content;
                 if (content != null)
                 {
-                    this.RootPanel.Children.Add(content);
-                    if (this._content != null)
+                    RootPanel.Children.Add(content);
+                    if (_content != null)
                     {
-                        this.RootPanel.InvalidateArrange();
-                        this._content.Arrange(new Windows.Foundation.Rect(0.0, 0.0, base.ActualWidth, base.ActualHeight));
-                        this._content.InvalidateArrange();
+                        RootPanel.InvalidateArrange();
+                        _content.Arrange(new Windows.Foundation.Rect(0.0, 0.0, base.ActualWidth, base.ActualHeight));
+                        _content.InvalidateArrange();
                     }
                 }
             }
@@ -401,101 +401,101 @@ namespace Dt.Cells.UI
         {
             if (visible)
             {
-                if (!this.ShowContent && (this._content != null))
+                if (!ShowContent && (_content != null))
                 {
-                    this._content.Visibility = Visibility.Visible;
+                    _content.Visibility = Visibility.Visible;
                 }
             }
-            else if (this.ShowContent && (this._content != null))
+            else if (ShowContent && (_content != null))
             {
-                this._content.Visibility = Visibility.Collapsed;
+                _content.Visibility = Visibility.Collapsed;
             }
-            this.ShowContent = visible;
+            ShowContent = visible;
         }
 
         internal void SynFilterButton()
         {
-            if (this.FilterButtonInfo != null)
+            if (FilterButtonInfo != null)
             {
-                if (this._filterButton == null)
+                if (_filterButton == null)
                 {
                     FilterButton element = new FilterButton();
                     element.HorizontalAlignment = HorizontalAlignment.Right;
                     element.VerticalAlignment = VerticalAlignment.Bottom;
                     element.CellView = this;
                     element.Area = SheetArea.Cells;
-                    this._filterButton = element;
+                    _filterButton = element;
                     Canvas.SetZIndex(element, 0xbb8);
-                    this.RootPanel.Children.Add(element);
+                    RootPanel.Children.Add(element);
                 }
                 else
                 {
-                    this._filterButton.ApplyState();
+                    _filterButton.ApplyState();
                 }
             }
-            else if (this._filterButton != null)
+            else if (_filterButton != null)
             {
-                this.RootPanel.Children.Remove(this._filterButton);
-                this._filterButton = null;
+                RootPanel.Children.Remove(_filterButton);
+                _filterButton = null;
             }
         }
 
         internal virtual bool TryUpdateVisualTree()
         {
-            Dt.Cells.UI.SheetView sheetView = this.SheetView;
+            Dt.Cells.UI.SheetView sheetView = SheetView;
             if (sheetView != null)
             {
-                Cell bindingCell = this.BindingCell;
+                Cell bindingCell = BindingCell;
                 if (bindingCell == null)
                 {
                     return false;
                 }
-                int row = this.Row;
-                int column = this.Column;
-                if (this.CellLayout != null)
+                int row = Row;
+                int column = Column;
+                if (CellLayout != null)
                 {
-                    row = this.CellLayout.Row;
-                    column = this.CellLayout.Column;
+                    row = CellLayout.Row;
+                    column = CellLayout.Column;
                 }
                 bool flag = false;
                 Dt.Cells.UI.FilterButtonInfo info = sheetView.GetFilterButtonInfo(row, column, bindingCell.SheetArea);
-                if (info != this.FilterButtonInfo)
+                if (info != FilterButtonInfo)
                 {
-                    this.FilterButtonInfo = info;
-                    this.SynFilterButton();
+                    FilterButtonInfo = info;
+                    SynFilterButton();
                     flag = true;
                 }
-                if (this.OwningRow.OwningPresenter.Sheet.HighlightInvalidData)
+                if (OwningRow.OwningPresenter.Sheet.HighlightInvalidData)
                 {
-                    if (this._dataValidationInvalidPresenterInfo == null)
+                    if (_dataValidationInvalidPresenterInfo == null)
                     {
-                        DataValidator actualDataValidator = this.BindingCell.ActualDataValidator;
-                        if ((actualDataValidator != null) && !actualDataValidator.IsValid(sheetView.Worksheet, this.Row, this.Column, bindingCell.Value))
+                        DataValidator actualDataValidator = BindingCell.ActualDataValidator;
+                        if ((actualDataValidator != null) && !actualDataValidator.IsValid(sheetView.Worksheet, Row, Column, bindingCell.Value))
                         {
                             InvalidDataPresenterInfo info2 = new InvalidDataPresenterInfo {
-                                Row = this.Row,
-                                Column = this.Column
+                                Row = Row,
+                                Column = Column
                             };
-                            this._dataValidationInvalidPresenterInfo = info2;
-                            this.OwningRow.OwningPresenter.AddDataValidationInvalidDataPresenterInfo(this._dataValidationInvalidPresenterInfo);
+                            _dataValidationInvalidPresenterInfo = info2;
+                            OwningRow.OwningPresenter.AddDataValidationInvalidDataPresenterInfo(_dataValidationInvalidPresenterInfo);
                             flag = true;
                         }
                     }
-                    else if (this._dataValidationInvalidPresenterInfo != null)
+                    else if (_dataValidationInvalidPresenterInfo != null)
                     {
-                        DataValidator validator2 = this.BindingCell.ActualDataValidator;
-                        if ((validator2 == null) || validator2.IsValid(sheetView.Worksheet, this.Row, this.Column, bindingCell.Value))
+                        DataValidator validator2 = BindingCell.ActualDataValidator;
+                        if ((validator2 == null) || validator2.IsValid(sheetView.Worksheet, Row, Column, bindingCell.Value))
                         {
-                            this.OwningRow.OwningPresenter.RemoveDataValidationInvalidDataPresenterInfo(this._dataValidationInvalidPresenterInfo);
-                            this._dataValidationInvalidPresenterInfo = null;
+                            OwningRow.OwningPresenter.RemoveDataValidationInvalidDataPresenterInfo(_dataValidationInvalidPresenterInfo);
+                            _dataValidationInvalidPresenterInfo = null;
                         }
                         flag = true;
                     }
                 }
-                else if (this._dataValidationInvalidPresenterInfo != null)
+                else if (_dataValidationInvalidPresenterInfo != null)
                 {
-                    this.OwningRow.OwningPresenter.RemoveDataValidationInvalidDataPresenterInfo(this._dataValidationInvalidPresenterInfo);
-                    this._dataValidationInvalidPresenterInfo = null;
+                    OwningRow.OwningPresenter.RemoveDataValidationInvalidDataPresenterInfo(_dataValidationInvalidPresenterInfo);
+                    _dataValidationInvalidPresenterInfo = null;
                     flag = true;
                 }
                 if (flag)
@@ -508,20 +508,20 @@ namespace Dt.Cells.UI
 
         internal void UnHideForEditing()
         {
-            if (this._isHiddenForEditing)
+            if (_isHiddenForEditing)
             {
-                this._isHiddenForEditing = false;
-                this.RootPanel.ClearValue(UIElement.VisibilityProperty);
+                _isHiddenForEditing = false;
+                RootPanel.ClearValue(UIElement.VisibilityProperty);
             }
         }
 
         internal void UpdateBindingCell()
         {
-            Cell bindingCell = this.GetBindingCell();
-            this._bindingCell = bindingCell;
+            Cell bindingCell = GetBindingCell();
+            _bindingCell = bindingCell;
         }
 
-        private void WalkTree(DependencyObject p)
+        void WalkTree(DependencyObject p)
         {
             if (p is Border)
             {
@@ -531,7 +531,7 @@ namespace Dt.Cells.UI
             for (int i = 0; i < childrenCount; i++)
             {
                 DependencyObject child = VisualTreeHelper.GetChild(p, i);
-                this.WalkTree(child);
+                WalkTree(child);
             }
         }
 
@@ -539,22 +539,22 @@ namespace Dt.Cells.UI
         {
             get
             {
-                if (this._bindingCell == null)
+                if (_bindingCell == null)
                 {
-                    this._bindingCell = this.GetBindingCell();
+                    _bindingCell = GetBindingCell();
                 }
-                return this._bindingCell;
+                return _bindingCell;
             }
         }
 
         internal Dt.Cells.UI.CellLayout CellLayout
         {
-            get { return  this._cellLayout; }
+            get { return  _cellLayout; }
             set
             {
-                if (!object.Equals(this._cellLayout, value))
+                if (!object.Equals(_cellLayout, value))
                 {
-                    this._cellLayout = value;
+                    _cellLayout = value;
                     base.InvalidateMeasure();
                 }
             }
@@ -562,15 +562,15 @@ namespace Dt.Cells.UI
 
         internal Dt.Cells.UI.CellOverflowLayout CellOverflowLayout
         {
-            get { return  this._overflowLayout; }
+            get { return  _overflowLayout; }
             set
             {
-                if (!object.Equals(this._overflowLayout, value))
+                if (!object.Equals(_overflowLayout, value))
                 {
-                    this._overflowLayout = value;
-                    if (this.RootPanel != null)
+                    _overflowLayout = value;
+                    if (RootPanel != null)
                     {
-                        this.RootPanel.InvalidateMeasure();
+                        RootPanel.InvalidateMeasure();
                     }
                     base.InvalidateMeasure();
                 }
@@ -579,7 +579,7 @@ namespace Dt.Cells.UI
 
         internal ICellType CellType
         {
-            get { return  this._cellType; }
+            get { return  _cellType; }
         }
 
         /// <summary>
@@ -587,12 +587,12 @@ namespace Dt.Cells.UI
         /// </summary>
         public int Column
         {
-            get { return  this._column; }
+            get { return  _column; }
             internal set
             {
-                if (value != this._column)
+                if (value != _column)
                 {
-                    this._column = value;
+                    _column = value;
                     base.InvalidateMeasure();
                 }
             }
@@ -600,18 +600,18 @@ namespace Dt.Cells.UI
 
         internal FrameworkElement Content
         {
-            get { return  this._content; }
-            set { this._content = value; }
+            get { return  _content; }
+            set { _content = value; }
         }
 
         internal Dt.Cells.UI.FilterButtonInfo FilterButtonInfo
         {
-            get { return  this._filterButtonInfo; }
+            get { return  _filterButtonInfo; }
             set
             {
-                if (this._filterButtonInfo != value)
+                if (_filterButtonInfo != value)
                 {
-                    this._filterButtonInfo = value;
+                    _filterButtonInfo = value;
                     base.InvalidateMeasure();
                 }
             }
@@ -619,7 +619,7 @@ namespace Dt.Cells.UI
 
         internal bool HasFilterButton
         {
-            get { return  (this._filterButton != null); }
+            get { return  (_filterButton != null); }
         }
 
         /// <summary>
@@ -665,11 +665,11 @@ namespace Dt.Cells.UI
         {
             get
             {
-                if (this._rootPanel == null)
+                if (_rootPanel == null)
                 {
                     base.ApplyTemplate();
                 }
-                return this._rootPanel;
+                return _rootPanel;
             }
         }
 
@@ -678,16 +678,16 @@ namespace Dt.Cells.UI
         /// </summary>
         public int Row
         {
-            get { return  this.OwningRow.Row; }
+            get { return  OwningRow.Row; }
         }
 
         internal Dt.Cells.UI.SheetView SheetView
         {
             get
             {
-                if ((this.OwningRow != null) && (this.OwningRow.OwningPresenter != null))
+                if ((OwningRow != null) && (OwningRow.OwningPresenter != null))
                 {
-                    return this.OwningRow.OwningPresenter.Sheet;
+                    return OwningRow.OwningPresenter.Sheet;
                 }
                 return null;
             }
@@ -695,11 +695,11 @@ namespace Dt.Cells.UI
 
         internal bool ShowContent { get; set; }
 
-        private double ZoomFactor
+        double ZoomFactor
         {
             get
             {
-                Dt.Cells.UI.SheetView sheetView = this.SheetView;
+                Dt.Cells.UI.SheetView sheetView = SheetView;
                 if (sheetView != null)
                 {
                     return (double) sheetView.ZoomFactor;

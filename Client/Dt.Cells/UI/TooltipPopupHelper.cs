@@ -21,60 +21,60 @@ namespace Dt.Cells.UI
 {
     internal class TooltipPopupHelper
     {
-        private double _minWidth;
-        private Windows.UI.Xaml.Controls.Primitives.Popup _popup;
-        private TooltipControl _toolTipBlock;
-        private Grid _tooltipFocusableElement;
+        double _minWidth;
+        Windows.UI.Xaml.Controls.Primitives.Popup _popup;
+        TooltipControl _toolTipBlock;
+        Grid _tooltipFocusableElement;
 
         public TooltipPopupHelper(SheetView sheetView, double minWidth = -1.0)
         {
-            this._popup = sheetView.ToolTipPopup;
-            this._tooltipFocusableElement = new Grid();
+            _popup = sheetView.ToolTipPopup;
+            _tooltipFocusableElement = new Grid();
             new Border();
             new LinearGradientBrush().StartPoint = new Windows.Foundation.Point();
-            this._toolTipBlock = new TooltipControl();
-            this._toolTipBlock.Margin = new Windows.UI.Xaml.Thickness(0.0, 0.0, 5.0, 5.0);
-            this._popup.Child = this._tooltipFocusableElement;
-            this._tooltipFocusableElement.Children.Add(this._toolTipBlock);
-            this._minWidth = minWidth;
-            Grid grid = this._tooltipFocusableElement;
+            _toolTipBlock = new TooltipControl();
+            _toolTipBlock.Margin = new Windows.UI.Xaml.Thickness(0.0, 0.0, 5.0, 5.0);
+            _popup.Child = _tooltipFocusableElement;
+            _tooltipFocusableElement.Children.Add(_toolTipBlock);
+            _minWidth = minWidth;
+            Grid grid = _tooltipFocusableElement;
             grid.SizeChanged += _tooltipFocusableElement_SizeChanged;
-            if (this._minWidth > 0.0)
+            if (_minWidth > 0.0)
             {
-                this._toolTipBlock.MinWidth = minWidth;
+                _toolTipBlock.MinWidth = minWidth;
             }
         }
 
-        private void _tooltipFocusableElement_SizeChanged(object sender, SizeChangedEventArgs e)
+        void _tooltipFocusableElement_SizeChanged(object sender, SizeChangedEventArgs e)
         {
         }
 
         public void CloseTooltip()
         {
-            if (this._popup != null)
+            if (_popup != null)
             {
-                this._popup.IsOpen = false;
+                _popup.IsOpen = false;
             }
         }
 
         public void ShowTooltip(string text, double offsetX, double offsetY)
         {
-            if (!string.IsNullOrEmpty(text) && this._popup.IsOpen)
+            if (!string.IsNullOrEmpty(text) && _popup.IsOpen)
             {
-                this._toolTipBlock.Text = text;
-                this._popup.HorizontalOffset = offsetX;
-                this._popup.VerticalOffset = offsetY;
+                _toolTipBlock.Text = text;
+                _popup.HorizontalOffset = offsetX;
+                _popup.VerticalOffset = offsetY;
             }
             else if (!string.IsNullOrEmpty(text))
             {
-                this._toolTipBlock.Text = text;
-                this._popup.HorizontalOffset = offsetX;
-                this._popup.VerticalOffset = offsetY;
-                this._popup.IsOpen = true;
+                _toolTipBlock.Text = text;
+                _popup.HorizontalOffset = offsetX;
+                _popup.VerticalOffset = offsetY;
+                _popup.IsOpen = true;
             }
-            else if (this._popup.IsOpen)
+            else if (_popup.IsOpen)
             {
-                this._popup.IsOpen = false;
+                _popup.IsOpen = false;
             }
         }
     }

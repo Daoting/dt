@@ -21,8 +21,8 @@ namespace Dt.Cells.UI
     {
         internal SelectionChangingEventArgs(CellRange[] oldSelections, CellRange[] newSelections)
         {
-            this.OldSelections = oldSelections;
-            this.NewSelections = newSelections;
+            OldSelections = oldSelections;
+            NewSelections = newSelections;
         }
 
         /// <summary>

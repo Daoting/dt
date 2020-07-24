@@ -21,117 +21,117 @@ namespace Dt.Cells.UI
 {
     internal partial class ChartTitleView : Panel
     {
-        private Dt.Cells.Data.ChartTitle _chartTitle;
-        private SpreadChartBaseView _parentView;
-        private TextBlock _titleContent;
-        private Rectangle _titleFrame;
+        Dt.Cells.Data.ChartTitle _chartTitle;
+        SpreadChartBaseView _parentView;
+        TextBlock _titleContent;
+        Rectangle _titleFrame;
 
         public ChartTitleView(Dt.Cells.Data.ChartTitle chartTitle, SpreadChartBaseView parentView)
         {
-            this._chartTitle = chartTitle;
-            this._parentView = parentView;
-            this._titleFrame = new Rectangle();
-            base.Children.Add(this._titleFrame);
-            this._titleContent = new TextBlock();
-            this._titleContent.TextAlignment = Windows.UI.Xaml.TextAlignment.Center;
-            base.Children.Add(this._titleContent);
-            this.UpdateChartTitle();
+            _chartTitle = chartTitle;
+            _parentView = parentView;
+            _titleFrame = new Rectangle();
+            base.Children.Add(_titleFrame);
+            _titleContent = new TextBlock();
+            _titleContent.TextAlignment = Windows.UI.Xaml.TextAlignment.Center;
+            base.Children.Add(_titleContent);
+            UpdateChartTitle();
         }
 
         protected override Windows.Foundation.Size ArrangeOverride(Windows.Foundation.Size finalSize)
         {
-            this._titleFrame.Arrange(new Windows.Foundation.Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
-            this._titleContent.Arrange(new Windows.Foundation.Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
+            _titleFrame.Arrange(new Windows.Foundation.Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
+            _titleContent.Arrange(new Windows.Foundation.Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
             return base.ArrangeOverride(finalSize);
         }
 
         protected override Windows.Foundation.Size MeasureOverride(Windows.Foundation.Size availableSize)
         {
-            this._titleFrame.Measure(availableSize);
-            this._titleContent.Measure(availableSize);
+            _titleFrame.Measure(availableSize);
+            _titleContent.Measure(availableSize);
             return base.MeasureOverride(availableSize);
         }
 
         internal void UpdateChartTitle()
         {
-            if (this.ChartTitle != null)
+            if (ChartTitle != null)
             {
-                this._titleFrame.StrokeDashArray =StrokeDashHelper.GetStrokeDashes(this.ChartTitle.StrokeDashType);
-                double strokeThickness = this.ChartTitle.StrokeThickness;
+                _titleFrame.StrokeDashArray =StrokeDashHelper.GetStrokeDashes(ChartTitle.StrokeDashType);
+                double strokeThickness = ChartTitle.StrokeThickness;
                 if (strokeThickness > 0.0)
                 {
-                    if ((this._parentView != null) && (this._parentView.ParentViewport != null))
+                    if ((_parentView != null) && (_parentView.ParentViewport != null))
                     {
-                        strokeThickness *= this._parentView.ParentViewport.Sheet.ZoomFactor;
+                        strokeThickness *= _parentView.ParentViewport.Sheet.ZoomFactor;
                     }
-                    this._titleFrame.StrokeThickness = strokeThickness;
+                    _titleFrame.StrokeThickness = strokeThickness;
                 }
                 else
                 {
-                    this._titleFrame.StrokeThickness = 0.0;
+                    _titleFrame.StrokeThickness = 0.0;
                 }
-                Brush actualStroke = this.ChartTitle.ActualStroke;
+                Brush actualStroke = ChartTitle.ActualStroke;
                 if (actualStroke != null)
                 {
-                    this._titleFrame.Stroke = actualStroke;
+                    _titleFrame.Stroke = actualStroke;
                 }
                 else
                 {
-                    this._titleFrame.Stroke = new SolidColorBrush(Colors.Transparent);
+                    _titleFrame.Stroke = new SolidColorBrush(Colors.Transparent);
                 }
-                Brush actualFill = this.ChartTitle.ActualFill;
+                Brush actualFill = ChartTitle.ActualFill;
                 if (actualFill != null)
                 {
-                    this._titleFrame.Fill = actualFill;
+                    _titleFrame.Fill = actualFill;
                 }
                 else
                 {
-                    this._titleFrame.Fill = new SolidColorBrush(Colors.Transparent);
+                    _titleFrame.Fill = new SolidColorBrush(Colors.Transparent);
                 }
-                this._titleContent.Text = this.ChartTitle.Text;
-                FontFamily actualFontFamily = this.ChartTitle.ActualFontFamily;
+                _titleContent.Text = ChartTitle.Text;
+                FontFamily actualFontFamily = ChartTitle.ActualFontFamily;
                 if (actualFontFamily == null)
                 {
                     actualFontFamily = Utility.DefaultFontFamily;
                 }
-                this._titleContent.FontFamily = actualFontFamily;
-                double actualFontSize = this.ChartTitle.ActualFontSize;
-                if ((this._parentView.ParentViewport != null) && (this._parentView.ParentViewport.Sheet != null))
+                _titleContent.FontFamily = actualFontFamily;
+                double actualFontSize = ChartTitle.ActualFontSize;
+                if ((_parentView.ParentViewport != null) && (_parentView.ParentViewport.Sheet != null))
                 {
-                    actualFontSize *= this._parentView.ParentViewport.Sheet.ZoomFactor;
+                    actualFontSize *= _parentView.ParentViewport.Sheet.ZoomFactor;
                 }
                 if (actualFontSize > 0.0)
                 {
-                    this._titleContent.FontSize = actualFontSize;
+                    _titleContent.FontSize = actualFontSize;
                 }
-                this._titleContent.FontStretch = this.ChartTitle.ActualFontStretch;
-                this._titleContent.FontStyle = this.ChartTitle.ActualFontStyle;
-                this._titleContent.FontWeight = this.ChartTitle.ActualFontWeight;
-                Brush actualForeground = this.ChartTitle.ActualForeground;
+                _titleContent.FontStretch = ChartTitle.ActualFontStretch;
+                _titleContent.FontStyle = ChartTitle.ActualFontStyle;
+                _titleContent.FontWeight = ChartTitle.ActualFontWeight;
+                Brush actualForeground = ChartTitle.ActualForeground;
                 if (actualForeground != null)
                 {
-                    this._titleContent.Foreground = actualForeground;
+                    _titleContent.Foreground = actualForeground;
                 }
                 else
                 {
-                    this._titleContent.ClearValue(TextBlock.ForegroundProperty);
+                    _titleContent.ClearValue(TextBlock.ForegroundProperty);
                 }
             }
             else
             {
-                this._titleFrame.Stroke = null;
-                this._titleFrame.Fill = null;
-                this._titleContent.ClearValue(TextBlock.TextProperty);
+                _titleFrame.Stroke = null;
+                _titleFrame.Fill = null;
+                _titleContent.ClearValue(TextBlock.TextProperty);
             }
         }
 
         public Dt.Cells.Data.ChartTitle ChartTitle
         {
-            get { return  this._chartTitle; }
+            get { return  _chartTitle; }
             set
             {
-                this._chartTitle = value;
-                this.UpdateChartTitle();
+                _chartTitle = value;
+                UpdateChartTitle();
             }
         }
     }

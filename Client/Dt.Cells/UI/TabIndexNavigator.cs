@@ -19,39 +19,39 @@ namespace Dt.Cells.UI
         /// <summary>
         /// This a cache for current cell position, and it is base on Composite.
         /// </summary>
-        private CompositePosition _currentCellPosition = CompositePosition.Empty;
+        CompositePosition _currentCellPosition = CompositePosition.Empty;
         /// <summary>
         /// When make navigation in multiple selection, need cache current range index.
         /// </summary>
-        private int _currentRangeIndex = -1;
+        int _currentRangeIndex = -1;
         /// <summary>
         /// Because the Navigation action don't always start with ActiveCell, so need add another cache for the position.
         /// </summary>
-        private CompositePosition _startNavigateCellPosition = CompositePosition.Empty;
+        CompositePosition _startNavigateCellPosition = CompositePosition.Empty;
 
         protected TabIndexNavigator()
         {
         }
 
-        private void AdjustStartPosition()
+        void AdjustStartPosition()
         {
-            if (this._currentCellPosition.IsEmpty)
+            if (_currentCellPosition.IsEmpty)
             {
-                this._startNavigateCellPosition = CompositePosition.Empty;
+                _startNavigateCellPosition = CompositePosition.Empty;
             }
             else
             {
                 CompositePosition position;
-                if (this.IsMerged(this._currentCellPosition, out position))
+                if (IsMerged(_currentCellPosition, out position))
                 {
-                    if (((this._startNavigateCellPosition.Column < position.Column) || (this._startNavigateCellPosition.Column > (position.Column + this.GetColumnSpan(position)))) || ((this._startNavigateCellPosition.Row < position.Row) || (this._startNavigateCellPosition.Row > (position.Row + this.GetRowSpan(position)))))
+                    if (((_startNavigateCellPosition.Column < position.Column) || (_startNavigateCellPosition.Column > (position.Column + GetColumnSpan(position)))) || ((_startNavigateCellPosition.Row < position.Row) || (_startNavigateCellPosition.Row > (position.Row + GetRowSpan(position)))))
                     {
-                        this._startNavigateCellPosition = this._currentCellPosition;
+                        _startNavigateCellPosition = _currentCellPosition;
                     }
                 }
-                else if (this._startNavigateCellPosition != this._currentCellPosition)
+                else if (_startNavigateCellPosition != _currentCellPosition)
                 {
-                    this._startNavigateCellPosition = this._currentCellPosition;
+                    _startNavigateCellPosition = _currentCellPosition;
                 }
             }
         }
@@ -59,7 +59,7 @@ namespace Dt.Cells.UI
         public abstract void BringCellToVisible(CompositePosition position);
         public virtual bool CanMoveCurrent(NavigationDirection direction)
         {
-            return !this.PredictMoveCurrent(direction).IsEmpty;
+            return !PredictMoveCurrent(direction).IsEmpty;
         }
 
         public virtual bool CanMoveCurrentTo(CompositePosition cellPosition)
@@ -70,12 +70,12 @@ namespace Dt.Cells.UI
         public abstract List<int> GetColumnIndexes();
         public abstract List<int> GetColumnIndexes(CompositeRange range);
         public abstract int GetColumnSpan(CompositePosition position);
-        private int GetCurrentPageIndex(CompositePosition position)
+        int GetCurrentPageIndex(CompositePosition position)
         {
-            IList<CompositeRange> selections = this.Selections;
+            IList<CompositeRange> selections = Selections;
             for (int i = selections.Count - 1; i >= 0; i--)
             {
-                CompositeRange fixedRange = this.GetFixedRange(selections[i]);
+                CompositeRange fixedRange = GetFixedRange(selections[i]);
                 if (((position.Column >= fixedRange.Column) && (position.Column <= fixedRange.EndColumn)) && ((position.Row >= fixedRange.Row) && (position.Row <= fixedRange.EndRow)))
                 {
                     return i;
@@ -87,17 +87,17 @@ namespace Dt.Cells.UI
         public abstract CompositeRange GetFixedRange(CompositeRange range);
         public CompositePosition GetNavigationStartPosition()
         {
-            return this._startNavigateCellPosition;
+            return _startNavigateCellPosition;
         }
 
-        private CompositePosition GetNextCellInRange(CompositeRange range, int rowDataIndex, List<int> columnIndexes, int startColumnDataIndex, out CompositePosition newStartPosition)
+        CompositePosition GetNextCellInRange(CompositeRange range, int rowDataIndex, List<int> columnIndexes, int startColumnDataIndex, out CompositePosition newStartPosition)
         {
-            CompositePosition position = this.GetNextCellInRow(rowDataIndex, columnIndexes, startColumnDataIndex, out newStartPosition);
+            CompositePosition position = GetNextCellInRow(rowDataIndex, columnIndexes, startColumnDataIndex, out newStartPosition);
             if (position.IsEmpty)
             {
                 for (int i = rowDataIndex + 1; i <= range.EndRow; i++)
                 {
-                    position = this.GetNextCellInRow(i, columnIndexes, -1, out newStartPosition);
+                    position = GetNextCellInRow(i, columnIndexes, -1, out newStartPosition);
                     if (!position.IsEmpty)
                     {
                         return position;
@@ -107,7 +107,7 @@ namespace Dt.Cells.UI
             return position;
         }
 
-        private CompositePosition GetNextCellInRow(CompositePosition startCellPosition, bool includeStartCell, List<int> columnIndexes, out CompositePosition newStartPosition)
+        CompositePosition GetNextCellInRow(CompositePosition startCellPosition, bool includeStartCell, List<int> columnIndexes, out CompositePosition newStartPosition)
         {
             newStartPosition = CompositePosition.Empty;
             int index = columnIndexes.IndexOf(startCellPosition.Column);
@@ -115,15 +115,15 @@ namespace Dt.Cells.UI
             {
                 CompositePosition position2;
                 CompositePosition position = new CompositePosition(startCellPosition.Type, startCellPosition.Row, columnIndexes[i]);
-                if (this.IsMerged(position, out position2))
+                if (IsMerged(position, out position2))
                 {
                     if (position.Column != position2.Column)
                     {
                         continue;
                     }
-                    if (this.CanMoveCurrentTo(position2))
+                    if (CanMoveCurrentTo(position2))
                     {
-                        if (position2 == this.CurrentCell)
+                        if (position2 == CurrentCell)
                         {
                             continue;
                         }
@@ -131,7 +131,7 @@ namespace Dt.Cells.UI
                         return position2;
                     }
                 }
-                if (this.CanMoveCurrentTo(position))
+                if (CanMoveCurrentTo(position))
                 {
                     newStartPosition = position;
                     return position;
@@ -140,14 +140,14 @@ namespace Dt.Cells.UI
             return CompositePosition.Empty;
         }
 
-        private CompositePosition GetNextCellInRow(int rowDataIndex, List<int> columnIndexes, int startColumnDataIndex, out CompositePosition newStartPosition)
+        CompositePosition GetNextCellInRow(int rowDataIndex, List<int> columnIndexes, int startColumnDataIndex, out CompositePosition newStartPosition)
         {
             newStartPosition = CompositePosition.Empty;
             for (int i = columnIndexes.IndexOf(startColumnDataIndex) + 1; i < columnIndexes.Count; i++)
             {
                 CompositePosition position2;
-                CompositePosition position = new CompositePosition(this.CurrentCell.Type, rowDataIndex, columnIndexes[i]);
-                if ((!this.IsMerged(position, out position2) || ((position.Row == position2.Row) && (position.Column == position2.Column))) && this.CanMoveCurrentTo(position))
+                CompositePosition position = new CompositePosition(CurrentCell.Type, rowDataIndex, columnIndexes[i]);
+                if ((!IsMerged(position, out position2) || ((position.Row == position2.Row) && (position.Column == position2.Column))) && CanMoveCurrentTo(position))
                 {
                     newStartPosition = position;
                     return position;
@@ -156,14 +156,14 @@ namespace Dt.Cells.UI
             return CompositePosition.Empty;
         }
 
-        private CompositePosition GetPreviousCellInRange(CompositeRange range, int rowDataIndex, List<int> columnIndexes, int startColumnDataIndex, out CompositePosition newStartPosition)
+        CompositePosition GetPreviousCellInRange(CompositeRange range, int rowDataIndex, List<int> columnIndexes, int startColumnDataIndex, out CompositePosition newStartPosition)
         {
-            CompositePosition position = this.GetPreviousCellInRow(rowDataIndex, columnIndexes, startColumnDataIndex, out newStartPosition);
+            CompositePosition position = GetPreviousCellInRow(rowDataIndex, columnIndexes, startColumnDataIndex, out newStartPosition);
             if (position.IsEmpty)
             {
                 for (int i = rowDataIndex - 1; i >= range.Row; i--)
                 {
-                    position = this.GetPreviousCellInRow(i, columnIndexes, this.CompositeColumnCount, out newStartPosition);
+                    position = GetPreviousCellInRow(i, columnIndexes, CompositeColumnCount, out newStartPosition);
                     if (!position.IsEmpty)
                     {
                         return position;
@@ -173,7 +173,7 @@ namespace Dt.Cells.UI
             return position;
         }
 
-        private CompositePosition GetPreviousCellInRow(CompositePosition startCellPosition, bool includeStartCell, List<int> columnIndexes, out CompositePosition newStartPosition)
+        CompositePosition GetPreviousCellInRow(CompositePosition startCellPosition, bool includeStartCell, List<int> columnIndexes, out CompositePosition newStartPosition)
         {
             newStartPosition = CompositePosition.Empty;
             int index = columnIndexes.IndexOf(startCellPosition.Column);
@@ -181,15 +181,15 @@ namespace Dt.Cells.UI
             {
                 CompositePosition position2;
                 CompositePosition position = new CompositePosition(startCellPosition.Type, startCellPosition.Row, columnIndexes[i]);
-                if (this.IsMerged(position, out position2))
+                if (IsMerged(position, out position2))
                 {
                     if (position.Column != position2.Column)
                     {
                         continue;
                     }
-                    if (this.CanMoveCurrentTo(position2))
+                    if (CanMoveCurrentTo(position2))
                     {
-                        if (position2 == this.CurrentCell)
+                        if (position2 == CurrentCell)
                         {
                             continue;
                         }
@@ -197,7 +197,7 @@ namespace Dt.Cells.UI
                         return position2;
                     }
                 }
-                if (this.CanMoveCurrentTo(position))
+                if (CanMoveCurrentTo(position))
                 {
                     newStartPosition = position;
                     return position;
@@ -206,7 +206,7 @@ namespace Dt.Cells.UI
             return CompositePosition.Empty;
         }
 
-        private CompositePosition GetPreviousCellInRow(int rowDataIndex, List<int> columnIndexes, int startColumnDataIndex, out CompositePosition newStartPosition)
+        CompositePosition GetPreviousCellInRow(int rowDataIndex, List<int> columnIndexes, int startColumnDataIndex, out CompositePosition newStartPosition)
         {
             newStartPosition = CompositePosition.Empty;
             int index = columnIndexes.IndexOf(startColumnDataIndex);
@@ -217,8 +217,8 @@ namespace Dt.Cells.UI
             for (int i = index - 1; i >= 0; i--)
             {
                 CompositePosition position2;
-                CompositePosition position = new CompositePosition(this.CurrentCell.Type, rowDataIndex, columnIndexes[i]);
-                if ((!this.IsMerged(position, out position2) || ((position.Row == position2.Row) && (position.Column == position2.Column))) && this.CanMoveCurrentTo(position))
+                CompositePosition position = new CompositePosition(CurrentCell.Type, rowDataIndex, columnIndexes[i]);
+                if ((!IsMerged(position, out position2) || ((position.Row == position2.Row) && (position.Column == position2.Column))) && CanMoveCurrentTo(position))
                 {
                     newStartPosition = position;
                     return position;
@@ -235,70 +235,70 @@ namespace Dt.Cells.UI
             CompositePosition empty = CompositePosition.Empty;
             CompositePosition newStartPosition = CompositePosition.Empty;
             int rangeIndex = -1;
-            this.AdjustStartPosition();
+            AdjustStartPosition();
             switch (direction)
             {
                 case NavigationDirection.Previous:
-                    empty = this.PredictPreviousCell(out newStartPosition);
+                    empty = PredictPreviousCell(out newStartPosition);
                     break;
 
                 case NavigationDirection.Next:
-                    empty = this.PredictNextCell(out newStartPosition);
+                    empty = PredictNextCell(out newStartPosition);
                     break;
 
                 case NavigationDirection.PreviousInSelection:
-                    empty = this.PredictPreviousCellInSelection(out newStartPosition, out rangeIndex);
+                    empty = PredictPreviousCellInSelection(out newStartPosition, out rangeIndex);
                     break;
 
                 case NavigationDirection.NextInSelection:
-                    empty = this.PredictNextCellInSelection(out newStartPosition, out rangeIndex);
+                    empty = PredictNextCellInSelection(out newStartPosition, out rangeIndex);
                     break;
 
                 case NavigationDirection.FirstRow:
-                    empty = this.PredictFirstRowCell(out newStartPosition);
+                    empty = PredictFirstRowCell(out newStartPosition);
                     break;
 
                 case NavigationDirection.LastRow:
-                    empty = this.PredictLastRowCell(out newStartPosition);
+                    empty = PredictLastRowCell(out newStartPosition);
                     break;
 
                 case NavigationDirection.NextRow:
-                    empty = this.PredictNextRowCell(out newStartPosition);
+                    empty = PredictNextRowCell(out newStartPosition);
                     break;
 
                 case NavigationDirection.PreviousRow:
-                    empty = this.PredictPreviousRowCell(out newStartPosition);
+                    empty = PredictPreviousRowCell(out newStartPosition);
                     break;
             }
-            if (empty.IsEmpty || (!(empty != this.CurrentCell) && (!(empty == this.CurrentCell) || (this._currentRangeIndex == rangeIndex))))
+            if (empty.IsEmpty || (!(empty != CurrentCell) && (!(empty == CurrentCell) || (_currentRangeIndex == rangeIndex))))
             {
                 return false;
             }
-            this.CurrentCell = empty;
-            this._startNavigateCellPosition = newStartPosition;
-            this._currentRangeIndex = rangeIndex;
+            CurrentCell = empty;
+            _startNavigateCellPosition = newStartPosition;
+            _currentRangeIndex = rangeIndex;
             return true;
         }
 
         public virtual void OnSelectionChanged(object sender, EventArgs e)
         {
-            this._currentRangeIndex = -1;
+            _currentRangeIndex = -1;
         }
 
-        private CompositePosition PredictFirstRowCell(out CompositePosition newStartPosition)
+        CompositePosition PredictFirstRowCell(out CompositePosition newStartPosition)
         {
             newStartPosition = CompositePosition.Empty;
-            int column = this._startNavigateCellPosition.IsEmpty ? 0 : this._startNavigateCellPosition.Column;
-            int num2 = this._startNavigateCellPosition.IsEmpty ? (this.ContentBounds.EndRow + 1) : this._startNavigateCellPosition.Row;
-            for (int i = this.ContentBounds.StartRow; i < num2; i++)
+            int column = _startNavigateCellPosition.IsEmpty ? 0 : _startNavigateCellPosition.Column;
+            int num2 = _startNavigateCellPosition.IsEmpty ? (ContentBounds.EndRow + 1) : _startNavigateCellPosition.Row;
+            for (int i = ContentBounds.StartRow; i < num2; i++)
             {
                 CompositePosition position2;
                 CompositePosition position = new CompositePosition(DataSheetElementType.Cell, i, column);
-                if (this.IsMerged(position, out position2))
+                if (IsMerged(position, out position2))
                 {
                     position = position2;
                 }
-                if (this.CanMoveCurrentTo(position))
+                if (CanMoveCurrentTo(position))
                 {
                     newStartPosition = position;
                     return position;
@@ -307,20 +307,20 @@ namespace Dt.Cells.UI
             return CompositePosition.Empty;
         }
 
-        private CompositePosition PredictLastRowCell(out CompositePosition newStartPosition)
+        CompositePosition PredictLastRowCell(out CompositePosition newStartPosition)
         {
             newStartPosition = CompositePosition.Empty;
-            int column = this._startNavigateCellPosition.IsEmpty ? 0 : this._startNavigateCellPosition.Column;
-            int num2 = this._startNavigateCellPosition.IsEmpty ? (this.ContentBounds.StartRow - 1) : this._startNavigateCellPosition.Row;
-            for (int i = this.ContentBounds.EndRow; i > num2; i--)
+            int column = _startNavigateCellPosition.IsEmpty ? 0 : _startNavigateCellPosition.Column;
+            int num2 = _startNavigateCellPosition.IsEmpty ? (ContentBounds.StartRow - 1) : _startNavigateCellPosition.Row;
+            for (int i = ContentBounds.EndRow; i > num2; i--)
             {
                 CompositePosition position2;
                 CompositePosition position = new CompositePosition(DataSheetElementType.Cell, i, column);
-                if (this.IsMerged(position, out position2))
+                if (IsMerged(position, out position2))
                 {
                     position = position2;
                 }
-                if (this.CanMoveCurrentTo(position))
+                if (CanMoveCurrentTo(position))
                 {
                     newStartPosition = position;
                     return position;
@@ -331,55 +331,55 @@ namespace Dt.Cells.UI
 
         public virtual CompositePosition PredictMoveCurrent(NavigationDirection direction)
         {
-            if ((this.CompositeColumnCount != 0) && (this.CompositeRowCount != 0))
+            if ((CompositeColumnCount != 0) && (CompositeRowCount != 0))
             {
-                this.AdjustStartPosition();
+                AdjustStartPosition();
                 CompositePosition empty = CompositePosition.Empty;
                 int rangeIndex = -1;
                 switch (direction)
                 {
                     case NavigationDirection.Previous:
-                        return this.PredictPreviousCell(out empty);
+                        return PredictPreviousCell(out empty);
 
                     case NavigationDirection.Next:
-                        return this.PredictNextCell(out empty);
+                        return PredictNextCell(out empty);
 
                     case NavigationDirection.PreviousInSelection:
-                        return this.PredictPreviousCellInSelection(out empty, out rangeIndex);
+                        return PredictPreviousCellInSelection(out empty, out rangeIndex);
 
                     case NavigationDirection.NextInSelection:
-                        return this.PredictNextCellInSelection(out empty, out rangeIndex);
+                        return PredictNextCellInSelection(out empty, out rangeIndex);
 
                     case NavigationDirection.FirstRow:
-                        return this.PredictFirstRowCell(out empty);
+                        return PredictFirstRowCell(out empty);
 
                     case NavigationDirection.LastRow:
-                        return this.PredictLastRowCell(out empty);
+                        return PredictLastRowCell(out empty);
 
                     case NavigationDirection.NextRow:
-                        return this.PredictNextRowCell(out empty);
+                        return PredictNextRowCell(out empty);
 
                     case NavigationDirection.PreviousRow:
-                        return this.PredictPreviousRowCell(out empty);
+                        return PredictPreviousRowCell(out empty);
                 }
             }
             return CompositePosition.Empty;
         }
 
-        private CompositePosition PredictNextCell(out CompositePosition newStartPosition)
+        CompositePosition PredictNextCell(out CompositePosition newStartPosition)
         {
-            CompositePosition startCellPosition = this._startNavigateCellPosition;
-            if (this.CurrentCell.IsEmpty)
+            CompositePosition startCellPosition = _startNavigateCellPosition;
+            if (CurrentCell.IsEmpty)
             {
                 startCellPosition = new CompositePosition(DataSheetElementType.Cell, 0, 0);
             }
-            List<int> columnIndexes = this.GetColumnIndexes();
-            CompositePosition position2 = this.GetNextCellInRow(startCellPosition, false, columnIndexes, out newStartPosition);
+            List<int> columnIndexes = GetColumnIndexes();
+            CompositePosition position2 = GetNextCellInRow(startCellPosition, false, columnIndexes, out newStartPosition);
             if (position2.IsEmpty)
             {
-                for (int i = startCellPosition.Row + 1; i < this.CompositeRowCount; i++)
+                for (int i = startCellPosition.Row + 1; i < CompositeRowCount; i++)
                 {
-                    position2 = this.GetNextCellInRow(new CompositePosition(startCellPosition.Type, i, columnIndexes[0]), true, columnIndexes, out newStartPosition);
+                    position2 = GetNextCellInRow(new CompositePosition(startCellPosition.Type, i, columnIndexes[0]), true, columnIndexes, out newStartPosition);
                     if (!position2.IsEmpty)
                     {
                         return position2;
@@ -389,32 +389,32 @@ namespace Dt.Cells.UI
             return position2;
         }
 
-        private CompositePosition PredictNextCellInSelection(out CompositePosition newStartPosition, out int rangeIndex)
+        CompositePosition PredictNextCellInSelection(out CompositePosition newStartPosition, out int rangeIndex)
         {
-            rangeIndex = this._currentRangeIndex;
+            rangeIndex = _currentRangeIndex;
             if (rangeIndex == -1)
             {
-                rangeIndex = this.GetCurrentPageIndex(this.CurrentCell);
+                rangeIndex = GetCurrentPageIndex(CurrentCell);
             }
             if (rangeIndex < 0)
             {
-                newStartPosition = this.CurrentCell;
+                newStartPosition = CurrentCell;
                 return CompositePosition.Empty;
             }
             List<CompositeRange> list = new List<CompositeRange>();
-            for (int i = 0; i < this.Selections.Count; i++)
+            for (int i = 0; i < Selections.Count; i++)
             {
-                list.Add(this.GetFixedRange(this.Selections[i]));
+                list.Add(GetFixedRange(Selections[i]));
             }
             CompositePosition empty = CompositePosition.Empty;
-            List<int> columnIndexes = this.GetColumnIndexes(list[rangeIndex]);
-            empty = this.GetNextCellInRange(list[rangeIndex], this.CurrentCell.Row, columnIndexes, this.CurrentCell.Column, out newStartPosition);
+            List<int> columnIndexes = GetColumnIndexes(list[rangeIndex]);
+            empty = GetNextCellInRange(list[rangeIndex], CurrentCell.Row, columnIndexes, CurrentCell.Column, out newStartPosition);
             if (empty.IsEmpty)
             {
                 for (int j = rangeIndex + 1; j < list.Count; j++)
                 {
-                    columnIndexes = this.GetColumnIndexes(list[j]);
-                    empty = this.GetNextCellInRange(list[j], list[j].Row, columnIndexes, -1, out newStartPosition);
+                    columnIndexes = GetColumnIndexes(list[j]);
+                    empty = GetNextCellInRange(list[j], list[j].Row, columnIndexes, -1, out newStartPosition);
                     if (!empty.IsEmpty)
                     {
                         rangeIndex = j;
@@ -423,8 +423,8 @@ namespace Dt.Cells.UI
                 }
                 for (int k = 0; k < list.Count; k++)
                 {
-                    columnIndexes = this.GetColumnIndexes(list[k]);
-                    empty = this.GetNextCellInRange(list[k], list[k].Row, columnIndexes, -1, out newStartPosition);
+                    columnIndexes = GetColumnIndexes(list[k]);
+                    empty = GetNextCellInRange(list[k], list[k].Row, columnIndexes, -1, out newStartPosition);
                     if (!empty.IsEmpty)
                     {
                         rangeIndex = k;
@@ -435,20 +435,20 @@ namespace Dt.Cells.UI
             return empty;
         }
 
-        private CompositePosition PredictNextRowCell(out CompositePosition newStartPosition)
+        CompositePosition PredictNextRowCell(out CompositePosition newStartPosition)
         {
             newStartPosition = CompositePosition.Empty;
-            int column = this._startNavigateCellPosition.IsEmpty ? 0 : this._startNavigateCellPosition.Column;
-            int num2 = this._startNavigateCellPosition.IsEmpty ? this.ContentBounds.StartRow : (this._startNavigateCellPosition.Row + 1);
-            for (int i = num2; i <= this.ContentBounds.EndRow; i++)
+            int column = _startNavigateCellPosition.IsEmpty ? 0 : _startNavigateCellPosition.Column;
+            int num2 = _startNavigateCellPosition.IsEmpty ? ContentBounds.StartRow : (_startNavigateCellPosition.Row + 1);
+            for (int i = num2; i <= ContentBounds.EndRow; i++)
             {
                 CompositePosition position2;
                 CompositePosition position = new CompositePosition(DataSheetElementType.Cell, i, column);
-                if (this.IsMerged(position, out position2))
+                if (IsMerged(position, out position2))
                 {
                     position = position2;
                 }
-                if (this.CanMoveCurrentTo(position))
+                if (CanMoveCurrentTo(position))
                 {
                     newStartPosition = position;
                     return position;
@@ -457,20 +457,20 @@ namespace Dt.Cells.UI
             return CompositePosition.Empty;
         }
 
-        private CompositePosition PredictPreviousCell(out CompositePosition newStartPosition)
+        CompositePosition PredictPreviousCell(out CompositePosition newStartPosition)
         {
-            if (this.CurrentCell.IsEmpty)
+            if (CurrentCell.IsEmpty)
             {
-                return this.PredictNextCell(out newStartPosition);
+                return PredictNextCell(out newStartPosition);
             }
-            List<int> columnIndexes = this.GetColumnIndexes();
-            CompositePosition startCellPosition = this._startNavigateCellPosition;
-            CompositePosition position2 = this.GetPreviousCellInRow(startCellPosition, false, columnIndexes, out newStartPosition);
+            List<int> columnIndexes = GetColumnIndexes();
+            CompositePosition startCellPosition = _startNavigateCellPosition;
+            CompositePosition position2 = GetPreviousCellInRow(startCellPosition, false, columnIndexes, out newStartPosition);
             if (position2.IsEmpty)
             {
                 for (int i = startCellPosition.Row - 1; i >= 0; i--)
                 {
-                    position2 = this.GetPreviousCellInRow(new CompositePosition(startCellPosition.Type, i, columnIndexes[columnIndexes.Count - 1]), true, columnIndexes, out newStartPosition);
+                    position2 = GetPreviousCellInRow(new CompositePosition(startCellPosition.Type, i, columnIndexes[columnIndexes.Count - 1]), true, columnIndexes, out newStartPosition);
                     if (!position2.IsEmpty)
                     {
                         return position2;
@@ -480,32 +480,32 @@ namespace Dt.Cells.UI
             return position2;
         }
 
-        private CompositePosition PredictPreviousCellInSelection(out CompositePosition newStartPosition, out int rangeIndex)
+        CompositePosition PredictPreviousCellInSelection(out CompositePosition newStartPosition, out int rangeIndex)
         {
-            rangeIndex = this._currentRangeIndex;
+            rangeIndex = _currentRangeIndex;
             if (rangeIndex == -1)
             {
-                rangeIndex = this.GetCurrentPageIndex(this.CurrentCell);
+                rangeIndex = GetCurrentPageIndex(CurrentCell);
             }
             if (rangeIndex < 0)
             {
-                newStartPosition = this.CurrentCell;
+                newStartPosition = CurrentCell;
                 return CompositePosition.Empty;
             }
             List<CompositeRange> list = new List<CompositeRange>();
-            for (int i = 0; i < this.Selections.Count; i++)
+            for (int i = 0; i < Selections.Count; i++)
             {
-                list.Add(this.GetFixedRange(this.Selections[i]));
+                list.Add(GetFixedRange(Selections[i]));
             }
             CompositePosition empty = CompositePosition.Empty;
-            List<int> columnIndexes = this.GetColumnIndexes(list[rangeIndex]);
-            empty = this.GetPreviousCellInRange(list[rangeIndex], this.CurrentCell.Row, columnIndexes, this.CurrentCell.Column, out newStartPosition);
+            List<int> columnIndexes = GetColumnIndexes(list[rangeIndex]);
+            empty = GetPreviousCellInRange(list[rangeIndex], CurrentCell.Row, columnIndexes, CurrentCell.Column, out newStartPosition);
             if (empty.IsEmpty)
             {
                 for (int j = rangeIndex - 1; j >= 0; j--)
                 {
-                    columnIndexes = this.GetColumnIndexes(list[j]);
-                    empty = this.GetPreviousCellInRange(list[j], list[j].EndRow, columnIndexes, list[j].EndColumn + 1, out newStartPosition);
+                    columnIndexes = GetColumnIndexes(list[j]);
+                    empty = GetPreviousCellInRange(list[j], list[j].EndRow, columnIndexes, list[j].EndColumn + 1, out newStartPosition);
                     if (!empty.IsEmpty)
                     {
                         rangeIndex = j;
@@ -514,8 +514,8 @@ namespace Dt.Cells.UI
                 }
                 for (int k = list.Count - 1; k >= 0; k--)
                 {
-                    columnIndexes = this.GetColumnIndexes(list[k]);
-                    empty = this.GetPreviousCellInRange(list[k], list[k].EndRow, columnIndexes, list[k].EndColumn + 1, out newStartPosition);
+                    columnIndexes = GetColumnIndexes(list[k]);
+                    empty = GetPreviousCellInRange(list[k], list[k].EndRow, columnIndexes, list[k].EndColumn + 1, out newStartPosition);
                     if (!empty.IsEmpty)
                     {
                         rangeIndex = k;
@@ -526,24 +526,24 @@ namespace Dt.Cells.UI
             return empty;
         }
 
-        private CompositePosition PredictPreviousRowCell(out CompositePosition newStartPosition)
+        CompositePosition PredictPreviousRowCell(out CompositePosition newStartPosition)
         {
-            if (this.CurrentCell.IsEmpty)
+            if (CurrentCell.IsEmpty)
             {
-                return this.PredictNextRowCell(out newStartPosition);
+                return PredictNextRowCell(out newStartPosition);
             }
             newStartPosition = CompositePosition.Empty;
-            int column = this._startNavigateCellPosition.IsEmpty ? 0 : this._startNavigateCellPosition.Column;
-            int num2 = this._startNavigateCellPosition.IsEmpty ? this.ContentBounds.StartRow : (this._startNavigateCellPosition.Row - 1);
-            for (int i = num2; i >= this.ContentBounds.StartRow; i--)
+            int column = _startNavigateCellPosition.IsEmpty ? 0 : _startNavigateCellPosition.Column;
+            int num2 = _startNavigateCellPosition.IsEmpty ? ContentBounds.StartRow : (_startNavigateCellPosition.Row - 1);
+            for (int i = num2; i >= ContentBounds.StartRow; i--)
             {
                 CompositePosition position2;
                 CompositePosition position = new CompositePosition(DataSheetElementType.Cell, i, column);
-                if (this.IsMerged(position, out position2))
+                if (IsMerged(position, out position2))
                 {
                     position = position2;
                 }
-                if (this.CanMoveCurrentTo(position))
+                if (CanMoveCurrentTo(position))
                 {
                     newStartPosition = position;
                     return position;
@@ -554,17 +554,17 @@ namespace Dt.Cells.UI
 
         public virtual bool ShouldNavigateInSelection()
         {
-            if (this.Selections.Count == 0)
+            if (Selections.Count == 0)
             {
                 return false;
             }
-            if (this.Selections.Count <= 1)
+            if (Selections.Count <= 1)
             {
-                CompositeRange fixedRange = this.GetFixedRange(this.Selections[0]);
-                CompositePosition topLeft = this.GetTopLeft(fixedRange);
-                if (fixedRange.RowCount <= this.GetRowSpan(topLeft))
+                CompositeRange fixedRange = GetFixedRange(Selections[0]);
+                CompositePosition topLeft = GetTopLeft(fixedRange);
+                if (fixedRange.RowCount <= GetRowSpan(topLeft))
                 {
-                    return (fixedRange.ColumnCount > this.GetColumnSpan(topLeft));
+                    return (fixedRange.ColumnCount > GetColumnSpan(topLeft));
                 }
             }
             return true;
@@ -572,14 +572,14 @@ namespace Dt.Cells.UI
 
         public void UpdateNavigationStartPosition(CompositePosition currentPosition, CompositePosition startPosition)
         {
-            this._currentCellPosition = currentPosition;
+            _currentCellPosition = currentPosition;
             if (startPosition.IsEmpty && !currentPosition.IsEmpty)
             {
-                this._startNavigateCellPosition = currentPosition;
+                _startNavigateCellPosition = currentPosition;
             }
             else
             {
-                this._startNavigateCellPosition = startPosition;
+                _startNavigateCellPosition = startPosition;
             }
         }
 
@@ -589,22 +589,22 @@ namespace Dt.Cells.UI
 
         public virtual CompositeRange ContentBounds
         {
-            get { return  new CompositeRange(DataSheetElementType.Cell, 0, 0, this.CompositeRowCount, this.CompositeColumnCount); }
+            get { return  new CompositeRange(DataSheetElementType.Cell, 0, 0, CompositeRowCount, CompositeColumnCount); }
         }
 
         public virtual CompositePosition CurrentCell
         {
-            get { return  this._currentCellPosition; }
+            get { return  _currentCellPosition; }
             set
             {
-                if (this._currentCellPosition != value)
+                if (_currentCellPosition != value)
                 {
-                    this._currentCellPosition = value;
+                    _currentCellPosition = value;
                     if (!value.IsEmpty)
                     {
-                        this.BringCellToVisible(value);
+                        BringCellToVisible(value);
                     }
-                    this._startNavigateCellPosition = value;
+                    _startNavigateCellPosition = value;
                 }
             }
         }
@@ -613,16 +613,16 @@ namespace Dt.Cells.UI
         {
             get
             {
-                IList<CompositeRange> selections = this.Selections;
-                if ((this._currentRangeIndex >= 0) && (this._currentRangeIndex < selections.Count))
+                IList<CompositeRange> selections = Selections;
+                if ((_currentRangeIndex >= 0) && (_currentRangeIndex < selections.Count))
                 {
-                    return selections[this._currentRangeIndex];
+                    return selections[_currentRangeIndex];
                 }
-                if (!this.CurrentCell.IsEmpty)
+                if (!CurrentCell.IsEmpty)
                 {
                     for (int i = selections.Count - 1; i >= 0; i--)
                     {
-                        if (((selections[i].Row == -1) || ((this.CurrentCell.Row >= selections[i].Row) && (this.CurrentCell.Row <= selections[i].EndRow))) && ((selections[i].Column == -1) || ((this.CurrentCell.Column >= selections[i].Column) && (this.CurrentCell.Column <= selections[i].EndColumn))))
+                        if (((selections[i].Row == -1) || ((CurrentCell.Row >= selections[i].Row) && (CurrentCell.Row <= selections[i].EndRow))) && ((selections[i].Column == -1) || ((CurrentCell.Column >= selections[i].Column) && (CurrentCell.Column <= selections[i].EndColumn))))
                         {
                             return selections[i];
                         }

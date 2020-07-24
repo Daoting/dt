@@ -17,32 +17,32 @@ namespace Dt.Cells.UI
 {
     internal partial class GcHeaderCornerViewport : GcViewport
     {
-        private RowPresenter _cornerRow;
+        RowPresenter _cornerRow;
 
         public GcHeaderCornerViewport(SheetView sheet) : base(sheet, SheetArea.CornerHeader, false)
         {
             base._sheetArea = SheetArea.CornerHeader;
-            this._cornerRow = new HeaderCornerRowPresenter(this);
+            _cornerRow = new HeaderCornerRowPresenter(this);
             base.Children.Clear();
-            base.Children.Add(this._cornerRow);
+            base.Children.Add(_cornerRow);
             base.HorizontalAlignment = HorizontalAlignment.Right;
             base.VerticalAlignment = VerticalAlignment.Bottom;
         }
 
         protected override Windows.Foundation.Size ArrangeOverride(Windows.Foundation.Size finalSize)
         {
-            this.GetRowLayoutModel();
+            GetRowLayoutModel();
             double y = base.Location.Y;
             double x = base.Location.X;
             double width = finalSize.Width;
             double height = finalSize.Height;
-            this._cornerRow.Arrange(new Windows.Foundation.Rect(base.PointToClient(new Windows.Foundation.Point(x, y)), new Windows.Foundation.Size(width, height)));
+            _cornerRow.Arrange(new Windows.Foundation.Rect(base.PointToClient(new Windows.Foundation.Point(x, y)), new Windows.Foundation.Size(width, height)));
             return finalSize;
         }
 
         internal override RowPresenter GetRow(int row)
         {
-            return this._cornerRow;
+            return _cornerRow;
         }
 
         internal override SheetSpanModelBase GetSpanModel()
@@ -60,8 +60,8 @@ namespace Dt.Cells.UI
 
         protected override Windows.Foundation.Size MeasureOverride(Windows.Foundation.Size availableSize)
         {
-            this._cornerRow.Measure(availableSize);
-            return this.GetViewportSize(availableSize);
+            _cornerRow.Measure(availableSize);
+            return GetViewportSize(availableSize);
         }
 
         internal override bool SupportCellOverflow

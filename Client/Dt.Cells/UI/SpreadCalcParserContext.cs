@@ -18,18 +18,18 @@ namespace Dt.Cells.UI
 {
     internal class SpreadCalcParserContext : CalcParserContext
     {
-        private Worksheet _context;
+        Worksheet _context;
 
         public SpreadCalcParserContext(Worksheet context, bool useR1C1 = false, int baseRowIndex = 0, int baseColumnIndex = 0, CultureInfo culture = null) : base(useR1C1, baseRowIndex, baseColumnIndex, culture)
         {
-            this._context = context;
+            _context = context;
         }
 
         public override ICalcSource GetExternalSource(string workbookName, string worksheetName)
         {
-            if ((this._context != null) && (this._context.Workbook != null))
+            if ((_context != null) && (_context.Workbook != null))
             {
-                return this._context.Workbook.Sheets[worksheetName];
+                return _context.Workbook.Sheets[worksheetName];
             }
             return base.GetExternalSource(workbookName, worksheetName);
         }

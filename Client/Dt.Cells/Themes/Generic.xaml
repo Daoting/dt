@@ -398,13 +398,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="dt:Excel">
-                    <Grid>
-                        <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
-                            <Grid x:Name="Root"/>
-                        </Border>
-                        <!--打印遮罩-->
-                        <ContentPresenter Content="{TemplateBinding PrintMask}" />
-                    </Grid>
+                    <Grid x:Name="Root" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

@@ -18,9 +18,9 @@ namespace Dt.Cells.UndoRedo
     {
         public SparklineInfo(Dt.Cells.Data.Sparkline sparkline, CellRange dataRange, CellRange dataAxisRange)
         {
-            this.Sparkline = sparkline;
-            this.DataRange = dataRange;
-            this.DataAxisRange = dataAxisRange;
+            Sparkline = sparkline;
+            DataRange = dataRange;
+            DataAxisRange = dataAxisRange;
         }
 
         public CellRange DataAxisRange { get; private set; }

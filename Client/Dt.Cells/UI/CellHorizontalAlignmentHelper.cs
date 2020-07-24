@@ -17,7 +17,7 @@ namespace Dt.Cells.UI
 {
     internal static class CellHorizontalAlignmentHelper
     {
-        private static bool IsExcelRightAlignmentValue(object value)
+        static bool IsExcelRightAlignmentValue(object value)
         {
             return ((((((value is TimeSpan) || (value is DateTime)) || ((value is double) || (value is float))) || (((value is decimal) || (value is long)) || ((value is int) || (value is short)))) || (((value is sbyte) || (value is ulong)) || ((value is uint) || (value is ushort)))) || (value is byte));
         }

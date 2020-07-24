@@ -16,88 +16,88 @@ namespace Dt.Cells.UI
 {
     internal class ScrollSelectionManager : IDisposable
     {
-        private double _max;
-        private double _min;
-        private double _mousePosition;
-        private bool _needIncrease;
-        private Action<bool> _tickAction;
-        private DispatcherTimer _timer;
+        double _max;
+        double _min;
+        double _mousePosition;
+        bool _needIncrease;
+        Action<bool> _tickAction;
+        DispatcherTimer _timer;
 
         public ScrollSelectionManager(double min, double max, Action<bool> tickAction)
         {
-            this._tickAction = tickAction;
-            this._min = min;
-            this._max = max;
-            this._timer = new DispatcherTimer();
-            DispatcherTimer timer = this._timer;
+            _tickAction = tickAction;
+            _min = min;
+            _max = max;
+            _timer = new DispatcherTimer();
+            DispatcherTimer timer = _timer;
             timer.Tick += TimerTick;
         }
 
         public void Dispose()
         {
-            if (this._timer != null)
+            if (_timer != null)
             {
-                this._timer.Stop();
+                _timer.Stop();
                 _timer.Tick -= TimerTick;
-                this._timer = null;
+                _timer = null;
             }
         }
 
-        private void TimerTick(object sender, object e)
+        void TimerTick(object sender, object e)
         {
-            this._tickAction(this._needIncrease);
+            _tickAction(_needIncrease);
         }
 
         public double MousePosition
         {
-            get { return  this._mousePosition; }
+            get { return  _mousePosition; }
             set
             {
-                if (this._mousePosition != value)
+                if (_mousePosition != value)
                 {
-                    this._mousePosition = value;
-                    if ((this._mousePosition > this._min) && (this._mousePosition < this._max))
+                    _mousePosition = value;
+                    if ((_mousePosition > _min) && (_mousePosition < _max))
                     {
-                        this._timer.Stop();
+                        _timer.Stop();
                     }
                     else
                     {
                         double num = 0.0;
-                        if (this._mousePosition <= this._min)
+                        if (_mousePosition <= _min)
                         {
-                            num = this._min - this._mousePosition;
-                            this._needIncrease = false;
+                            num = _min - _mousePosition;
+                            _needIncrease = false;
                         }
-                        else if (this._mousePosition >= this._max)
+                        else if (_mousePosition >= _max)
                         {
-                            num = this._mousePosition - this._max;
-                            this._needIncrease = true;
+                            num = _mousePosition - _max;
+                            _needIncrease = true;
                         }
                         if (num < 5.0)
                         {
-                            this._timer.Interval = new TimeSpan(0, 0, 0, 0, 200);
+                            _timer.Interval = new TimeSpan(0, 0, 0, 0, 200);
                         }
                         else if (num < 10.0)
                         {
-                            this._timer.Interval = new TimeSpan(0, 0, 0, 0, 150);
+                            _timer.Interval = new TimeSpan(0, 0, 0, 0, 150);
                         }
                         else if (num < 15.0)
                         {
-                            this._timer.Interval = new TimeSpan(0, 0, 0, 0, 0x7d);
+                            _timer.Interval = new TimeSpan(0, 0, 0, 0, 0x7d);
                         }
                         else if (num < 20.0)
                         {
-                            this._timer.Interval = new TimeSpan(0, 0, 0, 0, 0x7d);
+                            _timer.Interval = new TimeSpan(0, 0, 0, 0, 0x7d);
                         }
                         else if (num < 25.0)
                         {
-                            this._timer.Interval = new TimeSpan(0, 0, 0, 0, 0x7d);
+                            _timer.Interval = new TimeSpan(0, 0, 0, 0, 0x7d);
                         }
                         else
                         {
-                            this._timer.Interval = new TimeSpan(0, 0, 0, 0, 0x7d);
+                            _timer.Interval = new TimeSpan(0, 0, 0, 0, 0x7d);
                         }
-                        this._timer.Start();
+                        _timer.Start();
                     }
                 }
             }

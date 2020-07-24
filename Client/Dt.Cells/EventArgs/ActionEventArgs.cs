@@ -23,7 +23,7 @@ namespace Dt.Cells.UI
         /// </summary>
         public ActionEventArgs()
         {
-            this.Handled = false;
+            Handled = false;
         }
 
         /// <summary>

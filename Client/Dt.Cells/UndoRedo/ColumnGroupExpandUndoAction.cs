@@ -21,8 +21,8 @@ namespace Dt.Cells.UndoRedo
     /// </summary>
     public class ColumnGroupExpandUndoAction : ActionBase, IUndo
     {
-        private ColumnGroupExpandExtent _columnExpandExtent;
-        private Worksheet _sheet;
+        ColumnGroupExpandExtent _columnExpandExtent;
+        Worksheet _sheet;
 
         /// <summary>
         /// Creates a new instance of the <see cref="T:Dt.Cells.UndoRedo.ColumnGroupExpandUndoAction" /> class.
@@ -31,8 +31,8 @@ namespace Dt.Cells.UndoRedo
         /// <param name="columnExpandExtent">The column expand extent information.</param>
         public ColumnGroupExpandUndoAction(Worksheet sheet, ColumnGroupExpandExtent columnExpandExtent)
         {
-            this._sheet = sheet;
-            this._columnExpandExtent = columnExpandExtent;
+            _sheet = sheet;
+            _columnExpandExtent = columnExpandExtent;
         }
 
         /// <summary>
@@ -53,14 +53,14 @@ namespace Dt.Cells.UndoRedo
         /// <param name="sender">Object on which the action occurred.</param>
         public override void Execute(object sender)
         {
-            if (((this._sheet != null) && (this._columnExpandExtent != null)) && (this._sheet.ColumnRangeGroup != null))
+            if (((_sheet != null) && (_columnExpandExtent != null)) && (_sheet.ColumnRangeGroup != null))
             {
                 base.SuspendInvalidate(sender);
                 try
                 {
-                    int index = this._columnExpandExtent.Index;
-                    bool collapsed = this._columnExpandExtent.Collapsed;
-                    this._sheet.ColumnRangeGroup.Data.SetCollapsed(index, collapsed);
+                    int index = _columnExpandExtent.Index;
+                    bool collapsed = _columnExpandExtent.Collapsed;
+                    _sheet.ColumnRangeGroup.Data.SetCollapsed(index, collapsed);
                 }
                 finally
                 {
@@ -79,7 +79,7 @@ namespace Dt.Cells.UndoRedo
                     {
                         sheetView.InvalidateFloatingObjects(Enumerable.ToArray<SpreadChartBase>((IEnumerable<SpreadChartBase>) chartShapeAffectedByColumnRangeGroup));
                     }
-                    this.ShowColumnRangeGroup(sheetView);
+                    ShowColumnRangeGroup(sheetView);
                 }
             }
         }
@@ -91,21 +91,21 @@ namespace Dt.Cells.UndoRedo
         {
         }
 
-        private void ShowColumnRangeGroup(SheetView sheetView)
+        void ShowColumnRangeGroup(SheetView sheetView)
         {
-            int index = this._columnExpandExtent.Index;
-            if ((index >= 0) && (index < this._sheet.ColumnCount))
+            int index = _columnExpandExtent.Index;
+            if ((index >= 0) && (index < _sheet.ColumnCount))
             {
                 ViewportInfo viewportInfo = sheetView.GetViewportInfo();
                 if (sheetView.Worksheet.ColumnRangeGroup.Direction == RangeGroupDirection.Forward)
                 {
-                    RangeGroupInfo info2 = this._sheet.ColumnRangeGroup.Find(index - 1, this._columnExpandExtent.Level);
+                    RangeGroupInfo info2 = _sheet.ColumnRangeGroup.Find(index - 1, _columnExpandExtent.Level);
                     if (info2 != null)
                     {
                         int start = info2.Start;
                         int rightColumn = index;
-                        int viewportIndex = this._columnExpandExtent.ViewportIndex;
-                        if (this._sheet.ColumnRangeGroup.Data.GetCollapsed(index))
+                        int viewportIndex = _columnExpandExtent.ViewportIndex;
+                        if (_sheet.ColumnRangeGroup.Data.GetCollapsed(index))
                         {
                             if ((viewportIndex < 0) || (viewportIndex >= viewportInfo.ColumnViewportCount))
                             {
@@ -151,15 +151,15 @@ namespace Dt.Cells.UndoRedo
                         sheetView.SetViewportLeftColumn(viewportIndex, viewportLeftColumn);
                     }
                 }
-                else if (this._sheet.ColumnRangeGroup.Direction == RangeGroupDirection.Backward)
+                else if (_sheet.ColumnRangeGroup.Direction == RangeGroupDirection.Backward)
                 {
-                    RangeGroupInfo info3 = this._sheet.ColumnRangeGroup.Find(index + 1, this._columnExpandExtent.Level);
+                    RangeGroupInfo info3 = _sheet.ColumnRangeGroup.Find(index + 1, _columnExpandExtent.Level);
                     if (info3 != null)
                     {
                         int frozenColumnCount = index;
                         int end = info3.End;
-                        int columnViewportIndex = this._columnExpandExtent.ViewportIndex;
-                        if (this._sheet.ColumnRangeGroup.Data.GetCollapsed(index))
+                        int columnViewportIndex = _columnExpandExtent.ViewportIndex;
+                        if (_sheet.ColumnRangeGroup.Data.GetCollapsed(index))
                         {
                             if ((columnViewportIndex < 0) || (columnViewportIndex >= viewportInfo.ColumnViewportCount))
                             {
@@ -230,14 +230,14 @@ namespace Dt.Cells.UndoRedo
         public bool Undo(object sender)
         {
             bool flag = false;
-            if (((this._sheet != null) && (this._columnExpandExtent != null)) && (this._sheet.ColumnRangeGroup != null))
+            if (((_sheet != null) && (_columnExpandExtent != null)) && (_sheet.ColumnRangeGroup != null))
             {
                 base.SuspendInvalidate(sender);
                 try
                 {
-                    int index = this._columnExpandExtent.Index;
-                    bool collapsed = this._columnExpandExtent.Collapsed;
-                    this._sheet.ColumnRangeGroup.Data.SetCollapsed(index, !collapsed);
+                    int index = _columnExpandExtent.Index;
+                    bool collapsed = _columnExpandExtent.Collapsed;
+                    _sheet.ColumnRangeGroup.Data.SetCollapsed(index, !collapsed);
                     flag = true;
                 }
                 finally
@@ -259,7 +259,7 @@ namespace Dt.Cells.UndoRedo
                 {
                     sheetView.InvalidateFloatingObjects(Enumerable.ToArray<SpreadChartBase>((IEnumerable<SpreadChartBase>) chartShapeAffectedByColumnRangeGroup));
                 }
-                this.ShowColumnRangeGroup(sheetView);
+                ShowColumnRangeGroup(sheetView);
             }
             return flag;
         }

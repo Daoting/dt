@@ -33,9 +33,9 @@ namespace Dt.Cells.UI
         /// </param>
         public ColumnLayout(int column, double x, double width)
         {
-            this.Column = column;
-            this.X = x;
-            this.Width = width;
+            Column = column;
+            X = x;
+            Width = width;
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Dt.Cells.UI
         /// </returns>
         public bool ContainsX(double x)
         {
-            return ((this.X <= x) && (x < (this.X + this.Width)));
+            return ((X <= x) && (x < (X + Width)));
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace Dt.Cells.UI
         /// </returns>
         public bool IntersectsWith(Windows.Foundation.Rect rect)
         {
-            return (((this.Width > 0.0) && ((rect.X + rect.Width) > this.X)) && (rect.X < (this.X + this.Width)));
+            return (((Width > 0.0) && ((rect.X + rect.Width) > X)) && (rect.X < (X + Width)));
         }
 
         /// <summary>

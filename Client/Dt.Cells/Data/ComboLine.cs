@@ -31,15 +31,15 @@ namespace Dt.Cells.Data
         {
             base.HorizontalAlignment = HorizontalAlignment.Left;
             base.VerticalAlignment = VerticalAlignment.Top;
-            this._line1 = new InnerLine();
-            this._line2 = new InnerLine();
-            this._line3 = new InnerLine();
-            base.Children.Add(this._line1.Element);
-            base.Children.Add(this._line2.Element);
-            base.Children.Add(this._line3.Element);
+            _line1 = new InnerLine();
+            _line2 = new InnerLine();
+            _line3 = new InnerLine();
+            base.Children.Add(_line1.Element);
+            base.Children.Add(_line2.Element);
+            base.Children.Add(_line3.Element);
         }
 
-        private static void ApplyDashArray(InnerLine line, DoubleCollection value, int offset)
+        static void ApplyDashArray(InnerLine line, DoubleCollection value, int offset)
         {
             line.ClearDashArray();
             if (value != null)
@@ -167,12 +167,12 @@ namespace Dt.Cells.Data
         /// </value>
         public double X1
         {
-            get { return  this._line2.X1; }
+            get { return  _line2.X1; }
             set
             {
-                this._line1.X1 = value;
-                this._line2.X1 = value - 0.5;
-                this._line3.X1 = value;
+                _line1.X1 = value;
+                _line2.X1 = value - 0.5;
+                _line3.X1 = value;
             }
         }
 
@@ -184,12 +184,12 @@ namespace Dt.Cells.Data
         /// </value>
         public double X2
         {
-            get { return  this._line2.X2; }
+            get { return  _line2.X2; }
             set
             {
-                this._line1.X2 = value;
-                this._line2.X2 = value - 0.5;
-                this._line3.X2 = value;
+                _line1.X2 = value;
+                _line2.X2 = value - 0.5;
+                _line3.X2 = value;
             }
         }
 
@@ -201,12 +201,12 @@ namespace Dt.Cells.Data
         /// </value>
         public double Y1
         {
-            get { return  this._line2.Y1; }
+            get { return  _line2.Y1; }
             set
             {
-                this._line1.Y1 = value;
-                this._line2.Y1 = value - 0.5;
-                this._line3.Y1 = value;
+                _line1.Y1 = value;
+                _line2.Y1 = value - 0.5;
+                _line3.Y1 = value;
             }
         }
 
@@ -218,86 +218,88 @@ namespace Dt.Cells.Data
         /// </value>
         public double Y2
         {
-            get { return  this._line2.Y2; }
+            get { return  _line2.Y2; }
             set
             {
-                this._line1.Y2 = value;
-                this._line2.Y2 = value - 0.5;
-                this._line3.Y2 = value;
+                _line1.Y2 = value;
+                _line2.Y2 = value - 0.5;
+                _line3.Y2 = value;
             }
         }
 
         internal class InnerLine
         {
-            private Windows.UI.Color _cachedColor = Colors.Transparent;
-            private List<double> _dashArray = new List<double>();
-            private Windows.UI.Xaml.Shapes.Line _line = new Windows.UI.Xaml.Shapes.Line();
-            private SolidColorBrush _stroke;
-            private double _strokeDashOffset;
-            private double _strokeThickness = 1.0;
-            private Windows.UI.Xaml.Visibility _visibility;
-            private double _x1 = 1.0;
-            private double _x2 = 1.0;
-            private double _y1 = 1.0;
-            private double _y2 = 1.0;
+            Windows.UI.Color _cachedColor = Colors.Transparent;
+            List<double> _dashArray = new List<double>();
+            Windows.UI.Xaml.Shapes.Line _line = new Windows.UI.Xaml.Shapes.Line();
+            SolidColorBrush _stroke;
+            double _strokeDashOffset;
+            double _strokeThickness = 1.0;
+            Windows.UI.Xaml.Visibility _visibility;
+            double _x1 = 1.0;
+            double _x2 = 1.0;
+            double _y1 = 1.0;
+            double _y2 = 1.0;
 
             public void AddDashArray(double value)
             {
-                if (this._dashArray.Count == 0)
+                if (_dashArray.Count == 0)
                 {
-                    this._line.StrokeDashOffset = this._strokeDashOffset;
+                    _line.StrokeDashOffset = _strokeDashOffset;
                 }
-                this._dashArray.Add(value);
-                this._line.StrokeDashArray.Add(value);
+                _dashArray.Add(value);
+                if (_line.StrokeDashArray == null)
+                    _line.StrokeDashArray = new DoubleCollection();
+                _line.StrokeDashArray.Add(value);
             }
 
             public void ClearDashArray()
             {
-                if (this._dashArray.Count > 0)
+                if (_dashArray.Count > 0)
                 {
-                    this._dashArray.Clear();
-                    this._line.StrokeDashArray.Clear();
+                    _dashArray.Clear();
+                    _line.StrokeDashArray?.Clear();
                 }
             }
 
             public void SetColor(SolidColorBrush brush, Windows.UI.Color color)
             {
-                if (color != this._cachedColor)
+                if (color != _cachedColor)
                 {
-                    this._cachedColor = color;
-                    this._line.Stroke = brush;
+                    _cachedColor = color;
+                    _line.Stroke = brush;
                 }
             }
 
             internal Windows.UI.Xaml.Shapes.Line Element
             {
-                get { return  this._line; }
+                get { return  _line; }
             }
 
             public SolidColorBrush Stroke
             {
-                get { return  this._stroke; }
+                get { return  _stroke; }
                 set
                 {
-                    if (this._stroke != value)
+                    if (_stroke != value)
                     {
-                        this._stroke = value;
-                        this._line.Stroke = value;
+                        _stroke = value;
+                        _line.Stroke = value;
                     }
                 }
             }
 
             public double StrokeDashOffset
             {
-                get { return  this._strokeDashOffset; }
+                get { return  _strokeDashOffset; }
                 set
                 {
-                    if (this._strokeDashOffset != value)
+                    if (_strokeDashOffset != value)
                     {
-                        this._strokeDashOffset = value;
-                        if (this._dashArray.Count > 0)
+                        _strokeDashOffset = value;
+                        if (_dashArray.Count > 0)
                         {
-                            this._line.StrokeDashOffset = value;
+                            _line.StrokeDashOffset = value;
                         }
                     }
                 }
@@ -305,78 +307,78 @@ namespace Dt.Cells.Data
 
             public double StrokeThickness
             {
-                get { return  this._strokeThickness; }
+                get { return  _strokeThickness; }
                 set
                 {
-                    if (this._strokeThickness != value)
+                    if (_strokeThickness != value)
                     {
-                        this._strokeThickness = value;
-                        this._line.StrokeThickness = value;
+                        _strokeThickness = value;
+                        _line.StrokeThickness = value;
                     }
                 }
             }
 
             public Windows.UI.Xaml.Visibility Visibility
             {
-                get { return  this._visibility; }
+                get { return  _visibility; }
                 set
                 {
-                    if (this._visibility != value)
+                    if (_visibility != value)
                     {
-                        this._visibility = value;
-                        this._line.Visibility = value;
+                        _visibility = value;
+                        _line.Visibility = value;
                     }
                 }
             }
 
             public double X1
             {
-                get { return  this._x1; }
+                get { return  _x1; }
                 set
                 {
-                    if (this._x1 != value)
+                    if (_x1 != value)
                     {
-                        this._x1 = value;
-                        this._line.X1 = value;
+                        _x1 = value;
+                        _line.X1 = value;
                     }
                 }
             }
 
             public double X2
             {
-                get { return  this._x2; }
+                get { return  _x2; }
                 set
                 {
-                    if (this._x2 != value)
+                    if (_x2 != value)
                     {
-                        this._x2 = value;
-                        this._line.X2 = value;
+                        _x2 = value;
+                        _line.X2 = value;
                     }
                 }
             }
 
             public double Y1
             {
-                get { return  this._y1; }
+                get { return  _y1; }
                 set
                 {
-                    if (this._y1 != value)
+                    if (_y1 != value)
                     {
-                        this._y1 = value;
-                        this._line.Y1 = value;
+                        _y1 = value;
+                        _line.Y1 = value;
                     }
                 }
             }
 
             public double Y2
             {
-                get { return  this._y2; }
+                get { return  _y2; }
                 set
                 {
-                    if (this._y2 != value)
+                    if (_y2 != value)
                     {
-                        this._y2 = value;
-                        this._line.Y2 = value;
+                        _y2 = value;
+                        _line.Y2 = value;
                     }
                 }
             }

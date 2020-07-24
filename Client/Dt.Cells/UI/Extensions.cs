@@ -19,7 +19,7 @@ namespace Dt.Cells.UI
     /// </summary>
     internal static class Extensions
     {
-        private static bool _areHandlersSuspended;
+        static bool _areHandlersSuspended;
 
         /// <summary>
         /// Determines whether the events are suspended for the specified object.

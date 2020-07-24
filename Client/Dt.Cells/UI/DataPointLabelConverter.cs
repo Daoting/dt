@@ -24,7 +24,7 @@ namespace Dt.Cells.UI
     /// </summary>
     public class DataPointLabelConverter : IValueConverter
     {
-        private Dictionary<int, SpreadDataSeries> _dataSeries = new Dictionary<int, SpreadDataSeries>();
+        Dictionary<int, SpreadDataSeries> _dataSeries = new Dictionary<int, SpreadDataSeries>();
 
         /// <summary>
         /// Converts the specified value.
@@ -42,8 +42,8 @@ namespace Dt.Cells.UI
             if (!string.IsNullOrEmpty(str) && (value != null))
             {
                 Dt.Charts.DataPoint point = value as Dt.Charts.DataPoint;
-                SpreadDataSeries series = this.DataSeries[point.SeriesIndex];
-                return this.GetCustomConvertValue(series.GetDataLabel(point.PointIndex), str);
+                SpreadDataSeries series = DataSeries[point.SeriesIndex];
+                return GetCustomConvertValue(series.GetDataLabel(point.PointIndex), str);
             }
             return null;
         }
@@ -63,7 +63,7 @@ namespace Dt.Cells.UI
             return null;
         }
 
-        private object GetCustomConvertValue(DataLabel dataLabele, string para)
+        object GetCustomConvertValue(DataLabel dataLabele, string para)
         {
             if (para == "backColor")
             {
@@ -94,17 +94,17 @@ namespace Dt.Cells.UI
             }
             if (para == "borderThickness")
             {
-                return (double)(dataLabele.ActualStrokeThickness * this.ZoomFactor);
+                return (double)(dataLabele.ActualStrokeThickness * ZoomFactor);
             }
             if (para == "margin")
             {
-                return new Windows.UI.Xaml.Thickness(dataLabele.ActualStrokeThickness * this.ZoomFactor);
+                return new Windows.UI.Xaml.Thickness(dataLabele.ActualStrokeThickness * ZoomFactor);
             }
             if (para == "textFontSize")
             {
                 if (dataLabele.ActualFontSize > 0.0)
                 {
-                    return (double)(dataLabele.ActualFontSize * this.ZoomFactor);
+                    return (double)(dataLabele.ActualFontSize * ZoomFactor);
                 }
             }
             else
@@ -152,8 +152,8 @@ namespace Dt.Cells.UI
         /// </summary>
         public Dictionary<int, SpreadDataSeries> DataSeries
         {
-            get { return this._dataSeries; }
-            set { this._dataSeries = value; }
+            get { return _dataSeries; }
+            set { _dataSeries = value; }
         }
 
         /// <summary>

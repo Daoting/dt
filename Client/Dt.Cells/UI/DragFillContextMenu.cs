@@ -23,10 +23,10 @@ namespace Dt.Cells.UI
     /// </summary>
     public partial class DragFillContextMenu : ContentControl
     {
-        private AutoFillType[] _items;
-        private StackPanel _rootGrid;
-        private DragFillContextMenuItem _selectedItem;
-        private AutoFillType _selectedType;
+        AutoFillType[] _items;
+        StackPanel _rootGrid;
+        DragFillContextMenuItem _selectedItem;
+        AutoFillType _selectedType;
 
         /// <summary>
         /// Occurs when the selected automatic fit item has changed.
@@ -41,11 +41,11 @@ namespace Dt.Cells.UI
         public DragFillContextMenu(AutoFillType[] items, AutoFillType defaultType)
         {
             base.DefaultStyleKey = typeof(DragFillContextMenu);
-            this._rootGrid = new StackPanel();
-            base.Content = this._rootGrid;
+            _rootGrid = new StackPanel();
+            base.Content = _rootGrid;
             DragFillContextMenu menu = this;
-            menu.Loaded += DragFillContextMenu_Loaded; this._selectedType = defaultType;
-            this.Items = items;
+            menu.Loaded += DragFillContextMenu_Loaded; _selectedType = defaultType;
+            Items = items;
             DragFillContextMenu menu2 = this;
             menu2.PointerPressed += OnDragFillContextMenuPointerPressed;
         }
@@ -56,9 +56,9 @@ namespace Dt.Cells.UI
         public DragFillContextMenu()
         { }
 
-        private void CheckedItemChenged(object sender, EventArgs e)
+        void CheckedItemChenged(object sender, EventArgs e)
         {
-            foreach (DragFillContextMenuItem item in this._rootGrid.Children)
+            foreach (DragFillContextMenuItem item in _rootGrid.Children)
             {
                 if (item != sender)
                 {
@@ -66,17 +66,17 @@ namespace Dt.Cells.UI
                 }
                 else
                 {
-                    this._selectedItem = item;
+                    _selectedItem = item;
                 }
             }
-            this.OnSelectedItemChanged();
+            OnSelectedItemChanged();
         }
 
-        private void DragFillContextMenu_Loaded(object sender, RoutedEventArgs e)
+        void DragFillContextMenu_Loaded(object sender, RoutedEventArgs e)
         {
         }
 
-        private static string GetAutoFitTypeString(AutoFillType type)
+        static string GetAutoFitTypeString(AutoFillType type)
         {
             switch (type)
             {
@@ -95,41 +95,41 @@ namespace Dt.Cells.UI
             return ResourceStrings.UIFill_None;
         }
 
-        private void OnDragFillContextMenuPointerPressed(object sender, PointerRoutedEventArgs e)
+        void OnDragFillContextMenuPointerPressed(object sender, PointerRoutedEventArgs e)
         {
             e.Handled = true;
         }
 
-        private void OnSelectedItemChanged()
+        void OnSelectedItemChanged()
         {
-            if (this.SelectedAutoFitTypeChanged != null)
+            if (SelectedAutoFitTypeChanged != null)
             {
-                this.SelectedAutoFitTypeChanged(this, EventArgs.Empty);
+                SelectedAutoFitTypeChanged(this, EventArgs.Empty);
             }
         }
 
-        private void UpdateItems()
+        void UpdateItems()
         {
-            foreach (DragFillContextMenuItem item in this._rootGrid.Children)
+            foreach (DragFillContextMenuItem item in _rootGrid.Children)
             {
-                item.Checked -= new EventHandler(this.CheckedItemChenged);
+                item.Checked -= new EventHandler(CheckedItemChenged);
             }
-            this._rootGrid.Children.Clear();
-            foreach (AutoFillType type in this.Items)
+            _rootGrid.Children.Clear();
+            foreach (AutoFillType type in Items)
             {
                 DragFillContextMenuItem item2 = new DragFillContextMenuItem(GetAutoFitTypeString(type), type);
-                this._rootGrid.Children.Add(item2);
-                item2.Checked += new EventHandler(this.CheckedItemChenged);
+                _rootGrid.Children.Add(item2);
+                item2.Checked += new EventHandler(CheckedItemChenged);
             }
-            this.UpdateSelectedItem();
+            UpdateSelectedItem();
         }
 
-        private void UpdateSelectedItem()
+        void UpdateSelectedItem()
         {
             string autoFitTypeString = "";
-            foreach (AutoFillType type in this.Items)
+            foreach (AutoFillType type in Items)
             {
-                if (type == this._selectedType)
+                if (type == _selectedType)
                 {
                     autoFitTypeString = GetAutoFitTypeString(type);
                     break;
@@ -137,14 +137,14 @@ namespace Dt.Cells.UI
             }
             if (string.IsNullOrEmpty(autoFitTypeString))
             {
-                autoFitTypeString = GetAutoFitTypeString(this.Items[0]);
+                autoFitTypeString = GetAutoFitTypeString(Items[0]);
             }
-            foreach (DragFillContextMenuItem item in this._rootGrid.Children)
+            foreach (DragFillContextMenuItem item in _rootGrid.Children)
             {
                 if (item.Text == autoFitTypeString)
                 {
                     item.IsChecked = true;
-                    this._selectedItem = item;
+                    _selectedItem = item;
                 }
                 else
                 {
@@ -161,11 +161,11 @@ namespace Dt.Cells.UI
         /// </value>
         public AutoFillType[] Items
         {
-            get { return this._items; }
+            get { return _items; }
             set
             {
-                this._items = value;
-                this.UpdateItems();
+                _items = value;
+                UpdateItems();
             }
         }
 
@@ -177,11 +177,11 @@ namespace Dt.Cells.UI
         /// </value>
         public AutoFillType SelectedAutoFitType
         {
-            get { return this._selectedItem.FillType; }
+            get { return _selectedItem.FillType; }
             set
             {
-                this._selectedType = value;
-                this.UpdateSelectedItem();
+                _selectedType = value;
+                UpdateSelectedItem();
             }
         }
     }

@@ -16,168 +16,168 @@ namespace Dt.Cells.UndoRedo
 {
     internal class CopyMoveCellsInfo
     {
-        private object[,] _arrayFormulas;
-        private bool _arrayFormulaSaved;
-        private int _columnCount;
-        private List<CellData> _formulas = new List<CellData>();
-        private bool _formulaSaved;
-        private int _rowCount;
-        private List<CellRange> _spans;
-        private bool _spanSaved;
-        private List<CellData> _sparklines = new List<CellData>();
-        private bool _sparklineSaved;
-        private List<CellData> _styles = new List<CellData>();
-        private bool _styleSaved;
-        private List<CellData> _tags = new List<CellData>();
-        private bool _tagSaved;
-        private List<CellData> _values = new List<CellData>();
-        private bool _valueSaved;
+        object[,] _arrayFormulas;
+        bool _arrayFormulaSaved;
+        int _columnCount;
+        List<CellData> _formulas = new List<CellData>();
+        bool _formulaSaved;
+        int _rowCount;
+        List<CellRange> _spans;
+        bool _spanSaved;
+        List<CellData> _sparklines = new List<CellData>();
+        bool _sparklineSaved;
+        List<CellData> _styles = new List<CellData>();
+        bool _styleSaved;
+        List<CellData> _tags = new List<CellData>();
+        bool _tagSaved;
+        List<CellData> _values = new List<CellData>();
+        bool _valueSaved;
 
         public CopyMoveCellsInfo(int rowCount, int columnCount)
         {
-            this._rowCount = rowCount;
-            this._columnCount = columnCount;
+            _rowCount = rowCount;
+            _columnCount = columnCount;
         }
 
         public object[,] GetArrayFormula()
         {
-            return this._arrayFormulas;
+            return _arrayFormulas;
         }
 
         public List<CellData> GetFormulas()
         {
-            return this._formulas;
+            return _formulas;
         }
 
         public List<CellData> GetSparklines()
         {
-            return this._sparklines;
+            return _sparklines;
         }
 
         public List<CellData> GetStyles()
         {
-            return this._styles;
+            return _styles;
         }
 
         public List<CellData> GetTags()
         {
-            return this._tags;
+            return _tags;
         }
 
         public List<CellData> GetValues()
         {
-            return this._values;
+            return _values;
         }
 
         public bool IsArrayFormulaSaved()
         {
-            return this._arrayFormulaSaved;
+            return _arrayFormulaSaved;
         }
 
         public bool IsFormulaSaved()
         {
-            return this._formulaSaved;
+            return _formulaSaved;
         }
 
         public bool IsSpanSaved()
         {
-            return this._spanSaved;
+            return _spanSaved;
         }
 
         public bool IsSparklineSaved()
         {
-            return this._sparklineSaved;
+            return _sparklineSaved;
         }
 
         public bool IsStyleSaved()
         {
-            return this._styleSaved;
+            return _styleSaved;
         }
 
         public bool IsTagSaved()
         {
-            return this._tagSaved;
+            return _tagSaved;
         }
 
         public bool IsValueSaved()
         {
-            return this._valueSaved;
+            return _valueSaved;
         }
 
         public void SaveArrayFormula(object[,] arrayFormulas)
         {
-            this._arrayFormulas = arrayFormulas;
-            this._arrayFormulaSaved = true;
+            _arrayFormulas = arrayFormulas;
+            _arrayFormulaSaved = true;
         }
 
         public void SaveFormula(int row, int column, string formula)
         {
             if (!string.IsNullOrEmpty(formula))
             {
-                this._formulas.Add(new CellData(row, column, formula));
+                _formulas.Add(new CellData(row, column, formula));
             }
-            this._formulaSaved = true;
+            _formulaSaved = true;
         }
 
         public void SaveSpan(CellRange span)
         {
-            if (this._spans == null)
+            if (_spans == null)
             {
-                this._spans = new List<CellRange>();
+                _spans = new List<CellRange>();
             }
-            this._spans.Add(span);
-            this._spanSaved = true;
+            _spans.Add(span);
+            _spanSaved = true;
         }
 
         public void SaveSparkline(int row, int column, SparklineInfo sparkline)
         {
             if (sparkline != null)
             {
-                this._sparklines.Add(new CellData(row, column, sparkline));
+                _sparklines.Add(new CellData(row, column, sparkline));
             }
-            this._sparklineSaved = true;
+            _sparklineSaved = true;
         }
 
         public void SaveStyle(int row, int column, object style)
         {
             if (style != null)
             {
-                this._styles.Add(new CellData(row, column, style));
+                _styles.Add(new CellData(row, column, style));
             }
-            this._styleSaved = true;
+            _styleSaved = true;
         }
 
         public void SaveTag(int row, int column, object tag)
         {
             if (tag != null)
             {
-                this._tags.Add(new CellData(row, column, tag));
+                _tags.Add(new CellData(row, column, tag));
             }
-            this._tagSaved = true;
+            _tagSaved = true;
         }
 
         public void SaveValue(int row, int column, object value)
         {
             if (value != null)
             {
-                this._values.Add(new CellData(row, column, value));
+                _values.Add(new CellData(row, column, value));
             }
-            this._valueSaved = true;
+            _valueSaved = true;
         }
 
         public int ColumnCount
         {
-            get { return  this._columnCount; }
+            get { return  _columnCount; }
         }
 
         public int RowCount
         {
-            get { return  this._rowCount; }
+            get { return  _rowCount; }
         }
 
         public List<CellRange> Spans
         {
-            get { return  this._spans; }
+            get { return  _spans; }
         }
     }
 }

@@ -17,8 +17,8 @@ namespace Dt.Cells.UndoRedo
     /// </summary>
     public class ColumnResizeExtent
     {
-        private int firstColumn;
-        private int lastColumn;
+        int firstColumn;
+        int lastColumn;
 
         /// <summary>
         /// Creates a new ColumnResizeExtent object.
@@ -36,7 +36,7 @@ namespace Dt.Cells.UndoRedo
         /// </summary>
         public int FirstColumn
         {
-            get { return  this.firstColumn; }
+            get { return  firstColumn; }
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Dt.Cells.UndoRedo
         /// </summary>
         public int LastColumn
         {
-            get { return  this.lastColumn; }
+            get { return  lastColumn; }
         }
     }
 }

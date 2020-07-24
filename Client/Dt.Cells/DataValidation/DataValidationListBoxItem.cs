@@ -37,8 +37,8 @@ namespace Dt.Cells.UI
             base.OnPointerPressed(e);
             if ((base.Content == null) || ((base.Content is DataValidationListItem) && ((base.Content as DataValidationListItem).Value == null)))
             {
-                this.DataValidationListBox.SelectedIndex = -1;
-                this.DataValidationListBox.SelectedValue = null;
+                DataValidationListBox.SelectedIndex = -1;
+                DataValidationListBox.SelectedValue = null;
             }
         }
 
@@ -49,9 +49,9 @@ namespace Dt.Cells.UI
         protected override void OnPointerReleased(PointerRoutedEventArgs e)
         {
             base.OnPointerReleased(e);
-            if (this.DataValidationListBox != null)
+            if (DataValidationListBox != null)
             {
-                this.DataValidationListBox.PerformSelectionChanged();
+                DataValidationListBox.PerformSelectionChanged();
             }
         }
 

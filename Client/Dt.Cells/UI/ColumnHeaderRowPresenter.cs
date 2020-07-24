@@ -17,7 +17,7 @@ namespace Dt.Cells.UI
     internal partial class ColumnHeaderRowPresenter : RowPresenter
     {
         [ThreadStatic]
-        private static List<CellPresenterBase> _recycledColHeaderCells;
+        static List<CellPresenterBase> _recycledColHeaderCells;
 
         public ColumnHeaderRowPresenter(GcViewport viewPort) : base(viewPort)
         {
@@ -30,16 +30,16 @@ namespace Dt.Cells.UI
 
         protected override SheetSpanModelBase GetCellSpanModel()
         {
-            return this.OwningPresenter.Sheet.Worksheet.ColumnHeaderSpanModel;
+            return OwningPresenter.Sheet.Worksheet.ColumnHeaderSpanModel;
         }
 
         public override ColumnLayoutModel GetColumnLayoutModel()
         {
-            if (this.OwningPresenter.SheetArea == SheetArea.ColumnHeader)
+            if (OwningPresenter.SheetArea == SheetArea.ColumnHeader)
             {
-                return this.OwningPresenter.Sheet.GetColumnHeaderViewportColumnLayoutModel(this.OwningPresenter.ColumnViewportIndex);
+                return OwningPresenter.Sheet.GetColumnHeaderViewportColumnLayoutModel(OwningPresenter.ColumnViewportIndex);
             }
-            return this.OwningPresenter.Sheet.GetViewportColumnLayoutModel(this.OwningPresenter.ColumnViewportIndex);
+            return OwningPresenter.Sheet.GetViewportColumnLayoutModel(OwningPresenter.ColumnViewportIndex);
         }
 
         protected override List<CellPresenterBase> RecycledCells

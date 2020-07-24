@@ -108,7 +108,7 @@ namespace Dt.Cells.UI
             return (IEnumerable<T>) children;
         }
 
-        private static void GetVisualChildren<T>(DependencyObject element, List<T> children) where T: DependencyObject
+        static void GetVisualChildren<T>(DependencyObject element, List<T> children) where T: DependencyObject
         {
             if (element != null)
             {

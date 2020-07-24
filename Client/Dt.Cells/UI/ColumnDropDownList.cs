@@ -23,7 +23,7 @@ namespace Dt.Cells.UI
     /// </summary>
     public partial class ColumnDropDownList : ItemsControl
     {
-        private int _selectedItemIndex = -1;
+        int _selectedItemIndex = -1;
         /// <summary>
         /// Indicates the show icon bar dependency property.
         /// </summary>
@@ -39,10 +39,10 @@ namespace Dt.Cells.UI
 
         internal void Close()
         {
-            if (this.Popup != null)
+            if (Popup != null)
             {
-                this.Popup.Close();
-                this.Popup = null;
+                Popup.Close();
+                Popup = null;
             }
         }
 
@@ -52,7 +52,7 @@ namespace Dt.Cells.UI
             {
                 item.IsSelected = false;
             }
-            this.SelectedItemIndex = -1;
+            SelectedItemIndex = -1;
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace Dt.Cells.UI
                         goto Label_0056;
 
                     case VirtualKey.Escape:
-                        this.Close();
+                        Close();
                         e.Handled = true;
                         break;
 
@@ -86,9 +86,9 @@ namespace Dt.Cells.UI
                         goto Label_0046;
 
                     case VirtualKey.Enter:
-                        if (this.SelectedItemIndex >= 0)
+                        if (SelectedItemIndex >= 0)
                         {
-                            DropDownItemBaseControl control = base.ContainerFromIndex(this.SelectedItemIndex) as DropDownItemBaseControl;
+                            DropDownItemBaseControl control = base.ContainerFromIndex(SelectedItemIndex) as DropDownItemBaseControl;
                             if (control != null)
                             {
                                 if (!control.CanExecuteCommand())
@@ -98,18 +98,18 @@ namespace Dt.Cells.UI
                                 control.ExecuteCommand();
                             }
                         }
-                        this.Close();
+                        Close();
                         e.Handled = true;
                         break;
                 }
             }
             goto Label_00C3;
         Label_0046:
-            this.SelectNextItem(false);
+            SelectNextItem(false);
             e.Handled = true;
             goto Label_00C3;
         Label_0056:
-            this.SelectNextItem(true);
+            SelectNextItem(true);
             e.Handled = true;
         Label_00C3:
             base.OnKeyDown(e);
@@ -135,20 +135,20 @@ namespace Dt.Cells.UI
             int index = base.IndexFromContainer(item);
             if (index >= 0)
             {
-                this.SelectItem(index, true);
+                SelectItem(index, true);
             }
         }
 
-        private bool SelectItem(int index, bool forward)
+        bool SelectItem(int index, bool forward)
         {
             DropDownItemBaseControl control = base.ContainerFromIndex(index) as DropDownItemBaseControl;
             if ((control == null) || !control.CanSelect)
             {
                 return false;
             }
-            if (this.SelectedItemIndex >= 0)
+            if (SelectedItemIndex >= 0)
             {
-                DropDownItemBaseControl control2 = base.ContainerFromIndex(this.SelectedItemIndex) as DropDownItemBaseControl;
+                DropDownItemBaseControl control2 = base.ContainerFromIndex(SelectedItemIndex) as DropDownItemBaseControl;
                 if (control2 != null)
                 {
                     control2.IsSelected = false;
@@ -156,35 +156,35 @@ namespace Dt.Cells.UI
             }
             control.IsSelected = true;
             control.SelectChild(forward);
-            this.SelectedItemIndex = index;
+            SelectedItemIndex = index;
             return true;
         }
 
-        private void SelectNextItem(bool forward)
+        void SelectNextItem(bool forward)
         {
             int selectedItemIndex = forward ? -1 : base.Items.Count;
-            if (this.SelectedItemIndex >= 0)
+            if (SelectedItemIndex >= 0)
             {
-                selectedItemIndex = this.SelectedItemIndex;
+                selectedItemIndex = SelectedItemIndex;
             }
             int index = selectedItemIndex;
             do
             {
                 index = ((index + base.Items.Count) + (forward ? 1 : -1)) % base.Items.Count;
             }
-            while (!this.SelectItem(index, forward) && (index != selectedItemIndex));
+            while (!SelectItem(index, forward) && (index != selectedItemIndex));
         }
 
         internal PopupHelper Popup { get; set; }
 
         internal int SelectedItemIndex
         {
-            get { return this._selectedItemIndex; }
+            get { return _selectedItemIndex; }
             set
             {
-                if (this._selectedItemIndex != value)
+                if (_selectedItemIndex != value)
                 {
-                    this._selectedItemIndex = value;
+                    _selectedItemIndex = value;
                 }
             }
         }

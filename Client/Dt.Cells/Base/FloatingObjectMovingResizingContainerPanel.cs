@@ -21,38 +21,38 @@ namespace Dt.Cells.UI
 {
     internal partial class FloatingObjectMovingResizingContainerPanel : Panel
     {
-        private List<FloatingObjectMovingResizingFrame> _cachedFrames = new List<FloatingObjectMovingResizingFrame>();
+        List<FloatingObjectMovingResizingFrame> _cachedFrames = new List<FloatingObjectMovingResizingFrame>();
 
         public FloatingObjectMovingResizingContainerPanel(GcViewport parentViewport)
         {
-            this.ParentViewport = parentViewport;
+            ParentViewport = parentViewport;
         }
 
         protected override Windows.Foundation.Size ArrangeOverride(Windows.Foundation.Size finalSize)
         {
-            for (int i = 0; i < this._cachedFrames.Count; i++)
+            for (int i = 0; i < _cachedFrames.Count; i++)
             {
-                FloatingObjectMovingResizingFrame frame = this._cachedFrames[i];
+                FloatingObjectMovingResizingFrame frame = _cachedFrames[i];
                 frame.InvalidateArrange();
-                frame.Arrange(this.OperatingFrameLayouts[i]);
+                frame.Arrange(OperatingFrameLayouts[i]);
             }
             return base.ArrangeOverride(finalSize);
         }
 
         protected override Windows.Foundation.Size MeasureOverride(Windows.Foundation.Size availableSize)
         {
-            Windows.Foundation.Rect[] operatingFrameLayouts = this.OperatingFrameLayouts;
+            Windows.Foundation.Rect[] operatingFrameLayouts = OperatingFrameLayouts;
             if ((operatingFrameLayouts == null) || (operatingFrameLayouts.Length == 0))
             {
-                this._cachedFrames.Clear();
+                _cachedFrames.Clear();
                 base.Children.Clear();
                 return base.MeasureOverride(availableSize);
             }
-            if (this._cachedFrames.Count > operatingFrameLayouts.Length)
+            if (_cachedFrames.Count > operatingFrameLayouts.Length)
             {
                 int length = operatingFrameLayouts.Length;
-                int num2 = this._cachedFrames.Count - operatingFrameLayouts.Length;
-                this._cachedFrames.RemoveRange(length, num2);
+                int num2 = _cachedFrames.Count - operatingFrameLayouts.Length;
+                _cachedFrames.RemoveRange(length, num2);
                 while (num2 > 0)
                 {
                     base.Children.RemoveAt(length);
@@ -61,32 +61,32 @@ namespace Dt.Cells.UI
             }
             for (int i = 0; i < operatingFrameLayouts.Length; i++)
             {
-                if (i >= this._cachedFrames.Count)
+                if (i >= _cachedFrames.Count)
                 {
                     FloatingObjectMovingResizingFrame frame = new FloatingObjectMovingResizingFrame();
-                    this._cachedFrames.Add(frame);
+                    _cachedFrames.Add(frame);
                     base.Children.Add(frame);
                 }
-                this._cachedFrames[i].InvalidateMeasure();
-                this._cachedFrames[i].Measure(new Windows.Foundation.Size(operatingFrameLayouts[i].Width, operatingFrameLayouts[i].Height));
+                _cachedFrames[i].InvalidateMeasure();
+                _cachedFrames[i].Measure(new Windows.Foundation.Size(operatingFrameLayouts[i].Width, operatingFrameLayouts[i].Height));
             }
             return base.MeasureOverride(availableSize);
         }
 
-        private bool IsMoving
+        bool IsMoving
         {
-            get { return ((this.ParentViewport._cachedChartShapeMovingRects != null) && (this.ParentViewport._cachedChartShapeMovingRects.Length > 0)); }
+            get { return ((ParentViewport._cachedChartShapeMovingRects != null) && (ParentViewport._cachedChartShapeMovingRects.Length > 0)); }
         }
 
-        private Windows.Foundation.Rect[] OperatingFrameLayouts
+        Windows.Foundation.Rect[] OperatingFrameLayouts
         {
             get
             {
-                if (this.IsMoving)
+                if (IsMoving)
                 {
-                    return this.ParentViewport._cachedChartShapeMovingRects;
+                    return ParentViewport._cachedChartShapeMovingRects;
                 }
-                return this.ParentViewport._cachedChartShapeResizingRects;
+                return ParentViewport._cachedChartShapeResizingRects;
             }
         }
 
@@ -95,18 +95,18 @@ namespace Dt.Cells.UI
 
     internal partial class FloatingObjectMovingResizingFrame : Panel
     {
-        private Rectangle _frame = new Rectangle();
+        Rectangle _frame = new Rectangle();
 
         public FloatingObjectMovingResizingFrame()
         {
-            this._frame.StrokeThickness = 1.0;
-            this._frame.Fill = new SolidColorBrush(Windows.UI.Color.FromArgb(50, 110, 110, 110));
-            this._frame.Stroke = new SolidColorBrush(Colors.Black);
-            base.Children.Add(this._frame);
-            this.IsLeftVisibe = true;
-            this.IsRightVisibe = true;
-            this.IsTopVisibie = true;
-            this.IsBottomVisibe = true;
+            _frame.StrokeThickness = 1.0;
+            _frame.Fill = new SolidColorBrush(Windows.UI.Color.FromArgb(50, 110, 110, 110));
+            _frame.Stroke = new SolidColorBrush(Colors.Black);
+            base.Children.Add(_frame);
+            IsLeftVisibe = true;
+            IsRightVisibe = true;
+            IsTopVisibie = true;
+            IsBottomVisibe = true;
         }
 
         protected override Windows.Foundation.Size ArrangeOverride(Windows.Foundation.Size finalSize)
@@ -117,51 +117,51 @@ namespace Dt.Cells.UI
                 double height;
                 GeometryGroup group = new GeometryGroup();
                 group.FillRule = FillRule.Nonzero;
-                if (this.IsLeftVisibe)
+                if (IsLeftVisibe)
                 {
                     RectangleGeometry geometry = new RectangleGeometry();
-                    geometry.Rect = new Windows.Foundation.Rect(0.0, 0.0, this.Thickness, finalSize.Height);
+                    geometry.Rect = new Windows.Foundation.Rect(0.0, 0.0, Thickness, finalSize.Height);
                     group.Children.Add(geometry);
                 }
-                if (this.IsRightVisibe)
+                if (IsRightVisibe)
                 {
                     RectangleGeometry geometry2 = new RectangleGeometry();
-                    geometry2.Rect = new Windows.Foundation.Rect(finalSize.Width - this.Thickness, 0.0, this.Thickness, finalSize.Height);
+                    geometry2.Rect = new Windows.Foundation.Rect(finalSize.Width - Thickness, 0.0, Thickness, finalSize.Height);
                     group.Children.Add(geometry2);
                 }
-                if (this.IsTopVisibie)
+                if (IsTopVisibie)
                 {
                     RectangleGeometry geometry3 = new RectangleGeometry();
-                    geometry3.Rect = new Windows.Foundation.Rect(0.0, 0.0, finalSize.Width, this.Thickness);
+                    geometry3.Rect = new Windows.Foundation.Rect(0.0, 0.0, finalSize.Width, Thickness);
                     group.Children.Add(geometry3);
                 }
-                if (this.IsBottomVisibe)
+                if (IsBottomVisibe)
                 {
                     RectangleGeometry geometry4 = new RectangleGeometry();
-                    geometry4.Rect = new Windows.Foundation.Rect(0.0, finalSize.Height - this.Thickness, finalSize.Width, this.Thickness);
+                    geometry4.Rect = new Windows.Foundation.Rect(0.0, finalSize.Height - Thickness, finalSize.Width, Thickness);
                     group.Children.Add(geometry4);
                 }
-                double x = this.IsLeftVisibe ? this.Thickness : 0.0;
-                double y = this.IsTopVisibie ? this.Thickness : 0.0;
-                if (this.IsLeftVisibe && this.IsRightVisibe)
+                double x = IsLeftVisibe ? Thickness : 0.0;
+                double y = IsTopVisibie ? Thickness : 0.0;
+                if (IsLeftVisibe && IsRightVisibe)
                 {
-                    width = finalSize.Width - (2.0 * this.Thickness);
+                    width = finalSize.Width - (2.0 * Thickness);
                 }
-                else if (this.IsLeftVisibe || this.IsRightVisibe)
+                else if (IsLeftVisibe || IsRightVisibe)
                 {
-                    width = finalSize.Width - this.Thickness;
+                    width = finalSize.Width - Thickness;
                 }
                 else
                 {
                     width = finalSize.Width;
                 }
-                if (this.IsTopVisibie && this.IsBottomVisibe)
+                if (IsTopVisibie && IsBottomVisibe)
                 {
-                    height = finalSize.Height - (2.0 * this.Thickness);
+                    height = finalSize.Height - (2.0 * Thickness);
                 }
-                else if (this.IsTopVisibie || this.IsBottomVisibe)
+                else if (IsTopVisibie || IsBottomVisibe)
                 {
-                    height = finalSize.Height - this.Thickness;
+                    height = finalSize.Height - Thickness;
                 }
                 else
                 {
@@ -172,15 +172,15 @@ namespace Dt.Cells.UI
                 RectangleGeometry geometry5 = new RectangleGeometry();
                 geometry5.Rect = new Windows.Foundation.Rect(x, y, width, height);
                 group.Children.Add(geometry5);
-                this._frame.Arrange(new Windows.Foundation.Rect(new Windows.Foundation.Point(0.0, 0.0), finalSize));
+                _frame.Arrange(new Windows.Foundation.Rect(new Windows.Foundation.Point(0.0, 0.0), finalSize));
             }
             return finalSize;
         }
 
         protected override Windows.Foundation.Size MeasureOverride(Windows.Foundation.Size availableSize)
         {
-            this._frame.Measure(availableSize);
-            return this._frame.DesiredSize;
+            _frame.Measure(availableSize);
+            return _frame.DesiredSize;
         }
 
         public bool IsBottomVisibe { get; set; }

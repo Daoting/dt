@@ -40,7 +40,7 @@ namespace Dt.Cells.UI
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            this.CheckBox = base.GetTemplateChild("CheckBox") as Windows.UI.Xaml.Controls.CheckBox;
+            CheckBox = base.GetTemplateChild("CheckBox") as Windows.UI.Xaml.Controls.CheckBox;
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Dt.Cells.UI
         {
             if (e.Key == VirtualKey.Space)
             {
-                this.PerformCheck();
+                PerformCheck();
                 e.Handled = true;
             }
             base.OnKeyDown(e);
@@ -95,7 +95,7 @@ namespace Dt.Cells.UI
                 Windows.Foundation.Point point = intermediatePoints[0].Position;
                 if (((point.X >= 0.0) && (point.X < base.ActualWidth)) && ((point.Y >= 0.0) && (point.Y < base.ActualHeight)))
                 {
-                    this.PerformCheck();
+                    PerformCheck();
                 }
             }
             base.OnPointerReleased(e);
@@ -105,17 +105,17 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void PerformCheck()
+        void PerformCheck()
         {
-            if (this.CheckBox != null)
+            if (CheckBox != null)
             {
-                this.CheckBox.IsChecked = new bool?(!this.CheckBox.IsChecked.HasValue ? true : !this.CheckBox.IsChecked.Value);
+                CheckBox.IsChecked = new bool?(!CheckBox.IsChecked.HasValue ? true : !CheckBox.IsChecked.Value);
             }
         }
 
         internal Dt.Cells.UI.AutoFilterListBox AutoFilterListBox { get; set; }
 
-        private Windows.UI.Xaml.Controls.CheckBox CheckBox { get; set; }
+        Windows.UI.Xaml.Controls.CheckBox CheckBox { get; set; }
     }
 }
 

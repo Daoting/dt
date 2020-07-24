@@ -15,131 +15,131 @@ namespace Dt.Cells.UndoRedo
 {
     internal class CopyMoveSheetInfo
     {
-        private double _columnHeaderDefaultRowHeight;
-        private bool _columnHeaderDefaultRowHeightSaved;
-        private StyleInfo _columnHeaderDefaultStyle;
-        private bool _columnHeaderDefaultStyleSaved;
-        private double _defaultColumnWidth;
-        private bool _defaultColumnWidthSaved;
-        private double _defaultRowHeight;
-        private bool _defaultRowHeightSaved;
-        private StyleInfo _defaultStyle;
-        private bool _defaultStyleSaved;
-        private double _rowHeaderDefaultColumnWidth;
-        private bool _rowHeaderDefaultColumnWidthSaved;
-        private StyleInfo _rowHeaderDefaultStyle;
-        private bool _rowHeaderDefaultStyleSaved;
+        double _columnHeaderDefaultRowHeight;
+        bool _columnHeaderDefaultRowHeightSaved;
+        StyleInfo _columnHeaderDefaultStyle;
+        bool _columnHeaderDefaultStyleSaved;
+        double _defaultColumnWidth;
+        bool _defaultColumnWidthSaved;
+        double _defaultRowHeight;
+        bool _defaultRowHeightSaved;
+        StyleInfo _defaultStyle;
+        bool _defaultStyleSaved;
+        double _rowHeaderDefaultColumnWidth;
+        bool _rowHeaderDefaultColumnWidthSaved;
+        StyleInfo _rowHeaderDefaultStyle;
+        bool _rowHeaderDefaultStyleSaved;
 
         public double GetColumnHeaderDefaultRowHeight()
         {
-            return this._columnHeaderDefaultRowHeight;
+            return _columnHeaderDefaultRowHeight;
         }
 
         public StyleInfo GetColumnHeaderDefaultStyle()
         {
-            return this._columnHeaderDefaultStyle;
+            return _columnHeaderDefaultStyle;
         }
 
         public double GetDefaultColumnWidth()
         {
-            return this._defaultColumnWidth;
+            return _defaultColumnWidth;
         }
 
         public double GetDefaultRowHeight()
         {
-            return this._defaultRowHeight;
+            return _defaultRowHeight;
         }
 
         public StyleInfo GetDefaultStyle()
         {
-            return this._defaultStyle;
+            return _defaultStyle;
         }
 
         public double GetRowHeaderDefaultColumnWidth()
         {
-            return this._rowHeaderDefaultColumnWidth;
+            return _rowHeaderDefaultColumnWidth;
         }
 
         public StyleInfo GetRowHeaderDefaultStyle()
         {
-            return this._rowHeaderDefaultStyle;
+            return _rowHeaderDefaultStyle;
         }
 
         public bool IsColumnHeaderDefaultRowHeightSaved()
         {
-            return this._columnHeaderDefaultRowHeightSaved;
+            return _columnHeaderDefaultRowHeightSaved;
         }
 
         public bool IsColumnHeaderDefaultStyleSaved()
         {
-            return this._columnHeaderDefaultStyleSaved;
+            return _columnHeaderDefaultStyleSaved;
         }
 
         public bool IsDefaultColumnWidthSaved()
         {
-            return this._defaultColumnWidthSaved;
+            return _defaultColumnWidthSaved;
         }
 
         public bool IsDefaultRowHeightSaved()
         {
-            return this._defaultRowHeightSaved;
+            return _defaultRowHeightSaved;
         }
 
         public bool IsDefaultStyleSaved()
         {
-            return this._defaultStyleSaved;
+            return _defaultStyleSaved;
         }
 
         public bool IsRowHeaderDefaultColumnWidthSaved()
         {
-            return this._rowHeaderDefaultColumnWidthSaved;
+            return _rowHeaderDefaultColumnWidthSaved;
         }
 
         public bool IsRowHeaderDefaultStyleSaved()
         {
-            return this._rowHeaderDefaultStyleSaved;
+            return _rowHeaderDefaultStyleSaved;
         }
 
         public void SaveColumnHeaderDefaultRowHeight(double height)
         {
-            this._columnHeaderDefaultRowHeight = height;
-            this._columnHeaderDefaultRowHeightSaved = true;
+            _columnHeaderDefaultRowHeight = height;
+            _columnHeaderDefaultRowHeightSaved = true;
         }
 
         public void SaveColumnHeaderDefaultStyle(StyleInfo style)
         {
-            this._columnHeaderDefaultStyle = style;
-            this._columnHeaderDefaultStyleSaved = true;
+            _columnHeaderDefaultStyle = style;
+            _columnHeaderDefaultStyleSaved = true;
         }
 
         public void SaveDefaultColumnWidth(double width)
         {
-            this._defaultColumnWidth = width;
-            this._defaultColumnWidthSaved = true;
+            _defaultColumnWidth = width;
+            _defaultColumnWidthSaved = true;
         }
 
         public void SaveDefaultRowHeight(double height)
         {
-            this._defaultRowHeight = height;
-            this._defaultRowHeightSaved = true;
+            _defaultRowHeight = height;
+            _defaultRowHeightSaved = true;
         }
 
         public void SaveDefaultStyle(StyleInfo style)
         {
-            this._defaultStyle = style;
-            this._defaultStyleSaved = true;
+            _defaultStyle = style;
+            _defaultStyleSaved = true;
         }
 
         public void SaveRowHeaderDefaultColumnWidth(double width)
         {
-            this._rowHeaderDefaultColumnWidth = width;
-            this._rowHeaderDefaultColumnWidthSaved = true;
+            _rowHeaderDefaultColumnWidth = width;
+            _rowHeaderDefaultColumnWidthSaved = true;
         }
 
         public void SaveRowHeaderDefaultStyle(StyleInfo style)
         {
-            this._rowHeaderDefaultStyle = style;
-            this._rowHeaderDefaultStyleSaved = true;
+            _rowHeaderDefaultStyle = style;
+            _rowHeaderDefaultStyleSaved = true;
         }
     }
 }

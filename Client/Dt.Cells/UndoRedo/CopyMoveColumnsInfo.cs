@@ -16,36 +16,36 @@ namespace Dt.Cells.UndoRedo
 {
     internal class CopyMoveColumnsInfo
     {
-        private Dictionary<int, string> _bindingFields = new Dictionary<int, string>();
-        private bool _bindingFieldSaved;
-        private Dictionary<int, bool> _collapsed = new Dictionary<int, bool>();
-        private int _columnCount;
-        private Dictionary<int, object> _headerColumnStyles = new Dictionary<int, object>();
-        private bool _headerColumnStyleSaved;
-        private Dictionary<int, int> _levels = new Dictionary<int, int>();
-        private bool _rangeGroupSaved;
-        private Dictionary<int, bool> _resizables = new Dictionary<int, bool>();
-        private bool _resizableSaved;
-        private Dictionary<int, object> _tags = new Dictionary<int, object>();
-        private bool _tagSaved;
-        private Dictionary<int, object> _viewportColumnStyles = new Dictionary<int, object>();
-        private bool _viewportColumnStyleSaved;
-        private Dictionary<int, bool> _visibles = new Dictionary<int, bool>();
-        private bool _visibleSaved;
-        private Dictionary<int, double> _widths = new Dictionary<int, double>();
-        private bool _widthSaved;
+        Dictionary<int, string> _bindingFields = new Dictionary<int, string>();
+        bool _bindingFieldSaved;
+        Dictionary<int, bool> _collapsed = new Dictionary<int, bool>();
+        int _columnCount;
+        Dictionary<int, object> _headerColumnStyles = new Dictionary<int, object>();
+        bool _headerColumnStyleSaved;
+        Dictionary<int, int> _levels = new Dictionary<int, int>();
+        bool _rangeGroupSaved;
+        Dictionary<int, bool> _resizables = new Dictionary<int, bool>();
+        bool _resizableSaved;
+        Dictionary<int, object> _tags = new Dictionary<int, object>();
+        bool _tagSaved;
+        Dictionary<int, object> _viewportColumnStyles = new Dictionary<int, object>();
+        bool _viewportColumnStyleSaved;
+        Dictionary<int, bool> _visibles = new Dictionary<int, bool>();
+        bool _visibleSaved;
+        Dictionary<int, double> _widths = new Dictionary<int, double>();
+        bool _widthSaved;
 
         public CopyMoveColumnsInfo(int columnCount)
         {
-            this._columnCount = columnCount;
+            _columnCount = columnCount;
         }
 
         public bool GetBindingField(int index, out string fieldName)
         {
             fieldName = null;
-            if (this._bindingFields.ContainsKey(index))
+            if (_bindingFields.ContainsKey(index))
             {
-                fieldName = this._bindingFields[index];
+                fieldName = _bindingFields[index];
                 return true;
             }
             return false;
@@ -53,9 +53,9 @@ namespace Dt.Cells.UndoRedo
 
         public object GetHeaderColumnStyle(int index)
         {
-            if (this._headerColumnStyles.ContainsKey(index))
+            if (_headerColumnStyles.ContainsKey(index))
             {
-                return this._headerColumnStyles[index];
+                return _headerColumnStyles[index];
             }
             return null;
         }
@@ -64,272 +64,272 @@ namespace Dt.Cells.UndoRedo
         {
             level = -1;
             collapsed = false;
-            if (this._levels.ContainsKey(index))
+            if (_levels.ContainsKey(index))
             {
-                level = this._levels[index];
+                level = _levels[index];
             }
-            if (this._collapsed.ContainsKey(index))
+            if (_collapsed.ContainsKey(index))
             {
-                collapsed = this._collapsed[index];
+                collapsed = _collapsed[index];
             }
         }
 
         public bool GetResizable(int index)
         {
-            if (this._resizables.ContainsKey(index))
+            if (_resizables.ContainsKey(index))
             {
-                return this._resizables[index];
+                return _resizables[index];
             }
             return true;
         }
 
         public object GetTag(int index)
         {
-            if (this._tags.ContainsKey(index))
+            if (_tags.ContainsKey(index))
             {
-                return this._tags[index];
+                return _tags[index];
             }
             return null;
         }
 
         public object GetViewportColumnStyle(int index)
         {
-            if (this._viewportColumnStyles.ContainsKey(index))
+            if (_viewportColumnStyles.ContainsKey(index))
             {
-                return this._viewportColumnStyles[index];
+                return _viewportColumnStyles[index];
             }
             return null;
         }
 
         public bool GetVisible(int index)
         {
-            if (this._visibles.ContainsKey(index))
+            if (_visibles.ContainsKey(index))
             {
-                return this._visibles[index];
+                return _visibles[index];
             }
             return true;
         }
 
         public double GetWidth(int index)
         {
-            if (this._widths.ContainsKey(index))
+            if (_widths.ContainsKey(index))
             {
-                return this._widths[index];
+                return _widths[index];
             }
             return -1.0;
         }
 
         public bool IsBindingFieldSaved()
         {
-            return this._bindingFieldSaved;
+            return _bindingFieldSaved;
         }
 
         public bool IsHeaderColumnStyleSaved()
         {
-            return this._headerColumnStyleSaved;
+            return _headerColumnStyleSaved;
         }
 
         public bool IsRangeGroupSaved()
         {
-            return this._rangeGroupSaved;
+            return _rangeGroupSaved;
         }
 
         public bool IsResizableSaved()
         {
-            return this._resizableSaved;
+            return _resizableSaved;
         }
 
         public bool IsTagSaved()
         {
-            return this._tagSaved;
+            return _tagSaved;
         }
 
         public bool IsViewportColumnStyleSaved()
         {
-            return this._viewportColumnStyleSaved;
+            return _viewportColumnStyleSaved;
         }
 
         public bool IsVisibleSaved()
         {
-            return this._visibleSaved;
+            return _visibleSaved;
         }
 
         public bool IsWidthSaved()
         {
-            return this._widthSaved;
+            return _widthSaved;
         }
 
         public void SaveBindingField(int index, string fieldName)
         {
-            if (this._bindingFields.ContainsKey(index))
+            if (_bindingFields.ContainsKey(index))
             {
-                this._bindingFields[index] = fieldName;
+                _bindingFields[index] = fieldName;
             }
             else
             {
-                this._bindingFields.Add(index, fieldName);
+                _bindingFields.Add(index, fieldName);
             }
-            this._bindingFieldSaved = true;
+            _bindingFieldSaved = true;
         }
 
         public void SaveHeaderColumnStyle(int index, object style)
         {
-            if (this._headerColumnStyles.ContainsKey(index))
+            if (_headerColumnStyles.ContainsKey(index))
             {
                 if (style == null)
                 {
-                    this._headerColumnStyles.Remove(index);
+                    _headerColumnStyles.Remove(index);
                 }
                 else
                 {
-                    this._headerColumnStyles[index] = style;
+                    _headerColumnStyles[index] = style;
                 }
             }
             else if (style != null)
             {
-                this._headerColumnStyles.Add(index, style);
+                _headerColumnStyles.Add(index, style);
             }
-            this._headerColumnStyleSaved = true;
+            _headerColumnStyleSaved = true;
         }
 
         public void SaveRangeGroup(int index, int level, bool collapsed)
         {
-            if (this._levels.ContainsKey(index))
+            if (_levels.ContainsKey(index))
             {
                 if (level < 0)
                 {
-                    this._levels.Remove(index);
+                    _levels.Remove(index);
                 }
                 else
                 {
-                    this._levels[index] = level;
+                    _levels[index] = level;
                 }
             }
             else if (level >= 0)
             {
-                this._levels.Add(index, level);
+                _levels.Add(index, level);
             }
-            if (this._collapsed.ContainsKey(index))
+            if (_collapsed.ContainsKey(index))
             {
                 if (collapsed)
                 {
-                    this._collapsed[index] = collapsed;
+                    _collapsed[index] = collapsed;
                 }
                 else
                 {
-                    this._collapsed.Remove(index);
+                    _collapsed.Remove(index);
                 }
             }
             else if (collapsed)
             {
-                this._collapsed.Add(index, collapsed);
+                _collapsed.Add(index, collapsed);
             }
-            this._rangeGroupSaved = true;
+            _rangeGroupSaved = true;
         }
 
         public void SaveResizable(int index, bool resizable)
         {
-            if (this._resizables.ContainsKey(index))
+            if (_resizables.ContainsKey(index))
             {
                 if (resizable)
                 {
-                    this._resizables.Remove(index);
+                    _resizables.Remove(index);
                 }
                 else
                 {
-                    this._resizables[index] = resizable;
+                    _resizables[index] = resizable;
                 }
             }
             else if (!resizable)
             {
-                this._resizables.Add(index, resizable);
+                _resizables.Add(index, resizable);
             }
-            this._resizableSaved = true;
+            _resizableSaved = true;
         }
 
         public void SaveTag(int index, object tag)
         {
-            if (this._tags.ContainsKey(index))
+            if (_tags.ContainsKey(index))
             {
                 if (tag == null)
                 {
-                    this._tags.Remove(index);
+                    _tags.Remove(index);
                 }
                 else
                 {
-                    this._tags[index] = tag;
+                    _tags[index] = tag;
                 }
             }
             else if (tag != null)
             {
-                this._tags.Add(index, tag);
+                _tags.Add(index, tag);
             }
-            this._tagSaved = true;
+            _tagSaved = true;
         }
 
         public void SaveViewportColumnStyle(int index, object style)
         {
-            if (this._viewportColumnStyles.ContainsKey(index))
+            if (_viewportColumnStyles.ContainsKey(index))
             {
                 if (style == null)
                 {
-                    this._viewportColumnStyles.Remove(index);
+                    _viewportColumnStyles.Remove(index);
                 }
                 else
                 {
-                    this._viewportColumnStyles[index] = style;
+                    _viewportColumnStyles[index] = style;
                 }
             }
             else if (style != null)
             {
-                this._viewportColumnStyles.Add(index, style);
+                _viewportColumnStyles.Add(index, style);
             }
-            this._viewportColumnStyleSaved = true;
+            _viewportColumnStyleSaved = true;
         }
 
         public void SaveVisible(int index, bool visible)
         {
-            if (this._visibles.ContainsKey(index))
+            if (_visibles.ContainsKey(index))
             {
                 if (visible)
                 {
-                    this._visibles.Remove(index);
+                    _visibles.Remove(index);
                 }
                 else
                 {
-                    this._visibles[index] = visible;
+                    _visibles[index] = visible;
                 }
             }
             else if (!visible)
             {
-                this._visibles.Add(index, visible);
+                _visibles.Add(index, visible);
             }
-            this._visibleSaved = true;
+            _visibleSaved = true;
         }
 
         public void SaveWidth(int index, double width)
         {
-            if (this._widths.ContainsKey(index))
+            if (_widths.ContainsKey(index))
             {
                 if (width < 0.0)
                 {
-                    this._widths.Remove(index);
+                    _widths.Remove(index);
                 }
                 else
                 {
-                    this._widths[index] = width;
+                    _widths[index] = width;
                 }
             }
             else if (width >= 0.0)
             {
-                this._widths.Add(index, width);
+                _widths.Add(index, width);
             }
-            this._widthSaved = true;
+            _widthSaved = true;
         }
 
         public int ColumnCount
         {
-            get { return  this._columnCount; }
+            get { return  _columnCount; }
         }
     }
 }

@@ -22,9 +22,9 @@ namespace Dt.Cells.UI
     {
         internal DragFillBlockEventArgs(CellRange fillRange, Dt.Cells.Data.FillDirection fillDirection, Dt.Cells.Data.AutoFillType autoFillType)
         {
-            this.FillRange = fillRange;
-            this.AutoFillType = autoFillType;
-            this.FillDirection = fillDirection;
+            FillRange = fillRange;
+            AutoFillType = autoFillType;
+            FillDirection = fillDirection;
         }
 
         internal DragFillBlockEventArgs(CellRange fillRange, Dt.Cells.Data.FillDirection fillDirection, Dt.Cells.Data.AutoFillType autoFillType, bool cancel) : this(fillRange, fillDirection, autoFillType)

@@ -26,8 +26,8 @@ namespace Dt.Cells.UndoRedo
         /// <param name="resizedRects">The resized rectangles.</param>
         public ResizeFloatingObjectExtent(string[] names, Windows.Foundation.Rect[] resizedRects)
         {
-            this.Names = names;
-            this.ResizedRects = resizedRects;
+            Names = names;
+            ResizedRects = resizedRects;
         }
 
         /// <summary>

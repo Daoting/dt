@@ -33,9 +33,9 @@ namespace Dt.Cells.UI
         /// </param>
         public RowLayout(int row, double y, double height)
         {
-            this.Row = row;
-            this.Y = y;
-            this.Height = height;
+            Row = row;
+            Y = y;
+            Height = height;
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Dt.Cells.UI
         /// </returns>
         public bool ContainsY(double y)
         {
-            return ((y >= this.Y) && (y < (this.Y + this.Height)));
+            return ((y >= Y) && (y < (Y + Height)));
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Dt.Cells.UI
         /// </returns>
         public bool IntersectsWith(Windows.Foundation.Rect rect)
         {
-            return (((this.Height > 0.0) && ((rect.Y + rect.Height) > this.Y)) && ((this.Y + this.Height) > rect.Y));
+            return (((Height > 0.0) && ((rect.Y + rect.Height) > Y)) && ((Y + Height) > rect.Y));
         }
 
         /// <summary>

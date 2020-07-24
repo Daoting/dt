@@ -17,7 +17,7 @@ namespace Dt.Cells.UndoRedo
     /// </summary>
     public class RowAutoFitExtent
     {
-        private int _row;
+        int _row;
 
         /// <summary>
         /// Creates a new instance of the <see cref="T:Dt.Cells.UndoRedo.RowAutoFitExtent" /> class.
@@ -25,7 +25,7 @@ namespace Dt.Cells.UndoRedo
         /// <param name="row">The row.</param>
         public RowAutoFitExtent(int row)
         {
-            this._row = row;
+            _row = row;
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace Dt.Cells.UndoRedo
         /// </summary>
         public int Row
         {
-            get { return  this._row; }
+            get { return  _row; }
         }
     }
 }

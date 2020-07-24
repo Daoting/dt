@@ -15,16 +15,16 @@ namespace Dt.Cells.UI
 {
     internal class CustomProvider : IDrawingObjectProvider
     {
-        private Worksheet _sheet;
+        Worksheet _sheet;
 
         public CustomProvider(Worksheet workshet)
         {
-            this._sheet = workshet;
+            _sheet = workshet;
         }
 
         public DrawingObject[] GetDrawingObjects(Worksheet sheet, int row, int column, int rowCount, int columnCount)
         {
-            return this._sheet.GetDrawingObject(row, column, rowCount, columnCount);
+            return _sheet.GetDrawingObject(row, column, rowCount, columnCount);
         }
     }
 }

@@ -21,8 +21,8 @@ namespace Dt.Cells.UI
     {
         internal CellCancelEventArgs(int row, int column)
         {
-            this.Row = row;
-            this.Column = column;
+            Row = row;
+            Column = column;
         }
 
         /// <summary>

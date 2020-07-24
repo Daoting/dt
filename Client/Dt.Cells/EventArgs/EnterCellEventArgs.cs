@@ -20,8 +20,8 @@ namespace Dt.Cells.UI
     {
         internal EnterCellEventArgs(int row, int column)
         {
-            this.Row = row;
-            this.Column = column;
+            Row = row;
+            Column = column;
         }
 
         /// <summary>

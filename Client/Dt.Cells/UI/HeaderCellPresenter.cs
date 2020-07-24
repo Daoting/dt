@@ -15,11 +15,11 @@ namespace Dt.Cells.UI
 {
     public abstract partial class HeaderCellPresenter : CellPresenterBase
     {
-        private TextBlock _displayTextBlock;
-        private Rectangle _highlightRectangle;
-        private Rectangle _hoverRectangle;
-        private Rectangle _normalRectangle;
-        private Rectangle _selectionRectangle;
+        TextBlock _displayTextBlock;
+        Rectangle _highlightRectangle;
+        Rectangle _hoverRectangle;
+        Rectangle _normalRectangle;
+        Rectangle _selectionRectangle;
         internal const string GCCELL_DisplayTextBlock = "DisplayTextBlock";
         internal const string GCCELL_HighlightRectangle = "HighlightRectangle";
         internal const string GCCELL_HoverRectangle = "HoverRectangle";
@@ -61,33 +61,33 @@ namespace Dt.Cells.UI
         internal virtual void ApplyHightlightState()
         {
             Action action = null;
-            if (this.HighlightRectangle != null)
+            if (HighlightRectangle != null)
             {
                 if (action == null)
                 {
                     action = delegate
                     {
-                        if (this.IsHightlighted)
+                        if (IsHightlighted)
                         {
                             TextBlock content = base.Content as TextBlock;
-                            if ((content != null) && (this.DisplayTextBlock != null))
+                            if ((content != null) && (DisplayTextBlock != null))
                             {
-                                this.CopyTextBlock(this.DisplayTextBlock, content);
+                                CopyTextBlock(DisplayTextBlock, content);
                                 content.Opacity = 0.0;
-                                this.DisplayTextBlock.Opacity = 1.0;
+                                DisplayTextBlock.Opacity = 1.0;
                             }
-                            this.HighlightRectangle.Opacity = 1.0;
+                            HighlightRectangle.Opacity = 1.0;
 
                         }
                         else
                         {
                             TextBlock block2 = base.Content as TextBlock;
-                            if ((block2 != null) && (this.DisplayTextBlock != null))
+                            if ((block2 != null) && (DisplayTextBlock != null))
                             {
                                 block2.Opacity = 1.0;
-                                this.DisplayTextBlock.Opacity = 0.0;
+                                DisplayTextBlock.Opacity = 0.0;
                             }
-                            this.HighlightRectangle.Opacity = 0.0;
+                            HighlightRectangle.Opacity = 0.0;
                         }
                     };
                 }
@@ -97,17 +97,17 @@ namespace Dt.Cells.UI
 
         internal virtual void ApplyHoverState()
         {
-            if (this.HoverRectangle != null)
+            if (HoverRectangle != null)
             {
                 UIAdaptor.InvokeAsync(delegate
                 {
-                    if (this.IsMouseOver && (base.OwningRow.OwningPresenter.Sheet.InputDeviceType != InputDeviceType.Touch))
+                    if (IsMouseOver && (base.OwningRow.OwningPresenter.Sheet.InputDeviceType != InputDeviceType.Touch))
                     {
-                        this.HoverRectangle.Opacity = 1.0;
+                        HoverRectangle.Opacity = 1.0;
                     }
                     else
                     {
-                        this.HoverRectangle.Opacity = 0.0;
+                        HoverRectangle.Opacity = 0.0;
                     }
                 });
             }
@@ -115,7 +115,7 @@ namespace Dt.Cells.UI
 
         internal virtual void ApplySelectionState()
         {
-            if (this.SelectionRectangle != null)
+            if (SelectionRectangle != null)
             {
                 UIAdaptor.InvokeAsync(delegate
                 {
@@ -129,13 +129,13 @@ namespace Dt.Cells.UI
                     {
                         flag = false;
                     }
-                    if ((this.IsSelected && flag) || this.IsCurrent)
+                    if ((IsSelected && flag) || IsCurrent)
                     {
-                        this.SelectionRectangle.Opacity = 1.0;
+                        SelectionRectangle.Opacity = 1.0;
                     }
                     else
                     {
-                        this.SelectionRectangle.Opacity = 0.0;
+                        SelectionRectangle.Opacity = 0.0;
                     }
                 });
 
@@ -146,12 +146,12 @@ namespace Dt.Cells.UI
         internal override void ApplyState()
         {
             base.ApplyState();
-            this.ApplyHightlightState();
-            this.ApplySelectionState();
-            this.ApplyHoverState();
+            ApplyHightlightState();
+            ApplySelectionState();
+            ApplyHoverState();
         }
 
-        private void CopyTextBlock(TextBlock b1, TextBlock b2)
+        void CopyTextBlock(TextBlock b1, TextBlock b2)
         {
             Action action = null;
             Action action2 = null;
@@ -201,11 +201,11 @@ namespace Dt.Cells.UI
 
         protected override void OnApplyTemplate()
         {
-            this._hoverRectangle = base.GetTemplateChild("HoverRectangle") as Rectangle;
-            this._selectionRectangle = base.GetTemplateChild("SelectionRectangle") as Rectangle;
-            this._normalRectangle = base.GetTemplateChild("NormalRectangle") as Rectangle;
-            this._highlightRectangle = base.GetTemplateChild("HighlightRectangle") as Rectangle;
-            this._displayTextBlock = base.GetTemplateChild("DisplayTextBlock") as TextBlock;
+            _hoverRectangle = base.GetTemplateChild("HoverRectangle") as Rectangle;
+            _selectionRectangle = base.GetTemplateChild("SelectionRectangle") as Rectangle;
+            _normalRectangle = base.GetTemplateChild("NormalRectangle") as Rectangle;
+            _highlightRectangle = base.GetTemplateChild("HighlightRectangle") as Rectangle;
+            _displayTextBlock = base.GetTemplateChild("DisplayTextBlock") as TextBlock;
             base.OnApplyTemplate();
         }
 

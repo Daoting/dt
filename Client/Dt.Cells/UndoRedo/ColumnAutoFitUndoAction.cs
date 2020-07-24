@@ -20,11 +20,11 @@ namespace Dt.Cells.UndoRedo
     /// </summary>
     public class ColumnAutoFitUndoAction : ActionBase, IUndo
     {
-        private ColumnAutoFitExtent[] _columns;
-        private double[] _oldSizes;
-        private bool[] _oldVisibles;
-        private bool _rowHeader;
-        private Worksheet _sheet;
+        ColumnAutoFitExtent[] _columns;
+        double[] _oldSizes;
+        bool[] _oldVisibles;
+        bool _rowHeader;
+        Worksheet _sheet;
 
         /// <summary>
         /// Creates a new undo action for column automatic fit.
@@ -34,9 +34,9 @@ namespace Dt.Cells.UndoRedo
         /// <param name="rowHeader">Whether the resized column is in the row header area.</param>
         public ColumnAutoFitUndoAction(Worksheet sheet, ColumnAutoFitExtent[] columns, bool rowHeader)
         {
-            this._sheet = sheet;
-            this._columns = columns;
-            this._rowHeader = rowHeader;
+            _sheet = sheet;
+            _columns = columns;
+            _rowHeader = rowHeader;
         }
 
         /// <summary>
@@ -46,15 +46,15 @@ namespace Dt.Cells.UndoRedo
         /// <returns><c>true</c> if the action can execute; otherwise, <c>false</c>.</returns>
         public override bool CanExecute(object sender)
         {
-            if (this._sheet == null)
+            if (_sheet == null)
             {
                 return true;
             }
-            if (this._sheet.Protect)
+            if (_sheet.Protect)
             {
                 return false;
             }
-            return (((this._sheet != null) && (this._columns != null)) && (this._columns.Length > 0));
+            return (((_sheet != null) && (_columns != null)) && (_columns.Length > 0));
         }
 
         /// <summary>
@@ -63,49 +63,49 @@ namespace Dt.Cells.UndoRedo
         /// <param name="sender">Object on which the action occurred.</param>
         public override void Execute(object sender)
         {
-            if (this.CanExecute(sender))
+            if (CanExecute(sender))
             {
                 SheetView view = sender as SheetView;
-                int[] columnsReiszed = this.GetColumnsReiszed(this._columns);
+                int[] columnsReiszed = GetColumnsReiszed(_columns);
                 base.SuspendInvalidate(sender);
                 try
                 {
-                    if ((view != null) && view.RaiseColumnWidthChanging(columnsReiszed, this._rowHeader))
+                    if ((view != null) && view.RaiseColumnWidthChanging(columnsReiszed, _rowHeader))
                     {
                         return;
                     }
-                    this.SaveState();
-                    int num = this._rowHeader ? this._sheet.RowHeader.ColumnCount : this._sheet.ColumnCount;
-                    for (int i = 0; i < this._columns.Length; i++)
+                    SaveState();
+                    int num = _rowHeader ? _sheet.RowHeader.ColumnCount : _sheet.ColumnCount;
+                    for (int i = 0; i < _columns.Length; i++)
                     {
-                        ColumnAutoFitExtent extent = this._columns[i];
+                        ColumnAutoFitExtent extent = _columns[i];
                         if ((0 <= extent.Column) && (extent.Column < num))
                         {
-                            if (this._rowHeader && this._sheet.GetColumnResizable(extent.Column, SheetArea.CornerHeader | SheetArea.RowHeader))
+                            if (_rowHeader && _sheet.GetColumnResizable(extent.Column, SheetArea.CornerHeader | SheetArea.RowHeader))
                             {
                                 double width = Math.Ceiling(view.GetColumnAutoFitValue(extent.Column, true));
                                 if (width >= 0.0)
                                 {
                                     width = (width + 1.0) + 4.0;
                                 }
-                                if (width != this._sheet.GetColumnWidth(extent.Column, SheetArea.CornerHeader | SheetArea.RowHeader))
+                                if (width != _sheet.GetColumnWidth(extent.Column, SheetArea.CornerHeader | SheetArea.RowHeader))
                                 {
-                                    this._sheet.SetColumnWidth(extent.Column, SheetArea.CornerHeader | SheetArea.RowHeader, width);
+                                    _sheet.SetColumnWidth(extent.Column, SheetArea.CornerHeader | SheetArea.RowHeader, width);
                                 }
-                                this._sheet.SetColumnVisible(extent.Column, SheetArea.CornerHeader | SheetArea.RowHeader, true);
+                                _sheet.SetColumnVisible(extent.Column, SheetArea.CornerHeader | SheetArea.RowHeader, true);
                             }
-                            else if (this._sheet.GetColumnResizable(extent.Column, SheetArea.Cells))
+                            else if (_sheet.GetColumnResizable(extent.Column, SheetArea.Cells))
                             {
                                 double num4 = Math.Ceiling(view.GetColumnAutoFitValue(extent.Column, false));
                                 if (num4 >= 0.0)
                                 {
                                     num4 = (num4 + 1.0) + 4.0;
                                 }
-                                if (num4 != this._sheet.GetColumnWidth(extent.Column, SheetArea.Cells))
+                                if (num4 != _sheet.GetColumnWidth(extent.Column, SheetArea.Cells))
                                 {
-                                    this._sheet.SetColumnWidth(extent.Column, SheetArea.Cells, num4);
+                                    _sheet.SetColumnWidth(extent.Column, SheetArea.Cells, num4);
                                 }
-                                this._sheet.SetColumnVisible(extent.Column, SheetArea.Cells, true);
+                                _sheet.SetColumnVisible(extent.Column, SheetArea.Cells, true);
                             }
                         }
                     }
@@ -122,12 +122,12 @@ namespace Dt.Cells.UndoRedo
                     view.InvalidateMeasure();
                     view.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader);
                     view.InvalidateFloatingObjects();
-                    view.RaiseColumnWidthChanged(columnsReiszed, this._rowHeader);
+                    view.RaiseColumnWidthChanged(columnsReiszed, _rowHeader);
                 }
             }
         }
 
-        private int[] GetColumnsReiszed(ColumnAutoFitExtent[] columnWidthChangeExtents)
+        int[] GetColumnsReiszed(ColumnAutoFitExtent[] columnWidthChangeExtents)
         {
             List<int> list = new List<int>();
             foreach (ColumnAutoFitExtent extent in columnWidthChangeExtents)
@@ -144,25 +144,25 @@ namespace Dt.Cells.UndoRedo
         {
             double[] numArray = null;
             bool[] flagArray = null;
-            if (((this._sheet != null) && (this._columns != null)) && (this._columns.Length > 0))
+            if (((_sheet != null) && (_columns != null)) && (_columns.Length > 0))
             {
-                numArray = new double[this._columns.Length];
-                flagArray = new bool[this._columns.Length];
-                int num = this._rowHeader ? this._sheet.RowHeader.ColumnCount : this._sheet.ColumnCount;
-                for (int i = 0; i < this._columns.Length; i++)
+                numArray = new double[_columns.Length];
+                flagArray = new bool[_columns.Length];
+                int num = _rowHeader ? _sheet.RowHeader.ColumnCount : _sheet.ColumnCount;
+                for (int i = 0; i < _columns.Length; i++)
                 {
-                    ColumnAutoFitExtent extent = this._columns[i];
+                    ColumnAutoFitExtent extent = _columns[i];
                     if ((0 <= extent.Column) && (extent.Column < num))
                     {
-                        if (this._rowHeader)
+                        if (_rowHeader)
                         {
-                            numArray[i] = this._sheet.GetColumnWidth(extent.Column, SheetArea.CornerHeader | SheetArea.RowHeader);
-                            flagArray[i] = this._sheet.GetColumnVisible(extent.Column, SheetArea.CornerHeader | SheetArea.RowHeader);
+                            numArray[i] = _sheet.GetColumnWidth(extent.Column, SheetArea.CornerHeader | SheetArea.RowHeader);
+                            flagArray[i] = _sheet.GetColumnVisible(extent.Column, SheetArea.CornerHeader | SheetArea.RowHeader);
                         }
                         else
                         {
-                            numArray[i] = this._sheet.GetColumnWidth(extent.Column, SheetArea.Cells);
-                            flagArray[i] = this._sheet.GetColumnVisible(extent.Column, SheetArea.Cells);
+                            numArray[i] = _sheet.GetColumnWidth(extent.Column, SheetArea.Cells);
+                            flagArray[i] = _sheet.GetColumnVisible(extent.Column, SheetArea.Cells);
                         }
                     }
                     else
@@ -172,8 +172,8 @@ namespace Dt.Cells.UndoRedo
                     }
                 }
             }
-            this._oldSizes = numArray;
-            this._oldVisibles = flagArray;
+            _oldSizes = numArray;
+            _oldVisibles = flagArray;
         }
 
         /// <summary>
@@ -193,35 +193,35 @@ namespace Dt.Cells.UndoRedo
         public bool Undo(object sender)
         {
             bool flag = false;
-            if (((this._sheet != null) && (this._columns != null)) && (this._columns.Length > 0))
+            if (((_sheet != null) && (_columns != null)) && (_columns.Length > 0))
             {
                 SheetView view = sender as SheetView;
-                int[] columnsReiszed = this.GetColumnsReiszed(this._columns);
+                int[] columnsReiszed = GetColumnsReiszed(_columns);
                 base.SuspendInvalidate(sender);
                 try
                 {
-                    if ((view != null) && view.RaiseColumnWidthChanging(columnsReiszed, this._rowHeader))
+                    if ((view != null) && view.RaiseColumnWidthChanging(columnsReiszed, _rowHeader))
                     {
                         return true;
                     }
-                    int num2 = this._rowHeader ? this._sheet.RowHeader.ColumnCount : this._sheet.ColumnCount;
-                    for (int i = 0; i < this._columns.Length; i++)
+                    int num2 = _rowHeader ? _sheet.RowHeader.ColumnCount : _sheet.ColumnCount;
+                    for (int i = 0; i < _columns.Length; i++)
                     {
-                        ColumnAutoFitExtent extent = this._columns[i];
-                        double width = this._oldSizes[i];
-                        bool flag3 = this._oldVisibles[i];
+                        ColumnAutoFitExtent extent = _columns[i];
+                        double width = _oldSizes[i];
+                        bool flag3 = _oldVisibles[i];
                         if (((0 <= i) && (i < num2)) && (width != -1.0))
                         {
-                            if (this._rowHeader && this._sheet.GetColumnResizable(extent.Column, SheetArea.CornerHeader | SheetArea.RowHeader))
+                            if (_rowHeader && _sheet.GetColumnResizable(extent.Column, SheetArea.CornerHeader | SheetArea.RowHeader))
                             {
-                                this._sheet.SetColumnWidth(extent.Column, SheetArea.CornerHeader | SheetArea.RowHeader, width);
-                                this._sheet.SetColumnVisible(extent.Column, SheetArea.CornerHeader | SheetArea.RowHeader, flag3);
+                                _sheet.SetColumnWidth(extent.Column, SheetArea.CornerHeader | SheetArea.RowHeader, width);
+                                _sheet.SetColumnVisible(extent.Column, SheetArea.CornerHeader | SheetArea.RowHeader, flag3);
                                 flag = true;
                             }
-                            else if (this._sheet.GetColumnResizable(extent.Column, SheetArea.Cells))
+                            else if (_sheet.GetColumnResizable(extent.Column, SheetArea.Cells))
                             {
-                                this._sheet.SetColumnWidth(extent.Column, SheetArea.Cells, width);
-                                this._sheet.SetColumnVisible(extent.Column, SheetArea.Cells, flag3);
+                                _sheet.SetColumnWidth(extent.Column, SheetArea.Cells, width);
+                                _sheet.SetColumnVisible(extent.Column, SheetArea.Cells, flag3);
                                 flag = true;
                             }
                         }
@@ -238,7 +238,7 @@ namespace Dt.Cells.UndoRedo
                     view.InvalidateHeaderHorizontalArrangement();
                     view.InvalidateMeasure();
                     view.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader);
-                    view.RaiseColumnWidthChanged(columnsReiszed, this._rowHeader);
+                    view.RaiseColumnWidthChanged(columnsReiszed, _rowHeader);
                 }
             }
             return flag;

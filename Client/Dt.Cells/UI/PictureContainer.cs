@@ -16,20 +16,20 @@ namespace Dt.Cells.UI
 {
     internal partial class PictureContainer : FloatingObjectContainer
     {
-        private PictureView _pictureView;
+        PictureView _pictureView;
 
         public PictureContainer(Picture picture, GcViewport parentViewport) : base(picture, parentViewport)
         {
-            this._pictureView = new PictureView(picture, base.ParentViewport);
-            this._pictureView.HorizontalAlignment = HorizontalAlignment.Stretch;
-            this._pictureView.VerticalAlignment = VerticalAlignment.Stretch;
-            base.Content = this._pictureView;
+            _pictureView = new PictureView(picture, base.ParentViewport);
+            _pictureView.HorizontalAlignment = HorizontalAlignment.Stretch;
+            _pictureView.VerticalAlignment = VerticalAlignment.Stretch;
+            base.Content = _pictureView;
         }
 
         internal override void Refresh(object parameter)
         {
             base.Refresh(parameter);
-            this._pictureView.RefreshPictureView();
+            _pictureView.RefreshPictureView();
         }
     }
 }

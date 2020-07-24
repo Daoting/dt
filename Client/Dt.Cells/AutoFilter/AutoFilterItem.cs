@@ -19,9 +19,9 @@ namespace Dt.Cells.UI
     /// </summary>
     public class AutoFilterItem : INotifyPropertyChanged
     {
-        private object _criterion;
-        private string _displayText;
-        private bool? _isChecked = true;
+        object _criterion;
+        string _displayText;
+        bool? _isChecked = true;
 
         /// <summary>
         /// Occurs when a property value changes.
@@ -34,9 +34,9 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:System.ComponentModel.PropertyChangedEventArgs" /> instance containing the event data.</param>
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
         {
-            if (this.PropertyChanged != null)
+            if (PropertyChanged != null)
             {
-                this.PropertyChanged(this, e);
+                PropertyChanged(this, e);
             }
         }
 
@@ -45,13 +45,13 @@ namespace Dt.Cells.UI
         /// </summary>
         public virtual object Criterion
         {
-            get { return  this._criterion; }
+            get { return  _criterion; }
             set
             {
-                if (!object.Equals(value, this._criterion))
+                if (!object.Equals(value, _criterion))
                 {
-                    this._criterion = value;
-                    this.OnPropertyChanged(new PropertyChangedEventArgs("Criterion"));
+                    _criterion = value;
+                    OnPropertyChanged(new PropertyChangedEventArgs("Criterion"));
                 }
             }
         }
@@ -63,18 +63,18 @@ namespace Dt.Cells.UI
         {
             get
             {
-                if (this.Criterion != null)
+                if (Criterion != null)
                 {
-                    return this.Criterion.ToString();
+                    return Criterion.ToString();
                 }
                 return string.Empty;
             }
             set
             {
-                if (this._displayText != value)
+                if (_displayText != value)
                 {
-                    this._displayText = value;
-                    this.OnPropertyChanged(new PropertyChangedEventArgs("DisplayText"));
+                    _displayText = value;
+                    OnPropertyChanged(new PropertyChangedEventArgs("DisplayText"));
                 }
             }
         }
@@ -84,15 +84,15 @@ namespace Dt.Cells.UI
         /// </summary>
         public bool? IsChecked
         {
-            get { return  this._isChecked; }
+            get { return  _isChecked; }
             set
             {
                 bool? nullable = value;
-                bool? nullable2 = this._isChecked;
+                bool? nullable2 = _isChecked;
                 if ((nullable.GetValueOrDefault() != nullable2.GetValueOrDefault()) || (nullable.HasValue != nullable2.HasValue))
                 {
-                    this._isChecked = value;
-                    this.OnPropertyChanged(new PropertyChangedEventArgs("IsChecked"));
+                    _isChecked = value;
+                    OnPropertyChanged(new PropertyChangedEventArgs("IsChecked"));
                 }
             }
         }

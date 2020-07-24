@@ -20,8 +20,8 @@ namespace Dt.Cells.UndoRedo
     /// </summary>
     public class MoveFloatingObjectUndoAction : ActionBase, IUndo
     {
-        private MoveFloatingObjectExtent _movingExtent;
-        private Worksheet _worksheet;
+        MoveFloatingObjectExtent _movingExtent;
+        Worksheet _worksheet;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.UndoRedo.MoveFloatingObjectUndoAction" /> class.
@@ -30,8 +30,8 @@ namespace Dt.Cells.UndoRedo
         /// <param name="extent">The extent.</param>
         public MoveFloatingObjectUndoAction(Worksheet worksheet, MoveFloatingObjectExtent extent)
         {
-            this._worksheet = worksheet;
-            this._movingExtent = extent;
+            _worksheet = worksheet;
+            _movingExtent = extent;
         }
 
         /// <summary>
@@ -52,27 +52,27 @@ namespace Dt.Cells.UndoRedo
         /// <param name="parameter">Data used by the action. If the action does not require data to be passed, this object can be set to null.</param>
         public override void Execute(object parameter)
         {
-            if (this.CanExecute(parameter))
+            if (CanExecute(parameter))
             {
                 SheetView view = parameter as SheetView;
                 try
                 {
                     view.SuspendFloatingObjectsInvalidate();
-                    this.SaveState();
-                    foreach (string str in this._movingExtent.Names)
+                    SaveState();
+                    foreach (string str in _movingExtent.Names)
                     {
-                        FloatingObject obj2 = this._worksheet.FindChart(str);
+                        FloatingObject obj2 = _worksheet.FindChart(str);
                         if (obj2 == null)
                         {
-                            obj2 = this._worksheet.FindPicture(str);
+                            obj2 = _worksheet.FindPicture(str);
                         }
                         if (obj2 == null)
                         {
-                            obj2 = this._worksheet.FindFloatingObject(str);
+                            obj2 = _worksheet.FindFloatingObject(str);
                         }
                         if (obj2 != null)
                         {
-                            obj2.Location = new Windows.Foundation.Point(obj2.Location.X + this._movingExtent.OffsetX, obj2.Location.Y + this._movingExtent.OffsetY);
+                            obj2.Location = new Windows.Foundation.Point(obj2.Location.X + _movingExtent.OffsetX, obj2.Location.Y + _movingExtent.OffsetY);
                         }
                     }
                 }
@@ -115,21 +115,21 @@ namespace Dt.Cells.UndoRedo
             try
             {
                 view.SuspendFloatingObjectsInvalidate();
-                this.SaveState();
-                foreach (string str in this._movingExtent.Names)
+                SaveState();
+                foreach (string str in _movingExtent.Names)
                 {
-                    FloatingObject obj2 = this._worksheet.FindChart(str);
+                    FloatingObject obj2 = _worksheet.FindChart(str);
                     if (obj2 == null)
                     {
-                        obj2 = this._worksheet.FindPicture(str);
+                        obj2 = _worksheet.FindPicture(str);
                     }
                     if (obj2 == null)
                     {
-                        obj2 = this._worksheet.FindFloatingObject(str);
+                        obj2 = _worksheet.FindFloatingObject(str);
                     }
                     if (obj2 != null)
                     {
-                        obj2.Location = new Windows.Foundation.Point(obj2.Location.X - this._movingExtent.OffsetX, obj2.Location.Y - this._movingExtent.OffsetY);
+                        obj2.Location = new Windows.Foundation.Point(obj2.Location.X - _movingExtent.OffsetX, obj2.Location.Y - _movingExtent.OffsetY);
                     }
                 }
             }

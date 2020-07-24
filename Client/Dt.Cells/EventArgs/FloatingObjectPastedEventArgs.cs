@@ -21,8 +21,8 @@ namespace Dt.Cells.UI
     {
         internal FloatingObjectPastedEventArgs(Dt.Cells.Data.Worksheet worksheet, FloatingObject pastedObject)
         {
-            this.Worksheet = worksheet;
-            this.PastedObject = pastedObject;
+            Worksheet = worksheet;
+            PastedObject = pastedObject;
         }
 
         /// <summary>

@@ -35,19 +35,19 @@ namespace Dt.Cells.UI
         #region 成员变量
         public static readonly XmlReaderSettings _readerSettings = new XmlReaderSettings() { IgnoreWhitespace = true, IgnoreComments = true, IgnoreProcessingInstructions = true };
         internal static readonly Thickness _buildInMargin = new Thickness(1.0);
-        private ExcelPrinter _printer;
-        private Excel _excel;
-        private Worksheet _sheet;
-        private int _index;
+        ExcelPrinter _printer;
+        Excel _excel;
+        Worksheet _sheet;
+        int _index;
 
-        private Border _border;
-        private UIElement _footerCenterView;
-        private UIElement _footerLeftView;
-        private UIElement _footerRightView;
-        private UIElement _headerCenterView;
-        private UIElement _headerLeftView;
-        private UIElement _headerRightView;
-        private SheetPageInfo _pageInfo;
+        Border _border;
+        UIElement _footerCenterView;
+        UIElement _footerLeftView;
+        UIElement _footerRightView;
+        UIElement _headerCenterView;
+        UIElement _headerLeftView;
+        UIElement _headerRightView;
+        SheetPageInfo _pageInfo;
         #endregion
 
         public PrintPagePresenter(ExcelPrinter p_printer, int p_index, Excel p_excel, SheetPageInfo p_pageInfo)
@@ -61,7 +61,7 @@ namespace Dt.Cells.UI
             OnInit();
         }
 
-        private void OnInit()
+        void OnInit()
         {
             AddHeaderFooter();
 
@@ -205,27 +205,27 @@ namespace Dt.Cells.UI
             return _printer.PageSize;
         }
 
-        private double InnerHorizontalZoomFactor
+        double InnerHorizontalZoomFactor
         {
             get { return (1 * 0.96); }
         }
 
-        private double InnerVerticalZoomFactor
+        double InnerVerticalZoomFactor
         {
             get { return (1 * 0.96); }
         }
 
-        private double PrintLeftMargin
+        double PrintLeftMargin
         {
             get { return (_printer.PrintArea.Left + _buildInMargin.Left); }
         }
 
-        private double PrintTopMargin
+        double PrintTopMargin
         {
             get { return (_printer.PrintArea.Top + _buildInMargin.Top); }
         }
 
-        private bool ShowColumnHeader
+        bool ShowColumnHeader
         {
             get
             {
@@ -235,7 +235,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private bool ShowRowHeader
+        bool ShowRowHeader
         {
             get
             {
@@ -246,7 +246,7 @@ namespace Dt.Cells.UI
         }
 
         #region 页眉页脚
-        private void AddHeaderFooter()
+        void AddHeaderFooter()
         {
             _headerLeftView = CreateBlock(_printer.Info.HeaderLeft, HorizontalAlignment.Left, _printer.Info.HeaderLeftImage.ToImageSource());
             _headerCenterView = CreateBlock(_printer.Info.HeaderCenter, HorizontalAlignment.Center, _printer.Info.HeaderCenterImage.ToImageSource());
@@ -270,7 +270,7 @@ namespace Dt.Cells.UI
         }
 
 
-        private UIElement CreateBlock(string p_xml, HorizontalAlignment p_horAlignment, ImageSource p_img)
+        UIElement CreateBlock(string p_xml, HorizontalAlignment p_horAlignment, ImageSource p_img)
         {
             if (string.IsNullOrEmpty(p_xml))
                 return null;
@@ -386,7 +386,7 @@ namespace Dt.Cells.UI
             return panel;
         }
 
-        private void MeasureHeaderAndFooter()
+        void MeasureHeaderAndFooter()
         {
             ScaleTransform transform = new ScaleTransform();
             transform.ScaleX = InnerHorizontalZoomFactor;
@@ -424,7 +424,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void ArrangeHeaderAndFooter()
+        void ArrangeHeaderAndFooter()
         {
             double y = _printer.HeaderMargin + _buildInMargin.Top;
             new RotateTransform().Angle = 90.0;

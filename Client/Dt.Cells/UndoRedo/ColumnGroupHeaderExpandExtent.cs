@@ -17,7 +17,7 @@ namespace Dt.Cells.UndoRedo
     /// </summary>
     public class ColumnGroupHeaderExpandExtent
     {
-        private int _level;
+        int _level;
 
         /// <summary>
         /// Creates a new instance of the <see cref="T:Dt.Cells.UndoRedo.ColumnGroupHeaderExpandExtent" /> class.
@@ -25,7 +25,7 @@ namespace Dt.Cells.UndoRedo
         /// <param name="level">The column range group level.</param>
         public ColumnGroupHeaderExpandExtent(int level)
         {
-            this._level = level;
+            _level = level;
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace Dt.Cells.UndoRedo
         /// </summary>
         public int Level
         {
-            get { return  this._level; }
+            get { return  _level; }
         }
     }
 }

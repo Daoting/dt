@@ -24,7 +24,7 @@ namespace Dt.Cells.UndoRedo
         /// <param name="names">The names.</param>
         public FloatingObjectExtent(params string[] names)
         {
-            this.Names = names;
+            Names = names;
         }
 
         /// <summary>

@@ -21,10 +21,10 @@ namespace Dt.Cells.UI
     {
         internal LeaveCellEventArgs(int row, int column, int toRow, int toColumn)
         {
-            this.Row = row;
-            this.Column = column;
-            this.ToRow = toRow;
-            this.ToColumn = toColumn;
+            Row = row;
+            Column = column;
+            ToRow = toRow;
+            ToColumn = toColumn;
         }
 
         /// <summary>

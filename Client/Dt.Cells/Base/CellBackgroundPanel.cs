@@ -23,9 +23,9 @@ namespace Dt.Cells.UI
     /// </summary>
     public partial class CellBackgroundPanel : Panel
     {
-        private Windows.Foundation.Rect? _cachedClip;
-        private Windows.UI.Xaml.Thickness _contentPadding;
-        private CellPresenterBase _owner;
+        Windows.Foundation.Rect? _cachedClip;
+        Windows.UI.Xaml.Thickness _contentPadding;
+        CellPresenterBase _owner;
 
         /// <summary>
         /// Arranges and sizes the panel content.
@@ -38,28 +38,28 @@ namespace Dt.Cells.UI
             {
                 return new Windows.Foundation.Size();
             }
-            double width = finalSize.Width - (this.ContentPadding.Left + this.ContentPadding.Right);
+            double width = finalSize.Width - (ContentPadding.Left + ContentPadding.Right);
             if (width < 0.0)
             {
                 width = 0.0;
             }
-            double height = finalSize.Height - (this.ContentPadding.Top + this.ContentPadding.Bottom);
+            double height = finalSize.Height - (ContentPadding.Top + ContentPadding.Bottom);
             if (height < 0.0)
             {
                 height = 0.0;
             }
             Windows.Foundation.Rect? nullable = null;
-            double left = this.ContentPadding.Left;
-            double top = this.ContentPadding.Top;
+            double left = ContentPadding.Left;
+            double top = ContentPadding.Top;
             Windows.Foundation.Rect rect = new Windows.Foundation.Rect(left, top, width, height);
-            if (this.ContentWidth > width)
+            if (ContentWidth > width)
             {
-                switch (this.HorizontalContentFlowDirection)
+                switch (HorizontalContentFlowDirection)
                 {
                     case HorizontalAlignment.Left:
-                        if (this.CellOverflowLayout != null)
+                        if (CellOverflowLayout != null)
                         {
-                            double num5 = this.CellOverflowLayout.RightBackgroundWidth - this.ContentPadding.Right;
+                            double num5 = CellOverflowLayout.RightBackgroundWidth - ContentPadding.Right;
                             if (num5 >= 0.0)
                             {
                                 nullable = new Windows.Foundation.Rect(0.0, 0.0, num5, finalSize.Height);
@@ -68,11 +68,11 @@ namespace Dt.Cells.UI
                         break;
 
                     case HorizontalAlignment.Right:
-                        left -= this.ContentWidth - width;
-                        if (this.CellOverflowLayout != null)
+                        left -= ContentWidth - width;
+                        if (CellOverflowLayout != null)
                         {
-                            double x = finalSize.Width - this.CellOverflowLayout.LeftBackgroundWidth;
-                            double num7 = this.CellOverflowLayout.LeftBackgroundWidth - this.ContentPadding.Left;
+                            double x = finalSize.Width - CellOverflowLayout.LeftBackgroundWidth;
+                            double num7 = CellOverflowLayout.LeftBackgroundWidth - ContentPadding.Left;
                             if (num7 >= 0.0)
                             {
                                 nullable = new Windows.Foundation.Rect(x, 0.0, num7, finalSize.Height);
@@ -81,15 +81,15 @@ namespace Dt.Cells.UI
                         break;
 
                     default:
-                        left -= (this.ContentWidth - width) / 2.0;
-                        if (this.CellOverflowLayout != null)
+                        left -= (ContentWidth - width) / 2.0;
+                        if (CellOverflowLayout != null)
                         {
                             double num8 = 0.0;
-                            if (this.CellOverflowLayout.LeftBackgroundWidth > 0.0)
+                            if (CellOverflowLayout.LeftBackgroundWidth > 0.0)
                             {
-                                num8 = ((finalSize.Width / 2.0) - this.CellOverflowLayout.LeftBackgroundWidth) + this.ContentPadding.Left;
+                                num8 = ((finalSize.Width / 2.0) - CellOverflowLayout.LeftBackgroundWidth) + ContentPadding.Left;
                             }
-                            double num9 = this.CellOverflowLayout.BackgroundWidth - this.ContentPadding.Right;
+                            double num9 = CellOverflowLayout.BackgroundWidth - ContentPadding.Right;
                             if (num9 >= 0.0)
                             {
                                 nullable = new Windows.Foundation.Rect(num8, 0.0, num9, finalSize.Height);
@@ -97,14 +97,14 @@ namespace Dt.Cells.UI
                         }
                         break;
                 }
-                width = this.ContentWidth;
+                width = ContentWidth;
             }
             Windows.Foundation.Rect rect2 = new Windows.Foundation.Rect(left, top, width, height);
-            Windows.Foundation.Rect? nullable2 = this._cachedClip;
+            Windows.Foundation.Rect? nullable2 = _cachedClip;
             Windows.Foundation.Rect? nullable3 = nullable;
             if ((nullable2.HasValue != nullable3.HasValue) || (nullable2.HasValue && (nullable2.GetValueOrDefault() != nullable3.GetValueOrDefault())))
             {
-                this._cachedClip = nullable;
+                _cachedClip = nullable;
                 if (nullable.HasValue)
                 {
                     RectangleGeometry geometry = new RectangleGeometry();
@@ -145,21 +145,21 @@ namespace Dt.Cells.UI
             {
                 return new Windows.Foundation.Size();
             }
-            double width = availableSize.Width - (this.ContentPadding.Left + this.ContentPadding.Right);
+            double width = availableSize.Width - (ContentPadding.Left + ContentPadding.Right);
             if (width < 0.0)
             {
                 width = 0.0;
             }
-            double height = availableSize.Height - (this.ContentPadding.Top + this.ContentPadding.Bottom);
+            double height = availableSize.Height - (ContentPadding.Top + ContentPadding.Bottom);
             if (height < 0.0)
             {
                 height = 0.0;
             }
             Windows.Foundation.Size size = new Windows.Foundation.Size(width, height);
             Windows.Foundation.Size size2 = size;
-            if (this.ContentWidth > width)
+            if (ContentWidth > width)
             {
-                size2 = new Windows.Foundation.Size(this.ContentWidth, height);
+                size2 = new Windows.Foundation.Size(ContentWidth, height);
             }
             foreach (UIElement element in base.Children)
             {
@@ -180,13 +180,13 @@ namespace Dt.Cells.UI
             return size;
         }
 
-        private Dt.Cells.UI.CellOverflowLayout CellOverflowLayout
+        Dt.Cells.UI.CellOverflowLayout CellOverflowLayout
         {
             get
             {
-                if (this.OwneringCell != null)
+                if (OwneringCell != null)
                 {
-                    return this.OwneringCell.CellOverflowLayout;
+                    return OwneringCell.CellOverflowLayout;
                 }
                 return null;
             }
@@ -197,37 +197,37 @@ namespace Dt.Cells.UI
         /// </summary>
         public Windows.UI.Xaml.Thickness ContentPadding
         {
-            get { return  this._contentPadding; }
+            get { return  _contentPadding; }
             set
             {
-                if (this._contentPadding != value)
+                if (_contentPadding != value)
                 {
-                    this._contentPadding = value;
+                    _contentPadding = value;
                     base.InvalidateMeasure();
                     base.InvalidateArrange();
                 }
             }
         }
 
-        private double ContentWidth
+        double ContentWidth
         {
             get
             {
-                if (this.CellOverflowLayout != null)
+                if (CellOverflowLayout != null)
                 {
-                    return this.CellOverflowLayout.ContentWidth;
+                    return CellOverflowLayout.ContentWidth;
                 }
                 return 0.0;
             }
         }
 
-        private HorizontalAlignment HorizontalContentFlowDirection
+        HorizontalAlignment HorizontalContentFlowDirection
         {
             get
             {
-                if (this.OwneringCell != null)
+                if (OwneringCell != null)
                 {
-                    Cell bindingCell = this.OwneringCell.BindingCell;
+                    Cell bindingCell = OwneringCell.BindingCell;
                     if (bindingCell != null)
                     {
                         return bindingCell.ToHorizontalAlignment();
@@ -239,12 +239,12 @@ namespace Dt.Cells.UI
 
         internal CellPresenterBase OwneringCell
         {
-            get { return  this._owner; }
+            get { return  _owner; }
             set
             {
-                if (this._owner != value)
+                if (_owner != value)
                 {
-                    this._owner = value;
+                    _owner = value;
                     base.InvalidateMeasure();
                     base.InvalidateArrange();
                 }

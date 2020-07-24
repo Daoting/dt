@@ -18,7 +18,7 @@ namespace Dt.Cells.UI
 {
     internal static class CursorGenerator
     {
-        private static Dictionary<CursorType, ImageSource> _cache = new Dictionary<CursorType, ImageSource>();
+        static Dictionary<CursorType, ImageSource> _cache = new Dictionary<CursorType, ImageSource>();
 
         internal static ImageSource GetCursor(CursorType cursorType)
         {

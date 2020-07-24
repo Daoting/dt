@@ -33,11 +33,11 @@ namespace Dt.Cells.UI
         public object Convert(object value, Type targetType, object parameter, string culture)
         {
             string str = (string) (parameter as string);
-            if ((!string.IsNullOrEmpty(str) && (value != null)) && (this.Legend != null))
+            if ((!string.IsNullOrEmpty(str) && (value != null)) && (Legend != null))
             {
                 if (str == "borderThickness")
                 {
-                    double num = this.Legend.StrokeThickness * this.ZoomFactor;
+                    double num = Legend.StrokeThickness * ZoomFactor;
                     if (num < 0.0)
                     {
                         num = 0.0;
@@ -46,7 +46,7 @@ namespace Dt.Cells.UI
                 }
                 if (str == "borderDashArray")
                 {
-                    return Dt.Cells.Data.StrokeDashHelper.GetStrokeDashes(this.Legend.StrokeDashType);
+                    return Dt.Cells.Data.StrokeDashHelper.GetStrokeDashes(Legend.StrokeDashType);
                 }
             }
             return null;

@@ -20,8 +20,8 @@ namespace Dt.Cells.UI
     {
         internal ZoomEventArgs(float oldZoomFactor, float newZoomFactor)
         {
-            this.OldZoomFactor = oldZoomFactor;
-            this.NewZoomFactor = newZoomFactor;
+            OldZoomFactor = oldZoomFactor;
+            NewZoomFactor = newZoomFactor;
         }
 
         /// <summary>

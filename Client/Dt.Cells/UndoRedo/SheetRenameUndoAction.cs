@@ -52,7 +52,7 @@ namespace Dt.Cells.UndoRedo
         /// </returns>
         public override bool CanExecute(object parameter)
         {
-            return (((this.worksheet != null) && (this.newName != null)) && (this.newName != this.oldName));
+            return (((worksheet != null) && (newName != null)) && (newName != oldName));
         }
 
         /// <summary>
@@ -61,24 +61,24 @@ namespace Dt.Cells.UndoRedo
         /// <param name="parameter">Object on which the action occurred.</param>
         public override void Execute(object parameter)
         {
-            if (((this.worksheet == null) || (this.newName == null)) || !(this.newName != this.oldName))
+            if (((worksheet == null) || (newName == null)) || !(newName != oldName))
             {
                 throw new ActionFailedException(this);
             }
-            this.SaveState();
+            SaveState();
             base.SuspendInvalidate(parameter);
             try
             {
-                this.worksheet.Name = this.newName;
+                worksheet.Name = newName;
             }
             finally
             {
                 base.ResumeInvalidate(parameter);
             }
-            this.RefreshUI(parameter);
+            RefreshUI(parameter);
         }
 
-        private void RefreshUI(object sheetView)
+        void RefreshUI(object sheetView)
         {
             SpreadView view = sheetView as SpreadView;
             if (view != null)
@@ -92,9 +92,9 @@ namespace Dt.Cells.UndoRedo
         /// </summary>
         public void SaveState()
         {
-            if (this.worksheet != null)
+            if (worksheet != null)
             {
-                this.oldName = this.worksheet.Name;
+                oldName = worksheet.Name;
             }
         }
 
@@ -118,20 +118,20 @@ namespace Dt.Cells.UndoRedo
         /// </returns>
         public bool Undo(object parameter)
         {
-            if (this.worksheet == null)
+            if (worksheet == null)
             {
                 return false;
             }
             base.SuspendInvalidate(parameter);
             try
             {
-                this.worksheet.Name = this.oldName;
+                worksheet.Name = oldName;
             }
             finally
             {
                 base.ResumeInvalidate(parameter);
             }
-            this.RefreshUI(parameter);
+            RefreshUI(parameter);
             return true;
         }
 
@@ -140,7 +140,7 @@ namespace Dt.Cells.UndoRedo
         /// </summary>
         public bool CanUndo
         {
-            get { return  (this.oldName != null); }
+            get { return  (oldName != null); }
         }
     }
 }

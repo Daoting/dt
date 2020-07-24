@@ -26,7 +26,7 @@ namespace Dt.Cells.UI
         /// <param name="text">The text.</param>
         public CellTextRenderingEventArgs(int row, int column, string text) : base(row, column)
         {
-            this.CellText = text;
+            CellText = text;
         }
 
         /// <summary>

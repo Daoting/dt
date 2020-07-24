@@ -17,10 +17,10 @@ namespace Dt.Cells.UndoRedo
     /// </summary>
     public class RowGroupExpandExtent
     {
-        private bool _isCollapsed;
-        private int _level;
-        private int _summaryIndex;
-        private int _viewportIndex;
+        bool _isCollapsed;
+        int _level;
+        int _summaryIndex;
+        int _viewportIndex;
 
         /// <summary>
         /// Creates a new instance of the <see cref="T:Dt.Cells.UndoRedo.RowGroupExpandExtent" /> class.
@@ -31,10 +31,10 @@ namespace Dt.Cells.UndoRedo
         /// <param name="isCollapsed">The group state is <c>true</c> if collapsed; otherwise, expanded.</param>
         public RowGroupExpandExtent(int summaryIndex, int level, int viewportIndex, bool isCollapsed)
         {
-            this._summaryIndex = summaryIndex;
-            this._level = level;
-            this._viewportIndex = viewportIndex;
-            this._isCollapsed = isCollapsed;
+            _summaryIndex = summaryIndex;
+            _level = level;
+            _viewportIndex = viewportIndex;
+            _isCollapsed = isCollapsed;
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Dt.Cells.UndoRedo
         /// </value>
         public bool Collapsed
         {
-            get { return  this._isCollapsed; }
+            get { return  _isCollapsed; }
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Dt.Cells.UndoRedo
         /// </summary>
         public int Index
         {
-            get { return  this._summaryIndex; }
+            get { return  _summaryIndex; }
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Dt.Cells.UndoRedo
         /// </summary>
         public int Level
         {
-            get { return  this._level; }
+            get { return  _level; }
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace Dt.Cells.UndoRedo
         /// </summary>
         public int ViewportIndex
         {
-            get { return  this._viewportIndex; }
+            get { return  _viewportIndex; }
         }
     }
 }

@@ -7,8 +7,7 @@
     <a:WinCenter>
         <a:Tabs ShowHeader="False">
             <a:Tab>
-                <ContentControl x:Name="_con" />
-                <!--<Path Width="200" Height="200" Fill="Red" Data="M 45,155.368421052632 Z" />-->
+                <a:Excel x:Name="_excel" />
             </a:Tab>
         </a:Tabs>
     </a:WinCenter>

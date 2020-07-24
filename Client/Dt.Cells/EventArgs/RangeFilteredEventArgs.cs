@@ -20,8 +20,8 @@ namespace Dt.Cells.UI
     {
         internal RangeFilteredEventArgs(int column, object[] filterValues)
         {
-            this.Column = column;
-            this.FilterValues = filterValues;
+            Column = column;
+            FilterValues = filterValues;
         }
 
         /// <summary>

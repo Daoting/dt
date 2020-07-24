@@ -20,9 +20,9 @@ namespace Dt.Cells.UI
     {
         internal ViewportEventArgs(int oldIndex, int newIndex, int viewportIndex)
         {
-            this.OldIndex = oldIndex;
-            this.NewIndex = newIndex;
-            this.ViewportIndex = viewportIndex;
+            OldIndex = oldIndex;
+            NewIndex = newIndex;
+            ViewportIndex = viewportIndex;
         }
 
         /// <summary>

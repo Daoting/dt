@@ -29,8 +29,8 @@ namespace Dt.Cells.UI
             typeof(SheetView),
             new PropertyMetadata(false));
 
-        private Size _paperSize;
-        private CellRange _decorationRange;
+        Size _paperSize;
+        CellRange _decorationRange;
 
         /// <summary>
         /// 报表项开始拖放事件
@@ -83,7 +83,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        private void InvalidateDecoration()
+        void InvalidateDecoration()
         {
             if (_viewportPresenters != null)
             {
@@ -125,17 +125,17 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
+        void OnManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
         {
             e.Handled = true;
         }
 
-        private void OnManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
+        void OnManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
         {
             e.Handled = true;
         }
 
-        private void OnManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
+        void OnManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
         {
             e.Handled = true;
         }
