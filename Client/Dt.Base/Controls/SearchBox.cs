@@ -11,7 +11,7 @@ namespace Dt.Base
     /// <summary>
     /// 查询文本框
     /// </summary>
-    public partial class SearchBox : Control
+    public partial class SearchBox : DtControl
     {
         /// <summary>
         /// 提示内容
@@ -87,10 +87,8 @@ namespace Dt.Base
             }
         }
 
-        protected override void OnApplyTemplate()
+        protected override void OnLoadTemplate()
         {
-            base.OnApplyTemplate();
-
             ((Button)GetTemplateChild("Button")).Click += (s, e) => OnSearch();
             _tb = (TextBox)GetTemplateChild("TextBox");
             _tb.TextChanged += OnTextChanged;

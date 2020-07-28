@@ -15,7 +15,6 @@ using System.Linq;
 using System.Windows.Input;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Markup;
 #endregion
@@ -26,7 +25,7 @@ namespace Dt.Base
     /// 菜单项
     /// </summary>
     [ContentProperty(Name = nameof(Items))]
-    public partial class Mi : Control
+    public partial class Mi : DtControl
     {
         #region 静态内容
         public static readonly DependencyProperty IDProperty = DependencyProperty.Register(
@@ -412,9 +411,8 @@ namespace Dt.Base
         #endregion
 
         #region 加载过程
-        protected override void OnApplyTemplate()
+        protected override void OnLoadTemplate()
         {
-            base.OnApplyTemplate();
             CanExecuteApply();
             ChangeState(MenuItemState.Normal);
             UpdateRoleState();

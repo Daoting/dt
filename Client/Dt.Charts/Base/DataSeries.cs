@@ -289,9 +289,6 @@ namespace Dt.Base
         /// <summary>
         /// 
         /// </summary>
-#if ANDROID || IOS
-    new
-#endif
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>

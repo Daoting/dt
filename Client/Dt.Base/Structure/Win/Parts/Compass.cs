@@ -22,7 +22,7 @@ namespace Dt.Base.Docking
     /// <summary>
     /// 拖动过程的停靠导航，内部用
     /// </summary>
-    public partial class Compass : Control
+    public partial class Compass : DtControl
     {
         #region 静态内容
         /// <summary>
@@ -188,9 +188,8 @@ namespace Dt.Base.Docking
         #endregion
 
         #region 重写方法
-        protected override void OnApplyTemplate()
+        protected override void OnLoadTemplate()
         {
-            base.OnApplyTemplate();
             _leftIndicator = GetTemplateChild("PART_LeftIndicator") as FrameworkElement;
             _topIndicator = GetTemplateChild("PART_TopIndicator") as FrameworkElement;
             _rightIndicator = GetTemplateChild("PART_RightIndicator") as FrameworkElement;

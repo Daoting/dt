@@ -111,11 +111,7 @@ namespace Dt.Base
 
         internal object GetResource(string p_key)
         {
-#if UWP
             return Resources[p_key];
-#else
-            return StaticResources.FindResource(p_key);
-#endif
         }
         #endregion
 

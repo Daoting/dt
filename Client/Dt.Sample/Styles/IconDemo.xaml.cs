@@ -25,7 +25,7 @@ namespace Dt.Sample
         public IconDemo()
         {
             InitializeComponent();
-            Loaded += OnLoaded;
+            _container.Loaded += OnLoaded;
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace Dt.Sample
         /// <param name="e"></param>
         void OnLoaded(object sender, RoutedEventArgs e)
         {
-            Loaded -= OnLoaded;
+            _container.Loaded -= OnLoaded;
             GenIcons();
             LoadIcons();
             SizeChanged += OnSizeChanged;

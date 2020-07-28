@@ -143,26 +143,6 @@ namespace Dt.Sample
                     Note = "跨平台文件选择、上传下载文件、不同类型图像资源",
                     Tag = typeof(FileHome),
                 },
-                new DataCmd
-                {
-                    Title = "可停靠面板",
-                    Note = "停靠式窗口的布局面板",
-                    Tag = typeof(DockPanelDemo),
-                    Callback = OnNaviTo
-                },
-                new DataCmd
-                {
-                    Title = "分隔栏",
-                    Note = "包括水平/垂直分隔功能",
-                    Tag = typeof(SplitterDemo),
-                    Callback = OnNaviTo
-                },
-                new DataCmd
-                {
-                    Title = "流程图",
-                    Note = "任务流程定义示意图",
-                    Tag = typeof(SketchPage)
-                },
                  new DataCmd
                 {
                     Title = "Tab页",
@@ -177,8 +157,9 @@ namespace Dt.Sample
                 },
                 new DataCmd
                 {
-                    Title = "基础事件",
-                    Tag = typeof(RouteEventDemo)
+                    Title = "杂项",
+                    Note = "基础事件、分隔栏、可停靠面板、流程图、控件事件顺序",
+                    Tag = typeof(MiscHome)
                 },
             };
             group.Title = "基础控件";

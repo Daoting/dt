@@ -28,13 +28,8 @@ namespace Dt.Fz
 
             _lv.View = new PostItemSelector
             {
-#if UWP
                 Default = (DataTemplate)Resources["Default"],
                 CoverTitle = (DataTemplate)Resources["CoverTitle"],
-#else
-                Default = StaticResources.Default,
-                CoverTitle = StaticResources.CoverTitle,
-#endif
             };
             _lv.PageData = new PageData { NextPage = OnNextPage, PageSize = 5 };
         }

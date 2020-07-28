@@ -5,12 +5,11 @@
     xmlns:docking="using:Dt.Base.Docking">
 
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="/Dt.Base/Themes/Global.xaml"/>
-        <ResourceDictionary Source="/Dt.Base/Themes/Styles/Default.xaml"/>
+        <ResourceDictionary Source="ms-appx:///Dt.Base/Themes/Global.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
     <!--Win-->
-    <Style x:Key="DefaultWin" TargetType="a:Win">
+    <Style TargetType="a:Win">
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
         <Setter Property="Background" Value="{StaticResource 默认背景}" />
         <Setter Property="BorderBrush" Value="{StaticResource 浅灰边框}" />
@@ -37,7 +36,7 @@
     </Style>
 
     <!--WinItem-->
-    <Style x:Key="DefaultWinItem" TargetType="a:WinItem">
+    <Style TargetType="a:WinItem">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="a:WinItem">
@@ -51,7 +50,7 @@
     </Style>
 
     <!--Tabs-->
-    <Style x:Key="DefaultTabs" TargetType="a:Tabs">
+    <Style TargetType="a:Tabs">
         <Setter Property="BorderBrush" Value="{StaticResource 浅灰边框}"/>
         <Setter Property="Background" Value="{StaticResource 默认背景}" />
         <Setter Property="Padding" Value="0"/>
@@ -155,8 +154,8 @@
         </Setter>
     </Style>
 
-    <!--Tab Phone-->
-    <Style x:Key="PhoneTab" TargetType="a:Tab">
+    <!--Tab PhoneUI模式为缺省样式-->
+    <Style TargetType="a:Tab">
         <Setter Property="Foreground" Value="{StaticResource 默认前景}" />
         <Setter Property="Background" Value="{StaticResource 默认背景}" />
         <Setter Property="Template">

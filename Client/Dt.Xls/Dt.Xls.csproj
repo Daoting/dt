@@ -7,7 +7,7 @@
   <Import Project="..\Common\Dtc-Stable.props" />
   
   <ItemGroup>
-    <Content Include="BuiltInStyles.xml" />
+    <EmbeddedResource Include="BuiltInStyles.xml" />
   </ItemGroup>
 
 </Project>

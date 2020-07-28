@@ -29,7 +29,7 @@ namespace Dt.Base
     /// 表单控件
     /// </summary>
     [ContentProperty(Name = nameof(Items))]
-    public partial class Fv : Control
+    public partial class Fv : DtControl
     {
         #region 静态内容
         public readonly static DependencyProperty DataProperty = DependencyProperty.Register(
@@ -110,9 +110,6 @@ namespace Dt.Base
         {
             DefaultStyleKey = typeof(Fv);
             _panel = new FormPanel();
-#if !UWP
-            Loaded += OnLoaded;
-#endif
         }
         #endregion
 
@@ -663,57 +660,7 @@ namespace Dt.Base
         #endregion
 
         #region 重写方法
-        /************************************************************************************************************************************/
-        // 平台调用顺序不同：
-        // UWP：父OnApplyTemplate > 父MeasureOverride > 子MeasureOverride > 父ArrangeOverride > 子ArrangeOverride > 父SizeChanged > 子SizeChanged > 父Loaded > 子Loaded
-        // Adr：父OnApplyTemplate > 父Loaded > 子Loaded > 父MeasureOverride > 子MeasureOverride > 父ArrangeOverride > 子ArrangeOverride > 子SizeChanged > 父SizeChanged
-        // iOS：父OnApplyTemplate > 子Loaded > 父Loaded > 父MeasureOverride > 子MeasureOverride > 父SizeChanged > 子SizeChanged > 父ArrangeOverride > 子ArrangeOverride
-        //
-        // uwp的OnApplyTemplate时控件已在可视树上，可查询父元素；uno此时不在可视树上，只能在Loaded时查询父元素！！！
-        //
-        /************************************************************************************************************************************/
-
-#if UWP
-        protected override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-            InitTemplate();
-        }
-#endif
-
-        protected override Size MeasureOverride(Size availableSize)
-        {
-            // 准确获取高度
-            if (!double.IsInfinity(availableSize.Width) && !double.IsInfinity(availableSize.Height))
-            {
-                // 外部无ScrollViewer StackPanel的情况
-                _panel.SetMaxSize(availableSize);
-            }
-            else
-            {
-                // 和Lv相似，参见win.xaml：win模式在Tabs定义，phone模式在Tab定义
-                var pre = _scroll.FindParentInWin<SizedPresenter>();
-                if (pre != null)
-                {
-                    _panel.SetMaxSize(pre.AvailableSize);
-                }
-                else
-                {
-                    // 无有效大小时以窗口大小为准
-                    double width = double.IsInfinity(availableSize.Width) ? SysVisual.ViewWidth : availableSize.Width;
-                    double height = double.IsInfinity(availableSize.Height) ? SysVisual.ViewHeight : availableSize.Height;
-                    _panel.SetMaxSize(new Size(width, height));
-                }
-            }
-            return base.MeasureOverride(availableSize);
-        }
-        #endregion
-
-        #region 加载过程
-        /// <summary>
-        /// 动态构造控件内容，uwp在OnApplyTemplate中处理，uno在Loaded时处理
-        /// </summary>
-        void InitTemplate()
+        protected override void OnLoadTemplate()
         {
             var root = (Border)GetTemplateChild("Border");
 
@@ -746,20 +693,32 @@ namespace Dt.Base
                 OnDataChanged();
         }
 
-#if !UWP
-        /// <summary>
-        /// uno时的处理
-        /// uno中OnApplyTemplate时不在可视树上，无法查询父元素，uwp的OnApplyTemplate时已在可视树上
-        /// 为了动态构造控件内容，uwp在OnApplyTemplate中处理，uno在Loaded时处理 ！
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void OnLoaded(object sender, RoutedEventArgs e)
+        protected override Size MeasureOverride(Size availableSize)
         {
-            Loaded -= OnLoaded;
-            InitTemplate();
+            // 准确获取高度
+            if (!double.IsInfinity(availableSize.Width) && !double.IsInfinity(availableSize.Height))
+            {
+                // 外部无ScrollViewer StackPanel的情况
+                _panel.SetMaxSize(availableSize);
+            }
+            else
+            {
+                // 和Lv相似，参见win.xaml：win模式在Tabs定义，phone模式在Tab定义
+                var pre = _scroll.FindParentInWin<SizedPresenter>();
+                if (pre != null)
+                {
+                    _panel.SetMaxSize(pre.AvailableSize);
+                }
+                else
+                {
+                    // 无有效大小时以窗口大小为准
+                    double width = double.IsInfinity(availableSize.Width) ? SysVisual.ViewWidth : availableSize.Width;
+                    double height = double.IsInfinity(availableSize.Height) ? SysVisual.ViewHeight : availableSize.Height;
+                    _panel.SetMaxSize(new Size(width, height));
+                }
+            }
+            return base.MeasureOverride(availableSize);
         }
-#endif
         #endregion
 
         #region 数据源

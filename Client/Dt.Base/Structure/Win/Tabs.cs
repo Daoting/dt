@@ -9,13 +9,11 @@
 #region 引用命名
 using Dt.Base.Docking;
 using Dt.Core;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
 #endregion
 
 namespace Dt.Base
@@ -72,13 +70,9 @@ namespace Dt.Base
         #region 构造方法
         public Tabs()
         {
-            // PhoneUI模式时不在可视树
+            // PhoneUI模式时不在可视树，省去uno在xaml自动生成代码时调用ApplyTemplate
             if (!AtSys.IsPhoneUI)
-            {
-                // 若用DefaultStyleKey，当前控件在xaml文件有子元素时，uno中不调用OnApplyTemplate！
-                // uno中设置Style时同步调用OnApplyTemplate，即构造方法直接调用了OnApplyTemplate！
-                Style = (Style)Application.Current.Resources["DefaultTabs"];
-            }
+                DefaultStyleKey = typeof(Tabs);
         }
         #endregion
 
@@ -416,21 +410,9 @@ namespace Dt.Base
         #endregion
 
         #region 加载过程
-#if UWP
-        protected override void OnApplyTemplate()
+        protected override void OnLoadTemplate()
         {
-            base.OnApplyTemplate();
-            InitTemplate();
-        }
-#else
-        protected override void OnUnoLoaded()
-        {
-            InitTemplate();
-        }
-#endif
-
-        void InitTemplate()
-        {
+            base.OnLoadTemplate();
             var header = (TabHeader)GetTemplateChild("HeaderElement");
             header.Owner = this;
             var resizer = (GridResizer)GetTemplateChild("Resizer");

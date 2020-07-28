@@ -41,14 +41,15 @@ namespace Dt.Base
         /// <summary>
         /// 切换内容
         /// </summary>
-        protected override void LoadContent()
+        protected override void OnLoadTemplate()
         {
-            if (_root == null)
+            Grid root = (Grid)GetTemplateChild("RootGrid");
+            if (root == null)
                 return;
 
             // 为uno节省一级ContentPresenter！
-            if (_root.Children.Count > 2)
-                _root.Children.RemoveAt(2);
+            if (root.Children.Count > 2)
+                root.Children.RemoveAt(2);
 
             if (Content is string title)
             {
@@ -59,14 +60,14 @@ namespace Dt.Base
                     VerticalAlignment = VerticalAlignment.Center,
                     Margin = new Thickness(10, 0, 10, 0)
                 };
-                _root.Children.Add(tb);
+                root.Children.Add(tb);
             }
             else if (Content is FrameworkElement con)
             {
                 // 默认边距
                 var margin = con.Margin;
                 con.Margin = new Thickness(margin.Left + 10, margin.Top + 1, margin.Right, margin.Bottom);
-                _root.Children.Add(con);
+                root.Children.Add(con);
             }
         }
 

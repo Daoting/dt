@@ -21,7 +21,7 @@ namespace App.Droid
     public class Application : Windows.UI.Xaml.NativeApplication
     {
         public Application(IntPtr javaReference, JniHandleOwnership transfer)
-            : base(new Dt.Shell.App(), javaReference, transfer)
+            : base(() => new Dt.Shell.App(), javaReference, transfer)
         {
         }
     }

@@ -133,11 +133,11 @@ namespace Dt.Base
         #region 构造方法
         public Tab()
         {
-            // 直接设置Style的原因：
-            // 1. 两种UI模式样式不同
-            // 2. 若用DefaultStyleKey，当前控件在xaml文件有子元素时，uno中不调用OnApplyTemplate！
-            // uno中设置Style时同步调用OnApplyTemplate，即构造方法直接调用了OnApplyTemplate！
-            Style = AtSys.IsPhoneUI ? (Style)Application.Current.Resources["PhoneTab"] : (Style)Application.Current.Resources["WinTab"];
+            // 两种UI模式样式不同，PhoneUI模式为缺省样式
+            if (AtSys.IsPhoneUI)
+                DefaultStyleKey = typeof(Tab);
+            else
+                Style = (Style)Application.Current.Resources["WinTab"];
         }
         #endregion
 
@@ -367,23 +367,13 @@ namespace Dt.Base
         #endregion
 
         #region 加载过程
-#if UWP
-        protected override void OnApplyTemplate()
+        protected override void OnLoadTemplate()
         {
             if (AtSys.IsPhoneUI)
                 InitPhoneUITemplate();
             else
-                base.OnApplyTemplate();
+                base.OnLoadTemplate();
         }
-#else
-        protected override void OnUnoLoaded()
-        {
-            if (AtSys.IsPhoneUI)
-                InitPhoneUITemplate();
-            else
-                base.OnUnoLoaded();
-        }
-#endif
 
         void InitPhoneUITemplate()
         {

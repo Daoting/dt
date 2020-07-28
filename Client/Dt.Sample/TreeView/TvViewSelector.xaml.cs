@@ -22,13 +22,8 @@ namespace Dt.Sample
 
             _tv.View = new TvItemSelector
             {
-#if UWP
                 Folder = (DataTemplate)Resources["Folder"],
                 File = (DataTemplate)Resources["File"],
-#else
-                Folder = StaticResources.Folder,
-                File = StaticResources.File,
-#endif
             };
             _tv.Data = TvData.GetTbl();
         }

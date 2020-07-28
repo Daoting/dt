@@ -28,9 +28,6 @@ namespace Dt.Cells.UI
         int _startIndex = 0;
         const double _OVERLAP_OFFSET = 4.0;
 
-#if ANDROID || IOS
-        new
-#endif
         internal event EventHandler<PropertyChangedEventArgs> PropertyChanged;
 
         internal int GetNextVisibleIndex(int tabIndex)
@@ -181,9 +178,6 @@ namespace Dt.Cells.UI
             }
         }
 
-#if ANDROID  || IOS
-        new
-#endif
         void RaisePropertyChanged(string property)
         {
             if (PropertyChanged != null)

@@ -19,7 +19,7 @@ namespace Dt.Base
     /// 单元格分隔行
     /// </summary>
     [ContentProperty(Name = "Content")]
-    public partial class CBar : Control, IFvCell
+    public partial class CBar : DtControl, IFvCell
     {
         #region 静态成员
         /// <summary>
@@ -58,12 +58,8 @@ namespace Dt.Base
 
         static void OnContentPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ((CBar)d).LoadContent();
+            ((CBar)d).OnLoadTemplate();
         }
-        #endregion
-
-        #region 成员变量
-        protected Grid _root;
         #endregion
 
         public CBar()
@@ -112,24 +108,15 @@ namespace Dt.Base
         /// </summary>
         Rect IFvCell.Bounds { get; set; }
 
-        protected override void OnApplyTemplate()
+        protected override void OnLoadTemplate()
         {
-            base.OnApplyTemplate();
-            _root = (Grid)GetTemplateChild("RootGrid");
-            LoadContent();
-        }
-
-        /// <summary>
-        /// 切换内容
-        /// </summary>
-        protected virtual void LoadContent()
-        {
-            if (_root == null)
+            Grid root = (Grid)GetTemplateChild("RootGrid");
+            if (root == null)
                 return;
 
             // 为uno节省一级ContentPresenter！
-            if (_root.Children.Count > 1)
-                _root.Children.RemoveAt(0);
+            if (root.Children.Count > 1)
+                root.Children.RemoveAt(0);
 
             if (Content is string title)
             {
@@ -138,7 +125,7 @@ namespace Dt.Base
                 sp.Children.Add(tb);
                 tb = new TextBlock { Text = title, TextWrapping = TextWrapping.NoWrap, VerticalAlignment = VerticalAlignment.Center };
                 sp.Children.Add(tb);
-                _root.Children.Insert(0, sp);
+                root.Children.Insert(0, sp);
             }
             else if (Content is FrameworkElement con)
             {
@@ -146,7 +133,7 @@ namespace Dt.Base
                 // 左上空出边线
                 var margin = con.Margin;
                 con.Margin = new Thickness(margin.Left + 1, margin.Top + 1, margin.Right, margin.Bottom);
-                _root.Children.Insert(0, con);
+                root.Children.Insert(0, con);
             }
         }
     }

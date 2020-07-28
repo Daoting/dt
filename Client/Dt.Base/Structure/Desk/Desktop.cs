@@ -9,14 +9,11 @@
 #region 引用命名
 using Dt.Core;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -27,7 +24,7 @@ namespace Dt.Base
     /// <summary>
     /// 桌面容器
     /// </summary>
-    public partial class Desktop : Control
+    public partial class Desktop : DtControl
     {
         #region 静态成员
         // 和edge标签宽度相同
@@ -95,9 +92,6 @@ namespace Dt.Base
         {
             DefaultStyleKey = typeof(Desktop);
             Inst = this;
-#if !UWP
-            Loaded += OnLoaded;
-#endif
         }
         #endregion
 
@@ -320,26 +314,7 @@ namespace Dt.Base
         #endregion
 
         #region 加载过程
-        /************************************************************************************************************************************/
-        // uno在构造方法中设置Style时直接调用了OnApplyTemplate，只能在Loaded事件中加载Items
-        // UWP仍在OnApplyTemplate中加载Items
-        /************************************************************************************************************************************/
-
-#if UWP
-        protected override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-            InitTemplate();
-        }
-#else
-        void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            Loaded -= OnLoaded;
-            InitTemplate();
-        }
-#endif
-
-        void InitTemplate()
+        protected override void OnLoadTemplate()
         {
             _grid = (Grid)GetTemplateChild("ContentGrid");
             _taskbarPanel = (StackPanel)GetTemplateChild("TaskbarPanel");

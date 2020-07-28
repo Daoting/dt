@@ -57,10 +57,7 @@ namespace Dt.Base.Docking
             base.OnApplyTemplate();
             Button btn = GetTemplateChild("HeaderButton") as Button;
             if (btn != null)
-            {
-                btn.Click -= OnPinClick;
                 btn.Click += OnPinClick;
-            }
         }
 
         protected override void OnPointerPressed(PointerRoutedEventArgs e)

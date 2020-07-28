@@ -551,44 +551,6 @@ namespace Dt.Base
         }
         #endregion
 
-        #region 重写方法
-        protected override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-
-            _loaded = true;
-
-            // 上下文菜单
-            Menu menu = Ex.GetMenu(_owner);
-            if (menu != null)
-            {
-                var btn = AttachContextMenu(menu);
-                if (btn != null)
-                {
-                    Grid grid = (Grid)GetTemplateChild("RootGrid");
-                    grid.Children.Insert(grid.Children.Count - 2, btn);
-                }
-            }
-
-            // 交互事件
-            Grid pg;
-            if (FileType == FileItemType.Image || FileType == FileItemType.Video)
-                pg = (Grid)GetTemplateChild("ContentGrid");
-            else
-                pg = (Grid)GetTemplateChild("RootGrid");
-            pg.PointerEntered += OnPointerEntered;
-            pg.PointerPressed += OnPointerPressed;
-            pg.PointerReleased += OnPointerReleased;
-            pg.PointerCaptureLost += OnPointerCaptureLost;
-            pg.PointerExited += OnPointerExited;
-            Tapped += OnTapped;
-            RightTapped += OnRightTapped;
-
-            VisualStateManager.GoToState(this, State.ToString(), true);
-            UpdateCachedFlag();
-        }
-        #endregion
-
         #region IUploadUI 上传过程
         /// <summary>
         /// 上传进度回调
@@ -897,6 +859,40 @@ namespace Dt.Base
         async void OnLoaded(object sender, RoutedEventArgs e)
         {
             Loaded -= OnLoaded;
+
+            // -----原来放在OnApplyTemplate-----
+            _loaded = true;
+
+            // 上下文菜单
+            Menu menu = Ex.GetMenu(_owner);
+            if (menu != null)
+            {
+                var btn = AttachContextMenu(menu);
+                if (btn != null)
+                {
+                    Grid grid = (Grid)GetTemplateChild("RootGrid");
+                    grid.Children.Insert(grid.Children.Count - 2, btn);
+                }
+            }
+
+            // 交互事件
+            Grid pg;
+            if (FileType == FileItemType.Image || FileType == FileItemType.Video)
+                pg = (Grid)GetTemplateChild("ContentGrid");
+            else
+                pg = (Grid)GetTemplateChild("RootGrid");
+            pg.PointerEntered += OnPointerEntered;
+            pg.PointerPressed += OnPointerPressed;
+            pg.PointerReleased += OnPointerReleased;
+            pg.PointerCaptureLost += OnPointerCaptureLost;
+            pg.PointerExited += OnPointerExited;
+            Tapped += OnTapped;
+            RightTapped += OnRightTapped;
+
+            VisualStateManager.GoToState(this, State.ToString(), true);
+            UpdateCachedFlag();
+            // ---------------------
+
             if ((FileType == FileItemType.Image || FileType == FileItemType.Video)
                 && !string.IsNullOrEmpty(ID)
                 && Bitmap == null)

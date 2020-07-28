@@ -87,7 +87,7 @@
     <AndroidResource Include="Resources\values\styles.xml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Uno.UI" Version="2.4.4" />
+    <PackageReference Include="Uno.UI" Version="3.0.0-dev.1002" />
     <PackageReference Include="Xamarin.AndroidX.Lifecycle.LiveData" Version="2.1.0" />
   </ItemGroup>
   <ItemGroup>

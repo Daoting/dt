@@ -24,7 +24,7 @@ namespace Dt.Sample
         public FileLvDemo()
         {
             InitializeComponent();
-            _lv.View = GetResource("TableView");
+            _lv.View = Resources["TableView"];
             _lv.ViewMode = ViewMode.Table;
             LoadData();
         }
@@ -46,21 +46,12 @@ namespace Dt.Sample
 
         void OnGridView(object sender, RoutedEventArgs e)
         {
-            _lv.ChangeView(GetResource("TableView"), ViewMode.Table);
+            _lv.ChangeView(Resources["TableView"], ViewMode.Table);
         }
 
         void OnListView(object sender, RoutedEventArgs e)
         {
-            _lv.ChangeView(GetResource("ListView"), ViewMode.List);
-        }
-
-        object GetResource(string p_key)
-        {
-#if UWP
-            return Resources[p_key];
-#else
-            return StaticResources.FindResource(p_key);
-#endif
+            _lv.ChangeView(Resources["ListView"], ViewMode.List);
         }
     }
 }

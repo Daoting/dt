@@ -22,7 +22,7 @@ namespace Dt.Sample
         public LvInScrollViewer()
         {
             InitializeComponent();
-            _lv.View = GetResource("ListView");
+            _lv.View = Resources["ListView"];
             //_lv.GroupName = "bumen";
             //_lv.ItemHeight = double.NaN;
             _lv.Data = SampleData.CreatePersonsTbl(50);
@@ -35,17 +35,17 @@ namespace Dt.Sample
 
         void OnGridView(object sender, RoutedEventArgs e)
         {
-            _lv.ChangeView(GetResource("TableView"), ViewMode.Table);
+            _lv.ChangeView(Resources["TableView"], ViewMode.Table);
         }
 
         void OnListView(object sender, RoutedEventArgs e)
         {
-            _lv.ChangeView(GetResource("ListView"), ViewMode.List);
+            _lv.ChangeView(Resources["ListView"], ViewMode.List);
         }
 
         void OnTileView(object sender, RoutedEventArgs e)
         {
-            _lv.ChangeView(GetResource("TileView"), ViewMode.Tile);
+            _lv.ChangeView(Resources["TileView"], ViewMode.Tile);
         }
 
         void OnLoadData(object sender, RoutedEventArgs e)
@@ -108,15 +108,6 @@ namespace Dt.Sample
         void OnBottomZero(object sender, RoutedEventArgs e)
         {
             _bottom.Height = 0;
-        }
-
-        object GetResource(string p_key)
-        {
-#if UWP
-            return Resources[p_key];
-#else
-            return StaticResources.FindResource(p_key);
-#endif
         }
 
         void OnScrollTop(object sender, RoutedEventArgs e)

@@ -32,7 +32,7 @@ namespace Dt.Base
     /// 树控件
     /// </summary>
     [ContentProperty(Name = nameof(View))]
-    public partial class Tv : Control, IViewItemHost, IMenuHost
+    public partial class Tv : DtControl, IViewItemHost, IMenuHost
     {
         #region 静态内容
         public readonly static DependencyProperty DataProperty = DependencyProperty.Register(
@@ -240,7 +240,6 @@ namespace Dt.Base
             RootItems = new TvRootItems(this);
             _selectedRows = new ObservableCollection<TvItem>();
             _selectedRows.CollectionChanged += OnSelectedItemsChanged;
-            Loaded += OnLoaded;
         }
         #endregion
 
@@ -718,14 +717,6 @@ namespace Dt.Base
         #endregion
 
         #region 重写方法
-#if UWP
-        protected override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-            InitTemplate();
-        }
-#endif
-
         protected override Size MeasureOverride(Size availableSize)
         {
             // 准确获取高度
@@ -755,10 +746,7 @@ namespace Dt.Base
         #endregion
 
         #region 加载过程
-        /// <summary>
-        /// 动态构造控件内容，uwp在OnApplyTemplate中处理，uno在Loaded时处理
-        /// </summary>
-        void InitTemplate()
+        protected override void OnLoadTemplate()
         {
             _panel = new TvPanel(this);
             var root = (Border)GetTemplateChild("Border");
@@ -788,22 +776,10 @@ namespace Dt.Base
             _isLoaded = true;
         }
 
-        /// <summary>
-        /// uno中OnApplyTemplate时不在可视树上，无法查询父元素，uwp的OnApplyTemplate时已在可视树上
-        /// 为了动态构造控件内容，uwp在OnApplyTemplate中处理，uno在Loaded时处理 ！
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void OnLoaded(object sender, RoutedEventArgs e)
+        protected override void OnControlLoaded()
         {
-            Loaded -= OnLoaded;
-
-#if UWP
             Focus(FocusState.Programmatic);
             KeyDown += OnKeyDown;
-#else
-            InitTemplate();
-#endif
         }
 
         /// <summary>

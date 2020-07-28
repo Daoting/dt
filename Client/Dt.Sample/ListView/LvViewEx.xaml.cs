@@ -31,26 +31,17 @@ namespace Dt.Sample
 
         void OnGridView(object sender, RoutedEventArgs e)
         {
-            _lv.ChangeView(GetResource("GridView"), ViewMode.Table);
+            _lv.ChangeView(Resources["GridView"], ViewMode.Table);
         }
 
         void OnListView(object sender, RoutedEventArgs e)
         {
-            _lv.ChangeView(GetResource("ListView"), ViewMode.List);
+            _lv.ChangeView(Resources["ListView"], ViewMode.List);
         }
 
         void OnFormView(object sender, RoutedEventArgs e)
         {
-            _lv.ChangeView(GetResource("ListView"), ViewMode.Tile);
-        }
-
-        object GetResource(string p_key)
-        {
-#if UWP
-            return Resources[p_key];
-#else
-            return StaticResources.FindResource(p_key);
-#endif
+            _lv.ChangeView(Resources["ListView"], ViewMode.Tile);
         }
 
         void OnGroup(object sender, RoutedEventArgs e)

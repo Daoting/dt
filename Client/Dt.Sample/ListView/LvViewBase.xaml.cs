@@ -24,7 +24,7 @@ namespace Dt.Sample
         public LvViewBase()
         {
             InitializeComponent();
-            _lv.View = GetResource("TableView");
+            _lv.View = Resources["TableView"];
             _lv.ViewMode = ViewMode.Table;
             _lv.GroupName = "bumen";
             _lv.Data = SampleData.CreatePersonsTbl(100);
@@ -32,36 +32,27 @@ namespace Dt.Sample
 
         void OnGridView(object sender, RoutedEventArgs e)
         {
-            _lv.ChangeView(GetResource("TableView"), ViewMode.Table);
+            _lv.ChangeView(Resources["TableView"], ViewMode.Table);
         }
 
         void OnListView(object sender, RoutedEventArgs e)
         {
-            _lv.ChangeView(GetResource("ListView"), ViewMode.List);
+            _lv.ChangeView(Resources["ListView"], ViewMode.List);
         }
 
         void OnFormList(object sender, RoutedEventArgs e)
         {
-            _lv.ChangeView(GetResource("TableView"), ViewMode.List);
+            _lv.ChangeView(Resources["TableView"], ViewMode.List);
         }
 
         void OnTileView(object sender, RoutedEventArgs e)
         {
-            _lv.ChangeView(GetResource("TileView"), ViewMode.Tile);
+            _lv.ChangeView(Resources["TileView"], ViewMode.Tile);
         }
 
         void OnFormTile(object sender, RoutedEventArgs e)
         {
-            _lv.ChangeView(GetResource("TableView"), ViewMode.Tile);
-        }
-
-        object GetResource(string p_key)
-        {
-#if UWP
-            return Resources[p_key];
-#else
-            return StaticResources.FindResource(p_key);
-#endif
+            _lv.ChangeView(Resources["TableView"], ViewMode.Tile);
         }
 
         void OnRowClick(object sender, RoutedEventArgs e)

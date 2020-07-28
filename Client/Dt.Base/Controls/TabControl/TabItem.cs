@@ -21,7 +21,7 @@ namespace Dt.Base
     /// TabControl 中的可选标签项
     /// </summary>
     [ContentProperty(Name = "Content")]
-    public partial class TabItem : Control
+    public partial class TabItem : DtControl
     {
         #region 静态内容
         /// <summary>
@@ -113,11 +113,7 @@ namespace Dt.Base
         #region 构造方法
         public TabItem()
         {
-            // 两种UI模式样式相同
             DefaultStyleKey = typeof(TabItem);
-#if !UWP
-            Loaded += OnLoaded;
-#endif
         }
         #endregion
 
@@ -184,21 +180,7 @@ namespace Dt.Base
         #endregion
 
         #region 加载过程
-#if UWP
-        protected override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-            InitTemplate();
-        }
-#else
-        void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            Loaded -= OnLoaded;
-            OnUnoLoaded();
-        }
-#endif
-
-        void InitTemplate()
+        protected override void OnLoadTemplate()
         {
             _isLoaded = true;
             _header = (RotateContent)GetTemplateChild("ElementHeader");
@@ -207,11 +189,6 @@ namespace Dt.Base
             _rcLine = (Rectangle)GetTemplateChild("ElementLine");
             ApplyStripPlacement();
             ChangeVisualState();
-        }
-
-        protected virtual void OnUnoLoaded()
-        {
-            InitTemplate();
         }
         #endregion
 

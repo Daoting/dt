@@ -31,7 +31,7 @@ namespace Dt.Base
     /// 列表控件
     /// </summary>
     [ContentProperty(Name = nameof(View))]
-    public partial class Lv : Control, IViewItemHost, IMenuHost
+    public partial class Lv : DtControl, IViewItemHost, IMenuHost
     {
         #region 静态内容
         public readonly static DependencyProperty DataProperty = DependencyProperty.Register(
@@ -345,9 +345,6 @@ namespace Dt.Base
             _rows = new List<LvItem>();
             _selectedRows = new ObservableCollection<LvItem>();
             _selectedRows.CollectionChanged += OnSelectedItemsChanged;
-#if !UWP
-            Loaded += OnLoaded;
-#endif
         }
         #endregion
 
@@ -1084,13 +1081,6 @@ namespace Dt.Base
 
         #region 重写方法
         /************************************************************************************************************************************/
-        // 平台调用顺序不同：
-        // UWP：父OnApplyTemplate > 父MeasureOverride > 子MeasureOverride > 父ArrangeOverride > 子ArrangeOverride > 父SizeChanged > 子SizeChanged > 父Loaded > 子Loaded
-        // Adr：父OnApplyTemplate > 父Loaded > 子Loaded > 父MeasureOverride > 子MeasureOverride > 父ArrangeOverride > 子ArrangeOverride > 子SizeChanged > 父SizeChanged
-        // iOS：父OnApplyTemplate > 子Loaded > 父Loaded > 父MeasureOverride > 子MeasureOverride > 父SizeChanged > 子SizeChanged > 父ArrangeOverride > 子ArrangeOverride
-        //
-        // uwp的OnApplyTemplate时控件已在可视树上，可查询父元素；uno此时不在可视树上，只能在Loaded时查询父元素！！！
-        // 
         // 在MeasureOverride中尽可能不增删Children元素，uno中每增删一个元素会重复一次MeasureOverride，严重时死循环！！！
         // 采用虚拟行模式时，需要根据可视区大小确定生成的虚拟行行数，可视区大小在MeasureOverride时才能确定，故解决方法：
         // 在Lv.MeasureOverride时准确获取可见区大小，若大小变化则重新生成虚拟行，添加虚拟行会造成多次MeasureOverride，未发现其他好方法！！！
@@ -1105,14 +1095,39 @@ namespace Dt.Base
         // UWP：UpdateLayout内部会依次 > MeasureOverride > ArrangeOverride > SizeChanged
         // uno: UpdateLayout调用时未同步调用上述方法，内部异步测量布局，和InvalidateMeasure功能相似
         /************************************************************************************************************************************/
-
-#if UWP
-        protected override void OnApplyTemplate()
+        
+        /// <summary>
+        /// 动态构造控件内容，uwp在OnApplyTemplate中处理，uno在Loaded时处理
+        /// </summary>
+        protected override void OnLoadTemplate()
         {
-            base.OnApplyTemplate();
-            InitTemplate();
+            _root = (Border)GetTemplateChild("Border");
+
+            // win模式查询范围限制在Tabs内，phone模式限制在Tab内
+            var scroll = this.FindParentInWin<ScrollViewer>();
+            if (scroll == null)
+            {
+                // 内部滚动栏
+                scroll = new ScrollViewer();
+                _root.Child = scroll;
+            }
+            else if (AtSys.IsPhoneUI)
+            {
+                // 参见win.xaml：win模式在Tabs定义，phone模式在Tab定义
+                // 因phone模式Lv所属的Tab始终不变
+                _sizedPresenter = scroll.FindParentInWin<SizedPresenter>();
+            }
+            scroll.HorizontalScrollMode = ScrollMode.Auto;
+            scroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
+            scroll.VerticalScrollMode = ScrollMode.Auto;
+            scroll.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+            // 滚动到顶部或底部时添加分页数据
+            if (PageData != null)
+                scroll.ViewChanged += OnScrollViewChanged;
+            Scroll = scroll;
+
+            LoadPanel();
         }
-#endif
 
         protected override Size MeasureOverride(Size availableSize)
         {
@@ -1148,39 +1163,6 @@ namespace Dt.Base
         #endregion
 
         #region 加载过程
-        /// <summary>
-        /// 动态构造控件内容，uwp在OnApplyTemplate中处理，uno在Loaded时处理
-        /// </summary>
-        void InitTemplate()
-        {
-            _root = (Border)GetTemplateChild("Border");
-
-            // win模式查询范围限制在Tabs内，phone模式限制在Tab内
-            var scroll = this.FindParentInWin<ScrollViewer>();
-            if (scroll == null)
-            {
-                // 内部滚动栏
-                scroll = new ScrollViewer();
-                _root.Child = scroll;
-            }
-            else if (AtSys.IsPhoneUI)
-            {
-                // 参见win.xaml：win模式在Tabs定义，phone模式在Tab定义
-                // 因phone模式Lv所属的Tab始终不变
-                _sizedPresenter = scroll.FindParentInWin<SizedPresenter>();
-            }
-            scroll.HorizontalScrollMode = ScrollMode.Auto;
-            scroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
-            scroll.VerticalScrollMode = ScrollMode.Auto;
-            scroll.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
-            // 滚动到顶部或底部时添加分页数据
-            if (PageData != null)
-                scroll.ViewChanged += OnScrollViewChanged;
-            Scroll = scroll;
-
-            LoadPanel();
-        }
-
         /// <summary>
         /// 动态加载面板
         /// </summary>
@@ -1383,20 +1365,6 @@ namespace Dt.Base
             _panel?.OnRowsChanged(existGroup);
         }
 
-#if !UWP
-        /// <summary>
-        /// uno时的处理
-        /// uno中OnApplyTemplate时不一定在可视树上，无法查询父元素，uwp的OnApplyTemplate时已在可视树上
-        /// 为了动态构造控件内容，uwp在OnApplyTemplate中处理，uno在Loaded时处理 ！
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            Loaded -= OnLoaded;
-            InitTemplate();
-        }
-#endif
         /// <summary>
         /// 滚动到顶部或底部时添加分页数据
         /// </summary>

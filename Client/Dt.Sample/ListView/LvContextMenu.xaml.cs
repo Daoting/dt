@@ -24,28 +24,28 @@ namespace Dt.Sample
         public LvContextMenu()
         {
             InitializeComponent();
-            _lv.View = GetResource("ListView");
+            _lv.View = Resources["ListView"];
             _lv.Data = SampleData.CreatePersonsTbl(100);
         }
 
         void OnGridView(object sender, RoutedEventArgs e)
         {
-            _lv.ChangeView(GetResource("TableView"), ViewMode.Table);
+            _lv.ChangeView(Resources["TableView"], ViewMode.Table);
         }
 
         void OnListView(object sender, RoutedEventArgs e)
         {
-            _lv.ChangeView(GetResource("ListView"), ViewMode.List);
+            _lv.ChangeView(Resources["ListView"], ViewMode.List);
         }
 
         void OnFormList(object sender, RoutedEventArgs e)
         {
-            _lv.ChangeView(GetResource("TableView"), ViewMode.List);
+            _lv.ChangeView(Resources["TableView"], ViewMode.List);
         }
 
         void OnTileView(object sender, RoutedEventArgs e)
         {
-            _lv.ChangeView(GetResource("TileView"), ViewMode.Tile);
+            _lv.ChangeView(Resources["TileView"], ViewMode.Tile);
         }
 
         void OnBtnEvent(object sender, RoutedEventArgs e)
@@ -89,15 +89,6 @@ namespace Dt.Sample
         void OnNoMenu(object sender, RoutedEventArgs e)
         {
             Ex.SetMenu(_lv, null);
-        }
-
-        object GetResource(string p_key)
-        {
-#if UWP
-            return Resources[p_key];
-#else
-            return StaticResources.FindResource(p_key);
-#endif
         }
     }
 }

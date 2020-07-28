@@ -131,9 +131,6 @@ namespace Dt.Charts
 
         public event AnnoCreatedEventHandler AnnoCreated;
 
-#if ANDROID || IOS
-    new
-#endif
         internal event PropertyChangedEventHandler PropertyChanged;
 
         event PropertyChangedEventHandler INotifyPropertyChanged.PropertyChanged

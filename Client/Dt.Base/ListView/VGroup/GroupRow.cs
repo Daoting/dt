@@ -20,7 +20,7 @@ namespace Dt.Base.ListView
     /// <summary>
     /// 分组行
     /// </summary>
-    public partial class GroupRow : Control
+    public partial class GroupRow : DtControl
     {
         #region 静态内容
         public readonly static DependencyProperty ContentProperty = DependencyProperty.Register(
@@ -82,7 +82,7 @@ namespace Dt.Base.ListView
 #endif
         internal double Top { get; set; }
 
-        protected override void OnApplyTemplate()
+        protected override void OnLoadTemplate()
         {
             if (IsFirst)
                 ((Rectangle)GetTemplateChild("Rect")).Visibility = Visibility.Collapsed;

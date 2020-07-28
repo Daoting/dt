@@ -25,7 +25,7 @@ namespace Dt.Base
     /// 可停靠项，内部子项为 Tabs 或 WinItem
     /// </summary>
     [ContentProperty(Name = nameof(Items))]
-    public partial class WinItem : Control, IWinItemList
+    public partial class WinItem : DtControl, IWinItemList
     {
         #region 静态内容
         public static readonly DependencyProperty DockStateProperty = DependencyProperty.Register(
@@ -132,16 +132,9 @@ namespace Dt.Base
         #region 构造方法
         public WinItem()
         {
-            // PhoneUI模式时不在可视树
+            // PhoneUI模式时不在可视树，省去uno在xaml自动生成代码时调用ApplyTemplate
             if (!AtSys.IsPhoneUI)
-            {
-                // 若用DefaultStyleKey，当前控件在xaml文件有子元素时，uno中不调用OnApplyTemplate！
-                // uno中设置Style时同步调用OnApplyTemplate，即构造方法直接调用了OnApplyTemplate！
-                Style = (Style)Application.Current.Resources["DefaultWinItem"];
-#if !UWP
-                Loaded += OnLoaded;
-#endif
-            }
+                DefaultStyleKey = typeof(WinItem);
         }
         #endregion
 
@@ -508,26 +501,7 @@ namespace Dt.Base
         #endregion
 
         #region 加载过程
-        /************************************************************************************************************************************/
-        // uno在构造方法中设置Style时直接调用了OnApplyTemplate，只能在Loaded事件中加载Items
-        // UWP仍在OnApplyTemplate中加载Items
-        /************************************************************************************************************************************/
-
-#if UWP
-        protected override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-            InitTemplate();
-        }
-#else
-        void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            Loaded -= OnLoaded;
-            InitTemplate();
-        }
-#endif
-
-        void InitTemplate()
+        protected override void OnLoadTemplate()
         {
             _itemsPanel = (TabItemPanel)GetTemplateChild("TabItemPanel");
             _itemsPanel.Owner = this;

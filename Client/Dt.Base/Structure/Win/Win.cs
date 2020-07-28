@@ -28,7 +28,7 @@ namespace Dt.Base
     /// 可停靠多区域窗口
     /// </summary>
     [ContentProperty(Name = nameof(Items))]
-    public partial class Win : Control, IWinItemList
+    public partial class Win : DtControl, IWinItemList
     {
         #region 静态内容
         public readonly static DependencyProperty TitleProperty = DependencyProperty.Register(
@@ -106,16 +106,9 @@ namespace Dt.Base
         #region 构造方法
         public Win()
         {
-            // PhoneUI模式时不在可视树
+            // PhoneUI模式时不在可视树，省去uno在xaml自动生成代码时调用ApplyTemplate
             if (!AtSys.IsPhoneUI)
-            {
-                // 若用DefaultStyleKey，当前控件在xaml文件有子元素时，uno中不调用OnApplyTemplate！
-                // uno中设置Style时同步调用OnApplyTemplate，即构造方法直接调用了OnApplyTemplate！
-                Style = (Style)Application.Current.Resources["DefaultWin"];
-#if !UWP
-                Loaded += OnLoaded;
-#endif
-            }
+                DefaultStyleKey = typeof(Win);
         }
         #endregion
 
@@ -590,26 +583,7 @@ namespace Dt.Base
         #endregion
 
         #region 加载过程
-        /************************************************************************************************************************************/
-        // uno在构造方法中设置Style时直接调用了OnApplyTemplate，只能在Loaded事件中加载Items
-        // UWP仍在OnApplyTemplate中加载Items
-        /************************************************************************************************************************************/
-
-#if UWP
-        protected override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-            InitTemplate();
-        }
-#else
-        void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            Loaded -= OnLoaded;
-            InitTemplate();
-        }
-#endif
-
-        void InitTemplate()
+        protected override void OnLoadTemplate()
         {
             RootPanel = (WinItemPanel)GetTemplateChild("RootPanel");
             RootPanel.Init(CenterItem);

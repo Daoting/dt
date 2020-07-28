@@ -25,13 +25,8 @@ namespace Dt.Sample
 
             _lv.View = new ListItemSelector
             {
-#if UWP
                 Male = (DataTemplate)Resources["Male"],
                 Lady = (DataTemplate)Resources["Lady"],
-#else
-                Male = StaticResources.Male,
-                Lady = StaticResources.Lady,
-#endif
             };
             _lv.Data = SampleData.CreatePersonsTbl(50);
         }

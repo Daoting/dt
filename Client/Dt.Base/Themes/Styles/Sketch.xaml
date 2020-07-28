@@ -3,9 +3,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"
     xmlns:sketch="using:Dt.Base.Sketches">
-    
+
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="/Dt.Base/Themes/Global.xaml"/>
+        <ResourceDictionary Source="ms-appx:///Dt.Base/Themes/Global.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 
     <!--静态资源-->

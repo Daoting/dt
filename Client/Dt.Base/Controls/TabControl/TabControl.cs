@@ -26,7 +26,7 @@ namespace Dt.Base
     /// 选项卡控件
     /// </summary>
     [ContentProperty(Name = nameof(Items))]
-    public partial class TabControl : Control
+    public partial class TabControl : DtControl
     {
         #region 静态内容
         public static readonly DependencyProperty TabStripPlacementProperty = DependencyProperty.Register(
@@ -154,9 +154,6 @@ namespace Dt.Base
             DefaultStyleKey = typeof(TabControl);
             Items = new ItemList<TabItem>();
             _selector = new SelectionChanger(this);
-#if !UWP
-            Loaded += OnLoaded;
-#endif
         }
         #endregion
 
@@ -263,27 +260,7 @@ namespace Dt.Base
         #endregion
 
         #region 加载过程
-        /************************************************************************************************************************************/
-        // uno在构造方法中设置Style时直接调用了OnApplyTemplate，只能在Loaded事件中加载Items
-        // UWP仍在OnApplyTemplate中加载Items
-        /************************************************************************************************************************************/
-
-#if UWP
-        protected override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-            InitTemplate();
-        }
-#else
-        void OnLoaded(object sender, RoutedEventArgs e)
-        {
-            Loaded -= OnLoaded;
-            InitTemplate();
-            OnUnoLoaded();
-        }
-#endif
-
-        void InitTemplate()
+        protected override void OnLoadTemplate()
         {
             _mainGrid = (Grid)GetTemplateChild("MainGrid");
             _itemsPanel = (StackPanel)GetTemplateChild("ItemsPanel");
@@ -297,10 +274,6 @@ namespace Dt.Base
             InitSelection();
             Items.ItemsChanged += OnItemsChanged;
             SizeChanged += OnSizeChanged;
-        }
-
-        protected virtual void OnUnoLoaded()
-        {
         }
         #endregion
 

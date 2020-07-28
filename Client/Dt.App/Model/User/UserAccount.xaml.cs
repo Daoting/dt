@@ -26,7 +26,7 @@ namespace Dt.App.Model
         public UserAccount()
         {
             InitializeComponent();
-            _lvUser.View = GetResource(AtSys.IsPhoneUI ? "TileView" : "TableView");
+            _lvUser.View = Resources[AtSys.IsPhoneUI ? "TileView" : "TableView"];
             _lvUser.CellEx = typeof(UserViewEx);
             LoadAll();
         }
@@ -160,15 +160,6 @@ namespace Dt.App.Model
                 _lvUser.Data = await AtCm.Query("用户-模糊查询", new { input = $"%{e}%" });
             }
             NaviTo("用户列表");
-        }
-
-        object GetResource(string p_key)
-        {
-#if UWP
-            return Resources[p_key];
-#else
-            return StaticResources.FindResource(p_key);
-#endif
         }
 
         class UserViewEx

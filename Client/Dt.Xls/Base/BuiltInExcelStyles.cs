@@ -12,6 +12,7 @@ using Dt.Xls.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 #endregion
@@ -59,9 +60,8 @@ namespace Dt.Xls
             _builtInStyls.Clear();
             return Task.Run(()=>
             {
-                // hdt
-                var fi = new FileInfo($"{AppDomain.CurrentDomain.BaseDirectory}\\Dt.Xls\\BuiltInStyles.xml");
-                using (Stream s = fi.OpenRead())
+                // hdt，内容转为嵌入资源
+                using (Stream s = typeof(BuiltInExcelStyles).Assembly.GetManifestResourceStream("Dt.Xls.BuiltInStyles.xml"))
                 {
                     s.Seek(0L, (SeekOrigin) SeekOrigin.Begin);
                     XDocument document = XDocument.Load(s);

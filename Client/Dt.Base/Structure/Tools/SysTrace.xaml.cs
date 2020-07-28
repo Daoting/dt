@@ -40,17 +40,10 @@ namespace Dt.Base.Tools
             InitializeComponent();
             _lv.View = new TraceItemSelector
             {
-#if UWP
                 Normal = (DataTemplate)Resources["Normal"],
                 Call = (DataTemplate)Resources["Call"],
                 Recv = (DataTemplate)Resources["Recv"],
                 Exception = (DataTemplate)Resources["Exception"],
-#else
-                Normal = StaticResources.Normal,
-                Call = StaticResources.Call,
-                Recv = StaticResources.Recv,
-                Exception = StaticResources.Exception,
-#endif
             };
             _lv.CellEx = typeof(TraceViewEx);
             _lv.Data = AtKit.TraceList;
