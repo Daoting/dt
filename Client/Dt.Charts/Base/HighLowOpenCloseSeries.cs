@@ -21,6 +21,7 @@ namespace Dt.Base
     /// <summary>
     /// 财务图表
     /// </summary>
+    [Windows.UI.Xaml.Data.Bindable]
     public partial class HighLowOpenCloseSeries : HighLowSeries
     {
         /// <summary>
@@ -231,32 +232,34 @@ namespace Dt.Base
             get { return  (IEnumerable) base.GetValue(OpenValuesSourceProperty); }
             set { base.SetValue(OpenValuesSourceProperty, value); }
         }
+    }
 
-        public class HLOCDataPoint : XYDataSeries.XYDataPoint
+
+    [Windows.UI.Xaml.Data.Bindable]
+    public class HLOCDataPoint : XYDataPoint
+    {
+        internal HLOCDataPoint(DataSeries ds, int seriesIndex, int pointIndex, string[] names) : base(ds, seriesIndex, pointIndex, names)
         {
-            internal HLOCDataPoint(DataSeries ds, int seriesIndex, int pointIndex, string[] names) : base(ds, seriesIndex, pointIndex, names)
-            {
-            }
+        }
 
-            public object Close
-            {
-                get { return  base.Series.GetValue(5, base.PointIndex); }
-            }
+        public object Close
+        {
+            get { return base.Series.GetValue(5, base.PointIndex); }
+        }
 
-            public object High
-            {
-                get { return  base.Series.GetValue(3, base.PointIndex); }
-            }
+        public object High
+        {
+            get { return base.Series.GetValue(3, base.PointIndex); }
+        }
 
-            public object Low
-            {
-                get { return  base.Series.GetValue(2, base.PointIndex); }
-            }
+        public object Low
+        {
+            get { return base.Series.GetValue(2, base.PointIndex); }
+        }
 
-            public object Open
-            {
-                get { return  base.Series.GetValue(4, base.PointIndex); }
-            }
+        public object Open
+        {
+            get { return base.Series.GetValue(4, base.PointIndex); }
         }
     }
 }

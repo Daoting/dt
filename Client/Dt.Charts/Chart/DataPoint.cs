@@ -15,6 +15,7 @@ using System.Globalization;
 
 namespace Dt.Charts
 {
+    [Windows.UI.Xaml.Data.Bindable]
     public class DataPoint
     {
         DataSeries _ds;

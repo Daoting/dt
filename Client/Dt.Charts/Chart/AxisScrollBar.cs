@@ -15,13 +15,13 @@ using Windows.UI.Xaml.Controls.Primitives;
 
 namespace Dt.Charts
 {
-    public partial class AxisScrollBar : ContentControl, IAxisScrollBar
+    public partial class AxisScrollBar : UnoControl, IAxisScrollBar
     {
         Axis _axis;
         ScrollBar _sb;
-        double _scale;
+        double _scale = 1.0;
         double _value;
-        bool notify;
+        bool notify = true;
         internal const string ScrollBarElementName = "ScrollBar";
 
         public Axis Axis
@@ -98,9 +98,7 @@ namespace Dt.Charts
 
         public AxisScrollBar()
         {
-            _scale = 1.0;
-            notify = true;
-            base.DefaultStyleKey = typeof(AxisScrollBar);
+            DefaultStyleKey = typeof(AxisScrollBar);
         }
 
         void InitScrollBar()
@@ -109,8 +107,7 @@ namespace Dt.Charts
             {
                 UpdateScale();
                 UpdateValue();
-                ScrollBar bar = _sb;
-                bar.ValueChanged += (sender, e) =>
+                _sb.ValueChanged += (sender, e) =>
                 {
                     OnAxisRangeChanged();
                 };
@@ -118,10 +115,9 @@ namespace Dt.Charts
         }
 
 
-        protected override void OnApplyTemplate()
+        protected override void OnLoadTemplate()
         {
-            base.OnApplyTemplate();
-            _sb = base.GetTemplateChild("ScrollBar") as ScrollBar;
+            _sb = GetTemplateChild("ScrollBar") as ScrollBar;
             InitScrollBar();
         }
 

@@ -7,20 +7,20 @@
     <a:Win.Resources>
         <DataTemplate x:Key="label">
             <StackPanel>
-                <TextBlock FontFamily="Global User Interface">
+                <TextBlock>
                         <Run Text="Series:" />
-                        <Run Text="{Binding Series}" FontFamily="Global User Interface" />
+                        <Run Text="{Binding Series}" />
                 </TextBlock>
-                <TextBlock FontFamily="Global User Interface">
-                        <Run Text="Day:" FontFamily="Global User Interface" />
+                <TextBlock>
+                        <Run Text="Day:" />
                         <Run Text="{Binding [XValues]}" />
                 </TextBlock>
-                <TextBlock FontFamily="Global User Interface">
+                <TextBlock>
                         <Run Text="Low:" />
                         <Run Text="{Binding [LowValues]}" />
                 </TextBlock>
-                <TextBlock FontFamily="Global User Interface">
-                        <Run Text="High:" FontFamily="Global User Interface" />
+                <TextBlock>
+                        <Run Text="High:" />
                         <Run Text="{Binding [HighValues]}" />
                 </TextBlock>
             </StackPanel>

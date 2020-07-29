@@ -22,6 +22,7 @@ namespace Dt.Base
     /// <summary>
     /// 极线图表
     /// </summary>
+    [Windows.UI.Xaml.Data.Bindable]
     public partial class XYDataSeries : DataSeries
     {
         /// <summary>
@@ -155,33 +156,34 @@ namespace Dt.Base
             get { return  (IEnumerable) base.GetValue(XValuesSourceProperty); }
             set { base.SetValue(XValuesSourceProperty, value); }
         }
+    }
 
-        [EditorBrowsable((EditorBrowsableState) EditorBrowsableState.Never)]
-        public class XYDataPoint : DataPoint
+
+    [Windows.UI.Xaml.Data.Bindable]
+    public class XYDataPoint : DataPoint
+    {
+        internal XYDataPoint(DataSeries ds, int seriesIndex, int pointIndex, string[] names) : base(ds, seriesIndex, pointIndex, names)
         {
-            internal XYDataPoint(DataSeries ds, int seriesIndex, int pointIndex, string[] names) : base(ds, seriesIndex, pointIndex, names)
-            {
-            }
+        }
 
-            public object X
-            {
-                get { return  base.Series.GetValue(1, base.PointIndex); }
-            }
+        public object X
+        {
+            get { return base.Series.GetValue(1, base.PointIndex); }
+        }
 
-            public string XAsString
-            {
-                get { return  base.Series.GetFormattedValue(1, base.PointIndex); }
-            }
+        public string XAsString
+        {
+            get { return base.Series.GetFormattedValue(1, base.PointIndex); }
+        }
 
-            public object Y
-            {
-                get { return  base.Series.GetValue(0, base.PointIndex); }
-            }
+        public object Y
+        {
+            get { return base.Series.GetValue(0, base.PointIndex); }
+        }
 
-            public string YAsString
-            {
-                get { return  base.Series.GetFormattedValue(0, base.PointIndex); }
-            }
+        public string YAsString
+        {
+            get { return base.Series.GetFormattedValue(0, base.PointIndex); }
         }
     }
 }

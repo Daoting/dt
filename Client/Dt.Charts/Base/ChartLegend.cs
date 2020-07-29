@@ -9,11 +9,8 @@
 #region 引用命名
 using Dt.Charts;
 using System;
-using Windows.ApplicationModel;
-using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 #endregion
 
 namespace Dt.Base
@@ -21,7 +18,7 @@ namespace Dt.Base
     /// <summary>
     /// 图例说明
     /// </summary>
-    public partial class ChartLegend : Control
+    public partial class ChartLegend : UnoControl
     {
         #region 静态内容
         public static readonly DependencyProperty PositionProperty = DependencyProperty.Register(
@@ -122,7 +119,7 @@ namespace Dt.Base
             }
         }
 
-        protected override void OnApplyTemplate()
+        protected override void OnLoadTemplate()
         {
             _pnl = (StackPanel)GetTemplateChild("ItemPanel");
             UpdatePosition();

@@ -99,6 +99,10 @@
       <Project>{e3f3c994-17dc-4b65-8a66-f2c70537df7d}</Project>
       <Name>Dt.Base</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Dt.Charts\Dt.Charts.csproj">
+      <Project>{138be732-7f56-4b27-83a3-cfde63b7e7b0}</Project>
+      <Name>Dt.Charts</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Dt.Core\Dt.Core.csproj">
       <Project>{7e933aca-685d-4a54-979c-ce83c5cfd2fc}</Project>
       <Name>Dt.Core</Name>

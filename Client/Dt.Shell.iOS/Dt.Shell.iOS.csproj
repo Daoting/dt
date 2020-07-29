@@ -145,6 +145,10 @@
       <Project>{13a270fb-825a-4fb3-ae13-01dfd7c7a147}</Project>
       <Name>Dt.Base</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Dt.Charts\Dt.Charts.csproj">
+      <Project>{138be732-7f56-4b27-83a3-cfde63b7e7b0}</Project>
+      <Name>Dt.Charts</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Dt.Core\Dt.Core.csproj">
       <Project>{89b073f7-81dd-4e5d-a093-f73121b1f406}</Project>
       <Name>Dt.Core</Name>

@@ -23,7 +23,7 @@ namespace Dt.Base
     /// 菜单
     /// </summary>
     [ContentProperty(Name = nameof(Items))]
-    public partial class Menu : Control
+    public partial class Menu : DtControl
     {
         #region 成员变量
         MenuPanel _panel;
@@ -335,9 +335,8 @@ namespace Dt.Base
         #endregion
 
         #region 内部方法
-        protected override void OnApplyTemplate()
+        protected override void OnLoadTemplate()
         {
-            base.OnApplyTemplate();
             _panel = (MenuPanel)GetTemplateChild("Panel");
             _panel.SetOwner(this);
         }
