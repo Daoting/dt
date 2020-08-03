@@ -127,7 +127,7 @@
     <Reference Include="Xamarin.iOS" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Uno.UI" Version="3.0.0-dev.1002" />
+    <PackageReference Include="Uno.UI" Version="3.0.0-dev.1294" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="..\Common\App.xaml">

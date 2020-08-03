@@ -206,7 +206,8 @@ namespace Dt.Cells.UI
 
         void ProcessGestures(GestureType gestureType)
         {
-            if (((ActionGestureOrientation == DragOrientation.None) && ((ActionSampleDelta.X != 0.0) || (ActionSampleDelta.Y != 0.0))) && ((ActionGestureOrientation == DragOrientation.None) && ((ActionSampleDelta.X != 0.0) || (ActionSampleDelta.Y != 0.0))))
+            if (ActionGestureOrientation == DragOrientation.None
+                && (ActionSampleDelta.X != 0.0 || ActionSampleDelta.Y != 0.0))
             {
                 double num = Math.Atan(Math.Abs(ActionSampleDelta.Y) / Math.Abs(ActionSampleDelta.X)) * 57.295779513082323;
                 if (num > 55.0)
@@ -222,6 +223,7 @@ namespace Dt.Cells.UI
                     ActionGestureOrientation = DragOrientation.Horizontal;
                 }
             }
+
             switch (gestureType)
             {
                 case GestureType.Pinch:

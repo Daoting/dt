@@ -35,12 +35,9 @@ namespace Dt.Cells.UI
     {
         SheetTab _activeTab;
         SheetTab _editingTab;
-        bool _hasNewTab;
+        bool _hasNewTab = true;
         SheetTab _newTab;
-        Grid _root;
-        TabStripPresenter _tabStripPresent;
         bool showTextBoxContextMenus;
-        const string TABSTRIP_elementRoot = "Root";
 
         internal event EventHandler ActiveTabChanged;
 
@@ -48,19 +45,11 @@ namespace Dt.Cells.UI
 
         internal event EventHandler NewTabNeeded;
 
-        /// <summary>
-        /// Creates a new instance of the class.
-        /// </summary>
         public TabStrip()
         {
-            base.DefaultStyleKey = typeof(TabStrip);
-            _root = null;
-            _tabStripPresent = new TabStripPresenter();
-            _tabStripPresent.TabPresenter.PropertyChanged += new EventHandler<PropertyChangedEventArgs>(TabPresenter_PropertyChanged);
-            _activeTab = null;
-            _editingTab = null;
-            _hasNewTab = true;
-            _newTab = null;
+            DefaultStyleKey = typeof(TabStrip);
+            TabsPresenter = new TabsPresenter();
+            TabsPresenter.PropertyChanged += new EventHandler<PropertyChangedEventArgs>(TabPresenter_PropertyChanged);
         }
 
         internal void ActiveNextTab()
@@ -101,7 +90,7 @@ namespace Dt.Cells.UI
                             CancelEventArgs args = new CancelEventArgs();
                             if (!tab.IsActive)
                             {
-                                OnActiveTabChanging((EventArgs) args);
+                                OnActiveTabChanging((EventArgs)args);
                             }
                             if (!args.Cancel)
                             {
@@ -149,7 +138,7 @@ namespace Dt.Cells.UI
             {
                 for (int k = num2; k < count; k++)
                 {
-                    list2.Add((SheetTab) TabsPresenter.Children[k]);
+                    list2.Add((SheetTab)TabsPresenter.Children[k]);
                 }
             }
             UIElementCollection children = TabsPresenter.Children;
@@ -185,44 +174,6 @@ namespace Dt.Cells.UI
             }
         }
 
-        ButtonBase GetHitNavigatorButton(Windows.Foundation.Point point)
-        {
-            if (OwningView == null)
-            {
-                return null;
-            }
-            List<UIElement> list = Enumerable.ToList<UIElement>(VisualTreeHelper.FindElementsInHostCoordinates(TranslatePoint(point, Windows.UI.Xaml.Window.Current.Content), Windows.UI.Xaml.Window.Current.Content));
-            if ((list == null) || (list.Count <= 0))
-            {
-                goto Label_00BD;
-            }
-            bool flag = false;
-            using (List<UIElement>.Enumerator enumerator = list.GetEnumerator())
-            {
-                while (enumerator.MoveNext())
-                {
-                    if (enumerator.Current is TabStripNavigator)
-                    {
-                        flag = true;
-                        goto Label_007A;
-                    }
-                }
-            }
-        Label_007A:
-            if (flag)
-            {
-                foreach (UIElement element2 in list)
-                {
-                    if (element2 is RepeatButton)
-                    {
-                        return (RepeatButton) element2;
-                    }
-                }
-            }
-        Label_00BD:
-            return null;
-        }
-
         SheetTab GetHitSheetTab(PointerRoutedEventArgs mArgs)
         {
             if (TabsPresenter.Count > 0)
@@ -234,7 +185,7 @@ namespace Dt.Cells.UI
                     {
                         if (element is SheetTab)
                         {
-                            return (SheetTab) element;
+                            return (SheetTab)element;
                         }
                     }
                 }
@@ -244,7 +195,7 @@ namespace Dt.Cells.UI
 
         internal int GetStartIndexToBringTabIntoView(int tabIndex)
         {
-            return _tabStripPresent.GetStartIndexToBringTabIntoView(tabIndex);
+            return TabsPresenter.GetStartIndexToBringTabIntoView(tabIndex);
         }
 
         SheetTab GetTouchHitSheetTab(Windows.Foundation.Point point)
@@ -259,7 +210,7 @@ namespace Dt.Cells.UI
                     {
                         if (element is SheetTab)
                         {
-                            return (SheetTab) element;
+                            return (SheetTab)element;
                         }
                     }
                 }
@@ -286,7 +237,8 @@ namespace Dt.Cells.UI
         internal void NewTab(int sheetIndex)
         {
             StopTabEditing(false);
-            SheetTab tab = new SheetTab {
+            SheetTab tab = new SheetTab
+            {
                 OwningStrip = this,
                 SheetIndex = sheetIndex
             };
@@ -317,22 +269,12 @@ namespace Dt.Cells.UI
             }
         }
 
-        /// <summary>
-        /// Is invoked whenever application code or internal processes call <see cref="M:System.Windows.FrameworkElement.ApplyTemplate()" />, when overridden in a derived class.
-        /// </summary>
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            if (_root != null)
-            {
-                _root.Children.Clear();
-                _root = null;
-            }
-            _root = base.GetTemplateChild("Root") as Grid;
-            if ((_root != null) && !_root.Children.Contains(_tabStripPresent))
-            {
-                _root.Children.Add(_tabStripPresent);
-            }
+            var root = (Grid)GetTemplateChild("Root");
+            if (root != null)
+                root.Children.Add(TabsPresenter);
         }
 
         void OnEditorContextMenuOpening(object sender, ContextMenuEventArgs e)
@@ -380,7 +322,7 @@ namespace Dt.Cells.UI
                         OnNewTabNeeded(EventArgs.Empty);
                         if (tabsPresenter.Count > 1)
                         {
-                            ActiveSheet(((SheetTab) tabsPresenter.Children[tabsPresenter.Count - 2]).SheetIndex, true);
+                            ActiveSheet(((SheetTab)tabsPresenter.Children[tabsPresenter.Count - 2]).SheetIndex, true);
                         }
                     }
                 }
@@ -419,7 +361,7 @@ namespace Dt.Cells.UI
                         OnNewTabNeeded(EventArgs.Empty);
                         if (tabsPresenter.Count > 1)
                         {
-                            ActiveSheet(((SheetTab) tabsPresenter.Children[tabsPresenter.Count - 2]).SheetIndex, true);
+                            ActiveSheet(((SheetTab)tabsPresenter.Children[tabsPresenter.Count - 2]).SheetIndex, true);
                         }
                     }
                 }
@@ -447,73 +389,49 @@ namespace Dt.Cells.UI
         internal void ProcessTap(Windows.Foundation.Point point)
         {
             SheetTab touchHitSheetTab = GetTouchHitSheetTab(point);
-            if (touchHitSheetTab != null)
+            if (touchHitSheetTab == null)
+                return;
+
+            Dt.Cells.UI.TabsPresenter tabsPresenter = TabsPresenter;
+            if (touchHitSheetTab == _newTab)
             {
-                Dt.Cells.UI.TabsPresenter tabsPresenter = TabsPresenter;
-                if (touchHitSheetTab == _newTab)
+                if (!Workbook.Protect)
                 {
-                    if (!Workbook.Protect)
+                    if (OwningView.CanSelectFormula)
                     {
-                        if (OwningView.CanSelectFormula)
-                        {
-                            OwningView.SaveDataForFormulaSelection();
-                            OwningView.StopCellEditing(true);
-                        }
-                        OnNewTabNeeded(EventArgs.Empty);
-                        if (tabsPresenter.Count > 1)
-                        {
-                            ActiveSheet(((SheetTab) tabsPresenter.Children[tabsPresenter.Count - 2]).SheetIndex, true);
-                        }
+                        OwningView.SaveDataForFormulaSelection();
+                        OwningView.StopCellEditing(true);
+                    }
+                    OnNewTabNeeded(EventArgs.Empty);
+                    if (tabsPresenter.Count > 1)
+                    {
+                        ActiveSheet(((SheetTab)tabsPresenter.Children[tabsPresenter.Count - 2]).SheetIndex, true);
                     }
                 }
-                else
-                {
-                    int index = TabsPresenter.Children.IndexOf(touchHitSheetTab);
-                    if (index == (TabsPresenter.StartIndex - 1))
-                    {
-                        TabsPresenter.NavigateToPrevious();
-                    }
-                    else if (TabsPresenter.ReCalculateStartIndex(TabsPresenter.StartIndex, index))
-                    {
-                        TabsPresenter.InvalidateMeasure();
-                        TabsPresenter.InvalidateArrange();
-                    }
-                    if (touchHitSheetTab != _activeTab)
-                    {
-                        if (OwningView.CanSelectFormula)
-                        {
-                            OwningView.SaveDataForFormulaSelection();
-                            OwningView.StopCellEditing(true);
-                        }
-                        ActiveSheet(touchHitSheetTab.SheetIndex, true);
-                    }
-                }
-                OwningView.RaiseSheetTabClick(touchHitSheetTab.SheetIndex);
             }
             else
             {
-                ButtonBase hitNavigatorButton = GetHitNavigatorButton(point);
-                if (hitNavigatorButton != null)
+                int index = TabsPresenter.Children.IndexOf(touchHitSheetTab);
+                if (index == (TabsPresenter.StartIndex - 1))
                 {
-                    string name = hitNavigatorButton.Name;
-                    if ("First".Equals(name))
+                    TabsPresenter.NavigateToPrevious();
+                }
+                else if (TabsPresenter.ReCalculateStartIndex(TabsPresenter.StartIndex, index))
+                {
+                    TabsPresenter.InvalidateMeasure();
+                    TabsPresenter.InvalidateArrange();
+                }
+                if (touchHitSheetTab != _activeTab)
+                {
+                    if (OwningView.CanSelectFormula)
                     {
-                        TabsPresenter.NavigateToFirst();
+                        OwningView.SaveDataForFormulaSelection();
+                        OwningView.StopCellEditing(true);
                     }
-                    else if ("Previous".Equals(name))
-                    {
-                        TabsPresenter.NavigateToPrevious();
-                    }
-                    else if ("Next".Equals(name))
-                    {
-                        TabsPresenter.NavigateToNext();
-                    }
-                    else if ("Last".Equals(name))
-                    {
-                        TabsPresenter.NavigateToLast();
-                    }
+                    ActiveSheet(touchHitSheetTab.SheetIndex, true);
                 }
             }
+            OwningView.RaiseSheetTabClick(touchHitSheetTab.SheetIndex);
         }
 
         internal void Refresh()
@@ -524,12 +442,10 @@ namespace Dt.Cells.UI
                 {
                     tab.PrepareForDisplay();
                 }
-                _tabStripPresent.InvalidateMeasure();
-                _tabStripPresent.InvalidateArrange();
             }
             showTextBoxContextMenus = false;
         }
-        
+
         internal void SetStartSheet(int startSheetIndex)
         {
             if ((TabsPresenter.Count != 0) && (TabsPresenter.Count > startSheetIndex))
@@ -607,7 +523,7 @@ namespace Dt.Cells.UI
                         OwningView.DoCommand(command);
                     }
                     editingElement.Loaded += PrepareTabForEditing;
-                    editingElement.LostFocus += TabEditor_LostFocus; 
+                    editingElement.LostFocus += TabEditor_LostFocus;
                     editingElement.ContextMenuOpening += OnEditorContextMenuOpening;
                     editingElement.TextChanged += TabEditor_TextChanged;
                 }
@@ -619,7 +535,8 @@ namespace Dt.Cells.UI
                 {
                     if (agileCallback == null)
                     {
-                        agileCallback = delegate {
+                        agileCallback = delegate
+                        {
                             OwningView.FocusInternal();
                         };
                     }
@@ -704,12 +621,12 @@ namespace Dt.Cells.UI
 
         internal SheetTab ActiveTab
         {
-            get { return  _activeTab; }
+            get { return _activeTab; }
         }
 
         internal bool HasInsertTab
         {
-            get { return  _hasNewTab; }
+            get { return _hasNewTab; }
             set
             {
                 Action action = null;
@@ -728,7 +645,7 @@ namespace Dt.Cells.UI
                         {
                             TabsPresenter.Children.Add(_newTab);
                         }
-                        if (_root != null)
+                        if (IsLoaded)
                         {
                             TabsPresenter.Update();
                             TabsPresenter.ReCalculateStartIndex(0, TabsPresenter.Count - 1);
@@ -738,7 +655,8 @@ namespace Dt.Cells.UI
                     {
                         if (action == null)
                         {
-                            action = delegate {
+                            action = delegate
+                            {
                                 TabsPresenter.Children.Remove(_newTab);
                                 if (_newTab != null)
                                 {
@@ -757,14 +675,11 @@ namespace Dt.Cells.UI
 
         internal SpreadView OwningView { get; set; }
 
-        internal Dt.Cells.UI.TabsPresenter TabsPresenter
-        {
-            get { return  _tabStripPresent.TabPresenter; }
-        }
+        internal Dt.Cells.UI.TabsPresenter TabsPresenter { get; }
 
         internal Dt.Cells.Data.Workbook Workbook
         {
-            get { return  OwningView.SpreadSheet.Workbook; }
+            get { return OwningView.SpreadSheet.Workbook; }
         }
     }
 }

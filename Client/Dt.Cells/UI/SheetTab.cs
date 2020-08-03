@@ -126,9 +126,7 @@ namespace Dt.Cells.UI
             {
                 _editingElement = new EditingElement();
                 _editingElement.Padding = new Thickness(0.0);
-                _editingElement.BorderThickness = new Thickness(0.0);
                 _editingElement.VerticalAlignment = (VerticalAlignment)2;
-                _editingElement.VerticalContentAlignment = (VerticalAlignment)1;
                 _editingElement.FontSize = DEFAULT_FONTSIZE;
             }
             return _editingElement;
@@ -213,20 +211,7 @@ namespace Dt.Cells.UI
 
         void UpdateActiveStates()
         {
-            if (IsActive)
-            {
-                VisualStateManager.GoToState(this, "Active", true);
-            }
-#if UWP
-            else if (base.IsPointerOver)
-            {
-                VisualStateManager.GoToState(this, "Hover", true);
-            }
-#endif
-            else
-            {
-                VisualStateManager.GoToState(this, "Regular", true);
-            }
+            VisualStateManager.GoToState(this, IsActive ? "Active" : "Regular", true);
         }
     }
 }

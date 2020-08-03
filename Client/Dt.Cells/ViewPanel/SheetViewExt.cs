@@ -121,26 +121,6 @@ namespace Dt.Cells.UI
         }
 
         /// <summary>
-        /// hdt 标志已处理，屏蔽Pis的左右滑动
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void OnManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
-        {
-            e.Handled = true;
-        }
-
-        void OnManipulationDelta(object sender, ManipulationDeltaRoutedEventArgs e)
-        {
-            e.Handled = true;
-        }
-
-        void OnManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
-        {
-            e.Handled = true;
-        }
-
-        /// <summary>
         /// 设置打印时隐藏分页线
         /// </summary>
         internal bool HideDecorationWhenPrinting

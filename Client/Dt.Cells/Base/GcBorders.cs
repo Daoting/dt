@@ -59,11 +59,12 @@ namespace Dt.Cells.UI
 
         protected override Windows.Foundation.Size ArrangeOverride(Windows.Foundation.Size finalSize)
         {
-            if (_sheetView.fastScroll)
+            if (_sheetView._fastScroll)
             {
                 _scrollingGridlinesPanel.Arrange(new Windows.Foundation.Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
                 return base.ArrangeOverride(finalSize);
             }
+
             _borderLinesPanel.Arrange(new Windows.Foundation.Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
             foreach (KeyValuePair<ComboLine, LineItem> pair in _lineMap)
             {
@@ -830,7 +831,7 @@ namespace Dt.Cells.UI
         protected override Windows.Foundation.Size MeasureOverride(Windows.Foundation.Size availableSize)
         {
             _sheetView = GetSheetView();
-            if (_sheetView.fastScroll)
+            if (_sheetView._fastScroll)
             {
                 _scrollingGridlinesPanel.Measure(availableSize);
                 MeasureGridLinesForScrolling();

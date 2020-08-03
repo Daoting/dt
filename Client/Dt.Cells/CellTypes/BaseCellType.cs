@@ -153,12 +153,7 @@ namespace Dt.Cells.CellTypes
 
         protected virtual FrameworkElement CreateEditingElement()
         {
-            TextBox element = new EditingElement();
-            Dt.Cells.Data.UIAdaptor.InvokeSync(delegate {
-                element.Background = new SolidColorBrush(Colors.Transparent);
-            });
-            element.BorderThickness = new Windows.UI.Xaml.Thickness(0.0);
-            return element;
+            return new EditingElement();
         }
 
         Windows.UI.Xaml.Thickness GetDefaultMarginForDisplay(double fontSize)

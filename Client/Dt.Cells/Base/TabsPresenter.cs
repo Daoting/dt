@@ -102,6 +102,20 @@ namespace Dt.Cells.UI
             return StartIndex;
         }
 
+        internal void NavigateToPrevious()
+        {
+            if (StartIndex > 0)
+            {
+                int preVisibleIndex = GetPreVisibleIndex(StartIndex);
+                if (preVisibleIndex != -1)
+                {
+                    StartIndex = preVisibleIndex;
+                    base.InvalidateMeasure();
+                    base.InvalidateArrange();
+                }
+            }
+        }
+
         List<double> GetTabsWidth()
         {
             if (_cachedTabsWidth == null)
@@ -117,65 +131,6 @@ namespace Dt.Cells.UI
                 }
             }
             return _cachedTabsWidth;
-        }
-
-        internal void NavigateToFirst()
-        {
-            if ((StartIndex != 0) && (Count > 0))
-            {
-                StartIndex = 0;
-                if (!(base.Children[0] as SheetTab).Visible)
-                {
-                    int nextVisibleIndex = GetNextVisibleIndex(0);
-                    if (nextVisibleIndex != -1)
-                    {
-                        StartIndex = nextVisibleIndex;
-                    }
-                }
-                base.InvalidateMeasure();
-                base.InvalidateArrange();
-            }
-        }
-
-        internal void NavigateToLast()
-        {
-            if (ReCalculateStartIndex(0, Count - 1))
-            {
-                base.InvalidateMeasure();
-                base.InvalidateArrange();
-            }
-        }
-
-        internal void NavigateToNext()
-        {
-            if (StartIndex < (Count - 1))
-            {
-                int startIndex = StartIndex;
-                if (ReCalculateStartIndex(0, Count - 1))
-                {
-                    int nextVisibleIndex = GetNextVisibleIndex(startIndex);
-                    if (nextVisibleIndex != -1)
-                    {
-                        StartIndex = nextVisibleIndex;
-                        base.InvalidateMeasure();
-                        base.InvalidateArrange();
-                    }
-                }
-            }
-        }
-
-        internal void NavigateToPrevious()
-        {
-            if (StartIndex > 0)
-            {
-                int preVisibleIndex = GetPreVisibleIndex(StartIndex);
-                if (preVisibleIndex != -1)
-                {
-                    StartIndex = preVisibleIndex;
-                    base.InvalidateMeasure();
-                    base.InvalidateArrange();
-                }
-            }
         }
 
         void RaisePropertyChanged(string property)

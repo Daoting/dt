@@ -52,8 +52,8 @@ namespace Dt.Cells.UI
         /// </summary>
         public CellPresenterBase()
         {
-            base.DefaultStyleKey = typeof(CellPresenterBase);
-            base.Padding = new Windows.UI.Xaml.Thickness(2.0, 0.0, 2.0, 0.0);
+            DefaultStyleKey = typeof(CellPresenterBase);
+            Padding = new Windows.UI.Xaml.Thickness(2.0, 0.0, 2.0, 0.0);
             _cellType = new BaseCellType();
             ShowContent = true;
         }
@@ -141,12 +141,7 @@ namespace Dt.Cells.UI
                 ((IFormulaEditingSupport) _cellType).CanUserEditFormula = SheetView.CanUserEditFormula;
             }
             _cellType.InitEditingElement();
-            FrameworkElement editingElement = _cellType.GetEditingElement();
-            if ((editingElement != null) && (editingElement is EditingElement))
-            {
-                (editingElement as EditingElement).Owner = this;
-            }
-            return editingElement;
+            return _cellType.GetEditingElement();
         }
 
         internal Windows.Foundation.Size GetPreferredEditorSize(Windows.Foundation.Size maxSize, Windows.Foundation.Size cellContentSize, HorizontalAlignment alignment, float indent)

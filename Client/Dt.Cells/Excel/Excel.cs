@@ -54,9 +54,8 @@ namespace Dt.Base
             DefaultStyleKey = typeof(Excel);
             View = new SpreadView(this);
 
-            Loaded += GcSpreadSheet_Loaded;
-            AddHandler(UIElement.KeyDownEvent, new KeyEventHandler(OnKeyDown), true);
-            AddHandler(UIElement.KeyUpEvent, new KeyEventHandler(OnKeyUp), true);
+            AddHandler(KeyDownEvent, new KeyEventHandler(OnKeyDown), true);
+            AddHandler(KeyUpEvent, new KeyEventHandler(OnKeyUp), true);
         }
 
         /// <summary>
@@ -243,19 +242,6 @@ namespace Dt.Base
         public void DoCommand(ICommand command)
         {
             View.DoCommand(command);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void GcSpreadSheet_Loaded(object sender, RoutedEventArgs e)
-        {
-            if (View != null)
-            {
-                View.FocusInternal();
-            }
         }
 
         /// <summary>
@@ -604,30 +590,14 @@ namespace Dt.Base
             OnSpanModelChanged(e.Row, e.Column, e.RowCount, e.ColumnCount, SheetArea.ColumnHeader);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         void OnKeyDown(object sender, KeyRoutedEventArgs e)
         {
-            if (!DesignMode.DesignModeEnabled)
-            {
-                View.ProcessKeyDown(e);
-            }
+            View.ProcessKeyDown(e);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         void OnKeyUp(object sender, KeyRoutedEventArgs e)
         {
-            if (!DesignMode.DesignModeEnabled)
-            {
-                View.ProcessKeyUp(e);
-            }
+            View.ProcessKeyUp(e);
         }
 
         /// <summary>
@@ -1016,7 +986,7 @@ namespace Dt.Base
         /// <returns></returns>
         public IAsyncAction OpenXmlAsync(Stream xmlStream)
         {
-            return AsyncInfo.Run(delegate(CancellationToken token)
+            return AsyncInfo.Run(delegate (CancellationToken token)
             {
                 return Task.Factory.StartNew(delegate
                 {
@@ -1469,7 +1439,7 @@ namespace Dt.Base
         /// <returns></returns>
         public IAsyncAction SaveXmlAsync(Stream xmlStream, bool dataOnly)
         {
-            return AsyncInfo.Run(delegate(CancellationToken token)
+            return AsyncInfo.Run(delegate (CancellationToken token)
             {
                 return Task.Factory.StartNew(delegate
                 {

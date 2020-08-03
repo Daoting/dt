@@ -44,7 +44,7 @@ namespace Dt.Cells.UI
         /// </summary>
         public CellPresenter()
         {
-            base.DefaultStyleKey = typeof(CellPresenter);
+            DefaultStyleKey = typeof(CellPresenter);
         }
 
         void AttachSparklineEvents()

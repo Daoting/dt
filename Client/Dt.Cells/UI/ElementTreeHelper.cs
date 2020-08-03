@@ -26,45 +26,9 @@ namespace Dt.Cells.UI
 {
     internal static class ElementTreeHelper
     {
-        public static bool FocusChild(DependencyObject parent)
-        {
-            if (parent != null)
-            {
-                int childrenCount = VisualTreeHelper.GetChildrenCount(parent);
-                for (int i = 0; i < childrenCount; i++)
-                {
-                    DependencyObject child = VisualTreeHelper.GetChild(parent, i);
-                    if (child != null)
-                    {
-                        Control @this = child as Control;
-                        if ((@this != null) && @this.IsTabStop)
-                        {
-                            return @this.Focus(FocusState.Programmatic);
-                        }
-                    }
-                    if (FocusChild(child))
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
         public static DependencyObject GetKeyboardFocusedElement()
         {
             return (FocusManager.GetFocusedElement() as DependencyObject);
-        }
-
-        public static DependencyObject GetLogicFocusedElement(UIElement container)
-        {
-            return GetKeyboardFocusedElement();
-        }
-
-        public static DependencyObject GetLogicFocusedElement(UIElement container, out DependencyObject scope)
-        {
-            scope = null;
-            return GetKeyboardFocusedElement();
         }
 
         public static DependencyObject GetParent(DependencyObject element)
@@ -101,68 +65,6 @@ namespace Dt.Cells.UI
             return local;
         }
 
-        public static IEnumerable<T> GetVisualChildren<T>(DependencyObject element) where T: DependencyObject
-        {
-            List<T> children = new List<T>();
-            GetVisualChildren<T>(element, children);
-            return (IEnumerable<T>) children;
-        }
-
-        static void GetVisualChildren<T>(DependencyObject element, List<T> children) where T: DependencyObject
-        {
-            if (element != null)
-            {
-                int childrenCount = VisualTreeHelper.GetChildrenCount(element);
-                for (int i = 0; i < childrenCount; i++)
-                {
-                    DependencyObject child = VisualTreeHelper.GetChild(element, i);
-                    if (child is T)
-                    {
-                        children.Add((T) child);
-                    }
-                    else
-                    {
-                        GetVisualChildren<T>(child, children);
-                    }
-                }
-            }
-        }
-
-        public static T GetVisualParentOrSelf<T>(DependencyObject element)
-            where T: class
-        {
-            T local = default(T);
-            while ((local == null) && (element != null))
-            {
-                local = element as T;
-                element = VisualTreeHelper.GetParent(element);
-            }
-            return local;
-        }
-
-        public static T HitTest<T>(UIElement container, ref Windows.Foundation.Point position) where T: UIElement
-        {
-            position = container.TransformToVisual(Window.Current.Content).TransformPoint(position);
-            T visual = Enumerable.FirstOrDefault<UIElement>(VisualTreeHelper.FindElementsInHostCoordinates(position, container), delegate (UIElement e) {
-                return e is T;
-            }) as T;
-            position = Window.Current.Content.TransformToVisual(visual).TransformPoint(position);
-            return visual;
-        }
-
-        public static bool IsAncestorOf(this UIElement @this, DependencyObject element)
-        {
-            while (element != null)
-            {
-                if (element == @this)
-                {
-                    return true;
-                }
-                element = GetParent(element);
-            }
-            return false;
-        }
-
         public static bool IsFocused(Control targetElement)
         {
             return (FocusManager.GetFocusedElement() == targetElement);
@@ -178,25 +80,6 @@ namespace Dt.Cells.UI
                 }
             }
             return false;
-        }
-
-        public static bool IsLogicFocusWithin(UIElement targetElement)
-        {
-            return IsKeyboardFocusWithin(targetElement);
-        }
-
-        public static bool IsLogicFocusWithin(UIElement targetElement, out DependencyObject scope)
-        {
-            scope = null;
-            return IsKeyboardFocusWithin(targetElement);
-        }
-
-        public static void TransferFocusToDescendent(UIElement container, Control target)
-        {
-            if (GetKeyboardFocusedElement() == container)
-            {
-                target.Focus(FocusState.Programmatic);
-            }
         }
     }
 }
