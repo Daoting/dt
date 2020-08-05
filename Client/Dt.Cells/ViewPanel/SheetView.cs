@@ -450,7 +450,7 @@ namespace Dt.Cells.UI
             {
                 EndColumnResizing();
             }
-            HitTestInformation savedHitTestInformation = GetSavedHitTestInformation();
+            HitTestInformation savedHitTestInformation = GetHitInfo();
             if (savedHitTestInformation.HitTestType == HitTestType.ColumnHeader)
             {
                 viewportResizingColumnLayoutFromX = GetViewportResizingColumnLayoutFromX(savedHitTestInformation.ColumnViewportIndex, savedHitTestInformation.HitPoint.X);
@@ -611,7 +611,7 @@ namespace Dt.Cells.UI
             {
                 EndRowResizing();
             }
-            HitTestInformation savedHitTestInformation = GetSavedHitTestInformation();
+            HitTestInformation savedHitTestInformation = GetHitInfo();
             if (savedHitTestInformation.HitTestType == HitTestType.RowHeader)
             {
                 bool flag = false;
@@ -1028,7 +1028,7 @@ namespace Dt.Cells.UI
             if (IsSelectingColumns)
             {
                 EndColumnSelecting();
-                HitTestInformation savedHitTestInformation = GetSavedHitTestInformation();
+                HitTestInformation savedHitTestInformation = GetHitInfo();
                 if ((savedHitTestInformation != null) && (savedHitTestInformation.HitTestType == HitTestType.ColumnHeader))
                 {
                     GcViewport columnHeaderRowsPresenter = GetColumnHeaderRowsPresenter(savedHitTestInformation.ColumnViewportIndex);
@@ -1049,7 +1049,7 @@ namespace Dt.Cells.UI
             if (IsSelectingRows)
             {
                 EndRowSelecting();
-                HitTestInformation information2 = GetSavedHitTestInformation();
+                HitTestInformation information2 = GetHitInfo();
                 if ((information2 != null) && (information2.HitTestType == HitTestType.RowHeader))
                 {
                     GcViewport rowHeaderRowsPresenter = GetRowHeaderRowsPresenter(information2.RowViewportIndex);
@@ -1352,7 +1352,7 @@ namespace Dt.Cells.UI
 
         void ContinueColumnResizing()
         {
-            HitTestInformation savedHitTestInformation = GetSavedHitTestInformation();
+            HitTestInformation savedHitTestInformation = GetHitInfo();
             ColumnLayout viewportResizingColumnLayoutFromX = null;
             switch (savedHitTestInformation.HitTestType)
             {
@@ -1480,7 +1480,7 @@ namespace Dt.Cells.UI
 
         void ContinueRowResizing()
         {
-            HitTestInformation savedHitTestInformation = GetSavedHitTestInformation();
+            HitTestInformation savedHitTestInformation = GetHitInfo();
             RowLayout viewportResizingRowLayoutFromY = null;
             switch (savedHitTestInformation.HitTestType)
             {
@@ -1546,7 +1546,7 @@ namespace Dt.Cells.UI
         void ContinueTouchColumnResizing()
         {
             _DoTouchResizing = true;
-            HitTestInformation savedHitTestInformation = GetSavedHitTestInformation();
+            HitTestInformation savedHitTestInformation = GetHitInfo();
             ColumnLayout viewportResizingColumnLayoutFromXForTouch = null;
             switch (savedHitTestInformation.HitTestType)
             {
@@ -1607,7 +1607,7 @@ namespace Dt.Cells.UI
 
         void ContinueTouchRowResizing()
         {
-            HitTestInformation savedHitTestInformation = GetSavedHitTestInformation();
+            HitTestInformation savedHitTestInformation = GetHitInfo();
             RowLayout viewportResizingRowLayoutFromYForTouch = null;
             _DoTouchResizing = true;
             switch (savedHitTestInformation.HitTestType)
@@ -2465,7 +2465,7 @@ namespace Dt.Cells.UI
                 int columnViewportIndex = _dragStartColumnViewport;
                 if (GetViewportRowLayoutModel(rowViewportIndex).FindRow(row) == null)
                 {
-                    double y = GetSavedHitTestInformation().HitPoint.Y;
+                    double y = GetHitInfo().HitPoint.Y;
                     int rowViewportCount = GetViewportInfo().RowViewportCount;
                     if (MousePosition.Y < y)
                     {
@@ -2489,7 +2489,7 @@ namespace Dt.Cells.UI
                 }
                 if (GetViewportColumnLayoutModel(columnViewportIndex).FindColumn(column) == null)
                 {
-                    double x = GetSavedHitTestInformation().HitPoint.X;
+                    double x = GetHitInfo().HitPoint.X;
                     int columnViewportCount = GetViewportInfo().ColumnViewportCount;
                     if (MousePosition.X < x)
                     {
@@ -2925,7 +2925,7 @@ namespace Dt.Cells.UI
         {
             IsWorking = false;
             IsResizingColumns = false;
-            HitTestInformation savedHitTestInformation = GetSavedHitTestInformation();
+            HitTestInformation savedHitTestInformation = GetHitInfo();
             if (savedHitTestInformation.HitPoint.X == MousePosition.X)
             {
                 _resizingTracker.Visibility = Visibility.Collapsed;
@@ -3026,7 +3026,7 @@ namespace Dt.Cells.UI
                 {
                     activeSelection = Worksheet.Selections[0];
                 }
-                GetSavedHitTestInformation();
+                GetHitInfo();
                 int viewportTopRow = GetViewportTopRow(GetActiveRowViewportIndex());
                 if ((Worksheet.ActiveRowIndex != viewportTopRow) || (activeSelection.Column != Worksheet.ActiveColumnIndex))
                 {
@@ -3050,7 +3050,7 @@ namespace Dt.Cells.UI
             bool isInvalid = false;
             string invalidMessage = string.Empty;
             bool doCommand = false;
-            if (IsDragDropping && (GetSavedHitTestInformation().HitPoint != MousePosition))
+            if (IsDragDropping && (GetHitInfo().HitPoint != MousePosition))
             {
                 DoEndDragDropping(ref isInvalid, ref invalidMessage, ref doCommand);
             }
@@ -3174,13 +3174,6 @@ namespace Dt.Cells.UI
             _formulaSelectionFeature.EndFormulaSelection();
         }
 
-        internal virtual bool EndMouseClick(PointerMouseRoutedEventArgs e)
-        {
-            IsMouseLeftButtonPressed = false;
-            base.ReleasePointerCapture(e.Instance.Pointer);
-            return true;
-        }
-
         internal virtual bool EndMouseClick(DoubleTappedRoutedEventArgs e)
         {
             IsMouseLeftButtonPressed = false;
@@ -3192,7 +3185,7 @@ namespace Dt.Cells.UI
         {
             IsWorking = false;
             IsResizingRows = false;
-            HitTestInformation savedHitTestInformation = GetSavedHitTestInformation();
+            HitTestInformation savedHitTestInformation = GetHitInfo();
             if (savedHitTestInformation.HitPoint.Y == MousePosition.Y)
             {
                 TooltipHelper.CloseTooltip();
@@ -3288,7 +3281,7 @@ namespace Dt.Cells.UI
                 {
                     activeSelection = Worksheet.Selections[0];
                 }
-                GetSavedHitTestInformation();
+                GetHitInfo();
                 int viewportLeftColumn = GetViewportLeftColumn(GetActiveColumnViewportIndex());
                 if ((Worksheet.ActiveColumnIndex != viewportLeftColumn) || (activeSelection.Row != Worksheet.ActiveRowIndex))
                 {
@@ -3310,7 +3303,7 @@ namespace Dt.Cells.UI
         {
             IsWorking = false;
             IsTouchResizingColumns = false;
-            HitTestInformation savedHitTestInformation = GetSavedHitTestInformation();
+            HitTestInformation savedHitTestInformation = GetHitInfo();
             if ((savedHitTestInformation.HitPoint.X == MousePosition.X) || !_DoTouchResizing)
             {
                 TooltipHelper.CloseTooltip();
@@ -3402,7 +3395,7 @@ namespace Dt.Cells.UI
             bool isInvalid = false;
             string invalidMessage = string.Empty;
             bool doCommand = false;
-            if (IsTouchDrapDropping && (GetSavedHitTestInformation().HitPoint != MousePosition))
+            if (IsTouchDrapDropping && (GetHitInfo().HitPoint != MousePosition))
             {
                 DoEndDragDropping(ref isInvalid, ref invalidMessage, ref doCommand);
             }
@@ -3457,7 +3450,7 @@ namespace Dt.Cells.UI
         {
             IsWorking = false;
             IsTouchResizingRows = false;
-            HitTestInformation savedHitTestInformation = GetSavedHitTestInformation();
+            HitTestInformation savedHitTestInformation = GetHitInfo();
             if ((savedHitTestInformation.HitPoint.Y == MousePosition.Y) || !_DoTouchResizing)
             {
                 TooltipHelper.CloseTooltip();
@@ -4590,7 +4583,7 @@ namespace Dt.Cells.UI
                 return null;
             }
             Windows.Foundation.Point mousePosition = MousePosition;
-            HitTestInformation savedHitTestInformation = GetSavedHitTestInformation();
+            HitTestInformation savedHitTestInformation = GetHitInfo();
             if (IsTouchingResizingFloatingObjects || IsTouchingMovingFloatingObjects)
             {
                 savedHitTestInformation = _touchStartHitTestInfo;
@@ -5013,7 +5006,7 @@ namespace Dt.Cells.UI
 
         internal FilterButtonInfo GetMouseDownFilterButton()
         {
-            HitTestInformation savedHitTestInformation = GetSavedHitTestInformation();
+            HitTestInformation savedHitTestInformation = GetHitInfo();
             if (savedHitTestInformation != null)
             {
                 return GetMouseDownFilterButton(savedHitTestInformation, false);
@@ -5617,15 +5610,6 @@ namespace Dt.Cells.UI
                 }
             }
             return null;
-        }
-
-        internal HitTestInformation GetSavedHitTestInformation()
-        {
-            if (_positionInfo == null)
-            {
-                _positionInfo = new HitTestInformation();
-            }
-            return _positionInfo;
         }
 
         internal virtual SheetLayout GetSheetLayout()
@@ -6996,225 +6980,6 @@ namespace Dt.Cells.UI
             }
         }
 
-        internal virtual HitTestInformation HitTest(double x, double y)
-        {
-            Windows.Foundation.Point hitPoint = new Windows.Foundation.Point(x, y);
-            HitTestInformation hi = new HitTestInformation
-            {
-                HitTestType = HitTestType.Empty,
-                ColumnViewportIndex = -2,
-                RowViewportIndex = -2,
-                HitPoint = hitPoint
-            };
-            ViewportInfo viewportInfo = GetViewportInfo();
-            int columnViewportCount = viewportInfo.ColumnViewportCount;
-            int rowViewportCount = viewportInfo.RowViewportCount;
-            if (IsCornerRangeGroupHitTest(hitPoint))
-            {
-                hi.HitTestType = HitTestType.CornerRangeGroup;
-                return hi;
-            }
-            if (IsRowRangeGroupHitTest(hitPoint))
-            {
-                hi.HitTestType = HitTestType.RowRangeGroup;
-                return hi;
-            }
-            if (IsColumnRangeGroupHitTest(hitPoint))
-            {
-                hi.HitTestType = HitTestType.ColumnRangeGroup;
-                return hi;
-            }
-            if (GetCornerRectangle().Contains(hitPoint))
-            {
-                HeaderHitTestInformation information2 = new HeaderHitTestInformation
-                {
-                    Column = -1,
-                    Row = -1,
-                    ResizingColumn = -1,
-                    ResizingRow = -1
-                };
-                hi.HitTestType = HitTestType.Corner;
-                hi.HeaderInfo = information2;
-                ColumnLayout rowHeaderColumnLayoutFromX = GetRowHeaderColumnLayoutFromX(hitPoint.X);
-                RowLayout columnHeaderRowLayoutFromY = GetColumnHeaderRowLayoutFromY(hitPoint.Y);
-                ColumnLayout rowHeaderResizingColumnLayoutFromX = GetRowHeaderResizingColumnLayoutFromX(hitPoint.X);
-                RowLayout columnHeaderResizingRowLayoutFromY = GetColumnHeaderResizingRowLayoutFromY(hitPoint.Y);
-                if (rowHeaderColumnLayoutFromX != null)
-                {
-                    information2.Column = rowHeaderColumnLayoutFromX.Column;
-                }
-                if (columnHeaderRowLayoutFromY != null)
-                {
-                    information2.Row = columnHeaderRowLayoutFromY.Row;
-                }
-                if (rowHeaderResizingColumnLayoutFromX != null)
-                {
-                    information2.InColumnResize = true;
-                    information2.ResizingColumn = rowHeaderResizingColumnLayoutFromX.Column;
-                }
-                if (columnHeaderResizingRowLayoutFromY != null)
-                {
-                    information2.InRowResize = true;
-                    information2.ResizingRow = columnHeaderResizingRowLayoutFromY.Row;
-                }
-                return hi;
-            }
-            for (int i = -1; i <= rowViewportCount; i++)
-            {
-                if (GetRowHeaderRectangle(i).Contains(hitPoint))
-                {
-                    HeaderHitTestInformation information4 = new HeaderHitTestInformation
-                    {
-                        Row = -1,
-                        Column = -1,
-                        ResizingColumn = -1,
-                        ResizingRow = -1
-                    };
-                    hi.HitTestType = HitTestType.RowHeader;
-                    hi.RowViewportIndex = i;
-                    hi.HeaderInfo = information4;
-                    if (((InputDeviceType == Dt.Cells.UI.InputDeviceType.Touch) && ResizerGripperRect.HasValue) && ResizerGripperRect.Value.Contains(hitPoint))
-                    {
-                        hi.HeaderInfo.InRowResize = true;
-                        hi.HeaderInfo.ResizingRow = GetActiveCell().Row;
-                        return hi;
-                    }
-                    ColumnLayout layout5 = GetRowHeaderColumnLayoutFromX(hitPoint.X);
-                    RowLayout viewportRowLayoutFromY = GetViewportRowLayoutFromY(i, hitPoint.Y);
-                    RowLayout viewportResizingRowLayoutFromY = GetViewportResizingRowLayoutFromY(i, hitPoint.Y);
-                    if ((viewportResizingRowLayoutFromY == null) && (hi.RowViewportIndex == 0))
-                    {
-                        viewportResizingRowLayoutFromY = GetViewportResizingRowLayoutFromY(-1, hi.HitPoint.Y);
-                    }
-                    if ((viewportResizingRowLayoutFromY == null) && ((hi.RowViewportIndex == 0) || (hi.RowViewportIndex == -1)))
-                    {
-                        viewportResizingRowLayoutFromY = GetColumnHeaderResizingRowLayoutFromY(hi.HitPoint.Y);
-                        if (viewportResizingRowLayoutFromY != null)
-                        {
-                            hi.HitTestType = HitTestType.Corner;
-                        }
-                    }
-                    if (layout5 != null)
-                    {
-                        information4.Column = layout5.Column;
-                    }
-                    if (viewportRowLayoutFromY != null)
-                    {
-                        information4.Row = viewportRowLayoutFromY.Row;
-                    }
-                    if ((viewportResizingRowLayoutFromY != null) && (((viewportResizingRowLayoutFromY.Height > 0.0) || (viewportResizingRowLayoutFromY.Row >= Worksheet.RowCount)) || !Worksheet.RowRangeGroup.IsCollapsed(viewportResizingRowLayoutFromY.Row)))
-                    {
-                        information4.InRowResize = true;
-                        information4.ResizingRow = viewportResizingRowLayoutFromY.Row;
-                    }
-                    return hi;
-                }
-            }
-            for (int j = -1; j <= columnViewportCount; j++)
-            {
-                if (GetColumnHeaderRectangle(j).Contains(hitPoint))
-                {
-                    HeaderHitTestInformation information6 = new HeaderHitTestInformation
-                    {
-                        Row = -1,
-                        Column = -1,
-                        ResizingRow = -1,
-                        ResizingColumn = -1
-                    };
-                    hi.HitTestType = HitTestType.ColumnHeader;
-                    hi.HeaderInfo = information6;
-                    hi.ColumnViewportIndex = j;
-                    if (((InputDeviceType == Dt.Cells.UI.InputDeviceType.Touch) && ResizerGripperRect.HasValue) && ResizerGripperRect.Value.Contains(hitPoint))
-                    {
-                        hi.HeaderInfo.InColumnResize = true;
-                        hi.HeaderInfo.ResizingColumn = GetActiveCell().Column;
-                        return hi;
-                    }
-                    ColumnLayout viewportColumnLayoutFromX = GetViewportColumnLayoutFromX(j, hitPoint.X);
-                    RowLayout layout9 = GetColumnHeaderRowLayoutFromY(hitPoint.Y);
-                    ColumnLayout viewportResizingColumnLayoutFromX = GetViewportResizingColumnLayoutFromX(j, hitPoint.X);
-                    if (viewportResizingColumnLayoutFromX == null)
-                    {
-                        if (hi.ColumnViewportIndex == 0)
-                        {
-                            viewportResizingColumnLayoutFromX = GetViewportResizingColumnLayoutFromX(-1, hitPoint.X);
-                        }
-                        if ((viewportResizingColumnLayoutFromX == null) && ((hi.ColumnViewportIndex == 0) || (hi.ColumnViewportIndex == -1)))
-                        {
-                            viewportResizingColumnLayoutFromX = GetRowHeaderResizingColumnLayoutFromX(hitPoint.X);
-                            if (viewportResizingColumnLayoutFromX != null)
-                            {
-                                hi.HitTestType = HitTestType.Corner;
-                            }
-                        }
-                    }
-                    if (viewportColumnLayoutFromX != null)
-                    {
-                        hi.HeaderInfo.Column = viewportColumnLayoutFromX.Column;
-                    }
-                    if (layout9 != null)
-                    {
-                        hi.HeaderInfo.Row = layout9.Row;
-                    }
-                    if ((viewportResizingColumnLayoutFromX != null) && (((viewportResizingColumnLayoutFromX.Width > 0.0) || (viewportResizingColumnLayoutFromX.Column >= Worksheet.ColumnCount)) || !Worksheet.ColumnRangeGroup.IsCollapsed(viewportResizingColumnLayoutFromX.Column)))
-                    {
-                        hi.HeaderInfo.InColumnResize = true;
-                        hi.HeaderInfo.ResizingColumn = viewportResizingColumnLayoutFromX.Column;
-                    }
-                    return hi;
-                }
-            }
-            for (int k = -1; k <= rowViewportCount; k++)
-            {
-                for (int m = -1; m <= columnViewportCount; m++)
-                {
-                    if (GetViewportRectangle(k, m).Contains(hitPoint))
-                    {
-                        hi.ColumnViewportIndex = m;
-                        hi.RowViewportIndex = k;
-                        ViewportHitTestInformation information8 = new ViewportHitTestInformation
-                        {
-                            Column = -1,
-                            Row = -1
-                        };
-                        hi.HitTestType = HitTestType.Viewport;
-                        hi.ViewportInfo = information8;
-                        ColumnLayout layout11 = GetViewportColumnLayoutFromX(m, hitPoint.X);
-                        RowLayout layout12 = GetViewportRowLayoutFromY(k, hitPoint.Y);
-                        if (layout11 != null)
-                        {
-                            hi.ViewportInfo.Column = layout11.Column;
-                        }
-                        if (layout12 != null)
-                        {
-                            hi.ViewportInfo.Row = layout12.Row;
-                        }
-                        if (!_formulaSelectionFeature.HitTest(k, m, hitPoint.X, hitPoint.Y, hi) && (IsInSelectionGripper(new Windows.Foundation.Point(x, y)) || !HitTestFloatingObject(k, m, hitPoint.X, hitPoint.Y, hi)))
-                        {
-                            GcViewport viewportRowsPresenter = GetViewportRowsPresenter(k, m);
-                            if ((layout11 != null) && (layout12 != null))
-                            {
-                                if (IsMouseInDragFillIndicator(hitPoint.X, hitPoint.Y, k, m, false))
-                                {
-                                    hi.ViewportInfo.InDragFillIndicator = true;
-                                }
-                                else if (IsMouseInDragDropLocation(hitPoint.X, hitPoint.Y, k, m, false))
-                                {
-                                    hi.ViewportInfo.InSelectionDrag = true;
-                                }
-                            }
-                            if (((IsEditing && !hi.ViewportInfo.InSelectionDrag) && (!hi.ViewportInfo.InDragFillIndicator && (viewportRowsPresenter != null))) && viewportRowsPresenter.EditorBounds.Contains(new Windows.Foundation.Point(x - viewportRowsPresenter.Location.X, y - viewportRowsPresenter.Location.Y)))
-                            {
-                                hi.ViewportInfo.InEditor = true;
-                            }
-                            return hi;
-                        }
-                    }
-                }
-            }
-            return hi;
-        }
-
         bool HitTestFloatingObject(int rowViewportIndex, int columnViewportIndex, double mouseX, double mouseY, HitTestInformation hi)
         {
             FloatingObjectLayoutModel viewportFloatingObjectLayoutModel = GetViewportFloatingObjectLayoutModel(rowViewportIndex, columnViewportIndex);
@@ -7520,7 +7285,7 @@ namespace Dt.Cells.UI
 
         bool InitFloatingObjectsMovingResizing()
         {
-            HitTestInformation savedHitTestInformation = GetSavedHitTestInformation();
+            HitTestInformation savedHitTestInformation = GetHitInfo();
             if (IsTouching)
             {
                 savedHitTestInformation = _touchStartHitTestInfo;
@@ -8687,7 +8452,7 @@ namespace Dt.Cells.UI
             }
             if (!IsWorking)
             {
-                SaveHitTestInfo(null);
+                SaveHitInfo(null);
             }
             ViewportInfo viewportInfo = GetViewportInfo();
             int columnViewportCount = viewportInfo.ColumnViewportCount;
@@ -9116,16 +8881,6 @@ namespace Dt.Cells.UI
             Invalidate();
         }
 
-        void OnCurrentGestureActionCompleted(object sender, EventArgs e)
-        {
-            if (_currentGestureAction != null)
-            {
-                _currentGestureAction.ActionCompleted -= new EventHandler(OnCurrentGestureActionCompleted);
-                _currentGestureAction.Release();
-                _currentGestureAction = null;
-            }
-        }
-
         void OnEditedCellChanged(object sender, CellChangedEventArgs e)
         {
             if (string.Equals(e.PropertyName, "Value"))
@@ -9138,7 +8893,7 @@ namespace Dt.Cells.UI
         {
             if (_hScrollable)
             {
-                HitTestInformation savedHitTestInformation = GetSavedHitTestInformation();
+                HitTestInformation savedHitTestInformation = GetHitInfo();
                 int viewportLeftColumn = GetViewportLeftColumn(savedHitTestInformation.ColumnViewportIndex);
                 int viewportRightColumn = GetViewportRightColumn(savedHitTestInformation.ColumnViewportIndex);
                 Dt.Cells.Data.Worksheet worksheet = Worksheet;
@@ -9183,7 +8938,7 @@ namespace Dt.Cells.UI
                 }
                 if (IsTouchSelectingCells)
                 {
-                    ContinueTouchSelectingCells(_currentGestureAction.ActionCurrentPosition);
+                    ContinueTouchSelectingCells(MousePosition);
                 }
                 if (IsTouchSelectingColumns)
                 {
@@ -9216,31 +8971,11 @@ namespace Dt.Cells.UI
             }
         }
 
-        internal void OnTouchDoubleTap(Windows.Foundation.Point point)
-        {
-            if (Worksheet != null)
-            {
-                HitTestInformation savedHitTestInformation = GetSavedHitTestInformation();
-                base.ReleasePointerCaptures();
-                ProcessDoubleTap(point);
-                bool flag = ((savedHitTestInformation.HitTestType == HitTestType.Viewport) || (savedHitTestInformation.HitTestType == HitTestType.RowHeader)) || (savedHitTestInformation.HitTestType == HitTestType.ColumnHeader);
-                bool flag2 = ((savedHitTestInformation.HitTestType == HitTestType.ColumnHeader) && savedHitTestInformation.HeaderInfo.InColumnResize) || ((savedHitTestInformation.HitTestType == HitTestType.RowHeader) && savedHitTestInformation.HeaderInfo.InRowResize);
-                if (flag && !flag2)
-                {
-                    RaiseCellDoubleClick(point);
-                }
-            }
-        }
-
-        internal void OnTouchTap(Windows.Foundation.Point point)
-        {
-        }
-
         void OnVerticalSelectionTick(bool needIncrease)
         {
             if (_vScrollable)
             {
-                HitTestInformation savedHitTestInformation = GetSavedHitTestInformation();
+                HitTestInformation savedHitTestInformation = GetHitInfo();
                 int viewportTopRow = GetViewportTopRow(savedHitTestInformation.RowViewportIndex);
                 int viewportBottomRow = GetViewportBottomRow(savedHitTestInformation.RowViewportIndex);
                 Dt.Cells.Data.Worksheet worksheet = Worksheet;
@@ -9285,7 +9020,7 @@ namespace Dt.Cells.UI
                 }
                 if (IsTouchSelectingCells)
                 {
-                    ContinueTouchSelectingCells(_currentGestureAction.ActionCurrentPosition);
+                    ContinueTouchSelectingCells(MousePosition);
                 }
                 if (IsTouchSelectingRows)
                 {
@@ -9333,46 +9068,6 @@ namespace Dt.Cells.UI
         bool PreviewLeaveCell(int row, int column)
         {
             return (((row != Worksheet.ActiveRowIndex) || (column != Worksheet.ActiveColumnIndex)) && RaiseLeaveCell(Worksheet.ActiveRowIndex, Worksheet.ActiveColumnIndex, row, column));
-        }
-
-        internal virtual void ProcessDoubleTap(Windows.Foundation.Point point)
-        {
-            UpdateTouchHitTestInfo(point);
-            HitTestInformation savedHitTestInformation = GetSavedHitTestInformation();
-            if (((savedHitTestInformation.HitTestType == HitTestType.Viewport) && (savedHitTestInformation.ViewportInfo.Row > -1)) && (savedHitTestInformation.ViewportInfo.Column > -1))
-            {
-                if ((_touchToolbarPopup != null) && _touchToolbarPopup.IsOpen)
-                {
-                    _touchToolbarPopup.IsOpen = false;
-                }
-                SetSelection(savedHitTestInformation.ViewportInfo.Row, savedHitTestInformation.ViewportInfo.Column, 1, 1);
-                DoubleClickStartCellEditing(savedHitTestInformation.ViewportInfo.Row, savedHitTestInformation.ViewportInfo.Column);
-                RaiseCellDoubleClick(point);
-                RefreshSelection();
-            }
-            else
-            {
-                savedHitTestInformation = TouchHitTest(point.X, point.Y);
-                if (savedHitTestInformation.HitTestType == HitTestType.ColumnHeader)
-                {
-                    AutoFitColumnForTouch(savedHitTestInformation);
-                }
-                else if (savedHitTestInformation.HitTestType == HitTestType.RowHeader)
-                {
-                    AutoFitRowForTouch(savedHitTestInformation);
-                }
-                else if (savedHitTestInformation.HitTestType == HitTestType.Corner)
-                {
-                    if (savedHitTestInformation.HeaderInfo.InColumnResize)
-                    {
-                        AutoFitColumnForTouch(savedHitTestInformation);
-                    }
-                    else if (savedHitTestInformation.HeaderInfo.InRowResize)
-                    {
-                        AutoFitRowForTouch(savedHitTestInformation);
-                    }
-                }
-            }
         }
 
         internal void ProcessIMEInputInWinRT(KeyRoutedEventArgs e)
@@ -9662,7 +9357,7 @@ namespace Dt.Cells.UI
         {
             if (IsWorking)
             {
-                HitTestInformation savedHitTestInformation = GetSavedHitTestInformation();
+                HitTestInformation savedHitTestInformation = GetHitInfo();
                 SheetLayout sheetLayout = GetSheetLayout();
                 ViewportInfo viewportInfo = GetViewportInfo();
                 double viewportX = sheetLayout.GetViewportX(savedHitTestInformation.ColumnViewportIndex);
@@ -9774,69 +9469,6 @@ namespace Dt.Cells.UI
                 if (viewportRowsPresenter != null)
                 {
                     viewportRowsPresenter.SendFirstKey(c, replace);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Occurs when touch holding happening
-        /// </summary>
-        /// <param name="point">The current point related to SheetView</param>
-        internal virtual void ProcessTouchHold(Windows.Foundation.Point point)
-        {
-        }
-
-        void RaiseCellClick(PointerMouseRoutedEventArgs e, MouseButtonType button)
-        {
-            if ((CellClick != null) && (_eventSuspended == 0))
-            {
-                Windows.Foundation.Point position = e.GetPosition(this);
-                HitTestInformation information = HitTest(position.X, position.Y);
-                CellClickEventArgs args = null;
-                Windows.Foundation.Point point2 = new Windows.Foundation.Point(-1.0, -1.0);
-                if (information.HitTestType == HitTestType.Viewport)
-                {
-                    args = CreateCellClickEventArgs(information.ViewportInfo.Row, information.ViewportInfo.Column, Worksheet.SpanModel, SheetArea.Cells, button);
-                    point2 = new Windows.Foundation.Point((double)information.ViewportInfo.Row, (double)information.ViewportInfo.Column);
-                }
-                else if (information.HitTestType == HitTestType.RowHeader)
-                {
-                    args = CreateCellClickEventArgs(information.HeaderInfo.Row, information.HeaderInfo.Column, Worksheet.RowHeaderSpanModel, SheetArea.CornerHeader | SheetArea.RowHeader, button);
-                    point2 = new Windows.Foundation.Point((double)information.HeaderInfo.Row, (double)information.HeaderInfo.Column);
-                }
-                else if (information.HitTestType == HitTestType.ColumnHeader)
-                {
-                    args = CreateCellClickEventArgs(information.HeaderInfo.Row, information.HeaderInfo.Column, Worksheet.ColumnHeaderSpanModel, SheetArea.ColumnHeader, button);
-                    point2 = new Windows.Foundation.Point((double)information.HeaderInfo.Row, (double)information.HeaderInfo.Column);
-                }
-                if (((args != null) && (point2.X != -1.0)) && ((point2.Y != -1.0) && point2.Equals(_lastClickLocation)))
-                {
-                    CellClick(this, args);
-                }
-            }
-        }
-
-        void RaiseCellDoubleClick(Windows.Foundation.Point point)
-        {
-            if ((CellDoubleClick != null) && (_eventSuspended == 0))
-            {
-                HitTestInformation information = HitTest(point.X, point.Y);
-                CellDoubleClickEventArgs args = null;
-                if (information.HitTestType == HitTestType.Viewport)
-                {
-                    args = new CellDoubleClickEventArgs(SheetArea.Cells, information.ViewportInfo.Row, information.ViewportInfo.Column);
-                }
-                else if (information.HitTestType == HitTestType.RowHeader)
-                {
-                    args = new CellDoubleClickEventArgs(SheetArea.CornerHeader | SheetArea.RowHeader, information.HeaderInfo.Row, information.HeaderInfo.Column);
-                }
-                else if (information.HitTestType == HitTestType.ColumnHeader)
-                {
-                    args = new CellDoubleClickEventArgs(SheetArea.ColumnHeader, information.HeaderInfo.Row, information.HeaderInfo.Column);
-                }
-                if (args != null)
-                {
-                    CellDoubleClick(this, args);
                 }
             }
         }
@@ -11483,11 +11115,6 @@ namespace Dt.Cells.UI
             return Math.Floor(value);
         }
 
-        internal void SaveHitTestInfo(HitTestInformation hitTestInfo)
-        {
-            _positionInfo = hitTestInfo;
-        }
-
         /// <summary>
         /// Sets the active cell of the sheet.
         /// </summary>
@@ -11785,7 +11412,7 @@ namespace Dt.Cells.UI
                 }
                 if (!IsWorking)
                 {
-                    SaveHitTestInfo(null);
+                    SaveHitInfo(null);
                 }
             }
         }
@@ -11851,7 +11478,7 @@ namespace Dt.Cells.UI
                 }
                 if (!IsWorking)
                 {
-                    SaveHitTestInfo(null);
+                    SaveHitInfo(null);
                 }
             }
         }
@@ -12139,7 +11766,7 @@ namespace Dt.Cells.UI
 
         void StartCellSelecting()
         {
-            HitTestInformation savedHitTestInformation = GetSavedHitTestInformation();
+            HitTestInformation savedHitTestInformation = GetHitInfo();
             if (savedHitTestInformation.ViewportInfo != null)
             {
                 int row = savedHitTestInformation.ViewportInfo.Row;
@@ -12204,7 +11831,7 @@ namespace Dt.Cells.UI
 
         void StartColumnResizing()
         {
-            HitTestInformation savedHitTestInformation = GetSavedHitTestInformation();
+            HitTestInformation savedHitTestInformation = GetHitInfo();
             SheetLayout sheetLayout = GetSheetLayout();
             ColumnLayout viewportResizingColumnLayoutFromX = null;
             IsWorking = true;
@@ -12267,7 +11894,7 @@ namespace Dt.Cells.UI
 
         void StartColumnSelecting()
         {
-            HitTestInformation savedHitTestInformation = GetSavedHitTestInformation();
+            HitTestInformation savedHitTestInformation = GetHitInfo();
             if ((savedHitTestInformation.HitTestType == HitTestType.Empty) || (savedHitTestInformation.HeaderInfo == null))
             {
                 savedHitTestInformation = HitTest(_touchStartPoint.X, _touchStartPoint.Y);
@@ -12427,7 +12054,7 @@ namespace Dt.Cells.UI
         void StartRowResizing()
         {
             Action action = null;
-            HitTestInformation savedHitTestInformation = GetSavedHitTestInformation();
+            HitTestInformation savedHitTestInformation = GetHitInfo();
             SheetLayout sheetLayout = GetSheetLayout();
             RowLayout viewportResizingRowLayoutFromY = null;
             IsResizingRows = true;
@@ -12485,7 +12112,7 @@ namespace Dt.Cells.UI
 
         void StartRowsSelecting()
         {
-            HitTestInformation savedHitTestInformation = GetSavedHitTestInformation();
+            HitTestInformation savedHitTestInformation = GetHitInfo();
             if ((savedHitTestInformation.HitTestType == HitTestType.Empty) || (savedHitTestInformation.HeaderInfo == null))
             {
                 savedHitTestInformation = HitTest(_touchStartPoint.X, _touchStartPoint.Y);
@@ -12574,7 +12201,7 @@ namespace Dt.Cells.UI
         {
             if (IsWorking)
             {
-                HitTestInformation savedHitTestInformation = GetSavedHitTestInformation();
+                HitTestInformation savedHitTestInformation = GetHitInfo();
                 if (((savedHitTestInformation.HitTestType == HitTestType.Viewport) || (savedHitTestInformation.HitTestType == HitTestType.RowHeader)) || ((savedHitTestInformation.HitTestType == HitTestType.FloatingObject) || (savedHitTestInformation.HitTestType == HitTestType.FormulaSelection)))
                 {
                     double viewportHeight = GetViewportHeight(savedHitTestInformation.RowViewportIndex);
@@ -12619,7 +12246,7 @@ namespace Dt.Cells.UI
 
         void StartTapSelectCells()
         {
-            HitTestInformation savedHitTestInformation = GetSavedHitTestInformation();
+            HitTestInformation savedHitTestInformation = GetHitInfo();
             int row = savedHitTestInformation.ViewportInfo.Row;
             int column = savedHitTestInformation.ViewportInfo.Column;
             CloseTouchToolbar();
@@ -12707,7 +12334,7 @@ namespace Dt.Cells.UI
 
         void StartTouchColumnResizing()
         {
-            HitTestInformation savedHitTestInformation = GetSavedHitTestInformation();
+            HitTestInformation savedHitTestInformation = GetHitInfo();
             SheetLayout sheetLayout = GetSheetLayout();
             ColumnLayout viewportResizingColumnLayoutFromXForTouch = null;
             IsWorking = true;
@@ -12816,7 +12443,7 @@ namespace Dt.Cells.UI
         void StartTouchRowResizing()
         {
             Action action = null;
-            HitTestInformation savedHitTestInformation = GetSavedHitTestInformation();
+            HitTestInformation savedHitTestInformation = GetHitInfo();
             SheetLayout sheetLayout = GetSheetLayout();
             RowLayout viewportResizingRowLayoutFromYForTouch = null;
             _DoTouchResizing = false;
@@ -12872,20 +12499,6 @@ namespace Dt.Cells.UI
                     UpdateResizeToolTip(GetVerticalResizeTip(viewportResizingRowLayoutFromYForTouch.Height), false);
                 }
             }
-        }
-
-        internal virtual bool StartTouchTap(Windows.Foundation.Point point)
-        {
-            if (IsMouseInEditor() || IsMouseInRangeGroup())
-            {
-                return false;
-            }
-            if (!CanSelectFormula)
-            {
-                FocusInternal();
-            }
-            _lastClickPoint = point;
-            return true;
         }
 
         /// <summary>
@@ -13441,7 +13054,7 @@ namespace Dt.Cells.UI
         {
             if ((_mouseCursor != null) && (_mouseCursor.Opacity != 0.0))
             {
-                HitTestInformation savedHitTestInformation = GetSavedHitTestInformation();
+                HitTestInformation savedHitTestInformation = GetHitInfo();
                 if ((((savedHitTestInformation != null) && (savedHitTestInformation.ViewportInfo != null)) && savedHitTestInformation.ViewportInfo.InDragFillIndicator) || IsDraggingFill)
                 {
                     bool flag;
@@ -13496,7 +13109,7 @@ namespace Dt.Cells.UI
 
         void UpdateDragFillViewportInfoAndStartTimer()
         {
-            HitTestInformation savedHitTestInformation = GetSavedHitTestInformation();
+            HitTestInformation savedHitTestInformation = GetHitInfo();
             _dragStartRowViewport = savedHitTestInformation.RowViewportIndex;
             _dragStartColumnViewport = savedHitTestInformation.ColumnViewportIndex;
             _dragToRowViewport = savedHitTestInformation.RowViewportIndex;
@@ -13597,7 +13210,7 @@ namespace Dt.Cells.UI
                 TrackersContainer.Children.Add(_dragDropIndicator);
             }
             _dragDropFromRange = fromRange;
-            HitTestInformation savedHitTestInformation = GetSavedHitTestInformation();
+            HitTestInformation savedHitTestInformation = GetHitInfo();
             if ((savedHitTestInformation != null) && (savedHitTestInformation.ViewportInfo != null))
             {
                 int row = savedHitTestInformation.ViewportInfo.Row;
@@ -13750,7 +13363,7 @@ namespace Dt.Cells.UI
             }
             else
             {
-                HitTestInformation savedHitTestInformation = GetSavedHitTestInformation();
+                HitTestInformation savedHitTestInformation = GetHitInfo();
                 if (MousePosition.X > savedHitTestInformation.HitPoint.X)
                 {
                     _dragToColumn = DragFillStartViewportRightColumn;
@@ -13791,7 +13404,7 @@ namespace Dt.Cells.UI
             ColumnLayout viewportColumnLayoutNearX = GetViewportColumnLayoutNearX(_dragToColumnViewport, MousePosition.X);
             if ((viewportColumnLayoutNearX == null) || (GetViewportColumnLayoutModel(_dragToColumnViewport).FindColumn(viewportColumnLayoutNearX.Column) == null))
             {
-                double x = GetSavedHitTestInformation().HitPoint.X;
+                double x = GetHitInfo().HitPoint.X;
                 int columnViewportCount = GetViewportInfo().ColumnViewportCount;
                 if (MousePosition.X < x)
                 {
@@ -13832,7 +13445,7 @@ namespace Dt.Cells.UI
             }
             else
             {
-                HitTestInformation savedHitTestInformation = GetSavedHitTestInformation();
+                HitTestInformation savedHitTestInformation = GetHitInfo();
                 if (MousePosition.Y > savedHitTestInformation.HitPoint.Y)
                 {
                     _dragToRow = DragFillStartViewportBottomRow;
@@ -13873,7 +13486,7 @@ namespace Dt.Cells.UI
             RowLayout viewportRowLayoutNearY = GetViewportRowLayoutNearY(_dragToRowViewport, MousePosition.Y);
             if ((viewportRowLayoutNearY == null) || (GetViewportRowLayoutModel(_dragToRowViewport).FindRow(viewportRowLayoutNearY.Row) == null))
             {
-                double y = GetSavedHitTestInformation().HitPoint.Y;
+                double y = GetHitInfo().HitPoint.Y;
                 int rowViewportCount = GetViewportInfo().RowViewportCount;
                 if (MousePosition.Y < y)
                 {
@@ -13914,7 +13527,7 @@ namespace Dt.Cells.UI
             }
             else
             {
-                HitTestInformation savedHitTestInformation = GetSavedHitTestInformation();
+                HitTestInformation savedHitTestInformation = GetHitInfo();
                 if (MousePosition.X > savedHitTestInformation.HitPoint.X)
                 {
                     _dragToColumn = GetViewportRightColumn(_dragStartColumnViewport);
@@ -13960,7 +13573,7 @@ namespace Dt.Cells.UI
             }
             else
             {
-                HitTestInformation savedHitTestInformation = GetSavedHitTestInformation();
+                HitTestInformation savedHitTestInformation = GetHitInfo();
                 if (MousePosition.Y > savedHitTestInformation.HitPoint.Y)
                 {
                     _dragToRow = GetViewportBottomRow(_dragStartRowViewport);
@@ -14299,7 +13912,7 @@ namespace Dt.Cells.UI
                 double offsetY = _mouseDownPosition.Y - 10.0;
                 if (scrollTo == -1)
                 {
-                    scrollTo = GetViewportTopRow(GetSavedHitTestInformation().RowViewportIndex) + 1;
+                    scrollTo = GetViewportTopRow(GetHitInfo().RowViewportIndex) + 1;
                 }
                 TooltipHelper.ShowTooltip(GetVericalScrollTip(scrollTo), offsetX, offsetY);
             }
@@ -14309,7 +13922,7 @@ namespace Dt.Cells.UI
                 double num4 = _mouseDownPosition.Y - 40.0;
                 if (scrollTo == -1)
                 {
-                    scrollTo = GetViewportLeftColumn(GetSavedHitTestInformation().ColumnViewportIndex) + 1;
+                    scrollTo = GetViewportLeftColumn(GetHitInfo().ColumnViewportIndex) + 1;
                 }
                 TooltipHelper.ShowTooltip(GetHorizentalScrollTip(scrollTo), num3, num4);
             }
@@ -14356,26 +13969,11 @@ namespace Dt.Cells.UI
         /// 
         /// </summary>
         /// <param name="point"></param>
-        protected void UpdateTouchHitTestInfo(Windows.Foundation.Point point)
-        {
-            HitTestInformation savedHitTestInformation = GetSavedHitTestInformation();
-            Windows.Foundation.Point point2 = point;
-            if (point2 != savedHitTestInformation.HitPoint)
-            {
-                SaveHitTestInfo(savedHitTestInformation = HitTest(point2.X, point2.Y));
-            }
-            _lastClickPoint = new Windows.Foundation.Point(point2.X, point2.Y);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="point"></param>
         protected void UpdateTouchHitTestInfoForHold(Windows.Foundation.Point point)
         {
-            GetSavedHitTestInformation();
+            GetHitInfo();
             Windows.Foundation.Point point2 = point;
-            SaveHitTestInfo(TouchHitTest(point2.X, point2.Y));
+            SaveHitInfo(TouchHitTest(point2.X, point2.Y));
             _lastClickPoint = new Windows.Foundation.Point(point2.X, point2.Y);
         }
 
@@ -18050,7 +17648,7 @@ namespace Dt.Cells.UI
 
             void StartCellSelecting()
             {
-                HitTestInformation savedHitTestInformation = _sheetView.GetSavedHitTestInformation();
+                HitTestInformation savedHitTestInformation = _sheetView.GetHitInfo();
                 int row = savedHitTestInformation.ViewportInfo.Row;
                 int column = savedHitTestInformation.ViewportInfo.Column;
                 int rowCount = 1;
@@ -18094,7 +17692,7 @@ namespace Dt.Cells.UI
 
             void StartColumnSelecting()
             {
-                HitTestInformation savedHitTestInformation = _sheetView.GetSavedHitTestInformation();
+                HitTestInformation savedHitTestInformation = _sheetView.GetHitInfo();
                 if ((savedHitTestInformation.HitTestType == HitTestType.Empty) || (savedHitTestInformation.HeaderInfo == null))
                 {
                     savedHitTestInformation = _sheetView.HitTest(_sheetView._touchStartPoint.X, _sheetView._touchStartPoint.Y);
@@ -18140,7 +17738,7 @@ namespace Dt.Cells.UI
                 {
                     _sheetView.IsWorking = true;
                     _isDragDropping = true;
-                    HitTestInformation savedHitTestInformation = _sheetView.GetSavedHitTestInformation();
+                    HitTestInformation savedHitTestInformation = _sheetView.GetHitInfo();
                     FormulaSelectionItem item = Items[savedHitTestInformation.FormulaSelectionInfo.SelectionIndex];
                     _sheetView._rowOffset = Math.Max(0, Math.Min((int)(savedHitTestInformation.ViewportInfo.Row - item.Range.Row), (int)(item.Range.RowCount - 1)));
                     _sheetView._columnOffset = Math.Max(0, Math.Min((int)(savedHitTestInformation.ViewportInfo.Column - item.Range.Column), (int)(item.Range.ColumnCount - 1)));
@@ -18166,7 +17764,7 @@ namespace Dt.Cells.UI
                 {
                     _sheetView.IsWorking = true;
                     _isDragResizing = true;
-                    HitTestInformation savedHitTestInformation = _sheetView.GetSavedHitTestInformation();
+                    HitTestInformation savedHitTestInformation = _sheetView.GetHitInfo();
                     _sheetView._dragStartRowViewport = savedHitTestInformation.RowViewportIndex;
                     _sheetView._dragStartColumnViewport = savedHitTestInformation.ColumnViewportIndex;
                     _sheetView._dragToRowViewport = savedHitTestInformation.RowViewportIndex;
@@ -18218,7 +17816,7 @@ namespace Dt.Cells.UI
 
             void StartRowSelecting()
             {
-                HitTestInformation savedHitTestInformation = _sheetView.GetSavedHitTestInformation();
+                HitTestInformation savedHitTestInformation = _sheetView.GetHitInfo();
                 SheetLayout sheetLayout = _sheetView.GetSheetLayout();
                 int row = savedHitTestInformation.HeaderInfo.Row;
                 _sheetView.GetViewportLeftColumn((sheetLayout.FrozenWidth > 0.0) ? -1 : 0);
@@ -18411,7 +18009,7 @@ namespace Dt.Cells.UI
 
             void TouchSelectCell()
             {
-                HitTestInformation savedHitTestInformation = _sheetView.GetSavedHitTestInformation();
+                HitTestInformation savedHitTestInformation = _sheetView.GetHitInfo();
                 int row = savedHitTestInformation.ViewportInfo.Row;
                 int column = savedHitTestInformation.ViewportInfo.Column;
                 int rowCount = 1;
@@ -18437,7 +18035,7 @@ namespace Dt.Cells.UI
 
             void TouchSelectColumn()
             {
-                HitTestInformation savedHitTestInformation = _sheetView.GetSavedHitTestInformation();
+                HitTestInformation savedHitTestInformation = _sheetView.GetHitInfo();
                 if ((savedHitTestInformation.HitTestType == HitTestType.Empty) || (savedHitTestInformation.HeaderInfo == null))
                 {
                     savedHitTestInformation = _sheetView.HitTest(_sheetView._touchStartPoint.X, _sheetView._touchStartPoint.Y);
@@ -18458,7 +18056,7 @@ namespace Dt.Cells.UI
 
             void TouchSelectRow()
             {
-                HitTestInformation savedHitTestInformation = _sheetView.GetSavedHitTestInformation();
+                HitTestInformation savedHitTestInformation = _sheetView.GetHitInfo();
                 SheetLayout sheetLayout = _sheetView.GetSheetLayout();
                 int row = savedHitTestInformation.HeaderInfo.Row;
                 _sheetView.GetViewportLeftColumn((sheetLayout.FrozenWidth > 0.0) ? -1 : 0);
@@ -18501,7 +18099,7 @@ namespace Dt.Cells.UI
 
             void UpdateSelection()
             {
-                HitTestInformation savedHitTestInformation = _sheetView.GetSavedHitTestInformation();
+                HitTestInformation savedHitTestInformation = _sheetView.GetHitInfo();
                 FormulaSelectionItem item = Items[savedHitTestInformation.FormulaSelectionInfo.SelectionIndex];
                 CellRange range = item.Range;
                 int row = _sheetView._dragToRow - _sheetView._rowOffset;
@@ -18536,7 +18134,7 @@ namespace Dt.Cells.UI
 
             void UpdateSelectionForResize()
             {
-                HitTestInformation savedHitTestInformation = _sheetView.GetSavedHitTestInformation();
+                HitTestInformation savedHitTestInformation = _sheetView.GetHitInfo();
                 FormulaSelectionItem item = Items[savedHitTestInformation.FormulaSelectionInfo.SelectionIndex];
                 int column = Math.Min(_sheetView._dragToColumn, _resizingAnchorColumn);
                 int row = Math.Min(_sheetView._dragToRow, _resizingAnchorRow);

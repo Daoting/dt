@@ -106,7 +106,7 @@ namespace Dt.Cells.UI
             }
             if (!IsWorking)
             {
-                SaveHitTestInfo(null);
+                SaveHitInfo(null);
             }
 
             SpreadLayout spreadLayout = GetSpreadLayout();

@@ -1,38 +1,235 @@
 ﻿using Dt.Cells.Data;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using Windows.Devices.Input;
 using Windows.Foundation;
-using Windows.UI;
+using Windows.UI.Core;
 using Windows.UI.Input;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Shapes;
 
 namespace Dt.Cells.UI
 {
     public partial class SpreadView : SheetView
     {
-
-        internal override void OnPointerMoved(object sender, PointerRoutedEventArgs e)
+        #region 鼠标按下
+        protected override bool StartMouseClick(PointerRoutedEventArgs e)
         {
-            if (e.Pointer.PointerDeviceType == 0)
+            if (IsMouseInScrollBar())
             {
-                UpdateScrollBarIndicatorMode((ScrollingIndicatorMode)1);
+                return false;
+            }
+
+            if (IsEditing && ((IsMouseInSplitBar() || IsMouseInSplitBox()) || IsMouseInTabSplitBox()))
+            {
+                return false;
+            }
+
+            Point position = e.GetCurrentPoint(this).Position;
+            if (!GetTabStripRectangle().Contains(position))
+            {
+                return base.StartMouseClick(e);
+            }
+
+            if (CanSelectFormula)
+            {
+                IsSwitchingSheet = true;
+                EditorConnector.ClearFlickingItems();
+                if (!EditorConnector.IsInOtherSheet)
+                {
+                    EditorConnector.IsInOtherSheet = true;
+                    EditorConnector.SheetIndex = Worksheet.Workbook.ActiveSheetIndex;
+                    EditorConnector.RowIndex = Worksheet.ActiveRowIndex;
+                    EditorConnector.ColumnIndex = Worksheet.ActiveColumnIndex;
+                }
+            }
+
+            StopCellEditing(CanSelectFormula);
+            if (_tabStrip != null)
+            {
+                _tabStrip.StopTabEditing(false);
+            }
+            _lastClickPoint = position;
+            _routedEventArgs = e;
+            return true;
+        }
+
+        protected override void ProcessMouseLeftButtonDown(HitTestInformation p_hitInfo)
+        {
+            GetSpreadLayout();
+            if (!_isDoubleClick
+                || (p_hitInfo.HitTestType != HitTestType.ColumnSplitBar && p_hitInfo.HitTestType != HitTestType.RowSplitBar))
+            {
+                switch (p_hitInfo.HitTestType)
+                {
+                    case HitTestType.TabStrip:
+                        if (_routedEventArgs != null)
+                        {
+                            _tabStrip.ProcessMouseClickSheetTab(_routedEventArgs);
+                        }
+                        return;
+
+                    case HitTestType.RowSplitBar:
+                        StartRowSplitting();
+                        if (p_hitInfo.ColumnViewportIndex >= 0)
+                        {
+                            StartColumnSplitting();
+                        }
+                        return;
+
+                    case HitTestType.ColumnSplitBar:
+                        StartColumnSplitting();
+                        if (p_hitInfo.RowViewportIndex >= 0)
+                        {
+                            StartRowSplitting();
+                        }
+                        return;
+
+                    case HitTestType.RowSplitBox:
+                        StartRowSplitting();
+                        return;
+
+                    case HitTestType.ColumnSplitBox:
+                        StartColumnSplitting();
+                        return;
+
+                    case HitTestType.TabSplitBox:
+                        StartTabStripResizing();
+                        return;
+                }
+                base.ProcessMouseLeftButtonDown(p_hitInfo);
+            }
+        }
+        #endregion
+
+        #region 鼠标移动
+        protected override void OnPointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+            if (e.Pointer.PointerDeviceType == PointerDeviceType.Touch)
+            {
+                UpdateScrollBarIndicatorMode(ScrollingIndicatorMode.TouchIndicator);
             }
             base.OnPointerMoved(sender, e);
         }
 
-        internal override void OnPointerReleased(object sender, PointerRoutedEventArgs e)
+        protected override void ProcessMouseMove(HitTestInformation p_hitInfo)
         {
-            if (e.Pointer.PointerDeviceType == 0)
+            // 不知何用？hdt
+            //GetSpreadLayout();
+
+            bool flag = false;
+            switch (p_hitInfo.HitTestType)
+            {
+                case HitTestType.RowSplitBar:
+                    if ((!IsWorking && !IsEditing) && !SpreadSheet.Workbook.Protect)
+                    {
+                        if (InputDeviceType != InputDeviceType.Touch)
+                        {
+                            if (p_hitInfo.ColumnViewportIndex < 0)
+                            {
+                                SetBuiltInCursor((CoreCursorType)8);
+                            }
+                            else
+                            {
+                                SetBuiltInCursor((CoreCursorType)3);
+                            }
+                        }
+                        flag = true;
+                    }
+                    goto Label_01B3;
+
+                case HitTestType.ColumnSplitBar:
+                    if ((IsWorking || IsEditing) || SpreadSheet.Workbook.Protect)
+                    {
+                        goto Label_01B3;
+                    }
+                    if (InputDeviceType != InputDeviceType.Touch)
+                    {
+                        if (p_hitInfo.RowViewportIndex < 0)
+                        {
+                            SetBuiltInCursor((CoreCursorType)10);
+                            break;
+                        }
+                        SetBuiltInCursor((CoreCursorType)3);
+                    }
+                    break;
+
+                case HitTestType.RowSplitBox:
+                    if ((!IsWorking && !IsEditing) && !SpreadSheet.Workbook.Protect)
+                    {
+                        if (InputDeviceType != InputDeviceType.Touch)
+                        {
+                            SetBuiltInCursor((CoreCursorType)8);
+                        }
+                        flag = true;
+                    }
+                    goto Label_01B3;
+
+                case HitTestType.ColumnSplitBox:
+                    if ((!IsWorking && !IsEditing) && !SpreadSheet.Workbook.Protect)
+                    {
+                        if (InputDeviceType != InputDeviceType.Touch)
+                        {
+                            SetBuiltInCursor((CoreCursorType)10);
+                        }
+                        flag = true;
+                    }
+                    goto Label_01B3;
+
+                case HitTestType.TabSplitBox:
+                    if (!IsWorking && !IsEditing)
+                    {
+                        if (InputDeviceType != InputDeviceType.Touch)
+                        {
+                            SetBuiltInCursor((CoreCursorType)10);
+                        }
+                        flag = true;
+                    }
+                    goto Label_01B3;
+
+                default:
+                    goto Label_01B3;
+            }
+            flag = true;
+        Label_01B3:
+            if (IsColumnSplitting)
+            {
+                ContinueColumnSplitting();
+            }
+            if (IsRowSplitting)
+            {
+                ContinueRowSplitting();
+            }
+            if (IsTabStripResizing)
+            {
+                ContinueTabStripResizing();
+            }
+
+            if (flag)
+            {
+                if (!IsWorking)
+                {
+                    _hoverManager.DoHover(p_hitInfo);
+                }
+            }
+            else
+            {
+                base.ProcessMouseMove(p_hitInfo);
+            }
+            UpdateScrollBarIndicatorMode(ScrollingIndicatorMode.MouseIndicator);
+        }
+        #endregion
+
+        #region 鼠标释放
+        protected override void OnPointerReleased(object sender, PointerRoutedEventArgs e)
+        {
+            if (e.Pointer.PointerDeviceType == PointerDeviceType.Touch)
             {
                 IList<PointerPoint> intermediatePoints = e.GetIntermediatePoints(this);
-                if ((_primaryTouchDeviceId.HasValue && (intermediatePoints != null)) && (intermediatePoints.Count > 0))
+                if (_primaryTouchDeviceId.HasValue
+                    && intermediatePoints != null
+                    && intermediatePoints.Count > 0)
                 {
                     using (IEnumerator<PointerPoint> enumerator = intermediatePoints.GetEnumerator())
                     {
@@ -53,7 +250,8 @@ namespace Dt.Cells.UI
                     }
                 }
             }
-            if ((TabStrip != null) && TabStripEditable)
+
+            if (TabStrip != null && TabStripEditable)
             {
                 Point point = e.GetCurrentPoint(this).Position;
                 if ((HitTest(point.X, point.Y).HitTestType == HitTestType.TabStrip) && TabStrip.StayInEditing(point))
@@ -65,84 +263,200 @@ namespace Dt.Cells.UI
             base.OnPointerReleased(sender, e);
         }
 
-        protected override void OnManipulationStarted(Point point)
+        protected override bool EndMouseClick(PointerRoutedEventArgs e)
         {
-            base.UpdateTouchHitTestInfo(new Point(point.X, point.Y));
-            HitTestInformation savedHitTestInformation = base.GetSavedHitTestInformation();
-            base._touchStartHitTestInfo = savedHitTestInformation;
-            base._touchZoomNewFactor = Worksheet.ZoomFactor;
-            if ((savedHitTestInformation != null) && (savedHitTestInformation.HitTestType != HitTestType.Empty))
+            if (GetHitInfo().HitTestType == HitTestType.TabStrip)
+            {
+                return false;
+            }
+            return base.EndMouseClick(e);
+        }
+
+        protected override void ProcessMouseLeftButtonUp(HitTestInformation p_hitInfo)
+        {
+            if ((IsColumnSplitting || IsRowSplitting) || IsTabStripResizing)
+            {
+                ClearMouseLeftButtonDownStates();
+                if (!IsEditing)
+                {
+                    FocusInternal();
+                }
+            }
+            else
+            {
+                base.ProcessMouseLeftButtonUp(p_hitInfo);
+            }
+        }
+        #endregion
+
+        #region 鼠标离开
+        protected override void ResetTouchStates(IList<PointerPoint> ps)
+        {
+            if (IsTouchColumnSplitting)
+            {
+                EndColumnSplitting();
+            }
+            if (IsTouchRowSplitting)
+            {
+                EndRowSplitting();
+            }
+            if (IsTouchTabStripResizing)
+            {
+                EndTabStripResizing();
+            }
+            base.ResetTouchStates(ps);
+        }
+        #endregion
+
+        #region 鼠标双击
+        protected override void ProcessMouseLeftButtonDoubleClick(DoubleTappedRoutedEventArgs e)
+        {
+            HitTestInformation savedHitTestInformation = base.GetHitInfo();
+            if ((!IsEditing || ((savedHitTestInformation.HitTestType != HitTestType.RowSplitBar) && (savedHitTestInformation.HitTestType != HitTestType.ColumnSplitBar))) && ((savedHitTestInformation.HitTestType != HitTestType.Viewport) || !savedHitTestInformation.ViewportInfo.InSelectionDrag))
+            {
+                switch (savedHitTestInformation.HitTestType)
+                {
+                    case HitTestType.RowSplitBar:
+                    case HitTestType.ColumnSplitBar:
+                        ProcessSplitBarDoubleClick(savedHitTestInformation);
+                        return;
+
+                    case HitTestType.TabStrip:
+                        {
+                            if (((_tabStrip == null) || !TabStripEditable) || (SpreadSheet.Workbook.Protect || (base._routedEventArgs == null)))
+                            {
+                                break;
+                            }
+                            _tabStrip.StartTabEditing(_routedEventArgs);
+                            if (!_tabStrip.IsEditing)
+                            {
+                                break;
+                            }
+                            int sheetTabIndex = -1;
+                            if (_tabStrip.ActiveTab != null)
+                            {
+                                sheetTabIndex = _tabStrip.ActiveTab.SheetIndex;
+                            }
+                            base.RaiseSheetTabDoubleClick(sheetTabIndex);
+                            return;
+                        }
+                    default:
+                        base.ProcessMouseLeftButtonDoubleClick(e);
+                        break;
+                }
+            }
+        }
+        #endregion
+
+        #region 触摸开始
+        protected override void OnManipulationStarted()
+        {
+            UpdateHitInfo(_touchStartPoint);
+            _touchStartHitTestInfo = GetHitInfo();
+            _touchZoomNewFactor = Worksheet.ZoomFactor;
+            if ((_touchStartHitTestInfo != null) && (_touchStartHitTestInfo.HitTestType != HitTestType.Empty))
             {
                 InitTouchCacheInfomation();
             }
-            base.OnManipulationStarted(point);
+            base.OnManipulationStarted();
         }
+        #endregion
 
+        #region 触摸移动
         protected override void ProcessGestrueRecognizerManipulationUpdated(ManipulationUpdatedEventArgs e)
         {
-            if ((_currentGestureAction != null) && _currentGestureAction.IsValid)
+            Point curPos = GetPanelPosition(e.Position);
+            if (IsZero((double)(e.Cumulative.Scale - 1f)) || (_touchProcessedPointIds.Count == 1))
             {
-                if (IsZero((double)(e.Cumulative.Scale - 1f)) || (_touchProcessedPointIds.Count == 1))
+                ProcessTouchFreeDrag(curPos, new Point(-e.Delta.Translation.X, -e.Delta.Translation.Y));
+            }
+            else if ((!IsZero((double)(e.Cumulative.Scale - 1f)) && !IsTouchZooming) && CanUserZoom)
+            {
+                IsContinueTouchOperation = true;
+                _touchZoomInitFactor = Worksheet.ZoomFactor;
+                IsTouchZooming = true;
+                _touchZoomOrigin = curPos;
+                CloseTouchToolbar();
+                if (_touchStartHitTestInfo == null)
                 {
-                    _currentGestureAction.HandleSingleManipulationDelta(e.Position, e.Cumulative.Translation);
+                    _touchStartHitTestInfo = HitTest(curPos.X, curPos.Y);
                 }
-                else if ((!IsZero((double)(e.Cumulative.Scale - 1f)) && !base.IsTouchZooming) && base.CanUserZoom)
+                if (_zoomOriginHitTestInfo == null)
                 {
-                    base.IsContinueTouchOperation = true;
-                    base._touchZoomInitFactor = Worksheet.ZoomFactor;
-                    base.IsTouchZooming = true;
-                    base._touchZoomOrigin = e.Position;
-                    base.CloseTouchToolbar();
-                    if (base._touchStartHitTestInfo == null)
-                    {
-                        base._touchStartHitTestInfo = HitTest(e.Position.X, e.Position.Y);
-                    }
-                    if (base._zoomOriginHitTestInfo == null)
-                    {
-                        base._zoomOriginHitTestInfo = HitTest(e.Position.X, e.Position.Y);
-                    }
-                    base._touchZoomOrigin = e.Position;
-                    InitCachedTransform();
+                    _zoomOriginHitTestInfo = HitTest(curPos.X, curPos.Y);
                 }
-                else if (base.IsTouchZooming && (((!base.IsTouchDragFilling && !base.IsTouchDrapDropping) && (!IsEditing && !base.IsTouchSelectingCells)) && ((!base.IsTouchSelectingColumns && !base.IsTouchSelectingRows) && ((!base.IsTouchResizingColumns && !base.IsTouchResizingRows) && base.CanUserZoom))))
+                _touchZoomOrigin = curPos;
+                InitCachedTransform();
+            }
+            else if (IsTouchZooming
+                && !IsTouchDragFilling
+                && !IsTouchDrapDropping
+                && !IsEditing
+                && !IsTouchSelectingCells
+                && !IsTouchSelectingColumns
+                && !IsTouchSelectingRows
+                && !IsTouchResizingColumns
+                && !IsTouchResizingRows
+                && CanUserZoom)
+            {
+                double num = ((_touchZoomInitFactor * ((float)e.Cumulative.Scale)) * 100.0) / 100.0;
+                float scale = e.Delta.Scale;
+                if ((num < 0.5) || (num > 4.0))
                 {
-                    double num = ((base._touchZoomInitFactor * ((float)e.Cumulative.Scale)) * 100.0) / 100.0;
-                    float scale = e.Delta.Scale;
-                    if ((num < 0.5) || (num > 4.0))
-                    {
-                        scale = 1f;
-                    }
-                    UpdateCachedImageTransform(e.Position, e.Delta.Translation, (double)scale);
-                    if (num < 0.5)
-                    {
-                        num = 0.5;
-                    }
-                    if (num > 4.0)
-                    {
-                        num = 4.0;
-                    }
-                    base._touchZoomNewFactor = num;
-                    base.InvalidateMeasure();
+                    scale = 1f;
                 }
+                UpdateCachedImageTransform(curPos, e.Delta.Translation, (double)scale);
+                if (num < 0.5)
+                {
+                    num = 0.5;
+                }
+                if (num > 4.0)
+                {
+                    num = 4.0;
+                }
+                _touchZoomNewFactor = num;
+                InvalidateMeasure();
             }
         }
 
-        protected override void ProcessManipulationTranslation(Point currentPosition, Point offsetFromOrigin)
+        protected override void ProcessTouchFreeDrag(Point p_curPos, Point p_offset)
         {
-            if ((_currentGestureAction != null) && _currentGestureAction.IsValid)
-            {
-                _currentGestureAction.HandleSingleManipulationDelta(currentPosition, offsetFromOrigin);
-            }
-        }
+            if (Math.Abs(p_offset.X) < 1 && Math.Abs(p_offset.Y) < 1)
+                return;
 
-        internal override void ProcessTouchFreeDrag(Point startPoint, Point currentPoint, Point deltaPoint, DragOrientation orientation)
-        {
+            // 滑动方向
+            DragOrientation orientation;
+            if (p_offset.X == 0)
+            {
+                orientation = DragOrientation.Vertical;
+            }
+            else if (p_offset.Y == 0)
+            {
+                orientation = DragOrientation.Horizontal;
+            }
+            else
+            {
+                double num = Math.Atan(Math.Abs(p_offset.Y) / Math.Abs(p_offset.X)) * 57.295779513082323;
+                if (num > 55.0)
+                {
+                    orientation = DragOrientation.Vertical;
+                }
+                else if (num > 35.0)
+                {
+                    orientation = DragOrientation.Horizontal | DragOrientation.Vertical;
+                }
+                else
+                {
+                    orientation = DragOrientation.Horizontal;
+                }
+            }
+
+            MousePosition = p_curPos;
             if (!IsWorking)
             {
-                UpdateTouchHitTestInfo(currentPoint);
+                UpdateHitInfo(p_curPos);
             }
-            HitTestInformation savedHitTestInformation = GetSavedHitTestInformation();
-            MousePosition = currentPoint;
+            HitTestInformation savedHitTestInformation = GetHitInfo();
             if (!IsTouching)
                 return;
 
@@ -164,41 +478,41 @@ namespace Dt.Cells.UI
                 CloseTouchToolbar();
                 _updateViewportAfterTouch = true;
 
-                if (deltaPoint.X != 0.0 && (orientation & DragOrientation.Horizontal) == DragOrientation.Horizontal)
+                if (p_offset.X != 0.0 && (orientation & DragOrientation.Horizontal) == DragOrientation.Horizontal)
                 {
                     if ((orientation & DragOrientation.Vertical) == DragOrientation.None)
                     {
                         _translateOffsetY = 0.0;
                     }
 
-                    if (deltaPoint.X > 0.0)
+                    if (p_offset.X > 0.0)
                     {
                         _isTouchScrolling = true;
-                        TouchScrollLeft(startPoint, currentPoint, deltaPoint);
+                        TouchScrollLeft(p_curPos, p_offset);
                     }
                     else
                     {
                         _isTouchScrolling = true;
-                        TouchScrollRight(startPoint, currentPoint, deltaPoint);
+                        TouchScrollRight(p_curPos, p_offset);
                     }
                 }
 
-                if (deltaPoint.Y != 0.0 && (orientation & DragOrientation.Vertical) == DragOrientation.Vertical)
+                if (p_offset.Y != 0.0 && (orientation & DragOrientation.Vertical) == DragOrientation.Vertical)
                 {
                     if ((orientation & DragOrientation.Horizontal) == DragOrientation.None)
                     {
                         _translateOffsetX = 0.0;
                     }
 
-                    if (deltaPoint.Y > 0.0)
+                    if (p_offset.Y > 0.0)
                     {
                         _isTouchScrolling = true;
-                        TouchScrollUp(startPoint, currentPoint, deltaPoint);
+                        TouchScrollUp(p_curPos, p_offset);
                     }
                     else
                     {
                         _isTouchScrolling = true;
-                        TouchScrollBottom(startPoint, currentPoint, deltaPoint);
+                        TouchScrollBottom(p_curPos, p_offset);
                     }
                 }
 
@@ -271,15 +585,15 @@ namespace Dt.Cells.UI
             else if (savedHitTestInformation.HitTestType == HitTestType.TabStrip)
             {
                 IsTouchTabStripScrolling = true;
-                if ((deltaPoint.X != 0.0) && ((orientation & DragOrientation.Horizontal) == DragOrientation.Horizontal))
+                if ((p_offset.X != 0.0) && ((orientation & DragOrientation.Horizontal) == DragOrientation.Horizontal))
                 {
-                    if (deltaPoint.X > 0.0)
+                    if (p_offset.X > 0.0)
                     {
-                        TouchTabStripScrollLeft(startPoint, currentPoint, deltaPoint);
+                        TouchTabStripScrollLeft(p_curPos, p_offset);
                     }
-                    if (deltaPoint.X < 0.0)
+                    if (p_offset.X < 0.0)
                     {
-                        TouchTabStripScrollRight(startPoint, currentPoint, deltaPoint);
+                        TouchTabStripScrollRight(p_curPos, p_offset);
                     }
                     TabStrip.TabsPresenter.InvalidateMeasure();
                     TabStrip.TabsPresenter.InvalidateArrange();
@@ -291,11 +605,13 @@ namespace Dt.Cells.UI
             }
             else
             {
-                base.ProcessTouchFreeDrag(startPoint, currentPoint, deltaPoint, orientation);
+                base.ProcessTouchFreeDrag(p_curPos, p_offset);
             }
         }
+        #endregion
 
-        protected override void OnManipulationComplete(Point currentPoint)
+        #region 触摸结束
+        protected override void OnManipulationComplete()
         {
             IsContinueTouchOperation = false;
             CachedGripperLocation = null;
@@ -446,43 +762,142 @@ namespace Dt.Cells.UI
                     }
                 }
             }
-            base.OnManipulationComplete(currentPoint);
+            base.OnManipulationComplete();
+        }
+        #endregion
+
+        #region 触摸单/双击
+        protected override void ProcessTap(HitTestInformation p_hitInfo)
+        {
+            switch (p_hitInfo.HitTestType)
+            {
+                case HitTestType.HorizontalScrollBar:
+                    {
+                        int viewportLeftColumn = GetViewportLeftColumn(p_hitInfo.ColumnViewportIndex);
+                        HorizontalScrollBarTouchSmallDecrement(p_hitInfo.ColumnViewportIndex, viewportLeftColumn - 1);
+                        break;
+                    }
+                case HitTestType.VerticalScrollBar:
+                    {
+                        int viewportTopRow = GetViewportTopRow(p_hitInfo.RowViewportIndex);
+                        VerticalScrollBarTouchSmallDecrement(p_hitInfo.RowViewportIndex, viewportTopRow - 1);
+                        break;
+                    }
+                case HitTestType.TabStrip:
+                    _tabStrip.ProcessTap(p_hitInfo.HitPoint);
+                    break;
+            }
+            base.ProcessTap(p_hitInfo);
         }
 
-        internal override void ResetTouchStates(IList<PointerPoint> ps)
+        protected override void ProcessDoubleTap(HitTestInformation p_hitInfo)
         {
-            if (IsTouchColumnSplitting)
+            HitTestInformation hi = TouchHitTest(p_hitInfo.HitPoint.X, p_hitInfo.HitPoint.Y);
+            if (!IsEditing || ((hi.HitTestType != HitTestType.RowSplitBar) && (hi.HitTestType != HitTestType.ColumnSplitBar)))
             {
-                EndColumnSplitting();
+                if ((hi.HitTestType == HitTestType.RowSplitBar) || (hi.HitTestType == HitTestType.ColumnSplitBar))
+                {
+                    ProcessSplitBarDoubleTap(hi);
+                }
+                else if ((p_hitInfo.HitTestType != HitTestType.Viewport) || !p_hitInfo.ViewportInfo.InSelectionDrag)
+                {
+                    if (((p_hitInfo.HitTestType == HitTestType.TabStrip) && (_tabStrip != null)) && (TabStripEditable && !SpreadSheet.Workbook.Protect))
+                    {
+                        _tabStrip.StartTabTouchEditing(p_hitInfo.HitPoint);
+                        if (_tabStrip.IsEditing)
+                        {
+                            int sheetTabIndex = (_tabStrip.ActiveTab != null) ? _tabStrip.ActiveTab.SheetIndex : -1;
+                            base.RaiseSheetTabDoubleClick(sheetTabIndex);
+                        }
+                    }
+                    else
+                    {
+                        base.ProcessDoubleTap(p_hitInfo);
+                    }
+                }
             }
-            if (IsTouchRowSplitting)
-            {
-                EndRowSplitting();
-            }
-            if (base.IsTouchTabStripResizing)
-            {
-                EndTabStripResizing();
-            }
-            base.ResetTouchStates(ps);
         }
+        #endregion
 
-        internal override bool StartTouchTap(Point point)
+        #region HitTest
+        internal override HitTestInformation HitTest(double x, double y)
         {
-            if (IsEditing && ((IsMouseInSplitBar() || IsMouseInSplitBox()) || IsMouseInTabSplitBox()))
+            Point point = new Point(x, y);
+            SpreadLayout spreadLayout = GetSpreadLayout();
+            HitTestInformation information = new HitTestInformation
             {
-                return false;
-            }
-            if (!GetTabStripRectangle().Contains(point) || base.CanSelectFormula)
+                HitTestType = HitTestType.Empty,
+                ColumnViewportIndex = -2,
+                RowViewportIndex = -2,
+                HitPoint = point
+            };
+            if (GetTabStripRectangle().Contains(point))
             {
-                return base.StartTouchTap(point);
+                information.ColumnViewportIndex = 0;
+                information.HitTestType = HitTestType.TabStrip;
+                return information;
             }
-            base.StopCellEditing(false);
-            if (_tabStrip != null)
+            if (GetTabSplitBoxRectangle().Contains(point))
             {
-                _tabStrip.StopTabEditing(false);
+                information.ColumnViewportIndex = 0;
+                information.HitTestType = HitTestType.TabSplitBox;
+                return information;
             }
-            base._lastClickPoint = point;
-            return true;
+            for (int i = 0; i < spreadLayout.ColumnPaneCount; i++)
+            {
+                if (GetHorizontalScrollBarRectangle(i).Contains(point))
+                {
+                    information.ColumnViewportIndex = i;
+                    information.HitTestType = HitTestType.HorizontalScrollBar;
+                    return information;
+                }
+            }
+            for (int j = 0; j < spreadLayout.RowPaneCount; j++)
+            {
+                if (GetVerticalScrollBarRectangle(j).Contains(point))
+                {
+                    information.HitTestType = HitTestType.VerticalScrollBar;
+                    information.RowViewportIndex = j;
+                    return information;
+                }
+            }
+            for (int k = 0; k < spreadLayout.ColumnPaneCount; k++)
+            {
+                if (GetHorizontalSplitBoxRectangle(k).Contains(point))
+                {
+                    information.HitTestType = HitTestType.ColumnSplitBox;
+                    information.ColumnViewportIndex = k;
+                }
+            }
+            for (int m = 0; m < spreadLayout.RowPaneCount; m++)
+            {
+                if (GetVerticalSplitBoxRectangle(m).Contains(point))
+                {
+                    information.HitTestType = HitTestType.RowSplitBox;
+                    information.RowViewportIndex = m;
+                }
+            }
+            for (int n = 0; n < (spreadLayout.ColumnPaneCount - 1); n++)
+            {
+                if (GetHorizontalSplitBarRectangle(n).Contains(point))
+                {
+                    information.HitTestType = HitTestType.ColumnSplitBar;
+                    information.ColumnViewportIndex = n;
+                }
+            }
+            for (int num6 = 0; num6 < (spreadLayout.RowPaneCount - 1); num6++)
+            {
+                if (GetVerticalSplitBarRectangle(num6).Contains(point))
+                {
+                    information.HitTestType = HitTestType.RowSplitBar;
+                    information.RowViewportIndex = num6;
+                }
+            }
+            if (information.HitTestType == HitTestType.Empty)
+            {
+                information = base.HitTest(x, y);
+            }
+            return information;
         }
 
         internal override HitTestInformation TouchHitTest(double x, double y)
@@ -588,6 +1003,7 @@ namespace Dt.Cells.UI
             }
             return information;
         }
+        #endregion
 
         #region 实现触摸滚动
         //****************************************************
@@ -595,7 +1011,7 @@ namespace Dt.Cells.UI
         // TabStrip 通过改变 Offset 值实现标签滚动
         //****************************************************
 
-        void TouchScrollLeft(Point startPoint, Point currentPoint, Point deltaPoint)
+        void TouchScrollLeft(Point currentPoint, Point deltaPoint)
         {
             int maxRightScrollableColumn = base.GetMaxRightScrollableColumn();
             ColumnLayoutModel columnLayoutModel = base.GetColumnLayoutModel(base._touchStartHitTestInfo.ColumnViewportIndex, SheetArea.Cells);
@@ -667,7 +1083,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        void TouchScrollRight(Point startPoint, Point currentPoint, Point deltaPoint)
+        void TouchScrollRight(Point currentPoint, Point deltaPoint)
         {
             int maxLeftScrollableColumn = base.GetMaxLeftScrollableColumn();
             int maxRightScrollableColumn = base.GetMaxRightScrollableColumn();
@@ -676,12 +1092,12 @@ namespace Dt.Cells.UI
             int viewportLeftColumn = base.GetViewportLeftColumn(base._touchStartHitTestInfo.ColumnViewportIndex);
             if (viewportLeftColumn <= maxLeftScrollableColumn)
             {
-                Point point = currentPoint.Delta(startPoint);
+                Point point = currentPoint.Delta(_touchStartPoint);
                 base._translateOffsetX = -1.0 * point.X;
                 base._translateOffsetX = ManipulationAlgorithm.GetBoundaryFactor(Math.Abs(base._translateOffsetX), 120.0) * Math.Sign(base._translateOffsetX);
                 return;
             }
-            if ((viewportLeftColumn >= maxRightScrollableColumn) && (currentPoint.X < startPoint.X))
+            if ((viewportLeftColumn >= maxRightScrollableColumn) && (currentPoint.X < _touchStartPoint.X))
             {
                 return;
             }
@@ -723,7 +1139,7 @@ namespace Dt.Cells.UI
             }
             if (num6 < maxLeftScrollableColumn)
             {
-                Point point2 = currentPoint.Delta(startPoint);
+                Point point2 = currentPoint.Delta(_touchStartPoint);
                 base._translateOffsetX = -1.0 * point2.X;
                 base._translateOffsetX = ManipulationAlgorithm.GetBoundaryFactor(Math.Abs(base._translateOffsetX), 120.0) * Math.Sign(base._translateOffsetX);
                 return;
@@ -770,7 +1186,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        void TouchScrollUp(Point startPoint, Point currentPoint, Point deltaPoint)
+        void TouchScrollUp(Point currentPoint, Point deltaPoint)
         {
             int maxBottomScrollableRow = GetMaxBottomScrollableRow();
             RowLayoutModel rowLayoutModel = GetRowLayoutModel(_touchStartHitTestInfo.RowViewportIndex, SheetArea.Cells);
@@ -847,7 +1263,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        void TouchScrollBottom(Point startPoint, Point currentPoint, Point deltaPoint)
+        void TouchScrollBottom(Point currentPoint, Point deltaPoint)
         {
             int maxTopScrollableRow = base.GetMaxTopScrollableRow();
             int maxBottomScrollableRow = base.GetMaxBottomScrollableRow();
@@ -856,12 +1272,12 @@ namespace Dt.Cells.UI
             int viewportTopRow = base.GetViewportTopRow(base._touchStartHitTestInfo.RowViewportIndex);
             if (viewportTopRow <= maxTopScrollableRow)
             {
-                Point point = currentPoint.Delta(startPoint);
+                Point point = currentPoint.Delta(_touchStartPoint);
                 base._translateOffsetY = -1.0 * point.Y;
                 base._translateOffsetY = ManipulationAlgorithm.GetBoundaryFactor(Math.Abs(base._translateOffsetY), 80.0) * Math.Sign(base._translateOffsetY);
                 return;
             }
-            if ((viewportTopRow >= maxBottomScrollableRow) && (currentPoint.Y < startPoint.Y))
+            if ((viewportTopRow >= maxBottomScrollableRow) && (currentPoint.Y < _touchStartPoint.Y))
             {
                 return;
             }
@@ -903,7 +1319,7 @@ namespace Dt.Cells.UI
             }
             if (num6 < maxTopScrollableRow)
             {
-                Point point2 = currentPoint.Delta(startPoint);
+                Point point2 = currentPoint.Delta(_touchStartPoint);
                 base._translateOffsetY = -1.0 * point2.Y;
                 base._translateOffsetY = ManipulationAlgorithm.GetBoundaryFactor(Math.Abs(base._translateOffsetY), 80.0) * Math.Sign(base._translateOffsetY);
                 return;
@@ -946,7 +1362,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        void TouchTabStripScrollLeft(Point startPoint, Point currentPoint, Point deltaPoint)
+        void TouchTabStripScrollLeft(Point currentPoint, Point deltaPoint)
         {
             TabsPresenter tabsPresenter = TabStrip.TabsPresenter;
             int firstScrollableSheetIndex = tabsPresenter.FirstScrollableSheetIndex;
@@ -955,7 +1371,7 @@ namespace Dt.Cells.UI
             double num2 = Math.Abs(deltaPoint.X);
             if (tabsPresenter.IsLastSheetVisible)
             {
-                double num3 = -1.0 * currentPoint.Delta(startPoint).X;
+                double num3 = -1.0 * currentPoint.Delta(_touchStartPoint).X;
                 num3 = ManipulationAlgorithm.GetBoundaryFactor(Math.Abs(num3), 120.0) * Math.Sign(num3);
                 tabsPresenter.Offset = num3;
                 return;
@@ -1002,7 +1418,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        void TouchTabStripScrollRight(Point startPoint, Point currentPoint, Point deltaPoint)
+        void TouchTabStripScrollRight(Point currentPoint, Point deltaPoint)
         {
             int num7;
             double num9;
@@ -1013,13 +1429,13 @@ namespace Dt.Cells.UI
             double num4 = Math.Abs(deltaPoint.X);
             if (startIndex <= firstScrollableSheetIndex)
             {
-                Point point = currentPoint.Delta(startPoint);
+                Point point = currentPoint.Delta(_touchStartPoint);
                 double num5 = -1.0 * point.X;
                 num5 = ManipulationAlgorithm.GetBoundaryFactor(Math.Abs(num5), 120.0) * Math.Sign(num5);
                 tabsPresenter.Offset = num5;
                 return;
             }
-            if ((startIndex < lastScrollableSheetIndex) || (currentPoint.X >= startPoint.X))
+            if ((startIndex < lastScrollableSheetIndex) || (currentPoint.X >= _touchStartPoint.X))
             {
                 double num6 = Math.Abs(tabsPresenter.Offset);
                 if (num6 >= num4)
@@ -1035,7 +1451,7 @@ namespace Dt.Cells.UI
                     num7 = startIndex - 1;
                     if (num7 < tabsPresenter.FirstScrollableSheetIndex)
                     {
-                        Point point2 = currentPoint.Delta(startPoint);
+                        Point point2 = currentPoint.Delta(_touchStartPoint);
                         double num8 = -1.0 * point2.X;
                         num8 = ManipulationAlgorithm.GetBoundaryFactor(Math.Abs(num8), 120.0) * Math.Sign(num8);
                         tabsPresenter.Offset = num8;

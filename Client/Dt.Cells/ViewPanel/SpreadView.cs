@@ -1217,7 +1217,7 @@ namespace Dt.Cells.UI
         /// </summary>
         void ContinueColumnSplitting()
         {
-            HitTestInformation savedHitTestInformation = base.GetSavedHitTestInformation();
+            HitTestInformation savedHitTestInformation = base.GetHitInfo();
             SpreadLayout spreadLayout = GetSpreadLayout();
             int columnViewportIndex = savedHitTestInformation.ColumnViewportIndex;
             switch (savedHitTestInformation.HitTestType)
@@ -1249,7 +1249,7 @@ namespace Dt.Cells.UI
         /// </summary>
         void ContinueRowSplitting()
         {
-            HitTestInformation savedHitTestInformation = base.GetSavedHitTestInformation();
+            HitTestInformation savedHitTestInformation = base.GetHitInfo();
             SpreadLayout spreadLayout = GetSpreadLayout();
             int rowViewportIndex = savedHitTestInformation.RowViewportIndex;
             switch (savedHitTestInformation.HitTestType)
@@ -1915,7 +1915,7 @@ namespace Dt.Cells.UI
         void EndColumnSplitting()
         {
             double num2;
-            HitTestInformation savedHitTestInformation = base.GetSavedHitTestInformation();
+            HitTestInformation savedHitTestInformation = base.GetHitInfo();
             SpreadLayout spreadLayout = GetSpreadLayout();
             int columnViewportIndex = savedHitTestInformation.ColumnViewportIndex;
             base.IsWorking = false;
@@ -1975,20 +1975,6 @@ namespace Dt.Cells.UI
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="e"></param>
-        /// <returns></returns>
-        internal override bool EndMouseClick(PointerMouseRoutedEventArgs e)
-        {
-            if (base.GetSavedHitTestInformation().HitTestType == HitTestType.TabStrip)
-            {
-                return false;
-            }
-            return base.EndMouseClick(e);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="sheetIndex"></param>
         /// <returns></returns>
         internal int GetActiveRowViewportIndex(int sheetIndex)
@@ -2007,7 +1993,7 @@ namespace Dt.Cells.UI
         void EndRowSplitting()
         {
             double num2;
-            HitTestInformation savedHitTestInformation = base.GetSavedHitTestInformation();
+            HitTestInformation savedHitTestInformation = base.GetHitInfo();
             SpreadLayout spreadLayout = GetSpreadLayout();
             int rowViewportIndex = savedHitTestInformation.RowViewportIndex;
             base.IsWorking = false;
@@ -2081,7 +2067,7 @@ namespace Dt.Cells.UI
         /// <returns></returns>
         internal override bool EndTouchTap(Point point)
         {
-            if (base.GetSavedHitTestInformation().HitTestType == HitTestType.TabStrip)
+            if (base.GetHitInfo().HitTestType == HitTestType.TabStrip)
             {
                 return false;
             }
@@ -2521,92 +2507,6 @@ namespace Dt.Cells.UI
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <returns></returns>
-        internal override HitTestInformation HitTest(double x, double y)
-        {
-            Point point = new Point(x, y);
-            SpreadLayout spreadLayout = GetSpreadLayout();
-            HitTestInformation information = new HitTestInformation
-            {
-                HitTestType = HitTestType.Empty,
-                ColumnViewportIndex = -2,
-                RowViewportIndex = -2,
-                HitPoint = point
-            };
-            if (GetTabStripRectangle().Contains(point))
-            {
-                information.ColumnViewportIndex = 0;
-                information.HitTestType = HitTestType.TabStrip;
-                return information;
-            }
-            if (GetTabSplitBoxRectangle().Contains(point))
-            {
-                information.ColumnViewportIndex = 0;
-                information.HitTestType = HitTestType.TabSplitBox;
-                return information;
-            }
-            for (int i = 0; i < spreadLayout.ColumnPaneCount; i++)
-            {
-                if (GetHorizontalScrollBarRectangle(i).Contains(point))
-                {
-                    information.ColumnViewportIndex = i;
-                    information.HitTestType = HitTestType.HorizontalScrollBar;
-                    return information;
-                }
-            }
-            for (int j = 0; j < spreadLayout.RowPaneCount; j++)
-            {
-                if (GetVerticalScrollBarRectangle(j).Contains(point))
-                {
-                    information.HitTestType = HitTestType.VerticalScrollBar;
-                    information.RowViewportIndex = j;
-                    return information;
-                }
-            }
-            for (int k = 0; k < spreadLayout.ColumnPaneCount; k++)
-            {
-                if (GetHorizontalSplitBoxRectangle(k).Contains(point))
-                {
-                    information.HitTestType = HitTestType.ColumnSplitBox;
-                    information.ColumnViewportIndex = k;
-                }
-            }
-            for (int m = 0; m < spreadLayout.RowPaneCount; m++)
-            {
-                if (GetVerticalSplitBoxRectangle(m).Contains(point))
-                {
-                    information.HitTestType = HitTestType.RowSplitBox;
-                    information.RowViewportIndex = m;
-                }
-            }
-            for (int n = 0; n < (spreadLayout.ColumnPaneCount - 1); n++)
-            {
-                if (GetHorizontalSplitBarRectangle(n).Contains(point))
-                {
-                    information.HitTestType = HitTestType.ColumnSplitBar;
-                    information.ColumnViewportIndex = n;
-                }
-            }
-            for (int num6 = 0; num6 < (spreadLayout.RowPaneCount - 1); num6++)
-            {
-                if (GetVerticalSplitBarRectangle(num6).Contains(point))
-                {
-                    information.HitTestType = HitTestType.RowSplitBar;
-                    information.RowViewportIndex = num6;
-                }
-            }
-            if (information.HitTestType == HitTestType.Empty)
-            {
-                information = base.HitTest(x, y);
-            }
-            return information;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         void HorizontalScrollbar_Scroll(object sender, ScrollEventArgs e)
@@ -2846,7 +2746,7 @@ namespace Dt.Cells.UI
         /// <returns></returns>
         bool IsMouseInScrollBar()
         {
-            HitTestInformation savedHitTestInformation = base.GetSavedHitTestInformation();
+            HitTestInformation savedHitTestInformation = base.GetHitInfo();
             if ((savedHitTestInformation.HitTestType != HitTestType.HorizontalScrollBar) && (savedHitTestInformation.HitTestType != HitTestType.VerticalScrollBar))
             {
                 return false;
@@ -2860,7 +2760,7 @@ namespace Dt.Cells.UI
         /// <returns></returns>
         bool IsMouseInSplitBar()
         {
-            HitTestInformation savedHitTestInformation = base.GetSavedHitTestInformation();
+            HitTestInformation savedHitTestInformation = base.GetHitInfo();
             if ((savedHitTestInformation.HitTestType != HitTestType.RowSplitBar) && (savedHitTestInformation.HitTestType != HitTestType.ColumnSplitBar))
             {
                 return false;
@@ -2874,7 +2774,7 @@ namespace Dt.Cells.UI
         /// <returns></returns>
         bool IsMouseInSplitBox()
         {
-            HitTestInformation savedHitTestInformation = base.GetSavedHitTestInformation();
+            HitTestInformation savedHitTestInformation = base.GetHitInfo();
             if ((savedHitTestInformation.HitTestType != HitTestType.RowSplitBox) && (savedHitTestInformation.HitTestType != HitTestType.ColumnSplitBox))
             {
                 return false;
@@ -2888,7 +2788,7 @@ namespace Dt.Cells.UI
         /// <returns></returns>
         bool IsMouseInTabSplitBox()
         {
-            return (base.GetSavedHitTestInformation().HitTestType == HitTestType.TabSplitBox);
+            return (base.GetHitInfo().HitTestType == HitTestType.TabSplitBox);
         }
 
         /// <summary>
@@ -2897,7 +2797,7 @@ namespace Dt.Cells.UI
         /// <returns></returns>
         bool IsMouseInTabStrip()
         {
-            return (base.GetSavedHitTestInformation().HitTestType == HitTestType.TabStrip);
+            return (base.GetHitInfo().HitTestType == HitTestType.TabStrip);
         }
 
         /// <summary>
@@ -3159,40 +3059,6 @@ namespace Dt.Cells.UI
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="point"></param>
-        internal override void ProcessDoubleTap(Point point)
-        {
-            base.UpdateTouchHitTestInfo(point);
-            HitTestInformation savedHitTestInformation = base.GetSavedHitTestInformation();
-            HitTestInformation hi = TouchHitTest(point.X, point.Y);
-            if (!IsEditing || ((hi.HitTestType != HitTestType.RowSplitBar) && (hi.HitTestType != HitTestType.ColumnSplitBar)))
-            {
-                if ((hi.HitTestType == HitTestType.RowSplitBar) || (hi.HitTestType == HitTestType.ColumnSplitBar))
-                {
-                    ProcessSplitBarDoubleTap(hi);
-                }
-                else if ((savedHitTestInformation.HitTestType != HitTestType.Viewport) || !savedHitTestInformation.ViewportInfo.InSelectionDrag)
-                {
-                    if (((savedHitTestInformation.HitTestType == HitTestType.TabStrip) && (_tabStrip != null)) && (TabStripEditable && !SpreadSheet.Workbook.Protect))
-                    {
-                        _tabStrip.StartTabTouchEditing(point);
-                        if (_tabStrip.IsEditing)
-                        {
-                            int sheetTabIndex = (_tabStrip.ActiveTab != null) ? _tabStrip.ActiveTab.SheetIndex : -1;
-                            base.RaiseSheetTabDoubleClick(sheetTabIndex);
-                        }
-                    }
-                    else
-                    {
-                        base.ProcessDoubleTap(point);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="columnViewportIndex"></param>
         /// <param name="e"></param>
         void ProcessHorizontalScroll(int columnViewportIndex, ScrollEventArgs e)
@@ -3283,239 +3149,6 @@ namespace Dt.Cells.UI
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="e"></param>
-        internal override void ProcessMouseLeftButtonDoubleClick(DoubleTappedRoutedEventArgs e)
-        {
-            HitTestInformation savedHitTestInformation = base.GetSavedHitTestInformation();
-            if ((!IsEditing || ((savedHitTestInformation.HitTestType != HitTestType.RowSplitBar) && (savedHitTestInformation.HitTestType != HitTestType.ColumnSplitBar))) && ((savedHitTestInformation.HitTestType != HitTestType.Viewport) || !savedHitTestInformation.ViewportInfo.InSelectionDrag))
-            {
-                switch (savedHitTestInformation.HitTestType)
-                {
-                    case HitTestType.RowSplitBar:
-                    case HitTestType.ColumnSplitBar:
-                        ProcessSplitBarDoubleClick(savedHitTestInformation);
-                        return;
-
-                    case HitTestType.TabStrip:
-                        {
-                            if (((_tabStrip == null) || !TabStripEditable) || (SpreadSheet.Workbook.Protect || (base._routedEventArgs == null)))
-                            {
-                                break;
-                            }
-                            _tabStrip.StartTabEditing(base._routedEventArgs.Instance);
-                            if (!_tabStrip.IsEditing)
-                            {
-                                break;
-                            }
-                            int sheetTabIndex = -1;
-                            if (_tabStrip.ActiveTab != null)
-                            {
-                                sheetTabIndex = _tabStrip.ActiveTab.SheetIndex;
-                            }
-                            base.RaiseSheetTabDoubleClick(sheetTabIndex);
-                            return;
-                        }
-                    default:
-                        base.ProcessMouseLeftButtonDoubleClick(e);
-                        break;
-                }
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="e"></param>
-        internal override void ProcessMouseLeftButtonDown(PointerMouseRoutedEventArgs e)
-        {
-            HitTestInformation savedHitTestInformation = base.GetSavedHitTestInformation();
-            GetSpreadLayout();
-            Point position = e.GetPosition(this);
-            if (position != savedHitTestInformation.HitPoint)
-            {
-                base.SaveHitTestInfo(savedHitTestInformation = HitTest(position.X, position.Y));
-            }
-            if (!base._isDoubleClick || ((savedHitTestInformation.HitTestType != HitTestType.ColumnSplitBar) && (savedHitTestInformation.HitTestType != HitTestType.RowSplitBar)))
-            {
-                switch (savedHitTestInformation.HitTestType)
-                {
-                    case HitTestType.TabStrip:
-                        if (base._routedEventArgs != null)
-                        {
-                            _tabStrip.ProcessMouseClickSheetTab(base._routedEventArgs.Instance);
-                        }
-                        return;
-
-                    case HitTestType.RowSplitBar:
-                        StartRowSplitting();
-                        if (savedHitTestInformation.ColumnViewportIndex >= 0)
-                        {
-                            StartColumnSplitting();
-                        }
-                        return;
-
-                    case HitTestType.ColumnSplitBar:
-                        StartColumnSplitting();
-                        if (savedHitTestInformation.RowViewportIndex >= 0)
-                        {
-                            StartRowSplitting();
-                        }
-                        return;
-
-                    case HitTestType.RowSplitBox:
-                        StartRowSplitting();
-                        return;
-
-                    case HitTestType.ColumnSplitBox:
-                        StartColumnSplitting();
-                        return;
-
-                    case HitTestType.TabSplitBox:
-                        StartTabStripResizing();
-                        return;
-                }
-                base.ProcessMouseLeftButtonDown(e);
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="e"></param>
-        internal override void ProcessMouseLeftButtonUp(PointerMouseRoutedEventArgs e)
-        {
-            if ((IsColumnSplitting || IsRowSplitting) || IsTabStripResizing)
-            {
-                ClearMouseLeftButtonDownStates();
-                if (!IsEditing)
-                {
-                    base.FocusInternal();
-                }
-            }
-            else
-            {
-                base.ProcessMouseLeftButtonUp(e);
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="e"></param>
-        internal override void ProcessMouseMove(PointerMouseRoutedEventArgs e)
-        {
-            GetSpreadLayout();
-            base.MousePosition = e.GetPosition(this);
-            HitTestInformation hitTestInfo = HitTest(base.MousePosition.X, base.MousePosition.Y);
-            if (!base.IsWorking)
-            {
-                base.ResetCursor();
-            }
-            bool flag = false;
-            switch (hitTestInfo.HitTestType)
-            {
-                case HitTestType.RowSplitBar:
-                    if ((!base.IsWorking && !IsEditing) && !SpreadSheet.Workbook.Protect)
-                    {
-                        if (base.InputDeviceType != InputDeviceType.Touch)
-                        {
-                            if (hitTestInfo.ColumnViewportIndex < 0)
-                            {
-                                base.SetBuiltInCursor((CoreCursorType)8);
-                            }
-                            else
-                            {
-                                base.SetBuiltInCursor((CoreCursorType)3);
-                            }
-                        }
-                        flag = true;
-                    }
-                    goto Label_01B3;
-
-                case HitTestType.ColumnSplitBar:
-                    if ((base.IsWorking || IsEditing) || SpreadSheet.Workbook.Protect)
-                    {
-                        goto Label_01B3;
-                    }
-                    if (base.InputDeviceType != InputDeviceType.Touch)
-                    {
-                        if (hitTestInfo.RowViewportIndex < 0)
-                        {
-                            base.SetBuiltInCursor((CoreCursorType)10);
-                            break;
-                        }
-                        base.SetBuiltInCursor((CoreCursorType)3);
-                    }
-                    break;
-
-                case HitTestType.RowSplitBox:
-                    if ((!base.IsWorking && !IsEditing) && !SpreadSheet.Workbook.Protect)
-                    {
-                        if (base.InputDeviceType != InputDeviceType.Touch)
-                        {
-                            base.SetBuiltInCursor((CoreCursorType)8);
-                        }
-                        flag = true;
-                    }
-                    goto Label_01B3;
-
-                case HitTestType.ColumnSplitBox:
-                    if ((!base.IsWorking && !IsEditing) && !SpreadSheet.Workbook.Protect)
-                    {
-                        if (base.InputDeviceType != InputDeviceType.Touch)
-                        {
-                            base.SetBuiltInCursor((CoreCursorType)10);
-                        }
-                        flag = true;
-                    }
-                    goto Label_01B3;
-
-                case HitTestType.TabSplitBox:
-                    if (!base.IsWorking && !IsEditing)
-                    {
-                        if (base.InputDeviceType != InputDeviceType.Touch)
-                        {
-                            base.SetBuiltInCursor((CoreCursorType)10);
-                        }
-                        flag = true;
-                    }
-                    goto Label_01B3;
-
-                default:
-                    goto Label_01B3;
-            }
-            flag = true;
-        Label_01B3:
-            if (IsColumnSplitting)
-            {
-                ContinueColumnSplitting();
-            }
-            if (IsRowSplitting)
-            {
-                ContinueRowSplitting();
-            }
-            if (IsTabStripResizing)
-            {
-                ContinueTabStripResizing();
-            }
-            if (flag)
-            {
-                if (!base.IsWorking)
-                {
-                    base.SaveHitTestInfo(hitTestInfo);
-                    base._hoverManager.DoHover(hitTestInfo);
-                }
-            }
-            else
-            {
-                base.ProcessMouseMove(e);
-            }
-            UpdateScrollBarIndicatorMode((ScrollingIndicatorMode)2);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="hi"></param>
         void ProcessSplitBarDoubleClick(HitTestInformation hi)
         {
@@ -3565,43 +3198,6 @@ namespace Dt.Cells.UI
             {
                 _tabStrip.SetStartSheet(Worksheet.Workbook.StartSheetIndex);
             }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="point"></param>
-        internal override void ProcessTap(Point point)
-        {
-            base.UpdateTouchHitTestInfo(point);
-            HitTestInformation savedHitTestInformation = base.GetSavedHitTestInformation();
-            switch (savedHitTestInformation.HitTestType)
-            {
-                case HitTestType.HorizontalScrollBar:
-                    {
-                        int viewportLeftColumn = base.GetViewportLeftColumn(savedHitTestInformation.ColumnViewportIndex);
-                        HorizontalScrollBarTouchSmallDecrement(savedHitTestInformation.ColumnViewportIndex, viewportLeftColumn - 1);
-                        break;
-                    }
-                case HitTestType.VerticalScrollBar:
-                    {
-                        int viewportTopRow = base.GetViewportTopRow(savedHitTestInformation.RowViewportIndex);
-                        VerticalScrollBarTouchSmallDecrement(savedHitTestInformation.RowViewportIndex, viewportTopRow - 1);
-                        break;
-                    }
-                case HitTestType.TabStrip:
-                    _tabStrip.ProcessTap(point);
-                    break;
-            }
-            base.ProcessTap(point);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="point"></param>
-        internal override void ProcessTouchHold(Point point)
-        {
         }
 
         /// <summary>
@@ -3930,7 +3526,7 @@ namespace Dt.Cells.UI
         {
             if (!SpreadSheet.Workbook.Protect)
             {
-                HitTestInformation savedHitTestInformation = base.GetSavedHitTestInformation();
+                HitTestInformation savedHitTestInformation = base.GetHitInfo();
                 SpreadLayout spreadLayout = GetSpreadLayout();
                 if (!base.IsTouching)
                 {
@@ -3992,53 +3588,11 @@ namespace Dt.Cells.UI
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="e"></param>
-        /// <returns></returns>
-        internal override bool StartMouseClick(PointerMouseRoutedEventArgs e)
-        {
-            if (IsMouseInScrollBar())
-            {
-                return false;
-            }
-            if (IsEditing && ((IsMouseInSplitBar() || IsMouseInSplitBox()) || IsMouseInTabSplitBox()))
-            {
-                return false;
-            }
-            Point position = e.GetPosition(this);
-            if (!GetTabStripRectangle().Contains(position))
-            {
-                return base.StartMouseClick(e);
-            }
-            if (base.CanSelectFormula)
-            {
-                IsSwitchingSheet = true;
-                base.EditorConnector.ClearFlickingItems();
-                if (!base.EditorConnector.IsInOtherSheet)
-                {
-                    base.EditorConnector.IsInOtherSheet = true;
-                    base.EditorConnector.SheetIndex = Worksheet.Workbook.ActiveSheetIndex;
-                    base.EditorConnector.RowIndex = Worksheet.ActiveRowIndex;
-                    base.EditorConnector.ColumnIndex = Worksheet.ActiveColumnIndex;
-                }
-            }
-            base.StopCellEditing(base.CanSelectFormula);
-            if (_tabStrip != null)
-            {
-                _tabStrip.StopTabEditing(false);
-            }
-            base._lastClickPoint = new Point(position.X, position.Y);
-            base._routedEventArgs = e;
-            return true;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         void StartRowSplitting()
         {
             if (!SpreadSheet.Workbook.Protect)
             {
-                HitTestInformation savedHitTestInformation = base.GetSavedHitTestInformation();
+                HitTestInformation savedHitTestInformation = base.GetHitInfo();
                 SpreadLayout spreadLayout = GetSpreadLayout();
                 if (!base.IsTouching)
                 {

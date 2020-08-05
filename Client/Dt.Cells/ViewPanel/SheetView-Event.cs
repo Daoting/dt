@@ -108,7 +108,6 @@ namespace Dt.Cells.UI
         internal int _currentActiveRowIndex;
         DragFillDirection _currentFillDirection = DragFillDirection.Down;
         CellRange _currentFillRange;
-        internal GestureAction _currentGestureAction;
         Canvas _cursorsContainer;
         Windows.UI.Xaml.Controls.Primitives.Popup _dataValidationListPopUp;
         PopupHelper _dataValidationPopUpHelper;
@@ -182,7 +181,7 @@ namespace Dt.Cells.UI
         internal Border _resizerGripperContainer;
         internal Dt.Cells.UI.ResizeZeroIndicator _resizeZeroIndicator;
         internal Windows.UI.Xaml.Shapes.Line _resizingTracker;
-        internal PointerMouseRoutedEventArgs _routedEventArgs;
+        internal PointerRoutedEventArgs _routedEventArgs;
         internal Windows.UI.Xaml.Shapes.Line _rowFreezeLine;
         GcRangeGroupHeader _rowGroupHeaderPresenter;
         GcRangeGroup[] _rowGroupPresenters;
