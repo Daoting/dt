@@ -629,7 +629,6 @@ namespace Dt.Cells.UI
             get { return _hasNewTab; }
             set
             {
-                Action action = null;
                 if (value != _hasNewTab)
                 {
                     _hasNewTab = value;
@@ -653,19 +652,12 @@ namespace Dt.Cells.UI
                     }
                     else
                     {
-                        if (action == null)
+                        TabsPresenter.Children.Remove(_newTab);
+                        if (_newTab != null)
                         {
-                            action = delegate
-                            {
-                                TabsPresenter.Children.Remove(_newTab);
-                                if (_newTab != null)
-                                {
-                                    _newTab.Click -= Tab_Click;
-                                    _newTab = null;
-                                }
-                            };
+                            _newTab.Click -= Tab_Click;
+                            _newTab = null;
                         }
-                        Dt.Cells.Data.UIAdaptor.InvokeSync(action);
                     }
                 }
             }

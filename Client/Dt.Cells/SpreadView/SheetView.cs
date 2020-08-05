@@ -2023,11 +2023,7 @@ namespace Dt.Cells.UI
 
         internal Windows.UI.Xaml.Shapes.Line CreateFreezeLine()
         {
-            SolidColorBrush brush = null;
-            Dt.Cells.Data.UIAdaptor.InvokeSync(delegate
-            {
-                brush = new SolidColorBrush(Colors.Black);
-            });
+            SolidColorBrush brush = new SolidColorBrush(Colors.Black);
             Windows.UI.Xaml.Shapes.Line line2 = new Windows.UI.Xaml.Shapes.Line();
             line2.StrokeThickness = 1.0;
             line2.Stroke = brush;
@@ -6514,7 +6510,6 @@ namespace Dt.Cells.UI
 
         internal void HandleSheetPropertyChanged(object sender, PropertyChangedEventArgs e, bool autoRefresh)
         {
-            Action action = null;
             if (Worksheet != null)
             {
                 if (e.PropertyName == "Visible")
@@ -6678,16 +6673,9 @@ namespace Dt.Cells.UI
                             {
                                 InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
                             }
-                            if (_host is Excel)
+                            if (_host is Excel excel)
                             {
-                                if (action == null)
-                                {
-                                    action = delegate
-                                    {
-                                        (_host as Excel).HideProgressRingOnOpenCSVCompleted();
-                                    };
-                                }
-                                Dt.Cells.Data.UIAdaptor.InvokeSync(action);
+                                excel.HideProgressRingOnOpenCSVCompleted();
                             }
                             return;
 
@@ -7350,7 +7338,6 @@ namespace Dt.Cells.UI
 #endif
         public void Invalidate()
         {
-            Action action = null;
             if (!IsSuspendInvalidate())
             {
                 if (IsEditing)
@@ -7358,14 +7345,7 @@ namespace Dt.Cells.UI
                     StopCellEditing(true);
                 }
                 InvalidateLayout();
-                if (action == null)
-                {
-                    action = delegate
-                    {
-                        base.Children.Clear();
-                    };
-                }
-                Dt.Cells.Data.UIAdaptor.InvokeAsync(action);
+                Children.Clear();
                 _cornerPresenter = null;
                 _rowHeaderPresenters = null;
                 _columnHeaderPresenters = null;
@@ -7642,10 +7622,6 @@ namespace Dt.Cells.UI
         /// <param name="sheetArea">The invalidated sheet area.</param>
         public void InvalidateRange(int row, int column, int rowCount, int columnCount, SheetArea sheetArea)
         {
-            Action action = null;
-            Action action2 = null;
-            Action action3 = null;
-            Action action4 = null;
             if (!IsSuspendInvalidate())
             {
                 if ((row < 0) || (column < 0))
@@ -7653,14 +7629,7 @@ namespace Dt.Cells.UI
                     InvalidateLayout();
                 }
                 _cachedFilterButtonInfoModel = null;
-                if (action == null)
-                {
-                    action = delegate
-                    {
-                        base.InvalidateMeasure();
-                    };
-                }
-                Dt.Cells.Data.UIAdaptor.InvokeAsync(action);
+                InvalidateMeasure();
                 Dt.Cells.Data.Worksheet worksheet = Worksheet;
                 if (((byte)(sheetArea & SheetArea.Cells)) == 1)
                 {
@@ -7675,14 +7644,7 @@ namespace Dt.Cells.UI
                         columnCount = (worksheet == null) ? 0 : worksheet.ColumnCount;
                     }
                     _cachedViewportCellLayoutModel = null;
-                    if (action2 == null)
-                    {
-                        action2 = delegate
-                        {
-                            RefreshViewportCells(_viewportPresenters, row, column, rowCount, columnCount);
-                        };
-                    }
-                    Dt.Cells.Data.UIAdaptor.InvokeAsync(action2);
+                    RefreshViewportCells(_viewportPresenters, row, column, rowCount, columnCount);
                 }
                 if (((byte)(sheetArea & SheetArea.ColumnHeader)) == 4)
                 {
@@ -7697,14 +7659,7 @@ namespace Dt.Cells.UI
                         columnCount = (worksheet == null) ? 0 : worksheet.ColumnCount;
                     }
                     _cachedColumnHeaderCellLayoutModel = null;
-                    if (action3 == null)
-                    {
-                        action3 = delegate
-                        {
-                            RefreshHeaderCells(_columnHeaderPresenters, row, column, rowCount, columnCount);
-                        };
-                    }
-                    Dt.Cells.Data.UIAdaptor.InvokeAsync(action3);
+                    RefreshHeaderCells(_columnHeaderPresenters, row, column, rowCount, columnCount);
                 }
                 if (((byte)(sheetArea & (SheetArea.CornerHeader | SheetArea.RowHeader))) == 2)
                 {
@@ -7719,14 +7674,7 @@ namespace Dt.Cells.UI
                         columnCount = (worksheet == null) ? 0 : worksheet.ColumnCount;
                     }
                     _cachedRowHeaderCellLayoutModel = null;
-                    if (action4 == null)
-                    {
-                        action4 = delegate
-                        {
-                            RefreshHeaderCells(_rowHeaderPresenters, row, column, rowCount, columnCount);
-                        };
-                    }
-                    Dt.Cells.Data.UIAdaptor.InvokeAsync(action4);
+                    RefreshHeaderCells(_rowHeaderPresenters, row, column, rowCount, columnCount);
                 }
             }
         }
@@ -9236,10 +9184,7 @@ namespace Dt.Cells.UI
             {
                 _dataValidationPopUpHelper = new PopupHelper(DataValidationListPopUp);
                 DataValidationListBox dvListBox = new DataValidationListBox();
-                Dt.Cells.Data.UIAdaptor.InvokeSync(delegate
-                {
-                    dvListBox.Background = new SolidColorBrush(Colors.White);
-                });
+                dvListBox.Background = new SolidColorBrush(Colors.White);
                 object[] array = dataBtnInfo.Validator.GetValidList(Worksheet, dataBtnInfo.Row, dataBtnInfo.Column);
                 if ((dataBtnInfo.Validator.Type == CriteriaType.List) && (dataBtnInfo.Validator.Value1 != null))
                 {
@@ -9969,9 +9914,6 @@ namespace Dt.Cells.UI
 
         internal virtual void ReadXmlInternal(XmlReader reader)
         {
-            Action action = null;
-            Action action2 = null;
-            Action action3 = null;
             switch (reader.Name)
             {
                 case "AllowUserFormula":
@@ -10039,36 +9981,15 @@ namespace Dt.Cells.UI
                     return;
 
                 case "RangeGroupBackground":
-                    if (action == null)
-                    {
-                        action = delegate
-                        {
-                            _rangeGroupBackground = (Brush)Serializer.DeserializeObj(typeof(Brush), reader);
-                        };
-                    }
-                    Dt.Cells.Data.UIAdaptor.InvokeSync(action);
+                    _rangeGroupBackground = (Brush)Serializer.DeserializeObj(typeof(Brush), reader);
                     return;
 
                 case "RangeGroupBorderBrush":
-                    if (action2 == null)
-                    {
-                        action2 = delegate
-                        {
-                            _rangeGroupBorderBrush = (Brush)Serializer.DeserializeObj(typeof(Brush), reader);
-                        };
-                    }
-                    Dt.Cells.Data.UIAdaptor.InvokeSync(action2);
+                    _rangeGroupBorderBrush = (Brush)Serializer.DeserializeObj(typeof(Brush), reader);
                     return;
 
                 case "RangeGroupLineStroke":
-                    if (action3 == null)
-                    {
-                        action3 = delegate
-                        {
-                            _rangeGroupLineStroke = (Brush)Serializer.DeserializeObj(typeof(Brush), reader);
-                        };
-                    }
-                    Dt.Cells.Data.UIAdaptor.InvokeSync(action3);
+                    _rangeGroupLineStroke = (Brush)Serializer.DeserializeObj(typeof(Brush), reader);
                     return;
             }
         }
@@ -11356,11 +11277,7 @@ namespace Dt.Cells.UI
                 GcViewport viewportRowsPresenter = GetViewportRowsPresenter(tuple.Item1, tuple.Item2);
                 if (viewportRowsPresenter != null)
                 {
-                    SolidColorBrush brush = null;
-                    Dt.Cells.Data.UIAdaptor.InvokeSync(delegate
-                    {
-                        brush = new SolidColorBrush(Windows.UI.Color.FromArgb(0xff, 0x21, 0x73, 70));
-                    });
+                    SolidColorBrush brush = new SolidColorBrush(Windows.UI.Color.FromArgb(0xff, 0x21, 0x73, 70));
                     viewportRowsPresenter.SelectionContainer.SetSelectionFrameStroke(brush);
                     _resetSelectionFrameStroke = true;
                 }
@@ -11836,11 +11753,7 @@ namespace Dt.Cells.UI
             ColumnLayout viewportResizingColumnLayoutFromX = null;
             IsWorking = true;
             IsResizingColumns = true;
-            SolidColorBrush brush = null;
-            Dt.Cells.Data.UIAdaptor.InvokeSync(delegate
-            {
-                brush = new SolidColorBrush(Colors.Black);
-            });
+            SolidColorBrush brush = new SolidColorBrush(Colors.Black);
             if (_resizingTracker == null)
             {
                 Windows.UI.Xaml.Shapes.Line line = new Windows.UI.Xaml.Shapes.Line();
@@ -11850,10 +11763,7 @@ namespace Dt.Cells.UI
                 _resizingTracker = line;
                 TrackersContainer.Children.Add(_resizingTracker);
             }
-            Dt.Cells.Data.UIAdaptor.InvokeSync(delegate
-            {
-                _resizingTracker.Visibility = Visibility.Visible;
-            });
+            _resizingTracker.Visibility = Visibility.Visible;
             switch (savedHitTestInformation.HitTestType)
             {
                 case HitTestType.Corner:
@@ -12053,7 +11963,6 @@ namespace Dt.Cells.UI
 
         void StartRowResizing()
         {
-            Action action = null;
             HitTestInformation savedHitTestInformation = GetHitInfo();
             SheetLayout sheetLayout = GetSheetLayout();
             RowLayout viewportResizingRowLayoutFromY = null;
@@ -12062,14 +11971,7 @@ namespace Dt.Cells.UI
             if (_resizingTracker == null)
             {
                 _resizingTracker = new Windows.UI.Xaml.Shapes.Line();
-                if (action == null)
-                {
-                    action = delegate
-                    {
-                        _resizingTracker.Stroke = new SolidColorBrush(Colors.Black);
-                    };
-                }
-                Dt.Cells.Data.UIAdaptor.InvokeSync(action);
+                _resizingTracker.Stroke = new SolidColorBrush(Colors.Black);
                 _resizingTracker.StrokeThickness = 1.0;
                 _resizingTracker.StrokeDashArray = new DoubleCollection { 1.0 };
                 TrackersContainer.Children.Add(_resizingTracker);
@@ -12343,11 +12245,7 @@ namespace Dt.Cells.UI
             CloseTouchToolbar();
             if (_resizingTracker == null)
             {
-                SolidColorBrush brush = null;
-                Dt.Cells.Data.UIAdaptor.InvokeSync(delegate
-                {
-                    brush = new SolidColorBrush(Colors.Black);
-                });
+                SolidColorBrush brush = new SolidColorBrush(Colors.Black);
                 Windows.UI.Xaml.Shapes.Line line = new Windows.UI.Xaml.Shapes.Line();
                 line.Stroke = brush;
                 line.StrokeThickness = 1.0;
@@ -12442,7 +12340,6 @@ namespace Dt.Cells.UI
 
         void StartTouchRowResizing()
         {
-            Action action = null;
             HitTestInformation savedHitTestInformation = GetHitInfo();
             SheetLayout sheetLayout = GetSheetLayout();
             RowLayout viewportResizingRowLayoutFromYForTouch = null;
@@ -12453,14 +12350,7 @@ namespace Dt.Cells.UI
             if (_resizingTracker == null)
             {
                 _resizingTracker = new Windows.UI.Xaml.Shapes.Line();
-                if (action == null)
-                {
-                    action = delegate
-                    {
-                        _resizingTracker.Stroke = new SolidColorBrush(Colors.Black);
-                    };
-                }
-                Dt.Cells.Data.UIAdaptor.InvokeSync(action);
+                _resizingTracker.Stroke = new SolidColorBrush(Colors.Black);
                 _resizingTracker.StrokeThickness = 1.0;
                 _resizingTracker.StrokeDashArray = new DoubleCollection { 1.0 };
                 TrackersContainer.Children.Add(_resizingTracker);
@@ -12639,10 +12529,7 @@ namespace Dt.Cells.UI
         void IXmlSerializable.ReadXml(XmlReader reader)
         {
             Serializer.InitReader(reader);
-            Dt.Cells.Data.UIAdaptor.InvokeSync(delegate
-            {
-                Reset();
-            });
+            Reset();
             while (reader.Read())
             {
                 if (reader.NodeType == ((XmlNodeType)((int)XmlNodeType.Element)))
@@ -13120,11 +13007,7 @@ namespace Dt.Cells.UI
 
         void UpdateDragIndicatorAndStartTimer(CellRange fromRange)
         {
-            SolidColorBrush brush = null;
-            Dt.Cells.Data.UIAdaptor.InvokeSync(delegate
-            {
-                brush = new SolidColorBrush(Colors.Black);
-            });
+            SolidColorBrush brush = new SolidColorBrush(Colors.Black);
             if (_dragDropInsertIndicator == null)
             {
                 _dragDropInsertIndicator = new Grid();
@@ -17602,32 +17485,24 @@ namespace Dt.Cells.UI
 
             void OnItemsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
             {
-                bool isDirty = true;
-                Dt.Cells.Data.UIAdaptor.InvokeAsync(delegate
+                if (_sheetView._viewportPresenters != null)
                 {
-                    if (isDirty)
+                    GcViewport[,] viewportArray = _sheetView._viewportPresenters;
+                    int upperBound = viewportArray.GetUpperBound(0);
+                    int num2 = viewportArray.GetUpperBound(1);
+                    for (int k = viewportArray.GetLowerBound(0); k <= upperBound; k++)
                     {
-                        isDirty = false;
-                        if (_sheetView._viewportPresenters != null)
+                        for (int i = viewportArray.GetLowerBound(1); i <= num2; i++)
                         {
-                            GcViewport[,] viewportArray = _sheetView._viewportPresenters;
-                            int upperBound = viewportArray.GetUpperBound(0);
-                            int num2 = viewportArray.GetUpperBound(1);
-                            for (int k = viewportArray.GetLowerBound(0); k <= upperBound; k++)
+                            GcViewport viewport = viewportArray[k, i];
+                            if (viewport != null)
                             {
-                                for (int i = viewportArray.GetLowerBound(1); i <= num2; i++)
-                                {
-                                    GcViewport viewport = viewportArray[k, i];
-                                    if (viewport != null)
-                                    {
-                                        viewport.RefreshFormulaSelection();
-                                    }
-                                }
+                                viewport.RefreshFormulaSelection();
                             }
-                            _sheetView.RefreshFormulaSelectionGrippers();
                         }
                     }
-                });
+                    _sheetView.RefreshFormulaSelectionGrippers();
+                }
             }
 
             internal void SetCursor(ViewportFormulaSelectionHitTestInformation info)

@@ -38,22 +38,19 @@ namespace Dt.Cells.Data
                 return null;
             }
             string result = null;
-            UIAdaptor.InvokeSync(delegate {
-                try
+            try
+            {
+                using (MemoryStream stream = new MemoryStream(image.SourceArray))
                 {
-                    using (MemoryStream stream = new MemoryStream(image.SourceArray))
-                    {
-                        stream.Seek(0L, (SeekOrigin) SeekOrigin.Begin);
-                        byte[] buffer = new byte[stream.Length];
-                        stream.Seek(0L, (SeekOrigin) SeekOrigin.Begin);
-                        stream.Read(buffer, 0, (int) stream.Length);
-                        result = Convert.ToBase64String(buffer);
-                    }
+                    stream.Seek(0L, (SeekOrigin)SeekOrigin.Begin);
+                    byte[] buffer = new byte[stream.Length];
+                    stream.Seek(0L, (SeekOrigin)SeekOrigin.Begin);
+                    stream.Read(buffer, 0, (int)stream.Length);
+                    result = Convert.ToBase64String(buffer);
                 }
-                catch
-                {
-                }
-            });
+            }
+            catch
+            { }
             return result;
         }
 
@@ -68,7 +65,8 @@ namespace Dt.Cells.Data
             {
                 if (!string.IsNullOrWhiteSpace(fillThemeColor))
                 {
-                    SolidFillFormat format2 = new SolidFillFormat {
+                    SolidFillFormat format2 = new SolidFillFormat
+                    {
                         Color = fillThemeColor.GetExcelChartThemeColor()
                     };
                     if (((format2.Color != null) && (fillDrawingSettings != null)) && !format2.Color.Tint.IsZero())
@@ -87,7 +85,8 @@ namespace Dt.Cells.Data
             {
                 if (!string.IsNullOrWhiteSpace(strokeThemeColor))
                 {
-                    SolidFillFormat format3 = new SolidFillFormat {
+                    SolidFillFormat format3 = new SolidFillFormat
+                    {
                         Color = strokeThemeColor.GetExcelChartThemeColor()
                     };
                     if (((format3.Color != null) && (strokeDrawingSettings != null)) && !format3.Color.Tint.IsZero())
@@ -173,7 +172,7 @@ namespace Dt.Cells.Data
 
         internal static IExcelChartFormat GetExcelChartForamt(this SpreadChartElement chartElement)
         {
-            IExcelChartFormat format = CreateExcelChartFormat(chartElement.FillThemeColor, chartElement.Fill, chartElement.StrokeThemeColor, chartElement.Stroke, chartElement.StrokeThickness, chartElement.IsAutomaticFill, chartElement.IsAutomaticStroke, chartElement.StrokeDashType, 1.0, (ExcelDrawingColorSettings) chartElement.FillDrawingColorSettings, (ExcelDrawingColorSettings) chartElement.StrokeDrawingColorSettings);
+            IExcelChartFormat format = CreateExcelChartFormat(chartElement.FillThemeColor, chartElement.Fill, chartElement.StrokeThemeColor, chartElement.Stroke, chartElement.StrokeThickness, chartElement.IsAutomaticFill, chartElement.IsAutomaticStroke, chartElement.StrokeDashType, 1.0, (ExcelDrawingColorSettings)chartElement.FillDrawingColorSettings, (ExcelDrawingColorSettings)chartElement.StrokeDrawingColorSettings);
             if ((format != null) && (format.LineFormat != null))
             {
                 format.LineFormat.JoinType = chartElement.JoinType;
@@ -345,16 +344,14 @@ namespace Dt.Cells.Data
                         return null;
 
                     case FillFormatType.SolidFill:
-                    {
-                        SolidFillFormat solidFill = fillFormat as SolidFillFormat;
-                        return GetSolidFill(solidFill, workbook);
-                    }
+                        {
+                            SolidFillFormat solidFill = fillFormat as SolidFillFormat;
+                            return GetSolidFill(solidFill, workbook);
+                        }
                     case FillFormatType.GradientFill:
-                    {
-                        GradientFillFormat gradientFill = fillFormat as GradientFillFormat;
-                        GradientStopCollection stops = null;
-                        UIAdaptor.InvokeSync(delegate {
-                            stops = new GradientStopCollection();
+                        {
+                            GradientFillFormat gradientFill = fillFormat as GradientFillFormat;
+                            GradientStopCollection stops = new GradientStopCollection();
                             foreach (ExcelGradientStop stop in gradientFill.GradientStops)
                             {
                                 GradientStop stop2 = new GradientStop();
@@ -362,57 +359,53 @@ namespace Dt.Cells.Data
                                 stop2.Offset = stop.Position;
                                 stops.Add(stop2);
                             }
-                        });
-                        switch (gradientFill.GradientFillType)
-                        {
-                            case GradientFillType.Linear:
+                            switch (gradientFill.GradientFillType)
                             {
-                                LinearGradientBrush result = null;
-                                UIAdaptor.InvokeSync(delegate {
-                                    result = new LinearGradientBrush(stops, gradientFill.Angle);
-                                    Windows.Foundation.Point point = new Windows.Foundation.Point(0.0, 0.5);
-                                    Windows.Foundation.Point point2 = new Windows.Foundation.Point(1.0, 0.5);
-                                    if (gradientFill.Angle != 0.0)
+                                case GradientFillType.Linear:
                                     {
-                                        RotateTransform transform = new RotateTransform();
-                                        transform.Angle = gradientFill.Angle;
-                                        transform.CenterX = 0.5;
-                                        transform.CenterY = 0.5;
-                                        point = transform.TransformPoint(point);
-                                        point2 = transform.TransformPoint(point2);
+                                        LinearGradientBrush result = new LinearGradientBrush(stops, gradientFill.Angle);
+                                        Windows.Foundation.Point point = new Windows.Foundation.Point(0.0, 0.5);
+                                        Windows.Foundation.Point point2 = new Windows.Foundation.Point(1.0, 0.5);
+                                        if (gradientFill.Angle != 0.0)
+                                        {
+                                            RotateTransform transform = new RotateTransform();
+                                            transform.Angle = gradientFill.Angle;
+                                            transform.CenterX = 0.5;
+                                            transform.CenterY = 0.5;
+                                            point = transform.TransformPoint(point);
+                                            point2 = transform.TransformPoint(point2);
+                                        }
+                                        result.StartPoint = point;
+                                        result.EndPoint = point2;
+                                        return result;
                                     }
-                                    result.StartPoint = point;
-                                    result.EndPoint = point2;
-                                });
-                                return result;
+                                case GradientFillType.Circle:
+                                    return null;
+
+                                case GradientFillType.Rectange:
+                                    return null;
+
+                                case GradientFillType.Shape:
+                                    return null;
                             }
-                            case GradientFillType.Circle:
-                                return null;
-
-                            case GradientFillType.Rectange:
-                                return null;
-
-                            case GradientFillType.Shape:
-                                return null;
+                            return null;
                         }
-                        return null;
-                    }
                     case FillFormatType.PictureFill:
                         return null;
 
                     case FillFormatType.PatternFill:
-                    {
-                        PatternFill fill = fillFormat as PatternFill;
-                        if (fill.BackgroundColor == null)
                         {
-                            if (fill.ForegroundColor != null)
+                            PatternFill fill = fillFormat as PatternFill;
+                            if (fill.BackgroundColor == null)
                             {
-                                return new SolidColorBrush(Dt.Cells.Data.ColorHelper.UpdateColor(Dt.Cells.Data.ColorHelper.GetRGBColor(workbook, fill.ForegroundColor), ToSpreadDrawingColorSettings(fill.ForegroudDrawingColorSettings), true));
+                                if (fill.ForegroundColor != null)
+                                {
+                                    return new SolidColorBrush(Dt.Cells.Data.ColorHelper.UpdateColor(Dt.Cells.Data.ColorHelper.GetRGBColor(workbook, fill.ForegroundColor), ToSpreadDrawingColorSettings(fill.ForegroudDrawingColorSettings), true));
+                                }
+                                return null;
                             }
-                            return null;
+                            return new SolidColorBrush(Dt.Cells.Data.ColorHelper.UpdateColor(Dt.Cells.Data.ColorHelper.GetRGBColor(workbook, fill.BackgroundColor), ToSpreadDrawingColorSettings(fill.BackgroudDrawingColorSettings), true));
                         }
-                        return new SolidColorBrush(Dt.Cells.Data.ColorHelper.UpdateColor(Dt.Cells.Data.ColorHelper.GetRGBColor(workbook, fill.BackgroundColor), ToSpreadDrawingColorSettings(fill.BackgroudDrawingColorSettings), true));
-                    }
                     case FillFormatType.GroupFill:
                         return null;
                 }
@@ -498,7 +491,6 @@ namespace Dt.Cells.Data
 
         internal static ImageSource GetImageSource(IExcelImage image)
         {
-            Action action = null;
             if (image == null)
             {
                 return null;
@@ -506,22 +498,15 @@ namespace Dt.Cells.Data
             ImageSource result = null;
             try
             {
-                if (action == null)
+                using (MemoryStream stream = new MemoryStream(image.SourceArray))
                 {
-                    action = delegate {
-                        using (MemoryStream stream = new MemoryStream(image.SourceArray))
-                        {
-                            stream.Seek(0L, (SeekOrigin) SeekOrigin.Begin);
-                            result = new BitmapImage();
-                            Utility.InitImageSource(result as BitmapImage, (Stream) stream);
-                        }
-                    };
+                    stream.Seek(0L, (SeekOrigin)SeekOrigin.Begin);
+                    result = new BitmapImage();
+                    Utility.InitImageSource(result as BitmapImage, (Stream)stream);
                 }
-                UIAdaptor.InvokeSync(action);
             }
             catch
-            {
-            }
+            { }
             return result;
         }
 
@@ -553,7 +538,7 @@ namespace Dt.Cells.Data
                     {
                         num = (int)(solidFill.DrawingColorSettings.Tint.Value / 100000.0);
                     }
-                    solidFill.Color = new ExcelColor(solidFill.Color.ColorType, solidFill.Color.Value, (double) num);
+                    solidFill.Color = new ExcelColor(solidFill.Color.ColorType, solidFill.Color.Value, (double)num);
                 }
                 return solidFill.Color.GetThemeColorName();
             }
@@ -565,17 +550,14 @@ namespace Dt.Cells.Data
             {
                 return null;
             }
-            Brush result = null;
-            UIAdaptor.InvokeSync(delegate {
-                Windows.UI.Color rGBColor = Dt.Cells.Data.ColorHelper.GetRGBColor(workbook, solidFill.Color);
-                if (solidFill.DrawingColorSettings.Alpha.HasValue)
-                {
-                    byte a =(byte)( (solidFill.DrawingColorSettings.Alpha.Value / 100000.0) * 255.0);
-                    rGBColor = Windows.UI.Color.FromArgb(a, rGBColor.R, rGBColor.G, rGBColor.B);
-                }
-                result = new SolidColorBrush(rGBColor);
-            });
-            return result;
+
+            Windows.UI.Color rGBColor = Dt.Cells.Data.ColorHelper.GetRGBColor(workbook, solidFill.Color);
+            if (solidFill.DrawingColorSettings.Alpha.HasValue)
+            {
+                byte a = (byte)((solidFill.DrawingColorSettings.Alpha.Value / 100000.0) * 255.0);
+                rGBColor = Windows.UI.Color.FromArgb(a, rGBColor.R, rGBColor.G, rGBColor.B);
+            }
+            return new SolidColorBrush(rGBColor);
         }
 
         internal static SpreadDrawingColorSettings GetSpreadDrawingColorSettings(IFillFormat fillFormat)
@@ -721,7 +703,6 @@ namespace Dt.Cells.Data
 
         private static void SetAxis(IExcelChartAxis axis, Workbook workbook, Axis result)
         {
-            Action action = null;
             if (axis is IExcelChartCategoryAxis)
             {
                 result.AxisType = AxisType.Category;
@@ -752,19 +733,13 @@ namespace Dt.Cells.Data
                 {
                     result.FontSize = richTextFontSize.Value;
                 }
-                if (action == null)
+                FontFamily richTextFamily = RichTextUtility.GetRichTextFamily(axis.TextFormat.TextParagraphs);
+                if (richTextFamily != null)
                 {
-                    action = delegate {
-                        FontFamily richTextFamily = RichTextUtility.GetRichTextFamily(axis.TextFormat.TextParagraphs);
-                        if (richTextFamily != null)
-                        {
-                            result.FontFamily = richTextFamily;
-                        }
-                        result.FontStyle = RichTextUtility.GetRichTextFontStyle(axis.TextFormat.TextParagraphs);
-                        result.FontWeight = RichTextUtility.GetRichTextFontWeight(axis.TextFormat.TextParagraphs);
-                    };
+                    result.FontFamily = richTextFamily;
                 }
-                UIAdaptor.InvokeSync(action);
+                result.FontStyle = RichTextUtility.GetRichTextFontStyle(axis.TextFormat.TextParagraphs);
+                result.FontWeight = RichTextUtility.GetRichTextFontWeight(axis.TextFormat.TextParagraphs);
                 if ((axis.TextFormat.Rotation >= -90.0) && (axis.TextFormat.Rotation <= 90.0))
                 {
                     result.LabelAngle = axis.TextFormat.Rotation;
@@ -831,7 +806,7 @@ namespace Dt.Cells.Data
                     object stokeBrush = GetStokeBrush(axis.MajorGridlines.Format, workbook);
                     if (stokeBrush is string)
                     {
-                        result.MajorGridlinesStrokeThemeColor = (string) (stokeBrush as string);
+                        result.MajorGridlinesStrokeThemeColor = (string)(stokeBrush as string);
                     }
                     else if (stokeBrush is Brush)
                     {
@@ -865,7 +840,7 @@ namespace Dt.Cells.Data
                                 break;
                         }
                         result.MajorGridlinesStrokeDashType = GetStrokeDashType(axis.MajorGridlines.Format.LineFormat.LineDashType);
-                        result.MajorGridLineJoinType = (PenLineJoin) lineFormat.JoinType;
+                        result.MajorGridLineJoinType = (PenLineJoin)lineFormat.JoinType;
                         result.MajorGridLineBeginArrowSettings = lineFormat.HeadLineEndStyle.ToArrowSettings();
                         result.MajorGridLineEndArrowSettings = lineFormat.TailLineEndStyle.ToArrowSettings();
                     }
@@ -888,7 +863,7 @@ namespace Dt.Cells.Data
                     object obj3 = GetStokeBrush(axis.MinorGridlines.Format, workbook);
                     if (obj3 is string)
                     {
-                        result.MinorGridlinesStrokeThemeColor = (string) (obj3 as string);
+                        result.MinorGridlinesStrokeThemeColor = (string)(obj3 as string);
                     }
                     else if (obj3 is Brush)
                     {
@@ -919,14 +894,14 @@ namespace Dt.Cells.Data
                                 break;
                         }
                         result.MinorGridlinesStrokeDashType = GetStrokeDashType(axis.MinorGridlines.Format.LineFormat.LineDashType);
-                        result.MinorGridLineJoinType = (PenLineJoin) format2.JoinType;
+                        result.MinorGridLineJoinType = (PenLineJoin)format2.JoinType;
                         result.MinorGridLineBeginArrowSettings = format2.HeadLineEndStyle.ToArrowSettings();
                         result.MinorGridLineEndArrowSettings = format2.TailLineEndStyle.ToArrowSettings();
                     }
                 }
             }
-            result.MajorTickPosition = (AxisTickPosition) axis.MajorTickMark;
-            result.MinorTickPosition = (AxisTickPosition) axis.MinorTickMark;
+            result.MajorTickPosition = (AxisTickPosition)axis.MajorTickMark;
+            result.MinorTickPosition = (AxisTickPosition)axis.MinorTickMark;
             switch (axis.TickLabelPosition)
             {
                 case TickLabelPosition.None:
@@ -950,7 +925,7 @@ namespace Dt.Cells.Data
             }
             result.Visible = !axis.Delete;
             result.Id = axis.Id;
-            result.AxisCrosses = (Dt.Cells.Data.AxisCrosses) axis.Crosses;
+            result.AxisCrosses = (Dt.Cells.Data.AxisCrosses)axis.Crosses;
             result.CrossAt = axis.CrosssAt;
             if ((axis.AxisPosition == Dt.Xls.Chart.AxisPosition.Left) || (axis.AxisPosition == Dt.Xls.Chart.AxisPosition.Bottom))
             {
@@ -981,13 +956,13 @@ namespace Dt.Cells.Data
                 }
                 if (!axis3.IsAutoMajorTimeUint)
                 {
-                    result.MajorTimeUnit = (Dt.Cells.Data.AxisTimeUnit) axis3.MajorTimeUnit;
+                    result.MajorTimeUnit = (Dt.Cells.Data.AxisTimeUnit)axis3.MajorTimeUnit;
                 }
                 if (!axis3.IsAutoMinorTimeUnit)
                 {
-                    result.MinorTimeUnit = (Dt.Cells.Data.AxisTimeUnit) axis3.MinorTimeUnit;
+                    result.MinorTimeUnit = (Dt.Cells.Data.AxisTimeUnit)axis3.MinorTimeUnit;
                 }
-                result.BaseTimeUnit = (Dt.Cells.Data.AxisTimeUnit) axis3.BaseTimeUnit;
+                result.BaseTimeUnit = (Dt.Cells.Data.AxisTimeUnit)axis3.BaseTimeUnit;
             }
             else if (axis is ExcelChartSeriesAxis)
             {
@@ -1025,7 +1000,7 @@ namespace Dt.Cells.Data
                     }
                     else
                     {
-                        result.DisplayUnitSettings.DisplayUnit = (double) axis5.DislayUnits.BuiltInDisplayUnit;
+                        result.DisplayUnitSettings.DisplayUnit = (double)axis5.DislayUnits.BuiltInDisplayUnit;
                     }
                     result.DisplayUnitSettings.LabelLayout = axis5.DislayUnits.Layout.ToSpreadLayout();
                     if (!string.IsNullOrWhiteSpace(axis5.DislayUnits.TextFormula))
@@ -1037,7 +1012,7 @@ namespace Dt.Cells.Data
                         result.DisplayUnitSettings.LabelRichText = axis5.DislayUnits.RichText;
                     }
                 }
-                result.CrossBetween = (AxisCrossBetween) axis5.CrossBetween;
+                result.CrossBetween = (AxisCrossBetween)axis5.CrossBetween;
             }
         }
 
@@ -1102,7 +1077,7 @@ namespace Dt.Cells.Data
                 }
                 else
                 {
-                    spreadDataSeries.MarkerSize = new Windows.Foundation.Size((double) dataMarker.MarkerSize, (double) dataMarker.MarkerSize);
+                    spreadDataSeries.MarkerSize = new Windows.Foundation.Size((double)dataMarker.MarkerSize, (double)dataMarker.MarkerSize);
                 }
                 if (dataMarker.Format != null)
                 {
@@ -1202,14 +1177,14 @@ namespace Dt.Cells.Data
                 scaling.Min = double.NaN;
             }
             excelAxis.Scaling = scaling;
-            excelAxis.MinorTickMark = (TickMark) axis.MinorTickPosition;
-            excelAxis.MajorTickMark = (TickMark) axis.MajorTickPosition;
+            excelAxis.MinorTickMark = (TickMark)axis.MinorTickPosition;
+            excelAxis.MajorTickMark = (TickMark)axis.MajorTickPosition;
             if (axis.ShowMajorGridlines)
             {
                 excelAxis.MajorGridlines = new ExcelGridLine();
                 if (!axis.IsMajorGridlinesStrokeAutomatic)
                 {
-                    IExcelChartFormat format = CreateExcelChartFormat(null, null, axis.MajorGridlinesStrokeThemeColor, axis.MajorGridlinesStroke, axis.MajorGridlinesStrokeThickness, true, axis.IsMajorGridlinesStrokeAutomatic, axis.MajorGridlinesStrokeDashType, 1.0, null, (ExcelDrawingColorSettings) axis.MajorGridlineDrawingColorSettings);
+                    IExcelChartFormat format = CreateExcelChartFormat(null, null, axis.MajorGridlinesStrokeThemeColor, axis.MajorGridlinesStroke, axis.MajorGridlinesStrokeThickness, true, axis.IsMajorGridlinesStrokeAutomatic, axis.MajorGridlinesStrokeDashType, 1.0, null, (ExcelDrawingColorSettings)axis.MajorGridlineDrawingColorSettings);
                     if (format != null)
                     {
                         excelAxis.MajorGridlines.Format = format;
@@ -1221,7 +1196,7 @@ namespace Dt.Cells.Data
                 excelAxis.MinorGridlines = new ExcelGridLine();
                 if (!axis.IsMinorGridlinesStrokeAutomatic)
                 {
-                    IExcelChartFormat format2 = CreateExcelChartFormat(null, null, axis.MinorGridlinesStrokeThemeColor, axis.MinorGridlinesStroke, axis.MinorGridlinesStrokeThickness, true, axis.IsMinorGridlinesStrokeAutomatic, axis.MinorGridlinesStrokeDashType, 0.0, null, (ExcelDrawingColorSettings) axis.MinorGridlineDrawingColorSettings);
+                    IExcelChartFormat format2 = CreateExcelChartFormat(null, null, axis.MinorGridlinesStrokeThemeColor, axis.MinorGridlinesStroke, axis.MinorGridlinesStrokeThickness, true, axis.IsMinorGridlinesStrokeAutomatic, axis.MinorGridlinesStrokeDashType, 0.0, null, (ExcelDrawingColorSettings)axis.MinorGridlineDrawingColorSettings);
                     if (format2 != null)
                     {
                         excelAxis.MinorGridlines.Format = format2;
@@ -1447,9 +1422,10 @@ namespace Dt.Cells.Data
                         for (int i = 0; i < series2.SizeValues.Count; i++)
                         {
                             double num2 = series2.SizeValues[i];
-                            ExcelNumberPoint point = new ExcelNumberPoint {
+                            ExcelNumberPoint point = new ExcelNumberPoint
+                            {
                                 Index = i,
-                                Value = ((double) num2).ToString((IFormatProvider) CultureInfo.InvariantCulture)
+                                Value = ((double)num2).ToString((IFormatProvider)CultureInfo.InvariantCulture)
                             };
                             value2.NumericLiterals.NumberPoints.Add(point);
                         }
@@ -1545,11 +1521,12 @@ namespace Dt.Cells.Data
                     data.NumericLiterals = new NumericDataLiterals();
                     for (int i = 0; i < series.Values.Count; i++)
                     {
-                        ExcelNumberPoint point = new ExcelNumberPoint {
+                        ExcelNumberPoint point = new ExcelNumberPoint
+                        {
                             Index = i
                         };
                         double num2 = series.Values[i];
-                        point.Value = ((double) num2).ToString((IFormatProvider) CultureInfo.InvariantCulture);
+                        point.Value = ((double)num2).ToString((IFormatProvider)CultureInfo.InvariantCulture);
                         data.NumericLiterals.NumberPoints.Add(point);
                     }
                 }
@@ -1582,35 +1559,33 @@ namespace Dt.Cells.Data
                 {
                     dataLabels.NumberFormat = chartLabelStyleInfo.Formatter.FormatString;
                 }
-                dataLabels.ShapeFormat = CreateExcelChartFormat(chartLabelStyleInfo.FillThemeColor, chartLabelStyleInfo.Fill, chartLabelStyleInfo.StrokeThemeColor, chartLabelStyleInfo.Stroke, chartLabelStyleInfo.StrokeThickness, false, false, chartLabelStyleInfo.StrokeDashType, 1.0, (ExcelDrawingColorSettings) chartLabelStyleInfo.FillDrawingColorSettings, (ExcelDrawingColorSettings) chartLabelStyleInfo.StrokeDrawingColorSettings);
-                UIAdaptor.InvokeSync(delegate {
-                    if ((chartLabelStyleInfo != null) && ((((chartLabelStyleInfo.FontFamily != null) || (chartLabelStyleInfo.Foreground != null)) || (!string.IsNullOrWhiteSpace(chartLabelStyleInfo.ForegroundThemeColor) || !(chartLabelStyleInfo.FontSize + 1.0).IsZero())) || (FontWeightsIsBold(chartLabelStyleInfo.FontWeight) || (chartLabelStyleInfo.FontStyle != FontStyle.Normal))))
+                dataLabels.ShapeFormat = CreateExcelChartFormat(chartLabelStyleInfo.FillThemeColor, chartLabelStyleInfo.Fill, chartLabelStyleInfo.StrokeThemeColor, chartLabelStyleInfo.Stroke, chartLabelStyleInfo.StrokeThickness, false, false, chartLabelStyleInfo.StrokeDashType, 1.0, (ExcelDrawingColorSettings)chartLabelStyleInfo.FillDrawingColorSettings, (ExcelDrawingColorSettings)chartLabelStyleInfo.StrokeDrawingColorSettings);
+                if ((chartLabelStyleInfo != null) && ((((chartLabelStyleInfo.FontFamily != null) || (chartLabelStyleInfo.Foreground != null)) || (!string.IsNullOrWhiteSpace(chartLabelStyleInfo.ForegroundThemeColor) || !(chartLabelStyleInfo.FontSize + 1.0).IsZero())) || (FontWeightsIsBold(chartLabelStyleInfo.FontWeight) || (chartLabelStyleInfo.FontStyle != FontStyle.Normal))))
+                {
+                    if (dataLabels.TextFormat == null)
                     {
-                        if (dataLabels.TextFormat == null)
-                        {
-                            dataLabels.TextFormat = new ExcelTextFormat();
-                            dataLabels.TextFormat.TextParagraphs.Add(new TextParagraph());
-                        }
-                        if (chartLabelStyleInfo.FontFamily != null)
-                        {
-                            RichTextUtility.SetFontFamily(dataLabels.TextFormat.TextParagraphs, chartLabelStyleInfo.FontFamily.GetFontName());
-                        }
-                        RichTextUtility.SetRichTextFill(dataLabels.TextFormat.TextParagraphs, chartLabelStyleInfo.ActualForeground);
-                        RichTextUtility.SetRichTextFontSize(dataLabels.TextFormat.TextParagraphs, chartLabelStyleInfo.ActualFontSize);
-                        if (chartLabelStyleInfo.FontStyle == FontStyle.Italic)
-                        {
-                            RichTextUtility.SetRichTextFontStyle(dataLabels.TextFormat.TextParagraphs, true);
-                        }
-                        if (FontWeightsIsBold(chartLabelStyleInfo.FontWeight))
-                        {
-                            RichTextUtility.SetRichtTextFontWeight(dataLabels.TextFormat.TextParagraphs, true);
-                        }
-                        else
-                        {
-                            RichTextUtility.SetRichtTextFontWeight(dataLabels.TextFormat.TextParagraphs, false);
-                        }
+                        dataLabels.TextFormat = new ExcelTextFormat();
+                        dataLabels.TextFormat.TextParagraphs.Add(new TextParagraph());
                     }
-                });
+                    if (chartLabelStyleInfo.FontFamily != null)
+                    {
+                        RichTextUtility.SetFontFamily(dataLabels.TextFormat.TextParagraphs, chartLabelStyleInfo.FontFamily.GetFontName());
+                    }
+                    RichTextUtility.SetRichTextFill(dataLabels.TextFormat.TextParagraphs, chartLabelStyleInfo.ActualForeground);
+                    RichTextUtility.SetRichTextFontSize(dataLabels.TextFormat.TextParagraphs, chartLabelStyleInfo.ActualFontSize);
+                    if (chartLabelStyleInfo.FontStyle == FontStyle.Italic)
+                    {
+                        RichTextUtility.SetRichTextFontStyle(dataLabels.TextFormat.TextParagraphs, true);
+                    }
+                    if (FontWeightsIsBold(chartLabelStyleInfo.FontWeight))
+                    {
+                        RichTextUtility.SetRichtTextFontWeight(dataLabels.TextFormat.TextParagraphs, true);
+                    }
+                    else
+                    {
+                        RichTextUtility.SetRichtTextFontWeight(dataLabels.TextFormat.TextParagraphs, false);
+                    }
+                }
             }
         }
 
@@ -1637,7 +1612,8 @@ namespace Dt.Cells.Data
                     }
                     else
                     {
-                        ExcelDataMarker marker = new ExcelDataMarker {
+                        ExcelDataMarker marker = new ExcelDataMarker
+                        {
                             MarkerStyle = DataPointMarkStyle.None
                         };
                         excelSeries.Marker = marker;
@@ -1679,7 +1655,7 @@ namespace Dt.Cells.Data
                     SetExcelChartBasicSeriesSettings(chart, series2, excelSeries, DataSeriesCounter.Index);
                     if ((chart.PieChartSettings != null) && chart.ChartType.ToString().ToLower().Contains("exploded"))
                     {
-                        excelSeries.Explosion =(int) (chart.PieChartSettings.Explosion * 100.0);
+                        excelSeries.Explosion = (int)(chart.PieChartSettings.Explosion * 100.0);
                     }
                     excelChart.PieSeries.Add(excelSeries);
                     DataSeriesCounter.Index++;
@@ -1702,7 +1678,8 @@ namespace Dt.Cells.Data
                     }
                     else
                     {
-                        ExcelDataMarker marker = new ExcelDataMarker {
+                        ExcelDataMarker marker = new ExcelDataMarker
+                        {
                             MarkerStyle = DataPointMarkStyle.None
                         };
                         excelSeries.Marker = marker;
@@ -1747,7 +1724,8 @@ namespace Dt.Cells.Data
                         {
                             excelSeries.Format = new ExcelChartFormat();
                         }
-                        LineFormat format = new LineFormat {
+                        LineFormat format = new LineFormat
+                        {
                             FillFormat = new NoFillFormat()
                         };
                         excelSeries.Format.LineFormat = format;
@@ -1846,7 +1824,7 @@ namespace Dt.Cells.Data
                 object obj2 = GetSolidFill(solidFill, workbook);
                 if (obj2 is string)
                 {
-                    series.NegativeFillThemeColor = (string) (obj2 as string);
+                    series.NegativeFillThemeColor = (string)(obj2 as string);
                 }
                 else if (obj2 is SolidColorBrush)
                 {
@@ -1960,7 +1938,7 @@ namespace Dt.Cells.Data
                 object fillBrush = GetFillBrush(format, workbook);
                 if (fillBrush is string)
                 {
-                    chartElement.FillThemeColor = (string) (fillBrush as string);
+                    chartElement.FillThemeColor = (string)(fillBrush as string);
                 }
                 else if (fillBrush is Brush)
                 {
@@ -1978,7 +1956,7 @@ namespace Dt.Cells.Data
                 object stokeBrush = GetStokeBrush(format, workbook);
                 if (stokeBrush is string)
                 {
-                    chartElement.StrokeThemeColor = (string) (stokeBrush as string);
+                    chartElement.StrokeThemeColor = (string)(stokeBrush as string);
                 }
                 else if (stokeBrush is Brush)
                 {
@@ -2013,7 +1991,6 @@ namespace Dt.Cells.Data
 
         internal static void SetSpreadDataLabelStyleInfo(ChartLabelStyleInfo chartLabelStyleInfo, IExcelDataLabels dataLabels, Workbook workbook)
         {
-            Action action = null;
             ChartLabelStyleInfo result;
             if (chartLabelStyleInfo != null)
             {
@@ -2026,15 +2003,9 @@ namespace Dt.Cells.Data
                     {
                         result.FontSize = richTextFontSize.Value;
                     }
-                    if (action == null)
-                    {
-                        action = delegate {
-                            result.FontFamily = RichTextUtility.GetRichTextFamily(dataLabels.TextFormat.TextParagraphs);
-                            result.FontStyle = RichTextUtility.GetRichTextFontStyle(dataLabels.TextFormat.TextParagraphs);
-                            result.FontWeight = RichTextUtility.GetRichTextFontWeight(dataLabels.TextFormat.TextParagraphs);
-                        };
-                    }
-                    UIAdaptor.InvokeSync(action);
+                    result.FontFamily = RichTextUtility.GetRichTextFamily(dataLabels.TextFormat.TextParagraphs);
+                    result.FontStyle = RichTextUtility.GetRichTextFontStyle(dataLabels.TextFormat.TextParagraphs);
+                    result.FontWeight = RichTextUtility.GetRichTextFontWeight(dataLabels.TextFormat.TextParagraphs);
                 }
                 string numberFormat = dataLabels.NumberFormat;
                 if (!string.IsNullOrEmpty(numberFormat))
@@ -2047,7 +2018,7 @@ namespace Dt.Cells.Data
                     object fillBrush = GetFillBrush(shapeFormat, workbook);
                     if (fillBrush is string)
                     {
-                        result.FillThemeColor = (string) (fillBrush as string);
+                        result.FillThemeColor = (string)(fillBrush as string);
                     }
                     else if (fillBrush is Brush)
                     {
@@ -2057,7 +2028,7 @@ namespace Dt.Cells.Data
                     object stokeBrush = GetStokeBrush(shapeFormat, workbook);
                     if (stokeBrush is string)
                     {
-                        result.StrokeThemeColor = (string) (stokeBrush as string);
+                        result.StrokeThemeColor = (string)(stokeBrush as string);
                     }
                     else if (stokeBrush is Brush)
                     {
@@ -2138,7 +2109,8 @@ namespace Dt.Cells.Data
         {
             if ((trendlines != null) && (trendlines.Count != 0))
             {
-                foreach (IExcelTrendLine line in Enumerable.OrderBy<IExcelTrendLine, int>((IEnumerable<IExcelTrendLine>) trendlines, delegate (IExcelTrendLine item) {
+                foreach (IExcelTrendLine line in Enumerable.OrderBy<IExcelTrendLine, int>((IEnumerable<IExcelTrendLine>)trendlines, delegate (IExcelTrendLine item)
+                {
                     return item.Order;
                 }))
                 {
@@ -2190,15 +2162,15 @@ namespace Dt.Cells.Data
             SetExcelAxis(axis, excelAxis);
             if (!axis.AutoMajorUnit)
             {
-                excelAxis.MajorUnit = (int) Math.Ceiling(axis.MajorUnit);
+                excelAxis.MajorUnit = (int)Math.Ceiling(axis.MajorUnit);
             }
             if (!axis.AutoMinorUnit)
             {
-                excelAxis.MinorUnit = (int) Math.Ceiling(axis.MinorUnit);
+                excelAxis.MinorUnit = (int)Math.Ceiling(axis.MinorUnit);
             }
-            excelAxis.MajorTimeUnit = (Dt.Xls.Chart.AxisTimeUnit) axis.MajorTimeUnit;
-            excelAxis.MinorTimeUnit = (Dt.Xls.Chart.AxisTimeUnit) axis.MinorTimeUnit;
-            excelAxis.BaseTimeUnit = (Dt.Xls.Chart.AxisTimeUnit) axis.BaseTimeUnit;
+            excelAxis.MajorTimeUnit = (Dt.Xls.Chart.AxisTimeUnit)axis.MajorTimeUnit;
+            excelAxis.MinorTimeUnit = (Dt.Xls.Chart.AxisTimeUnit)axis.MinorTimeUnit;
+            excelAxis.BaseTimeUnit = (Dt.Xls.Chart.AxisTimeUnit)axis.BaseTimeUnit;
             excelAxis.LabelOffset = axis.LableOffset;
             excelAxis.IsAutomaticCategoryAxis = false;
             excelAxis.ShapeFormat = axis.GetExcelChartForamt();
@@ -2218,7 +2190,7 @@ namespace Dt.Cells.Data
             {
                 return null;
             }
-            return new ArrowSettings { Length = (ArrowSize) lineEndStyle.Length, Width = (ArrowSize) lineEndStyle.Width, Type = (ArrowType) lineEndStyle.Type };
+            return new ArrowSettings { Length = (ArrowSize)lineEndStyle.Length, Width = (ArrowSize)lineEndStyle.Width, Type = (ArrowType)lineEndStyle.Type };
         }
 
         internal static IExcelAreaChart ToExcelAreaChart(this SpreadChart chart)
@@ -2244,7 +2216,7 @@ namespace Dt.Cells.Data
                 }
                 if (excelChart != null)
                 {
-                    SetExcelAreaChartSettings(chart, excelChart, (IEnumerable<SpreadDataSeries>) list);
+                    SetExcelAreaChartSettings(chart, excelChart, (IEnumerable<SpreadDataSeries>)list);
                     excelChart.DropLine = chart.DropLine;
                     return excelChart;
                 }
@@ -2279,7 +2251,7 @@ namespace Dt.Cells.Data
             {
                 return null;
             }
-            SetExcelBarChartBaseSettings(chart, excelChart, (IEnumerable<SpreadDataSeries>) list);
+            SetExcelBarChartBaseSettings(chart, excelChart, (IEnumerable<SpreadDataSeries>)list);
             if (chart.DataSeriesSettings != null)
             {
                 if (!double.IsNaN(chart.DataSeriesSettings.SeriesOverlap))
@@ -2292,7 +2264,7 @@ namespace Dt.Cells.Data
                 }
                 if (!double.IsNaN(chart.DataSeriesSettings.GapWidth))
                 {
-                    excelChart.GapWidth =(int)( chart.DataSeriesSettings.GapWidth * 100.0);
+                    excelChart.GapWidth = (int)(chart.DataSeriesSettings.GapWidth * 100.0);
                 }
                 else
                 {
@@ -2333,11 +2305,11 @@ namespace Dt.Cells.Data
             {
                 return null;
             }
-            SetExcelBubbleChartSettings(chart, excelChart, (IEnumerable<SpreadBubbleSeries>) list);
+            SetExcelBubbleChartSettings(chart, excelChart, (IEnumerable<SpreadBubbleSeries>)list);
             if (chart.BubbleChartSettings != null)
             {
-                excelChart.SizeRepresents = (Dt.Xls.Chart.BubbleSizeRepresents) chart.BubbleChartSettings.BubbleSizeRepresents;
-                excelChart.BubbleScale =(int)( chart.BubbleChartSettings.BubbleScale * 100.0);
+                excelChart.SizeRepresents = (Dt.Xls.Chart.BubbleSizeRepresents)chart.BubbleChartSettings.BubbleSizeRepresents;
+                excelChart.BubbleScale = (int)(chart.BubbleChartSettings.BubbleScale * 100.0);
                 excelChart.ShowNegativeBubbles = chart.BubbleChartSettings.ShowNegativeBubble;
             }
             return excelChart;
@@ -2376,9 +2348,10 @@ namespace Dt.Cells.Data
                     for (int i = 0; i < axis.Items.Count; i++)
                     {
                         object obj3 = axis.Items[i];
-                        ExcelNumberPoint point = new ExcelNumberPoint {
+                        ExcelNumberPoint point = new ExcelNumberPoint
+                        {
                             Index = i,
-                            Value = Convert.ToString(obj3, (IFormatProvider) CultureInfo.InvariantCulture)
+                            Value = Convert.ToString(obj3, (IFormatProvider)CultureInfo.InvariantCulture)
                         };
                         data.NumericLiterals.NumberPoints.Add(point);
                     }
@@ -2388,7 +2361,7 @@ namespace Dt.Cells.Data
                     data.StringLiterals = new StringLiteralData();
                     for (int j = 0; j < axis.Items.Count; j++)
                     {
-                        data.StringLiterals.StringLiteralDatas.Add(Convert.ToString(axis.Items[j], (IFormatProvider) CultureInfo.InvariantCulture));
+                        data.StringLiterals.StringLiteralDatas.Add(Convert.ToString(axis.Items[j], (IFormatProvider)CultureInfo.InvariantCulture));
                     }
                 }
             }
@@ -2452,7 +2425,7 @@ namespace Dt.Cells.Data
                 {
                     axis4.MinorUnit = axis.MinorUnit;
                 }
-                axis4.CrossBetween = (CrossBetween) axis.CrossBetween;
+                axis4.CrossBetween = (CrossBetween)axis.CrossBetween;
                 if (axis.DisplayUnitSettings != null)
                 {
                     DisplayUnits units = new DisplayUnits();
@@ -2462,7 +2435,7 @@ namespace Dt.Cells.Data
                     {
                         if ((num - axis.DisplayUnitSettings.DisplayUnit).IsZero())
                         {
-                            none = (BuiltInDisplayUnitValue) num;
+                            none = (BuiltInDisplayUnitValue)num;
                         }
                     }
                     if ((axis.DisplayUnitSettings.DisplayUnit > 0.0) && (none != BuiltInDisplayUnitValue.None))
@@ -2502,15 +2475,15 @@ namespace Dt.Cells.Data
             SetExcelAxis(axis, excelAxis);
             if (!axis.AutoMajorUnit)
             {
-                excelAxis.MajorUnit = (int) Math.Ceiling(axis.MajorUnit);
+                excelAxis.MajorUnit = (int)Math.Ceiling(axis.MajorUnit);
             }
             if (!axis.AutoMinorUnit)
             {
-                excelAxis.MinorUnit = (int) Math.Ceiling(axis.MinorUnit);
+                excelAxis.MinorUnit = (int)Math.Ceiling(axis.MinorUnit);
             }
-            excelAxis.MajorTimeUnit = (Dt.Xls.Chart.AxisTimeUnit) axis.MajorTimeUnit;
-            excelAxis.MinorTimeUnit = (Dt.Xls.Chart.AxisTimeUnit) axis.MinorTimeUnit;
-            excelAxis.BaseTimeUnit = (Dt.Xls.Chart.AxisTimeUnit) axis.BaseTimeUnit;
+            excelAxis.MajorTimeUnit = (Dt.Xls.Chart.AxisTimeUnit)axis.MajorTimeUnit;
+            excelAxis.MinorTimeUnit = (Dt.Xls.Chart.AxisTimeUnit)axis.MinorTimeUnit;
+            excelAxis.BaseTimeUnit = (Dt.Xls.Chart.AxisTimeUnit)axis.BaseTimeUnit;
             excelAxis.LabelOffset = axis.LableOffset;
             excelAxis.IsAutomaticCategoryAxis = false;
             excelAxis.ShapeFormat = axis.GetExcelChartForamt();
@@ -2539,7 +2512,7 @@ namespace Dt.Cells.Data
             {
                 return null;
             }
-            return CreateExcelChartFormat(format.FillThemeColor, format.Fill, format.StrokeThemeColor, format.Stroke, format.StrokeThickness, format.IsAutomaticFill, format.IsAutomaticStroke, format.StrokeDashType, 1.0, (ExcelDrawingColorSettings) format.FillDrawingColorSettings, (ExcelDrawingColorSettings) format.StrokeDrawingColorSettings);
+            return CreateExcelChartFormat(format.FillThemeColor, format.Fill, format.StrokeThemeColor, format.Stroke, format.StrokeThickness, format.IsAutomaticFill, format.IsAutomaticStroke, format.StrokeDashType, 1.0, (ExcelDrawingColorSettings)format.FillDrawingColorSettings, (ExcelDrawingColorSettings)format.StrokeDrawingColorSettings);
         }
 
         internal static IExcelChartFormat ToExcelChartFormat(this FloatingObjectStyleInfo format)
@@ -2557,7 +2530,8 @@ namespace Dt.Cells.Data
             {
                 return null;
             }
-            ExcelDataLabels labels = new ExcelDataLabels {
+            ExcelDataLabels labels = new ExcelDataLabels
+            {
                 ShowCategoryName = dataLabelSettings.ShowCategoryName,
                 ShowValue = dataLabelSettings.ShowValue,
                 ShowSeriesName = dataLabelSettings.ShowSeriesName,
@@ -2566,7 +2540,7 @@ namespace Dt.Cells.Data
                 ShowBubbleSize = dataLabelSettings.ShowBubbleSize,
                 ShowPercentage = dataLabelSettings.ShowPercent,
                 ShowLeaderLines = dataLabelSettings.IncludeLeaderLines,
-                Position = (Dt.Xls.Chart.DataLabelPosition) dataLabelSettings.Position
+                Position = (Dt.Xls.Chart.DataLabelPosition)dataLabelSettings.Position
             };
             if (dataLabelSettings.DataLabelList != null)
             {
@@ -2630,7 +2604,7 @@ namespace Dt.Cells.Data
                     break;
             }
             Windows.Foundation.Size markerSize = dataMarker.MarkerSize;
-            marker.MarkerSize = (int) dataMarker.MarkerSize.Width;
+            marker.MarkerSize = (int)dataMarker.MarkerSize.Width;
             marker.Format = dataMarker.StyleInfo.ToExcelChartFormat();
             return marker;
         }
@@ -2689,7 +2663,7 @@ namespace Dt.Cells.Data
                     break;
             }
             Windows.Foundation.Size markerSize = spreadDataSeries.MarkerSize;
-            marker.MarkerSize = (int) spreadDataSeries.MarkerSize.Width;
+            marker.MarkerSize = (int)spreadDataSeries.MarkerSize.Width;
             if (spreadDataSeries.DataMarkerStyle != null)
             {
                 marker.Format = spreadDataSeries.DataMarkerStyle.ToExcelChartFormat();
@@ -2756,11 +2730,11 @@ namespace Dt.Cells.Data
             {
                 return null;
             }
-            SetExcelPieChartSettings(chart, excelChart, (IEnumerable<SpreadDataSeries>) list);
+            SetExcelPieChartSettings(chart, excelChart, (IEnumerable<SpreadDataSeries>)list);
             if (chart.PieChartSettings != null)
             {
                 excelChart.FirstSliceAngle = chart.PieChartSettings.FirstSliceAngle;
-                excelChart.HoleSize =(int)( chart.PieChartSettings.HoleSize * 100.0);
+                excelChart.HoleSize = (int)(chart.PieChartSettings.HoleSize * 100.0);
             }
             return excelChart;
         }
@@ -2771,10 +2745,11 @@ namespace Dt.Cells.Data
             {
                 return null;
             }
-            ExcelErrorBars bars = new ExcelErrorBars {
-                ErrorBarType = (ExcelErrorBarType) errorBars.ErrorBarType,
-                ErrorBarValueType = (ExcelErrorBarValueType) errorBars.ErrorBarValueType,
-                ErrorBarDireciton = (ExcelErrorBarDireciton) errorBars.ErrorBarDireciton,
+            ExcelErrorBars bars = new ExcelErrorBars
+            {
+                ErrorBarType = (ExcelErrorBarType)errorBars.ErrorBarType,
+                ErrorBarValueType = (ExcelErrorBarValueType)errorBars.ErrorBarValueType,
+                ErrorBarDireciton = (ExcelErrorBarDireciton)errorBars.ErrorBarDireciton,
                 NoEndCap = errorBars.NoEndCap
             };
             if (errorBars.Minus != null)
@@ -2813,9 +2788,7 @@ namespace Dt.Cells.Data
             {
                 SolidColorBrush solidColorBrush = brush as SolidColorBrush;
                 SolidFillFormat result = new SolidFillFormat();
-                UIAdaptor.InvokeSync(delegate {
-                    result.Color = new ExcelColor(GcColor.FromArgb(solidColorBrush.Color.A, solidColorBrush.Color.R, solidColorBrush.Color.G, solidColorBrush.Color.B));
-                });
+                result.Color = new ExcelColor(GcColor.FromArgb(solidColorBrush.Color.A, solidColorBrush.Color.R, solidColorBrush.Color.G, solidColorBrush.Color.B));
                 if (solidColorBrush.Color.A == 0)
                 {
                     if (result.DrawingColorSettings == null)
@@ -2828,32 +2801,21 @@ namespace Dt.Cells.Data
             }
             if (brush is GradientBrush)
             {
-                Action action = null;
                 GradientBrush gradientBrhs = brush as GradientBrush;
                 GradientFillFormat result = new GradientFillFormat();
-                UIAdaptor.InvokeSync(delegate {
-                    foreach (GradientStop stop in gradientBrhs.GradientStops)
+                foreach (GradientStop stop in gradientBrhs.GradientStops)
+                {
+                    ExcelGradientStop stop2 = new ExcelGradientStop
                     {
-                        ExcelGradientStop stop2 = new ExcelGradientStop {
-                            Color = new ExcelColor(GcColor.FromArgb(stop.Color.A, stop.Color.R, stop.Color.G, stop.Color.B)),
-                            Position = stop.Offset
-                        };
-                        result.GradientStops.Add(stop2);
-                    }
-                });
+                        Color = new ExcelColor(GcColor.FromArgb(stop.Color.A, stop.Color.R, stop.Color.G, stop.Color.B)),
+                        Position = stop.Offset
+                    };
+                    result.GradientStops.Add(stop2);
+                }
                 if (brush is LinearGradientBrush)
                 {
                     result.GradientFillType = GradientFillType.Linear;
-                    if (action == null)
-                    {
-                        action = delegate {
-                            if (brush is LinearGradientBrush)
-                            {
-                                result.Angle = GetGradientFillAngle(brush as GradientBrush);
-                            }
-                        };
-                    }
-                    UIAdaptor.InvokeSync(action);
+                    result.Angle = GetGradientFillAngle(brush as GradientBrush);
                 }
                 return result;
             }
@@ -2873,12 +2835,13 @@ namespace Dt.Cells.Data
             Dt.Xls.Chart.Layout layout2 = new Dt.Xls.Chart.Layout();
             if (layout.ManualLayout != null)
             {
-                ExcelManualLayout layout3 = new ExcelManualLayout {
-                    Target = (ExcelLayoutTarget) layout.ManualLayout.Target,
-                    HeightMode = (ExcelLayoutMode) layout.ManualLayout.HeightMode,
-                    WidthMode = (ExcelLayoutMode) layout.ManualLayout.WidthMode,
-                    LeftMode = (ExcelLayoutMode) layout.ManualLayout.LeftMode,
-                    TopMode = (ExcelLayoutMode) layout.ManualLayout.TopMode,
+                ExcelManualLayout layout3 = new ExcelManualLayout
+                {
+                    Target = (ExcelLayoutTarget)layout.ManualLayout.Target,
+                    HeightMode = (ExcelLayoutMode)layout.ManualLayout.HeightMode,
+                    WidthMode = (ExcelLayoutMode)layout.ManualLayout.WidthMode,
+                    LeftMode = (ExcelLayoutMode)layout.ManualLayout.LeftMode,
+                    TopMode = (ExcelLayoutMode)layout.ManualLayout.TopMode,
                     Height = layout.ManualLayout.Height,
                     Width = layout.ManualLayout.Width,
                     Left = layout.ManualLayout.Left,
@@ -2891,12 +2854,12 @@ namespace Dt.Cells.Data
 
         internal static IExcelChartLegend ToExcelLegend(this Legend legend)
         {
-            Action action = null;
             if (legend == null)
             {
                 return null;
             }
-            ExcelChartLegend result = new ExcelChartLegend {
+            ExcelChartLegend result = new ExcelChartLegend
+            {
                 ShapeFormat = legend.GetExcelChartForamt(),
                 Overlay = legend.OverlapChart
             };
@@ -2929,35 +2892,29 @@ namespace Dt.Cells.Data
             result.TextFormat = legend.TextFormat;
             if (result.TextFormat == null)
             {
-                if (action == null)
+                if ((((legend.FontFamily != null) || (legend.Foreground != null)) || (!string.IsNullOrWhiteSpace(legend.ForegroundThemeColor) || !(legend.FontSize + 1.0).IsZero())) || (FontWeightsIsBold(legend.FontWeight) || (legend.FontStyle != FontStyle.Normal)))
                 {
-                    action = delegate {
-                        if ((((legend.FontFamily != null) || (legend.Foreground != null)) || (!string.IsNullOrWhiteSpace(legend.ForegroundThemeColor) || !(legend.FontSize + 1.0).IsZero())) || (FontWeightsIsBold(legend.FontWeight) || (legend.FontStyle != FontStyle.Normal)))
-                        {
-                            result.TextFormat = new ExcelTextFormat();
-                            result.TextFormat.TextParagraphs.Add(new TextParagraph());
-                            if (legend.FontFamily != null)
-                            {
-                                RichTextUtility.SetFontFamily(result.TextFormat.TextParagraphs, legend.FontFamily.GetFontName());
-                            }
-                            RichTextUtility.SetRichTextFill(result.TextFormat.TextParagraphs, legend.ActualForeground);
-                            RichTextUtility.SetRichTextFontSize(result.TextFormat.TextParagraphs, legend.ActualFontSize);
-                            if (legend.FontStyle == FontStyle.Italic)
-                            {
-                                RichTextUtility.SetRichTextFontStyle(result.TextFormat.TextParagraphs, true);
-                            }
-                            if (FontWeightsIsBold(legend.FontWeight))
-                            {
-                                RichTextUtility.SetRichtTextFontWeight(result.TextFormat.TextParagraphs, true);
-                            }
-                            else
-                            {
-                                RichTextUtility.SetRichtTextFontWeight(result.TextFormat.TextParagraphs, false);
-                            }
-                        }
-                    };
+                    result.TextFormat = new ExcelTextFormat();
+                    result.TextFormat.TextParagraphs.Add(new TextParagraph());
+                    if (legend.FontFamily != null)
+                    {
+                        RichTextUtility.SetFontFamily(result.TextFormat.TextParagraphs, legend.FontFamily.GetFontName());
+                    }
+                    RichTextUtility.SetRichTextFill(result.TextFormat.TextParagraphs, legend.ActualForeground);
+                    RichTextUtility.SetRichTextFontSize(result.TextFormat.TextParagraphs, legend.ActualFontSize);
+                    if (legend.FontStyle == FontStyle.Italic)
+                    {
+                        RichTextUtility.SetRichTextFontStyle(result.TextFormat.TextParagraphs, true);
+                    }
+                    if (FontWeightsIsBold(legend.FontWeight))
+                    {
+                        RichTextUtility.SetRichtTextFontWeight(result.TextFormat.TextParagraphs, true);
+                    }
+                    else
+                    {
+                        RichTextUtility.SetRichtTextFontWeight(result.TextFormat.TextParagraphs, false);
+                    }
                 }
-                UIAdaptor.InvokeSync(action);
             }
             result.Layout = legend.Layout.ToExcelLayout();
             result.LegendEntries = legend.LegendEntries;
@@ -2987,7 +2944,7 @@ namespace Dt.Cells.Data
                 }
                 if (excelChart != null)
                 {
-                    SetExcelLineChartSettings(chart, excelChart, (IEnumerable<SpreadDataSeries>) list);
+                    SetExcelLineChartSettings(chart, excelChart, (IEnumerable<SpreadDataSeries>)list);
                     excelChart.DropLine = chart.DropLine;
                     excelChart.HighLowLine = chart.HighLowLine;
                     excelChart.UpDownBars = chart.UpDownDarsSettings.ToExcelUpDownBars();
@@ -3003,7 +2960,7 @@ namespace Dt.Cells.Data
             {
                 return null;
             }
-            return new LineEndStyle { Length = (LineSize) arrowSettings.Length, Width = (LineSize) arrowSettings.Width, Type = (LineEndType) arrowSettings.Type };
+            return new LineEndStyle { Length = (LineSize)arrowSettings.Length, Width = (LineSize)arrowSettings.Width, Type = (LineEndType)arrowSettings.Type };
         }
 
         internal static NumericDataLiterals ToExcelNumericDataLiterals(this DoubleSeriesCollection seriesCollection, IFormatter formatter)
@@ -3024,9 +2981,10 @@ namespace Dt.Cells.Data
             for (int i = 0; i < seriesCollection.Count; i++)
             {
                 double num2 = seriesCollection[i];
-                ExcelNumberPoint point = new ExcelNumberPoint {
+                ExcelNumberPoint point = new ExcelNumberPoint
+                {
                     Index = i,
-                    Value = ((double) num2).ToString((IFormatProvider) CultureInfo.InvariantCulture)
+                    Value = ((double)num2).ToString((IFormatProvider)CultureInfo.InvariantCulture)
                 };
                 literals.NumberPoints.Add(point);
             }
@@ -3060,7 +3018,7 @@ namespace Dt.Cells.Data
             {
                 return null;
             }
-            SetExcelPieChartSettings(chart, excelChart, (IEnumerable<SpreadDataSeries>) list);
+            SetExcelPieChartSettings(chart, excelChart, (IEnumerable<SpreadDataSeries>)list);
             if (chart.PieChartSettings != null)
             {
                 excelChart.FirstSliceAngle = chart.PieChartSettings.FirstSliceAngle;
@@ -3091,7 +3049,7 @@ namespace Dt.Cells.Data
                 }
                 if (excelChart != null)
                 {
-                    SetExcelRadarChartSettings(chart, excelChart, (IEnumerable<SpreadDataSeries>) list);
+                    SetExcelRadarChartSettings(chart, excelChart, (IEnumerable<SpreadDataSeries>)list);
                     return excelChart;
                 }
             }
@@ -3121,7 +3079,7 @@ namespace Dt.Cells.Data
                 }
                 if (excelChart != null)
                 {
-                    SetExcelScatterChartSettings(chart, excelChart, (IEnumerable<SpreadXYDataSeries>) list);
+                    SetExcelScatterChartSettings(chart, excelChart, (IEnumerable<SpreadXYDataSeries>)list);
                     return excelChart;
                 }
             }
@@ -3175,9 +3133,10 @@ namespace Dt.Cells.Data
             for (int i = 0; i < spreadDataSeries.Values.Count; i++)
             {
                 double num2 = spreadDataSeries.Values[i];
-                ExcelNumberPoint point = new ExcelNumberPoint {
+                ExcelNumberPoint point = new ExcelNumberPoint
+                {
                     Index = i,
-                    Value = ((double) num2).ToString((IFormatProvider) CultureInfo.InvariantCulture)
+                    Value = ((double)num2).ToString((IFormatProvider)CultureInfo.InvariantCulture)
                 };
                 value2.NumericLiterals.NumberPoints.Add(point);
             }
@@ -3205,26 +3164,26 @@ namespace Dt.Cells.Data
                 {
                     RichText text = new RichText();
                     TextParagraph paragraph = new TextParagraph();
-                    UIAdaptor.InvokeSync(delegate {
-                        if (chartTitle.FontSize > 0.0)
+                    if (chartTitle.FontSize > 0.0)
+                    {
+                        paragraph.FontSize = new double?(UnitHelper.PixelToPoint(chartTitle.FontSize));
+                    }
+                    paragraph.Bold = new bool?(FontWeightsIsBold(chartTitle.FontWeight));
+                    paragraph.Italics = new bool?(chartTitle.FontStyle == FontStyle.Italic);
+                    if (!string.IsNullOrWhiteSpace(chartTitle.ForegroundThemeColor))
+                    {
+                        SolidFillFormat format = new SolidFillFormat
                         {
-                            paragraph.FontSize = new double?(UnitHelper.PixelToPoint(chartTitle.FontSize));
-                        }
-                        paragraph.Bold = new bool?(FontWeightsIsBold(chartTitle.FontWeight));
-                        paragraph.Italics = new bool?(chartTitle.FontStyle == FontStyle.Italic);
-                        if (!string.IsNullOrWhiteSpace(chartTitle.ForegroundThemeColor))
-                        {
-                            SolidFillFormat format = new SolidFillFormat {
-                                Color = chartTitle.ForegroundThemeColor.GetExcelChartThemeColor()
-                            };
-                            paragraph.FillFormat = format;
-                        }
-                        else if (chartTitle.Foreground != null)
-                        {
-                            paragraph.FillFormat = chartTitle.Foreground.ToExcelFillFormat();
-                        }
-                    });
-                    TextRun run = new TextRun {
+                            Color = chartTitle.ForegroundThemeColor.GetExcelChartThemeColor()
+                        };
+                        paragraph.FillFormat = format;
+                    }
+                    else if (chartTitle.Foreground != null)
+                    {
+                        paragraph.FillFormat = chartTitle.Foreground.ToExcelFillFormat();
+                    }
+                    TextRun run = new TextRun
+                    {
                         Text = chartTitle.Text
                     };
                     paragraph.TextRuns.Add(run);
@@ -3281,19 +3240,21 @@ namespace Dt.Cells.Data
             {
                 return null;
             }
-            ExcelTrendLine line = new ExcelTrendLine {
+            ExcelTrendLine line = new ExcelTrendLine
+            {
                 Name = trendLine.Name,
                 Backward = trendLine.Backward,
                 Forward = trendLine.Forward,
                 DisplayEquation = trendLine.DisplayEquation,
                 DisplayRSquaredValue = trendLine.DisplayRSquaredValue,
                 Period = trendLine.Period,
-                TrendlineType = (ExcelTrendLineType) trendLine.TrendlineType,
+                TrendlineType = (ExcelTrendLineType)trendLine.TrendlineType,
                 Intercept = trendLine.Intercept
             };
             if (trendLine.TrendLineLabel != null)
             {
-                ExcelTrendLineLabel label = new ExcelTrendLineLabel {
+                ExcelTrendLineLabel label = new ExcelTrendLineLabel
+                {
                     Layout = trendLine.TrendLineLabel.Layout.ToExcelLayout()
                 };
                 if (trendLine.TrendLineLabel.Formatter != null)
@@ -3421,7 +3382,6 @@ namespace Dt.Cells.Data
 
         internal static Legend ToSpreadChartLegend(this IExcelChartLegend legend, Workbook workbook)
         {
-            Action action = null;
             if (legend == null)
             {
                 return null;
@@ -3439,19 +3399,13 @@ namespace Dt.Cells.Data
                 {
                     result.FontSize = richTextFontSize.Value;
                 }
-                if (action == null)
+                FontFamily richTextFamily = RichTextUtility.GetRichTextFamily(legend.TextFormat.TextParagraphs);
+                if (richTextFamily != null)
                 {
-                    action = delegate {
-                        FontFamily richTextFamily = RichTextUtility.GetRichTextFamily(legend.TextFormat.TextParagraphs);
-                        if (richTextFamily != null)
-                        {
-                            result.FontFamily = richTextFamily;
-                        }
-                        result.FontStyle = RichTextUtility.GetRichTextFontStyle(legend.TextFormat.TextParagraphs);
-                        result.FontWeight = RichTextUtility.GetRichTextFontWeight(legend.TextFormat.TextParagraphs);
-                    };
+                    result.FontFamily = richTextFamily;
                 }
-                UIAdaptor.InvokeSync(action);
+                result.FontStyle = RichTextUtility.GetRichTextFontStyle(legend.TextFormat.TextParagraphs);
+                result.FontWeight = RichTextUtility.GetRichTextFontWeight(legend.TextFormat.TextParagraphs);
             }
             result.LegendEntries = legend.LegendEntries;
             switch (legend.Position)
@@ -3494,7 +3448,7 @@ namespace Dt.Cells.Data
             object fillBrush = GetFillBrush(format, workbook);
             if (fillBrush is string)
             {
-                info.FillThemeColor = (string) (fillBrush as string);
+                info.FillThemeColor = (string)(fillBrush as string);
             }
             else if (fillBrush is Brush)
             {
@@ -3512,7 +3466,7 @@ namespace Dt.Cells.Data
             object stokeBrush = GetStokeBrush(format, workbook);
             if (stokeBrush is string)
             {
-                info.StrokeThemeColor = (string) (stokeBrush as string);
+                info.StrokeThemeColor = (string)(stokeBrush as string);
             }
             else if (stokeBrush is Brush)
             {
@@ -3747,7 +3701,7 @@ namespace Dt.Cells.Data
             {
                 settings2.ShowBubbleSize = dataLabels.ShowBubbleSize;
             }
-            settings2.Position = (Dt.Cells.Data.DataLabelPosition) dataLabels.Position;
+            settings2.Position = (Dt.Cells.Data.DataLabelPosition)dataLabels.Position;
             settings2.DataLabelList = dataLabels.DataLabelList;
             settings2.TextFormat = dataLabels.TextFormat;
             settings2.NumberFormatLinked = dataLabels.NumberFormatLinked;
@@ -3809,7 +3763,7 @@ namespace Dt.Cells.Data
             }
             else
             {
-                marker.MarkerSize = new Windows.Foundation.Size((double) dataMarker.MarkerSize, (double) dataMarker.MarkerSize);
+                marker.MarkerSize = new Windows.Foundation.Size((double)dataMarker.MarkerSize, (double)dataMarker.MarkerSize);
             }
             marker.StyleInfo = dataMarker.Format.ToSpreadFloatingObjectStyleInfo(workbook);
             return marker;
@@ -3828,7 +3782,7 @@ namespace Dt.Cells.Data
 
         internal static SpreadDataSeries ToSpreadDataSeries(this IExcelLineSeries excelSeries, Workbook workbook)
         {
-            SpreadDataSeries spreadDataSeries = ((IExcelChartSeriesBase) excelSeries).ToSpreadDataSeries(workbook);
+            SpreadDataSeries spreadDataSeries = ((IExcelChartSeriesBase)excelSeries).ToSpreadDataSeries(workbook);
             if (spreadDataSeries != null)
             {
                 spreadDataSeries.SetDataMarker(excelSeries.Marker, workbook);
@@ -3881,10 +3835,11 @@ namespace Dt.Cells.Data
             {
                 return null;
             }
-            ErrorBars bars = new ErrorBars {
-                ErrorBarType = (ErrorBarType) errorBars.ErrorBarType,
-                ErrorBarValueType = (ErrorBarValueType) errorBars.ErrorBarValueType,
-                ErrorBarDireciton = (ErrorBarDireciton) errorBars.ErrorBarDireciton,
+            ErrorBars bars = new ErrorBars
+            {
+                ErrorBarType = (ErrorBarType)errorBars.ErrorBarType,
+                ErrorBarValueType = (ErrorBarValueType)errorBars.ErrorBarValueType,
+                ErrorBarDireciton = (ErrorBarDireciton)errorBars.ErrorBarDireciton,
                 NoEndCap = errorBars.NoEndCap
             };
             if (errorBars.Minus != null)
@@ -3925,7 +3880,7 @@ namespace Dt.Cells.Data
                 object fill = GetFill(errorBars.ErrorBarsFormat.FillFormat, workbook);
                 if (fill is string)
                 {
-                    bars.FillThemeColor = (string) (fill as string);
+                    bars.FillThemeColor = (string)(fill as string);
                 }
                 else if (fill is Brush)
                 {
@@ -3942,7 +3897,7 @@ namespace Dt.Cells.Data
                 object stokeBrush = GetStokeBrush(errorBars.ErrorBarsFormat, workbook);
                 if (stokeBrush is string)
                 {
-                    bars.StrokeThemeColor = (string) (stokeBrush as string);
+                    bars.StrokeThemeColor = (string)(stokeBrush as string);
                 }
                 else if (stokeBrush is Brush)
                 {
@@ -3974,17 +3929,17 @@ namespace Dt.Cells.Data
             object fillBrush = GetFillBrush(format, workbook);
             if (fillBrush is string)
             {
-                info.FillThemeColor = (string) (fillBrush as string);
+                info.FillThemeColor = (string)(fillBrush as string);
             }
             else if (fillBrush is Brush)
             {
                 info.Fill = fillBrush as Brush;
             }
-            info.FillDrawingColorSettings = (ExcelDrawingColorSettings) GetSpreadDrawingColorSettings(format.FillFormat);
+            info.FillDrawingColorSettings = (ExcelDrawingColorSettings)GetSpreadDrawingColorSettings(format.FillFormat);
             object stokeBrush = GetStokeBrush(format, workbook);
             if (stokeBrush is string)
             {
-                info.StrokeThemeColor = (string) (stokeBrush as string);
+                info.StrokeThemeColor = (string)(stokeBrush as string);
             }
             else if (stokeBrush is Brush)
             {
@@ -3992,7 +3947,7 @@ namespace Dt.Cells.Data
             }
             if (format.LineFormat != null)
             {
-                info.StrokeDrawingColorSettings = (ExcelDrawingColorSettings) GetSpreadDrawingColorSettings(format.LineFormat.FillFormat);
+                info.StrokeDrawingColorSettings = (ExcelDrawingColorSettings)GetSpreadDrawingColorSettings(format.LineFormat.FillFormat);
                 info.StrokeDashType = GetStrokeDashType(format.LineFormat.LineDashType);
             }
             double width = 0.0;
@@ -4013,12 +3968,13 @@ namespace Dt.Cells.Data
             Dt.Cells.Data.Layout layout2 = new Dt.Cells.Data.Layout();
             if (layout.ManualLayout != null)
             {
-                ManualLayout layout3 = new ManualLayout {
-                    Target = (LayoutTarget) layout.ManualLayout.Target,
-                    HeightMode = (LayoutMode) layout.ManualLayout.HeightMode,
-                    WidthMode = (LayoutMode) layout.ManualLayout.WidthMode,
-                    LeftMode = (LayoutMode) layout.ManualLayout.LeftMode,
-                    TopMode = (LayoutMode) layout.ManualLayout.TopMode,
+                ManualLayout layout3 = new ManualLayout
+                {
+                    Target = (LayoutTarget)layout.ManualLayout.Target,
+                    HeightMode = (LayoutMode)layout.ManualLayout.HeightMode,
+                    WidthMode = (LayoutMode)layout.ManualLayout.WidthMode,
+                    LeftMode = (LayoutMode)layout.ManualLayout.LeftMode,
+                    TopMode = (LayoutMode)layout.ManualLayout.TopMode,
                     Height = layout.ManualLayout.Height,
                     Width = layout.ManualLayout.Width,
                     Left = layout.ManualLayout.Left,
@@ -4035,20 +3991,22 @@ namespace Dt.Cells.Data
             {
                 return null;
             }
-            TrendLine line = new TrendLine {
+            TrendLine line = new TrendLine
+            {
                 Name = excelTrendLine.Name,
                 Backward = excelTrendLine.Backward,
                 Forward = excelTrendLine.Forward,
                 DisplayEquation = excelTrendLine.DisplayEquation,
                 DisplayRSquaredValue = excelTrendLine.DisplayRSquaredValue,
                 Period = excelTrendLine.Period,
-                TrendlineType = (TrendLineType) excelTrendLine.TrendlineType,
+                TrendlineType = (TrendLineType)excelTrendLine.TrendlineType,
                 Order = excelTrendLine.Order,
                 Intercept = excelTrendLine.Intercept
             };
             if (excelTrendLine.TrendLineLabel != null)
             {
-                TrendLineLabel label = new TrendLineLabel {
+                TrendLineLabel label = new TrendLineLabel
+                {
                     Layout = excelTrendLine.TrendLineLabel.Layout.ToSpreadLayout()
                 };
                 string numberFormat = excelTrendLine.TrendLineLabel.NumberFormat;
@@ -4089,7 +4047,8 @@ namespace Dt.Cells.Data
             {
                 return null;
             }
-            Wall chartElement = new Wall {
+            Wall chartElement = new Wall
+            {
                 Thickness = excelWall.Thickness
             };
             SetSpreadChartElementStyle(chartElement, excelWall.Format, workbook);
@@ -4129,27 +4088,27 @@ namespace Dt.Cells.Data
 
         private static Windows.Foundation.Point BottomLeft
         {
-            get { return  new Windows.Foundation.Point(0.0, 1.0); }
+            get { return new Windows.Foundation.Point(0.0, 1.0); }
         }
 
         private static Windows.Foundation.Point BottomRight
         {
-            get { return  new Windows.Foundation.Point(1.0, 1.0); }
+            get { return new Windows.Foundation.Point(1.0, 1.0); }
         }
 
         private static Windows.Foundation.Point MiddleCenter
         {
-            get { return  new Windows.Foundation.Point(0.5, 0.5); }
+            get { return new Windows.Foundation.Point(0.5, 0.5); }
         }
 
         private static Windows.Foundation.Point TopLeft
         {
-            get { return  new Windows.Foundation.Point(0.0, 0.0); }
+            get { return new Windows.Foundation.Point(0.0, 0.0); }
         }
 
         private static Windows.Foundation.Point TopRight
         {
-            get { return  new Windows.Foundation.Point(1.0, 0.0); }
+            get { return new Windows.Foundation.Point(1.0, 0.0); }
         }
     }
 }

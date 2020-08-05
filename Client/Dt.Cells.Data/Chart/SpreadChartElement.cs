@@ -271,11 +271,7 @@ namespace Dt.Cells.Data
                 {
                     Windows.UI.Color color = this.ThemeContext.GetThemeColor(this.FillThemeColor);
                     color = Dt.Cells.Data.ColorHelper.UpdateColor(color, this.FillDrawingColorSettings, false);
-                    SolidColorBrush result = null;
-                    UIAdaptor.InvokeSync(delegate {
-                        result = new SolidColorBrush(color);
-                    });
-                    return result;
+                    return new SolidColorBrush(color);
                 }
                 return null;
             }
@@ -300,11 +296,7 @@ namespace Dt.Cells.Data
                 {
                     Windows.UI.Color color = this.ThemeContext.GetThemeColor(this.StrokeThemeColor);
                     color = Dt.Cells.Data.ColorHelper.UpdateColor(color, this.StrokeDrawingColorSettings, false);
-                    SolidColorBrush result = null;
-                    UIAdaptor.InvokeSync(delegate {
-                        result = new SolidColorBrush(color);
-                    });
-                    return result;
+                    return new SolidColorBrush(color);
                 }
                 return null;
             }
@@ -355,9 +347,7 @@ namespace Dt.Cells.Data
                     {
                         if (_defaultAutomaticFill == null)
                         {
-                            UIAdaptor.InvokeSync(delegate {
-                                _defaultAutomaticFill = new SolidColorBrush(Colors.White);
-                            });
+                            _defaultAutomaticFill = new SolidColorBrush(Colors.White);
                         }
                     }
                 }
@@ -375,9 +365,7 @@ namespace Dt.Cells.Data
                     {
                         if (_defaultAutomaticStroke == null)
                         {
-                            UIAdaptor.InvokeSync(delegate {
-                                _defaultAutomaticStroke = new SolidColorBrush(Windows.UI.Color.FromArgb(0xff, 0x86, 0x86, 0x86));
-                            });
+                            _defaultAutomaticStroke = new SolidColorBrush(Windows.UI.Color.FromArgb(0xff, 0x86, 0x86, 0x86));
                         }
                     }
                 }

@@ -143,18 +143,13 @@ namespace Dt.Cells.Data
 
         private static void DrawLine(Graphics g, ExporterState state, Windows.Foundation.Point from, Windows.Foundation.Point to, Windows.UI.Color color, DashStyle style, double thickness)
         {
-            SolidColorBrush borderBrush = null;
-            UIAdaptor.InvokeSync(delegate {
-                borderBrush = new SolidColorBrush(color);
-            });
+            SolidColorBrush borderBrush = new SolidColorBrush(color);
             if (thickness > 0.0)
             {
                 if (state.BlackAndWhite)
                 {
                     Windows.UI.Color grayColor = Utilities.GetGrayColor(color);
-                    UIAdaptor.InvokeSync(delegate {
-                        borderBrush = new SolidColorBrush(grayColor);
-                    });
+                    borderBrush = new SolidColorBrush(grayColor);
                 }
                 g.SaveState();
                 g.MoveTo(from);
@@ -669,36 +664,25 @@ namespace Dt.Cells.Data
 
         public void PaintDataBar(Windows.Foundation.Rect rect, Graphics g, ExporterState state, DataBarDrawingObject dataBarObject)
         {
-            Brush fillBrush = null;
-            UIAdaptor.InvokeSync(delegate {
-                fillBrush = new SolidColorBrush(dataBarObject.Color);
-            });
+            Brush fillBrush = new SolidColorBrush(dataBarObject.Color);
             if (dataBarObject.Gradient)
             {
                 float factor = 0.9f;
                 Windows.UI.Color gradientColor = Windows.UI.Color.FromArgb(dataBarObject.Color.A, (byte) ((255f * factor) + (dataBarObject.Color.R * (1f - factor))), (byte) ((255f * factor) + (dataBarObject.Color.G * (1f - factor))), (byte) ((255f * factor) + (dataBarObject.Color.B * (1f - factor))));
-                UIAdaptor.InvokeSync(delegate {
-                    GradientStopCollection gradientStopCollection = new GradientStopCollection();
-                    GradientStop stop = new GradientStop();
-                    stop.Color = gradientColor;
-                    stop.Offset = (dataBarObject.Scale < 0.0) ? ((double) (1f - factor)) : ((double) factor);
-                    GradientStop stop2 = new GradientStop();
-                    stop2.Color = dataBarObject.Color;
-                    stop2.Offset = (dataBarObject.Scale < 0.0) ? ((double) 1) : ((double) 0);
-                    gradientStopCollection.Add(stop);
-                    gradientStopCollection.Add(stop2);
-                    fillBrush = new LinearGradientBrush(gradientStopCollection, 0.0);
-                });
+                GradientStopCollection gradientStopCollection = new GradientStopCollection();
+                GradientStop stop = new GradientStop();
+                stop.Color = gradientColor;
+                stop.Offset = (dataBarObject.Scale < 0.0) ? ((double)(1f - factor)) : ((double)factor);
+                GradientStop stop2 = new GradientStop();
+                stop2.Color = dataBarObject.Color;
+                stop2.Offset = (dataBarObject.Scale < 0.0) ? ((double)1) : ((double)0);
+                gradientStopCollection.Add(stop);
+                gradientStopCollection.Add(stop2);
+                fillBrush = new LinearGradientBrush(gradientStopCollection, 0.0);
             }
             Windows.Foundation.Rect rect2 = new Windows.Foundation.Rect(rect.X, rect.Y, rect.Width - 5.0, rect.Height - 4.0);
-            Brush borderBrush = null;
-            UIAdaptor.InvokeSync(delegate {
-                borderBrush = new SolidColorBrush(dataBarObject.BorderColor);
-            });
-            Brush axisBrush = null;
-            UIAdaptor.InvokeSync(delegate {
-                axisBrush = new SolidColorBrush(dataBarObject.AxisColor);
-            });
+            Brush borderBrush = new SolidColorBrush(dataBarObject.BorderColor);
+            Brush axisBrush = new SolidColorBrush(dataBarObject.AxisColor);
             double x = rect2.X;
             double y = rect2.Y;
             double width = Math.Abs((double) (rect2.Width * dataBarObject.Scale));
@@ -1250,7 +1234,6 @@ namespace Dt.Cells.Data
         /// <param name="spans">The spans</param>
         private void PaintSheetCell(int r, int c, Windows.Foundation.Rect rect, Windows.Foundation.Rect styleRect, string overFlowText, StyleInfo overFlowtextStyleInfo, GcSheetBlock.PartType part, GcSheetBlock block, CellState cellState, Graphics g, ExporterState state, SpanLayoutData spans)
         {
-            Action action3 = null;
             Worksheet worksheet;
             SheetArea area;
             StyleInfo style;
@@ -1262,21 +1245,19 @@ namespace Dt.Cells.Data
                 if (area == SheetArea.CornerHeader)
                 {
                     SolidColorBrush cornerBrush = null;
-                    UIAdaptor.InvokeSync(delegate {
-                        if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
-                        {
-                            cornerBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(0xff, 0x3a, 0x3a, 0x3a));
-                        }
-                        else
-                        {
-                            cornerBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(0xff, 0xa2, 0x9f, 0x9f));
-                        }
-                        if (state.BlackAndWhite)
-                        {
-                            Windows.UI.Color grayColor = Utilities.GetGrayColor(cornerBrush.Color);
-                            cornerBrush = new SolidColorBrush(grayColor);
-                        }
-                    });
+                    if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
+                    {
+                        cornerBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(0xff, 0x3a, 0x3a, 0x3a));
+                    }
+                    else
+                    {
+                        cornerBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(0xff, 0xa2, 0x9f, 0x9f));
+                    }
+                    if (state.BlackAndWhite)
+                    {
+                        Windows.UI.Color grayColor = Utilities.GetGrayColor(cornerBrush.Color);
+                        cornerBrush = new SolidColorBrush(grayColor);
+                    }
                     g.FillRectangle(new Windows.Foundation.Rect(rect.Left, rect.Top, rect.Width, rect.Height), cornerBrush);
                 }
                 else
@@ -1450,49 +1431,43 @@ namespace Dt.Cells.Data
                     rect.Y = 0.0;
                     if (style.Background == null)
                     {
-                        if (action3 == null)
+                        if (area == (SheetArea.CornerHeader | SheetArea.RowHeader))
                         {
-                            action3 = delegate {
-                                if (area == (SheetArea.CornerHeader | SheetArea.RowHeader))
-                                {
-                                    if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
-                                    {
-                                        style.Background = new SolidColorBrush(Windows.UI.Color.FromArgb(0xff, 0x3a, 0x3a, 0x3a));
-                                    }
-                                    else
-                                    {
-                                        style.Background = new SolidColorBrush(Windows.UI.Color.FromArgb(0xff, 0xcc, 0xcc, 0xcc));
-                                    }
-                                }
-                                else if (area == SheetArea.ColumnHeader)
-                                {
-                                    Windows.UI.Color color = Colors.Transparent;
-                                    LinearGradientBrush brush = new LinearGradientBrush();
-                                    brush.StartPoint = new Windows.Foundation.Point(0.5, 0.0);
-                                    brush.EndPoint = new Windows.Foundation.Point(0.5, 1.0);
-                                    GradientStopCollection stops = new GradientStopCollection();
-                                    if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
-                                    {
-                                        color = Windows.UI.Color.FromArgb(0xff, 0x3a, 0x3a, 0x3a);
-                                    }
-                                    else
-                                    {
-                                        color = Windows.UI.Color.FromArgb(0xff, 0xcc, 0xcc, 0xcc);
-                                    }
-                                    GradientStop stop = new GradientStop();
-                                    stop.Offset = 0.125;
-                                    stop.Color = color;
-                                    GradientStop stop2 = new GradientStop();
-                                    stop2.Offset = 1.0;
-                                    stop2.Color = color;
-                                    stops.Add(stop);
-                                    stops.Add(stop2);
-                                    brush.GradientStops = stops;
-                                    style.Background = brush;
-                                }
-                            };
+                            if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
+                            {
+                                style.Background = new SolidColorBrush(Windows.UI.Color.FromArgb(0xff, 0x3a, 0x3a, 0x3a));
+                            }
+                            else
+                            {
+                                style.Background = new SolidColorBrush(Windows.UI.Color.FromArgb(0xff, 0xcc, 0xcc, 0xcc));
+                            }
                         }
-                        UIAdaptor.InvokeSync(action3);
+                        else if (area == SheetArea.ColumnHeader)
+                        {
+                            Windows.UI.Color color = Colors.Transparent;
+                            LinearGradientBrush brush = new LinearGradientBrush();
+                            brush.StartPoint = new Windows.Foundation.Point(0.5, 0.0);
+                            brush.EndPoint = new Windows.Foundation.Point(0.5, 1.0);
+                            GradientStopCollection stops = new GradientStopCollection();
+                            if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
+                            {
+                                color = Windows.UI.Color.FromArgb(0xff, 0x3a, 0x3a, 0x3a);
+                            }
+                            else
+                            {
+                                color = Windows.UI.Color.FromArgb(0xff, 0xcc, 0xcc, 0xcc);
+                            }
+                            GradientStop stop = new GradientStop();
+                            stop.Offset = 0.125;
+                            stop.Color = color;
+                            GradientStop stop2 = new GradientStop();
+                            stop2.Offset = 1.0;
+                            stop2.Color = color;
+                            stops.Add(stop);
+                            stops.Add(stop2);
+                            brush.GradientStops = stops;
+                            style.Background = brush;
+                        }
                     }
                     if ((style.Formatter != null) && (style.Formatter is IPdfOwnerPaintSupport))
                     {
@@ -1500,27 +1475,17 @@ namespace Dt.Cells.Data
                     }
                     else
                     {
-                        Action action2 = null;
                         Brush background = style.Background;
                         if (style.IsBackgroundThemeColorSet())
                         {
-                            if (action2 == null)
-                            {
-                                action2 = delegate {
-                                    background = new SolidColorBrush(((IThemeSupport) worksheet).GetThemeColor(style.BackgroundThemeColor));
-                                };
-                            }
-                            UIAdaptor.InvokeSync(action2);
+                            background = new SolidColorBrush(((IThemeSupport)worksheet).GetThemeColor(style.BackgroundThemeColor));
                         }
                         if (Utilities.HasFillEffect(background) && !background.Equals(FillEffects.White))
                         {
                             bool flag6 = true;
                             if (background is SolidColorBrush)
                             {
-                                Windows.UI.Color color = new Windows.UI.Color();
-                                UIAdaptor.InvokeSync(delegate {
-                                    color = ((SolidColorBrush) background).Color;
-                                });
+                                Windows.UI.Color color = ((SolidColorBrush)background).Color;
                                 if ((color.A == 0) || (((color.R == 0xff) && (color.G == 0xff)) && (color.B == 0xff)))
                                 {
                                     flag6 = false;
@@ -1528,9 +1493,7 @@ namespace Dt.Cells.Data
                                 if (state.BlackAndWhite)
                                 {
                                     Windows.UI.Color bgColor = Utilities.GetGrayColor(color);
-                                    UIAdaptor.InvokeSync(delegate {
-                                        background = new SolidColorBrush(bgColor);
-                                    });
+                                    background = new SolidColorBrush(bgColor);
                                 }
                             }
                             if (flag6)
@@ -1568,7 +1531,6 @@ namespace Dt.Cells.Data
                             }
                             if (!flag8)
                             {
-                                Action action = null;
                                 bool flag9 = false;
                                 bool flag10 = false;
                                 DataBarDrawingObject dataBarObject = null;
@@ -1618,21 +1580,19 @@ namespace Dt.Cells.Data
                                         this.PaintSparkLine(styleRect, g, sparkline, worksheet);
                                     }
                                 }
-                                Brush foreground = null;
-                                UIAdaptor.InvokeSync(delegate {
-                                    foreground = tmStyle.Foreground;
-                                    if (tmStyle.IsForegroundThemeColorSet())
+                                Brush foreground = tmStyle.Foreground;
+                                if (tmStyle.IsForegroundThemeColorSet())
+                                {
+                                    if (tmStyle.ForegroundThemeColor == null)
                                     {
-                                        if (tmStyle.ForegroundThemeColor == null)
-                                        {
-                                            foreground = new SolidColorBrush(Colors.Black);
-                                        }
-                                        else
-                                        {
-                                            foreground = new SolidColorBrush(((IThemeSupport) worksheet).GetThemeColor(tmStyle.ForegroundThemeColor));
-                                        }
+                                        foreground = new SolidColorBrush(Colors.Black);
                                     }
-                                });
+                                    else
+                                    {
+                                        foreground = new SolidColorBrush(((IThemeSupport)worksheet).GetThemeColor(tmStyle.ForegroundThemeColor));
+                                    }
+                                }
+
                                 foreground = (foreground == null) ? FillEffects.Black : foreground;
                                 if (!string.IsNullOrEmpty(str2) && Utilities.HasFillEffect(foreground))
                                 {
@@ -1655,14 +1615,8 @@ namespace Dt.Cells.Data
                                     }
                                     if (state.BlackAndWhite && (foreground is SolidColorBrush))
                                     {
-                                        if (action == null)
-                                        {
-                                            action = delegate {
-                                                Windows.UI.Color grayColor = Utilities.GetGrayColor(((SolidColorBrush) foreground).Color);
-                                                foreground = new SolidColorBrush(grayColor);
-                                            };
-                                        }
-                                        UIAdaptor.InvokeSync(action);
+                                        Windows.UI.Color grayColor = Utilities.GetGrayColor(((SolidColorBrush)foreground).Color);
+                                        foreground = new SolidColorBrush(grayColor);
                                     }
                                     bool fitRect = style.ShrinkToFit && !style.WordWrap;
                                     if (flag11)
@@ -2141,11 +2095,7 @@ namespace Dt.Cells.Data
             /// <returns></returns>
             private static Brush GetFirstFillEffect(BorderLine gridLine)
             {
-                Brush _brush = null;
-                UIAdaptor.InvokeSync(delegate {
-                    _brush = new SolidColorBrush(gridLine.Color);
-                });
-                return _brush;
+                return new SolidColorBrush(gridLine.Color);
             }
 
             /// <summary>

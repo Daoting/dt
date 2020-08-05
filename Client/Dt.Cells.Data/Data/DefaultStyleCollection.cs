@@ -354,9 +354,7 @@ namespace Dt.Cells.Data
                 if (columnFooterDefault == null)
                 {
                     columnFooterDefault = new StyleInfo("ColumnFooterDefault");
-                    UIAdaptor.InvokeSync(delegate {
-                        columnFooterDefault.Foreground = new SolidColorBrush(Colors.Black);
-                    });
+                    columnFooterDefault.Foreground = new SolidColorBrush(Colors.Black);
                     columnFooterDefault.HorizontalAlignment = CellHorizontalAlignment.Center;
                     columnFooterDefault.VerticalAlignment = CellVerticalAlignment.Center;
                 }
@@ -375,9 +373,7 @@ namespace Dt.Cells.Data
                 if (columnHeaderDefault == null)
                 {
                     columnHeaderDefault = new StyleInfo("ColumnHeaderDefault");
-                    UIAdaptor.InvokeSync(delegate {
-                        columnHeaderDefault.Foreground = new SolidColorBrush(Colors.Black);
-                    });
+                    columnHeaderDefault.Foreground = new SolidColorBrush(Colors.Black);
                     columnHeaderDefault.HorizontalAlignment = CellHorizontalAlignment.Center;
                     columnHeaderDefault.VerticalAlignment = CellVerticalAlignment.Center;
                 }
@@ -396,9 +392,7 @@ namespace Dt.Cells.Data
                 if (cornerDefault == null)
                 {
                     cornerDefault = new StyleInfo("CornerDefault");
-                    UIAdaptor.InvokeSync(delegate {
-                        cornerDefault.Foreground = new SolidColorBrush(Colors.Black);
-                    });
+                    cornerDefault.Foreground = new SolidColorBrush(Colors.Black);
                 }
                 return cornerDefault;
             }
@@ -418,11 +412,7 @@ namespace Dt.Cells.Data
             get
             {
                 if (defaultFontFamily == null)
-                {
-                    UIAdaptor.InvokeSync(delegate {
-                        defaultFontFamily = new FontFamily("Calibri");
-                    });
-                }
+                    defaultFontFamily = new FontFamily("Calibri");
                 return defaultFontFamily;
             }
         }
@@ -431,11 +421,7 @@ namespace Dt.Cells.Data
         {
             get
             {
-                string fontFamily = string.Empty;
-                UIAdaptor.InvokeSync(delegate {
-                    fontFamily = DefaultFontFamily.Source;
-                });
-                return fontFamily;
+                return DefaultFontFamily.Source;
             }
         }
 
@@ -444,11 +430,7 @@ namespace Dt.Cells.Data
             get
             {
                 if (defaultFontSize == 0.0)
-                {
-                    UIAdaptor.InvokeSync(delegate {
-                        defaultFontSize = 14.67;
-                    });
-                }
+                    defaultFontSize = 14.67;
                 return defaultFontSize;
             }
         }
@@ -512,9 +494,7 @@ namespace Dt.Cells.Data
                 if (rowHeaderDefault == null)
                 {
                     rowHeaderDefault = new StyleInfo("RowHeaderDefault");
-                    UIAdaptor.InvokeSync(delegate {
-                        rowHeaderDefault.Foreground = new SolidColorBrush(Colors.Black);
-                    });
+                    rowHeaderDefault.Foreground = new SolidColorBrush(Colors.Black);
                     rowHeaderDefault.HorizontalAlignment = CellHorizontalAlignment.Center;
                     rowHeaderDefault.VerticalAlignment = CellVerticalAlignment.Center;
                 }

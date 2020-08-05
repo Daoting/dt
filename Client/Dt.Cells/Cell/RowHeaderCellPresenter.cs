@@ -10,10 +10,9 @@ namespace Dt.Cells.UI
 {
     public partial class RowHeaderCellPresenter : HeaderCellPresenter
     {
-
         public RowHeaderCellPresenter()
         {
-            base.DefaultStyleKey = typeof(RowHeaderCellPresenter);
+            DefaultStyleKey = typeof(RowHeaderCellPresenter);
         }
 
         internal override bool IsHightlighted

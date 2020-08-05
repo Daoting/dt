@@ -813,29 +813,13 @@ namespace Dt.Base
         /// <param name="e"></param>
         void OnWorkbookPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            Action action = null;
-            Action action2 = null;
             if (AutoRefresh)
             {
-                if (action == null)
-                {
-                    action = delegate
-                    {
-                        View.HandleWorkbookPropertyChanged(sender, e);
-                    };
-                }
-                UIAdaptor.InvokeSync(action);
+                View.HandleWorkbookPropertyChanged(sender, e);
             }
             if (e.PropertyName == "ActiveSheetIndex")
             {
-                if (action2 == null)
-                {
-                    action2 = delegate
-                    {
-                        View.OnActiveSheetChanged();
-                    };
-                }
-                UIAdaptor.InvokeSync(action2);
+                View.OnActiveSheetChanged();
             }
         }
 
@@ -899,7 +883,6 @@ namespace Dt.Base
         /// <returns></returns>
         internal IAsyncAction OpenExcel(Stream stream, ExcelOpenFlags openFlags, string password)
         {
-            Action action = null;
             IAsyncAction action2;
             if (stream == null)
             {
@@ -907,14 +890,7 @@ namespace Dt.Base
             }
             try
             {
-                if (action == null)
-                {
-                    action = delegate
-                    {
-                        View.ShowOpeningStatus();
-                    };
-                }
-                UIAdaptor.InvokeAsync(action);
+                View.ShowOpeningStatus();
                 action2 = Workbook.OpenExcelAsync(stream, openFlags);
             }
             catch (Exception exception)
@@ -1075,36 +1051,16 @@ namespace Dt.Base
         void OpenXmlOnBackground(Stream xmlStream)
         {
             XmlReader reader = null;
-            Action action = null;
-            Action action2 = null;
-            Action action3 = null;
-            UIAdaptor.InvokeSync(delegate
-            {
-                Workbook.SuspendEvent();
-            });
+            Workbook.SuspendEvent();
             try
             {
                 if (_workbook != null)
                 {
-                    if (action == null)
-                    {
-                        action = delegate
-                        {
-                            _workbook.Reset();
-                        };
-                    }
-                    UIAdaptor.InvokeSync(action);
+                    _workbook.Reset();
                     _workbook.Sheets.CollectionChanged -= new NotifyCollectionChangedEventHandler(OnSheetsCollectionChanged);
                     _workbook.PropertyChanged -= new PropertyChangedEventHandler(OnWorkbookPropertyChanged);
                 }
-                if (action2 == null)
-                {
-                    action2 = delegate
-                    {
-                        View.ShowOpeningStatus();
-                    };
-                }
-                UIAdaptor.InvokeSync(action2);
+                View.ShowOpeningStatus();
                 using (reader = XmlReader.Create(xmlStream))
                 {
                     Serializer.InitReader(reader);
@@ -1119,15 +1075,8 @@ namespace Dt.Base
                                 XmlReader reader2 = Serializer.ExtractNode(reader);
                                 Serializer.InitReader(reader2);
                                 reader2.Read();
-                                if (action3 == null)
-                                {
-                                    action3 = delegate
-                                    {
-                                        _workbook = new Workbook();
-                                        _workbook.SuspendEvent();
-                                    };
-                                }
-                                UIAdaptor.InvokeSync(action3);
+                                _workbook = new Workbook();
+                                _workbook.SuspendEvent();
                                 _workbook.OpenXml(reader);
                             }
                             else if (str == "View")
@@ -1166,11 +1115,8 @@ namespace Dt.Base
                 }
                 Workbook.ResumeEvent();
             }
-            UIAdaptor.InvokeAsync(delegate
-            {
-                Invalidate();
-                View.HideOpeningStatus();
-            });
+            Invalidate();
+            View.HideOpeningStatus();
         }
 
         /// <summary>

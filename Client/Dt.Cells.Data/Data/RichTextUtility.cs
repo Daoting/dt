@@ -75,11 +75,7 @@ namespace Dt.Cells.Data
                     if (workbook != null)
                     {
                         Windows.UI.Color color = Dt.Cells.Data.ColorHelper.UpdateColor(workbook.GetThemeColor((string) (fill as string)), spreadDrawingColorSettings, false);
-                        SolidColorBrush result = null;
-                        UIAdaptor.InvokeSync(delegate {
-                            result = new SolidColorBrush(color);
-                        });
-                        return result;
+                        return new SolidColorBrush(color);
                     }
                     return brush;
                 }

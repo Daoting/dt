@@ -495,10 +495,6 @@ namespace Dt.Cells.Data
 
         internal override void ReadXmlInternal(XmlReader reader)
         {
-            Action action = null;
-            Action action2 = null;
-            Action action3 = null;
-            Action action4 = null;
             base.ReadXmlInternal(reader);
             if (reader.NodeType == ((XmlNodeType) ((int) XmlNodeType.Element)))
             {
@@ -606,13 +602,7 @@ namespace Dt.Cells.Data
                         return;
 
                     case "MajorGridStroke":
-                        if (action == null)
-                        {
-                            action = delegate {
-                                this._majorGridStroke = (Brush) Serializer.DeserializeObj(typeof(Brush), reader);
-                            };
-                        }
-                        UIAdaptor.InvokeSync(action);
+                        _majorGridStroke = (Brush)Serializer.DeserializeObj(typeof(Brush), reader);
                         return;
 
                     case "MajorGridStrokeThemeColor":
@@ -652,13 +642,7 @@ namespace Dt.Cells.Data
                         return;
 
                     case "MajorTickStroke":
-                        if (action2 == null)
-                        {
-                            action2 = delegate {
-                                this._majorTickStroke = (Brush) Serializer.DeserializeObj(typeof(Brush), reader);
-                            };
-                        }
-                        UIAdaptor.InvokeSync(action2);
+                        _majorTickStroke = (Brush)Serializer.DeserializeObj(typeof(Brush), reader);
                         return;
 
                     case "MajorTickThickness":
@@ -670,13 +654,7 @@ namespace Dt.Cells.Data
                         return;
 
                     case "MinorGridStroke":
-                        if (action3 == null)
-                        {
-                            action3 = delegate {
-                                this._minorGridStroke = (Brush) Serializer.DeserializeObj(typeof(Brush), reader);
-                            };
-                        }
-                        UIAdaptor.InvokeSync(action3);
+                        _minorGridStroke = (Brush)Serializer.DeserializeObj(typeof(Brush), reader);
                         return;
 
                     case "MinorGridStrokeThemeColor":
@@ -716,13 +694,7 @@ namespace Dt.Cells.Data
                         return;
 
                     case "MinorTickStroke":
-                        if (action4 == null)
-                        {
-                            action4 = delegate {
-                                this._minorTickStroke = (Brush) Serializer.DeserializeObj(typeof(Brush), reader);
-                            };
-                        }
-                        UIAdaptor.InvokeSync(action4);
+                        _minorTickStroke = (Brush)Serializer.DeserializeObj(typeof(Brush), reader);
                         return;
 
                     case "MinorTickThickness":
@@ -1030,11 +1002,6 @@ namespace Dt.Cells.Data
 
         internal override void WriteXmlInternal(XmlWriter writer)
         {
-            Action action = null;
-            Action action2 = null;
-            Action action3 = null;
-            Action action4 = null;
-            Action action5 = null;
             base.WriteXmlInternal(writer);
             if (this._min != double.NaN)
             {
@@ -1128,13 +1095,7 @@ namespace Dt.Cells.Data
             }
             if (this._majorGridStroke != null)
             {
-                if (action == null)
-                {
-                    action = delegate {
-                        Serializer.SerializeObj(this._majorGridStroke, "MajorGridStroke", writer);
-                    };
-                }
-                UIAdaptor.InvokeSync(action);
+                Serializer.SerializeObj(this._majorGridStroke, "MajorGridStroke", writer);
             }
             if (this._majorGridStrokeDashType != StrokeDashType.None)
             {
@@ -1170,13 +1131,7 @@ namespace Dt.Cells.Data
             }
             if (this._majorTickStroke != null)
             {
-                if (action2 == null)
-                {
-                    action2 = delegate {
-                        Serializer.SerializeObj(this._majorTickStroke, "MajorTickStroke", writer);
-                    };
-                }
-                UIAdaptor.InvokeSync(action2);
+                Serializer.SerializeObj(this._majorTickStroke, "MajorTickStroke", writer);
             }
             if (this._majorTickThickness != 0.5)
             {
@@ -1188,13 +1143,7 @@ namespace Dt.Cells.Data
             }
             if (this._minorGridStroke != null)
             {
-                if (action3 == null)
-                {
-                    action3 = delegate {
-                        Serializer.SerializeObj(this._minorGridStroke, "MinorGridStroke", writer);
-                    };
-                }
-                UIAdaptor.InvokeSync(action3);
+                Serializer.SerializeObj(this._minorGridStroke, "MinorGridStroke", writer);
             }
             if (!string.IsNullOrEmpty(this._minorGridStrokeThemeColor))
             {
@@ -1234,13 +1183,7 @@ namespace Dt.Cells.Data
             }
             if (this._minorTickStroke != null)
             {
-                if (action4 == null)
-                {
-                    action4 = delegate {
-                        Serializer.SerializeObj(this._minorTickStroke, "MinorTickStroke", writer);
-                    };
-                }
-                UIAdaptor.InvokeSync(action4);
+                Serializer.SerializeObj(this._minorTickStroke, "MinorTickStroke", writer);
             }
             if (this._minorTickThickness != 0.0)
             {
@@ -1252,13 +1195,7 @@ namespace Dt.Cells.Data
             }
             if (this._minScale != double.NaN)
             {
-                if (action5 == null)
-                {
-                    action5 = delegate {
-                        Serializer.SerializeObj((double) this._minScale, "MinScale", writer);
-                    };
-                }
-                UIAdaptor.InvokeSync(action5);
+                Serializer.SerializeObj((double)this._minScale, "MinScale", writer);
             }
             if (this._scale != 1.0)
             {
@@ -1344,11 +1281,7 @@ namespace Dt.Cells.Data
                 {
                     Windows.UI.Color color = base.ThemeContext.GetThemeColor(this._majorGridStrokeThemeColor);
                     color = Dt.Cells.Data.ColorHelper.UpdateColor(color, this.MajorGridlineDrawingColorSettings, false);
-                    SolidColorBrush result = null;
-                    UIAdaptor.InvokeSync(delegate {
-                        result = new SolidColorBrush(color);
-                    });
-                    return result;
+                    return new SolidColorBrush(color);
                 }
                 return null;
             }
@@ -1384,11 +1317,7 @@ namespace Dt.Cells.Data
                 {
                     Windows.UI.Color color = base.ThemeContext.GetThemeColor(this._minorGridStrokeThemeColor);
                     color = Dt.Cells.Data.ColorHelper.UpdateColor(color, this.MajorGridlineDrawingColorSettings, false);
-                    SolidColorBrush result = null;
-                    UIAdaptor.InvokeSync(delegate {
-                        result = new SolidColorBrush(color);
-                    });
-                    return result;
+                    return new SolidColorBrush(color);
                 }
                 return null;
             }
@@ -1471,14 +1400,7 @@ namespace Dt.Cells.Data
         /// </summary>
         public override Brush AutomaticFill
         {
-            get
-            {
-                SolidColorBrush result = null;
-                UIAdaptor.InvokeSync(delegate {
-                    result = new SolidColorBrush(Colors.Transparent);
-                });
-                return result;
-            }
+            get { return new SolidColorBrush(Colors.Transparent); }
         }
 
         /// <summary>
@@ -1488,11 +1410,7 @@ namespace Dt.Cells.Data
         {
             get
             {
-                SolidColorBrush result = null;
-                UIAdaptor.InvokeSync(delegate {
-                    result = new SolidColorBrush(Colors.Black);
-                });
-                return result;
+                return new SolidColorBrush(Colors.Black);
             }
         }
 

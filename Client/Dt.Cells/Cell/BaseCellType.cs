@@ -30,20 +30,8 @@ namespace Dt.Cells.CellTypes
         protected FrameworkElement _displayElement;
         protected FrameworkElement _editingElement;
         double _zoomFactor = 1.0;
-        FontFamily appliedFontFamily;
-        double? appliedFontSize;
-        FontStretch? appliedFontStretch = null;
-        FontStyle? appliedFontStyle = null;
-        FontWeight? appliedFontWeight = null;
-        Brush appliedForeground;
-        HorizontalAlignment? appliedHorizontalAlignment = null;
-        Windows.UI.Xaml.Thickness? appliedMargin = null;
-        double? appliedShrinkFactor = null;
-        string appliedText = "";
-        TextAlignment? appliedTextAlignment = TextAlignment.Left;
-        bool? appliedTextWrapping = false;
-        VerticalAlignment? appliedVerticalAlignment = null;
-        Type cachedValueType;
+        double? _appliedShrinkFactor = null;
+        Type _cachedValueType;
 
         public virtual bool ApplyEditing(SheetView sheetView, bool allowFormula)
         {
@@ -52,8 +40,8 @@ namespace Dt.Cells.CellTypes
             {
                 bool isFormulaApplied = false;
                 string appliedFormula = null;
-                bool flag2 = ApplyValueToCell(sheetView, DataContext, allowFormula, box.Text, cachedValueType, out isFormulaApplied, out appliedFormula);
-                cachedValueType = null;
+                bool flag2 = ApplyValueToCell(sheetView, DataContext, allowFormula, box.Text, _cachedValueType, out isFormulaApplied, out appliedFormula);
+                _cachedValueType = null;
                 return flag2;
             }
             return false;
@@ -201,275 +189,136 @@ namespace Dt.Cells.CellTypes
             return (_editingElement != null);
         }
 
-        public virtual void InitDisplayElement(string text)
+        public virtual void InitDisplayElement(string p_text)
         {
-            TextAlignment center;
-            VerticalAlignment alignment3;
-            FontWeight weight;
-            FontFamily family;
-            Thickness thickness;
-            TextBlock displayElement = GetDisplayElement() as TextBlock;
-            Cell dataContext = DataContext;
-            if (dataContext == null)
-            {
+            TextBlock tb = GetDisplayElement() as TextBlock;
+            Cell cell = DataContext;
+            if (cell == null || tb == null)
                 return;
-            }
-            if (displayElement == null)
-            {
-                return;
-            }
-            if (appliedText != text)
-            {
-                displayElement.Text = text;
-                appliedText = text;
-            }
-            HorizontalAlignment alignment = dataContext.ToHorizontalAlignment();
-            if (appliedHorizontalAlignment.HasValue)
-            {
-                HorizontalAlignment? appliedHorizontalAlignment = this.appliedHorizontalAlignment;
-                HorizontalAlignment alignment4 = alignment;
-                if ((((HorizontalAlignment) appliedHorizontalAlignment.GetValueOrDefault()) == alignment4) && appliedHorizontalAlignment.HasValue)
-                {
-                    goto Label_0085;
-                }
-            }
-            displayElement.HorizontalAlignment = alignment;
-            appliedHorizontalAlignment = new HorizontalAlignment?(alignment);
-        Label_0085:
-            center = TextAlignment.Left;
-            switch (alignment)
-            {
-                case HorizontalAlignment.Center:
-                    center = TextAlignment.Center;
-                    break;
 
-                case HorizontalAlignment.Right:
-                    center = TextAlignment.Right;
-                    break;
-            }
-            if (appliedTextAlignment.HasValue)
-            {
-                TextAlignment? appliedTextAlignment = this.appliedTextAlignment;
-                TextAlignment alignment6 = center;
-                if ((((TextAlignment) appliedTextAlignment.GetValueOrDefault()) == alignment6) && appliedTextAlignment.HasValue)
-                {
-                    goto Label_00E8;
-                }
-            }
-            displayElement.TextAlignment = center;
-            appliedTextAlignment = new TextAlignment?(center);
-        Label_00E8:
-            alignment3 = dataContext.ActualVerticalAlignment.ToVerticalAlignment();
-            if (appliedVerticalAlignment.HasValue)
-            {
-                VerticalAlignment? appliedVerticalAlignment = this.appliedVerticalAlignment;
-                VerticalAlignment alignment7 = alignment3;
-                if ((((VerticalAlignment) appliedVerticalAlignment.GetValueOrDefault()) == alignment7) && appliedVerticalAlignment.HasValue)
-                {
-                    goto Label_013D;
-                }
-            }
-            displayElement.VerticalAlignment = alignment3;
-            appliedVerticalAlignment = new VerticalAlignment?(alignment3);
-        Label_013D:
-            if (string.IsNullOrWhiteSpace(appliedText))
-            {
-                return;
-            }
-            Brush actualForeground = dataContext.ActualForeground;
-            if (actualForeground != null)
-            {
-                if (appliedForeground == null)
-                {
-                    SolidColorBrush brush2 = actualForeground as SolidColorBrush;
-                    if ((brush2 == null) || !(brush2.Color == Colors.Black))
-                    {
-                        displayElement.Foreground = actualForeground;
-                        appliedForeground = actualForeground;
-                    }
-                }
-                else
-                {
-                    displayElement.Foreground = actualForeground;
-                    appliedForeground = actualForeground;
-                }
-            }
-            else if (appliedForeground != null)
-            {
-                displayElement.Foreground = actualForeground;
-                displayElement.ClearValue(TextBlock.ForegroundProperty);
-            }
-            FontStyle actualFontStyle = dataContext.ActualFontStyle;
-            if (appliedFontStyle.HasValue)
-            {
-                FontStyle? appliedFontStyle = this.appliedFontStyle;
-                FontStyle style2 = actualFontStyle;
-                if ((((FontStyle) appliedFontStyle.GetValueOrDefault()) == style2) && appliedFontStyle.HasValue)
-                {
-                    goto Label_0210;
-                }
-            }
-            displayElement.FontStyle = actualFontStyle;
-            appliedFontStyle = new FontStyle?(actualFontStyle);
-        Label_0210:
-            weight = dataContext.ActualFontWeight;
-            if (!appliedFontWeight.HasValue || (appliedFontWeight.Value.Weight != weight.Weight))
-            {
-                displayElement.FontWeight = weight;
-                appliedFontWeight = new FontWeight?(weight);
-            }
-            FontStretch actualFontStretch = dataContext.ActualFontStretch;
-            if (appliedFontStretch.HasValue)
-            {
-                FontStretch? appliedFontStretch = this.appliedFontStretch;
-                FontStretch stretch2 = actualFontStretch;
-                if ((((FontStretch) appliedFontStretch.GetValueOrDefault()) == stretch2) && appliedFontStretch.HasValue)
-                {
-                    goto Label_02A3;
-                }
-            }
-            displayElement.FontStretch = actualFontStretch;
-            appliedFontStretch = new FontStretch?(actualFontStretch);
-        Label_02A3:
-            family = dataContext.ActualFontFamily;
-            if (family != null)
-            {
-                if (appliedFontFamily != family)
-                {
-                    displayElement.FontFamily = family;
-                    appliedFontFamily = family;
-                }
-            }
-            else if (appliedFontFamily != null)
-            {
-                displayElement.ClearValue(TextBlock.FontFamilyProperty);
-                appliedFontFamily = family;
-            }
-            bool actualWordWrap = dataContext.ActualWordWrap;
-            if (appliedTextWrapping.HasValue)
-            {
-                bool? appliedTextWrapping = this.appliedTextWrapping;
-                bool flag3 = actualWordWrap;
-                if ((appliedTextWrapping.GetValueOrDefault() == flag3) && appliedTextWrapping.HasValue)
-                {
-                    goto Label_033C;
-                }
-            }
-            displayElement.TextWrapping = actualWordWrap ? TextWrapping.Wrap : TextWrapping.NoWrap;
-            appliedTextWrapping = new bool?(actualWordWrap);
-        Label_033C:
-            if (!actualWordWrap && dataContext.ActualShrinkToFit)
-            {
-                double fontSize = dataContext.ActualFontSize * ZoomFactor;
-                if (fontSize > 0.0)
-                {
-                    double num2 = 1.0;
-                    FontFamily fontFamily = family;
-                    if (family == null)
-                    {
-                        fontFamily = displayElement.FontFamily;
-                    }
-                    object textFormattingMode = null;
-                    double width = MeasureHelper.MeasureText(appliedText, fontFamily, fontSize, appliedFontStretch.Value, appliedFontStyle.Value, appliedFontWeight.Value, new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity), false, textFormattingMode, displayElement.UseLayoutRounding, ZoomFactor).Width;
-                    double num4 = dataContext.ActualTextIndent * ZoomFactor;
-                    double num5 = dataContext.Worksheet.GetActualColumnWidth(dataContext.Column.Index, dataContext.ColumnSpan, dataContext.SheetArea) * ZoomFactor;
-                    num5 = MeasureHelper.ConvertExcelCellSizeToTextSize(new Windows.Foundation.Size(num5, double.PositiveInfinity), ZoomFactor).Width;
-                    num5 = Math.Max((double) 0.0, (double) (num5 - num4));
-                    num2 = num5 / width;
-                    if (num5 < width)
-                    {
-                        appliedShrinkFactor = new double?(num2);
-                    }
-                    else
-                    {
-                        appliedShrinkFactor = null;
-                    }
-                }
-            }
-            else
-            {
-                appliedShrinkFactor = null;
-            }
-            double num6 = dataContext.ActualFontSize * ZoomFactor;
-            if (appliedShrinkFactor.HasValue)
-            {
-                num6 *= appliedShrinkFactor.Value;
-            }
-            if (appliedFontSize.HasValue)
-            {
-                double num8 = num6;
-                double? appliedFontSize = this.appliedFontSize;
-                if ((num8 == ((double) appliedFontSize.GetValueOrDefault())) && appliedFontSize.HasValue)
-                {
-                    goto Label_0554;
-                }
-            }
-            if (num6 > 0.0)
-            {
-                displayElement.FontSize = num6;
-                appliedFontSize = new double?(num6);
-            }
-            else if (num6 == 0.0)
-            {
-                displayElement.Text = "";
-                appliedText = null;
-            }
-            else
-            {
-                displayElement.ClearValue(TextBlock.FontSizeProperty);
-                appliedFontSize = null;
-            }
-        Label_0554:
-            thickness = GetDefaultMarginForDisplay(num6);
-            double num7 = dataContext.ActualTextIndent * ZoomFactor;
-            switch (alignment)
-            {
-                case HorizontalAlignment.Center:
-                    num7 = 0.0;
-                    break;
+            tb.Text = p_text;
+            tb.HorizontalAlignment = cell.ToHorizontalAlignment();
+            //switch (tb.HorizontalAlignment)
+            //{
+            //    case HorizontalAlignment.Center:
+            //        tb.TextAlignment = TextAlignment.Center;
+            //        break;
 
-                case HorizontalAlignment.Left:
-                    thickness.Left += num7;
-                    break;
+            //    case HorizontalAlignment.Right:
+            //        tb.TextAlignment = TextAlignment.Right;
+            //        break;
 
-                case HorizontalAlignment.Right:
-                    thickness.Right += num7;
-                    break;
-            }
-            if (appliedMargin.HasValue)
-            {
-                Windows.UI.Xaml.Thickness? appliedMargin = this.appliedMargin;
-                Windows.UI.Xaml.Thickness thickness2 = thickness;
-                if (appliedMargin.HasValue && (appliedMargin.GetValueOrDefault() == thickness2))
-                {
-                    goto Label_05F2;
-                }
-            }
-            displayElement.Margin = thickness;
-            appliedMargin = new Windows.UI.Xaml.Thickness?(thickness);
-        Label_05F2:
-            if (dataContext.ActualUnderline)
-            {
-                Underline underline = new Underline();
-                Run run = new Run();
-                run.Text = displayElement.Text;
-                underline.Inlines.Add(run);
-                displayElement.Inlines.Clear();
-                displayElement.Inlines.Add(underline);
-            }
-            else
-            {
-                string str = displayElement.Text;
-                displayElement.Inlines.Clear();
-                displayElement.Text = str;
-            }
-            InitStrikethroughforDisplayElement(displayElement, dataContext);
+            //    default:
+            //        tb.TextAlignment = TextAlignment.Left;
+            //        break;
+            //}
+            //tb.VerticalAlignment = cell.ActualVerticalAlignment.ToVerticalAlignment();
+            //if (string.IsNullOrWhiteSpace(p_text))
+            //    return;
+
+            ////tb.Foreground = cell.ActualForeground;
+
+            //tb.FontStyle = cell.ActualFontStyle;
+            //tb.FontWeight = cell.ActualFontWeight;
+            //tb.FontStretch = cell.ActualFontStretch;
+            //tb.FontFamily = cell.ActualFontFamily;
+            //bool actualWordWrap = cell.ActualWordWrap;
+            //tb.TextWrapping = actualWordWrap ? TextWrapping.Wrap : TextWrapping.NoWrap;
+
+            //// 自动缩放到格
+            //if (!actualWordWrap && cell.ActualShrinkToFit)
+            //{
+            //    double fontSize = cell.ActualFontSize * ZoomFactor;
+            //    if (fontSize > 0.0)
+            //    {
+            //        double width = MeasureHelper.MeasureText(
+            //            p_text,
+            //            tb.FontFamily,
+            //            fontSize,
+            //            tb.FontStretch,
+            //            tb.FontStyle,
+            //            tb.FontWeight,
+            //            new Size(double.PositiveInfinity, double.PositiveInfinity),
+            //            false,
+            //            null,
+            //            tb.UseLayoutRounding,
+            //            ZoomFactor).Width;
+            //        double num4 = cell.ActualTextIndent * ZoomFactor;
+            //        double num5 = cell.Worksheet.GetActualColumnWidth(cell.Column.Index, cell.ColumnSpan, cell.SheetArea) * ZoomFactor;
+            //        num5 = MeasureHelper.ConvertExcelCellSizeToTextSize(new Windows.Foundation.Size(num5, double.PositiveInfinity), ZoomFactor).Width;
+            //        num5 = Math.Max((double) 0.0, (double) (num5 - num4));
+            //        double num2 = num5 / width;
+            //        if (num5 < width)
+            //        {
+            //            _appliedShrinkFactor = new double?(num2);
+            //        }
+            //        else
+            //        {
+            //            _appliedShrinkFactor = null;
+            //        }
+            //    }
+            //}
+            //else
+            //{
+            //    _appliedShrinkFactor = null;
+            //}
+            //double num6 = cell.ActualFontSize * ZoomFactor;
+            //if (_appliedShrinkFactor.HasValue)
+            //{
+            //    num6 *= _appliedShrinkFactor.Value;
+            //}
+            //if (num6 > 0.0)
+            //{
+            //    tb.FontSize = num6;
+            //}
+            //else if (num6 == 0.0)
+            //{
+            //    tb.Text = "";
+            //}
+            //else
+            //{
+            //    tb.ClearValue(TextBlock.FontSizeProperty);
+            //}
+
+            //var thickness = GetDefaultMarginForDisplay(num6);
+            //double num7 = cell.ActualTextIndent * ZoomFactor;
+            //switch (tb.HorizontalAlignment)
+            //{
+            //    case HorizontalAlignment.Center:
+            //        num7 = 0.0;
+            //        break;
+
+            //    case HorizontalAlignment.Left:
+            //        thickness.Left += num7;
+            //        break;
+
+            //    case HorizontalAlignment.Right:
+            //        thickness.Right += num7;
+            //        break;
+            //}
+            ////tb.Margin = thickness;
+
+            //if (cell.ActualUnderline)
+            //{
+            //    Underline underline = new Underline();
+            //    Run run = new Run();
+            //    run.Text = tb.Text;
+            //    underline.Inlines.Add(run);
+            //    tb.Inlines.Clear();
+            //    tb.Inlines.Add(underline);
+            //}
+            //else
+            //{
+            //    string str = tb.Text;
+            //    tb.Inlines.Clear();
+            //    tb.Text = str;
+            //}
+            //InitStrikethroughforDisplayElement(tb, cell);
         }
 
         public virtual void InitEditingElement()
         {
             IFormatter formatter2;
-            Action action2 = null;
             IFormatter preferredEditingFormatter = null;
             TextBox tbElement = GetEditingElement() as TextBox;
             Cell bindingCell = DataContext;
@@ -510,11 +359,11 @@ namespace Dt.Cells.CellTypes
             {
                 if (bindingCell.Value == null)
                 {
-                    cachedValueType = null;
+                    _cachedValueType = null;
                 }
                 goto Label_0293;
             }
-            cachedValueType = bindingCell.Value.GetType();
+            _cachedValueType = bindingCell.Value.GetType();
             preferredEditingFormatter = new GeneralFormatter().GetPreferredEditingFormatter(bindingCell.Value);
             if ((preferredEditingFormatter != null) && (info.Formatter is AutoFormatter))
             {
@@ -588,17 +437,10 @@ namespace Dt.Cells.CellTypes
             }
             else if (info.IsForegroundThemeColorSet())
             {
-                Action action = null;
                 string fname = info.ForegroundThemeColor;
                 if ((!string.IsNullOrEmpty(fname) && (bindingCell.Worksheet != null)) && (bindingCell.Worksheet.Workbook != null))
                 {
-                    if (action == null)
-                    {
-                        action = delegate {
-                            foreground = new SolidColorBrush(bindingCell.Worksheet.Workbook.GetThemeColor(fname));
-                        };
-                    }
-                    Dt.Cells.Data.UIAdaptor.InvokeSync(action);
+                    foreground = new SolidColorBrush(bindingCell.Worksheet.Workbook.GetThemeColor(fname));
                 }
             }
             if (foreground != null)
@@ -607,13 +449,7 @@ namespace Dt.Cells.CellTypes
             }
             else
             {
-                if (action2 == null)
-                {
-                    action2 = delegate {
-                        tbElement.Foreground = new SolidColorBrush(Colors.Black);
-                    };
-                }
-                Dt.Cells.Data.UIAdaptor.InvokeSync(action2);
+                tbElement.Foreground = new SolidColorBrush(Colors.Black);
             }
             HorizontalAlignment alignment = bindingCell.ToHorizontalAlignment();
             VerticalAlignment alignment2 = info.VerticalAlignment.ToVerticalAlignment();

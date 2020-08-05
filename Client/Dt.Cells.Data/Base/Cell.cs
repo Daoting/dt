@@ -120,13 +120,10 @@ namespace Dt.Cells.Data
                     {
                         string name = this._styleInfo.BackgroundThemeColor;
                         Brush brush = null;
-                        UIAdaptor.InvokeSync(delegate
+                        if ((!string.IsNullOrEmpty(name) && (this._worksheet != null)) && ((this._worksheet.Workbook != null) && (this._worksheet.Workbook.CurrentTheme != null)))
                         {
-                            if ((!string.IsNullOrEmpty(name) && (this._worksheet != null)) && ((this._worksheet.Workbook != null) && (this._worksheet.Workbook.CurrentTheme != null)))
-                            {
-                                brush = new SolidColorBrush(this._worksheet.Workbook.GetThemeColor(name));
-                            }
-                        });
+                            brush = new SolidColorBrush(this._worksheet.Workbook.GetThemeColor(name));
+                        }
                         return brush;
                     }
                 }
@@ -340,13 +337,10 @@ namespace Dt.Cells.Data
                     {
                         string name = this._styleInfo.ForegroundThemeColor;
                         SolidColorBrush brush = null;
-                        UIAdaptor.InvokeSync(delegate
+                        if ((!string.IsNullOrEmpty(name) && (this._worksheet != null)) && ((this._worksheet.Workbook != null) && (this._worksheet.Workbook.CurrentTheme != null)))
                         {
-                            if ((!string.IsNullOrEmpty(name) && (this._worksheet != null)) && ((this._worksheet.Workbook != null) && (this._worksheet.Workbook.CurrentTheme != null)))
-                            {
-                                brush = new SolidColorBrush(this._worksheet.Workbook.GetThemeColor(name));
-                            }
-                        });
+                            brush = new SolidColorBrush(this._worksheet.Workbook.GetThemeColor(name));
+                        }
                         return brush;
                     }
                 }

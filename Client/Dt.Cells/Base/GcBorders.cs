@@ -758,7 +758,6 @@ namespace Dt.Cells.UI
 
         void MeasureGridLinesForScrolling()
         {
-            Action action = null;
             _borderLinesPanel.Visibility = Visibility.Collapsed;
             _scrollingGridlinesPanel.Visibility = Visibility.Visible;
             _scrollingGridlinesPanel.Children.Clear();
@@ -773,58 +772,52 @@ namespace Dt.Cells.UI
             Windows.Foundation.Point viewportLocation = _viewport.Location;
             if (((_rowIndexes.Length != 1) || (_rowIndexes[0] != -1)) && ((_columnIndexes.Length != 1) || (_columnIndexes[0] != -1)))
             {
-                if (action == null)
+                double viewportWidth = _sheetView.GetViewportWidth(_viewport.ColumnViewportIndex);
+                SolidColorBrush brush = new SolidColorBrush(gridBorderLine.Color);
+                if ((rightColumnLayout != null) && (viewportWidth > ((rightColumnLayout.X + rightColumnLayout.Width) - viewportLocation.X)))
                 {
-                    action = delegate {
-                        double viewportWidth = _sheetView.GetViewportWidth(_viewport.ColumnViewportIndex);
-                        SolidColorBrush brush = new SolidColorBrush(gridBorderLine.Color);
-                        if ((rightColumnLayout != null) && (viewportWidth > ((rightColumnLayout.X + rightColumnLayout.Width) - viewportLocation.X)))
-                        {
-                            double x = rightColumnLayout.X;
-                            double width = rightColumnLayout.Width;
-                            double num9 = viewportLocation.X;
-                        }
-                        double num2 = viewportLocation.Y + 0.5;
-                        for (int k = 0; k < _rowIndexes.Length; k++)
-                        {
-                            RowLayout layout = rowLayoutModel.FindRow(_rowIndexes[k]);
-                            if (layout != null)
-                            {
-                                Windows.UI.Xaml.Shapes.Line line = new Windows.UI.Xaml.Shapes.Line();
-                                line.X1 = 0.0;
-                                line.Y1 = (layout.Y + layout.Height) - num2;
-                                line.X2 = viewportWidth;
-                                line.Y2 = line.Y1;
-                                line.Stroke = brush;
-                                line.StrokeThickness = 1.0;
-                                _scrollingGridlinesPanel.Children.Add(line);
-                            }
-                        }
-                        double viewportHeight = _sheetView.GetViewportHeight(_viewport.RowViewportIndex);
-                        double num5 = viewportLocation.X + 0.5;
-                        double num6 = viewportHeight;
-                        if ((bottomRowLayout != null) && (viewportHeight > ((bottomRowLayout.Y + bottomRowLayout.Height) - viewportLocation.Y)))
-                        {
-                            num6 = ((bottomRowLayout.Y + bottomRowLayout.Height) - viewportLocation.Y) - 0.5;
-                        }
-                        for (int i = 0; i < _columnIndexes.Length; i++)
-                        {
-                            ColumnLayout layout2 = columnLayoutModel.FindColumn(_columnIndexes[i]);
-                            if (layout2 != null)
-                            {
-                                Windows.UI.Xaml.Shapes.Line line2 = new Windows.UI.Xaml.Shapes.Line();
-                                line2.X1 = (layout2.X + layout2.Width) - num5;
-                                line2.Y1 = 0.0;
-                                line2.X2 = line2.X1;
-                                line2.Y2 = num6;
-                                line2.Stroke = brush;
-                                line2.StrokeThickness = 1.0;
-                                _scrollingGridlinesPanel.Children.Add(line2);
-                            }
-                        }
-                    };
+                    double x = rightColumnLayout.X;
+                    double width = rightColumnLayout.Width;
+                    double num9 = viewportLocation.X;
                 }
-                Dt.Cells.Data.UIAdaptor.InvokeSync(action);
+                double num2 = viewportLocation.Y + 0.5;
+                for (int k = 0; k < _rowIndexes.Length; k++)
+                {
+                    RowLayout layout = rowLayoutModel.FindRow(_rowIndexes[k]);
+                    if (layout != null)
+                    {
+                        Windows.UI.Xaml.Shapes.Line line = new Windows.UI.Xaml.Shapes.Line();
+                        line.X1 = 0.0;
+                        line.Y1 = (layout.Y + layout.Height) - num2;
+                        line.X2 = viewportWidth;
+                        line.Y2 = line.Y1;
+                        line.Stroke = brush;
+                        line.StrokeThickness = 1.0;
+                        _scrollingGridlinesPanel.Children.Add(line);
+                    }
+                }
+                double viewportHeight = _sheetView.GetViewportHeight(_viewport.RowViewportIndex);
+                double num5 = viewportLocation.X + 0.5;
+                double num6 = viewportHeight;
+                if ((bottomRowLayout != null) && (viewportHeight > ((bottomRowLayout.Y + bottomRowLayout.Height) - viewportLocation.Y)))
+                {
+                    num6 = ((bottomRowLayout.Y + bottomRowLayout.Height) - viewportLocation.Y) - 0.5;
+                }
+                for (int i = 0; i < _columnIndexes.Length; i++)
+                {
+                    ColumnLayout layout2 = columnLayoutModel.FindColumn(_columnIndexes[i]);
+                    if (layout2 != null)
+                    {
+                        Windows.UI.Xaml.Shapes.Line line2 = new Windows.UI.Xaml.Shapes.Line();
+                        line2.X1 = (layout2.X + layout2.Width) - num5;
+                        line2.Y1 = 0.0;
+                        line2.X2 = line2.X1;
+                        line2.Y2 = num6;
+                        line2.Stroke = brush;
+                        line2.StrokeThickness = 1.0;
+                        _scrollingGridlinesPanel.Children.Add(line2);
+                    }
+                }
             }
         }
 

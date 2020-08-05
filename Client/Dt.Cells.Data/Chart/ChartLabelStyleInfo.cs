@@ -169,11 +169,7 @@ namespace Dt.Cells.Data
                 {
                     Windows.UI.Color color = base.ThemeContext.GetThemeColor(this.ForegroundThemeColor);
                     color = Dt.Cells.Data.ColorHelper.UpdateColor(color, this.ForegroundColorSettings, false);
-                    SolidColorBrush result = null;
-                    UIAdaptor.InvokeSync(delegate {
-                        result = new SolidColorBrush(color);
-                    });
-                    return result;
+                    return new SolidColorBrush(color);
                 }
                 if (base.Chart != null)
                 {

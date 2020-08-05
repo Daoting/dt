@@ -328,11 +328,7 @@ namespace Dt.Cells.Data
                 if (((base._themeContext != null) && (base._styleInfo != null)) && base._styleInfo.IsForegroundThemeColorSet)
                 {
                     Windows.UI.Color color = base._themeContext.GetThemeColor(this.ForegroundThemeColor);
-                    SolidColorBrush result = null;
-                    UIAdaptor.InvokeSync(delegate {
-                        result = new SolidColorBrush(color);
-                    });
-                    return result;
+                    return new SolidColorBrush(color);
                 }
                 return null;
             }
@@ -343,7 +339,6 @@ namespace Dt.Cells.Data
             get { return  this._chartTitle; }
             set
             {
-                Action action = null;
                 if (value != null)
                 {
                     value.TitleType = TitleType.ChartTitle;
@@ -353,13 +348,7 @@ namespace Dt.Cells.Data
                     }
                     if (((value._styleInfo != null) && !value._styleInfo.IsFontWeightSet) || (value._styleInfo == null))
                     {
-                        if (action == null)
-                        {
-                            action = delegate {
-                                value.FontWeight = FontWeights.Bold;
-                            };
-                        }
-                        UIAdaptor.InvokeSync(action);
+                        value.FontWeight = FontWeights.Bold;
                     }
                 }
                 this._chartTitle = value;

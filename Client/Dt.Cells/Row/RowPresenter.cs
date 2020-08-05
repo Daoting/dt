@@ -37,18 +37,11 @@ namespace Dt.Cells.UI
 
         public RowPresenter(GcViewport viewport)
         {
-            Action action = null;
             _row = -1;
             Cells = new Dictionary<int, CellPresenterBase>();
-            base.HorizontalAlignment = HorizontalAlignment.Left;
-            base.VerticalAlignment = VerticalAlignment.Top;
-            if (action == null)
-            {
-                action = delegate {
-                    base.Background = new SolidColorBrush(Colors.Transparent);
-                };
-            }
-            Dt.Cells.Data.UIAdaptor.InvokeSync(action);
+            HorizontalAlignment = HorizontalAlignment.Left;
+            VerticalAlignment = VerticalAlignment.Top;
+            Background = new SolidColorBrush(Colors.Transparent);
             _owningPresenter = viewport;
         }
 
@@ -287,12 +280,7 @@ namespace Dt.Cells.UI
             return new Windows.Foundation.Point(point.X - Location.X, point.Y - Location.Y);
         }
 
-        internal void UpdateDisplayedCells()
-        {
-            UpdateDisplayedCells(false);
-        }
-
-        internal void UpdateDisplayedCells(bool forceUpdate)
+        internal void UpdateDisplayedCells(bool forceUpdate = false)
         {
             ColumnLayoutModel columnLayoutModel = GetColumnLayoutModel();
             List<CellPresenterBase> list = new List<CellPresenterBase>();

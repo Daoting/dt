@@ -182,7 +182,6 @@ namespace Dt.Cells.Data
 
         private void UpdateTextStyle()
         {
-            Action action = null;
             if (this.TextForamt != null)
             {
                 double? richTextFontSize = RichTextUtility.GetRichTextFontSize(this.TextForamt.TextParagraphs);
@@ -190,19 +189,13 @@ namespace Dt.Cells.Data
                 {
                     this.FontSize = richTextFontSize.Value;
                 }
-                if (action == null)
+                this.FontStyle = RichTextUtility.GetRichTextFontStyle(this.TextForamt.TextParagraphs);
+                this.FontWeight = RichTextUtility.GetRichTextFontWeight(this.TextForamt.TextParagraphs, FontWeights.Bold);
+                SpreadChartBase chart = this.ChartBase;
+                if (chart != null)
                 {
-                    action = delegate {
-                        this.FontStyle = RichTextUtility.GetRichTextFontStyle(this.TextForamt.TextParagraphs);
-                        this.FontWeight = RichTextUtility.GetRichTextFontWeight(this.TextForamt.TextParagraphs, FontWeights.Bold);
-                        SpreadChartBase chart = this.ChartBase;
-                        if (chart != null)
-                        {
-                            this.Foreground = RichTextUtility.GetRichTextFill(this.TextForamt.TextParagraphs, chart.Worksheet.Workbook);
-                        }
-                    };
+                    this.Foreground = RichTextUtility.GetRichTextFill(this.TextForamt.TextParagraphs, chart.Worksheet.Workbook);
                 }
-                UIAdaptor.InvokeSync(action);
             }
         }
 
@@ -371,11 +364,7 @@ namespace Dt.Cells.Data
                 if (((base.ThemeContext != null) && (base._styleInfo != null)) && base._styleInfo.IsForegroundThemeColorSet)
                 {
                     Windows.UI.Color color = base.ThemeContext.GetThemeColor(this.ForegroundThemeColor);
-                    SolidColorBrush result = null;
-                    UIAdaptor.InvokeSync(delegate {
-                        result = new SolidColorBrush(color);
-                    });
-                    return result;
+                    return new SolidColorBrush(color);
                 }
                 if (base.ChartBase != null)
                 {
@@ -542,7 +531,6 @@ namespace Dt.Cells.Data
             get { return  this._richText; }
             set
             {
-                Action action = null;
                 if (value != this._richText)
                 {
                     this._richText = value;
@@ -553,13 +541,7 @@ namespace Dt.Cells.Data
                         {
                             this.FontSize = richTextFontSize.Value;
                         }
-                        if (action == null)
-                        {
-                            action = delegate {
-                                this.FontWeight = RichTextUtility.GetRichTextFontWeight(this._richText.TextParagraphs);
-                            };
-                        }
-                        UIAdaptor.InvokeSync(action);
+                        FontWeight = RichTextUtility.GetRichTextFontWeight(this._richText.TextParagraphs);
                     }
                     this._text = null;
                 }

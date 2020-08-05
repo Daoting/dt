@@ -365,9 +365,7 @@ namespace Dt.Cells.Data
             {
                 SolidColorBrush solidbrush = fill as SolidColorBrush;
                 string fillColor = string.Empty;
-                UIAdaptor.InvokeSync(delegate {
-                    fillColor = GetHtmlColor(solidbrush.Color);
-                });
+                fillColor = GetHtmlColor(solidbrush.Color);
                 return fillColor;
             }
             return string.Empty;

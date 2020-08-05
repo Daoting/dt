@@ -542,14 +542,9 @@ namespace Dt.Cells.Data
         {
             if (((background != null) && !(background is ImageBrush)) && (mode != ShapePathFillMode.Normal))
             {
-                if (background is SolidColorBrush)
+                if (background is SolidColorBrush brush)
                 {
-                    SolidColorBrush brush = null;
-                    UIAdaptor.InvokeSync(delegate {
-                        SolidColorBrush brush1 = background as SolidColorBrush;
-                        brush = new SolidColorBrush(GetColorByFillMode(brush1.Color, mode));
-                    });
-                    return brush;
+                    return new SolidColorBrush(GetColorByFillMode(brush.Color, mode));
                 }
                 if (background is GradientBrush)
                 {
@@ -1353,12 +1348,10 @@ namespace Dt.Cells.Data
             {
                 SolidColorBrush sfe = effect as SolidColorBrush;
                 bool _hasFillEffect = true;
-                UIAdaptor.InvokeSync(delegate {
-                    if (sfe.Color.A == 0)
-                    {
-                        _hasFillEffect = false;
-                    }
-                });
+                if (sfe.Color.A == 0)
+                {
+                    _hasFillEffect = false;
+                }
                 return _hasFillEffect;
             }
             return true;

@@ -107,5 +107,9 @@
     <ProjectReference Include="..\Dt.Charts\Dt.Charts.csproj" />
     <ProjectReference Include="..\Dt.Cells.Data\Dt.Cells.Data.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Row\" />
+  </ItemGroup>
  
 </Project>

@@ -136,7 +136,7 @@ namespace Dt.Cells.UI
         {
             base.OnApplyTemplate();
             _content = base.GetTemplateChild("PART_ContentPresenter") as ContentControl;
-            base.FontSize = 13.0;
+            FontSize = 13.0;
             PrepareForDisplay();
             UpdateActiveStates();
         }

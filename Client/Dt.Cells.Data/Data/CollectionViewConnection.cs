@@ -38,12 +38,9 @@ namespace Dt.Cells.Data
             {
                 return factory.CreateView();
             }
-            CollectionViewSource viewSource = null;
-            UIAdaptor.InvokeSync(delegate {
-                viewSource = new CollectionViewSource();
-                viewSource.Source = source;
-                view = viewSource.View;
-            });
+            var viewSource = new CollectionViewSource();
+            viewSource.Source = source;
+            view = viewSource.View;
             return view;
         }
 
@@ -66,35 +63,28 @@ namespace Dt.Cells.Data
         {
             if ((this.Context != null) && ((this.fields == null) || (this.fields.Count == 0)))
             {
-                Action action = null;
                 Dictionary<string, BindingField> fieldsTemp = new Dictionary<string, BindingField>();
                 if ((this.fields == null) || (this.fields.Count == 0))
                 {
-                    if (action == null)
+                    while (this.Context.CurrentItem != null)
                     {
-                        action = delegate {
-                            while (this.Context.CurrentItem != null)
+                        object currentItem = this.Context.CurrentItem;
+                        if (currentItem != null)
+                        {
+                            // hdt
+                            foreach (PropertyInfo info in currentItem.GetType().GetRuntimeProperties())
                             {
-                                object currentItem = this.Context.CurrentItem;
-                                if (currentItem != null)
+                                ParameterInfo[] indexParameters = info.GetIndexParameters();
+                                if ((indexParameters == null) || (indexParameters.Length == 0))
                                 {
-                                    // hdt
-                                    foreach (PropertyInfo info in currentItem.GetType().GetRuntimeProperties())
-                                    {
-                                        ParameterInfo[] indexParameters = info.GetIndexParameters();
-                                        if ((indexParameters == null) || (indexParameters.Length == 0))
-                                        {
-                                            fieldsTemp.Add(info.Name, new BindingField(info.Name, info));
-                                        }
-                                    }
-                                    this.fields = fieldsTemp;
-                                    return;
+                                    fieldsTemp.Add(info.Name, new BindingField(info.Name, info));
                                 }
-                                this.Context.MoveCurrentToNext();
                             }
-                        };
+                            this.fields = fieldsTemp;
+                            return;
+                        }
+                        this.Context.MoveCurrentToNext();
                     }
-                    UIAdaptor.InvokeSync(action);
                 }
             }
         }

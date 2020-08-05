@@ -86,11 +86,7 @@ namespace Dt.Cells.Data
         {
             get
             {
-                SolidColorBrush result = null;
-                UIAdaptor.InvokeSync(delegate {
-                    result = new SolidColorBrush(Colors.Transparent);
-                });
-                return result;
+                return new SolidColorBrush(Colors.Transparent);
             }
         }
 
@@ -101,11 +97,7 @@ namespace Dt.Cells.Data
         {
             get
             {
-                SolidColorBrush result = null;
-                UIAdaptor.InvokeSync(delegate {
-                    result = new SolidColorBrush(Colors.Transparent);
-                });
-                return result;
+                return new SolidColorBrush(Colors.Transparent);
             }
         }
 

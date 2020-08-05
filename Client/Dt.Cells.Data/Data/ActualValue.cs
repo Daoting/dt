@@ -49,11 +49,7 @@ namespace Dt.Cells.Data
                     }
                     if (style.Background is SolidColorBrush)
                     {
-                        Color? color = null;
-                        UIAdaptor.InvokeSync(delegate {
-                            color = new Color?(((SolidColorBrush) style.Background).Color);
-                        });
-                        return color;
+                        return new Color?(((SolidColorBrush)style.Background).Color);
                     }
                 }
             }
@@ -107,11 +103,7 @@ namespace Dt.Cells.Data
                     }
                     if (style.Foreground is SolidColorBrush)
                     {
-                        Color? color = null;
-                        UIAdaptor.InvokeSync(delegate {
-                            color = new Color?(((SolidColorBrush) style.Foreground).Color);
-                        });
-                        return color;
+                        return new Color?(((SolidColorBrush)style.Foreground).Color);
                     }
                 }
             }

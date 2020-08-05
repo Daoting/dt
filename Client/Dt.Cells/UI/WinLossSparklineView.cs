@@ -35,9 +35,7 @@ namespace Dt.Cells.UI
         {
             Rectangle r = new Rectangle();
             Windows.UI.Color color = base.GetDataPointColor(index);
-            UIAdaptor.InvokeSync(delegate {
-                r.Fill = new SolidColorBrush(color);
-            });
+            r.Fill = new SolidColorBrush(color);
             r.RenderTransformOrigin = new Windows.Foundation.Point(0.5, 0.0);
             ScaleTransform transform = new ScaleTransform();
             transform.ScaleX = 0.5;

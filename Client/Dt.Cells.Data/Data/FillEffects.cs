@@ -29,13 +29,7 @@ namespace Dt.Cells.Data
                 lock (_lock)
                 {
                     if (field == null)
-                    {
-                        Brush initValue = null;
-                        UIAdaptor.InvokeSync(delegate {
-                            initValue = new SolidColorBrush(defValue);
-                        });
-                        field = initValue;
-                    }
+                        field = new SolidColorBrush(defValue);
                 }
             }
             return field;
@@ -48,17 +42,15 @@ namespace Dt.Cells.Data
         /// <returns>The color.</returns>
         public static Windows.UI.Color ToColor(GradientBrush effect)
         {
-            Windows.UI.Color color = new Windows.UI.Color();
-            UIAdaptor.InvokeSync(delegate {
-                if ((effect.GradientStops != null) && (effect.GradientStops.Count > 0))
-                {
-                    color = effect.GradientStops[0].Color;
-                }
-                else
-                {
-                    color = Colors.Transparent;
-                }
-            });
+            Windows.UI.Color color;
+            if ((effect.GradientStops != null) && (effect.GradientStops.Count > 0))
+            {
+                color = effect.GradientStops[0].Color;
+            }
+            else
+            {
+                color = Colors.Transparent;
+            }
             return color;
         }
 

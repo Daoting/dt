@@ -91,11 +91,7 @@ namespace Dt.Cells.Data
 
         internal Brush GetFillBrush(int index, Windows.Foundation.Size availableSize)
         {
-            SolidColorBrush fillBrush = null;
-            UIAdaptor.InvokeSync(delegate {
-                fillBrush = new SolidColorBrush(this._viewInfo.GetDataPointColor(index));
-            });
-            return fillBrush;
+            return new SolidColorBrush(this._viewInfo.GetDataPointColor(index));
         }
 
         /// <summary>

@@ -136,8 +136,7 @@ namespace Dt.Cells.Data
         /// <returns></returns>
         public static Stream GetBmpStream(RenderTargetBitmap p_bmp)
         {
-            Task<IBuffer> taskBuf = null;
-            UIAdaptor.InvokeSync(() => taskBuf = p_bmp.GetPixelsAsync().AsTask());
+            Task<IBuffer> taskBuf = taskBuf = p_bmp.GetPixelsAsync().AsTask();
             taskBuf.Wait();
             byte[] data = taskBuf.Result.ToArray();
 
@@ -146,18 +145,15 @@ namespace Dt.Cells.Data
             taskEncoder.Wait();
 
             BitmapEncoder encoder = taskEncoder.Result;
-            UIAdaptor.InvokeSync(delegate
-            {
-                float dpi = DisplayInformation.GetForCurrentView().LogicalDpi;
-                encoder.SetPixelData(
-                        BitmapPixelFormat.Bgra8,
-                        BitmapAlphaMode.Ignore,
-                        (uint)p_bmp.PixelWidth,
-                        (uint)p_bmp.PixelHeight,
-                        dpi,
-                        dpi,
-                        data);
-            });
+            float dpi = DisplayInformation.GetForCurrentView().LogicalDpi;
+            encoder.SetPixelData(
+                    BitmapPixelFormat.Bgra8,
+                    BitmapAlphaMode.Ignore,
+                    (uint)p_bmp.PixelWidth,
+                    (uint)p_bmp.PixelHeight,
+                    dpi,
+                    dpi,
+                    data);
             encoder.FlushAsync().AsTask().Wait();
 
             return WindowsRuntimeStreamExtensions.AsStream(ms);
@@ -171,7 +167,7 @@ namespace Dt.Cells.Data
             InMemoryRandomAccessStream random = new InMemoryRandomAccessStream();
             IOutputStream output = random.GetOutputStreamAt(0L);
             await RandomAccessStream.CopyAsync(ms.AsInputStream(), output);
-            UIAdaptor.InvokeSync(() => image.SetSource(random));
+            image.SetSource(random);
         }
 
         public static bool IsNumber(double x)

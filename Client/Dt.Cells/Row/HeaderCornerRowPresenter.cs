@@ -22,7 +22,7 @@ namespace Dt.Cells.UI
         {
             _cornerCell = new CornerHeaderCellPresenter();
             _cornerCell.OwningRow = this;
-            base.Children.Add(_cornerCell);
+            Children.Add(_cornerCell);
             _owningPresenter = cornerHeader;
         }
 

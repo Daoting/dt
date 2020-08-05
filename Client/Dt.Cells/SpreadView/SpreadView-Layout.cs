@@ -40,15 +40,7 @@ namespace Dt.Cells.UI
             _progressRing = new ProgressRing();
             if (!_progressGrid.Children.Contains(_progressRing))
             {
-                Action action = null;
-                if (action == null)
-                {
-                    action = delegate
-                    {
-                        _progressRing.Foreground = new SolidColorBrush(Colors.Black);
-                    };
-                }
-                UIAdaptor.InvokeSync(action);
+                _progressRing.Foreground = new SolidColorBrush(Colors.Black);
                 _progressRing.IsActive = true;
                 _progressRing.Visibility = (Visibility)1;
                 _progressRing.Width = 200.0;

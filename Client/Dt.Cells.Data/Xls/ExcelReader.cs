@@ -500,14 +500,11 @@ namespace Dt.Cells.Data
 
         private void AddStyleToWorkbookNameStyles(StyleInfo namedStyle)
         {
-            UIAdaptor.InvokeSync(delegate
+            if (this._workbook.NamedStyles == null)
             {
-                if (this._workbook.NamedStyles == null)
-                {
-                    this._workbook.NamedStyles = new StyleInfoCollection();
-                }
-                this._workbook.NamedStyles.Add(namedStyle);
-            });
+                this._workbook.NamedStyles = new StyleInfoCollection();
+            }
+            this._workbook.NamedStyles.Add(namedStyle);
         }
 
         private void AddTop10ConditionalFormat(Worksheet worksheet, List<CellRange> ranges, IExcelGeneralRule generalRule)
@@ -542,13 +539,9 @@ namespace Dt.Cells.Data
 
         private double CalculateDefaultRowHeight()
         {
-            double result = 0.0;
-            UIAdaptor.InvokeSync(delegate
-            {
-                FontFamily fontFamily = this.GetFontFamily();
-                double fontSize = this._workbook.DefaultStyle.FontSize;
-                result = UnitHelper.PixelToPoint(1.0 + this.MeasureStringHeight(MeasureItem, fontFamily.Source, fontSize, false, false, false, -1.0));
-            });
+            FontFamily fontFamily = this.GetFontFamily();
+            double fontSize = this._workbook.DefaultStyle.FontSize;
+            double result = UnitHelper.PixelToPoint(1.0 + this.MeasureStringHeight(MeasureItem, fontFamily.Source, fontSize, false, false, false, -1.0));
             return result;
         }
 
@@ -949,64 +942,56 @@ namespace Dt.Cells.Data
 
         private double GetMaxiumDigitWidth()
         {
-            Action action = null;
             if (double.IsNaN(this._maxiumDigitWidth))
             {
-                if (action == null)
+                if (this._normalStyleInfo == null)
                 {
-                    action = delegate
-                    {
-                        if (this._normalStyleInfo == null)
-                        {
-                            this._normalStyleInfo = this._workbook.DefaultStyle;
-                        }
-                        TextBlock block = new TextBlock();
-                        if (!string.IsNullOrWhiteSpace(this._normalStyleInfo.FontTheme))
-                        {
-                            if (this._normalStyleInfo.FontTheme == "Headings")
-                            {
-                                block.FontFamily = this._workbook.CurrentTheme.HeadingFontFamily;
-                            }
-                            else if (this._normalStyleInfo.FontTheme == "Body")
-                            {
-                                block.FontFamily = this._workbook.CurrentTheme.BodyFontFamily;
-                            }
-                            else
-                            {
-                                block.FontFamily = new FontFamily("Microsoft YaHei");
-                            }
-                        }
-                        else
-                        {
-                            if (this._normalStyleInfo.FontFamily != null)
-                            {
-                                block.FontFamily = this._normalStyleInfo.FontFamily;
-                            }
-                            if (block.FontFamily == null)
-                            {
-                                block.FontFamily = new FontFamily("Microsoft YaHei");
-                            }
-                        }
-                        block.FontSize = this._normalStyleInfo.FontSize;
-                        block.FontWeight = this._normalStyleInfo.FontWeight;
-                        block.FontStyle = this._normalStyleInfo.FontStyle;
-                        double num = 0.0;
-                        for (int j = 0; j < 10; j++)
-                        {
-                            char c = (char)(0x30 + j);
-                            string str = (string)new string(c, 1);
-                            block.Text = str;
-                            block.Measure(new Windows.Foundation.Size(double.MaxValue, double.MaxValue));
-                            double width = block.DesiredSize.Width;
-                            if (width > num)
-                            {
-                                num = width;
-                            }
-                        }
-                        this._maxiumDigitWidth = num;
-                    };
+                    this._normalStyleInfo = this._workbook.DefaultStyle;
                 }
-                UIAdaptor.InvokeSync(action);
+                TextBlock block = new TextBlock();
+                if (!string.IsNullOrWhiteSpace(this._normalStyleInfo.FontTheme))
+                {
+                    if (this._normalStyleInfo.FontTheme == "Headings")
+                    {
+                        block.FontFamily = this._workbook.CurrentTheme.HeadingFontFamily;
+                    }
+                    else if (this._normalStyleInfo.FontTheme == "Body")
+                    {
+                        block.FontFamily = this._workbook.CurrentTheme.BodyFontFamily;
+                    }
+                    else
+                    {
+                        block.FontFamily = new FontFamily("Microsoft YaHei");
+                    }
+                }
+                else
+                {
+                    if (this._normalStyleInfo.FontFamily != null)
+                    {
+                        block.FontFamily = this._normalStyleInfo.FontFamily;
+                    }
+                    if (block.FontFamily == null)
+                    {
+                        block.FontFamily = new FontFamily("Microsoft YaHei");
+                    }
+                }
+                block.FontSize = this._normalStyleInfo.FontSize;
+                block.FontWeight = this._normalStyleInfo.FontWeight;
+                block.FontStyle = this._normalStyleInfo.FontStyle;
+                double num = 0.0;
+                for (int j = 0; j < 10; j++)
+                {
+                    char c = (char)(0x30 + j);
+                    string str = (string)new string(c, 1);
+                    block.Text = str;
+                    block.Measure(new Windows.Foundation.Size(double.MaxValue, double.MaxValue));
+                    double width = block.DesiredSize.Width;
+                    if (width > num)
+                    {
+                        num = width;
+                    }
+                }
+                this._maxiumDigitWidth = num;
             }
             return this._maxiumDigitWidth;
         }
@@ -1086,22 +1071,19 @@ namespace Dt.Cells.Data
             {
                 this._workbook.NamedStyles.Clear();
                 BuiltInExcelStyles builtInExcelStyleCollection = new BuiltInExcelStyles();
-                UIAdaptor.InvokeSync(delegate
+                this._builtInStyles = builtInExcelStyleCollection.GetBuiltInStyls();
+                foreach (IExcelStyle style in this._builtInStyles)
                 {
-                    this._builtInStyles = builtInExcelStyleCollection.GetBuiltInStyls();
-                    foreach (IExcelStyle style in this._builtInStyles)
+                    if ((style != null) && (style.Name == "Normal"))
                     {
-                        if ((style != null) && (style.Name == "Normal"))
-                        {
-                            this._normalStleIndex = this._extendedFormats.Count;
-                        }
-                        this._styles.Add(style);
-                        this._extendedFormats.Add(style.Format);
-                        this._styleNames.Add(style.Name);
-                        this._namedStylesExtendedFormats[style.Name] = style.Format;
-                        this.AddStyleToWorkbookNameStyles(new StyleInfo(style.Name, "", style.Format.ToCellStyleInfo(this._workbook)));
+                        this._normalStleIndex = this._extendedFormats.Count;
                     }
-                });
+                    this._styles.Add(style);
+                    this._extendedFormats.Add(style.Format);
+                    this._styleNames.Add(style.Name);
+                    this._namedStylesExtendedFormats[style.Name] = style.Format;
+                    this.AddStyleToWorkbookNameStyles(new StyleInfo(style.Name, "", style.Format.ToCellStyleInfo(this._workbook)));
+                }
             }
         }
 
@@ -1276,32 +1258,27 @@ namespace Dt.Cells.Data
 
         private double MeasureStringHeight(string text, string fontName, double fontSize, bool wordWrap, bool bold, bool italic, double width)
         {
-            double result = 0.0;
-            UIAdaptor.InvokeSync(delegate
+            TextBlock block = new TextBlock();
+            if (string.IsNullOrWhiteSpace(fontName))
             {
-                TextBlock block = new TextBlock();
-                if (string.IsNullOrWhiteSpace(fontName))
-                {
-                    fontName = "Microsoft YaHei";
-                }
-                block.FontFamily = new FontFamily(fontName);
-                block.FontSize = fontSize;
-                if (bold)
-                {
-                    block.FontWeight = FontWeights.Bold;
-                }
-                if (italic)
-                {
-                    block.FontStyle = Windows.UI.Text.FontStyle.Italic;
-                }
-                block.Margin = new Windows.UI.Xaml.Thickness(4.0);
-                block.TextWrapping = wordWrap ? TextWrapping.Wrap : TextWrapping.NoWrap;
-                block.Text = text;
-                block.LineStackingStrategy = LineStackingStrategy.BlockLineHeight;
-                block.Measure(new Windows.Foundation.Size((width <= 0.0) ? double.MaxValue : width, double.MaxValue));
-                result = Math.Floor(block.ActualHeight);
-            });
-            return result;
+                fontName = "Microsoft YaHei";
+            }
+            block.FontFamily = new FontFamily(fontName);
+            block.FontSize = fontSize;
+            if (bold)
+            {
+                block.FontWeight = FontWeights.Bold;
+            }
+            if (italic)
+            {
+                block.FontStyle = Windows.UI.Text.FontStyle.Italic;
+            }
+            block.Margin = new Windows.UI.Xaml.Thickness(4.0);
+            block.TextWrapping = wordWrap ? TextWrapping.Wrap : TextWrapping.NoWrap;
+            block.Text = text;
+            block.LineStackingStrategy = LineStackingStrategy.BlockLineHeight;
+            block.Measure(new Windows.Foundation.Size((width <= 0.0) ? double.MaxValue : width, double.MaxValue));
+            return Math.Floor(block.ActualHeight);
         }
 
         public void OnExcelLoadError(ExcelWarning excelWarning)
@@ -1322,122 +1299,119 @@ namespace Dt.Cells.Data
 
         private void ResetCellStyleInfoOfTableRangeCell(Worksheet worksheet, int row, int column, StyleInfo defaultStyle)
         {
-            UIAdaptor.InvokeSync(delegate
+            StyleInfo styleInfo = worksheet.GetStyleInfo(row, column);
+            if (styleInfo != null)
             {
-                StyleInfo styleInfo = worksheet.GetStyleInfo(row, column);
-                if (styleInfo != null)
+                StyleInfo style = styleInfo.Clone() as StyleInfo;
+                if (style.IsBackgroundSet() && defaultStyle.IsBackgroundSet())
                 {
-                    StyleInfo style = styleInfo.Clone() as StyleInfo;
-                    if (style.IsBackgroundSet() && defaultStyle.IsBackgroundSet())
+                    if (((style.Background is SolidColorBrush) && (defaultStyle.Background is SolidColorBrush)) && ((style.Background as SolidColorBrush).Color == (defaultStyle.Background as SolidColorBrush).Color))
                     {
-                        if (((style.Background is SolidColorBrush) && (defaultStyle.Background is SolidColorBrush)) && ((style.Background as SolidColorBrush).Color == (defaultStyle.Background as SolidColorBrush).Color))
-                        {
-                            style.ResetBackground();
-                        }
-                    }
-                    else if ((style.IsBackgroundThemeColorSet() && defaultStyle.IsBackgroundThemeColorSet()) && (style.BackgroundThemeColor == defaultStyle.BackgroundThemeColor))
-                    {
-                        style.ResetBackgroundThemeColor();
-                    }
-                    if (style.IsForegroundSet() && defaultStyle.IsForegroundSet())
-                    {
-                        if (((style.Foreground is SolidColorBrush) && (defaultStyle.Foreground is SolidColorBrush)) && ((style.Foreground as SolidColorBrush).Color == (defaultStyle.Foreground as SolidColorBrush).Color))
-                        {
-                            style.ResetForeground();
-                        }
-                    }
-                    else if ((style.IsForegroundThemeColorSet() && defaultStyle.IsForegroundThemeColorSet()) && (style.ForegroundThemeColor == defaultStyle.ForegroundThemeColor))
-                    {
-                        style.ResetForegroundThemeColor();
-                    }
-                    if ((style.IsBorderBottomSet() && defaultStyle.IsBorderBottomSet()) && (style.BorderBottom == defaultStyle.BorderBottom))
-                    {
-                        style.ResetBorderBottom();
-                    }
-                    if ((style.IsBorderLeftSet() && defaultStyle.IsBorderLeftSet()) && (style.BorderLeft == defaultStyle.BorderLeft))
-                    {
-                        style.ResetBorderLeft();
-                    }
-                    if ((style.IsBorderRightSet() && defaultStyle.IsBorderRightSet()) && (style.BorderRight == defaultStyle.BorderRight))
-                    {
-                        style.ResetBorderRight();
-                    }
-                    if ((style.IsBorderTopSet() && defaultStyle.IsBorderTopSet()) && (style.BorderTop == defaultStyle.BorderTop))
-                    {
-                        style.ResetBorderTop();
-                    }
-                    if (((style.IsFontFamilySet() && defaultStyle.IsFontFamilySet()) && ((defaultStyle.FontFamily != null) && (style.FontFamily != null))) && (defaultStyle.FontFamily.Source == style.FontFamily.Source))
-                    {
-                        style.ResetFontFamily();
-                    }
-                    if ((style.IsFontSizeSet() && defaultStyle.IsFontSizeSet()) && (style.FontSize == defaultStyle.FontSize))
-                    {
-                        style.ResetFontSize();
-                    }
-                    if ((style.IsFontStyleSet() && defaultStyle.IsFontStyleSet()) && (style.FontStyle == defaultStyle.FontStyle))
-                    {
-                        style.ResetFontStyle();
-                    }
-                    if (style.IsFormatterSet() && defaultStyle.IsFormatterSet())
-                    {
-                        if ((style.Formatter == null) && (defaultStyle.Formatter == null))
-                        {
-                            style.ResetFormatter();
-                        }
-                        else if (((style.Formatter != null) && (defaultStyle.Formatter != null)) && ((style.Formatter.GetType() == defaultStyle.Formatter.GetType()) && (style.Formatter.FormatString == defaultStyle.Formatter.FormatString)))
-                        {
-                            style.ResetFormatter();
-                        }
-                    }
-                    if ((style.IsHorizontalAlignmentSet() && defaultStyle.IsHorizontalAlignmentSet()) && (style.HorizontalAlignment == defaultStyle.HorizontalAlignment))
-                    {
-                        style.ResetHorizontalAlignment();
-                    }
-                    if ((style.IsVerticalAlignmentSet() && defaultStyle.IsVerticalAlignmentSet()) && (style.VerticalAlignment == defaultStyle.VerticalAlignment))
-                    {
-                        style.ResetVerticalAlignment();
-                    }
-                    if ((style.IsTextIndentSet() && defaultStyle.IsTextIndentSet()) && (style.TextIndent == defaultStyle.TextIndent))
-                    {
-                        style.ResetTextIndent();
-                    }
-                    if ((style.IsFontWeightSet() && defaultStyle.IsFontWeightSet()) && style.FontWeight.Equals(defaultStyle.FontWeight))
-                    {
-                        style.ResetFontWeight();
-                    }
-                    if ((style.IsWordWrapSet() && defaultStyle.IsWordWrapSet()) && (style.WordWrap == defaultStyle.WordWrap))
-                    {
-                        style.ResetWordWrap();
-                    }
-                    if ((style.IsLockedSet() && defaultStyle.IsLockedSet()) && (style.Locked == defaultStyle.Locked))
-                    {
-                        style.ResetLocked();
-                    }
-                    if ((style.IsFocusableSet() && defaultStyle.IsFocusableSet()) && (style.Focusable == defaultStyle.Focusable))
-                    {
-                        style.ResetFocusable();
-                    }
-                    if ((style.IsTabStopSet() && defaultStyle.IsTabStopSet()) && (style.TabStop == defaultStyle.TabStop))
-                    {
-                        style.ResetTabStop();
-                    }
-                    if ((style.IsShrinkToFitSet() && defaultStyle.IsShrinkToFitSet()) && (style.ShrinkToFit == defaultStyle.ShrinkToFit))
-                    {
-                        style.ResetShrinkToFit();
-                    }
-                    string name = style.Name;
-                    style.ResetName();
-                    if (style.IsEmpty)
-                    {
-                        worksheet.SetStyleInfo(row, column, null);
-                    }
-                    else
-                    {
-                        style.Name = style.Name;
-                        worksheet.SetStyleInfo(row, column, style);
+                        style.ResetBackground();
                     }
                 }
-            });
+                else if ((style.IsBackgroundThemeColorSet() && defaultStyle.IsBackgroundThemeColorSet()) && (style.BackgroundThemeColor == defaultStyle.BackgroundThemeColor))
+                {
+                    style.ResetBackgroundThemeColor();
+                }
+                if (style.IsForegroundSet() && defaultStyle.IsForegroundSet())
+                {
+                    if (((style.Foreground is SolidColorBrush) && (defaultStyle.Foreground is SolidColorBrush)) && ((style.Foreground as SolidColorBrush).Color == (defaultStyle.Foreground as SolidColorBrush).Color))
+                    {
+                        style.ResetForeground();
+                    }
+                }
+                else if ((style.IsForegroundThemeColorSet() && defaultStyle.IsForegroundThemeColorSet()) && (style.ForegroundThemeColor == defaultStyle.ForegroundThemeColor))
+                {
+                    style.ResetForegroundThemeColor();
+                }
+                if ((style.IsBorderBottomSet() && defaultStyle.IsBorderBottomSet()) && (style.BorderBottom == defaultStyle.BorderBottom))
+                {
+                    style.ResetBorderBottom();
+                }
+                if ((style.IsBorderLeftSet() && defaultStyle.IsBorderLeftSet()) && (style.BorderLeft == defaultStyle.BorderLeft))
+                {
+                    style.ResetBorderLeft();
+                }
+                if ((style.IsBorderRightSet() && defaultStyle.IsBorderRightSet()) && (style.BorderRight == defaultStyle.BorderRight))
+                {
+                    style.ResetBorderRight();
+                }
+                if ((style.IsBorderTopSet() && defaultStyle.IsBorderTopSet()) && (style.BorderTop == defaultStyle.BorderTop))
+                {
+                    style.ResetBorderTop();
+                }
+                if (((style.IsFontFamilySet() && defaultStyle.IsFontFamilySet()) && ((defaultStyle.FontFamily != null) && (style.FontFamily != null))) && (defaultStyle.FontFamily.Source == style.FontFamily.Source))
+                {
+                    style.ResetFontFamily();
+                }
+                if ((style.IsFontSizeSet() && defaultStyle.IsFontSizeSet()) && (style.FontSize == defaultStyle.FontSize))
+                {
+                    style.ResetFontSize();
+                }
+                if ((style.IsFontStyleSet() && defaultStyle.IsFontStyleSet()) && (style.FontStyle == defaultStyle.FontStyle))
+                {
+                    style.ResetFontStyle();
+                }
+                if (style.IsFormatterSet() && defaultStyle.IsFormatterSet())
+                {
+                    if ((style.Formatter == null) && (defaultStyle.Formatter == null))
+                    {
+                        style.ResetFormatter();
+                    }
+                    else if (((style.Formatter != null) && (defaultStyle.Formatter != null)) && ((style.Formatter.GetType() == defaultStyle.Formatter.GetType()) && (style.Formatter.FormatString == defaultStyle.Formatter.FormatString)))
+                    {
+                        style.ResetFormatter();
+                    }
+                }
+                if ((style.IsHorizontalAlignmentSet() && defaultStyle.IsHorizontalAlignmentSet()) && (style.HorizontalAlignment == defaultStyle.HorizontalAlignment))
+                {
+                    style.ResetHorizontalAlignment();
+                }
+                if ((style.IsVerticalAlignmentSet() && defaultStyle.IsVerticalAlignmentSet()) && (style.VerticalAlignment == defaultStyle.VerticalAlignment))
+                {
+                    style.ResetVerticalAlignment();
+                }
+                if ((style.IsTextIndentSet() && defaultStyle.IsTextIndentSet()) && (style.TextIndent == defaultStyle.TextIndent))
+                {
+                    style.ResetTextIndent();
+                }
+                if ((style.IsFontWeightSet() && defaultStyle.IsFontWeightSet()) && style.FontWeight.Equals(defaultStyle.FontWeight))
+                {
+                    style.ResetFontWeight();
+                }
+                if ((style.IsWordWrapSet() && defaultStyle.IsWordWrapSet()) && (style.WordWrap == defaultStyle.WordWrap))
+                {
+                    style.ResetWordWrap();
+                }
+                if ((style.IsLockedSet() && defaultStyle.IsLockedSet()) && (style.Locked == defaultStyle.Locked))
+                {
+                    style.ResetLocked();
+                }
+                if ((style.IsFocusableSet() && defaultStyle.IsFocusableSet()) && (style.Focusable == defaultStyle.Focusable))
+                {
+                    style.ResetFocusable();
+                }
+                if ((style.IsTabStopSet() && defaultStyle.IsTabStopSet()) && (style.TabStop == defaultStyle.TabStop))
+                {
+                    style.ResetTabStop();
+                }
+                if ((style.IsShrinkToFitSet() && defaultStyle.IsShrinkToFitSet()) && (style.ShrinkToFit == defaultStyle.ShrinkToFit))
+                {
+                    style.ResetShrinkToFit();
+                }
+                string name = style.Name;
+                style.ResetName();
+                if (style.IsEmpty)
+                {
+                    worksheet.SetStyleInfo(row, column, null);
+                }
+                else
+                {
+                    style.Name = style.Name;
+                    worksheet.SetStyleInfo(row, column, style);
+                }
+            }
         }
 
         private void ResetExcelReaderToDefault()
@@ -1618,7 +1592,6 @@ namespace Dt.Cells.Data
         {
             if (!this._openFlags.DataOnly() && !this._openFlags.DataFormulaOnly())
             {
-                Action action = null;
                 SheetArea sheetArea = SheetArea.Cells;
                 string str = null;
                 if (this._builtInStyleNames.TryGetValue(formatIndex, out str))
@@ -1627,14 +1600,7 @@ namespace Dt.Cells.Data
                 }
                 else if ((formatIndex > 0) && (formatIndex < this._cellStyleInfos.Count))
                 {
-                    if (action == null)
-                    {
-                        action = delegate
-                        {
-                            worksheet.SetStyleInfo(row, column, sheetArea, this._cellStyleInfos[formatIndex]);
-                        };
-                    }
-                    UIAdaptor.InvokeSync(action);
+                    worksheet.SetStyleInfo(row, column, sheetArea, this._cellStyleInfos[formatIndex]);
                 }
             }
             return true;
@@ -2045,7 +2011,6 @@ namespace Dt.Cells.Data
 
         public void SetExcelCellFormat(IExtendedFormat format)
         {
-            Action action = null;
             StyleInfo styleInfo;
             if (format != null)
             {
@@ -2102,14 +2067,7 @@ namespace Dt.Cells.Data
                             str2 = "__builtInStyle" + ((int)this._builtInStyleNames.Count);
                             styleInfo.Name = str2;
                         }
-                        if (action == null)
-                        {
-                            action = delegate
-                            {
-                                this._workbook.NamedStyles.Add(styleInfo);
-                            };
-                        }
-                        UIAdaptor.InvokeSync(action);
+                        this._workbook.NamedStyles.Add(styleInfo);
                         this._builtInStyleNames.Add(this._builtInStyleNames.Count, str2);
                     }
                 }
@@ -2337,31 +2295,28 @@ namespace Dt.Cells.Data
                         }
                     }
                 }
-                UIAdaptor.InvokeSync(delegate
+                if (this._workbook.NamedStyles.Find(styleName) == null)
                 {
-                    if (this._workbook.NamedStyles.Find(styleName) == null)
+                    this._namedStylesExtendedFormats[styleName] = style.Format;
+                    this._styles.Add(style);
+                    this._extendedFormats.Add(style.Format);
+                    this._styleNames.Add(styleName);
+                    this.AddStyleToWorkbookNameStyles(new StyleInfo(styleName, "", style.Format.ToCellStyleInfo(this._workbook)));
+                }
+                else
+                {
+                    for (int j = 0; j < this._styles.Count; j++)
                     {
-                        this._namedStylesExtendedFormats[styleName] = style.Format;
-                        this._styles.Add(style);
-                        this._extendedFormats.Add(style.Format);
-                        this._styleNames.Add(styleName);
-                        this.AddStyleToWorkbookNameStyles(new StyleInfo(styleName, "", style.Format.ToCellStyleInfo(this._workbook)));
-                    }
-                    else
-                    {
-                        for (int j = 0; j < this._styles.Count; j++)
+                        if (this._styles[j].Name == styleName)
                         {
-                            if (this._styles[j].Name == styleName)
-                            {
-                                this._styles[j] = style;
-                                this._extendedFormats[j] = style.Format;
-                                break;
-                            }
+                            this._styles[j] = style;
+                            this._extendedFormats[j] = style.Format;
+                            break;
                         }
-                        this._namedStylesExtendedFormats[styleName] = style.Format;
-                        this.AddStyleToWorkbookNameStyles(new StyleInfo(styleName, "", style.Format.ToCellStyleInfo(this._workbook)));
                     }
-                });
+                    this._namedStylesExtendedFormats[styleName] = style.Format;
+                    this.AddStyleToWorkbookNameStyles(new StyleInfo(styleName, "", style.Format.ToCellStyleInfo(this._workbook)));
+                }
             }
         }
 
@@ -2753,19 +2708,14 @@ namespace Dt.Cells.Data
         private void SetRowColumnHeaders()
         {
             double defaultColumnHeaderRowHeight = this.CalculateDefaultRowHeight();
-            UIAdaptor.InvokeSync(delegate
+            foreach (Worksheet worksheet in this._workbook.Sheets)
             {
-                foreach (Worksheet worksheet in this._workbook.Sheets)
-                {
-                    worksheet.ColumnHeader.DefaultRowHeight = Math.Max(worksheet.ColumnHeader.DefaultRowHeight, defaultColumnHeaderRowHeight);
-                    worksheet.ColumnHeaderDefaultStyle.FontSize = this._workbook.DefaultStyle.FontSize;
-                    worksheet.RowHeaderDefaultStyle.FontSize = this._workbook.DefaultStyle.FontSize;
-                }
-            });
+                worksheet.ColumnHeader.DefaultRowHeight = Math.Max(worksheet.ColumnHeader.DefaultRowHeight, defaultColumnHeaderRowHeight);
+                worksheet.ColumnHeaderDefaultStyle.FontSize = this._workbook.DefaultStyle.FontSize;
+                worksheet.RowHeaderDefaultStyle.FontSize = this._workbook.DefaultStyle.FontSize;
+            }
             for (int k = 0; k < this._workbook.SheetCount; k++)
             {
-                Action action = null;
-                Action action2 = null;
                 Worksheet worksheet = this._workbook.Sheets[k];
                 int frozenRowCount = worksheet.FrozenRowCount;
                 int frozenColumnCount = worksheet.FrozenColumnCount;
@@ -2782,56 +2732,42 @@ namespace Dt.Cells.Data
                 if (this._openFlags.RowHeaders() && (frozenColumnCount > 0))
                 {
                     worksheet.RowHeader.ColumnCount = frozenColumnCount;
-                    if (action == null)
+                    for (int m = rowShift; m < worksheet.RowCount; m++)
                     {
-                        action = delegate
+                        for (int n = 0; n < frozenColumnCount; n++)
                         {
-                            for (int m = rowShift; m < worksheet.RowCount; m++)
+                            worksheet.RowHeader.Columns[n].Width = worksheet.Columns[n].Width;
+                            worksheet.RowHeader.Columns[n].IsVisible = worksheet.Columns[n].IsVisible;
+                            Cell cell = worksheet.Cells[m, n];
+                            worksheet.RowHeader.Cells[m, n].Value = cell.Value;
+                            if (!this._openFlags.DataOnly() && !this._openFlags.DataFormulaOnly())
                             {
-                                for (int n = 0; n < frozenColumnCount; n++)
-                                {
-                                    worksheet.RowHeader.Columns[n].Width = worksheet.Columns[n].Width;
-                                    worksheet.RowHeader.Columns[n].IsVisible = worksheet.Columns[n].IsVisible;
-                                    Cell cell = worksheet.Cells[m, n];
-                                    worksheet.RowHeader.Cells[m, n].Value = cell.Value;
-                                    if (!this._openFlags.DataOnly() && !this._openFlags.DataFormulaOnly())
-                                    {
-                                        worksheet.SetStyleName(m, n, SheetArea.CornerHeader | SheetArea.RowHeader, worksheet.GetStyleName(m, n));
-                                        worksheet.RowHeader.Cells[m, n].RowSpan = cell.RowSpan;
-                                        worksheet.RowHeader.Cells[m, n].ColumnSpan = Math.Min(cell.ColumnSpan, worksheet.RowHeader.ColumnCount - n);
-                                    }
-                                }
+                                worksheet.SetStyleName(m, n, SheetArea.CornerHeader | SheetArea.RowHeader, worksheet.GetStyleName(m, n));
+                                worksheet.RowHeader.Cells[m, n].RowSpan = cell.RowSpan;
+                                worksheet.RowHeader.Cells[m, n].ColumnSpan = Math.Min(cell.ColumnSpan, worksheet.RowHeader.ColumnCount - n);
                             }
-                        };
+                        }
                     }
-                    UIAdaptor.InvokeSync(action);
                 }
                 if (this._openFlags.ColumnHeaders() && (frozenRowCount > 0))
                 {
                     worksheet.ColumnHeader.RowCount = frozenRowCount;
-                    if (action2 == null)
+                    for (int i = columnShift; i < worksheet.ColumnCount; i++)
                     {
-                        action2 = delegate
+                        for (int j = 0; j < frozenRowCount; j++)
                         {
-                            for (int i = columnShift; i < worksheet.ColumnCount; i++)
+                            worksheet.ColumnHeader.Rows[j].Height = worksheet.Rows[j].Height;
+                            worksheet.ColumnHeader.Rows[j].IsVisible = worksheet.Rows[j].IsVisible;
+                            Cell cell = worksheet.Cells[j, i];
+                            worksheet.ColumnHeader.Cells[j, i].Value = cell.Value;
+                            if (!this._openFlags.DataOnly() && !this._openFlags.DataFormulaOnly())
                             {
-                                for (int j = 0; j < frozenRowCount; j++)
-                                {
-                                    worksheet.ColumnHeader.Rows[j].Height = worksheet.Rows[j].Height;
-                                    worksheet.ColumnHeader.Rows[j].IsVisible = worksheet.Rows[j].IsVisible;
-                                    Cell cell = worksheet.Cells[j, i];
-                                    worksheet.ColumnHeader.Cells[j, i].Value = cell.Value;
-                                    if (!this._openFlags.DataOnly() && !this._openFlags.DataFormulaOnly())
-                                    {
-                                        worksheet.SetStyleName(j, i, SheetArea.ColumnHeader, worksheet.GetStyleName(j, i));
-                                        worksheet.ColumnHeader.Cells[j, i].RowSpan = Math.Min(cell.RowSpan, worksheet.ColumnHeader.RowCount - j);
-                                        worksheet.ColumnHeader.Cells[j, i].ColumnSpan = cell.ColumnSpan;
-                                    }
-                                }
+                                worksheet.SetStyleName(j, i, SheetArea.ColumnHeader, worksheet.GetStyleName(j, i));
+                                worksheet.ColumnHeader.Cells[j, i].RowSpan = Math.Min(cell.RowSpan, worksheet.ColumnHeader.RowCount - j);
+                                worksheet.ColumnHeader.Cells[j, i].ColumnSpan = cell.ColumnSpan;
                             }
-                        };
+                        }
                     }
-                    UIAdaptor.InvokeSync(action2);
                 }
                 if (this._openFlags.RowHeaders())
                 {
@@ -3004,7 +2940,6 @@ namespace Dt.Cells.Data
 
         public void SetTable(int sheetIndex, IExcelTable table)
         {
-            Action action = null;
             SheetTable sheetTable;
             if ((((table != null) && (table.Range != null)) && this.IsValidWorkSheet(sheetIndex)) && (!this._openFlags.DataOnly() && !this._openFlags.DataFormulaOnly()))
             {
@@ -3087,14 +3022,7 @@ namespace Dt.Cells.Data
                         this.SetDynamicAutoFilter(sheetTable.RowFilter, filterRange, column2, columId);
                         this.SetCustomAutoFilter(sheetTable.RowFilter, column2, columId);
                     }
-                    if (action == null)
-                    {
-                        action = delegate
-                        {
-                            sheetTable.RowFilter.Filter();
-                        };
-                    }
-                    UIAdaptor.InvokeSync(action);
+                    sheetTable.RowFilter.Filter();
                 }
                 else if ((table.AutoFilter == null) || (table.AutoFilter.Range == null))
                 {
@@ -3342,7 +3270,6 @@ namespace Dt.Cells.Data
                 {
                     while (enumerator2.MoveNext())
                     {
-                        Action action = null;
                         IRange range = enumerator2.Current;
                         if (this.IsEntrieColumn(range))
                         {
@@ -3355,24 +3282,17 @@ namespace Dt.Cells.Data
                                 worksheet.Rows[range.Row].DataValidator = dataValidation.ToDataValidator(range.Row, range.Column);
                                 continue;
                             }
-                            if (action == null)
+                            for (int k = 0; (k < range.RowSpan) && ((range.Row + k) < worksheet.RowCount); k++)
                             {
-                                action = delegate
+                                for (int i = 0; (i < range.ColumnSpan) && ((range.Column + i) < worksheet.ColumnCount); i++)
                                 {
-                                    for (int k = 0; (k < range.RowSpan) && ((range.Row + k) < worksheet.RowCount); k++)
+                                    if (worksheet.GetStyleObject(range.Row + k, range.Column + i, SheetArea.Cells) == null)
                                     {
-                                        for (int i = 0; (i < range.ColumnSpan) && ((range.Column + i) < worksheet.ColumnCount); i++)
-                                        {
-                                            if (worksheet.GetStyleObject(range.Row + k, range.Column + i, SheetArea.Cells) == null)
-                                            {
-                                                worksheet.SetStyleName(range.Row + k, range.Column + i, "Normal");
-                                            }
-                                            worksheet.Cells[range.Row + k, range.Column + i].DataValidator = dataValidation.ToDataValidator((k + range.Row) - baseRow, (i + range.Column) - baseColumn);
-                                        }
+                                        worksheet.SetStyleName(range.Row + k, range.Column + i, "Normal");
                                     }
-                                };
+                                    worksheet.Cells[range.Row + k, range.Column + i].DataValidator = dataValidation.ToDataValidator((k + range.Row) - baseRow, (i + range.Column) - baseColumn);
+                                }
                             }
-                            UIAdaptor.InvokeSync(action);
                         }
                     }
                 }
@@ -3455,16 +3375,13 @@ namespace Dt.Cells.Data
                 {
                     this._builtInTableStyles = new Dictionary<string, TableStyle>();
                     // hdt
-                    UIAdaptor.InvokeSync(delegate
+                    foreach (PropertyInfo info in typeof(TableStyles).GetTypeInfo().DeclaredProperties)
                     {
-                        foreach (PropertyInfo info in typeof(TableStyles).GetTypeInfo().DeclaredProperties)
+                        if (info.Name.ToUpperInvariant() != "CUSTOMSTYLES")
                         {
-                            if (info.Name.ToUpperInvariant() != "CUSTOMSTYLES")
-                            {
-                                this._builtInTableStyles.Add(info.Name.ToUpperInvariant(), info.GetValue(null, null) as TableStyle);
-                            }
+                            this._builtInTableStyles.Add(info.Name.ToUpperInvariant(), info.GetValue(null, null) as TableStyle);
                         }
-                    });
+                    }
                 }
                 return this._builtInTableStyles;
             }

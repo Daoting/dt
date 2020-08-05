@@ -600,18 +600,14 @@ namespace Dt.Cells.Data
             }
             try
             {
-                BitmapImage image = null;
                 string tpString = null;
-                UIAdaptor.InvokeSync(() =>
-                {
-                    image = new BitmapImage();
-                    tpString = ReadAttribute("value", reader);
-                    byte[] buffer = Convert.FromBase64String(tpString);
-                    Stream imageStream = new MemoryStream();
-                    imageStream.Write(buffer, 0, buffer.Length);
-                    imageStream.Seek(0L, SeekOrigin.Begin);
-                    Utility.InitImageSource(image, imageStream);
-                });
+                BitmapImage image = new BitmapImage();
+                tpString = ReadAttribute("value", reader);
+                byte[] buffer = Convert.FromBase64String(tpString);
+                Stream imageStream = new MemoryStream();
+                imageStream.Write(buffer, 0, buffer.Length);
+                imageStream.Seek(0L, SeekOrigin.Begin);
+                Utility.InitImageSource(image, imageStream);
                 imageString = tpString;
                 return image;
             }
@@ -899,28 +895,20 @@ namespace Dt.Cells.Data
             }
             if (type == typeof(Brush))
             {
-                Action action = null;
                 string str9 = ReadAttribute("type", reader);
                 string strValue = ReadAttribute("value", reader);
                 Brush brush = null;
                 if ("ImageBrush.URI".Equals(str9))
                 {
-                    if (action == null)
+                    try
                     {
-                        action = delegate
-                        {
-                            try
-                            {
-                                brush = new ImageBrush();
-                                (brush as ImageBrush).ImageSource = new BitmapImage(new Uri(strValue, (UriKind)UriKind.RelativeOrAbsolute));
-                            }
-                            catch
-                            {
-                                brush = new SolidColorBrush(Colors.Black);
-                            }
-                        };
+                        brush = new ImageBrush();
+                        (brush as ImageBrush).ImageSource = new BitmapImage(new Uri(strValue, (UriKind)UriKind.RelativeOrAbsolute));
                     }
-                    UIAdaptor.InvokeSync(action);
+                    catch
+                    {
+                        brush = new SolidColorBrush(Colors.Black);
+                    }
                     return brush;
                 }
                 if ("Image".Equals(str9))
@@ -1195,14 +1183,11 @@ namespace Dt.Cells.Data
             if (obj is MatrixTransform)
             {
                 bool isEmpty = false;
-                UIAdaptor.InvokeSync(delegate
+                MatrixTransform transform = obj as MatrixTransform;
+                if ((((transform.Matrix.M11 == 1.0) && (transform.Matrix.M12 == 0.0)) && ((transform.Matrix.M21 == 0.0) && (transform.Matrix.M22 == 1.0))) && ((transform.Matrix.OffsetX == 0.0) && (transform.Matrix.OffsetY == 0.0)))
                 {
-                    MatrixTransform transform = obj as MatrixTransform;
-                    if ((((transform.Matrix.M11 == 1.0) && (transform.Matrix.M12 == 0.0)) && ((transform.Matrix.M21 == 0.0) && (transform.Matrix.M22 == 1.0))) && ((transform.Matrix.OffsetX == 0.0) && (transform.Matrix.OffsetY == 0.0)))
-                    {
-                        isEmpty = true;
-                    }
-                });
+                    isEmpty = true;
+                }
                 return isEmpty;
             }
             return false;
@@ -1447,12 +1432,7 @@ namespace Dt.Cells.Data
                     {
                         throw new InvalidCastException(string.Format(ResourceStrings.SerializerParseTypeNotMatchError, (object[])new object[] { str, type.ToString() }));
                     }
-                    SolidColorBrush brush = null;
-                    UIAdaptor.InvokeSync(delegate
-                    {
-                        brush = new SolidColorBrush(color.Value);
-                    });
-                    return brush;
+                    return new SolidColorBrush(color.Value);
                 }
                 catch
                 {
@@ -2423,16 +2403,13 @@ namespace Dt.Cells.Data
 
         internal static void SerializePublicProperties(object obj, XmlWriter writer)
         {
-            UIAdaptor.InvokeSync(delegate
+            foreach (PropertyInfo info in obj.GetType().GetRuntimeProperties())
             {
-                foreach (PropertyInfo info in obj.GetType().GetRuntimeProperties())
+                if (info.CanRead && info.CanWrite)
                 {
-                    if (info.CanRead && info.CanWrite)
-                    {
-                        SerializeObj(info.GetValue(obj, new object[0]), info.Name, writer);
-                    }
+                    SerializeObj(info.GetValue(obj, new object[0]), info.Name, writer);
                 }
-            });
+            }
         }
 
         internal static void SerializeStorageBlock(StorageBlock block, string elementName, XmlWriter writer, bool isDataOnly)

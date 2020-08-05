@@ -136,9 +136,7 @@ namespace Dt.Cells.Data
             label.Alignment.HorizontalAlignment = TextHorizontalAlignment.Center;
             label.Alignment.WordWrap = true;
             label.Foreground = FillEffects.Red;
-            UIAdaptor.InvokeSync(delegate {
-                label.Background = new SolidColorBrush(Colors.Red);
-            });
+            label.Background = new SolidColorBrush(Colors.Red);
             GcPaintHelper.PaintLabel(label.GetBlock(this.context), g, state);
             g.RestoreState();
         }
@@ -491,11 +489,8 @@ namespace Dt.Cells.Data
                 {
                     try
                     {
-                        Uri uri = null;
-                        UIAdaptor.InvokeSync(delegate {
-                            Uri uri1 = ((Windows.UI.Xaml.Media.Imaging.BitmapImage) source).UriSource;
-                            uri = new Uri("ms-appx:///" + uri1.LocalPath.TrimStart(new char[] { '/' }));
-                        });
+                        Uri uri1 = ((Windows.UI.Xaml.Media.Imaging.BitmapImage)source).UriSource;
+                        Uri uri = new Uri("ms-appx:///" + uri1.LocalPath.TrimStart(new char[] { '/' }));
                         stream = WindowsRuntimeStreamExtensions.AsStreamForRead(StorageFile.GetFileFromApplicationUriAsync(uri).GetResultSynchronously<StorageFile>().OpenSequentialReadAsync().GetResultSynchronously<IInputStream>());
                     }
                     catch (Exception)

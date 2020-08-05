@@ -92,35 +92,22 @@ namespace Dt.Cells.Data
             {
                 if (this.fontWeight.HasValue)
                 {
-                    bool isBold = false;
-                    UIAdaptor.InvokeSync(delegate
-                    {
-                        isBold = ((this.fontWeight.Value.Equals(FontWeights.Black) || this.fontWeight.Value.Equals(FontWeights.Bold)) || (this.fontWeight.Value.Equals(FontWeights.ExtraBlack) || this.fontWeight.Value.Equals(FontWeights.ExtraBold))) || this.fontWeight.Value.Equals(FontWeights.SemiBold);
-                    });
-                    return isBold;
+                    return ((this.fontWeight.Value.Equals(FontWeights.Black) || this.fontWeight.Value.Equals(FontWeights.Bold)) || (this.fontWeight.Value.Equals(FontWeights.ExtraBlack) || this.fontWeight.Value.Equals(FontWeights.ExtraBold))) || this.fontWeight.Value.Equals(FontWeights.SemiBold);
                 }
                 return false;
             }
             set
             {
-                Action action = null;
                 if (this.Bold != value)
                 {
-                    if (action == null)
+                    if (value)
                     {
-                        action = delegate
-                        {
-                            if (value)
-                            {
-                                this.fontWeight = new FontWeight?(FontWeights.Bold);
-                            }
-                            else
-                            {
-                                this.fontWeight = new FontWeight?(FontWeights.Normal);
-                            }
-                        };
+                        this.fontWeight = new FontWeight?(FontWeights.Bold);
                     }
-                    UIAdaptor.InvokeSync(action);
+                    else
+                    {
+                        this.fontWeight = new FontWeight?(FontWeights.Normal);
+                    }
                     this.ClearFontCached();
                 }
             }
@@ -133,29 +120,18 @@ namespace Dt.Cells.Data
                 if (this.fontFamily == null)
                 {
                     string actualName = (this.fontFamilyName != null) ? this.fontFamilyName : DefaultStyleCollection.DefaultFontName;
-                    UIAdaptor.InvokeSync(delegate
-                    {
-                        this.fontFamily = new FontFamily(actualName);
-                    });
+                    this.fontFamily = new FontFamily(actualName);
                 }
                 return this.fontFamily;
             }
             set
             {
-                Action action = null;
                 if (this.fontFamily != value)
                 {
                     this.fontFamily = value;
                     if (this.fontFamily != null)
                     {
-                        if (action == null)
-                        {
-                            action = delegate
-                            {
-                                this.fontFamilyName = this.fontFamily.Source;
-                            };
-                        }
-                        UIAdaptor.InvokeSync(action);
+                        this.fontFamilyName = this.fontFamily.Source;
                     }
                     this.ClearFontCached();
                 }
@@ -171,24 +147,18 @@ namespace Dt.Cells.Data
             get
             {
                 string fontFamilyName = string.Empty;
-                UIAdaptor.InvokeSync(delegate
+                if (this.fontFamily != null)
                 {
-                    if (this.fontFamily != null)
-                    {
-                        fontFamilyName = this.fontFamily.Source;
-                    }
-                });
+                    fontFamilyName = this.fontFamily.Source;
+                }
                 if (!string.IsNullOrEmpty(fontFamilyName))
                 {
                     return fontFamilyName;
                 }
-                UIAdaptor.InvokeSync(delegate
+                if (this.fontFamilyName != null)
                 {
-                    if (this.fontFamilyName != null)
-                    {
-                        fontFamilyName = this.fontFamilyName;
-                    }
-                });
+                    fontFamilyName = this.fontFamilyName;
+                }
                 if (!string.IsNullOrEmpty(fontFamilyName))
                 {
                     return fontFamilyName;
@@ -451,24 +421,16 @@ namespace Dt.Cells.Data
 
         public static Font Create(StyleInfo style)
         {
-            Action action = null;
             Font font = new Font();
             if ((!style.IsFontFamilySet() && !style.IsFontSizeSet()) && ((!style.IsFontStretchSet() && !style.IsFontStyleSet()) && !style.IsFontWeightSet()))
             {
                 return null;
             }
-            if (action == null)
+            if ((style != null) && (style.FontFamily != null))
             {
-                action = delegate
-                {
-                    if ((style != null) && (style.FontFamily != null))
-                    {
-                        string familyName = FontHelper.GetEquivalentEnglishFontName(style.FontFamily.Source);
-                        font.FontFamily = new FontFamily(familyName);
-                    }
-                };
+                string familyName = FontHelper.GetEquivalentEnglishFontName(style.FontFamily.Source);
+                font.FontFamily = new FontFamily(familyName);
             }
-            UIAdaptor.InvokeSync(action);
             font.FontSize = style.FontSize;
             font.FontStretch = style.FontStretch;
             font.FontStyle = style.FontStyle;

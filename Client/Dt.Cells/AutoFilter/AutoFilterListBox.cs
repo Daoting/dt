@@ -54,14 +54,6 @@ namespace Dt.Cells.UI
         }
 
         /// <summary>
-        /// When overridden in a derived class, is invoked whenever application code or internal processes call <see cref="M:System.Windows.FrameworkElement.ApplyTemplate" />.
-        /// </summary>
-        protected override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-        }
-
-        /// <summary>
         /// Invoked whenever an unhandled <see cref="E:System.Windows.UIElement.GotFocus" /> event reaches this element in its route.
         /// </summary>
         /// <param name="e">The <see cref="T:System.Windows.RoutedEventArgs" /> that contains the event data.</param>

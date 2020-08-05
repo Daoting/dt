@@ -249,11 +249,7 @@ namespace Dt.Cells.Data
         {
             get
             {
-                SolidColorBrush result = null;
-                UIAdaptor.InvokeSync(delegate {
-                    result = new SolidColorBrush(Colors.Black);
-                });
-                return result;
+                return new SolidColorBrush(Colors.Black);
             }
         }
 

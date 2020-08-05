@@ -117,7 +117,7 @@ namespace Dt.Cells.Data
             {
                 if (control is GcLabel)
                 {
-                    ((GcLabel) control).AutoSize(context);
+                    ((GcLabel)control).AutoSize(context);
                 }
                 control.X = num2;
                 num2 += control.Width;
@@ -138,7 +138,7 @@ namespace Dt.Cells.Data
                     break;
 
                 case 1:
-                    num2 =  (int)(rect.Width - num2);
+                    num2 = (int)(rect.Width - num2);
                     break;
             }
             foreach (GcPrintableControl control2 in lists)
@@ -173,7 +173,7 @@ namespace Dt.Cells.Data
             {
                 width -= rLabel.Padding.Vertical;
             }
-            Windows.Foundation.Rect rect = new Windows.Foundation.Rect(0.0, 0.0, (double) width, (double) height);
+            Windows.Foundation.Rect rect = new Windows.Foundation.Rect(0.0, 0.0, (double)width, (double)height);
             List<List<List<GcPrintableControl>>> list = new List<List<List<GcPrintableControl>>> { null, null, null };
             if ((!string.IsNullOrEmpty(leftSource) || !string.IsNullOrEmpty(centerSource)) || !string.IsNullOrEmpty(rightSource))
             {
@@ -275,23 +275,21 @@ namespace Dt.Cells.Data
                                 goto Label_07C0;
 
                             case "K":
-                            {
-                                match = RgbColorRegex.Match(source.Substring(length));
-                                if (!match.Success)
                                 {
-                                    break;
-                                }
-                                byte r = byte.Parse(match.Groups["red"].Value, (NumberStyles) NumberStyles.AllowHexSpecifier);
-                                byte g = byte.Parse(match.Groups["green"].Value, (NumberStyles) NumberStyles.AllowHexSpecifier);
-                                byte b = byte.Parse(match.Groups["blue"].Value, (NumberStyles) NumberStyles.AllowHexSpecifier);
-                                UIAdaptor.InvokeSync(delegate {
+                                    match = RgbColorRegex.Match(source.Substring(length));
+                                    if (!match.Success)
+                                    {
+                                        break;
+                                    }
+                                    byte r = byte.Parse(match.Groups["red"].Value, (NumberStyles)NumberStyles.AllowHexSpecifier);
+                                    byte g = byte.Parse(match.Groups["green"].Value, (NumberStyles)NumberStyles.AllowHexSpecifier);
+                                    byte b = byte.Parse(match.Groups["blue"].Value, (NumberStyles)NumberStyles.AllowHexSpecifier);
                                     foregroundNext = new SolidColorBrush(Windows.UI.Color.FromArgb(0xff, r, g, b));
-                                });
-                                flag4 = true;
-                                num4 = 0;
-                                startIndex = ((length + "&".Length) + "K".Length) + 6;
-                                goto Label_07C0;
-                            }
+                                    flag4 = true;
+                                    num4 = 0;
+                                    startIndex = ((length + "&".Length) + "K".Length) + 6;
+                                    goto Label_07C0;
+                                }
                             case "S":
                                 flag = !flag;
                                 flag4 = true;
@@ -461,14 +459,15 @@ namespace Dt.Cells.Data
                                 break;
 
                             case 1:
-                            {
-                                GcPageInfo info = new GcPageInfo {
-                                    Format = str,
-                                    Type = pageNumber
-                                };
-                                label = info;
-                                break;
-                            }
+                                {
+                                    GcPageInfo info = new GcPageInfo
+                                    {
+                                        Format = str,
+                                        Type = pageNumber
+                                    };
+                                    label = info;
+                                    break;
+                                }
                         }
                         label.CanGrow = false;
                         label.CanShrink = false;
@@ -551,7 +550,7 @@ namespace Dt.Cells.Data
                     list.Add(lists);
                     if ((num3 <= 0) && (lists.Count <= 0))
                     {
-                        num3 = (int) Math.Ceiling(context.MeasureNoWrapString("X", font).Height);
+                        num3 = (int)Math.Ceiling(context.MeasureNoWrapString("X", font).Height);
                     }
                     allHeight += num3;
                 }
@@ -612,10 +611,10 @@ namespace Dt.Cells.Data
         /// A <see cref="T:Windows.UI.Xaml.Media.Brush" /> object that specifies the background for the rich label.
         /// The default value is null.
         /// </value>
-        [DefaultValue((string) null)]
+        [DefaultValue((string)null)]
         public Brush Background
         {
-            get { return  this.background; }
+            get { return this.background; }
             set { this.background = value; }
         }
 
@@ -628,7 +627,7 @@ namespace Dt.Cells.Data
         /// <remarks>This property is read-only.</remarks>
         public override bool CanGrow
         {
-            get { return  false; }
+            get { return false; }
             set
             {
             }
@@ -643,7 +642,7 @@ namespace Dt.Cells.Data
         /// <remarks>This property is read-only.</remarks>
         public override bool CanShrink
         {
-            get { return  false; }
+            get { return false; }
             set
             {
             }
@@ -653,10 +652,10 @@ namespace Dt.Cells.Data
         /// Gets or sets the center part of the image.
         /// </summary>
         /// <value>The image for the center section of the rich label. The default value is null.</value>
-        [DefaultValue((string) null)]
+        [DefaultValue((string)null)]
         public Image CenterImage
         {
-            get { return  this.cImage; }
+            get { return this.cImage; }
             set { this.cImage = value; }
         }
 
@@ -667,7 +666,7 @@ namespace Dt.Cells.Data
         [DefaultValue("")]
         public string CenterSource
         {
-            get { return  this.centerSource; }
+            get { return this.centerSource; }
             set { this.centerSource = value; }
         }
 
@@ -682,7 +681,7 @@ namespace Dt.Cells.Data
             {
                 if (fontRegex == null)
                 {
-                    fontRegex = new Regex(string.Format("^{5}\"\\s*(?<{3}>-|[^-,\"]+),\\s*(?<{4}>((({0}|{1}|{2})\\s+)*({0}|{1}|{2}))*|-)\\s*\"", (object[]) new object[] { "Regular", "Bold", "Italic", "fontName", "fontStyle", "&" }));
+                    fontRegex = new Regex(string.Format("^{5}\"\\s*(?<{3}>-|[^-,\"]+),\\s*(?<{4}>((({0}|{1}|{2})\\s+)*({0}|{1}|{2}))*|-)\\s*\"", (object[])new object[] { "Regular", "Bold", "Italic", "fontName", "fontStyle", "&" }));
                 }
                 return fontRegex;
             }
@@ -699,7 +698,7 @@ namespace Dt.Cells.Data
             {
                 if (fontSizeRegex == null)
                 {
-                    fontSizeRegex = new Regex(string.Format(@"^{0}(?<{1}>[0-9]+)(?<{2}>\s[0-9])?", (object[]) new object[] { "&", "fontSize", "nextIsNumber" }));
+                    fontSizeRegex = new Regex(string.Format(@"^{0}(?<{1}>[0-9]+)(?<{2}>\s[0-9])?", (object[])new object[] { "&", "fontSize", "nextIsNumber" }));
                 }
                 return fontSizeRegex;
             }
@@ -714,7 +713,7 @@ namespace Dt.Cells.Data
         /// </value>
         public Brush Foreground
         {
-            get { return  this.foreground; }
+            get { return this.foreground; }
             set { this.foreground = value; }
         }
 
@@ -722,10 +721,10 @@ namespace Dt.Cells.Data
         /// Gets or sets the left part of the image.
         /// </summary>
         /// <value>The image for the left section of the rich label. The default value is null.</value>
-        [DefaultValue((string) null)]
+        [DefaultValue((string)null)]
         public Image LeftImage
         {
-            get { return  this.lImage; }
+            get { return this.lImage; }
             set { this.lImage = value; }
         }
 
@@ -736,7 +735,7 @@ namespace Dt.Cells.Data
         [DefaultValue("")]
         public string LeftSource
         {
-            get { return  this.leftSource; }
+            get { return this.leftSource; }
             set { this.leftSource = value; }
         }
 
@@ -751,7 +750,7 @@ namespace Dt.Cells.Data
             {
                 if (rgbColorRegex == null)
                 {
-                    rgbColorRegex = new Regex(string.Format("^{0}{1}(?<{2}>[0-9ABCDEFabcdef][0-9ABCDEFabcdef])(?<{3}>[0-9ABCDEFabcdef][0-9ABCDEFabcdef])(?<{4}>[0-9ABCDEFabcdef][0-9ABCDEFabcdef])", (object[]) new object[] { "&", "K", "red", "green", "blue" }));
+                    rgbColorRegex = new Regex(string.Format("^{0}{1}(?<{2}>[0-9ABCDEFabcdef][0-9ABCDEFabcdef])(?<{3}>[0-9ABCDEFabcdef][0-9ABCDEFabcdef])(?<{4}>[0-9ABCDEFabcdef][0-9ABCDEFabcdef])", (object[])new object[] { "&", "K", "red", "green", "blue" }));
                 }
                 return rgbColorRegex;
             }
@@ -761,10 +760,10 @@ namespace Dt.Cells.Data
         /// Gets or sets the right part of the image.
         /// </summary>
         /// <value>The image for the right section of the rich label. The default value is null.</value>
-        [DefaultValue((string) null)]
+        [DefaultValue((string)null)]
         public Image RightImage
         {
-            get { return  this.rImage; }
+            get { return this.rImage; }
             set { this.rImage = value; }
         }
 
@@ -775,7 +774,7 @@ namespace Dt.Cells.Data
         [DefaultValue("")]
         public string RightSource
         {
-            get { return  this.rightSource; }
+            get { return this.rightSource; }
             set { this.rightSource = value; }
         }
 
@@ -790,7 +789,7 @@ namespace Dt.Cells.Data
             {
                 if (themeColorRegex == null)
                 {
-                    themeColorRegex = new Regex(string.Format(@"^{0}{1}(?<{2}>[0-9ABCDEFabcdef][0-9ABCDEFabcdef])(?<{3}>(\+|\-))(?<{4}>[0-9ABCDEFabcdef][0-9ABCDEFabcdef])", (object[]) new object[] { "&", "K", "theme", "method", "value" }));
+                    themeColorRegex = new Regex(string.Format(@"^{0}{1}(?<{2}>[0-9ABCDEFabcdef][0-9ABCDEFabcdef])(?<{3}>(\+|\-))(?<{4}>[0-9ABCDEFabcdef][0-9ABCDEFabcdef])", (object[])new object[] { "&", "K", "theme", "method", "value" }));
                 }
                 return themeColorRegex;
             }
@@ -806,7 +805,7 @@ namespace Dt.Cells.Data
         [DefaultValue(0)]
         public TextVerticalAlignment VerticalAlignment
         {
-            get { return  this.vAlignment; }
+            get { return this.vAlignment; }
             set { this.vAlignment = value; }
         }
 
@@ -817,7 +816,7 @@ namespace Dt.Cells.Data
         /// <value>The name of the workbook.</value>
         internal string WorkbookName
         {
-            get { return  this.workbookName; }
+            get { return this.workbookName; }
             set { this.workbookName = value; }
         }
 
@@ -828,7 +827,7 @@ namespace Dt.Cells.Data
         /// <value>The name of the worksheet.</value>
         internal string WorksheetName
         {
-            get { return  this.worksheetName; }
+            get { return this.worksheetName; }
             set { this.worksheetName = value; }
         }
     }

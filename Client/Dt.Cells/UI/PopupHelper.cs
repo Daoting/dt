@@ -141,11 +141,8 @@ namespace Dt.Cells.UI
             _placeElement = placeElement;
             _relativePoint = relativePoint;
             _popDirection = popDirection;
-            Dt.Cells.Data.UIAdaptor.InvokeSync(delegate
-            {
-                _popupContentHost.Background = new SolidColorBrush(Colors.Transparent);
-                _popupOutsideCanvas.Background = new SolidColorBrush(Colors.Transparent);
-            });
+            _popupContentHost.Background = new SolidColorBrush(Colors.Transparent);
+            _popupOutsideCanvas.Background = new SolidColorBrush(Colors.Transparent);
             _popupOutsideCanvas.Margin = new Windows.UI.Xaml.Thickness(-10000.0);
             placeElement.ReleasePointerCaptures();
             _popup.IsOpen = true;

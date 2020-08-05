@@ -3814,19 +3814,11 @@ namespace Dt.Cells.Data
                 IColorFormatter formatter = info.Formatter as IColorFormatter;
                 if ((formatter != null) && formatter.HasFormatedColor)
                 {
-                    Action action = null;
                     Color? color;
                     formatter.Format(GetValue(row, column), out color);
                     if (color.HasValue)
                     {
-                        if (action == null)
-                        {
-                            action = delegate
-                            {
-                                info.Foreground = new SolidColorBrush(color.Value);
-                            };
-                        }
-                        UIAdaptor.InvokeSync(action);
+                        info.Foreground = new SolidColorBrush(color.Value);
                     }
                 }
                 if ((_conditionalFormats != null) && (_conditionalFormats.RuleCount > 0))
@@ -3861,18 +3853,10 @@ namespace Dt.Cells.Data
                             {
                                 if (base2 is ScaleRule)
                                 {
-                                    Action action2 = null;
                                     Color? color = base2.Evaluate(this, row, column, new ActualValue(this, row, column)) as Color?;
                                     if (color.HasValue)
                                     {
-                                        if (action2 == null)
-                                        {
-                                            action2 = delegate
-                                            {
-                                                info.Background = new SolidColorBrush(color.Value);
-                                            };
-                                        }
-                                        UIAdaptor.InvokeSync(action2);
+                                        info.Background = new SolidColorBrush(color.Value);
                                     }
                                 }
                                 else
@@ -6509,11 +6493,8 @@ namespace Dt.Cells.Data
             {
                 _protect = false;
             }
-            UIAdaptor.InvokeSync(delegate
-            {
-                _selectionBorderColor = Color.FromArgb(220, 0, 0, 0);
-                _touchSelectionGripperBackgroundColor = Color.FromArgb(0xff, 0xff, 0xff, 0xff);
-            });
+            _selectionBorderColor = Color.FromArgb(220, 0, 0, 0);
+            _touchSelectionGripperBackgroundColor = Color.FromArgb(0xff, 0xff, 0xff, 0xff);
             _selectionBorderThemeColor = null;
             _touchSelectionGripperBackgroundThemeColor = null;
             if (_spreadCharts != null)
@@ -9603,7 +9584,7 @@ namespace Dt.Cells.Data
                     _columnHeaderDefaultStyle.PropertyChanged -= new PropertyChangedEventHandler(OnColumnHeaderDefaultStylePropertyChanged);
                 _columnHeaderDefaultStyle = Serializer.DeserializeObj(typeof(StyleInfo), reader) as StyleInfo;
                 if (_columnHeaderDefaultStyle.Foreground == null)
-                    UIAdaptor.InvokeSync(() => _columnHeaderDefaultStyle.Foreground = new SolidColorBrush(Colors.Black));
+                    _columnHeaderDefaultStyle.Foreground = new SolidColorBrush(Colors.Black);
                 if (_columnHeaderDefaultStyle != null)
                     _columnHeaderDefaultStyle.PropertyChanged += new PropertyChangedEventHandler(OnColumnHeaderDefaultStylePropertyChanged);
                 goto Label_1240;
@@ -9612,7 +9593,7 @@ namespace Dt.Cells.Data
                     _rowHeaderDefaultStyle.PropertyChanged -= new PropertyChangedEventHandler(OnRowHeaderDefaultStylePropertyChanged);
                 _rowHeaderDefaultStyle = Serializer.DeserializeObj(typeof(StyleInfo), reader) as StyleInfo;
                 if (_rowHeaderDefaultStyle.Foreground == null)
-                    UIAdaptor.InvokeSync(() => _rowHeaderDefaultStyle.Foreground = new SolidColorBrush(Colors.Black));
+                    _rowHeaderDefaultStyle.Foreground = new SolidColorBrush(Colors.Black);
                 if (_rowHeaderDefaultStyle != null)
                     _rowHeaderDefaultStyle.PropertyChanged += new PropertyChangedEventHandler(OnRowHeaderDefaultStylePropertyChanged);
                 goto Label_1240;
@@ -9633,13 +9614,13 @@ namespace Dt.Cells.Data
                     _conditionalFormats.RulesChanged += new EventHandler<RulesChangedEventArgs>(OnConditionalFormatsRulesChanged);
                 goto Label_1240;
             Label_0E21:
-                UIAdaptor.InvokeSync(() => _selectionBorderColor = (Color)Serializer.DeserializeObj(typeof(Color), reader));
+                _selectionBorderColor = (Color)Serializer.DeserializeObj(typeof(Color), reader);
                 goto Label_1240;
             Label_0E66:
-                UIAdaptor.InvokeSync(() => _touchSelectionGripperBackgroundColor = (Color)Serializer.DeserializeObj(typeof(Color), reader));
+                _touchSelectionGripperBackgroundColor = (Color)Serializer.DeserializeObj(typeof(Color), reader);
                 goto Label_1240;
             Label_0EAB:
-                UIAdaptor.InvokeSync(() => _selectionBackground = (Brush)Serializer.DeserializeObj(typeof(Brush), reader));
+                _selectionBackground = (Brush)Serializer.DeserializeObj(typeof(Brush), reader);
                 goto Label_1240;
             Label_0FAE:
                 if (_cachedDeserializedCustomNames == null)
@@ -9669,7 +9650,7 @@ namespace Dt.Cells.Data
                     break;
             }
             if (invalidateLoadedData)
-                UIAdaptor.InvokeSync(() => InvalidateLoadedData());
+                InvalidateLoadedData();
             return true;
         }
 
@@ -13049,20 +13030,17 @@ namespace Dt.Cells.Data
         {
             get
             {
-                UIAdaptor.InvokeSync(delegate
+                if (_columnHeaderDefaultStyle == null)
                 {
-                    if (_columnHeaderDefaultStyle == null)
+                    _columnHeaderDefaultStyle = new StyleInfo();
+                    _columnHeaderDefaultStyle.HorizontalAlignment = CellHorizontalAlignment.Center;
+                    _columnHeaderDefaultStyle.VerticalAlignment = CellVerticalAlignment.Center;
+                    _columnHeaderDefaultStyle.PropertyChanged += new PropertyChangedEventHandler(OnColumnHeaderDefaultStylePropertyChanged);
+                    if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
                     {
-                        _columnHeaderDefaultStyle = new StyleInfo();
-                        _columnHeaderDefaultStyle.HorizontalAlignment = CellHorizontalAlignment.Center;
-                        _columnHeaderDefaultStyle.VerticalAlignment = CellVerticalAlignment.Center;
-                        _columnHeaderDefaultStyle.PropertyChanged += new PropertyChangedEventHandler(OnColumnHeaderDefaultStylePropertyChanged);
-                        if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
-                        {
-                            _columnHeaderDefaultStyle.Foreground = new SolidColorBrush(Colors.Black);
-                        }
+                        _columnHeaderDefaultStyle.Foreground = new SolidColorBrush(Colors.Black);
                     }
-                });
+                }
                 return _columnHeaderDefaultStyle;
             }
             set
@@ -13071,13 +13049,11 @@ namespace Dt.Cells.Data
                 {
                     _columnHeaderDefaultStyle.PropertyChanged -= new PropertyChangedEventHandler(OnColumnHeaderDefaultStylePropertyChanged);
                 }
-                UIAdaptor.InvokeSync(delegate
-                {
-                    if (value != null)
-                        _columnHeaderDefaultStyle = new StyleInfo(value.Name, DefaultColumnHeaderStyleName, value);
-                    else
-                        _columnHeaderDefaultStyle = new StyleInfo(null, DefaultColumnHeaderStyleName);
-                });
+                if (value != null)
+                    _columnHeaderDefaultStyle = new StyleInfo(value.Name, DefaultColumnHeaderStyleName, value);
+                else
+                    _columnHeaderDefaultStyle = new StyleInfo(null, DefaultColumnHeaderStyleName);
+
                 _columnHeaderDefaultStyle.PropertyChanged += new PropertyChangedEventHandler(OnColumnHeaderDefaultStylePropertyChanged);
                 RaisePropertyChanged("ColumnHeaderDefaultStyle");
             }
@@ -14103,20 +14079,17 @@ namespace Dt.Cells.Data
         {
             get
             {
-                UIAdaptor.InvokeSync(delegate
+                if (_rowHeaderDefaultStyle == null)
                 {
-                    if (_rowHeaderDefaultStyle == null)
+                    _rowHeaderDefaultStyle = new StyleInfo();
+                    _rowHeaderDefaultStyle.HorizontalAlignment = CellHorizontalAlignment.Center;
+                    _rowHeaderDefaultStyle.VerticalAlignment = CellVerticalAlignment.Center;
+                    _rowHeaderDefaultStyle.PropertyChanged += new PropertyChangedEventHandler(OnRowHeaderDefaultStylePropertyChanged);
+                    if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
                     {
-                        _rowHeaderDefaultStyle = new StyleInfo();
-                        _rowHeaderDefaultStyle.HorizontalAlignment = CellHorizontalAlignment.Center;
-                        _rowHeaderDefaultStyle.VerticalAlignment = CellVerticalAlignment.Center;
-                        _rowHeaderDefaultStyle.PropertyChanged += new PropertyChangedEventHandler(OnRowHeaderDefaultStylePropertyChanged);
-                        if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
-                        {
-                            _rowHeaderDefaultStyle.Foreground = new SolidColorBrush(Colors.Black);
-                        }
+                        _rowHeaderDefaultStyle.Foreground = new SolidColorBrush(Colors.Black);
                     }
-                });
+                }
                 return _rowHeaderDefaultStyle;
             }
             set
@@ -14125,21 +14098,19 @@ namespace Dt.Cells.Data
                 {
                     _rowHeaderDefaultStyle.PropertyChanged -= new PropertyChangedEventHandler(OnRowHeaderDefaultStylePropertyChanged);
                 }
-                UIAdaptor.InvokeSync(delegate
+
+                if (value != null)
                 {
-                    if (value != null)
+                    _rowHeaderDefaultStyle = new StyleInfo(value.Name, DefaultRowHeaderStyleName, value);
+                }
+                else
+                {
+                    _rowHeaderDefaultStyle = new StyleInfo(null, DefaultRowHeaderStyleName);
+                    if ((_rowHeaderDefaultStyle != null) && (Application.Current.RequestedTheme == ApplicationTheme.Dark))
                     {
-                        _rowHeaderDefaultStyle = new StyleInfo(value.Name, DefaultRowHeaderStyleName, value);
+                        _rowHeaderDefaultStyle.Foreground = new SolidColorBrush(Colors.White);
                     }
-                    else
-                    {
-                        _rowHeaderDefaultStyle = new StyleInfo(null, DefaultRowHeaderStyleName);
-                        if ((_rowHeaderDefaultStyle != null) && (Application.Current.RequestedTheme == ApplicationTheme.Dark))
-                        {
-                            _rowHeaderDefaultStyle.Foreground = new SolidColorBrush(Colors.White);
-                        }
-                    }
-                });
+                }
                 _rowHeaderDefaultStyle.PropertyChanged += new PropertyChangedEventHandler(OnRowHeaderDefaultStylePropertyChanged);
                 RaisePropertyChanged("RowHeaderDefaultStyle");
             }

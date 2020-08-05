@@ -96,7 +96,7 @@ namespace Dt.Cells.Data
         {
             if ((o is FloatingObjectStyleInfo) && !object.ReferenceEquals(o, this))
             {
-                FloatingObjectStyleInfo info = (FloatingObjectStyleInfo) o;
+                FloatingObjectStyleInfo info = (FloatingObjectStyleInfo)o;
                 this._fontTheme = info._fontTheme;
                 this._fontThemeSet = info._fontThemeSet;
                 this._fontFamily = info._fontFamily;
@@ -215,7 +215,7 @@ namespace Dt.Cells.Data
             for (int i = 0; i < infos.Length; i++)
             {
                 object obj2 = infos[i].GetValue(null);
-                if ((obj2 != null) && (((Windows.UI.Text.FontWeight) obj2).Weight == fontWeight.Weight))
+                if ((obj2 != null) && (((Windows.UI.Text.FontWeight)obj2).Weight == fontWeight.Weight))
                 {
                     return infos[i].Name;
                 }
@@ -228,11 +228,9 @@ namespace Dt.Cells.Data
             this._fontTheme = null;
             this._fontFamily = null;
             this._fontSize = -1.0;
-            UIAdaptor.InvokeSync(delegate {
-                this._fontStretch = Windows.UI.Text.FontStretch.Normal;
-                this._fontStyle = Windows.UI.Text.FontStyle.Normal;
-                this._fontWeight = FontWeights.Normal;
-            });
+            this._fontStretch = Windows.UI.Text.FontStretch.Normal;
+            this._fontStyle = Windows.UI.Text.FontStyle.Normal;
+            this._fontWeight = FontWeights.Normal;
             this._fill = null;
             this._fillThemeColor = null;
             this._foreground = null;
@@ -465,12 +463,12 @@ namespace Dt.Cells.Data
             this.Reset();
             while (reader.Read())
             {
-                if (reader.NodeType == ((XmlNodeType) ((int) XmlNodeType.Element)))
+                if (reader.NodeType == ((XmlNodeType)((int)XmlNodeType.Element)))
                 {
                     switch (reader.Name)
                     {
                         case "FontTheme":
-                            this._fontTheme = (string) (Serializer.DeserializeObj(typeof(string), reader) as string);
+                            this._fontTheme = (string)(Serializer.DeserializeObj(typeof(string), reader) as string);
                             this._fontThemeSet = true;
                             break;
 
@@ -483,60 +481,53 @@ namespace Dt.Cells.Data
                             goto Label_0279;
 
                         case "FontSize":
-                            this._fontSize = (float) Serializer.DeserializeObj(typeof(float), reader);
+                            this._fontSize = (float)Serializer.DeserializeObj(typeof(float), reader);
                             this._fontSizeSet = true;
                             break;
 
                         case "FontStretch":
-                        {
-                            Windows.UI.Text.FontStretch? stretch = null;
-                            UIAdaptor.InvokeSync(delegate {
-                                string str = (string) (Serializer.DeserializeObj(typeof(string), reader) as string);
+                            {
+                                Windows.UI.Text.FontStretch? stretch = null;
+                                string str = (string)(Serializer.DeserializeObj(typeof(string), reader) as string);
                                 object obj2 = Serializer.DeserializeEnum(this.FontStretch.GetType(), str);
                                 if (obj2 != null)
                                 {
-                                    stretch = new Windows.UI.Text.FontStretch?((Windows.UI.Text.FontStretch) obj2);
+                                    stretch = new Windows.UI.Text.FontStretch?((Windows.UI.Text.FontStretch)obj2);
                                 }
-                            });
-                            if (stretch.HasValue)
-                            {
-                                this._fontStretch = stretch.Value;
-                                this._fontStretchSet = true;
+                                if (stretch.HasValue)
+                                {
+                                    this._fontStretch = stretch.Value;
+                                    this._fontStretchSet = true;
+                                }
+                                break;
                             }
-                            break;
-                        }
                         case "FontStyle":
-                        {
-                            Windows.UI.Text.FontStyle? style = null;
-                            UIAdaptor.InvokeSync(delegate {
-                                string str = (string) (Serializer.DeserializeObj(typeof(string), reader) as string);
+                            {
+                                Windows.UI.Text.FontStyle? style = null;
+                                string str = (string)(Serializer.DeserializeObj(typeof(string), reader) as string);
                                 object obj2 = Serializer.DeserializeEnum(this.FontStyle.GetType(), str);
                                 if (obj2 != null)
                                 {
-                                    style = new Windows.UI.Text.FontStyle?((Windows.UI.Text.FontStyle) obj2);
+                                    style = new Windows.UI.Text.FontStyle?((Windows.UI.Text.FontStyle)obj2);
                                 }
-                            });
-                            if (style.HasValue)
-                            {
-                                this._fontStyle = style.Value;
-                                this._fontStyleSet = true;
+                                if (style.HasValue)
+                                {
+                                    this._fontStyle = style.Value;
+                                    this._fontStyleSet = true;
+                                }
+                                break;
                             }
-                            break;
-                        }
                         case "FontWeight":
-                        {
-                            string result = (string) (Serializer.DeserializeObj(typeof(string), reader) as string);
-                            Windows.UI.Text.FontWeight? weight = null;
-                            UIAdaptor.InvokeSync(delegate {
-                                weight = Serializer.FindStaticDefinationStruct<Windows.UI.Text.FontWeight>(typeof(FontWeights), result);
-                            });
-                            if (weight.HasValue)
                             {
-                                this._fontWeight = weight.Value;
-                                this._fontWeightSet = true;
+                                string result = (string)(Serializer.DeserializeObj(typeof(string), reader) as string);
+                                Windows.UI.Text.FontWeight? weight = Serializer.FindStaticDefinationStruct<Windows.UI.Text.FontWeight>(typeof(FontWeights), result);
+                                if (weight.HasValue)
+                                {
+                                    this._fontWeight = weight.Value;
+                                    this._fontWeightSet = true;
+                                }
+                                break;
                             }
-                            break;
-                        }
                         case "Fill":
                             goto Label_03E3;
 
@@ -544,12 +535,12 @@ namespace Dt.Cells.Data
                             goto Label_0409;
 
                         case "FillTheme":
-                            this._fillThemeColor = (string) (Serializer.DeserializeObj(typeof(string), reader) as string);
+                            this._fillThemeColor = (string)(Serializer.DeserializeObj(typeof(string), reader) as string);
                             this._fillThemeColorSet = true;
                             break;
 
                         case "ForegroundTheme":
-                            this._foregroundThemeColor = (string) (Serializer.DeserializeObj(typeof(string), reader) as string);
+                            this._foregroundThemeColor = (string)(Serializer.DeserializeObj(typeof(string), reader) as string);
                             this._foregroundThemeColorSet = true;
                             break;
 
@@ -565,62 +556,62 @@ namespace Dt.Cells.Data
                             goto Label_04EE;
 
                         case "StrokeTheme":
-                            this._strokeThemeColor = (string) (Serializer.DeserializeObj(typeof(string), reader) as string);
+                            this._strokeThemeColor = (string)(Serializer.DeserializeObj(typeof(string), reader) as string);
                             this._strokeThemeColorSet = true;
                             break;
 
                         case "StrokeThickness":
-                            this._strokeThickness = (double) ((double) Serializer.DeserializeObj(typeof(double), reader));
+                            this._strokeThickness = (double)((double)Serializer.DeserializeObj(typeof(double), reader));
                             this._strokeThicknessSet = true;
                             break;
 
                         case "CornerRadius":
-                            this._cornerRadius = (double) ((double) Serializer.DeserializeObj(typeof(double), reader));
+                            this._cornerRadius = (double)((double)Serializer.DeserializeObj(typeof(double), reader));
                             this._cornerRadiusSet = true;
                             break;
 
                         case "StrokeDashes":
-                            this._strokeDashType = (Dt.Cells.Data.StrokeDashType) Serializer.DeserializeObj(typeof(Dt.Cells.Data.StrokeDashType), reader);
+                            this._strokeDashType = (Dt.Cells.Data.StrokeDashType)Serializer.DeserializeObj(typeof(Dt.Cells.Data.StrokeDashType), reader);
                             this._strokeDashTypeSet = true;
                             break;
 
                         case "LineCapType":
-                            this._lineCapType = (PenLineCap) Serializer.DeserializeObj(typeof(PenLineCap), reader);
+                            this._lineCapType = (PenLineCap)Serializer.DeserializeObj(typeof(PenLineCap), reader);
                             this._lineCapTypeSet = true;
                             break;
 
                         case "LineJoinType":
-                            this._lineJoinType = (PenLineJoin) Serializer.DeserializeObj(typeof(PenLineJoin), reader);
+                            this._lineJoinType = (PenLineJoin)Serializer.DeserializeObj(typeof(PenLineJoin), reader);
                             this._lineJoinTypeSet = true;
                             break;
 
                         case "LineBeginArrowSettings":
-                            this._lineBeginArrowSettings = (ArrowSettings) Serializer.DeserializeObj(typeof(ArrowSettings), reader);
+                            this._lineBeginArrowSettings = (ArrowSettings)Serializer.DeserializeObj(typeof(ArrowSettings), reader);
                             this._lineBeginArrowSettingsSet = true;
                             break;
 
                         case "LineEndArrowSettings":
-                            this._lineEndArrowSettings = (ArrowSettings) Serializer.DeserializeObj(typeof(ArrowSettings), reader);
+                            this._lineEndArrowSettings = (ArrowSettings)Serializer.DeserializeObj(typeof(ArrowSettings), reader);
                             this._lineEndArrowSettingsSet = true;
                             break;
                     }
                 }
                 continue;
             Label_0239:
-                UIAdaptor.InvokeSync(() => _fontFamily = new FontFamily(Serializer.DeserializeObj(typeof(string), reader) as string));
+                _fontFamily = new FontFamily(Serializer.DeserializeObj(typeof(string), reader) as string);
             Label_0279:
                 this._fontFamilySet = true;
                 continue;
             Label_03E3:
-                UIAdaptor.InvokeSync(() => _fill = Serializer.DeserializeObj(typeof(Brush), reader) as Brush);
+                _fill = Serializer.DeserializeObj(typeof(Brush), reader) as Brush;
                 this._fillSet = true;
                 continue;
             Label_0409:
-                UIAdaptor.InvokeSync(() => _foreground = Serializer.DeserializeObj(typeof(Brush), reader) as Brush);
+                _foreground = Serializer.DeserializeObj(typeof(Brush), reader) as Brush;
                 this._foregroundSet = true;
                 continue;
             Label_04B4:
-                string str3 = (string) (Serializer.DeserializeObj(typeof(string), reader) as string);
+                string str3 = (string)(Serializer.DeserializeObj(typeof(string), reader) as string);
                 if (str3 != null)
                 {
                     this._formatter = new GeneralFormatter(str3);
@@ -629,7 +620,7 @@ namespace Dt.Cells.Data
                 this._formatterSet = true;
                 continue;
             Label_04EE:
-                UIAdaptor.InvokeSync(() => _stroke = Serializer.DeserializeObj(typeof(Brush), reader) as Brush);
+                _stroke = Serializer.DeserializeObj(typeof(Brush), reader) as Brush;
                 this._strokeSet = true;
             }
         }
@@ -647,43 +638,40 @@ namespace Dt.Cells.Data
             }
             if (this._fontFamilySet)
             {
-                UIAdaptor.InvokeSync(() =>
+                if (this._fontFamily == null)
                 {
-                    if (this._fontFamily == null)
-                    {
-                        writer.WriteStartElement("FontFamily");
-                        Serializer.WriteAttr("value", Serializer.Format(null), writer);
-                        writer.WriteEndElement();
-                    }
-                    else
-                    {
-                        Serializer.SerializeObj(this._fontFamily.Source, "FontFamily", writer);
-                    }
-                });
+                    writer.WriteStartElement("FontFamily");
+                    Serializer.WriteAttr("value", Serializer.Format(null), writer);
+                    writer.WriteEndElement();
+                }
+                else
+                {
+                    Serializer.SerializeObj(this._fontFamily.Source, "FontFamily", writer);
+                }
             }
             if (this._fontSizeSet)
             {
-                Serializer.SerializeObj((double) this._fontSize, "FontSize", writer);
+                Serializer.SerializeObj((double)this._fontSize, "FontSize", writer);
             }
             if (this._fontStretchSet)
             {
-                UIAdaptor.InvokeSync(() => Serializer.SerializeObj(this._fontStretch.ToString(), "FontStretch", writer));
+                Serializer.SerializeObj(this._fontStretch.ToString(), "FontStretch", writer);
             }
             if (this._fontStyleSet)
             {
-                UIAdaptor.InvokeSync(() => Serializer.SerializeObj(this._fontStyle.ToString(), "FontStyle", writer));
+                Serializer.SerializeObj(this._fontStyle.ToString(), "FontStyle", writer);
             }
             if (this._fontWeightSet)
             {
-                UIAdaptor.InvokeSync(() => Serializer.SerializeObj(StyleInfo.GetFontWeightString(this._fontWeight), "FontWeight", writer));
+                Serializer.SerializeObj(StyleInfo.GetFontWeightString(this._fontWeight), "FontWeight", writer);
             }
             if (this._fillSet)
             {
-                UIAdaptor.InvokeSync(() => Serializer.SerializeObj(this._fill, "Fill", writer));
+                Serializer.SerializeObj(this._fill, "Fill", writer);
             }
             if (this._foregroundSet)
             {
-                UIAdaptor.InvokeSync(() => Serializer.SerializeObj(this._foreground, "Foreground", writer));
+                Serializer.SerializeObj(this._foreground, "Foreground", writer);
             }
             if (this._fillThemeColorSet)
             {
@@ -695,7 +683,7 @@ namespace Dt.Cells.Data
             }
             if (this._strokeSet)
             {
-                UIAdaptor.InvokeSync(() => Serializer.SerializeObj(this._stroke, "Stroke", writer));
+                Serializer.SerializeObj(this._stroke, "Stroke", writer);
             }
             if (this._strokeThemeColorSet)
             {
@@ -703,11 +691,11 @@ namespace Dt.Cells.Data
             }
             if (this._strokeThicknessSet)
             {
-                Serializer.SerializeObj((double) this._strokeThickness, "StrokeThickness", writer);
+                Serializer.SerializeObj((double)this._strokeThickness, "StrokeThickness", writer);
             }
             if (this._cornerRadiusSet)
             {
-                Serializer.SerializeObj((double) this._cornerRadius, "CornerRadius", writer);
+                Serializer.SerializeObj((double)this._cornerRadius, "CornerRadius", writer);
             }
             if (this._strokeDashTypeSet && (this._strokeDashType != Dt.Cells.Data.StrokeDashType.None))
             {
@@ -746,7 +734,7 @@ namespace Dt.Cells.Data
 
         public double CornerRadius
         {
-            get { return  this._cornerRadius; }
+            get { return this._cornerRadius; }
             set
             {
                 this._cornerRadiusSet = true;
@@ -760,7 +748,7 @@ namespace Dt.Cells.Data
 
         public Brush Fill
         {
-            get { return  this._fill; }
+            get { return this._fill; }
             set
             {
                 this._fillThemeColor = null;
@@ -778,7 +766,7 @@ namespace Dt.Cells.Data
 
         public string FillThemeColor
         {
-            get { return  this._fillThemeColor; }
+            get { return this._fillThemeColor; }
             set
             {
                 this._fill = null;
@@ -794,7 +782,7 @@ namespace Dt.Cells.Data
 
         public Windows.UI.Xaml.Media.FontFamily FontFamily
         {
-            get { return  this._fontFamily; }
+            get { return this._fontFamily; }
             set
             {
                 this._fontTheme = null;
@@ -810,7 +798,7 @@ namespace Dt.Cells.Data
 
         public double FontSize
         {
-            get { return  this._fontSize; }
+            get { return this._fontSize; }
             set
             {
                 this._fontSizeSet = true;
@@ -824,7 +812,7 @@ namespace Dt.Cells.Data
 
         public Windows.UI.Text.FontStretch FontStretch
         {
-            get { return  this._fontStretch; }
+            get { return this._fontStretch; }
             set
             {
                 this._fontStretchSet = true;
@@ -838,7 +826,7 @@ namespace Dt.Cells.Data
 
         public Windows.UI.Text.FontStyle FontStyle
         {
-            get { return  this._fontStyle; }
+            get { return this._fontStyle; }
             set
             {
                 this._fontStyleSet = true;
@@ -852,7 +840,7 @@ namespace Dt.Cells.Data
 
         public string FontTheme
         {
-            get { return  this._fontTheme; }
+            get { return this._fontTheme; }
             set
             {
                 this._fontFamily = null;
@@ -868,7 +856,7 @@ namespace Dt.Cells.Data
 
         public Windows.UI.Text.FontWeight FontWeight
         {
-            get { return  this._fontWeight; }
+            get { return this._fontWeight; }
             set
             {
                 this._fontWeightSet = true;
@@ -882,7 +870,7 @@ namespace Dt.Cells.Data
 
         public Brush Foreground
         {
-            get { return  this._foreground; }
+            get { return this._foreground; }
             set
             {
                 this._foregroundThemeColor = null;
@@ -898,7 +886,7 @@ namespace Dt.Cells.Data
 
         public string ForegroundThemeColor
         {
-            get { return  this._foregroundThemeColor; }
+            get { return this._foregroundThemeColor; }
             set
             {
                 this._foreground = null;
@@ -914,7 +902,7 @@ namespace Dt.Cells.Data
 
         public IFormatter Formatter
         {
-            get { return  this._formatter; }
+            get { return this._formatter; }
             set
             {
                 this._formatterSet = true;
@@ -928,67 +916,67 @@ namespace Dt.Cells.Data
 
         public bool IsCornerRadiusSet
         {
-            get { return  this._cornerRadiusSet; }
+            get { return this._cornerRadiusSet; }
         }
 
         public bool IsEmpty
         {
-            get { return  ((((((!this._cornerRadiusSet && !this._fillSet) && (!this._fillThemeColorSet && !this._fontFamilySet)) && ((!this._fontSizeSet && !this._fontStretchSet) && (!this._fontStyleSet && !this._fontThemeSet))) && (((!this._fontWeightSet && !this._foregroundSet) && (!this._foregroundThemeColorSet && !this._strokeDashTypeSet)) && ((!this._strokeSet && !this._strokeThemeColorSet) && (!this._strokeThicknessSet && !this._formatterSet)))) && ((!this._lineCapTypeSet && !this._lineJoinTypeSet) && !this._lineBeginArrowSettingsSet)) && !this._lineEndArrowSettingsSet); }
+            get { return ((((((!this._cornerRadiusSet && !this._fillSet) && (!this._fillThemeColorSet && !this._fontFamilySet)) && ((!this._fontSizeSet && !this._fontStretchSet) && (!this._fontStyleSet && !this._fontThemeSet))) && (((!this._fontWeightSet && !this._foregroundSet) && (!this._foregroundThemeColorSet && !this._strokeDashTypeSet)) && ((!this._strokeSet && !this._strokeThemeColorSet) && (!this._strokeThicknessSet && !this._formatterSet)))) && ((!this._lineCapTypeSet && !this._lineJoinTypeSet) && !this._lineBeginArrowSettingsSet)) && !this._lineEndArrowSettingsSet); }
         }
 
         public bool IsFillSet
         {
-            get { return  this._fillSet; }
+            get { return this._fillSet; }
         }
 
         public bool IsFillThemeColorSet
         {
-            get { return  this._fillThemeColorSet; }
+            get { return this._fillThemeColorSet; }
         }
 
         public bool IsFontFamilySet
         {
-            get { return  this._fontFamilySet; }
+            get { return this._fontFamilySet; }
         }
 
         public bool IsFontSizeSet
         {
-            get { return  this._fontSizeSet; }
+            get { return this._fontSizeSet; }
         }
 
         public bool IsFontStretchSet
         {
-            get { return  this._fontStretchSet; }
+            get { return this._fontStretchSet; }
         }
 
         public bool IsFontStyleSet
         {
-            get { return  this._fontStyleSet; }
+            get { return this._fontStyleSet; }
         }
 
         public bool IsFontThemeSet
         {
-            get { return  this._fontThemeSet; }
+            get { return this._fontThemeSet; }
         }
 
         public bool IsFontWeightSet
         {
-            get { return  this._fontWeightSet; }
+            get { return this._fontWeightSet; }
         }
 
         public bool IsForegroundSet
         {
-            get { return  this._foregroundSet; }
+            get { return this._foregroundSet; }
         }
 
         public bool IsForegroundThemeColorSet
         {
-            get { return  this._foregroundThemeColorSet; }
+            get { return this._foregroundThemeColorSet; }
         }
 
         public bool IsFormatterSet
         {
-            get { return  this._formatterSet; }
+            get { return this._formatterSet; }
         }
 
         /// <summary>
@@ -999,7 +987,7 @@ namespace Dt.Cells.Data
         /// </value>
         public bool IsLineBeginArrowSettingsSet
         {
-            get { return  this._lineBeginArrowSettingsSet; }
+            get { return this._lineBeginArrowSettingsSet; }
         }
 
         /// <summary>
@@ -1010,7 +998,7 @@ namespace Dt.Cells.Data
         /// </value>
         public bool IsLineCapTypeSet
         {
-            get { return  this._lineCapTypeSet; }
+            get { return this._lineCapTypeSet; }
         }
 
         /// <summary>
@@ -1021,7 +1009,7 @@ namespace Dt.Cells.Data
         /// </value>
         public bool IsLineEndArrowSettingsSet
         {
-            get { return  this._lineEndArrowSettingsSet; }
+            get { return this._lineEndArrowSettingsSet; }
         }
 
         /// <summary>
@@ -1032,27 +1020,27 @@ namespace Dt.Cells.Data
         /// </value>
         public bool IsLineJoinTypeSet
         {
-            get { return  this._lineJoinTypeSet; }
+            get { return this._lineJoinTypeSet; }
         }
 
         public bool IsStrokeDashTypeSet
         {
-            get { return  this._strokeDashTypeSet; }
+            get { return this._strokeDashTypeSet; }
         }
 
         public bool IsStrokeSet
         {
-            get { return  this._strokeSet; }
+            get { return this._strokeSet; }
         }
 
         public bool IsStrokeThemeColorSet
         {
-            get { return  this._strokeThemeColorSet; }
+            get { return this._strokeThemeColorSet; }
         }
 
         public bool IsStrokeThicknessSet
         {
-            get { return  this._strokeThicknessSet; }
+            get { return this._strokeThicknessSet; }
         }
 
         /// <summary>
@@ -1063,7 +1051,7 @@ namespace Dt.Cells.Data
         /// </value>
         public ArrowSettings LineBeginArrowSettings
         {
-            get { return  this._lineBeginArrowSettings; }
+            get { return this._lineBeginArrowSettings; }
             set
             {
                 this._lineBeginArrowSettingsSet = true;
@@ -1090,7 +1078,7 @@ namespace Dt.Cells.Data
         /// </value>
         public PenLineCap LineCapType
         {
-            get { return  this._lineCapType; }
+            get { return this._lineCapType; }
             set
             {
                 this._lineCapTypeSet = true;
@@ -1110,7 +1098,7 @@ namespace Dt.Cells.Data
         /// </value>
         public ArrowSettings LineEndArrowSettings
         {
-            get { return  this._lineEndArrowSettings; }
+            get { return this._lineEndArrowSettings; }
             set
             {
                 this._lineEndArrowSettingsSet = true;
@@ -1137,7 +1125,7 @@ namespace Dt.Cells.Data
         /// </value>
         public PenLineJoin LineJoinType
         {
-            get { return  this._lineJoinType; }
+            get { return this._lineJoinType; }
             set
             {
                 this._lineJoinTypeSet = true;
@@ -1151,7 +1139,7 @@ namespace Dt.Cells.Data
 
         public Brush Stroke
         {
-            get { return  this._stroke; }
+            get { return this._stroke; }
             set
             {
                 this._strokeThemeColor = null;
@@ -1167,7 +1155,7 @@ namespace Dt.Cells.Data
 
         public Dt.Cells.Data.StrokeDashType StrokeDashType
         {
-            get { return  this._strokeDashType; }
+            get { return this._strokeDashType; }
             set
             {
                 this._strokeDashTypeSet = true;
@@ -1183,7 +1171,7 @@ namespace Dt.Cells.Data
 
         public string StrokeThemeColor
         {
-            get { return  this._strokeThemeColor; }
+            get { return this._strokeThemeColor; }
             set
             {
                 this._stroke = null;
@@ -1199,7 +1187,7 @@ namespace Dt.Cells.Data
 
         public double StrokeThickness
         {
-            get { return  this._strokeThickness; }
+            get { return this._strokeThickness; }
             set
             {
                 this._strokeThicknessSet = true;

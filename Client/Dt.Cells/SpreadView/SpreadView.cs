@@ -996,8 +996,7 @@ namespace Dt.Cells.UI
         /// <param name="value">The row index.</param>
         public override void SetViewportTopRow(int rowViewportIndex, int value)
         {
-            Action action = null;
-            if (base.VerticalScrollable)
+            if (VerticalScrollable)
             {
                 value = Math.Max(Worksheet.FrozenRowCount, value);
                 value = Math.Min((Worksheet.RowCount - Worksheet.FrozenTrailingRowCount) - 1, value);
@@ -1005,20 +1004,13 @@ namespace Dt.Cells.UI
                 if (_verticalScrollBar != null)
                 {
                     GetSpreadLayout();
-                    if (action == null)
+                    if (((rowViewportIndex > -1) && (rowViewportIndex < _verticalScrollBar.Length)) && (value != _verticalScrollBar[rowViewportIndex].Value))
                     {
-                        action = delegate
-                        {
-                            if (((rowViewportIndex > -1) && (rowViewportIndex < _verticalScrollBar.Length)) && (value != _verticalScrollBar[rowViewportIndex].Value))
-                            {
-                                int invisibleRowsBeforeRow = GetInvisibleRowsBeforeRow(ActiveSheet, value);
-                                int num2 = value - invisibleRowsBeforeRow;
-                                _verticalScrollBar[rowViewportIndex].Value = (double)num2;
-                                _verticalScrollBar[rowViewportIndex].InvalidateArrange();
-                            }
-                        };
+                        int invisibleRowsBeforeRow = GetInvisibleRowsBeforeRow(ActiveSheet, value);
+                        int num2 = value - invisibleRowsBeforeRow;
+                        _verticalScrollBar[rowViewportIndex].Value = (double)num2;
+                        _verticalScrollBar[rowViewportIndex].InvalidateArrange();
                     }
-                    UIAdaptor.InvokeSync(action);
                 }
                 base.SetViewportTopRow(rowViewportIndex, value);
             }
@@ -3494,14 +3486,11 @@ namespace Dt.Cells.UI
         /// </summary>
         internal void ShowOpeningProgressRing()
         {
-            UIAdaptor.InvokeAsync(delegate
+            if (_progressRing != null)
             {
-                if (_progressRing != null)
-                {
-                    _progressRing.Visibility = 0;
-                    _progressRing.IsActive = true;
-                }
-            });
+                _progressRing.Visibility = 0;
+                _progressRing.IsActive = true;
+            }
         }
 
         /// <summary>
@@ -3510,13 +3499,10 @@ namespace Dt.Cells.UI
         internal void ShowOpeningStatus()
         {
             ShowOpeningProgressRing();
-            UIAdaptor.InvokeAsync(delegate
+            if (TabStrip != null)
             {
-                if (TabStrip != null)
-                {
-                    TabStrip.Visibility = (Visibility)1;
-                }
-            });
+                TabStrip.Visibility = (Visibility)1;
+            }
         }
 
         /// <summary>
@@ -3539,13 +3525,8 @@ namespace Dt.Cells.UI
                 base.IsWorking = true;
                 if (_columnSplittingTracker == null)
                 {
-                    SolidColorBrush brush = null;
-                    UIAdaptor.InvokeSync(delegate
-                    {
-                        brush = new SolidColorBrush(Colors.Black);
-                    });
                     Line line = new Line();
-                    line.Stroke = brush;
+                    line.Stroke = new SolidColorBrush(Colors.Black);
                     line.Opacity = 0.5;
                     _columnSplittingTracker = line;
                     SplittingTrackerContainer.Children.Add(_columnSplittingTracker);
@@ -3605,13 +3586,8 @@ namespace Dt.Cells.UI
                 base.IsWorking = true;
                 if (_rowSplittingTracker == null)
                 {
-                    SolidColorBrush brush = null;
-                    UIAdaptor.InvokeSync(delegate
-                    {
-                        brush = new SolidColorBrush(Colors.Black);
-                    });
                     Line line = new Line();
-                    line.Stroke = brush;
+                    line.Stroke = new SolidColorBrush(Colors.Black);
                     line.Opacity = 0.5;
                     _rowSplittingTracker = line;
                     SplittingTrackerContainer.Children.Add(_rowSplittingTracker);

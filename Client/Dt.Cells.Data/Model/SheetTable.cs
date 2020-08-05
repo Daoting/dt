@@ -542,27 +542,25 @@ namespace Dt.Cells.Data
             {
                 this.CheckSheet();
                 col = this.column;
-                UIAdaptor.InvokeSync(delegate {
-                    int num = 0;
-                    while (num < this.DataRange.ColumnCount)
+                int num = 0;
+                while (num < this.DataRange.ColumnCount)
+                {
+                    int num2 = this.showHeader ? 1 : 0;
+                    string field = this.columns[num].Name;
+                    int recordIndex = 0;
+                    while (recordIndex < this.DataRange.RowCount)
                     {
-                        int num2 = this.showHeader ? 1 : 0;
-                        string field = this.columns[num].Name;
-                        int recordIndex = 0;
-                        while (recordIndex < this.DataRange.RowCount)
+                        if (field != null)
                         {
-                            if (field != null)
-                            {
-                                object obj2 = this.dataConnection.GetValue(recordIndex, field);
-                                this.Sheet.SetValue(num2 + this.row, col, obj2);
-                            }
-                            recordIndex++;
-                            num2++;
+                            object obj2 = this.dataConnection.GetValue(recordIndex, field);
+                            this.Sheet.SetValue(num2 + this.row, col, obj2);
                         }
-                        num++;
-                        col++;
+                        recordIndex++;
+                        num2++;
                     }
-                });
+                    num++;
+                    col++;
+                }
             }
         }
 

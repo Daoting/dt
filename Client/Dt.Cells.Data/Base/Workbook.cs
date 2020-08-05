@@ -265,18 +265,15 @@ namespace Dt.Cells.Data
         {
             get
             {
-                UIAdaptor.InvokeSync(delegate
+                if (this._defaultStyle == null)
                 {
-                    if (this._defaultStyle == null)
-                    {
-                        this._defaultStyle = new StyleInfo();
-                        this._defaultStyle.Background = new SolidColorBrush(Colors.Transparent);
-                        this._defaultStyle.Foreground = new SolidColorBrush(Colors.Black);
-                        this._defaultStyle.FontFamily = DefaultStyleCollection.DefaultFontFamily;
-                        this._defaultStyle.FontSize = DefaultStyleCollection.DefaultFontSize;
-                        this._defaultStyle.Formatter = new GeneralFormatter();
-                    }
-                });
+                    this._defaultStyle = new StyleInfo();
+                    this._defaultStyle.Background = new SolidColorBrush(Colors.Transparent);
+                    this._defaultStyle.Foreground = new SolidColorBrush(Colors.Black);
+                    this._defaultStyle.FontFamily = DefaultStyleCollection.DefaultFontFamily;
+                    this._defaultStyle.FontSize = DefaultStyleCollection.DefaultFontSize;
+                    this._defaultStyle.Formatter = new GeneralFormatter();
+                }
                 return this._defaultStyle;
             }
             set
@@ -1001,7 +998,6 @@ namespace Dt.Cells.Data
 
         private void OpenExcelOnBackground(Stream stream, ExcelOpenFlags openFlags)
         {
-            Action action = null;
             ExtendedNumberFormatHelper.Reset();
             using (IEnumerator<Worksheet> enumerator = this.Sheets.GetEnumerator())
             {
@@ -1010,7 +1006,7 @@ namespace Dt.Cells.Data
                     enumerator.Current.ResetCalcEngine();
                 }
             }
-            UIAdaptor.InvokeSync(new Action(this.Reset));
+            Reset();
             this.SuspendEvent();
             ExcelReader reader = new ExcelReader(this, openFlags);
             try
@@ -1026,14 +1022,7 @@ namespace Dt.Cells.Data
                 }
                 reader = null;
                 this.ResumeEvent();
-                if (action == null)
-                {
-                    action = delegate
-                    {
-                        this.RaisePropertyChanged("[OpenExcel]");
-                    };
-                }
-                UIAdaptor.InvokeSync(action);
+                RaisePropertyChanged("[OpenExcel]");
             }
         }
 
@@ -1090,7 +1079,6 @@ namespace Dt.Cells.Data
 
         internal void OpenXmlOnBackground(XmlReader reader)
         {
-            Action action = null;
             this.SuspendEvent();
             this.SuspendCalcService();
             try
@@ -1108,14 +1096,7 @@ namespace Dt.Cells.Data
             }
             finally
             {
-                if (action == null)
-                {
-                    action = delegate
-                    {
-                        this.ResumeCalcService();
-                    };
-                }
-                UIAdaptor.InvokeAsync(action);
+                ResumeCalcService();
                 this.ResumeEvent();
                 this.RaisePropertyChanged("[OpenXml]");
             }

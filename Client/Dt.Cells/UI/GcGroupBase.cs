@@ -30,32 +30,18 @@ namespace Dt.Cells.UI
 
         public GcGroupBase(SheetView sheetView)
         {
-            Action action = null;
-            Action action2 = null;
             _sheetView = sheetView;
             if ((_sheetView != null) && (_sheetView.RangeGroupBackground != null))
             {
-                base.Background = _sheetView.RangeGroupBackground;
+                Background = _sheetView.RangeGroupBackground;
             }
             else if (Application.Current.RequestedTheme == ApplicationTheme.Light)
             {
-                if (action == null)
-                {
-                    action = delegate {
-                        base.Background = new SolidColorBrush(Windows.UI.Color.FromArgb(0xff, 0xb1, 0xab, 0xab));
-                    };
-                }
-                Dt.Cells.Data.UIAdaptor.InvokeSync(action);
+                Background = new SolidColorBrush(Windows.UI.Color.FromArgb(0xff, 0xb1, 0xab, 0xab));
             }
             else
             {
-                if (action2 == null)
-                {
-                    action2 = delegate {
-                        base.Background = new SolidColorBrush(Windows.UI.Color.FromArgb(0xff, 0xd1, 0xd1, 0xd1));
-                    };
-                }
-                Dt.Cells.Data.UIAdaptor.InvokeSync(action2);
+                Background = new SolidColorBrush(Windows.UI.Color.FromArgb(0xff, 0xd1, 0xd1, 0xd1));
             }
         }
 
@@ -127,12 +113,10 @@ namespace Dt.Cells.UI
             {
                 _borderBottom = new Rectangle();
             }
-            Dt.Cells.Data.UIAdaptor.InvokeSync(delegate {
-                _borderBottom.Fill = BorderBrush;
-            });
-            if (!base.Children.Contains(_borderBottom))
+            _borderBottom.Fill = BorderBrush;
+            if (!Children.Contains(_borderBottom))
             {
-                base.Children.Add(_borderBottom);
+                Children.Add(_borderBottom);
             }
             _borderBottom.Measure(new Windows.Foundation.Size(availableSize.Width, 1.0));
         }
@@ -143,12 +127,10 @@ namespace Dt.Cells.UI
             {
                 _borderRight = new Rectangle();
             }
-            Dt.Cells.Data.UIAdaptor.InvokeSync(delegate {
-                _borderRight.Fill = BorderBrush;
-            });
-            if (!base.Children.Contains(_borderRight))
+            _borderRight.Fill = BorderBrush;
+            if (!Children.Contains(_borderRight))
             {
-                base.Children.Add(_borderRight);
+                Children.Add(_borderRight);
             }
             _borderRight.Measure(new Windows.Foundation.Size(1.0, availableSize.Height));
         }
@@ -165,21 +147,12 @@ namespace Dt.Cells.UI
         {
             get
             {
-                Action action = null;
                 if ((_sheetView != null) && (_sheetView.RangeGroupBorderBrush != null))
                 {
                     return _sheetView.RangeGroupBorderBrush;
                 }
                 if (borderBrush == null)
-                {
-                    if (action == null)
-                    {
-                        action = delegate {
-                            borderBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(0xff, 160, 160, 160));
-                        };
-                    }
-                    Dt.Cells.Data.UIAdaptor.InvokeSync(action);
-                }
+                    borderBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(0xff, 160, 160, 160));
                 return borderBrush;
             }
         }

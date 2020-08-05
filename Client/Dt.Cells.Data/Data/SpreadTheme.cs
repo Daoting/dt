@@ -156,22 +156,9 @@ namespace Dt.Cells.Data
         {
             get
             {
-                Action action = null;
                 if ((this.bodyFontFamily == null) && !string.IsNullOrEmpty(this.bodyFontName))
                 {
-                    try
-                    {
-                        if (action == null)
-                        {
-                            action = delegate {
-                                this.bodyFontFamily = new FontFamily(this.bodyFontName);
-                            };
-                        }
-                        UIAdaptor.InvokeSync(action);
-                    }
-                    catch
-                    {
-                    }
+                    bodyFontFamily = new FontFamily(this.bodyFontName);
                 }
                 return this.bodyFontFamily;
             }

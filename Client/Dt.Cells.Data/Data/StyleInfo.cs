@@ -1111,10 +1111,7 @@ namespace Dt.Cells.Data
             this.fontSize = -1.0;
             this.fontStretch = (FontStretch)5;
             this.fontStyle = 0;
-            UIAdaptor.InvokeSync(delegate
-            {
-                this.fontWeight = FontWeights.Normal;
-            });
+            this.fontWeight = FontWeights.Normal;
             this.horizontalAlignment = CellHorizontalAlignment.General;
             this.verticalAlignment = CellVerticalAlignment.Center;
             this.textIndent = 0;
@@ -1573,8 +1570,6 @@ namespace Dt.Cells.Data
 
         void IXmlSerializable.ReadXml(XmlReader reader)
         {
-            Action action = null;
-            Action action2 = null;
             Serializer.InitReader(reader);
             try
             {
@@ -1625,10 +1620,7 @@ namespace Dt.Cells.Data
                         if (!(Serializer.ReadAttribute("value", reader) == Serializer.Format(null)))
                         {
                             string family = (string)(Serializer.DeserializeObj(typeof(string), reader) as string);
-                            UIAdaptor.InvokeSync(delegate
-                            {
-                                this.fontFamily = new FontFamily(family);
-                            });
+                            this.fontFamily = new FontFamily(family);
                         }
                         else
                         {
@@ -1645,15 +1637,12 @@ namespace Dt.Cells.Data
                     case "FontStretch":
                         {
                             FontStretch? stretch = null;
-                            UIAdaptor.InvokeSync(delegate
+                            string str = (string)(Serializer.DeserializeObj(typeof(string), reader) as string);
+                            object obj2 = Serializer.DeserializeEnum(this.FontStretch.GetType(), str);
+                            if (obj2 != null)
                             {
-                                string str = (string)(Serializer.DeserializeObj(typeof(string), reader) as string);
-                                object obj2 = Serializer.DeserializeEnum(this.FontStretch.GetType(), str);
-                                if (obj2 != null)
-                                {
-                                    stretch = new FontStretch?((FontStretch)obj2);
-                                }
-                            });
+                                stretch = new FontStretch?((FontStretch)obj2);
+                            }
                             if (stretch.HasValue)
                             {
                                 this.fontStretch = stretch.Value;
@@ -1664,15 +1653,12 @@ namespace Dt.Cells.Data
                     case "FontStyle":
                         {
                             Windows.UI.Text.FontStyle? style = null;
-                            UIAdaptor.InvokeSync(delegate
+                            string str = (string)(Serializer.DeserializeObj(typeof(string), reader) as string);
+                            object obj2 = Serializer.DeserializeEnum(this.FontStyle.GetType(), str);
+                            if (obj2 != null)
                             {
-                                string str = (string)(Serializer.DeserializeObj(typeof(string), reader) as string);
-                                object obj2 = Serializer.DeserializeEnum(this.FontStyle.GetType(), str);
-                                if (obj2 != null)
-                                {
-                                    style = new Windows.UI.Text.FontStyle?((Windows.UI.Text.FontStyle)obj2);
-                                }
-                            });
+                                style = new Windows.UI.Text.FontStyle?((Windows.UI.Text.FontStyle)obj2);
+                            }
                             if (style.HasValue)
                             {
                                 this.fontStyle = style.Value;
@@ -1683,11 +1669,7 @@ namespace Dt.Cells.Data
                     case "FontWeight":
                         {
                             string result = (string)(Serializer.DeserializeObj(typeof(string), reader) as string);
-                            FontWeight? weight = null;
-                            UIAdaptor.InvokeSync(delegate
-                            {
-                                weight = Serializer.FindStaticDefinationStruct<FontWeight>(typeof(FontWeights), result);
-                            });
+                            FontWeight? weight = Serializer.FindStaticDefinationStruct<FontWeight>(typeof(FontWeights), result);
                             if (weight.HasValue)
                             {
                                 this.fontWeight = weight.Value;
@@ -1769,26 +1751,12 @@ namespace Dt.Cells.Data
                         break;
 
                     case "Background":
-                        if (action == null)
-                        {
-                            action = delegate
-                            {
-                                this.background = Serializer.DeserializeObj(typeof(Brush), reader) as Brush;
-                            };
-                        }
-                        UIAdaptor.InvokeSync(action);
+                        background = Serializer.DeserializeObj(typeof(Brush), reader) as Brush;
                         this.backgroundSet = true;
                         break;
 
                     case "Foreground":
-                        if (action2 == null)
-                        {
-                            action2 = delegate
-                            {
-                                this.foreground = Serializer.DeserializeObj(typeof(Brush), reader) as Brush;
-                            };
-                        }
-                        UIAdaptor.InvokeSync(action2);
+                        foreground = Serializer.DeserializeObj(typeof(Brush), reader) as Brush;
                         this.foregroundSet = true;
                         break;
 
@@ -1860,12 +1828,6 @@ namespace Dt.Cells.Data
 
         void IXmlSerializable.WriteXml(XmlWriter writer)
         {
-            Action action = null;
-            Action action2 = null;
-            Action action3 = null;
-            Action action4 = null;
-            Action action5 = null;
-            Action action6 = null;
             Serializer.InitWriter(writer);
             if (this.nameSet)
             {
@@ -1893,23 +1855,16 @@ namespace Dt.Cells.Data
             }
             if (this.fontFamilySet)
             {
-                if (action == null)
+                if (this.fontFamily == null)
                 {
-                    action = delegate
-                    {
-                        if (this.fontFamily == null)
-                        {
-                            writer.WriteStartElement("FontFamily");
-                            Serializer.WriteAttr("value", Serializer.Format(null), writer);
-                            writer.WriteEndElement();
-                        }
-                        else
-                        {
-                            Serializer.SerializeObj(this.fontFamily.Source, "FontFamily", writer);
-                        }
-                    };
+                    writer.WriteStartElement("FontFamily");
+                    Serializer.WriteAttr("value", Serializer.Format(null), writer);
+                    writer.WriteEndElement();
                 }
-                UIAdaptor.InvokeSync(action);
+                else
+                {
+                    Serializer.SerializeObj(this.fontFamily.Source, "FontFamily", writer);
+                }
             }
             if (this.fontSizeSet)
             {
@@ -1917,36 +1872,15 @@ namespace Dt.Cells.Data
             }
             if (this.fontStretchSet)
             {
-                if (action2 == null)
-                {
-                    action2 = delegate
-                    {
-                        Serializer.SerializeObj(this.fontStretch.ToString(), "FontStretch", writer);
-                    };
-                }
-                UIAdaptor.InvokeSync(action2);
+                Serializer.SerializeObj(this.fontStretch.ToString(), "FontStretch", writer);
             }
             if (this.fontStyleSet)
             {
-                if (action3 == null)
-                {
-                    action3 = delegate
-                    {
-                        Serializer.SerializeObj(this.fontStyle.ToString(), "FontStyle", writer);
-                    };
-                }
-                UIAdaptor.InvokeSync(action3);
+                Serializer.SerializeObj(this.fontStyle.ToString(), "FontStyle", writer);
             }
             if (this.fontWeightSet)
             {
-                if (action4 == null)
-                {
-                    action4 = delegate
-                    {
-                        Serializer.SerializeObj(GetFontWeightString(this.fontWeight), "FontWeight", writer);
-                    };
-                }
-                UIAdaptor.InvokeSync(action4);
+                Serializer.SerializeObj(GetFontWeightString(this.fontWeight), "FontWeight", writer);
             }
             if (this.horizontalAlignmentSet)
             {
@@ -2022,25 +1956,11 @@ namespace Dt.Cells.Data
             }
             if (this.backgroundSet)
             {
-                if (action5 == null)
-                {
-                    action5 = delegate
-                    {
-                        Serializer.SerializeObj(this.background, "Background", writer);
-                    };
-                }
-                UIAdaptor.InvokeSync(action5);
+                Serializer.SerializeObj(this.background, "Background", writer);
             }
             if (this.foregroundSet)
             {
-                if (action6 == null)
-                {
-                    action6 = delegate
-                    {
-                        Serializer.SerializeObj(this.foreground, "Foreground", writer);
-                    };
-                }
-                UIAdaptor.InvokeSync(action6);
+                Serializer.SerializeObj(this.foreground, "Foreground", writer);
             }
             if (this.backgroundThemeColorSet)
             {

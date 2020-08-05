@@ -1167,7 +1167,7 @@ namespace Dt.Cells.UI
 
         internal override void RefreshChartContent()
         {
-            UIAdaptor.InvokeSync(() => SyncSpreadChartToC1Chart());
+            SyncSpreadChartToC1Chart();
         }
 
         internal override void RefreshChartLegend()
@@ -1419,10 +1419,7 @@ namespace Dt.Cells.UI
                 {
                     SyncValueItems(c1Axis, axis, axisType, out annotations);
                 }
-                UIAdaptor.InvokeSync(delegate
-                {
-                    c1Axis.AnnoTemplate = CreateAnnoTemplate(axis, c1Axis, annotations, axisType);
-                });
+                c1Axis.AnnoTemplate = CreateAnnoTemplate(axis, c1Axis, annotations, axisType);
             }
         }
 

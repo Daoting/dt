@@ -589,7 +589,6 @@ namespace Dt.Cells.UI
 
         void SetDataBarAxis()
         {
-            Action action = null;
             if (_databarObject != null)
             {
                 _cachedAxisPosition = (_databarObject.DataBarDirection == BarDirection.LeftToRight) ? _databarObject.DataBarAxisPosition : (1.0 - _databarObject.DataBarAxisPosition);
@@ -600,14 +599,7 @@ namespace Dt.Cells.UI
                 }
                 else
                 {
-                    if (action == null)
-                    {
-                        action = delegate
-                        {
-                            _axisLine.Stroke = new SolidColorBrush(_databarObject.AxisColor);
-                        };
-                    }
-                    Dt.Cells.Data.UIAdaptor.InvokeSync(action);
+                    _axisLine.Stroke = new SolidColorBrush(_databarObject.AxisColor);
                     _axisLine.StrokeThickness = 1.0;
                 }
             }
@@ -615,18 +607,10 @@ namespace Dt.Cells.UI
 
         void SetDataBarBorder()
         {
-            Action action = null;
             if ((_databarObject != null) && _databarObject.ShowBorder)
             {
                 _dataBarRectangle.StrokeThickness = 1.0;
-                if (action == null)
-                {
-                    action = delegate
-                    {
-                        _dataBarRectangle.Stroke = new SolidColorBrush(_databarObject.BorderColor);
-                    };
-                }
-                Dt.Cells.Data.UIAdaptor.InvokeSync(action);
+                _dataBarRectangle.Stroke = new SolidColorBrush(_databarObject.BorderColor);
             }
             else
             {

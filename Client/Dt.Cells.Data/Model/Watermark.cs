@@ -146,11 +146,8 @@ namespace Dt.Cells.Data
         internal void Init()
         {
             this.innerLabel = new GcLabel();
-            UIAdaptor.InvokeSync(delegate
-            {
-                this.innerLabel.Font = new Font(GcReportContext.defaultFont.FontFamilyName, 40.0);
-                this.innerLabel.Foreground = new SolidColorBrush(Color.FromArgb(0x66, 0x7f, 0xc9, 0xff));
-            });
+            this.innerLabel.Font = new Font(GcReportContext.defaultFont.FontFamilyName, 40.0);
+            this.innerLabel.Foreground = new SolidColorBrush(Color.FromArgb(0x66, 0x7f, 0xc9, 0xff));
             this.innerLabel.Alignment.HorizontalAlignment = TextHorizontalAlignment.Center;
             this.innerLabel.Alignment.VerticalAlignment = TextVerticalAlignment.Center;
             this.innerLabel.Alignment.TextRotationAngle = 45.0;

@@ -37,10 +37,7 @@ namespace Dt.Cells.UI
 
         public DragFillFrame()
         {
-            SolidColorBrush brush = null;
-            Dt.Cells.Data.UIAdaptor.InvokeSync(delegate {
-                brush = new SolidColorBrush(Colors.Black);
-            });
+            SolidColorBrush brush = new SolidColorBrush(Colors.Black);
             Rectangle rectangle = new Rectangle();
             rectangle.Stroke = brush;
             rectangle.StrokeThickness = 1.0;

@@ -70,10 +70,8 @@ namespace Dt.Cells.UI
         internal override UIElement GetDataPoint(int index, Windows.Foundation.Size availableSize)
         {
             Rectangle r = new Rectangle();
-            Windows.UI.Color color = base.GetDataPointColor(index);
-            Dt.Cells.Data.UIAdaptor.InvokeSync(delegate {
-                r.Fill = new SolidColorBrush(color);
-            });
+            Windows.UI.Color color = GetDataPointColor(index);
+            r.Fill = new SolidColorBrush(color);
             r.RenderTransformOrigin = new Windows.Foundation.Point(0.5, 0.5);
             RotateTransform transform = new RotateTransform();
             transform.Angle = 45.0;
@@ -101,7 +99,6 @@ namespace Dt.Cells.UI
                 }
                 for (int i = 0; i < sparklineViewInfo.LinePos.Count; i++)
                 {
-                    Action action = null;
                     Windows.UI.Xaml.Shapes.Line line;
                     Tuple<Windows.Foundation.Point, Windows.Foundation.Point> tuple = sparklineViewInfo.LinePos[i];
                     if (tuple != null)
@@ -112,13 +109,7 @@ namespace Dt.Cells.UI
                             line = new Windows.UI.Xaml.Shapes.Line();
                             line.StrokeStartLineCap = PenLineCap.Round;
                             line.StrokeEndLineCap = PenLineCap.Round;
-                            if (action == null)
-                            {
-                                action = delegate {
-                                    line.Stroke = new SolidColorBrush(SparklineInfo.Setting.SeriesColor);
-                                };
-                            }
-                            Dt.Cells.Data.UIAdaptor.InvokeSync(action);
+                            line.Stroke = new SolidColorBrush(SparklineInfo.Setting.SeriesColor);
                             double lineWeight = (base.SparklineViewInfo as LineSparklineViewInfo).GetLineWeight();
                             line.StrokeThickness = lineWeight;
                             Canvas.SetZIndex(line, LineZIndex);

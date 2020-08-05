@@ -94,23 +94,21 @@ namespace Dt.Cells.Data
                 RowCount = this.rowIndexes.Count,
                 ColumnCount = this.fields.Length
             };
-            UIAdaptor.InvokeSync(delegate {
-                for (int k = 0; k < this.rowIndexes.Count; k++)
+            for (int k = 0; k < this.rowIndexes.Count; k++)
+            {
+                if (this.rowIndexes[k] != -1)
                 {
-                    if (this.rowIndexes[k] != -1)
+                    for (int i = 0; i < this.fields.Length; i++)
                     {
-                        for (int i = 0; i < this.fields.Length; i++)
+                        string field = this.fields[i];
+                        if (field != null)
                         {
-                            string field = this.fields[i];
-                            if (field != null)
-                            {
-                                object obj2 = this.Connection.GetValue(this.rowIndexes[k], field);
-                                data.SetValue(k, i, obj2);
-                            }
+                            object obj2 = this.Connection.GetValue(this.rowIndexes[k], field);
+                            data.SetValue(k, i, obj2);
                         }
                     }
                 }
-            });
+            }
             return data;
         }
 
@@ -123,27 +121,25 @@ namespace Dt.Cells.Data
                 data.RowCount = this.rowIndexes.Count;
                 data.ColumnCount = this.fields.Length;
                 nonEmpty = this.Connection.GetDirtyRecordIndex();
-                UIAdaptor.InvokeSync(delegate {
-                    for (int k = 0; k < nonEmpty.Count; k++)
+                for (int k = 0; k < nonEmpty.Count; k++)
+                {
+                    int recordIndex = nonEmpty[k];
+                    int row = this.rowIndexes.IndexOf(recordIndex);
+                    if ((row >= 0) && (this.fields != null))
                     {
-                        int recordIndex = nonEmpty[k];
-                        int row = this.rowIndexes.IndexOf(recordIndex);
-                        if ((row >= 0) && (this.fields != null))
+                        List<int> nonEmptyIndexes = this.fields.GetNonEmptyIndexes();
+                        for (int i = 0; i < nonEmptyIndexes.Count; i++)
                         {
-                            List<int> nonEmptyIndexes = this.fields.GetNonEmptyIndexes();
-                            for (int i = 0; i < nonEmptyIndexes.Count; i++)
+                            int column = nonEmptyIndexes[i];
+                            string str = this.fields[column];
+                            if (!string.IsNullOrEmpty(str))
                             {
-                                int column = nonEmptyIndexes[i];
-                                string str = this.fields[column];
-                                if (!string.IsNullOrEmpty(str))
-                                {
-                                    object obj2 = this.Connection.GetValue(recordIndex, str);
-                                    data.SetValue(row, column, obj2);
-                                }
+                                object obj2 = this.Connection.GetValue(recordIndex, str);
+                                data.SetValue(row, column, obj2);
                             }
                         }
                     }
-                });
+                }
             }
             return data;
         }
@@ -260,11 +256,7 @@ namespace Dt.Cells.Data
                 string field = this.fields[column];
                 if (field != null)
                 {
-                    object value = null;
-                    UIAdaptor.InvokeSync(delegate {
-                        value = this.connection.GetValue(dsRow, field);
-                    });
-                    return value;
+                    return connection.GetValue(dsRow, field);
                 }
             }
             return null;

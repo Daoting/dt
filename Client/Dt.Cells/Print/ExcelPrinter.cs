@@ -163,7 +163,7 @@ namespace Dt.Cells.UI
                 // 报表中包含图片,先将Excel导出,再导入。否则，图片打印不出来
                 if (_hasPictures)
                 {
-                    UIAdaptor.InvokeSync(() => { _excel.ShowDecoration = false; });
+                    _excel.ShowDecoration = false;
                     _cachedStream = new MemoryStream();
                     _excel.SaveXmlInternal(_cachedStream);
                     _cachedStream.Seek(0L, SeekOrigin.Begin);
@@ -171,22 +171,19 @@ namespace Dt.Cells.UI
                 }
 
                 Memento memento = new Memento();
-                UIAdaptor.InvokeSync(() =>
-                {
-                    Init(memento);
-                    StretchContent();
-                    src.SetSource(_printDoc.DocumentSource);
-                });
+                Init(memento);
+                StretchContent();
+                src.SetSource(_printDoc.DocumentSource);
 
                 // 打印任务完成时释放资源
-                printTask.Completed += (s, args) => UIAdaptor.InvokeSync(() =>
+                printTask.Completed += (s, args) =>
                 {
                     if (_hasPictures)
                     {
                         // 恢复分页线
                         if (_showDeco)
                         {
-                            UIAdaptor.InvokeSync(() => { _excel.ShowDecoration = true; });
+                            _excel.ShowDecoration = true;
                             _cachedStream.Seek(0L, SeekOrigin.Begin);
                             _excel.OpenXmlInternal(_cachedStream);
                         }
@@ -195,7 +192,7 @@ namespace Dt.Cells.UI
                         _cachedStream = null;
                     }
                     Resume(memento);
-                });
+                };
             });
         }
 

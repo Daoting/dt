@@ -249,11 +249,7 @@ namespace Dt.Cells.Data
                 if (this._negativeFillThemeColorSet && (base.ThemeContext != null))
                 {
                     Windows.UI.Color themeColor = base.ThemeContext.GetThemeColor(this._negativeFillThemeColor);
-                    SolidColorBrush result = null;
-                    UIAdaptor.InvokeSync(delegate {
-                        result = new SolidColorBrush(themeColor);
-                    });
-                    return result;
+                    return new SolidColorBrush(themeColor);
                 }
                 if (this.DataSeries != null)
                 {

@@ -623,80 +623,51 @@ namespace Dt.Cells.Data
 
         private static void SetStyleInfoBorders(IExcelBorder border, StyleInfo styleInfo, Workbook workbook)
         {
-            UIAdaptor.InvokeSync(delegate {
-                if (!border.Left.IsNullOrEmpty())
+            if (!border.Left.IsNullOrEmpty())
+            {
+                BorderLine line = border.Left.ToBorderLine(workbook);
+                if (line != null)
                 {
-                    BorderLine line = border.Left.ToBorderLine(workbook);
-                    if (line != null)
-                    {
-                        styleInfo.BorderLeft = line;
-                    }
+                    styleInfo.BorderLeft = line;
                 }
-                if (!border.Right.IsNullOrEmpty())
+            }
+            if (!border.Right.IsNullOrEmpty())
+            {
+                BorderLine line2 = border.Right.ToBorderLine(workbook);
+                if (line2 != null)
                 {
-                    BorderLine line2 = border.Right.ToBorderLine(workbook);
-                    if (line2 != null)
-                    {
-                        styleInfo.BorderRight = line2;
-                    }
+                    styleInfo.BorderRight = line2;
                 }
-                if (!border.Top.IsNullOrEmpty())
+            }
+            if (!border.Top.IsNullOrEmpty())
+            {
+                BorderLine line3 = border.Top.ToBorderLine(workbook);
+                if (line3 != null)
                 {
-                    BorderLine line3 = border.Top.ToBorderLine(workbook);
-                    if (line3 != null)
-                    {
-                        styleInfo.BorderTop = line3;
-                    }
+                    styleInfo.BorderTop = line3;
                 }
-                if (!border.Bottom.IsNullOrEmpty())
+            }
+            if (!border.Bottom.IsNullOrEmpty())
+            {
+                BorderLine line4 = border.Bottom.ToBorderLine(workbook);
+                if (line4 != null)
                 {
-                    BorderLine line4 = border.Bottom.ToBorderLine(workbook);
-                    if (line4 != null)
-                    {
-                        styleInfo.BorderBottom = line4;
-                    }
+                    styleInfo.BorderBottom = line4;
                 }
-            });
+            }
         }
 
         private static void SetStyleInfoFill(FillPatternType fillPattern, IExcelColor patternColor, IExcelColor patternBackgroundColor, StyleInfo styleInfo, Workbook workbook)
         {
-            UIAdaptor.InvokeSync(delegate {
-                if ((fillPattern == FillPatternType.Solid) && (patternColor != null))
+            if ((fillPattern == FillPatternType.Solid) && (patternColor != null))
+            {
+                if (patternColor.IsThemeColor)
                 {
-                    if (patternColor.IsThemeColor)
-                    {
-                        styleInfo.BackgroundThemeColor = patternColor.GetThemeColorName();
-                    }
-                    else if (((!patternColor.IsRGBColor || (patternColor.Value != 0)) && (!patternColor.IsIndexedColor || (patternColor.Value != 0x40))) && (!patternColor.IsIndexedColor || (patternColor.Value != 0x41)))
-                    {
-                        styleInfo.Background = patternColor.ToBrush(workbook);
-                    }
-                    else if (patternBackgroundColor != null)
-                    {
-                        if (patternBackgroundColor.IsThemeColor)
-                        {
-                            styleInfo.BackgroundThemeColor = patternBackgroundColor.GetThemeColorName();
-                        }
-                        else if (((!patternBackgroundColor.IsRGBColor || (patternBackgroundColor.Value != 0)) && (!patternBackgroundColor.IsIndexedColor || (patternBackgroundColor.Value != 0x40))) && (!patternBackgroundColor.IsIndexedColor || (patternBackgroundColor.Value != 0x41)))
-                        {
-                            styleInfo.Background = patternBackgroundColor.ToBrush(workbook);
-                        }
-                    }
+                    styleInfo.BackgroundThemeColor = patternColor.GetThemeColorName();
                 }
-                else if ((patternBackgroundColor != null) && (((patternBackgroundColor.IsRGBColor && (patternBackgroundColor.Value == 0)) || (patternBackgroundColor.IsIndexedColor && (patternBackgroundColor.Value == 0x40))) || (patternBackgroundColor.IsIndexedColor && (patternBackgroundColor.Value == 0x41))))
+                else if (((!patternColor.IsRGBColor || (patternColor.Value != 0)) && (!patternColor.IsIndexedColor || (patternColor.Value != 0x40))) && (!patternColor.IsIndexedColor || (patternColor.Value != 0x41)))
                 {
-                    if (patternColor != null)
-                    {
-                        if (patternColor.IsThemeColor)
-                        {
-                            styleInfo.BackgroundThemeColor = patternColor.GetThemeColorName();
-                        }
-                        else if (((!patternColor.IsRGBColor || (patternColor.Value != 0)) && (!patternColor.IsIndexedColor || (patternColor.Value != 0x40))) && (!patternColor.IsIndexedColor || (patternColor.Value != 0x41)))
-                        {
-                            styleInfo.Background = patternColor.ToBrush(workbook);
-                        }
-                    }
+                    styleInfo.Background = patternColor.ToBrush(workbook);
                 }
                 else if (patternBackgroundColor != null)
                 {
@@ -704,12 +675,15 @@ namespace Dt.Cells.Data
                     {
                         styleInfo.BackgroundThemeColor = patternBackgroundColor.GetThemeColorName();
                     }
-                    else
+                    else if (((!patternBackgroundColor.IsRGBColor || (patternBackgroundColor.Value != 0)) && (!patternBackgroundColor.IsIndexedColor || (patternBackgroundColor.Value != 0x40))) && (!patternBackgroundColor.IsIndexedColor || (patternBackgroundColor.Value != 0x41)))
                     {
                         styleInfo.Background = patternBackgroundColor.ToBrush(workbook);
                     }
                 }
-                else if ((patternBackgroundColor == null) && (patternColor != null))
+            }
+            else if ((patternBackgroundColor != null) && (((patternBackgroundColor.IsRGBColor && (patternBackgroundColor.Value == 0)) || (patternBackgroundColor.IsIndexedColor && (patternBackgroundColor.Value == 0x40))) || (patternBackgroundColor.IsIndexedColor && (patternBackgroundColor.Value == 0x41))))
+            {
+                if (patternColor != null)
                 {
                     if (patternColor.IsThemeColor)
                     {
@@ -720,62 +694,82 @@ namespace Dt.Cells.Data
                         styleInfo.Background = patternColor.ToBrush(workbook);
                     }
                 }
-            });
+            }
+            else if (patternBackgroundColor != null)
+            {
+                if (patternBackgroundColor.IsThemeColor)
+                {
+                    styleInfo.BackgroundThemeColor = patternBackgroundColor.GetThemeColorName();
+                }
+                else
+                {
+                    styleInfo.Background = patternBackgroundColor.ToBrush(workbook);
+                }
+            }
+            else if ((patternBackgroundColor == null) && (patternColor != null))
+            {
+                if (patternColor.IsThemeColor)
+                {
+                    styleInfo.BackgroundThemeColor = patternColor.GetThemeColorName();
+                }
+                else if (((!patternColor.IsRGBColor || (patternColor.Value != 0)) && (!patternColor.IsIndexedColor || (patternColor.Value != 0x40))) && (!patternColor.IsIndexedColor || (patternColor.Value != 0x41)))
+                {
+                    styleInfo.Background = patternColor.ToBrush(workbook);
+                }
+            }
         }
 
         private static void SetStyleInfoFont(IExcelFont font, StyleInfo styleInfo, Workbook workbook)
         {
-            UIAdaptor.InvokeSync(delegate {
-                string fontFamilyName = GetFontFamilyName(font);
-                if (!string.IsNullOrWhiteSpace(fontFamilyName))
+            string fontFamilyName = GetFontFamilyName(font);
+            if (!string.IsNullOrWhiteSpace(fontFamilyName))
+            {
+                styleInfo.FontFamily = new FontFamily(fontFamilyName);
+            }
+            if (font.FontSize > 0.0)
+            {
+                styleInfo.FontSize = (float)UnitHelper.PointToPixel(font.FontSize);
+            }
+            if (font.IsItalic)
+            {
+                styleInfo.FontStyle = FontStyle.Italic;
+            }
+            else
+            {
+                styleInfo.FontStyle = FontStyle.Normal;
+            }
+            if (font.IsBold)
+            {
+                styleInfo.FontWeight = FontWeights.Bold;
+            }
+            else
+            {
+                styleInfo.FontWeight = FontWeights.Normal;
+            }
+            if (font.FontColor != null)
+            {
+                if (font.FontColor.IsThemeColor)
                 {
-                    styleInfo.FontFamily = new FontFamily(fontFamilyName);
-                }
-                if (font.FontSize > 0.0)
-                {
-                    styleInfo.FontSize = (float) UnitHelper.PointToPixel(font.FontSize);
-                }
-                if (font.IsItalic)
-                {
-                    styleInfo.FontStyle = FontStyle.Italic;
+                    styleInfo.ForegroundThemeColor = font.FontColor.GetThemeColorName();
                 }
                 else
                 {
-                    styleInfo.FontStyle = FontStyle.Normal;
+                    styleInfo.Foreground = font.FontColor.ToBrush(workbook);
                 }
-                if (font.IsBold)
-                {
-                    styleInfo.FontWeight = FontWeights.Bold;
-                }
-                else
-                {
-                    styleInfo.FontWeight = FontWeights.Normal;
-                }
-                if (font.FontColor != null)
-                {
-                    if (font.FontColor.IsThemeColor)
-                    {
-                        styleInfo.ForegroundThemeColor = font.FontColor.GetThemeColorName();
-                    }
-                    else
-                    {
-                        styleInfo.Foreground = font.FontColor.ToBrush(workbook);
-                    }
-                }
-                styleInfo.Strikethrough = font.IsStrikeOut;
-                if (font.UnderLineStyle != UnderLineStyle.None)
-                {
-                    styleInfo.Underline = true;
-                }
-                if (font.FontScheme == FontSchemeCategory.Major)
-                {
-                    styleInfo.FontTheme = "Headings";
-                }
-                else if (font.FontScheme == FontSchemeCategory.Minor)
-                {
-                    styleInfo.FontTheme = "Body";
-                }
-            });
+            }
+            styleInfo.Strikethrough = font.IsStrikeOut;
+            if (font.UnderLineStyle != UnderLineStyle.None)
+            {
+                styleInfo.Underline = true;
+            }
+            if (font.FontScheme == FontSchemeCategory.Major)
+            {
+                styleInfo.FontTheme = "Headings";
+            }
+            else if (font.FontScheme == FontSchemeCategory.Minor)
+            {
+                styleInfo.FontTheme = "Body";
+            }
         }
 
         private static BorderLine ToBorderLine(this IExcelBorderSide borderSide, Workbook workbook)
@@ -798,14 +792,8 @@ namespace Dt.Cells.Data
         internal static Brush ToBrush(this IExcelColor excelColor, Workbook workbook)
         {
             if (excelColor == null)
-            {
                 return null;
-            }
-            Brush result = null;
-            UIAdaptor.InvokeSync(delegate {
-                result = new SolidColorBrush(Dt.Cells.Data.ColorHelper.GetRGBColor(workbook, excelColor));
-            });
-            return result;
+            return new SolidColorBrush(Dt.Cells.Data.ColorHelper.GetRGBColor(workbook, excelColor));
         }
 
         internal static StyleInfo ToCellStyleInfo(this IDifferentialFormatting dxf, Workbook workbook)
@@ -815,114 +803,110 @@ namespace Dt.Cells.Data
                 return null;
             }
             StyleInfo result = new StyleInfo();
-            UIAdaptor.InvokeSync(delegate {
-                GeneralFormatter formatter = null;
-                if ((dxf.NumberFormat != null) && (dxf.NumberFormat.NumberFormatCode != null))
+            GeneralFormatter formatter = null;
+            if ((dxf.NumberFormat != null) && (dxf.NumberFormat.NumberFormatCode != null))
+            {
+                result.Formatter = new GeneralFormatter(dxf.NumberFormat.NumberFormatCode);
+            }
+            if ((formatter != null) && (formatter.FormatString != dxf.NumberFormat.NumberFormatCode))
+            {
+                ExtendedNumberFormatHelper.UpdateFormatCodeTable(formatter.FormatString, dxf.NumberFormat.NumberFormatCode);
+            }
+            if (dxf.Font != null)
+            {
+                SetStyleInfoFont(dxf.Font, result, workbook);
+                if ((result.FontFamily != null) && (result.FontFamily.Source == DefaultStyleCollection.DefaultFontFamily.Source))
                 {
-                    result.Formatter = new GeneralFormatter(dxf.NumberFormat.NumberFormatCode);
+                    result.ResetFontFamily();
                 }
-                if ((formatter != null) && (formatter.FormatString != dxf.NumberFormat.NumberFormatCode))
+            }
+            if (dxf.Alignment != null)
+            {
+                result.TextIndent = dxf.Alignment.IndentationLevel;
+                if (result.TextIndent > 0)
                 {
-                    ExtendedNumberFormatHelper.UpdateFormatCodeTable(formatter.FormatString, dxf.NumberFormat.NumberFormatCode);
+                    result.TextIndent *= 10;
                 }
-                if (dxf.Font != null)
-                {
-                    SetStyleInfoFont(dxf.Font, result, workbook);
-                    if ((result.FontFamily != null) && (result.FontFamily.Source == DefaultStyleCollection.DefaultFontFamily.Source))
-                    {
-                        result.ResetFontFamily();
-                    }
-                }
-                if (dxf.Alignment != null)
-                {
-                    result.TextIndent = dxf.Alignment.IndentationLevel;
-                    if (result.TextIndent > 0)
-                    {
-                        result.TextIndent *= 10;
-                    }
-                    result.WordWrap = dxf.Alignment.IsTextWrapped;
-                    result.HorizontalAlignment = dxf.Alignment.HorizontalAlignment.ToHorizontalAlignment();
-                    result.VerticalAlignment = dxf.Alignment.VerticalAlignment.ToVerticalAlignment();
-                }
-                if (dxf.Border != null)
-                {
-                    SetStyleInfoBorders(dxf.Border, result, workbook);
-                }
-                if (dxf.Fill != null)
-                {
-                    SetStyleInfoFill(dxf.Fill.Item1, dxf.Fill.Item2, dxf.Fill.Item3, result, workbook);
-                }
-            });
+                result.WordWrap = dxf.Alignment.IsTextWrapped;
+                result.HorizontalAlignment = dxf.Alignment.HorizontalAlignment.ToHorizontalAlignment();
+                result.VerticalAlignment = dxf.Alignment.VerticalAlignment.ToVerticalAlignment();
+            }
+            if (dxf.Border != null)
+            {
+                SetStyleInfoBorders(dxf.Border, result, workbook);
+            }
+            if (dxf.Fill != null)
+            {
+                SetStyleInfoFill(dxf.Fill.Item1, dxf.Fill.Item2, dxf.Fill.Item3, result, workbook);
+            }
             return result;
         }
 
         internal static StyleInfo ToCellStyleInfo(this IExtendedFormat format, Workbook workbook)
         {
             StyleInfo result = null;
-            UIAdaptor.InvokeSync(delegate {
-                if (format == null)
+            if (format == null)
+            {
+                result = null;
+            }
+            result = new StyleInfo();
+            if ((!format.IsStyleFormat || (format.IsStyleFormat && (!format.ApplyFont.HasValue || format.ApplyFont.Value))) && ((format.Font != null) && (format.Font != null)))
+            {
+                SetStyleInfoFont(format.Font, result, workbook);
+            }
+            if (!format.IsStyleFormat || (format.IsStyleFormat && (!format.ApplyProtection.HasValue || format.ApplyProtection.Value)))
+            {
+                result.Locked = format.IsLocked;
+            }
+            if (!format.IsStyleFormat || (format.IsStyleFormat && (!format.ApplyAlignment.HasValue || format.ApplyAlignment.Value)))
+            {
+                result.TextIndent = format.Indent;
+                if (result.TextIndent > 0)
                 {
-                    result = null;
+                    result.TextIndent *= 10;
                 }
-                result = new StyleInfo();
-                if ((!format.IsStyleFormat || (format.IsStyleFormat && (!format.ApplyFont.HasValue || format.ApplyFont.Value))) && ((format.Font != null) && (format.Font != null)))
+                result.WordWrap = format.IsWordWrap;
+                result.VerticalAlignment = format.VerticalAlign.ToVerticalAlignment();
+                result.HorizontalAlignment = format.HorizontalAlign.ToHorizontalAlignment();
+            }
+            if (format.Border != null)
+            {
+                IExcelBorder border = format.Border;
+                if ((format.IsStyleFormat && format.ApplyBorder.HasValue) && !format.ApplyBorder.Value)
                 {
-                    SetStyleInfoFont(format.Font, result, workbook);
+                    border = null;
                 }
-                if (!format.IsStyleFormat || (format.IsStyleFormat && (!format.ApplyProtection.HasValue || format.ApplyProtection.Value)))
+                if (border != null)
                 {
-                    result.Locked = format.IsLocked;
+                    SetStyleInfoBorders(border, result, workbook);
                 }
-                if (!format.IsStyleFormat || (format.IsStyleFormat && (!format.ApplyAlignment.HasValue || format.ApplyAlignment.Value)))
-                {
-                    result.TextIndent = format.Indent;
-                    if (result.TextIndent > 0)
-                    {
-                        result.TextIndent *= 10;
-                    }
-                    result.WordWrap = format.IsWordWrap;
-                    result.VerticalAlignment = format.VerticalAlign.ToVerticalAlignment();
-                    result.HorizontalAlignment = format.HorizontalAlign.ToHorizontalAlignment();
-                }
-                if (format.Border != null)
-                {
-                    IExcelBorder border = format.Border;
-                    if ((format.IsStyleFormat && format.ApplyBorder.HasValue) && !format.ApplyBorder.Value)
-                    {
-                        border = null;
-                    }
-                    if (border != null)
-                    {
-                        SetStyleInfoBorders(border, result, workbook);
-                    }
-                }
-                if ((format.FillPattern != FillPatternType.None) && (!format.IsStyleFormat || (format.IsStyleFormat && (!format.ApplyFill.HasValue || format.ApplyFill.Value))))
-                {
-                    SetStyleInfoFill(format.FillPattern, format.PatternColor, format.PatternBackgroundColor, result, workbook);
-                }
-                if (format.IsShrinkToFit)
-                {
-                    result.ShrinkToFit = true;
-                }
-                string formatCode = ExtendedNumberFormatHelper.GetFormatCode(format);
-                IFormatter formatter = null;
-                if (formatCode == "@")
-                {
-                    formatter = new GeneralFormatter(formatCode);
-                }
-                else
-                {
-                    formatter = new AutoFormatter(new GeneralFormatter(formatCode));
-                }
-                if (formatter.FormatString != formatCode)
-                {
-                    ExtendedNumberFormatHelper.UpdateFormatCodeTable(formatter.FormatString, formatCode);
-                }
-                if (!format.IsStyleFormat || (format.IsStyleFormat && (!format.ApplyNumberFormat.HasValue || format.ApplyNumberFormat.Value)))
-                {
-                    result.Formatter = formatter;
-                }
-            });
+            }
+            if ((format.FillPattern != FillPatternType.None) && (!format.IsStyleFormat || (format.IsStyleFormat && (!format.ApplyFill.HasValue || format.ApplyFill.Value))))
+            {
+                SetStyleInfoFill(format.FillPattern, format.PatternColor, format.PatternBackgroundColor, result, workbook);
+            }
+            if (format.IsShrinkToFit)
+            {
+                result.ShrinkToFit = true;
+            }
+            string formatCode = ExtendedNumberFormatHelper.GetFormatCode(format);
+            IFormatter formatter = null;
+            if (formatCode == "@")
+            {
+                formatter = new GeneralFormatter(formatCode);
+            }
+            else
+            {
+                formatter = new AutoFormatter(new GeneralFormatter(formatCode));
+            }
+            if (formatter.FormatString != formatCode)
+            {
+                ExtendedNumberFormatHelper.UpdateFormatCodeTable(formatter.FormatString, formatCode);
+            }
+            if (!format.IsStyleFormat || (format.IsStyleFormat && (!format.ApplyNumberFormat.HasValue || format.ApplyNumberFormat.Value)))
+            {
+                result.Formatter = formatter;
+            }
             return result;
         }
 
@@ -1077,7 +1061,6 @@ namespace Dt.Cells.Data
 
         internal static IDifferentialFormatting ToDifferentialFormatting(this StyleInfo styleInfo, Workbook workbook)
         {
-            Action action = null;
             DifferentialFormatting result = new DifferentialFormatting();
             if ((styleInfo.Formatter != null) && !string.IsNullOrWhiteSpace(styleInfo.Formatter.FormatString))
             {
@@ -1155,67 +1138,61 @@ namespace Dt.Cells.Data
             }
             if (((styleInfo.IsFontFamilySet() || styleInfo.IsFontSizeSet()) || (styleInfo.IsFontStyleSet() || styleInfo.IsFontWeightSet())) || ((styleInfo.IsForegroundSet() || styleInfo.IsForegroundThemeColorSet()) || (styleInfo.IsFontThemeSet() || styleInfo.IsUnderlineSet())))
             {
-                if (action == null)
+                result.Font = new ExcelFont(DefaultStyleCollection.DefaultFontFamily.Source, null, ExcelFontFamily.Auto);
+                if (styleInfo.IsFontFamilySet())
                 {
-                    action = delegate {
-                        result.Font = new ExcelFont(DefaultStyleCollection.DefaultFontFamily.Source, null, ExcelFontFamily.Auto);
-                        if (styleInfo.IsFontFamilySet())
-                        {
-                            result.Font.FontName = styleInfo.FontFamily.GetFontName();
-                        }
-                        if (result.Font.FontName == workbook.CurrentThemeName)
-                        {
-                            result.Font.FontName = null;
-                        }
-                        result.Font.FontFamily = ExcelFontFamily.Auto;
-                        if (styleInfo.IsFontSizeSet())
-                        {
-                            result.Font.FontSize = UnitHelper.PixelToPoint(styleInfo.FontSize);
-                        }
-                        else
-                        {
-                            result.Font.FontSize = 0.0;
-                        }
-                        if (styleInfo.IsFontStyleSet() && (styleInfo.FontStyle == FontStyle.Italic))
-                        {
-                            result.Font.IsItalic = true;
-                        }
-                        if (styleInfo.IsFontWeightSet() && styleInfo.FontWeight.Equals(FontWeights.Bold))
-                        {
-                            result.Font.IsBold = true;
-                        }
-                        if (styleInfo.IsForegroundThemeColorSet())
-                        {
-                            result.Font.FontColor = styleInfo.ForegroundThemeColor.GetExcelThemeColor();
-                        }
-                        else if (styleInfo.IsForegroundSet() && (styleInfo.Foreground is SolidColorBrush))
-                        {
-                            Windows.UI.Color color = (styleInfo.Foreground as SolidColorBrush).Color;
-                            color = Dt.Cells.Data.ColorHelper.MixTranslucentColor(Colors.White, color);
-                            result.Font.FontColor = new ExcelColor(GcColor.FromArgb(color.A, color.R, color.G, color.B));
-                        }
-                        if (styleInfo.IsFontThemeSet())
-                        {
-                            if (styleInfo.FontTheme.ToUpperInvariant() == "Headings".ToUpperInvariant())
-                            {
-                                result.Font.FontScheme = FontSchemeCategory.Major;
-                            }
-                            else if (styleInfo.FontTheme.ToUpperInvariant() == "Body".ToUpperInvariant())
-                            {
-                                result.Font.FontScheme = FontSchemeCategory.Minor;
-                            }
-                        }
-                        if (styleInfo.IsUnderlineSet() && styleInfo.Underline)
-                        {
-                            result.Font.UnderLineStyle = UnderLineStyle.Single;
-                        }
-                        if (styleInfo.IsStrikethroughSet() && styleInfo.Strikethrough)
-                        {
-                            result.Font.IsStrikeOut = true;
-                        }
-                    };
+                    result.Font.FontName = styleInfo.FontFamily.GetFontName();
                 }
-                UIAdaptor.InvokeSync(action);
+                if (result.Font.FontName == workbook.CurrentThemeName)
+                {
+                    result.Font.FontName = null;
+                }
+                result.Font.FontFamily = ExcelFontFamily.Auto;
+                if (styleInfo.IsFontSizeSet())
+                {
+                    result.Font.FontSize = UnitHelper.PixelToPoint(styleInfo.FontSize);
+                }
+                else
+                {
+                    result.Font.FontSize = 0.0;
+                }
+                if (styleInfo.IsFontStyleSet() && (styleInfo.FontStyle == FontStyle.Italic))
+                {
+                    result.Font.IsItalic = true;
+                }
+                if (styleInfo.IsFontWeightSet() && styleInfo.FontWeight.Equals(FontWeights.Bold))
+                {
+                    result.Font.IsBold = true;
+                }
+                if (styleInfo.IsForegroundThemeColorSet())
+                {
+                    result.Font.FontColor = styleInfo.ForegroundThemeColor.GetExcelThemeColor();
+                }
+                else if (styleInfo.IsForegroundSet() && (styleInfo.Foreground is SolidColorBrush))
+                {
+                    Windows.UI.Color color = (styleInfo.Foreground as SolidColorBrush).Color;
+                    color = Dt.Cells.Data.ColorHelper.MixTranslucentColor(Colors.White, color);
+                    result.Font.FontColor = new ExcelColor(GcColor.FromArgb(color.A, color.R, color.G, color.B));
+                }
+                if (styleInfo.IsFontThemeSet())
+                {
+                    if (styleInfo.FontTheme.ToUpperInvariant() == "Headings".ToUpperInvariant())
+                    {
+                        result.Font.FontScheme = FontSchemeCategory.Major;
+                    }
+                    else if (styleInfo.FontTheme.ToUpperInvariant() == "Body".ToUpperInvariant())
+                    {
+                        result.Font.FontScheme = FontSchemeCategory.Minor;
+                    }
+                }
+                if (styleInfo.IsUnderlineSet() && styleInfo.Underline)
+                {
+                    result.Font.UnderLineStyle = UnderLineStyle.Single;
+                }
+                if (styleInfo.IsStrikethroughSet() && styleInfo.Strikethrough)
+                {
+                    result.Font.IsStrikeOut = true;
+                }
             }
             if ((styleInfo.IsVerticalAlignmentSet() || styleInfo.IsHorizontalAlignmentSet()) || (styleInfo.IsWordWrapSet() || styleInfo.IsTextIndentSet()))
             {
@@ -1932,151 +1909,149 @@ namespace Dt.Cells.Data
         internal static IExtendedFormat ToExtendedFormat(this StyleInfo styleInfo, Workbook workbook)
         {
             IExtendedFormat extendedFormat = null;
-            UIAdaptor.InvokeSync(delegate {
-                if (styleInfo == null)
+            if (styleInfo == null)
+            {
+                extendedFormat = new ExtendedFormat();
+            }
+            else
+            {
+                ExtendedFormat format = new ExtendedFormat();
+                if ((styleInfo.Formatter != null) && !string.IsNullOrWhiteSpace(styleInfo.Formatter.FormatString))
                 {
-                    extendedFormat = new ExtendedFormat();
+                    string excelFormatCode = ExtendedNumberFormatHelper.GetExcelFormatCode(styleInfo.Formatter.FormatString);
+                    bool isBuiltIn = true;
+                    int id = ExtendedNumberFormatHelper.GetFormatId(excelFormatCode, ref isBuiltIn);
+                    if (isBuiltIn)
+                    {
+                        format.NumberFormatIndex = id;
+                    }
+                    else
+                    {
+                        format.NumberFormat = new ExcelNumberFormat(id, excelFormatCode);
+                    }
+                    if (id > 0)
+                    {
+                        format.ApplyNumberFormat = true;
+                    }
                 }
                 else
                 {
-                    ExtendedFormat format = new ExtendedFormat();
-                    if ((styleInfo.Formatter != null) && !string.IsNullOrWhiteSpace(styleInfo.Formatter.FormatString))
-                    {
-                        string excelFormatCode = ExtendedNumberFormatHelper.GetExcelFormatCode(styleInfo.Formatter.FormatString);
-                        bool isBuiltIn = true;
-                        int id = ExtendedNumberFormatHelper.GetFormatId(excelFormatCode, ref isBuiltIn);
-                        if (isBuiltIn)
-                        {
-                            format.NumberFormatIndex = id;
-                        }
-                        else
-                        {
-                            format.NumberFormat = new ExcelNumberFormat(id, excelFormatCode);
-                        }
-                        if (id > 0)
-                        {
-                            format.ApplyNumberFormat = true;
-                        }
-                    }
-                    else
-                    {
-                        format.NumberFormatIndex = 0;
-                    }
-                    if (styleInfo.IsBackgroundSet() || styleInfo.IsBackgroundThemeColorSet())
-                    {
-                        if (styleInfo.IsBackgroundThemeColorSet())
-                        {
-                            format.PatternBackgroundColor = new ExcelColor(ExcelColorType.Indexed, 0x40, 0.0);
-                            format.PatternColor = styleInfo.BackgroundThemeColor.GetExcelThemeColor();
-                        }
-                        else if ((styleInfo.Background is SolidColorBrush) && (Dt.Cells.Data.ColorHelper.ToArgb((styleInfo.Background as SolidColorBrush).Color) != 0xffffff))
-                        {
-                            Windows.UI.Color color = Dt.Cells.Data.ColorHelper.MixTranslucentColor(Colors.White, (styleInfo.Background as SolidColorBrush).Color);
-                            format.PatternColor = new ExcelColor(GcColor.FromArgb(color.A, color.R, color.G, color.B));
-                        }
-                        if (format.PatternColor != null)
-                        {
-                            format.FillPattern = FillPatternType.Solid;
-                            format.ApplyFill = true;
-                        }
-                    }
-                    if ((styleInfo.IsBorderLeftSet() || styleInfo.IsBorderRightSet()) || (styleInfo.IsBorderTopSet() || styleInfo.IsBorderBottomSet()))
-                    {
-                        format.Border = new ExcelBorder();
-                        if (styleInfo.IsBorderLeftSet())
-                        {
-                            format.Border.Left = styleInfo.BorderLeft.ToExcelBorderSide(workbook);
-                        }
-                        if (styleInfo.IsBorderRightSet())
-                        {
-                            format.Border.Right = styleInfo.BorderRight.ToExcelBorderSide(workbook);
-                        }
-                        if (styleInfo.IsBorderTopSet())
-                        {
-                            format.Border.Top = styleInfo.BorderTop.ToExcelBorderSide(workbook);
-                        }
-                        if (styleInfo.IsBorderBottomSet())
-                        {
-                            format.Border.Bottom = styleInfo.BorderBottom.ToExcelBorderSide(workbook);
-                        }
-                        format.ApplyBorder = true;
-                    }
-                    if (((styleInfo.IsFontFamilySet() || styleInfo.IsFontSizeSet()) || (styleInfo.IsFontStyleSet() || styleInfo.IsFontWeightSet())) || ((styleInfo.IsForegroundSet() || styleInfo.IsForegroundThemeColorSet()) || (styleInfo.IsFontThemeSet() || styleInfo.IsUnderlineSet())))
-                    {
-                        format.ApplyFont = true;
-                        string fontName = workbook.CurrentTheme.BodyFontName;
-                        if (styleInfo.FontFamily != null)
-                        {
-                            fontName = styleInfo.FontFamily.GetFontName();
-                        }
-                        if (string.IsNullOrEmpty(fontName))
-                        {
-                            fontName = DefaultStyleCollection.DefaultFontFamily.Source;
-                        }
-                        format.Font = new ExcelFont(fontName.Trim(), null, ExcelFontFamily.Auto);
-                        if (styleInfo.IsFontSizeSet())
-                        {
-                            format.Font.FontSize = UnitHelper.PixelToPoint(styleInfo.FontSize);
-                        }
-                        if (styleInfo.IsFontStyleSet() && (styleInfo.FontStyle == FontStyle.Italic))
-                        {
-                            format.Font.IsItalic = true;
-                        }
-                        if (styleInfo.IsFontWeightSet() && styleInfo.FontWeight.Equals(FontWeights.Bold))
-                        {
-                            format.Font.IsBold = true;
-                        }
-                        if (styleInfo.Underline)
-                        {
-                            format.Font.UnderLineStyle = UnderLineStyle.Single;
-                        }
-                        if (styleInfo.IsForegroundThemeColorSet())
-                        {
-                            format.Font.FontColor = styleInfo.ForegroundThemeColor.GetExcelThemeColor();
-                        }
-                        else if (styleInfo.IsForegroundSet() && (styleInfo.Foreground is SolidColorBrush))
-                        {
-                            Windows.UI.Color color2 = Dt.Cells.Data.ColorHelper.MixTranslucentColor(Colors.White, (styleInfo.Foreground as SolidColorBrush).Color);
-                            format.Font.FontColor = new ExcelColor(GcColor.FromArgb(color2.A, color2.R, color2.G, color2.B));
-                        }
-                        format.Font.IsStrikeOut = styleInfo.Strikethrough;
-                        if (styleInfo.IsFontThemeSet())
-                        {
-                            if (styleInfo.FontTheme.ToUpperInvariant() == "Headings".ToUpperInvariant())
-                            {
-                                format.Font.FontScheme = FontSchemeCategory.Major;
-                            }
-                            else if (styleInfo.FontTheme.ToUpperInvariant() == "Body".ToUpperInvariant())
-                            {
-                                format.Font.FontScheme = FontSchemeCategory.Minor;
-                            }
-                        }
-                    }
-                    if (styleInfo.IsShrinkToFitSet() && styleInfo.ShrinkToFit)
-                    {
-                        format.IsShrinkToFit = true;
-                    }
-                    if (styleInfo.IsLockedSet())
-                    {
-                        format.IsLocked = styleInfo.Locked;
-                    }
-                    else
-                    {
-                        format.IsLocked = true;
-                    }
-                    if (styleInfo.IsWordWrapSet())
-                    {
-                        format.IsWordWrap = styleInfo.WordWrap;
-                    }
-                    if (styleInfo.IsTextIndentSet())
-                    {
-                        format.Indent = (byte) Math.Ceiling((double) (((double) styleInfo.TextIndent) / 10.0));
-                    }
-                    format.VerticalAlign = styleInfo.VerticalAlignment.ToExcelVerticalAlignment();
-                    format.HorizontalAlign = styleInfo.HorizontalAlignment.ToExcelHorizontalAlignment();
-                    extendedFormat = format;
+                    format.NumberFormatIndex = 0;
                 }
-            });
+                if (styleInfo.IsBackgroundSet() || styleInfo.IsBackgroundThemeColorSet())
+                {
+                    if (styleInfo.IsBackgroundThemeColorSet())
+                    {
+                        format.PatternBackgroundColor = new ExcelColor(ExcelColorType.Indexed, 0x40, 0.0);
+                        format.PatternColor = styleInfo.BackgroundThemeColor.GetExcelThemeColor();
+                    }
+                    else if ((styleInfo.Background is SolidColorBrush) && (Dt.Cells.Data.ColorHelper.ToArgb((styleInfo.Background as SolidColorBrush).Color) != 0xffffff))
+                    {
+                        Windows.UI.Color color = Dt.Cells.Data.ColorHelper.MixTranslucentColor(Colors.White, (styleInfo.Background as SolidColorBrush).Color);
+                        format.PatternColor = new ExcelColor(GcColor.FromArgb(color.A, color.R, color.G, color.B));
+                    }
+                    if (format.PatternColor != null)
+                    {
+                        format.FillPattern = FillPatternType.Solid;
+                        format.ApplyFill = true;
+                    }
+                }
+                if ((styleInfo.IsBorderLeftSet() || styleInfo.IsBorderRightSet()) || (styleInfo.IsBorderTopSet() || styleInfo.IsBorderBottomSet()))
+                {
+                    format.Border = new ExcelBorder();
+                    if (styleInfo.IsBorderLeftSet())
+                    {
+                        format.Border.Left = styleInfo.BorderLeft.ToExcelBorderSide(workbook);
+                    }
+                    if (styleInfo.IsBorderRightSet())
+                    {
+                        format.Border.Right = styleInfo.BorderRight.ToExcelBorderSide(workbook);
+                    }
+                    if (styleInfo.IsBorderTopSet())
+                    {
+                        format.Border.Top = styleInfo.BorderTop.ToExcelBorderSide(workbook);
+                    }
+                    if (styleInfo.IsBorderBottomSet())
+                    {
+                        format.Border.Bottom = styleInfo.BorderBottom.ToExcelBorderSide(workbook);
+                    }
+                    format.ApplyBorder = true;
+                }
+                if (((styleInfo.IsFontFamilySet() || styleInfo.IsFontSizeSet()) || (styleInfo.IsFontStyleSet() || styleInfo.IsFontWeightSet())) || ((styleInfo.IsForegroundSet() || styleInfo.IsForegroundThemeColorSet()) || (styleInfo.IsFontThemeSet() || styleInfo.IsUnderlineSet())))
+                {
+                    format.ApplyFont = true;
+                    string fontName = workbook.CurrentTheme.BodyFontName;
+                    if (styleInfo.FontFamily != null)
+                    {
+                        fontName = styleInfo.FontFamily.GetFontName();
+                    }
+                    if (string.IsNullOrEmpty(fontName))
+                    {
+                        fontName = DefaultStyleCollection.DefaultFontFamily.Source;
+                    }
+                    format.Font = new ExcelFont(fontName.Trim(), null, ExcelFontFamily.Auto);
+                    if (styleInfo.IsFontSizeSet())
+                    {
+                        format.Font.FontSize = UnitHelper.PixelToPoint(styleInfo.FontSize);
+                    }
+                    if (styleInfo.IsFontStyleSet() && (styleInfo.FontStyle == FontStyle.Italic))
+                    {
+                        format.Font.IsItalic = true;
+                    }
+                    if (styleInfo.IsFontWeightSet() && styleInfo.FontWeight.Equals(FontWeights.Bold))
+                    {
+                        format.Font.IsBold = true;
+                    }
+                    if (styleInfo.Underline)
+                    {
+                        format.Font.UnderLineStyle = UnderLineStyle.Single;
+                    }
+                    if (styleInfo.IsForegroundThemeColorSet())
+                    {
+                        format.Font.FontColor = styleInfo.ForegroundThemeColor.GetExcelThemeColor();
+                    }
+                    else if (styleInfo.IsForegroundSet() && (styleInfo.Foreground is SolidColorBrush))
+                    {
+                        Windows.UI.Color color2 = Dt.Cells.Data.ColorHelper.MixTranslucentColor(Colors.White, (styleInfo.Foreground as SolidColorBrush).Color);
+                        format.Font.FontColor = new ExcelColor(GcColor.FromArgb(color2.A, color2.R, color2.G, color2.B));
+                    }
+                    format.Font.IsStrikeOut = styleInfo.Strikethrough;
+                    if (styleInfo.IsFontThemeSet())
+                    {
+                        if (styleInfo.FontTheme.ToUpperInvariant() == "Headings".ToUpperInvariant())
+                        {
+                            format.Font.FontScheme = FontSchemeCategory.Major;
+                        }
+                        else if (styleInfo.FontTheme.ToUpperInvariant() == "Body".ToUpperInvariant())
+                        {
+                            format.Font.FontScheme = FontSchemeCategory.Minor;
+                        }
+                    }
+                }
+                if (styleInfo.IsShrinkToFitSet() && styleInfo.ShrinkToFit)
+                {
+                    format.IsShrinkToFit = true;
+                }
+                if (styleInfo.IsLockedSet())
+                {
+                    format.IsLocked = styleInfo.Locked;
+                }
+                else
+                {
+                    format.IsLocked = true;
+                }
+                if (styleInfo.IsWordWrapSet())
+                {
+                    format.IsWordWrap = styleInfo.WordWrap;
+                }
+                if (styleInfo.IsTextIndentSet())
+                {
+                    format.Indent = (byte)Math.Ceiling((double)(((double)styleInfo.TextIndent) / 10.0));
+                }
+                format.VerticalAlign = styleInfo.VerticalAlignment.ToExcelVerticalAlignment();
+                format.HorizontalAlign = styleInfo.HorizontalAlignment.ToExcelHorizontalAlignment();
+                extendedFormat = format;
+            }
             return extendedFormat;
         }
 
@@ -2180,60 +2155,58 @@ namespace Dt.Cells.Data
         internal static StyleInfo ToStyleInfo(this TableStyleInfo tableStyleInfo, Workbook workbook)
         {
             StyleInfo result = new StyleInfo();
-            UIAdaptor.InvokeSync(delegate {
-                if (tableStyleInfo.IsBackgroundSet())
-                {
-                    result.Background = tableStyleInfo.Background;
-                }
-                if (tableStyleInfo.IsBackgroundThemeColorSet())
-                {
-                    result.BackgroundThemeColor = tableStyleInfo.BackgroundThemeColor;
-                }
-                if (tableStyleInfo.IsBorderLeftSet())
-                {
-                    result.BorderLeft = tableStyleInfo.BorderLeft;
-                }
-                if (tableStyleInfo.IsBorderRightSet())
-                {
-                    result.BorderRight = tableStyleInfo.BorderRight;
-                }
-                if (tableStyleInfo.IsBorderTopSet())
-                {
-                    result.BorderTop = tableStyleInfo.BorderTop;
-                }
-                if (tableStyleInfo.IsBorderBottomSet())
-                {
-                    result.BorderBottom = tableStyleInfo.BorderBottom;
-                }
-                if (tableStyleInfo.IsBorderVerticalSet())
-                {
-                    result.BorderVertical = tableStyleInfo.BorderVertical;
-                }
-                if (tableStyleInfo.IsBorderHorizontalSet())
-                {
-                    result.BorderHorizontal = tableStyleInfo.BorderHorizontal;
-                }
-                if (tableStyleInfo.IsFontWeightSet())
-                {
-                    result.FontWeight = tableStyleInfo.FontWeight;
-                }
-                if (tableStyleInfo.IsFontStyleSet())
-                {
-                    result.FontStyle = tableStyleInfo.FontStyle;
-                }
-                if (tableStyleInfo.IsFontStretchSet())
-                {
-                    result.FontStretch = tableStyleInfo.FontStretch;
-                }
-                if (tableStyleInfo.IsForegroundSet())
-                {
-                    result.Foreground = tableStyleInfo.Foreground;
-                }
-                if (tableStyleInfo.IsForegroundThemeColorSet())
-                {
-                    result.ForegroundThemeColor = tableStyleInfo.ForegroundThemeColor;
-                }
-            });
+            if (tableStyleInfo.IsBackgroundSet())
+            {
+                result.Background = tableStyleInfo.Background;
+            }
+            if (tableStyleInfo.IsBackgroundThemeColorSet())
+            {
+                result.BackgroundThemeColor = tableStyleInfo.BackgroundThemeColor;
+            }
+            if (tableStyleInfo.IsBorderLeftSet())
+            {
+                result.BorderLeft = tableStyleInfo.BorderLeft;
+            }
+            if (tableStyleInfo.IsBorderRightSet())
+            {
+                result.BorderRight = tableStyleInfo.BorderRight;
+            }
+            if (tableStyleInfo.IsBorderTopSet())
+            {
+                result.BorderTop = tableStyleInfo.BorderTop;
+            }
+            if (tableStyleInfo.IsBorderBottomSet())
+            {
+                result.BorderBottom = tableStyleInfo.BorderBottom;
+            }
+            if (tableStyleInfo.IsBorderVerticalSet())
+            {
+                result.BorderVertical = tableStyleInfo.BorderVertical;
+            }
+            if (tableStyleInfo.IsBorderHorizontalSet())
+            {
+                result.BorderHorizontal = tableStyleInfo.BorderHorizontal;
+            }
+            if (tableStyleInfo.IsFontWeightSet())
+            {
+                result.FontWeight = tableStyleInfo.FontWeight;
+            }
+            if (tableStyleInfo.IsFontStyleSet())
+            {
+                result.FontStyle = tableStyleInfo.FontStyle;
+            }
+            if (tableStyleInfo.IsFontStretchSet())
+            {
+                result.FontStretch = tableStyleInfo.FontStretch;
+            }
+            if (tableStyleInfo.IsForegroundSet())
+            {
+                result.Foreground = tableStyleInfo.Foreground;
+            }
+            if (tableStyleInfo.IsForegroundThemeColorSet())
+            {
+                result.ForegroundThemeColor = tableStyleInfo.ForegroundThemeColor;
+            }
             return result;
         }
 
@@ -2244,150 +2217,148 @@ namespace Dt.Cells.Data
                 return null;
             }
             TableStyleInfo result = new TableStyleInfo();
-            UIAdaptor.InvokeSync(delegate {
-                if (dxf.Font != null)
+            if (dxf.Font != null)
+            {
+                if (dxf.Font.IsItalic)
                 {
-                    if (dxf.Font.IsItalic)
+                    result.FontStyle = FontStyle.Italic;
+                }
+                else
+                {
+                    result.FontStyle = FontStyle.Normal;
+                }
+                if (dxf.Font.IsBold)
+                {
+                    result.FontWeight = FontWeights.Bold;
+                }
+                else
+                {
+                    result.FontWeight = FontWeights.Normal;
+                }
+                if (dxf.Font.FontColor != null)
+                {
+                    if (dxf.Font.FontColor.IsThemeColor)
                     {
-                        result.FontStyle = FontStyle.Italic;
+                        result.ForegroundThemeColor = dxf.Font.FontColor.GetThemeColorName();
                     }
                     else
                     {
-                        result.FontStyle = FontStyle.Normal;
+                        result.Foreground = dxf.Font.FontColor.ToBrush(workbook);
                     }
-                    if (dxf.Font.IsBold)
+                }
+            }
+            if (dxf.Border != null)
+            {
+                IExcelBorder border = dxf.Border;
+                if (!border.Left.IsNullOrEmpty())
+                {
+                    BorderLine line = border.Left.ToBorderLine(workbook);
+                    if (line != null)
                     {
-                        result.FontWeight = FontWeights.Bold;
+                        result.BorderLeft = line;
+                    }
+                }
+                if (!border.Right.IsNullOrEmpty())
+                {
+                    BorderLine line2 = border.Right.ToBorderLine(workbook);
+                    if (line2 != null)
+                    {
+                        result.BorderRight = line2;
+                    }
+                }
+                if (!border.Top.IsNullOrEmpty())
+                {
+                    BorderLine line3 = border.Top.ToBorderLine(workbook);
+                    if (line3 != null)
+                    {
+                        result.BorderTop = line3;
+                    }
+                }
+                if (!border.Bottom.IsNullOrEmpty())
+                {
+                    BorderLine line4 = border.Bottom.ToBorderLine(workbook);
+                    if (line4 != null)
+                    {
+                        result.BorderBottom = line4;
+                    }
+                }
+                if (border is IExcelTableBorder)
+                {
+                    ExcelTableBorder border2 = border as ExcelTableBorder;
+                    if (!border2.Vertical.IsNullOrEmpty())
+                    {
+                        BorderLine line5 = border2.Vertical.ToBorderLine(workbook);
+                        if (line5 != null)
+                        {
+                            result.BorderVertical = line5;
+                        }
+                    }
+                    if (!border2.Horizontal.IsNullOrEmpty())
+                    {
+                        BorderLine line6 = border2.Horizontal.ToBorderLine(workbook);
+                        if (line6 != null)
+                        {
+                            result.BorderHorizontal = line6;
+                        }
+                    }
+                }
+            }
+            if (dxf.Fill != null)
+            {
+                FillPatternType type = dxf.Fill.Item1;
+                IExcelColor color = dxf.Fill.Item2;
+                IExcelColor color2 = dxf.Fill.Item3;
+                if ((type == FillPatternType.Solid) && (color != null))
+                {
+                    if (color.IsThemeColor)
+                    {
+                        result.BackgroundThemeColor = color.GetThemeColorName();
+                    }
+                    else if (((color.IsRGBColor && (color.Value == 0)) || (color.IsIndexedColor && (color.Value == 0x40))) || (color.IsIndexedColor && (color.Value == 0x41)))
+                    {
+                        if (color2 != null)
+                        {
+                            if (color2.IsThemeColor)
+                            {
+                                result.BackgroundThemeColor = color2.GetThemeColorName();
+                            }
+                            else if (color2.IsRGBColor && (color2.Value != 0))
+                            {
+                                result.Background = color2.ToBrush(workbook);
+                            }
+                        }
                     }
                     else
                     {
-                        result.FontWeight = FontWeights.Normal;
-                    }
-                    if (dxf.Font.FontColor != null)
-                    {
-                        if (dxf.Font.FontColor.IsThemeColor)
-                        {
-                            result.ForegroundThemeColor = dxf.Font.FontColor.GetThemeColorName();
-                        }
-                        else
-                        {
-                            result.Foreground = dxf.Font.FontColor.ToBrush(workbook);
-                        }
+                        result.Background = color.ToBrush(workbook);
                     }
                 }
-                if (dxf.Border != null)
+                else if (((color2.IsRGBColor && (color2.Value == 0)) || (color2.IsIndexedColor && (color2.Value == 0x40))) || (color2.IsIndexedColor && (color2.Value == 0x41)))
                 {
-                    IExcelBorder border = dxf.Border;
-                    if (!border.Left.IsNullOrEmpty())
-                    {
-                        BorderLine line = border.Left.ToBorderLine(workbook);
-                        if (line != null)
-                        {
-                            result.BorderLeft = line;
-                        }
-                    }
-                    if (!border.Right.IsNullOrEmpty())
-                    {
-                        BorderLine line2 = border.Right.ToBorderLine(workbook);
-                        if (line2 != null)
-                        {
-                            result.BorderRight = line2;
-                        }
-                    }
-                    if (!border.Top.IsNullOrEmpty())
-                    {
-                        BorderLine line3 = border.Top.ToBorderLine(workbook);
-                        if (line3 != null)
-                        {
-                            result.BorderTop = line3;
-                        }
-                    }
-                    if (!border.Bottom.IsNullOrEmpty())
-                    {
-                        BorderLine line4 = border.Bottom.ToBorderLine(workbook);
-                        if (line4 != null)
-                        {
-                            result.BorderBottom = line4;
-                        }
-                    }
-                    if (border is IExcelTableBorder)
-                    {
-                        ExcelTableBorder border2 = border as ExcelTableBorder;
-                        if (!border2.Vertical.IsNullOrEmpty())
-                        {
-                            BorderLine line5 = border2.Vertical.ToBorderLine(workbook);
-                            if (line5 != null)
-                            {
-                                result.BorderVertical = line5;
-                            }
-                        }
-                        if (!border2.Horizontal.IsNullOrEmpty())
-                        {
-                            BorderLine line6 = border2.Horizontal.ToBorderLine(workbook);
-                            if (line6 != null)
-                            {
-                                result.BorderHorizontal = line6;
-                            }
-                        }
-                    }
-                }
-                if (dxf.Fill != null)
-                {
-                    FillPatternType type = dxf.Fill.Item1;
-                    IExcelColor color = dxf.Fill.Item2;
-                    IExcelColor color2 = dxf.Fill.Item3;
-                    if ((type == FillPatternType.Solid) && (color != null))
+                    if (color != null)
                     {
                         if (color.IsThemeColor)
                         {
                             result.BackgroundThemeColor = color.GetThemeColorName();
                         }
-                        else if (((color.IsRGBColor && (color.Value == 0)) || (color.IsIndexedColor && (color.Value == 0x40))) || (color.IsIndexedColor && (color.Value == 0x41)))
-                        {
-                            if (color2 != null)
-                            {
-                                if (color2.IsThemeColor)
-                                {
-                                    result.BackgroundThemeColor = color2.GetThemeColorName();
-                                }
-                                else if (color2.IsRGBColor && (color2.Value != 0))
-                                {
-                                    result.Background = color2.ToBrush(workbook);
-                                }
-                            }
-                        }
-                        else
+                        else if (((!color.IsRGBColor || (color.Value != 0)) && (!color.IsIndexedColor || (color.Value != 0x40))) && (!color.IsIndexedColor || (color.Value != 0x41)))
                         {
                             result.Background = color.ToBrush(workbook);
                         }
                     }
-                    else if (((color2.IsRGBColor && (color2.Value == 0)) || (color2.IsIndexedColor && (color2.Value == 0x40))) || (color2.IsIndexedColor && (color2.Value == 0x41)))
+                }
+                else if (color2 != null)
+                {
+                    if (color2.IsThemeColor)
                     {
-                        if (color != null)
-                        {
-                            if (color.IsThemeColor)
-                            {
-                                result.BackgroundThemeColor = color.GetThemeColorName();
-                            }
-                            else if (((!color.IsRGBColor || (color.Value != 0)) && (!color.IsIndexedColor || (color.Value != 0x40))) && (!color.IsIndexedColor || (color.Value != 0x41)))
-                            {
-                                result.Background = color.ToBrush(workbook);
-                            }
-                        }
+                        result.BackgroundThemeColor = color2.GetThemeColorName();
                     }
-                    else if (color2 != null)
+                    else
                     {
-                        if (color2.IsThemeColor)
-                        {
-                            result.BackgroundThemeColor = color2.GetThemeColorName();
-                        }
-                        else
-                        {
-                            result.Background = color2.ToBrush(workbook);
-                        }
+                        result.Background = color2.ToBrush(workbook);
                     }
                 }
-            });
+            }
             return result;
         }
 

@@ -44,7 +44,7 @@ namespace Dt.Cells.Data
 
         static UnitManager()
         {
-            UIAdaptor.InvokeAsync(() => { _dpi = DisplayInformation.GetForCurrentView().LogicalDpi; });
+            _dpi = DisplayInformation.GetForCurrentView().LogicalDpi;
         }
 
         /// <summary>

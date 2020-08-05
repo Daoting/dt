@@ -98,9 +98,7 @@ namespace Dt.Cells.Data
                 line.X2 = avalibleSize.Width - this.RightSpace;
                 line.Y1 = this.GetAxisY(avalibleSize);
                 line.Y2 = line.Y1;
-                UIAdaptor.InvokeSync(delegate {
-                    line.Stroke = new SolidColorBrush(this.SparklineInfo.Setting.AxisColor);
-                });
+                line.Stroke = new SolidColorBrush(this.SparklineInfo.Setting.AxisColor);
                 line.StrokeThickness = 1.0;
                 Canvas.SetZIndex(line, this.AxisZIndex);
                 return line;

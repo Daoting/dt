@@ -10,7 +10,6 @@
 using Dt.Cells.Data;
 using System;
 using System.Collections.Generic;
-using Windows.Foundation;
 #endregion
 
 namespace Dt.Cells.UI

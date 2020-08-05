@@ -45,7 +45,7 @@ namespace Dt.Cells.UI
         public EditingPanel(GcViewport parent)
         {
             _parentViewport = parent;
-            UIAdaptor.InvokeSync(() => { Background = new SolidColorBrush(Colors.White); });
+            Background = new SolidColorBrush(Colors.White);
             IsHitTestVisible = false;
         }
 

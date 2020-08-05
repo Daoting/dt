@@ -83,20 +83,17 @@ namespace Dt.Cells.UI
             Windows.Foundation.Size chartTitleSize = Windows.Foundation.Size.Empty;
             if ((title != null) && !string.IsNullOrEmpty(title.Text))
             {
-                object textFormattingMode = null;
-                Dt.Cells.Data.UIAdaptor.InvokeSync(delegate {
-                    double fontSize = title.ActualFontSize * ZoomFactor;
-                    if (fontSize < 0.0)
-                    {
-                        fontSize = new TextBlock().FontSize;
-                    }
-                    FontFamily fontFamily = title.ActualFontFamily;
-                    if (fontFamily == null)
-                    {
-                        fontFamily = Dt.Cells.Data.Utility.DefaultFontFamily;
-                    }
-                    chartTitleSize = MeasureHelper.MeasureTextBlock(title.Text, fontFamily, fontSize, title.ActualFontStretch, title.ActualFontStyle, title.FontWeight, new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity), false, textFormattingMode, UseLayoutRounding, ZoomFactor);
-                });
+                double fontSize = title.ActualFontSize * ZoomFactor;
+                if (fontSize < 0.0)
+                {
+                    fontSize = new TextBlock().FontSize;
+                }
+                FontFamily fontFamily = title.ActualFontFamily;
+                if (fontFamily == null)
+                {
+                    fontFamily = Dt.Cells.Data.Utility.DefaultFontFamily;
+                }
+                chartTitleSize = MeasureHelper.MeasureTextBlock(title.Text, fontFamily, fontSize, title.ActualFontStretch, title.ActualFontStyle, title.FontWeight, new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity), false, null, UseLayoutRounding, ZoomFactor);
             }
             if (!chartTitleSize.IsEmpty)
             {

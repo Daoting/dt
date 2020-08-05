@@ -154,11 +154,7 @@ namespace Dt.Cells.Data
                 {
                     Windows.UI.Color color = this.ThemeContext.GetThemeColor(this.FillThemeColor);
                     color = ColorHelper.UpdateColor(color, this.FillDrawingColorSettings, false);
-                    SolidColorBrush result = null;
-                    UIAdaptor.InvokeSync(delegate {
-                        result = new SolidColorBrush(color);
-                    });
-                    return result;
+                    return new SolidColorBrush(color);
                 }
                 if (this.Chart != null)
                 {
@@ -187,11 +183,7 @@ namespace Dt.Cells.Data
                 {
                     Windows.UI.Color color = this.ThemeContext.GetThemeColor(this.StrokeThemeColor);
                     color = Dt.Cells.Data.ColorHelper.UpdateColor(color, this.StrokeDrawingColorSettings, false);
-                    SolidColorBrush result = null;
-                    UIAdaptor.InvokeSync(delegate {
-                        result = new SolidColorBrush(color);
-                    });
-                    return result;
+                    return new SolidColorBrush(color);
                 }
                 return null;
             }

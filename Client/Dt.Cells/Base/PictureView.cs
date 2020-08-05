@@ -28,20 +28,12 @@ namespace Dt.Cells.UI
 
         public PictureView(Picture picture, GcViewport parentViewport)
         {
-            Action action = null;
             _picture = picture;
             ParentViewport = parentViewport;
-            if (action == null)
-            {
-                action = delegate
-                {
-                    _backgroundRect = new Rectangle();
-                    base.Children.Add(_backgroundRect);
-                    _image = new Image();
-                    base.Children.Add(_image);
-                };
-            }
-            Dt.Cells.Data.UIAdaptor.InvokeSync(action);
+            _backgroundRect = new Rectangle();
+            Children.Add(_backgroundRect);
+            _image = new Image();
+            Children.Add(_image);
             SyncPictureView();
         }
 
@@ -70,22 +62,13 @@ namespace Dt.Cells.UI
 
         void SyncPictureView()
         {
-            Action action = null;
-            Action action2 = null;
             if (_picture.ImageSource != null)
             {
                 _image.Source = _picture.ImageSource;
             }
             else if (_picture.UriSource != null)
             {
-                if (action == null)
-                {
-                    action = delegate
-                    {
-                        _image.Source = new BitmapImage(_picture.UriSource);
-                    };
-                }
-                Dt.Cells.Data.UIAdaptor.InvokeSync(action);
+                _image.Source = new BitmapImage(_picture.UriSource);
             }
             Brush actualFill = _picture.ActualFill;
             if (actualFill != null)
@@ -94,14 +77,7 @@ namespace Dt.Cells.UI
             }
             else
             {
-                if (action2 == null)
-                {
-                    action2 = delegate
-                    {
-                        _backgroundRect.Fill = new SolidColorBrush(Colors.Transparent);
-                    };
-                }
-                Dt.Cells.Data.UIAdaptor.InvokeSync(action2);
+                _backgroundRect.Fill = new SolidColorBrush(Colors.Transparent);
             }
             _backgroundRect.Stroke = _picture.ActualStroke;
             double num = _picture.StrokeThickness * ParentViewport.Sheet.ZoomFactor;

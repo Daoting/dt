@@ -75,7 +75,6 @@ namespace Dt.Cells.Data
                 }
                 for (int i = 0; i < sparklineViewInfo.LinePos.Count; i++)
                 {
-                    Action action = null;
                     Windows.UI.Xaml.Shapes.Line line;
                     Windows.Foundation.Point p1;
                     Windows.Foundation.Point p2;
@@ -85,18 +84,12 @@ namespace Dt.Cells.Data
                         line = null;
                         if (i >= this.lines.Count)
                         {
-                            if (action == null)
-                            {
-                                action = delegate {
-                                    line = new Windows.UI.Xaml.Shapes.Line();
-                                    line.StrokeStartLineCap = PenLineCap.Round;
-                                    line.StrokeEndLineCap = PenLineCap.Round;
-                                    line.Stroke = new SolidColorBrush(this.SparklineInfo.Setting.SeriesColor);
-                                    double lineWeight = this.GetLineWeight();
-                                    line.StrokeThickness = lineWeight;
-                                };
-                            }
-                            UIAdaptor.InvokeSync(action);
+                            line = new Windows.UI.Xaml.Shapes.Line();
+                            line.StrokeStartLineCap = PenLineCap.Round;
+                            line.StrokeEndLineCap = PenLineCap.Round;
+                            line.Stroke = new SolidColorBrush(this.SparklineInfo.Setting.SeriesColor);
+                            double lineWeight = this.GetLineWeight();
+                            line.StrokeThickness = lineWeight;
                             this.lines.Add(line);
                         }
                         else
@@ -105,12 +98,10 @@ namespace Dt.Cells.Data
                         }
                         p1 = tuple.Item1;
                         p2 = tuple.Item2;
-                        UIAdaptor.InvokeSync(delegate {
-                            line.X1 = p1.X;
-                            line.X2 = p2.X;
-                            line.Y1 = p1.Y;
-                            line.Y2 = p2.Y;
-                        });
+                        line.X1 = p1.X;
+                        line.X2 = p2.X;
+                        line.Y1 = p1.Y;
+                        line.Y2 = p2.Y;
                     }
                 }
             }
@@ -125,29 +116,22 @@ namespace Dt.Cells.Data
                 {
                     while (enumerator.MoveNext())
                     {
-                        Action action = null;
                         Windows.UI.Xaml.Shapes.Line item = enumerator.Current;
                         base.TransFormLine(item, avilableSize);
-                        if (action == null)
+                        double num1 = item.X1;
+                        double num3 = item.Y1;
+                        double width = Math.Abs((double)(item.X2 - item.X1));
+                        double height = Math.Abs((double)(item.Y2 - item.Y1));
+                        if ((width >= 0.0) && (height >= 0.0))
                         {
-                            action = delegate {
-                                double num1 = item.X1;
-                                double num3 = item.Y1;
-                                double width = Math.Abs((double) (item.X2 - item.X1));
-                                double height = Math.Abs((double) (item.Y2 - item.Y1));
-                                if ((width >= 0.0) && (height >= 0.0))
-                                {
-                                    gs.SaveState();
-                                    gs.MoveTo(new Windows.Foundation.Point(item.X1, item.Y1));
-                                    gs.LineTo(new Windows.Foundation.Point(item.X2, item.Y2));
-                                    gs.ApplyFillEffect(item.Stroke, new Windows.Foundation.Rect(item.X1, item.Y1, width, height), true, false);
-                                    gs.SetLineWidth(item.StrokeThickness);
-                                    gs.Stroke();
-                                    gs.RestoreState();
-                                }
-                            };
+                            gs.SaveState();
+                            gs.MoveTo(new Windows.Foundation.Point(item.X1, item.Y1));
+                            gs.LineTo(new Windows.Foundation.Point(item.X2, item.Y2));
+                            gs.ApplyFillEffect(item.Stroke, new Windows.Foundation.Rect(item.X1, item.Y1, width, height), true, false);
+                            gs.SetLineWidth(item.StrokeThickness);
+                            gs.Stroke();
+                            gs.RestoreState();
                         }
-                        UIAdaptor.InvokeSync(action);
                     }
                 }
             }

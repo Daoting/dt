@@ -182,15 +182,12 @@ namespace Dt.Cells.Data
                     {
                         Action<Task<IRandomAccessStreamWithContentType>> func = delegate (Task<IRandomAccessStreamWithContentType> r)
                         {
-                            UIAdaptor.InvokeSync(() =>
+                            using (Stream stream = WindowsRuntimeStreamExtensions.AsStreamForRead(r.Result))
                             {
-                                using (Stream stream = WindowsRuntimeStreamExtensions.AsStreamForRead(r.Result))
-                                {
-                                    // Utility.InitImageSource(imageSource, stream);
-                                    //导出RptText ImageUri时图片不出问题 李雪修改
-                                    InitImageSource(stream);
-                                }
-                            });
+                                // Utility.InitImageSource(imageSource, stream);
+                                //导出RptText ImageUri时图片不出问题 李雪修改
+                                InitImageSource(stream);
+                            }
                         };
                         WindowsRuntimeSystemExtensions.AsTask<IRandomAccessStreamWithContentType>(fr.Result.OpenReadAsync()).ContinueWith(func);
                     }
@@ -202,11 +199,7 @@ namespace Dt.Cells.Data
 
         private Size? GetPicturPreferredSize()
         {
-            ImageSource imageSource = null;
-            UIAdaptor.InvokeSync(delegate
-            {
-                imageSource = GetActualImageSource();
-            });
+            ImageSource imageSource = GetActualImageSource();
             if ((imageSource != null) && (imageSource is BitmapSource))
             {
                 BitmapSource source = imageSource as BitmapSource;
@@ -275,8 +268,7 @@ namespace Dt.Cells.Data
 
         private void UpdateToPreferredSize()
         {
-            ImageSource imageSource = null;
-            UIAdaptor.InvokeSync(() => imageSource = GetActualImageSource());
+            ImageSource imageSource = GetActualImageSource();
             if (imageSource is BitmapImage)
             {
                 BitmapImage bmpImage = imageSource as BitmapImage;
@@ -287,8 +279,7 @@ namespace Dt.Cells.Data
         internal override void WriteXmlInternal(XmlWriter writer)
         {
             base.WriteXmlInternal(writer);
-            ImageSource imageSource = null;
-            UIAdaptor.InvokeSync(() => imageSource = GetActualImageSource());
+            ImageSource imageSource = GetActualImageSource();
             Serializer.SerializeObj(_serializationMode, "SerializationMode", writer);
             if (!string.IsNullOrEmpty(ImageByteArrayBase64String))
             {

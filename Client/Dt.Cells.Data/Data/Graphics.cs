@@ -101,27 +101,21 @@ namespace Dt.Cells.Data
                 if (effect is SolidColorBrush)
                 {
                     SolidColorBrush solid = effect as SolidColorBrush;
-                    UIAdaptor.InvokeSync(delegate {
-                        if (isStroke)
-                        {
-                            this.SetRGBStroke(solid.Color);
-                        }
-                        if (isFill)
-                        {
-                            this.SetRGBFill(solid.Color);
-                        }
-                    });
+                    if (isStroke)
+                    {
+                        this.SetRGBStroke(solid.Color);
+                    }
+                    if (isFill)
+                    {
+                        this.SetRGBFill(solid.Color);
+                    }
                 }
                 if (effect is ImageBrush)
                 {
-                    Action action = null;
-                    Action action2 = null;
                     ImageBrush imageEF = (ImageBrush) effect;
                     Image image = null;
                     ImageSource imageSource = null;
-                    UIAdaptor.InvokeSync(delegate {
-                        imageSource = imageEF.ImageSource;
-                    });
+                    imageSource = imageEF.ImageSource;
                     image = this.exporter.GetImage(imageSource);
                     if (image != null)
                     {
@@ -138,34 +132,34 @@ namespace Dt.Cells.Data
                         float imageHeight = image.Height;
                         float offsetX = 0f;
                         float offsetY = 0f;
-                        UIAdaptor.InvokeSync(delegate {
-                            switch (imageEF.Stretch)
-                            {
-                                case Stretch.None:
-                                    offsetX = 0f;
-                                    switch (imageEF.AlignmentX)
-                                    {
-                                        case AlignmentX.Center:
-                                            offsetX = (width - imageWidth) / 2f;
-                                            goto Label_0092;
 
-                                        case AlignmentX.Right:
-                                            offsetX = width - imageWidth;
-                                            goto Label_0092;
-                                    }
-                                    throw new ArgumentOutOfRangeException();
+                        switch (imageEF.Stretch)
+                        {
+                            case Stretch.None:
+                                offsetX = 0f;
+                                switch (imageEF.AlignmentX)
+                                {
+                                    case AlignmentX.Center:
+                                        offsetX = (width - imageWidth) / 2f;
+                                        goto Label_0092;
 
-                                case Stretch.Fill:
-                                    width += 0.5f;
-                                    height += 0.5f;
-                                    g.AddImage(image, width, 0f, 0f, -height, 0f, height);
-                                    p.BBox = new PdfRectangle(0f, 0f, width, height);
-                                    p.XStep = width;
-                                    p.YStep = height;
-                                    return;
+                                    case AlignmentX.Right:
+                                        offsetX = width - imageWidth;
+                                        goto Label_0092;
+                                }
+                                throw new ArgumentOutOfRangeException();
 
-                                case Stretch.Uniform:
-                                case Stretch.UniformToFill:
+                            case Stretch.Fill:
+                                width += 0.5f;
+                                height += 0.5f;
+                                g.AddImage(image, width, 0f, 0f, -height, 0f, height);
+                                p.BBox = new PdfRectangle(0f, 0f, width, height);
+                                p.XStep = width;
+                                p.YStep = height;
+                                return;
+
+                            case Stretch.Uniform:
+                            case Stretch.UniformToFill:
                                 {
                                     width += 0.5f;
                                     height += 0.5f;
@@ -209,59 +203,47 @@ namespace Dt.Cells.Data
                                     }
                                     throw new ArgumentOutOfRangeException();
                                 }
-                                default:
-                                    throw new ArgumentOutOfRangeException();
-                            }
-                        Label_0092:
-                            offsetY = 0f;
-                            switch (imageEF.AlignmentY)
-                            {
-                                case AlignmentY.Top:
-                                    break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
+                    Label_0092:
+                        offsetY = 0f;
+                        switch (imageEF.AlignmentY)
+                        {
+                            case AlignmentY.Top:
+                                break;
 
-                                case AlignmentY.Center:
-                                    offsetY = (height - imageHeight) / 2f;
-                                    break;
+                            case AlignmentY.Center:
+                                offsetY = (height - imageHeight) / 2f;
+                                break;
 
-                                case AlignmentY.Bottom:
-                                    offsetY = height - imageHeight;
-                                    break;
+                            case AlignmentY.Bottom:
+                                offsetY = height - imageHeight;
+                                break;
 
-                                default:
-                                    throw new ArgumentOutOfRangeException();
-                            }
-                            g.AddImage(image, imageWidth, 0f, 0f, -imageHeight, offsetX, imageHeight + offsetY);
-                            p.BBox = new PdfRectangle(0f, 0f, width, height);
-                            p.XStep = width;
-                            p.YStep = height;
-                            return;
-                        Label_039E:
-                            g.AddImage(image, imageWidth, 0f, 0f, -imageHeight, offsetX, offsetY + imageHeight);
-                            p.BBox = new PdfRectangle(0f, 0f, width, height);
-                            p.XStep = width;
-                            p.YStep = height;
-                        });
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
+                        g.AddImage(image, imageWidth, 0f, 0f, -imageHeight, offsetX, imageHeight + offsetY);
+                        p.BBox = new PdfRectangle(0f, 0f, width, height);
+                        p.XStep = width;
+                        p.YStep = height;
+                        return;
+                    Label_039E:
+                        g.AddImage(image, imageWidth, 0f, 0f, -imageHeight, offsetX, offsetY + imageHeight);
+                        p.BBox = new PdfRectangle(0f, 0f, width, height);
+                        p.XStep = width;
+                        p.YStep = height;
+
                         p.Properties.Add(PdfName.Matrix, new PdfMatrix(this.matrix.M11, this.matrix.M12, this.matrix.M21, this.matrix.M22, this.matrix.OffsetX, this.matrix.OffsetY));
                         if (isStroke)
                         {
-                            if (action == null)
-                            {
-                                action = delegate {
-                                    this.SetStrokeAlpha((float) imageEF.Opacity);
-                                };
-                            }
-                            UIAdaptor.InvokeSync(action);
+                            SetStrokeAlpha((float)imageEF.Opacity);
                             this.pdfGraphics.SetPatternStroke(p);
                         }
                         if (isFill)
                         {
-                            if (action2 == null)
-                            {
-                                action2 = delegate {
-                                    this.SetFillAlpha((float) imageEF.Opacity);
-                                };
-                            }
-                            UIAdaptor.InvokeSync(action2);
+                            SetFillAlpha((float)imageEF.Opacity);
                             this.pdfGraphics.SetPatternFill(p);
                         }
                     }
@@ -295,19 +277,17 @@ namespace Dt.Cells.Data
                             {
                                 GradientStop tmpSection = enumerator.Current;
                                 Windows.UI.Color tmpColor = new Windows.UI.Color();
-                                UIAdaptor.InvokeSync(delegate {
-                                    tmpColor = this.GrayMode ? Utilities.GetGrayColor(tmpSection.Color) : tmpSection.Color;
-                                    if (gradientStyle == GradientStyle.RadialIntoCenter)
-                                    {
-                                        colors.Insert(0, new PdfColor(tmpColor.R, tmpColor.G, tmpColor.B));
-                                        offsets.Insert(0, 1f - (((float) tmpSection.Offset) / 100f));
-                                    }
-                                    else
-                                    {
-                                        colors.Add(new PdfColor(tmpColor.R, tmpColor.G, tmpColor.B));
-                                        offsets.Add((float) tmpSection.Offset);
-                                    }
-                                });
+                                tmpColor = this.GrayMode ? Utilities.GetGrayColor(tmpSection.Color) : tmpSection.Color;
+                                if (gradientStyle == GradientStyle.RadialIntoCenter)
+                                {
+                                    colors.Insert(0, new PdfColor(tmpColor.R, tmpColor.G, tmpColor.B));
+                                    offsets.Insert(0, 1f - (((float)tmpSection.Offset) / 100f));
+                                }
+                                else
+                                {
+                                    colors.Add(new PdfColor(tmpColor.R, tmpColor.G, tmpColor.B));
+                                    offsets.Add((float)tmpSection.Offset);
+                                }
                             }
                         }
                         bool flag = true;
@@ -1103,23 +1083,20 @@ namespace Dt.Cells.Data
         /// <returns></returns>
         private static List<GradientStop> GetGradientSections(GradientBrush effect)
         {
-            List<GradientStop> sections = null;
-            UIAdaptor.InvokeSync(delegate {
-                sections = new List<GradientStop>((IEnumerable<GradientStop>) effect.GradientStops);
-                GradientStop stop = null;
-                for (int k = 1; k < sections.Count; k++)
+            List<GradientStop> sections = new List<GradientStop>((IEnumerable<GradientStop>)effect.GradientStops);
+            GradientStop stop = null;
+            for (int k = 1; k < sections.Count; k++)
+            {
+                for (int i = sections.Count - 1; i >= k; i--)
                 {
-                    for (int i = sections.Count - 1; i >= k; i--)
+                    if (sections[i].Offset < sections[i - 1].Offset)
                     {
-                        if (sections[i].Offset < sections[i - 1].Offset)
-                        {
-                            stop = sections[i - 1];
-                            sections[i - 1] = sections[i];
-                            sections[i] = stop;
-                        }
+                        stop = sections[i - 1];
+                        sections[i - 1] = sections[i];
+                        sections[i] = stop;
                     }
                 }
-            });
+            }
             return sections;
         }
 

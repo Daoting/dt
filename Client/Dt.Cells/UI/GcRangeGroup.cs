@@ -588,28 +588,20 @@ namespace Dt.Cells.UI
         {
             get
             {
-                Action action = null;
-                if ((base._sheetView != null) && (base._sheetView.RangeGroupLineStroke != null))
+                if ((_sheetView != null) && (_sheetView.RangeGroupLineStroke != null))
                 {
-                    return base._sheetView.RangeGroupLineStroke;
+                    return _sheetView.RangeGroupLineStroke;
                 }
                 if (paintedBrush == null)
                 {
-                    if (action == null)
+                    if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
                     {
-                        action = delegate
-                        {
-                            if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
-                            {
-                                paintedBrush = new SolidColorBrush(Colors.Gray);
-                            }
-                            else
-                            {
-                                paintedBrush = new SolidColorBrush(Colors.Black);
-                            }
-                        };
+                        paintedBrush = new SolidColorBrush(Colors.Gray);
                     }
-                    Dt.Cells.Data.UIAdaptor.InvokeSync(action);
+                    else
+                    {
+                        paintedBrush = new SolidColorBrush(Colors.Black);
+                    }
                 }
                 return paintedBrush;
             }

@@ -23,7 +23,7 @@ namespace Dt.Cells.UI
     /// <summary>
     /// Represents an individual <see cref="T:Dt.Cells.UI.GcSpreadSheet" /> base cell.
     /// </summary>
-    [TemplateVisualState(Name="Unselected", GroupName="SelectionStates"), TemplatePart(Name="Root", Type=typeof(CellBackgroundPanel)), TemplateVisualState(Name="Selected", GroupName="SelectionStates")]
+    [TemplateVisualState(Name = "Unselected", GroupName = "SelectionStates"), TemplatePart(Name = "Root", Type = typeof(CellBackgroundPanel)), TemplateVisualState(Name = "Selected", GroupName = "SelectionStates")]
     public abstract partial class CellPresenterBase : Control
     {
         Cell _bindingCell;
@@ -138,7 +138,7 @@ namespace Dt.Cells.UI
             }
             if (_cellType is IFormulaEditingSupport)
             {
-                ((IFormulaEditingSupport) _cellType).CanUserEditFormula = SheetView.CanUserEditFormula;
+                ((IFormulaEditingSupport)_cellType).CanUserEditFormula = SheetView.CanUserEditFormula;
             }
             _cellType.InitEditingElement();
             return _cellType.GetEditingElement();
@@ -256,82 +256,74 @@ namespace Dt.Cells.UI
             return base.MeasureOverride(constraint);
         }
 
-        /// <summary>
-        /// Is invoked whenever application code or internal processes call <see cref="M:FrameworkElement.ApplyTemplate" /> when overridden in a derived class.
-        /// </summary>
         protected override void OnApplyTemplate()
         {
+            base.OnApplyTemplate();
             if (_rootPanel != null)
             {
                 _rootPanel.Children.Clear();
                 _isContentAddedToPanel = false;
             }
-            _rootPanel = base.GetTemplateChild("Root") as CellBackgroundPanel;
+            _rootPanel = GetTemplateChild("Root") as CellBackgroundPanel;
             if (_rootPanel != null)
             {
                 _rootPanel.OwneringCell = this;
             }
             PrepareCellForDisplay();
-            base.OnApplyTemplate();
-        }
-
-        void OnBindingValidationError(object sender, ValidationErrorEventArgs e)
-        {
-            throw new NotImplementedException();
         }
 
         void PrepareCellForDisplay()
         {
-            if (BindingCell != null)
+            if (BindingCell == null)
+                return;
+
+            string text = BindingCell.Text;
+            if (BindingCell.SheetArea == SheetArea.Cells)
             {
-                string text = BindingCell.Text;
-                if (BindingCell.SheetArea == SheetArea.Cells)
+                text = SheetView.RaiseCellTextRendering(BindingCell.Row.Index, BindingCell.Column.Index, text);
+            }
+            if (string.IsNullOrEmpty(text))
+            {
+                if (_isContentAddedToPanel)
                 {
-                    text = SheetView.RaiseCellTextRendering(BindingCell.Row.Index, BindingCell.Column.Index, text);
-                }
-                if (string.IsNullOrEmpty(text))
-                {
-                    if (_isContentAddedToPanel)
+                    if ((_rootPanel != null) && (_content != null))
                     {
-                        if ((_rootPanel != null) && (_content != null))
-                        {
-                            _rootPanel.Children.Remove(_content);
-                        }
-                        _isContentAddedToPanel = false;
+                        _rootPanel.Children.Remove(_content);
+                    }
+                    _isContentAddedToPanel = false;
+                }
+            }
+            else if (!_isContentAddedToPanel && (_rootPanel != null))
+            {
+                if (_content == null)
+                {
+                    _content = CreateContent();
+                    if (!ShowContent)
+                    {
+                        _content.Visibility = Visibility.Collapsed;
                     }
                 }
-                else if (!_isContentAddedToPanel && (_rootPanel != null))
+                if (_content != null)
                 {
-                    if (_content == null)
-                    {
-                        _content = CreateContent();
-                        if (!ShowContent)
-                        {
-                            _content.Visibility = Visibility.Collapsed;
-                        }
-                    }
-                    if (_content != null)
-                    {
-                        _rootPanel.Children.Add(_content);
-                        _isContentAddedToPanel = true;
-                    }
+                    _rootPanel.Children.Add(_content);
+                    _isContentAddedToPanel = true;
                 }
-                if (_cellType != null)
+            }
+            if (_cellType != null)
+            {
+                InitCellType();
+                if (_isContentAddedToPanel)
                 {
-                    InitCellType();
-                    if (_isContentAddedToPanel)
-                    {
-                        _cellType.InitDisplayElement(text);
-                    }
+                    _cellType.InitDisplayElement(text);
                 }
-                if (_rootPanel != null)
+            }
+            if (_rootPanel != null)
+            {
+                if (_isHiddenForEditing)
                 {
-                    if (_isHiddenForEditing)
-                    {
-                        UnHideForEditing();
-                    }
-                    ApplyState();
+                    UnHideForEditing();
                 }
+                ApplyState();
             }
         }
 
@@ -344,15 +336,11 @@ namespace Dt.Cells.UI
             }
         }
 
-        internal virtual void Reset()
+        internal void Reset()
         {
             if (_content == null)
             {
-                base.ApplyTemplate();
-            }
-            if (_rootPanel != null)
-            {
-                _rootPanel.InvalidateMeasure();
+                ApplyTemplate();
             }
             PrepareCellForDisplay();
         }
@@ -467,7 +455,8 @@ namespace Dt.Cells.UI
                         DataValidator actualDataValidator = BindingCell.ActualDataValidator;
                         if ((actualDataValidator != null) && !actualDataValidator.IsValid(sheetView.Worksheet, Row, Column, bindingCell.Value))
                         {
-                            InvalidDataPresenterInfo info2 = new InvalidDataPresenterInfo {
+                            InvalidDataPresenterInfo info2 = new InvalidDataPresenterInfo
+                            {
                                 Row = Row,
                                 Column = Column
                             };
@@ -520,7 +509,7 @@ namespace Dt.Cells.UI
         {
             if (p is Border)
             {
-                ((Border) p).BorderThickness = new Windows.UI.Xaml.Thickness(0.0);
+                ((Border)p).BorderThickness = new Windows.UI.Xaml.Thickness(0.0);
             }
             int childrenCount = VisualTreeHelper.GetChildrenCount(p);
             for (int i = 0; i < childrenCount; i++)
@@ -544,7 +533,7 @@ namespace Dt.Cells.UI
 
         internal Dt.Cells.UI.CellLayout CellLayout
         {
-            get { return  _cellLayout; }
+            get { return _cellLayout; }
             set
             {
                 if (!object.Equals(_cellLayout, value))
@@ -557,7 +546,7 @@ namespace Dt.Cells.UI
 
         internal Dt.Cells.UI.CellOverflowLayout CellOverflowLayout
         {
-            get { return  _overflowLayout; }
+            get { return _overflowLayout; }
             set
             {
                 if (!object.Equals(_overflowLayout, value))
@@ -574,7 +563,7 @@ namespace Dt.Cells.UI
 
         internal ICellType CellType
         {
-            get { return  _cellType; }
+            get { return _cellType; }
         }
 
         /// <summary>
@@ -582,7 +571,7 @@ namespace Dt.Cells.UI
         /// </summary>
         public int Column
         {
-            get { return  _column; }
+            get { return _column; }
             internal set
             {
                 if (value != _column)
@@ -595,13 +584,13 @@ namespace Dt.Cells.UI
 
         internal FrameworkElement Content
         {
-            get { return  _content; }
+            get { return _content; }
             set { _content = value; }
         }
 
         internal Dt.Cells.UI.FilterButtonInfo FilterButtonInfo
         {
-            get { return  _filterButtonInfo; }
+            get { return _filterButtonInfo; }
             set
             {
                 if (_filterButtonInfo != value)
@@ -614,7 +603,7 @@ namespace Dt.Cells.UI
 
         internal bool HasFilterButton
         {
-            get { return  (_filterButton != null); }
+            get { return (_filterButton != null); }
         }
 
         /// <summary>
@@ -622,7 +611,7 @@ namespace Dt.Cells.UI
         /// </summary>
         protected virtual bool IsActive
         {
-            get { return  false; }
+            get { return false; }
         }
 
         /// <summary>
@@ -630,7 +619,7 @@ namespace Dt.Cells.UI
         /// </summary>
         protected virtual bool IsCurrent
         {
-            get { return  false; }
+            get { return false; }
         }
 
         /// <summary>
@@ -638,12 +627,12 @@ namespace Dt.Cells.UI
         /// </summary>
         protected virtual bool IsMouseOver
         {
-            get { return  false; }
+            get { return false; }
         }
 
         internal virtual bool IsRecylable
         {
-            get { return  true; }
+            get { return true; }
         }
 
         /// <summary>
@@ -651,7 +640,7 @@ namespace Dt.Cells.UI
         /// </summary>
         protected virtual bool IsSelected
         {
-            get { return  false; }
+            get { return false; }
         }
 
         internal RowPresenter OwningRow { get; set; }
@@ -673,7 +662,7 @@ namespace Dt.Cells.UI
         /// </summary>
         public int Row
         {
-            get { return  OwningRow.Row; }
+            get { return OwningRow.Row; }
         }
 
         internal Dt.Cells.UI.SheetView SheetView
@@ -697,7 +686,7 @@ namespace Dt.Cells.UI
                 Dt.Cells.UI.SheetView sheetView = SheetView;
                 if (sheetView != null)
                 {
-                    return (double) sheetView.ZoomFactor;
+                    return (double)sheetView.ZoomFactor;
                 }
                 return 1.0;
             }

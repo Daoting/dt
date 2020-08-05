@@ -88,7 +88,6 @@ namespace Dt.Cells.Data
 
         internal ExcelWriter(Workbook owner, ExcelSaveFlags saveFlags)
         {
-            Action action = null;
             this._defaultRowHeights = new Dictionary<int, double>();
             this._autoRowHeight = new Dictionary<int, Dictionary<int, double>>();
             this._conditinalFormats = new Dictionary<int, List<IExcelConditionalFormat>>();
@@ -111,14 +110,7 @@ namespace Dt.Cells.Data
             this._tableStyles = new List<IExcelTableStyle>();
             this._workbook = owner;
             this._saveFlags = saveFlags;
-            if (action == null)
-            {
-                action = delegate
-                {
-                    this.InitDefaultDateFormatter();
-                };
-            }
-            UIAdaptor.InvokeSync(action);
+            this.InitDefaultDateFormatter();
             this.PreProcessWorkbook();
         }
 
@@ -295,21 +287,16 @@ namespace Dt.Cells.Data
         private double CalcRowHeight(string text, FontFamily fontFamily, double fontSize, bool wordWrap, FontWeight fontWeight, FontStyle fontStyle, double width)
         {
             bool bold = false;
-            double result = 0.0;
-            UIAdaptor.InvokeSync(delegate
+            if ((fontWeight.Equals(FontWeights.Bold) || fontWeight.Equals(FontWeights.ExtraBold)) || fontWeight.Equals(FontWeights.SemiBold))
             {
-                if ((fontWeight.Equals(FontWeights.Bold) || fontWeight.Equals(FontWeights.ExtraBold)) || fontWeight.Equals(FontWeights.SemiBold))
-                {
-                    bold = true;
-                }
-                string source = "Calibri";
-                if (fontFamily != null)
-                {
-                    source = fontFamily.Source;
-                }
-                result = ((1.0 + this.MeasureStringHeight(text, source, fontSize, wordWrap, bold, fontStyle == FontStyle.Italic, width)) * 72.0) / UnitHelper.GetDPI();
-            });
-            return result;
+                bold = true;
+            }
+            string source = "Calibri";
+            if (fontFamily != null)
+            {
+                source = fontFamily.Source;
+            }
+            return ((1.0 + this.MeasureStringHeight(text, source, fontSize, wordWrap, bold, fontStyle == FontStyle.Italic, width)) * 72.0) / UnitHelper.GetDPI();
         }
 
         private double CalculateDefaultRowHeight(int sheet)
@@ -328,10 +315,7 @@ namespace Dt.Cells.Data
                 {
                     extraHeight = 1.0;
                 }
-                UIAdaptor.InvokeSync(delegate
-                {
-                    result = UnitHelper.PixelToPoint(extraHeight + this.MeasureStringHeight(MeasureItem, fontFamily.Source, fontSize, false, false, false, this._workbook.Sheets[sheet].DefaultColumnWidth));
-                });
+                result = UnitHelper.PixelToPoint(extraHeight + this.MeasureStringHeight(MeasureItem, fontFamily.Source, fontSize, false, false, false, this._workbook.Sheets[sheet].DefaultColumnWidth));
                 this._defaultRowHeights.Add(sheet, result);
             }
             return result;
@@ -983,27 +967,19 @@ namespace Dt.Cells.Data
         {
             Worksheet worksheet = this._workbook.Sheets[sheet];
             int count = worksheet.Columns.Count;
-            Action action = null;
             for (int i = 0; i < count; i++)
             {
-                if (action == null)
+                Column column = worksheet.Columns[i];
+                if (column != null)
                 {
-                    action = delegate
+                    DataValidator dataValidator = column.DataValidator;
+                    if (dataValidator != null)
                     {
-                        Column column = worksheet.Columns[i];
-                        if (column != null)
-                        {
-                            DataValidator dataValidator = column.DataValidator;
-                            if (dataValidator != null)
-                            {
-                                IExcelDataValidation validation = dataValidator.ToExcelDataValidation();
-                                validation.Ranges.Add(this.CreateCellRange(0, i, 0x100000, 1));
-                                result.Add(validation);
-                            }
-                        }
-                    };
+                        IExcelDataValidation validation = dataValidator.ToExcelDataValidation();
+                        validation.Ranges.Add(this.CreateCellRange(0, i, 0x100000, 1));
+                        result.Add(validation);
+                    }
                 }
-                UIAdaptor.InvokeSync(action);
             }
         }
 
@@ -1037,20 +1013,17 @@ namespace Dt.Cells.Data
         {
             List<StyleInfo> columnStyles = new List<StyleInfo>();
             int columnCount = Math.Max(worksheet.GetLastDirtyColumn(StorageType.Data), Math.Max(worksheet.GetLastDirtyColumn(StorageType.Sparkline), worksheet.GetLastDirtyColumn(StorageType.Style))) + 1;
-            UIAdaptor.InvokeSync(delegate
+            for (int j = 0; j < columnCount; j++)
             {
-                for (int j = 0; j < columnCount; j++)
+                if (j < worksheet.ColumnCount)
                 {
-                    if (j < worksheet.ColumnCount)
-                    {
-                        columnStyles.Add(worksheet.GetStyleInfo(-1, j, SheetArea.Cells));
-                    }
-                    else
-                    {
-                        columnStyles.Add(null);
-                    }
+                    columnStyles.Add(worksheet.GetStyleInfo(-1, j, SheetArea.Cells));
                 }
-            });
+                else
+                {
+                    columnStyles.Add(null);
+                }
+            }
             return columnStyles;
         }
 
@@ -1058,13 +1031,10 @@ namespace Dt.Cells.Data
         {
             List<double> columnsWidthCollection = new List<double>();
             int columnCount = worksheet.ColumnCount;
-            UIAdaptor.InvokeSync(delegate
+            for (int j = 0; j < columnCount; j++)
             {
-                for (int j = 0; j < columnCount; j++)
-                {
-                    columnsWidthCollection.Add(worksheet.Columns[j].Width);
-                }
-            });
+                columnsWidthCollection.Add(worksheet.Columns[j].Width);
+            }
             return columnsWidthCollection;
         }
 
@@ -1322,14 +1292,11 @@ namespace Dt.Cells.Data
                 defaultStyle.FontFamily = this._workbook.CurrentTheme.BodyFontFamily;
             }
             IExtendedFormat result = null;
-            UIAdaptor.InvokeSync(delegate
+            if ((((defaultStyle.Background is SolidColorBrush) && ((defaultStyle.Background as SolidColorBrush).Color == Windows.UI.Color.FromArgb(0, 0xff, 0xff, 0xff))) && (((defaultStyle.FontFamily != null) ? defaultStyle.FontFamily.Source : "Calibri") == ((this._workbook.CurrentTheme.BodyFontFamily != null) ? this._workbook.CurrentTheme.BodyFontFamily.Source : "Calibri"))) && (defaultStyle.FontSize == DefaultStyleCollection.DefaultFontSize))
             {
-                if ((((defaultStyle.Background is SolidColorBrush) && ((defaultStyle.Background as SolidColorBrush).Color == Windows.UI.Color.FromArgb(0, 0xff, 0xff, 0xff))) && (((defaultStyle.FontFamily != null) ? defaultStyle.FontFamily.Source : "Calibri") == ((this._workbook.CurrentTheme.BodyFontFamily != null) ? this._workbook.CurrentTheme.BodyFontFamily.Source : "Calibri"))) && (defaultStyle.FontSize == DefaultStyleCollection.DefaultFontSize))
-                {
-                    defaultStyle.Background = null;
-                }
-                result = defaultStyle.ToExtendedFormat(this._workbook);
-            });
+                defaultStyle.Background = null;
+            }
+            result = defaultStyle.ToExtendedFormat(this._workbook);
             result.ParentFormatID = 0;
             return result;
         }
@@ -1920,21 +1887,18 @@ namespace Dt.Cells.Data
         {
             Worksheet worksheet = this._workbook.Sheets[sheet];
             FontFamily fontFamily = null;
-            UIAdaptor.InvokeSync(delegate
+            if (worksheet.DefaultStyle.IsFontFamilySet())
             {
-                if (worksheet.DefaultStyle.IsFontFamilySet())
-                {
-                    fontFamily = worksheet.DefaultStyle.FontFamily;
-                }
-                else if (this._workbook.DefaultStyle.IsFontFamilySet())
-                {
-                    fontFamily = this._workbook.DefaultStyle.FontFamily;
-                }
-                else
-                {
-                    fontFamily = DefaultStyleCollection.DefaultFontFamily;
-                }
-            });
+                fontFamily = worksheet.DefaultStyle.FontFamily;
+            }
+            else if (this._workbook.DefaultStyle.IsFontFamilySet())
+            {
+                fontFamily = this._workbook.DefaultStyle.FontFamily;
+            }
+            else
+            {
+                fontFamily = DefaultStyleCollection.DefaultFontFamily;
+            }
             return fontFamily;
         }
 
@@ -2171,61 +2135,53 @@ namespace Dt.Cells.Data
 
         public double GetMaxiumDigitWidthCore()
         {
-            Action action = null;
             if (double.IsNaN(this._maxiumDigitWidth))
             {
-                if (action == null)
+                if (this._normalStyleInfo == null)
                 {
-                    action = delegate
-                    {
-                        if (this._normalStyleInfo == null)
-                        {
-                            this._normalStyleInfo = this._workbook.DefaultStyle;
-                        }
-                        TextBlock block = new TextBlock();
-                        if (!string.IsNullOrWhiteSpace(this._normalStyleInfo.FontTheme))
-                        {
-                            if (this._normalStyleInfo.FontTheme == "Headings")
-                            {
-                                block.FontFamily = this._workbook.CurrentTheme.HeadingFontFamily;
-                            }
-                            else if (this._normalStyleInfo.FontTheme == "Body")
-                            {
-                                block.FontFamily = this._workbook.CurrentTheme.BodyFontFamily;
-                            }
-                            else
-                            {
-                                block.FontFamily = new FontFamily("Calibri");
-                            }
-                        }
-                        else if (this._normalStyleInfo.FontFamily != null)
-                        {
-                            block.FontFamily = this._normalStyleInfo.FontFamily;
-                        }
-                        else
-                        {
-                            block.FontFamily = new FontFamily("Calibri");
-                        }
-                        block.FontSize = this._normalStyleInfo.FontSize;
-                        block.FontWeight = this._normalStyleInfo.FontWeight;
-                        block.FontStyle = this._normalStyleInfo.FontStyle;
-                        double num = 0.0;
-                        for (int j = 0; j < 10; j++)
-                        {
-                            char c = (char)(0x30 + j);
-                            string str = (string)new string(c, 1);
-                            block.Text = str;
-                            block.Measure(new Windows.Foundation.Size(double.MaxValue, double.MaxValue));
-                            double num3 = Math.Ceiling(block.ActualWidth);
-                            if (num3 > num)
-                            {
-                                num = num3;
-                            }
-                        }
-                        this._maxiumDigitWidth = num;
-                    };
+                    this._normalStyleInfo = this._workbook.DefaultStyle;
                 }
-                UIAdaptor.InvokeSync(action);
+                TextBlock block = new TextBlock();
+                if (!string.IsNullOrWhiteSpace(this._normalStyleInfo.FontTheme))
+                {
+                    if (this._normalStyleInfo.FontTheme == "Headings")
+                    {
+                        block.FontFamily = this._workbook.CurrentTheme.HeadingFontFamily;
+                    }
+                    else if (this._normalStyleInfo.FontTheme == "Body")
+                    {
+                        block.FontFamily = this._workbook.CurrentTheme.BodyFontFamily;
+                    }
+                    else
+                    {
+                        block.FontFamily = new FontFamily("Calibri");
+                    }
+                }
+                else if (this._normalStyleInfo.FontFamily != null)
+                {
+                    block.FontFamily = this._normalStyleInfo.FontFamily;
+                }
+                else
+                {
+                    block.FontFamily = new FontFamily("Calibri");
+                }
+                block.FontSize = this._normalStyleInfo.FontSize;
+                block.FontWeight = this._normalStyleInfo.FontWeight;
+                block.FontStyle = this._normalStyleInfo.FontStyle;
+                double num = 0.0;
+                for (int j = 0; j < 10; j++)
+                {
+                    char c = (char)(0x30 + j);
+                    string str = (string)new string(c, 1);
+                    block.Text = str;
+                    block.Measure(new Windows.Foundation.Size(double.MaxValue, double.MaxValue));
+                    double num3 = Math.Ceiling(block.ActualWidth);
+                    if (num3 > num)
+                    {
+                        num = num3;
+                    }
+                }
+                this._maxiumDigitWidth = num;
             }
             return this._maxiumDigitWidth;
         }
@@ -2282,11 +2238,7 @@ namespace Dt.Cells.Data
             int maxRowRangeLevel = worksheet.RowRangeGroup.GetMaxLevel();
             for (int row = 0; row <= num; row++)
             {
-                IExcelRow excelRow = null;
-                UIAdaptor.InvokeSync(delegate
-                {
-                    excelRow = this.GetRow(sheet, row, maxRowRangeLevel);
-                });
+                IExcelRow excelRow = this.GetRow(sheet, row, maxRowRangeLevel);
                 if (excelRow != null)
                 {
                     if (this._saveFlags.AutoRowHeight())
@@ -2706,27 +2658,19 @@ namespace Dt.Cells.Data
         {
             Worksheet worksheet = this._workbook.Sheets[sheet];
             int count = worksheet.Rows.Count;
-            Action action = null;
             for (int i = 0; i < count; i++)
             {
-                if (action == null)
+                Row row = worksheet.Rows[i];
+                if (row != null)
                 {
-                    action = delegate
+                    DataValidator dataValidator = row.DataValidator;
+                    if (dataValidator != null)
                     {
-                        Row row = worksheet.Rows[i];
-                        if (row != null)
-                        {
-                            DataValidator dataValidator = row.DataValidator;
-                            if (dataValidator != null)
-                            {
-                                IExcelDataValidation validation = dataValidator.ToExcelDataValidation();
-                                validation.Ranges.Add(this.CreateCellRange(i, 0, 1, 0x4000));
-                                result.Add(validation);
-                            }
-                        }
-                    };
+                        IExcelDataValidation validation = dataValidator.ToExcelDataValidation();
+                        validation.Ranges.Add(this.CreateCellRange(i, 0, 1, 0x4000));
+                        result.Add(validation);
+                    }
                 }
-                UIAdaptor.InvokeSync(action);
             }
         }
 
@@ -3206,35 +3150,33 @@ namespace Dt.Cells.Data
                     excelChart.PlotAreaFormat = chart.PlotArea.GetExcelChartForamt();
                     excelChart.PlotAreaLayout = chart.PlotAreaLayout.ToExcelLayout();
                     excelChart.ChartFormat = ExcelChartExtension.CreateExcelChartFormat(chart.FillThemeColor, chart.Fill, chart.StrokeThemeColor, chart.Stroke, chart.StrokeThickness, chart.IsAutomaticFill, chart.IsAutomaticStroke, chart.StrokeDashType, 1.0, (ExcelDrawingColorSettings)chart.FillDrawingColorSettings, (ExcelDrawingColorSettings)chart.StrokeDrawingColorSettings);
-                    UIAdaptor.InvokeSync(delegate
+                    if ((((chart.FontFamily != null) || (chart.Foreground != null)) || (!string.IsNullOrWhiteSpace(chart.ForegroundThemeColor) || !(chart.FontSize + 1.0).IsZero())) || (ExcelChartExtension.FontWeightsIsBold(chart.FontWeight) || (chart.FontStyle != FontStyle.Normal)))
                     {
-                        if ((((chart.FontFamily != null) || (chart.Foreground != null)) || (!string.IsNullOrWhiteSpace(chart.ForegroundThemeColor) || !(chart.FontSize + 1.0).IsZero())) || (ExcelChartExtension.FontWeightsIsBold(chart.FontWeight) || (chart.FontStyle != FontStyle.Normal)))
+                        if (excelChart.TextFormat == null)
                         {
-                            if (excelChart.TextFormat == null)
-                            {
-                                excelChart.TextFormat = new ExcelTextFormat();
-                                excelChart.TextFormat.TextParagraphs.Add(new TextParagraph());
-                            }
-                            if (chart.FontFamily != null)
-                            {
-                                RichTextUtility.SetFontFamily(excelChart.TextFormat.TextParagraphs, chart.FontFamily.GetFontName());
-                            }
-                            RichTextUtility.SetRichTextFill(excelChart.TextFormat.TextParagraphs, chart.ActualForeground);
-                            RichTextUtility.SetRichTextFontSize(excelChart.TextFormat.TextParagraphs, chart.ActualFontSize);
-                            if (chart.FontStyle == FontStyle.Italic)
-                            {
-                                RichTextUtility.SetRichTextFontStyle(excelChart.TextFormat.TextParagraphs, true);
-                            }
-                            if (ExcelChartExtension.FontWeightsIsBold(chart.FontWeight))
-                            {
-                                RichTextUtility.SetRichtTextFontWeight(excelChart.TextFormat.TextParagraphs, true);
-                            }
-                            else
-                            {
-                                RichTextUtility.SetRichtTextFontWeight(excelChart.TextFormat.TextParagraphs, false);
-                            }
+                            excelChart.TextFormat = new ExcelTextFormat();
+                            excelChart.TextFormat.TextParagraphs.Add(new TextParagraph());
                         }
-                    });
+                        if (chart.FontFamily != null)
+                        {
+                            RichTextUtility.SetFontFamily(excelChart.TextFormat.TextParagraphs, chart.FontFamily.GetFontName());
+                        }
+                        RichTextUtility.SetRichTextFill(excelChart.TextFormat.TextParagraphs, chart.ActualForeground);
+                        RichTextUtility.SetRichTextFontSize(excelChart.TextFormat.TextParagraphs, chart.ActualFontSize);
+                        if (chart.FontStyle == FontStyle.Italic)
+                        {
+                            RichTextUtility.SetRichTextFontStyle(excelChart.TextFormat.TextParagraphs, true);
+                        }
+                        if (ExcelChartExtension.FontWeightsIsBold(chart.FontWeight))
+                        {
+                            RichTextUtility.SetRichtTextFontWeight(excelChart.TextFormat.TextParagraphs, true);
+                        }
+                        else
+                        {
+                            RichTextUtility.SetRichtTextFontWeight(excelChart.TextFormat.TextParagraphs, false);
+                        }
+                    }
+
                     switch (chart.DisplayEmptyCellsAs)
                     {
                         case EmptyValueStyle.Gaps:
@@ -3315,12 +3257,8 @@ namespace Dt.Cells.Data
                         {
                             try
                             {
-                                BitmapImage imageSource = null;
-                                UIAdaptor.InvokeSync(delegate
-                                {
-                                    imageSource = new BitmapImage();
-                                    imageSource.UriSource = picture.UriSource;
-                                });
+                                BitmapImage imageSource = new BitmapImage();
+                                imageSource.UriSource = picture.UriSource;
                                 Stream stream = Utility.GetImageStream(imageSource, ImageFormat.Png, PictureSerializationMode.Normal);
                                 byte[] buffer = new byte[stream.Length];
                                 stream.Seek(0L, (SeekOrigin)SeekOrigin.Begin);
@@ -3360,7 +3298,7 @@ namespace Dt.Cells.Data
             list.AddRange(Enumerable.Cast<IExcelImage>((IEnumerable)worksheet.UnsupportImages));
             return list;
         }
-        
+
         public void GetZoom(short sheet, ref float zoom)
         {
             zoom = this._workbook.Sheets[sheet].ZoomFactor;
@@ -3397,21 +3335,18 @@ namespace Dt.Cells.Data
 
         private void InitDefaultDateFormatter()
         {
-            UIAdaptor.InvokeSync(delegate
+            ShortDateFormatter = new GeneralFormatter(CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern);
+            ShortTimeFormatter = new GeneralFormatter("h:mm:ss");
+            StyleInfo info = new StyleInfo
             {
-                ShortDateFormatter = new GeneralFormatter(CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern);
-                ShortTimeFormatter = new GeneralFormatter("h:mm:ss");
-                StyleInfo info = new StyleInfo
-                {
-                    Formatter = ShortDateFormatter
-                };
-                DefaultDateTimeStyle = info;
-                StyleInfo info2 = new StyleInfo
-                {
-                    Formatter = ShortTimeFormatter
-                };
-                DefaultTimeSpanStyle = info2;
-            });
+                Formatter = ShortDateFormatter
+            };
+            DefaultDateTimeStyle = info;
+            StyleInfo info2 = new StyleInfo
+            {
+                Formatter = ShortTimeFormatter
+            };
+            DefaultTimeSpanStyle = info2;
         }
 
         private static void InitExcelBuiltInStyles()
@@ -3484,22 +3419,15 @@ namespace Dt.Cells.Data
 
         private void InitStyle()
         {
-            StyleInfo normalStyle = null;
-            UIAdaptor.InvokeSync(delegate
-            {
-                normalStyle = this._workbook.DefaultStyle.Clone() as StyleInfo;
-            });
+            StyleInfo normalStyle = this._workbook.DefaultStyle.Clone() as StyleInfo;
             if (string.IsNullOrWhiteSpace(normalStyle.FontTheme) && (normalStyle.FontFamily == null))
             {
                 normalStyle.FontFamily = this._workbook.CurrentTheme.BodyFontFamily;
             }
-            UIAdaptor.InvokeSync(delegate
+            if ((((normalStyle.Background is SolidColorBrush) && ((normalStyle.Background as SolidColorBrush).Color == Windows.UI.Color.FromArgb(0, 0xff, 0xff, 0xff))) && (((normalStyle.FontFamily != null) ? normalStyle.FontFamily.Source : "Calibri") == ((this._workbook.CurrentTheme.BodyFontFamily != null) ? this._workbook.CurrentTheme.BodyFontFamily.Source : "Calibri"))) && (normalStyle.FontSize == DefaultStyleCollection.DefaultFontSize))
             {
-                if ((((normalStyle.Background is SolidColorBrush) && ((normalStyle.Background as SolidColorBrush).Color == Windows.UI.Color.FromArgb(0, 0xff, 0xff, 0xff))) && (((normalStyle.FontFamily != null) ? normalStyle.FontFamily.Source : "Calibri") == ((this._workbook.CurrentTheme.BodyFontFamily != null) ? this._workbook.CurrentTheme.BodyFontFamily.Source : "Calibri"))) && (normalStyle.FontSize == DefaultStyleCollection.DefaultFontSize))
-                {
-                    normalStyle.Background = null;
-                }
-            });
+                normalStyle.Background = null;
+            }
             normalStyle.Name = "Normal";
             this._namedStyleTable.Add("Normal", 0);
             this._styles.Add(normalStyle);
@@ -3643,29 +3571,24 @@ namespace Dt.Cells.Data
 
         public double MeasureStringHeightCore(string text, string fontName, double fontSize, bool wordWrap, bool bold, bool italic, double width)
         {
-            double result = 0.0;
-            UIAdaptor.InvokeSync(delegate
+            TextBlock block = new TextBlock();
+            block.FontFamily = new FontFamily(fontName);
+            block.FontSize = fontSize;
+            if (bold)
             {
-                TextBlock block = new TextBlock();
-                block.FontFamily = new FontFamily(fontName);
-                block.FontSize = fontSize;
-                if (bold)
-                {
-                    block.FontWeight = FontWeights.Bold;
-                }
-                if (italic)
-                {
-                    block.FontStyle = FontStyle.Italic;
-                }
-                block.Margin = new Windows.UI.Xaml.Thickness(4.0);
-                block.TextWrapping = wordWrap ? TextWrapping.Wrap : TextWrapping.NoWrap;
-                block.Text = text;
-                block.LineStackingStrategy = LineStackingStrategy.BlockLineHeight;
-                block.Measure(new Windows.Foundation.Size((width <= 0.0) ? double.MaxValue : width, double.MaxValue));
-                block.Width = (width < 0.0) ? double.MaxValue : width;
-                result = Math.Floor((double)(block.ActualHeight + 8.0));
-            });
-            return result;
+                block.FontWeight = FontWeights.Bold;
+            }
+            if (italic)
+            {
+                block.FontStyle = FontStyle.Italic;
+            }
+            block.Margin = new Windows.UI.Xaml.Thickness(4.0);
+            block.TextWrapping = wordWrap ? TextWrapping.Wrap : TextWrapping.NoWrap;
+            block.Text = text;
+            block.LineStackingStrategy = LineStackingStrategy.BlockLineHeight;
+            block.Measure(new Windows.Foundation.Size((width <= 0.0) ? double.MaxValue : width, double.MaxValue));
+            block.Width = (width < 0.0) ? double.MaxValue : width;
+            return Math.Floor((double)(block.ActualHeight + 8.0));
         }
 
         public void OnExcelSaveError(ExcelWarning excelWarning)
@@ -3694,10 +3617,7 @@ namespace Dt.Cells.Data
                 }
             }
             this.Clear();
-            UIAdaptor.InvokeSync(delegate
-            {
-                this._workbook.ResumeCalcService();
-            });
+            this._workbook.ResumeCalcService();
             this._workbook.ResumeEvent();
         }
 
@@ -3751,10 +3671,7 @@ namespace Dt.Cells.Data
                         this.AddCellSparklineToCache(sparklineGroup, sparkline);
                         SheetTable table = worksheet.FindTable(row, column);
                         bool isInTable = table != null;
-                        UIAdaptor.InvokeSync(delegate
-                        {
-                            this.GetCellStyle(worksheet, row, column, allNamedStyles, cellStyleTable, columnNamedStyles[column], currentRowStyleName, currentRowStyle, columnStyles[column], styleKey, value, ref styleName, ref styleInfo, isInTable);
-                        });
+                        this.GetCellStyle(worksheet, row, column, allNamedStyles, cellStyleTable, columnNamedStyles[column], currentRowStyleName, currentRowStyle, columnStyles[column], styleKey, value, ref styleName, ref styleInfo, isInTable);
                         if ((isInTable && ((row == table.HeaderIndex) || (row == table.FooterIndex))) && (value != null))
                         {
                             value = value.ToString();
@@ -3840,13 +3757,10 @@ namespace Dt.Cells.Data
             this.GetDifferentConditionalFormatFromTable(styles);
             this.GetDifferentConditionalFormatFormConditionalFormat(styles);
             List<IDifferentialFormatting> result = new List<IDifferentialFormatting>();
-            UIAdaptor.InvokeSync(delegate
+            foreach (StyleInfo info in styles)
             {
-                foreach (StyleInfo info in styles)
-                {
-                    result.Add(info.ToDifferentialFormatting(this._workbook));
-                }
-            });
+                result.Add(info.ToDifferentialFormatting(this._workbook));
+            }
             if (this._differenceFormats == null)
             {
                 this._differenceFormats = new List<IDifferentialFormatting>();
@@ -3871,15 +3785,12 @@ namespace Dt.Cells.Data
                 builtInStyles = builtInExcelStyleCollection.GetBuiltInStyls();
             }).Wait();
             StyleInfoCollection builtInStyleCollection = new StyleInfoCollection();
-            UIAdaptor.InvokeSync(delegate
+            foreach (IExcelStyle style in builtInStyles)
             {
-                foreach (IExcelStyle style in builtInStyles)
-                {
-                    StyleInfo info = style.Format.ToCellStyleInfo(this._workbook);
-                    info.Name = style.Name;
-                    builtInStyleCollection.Add(info);
-                }
-            });
+                StyleInfo info = style.Format.ToCellStyleInfo(this._workbook);
+                info.Name = style.Name;
+                builtInStyleCollection.Add(info);
+            }
             this.PreProcessNamedStyles(builtInStyleCollection, processedNamesStyle, fakeNamedStyles);
             int num2 = this._styles.Count;
             for (int j = 0; j < num2; j++)
@@ -3929,21 +3840,13 @@ namespace Dt.Cells.Data
             this.InitStyle();
             this.PreProcessNamedStyle();
             this.PreProcessDifferentConditonalFormats();
-            Action action = null;
             for (int sheetIndex = 0; sheetIndex < this._workbook.Sheets.Count; sheetIndex++)
             {
                 if (this._workbook.Sheets[sheetIndex] != null)
                 {
                     this.InitCacheCollections(sheetIndex);
-                    if (action == null)
-                    {
-                        action = delegate
-                        {
-                            this.ShiftRowHeader(sheetIndex);
-                            this.ShiftColumnHeader(sheetIndex);
-                        };
-                    }
-                    UIAdaptor.InvokeSync(action);
+                    this.ShiftRowHeader(sheetIndex);
+                    this.ShiftColumnHeader(sheetIndex);
                     this.PreProcessCells(sheetIndex);
                     this.PreProcessColumnStyles(sheetIndex);
                     if (this._formulas.ContainsKey(sheetIndex))
@@ -3953,19 +3856,15 @@ namespace Dt.Cells.Data
                 }
             }
             this._formulas.Clear();
-            UIAdaptor.InvokeSync(delegate
+            try
             {
-                try
+                if (!this.AllEqual(this._sheetsRowOffsets, 0) || !this.AllEqual(this._sheetscolumnOffsets, 0))
                 {
-                    if (!this.AllEqual(this._sheetsRowOffsets, 0) || !this.AllEqual(this._sheetscolumnOffsets, 0))
-                    {
-                        this._workbook.ResumeCalcService();
-                    }
+                    this._workbook.ResumeCalcService();
                 }
-                catch
-                {
-                }
-            });
+            }
+            catch
+            { }
         }
 
         private void ProcessConditionalFormatAverageRule(List<StyleInfo> styles, int sheetIndex, ref short identfier, FormattingRuleBase item)
@@ -4871,23 +4770,20 @@ namespace Dt.Cells.Data
         {
             this._sheetsRowOffsets = new int[this._workbook.SheetCount];
             this._sheetscolumnOffsets = new int[this._workbook.SheetCount];
-            UIAdaptor.InvokeSync(delegate
+            for (int j = 0; j < this._workbook.SheetCount; j++)
             {
-                for (int j = 0; j < this._workbook.SheetCount; j++)
+                Worksheet worksheet = this._workbook.Sheets[j];
+                if (this._saveFlags.SaveCustomRowHeaders())
                 {
-                    Worksheet worksheet = this._workbook.Sheets[j];
-                    if (this._saveFlags.SaveCustomRowHeaders())
-                    {
-                        this._sheetscolumnOffsets[j] = worksheet.RowHeader.ColumnCount;
-                        worksheet.AddColumns(0, worksheet.RowHeader.ColumnCount);
-                    }
-                    if (this._saveFlags.SaveCustomColumnHeaders())
-                    {
-                        this._sheetsRowOffsets[j] = worksheet.ColumnHeader.RowCount;
-                        worksheet.AddRows(0, worksheet.ColumnHeader.RowCount);
-                    }
+                    this._sheetscolumnOffsets[j] = worksheet.RowHeader.ColumnCount;
+                    worksheet.AddColumns(0, worksheet.RowHeader.ColumnCount);
                 }
-            });
+                if (this._saveFlags.SaveCustomColumnHeaders())
+                {
+                    this._sheetsRowOffsets[j] = worksheet.ColumnHeader.RowCount;
+                    worksheet.AddRows(0, worksheet.ColumnHeader.RowCount);
+                }
+            }
         }
 
         private IRange ToRange(CellRange range)
@@ -4982,42 +4878,34 @@ namespace Dt.Cells.Data
 
         private double UpdateMaxRowHeightIfNeeded(Workbook workbook, List<double> columnsWidthCollection, double maxRowHeight, int column, StyleInfo styleInfo, Dt.Cells.Data.ExcelCell cell)
         {
-            Action action = null;
             if ((this._saveFlags.AutoRowHeight() && (cell.Value != null)) && (styleInfo != null))
             {
-                if (action == null)
+                FontFamily bodyFontFamily = null;
+                if (!string.IsNullOrWhiteSpace(styleInfo.FontTheme))
                 {
-                    action = delegate
+                    if (styleInfo.FontTheme.ToUpperInvariant() == "Body")
                     {
-                        FontFamily bodyFontFamily = null;
-                        if (!string.IsNullOrWhiteSpace(styleInfo.FontTheme))
-                        {
-                            if (styleInfo.FontTheme.ToUpperInvariant() == "Body")
-                            {
-                                bodyFontFamily = workbook.CurrentTheme.BodyFontFamily;
-                            }
-                            else if (styleInfo.FontTheme.ToUpperInvariant() == "Headings")
-                            {
-                                bodyFontFamily = workbook.CurrentTheme.HeadingFontFamily;
-                            }
-                        }
-                        else if (styleInfo.FontFamily != null)
-                        {
-                            bodyFontFamily = styleInfo.FontFamily;
-                        }
-                        if (styleInfo.FontFamily == null)
-                        {
-                            styleInfo.FontFamily = (workbook.DefaultStyle.FontFamily != null) ? workbook.DefaultStyle.FontFamily : new FontFamily("Calibri");
-                        }
-                        double fontSize = (styleInfo.FontSize >= 0.0) ? styleInfo.FontSize : ((workbook.DefaultStyle.FontSize * 96.0) / 72.0);
-                        double num2 = this.CalcRowHeight(cell.Value.ToString(), bodyFontFamily, fontSize, styleInfo.WordWrap, styleInfo.FontWeight, styleInfo.FontStyle, columnsWidthCollection[column]);
-                        if (num2 > maxRowHeight)
-                        {
-                            maxRowHeight = num2;
-                        }
-                    };
+                        bodyFontFamily = workbook.CurrentTheme.BodyFontFamily;
+                    }
+                    else if (styleInfo.FontTheme.ToUpperInvariant() == "Headings")
+                    {
+                        bodyFontFamily = workbook.CurrentTheme.HeadingFontFamily;
+                    }
                 }
-                UIAdaptor.InvokeSync(action);
+                else if (styleInfo.FontFamily != null)
+                {
+                    bodyFontFamily = styleInfo.FontFamily;
+                }
+                if (styleInfo.FontFamily == null)
+                {
+                    styleInfo.FontFamily = (workbook.DefaultStyle.FontFamily != null) ? workbook.DefaultStyle.FontFamily : new FontFamily("Calibri");
+                }
+                double fontSize = (styleInfo.FontSize >= 0.0) ? styleInfo.FontSize : ((workbook.DefaultStyle.FontSize * 96.0) / 72.0);
+                double num2 = this.CalcRowHeight(cell.Value.ToString(), bodyFontFamily, fontSize, styleInfo.WordWrap, styleInfo.FontWeight, styleInfo.FontStyle, columnsWidthCollection[column]);
+                if (num2 > maxRowHeight)
+                {
+                    maxRowHeight = num2;
+                }
             }
             return maxRowHeight;
         }
