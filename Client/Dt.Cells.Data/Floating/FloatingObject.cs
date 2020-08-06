@@ -23,27 +23,27 @@ namespace Dt.Cells.Data
     /// </summary>
     public abstract class FloatingObject : IFloatingObject, IRangeSupport, IXmlSerializable, ICloneable, INotifyPropertyChanged
     {
-        private bool _canPrint;
-        private bool _dynamicMove;
-        private bool _dynamicSize;
-        private int _endColumn;
-        private double _endColumnOffset;
-        private int _endRow;
-        private double _endRowOffset;
-        private bool _isSelected;
-        private Windows.Foundation.Point _location;
-        private bool _locked;
-        private string _name;
-        private IList _owner;
-        private IFloatingObjectSheet _sheet;
+        bool _canPrint;
+        bool _dynamicMove;
+        bool _dynamicSize;
+        int _endColumn;
+        double _endColumnOffset;
+        int _endRow;
+        double _endRowOffset;
+        bool _isSelected;
+        Windows.Foundation.Point _location;
+        bool _locked;
+        string _name;
+        IList _owner;
+        IFloatingObjectSheet _sheet;
         internal Windows.Foundation.Size _size;
-        private bool _sizeWithSameRatio;
-        private int _startColumn;
-        private double _startColumnOffset;
-        private int _startRow;
-        private double _startRowOffset;
-        private WorkingState _suspendState;
-        private bool _visible;
+        bool _sizeWithSameRatio;
+        int _startColumn;
+        double _startColumnOffset;
+        int _startRow;
+        double _startRowOffset;
+        WorkingState _suspendState;
+        bool _visible;
 
         /// <summary>
         /// Occurs when a property value changes.
@@ -91,7 +91,7 @@ namespace Dt.Cells.Data
             this.Init(name, x, y, width, height);
         }
 
-        private void AdjustLocation()
+        void AdjustLocation()
         {
             Windows.Foundation.Size sheetBounds = this.GetSheetBounds();
             double num = this._location.X + this.Size.Width;
@@ -114,7 +114,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void AdjustSize()
+        void AdjustSize()
         {
             Windows.Foundation.Size sheetBounds = this.GetSheetBounds();
             if (this._size.Width > sheetBounds.Width)
@@ -127,7 +127,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private Windows.Foundation.Size AdjustSizeWithRatio(Windows.Foundation.Size newSize)
+        Windows.Foundation.Size AdjustSizeWithRatio(Windows.Foundation.Size newSize)
         {
             if (!this.SizeWithSameRatio)
             {
@@ -157,7 +157,7 @@ namespace Dt.Cells.Data
             this.Init(string.Empty, 0.0, 0.0, 200.0, 200.0);
         }
 
-        private int CalcAnchorColumn(double x, out double coumnOffset)
+        int CalcAnchorColumn(double x, out double coumnOffset)
         {
             double num = 0.0;
             coumnOffset = 0.0;
@@ -180,7 +180,7 @@ namespace Dt.Cells.Data
             return -1;
         }
 
-        private int CalcAnchorRow(double y, out double rowOffset)
+        int CalcAnchorRow(double y, out double rowOffset)
         {
             double num = 0.0;
             rowOffset = 0.0;
@@ -249,7 +249,7 @@ namespace Dt.Cells.Data
             return null;
         }
 
-        private Windows.Foundation.Size GetSheetBounds()
+        Windows.Foundation.Size GetSheetBounds()
         {
             if (this.Sheet == null)
             {
@@ -619,7 +619,7 @@ namespace Dt.Cells.Data
             this.WriteXmlInternal(writer);
         }
 
-        private void UpdateConverRange()
+        void UpdateConverRange()
         {
             if (this._sheet != null)
             {
@@ -667,7 +667,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void UpdateFloatingObjectLocation()
+        void UpdateFloatingObjectLocation()
         {
             if (this._sheet != null)
             {
@@ -688,7 +688,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void UpdateFloatingObjectSize()
+        void UpdateFloatingObjectSize()
         {
             if (this._sheet != null)
             {

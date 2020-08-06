@@ -20,7 +20,7 @@ namespace Dt.Cells.Data
     /// </summary>
     public sealed class ColorCondition : ConditionBase
     {
-        private ColorCompareType compareType;
+        ColorCompareType compareType;
 
         /// <summary>
         /// Creates a new style condition.
@@ -84,7 +84,7 @@ namespace Dt.Cells.Data
             return new ColorCondition(compareType, expected);
         }
 
-        private bool IsEqualsBackgroundColor(IActualValue actualObj)
+        bool IsEqualsBackgroundColor(IActualValue actualObj)
         {
             Windows.UI.Color? nullable = base.GetExpectedColor(null, 0, 0);
             if (nullable.HasValue)
@@ -100,7 +100,7 @@ namespace Dt.Cells.Data
             return this.IgnoreBlank;
         }
 
-        private bool IsEqualsForegroundColor(IActualValue actualObj)
+        bool IsEqualsForegroundColor(IActualValue actualObj)
         {
             Windows.UI.Color? nullable = base.GetExpectedColor(null, 0, 0);
             if (nullable.HasValue)

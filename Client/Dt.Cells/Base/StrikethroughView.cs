@@ -38,15 +38,15 @@ namespace Dt.Cells.UI
             base.Children.Add(_border);
         }
 
-        protected override Windows.Foundation.Size ArrangeOverride(Windows.Foundation.Size availableSize)
+        protected override Size ArrangeOverride(Size availableSize)
         {
-            Windows.Foundation.Size size = new Windows.Foundation.Size(availableSize.Width, availableSize.Height);
+            Size size = new Size(availableSize.Width, availableSize.Height);
             foreach (UIElement element in _cellBackgroundPanel.Children)
             {
                 if (element is TextBlock)
                 {
                     size.Width = (element as TextBlock).DesiredSize.Width;
-                    foreach (Windows.UI.Xaml.Shapes.Line line in _lineContainer.Children)
+                    foreach (Line line in _lineContainer.Children)
                     {
                         line.Stroke = (element as TextBlock).Foreground;
                     }
@@ -54,18 +54,18 @@ namespace Dt.Cells.UI
                     break;
                 }
             }
-            _border.Arrange(new Windows.Foundation.Rect(new Windows.Foundation.Point(0.0, 0.0), availableSize));
+            _border.Arrange(new Rect(new Point(0.0, 0.0), availableSize));
             if (_bindingCell.Worksheet.Workbook.CanCellOverflow)
             {
                 double width = Math.Max(availableSize.Width, size.Width);
                 RectangleGeometry geometry = new RectangleGeometry();
-                geometry.Rect = new Windows.Foundation.Rect(new Windows.Foundation.Point(0.0, 0.0), new Windows.Foundation.Size(width, availableSize.Height));
+                geometry.Rect = new Rect(new Point(0.0, 0.0), new Size(width, availableSize.Height));
                 base.Clip = geometry;
             }
             else
             {
                 RectangleGeometry geometry2 = new RectangleGeometry();
-                geometry2.Rect = new Windows.Foundation.Rect(new Windows.Foundation.Point(0.0, 0.0), availableSize);
+                geometry2.Rect = new Rect(new Point(0.0, 0.0), availableSize);
                 base.Clip = geometry2;
             }
             return base.ArrangeOverride(availableSize);
@@ -76,26 +76,26 @@ namespace Dt.Cells.UI
             TextBlock block = new TextBlock();
             block.TextWrapping = TextWrapping.NoWrap;
             block.Text = Regex.Replace(cell.Text, @"[\n\r]", "");
-            return MeasureHelper.MeasureText(block.Text, cell.ActualFontFamily, cell.ActualFontSize * cell.Worksheet.ZoomFactor, cell.ActualFontStretch, cell.ActualFontStyle, cell.ActualFontWeight, new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity), cell.ActualWordWrap, null, false, (double) cell.Worksheet.ZoomFactor).Height;
+            return MeasureHelper.MeasureText(block.Text, cell.ActualFontFamily, cell.ActualFontSize * cell.Worksheet.ZoomFactor, cell.ActualFontStretch, cell.ActualFontStyle, cell.ActualFontWeight, new Size(double.PositiveInfinity, double.PositiveInfinity), cell.ActualWordWrap, null, false, (double) cell.Worksheet.ZoomFactor).Height;
         }
 
         double GetLineSpacing(Cell cell)
         {
             string text = "ABCabABC";
             string str2 = "ABC\r\nAB";
-            Windows.Foundation.Size size = MeasureHelper.MeasureText(text, cell.ActualFontFamily, cell.ActualFontSize * cell.Worksheet.ZoomFactor, cell.ActualFontStretch, cell.ActualFontStyle, cell.ActualFontWeight, new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity), cell.ActualWordWrap, null, false, (double) cell.Worksheet.ZoomFactor);
-            return (MeasureHelper.MeasureText(str2, cell.ActualFontFamily, cell.ActualFontSize * cell.Worksheet.ZoomFactor, cell.ActualFontStretch, cell.ActualFontStyle, cell.ActualFontWeight, new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity), cell.ActualWordWrap, null, false, (double) cell.Worksheet.ZoomFactor).Height - (size.Height * 2.0));
+            Size size = MeasureHelper.MeasureText(text, cell.ActualFontFamily, cell.ActualFontSize * cell.Worksheet.ZoomFactor, cell.ActualFontStretch, cell.ActualFontStyle, cell.ActualFontWeight, new Size(double.PositiveInfinity, double.PositiveInfinity), cell.ActualWordWrap, null, false, (double) cell.Worksheet.ZoomFactor);
+            return (MeasureHelper.MeasureText(str2, cell.ActualFontFamily, cell.ActualFontSize * cell.Worksheet.ZoomFactor, cell.ActualFontStretch, cell.ActualFontStyle, cell.ActualFontWeight, new Size(double.PositiveInfinity, double.PositiveInfinity), cell.ActualWordWrap, null, false, (double) cell.Worksheet.ZoomFactor).Height - (size.Height * 2.0));
         }
 
-        static Windows.Foundation.Size GetTextSize(Cell cell)
+        static Size GetTextSize(Cell cell)
         {
-            Windows.Foundation.Size maxSize = new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity);
+            Size maxSize = new Size(double.PositiveInfinity, double.PositiveInfinity);
             if (cell.ActualWordWrap)
             {
                 CellRange range = cell.Worksheet.GetSpanCell(cell.Row.Index, cell.Column.Index, cell.SheetArea);
                 if ((range != null) && ((range.Row < cell.Row.Index) || (range.RowCount > 1)))
                 {
-                    return new Windows.Foundation.Size(0.0, 0.0);
+                    return new Size(0.0, 0.0);
                 }
                 double width = 0.0;
                 if (range == null)
@@ -110,12 +110,12 @@ namespace Dt.Cells.UI
                     }
                 }
                 width *= cell.Worksheet.ZoomFactor;
-                maxSize = MeasureHelper.ConvertExcelCellSizeToTextSize(new Windows.Foundation.Size(width, double.PositiveInfinity), 1.0);
+                maxSize = MeasureHelper.ConvertExcelCellSizeToTextSize(new Size(width, double.PositiveInfinity), 1.0);
             }
             return MeasureHelper.MeasureTextInCell(cell, maxSize, (double) cell.Worksheet.ZoomFactor, cell.ActualFontFamily, null, false);
         }
 
-        protected override Windows.Foundation.Size MeasureOverride(Windows.Foundation.Size availableSize)
+        protected override Size MeasureOverride(Size availableSize)
         {
             _border.Measure(availableSize);
             return base.MeasureOverride(availableSize);
@@ -125,15 +125,15 @@ namespace Dt.Cells.UI
         {
             if (!cell.ActualStrikethrough || string.IsNullOrEmpty(cell.Text))
             {
-                List<Windows.UI.Xaml.Shapes.Line> list = new List<Windows.UI.Xaml.Shapes.Line>();
+                List<Line> list = new List<Line>();
                 foreach (UIElement element in base.Children)
                 {
-                    if (element is Windows.UI.Xaml.Shapes.Line)
+                    if (element is Line)
                     {
-                        list.Add(element as Windows.UI.Xaml.Shapes.Line);
+                        list.Add(element as Line);
                     }
                 }
-                foreach (Windows.UI.Xaml.Shapes.Line line in list)
+                foreach (Line line in list)
                 {
                     base.Children.Remove(line);
                 }
@@ -142,7 +142,7 @@ namespace Dt.Cells.UI
             {
                 double lineSpacing = GetLineSpacing(cell);
                 double lineHeight = GetLineHeight(cell);
-                Windows.Foundation.Size textSize = GetTextSize(cell);
+                Size textSize = GetTextSize(cell);
                 double a = (textSize.Height + lineSpacing) / (lineHeight + lineSpacing);
                 int num4 = (int) Math.Round(a);
                 double width = textSize.Width;
@@ -153,7 +153,7 @@ namespace Dt.Cells.UI
                 {
                     for (int i = 0; i < num4; i++)
                     {
-                        Windows.UI.Xaml.Shapes.Line line2 = new Windows.UI.Xaml.Shapes.Line();
+                        Line line2 = new Line();
                         line2.StrokeThickness = 1.0;
                         line2.Stroke = cell.ActualForeground;
                         line2.X1 = excelBlank.Left * cell.Worksheet.ZoomFactor;

@@ -29,10 +29,10 @@ namespace Dt.Cells.Data
     /// </summary>
     public class Picture : SpreadChartShapeBase
     {
-        private ImageSource _imageSource;
-        private PictureSerializationMode _serializationMode;
-        private Stretch _stretch;
-        private Uri _uriSource;
+        ImageSource _imageSource;
+        PictureSerializationMode _serializationMode;
+        Stretch _stretch;
+        Uri _uriSource;
         internal string ImageByteArrayBase64String;
 
         /// <summary>
@@ -197,7 +197,7 @@ namespace Dt.Cells.Data
             return null;
         }
 
-        private Size? GetPicturPreferredSize()
+        Size? GetPicturPreferredSize()
         {
             ImageSource imageSource = GetActualImageSource();
             if ((imageSource != null) && (imageSource is BitmapSource))
@@ -217,7 +217,7 @@ namespace Dt.Cells.Data
             return null;
         }
 
-        private void InitImageSource(Stream imageStream)
+        void InitImageSource(Stream imageStream)
         {
             byte[] buffer = new byte[imageStream.Length];
             imageStream.Seek(0L, SeekOrigin.Begin);
@@ -266,7 +266,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void UpdateToPreferredSize()
+        void UpdateToPreferredSize()
         {
             ImageSource imageSource = GetActualImageSource();
             if (imageSource is BitmapImage)
@@ -312,7 +312,7 @@ namespace Dt.Cells.Data
                 Serializer.SerializeObj(_stretch, "Stretch", writer);
         }
 
-        private async Task GetPixelsBuffer(RenderTargetBitmap p_rtb)
+        async Task GetPixelsBuffer(RenderTargetBitmap p_rtb)
         {
             var buffer = await p_rtb.GetPixelsAsync();
         }

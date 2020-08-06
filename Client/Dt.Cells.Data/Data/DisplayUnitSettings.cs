@@ -19,7 +19,7 @@ namespace Dt.Cells.Data
     /// </summary>
     internal class DisplayUnitSettings
     {
-        private double _uint = double.NaN;
+        double _uint = double.NaN;
 
         /// <summary>
         /// Gets or sets the display unit.

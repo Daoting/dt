@@ -19,7 +19,7 @@ namespace Dt.Cells.Data
     /// </summary>
     public sealed class DateCondition : ConditionBase
     {
-        private DateCompareType compareType;
+        DateCompareType compareType;
 
         /// <summary>
         /// Creates a new date condition.
@@ -57,7 +57,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="datetime">The datetime</param>
         /// <returns>Returns the date time.</returns>
-        private DateTime CreateDayBeginning(DateTime datetime)
+        DateTime CreateDayBeginning(DateTime datetime)
         {
             return new DateTime(datetime.Year, datetime.Month, datetime.Day, 0, 0, 0);
         }
@@ -67,7 +67,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="datetime">The datetime</param>
         /// <returns>Returns the date time.</returns>
-        private DateTime CreateDayEnding(DateTime datetime)
+        DateTime CreateDayEnding(DateTime datetime)
         {
             return new DateTime(datetime.Year, datetime.Month, datetime.Day, 0x17, 0x3b, 0x3b);
         }
@@ -152,7 +152,7 @@ namespace Dt.Cells.Data
         /// <returns>
         /// <c>true</c> if the specified date is after another date; otherwise, <c>false</c>.
         /// </returns>
-        private bool IsAfter(DateTime expectedValue, DateTime value)
+        bool IsAfter(DateTime expectedValue, DateTime value)
         {
             DateTime time = this.CreateDayEnding(expectedValue);
             return (value > time);
@@ -166,7 +166,7 @@ namespace Dt.Cells.Data
         /// <returns>
         /// <c>true</c> if the specified date is before another date; otherwise, <c>false</c>.
         /// </returns>
-        private bool IsBefore(DateTime expectedValue, DateTime value)
+        bool IsBefore(DateTime expectedValue, DateTime value)
         {
             DateTime time = this.CreateDayBeginning(expectedValue);
             return (value < time);
@@ -180,7 +180,7 @@ namespace Dt.Cells.Data
         /// <returns>
         /// <c>true</c> if the specified date equals the other date; otherwise, <c>false</c>.
         /// </returns>
-        private bool IsEquals(DateTime expectedValue, DateTime value)
+        bool IsEquals(DateTime expectedValue, DateTime value)
         {
             return (((expectedValue.Year == value.Year) && (expectedValue.Month == value.Month)) && (expectedValue.Day == value.Day));
         }

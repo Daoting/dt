@@ -26,7 +26,7 @@ namespace Dt.Cells.Data
 {
     public partial class Worksheet : IXmlSerializable, ICellsSupport, ICalcSource, IEqualityComparer<ICalcSource>, ICustomNameSupport, ISubtotalSupport, IMultiSourceProvider, IBindableSheet, ISparklineSheet, ITableSheet, IUIActionExecuter, IPrintSupportInternal, IFloatingObjectSheet, ICalcEvaluator, IThemeSupport
     {
-        private bool _lockCell;
+        bool _lockCell;
 
         /// <summary>
         /// 获取设置是否锁定单元格只读，报表预览中用，只读优先级高于Protect

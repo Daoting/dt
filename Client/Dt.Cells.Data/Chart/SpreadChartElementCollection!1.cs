@@ -20,8 +20,8 @@ namespace Dt.Cells.Data
     /// <typeparam name="T"></typeparam>
     public class SpreadChartElementCollection<T> : NotifyCollection<T> where T: SpreadChartElement
     {
-        private ChartArea _area;
-        private SpreadChartBase _chart;
+        ChartArea _area;
+        SpreadChartBase _chart;
 
         internal SpreadChartElementCollection(SpreadChartBase chart, ChartArea area)
         {
@@ -79,7 +79,7 @@ namespace Dt.Cells.Data
             this.NotifyChart();
         }
 
-        private void NotifyChart()
+        void NotifyChart()
         {
             if (!base.IsEventSuspended)
             {

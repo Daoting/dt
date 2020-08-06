@@ -16,9 +16,9 @@ namespace Dt.Cells.Data
 {
     internal class ReorderVisitor : OperatorExpressionVisistor
     {
-        private int _count;
-        private int _from;
-        private int _to;
+        int _count;
+        int _from;
+        int _to;
 
         public ReorderVisitor(int from, int to, int count, bool row, bool isFullBand, ICalcSource currentCalcSource = null) : base(row, isFullBand, currentCalcSource)
         {
@@ -46,7 +46,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private static void AdjustDown(int rangeStart, int rangeCount, int moveRangeStart, int moveRangeCount, int moveOffset, out int newStart, out int newCount)
+        static void AdjustDown(int rangeStart, int rangeCount, int moveRangeStart, int moveRangeCount, int moveOffset, out int newStart, out int newCount)
         {
             switch (GetAdjustMode(rangeStart, rangeCount, moveRangeStart, moveRangeCount, moveOffset))
             {
@@ -112,7 +112,7 @@ namespace Dt.Cells.Data
             Adjust(oldIndex, 1, this._from, this._count, this._to - this._from, out newIndex, out num);
         }
 
-        private static int GetMoveDownAdjustMode(int rangeStart, int rangeCount, int moveRangeStart, int moveRangeCount, int moveOffset)
+        static int GetMoveDownAdjustMode(int rangeStart, int rangeCount, int moveRangeStart, int moveRangeCount, int moveOffset)
         {
             if ((rangeStart > moveRangeStart) || (rangeCount <= (((moveRangeStart + moveRangeCount) + moveOffset) - rangeStart)))
             {
@@ -156,7 +156,7 @@ namespace Dt.Cells.Data
             return 0;
         }
 
-        private static int GetMoveUpAdjustMode(int rangeStart, int rangeCount, int moveRangeStart, int moveRangeCount, int moveOffset)
+        static int GetMoveUpAdjustMode(int rangeStart, int rangeCount, int moveRangeStart, int moveRangeCount, int moveOffset)
         {
             Reverse(ref rangeStart, ref rangeCount, ref moveRangeStart, ref moveRangeCount, ref moveOffset);
             return GetMoveDownAdjustMode(rangeStart, rangeCount, moveRangeStart, moveRangeCount, moveOffset);
@@ -169,7 +169,7 @@ namespace Dt.Cells.Data
             newEnd = (num + newStart) - 1;
         }
 
-        private static int Reverse(ref int rangeStart, ref int rangeCount, ref int moveRangeStart, ref int moveRangeCount, ref int moveOffset)
+        static int Reverse(ref int rangeStart, ref int rangeCount, ref int moveRangeStart, ref int moveRangeCount, ref int moveOffset)
         {
             int num = rangeStart + rangeCount;
             int num2 = moveRangeStart + moveRangeCount;
@@ -180,7 +180,7 @@ namespace Dt.Cells.Data
             return num3;
         }
 
-        private static void ReverseBack(int baseline, ref int rangeStart, ref int rangeCount)
+        static void ReverseBack(int baseline, ref int rangeStart, ref int rangeCount)
         {
             int num = baseline - rangeStart;
             rangeStart = num - rangeCount;

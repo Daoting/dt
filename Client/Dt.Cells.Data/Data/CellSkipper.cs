@@ -21,7 +21,7 @@ namespace Dt.Cells.Data
         /// <summary>
         /// the handler of skip
         /// </summary>
-        private SkipHandler skipHandler;
+        SkipHandler skipHandler;
 
         /// <summary>
         /// Creates a new instance of the <see cref="T:Dt.Cells.Data.CellSkipper" /> class.

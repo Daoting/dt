@@ -25,8 +25,8 @@ namespace Dt.Cells.Data
     /// </summary>
     internal static class TypePool
     {
-        private static Assembly[] assemblys = new Assembly[] { IntrospectionExtensions.GetTypeInfo((Type) typeof(Worksheet)).Assembly, IntrospectionExtensions.GetTypeInfo((Type) typeof(CalcError)).Assembly, IntrospectionExtensions.GetTypeInfo((Type) typeof(int)).Assembly, IntrospectionExtensions.GetTypeInfo((Type) typeof(Uri)).Assembly, IntrospectionExtensions.GetTypeInfo((Type) typeof(CallInfo)).Assembly, IntrospectionExtensions.GetTypeInfo((Type) typeof(XmlException)).Assembly, IntrospectionExtensions.GetTypeInfo((Type) typeof(DependencyObject)).Assembly, IntrospectionExtensions.GetTypeInfo((Type) typeof(Color)).Assembly };
-        private static Dictionary<string, Type> typeMap = new Dictionary<string, Type>();
+        static Assembly[] assemblys = new Assembly[] { IntrospectionExtensions.GetTypeInfo((Type) typeof(Worksheet)).Assembly, IntrospectionExtensions.GetTypeInfo((Type) typeof(CalcError)).Assembly, IntrospectionExtensions.GetTypeInfo((Type) typeof(int)).Assembly, IntrospectionExtensions.GetTypeInfo((Type) typeof(Uri)).Assembly, IntrospectionExtensions.GetTypeInfo((Type) typeof(CallInfo)).Assembly, IntrospectionExtensions.GetTypeInfo((Type) typeof(XmlException)).Assembly, IntrospectionExtensions.GetTypeInfo((Type) typeof(DependencyObject)).Assembly, IntrospectionExtensions.GetTypeInfo((Type) typeof(Color)).Assembly };
+        static Dictionary<string, Type> typeMap = new Dictionary<string, Type>();
 
         public static void CacheType(string typeName, Type type)
         {

@@ -16,8 +16,8 @@ namespace Dt.Cells.Data
 {
     internal class RemoveVisitor : OperatorExpressionVisistor
     {
-        private int _count;
-        private int _index;
+        int _count;
+        int _index;
 
         public RemoveVisitor(int index, int count, bool row, bool isFullBand, ICalcSource currentCalcSource = null) : base(row, isFullBand, currentCalcSource)
         {

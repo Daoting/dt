@@ -198,7 +198,7 @@ namespace Dt.Cells.UI
             return TabsPresenter.GetStartIndexToBringTabIntoView(tabIndex);
         }
 
-        SheetTab GetTouchHitSheetTab(Windows.Foundation.Point point)
+        SheetTab GetTouchHitSheetTab(Point point)
         {
             int count = TabsPresenter.Count;
             if ((OwningView != null) && (count > 0))
@@ -386,7 +386,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        internal void ProcessTap(Windows.Foundation.Point point)
+        internal void ProcessTap(Point point)
         {
             SheetTab touchHitSheetTab = GetTouchHitSheetTab(point);
             if (touchHitSheetTab == null)
@@ -478,7 +478,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        internal void StartTabTouchEditing(Windows.Foundation.Point point)
+        internal void StartTabTouchEditing(Point point)
         {
             if (((_activeTab != null) && (Workbook != null)) && !Workbook.Protect)
             {
@@ -503,7 +503,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        internal bool StayInEditing(Windows.Foundation.Point point)
+        internal bool StayInEditing(Point point)
         {
             return ((IsEditing && (_editingTab != null)) && (GetTouchHitSheetTab(point) == _editingTab));
         }
@@ -583,7 +583,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        Windows.Foundation.Point TranslatePoint(Windows.Foundation.Point point, UIElement element)
+        Point TranslatePoint(Point point, UIElement element)
         {
             return OwningView.TransformToVisual(element).TransformPoint(point);
         }

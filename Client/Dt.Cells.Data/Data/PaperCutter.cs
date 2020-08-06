@@ -20,10 +20,10 @@ namespace Dt.Cells.Data
     /// </summary>
     internal class PaperCutter
     {
-        private readonly int allLength;
-        private readonly List<int> breaks = new List<int>();
-        private int current;
-        private int maxLength;
+        readonly int allLength;
+        readonly List<int> breaks = new List<int>();
+        int current;
+        int maxLength;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.PaperCutter" /> class.

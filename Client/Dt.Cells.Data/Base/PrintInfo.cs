@@ -26,50 +26,50 @@ namespace Dt.Cells.Data
     public class PrintInfo : IXmlSerializable
     {
         #region 成员变量
-        private bool _bestFitColumns;
-        private bool _bestFitRows;
-        private bool _blackAndWhite;
-        private Centering _centering;
-        private int _columnEnd;
-        private int _columnStart;
-        private int _firstPageNumber;
-        private int _fitPagesTall;
-        private int _fitPagesWide;
-        private string _footerCenter;
-        private byte[] _footerCenterImage;
-        private string _footerLeft;
-        private byte[] _footerLeftImage;
-        private string _footerRight;
-        private byte[] _footerRightImage;
-        private string _headerCenter;
-        private byte[] _headerCenterImage;
-        private string _headerLeft;
-        private byte[] _headerLeftImage;
-        private string _headerRight;
-        private byte[] _headerRightImage;
-        private Margins _margin;
-        private string _noteFontFamilyName;
-        private PrintPageOrientation _orientation;
-        private PrintPageOrder _pageOrder;
-        private string _pageRange;
-        private PaperSize _paperSize;
-        private PrintNotes _printNotes;
-        private bool _printShapes;
-        private int _repeatColumnEnd;
-        private int _repeatColumnStart;
-        private int _repeatRowEnd;
-        private int _repeatRowStart;
-        private int _rowEnd;
-        private int _rowStart;
-        private bool _showBorder;
-        private VisibilityType _showColumnFooter;
-        private VisibilityType _showColumnHeader;
-        private bool _showGridLine;
-        private VisibilityType _showRowFooter;
-        private VisibilityType _showRowHeader;
-        private bool _useMax;
-        private Watermark _watermark;
-        private double _zoomFactor;
+        bool _bestFitColumns;
+        bool _bestFitRows;
+        bool _blackAndWhite;
+        Centering _centering;
+        int _columnEnd;
+        int _columnStart;
+        int _firstPageNumber;
+        int _fitPagesTall;
+        int _fitPagesWide;
+        string _footerCenter;
+        byte[] _footerCenterImage;
+        string _footerLeft;
+        byte[] _footerLeftImage;
+        string _footerRight;
+        byte[] _footerRightImage;
+        string _headerCenter;
+        byte[] _headerCenterImage;
+        string _headerLeft;
+        byte[] _headerLeftImage;
+        string _headerRight;
+        byte[] _headerRightImage;
+        Margins _margin;
+        string _noteFontFamilyName;
+        PrintPageOrientation _orientation;
+        PrintPageOrder _pageOrder;
+        string _pageRange;
+        PaperSize _paperSize;
+        PrintNotes _printNotes;
+        bool _printShapes;
+        int _repeatColumnEnd;
+        int _repeatColumnStart;
+        int _repeatRowEnd;
+        int _repeatRowStart;
+        int _rowEnd;
+        int _rowStart;
+        bool _showBorder;
+        VisibilityType _showColumnFooter;
+        VisibilityType _showColumnHeader;
+        bool _showGridLine;
+        VisibilityType _showRowFooter;
+        VisibilityType _showRowHeader;
+        bool _useMax;
+        Watermark _watermark;
+        double _zoomFactor;
         #endregion
 
         /// <summary>
@@ -1041,7 +1041,7 @@ namespace Dt.Cells.Data
             _paperSize = new PaperSize();
         }
 
-        private void RaiseCellChanged(string propertyName)
+        void RaiseCellChanged(string propertyName)
         {
             if (PropertyChanged != null)
             {

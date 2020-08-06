@@ -72,7 +72,7 @@ namespace Dt.Cells.UndoRedo
                         }
                         if (obj2 != null)
                         {
-                            obj2.Location = new Windows.Foundation.Point(obj2.Location.X + _movingExtent.OffsetX, obj2.Location.Y + _movingExtent.OffsetY);
+                            obj2.Location = new Point(obj2.Location.X + _movingExtent.OffsetX, obj2.Location.Y + _movingExtent.OffsetY);
                         }
                     }
                 }
@@ -129,7 +129,7 @@ namespace Dt.Cells.UndoRedo
                     }
                     if (obj2 != null)
                     {
-                        obj2.Location = new Windows.Foundation.Point(obj2.Location.X - _movingExtent.OffsetX, obj2.Location.Y - _movingExtent.OffsetY);
+                        obj2.Location = new Point(obj2.Location.X - _movingExtent.OffsetX, obj2.Location.Y - _movingExtent.OffsetY);
                     }
                 }
             }

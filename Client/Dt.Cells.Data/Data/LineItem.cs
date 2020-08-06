@@ -20,7 +20,7 @@ namespace Dt.Cells.Data
     /// </summary>
     public class LineItem : IThemeContextSupport
     {
-        private List<Rect> _bounds;
+        List<Rect> _bounds;
 
         IThemeSupport IThemeContextSupport.GetContext()
         {

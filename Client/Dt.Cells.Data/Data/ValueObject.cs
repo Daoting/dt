@@ -15,15 +15,15 @@ namespace Dt.Cells.Data
 {
     internal class ValueObject : ICloneable
     {
-        private int columnOffset;
-        private bool expectArrayValue;
-        private object expression;
-        private string formula;
-        private bool isFormula;
-        private int rowOffset;
-        private object value;
+        int columnOffset;
+        bool expectArrayValue;
+        object expression;
+        string formula;
+        bool isFormula;
+        int rowOffset;
+        object value;
 
-        private ValueObject()
+        ValueObject()
         {
         }
 

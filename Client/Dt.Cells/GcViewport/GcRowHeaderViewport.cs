@@ -10,6 +10,7 @@
 using Dt.Cells.Data;
 using System;
 using System.Collections.Generic;
+using Windows.Foundation;
 #endregion
 
 namespace Dt.Cells.UI
@@ -18,10 +19,9 @@ namespace Dt.Cells.UI
     {
         List<RowPresenter> _recycledRowHeaderRows;
 
-        public GcRowHeaderViewport(SheetView sheet) : base(sheet, SheetArea.CornerHeader | SheetArea.RowHeader, false)
+        public GcRowHeaderViewport(SheetView sheet) : base(sheet, SheetArea.CornerHeader | SheetArea.RowHeader)
         {
             _recycledRowHeaderRows = new List<RowPresenter>();
-            base._sheetArea = SheetArea.CornerHeader | SheetArea.RowHeader;
         }
 
         internal override RowPresenter GenerateNewRow()
@@ -31,31 +31,31 @@ namespace Dt.Cells.UI
 
         internal override CellLayoutModel GetCellLayoutModel()
         {
-            return base.Sheet.GetRowHeaderCellLayoutModel(base.RowViewportIndex);
+            return Sheet.GetRowHeaderCellLayoutModel(RowViewportIndex);
         }
 
         internal override ICellsSupport GetDataContext()
         {
-            return base.Sheet.Worksheet.RowHeader;
+            return Sheet.Worksheet.RowHeader;
         }
 
         internal override RowLayoutModel GetRowLayoutModel()
         {
-            return base.Sheet.GetViewportRowLayoutModel(base.RowViewportIndex);
+            return Sheet.GetViewportRowLayoutModel(RowViewportIndex);
         }
 
         internal override SheetSpanModelBase GetSpanModel()
         {
-            return base.Sheet.Worksheet.RowHeaderSpanModel;
+            return Sheet.Worksheet.RowHeaderSpanModel;
         }
 
-        internal override Windows.Foundation.Size GetViewportSize(Windows.Foundation.Size availableSize)
+        internal override Size GetViewportSize(Size availableSize)
         {
-            SheetLayout sheetLayout = base.Sheet.GetSheetLayout();
+            SheetLayout sheetLayout = Sheet.GetSheetLayout();
             double headerWidth = sheetLayout.HeaderWidth;
-            double viewportHeight = sheetLayout.GetViewportHeight(base.RowViewportIndex);
+            double viewportHeight = sheetLayout.GetViewportHeight(RowViewportIndex);
             headerWidth = Math.Min(headerWidth, availableSize.Width);
-            return new Windows.Foundation.Size(headerWidth, Math.Min(viewportHeight, availableSize.Height));
+            return new Size(headerWidth, Math.Min(viewportHeight, availableSize.Height));
         }
 
         internal override List<RowPresenter> RecycledRows
@@ -71,11 +71,6 @@ namespace Dt.Cells.UI
         }
 
         internal override bool SupportCellOverflow
-        {
-            get { return  false; }
-        }
-
-        protected override bool SupportSelection
         {
             get { return  false; }
         }

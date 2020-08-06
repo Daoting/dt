@@ -19,12 +19,12 @@ namespace Dt.Cells.Data
     /// </summary>
     internal class GcBlock
     {
-        private object cache;
-        private readonly GcControl data;
-        private double height;
-        private double width;
-        private double x;
-        private double y;
+        object cache;
+        readonly GcControl data;
+        double height;
+        double width;
+        double x;
+        double y;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.GcBlock" /> class.

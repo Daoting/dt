@@ -22,10 +22,10 @@ namespace Dt.Cells.Data
     /// </summary>
     internal class OpenTypeFontUtility : IMeasureable
     {
-        private Font defaultFont;
-        private int dpi;
-        private readonly Dictionary<string, BaseFont> fontCaches = new Dictionary<string, BaseFont>();
-        private UnitType unit = UnitType.CentileInch;
+        Font defaultFont;
+        int dpi;
+        readonly Dictionary<string, BaseFont> fontCaches = new Dictionary<string, BaseFont>();
+        UnitType unit = UnitType.CentileInch;
 
         /// <summary>
         /// Occurs when not using a built-in Silverlight font.

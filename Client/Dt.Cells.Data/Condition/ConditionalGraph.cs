@@ -25,11 +25,11 @@ namespace Dt.Cells.Data
 {
     internal abstract class ConditionalGraph : IFormulaOperatorSource
     {
-        private CalcCalculationManager _calculationManager;
-        private Dictionary<CalcLocalIdentity, ConditionIdStorage> _conditionals = new Dictionary<CalcLocalIdentity, ConditionIdStorage>();
-        private Dictionary<CalcLocalIdentity, CalcLocalIdentity> _dirtyList = new Dictionary<CalcLocalIdentity, CalcLocalIdentity>();
-        private ConditionalCalcGraph _graph;
-        private int _suspendCount;
+        CalcCalculationManager _calculationManager;
+        Dictionary<CalcLocalIdentity, ConditionIdStorage> _conditionals = new Dictionary<CalcLocalIdentity, ConditionIdStorage>();
+        Dictionary<CalcLocalIdentity, CalcLocalIdentity> _dirtyList = new Dictionary<CalcLocalIdentity, CalcLocalIdentity>();
+        ConditionalCalcGraph _graph;
+        int _suspendCount;
 
         public ConditionalGraph()
         {
@@ -57,7 +57,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void AddDirty(CalcNode dp)
+        void AddDirty(CalcNode dp)
         {
             ConditionalIdentity id = dp.Id as ConditionalIdentity;
             CalcLocalIdentity identity2 = dp.Id as CalcLocalIdentity;
@@ -102,7 +102,7 @@ namespace Dt.Cells.Data
             return this.CalculationManager.Parser.Parse(formula, context);
         }
 
-        private CalcCellIdentity GetBaseCell(CalcLocalIdentity id)
+        CalcCellIdentity GetBaseCell(CalcLocalIdentity id)
         {
             int rowIndex;
             int columnIndex;
@@ -239,7 +239,7 @@ namespace Dt.Cells.Data
             this.InvalidateCore(range);
         }
 
-        private void InvalidateCore(CalcLocalIdentity id)
+        void InvalidateCore(CalcLocalIdentity id)
         {
             ConditionalIdentity identity = id as ConditionalIdentity;
             if (identity != null)
@@ -286,7 +286,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private static CalcLocalIdentity OffsetLocalIdentity(CalcLocalIdentity id, int offset, bool row)
+        static CalcLocalIdentity OffsetLocalIdentity(CalcLocalIdentity id, int offset, bool row)
         {
             CalcCellIdentity cellIdentity = id as CalcCellIdentity;
             CalcRangeIdentity range = id as CalcRangeIdentity;
@@ -303,7 +303,7 @@ namespace Dt.Cells.Data
         }
 
         protected abstract void OnInvalidate(List<CalcRangeIdentity> ranges, List<CalcCellIdentity> cells);
-        private void Refresh()
+        void Refresh()
         {
             if ((this._dirtyList != null) && (this._dirtyList.Count != 0))
             {
@@ -451,7 +451,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void UpdateActualIds(OperatorExpressionVisistor visitor, int index, int count, bool row, bool isFullBand)
+        void UpdateActualIds(OperatorExpressionVisistor visitor, int index, int count, bool row, bool isFullBand)
         {
             Dictionary<CalcLocalIdentity, ConditionIdStorage> dictionary = new Dictionary<CalcLocalIdentity, ConditionIdStorage>();
             foreach (KeyValuePair<CalcLocalIdentity, ConditionIdStorage> pair in this._conditionals)
@@ -480,7 +480,7 @@ namespace Dt.Cells.Data
             this._conditionals = dictionary;
         }
 
-        private CalcCalculationManager CalculationManager
+        CalcCalculationManager CalculationManager
         {
             get
             {
@@ -513,14 +513,14 @@ namespace Dt.Cells.Data
 
         protected abstract ICalcSource Source { get; }
 
-        private bool UserR1C1
+        bool UserR1C1
         {
             get { return  (this.ReferenceStyle == ReferenceStyle.R1C1); }
         }
 
-        private class CalcStorage : ICalcStorage<CalcLocalIdentity, CalcExpression>, IEnumerable<KeyValuePair<CalcLocalIdentity, CalcExpression>>, IEnumerable
+        class CalcStorage : ICalcStorage<CalcLocalIdentity, CalcExpression>, IEnumerable<KeyValuePair<CalcLocalIdentity, CalcExpression>>, IEnumerable
         {
-            private readonly Dictionary<CalcLocalIdentity, CalcExpression> _storage = new Dictionary<CalcLocalIdentity, CalcExpression>();
+            readonly Dictionary<CalcLocalIdentity, CalcExpression> _storage = new Dictionary<CalcLocalIdentity, CalcExpression>();
 
             internal void Add(CalcLocalIdentity id, CalcExpression exp)
             {
@@ -561,12 +561,12 @@ namespace Dt.Cells.Data
             }
         }
 
-        private class ConditionalCalcGraph
+        class ConditionalCalcGraph
         {
-            private ICalcStorage<CalcIdentity, CalcNode> _conditionalNodeStorage = new SimpleNodeStorage();
-            private ICalcStorage<CalcIdentity, CalcNode> _nodes = new SimpleNodeStorage();
-            private ICalcStorage<CalcIdentity, CalcNode> _rangeNodeStorage = new SimpleNodeStorage();
-            private Dictionary<CalcLocalIdentity, CalcLocalIdentity> _sheetRangeIds = new Dictionary<CalcLocalIdentity, CalcLocalIdentity>();
+            ICalcStorage<CalcIdentity, CalcNode> _conditionalNodeStorage = new SimpleNodeStorage();
+            ICalcStorage<CalcIdentity, CalcNode> _nodes = new SimpleNodeStorage();
+            ICalcStorage<CalcIdentity, CalcNode> _rangeNodeStorage = new SimpleNodeStorage();
+            Dictionary<CalcLocalIdentity, CalcLocalIdentity> _sheetRangeIds = new Dictionary<CalcLocalIdentity, CalcLocalIdentity>();
 
             public ConditionalCalcGraph(IFormulaOperatorSource source)
             {
@@ -657,7 +657,7 @@ namespace Dt.Cells.Data
             }
 
 
-            private static CalcIdentity ExtendPrecedents(CalcReferenceExpression expr, CalcIdentity id, int extendRow, int extendColumn)
+            static CalcIdentity ExtendPrecedents(CalcReferenceExpression expr, CalcIdentity id, int extendRow, int extendColumn)
             {
                 if ((extendRow == 0) && (extendColumn == 0))
                 {
@@ -803,7 +803,7 @@ namespace Dt.Cells.Data
                 return this._rangeNodeStorage[id];
             }
 
-            private bool IsIsolatedNode(CalcNode node)
+            bool IsIsolatedNode(CalcNode node)
             {
                 if ((node.Precedents != null) && (node.Precedents.Count > 0))
                 {
@@ -816,7 +816,7 @@ namespace Dt.Cells.Data
                 return true;
             }
 
-            private List<CalcNode> ParsePrecedents(CalcNode current, CalcExpression expr, CalcEvaluatorContext context)
+            List<CalcNode> ParsePrecedents(CalcNode current, CalcExpression expr, CalcEvaluatorContext context)
             {
                 CalcIdentity id = current.Id;
                 if (id is ConditionalGraph.ConditionalIdentity)
@@ -931,7 +931,7 @@ namespace Dt.Cells.Data
                 return list7;
             }
 
-            private static void ParseReferencePrecedents(CalcLocalIdentity targetId, CalcReferenceExpression expr, List<CalcIdentity> theRefs)
+            static void ParseReferencePrecedents(CalcLocalIdentity targetId, CalcReferenceExpression expr, List<CalcIdentity> theRefs)
             {
                 int rowIndex;
                 int columnIndex;
@@ -961,7 +961,7 @@ namespace Dt.Cells.Data
                 }
             }
 
-            private void ParseSheetRangePrecedents(CalcIdentity currentId, List<CalcIdentity> theRefs, CalcSheetRangeExpression sheetRangeExpr)
+            void ParseSheetRangePrecedents(CalcIdentity currentId, List<CalcIdentity> theRefs, CalcSheetRangeExpression sheetRangeExpr)
             {
                 IMultiSourceProvider multiSourceProvider = this.Manager.MultiSourceProvider;
                 if (multiSourceProvider != null)
@@ -1021,7 +1021,7 @@ namespace Dt.Cells.Data
                 }
             }
 
-            private void RemoveNodeAt(CalcIdentity id)
+            void RemoveNodeAt(CalcIdentity id)
             {
                 this._nodes.RemoveAt(id);
                 this._rangeNodeStorage.RemoveAt(id);
@@ -1098,7 +1098,7 @@ namespace Dt.Cells.Data
                 }
             }
 
-            private static void ShouldExtendPrecedents(CalcLocalIdentity targetId, out int extendRow, out int extendColumn)
+            static void ShouldExtendPrecedents(CalcLocalIdentity targetId, out int extendRow, out int extendColumn)
             {
                 extendRow = 0;
                 extendColumn = 0;
@@ -1118,9 +1118,9 @@ namespace Dt.Cells.Data
 
             public IFormulaOperatorSource Manager { get; set; }
             
-            private class SimpleNodeStorage : ICalcStorage<CalcIdentity, CalcNode>, IEnumerable<KeyValuePair<CalcIdentity, CalcNode>>, IEnumerable
+            class SimpleNodeStorage : ICalcStorage<CalcIdentity, CalcNode>, IEnumerable<KeyValuePair<CalcIdentity, CalcNode>>, IEnumerable
             {
-                private Dictionary<CalcIdentity, CalcNode> _storage = new Dictionary<CalcIdentity, CalcNode>();
+                Dictionary<CalcIdentity, CalcNode> _storage = new Dictionary<CalcIdentity, CalcNode>();
 
                 public IEnumerator<KeyValuePair<CalcIdentity, CalcNode>> GetEnumerator()
                 {
@@ -1189,10 +1189,10 @@ namespace Dt.Cells.Data
             public CalcLocalIdentity OldActualIdentity { get; set; }
         }
 
-        private class ConditionIdStorage
+        class ConditionIdStorage
         {
-            private CalcLocalIdentity _actualId;
-            private Dictionary<IConditionalFormula, ConditionalGraph.ConditionalIdentity> _conditions = new Dictionary<IConditionalFormula, ConditionalGraph.ConditionalIdentity>();
+            CalcLocalIdentity _actualId;
+            Dictionary<IConditionalFormula, ConditionalGraph.ConditionalIdentity> _conditions = new Dictionary<IConditionalFormula, ConditionalGraph.ConditionalIdentity>();
 
             public ConditionIdStorage(CalcLocalIdentity actualId)
             {

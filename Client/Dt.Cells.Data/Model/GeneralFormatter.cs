@@ -34,60 +34,60 @@ namespace Dt.Cells.Data
         /// <summary>
         /// customer culture for ssl
         /// </summary>
-        private CultureInfo customerCulture;
+        CultureInfo customerCulture;
         /// <summary>
         /// date time format info.
         /// </summary>
-        private System.Globalization.DateTimeFormatInfo dateTimeFormatInfo;
-        private static GeneralFormatter defaultComboNumberFormatter1;
-        private static GeneralFormatter defaultComboNumberFormatter2;
-        private static GeneralFormatter defaultDMMMFormatter;
-        private static GeneralFormatter defaultGeneralFormatter;
-        private static GeneralFormatter defaultHMMFormatter;
-        private static GeneralFormatter defaultHMMSS0Formatter;
-        private static GeneralFormatter defaultHMMSSFormatter;
-        private static GeneralFormatter defaultLongTimePatternFormatter;
-        private static GeneralFormatter defaultMMMYYFormatter;
-        private static GeneralFormatter defaultNumberFormatter;
-        private static GeneralFormatter defaultNumberFormatter2;
-        private static GeneralFormatter defaultShortDatePatternFormatter;
-        private static GeneralFormatter defaultShortDatePatternHMMFormatter;
-        private static GeneralFormatter defaultShortDatePatternHMMSS0Formatter;
-        private static GeneralFormatter defaultShortDatePatternHMMSSFormatter;
-        private static GeneralFormatter defaultStandardGroupNumberFormatter1;
-        private static GeneralFormatter defaultStandardGroupNumberFormatter2;
-        private static GeneralFormatter defaultStandardNumberFormatter;
-        private static GeneralFormatter defaultStandardPercentFormatter1;
-        private static GeneralFormatter defaultStandardPercentFormatter2;
-        private static GeneralFormatter defaultSXDatetimePatternFormatter;
+        System.Globalization.DateTimeFormatInfo dateTimeFormatInfo;
+        static GeneralFormatter defaultComboNumberFormatter1;
+        static GeneralFormatter defaultComboNumberFormatter2;
+        static GeneralFormatter defaultDMMMFormatter;
+        static GeneralFormatter defaultGeneralFormatter;
+        static GeneralFormatter defaultHMMFormatter;
+        static GeneralFormatter defaultHMMSS0Formatter;
+        static GeneralFormatter defaultHMMSSFormatter;
+        static GeneralFormatter defaultLongTimePatternFormatter;
+        static GeneralFormatter defaultMMMYYFormatter;
+        static GeneralFormatter defaultNumberFormatter;
+        static GeneralFormatter defaultNumberFormatter2;
+        static GeneralFormatter defaultShortDatePatternFormatter;
+        static GeneralFormatter defaultShortDatePatternHMMFormatter;
+        static GeneralFormatter defaultShortDatePatternHMMSS0Formatter;
+        static GeneralFormatter defaultShortDatePatternHMMSSFormatter;
+        static GeneralFormatter defaultStandardGroupNumberFormatter1;
+        static GeneralFormatter defaultStandardGroupNumberFormatter2;
+        static GeneralFormatter defaultStandardNumberFormatter;
+        static GeneralFormatter defaultStandardPercentFormatter1;
+        static GeneralFormatter defaultStandardPercentFormatter2;
+        static GeneralFormatter defaultSXDatetimePatternFormatter;
         /// <summary>
         /// the format cached.
         /// </summary>
-        private string formatCached;
+        string formatCached;
         /// <summary>
         /// the format mode.
         /// </summary>
-        private Dt.Cells.Data.FormatMode formatModeType;
+        Dt.Cells.Data.FormatMode formatModeType;
         /// <summary>
         /// the list of all formats
         /// </summary>
-        private Collection<IFormatter> formatters;
+        Collection<IFormatter> formatters;
         /// <summary>
         /// whether constructed
         /// </summary>
-        private bool isConstructed;
+        bool isConstructed;
         /// <summary>
         /// is default
         /// </summary>
-        private bool isDefault;
+        bool isDefault;
         /// <summary>
         /// if format string is "0.00" that without ";" at the end of the format string.
         /// </summary>
-        private bool isSingleFormatterInfo;
+        bool isSingleFormatterInfo;
         /// <summary>
         /// number format info.
         /// </summary>
-        private System.Globalization.NumberFormatInfo numberFormatInfo;
+        System.Globalization.NumberFormatInfo numberFormatInfo;
 
         /// <summary>
         /// Occurs when a formatter property is changed.
@@ -256,7 +256,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="obj">Object to get the formatter</param>
         /// <returns>Returns the format information.</returns>
-        private IFormatter GetFormatInfo(object obj)
+        IFormatter GetFormatInfo(object obj)
         {
             if (this.FormatMode == Dt.Cells.Data.FormatMode.CustomMode)
             {
@@ -596,7 +596,7 @@ namespace Dt.Cells.Data
         /// <summary>
         /// Init this instance.
         /// </summary>
-        private void Init()
+        void Init()
         {
             if (!this.isConstructed)
             {
@@ -625,7 +625,7 @@ namespace Dt.Cells.Data
         /// Initializes the Excel-compatible mode.
         /// </summary>
         /// <param name="format">Format string</param>
-        private void InitExcelCompatibleMode(string format)
+        void InitExcelCompatibleMode(string format)
         {
             if (format == null)
             {
@@ -673,7 +673,7 @@ namespace Dt.Cells.Data
         /// Initializes the standard date time mode.
         /// </summary>
         /// <param name="format">Format string</param>
-        private void InitStandardDateTimeMode(string format)
+        void InitStandardDateTimeMode(string format)
         {
             if (!StandardDateTimeFormatter.EvaluateFormat(format))
             {
@@ -688,7 +688,7 @@ namespace Dt.Cells.Data
         /// Initializes the standard numeric mode.
         /// </summary>
         /// <param name="format">Format string</param>
-        private void InitStandardNumericMode(string format)
+        void InitStandardNumericMode(string format)
         {
             if (!StandardNumberFormatter.EvaluateFormat(format))
             {
@@ -718,7 +718,7 @@ namespace Dt.Cells.Data
         /// Occurs when a property has changed.
         /// </summary>
         /// <param name="propertyName">Name of the property</param>
-        private void RaisePropertyChanged(string propertyName)
+        void RaisePropertyChanged(string propertyName)
         {
             if (this.PropertyChanged != null)
             {

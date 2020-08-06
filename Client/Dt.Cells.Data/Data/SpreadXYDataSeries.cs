@@ -25,12 +25,12 @@ namespace Dt.Cells.Data
     /// </remarks>
     public class SpreadXYDataSeries : SpreadDataSeries
     {
-        private DataOrientation? _xDataOrientation = 0;
-        private IFormatter _xFormatter;
-        private string _xValueFormula;
-        private SheetCellRange[] _xValueRange;
-        private CalcExpression _xValueReference;
-        private DoubleSeriesCollection _xValues;
+        DataOrientation? _xDataOrientation = 0;
+        IFormatter _xFormatter;
+        string _xValueFormula;
+        SheetCellRange[] _xValueRange;
+        CalcExpression _xValueReference;
+        DoubleSeriesCollection _xValues;
 
         internal override DataLabel CreateDataLabelOnNeeded(int pointIndex)
         {
@@ -137,12 +137,12 @@ namespace Dt.Cells.Data
             this.UpdateXValuesReference(this.XValueFormula);
         }
 
-        private void UpdateXValuesReference(string xValueFormula)
+        void UpdateXValuesReference(string xValueFormula)
         {
             this.XValuesReference = FormulaUtility.Formula2Expression(base.Sheet, xValueFormula);
         }
 
-        private DataOrientation? ValidateXValuesRange(SheetCellRange[] ranges)
+        DataOrientation? ValidateXValuesRange(SheetCellRange[] ranges)
         {
             if ((ranges == null) || (ranges.Length == 0))
             {
@@ -188,7 +188,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void XValues_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        void XValues_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             ((ISpreadChartElement) this).NotifyElementChanged("XValues");
         }
@@ -281,7 +281,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private CalcExpression XValuesReference
+        CalcExpression XValuesReference
         {
             get { return  this._xValueReference; }
             set
@@ -310,9 +310,9 @@ namespace Dt.Cells.Data
             }
         }
 
-        private class XValueDataSeries : IDataSeries
+        class XValueDataSeries : IDataSeries
         {
-            private SpreadXYDataSeries _xyDataSeries;
+            SpreadXYDataSeries _xyDataSeries;
 
             public XValueDataSeries(SpreadXYDataSeries xyDataSeries)
             {

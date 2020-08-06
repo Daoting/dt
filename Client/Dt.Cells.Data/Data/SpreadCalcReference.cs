@@ -15,15 +15,15 @@ namespace Dt.Cells.Data
 {
     internal class SpreadCalcReference : CalcReference
     {
-        private int column;
-        private int columnCount;
-        private ICalcSource context;
-        private int row;
-        private int rowCount;
-        private int sheetColumnCount;
-        private int sheetRowCount;
-        private SpreadCalcReference standaloneCalcRef;
-        private ISubtotalSupport subtotalSupport;
+        int column;
+        int columnCount;
+        ICalcSource context;
+        int row;
+        int rowCount;
+        int sheetColumnCount;
+        int sheetRowCount;
+        SpreadCalcReference standaloneCalcRef;
+        ISubtotalSupport subtotalSupport;
 
         internal SpreadCalcReference(ISubtotalSupport subtotalSupport)
         {

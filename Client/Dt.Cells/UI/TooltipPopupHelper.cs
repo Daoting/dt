@@ -31,7 +31,7 @@ namespace Dt.Cells.UI
             _popup = sheetView.ToolTipPopup;
             _tooltipFocusableElement = new Grid();
             new Border();
-            new LinearGradientBrush().StartPoint = new Windows.Foundation.Point();
+            new LinearGradientBrush().StartPoint = new Point();
             _toolTipBlock = new TooltipControl();
             _toolTipBlock.Margin = new Windows.UI.Xaml.Thickness(0.0, 0.0, 5.0, 5.0);
             _popup.Child = _tooltipFocusableElement;

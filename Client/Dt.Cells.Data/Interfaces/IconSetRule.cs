@@ -22,13 +22,13 @@ namespace Dt.Cells.Data
     /// </summary>
     public sealed class IconSetRule : FormattingRuleBase, ICachableRule
     {
-        private bool cahced;
-        private double? highestValueCached;
-        private IconCriterion[] iconCriteria;
-        private Dt.Cells.Data.IconSetType iconSetType;
-        private double? lowestValueCached;
-        private bool reverseIconOrder;
-        private bool showIconOnly;
+        bool cahced;
+        double? highestValueCached;
+        IconCriterion[] iconCriteria;
+        Dt.Cells.Data.IconSetType iconSetType;
+        double? lowestValueCached;
+        bool reverseIconOrder;
+        bool showIconOnly;
 
         /// <summary>
         /// Creates a new icon set rule.
@@ -51,7 +51,7 @@ namespace Dt.Cells.Data
             return ConditionValueConverter.TryDouble(ValueObject.FromFormula(formula).GetValue(evaluator, baseRow, baseColumn));
         }
 
-        private void CalculateLowestValueAndHighestValue(IActualValue actualValue, out double? min, out double? max, ICellRange[] ranges)
+        void CalculateLowestValueAndHighestValue(IActualValue actualValue, out double? min, out double? max, ICellRange[] ranges)
         {
             min = 0;
             max = 0;
@@ -276,14 +276,14 @@ namespace Dt.Cells.Data
             this.ClearCache();
         }
 
-        private void Init(Dt.Cells.Data.IconSetType iconSetType)
+        void Init(Dt.Cells.Data.IconSetType iconSetType)
         {
             this.showIconOnly = false;
             this.reverseIconOrder = false;
             this.InitIconSetType(iconSetType);
         }
 
-        private void InitIconSetType(Dt.Cells.Data.IconSetType iconSetType)
+        void InitIconSetType(Dt.Cells.Data.IconSetType iconSetType)
         {
             this.iconSetType = iconSetType;
             if ((this.iconSetType >= Dt.Cells.Data.IconSetType.ThreeArrowsColored) && (this.iconSetType <= Dt.Cells.Data.IconSetType.ThreeSymbolsUncircled))
@@ -374,12 +374,12 @@ namespace Dt.Cells.Data
             return true;
         }
 
-        private static bool IsFormula(object val)
+        static bool IsFormula(object val)
         {
             return ((val is string) && val.ToString().StartsWith("="));
         }
 
-        private int modifyIconIndex(int index)
+        int modifyIconIndex(int index)
         {
             int num = this.iconCriteria.Length + 1;
             if (this.reverseIconOrder && (num > 2))
@@ -475,7 +475,7 @@ namespace Dt.Cells.Data
             this.iconCriteria = null;
         }
 
-        private static string TrimFormula(string val)
+        static string TrimFormula(string val)
         {
             if (!string.IsNullOrEmpty(val))
             {

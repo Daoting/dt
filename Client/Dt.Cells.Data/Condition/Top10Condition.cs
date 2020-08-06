@@ -21,9 +21,9 @@ namespace Dt.Cells.Data
     /// </summary>
     public sealed class Top10Condition : ConditionBase, IRangesDependent
     {
-        private bool isPercent;
-        private ICellRange[] ranges;
-        private Top10ConditionType type;
+        bool isPercent;
+        ICellRange[] ranges;
+        Top10ConditionType type;
 
         /// <summary>
         /// Creates a new top 10 condition.

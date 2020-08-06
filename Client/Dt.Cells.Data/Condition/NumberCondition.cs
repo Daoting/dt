@@ -19,8 +19,8 @@ namespace Dt.Cells.Data
     /// </summary>
     public sealed class NumberCondition : ConditionBase
     {
-        private GeneralCompareType compareType;
-        private bool integerValue;
+        GeneralCompareType compareType;
+        bool integerValue;
 
         /// <summary>
         /// Creates a new number condition.
@@ -48,7 +48,7 @@ namespace Dt.Cells.Data
         /// <returns>
         /// <c>true</c> if the value satisfies the condition; otherwise, <c>false</c>.
         /// </returns>
-        private bool CheckCondition(object expectedValue, object actualValue)
+        bool CheckCondition(object expectedValue, object actualValue)
         {
             if (this.IgnoreBlank && ((actualValue == null) || actualValue.Equals(string.Empty)))
             {

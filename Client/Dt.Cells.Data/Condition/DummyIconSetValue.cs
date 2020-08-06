@@ -14,8 +14,8 @@ namespace Dt.Cells.Data
 {
     internal class DummyIconSetValue : IConditionalFormula
     {
-        private IconSetRule iconSetRule;
-        private int valueIndex;
+        IconSetRule iconSetRule;
+        int valueIndex;
 
         public DummyIconSetValue(IconSetRule rule, int index)
         {

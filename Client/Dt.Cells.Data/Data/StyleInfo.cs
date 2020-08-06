@@ -30,64 +30,64 @@ namespace Dt.Cells.Data
         internal static string FONTTHEME_HEADING;
         internal BorderLine BorderHorizontal;
         internal BorderLine BorderVertical;
-        private Brush background;
-        private bool backgroundSet;
-        private string backgroundThemeColor;
-        private bool backgroundThemeColorSet;
-        private BorderLine bottomBorder;
-        private bool bottomBorderSet;
-        private bool canFocus;
-        private bool canFocusSet;
-        private DataValidator dataValidator;
-        private bool dataValidatorSet;
-        private FontFamily fontFamily;
-        private bool fontFamilySet;
-        private double fontSize;
-        private bool fontSizeSet;
-        private FontStretch fontStretch;
-        private bool fontStretchSet;
-        private Windows.UI.Text.FontStyle fontStyle;
-        private bool fontStyleSet;
-        private string fontTheme;
-        private bool fontThemeSet;
-        private FontWeight fontWeight;
-        private bool fontWeightSet;
-        private Brush foreground;
-        private bool foregroundSet;
-        private string foregroundThemeColor;
-        private bool foregroundThemeColorSet;
-        private IFormatter formatter;
-        private bool formatterSet;
-        private CellHorizontalAlignment horizontalAlignment;
-        private bool horizontalAlignmentSet;
-        private static PropertyInfo[] infos;
-        private BorderLine leftBorder;
-        private bool leftBorderSet;
-        private bool locked;
-        private bool lockedSet;
-        private string name;
-        private bool nameSet;
-        private string parent;
-        private bool parentSet;
-        private BorderLine rightBorder;
-        private bool rightBorderSet;
-        private bool shrinkToFit;
-        private bool shrinkToFitSet;
+        Brush background;
+        bool backgroundSet;
+        string backgroundThemeColor;
+        bool backgroundThemeColorSet;
+        BorderLine bottomBorder;
+        bool bottomBorderSet;
+        bool canFocus;
+        bool canFocusSet;
+        DataValidator dataValidator;
+        bool dataValidatorSet;
+        FontFamily fontFamily;
+        bool fontFamilySet;
+        double fontSize;
+        bool fontSizeSet;
+        FontStretch fontStretch;
+        bool fontStretchSet;
+        Windows.UI.Text.FontStyle fontStyle;
+        bool fontStyleSet;
+        string fontTheme;
+        bool fontThemeSet;
+        FontWeight fontWeight;
+        bool fontWeightSet;
+        Brush foreground;
+        bool foregroundSet;
+        string foregroundThemeColor;
+        bool foregroundThemeColorSet;
+        IFormatter formatter;
+        bool formatterSet;
+        CellHorizontalAlignment horizontalAlignment;
+        bool horizontalAlignmentSet;
+        static PropertyInfo[] infos;
+        BorderLine leftBorder;
+        bool leftBorderSet;
+        bool locked;
+        bool lockedSet;
+        string name;
+        bool nameSet;
+        string parent;
+        bool parentSet;
+        BorderLine rightBorder;
+        bool rightBorderSet;
+        bool shrinkToFit;
+        bool shrinkToFitSet;
         internal bool suspendEvents;
-        private bool tabStop;
-        private bool tabStopSet;
-        private int textIndent;
-        private bool textIndentSet;
-        private BorderLine topBorder;
-        private bool topBorderSet;
-        private CellVerticalAlignment verticalAlignment;
-        private bool verticalAlignmentSet;
-        private bool wordWrap;
-        private bool wordWrapSet;
-        private bool strikethrough;
-        private bool isStrikethroughSet;
-        private bool underline;
-        private bool isUnderlineSet;
+        bool tabStop;
+        bool tabStopSet;
+        int textIndent;
+        bool textIndentSet;
+        BorderLine topBorder;
+        bool topBorderSet;
+        CellVerticalAlignment verticalAlignment;
+        bool verticalAlignmentSet;
+        bool wordWrap;
+        bool wordWrapSet;
+        bool strikethrough;
+        bool isStrikethroughSet;
+        bool underline;
+        bool isUnderlineSet;
 
         static StyleInfo()
         {
@@ -1321,7 +1321,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void RaisePropertyChanged(string propertyName)
+        void RaisePropertyChanged(string propertyName)
         {
             if (!this.suspendEvents && (this.PropertyChanged != null))
             {

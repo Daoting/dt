@@ -15,11 +15,11 @@ namespace Dt.Cells.Data
 {
     internal class DefaultDataSeries : IDataSeries
     {
-        private Dt.Cells.Data.DataOrientation? _dataOrientation;
-        private CalcExpression _dataReference;
-        private bool _displayHiddenData;
-        private Dt.Cells.Data.EmptyValueStyle _emptyValueStyle;
-        private ICalcEvaluator _evaluator;
+        Dt.Cells.Data.DataOrientation? _dataOrientation;
+        CalcExpression _dataReference;
+        bool _displayHiddenData;
+        Dt.Cells.Data.EmptyValueStyle _emptyValueStyle;
+        ICalcEvaluator _evaluator;
 
         public DefaultDataSeries(CalcExpression dataReference, Dt.Cells.Data.DataOrientation dataOrientation, bool displayHiddenData, Dt.Cells.Data.EmptyValueStyle emptyValueStyle, ICalcEvaluator evalutor)
         {

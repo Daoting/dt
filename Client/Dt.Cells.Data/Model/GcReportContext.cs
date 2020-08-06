@@ -21,22 +21,22 @@ namespace Dt.Cells.Data
     /// </summary>
     internal class GcReportContext : IMeasureable
     {
-        private GcSection.GcSectionCache bmCache;
-        private GcBottomMarginSection bottomMargin;
+        GcSection.GcSectionCache bmCache;
+        GcBottomMarginSection bottomMargin;
         internal static readonly Font defaultFont = new Font(DefaultStyleCollection.DefaultFontName, DefaultStyleCollection.DefaultFontSize);
-        private int dpi;
-        private readonly IMeasureable measure;
-        private GcPageFooterSection pageFooter;
-        private GcPageHeaderSection pageHeader;
-        private int pageHeaderFooterMaxWidth;
-        private readonly GcPageRectangles pageRects;
-        private readonly List<List<GcPageBlock>> pages;
-        private GcSection.GcSectionCache pfCache;
-        private GcSection.GcSectionCache phCache;
-        private readonly GcReport report;
-        private GcSection.GcSectionCache tmCache;
-        private GcTopMarginSection topMargin;
-        private int upi;
+        int dpi;
+        readonly IMeasureable measure;
+        GcPageFooterSection pageFooter;
+        GcPageHeaderSection pageHeader;
+        int pageHeaderFooterMaxWidth;
+        readonly GcPageRectangles pageRects;
+        readonly List<List<GcPageBlock>> pages;
+        GcSection.GcSectionCache pfCache;
+        GcSection.GcSectionCache phCache;
+        readonly GcReport report;
+        GcSection.GcSectionCache tmCache;
+        GcTopMarginSection topMargin;
+        int upi;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.GcReportContext" /> class.
@@ -215,7 +215,7 @@ namespace Dt.Cells.Data
         /// <summary>
         /// Init the page rectangles.
         /// </summary>
-        private void InitPageRectangles()
+        void InitPageRectangles()
         {
             Windows.Foundation.Size pageSize = Utilities.GetPageSize(this.Report.PaperSize, this.Report.Orientation);
             Windows.Foundation.Rect rect = new Windows.Foundation.Rect(0.0, 0.0, pageSize.Width, pageSize.Height);

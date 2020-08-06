@@ -23,21 +23,21 @@ namespace Dt.Cells.Data
     /// </summary>
     internal class GcReport : IXmlSerializable
     {
-        private bool blackAndWhite;
-        private string bookmark;
-        private Dt.Cells.Data.Centering centering;
-        private int firstPageNumber;
-        private int fitPagesTall;
-        private int fitPagesWide;
-        private Margins margin;
-        private PrintPageOrientation orientation;
-        private PrintPageOrder pageOrder;
-        private string pageRange;
-        private Dt.Cells.Data.PaperSize paperSize;
-        private double realZoom;
-        private SectionCollection sections;
-        private Dt.Cells.Data.Watermark watermark;
-        private double zoomFactor;
+        bool blackAndWhite;
+        string bookmark;
+        Dt.Cells.Data.Centering centering;
+        int firstPageNumber;
+        int fitPagesTall;
+        int fitPagesWide;
+        Margins margin;
+        PrintPageOrientation orientation;
+        PrintPageOrder pageOrder;
+        string pageRange;
+        Dt.Cells.Data.PaperSize paperSize;
+        double realZoom;
+        SectionCollection sections;
+        Dt.Cells.Data.Watermark watermark;
+        double zoomFactor;
 
         /// <summary>
         /// Creates a new report.
@@ -99,7 +99,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        private T GetStandAloneSection<T>() where T: GcSection
+        T GetStandAloneSection<T>() where T: GcSection
         {
             List<T> sections = this.sections.GetSections<T>();
             T local = (sections.Count <= 0) ? default(T) : sections[0];
@@ -161,7 +161,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="t">The t</param>
-        private void SetStandAloneSection<T>(T t) where T: GcSection
+        void SetStandAloneSection<T>(T t) where T: GcSection
         {
             this.sections.RemoveSections<T>();
             if (t is GcMarginSection)

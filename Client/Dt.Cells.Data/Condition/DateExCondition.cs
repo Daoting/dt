@@ -18,7 +18,7 @@ namespace Dt.Cells.Data
     /// </summary>
     public sealed class DateExCondition : ConditionBase
     {
-        private int expectTypeId;
+        int expectTypeId;
 
         /// <summary>
         /// Creates a new date condition.
@@ -35,11 +35,11 @@ namespace Dt.Cells.Data
         {
         }
 
-        private DateExCondition(object expected) : base(expected, null)
+        DateExCondition(object expected) : base(expected, null)
         {
         }
 
-        private bool CheckCondition(int expected, IActualValue actualValue)
+        bool CheckCondition(int expected, IActualValue actualValue)
         {
             if (this.IgnoreBlank && (actualValue.GetValue() == null))
             {
@@ -284,17 +284,17 @@ namespace Dt.Cells.Data
             return new DateExCondition((int) year) { expectTypeId = 1 };
         }
 
-        private bool IsEqualsDay(int expected, DateTime actualDateTime)
+        bool IsEqualsDay(int expected, DateTime actualDateTime)
         {
             return (expected == actualDateTime.Day);
         }
 
-        private bool IsEqualsMonth(int expected, DateTime actualDateTime)
+        bool IsEqualsMonth(int expected, DateTime actualDateTime)
         {
             return (expected == actualDateTime.Month);
         }
 
-        private bool IsEqualsQuarter(int expected, DateTime actualDateTime)
+        bool IsEqualsQuarter(int expected, DateTime actualDateTime)
         {
             switch (((QuarterType) expected))
             {
@@ -329,12 +329,12 @@ namespace Dt.Cells.Data
             return false;
         }
 
-        private bool IsEqualsWeek(int expected, DateTime actualDateTime)
+        bool IsEqualsWeek(int expected, DateTime actualDateTime)
         {
             return (expected == (int) actualDateTime.DayOfWeek);
         }
 
-        private bool IsEqualsYear(int expected, DateTime actualDateTime)
+        bool IsEqualsYear(int expected, DateTime actualDateTime)
         {
             return (expected == actualDateTime.Year);
         }

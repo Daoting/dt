@@ -21,7 +21,7 @@ namespace Dt.Cells.Data
         /// <summary>
         /// The states
         /// </summary>
-        private IDictionary<string, WorkingState> states;
+        IDictionary<string, WorkingState> states;
 
         /// <summary>
         /// Suspends the specified key.

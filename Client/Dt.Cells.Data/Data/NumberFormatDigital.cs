@@ -21,50 +21,50 @@ namespace Dt.Cells.Data
     /// </summary>
     internal sealed class NumberFormatDigital : NumberFormatBase
     {
-        private string constString;
+        string constString;
         /// <summary>
         /// the default converter.
         /// </summary>
-        private static readonly INumberStringConverter defaultNumberStringConverter = new DefaultNumberStringConverter();
+        static readonly INumberStringConverter defaultNumberStringConverter = new DefaultNumberStringConverter();
         /// <summary>
         /// the excel format string.
         /// </summary>
-        private string excelFormatString;
+        string excelFormatString;
         /// <summary>
         /// denominator format.
         /// </summary>
-        private string fractionDenominatorFormat;
+        string fractionDenominatorFormat;
         /// <summary>
         /// integer format.
         /// </summary>
-        private string fractionIntegerFormat;
+        string fractionIntegerFormat;
         /// <summary>
         /// numerator format.
         /// </summary>
-        private string fractionNumeratorFormat;
+        string fractionNumeratorFormat;
         /// <summary>
         /// 
         /// </summary>
-        private string fullFormatString;
+        string fullFormatString;
         /// <summary>
         /// whether has "General" keyword.
         /// </summary>
-        private bool isGeneralNumber;
+        bool isGeneralNumber;
         /// <summary>
         /// the date time keyword
         /// </summary>
-        private static readonly string[] keywords = new string[] { DefaultTokens.Exponential1, DefaultTokens.Exponential2, ((char) DefaultTokens.NumberSign).ToString(), DefaultTokens.DecimalSeparator, DefaultTokens.NumberGroupSeparator, DefaultTokens.PercentSymbol, ((char) DefaultTokens.Zero).ToString(), ((char) DefaultTokens.SolidusSign).ToString() };
-        private static readonly double maxEdittingNumber = 1E+20;
-        private static readonly double minDisplayNumber = 1E-09;
-        private static readonly double minEdittingNumber = 1E-19;
+        static readonly string[] keywords = new string[] { DefaultTokens.Exponential1, DefaultTokens.Exponential2, ((char) DefaultTokens.NumberSign).ToString(), DefaultTokens.DecimalSeparator, DefaultTokens.NumberGroupSeparator, DefaultTokens.PercentSymbol, ((char) DefaultTokens.Zero).ToString(), ((char) DefaultTokens.SolidusSign).ToString() };
+        static readonly double maxEdittingNumber = 1E+20;
+        static readonly double minDisplayNumber = 1E-09;
+        static readonly double minEdittingNumber = 1E-19;
         /// <summary>
         /// the valid date time format string.
         /// </summary>
-        private string numberFormatString;
+        string numberFormatString;
         /// <summary>
         /// regex for number.
         /// </summary>
-        private static Regex numberRegex;
+        static Regex numberRegex;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.NumberFormatDigital" /> class.
@@ -113,7 +113,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="format">The format to encode.</param>
         /// <returns>Returns the encoded format string.</returns>
-        private string EncodeNumberFormat(string format)
+        string EncodeNumberFormat(string format)
         {
             format = format.Replace(@"\\", @"'\'");
             format = format.Replace(@"\ ", " ");
@@ -278,7 +278,7 @@ namespace Dt.Cells.Data
             return NumberHelper.GetFraction(value, denominatorDigits, out integer, out numerator, out denominator);
         }
 
-        private string[] GetIntegerAndNumeratorParts(string s)
+        string[] GetIntegerAndNumeratorParts(string s)
         {
             if ((s == null) || (s == string.Empty))
             {
@@ -345,7 +345,7 @@ namespace Dt.Cells.Data
             return strArray;
         }
 
-        private double GetMincCommonMultiple(double value1, double value2)
+        double GetMincCommonMultiple(double value1, double value2)
         {
             if (value1 != 0.0)
             {
@@ -369,13 +369,13 @@ namespace Dt.Cells.Data
             return Math.Abs(value2);
         }
 
-        private Regex InitRegex()
+        Regex InitRegex()
         {
             int num = (this.NumberFormatInfo.CurrencyGroupSizes.Length > 1) ? this.NumberFormatInfo.CurrencyGroupSizes[1] : this.NumberFormatInfo.CurrencyGroupSizes[0];
             return new Regex(string.Format(@"^(\-|\+)?([0-9]{{1,{4}}})*(\{0}[0-9]{{{2}}})*(\{0}[0-9]{{{3}}})*(\{1})?([0-9]+)*$", (object[]) new object[] { (string.IsNullOrWhiteSpace(this.NumberFormatInfo.CurrencyGroupSeparator) ? (string.IsNullOrEmpty(this.NumberFormatInfo.CurrencyGroupSeparator) ? "*" : "s") : this.NumberFormatInfo.CurrencyGroupSeparator), this.NumberFormatInfo.CurrencyDecimalSeparator, ((int) num), ((int) this.NumberFormatInfo.CurrencyGroupSizes[0]), ((int) 100) }), (RegexOptions) RegexOptions.CultureInvariant);
         }
 
-        private bool IsCurrency(string value, out string result)
+        bool IsCurrency(string value, out string result)
         {
             result = string.Empty;
             string currencySymbol = this.NumberFormatInfo.CurrencySymbol;
@@ -395,7 +395,7 @@ namespace Dt.Cells.Data
         /// <returns>
         /// <c>true</c> if the character is a special symbol; otherwise, <c>false</c>.
         /// </returns>
-        private bool IsSpecialSymbol(char c)
+        bool IsSpecialSymbol(char c)
         {
             if (this.IsStandardNumberSymbol(c))
             {
@@ -411,7 +411,7 @@ namespace Dt.Cells.Data
         /// <returns>
         /// <c>true</c> if the character is the standard number symbol; otherwise, <c>false</c>.
         /// </returns>
-        private bool IsStandardNumberSymbol(char c)
+        bool IsStandardNumberSymbol(char c)
         {
             System.Globalization.NumberFormatInfo info = (this.NumberFormatInfo != null) ? this.NumberFormatInfo : DefaultTokens.NumberFormatInfo;
             if (info != null)
@@ -489,7 +489,7 @@ namespace Dt.Cells.Data
         /// <param name="value">The value</param>
         /// <param name="isDecimal">if set to <c>true</c> to convert decimal value</param>
         /// <returns>Return the value</returns>
-        private object ToObject(double value, bool isDecimal)
+        object ToObject(double value, bool isDecimal)
         {
             if (!isDecimal)
             {
@@ -511,7 +511,7 @@ namespace Dt.Cells.Data
         /// <param name="s">The string to trim</param>
         /// <param name="count">The number of percent sign.</param>
         /// <returns>Returns the trimmed string</returns>
-        private string TrimPercentSign(string s, out int count)
+        string TrimPercentSign(string s, out int count)
         {
             count = 0;
             if ((s == null) || (s == string.Empty))
@@ -529,7 +529,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="s">The string to trim</param>
         /// <returns>Returns the trimmed string.</returns>
-        private string TrimSpecialSymbol(string s)
+        string TrimSpecialSymbol(string s)
         {
             if ((s == null) || (s == string.Empty))
             {
@@ -584,7 +584,7 @@ namespace Dt.Cells.Data
             return str;
         }
 
-        private bool TryParse(string value, out double result, bool forceParse)
+        bool TryParse(string value, out double result, bool forceParse)
         {
             result = 0.0;
             if (string.IsNullOrEmpty(value) || (this.NumberFormatInfo == null))
@@ -699,7 +699,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private Regex NumberRegex
+        Regex NumberRegex
         {
             get
             {

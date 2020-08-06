@@ -19,11 +19,11 @@ namespace Dt.Cells.Data
     /// </summary>
     public class DocumentAttachment
     {
-        private bool compress = true;
-        private string contentType;
-        private string description;
-        private string fileName;
-        private MemoryStream fileStream;
+        bool compress = true;
+        string contentType;
+        string description;
+        string fileName;
+        MemoryStream fileStream;
 
         /// <summary>
         /// Creates a new document attachment for the specified file.

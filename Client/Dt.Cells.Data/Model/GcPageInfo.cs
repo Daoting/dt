@@ -19,13 +19,13 @@ namespace Dt.Cells.Data
     /// </summary>
     internal class GcPageInfo : GcLabel
     {
-        private int currentHPage = 1;
-        private int currentPage = 1;
-        private int currentVPage = 1;
-        private System.DateTime dateTime = System.DateTime.Now;
-        private string format = string.Empty;
-        private int pageCount = 1;
-        private PageInfoType type = PageInfoType.CurrentOfTotal;
+        int currentHPage = 1;
+        int currentPage = 1;
+        int currentVPage = 1;
+        System.DateTime dateTime = System.DateTime.Now;
+        string format = string.Empty;
+        int pageCount = 1;
+        PageInfoType type = PageInfoType.CurrentOfTotal;
 
         /// <summary>
         /// Creates a new page information object.

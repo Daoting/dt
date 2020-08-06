@@ -16,17 +16,17 @@ namespace Dt.Cells.Data
 {
     internal class DataTableSettings : INotifyPropertyChanged
     {
-        private bool _showHorizontalBorder = true;
-        private bool _showLegendKeys;
-        private bool _showOutlineBorder = true;
-        private bool _showVerticalBorder = true;
+        bool _showHorizontalBorder = true;
+        bool _showLegendKeys;
+        bool _showOutlineBorder = true;
+        bool _showVerticalBorder = true;
 
         /// <summary>
         /// 
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void RaisePropertyChanged(string property)
+        void RaisePropertyChanged(string property)
         {
             if (this.PropertyChanged != null)
             {

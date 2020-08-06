@@ -17,9 +17,9 @@ namespace Dt.Cells.Data
     /// </summary>
     public sealed class IconDrawingObject : DrawingObject
     {
-        private Dt.Cells.Data.IconSetType iconSetType;
-        private int indexOfIcon;
-        private bool showIconOnly;
+        Dt.Cells.Data.IconSetType iconSetType;
+        int indexOfIcon;
+        bool showIconOnly;
 
         /// <summary>
         /// Constructs an icon object with the specified row index, column index, icon set type, icon collection index, and icon or icon and data.

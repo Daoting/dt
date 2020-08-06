@@ -16,9 +16,9 @@ namespace Dt.Cells.Data
 {
     internal class SparseArray<T>
     {
-        private Dictionary<int, T> _items;
-        private int _length;
-        private int lastDirtyIndex;
+        Dictionary<int, T> _items;
+        int _length;
+        int lastDirtyIndex;
 
         public SparseArray() : this(0)
         {

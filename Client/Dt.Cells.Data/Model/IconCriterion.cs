@@ -20,9 +20,9 @@ namespace Dt.Cells.Data
     /// </summary>
     public sealed class IconCriterion : IXmlSerializable
     {
-        private object iconValue;
-        private Dt.Cells.Data.IconValueType iconValueType;
-        private bool isGreaterThanOrEqualTo;
+        object iconValue;
+        Dt.Cells.Data.IconValueType iconValueType;
+        bool isGreaterThanOrEqualTo;
 
         /// <summary>
         /// Creates new icon criteria.

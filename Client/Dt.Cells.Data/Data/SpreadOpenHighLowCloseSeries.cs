@@ -26,9 +26,9 @@ namespace Dt.Cells.Data
     /// </remarks>
     public class SpreadOpenHighLowCloseSeries : SpreadHighLowSeries
     {
-        private SpreadDataSeries _closeSeries;
-        private bool _isOpenEmpty;
-        private SpreadDataSeries _openSeries;
+        SpreadDataSeries _closeSeries;
+        bool _isOpenEmpty;
+        SpreadDataSeries _openSeries;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.SpreadOpenHighLowCloseSeries" /> class.

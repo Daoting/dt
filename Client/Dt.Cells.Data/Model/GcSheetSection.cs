@@ -21,10 +21,10 @@ namespace Dt.Cells.Data
     /// </summary>
     internal class GcSheetSection : GcMultiplePageSection, IGcAllowAppendixSection
     {
-        private bool flagName;
-        private string sheetName;
+        bool flagName;
+        string sheetName;
         internal const string Suffix = "ETEN2J";
-        private Worksheet worksheet;
+        Worksheet worksheet;
 
         /// <summary>
         /// Creates a new section for the worksheet.
@@ -586,7 +586,7 @@ namespace Dt.Cells.Data
         /// <param name="showGridline">if set to <c>true</c> [show gridline].</param>
         /// <param name="borderCollapse">The border collapse.</param>
         /// <returns></returns>
-        private static List<double> GetColumnWidths(Worksheet worksheet, SheetArea area, int startIndex, int count, GcReportContext context, bool autoFit, int rowStartIndex, int rowEndIndex, int repeatStartIndex, int repeatEndIndex, bool hasTopPart, bool hasBottomPart, bool showGridline, BorderCollapse borderCollapse)
+        static List<double> GetColumnWidths(Worksheet worksheet, SheetArea area, int startIndex, int count, GcReportContext context, bool autoFit, int rowStartIndex, int rowEndIndex, int repeatStartIndex, int repeatEndIndex, bool hasTopPart, bool hasBottomPart, bool showGridline, BorderCollapse borderCollapse)
         {
             return Utilities.GetColumnWidths(worksheet, area, startIndex, count, context, autoFit, rowStartIndex, rowEndIndex, repeatStartIndex, repeatEndIndex, hasTopPart, hasBottomPart, UnitType.CentileInch, showGridline, borderCollapse);
         }
@@ -612,7 +612,7 @@ namespace Dt.Cells.Data
         /// <param name="showGridline">if set to <c>true</c> [show gridline].</param>
         /// <param name="borderCollapse">The border collapse.</param>
         /// <returns></returns>
-        private static List<double> GetRowHeights(Worksheet worksheet, SheetArea area, int startIndex, int count, GcReportContext context, bool autoFit, int columnStartIndex, int columnEndIndex, int repeatStartIndex, int repeatEndIndex, bool hasLeftPart, bool hasRightPart, PartLayoutData colWidths, PartLayoutData lColWidths, PartLayoutData rColWidths, bool showGridline, BorderCollapse borderCollapse)
+        static List<double> GetRowHeights(Worksheet worksheet, SheetArea area, int startIndex, int count, GcReportContext context, bool autoFit, int columnStartIndex, int columnEndIndex, int repeatStartIndex, int repeatEndIndex, bool hasLeftPart, bool hasRightPart, PartLayoutData colWidths, PartLayoutData lColWidths, PartLayoutData rColWidths, bool showGridline, BorderCollapse borderCollapse)
         {
             return Utilities.GetRowHeights(worksheet, area, startIndex, count, context, autoFit, columnStartIndex, columnEndIndex, repeatStartIndex, repeatEndIndex, hasLeftPart, hasRightPart, colWidths, lColWidths, rColWidths, UnitType.CentileInch, showGridline, borderCollapse);
         }
@@ -630,7 +630,7 @@ namespace Dt.Cells.Data
         /// <param name="titleLabel">The title label</param>
         /// <param name="value">The value</param>
         /// <returns></returns>
-        private static bool GetSheetNotePart(GcReportContext context, GcRangeBlock range, NotePrintState nps, int lineNumber, ref int offsetY, int width, int high, GcLabel titleLabel, string value)
+        static bool GetSheetNotePart(GcReportContext context, GcRangeBlock range, NotePrintState nps, int lineNumber, ref int offsetY, int width, int high, GcLabel titleLabel, string value)
         {
             int lastOffsetX = 0;
             int num2 = 0;
@@ -697,7 +697,7 @@ namespace Dt.Cells.Data
         /// <param name="sectionState">State of the section</param>
         /// <param name="horizontal">If set to <c>true</c>, [horizontal]</param>
         /// <returns></returns>
-        private static List<GcRangeBlock> GetSheetNoteRange(GcReportContext context, int x, int y, int width, int high, SheetSectionState sectionState, bool horizontal)
+        static List<GcRangeBlock> GetSheetNoteRange(GcReportContext context, int x, int y, int width, int high, SheetSectionState sectionState, bool horizontal)
         {
             if ((sectionState == null) || !SheetNotesHasMorePage(sectionState, horizontal))
             {
@@ -729,7 +729,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="buildInControlState">State of the build in control</param>
         /// <returns></returns>
-        private static SheetSectionState GetSheetSectionState(object buildInControlState)
+        static SheetSectionState GetSheetSectionState(object buildInControlState)
         {
             if (buildInControlState == null)
             {
@@ -779,7 +779,7 @@ namespace Dt.Cells.Data
         /// <returns>
         /// <c>true</c> if [is print note mode] [the specified section state]; otherwise, <c>false</c>
         /// </returns>
-        private static bool IsPrintNoteMode(SheetSectionState sectionState, bool horizontal)
+        static bool IsPrintNoteMode(SheetSectionState sectionState, bool horizontal)
         {
             return (!SheetHasMorePage(sectionState, horizontal) && SheetNotesHasMorePage(sectionState, horizontal));
         }
@@ -824,7 +824,7 @@ namespace Dt.Cells.Data
         /// <param name="sectionState">State of the section</param>
         /// <param name="horizontal">If set to <c>true</c>, [horizontal]</param>
         /// <returns></returns>
-        private static bool SheetHasMorePage(SheetSectionState sectionState, bool horizontal)
+        static bool SheetHasMorePage(SheetSectionState sectionState, bool horizontal)
         {
             bool flag = false;
             if (horizontal)
@@ -856,7 +856,7 @@ namespace Dt.Cells.Data
         /// <param name="sectionState">State of the section</param>
         /// <param name="horizontal">If set to <c>true</c>, [horizontal]</param>
         /// <returns></returns>
-        private static bool SheetNotesHasMorePage(SheetSectionState sectionState, bool horizontal)
+        static bool SheetNotesHasMorePage(SheetSectionState sectionState, bool horizontal)
         {
             return ((!horizontal && (sectionState.NoteStates.Count > 0)) && (sectionState.NotePrintState.Index < sectionState.NoteStates.Count));
         }
@@ -868,7 +868,7 @@ namespace Dt.Cells.Data
         /// <param name="worksheet">The sheet</param>
         /// <param name="settings">The settings</param>
         /// <returns></returns>
-        private static bool ShowPart(SheetArea area, Worksheet worksheet, PrintInfo settings)
+        static bool ShowPart(SheetArea area, Worksheet worksheet, PrintInfo settings)
         {
             VisibilityType showRowHeader;
             bool rowHeaderVisible;
@@ -973,20 +973,20 @@ namespace Dt.Cells.Data
         /// </summary>
         internal class NotePrintState
         {
-            private GcLabel cellTitle;
-            private GcLabel commentTitle;
-            private int index;
-            private bool isMultiSheet;
-            private int lastColumn = -1;
-            private int lastLine = -1;
-            private int lastOffsetX;
-            private int lastOffsetY;
-            private const string NoteCellTitle = "Cell: ";
-            private const string NoteCommentTitle = "Comment: ";
-            private Font noteFont;
-            private Font noteHeadFont;
-            private const string NoteSheetTitle = "Sheet: ";
-            private GcLabel sheetTitle;
+            GcLabel cellTitle;
+            GcLabel commentTitle;
+            int index;
+            bool isMultiSheet;
+            int lastColumn = -1;
+            int lastLine = -1;
+            int lastOffsetX;
+            int lastOffsetY;
+            const string NoteCellTitle = "Cell: ";
+            const string NoteCommentTitle = "Comment: ";
+            Font noteFont;
+            Font noteHeadFont;
+            const string NoteSheetTitle = "Sheet: ";
+            GcLabel sheetTitle;
 
             /// <summary>
             /// Creates all title controls.
@@ -1147,9 +1147,9 @@ namespace Dt.Cells.Data
         /// </summary>
         internal class NoteState
         {
-            private readonly int columnIndex;
-            private readonly int rowIndex;
-            private readonly Worksheet worksheet;
+            readonly int columnIndex;
+            readonly int rowIndex;
+            readonly Worksheet worksheet;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.GcSheetSection.NoteState" /> class.
@@ -1198,18 +1198,18 @@ namespace Dt.Cells.Data
         /// </summary>
         internal class SheetPrintState
         {
-            private int columnEndIndex;
-            private int columnStartIndex;
-            private int currentColumnIndex;
-            private int currentRowIndex;
-            private int lastRowCount;
-            private double offsetX;
-            private int rowEndIndex;
-            private List<int> rowIndexs;
-            private int rowStartIndex;
-            private bool seekChild = true;
-            private readonly Dt.Cells.Data.GcSheetSection.SheetState sheetState;
-            private readonly Worksheet worksheet;
+            int columnEndIndex;
+            int columnStartIndex;
+            int currentColumnIndex;
+            int currentRowIndex;
+            int lastRowCount;
+            double offsetX;
+            int rowEndIndex;
+            List<int> rowIndexs;
+            int rowStartIndex;
+            bool seekChild = true;
+            readonly Dt.Cells.Data.GcSheetSection.SheetState sheetState;
+            readonly Worksheet worksheet;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.GcSheetSection.SheetPrintState" /> class.
@@ -1405,13 +1405,13 @@ namespace Dt.Cells.Data
         /// </summary>
         internal class SheetSectionState
         {
-            private readonly List<DataRelation> circleRelation = new List<DataRelation>();
-            private readonly List<GcSheetSection.SheetPrintState> currentPrintStates = new List<GcSheetSection.SheetPrintState>();
-            private Worksheet groupSheet;
-            private readonly Dt.Cells.Data.GcSheetSection.NotePrintState notePrintState = new Dt.Cells.Data.GcSheetSection.NotePrintState();
-            private readonly List<GcSheetSection.NoteState> noteStates = new List<GcSheetSection.NoteState>();
-            private readonly Stack<GcSheetSection.SheetPrintState> printStateStack = new Stack<GcSheetSection.SheetPrintState>();
-            private readonly Dictionary<Worksheet, GcSheetSection.SheetState> sheetStates = new Dictionary<Worksheet, GcSheetSection.SheetState>();
+            readonly List<DataRelation> circleRelation = new List<DataRelation>();
+            readonly List<GcSheetSection.SheetPrintState> currentPrintStates = new List<GcSheetSection.SheetPrintState>();
+            Worksheet groupSheet;
+            readonly Dt.Cells.Data.GcSheetSection.NotePrintState notePrintState = new Dt.Cells.Data.GcSheetSection.NotePrintState();
+            readonly List<GcSheetSection.NoteState> noteStates = new List<GcSheetSection.NoteState>();
+            readonly Stack<GcSheetSection.SheetPrintState> printStateStack = new Stack<GcSheetSection.SheetPrintState>();
+            readonly Dictionary<Worksheet, GcSheetSection.SheetState> sheetStates = new Dictionary<Worksheet, GcSheetSection.SheetState>();
 
             /// <summary>
             /// Gets the circle relation.
@@ -1484,41 +1484,41 @@ namespace Dt.Cells.Data
         /// </summary>
         internal class SheetState
         {
-            private SpanLayoutData bottomLeftCornerSpans;
-            private SpanLayoutData bottomRightCornerSpans;
-            private SpanLayoutData cellSpans;
-            private int columnEndIndex;
-            private PartLayoutData columnFooterHeights;
-            private SpanLayoutData columnFooterSpans;
-            private PartLayoutData columnHeaderHeights;
-            private SpanLayoutData columnHeaderSpans;
-            private int columnStartIndex;
-            private PartLayoutData columnWidths;
-            private PartLayoutData frozenColumnWidths;
-            private PartLayoutData frozenRowHeights;
-            private PartLayoutData frozenTrailingColumnWidths;
-            private PartLayoutData frozenTrailingRowHeights;
-            private bool hasHierarchy;
-            private bool isBookmarked;
-            private bool isHierarchy;
-            private int repeatColumnEndIndex = -1;
-            private int repeatColumnStartIndex = -1;
-            private PartLayoutData repeatColumnWidths;
-            private int repeatRowEndIndex = -1;
-            private PartLayoutData repeatRowHeights;
-            private int repeatRowStartIndex = -1;
-            private int rowEndIndex;
-            private SpanLayoutData rowFooterSpans;
-            private PartLayoutData rowFooterWidths;
-            private SpanLayoutData rowHeaderSpans;
-            private PartLayoutData rowHeaderWidths;
-            private PartLayoutData rowHeights;
-            private int rowStartIndex;
-            private readonly PrintInfo settings;
-            private readonly Dictionary<Rect, List<Shape>> shapes = new Dictionary<Rect, List<Shape>>();
-            private readonly Dictionary<Rect, List<StickyNote>> stickyNotes = new Dictionary<Rect, List<StickyNote>>();
-            private SpanLayoutData topLeftCornerSpans;
-            private SpanLayoutData topRightCornerSpans;
+            SpanLayoutData bottomLeftCornerSpans;
+            SpanLayoutData bottomRightCornerSpans;
+            SpanLayoutData cellSpans;
+            int columnEndIndex;
+            PartLayoutData columnFooterHeights;
+            SpanLayoutData columnFooterSpans;
+            PartLayoutData columnHeaderHeights;
+            SpanLayoutData columnHeaderSpans;
+            int columnStartIndex;
+            PartLayoutData columnWidths;
+            PartLayoutData frozenColumnWidths;
+            PartLayoutData frozenRowHeights;
+            PartLayoutData frozenTrailingColumnWidths;
+            PartLayoutData frozenTrailingRowHeights;
+            bool hasHierarchy;
+            bool isBookmarked;
+            bool isHierarchy;
+            int repeatColumnEndIndex = -1;
+            int repeatColumnStartIndex = -1;
+            PartLayoutData repeatColumnWidths;
+            int repeatRowEndIndex = -1;
+            PartLayoutData repeatRowHeights;
+            int repeatRowStartIndex = -1;
+            int rowEndIndex;
+            SpanLayoutData rowFooterSpans;
+            PartLayoutData rowFooterWidths;
+            SpanLayoutData rowHeaderSpans;
+            PartLayoutData rowHeaderWidths;
+            PartLayoutData rowHeights;
+            int rowStartIndex;
+            readonly PrintInfo settings;
+            readonly Dictionary<Rect, List<Shape>> shapes = new Dictionary<Rect, List<Shape>>();
+            readonly Dictionary<Rect, List<StickyNote>> stickyNotes = new Dictionary<Rect, List<StickyNote>>();
+            SpanLayoutData topLeftCornerSpans;
+            SpanLayoutData topRightCornerSpans;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.GcSheetSection.SheetState" /> class.

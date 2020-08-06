@@ -95,7 +95,7 @@ namespace Dt.Cells.Data
         /// <param name="type">The type</param>
         /// <param name="source">The source</param>
         /// <returns></returns>
-        private static object CreateTypeInstance(Type type, string source)
+        static object CreateTypeInstance(Type type, string source)
         {
             if (IsSimpleType(type))
             {
@@ -1178,7 +1178,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private static bool IsObjEmpty(object obj)
+        static bool IsObjEmpty(object obj)
         {
             if (obj is MatrixTransform)
             {
@@ -1193,7 +1193,7 @@ namespace Dt.Cells.Data
             return false;
         }
 
-        private static bool IsSimpleType(Type type)
+        static bool IsSimpleType(Type type)
         {
             if ((((((type != typeof(string)) && (type != typeof(double))) && ((type != typeof(int)) && (type != typeof(short)))) && (((type != typeof(long)) && (type != typeof(bool))) && ((type != typeof(float)) && (type != typeof(char))))) && ((((type != typeof(byte)) && (type != typeof(sbyte))) && ((type != typeof(ushort)) && (type != typeof(uint)))) && (((type != typeof(ulong)) && (type != typeof(DateTime))) && ((type != typeof(TimeSpan)) && (type != typeof(decimal)))))) && ((((type != typeof(double?)) && (type != typeof(int?))) && ((type != typeof(short?)) && (type != typeof(long?)))) && (((type != typeof(bool?)) && (type != typeof(float?))) && ((type != typeof(char?)) && (type != typeof(byte?))))))
             {
@@ -1202,7 +1202,7 @@ namespace Dt.Cells.Data
             return true;
         }
 
-        private static bool IsSupportedValueType(Type type)
+        static bool IsSupportedValueType(Type type)
         {
             if ((!IsSimpleType(type) && !IntrospectionExtensions.GetTypeInfo(type).IsEnum) && ((type != typeof(Image)) && (type != typeof(Windows.UI.Color))))
             {
@@ -1211,7 +1211,7 @@ namespace Dt.Cells.Data
             return true;
         }
 
-        private static object Parse(Type type, string str)
+        static object Parse(Type type, string str)
         {
             if (string.IsNullOrEmpty(str))
             {
@@ -1465,7 +1465,7 @@ namespace Dt.Cells.Data
             throw new InvalidCastException(ResourceStrings.SerializerInvalidCastError);
         }
 
-        private static bool ParseValuePair(string str, out double a, out double b)
+        static bool ParseValuePair(string str, out double a, out double b)
         {
             a = 0.0;
             b = 0.0;
@@ -1795,7 +1795,7 @@ namespace Dt.Cells.Data
             return null;
         }
 
-        private static Type ReadTypeAttr(XmlReader reader)
+        static Type ReadTypeAttr(XmlReader reader)
         {
             string typeName = ReadAttribute("type", reader);
             string assembly = ReadAttribute("assembly", reader);

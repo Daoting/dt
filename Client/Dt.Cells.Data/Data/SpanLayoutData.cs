@@ -20,8 +20,8 @@ namespace Dt.Cells.Data
     /// </summary>
     internal class SpanLayoutData
     {
-        private readonly SheetSpanModel pureSpans = new SheetSpanModel();
-        private readonly SheetSpanModel spans = new SheetSpanModel();
+        readonly SheetSpanModel pureSpans = new SheetSpanModel();
+        readonly SheetSpanModel spans = new SheetSpanModel();
 
         /// <summary>
         /// Adds the specified row.

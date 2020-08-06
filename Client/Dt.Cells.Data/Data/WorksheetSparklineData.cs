@@ -16,10 +16,10 @@ namespace Dt.Cells.Data
 {
     internal abstract class WorksheetSparklineData : ISparklineData
     {
-        private int anchorLine = -1;
-        private object[,] cachedData;
-        private int end;
-        private int start;
+        int anchorLine = -1;
+        object[,] cachedData;
+        int end;
+        int start;
 
         public event EventHandler DataChanged;
 
@@ -32,7 +32,7 @@ namespace Dt.Cells.Data
             this.cachedData = null;
         }
 
-        private void GetStartAndEnd()
+        void GetStartAndEnd()
         {
             switch (this.DataOrientation)
             {
@@ -124,7 +124,7 @@ namespace Dt.Cells.Data
             return null;
         }
 
-        private bool IsValueVisible(int index)
+        bool IsValueVisible(int index)
         {
             if (!this.ShowHiddenData)
             {

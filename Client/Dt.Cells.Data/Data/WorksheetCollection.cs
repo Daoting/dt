@@ -27,7 +27,7 @@ namespace Dt.Cells.Data
         /// <summary>
         /// The workbook.
         /// </summary>
-        private Dt.Cells.Data.Workbook workbook;
+        Dt.Cells.Data.Workbook workbook;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="P:Dt.Cells.Data.WorksheetCollection.Workbook" /> class.
@@ -140,7 +140,7 @@ namespace Dt.Cells.Data
         /// Generals the new name of the sheet.
         /// </summary>
         /// <returns></returns>
-        private static string GeneralNewSheetName(Dt.Cells.Data.Workbook workbook)
+        static string GeneralNewSheetName(Dt.Cells.Data.Workbook workbook)
         {
             int num = 0;
             if (workbook != null)

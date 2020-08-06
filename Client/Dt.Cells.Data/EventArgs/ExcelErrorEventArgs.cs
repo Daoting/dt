@@ -18,7 +18,7 @@ namespace Dt.Cells.Data
     /// </summary>
     public class ExcelErrorEventArgs : EventArgs
     {
-        private Dt.Xls.ExcelWarning _warning;
+        Dt.Xls.ExcelWarning _warning;
 
         internal ExcelErrorEventArgs(Dt.Xls.ExcelWarning warning)
         {

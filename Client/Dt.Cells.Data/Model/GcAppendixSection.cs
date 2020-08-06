@@ -19,7 +19,7 @@ namespace Dt.Cells.Data
     /// </summary>
     internal abstract class GcAppendixSection : GcSection
     {
-        private bool horizontalExtend;
+        bool horizontalExtend;
 
         /// <summary>
         /// Creates a new appendix section.

@@ -32,11 +32,11 @@ namespace Dt.Cells.Data
         /// <summary>
         /// the compare operator.
         /// </summary>
-        private GeneralCompareType compareOperator;
+        GeneralCompareType compareOperator;
         /// <summary>
         /// the value.
         /// </summary>
-        private double value;
+        double value;
 
         /// <summary>
         /// Creates a new condition format with the specified string expression.

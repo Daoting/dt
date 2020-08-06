@@ -23,11 +23,11 @@ namespace Dt.Cells.Data
         /// <summary>
         /// The compare information.
         /// </summary>
-        private CompareInfo compareInfo;
+        CompareInfo compareInfo;
         /// <summary>
         /// The compare information name.
         /// </summary>
-        private const string CompareInfoName = "CompareInfo";
+        const string CompareInfoName = "CompareInfo";
         /// <summary>
         /// The default comparer.
         /// </summary>
@@ -40,7 +40,7 @@ namespace Dt.Cells.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.Comparer" /> class.
         /// </summary>
-        private Comparer()
+        Comparer()
         {
             this.compareInfo = null;
         }

@@ -19,8 +19,8 @@ namespace Dt.Cells.Data
     /// </summary>
     internal class TrendLineLabel
     {
-        private Dt.Xls.Chart.RichText _richText;
-        private string _text;
+        Dt.Xls.Chart.RichText _richText;
+        string _text;
 
         /// <summary>
         /// Gets or sets the formatter.

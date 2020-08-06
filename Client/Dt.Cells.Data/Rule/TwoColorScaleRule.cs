@@ -19,7 +19,7 @@ namespace Dt.Cells.Data
     /// </summary>
     public sealed class TwoColorScaleRule : ScaleRule
     {
-        private IActualValue lastActualValue;
+        IActualValue lastActualValue;
 
         /// <summary>
         /// Constructs a two color scale rule.
@@ -83,7 +83,7 @@ namespace Dt.Cells.Data
             return null;
         }
 
-        private void Init()
+        void Init()
         {
             base.scales = new ScaleValue[3];
             base.scales[0] = new ScaleValue(ScaleValueType.LowestValue, null);

@@ -26,162 +26,162 @@ namespace Dt.Cells.Data
         /// <summary>
         /// Custom format for short AM/PM symbol in excel.
         /// </summary>
-        private static readonly string AMPMSingleDigit = "A/P";
+        static readonly string AMPMSingleDigit = "A/P";
         /// <summary>
         /// Custom format for default AM/PM symbol in excel.
         /// </summary>
-        private static readonly string AMPMTwoDigit = "AM/PM";
+        static readonly string AMPMTwoDigit = "AM/PM";
         /// <summary>
         /// Custom format for short day in excel.
         /// </summary>
-        private static readonly string DaySingleDigit = "d";
+        static readonly string DaySingleDigit = "d";
         /// <summary>
         /// Custom format for long day in excel.
         /// </summary>
-        private static readonly string DayTwoDigit = "dd";
+        static readonly string DayTwoDigit = "dd";
         /// <summary>
         /// Custom format for week day abbreviation name in excel.
         /// </summary>
-        private static readonly string DayWeekDayAbbreviation = "aaa";
+        static readonly string DayWeekDayAbbreviation = "aaa";
         /// <summary>
         /// Custom format for week day unabbreviated name in excel.
         /// </summary>
-        private static readonly string DayWeekDayUnabbreviated = "aaaa";
+        static readonly string DayWeekDayUnabbreviated = "aaaa";
         /// <summary>
         /// the absolute time.
         /// </summary>
-        private static readonly DateTime defaultAbsoluteTime = new DateTime(0x76b, 12, 30, 0, 0, 0, 0);
+        static readonly DateTime defaultAbsoluteTime = new DateTime(0x76b, 12, 30, 0, 0, 0, 0);
         /// <summary>
         /// the default converter.
         /// </summary>
-        private static readonly INumberStringConverter defaultNumberStringConverter = new DefaultDateTimeNumberStringConverter();
+        static readonly INumberStringConverter defaultNumberStringConverter = new DefaultDateTimeNumberStringConverter();
         /// <summary>
         /// Custom format for era year in excel.
         /// </summary>
-        private static readonly string EraYear = "e";
+        static readonly string EraYear = "e";
         /// <summary>
         /// Custom format for short hours in excel.
         /// </summary>
-        private static readonly string HoursSingleDigit = "h";
+        static readonly string HoursSingleDigit = "h";
         /// <summary>
         /// Custom format for long hours in excel.
         /// </summary>
-        private static readonly string HoursTwoDigit = "hh";
-        private static readonly string JanpanAraYearSymbol1 = "ge";
-        private static readonly string JanpanAraYearSymbol2 = "g e";
+        static readonly string HoursTwoDigit = "hh";
+        static readonly string JanpanAraYearSymbol1 = "ge";
+        static readonly string JanpanAraYearSymbol2 = "g e";
         
         /// <summary>
         /// Custom format for short minute in excel.
         /// </summary>
-        private static readonly string MinuteSingleDigit = "m";
+        static readonly string MinuteSingleDigit = "m";
         /// <summary>
         /// Custom format for long minute in excel.
         /// </summary>
-        private static readonly string MinuteTwoDigit = "mm";
+        static readonly string MinuteTwoDigit = "mm";
         /// <summary>
         /// Custom format for month abbreviation name in excel.
         /// </summary>
-        private static readonly string MonthAbbreviation = "mmm";
+        static readonly string MonthAbbreviation = "mmm";
         /// <summary>
         /// Custom format for the first char of month name in excel.
         /// </summary>
-        private static readonly string MonthJD = "mmmmm";
+        static readonly string MonthJD = "mmmmm";
         /// <summary>
         /// Custom format for short month in excel.
         /// </summary>
-        private static readonly string MonthSingleDigit = "m";
+        static readonly string MonthSingleDigit = "m";
         /// <summary>
         /// Custom format for long month in excel.
         /// </summary>
-        private static readonly string MonthTwoDigit = "mm";
+        static readonly string MonthTwoDigit = "mm";
         /// <summary>
         /// Custom format for month unabbreviated name in excel.
         /// </summary>
-        private static readonly string MonthUnabbreviated = "mmmm";
+        static readonly string MonthUnabbreviated = "mmmm";
         /// <summary>
         /// the placeholder for month JD.
         /// </summary>
-        private static readonly string PlaceholderMonthJD = (DefaultTokens.ReplacePlaceholder + MonthJD);
+        static readonly string PlaceholderMonthJD = (DefaultTokens.ReplacePlaceholder + MonthJD);
         /// <summary>
         /// Custom format for short second in excel.
         /// </summary>
-        private static readonly string SecondSingleDigit = "s";
+        static readonly string SecondSingleDigit = "s";
         /// <summary>
         /// Custom format for long second in excel.
         /// </summary>
-        private static readonly string SecondTwoDigit = "ss";
+        static readonly string SecondTwoDigit = "ss";
         /// <summary>
         /// Custom format for AM/PM symbol in string.format.
         /// </summary>
-        private static readonly string StandardAMPMSingleDigit = "tt";
+        static readonly string StandardAMPMSingleDigit = "tt";
         /// <summary>
         /// Custom format for week day abbreviation name in excel.
         /// </summary>
-        private static readonly string StandardDayWeekDayAbbreviation = "ddd";
+        static readonly string StandardDayWeekDayAbbreviation = "ddd";
         /// <summary>
         /// Custom format for week day unabbreviated name in excel.
         /// </summary>
-        private static readonly string StandardDayWeekDayUnabbreviated = "dddd";
+        static readonly string StandardDayWeekDayUnabbreviated = "dddd";
         /// <summary>
         /// Custom format for short hour in string.format.
         /// </summary>
-        private static readonly string StandardHourSingleDigit = "H";
+        static readonly string StandardHourSingleDigit = "H";
         /// <summary>
         /// Custom format for short hour in string.format.
         /// </summary>
-        private static readonly string StandardHourTwoDigit = "HH";
+        static readonly string StandardHourTwoDigit = "HH";
         /// <summary>
         /// Custom format for short minute in string.format.
         /// </summary>
-        private static readonly string StandardMinuteSingleDigit = "%m";
+        static readonly string StandardMinuteSingleDigit = "%m";
         /// <summary>
         /// Custom format for month abbreviation name in string.format.
         /// </summary>
-        private static readonly string StandardMonthAbbreviation = "MMM";
+        static readonly string StandardMonthAbbreviation = "MMM";
         /// <summary>
         /// Custom format for short month in string.format.
         /// </summary>
-        private static readonly string StandardMonthSingleDigit = "%M";
+        static readonly string StandardMonthSingleDigit = "%M";
         /// <summary>
         /// Custom format for long month in string.format.
         /// </summary>
-        private static readonly string StandardMonthTwoDigit = "MM";
+        static readonly string StandardMonthTwoDigit = "MM";
         /// <summary>
         /// Custom format for month unabbreviated name in string.format.
         /// </summary>
-        private static readonly string StandardMonthUnabbreviated = "MMMM";
+        static readonly string StandardMonthUnabbreviated = "MMMM";
         /// <summary>
         /// Custom format for short second in string.format.
         /// </summary>
-        private static readonly string StandardSecondSingleDigit = "%s";
+        static readonly string StandardSecondSingleDigit = "%s";
         /// <summary>
         /// Custom format for short sub second in string.format.
         /// </summary>
-        private static readonly string StandardSubSecondSingleDigit = ".f";
+        static readonly string StandardSubSecondSingleDigit = ".f";
         /// <summary>
         /// Custom format for full sub second in string.format.
         /// </summary>
-        private static readonly string StandardSubSecondThreeDigit = ".fff";
+        static readonly string StandardSubSecondThreeDigit = ".fff";
         /// <summary>
         /// Custom format for long sub second in string.format.
         /// </summary>
-        private static readonly string StandardSubSecondTwoDigit = ".ff";
+        static readonly string StandardSubSecondTwoDigit = ".ff";
         /// <summary>
         /// Custom format for short year in string.format.
         /// </summary>
-        private static readonly string StandardYearSingleDigit = "%y";
+        static readonly string StandardYearSingleDigit = "%y";
         /// <summary>
         /// Custom format for short sub-second in excel.
         /// </summary>
-        private static readonly string SubSecondSingleDigit = ".0";
+        static readonly string SubSecondSingleDigit = ".0";
         /// <summary>
         /// Custom format for full sub-second in excel.
         /// </summary>
-        private static readonly string SubSecondThreeDigit = ".000";
+        static readonly string SubSecondThreeDigit = ".000";
         /// <summary>
         /// Custom format for long sub-second in excel.
         /// </summary>
-        private static readonly string SubSecondTwoDigit = ".00";
+        static readonly string SubSecondTwoDigit = ".00";
         
         /// <summary>
         /// Custom format for long year in excel.
@@ -190,7 +190,7 @@ namespace Dt.Cells.Data
         /// <summary>
         /// Custom format for short year in excel.
         /// </summary>
-        private static readonly string YearSingleDigit = "y";
+        static readonly string YearSingleDigit = "y";
         /// <summary>
         /// Custom format for short year in excel.
         /// </summary>
@@ -199,7 +199,7 @@ namespace Dt.Cells.Data
         /// <summary>
         /// the date time keyword
         /// </summary>
-        private static readonly string[] keywords = new string[] { 
+        static readonly string[] keywords = new string[] { 
             YearTwoDigit, YearFourDigit, MonthSingleDigit, MonthTwoDigit, MonthAbbreviation, MonthUnabbreviated, MonthJD, DaySingleDigit, DayTwoDigit, DayWeekDayAbbreviation, DayWeekDayUnabbreviated, HoursSingleDigit, HoursTwoDigit, MinuteSingleDigit, MinuteTwoDigit, SecondSingleDigit, 
             SecondTwoDigit, JanpanAraYearSymbol1, JanpanAraYearSymbol2
          };
@@ -207,27 +207,27 @@ namespace Dt.Cells.Data
         /// <summary>
         /// the absolute time.
         /// </summary>
-        private DateTime? absoluteTime;
+        DateTime? absoluteTime;
         /// <summary>
         /// the absTimeParts
         /// </summary>
-        private ABSTimeFormatPart[] absTimeParts;
+        ABSTimeFormatPart[] absTimeParts;
         /// <summary>
         /// the format string.
         /// </summary>
-        private string formatString;
+        string formatString;
         /// <summary>
         /// is the format has JD.
         /// </summary>
-        private bool hasJD;
+        bool hasJD;
         /// <summary>
         /// whether the year formatting is delay.
         /// </summary>
-        private bool hasYearDelay;
+        bool hasYearDelay;
         /// <summary>
         /// the valid date time format string.
         /// </summary>
-        private string validDateTimeFormatString;
+        string validDateTimeFormatString;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.NumberFormatDateTime" /> class.
@@ -311,7 +311,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="format">The format</param>
         /// <returns>Returns the fixed format string</returns>
-        private string FixFormat(string format)
+        string FixFormat(string format)
         {
             string str = format;
             StringBuilder builder = new StringBuilder();
@@ -445,7 +445,7 @@ namespace Dt.Cells.Data
             return this.NumberStringConverter.ConvertTo(number, obj, true, base.PartLocaleID, base.PartDBNumberFormat);
         }
 
-        private bool IsJanpaneseCulture()
+        bool IsJanpaneseCulture()
         {
             if ((base.PartLocaleID != null) && (base.PartLocaleID.CultureInfo != null))
             {
@@ -512,7 +512,7 @@ namespace Dt.Cells.Data
         /// <returns>
         /// <c>true</c> if the specified format contains the Am/Pm information; otherwise, <c>false</c>.
         /// </returns>
-        private bool ProcessAMPM(ref string format)
+        bool ProcessAMPM(ref string format)
         {
             bool flag = false;
             int startIndex = CultureInfo.InvariantCulture.CompareInfo.IndexOf(format, AMPMTwoDigit, (CompareOptions) CompareOptions.IgnoreCase);
@@ -572,7 +572,7 @@ namespace Dt.Cells.Data
         /// <returns>
         /// <c>true</c> if replace token successful; otherwise, <c>false</c>.
         /// </returns>
-        private bool Replace(string format, string oldToken, string newToken, bool isReplaceInDateFormat, bool isReplaceInTimeFormat, out string result, bool justSearch, bool isIgnoreCase)
+        bool Replace(string format, string oldToken, string newToken, bool isReplaceInDateFormat, bool isReplaceInTimeFormat, out string result, bool justSearch, bool isIgnoreCase)
         {
             result = format;
             if (!isReplaceInDateFormat && !isReplaceInTimeFormat)
@@ -677,7 +677,7 @@ namespace Dt.Cells.Data
         /// Gets the current AMPM.
         /// </summary>
         /// <value>The current AMPM.</value>
-        private string CurrentAMPM
+        string CurrentAMPM
         {
             get
             {

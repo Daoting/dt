@@ -38,14 +38,14 @@ namespace Dt.Cells.UI
             UpdateChartTitle();
         }
 
-        protected override Windows.Foundation.Size ArrangeOverride(Windows.Foundation.Size finalSize)
+        protected override Size ArrangeOverride(Size finalSize)
         {
-            _titleFrame.Arrange(new Windows.Foundation.Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
-            _titleContent.Arrange(new Windows.Foundation.Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
+            _titleFrame.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
+            _titleContent.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
             return base.ArrangeOverride(finalSize);
         }
 
-        protected override Windows.Foundation.Size MeasureOverride(Windows.Foundation.Size availableSize)
+        protected override Size MeasureOverride(Size availableSize)
         {
             _titleFrame.Measure(availableSize);
             _titleContent.Measure(availableSize);

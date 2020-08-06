@@ -29,7 +29,7 @@ namespace Dt.Cells.Data
     internal static class Utility
     {
         public static FontFamily DefaultFontFamily = new FontFamily("Calibri");
-        private static PropertyInfo[] infos = null;
+        static PropertyInfo[] infos = null;
 
         public static MemoryStream CreateMemStream(Stream source)
         {
@@ -175,7 +175,7 @@ namespace Dt.Cells.Data
             return (!double.IsInfinity(x) && !double.IsNaN(x));
         }
 
-        private async static Task LoadImgAsync(Uri uri, Stream p_stream)
+        async static Task LoadImgAsync(Uri uri, Stream p_stream)
         {
             string originalString = uri.OriginalString;
             if (originalString.StartsWith("ms-appx:/"))
@@ -194,7 +194,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="relativePath"></param>
         /// <returns></returns>
-        private static async Task<StorageFile> GetLocalResourceAsync(string relativePath)
+        static async Task<StorageFile> GetLocalResourceAsync(string relativePath)
         {
             string path = string.Format("Files/{0}", (object[])new object[] { relativePath });
             ResourceMap rm = ResourceManager.Current.MainResourceMap;

@@ -20,8 +20,8 @@ namespace Dt.Cells.Data
     /// </summary>
     public class CsvFileSource
     {
-        private string columnDelimiter;
-        private System.Text.Encoding encoding = System.Text.Encoding.UTF8;
+        string columnDelimiter;
+        System.Text.Encoding encoding = System.Text.Encoding.UTF8;
 
         /// <summary>
         /// Constructs a data source for Csv file binding.

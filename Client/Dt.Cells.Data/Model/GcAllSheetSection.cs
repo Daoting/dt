@@ -18,9 +18,9 @@ namespace Dt.Cells.Data
     /// </summary>
     internal class GcAllSheetSection : GcSection
     {
-        private bool flagName;
-        private Dt.Cells.Data.Workbook workbook;
-        private string workbookName;
+        bool flagName;
+        Dt.Cells.Data.Workbook workbook;
+        string workbookName;
 
         /// <summary>
         /// Creates a new section that contains all the worksheets for the workbook.

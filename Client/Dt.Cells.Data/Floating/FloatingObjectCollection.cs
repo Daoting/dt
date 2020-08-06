@@ -24,7 +24,7 @@ namespace Dt.Cells.Data
     /// </summary>
     public class FloatingObjectCollection<T> : NotifyCollection<T>, IRangeSupport, IDisposable where T: FloatingObject
     {
-        private IFloatingObjectSheet _sheet;
+        IFloatingObjectSheet _sheet;
 
         internal FloatingObjectCollection(IFloatingObjectSheet innerSheet)
         {
@@ -58,7 +58,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void CheckObjectExists(string name)
+        void CheckObjectExists(string name)
         {
             if ((this.Sheet.FindChart(name) != null) || (this.Sheet.FindFloatingObject(name) != null))
             {
@@ -221,7 +221,7 @@ namespace Dt.Cells.Data
             throw new NotImplementedException();
         }
 
-        private void InnerSheet_ColumnChanged(object sender, SheetChangedEventArgs e)
+        void InnerSheet_ColumnChanged(object sender, SheetChangedEventArgs e)
         {
             this.SuspendItemsEvent();
             if ((e.PropertyName == "Width") || (e.PropertyName == "Axis"))
@@ -231,7 +231,7 @@ namespace Dt.Cells.Data
             this.ResumeItemsEvent();
         }
 
-        private void InnerSheet_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void InnerSheet_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             this.SuspendItemsEvent();
             if (e.PropertyName == "ColumnRangeGroup")
@@ -245,7 +245,7 @@ namespace Dt.Cells.Data
             this.ResumeItemsEvent();
         }
 
-        private void InnerSheet_RowChanged(object sender, SheetChangedEventArgs e)
+        void InnerSheet_RowChanged(object sender, SheetChangedEventArgs e)
         {
             this.SuspendItemsEvent();
             if ((e.PropertyName == "Height") || (e.PropertyName == "Axis"))
@@ -272,22 +272,22 @@ namespace Dt.Cells.Data
             base.Insert(index, item);
         }
 
-        private bool IsCoverObject(int row, int column, int rowCount, int columnCount, T floatingObject)
+        bool IsCoverObject(int row, int column, int rowCount, int columnCount, T floatingObject)
         {
             CellRange range = floatingObject.Range;
             return ((((row <= range.Row) && (column <= range.Column)) && ((row + rowCount) >= (range.Row + range.RowCount))) && ((column + columnCount) >= (range.Column + range.ColumnCount)));
         }
 
-        private void NotifyCellValueChanged(int row, int column)
+        void NotifyCellValueChanged(int row, int column)
         {
         }
 
-        private void NotifyColumnWidthChanged()
+        void NotifyColumnWidthChanged()
         {
             this.UpdateObjectsLayout();
         }
 
-        private void NotifyRowHeightChanged()
+        void NotifyRowHeightChanged()
         {
             this.UpdateObjectsLayout();
         }
@@ -339,7 +339,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void ReplaceObject(int index, T floatingObject)
+        void ReplaceObject(int index, T floatingObject)
         {
             if (index <= -1)
             {
@@ -355,7 +355,7 @@ namespace Dt.Cells.Data
             floatingObject.Owner = this;
         }
 
-        private void ReplaceObject(string name, T floatingObject)
+        void ReplaceObject(string name, T floatingObject)
         {
             int index = -1;
             for (int i = 0; i < base.Items.Count; i++)
@@ -393,7 +393,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void Sheet_CellChanged(object sender, CellChangedEventArgs e)
+        void Sheet_CellChanged(object sender, CellChangedEventArgs e)
         {
             if (e.PropertyName == "Value")
             {
@@ -412,7 +412,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void UpdateObjectsLayout()
+        void UpdateObjectsLayout()
         {
             this.SuspendItemsEvent();
             using (IEnumerator<T> enumerator = base.GetEnumerator())

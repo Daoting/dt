@@ -22,11 +22,11 @@ namespace Dt.Cells.Data
     /// </summary>
     public class SpreadXYZDataSeries : SpreadXYDataSeries
     {
-        private DataOrientation? _zDataOrientation = 0;
-        private string _zValueFormula;
-        private SheetCellRange[] _zValueRange;
-        private CalcExpression _zValueReference;
-        private DoubleSeriesCollection _zValues;
+        DataOrientation? _zDataOrientation = 0;
+        string _zValueFormula;
+        SheetCellRange[] _zValueRange;
+        CalcExpression _zValueReference;
+        DoubleSeriesCollection _zValues;
 
         internal override DataLabel CreateDataLabelOnNeeded(int pointIndex)
         {
@@ -117,7 +117,7 @@ namespace Dt.Cells.Data
             this.UpdateZValueReference(this.ZValueFormula);
         }
 
-        private void UpdateZValueReference(string zValueFormula)
+        void UpdateZValueReference(string zValueFormula)
         {
             this.ZValueReference = FormulaUtility.Formula2Expression(base.Sheet, zValueFormula);
         }
@@ -135,7 +135,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void ZValues_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        void ZValues_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             ((ISpreadChartElement) this).NotifyElementChanged("ZValues");
         }
@@ -185,7 +185,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private CalcExpression ZValueReference
+        CalcExpression ZValueReference
         {
             get { return  this._zValueReference; }
             set
@@ -237,9 +237,9 @@ namespace Dt.Cells.Data
             }
         }
 
-        private class ZValueDataSeries : IDataSeries
+        class ZValueDataSeries : IDataSeries
         {
-            private SpreadXYZDataSeries _xyzSeries;
+            SpreadXYZDataSeries _xyzSeries;
 
             public ZValueDataSeries(SpreadXYZDataSeries xyzSeries)
             {

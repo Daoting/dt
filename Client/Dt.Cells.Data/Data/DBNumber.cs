@@ -21,82 +21,82 @@ namespace Dt.Cells.Data
         /// <summary>
         /// the Chinese number1.
         /// </summary>
-        private static DBNumber chineseDBNum1 = null;
+        static DBNumber chineseDBNum1 = null;
         /// <summary>
         /// the Chinese number2.
         /// </summary>
-        private static DBNumber chineseDBNum2 = null;
+        static DBNumber chineseDBNum2 = null;
         /// <summary>
         /// the Chinese number3.
         /// </summary>
-        private static DBNumber chineseDBNum3 = null;
+        static DBNumber chineseDBNum3 = null;
         /// <summary>
         /// ○一二三四五六七八九
         /// </summary>
-        private static int[] ChineseNumberLetterValues1 = new int[] { 0x25cb, 0x4e00, 0x4e8c, 0x4e09, 0x56db, 0x4e94, 0x516d, 0x4e03, 0x516b, 0x4e5d };
+        static int[] ChineseNumberLetterValues1 = new int[] { 0x25cb, 0x4e00, 0x4e8c, 0x4e09, 0x56db, 0x4e94, 0x516d, 0x4e03, 0x516b, 0x4e5d };
         /// <summary>
         /// 零壹贰叁肆伍陆柒捌玖
         /// </summary>
-        private static int[] ChineseNumberLetterValues2 = new int[] { 0x96f6, 0x58f9, 0x8d30, 0x53c1, 0x8086, 0x4f0d, 0x9646, 0x67d2, 0x634c, 0x7396 };
+        static int[] ChineseNumberLetterValues2 = new int[] { 0x96f6, 0x58f9, 0x8d30, 0x53c1, 0x8086, 0x4f0d, 0x9646, 0x67d2, 0x634c, 0x7396 };
         /// <summary>
         /// ０１２３４５６７８９
         /// </summary>
-        private static int[] ChineseNumberLetterValues3 = new int[] { 0xff10, 0xff11, 0xff12, 0xff13, 0xff14, 0xff15, 0xff16, 0xff17, 0xff18, 0xff19 };
+        static int[] ChineseNumberLetterValues3 = new int[] { 0xff10, 0xff11, 0xff12, 0xff13, 0xff14, 0xff15, 0xff16, 0xff17, 0xff18, 0xff19 };
         /// <summary>
         /// 千百十兆千百十亿千百十万千百十
         /// </summary>
-        private static int[] ChineseNumberUnitLetter1 = new int[] { 0x5343, 0x767e, 0x5341, 0x5146, 0x5343, 0x767e, 0x5341, 0x4ebf, 0x5343, 0x767e, 0x5341, 0x4e07, 0x5343, 0x767e, 0x5341, 0 };
+        static int[] ChineseNumberUnitLetter1 = new int[] { 0x5343, 0x767e, 0x5341, 0x5146, 0x5343, 0x767e, 0x5341, 0x4ebf, 0x5343, 0x767e, 0x5341, 0x4e07, 0x5343, 0x767e, 0x5341, 0 };
         /// <summary>
         /// 仟佰拾兆仟佰拾亿仟佰拾万仟佰拾
         /// </summary>
-        private static int[] ChineseNumberUnitLetter2 = new int[] { 0x4edf, 0x4f70, 0x62fe, 0x5146, 0x4edf, 0x4f70, 0x62fe, 0x4ebf, 0x4edf, 0x4f70, 0x62fe, 0x4e07, 0x4edf, 0x4f70, 0x62fe, 0 };
+        static int[] ChineseNumberUnitLetter2 = new int[] { 0x4edf, 0x4f70, 0x62fe, 0x5146, 0x4edf, 0x4f70, 0x62fe, 0x4ebf, 0x4edf, 0x4f70, 0x62fe, 0x4e07, 0x4edf, 0x4f70, 0x62fe, 0 };
         /// <summary>
         /// the Japanese number1.
         /// </summary>
-        private static DBNumber japaneseDBNum1 = null;
+        static DBNumber japaneseDBNum1 = null;
         /// <summary>
         /// the Japanese number2.
         /// </summary>
-        private static DBNumber japaneseDBNum2 = null;
+        static DBNumber japaneseDBNum2 = null;
         /// <summary>
         /// the Japanese number3.
         /// </summary>
-        private static DBNumber japaneseDBNum3 = null;
+        static DBNumber japaneseDBNum3 = null;
         /// <summary>
         /// 〇一二三四五六七八九
         /// </summary>
-        private static int[] JapaneseNumberLetterValues1 = new int[] { 0x3007, 0x4e00, 0x4e8c, 0x4e09, 0x56db, 0x4e94, 0x516d, 0x4e03, 0x516b, 0x4e5d };
+        static int[] JapaneseNumberLetterValues1 = new int[] { 0x3007, 0x4e00, 0x4e8c, 0x4e09, 0x56db, 0x4e94, 0x516d, 0x4e03, 0x516b, 0x4e5d };
         /// <summary>
         /// 〇壱弐参四伍六七八九
         /// </summary>
-        private static int[] JapaneseNumberLetterValues2 = new int[] { 0x3007, 0x58f1, 0x5f10, 0x53c2, 0x56db, 0x4f0d, 0x516d, 0x4e03, 0x516b, 0x4e5d };
+        static int[] JapaneseNumberLetterValues2 = new int[] { 0x3007, 0x58f1, 0x5f10, 0x53c2, 0x56db, 0x4f0d, 0x516d, 0x4e03, 0x516b, 0x4e5d };
         /// <summary>
         /// ０１２３４５６７８９
         /// </summary>
-        private static int[] JapaneseNumberLetterValues3 = new int[] { 0xff10, 0xff11, 0xff12, 0xff13, 0xff14, 0xff15, 0xff16, 0xff17, 0xff18, 0xff19 };
+        static int[] JapaneseNumberLetterValues3 = new int[] { 0xff10, 0xff11, 0xff12, 0xff13, 0xff14, 0xff15, 0xff16, 0xff17, 0xff18, 0xff19 };
         /// <summary>
         /// 千百十兆千百十億千百十万千百十
         /// </summary>
-        private static int[] JapaneseNumberUnitLetter1 = new int[] { 0x5343, 0x767e, 0x5341, 0x5146, 0x5343, 0x767e, 0x5341, 0x5104, 0x5343, 0x767e, 0x5341, 0x4e07, 0x5343, 0x767e, 0x5341, 0 };
+        static int[] JapaneseNumberUnitLetter1 = new int[] { 0x5343, 0x767e, 0x5341, 0x5146, 0x5343, 0x767e, 0x5341, 0x5104, 0x5343, 0x767e, 0x5341, 0x4e07, 0x5343, 0x767e, 0x5341, 0 };
         /// <summary>
         /// 阡百拾兆阡百拾億阡百拾萬阡百拾
         /// </summary>
-        private static int[] JapaneseNumberUnitLetter2 = new int[] { 0x9621, 0x767e, 0x62fe, 0x5146, 0x9621, 0x767e, 0x62fe, 0x5104, 0x9621, 0x767e, 0x62fe, 0x842c, 0x9621, 0x767e, 0x62fe, 0 };
+        static int[] JapaneseNumberUnitLetter2 = new int[] { 0x9621, 0x767e, 0x62fe, 0x5146, 0x9621, 0x767e, 0x62fe, 0x5104, 0x9621, 0x767e, 0x62fe, 0x842c, 0x9621, 0x767e, 0x62fe, 0 };
         /// <summary>
         /// the numbers
         /// </summary>
-        private IList<string> numbers;
+        IList<string> numbers;
         /// <summary>
         /// the units
         /// </summary>
-        private IList<string> units;
+        IList<string> units;
 
         /// <summary>
         /// Creates a <see cref="T:Dt.Cells.Data.DBNumber" /> object with the specified numbers and units.
         /// </summary>
         /// <param name="units">The number units.</param>
         /// <param name="numbers">The numbers.</param>
-        private DBNumber(int[] units, int[] numbers)
+        DBNumber(int[] units, int[] numbers)
         {
             if (units != null)
             {

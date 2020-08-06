@@ -16,9 +16,9 @@ namespace Dt.Cells.Data
 {
     internal class DenseArray<T>
     {
-        private List<T> _items;
-        private int _length;
-        private const int INITLENGTH = 0x3e8;
+        List<T> _items;
+        int _length;
+        const int INITLENGTH = 0x3e8;
 
         public DenseArray() : this(0)
         {
@@ -31,7 +31,7 @@ namespace Dt.Cells.Data
             this._length = length;
         }
 
-        private void CheckBound(int lastIndex)
+        void CheckBound(int lastIndex)
         {
             if (this._items.Count <= lastIndex)
             {

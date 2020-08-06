@@ -16,16 +16,16 @@ namespace Dt.Cells.Data
 {
     internal class BubbleChartSettings : INotifyPropertyChanged
     {
-        private double _bubbleScale = 1.0;
-        private bool _showNegativeBubble;
-        private Dt.Cells.Data.BubbleSizeRepresents _sizeRepresents = Dt.Cells.Data.BubbleSizeRepresents.Width;
+        double _bubbleScale = 1.0;
+        bool _showNegativeBubble;
+        Dt.Cells.Data.BubbleSizeRepresents _sizeRepresents = Dt.Cells.Data.BubbleSizeRepresents.Width;
 
         /// <summary>
         /// Occurs when the property has changed.
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void RaisePropertyChanged(string propertyName)
+        void RaisePropertyChanged(string propertyName)
         {
             if (this.PropertyChanged != null)
             {

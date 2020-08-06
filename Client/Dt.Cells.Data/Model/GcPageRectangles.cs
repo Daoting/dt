@@ -19,13 +19,13 @@ namespace Dt.Cells.Data
     /// </summary>
     internal class GcPageRectangles
     {
-        private Windows.Foundation.Rect bottomMarginRectangle;
-        private Windows.Foundation.Rect contentRectangle;
-        private Windows.Foundation.Rect cropRectangle;
-        private Windows.Foundation.Rect pageFooterRectangle;
-        private Windows.Foundation.Rect pageHeaderRectangle;
-        private Windows.Foundation.Rect pageRectangle;
-        private Windows.Foundation.Rect topMarginRectangle;
+        Windows.Foundation.Rect bottomMarginRectangle;
+        Windows.Foundation.Rect contentRectangle;
+        Windows.Foundation.Rect cropRectangle;
+        Windows.Foundation.Rect pageFooterRectangle;
+        Windows.Foundation.Rect pageHeaderRectangle;
+        Windows.Foundation.Rect pageRectangle;
+        Windows.Foundation.Rect topMarginRectangle;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.GcPageRectangles" /> class.

@@ -76,7 +76,7 @@ namespace Dt.Cells.UndoRedo
                         {
                             SpreadChart item = chart.Clone() as SpreadChart;
                             pastedObject = item;
-                            item.Location = new Windows.Foundation.Point(chart.Location.X + _movingExtent.OffsetX, chart.Location.Y + _movingExtent.OffsetY);
+                            item.Location = new Point(chart.Location.X + _movingExtent.OffsetX, chart.Location.Y + _movingExtent.OffsetY);
                             item.Size = chart.Size;
                             item.Name = Dt.Cells.UndoRedo.GenerateNameHelper.GenerateChartName(_worksheet);
                             chart.IsSelected = false;
@@ -88,7 +88,7 @@ namespace Dt.Cells.UndoRedo
                         {
                             Picture picture2 = picture.Clone() as Picture;
                             pastedObject = picture2;
-                            picture2.Location = new Windows.Foundation.Point(picture.Location.X + _movingExtent.OffsetX, picture.Location.Y + _movingExtent.OffsetY);
+                            picture2.Location = new Point(picture.Location.X + _movingExtent.OffsetX, picture.Location.Y + _movingExtent.OffsetY);
                             picture2.Size = picture.Size;
                             picture2.Name = Dt.Cells.UndoRedo.GenerateNameHelper.GeneratePictureName(_worksheet);
                             picture.IsSelected = false;
@@ -100,7 +100,7 @@ namespace Dt.Cells.UndoRedo
                         {
                             FloatingObject obj4 = obj2.Clone() as FloatingObject;
                             pastedObject = obj4;
-                            obj4.Location = new Windows.Foundation.Point(obj2.Location.X + _movingExtent.OffsetX, obj2.Location.Y + _movingExtent.OffsetY);
+                            obj4.Location = new Point(obj2.Location.X + _movingExtent.OffsetX, obj2.Location.Y + _movingExtent.OffsetY);
                             obj4.Size = obj2.Size;
                             obj4.Name = Dt.Cells.UndoRedo.GenerateNameHelper.GenerateFloatingObjectName(_worksheet);
                             obj2.IsSelected = false;

@@ -17,7 +17,7 @@ namespace Dt.Cells.Data
     /// </summary>
     public class OpenHighLowCloseDataMarker : DataMarker, IXYDataPoint, IDataPoint
     {
-        private SpreadOpenHighLowCloseSeries _openHighLowCloseSeries;
+        SpreadOpenHighLowCloseSeries _openHighLowCloseSeries;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.OpenHighLowCloseDataMarker" /> class.

@@ -15,9 +15,9 @@ namespace Dt.Cells.Data
 {
     internal class StringFormat
     {
-        private StringAlignment alignment;
-        private StringAlignment lineAlignment;
-        private Windows.UI.Xaml.TextWrapping textWrapping = Windows.UI.Xaml.TextWrapping.Wrap;
+        StringAlignment alignment;
+        StringAlignment lineAlignment;
+        Windows.UI.Xaml.TextWrapping textWrapping = Windows.UI.Xaml.TextWrapping.Wrap;
 
         public StringAlignment Alignment
         {

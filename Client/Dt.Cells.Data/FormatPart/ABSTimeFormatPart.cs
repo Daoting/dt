@@ -23,27 +23,27 @@ namespace Dt.Cells.Data
         /// <summary>
         /// the format string.
         /// </summary>
-        private string formatString;
+        string formatString;
         /// <summary>
         /// Custom format for absolute hours in Excel (started with 1900-1-1 0:0:0).
         /// </summary>
-        private static readonly char HoursABSContent = 'h';
+        static readonly char HoursABSContent = 'h';
         /// <summary>
         /// Custom format for absolute minutes in Excel (started with 1900-1-1 0:0:0).
         /// </summary>
-        private static readonly char MinuteABSContent = 'm';
+        static readonly char MinuteABSContent = 'm';
         /// <summary>
         /// Custom format for absolute seconds in Excel (started with 1900-1-1 0:0:0).
         /// </summary>
-        private static readonly char SecondABSContent = 's';
+        static readonly char SecondABSContent = 's';
         /// <summary>
         /// the abs time token
         /// </summary>
-        private string token;
+        string token;
         /// <summary>
         /// the type of time part.
         /// </summary>
-        private TimePart type;
+        TimePart type;
 
         /// <summary>
         /// Creates a new absolute time format.

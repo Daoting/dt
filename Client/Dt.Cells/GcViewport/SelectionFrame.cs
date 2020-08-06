@@ -242,7 +242,7 @@ namespace Dt.Cells.UI
             return selectionBorderColor;
         }
 
-        internal bool IsMouseInFillIndicator(Windows.Foundation.Point viewportPoint)
+        internal bool IsMouseInFillIndicator(Point viewportPoint)
         {
             return _fillIndicatorBounds.Contains(viewportPoint);
         }

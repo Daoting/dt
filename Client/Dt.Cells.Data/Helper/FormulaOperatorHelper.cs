@@ -19,7 +19,7 @@ namespace Dt.Cells.Data
 {
     internal class FormulaOperatorHelper
     {
-        private static bool ContainsOrEqual(CalcCalculationManager mgr, CalcLocalIdentity id1, CalcLocalIdentity id2)
+        static bool ContainsOrEqual(CalcCalculationManager mgr, CalcLocalIdentity id1, CalcLocalIdentity id2)
         {
             CalcLocalIdentityExtension.CompareResult result;
             CalcLocalIdentityExtension.CompareResult result2;
@@ -51,7 +51,7 @@ namespace Dt.Cells.Data
             return false;
         }
 
-        private static CalcIdentity GetActualId(CalcIdentity id)
+        static CalcIdentity GetActualId(CalcIdentity id)
         {
             if (id is ConditionalGraph.ConditionalIdentity)
             {
@@ -236,7 +236,7 @@ namespace Dt.Cells.Data
             return list;
         }
 
-        private static void GetChangingIds(IFormulaOperatorSource mgr, bool row, ChangingContext context, OperatorExpressionVisistor visitor, bool updateDependents)
+        static void GetChangingIds(IFormulaOperatorSource mgr, bool row, ChangingContext context, OperatorExpressionVisistor visitor, bool updateDependents)
         {
             foreach (CalcLocalIdentity identity in mgr.GetAllLocalIdentities())
             {
@@ -346,7 +346,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private static void GetInvalidFormulas(IFormulaOperatorSource mgr, ChangingContext context)
+        static void GetInvalidFormulas(IFormulaOperatorSource mgr, ChangingContext context)
         {
             HashSet<CalcNode> arrayFormulaNodes = new HashSet<CalcNode>();
             foreach (CalcLocalIdentity identity in context.ChangingIdentities.Keys)
@@ -493,7 +493,7 @@ namespace Dt.Cells.Data
             UpdataInvalidFormula(mgr, context, visitor);
         }
 
-        private static void InvalidateNode(IFormulaOperatorSource mgr, ChangingContext context, CalcNode node)
+        static void InvalidateNode(IFormulaOperatorSource mgr, ChangingContext context, CalcNode node)
         {
             using (Dictionary<CalcNode, CalcNode>.Enumerator enumerator = node.Dependents.GetEnumerator())
             {
@@ -599,7 +599,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private static void UpdataCustomnNames(IFormulaOperatorSource mgr, Dt.Cells.Data.ExpressionVisitor visitor)
+        static void UpdataCustomnNames(IFormulaOperatorSource mgr, Dt.Cells.Data.ExpressionVisitor visitor)
         {
             ICustomNameSupport source = mgr.Source as ICustomNameSupport;
             OperatorExpressionVisistor visistor = visitor as OperatorExpressionVisistor;

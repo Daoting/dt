@@ -22,7 +22,7 @@ namespace Dt.Cells.UndoRedo
     internal class ResizeFloatingObjectUndoAction : ActionBase, IUndo
     {
         ResizeFloatingObjectExtent _resizingExtent;
-        Windows.Foundation.Rect[] _savedRects;
+        Rect[] _savedRects;
         Worksheet _worksheet;
 
         /// <summary>
@@ -75,9 +75,9 @@ namespace Dt.Cells.UndoRedo
                         }
                         if (obj2 != null)
                         {
-                            Windows.Foundation.Rect rect = _resizingExtent.ResizedRects[i];
-                            obj2.Size = new Windows.Foundation.Size(rect.Width, rect.Height);
-                            obj2.Location = new Windows.Foundation.Point(rect.X, rect.Y);
+                            Rect rect = _resizingExtent.ResizedRects[i];
+                            obj2.Size = new Size(rect.Width, rect.Height);
+                            obj2.Location = new Point(rect.X, rect.Y);
                         }
                     }
                 }
@@ -94,7 +94,7 @@ namespace Dt.Cells.UndoRedo
         /// </summary>
         public void SaveState()
         {
-            List<Windows.Foundation.Rect> list = new List<Windows.Foundation.Rect>();
+            List<Rect> list = new List<Rect>();
             foreach (string str in _resizingExtent.Names)
             {
                 FloatingObject obj2 = _worksheet.FindChart(str);
@@ -108,7 +108,7 @@ namespace Dt.Cells.UndoRedo
                 }
                 if (obj2 != null)
                 {
-                    list.Add(new Windows.Foundation.Rect(obj2.Location, obj2.Size));
+                    list.Add(new Rect(obj2.Location, obj2.Size));
                 }
             }
             _savedRects = list.ToArray();
@@ -146,9 +146,9 @@ namespace Dt.Cells.UndoRedo
                     }
                     if (obj2 != null)
                     {
-                        Windows.Foundation.Rect rect = _savedRects[i];
-                        obj2.Location = new Windows.Foundation.Point(rect.X, rect.Y);
-                        obj2.Size = new Windows.Foundation.Size(rect.Width, rect.Height);
+                        Rect rect = _savedRects[i];
+                        obj2.Location = new Point(rect.X, rect.Y);
+                        obj2.Size = new Size(rect.Width, rect.Height);
                     }
                 }
             }

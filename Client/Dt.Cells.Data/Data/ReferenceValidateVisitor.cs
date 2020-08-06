@@ -17,8 +17,8 @@ namespace Dt.Cells.Data
 {
     internal class ReferenceValidateVisitor : Dt.Cells.Data.ExpressionVisitor
     {
-        private int? _maxColIndex;
-        private int? _maxRowIndex;
+        int? _maxColIndex;
+        int? _maxRowIndex;
 
         public ReferenceValidateVisitor(int? maxRowIndex = new int?(), int? maxColCount = new int?())
         {

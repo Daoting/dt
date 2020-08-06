@@ -16,11 +16,11 @@ namespace Dt.Cells.Data
 {
     internal class ActualValue : IActualValue
     {
-        private int column;
-        private int row;
-        private Worksheet sheet;
-        private bool sheetValue;
-        private object value;
+        int column;
+        int row;
+        Worksheet sheet;
+        bool sheetValue;
+        object value;
 
         public ActualValue(object value)
         {

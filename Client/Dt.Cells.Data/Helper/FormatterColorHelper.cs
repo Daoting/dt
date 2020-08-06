@@ -16,7 +16,7 @@ namespace Dt.Cells.Data
 {
     internal class FormatterColorHelper
     {
-        private static byte[,] Palette = new byte[,] { 
+        static byte[,] Palette = new byte[,] { 
             { 0, 0, 0 }, { 0xff, 0xff, 0xff }, { 0xff, 0, 0 }, { 0, 0xff, 0 }, { 0, 0, 0xff }, { 0xff, 0xff, 0 }, { 0xff, 0, 0xff }, { 0, 0xff, 0xff }, { 0x80, 0, 0 }, { 0, 0x80, 0 }, { 0, 0, 0x80 }, { 0x80, 0x80, 0 }, { 0x80, 0, 0x80 }, { 0, 0x80, 0x80 }, { 0xc0, 0xc0, 0xc0 }, { 0x80, 0x80, 0x80 }, 
             { 0x99, 0x99, 0xff }, { 0x99, 0x33, 0x66 }, { 0xff, 0xff, 0xcc }, { 0xcc, 0xff, 0xff }, { 0x66, 0, 0x66 }, { 0xff, 0x80, 0x80 }, { 0, 0x66, 0xcc }, { 0xcc, 0xcc, 0xff }, { 0, 0, 0x80 }, { 0xff, 0, 0xff }, { 0xff, 0xff, 0 }, { 0, 0xff, 0xff }, { 0x80, 0, 0x80 }, { 0x80, 0, 0 }, { 0, 0x80, 0x80 }, { 0, 0, 0xff }, 
             { 0, 0xcc, 0xff }, { 0xcc, 0xff, 0xff }, { 0xcc, 0xff, 0xcc }, { 0xff, 0xff, 0x99 }, { 0x99, 0xcc, 0xff }, { 0xff, 0x99, 0xcc }, { 0xcc, 0x99, 0xff }, { 0xff, 0xcc, 0x99 }, { 0x33, 0x66, 0xff }, { 0x33, 0xcc, 0xcc }, { 0x99, 0xcc, 0 }, { 0xff, 0xcc, 0 }, { 0xff, 0x99, 0 }, { 0xff, 0x66, 0 }, { 0x66, 0x66, 0x99 }, { 150, 150, 150 }, 
@@ -40,7 +40,7 @@ namespace Dt.Cells.Data
         /// <param name="alpha">The alpha</param>
         /// <param name="palette">Palette to use</param>
         /// <returns>Returns the color.</returns>
-        private static Windows.UI.Color ColorFromIndex(int index, byte alpha, byte[,] palette)
+        static Windows.UI.Color ColorFromIndex(int index, byte alpha, byte[,] palette)
         {
             Windows.UI.Color color = new Windows.UI.Color();
             switch (index)
@@ -88,7 +88,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="color">The color</param>
         /// <returns></returns>
-        private static Windows.UI.Color FromName(KnownColor color)
+        static Windows.UI.Color FromName(KnownColor color)
         {
             uint num = (uint) color;
             return Windows.UI.Color.FromArgb((byte) (num >> 0x18), (byte) (num >> 0x10), (byte) (num >> 8), (byte) num);
@@ -108,7 +108,7 @@ namespace Dt.Cells.Data
             return FromName(color2);
         }
 
-        private static Windows.UI.Color? FromNameFast(string color)
+        static Windows.UI.Color? FromNameFast(string color)
         {
             KnownColor color2;
             if (Enum.TryParse<KnownColor>(color, true, out color2))
@@ -146,7 +146,7 @@ namespace Dt.Cells.Data
         /// <summary>
         /// Lists the known colors.
         /// </summary>
-        private enum KnownColor : uint
+        enum KnownColor : uint
         {
             AliceBlue = 0xfff0f8ff,
             AntiqueWhite = 0xfffaebd7,

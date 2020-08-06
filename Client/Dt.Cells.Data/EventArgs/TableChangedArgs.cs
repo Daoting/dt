@@ -14,8 +14,8 @@ namespace Dt.Cells.Data
 {
     internal class TableChangedArgs : EventArgs
     {
-        private string propertyName;
-        private SheetTable sheetTable;
+        string propertyName;
+        SheetTable sheetTable;
 
         public TableChangedArgs(SheetTable table, string property)
         {

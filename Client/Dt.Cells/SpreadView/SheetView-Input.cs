@@ -626,21 +626,21 @@ namespace Dt.Cells.UI
                 return;
 
             CellClickEventArgs args = null;
-            Windows.Foundation.Point point2 = new Windows.Foundation.Point(-1.0, -1.0);
+            Point point2 = new Point(-1.0, -1.0);
             if (p_hitInfo.HitTestType == HitTestType.Viewport)
             {
                 args = CreateCellClickEventArgs(p_hitInfo.ViewportInfo.Row, p_hitInfo.ViewportInfo.Column, Worksheet.SpanModel, SheetArea.Cells, p_btnType);
-                point2 = new Windows.Foundation.Point((double)p_hitInfo.ViewportInfo.Row, (double)p_hitInfo.ViewportInfo.Column);
+                point2 = new Point((double)p_hitInfo.ViewportInfo.Row, (double)p_hitInfo.ViewportInfo.Column);
             }
             else if (p_hitInfo.HitTestType == HitTestType.RowHeader)
             {
                 args = CreateCellClickEventArgs(p_hitInfo.HeaderInfo.Row, p_hitInfo.HeaderInfo.Column, Worksheet.RowHeaderSpanModel, SheetArea.CornerHeader | SheetArea.RowHeader, p_btnType);
-                point2 = new Windows.Foundation.Point((double)p_hitInfo.HeaderInfo.Row, (double)p_hitInfo.HeaderInfo.Column);
+                point2 = new Point((double)p_hitInfo.HeaderInfo.Row, (double)p_hitInfo.HeaderInfo.Column);
             }
             else if (p_hitInfo.HitTestType == HitTestType.ColumnHeader)
             {
                 args = CreateCellClickEventArgs(p_hitInfo.HeaderInfo.Row, p_hitInfo.HeaderInfo.Column, Worksheet.ColumnHeaderSpanModel, SheetArea.ColumnHeader, p_btnType);
-                point2 = new Windows.Foundation.Point((double)p_hitInfo.HeaderInfo.Row, (double)p_hitInfo.HeaderInfo.Column);
+                point2 = new Point((double)p_hitInfo.HeaderInfo.Row, (double)p_hitInfo.HeaderInfo.Column);
             }
 
             if (((args != null) && (point2.X != -1.0)) && ((point2.Y != -1.0) && point2.Equals(_lastClickLocation)))
@@ -906,7 +906,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        void RaiseCellDoubleClick(Windows.Foundation.Point point)
+        void RaiseCellDoubleClick(Point point)
         {
             if ((CellDoubleClick != null) && (_eventSuspended == 0))
             {
@@ -1784,7 +1784,7 @@ namespace Dt.Cells.UI
 
         internal virtual HitTestInformation HitTest(double x, double y)
         {
-            Windows.Foundation.Point hitPoint = new Windows.Foundation.Point(x, y);
+            Point hitPoint = new Point(x, y);
             HitTestInformation hi = new HitTestInformation
             {
                 HitTestType = HitTestType.Empty,
@@ -1975,7 +1975,7 @@ namespace Dt.Cells.UI
                         {
                             hi.ViewportInfo.Row = layout12.Row;
                         }
-                        if (!_formulaSelectionFeature.HitTest(k, m, hitPoint.X, hitPoint.Y, hi) && (IsInSelectionGripper(new Windows.Foundation.Point(x, y)) || !HitTestFloatingObject(k, m, hitPoint.X, hitPoint.Y, hi)))
+                        if (!_formulaSelectionFeature.HitTest(k, m, hitPoint.X, hitPoint.Y, hi) && (IsInSelectionGripper(new Point(x, y)) || !HitTestFloatingObject(k, m, hitPoint.X, hitPoint.Y, hi)))
                         {
                             GcViewport viewportRowsPresenter = GetViewportRowsPresenter(k, m);
                             if ((layout11 != null) && (layout12 != null))
@@ -1989,7 +1989,7 @@ namespace Dt.Cells.UI
                                     hi.ViewportInfo.InSelectionDrag = true;
                                 }
                             }
-                            if (((IsEditing && !hi.ViewportInfo.InSelectionDrag) && (!hi.ViewportInfo.InDragFillIndicator && (viewportRowsPresenter != null))) && viewportRowsPresenter.EditorBounds.Contains(new Windows.Foundation.Point(x - viewportRowsPresenter.Location.X, y - viewportRowsPresenter.Location.Y)))
+                            if (((IsEditing && !hi.ViewportInfo.InSelectionDrag) && (!hi.ViewportInfo.InDragFillIndicator && (viewportRowsPresenter != null))) && viewportRowsPresenter.EditorBounds.Contains(new Point(x - viewportRowsPresenter.Location.X, y - viewportRowsPresenter.Location.Y)))
                             {
                                 hi.ViewportInfo.InEditor = true;
                             }
@@ -2003,7 +2003,7 @@ namespace Dt.Cells.UI
 
         internal virtual HitTestInformation TouchHitTest(double x, double y)
         {
-            Windows.Foundation.Point hitPoint = new Windows.Foundation.Point(x, y);
+            Point hitPoint = new Point(x, y);
             HitTestInformation hi = new HitTestInformation
             {
                 HitTestType = HitTestType.Empty,
@@ -2211,7 +2211,7 @@ namespace Dt.Cells.UI
                                     hi.ViewportInfo.InSelectionDrag = true;
                                 }
                             }
-                            if (((IsEditing && !hi.ViewportInfo.InSelectionDrag) && (!hi.ViewportInfo.InDragFillIndicator && (viewportRowsPresenter != null))) && viewportRowsPresenter.EditorBounds.Contains(new Windows.Foundation.Point(x - viewportRowsPresenter.Location.X, y - viewportRowsPresenter.Location.Y)))
+                            if (((IsEditing && !hi.ViewportInfo.InSelectionDrag) && (!hi.ViewportInfo.InDragFillIndicator && (viewportRowsPresenter != null))) && viewportRowsPresenter.EditorBounds.Contains(new Point(x - viewportRowsPresenter.Location.X, y - viewportRowsPresenter.Location.Y)))
                             {
                                 hi.ViewportInfo.InEditor = true;
                             }
@@ -2241,7 +2241,7 @@ namespace Dt.Cells.UI
             return true;
         }
 
-        bool CanTouchManipulate(Windows.Foundation.Point point)
+        bool CanTouchManipulate(Point point)
         {
             IsTouchPromotedMouseMessage = false;
             HitTestInformation information = TouchHitTest(point.X, point.Y);

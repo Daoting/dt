@@ -16,15 +16,15 @@ namespace Dt.Cells.Data
 {
     internal static class DateTimeExtension
     {
-        private const int DatePartMonth = 2;
-        private const long DoubleDateOffset = 0x85103c0cb83c000L;
-        private const long MaxMillis = 0x11efae44cb400L;
-        private const int MillisPerDay = 0x5265c00;
-        private const double OADateMaxAsDouble = 2958466.0;
-        private const double OADateMinAsDouble = -657435.0;
-        private const long OADateMinAsTicks = 0x6efdddaec64000L;
-        private const long TicksPerDay = 0xc92a69c000L;
-        private const long TicksPerMillisecond = 0x2710L;
+        const int DatePartMonth = 2;
+        const long DoubleDateOffset = 0x85103c0cb83c000L;
+        const long MaxMillis = 0x11efae44cb400L;
+        const int MillisPerDay = 0x5265c00;
+        const double OADateMaxAsDouble = 2958466.0;
+        const double OADateMinAsDouble = -657435.0;
+        const long OADateMinAsTicks = 0x6efdddaec64000L;
+        const long TicksPerDay = 0xc92a69c000L;
+        const long TicksPerMillisecond = 0x2710L;
 
         internal static long DoubleDateToTicks(double value)
         {
@@ -50,7 +50,7 @@ namespace Dt.Cells.Data
             return new DateTime(DoubleDateToTicks(d), (DateTimeKind) DateTimeKind.Unspecified);
         }
 
-        private static double TicksToOADate(long value)
+        static double TicksToOADate(long value)
         {
             if (value == 0L)
             {

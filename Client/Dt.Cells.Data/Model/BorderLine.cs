@@ -21,14 +21,14 @@ namespace Dt.Cells.Data
     /// </summary>
     public sealed class BorderLine : IThemeContextSupport, ICloneable, IXmlSerializable
     {
-        private bool _builtIn;
-        private Windows.UI.Color _color;
-        private IThemeSupport _context;
-        private static BorderLine _emptyBorder;
-        private static BorderLine _noBorder;
-        private BorderLineStyle _style;
-        private BorderLineData _styleData;
-        private string _themeColor;
+        bool _builtIn;
+        Windows.UI.Color _color;
+        IThemeSupport _context;
+        static BorderLine _emptyBorder;
+        static BorderLine _noBorder;
+        BorderLineStyle _style;
+        BorderLineData _styleData;
+        string _themeColor;
 
         /// <summary>
         /// Creates an empty border line.
@@ -133,7 +133,7 @@ namespace Dt.Cells.Data
             return true;
         }
 
-        private static int GetBrightness(Windows.UI.Color color)
+        static int GetBrightness(Windows.UI.Color color)
         {
             return ((((color.R * 0x12b) + (color.G * 0x24b)) + (color.B * 0x72)) / 0x3e8);
         }
@@ -169,7 +169,7 @@ namespace Dt.Cells.Data
             this._context = context;
         }
 
-        private void InitStyle()
+        void InitStyle()
         {
             if (this._styleData == null)
             {

@@ -14,8 +14,8 @@ namespace Dt.Cells.Data
 {
     internal static class UnitHelper
     {
-        private static double? _dpi;
-        private static readonly double PointsPerInch = 72.0;
+        static double? _dpi;
+        static readonly double PointsPerInch = 72.0;
 
         public static double GetDPI()
         {
@@ -26,7 +26,7 @@ namespace Dt.Cells.Data
             return _dpi.Value;
         }
 
-        private static double GetSystemDPI()
+        static double GetSystemDPI()
         {
             return 96.0;
         }

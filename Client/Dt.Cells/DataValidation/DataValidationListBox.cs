@@ -110,9 +110,9 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="constraint"></param>
         /// <returns></returns>
-        protected override Windows.Foundation.Size MeasureOverride(Windows.Foundation.Size constraint)
+        protected override Size MeasureOverride(Size constraint)
         {
-            Windows.Foundation.Size size = base.MeasureOverride(constraint);
+            Size size = base.MeasureOverride(constraint);
             ProcessFocus();
             return size;
         }

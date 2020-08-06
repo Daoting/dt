@@ -71,7 +71,7 @@ namespace Dt.Cells.Data
             return str;
         }
 
-        private static CalcExternalRangeExpression CreateExternalRangeExpressionByCount(ICalcSource source, int row, int column, int rowCount, int columnCount, bool startRowRelative = false, bool startColumnRelative = false, bool endRowRelative = false, bool endColumnRelative = false)
+        static CalcExternalRangeExpression CreateExternalRangeExpressionByCount(ICalcSource source, int row, int column, int rowCount, int columnCount, bool startRowRelative = false, bool startColumnRelative = false, bool endRowRelative = false, bool endColumnRelative = false)
         {
             new CalcCellIdentity(row, column);
             if ((rowCount == -1) && (rowCount == -1))

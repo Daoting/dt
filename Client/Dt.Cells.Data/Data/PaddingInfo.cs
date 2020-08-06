@@ -20,11 +20,11 @@ namespace Dt.Cells.Data
     [StructLayout(LayoutKind.Sequential)]
     internal struct PaddingInfo
     {
-        private bool all;
-        private int top;
-        private int left;
-        private int right;
-        private int bottom;
+        bool all;
+        int top;
+        int left;
+        int right;
+        int bottom;
         public static readonly PaddingInfo Empty;
         /// <summary>
         /// Gets or sets all padding information, in hundredths of an inch.

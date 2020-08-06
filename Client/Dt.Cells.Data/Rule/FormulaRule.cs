@@ -19,7 +19,7 @@ namespace Dt.Cells.Data
     /// </summary>
     public sealed class FormulaRule : FormattingRuleBase, IConditionalFormula
     {
-        private string formula;
+        string formula;
 
         /// <summary>
         /// Constructs a formula rule.
@@ -73,7 +73,7 @@ namespace Dt.Cells.Data
             return new FormulaCondition(CustomValueType.Formula, string.IsNullOrEmpty(this.formula) ? null : this.formula.TrimStart(new char[] { '=' }));
         }
 
-        private static bool IsFormula(object val)
+        static bool IsFormula(object val)
         {
             return ((val is string) && val.ToString().StartsWith("="));
         }

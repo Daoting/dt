@@ -17,8 +17,8 @@ namespace Dt.Cells.Data
 {
     internal class TableCalcEvaluatorContext : CalcEvaluatorContext
     {
-        private const int REF_COLUMN = 0;
-        private SheetTable table;
+        const int REF_COLUMN = 0;
+        SheetTable table;
 
         public TableCalcEvaluatorContext(SheetTable table, ICalcSource source, bool arrayFormulaMode = false, int baseRowIndex = 0, int baseColumnIndex = 0, int baseRowCount = 1, int baseColumnCount = 1) : base(source, arrayFormulaMode, baseRowIndex, baseColumnIndex, baseRowCount, baseColumnCount)
         {
@@ -57,7 +57,7 @@ namespace Dt.Cells.Data
             return base.IsIntersected(srcId, destId);
         }
 
-        private bool TryParseColumnIndex(string token, out int val)
+        bool TryParseColumnIndex(string token, out int val)
         {
             val = 0;
             int num = CultureInfo.InvariantCulture.CompareInfo.IndexOf(token, "[Column", (CompareOptions) CompareOptions.IgnoreCase);

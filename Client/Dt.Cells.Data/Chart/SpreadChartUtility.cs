@@ -746,7 +746,7 @@ namespace Dt.Cells.Data
             return chartType.ToString().ToLower().Contains("column");
         }
 
-        private static bool IsEmptyCell(Worksheet sheetView, int r, int c)
+        static bool IsEmptyCell(Worksheet sheetView, int r, int c)
         {
             object obj2 = sheetView.GetValue(r, c);
             if ((obj2 != null) && (obj2.ToString().Length > 0))
@@ -765,7 +765,7 @@ namespace Dt.Cells.Data
             return true;
         }
 
-        private static bool IsNumericData(object value)
+        static bool IsNumericData(object value)
         {
             decimal num;
             if (value == null)
@@ -809,7 +809,7 @@ namespace Dt.Cells.Data
             return true;
         }
 
-        private static void TrimCellRange(Worksheet sheetView, ref int row, ref int column, ref int rowCount, ref int columnCount)
+        static void TrimCellRange(Worksheet sheetView, ref int row, ref int column, ref int rowCount, ref int columnCount)
         {
             bool flag2;
             bool flag3;

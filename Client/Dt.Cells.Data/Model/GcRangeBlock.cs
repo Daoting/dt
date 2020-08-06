@@ -19,9 +19,9 @@ namespace Dt.Cells.Data
     /// </summary>
     internal class GcRangeBlock : GcBlock
     {
-        private readonly GcBlockCollection blocks;
-        private double offsetX;
-        private double offsetY;
+        readonly GcBlockCollection blocks;
+        double offsetX;
+        double offsetY;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.GcRangeBlock" /> class.

@@ -25,9 +25,9 @@ namespace Dt.Cells.Data
     {
         internal static SolidColorBrush _defaultAutomaticFill = null;
         internal static SolidColorBrush _defaultAutomaticStroke = null;
-        private bool _isAutomaticFill;
-        private bool _isAutomaticStroke;
-        private static readonly object _lock = new object();
+        bool _isAutomaticFill;
+        bool _isAutomaticStroke;
+        static readonly object _lock = new object();
         internal FloatingObjectStyleInfo _styleInfo;
         internal IThemeSupport _themeContext;
         internal static string FONTTHEME_BODY = "Body";
@@ -78,7 +78,7 @@ namespace Dt.Cells.Data
             this._isAutomaticStroke = true;
         }
 
-        private void FormatInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void FormatInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             base.RaisePropertyChanged("Style");
         }

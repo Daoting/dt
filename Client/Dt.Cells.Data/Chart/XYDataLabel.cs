@@ -87,7 +87,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private SpreadXYDataSeries XYDataSeries
+        SpreadXYDataSeries XYDataSeries
         {
             get { return  (base.DataSeries as SpreadXYDataSeries); }
         }

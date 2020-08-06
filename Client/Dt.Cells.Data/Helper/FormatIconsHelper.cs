@@ -17,9 +17,9 @@ namespace Dt.Cells.Data
 {
     internal static class FormatIconsHelper
     {
-        private static string[,] _cachedIconNames;
-        private static string[,] _cachedImageSources = new string[20, 5];
-        private static Dictionary<string, Stream> _cachedResource = new Dictionary<string, Stream>();
+        static string[,] _cachedIconNames;
+        static string[,] _cachedImageSources = new string[20, 5];
+        static Dictionary<string, Stream> _cachedResource = new Dictionary<string, Stream>();
 
         static FormatIconsHelper()
         {

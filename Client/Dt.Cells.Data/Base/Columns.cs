@@ -22,11 +22,11 @@ namespace Dt.Cells.Data
         /// <summary>
         /// Indicate which area contains this cell.
         /// </summary>
-        private SheetArea sheetArea;
+        SheetArea sheetArea;
         /// <summary>
         /// sheet containing Column
         /// </summary>
-        private Worksheet worksheet;
+        Worksheet worksheet;
 
         /// <summary>
         /// Creates a collection of columns.

@@ -15,22 +15,22 @@ namespace Dt.Cells.Data
 {
     internal sealed class BorderLineStyleDatas
     {
-        private static BorderLineData _dashDot;
-        private static BorderLineData _dashDotDot;
-        private static BorderLineData _dashed;
-        private static BorderLineData _dotted;
-        private static BorderLineData _double;
-        private static BorderLineData _empty;
-        private static BorderLineData _gridLine;
-        private static BorderLineData _hair;
-        private static BorderLineData _medium;
-        private static BorderLineData _mediumDashDot;
-        private static BorderLineData _mediumDashDotDot;
-        private static BorderLineData _mediumDashed;
-        private static BorderLineData _noBorder;
-        private static BorderLineData _slantedDashDot;
-        private static BorderLineData _thick;
-        private static BorderLineData _thin;
+        static BorderLineData _dashDot;
+        static BorderLineData _dashDotDot;
+        static BorderLineData _dashed;
+        static BorderLineData _dotted;
+        static BorderLineData _double;
+        static BorderLineData _empty;
+        static BorderLineData _gridLine;
+        static BorderLineData _hair;
+        static BorderLineData _medium;
+        static BorderLineData _mediumDashDot;
+        static BorderLineData _mediumDashDotDot;
+        static BorderLineData _mediumDashed;
+        static BorderLineData _noBorder;
+        static BorderLineData _slantedDashDot;
+        static BorderLineData _thick;
+        static BorderLineData _thin;
 
         public static BorderLineData DashDot
         {

@@ -29,12 +29,12 @@ namespace Dt.Cells.Data
     internal class Utilities
     {
         internal static readonly Font HtmlDefaultFont = new Font(DefaultStyleCollection.DefaultFontName, DefaultStyleCollection.DefaultFontSize, UnitType.Pixel);
-        private static IMeasureable htmlMeasure;
-        private static readonly object PaddingCellTag = new object();
-        private static readonly object PaddingFooterCellTag = new object();
-        private static Regex pageRangeRegex;
-        private const string pageRangeRegexEnd = "end";
-        private const string pageRangeRegexStart = "start";
+        static IMeasureable htmlMeasure;
+        static readonly object PaddingCellTag = new object();
+        static readonly object PaddingFooterCellTag = new object();
+        static Regex pageRangeRegex;
+        const string pageRangeRegexEnd = "end";
+        const string pageRangeRegexStart = "start";
         public const int ROW_GROUP_MIN_INDENT = 10;
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace Dt.Cells.Data
         /// <param name="columnWidths">The column widths</param>
         /// <param name="measure">The measure</param>
         /// <param name="state">The state.</param>
-        private static void FindOverFlow(Worksheet worksheet, SheetSpanModelBase spanModel, SheetSpanModelBase mergeModel, SheetArea area, SheetSpanModelBase overFlowModel, int topRow, int leftColumn, int bottomRow, int rightColumn, PartLayoutData columnWidths, IMeasureable measure, GcSheetSection.SheetState state)
+        static void FindOverFlow(Worksheet worksheet, SheetSpanModelBase spanModel, SheetSpanModelBase mergeModel, SheetArea area, SheetSpanModelBase overFlowModel, int topRow, int leftColumn, int bottomRow, int rightColumn, PartLayoutData columnWidths, IMeasureable measure, GcSheetSection.SheetState state)
         {
             if (measure == null)
             {
@@ -352,7 +352,7 @@ namespace Dt.Cells.Data
         /// <param name="color">The color.</param>
         /// <param name="mode">The mode.</param>
         /// <returns></returns>
-        private static Windows.UI.Color GetColorByFillMode(Windows.UI.Color color, ShapePathFillMode mode)
+        static Windows.UI.Color GetColorByFillMode(Windows.UI.Color color, ShapePathFillMode mode)
         {
             switch (mode)
             {
@@ -1011,7 +1011,7 @@ namespace Dt.Cells.Data
         /// <param name="isRowSorted">if set to <c>true</c> [is row sorted].</param>
         /// <param name="borderCollapse">The border collapse.</param>
         /// <returns></returns>
-        private static bool GetSheetAreaMinHeight(Worksheet worksheet, SheetArea area, int columnStartIndex, int columnEndIndex, int specStartIndex, int specEndIndex, SheetSpanModelBase spanModel, int rowIndex, IMeasureable measure, UnitType unit, ref double height, PartLayoutData colWidths, bool calcFrozen, double hGridLineTopHeight, double hGridLineBottomHeight, double vGridLineLeftWidth, double vGridLineRightWidth, bool isColumnSorted, bool isRowSorted, BorderCollapse borderCollapse)
+        static bool GetSheetAreaMinHeight(Worksheet worksheet, SheetArea area, int columnStartIndex, int columnEndIndex, int specStartIndex, int specEndIndex, SheetSpanModelBase spanModel, int rowIndex, IMeasureable measure, UnitType unit, ref double height, PartLayoutData colWidths, bool calcFrozen, double hGridLineTopHeight, double hGridLineBottomHeight, double vGridLineLeftWidth, double vGridLineRightWidth, bool isColumnSorted, bool isRowSorted, BorderCollapse borderCollapse)
         {
             int row = isRowSorted ? worksheet.GetModelRowFromViewRow(rowIndex, area) : rowIndex;
             int columnCount = worksheet.GetColumnCount(area);
@@ -1117,7 +1117,7 @@ namespace Dt.Cells.Data
         /// <param name="gSpans">The g spans.</param>
         /// <param name="borderCollapse">The border collapse.</param>
         /// <returns></returns>
-        private static bool GetSheetAreaMinWidth(Worksheet worksheet, SheetArea area, int rowStartIndex, int rowEndIndex, int specStartIndex, int specEndIndex, SheetSpanModelBase spanModel, int columnIndex, IMeasureable measure, UnitType unit, ref double width, bool calcFrozen, double hGridLineTopHeight, double hGridLineBottomHeight, double vGridLineLeftWidth, double vGridLineRightWidth, bool isColumnSorted, bool isRowSorted, SheetSpanModel gSpans, BorderCollapse borderCollapse)
+        static bool GetSheetAreaMinWidth(Worksheet worksheet, SheetArea area, int rowStartIndex, int rowEndIndex, int specStartIndex, int specEndIndex, SheetSpanModelBase spanModel, int columnIndex, IMeasureable measure, UnitType unit, ref double width, bool calcFrozen, double hGridLineTopHeight, double hGridLineBottomHeight, double vGridLineLeftWidth, double vGridLineRightWidth, bool isColumnSorted, bool isRowSorted, SheetSpanModel gSpans, BorderCollapse borderCollapse)
         {
             int column = isColumnSorted ? worksheet.GetModelColumnFromViewColumn(columnIndex, area) : columnIndex;
             int rowCount = worksheet.GetRowCount(area);
@@ -1589,9 +1589,9 @@ namespace Dt.Cells.Data
         /// </summary>
         internal class MeasureUtility : IMeasureable
         {
-            private TextBlock _internalTextBlock;
-            private readonly Font defaultFont;
-            private readonly UnitType unit;
+            TextBlock _internalTextBlock;
+            readonly Font defaultFont;
+            readonly UnitType unit;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.Utilities.MeasureUtility" /> class.

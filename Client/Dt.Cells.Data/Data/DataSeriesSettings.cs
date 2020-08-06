@@ -16,16 +16,16 @@ namespace Dt.Cells.Data
 {
     internal class DataSeriesSettings : INotifyPropertyChanged
     {
-        private double _gapDepth = double.NaN;
-        private double _gapWidth = double.NaN;
-        private double _seriesOverlap = double.NaN;
+        double _gapDepth = double.NaN;
+        double _gapWidth = double.NaN;
+        double _seriesOverlap = double.NaN;
 
         /// <summary>
         /// Occurs when the property has changed.
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void RaisePropertyChanged(string property)
+        void RaisePropertyChanged(string property)
         {
             if (this.PropertyChanged != null)
             {

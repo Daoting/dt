@@ -71,16 +71,16 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="finalSize"></param>
         /// <returns></returns>
-        protected override Windows.Foundation.Size ArrangeOverride(Windows.Foundation.Size finalSize)
+        protected override Size ArrangeOverride(Size finalSize)
         {
-            _formatRect.Arrange(new Windows.Foundation.Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
-            _rootLayoutGrid.Arrange(new Windows.Foundation.Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
+            _formatRect.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
+            _rootLayoutGrid.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
             return base.ArrangeOverride(finalSize);
         }
 
-        internal Windows.Foundation.Size GetChartTitleSize(ChartTitle title)
+        internal Size GetChartTitleSize(ChartTitle title)
         {
-            Windows.Foundation.Size chartTitleSize = Windows.Foundation.Size.Empty;
+            Size chartTitleSize = Size.Empty;
             if ((title != null) && !string.IsNullOrEmpty(title.Text))
             {
                 double fontSize = title.ActualFontSize * ZoomFactor;
@@ -93,7 +93,7 @@ namespace Dt.Cells.UI
                 {
                     fontFamily = Dt.Cells.Data.Utility.DefaultFontFamily;
                 }
-                chartTitleSize = MeasureHelper.MeasureTextBlock(title.Text, fontFamily, fontSize, title.ActualFontStretch, title.ActualFontStyle, title.FontWeight, new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity), false, null, UseLayoutRounding, ZoomFactor);
+                chartTitleSize = MeasureHelper.MeasureTextBlock(title.Text, fontFamily, fontSize, title.ActualFontStretch, title.ActualFontStyle, title.FontWeight, new Size(double.PositiveInfinity, double.PositiveInfinity), false, null, UseLayoutRounding, ZoomFactor);
             }
             if (!chartTitleSize.IsEmpty)
             {
@@ -101,7 +101,7 @@ namespace Dt.Cells.UI
             }
             else
             {
-                chartTitleSize = new Windows.Foundation.Size(0.0, 0.0);
+                chartTitleSize = new Size(0.0, 0.0);
             }
             return chartTitleSize;
         }
@@ -111,7 +111,7 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="availableSize"></param>
         /// <returns></returns>
-        protected override Windows.Foundation.Size MeasureOverride(Windows.Foundation.Size availableSize)
+        protected override Size MeasureOverride(Size availableSize)
         {
             _formatRect.Measure(availableSize);
             _rootLayoutGrid.Measure(availableSize);
@@ -174,10 +174,10 @@ namespace Dt.Cells.UI
             }
         }
 
-        internal virtual void UpdateLayoutsOnMeasure(Windows.Foundation.Size size)
+        internal virtual void UpdateLayoutsOnMeasure(Size size)
         {
             RectangleGeometry geometry = new RectangleGeometry();
-            geometry.Rect = new Windows.Foundation.Rect(0.0, 0.0, size.Width, size.Height);
+            geometry.Rect = new Rect(0.0, 0.0, size.Width, size.Height);
             base.Clip = geometry;
         }
 

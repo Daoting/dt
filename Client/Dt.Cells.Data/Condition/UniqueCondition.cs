@@ -21,7 +21,7 @@ namespace Dt.Cells.Data
     /// </summary>
     internal sealed class UniqueCondition : ConditionBase, IRangesDependent
     {
-        private ICellRange[] ranges;
+        ICellRange[] ranges;
 
         /// <summary>
         /// Creates a new unique condition.
@@ -118,7 +118,7 @@ namespace Dt.Cells.Data
             return true;
         }
 
-        private static List<object> GetDuplicated(IActualValue actualValue, ICellRange[] ranges, int maxRowCount = 0x7fffffff, int maxColumnCount = 0x7fffffff)
+        static List<object> GetDuplicated(IActualValue actualValue, ICellRange[] ranges, int maxRowCount = 0x7fffffff, int maxColumnCount = 0x7fffffff)
         {
             Dictionary<object, int> dictionary = new Dictionary<object, int>();
             if (ranges != null)

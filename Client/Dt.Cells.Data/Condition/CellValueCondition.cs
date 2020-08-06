@@ -20,8 +20,8 @@ namespace Dt.Cells.Data
     /// </summary>
     internal sealed class CellValueCondition : ConditionBase
     {
-        private GeneralCompareType compareType;
-        private bool treatNullValueAsZero;
+        GeneralCompareType compareType;
+        bool treatNullValueAsZero;
 
         /// <summary>
         /// Creates a new number condition.
@@ -49,7 +49,7 @@ namespace Dt.Cells.Data
         /// <returns>
         /// <c>true</c> if the value satisfies the condition; otherwise, <c>false</c>.
         /// </returns>
-        private bool CheckCondition(object expectedValue, object actualValue)
+        bool CheckCondition(object expectedValue, object actualValue)
         {
             double dValue = 0.0;
             bool flag = false;
@@ -289,7 +289,7 @@ namespace Dt.Cells.Data
             Serializer.SerializeObj((bool) this.treatNullValueAsZero, "TreatNullValueAsZero", writer);
         }
 
-        private static bool TryConvertToNumber(object value, out double dValue)
+        static bool TryConvertToNumber(object value, out double dValue)
         {
             dValue = 0.0;
             if (ConditionValueConverter.IsNumber(value))

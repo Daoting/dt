@@ -26,30 +26,30 @@ namespace Dt.Cells.Data
         /// <summary>
         /// the format provider.
         /// </summary>
-        private DateTimeFormatInfo formatProvider;
+        DateTimeFormatInfo formatProvider;
         /// <summary>
         /// the format string
         /// </summary>
-        private string formatString;
-        private static readonly string FullDatePatternLongTime = "F";
-        private static readonly string FullDatePatternShortTime = "f";
-        private static readonly string GeneralDatePatternLongTimeLongTime = "G";
-        private static readonly string GeneralDatePatternLongTimeShortTime = "g";
-        private static readonly string LongDatePattern = "D";
-        private static readonly string LongTimePattern = "T";
-        private static readonly string MonthDayPattern1 = "m";
-        private static readonly string MonthDayPattern2 = "M";
-        private static readonly string RFC1123Pattern1 = "r";
-        private static readonly string RFC1123Pattern2 = "R";
-        private static readonly string RoundTripDatePattern1 = "o";
-        private static readonly string RoundTripDatePattern2 = "O";
-        private static readonly string ShortDatePattern = "d";
-        private static readonly string ShortTimePattern = "t";
-        private static readonly string SortableDatePattern = "s";
-        private static readonly string UniversalFullDatePattern = "U";
-        private static readonly string UniversalSortableDatePattern = "u";
-        private static readonly string YearMonthPattern1 = "y";
-        private static readonly string YearMonthPattern2 = "Y";
+        string formatString;
+        static readonly string FullDatePatternLongTime = "F";
+        static readonly string FullDatePatternShortTime = "f";
+        static readonly string GeneralDatePatternLongTimeLongTime = "G";
+        static readonly string GeneralDatePatternLongTimeShortTime = "g";
+        static readonly string LongDatePattern = "D";
+        static readonly string LongTimePattern = "T";
+        static readonly string MonthDayPattern1 = "m";
+        static readonly string MonthDayPattern2 = "M";
+        static readonly string RFC1123Pattern1 = "r";
+        static readonly string RFC1123Pattern2 = "R";
+        static readonly string RoundTripDatePattern1 = "o";
+        static readonly string RoundTripDatePattern2 = "O";
+        static readonly string ShortDatePattern = "d";
+        static readonly string ShortTimePattern = "t";
+        static readonly string SortableDatePattern = "s";
+        static readonly string UniversalFullDatePattern = "U";
+        static readonly string UniversalSortableDatePattern = "u";
+        static readonly string YearMonthPattern1 = "y";
+        static readonly string YearMonthPattern2 = "Y";
 
         /// <summary>
         /// Creates a new standard date and time format.

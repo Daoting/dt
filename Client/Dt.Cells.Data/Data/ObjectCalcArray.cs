@@ -15,7 +15,7 @@ namespace Dt.Cells.Data
 {
     internal class ObjectCalcArray : CalcArray
     {
-        private object[,] values;
+        object[,] values;
 
         public ObjectCalcArray(object[,] values)
         {

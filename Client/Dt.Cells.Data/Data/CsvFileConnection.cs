@@ -18,18 +18,18 @@ namespace Dt.Cells.Data
 {
     internal sealed class CsvFileConnection : ConnectionBase
     {
-        private List<List<string>> cachedFileText;
-        private List<string> cachedHeaders;
-        private CsvFileSource fileSource;
-        private bool hasColumnHeader;
-        private bool hasRowHeader;
+        List<List<string>> cachedFileText;
+        List<string> cachedHeaders;
+        CsvFileSource fileSource;
+        bool hasColumnHeader;
+        bool hasRowHeader;
 
         public override bool CanOpen()
         {
             return (base.DataSource is CsvFileSource);
         }
 
-        private void CreateDataFields()
+        void CreateDataFields()
         {
             if ((this.cachedFileText != null) || (this.cachedFileText.Count > 0))
             {

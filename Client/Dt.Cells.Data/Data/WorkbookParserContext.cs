@@ -17,7 +17,7 @@ namespace Dt.Cells.Data
 {
     internal class WorkbookParserContext : CalcParserContext
     {
-        private Workbook _context;
+        Workbook _context;
 
         public WorkbookParserContext(Workbook context, bool useR1C1 = false, int baseRowIndex = 0, int baseColumnIndex = 0, CultureInfo culture = null) : base(useR1C1, baseRowIndex, baseColumnIndex, culture)
         {

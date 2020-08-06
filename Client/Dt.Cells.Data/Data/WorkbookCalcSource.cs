@@ -18,7 +18,7 @@ namespace Dt.Cells.Data
 {
     internal class WorkbookCalcSource : ICalcSource, IEqualityComparer<ICalcSource>
     {
-        private Workbook _workbook;
+        Workbook _workbook;
 
         public WorkbookCalcSource(Workbook workbook)
         {

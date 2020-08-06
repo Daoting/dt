@@ -14,7 +14,7 @@ namespace Dt.Cells.Data
 {
     internal class SheetCellRange : CellRange
     {
-        private Worksheet _sheet;
+        Worksheet _sheet;
 
         public SheetCellRange(Worksheet sheet, CellRange range) : this(sheet, range.Row, range.Column, range.RowCount, range.ColumnCount)
         {

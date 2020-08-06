@@ -21,13 +21,13 @@ namespace Dt.Cells.Data
     /// </summary>
     public class SpreadTheme : ICloneable, IXmlSerializable
     {
-        private FontFamily bodyFontFamily;
-        private string bodyFontName;
-        private ThemeColor colors;
-        private FontFamily headingFontFamily;
-        private string headingFontName;
-        private bool isDirty;
-        private string name;
+        FontFamily bodyFontFamily;
+        string bodyFontName;
+        ThemeColor colors;
+        FontFamily headingFontFamily;
+        string headingFontName;
+        bool isDirty;
+        string name;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.SpreadTheme" /> class.

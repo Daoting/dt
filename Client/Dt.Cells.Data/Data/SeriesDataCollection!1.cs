@@ -23,10 +23,10 @@ namespace Dt.Cells.Data
     /// <typeparam name="T"></typeparam>
     public abstract class SeriesDataCollection<T> : NotifyCollection<T>, IDisposable
     {
-        private List<ISeriesDataProvider> _dataProviders;
-        private IDataSeries _dataSeries;
-        private bool _isDateTimeSeries;
-        private string _valuesSperator;
+        List<ISeriesDataProvider> _dataProviders;
+        IDataSeries _dataSeries;
+        bool _isDateTimeSeries;
+        string _valuesSperator;
 
         internal event EventHandler IsDateTimeSeriesChanged;
 
@@ -72,7 +72,7 @@ namespace Dt.Cells.Data
             this.UpdateIsDateTimeSeries();
         }
 
-        private void CheckDataConnecting()
+        void CheckDataConnecting()
         {
             if (this.IsBoundToDataSeries)
             {
@@ -106,7 +106,7 @@ namespace Dt.Cells.Data
             return new DataSeiresDataProvider(dataSeries);
         }
 
-        private void DataProvider_DataChanged(object sender, EventArgs e)
+        void DataProvider_DataChanged(object sender, EventArgs e)
         {
             this.UpdateCollection();
             this.RaiseCollectionChanged(this, new NotifyCollectionChangedEventArgs((NotifyCollectionChangedAction) NotifyCollectionChangedAction.Reset));
@@ -257,7 +257,7 @@ namespace Dt.Cells.Data
             this.UpdateIsDateTimeSeries();
         }
 
-        private void ResumeWorksheetChartsEvent()
+        void ResumeWorksheetChartsEvent()
         {
             if (this._dataProviders != null)
             {
@@ -271,7 +271,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void SuspendWorksheetChartsEvent()
+        void SuspendWorksheetChartsEvent()
         {
             if (this._dataProviders != null)
             {
@@ -400,7 +400,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void UpdateDataProviders()
+        void UpdateDataProviders()
         {
             if (this._dataProviders != null)
             {
@@ -450,7 +450,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void UpdateIsDateTimeSeries()
+        void UpdateIsDateTimeSeries()
         {
             bool flag = true;
             if (base.items.Count != 0)

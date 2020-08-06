@@ -183,7 +183,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private static void CalcLayoutHorizontal(LineItem lineItem, double hOffset, double vOffset, out double x1, out double x2, out double y1, out double y2)
+        static void CalcLayoutHorizontal(LineItem lineItem, double hOffset, double vOffset, out double x1, out double x2, out double y1, out double y2)
         {
             if (lineItem.Line.StyleData.DrawingThickness == 2)
             {
@@ -365,7 +365,7 @@ namespace Dt.Cells.Data
             y2 -= vOffset;
         }
 
-        private static void CalcLayoutVertical(LineItem lineItem, double hOffset, double vOffset, out double x1, out double x2, out double y1, out double y2)
+        static void CalcLayoutVertical(LineItem lineItem, double hOffset, double vOffset, out double x1, out double x2, out double y1, out double y2)
         {
             y1 = lineItem.Bounds[0].Top;
             y2 = lineItem.Bounds[lineItem.Bounds.Count - 1].Bottom;
@@ -574,7 +574,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private static BorderLine GetBreaker(LineItem lineItem, int type, int breaker)
+        static BorderLine GetBreaker(LineItem lineItem, int type, int breaker)
         {
             if (breaker == 1)
             {
@@ -587,7 +587,7 @@ namespace Dt.Cells.Data
             return null;
         }
 
-        private static BorderLine GetBreaker1(LineItem lineItem, int type)
+        static BorderLine GetBreaker1(LineItem lineItem, int type)
         {
             if (type == -1)
             {
@@ -600,7 +600,7 @@ namespace Dt.Cells.Data
             return null;
         }
 
-        private static BorderLine GetBreaker2(LineItem lineItem, int type)
+        static BorderLine GetBreaker2(LineItem lineItem, int type)
         {
             if (type == -1)
             {
@@ -613,7 +613,7 @@ namespace Dt.Cells.Data
             return null;
         }
 
-        private static BorderLine GetNeighbor(LineItem lineItem, int type)
+        static BorderLine GetNeighbor(LineItem lineItem, int type)
         {
             if (type == -1)
             {
@@ -626,7 +626,7 @@ namespace Dt.Cells.Data
             return null;
         }
 
-        private static bool IsAllowExtend(LineItem lineItem, int type)
+        static bool IsAllowExtend(LineItem lineItem, int type)
         {
             if (IsDoubleLine(lineItem.Line))
             {
@@ -658,7 +658,7 @@ namespace Dt.Cells.Data
             return ((line != null) && (line.Style == BorderLineStyle.Double));
         }
 
-        private static void Layout4Connected(LineItem lineItem, int type, ref double o1, ref double o3)
+        static void Layout4Connected(LineItem lineItem, int type, ref double o1, ref double o3)
         {
             BorderLine neighbor = GetNeighbor(lineItem, type);
             if (IsDoubleLine(neighbor))
@@ -703,7 +703,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private static void Layout4CrossRoad(LineItem lineItem, int type, ref double o1, ref double o3)
+        static void Layout4CrossRoad(LineItem lineItem, int type, ref double o1, ref double o3)
         {
             BorderLine objB = GetBreaker1(lineItem, type);
             BorderLine line2 = GetBreaker2(lineItem, type);
@@ -725,7 +725,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private static void Layout4TRoad(LineItem lineItem, int type, ref double o1, ref double o3)
+        static void Layout4TRoad(LineItem lineItem, int type, ref double o1, ref double o3)
         {
             BorderLine objB = GetBreaker1(lineItem, type);
             BorderLine line2 = GetBreaker2(lineItem, type);
@@ -747,7 +747,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private static void Layout4TurnRoad(LineItem lineItem, int type, int breaker, ref double o1, ref double o3)
+        static void Layout4TurnRoad(LineItem lineItem, int type, int breaker, ref double o1, ref double o3)
         {
             BorderLine objB = GetBreaker(lineItem, type, breaker);
             BorderLine neighbor = GetNeighbor(lineItem, type);

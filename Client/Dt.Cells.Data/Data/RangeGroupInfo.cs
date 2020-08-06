@@ -24,15 +24,15 @@ namespace Dt.Cells.Data
         /// <summary>
         /// The children.
         /// </summary>
-        private Collection<RangeGroupInfo> children;
+        Collection<RangeGroupInfo> children;
         /// <summary>
         /// The Owner.
         /// </summary>
-        private RangeGroup model;
+        RangeGroup model;
         /// <summary>
         /// The parent group.
         /// </summary>
-        private RangeGroupInfo parent;
+        RangeGroupInfo parent;
 
         /// <summary>
         /// Creates a new range group info.

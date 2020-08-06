@@ -21,11 +21,11 @@ namespace Dt.Cells.Data
         /// <summary>
         /// 
         /// </summary>
-        private string originalToken;
+        string originalToken;
         /// <summary>
         /// the supported part format.
         /// </summary>
-        private static Collection<Type> supportedPartFormat;
+        static Collection<Type> supportedPartFormat;
 
         /// <summary>
         /// Creates a new format.

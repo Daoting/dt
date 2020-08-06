@@ -17,10 +17,10 @@ namespace Dt.Cells.Data
     /// </summary>
     public sealed class SheetSelectionChangedEventArgs : EventArgs
     {
-        private int column;
-        private int columnCount;
-        private int row;
-        private int rowCount;
+        int column;
+        int columnCount;
+        int row;
+        int rowCount;
 
         /// <summary>
         /// Creates a new Changed event arguments object for the selection model for the sheet.

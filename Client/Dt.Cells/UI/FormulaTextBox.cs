@@ -94,7 +94,7 @@ namespace Dt.Cells.UI
                 Focus(FocusState.Programmatic);
                 base.Select((_startIndex + str.Length) + 1, 0);
                 _functionTextBlock.Text = (_functionListBox.SelectedItem as FormulaFunction).FullName;
-                Windows.Foundation.Point point = new Windows.Foundation.Point(0.0, base.ActualHeight);
+                Point point = new Point(0.0, base.ActualHeight);
                 point = base.TransformToVisual(null).TransformPoint(point);
                 _functionPopup.HorizontalOffset = point.X;
                 _functionPopup.VerticalOffset = point.Y;
@@ -433,7 +433,7 @@ namespace Dt.Cells.UI
                             if (object.Equals(objA, FunctionList[i].Name))
                             {
                                 _functionTextBlock.Text = FunctionList[i].FullName.Replace(',', CultureInfo.CurrentCulture.TextInfo.ListSeparator[0]);
-                                Windows.Foundation.Point point = new Windows.Foundation.Point(0.0, base.ActualHeight);
+                                Point point = new Point(0.0, base.ActualHeight);
                                 point = base.TransformToVisual(null).TransformPoint(point);
                                 _functionPopup.HorizontalOffset = point.X;
                                 _functionPopup.VerticalOffset = point.Y;
@@ -486,7 +486,7 @@ namespace Dt.Cells.UI
                         }
                         if (_functionListBox.Items.Count > 0)
                         {
-                            Windows.Foundation.Point point = new Windows.Foundation.Point(0.0, base.ActualHeight);
+                            Point point = new Point(0.0, base.ActualHeight);
                             if (_functionPopup.IsOpen)
                             {
                                 point.Y += 37.0;

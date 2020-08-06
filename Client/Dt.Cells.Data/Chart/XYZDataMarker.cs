@@ -28,7 +28,7 @@ namespace Dt.Cells.Data
         {
         }
 
-        private SpreadXYZDataSeries XYZDataSeries
+        SpreadXYZDataSeries XYZDataSeries
         {
             get { return  (base.DataSeries as SpreadXYZDataSeries); }
         }

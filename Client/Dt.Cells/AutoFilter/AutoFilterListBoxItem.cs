@@ -92,7 +92,7 @@ namespace Dt.Cells.UI
             IList<PointerPoint> intermediatePoints = e.GetIntermediatePoints(this);
             if ((intermediatePoints != null) && (intermediatePoints.Count == 1))
             {
-                Windows.Foundation.Point point = intermediatePoints[0].Position;
+                Point point = intermediatePoints[0].Position;
                 if (((point.X >= 0.0) && (point.X < base.ActualWidth)) && ((point.Y >= 0.0) && (point.Y < base.ActualHeight)))
                 {
                     PerformCheck();

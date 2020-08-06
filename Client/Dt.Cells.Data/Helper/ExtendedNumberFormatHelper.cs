@@ -17,12 +17,12 @@ namespace Dt.Cells.Data
 {
     internal class ExtendedNumberFormatHelper
     {
-        private static Dictionary<int, string> _builtInNumberFomrat = new Dictionary<int, string>();
-        private static Dictionary<string, int> _builtInNumberFormat2 = new Dictionary<string, int>();
-        private static Dictionary<string, int> _customNumberFormat = new Dictionary<string, int>();
-        private static Dictionary<string, string> _formatCodeTable = new Dictionary<string, string>();
-        private static Dictionary<int, string> _languageIndepedentNumberFormat = new Dictionary<int, string>();
-        private static int _startKey = 170;
+        static Dictionary<int, string> _builtInNumberFomrat = new Dictionary<int, string>();
+        static Dictionary<string, int> _builtInNumberFormat2 = new Dictionary<string, int>();
+        static Dictionary<string, int> _customNumberFormat = new Dictionary<string, int>();
+        static Dictionary<string, string> _formatCodeTable = new Dictionary<string, string>();
+        static Dictionary<int, string> _languageIndepedentNumberFormat = new Dictionary<int, string>();
+        static int _startKey = 170;
 
         internal static string GetExcelFormatCode(string spreadSheetFormatCode)
         {
@@ -94,7 +94,7 @@ namespace Dt.Cells.Data
             return nextAvirableKey;
         }
 
-        private static int GetNextAvirableKey()
+        static int GetNextAvirableKey()
         {
             int num = 0;
             if (_customNumberFormat.Count > 0)
@@ -104,7 +104,7 @@ namespace Dt.Cells.Data
             return (Math.Max(_startKey++, num) + 1);
         }
 
-        private static void InitBuintNumberFormat()
+        static void InitBuintNumberFormat()
         {
             _builtInNumberFomrat.Add(0, "General");
             _builtInNumberFomrat.Add(1, "0");
@@ -180,7 +180,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private static void InitBuintNumberFormat2()
+        static void InitBuintNumberFormat2()
         {
             if (Dt.Cells.Data.LanguageHelper.GetCurrentRuntimeLanguage() == Dt.Cells.Data.Language.Ja_jp)
             {
@@ -228,7 +228,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private static void InitLanguageIndepedentNumberFormat()
+        static void InitLanguageIndepedentNumberFormat()
         {
             _languageIndepedentNumberFormat[0x1b] = "m/d/yyyy";
             _languageIndepedentNumberFormat[0x1c] = "m/d/yyyy";

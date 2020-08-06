@@ -18,12 +18,12 @@ namespace Dt.Cells.Data
     /// </summary>
     internal class GcPageBlock : GcBlock
     {
-        private readonly GcBlockCollection blocks = new GcBlockCollection();
-        private GcRangeBlock bottomMargin;
-        private GcRangeBlock pageFooter;
-        private GcRangeBlock pageHeader;
-        private GcPageRectangles rectangles = new GcPageRectangles();
-        private GcRangeBlock topMargin;
+        readonly GcBlockCollection blocks = new GcBlockCollection();
+        GcRangeBlock bottomMargin;
+        GcRangeBlock pageFooter;
+        GcRangeBlock pageHeader;
+        GcPageRectangles rectangles = new GcPageRectangles();
+        GcRangeBlock topMargin;
 
         /// <summary>
         /// Gets the blocks.

@@ -131,7 +131,7 @@ namespace Dt.Cells.UndoRedo
                     }
                     if ((series.MarkerType != MarkerType.None) && ((series.MarkerSize.IsEmpty || (series.MarkerSize.Width == 0.0)) || (series.MarkerSize.Height == 0.0)))
                     {
-                        series.MarkerSize = new Windows.Foundation.Size(7.0, 7.0);
+                        series.MarkerSize = new Size(7.0, 7.0);
                     }
                 }
             }

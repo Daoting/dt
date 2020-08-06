@@ -21,28 +21,28 @@ namespace Dt.Cells.Data
     /// </summary>
     internal class GcSheetBlock : GcBlock
     {
-        private string bookmark;
-        private Windows.Foundation.Rect cellRect;
-        private int columnEndIndex;
-        private int columnStartIndex;
-        private bool footer;
-        private Windows.Foundation.Rect footerRect;
-        private bool frozen;
-        private Windows.Foundation.Rect frozenRect;
-        private bool frozenTrailing;
-        private Windows.Foundation.Rect frozenTrailingRect;
-        private bool header;
-        private Windows.Foundation.Rect headerRect;
-        private bool horizontal;
-        private bool recalcRects;
-        private bool repeat;
-        private Windows.Foundation.Rect repeatRect;
-        private int rowEndIndex;
-        private List<int> rowIndexs;
-        private int rowStartIndex;
-        private GcSheetSection.SheetState state;
-        private PartType type;
-        private Worksheet worksheet;
+        string bookmark;
+        Windows.Foundation.Rect cellRect;
+        int columnEndIndex;
+        int columnStartIndex;
+        bool footer;
+        Windows.Foundation.Rect footerRect;
+        bool frozen;
+        Windows.Foundation.Rect frozenRect;
+        bool frozenTrailing;
+        Windows.Foundation.Rect frozenTrailingRect;
+        bool header;
+        Windows.Foundation.Rect headerRect;
+        bool horizontal;
+        bool recalcRects;
+        bool repeat;
+        Windows.Foundation.Rect repeatRect;
+        int rowEndIndex;
+        List<int> rowIndexs;
+        int rowStartIndex;
+        GcSheetSection.SheetState state;
+        PartType type;
+        Worksheet worksheet;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.GcSheetBlock" /> class.
@@ -79,7 +79,7 @@ namespace Dt.Cells.Data
         /// <summary>
         /// Checks the rectangles.
         /// </summary>
-        private void CheckRects()
+        void CheckRects()
         {
             if (this.recalcRects)
             {

@@ -21,9 +21,9 @@ namespace Dt.Cells.Data
     /// </summary>
     public sealed class AverageCondition : ConditionBase, IRangesDependent
     {
-        private ICellRange[] ranges;
-        private ValueObject stdValueObject;
-        private AverageConditionType type;
+        ICellRange[] ranges;
+        ValueObject stdValueObject;
+        AverageConditionType type;
 
         /// <summary>
         /// Creates a new average condition.
@@ -264,7 +264,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void RebuildFormula(ICalcEvaluator evaluator)
+        void RebuildFormula(ICalcEvaluator evaluator)
         {
             base.ClearExpected();
             this.stdValueObject = null;

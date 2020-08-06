@@ -21,8 +21,8 @@ namespace Dt.Cells.Data
     /// </summary>
     internal class GcImage : GcPrintableControl
     {
-        private Brush background;
-        private Dt.Pdf.Drawing.Image image;
+        Brush background;
+        Dt.Pdf.Drawing.Image image;
 
         /// <summary>
         /// Creates a new image of the control.

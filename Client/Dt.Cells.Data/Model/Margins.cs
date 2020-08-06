@@ -20,12 +20,12 @@ namespace Dt.Cells.Data
     /// </summary>
     public class Margins : IXmlSerializable
     {
-        private int bottom;
-        private int footer;
-        private int header;
-        private int left;
-        private int right;
-        private int top;
+        int bottom;
+        int footer;
+        int header;
+        int left;
+        int right;
+        int top;
 
         /// <summary>
         /// Creates new margin settings.

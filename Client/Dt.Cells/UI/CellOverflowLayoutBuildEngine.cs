@@ -125,7 +125,7 @@ namespace Dt.Cells.UI
                 }
                 if (layout3.BackgroundWidth > layout2.Width)
                 {
-                    Windows.Foundation.Size textSize = MeasureHelper.MeasureTextInCell(cachedCell, new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity), (double) Viewport.Sheet.ZoomFactor, Viewport.Sheet.InheritedControlFontFamily, textFormattingMode, useLayoutRounding);
+                    Size textSize = MeasureHelper.MeasureTextInCell(cachedCell, new Size(double.PositiveInfinity, double.PositiveInfinity), (double) Viewport.Sheet.ZoomFactor, Viewport.Sheet.InheritedControlFontFamily, textFormattingMode, useLayoutRounding);
                     layout3.ContentWidth = MeasureHelper.ConvertTextSizeToExcelCellSize(textSize, (double) Viewport.Sheet.ZoomFactor).Width;
                     result.Add(layout3);
                 }
@@ -158,7 +158,7 @@ namespace Dt.Cells.UI
                     return null;
                 }
                 float zoomFactor = Viewport.Sheet.ZoomFactor;
-                Windows.Foundation.Size textSize = MeasureHelper.MeasureTextInCell(bindingCell, new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity), (double) zoomFactor, Viewport.Sheet.InheritedControlFontFamily, textFormattingMode, useLayoutRounding);
+                Size textSize = MeasureHelper.MeasureTextInCell(bindingCell, new Size(double.PositiveInfinity, double.PositiveInfinity), (double) zoomFactor, Viewport.Sheet.InheritedControlFontFamily, textFormattingMode, useLayoutRounding);
                 double width = MeasureHelper.ConvertTextSizeToExcelCellSize(textSize, (double) zoomFactor).Width;
                 double num5 = column.ActualWidth * zoomFactor;
                 if (buildForCenter)
@@ -229,7 +229,7 @@ namespace Dt.Cells.UI
                     return null;
                 }
                 float zoomFactor = Viewport.Sheet.ZoomFactor;
-                Windows.Foundation.Size textSize = MeasureHelper.MeasureTextInCell(bindingCell, new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity), (double) zoomFactor, Viewport.Sheet.InheritedControlFontFamily, textFormattingMode, useLayoutRounding);
+                Size textSize = MeasureHelper.MeasureTextInCell(bindingCell, new Size(double.PositiveInfinity, double.PositiveInfinity), (double) zoomFactor, Viewport.Sheet.InheritedControlFontFamily, textFormattingMode, useLayoutRounding);
                 double width = MeasureHelper.ConvertTextSizeToExcelCellSize(textSize, (double) zoomFactor).Width;
                 double num5 = column.ActualWidth * zoomFactor;
                 if (buildForCenter)

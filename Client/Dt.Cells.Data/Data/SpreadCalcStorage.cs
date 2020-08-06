@@ -21,7 +21,7 @@ namespace Dt.Cells.Data
 {
     internal class SpreadCalcStorage : ICalcStorage<CalcLocalIdentity, CalcExpression>, IEnumerable<KeyValuePair<CalcLocalIdentity, CalcExpression>>, IEnumerable
     {
-        private Dictionary<CalcLocalIdentity, CalcExpression> _storage = new Dictionary<CalcLocalIdentity, CalcExpression>();
+        Dictionary<CalcLocalIdentity, CalcExpression> _storage = new Dictionary<CalcLocalIdentity, CalcExpression>();
 
         internal void Add(CalcLocalIdentity id, CalcExpression exp)
         {

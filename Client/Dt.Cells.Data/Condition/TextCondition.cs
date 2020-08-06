@@ -21,14 +21,14 @@ namespace Dt.Cells.Data
     /// </summary>
     public sealed class TextCondition : ConditionBase
     {
-        private static readonly string AsteriskWildcard = "*";
-        private static readonly string AsteriskWildcardRegularExpression = @"((.|\n)*)";
-        private TextCompareType compareType;
-        private bool forceValue2Text;
-        private bool ignoreCase;
-        private static readonly string QuestionMarkWildcard = "?";
-        private Regex regex;
-        private bool useWildCards;
+        static readonly string AsteriskWildcard = "*";
+        static readonly string AsteriskWildcardRegularExpression = @"((.|\n)*)";
+        TextCompareType compareType;
+        bool forceValue2Text;
+        bool ignoreCase;
+        static readonly string QuestionMarkWildcard = "?";
+        Regex regex;
+        bool useWildCards;
 
         /// <summary>
         /// Creates a new text condition.
@@ -72,7 +72,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="expression">Expression</param>
         /// <returns>Returns the regular expression.</returns>
-        private Regex CreateContainsRegex(string expression)
+        Regex CreateContainsRegex(string expression)
         {
             if (this.regex != null)
             {
@@ -100,7 +100,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="expression">Expression</param>
         /// <returns>Returns the regular expression.</returns>
-        private Regex CreateEndWithRegex(string expression)
+        Regex CreateEndWithRegex(string expression)
         {
             if (this.regex != null)
             {
@@ -128,7 +128,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="expression">Expression</param>
         /// <returns>Returns the regular expression.</returns>
-        private Regex CreateEqualsRegex(string expression)
+        Regex CreateEqualsRegex(string expression)
         {
             if (this.regex != null)
             {
@@ -156,7 +156,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="expression">Expression</param>
         /// <returns>Returns the regular expression.</returns>
-        private Regex CreateStartWithRegex(string expression)
+        Regex CreateStartWithRegex(string expression)
         {
             if (this.regex != null)
             {
@@ -184,7 +184,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="expression">The expression.</param>
         /// <returns>Returns the encoded expression.</returns>
-        private static string EncodeExpression(string expression)
+        static string EncodeExpression(string expression)
         {
             if (expression == null)
             {
@@ -292,7 +292,7 @@ namespace Dt.Cells.Data
         /// <returns>
         /// <c>true</c> if the specified text has a wildcard; otherwise, <c>false</c>.
         /// </returns>
-        private static bool HasWildcard(string text)
+        static bool HasWildcard(string text)
         {
             if ((text == null) || (text == string.Empty))
             {
@@ -313,7 +313,7 @@ namespace Dt.Cells.Data
         /// <returns>
         /// <c>true</c> if the specified expected value contains the string; otherwise, <c>false</c>.
         /// </returns>
-        private bool IsContains(string expected, string value)
+        bool IsContains(string expected, string value)
         {
             if (this.UseWildCards && HasWildcard(expected))
             {
@@ -347,7 +347,7 @@ namespace Dt.Cells.Data
         /// <returns>
         /// <c>true</c> if the specified text ends with the string; otherwise, <c>false</c>.
         /// </returns>
-        private bool IsEndWith(string expected, string value)
+        bool IsEndWith(string expected, string value)
         {
             if (this.UseWildCards && HasWildcard(expected))
             {
@@ -381,7 +381,7 @@ namespace Dt.Cells.Data
         /// <returns>
         /// <c>true</c> if the specified expected value is equal; otherwise, <c>false</c>.
         /// </returns>
-        private bool IsEquals(string expected, string value)
+        bool IsEquals(string expected, string value)
         {
             if (this.UseWildCards && HasWildcard(expected))
             {
@@ -408,7 +408,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="expected">The string to check for.</param>
         /// <param name="value">The text to check.</param>
-        private bool IsStartWith(string expected, string value)
+        bool IsStartWith(string expected, string value)
         {
             if (this.UseWildCards && HasWildcard(expected))
             {

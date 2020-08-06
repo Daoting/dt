@@ -18,12 +18,12 @@ namespace Dt.Cells.Data
     /// </summary>
     internal class PartsLayoutData
     {
-        private PartLayoutData columnFooterHeights;
-        private PartLayoutData columnHeaderHeights;
-        private PartLayoutData columnWidths;
-        private PartLayoutData rowFooterWidths;
-        private PartLayoutData rowHeaderWidths;
-        private PartLayoutData rowHeights;
+        PartLayoutData columnFooterHeights;
+        PartLayoutData columnHeaderHeights;
+        PartLayoutData columnWidths;
+        PartLayoutData rowFooterWidths;
+        PartLayoutData rowHeaderWidths;
+        PartLayoutData rowHeights;
 
         /// <summary>
         /// Gets or sets the column footer heights.

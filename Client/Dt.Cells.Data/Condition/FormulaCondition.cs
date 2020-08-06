@@ -25,7 +25,7 @@ namespace Dt.Cells.Data
         /// <summary>
         /// the custom value type.
         /// </summary>
-        private CustomValueType customValueType;
+        CustomValueType customValueType;
 
         /// <summary>
         /// Creates a new custom condition.

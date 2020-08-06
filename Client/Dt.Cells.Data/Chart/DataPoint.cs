@@ -23,15 +23,15 @@ namespace Dt.Cells.Data
     /// </summary>
     public class DataPoint : SpreadChartElement, IDataPoint
     {
-        private SpreadDataSeries _dataSeries;
-        private bool _invertIfNegative;
-        private bool _invertIfNegativeSet;
-        private bool _isBubble3D;
-        private Brush _negativeFill;
-        private bool _negativeFillSet;
-        private string _negativeFillThemeColor;
-        private bool _negativeFillThemeColorSet;
-        private int _pointIndex;
+        SpreadDataSeries _dataSeries;
+        bool _invertIfNegative;
+        bool _invertIfNegativeSet;
+        bool _isBubble3D;
+        Brush _negativeFill;
+        bool _negativeFillSet;
+        string _negativeFillThemeColor;
+        bool _negativeFillThemeColorSet;
+        int _pointIndex;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.DataPoint" /> class.
@@ -57,12 +57,12 @@ namespace Dt.Cells.Data
             this.ResetNegativeFillThemeColor();
         }
 
-        private void FormatInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void FormatInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             base.NotifyChartChanged(e.PropertyName);
         }
 
-        private void Init()
+        void Init()
         {
             this._pointIndex = -1;
             this._dataSeries = null;

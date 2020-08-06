@@ -20,7 +20,7 @@ namespace Dt.Cells.Data
     /// </summary>
     internal class ConstructorObject : IXmlSerializable
     {
-        private object[] args;
+        object[] args;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.ConstructorObject" /> class.

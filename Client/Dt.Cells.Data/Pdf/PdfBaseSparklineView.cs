@@ -21,7 +21,7 @@ namespace Dt.Cells.Data
     /// </summary>
     internal abstract class PdfBaseSparklineView : IThemeContextSupport
     {
-        private BaseSparklineViewInfo _viewInfo;
+        BaseSparklineViewInfo _viewInfo;
 
         internal PdfBaseSparklineView(BaseSparklineViewInfo viewInfo)
         {

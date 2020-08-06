@@ -24,11 +24,11 @@ namespace Dt.Cells.Data
     /// </summary>
     public class DataLabel : SpreadChartTextElement, IDataPoint
     {
-        private Dt.Cells.Data.DataLabelSettings _dataLabelSettings;
-        private SpreadDataSeries _dataSeries;
-        private IFormatter _formatter;
-        private bool _isFormatterSet;
-        private int _pointIndex;
+        Dt.Cells.Data.DataLabelSettings _dataLabelSettings;
+        SpreadDataSeries _dataSeries;
+        IFormatter _formatter;
+        bool _isFormatterSet;
+        int _pointIndex;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.DataLabel" /> class.
@@ -44,7 +44,7 @@ namespace Dt.Cells.Data
             this._pointIndex = pointIndex;
         }
 
-        private void DataLabelSettings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void DataLabelSettings_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             base.NotifyChartChanged(e.PropertyName);
         }
@@ -76,13 +76,13 @@ namespace Dt.Cells.Data
             return actualFormatter.Format(value);
         }
 
-        private void Init()
+        void Init()
         {
             this._pointIndex = -1;
             this._dataSeries = null;
         }
 
-        private bool IsPieChart()
+        bool IsPieChart()
         {
             return ((this.DataSeries != null) && this.DataSeries.ChartType.ToString().ToLower().Contains("pie"));
         }

@@ -19,7 +19,7 @@ namespace Dt.Cells.Data
     /// </summary>
     internal class Wall : SpreadChartElement
     {
-        private int _thickness;
+        int _thickness;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.Wall" /> class.

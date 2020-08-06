@@ -19,7 +19,7 @@ namespace Dt.Cells.Data
     /// </summary>
     public sealed class DateOccurringRule : FormattingRuleBase
     {
-        private DateOccurringType op;
+        DateOccurringType op;
 
         /// <summary>
         /// Constructs a data occurring  rule.

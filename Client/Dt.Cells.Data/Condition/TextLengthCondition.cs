@@ -19,7 +19,7 @@ namespace Dt.Cells.Data
     /// </summary>
     public sealed class TextLengthCondition : ConditionBase
     {
-        private GeneralCompareType compareType;
+        GeneralCompareType compareType;
 
         /// <summary>
         /// Creates a new number condition.

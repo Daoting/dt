@@ -15,13 +15,13 @@ namespace Dt.Cells.Data
 {
     internal sealed class ContentAlignment : ICloneable
     {
-        private TextHorizontalAlignment? horizontalAlignment;
-        private bool? rightToLeft;
-        private int? textIndent;
-        private Dt.Cells.Data.TextOrientation? textOrientation;
-        private double? textRotationAngle;
-        private TextVerticalAlignment? verticalAlignment;
-        private bool? wordWrap;
+        TextHorizontalAlignment? horizontalAlignment;
+        bool? rightToLeft;
+        int? textIndent;
+        Dt.Cells.Data.TextOrientation? textOrientation;
+        double? textRotationAngle;
+        TextVerticalAlignment? verticalAlignment;
+        bool? wordWrap;
 
         /// <summary>
         /// Creates a new content alignment object.

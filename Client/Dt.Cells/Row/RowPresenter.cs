@@ -45,7 +45,7 @@ namespace Dt.Cells.UI
             _owningPresenter = viewport;
         }
 
-        protected override Windows.Foundation.Size ArrangeOverride(Windows.Foundation.Size finalSize)
+        protected override Size ArrangeOverride(Size finalSize)
         {
             ColumnLayoutModel columnLayoutModel = GetColumnLayoutModel();
             RowLayoutModel rowLayoutModel = OwningPresenter.GetRowLayoutModel();
@@ -80,7 +80,7 @@ namespace Dt.Cells.UI
                             }
                             num5 = num5 % 0x7ffe;
                             Canvas.SetZIndex(cell, num5);
-                            cell.Arrange(new Windows.Foundation.Rect(PointToClient(new Windows.Foundation.Point(num, num2)), new Windows.Foundation.Size(num3, height)));
+                            cell.Arrange(new Rect(PointToClient(new Point(num, num2)), new Size(num3, height)));
                         }
                     }
                 }
@@ -100,8 +100,8 @@ namespace Dt.Cells.UI
                         num7 -= actualColumnWidth * zoomFactor;
                     }
                     double num12 = worksheet.GetActualColumnWidth(cellOverflowLayoutModel.HeadingOverflowlayout.Column, OwningPresenter.SheetArea) * zoomFactor;
-                    Windows.Foundation.Size size = new Windows.Foundation.Size(num12, layout.Height);
-                    Windows.Foundation.Rect rect = new Windows.Foundation.Rect(PointToClient(new Windows.Foundation.Point(num7, num8)), size);
+                    Size size = new Size(num12, layout.Height);
+                    Rect rect = new Rect(PointToClient(new Point(num7, num8)), size);
                     int num13 = 0x7530 + cellOverflowLayoutModel.HeadingOverflowlayout.Column;
                     num13 = num13 % 0x7ffe;
                     Canvas.SetZIndex(HeadingOverflowCell, num13);
@@ -124,8 +124,8 @@ namespace Dt.Cells.UI
                     x += worksheet.GetActualColumnWidth(i, OwningPresenter.SheetArea) * zoomFactor;
                 }
                 double width = worksheet.GetActualColumnWidth(cellOverflowLayoutModel.TrailingOverflowlayout.Column, OwningPresenter.SheetArea) * zoomFactor;
-                Windows.Foundation.Size size2 = new Windows.Foundation.Size(width, layout.Height);
-                Windows.Foundation.Rect rect2 = new Windows.Foundation.Rect(PointToClient(new Windows.Foundation.Point(x, y)), size2);
+                Size size2 = new Size(width, layout.Height);
+                Rect rect2 = new Rect(PointToClient(new Point(x, y)), size2);
                 int num18 = 0x7530 + cellOverflowLayoutModel.TrailingOverflowlayout.Column;
                 num18 = num18 % 0x7ffe;
                 Canvas.SetZIndex(TrailingOverflowCell, num18);
@@ -198,7 +198,7 @@ namespace Dt.Cells.UI
             return OwningPresenter.Sheet.GetViewportColumnLayoutModel(OwningPresenter.ColumnViewportIndex);
         }
 
-        protected override Windows.Foundation.Size MeasureOverride(Windows.Foundation.Size availableSize)
+        protected override Size MeasureOverride(Size availableSize)
         {
             if (OwningPresenter == null)
             {
@@ -206,7 +206,7 @@ namespace Dt.Cells.UI
             }
             if (double.IsInfinity(availableSize.Width) || double.IsInfinity(availableSize.Height))
             {
-                return Windows.Foundation.Size.Empty;
+                return Size.Empty;
             }
             ColumnLayoutModel columnLayoutModel = GetColumnLayoutModel();
             RowLayout layout = OwningPresenter.GetRowLayoutModel().FindRow(Row);
@@ -243,7 +243,7 @@ namespace Dt.Cells.UI
                     {
                         cell.CellOverflowLayout = null;
                     }
-                    cell.Measure(new Windows.Foundation.Size(num4, num5));
+                    cell.Measure(new Size(num4, num5));
                 }
                 _rowWidth += num2;
             }
@@ -261,23 +261,23 @@ namespace Dt.Cells.UI
                         HeadingOverflowCell.HideForEditing();
                     }
                     double num8 = worksheet.GetActualColumnWidth(cellOverflowLayoutModel.HeadingOverflowlayout.Column, OwningPresenter.SheetArea) * zoomFactor;
-                    Windows.Foundation.Size size = new Windows.Foundation.Size(num8, layout.Height);
+                    Size size = new Size(num8, layout.Height);
                     HeadingOverflowCell.Measure(size);
                 }
                 if (cellOverflowLayoutModel.TrailingOverflowlayout != null)
                 {
                     TrailingOverflowCell.CellOverflowLayout = cellOverflowLayoutModel.TrailingOverflowlayout;
                     double num9 = worksheet.GetActualColumnWidth(cellOverflowLayoutModel.TrailingOverflowlayout.Column, OwningPresenter.SheetArea) * zoomFactor;
-                    Windows.Foundation.Size size2 = new Windows.Foundation.Size(num9, layout.Height);
+                    Size size2 = new Size(num9, layout.Height);
                     TrailingOverflowCell.Measure(size2);
                 }
             }
-            return new Windows.Foundation.Size(width, height);
+            return new Size(width, height);
         }
 
-        public Windows.Foundation.Point PointToClient(Windows.Foundation.Point point)
+        public Point PointToClient(Point point)
         {
-            return new Windows.Foundation.Point(point.X - Location.X, point.Y - Location.Y);
+            return new Point(point.X - Location.X, point.Y - Location.Y);
         }
 
         internal void UpdateDisplayedCells(bool forceUpdate = false)
@@ -553,7 +553,7 @@ namespace Dt.Cells.UI
             get { return  AllCellsAreRecyclable; }
         }
 
-        public Windows.Foundation.Point Location { get; set; }
+        public Point Location { get; set; }
 
         public virtual GcViewport OwningPresenter
         {

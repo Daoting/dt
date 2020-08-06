@@ -29,11 +29,11 @@ namespace Dt.Cells.Data
         /// <summary>
         /// Default name number.
         /// </summary>
-        private int defaultNameNumber = 1;
+        int defaultNameNumber = 1;
         /// <summary>
         /// Default Name Prefix.
         /// </summary>
-        private static string defaultNamePrefix = "Style";
+        static string defaultNamePrefix = "Style";
         /// <summary>
         /// Represents the read-only collection of default styles.
         /// </summary>
@@ -41,19 +41,19 @@ namespace Dt.Cells.Data
         /// <summary>
         /// The name in map.
         /// </summary>
-        private Dictionary<string, int> nameIndexLookupTable = new Dictionary<string, int>();
+        Dictionary<string, int> nameIndexLookupTable = new Dictionary<string, int>();
         /// <summary>
         /// the owner of the current CellStyleCollection
         /// </summary>
-        private object owner;
+        object owner;
         /// <summary>
         /// The style version.
         /// </summary>
-        private static long styleInfoVersion = 0L;
+        static long styleInfoVersion = 0L;
         /// <summary>
         /// The style collection.
         /// </summary>
-        private SparseArray<object> styles = null;
+        SparseArray<object> styles = null;
 
         /// <summary>
         /// Occurs when a style is added, removed, or changed in the collection.
@@ -273,7 +273,7 @@ namespace Dt.Cells.Data
         /// Gets the default name.
         /// </summary>
         /// <returns>Default name string</returns>
-        private string GetDefaultName()
+        string GetDefaultName()
         {
             string str;
             do
@@ -397,7 +397,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void OnStyleInfoPropertyChanged(object sender, PropertyChangedEventArgs e)
+        void OnStyleInfoPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             this.RaiseItemChanged(sender as StyleInfo, sender as StyleInfo);
         }
@@ -408,7 +408,7 @@ namespace Dt.Cells.Data
         /// <param name="style">
         /// New StyleInfo object
         /// </param>
-        private void RaiseItemAdded(StyleInfo style)
+        void RaiseItemAdded(StyleInfo style)
         {
             this.OnChanged(new StyleInfoCollectionChangedEventArgs(StyleInfoCollectionChangedAction.ItemAdded, null, style));
         }
@@ -422,7 +422,7 @@ namespace Dt.Cells.Data
         /// <param name="newstyle">
         /// New StyleInfo object
         /// </param>
-        private void RaiseItemChanged(StyleInfo oldstyle, StyleInfo newstyle)
+        void RaiseItemChanged(StyleInfo oldstyle, StyleInfo newstyle)
         {
             this.OnChanged(new StyleInfoCollectionChangedEventArgs(StyleInfoCollectionChangedAction.ItemChanged, oldstyle, newstyle));
         }
@@ -433,7 +433,7 @@ namespace Dt.Cells.Data
         /// <param name="style">
         /// Old StyleInfo object
         /// </param>
-        private void RaiseItemRemoved(StyleInfo style)
+        void RaiseItemRemoved(StyleInfo style)
         {
             this.OnChanged(new StyleInfoCollectionChangedEventArgs(StyleInfoCollectionChangedAction.ItemRemoved, style, null));
         }
@@ -724,7 +724,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private StyleInfo this[string name]
+        StyleInfo this[string name]
         {
             get
             {

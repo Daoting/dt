@@ -19,7 +19,7 @@ namespace Dt.Cells.Data
     /// </summary>
     internal static class HtmlEncoder
     {
-        private static string[] htmlCode;
+        static string[] htmlCode;
 
         static HtmlEncoder()
         {

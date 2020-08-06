@@ -15,8 +15,8 @@ namespace Dt.Cells.Data
 {
     internal class SwapVisitor : Dt.Cells.Data.ExpressionVisitor
     {
-        private int _colOffset;
-        private int _rowOffset;
+        int _colOffset;
+        int _rowOffset;
 
         public SwapVisitor(int rowOffset, int colOffset)
         {

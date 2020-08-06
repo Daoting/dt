@@ -24,12 +24,12 @@ namespace Dt.Cells.Data
     /// </summary>
     public class Sparkline : IXmlSerializable, IThemeContextSupport
     {
-        private string cachedFormula;
-        private ISparklineData data;
-        private Dt.Cells.Data.DataOrientation dataOrientation;
-        private CalcExpression dataReference;
-        private SparklineGroup group;
-        private bool isDataSet;
+        string cachedFormula;
+        ISparklineData data;
+        Dt.Cells.Data.DataOrientation dataOrientation;
+        CalcExpression dataReference;
+        SparklineGroup group;
+        bool isDataSet;
 
         /// <summary>
         /// Occurs when the sparkline has changed.
@@ -86,7 +86,7 @@ namespace Dt.Cells.Data
             return sparkline;
         }
 
-        private void data_DataChanged(object sender, EventArgs e)
+        void data_DataChanged(object sender, EventArgs e)
         {
             this.OnSparklineChanged();
         }

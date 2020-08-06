@@ -20,15 +20,15 @@ namespace Dt.Cells.Data
         /// <summary>
         /// The new style.
         /// </summary>
-        private StyleInfo newstyle;
+        StyleInfo newstyle;
         /// <summary>
         /// The old style.
         /// </summary>
-        private StyleInfo oldstyle;
+        StyleInfo oldstyle;
         /// <summary>
         /// Event Type.
         /// </summary>
-        private StyleInfoCollectionChangedAction type;
+        StyleInfoCollectionChangedAction type;
 
         /// <summary>
         /// Initializes a new NamedStyleCollectionEventArgs object with the specified type and styles.

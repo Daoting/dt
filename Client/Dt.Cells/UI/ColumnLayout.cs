@@ -64,7 +64,7 @@ namespace Dt.Cells.UI
         /// Returns true if the column represented by the <see cref="T:GrapeCity.Windows.SpreadSheet.UI.ColumnLayout" /> 
         /// intersects with the specified rectangle, otherwise, returns false.
         /// </returns>
-        public bool IntersectsWith(Windows.Foundation.Rect rect)
+        public bool IntersectsWith(Rect rect)
         {
             return (((Width > 0.0) && ((rect.X + rect.Width) > X)) && (rect.X < (X + Width)));
         }

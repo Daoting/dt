@@ -20,9 +20,9 @@ namespace Dt.Cells.Data
 {
     internal class SpreadCalcAxialManager : IRangeSupport, ICrossSheetRangeSupport
     {
-        private IFormulaOperatorSource _formulaOperatorSource;
-        private CalcCalculationManager _manager;
-        private int _suspendCount;
+        IFormulaOperatorSource _formulaOperatorSource;
+        CalcCalculationManager _manager;
+        int _suspendCount;
 
         public SpreadCalcAxialManager(Worksheet sheet, CalcCalculationManager manager, ICalcStorage<CalcLocalIdentity, CalcExpression> storage)
         {
@@ -79,7 +79,7 @@ namespace Dt.Cells.Data
             this.Save(src, fromRow, fromColumn, toRow, toColumn, fromRowCount, fromColumnCount, toRowCount, toColumnCount, formulas, false, false);
         }
 
-        private Dictionary<CalcLocalIdentity, CalcExpression> GetFormulaIds(int fromRow, int fromColumn, int rowCount, int columnCount, CalcCalculationManager sourceMgr, ChangingContext context, bool clearSource)
+        Dictionary<CalcLocalIdentity, CalcExpression> GetFormulaIds(int fromRow, int fromColumn, int rowCount, int columnCount, CalcCalculationManager sourceMgr, ChangingContext context, bool clearSource)
         {
             CalcLocalIdentity id = FormulaOperatorHelper.Indexs2Identity(fromRow, fromColumn, (fromRow + rowCount) - 1, (fromColumn + columnCount) - 1);
             Dictionary<CalcLocalIdentity, CalcExpression> allContainsIds = FormulaOperatorHelper.GetAllContainsIds(sourceMgr, id);
@@ -145,7 +145,7 @@ namespace Dt.Cells.Data
             FormulaClipboardHelper.Save(sourceMgr, this.Manager, context, sourceRowCount, sourceColumnCount, fromRow, fromColumn, toRow, toColumn, rowCount, columnCount, rowCount, columnCount, formulas, true, true);
         }
 
-        private static CalcLocalIdentity Offset(CalcLocalIdentity id, int rowOffset, int colOffset)
+        static CalcLocalIdentity Offset(CalcLocalIdentity id, int rowOffset, int colOffset)
         {
             CalcCellIdentity cellIdentity = id as CalcCellIdentity;
             CalcRangeIdentity range = id as CalcRangeIdentity;
@@ -383,7 +383,7 @@ namespace Dt.Cells.Data
 
         public ICalcStorage<CalcLocalIdentity, CalcExpression> Storage { get; set; }
 
-        private bool Suspended
+        bool Suspended
         {
             get { return  (this._suspendCount > 0); }
         }

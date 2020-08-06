@@ -55,83 +55,85 @@ namespace Dt.Cells.UI
         RowsPanel _rowsContainer;
         SelectionContainerPanel _selectionContainer;
         Panel _shapeContainer;
-        protected SheetArea _sheetArea;
-        bool _supportShapes;
         DecorationPanel _decoratinPanel;
 
         public GcViewport(SheetView sheet)
-            : this(sheet, SheetArea.Cells, true)
+            : this(sheet, SheetArea.Cells)
         {
             HorizontalAlignment = HorizontalAlignment.Left;
             VerticalAlignment = VerticalAlignment.Top;
             Loaded += GcViewport_Loaded;
         }
 
-        public GcViewport(SheetView sheet, SheetArea sheetArea, bool supportShapes)
+        public GcViewport(SheetView sheet, SheetArea sheetArea)
         {
+            SheetArea = sheetArea;
+            Sheet = sheet;
+
             _cachedSelectionLayout = new List<Rect>();
             _cachedActiveSelectionLayout = Rect.Empty;
             _cachedSelectionFrameLayout = new Rect();
             _cachedFocusCellLayout = new Rect();
-            _supportShapes = true;
             _editorBounds = new Rect();
             _recycledRows = new List<RowPresenter>();
             _cachedDragFillFrameRect = Rect.Empty;
             _cachedDragClearRect = Rect.Empty;
-            _sheetArea = sheetArea;
-            Sheet = sheet;
-            _supportShapes = supportShapes;
+            _cellCachePool = new CellCachePool(this);
+            _cachedSpanGraph = new SpanGraph();
 
+            // 左上角内容完全自定义
+            if (SheetArea == SheetArea.CornerHeader)
+                return;
+
+            // 行数据层
             _rowsContainer = new RowsPanel { ParentViewport = this };
             Children.Add(_rowsContainer);
 
+            // 行/列头只有一层
+            if (SheetArea != SheetArea.Cells)
+                return;
+
+            // 以下为Cells内容区域
+
+            // 网格层，调整为只用在内容区域，行/列头不再使用
             _borderContainer = new GcBorders(this);
             Children.Add(_borderContainer);
 
-            if (SupportSelection)
-            {
-                _selectionContainer = new SelectionContainerPanel(this);
-                Children.Add(_selectionContainer);
-                _formulaSelectionContainer = new FormulaSelectionContainerPanel { ParentViewport = this };
-                Children.Add(_formulaSelectionContainer);
-            }
+            // 选择状态层
+            _selectionContainer = new SelectionContainerPanel(this);
+            Children.Add(_selectionContainer);
+            _formulaSelectionContainer = new FormulaSelectionContainerPanel { ParentViewport = this };
+            Children.Add(_formulaSelectionContainer);
 
-            if (supportShapes)
-            {
-                _shapeContainer = new Canvas();
-                Children.Add(_shapeContainer);
-            }
+            // 图形层
+            _shapeContainer = new Canvas();
+            Children.Add(_shapeContainer);
 
+            // 拖拽复制层
             if (Sheet.CanUserDragFill)
             {
                 _dragFillContainer = new DragFillContainerPanel { ParentViewport = this };
                 Children.Add(_dragFillContainer);
             }
 
-            if (SheetArea == SheetArea.Cells)
+            // hdt 新增修饰层
+            if (sheet.ShowDecoration)
             {
-                // hdt 新增修饰层
-                if (sheet.ShowDecoration)
-                {
-                    _decoratinPanel = new DecorationPanel(this);
-                    Children.Add(_decoratinPanel);
-                }
-
-                _dataValidationPanel = new DataValidationPanel(this);
-                Children.Add(_dataValidationPanel);
-
-                _editorPanel = new EditingPanel(this);
-                Children.Add(_editorPanel);
-
-                _floatingObjectContainerPanel = new FloatingObjectContainerPanel(this);
-                Children.Add(_floatingObjectContainerPanel);
-
-                _floatingObjectsMovingResizingContainer = new FloatingObjectMovingResizingContainerPanel(this);
-                Children.Add(_floatingObjectsMovingResizingContainer);
+                _decoratinPanel = new DecorationPanel(this);
+                Children.Add(_decoratinPanel);
             }
 
-            _cellCachePool = new CellCachePool(this);
-            _cachedSpanGraph = new SpanGraph();
+            _dataValidationPanel = new DataValidationPanel(this);
+            Children.Add(_dataValidationPanel);
+
+            _editorPanel = new EditingPanel(this);
+            Children.Add(_editorPanel);
+
+            _floatingObjectContainerPanel = new FloatingObjectContainerPanel(this);
+            Children.Add(_floatingObjectContainerPanel);
+
+            _floatingObjectsMovingResizingContainer = new FloatingObjectMovingResizingContainerPanel(this);
+            Children.Add(_floatingObjectsMovingResizingContainer);
         }
 
         void _editorPanel_EdtingChanged(object sender, EventArgs e)
@@ -152,14 +154,14 @@ namespace Dt.Cells.UI
         void BuildSelection()
         {
             _cachedSelectionLayout.Clear();
-            SelectionContainer.FocusIndicator.Visibility = Visibility.Collapsed;
+            _selectionContainer.FocusIndicator.Visibility = Visibility.Collapsed;
             _cachedFocusCellLayout = Rect.Empty;
             _cachedSelectionFrameLayout = Rect.Empty;
             _cachedActiveSelectionLayout = Rect.Empty;
             _cachedActiveSelection = null;
             _activeRow = Sheet.Worksheet.ActiveRowIndex;
             _activeCol = Sheet.Worksheet.ActiveColumnIndex;
-            SelectionContainer.IsAnchorCellInSelection = false;
+            _selectionContainer.IsAnchorCellInSelection = false;
             CellRange activeCellRange = GetActiveCellRange();
             List<CellRange> list = new List<CellRange>((IEnumerable<CellRange>)Sheet.Worksheet.Selections);
             if (list.Count == 0)
@@ -184,7 +186,7 @@ namespace Dt.Cells.UI
                         CellRange range = list[i];
                         if (range.Contains(_activeRow, _activeCol))
                         {
-                            SelectionContainer.IsAnchorCellInSelection = true;
+                            _selectionContainer.IsAnchorCellInSelection = true;
                         }
                         int num7 = (range.Row < 0) ? 0 : range.Row;
                         int num8 = (range.Column < 0) ? 0 : range.Column;
@@ -231,7 +233,7 @@ namespace Dt.Cells.UI
                     if (num == 1)
                     {
                         CellRange range3 = list[0];
-                        if (!SelectionContainer.IsAnchorCellInSelection)
+                        if (!_selectionContainer.IsAnchorCellInSelection)
                         {
                             range3 = activeCellRange;
                         }
@@ -241,17 +243,17 @@ namespace Dt.Cells.UI
                         {
                             if ((range3.Row == -1) && (range3.Column == -1))
                             {
-                                SelectionContainer.FocusIndicator.Thickness = 1.0;
+                                _selectionContainer.FocusIndicator.Thickness = 1.0;
                                 _cachedSelectionFrameLayout = rect6;
                             }
-                            else if (!SelectionContainer.IsAnchorCellInSelection)
+                            else if (!_selectionContainer.IsAnchorCellInSelection)
                             {
-                                SelectionContainer.FocusIndicator.Thickness = 1.0;
+                                _selectionContainer.FocusIndicator.Thickness = 1.0;
                                 _cachedSelectionFrameLayout = new Rect(rect6.Left, rect6.Top, rect6.Width, rect6.Height);
                             }
                             else
                             {
-                                SelectionContainer.FocusIndicator.Thickness = 3.0;
+                                _selectionContainer.FocusIndicator.Thickness = 3.0;
                                 _cachedSelectionFrameLayout = rect6.IsEmpty ? rect6 : new Rect(rect6.Left - 2.0, rect6.Top - 2.0, rect6.Width + 3.0, rect6.Height + 3.0);
                             }
                             if (!Sheet.IsDraggingFill)
@@ -260,54 +262,54 @@ namespace Dt.Cells.UI
                                 {
                                     if (range3.Row == -1)
                                     {
-                                        SelectionContainer.FocusIndicator.IsTopVisible = row == 0;
-                                        SelectionContainer.FocusIndicator.IsBottomVisible = num3 == (Sheet.Worksheet.RowCount - 1);
+                                        _selectionContainer.FocusIndicator.IsTopVisible = row == 0;
+                                        _selectionContainer.FocusIndicator.IsBottomVisible = num3 == (Sheet.Worksheet.RowCount - 1);
                                     }
                                     else
                                     {
-                                        SelectionContainer.FocusIndicator.IsTopVisible = (range3.Row >= row) && (range3.Row <= num3);
+                                        _selectionContainer.FocusIndicator.IsTopVisible = (range3.Row >= row) && (range3.Row <= num3);
                                         int num11 = (range3.Row + range3.RowCount) - 1;
-                                        SelectionContainer.FocusIndicator.IsBottomVisible = (num11 >= row) && (num11 <= num3);
+                                        _selectionContainer.FocusIndicator.IsBottomVisible = (num11 >= row) && (num11 <= num3);
                                     }
                                     if (range3.Column == -1)
                                     {
-                                        SelectionContainer.FocusIndicator.IsLeftVisible = column == 0;
-                                        SelectionContainer.FocusIndicator.IsRightVisible = num5 == (Sheet.Worksheet.ColumnCount - 1);
+                                        _selectionContainer.FocusIndicator.IsLeftVisible = column == 0;
+                                        _selectionContainer.FocusIndicator.IsRightVisible = num5 == (Sheet.Worksheet.ColumnCount - 1);
                                     }
                                     else
                                     {
-                                        SelectionContainer.FocusIndicator.IsLeftVisible = (range3.Column >= column) && (range3.Column <= num5);
+                                        _selectionContainer.FocusIndicator.IsLeftVisible = (range3.Column >= column) && (range3.Column <= num5);
                                         int num12 = (range3.Column + range3.ColumnCount) - 1;
-                                        SelectionContainer.FocusIndicator.IsRightVisible = (num12 >= column) && (num12 <= num5);
+                                        _selectionContainer.FocusIndicator.IsRightVisible = (num12 >= column) && (num12 <= num5);
                                     }
                                 }
                                 else
                                 {
-                                    SelectionContainer.FocusIndicator.IsTopVisible = false;
-                                    SelectionContainer.FocusIndicator.IsBottomVisible = false;
-                                    SelectionContainer.FocusIndicator.IsLeftVisible = false;
-                                    SelectionContainer.FocusIndicator.IsRightVisible = false;
+                                    _selectionContainer.FocusIndicator.IsTopVisible = false;
+                                    _selectionContainer.FocusIndicator.IsBottomVisible = false;
+                                    _selectionContainer.FocusIndicator.IsLeftVisible = false;
+                                    _selectionContainer.FocusIndicator.IsRightVisible = false;
                                 }
                             }
                             if (Sheet.CanUserDragFill)
                             {
                                 if (!Sheet.IsDraggingFill)
                                 {
-                                    if (((rect6.Width == 0.0) || (rect6.Height == 0.0)) || (SelectionContainer.FocusIndicator.Thickness == 1.0))
+                                    if (((rect6.Width == 0.0) || (rect6.Height == 0.0)) || (_selectionContainer.FocusIndicator.Thickness == 1.0))
                                     {
-                                        SelectionContainer.FocusIndicator.IsFillIndicatorVisible = false;
+                                        _selectionContainer.FocusIndicator.IsFillIndicatorVisible = false;
                                     }
                                     else if ((range3.Row != -1) && (range3.Column != -1))
                                     {
-                                        bool flag = SelectionContainer.FocusIndicator.IsRightVisible && SelectionContainer.FocusIndicator.IsBottomVisible;
+                                        bool flag = _selectionContainer.FocusIndicator.IsRightVisible && _selectionContainer.FocusIndicator.IsBottomVisible;
                                         if (Sheet.InputDeviceType == InputDeviceType.Touch)
                                         {
                                             flag = false;
                                         }
-                                        SelectionContainer.FocusIndicator.IsFillIndicatorVisible = flag;
+                                        _selectionContainer.FocusIndicator.IsFillIndicatorVisible = flag;
                                         if (flag)
                                         {
-                                            SelectionContainer.FocusIndicator.FillIndicatorPosition = FillIndicatorPosition.BottomRight;
+                                            _selectionContainer.FocusIndicator.FillIndicatorPosition = FillIndicatorPosition.BottomRight;
                                         }
                                     }
                                     else if ((range3.Row != -1) && (range3.Column == -1))
@@ -322,15 +324,15 @@ namespace Dt.Cells.UI
                                         {
                                             flag2 = (ColumnViewportIndex == -1) || ((ColumnViewportIndex >= 1) && (ColumnViewportIndex < viewportInfo.ColumnViewportCount));
                                         }
-                                        flag2 = flag2 && SelectionContainer.FocusIndicator.IsBottomVisible;
+                                        flag2 = flag2 && _selectionContainer.FocusIndicator.IsBottomVisible;
                                         if (Sheet.InputDeviceType == InputDeviceType.Touch)
                                         {
                                             flag2 = false;
                                         }
-                                        SelectionContainer.FocusIndicator.IsFillIndicatorVisible = flag2;
+                                        _selectionContainer.FocusIndicator.IsFillIndicatorVisible = flag2;
                                         if (flag2)
                                         {
-                                            SelectionContainer.FocusIndicator.FillIndicatorPosition = FillIndicatorPosition.BottomLeft;
+                                            _selectionContainer.FocusIndicator.FillIndicatorPosition = FillIndicatorPosition.BottomLeft;
                                         }
                                     }
                                     else if ((range3.Column != -1) && (range3.Row == -1))
@@ -345,32 +347,32 @@ namespace Dt.Cells.UI
                                         {
                                             flag3 = (RowViewportIndex == -1) || ((RowViewportIndex >= 1) && (RowViewportIndex < info2.RowViewportCount));
                                         }
-                                        flag3 = flag3 && SelectionContainer.FocusIndicator.IsRightVisible;
+                                        flag3 = flag3 && _selectionContainer.FocusIndicator.IsRightVisible;
                                         if (Sheet.InputDeviceType == InputDeviceType.Touch)
                                         {
                                             flag3 = false;
                                         }
-                                        SelectionContainer.FocusIndicator.IsFillIndicatorVisible = flag3;
+                                        _selectionContainer.FocusIndicator.IsFillIndicatorVisible = flag3;
                                         if (flag3)
                                         {
-                                            SelectionContainer.FocusIndicator.FillIndicatorPosition = FillIndicatorPosition.TopRight;
+                                            _selectionContainer.FocusIndicator.FillIndicatorPosition = FillIndicatorPosition.TopRight;
                                         }
                                     }
                                     else
                                     {
-                                        SelectionContainer.FocusIndicator.IsFillIndicatorVisible = false;
+                                        _selectionContainer.FocusIndicator.IsFillIndicatorVisible = false;
                                     }
                                 }
                             }
                             else
                             {
-                                SelectionContainer.FocusIndicator.IsFillIndicatorVisible = false;
+                                _selectionContainer.FocusIndicator.IsFillIndicatorVisible = false;
                             }
-                            SelectionContainer.FocusIndicator.Visibility = Visibility.Visible;
+                            _selectionContainer.FocusIndicator.Visibility = Visibility.Visible;
                         }
                         else
                         {
-                            SelectionContainer.FocusIndicator.Visibility = Visibility.Collapsed;
+                            _selectionContainer.FocusIndicator.Visibility = Visibility.Collapsed;
                         }
                     }
                     else
@@ -378,8 +380,8 @@ namespace Dt.Cells.UI
                         Rect rect7 = GetRangeBounds(activeCellRange);
                         if (!rect7.IsEmpty)
                         {
-                            SelectionContainer.FocusIndicator.Thickness = 1.0;
-                            SelectionContainer.FocusIndicator.Visibility = Visibility.Visible;
+                            _selectionContainer.FocusIndicator.Thickness = 1.0;
+                            _selectionContainer.FocusIndicator.Visibility = Visibility.Visible;
                             _cachedSelectionFrameLayout = rect7;
                             _cachedSelectionFrameLayout.Width = Math.Max((double)0.0, (double)(_cachedSelectionFrameLayout.Width - 1.0));
                             _cachedSelectionFrameLayout.Height = Math.Max((double)0.0, (double)(_cachedSelectionFrameLayout.Height - 1.0));
@@ -417,20 +419,20 @@ namespace Dt.Cells.UI
                         }
                         else
                         {
-                            SelectionContainer.FocusIndicator.Visibility = Visibility.Collapsed;
+                            _selectionContainer.FocusIndicator.Visibility = Visibility.Collapsed;
                         }
-                        SelectionContainer.FocusIndicator.IsBottomVisible = true;
-                        SelectionContainer.FocusIndicator.IsTopVisible = true;
-                        SelectionContainer.FocusIndicator.IsLeftVisible = true;
-                        SelectionContainer.FocusIndicator.IsRightVisible = true;
-                        SelectionContainer.FocusIndicator.IsFillIndicatorVisible = false;
+                        _selectionContainer.FocusIndicator.IsBottomVisible = true;
+                        _selectionContainer.FocusIndicator.IsTopVisible = true;
+                        _selectionContainer.FocusIndicator.IsLeftVisible = true;
+                        _selectionContainer.FocusIndicator.IsRightVisible = true;
+                        _selectionContainer.FocusIndicator.IsFillIndicatorVisible = false;
                     }
                 }
             }
-            if (SelectionContainer.FocusIndicator != null)
+            if (_selectionContainer.FocusIndicator != null)
             {
-                SelectionContainer.FocusIndicator.InvalidateMeasure();
-                SelectionContainer.FocusIndicator.InvalidateArrange();
+                _selectionContainer.FocusIndicator.InvalidateMeasure();
+                _selectionContainer.FocusIndicator.InvalidateArrange();
             }
         }
 
@@ -468,7 +470,7 @@ namespace Dt.Cells.UI
                         double num4 = (viewportSize.Width - rect2.Left) + Location.X;
                         num4 = Math.Max(Math.Min(num4, viewportSize.Width), 0.0);
                         Size maxSize = new Size(num4, height);
-                        return new Rect(PointToClient(new Windows.Foundation.Point(x, rect2.Y)), base2.GetPreferredEditorSize(maxSize, cellContentSize, alignment, indent));
+                        return new Rect(PointToClient(new Point(x, rect2.Y)), base2.GetPreferredEditorSize(maxSize, cellContentSize, alignment, indent));
                     }
                 case HorizontalAlignment.Right:
                     {
@@ -477,7 +479,7 @@ namespace Dt.Cells.UI
                         num6 = Math.Max(Math.Min(num6, viewportSize.Width), 0.0);
                         Size size4 = new Size(num6, height);
                         Size size = base2.GetPreferredEditorSize(size4, cellContentSize, alignment, num5);
-                        Windows.Foundation.Point point = new Windows.Foundation.Point(rect2.Right - size.Width, rect2.Top);
+                        Point point = new Point(rect2.Right - size.Width, rect2.Top);
                         return new Rect(PointToClient(point), size);
                     }
                 case HorizontalAlignment.Center:
@@ -499,10 +501,10 @@ namespace Dt.Cells.UI
                         {
                             x -= (size7.Width - rect2.Width) / 2.0;
                         }
-                        return new Rect(PointToClient(new Windows.Foundation.Point(x, rect2.Y)), size7);
+                        return new Rect(PointToClient(new Point(x, rect2.Y)), size7);
                     }
             }
-            Windows.Foundation.Point location = PointToClient(new Windows.Foundation.Point(rect2.X, rect2.Y));
+            Point location = PointToClient(new Point(rect2.X, rect2.Y));
             return new Rect(location, new Size(rect2.Width, rect2.Height));
         }
 
@@ -647,7 +649,7 @@ namespace Dt.Cells.UI
 
         internal Rect GetRangeBounds(CellRange range)
         {
-            return GetRangeBounds(range, _sheetArea);
+            return GetRangeBounds(range, SheetArea);
         }
 
         internal Rect GetRangeBounds(CellRange range, SheetArea area)
@@ -720,7 +722,7 @@ namespace Dt.Cells.UI
                 x = columnLayoutModel[0].X;
                 width = (columnLayoutModel[columnLayoutModel.Count - 1].X + columnLayoutModel[columnLayoutModel.Count - 1].Width) - x;
             }
-            return new Rect(PointToClient(new Windows.Foundation.Point(x, y)), new Size(width, height));
+            return new Rect(PointToClient(new Point(x, y)), new Size(width, height));
         }
 
         internal Rect GetRangeBounds(CellRange range, out bool isLeftVisible, out bool isRightVisible, out bool isTopVisible, out bool isBottomVisible)
@@ -787,7 +789,7 @@ namespace Dt.Cells.UI
             {
                 isBottomVisible = false;
             }
-            return new Rect(PointToClient(new Windows.Foundation.Point(x, y)), new Size(width, height));
+            return new Rect(PointToClient(new Point(x, y)), new Size(width, height));
         }
 
         internal virtual RowPresenter GetRow(int row)
@@ -868,7 +870,7 @@ namespace Dt.Cells.UI
 
         internal void InvalidateBordersMeasureState()
         {
-            BorderContainer.InvalidateMeasure();
+            _borderContainer?.InvalidateMeasure();
         }
 
         internal void InvalidateFloatingObjectMeasureState(FloatingObject floatingObject)
@@ -903,10 +905,7 @@ namespace Dt.Cells.UI
 
         internal void InvalidateSelectionMeasureState()
         {
-            if (SupportSelection)
-            {
-                SelectionContainer.InvalidateMeasure();
-            }
+            _selectionContainer?.InvalidateMeasure();
         }
 
         internal bool IsCurrentEditingCell(int row, int column)
@@ -923,9 +922,9 @@ namespace Dt.Cells.UI
             return ((_editorPanel != null) && (_editorPanel.Opacity == 1.0));
         }
 
-        public Windows.Foundation.Point PointToClient(Windows.Foundation.Point point)
+        public Point PointToClient(Point point)
         {
-            return new Windows.Foundation.Point(point.X - Location.X, point.Y - Location.Y);
+            return new Point(point.X - Location.X, point.Y - Location.Y);
         }
 
         internal void PrepareCellEditing(CellPresenterBase editingCell)
@@ -1164,20 +1163,17 @@ namespace Dt.Cells.UI
 
         public void RefreshFormulaSelection()
         {
-            if (SupportSelection)
-            {
-                FormulaSelectionContainer.Refresh();
-            }
+            _formulaSelectionContainer?.Refresh();
         }
 
         public void RefreshSelection()
         {
-            if (SupportSelection)
+            if (_selectionContainer != null)
             {
                 FloatingObject[] allSelectedFloatingObjects = Sheet.GetAllSelectedFloatingObjects();
                 if ((allSelectedFloatingObjects != null) && (allSelectedFloatingObjects.Length > 0))
                 {
-                    SelectionContainer.Visibility = Visibility.Collapsed;
+                    _selectionContainer.Visibility = Visibility.Collapsed;
                     if (Sheet.InputDeviceType != InputDeviceType.Touch)
                     {
                         (Sheet as SpreadView).InvalidateMeasure();
@@ -1185,7 +1181,7 @@ namespace Dt.Cells.UI
                 }
                 else
                 {
-                    SelectionContainer.Visibility = Visibility.Visible;
+                    _selectionContainer.Visibility = Visibility.Visible;
                     BuildSelection();
                     InvalidateSelectionMeasureState();
                 }
@@ -1552,11 +1548,6 @@ namespace Dt.Cells.UI
             }
         }
 
-        protected Panel BorderContainer
-        {
-            get { return _borderContainer; }
-        }
-
         internal SpanGraph CachedSpanGraph
         {
             get { return _cachedSpanGraph; }
@@ -1634,7 +1625,7 @@ namespace Dt.Cells.UI
             get { return ((Sheet == null) || ((Sheet.GetActiveColumnViewportIndex() == ColumnViewportIndex) && (Sheet.GetActiveRowViewportIndex() == RowViewportIndex))); }
         }
 
-        public Windows.Foundation.Point Location { get; set; }
+        public Point Location { get; set; }
 
         internal virtual List<RowPresenter> RecycledRows
         {
@@ -1667,17 +1658,9 @@ namespace Dt.Cells.UI
 
         public SheetView Sheet { get; private set; }
 
-        internal SheetArea SheetArea
-        {
-            get { return _sheetArea; }
-        }
+        internal SheetArea SheetArea { get; }
 
         internal virtual bool SupportCellOverflow
-        {
-            get { return true; }
-        }
-
-        protected virtual bool SupportSelection
         {
             get { return true; }
         }

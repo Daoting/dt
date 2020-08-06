@@ -17,7 +17,7 @@ namespace Dt.Cells.Data
     /// </summary>
     internal abstract class GcMarginSection : GcAppendixSection, IGcSpecialSection
     {
-        private GcReport report;
+        GcReport report;
 
         protected GcMarginSection()
         {

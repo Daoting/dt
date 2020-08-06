@@ -14,8 +14,8 @@ namespace Dt.Cells.Data
 {
     internal class DummyScaleValue : IConditionalFormula
     {
-        private ScaleRule scaleRule;
-        private int valueIndex;
+        ScaleRule scaleRule;
+        int valueIndex;
 
         public DummyScaleValue(ScaleRule rule, int index)
         {

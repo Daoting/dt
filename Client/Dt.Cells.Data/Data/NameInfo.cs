@@ -18,10 +18,10 @@ namespace Dt.Cells.Data
     /// </summary>
     public class NameInfo
     {
-        private int baseColumn;
-        private int baseRow;
-        private CalcExpression expression;
-        private string name;
+        int baseColumn;
+        int baseRow;
+        CalcExpression expression;
+        string name;
 
         /// <summary>
         /// Constructs a new custom named expression.

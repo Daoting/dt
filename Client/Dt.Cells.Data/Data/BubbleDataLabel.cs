@@ -29,7 +29,7 @@ namespace Dt.Cells.Data
         {
         }
 
-        private SpreadBubbleSeries BubbleDataSeries
+        SpreadBubbleSeries BubbleDataSeries
         {
             get { return  (base.DataSeries as SpreadBubbleSeries); }
         }

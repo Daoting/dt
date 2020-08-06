@@ -25,63 +25,63 @@ namespace Dt.Cells.Data
         /// <summary>
         /// the column end index.
         /// </summary>
-        private int actualEndColumn;
+        int actualEndColumn;
         /// <summary>
         /// the row end index.
         /// </summary>
-        private int actualEndRow;
+        int actualEndRow;
         /// <summary>
         /// data model
         /// </summary>
-        private StorageBlock block;
+        StorageBlock block;
         /// <summary>
         /// the column end index.
         /// </summary>
-        private int columnEnd;
+        int columnEnd;
         /// <summary>
         /// the column start index.
         /// </summary>
-        private int columnStart;
+        int columnStart;
         /// <summary>
         /// the high priority values
         /// </summary>
-        private int currentColumn;
+        int currentColumn;
         /// <summary>
         /// the low priority values.
         /// </summary>
-        private int currentRow;
+        int currentRow;
         /// <summary>
         /// Indicate  whether actual end column is set 
         /// </summary>
-        private bool isActualEndColumnSet;
+        bool isActualEndColumnSet;
         /// <summary>
         /// Indicate  whether actual end row is set 
         /// </summary>
-        private bool isActualEndRowSet;
+        bool isActualEndRowSet;
         /// <summary>
         /// the option for enumerator
         /// </summary>
-        private EnumeratorOption options;
+        EnumeratorOption options;
         /// <summary>
         /// the row end index.
         /// </summary>
-        private int rowEnd;
+        int rowEnd;
         /// <summary>
         /// the row start index.
         /// </summary>
-        private int rowStart;
+        int rowStart;
         /// <summary>
         /// the search order.
         /// </summary>
-        private Dt.Cells.Data.SearchOrder searchOrder;
+        Dt.Cells.Data.SearchOrder searchOrder;
         /// <summary>
         /// the sheet area.
         /// </summary>
-        private Dt.Cells.Data.SheetArea sheetArea;
+        Dt.Cells.Data.SheetArea sheetArea;
         /// <summary>
         /// the sheet.
         /// </summary>
-        private Worksheet worksheet;
+        Worksheet worksheet;
 
         /// <summary>
         /// Creates a new cells enumerator.
@@ -148,7 +148,7 @@ namespace Dt.Cells.Data
             this.block = this.worksheet.GetStorage(this.sheetArea);
         }
 
-        private void Before(int r1, int c1, int r2, int c2, out int row, out int column)
+        void Before(int r1, int c1, int r2, int c2, out int row, out int column)
         {
             row = -1;
             column = -1;
@@ -214,7 +214,7 @@ namespace Dt.Cells.Data
             this.Reset();
         }
 
-        private int GetActualEndColumnZOrder(int row)
+        int GetActualEndColumnZOrder(int row)
         {
             if ((row < this.RowStart) || (row > this.RowEnd))
             {
@@ -234,7 +234,7 @@ namespace Dt.Cells.Data
             return (flag ? Math.Min(num, this.worksheet.GetColumnCount(this.sheetArea) - 1) : (this.worksheet.GetColumnCount(this.sheetArea) - 1));
         }
 
-        private int GetActualEndRowZOrder(int column)
+        int GetActualEndRowZOrder(int column)
         {
             if ((column < this.ColumnStart) || (column > this.ColumnEnd))
             {
@@ -254,7 +254,7 @@ namespace Dt.Cells.Data
             return (flag ? Math.Min(num, this.worksheet.GetRowCount(this.sheetArea) - 1) : (this.worksheet.GetRowCount(this.sheetArea) - 1));
         }
 
-        private int GetNextNonEmptyColumnInRow(StorageBlock model, int row, int column)
+        int GetNextNonEmptyColumnInRow(StorageBlock model, int row, int column)
         {
             int num = (this.SearchOrder == Dt.Cells.Data.SearchOrder.ZOrder) ? this.GetActualEndColumnZOrder(row) : this.ActualEndColumn;
             for (int i = column; i <= num; i++)
@@ -270,18 +270,18 @@ namespace Dt.Cells.Data
         /// <summary>
         /// Init this instance.
         /// </summary>
-        private void Init()
+        void Init()
         {
             this.currentRow = -1;
             this.currentColumn = -1;
         }
 
-        private bool IsIndexAcceptable(int row, int column)
+        bool IsIndexAcceptable(int row, int column)
         {
             return (((((this.options & EnumeratorOption.HasValue) > EnumeratorOption.All) && (this.block != null)) && ((this.block.GetValue(row, column) != null) || (this.block.GetTag(row, column) != null))) || (((((this.options & EnumeratorOption.HasStyle) > EnumeratorOption.All) && (this.block != null)) && (this.block.GetStyle(row, column) != null)) || (this.options == EnumeratorOption.All)));
         }
 
-        private bool IsNOrderOver(int row, int column)
+        bool IsNOrderOver(int row, int column)
         {
             if (this.IsBlockRange)
             {
@@ -306,7 +306,7 @@ namespace Dt.Cells.Data
             return true;
         }
 
-        private bool IsZOrderOver(int row, int column)
+        bool IsZOrderOver(int row, int column)
         {
             if (this.IsBlockRange)
             {
@@ -363,7 +363,7 @@ namespace Dt.Cells.Data
             return false;
         }
 
-        private bool Next(ref int row, ref int column)
+        bool Next(ref int row, ref int column)
         {
             if (this.SearchOrder == Dt.Cells.Data.SearchOrder.ZOrder)
             {
@@ -414,7 +414,7 @@ namespace Dt.Cells.Data
             return this.IsNOrderOver(row, column);
         }
 
-        private bool NextNOrder(StorageBlock model, ref int row, ref int column)
+        bool NextNOrder(StorageBlock model, ref int row, ref int column)
         {
             if (model != null)
             {
@@ -486,7 +486,7 @@ namespace Dt.Cells.Data
             return false;
         }
 
-        private bool NextStyle(ref int row, ref int column)
+        bool NextStyle(ref int row, ref int column)
         {
             if ((this.block != null) && (this.SearchOrder == Dt.Cells.Data.SearchOrder.ZOrder))
             {
@@ -506,7 +506,7 @@ namespace Dt.Cells.Data
             return false;
         }
 
-        private bool NextValue(ref int row, ref int column)
+        bool NextValue(ref int row, ref int column)
         {
             if ((this.block != null) && (this.searchOrder == Dt.Cells.Data.SearchOrder.ZOrder))
             {
@@ -526,7 +526,7 @@ namespace Dt.Cells.Data
             return false;
         }
 
-        private bool NextZOrder(StorageBlock model, ref int row, ref int column)
+        bool NextZOrder(StorageBlock model, ref int row, ref int column)
         {
             if (model != null)
             {
@@ -625,7 +625,7 @@ namespace Dt.Cells.Data
         /// Tries the move next.
         /// </summary>
         /// <returns></returns>
-        private bool TryMoveNext()
+        bool TryMoveNext()
         {
             int currentRow = this.currentRow;
             int currentColumn = this.currentColumn;
@@ -727,7 +727,7 @@ namespace Dt.Cells.Data
         /// Gets the actual end column.
         /// </summary>
         /// <value>The actual end column.</value>
-        private int ActualEndColumn
+        int ActualEndColumn
         {
             get
             {
@@ -753,7 +753,7 @@ namespace Dt.Cells.Data
         /// Gets the actual end row.
         /// </summary>
         /// <value>The actual end row.</value>
-        private int ActualEndRow
+        int ActualEndRow
         {
             get
             {

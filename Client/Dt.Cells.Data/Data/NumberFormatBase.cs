@@ -25,11 +25,11 @@ namespace Dt.Cells.Data
         /// <summary>
         /// the culture for date time and number format.
         /// </summary>
-        private CultureInfo culture;
+        CultureInfo culture;
         /// <summary>
         /// the date time format info.
         /// </summary>
-        private System.Globalization.DateTimeFormatInfo dateTimeFormatInfo;
+        System.Globalization.DateTimeFormatInfo dateTimeFormatInfo;
         /// <summary>
         /// the general format.
         /// </summary>
@@ -37,19 +37,19 @@ namespace Dt.Cells.Data
         /// <summary>
         /// the number format info.
         /// </summary>
-        private System.Globalization.NumberFormatInfo numberFormatInfo;
+        System.Globalization.NumberFormatInfo numberFormatInfo;
         /// <summary>
         /// the number string Converter.
         /// </summary>
-        private INumberStringConverter numberStringConverter;
+        INumberStringConverter numberStringConverter;
         /// <summary>
         /// DBNum part.
         /// </summary>
-        private object partDbNumberFormat;
+        object partDbNumberFormat;
         /// <summary>
         /// the part locale id.
         /// </summary>
-        private object partLocaleID;
+        object partLocaleID;
 
         /// <summary>
         /// Creates a new number format with the specified locale and db number formats.
@@ -136,7 +136,7 @@ namespace Dt.Cells.Data
         /// <returns>
         /// <c>true</c> if the specified string is transform; otherwise, <c>false</c>.
         /// </returns>
-        private static bool IsTransform(string str, int currentpos)
+        static bool IsTransform(string str, int currentpos)
         {
             if (str[currentpos] == '\\')
             {

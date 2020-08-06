@@ -20,9 +20,9 @@ namespace Dt.Cells.Data
     /// </summary>
     public sealed class RelationCondition : ConditionBase
     {
-        private RelationCompareType compareType;
-        private ConditionBase item1;
-        private ConditionBase item2;
+        RelationCompareType compareType;
+        ConditionBase item1;
+        ConditionBase item2;
 
         /// <summary>
         /// Creates a new relation condition.

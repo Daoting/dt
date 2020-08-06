@@ -21,25 +21,25 @@ namespace Dt.Cells.Data
     /// </summary>
     public class PdfExportSettings
     {
-        private string author;
-        private bool centerWindow;
-        private string creator;
-        private Dt.Cells.Data.DestinationType destinationType;
-        private bool displayDocTitle;
-        private readonly List<DocumentAttachment> documentAttachments = new List<DocumentAttachment>();
-        private bool fitWindow;
-        private bool hideMenubar;
-        private bool hideToolbar;
-        private bool hideWindowUI;
-        private string keywords;
-        private int openPageNumber = 1;
-        private Dt.Pdf.Object.OpenType openType;
-        private int pageDuration = -1;
-        private PageLayoutType pageLayout;
-        private PageTransitionType pageTransition;
-        private readonly Dt.Cells.Data.PrintPreset printPreset = new Dt.Cells.Data.PrintPreset();
-        private string subject;
-        private string title;
+        string author;
+        bool centerWindow;
+        string creator;
+        Dt.Cells.Data.DestinationType destinationType;
+        bool displayDocTitle;
+        readonly List<DocumentAttachment> documentAttachments = new List<DocumentAttachment>();
+        bool fitWindow;
+        bool hideMenubar;
+        bool hideToolbar;
+        bool hideWindowUI;
+        string keywords;
+        int openPageNumber = 1;
+        Dt.Pdf.Object.OpenType openType;
+        int pageDuration = -1;
+        PageLayoutType pageLayout;
+        PageTransitionType pageTransition;
+        readonly Dt.Cells.Data.PrintPreset printPreset = new Dt.Cells.Data.PrintPreset();
+        string subject;
+        string title;
 
         /// <summary>
         /// Appends to PdfDocument.

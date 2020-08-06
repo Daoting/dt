@@ -28,15 +28,15 @@ namespace Dt.Cells.Data
         /// <summary>
         /// color name.
         /// </summary>
-        private string colorName;
+        string colorName;
         /// <summary>
         /// the fore color.
         /// </summary>
-        private Windows.UI.Color foreColor;
+        Windows.UI.Color foreColor;
         /// <summary>
         /// the color index.
         /// </summary>
-        private int index;
+        int index;
 
         /// <summary>
         /// Creates a new color format.

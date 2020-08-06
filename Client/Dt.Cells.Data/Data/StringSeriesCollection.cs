@@ -18,7 +18,7 @@ namespace Dt.Cells.Data
     /// </summary>
     public sealed class StringSeriesCollection : SeriesDataCollection<string>
     {
-        private IFormatter _formatter;
+        IFormatter _formatter;
 
         /// <summary>
         /// Converts the value.

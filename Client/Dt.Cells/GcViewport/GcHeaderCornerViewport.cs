@@ -9,6 +9,7 @@
 #region 引用命名
 using Dt.Cells.Data;
 using System;
+using Windows.Foundation;
 using Windows.UI.Xaml;
 #endregion
 
@@ -18,24 +19,28 @@ namespace Dt.Cells.UI
     {
         RowPresenter _cornerRow;
 
-        public GcHeaderCornerViewport(SheetView sheet) : base(sheet, SheetArea.CornerHeader, false)
+        public GcHeaderCornerViewport(SheetView sheet) : base(sheet, SheetArea.CornerHeader)
         {
-            base._sheetArea = SheetArea.CornerHeader;
             _cornerRow = new HeaderCornerRowPresenter(this);
-            base.Children.Clear();
-            base.Children.Add(_cornerRow);
-            base.HorizontalAlignment = HorizontalAlignment.Right;
-            base.VerticalAlignment = VerticalAlignment.Bottom;
+            Children.Add(_cornerRow);
+            HorizontalAlignment = HorizontalAlignment.Right;
+            VerticalAlignment = VerticalAlignment.Bottom;
         }
 
-        protected override Windows.Foundation.Size ArrangeOverride(Windows.Foundation.Size finalSize)
+        protected override Size MeasureOverride(Size availableSize)
+        {
+            _cornerRow.Measure(availableSize);
+            return GetViewportSize(availableSize);
+        }
+
+        protected override Size ArrangeOverride(Size finalSize)
         {
             GetRowLayoutModel();
-            double y = base.Location.Y;
-            double x = base.Location.X;
+            double y = Location.Y;
+            double x = Location.X;
             double width = finalSize.Width;
             double height = finalSize.Height;
-            _cornerRow.Arrange(new Windows.Foundation.Rect(base.PointToClient(new Windows.Foundation.Point(x, y)), new Windows.Foundation.Size(width, height)));
+            _cornerRow.Arrange(new Rect(PointToClient(new Point(x, y)), new Size(width, height)));
             return finalSize;
         }
 
@@ -49,26 +54,15 @@ namespace Dt.Cells.UI
             return null;
         }
 
-        internal override Windows.Foundation.Size GetViewportSize(Windows.Foundation.Size availableSize)
+        internal override Size GetViewportSize(Size availableSize)
         {
-            double headerWidth = base.Sheet.GetSheetLayout().HeaderWidth;
-            double headerHeight = base.Sheet.GetSheetLayout().HeaderHeight;
+            double headerWidth = Sheet.GetSheetLayout().HeaderWidth;
+            double headerHeight = Sheet.GetSheetLayout().HeaderHeight;
             headerWidth = Math.Min(headerWidth, availableSize.Width);
-            return new Windows.Foundation.Size(headerWidth, Math.Min(headerHeight, availableSize.Height));
-        }
-
-        protected override Windows.Foundation.Size MeasureOverride(Windows.Foundation.Size availableSize)
-        {
-            _cornerRow.Measure(availableSize);
-            return GetViewportSize(availableSize);
+            return new Size(headerWidth, Math.Min(headerHeight, availableSize.Height));
         }
 
         internal override bool SupportCellOverflow
-        {
-            get { return  false; }
-        }
-
-        protected override bool SupportSelection
         {
             get { return  false; }
         }

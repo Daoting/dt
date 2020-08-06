@@ -16,17 +16,17 @@ namespace Dt.Cells.Data
 {
     internal class WorksheetConditionalGraph : ConditionalGraph
     {
-        private Dictionary<CellValueRule, List<DummyCellValue>> cellValues = new Dictionary<CellValueRule, List<DummyCellValue>>();
-        private Dictionary<IconSetRule, List<DummyIconSetValue>> iconValues = new Dictionary<IconSetRule, List<DummyIconSetValue>>();
-        private Dictionary<ScaleRule, List<DummyScaleValue>> scaleRules = new Dictionary<ScaleRule, List<DummyScaleValue>>();
-        private Worksheet worksheet;
+        Dictionary<CellValueRule, List<DummyCellValue>> cellValues = new Dictionary<CellValueRule, List<DummyCellValue>>();
+        Dictionary<IconSetRule, List<DummyIconSetValue>> iconValues = new Dictionary<IconSetRule, List<DummyIconSetValue>>();
+        Dictionary<ScaleRule, List<DummyScaleValue>> scaleRules = new Dictionary<ScaleRule, List<DummyScaleValue>>();
+        Worksheet worksheet;
 
         public WorksheetConditionalGraph(Worksheet source)
         {
             this.worksheet = source;
         }
 
-        private void AddCellValueRuleCondtion(CellValueRule cellValueRule)
+        void AddCellValueRuleCondtion(CellValueRule cellValueRule)
         {
             if (cellValueRule != null)
             {
@@ -39,7 +39,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void AddConditionsByRange(CellRange[] ranges, params IConditionalFormula[] conditions)
+        void AddConditionsByRange(CellRange[] ranges, params IConditionalFormula[] conditions)
         {
             if (((ranges != null) && (ranges.Length != 0)) && ((conditions != null) && (conditions.Length != 0)))
             {
@@ -51,7 +51,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void AddIconSetRuleCondition(IconSetRule iconSetRule)
+        void AddIconSetRuleCondition(IconSetRule iconSetRule)
         {
             if (iconSetRule != null)
             {
@@ -105,7 +105,7 @@ namespace Dt.Cells.Data
             rule.ConditionChanged += new EventHandler<ConditionChangedEventArgs>(this.rule_ConditionChanged);
         }
 
-        private void AddScaleRuleCondition(ScaleRule scaleRule)
+        void AddScaleRuleCondition(ScaleRule scaleRule)
         {
             if (scaleRule != null)
             {
@@ -139,7 +139,7 @@ namespace Dt.Cells.Data
         {
         }
 
-        private void RemoveCellVauleRuleCondition(CellValueRule cellVauleRule)
+        void RemoveCellVauleRuleCondition(CellValueRule cellVauleRule)
         {
             if (this.cellValues.ContainsKey(cellVauleRule))
             {
@@ -147,7 +147,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void RemoveCondition(CellRange[] ranges, ConditionBase condition)
+        void RemoveCondition(CellRange[] ranges, ConditionBase condition)
         {
             if ((condition != null) && (ranges != null))
             {
@@ -164,7 +164,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void RemoveConditionsByRange(CellRange[] ranges, params IConditionalFormula[] conditions)
+        void RemoveConditionsByRange(CellRange[] ranges, params IConditionalFormula[] conditions)
         {
             if (((ranges != null) && (ranges.Length != 0)) && ((conditions != null) && (conditions.Length != 0)))
             {
@@ -176,7 +176,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void RemoveIconSetRuleCondition(IconSetRule iconSetRule)
+        void RemoveIconSetRuleCondition(IconSetRule iconSetRule)
         {
             if (this.iconValues.ContainsKey(iconSetRule))
             {
@@ -209,7 +209,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void RemoveScaleRuleCondition(ScaleRule scaleRule)
+        void RemoveScaleRuleCondition(ScaleRule scaleRule)
         {
             if (this.scaleRules.ContainsKey(scaleRule))
             {
@@ -217,7 +217,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void rule_ConditionChanged(object sender, ConditionChangedEventArgs e)
+        void rule_ConditionChanged(object sender, ConditionChangedEventArgs e)
         {
             FormattingRuleBase base2 = sender as FormattingRuleBase;
             if (base2 != null)

@@ -17,8 +17,8 @@ namespace Dt.Cells.Data
     /// </summary>
     public sealed class ScaleValue
     {
-        private ScaleValueType type;
-        private object value;
+        ScaleValueType type;
+        object value;
 
         /// <summary>
         /// Constructs a scale value with the specified type and value.

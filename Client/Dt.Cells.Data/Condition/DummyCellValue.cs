@@ -15,8 +15,8 @@ namespace Dt.Cells.Data
 {
     internal class DummyCellValue : IConditionalFormula
     {
-        private CellValueRule cellValueRule;
-        private int index;
+        CellValueRule cellValueRule;
+        int index;
 
         public DummyCellValue(CellValueRule cellValueRule, int index)
         {
@@ -41,7 +41,7 @@ namespace Dt.Cells.Data
             return list;
         }
 
-        private static string GetExpectedFormula(CellValueRule cellValueRule, int index)
+        static string GetExpectedFormula(CellValueRule cellValueRule, int index)
         {
             if ((cellValueRule != null) && (cellValueRule.Condition != null))
             {

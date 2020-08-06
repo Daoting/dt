@@ -22,18 +22,18 @@ namespace Dt.Cells.Data
     /// </summary>
     public sealed class Cell
     {
-        private bool _cacheStyleObject;
-        private Column _colobj;
-        private int _columnSpan;
-        private Row _rowobj;
-        private int rowSpan;
-        private SheetArea _sheetArea;
-        private StyleInfo _styleInfo;
-        private int _viewcolumn;
-        private int _viewcolumn2;
-        private int _viewrow;
-        private int _viewrow2;
-        private Worksheet _worksheet;
+        bool _cacheStyleObject;
+        Column _colobj;
+        int _columnSpan;
+        Row _rowobj;
+        int rowSpan;
+        SheetArea _sheetArea;
+        StyleInfo _styleInfo;
+        int _viewcolumn;
+        int _viewcolumn2;
+        int _viewrow;
+        int _viewrow2;
+        Worksheet _worksheet;
 
 
         internal Cell(Worksheet worksheet, int row, int column, SheetArea sheetArea)
@@ -58,7 +58,7 @@ namespace Dt.Cells.Data
             this._sheetArea = sheetArea;
         }
 
-        private Cell(int row, int column)
+        Cell(int row, int column)
         {
             this.rowSpan = 1;
             this._columnSpan = 1;
@@ -66,7 +66,7 @@ namespace Dt.Cells.Data
             this._viewcolumn = this._viewcolumn2 = column;
         }
 
-        private Cell(int row, int column, int row2, int column2)
+        Cell(int row, int column, int row2, int column2)
         {
             this.rowSpan = 1;
             this._columnSpan = 1;
@@ -1894,7 +1894,7 @@ namespace Dt.Cells.Data
             return cacheStyleObject;
         }
 
-        private static CellRange ConvertDataRefferenceToCellRange(CalcExpression dataRefference)
+        static CellRange ConvertDataRefferenceToCellRange(CalcExpression dataRefference)
         {
             CalcRangeExpression expression = dataRefference as CalcRangeExpression;
             if (expression != null)
@@ -1924,7 +1924,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="row"></param>
         /// <param name="column"></param>
-        private void GetActualStyleInfo(int row, int column)
+        void GetActualStyleInfo(int row, int column)
         {
             if (!this._cacheStyleObject || (this._styleInfo == null))
             {
@@ -1937,7 +1937,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="row"></param>
         /// <param name="column"></param>
-        private void GetStyleInfo(int row, int column)
+        void GetStyleInfo(int row, int column)
         {
             if (this._styleInfo == null)
             {
@@ -1959,7 +1959,7 @@ namespace Dt.Cells.Data
         /// <param name="viewrow"></param>
         /// <param name="viewcolumn"></param>
         /// <returns></returns>
-        private bool IsValidIndex(int viewrow, int viewcolumn)
+        bool IsValidIndex(int viewrow, int viewcolumn)
         {
             if (this._cacheStyleObject)
             {
@@ -2004,7 +2004,7 @@ namespace Dt.Cells.Data
             return true;
         }
 
-        private void RaisePropertyChanged(string propertyName)
+        void RaisePropertyChanged(string propertyName)
         {
             if (this._worksheet != null)
             {
@@ -2672,7 +2672,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="row"></param>
         /// <param name="column"></param>
-        private void SetStyleInfo(int row, int column)
+        void SetStyleInfo(int row, int column)
         {
             this._worksheet.SetStyleObject(row, column, this._sheetArea, this._styleInfo);
         }

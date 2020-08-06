@@ -19,7 +19,7 @@ namespace Dt.Cells.Data
     /// </summary>
     public sealed class TimeCondition : ConditionBase
     {
-        private DateCompareType compareType;
+        DateCompareType compareType;
 
         /// <summary>
         /// Creates a new time condition.
@@ -47,7 +47,7 @@ namespace Dt.Cells.Data
         /// <returns>
         /// <c>true</c> if the value satisfy the condition; otherwise, <c>false</c>.
         /// </returns>
-        private bool CheckCondition(object expectedValue, object actualValue)
+        bool CheckCondition(object expectedValue, object actualValue)
         {
             TimeSpan? nullable = null;
             if (actualValue is DateTime)
@@ -188,7 +188,7 @@ namespace Dt.Cells.Data
         /// <returns>
         /// <c>true</c> if the specified time value is after the other time; otherwise, <c>false</c>.
         /// </returns>
-        private bool IsAfter(TimeSpan expectedValue, TimeSpan value)
+        bool IsAfter(TimeSpan expectedValue, TimeSpan value)
         {
             return (value > expectedValue);
         }
@@ -201,7 +201,7 @@ namespace Dt.Cells.Data
         /// <returns>
         /// <c>true</c> if the specified time value is before the other time; otherwise, <c>false</c>.
         /// </returns>
-        private bool IsBefore(TimeSpan expectedValue, TimeSpan value)
+        bool IsBefore(TimeSpan expectedValue, TimeSpan value)
         {
             return (value < expectedValue);
         }
@@ -214,7 +214,7 @@ namespace Dt.Cells.Data
         /// <returns>
         /// <c>true</c> if the specified time equals the other; otherwise, <c>false</c>.
         /// </returns>
-        private bool IsEquals(TimeSpan expectedValue, TimeSpan value)
+        bool IsEquals(TimeSpan expectedValue, TimeSpan value)
         {
             return ((((expectedValue.Hours == value.Hours) && (expectedValue.Minutes == value.Minutes)) && (expectedValue.Seconds == value.Seconds)) && (expectedValue.Milliseconds == value.Milliseconds));
         }

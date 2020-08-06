@@ -32,7 +32,7 @@ namespace Dt.Cells.Data
         /// <summary>
         /// The suspend state
         /// </summary>
-        private WorkingState suspendState;
+        WorkingState suspendState;
 
         /// <summary>
         /// Occurs when the items list of the collection has changed or the collection is reset.

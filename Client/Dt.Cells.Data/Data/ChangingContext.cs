@@ -17,10 +17,10 @@ namespace Dt.Cells.Data
 {
     internal class ChangingContext
     {
-        private Dictionary<CalcLocalIdentity, Tuple<CalcLocalIdentity, CalcExpression>> _changedFormulas;
-        private Dictionary<CalcLocalIdentity, CalcLocalIdentity> _changingIdentities;
+        Dictionary<CalcLocalIdentity, Tuple<CalcLocalIdentity, CalcExpression>> _changedFormulas;
+        Dictionary<CalcLocalIdentity, CalcLocalIdentity> _changingIdentities;
         public Dictionary<IFormulaOperatorSource, Dictionary<CalcLocalIdentity, Tuple<CalcLocalIdentity, CalcExpression>>> _extChangedFormulas;
-        private Dictionary<IFormulaOperatorSource, Dictionary<CalcLocalIdentity, CalcLocalIdentity>> _invalidateIdentities;
+        Dictionary<IFormulaOperatorSource, Dictionary<CalcLocalIdentity, CalcLocalIdentity>> _invalidateIdentities;
 
         public void AddExtChangedFormula(IFormulaOperatorSource manager, CalcLocalIdentity id, CalcLocalIdentity oldId, CalcExpression expr)
         {

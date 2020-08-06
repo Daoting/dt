@@ -17,7 +17,7 @@ namespace Dt.Cells.Data
 {
     internal class SheetCellRangeMonitor
     {
-        private Dictionary<IFloatingObjectSheet, List<ISheetCellRangeMonitorSupport>> _cachedChangedRanges = new Dictionary<IFloatingObjectSheet, List<ISheetCellRangeMonitorSupport>>();
+        Dictionary<IFloatingObjectSheet, List<ISheetCellRangeMonitorSupport>> _cachedChangedRanges = new Dictionary<IFloatingObjectSheet, List<ISheetCellRangeMonitorSupport>>();
 
         public event EventHandler<SheetCellRangeSupporterAffectedEventArgs> SheetCellRangeSupporterAffected;
 
@@ -37,7 +37,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void EndMonitorSheet(IFloatingObjectSheet worksheet, ISheetCellRangeMonitorSupport sheetCellRangeSupporter)
+        void EndMonitorSheet(IFloatingObjectSheet worksheet, ISheetCellRangeMonitorSupport sheetCellRangeSupporter)
         {
             if ((worksheet != null) && this._cachedChangedRanges.ContainsKey(worksheet))
             {
@@ -51,7 +51,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void RaiseSheetCellRangeSupporterAffected(string property, ISheetCellRangeMonitorSupport[] affects)
+        void RaiseSheetCellRangeSupporterAffected(string property, ISheetCellRangeMonitorSupport[] affects)
         {
             if (this.SheetCellRangeSupporterAffected != null)
             {
@@ -59,7 +59,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void RangeChanged(object sender, MonitoringRangesChangedEventArgs e)
+        void RangeChanged(object sender, MonitoringRangesChangedEventArgs e)
         {
             if ((e.OldRanges != null) && (e.OldRanges.Length > 0))
             {
@@ -83,7 +83,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void Sheet_CellChanged(object sender, CellChangedEventArgs e)
+        void Sheet_CellChanged(object sender, CellChangedEventArgs e)
         {
             if (e.PropertyName == "Value")
             {
@@ -119,7 +119,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void StartMonitorSheet(IFloatingObjectSheet worksheet, ISheetCellRangeMonitorSupport sheetCellRangeSupporter)
+        void StartMonitorSheet(IFloatingObjectSheet worksheet, ISheetCellRangeMonitorSupport sheetCellRangeSupporter)
         {
             if ((worksheet != null) && !Enumerable.Contains<IFloatingObjectSheet>((IEnumerable<IFloatingObjectSheet>) this._cachedChangedRanges.Keys, worksheet))
             {

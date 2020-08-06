@@ -10,6 +10,7 @@
 using Dt.Cells.Data;
 using System;
 using System.Collections.Generic;
+using Windows.Foundation;
 #endregion
 
 namespace Dt.Cells.UI
@@ -18,10 +19,9 @@ namespace Dt.Cells.UI
     {
         List<RowPresenter> _recycledColHeaderRows;
 
-        public GcColumnHeaderViewport(SheetView sheet) : base(sheet, SheetArea.ColumnHeader, false)
+        public GcColumnHeaderViewport(SheetView sheet) : base(sheet, SheetArea.ColumnHeader)
         {
             _recycledColHeaderRows = new List<RowPresenter>();
-            base._sheetArea = SheetArea.ColumnHeader;
         }
 
         internal override RowPresenter GenerateNewRow()
@@ -49,13 +49,13 @@ namespace Dt.Cells.UI
             return base.Sheet.Worksheet.ColumnHeaderSpanModel;
         }
 
-        internal override Windows.Foundation.Size GetViewportSize(Windows.Foundation.Size availableSize)
+        internal override Size GetViewportSize(Size availableSize)
         {
             SheetLayout sheetLayout = base.Sheet.GetSheetLayout();
             double viewportWidth = sheetLayout.GetViewportWidth(base.ColumnViewportIndex);
             double headerHeight = sheetLayout.HeaderHeight;
             viewportWidth = Math.Min(viewportWidth, availableSize.Width);
-            return new Windows.Foundation.Size(viewportWidth, Math.Min(headerHeight, availableSize.Height));
+            return new Size(viewportWidth, Math.Min(headerHeight, availableSize.Height));
         }
 
         internal override List<RowPresenter> RecycledRows
@@ -71,11 +71,6 @@ namespace Dt.Cells.UI
         }
 
         internal override bool SupportCellOverflow
-        {
-            get { return  false; }
-        }
-
-        protected override bool SupportSelection
         {
             get { return  false; }
         }

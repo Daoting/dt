@@ -22,7 +22,7 @@ namespace Dt.Cells.Data
     /// </summary>
     internal sealed class AreaCondition : ConditionBase
     {
-        private const double Epsilon = 1E-10;
+        const double Epsilon = 1E-10;
 
         /// <summary>
         /// Creates a new number condition.
@@ -167,7 +167,7 @@ namespace Dt.Cells.Data
             return list.ToArray();
         }
 
-        private bool IsNumber(object value)
+        bool IsNumber(object value)
         {
             if (value == null)
             {
@@ -194,7 +194,7 @@ namespace Dt.Cells.Data
             base.Reset();
         }
 
-        private object TryValue(object obj)
+        object TryValue(object obj)
         {
             if (obj == null)
             {
@@ -232,7 +232,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <value>The expression list separator.</value>
         [DefaultValue('\0')]
-        private char ExpressionListSeparator
+        char ExpressionListSeparator
         {
             get { return  DefaultTokens.EndCharOfArray; }
         }

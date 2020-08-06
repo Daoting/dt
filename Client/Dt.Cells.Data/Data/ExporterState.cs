@@ -21,16 +21,16 @@ namespace Dt.Cells.Data
     /// </summary>
     internal class ExporterState
     {
-        private bool blackAndWhite;
-        private readonly List<BookmarkState> bookmarks = new List<BookmarkState>();
-        private readonly GcReportContext context;
-        private int currentHPageNumber;
-        private PdfPage currentPage;
-        private int currentPageNumber;
-        private int currentVPageNumber;
-        private System.DateTime dateTime = System.DateTime.Now;
-        private PdfPage firstPage;
-        private int pageCount;
+        bool blackAndWhite;
+        readonly List<BookmarkState> bookmarks = new List<BookmarkState>();
+        readonly GcReportContext context;
+        int currentHPageNumber;
+        PdfPage currentPage;
+        int currentPageNumber;
+        int currentVPageNumber;
+        System.DateTime dateTime = System.DateTime.Now;
+        PdfPage firstPage;
+        int pageCount;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.ExporterState" /> class.
@@ -157,9 +157,9 @@ namespace Dt.Cells.Data
 
         public class BookmarkState
         {
-            private Dt.Cells.Data.Bookmark bookmark;
-            private Windows.Foundation.Point location;
-            private PdfPage page;
+            Dt.Cells.Data.Bookmark bookmark;
+            Windows.Foundation.Point location;
+            PdfPage page;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.ExporterState.BookmarkState" /> class.

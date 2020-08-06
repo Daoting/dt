@@ -25,7 +25,7 @@ namespace Dt.Cells.Data
         /// <summary>
         /// the names.
         /// </summary>
-        private IDictionary<string, NameInfo> names = ((IDictionary<string, NameInfo>) new Dictionary<string, NameInfo>(new NameKeyComparer()));
+        IDictionary<string, NameInfo> names = ((IDictionary<string, NameInfo>) new Dictionary<string, NameInfo>(new NameKeyComparer()));
 
         internal event EventHandler<NameInfoCollectionChangedEventArgs> Changed;
 
@@ -131,7 +131,7 @@ namespace Dt.Cells.Data
             return Enumerable.ToArray<string>((IEnumerable<string>) this.names.Keys);
         }
 
-        private void RaiseNameInfoCollectionChanged(NameInfo nameInfo, NameInfoCollectionChangedAction action)
+        void RaiseNameInfoCollectionChanged(NameInfo nameInfo, NameInfoCollectionChangedAction action)
         {
             if (this.Changed != null)
             {
@@ -284,7 +284,7 @@ namespace Dt.Cells.Data
             set { throw new NotSupportedException(); }
         }
 
-        private class NameKeyComparer : IEqualityComparer<string>
+        class NameKeyComparer : IEqualityComparer<string>
         {
             public bool Equals(string x, string y)
             {

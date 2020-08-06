@@ -18,7 +18,7 @@ namespace Dt.Cells.Data
     /// </summary>
     public class OpenHighLowCloseDataLabel : DataLabel, IXYDataPoint, IDataPoint
     {
-        private SpreadOpenHighLowCloseSeries _openHighLowCloseSeries;
+        SpreadOpenHighLowCloseSeries _openHighLowCloseSeries;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.OpenHighLowCloseDataLabel" /> class.

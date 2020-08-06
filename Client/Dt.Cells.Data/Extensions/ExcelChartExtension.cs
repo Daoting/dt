@@ -157,7 +157,7 @@ namespace Dt.Cells.Data
             return true;
         }
 
-        private static int GenerateAxisId()
+        static int GenerateAxisId()
         {
             Random random = new Random();
             int num = 0;
@@ -319,7 +319,7 @@ namespace Dt.Cells.Data
             return Dt.Xls.Chart.LineDashType.None;
         }
 
-        private static List<IExcelTrendLine> GetExcelTrendLines(List<TrendLine> trenlines)
+        static List<IExcelTrendLine> GetExcelTrendLines(List<TrendLine> trenlines)
         {
             if ((trenlines == null) || (trenlines.Count == 0))
             {
@@ -427,7 +427,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="gradientBrush">The gradient brush.</param>
         /// <returns></returns>
-        private static double GetGradientFillAngle(GradientBrush gradientBrush)
+        static double GetGradientFillAngle(GradientBrush gradientBrush)
         {
             // uno
             //if (gradientBrush is LinearGradientBrush linearGradientBrush)
@@ -510,7 +510,7 @@ namespace Dt.Cells.Data
             return result;
         }
 
-        private static Axis GetPerpendiculaAxis(Axis axis)
+        static Axis GetPerpendiculaAxis(Axis axis)
         {
             SpreadChart chart = axis.Chart;
             if (chart != null)
@@ -527,7 +527,7 @@ namespace Dt.Cells.Data
             return null;
         }
 
-        private static object GetSolidFill(SolidFillFormat solidFill, Workbook workbook)
+        static object GetSolidFill(SolidFillFormat solidFill, Workbook workbook)
         {
             if (solidFill.Color.IsThemeColor)
             {
@@ -616,7 +616,7 @@ namespace Dt.Cells.Data
             return StrokeDashType.None;
         }
 
-        private static bool IsAreaChart(SpreadChartType chartType)
+        static bool IsAreaChart(SpreadChartType chartType)
         {
             if ((chartType != SpreadChartType.Area) && (chartType != SpreadChartType.AreaStacked))
             {
@@ -625,7 +625,7 @@ namespace Dt.Cells.Data
             return true;
         }
 
-        private static bool IsBarChart(SpreadChartType chartType)
+        static bool IsBarChart(SpreadChartType chartType)
         {
             if ((((chartType != SpreadChartType.ColumnClustered) && (chartType != SpreadChartType.ColumnStacked)) && ((chartType != SpreadChartType.ColumnStacked100pc) && (chartType != SpreadChartType.BarClustered))) && (chartType != SpreadChartType.BarStacked))
             {
@@ -634,12 +634,12 @@ namespace Dt.Cells.Data
             return true;
         }
 
-        private static bool IsBubbleChart(SpreadChartType chartType)
+        static bool IsBubbleChart(SpreadChartType chartType)
         {
             return (chartType == SpreadChartType.Bubble);
         }
 
-        private static bool IsDoughnutChart(SpreadChartType chartType)
+        static bool IsDoughnutChart(SpreadChartType chartType)
         {
             if (chartType != SpreadChartType.PieDoughnut)
             {
@@ -648,7 +648,7 @@ namespace Dt.Cells.Data
             return true;
         }
 
-        private static bool IsLineChart(SpreadChartType chartType)
+        static bool IsLineChart(SpreadChartType chartType)
         {
             if ((((chartType != SpreadChartType.Line) && (chartType != SpreadChartType.LineSmoothed)) && ((chartType != SpreadChartType.LineWithMarkersSmoothed) && (chartType != SpreadChartType.LineStacked))) && (((chartType != SpreadChartType.LineStacked100pc) && (chartType != SpreadChartType.LineStacked100pcWithMarkers)) && (chartType != SpreadChartType.LineStackedWithMarkers)))
             {
@@ -667,7 +667,7 @@ namespace Dt.Cells.Data
             return (((format != null) && (format.FillFormat != null)) && (format.FillFormat.FillFormatType == FillFormatType.NoFill));
         }
 
-        private static bool IsPieChart(SpreadChartType chartType)
+        static bool IsPieChart(SpreadChartType chartType)
         {
             if (chartType != SpreadChartType.Pie)
             {
@@ -676,7 +676,7 @@ namespace Dt.Cells.Data
             return true;
         }
 
-        private static bool IsRadarChart(SpreadChartType chartType)
+        static bool IsRadarChart(SpreadChartType chartType)
         {
             if ((chartType != SpreadChartType.Radar) && (chartType != SpreadChartType.RadarFilled))
             {
@@ -685,7 +685,7 @@ namespace Dt.Cells.Data
             return true;
         }
 
-        private static bool IsScatterChart(SpreadChartType chartType)
+        static bool IsScatterChart(SpreadChartType chartType)
         {
             if (((chartType != SpreadChartType.Scatter) && (chartType != SpreadChartType.ScatterLinesSmoothed)) && ((chartType != SpreadChartType.ScatterLinesSmoothedWithMarkers) && (chartType != SpreadChartType.ScatterLines)))
             {
@@ -701,7 +701,7 @@ namespace Dt.Cells.Data
             return transform.TransformPoint(point);
         }
 
-        private static void SetAxis(IExcelChartAxis axis, Workbook workbook, Axis result)
+        static void SetAxis(IExcelChartAxis axis, Workbook workbook, Axis result)
         {
             if (axis is IExcelChartCategoryAxis)
             {
@@ -1136,7 +1136,7 @@ namespace Dt.Cells.Data
             excelChart.AxisY = chart.AxisY.ToExcelChartAxis();
         }
 
-        private static void SetExcelAxis(Axis axis, IExcelChartAxis excelAxis)
+        static void SetExcelAxis(Axis axis, IExcelChartAxis excelAxis)
         {
             if (axis.Title != null)
             {
@@ -1291,7 +1291,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private static void SetExcelAxisTextFormat(IExcelChartAxis serAxis, Axis axis)
+        static void SetExcelAxisTextFormat(IExcelChartAxis serAxis, Axis axis)
         {
             serAxis.TextFormat = axis.TextFormat;
             if (((axis.LabelAngle >= -90.0) && (axis.LabelAngle <= 90.0)) && !axis.LabelAngle.IsZero())
@@ -1394,7 +1394,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private static void SetExcelBubbleChartSettings(SpreadChart chart, IExcelBubbleChart excelChart, IEnumerable<SpreadBubbleSeries> series)
+        static void SetExcelBubbleChartSettings(SpreadChart chart, IExcelBubbleChart excelChart, IEnumerable<SpreadBubbleSeries> series)
         {
             SetExcelChartBasicSettings(chart, excelChart);
             foreach (SpreadBubbleSeries series2 in series)
@@ -2048,7 +2048,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private static void SetSpreadXYDataSeries(SpreadXYDataSeries xyDataSeries, IExcelChartSeriesBase excelSeries, Workbook workbook)
+        static void SetSpreadXYDataSeries(SpreadXYDataSeries xyDataSeries, IExcelChartSeriesBase excelSeries, Workbook workbook)
         {
             SetDataSeries(xyDataSeries, excelSeries, workbook);
             if (excelSeries.CategoryAxisData != null)
@@ -2315,7 +2315,7 @@ namespace Dt.Cells.Data
             return excelChart;
         }
 
-        private static IExcelChartCategoryAxisData ToExcelCategoryAxisData(this Axis axis)
+        static IExcelChartCategoryAxisData ToExcelCategoryAxisData(this Axis axis)
         {
             if (axis == null)
             {
@@ -4086,27 +4086,27 @@ namespace Dt.Cells.Data
             return angle;
         }
 
-        private static Windows.Foundation.Point BottomLeft
+        static Windows.Foundation.Point BottomLeft
         {
             get { return new Windows.Foundation.Point(0.0, 1.0); }
         }
 
-        private static Windows.Foundation.Point BottomRight
+        static Windows.Foundation.Point BottomRight
         {
             get { return new Windows.Foundation.Point(1.0, 1.0); }
         }
 
-        private static Windows.Foundation.Point MiddleCenter
+        static Windows.Foundation.Point MiddleCenter
         {
             get { return new Windows.Foundation.Point(0.5, 0.5); }
         }
 
-        private static Windows.Foundation.Point TopLeft
+        static Windows.Foundation.Point TopLeft
         {
             get { return new Windows.Foundation.Point(0.0, 0.0); }
         }
 
-        private static Windows.Foundation.Point TopRight
+        static Windows.Foundation.Point TopRight
         {
             get { return new Windows.Foundation.Point(1.0, 0.0); }
         }

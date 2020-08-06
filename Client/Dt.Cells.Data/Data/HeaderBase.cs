@@ -22,19 +22,19 @@ namespace Dt.Cells.Data
         /// <summary>
         /// cells of sheet.
         /// </summary>
-        private Dt.Cells.Data.Cells cells;
+        Dt.Cells.Data.Cells cells;
         /// <summary>
         /// columns of sheet.
         /// </summary>
-        private Dt.Cells.Data.Columns columns;
+        Dt.Cells.Data.Columns columns;
         /// <summary>
         /// rows of sheet.
         /// </summary>
-        private Dt.Cells.Data.Rows rows;
+        Dt.Cells.Data.Rows rows;
         /// <summary>
         /// Sheet Owner
         /// </summary>
-        private Worksheet worksheet;
+        Worksheet worksheet;
 
         /// <summary>
         /// Occurs when a property value changes.

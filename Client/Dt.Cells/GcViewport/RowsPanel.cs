@@ -107,7 +107,7 @@ namespace Dt.Cells.UI
                         num7 = num7 % 0x7ffe;
                         Canvas.SetZIndex(element, num7);
                         _rows.Add(row, element);
-                        element.Location = new Windows.Foundation.Point(x, y);
+                        element.Location = new Point(x, y);
                         element.Measure(new Size(availableSize.Width, layout.Height));
                         y += layout.Height;
                         num5 = Math.Max(num5, element.DesiredSize.Width);
@@ -151,7 +151,7 @@ namespace Dt.Cells.UI
                     if (_rows.ContainsKey(layout.Row))
                     {
                         RowPresenter presenter = _rows[layout.Row];
-                        presenter.Arrange(new Rect(new Windows.Foundation.Point(0.0, y), new Size(width, height)));
+                        presenter.Arrange(new Rect(new Point(0.0, y), new Size(width, height)));
                         if (rowWidth == 0.0)
                         {
                             rowWidth = presenter.RowWidth;
@@ -163,7 +163,7 @@ namespace Dt.Cells.UI
             rowWidth = Math.Min(ParentViewport.GetViewportSize().Width, rowWidth);
             Size size = new Size(rowWidth, y);
             RectangleGeometry geometry = new RectangleGeometry();
-            geometry.Rect = new Rect(new Windows.Foundation.Point(0.0, 0.0), size);
+            geometry.Rect = new Rect(new Point(0.0, 0.0), size);
             base.Clip = geometry;
             return size;
         }

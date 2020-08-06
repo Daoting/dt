@@ -26,14 +26,14 @@ namespace Dt.Cells.Data
     /// </summary>
     public class SpreadChartTextElement : SpreadChartElement
     {
-        private Dt.Xls.Chart.RichText _richText;
-        private string _text;
-        private IExcelTextFormat _textFormat;
-        private string _textFormula;
-        private DataOrientation? _textOrientation;
-        private SheetCellRange _textRange;
-        private CalcExpression _textReference;
-        private StringSeriesCollection _textSeries;
+        Dt.Xls.Chart.RichText _richText;
+        string _text;
+        IExcelTextFormat _textFormat;
+        string _textFormula;
+        DataOrientation? _textOrientation;
+        SheetCellRange _textRange;
+        CalcExpression _textReference;
+        StringSeriesCollection _textSeries;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.SpreadChartTextElement" /> class.
@@ -168,7 +168,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void UpdateTextSeries()
+        void UpdateTextSeries()
         {
             if (this._textSeries.DataSeries != null)
             {
@@ -180,7 +180,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void UpdateTextStyle()
+        void UpdateTextStyle()
         {
             if (this.TextForamt != null)
             {
@@ -678,7 +678,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private CalcExpression TextReference
+        CalcExpression TextReference
         {
             get { return  this._textReference; }
             set
@@ -701,9 +701,9 @@ namespace Dt.Cells.Data
             }
         }
 
-        private class TextDataSeries : IDataSeries
+        class TextDataSeries : IDataSeries
         {
-            private SpreadChartTextElement _textElement;
+            SpreadChartTextElement _textElement;
 
             public TextDataSeries(SpreadChartTextElement textElement)
             {

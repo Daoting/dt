@@ -18,15 +18,15 @@ namespace Dt.Cells.Data
     /// </summary>
     public sealed class DataBarDrawingObject : DrawingObject
     {
-        private Windows.UI.Color axisColor;
-        private double axisLocation;
-        private Windows.UI.Color borderColor;
-        private BarDirection direction;
-        private Windows.UI.Color fillColor;
-        private bool isGradient;
-        private double scale;
-        private bool showBarOnly;
-        private bool showBorder;
+        Windows.UI.Color axisColor;
+        double axisLocation;
+        Windows.UI.Color borderColor;
+        BarDirection direction;
+        Windows.UI.Color fillColor;
+        bool isGradient;
+        double scale;
+        bool showBarOnly;
+        bool showBorder;
 
         /// <summary>
         /// Constructs a data bar object with the specified row index, column index, color, scale, and data bar or data bar and data.

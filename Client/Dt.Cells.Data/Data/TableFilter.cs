@@ -16,7 +16,7 @@ namespace Dt.Cells.Data
 {
     internal class TableFilter : HideRowFilter
     {
-        private SheetTable table;
+        SheetTable table;
 
         /// <summary>
         /// This method is reserved only for XML serialization, 

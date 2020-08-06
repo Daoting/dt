@@ -22,10 +22,10 @@ namespace Dt.Cells.Data
     /// </summary>
     public class DataMarker : SpreadChartElement, IDataPoint
     {
-        private SpreadDataSeries _dataSeries;
-        private Windows.Foundation.Size _markerSize;
-        private Dt.Cells.Data.MarkerType _markerType;
-        private int _pointIndex;
+        SpreadDataSeries _dataSeries;
+        Windows.Foundation.Size _markerSize;
+        Dt.Cells.Data.MarkerType _markerType;
+        int _pointIndex;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.DataMarker" /> class.
@@ -43,12 +43,12 @@ namespace Dt.Cells.Data
             this._pointIndex = pointIndex;
         }
 
-        private void FormatInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void FormatInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             base.NotifyChartChanged(e.PropertyName);
         }
 
-        private void Init()
+        void Init()
         {
             this._pointIndex = -1;
             this._dataSeries = null;

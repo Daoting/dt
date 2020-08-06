@@ -231,7 +231,7 @@ namespace Dt.Cells.Data
         {
             Windows.UI.Color _cachedColor = Colors.Transparent;
             List<double> _dashArray = new List<double>();
-            Windows.UI.Xaml.Shapes.Line _line = new Windows.UI.Xaml.Shapes.Line();
+            Line _line = new Line();
             SolidColorBrush _stroke;
             double _strokeDashOffset;
             double _strokeThickness = 1.0;
@@ -271,7 +271,7 @@ namespace Dt.Cells.Data
                 }
             }
 
-            internal Windows.UI.Xaml.Shapes.Line Element
+            internal Line Element
             {
                 get { return  _line; }
             }

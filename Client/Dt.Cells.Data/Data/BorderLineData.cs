@@ -19,15 +19,15 @@ namespace Dt.Cells.Data
     /// </summary>
     public sealed class BorderLineData
     {
-        private int _drawingThickness;
-        private DoubleCollection _farDash;
-        private int _farWidth;
-        private DoubleCollection _middleDash;
-        private int _middleWidth;
-        private DoubleCollection _nearDash;
-        private int _nearWidth;
-        private int _strokeDashOffset;
-        private int _weight;
+        int _drawingThickness;
+        DoubleCollection _farDash;
+        int _farWidth;
+        DoubleCollection _middleDash;
+        int _middleWidth;
+        DoubleCollection _nearDash;
+        int _nearWidth;
+        int _strokeDashOffset;
+        int _weight;
 
         internal BorderLineData(int weight, int widthFar, DoubleCollection dashFar, int widthMiddle, DoubleCollection dashMiddle, int widthNear, DoubleCollection dashNear)
         {

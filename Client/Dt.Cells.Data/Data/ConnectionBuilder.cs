@@ -38,7 +38,7 @@ namespace Dt.Cells.Data
             throw new NotSupportedException(ResourceStrings.DataBindingNullConnection);
         }
 
-        private static ConnectionBase[] SearchConnections()
+        static ConnectionBase[] SearchConnections()
         {
             List<ConnectionBase> list = new List<ConnectionBase>();
             if (ConnectionBase.externalConnectionTypes != null)

@@ -9,7 +9,6 @@
         <ResourceDictionary x:Key="Default">
             <SolidColorBrush x:Key="ProgressForegroundThemeBrush" Color="#80FFFFFF"></SolidColorBrush>
             <!--###################### Brushed Resources ####################-->
-            <Color x:Key="HeaderGridlineColor">#FFE0E0E0</Color>
 
             <!--for spread control color settings-->
             <SolidColorBrush x:Key="ControlBorderBrush" Color="#FFE0E0E0"/>
@@ -46,7 +45,6 @@
             <!--for ColumnHeaderCell color settings-->
             <SolidColorBrush x:Key="ColumnHeaderCellBackgroundBrush" Color="#FFF1F1F1"/>
             <SolidColorBrush x:Key="ColumnHeaderCellHighlighedBackgroundBrush" Color="#FFFFDA37"/>
-
             <SolidColorBrush x:Key="ColumnHeaderCellSelectedBackgroundBrush" Color="#FFFFDA37"/>
             <SolidColorBrush x:Key="ColumnHeaderCellHoverBackgroundBrush" Color="#FFFFFDC5"/>
 
@@ -208,86 +206,6 @@
         </Setter>
     </Style>
 
-    <!-- Default style for System.Windows.Controls.Primitives.RepeatButton -->
-    <Style TargetType="RepeatButton" x:Key="SLRepeatButton">
-        <Setter Property="Background" Value="#FF1F3B53" />
-        <Setter Property="Foreground" Value="#FF000000" />
-        <Setter Property="Padding" Value="3" />
-        <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="BorderBrush">
-            <Setter.Value>
-                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="#FFA3AEB9" Offset="0" />
-                    <GradientStop Color="#FF8399A9" Offset="0.375" />
-                    <GradientStop Color="#FF718597" Offset="0.375" />
-                    <GradientStop Color="#FF617584" Offset="1" />
-                </LinearGradientBrush>
-            </Setter.Value>
-        </Setter>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="RepeatButton">
-                    <Grid>
-                        <VisualStateManager.VisualStateGroups>
-                            <VisualStateGroup x:Name="CommonStates">
-                                <VisualState x:Name="Normal" />
-                                <VisualState x:Name="MouseOver">
-                                    <Storyboard>
-                                        <DoubleAnimation Duration="0" Storyboard.TargetName="BackgroundAnimation" Storyboard.TargetProperty="Opacity" To="1" />
-                                        <ColorAnimation Duration="0" Storyboard.TargetName="BackgroundGradient" Storyboard.TargetProperty="(Rectangle.Fill).(GradientBrush.GradientStops)[1].(GradientStop.Color)" To="#F2FFFFFF" />
-                                        <ColorAnimation Duration="0" Storyboard.TargetName="BackgroundGradient" Storyboard.TargetProperty="(Rectangle.Fill).(GradientBrush.GradientStops)[2].(GradientStop.Color)" To="#CCFFFFFF" />
-                                        <ColorAnimation Duration="0" Storyboard.TargetName="BackgroundGradient" Storyboard.TargetProperty="(Rectangle.Fill).(GradientBrush.GradientStops)[3].(GradientStop.Color)" To="#7FFFFFFF" />
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="Pressed">
-                                    <Storyboard>
-                                        <ColorAnimation Duration="0" Storyboard.TargetName="Background" Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)" To="#FF6DBDD1" />
-                                        <DoubleAnimation Duration="0" Storyboard.TargetName="BackgroundAnimation" Storyboard.TargetProperty="Opacity" To="1" />
-                                        <ColorAnimation Duration="0" Storyboard.TargetName="BackgroundGradient" Storyboard.TargetProperty="(Rectangle.Fill).(GradientBrush.GradientStops)[0].(GradientStop.Color)" To="#D8FFFFFF" />
-                                        <ColorAnimation Duration="0" Storyboard.TargetName="BackgroundGradient" Storyboard.TargetProperty="(Rectangle.Fill).(GradientBrush.GradientStops)[1].(GradientStop.Color)" To="#C6FFFFFF" />
-                                        <ColorAnimation Duration="0" Storyboard.TargetName="BackgroundGradient" Storyboard.TargetProperty="(Rectangle.Fill).(GradientBrush.GradientStops)[2].(GradientStop.Color)" To="#8CFFFFFF" />
-                                        <ColorAnimation Duration="0" Storyboard.TargetName="BackgroundGradient" Storyboard.TargetProperty="(Rectangle.Fill).(GradientBrush.GradientStops)[3].(GradientStop.Color)" To="#3FFFFFFF" />
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="Disabled">
-                                    <Storyboard>
-                                        <DoubleAnimation Duration="0" Storyboard.TargetName="DisabledVisualElement" Storyboard.TargetProperty="Opacity" To=".55" />
-                                    </Storyboard>
-                                </VisualState>
-                            </VisualStateGroup>
-                            <VisualStateGroup x:Name="FocusStates">
-                                <VisualState x:Name="Focused">
-                                    <Storyboard>
-                                        <DoubleAnimation Duration="0" Storyboard.TargetName="FocusVisualElement" Storyboard.TargetProperty="Opacity" To="1" />
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="Unfocused" />
-                            </VisualStateGroup>
-                        </VisualStateManager.VisualStateGroups>
-                        <Border x:Name="Background" CornerRadius="3" Background="White" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}">
-                            <Grid Background="{TemplateBinding Background}" Margin="1">
-                                <Border Opacity="0" x:Name="BackgroundAnimation" Background="#FF448DCA" />
-                                <Rectangle x:Name="BackgroundGradient">
-                                    <Rectangle.Fill>
-                                        <LinearGradientBrush StartPoint=".7,0" EndPoint=".7,1">
-                                            <GradientStop Color="#FFFFFFFF" Offset="0" />
-                                            <GradientStop Color="#F9FFFFFF" Offset="0.375" />
-                                            <GradientStop Color="#E5FFFFFF" Offset="0.625" />
-                                            <GradientStop Color="#C6FFFFFF" Offset="1" />
-                                        </LinearGradientBrush>
-                                    </Rectangle.Fill>
-                                </Rectangle>
-                            </Grid>
-                        </Border>
-                        <ContentPresenter x:Name="contentPresenter" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" />
-                        <Rectangle x:Name="DisabledVisualElement" RadiusX="3" RadiusY="3" Fill="#FFFFFFFF" Opacity="0" IsHitTestVisible="false" />
-                        <Rectangle x:Name="FocusVisualElement" RadiusX="2" RadiusY="2" Margin="1" Stroke="#FF6DBDD1" StrokeThickness="1" Opacity="0" IsHitTestVisible="false" />
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
     <!-- Default style for System.Windows.Controls.RadioButton -->
     <Style TargetType="RadioButton" x:Key="SLRadioButton">
         <Setter Property="Background" Value="#FF448DCA" />
@@ -370,8 +288,6 @@
 
     <!--###################### Main Control Style ####################-->
     <Style TargetType="dt:Excel">
-        <Setter Property="BorderBrush" Value="{StaticResource ControlBorderBrush}"/>
-        <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="Foreground" Value="{StaticResource ControlForegroundBrush}" />
         <Setter Property="Background" Value="{StaticResource ControlBackgroundBrush}" />
         <Setter Property="Template">
@@ -552,8 +468,6 @@
         </Setter>
     </Style>
 
-    <SolidColorBrush x:Key="HeaderGridlineBrush" Color="{StaticResource  HeaderGridlineColor}"/>
-
     <Style TargetType="local:CornerHeaderCellPresenter">
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="VerticalContentAlignment" Value="Stretch" />
@@ -561,33 +475,17 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:CornerHeaderCellPresenter">
-                    <Grid Margin="0">
-                        <Rectangle x:Name="NormalRectangle" Fill ="{StaticResource CornerHeaderCellBackgroundBrush}" />
-                        <Rectangle x:Name="SelectionRectangle" Opacity="0" Fill ="{StaticResource CornerHeaderCellSelectedBackgroundBrush}" />
-                        <Rectangle x:Name="HoverRectangle" Opacity="0" Fill ="{StaticResource CornerHeaderCellHoverBackgroundBrush}" />
-                        <Grid >
-                            <Grid >
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition/>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid   Grid.Row="1" Grid.Column="0"  Margin="{TemplateBinding Padding}" />
-                                <Path Data="M9,0 L9,9 L0,9 z" Grid.ColumnSpan="2" Grid.RowSpan="3" 
-                                      HorizontalAlignment="Right" 
-                                      VerticalAlignment="Bottom"
-                                      Margin="0,4,4,4" 
-                                      Stretch="Uniform" 
-                                      UseLayoutRounding="False" 
-                                      Fill="{StaticResource CornerHeaderCellGlyphBrush}"/>
-                                <Rectangle Grid.Column="1" Grid.RowSpan="3" x:Name="RightGridLine" Fill="{StaticResource HeaderGridlineBrush}" Width="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
-                                <Rectangle Grid.Row="2" Grid.ColumnSpan="2" x:Name="BottomGridLine"  Fill="{StaticResource HeaderGridlineBrush}" Height="1" HorizontalAlignment="Stretch" />
-                            </Grid>
-                        </Grid>
+                    <Grid BorderBrush="{StaticResource ControlBorderBrush}" BorderThickness="0,0,1,1">
+                        <Rectangle x:Name="NormalRectangle" Fill ="{StaticResource CornerHeaderCellBackgroundBrush}" IsHitTestVisible="False" />
+                        <Rectangle x:Name="SelectionRectangle" Opacity="0" Fill ="{StaticResource CornerHeaderCellSelectedBackgroundBrush}" IsHitTestVisible="False" />
+                        <Rectangle x:Name="HoverRectangle" Opacity="0" Fill ="{StaticResource CornerHeaderCellHoverBackgroundBrush}" IsHitTestVisible="False" />
+                        <Path Data="M9,0 L9,9 L0,9 z"
+                              HorizontalAlignment="Right"
+                              VerticalAlignment="Bottom"
+                              Margin="0,4,4,4" 
+                              Stretch="Uniform"
+                              Fill="{StaticResource CornerHeaderCellGlyphBrush}"
+                              IsHitTestVisible="False"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -602,14 +500,13 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:RowHeaderCellPresenter">
-                    <Grid >
+                    <Grid BorderBrush="{StaticResource ControlBorderBrush}" BorderThickness="0,0,1,1">
                         <Rectangle x:Name="NormalRectangle" Fill ="{StaticResource RowHeaderCellBackgroundBrush}" />
                         <local:CellBackgroundPanel x:Name="Root" Margin="-1,-1,0,0" >
                             <Grid Margin="1">
                                 <Rectangle x:Name="HighlightRectangle" Opacity="0" Margin="-1,-1,-1,-1" Fill ="{StaticResource RowHeaderCellHighlighedBackgroundBrush}" />
                                 <Rectangle x:Name="SelectionRectangle" Opacity="0"  Fill ="{StaticResource RowHeaderCellSelectedBackgroundBrush}" />
                                 <Rectangle x:Name="HoverRectangle" Opacity="0" Fill ="{StaticResource RowHeaderCellHoverBackgroundBrush}" />
-                                <TextBlock x:Name="DisplayTextBlock" Opacity="0" />
                             </Grid>
                         </local:CellBackgroundPanel>
                     </Grid>
@@ -626,14 +523,13 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:ColumnHeaderCellPresenter">
-                    <Grid >
+                    <Grid BorderBrush="{StaticResource ControlBorderBrush}" BorderThickness="0,0,1,1">
                         <Rectangle x:Name="NormalRectangle" Fill="{StaticResource ColumnHeaderCellBackgroundBrush}" />
                         <local:CellBackgroundPanel x:Name="Root" Margin="-1,-1,0,0">
                             <Grid Margin="1">
                                 <Rectangle x:Name="HighlightRectangle" Margin="-1,-1,-1,-1" Fill="{StaticResource ColumnHeaderCellHighlighedBackgroundBrush}"/>
                                 <Rectangle x:Name="SelectionRectangle" Opacity="0" Fill ="{StaticResource ColumnHeaderCellSelectedBackgroundBrush}" />
                                 <Rectangle x:Name="HoverRectangle" Opacity="0"  Fill="{StaticResource ColumnHeaderCellHoverBackgroundBrush}"/>
-                                <TextBlock x:Name="DisplayTextBlock" Opacity="0" />
                             </Grid>
                         </local:CellBackgroundPanel>
                     </Grid>
@@ -1744,157 +1640,6 @@
                                Opacity="0">
                         </Image>
                     </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <!--################# GcTextBox.xaml #####################-->
-    <Style x:Key="ScrollViewerStyle1" TargetType="ScrollViewer">
-        <Setter Property="HorizontalScrollMode" Value="Enabled"/>
-        <Setter Property="VerticalScrollMode" Value="Enabled"/>
-        <Setter Property="IsHorizontalRailEnabled" Value="True"/>
-        <Setter Property="IsVerticalRailEnabled" Value="True"/>
-        <Setter Property="IsTabStop" Value="False"/>
-        <Setter Property="ZoomMode" Value="Enabled"/>
-        <Setter Property="HorizontalContentAlignment" Value="Left"/>
-        <Setter Property="VerticalContentAlignment" Value="Top"/>
-        <Setter Property="VerticalScrollBarVisibility" Value="Visible"/>
-        <Setter Property="Padding" Value="0"/>
-        <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="BorderBrush" Value="Transparent"/>
-        <Setter Property="Background" Value="Transparent"/>
-        <!--for windows8.1 the size of textbox will not be right if not set the min height, here we just give it a value to make textbox measure correct size-->
-        <Setter Property="MinHeight" Value="1" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="ScrollViewer">
-                    <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
-                        <VisualStateManager.VisualStateGroups>
-                            <VisualStateGroup x:Name="ScrollingIndicatorStates">
-                                <VisualStateGroup.Transitions>
-                                    <VisualTransition From="MouseIndicator" To="NoIndicator">
-                                        <Storyboard>
-                                            <FadeOutThemeAnimation BeginTime="0:0:3" TargetName="ScrollBarSeparator"/>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="IndicatorMode" Storyboard.TargetName="VerticalScrollBar">
-                                                <DiscreteObjectKeyFrame KeyTime="0:0:3">
-                                                    <DiscreteObjectKeyFrame.Value>
-                                                        <ScrollingIndicatorMode>None</ScrollingIndicatorMode>
-                                                    </DiscreteObjectKeyFrame.Value>
-                                                </DiscreteObjectKeyFrame>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="IndicatorMode" Storyboard.TargetName="HorizontalScrollBar">
-                                                <DiscreteObjectKeyFrame KeyTime="0:0:3">
-                                                    <DiscreteObjectKeyFrame.Value>
-                                                        <ScrollingIndicatorMode>None</ScrollingIndicatorMode>
-                                                    </DiscreteObjectKeyFrame.Value>
-                                                </DiscreteObjectKeyFrame>
-                                            </ObjectAnimationUsingKeyFrames>
-                                        </Storyboard>
-                                    </VisualTransition>
-                                    <VisualTransition From="TouchIndicator" To="NoIndicator">
-                                        <Storyboard>
-                                            <FadeOutThemeAnimation TargetName="ScrollBarSeparator"/>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="IndicatorMode" Storyboard.TargetName="VerticalScrollBar">
-                                                <DiscreteObjectKeyFrame KeyTime="0:0:0.5">
-                                                    <DiscreteObjectKeyFrame.Value>
-                                                        <ScrollingIndicatorMode>None</ScrollingIndicatorMode>
-                                                    </DiscreteObjectKeyFrame.Value>
-                                                </DiscreteObjectKeyFrame>
-                                            </ObjectAnimationUsingKeyFrames>
-                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="IndicatorMode" Storyboard.TargetName="HorizontalScrollBar">
-                                                <DiscreteObjectKeyFrame KeyTime="0:0:0.5">
-                                                    <DiscreteObjectKeyFrame.Value>
-                                                        <ScrollingIndicatorMode>None</ScrollingIndicatorMode>
-                                                    </DiscreteObjectKeyFrame.Value>
-                                                </DiscreteObjectKeyFrame>
-                                            </ObjectAnimationUsingKeyFrames>
-                                        </Storyboard>
-                                    </VisualTransition>
-                                </VisualStateGroup.Transitions>
-                                <VisualState x:Name="NoIndicator">
-                                    <Storyboard>
-                                        <FadeOutThemeAnimation TargetName="ScrollBarSeparator"/>
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="TouchIndicator">
-                                    <Storyboard>
-                                        <FadeOutThemeAnimation TargetName="ScrollBarSeparator"/>
-                                        <ObjectAnimationUsingKeyFrames Duration="0" Storyboard.TargetProperty="IndicatorMode" Storyboard.TargetName="VerticalScrollBar">
-                                            <DiscreteObjectKeyFrame KeyTime="0">
-                                                <DiscreteObjectKeyFrame.Value>
-                                                    <ScrollingIndicatorMode>TouchIndicator</ScrollingIndicatorMode>
-                                                </DiscreteObjectKeyFrame.Value>
-                                            </DiscreteObjectKeyFrame>
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Duration="0" Storyboard.TargetProperty="IndicatorMode" Storyboard.TargetName="HorizontalScrollBar">
-                                            <DiscreteObjectKeyFrame KeyTime="0">
-                                                <DiscreteObjectKeyFrame.Value>
-                                                    <ScrollingIndicatorMode>TouchIndicator</ScrollingIndicatorMode>
-                                                </DiscreteObjectKeyFrame.Value>
-                                            </DiscreteObjectKeyFrame>
-                                        </ObjectAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                </VisualState>
-                                <VisualState x:Name="MouseIndicator">
-                                    <Storyboard>
-                                        <FadeInThemeAnimation TargetName="ScrollBarSeparator"/>
-                                        <ObjectAnimationUsingKeyFrames Duration="0" Storyboard.TargetProperty="IndicatorMode" Storyboard.TargetName="VerticalScrollBar">
-                                            <DiscreteObjectKeyFrame KeyTime="0">
-                                                <DiscreteObjectKeyFrame.Value>
-                                                    <ScrollingIndicatorMode>MouseIndicator</ScrollingIndicatorMode>
-                                                </DiscreteObjectKeyFrame.Value>
-                                            </DiscreteObjectKeyFrame>
-                                        </ObjectAnimationUsingKeyFrames>
-                                        <ObjectAnimationUsingKeyFrames Duration="0" Storyboard.TargetProperty="IndicatorMode" Storyboard.TargetName="HorizontalScrollBar">
-                                            <DiscreteObjectKeyFrame KeyTime="0">
-                                                <DiscreteObjectKeyFrame.Value>
-                                                    <ScrollingIndicatorMode>MouseIndicator</ScrollingIndicatorMode>
-                                                </DiscreteObjectKeyFrame.Value>
-                                            </DiscreteObjectKeyFrame>
-                                        </ObjectAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                </VisualState>
-                            </VisualStateGroup>
-                        </VisualStateManager.VisualStateGroups>
-                        <Grid Background="{TemplateBinding Background}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <ScrollContentPresenter x:Name="ScrollContentPresenter" 
-                                                    Grid.ColumnSpan="2" 
-                                                    ContentTemplate="{TemplateBinding ContentTemplate}"          
-                                                    Grid.RowSpan="2"/>
-                            <ScrollBar x:Name="VerticalScrollBar" 
-                                       Grid.Column="1"
-                                       HorizontalAlignment="Right"
-                                       IsTabStop="False"
-                                       Maximum="{TemplateBinding ScrollableHeight}"
-                                       Orientation="Vertical"
-                                       Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"
-                                       Value="{TemplateBinding VerticalOffset}"
-                                       ViewportSize="{TemplateBinding ViewportHeight}"/>
-                            <ScrollBar x:Name="HorizontalScrollBar" 
-                                       IsTabStop="False" 
-                                       Maximum="{TemplateBinding ScrollableWidth}" 
-                                       Orientation="Horizontal" 
-                                       Grid.Row="1" 
-                                       Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" 
-                                       Value="{TemplateBinding HorizontalOffset}" 
-                                       ViewportSize="{TemplateBinding ViewportWidth}"/>
-                            <Border x:Name="ScrollBarSeparator"
-                                    BorderBrush="{StaticResource ScrollBarTrackBorderThemeBrush}"
-                                    BorderThickness="0,0,1,1" 
-                                    Background="{StaticResource ScrollBarTrackBackgroundThemeBrush}"
-                                    Grid.Column="1"
-                                    Grid.Row="1"/>
-                        </Grid>
-                    </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

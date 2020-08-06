@@ -20,7 +20,7 @@ namespace Dt.Cells.Data
         /// <summary>
         /// ref count
         /// </summary>
-        private short countRef;
+        short countRef;
 
         /// <summary>
         /// Adds a counter. 

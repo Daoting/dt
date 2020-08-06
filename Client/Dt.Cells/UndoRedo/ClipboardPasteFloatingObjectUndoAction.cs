@@ -66,12 +66,12 @@ namespace Dt.Cells.UndoRedo
                     view.SuspendFloatingObjectsInvalidate();
                     if ((_sourceFloatingObjects != null) && (_sourceFloatingObjects.Length > 0))
                     {
-                        Windows.Foundation.Point[] pointArray = new Windows.Foundation.Point[_sourceFloatingObjects.Length];
+                        Point[] pointArray = new Point[_sourceFloatingObjects.Length];
                         if (view.HasSelectedFloatingObject())
                         {
                             for (int j = 0; j < _sourceFloatingObjects.Length; j++)
                             {
-                                pointArray[j] = new Windows.Foundation.Point(_sourceFloatingObjects[j].Location.X + 15.0, _sourceFloatingObjects[j].Location.Y + 15.0);
+                                pointArray[j] = new Point(_sourceFloatingObjects[j].Location.X + 15.0, _sourceFloatingObjects[j].Location.Y + 15.0);
                             }
                         }
                         else
@@ -83,10 +83,10 @@ namespace Dt.Cells.UndoRedo
                                 maxValue = Math.Min(obj2.Location.X, maxValue);
                                 num3 = Math.Min(obj2.Location.Y, num3);
                             }
-                            Windows.Foundation.Point[] pointArray2 = new Windows.Foundation.Point[_sourceFloatingObjects.Length];
+                            Point[] pointArray2 = new Point[_sourceFloatingObjects.Length];
                             for (int k = 0; k < _sourceFloatingObjects.Length; k++)
                             {
-                                pointArray2[k] = new Windows.Foundation.Point(_sourceFloatingObjects[k].Location.X - maxValue, _sourceFloatingObjects[k].Location.Y - num3);
+                                pointArray2[k] = new Point(_sourceFloatingObjects[k].Location.X - maxValue, _sourceFloatingObjects[k].Location.Y - num3);
                             }
                             double num5 = 0.0;
                             double num6 = 0.0;
@@ -100,7 +100,7 @@ namespace Dt.Cells.UndoRedo
                             }
                             for (int num9 = 0; num9 < _sourceFloatingObjects.Length; num9++)
                             {
-                                pointArray[num9] = new Windows.Foundation.Point(num5 + pointArray2[num9].X, num6 + pointArray2[num9].Y);
+                                pointArray[num9] = new Point(num5 + pointArray2[num9].X, num6 + pointArray2[num9].Y);
                             }
                         }
                         List<SpreadChart> list = new List<SpreadChart>();

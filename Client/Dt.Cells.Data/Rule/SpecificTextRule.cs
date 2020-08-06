@@ -19,8 +19,8 @@ namespace Dt.Cells.Data
     /// </summary>
     public sealed class SpecificTextRule : FormattingRuleBase
     {
-        private TextComparisonOperator op;
-        private string text;
+        TextComparisonOperator op;
+        string text;
 
         /// <summary>
         /// Creates a new text rule.

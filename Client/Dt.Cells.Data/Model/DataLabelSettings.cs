@@ -26,28 +26,28 @@ namespace Dt.Cells.Data
     /// </summary>
     public class DataLabelSettings : INotifyPropertyChanged, IXmlSerializable
     {
-        private Dt.Cells.Data.DataLabelPosition _dataLabelPosition = Dt.Cells.Data.DataLabelPosition.BestFit;
-        private bool _includeLeaderLines;
-        private bool _includeLegentKey;
-        private bool _isSeparatorSet;
-        private bool _isShowBubbleSizeSet;
-        private bool _isShowCategoryNameSet;
-        private bool _isShowPercentSet;
-        private bool _isShowSeriesNameSet;
-        private bool _isShowValueSet;
-        private string _separator = CultureInfo.CurrentCulture.TextInfo.ListSeparator;
-        private bool _showBubbleSize;
-        private bool _showCategoryName;
-        private bool _showPercent;
-        private bool _showSeriesName;
-        private bool _showValue;
+        Dt.Cells.Data.DataLabelPosition _dataLabelPosition = Dt.Cells.Data.DataLabelPosition.BestFit;
+        bool _includeLeaderLines;
+        bool _includeLegentKey;
+        bool _isSeparatorSet;
+        bool _isShowBubbleSizeSet;
+        bool _isShowCategoryNameSet;
+        bool _isShowPercentSet;
+        bool _isShowSeriesNameSet;
+        bool _isShowValueSet;
+        string _separator = CultureInfo.CurrentCulture.TextInfo.ListSeparator;
+        bool _showBubbleSize;
+        bool _showCategoryName;
+        bool _showPercent;
+        bool _showSeriesName;
+        bool _showValue;
 
         /// <summary>
         /// Occurs when a property value changes.
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void RaisePropertyChanged(string property)
+        void RaisePropertyChanged(string property)
         {
             if (this.PropertyChanged != null)
             {

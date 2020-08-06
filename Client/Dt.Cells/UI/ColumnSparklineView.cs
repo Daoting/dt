@@ -31,12 +31,12 @@ namespace Dt.Cells.UI
         {
         }
 
-        internal override UIElement GetDataPoint(int index, Windows.Foundation.Size availableSize)
+        internal override UIElement GetDataPoint(int index, Size availableSize)
         {
             Rectangle r = new Rectangle();
             Windows.UI.Color color = base.GetDataPointColor(index);
             r.Fill = new SolidColorBrush(color);
-            r.RenderTransformOrigin = new Windows.Foundation.Point(0.5, 0.0);
+            r.RenderTransformOrigin = new Point(0.5, 0.0);
             ScaleTransform transform = new ScaleTransform();
             transform.ScaleX = 0.5;
             transform.ScaleY = 1.0;

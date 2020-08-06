@@ -49,7 +49,7 @@ namespace Dt.Cells.UI
         /// </summary>
         public HeaderHitTestInformation HeaderInfo { get; internal set; }
 
-        internal Windows.Foundation.Point HitPoint { get; set; }
+        internal Point HitPoint { get; set; }
 
         /// <summary>
         /// Gets the general area referred to in the spreadsheet.

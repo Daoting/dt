@@ -162,7 +162,7 @@ namespace Dt.Cells.Data
             return expr;
         }
 
-        private CalcExpression VisitParenthesesExpression(CalcParenthesesExpression expr, int baseRow, int baseColumn)
+        CalcExpression VisitParenthesesExpression(CalcParenthesesExpression expr, int baseRow, int baseColumn)
         {
             CalcExpression arg = expr.Arg;
             CalcExpression expression2 = this.Visit(arg, baseRow, baseColumn);

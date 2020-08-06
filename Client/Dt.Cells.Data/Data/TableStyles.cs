@@ -22,10 +22,10 @@ namespace Dt.Cells.Data
     /// </summary>
     public static class TableStyles
     {
-        private static List<TableStyle> customStyles = null;
-        private static TableStyle[] darks = new TableStyle[11];
-        private static TableStyle[] lights = new TableStyle[0x15];
-        private static TableStyle[] mediums = new TableStyle[0x1c];
+        static List<TableStyle> customStyles = null;
+        static TableStyle[] darks = new TableStyle[11];
+        static TableStyle[] lights = new TableStyle[0x15];
+        static TableStyle[] mediums = new TableStyle[0x1c];
 
         /// <summary>
         /// Adds the specified custom style.
@@ -54,7 +54,7 @@ namespace Dt.Cells.Data
             customStyles.Add(style);
         }
 
-        private static TableStyle CreateDarkA(int factor)
+        static TableStyle CreateDarkA(int factor)
         {
             string theme = GetTheme(factor);
             Windows.UI.Color color = Colors.Black;
@@ -93,7 +93,7 @@ namespace Dt.Cells.Data
             return style;
         }
 
-        private static TableStyle CreateDarkB(int factor)
+        static TableStyle CreateDarkB(int factor)
         {
             GetTheme(factor);
             string headerColor = GetHeaderColor(factor);
@@ -122,7 +122,7 @@ namespace Dt.Cells.Data
             return style;
         }
 
-        private static TableStyle CreateLightA(int factor)
+        static TableStyle CreateLightA(int factor)
         {
             string theme = GetTheme(factor);
             string str2 = string.Format("{0} 80", (object[]) new object[] { theme });
@@ -154,7 +154,7 @@ namespace Dt.Cells.Data
             return style;
         }
 
-        private static TableStyle CreateLightB(int factor)
+        static TableStyle CreateLightB(int factor)
         {
             string theme = GetTheme(factor);
             string themeColor = string.Format("{0}", (object[]) new object[] { theme });
@@ -187,7 +187,7 @@ namespace Dt.Cells.Data
             return style;
         }
 
-        private static TableStyle CreateLightC(int factor)
+        static TableStyle CreateLightC(int factor)
         {
             string theme = GetTheme(factor);
             string str2 = string.Format("{0} 80", (object[]) new object[] { theme });
@@ -218,7 +218,7 @@ namespace Dt.Cells.Data
             return style;
         }
 
-        private static TableStyle CreateMediumA(int factor)
+        static TableStyle CreateMediumA(int factor)
         {
             string theme = GetTheme(factor);
             string themeColor = string.Format("{0} 20", (object[]) new object[] { theme });
@@ -251,7 +251,7 @@ namespace Dt.Cells.Data
             return style;
         }
 
-        private static TableStyle CreateMediumB(int factor)
+        static TableStyle CreateMediumB(int factor)
         {
             string theme = GetTheme(factor);
             Windows.UI.Color color = Colors.White;
@@ -291,7 +291,7 @@ namespace Dt.Cells.Data
             return style;
         }
 
-        private static TableStyle CreateMediumC(int factor)
+        static TableStyle CreateMediumC(int factor)
         {
             string theme = GetTheme(factor);
             string str2 = string.Format("{0}", (object[]) new object[] { theme });
@@ -339,7 +339,7 @@ namespace Dt.Cells.Data
             return style;
         }
 
-        private static TableStyle CreateMediumD(int factor)
+        static TableStyle CreateMediumD(int factor)
         {
             string theme = GetTheme(factor);
             string themeColor = string.Format("{0}", (object[]) new object[] { theme });
@@ -407,7 +407,7 @@ namespace Dt.Cells.Data
             return null;
         }
 
-        private static TableStyle GetDarkStyle(int id)
+        static TableStyle GetDarkStyle(int id)
         {
             int index = id - 1;
             if (darks == null)
@@ -438,7 +438,7 @@ namespace Dt.Cells.Data
             return null;
         }
 
-        private static string GetHeaderColor(int index)
+        static string GetHeaderColor(int index)
         {
             if (index == 0)
             {
@@ -459,7 +459,7 @@ namespace Dt.Cells.Data
             return string.Empty;
         }
 
-        private static TableStyle GetLightStyle(int id)
+        static TableStyle GetLightStyle(int id)
         {
             int index = id - 1;
             if (lights == null)
@@ -494,7 +494,7 @@ namespace Dt.Cells.Data
             return null;
         }
 
-        private static TableStyle GetMediumStyle(int id)
+        static TableStyle GetMediumStyle(int id)
         {
             int index = id - 1;
             if (mediums == null)
@@ -533,7 +533,7 @@ namespace Dt.Cells.Data
             return null;
         }
 
-        private static string GetStripColor(int index)
+        static string GetStripColor(int index)
         {
             if (index == 0)
             {
@@ -554,7 +554,7 @@ namespace Dt.Cells.Data
             return string.Empty;
         }
 
-        private static string GetTableBackground(int index)
+        static string GetTableBackground(int index)
         {
             if (index == 0)
             {
@@ -575,7 +575,7 @@ namespace Dt.Cells.Data
             return string.Empty;
         }
 
-        private static string GetTheme(int factor)
+        static string GetTheme(int factor)
         {
             if (factor == 0)
             {

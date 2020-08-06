@@ -188,7 +188,8 @@ namespace Dt.Cells.UI
             {
                 geometry = new RectangleGeometry();
                 geometry.Rect = Clip.Rect;
-                _borderContainer.Clip = geometry;
+                if (_borderContainer != null)
+                    _borderContainer.Clip = geometry;
             }
             return viewportSize;
         }

@@ -31,13 +31,13 @@ namespace Dt.Cells.Data
     /// </summary>
     internal class PdfExporter
     {
-        private GcReportContext context;
-        private PdfDocument currentDoc;
-        private int dpi;
-        private readonly Dictionary<ImageSource, Image> imageCaches;
-        private OpenTypeFontUtility openTypeFontUtility;
-        private readonly GcReport report;
-        private readonly PdfExportSettings settings;
+        GcReportContext context;
+        PdfDocument currentDoc;
+        int dpi;
+        readonly Dictionary<ImageSource, Image> imageCaches;
+        OpenTypeFontUtility openTypeFontUtility;
+        readonly GcReport report;
+        readonly PdfExportSettings settings;
         internal const int Upi = 0x48;
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="state">The state.</param>
         /// <param name="doc">The document.</param>
-        private void ExportEmptyPage(ExporterState state, PdfDocument doc)
+        void ExportEmptyPage(ExporterState state, PdfDocument doc)
         {
             PdfPage page = doc.Pages.AddNewPage(this.context.GetDot((float) this.context.PageRects.PageRectangle.Width), this.context.GetDot((float) this.context.PageRects.PageRectangle.Height));
             state.CurrentPage = page;
@@ -429,7 +429,7 @@ namespace Dt.Cells.Data
         /// <param name="state">The state.</param>
         /// <param name="doc">The document.</param>
         /// <param name="page">The page.</param>
-        private void ExportPage(ExporterState state, PdfDocument doc, GcPageBlock page)
+        void ExportPage(ExporterState state, PdfDocument doc, GcPageBlock page)
         {
             PdfPage page2 = doc.Pages.AddNewPage(this.context.GetDot((float) page.Width), this.context.GetDot((float) page.Height));
             if (this.settings.PageDuration >= 0)
@@ -583,12 +583,12 @@ namespace Dt.Cells.Data
         /// <summary>
         /// PageState, Internal only.
         /// </summary>
-        private class PageState
+        class PageState
         {
-            private int hPageIndex;
-            private GcPageBlock pageBlock;
-            private int pageIndex;
-            private int vPageIndex;
+            int hPageIndex;
+            GcPageBlock pageBlock;
+            int pageIndex;
+            int vPageIndex;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.PdfExporter.PageState" /> class.

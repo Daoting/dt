@@ -21,13 +21,13 @@ namespace Dt.Cells.Data
 {
     internal sealed class SheetBindingManager : IRangeSupport, IDisposable, IXmlSerializable
     {
-        private ConnectionBase connection;
-        private SparseArray<string> fields;
-        private bool isBound;
-        private bool isLoadingData;
-        private List<int> rowIndexes;
-        private IBindableSheet sheet;
-        private object source;
+        ConnectionBase connection;
+        SparseArray<string> fields;
+        bool isBound;
+        bool isLoadingData;
+        List<int> rowIndexes;
+        IBindableSheet sheet;
+        object source;
 
         /// <summary>
         /// This method is only used for xml deserialization, 

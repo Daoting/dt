@@ -36,12 +36,6 @@ namespace Dt.Base
     public partial class Excel : Control
     {
         #region 成员变量
-        public static readonly DependencyProperty HeaderGridLineColorProperty = DependencyProperty.Register(
-                "HeaderGridLineColor",
-                 typeof(Color?),
-                 typeof(Excel),
-                 new PropertyMetadata(null, new PropertyChangedCallback(Excel.HeaderGridLineColorChanged)));
-
         Uri _documentUri;
         Workbook _workbook;
         #endregion
@@ -366,20 +360,6 @@ namespace Dt.Base
         public int GetViewportTopRow(int rowViewportIndex)
         {
             return View.GetViewportTopRow(rowViewportIndex);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="d"></param>
-        /// <param name="e"></param>
-        static void HeaderGridLineColorChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            Excel sheet = d as Excel;
-            if (sheet != null)
-            {
-                sheet.View.HeaderGridLineColor = e.NewValue as Color?;
-            }
         }
 
         /// <summary>

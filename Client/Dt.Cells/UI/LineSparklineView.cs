@@ -25,7 +25,7 @@ namespace Dt.Cells.UI
     /// </summary>
     public partial class LineSparklineView : BaseSparklineView
     {
-        List<Windows.UI.Xaml.Shapes.Line> lines;
+        List<Line> lines;
 
         /// <summary>
         /// Creates a new instance of the class.
@@ -35,16 +35,16 @@ namespace Dt.Cells.UI
         {
         }
 
-        void ArrangeLines(Windows.Foundation.Size finalSize)
+        void ArrangeLines(Size finalSize)
         {
             if (lines != null)
             {
-                using (List<Windows.UI.Xaml.Shapes.Line>.Enumerator enumerator = lines.GetEnumerator())
+                using (List<Line>.Enumerator enumerator = lines.GetEnumerator())
                 {
                     while (enumerator.MoveNext())
                     {
-                        Windows.Foundation.Point location = new Windows.Foundation.Point();
-                        enumerator.Current.Arrange(new Windows.Foundation.Rect(location, finalSize));
+                        Point location = new Point();
+                        enumerator.Current.Arrange(new Rect(location, finalSize));
                     }
                 }
             }
@@ -55,7 +55,7 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="finalSize"> The final area within the parent that this element uses to arrange itself and its children.</param>
         /// <returns> The actual size used.</returns>
-        protected override Windows.Foundation.Size ArrangeOverride(Windows.Foundation.Size finalSize)
+        protected override Size ArrangeOverride(Size finalSize)
         {
             base.ArrangeOverride(finalSize);
             ArrangeLines(finalSize);
@@ -67,24 +67,24 @@ namespace Dt.Cells.UI
             return false;
         }
 
-        internal override UIElement GetDataPoint(int index, Windows.Foundation.Size availableSize)
+        internal override UIElement GetDataPoint(int index, Size availableSize)
         {
             Rectangle r = new Rectangle();
             Windows.UI.Color color = GetDataPointColor(index);
             r.Fill = new SolidColorBrush(color);
-            r.RenderTransformOrigin = new Windows.Foundation.Point(0.5, 0.5);
+            r.RenderTransformOrigin = new Point(0.5, 0.5);
             RotateTransform transform = new RotateTransform();
             transform.Angle = 45.0;
             r.RenderTransform = transform;
             return r;
         }
 
-        void MeasureLines(Windows.Foundation.Size availableSize)
+        void MeasureLines(Size availableSize)
         {
             LineSparklineViewInfo sparklineViewInfo = base.SparklineViewInfo as LineSparklineViewInfo;
             if (sparklineViewInfo != null)
             {
-                List<Tuple<Windows.Foundation.Point, Windows.Foundation.Point>> linePos = sparklineViewInfo.LinePos;
+                List<Tuple<Point, Point>> linePos = sparklineViewInfo.LinePos;
                 sparklineViewInfo.MeasurelinePos(availableSize);
                 if ((linePos != null) && (linePos.Count != sparklineViewInfo.LinePos.Count))
                 {
@@ -95,18 +95,18 @@ namespace Dt.Cells.UI
             {
                 if (lines == null)
                 {
-                    lines = new List<Windows.UI.Xaml.Shapes.Line>();
+                    lines = new List<Line>();
                 }
                 for (int i = 0; i < sparklineViewInfo.LinePos.Count; i++)
                 {
-                    Windows.UI.Xaml.Shapes.Line line;
-                    Tuple<Windows.Foundation.Point, Windows.Foundation.Point> tuple = sparklineViewInfo.LinePos[i];
+                    Line line;
+                    Tuple<Point, Point> tuple = sparklineViewInfo.LinePos[i];
                     if (tuple != null)
                     {
                         line = null;
                         if (i >= lines.Count)
                         {
-                            line = new Windows.UI.Xaml.Shapes.Line();
+                            line = new Line();
                             line.StrokeStartLineCap = PenLineCap.Round;
                             line.StrokeEndLineCap = PenLineCap.Round;
                             line.Stroke = new SolidColorBrush(SparklineInfo.Setting.SeriesColor);
@@ -120,8 +120,8 @@ namespace Dt.Cells.UI
                         {
                             line = lines[i];
                         }
-                        Windows.Foundation.Point point = tuple.Item1;
-                        Windows.Foundation.Point point2 = tuple.Item2;
+                        Point point = tuple.Item1;
+                        Point point2 = tuple.Item2;
                         line.X1 = point.X;
                         line.X2 = point2.X;
                         line.Y1 = point.Y;
@@ -142,7 +142,7 @@ namespace Dt.Cells.UI
         /// <returns> 
         /// The size that this element determines it needs during layout, based on its calculations of child element sizes.
         /// </returns>
-        protected override Windows.Foundation.Size MeasureOverride(Windows.Foundation.Size availableSize)
+        protected override Size MeasureOverride(Size availableSize)
         {
             if (!double.IsInfinity(availableSize.Width) && !double.IsInfinity(availableSize.Height))
             {
@@ -155,7 +155,7 @@ namespace Dt.Cells.UI
         {
             if (lines != null)
             {
-                foreach (Windows.UI.Xaml.Shapes.Line line in lines)
+                foreach (Line line in lines)
                 {
                     if (line != null)
                     {
@@ -171,7 +171,7 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="size">The updated size.</param>
         /// <param name="zoomfactor">The zoom factor used for the update.</param>
-        public override void Update(Windows.Foundation.Size size, double zoomfactor)
+        public override void Update(Size size, double zoomfactor)
         {
             RemoveLines();
             lines = null;

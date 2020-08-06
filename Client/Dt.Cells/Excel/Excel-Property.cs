@@ -363,19 +363,6 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// Gets or sets the color of the gridline in the header. 
-        /// </summary>
-        /// <remarks>
-        /// The default is null. This property is supposed to be used if customizing the control theme in XAML.
-        /// </remarks>
-        [EditorBrowsable((EditorBrowsableState)EditorBrowsableState.Never), Browsable(false)]
-        public Color? HeaderGridLineColor
-        {
-            get { return (Color?)base.GetValue(HeaderGridLineColorProperty); }
-            set { base.SetValue(HeaderGridLineColorProperty, value); }
-        }
-
-        /// <summary>
         /// Specifies whether to highlight invalid data. 
         /// </summary>
         [DefaultValue(false)]

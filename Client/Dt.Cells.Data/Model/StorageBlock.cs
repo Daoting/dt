@@ -19,14 +19,14 @@ namespace Dt.Cells.Data
 {
     internal class StorageBlock : IXmlSerializable
     {
-        private int columnCount;
-        private DataMatrix<object> data;
-        private const int DEFAULT_COLUMN_COUNT = 250;
-        private const int DEFAULT_ROW_COUNT = 0xfde8;
-        private int rowCount;
-        private DataMatrix<Sparkline> sparklines;
-        private DataMatrix<object> style;
-        private DataMatrix<object> tags;
+        int columnCount;
+        DataMatrix<object> data;
+        const int DEFAULT_COLUMN_COUNT = 250;
+        const int DEFAULT_ROW_COUNT = 0xfde8;
+        int rowCount;
+        DataMatrix<Sparkline> sparklines;
+        DataMatrix<object> style;
+        DataMatrix<object> tags;
 
         public StorageBlock() : this(0xfde8, 250)
         {
@@ -197,7 +197,7 @@ namespace Dt.Cells.Data
             return this.data.GetValue(row, column);
         }
 
-        private void Init(int rowCount, int columnCount)
+        void Init(int rowCount, int columnCount)
         {
             this.rowCount = rowCount;
             this.columnCount = columnCount;

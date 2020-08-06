@@ -19,16 +19,16 @@ namespace Dt.Cells.Data
     /// </summary>
     internal class ArrowSettings : INotifyPropertyChanged
     {
-        private ArrowSize _length = ArrowSize.Small;
-        private ArrowType _type;
-        private ArrowSize _width = ArrowSize.Small;
+        ArrowSize _length = ArrowSize.Small;
+        ArrowType _type;
+        ArrowSize _width = ArrowSize.Small;
 
         /// <summary>
         /// Occurs when [property changed].
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void RaisePropertyChanged(string propertyName)
+        void RaisePropertyChanged(string propertyName)
         {
             if (this.PropertyChanged != null)
             {

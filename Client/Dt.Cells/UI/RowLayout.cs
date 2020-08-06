@@ -58,12 +58,12 @@ namespace Dt.Cells.UI
         /// intersects with the specified <see cref="T:System.Windows.Rect" /> object.
         /// </summary>
         /// <param name="rect">
-        /// The specified <see cref="T:Windows.Foundation.Rect" /> object.
+        /// The specified <see cref="T:Rect" /> object.
         /// </param>
         /// <returns>
         /// Returns true if the row intersects with the <see cref="T:System.Windows.Rect" /> object; otherwise, returns false.
         /// </returns>
-        public bool IntersectsWith(Windows.Foundation.Rect rect)
+        public bool IntersectsWith(Rect rect)
         {
             return (((Height > 0.0) && ((rect.Y + rect.Height) > Y)) && ((Y + Height) > rect.Y));
         }

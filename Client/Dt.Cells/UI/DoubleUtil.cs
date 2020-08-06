@@ -31,7 +31,7 @@ namespace Dt.Cells.UI
             return ((-num < num2) && (num > num2));
         }
 
-        public static bool AreClose(Windows.Foundation.Rect rect1, Windows.Foundation.Rect rect2)
+        public static bool AreClose(Rect rect1, Rect rect2)
         {
             if (rect1.IsEmpty)
             {
@@ -40,7 +40,7 @@ namespace Dt.Cells.UI
             return (((!rect2.IsEmpty && AreClose(rect1.X, rect2.X)) && (AreClose(rect1.Y, rect2.Y) && AreClose(rect1.Height, rect2.Height))) && AreClose(rect1.Width, rect2.Width));
         }
 
-        public static bool AreClose(Windows.Foundation.Size size1, Windows.Foundation.Size size2)
+        public static bool AreClose(Size size1, Size size2)
         {
             return (AreClose(size1.Width, size2.Width) && AreClose(size1.Height, size2.Height));
         }

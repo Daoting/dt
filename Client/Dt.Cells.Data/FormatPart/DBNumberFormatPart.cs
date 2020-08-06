@@ -24,11 +24,11 @@ namespace Dt.Cells.Data
         /// <summary>
         /// the abs time token
         /// </summary>
-        private string token;
+        string token;
         /// <summary>
         /// the type of time part.
         /// </summary>
-        private int type;
+        int type;
 
         /// <summary>
         /// Creates a new DB number format. 
@@ -76,7 +76,7 @@ namespace Dt.Cells.Data
         /// <param name="value">The value</param>
         /// <param name="numbers">The numbers</param>
         /// <returns>Returns the formatted number.</returns>
-        private static string FormatNumberString(string value, IList<string> numbers)
+        static string FormatNumberString(string value, IList<string> numbers)
         {
             string str = value;
             StringBuilder builder = new StringBuilder();
@@ -95,7 +95,7 @@ namespace Dt.Cells.Data
         /// <param name="units">The units</param>
         /// <param name="numbers">The numbers</param>
         /// <returns>Returns the formatted number.</returns>
-        private static string FormatNumberString(string value, IList<string> units, IList<string> numbers)
+        static string FormatNumberString(string value, IList<string> units, IList<string> numbers)
         {
             if (units == null)
             {

@@ -21,11 +21,11 @@ namespace Dt.Cells.Data
     /// </summary>
     internal class Bookmark : IXmlSerializable
     {
-        private int index;
-        private Bookmark parent;
-        private int parentIndex;
+        int index;
+        Bookmark parent;
+        int parentIndex;
         internal static int SIndex;
-        private string text;
+        string text;
 
         /// <summary>
         /// Creates a new bookmark.

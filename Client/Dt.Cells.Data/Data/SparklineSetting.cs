@@ -20,40 +20,40 @@ namespace Dt.Cells.Data
     /// </summary>
     public class SparklineSetting : IThemeContextSupport
     {
-        private IThemeSupport _context;
-        private Windows.UI.Color axisColor = Colors.Black;
-        private string axisThemeColor = string.Empty;
-        private EmptyValueStyle displayEmptyValueStyle;
-        private bool displayHidden = true;
-        private bool displayXAxis;
-        private Windows.UI.Color firstMarkerColor = Colors.Brown;
-        private string firstMarkerThemeColor = string.Empty;
-        private double groupMaxValue;
-        private double groupMinValue;
-        private Windows.UI.Color highMarkerColor = Colors.Blue;
-        private string highMarkerThemeColor = string.Empty;
-        private Windows.UI.Color lastMarkerColor = Colors.Green;
-        private string lastMarkerThemeColor = string.Empty;
-        private double lineWeight = 1.0;
-        private Windows.UI.Color lowMarkerColor = Colors.Blue;
-        private string lowMarkerThemeColor = string.Empty;
-        private double manualMax = 3.0;
-        private double manualMin;
-        private Windows.UI.Color markersColor = Colors.Brown;
-        private string markersThemeColor = string.Empty;
-        private SparklineAxisMinMax maxAxisType;
-        private SparklineAxisMinMax minAxisType;
-        private Windows.UI.Color negativeColor = Colors.Red;
-        private string negativeThemeColor = string.Empty;
-        private bool rightToLeft;
-        private Windows.UI.Color seriesColor = Windows.UI.Color.FromArgb(0xff, 0x24, 0x40, 0x62);
-        private string seriesThemeColor = string.Empty;
-        private bool showFirst;
-        private bool showHigh;
-        private bool showLast;
-        private bool showLow;
-        private bool showMarkers;
-        private bool showNegative;
+        IThemeSupport _context;
+        Windows.UI.Color axisColor = Colors.Black;
+        string axisThemeColor = string.Empty;
+        EmptyValueStyle displayEmptyValueStyle;
+        bool displayHidden = true;
+        bool displayXAxis;
+        Windows.UI.Color firstMarkerColor = Colors.Brown;
+        string firstMarkerThemeColor = string.Empty;
+        double groupMaxValue;
+        double groupMinValue;
+        Windows.UI.Color highMarkerColor = Colors.Blue;
+        string highMarkerThemeColor = string.Empty;
+        Windows.UI.Color lastMarkerColor = Colors.Green;
+        string lastMarkerThemeColor = string.Empty;
+        double lineWeight = 1.0;
+        Windows.UI.Color lowMarkerColor = Colors.Blue;
+        string lowMarkerThemeColor = string.Empty;
+        double manualMax = 3.0;
+        double manualMin;
+        Windows.UI.Color markersColor = Colors.Brown;
+        string markersThemeColor = string.Empty;
+        SparklineAxisMinMax maxAxisType;
+        SparklineAxisMinMax minAxisType;
+        Windows.UI.Color negativeColor = Colors.Red;
+        string negativeThemeColor = string.Empty;
+        bool rightToLeft;
+        Windows.UI.Color seriesColor = Windows.UI.Color.FromArgb(0xff, 0x24, 0x40, 0x62);
+        string seriesThemeColor = string.Empty;
+        bool showFirst;
+        bool showHigh;
+        bool showLast;
+        bool showLow;
+        bool showMarkers;
+        bool showNegative;
 
         /// <summary>
         /// Occurs when the property has changed.

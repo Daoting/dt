@@ -29,85 +29,85 @@ namespace Dt.Cells.Data
     /// </summary>
     public class Axis : SpreadChartTextElement, IXmlSerializable, IRangeSupport, IDisposable
     {
-        private Dt.Cells.Data.AxisType _autoAxisType;
-        private bool _autoBaseTimeUnit;
-        private bool _autoMajorUint;
-        private bool _automaticFill;
-        private bool _automaticStroke;
-        private bool _autoMax;
-        private bool _autoMin;
-        private bool _autoMinorUnit;
-        private Dt.Cells.Data.AxisPosition _axisPosition;
-        private Dt.Cells.Data.AxisType? _axisType;
-        private Dt.Cells.Data.AxisTimeUnit _baseTimeUnit;
-        private Dt.Cells.Data.AxisCrosses _corsses;
-        private double _crossAt;
-        private AxisCrossBetween _crossBetween;
-        private bool _displayHidden;
-        private Dt.Cells.Data.DisplayUnitSettings _displayUnitSettings;
-        private Dt.Cells.Data.EmptyValueStyle _emptyValueStyle;
-        private bool _hasMajorGridLine;
-        private bool _hasMinorGridLine;
-        private bool _isMajorGridStrokeAutomatic;
-        private bool _isMinorGridStrokeAutomatic;
-        private AxisItemsCollection _items;
-        private string _itemsFormula;
-        private DataOrientation? _itemsOrientation;
-        private SheetCellRange[] _itemsRange;
-        private CalcExpression _itemsReference;
-        private double _labelAngle;
-        private IFormatter _labelFormatter;
-        private AxisLabelPosition _labelPosition;
-        private int _lableOffset;
-        private double _logBase;
-        private ArrowSettings _majorGridLineBeginArrowSettings;
-        private PenLineCap _majorGridLineCapType;
-        private ArrowSettings _majorGridLineEndArrowSettings;
-        private PenLineJoin _majorGridLineJoinType;
-        private Brush _majorGridStroke;
-        private StrokeDashType _majorGridStrokeDashType;
-        private string _majorGridStrokeThemeColor;
-        private double _majorGridStrokeThickness;
-        private double _majorTickHeight;
-        private AxisTickPosition _majorTickPosition;
-        private Brush _majorTickStroke;
-        private double _majorTickThickness;
-        private Dt.Cells.Data.AxisTimeUnit _majorTimeUnit;
-        private double _majorUnit;
-        private double _max;
-        private int _maxDataPointCount;
-        private double _min;
-        private ArrowSettings _minorGridLineBeginArrowSettings;
-        private PenLineCap _minorGridLineCapType;
-        private ArrowSettings _minorGridLineEndArrowSettings;
-        private PenLineJoin _minorGridLineJoinType;
-        private Brush _minorGridStroke;
-        private StrokeDashType _minorGridStrokeDashType;
-        private string _minorGridStrokeThemeColor;
-        private double _minorGridStrokeThickness;
-        private double _minorTickHeight;
-        private AxisTickPosition _minorTickPosition;
-        private Brush _minorTickStroke;
-        private double _minorTickThickness;
-        private Dt.Cells.Data.AxisTimeUnit _minorTimeUnit;
-        private double _minorUnit;
-        private double _minScale;
-        private Dt.Cells.Data.AxisOrientation _orientation;
-        private bool _overlapData;
-        private bool _reversed;
-        private double _scale;
-        private bool _showAxisLabel;
-        private int _tickLabelInterval;
-        private int _tickMarkInterval;
-        private ChartTitle _title;
-        private bool _useCustomItems;
-        private bool _useLogBase;
-        private bool _visible;
-        private const double DefaultLogBase = 10.0;
+        Dt.Cells.Data.AxisType _autoAxisType;
+        bool _autoBaseTimeUnit;
+        bool _autoMajorUint;
+        bool _automaticFill;
+        bool _automaticStroke;
+        bool _autoMax;
+        bool _autoMin;
+        bool _autoMinorUnit;
+        Dt.Cells.Data.AxisPosition _axisPosition;
+        Dt.Cells.Data.AxisType? _axisType;
+        Dt.Cells.Data.AxisTimeUnit _baseTimeUnit;
+        Dt.Cells.Data.AxisCrosses _corsses;
+        double _crossAt;
+        AxisCrossBetween _crossBetween;
+        bool _displayHidden;
+        Dt.Cells.Data.DisplayUnitSettings _displayUnitSettings;
+        Dt.Cells.Data.EmptyValueStyle _emptyValueStyle;
+        bool _hasMajorGridLine;
+        bool _hasMinorGridLine;
+        bool _isMajorGridStrokeAutomatic;
+        bool _isMinorGridStrokeAutomatic;
+        AxisItemsCollection _items;
+        string _itemsFormula;
+        DataOrientation? _itemsOrientation;
+        SheetCellRange[] _itemsRange;
+        CalcExpression _itemsReference;
+        double _labelAngle;
+        IFormatter _labelFormatter;
+        AxisLabelPosition _labelPosition;
+        int _lableOffset;
+        double _logBase;
+        ArrowSettings _majorGridLineBeginArrowSettings;
+        PenLineCap _majorGridLineCapType;
+        ArrowSettings _majorGridLineEndArrowSettings;
+        PenLineJoin _majorGridLineJoinType;
+        Brush _majorGridStroke;
+        StrokeDashType _majorGridStrokeDashType;
+        string _majorGridStrokeThemeColor;
+        double _majorGridStrokeThickness;
+        double _majorTickHeight;
+        AxisTickPosition _majorTickPosition;
+        Brush _majorTickStroke;
+        double _majorTickThickness;
+        Dt.Cells.Data.AxisTimeUnit _majorTimeUnit;
+        double _majorUnit;
+        double _max;
+        int _maxDataPointCount;
+        double _min;
+        ArrowSettings _minorGridLineBeginArrowSettings;
+        PenLineCap _minorGridLineCapType;
+        ArrowSettings _minorGridLineEndArrowSettings;
+        PenLineJoin _minorGridLineJoinType;
+        Brush _minorGridStroke;
+        StrokeDashType _minorGridStrokeDashType;
+        string _minorGridStrokeThemeColor;
+        double _minorGridStrokeThickness;
+        double _minorTickHeight;
+        AxisTickPosition _minorTickPosition;
+        Brush _minorTickStroke;
+        double _minorTickThickness;
+        Dt.Cells.Data.AxisTimeUnit _minorTimeUnit;
+        double _minorUnit;
+        double _minScale;
+        Dt.Cells.Data.AxisOrientation _orientation;
+        bool _overlapData;
+        bool _reversed;
+        double _scale;
+        bool _showAxisLabel;
+        int _tickLabelInterval;
+        int _tickMarkInterval;
+        ChartTitle _title;
+        bool _useCustomItems;
+        bool _useLogBase;
+        bool _visible;
+        const double DefaultLogBase = 10.0;
         internal bool IsAumaticCategoryAxis;
         internal bool NoMultiLevelLables;
-        private const int ONE_MONTH = 0x1c;
-        private const int ONE_WEEK = 7;
+        const int ONE_MONTH = 0x1c;
+        const int ONE_WEEK = 7;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.Axis" /> class.
@@ -238,7 +238,7 @@ namespace Dt.Cells.Data
             this.Init();
         }
 
-        private void AddColumnRange(int column, int columnCount)
+        void AddColumnRange(int column, int columnCount)
         {
             if (!string.IsNullOrEmpty(this.ItemsFormula))
             {
@@ -247,7 +247,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void AddRowRange(int row, int rowCount)
+        void AddRowRange(int row, int rowCount)
         {
             if (!string.IsNullOrEmpty(this.ItemsFormula))
             {
@@ -297,12 +297,12 @@ namespace Dt.Cells.Data
             this.Items.Dispose();
         }
 
-        private void FormatInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void FormatInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             this.NotifyAxisChanged(e.PropertyName);
         }
 
-        private int GetDecimalPlaces(double value)
+        int GetDecimalPlaces(double value)
         {
             char ch = CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator[0];
             return ((double) value).ToString((IFormatProvider) CultureInfo.InvariantCulture).Split(new char[] { ch }).Length;
@@ -334,7 +334,7 @@ namespace Dt.Cells.Data
             return list.Count;
         }
 
-        private int GetNumbersCount(double number)
+        int GetNumbersCount(double number)
         {
             return ((double) number).ToString().Length;
         }
@@ -379,7 +379,7 @@ namespace Dt.Cells.Data
             throw new NotImplementedException();
         }
 
-        private void Init()
+        void Init()
         {
             this._itemsFormula = null;
             this._items = new AxisItemsCollection(this);
@@ -441,7 +441,7 @@ namespace Dt.Cells.Data
             this._hasMajorGridLine = true;
         }
 
-        private void Items_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        void Items_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             ((ISpreadChartElement) this).NotifyElementChanged("Items");
         }
@@ -799,7 +799,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void RemoveColumnRange(int column, int columnCount)
+        void RemoveColumnRange(int column, int columnCount)
         {
             if (!string.IsNullOrEmpty(this.ItemsFormula))
             {
@@ -808,7 +808,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void RemoveRowRange(int row, int rowCount)
+        void RemoveRowRange(int row, int rowCount)
         {
             if (!string.IsNullOrEmpty(this.ItemsFormula))
             {
@@ -1786,7 +1786,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private DataOrientation? ItemsOrientation
+        DataOrientation? ItemsOrientation
         {
             get { return  this._itemsOrientation; }
         }
@@ -1818,7 +1818,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private CalcExpression ItemsReference
+        CalcExpression ItemsReference
         {
             get { return  this._itemsReference; }
             set
@@ -2947,7 +2947,7 @@ namespace Dt.Cells.Data
         /// </summary>
         public class ItemsDataSeries : IDataSeries
         {
-            private Axis _axis;
+            Axis _axis;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.Axis.ItemsDataSeries" /> class.

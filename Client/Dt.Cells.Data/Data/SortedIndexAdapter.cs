@@ -45,7 +45,7 @@ namespace Dt.Cells.Data
         /// </summary>
         internal class SortedColumnIndexAdapter : SortedIndexAdapter
         {
-            private Worksheet worksheet;
+            Worksheet worksheet;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.SortedIndexAdapter.SortedColumnIndexAdapter" /> class.
@@ -95,7 +95,7 @@ namespace Dt.Cells.Data
         /// </summary>
         internal class SortedRowIndexAdapter : SortedIndexAdapter
         {
-            private Worksheet worksheet;
+            Worksheet worksheet;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.SortedIndexAdapter.SortedColumnIndexAdapter" /> class.

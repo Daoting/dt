@@ -20,7 +20,7 @@ namespace Dt.Cells.Data
     public class ColumnSparklineViewInfo : BaseSparklineViewInfo
     {
         internal const int MinItemHeight = 2;
-        private Windows.Foundation.Size theSize;
+        Windows.Foundation.Size theSize;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.ColumnSparklineViewInfo" /> class.

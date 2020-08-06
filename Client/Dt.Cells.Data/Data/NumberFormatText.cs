@@ -19,8 +19,8 @@ namespace Dt.Cells.Data
     internal sealed class NumberFormatText : NumberFormatBase
     {
         public static readonly string CommercialAt = "@";
-        private string excelFormatString;
-        private string formatString;
+        string excelFormatString;
+        string formatString;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.NumberFormatText" /> class.

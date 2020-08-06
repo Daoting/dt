@@ -22,25 +22,25 @@ namespace Dt.Cells.Data
         /// <summary>
         /// cm - inch
         /// </summary>
-        private const double CMConstant = 2.539999918;
-        private const int DefaultDpi = 0x60;
+        const double CMConstant = 2.539999918;
+        const int DefaultDpi = 0x60;
         /// <summary>
         /// the device constant of print device.
         /// </summary>
-        private const int DeviceConstant = 0x48;
+        const int DeviceConstant = 0x48;
         /// <summary>
         /// 36000 EMUs/cm
         /// </summary>
-        private const double EMUCmConstant = 36000.0;
+        const double EMUCmConstant = 36000.0;
         /// <summary>
         /// 91440 EMUs/U.S. inch
         /// </summary>
-        private const double EMUInchConstant = 91440.0;
+        const double EMUInchConstant = 91440.0;
 
         /// <summary>
         /// the dpi
         /// </summary>
-        private static float _dpi;
+        static float _dpi;
 
         static UnitManager()
         {

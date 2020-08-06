@@ -26,11 +26,11 @@ namespace Dt.Cells.Data
     /// </summary>
     internal class Watermark : IXmlSerializable
     {
-        private GcLabel innerLabel;
-        private LayoutType layoutType;
-        private Brush outlineFillEffect;
-        private int outlineWidth;
-        private bool showOutline;
+        GcLabel innerLabel;
+        LayoutType layoutType;
+        Brush outlineFillEffect;
+        int outlineWidth;
+        bool showOutline;
 
         public Watermark()
         {
@@ -175,7 +175,7 @@ namespace Dt.Cells.Data
             this.SetLayoutInner(this.layoutType);
         }
 
-        private void SetLayoutInner(LayoutType layout)
+        void SetLayoutInner(LayoutType layout)
         {
             switch (layout)
             {

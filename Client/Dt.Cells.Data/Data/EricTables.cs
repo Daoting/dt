@@ -26,7 +26,7 @@ namespace Dt.Cells.Data
     /// </remarks>
     internal sealed class EricTables : IRangeSupport
     {
-        private List<SheetTable> innerList;
+        List<SheetTable> innerList;
         internal ITableSheet innerSheet;
 
         public event EventHandler<TableChangedArgs> SheetTableChanged;
@@ -255,13 +255,13 @@ namespace Dt.Cells.Data
             return false;
         }
 
-        private bool IsCoverTable(int row, int column, int rowCount, int columnCount, SheetTable table)
+        bool IsCoverTable(int row, int column, int rowCount, int columnCount, SheetTable table)
         {
             CellRange range = table.Range;
             return ((((row <= range.Row) && (column <= range.Column)) && ((row + rowCount) >= (range.Row + range.RowCount))) && ((column + columnCount) >= (range.Column + range.ColumnCount)));
         }
 
-        private void OnTablePropertyChanged(object sender, PropertyChangedEventArgs e)
+        void OnTablePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "Name")
             {

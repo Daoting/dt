@@ -37,16 +37,16 @@ namespace Dt.Cells.UI
             SyncPictureView();
         }
 
-        protected override Windows.Foundation.Size ArrangeOverride(Windows.Foundation.Size finalSize)
+        protected override Size ArrangeOverride(Size finalSize)
         {
 #if UWP
-            _image.Arrange(new Windows.Foundation.Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
+            _image.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
 #endif
-            _backgroundRect.Arrange(new Windows.Foundation.Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
+            _backgroundRect.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
             return base.ArrangeOverride(finalSize);
         }
 
-        protected override Windows.Foundation.Size MeasureOverride(Windows.Foundation.Size availableSize)
+        protected override Size MeasureOverride(Size availableSize)
         {
 #if UWP
             _image.Measure(availableSize);

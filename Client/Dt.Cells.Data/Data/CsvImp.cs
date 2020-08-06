@@ -31,7 +31,7 @@ namespace Dt.Cells.Data
         /// <param name="columnIndex">Index of the column</param>
         /// <param name="opt">The opt</param>
         /// <returns></returns>
-        private static object GetCellData(Worksheet worksheet, SheetArea area, int rowIndex, int columnIndex, ImportExportOptions opt)
+        static object GetCellData(Worksheet worksheet, SheetArea area, int rowIndex, int columnIndex, ImportExportOptions opt)
         {
             if (opt.Formula && (area == SheetArea.Cells))
             {
@@ -94,7 +94,7 @@ namespace Dt.Cells.Data
         /// <param name="area">The area</param>
         /// <param name="opt">The opt</param>
         /// <returns></returns>
-        private static List<List<object>> GetPartData(Worksheet worksheet, int rowStartIndex, int rowEndIndex, int columnStartIndex, int columnEndIndex, SheetArea area, ImportExportOptions opt)
+        static List<List<object>> GetPartData(Worksheet worksheet, int rowStartIndex, int rowEndIndex, int columnStartIndex, int columnEndIndex, SheetArea area, ImportExportOptions opt)
         {
             if (!opt.IncludeSheetArea(area))
             {
@@ -390,7 +390,7 @@ namespace Dt.Cells.Data
         /// <param name="columnIndex">Index of the column</param>
         /// <param name="value">The value</param>
         /// <param name="opt">The opt</param>
-        private static void SetCellData(Worksheet worksheet, SheetArea area, int rowIndex, int columnIndex, string value, ImportExportOptions opt)
+        static void SetCellData(Worksheet worksheet, SheetArea area, int rowIndex, int columnIndex, string value, ImportExportOptions opt)
         {
             object obj2 = value;
             GeneralFormatter gformatter = null;
@@ -525,7 +525,7 @@ namespace Dt.Cells.Data
         /// <param name="columnCount">The column count</param>
         /// <param name="area">The area</param>
         /// <param name="opt">The opt</param>
-        private static void SetRowData(Worksheet worksheet, List<string> rowData, int sheetRowIndex, int columnIndex, int columnCount, SheetArea area, ImportExportOptions opt)
+        static void SetRowData(Worksheet worksheet, List<string> rowData, int sheetRowIndex, int columnIndex, int columnCount, SheetArea area, ImportExportOptions opt)
         {
             int num = 0;
             for (int i = columnIndex; num < rowData.Count; i++)
@@ -608,13 +608,13 @@ namespace Dt.Cells.Data
 
         internal class ImportExportOptions
         {
-            private bool asViewed;
-            private bool columnHeader;
-            private bool expandColumns;
-            private bool expandRows;
-            private bool formula;
-            private bool rowHeader;
-            private bool unFormatted;
+            bool asViewed;
+            bool columnHeader;
+            bool expandColumns;
+            bool expandRows;
+            bool formula;
+            bool rowHeader;
+            bool unFormatted;
 
             public ImportExportOptions(TextFileOpenFlags flags)
             {

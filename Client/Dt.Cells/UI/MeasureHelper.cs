@@ -33,7 +33,7 @@ namespace Dt.Cells.UI
         static Windows.UI.Xaml.Thickness TextBlockBlankThickness = new Windows.UI.Xaml.Thickness(1.0, 3.0, 1.0, 3.0);
         static Windows.UI.Xaml.Thickness TextBoxBlankThickness = new Windows.UI.Xaml.Thickness(4.0, 6.0, 5.0, 7.0);
 
-        public static Windows.Foundation.Size ConvertExcelCellSizeToTextSize(Windows.Foundation.Size excelCellSize, double zoomFactor)
+        public static Size ConvertExcelCellSizeToTextSize(Size excelCellSize, double zoomFactor)
         {
             double width = excelCellSize.Width;
             double height = excelCellSize.Height;
@@ -56,10 +56,10 @@ namespace Dt.Cells.UI
             {
                 height = 0.0;
             }
-            return new Windows.Foundation.Size(width, height);
+            return new Size(width, height);
         }
 
-        public static Windows.Foundation.Size ConvertTextBlockSizeToTextSize(Windows.Foundation.Size textBlockSize, double zoomFactor, double fontSize)
+        public static Size ConvertTextBlockSizeToTextSize(Size textBlockSize, double zoomFactor, double fontSize)
         {
             double width = textBlockSize.Width;
             double height = textBlockSize.Height;
@@ -83,16 +83,16 @@ namespace Dt.Cells.UI
             {
                 height = 0.0;
             }
-            return new Windows.Foundation.Size(width, height);
+            return new Size(width, height);
         }
 
-        public static Windows.Foundation.Size ConvertTextSizeToExcelCellSize(Windows.Foundation.Size textSize, double zoomFactor)
+        public static Size ConvertTextSizeToExcelCellSize(Size textSize, double zoomFactor)
         {
             double width = textSize.Width;
             double height = textSize.Height;
             Windows.UI.Xaml.Thickness excelBlank = GetExcelBlank();
             width += excelBlank.Left + excelBlank.Right;
-            return new Windows.Foundation.Size(width, height + (excelBlank.Top + excelBlank.Bottom));
+            return new Size(width, height + (excelBlank.Top + excelBlank.Bottom));
         }
 
         internal static Windows.UI.Xaml.Thickness GetExcelBlank()
@@ -122,7 +122,7 @@ namespace Dt.Cells.UI
             return TextBoxBlankThickness;
         }
 
-        internal static Windows.Foundation.Size MeasureCustomerTextInCell(Cell cell, string text, Windows.Foundation.Size maxSize, double zoomFactor, FontFamily unknownFontfamily, object textFormattingMode, bool useLayoutRounding)
+        internal static Size MeasureCustomerTextInCell(Cell cell, string text, Size maxSize, double zoomFactor, FontFamily unknownFontfamily, object textFormattingMode, bool useLayoutRounding)
         {
             FontFamily actualFontFamily = cell.ActualFontFamily;
             if (actualFontFamily == null)
@@ -137,20 +137,20 @@ namespace Dt.Cells.UI
                 }
             }
             bool cache = cell.CacheStyleObject(true);
-            Windows.Foundation.Size size = MeasureText(text, actualFontFamily, cell.ActualFontSize * zoomFactor, cell.ActualFontStretch, cell.ActualFontStyle, cell.ActualFontWeight, maxSize, cell.ActualWordWrap, textFormattingMode, useLayoutRounding, zoomFactor);
+            Size size = MeasureText(text, actualFontFamily, cell.ActualFontSize * zoomFactor, cell.ActualFontStretch, cell.ActualFontStyle, cell.ActualFontWeight, maxSize, cell.ActualWordWrap, textFormattingMode, useLayoutRounding, zoomFactor);
             cell.CacheStyleObject(cache);
             size.Width += cell.ActualTextIndent * zoomFactor;
             return size;
         }
 
-        public static Windows.Foundation.Size MeasureText(string text, FontFamily fontFamily, double fontSize, FontStretch fontStretch, FontStyle fontStyle, FontWeight fontWeight, Windows.Foundation.Size maxSize, bool allowWrap, object textFormattingMode, bool useLayoutRounding, double zoomFactor)
+        public static Size MeasureText(string text, FontFamily fontFamily, double fontSize, FontStretch fontStretch, FontStyle fontStyle, FontWeight fontWeight, Size maxSize, bool allowWrap, object textFormattingMode, bool useLayoutRounding, double zoomFactor)
         {
             return ConvertTextBlockSizeToTextSize(MeasureTextBlock(text, fontFamily, fontSize, fontStretch, fontStyle, fontWeight, maxSize, allowWrap, textFormattingMode, useLayoutRounding, zoomFactor), zoomFactor, fontSize);
         }
 
-        public static Windows.Foundation.Size MeasureTextBlock(string text, FontFamily fontFamily, double fontSize, FontStretch fontStretch, FontStyle fontStyle, FontWeight fontWeight, Windows.Foundation.Size maxSize, bool allowWrap, object textFormattingMode, bool useLayoutRounding, double zoomFactor)
+        public static Size MeasureTextBlock(string text, FontFamily fontFamily, double fontSize, FontStretch fontStretch, FontStyle fontStyle, FontWeight fontWeight, Size maxSize, bool allowWrap, object textFormattingMode, bool useLayoutRounding, double zoomFactor)
         {
-            Windows.Foundation.Size size = new Windows.Foundation.Size(0.0, 0.0);
+            Size size = new Size(0.0, 0.0);
             if (string.IsNullOrEmpty(text))
             {
                 return size;
@@ -172,7 +172,7 @@ namespace Dt.Cells.UI
                 {
                     if (fontSize == 0.0)
                     {
-                        return new Windows.Foundation.Size(0.0, 0.0);
+                        return new Size(0.0, 0.0);
                     }
                     _cachedFontSize = 0.0;
                     textBlock.ClearValue(TextBlock.FontSizeProperty);
@@ -219,7 +219,7 @@ namespace Dt.Cells.UI
             return textBlock.DesiredSize;
         }
 
-        public static Windows.Foundation.Size MeasureTextInCell(Cell cell, Windows.Foundation.Size maxSize, double zoomFactor, FontFamily unknownFontfamily, object textFormattingMode, bool useLayoutRounding)
+        public static Size MeasureTextInCell(Cell cell, Size maxSize, double zoomFactor, FontFamily unknownFontfamily, object textFormattingMode, bool useLayoutRounding)
         {
             FontFamily actualFontFamily = cell.ActualFontFamily;
             if (actualFontFamily == null)
@@ -234,7 +234,7 @@ namespace Dt.Cells.UI
                 }
             }
             bool cache = cell.CacheStyleObject(true);
-            Windows.Foundation.Size size = MeasureText(cell.Text, actualFontFamily, cell.ActualFontSize * zoomFactor, cell.ActualFontStretch, cell.ActualFontStyle, cell.ActualFontWeight, maxSize, cell.ActualWordWrap, textFormattingMode, useLayoutRounding, zoomFactor);
+            Size size = MeasureText(cell.Text, actualFontFamily, cell.ActualFontSize * zoomFactor, cell.ActualFontStretch, cell.ActualFontStyle, cell.ActualFontWeight, maxSize, cell.ActualWordWrap, textFormattingMode, useLayoutRounding, zoomFactor);
             cell.CacheStyleObject(cache);
             size.Width += cell.ActualTextIndent * zoomFactor;
             return size;

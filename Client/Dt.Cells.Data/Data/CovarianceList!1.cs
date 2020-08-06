@@ -16,7 +16,7 @@ namespace Dt.Cells.Data
 {
     internal class CovarianceList<T> : IEnumerable<T>, IEnumerable
     {
-        private List<T> _items;
+        List<T> _items;
 
         public CovarianceList()
         {

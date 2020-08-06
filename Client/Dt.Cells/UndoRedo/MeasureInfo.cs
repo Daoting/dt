@@ -24,7 +24,7 @@ namespace Dt.Cells.UndoRedo
         {
         }
 
-        public MeasureInfo(Cell cell, Windows.Foundation.Size maxSize)
+        public MeasureInfo(Cell cell, Size maxSize)
         {
             FontFamily = cell.FontFamily;
             cell.CacheStyleObject(true);
@@ -72,7 +72,7 @@ namespace Dt.Cells.UndoRedo
 
         public Windows.UI.Text.FontWeight FontWeight { get; set; }
 
-        public Windows.Foundation.Size MaximumSize { get; set; }
+        public Size MaximumSize { get; set; }
 
         public bool WordWrap { get; set; }
     }

@@ -215,7 +215,7 @@ namespace Dt.Cells.UI
                         base.RootPanel.Children.Add(_sparklineView);
                         if (base.SheetView != null)
                         {
-                            _sparklineView.Update(new Windows.Foundation.Size(base.ActualWidth, base.ActualHeight), (double)base.SheetView.ZoomFactor);
+                            _sparklineView.Update(new Size(base.ActualWidth, base.ActualHeight), (double)base.SheetView.ZoomFactor);
                         }
                     }
                 }
@@ -362,7 +362,7 @@ namespace Dt.Cells.UI
                 BaseSparklineView view = _sparklineView;
                 if (view != null)
                 {
-                    view.Update(new Windows.Foundation.Size(base.ActualWidth, base.ActualHeight), (double)base.SheetView.ZoomFactor);
+                    view.Update(new Size(base.ActualWidth, base.ActualHeight), (double)base.SheetView.ZoomFactor);
                 }
             }
         }
@@ -427,7 +427,7 @@ namespace Dt.Cells.UI
     internal partial class ConditionalFormatView : Panel
     {
         Canvas _axisCanvas;
-        Windows.UI.Xaml.Shapes.Line _axisLine;
+        Line _axisLine;
         Cell _bindingCell;
         double _cachedAxisPosition;
         Windows.UI.Color _cachedFillColor;
@@ -455,7 +455,7 @@ namespace Dt.Cells.UI
             base.UseLayoutRounding = true;
             _bindingCell = bindingCell;
             _axisCanvas = new Canvas();
-            Windows.UI.Xaml.Shapes.Line line = new Windows.UI.Xaml.Shapes.Line();
+            Line line = new Line();
             line.StrokeThickness = 1.0;
             line.StrokeDashArray = new DoubleCollection { 2.0, 1.0 };
             _axisLine = line;
@@ -481,7 +481,7 @@ namespace Dt.Cells.UI
             stop3.Offset = 0.0;
             _cachedGradientTransparentEnd = stop3;
             _dataBarBackground.GradientStops.Add(_cachedGradientTransparentEnd);
-            _dataBarBackground.EndPoint = new Windows.Foundation.Point(1.0, 0.0);
+            _dataBarBackground.EndPoint = new Point(1.0, 0.0);
             _dataBarRectangle.Fill = _dataBarBackground;
             _iconObject = null;
             _imageContainer = new Border();
@@ -491,7 +491,7 @@ namespace Dt.Cells.UI
             _imageContainer.Child = _cachedImage;
         }
 
-        void ArrangeAxis(Windows.Foundation.Size availableSize)
+        void ArrangeAxis(Size availableSize)
         {
             _axisCanvas.Width = availableSize.Width;
             _axisCanvas.Height = availableSize.Height;
@@ -512,45 +512,45 @@ namespace Dt.Cells.UI
                 _axisLine.X2 = 0.0;
                 _axisLine.Y2 = 0.0;
             }
-            _axisCanvas.Arrange(new Windows.Foundation.Rect(0.0, 0.0, availableSize.Width, availableSize.Height));
+            _axisCanvas.Arrange(new Rect(0.0, 0.0, availableSize.Width, availableSize.Height));
         }
 
-        void ArrangeDataBarRectangle(Windows.Foundation.Size availableSize)
+        void ArrangeDataBarRectangle(Size availableSize)
         {
             double num = Math.Round((double)(availableSize.Width * _cachedAxisPosition));
             double width = Math.Round((double)(availableSize.Width * Math.Abs(_cachedScale)));
-            Windows.Foundation.Rect empty = Windows.Foundation.Rect.Empty;
+            Rect empty = Rect.Empty;
             if ((_cachedAxisPosition > 0.0) && (_cachedAxisPosition < 1.0))
             {
                 if (_cachedScale >= 0.0)
                 {
                     double x = num + _axisLine.StrokeThickness;
-                    empty = new Windows.Foundation.Rect(x, 0.0, width, availableSize.Height);
+                    empty = new Rect(x, 0.0, width, availableSize.Height);
                 }
                 else
                 {
                     double num4 = num - width;
-                    empty = new Windows.Foundation.Rect(num4, 0.0, width, availableSize.Height);
+                    empty = new Rect(num4, 0.0, width, availableSize.Height);
                 }
             }
             else if (_cachedScale >= 0.0)
             {
-                empty = new Windows.Foundation.Rect(0.0, 0.0, width, availableSize.Height);
+                empty = new Rect(0.0, 0.0, width, availableSize.Height);
             }
             else
             {
-                empty = new Windows.Foundation.Rect(availableSize.Width - width, 0.0, width, availableSize.Height);
+                empty = new Rect(availableSize.Width - width, 0.0, width, availableSize.Height);
             }
-            empty.Intersect(new Windows.Foundation.Rect(0.0, 0.0, availableSize.Width, availableSize.Height));
+            empty.Intersect(new Rect(0.0, 0.0, availableSize.Width, availableSize.Height));
             _dataBarRectangle.Arrange(empty);
         }
 
-        void ArrangeIconSet(Windows.Foundation.Size availableSize)
+        void ArrangeIconSet(Size availableSize)
         {
-            _imageContainer.Arrange(new Windows.Foundation.Rect(0.0, 0.0, availableSize.Width, availableSize.Height));
+            _imageContainer.Arrange(new Rect(0.0, 0.0, availableSize.Width, availableSize.Height));
         }
 
-        protected override Windows.Foundation.Size ArrangeOverride(Windows.Foundation.Size finalSize)
+        protected override Size ArrangeOverride(Size finalSize)
         {
             ArrangeAxis(finalSize);
             ArrangeDataBarRectangle(finalSize);
@@ -581,7 +581,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        protected override Windows.Foundation.Size MeasureOverride(Windows.Foundation.Size availableSize)
+        protected override Size MeasureOverride(Size availableSize)
         {
             _imageContainer.Measure(availableSize);
             return base.MeasureOverride(availableSize);
@@ -668,13 +668,13 @@ namespace Dt.Cells.UI
                 Math.Abs(_cachedScale);
                 if (_cachedScale >= 0.0)
                 {
-                    _dataBarBackground.StartPoint = new Windows.Foundation.Point(0.0, 0.0);
-                    _dataBarBackground.EndPoint = new Windows.Foundation.Point(1.0, 0.0);
+                    _dataBarBackground.StartPoint = new Point(0.0, 0.0);
+                    _dataBarBackground.EndPoint = new Point(1.0, 0.0);
                 }
                 else
                 {
-                    _dataBarBackground.StartPoint = new Windows.Foundation.Point(1.0, 0.0);
-                    _dataBarBackground.EndPoint = new Windows.Foundation.Point(0.0, 0.0);
+                    _dataBarBackground.StartPoint = new Point(1.0, 0.0);
+                    _dataBarBackground.EndPoint = new Point(0.0, 0.0);
                 }
                 _cachedGradientEnd.Offset = 1.0;
                 _cachedGradientTransparentEnd.Offset = 1.0;

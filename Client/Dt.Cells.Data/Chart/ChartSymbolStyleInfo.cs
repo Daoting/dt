@@ -24,8 +24,8 @@ namespace Dt.Cells.Data
     /// </summary>
     public class ChartSymbolStyleInfo : IXmlSerializable
     {
-        private bool _isAutomaticFill;
-        private bool _isAutomaticStroke;
+        bool _isAutomaticFill;
+        bool _isAutomaticStroke;
         internal FloatingObjectStyleInfo _styleInfo;
         internal ISpreadChartElement _symbol;
 
@@ -45,7 +45,7 @@ namespace Dt.Cells.Data
             this._symbol = symbol;
         }
 
-        private void FormatInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void FormatInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (this._symbol != null)
             {

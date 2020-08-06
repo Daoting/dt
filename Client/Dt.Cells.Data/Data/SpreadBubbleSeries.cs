@@ -22,13 +22,13 @@ namespace Dt.Cells.Data
     /// </summary>
     public class SpreadBubbleSeries : SpreadXYDataSeries
     {
-        private bool _bubble3D;
-        private DataOrientation? _sizeDataOrientation = 0;
-        private IFormatter _sizeFormatter;
-        private string _sizeValueFormula;
-        private SheetCellRange[] _sizeValueRange;
-        private CalcExpression _sizeValueReference;
-        private DoubleSeriesCollection _sizeValues;
+        bool _bubble3D;
+        DataOrientation? _sizeDataOrientation = 0;
+        IFormatter _sizeFormatter;
+        string _sizeValueFormula;
+        SheetCellRange[] _sizeValueRange;
+        CalcExpression _sizeValueReference;
+        DoubleSeriesCollection _sizeValues;
 
         internal override DataLabel CreateDataLabelOnNeeded(int pointIndex)
         {
@@ -133,7 +133,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void SizeValues_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        void SizeValues_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             base.NotifyChartChanged("Sizes");
         }
@@ -144,7 +144,7 @@ namespace Dt.Cells.Data
             this.UpdateSizeReference(this.SizeFormula);
         }
 
-        private void UpdateSizeReference(string sizeFormula)
+        void UpdateSizeReference(string sizeFormula)
         {
             this.SizeReference = FormulaUtility.Formula2Expression(base.Sheet, sizeFormula);
         }
@@ -240,7 +240,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private CalcExpression SizeReference
+        CalcExpression SizeReference
         {
             get { return  this._sizeValueReference; }
             set
@@ -293,9 +293,9 @@ namespace Dt.Cells.Data
             }
         }
 
-        private class SizeDataSeries : IDataSeries
+        class SizeDataSeries : IDataSeries
         {
-            private SpreadBubbleSeries _bubbleSeries;
+            SpreadBubbleSeries _bubbleSeries;
 
             public SizeDataSeries(SpreadBubbleSeries bubbleSeries)
             {

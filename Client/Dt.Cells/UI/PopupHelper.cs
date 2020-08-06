@@ -29,7 +29,7 @@ namespace Dt.Cells.UI
         Grid _popupChildGrid;
         Border _popupContentHost;
         Canvas _popupOutsideCanvas;
-        Windows.Foundation.Point _relativePoint;
+        Point _relativePoint;
         const double BackgroundSize = 10000.0;
 
         public PopupHelper(Windows.UI.Xaml.Controls.Primitives.Popup popup)
@@ -48,9 +48,9 @@ namespace Dt.Cells.UI
             border.SizeChanged += OnPopupContentHostSizeChanged;
         }
 
-        Windows.Foundation.Point CalcPlacementPosition(Windows.Foundation.Point basePoint, Windows.Foundation.Size popSize, PopupDirection popDirection)
+        Point CalcPlacementPosition(Point basePoint, Size popSize, PopupDirection popDirection)
         {
-            Windows.Foundation.Point point = new Windows.Foundation.Point();
+            Point point = new Point();
             switch (popDirection)
             {
                 case PopupDirection.UpperLeft:
@@ -92,8 +92,8 @@ namespace Dt.Cells.UI
 
         void OnPopupContentHostSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            Windows.Foundation.Point basePoint = _relativePoint;
-            basePoint = CalcPlacementPosition(basePoint, new Windows.Foundation.Size(_popupContentHost.ActualWidth, _popupContentHost.ActualHeight), _popDirection);
+            Point basePoint = _relativePoint;
+            basePoint = CalcPlacementPosition(basePoint, new Size(_popupContentHost.ActualWidth, _popupContentHost.ActualHeight), _popDirection);
             basePoint.X += 5.0;
             if (basePoint.X < 0.0)
             {
@@ -125,17 +125,17 @@ namespace Dt.Cells.UI
             _popup.VerticalOffset = Math.Floor(basePoint.Y);
         }
 
-        public void ShowAsModal(FrameworkElement placeElement, Control contentElement, Windows.Foundation.Point relativePoint)
+        public void ShowAsModal(FrameworkElement placeElement, Control contentElement, Point relativePoint)
         {
             ShowAsModal(placeElement, contentElement, relativePoint, PopupDirection.BottomLeft);
         }
 
-        public void ShowAsModal(FrameworkElement placeElement, Control contentElement, Windows.Foundation.Point relativePoint, PopupDirection popDirection)
+        public void ShowAsModal(FrameworkElement placeElement, Control contentElement, Point relativePoint, PopupDirection popDirection)
         {
             ShowAsModal(placeElement, contentElement, relativePoint, popDirection, true, true);
         }
 
-        public void ShowAsModal(FrameworkElement placeElement, Control contentElement, Windows.Foundation.Point relativePoint, PopupDirection popDirection, bool capture, bool contentFocus)
+        public void ShowAsModal(FrameworkElement placeElement, Control contentElement, Point relativePoint, PopupDirection popDirection, bool capture, bool contentFocus)
         {
             _popupContentHost.Child = contentElement;
             _placeElement = placeElement;
@@ -152,17 +152,17 @@ namespace Dt.Cells.UI
             }
         }
 
-        internal Windows.Foundation.Point Location
+        internal Point Location
         {
-            get { return new Windows.Foundation.Point(_popup.HorizontalOffset, _popup.VerticalOffset); }
+            get { return new Point(_popup.HorizontalOffset, _popup.VerticalOffset); }
         }
 
-        internal Windows.Foundation.Size Size
+        internal Size Size
         {
             get
             {
                 Control child = _popupContentHost.Child as Control;
-                return new Windows.Foundation.Size(child.ActualWidth, child.ActualHeight);
+                return new Size(child.ActualWidth, child.ActualHeight);
             }
         }
     }

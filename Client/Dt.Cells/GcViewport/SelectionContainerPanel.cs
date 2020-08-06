@@ -156,7 +156,7 @@ namespace Dt.Cells.UI
         {
             if (!ParentViewport.Sheet.HideSelectionWhenPrinting)
             {
-                Rect rect = new Rect(new Windows.Foundation.Point(), finalSize);
+                Rect rect = new Rect(new Point(), finalSize);
                 for (int i = 0; i < _activeSelectionRectangles.Count; i++)
                 {
                     _activeSelectionRectangles[i].InvalidateArrange();

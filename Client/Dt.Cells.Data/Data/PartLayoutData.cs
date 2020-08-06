@@ -19,9 +19,9 @@ namespace Dt.Cells.Data
     /// </summary>
     internal class PartLayoutData
     {
-        private double allSize;
-        private int offsetIndex;
-        private readonly List<double> sizes;
+        double allSize;
+        int offsetIndex;
+        readonly List<double> sizes;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.PartLayoutData" /> class.
@@ -121,7 +121,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="index">The index.</param>
         /// <returns></returns>
-        private double GetValue(int index)
+        double GetValue(int index)
         {
             return this.sizes[index];
         }

@@ -20,35 +20,35 @@ namespace Dt.Cells.Data
         /// <summary>
         /// the bottom position.
         /// </summary>
-        private double bottom;
+        double bottom;
         /// <summary>
         /// the left position.
         /// </summary>
-        private double left;
+        double left;
         /// <summary>
         /// the right position.
         /// </summary>
-        private double right;
+        double right;
         /// <summary>
         /// the top position.
         /// </summary>
-        private double top;
+        double top;
         /// <summary>
         /// the unit type for bottom.
         /// </summary>
-        private UnitType unitTypeBottom;
+        UnitType unitTypeBottom;
         /// <summary>
         /// the unit type for left.
         /// </summary>
-        private UnitType unitTypeLeft;
+        UnitType unitTypeLeft;
         /// <summary>
         /// the unit type for right.
         /// </summary>
-        private UnitType unitTypeRight;
+        UnitType unitTypeRight;
         /// <summary>
         /// the unit type for top.
         /// </summary>
-        private UnitType unitTypeTop;
+        UnitType unitTypeTop;
 
         /// <summary>
         /// Creates an inset for the specified side.

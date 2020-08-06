@@ -23,8 +23,8 @@ namespace Dt.Cells.Data
     /// </remarks>
     public class SpreadHighLowSeries : SpreadXYDataSeries
     {
-        private SpreadDataSeries _highSeries;
-        private SpreadDataSeries _lowSeries;
+        SpreadDataSeries _highSeries;
+        SpreadDataSeries _lowSeries;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.SpreadHighLowSeries" /> class.

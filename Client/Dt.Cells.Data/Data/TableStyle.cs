@@ -17,24 +17,24 @@ namespace Dt.Cells.Data
     /// </summary>
     public sealed class TableStyle : ICloneable
     {
-        private TableStyleInfo firstColumn;
-        private TableStyleInfo firstColumnStrip;
-        private int firstColumnStripSize;
-        private TableStyleInfo firstFooterCell;
-        private TableStyleInfo firstHeaderCell;
-        private TableStyleInfo firstRowStrip;
-        private int firstRowStripSize;
-        private TableStyleInfo footerRow;
-        private TableStyleInfo headerRow;
-        private TableStyleInfo lastColumn;
-        private TableStyleInfo lastFooterCell;
-        private TableStyleInfo lastHeaderCell;
-        private string name;
-        private TableStyleInfo secondColumnStrip;
-        private int secondColumnStripSize;
-        private TableStyleInfo secondRowStrip;
-        private int secondRowStripSize;
-        private TableStyleInfo wholeTable;
+        TableStyleInfo firstColumn;
+        TableStyleInfo firstColumnStrip;
+        int firstColumnStripSize;
+        TableStyleInfo firstFooterCell;
+        TableStyleInfo firstHeaderCell;
+        TableStyleInfo firstRowStrip;
+        int firstRowStripSize;
+        TableStyleInfo footerRow;
+        TableStyleInfo headerRow;
+        TableStyleInfo lastColumn;
+        TableStyleInfo lastFooterCell;
+        TableStyleInfo lastHeaderCell;
+        string name;
+        TableStyleInfo secondColumnStrip;
+        int secondColumnStripSize;
+        TableStyleInfo secondRowStrip;
+        int secondRowStripSize;
+        TableStyleInfo wholeTable;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.TableStyle" /> class.
@@ -56,7 +56,7 @@ namespace Dt.Cells.Data
              };
         }
 
-        private TableStyleInfo Clone(TableStyleInfo styleInfo)
+        TableStyleInfo Clone(TableStyleInfo styleInfo)
         {
             if (styleInfo != null)
             {
@@ -65,7 +65,7 @@ namespace Dt.Cells.Data
             return null;
         }
 
-        private void Init()
+        void Init()
         {
             this.name = string.Empty;
             this.headerRow = null;

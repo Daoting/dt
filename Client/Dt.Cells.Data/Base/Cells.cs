@@ -22,11 +22,11 @@ namespace Dt.Cells.Data
         /// <summary>
         /// Indicates which area contains this cell.
         /// </summary>
-        private Dt.Cells.Data.SheetArea sheetArea;
+        Dt.Cells.Data.SheetArea sheetArea;
         /// <summary>
         /// sheet view containing Cell
         /// </summary>
-        private Dt.Cells.Data.Worksheet worksheet;
+        Dt.Cells.Data.Worksheet worksheet;
 
         /// <summary>
         /// Creates a collection of cells.
@@ -44,7 +44,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="column">Column index</param>
         /// <param name="sheetArea">The sheet area</param>
-        private void CheckColumnIndexBounds(int column, Dt.Cells.Data.SheetArea sheetArea)
+        void CheckColumnIndexBounds(int column, Dt.Cells.Data.SheetArea sheetArea)
         {
             int columnCount = this.worksheet.GetColumnCount(sheetArea);
             if ((column < -1) || (column >= columnCount))
@@ -58,7 +58,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="row">Row index</param>
         /// <param name="sheetArea">The sheet area</param>
-        private void CheckRowIndexBounds(int row, Dt.Cells.Data.SheetArea sheetArea)
+        void CheckRowIndexBounds(int row, Dt.Cells.Data.SheetArea sheetArea)
         {
             int rowCount = this.worksheet.GetRowCount(sheetArea);
             if ((row < -1) || (row >= rowCount))

@@ -39,18 +39,18 @@ namespace Dt.Cells.UI
             foreach (SpreadChartContainer container in _cachedCharts.Values)
             {
                 IFloatingObject floatingObject = container.FloatingObject;
-                Windows.Foundation.Point location = new Windows.Foundation.Point(0.0, 0.0);
-                Windows.Foundation.Size size = new Windows.Foundation.Size(0.0, 0.0);
+                Point location = new Point(0.0, 0.0);
+                Size size = new Size(0.0, 0.0);
                 FloatingObjectLayout layout = viewportFloatingObjectLayoutModel.Find(floatingObject.Name);
                 if (layout != null)
                 {
                     double num = 7.0;
                     double num2 = 1.0;
-                    location = new Windows.Foundation.Point(((layout.X - Location.X) - num) - num2, ((layout.Y - Location.Y) - num) - num2);
-                    size = new Windows.Foundation.Size(layout.Width + (2.0 * num), layout.Height + (2.0 * num));
+                    location = new Point(((layout.X - Location.X) - num) - num2, ((layout.Y - Location.Y) - num) - num2);
+                    size = new Size(layout.Width + (2.0 * num), layout.Height + (2.0 * num));
                 }
                 container.InvalidateArrange();
-                container.Arrange(new Windows.Foundation.Rect(location, size));
+                container.Arrange(new Rect(location, size));
             }
         }
 
@@ -60,22 +60,22 @@ namespace Dt.Cells.UI
             foreach (FloatingObjectContainer container in _cachedFloatingObjects.Values)
             {
                 IFloatingObject floatingObject = container.FloatingObject;
-                Windows.Foundation.Point location = new Windows.Foundation.Point(0.0, 0.0);
-                Windows.Foundation.Size size = new Windows.Foundation.Size(0.0, 0.0);
+                Point location = new Point(0.0, 0.0);
+                Size size = new Size(0.0, 0.0);
                 FloatingObjectLayout layout = viewportFloatingObjectLayoutModel.Find(floatingObject.Name);
                 if (layout != null)
                 {
                     double num = 7.0;
                     double num2 = 1.0;
-                    location = new Windows.Foundation.Point(((layout.X - Location.X) - num) - num2, ((layout.Y - Location.Y) - num) - num2);
-                    size = new Windows.Foundation.Size(layout.Width + (2.0 * num), layout.Height + (2.0 * num));
+                    location = new Point(((layout.X - Location.X) - num) - num2, ((layout.Y - Location.Y) - num) - num2);
+                    size = new Size(layout.Width + (2.0 * num), layout.Height + (2.0 * num));
                 }
                 container.InvalidateArrange();
-                container.Arrange(new Windows.Foundation.Rect(location, size));
+                container.Arrange(new Rect(location, size));
             }
         }
 
-        protected override Windows.Foundation.Size ArrangeOverride(Windows.Foundation.Size finalSize)
+        protected override Size ArrangeOverride(Size finalSize)
         {
             if (!IsSuspendFloatingObjectInvalidate)
             {
@@ -92,18 +92,18 @@ namespace Dt.Cells.UI
             foreach (PictureContainer container in _cachedPictures.Values)
             {
                 FloatingObject floatingObject = container.FloatingObject;
-                Windows.Foundation.Point location = new Windows.Foundation.Point(0.0, 0.0);
-                Windows.Foundation.Size size = new Windows.Foundation.Size(0.0, 0.0);
+                Point location = new Point(0.0, 0.0);
+                Size size = new Size(0.0, 0.0);
                 FloatingObjectLayout layout = viewportFloatingObjectLayoutModel.Find(floatingObject.Name);
                 if (layout != null)
                 {
                     double num = 7.0;
                     double num2 = 1.0;
-                    location = new Windows.Foundation.Point(((layout.X - Location.X) - num) - num2, ((layout.Y - Location.Y) - num) - num2);
-                    size = new Windows.Foundation.Size(layout.Width + (2.0 * num), layout.Height + (2.0 * num));
+                    location = new Point(((layout.X - Location.X) - num) - num2, ((layout.Y - Location.Y) - num) - num2);
+                    size = new Size(layout.Width + (2.0 * num), layout.Height + (2.0 * num));
                 }
                 container.InvalidateArrange();
-                container.Arrange(new Windows.Foundation.Rect(location, size));
+                container.Arrange(new Rect(location, size));
             }
         }
 
@@ -212,12 +212,12 @@ namespace Dt.Cells.UI
                 }
                 if (container != null)
                 {
-                    Windows.Foundation.Size empty = Windows.Foundation.Size.Empty;
+                    Size empty = Size.Empty;
                     FloatingObjectLayout layout = viewportFloatingObjectLayoutModel.Find(spreadChart.Name);
                     if (layout != null)
                     {
                         double num3 = 7.0;
-                        empty = new Windows.Foundation.Size(layout.Width + (2.0 * num3), layout.Height + (2.0 * num3));
+                        empty = new Size(layout.Width + (2.0 * num3), layout.Height + (2.0 * num3));
                     }
                     container.InvalidateMeasure();
                     container.Measure(empty);
@@ -260,12 +260,12 @@ namespace Dt.Cells.UI
                 }
                 if (container != null)
                 {
-                    Windows.Foundation.Size empty = Windows.Foundation.Size.Empty;
+                    Size empty = Size.Empty;
                     FloatingObjectLayout layout = viewportFloatingObjectLayoutModel.Find(floatingObject.Name);
                     if (layout != null)
                     {
                         double num3 = 7.0;
-                        empty = new Windows.Foundation.Size(layout.Width + (2.0 * num3), layout.Height + (2.0 * num3));
+                        empty = new Size(layout.Width + (2.0 * num3), layout.Height + (2.0 * num3));
                     }
                     container.InvalidateMeasure();
                     container.Measure(empty);
@@ -281,7 +281,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        protected override Windows.Foundation.Size MeasureOverride(Windows.Foundation.Size availableSize)
+        protected override Size MeasureOverride(Size availableSize)
         {
             if (!IsSuspendFloatingObjectInvalidate)
             {
@@ -310,12 +310,12 @@ namespace Dt.Cells.UI
                 }
                 if (container != null)
                 {
-                    Windows.Foundation.Size empty = Windows.Foundation.Size.Empty;
+                    Size empty = Size.Empty;
                     FloatingObjectLayout layout = viewportFloatingObjectLayoutModel.Find(picture.Name);
                     if (layout != null)
                     {
                         double num3 = 7.0;
-                        empty = new Windows.Foundation.Size(layout.Width + (2.0 * num3), layout.Height + (2.0 * num3));
+                        empty = new Size(layout.Width + (2.0 * num3), layout.Height + (2.0 * num3));
                     }
                     container.InvalidateMeasure();
                     container.Measure(empty);
@@ -512,7 +512,7 @@ namespace Dt.Cells.UI
             get { return  (_suspendFloatingObjectInvalidate > 0); }
         }
 
-        public Windows.Foundation.Point Location
+        public Point Location
         {
             get { return  ParentViewport.Location; }
         }

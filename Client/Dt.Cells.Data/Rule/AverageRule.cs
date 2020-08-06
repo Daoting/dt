@@ -19,7 +19,7 @@ namespace Dt.Cells.Data
     /// </summary>
     public sealed class AverageRule : FormattingRuleBase
     {
-        private AverageConditionType op;
+        AverageConditionType op;
 
         /// <summary>
         /// Constructs an average rule.

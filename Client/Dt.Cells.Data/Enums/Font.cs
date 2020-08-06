@@ -18,16 +18,16 @@ namespace Dt.Cells.Data
 {
     internal class Font : ICloneable
     {
-        private FontFamily fontFamily;
-        private string fontFamilyName;
-        private double? fontSize;
-        private UnitType? fontSizeUnit;
-        private FontStretch? fontStretch;
-        private Windows.UI.Text.FontStyle? fontStyle;
-        private FontWeight? fontWeight;
-        private byte? gdiCharSet;
-        private bool? strikeout;
-        private UnderlineType? underline;
+        FontFamily fontFamily;
+        string fontFamilyName;
+        double? fontSize;
+        UnitType? fontSizeUnit;
+        FontStretch? fontStretch;
+        Windows.UI.Text.FontStyle? fontStyle;
+        FontWeight? fontWeight;
+        byte? gdiCharSet;
+        bool? strikeout;
+        UnderlineType? underline;
 
         public Font()
         {
@@ -410,7 +410,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void ClearFontCached()
+        void ClearFontCached()
         {
         }
 

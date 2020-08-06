@@ -36,7 +36,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private static void GetDependentsFromulas(CalcCalculationManager sourceMgr, CalcCalculationManager targetMgr, ChangingContext context, int fromRow, int fromColumn, int toRow, int toColumn, int fromRowCount, Dictionary<CalcLocalIdentity, CalcExpression> formulas, int fromColumnCount, bool offsetSelf, bool updataDependens)
+        static void GetDependentsFromulas(CalcCalculationManager sourceMgr, CalcCalculationManager targetMgr, ChangingContext context, int fromRow, int fromColumn, int toRow, int toColumn, int fromRowCount, Dictionary<CalcLocalIdentity, CalcExpression> formulas, int fromColumnCount, bool offsetSelf, bool updataDependens)
         {
             int rowOffset = toRow - fromRow;
             int columnOffset = toColumn - fromColumn;
@@ -87,7 +87,7 @@ namespace Dt.Cells.Data
             FormulaOperatorHelper.UpdataInvalidFormula(mgr, context, visitor);
         }
 
-        private static void GetTargetFormulas(CalcCalculationManager sourceMgr, CalcCalculationManager targetMgr, int sourceRowCount, int sourceColumnCount, int fromRow, int fromColumn, int toRow, int toColumn, int fromRowCount, int fromColumnCount, int toRowCount, int toColumnCount, Dictionary<CalcCellIdentity, CalcExpression> cellFormulas, Dictionary<CalcRangeIdentity, CalcExpression> rangeFormulas, bool offsetSelf, out Dictionary<CalcLocalIdentity, CalcExpression> newExpressions)
+        static void GetTargetFormulas(CalcCalculationManager sourceMgr, CalcCalculationManager targetMgr, int sourceRowCount, int sourceColumnCount, int fromRow, int fromColumn, int toRow, int toColumn, int fromRowCount, int fromColumnCount, int toRowCount, int toColumnCount, Dictionary<CalcCellIdentity, CalcExpression> cellFormulas, Dictionary<CalcRangeIdentity, CalcExpression> rangeFormulas, bool offsetSelf, out Dictionary<CalcLocalIdentity, CalcExpression> newExpressions)
         {
             MoveVisitor visitor;
             int rowOffset = toRow - fromRow;
@@ -259,7 +259,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private class NoneSource : ICalcSource, IEqualityComparer<ICalcSource>
+        class NoneSource : ICalcSource, IEqualityComparer<ICalcSource>
         {
             public bool Equals(ICalcSource x, ICalcSource y)
             {

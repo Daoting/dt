@@ -15,7 +15,7 @@ namespace Dt.Cells.Data
 {
     internal static class BorderSettingImp
     {
-        private static int GetColumnCount(Worksheet worksheet, SheetArea sheetArea)
+        static int GetColumnCount(Worksheet worksheet, SheetArea sheetArea)
         {
             if ((sheetArea == SheetArea.Cells) || (sheetArea == SheetArea.ColumnHeader))
             {
@@ -28,7 +28,7 @@ namespace Dt.Cells.Data
             return 0;
         }
 
-        private static int GetRowCount(Worksheet worksheet, SheetArea sheetArea)
+        static int GetRowCount(Worksheet worksheet, SheetArea sheetArea)
         {
             if ((sheetArea == SheetArea.Cells) || (sheetArea == (SheetArea.CornerHeader | SheetArea.RowHeader)))
             {
@@ -41,7 +41,7 @@ namespace Dt.Cells.Data
             return 0;
         }
 
-        private static void SetAxisBorder(Worksheet workSheet, SheetArea sheetArea, int index, int count, bool[] flags, BorderLine[] lines, bool isRowDirection)
+        static void SetAxisBorder(Worksheet workSheet, SheetArea sheetArea, int index, int count, bool[] flags, BorderLine[] lines, bool isRowDirection)
         {
             for (int i = 0; i < count; i++)
             {
@@ -57,7 +57,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private static void SetCellBorder(Worksheet workSheet, SheetArea sheetArea, int row, int rowCount, int column, int columnCount, bool[] flags, BorderLine[] lines, bool isinside, bool clear = false)
+        static void SetCellBorder(Worksheet workSheet, SheetArea sheetArea, int row, int rowCount, int column, int columnCount, bool[] flags, BorderLine[] lines, bool isinside, bool clear = false)
         {
             for (int i = 0; i < rowCount; i++)
             {
@@ -549,7 +549,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private static void UpdateStyle(StyleInfo style, bool[] sets, BorderLine[] lines)
+        static void UpdateStyle(StyleInfo style, bool[] sets, BorderLine[] lines)
         {
             if (sets[0])
             {

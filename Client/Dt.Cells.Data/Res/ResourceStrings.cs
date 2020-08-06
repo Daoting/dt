@@ -15,7 +15,7 @@ namespace Dt.Cells.Data
 {
     internal class ResourceStrings
     {
-        private static ResourceLoader _loader;
+        static ResourceLoader _loader;
 
         internal static string AnotherWorksheetWithTheSameNameError
         {

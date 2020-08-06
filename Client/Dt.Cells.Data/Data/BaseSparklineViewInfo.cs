@@ -23,17 +23,17 @@ namespace Dt.Cells.Data
     /// </summary>
     public abstract class BaseSparklineViewInfo : IThemeContextSupport
     {
-        private double _zoomfactor = 1.0;
-        private Windows.UI.Xaml.Shapes.Line axisLine;
-        private List<DateTime?> cachedDatetimes;
-        private List<bool> cachedDatetimeVisible;
-        private List<int> cachedIndexMapping;
-        private DateTime cachedMaxDatetime = DateTime.MinValue;
-        private double cachedMaxValue = double.MinValue;
-        private DateTime cachedMinDatetime = DateTime.MaxValue;
-        private List<double?> cachedValues;
-        private double cahcedMinValue = double.MaxValue;
-        private Sparkline info;
+        double _zoomfactor = 1.0;
+        Windows.UI.Xaml.Shapes.Line axisLine;
+        List<DateTime?> cachedDatetimes;
+        List<bool> cachedDatetimeVisible;
+        List<int> cachedIndexMapping;
+        DateTime cachedMaxDatetime = DateTime.MinValue;
+        double cachedMaxValue = double.MinValue;
+        DateTime cachedMinDatetime = DateTime.MaxValue;
+        List<double?> cachedValues;
+        double cahcedMinValue = double.MaxValue;
+        Sparkline info;
 
         /// <summary>
         /// Creates a new instance of  the base sparkline view information.
@@ -45,7 +45,7 @@ namespace Dt.Cells.Data
             this.Reset();
         }
 
-        private double CalcItemWidth(Windows.Foundation.Size availableSize)
+        double CalcItemWidth(Windows.Foundation.Size availableSize)
         {
             double num = this.GetMinDatetime().ToOADate();
             double num2 = this.GetMaxDatetime().ToOADate();
@@ -492,7 +492,7 @@ namespace Dt.Cells.Data
             return this.cachedMaxDatetime;
         }
 
-        private void GetMaxMinDatetimes()
+        void GetMaxMinDatetimes()
         {
             for (int i = 0; i < this.CachedIndexMaping.Count; i++)
             {

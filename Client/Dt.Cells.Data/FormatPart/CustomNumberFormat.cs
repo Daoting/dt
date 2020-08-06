@@ -32,14 +32,14 @@ namespace Dt.Cells.Data
         /// <summary>
         /// the color format part.
         /// </summary>
-        private Dt.Cells.Data.ColorFormatPart colorFormatPart;
-        private readonly string colorFormatString;
+        Dt.Cells.Data.ColorFormatPart colorFormatPart;
+        readonly string colorFormatString;
         /// <summary>
         /// the condition format part.
         /// </summary>
-        private Dt.Cells.Data.ConditionFormatPart conditionFormatPart;
-        private readonly string conditionFormatString;
-        private static readonly string[] CurrencySymbols = new string[] { 
+        Dt.Cells.Data.ConditionFormatPart conditionFormatPart;
+        readonly string conditionFormatString;
+        static readonly string[] CurrencySymbols = new string[] { 
             "$", "Kč", @"kr\.", "Ft", "kr", "zł", "R$", @"fr\.", "RON", @"р\.", "kn", "EUR", "Lek", "Rs", "Rp", "Ls", 
             "Lt", "manat", "R", "RM", "so'm", "ETB", "DZD", "PhP", "XOF", "$b", "ERN", "RWF", "NT$", "Kč", "Ft", "zł", 
             "RON", "kn", "Lek", "Rs", "Rp", "manat", "Q", @"din\.", "HK$", "KM", "MOP", "CHF", "RD$", "J$", @"Bs\.F\.", "EC$", 
@@ -48,30 +48,30 @@ namespace Dt.Cells.Data
         /// <summary>
         /// date time format info
         /// </summary>
-        private System.Globalization.DateTimeFormatInfo dateTimeFormatInfo;
+        System.Globalization.DateTimeFormatInfo dateTimeFormatInfo;
         /// <summary>
         /// the [DBNum] part format.
         /// </summary>
-        private Dt.Cells.Data.DBNumberFormatPart dbNumberFormatPart;
-        private readonly string dbNumberFormatString;
+        Dt.Cells.Data.DBNumberFormatPart dbNumberFormatPart;
+        readonly string dbNumberFormatString;
         /// <summary>
         /// the format cache.
         /// </summary>
-        private string formatCached;
-        private StringBuilder formatStringTemplate;
+        string formatCached;
+        StringBuilder formatStringTemplate;
         /// <summary>
         /// the local id format part.
         /// </summary>
-        private Dt.Cells.Data.LocaleIDFormatPart localeIDFormatPart;
-        private readonly string localIDFormatString;
+        Dt.Cells.Data.LocaleIDFormatPart localeIDFormatPart;
+        readonly string localIDFormatString;
         /// <summary>
         /// the number format info.
         /// </summary>
-        private NumberFormatBase numberFormat;
+        NumberFormatBase numberFormat;
         /// <summary>
         /// number format info
         /// </summary>
-        private System.Globalization.NumberFormatInfo numberFormatInfo;
+        System.Globalization.NumberFormatInfo numberFormatInfo;
 
         /// <summary>
         /// Creates a new custom number format.
@@ -179,7 +179,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private bool ContainsCurrencySymbol(string format)
+        bool ContainsCurrencySymbol(string format)
         {
             foreach (string str in CurrencySymbols)
             {
@@ -229,7 +229,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="format">Format String</param>
         /// <param name="culture">The culture.</param>
-        private void Init(string format, CultureInfo culture)
+        void Init(string format, CultureInfo culture)
         {
             if (format == null)
             {

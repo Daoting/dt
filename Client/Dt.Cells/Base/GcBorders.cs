@@ -10,20 +10,21 @@
 using Dt.Cells.Data;
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Shapes;
 #endregion
 
 namespace Dt.Cells.UI
 {
+    /// <summary>
+    /// 调整为只用在内容区域，行/列头不再使用
+    /// </summary>
     internal sealed partial class GcBorders : Panel
     {
         Panel _borderLinesPanel = new Canvas();
-        Dictionary<ulong, Windows.Foundation.Rect> _cellBoundsCache = new Dictionary<ulong, Windows.Foundation.Rect>();
+        Dictionary<ulong, Rect> _cellBoundsCache = new Dictionary<ulong, Rect>();
         int _columnEnd = 0;
         int[] _columnIndexes = new int[0];
         int _columnStart = 0;
@@ -46,30 +47,71 @@ namespace Dt.Cells.UI
         int _viewportTopRow = -1;
         Worksheet _worksheet = null;
         float _zoomFactor;
-        const int _HORIZONTAL = 0;
-        const int _VERTICAL = 1;
 
         public GcBorders(GcViewport viewport)
         {
             _viewport = viewport;
             _zoomFactor = 1f;
-            base.Children.Add(_borderLinesPanel);
-            base.Children.Add(_scrollingGridlinesPanel);
+            Children.Add(_borderLinesPanel);
+            Children.Add(_scrollingGridlinesPanel);
         }
 
-        protected override Windows.Foundation.Size ArrangeOverride(Windows.Foundation.Size finalSize)
+        protected override Size MeasureOverride(Size availableSize)
+        {
+            _sheetView = GetSheetView();
+            if (_sheetView._fastScroll)
+            {
+                _scrollingGridlinesPanel.Measure(availableSize);
+                MeasureGridLinesForScrolling();
+                return base.MeasureOverride(availableSize);
+            }
+
+            _worksheet = GetWorksheet();
+            _rowIndexes = new int[0];
+            _columnIndexes = new int[0];
+            _rowStart = 0;
+            _rowEnd = 0;
+            _columnStart = 0;
+            _columnEnd = 0;
+            _borderLinesPanel.Measure(availableSize);
+            _lineMap = new Dictionary<ComboLine, LineItem>();
+            _linesPool = new BorderLinesPool(_borderLinesPanel.Children);
+            _linesPool.Reset();
+            _zoomFactor = _sheetView.ZoomFactor;
+
+            if (_worksheet != null)
+            {
+                _gridLine = _worksheet.GetGridLine(_viewport.SheetArea);
+                MeasureBorders(availableSize);
+            }
+
+            _linesPool.Collect();
+            foreach (ComboLine line in _lineMap.Keys)
+            {
+                LineItem lineItem = _lineMap[line];
+                Point point = _viewport.PointToClient(new Point(0.0, 0.0));
+                line.Width = availableSize.Width;
+                line.Height = availableSize.Height;
+                ((IThemeContextSupport)lineItem).SetContext(_worksheet);
+                line.Layout(lineItem, -point.X, -point.Y);
+                ((IThemeContextSupport)lineItem).SetContext(null);
+            }
+            return base.MeasureOverride(availableSize);
+        }
+
+        protected override Size ArrangeOverride(Size finalSize)
         {
             if (_sheetView._fastScroll)
             {
-                _scrollingGridlinesPanel.Arrange(new Windows.Foundation.Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
+                _scrollingGridlinesPanel.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
                 return base.ArrangeOverride(finalSize);
             }
 
-            _borderLinesPanel.Arrange(new Windows.Foundation.Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
+            _borderLinesPanel.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
             foreach (KeyValuePair<ComboLine, LineItem> pair in _lineMap)
             {
                 ComboLine line = pair.Key;
-                line.Arrange(new Windows.Foundation.Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
+                line.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
             }
             return base.ArrangeOverride(finalSize);
         }
@@ -173,7 +215,7 @@ namespace Dt.Cells.UI
                             item.NextBreaker2 = GetBorderLine(rIndex, cIndex, row, 0, Borders.BOTTOM);
                             break;
                     }
-                    Windows.Foundation.Rect empty = Windows.Foundation.Rect.Empty;
+                    Rect empty = Rect.Empty;
                     ulong num = (ulong) row;
                     num = num << 0x20;
                     num |= (uint) column;
@@ -325,15 +367,6 @@ namespace Dt.Cells.UI
                     {
                         list.Add(n);
                     }
-                    else if ((_viewport.SheetArea == (SheetArea.CornerHeader | SheetArea.RowHeader)) && (_viewport.Sheet.ResizeZeroIndicator == ResizeZeroIndicator.Enhanced))
-                    {
-                        int row = n + 1;
-                        while ((row <= _rowEnd) && (_worksheet.GetActualRowHeight(row, _viewport.SheetArea) == 0.0))
-                        {
-                            row++;
-                        }
-                        list.Add(row - 1);
-                    }
                 }
                 _rowIndexes = list.ToArray();
                 list.Clear();
@@ -342,15 +375,6 @@ namespace Dt.Cells.UI
                     if (_worksheet.GetActualColumnVisible(num11, _viewport.SheetArea))
                     {
                         list.Add(num11);
-                    }
-                    else if ((_viewport.SheetArea == SheetArea.ColumnHeader) && (_viewport.Sheet.ResizeZeroIndicator == ResizeZeroIndicator.Enhanced))
-                    {
-                        int column = num11 + 1;
-                        while ((column <= _columnEnd) && (_worksheet.GetActualColumnWidth(column, _viewport.SheetArea) == 0.0))
-                        {
-                            column++;
-                        }
-                        list.Add(column - 1);
                     }
                 }
                 _columnIndexes = list.ToArray();
@@ -608,7 +632,7 @@ namespace Dt.Cells.UI
             }
             if ((!flag && !isInCellflow) && (empty == null))
             {
-                if ((_viewport.SheetArea == SheetArea.Cells) && (_zoomFactor < 0.4f))
+                if (_zoomFactor < 0.4f)
                 {
                     return BorderLine.Empty;
                 }
@@ -661,9 +685,9 @@ namespace Dt.Cells.UI
             return null;
         }
 
-        Windows.Foundation.Rect GetCellBounds(int row, int column)
+        Rect GetCellBounds(int row, int column)
         {
-            Windows.Foundation.Rect rect = _viewport.GetCellBounds(row, column, true);
+            Rect rect = _viewport.GetCellBounds(row, column, true);
             if (rect.X == -1.0)
             {
                 rect.X = _viewport.Location.X;
@@ -744,7 +768,7 @@ namespace Dt.Cells.UI
             return BorderLineLayoutEngine.IsDoubleLine(line);
         }
 
-        void MeasureBorders(Windows.Foundation.Size availableSize)
+        void MeasureBorders(Size availableSize)
         {
             _borderLinesPanel.Visibility = Visibility.Visible;
             _scrollingGridlinesPanel.Visibility = Visibility.Collapsed;
@@ -769,7 +793,7 @@ namespace Dt.Cells.UI
             int viewportRightColumn = _sheetView.GetViewportRightColumn(_viewport.ColumnViewportIndex);
             RowLayout bottomRowLayout = rowLayoutModel.FindRow(viewportBottomRow);
             ColumnLayout rightColumnLayout = columnLayoutModel.FindColumn(viewportRightColumn);
-            Windows.Foundation.Point viewportLocation = _viewport.Location;
+            Point viewportLocation = _viewport.Location;
             if (((_rowIndexes.Length != 1) || (_rowIndexes[0] != -1)) && ((_columnIndexes.Length != 1) || (_columnIndexes[0] != -1)))
             {
                 double viewportWidth = _sheetView.GetViewportWidth(_viewport.ColumnViewportIndex);
@@ -821,67 +845,6 @@ namespace Dt.Cells.UI
             }
         }
 
-        protected override Windows.Foundation.Size MeasureOverride(Windows.Foundation.Size availableSize)
-        {
-            _sheetView = GetSheetView();
-            if (_sheetView._fastScroll)
-            {
-                _scrollingGridlinesPanel.Measure(availableSize);
-                MeasureGridLinesForScrolling();
-                return base.MeasureOverride(availableSize);
-            }
-            _worksheet = GetWorksheet();
-            _rowIndexes = new int[0];
-            _columnIndexes = new int[0];
-            _rowStart = 0;
-            _rowEnd = 0;
-            _columnStart = 0;
-            _columnEnd = 0;
-            _borderLinesPanel.Measure(availableSize);
-            _lineMap = new Dictionary<ComboLine, LineItem>();
-            _linesPool = new BorderLinesPool(_borderLinesPanel.Children);
-            _linesPool.Reset();
-            _zoomFactor = _sheetView.ZoomFactor;
-            if (_worksheet != null)
-            {
-                _gridLine = _worksheet.GetGridLine(_viewport.SheetArea);
-                if (((_viewport.SheetArea == SheetArea.ColumnHeader) || (_viewport.SheetArea == (SheetArea.CornerHeader | SheetArea.RowHeader))) && _viewport.Sheet.HeaderGridLineColor.HasValue)
-                {
-                    _gridLine = new BorderLine(_viewport.Sheet.HeaderGridLineColor.Value, BorderLineStyle.Thin);
-                }
-                switch (_viewport.SheetArea)
-                {
-                    case SheetArea.Cells:
-                    {
-                        SheetSpanModel spanModel = _worksheet.SpanModel;
-                        break;
-                    }
-                    case (SheetArea.CornerHeader | SheetArea.RowHeader):
-                    {
-                        SheetSpanModel rowHeaderSpanModel = _worksheet.RowHeaderSpanModel;
-                        break;
-                    }
-                    case SheetArea.ColumnHeader:
-                    {
-                        SheetSpanModel columnHeaderSpanModel = _worksheet.ColumnHeaderSpanModel;
-                        break;
-                    }
-                }
-                MeasureBorders(availableSize);
-            }
-            _linesPool.Collect();
-            foreach (ComboLine line in _lineMap.Keys)
-            {
-                LineItem lineItem = _lineMap[line];
-                Windows.Foundation.Point point = _viewport.PointToClient(new Windows.Foundation.Point(0.0, 0.0));
-                line.Width = availableSize.Width;
-                line.Height = availableSize.Height;
-                ((IThemeContextSupport) lineItem).SetContext(_worksheet);
-                line.Layout(lineItem, -point.X, -point.Y);
-                ((IThemeContextSupport) lineItem).SetContext(null);
-            }
-            return base.MeasureOverride(availableSize);
-        }
 
         int NextColumn(int cPos)
         {

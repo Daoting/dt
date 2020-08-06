@@ -17,7 +17,7 @@ namespace Dt.Cells.Data
 {
     internal static class CalcLocalIdentityExtension
     {
-        private static CompareResult Compare(int start1, int count1, int start2, int count2)
+        static CompareResult Compare(int start1, int count1, int start2, int count2)
         {
             if (start1 == -1)
             {

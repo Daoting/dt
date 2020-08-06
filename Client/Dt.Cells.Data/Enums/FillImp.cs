@@ -21,8 +21,8 @@ namespace Dt.Cells.Data
     /// </summary>
     internal class FillImp
     {
-        private FillCachePool _fillCache;
-        private Worksheet _worksheet;
+        FillCachePool _fillCache;
+        Worksheet _worksheet;
 
         public FillImp(Worksheet worksheet)
         {
@@ -30,7 +30,7 @@ namespace Dt.Cells.Data
             this._fillCache = new FillCachePool(worksheet);
         }
 
-        private void AutoFillColumnTrendValues(CellRange sourceRange, CellRange targetRange, int sourceColumn, int targetColumn, NumberSource trendData)
+        void AutoFillColumnTrendValues(CellRange sourceRange, CellRange targetRange, int sourceColumn, int targetColumn, NumberSource trendData)
         {
             if ((trendData != null) && (trendData.DataCount > 0))
             {
@@ -99,7 +99,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void AutoFillRange(CellRange sourceRange, int rowCount, int columnCount, FillSeries fillSeries)
+        void AutoFillRange(CellRange sourceRange, int rowCount, int columnCount, FillSeries fillSeries)
         {
             int num;
             int num2;
@@ -150,7 +150,7 @@ namespace Dt.Cells.Data
             this._fillCache.Clear();
         }
 
-        private void AutoFillRowTrendValues(CellRange sourceRange, CellRange targetRange, int sourceRow, int targetRow, NumberSource trendData)
+        void AutoFillRowTrendValues(CellRange sourceRange, CellRange targetRange, int sourceRow, int targetRow, NumberSource trendData)
         {
             if ((trendData != null) && (trendData.DataCount > 0))
             {
@@ -219,7 +219,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private List<double> CalcSeriesData(NumberSource sourceData, int count, FillType type, double stepValue, double? stopValue, FillDateUnit? dateUnit)
+        List<double> CalcSeriesData(NumberSource sourceData, int count, FillType type, double stepValue, double? stopValue, FillDateUnit? dateUnit)
         {
             if ((sourceData == null) || (sourceData.DataCount <= 0))
             {
@@ -256,7 +256,7 @@ namespace Dt.Cells.Data
             return list;
         }
 
-        private List<double> CalcSeriesTrendData(NumberSource sourceData, int count, FillType type)
+        List<double> CalcSeriesTrendData(NumberSource sourceData, int count, FillType type)
         {
             if (((sourceData == null) || (sourceData.DataCount <= 0)) || ((type != FillType.Linear) && (type != FillType.Growth)))
             {
@@ -311,7 +311,7 @@ namespace Dt.Cells.Data
             return list;
         }
 
-        private void CopyCell(Worksheet sheet, int fromRow, int fromColumn, int toRow, int toColumn, object newValue, FillType type)
+        void CopyCell(Worksheet sheet, int fromRow, int fromColumn, int toRow, int toColumn, object newValue, FillType type)
         {
             if (sheet.HasFormula)
             {
@@ -349,7 +349,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void CopyRange(CellRange sourceRange, CellRange targetRange, FillSeries fillSeries, FillType fillType)
+        void CopyRange(CellRange sourceRange, CellRange targetRange, FillSeries fillSeries, FillType fillType)
         {
             bool hasFormula;
             int num7;
@@ -523,7 +523,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void DirectionFillRange(CellRange sourceRange, int row, int column, int rowCount, int columnCount, FillDirection direction)
+        void DirectionFillRange(CellRange sourceRange, int row, int column, int rowCount, int columnCount, FillDirection direction)
         {
             this._fillCache.Clear();
             switch (direction)
@@ -688,7 +688,7 @@ namespace Dt.Cells.Data
             this.SeriesFillRange(range, series, FillType.Linear, step, stop, null);
         }
 
-        private CellRange FixRange(CellRange range)
+        CellRange FixRange(CellRange range)
         {
             int row = range.Row;
             int column = range.Column;
@@ -707,7 +707,7 @@ namespace Dt.Cells.Data
             return new CellRange(row, column, rowCount, columnCount);
         }
 
-        private string GetAutoFillColumnTreadValue(CellRange sourceRange, CellRange targetRange, int souceCoulumn, int targetColumn, NumberSource trendData)
+        string GetAutoFillColumnTreadValue(CellRange sourceRange, CellRange targetRange, int souceCoulumn, int targetColumn, NumberSource trendData)
         {
             if ((trendData != null) && (trendData.DataCount > 0))
             {
@@ -755,7 +755,7 @@ namespace Dt.Cells.Data
             return null;
         }
 
-        private void GetAutoFillColumnTrendValues(CellRange sourceRange, CellRange targetRange, int sourceColumn, int targetColumn, NumberSource trendData, Dictionary<long, object> result)
+        void GetAutoFillColumnTrendValues(CellRange sourceRange, CellRange targetRange, int sourceColumn, int targetColumn, NumberSource trendData, Dictionary<long, object> result)
         {
             if ((trendData != null) && (trendData.DataCount > 0))
             {
@@ -819,7 +819,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private object GetAutoFillRange(CellRange sourceRange, int rowCount, int columnCount, FillSeries fillSeries)
+        object GetAutoFillRange(CellRange sourceRange, int rowCount, int columnCount, FillSeries fillSeries)
         {
             int num;
             int num2;
@@ -872,7 +872,7 @@ namespace Dt.Cells.Data
             return result;
         }
 
-        private string GetAutoFillRowTreadValue(CellRange sourceRange, CellRange targetRange, int souceRow, int targetRow, NumberSource trendData)
+        string GetAutoFillRowTreadValue(CellRange sourceRange, CellRange targetRange, int souceRow, int targetRow, NumberSource trendData)
         {
             if ((trendData != null) && (trendData.DataCount > 0))
             {
@@ -920,7 +920,7 @@ namespace Dt.Cells.Data
             return null;
         }
 
-        private void GetAutoFillRowTrendValues(CellRange sourceRange, CellRange targetRange, int sourceRow, int targetRow, NumberSource trendData, Dictionary<long, object> result)
+        void GetAutoFillRowTrendValues(CellRange sourceRange, CellRange targetRange, int sourceRow, int targetRow, NumberSource trendData, Dictionary<long, object> result)
         {
             if ((trendData != null) && (trendData.DataCount > 0))
             {
@@ -984,7 +984,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private CellRange GetAutoFillSourceRange(int row, int column, int rowCount, int columnCount, FillSeries fillSeries)
+        CellRange GetAutoFillSourceRange(int row, int column, int rowCount, int columnCount, FillSeries fillSeries)
         {
             switch (fillSeries)
             {
@@ -1074,7 +1074,7 @@ namespace Dt.Cells.Data
             return null;
         }
 
-        private void GetCopyRangeValue(CellRange sourceRange, CellRange targetRange, FillSeries fillSeries, FillType fillType, Dictionary<long, object> result)
+        void GetCopyRangeValue(CellRange sourceRange, CellRange targetRange, FillSeries fillSeries, FillType fillType, Dictionary<long, object> result)
         {
             bool hasFormula;
             int num7;
@@ -1249,7 +1249,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private CellRange GetDirectionFillSourceRange(int row, int column, int rowCount, int columnCount, FillDirection direction)
+        CellRange GetDirectionFillSourceRange(int row, int column, int rowCount, int columnCount, FillDirection direction)
         {
             CellRange range = null;
             switch (direction)
@@ -1355,7 +1355,7 @@ namespace Dt.Cells.Data
             return this._worksheet.GetText(sourceRange.Row, sourceRange.Column + num2);
         }
 
-        private double GetNextDateValue(FillDateUnit dateUnit, double initValue, double currentValue, double stepValue, int nextIndex)
+        double GetNextDateValue(FillDateUnit dateUnit, double initValue, double currentValue, double stepValue, int nextIndex)
         {
             double num = currentValue;
             switch (dateUnit)
@@ -1393,7 +1393,7 @@ namespace Dt.Cells.Data
             return num;
         }
 
-        private NumberSource GetSeriesSource(int row, int column, int rowCount, int columnCount, FillSeries fillSeries)
+        NumberSource GetSeriesSource(int row, int column, int rowCount, int columnCount, FillSeries fillSeries)
         {
             NumberSource source = null;
             switch (fillSeries)
@@ -1432,7 +1432,7 @@ namespace Dt.Cells.Data
             return source;
         }
 
-        private object GetSeriesTrendFillRangeValue(CellRange range, FillSeries fillSeries, FillType fillType)
+        object GetSeriesTrendFillRangeValue(CellRange range, FillSeries fillSeries, FillType fillType)
         {
             Dictionary<long, object> dictionary = new Dictionary<long, object>();
             CellRange range2 = this.FixRange(range);
@@ -1488,7 +1488,7 @@ namespace Dt.Cells.Data
             return dictionary;
         }
 
-        private bool HasPartSpans(int row, int column, int rowCount, int columnCount)
+        bool HasPartSpans(int row, int column, int rowCount, int columnCount)
         {
             IEnumerator enumerator = this._worksheet.SpanModel.GetEnumerator(row, column, rowCount, columnCount);
             while (enumerator.MoveNext())
@@ -1506,12 +1506,12 @@ namespace Dt.Cells.Data
             return false;
         }
 
-        private bool HasSpans(int row, int column, int rowCount, int columnCount)
+        bool HasSpans(int row, int column, int rowCount, int columnCount)
         {
             return this._worksheet.SpanModel.GetEnumerator(row, column, rowCount, columnCount).MoveNext();
         }
 
-        private CellRange InflateCellRange(CellRange range)
+        CellRange InflateCellRange(CellRange range)
         {
             List<CellRange> spans = this._worksheet.GetSpans();
             if ((spans != null) && (range != null))
@@ -1521,7 +1521,7 @@ namespace Dt.Cells.Data
             return range;
         }
 
-        private bool IsArithmeticProgression(List<int> indexes, List<double> values)
+        bool IsArithmeticProgression(List<int> indexes, List<double> values)
         {
             if (indexes.Count != values.Count)
             {
@@ -1551,7 +1551,7 @@ namespace Dt.Cells.Data
             return true;
         }
 
-        private void SeriesFillRange(CellRange range, FillSeries fillSeries, FillType type, double stepValue, double? stopValue, FillDateUnit? dateUnit)
+        void SeriesFillRange(CellRange range, FillSeries fillSeries, FillType type, double stepValue, double? stopValue, FillDateUnit? dateUnit)
         {
             CellRange range2 = this.FixRange(range);
             int row = range2.Row;
@@ -1604,7 +1604,7 @@ namespace Dt.Cells.Data
             this._fillCache.Clear();
         }
 
-        private void SeriesTrendFillRange(CellRange range, FillSeries fillSeries, FillType fillType)
+        void SeriesTrendFillRange(CellRange range, FillSeries fillSeries, FillType fillType)
         {
             CellRange range2 = this.FixRange(range);
             int row = range2.Row;
@@ -1657,10 +1657,10 @@ namespace Dt.Cells.Data
             this._fillCache.Clear();
         }
 
-        private class FillCachePool
+        class FillCachePool
         {
-            private Dictionary<ulong, StyleInfo> _cacheStyle = new Dictionary<ulong, StyleInfo>();
-            private Worksheet _sheet;
+            Dictionary<ulong, StyleInfo> _cacheStyle = new Dictionary<ulong, StyleInfo>();
+            Worksheet _sheet;
 
             public FillCachePool(Worksheet sheet)
             {
@@ -1688,7 +1688,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private enum FillType
+        enum FillType
         {
             Direction,
             Linear,
@@ -1697,12 +1697,12 @@ namespace Dt.Cells.Data
             Auto
         }
 
-        private class NumberSource
+        class NumberSource
         {
-            private List<int> _indexes;
-            private List<double> _innerValues;
-            private int _startIndex;
-            private Type _type;
+            List<int> _indexes;
+            List<double> _innerValues;
+            int _startIndex;
+            Type _type;
 
             public NumberSource() : this(-1)
             {
@@ -1775,7 +1775,7 @@ namespace Dt.Cells.Data
                 return (double) value;
             }
 
-            private DateTime ToDateTime(object value)
+            DateTime ToDateTime(object value)
             {
                 DateTime? nullable = FormatConverter.TryDateTime(value, false);
                 if (!nullable.HasValue)
@@ -1785,13 +1785,13 @@ namespace Dt.Cells.Data
                 return nullable.Value;
             }
 
-            private double ToDouble(object value)
+            double ToDouble(object value)
             {
                 double? nullable = FormatConverter.TryDouble(value, false);
                 return (nullable.HasValue ? ((double) nullable.GetValueOrDefault()) : 0.0);
             }
 
-            private TimeSpan ToTimeSpan(object value)
+            TimeSpan ToTimeSpan(object value)
             {
                 TimeSpan? nullable = FormatConverter.TryTimeSpan(value, false);
                 if (!nullable.HasValue)

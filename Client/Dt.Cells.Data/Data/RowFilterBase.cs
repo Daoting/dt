@@ -25,12 +25,12 @@ namespace Dt.Cells.Data
         /// Indicates a blank item in the filter.
         /// </summary>
         public static readonly object BlankItem = new object();
-        private CellRange range;
-        private bool showFilterButton = true;
+        CellRange range;
+        bool showFilterButton = true;
         /// <summary>
         /// the sheet.
         /// </summary>
-        private Worksheet worksheet;
+        Worksheet worksheet;
 
         internal event EventHandler<FilterEventArgs> Changed;
 

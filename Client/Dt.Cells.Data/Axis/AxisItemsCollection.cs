@@ -19,7 +19,7 @@ namespace Dt.Cells.Data
     /// </summary>
     public sealed class AxisItemsCollection : SeriesDataCollection<object>
     {
-        private Dt.Cells.Data.Axis _axis;
+        Dt.Cells.Data.Axis _axis;
 
         /// <summary>
         /// 
@@ -40,7 +40,7 @@ namespace Dt.Cells.Data
             this.AdjustAxisMinMax(this.Axis, item);
         }
 
-        private void AdjustAxisMinMax(Dt.Cells.Data.Axis axis, object value)
+        void AdjustAxisMinMax(Dt.Cells.Data.Axis axis, object value)
         {
             double? nullable = FormatConverter.TryDouble(value, true);
             if (nullable.HasValue)
@@ -102,7 +102,7 @@ namespace Dt.Cells.Data
             return obj;
         }
 
-        private int GetNumbersCount(double number)
+        int GetNumbersCount(double number)
         {
             return ((double) number).ToString().Length;
         }
@@ -152,7 +152,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void UpdateCategoryAxisMinMax()
+        void UpdateCategoryAxisMinMax()
         {
             Dt.Cells.Data.Axis axis = this.Axis;
             double min = 0.0;
@@ -192,7 +192,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void UpdateDateTimeItems()
+        void UpdateDateTimeItems()
         {
             double num;
             double num2;
@@ -227,7 +227,7 @@ namespace Dt.Cells.Data
             this.Axis.NotifyAxisChanged("Items");
         }
 
-        private void UpdateDoubleItems()
+        void UpdateDoubleItems()
         {
             double num;
             double num2;

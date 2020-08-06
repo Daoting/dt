@@ -23,16 +23,16 @@ namespace Dt.Cells.Data
         /// <summary>
         /// The sort by row.
         /// </summary>
-        private bool byRows;
-        private Dictionary<string, object> cachedValues = new Dictionary<string, object>();
+        bool byRows;
+        Dictionary<string, object> cachedValues = new Dictionary<string, object>();
         /// <summary>
         /// The sort info array.
         /// </summary>
-        private SortInfo[] sortInfo;
+        SortInfo[] sortInfo;
         /// <summary>
         /// The sheet object.
         /// </summary>
-        private Worksheet worksheet;
+        Worksheet worksheet;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.SpreadSortComparer" /> class.
@@ -58,7 +58,7 @@ namespace Dt.Cells.Data
         /// <param name="row2">The row index2</param>
         /// <param name="col2">The column index2</param>
         /// <returns>The sort result</returns>
-        private int _SortCompare(int index, int sortKey, int row, int col, int row2, int col2)
+        int _SortCompare(int index, int sortKey, int row, int col, int row2, int col2)
         {
             bool ascending = this.sortInfo[sortKey].Ascending;
             IComparer comparer = this.sortInfo[sortKey].Comparer;

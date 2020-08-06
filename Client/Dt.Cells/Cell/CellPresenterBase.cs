@@ -40,12 +40,6 @@ namespace Dt.Cells.UI
         bool _isInvalidating;
         Dt.Cells.UI.CellOverflowLayout _overflowLayout;
         internal CellBackgroundPanel _rootPanel;
-        internal const int ConditionalZIndex = 500;
-        internal const int ContentZIndex = 0x7d0;
-        internal const int CustomDrawingObjectZIndex = 0x5dc;
-        internal const int FilterButtonZIndex = 0xbb8;
-        internal const string GCCELL_elementRoot = "Root";
-        internal const int SparkLineZIndex = 0x3e8;
 
         /// <summary>
         /// Creates a new instance of the class.
@@ -67,7 +61,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        Windows.Foundation.Size CalcStringSize(Windows.Foundation.Size maxSize, bool allowWrap, string text = null)
+        Size CalcStringSize(Size maxSize, bool allowWrap, string text = null)
         {
             if (_cellType.HasEditingElement())
             {
@@ -92,7 +86,7 @@ namespace Dt.Cells.UI
                     }
                 }
             }
-            return new Windows.Foundation.Size();
+            return new Size();
         }
 
         internal virtual void CleanUpBeforeDiscard()
@@ -144,27 +138,27 @@ namespace Dt.Cells.UI
             return _cellType.GetEditingElement();
         }
 
-        internal Windows.Foundation.Size GetPreferredEditorSize(Windows.Foundation.Size maxSize, Windows.Foundation.Size cellContentSize, HorizontalAlignment alignment, float indent)
+        internal Size GetPreferredEditorSize(Size maxSize, Size cellContentSize, HorizontalAlignment alignment, float indent)
         {
             if (((OwningRow == null) ? null : OwningRow.OwningPresenter) == null)
             {
-                return new Windows.Foundation.Size();
+                return new Size();
             }
             if (!OwningRow.OwningPresenter.Sheet.CanEditOverflow || (_cellType == null))
             {
-                return new Windows.Foundation.Size(cellContentSize.Width, cellContentSize.Height);
+                return new Size(cellContentSize.Width, cellContentSize.Height);
             }
             double num = Math.Min(maxSize.Width, cellContentSize.Width);
-            Windows.Foundation.Size size = MeasureHelper.ConvertTextSizeToExcelCellSize(CalcStringSize(maxSize, true, null), ZoomFactor);
+            Size size = MeasureHelper.ConvertTextSizeToExcelCellSize(CalcStringSize(maxSize, true, null), ZoomFactor);
             size.Width += 2.0;
             string text = "T";
-            Windows.Foundation.Size size2 = CalcStringSize(new Windows.Foundation.Size(2147483647.0, 2147483647.0), false, text);
+            Size size2 = CalcStringSize(new Size(2147483647.0, 2147483647.0), false, text);
             size.Width += size2.Width;
             if (((alignment == HorizontalAlignment.Left) || (alignment == HorizontalAlignment.Right)) && (num < (size.Width + indent)))
             {
                 size.Width += indent;
             }
-            return new Windows.Foundation.Size(Math.Max(num, size.Width), Math.Max(cellContentSize.Height, size.Height));
+            return new Size(Math.Max(num, size.Width), Math.Max(cellContentSize.Height, size.Height));
         }
 
         internal void HideForEditing()
@@ -198,14 +192,14 @@ namespace Dt.Cells.UI
             base.InvalidateMeasure();
         }
 
-        internal bool JudgeWordWrap(Windows.Foundation.Size maxSize, Windows.Foundation.Size cellContentSize, HorizontalAlignment alignment, float indent)
+        internal bool JudgeWordWrap(Size maxSize, Size cellContentSize, HorizontalAlignment alignment, float indent)
         {
             if (((((OwningRow == null) ? null : OwningRow.OwningPresenter) == null) || !OwningRow.OwningPresenter.Sheet.CanEditOverflow) || (_cellType == null))
             {
                 return false;
             }
             double num = Math.Min(maxSize.Width, cellContentSize.Width);
-            Windows.Foundation.Size size = MeasureHelper.ConvertTextSizeToExcelCellSize(CalcStringSize(new Windows.Foundation.Size(2147483647.0, 2147483647.0), false, null), ZoomFactor);
+            Size size = MeasureHelper.ConvertTextSizeToExcelCellSize(CalcStringSize(new Size(2147483647.0, 2147483647.0), false, null), ZoomFactor);
             size.Width += 2.0;
             if (((alignment == HorizontalAlignment.Left) || (alignment == HorizontalAlignment.Right)) && (num < (size.Width + indent)))
             {
@@ -219,7 +213,7 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="constraint"> The maximum size that the method can return.</param>
         /// <returns> The size of the control, up to the maximum specified by the constraint.</returns>
-        protected override Windows.Foundation.Size MeasureOverride(Windows.Foundation.Size constraint)
+        protected override Size MeasureOverride(Size constraint)
         {
             if (_isHiddenForEditing)
             {
@@ -373,7 +367,7 @@ namespace Dt.Cells.UI
                     if (_content != null)
                     {
                         RootPanel.InvalidateArrange();
-                        _content.Arrange(new Windows.Foundation.Rect(0.0, 0.0, base.ActualWidth, base.ActualHeight));
+                        _content.Arrange(new Rect(0.0, 0.0, base.ActualWidth, base.ActualHeight));
                         _content.InvalidateArrange();
                     }
                 }

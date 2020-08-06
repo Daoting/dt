@@ -19,10 +19,10 @@ namespace Dt.Cells.Data
 {
     internal sealed class CollectionViewConnection : ConnectionBase
     {
-        private ICollectionView collectionView;
-        private Dictionary<string, BindingField> fields = new Dictionary<string, BindingField>();
+        ICollectionView collectionView;
+        Dictionary<string, BindingField> fields = new Dictionary<string, BindingField>();
 
-        private static ICollectionView BuildView(object source)
+        static ICollectionView BuildView(object source)
         {
             if ((source is IEnumerable) && !((IEnumerable) source).GetEnumerator().MoveNext())
             {
@@ -59,7 +59,7 @@ namespace Dt.Cells.Data
             base.Close();
         }
 
-        private void CreateAvailableFields()
+        void CreateAvailableFields()
         {
             if ((this.Context != null) && ((this.fields == null) || (this.fields.Count == 0)))
             {
@@ -102,7 +102,7 @@ namespace Dt.Cells.Data
             return base.GetColumnDataType(field);
         }
 
-        private static object GetFiledValueFromRecord(BindingField bindingField, object record)
+        static object GetFiledValueFromRecord(BindingField bindingField, object record)
         {
             if ((bindingField.propertyInfo != null) && bindingField.propertyInfo.CanRead)
             {
@@ -172,7 +172,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private static void SetFiledValueFromRecord(BindingField bindingField, object record, object value)
+        static void SetFiledValueFromRecord(BindingField bindingField, object record, object value)
         {
             if ((bindingField.propertyInfo != null) && bindingField.propertyInfo.CanWrite)
             {
@@ -198,7 +198,7 @@ namespace Dt.Cells.Data
             this.collectionView = BuildView(base.DataSource);
         }
 
-        private ICollectionView Context
+        ICollectionView Context
         {
             get { return  this.collectionView; }
         }
@@ -217,11 +217,11 @@ namespace Dt.Cells.Data
 
         internal sealed class BindingField : ICloneable
         {
-            private int index;
-            private string name;
+            int index;
+            string name;
             public PropertyInfo propertyInfo;
 
-            private BindingField()
+            BindingField()
             {
             }
 

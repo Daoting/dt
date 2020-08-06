@@ -29,14 +29,14 @@ namespace Dt.Cells.Data
     /// </summary>
     internal class GcPaintHelper
     {
-        private Windows.UI.Color cacheStartColor = Colors.Transparent;
-        private const int marginOffset = 2;
-        private const bool PrintRectangle = false;
-        private Dictionary<ulong, StyleInfo> styleCellDictionary = new Dictionary<ulong, StyleInfo>();
-        private Dictionary<ulong, StyleInfo> styleColumnHeaderDictionary = new Dictionary<ulong, StyleInfo>();
-        private Dictionary<ulong, StyleInfo> styleRowHeaderDicitonary = new Dictionary<ulong, StyleInfo>();
+        Windows.UI.Color cacheStartColor = Colors.Transparent;
+        const int marginOffset = 2;
+        const bool PrintRectangle = false;
+        Dictionary<ulong, StyleInfo> styleCellDictionary = new Dictionary<ulong, StyleInfo>();
+        Dictionary<ulong, StyleInfo> styleColumnHeaderDictionary = new Dictionary<ulong, StyleInfo>();
+        Dictionary<ulong, StyleInfo> styleRowHeaderDicitonary = new Dictionary<ulong, StyleInfo>();
 
-        private static DashStyle BorderLineStyle2DashStyle(BorderLineStyle style)
+        static DashStyle BorderLineStyle2DashStyle(BorderLineStyle style)
         {
             switch (style)
             {
@@ -80,7 +80,7 @@ namespace Dt.Cells.Data
         /// <param name="bounds">The bounds</param>
         /// <param name="g">The graphics</param>
         /// <param name="state">The state.</param>
-        private static void DrawBorder(Graphics g, ExporterState state, LineItem border, Windows.Foundation.Rect bounds)
+        static void DrawBorder(Graphics g, ExporterState state, LineItem border, Windows.Foundation.Rect bounds)
         {
             double num = 0.3;
             BorderLine line = (border == null) ? null : border.Line;
@@ -141,7 +141,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private static void DrawLine(Graphics g, ExporterState state, Windows.Foundation.Point from, Windows.Foundation.Point to, Windows.UI.Color color, DashStyle style, double thickness)
+        static void DrawLine(Graphics g, ExporterState state, Windows.Foundation.Point from, Windows.Foundation.Point to, Windows.UI.Color color, DashStyle style, double thickness)
         {
             SolidColorBrush borderBrush = new SolidColorBrush(color);
             if (thickness > 0.0)
@@ -163,7 +163,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private StyleInfo FindStyle(Worksheet worksheet, int r, int c, SheetArea area)
+        StyleInfo FindStyle(Worksheet worksheet, int r, int c, SheetArea area)
         {
             ulong num = (ulong) r;
             num = num << 0x20;
@@ -210,7 +210,7 @@ namespace Dt.Cells.Data
             return info3;
         }
 
-        private BorderLine GetBorderLine(Worksheet worksheet, int r, int c, SheetArea area, int border)
+        BorderLine GetBorderLine(Worksheet worksheet, int r, int c, SheetArea area, int border)
         {
             StyleInfo info;
             if (((r > -1) && (r < worksheet.GetRowCount(area))) && ((c > -1) && (c < worksheet.GetColumnCount(area))))
@@ -241,7 +241,7 @@ namespace Dt.Cells.Data
             return null;
         }
 
-        private static List<Windows.Foundation.Point> GetBorderPoints(Windows.Foundation.Rect rect, Inset inset, BorderPart part)
+        static List<Windows.Foundation.Point> GetBorderPoints(Windows.Foundation.Rect rect, Inset inset, BorderPart part)
         {
             List<Windows.Foundation.Point> list = new List<Windows.Foundation.Point>();
             switch (part)
@@ -283,7 +283,7 @@ namespace Dt.Cells.Data
         /// <param name="gridline">The grid line</param>
         /// <param name="w1">The w1 width</param>
         /// <param name="w2">The w2 width</param>
-        private static void GetGridLineWidths(BorderLine gridline, out double w1, out double w2)
+        static void GetGridLineWidths(BorderLine gridline, out double w1, out double w2)
         {
             if (gridline == null)
             {
@@ -297,7 +297,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private static int GetNextVisableColumn(int columnIndex, Worksheet worksheet, SheetArea area)
+        static int GetNextVisableColumn(int columnIndex, Worksheet worksheet, SheetArea area)
         {
             int num = columnIndex - 1;
             for (int i = num; i < worksheet.GetColumnCount(area); i++)
@@ -310,7 +310,7 @@ namespace Dt.Cells.Data
             return -1;
         }
 
-        private static int GetNextVisableRow(int rowIndex, Worksheet worksheet, SheetArea area)
+        static int GetNextVisableRow(int rowIndex, Worksheet worksheet, SheetArea area)
         {
             int num = rowIndex + 1;
             for (int i = num; i < worksheet.GetRowCount(area); i++)
@@ -323,7 +323,7 @@ namespace Dt.Cells.Data
             return -1;
         }
 
-        private SpanCellInfo GetOverFlowTextCellInfo(double x, double y, double width, double height, int offsetCindex, int offsetRindex, int rowIndex, int columnIndex, int overflowTextCellIndex, PartLayoutData rowHeights, PartLayoutData columnWidths, CellRange spanRange, SheetArea area, Worksheet worksheet)
+        SpanCellInfo GetOverFlowTextCellInfo(double x, double y, double width, double height, int offsetCindex, int offsetRindex, int rowIndex, int columnIndex, int overflowTextCellIndex, PartLayoutData rowHeights, PartLayoutData columnWidths, CellRange spanRange, SheetArea area, Worksheet worksheet)
         {
             SpanCellInfo info = new SpanCellInfo {
                 StyleRect = new Windows.Foundation.Rect(x, y, width, height)
@@ -354,7 +354,7 @@ namespace Dt.Cells.Data
             return info;
         }
 
-        private static int GetPreviousVisableColumn(int columnIndex, Worksheet worksheet, SheetArea area)
+        static int GetPreviousVisableColumn(int columnIndex, Worksheet worksheet, SheetArea area)
         {
             int num = columnIndex - 1;
             for (int i = num; i >= 0; i--)
@@ -367,7 +367,7 @@ namespace Dt.Cells.Data
             return -1;
         }
 
-        private static int GetPreviousVisableRow(int rowIndex, Worksheet worksheet, SheetArea area)
+        static int GetPreviousVisableRow(int rowIndex, Worksheet worksheet, SheetArea area)
         {
             int num = rowIndex - 1;
             for (int i = num; i >= 0; i--)
@@ -393,7 +393,7 @@ namespace Dt.Cells.Data
         /// <returns>
         /// <c>true</c> if the specified rect1 is intersect; otherwise, <c>false</c>.
         /// </returns>
-        private static bool IsIntersect(Windows.Foundation.Rect rect1, Windows.Foundation.Rect rect2)
+        static bool IsIntersect(Windows.Foundation.Rect rect1, Windows.Foundation.Rect rect2)
         {
             return ((((rect2.X < (rect1.X + rect1.Width)) && (rect1.X < (rect2.X + rect2.Width))) && (rect2.Y < (rect1.Y + rect1.Height))) && (rect1.Y < (rect2.Y + rect2.Height)));
         }
@@ -412,12 +412,12 @@ namespace Dt.Cells.Data
         /// <returns>
         /// <c>true</c> if [is need to draw sticky note] [the specified sticky note]; otherwise, <c>false</c>
         /// </returns>
-        private static bool IsNeedToDrawStickyNode(StickyNote sNote, int columnStartIndex, int columnEndIndex, int rowStartIndex, int rowEndIndex, Windows.Foundation.Rect cellRect, Windows.Foundation.Rect noteRect, ref bool isLineOnly)
+        static bool IsNeedToDrawStickyNode(StickyNote sNote, int columnStartIndex, int columnEndIndex, int rowStartIndex, int rowEndIndex, Windows.Foundation.Rect cellRect, Windows.Foundation.Rect noteRect, ref bool isLineOnly)
         {
             return false;
         }
 
-        private static BorderLine MaxBorderLine(BorderLine l1, BorderLine l2, BorderLine gridLine)
+        static BorderLine MaxBorderLine(BorderLine l1, BorderLine l2, BorderLine gridLine)
         {
             if ((l1 != null) && (l1.Style == BorderLineStyle.Double))
             {
@@ -743,7 +743,7 @@ namespace Dt.Cells.Data
             g.RestoreState();
         }
 
-        private static void PaintDoubleLineBorderPart(Graphics g, Windows.Foundation.Rect rect, Inset inset, BorderPart part)
+        static void PaintDoubleLineBorderPart(Graphics g, Windows.Foundation.Rect rect, Inset inset, BorderPart part)
         {
             List<Windows.Foundation.Point> list = GetBorderPoints(rect, inset, part);
             g.MoveTo(list[0]);
@@ -761,7 +761,7 @@ namespace Dt.Cells.Data
         /// <param name="shapeRect">The shape rect.</param>
         /// <param name="isShadow">if set to <c>true</c> [is shadow].</param>
         /// <param name="state">The state.</param>
-        private static void PaintGeometry(ShapeGeometry geo, Graphics g, ShapeBase shape, Windows.Foundation.Rect shapeRect, bool isShadow, ExporterState state)
+        static void PaintGeometry(ShapeGeometry geo, Graphics g, ShapeBase shape, Windows.Foundation.Rect shapeRect, bool isShadow, ExporterState state)
         {
         }
 
@@ -783,7 +783,7 @@ namespace Dt.Cells.Data
         /// <param name="borders">The borders</param>
         /// <param name="g">The graphics</param>
         /// <param name="state">The state</param>
-        private static void PaintGridLine(Worksheet worksheet, SheetArea area, BorderLine hGridLine, BorderLine vGridLine, int rowStartIndex, int rowEndIndex, int columnStartIndex, int columnEndIndex, PartLayoutData heights, PartLayoutData widths, SpanLayoutData spans, Windows.Foundation.Rect rect, List<LineItem> borders, Graphics g, ExporterState state)
+        static void PaintGridLine(Worksheet worksheet, SheetArea area, BorderLine hGridLine, BorderLine vGridLine, int rowStartIndex, int rowEndIndex, int columnStartIndex, int columnEndIndex, PartLayoutData heights, PartLayoutData widths, SpanLayoutData spans, Windows.Foundation.Rect rect, List<LineItem> borders, Graphics g, ExporterState state)
         {
             GridLinePainter painter = new GridLinePainter();
             double y = 0.0;
@@ -1156,7 +1156,7 @@ namespace Dt.Cells.Data
         /// <param name="g">The g.</param>
         /// <param name="state">The state.</param>
         /// <param name="rect">The rect.</param>
-        private void PaintRichLabelInnerControls(List<List<GcPrintableControl>> lists, Graphics g, ExporterState state, Windows.Foundation.Rect rect)
+        void PaintRichLabelInnerControls(List<List<GcPrintableControl>> lists, Graphics g, ExporterState state, Windows.Foundation.Rect rect)
         {
             if ((lists != null) && (lists.Count > 0))
             {
@@ -1232,7 +1232,7 @@ namespace Dt.Cells.Data
         /// <param name="g">The graphics</param>
         /// <param name="state">The state</param>
         /// <param name="spans">The spans</param>
-        private void PaintSheetCell(int r, int c, Windows.Foundation.Rect rect, Windows.Foundation.Rect styleRect, string overFlowText, StyleInfo overFlowtextStyleInfo, GcSheetBlock.PartType part, GcSheetBlock block, CellState cellState, Graphics g, ExporterState state, SpanLayoutData spans)
+        void PaintSheetCell(int r, int c, Windows.Foundation.Rect rect, Windows.Foundation.Rect styleRect, string overFlowText, StyleInfo overFlowtextStyleInfo, GcSheetBlock.PartType part, GcSheetBlock block, CellState cellState, Graphics g, ExporterState state, SpanLayoutData spans)
         {
             Worksheet worksheet;
             SheetArea area;
@@ -1659,7 +1659,7 @@ namespace Dt.Cells.Data
         /// <param name="block">The block</param>
         /// <param name="g">The graphics</param>
         /// <param name="state">The state</param>
-        private void PaintSheetPart(GcSheetBlock.PartType part, GcSheetBlock block, Graphics g, ExporterState state)
+        void PaintSheetPart(GcSheetBlock.PartType part, GcSheetBlock block, Graphics g, ExporterState state)
         {
             int num;
             int num2;
@@ -1916,7 +1916,7 @@ namespace Dt.Cells.Data
         /// <param name="state">The state.</param>
         /// <param name="rect">The rect.</param>
         /// <param name="part">The part.</param>
-        private static void SmartAdjustRichLabelInnerControls(List<List<GcPrintableControl>> lists, ExporterState state, Windows.Foundation.Rect rect, int part)
+        static void SmartAdjustRichLabelInnerControls(List<List<GcPrintableControl>> lists, ExporterState state, Windows.Foundation.Rect rect, int part)
         {
             if ((lists != null) && (lists.Count > 0))
             {
@@ -1960,15 +1960,15 @@ namespace Dt.Cells.Data
 
         public class CellState
         {
-            private double borderOverlapLeft;
-            private double borderOverlapRight;
-            private double borderOverlapTop;
-            private readonly Dictionary<Windows.Foundation.Rect, List<BorderLine>> borders = new Dictionary<Windows.Foundation.Rect, List<BorderLine>>();
-            private readonly double gridLineBottom;
-            private readonly double gridLineLeft;
-            private readonly double gridLineRight;
-            private readonly double gridLineTop;
-            private readonly List<LineItem> lineItems = new List<LineItem>();
+            double borderOverlapLeft;
+            double borderOverlapRight;
+            double borderOverlapTop;
+            readonly Dictionary<Windows.Foundation.Rect, List<BorderLine>> borders = new Dictionary<Windows.Foundation.Rect, List<BorderLine>>();
+            readonly double gridLineBottom;
+            readonly double gridLineLeft;
+            readonly double gridLineRight;
+            readonly double gridLineTop;
+            readonly List<LineItem> lineItems = new List<LineItem>();
 
             public CellState(double gridLineLeft, double gridLineRight, double gridLineTop, double gridLineBottom, double borderOverlapLeft, double borderOverlapRight, double borderOverlapTop)
             {
@@ -2093,7 +2093,7 @@ namespace Dt.Cells.Data
             /// </summary>
             /// <param name="gridLine">The grid line</param>
             /// <returns></returns>
-            private static Brush GetFirstFillEffect(BorderLine gridLine)
+            static Brush GetFirstFillEffect(BorderLine gridLine)
             {
                 return new SolidColorBrush(gridLine.Color);
             }
@@ -2103,7 +2103,7 @@ namespace Dt.Cells.Data
             /// </summary>
             /// <param name="gridLine">The grid line</param>
             /// <returns></returns>
-            private static Brush GetSecondFillEffect(BorderLine gridLine)
+            static Brush GetSecondFillEffect(BorderLine gridLine)
             {
                 return null;
             }
@@ -2183,7 +2183,7 @@ namespace Dt.Cells.Data
             /// <param name="width">The width</param>
             /// <param name="height">The height</param>
             /// <param name="lineWidth">Width of the line</param>
-            private static void PaintHorizontalLine(Graphics g, Brush fillEffect, double x, double y, double width, double height, double lineWidth)
+            static void PaintHorizontalLine(Graphics g, Brush fillEffect, double x, double y, double width, double height, double lineWidth)
             {
                 g.DrawLine(x, y + (height / 2.0), x + width, y + (height / 2.0), lineWidth, fillEffect);
             }
@@ -2198,7 +2198,7 @@ namespace Dt.Cells.Data
             /// <param name="width">The width</param>
             /// <param name="height">The height</param>
             /// <param name="lineWidth">Width of the line</param>
-            private static void PaintVerticalLine(Graphics g, Brush fillEffect, double x, double y, double width, double height, double lineWidth)
+            static void PaintVerticalLine(Graphics g, Brush fillEffect, double x, double y, double width, double height, double lineWidth)
             {
                 g.DrawLine(x + (width / 2.0), y, x + (width / 2.0), y + height, lineWidth, fillEffect);
             }
@@ -2219,7 +2219,7 @@ namespace Dt.Cells.Data
             /// <param name="lines">The lines</param>
             /// <param name="rect">The rectangle</param>
             /// <returns></returns>
-            private static List<Line> SplitHorizontalLines(IEnumerable<Line> lines, Windows.Foundation.Rect rect)
+            static List<Line> SplitHorizontalLines(IEnumerable<Line> lines, Windows.Foundation.Rect rect)
             {
                 List<Line> list = new List<Line>();
                 foreach (Line line in lines)
@@ -2250,7 +2250,7 @@ namespace Dt.Cells.Data
             /// <param name="lines">The lines</param>
             /// <param name="rect">The rectangle</param>
             /// <returns></returns>
-            private static List<Line> SplitVerticalLines(IEnumerable<Line> lines, Windows.Foundation.Rect rect)
+            static List<Line> SplitVerticalLines(IEnumerable<Line> lines, Windows.Foundation.Rect rect)
             {
                 List<Line> list = new List<Line>();
                 foreach (Line line in lines)

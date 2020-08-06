@@ -22,19 +22,19 @@ namespace Dt.Cells.Data
         /// <summary>
         /// column index of this.sheet.
         /// </summary>
-        private int column;
+        int column;
         /// <summary>
         /// column count of this.sheet.
         /// </summary>
-        private int columnCount;
+        int columnCount;
         /// <summary>
         /// row index of this.sheet.
         /// </summary>
-        private int row;
+        int row;
         /// <summary>
         /// row count of this.sheet.
         /// </summary>
-        private int rowCount;
+        int rowCount;
 
         /// <summary>
         /// Creates a range of cells.
@@ -589,7 +589,7 @@ namespace Dt.Cells.Data
         /// <param name="s">String to be parsed</param>
         /// <param name="result">Cell represented by the string</param>
         /// <returns><c>true</c> if the string is converted successfully; otherwise, <c>false</c>.</returns>
-        private static bool TryParseCell(string s, out CellRange result)
+        static bool TryParseCell(string s, out CellRange result)
         {
             int num = 0;
             int row = 0;

@@ -28,7 +28,7 @@ namespace Dt.Cells.UI
         {
         }
 
-        void ArrangeGroupHeader(Windows.Foundation.Size finalSize)
+        void ArrangeGroupHeader(Size finalSize)
         {
             if (((GetMaxLevel(Orientation) != -1) && (_headButtons != null)) && (_headButtons.Count > 0))
             {
@@ -45,7 +45,7 @@ namespace Dt.Cells.UI
                         {
                             while (enumerator.MoveNext())
                             {
-                                enumerator.Current.Arrange(new Windows.Foundation.Rect(base.PointToClient(new Windows.Foundation.Point(num3, num4)), new Windows.Foundation.Size(width, width)));
+                                enumerator.Current.Arrange(new Rect(base.PointToClient(new Point(num3, num4)), new Size(width, width)));
                                 num3 += width;
                             }
                             return;
@@ -59,7 +59,7 @@ namespace Dt.Cells.UI
                         {
                             while (enumerator2.MoveNext())
                             {
-                                enumerator2.Current.Arrange(new Windows.Foundation.Rect(base.PointToClient(new Windows.Foundation.Point(num3, num4)), new Windows.Foundation.Size(width, width)));
+                                enumerator2.Current.Arrange(new Rect(base.PointToClient(new Point(num3, num4)), new Size(width, width)));
                                 num4 += width;
                             }
                         }
@@ -68,7 +68,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        protected override Windows.Foundation.Size ArrangeOverride(Windows.Foundation.Size finalSize)
+        protected override Size ArrangeOverride(Size finalSize)
         {
             ArrangeGroupHeader(finalSize);
             return base.ArrangeOverride(finalSize);
@@ -107,7 +107,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        void MeasureGroupHeader(Windows.Foundation.Size availableSize)
+        void MeasureGroupHeader(Size availableSize)
         {
             int maxLevel = GetMaxLevel(Orientation);
             if (maxLevel != -1)
@@ -143,7 +143,7 @@ namespace Dt.Cells.UI
             base.Children.Clear();
         }
 
-        protected override Windows.Foundation.Size MeasureOverride(Windows.Foundation.Size availableSize)
+        protected override Size MeasureOverride(Size availableSize)
         {
             MeasureInitialization();
             MeasureGroupHeader(availableSize);

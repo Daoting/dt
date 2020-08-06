@@ -19,12 +19,12 @@ namespace Dt.Cells.Data
     /// </summary>
     public abstract class ConnectionBase
     {
-        private bool allowInsert;
-        private SparseArray<RecordState> cachedRecordStates = new SparseArray<RecordState>();
-        private SparseArray<Dictionary<string, object>> cachedRecordValues = new SparseArray<Dictionary<string, object>>();
-        private object dataSource;
+        bool allowInsert;
+        SparseArray<RecordState> cachedRecordStates = new SparseArray<RecordState>();
+        SparseArray<Dictionary<string, object>> cachedRecordValues = new SparseArray<Dictionary<string, object>>();
+        object dataSource;
         internal static List<Type> externalConnectionTypes;
-        private bool isOpened;
+        bool isOpened;
 
         /// <summary>
         /// Creates a connection base.
@@ -160,7 +160,7 @@ namespace Dt.Cells.Data
             return null;
         }
 
-        private void Init()
+        void Init()
         {
             this.dataSource = null;
             this.ClearCachedData();

@@ -26,9 +26,9 @@ namespace Dt.Cells.UI
             _owningPresenter = cornerHeader;
         }
 
-        protected override Windows.Foundation.Size ArrangeOverride(Windows.Foundation.Size finalSize)
+        protected override Size ArrangeOverride(Size finalSize)
         {
-            _cornerCell.Arrange(new Windows.Foundation.Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
+            _cornerCell.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
             return finalSize;
         }
 
@@ -37,11 +37,11 @@ namespace Dt.Cells.UI
             return _cornerCell;
         }
 
-        protected override Windows.Foundation.Size MeasureOverride(Windows.Foundation.Size availableSize)
+        protected override Size MeasureOverride(Size availableSize)
         {
             double width = availableSize.Width;
             double height = availableSize.Height;
-            _cornerCell.Measure(new Windows.Foundation.Size(width, height));
+            _cornerCell.Measure(new Size(width, height));
             GcViewport parent = base.Parent as GcViewport;
             if (parent != null)
             {

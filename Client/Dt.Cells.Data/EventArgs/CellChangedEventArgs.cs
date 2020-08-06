@@ -17,12 +17,12 @@ namespace Dt.Cells.Data
     /// </summary>
     public class CellChangedEventArgs : EventArgs
     {
-        private int column;
-        private int columnCount;
-        private string propertyName;
-        private int row;
-        private int rowCount;
-        private Dt.Cells.Data.SheetArea sheetArea;
+        int column;
+        int columnCount;
+        string propertyName;
+        int row;
+        int rowCount;
+        Dt.Cells.Data.SheetArea sheetArea;
 
         internal CellChangedEventArgs(string propertyName, int row, int column, Dt.Cells.Data.SheetArea sheetArea) : this(propertyName, row, column, 1, 1, sheetArea)
         {

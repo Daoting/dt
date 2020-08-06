@@ -25,32 +25,32 @@ namespace Dt.Cells.Data
     /// </summary>
     public sealed class TableStyleInfo : ICloneable, IXmlSerializable
     {
-        private Brush background;
-        private bool backgroundSet;
-        private string backgroundThemeColor;
-        private bool backgroundThemeColorSet;
-        private BorderLine bottomBorder;
-        private bool bottomBorderSet;
-        private FontStretch fontStretch;
-        private bool fontStretchSet;
-        private Windows.UI.Text.FontStyle fontStyle;
-        private bool fontStyleSet;
-        private FontWeight fontWeight;
-        private bool fontWeightSet;
-        private Brush foreground;
-        private bool foregroundSet;
-        private string foregroundThemeColor;
-        private bool foregroundThemeColorSet;
-        private BorderLine horizontalBorder;
-        private bool horizontalBorderSet;
-        private BorderLine leftBorder;
-        private bool leftBorderSet;
-        private BorderLine rightBorder;
-        private bool rightBorderSet;
-        private BorderLine topBorder;
-        private bool topBorderSet;
-        private BorderLine verticalBorder;
-        private bool verticalBorderSet;
+        Brush background;
+        bool backgroundSet;
+        string backgroundThemeColor;
+        bool backgroundThemeColorSet;
+        BorderLine bottomBorder;
+        bool bottomBorderSet;
+        FontStretch fontStretch;
+        bool fontStretchSet;
+        Windows.UI.Text.FontStyle fontStyle;
+        bool fontStyleSet;
+        FontWeight fontWeight;
+        bool fontWeightSet;
+        Brush foreground;
+        bool foregroundSet;
+        string foregroundThemeColor;
+        bool foregroundThemeColorSet;
+        BorderLine horizontalBorder;
+        bool horizontalBorderSet;
+        BorderLine leftBorder;
+        bool leftBorderSet;
+        BorderLine rightBorder;
+        bool rightBorderSet;
+        BorderLine topBorder;
+        bool topBorderSet;
+        BorderLine verticalBorder;
+        bool verticalBorderSet;
 
         public TableStyleInfo()
         {
@@ -487,11 +487,11 @@ namespace Dt.Cells.Data
             return this.foregroundThemeColorSet;
         }
 
-        private void OnChanged(EventArgs e)
+        void OnChanged(EventArgs e)
         {
         }
 
-        private void RaisePropertyChanged(string propertyName)
+        void RaisePropertyChanged(string propertyName)
         {
         }
 

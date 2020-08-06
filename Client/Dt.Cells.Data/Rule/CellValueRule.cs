@@ -19,9 +19,9 @@ namespace Dt.Cells.Data
     /// </summary>
     public sealed class CellValueRule : FormattingRuleBase
     {
-        private ComparisonOperator op;
-        private object value1;
-        private object value2;
+        ComparisonOperator op;
+        object value1;
+        object value2;
 
         /// <summary>
         /// Creates a new text rule.
@@ -168,7 +168,7 @@ namespace Dt.Cells.Data
             return condition;
         }
 
-        private static bool IsFormula(object val)
+        static bool IsFormula(object val)
         {
             return (((val is string) && val.ToString().StartsWith("=")) && (val.ToString().Length > 1));
         }

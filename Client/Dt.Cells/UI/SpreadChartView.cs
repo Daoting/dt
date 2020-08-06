@@ -15,11 +15,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI;
 using Windows.UI.Text;
 using Windows.UI.Xaml;
@@ -27,7 +23,6 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Shapes;
 #endregion
 
 namespace Dt.Cells.UI
@@ -79,13 +74,13 @@ namespace Dt.Cells.UI
             C1Chart.IsTabStop = false;
             double width = 5.0 * ZoomFactor;
             double num2 = 50.0 * ZoomFactor;
-            BubbleOptions.SetMinSize(C1Chart, new Windows.Foundation.Size(width, width));
-            BubbleOptions.SetMaxSize(C1Chart, new Windows.Foundation.Size(num2, num2));
+            BubbleOptions.SetMinSize(C1Chart, new Size(width, width));
+            BubbleOptions.SetMaxSize(C1Chart, new Size(num2, num2));
         }
 
         void SyncChartTitle()
         {
-            Windows.Foundation.Size chartTitleSize = base.GetChartTitleSize(SpreadChart.ChartTitle);
+            Size chartTitleSize = base.GetChartTitleSize(SpreadChart.ChartTitle);
             base._chartTitleView.Width = chartTitleSize.Width;
             base._chartTitleView.Height = chartTitleSize.Height;
             base._chartTitleView.ChartTitle = SpreadChart.ChartTitle;
@@ -412,14 +407,14 @@ namespace Dt.Cells.UI
                     ScaleTransform transform = new ScaleTransform();
                     transform.ScaleY = 0.67;
                     plotElement.RenderTransform = transform;
-                    plotElement.RenderTransformOrigin = new Windows.Foundation.Point(0.5, 0.5);
+                    plotElement.RenderTransformOrigin = new Point(0.5, 0.5);
                 }
                 else
                 {
                     ScaleTransform transform2 = new ScaleTransform();
                     transform2.ScaleX = 0.67;
                     plotElement.RenderTransform = transform2;
-                    plotElement.RenderTransformOrigin = new Windows.Foundation.Point(0.5, 0.5);
+                    plotElement.RenderTransformOrigin = new Point(0.5, 0.5);
                 }
             }
         }
@@ -548,7 +543,7 @@ namespace Dt.Cells.UI
             {
                 foreach (AxisAnnotation annotation in annotations)
                 {
-                    Windows.Foundation.Size size = MeasureHelper.MeasureText(annotation.Label, actualFontFamily, fontSize, actualFontStretch, actualFontStyle, actualFontWeight, new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity), true, textFormattingMode, true, 1.0);
+                    Size size = MeasureHelper.MeasureText(annotation.Label, actualFontFamily, fontSize, actualFontStretch, actualFontStyle, actualFontWeight, new Size(double.PositiveInfinity, double.PositiveInfinity), true, textFormattingMode, true, 1.0);
                     minValue = Math.Round(Math.Max(minValue, size.Width), 1);
                     num2 = Math.Round(Math.Max(num2, size.Height), 1);
                 }
@@ -1662,7 +1657,7 @@ namespace Dt.Cells.UI
             if (spAxis.Title != null)
             {
                 ChartTitleView view = new ChartTitleView(spAxis.Title, this);
-                Windows.Foundation.Size chartTitleSize = base.GetChartTitleSize(spAxis.Title);
+                Size chartTitleSize = base.GetChartTitleSize(spAxis.Title);
                 view.HorizontalAlignment = HorizontalAlignment.Center;
                 view.VerticalAlignment = VerticalAlignment.Center;
                 view.Width = chartTitleSize.Width;
@@ -1760,13 +1755,13 @@ namespace Dt.Cells.UI
                 DataMarker dataMarker = dataSeries.GetDataMarker(plotElement.DataPoint.PointIndex);
                 if (dataMarker != null)
                 {
-                    if ((dataMarker.ActualMarkerSize != Windows.Foundation.Size.Empty) && (dataMarker.MarkerType != Dt.Cells.Data.MarkerType.None))
+                    if ((dataMarker.ActualMarkerSize != Size.Empty) && (dataMarker.MarkerType != Dt.Cells.Data.MarkerType.None))
                     {
                         plotElement.Size = dataMarker.ActualMarkerSize;
                     }
                     else
                     {
-                        plotElement.Size = new Windows.Foundation.Size(0.0, 0.0);
+                        plotElement.Size = new Size(0.0, 0.0);
                     }
                     Brush actualFill = dataMarker.ActualFill;
                     if (actualFill != null)
@@ -1960,7 +1955,7 @@ namespace Dt.Cells.UI
                     }
                     c1DataSeries.SymbolStrokeDashes = Dt.Cells.Data.StrokeDashHelper.GetStrokeDashes(spDataSeries.DataMarkerStyle.StrokeDashType);
                 }
-                Windows.Foundation.Size markerSize = spDataSeries.MarkerSize;
+                Size markerSize = spDataSeries.MarkerSize;
                 c1DataSeries.SymbolSize = markerSize;
             }
             else if (SpreadChartUtility.IsSymbolChart(spDataSeries.ChartType) || (spDataSeries.ChartType == SpreadChartType.StockHighLowOpenClose))
@@ -2236,7 +2231,7 @@ namespace Dt.Cells.UI
                 c1DataSeries.SymbolStrokeThickness = 0.0;
             }
             c1DataSeries.SymbolStrokeDashes = Dt.Cells.Data.StrokeDashHelper.GetStrokeDashes(spDataSeries.DataMarkerStyle.StrokeDashType);
-            Windows.Foundation.Size markerSize = spDataSeries.MarkerSize;
+            Size markerSize = spDataSeries.MarkerSize;
             c1DataSeries.SymbolSize = markerSize;
             if (SpreadChart.DisplayEmptyCellsAs == EmptyValueStyle.Zero)
             {
@@ -2565,7 +2560,7 @@ namespace Dt.Cells.UI
             {
                 PlotElement element = list[i];
                 element.RenderTransform = CreatTransformGroup(scale, -1.0, false, false);
-                element.RenderTransformOrigin = new Windows.Foundation.Point(0.0, 0.5);
+                element.RenderTransformOrigin = new Point(0.0, 0.5);
             }
         }
 
@@ -2641,7 +2636,7 @@ namespace Dt.Cells.UI
                             offset += num3;
                         }
                         element3.RenderTransform = CreatTransformGroup(scale, offset, true, true);
-                        element3.RenderTransformOrigin = new Windows.Foundation.Point(0.5, 0.0);
+                        element3.RenderTransformOrigin = new Point(0.5, 0.0);
                     }
                 }
                 for (int j = num6; j < maxDataPointCount; j++)
@@ -2655,14 +2650,14 @@ namespace Dt.Cells.UI
                             num10 += num3;
                         }
                         element4.RenderTransform = CreatTransformGroup(scale, -num10, true, true);
-                        element4.RenderTransformOrigin = new Windows.Foundation.Point(0.5, 0.0);
+                        element4.RenderTransformOrigin = new Point(0.5, 0.0);
                     }
                 }
                 if ((((maxDataPointCount % 2) != 0) && (num4 < list.Count)) && (num4 >= 0))
                 {
                     PlotElement element5 = list[num4];
                     element5.RenderTransform = CreatTransformGroup(scale, 0.0, true, true);
-                    element5.RenderTransformOrigin = new Windows.Foundation.Point(0.5, 0.0);
+                    element5.RenderTransformOrigin = new Point(0.5, 0.0);
                 }
             }
         }
@@ -2673,7 +2668,7 @@ namespace Dt.Cells.UI
             {
                 PlotElement element = list[i];
                 element.RenderTransform = CreatTransformGroup(scale, -1.0, false, true);
-                element.RenderTransformOrigin = new Windows.Foundation.Point(0.5, 0.0);
+                element.RenderTransformOrigin = new Point(0.5, 0.0);
             }
         }
 
@@ -2812,7 +2807,7 @@ namespace Dt.Cells.UI
             return list;
         }
 
-        internal override void UpdateLayoutsOnMeasure(Windows.Foundation.Size size)
+        internal override void UpdateLayoutsOnMeasure(Size size)
         {
             base.UpdateLayoutsOnMeasure(size);
             if (((C1Chart != null) && (C1Chart.View.AxisX != null)) && ((C1Chart.View.AxisX.Title != null) && (C1Chart.View.AxisX.Title is FrameworkElement)))

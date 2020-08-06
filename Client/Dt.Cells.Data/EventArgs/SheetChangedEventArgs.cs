@@ -17,7 +17,7 @@ namespace Dt.Cells.Data
     /// </summary>
     public class SheetChangedEventArgs : CellChangedEventArgs
     {
-        private SheetChangedEventAction type;
+        SheetChangedEventAction type;
 
         internal SheetChangedEventArgs(string propertyName, int row, int column, SheetArea sheetArea, SheetChangedEventAction t) : base(propertyName, row, column, 1, 1, sheetArea)
         {

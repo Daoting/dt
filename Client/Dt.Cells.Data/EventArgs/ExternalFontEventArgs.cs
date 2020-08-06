@@ -15,9 +15,9 @@ namespace Dt.Cells.Data
 {
     internal class ExternalFontEventArgs : EventArgs
     {
-        private byte[] fontData;
-        private string fontFamilyName;
-        private Dt.Pdf.Text.SimpleTrueTypeFont simpleTrueTypeFont;
+        byte[] fontData;
+        string fontFamilyName;
+        Dt.Pdf.Text.SimpleTrueTypeFont simpleTrueTypeFont;
 
         public ExternalFontEventArgs(string fontFamilyName)
         {

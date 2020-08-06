@@ -27,7 +27,7 @@ namespace Dt.Cells.Data
         /// <summary>
         /// The merged cell range collection.
         /// </summary>
-        private List<CellRange> items = new List<CellRange>();
+        List<CellRange> items = new List<CellRange>();
 
         /// <summary>
         /// Adds a cell span to the collection.
@@ -131,7 +131,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="items">The items</param>
         /// <returns>The cloned items</returns>
-        private static List<CellRange> Clone(List<CellRange> items)
+        static List<CellRange> Clone(List<CellRange> items)
         {
             if (items == null)
             {
@@ -537,7 +537,7 @@ namespace Dt.Cells.Data
         /// <returns>
         /// <c>true</c> if the specified list is valid; otherwise, <c>false</c>
         /// </returns>
-        private bool IsValid(List<CellRange> list, int start, int end, CellRange cellRange)
+        bool IsValid(List<CellRange> list, int start, int end, CellRange cellRange)
         {
             for (int i = start; (i < end) && (i < list.Count); i++)
             {
@@ -816,7 +816,7 @@ namespace Dt.Cells.Data
         /// Returns information about the event that was raised. 
         /// </summary>
         /// <param name="e"><see cref="T:Dt.Cells.Data.SheetSpanModelChangedEventArgs" /> object that contains event data.</param>
-        private void OnChanged(SheetSpanModelChangedEventArgs e)
+        void OnChanged(SheetSpanModelChangedEventArgs e)
         {
             base.RaiseChanged(e);
         }
@@ -829,7 +829,7 @@ namespace Dt.Cells.Data
         /// <param name="rowCount">The number of rows in the span.</param>
         /// <param name="columnCount">The number of columns in the span.</param>
         /// <param name="type">Returns the type of event that was raised.</param>
-        private void RaiseChanged(int row, int column, int rowCount, int columnCount, SheetSpanModelChangedEventAction type)
+        void RaiseChanged(int row, int column, int rowCount, int columnCount, SheetSpanModelChangedEventAction type)
         {
             this.OnChanged(new SheetSpanModelChangedEventArgs(row, column, rowCount, columnCount, type));
         }
@@ -1166,36 +1166,36 @@ namespace Dt.Cells.Data
         /// <summary>
         /// The SpanEnumerator Class
         /// </summary>
-        private class SpanEnumerator : IEnumerator
+        class SpanEnumerator : IEnumerator
         {
             /// <summary>
             /// Whether all cell range.
             /// </summary>
-            private bool all;
+            bool all;
             /// <summary>
             /// The column index.
             /// </summary>
-            private int column;
+            int column;
             /// <summary>
             /// The column count.
             /// </summary>
-            private int columnCount;
+            int columnCount;
             /// <summary>
             /// The current index.
             /// </summary>
-            private int currentIndex;
+            int currentIndex;
             /// <summary>
             /// The Sheet span model.
             /// </summary>
-            private SheetSpanModel model;
+            SheetSpanModel model;
             /// <summary>
             /// The row index.
             /// </summary>
-            private int row;
+            int row;
             /// <summary>
             /// The row count.
             /// </summary>
-            private int rowCount;
+            int rowCount;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.SheetSpanModel.SpanEnumerator" /> class.

@@ -45,7 +45,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        protected virtual void ArrangeBorderLines(Windows.Foundation.Size finalSize)
+        protected virtual void ArrangeBorderLines(Size finalSize)
         {
             double x;
             double y;
@@ -53,23 +53,23 @@ namespace Dt.Cells.UI
             {
                 x = (Location.X + finalSize.Width) - 1.0;
                 y = Location.Y;
-                _borderRight.Arrange(new Windows.Foundation.Rect(PointToClient(new Windows.Foundation.Point(x, y)), new Windows.Foundation.Size(1.0, finalSize.Height)));
+                _borderRight.Arrange(new Rect(PointToClient(new Point(x, y)), new Size(1.0, finalSize.Height)));
             }
             if (_borderBottom != null)
             {
                 x = Location.X;
                 y = (Location.Y + finalSize.Height) - 1.0;
-                _borderBottom.Arrange(new Windows.Foundation.Rect(PointToClient(new Windows.Foundation.Point(x, y)), new Windows.Foundation.Size(finalSize.Width, 1.0)));
+                _borderBottom.Arrange(new Rect(PointToClient(new Point(x, y)), new Size(finalSize.Width, 1.0)));
             }
         }
 
-        protected override Windows.Foundation.Size ArrangeOverride(Windows.Foundation.Size finalSize)
+        protected override Size ArrangeOverride(Size finalSize)
         {
             ArrangeBorderLines(finalSize);
             return base.ArrangeOverride(finalSize);
         }
 
-        protected virtual double CalcMinWidthOrHeight(Windows.Foundation.Size finalSize, Orientation orientation)
+        protected virtual double CalcMinWidthOrHeight(Size finalSize, Orientation orientation)
         {
             double num = 0.0;
             int maxLevel = GetMaxLevel(orientation);
@@ -101,13 +101,13 @@ namespace Dt.Cells.UI
             return maxLevel;
         }
 
-        protected virtual void MeasureBorderLines(Windows.Foundation.Size availableSize)
+        protected virtual void MeasureBorderLines(Size availableSize)
         {
             MeasureRightBorder(availableSize);
             MeasureBottomBorder(availableSize);
         }
 
-        protected void MeasureBottomBorder(Windows.Foundation.Size availableSize)
+        protected void MeasureBottomBorder(Size availableSize)
         {
             if (_borderBottom == null)
             {
@@ -118,10 +118,10 @@ namespace Dt.Cells.UI
             {
                 Children.Add(_borderBottom);
             }
-            _borderBottom.Measure(new Windows.Foundation.Size(availableSize.Width, 1.0));
+            _borderBottom.Measure(new Size(availableSize.Width, 1.0));
         }
 
-        protected void MeasureRightBorder(Windows.Foundation.Size availableSize)
+        protected void MeasureRightBorder(Size availableSize)
         {
             if (_borderRight == null)
             {
@@ -132,12 +132,12 @@ namespace Dt.Cells.UI
             {
                 Children.Add(_borderRight);
             }
-            _borderRight.Measure(new Windows.Foundation.Size(1.0, availableSize.Height));
+            _borderRight.Measure(new Size(1.0, availableSize.Height));
         }
 
-        public Windows.Foundation.Point PointToClient(Windows.Foundation.Point point)
+        public Point PointToClient(Point point)
         {
-            return new Windows.Foundation.Point(point.X - Location.X, point.Y - Location.Y);
+            return new Point(point.X - Location.X, point.Y - Location.Y);
         }
 
 #if !UWP
@@ -157,7 +157,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        public Windows.Foundation.Point Location { get; set; }
+        public Point Location { get; set; }
     }
 }
 

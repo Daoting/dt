@@ -23,13 +23,13 @@ namespace Dt.Cells.Data
     public sealed class Row
     {
         internal const int _MAXROWHEIGHT = 0x98967f;
-        private AxisInfo _axisStyle;
-        private bool _isdefault;
-        private SheetArea _sheetArea;
-        private StyleInfo _styleInfo;
-        private int _viewrow;
-        private int _viewrow2;
-        private Worksheet _worksheet;
+        AxisInfo _axisStyle;
+        bool _isdefault;
+        SheetArea _sheetArea;
+        StyleInfo _styleInfo;
+        int _viewrow;
+        int _viewrow2;
+        Worksheet _worksheet;
 
 
         internal Row(Worksheet worksheet, int row, SheetArea sheetArea)
@@ -1254,12 +1254,12 @@ namespace Dt.Cells.Data
             return ((((this._worksheet == row._worksheet) && (this._viewrow == row._viewrow)) && (this._viewrow2 == row._viewrow2)) && (this._sheetArea == row._sheetArea));
         }
 
-        private void GetAxisStyle(int row)
+        void GetAxisStyle(int row)
         {
             this._axisStyle = this._worksheet.GetRowAxisStyle(row, this._sheetArea);
         }
 
-        private void GetStyleInfo(int row)
+        void GetStyleInfo(int row)
         {
             this._styleInfo.Reset();
             this._worksheet.GetDirectInfo(row, -1, this._styleInfo, this._sheetArea);
@@ -1283,7 +1283,7 @@ namespace Dt.Cells.Data
             return null;
         }
 
-        private bool IsValid(int viewrow)
+        bool IsValid(int viewrow)
         {
             if (this._worksheet != null)
             {
@@ -1293,7 +1293,7 @@ namespace Dt.Cells.Data
             return false;
         }
 
-        private void RaisePropertyChanged(string propertyName)
+        void RaisePropertyChanged(string propertyName)
         {
             if (this._worksheet != null)
             {
@@ -1778,12 +1778,12 @@ namespace Dt.Cells.Data
             this.RaisePropertyChanged("WordWrap");
         }
 
-        private void SetAxisStyle(int row)
+        void SetAxisStyle(int row)
         {
             this._worksheet.SetRowAxisStyleInternal(row, this._sheetArea, this._axisStyle);
         }
 
-        private void SetStyleInfo(int row)
+        void SetStyleInfo(int row)
         {
             this._worksheet.SetStyleObject(row, -1, this._sheetArea, this._styleInfo);
         }

@@ -30,23 +30,23 @@ namespace Dt.Cells.Data
         /// <summary>
         /// anchor cell column.
         /// </summary>
-        private int anchorColumn;
+        int anchorColumn;
         /// <summary>
         /// anchor cell row.
         /// </summary>
-        private int anchorRow;
+        int anchorRow;
         /// <summary>
         /// the selected cell ranges.
         /// </summary>
-        private List<CellRange> items = new List<CellRange>();
+        List<CellRange> items = new List<CellRange>();
         /// <summary>
         /// the selection policy.
         /// </summary>
-        private Dt.Cells.Data.SelectionPolicy selectionPolicy = Dt.Cells.Data.SelectionPolicy.MultiRange;
+        Dt.Cells.Data.SelectionPolicy selectionPolicy = Dt.Cells.Data.SelectionPolicy.MultiRange;
         /// <summary>
         /// the selection unit.
         /// </summary>
-        private Dt.Cells.Data.SelectionUnit selectionUnit;
+        Dt.Cells.Data.SelectionUnit selectionUnit;
 
         /// <summary>
         /// Adds a cell or cells to the selection.
@@ -634,7 +634,7 @@ namespace Dt.Cells.Data
         /// <param name="items">The items.</param>
         /// <param name="original">The original</param>
         /// <param name="split">The split</param>
-        private void Split(List<CellRange> items, CellRange original, CellRange split)
+        void Split(List<CellRange> items, CellRange original, CellRange split)
         {
             CellRange range;
             int row = split.Row;

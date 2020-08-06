@@ -23,10 +23,10 @@ namespace Dt.Cells.Data
     /// </summary>
     internal abstract class GcSection : IXmlSerializable
     {
-        private bool canGrow;
-        private bool canShrink;
-        private ControlCollection controls;
-        private int height;
+        bool canGrow;
+        bool canShrink;
+        ControlCollection controls;
+        int height;
 
         /// <summary>
         /// Creates a new section.
@@ -95,7 +95,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="list">The list</param>
         /// <returns></returns>
-        private Windows.Foundation.Size GetAllSize(IEnumerable<GcBlock> list)
+        Windows.Foundation.Size GetAllSize(IEnumerable<GcBlock> list)
         {
             Windows.Foundation.Size size = new Windows.Foundation.Size(0.0, 0.0);
             foreach (GcBlock block in list)
@@ -252,7 +252,7 @@ namespace Dt.Cells.Data
         /// <returns>
         /// <c>true</c> if the specified rect1 is intersect; otherwise, <c>false</c>.
         /// </returns>
-        private static bool IsIntersect(Windows.Foundation.Rect rect1, Windows.Foundation.Rect rect2)
+        static bool IsIntersect(Windows.Foundation.Rect rect1, Windows.Foundation.Rect rect2)
         {
             return ((((rect2.X < (rect1.X + rect1.Width)) && (rect1.X < (rect2.X + rect2.Width))) && (rect2.Y < (rect1.Y + rect1.Height))) && (rect1.Y < (rect2.Y + rect2.Height)));
         }
@@ -391,8 +391,8 @@ namespace Dt.Cells.Data
         /// </summary>
         internal class GcSectionCache
         {
-            private List<GcBlock> allBlocks;
-            private Windows.Foundation.Size allSize;
+            List<GcBlock> allBlocks;
+            Windows.Foundation.Size allSize;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.GcSection.GcSectionCache" /> class.

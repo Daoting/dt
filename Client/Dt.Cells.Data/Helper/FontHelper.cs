@@ -15,8 +15,8 @@ namespace Dt.Cells.Data
 {
     internal static class FontHelper
     {
-        private static Dictionary<string, string> EastAsiaFontMapping = new Dictionary<string, string>();
-        private static HashSet<string> EastAsiaFontNames = new HashSet<string>();
+        static Dictionary<string, string> EastAsiaFontMapping = new Dictionary<string, string>();
+        static HashSet<string> EastAsiaFontNames = new HashSet<string>();
 
         static FontHelper()
         {

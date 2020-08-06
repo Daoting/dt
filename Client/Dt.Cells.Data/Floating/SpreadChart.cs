@@ -25,37 +25,37 @@ namespace Dt.Cells.Data
     /// </summary>
     public class SpreadChart : SpreadChartBase, IDisposable, ICloneable
     {
-        private Wall _backWall;
-        private Dt.Cells.Data.BubbleChartSettings _bubbleChartSettings;
-        private SpreadChartType _chartType;
-        private string _dataFormula;
-        private Dt.Cells.Data.DataLabelSettings _dataLabelSettings;
-        private Dt.Cells.Data.DataOrientation? _dataOrientation;
-        private Dt.Cells.Data.DataSeriesSettings _dataSeriesSettings;
-        private Dt.Cells.Data.DataTableSettings _dataTableSettings;
-        private int _defaultStyleIndex;
-        private EmptyValueStyle _displayEmptyCellsAs;
-        private bool _displayHidden;
-        private IList<SpreadDataSeries> _displayingDataSeries;
-        private Wall _floorWall;
-        private string _formula;
-        private string _itemsFormula;
-        private Dt.Cells.Data.Legend _legend;
-        private string _nameFormula;
-        private Dt.Cells.Data.PieChartSettings _pieChartSettings;
-        private ObservableCollection<PlotAreaColumnDefinition> _plotAreaColumnDefinitions;
-        private ObservableCollection<PlotAreaRowDefinition> _plotAreaRowDefinitions;
-        private PlotAreaCollection _plotAreas;
-        private IExcelChart _secondaryChart;
-        private DataSeriesCollection _series;
-        private bool _showAutoTitle;
-        private bool _showDataLabelOverMax;
-        private Wall _sideWall;
-        private bool _varyColorsByPoint;
-        private View3DSettings _view3D;
-        private AxisCollection _xAxises;
-        private AxisCollection _yAxises;
-        private AxisCollection _zAxises;
+        Wall _backWall;
+        Dt.Cells.Data.BubbleChartSettings _bubbleChartSettings;
+        SpreadChartType _chartType;
+        string _dataFormula;
+        Dt.Cells.Data.DataLabelSettings _dataLabelSettings;
+        Dt.Cells.Data.DataOrientation? _dataOrientation;
+        Dt.Cells.Data.DataSeriesSettings _dataSeriesSettings;
+        Dt.Cells.Data.DataTableSettings _dataTableSettings;
+        int _defaultStyleIndex;
+        EmptyValueStyle _displayEmptyCellsAs;
+        bool _displayHidden;
+        IList<SpreadDataSeries> _displayingDataSeries;
+        Wall _floorWall;
+        string _formula;
+        string _itemsFormula;
+        Dt.Cells.Data.Legend _legend;
+        string _nameFormula;
+        Dt.Cells.Data.PieChartSettings _pieChartSettings;
+        ObservableCollection<PlotAreaColumnDefinition> _plotAreaColumnDefinitions;
+        ObservableCollection<PlotAreaRowDefinition> _plotAreaRowDefinitions;
+        PlotAreaCollection _plotAreas;
+        IExcelChart _secondaryChart;
+        DataSeriesCollection _series;
+        bool _showAutoTitle;
+        bool _showDataLabelOverMax;
+        Wall _sideWall;
+        bool _varyColorsByPoint;
+        View3DSettings _view3D;
+        AxisCollection _xAxises;
+        AxisCollection _yAxises;
+        AxisCollection _zAxises;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.SpreadChart" /> class.
@@ -148,7 +148,7 @@ namespace Dt.Cells.Data
             this._yAxises.ResumeEvent();
         }
 
-        private bool AreValuesDateTime(Worksheet worksheet, CellRange cellRange)
+        bool AreValuesDateTime(Worksheet worksheet, CellRange cellRange)
         {
             if (cellRange == null)
             {
@@ -167,7 +167,7 @@ namespace Dt.Cells.Data
             return true;
         }
 
-        private bool AreXValueFormulaSame(out string xValueFormua)
+        bool AreXValueFormulaSame(out string xValueFormua)
         {
             xValueFormua = null;
             if (this.DataSeries.Count != 0)
@@ -197,7 +197,7 @@ namespace Dt.Cells.Data
             return true;
         }
 
-        private Dictionary<int, List<SheetCellRange>> ArrangeRangesByOrientation(IEnumerable<SheetCellRange> ranges)
+        Dictionary<int, List<SheetCellRange>> ArrangeRangesByOrientation(IEnumerable<SheetCellRange> ranges)
         {
             Dictionary<int, List<SheetCellRange>> dictionary = new Dictionary<int, List<SheetCellRange>>();
             if (this.DataOrientation == Dt.Cells.Data.DataOrientation.Vertical)
@@ -238,12 +238,12 @@ namespace Dt.Cells.Data
             this._yAxises.SuspendEvent();
         }
 
-        private void BubbleChartSettings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void BubbleChartSettings_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             this.NotifyChartAreaChanged(ChartArea.Chart, "BubbleChartSettings");
         }
 
-        private SpreadDataSeries CreateDataSeries()
+        SpreadDataSeries CreateDataSeries()
         {
             SpreadDataSeries series = null;
             switch (this.ChartType)
@@ -297,17 +297,17 @@ namespace Dt.Cells.Data
             return series;
         }
 
-        private void DataLabelSettings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void DataLabelSettings_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             this.NotifyChartAreaChanged(ChartArea.DataLabel, "DataLabel");
         }
 
-        private void DataSeriesSettings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void DataSeriesSettings_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             this.NotifyChartAreaChanged(ChartArea.Chart, "DataSeriesSettings");
         }
 
-        private void DetectFormulas(string formula, out string dataFormula, out string nameFormula, out string categoryFormula)
+        void DetectFormulas(string formula, out string dataFormula, out string nameFormula, out string categoryFormula)
         {
             dataFormula = null;
             nameFormula = null;
@@ -328,7 +328,7 @@ namespace Dt.Cells.Data
         /// <param name="dataFormula"></param>
         /// <param name="nameFormula"></param>
         /// <param name="categoryFormula"></param>
-        private void DetectFormulas(SheetCellRange[] ranges, out string dataFormula, out string nameFormula, out string categoryFormula)
+        void DetectFormulas(SheetCellRange[] ranges, out string dataFormula, out string nameFormula, out string categoryFormula)
         {
             CellRange range2;
             CellRange range3;
@@ -496,7 +496,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void GenerateOtherNameDataRanges(SheetCellRange[] ranges, SheetCellRange firstNameRange, List<SheetCellRange> nameRanges, List<SheetCellRange> dataRanges)
+        void GenerateOtherNameDataRanges(SheetCellRange[] ranges, SheetCellRange firstNameRange, List<SheetCellRange> nameRanges, List<SheetCellRange> dataRanges)
         {
             if (firstNameRange != null)
             {
@@ -540,7 +540,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private List<List<SheetCellRange>> GetAllDataRanges(bool includXValueRange)
+        List<List<SheetCellRange>> GetAllDataRanges(bool includXValueRange)
         {
             List<List<SheetCellRange>> list = new List<List<SheetCellRange>>();
             if (this.DataSeries.Count != 0)
@@ -561,7 +561,7 @@ namespace Dt.Cells.Data
             return list;
         }
 
-        private void GetAxisMinMaxValue(Axis axis, XYZValues xyzValues, out double minValue, out double maxValue)
+        void GetAxisMinMaxValue(Axis axis, XYZValues xyzValues, out double minValue, out double maxValue)
         {
             minValue = axis.Min;
             maxValue = axis.Max;
@@ -578,7 +578,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private bool GetCanSwitchRowColumn()
+        bool GetCanSwitchRowColumn()
         {
             List<SheetCellRange> chartAllRanges = this.GetChartAllRanges();
             if ((chartAllRanges == null) || (chartAllRanges.Count == 0))
@@ -599,7 +599,7 @@ namespace Dt.Cells.Data
             return SpreadChartUtility.AreSegmentsAligned(list3, this.DataOrientation);
         }
 
-        private List<SheetCellRange> GetChartAllRanges()
+        List<SheetCellRange> GetChartAllRanges()
         {
             SheetCellRange[] itemsRange = this.GetItemsRange();
             List<SheetCellRange> list = new List<SheetCellRange>();
@@ -680,19 +680,19 @@ namespace Dt.Cells.Data
             return list5;
         }
 
-        private string GetDataFormula()
+        string GetDataFormula()
         {
             List<List<SheetCellRange>> ranges = this.TryCombineDataRanges();
             return SheetCellRangeUtility.BuildFormula(base.Sheet, ranges);
         }
 
-        private string GetFormula()
+        string GetFormula()
         {
             List<List<SheetCellRange>> ranges = this.TryCombineChartRange();
             return SheetCellRangeUtility.BuildFormula(base.Sheet, ranges);
         }
 
-        private string GetItemsFormula()
+        string GetItemsFormula()
         {
             List<List<SheetCellRange>> ranges = this.TryCombineItemsRanges();
             if ((ranges != null) && (ranges.Count > 0))
@@ -714,7 +714,7 @@ namespace Dt.Cells.Data
             return this.AxisX.ItemsFormula;
         }
 
-        private SheetCellRange[] GetItemsRange()
+        SheetCellRange[] GetItemsRange()
         {
             if (SpreadChartUtility.IsBarChart(this.ChartType))
             {
@@ -723,18 +723,18 @@ namespace Dt.Cells.Data
             return this.AxisX.ItemsRange;
         }
 
-        private string GetNameFormula()
+        string GetNameFormula()
         {
             List<SheetCellRange> ranges = this.TryCombineSeriesNameRanges();
             return SheetCellRangeUtility.BuildFormula(base.Sheet, ranges);
         }
 
-        private int GetNumbersCount(double number)
+        int GetNumbersCount(double number)
         {
             return ((double) number).ToString().Length;
         }
 
-        private Dt.Cells.Data.DataOrientation GetSeriesRangeDataOrientation(SheetCellRange[] seriesRanges)
+        Dt.Cells.Data.DataOrientation GetSeriesRangeDataOrientation(SheetCellRange[] seriesRanges)
         {
             if (seriesRanges.Length != 0)
             {
@@ -786,7 +786,7 @@ namespace Dt.Cells.Data
             return null;
         }
 
-        private IList<SpreadDataSeries> GetVisibleDataSeries()
+        IList<SpreadDataSeries> GetVisibleDataSeries()
         {
             List<SpreadDataSeries> list = new List<SpreadDataSeries>();
             foreach (SpreadDataSeries series in this.DataSeries)
@@ -799,7 +799,7 @@ namespace Dt.Cells.Data
             return (IList<SpreadDataSeries>) list;
         }
 
-        private void GetXValuesMinMaxValue(Axis axis, out double minValue, out double maxValue)
+        void GetXValuesMinMaxValue(Axis axis, out double minValue, out double maxValue)
         {
             minValue = double.MaxValue;
             maxValue = double.MinValue;
@@ -928,7 +928,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void GetYValuesMinMaxValue(Axis axis, out double minValue, out double maxValue)
+        void GetYValuesMinMaxValue(Axis axis, out double minValue, out double maxValue)
         {
             minValue = double.MaxValue;
             maxValue = double.MinValue;
@@ -1037,7 +1037,7 @@ namespace Dt.Cells.Data
             maxValue = AxisUtility.CalculateMaximum(minValue, maxValue, false, axis.LogBase);
         }
 
-        private bool HasTwoDimensionSeries()
+        bool HasTwoDimensionSeries()
         {
             using (IEnumerator<SpreadDataSeries> enumerator = this.DisplayingDataSeries.GetEnumerator())
             {
@@ -1052,7 +1052,7 @@ namespace Dt.Cells.Data
             return false;
         }
 
-        private SheetCellRange InflateNameRange(SheetCellRange nameRange, SpreadDataSeries dataSeries)
+        SheetCellRange InflateNameRange(SheetCellRange nameRange, SpreadDataSeries dataSeries)
         {
             SheetCellRange range = nameRange;
             List<List<SheetCellRange>> dataRanges = dataSeries.GetDataRanges();
@@ -1107,7 +1107,7 @@ namespace Dt.Cells.Data
             return range;
         }
 
-        private void Init(string name, SpreadChartType type, string formula, string itemsFormula, string nameFormula, string dataFormula, double x, double y, double width, double height, bool addDefaultElements)
+        void Init(string name, SpreadChartType type, string formula, string itemsFormula, string nameFormula, string dataFormula, double x, double y, double width, double height, bool addDefaultElements)
         {
             base.SuspendEvents();
             base.Init(name, x, y, width, height);
@@ -1204,7 +1204,7 @@ namespace Dt.Cells.Data
             base.ResumeEvents();
         }
 
-        private void InitAxisesTypes(SpreadChartType chartType)
+        void InitAxisesTypes(SpreadChartType chartType)
         {
             int dataDimension = SpreadChartUtility.GetDataDimension(chartType);
             if (dataDimension == 1)
@@ -1220,7 +1220,7 @@ namespace Dt.Cells.Data
             this.AxisZ.SetAutoAxisTypeInternal(AxisType.Category);
         }
 
-        private bool InSameColumnRowStrip(SheetCellRange[] ranges)
+        bool InSameColumnRowStrip(SheetCellRange[] ranges)
         {
             int column = -1;
             int num2 = -1;
@@ -1253,7 +1253,7 @@ namespace Dt.Cells.Data
             return true;
         }
 
-        private bool Is100PercentChart()
+        bool Is100PercentChart()
         {
             if (((this.ChartType != SpreadChartType.AreaStacked100pc) && (this.ChartType != SpreadChartType.BarStacked100pc)) && ((this.ChartType != SpreadChartType.ColumnStacked100pc) && (this.ChartType != SpreadChartType.LineStacked100pc)))
             {
@@ -1262,7 +1262,7 @@ namespace Dt.Cells.Data
             return true;
         }
 
-        private bool NeedReGenerateAxisValues(string axisChanged)
+        bool NeedReGenerateAxisValues(string axisChanged)
         {
             if ((((axisChanged != "AxisType") && (axisChanged != "AutoMin")) && ((axisChanged != "AutoMax") && (axisChanged != "AutoMajorUnit"))) && (axisChanged != "AutoMinorUnit"))
             {
@@ -1499,12 +1499,12 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void PieChartSettings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void PieChartSettings_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             this.NotifyChartAreaChanged(ChartArea.Chart, "PieChartSettings");
         }
 
-        private void ProcessDataOrientationChange(Dt.Cells.Data.DataOrientation newOrientation)
+        void ProcessDataOrientationChange(Dt.Cells.Data.DataOrientation newOrientation)
         {
             string formula = this.Formula;
             if (!string.IsNullOrEmpty(formula))
@@ -1515,7 +1515,7 @@ namespace Dt.Cells.Data
             base.RaisePropertyChanged("DataOrientation");
         }
 
-        private void RaiseChartChanged(ChartArea chartArea, string changed)
+        void RaiseChartChanged(ChartArea chartArea, string changed)
         {
             if (!base.IsEventSuspened() && (base.Worksheet != null))
             {
@@ -1523,7 +1523,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void RaiseChartSelectionEvent()
+        void RaiseChartSelectionEvent()
         {
             if (!base.IsEventSuspened() && (base.Worksheet != null))
             {
@@ -1675,13 +1675,13 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void RelLoadAxisItemsFormula()
+        void RelLoadAxisItemsFormula()
         {
             this.AxisX.ReLoadItemsFormula();
             this.AxisY.ReLoadItemsFormula();
         }
 
-        private void ResetDataSeriesChartType()
+        void ResetDataSeriesChartType()
         {
             using (IEnumerator<SpreadDataSeries> enumerator = this.DataSeries.GetEnumerator())
             {
@@ -1916,12 +1916,12 @@ namespace Dt.Cells.Data
             }
         }
 
-        private bool SupportCategoryFormula()
+        bool SupportCategoryFormula()
         {
             return (SpreadChartUtility.GetDataDimension(this.ChartType) == 1);
         }
 
-        private void SwitchItemsFormula(SpreadChartType oldChartType, SpreadChartType newChartType)
+        void SwitchItemsFormula(SpreadChartType oldChartType, SpreadChartType newChartType)
         {
             if ((((oldChartType == SpreadChartType.ColumnClustered) || (oldChartType == SpreadChartType.ColumnStacked)) || (oldChartType == SpreadChartType.ColumnStacked100pc)) && (((newChartType == SpreadChartType.BarClustered) || (newChartType == SpreadChartType.BarStacked)) || (newChartType == SpreadChartType.BarStacked100pc)))
             {
@@ -1961,7 +1961,7 @@ namespace Dt.Cells.Data
             return true;
         }
 
-        private List<List<SheetCellRange>> TryCombineChartRange()
+        List<List<SheetCellRange>> TryCombineChartRange()
         {
             List<SheetCellRange> chartAllRanges = this.GetChartAllRanges();
             if ((chartAllRanges == null) || (chartAllRanges.Count == 0))
@@ -1987,7 +1987,7 @@ namespace Dt.Cells.Data
             return FormulaUtility.TryCombineSeriesRange(ranges, this.DataOrientation);
         }
 
-        private List<List<SheetCellRange>> TryCombineDataRanges()
+        List<List<SheetCellRange>> TryCombineDataRanges()
         {
             string str;
             if (this.DataSeries.Count == 0)
@@ -2007,7 +2007,7 @@ namespace Dt.Cells.Data
             return FormulaUtility.TryCombineSeriesRange(allDataRanges, this.DataOrientation);
         }
 
-        private List<List<SheetCellRange>> TryCombineItemsRanges()
+        List<List<SheetCellRange>> TryCombineItemsRanges()
         {
             SheetCellRange[] itemsRange = this.GetItemsRange();
             if ((itemsRange == null) || (itemsRange.Length == 0))
@@ -2027,7 +2027,7 @@ namespace Dt.Cells.Data
             return FormulaUtility.TryCombineSeriesRange(seriesRanges, this.DataOrientation);
         }
 
-        private List<SheetCellRange> TryCombineSeriesNameRanges()
+        List<SheetCellRange> TryCombineSeriesNameRanges()
         {
             List<SheetCellRange> list = new List<SheetCellRange>();
             if (this.DataSeries.Count != 0)
@@ -2088,7 +2088,7 @@ namespace Dt.Cells.Data
             return list;
         }
 
-        private void UpdataAxisMaxDataPointCount()
+        void UpdataAxisMaxDataPointCount()
         {
             int count = 0;
             foreach (SpreadDataSeries series in this.DisplayingDataSeries)
@@ -2130,7 +2130,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void Update100PercentAxisValues(Axis axis)
+        void Update100PercentAxisValues(Axis axis)
         {
             if (this.DisplayingDataSeries.Count == 0)
             {
@@ -2215,7 +2215,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void UpdateAxisCatetryValues(Axis axis)
+        void UpdateAxisCatetryValues(Axis axis)
         {
             double min = 0.0;
             double num2 = 1.0;
@@ -2245,7 +2245,7 @@ namespace Dt.Cells.Data
             axis.UpdateItems();
         }
 
-        private void UpdateAxisDateTimeValues(Axis axis, XYZValues xyzValues)
+        void UpdateAxisDateTimeValues(Axis axis, XYZValues xyzValues)
         {
             double num;
             double num2;
@@ -2317,7 +2317,7 @@ namespace Dt.Cells.Data
             axis.UpdateItems();
         }
 
-        private void UpdateAxisDoubleValues(Axis axis, XYZValues xyzValues)
+        void UpdateAxisDoubleValues(Axis axis, XYZValues xyzValues)
         {
             double num;
             double num2;
@@ -2349,7 +2349,7 @@ namespace Dt.Cells.Data
             axis.UpdateItems();
         }
 
-        private void UpdateAxisDoubleValuesMixed(Axis axis, XYZValues xyzValues)
+        void UpdateAxisDoubleValuesMixed(Axis axis, XYZValues xyzValues)
         {
             double num;
             double num2;
@@ -2430,7 +2430,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void UpdateAxisesFormatter()
+        void UpdateAxisesFormatter()
         {
             if (SpreadChartUtility.Is100PercentChart(this.ChartType))
             {
@@ -2464,7 +2464,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void UpdateAxisesTypeBySeriesValues()
+        void UpdateAxisesTypeBySeriesValues()
         {
             if ((this.DataSeries != null) && (this.DataSeries.Count != 0))
             {
@@ -2487,7 +2487,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void UpdateAxisesValues()
+        void UpdateAxisesValues()
         {
             bool flag = SpreadChartUtility.Is100PercentChart(this.ChartType);
             if (SpreadChartUtility.IsBarChart(this.ChartType))
@@ -2540,7 +2540,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void UpdateAxisItemsFormula(string itemsFormula)
+        void UpdateAxisItemsFormula(string itemsFormula)
         {
             if (SpreadChartUtility.IsBarChart(this.ChartType))
             {
@@ -2560,7 +2560,7 @@ namespace Dt.Cells.Data
             this.UpdateAxisesFormatter();
         }
 
-        private void UpdateAxisOnChartTypeChanged()
+        void UpdateAxisOnChartTypeChanged()
         {
             base.SuspendEvents();
             this.UpdateAxisesAutoType();
@@ -2571,7 +2571,7 @@ namespace Dt.Cells.Data
             base.ResumeEvents();
         }
 
-        private void UpdateAxisTypeBySeriesValues(Axis axis, XYZValues xyzValues)
+        void UpdateAxisTypeBySeriesValues(Axis axis, XYZValues xyzValues)
         {
             if (((axis != null) && !axis.UseCustomItems) && (this.DisplayingDataSeries.Count != 0))
             {
@@ -2593,7 +2593,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void UpdateAxisValuesBySeriesValues(Axis axis, XYZValues xyzValues)
+        void UpdateAxisValuesBySeriesValues(Axis axis, XYZValues xyzValues)
         {
             if (axis.AxisType == AxisType.Value)
             {
@@ -2634,7 +2634,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void UpdateAxisValuesOnDataSeriesChanged(string changed)
+        void UpdateAxisValuesOnDataSeriesChanged(string changed)
         {
             if (changed == "XValues")
             {
@@ -2655,7 +2655,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void UpdateAxisValuesOnSeriesXValuesChanged()
+        void UpdateAxisValuesOnSeriesXValuesChanged()
         {
             if (SpreadChartUtility.IsBarChart(this.ChartType))
             {
@@ -2667,7 +2667,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void UpdateAxisValuesOnSeriesYValuesChanged()
+        void UpdateAxisValuesOnSeriesYValuesChanged()
         {
             bool flag = SpreadChartUtility.Is100PercentChart(this.ChartType);
             if (SpreadChartUtility.IsBarChart(this.ChartType))
@@ -2691,7 +2691,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void UpdateChartElements()
+        void UpdateChartElements()
         {
             base.SuspendEvents();
             string str = (base.Sheet != null) ? this.GetFormula() : null;
@@ -2800,12 +2800,12 @@ namespace Dt.Cells.Data
             this.NotifyChartAreaChanged(ChartArea.DataSeries, "");
         }
 
-        private void UpdateDisplayingDataSeries()
+        void UpdateDisplayingDataSeries()
         {
             this._displayingDataSeries = this.GetVisibleDataSeries();
         }
 
-        private void UpdateElementsDisplayHidden(bool displayHidden)
+        void UpdateElementsDisplayHidden(bool displayHidden)
         {
             using (IEnumerator<Axis> enumerator = this._xAxises.GetEnumerator())
             {
@@ -2837,7 +2837,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void UpdateElementsEmptyValueStyle(EmptyValueStyle emptyValueStyle)
+        void UpdateElementsEmptyValueStyle(EmptyValueStyle emptyValueStyle)
         {
             using (IEnumerator<Axis> enumerator = this._xAxises.GetEnumerator())
             {
@@ -2869,7 +2869,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void UpdateFormula(string formula)
+        void UpdateFormula(string formula)
         {
             this.DetectFormulas(formula, out this._dataFormula, out this._nameFormula, out this._itemsFormula);
             base.SuspendEvents();
@@ -2880,7 +2880,7 @@ namespace Dt.Cells.Data
             this.NotifyChartAreaChanged(ChartArea.All, "Formula");
         }
 
-        private bool UpdateSeriesByDataFormula(string dataFormula)
+        bool UpdateSeriesByDataFormula(string dataFormula)
         {
             SheetCellRange[] rangeArray;
             bool flag = false;
@@ -3159,7 +3159,7 @@ namespace Dt.Cells.Data
             return flag;
         }
 
-        private void UpdateSeriesNameFormula(string nameFormula, bool fromSecondNameSeries = false)
+        void UpdateSeriesNameFormula(string nameFormula, bool fromSecondNameSeries = false)
         {
             if ((base.Sheet == null) || string.IsNullOrEmpty(nameFormula))
             {
@@ -3340,7 +3340,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void UpdateSettings()
+        void UpdateSettings()
         {
             base.SuspendEvents();
             this.UpdateAxisesAutoType();
@@ -3382,7 +3382,7 @@ namespace Dt.Cells.Data
             base.ResumeEvents();
         }
 
-        private void UpdateUpDownDars()
+        void UpdateUpDownDars()
         {
             if ((this.ChartType == SpreadChartType.StockHighLowOpenClose) && (this.UpDownDarsSettings == null))
             {
@@ -3391,7 +3391,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void View3D_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void View3D_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             this.NotifyChartAreaChanged(ChartArea.Chart, "View3D");
         }

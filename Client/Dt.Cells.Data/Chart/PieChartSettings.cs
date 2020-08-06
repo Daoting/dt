@@ -16,16 +16,16 @@ namespace Dt.Cells.Data
 {
     internal class PieChartSettings : INotifyPropertyChanged
     {
-        private double _explosion = 0.25;
-        private int _firstSliceAngle;
-        private double _holeSize = 0.1;
+        double _explosion = 0.25;
+        int _firstSliceAngle;
+        double _holeSize = 0.1;
 
         /// <summary>
         /// Occurs when the property has changed.
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void RaisePropertyChanged(string propertyName)
+        void RaisePropertyChanged(string propertyName)
         {
             if (this.PropertyChanged != null)
             {

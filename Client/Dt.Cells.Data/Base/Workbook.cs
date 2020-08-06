@@ -41,36 +41,36 @@ namespace Dt.Cells.Data
     /// </summary>
     public sealed class Workbook : ICloneable, IXmlSerializable, INotifyPropertyChanged, IThemeSupport
     {
-        private bool _allowCellOverflow;
-        private bool _autoRefresh;
-        private ScrollBarVisibility _horizontalScrollBarPolicy;
-        private bool _protect;
-        private ShowResizeTip _resizeTip;
-        private ShowScrollTip _scrollTip;
-        private ScrollBarVisibility _verticalScrollBarPolicy;
-        private int _activeSheetIndex;
-        private bool _autoRecalculation;
-        private bool _isCalculating;
-        private CalcService _calcService;
-        private List<List<object>> _customNamesCache;
-        private StyleInfo _defaultStyle;
-        private TableStyle _defaultTableStyle;
-        private const string _DefaultThemeName = "Office";
-        private short _eventSuspended;
-        private ExcelOperator _excelOperator;
-        private IDictionary<string, CalcFunction> _functions;
-        private string _name;
-        private StyleInfoCollection _namedStyles;
-        private NameInfoCollection _names;
-        private ReferenceStyle _referenceStyle;
-        private WorksheetCollection _sheets;
-        private int _startSheetIndex;
-        private SpreadTheme _themeCached;
-        private string _themeName;
-        private SpreadThemes _themes;
-        private List<IUnsupportRecord> _unSupportExcelRecrods;
-        private bool _showDragDropTip;
-        private bool _showDragFillTip;
+        bool _allowCellOverflow;
+        bool _autoRefresh;
+        ScrollBarVisibility _horizontalScrollBarPolicy;
+        bool _protect;
+        ShowResizeTip _resizeTip;
+        ShowScrollTip _scrollTip;
+        ScrollBarVisibility _verticalScrollBarPolicy;
+        int _activeSheetIndex;
+        bool _autoRecalculation;
+        bool _isCalculating;
+        CalcService _calcService;
+        List<List<object>> _customNamesCache;
+        StyleInfo _defaultStyle;
+        TableStyle _defaultTableStyle;
+        const string _DefaultThemeName = "Office";
+        short _eventSuspended;
+        ExcelOperator _excelOperator;
+        IDictionary<string, CalcFunction> _functions;
+        string _name;
+        StyleInfoCollection _namedStyles;
+        NameInfoCollection _names;
+        ReferenceStyle _referenceStyle;
+        WorksheetCollection _sheets;
+        int _startSheetIndex;
+        SpreadTheme _themeCached;
+        string _themeName;
+        SpreadThemes _themes;
+        List<IUnsupportRecord> _unSupportExcelRecrods;
+        bool _showDragDropTip;
+        bool _showDragFillTip;
 
         public Workbook()
             : this(0)
@@ -360,7 +360,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private bool IsFormulaSuspended
+        bool IsFormulaSuspended
         {
             get
             {
@@ -866,7 +866,7 @@ namespace Dt.Cells.Data
             return null;
         }
 
-        private void Init(int sheetCount)
+        void Init(int sheetCount)
         {
             if ((sheetCount < 0) && (sheetCount > 0xff))
             {
@@ -930,7 +930,7 @@ namespace Dt.Cells.Data
             Worksheet.MoveTo(source, sourceRow, sourceColumn, dest, destRow, destColumn, rowCount, columnCount, copyOption);
         }
 
-        private void OnCustomFunctionChanged(string name)
+        void OnCustomFunctionChanged(string name)
         {
             using (IEnumerator<Worksheet> enumerator = this.Sheets.GetEnumerator())
             {
@@ -941,7 +941,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void OnCustomNameChanged(string name, bool refreshNode)
+        void OnCustomNameChanged(string name, bool refreshNode)
         {
             using (IEnumerator<Worksheet> enumerator = this.Sheets.GetEnumerator())
             {
@@ -957,7 +957,7 @@ namespace Dt.Cells.Data
             this.RaiseExcelError(warning);
         }
 
-        private void OnNameInfoCollectionChanged(object sender, NameInfoCollectionChangedEventArgs e)
+        void OnNameInfoCollectionChanged(object sender, NameInfoCollectionChangedEventArgs e)
         {
             if (!this.IsFormulaSuspended)
             {
@@ -966,7 +966,7 @@ namespace Dt.Cells.Data
             this.RaisePropertyChanged("Names");
         }
 
-        private void OnSheetsChanged(object sender, NotifyCollectionChangedEventArgs e)
+        void OnSheetsChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (!this.IsFormulaSuspended)
             {
@@ -996,7 +996,7 @@ namespace Dt.Cells.Data
             return this.OpenExcel(stream, openFlags, null);
         }
 
-        private void OpenExcelOnBackground(Stream stream, ExcelOpenFlags openFlags)
+        void OpenExcelOnBackground(Stream stream, ExcelOpenFlags openFlags)
         {
             ExtendedNumberFormatHelper.Reset();
             using (IEnumerator<Worksheet> enumerator = this.Sheets.GetEnumerator())
@@ -1102,7 +1102,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void RaiseExcelError(ExcelWarning warning)
+        void RaiseExcelError(ExcelWarning warning)
         {
             if (this.ExcelError != null)
             {
@@ -1110,7 +1110,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void RaisePropertyChanged(string propertyName)
+        void RaisePropertyChanged(string propertyName)
         {
             if (!this.IsEventSuspend() && (this.PropertyChanged != null))
             {
@@ -1123,7 +1123,7 @@ namespace Dt.Cells.Data
             this.FormulaService.Recalculate(0xc350, false);
         }
 
-        private void ReadXmlPrivate(XmlReader reader)
+        void ReadXmlPrivate(XmlReader reader)
         {
             Serializer.InitReader(reader);
             this.SuspendEvent();
@@ -1356,7 +1356,7 @@ namespace Dt.Cells.Data
             return this.SaveExcel(stream, workbookType, saveFlags, null);
         }
 
-        private void SaveExcelOnBackground(Stream stream, ExcelFileFormat workbookType, ExcelSaveFlags saveFlags)
+        void SaveExcelOnBackground(Stream stream, ExcelFileFormat workbookType, ExcelSaveFlags saveFlags)
         {
             ExcelWriter writer = new ExcelWriter(this, saveFlags);
             this.ExcelOperator = new ExcelOperator(null, writer, null);
@@ -1379,7 +1379,7 @@ namespace Dt.Cells.Data
             });
         }
 
-        private void SavePdfBackGround(Stream stream, PdfExportSettings settings, params int[] sheetIndexs)
+        void SavePdfBackGround(Stream stream, PdfExportSettings settings, params int[] sheetIndexs)
         {
             if (stream == null)
             {
@@ -1538,7 +1538,7 @@ namespace Dt.Cells.Data
             });
         }
 
-        private void SaveXmlBackGround(Stream xmlStream, bool dataOnly, bool saveDataSource)
+        void SaveXmlBackGround(Stream xmlStream, bool dataOnly, bool saveDataSource)
         {
             try
             {
@@ -1559,7 +1559,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void SaveXmlBackGround(XmlWriter writer, bool dataOnly, bool saveDataSource)
+        void SaveXmlBackGround(XmlWriter writer, bool dataOnly, bool saveDataSource)
         {
             try
             {
@@ -1753,7 +1753,7 @@ namespace Dt.Cells.Data
             this.WriteXmlPrivate(writer, false);
         }
 
-        private void WriteXmlPrivate(XmlWriter writer, bool dataOnly)
+        void WriteXmlPrivate(XmlWriter writer, bool dataOnly)
         {
             Serializer.InitWriter(writer);
             if (!string.IsNullOrEmpty(this._name))

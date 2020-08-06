@@ -19,10 +19,10 @@ namespace Dt.Cells.Data
     /// </summary>
     public abstract class ScaleRule : FormattingRuleBase, ICachableRule
     {
-        private bool cahced;
+        bool cahced;
         internal object[] expected;
-        private double? highestValueCached;
-        private double? lowestValueCached;
+        double? highestValueCached;
+        double? lowestValueCached;
         internal ScaleValue[] scales;
 
         /// <summary>
@@ -362,7 +362,7 @@ namespace Dt.Cells.Data
             return null;
         }
 
-        private Windows.UI.Color? GetColor(int index)
+        Windows.UI.Color? GetColor(int index)
         {
             object obj2 = this.expected[index];
             if (obj2 is Windows.UI.Color)
@@ -461,7 +461,7 @@ namespace Dt.Cells.Data
             return false;
         }
 
-        private static bool IsFormula(object val)
+        static bool IsFormula(object val)
         {
             return ((val is string) && val.ToString().StartsWith("="));
         }
@@ -479,7 +479,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private static string TrimFormula(string val)
+        static string TrimFormula(string val)
         {
             if (!string.IsNullOrEmpty(val))
             {

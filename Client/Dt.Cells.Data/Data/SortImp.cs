@@ -21,7 +21,7 @@ namespace Dt.Cells.Data
         /// <summary>
         /// The sheet object.
         /// </summary>
-        private Worksheet worksheet;
+        Worksheet worksheet;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.SortImp" /> class.
@@ -37,7 +37,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="list">List to sort</param>
         /// <param name="comparer">The comparer</param>
-        private void BubbleSort(Array list, IComparer comparer)
+        void BubbleSort(Array list, IComparer comparer)
         {
             bool flag = false;
             for (int i = 1; (i < list.Length) && !flag; i++)
@@ -61,7 +61,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="list">List to sort</param>
         /// <param name="comparer">The comparer</param>
-        private void InsertionSort(Array list, IComparer comparer)
+        void InsertionSort(Array list, IComparer comparer)
         {
             for (int i = 1; i < list.Length; i++)
             {

@@ -19,7 +19,7 @@ namespace Dt.Cells.Data
     /// </summary>
     public sealed class AutoFormatter : IFormatter, IColorFormatter, ICloneable
     {
-        private GeneralFormatter _innerformatter;
+        GeneralFormatter _innerformatter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.AutoFormatter" /> class.

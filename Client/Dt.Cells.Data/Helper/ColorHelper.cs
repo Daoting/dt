@@ -19,7 +19,7 @@ namespace Dt.Cells.Data
 {
     internal class ColorHelper
     {
-        private static Dictionary<int, uint> _palette = new Dictionary<int, uint>();
+        static Dictionary<int, uint> _palette = new Dictionary<int, uint>();
         public static readonly Windows.UI.Color Black = Windows.UI.Color.FromArgb(0xff, 0, 0, 0);
         internal static Dictionary<int, Windows.UI.Color> CustomPalette = null;
         public static readonly Windows.UI.Color EmptyColor = Windows.UI.Color.FromArgb(0, 0, 0, 0);
@@ -194,7 +194,7 @@ namespace Dt.Cells.Data
             return null;
         }
 
-        private static int GetCloestColorIndex(Windows.UI.Color color, int startIndex = 0x40)
+        static int GetCloestColorIndex(Windows.UI.Color color, int startIndex = 0x40)
         {
             int num = -1;
             double maxValue = double.MaxValue;
@@ -214,7 +214,7 @@ namespace Dt.Cells.Data
             return num;
         }
 
-        private static byte GetMaxInt(int baseColorAlpha, int colorAlpha, int baseColorValue, int colorValue, double resultColorAlpha)
+        static byte GetMaxInt(int baseColorAlpha, int colorAlpha, int baseColorValue, int colorValue, double resultColorAlpha)
         {
             if (resultColorAlpha == 0.0)
             {
@@ -274,7 +274,7 @@ namespace Dt.Cells.Data
             return color.Lighter(percOfLightLight);
         }
 
-        private static int MakeArgb(byte alpha, byte red, byte green, byte blue)
+        static int MakeArgb(byte alpha, byte red, byte green, byte blue)
         {
             int num = 0;
             num |= alpha << 0x18;
@@ -449,18 +449,18 @@ namespace Dt.Cells.Data
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        private struct HLSColor
+        struct HLSColor
         {
-            private const int ShadowAdj = -333;
-            private const int HilightAdj = 500;
-            private const int WatermarkAdj = -50;
-            private const int Range = 240;
-            private const int HLSMax = 240;
-            private const int RGBMax = 0xff;
-            private const int Undefined = 160;
-            private int hue;
-            private int saturation;
-            private int luminosity;
+            const int ShadowAdj = -333;
+            const int HilightAdj = 500;
+            const int WatermarkAdj = -50;
+            const int Range = 240;
+            const int HLSMax = 240;
+            const int RGBMax = 0xff;
+            const int Undefined = 160;
+            int hue;
+            int saturation;
+            int luminosity;
             public HLSColor(Windows.UI.Color color)
             {
                 int r = color.R;
@@ -563,12 +563,12 @@ namespace Dt.Cells.Data
                 return ColorFromHLS(this.hue, (int)(luminosity + ((num2 - luminosity) * percLighter)), this.saturation);
             }
 
-            private int NewLuma(int n, bool scale)
+            int NewLuma(int n, bool scale)
             {
                 return this.NewLuma(this.luminosity, n, scale);
             }
 
-            private int NewLuma(int luminosity, int n, bool scale)
+            int NewLuma(int luminosity, int n, bool scale)
             {
                 if (n == 0)
                 {
@@ -626,7 +626,7 @@ namespace Dt.Cells.Data
                 return Windows.UI.Color.FromArgb(0xff, num, num2, num3);
             }
 
-            private static int HueToRGB(int n1, int n2, int hue)
+            static int HueToRGB(int n1, int n2, int hue)
             {
                 if (hue < 0)
                 {

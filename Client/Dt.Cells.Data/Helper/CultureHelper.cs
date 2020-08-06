@@ -18,26 +18,26 @@ namespace Dt.Cells.Data
     /// </summary>
     internal static class CultureHelper
     {
-        private static readonly string ChineseHongKongSarPRC = "zh-HK";
-        private static readonly string ChineseMacaoSAR = "zh-MO";
-        private static readonly string ChinesePRC = "zh-CN";
-        private static readonly string ChineseSimplified = "zh-Hans";
-        private static readonly string ChineseSingapore = "zh-SG";
-        private static readonly string ChineseTaiwan = "zh-TW";
-        private static readonly string ChineseTraditional = "zh-Hant";
-        private static readonly string EnglishCanada = "en-CA";
-        private static readonly string EnglishCaribbean = "en-029";
-        private static readonly string EnglishIreland = "en-IE";
-        private static readonly string EnglishJamaica = "en-JM";
-        private static readonly string EnglishNewZealand = "en-NZ";
-        private static readonly string EnglishPhilippines = "en-PH";
-        private static readonly string EnglishSouthAfrica = "en-ZA";
-        private static readonly string EnglishTrinidadandTobago = "en-TT";
-        private static readonly string EnglishUnitedKingdom = "en-GB";
-        private static readonly string EnglishUnitedStates = "en-US";
-        private static readonly string EnglishZimbabwe = "en-ZW";
-        private static readonly string Japanese = "ja";
-        private static readonly string JapaneseJapan = "ja-JP";
+        static readonly string ChineseHongKongSarPRC = "zh-HK";
+        static readonly string ChineseMacaoSAR = "zh-MO";
+        static readonly string ChinesePRC = "zh-CN";
+        static readonly string ChineseSimplified = "zh-Hans";
+        static readonly string ChineseSingapore = "zh-SG";
+        static readonly string ChineseTaiwan = "zh-TW";
+        static readonly string ChineseTraditional = "zh-Hant";
+        static readonly string EnglishCanada = "en-CA";
+        static readonly string EnglishCaribbean = "en-029";
+        static readonly string EnglishIreland = "en-IE";
+        static readonly string EnglishJamaica = "en-JM";
+        static readonly string EnglishNewZealand = "en-NZ";
+        static readonly string EnglishPhilippines = "en-PH";
+        static readonly string EnglishSouthAfrica = "en-ZA";
+        static readonly string EnglishTrinidadandTobago = "en-TT";
+        static readonly string EnglishUnitedKingdom = "en-GB";
+        static readonly string EnglishUnitedStates = "en-US";
+        static readonly string EnglishZimbabwe = "en-ZW";
+        static readonly string Japanese = "ja";
+        static readonly string JapaneseJapan = "ja-JP";
 
         public static bool AllowScience(CultureInfo culture)
         {

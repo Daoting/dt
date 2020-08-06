@@ -218,7 +218,7 @@ namespace Dt.Cells.UI
             return DataValidationResult.ForceApply;
         }
 
-        Windows.Foundation.Point ArrangeDragFillTooltip(CellRange range, FillDirection direction)
+        Point ArrangeDragFillTooltip(CellRange range, FillDirection direction)
         {
             int row = -1;
             int column = -1;
@@ -247,17 +247,17 @@ namespace Dt.Cells.UI
                 switch (direction)
                 {
                     case FillDirection.Left:
-                        return new Windows.Foundation.Point(layout2.X + 2.0, (layout.Y + layout.Height) + 2.0);
+                        return new Point(layout2.X + 2.0, (layout.Y + layout.Height) + 2.0);
 
                     case FillDirection.Right:
                     case FillDirection.Down:
-                        return new Windows.Foundation.Point((layout2.X + layout2.Width) + 2.0, (layout.Y + layout.Height) + 2.0);
+                        return new Point((layout2.X + layout2.Width) + 2.0, (layout.Y + layout.Height) + 2.0);
 
                     case FillDirection.Up:
-                        return new Windows.Foundation.Point((layout2.X + layout2.Width) + 2.0, layout.Y + 2.0);
+                        return new Point((layout2.X + layout2.Width) + 2.0, layout.Y + 2.0);
                 }
             }
-            return new Windows.Foundation.Point();
+            return new Point();
         }
 
         /// <summary>
@@ -267,7 +267,7 @@ namespace Dt.Cells.UI
         /// <returns>
         /// The actual size used.
         /// </returns>
-        protected override Windows.Foundation.Size ArrangeOverride(Windows.Foundation.Size finalSize)
+        protected override Size ArrangeOverride(Size finalSize)
         {
             double headerX;
             double headerY;
@@ -275,16 +275,16 @@ namespace Dt.Cells.UI
             ViewportInfo viewportInfo = GetViewportInfo();
             int columnViewportCount = viewportInfo.ColumnViewportCount;
             int rowViewportCount = viewportInfo.RowViewportCount;
-            TrackersContainer.Arrange(new Windows.Foundation.Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
-            ShapeDrawingContainer.Arrange(new Windows.Foundation.Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
-            CursorsContainer.Arrange(new Windows.Foundation.Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
+            TrackersContainer.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
+            ShapeDrawingContainer.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
+            CursorsContainer.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
             if ((_cornerPresenter != null) && (_cornerPresenter.Parent != null))
             {
                 headerX = sheetLayout.HeaderX;
                 headerY = sheetLayout.HeaderY;
                 if ((_cornerPresenter.Width != sheetLayout.HeaderWidth) || (_cornerPresenter.Height != sheetLayout.HeaderHeight))
                 {
-                    _cornerPresenter.Arrange(new Windows.Foundation.Rect(headerX, headerY, sheetLayout.HeaderWidth, sheetLayout.HeaderHeight));
+                    _cornerPresenter.Arrange(new Rect(headerX, headerY, sheetLayout.HeaderWidth, sheetLayout.HeaderHeight));
                 }
             }
             if (_columnHeaderPresenters != null)
@@ -299,7 +299,7 @@ namespace Dt.Cells.UI
                     if (((viewport != null) && (viewport.Parent != null)) && ((viewport.Width != viewportWidth) || (viewport.Height != headerHeight)))
                     {
                         viewport.InvalidateArrange();
-                        viewport.Arrange(new Windows.Foundation.Rect(headerX, headerY, viewportWidth, headerHeight));
+                        viewport.Arrange(new Rect(headerX, headerY, viewportWidth, headerHeight));
                     }
                 }
             }
@@ -315,7 +315,7 @@ namespace Dt.Cells.UI
                     if (((viewport2 != null) && (viewport2.Parent != null)) && ((viewport2.Width != headerWidth) || (viewport2.Height != viewportHeight)))
                     {
                         viewport2.InvalidateArrange();
-                        viewport2.Arrange(new Windows.Foundation.Rect(headerX, headerY, headerWidth, viewportHeight));
+                        viewport2.Arrange(new Rect(headerX, headerY, headerWidth, viewportHeight));
                     }
                 }
             }
@@ -332,7 +332,7 @@ namespace Dt.Cells.UI
                         GcViewport viewport3 = _viewportPresenters[m + 1, k + 1];
                         if (viewport3 != null)
                         {
-                            viewport3.Arrange(new Windows.Foundation.Rect(headerX, headerY, width, height));
+                            viewport3.Arrange(new Rect(headerX, headerY, width, height));
                         }
                     }
                 }
@@ -352,7 +352,7 @@ namespace Dt.Cells.UI
                 y = groupLayout.Y;
                 if ((_groupCornerPresenter.Width != groupLayout.Width) || (_groupCornerPresenter.Height != groupLayout.Height))
                 {
-                    _groupCornerPresenter.Arrange(new Windows.Foundation.Rect(x, y, groupLayout.Width, groupLayout.Height));
+                    _groupCornerPresenter.Arrange(new Rect(x, y, groupLayout.Width, groupLayout.Height));
                 }
             }
             if ((_rowGroupHeaderPresenter != null) && (_rowGroupHeaderPresenter.Parent != null))
@@ -361,7 +361,7 @@ namespace Dt.Cells.UI
                 y = groupLayout.Y + groupLayout.Height;
                 double width = groupLayout.Width;
                 double headerHeight = layout.HeaderHeight;
-                _rowGroupHeaderPresenter.Arrange(new Windows.Foundation.Rect(x, y, width, headerHeight));
+                _rowGroupHeaderPresenter.Arrange(new Rect(x, y, width, headerHeight));
             }
             if ((_columnGroupHeaderPresenter != null) && (_columnGroupHeaderPresenter.Parent != null))
             {
@@ -369,7 +369,7 @@ namespace Dt.Cells.UI
                 y = groupLayout.Y;
                 double headerWidth = layout.HeaderWidth;
                 double height = groupLayout.Height;
-                _columnGroupHeaderPresenter.Arrange(new Windows.Foundation.Rect(x, y, headerWidth, height));
+                _columnGroupHeaderPresenter.Arrange(new Rect(x, y, headerWidth, height));
             }
             if (_rowGroupPresenters != null)
             {
@@ -384,22 +384,22 @@ namespace Dt.Cells.UI
                         double viewportHeight = layout.GetViewportHeight(i);
                         if (!IsTouching || (i != _touchStartHitTestInfo.RowViewportIndex))
                         {
-                            group.Arrange(new Windows.Foundation.Rect(x, y, num8, viewportHeight));
+                            group.Arrange(new Rect(x, y, num8, viewportHeight));
                             group.Clip = null;
                         }
                         else
                         {
-                            group.Arrange(new Windows.Foundation.Rect(x, y + _translateOffsetY, num8, viewportHeight));
+                            group.Arrange(new Rect(x, y + _translateOffsetY, num8, viewportHeight));
                             if (_translateOffsetY < 0.0)
                             {
                                 RectangleGeometry geometry = new RectangleGeometry();
-                                geometry.Rect = new Windows.Foundation.Rect(x, Math.Abs(_translateOffsetY), num8, viewportHeight);
+                                geometry.Rect = new Rect(x, Math.Abs(_translateOffsetY), num8, viewportHeight);
                                 group.Clip = geometry;
                             }
                             else if (_translateOffsetY > 0.0)
                             {
                                 RectangleGeometry geometry2 = new RectangleGeometry();
-                                geometry2.Rect = new Windows.Foundation.Rect(x, 0.0, num8, Math.Max((double)0.0, (double)(viewportHeight - Math.Abs(_translateOffsetY))));
+                                geometry2.Rect = new Rect(x, 0.0, num8, Math.Max((double)0.0, (double)(viewportHeight - Math.Abs(_translateOffsetY))));
                                 group.Clip = geometry2;
                             }
                         }
@@ -419,22 +419,22 @@ namespace Dt.Cells.UI
                         double num12 = groupLayout.Height;
                         if (!IsTouching || (j != _touchStartHitTestInfo.ColumnViewportIndex))
                         {
-                            group2.Arrange(new Windows.Foundation.Rect(x, y, viewportWidth, num12));
+                            group2.Arrange(new Rect(x, y, viewportWidth, num12));
                             group2.Clip = null;
                         }
                         else
                         {
-                            group2.Arrange(new Windows.Foundation.Rect(x + _translateOffsetX, y, viewportWidth, num12));
+                            group2.Arrange(new Rect(x + _translateOffsetX, y, viewportWidth, num12));
                             if (_translateOffsetX < 0.0)
                             {
                                 RectangleGeometry geometry3 = new RectangleGeometry();
-                                geometry3.Rect = new Windows.Foundation.Rect(Math.Abs(_translateOffsetX), y, viewportWidth, num12);
+                                geometry3.Rect = new Rect(Math.Abs(_translateOffsetX), y, viewportWidth, num12);
                                 group2.Clip = geometry3;
                             }
                             else if (_translateOffsetX > 0.0)
                             {
                                 RectangleGeometry geometry4 = new RectangleGeometry();
-                                geometry4.Rect = new Windows.Foundation.Rect(0.0, y, Math.Max((double)0.0, (double)(viewportWidth - Math.Abs(_translateOffsetX))), num12);
+                                geometry4.Rect = new Rect(0.0, y, Math.Max((double)0.0, (double)(viewportWidth - Math.Abs(_translateOffsetX))), num12);
                                 group2.Clip = geometry4;
                             }
                         }
@@ -788,16 +788,16 @@ namespace Dt.Cells.UI
             }
         }
 
-        Windows.Foundation.Point CalcMoveOffset(int moveStartRowViewport, int moveStartColumnViewport, int moveStartRow, int moveStartColumn, Windows.Foundation.Point startPoint, int moveEndRowViewport, int moveEndColumnViewport, int moveEndRow, int moveEndColumn, Windows.Foundation.Point endPoint)
+        Point CalcMoveOffset(int moveStartRowViewport, int moveStartColumnViewport, int moveStartRow, int moveStartColumn, Point startPoint, int moveEndRowViewport, int moveEndColumnViewport, int moveEndRow, int moveEndColumn, Point endPoint)
         {
             RowLayout layout = GetViewportRowLayoutModel(moveEndRowViewport).FindRow(moveEndRow);
             ColumnLayout layout2 = GetViewportColumnLayoutModel(moveEndColumnViewport).FindColumn(moveEndColumn);
             if ((layout == null) || (layout2 == null))
             {
-                return new Windows.Foundation.Point(0.0, 0.0);
+                return new Point(0.0, 0.0);
             }
-            Windows.Foundation.Rect rect = _floatingObjectsMovingResizingStartPointCellBounds;
-            Windows.Foundation.Rect rect2 = new Windows.Foundation.Rect(layout2.X, layout.Y, layout2.Width, layout.Height);
+            Rect rect = _floatingObjectsMovingResizingStartPointCellBounds;
+            Rect rect2 = new Rect(layout2.X, layout.Y, layout2.Width, layout.Height);
             bool flag = true;
             if (moveEndRow < moveStartRow)
             {
@@ -855,7 +855,7 @@ namespace Dt.Cells.UI
                 x = -x;
             }
             x = Math.Floor((double)(x / ((double)ZoomFactor)));
-            return new Windows.Foundation.Point(x, Math.Floor((double)(num3 / ((double)ZoomFactor))));
+            return new Point(x, Math.Floor((double)(num3 / ((double)ZoomFactor))));
         }
 
         internal bool CanCommitAndNavigate()
@@ -1290,7 +1290,7 @@ namespace Dt.Cells.UI
         {
             _autoFillIndicatorContainer.Width = 0.0;
             _autoFillIndicatorContainer.Height = 0.0;
-            _autoFillIndicatorContainer.Arrange(new Windows.Foundation.Rect(0.0, 0.0, 0.0, 0.0));
+            _autoFillIndicatorContainer.Arrange(new Rect(0.0, 0.0, 0.0, 0.0));
             _autoFillIndicatorContainer.InvalidateMeasure();
             AutoFillIndicatorRec = null;
         }
@@ -1651,7 +1651,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        void ContinueTouchSelectingCells(Windows.Foundation.Point touchPoint)
+        void ContinueTouchSelectingCells(Point touchPoint)
         {
             IsContinueTouchOperation = true;
             int activeColumnViewportIndex = GetActiveColumnViewportIndex();
@@ -2021,13 +2021,13 @@ namespace Dt.Cells.UI
             return model;
         }
 
-        internal Windows.UI.Xaml.Shapes.Line CreateFreezeLine()
+        internal Line CreateFreezeLine()
         {
             SolidColorBrush brush = new SolidColorBrush(Colors.Black);
-            Windows.UI.Xaml.Shapes.Line line2 = new Windows.UI.Xaml.Shapes.Line();
+            Line line2 = new Line();
             line2.StrokeThickness = 1.0;
             line2.Stroke = brush;
-            Windows.UI.Xaml.Shapes.Line element = line2;
+            Line element = line2;
             element.TypeSafeSetStyle(FreezeLineStyle);
             return element;
         }
@@ -2313,7 +2313,7 @@ namespace Dt.Cells.UI
                 SheetLayout sheetLayout = GetSheetLayout();
                 double viewportX = sheetLayout.GetViewportX(columnViewportIndex);
                 double viewportY = sheetLayout.GetViewportY(rowViewportIndex);
-                Windows.Foundation.Point viewportTopLeftCoordinates = GetViewportTopLeftCoordinates(rowViewportIndex, columnViewportIndex);
+                Point viewportTopLeftCoordinates = GetViewportTopLeftCoordinates(rowViewportIndex, columnViewportIndex);
                 for (int i = 0; i < allFloatingObjects.Length; i++)
                 {
                     FloatingObject obj2 = allFloatingObjects[i];
@@ -2556,7 +2556,7 @@ namespace Dt.Cells.UI
                 }
                 if (!string.IsNullOrWhiteSpace(str))
                 {
-                    Windows.Foundation.Point point = ArrangeDragFillTooltip(_currentFillRange, currentFillDirection);
+                    Point point = ArrangeDragFillTooltip(_currentFillRange, currentFillDirection);
                     if (IsTouchDragFilling)
                     {
                         if (ShowDragFillTip)
@@ -2771,13 +2771,13 @@ namespace Dt.Cells.UI
             {
                 int activeRowViewportIndex = GetActiveRowViewportIndex();
                 int activeColumnViewportIndex = GetActiveColumnViewportIndex();
-                Windows.Foundation.Rect[] floatingObjectsResizingRects = GetFloatingObjectsResizingRects(activeRowViewportIndex, activeColumnViewportIndex);
+                Rect[] floatingObjectsResizingRects = GetFloatingObjectsResizingRects(activeRowViewportIndex, activeColumnViewportIndex);
                 List<string> list = new List<string>();
-                List<Windows.Foundation.Rect> list2 = new List<Windows.Foundation.Rect>();
+                List<Rect> list2 = new List<Rect>();
                 for (int i = 0; (i < _movingResizingFloatingObjects.Length) && (i < floatingObjectsResizingRects.Length); i++)
                 {
                     FloatingObject obj2 = _movingResizingFloatingObjects[i];
-                    Windows.Foundation.Rect rect = new Windows.Foundation.Rect(floatingObjectsResizingRects[i].X, floatingObjectsResizingRects[i].Y, floatingObjectsResizingRects[i].Width, floatingObjectsResizingRects[i].Height);
+                    Rect rect = new Rect(floatingObjectsResizingRects[i].X, floatingObjectsResizingRects[i].Y, floatingObjectsResizingRects[i].Width, floatingObjectsResizingRects[i].Height);
                     RowLayout viewportRowLayoutNearY = GetViewportRowLayoutNearY(activeRowViewportIndex, rect.Y);
                     if (viewportRowLayoutNearY == null)
                     {
@@ -2819,7 +2819,7 @@ namespace Dt.Cells.UI
                     double width = Math.Floor((double)(rect.Width / ((double)ZoomFactor)));
                     double height = Math.Floor((double)(rect.Height / ((double)ZoomFactor)));
                     list.Add(obj2.Name);
-                    list2.Add(new Windows.Foundation.Rect(x, y, width, height));
+                    list2.Add(new Rect(x, y, width, height));
                 }
                 ResizeFloatingObjectExtent extent = new ResizeFloatingObjectExtent(list.ToArray(), list2.ToArray());
                 DoCommand(new ResizeFloatingObjectUndoAction(Worksheet, extent));
@@ -3554,7 +3554,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        internal virtual bool EndTouchTap(Windows.Foundation.Point point)
+        internal virtual bool EndTouchTap(Point point)
         {
             return true;
         }
@@ -3681,7 +3681,7 @@ namespace Dt.Cells.UI
             return null;
         }
 
-        internal Windows.Foundation.Rect GetActiveSelectionBounds()
+        internal Rect GetActiveSelectionBounds()
         {
             CellRange activeSelection = GetActiveSelection();
             if (activeSelection == null)
@@ -3694,13 +3694,13 @@ namespace Dt.Cells.UI
             {
                 double viewportX = sheetLayout.GetViewportX(GetActiveColumnViewportIndex());
                 double viewportY = sheetLayout.GetViewportY(GetActiveRowViewportIndex());
-                Windows.Foundation.Rect rangeBounds = viewportRowsPresenter.GetRangeBounds(activeSelection);
+                Rect rangeBounds = viewportRowsPresenter.GetRangeBounds(activeSelection);
                 if (!double.IsInfinity(rangeBounds.Width) && !double.IsInfinity(rangeBounds.Height))
                 {
-                    return new Windows.Foundation.Rect(viewportX + rangeBounds.X, viewportY + rangeBounds.Y, rangeBounds.Width, rangeBounds.Height);
+                    return new Rect(viewportX + rangeBounds.X, viewportY + rangeBounds.Y, rangeBounds.Width, rangeBounds.Height);
                 }
             }
-            return Windows.Foundation.Rect.Empty;
+            return Rect.Empty;
         }
 
         internal FloatingObject[] GetAllFloatingObjects()
@@ -3743,12 +3743,12 @@ namespace Dt.Cells.UI
             return list.ToArray();
         }
 
-        Windows.Foundation.Rect GetAutoFillIndicatorRect(GcViewport vp, CellRange activeSelection)
+        Rect GetAutoFillIndicatorRect(GcViewport vp, CellRange activeSelection)
         {
             SheetLayout sheetLayout = GetSheetLayout();
             double viewportX = sheetLayout.GetViewportX(vp.ColumnViewportIndex);
             double viewportY = sheetLayout.GetViewportY(vp.RowViewportIndex);
-            Windows.Foundation.Rect rangeBounds = vp._cachedSelectionFrameLayout;
+            Rect rangeBounds = vp._cachedSelectionFrameLayout;
             if (!vp.SelectionContainer.IsAnchorCellInSelection)
             {
                 rangeBounds = vp._cachedFocusCellLayout;
@@ -3757,8 +3757,8 @@ namespace Dt.Cells.UI
             {
                 rangeBounds = vp.GetRangeBounds(activeSelection);
             }
-            Windows.Foundation.Rect rect3 = rangeBounds;
-            return new Windows.Foundation.Rect(((rect3.Width + viewportX) + rangeBounds.X) - 16.0, (rect3.Height + viewportY) + rangeBounds.Y, 16.0, 16.0);
+            Rect rect3 = rangeBounds;
+            return new Rect(((rect3.Width + viewportX) + rangeBounds.X) - 16.0, (rect3.Height + viewportY) + rangeBounds.Y, 16.0, 16.0);
         }
 
         FloatingObjectLayoutModel GetCacheFloatingObjectsMovingResizingLayoutModels(int rowViewport, int columnViewport)
@@ -3918,7 +3918,7 @@ namespace Dt.Cells.UI
                                 height += worksheet.GetRowHeight(i, sheetArea);
                             }
                         }
-                        Windows.Foundation.Size maxSize = MeasureHelper.ConvertExcelCellSizeToTextSize(new Windows.Foundation.Size(double.PositiveInfinity, height), 1.0);
+                        Size maxSize = MeasureHelper.ConvertExcelCellSizeToTextSize(new Size(double.PositiveInfinity, height), 1.0);
                         if ((viewportTopRow <= i) && (i < (viewportTopRow + num5)))
                         {
                             num = Math.Max(num, MeasureCellText(cell, i, column, maxSize, fontFamily, textFormattingMode, base.UseLayoutRounding));
@@ -3967,7 +3967,7 @@ namespace Dt.Cells.UI
                         rowHeight += worksheet.GetRowHeight(row, sheetArea);
                     }
                 }
-                Windows.Foundation.Size size2 = MeasureHelper.ConvertExcelCellSizeToTextSize(new Windows.Foundation.Size(double.PositiveInfinity, rowHeight), 1.0);
+                Size size2 = MeasureHelper.ConvertExcelCellSizeToTextSize(new Size(double.PositiveInfinity, rowHeight), 1.0);
                 num = Math.Max(num, MeasureCellText(cell, row, column, size2, fontFamily, textFormattingMode, base.UseLayoutRounding));
             }
             return num;
@@ -3987,7 +3987,7 @@ namespace Dt.Cells.UI
             return _cachedColumnHeaderCellLayoutModel[columnViewportIndex + 1];
         }
 
-        Windows.Foundation.Rect GetColumnHeaderRectangle(int columnViewportIndex)
+        Rect GetColumnHeaderRectangle(int columnViewportIndex)
         {
             SheetLayout sheetLayout = GetSheetLayout();
             double viewportX = sheetLayout.GetViewportX(columnViewportIndex);
@@ -3996,9 +3996,9 @@ namespace Dt.Cells.UI
             double height = sheetLayout.HeaderHeight - 1.0;
             if ((width >= 0.0) && (height >= 0.0))
             {
-                return new Windows.Foundation.Rect(viewportX, headerY, width, height);
+                return new Rect(viewportX, headerY, width, height);
             }
-            return Windows.Foundation.Rect.Empty;
+            return Rect.Empty;
         }
 
         RowLayout GetColumnHeaderResizingRowLayoutFromY(double y)
@@ -4110,7 +4110,7 @@ namespace Dt.Cells.UI
             return _cornerPresenter;
         }
 
-        Windows.Foundation.Rect GetCornerRectangle()
+        Rect GetCornerRectangle()
         {
             SheetLayout sheetLayout = GetSheetLayout();
             double headerX = sheetLayout.HeaderX;
@@ -4119,9 +4119,9 @@ namespace Dt.Cells.UI
             double height = sheetLayout.HeaderHeight - 1.0;
             if ((width >= 0.0) && (height >= 0.0))
             {
-                return new Windows.Foundation.Rect(headerX, headerY, width, height);
+                return new Rect(headerX, headerY, width, height);
             }
-            return Windows.Foundation.Rect.Empty;
+            return Rect.Empty;
         }
 
         ColumnLayout GetCurrentDragToColumnLayout()
@@ -4422,135 +4422,135 @@ namespace Dt.Cells.UI
             return list;
         }
 
-        Windows.Foundation.Rect[] GetFloatingObjectsBottomCenterResizingRects(int rowViewport, int columnViewport, Windows.Foundation.Point mousePosition)
+        Rect[] GetFloatingObjectsBottomCenterResizingRects(int rowViewport, int columnViewport, Point mousePosition)
         {
-            List<Windows.Foundation.Rect> list = new List<Windows.Foundation.Rect>();
+            List<Rect> list = new List<Rect>();
             FloatingObjectLayoutModel cacheFloatingObjectsMovingResizingLayoutModels = GetCacheFloatingObjectsMovingResizingLayoutModels(rowViewport, columnViewport);
             FloatingObjectLayoutModel viewportFloatingObjectLayoutModel = GetViewportFloatingObjectLayoutModel(rowViewport, columnViewport);
-            Windows.Foundation.Point point = new Windows.Foundation.Point(mousePosition.X - _floatingObjectsMovingResizingStartPoint.X, mousePosition.Y - _floatingObjectsMovingResizingStartPoint.Y);
+            Point point = new Point(mousePosition.X - _floatingObjectsMovingResizingStartPoint.X, mousePosition.Y - _floatingObjectsMovingResizingStartPoint.Y);
             foreach (FloatingObject obj2 in _movingResizingFloatingObjects)
             {
                 FloatingObjectLayout layout = cacheFloatingObjectsMovingResizingLayoutModels.Find(obj2.Name);
                 FloatingObjectLayout layout2 = viewportFloatingObjectLayoutModel.Find(obj2.Name);
-                Windows.Foundation.Point point2 = new Windows.Foundation.Point(layout.X + layout.Width, layout.Y + layout.Height);
-                Windows.Foundation.Point point3 = new Windows.Foundation.Point(point2.X + point.X, point2.Y + point.Y);
-                Windows.Foundation.Point point4 = new Windows.Foundation.Point(layout2.X, layout2.Y);
+                Point point2 = new Point(layout.X + layout.Width, layout.Y + layout.Height);
+                Point point3 = new Point(point2.X + point.X, point2.Y + point.Y);
+                Point point4 = new Point(layout2.X, layout2.Y);
                 double y = Math.Min(point3.Y, point4.Y);
                 double height = Math.Abs((double)(point3.Y - point4.Y));
                 double width = layout2.Width;
-                Windows.Foundation.Rect rect = new Windows.Foundation.Rect(layout2.X, y, width, height);
+                Rect rect = new Rect(layout2.X, y, width, height);
                 list.Add(rect);
             }
             return list.ToArray();
         }
 
-        Windows.Foundation.Rect[] GetFloatingObjectsBottomLeftResizingRects(int rowViewport, int columnViewport, Windows.Foundation.Point mousePosition)
+        Rect[] GetFloatingObjectsBottomLeftResizingRects(int rowViewport, int columnViewport, Point mousePosition)
         {
-            List<Windows.Foundation.Rect> list = new List<Windows.Foundation.Rect>();
+            List<Rect> list = new List<Rect>();
             FloatingObjectLayoutModel cacheFloatingObjectsMovingResizingLayoutModels = GetCacheFloatingObjectsMovingResizingLayoutModels(rowViewport, columnViewport);
             FloatingObjectLayoutModel viewportFloatingObjectLayoutModel = GetViewportFloatingObjectLayoutModel(rowViewport, columnViewport);
-            Windows.Foundation.Point point = new Windows.Foundation.Point(mousePosition.X - _floatingObjectsMovingResizingStartPoint.X, mousePosition.Y - _floatingObjectsMovingResizingStartPoint.Y);
+            Point point = new Point(mousePosition.X - _floatingObjectsMovingResizingStartPoint.X, mousePosition.Y - _floatingObjectsMovingResizingStartPoint.Y);
             foreach (FloatingObject obj2 in _movingResizingFloatingObjects)
             {
                 FloatingObjectLayout layout = cacheFloatingObjectsMovingResizingLayoutModels.Find(obj2.Name);
                 FloatingObjectLayout layout2 = viewportFloatingObjectLayoutModel.Find(obj2.Name);
-                Windows.Foundation.Point point2 = new Windows.Foundation.Point(layout.X, layout.Y + layout.Height);
-                Windows.Foundation.Point point3 = new Windows.Foundation.Point(point2.X + point.X, point2.Y + point.Y);
-                Windows.Foundation.Point point4 = new Windows.Foundation.Point(layout2.X + layout2.Width, layout2.Y);
+                Point point2 = new Point(layout.X, layout.Y + layout.Height);
+                Point point3 = new Point(point2.X + point.X, point2.Y + point.Y);
+                Point point4 = new Point(layout2.X + layout2.Width, layout2.Y);
                 double x = Math.Min(point3.X, point4.X);
                 double y = Math.Min(point3.Y, point4.Y);
                 double width = Math.Abs((double)(point4.X - point3.X));
                 double height = Math.Abs((double)(point4.Y - point3.Y));
-                Windows.Foundation.Rect rect = new Windows.Foundation.Rect(x, y, width, height);
+                Rect rect = new Rect(x, y, width, height);
                 list.Add(rect);
             }
             return list.ToArray();
         }
 
-        Windows.Foundation.Rect[] GetFloatingObjectsBottomRighResizingRects(int rowViewport, int columnViewport, Windows.Foundation.Point mousePosition)
+        Rect[] GetFloatingObjectsBottomRighResizingRects(int rowViewport, int columnViewport, Point mousePosition)
         {
-            List<Windows.Foundation.Rect> list = new List<Windows.Foundation.Rect>();
+            List<Rect> list = new List<Rect>();
             FloatingObjectLayoutModel cacheFloatingObjectsMovingResizingLayoutModels = GetCacheFloatingObjectsMovingResizingLayoutModels(rowViewport, columnViewport);
             FloatingObjectLayoutModel viewportFloatingObjectLayoutModel = GetViewportFloatingObjectLayoutModel(rowViewport, columnViewport);
-            Windows.Foundation.Point point = new Windows.Foundation.Point(mousePosition.X - _floatingObjectsMovingResizingStartPoint.X, mousePosition.Y - _floatingObjectsMovingResizingStartPoint.Y);
+            Point point = new Point(mousePosition.X - _floatingObjectsMovingResizingStartPoint.X, mousePosition.Y - _floatingObjectsMovingResizingStartPoint.Y);
             foreach (FloatingObject obj2 in _movingResizingFloatingObjects)
             {
                 FloatingObjectLayout layout = cacheFloatingObjectsMovingResizingLayoutModels.Find(obj2.Name);
                 FloatingObjectLayout layout2 = viewportFloatingObjectLayoutModel.Find(obj2.Name);
-                Windows.Foundation.Point point2 = new Windows.Foundation.Point(layout.X + layout.Width, layout.Y + layout.Height);
-                Windows.Foundation.Point point3 = new Windows.Foundation.Point(point2.X + point.X, point2.Y + point.Y);
-                Windows.Foundation.Point point4 = new Windows.Foundation.Point(layout2.X, layout2.Y);
+                Point point2 = new Point(layout.X + layout.Width, layout.Y + layout.Height);
+                Point point3 = new Point(point2.X + point.X, point2.Y + point.Y);
+                Point point4 = new Point(layout2.X, layout2.Y);
                 double x = Math.Min(point3.X, point4.X);
                 double y = Math.Min(point3.Y, point4.Y);
                 double width = Math.Abs((double)(point3.X - point4.X));
                 double height = Math.Abs((double)(point3.Y - point4.Y));
-                Windows.Foundation.Rect rect = new Windows.Foundation.Rect(x, y, width, height);
+                Rect rect = new Rect(x, y, width, height);
                 list.Add(rect);
             }
             return list.ToArray();
         }
 
-        Windows.Foundation.Rect[] GetFloatingObjectsMiddleLeftResizingRects(int rowViewport, int columnViewport, Windows.Foundation.Point mousePosition)
+        Rect[] GetFloatingObjectsMiddleLeftResizingRects(int rowViewport, int columnViewport, Point mousePosition)
         {
-            List<Windows.Foundation.Rect> list = new List<Windows.Foundation.Rect>();
+            List<Rect> list = new List<Rect>();
             FloatingObjectLayoutModel cacheFloatingObjectsMovingResizingLayoutModels = GetCacheFloatingObjectsMovingResizingLayoutModels(rowViewport, columnViewport);
             FloatingObjectLayoutModel viewportFloatingObjectLayoutModel = GetViewportFloatingObjectLayoutModel(rowViewport, columnViewport);
-            Windows.Foundation.Point point = new Windows.Foundation.Point(mousePosition.X - _floatingObjectsMovingResizingStartPoint.X, mousePosition.Y - _floatingObjectsMovingResizingStartPoint.Y);
+            Point point = new Point(mousePosition.X - _floatingObjectsMovingResizingStartPoint.X, mousePosition.Y - _floatingObjectsMovingResizingStartPoint.Y);
             foreach (FloatingObject obj2 in _movingResizingFloatingObjects)
             {
                 FloatingObjectLayout layout = cacheFloatingObjectsMovingResizingLayoutModels.Find(obj2.Name);
                 FloatingObjectLayout layout2 = viewportFloatingObjectLayoutModel.Find(obj2.Name);
-                Windows.Foundation.Point point2 = new Windows.Foundation.Point(layout.X, layout.Y);
-                Windows.Foundation.Point point3 = new Windows.Foundation.Point(point2.X + point.X, point2.Y + point.Y);
-                Windows.Foundation.Point point4 = new Windows.Foundation.Point(layout2.X + layout2.Width, layout2.Y + layout2.Height);
+                Point point2 = new Point(layout.X, layout.Y);
+                Point point3 = new Point(point2.X + point.X, point2.Y + point.Y);
+                Point point4 = new Point(layout2.X + layout2.Width, layout2.Y + layout2.Height);
                 double x = Math.Min(point3.X, point4.X);
                 double width = Math.Abs((double)(point4.X - point3.X));
                 double height = layout2.Height;
-                Windows.Foundation.Rect rect = new Windows.Foundation.Rect(x, layout2.Y, width, height);
+                Rect rect = new Rect(x, layout2.Y, width, height);
                 list.Add(rect);
             }
             return list.ToArray();
         }
 
-        Windows.Foundation.Rect[] GetFloatingObjectsMiddleRightResizingRects(int rowViewport, int columnViewport, Windows.Foundation.Point mousePosition)
+        Rect[] GetFloatingObjectsMiddleRightResizingRects(int rowViewport, int columnViewport, Point mousePosition)
         {
-            List<Windows.Foundation.Rect> list = new List<Windows.Foundation.Rect>();
+            List<Rect> list = new List<Rect>();
             FloatingObjectLayoutModel cacheFloatingObjectsMovingResizingLayoutModels = GetCacheFloatingObjectsMovingResizingLayoutModels(rowViewport, columnViewport);
             FloatingObjectLayoutModel viewportFloatingObjectLayoutModel = GetViewportFloatingObjectLayoutModel(rowViewport, columnViewport);
-            Windows.Foundation.Point point = new Windows.Foundation.Point(mousePosition.X - _floatingObjectsMovingResizingStartPoint.X, mousePosition.Y - _floatingObjectsMovingResizingStartPoint.Y);
+            Point point = new Point(mousePosition.X - _floatingObjectsMovingResizingStartPoint.X, mousePosition.Y - _floatingObjectsMovingResizingStartPoint.Y);
             foreach (FloatingObject obj2 in _movingResizingFloatingObjects)
             {
                 FloatingObjectLayout layout = cacheFloatingObjectsMovingResizingLayoutModels.Find(obj2.Name);
                 FloatingObjectLayout layout2 = viewportFloatingObjectLayoutModel.Find(obj2.Name);
-                Windows.Foundation.Point point2 = new Windows.Foundation.Point(layout.X + layout.Width, layout.Y + layout.Height);
-                Windows.Foundation.Point point3 = new Windows.Foundation.Point(point2.X + point.X, point2.Y + point.Y);
-                Windows.Foundation.Point point4 = new Windows.Foundation.Point(layout2.X, layout2.Y);
+                Point point2 = new Point(layout.X + layout.Width, layout.Y + layout.Height);
+                Point point3 = new Point(point2.X + point.X, point2.Y + point.Y);
+                Point point4 = new Point(layout2.X, layout2.Y);
                 double x = Math.Min(point3.X, point4.X);
                 double width = Math.Abs((double)(point3.X - point4.X));
                 double height = layout2.Height;
-                Windows.Foundation.Rect rect = new Windows.Foundation.Rect(x, layout2.Y, width, height);
+                Rect rect = new Rect(x, layout2.Y, width, height);
                 list.Add(rect);
             }
             return list.ToArray();
         }
 
-        internal Windows.Foundation.Rect[] GetFloatingObjectsMovingFrameRects(int rowViewport, int columnViewport)
+        internal Rect[] GetFloatingObjectsMovingFrameRects(int rowViewport, int columnViewport)
         {
             FloatingObject[] allSelectedFloatingObjects = GetAllSelectedFloatingObjects();
             if ((allSelectedFloatingObjects == null) || (allSelectedFloatingObjects.Length == 0))
             {
                 return null;
             }
-            List<Windows.Foundation.Rect> list = new List<Windows.Foundation.Rect>();
-            Windows.Foundation.Point mousePosition = MousePosition;
-            new Windows.Foundation.Point(mousePosition.X - _floatingObjectsMovingResizingStartPoint.X, mousePosition.Y - _floatingObjectsMovingResizingStartPoint.Y);
+            List<Rect> list = new List<Rect>();
+            Point mousePosition = MousePosition;
+            new Point(mousePosition.X - _floatingObjectsMovingResizingStartPoint.X, mousePosition.Y - _floatingObjectsMovingResizingStartPoint.Y);
             FloatingObjectLayoutModel cacheFloatingObjectsMovingResizingLayoutModels = GetCacheFloatingObjectsMovingResizingLayoutModels(rowViewport, columnViewport);
             foreach (FloatingObject obj2 in allSelectedFloatingObjects)
             {
                 bool flag;
                 bool flag2;
                 FloatingObjectLayout layout = cacheFloatingObjectsMovingResizingLayoutModels.Find(obj2.Name);
-                Windows.Foundation.Point point2 = new Windows.Foundation.Point(_floatingObjectsMovingResizingStartPoint.X - layout.X, _floatingObjectsMovingResizingStartPoint.Y - layout.Y);
+                Point point2 = new Point(_floatingObjectsMovingResizingStartPoint.X - layout.X, _floatingObjectsMovingResizingStartPoint.Y - layout.Y);
                 double x = mousePosition.X - point2.X;
                 double y = mousePosition.Y - point2.Y;
                 KeyboardHelper.GetMetaKeyState(out flag, out flag2);
@@ -4567,18 +4567,18 @@ namespace Dt.Cells.UI
                         x = layout.X;
                     }
                 }
-                list.Add(new Windows.Foundation.Rect(x, y, layout.Width, layout.Height));
+                list.Add(new Rect(x, y, layout.Width, layout.Height));
             }
             return list.ToArray();
         }
 
-        internal Windows.Foundation.Rect[] GetFloatingObjectsResizingRects(int rowViewport, int columnViewport)
+        internal Rect[] GetFloatingObjectsResizingRects(int rowViewport, int columnViewport)
         {
             if ((_movingResizingFloatingObjects == null) || (_movingResizingFloatingObjects.Length == 0))
             {
                 return null;
             }
-            Windows.Foundation.Point mousePosition = MousePosition;
+            Point mousePosition = MousePosition;
             HitTestInformation savedHitTestInformation = GetHitInfo();
             if (IsTouchingResizingFloatingObjects || IsTouchingMovingFloatingObjects)
             {
@@ -4620,72 +4620,72 @@ namespace Dt.Cells.UI
             {
                 return GetFloatingObjectsBottomRighResizingRects(rowViewport, columnViewport, mousePosition);
             }
-            return new List<Windows.Foundation.Rect>().ToArray();
+            return new List<Rect>().ToArray();
         }
 
-        Windows.Foundation.Rect[] GetFloatingObjectsTopCenterResizingRects(int rowViewport, int columnViewport, Windows.Foundation.Point mousePosition)
+        Rect[] GetFloatingObjectsTopCenterResizingRects(int rowViewport, int columnViewport, Point mousePosition)
         {
-            List<Windows.Foundation.Rect> list = new List<Windows.Foundation.Rect>();
+            List<Rect> list = new List<Rect>();
             FloatingObjectLayoutModel cacheFloatingObjectsMovingResizingLayoutModels = GetCacheFloatingObjectsMovingResizingLayoutModels(rowViewport, columnViewport);
             FloatingObjectLayoutModel viewportFloatingObjectLayoutModel = GetViewportFloatingObjectLayoutModel(rowViewport, columnViewport);
-            Windows.Foundation.Point point = new Windows.Foundation.Point(mousePosition.X - _floatingObjectsMovingResizingStartPoint.X, mousePosition.Y - _floatingObjectsMovingResizingStartPoint.Y);
+            Point point = new Point(mousePosition.X - _floatingObjectsMovingResizingStartPoint.X, mousePosition.Y - _floatingObjectsMovingResizingStartPoint.Y);
             foreach (FloatingObject obj2 in _movingResizingFloatingObjects)
             {
                 FloatingObjectLayout layout = cacheFloatingObjectsMovingResizingLayoutModels.Find(obj2.Name);
                 FloatingObjectLayout layout2 = viewportFloatingObjectLayoutModel.Find(obj2.Name);
-                Windows.Foundation.Point point2 = new Windows.Foundation.Point(layout.X, layout.Y);
-                Windows.Foundation.Point point3 = new Windows.Foundation.Point(point2.X + point.X, point2.Y + point.Y);
-                Windows.Foundation.Point point4 = new Windows.Foundation.Point(layout2.X + layout2.Width, layout2.Y + layout2.Height);
+                Point point2 = new Point(layout.X, layout.Y);
+                Point point3 = new Point(point2.X + point.X, point2.Y + point.Y);
+                Point point4 = new Point(layout2.X + layout2.Width, layout2.Y + layout2.Height);
                 double y = Math.Min(point3.Y, point4.Y);
                 double height = Math.Abs((double)(point4.Y - point3.Y));
                 double width = layout2.Width;
-                Windows.Foundation.Rect rect = new Windows.Foundation.Rect(layout2.X, y, width, height);
+                Rect rect = new Rect(layout2.X, y, width, height);
                 list.Add(rect);
             }
             return list.ToArray();
         }
 
-        Windows.Foundation.Rect[] GetFloatingObjectsTopleftResizingRects(int rowViewport, int columnViewport, Windows.Foundation.Point mousePosition)
+        Rect[] GetFloatingObjectsTopleftResizingRects(int rowViewport, int columnViewport, Point mousePosition)
         {
-            List<Windows.Foundation.Rect> list = new List<Windows.Foundation.Rect>();
+            List<Rect> list = new List<Rect>();
             FloatingObjectLayoutModel cacheFloatingObjectsMovingResizingLayoutModels = GetCacheFloatingObjectsMovingResizingLayoutModels(rowViewport, columnViewport);
             FloatingObjectLayoutModel viewportFloatingObjectLayoutModel = GetViewportFloatingObjectLayoutModel(rowViewport, columnViewport);
-            Windows.Foundation.Point point = new Windows.Foundation.Point(mousePosition.X - _floatingObjectsMovingResizingStartPoint.X, mousePosition.Y - _floatingObjectsMovingResizingStartPoint.Y);
+            Point point = new Point(mousePosition.X - _floatingObjectsMovingResizingStartPoint.X, mousePosition.Y - _floatingObjectsMovingResizingStartPoint.Y);
             foreach (FloatingObject obj2 in _movingResizingFloatingObjects)
             {
                 FloatingObjectLayout layout = cacheFloatingObjectsMovingResizingLayoutModels.Find(obj2.Name);
                 FloatingObjectLayout layout2 = viewportFloatingObjectLayoutModel.Find(obj2.Name);
-                Windows.Foundation.Point point2 = new Windows.Foundation.Point(layout.X, layout.Y);
-                Windows.Foundation.Point point3 = new Windows.Foundation.Point(point2.X + point.X, point2.Y + point.Y);
-                Windows.Foundation.Point point4 = new Windows.Foundation.Point(layout2.X + layout2.Width, layout2.Y + layout2.Height);
+                Point point2 = new Point(layout.X, layout.Y);
+                Point point3 = new Point(point2.X + point.X, point2.Y + point.Y);
+                Point point4 = new Point(layout2.X + layout2.Width, layout2.Y + layout2.Height);
                 double x = Math.Min(point3.X, point4.X);
                 double y = Math.Min(point3.Y, point4.Y);
                 double width = Math.Abs((double)(point4.X - point3.X));
                 double height = Math.Abs((double)(point4.Y - point3.Y));
-                Windows.Foundation.Rect rect = new Windows.Foundation.Rect(x, y, width, height);
+                Rect rect = new Rect(x, y, width, height);
                 list.Add(rect);
             }
             return list.ToArray();
         }
 
-        Windows.Foundation.Rect[] GetFloatingObjectsTopRightResizingRects(int rowViewport, int columnViewport, Windows.Foundation.Point mousePosition)
+        Rect[] GetFloatingObjectsTopRightResizingRects(int rowViewport, int columnViewport, Point mousePosition)
         {
-            List<Windows.Foundation.Rect> list = new List<Windows.Foundation.Rect>();
+            List<Rect> list = new List<Rect>();
             FloatingObjectLayoutModel cacheFloatingObjectsMovingResizingLayoutModels = GetCacheFloatingObjectsMovingResizingLayoutModels(rowViewport, columnViewport);
             FloatingObjectLayoutModel viewportFloatingObjectLayoutModel = GetViewportFloatingObjectLayoutModel(rowViewport, columnViewport);
-            Windows.Foundation.Point point = new Windows.Foundation.Point(mousePosition.X - _floatingObjectsMovingResizingStartPoint.X, mousePosition.Y - _floatingObjectsMovingResizingStartPoint.Y);
+            Point point = new Point(mousePosition.X - _floatingObjectsMovingResizingStartPoint.X, mousePosition.Y - _floatingObjectsMovingResizingStartPoint.Y);
             foreach (FloatingObject obj2 in _movingResizingFloatingObjects)
             {
                 FloatingObjectLayout layout = cacheFloatingObjectsMovingResizingLayoutModels.Find(obj2.Name);
                 FloatingObjectLayout layout2 = viewportFloatingObjectLayoutModel.Find(obj2.Name);
-                Windows.Foundation.Point point2 = new Windows.Foundation.Point(layout.X + layout.Width, layout.Y);
-                Windows.Foundation.Point point3 = new Windows.Foundation.Point(point2.X + point.X, point2.Y + point.Y);
-                Windows.Foundation.Point point4 = new Windows.Foundation.Point(layout2.X, layout2.Y + layout2.Height);
+                Point point2 = new Point(layout.X + layout.Width, layout.Y);
+                Point point3 = new Point(point2.X + point.X, point2.Y + point.Y);
+                Point point4 = new Point(layout2.X, layout2.Y + layout2.Height);
                 double x = Math.Min(point3.X, point4.X);
                 double y = Math.Min(point3.Y, point4.Y);
                 double width = Math.Abs((double)(point4.X - point3.X));
                 double height = Math.Abs((double)(point4.Y - point3.Y));
-                Windows.Foundation.Rect rect = new Windows.Foundation.Rect(x, y, width, height);
+                Rect rect = new Rect(x, y, width, height);
                 list.Add(rect);
             }
             return list.ToArray();
@@ -5432,8 +5432,8 @@ namespace Dt.Cells.UI
                                 width += worksheet.GetColumnWidth(i + j, cell.SheetArea);
                             }
                         }
-                        Windows.Foundation.Size maxSize = MeasureHelper.ConvertExcelCellSizeToTextSize(new Windows.Foundation.Size(width, double.PositiveInfinity), 1.0);
-                        Windows.Foundation.Size size3 = MeasureHelper.ConvertTextSizeToExcelCellSize(MeasureHelper.MeasureTextInCell(cell, maxSize, 1.0, unknownFontfamily, textFormattingMode, base.UseLayoutRounding), 1.0);
+                        Size maxSize = MeasureHelper.ConvertExcelCellSizeToTextSize(new Size(width, double.PositiveInfinity), 1.0);
+                        Size size3 = MeasureHelper.ConvertTextSizeToExcelCellSize(MeasureHelper.MeasureTextInCell(cell, maxSize, 1.0, unknownFontfamily, textFormattingMode, base.UseLayoutRounding), 1.0);
                         num = Math.Max(num, size3.Height);
                         if (range != null)
                         {
@@ -5478,7 +5478,7 @@ namespace Dt.Cells.UI
             return _cachedRowHeaderColumnLayoutModel;
         }
 
-        Windows.Foundation.Rect GetRowHeaderRectangle(int rowViewportIndex)
+        Rect GetRowHeaderRectangle(int rowViewportIndex)
         {
             SheetLayout sheetLayout = GetSheetLayout();
             double headerX = sheetLayout.HeaderX;
@@ -5487,9 +5487,9 @@ namespace Dt.Cells.UI
             double height = sheetLayout.GetViewportHeight(rowViewportIndex) - 1.0;
             if ((width >= 0.0) && (height >= 0.0))
             {
-                return new Windows.Foundation.Rect(headerX, viewportY, width, height);
+                return new Rect(headerX, viewportY, width, height);
             }
-            return Windows.Foundation.Rect.Empty;
+            return Rect.Empty;
         }
 
         ColumnLayout GetRowHeaderResizingColumnLayoutFromX(double x)
@@ -5867,7 +5867,7 @@ namespace Dt.Cells.UI
             return Worksheet.GetViewportLeftColumn(columnViewportIndex);
         }
 
-        Windows.Foundation.Rect GetViewportRectangle(int rowViewportIndex, int columnViewportIndex)
+        Rect GetViewportRectangle(int rowViewportIndex, int columnViewportIndex)
         {
             SheetLayout sheetLayout = GetSheetLayout();
             double viewportX = sheetLayout.GetViewportX(columnViewportIndex);
@@ -5876,9 +5876,9 @@ namespace Dt.Cells.UI
             double height = sheetLayout.GetViewportHeight(rowViewportIndex) - 1.0;
             if ((width >= 0.0) && (height >= 0.0))
             {
-                return new Windows.Foundation.Rect(viewportX, viewportY, width, height);
+                return new Rect(viewportX, viewportY, width, height);
             }
-            return Windows.Foundation.Rect.Empty;
+            return Rect.Empty;
         }
 
         ColumnLayout GetViewportResizingColumnLayoutFromX(int columnViewportIndex, double x)
@@ -6134,7 +6134,7 @@ namespace Dt.Cells.UI
             return null;
         }
 
-        Windows.Foundation.Point GetViewportTopLeftCoordinates(int rowViewportIndex, int columnViewportIndex)
+        Point GetViewportTopLeftCoordinates(int rowViewportIndex, int columnViewportIndex)
         {
             int viewportTopRow = GetViewportTopRow(rowViewportIndex);
             double y = 0.0;
@@ -6150,7 +6150,7 @@ namespace Dt.Cells.UI
                 double num8 = Math.Ceiling((double)(Worksheet.GetActualColumnWidth(j, SheetArea.Cells) * ZoomFactor));
                 x += num8;
             }
-            return new Windows.Foundation.Point(x, y);
+            return new Point(x, y);
         }
 
         /// <summary>
@@ -6992,8 +6992,8 @@ namespace Dt.Cells.UI
                             width += 2.0 * num5;
                             height += 2.0 * num5;
                         }
-                        Windows.Foundation.Rect rect = new Windows.Foundation.Rect(x, y, width, height);
-                        if (rect.Contains(new Windows.Foundation.Point(mouseX, mouseY)))
+                        Rect rect = new Rect(x, y, width, height);
+                        if (rect.Contains(new Point(mouseX, mouseY)))
                         {
                             ViewportFloatingObjectHitTestInformation information = new ViewportFloatingObjectHitTestInformation();
                             hi.HitTestType = HitTestType.FloatingObject;
@@ -7006,50 +7006,50 @@ namespace Dt.Cells.UI
                             }
                             double num6 = 7.0;
                             double size = 10.0;
-                            Windows.Foundation.Rect rect2 = new Windows.Foundation.Rect(x, y, num6, num6);
-                            if (InflateRect(rect2, size).Contains(new Windows.Foundation.Point(mouseX, mouseY)))
+                            Rect rect2 = new Rect(x, y, num6, num6);
+                            if (InflateRect(rect2, size).Contains(new Point(mouseX, mouseY)))
                             {
                                 information.InTopNWSEResize = true;
                                 return true;
                             }
-                            Windows.Foundation.Rect rect3 = new Windows.Foundation.Rect((x + (width / 2.0)) - num6, y, 2.0 * num6, num6);
-                            if (InflateRect(rect3, size).Contains(new Windows.Foundation.Point(mouseX, mouseY)))
+                            Rect rect3 = new Rect((x + (width / 2.0)) - num6, y, 2.0 * num6, num6);
+                            if (InflateRect(rect3, size).Contains(new Point(mouseX, mouseY)))
                             {
                                 information.InTopNSResize = true;
                                 return true;
                             }
-                            Windows.Foundation.Rect rect4 = new Windows.Foundation.Rect((x + width) - num6, y, num6, num6);
-                            if (InflateRect(rect4, size).Contains(new Windows.Foundation.Point(mouseX, mouseY)))
+                            Rect rect4 = new Rect((x + width) - num6, y, num6, num6);
+                            if (InflateRect(rect4, size).Contains(new Point(mouseX, mouseY)))
                             {
                                 information.InTopNESWResize = true;
                                 return true;
                             }
-                            Windows.Foundation.Rect rect5 = new Windows.Foundation.Rect(x, (y + (height / 2.0)) - num6, num6, 2.0 * num6);
-                            if (InflateRect(rect5, size).Contains(new Windows.Foundation.Point(mouseX, mouseY)))
+                            Rect rect5 = new Rect(x, (y + (height / 2.0)) - num6, num6, 2.0 * num6);
+                            if (InflateRect(rect5, size).Contains(new Point(mouseX, mouseY)))
                             {
                                 information.InLeftWEResize = true;
                                 return true;
                             }
-                            Windows.Foundation.Rect rect6 = new Windows.Foundation.Rect((x + width) - num6, (y + (height / 2.0)) - num6, num6, 2.0 * num6);
-                            if (InflateRect(rect6, size).Contains(new Windows.Foundation.Point(mouseX, mouseY)))
+                            Rect rect6 = new Rect((x + width) - num6, (y + (height / 2.0)) - num6, num6, 2.0 * num6);
+                            if (InflateRect(rect6, size).Contains(new Point(mouseX, mouseY)))
                             {
                                 information.InRightWEResize = true;
                                 return true;
                             }
-                            Windows.Foundation.Rect rect7 = new Windows.Foundation.Rect(x, (y + height) - num6, num6, num6);
-                            if (InflateRect(rect7, size).Contains(new Windows.Foundation.Point(mouseX, mouseY)))
+                            Rect rect7 = new Rect(x, (y + height) - num6, num6, num6);
+                            if (InflateRect(rect7, size).Contains(new Point(mouseX, mouseY)))
                             {
                                 information.InBottomNESWResize = true;
                                 return true;
                             }
-                            Windows.Foundation.Rect rect8 = new Windows.Foundation.Rect((x + (width / 2.0)) - num6, (y + height) - num6, 2.0 * num6, num6);
-                            if (InflateRect(rect8, size).Contains(new Windows.Foundation.Point(mouseX, mouseY)))
+                            Rect rect8 = new Rect((x + (width / 2.0)) - num6, (y + height) - num6, 2.0 * num6, num6);
+                            if (InflateRect(rect8, size).Contains(new Point(mouseX, mouseY)))
                             {
                                 information.InBottomNSResize = true;
                                 return true;
                             }
-                            Windows.Foundation.Rect rect9 = new Windows.Foundation.Rect((x + width) - num6, (y + height) - num6, num6, num6);
-                            if (InflateRect(rect9, size).Contains(new Windows.Foundation.Point(mouseX, mouseY)))
+                            Rect rect9 = new Rect((x + width) - num6, (y + height) - num6, num6, num6);
+                            if (InflateRect(rect9, size).Contains(new Point(mouseX, mouseY)))
                             {
                                 information.InBottomNWSEResize = true;
                                 return true;
@@ -7063,13 +7063,13 @@ namespace Dt.Cells.UI
             return false;
         }
 
-        bool HitTestPopup(PopupHelper popUpHelper, Windows.Foundation.Point point)
+        bool HitTestPopup(PopupHelper popUpHelper, Point point)
         {
             if (popUpHelper == null)
             {
                 return false;
             }
-            Windows.Foundation.Rect rect = new Windows.Foundation.Rect(popUpHelper.Location.X, popUpHelper.Location.Y, popUpHelper.Size.Width, popUpHelper.Size.Height);
+            Rect rect = new Rect(popUpHelper.Location.X, popUpHelper.Location.Y, popUpHelper.Size.Width, popUpHelper.Size.Height);
             return rect.Expand(10, 5).Contains(point);
         }
 
@@ -7090,7 +7090,7 @@ namespace Dt.Cells.UI
             return builder.ToString();
         }
 
-        Windows.Foundation.Rect InflateRect(Windows.Foundation.Rect rect, double size)
+        Rect InflateRect(Rect rect, double size)
         {
             double x = rect.X - size;
             double y = rect.Y - size;
@@ -7104,7 +7104,7 @@ namespace Dt.Cells.UI
             {
                 height = 0.0;
             }
-            return new Windows.Foundation.Rect(x, y, width, height);
+            return new Rect(x, y, width, height);
         }
 
 #if IOS
@@ -7160,15 +7160,15 @@ namespace Dt.Cells.UI
             _horizontalSelectionMgr = null;
             _keyMap = null;
             _floatingObjectsKeyMap = null;
-            _availableSize = new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity);
+            _availableSize = new Size(double.PositiveInfinity, double.PositiveInfinity);
             _isEditing = false;
             _isDoubleClick = false;
             _positionInfo = null;
             _navigation = null;
             _undoManager = null;
             _eventSuspended = 0;
-            _lastClickPoint = new Windows.Foundation.Point();
-            _lastClickLocation = new Windows.Foundation.Point(-1.0, -1.0);
+            _lastClickPoint = new Point();
+            _lastClickLocation = new Point(-1.0, -1.0);
             _hoverManager = new Dt.Cells.UI.HoverManager(this);
             _allowDragDrop = true;
             _dragDropIndicator = null;
@@ -7294,8 +7294,8 @@ namespace Dt.Cells.UI
             CachFloatingObjectsMovingResizingLayoutModels();
             RowLayout viewportRowLayoutNearY = GetViewportRowLayoutNearY(_dragStartRowViewport, _floatingObjectsMovingResizingStartPoint.Y);
             ColumnLayout viewportColumnLayoutNearX = GetViewportColumnLayoutNearX(_dragToColumnViewport, _floatingObjectsMovingResizingStartPoint.X);
-            _floatingObjectsMovingResizingStartPointCellBounds = new Windows.Foundation.Rect(viewportColumnLayoutNearX.X, viewportRowLayoutNearY.Y, viewportColumnLayoutNearX.Width, viewportRowLayoutNearY.Height);
-            _floatingObjectsMovingStartLocations = new Dictionary<string, Windows.Foundation.Point>();
+            _floatingObjectsMovingResizingStartPointCellBounds = new Rect(viewportColumnLayoutNearX.X, viewportRowLayoutNearY.Y, viewportColumnLayoutNearX.Width, viewportRowLayoutNearY.Height);
+            _floatingObjectsMovingStartLocations = new Dictionary<string, Point>();
             FloatingObject[] objArray = _movingResizingFloatingObjects;
             for (int i = 0; i < objArray.Length; i++)
             {
@@ -7899,7 +7899,7 @@ namespace Dt.Cells.UI
             return ((column >= viewportLeftColumn) && (column <= viewportRightColumn));
         }
 
-        bool IsColumnRangeGroupHitTest(Windows.Foundation.Point hitPoint)
+        bool IsColumnRangeGroupHitTest(Point hitPoint)
         {
             GroupLayout groupLayout = GetGroupLayout();
             if ((Worksheet != null) && (groupLayout.Height > 0.0))
@@ -7909,10 +7909,10 @@ namespace Dt.Cells.UI
                 double y = groupLayout.Y;
                 double width = sheetLayout.HeaderWidth - 1.0;
                 double height = groupLayout.Height - 1.0;
-                Windows.Foundation.Rect empty = Windows.Foundation.Rect.Empty;
+                Rect empty = Rect.Empty;
                 if ((width >= 0.0) && (height >= 0.0))
                 {
-                    empty = new Windows.Foundation.Rect(headerX, y, width, height);
+                    empty = new Rect(headerX, y, width, height);
                 }
                 if (empty.Contains(hitPoint))
                 {
@@ -7925,10 +7925,10 @@ namespace Dt.Cells.UI
                     double num8 = groupLayout.Y;
                     double num9 = groupLayout.Height - 1.0;
                     double num10 = sheetLayout.GetViewportWidth(i) - 1.0;
-                    Windows.Foundation.Rect rect2 = Windows.Foundation.Rect.Empty;
+                    Rect rect2 = Rect.Empty;
                     if ((num9 >= 0.0) && (num10 >= 0.0))
                     {
-                        rect2 = new Windows.Foundation.Rect(viewportX, num8, num10, num9);
+                        rect2 = new Rect(viewportX, num8, num10, num9);
                     }
                     if (rect2.Contains(hitPoint))
                     {
@@ -7939,7 +7939,7 @@ namespace Dt.Cells.UI
             return false;
         }
 
-        bool IsCornerRangeGroupHitTest(Windows.Foundation.Point hitPoint)
+        bool IsCornerRangeGroupHitTest(Point hitPoint)
         {
             GroupLayout groupLayout = GetGroupLayout();
             if ((groupLayout.Width > 0.0) && (groupLayout.Height > 0.0))
@@ -7948,10 +7948,10 @@ namespace Dt.Cells.UI
                 double y = groupLayout.Y;
                 double width = groupLayout.Width - 1.0;
                 double height = groupLayout.Height - 1.0;
-                Windows.Foundation.Rect empty = Windows.Foundation.Rect.Empty;
+                Rect empty = Rect.Empty;
                 if ((width >= 0.0) && (height >= 0.0))
                 {
-                    empty = new Windows.Foundation.Rect(x, y, width, height);
+                    empty = new Rect(x, y, width, height);
                 }
                 if (empty.Contains(hitPoint))
                 {
@@ -7986,18 +7986,18 @@ namespace Dt.Cells.UI
             return (IsEntrieRowSelection() && IsEntrieColumnSelection());
         }
 
-        bool IsInSelectionGripper(Windows.Foundation.Point point)
+        bool IsInSelectionGripper(Point point)
         {
             if (CachedGripperLocation == null)
             {
                 return false;
             }
-            Windows.Foundation.Rect topLeft = CachedGripperLocation.TopLeft;
+            Rect topLeft = CachedGripperLocation.TopLeft;
             if (CachedGripperLocation.TopLeft.Expand(10, 10).Contains(point))
             {
                 return true;
             }
-            Windows.Foundation.Rect bottomRight = CachedGripperLocation.BottomRight;
+            Rect bottomRight = CachedGripperLocation.BottomRight;
             return CachedGripperLocation.BottomRight.Expand(10, 10).Contains(point);
         }
 
@@ -8176,8 +8176,8 @@ namespace Dt.Cells.UI
             double viewportY = sheetLayout.GetViewportY(rowViewportIndex);
             double viewportWidth = sheetLayout.GetViewportWidth(columnViewportIndex);
             double viewportHeight = sheetLayout.GetViewportHeight(rowViewportIndex);
-            Windows.Foundation.Rect rect = new Windows.Foundation.Rect(viewportX, viewportY, viewportWidth, viewportHeight);
-            if (!rect.Contains(new Windows.Foundation.Point(mouseX, mouseY)))
+            Rect rect = new Rect(viewportX, viewportY, viewportWidth, viewportHeight);
+            if (!rect.Contains(new Point(mouseX, mouseY)))
             {
                 return false;
             }
@@ -8206,7 +8206,7 @@ namespace Dt.Cells.UI
                     num8 = layout2.Y + 1.0;
                     break;
             }
-            Windows.Foundation.Point point = new Windows.Foundation.Point(mouseX, mouseY);
+            Point point = new Point(mouseX, mouseY);
             if (IsTouching)
             {
                 if (IsEditing)
@@ -8215,27 +8215,27 @@ namespace Dt.Cells.UI
                 }
                 double x = Math.Max((double)0.0, (double)(num7 - 15.0));
                 double y = Math.Max((double)0.0, (double)(num8 - 5.0));
-                Windows.Foundation.Rect rect2 = new Windows.Foundation.Rect(x, y, 30.0, 25.0);
+                Rect rect2 = new Rect(x, y, 30.0, 25.0);
                 return rect2.Contains(point);
             }
-            Windows.Foundation.Rect rect3 = new Windows.Foundation.Rect(num7, num8, (double)num9, (double)num9);
+            Rect rect3 = new Rect(num7, num8, (double)num9, (double)num9);
             if (!IsEditing)
             {
                 return rect3.Contains(point);
             }
-            Windows.Foundation.Rect empty = Windows.Foundation.Rect.Empty;
+            Rect empty = Rect.Empty;
             switch (fillIndicatorPosition)
             {
                 case FillIndicatorPosition.BottomRight:
-                    empty = new Windows.Foundation.Rect(num7, num8, 2.0, 2.0);
+                    empty = new Rect(num7, num8, 2.0, 2.0);
                     break;
 
                 case FillIndicatorPosition.TopRight:
-                    empty = new Windows.Foundation.Rect(num7, num8, 2.0, (double)num9);
+                    empty = new Rect(num7, num8, 2.0, (double)num9);
                     break;
 
                 case FillIndicatorPosition.BottomLeft:
-                    empty = new Windows.Foundation.Rect(num7, num8, (double)num9, 2.0);
+                    empty = new Rect(num7, num8, (double)num9, 2.0);
                     break;
             }
             return (rect3.Contains(point) && !empty.Contains(point));
@@ -8287,7 +8287,7 @@ namespace Dt.Cells.UI
             return ((row >= viewportTopRow) && (row <= viewportBottomRow));
         }
 
-        bool IsRowRangeGroupHitTest(Windows.Foundation.Point hitPoint)
+        bool IsRowRangeGroupHitTest(Point hitPoint)
         {
             GroupLayout groupLayout = GetGroupLayout();
             if ((Worksheet != null) && (groupLayout.Width > 0.0))
@@ -8297,10 +8297,10 @@ namespace Dt.Cells.UI
                 double headerY = sheetLayout.HeaderY;
                 double width = groupLayout.Width - 1.0;
                 double height = sheetLayout.HeaderHeight - 1.0;
-                Windows.Foundation.Rect empty = Windows.Foundation.Rect.Empty;
+                Rect empty = Rect.Empty;
                 if ((width >= 0.0) && (height >= 0.0))
                 {
-                    empty = new Windows.Foundation.Rect(x, headerY, width, height);
+                    empty = new Rect(x, headerY, width, height);
                 }
                 if (empty.Contains(hitPoint))
                 {
@@ -8313,10 +8313,10 @@ namespace Dt.Cells.UI
                     double viewportY = sheetLayout.GetViewportY(i);
                     double num9 = groupLayout.Width - 1.0;
                     double num10 = sheetLayout.GetViewportHeight(i) - 1.0;
-                    Windows.Foundation.Rect rect2 = Windows.Foundation.Rect.Empty;
+                    Rect rect2 = Rect.Empty;
                     if ((num9 >= 0.0) && (num10 >= 0.0))
                     {
-                        rect2 = new Windows.Foundation.Rect(num7, viewportY, num9, num10);
+                        rect2 = new Rect(num7, viewportY, num9, num10);
                     }
                     if (rect2.Contains(hitPoint))
                     {
@@ -8362,10 +8362,10 @@ namespace Dt.Cells.UI
             return false;
         }
 
-        double MeasureCellText(Cell cell, int row, int column, Windows.Foundation.Size maxSize, FontFamily fontFamily, object textFormattingMode, bool useLayoutRounding)
+        double MeasureCellText(Cell cell, int row, int column, Size maxSize, FontFamily fontFamily, object textFormattingMode, bool useLayoutRounding)
         {
             double num = 0.0;
-            Windows.Foundation.Size size2 = MeasureHelper.ConvertTextSizeToExcelCellSize(MeasureHelper.MeasureTextInCell(cell, maxSize, 1.0, fontFamily, textFormattingMode, useLayoutRounding), 1.0);
+            Size size2 = MeasureHelper.ConvertTextSizeToExcelCellSize(MeasureHelper.MeasureTextInCell(cell, maxSize, 1.0, fontFamily, textFormattingMode, useLayoutRounding), 1.0);
             num = Math.Max(num, size2.Width);
             if (!ContainsFilterButton(row, column, cell.SheetArea))
             {
@@ -8389,7 +8389,7 @@ namespace Dt.Cells.UI
         /// <returns>
         /// The size that this element determines it needs during layout, based on its calculations of child element sizes.
         /// </returns>
-        protected override Windows.Foundation.Size MeasureOverride(Windows.Foundation.Size availableSize)
+        protected override Size MeasureOverride(Size availableSize)
         {
             double viewportX;
             double viewportY;
@@ -8411,17 +8411,17 @@ namespace Dt.Cells.UI
             {
                 base.Children.Add(TrackersContainer);
             }
-            TrackersContainer.Measure(new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity));
+            TrackersContainer.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
             if (!base.Children.Contains(CursorsContainer))
             {
                 base.Children.Add(CursorsContainer);
             }
-            CursorsContainer.Measure(new Windows.Foundation.Size(double.PositiveInfinity, double.PositiveInfinity));
+            CursorsContainer.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
             if (_cornerPresenter == null)
             {
                 _cornerPresenter = new GcHeaderCornerViewport(this);
             }
-            _cornerPresenter.Location = new Windows.Foundation.Point(sheetLayout.HeaderX, sheetLayout.HeaderY);
+            _cornerPresenter.Location = new Point(sheetLayout.HeaderX, sheetLayout.HeaderY);
             if ((sheetLayout.HeaderWidth > 0.0) && (sheetLayout.HeaderHeight > 0.0))
             {
                 if (!base.Children.Contains(_cornerPresenter))
@@ -8429,7 +8429,7 @@ namespace Dt.Cells.UI
                     base.Children.Add(_cornerPresenter);
                 }
                 _cornerPresenter.InvalidateMeasure();
-                _cornerPresenter.Measure(new Windows.Foundation.Size(sheetLayout.HeaderWidth, sheetLayout.HeaderHeight));
+                _cornerPresenter.Measure(new Size(sheetLayout.HeaderWidth, sheetLayout.HeaderHeight));
             }
             else
             {
@@ -8459,7 +8459,7 @@ namespace Dt.Cells.UI
                         _columnHeaderPresenters[j + 1] = new GcColumnHeaderViewport(this);
                     }
                     GcViewport viewport2 = _columnHeaderPresenters[j + 1];
-                    viewport2.Location = new Windows.Foundation.Point(viewportX, sheetLayout.HeaderY);
+                    viewport2.Location = new Point(viewportX, sheetLayout.HeaderY);
                     viewport2.ColumnViewportIndex = j;
                     if (viewportWidth > 0.0)
                     {
@@ -8468,7 +8468,7 @@ namespace Dt.Cells.UI
                             base.Children.Add(viewport2);
                         }
                         viewport2.InvalidateMeasure();
-                        viewport2.Measure(new Windows.Foundation.Size(viewportWidth, sheetLayout.HeaderHeight));
+                        viewport2.Measure(new Size(viewportWidth, sheetLayout.HeaderHeight));
                     }
                     else
                     {
@@ -8507,7 +8507,7 @@ namespace Dt.Cells.UI
                         _rowHeaderPresenters[k + 1] = new GcRowHeaderViewport(this);
                     }
                     GcViewport viewport5 = _rowHeaderPresenters[k + 1];
-                    viewport5.Location = new Windows.Foundation.Point(sheetLayout.HeaderX, viewportY);
+                    viewport5.Location = new Point(sheetLayout.HeaderX, viewportY);
                     viewport5.RowViewportIndex = k;
                     if (viewportHeight > 0.0)
                     {
@@ -8516,7 +8516,7 @@ namespace Dt.Cells.UI
                             base.Children.Add(viewport5);
                         }
                         viewport5.InvalidateMeasure();
-                        viewport5.Measure(new Windows.Foundation.Size(sheetLayout.HeaderWidth, viewportHeight));
+                        viewport5.Measure(new Size(sheetLayout.HeaderWidth, viewportHeight));
                     }
                     else
                     {
@@ -8567,7 +8567,7 @@ namespace Dt.Cells.UI
                         _viewportPresenters[num11 + 1, i + 1] = new GcViewport(this);
                     }
                     GcViewport viewport8 = _viewportPresenters[num11 + 1, i + 1];
-                    viewport8.Location = new Windows.Foundation.Point(viewportX, viewportY);
+                    viewport8.Location = new Point(viewportX, viewportY);
                     viewport8.ColumnViewportIndex = i;
                     viewport8.RowViewportIndex = num11;
                     if ((width > 0.0) && (height > 0.0))
@@ -8578,7 +8578,7 @@ namespace Dt.Cells.UI
                         }
                         viewport8.InvalidateMeasure();
                         viewport8.InvalidateRowsMeasureState(false);
-                        viewport8.Measure(new Windows.Foundation.Size(width, height));
+                        viewport8.Measure(new Size(width, height));
                     }
                     else
                     {
@@ -8620,7 +8620,7 @@ namespace Dt.Cells.UI
                     GcRangeGroup group3 = _rowGroupPresenters[i + 1];
                     group3.Orientation = Orientation.Horizontal;
                     group3.ViewportIndex = i;
-                    group3.Location = new Windows.Foundation.Point(groupLayout.X, viewportY);
+                    group3.Location = new Point(groupLayout.X, viewportY);
                     if (viewportHeight > 0.0)
                     {
                         if (!base.Children.Contains(group3))
@@ -8628,7 +8628,7 @@ namespace Dt.Cells.UI
                             base.Children.Add(group3);
                         }
                         group3.InvalidateMeasure();
-                        group3.Measure(new Windows.Foundation.Size(groupLayout.Width, viewportHeight));
+                        group3.Measure(new Size(groupLayout.Width, viewportHeight));
                     }
                     else
                     {
@@ -8672,7 +8672,7 @@ namespace Dt.Cells.UI
                     GcRangeGroup group6 = _columnGroupPresenters[k + 1];
                     group6.Orientation = Orientation.Vertical;
                     group6.ViewportIndex = k;
-                    group6.Location = new Windows.Foundation.Point(viewportX, groupLayout.Y);
+                    group6.Location = new Point(viewportX, groupLayout.Y);
                     if (viewportWidth > 0.0)
                     {
                         if (!base.Children.Contains(group6))
@@ -8680,7 +8680,7 @@ namespace Dt.Cells.UI
                             base.Children.Add(group6);
                         }
                         group6.InvalidateMeasure();
-                        group6.Measure(new Windows.Foundation.Size(viewportWidth, groupLayout.Height));
+                        group6.Measure(new Size(viewportWidth, groupLayout.Height));
                     }
                     else
                     {
@@ -8703,7 +8703,7 @@ namespace Dt.Cells.UI
                 _rowGroupHeaderPresenter = new GcRangeGroupHeader(this);
             }
             _rowGroupHeaderPresenter.Orientation = Orientation.Horizontal;
-            _rowGroupHeaderPresenter.Location = new Windows.Foundation.Point(groupLayout.X, groupLayout.Y + groupLayout.Height);
+            _rowGroupHeaderPresenter.Location = new Point(groupLayout.X, groupLayout.Y + groupLayout.Height);
             if (groupLayout.Width > 0.0)
             {
                 if (!base.Children.Contains(_rowGroupHeaderPresenter))
@@ -8711,7 +8711,7 @@ namespace Dt.Cells.UI
                     base.Children.Add(_rowGroupHeaderPresenter);
                 }
                 _rowGroupHeaderPresenter.InvalidateMeasure();
-                _rowGroupHeaderPresenter.Measure(new Windows.Foundation.Size(groupLayout.Width, layout.HeaderHeight));
+                _rowGroupHeaderPresenter.Measure(new Size(groupLayout.Width, layout.HeaderHeight));
             }
             else
             {
@@ -8723,7 +8723,7 @@ namespace Dt.Cells.UI
                 _columnGroupHeaderPresenter = new GcRangeGroupHeader(this);
             }
             _columnGroupHeaderPresenter.Orientation = Orientation.Vertical;
-            _columnGroupHeaderPresenter.Location = new Windows.Foundation.Point(groupLayout.X + groupLayout.Width, groupLayout.Y);
+            _columnGroupHeaderPresenter.Location = new Point(groupLayout.X + groupLayout.Width, groupLayout.Y);
             if (groupLayout.Height > 0.0)
             {
                 if (!base.Children.Contains(_columnGroupHeaderPresenter))
@@ -8731,7 +8731,7 @@ namespace Dt.Cells.UI
                     base.Children.Add(_columnGroupHeaderPresenter);
                 }
                 _columnGroupHeaderPresenter.InvalidateMeasure();
-                _columnGroupHeaderPresenter.Measure(new Windows.Foundation.Size(layout.HeaderWidth, groupLayout.Height));
+                _columnGroupHeaderPresenter.Measure(new Size(layout.HeaderWidth, groupLayout.Height));
             }
             else
             {
@@ -8742,7 +8742,7 @@ namespace Dt.Cells.UI
             {
                 _groupCornerPresenter = new GcRangeGroupCorner(this);
             }
-            _groupCornerPresenter.Location = new Windows.Foundation.Point(groupLayout.X, groupLayout.Y);
+            _groupCornerPresenter.Location = new Point(groupLayout.X, groupLayout.Y);
             if ((groupLayout.Width > 0.0) && (groupLayout.Height > 0.0))
             {
                 if (!base.Children.Contains(_groupCornerPresenter))
@@ -8750,7 +8750,7 @@ namespace Dt.Cells.UI
                     base.Children.Add(_groupCornerPresenter);
                 }
                 _groupCornerPresenter.InvalidateMeasure();
-                _groupCornerPresenter.Measure(new Windows.Foundation.Size(groupLayout.Width, groupLayout.Height));
+                _groupCornerPresenter.Measure(new Size(groupLayout.Width, groupLayout.Height));
             }
             else
             {
@@ -9250,13 +9250,13 @@ namespace Dt.Cells.UI
                     {
                         dvListBox.Width = Math.Max((double)60.0, (double)(GetDataValidationListDropdownWidth(row, dataBtnInfo.Column, dataBtnInfo.ColumnViewportIndex) + 5.0));
                         dvListBox.MaxHeight = 200.0;
-                        _dataValidationPopUpHelper.ShowAsModal(this, dvListBox, new Windows.Foundation.Point(layout2.X + layout2.Width, columnHeaderRowLayout.Y + columnHeaderRowLayout.Height));
+                        _dataValidationPopUpHelper.ShowAsModal(this, dvListBox, new Point(layout2.X + layout2.Width, columnHeaderRowLayout.Y + columnHeaderRowLayout.Height));
                     }
                     else
                     {
                         dvListBox.Width = Math.Max((double)60.0, (double)((GetDataValidationListDropdownWidth(row, dataBtnInfo.Column, dataBtnInfo.ColumnViewportIndex) + 5.0) + 16.0));
                         dvListBox.MaxHeight = 200.0;
-                        _dataValidationPopUpHelper.ShowAsModal(this, dvListBox, new Windows.Foundation.Point((layout2.X + layout2.Width) + num6, columnHeaderRowLayout.Y + columnHeaderRowLayout.Height));
+                        _dataValidationPopUpHelper.ShowAsModal(this, dvListBox, new Point((layout2.X + layout2.Width) + num6, columnHeaderRowLayout.Y + columnHeaderRowLayout.Height));
                     }
                 }
             }
@@ -9293,7 +9293,7 @@ namespace Dt.Cells.UI
                 }
                 if ((columnHeaderRowLayout != null) && (layout2 != null))
                 {
-                    _filterPopupHelper.ShowAsModal(this, dropdown, new Windows.Foundation.Point(layout2.X + layout2.Width, columnHeaderRowLayout.Y + columnHeaderRowLayout.Height));
+                    _filterPopupHelper.ShowAsModal(this, dropdown, new Point(layout2.X + layout2.Width, columnHeaderRowLayout.Y + columnHeaderRowLayout.Height));
                 }
             }
         }
@@ -9802,21 +9802,21 @@ namespace Dt.Cells.UI
             if ((CellClick != null) && (_eventSuspended == 0))
             {
                 CellClickEventArgs args = null;
-                Windows.Foundation.Point point = new Windows.Foundation.Point(-1.0, -1.0);
+                Point point = new Point(-1.0, -1.0);
                 if (hi.HitTestType == HitTestType.Viewport)
                 {
                     args = CreateCellClickEventArgs(hi.ViewportInfo.Row, hi.ViewportInfo.Column, Worksheet.SpanModel, SheetArea.Cells, MouseButtonType.Left);
-                    point = new Windows.Foundation.Point((double)hi.ViewportInfo.Row, (double)hi.ViewportInfo.Column);
+                    point = new Point((double)hi.ViewportInfo.Row, (double)hi.ViewportInfo.Column);
                 }
                 else if (hi.HitTestType == HitTestType.RowHeader)
                 {
                     args = CreateCellClickEventArgs(hi.ViewportInfo.Row, hi.ViewportInfo.Column, Worksheet.SpanModel, SheetArea.CornerHeader | SheetArea.RowHeader, MouseButtonType.Left);
-                    point = new Windows.Foundation.Point((double)hi.HeaderInfo.Row, (double)hi.HeaderInfo.Column);
+                    point = new Point((double)hi.HeaderInfo.Row, (double)hi.HeaderInfo.Column);
                 }
                 else if (hi.HitTestType == HitTestType.ColumnHeader)
                 {
                     args = CreateCellClickEventArgs(hi.ViewportInfo.Row, hi.ViewportInfo.Column, Worksheet.SpanModel, SheetArea.ColumnHeader, MouseButtonType.Left);
-                    point = new Windows.Foundation.Point((double)hi.HeaderInfo.Row, (double)hi.HeaderInfo.Column);
+                    point = new Point((double)hi.HeaderInfo.Row, (double)hi.HeaderInfo.Column);
                 }
                 if (((args != null) && (point.X != -1.0)) && (point.Y != -1.0))
                 {
@@ -9825,7 +9825,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        internal bool RaiseTouchToolbarOpeningEvent(Windows.Foundation.Point touchPoint, TouchToolbarShowingArea area)
+        internal bool RaiseTouchToolbarOpeningEvent(Point touchPoint, TouchToolbarShowingArea area)
         {
             if ((TouchToolbarOpening != null) && (_eventSuspended == 0))
             {
@@ -10237,25 +10237,25 @@ namespace Dt.Cells.UI
                     double x = (index <= viewportColumnLayoutModel[0].Column) ? 2.0 : 0.0;
                     double y = (num9 <= viewportRowLayoutModel[0].Row) ? 2.0 : 0.0;
                     double width = 3.0;
-                    Windows.Foundation.Rect empty = Windows.Foundation.Rect.Empty;
-                    Windows.Foundation.Rect rect2 = Windows.Foundation.Rect.Empty;
-                    Windows.Foundation.Rect rect3 = Windows.Foundation.Rect.Empty;
-                    Windows.Foundation.Rect rect4 = Windows.Foundation.Rect.Empty;
+                    Rect empty = Rect.Empty;
+                    Rect rect2 = Rect.Empty;
+                    Rect rect3 = Rect.Empty;
+                    Rect rect4 = Rect.Empty;
                     if (flag)
                     {
-                        empty = new Windows.Foundation.Rect(x, y, width - x, num24 - y);
+                        empty = new Rect(x, y, width - x, num24 - y);
                     }
                     if (flag3)
                     {
-                        rect2 = new Windows.Foundation.Rect(x, y, num23 - x, width - y);
+                        rect2 = new Rect(x, y, num23 - x, width - y);
                     }
                     if (flag2)
                     {
-                        rect3 = new Windows.Foundation.Rect(num23 - width, y, width, num24 - y);
+                        rect3 = new Rect(num23 - width, y, width, num24 - y);
                     }
                     if (flag4)
                     {
-                        rect4 = new Windows.Foundation.Rect(x, num24 - width, num23 - x, width);
+                        rect4 = new Rect(x, num24 - width, num23 - x, width);
                     }
                     if (_dragDropIndicator.Children.Count >= 8)
                     {
@@ -10397,7 +10397,7 @@ namespace Dt.Cells.UI
                             _dragDropInsertIndicator.Width = num12;
                             _dragDropInsertIndicator.Height = num13;
                             RectangleGeometry geometry = new RectangleGeometry();
-                            geometry.Rect = new Windows.Foundation.Rect(0.0, 0.0, width, num13);
+                            geometry.Rect = new Rect(0.0, 0.0, width, num13);
                             _dragDropInsertIndicator.Clip = geometry;
                             if (ShowDragDropTip)
                             {
@@ -10483,7 +10483,7 @@ namespace Dt.Cells.UI
                             _dragDropInsertIndicator.Width = num20;
                             _dragDropInsertIndicator.Height = num21;
                             RectangleGeometry geometry2 = new RectangleGeometry();
-                            geometry2.Rect = new Windows.Foundation.Rect(0.0, 0.0, num20, width);
+                            geometry2.Rect = new Rect(0.0, 0.0, num20, width);
                             _dragDropInsertIndicator.Clip = geometry2;
                             if (ShowDragDropTip)
                             {
@@ -10898,9 +10898,9 @@ namespace Dt.Cells.UI
             _dragToColumn = -2;
             _floatingObjectsMovingResizingStartRow = -2;
             _floatingObjectsMovingResizingStartColumn = -2;
-            _floatingObjectsMovingResizingOffset = new Windows.Foundation.Point(0.0, 0.0);
+            _floatingObjectsMovingResizingOffset = new Point(0.0, 0.0);
             _floatingObjectsMovingStartLocations = null;
-            _floatingObjectsMovingResizingStartPointCellBounds = new Windows.Foundation.Rect(0.0, 0.0, 0.0, 0.0);
+            _floatingObjectsMovingResizingStartPointCellBounds = new Rect(0.0, 0.0, 0.0, 0.0);
             _cachedFloatingObjectMovingResizingLayoutModel = null;
             ResetViewportFloatingObjectsContainerMoving();
             ResetViewportFloatingObjectsContainerReSizing();
@@ -11419,7 +11419,7 @@ namespace Dt.Cells.UI
                     {
                         _autoFillIndicatorContainer.Width = 16.0;
                         _autoFillIndicatorContainer.Height = 16.0;
-                        AutoFillIndicatorRec = new Windows.Foundation.Rect?(GetAutoFillIndicatorRect(viewportRowsPresenter, activeSelection));
+                        AutoFillIndicatorRec = new Rect?(GetAutoFillIndicatorRect(viewportRowsPresenter, activeSelection));
                         base.InvalidateArrange();
                         CachedGripperLocation = null;
                     }
@@ -11609,7 +11609,7 @@ namespace Dt.Cells.UI
                     x += 4.0;
                     y += 4.0;
                 }
-                _dragFillPopup.ShowAsModal(this, _dragFillSmartTag, new Windows.Foundation.Point(x, y), PopupDirection.BottomRight, false, false);
+                _dragFillPopup.ShowAsModal(this, _dragFillSmartTag, new Point(x, y), PopupDirection.BottomRight, false, false);
             }
         }
 
@@ -11756,7 +11756,7 @@ namespace Dt.Cells.UI
             SolidColorBrush brush = new SolidColorBrush(Colors.Black);
             if (_resizingTracker == null)
             {
-                Windows.UI.Xaml.Shapes.Line line = new Windows.UI.Xaml.Shapes.Line();
+                Line line = new Line();
                 line.Stroke = brush;
                 line.StrokeThickness = 1.0;
                 line.StrokeDashArray = new DoubleCollection { 1.0 };
@@ -11970,7 +11970,7 @@ namespace Dt.Cells.UI
             IsWorking = true;
             if (_resizingTracker == null)
             {
-                _resizingTracker = new Windows.UI.Xaml.Shapes.Line();
+                _resizingTracker = new Line();
                 _resizingTracker.Stroke = new SolidColorBrush(Colors.Black);
                 _resizingTracker.StrokeThickness = 1.0;
                 _resizingTracker.StrokeDashArray = new DoubleCollection { 1.0 };
@@ -12246,7 +12246,7 @@ namespace Dt.Cells.UI
             if (_resizingTracker == null)
             {
                 SolidColorBrush brush = new SolidColorBrush(Colors.Black);
-                Windows.UI.Xaml.Shapes.Line line = new Windows.UI.Xaml.Shapes.Line();
+                Line line = new Line();
                 line.Stroke = brush;
                 line.StrokeThickness = 1.0;
                 line.StrokeDashArray = new DoubleCollection { 1.0 };
@@ -12349,7 +12349,7 @@ namespace Dt.Cells.UI
             CloseTouchToolbar();
             if (_resizingTracker == null)
             {
-                _resizingTracker = new Windows.UI.Xaml.Shapes.Line();
+                _resizingTracker = new Line();
                 _resizingTracker.Stroke = new SolidColorBrush(Colors.Black);
                 _resizingTracker.StrokeThickness = 1.0;
                 _resizingTracker.StrokeDashArray = new DoubleCollection { 1.0 };
@@ -12547,7 +12547,7 @@ namespace Dt.Cells.UI
             Serializer.WriteEndObj(writer);
         }
 
-        Windows.Foundation.Point TapInColumnHeaderSelection(Windows.Foundation.Point point, HitTestInformation hi)
+        Point TapInColumnHeaderSelection(Point point, HitTestInformation hi)
         {
             UnSelectedAllFloatingObjects();
             StartColumnSelecting();
@@ -12556,7 +12556,7 @@ namespace Dt.Cells.UI
             return point;
         }
 
-        Windows.Foundation.Point TapInRowHeaderSelection(Windows.Foundation.Point point, HitTestInformation hi)
+        Point TapInRowHeaderSelection(Point point, HitTestInformation hi)
         {
             UnSelectedAllFloatingObjects();
             StartRowsSelecting();
@@ -12565,7 +12565,7 @@ namespace Dt.Cells.UI
             return point;
         }
 
-        bool TapInSelection(Windows.Foundation.Point point)
+        bool TapInSelection(Point point)
         {
             if (_formulaSelectionFeature.IsSelectionBegined)
             {
@@ -13261,7 +13261,7 @@ namespace Dt.Cells.UI
             if (_dragToColumn == DragFillToViewportRightColumn)
             {
                 double width = 0.0;
-                Windows.Foundation.Rect rowHeaderRectangle = GetRowHeaderRectangle(_dragStartRowViewport);
+                Rect rowHeaderRectangle = GetRowHeaderRectangle(_dragStartRowViewport);
                 if (!rowHeaderRectangle.IsEmpty)
                 {
                     width = rowHeaderRectangle.Width;
@@ -13343,7 +13343,7 @@ namespace Dt.Cells.UI
             if (_dragToRow == DragFillToViewportBottomRow)
             {
                 double height = 0.0;
-                Windows.Foundation.Rect columnHeaderRectangle = GetColumnHeaderRectangle(_dragStartColumnViewport);
+                Rect columnHeaderRectangle = GetColumnHeaderRectangle(_dragStartColumnViewport);
                 if (!columnHeaderRectangle.IsEmpty)
                 {
                     height = columnHeaderRectangle.Height;
@@ -13700,19 +13700,19 @@ namespace Dt.Cells.UI
         {
             if ((hi.HitTestType == HitTestType.Viewport) && (hi.ViewportInfo != null))
             {
-                _lastClickLocation = new Windows.Foundation.Point((double)hi.ViewportInfo.Row, (double)hi.ViewportInfo.Column);
+                _lastClickLocation = new Point((double)hi.ViewportInfo.Row, (double)hi.ViewportInfo.Column);
             }
             else if ((hi.HitTestType == HitTestType.ColumnHeader) && (hi.HeaderInfo != null))
             {
-                _lastClickLocation = new Windows.Foundation.Point((double)hi.HeaderInfo.Row, (double)hi.HeaderInfo.Column);
+                _lastClickLocation = new Point((double)hi.HeaderInfo.Row, (double)hi.HeaderInfo.Column);
             }
             else if ((hi.HitTestType == HitTestType.RowHeader) && (hi.HeaderInfo != null))
             {
-                _lastClickLocation = new Windows.Foundation.Point((double)hi.HeaderInfo.Row, (double)hi.HeaderInfo.Column);
+                _lastClickLocation = new Point((double)hi.HeaderInfo.Row, (double)hi.HeaderInfo.Column);
             }
             else
             {
-                _lastClickLocation = new Windows.Foundation.Point(-1.0, -1.0);
+                _lastClickLocation = new Point(-1.0, -1.0);
             }
         }
 
@@ -13852,20 +13852,20 @@ namespace Dt.Cells.UI
         /// 
         /// </summary>
         /// <param name="point"></param>
-        protected void UpdateTouchHitTestInfoForHold(Windows.Foundation.Point point)
+        protected void UpdateTouchHitTestInfoForHold(Point point)
         {
             GetHitInfo();
-            Windows.Foundation.Point point2 = point;
+            Point point2 = point;
             SaveHitInfo(TouchHitTest(point2.X, point2.Y));
-            _lastClickPoint = new Windows.Foundation.Point(point2.X, point2.Y);
+            _lastClickPoint = new Point(point2.X, point2.Y);
         }
 
         internal void UpdateTouchSelectionGripper()
         {
-            Windows.Foundation.Rect? autoFillIndicatorRec;
+            Rect? autoFillIndicatorRec;
             if (((InputDeviceType != Dt.Cells.UI.InputDeviceType.Touch) || IsTouchPromotedMouseMessage) || _formulaSelectionFeature.IsSelectionBegined)
             {
-                Windows.Foundation.Rect rect16 = new Windows.Foundation.Rect(0.0, 0.0, 0.0, 0.0);
+                Rect rect16 = new Rect(0.0, 0.0, 0.0, 0.0);
                 GripperLocations = null;
                 ResizerGripperRect = null;
                 _topLeftGripper.Arrange(rect16);
@@ -13883,7 +13883,7 @@ namespace Dt.Cells.UI
                 }
                 return;
             }
-            Windows.Foundation.Rect rect = new Windows.Foundation.Rect(0.0, 0.0, 0.0, 0.0);
+            Rect rect = new Rect(0.0, 0.0, 0.0, 0.0);
             GcViewport viewportRowsPresenter = GetViewportRowsPresenter(GetActiveRowViewportIndex(), GetActiveColumnViewportIndex());
             if (viewportRowsPresenter == null)
             {
@@ -13942,9 +13942,9 @@ namespace Dt.Cells.UI
                 _topLeftGripper.Arrange(rect);
                 _bottomRightGripper.Arrange(rect);
                 _resizerGripperContainer.Arrange(rect);
-                Windows.Foundation.Rect autoFillIndicatorRect = GetAutoFillIndicatorRect(viewportRowsPresenter, activeSelection);
+                Rect autoFillIndicatorRect = GetAutoFillIndicatorRect(viewportRowsPresenter, activeSelection);
                 _autoFillIndicatorContainer.Arrange(autoFillIndicatorRect);
-                AutoFillIndicatorRec = new Windows.Foundation.Rect?(autoFillIndicatorRect);
+                AutoFillIndicatorRec = new Rect?(autoFillIndicatorRect);
                 return;
             }
             if (viewportRowsPresenter.Sheet.Worksheet.Selections.Count <= 0)
@@ -13952,7 +13952,7 @@ namespace Dt.Cells.UI
                 return;
             }
             SheetLayout sheetLayout = GetSheetLayout();
-            Windows.Foundation.Rect rangeBounds = viewportRowsPresenter._cachedSelectionFrameLayout;
+            Rect rangeBounds = viewportRowsPresenter._cachedSelectionFrameLayout;
             if (!viewportRowsPresenter.SelectionContainer.IsAnchorCellInSelection)
             {
                 rangeBounds = viewportRowsPresenter._cachedFocusCellLayout;
@@ -13961,7 +13961,7 @@ namespace Dt.Cells.UI
             {
                 rangeBounds = viewportRowsPresenter.GetRangeBounds(activeSelection);
             }
-            List<Tuple<Windows.Foundation.Point, double>> list = new List<Tuple<Windows.Foundation.Point, double>>();
+            List<Tuple<Point, double>> list = new List<Tuple<Point, double>>();
             if (IsEntrieSheetSelection())
             {
                 GripperLocations = null;
@@ -13991,11 +13991,11 @@ namespace Dt.Cells.UI
                         int num36 = -7;
                         if ((activeSelection.Column < viewportLeftColumn) || (activeSelection.Row < num32))
                         {
-                            list.Add(Tuple.Create<Windows.Foundation.Point, double>(new Windows.Foundation.Point(-2147483648.0, -2147483648.0), 0.0));
+                            list.Add(Tuple.Create<Point, double>(new Point(-2147483648.0, -2147483648.0), 0.0));
                         }
                         else
                         {
-                            list.Add(Tuple.Create<Windows.Foundation.Point, double>(new Windows.Foundation.Point((num27 + rangeBounds.X) + num35, (num28 + rangeBounds.Y) + num36), 16.0));
+                            list.Add(Tuple.Create<Point, double>(new Point((num27 + rangeBounds.X) + num35, (num28 + rangeBounds.Y) + num36), 16.0));
                         }
                         num35 = (int)(rangeBounds.Width - 9.0);
                         num36 = (int)(rangeBounds.Height - 9.0);
@@ -14025,7 +14025,7 @@ namespace Dt.Cells.UI
                                         GcViewport viewport8 = _viewportPresenters[i + 1, j + 1];
                                         if (viewport8 != null)
                                         {
-                                            Windows.Foundation.Rect rect13 = viewport8._cachedSelectionFrameLayout;
+                                            Rect rect13 = viewport8._cachedSelectionFrameLayout;
                                             if (!viewport8.SelectionContainer.IsAnchorCellInSelection)
                                             {
                                                 rect13 = viewport8._cachedFocusCellLayout;
@@ -14036,11 +14036,11 @@ namespace Dt.Cells.UI
                                             {
                                                 if ((num35 > (sheetLayout.GetViewportX(j) + sheetLayout.GetViewportWidth(j))) || (num36 > (sheetLayout.GetViewportY(i) + sheetLayout.GetViewportHeight(i))))
                                                 {
-                                                    list.Add(Tuple.Create<Windows.Foundation.Point, double>(new Windows.Foundation.Point(2147483647.0, 2147483647.0), 0.0));
+                                                    list.Add(Tuple.Create<Point, double>(new Point(2147483647.0, 2147483647.0), 0.0));
                                                 }
                                                 else
                                                 {
-                                                    list.Add(Tuple.Create<Windows.Foundation.Point, double>(new Windows.Foundation.Point((double)num35, (double)num36), 16.0));
+                                                    list.Add(Tuple.Create<Point, double>(new Point((double)num35, (double)num36), 16.0));
                                                 }
                                             }
                                         }
@@ -14049,7 +14049,7 @@ namespace Dt.Cells.UI
                             }
                             if (list.Count == 1)
                             {
-                                list.Add(Tuple.Create<Windows.Foundation.Point, double>(new Windows.Foundation.Point(2147483647.0, 2147483647.0), 0.0));
+                                list.Add(Tuple.Create<Point, double>(new Point(2147483647.0, 2147483647.0), 0.0));
                             }
                         }
                         else
@@ -14058,11 +14058,11 @@ namespace Dt.Cells.UI
                             num36 = (int)((num36 + num28) + rangeBounds.Y);
                             if ((num35 > (sheetLayout.GetViewportX(activeColumnViewportIndex) + sheetLayout.GetViewportWidth(activeColumnViewportIndex))) || (num36 > (sheetLayout.GetViewportY(num29) + sheetLayout.GetViewportHeight(num29))))
                             {
-                                list.Add(Tuple.Create<Windows.Foundation.Point, double>(new Windows.Foundation.Point(2147483647.0, 2147483647.0), 0.0));
+                                list.Add(Tuple.Create<Point, double>(new Point(2147483647.0, 2147483647.0), 0.0));
                             }
                             else
                             {
-                                list.Add(Tuple.Create<Windows.Foundation.Point, double>(new Windows.Foundation.Point((double)num35, (double)num36), 16.0));
+                                list.Add(Tuple.Create<Point, double>(new Point((double)num35, (double)num36), 16.0));
                             }
                         }
                         goto Label_10BF;
@@ -14074,20 +14074,20 @@ namespace Dt.Cells.UI
                     if (Worksheet.FrozenColumnCount > 0)
                     {
                         GcViewport viewport5 = GetViewportRowsPresenter(GetActiveRowViewportIndex(), GetActiveColumnViewportIndex() + 1);
-                        Windows.Foundation.Rect rect9 = viewport5._cachedSelectionFrameLayout;
+                        Rect rect9 = viewport5._cachedSelectionFrameLayout;
                         if (!viewport5.SelectionContainer.IsAnchorCellInSelection)
                         {
                             rect9 = viewportRowsPresenter._cachedFocusCellLayout;
                         }
-                        rangeBounds = new Windows.Foundation.Rect(rangeBounds.X, rangeBounds.Y, rangeBounds.Width + rect9.Width, rangeBounds.Height);
+                        rangeBounds = new Rect(rangeBounds.X, rangeBounds.Y, rangeBounds.Width + rect9.Width, rangeBounds.Height);
                     }
                     if (activeSelection.Row >= viewportTopRow)
                     {
-                        list.Add(Tuple.Create<Windows.Foundation.Point, double>(new Windows.Foundation.Point(((viewportX + rangeBounds.X) + (rangeBounds.Width / 2.0)) - 7.0, (viewportY + rangeBounds.Y) - 16.0), 16.0));
+                        list.Add(Tuple.Create<Point, double>(new Point(((viewportX + rangeBounds.X) + (rangeBounds.Width / 2.0)) - 7.0, (viewportY + rangeBounds.Y) - 16.0), 16.0));
                     }
                     else
                     {
-                        list.Add(Tuple.Create<Windows.Foundation.Point, double>(new Windows.Foundation.Point(((viewportX + rangeBounds.X) + (rangeBounds.Width / 2.0)) - 7.0, -2147483648.0), 0.0));
+                        list.Add(Tuple.Create<Point, double>(new Point(((viewportX + rangeBounds.X) + (rangeBounds.Width / 2.0)) - 7.0, -2147483648.0), 0.0));
                     }
                     int num18 = (int)(rangeBounds.Height - 9.0);
                     int num19 = (activeSelection.Row + activeSelection.RowCount) - 1;
@@ -14108,7 +14108,7 @@ namespace Dt.Cells.UI
                                 GcViewport viewport6 = _viewportPresenters[rowViewportIndex + 1, viewportRowsPresenter.ColumnViewportIndex + 1];
                                 if (viewport6 != null)
                                 {
-                                    Windows.Foundation.Rect rect10 = viewport6._cachedSelectionFrameLayout;
+                                    Rect rect10 = viewport6._cachedSelectionFrameLayout;
                                     if (!viewport6.SelectionContainer.IsAnchorCellInSelection)
                                     {
                                         rect10 = viewport6._cachedFocusCellLayout;
@@ -14118,11 +14118,11 @@ namespace Dt.Cells.UI
                                     {
                                         if (num18 <= (sheetLayout.GetViewportY(rowViewportIndex) + sheetLayout.GetViewportHeight(rowViewportIndex)))
                                         {
-                                            list.Add(Tuple.Create<Windows.Foundation.Point, double>(new Windows.Foundation.Point(((viewportX + rangeBounds.X) + (rangeBounds.Width / 2.0)) - 7.0, (double)num18), 16.0));
+                                            list.Add(Tuple.Create<Point, double>(new Point(((viewportX + rangeBounds.X) + (rangeBounds.Width / 2.0)) - 7.0, (double)num18), 16.0));
                                         }
                                         else
                                         {
-                                            list.Add(Tuple.Create<Windows.Foundation.Point, double>(new Windows.Foundation.Point(((viewportX + rangeBounds.X) + (rangeBounds.Width / 2.0)) - 7.0, 2147483647.0), 0.0));
+                                            list.Add(Tuple.Create<Point, double>(new Point(((viewportX + rangeBounds.X) + (rangeBounds.Width / 2.0)) - 7.0, 2147483647.0), 0.0));
                                             flag2 = false;
                                         }
                                         break;
@@ -14138,11 +14138,11 @@ namespace Dt.Cells.UI
                         double y = (viewportY + rangeBounds.Y) + rangeBounds.Height;
                         if (y <= (viewportY + viewportHeight))
                         {
-                            list.Add(Tuple.Create<Windows.Foundation.Point, double>(new Windows.Foundation.Point(((viewportX + rangeBounds.X) + (rangeBounds.Width / 2.0)) - 7.0, y), 16.0));
+                            list.Add(Tuple.Create<Point, double>(new Point(((viewportX + rangeBounds.X) + (rangeBounds.Width / 2.0)) - 7.0, y), 16.0));
                         }
                         else
                         {
-                            list.Add(Tuple.Create<Windows.Foundation.Point, double>(new Windows.Foundation.Point(viewportX, 2147483647.0), 0.0));
+                            list.Add(Tuple.Create<Point, double>(new Point(viewportX, 2147483647.0), 0.0));
                             flag2 = false;
                         }
                     }
@@ -14156,20 +14156,20 @@ namespace Dt.Cells.UI
                     if (Worksheet.FrozenRowCount > 0)
                     {
                         GcViewport viewport2 = GetViewportRowsPresenter(GetActiveRowViewportIndex() + 1, GetActiveColumnViewportIndex());
-                        Windows.Foundation.Rect rect5 = viewport2._cachedSelectionFrameLayout;
+                        Rect rect5 = viewport2._cachedSelectionFrameLayout;
                         if (!viewport2.SelectionContainer.IsAnchorCellInSelection)
                         {
                             rect5 = viewport2._cachedFocusCellLayout;
                         }
-                        rangeBounds = new Windows.Foundation.Rect(rangeBounds.X, rangeBounds.Y, rangeBounds.Width, rangeBounds.Height + rect5.Height);
+                        rangeBounds = new Rect(rangeBounds.X, rangeBounds.Y, rangeBounds.Width, rangeBounds.Height + rect5.Height);
                     }
                     if (activeSelection.Column >= num3)
                     {
-                        list.Add(Tuple.Create<Windows.Foundation.Point, double>(new Windows.Foundation.Point((num + rangeBounds.X) - 16.0, ((num2 + rangeBounds.Y) + (rangeBounds.Height / 2.0)) - 9.0), 16.0));
+                        list.Add(Tuple.Create<Point, double>(new Point((num + rangeBounds.X) - 16.0, ((num2 + rangeBounds.Y) + (rangeBounds.Height / 2.0)) - 9.0), 16.0));
                     }
                     else
                     {
-                        list.Add(Tuple.Create<Windows.Foundation.Point, double>(new Windows.Foundation.Point(-2147483648.0, ((num2 + rangeBounds.Y) + (rangeBounds.Height / 2.0)) - 9.0), 0.0));
+                        list.Add(Tuple.Create<Point, double>(new Point(-2147483648.0, ((num2 + rangeBounds.Y) + (rangeBounds.Height / 2.0)) - 9.0), 0.0));
                     }
                     int num5 = (int)(rangeBounds.Width - 9.0);
                     int num6 = (activeSelection.Column + activeSelection.ColumnCount) - 1;
@@ -14190,7 +14190,7 @@ namespace Dt.Cells.UI
                                 GcViewport viewport3 = _viewportPresenters[viewportRowsPresenter.RowViewportIndex + 1, columnViewportIndex + 1];
                                 if (viewport3 != null)
                                 {
-                                    Windows.Foundation.Rect rect6 = viewport3._cachedSelectionFrameLayout;
+                                    Rect rect6 = viewport3._cachedSelectionFrameLayout;
                                     if (!viewport3.SelectionContainer.IsAnchorCellInSelection)
                                     {
                                         rect6 = viewport3._cachedFocusCellLayout;
@@ -14200,11 +14200,11 @@ namespace Dt.Cells.UI
                                     {
                                         if (num5 <= (sheetLayout.GetViewportX(columnViewportIndex) + sheetLayout.GetViewportWidth(columnViewportIndex)))
                                         {
-                                            list.Add(Tuple.Create<Windows.Foundation.Point, double>(new Windows.Foundation.Point((double)num5, ((num2 + rangeBounds.Y) + (rangeBounds.Height / 2.0)) - 9.0), 16.0));
+                                            list.Add(Tuple.Create<Point, double>(new Point((double)num5, ((num2 + rangeBounds.Y) + (rangeBounds.Height / 2.0)) - 9.0), 16.0));
                                         }
                                         else
                                         {
-                                            list.Add(Tuple.Create<Windows.Foundation.Point, double>(new Windows.Foundation.Point(-2147483648.0, ((num2 + rangeBounds.Y) + (rangeBounds.Height / 2.0)) - 9.0), 0.0));
+                                            list.Add(Tuple.Create<Point, double>(new Point(-2147483648.0, ((num2 + rangeBounds.Y) + (rangeBounds.Height / 2.0)) - 9.0), 0.0));
                                             flag = false;
                                         }
                                         break;
@@ -14220,17 +14220,17 @@ namespace Dt.Cells.UI
                         double x = (num + rangeBounds.X) + rangeBounds.Width;
                         if (x <= (num + viewportWidth))
                         {
-                            list.Add(Tuple.Create<Windows.Foundation.Point, double>(new Windows.Foundation.Point(x, ((num2 + rangeBounds.Y) + (rangeBounds.Height / 2.0)) - 9.0), 16.0));
+                            list.Add(Tuple.Create<Point, double>(new Point(x, ((num2 + rangeBounds.Y) + (rangeBounds.Height / 2.0)) - 9.0), 16.0));
                         }
                         else
                         {
-                            list.Add(Tuple.Create<Windows.Foundation.Point, double>(new Windows.Foundation.Point(2147483647.0, ((num2 + rangeBounds.Y) + (rangeBounds.Height / 2.0)) - 9.0), 0.0));
+                            list.Add(Tuple.Create<Point, double>(new Point(2147483647.0, ((num2 + rangeBounds.Y) + (rangeBounds.Height / 2.0)) - 9.0), 0.0));
                             flag = false;
                         }
                     }
                     GcViewport viewport4 = _columnHeaderPresenters[viewportRowsPresenter.ColumnViewportIndex + 1];
                     CellRange range2 = new CellRange(Worksheet.ColumnHeader.RowCount - 1, (activeSelection.Column + activeSelection.ColumnCount) - 1, 1, 1);
-                    Windows.Foundation.Rect rect7 = viewport4.GetRangeBounds(range2, SheetArea.ColumnHeader);
+                    Rect rect7 = viewport4.GetRangeBounds(range2, SheetArea.ColumnHeader);
                     int column = (activeSelection.Column + activeSelection.ColumnCount) - 1;
                     if ((Worksheet.GetColumnResizable(column) && !rect7.IsEmpty) && flag)
                     {
@@ -14239,10 +14239,10 @@ namespace Dt.Cells.UI
                         {
                             num12 += Worksheet.GetActualRowHeight(k, SheetArea.ColumnHeader) * Worksheet.ZoomFactor;
                         }
-                        Windows.Foundation.Rect rect8 = new Windows.Foundation.Rect(((num + rect7.X) + rect7.Width) - 8.0, (viewport4.Location.Y + num12) - 16.0, 16.0, 16.0);
+                        Rect rect8 = new Rect(((num + rect7.X) + rect7.Width) - 8.0, (viewport4.Location.Y + num12) - 16.0, 16.0, 16.0);
                         _resizerGripperContainer.Child = _cachedColumnResizerGripperImage;
                         _resizerGripperContainer.Arrange(rect8);
-                        ResizerGripperRect = new Windows.Foundation.Rect?(rect8);
+                        ResizerGripperRect = new Rect?(rect8);
                     }
                     else
                     {
@@ -14254,7 +14254,7 @@ namespace Dt.Cells.UI
                 }
                 GcViewport viewport7 = _rowHeaderPresenters[viewportRowsPresenter.RowViewportIndex + 1];
                 CellRange range = new CellRange((activeSelection.Row + activeSelection.RowCount) - 1, Worksheet.RowHeader.ColumnCount - 1, 1, 1);
-                Windows.Foundation.Rect rect11 = viewport7.GetRangeBounds(range, SheetArea.CornerHeader | SheetArea.RowHeader);
+                Rect rect11 = viewport7.GetRangeBounds(range, SheetArea.CornerHeader | SheetArea.RowHeader);
                 int row = (activeSelection.Row + activeSelection.RowCount) - 1;
                 if ((Worksheet.GetRowResizable(row) && !rect11.IsEmpty) && flag2)
                 {
@@ -14263,10 +14263,10 @@ namespace Dt.Cells.UI
                     {
                         num25 += Worksheet.GetActualColumnWidth(m, SheetArea.CornerHeader | SheetArea.RowHeader) * Worksheet.ZoomFactor;
                     }
-                    Windows.Foundation.Rect rect12 = new Windows.Foundation.Rect((viewport7.Location.X + num25) - 16.0, ((viewportY + rect11.Y) + rect11.Height) - 8.0, 16.0, 16.0);
+                    Rect rect12 = new Rect((viewport7.Location.X + num25) - 16.0, ((viewportY + rect11.Y) + rect11.Height) - 8.0, 16.0, 16.0);
                     _resizerGripperContainer.Child = _cachedRowResizerGripperImage;
                     _resizerGripperContainer.Arrange(rect12);
-                    ResizerGripperRect = new Windows.Foundation.Rect?(rect12);
+                    ResizerGripperRect = new Rect?(rect12);
                 }
                 else
                 {
@@ -14278,13 +14278,13 @@ namespace Dt.Cells.UI
         Label_10BF:
             if (list.Count == 2)
             {
-                Windows.Foundation.Point point = list[0].Item1;
+                Point point = list[0].Item1;
                 double width = list[0].Item2;
-                Windows.Foundation.Rect rect14 = new Windows.Foundation.Rect((double)((int)point.X), (double)((int)point.Y), width, width);
+                Rect rect14 = new Rect((double)((int)point.X), (double)((int)point.Y), width, width);
                 _topLeftGripper.Arrange(rect14);
                 point = list[1].Item1;
                 width = list[1].Item2;
-                Windows.Foundation.Rect rect15 = new Windows.Foundation.Rect((double)((int)point.X), (double)((int)point.Y), width, width);
+                Rect rect15 = new Rect((double)((int)point.X), (double)((int)point.Y), width, width);
                 _bottomRightGripper.Arrange(rect15);
                 GripperLocationsStruct struct2 = new GripperLocationsStruct
                 {
@@ -14435,9 +14435,9 @@ namespace Dt.Cells.UI
             set { _autoClipboard = value; }
         }
 
-        internal Windows.Foundation.Rect? AutoFillIndicatorRec { get; set; }
+        internal Rect? AutoFillIndicatorRec { get; set; }
 
-        internal Windows.Foundation.Size AvailableSize
+        internal Size AvailableSize
         {
             get
             {
@@ -14457,7 +14457,7 @@ namespace Dt.Cells.UI
                         height = GCSPREAD_DefaultSize.Height;
                     }
                 }
-                return new Windows.Foundation.Size(width, height);
+                return new Size(width, height);
             }
             set
             {
@@ -14952,8 +14952,6 @@ namespace Dt.Cells.UI
 
         internal GripperLocationsStruct GripperLocations { get; set; }
 
-        internal Windows.UI.Color? HeaderGridLineColor { get; set; }
-
         internal bool HideSelectionWhenPrinting
         {
             get { return _hideSelectionWhenPrinting; }
@@ -15224,7 +15222,7 @@ namespace Dt.Cells.UI
 
         internal int MouseOverRowIndex { get; set; }
 
-        internal Windows.Foundation.Point MousePosition { get; set; }
+        internal Point MousePosition { get; set; }
 
         internal SpreadXNavigation Navigation
         {
@@ -15281,7 +15279,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        internal Windows.Foundation.Rect? ResizerGripperRect { get; set; }
+        internal Rect? ResizerGripperRect { get; set; }
 
         /// <summary>
         /// Specifies the drawing policy when the row or column is resized to zero.
@@ -18228,9 +18226,9 @@ namespace Dt.Cells.UI
 
         internal class GripperLocationsStruct
         {
-            public Windows.Foundation.Rect BottomRight { get; set; }
+            public Rect BottomRight { get; set; }
 
-            public Windows.Foundation.Rect TopLeft { get; set; }
+            public Rect TopLeft { get; set; }
         }
 
         internal class SpreadXFormulaNavigation

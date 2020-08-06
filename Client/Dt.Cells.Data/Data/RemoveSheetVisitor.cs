@@ -16,8 +16,8 @@ namespace Dt.Cells.Data
 {
     internal class RemoveSheetVisitor : Dt.Cells.Data.ExpressionVisitor
     {
-        private ICalcSource _currentSource;
-        private ICalcSource _replacedSource;
+        ICalcSource _currentSource;
+        ICalcSource _replacedSource;
 
         public RemoveSheetVisitor(ICalcSource currentSource, ICalcSource replacedSource)
         {

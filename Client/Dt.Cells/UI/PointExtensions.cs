@@ -22,17 +22,17 @@ namespace Dt.Cells.UI
         /// <param name="reference">The reference.</param>
         /// <param name="newLocation">The new location.</param>
         /// <returns></returns>
-        public static Windows.Foundation.Point Delta(this Windows.Foundation.Point reference, Windows.Foundation.Point newLocation)
+        public static Point Delta(this Point reference, Point newLocation)
         {
-            return new Windows.Foundation.Point(newLocation.X - reference.X, newLocation.Y - reference.Y);
+            return new Point(newLocation.X - reference.X, newLocation.Y - reference.Y);
         }
 
         /// <summary>
-        /// Computes the offset indicated by the X and Y values of the given <see cref="T:Windows.Foundation.Point" />.
+        /// Computes the offset indicated by the X and Y values of the given <see cref="T:Point" />.
         /// </summary>
         /// <param name="offset">The offset.</param>
         /// <returns></returns>
-        public static double Offset(this Windows.Foundation.Point offset)
+        public static double Offset(this Point offset)
         {
             return Math.Sqrt(Math.Pow(offset.X, 2.0) + Math.Pow(offset.Y, 2.0));
         }

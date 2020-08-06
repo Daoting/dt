@@ -21,10 +21,10 @@ namespace Dt.Cells.Data
     /// </summary>
     internal class GcLabel : GcPrintableControl
     {
-        private ContentAlignment alignment;
-        private Brush background;
-        private Brush foreground;
-        private string text;
+        ContentAlignment alignment;
+        Brush background;
+        Brush foreground;
+        string text;
 
         /// <summary>
         /// Creates a new label.

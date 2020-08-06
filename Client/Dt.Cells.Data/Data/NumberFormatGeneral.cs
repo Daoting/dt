@@ -19,63 +19,63 @@ namespace Dt.Cells.Data
     /// </summary>
     internal sealed class NumberFormatGeneral : NumberFormatBase
     {
-        private static string[] alternativeYearMonthDay = null;
+        static string[] alternativeYearMonthDay = null;
         /// <summary>
         /// the number formatter.
         /// </summary>
-        private NumberFormatDigital digitalFormat;
+        NumberFormatDigital digitalFormat;
         /// <summary>
         /// the formatter for exponential.
         /// </summary>
-        private NumberFormatDigital exponentialDigitalFormat;
+        NumberFormatDigital exponentialDigitalFormat;
         /// <summary>
         /// the full format string.
         /// </summary>
-        private string fullFormatString;
+        string fullFormatString;
         /// <summary>
         /// hour minute
         /// </summary>
-        private static readonly string[] generalHourMinute = new string[] { "H:m", "h:m tt" };
+        static readonly string[] generalHourMinute = new string[] { "H:m", "h:m tt" };
         /// <summary>
         /// hour minute second
         /// </summary>
-        private static readonly string[] generalHourMinuteSecond = new string[] { "H:m:s", "h:m:s tt", "H:m:s", "h:mm:ss tt" };
+        static readonly string[] generalHourMinuteSecond = new string[] { "H:m:s", "h:m:s tt", "H:m:s", "h:mm:ss tt" };
         /// <summary>
         /// hour minute second millisecond 
         /// </summary>
-        private static readonly string[] generalHourMinuteSecondSubSecond = new string[] { "H:m:s.FFF", "h:m:s.FFF tt" };
+        static readonly string[] generalHourMinuteSecondSubSecond = new string[] { "H:m:s.FFF", "h:m:s.FFF tt" };
         /// <summary>
         /// hour minute second millisecond with date
         /// </summary>
-        private static string[] generalHourMinuteSecondSubSecondWithDate = null;
+        static string[] generalHourMinuteSecondSubSecondWithDate = null;
         /// <summary>
         /// hour minute second with date
         /// </summary>
-        private static string[] generalHourMinuteSecondWithDate = null;
+        static string[] generalHourMinuteSecondWithDate = null;
         /// <summary>
         /// hour minute with date
         /// </summary>
-        private static string[] generalHourMinuteWithDate = null;
+        static string[] generalHourMinuteWithDate = null;
         /// <summary>
         /// month day
         /// </summary>
-        private static string[] generalMonthDay = null;
+        static string[] generalMonthDay = null;
         /// <summary>
         /// 
         /// </summary>
-        private static readonly string GeneralNumber = "##################0.################";
+        static readonly string GeneralNumber = "##################0.################";
         /// <summary>
         /// general of placeholder 
         /// </summary>
-        private static readonly string GeneralPlaceholder = "@NumberFormat";
+        static readonly string GeneralPlaceholder = "@NumberFormat";
         /// <summary>
         /// year month
         /// </summary>
-        private static readonly string[] generalYearMonth = new string[] { "M/y", "MMM/y", "M/yyyy", "MMM/yyyy", "M-y", "MMM-y", "M-yyyy", "MMM-yyyy" };
+        static readonly string[] generalYearMonth = new string[] { "M/y", "MMM/y", "M/yyyy", "MMM/yyyy", "M-y", "MMM-y", "M-yyyy", "MMM-yyyy" };
         /// <summary>
         /// year month day
         /// </summary>
-        private static string[] generalYearMonthDay = null;
+        static string[] generalYearMonthDay = null;
 
         /// <summary>
         /// Creates a new normal general number format.
@@ -350,7 +350,7 @@ namespace Dt.Cells.Data
         /// Gets the digital format.
         /// </summary>
         /// <value>The digital format.</value>
-        private NumberFormatDigital DigitalFormat
+        NumberFormatDigital DigitalFormat
         {
             get
             {
@@ -377,7 +377,7 @@ namespace Dt.Cells.Data
         /// Gets the digital format.
         /// </summary>
         /// <value>The digital format.</value>
-        private NumberFormatDigital ExponentialDigitalFormat
+        NumberFormatDigital ExponentialDigitalFormat
         {
             get
             {

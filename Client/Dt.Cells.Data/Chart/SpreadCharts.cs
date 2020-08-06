@@ -23,7 +23,7 @@ namespace Dt.Cells.Data
         {
         }
 
-        private void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
             if (base.Worksheet != null)
             {

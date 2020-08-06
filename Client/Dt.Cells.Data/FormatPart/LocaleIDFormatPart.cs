@@ -28,19 +28,19 @@ namespace Dt.Cells.Data
         /// <summary>
         /// the content.
         /// </summary>
-        private string content;
+        string content;
         /// <summary>
         /// culture info.
         /// </summary>
-        private System.Globalization.CultureInfo cultureInfo;
+        System.Globalization.CultureInfo cultureInfo;
         /// <summary>
         /// the utf16any
         /// </summary>
-        private string currencySymbol;
+        string currencySymbol;
         /// <summary>
         /// the locate id.
         /// </summary>
-        private int locateID;
+        int locateID;
 
         /// <summary>
         /// Creates a new locale format with the specified token.
@@ -96,7 +96,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="symbol">The format string to encode</param>
         /// <returns>Returns the encoded format string.</returns>
-        private string EncodeSymbol(string symbol)
+        string EncodeSymbol(string symbol)
         {
             return symbol.Replace(".", "'.'");
         }

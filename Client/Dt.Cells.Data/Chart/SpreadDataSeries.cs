@@ -31,40 +31,40 @@ namespace Dt.Cells.Data
     /// </summary>
     public class SpreadDataSeries : SpreadChartElement, IRangeSupport, IXmlSerializable, IDisposable
     {
-        private int _axisXIndex;
-        private int _axisYIndex;
-        private SpreadChartType? _chartType = null;
-        private Dictionary<int, DataLabel> _dataLabels;
-        private Dt.Cells.Data.DataLabelSettings _dataLabelSettings;
-        private ChartLabelStyleInfo _dataLabelStyleInfo;
-        private Dictionary<int, DataMarker> _dataMarkers;
-        private Dictionary<int, DataPoint> _dataPoints;
-        private bool _displayHidden;
-        private Dt.Cells.Data.EmptyValueStyle _emptyValueStyle;
-        private bool _invertIfNegative;
-        private bool _invertIfNegativeSet;
-        private Windows.Foundation.Size _markerSize;
-        private ChartSymbolStyleInfo _markerStyleInfo;
-        private Dt.Cells.Data.MarkerType _markerType;
-        private string _name;
-        private string _nameFormula;
-        private DataOrientation? _nameOrientation = 0;
-        private SheetCellRange _nameRange;
-        private CalcExpression _nameReference;
-        private StringSeriesCollection _names;
-        private Brush _negativeFill;
-        private bool _negativeFillSet;
-        private string _negativeFillThemeColor;
-        private bool _negativeFillThemeColorSet;
-        private List<TrendLine> _trendLines;
-        private bool _useSecondaryAxis;
-        private string _valueFormula;
-        private DataOrientation? _valueOrientation = 0;
-        private SheetCellRange[] _valueRange;
-        private CalcExpression _valueReference;
-        private DoubleSeriesCollection _values;
-        private string defaultPrefix = "Accent";
-        private string defaultSeparator = " ";
+        int _axisXIndex;
+        int _axisYIndex;
+        SpreadChartType? _chartType = null;
+        Dictionary<int, DataLabel> _dataLabels;
+        Dt.Cells.Data.DataLabelSettings _dataLabelSettings;
+        ChartLabelStyleInfo _dataLabelStyleInfo;
+        Dictionary<int, DataMarker> _dataMarkers;
+        Dictionary<int, DataPoint> _dataPoints;
+        bool _displayHidden;
+        Dt.Cells.Data.EmptyValueStyle _emptyValueStyle;
+        bool _invertIfNegative;
+        bool _invertIfNegativeSet;
+        Windows.Foundation.Size _markerSize;
+        ChartSymbolStyleInfo _markerStyleInfo;
+        Dt.Cells.Data.MarkerType _markerType;
+        string _name;
+        string _nameFormula;
+        DataOrientation? _nameOrientation = 0;
+        SheetCellRange _nameRange;
+        CalcExpression _nameReference;
+        StringSeriesCollection _names;
+        Brush _negativeFill;
+        bool _negativeFillSet;
+        string _negativeFillThemeColor;
+        bool _negativeFillThemeColorSet;
+        List<TrendLine> _trendLines;
+        bool _useSecondaryAxis;
+        string _valueFormula;
+        DataOrientation? _valueOrientation = 0;
+        SheetCellRange[] _valueRange;
+        CalcExpression _valueReference;
+        DoubleSeriesCollection _values;
+        string defaultPrefix = "Accent";
+        string defaultSeparator = " ";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.SpreadDataSeries" /> class.
@@ -80,7 +80,7 @@ namespace Dt.Cells.Data
             base.ResumeEvents();
         }
 
-        private bool AreDataRangesInColumn(int column)
+        bool AreDataRangesInColumn(int column)
         {
             DataOrientation? nullable = this._valueOrientation;
             if ((((DataOrientation) nullable.GetValueOrDefault()) == DataOrientation.Horizontal) && nullable.HasValue)
@@ -107,7 +107,7 @@ namespace Dt.Cells.Data
             return true;
         }
 
-        private bool AreDataRangesInRow(int row)
+        bool AreDataRangesInRow(int row)
         {
             DataOrientation? nullable = this._valueOrientation;
             if ((((DataOrientation) nullable.GetValueOrDefault()) == DataOrientation.Vertical) && nullable.HasValue)
@@ -134,7 +134,7 @@ namespace Dt.Cells.Data
             return true;
         }
 
-        private void AttachFormatChanged()
+        void AttachFormatChanged()
         {
         }
 
@@ -145,7 +145,7 @@ namespace Dt.Cells.Data
             base.SuspendEvents();
         }
 
-        private bool CanChangeChartType(SpreadChartType newChartType)
+        bool CanChangeChartType(SpreadChartType newChartType)
         {
             return (base.GetType() == this.GetPreferedDataSeriesType(newChartType));
         }
@@ -194,7 +194,7 @@ namespace Dt.Cells.Data
             this.NotifyDataSeriesChanged(e.PropertyName);
         }
 
-        private void DataSeries_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void DataSeries_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             this.NotifyDataSeriesChanged(e.PropertyName);
         }
@@ -208,7 +208,7 @@ namespace Dt.Cells.Data
             this.OnDisposed();
         }
 
-        private void FormatInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void FormatInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             this.NotifyDataSeriesChanged(e.PropertyName);
         }
@@ -363,7 +363,7 @@ namespace Dt.Cells.Data
             return list;
         }
 
-        private Type GetPreferedDataSeriesType(SpreadChartType chartType)
+        Type GetPreferedDataSeriesType(SpreadChartType chartType)
         {
             switch (chartType)
             {
@@ -476,7 +476,7 @@ namespace Dt.Cells.Data
             this._trendLines = null;
         }
 
-        private bool IsPieChart()
+        bool IsPieChart()
         {
             if (this.Chart == null)
             {
@@ -489,12 +489,12 @@ namespace Dt.Cells.Data
             return true;
         }
 
-        private void Names_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        void Names_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             this.NotifyDataSeriesChanged("Names");
         }
 
-        private void NotifyDataSeriesChanged(string changed)
+        void NotifyDataSeriesChanged(string changed)
         {
             if (!base.IsEventsSuspend())
             {
@@ -717,7 +717,7 @@ namespace Dt.Cells.Data
             base.ResumeEvents();
         }
 
-        private void UpdateDataPointsChart()
+        void UpdateDataPointsChart()
         {
             if (this._dataPoints != null)
             {
@@ -751,11 +751,11 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void UpdateDataPointsFormatter()
+        void UpdateDataPointsFormatter()
         {
         }
 
-        private void UpdateFormatter()
+        void UpdateFormatter()
         {
             this.UpdateDataPointsFormatter();
         }
@@ -771,7 +771,7 @@ namespace Dt.Cells.Data
             this.UpdateNameReference(this.NameFormula);
         }
 
-        private void UpdateValueReference(string valueFormula)
+        void UpdateValueReference(string valueFormula)
         {
             this.ValueReference = FormulaUtility.Formula2Expression(this.Sheet, valueFormula);
         }
@@ -824,12 +824,12 @@ namespace Dt.Cells.Data
             return nullable;
         }
 
-        private void Values_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        void Values_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             this.NotifyDataSeriesChanged("Values");
         }
 
-        private void Values_IsDateTimeSeriesChanged(object sender, EventArgs e)
+        void Values_IsDateTimeSeriesChanged(object sender, EventArgs e)
         {
             this.NotifyDataSeriesChanged("Values");
         }
@@ -1455,7 +1455,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private CalcExpression NameReference
+        CalcExpression NameReference
         {
             get { return  this._nameReference; }
             set
@@ -1484,7 +1484,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private StringSeriesCollection Names
+        StringSeriesCollection Names
         {
             get { return  this._names; }
         }
@@ -1626,7 +1626,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private CalcExpression ValueReference
+        CalcExpression ValueReference
         {
             get { return  this._valueReference; }
             set
@@ -1706,9 +1706,9 @@ namespace Dt.Cells.Data
             }
         }
 
-        private class NameDataSeries : IDataSeries
+        class NameDataSeries : IDataSeries
         {
-            private SpreadDataSeries _dataSeries;
+            SpreadDataSeries _dataSeries;
 
             public NameDataSeries(SpreadDataSeries dataSeries)
             {
@@ -1741,9 +1741,9 @@ namespace Dt.Cells.Data
             }
         }
 
-        private class ValueDataSeries : IDataSeries
+        class ValueDataSeries : IDataSeries
         {
-            private SpreadDataSeries _dataSeries;
+            SpreadDataSeries _dataSeries;
 
             public ValueDataSeries(SpreadDataSeries dataSeries)
             {

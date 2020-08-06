@@ -22,18 +22,18 @@ namespace Dt.Cells.Data
     /// </summary>
     public class DataValidator : ICloneable, IXmlSerializable
     {
-        private Dt.Cells.Data.ComparisonOperator comparisonOperator;
-        private ConditionBase condition;
-        private string errorMessage;
-        private Dt.Cells.Data.ErrorStyle errorStyle;
-        private string errorTitle;
-        private bool ignoreBlank;
-        private bool inCellDropdown;
-        private string inputMessage;
-        private string inputTitle;
-        private bool showErrorMessage;
-        private bool showInputMessage;
-        private CriteriaType type;
+        Dt.Cells.Data.ComparisonOperator comparisonOperator;
+        ConditionBase condition;
+        string errorMessage;
+        Dt.Cells.Data.ErrorStyle errorStyle;
+        string errorTitle;
+        bool ignoreBlank;
+        bool inCellDropdown;
+        string inputMessage;
+        string inputTitle;
+        bool showErrorMessage;
+        bool showInputMessage;
+        CriteriaType type;
 
         /// <summary>
         /// Constructs a data validator.
@@ -42,7 +42,7 @@ namespace Dt.Cells.Data
         {
         }
 
-        private DataValidator(ConditionBase condition)
+        DataValidator(ConditionBase condition)
         {
             this.Init();
             this.condition = condition;
@@ -386,7 +386,7 @@ namespace Dt.Cells.Data
             return null;
         }
 
-        private void Init()
+        void Init()
         {
             this.errorStyle = Dt.Cells.Data.ErrorStyle.Stop;
             this.ignoreBlank = true;
@@ -400,7 +400,7 @@ namespace Dt.Cells.Data
             this.comparisonOperator = Dt.Cells.Data.ComparisonOperator.Between;
         }
 
-        private static bool IsFormula(object val)
+        static bool IsFormula(object val)
         {
             return ((val is string) && val.ToString().StartsWith("="));
         }

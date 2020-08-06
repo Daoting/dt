@@ -23,15 +23,15 @@ namespace Dt.Cells.Data
         /// <summary>
         /// The ascending.
         /// </summary>
-        private bool ascending;
+        bool ascending;
         /// <summary>
         /// The comparer.
         /// </summary>
-        private IComparer comparer;
+        IComparer comparer;
         /// <summary>
         /// The sort index.
         /// </summary>
-        private int index;
+        int index;
 
         /// <summary>
         /// Creates a <see cref="T:Dt.Cells.Data.SortInfo" /> object with the specified order that uses the system default comparer for the 

@@ -39,7 +39,7 @@ namespace Dt.Cells.Data
             get { return  base.Text; }
         }
 
-        private SpreadXYZDataSeries XYZDataSeries
+        SpreadXYZDataSeries XYZDataSeries
         {
             get { return  (base.DataSeries as SpreadXYZDataSeries); }
         }

@@ -14,7 +14,7 @@ namespace Dt.Cells.Data
 {
     internal class DataFieldCollector
     {
-        private Worksheet sheet;
+        Worksheet sheet;
 
         public DataFieldCollector(Worksheet sheet)
         {

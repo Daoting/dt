@@ -25,26 +25,26 @@ namespace Dt.Cells.Data
     /// </summary>
     public sealed class SheetTable : IXmlSerializable, INotifyPropertyChanged, IRangeSupport
     {
-        private bool bandedColumns;
-        private bool bandedRows;
-        private int column;
-        private static string COLUMN_NAME_PREFIX = "Column";
-        private int columnCount;
-        private SparseArray<TableColumn> columns;
-        private bool copying;
-        private ConnectionBase dataConnection;
-        private int footerRowIndex;
-        private int headerRowIndex;
-        private bool highlightFirstColumn;
-        private bool highlightLastColumn;
-        private string name;
+        bool bandedColumns;
+        bool bandedRows;
+        int column;
+        static string COLUMN_NAME_PREFIX = "Column";
+        int columnCount;
+        SparseArray<TableColumn> columns;
+        bool copying;
+        ConnectionBase dataConnection;
+        int footerRowIndex;
+        int headerRowIndex;
+        bool highlightFirstColumn;
+        bool highlightLastColumn;
+        string name;
         internal EricTables owner;
-        private int row;
-        private int rowCount;
-        private TableFilter rowfilter;
-        private bool showFooter;
-        private bool showHeader;
-        private TableStyle style;
+        int row;
+        int rowCount;
+        TableFilter rowfilter;
+        bool showFooter;
+        bool showHeader;
+        TableStyle style;
 
         /// <summary>
         /// Occurs when a property value changes.
@@ -77,7 +77,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private short CalcAutoIdx()
+        short CalcAutoIdx()
         {
             List<short> list = new List<short>();
             for (int i = 0; i < this.columns.Length; i++)
@@ -107,7 +107,7 @@ namespace Dt.Cells.Data
             return num2;
         }
 
-        private CellRange CalcDataRange()
+        CellRange CalcDataRange()
         {
             int row = this.showHeader ? (this.row + 1) : this.row;
             int rowCount = this.rowCount;
@@ -122,7 +122,7 @@ namespace Dt.Cells.Data
             return new CellRange(row, this.column, rowCount, this.columnCount);
         }
 
-        private int CalcFooterIndex()
+        int CalcFooterIndex()
         {
             if (!this.showFooter)
             {
@@ -131,7 +131,7 @@ namespace Dt.Cells.Data
             return ((this.row + this.rowCount) - 1);
         }
 
-        private int CalcHeaderIndex()
+        int CalcHeaderIndex()
         {
             if (!this.showHeader)
             {
@@ -140,7 +140,7 @@ namespace Dt.Cells.Data
             return this.row;
         }
 
-        private void CheckSheet()
+        void CheckSheet()
         {
             if (this.Sheet == null)
             {
@@ -162,7 +162,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void ClearTableRow(int sheetRowIndex)
+        void ClearTableRow(int sheetRowIndex)
         {
             if ((sheetRowIndex >= this.row) && (sheetRowIndex <= (this.row + this.rowCount)))
             {
@@ -509,7 +509,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void Init()
+        void Init()
         {
             this.owner = null;
             this.name = null;
@@ -597,7 +597,7 @@ namespace Dt.Cells.Data
             this.UpdateFilter();
         }
 
-        private static short? ParseIdx(string token)
+        static short? ParseIdx(string token)
         {
             short num;
             if ((!string.IsNullOrEmpty(token) && token.StartsWith(COLUMN_NAME_PREFIX)) && short.TryParse(token.Substring(COLUMN_NAME_PREFIX.Length), out num))
@@ -607,7 +607,7 @@ namespace Dt.Cells.Data
             return null;
         }
 
-        private void RaisePropertyChanged(string propertyName)
+        void RaisePropertyChanged(string propertyName)
         {
             if (this.PropertyChanged != null)
             {
@@ -854,7 +854,7 @@ namespace Dt.Cells.Data
             this.UpdateFilter();
         }
 
-        private void rowfilter_Changed(object sender, FilterEventArgs e)
+        void rowfilter_Changed(object sender, FilterEventArgs e)
         {
             this.RaisePropertyChanged("TableFilter");
         }
@@ -1420,7 +1420,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private ITableSheet Sheet
+        ITableSheet Sheet
         {
             get
             {

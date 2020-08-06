@@ -17,8 +17,8 @@ namespace Dt.Cells.Data
     /// </summary>
     public abstract class DrawingObject
     {
-        private int anchorColumn;
-        private int anchorRow;
+        int anchorColumn;
+        int anchorRow;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.DrawingObject" /> class.

@@ -24,13 +24,13 @@ namespace Dt.Cells.Data
     public sealed class Column
     {
         internal const double _MAXCOLUMNWIDTH = 9999999.0;
-        private AxisInfo _axisStyle;
-        private bool _isdefault;
-        private SheetArea _sheetArea;
-        private StyleInfo _styleInfo;
-        private int _viewcolumn;
-        private int _viewcolumn2;
-        private Worksheet _worksheet;
+        AxisInfo _axisStyle;
+        bool _isdefault;
+        SheetArea _sheetArea;
+        StyleInfo _styleInfo;
+        int _viewcolumn;
+        int _viewcolumn2;
+        Worksheet _worksheet;
 
         internal Column(Worksheet worksheet, int column, SheetArea sheetArea)
         {
@@ -1281,7 +1281,7 @@ namespace Dt.Cells.Data
         }
 
 
-        private void GetAxisStyle(int column)
+        void GetAxisStyle(int column)
         {
             this._axisStyle = this._worksheet.GetColumnAxisStyle(column, this._sheetArea);
         }
@@ -1292,7 +1292,7 @@ namespace Dt.Cells.Data
         }
 
 
-        private void GetStyleInfo(int column)
+        void GetStyleInfo(int column)
         {
             this._styleInfo.Reset();
             this._worksheet.GetDirectInfo(-1, column, this._styleInfo, this._sheetArea);
@@ -1319,7 +1319,7 @@ namespace Dt.Cells.Data
         }
 
 
-        private bool IsValid(int viewcolumn)
+        bool IsValid(int viewcolumn)
         {
             if (this._worksheet != null)
             {
@@ -1329,7 +1329,7 @@ namespace Dt.Cells.Data
             return false;
         }
 
-        private void RaisePropertyChanged(string propertyName)
+        void RaisePropertyChanged(string propertyName)
         {
             if (this._worksheet != null)
             {
@@ -1800,12 +1800,12 @@ namespace Dt.Cells.Data
             this.RaisePropertyChanged("WordWrap");
         }
 
-        private void SetAxisStyle(int column)
+        void SetAxisStyle(int column)
         {
             this._worksheet.SetColumnAxisStyleInternal(column, this._sheetArea, this._axisStyle);
         }
 
-        private void SetStyleInfo(int column)
+        void SetStyleInfo(int column)
         {
             this._worksheet.SetStyleObject(-1, column, this._sheetArea, this._styleInfo);
         }

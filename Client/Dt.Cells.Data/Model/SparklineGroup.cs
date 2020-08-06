@@ -27,15 +27,15 @@ namespace Dt.Cells.Data
     /// </summary>
     public class SparklineGroup : IXmlSerializable
     {
-        private WorksheetSparklineGroupManager _manager;
-        private DataOrientation axisOrientation;
-        private string cachedFormula;
-        private ISparklineData dateAxisData;
-        private CalcExpression dateAxisReference;
-        private List<Sparkline> innerList;
-        private bool isDateAxisDataSet;
-        private SparklineSetting setting;
-        private Dt.Cells.Data.SparklineType sparklineType;
+        WorksheetSparklineGroupManager _manager;
+        DataOrientation axisOrientation;
+        string cachedFormula;
+        ISparklineData dateAxisData;
+        CalcExpression dateAxisReference;
+        List<Sparkline> innerList;
+        bool isDateAxisDataSet;
+        SparklineSetting setting;
+        Dt.Cells.Data.SparklineType sparklineType;
 
         /// <summary>
         /// Initializes the sparkline group.
@@ -140,7 +140,7 @@ namespace Dt.Cells.Data
             this.InnerList.CopyTo(array, arrayIndex);
         }
 
-        private void dateAxisData_DataChanged(object sender, EventArgs e)
+        void dateAxisData_DataChanged(object sender, EventArgs e)
         {
             this.OnGroupChanged();
         }
@@ -179,7 +179,7 @@ namespace Dt.Cells.Data
             return (IEnumerator<Sparkline>) this.InnerList.GetEnumerator();
         }
 
-        private void GetMaxMinValues(Sparkline sparkline, out double max, out double min)
+        void GetMaxMinValues(Sparkline sparkline, out double max, out double min)
         {
             max = double.MinValue;
             min = double.MaxValue;
@@ -211,7 +211,7 @@ namespace Dt.Cells.Data
             this.cachedFormula = null;
         }
 
-        private bool IsNeedAdjustGroupMaxMinValue(Sparkline removedSparkline)
+        bool IsNeedAdjustGroupMaxMinValue(Sparkline removedSparkline)
         {
             bool flag = this.setting.MaxAxisType == SparklineAxisMinMax.Group;
             bool flag2 = this.setting.MinAxisType == SparklineAxisMinMax.Group;
@@ -280,7 +280,7 @@ namespace Dt.Cells.Data
             this.AdjustGroupMaxMinValue();
         }
 
-        private void setting_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void setting_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if ((e.PropertyName == "MinAxisType") || (e.PropertyName == "MaxAxisType"))
             {
@@ -463,7 +463,7 @@ namespace Dt.Cells.Data
             get { return  (this.DateAxisReference != null); }
         }
 
-        private List<Sparkline> InnerList
+        List<Sparkline> InnerList
         {
             get
             {

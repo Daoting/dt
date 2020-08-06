@@ -18,8 +18,8 @@ namespace Dt.Cells.Data
     [StructLayout(LayoutKind.Sequential)]
     internal struct MatrixMock
     {
-        private const int c_identityHashCode = 0;
-        private static MatrixMock s_identity;
+        const int c_identityHashCode = 0;
+        static MatrixMock s_identity;
         internal double _m11;
         internal double _m12;
         internal double _m21;
@@ -488,14 +488,14 @@ namespace Dt.Cells.Data
             return mock;
         }
 
-        private static MatrixMock CreateIdentity()
+        static MatrixMock CreateIdentity()
         {
             MatrixMock mock = new MatrixMock();
             mock.SetMatrix(1.0, 0.0, 0.0, 1.0, 0.0, 0.0, MatrixTypesMock.TRANSFORM_IS_IDENTITY);
             return mock;
         }
 
-        private void SetMatrix(double m11, double m12, double m21, double m22, double offsetX, double offsetY, MatrixTypesMock type)
+        void SetMatrix(double m11, double m12, double m21, double m22, double offsetX, double offsetY, MatrixTypesMock type)
         {
             this._m11 = m11;
             this._m12 = m12;
@@ -506,7 +506,7 @@ namespace Dt.Cells.Data
             this._type = type;
         }
 
-        private void DeriveMatrixType()
+        void DeriveMatrixType()
         {
             this._type = MatrixTypesMock.TRANSFORM_IS_IDENTITY;
             if ((this._m21 != 0.0) || (this._m12 != 0.0))
@@ -530,11 +530,11 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void Debug_CheckType()
+        void Debug_CheckType()
         {
         }
 
-        private bool IsDistinguishedIdentity
+        bool IsDistinguishedIdentity
         {
             get { return  (this._type == MatrixTypesMock.TRANSFORM_IS_IDENTITY); }
         }

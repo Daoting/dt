@@ -17,10 +17,10 @@ namespace Dt.Cells.Data
 {
     internal abstract class WorksheetSeriesDataProvider : ISeriesDataProvider, IDisposable
     {
-        private object[,] _cachedData;
-        private string[,] _cachedText;
-        private CellRange _cachRange;
-        private Dt.Cells.Data.Worksheet _worksheet;
+        object[,] _cachedData;
+        string[,] _cachedText;
+        CellRange _cachRange;
+        Dt.Cells.Data.Worksheet _worksheet;
 
         public event EventHandler DataChanged;
 
@@ -28,7 +28,7 @@ namespace Dt.Cells.Data
         {
         }
 
-        private void AttachEvents()
+        void AttachEvents()
         {
             if (this.Worksheet != null)
             {
@@ -45,7 +45,7 @@ namespace Dt.Cells.Data
             this._cachedData = null;
         }
 
-        private void DetachEvents()
+        void DetachEvents()
         {
             if (this.Worksheet != null)
             {
@@ -195,7 +195,7 @@ namespace Dt.Cells.Data
             return true;
         }
 
-        private void OnDataChanged()
+        void OnDataChanged()
         {
             if (this.DataChanged != null)
             {
@@ -203,7 +203,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void UpdateCacheData()
+        void UpdateCacheData()
         {
             if ((this.Worksheet == null) || (this.DataReference == null))
             {
@@ -223,7 +223,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void UpdateCacheText()
+        void UpdateCacheText()
         {
             if (this._cachedData == null)
             {
@@ -253,7 +253,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void UpdateDataRange()
+        void UpdateDataRange()
         {
             this._cachRange = new CellRange(0, 0, 0, 0);
             CalcExternalRangeExpression dataReference = this.DataReference as CalcExternalRangeExpression;
@@ -278,7 +278,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void Worksheet_CellChanged(object sender, CellChangedEventArgs e)
+        void Worksheet_CellChanged(object sender, CellChangedEventArgs e)
         {
             if (((this._cachRange != null) && (e.PropertyName == "Value")) && (this._cachRange != null))
             {
@@ -291,7 +291,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void Worksheet_ColumnChanged(object sender, SheetChangedEventArgs e)
+        void Worksheet_ColumnChanged(object sender, SheetChangedEventArgs e)
         {
             if (this._cachRange != null)
             {
@@ -304,7 +304,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void Worksheet_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void Worksheet_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (this._cachRange != null)
             {
@@ -331,7 +331,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void Worksheet_RowChanged(object sender, SheetChangedEventArgs e)
+        void Worksheet_RowChanged(object sender, SheetChangedEventArgs e)
         {
             if (this._cachRange != null)
             {

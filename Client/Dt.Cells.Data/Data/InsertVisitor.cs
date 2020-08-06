@@ -16,8 +16,8 @@ namespace Dt.Cells.Data
 {
     internal class InsertVisitor : OperatorExpressionVisistor
     {
-        private int _count;
-        private int _index;
+        int _count;
+        int _index;
 
         public InsertVisitor(int index, int count, bool row, bool isFullBand, ICalcSource currentCalcSource = null) : base(row, isFullBand, currentCalcSource)
         {

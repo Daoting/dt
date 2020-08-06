@@ -100,11 +100,11 @@ namespace Dt.Cells.UI
             UpdateVisualState(true);
         }
 
-        internal void DragFillSmartTagTap(Windows.Foundation.Point point)
+        internal void DragFillSmartTagTap(Point point)
         {
             double num = 0.0;
             double actualHeight = base.ActualHeight;
-            Windows.Foundation.Point point2 = new Windows.Foundation.Point(num - 5.0, actualHeight);
+            Point point2 = new Point(num - 5.0, actualHeight);
             point2 = base.TransformToVisual(_ownerSheet).Transform(point2);
             if (!_isPressed)
             {
@@ -120,11 +120,11 @@ namespace Dt.Cells.UI
             }
         }
 
-        internal DragFillContextMenuItem GetTappedDragFillContextMenu(Windows.Foundation.Point point)
+        internal DragFillContextMenuItem GetTappedDragFillContextMenu(Point point)
         {
             if (IsContextMenuOpened)
             {
-                Windows.Foundation.Rect rect = new Windows.Foundation.Rect(_dragFillPopupManager.Location.X, _dragFillPopupManager.Location.Y, _dragFillPopupManager.Size.Width, _dragFillPopupManager.Size.Height);
+                Rect rect = new Rect(_dragFillPopupManager.Location.X, _dragFillPopupManager.Location.Y, _dragFillPopupManager.Size.Width, _dragFillPopupManager.Size.Height);
                 if (!rect.Contains(point))
                 {
                     return null;
@@ -187,7 +187,7 @@ namespace Dt.Cells.UI
         {
             double num = 0.0;
             double actualHeight = base.ActualHeight;
-            Windows.Foundation.Point point = new Windows.Foundation.Point(num - 5.0, actualHeight);
+            Point point = new Point(num - 5.0, actualHeight);
             point = base.TransformToVisual(_ownerSheet).Transform(point);
             if (!_isPressed)
             {
@@ -203,7 +203,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        Windows.Foundation.Point TranslatePoint(Windows.Foundation.Point point, UIElement element)
+        Point TranslatePoint(Point point, UIElement element)
         {
             return _ownerSheet.TransformToVisual(element).Transform(point);
         }

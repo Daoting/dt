@@ -16,13 +16,13 @@ namespace Dt.Cells.Data
 {
     internal static class FillEffects
     {
-        private static Brush _Black = null;
-        private static readonly object _lock = new object();
-        private static Brush _Red = null;
-        private static Brush _White = null;
-        private static Brush _Yellow = null;
+        static Brush _Black = null;
+        static readonly object _lock = new object();
+        static Brush _Red = null;
+        static Brush _White = null;
+        static Brush _Yellow = null;
 
-        private static Brush EnsureBrush(ref Brush field, Windows.UI.Color defValue)
+        static Brush EnsureBrush(ref Brush field, Windows.UI.Color defValue)
         {
             if (field == null)
             {

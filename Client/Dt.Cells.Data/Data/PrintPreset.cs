@@ -23,11 +23,11 @@ namespace Dt.Cells.Data
     /// </summary>
     public class PrintPreset
     {
-        private Dt.Pdf.Object.DuplexMode duplexMode;
-        private bool isPageSourceByPageSize;
-        private int numberOfCopies = 1;
-        private readonly List<PrintRange> printRanges = new List<PrintRange>();
-        private PrintScalingType scalingType;
+        Dt.Pdf.Object.DuplexMode duplexMode;
+        bool isPageSourceByPageSize;
+        int numberOfCopies = 1;
+        readonly List<PrintRange> printRanges = new List<PrintRange>();
+        PrintScalingType scalingType;
 
         /// <summary>
         /// Appends to PdfDocument.
@@ -142,8 +142,8 @@ namespace Dt.Cells.Data
         /// </summary>
         public class PrintRange
         {
-            private readonly ushort count;
-            private readonly ushort index;
+            readonly ushort count;
+            readonly ushort index;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.PrintPreset.PrintRange" /> class.

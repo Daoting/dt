@@ -25,14 +25,14 @@ namespace Dt.Cells.Data
     /// </summary>
     public class SpreadChartElement : ISpreadChartElement, IXmlSerializable
     {
-        private SpreadChartBase _chart;
+        SpreadChartBase _chart;
         internal static SolidColorBrush _defaultAutomaticFill = null;
         internal static SolidColorBrush _defaultAutomaticStroke = null;
-        private bool _isAutomaticFill;
-        private bool _isAutomaticStroke;
-        private static readonly object _lock = new object();
+        bool _isAutomaticFill;
+        bool _isAutomaticStroke;
+        static readonly object _lock = new object();
         internal FloatingObjectStyleInfo _styleInfo;
-        private WorkingState _suspendState;
+        WorkingState _suspendState;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.SpreadChartElement" /> class.
@@ -60,7 +60,7 @@ namespace Dt.Cells.Data
         {
         }
 
-        private void FormatInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void FormatInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             ((ISpreadChartElement) this).NotifyElementChanged(e.PropertyName);
         }

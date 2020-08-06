@@ -23,12 +23,12 @@ namespace Dt.Cells.Data
     /// </summary>
     public class ViewportInfo : IXmlSerializable
     {
-        private int _columnViewportCount;
-        private int[] _leftColumns;
-        private int _rowViewportCount;
-        private int[] _topRows;
-        private double[] _viewportHeight;
-        private double[] _viewportWidth;
+        int _columnViewportCount;
+        int[] _leftColumns;
+        int _rowViewportCount;
+        int[] _topRows;
+        double[] _viewportHeight;
+        double[] _viewportWidth;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object" /> class.

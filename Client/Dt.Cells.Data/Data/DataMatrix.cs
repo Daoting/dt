@@ -15,11 +15,11 @@ namespace Dt.Cells.Data
 {
     internal class DataMatrix<T> where T: class
     {
-        private SparseArray<DenseArray<T>> _table;
-        private int columnCount;
-        private int lastDirtyColumn;
-        private int lastDirtyRow;
-        private int rowCount;
+        SparseArray<DenseArray<T>> _table;
+        int columnCount;
+        int lastDirtyColumn;
+        int lastDirtyRow;
+        int rowCount;
 
         public DataMatrix()
         {
@@ -118,7 +118,7 @@ namespace Dt.Cells.Data
             return this._table.GetNonEmptyIndexes();
         }
 
-        private DenseArray<T> GetRow(int row, bool create)
+        DenseArray<T> GetRow(int row, bool create)
         {
             DenseArray<T> array = this._table[row];
             if (create && (array == null))

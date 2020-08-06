@@ -28,7 +28,7 @@ namespace Dt.Cells.UI
             ParentViewport = parentViewport;
         }
 
-        protected override Windows.Foundation.Size ArrangeOverride(Windows.Foundation.Size finalSize)
+        protected override Size ArrangeOverride(Size finalSize)
         {
             for (int i = 0; i < _cachedFrames.Count; i++)
             {
@@ -39,9 +39,9 @@ namespace Dt.Cells.UI
             return base.ArrangeOverride(finalSize);
         }
 
-        protected override Windows.Foundation.Size MeasureOverride(Windows.Foundation.Size availableSize)
+        protected override Size MeasureOverride(Size availableSize)
         {
-            Windows.Foundation.Rect[] operatingFrameLayouts = OperatingFrameLayouts;
+            Rect[] operatingFrameLayouts = OperatingFrameLayouts;
             if ((operatingFrameLayouts == null) || (operatingFrameLayouts.Length == 0))
             {
                 _cachedFrames.Clear();
@@ -68,7 +68,7 @@ namespace Dt.Cells.UI
                     base.Children.Add(frame);
                 }
                 _cachedFrames[i].InvalidateMeasure();
-                _cachedFrames[i].Measure(new Windows.Foundation.Size(operatingFrameLayouts[i].Width, operatingFrameLayouts[i].Height));
+                _cachedFrames[i].Measure(new Size(operatingFrameLayouts[i].Width, operatingFrameLayouts[i].Height));
             }
             return base.MeasureOverride(availableSize);
         }
@@ -78,7 +78,7 @@ namespace Dt.Cells.UI
             get { return ((ParentViewport._cachedChartShapeMovingRects != null) && (ParentViewport._cachedChartShapeMovingRects.Length > 0)); }
         }
 
-        Windows.Foundation.Rect[] OperatingFrameLayouts
+        Rect[] OperatingFrameLayouts
         {
             get
             {
@@ -109,7 +109,7 @@ namespace Dt.Cells.UI
             IsBottomVisibe = true;
         }
 
-        protected override Windows.Foundation.Size ArrangeOverride(Windows.Foundation.Size finalSize)
+        protected override Size ArrangeOverride(Size finalSize)
         {
             if (!finalSize.IsEmpty)
             {
@@ -120,25 +120,25 @@ namespace Dt.Cells.UI
                 if (IsLeftVisibe)
                 {
                     RectangleGeometry geometry = new RectangleGeometry();
-                    geometry.Rect = new Windows.Foundation.Rect(0.0, 0.0, Thickness, finalSize.Height);
+                    geometry.Rect = new Rect(0.0, 0.0, Thickness, finalSize.Height);
                     group.Children.Add(geometry);
                 }
                 if (IsRightVisibe)
                 {
                     RectangleGeometry geometry2 = new RectangleGeometry();
-                    geometry2.Rect = new Windows.Foundation.Rect(finalSize.Width - Thickness, 0.0, Thickness, finalSize.Height);
+                    geometry2.Rect = new Rect(finalSize.Width - Thickness, 0.0, Thickness, finalSize.Height);
                     group.Children.Add(geometry2);
                 }
                 if (IsTopVisibie)
                 {
                     RectangleGeometry geometry3 = new RectangleGeometry();
-                    geometry3.Rect = new Windows.Foundation.Rect(0.0, 0.0, finalSize.Width, Thickness);
+                    geometry3.Rect = new Rect(0.0, 0.0, finalSize.Width, Thickness);
                     group.Children.Add(geometry3);
                 }
                 if (IsBottomVisibe)
                 {
                     RectangleGeometry geometry4 = new RectangleGeometry();
-                    geometry4.Rect = new Windows.Foundation.Rect(0.0, finalSize.Height - Thickness, finalSize.Width, Thickness);
+                    geometry4.Rect = new Rect(0.0, finalSize.Height - Thickness, finalSize.Width, Thickness);
                     group.Children.Add(geometry4);
                 }
                 double x = IsLeftVisibe ? Thickness : 0.0;
@@ -170,14 +170,14 @@ namespace Dt.Cells.UI
                 width = Math.Max(0.0, width);
                 height = Math.Max(0.0, height);
                 RectangleGeometry geometry5 = new RectangleGeometry();
-                geometry5.Rect = new Windows.Foundation.Rect(x, y, width, height);
+                geometry5.Rect = new Rect(x, y, width, height);
                 group.Children.Add(geometry5);
-                _frame.Arrange(new Windows.Foundation.Rect(new Windows.Foundation.Point(0.0, 0.0), finalSize));
+                _frame.Arrange(new Rect(new Point(0.0, 0.0), finalSize));
             }
             return finalSize;
         }
 
-        protected override Windows.Foundation.Size MeasureOverride(Windows.Foundation.Size availableSize)
+        protected override Size MeasureOverride(Size availableSize)
         {
             _frame.Measure(availableSize);
             return _frame.DesiredSize;

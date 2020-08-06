@@ -25,7 +25,7 @@ namespace Dt.Cells.UI
     public abstract partial class BaseSparklineView : Panel, IThemeContextSupport
     {
         BaseSparklineViewInfo _viewInfo;
-        Windows.Foundation.Rect? _cachedClip;
+        Rect? _cachedClip;
         List<UIElement> _dataPoints;
 
         internal BaseSparklineView(BaseSparklineViewInfo viewInfo)
@@ -33,15 +33,15 @@ namespace Dt.Cells.UI
             _viewInfo = viewInfo;
         }
 
-        internal void ArrangeAxis(Windows.Foundation.Size finalSize)
+        internal void ArrangeAxis(Size finalSize)
         {
             if (_viewInfo.AxisLine != null)
             {
-                _viewInfo.AxisLine.Arrange(new Windows.Foundation.Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
+                _viewInfo.AxisLine.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
             }
         }
 
-        internal void ArrangeDataPoints(Windows.Foundation.Size finalSize)
+        internal void ArrangeDataPoints(Size finalSize)
         {
             if (_dataPoints != null)
             {
@@ -49,7 +49,7 @@ namespace Dt.Cells.UI
                 double actualMaxValue = _viewInfo.GetActualMaxValue();
                 for (int i = 0; i < _viewInfo.CachedIndexMaping.Count; i++)
                 {
-                    Windows.Foundation.Rect rect;
+                    Rect rect;
                     int valueIndexInValueCache = _viewInfo.CachedIndexMaping[i];
                     double? cachedValue = _viewInfo.GetCachedValue(valueIndexInValueCache);
                     if (cachedValue.HasValue)
@@ -85,7 +85,7 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="finalSize"> The final area within the parent that this element uses to arrange itself and its children.</param>
         /// <returns>The actual size used.</returns>
-        protected override Windows.Foundation.Size ArrangeOverride(Windows.Foundation.Size finalSize)
+        protected override Size ArrangeOverride(Size finalSize)
         {
             SetClipToBounds(finalSize);
             ArrangeAxis(finalSize);
@@ -93,7 +93,7 @@ namespace Dt.Cells.UI
             return finalSize;
         }
 
-        double CalcItemWidth(Windows.Foundation.Size availableSize)
+        double CalcItemWidth(Size availableSize)
         {
             double num = DateTimeExtension.ToOADate(_viewInfo.GetMinDatetime());
             double num2 = DateTimeExtension.ToOADate(_viewInfo.GetMaxDatetime());
@@ -132,7 +132,7 @@ namespace Dt.Cells.UI
             return num11;
         }
 
-        List<UIElement> CreateDataPoints(Windows.Foundation.Size availableSize)
+        List<UIElement> CreateDataPoints(Size availableSize)
         {
             List<UIElement> list = new List<UIElement>();
             foreach (int num in _viewInfo.CachedIndexMaping)
@@ -149,7 +149,7 @@ namespace Dt.Cells.UI
             return true;
         }
 
-        internal abstract UIElement GetDataPoint(int indexInValueCache, Windows.Foundation.Size availableSize);
+        internal abstract UIElement GetDataPoint(int indexInValueCache, Size availableSize);
         internal Windows.UI.Color GetDataPointColor(int indexInValueCache)
         {
             Windows.UI.Color? markerColor = null;
@@ -253,7 +253,7 @@ namespace Dt.Cells.UI
             _viewInfo.Reset();
         }
 
-        internal void MeasureAxis(Windows.Foundation.Size availableSize)
+        internal void MeasureAxis(Size availableSize)
         {
             _viewInfo.MeasureAxis(availableSize);
             if (_viewInfo.AxisLine != null)
@@ -267,7 +267,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        internal void MeasureDataPoints(Windows.Foundation.Size availableSize)
+        internal void MeasureDataPoints(Size availableSize)
         {
             if (!double.IsInfinity(availableSize.Width) && !double.IsInfinity(availableSize.Height))
             {
@@ -305,7 +305,7 @@ namespace Dt.Cells.UI
         /// <returns> 
         /// The size that this element determines it needs during layout, based on its calculations of child element sizes.
         /// </returns>
-        protected override Windows.Foundation.Size MeasureOverride(Windows.Foundation.Size availableSize)
+        protected override Size MeasureOverride(Size availableSize)
         {
             if (!double.IsInfinity(availableSize.Width) && !double.IsInfinity(availableSize.Height))
             {
@@ -316,11 +316,11 @@ namespace Dt.Cells.UI
             return base.MeasureOverride(availableSize);
         }
 
-        internal void SetClipToBounds(Windows.Foundation.Size finalSize)
+        internal void SetClipToBounds(Size finalSize)
         {
-            Windows.Foundation.Rect? clipBounds = _viewInfo.GetClipBounds(finalSize);
-            Windows.Foundation.Rect? cachedClip = _cachedClip;
-            Windows.Foundation.Rect? nullable3 = clipBounds;
+            Rect? clipBounds = _viewInfo.GetClipBounds(finalSize);
+            Rect? cachedClip = _cachedClip;
+            Rect? nullable3 = clipBounds;
             if ((cachedClip.HasValue != nullable3.HasValue) || (cachedClip.HasValue && (cachedClip.GetValueOrDefault() != nullable3.GetValueOrDefault())))
             {
                 _cachedClip = clipBounds;
@@ -342,7 +342,7 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="size">The update size.</param>
         /// <param name="zoomfactor">The zoom factor to update.</param>
-        public virtual void Update(Windows.Foundation.Size size, double zoomfactor)
+        public virtual void Update(Size size, double zoomfactor)
         {
             if (_viewInfo.AxisLine != null)
             {
@@ -362,7 +362,7 @@ namespace Dt.Cells.UI
             ZoomFactor = zoomfactor;
             if (SparklineInfo.Setting.RightToLeft)
             {
-                base.RenderTransformOrigin = new Windows.Foundation.Point(0.5, 0.0);
+                base.RenderTransformOrigin = new Point(0.5, 0.0);
                 ScaleTransform transform = new ScaleTransform();
                 transform.ScaleX = -1.0;
                 base.RenderTransform = transform;

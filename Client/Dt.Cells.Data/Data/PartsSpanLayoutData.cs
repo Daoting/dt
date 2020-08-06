@@ -18,15 +18,15 @@ namespace Dt.Cells.Data
     /// </summary>
     internal class PartsSpanLayoutData
     {
-        private SpanLayoutData bottomLeftCornerSpans;
-        private SpanLayoutData bottomRightCornerSpans;
-        private SpanLayoutData cellSpans;
-        private SpanLayoutData columnFooterSpans;
-        private SpanLayoutData columnHeaderSpans;
-        private SpanLayoutData rowFooterSpans;
-        private SpanLayoutData rowHeaderSpans;
-        private SpanLayoutData topLeftCornerSpans;
-        private SpanLayoutData topRightCornerSpans;
+        SpanLayoutData bottomLeftCornerSpans;
+        SpanLayoutData bottomRightCornerSpans;
+        SpanLayoutData cellSpans;
+        SpanLayoutData columnFooterSpans;
+        SpanLayoutData columnHeaderSpans;
+        SpanLayoutData rowFooterSpans;
+        SpanLayoutData rowHeaderSpans;
+        SpanLayoutData topLeftCornerSpans;
+        SpanLayoutData topRightCornerSpans;
 
         /// <summary>
         /// Gets the span layout data.

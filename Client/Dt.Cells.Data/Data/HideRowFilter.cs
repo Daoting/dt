@@ -33,20 +33,20 @@ namespace Dt.Cells.Data
         /// key: Column Model Index.
         /// value: The Filter items of The Column.
         /// </summary>
-        private Dictionary<int, List<ConditionBase>> filterConditionMap;
-        private List<int> filteredColumns;
+        Dictionary<int, List<ConditionBase>> filterConditionMap;
+        List<int> filteredColumns;
         /// <summary>
         /// Map: Filtered in Row and Column.
         /// Key: filtered in row model index.
         /// Value: Indicate which column filter this row in.
         /// </summary>
-        private Dictionary<int, List<int>> filteredInRowModelIndex;
+        Dictionary<int, List<int>> filteredInRowModelIndex;
         /// <summary>
         /// All filtered conditions.
         /// </summary>
-        private List<ConditionBase> filteredItems;
-        private SortState sortState;
-        private int sorttedColumn;
+        List<ConditionBase> filteredItems;
+        SortState sortState;
+        int sorttedColumn;
 
         /// <summary>
         /// Creates a new default row filter.
@@ -134,7 +134,7 @@ namespace Dt.Cells.Data
         /// <summary>
         /// Checks the sheet.
         /// </summary>
-        private void CheckSheet()
+        void CheckSheet()
         {
             if (base.Sheet == null)
             {
@@ -161,7 +161,7 @@ namespace Dt.Cells.Data
         /// <summary>
         /// Clears the row filtered statues.
         /// </summary>
-        private void ClearRowFilteredStatues()
+        void ClearRowFilteredStatues()
         {
             this.filteredColumns.Clear();
             this.filteredInRowModelIndex.Clear();
@@ -205,7 +205,7 @@ namespace Dt.Cells.Data
         /// Filters the specified column view index.
         /// </summary>
         /// <param name="columnModelIndex">Index of the column model</param>
-        private void FilterColumn(int columnModelIndex)
+        void FilterColumn(int columnModelIndex)
         {
             this.UnfilterColumn(columnModelIndex);
             if ((this.filterConditionMap.ContainsKey(columnModelIndex) && (this.Range != null)) && (((this.Range == null) || (this.Range.Column == -1)) || ((columnModelIndex >= this.Range.Column) && (columnModelIndex <= ((this.Range.Column + this.Range.ColumnCount) - 1)))))
@@ -239,7 +239,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void FilterRowByCell(int rowModelIndex, int columnModelIndex)
+        void FilterRowByCell(int rowModelIndex, int columnModelIndex)
         {
             this.FilterRowByCell(rowModelIndex, columnModelIndex, false);
         }
@@ -250,7 +250,7 @@ namespace Dt.Cells.Data
         /// <param name="rowModelIndex">Index of the row model.</param>
         /// <param name="columnModelIndex">Index of the column model.</param>
         /// <param name="nullValue">if set to <c>true</c> [null value].</param>
-        private void FilterRowByCell(int rowModelIndex, int columnModelIndex, bool nullValue)
+        void FilterRowByCell(int rowModelIndex, int columnModelIndex, bool nullValue)
         {
             if ((this.Range != null) && (((this.Range == null) || (this.Range.Row == -1)) || ((rowModelIndex >= this.Range.Row) && (rowModelIndex <= ((this.Range.Row + this.Range.RowCount) - 1)))))
             {
@@ -354,7 +354,7 @@ namespace Dt.Cells.Data
         /// <param name="order">The order.</param>
         /// <param name="hasBlankItem">if set to <c>true</c> [has blank item].</param>
         /// <returns></returns>
-        private List<T> GetCandindateDataItems<T>(int columnViewIndex, string order, out bool hasBlankItem)
+        List<T> GetCandindateDataItems<T>(int columnViewIndex, string order, out bool hasBlankItem)
         {
             if ((columnViewIndex < 0) || (columnViewIndex >= base.Sheet.ColumnCount))
             {
@@ -584,7 +584,7 @@ namespace Dt.Cells.Data
             return this.sorttedColumn;
         }
 
-        private void Init()
+        void Init()
         {
             this.filterConditionMap = new Dictionary<int, List<ConditionBase>>();
             this.sorttedColumn = -1;
@@ -608,7 +608,7 @@ namespace Dt.Cells.Data
             return this.filteredColumns.Contains(column);
         }
 
-        private bool IsLastFilteredColumn(int column)
+        bool IsLastFilteredColumn(int column)
         {
             int num = this.filteredColumns.Count;
             return ((num > 0) && (this.filteredColumns[num - 1] == column));
@@ -640,7 +640,7 @@ namespace Dt.Cells.Data
             return true;
         }
 
-        private bool IsRowfilteredOutByColumn(int row, int byColumnIndex)
+        bool IsRowfilteredOutByColumn(int row, int byColumnIndex)
         {
             if (this.filteredColumns.Count == 0)
             {
@@ -1109,7 +1109,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void RemoveFilteredColumn(int column)
+        void RemoveFilteredColumn(int column)
         {
             this.filteredColumns.Remove(column);
         }
@@ -1118,7 +1118,7 @@ namespace Dt.Cells.Data
         /// Removes the filtered items.
         /// </summary>
         /// <param name="columnModelIndex">Index of the column model.</param>
-        private void RemoveFilteredItems(int columnModelIndex)
+        void RemoveFilteredItems(int columnModelIndex)
         {
             if (this.filterConditionMap.ContainsKey(columnModelIndex))
             {
@@ -1170,7 +1170,7 @@ namespace Dt.Cells.Data
             this.filterConditionMap.Clear();
         }
 
-        private void ResumeEvent()
+        void ResumeEvent()
         {
             if ((base.Sheet != null) && (base.Sheet.Workbook != null))
             {
@@ -1219,7 +1219,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="columnModelIndex">Index of the column model</param>
         /// <param name="isFiltered">Set to <c>true</c> to filter the column</param>
-        private void SetColumnFilteredState(int columnModelIndex, bool isFiltered)
+        void SetColumnFilteredState(int columnModelIndex, bool isFiltered)
         {
             if (isFiltered)
             {
@@ -1278,7 +1278,7 @@ namespace Dt.Cells.Data
             return flag2;
         }
 
-        private void SuspendEvent()
+        void SuspendEvent()
         {
             if ((base.Sheet != null) && (base.Sheet.Workbook != null))
             {
@@ -1336,7 +1336,7 @@ namespace Dt.Cells.Data
             this.SaveXml(writer);
         }
 
-        private void TryPushFilteredColumn(int column)
+        void TryPushFilteredColumn(int column)
         {
             if (this.filteredColumns.Count > 0)
             {
@@ -1379,7 +1379,7 @@ namespace Dt.Cells.Data
         /// Removes the filter from the specified column.
         /// </summary>
         /// <param name="columnModelIndex">Index of the column model</param>
-        private void UnfilterColumn(int columnModelIndex)
+        void UnfilterColumn(int columnModelIndex)
         {
             if (this.Range != null)
             {

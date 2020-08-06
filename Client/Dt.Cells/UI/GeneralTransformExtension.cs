@@ -17,7 +17,7 @@ namespace Dt.Cells.UI
 {
     internal static class GeneralTransformExtension
     {
-        internal static Windows.Foundation.Point Transform(this GeneralTransform transform, Windows.Foundation.Point point)
+        internal static Point Transform(this GeneralTransform transform, Point point)
         {
             return transform.TransformPoint(point);
         }

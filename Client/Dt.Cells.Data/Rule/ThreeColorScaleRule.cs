@@ -19,7 +19,7 @@ namespace Dt.Cells.Data
     /// </summary>
     public sealed class ThreeColorScaleRule : ScaleRule
     {
-        private IActualValue lastActualValue;
+        IActualValue lastActualValue;
 
         /// <summary>
         /// Constructs a three color scale.
@@ -110,7 +110,7 @@ namespace Dt.Cells.Data
             return null;
         }
 
-        private void Init()
+        void Init()
         {
             base.scales = new ScaleValue[] { new ScaleValue(ScaleValueType.LowestValue, null), new ScaleValue(ScaleValueType.Percentile, (int) 50), new ScaleValue(ScaleValueType.HighestValue, null) };
             base.expected = new object[] { Windows.UI.Color.FromArgb(0xff, 0xf8, 0x69, 0x6b), Windows.UI.Color.FromArgb(0xff, 0xff, 0xeb, 0x84), Windows.UI.Color.FromArgb(0xff, 0x63, 190, 0x7b) };

@@ -17,11 +17,11 @@ namespace Dt.Cells.Data
     /// </summary>
     public class SheetSpanModelChangedEventArgs : EventArgs
     {
-        private int column;
-        private int columnCount;
-        private SheetSpanModelChangedEventAction eventType;
-        private int row;
-        private int rowCount;
+        int column;
+        int columnCount;
+        SheetSpanModelChangedEventAction eventType;
+        int row;
+        int rowCount;
 
         /// <summary>
         /// Creates a new event arguments object for the sheet,

@@ -179,18 +179,18 @@ namespace Dt.Cells.UI
             UpdateElements(false);
         }
 
-        protected override Windows.Foundation.Size ArrangeOverride(Windows.Foundation.Size finalSize)
+        protected override Size ArrangeOverride(Size finalSize)
         {
-            _outBorder.Arrange(new Windows.Foundation.Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
-            Windows.Foundation.Point location = new Windows.Foundation.Point(3.0, 3.0);
-            Windows.Foundation.Size size = new Windows.Foundation.Size(finalSize.Width - 6.0, finalSize.Height - 6.0);
-            _glyphGrid.Arrange(new Windows.Foundation.Rect(location, size));
-            Windows.Foundation.Point point2 = new Windows.Foundation.Point(6.0, 6.0);
-            Windows.Foundation.Size size2 = new Windows.Foundation.Size(finalSize.Width - 12.0, finalSize.Height - 12.0);
-            _innerBorder.Arrange(new Windows.Foundation.Rect(point2, size2));
-            Windows.Foundation.Point point3 = new Windows.Foundation.Point(7.0, 7.0);
-            Windows.Foundation.Size size3 = new Windows.Foundation.Size(finalSize.Width - 14.0, finalSize.Height - 14.0);
-            _contentPanel.Arrange(new Windows.Foundation.Rect(point3, size3));
+            _outBorder.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
+            Point location = new Point(3.0, 3.0);
+            Size size = new Size(finalSize.Width - 6.0, finalSize.Height - 6.0);
+            _glyphGrid.Arrange(new Rect(location, size));
+            Point point2 = new Point(6.0, 6.0);
+            Size size2 = new Size(finalSize.Width - 12.0, finalSize.Height - 12.0);
+            _innerBorder.Arrange(new Rect(point2, size2));
+            Point point3 = new Point(7.0, 7.0);
+            Size size3 = new Size(finalSize.Width - 14.0, finalSize.Height - 14.0);
+            _contentPanel.Arrange(new Rect(point3, size3));
             return base.ArrangeOverride(finalSize);
         }
 
@@ -199,14 +199,14 @@ namespace Dt.Cells.UI
             IsSelected = _floatingObject.IsSelected;
         }
 
-        protected override Windows.Foundation.Size MeasureOverride(Windows.Foundation.Size availableSize)
+        protected override Size MeasureOverride(Size availableSize)
         {
             _outBorder.Measure(availableSize);
-            Windows.Foundation.Size size = new Windows.Foundation.Size(availableSize.Width - 6.0, availableSize.Height - 6.0);
+            Size size = new Size(availableSize.Width - 6.0, availableSize.Height - 6.0);
             _glyphGrid.Measure(size);
-            Windows.Foundation.Size size2 = new Windows.Foundation.Size(availableSize.Width - 12.0, availableSize.Height - 12.0);
+            Size size2 = new Size(availableSize.Width - 12.0, availableSize.Height - 12.0);
             _innerBorder.Measure(size2);
-            Windows.Foundation.Size size3 = new Windows.Foundation.Size(availableSize.Width - 14.0, availableSize.Height - 14.0);
+            Size size3 = new Size(availableSize.Width - 14.0, availableSize.Height - 14.0);
             _contentPanel.Measure(size3);
             return base.MeasureOverride(availableSize);
         }

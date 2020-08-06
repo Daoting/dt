@@ -19,8 +19,8 @@ namespace Dt.Cells.Data
     /// </summary>
     public sealed class Top10Rule : FormattingRuleBase
     {
-        private Top10ConditionType op;
-        private int rank;
+        Top10ConditionType op;
+        int rank;
 
         /// <summary>
         /// Constructs a top 10 rule.

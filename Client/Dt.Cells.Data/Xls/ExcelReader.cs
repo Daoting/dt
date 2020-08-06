@@ -27,39 +27,39 @@ namespace Dt.Cells.Data
 {
     internal class ExcelReader : IExcelReader, IExcelReader2, IExcelSparklineReader, IExcelTableReader
     {
-        private int _activeSheetIndex;
-        private Dictionary<int, string> _builtInStyleNames;
-        private List<IExcelStyle> _builtInStyles;
-        private Dictionary<string, TableStyle> _builtInTableStyles;
-        private Dictionary<int, Tuple<int, int>> _cachedActivePosition;
-        private List<StyleInfo> _cellStyleInfos;
-        private Dictionary<int, Dictionary<int, List<int>>> _columnCollapsedInfo;
-        private List<bool> _dateTimeFormatter;
-        private IExtendedFormat _defaultExcelExtendedFormat;
-        private string _defaultTableStyleName;
-        private List<StyleInfo> _differentCellStyles;
-        private List<IDifferentialFormatting> _differentFormats;
-        private List<IExtendedFormat> _extendedFormats;
-        private bool _initStyle;
-        private bool _isDate1904;
-        private double _maxiumDigitWidth;
-        private Dictionary<int, List<IName>> _namedCellRanges;
-        private Dictionary<string, IExtendedFormat> _namedStylesExtendedFormats;
-        private int _normalStleIndex;
-        private StyleInfo _normalStyleInfo;
-        private ExcelOpenFlags _openFlags;
-        private Dictionary<int, Dictionary<int, List<int>>> _rowCollaspedInfo;
-        private Dictionary<string, int> _sheetColumnDemensions;
-        private Dictionary<string, List<IExcelConditionalFormat>> _sheetsCondtionalForats;
-        private int _startSheetIndex;
-        private List<string> _styleNames;
-        private List<IExcelStyle> _styles;
-        private Dictionary<string, TableStyle> _tableStyleCollection;
-        private List<bool> _textFormatter;
-        private HashSet<string> _uniqueTableNames;
-        private Workbook _workbook;
-        private static Dictionary<char, int> DateAndTimeFormatElementDict = new Dictionary<char, int>();
-        private static string MeasureItem = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        int _activeSheetIndex;
+        Dictionary<int, string> _builtInStyleNames;
+        List<IExcelStyle> _builtInStyles;
+        Dictionary<string, TableStyle> _builtInTableStyles;
+        Dictionary<int, Tuple<int, int>> _cachedActivePosition;
+        List<StyleInfo> _cellStyleInfos;
+        Dictionary<int, Dictionary<int, List<int>>> _columnCollapsedInfo;
+        List<bool> _dateTimeFormatter;
+        IExtendedFormat _defaultExcelExtendedFormat;
+        string _defaultTableStyleName;
+        List<StyleInfo> _differentCellStyles;
+        List<IDifferentialFormatting> _differentFormats;
+        List<IExtendedFormat> _extendedFormats;
+        bool _initStyle;
+        bool _isDate1904;
+        double _maxiumDigitWidth;
+        Dictionary<int, List<IName>> _namedCellRanges;
+        Dictionary<string, IExtendedFormat> _namedStylesExtendedFormats;
+        int _normalStleIndex;
+        StyleInfo _normalStyleInfo;
+        ExcelOpenFlags _openFlags;
+        Dictionary<int, Dictionary<int, List<int>>> _rowCollaspedInfo;
+        Dictionary<string, int> _sheetColumnDemensions;
+        Dictionary<string, List<IExcelConditionalFormat>> _sheetsCondtionalForats;
+        int _startSheetIndex;
+        List<string> _styleNames;
+        List<IExcelStyle> _styles;
+        Dictionary<string, TableStyle> _tableStyleCollection;
+        List<bool> _textFormatter;
+        HashSet<string> _uniqueTableNames;
+        Workbook _workbook;
+        static Dictionary<char, int> DateAndTimeFormatElementDict = new Dictionary<char, int>();
+        static string MeasureItem = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
         static ExcelReader()
         {
@@ -104,7 +104,7 @@ namespace Dt.Cells.Data
             this._openFlags = openFlags;
         }
 
-        private void AddAverageCondtionalFormat(Worksheet worksheet, List<CellRange> ranges, IExcelGeneralRule generalRule, ExcelConditionalFormatType type)
+        void AddAverageCondtionalFormat(Worksheet worksheet, List<CellRange> ranges, IExcelGeneralRule generalRule, ExcelConditionalFormatType type)
         {
             AverageConditionType above = AverageConditionType.Above;
             bool flag = true;
@@ -163,7 +163,7 @@ namespace Dt.Cells.Data
             worksheet.ConditionalFormats.AddAverageRule(above, (generalRule.DifferentialFormattingId == -1) ? null : this._differentCellStyles[generalRule.DifferentialFormattingId], ranges.ToArray());
         }
 
-        private void AddColorScaleConditionalFormat(Worksheet worksheet, List<CellRange> ranges, IExcelConditionalFormatRule rule)
+        void AddColorScaleConditionalFormat(Worksheet worksheet, List<CellRange> ranges, IExcelConditionalFormatRule rule)
         {
             IExcelColorScaleRule rule2 = rule as IExcelColorScaleRule;
             if ((rule2 != null) && rule2.HasMiddleNode)
@@ -187,7 +187,7 @@ namespace Dt.Cells.Data
         /// <param name="worksheet"></param>
         /// <param name="ranges"></param>
         /// <param name="rule"></param>
-        private void AddDataBarConditionalFormat(Worksheet worksheet, List<CellRange> ranges, IExcelConditionalFormatRule rule)
+        void AddDataBarConditionalFormat(Worksheet worksheet, List<CellRange> ranges, IExcelConditionalFormatRule rule)
         {
             IExcelDataBarRule rule2 = rule as IExcelDataBarRule;
             DataBarRule rule3 = null;
@@ -286,7 +286,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void AddDatesOccuringConditionalFormat(Worksheet worksheet, List<CellRange> ranges, IExcelGeneralRule generalRule, ExcelConditionalFormatType type)
+        void AddDatesOccuringConditionalFormat(Worksheet worksheet, List<CellRange> ranges, IExcelGeneralRule generalRule, ExcelConditionalFormatType type)
         {
             DateOccurringType today = DateOccurringType.Today;
             if (type == ExcelConditionalFormatType.Tomorrow)
@@ -328,7 +328,7 @@ namespace Dt.Cells.Data
             worksheet.ConditionalFormats.AddDateOccurringRule(today, (generalRule.DifferentialFormattingId == -1) ? null : this._differentCellStyles[generalRule.DifferentialFormattingId], ranges.ToArray());
         }
 
-        private string AddFormulaSymbolsIfNeeded(object value)
+        string AddFormulaSymbolsIfNeeded(object value)
         {
             if (value == null)
             {
@@ -342,7 +342,7 @@ namespace Dt.Cells.Data
             return ("=" + str);
         }
 
-        private void AddGeneralRuleConditionalFormat(Worksheet worksheet, List<CellRange> ranges, IExcelConditionalFormatRule rule)
+        void AddGeneralRuleConditionalFormat(Worksheet worksheet, List<CellRange> ranges, IExcelConditionalFormatRule rule)
         {
             IExcelGeneralRule generalRule = rule as IExcelGeneralRule;
             if (generalRule != null)
@@ -419,7 +419,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void AddHighlightConditionalFormat(Worksheet worksheet, List<CellRange> ranges, IExcelConditionalFormatRule rule)
+        void AddHighlightConditionalFormat(Worksheet worksheet, List<CellRange> ranges, IExcelConditionalFormatRule rule)
         {
             IExcelHighlightingRule rule2 = rule as IExcelHighlightingRule;
             if (rule2 != null)
@@ -437,7 +437,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void AddIconSetCondtionalFormat(Worksheet worksheet, List<CellRange> ranges, IExcelConditionalFormatRule rule)
+        void AddIconSetCondtionalFormat(Worksheet worksheet, List<CellRange> ranges, IExcelConditionalFormatRule rule)
         {
             IExcelIconSetsRule rule2 = rule as IExcelIconSetsRule;
             if ((rule2 != null) && (rule2.IconSet != ExcelIconSetType.Icon_NIL))
@@ -498,7 +498,7 @@ namespace Dt.Cells.Data
             item.CalcAxial.Suspend();
         }
 
-        private void AddStyleToWorkbookNameStyles(StyleInfo namedStyle)
+        void AddStyleToWorkbookNameStyles(StyleInfo namedStyle)
         {
             if (this._workbook.NamedStyles == null)
             {
@@ -507,7 +507,7 @@ namespace Dt.Cells.Data
             this._workbook.NamedStyles.Add(namedStyle);
         }
 
-        private void AddTop10ConditionalFormat(Worksheet worksheet, List<CellRange> ranges, IExcelGeneralRule generalRule)
+        void AddTop10ConditionalFormat(Worksheet worksheet, List<CellRange> ranges, IExcelGeneralRule generalRule)
         {
             Top10ConditionType top = Top10ConditionType.Top;
             if (generalRule.Bottom.HasValue && generalRule.Bottom.Value)
@@ -537,7 +537,7 @@ namespace Dt.Cells.Data
         {
         }
 
-        private double CalculateDefaultRowHeight()
+        double CalculateDefaultRowHeight()
         {
             FontFamily fontFamily = this.GetFontFamily();
             double fontSize = this._workbook.DefaultStyle.FontSize;
@@ -545,7 +545,7 @@ namespace Dt.Cells.Data
             return result;
         }
 
-        private object ConvertExcelErrorToCalcEngineError(object value)
+        object ConvertExcelErrorToCalcEngineError(object value)
         {
             string str = value.ToString();
             switch (str)
@@ -574,7 +574,7 @@ namespace Dt.Cells.Data
             return str;
         }
 
-        private string ConvertValueToFormulaIfNeeded(string value)
+        string ConvertValueToFormulaIfNeeded(string value)
         {
             int num;
             if (!int.TryParse(value, out num))
@@ -668,7 +668,7 @@ namespace Dt.Cells.Data
             ExtendedNumberFormatHelper.Reset();
         }
 
-        private PaneType GetActivePane(short sheet)
+        PaneType GetActivePane(short sheet)
         {
             ViewportInfo viewportInfo = this._workbook.Sheets[sheet].GetViewportInfo();
             if ((viewportInfo.ActiveRowViewport != 0) || (viewportInfo.ActiveColumnViewport != 0))
@@ -689,7 +689,7 @@ namespace Dt.Cells.Data
             return PaneType.TopLeft;
         }
 
-        private TableStyle GetBuiltItTableStyle(string styleName)
+        TableStyle GetBuiltItTableStyle(string styleName)
         {
             TableStyle style = null;
             if (this.BuiltInTableStyles.TryGetValue(styleName, out style))
@@ -699,7 +699,7 @@ namespace Dt.Cells.Data
             return this._workbook.DefaultTableStyle;
         }
 
-        private double GetColumnWidthInPixel(int sheet, double width)
+        double GetColumnWidthInPixel(int sheet, double width)
         {
             if (width == 0.0)
             {
@@ -709,7 +709,7 @@ namespace Dt.Cells.Data
             return Math.Floor((double)(((Math.Floor((double)(width * 256.0)) / 256.0) * maxiumDigitWidth) + 0.5));
         }
 
-        private ConditionBase GetCondition(IExcelCustomFilter customFilter)
+        ConditionBase GetCondition(IExcelCustomFilter customFilter)
         {
             if (customFilter == null)
             {
@@ -765,7 +765,7 @@ namespace Dt.Cells.Data
             return new CellValueCondition(equalsTo, customFilter.Value, null);
         }
 
-        private List<CellRange> GetConditionalFormatRanges(List<IRange> ranges)
+        List<CellRange> GetConditionalFormatRanges(List<IRange> ranges)
         {
             List<CellRange> list = new List<CellRange>();
             for (int i = 0; i < ranges.Count; i++)
@@ -788,7 +788,7 @@ namespace Dt.Cells.Data
             return list;
         }
 
-        private double GetDefaultColumnWidthInPixel(int sheet, double width)
+        double GetDefaultColumnWidthInPixel(int sheet, double width)
         {
             if (width == 0.0)
             {
@@ -799,7 +799,7 @@ namespace Dt.Cells.Data
             return (Math.Ceiling((double)(num3 / 8.0)) * 8.0);
         }
 
-        private object GetExcelRealUnderlyingCellValue(CellType type, object value)
+        object GetExcelRealUnderlyingCellValue(CellType type, object value)
         {
             double num2;
             System.DateTime time;
@@ -843,7 +843,7 @@ namespace Dt.Cells.Data
             return (double)num2;
         }
 
-        private int GetExtendedFormatIndex(IExtendedFormat format)
+        int GetExtendedFormatIndex(IExtendedFormat format)
         {
             for (int i = 0; i < this._extendedFormats.Count; i++)
             {
@@ -855,7 +855,7 @@ namespace Dt.Cells.Data
             return -1;
         }
 
-        private FontFamily GetFontFamily()
+        FontFamily GetFontFamily()
         {
             FontFamily fontFamily = null;
             if (this._workbook.DefaultStyle.IsFontFamilySet())
@@ -873,7 +873,7 @@ namespace Dt.Cells.Data
             return fontFamily;
         }
 
-        private IconSetType GetIconSetType(ExcelIconSetType iconset)
+        IconSetType GetIconSetType(ExcelIconSetType iconset)
         {
             switch (iconset)
             {
@@ -940,7 +940,7 @@ namespace Dt.Cells.Data
             return IconSetType.ThreeTrafficLightsUnrimmed;
         }
 
-        private double GetMaxiumDigitWidth()
+        double GetMaxiumDigitWidth()
         {
             if (double.IsNaN(this._maxiumDigitWidth))
             {
@@ -996,7 +996,7 @@ namespace Dt.Cells.Data
             return this._maxiumDigitWidth;
         }
 
-        private ScaleValueType GetScaleValueType(ExcelConditionalFormatValueObjectType cfvoType)
+        ScaleValueType GetScaleValueType(ExcelConditionalFormatValueObjectType cfvoType)
         {
             switch (cfvoType)
             {
@@ -1027,7 +1027,7 @@ namespace Dt.Cells.Data
             return ScaleValueType.Number;
         }
 
-        private TableStyle GetTableStyle(string styleName)
+        TableStyle GetTableStyle(string styleName)
         {
             if (string.IsNullOrWhiteSpace(styleName))
             {
@@ -1045,7 +1045,7 @@ namespace Dt.Cells.Data
             return this._workbook.DefaultTableStyle;
         }
 
-        private string GetUniqueTableName(string name)
+        string GetUniqueTableName(string name)
         {
             if (!this._uniqueTableNames.Contains(name))
             {
@@ -1065,7 +1065,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void InitExcelDefaultBuiltInStyles()
+        void InitExcelDefaultBuiltInStyles()
         {
             if (this._initStyle)
             {
@@ -1087,7 +1087,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private bool IsDatesOrTimesNumberFormat(string formatCode)
+        bool IsDatesOrTimesNumberFormat(string formatCode)
         {
             if (string.IsNullOrWhiteSpace(formatCode))
             {
@@ -1180,17 +1180,17 @@ namespace Dt.Cells.Data
             return (nullable.HasValue && nullable.Value);
         }
 
-        private bool IsEntireRow(IRange range)
+        bool IsEntireRow(IRange range)
         {
             return (range.RowSpan == 0x100000);
         }
 
-        private bool IsEntrieColumn(IRange range)
+        bool IsEntrieColumn(IRange range)
         {
             return (range.ColumnSpan == 0x4000);
         }
 
-        private bool IsModifiedTableStyle(string styleName, out string baseBuiltInStyleName)
+        bool IsModifiedTableStyle(string styleName, out string baseBuiltInStyleName)
         {
             string str = styleName.ToUpperInvariant();
             if (str.StartsWith("TABLESTYLE") && (str.Length > 9))
@@ -1215,7 +1215,7 @@ namespace Dt.Cells.Data
             return true;
         }
 
-        private bool IsNumber(object value)
+        bool IsNumber(object value)
         {
             if (value is string)
             {
@@ -1224,7 +1224,7 @@ namespace Dt.Cells.Data
             return ((((((value is double) || (value is float)) || ((value is int) || (value is long))) || (((value is short) || (value is System.DateTime)) || ((value is System.TimeSpan) || (value is decimal)))) || (((value is sbyte) || (value is ulong)) || ((value is uint) || (value is ushort)))) || (value is byte));
         }
 
-        private bool IsValidDateOrTimeFormatPattern(string pattern)
+        bool IsValidDateOrTimeFormatPattern(string pattern)
         {
             if (string.IsNullOrWhiteSpace(pattern))
             {
@@ -1251,12 +1251,12 @@ namespace Dt.Cells.Data
             return true;
         }
 
-        private bool IsValidWorkSheet(int sheet)
+        bool IsValidWorkSheet(int sheet)
         {
             return ((sheet >= 0) && (sheet < this._workbook.SheetCount));
         }
 
-        private double MeasureStringHeight(string text, string fontName, double fontSize, bool wordWrap, bool bold, bool italic, double width)
+        double MeasureStringHeight(string text, string fontName, double fontSize, bool wordWrap, bool bold, bool italic, double width)
         {
             TextBlock block = new TextBlock();
             if (string.IsNullOrWhiteSpace(fontName))
@@ -1289,7 +1289,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void ReCalculateWorkbook(bool forceRecalculateAll = false)
+        void ReCalculateWorkbook(bool forceRecalculateAll = false)
         {
             if (!this._openFlags.DoNotRecalculateAfterLoad())
             {
@@ -1297,7 +1297,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void ResetCellStyleInfoOfTableRangeCell(Worksheet worksheet, int row, int column, StyleInfo defaultStyle)
+        void ResetCellStyleInfoOfTableRangeCell(Worksheet worksheet, int row, int column, StyleInfo defaultStyle)
         {
             StyleInfo styleInfo = worksheet.GetStyleInfo(row, column);
             if (styleInfo != null)
@@ -1414,7 +1414,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void ResetExcelReaderToDefault()
+        void ResetExcelReaderToDefault()
         {
             this._extendedFormats.Clear();
             this._styleNames.Clear();
@@ -1538,7 +1538,7 @@ namespace Dt.Cells.Data
             return true;
         }
 
-        private bool SetCellFormula(Worksheet worksheet, int row, int column, IExcelFormula cellFormula)
+        bool SetCellFormula(Worksheet worksheet, int row, int column, IExcelFormula cellFormula)
         {
             if (cellFormula == null)
             {
@@ -1588,7 +1588,7 @@ namespace Dt.Cells.Data
         {
         }
 
-        private bool SetCellStyle(Worksheet worksheet, int row, int column, int formatIndex, CellType cellType)
+        bool SetCellStyle(Worksheet worksheet, int row, int column, int formatIndex, CellType cellType)
         {
             if (!this._openFlags.DataOnly() && !this._openFlags.DataFormulaOnly())
             {
@@ -1634,7 +1634,7 @@ namespace Dt.Cells.Data
             return true;
         }
 
-        private void SetCellValueInternal(Worksheet workSheet, int row, int column, int formatIndex, CellType type, object value)
+        void SetCellValueInternal(Worksheet workSheet, int row, int column, int formatIndex, CellType type, object value)
         {
             if (value != null)
             {
@@ -1690,7 +1690,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void SetColumnInfo(short sheet, Worksheet worksheet, int column, short formatIndex, double width, bool hidden, byte outlineLevel, bool collapsed)
+        void SetColumnInfo(short sheet, Worksheet worksheet, int column, short formatIndex, double width, bool hidden, byte outlineLevel, bool collapsed)
         {
             if (outlineLevel > 0)
             {
@@ -1789,7 +1789,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void SetCustomAutoFilter(RowFilterBase rowFilter, IExcelFilterColumn filterColumn, int columId)
+        void SetCustomAutoFilter(RowFilterBase rowFilter, IExcelFilterColumn filterColumn, int columId)
         {
             if (filterColumn.CustomFilters != null)
             {
@@ -1882,7 +1882,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void SetDynamicAutoFilter(RowFilterBase rowFilter, CellRange filterRange, IExcelFilterColumn filterColumn, int columId)
+        void SetDynamicAutoFilter(RowFilterBase rowFilter, CellRange filterRange, IExcelFilterColumn filterColumn, int columId)
         {
             if (filterColumn.DynamicFilter != null)
             {
@@ -2332,7 +2332,7 @@ namespace Dt.Cells.Data
         {
         }
 
-        private void SetFilters(RowFilterBase rowFilter, IExcelFilterColumn filterColumn, int columId)
+        void SetFilters(RowFilterBase rowFilter, IExcelFilterColumn filterColumn, int columId)
         {
             if (filterColumn.Filters != null)
             {
@@ -2363,7 +2363,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void SetForegroundBackgroundAutoFilter(RowFilterBase rowFilter, IExcelFilterColumn filterColumn, int columId)
+        void SetForegroundBackgroundAutoFilter(RowFilterBase rowFilter, IExcelFilterColumn filterColumn, int columId)
         {
             if (filterColumn.ColorFilter != null)
             {
@@ -2391,7 +2391,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void SetIconAutoFilter(IExcelFilterColumn filterColumn)
+        void SetIconAutoFilter(IExcelFilterColumn filterColumn)
         {
             IExcelIconFilter iconFilter = filterColumn.IconFilter;
         }
@@ -2414,7 +2414,7 @@ namespace Dt.Cells.Data
             return true;
         }
 
-        private void SetNamedCellRange()
+        void SetNamedCellRange()
         {
             if ((this._namedCellRanges != null) && (this._namedCellRanges.Count != 0))
             {
@@ -2657,7 +2657,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void SetRowColumnGroupCollapsedInfo()
+        void SetRowColumnGroupCollapsedInfo()
         {
             foreach (KeyValuePair<int, Dictionary<int, List<int>>> pair in this._rowCollaspedInfo)
             {
@@ -2705,7 +2705,7 @@ namespace Dt.Cells.Data
         {
         }
 
-        private void SetRowColumnHeaders()
+        void SetRowColumnHeaders()
         {
             double defaultColumnHeaderRowHeight = this.CalculateDefaultRowHeight();
             foreach (Worksheet worksheet in this._workbook.Sheets)
@@ -3211,7 +3211,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void SetTop10AutoFilter(RowFilterBase rowFilter, IExcelFilterColumn filterColumn, int columId)
+        void SetTop10AutoFilter(RowFilterBase rowFilter, IExcelFilterColumn filterColumn, int columId)
         {
             if (filterColumn.Top10 != null)
             {
@@ -3311,7 +3311,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void UpdateWorksheetsStatus()
+        void UpdateWorksheetsStatus()
         {
             StyleInfo info = this._defaultExcelExtendedFormat.ToCellStyleInfo(this._workbook);
             for (int i = 0; i < this._workbook.Sheets.Count; i++)
@@ -3367,7 +3367,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private Dictionary<string, TableStyle> BuiltInTableStyles
+        Dictionary<string, TableStyle> BuiltInTableStyles
         {
             get
             {

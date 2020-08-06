@@ -20,7 +20,7 @@ namespace Dt.Cells.Data
     /// </summary>
     public class LineSparklineViewInfo : BaseSparklineViewInfo
     {
-        private List<Tuple<Windows.Foundation.Point, Windows.Foundation.Point>> linePos;
+        List<Tuple<Windows.Foundation.Point, Windows.Foundation.Point>> linePos;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.LineSparklineViewInfo" /> class.

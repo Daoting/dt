@@ -16,15 +16,15 @@ namespace Dt.Cells.Data
 {
     internal class MoveVisitor : OperatorExpressionVisistorBase
     {
-        private int _columnCount;
-        private int _columnOffset;
-        private bool _convertToExternal;
-        private ICalcSource _extSource;
-        private CellRange _fromRange;
-        private bool _isCopy;
-        private bool _offsetForDependency;
-        private int _rowCount;
-        private int _rowOffset;
+        int _columnCount;
+        int _columnOffset;
+        bool _convertToExternal;
+        ICalcSource _extSource;
+        CellRange _fromRange;
+        bool _isCopy;
+        bool _offsetForDependency;
+        int _rowCount;
+        int _rowOffset;
 
         public MoveVisitor(CellRange fromRange, int rowOffset, int columnOffset, int rowCount, int columnCount, bool offsetForDependency, ICalcSource extSource, bool convertToExternal, ICalcSource currentSource, bool isCopy) : base(currentSource)
         {
@@ -56,7 +56,7 @@ namespace Dt.Cells.Data
             return this.Visit(expr, baseRow, baseColumn);
         }
 
-        private bool NeedMove(int row, int column, int endRow, int endColumn)
+        bool NeedMove(int row, int column, int endRow, int endColumn)
         {
             if (((this._rowOffset != 0) || (this._columnOffset != 0)) && ((((row >= this._fromRange.Row) && (row < (this._fromRange.Row + this._fromRange.RowCount))) || ((this._fromRange.Row == -1) || (row == -1))) && (((endRow < (this._fromRange.Row + this._rowCount)) || (this._fromRange.Row == -1)) || ((endRow == -1) || (this._rowCount == 0x7fffffff)))))
             {

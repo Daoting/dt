@@ -19,22 +19,22 @@ namespace Dt.Cells.Data
     /// </summary>
     public class ThemeColor : ICloneable
     {
-        private const int ACCENT1 = 4;
-        private const int ACCENT2 = 5;
-        private const int ACCENT3 = 6;
-        private const int ACCENT4 = 7;
-        private const int ACCENT5 = 8;
-        private const int ACCENT6 = 9;
-        private const int BACKCOLOR1 = 0;
-        private const int BACKCOLOR2 = 1;
-        private const int colorCount = 12;
-        private Windows.UI.Color[] colorList;
-        private const int FHYPERLINK = 11;
-        private const int HYPERLINK = 10;
-        private bool isDirty;
-        private string name;
-        private const int TEXTCOLOR1 = 2;
-        private const int TEXTCOLOR2 = 3;
+        const int ACCENT1 = 4;
+        const int ACCENT2 = 5;
+        const int ACCENT3 = 6;
+        const int ACCENT4 = 7;
+        const int ACCENT5 = 8;
+        const int ACCENT6 = 9;
+        const int BACKCOLOR1 = 0;
+        const int BACKCOLOR2 = 1;
+        const int colorCount = 12;
+        Windows.UI.Color[] colorList;
+        const int FHYPERLINK = 11;
+        const int HYPERLINK = 10;
+        bool isDirty;
+        string name;
+        const int TEXTCOLOR1 = 2;
+        const int TEXTCOLOR2 = 3;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.ThemeColor" /> class.

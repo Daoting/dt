@@ -22,9 +22,9 @@ namespace Dt.Cells.Data
 {
     internal class WorksheetSparklineGroupManager : IRangeSupport, ICrossSheetRangeSupport, IDisposable, IXmlSerializable
     {
-        private ICalcEvaluator evaluator;
-        private List<SparklineGroup> groups;
-        private ISparklineSheet sheet;
+        ICalcEvaluator evaluator;
+        List<SparklineGroup> groups;
+        ISparklineSheet sheet;
 
         /// <summary>
         /// This method is only used for XML deserialization. Do not use it in other cases.
@@ -47,7 +47,7 @@ namespace Dt.Cells.Data
             group.SparklineGroupManager = this;
         }
 
-        private static CalcExpression AddColumnRange(int column, int columnCount, CalcExpression dataRange)
+        static CalcExpression AddColumnRange(int column, int columnCount, CalcExpression dataRange)
         {
             CalcRangeExpression expression = dataRange as CalcRangeExpression;
             if (expression != null)
@@ -105,7 +105,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private static CalcExpression AddRowRange(int row, int rowCount, CalcExpression dataRange)
+        static CalcExpression AddRowRange(int row, int rowCount, CalcExpression dataRange)
         {
             CalcRangeExpression expression = dataRange as CalcRangeExpression;
             if (expression != null)
@@ -171,7 +171,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private static bool CanOffset(CalcExpression exp, int offsetRow, int offsetColumn, int MAX_ROW_COUNT, int MAX_COLUMN_COUNT)
+        static bool CanOffset(CalcExpression exp, int offsetRow, int offsetColumn, int MAX_ROW_COUNT, int MAX_COLUMN_COUNT)
         {
             CellRange expressionRange = GetExpressionRange(exp);
             if (expressionRange == null)
@@ -222,7 +222,7 @@ namespace Dt.Cells.Data
             return this.Groups.Contains(group);
         }
 
-        private static bool ContainsCell(CalcExpression exp, int row, int column)
+        static bool ContainsCell(CalcExpression exp, int row, int column)
         {
             CalcRangeExpression expression = exp as CalcRangeExpression;
             if (expression != null)
@@ -237,7 +237,7 @@ namespace Dt.Cells.Data
             return ((((row >= expression2.StartRow) && (row <= expression2.EndRow)) && (column >= expression2.StartColumn)) && (column <= expression2.EndColumn));
         }
 
-        private static CalcExpression ConvertToExternal(ICalcSource extSource, CalcExpression exp)
+        static CalcExpression ConvertToExternal(ICalcSource extSource, CalcExpression exp)
         {
             if (exp is CalcRangeExpression)
             {
@@ -404,7 +404,7 @@ namespace Dt.Cells.Data
             this.Groups.Clear();
         }
 
-        private Sparkline Find(int row, int column)
+        Sparkline Find(int row, int column)
         {
             foreach (SparklineGroup group in this.Groups)
             {
@@ -420,7 +420,7 @@ namespace Dt.Cells.Data
             return null;
         }
 
-        private static CellRange GetExpressionRange(CalcExpression exp)
+        static CellRange GetExpressionRange(CalcExpression exp)
         {
             if (exp is CalcRangeExpression)
             {
@@ -533,7 +533,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void MoveDataRange(int fromRow, int fromColumn, int toRow, int toColumn, int rowCount, int columnCount)
+        void MoveDataRange(int fromRow, int fromColumn, int toRow, int toColumn, int rowCount, int columnCount)
         {
             CellRange range = new CellRange(fromRow, fromColumn, rowCount, columnCount);
             int row = toRow - fromRow;
@@ -564,7 +564,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void MoveDataRange(Worksheet src, int fromRow, int fromColumn, int toRow, int toColumn, int rowCount, int columnCount)
+        void MoveDataRange(Worksheet src, int fromRow, int fromColumn, int toRow, int toColumn, int rowCount, int columnCount)
         {
             if (src == (this.Sheet as Worksheet))
             {
@@ -602,7 +602,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void NotifyCellValueChanged(int row, int column)
+        void NotifyCellValueChanged(int row, int column)
         {
             foreach (SparklineGroup group in this.Groups)
             {
@@ -626,7 +626,7 @@ namespace Dt.Cells.Data
             group.SparklineGroupManager = null;
         }
 
-        private static CalcExpression RemoveColumnRange(int column, int columnCount, CalcExpression dataRange)
+        static CalcExpression RemoveColumnRange(int column, int columnCount, CalcExpression dataRange)
         {
             int targetEnd = (column + columnCount) - 1;
             CalcRangeExpression expression = dataRange as CalcRangeExpression;
@@ -713,7 +713,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private static CalcExpression RemoveRowRange(int row, int rowCount, CalcExpression dataRange)
+        static CalcExpression RemoveRowRange(int row, int rowCount, CalcExpression dataRange)
         {
             int targetEnd = (row + rowCount) - 1;
             CalcRangeExpression expression = dataRange as CalcRangeExpression;
@@ -814,7 +814,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private static bool SameSource(ICalcSource source, CalcExpression exp)
+        static bool SameSource(ICalcSource source, CalcExpression exp)
         {
             if (exp is CalcExternalExpression)
             {
@@ -823,7 +823,7 @@ namespace Dt.Cells.Data
             return true;
         }
 
-        private void Sheet_CellChanged(object sender, CellChangedEventArgs e)
+        void Sheet_CellChanged(object sender, CellChangedEventArgs e)
         {
             if (e.PropertyName == "Value")
             {
@@ -831,7 +831,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private static void SubCat(int sourceStart, int sourceEnd, int targetStart, int targetEnd, ref int resultStart, ref int resultEnd)
+        static void SubCat(int sourceStart, int sourceEnd, int targetStart, int targetEnd, ref int resultStart, ref int resultEnd)
         {
             if (targetEnd < sourceStart)
             {

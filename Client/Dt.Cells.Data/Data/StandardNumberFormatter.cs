@@ -23,32 +23,32 @@ namespace Dt.Cells.Data
     /// </summary>
     internal sealed class StandardNumberFormatter : IFormatter, IXmlSerializable
     {
-        private static readonly string CurrencyPattern1 = "c";
-        private static readonly string CurrencyPattern2 = "C";
-        private static readonly string DecimalPattern1 = "d";
-        private static readonly string DecimalPattern2 = "D";
-        private static readonly string FixedPointPattern1 = "f";
-        private static readonly string FixedPointPattern2 = "F";
+        static readonly string CurrencyPattern1 = "c";
+        static readonly string CurrencyPattern2 = "C";
+        static readonly string DecimalPattern1 = "d";
+        static readonly string DecimalPattern2 = "D";
+        static readonly string FixedPointPattern1 = "f";
+        static readonly string FixedPointPattern2 = "F";
         /// <summary>
         /// the format provider.
         /// </summary>
-        private NumberFormatInfo formatProvider;
+        NumberFormatInfo formatProvider;
         /// <summary>
         /// the format string
         /// </summary>
-        private string formatString;
-        private static readonly string GeneralPattern1 = "g";
-        private static readonly string GeneralPattern2 = "G";
-        private static readonly string HexadecimalPattern1 = "x";
-        private static readonly string HexadecimalPattern2 = "X";
-        private static readonly string NumberPattern1 = "n";
-        private static readonly string NumberPattern2 = "N";
-        private static readonly string PercentPattern1 = "p";
-        private static readonly string PercentPattern2 = "P";
-        private static readonly string RoundTripPattern1 = "r";
-        private static readonly string RoundTripPattern2 = "R";
-        private static readonly string ScientificPattern1 = "e";
-        private static readonly string ScientificPattern2 = "E";
+        string formatString;
+        static readonly string GeneralPattern1 = "g";
+        static readonly string GeneralPattern2 = "G";
+        static readonly string HexadecimalPattern1 = "x";
+        static readonly string HexadecimalPattern2 = "X";
+        static readonly string NumberPattern1 = "n";
+        static readonly string NumberPattern2 = "N";
+        static readonly string PercentPattern1 = "p";
+        static readonly string PercentPattern2 = "P";
+        static readonly string RoundTripPattern1 = "r";
+        static readonly string RoundTripPattern2 = "R";
+        static readonly string ScientificPattern1 = "e";
+        static readonly string ScientificPattern2 = "E";
 
         /// <summary>
         /// Creates a new standard number format.
@@ -77,7 +77,7 @@ namespace Dt.Cells.Data
         /// <param name="c">The precision char for string format.</param>
         /// <param name="count">The number of the decimal precision.</param>
         /// <returns>Returns the string format.</returns>
-        private static string AddDecimalPrecision(string baseFormat, char c, int count)
+        static string AddDecimalPrecision(string baseFormat, char c, int count)
         {
             string str = baseFormat;
             if (count > 0)
@@ -94,7 +94,7 @@ namespace Dt.Cells.Data
         /// <param name="c">The precision char for string format.</param>
         /// <param name="count">The number of the decimal precision.</param>
         /// <returns>Returns the string format.</returns>
-        private static string AddIntegralPrecision(string baseFormat, char c, int count)
+        static string AddIntegralPrecision(string baseFormat, char c, int count)
         {
             string str = baseFormat;
             if (count > 0)

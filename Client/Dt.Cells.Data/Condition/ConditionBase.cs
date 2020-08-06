@@ -24,10 +24,10 @@ namespace Dt.Cells.Data
     /// </summary>
     public abstract class ConditionBase : ICloneable, IConditionalFormula, IXmlSerializable
     {
-        private int columnOffset;
-        private ValueObject expected;
-        private bool ignoreBlank = false;
-        private int rowOffset;
+        int columnOffset;
+        ValueObject expected;
+        bool ignoreBlank = false;
+        int rowOffset;
 
         /// <summary>
         /// Creates a new base condition with the specified expected content for the specified cell.

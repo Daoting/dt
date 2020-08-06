@@ -23,9 +23,9 @@ namespace Dt.Cells.Data
     /// </summary>
     public class ChartTitle : SpreadChartTextElement
     {
-        private Dt.Cells.Data.TitleType _titleType;
-        private string DefaultAxisTitle;
-        private string DefaultChartTitle;
+        Dt.Cells.Data.TitleType _titleType;
+        string DefaultAxisTitle;
+        string DefaultChartTitle;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.ChartTitle" /> class.
@@ -42,7 +42,7 @@ namespace Dt.Cells.Data
             this.DefaultChartTitle = ResourceStrings.DefaultChartTitle;
         }
 
-        private void FormatInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void FormatInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             ((ISpreadChartElement) this).NotifyElementChanged(e.PropertyName);
         }

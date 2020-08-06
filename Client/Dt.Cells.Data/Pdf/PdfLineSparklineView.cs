@@ -21,7 +21,7 @@ namespace Dt.Cells.Data
     /// </summary>
     internal class PdfLineSparklineView : PdfBaseSparklineView
     {
-        private List<Windows.UI.Xaml.Shapes.Line> lines;
+        List<Windows.UI.Xaml.Shapes.Line> lines;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.PdfLineSparklineView" /> class.
@@ -60,7 +60,7 @@ namespace Dt.Cells.Data
             return num;
         }
 
-        private void MeasureLines(Windows.Foundation.Size availableSize)
+        void MeasureLines(Windows.Foundation.Size availableSize)
         {
             LineSparklineViewInfo sparklineViewInfo = base.SparklineViewInfo as LineSparklineViewInfo;
             if (sparklineViewInfo != null)

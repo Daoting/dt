@@ -25,9 +25,9 @@ namespace Dt.Cells.Data
     /// </summary>
     public class Legend : SpreadChartTextElement
     {
-        private LegendAlignment _alignment;
-        private Windows.UI.Xaml.Controls.Orientation _orientation;
-        private bool _overlapChart;
+        LegendAlignment _alignment;
+        Windows.UI.Xaml.Controls.Orientation _orientation;
+        bool _overlapChart;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.Legend" /> class.
@@ -42,7 +42,7 @@ namespace Dt.Cells.Data
             this._alignment = LegendAlignment.MiddleRight;
         }
 
-        private void FormatInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void FormatInfo_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             ((ISpreadChartElement) this).NotifyElementChanged(e.PropertyName);
         }

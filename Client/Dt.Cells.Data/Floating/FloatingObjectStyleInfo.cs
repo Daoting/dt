@@ -25,51 +25,51 @@ namespace Dt.Cells.Data
 {
     internal class FloatingObjectStyleInfo : INotifyPropertyChanged, ICloneable, IXmlSerializable
     {
-        private double _cornerRadius;
-        private bool _cornerRadiusSet;
-        private Brush _fill;
-        private bool _fillSet;
-        private string _fillThemeColor;
-        private bool _fillThemeColorSet;
-        private Windows.UI.Xaml.Media.FontFamily _fontFamily;
-        private bool _fontFamilySet;
-        private double _fontSize;
-        private bool _fontSizeSet;
-        private Windows.UI.Text.FontStretch _fontStretch;
-        private bool _fontStretchSet;
-        private Windows.UI.Text.FontStyle _fontStyle;
-        private bool _fontStyleSet;
-        private string _fontTheme;
-        private bool _fontThemeSet;
-        private Windows.UI.Text.FontWeight _fontWeight;
-        private bool _fontWeightSet;
-        private Brush _foreground;
-        private bool _foregroundSet;
-        private string _foregroundThemeColor;
-        private bool _foregroundThemeColorSet;
-        private IFormatter _formatter;
-        private bool _formatterSet;
-        private ArrowSettings _lineBeginArrowSettings;
-        private bool _lineBeginArrowSettingsSet;
-        private PenLineCap _lineCapType;
-        private bool _lineCapTypeSet;
-        private ArrowSettings _lineEndArrowSettings;
-        private bool _lineEndArrowSettingsSet;
-        private PenLineJoin _lineJoinType;
-        private bool _lineJoinTypeSet;
-        private Brush _stroke;
-        private Dt.Cells.Data.StrokeDashType _strokeDashType;
-        private bool _strokeDashTypeSet;
-        private bool _strokeSet;
-        private string _strokeThemeColor;
-        private bool _strokeThemeColorSet;
-        private double _strokeThickness;
-        private bool _strokeThicknessSet;
-        private WorkingState _suspendState;
-        private IThemeSupport _themeContext;
+        double _cornerRadius;
+        bool _cornerRadiusSet;
+        Brush _fill;
+        bool _fillSet;
+        string _fillThemeColor;
+        bool _fillThemeColorSet;
+        Windows.UI.Xaml.Media.FontFamily _fontFamily;
+        bool _fontFamilySet;
+        double _fontSize;
+        bool _fontSizeSet;
+        Windows.UI.Text.FontStretch _fontStretch;
+        bool _fontStretchSet;
+        Windows.UI.Text.FontStyle _fontStyle;
+        bool _fontStyleSet;
+        string _fontTheme;
+        bool _fontThemeSet;
+        Windows.UI.Text.FontWeight _fontWeight;
+        bool _fontWeightSet;
+        Brush _foreground;
+        bool _foregroundSet;
+        string _foregroundThemeColor;
+        bool _foregroundThemeColorSet;
+        IFormatter _formatter;
+        bool _formatterSet;
+        ArrowSettings _lineBeginArrowSettings;
+        bool _lineBeginArrowSettingsSet;
+        PenLineCap _lineCapType;
+        bool _lineCapTypeSet;
+        ArrowSettings _lineEndArrowSettings;
+        bool _lineEndArrowSettingsSet;
+        PenLineJoin _lineJoinType;
+        bool _lineJoinTypeSet;
+        Brush _stroke;
+        Dt.Cells.Data.StrokeDashType _strokeDashType;
+        bool _strokeDashTypeSet;
+        bool _strokeSet;
+        string _strokeThemeColor;
+        bool _strokeThemeColorSet;
+        double _strokeThickness;
+        bool _strokeThicknessSet;
+        WorkingState _suspendState;
+        IThemeSupport _themeContext;
         internal static string FONTTHEME_BODY = "Body";
         internal static string FONTTHEME_HEADING = "Headings";
-        private static PropertyInfo[] infos = null;
+        static PropertyInfo[] infos = null;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -223,7 +223,7 @@ namespace Dt.Cells.Data
             return "Normal";
         }
 
-        private void Init()
+        void Init()
         {
             this._fontTheme = null;
             this._fontFamily = null;
@@ -268,17 +268,17 @@ namespace Dt.Cells.Data
             this._lineEndArrowSettingsSet = false;
         }
 
-        private void LineBeginArrowSettings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void LineBeginArrowSettings_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             this.RaisePropertyChanged("LineBeginArrowSettings");
         }
 
-        private void LineEndArrowSettings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void LineEndArrowSettings_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             this.RaisePropertyChanged("LineEndArrowSettings");
         }
 
-        private void RaisePropertyChanged(string property)
+        void RaisePropertyChanged(string property)
         {
             if (!this._suspendState.IsWorking && (this.PropertyChanged != null))
             {

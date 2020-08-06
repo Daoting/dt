@@ -18,7 +18,7 @@ namespace Dt.Cells.Data
     /// </summary>
     public class ChartChangedBaseEventArgs : EventArgs
     {
-        private Dt.Cells.Data.ChartArea _chartArea;
+        Dt.Cells.Data.ChartArea _chartArea;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.ChartChangedBaseEventArgs" /> class.

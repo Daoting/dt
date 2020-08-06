@@ -25,7 +25,7 @@ namespace Dt.Cells.Data
 {
     internal static class ConverterHelper
     {
-        private static string AddFormulaPrefixSymbol(this string formulaExp)
+        static string AddFormulaPrefixSymbol(this string formulaExp)
         {
             if (string.IsNullOrWhiteSpace(formulaExp))
             {
@@ -34,7 +34,7 @@ namespace Dt.Cells.Data
             return ("=" + formulaExp);
         }
 
-        private static string AddStringPrefixSymbol(this string formulaExp)
+        static string AddStringPrefixSymbol(this string formulaExp)
         {
             if (!string.IsNullOrWhiteSpace(formulaExp) && (formulaExp.Length > 2))
             {
@@ -43,7 +43,7 @@ namespace Dt.Cells.Data
             return formulaExp;
         }
 
-        private static double ConvertToDouble(object value)
+        static double ConvertToDouble(object value)
         {
             if (value == null)
             {
@@ -54,7 +54,7 @@ namespace Dt.Cells.Data
             return num;
         }
 
-        private static string ConvertValueToFormulaIfNeeded(string value)
+        static string ConvertValueToFormulaIfNeeded(string value)
         {
             int num;
             float num2;
@@ -79,7 +79,7 @@ namespace Dt.Cells.Data
             return ("=" + value);
         }
 
-        private static List<ConditionBase> ExpanedRalationCondtion(RelationCondition relationCondtion)
+        static List<ConditionBase> ExpanedRalationCondtion(RelationCondition relationCondtion)
         {
             List<ConditionBase> list = new List<ConditionBase>();
             Queue<ConditionBase> queue = new Queue<ConditionBase>();
@@ -122,7 +122,7 @@ namespace Dt.Cells.Data
             return false;
         }
 
-        private static ExcelFilterOperator GetCellValueConditonOperator(CellValueCondition cellValueCondtion)
+        static ExcelFilterOperator GetCellValueConditonOperator(CellValueCondition cellValueCondtion)
         {
             ExcelFilterOperator none = ExcelFilterOperator.None;
             switch (cellValueCondtion.CompareType)
@@ -148,7 +148,7 @@ namespace Dt.Cells.Data
             return none;
         }
 
-        private static void GetDateExConditionRange(DateOccurringType dateOccurringType, ref double from, ref double to)
+        static void GetDateExConditionRange(DateOccurringType dateOccurringType, ref double from, ref double to)
         {
             switch (dateOccurringType)
             {
@@ -282,7 +282,7 @@ namespace Dt.Cells.Data
             return new ExcelColor(ExcelColorType.Theme, themeColor.GetThemeColorIndex(false), result);
         }
 
-        private static string GetFontFamilyName(IExcelFont font)
+        static string GetFontFamilyName(IExcelFont font)
         {
             if (font.FontName == null)
             {
@@ -330,7 +330,7 @@ namespace Dt.Cells.Data
             return source;
         }
 
-        private static string GetFormula(object info)
+        static string GetFormula(object info)
         {
             if (info is Tuple<object, object, ComparisonOperator>)
             {
@@ -358,7 +358,7 @@ namespace Dt.Cells.Data
             return str;
         }
 
-        private static ExcelFilterOperator GetTextConditonOperator(TextCondition textCondtion)
+        static ExcelFilterOperator GetTextConditonOperator(TextCondition textCondtion)
         {
             switch (textCondtion.CompareType)
             {
@@ -377,7 +377,7 @@ namespace Dt.Cells.Data
             return ExcelFilterOperator.Equal;
         }
 
-        private static string GetTextCondtionValue(string originalValue, TextCompareType textCompareType)
+        static string GetTextCondtionValue(string originalValue, TextCompareType textCompareType)
         {
             switch (textCompareType)
             {
@@ -585,7 +585,7 @@ namespace Dt.Cells.Data
             return flag;
         }
 
-        private static bool IsNullOrEmpty(this IExcelBorderSide borderSide)
+        static bool IsNullOrEmpty(this IExcelBorderSide borderSide)
         {
             return ((borderSide == null) || ((borderSide.LineStyle == ExcelBorderStyle.None) && (borderSide.Color == null)));
         }
@@ -621,7 +621,7 @@ namespace Dt.Cells.Data
             return expression;
         }
 
-        private static void SetStyleInfoBorders(IExcelBorder border, StyleInfo styleInfo, Workbook workbook)
+        static void SetStyleInfoBorders(IExcelBorder border, StyleInfo styleInfo, Workbook workbook)
         {
             if (!border.Left.IsNullOrEmpty())
             {
@@ -657,7 +657,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private static void SetStyleInfoFill(FillPatternType fillPattern, IExcelColor patternColor, IExcelColor patternBackgroundColor, StyleInfo styleInfo, Workbook workbook)
+        static void SetStyleInfoFill(FillPatternType fillPattern, IExcelColor patternColor, IExcelColor patternBackgroundColor, StyleInfo styleInfo, Workbook workbook)
         {
             if ((fillPattern == FillPatternType.Solid) && (patternColor != null))
             {
@@ -719,7 +719,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private static void SetStyleInfoFont(IExcelFont font, StyleInfo styleInfo, Workbook workbook)
+        static void SetStyleInfoFont(IExcelFont font, StyleInfo styleInfo, Workbook workbook)
         {
             string fontFamilyName = GetFontFamilyName(font);
             if (!string.IsNullOrWhiteSpace(fontFamilyName))
@@ -772,7 +772,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private static BorderLine ToBorderLine(this IExcelBorderSide borderSide, Workbook workbook)
+        static BorderLine ToBorderLine(this IExcelBorderSide borderSide, Workbook workbook)
         {
             if (borderSide.LineStyle == ExcelBorderStyle.None)
             {

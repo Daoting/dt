@@ -23,15 +23,15 @@ namespace Dt.Cells.Data
     /// </summary>
     public class ConditionalFormat : IRangeSupport
     {
-        private WorksheetConditionalGraph conditionalGrpah;
+        WorksheetConditionalGraph conditionalGrpah;
         /// <summary>
         /// The rules.
         /// </summary>
-        private Collection<FormattingRuleBase> rules;
+        Collection<FormattingRuleBase> rules;
         /// <summary>
         /// The sheet.
         /// </summary>
-        private Worksheet worksheet;
+        Worksheet worksheet;
 
         internal event EventHandler<RulesChangedEventArgs> RulesChanged;
 
@@ -306,7 +306,7 @@ namespace Dt.Cells.Data
         /// <param name="column">The column index of the first cell in the range.</param>
         /// <param name="rowCount">The number of rows in the range.</param>
         /// <param name="columnCount">The number of columns in the range.</param>
-        private void ClearInternal(int row, int column, int rowCount, int columnCount)
+        void ClearInternal(int row, int column, int rowCount, int columnCount)
         {
             this.ClearInternal(row, column, rowCount, columnCount, true);
         }
@@ -319,7 +319,7 @@ namespace Dt.Cells.Data
         /// <param name="rowCount">The number of rows in the selected range.</param>
         /// <param name="columnCount">The number of columns in the selected range.</param>
         /// <param name="removeEmptyRule">If set to <c>true</c> removes the rule that does not contain a cell range.</param>
-        private void ClearInternal(int row, int column, int rowCount, int columnCount, bool removeEmptyRule)
+        void ClearInternal(int row, int column, int rowCount, int columnCount, bool removeEmptyRule)
         {
             List<FormattingRuleBase> list = new List<FormattingRuleBase>();
             if ((this.rules != null) && (this.rules.Count > 0))
@@ -366,7 +366,7 @@ namespace Dt.Cells.Data
         /// <summary>
         /// Clears the null ref rules.
         /// </summary>
-        private void ClearNullRefRules()
+        void ClearNullRefRules()
         {
             if (this.rules != null)
             {
@@ -420,7 +420,7 @@ namespace Dt.Cells.Data
         /// <param name="toColumn">Column index at which to paste the cell range</param>
         /// <param name="rowCount">Number of rows to copy</param>
         /// <param name="columnCount">Number of columns to copy</param>
-        private void CopyInternal(int fromRow, int fromColumn, int toRow, int toColumn, int rowCount, int columnCount)
+        void CopyInternal(int fromRow, int fromColumn, int toRow, int toColumn, int rowCount, int columnCount)
         {
             if ((this.rules != null) && (this.rules.Count > 0))
             {
@@ -906,7 +906,7 @@ namespace Dt.Cells.Data
         /// <param name="rowCount">Number of rows to move</param>
         /// <param name="columnCount">Number of columns to move</param>
         /// <param name="removeEmptyRule"></param>
-        private void MoveInternal(int fromRow, int fromColumn, int toRow, int toColumn, int rowCount, int columnCount, bool removeEmptyRule)
+        void MoveInternal(int fromRow, int fromColumn, int toRow, int toColumn, int rowCount, int columnCount, bool removeEmptyRule)
         {
             List<FormattingRuleBase> list = new List<FormattingRuleBase>();
             new List<FormattingRuleBase>();
@@ -981,7 +981,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="rule">The rule.</param>
         /// <param name="changedAction">The rule changed action</param>
-        private void RaiseRuleChanged(FormattingRuleBase rule, RulesChangedAction changedAction)
+        void RaiseRuleChanged(FormattingRuleBase rule, RulesChangedAction changedAction)
         {
             if (this.RulesChanged != null)
             {
@@ -1047,7 +1047,7 @@ namespace Dt.Cells.Data
         /// <param name="toColumn">Column index of the destination range</param>
         /// <param name="rowCount">Number of rows to swap</param>
         /// <param name="columnCount">Number of columns to swap</param>
-        private void SwapInternal(int fromRow, int fromColumn, int toRow, int toColumn, int rowCount, int columnCount)
+        void SwapInternal(int fromRow, int fromColumn, int toRow, int toColumn, int rowCount, int columnCount)
         {
             new List<FormattingRuleBase>();
             new List<FormattingRuleBase>();
@@ -1220,7 +1220,7 @@ namespace Dt.Cells.Data
         /// Gets the rules.
         /// </summary>
         /// <value>The rules.</value>
-        private Collection<FormattingRuleBase> Rules
+        Collection<FormattingRuleBase> Rules
         {
             get
             {

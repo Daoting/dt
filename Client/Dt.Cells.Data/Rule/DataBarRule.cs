@@ -22,21 +22,21 @@ namespace Dt.Cells.Data
     /// </summary>
     public sealed class DataBarRule : ScaleRule
     {
-        private Windows.UI.Color axisColor;
-        private DataBarAxisPosition axisPosition;
-        private Windows.UI.Color borderColor;
-        private Windows.UI.Color color;
-        private BarDirection direction;
-        private bool gradient;
-        private IActualValue lastActualValue;
-        private double maxScale;
-        private double minScale;
-        private Windows.UI.Color negativeBorderColor;
-        private Windows.UI.Color negativeFillColor;
-        private bool showBarOnly;
-        private bool showBorder;
-        private bool useNegativeBorderColor;
-        private bool useNegativeFillColor;
+        Windows.UI.Color axisColor;
+        DataBarAxisPosition axisPosition;
+        Windows.UI.Color borderColor;
+        Windows.UI.Color color;
+        BarDirection direction;
+        bool gradient;
+        IActualValue lastActualValue;
+        double maxScale;
+        double minScale;
+        Windows.UI.Color negativeBorderColor;
+        Windows.UI.Color negativeFillColor;
+        bool showBarOnly;
+        bool showBorder;
+        bool useNegativeBorderColor;
+        bool useNegativeFillColor;
 
         /// <summary>
         /// Constructs a data bar rule.
@@ -160,7 +160,7 @@ namespace Dt.Cells.Data
             return null;
         }
 
-        private double EvaluateAutoScale(double currentValue, double minValue, double maxValue, out double axisScale)
+        double EvaluateAutoScale(double currentValue, double minValue, double maxValue, out double axisScale)
         {
             double num = Math.Abs((double) (maxValue - minValue));
             if ((maxValue > 0.0) && (minValue >= 0.0))
@@ -247,7 +247,7 @@ namespace Dt.Cells.Data
             return -1.0;
         }
 
-        private double EvaluateMidScale(double currentValue, double minValue, double maxValue, out double axisScale)
+        double EvaluateMidScale(double currentValue, double minValue, double maxValue, out double axisScale)
         {
             axisScale = 0.5;
             double num = Math.Abs((double) (maxValue - minValue));
@@ -313,7 +313,7 @@ namespace Dt.Cells.Data
             return -1.0;
         }
 
-        private double EvaluateNoneScale(double currentValue, double minValue, double maxValue, out double axisScale)
+        double EvaluateNoneScale(double currentValue, double minValue, double maxValue, out double axisScale)
         {
             axisScale = 0.0;
             if (maxValue == minValue)
@@ -339,7 +339,7 @@ namespace Dt.Cells.Data
             return ((currentValue - minValue) / (maxValue - minValue));
         }
 
-        private double EvaluateScale(double currentValue, double minValue, double maxValue, out double axisScale)
+        double EvaluateScale(double currentValue, double minValue, double maxValue, out double axisScale)
         {
             if (this.axisPosition == DataBarAxisPosition.Automatic)
             {
@@ -352,7 +352,7 @@ namespace Dt.Cells.Data
             return this.EvaluateNoneScale(currentValue, minValue, maxValue, out axisScale);
         }
 
-        private void Init(Windows.UI.Color color)
+        void Init(Windows.UI.Color color)
         {
             this.minScale = 0.0;
             this.maxScale = 1.0;

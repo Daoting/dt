@@ -17,10 +17,10 @@ namespace Dt.Cells.Data
 {
     internal class DataValidationConditionalGraph : ConditionalGraph, IRangeSupport, ICrossSheetRangeSupport
     {
-        private Dt.Cells.Data.ReferenceStyle _referenceStyle;
-        private int _sheetColumnCount;
-        private int _sheetRowCount;
-        private ICalcSource _source;
+        Dt.Cells.Data.ReferenceStyle _referenceStyle;
+        int _sheetColumnCount;
+        int _sheetRowCount;
+        ICalcSource _source;
 
         public DataValidationConditionalGraph(ICalcSource source, Dt.Cells.Data.ReferenceStyle referenceStyle, int sheetRowCount, int sheetColumnCount)
         {
@@ -81,7 +81,7 @@ namespace Dt.Cells.Data
             throw new InvalidOperationException();
         }
 
-        private Dictionary<CalcLocalIdentity, List<ConditionalGraph.ConditionalIdentity>> GetAllFromulas(int row, int col, int rowCount, int colCount)
+        Dictionary<CalcLocalIdentity, List<ConditionalGraph.ConditionalIdentity>> GetAllFromulas(int row, int col, int rowCount, int colCount)
         {
             Dictionary<CalcLocalIdentity, List<ConditionalGraph.ConditionalIdentity>> dictionary = new Dictionary<CalcLocalIdentity, List<ConditionalGraph.ConditionalIdentity>>();
             rowCount = (rowCount <= 0) ? 1 : rowCount;

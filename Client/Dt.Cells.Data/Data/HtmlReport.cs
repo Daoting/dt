@@ -26,26 +26,26 @@ namespace Dt.Cells.Data
     /// </summary>
     internal static class HtmlReport
     {
-        private const string _bottomLeftCorner = "tfoot th.l";
-        private const string _bottomRightCorner = "tfoot th.r";
-        private const string _cells = "tbody td";
-        private const string _centerClass = "c";
-        private const string _classPrefix = ".";
-        private const string _columnFooter = "tfoot th.c";
-        private const string _columnHeader = "thead th.c";
-        private const string _defaultHeaderBKColor = "#9EB6CE";
-        private const string _defaultSheetName = "sdm";
-        private const string _idPrefix = "#";
-        private const string _leftClass = "l";
-        private const string _noData = "No Data";
-        private const string _rightClass = "r";
-        private const string _rowFooter = "tbody th.r";
-        private const string _rowHeader = "tbody th.l";
-        private const string _topLeftCorner = "thead th.l";
-        private const string _topRightCorner = "thead th.r";
-        private static Dictionary<ulong, StyleInfo> styleCellDictionary = new Dictionary<ulong, StyleInfo>();
-        private static Dictionary<ulong, StyleInfo> styleColumnHeaderDictionary = new Dictionary<ulong, StyleInfo>();
-        private static Dictionary<ulong, StyleInfo> styleRowHeaderDicitonary = new Dictionary<ulong, StyleInfo>();
+        const string _bottomLeftCorner = "tfoot th.l";
+        const string _bottomRightCorner = "tfoot th.r";
+        const string _cells = "tbody td";
+        const string _centerClass = "c";
+        const string _classPrefix = ".";
+        const string _columnFooter = "tfoot th.c";
+        const string _columnHeader = "thead th.c";
+        const string _defaultHeaderBKColor = "#9EB6CE";
+        const string _defaultSheetName = "sdm";
+        const string _idPrefix = "#";
+        const string _leftClass = "l";
+        const string _noData = "No Data";
+        const string _rightClass = "r";
+        const string _rowFooter = "tbody th.r";
+        const string _rowHeader = "tbody th.l";
+        const string _topLeftCorner = "thead th.l";
+        const string _topRightCorner = "thead th.r";
+        static Dictionary<ulong, StyleInfo> styleCellDictionary = new Dictionary<ulong, StyleInfo>();
+        static Dictionary<ulong, StyleInfo> styleColumnHeaderDictionary = new Dictionary<ulong, StyleInfo>();
+        static Dictionary<ulong, StyleInfo> styleRowHeaderDicitonary = new Dictionary<ulong, StyleInfo>();
 
         /// <summary>
         /// Adds to style ex.
@@ -56,7 +56,7 @@ namespace Dt.Cells.Data
         /// <param name="td">The td.</param>
         /// <param name="area">The area.</param>
         /// <returns></returns>
-        private static string AddToStyleEx(StyleEx styleEx, int rowIndex, int columnIndex, TableCellEx td, SheetArea area)
+        static string AddToStyleEx(StyleEx styleEx, int rowIndex, int columnIndex, TableCellEx td, SheetArea area)
         {
             string str = styleEx.FindEquals(td.Styles);
             if (string.IsNullOrEmpty(str))
@@ -67,7 +67,7 @@ namespace Dt.Cells.Data
             return str;
         }
 
-        private static string ConvertFontWeight(FontWeight fontweight)
+        static string ConvertFontWeight(FontWeight fontweight)
         {
             return ((ushort) fontweight.Weight).ToString();
         }
@@ -84,7 +84,7 @@ namespace Dt.Cells.Data
         /// <param name="columnHeaders">if set to <c>true</c> [column headers].</param>
         /// <param name="styleEx">The style ex.</param>
         /// <returns></returns>
-        private static TableEx CreateTable(Worksheet worksheet, int row, int column, int rowCount, int columnCount, bool rowHeaders, bool columnHeaders, StyleEx styleEx)
+        static TableEx CreateTable(Worksheet worksheet, int row, int column, int rowCount, int columnCount, bool rowHeaders, bool columnHeaders, StyleEx styleEx)
         {
             TableEx table = new TableEx();
             PartsLayoutData layouts = new PartsLayoutData();
@@ -144,7 +144,7 @@ namespace Dt.Cells.Data
             return table;
         }
 
-        private static StyleInfo FindStyle(Worksheet worksheet, int r, int c, SheetArea area)
+        static StyleInfo FindStyle(Worksheet worksheet, int r, int c, SheetArea area)
         {
             ulong num = (ulong) r;
             num = num << 0x20;
@@ -191,7 +191,7 @@ namespace Dt.Cells.Data
             return info3;
         }
 
-        private static BorderLine GetBorderLine(Worksheet worksheet, int r, int c, SheetArea area, int border)
+        static BorderLine GetBorderLine(Worksheet worksheet, int r, int c, SheetArea area, int border)
         {
             StyleInfo info;
             if (((r > -1) && (r < worksheet.GetRowCount(area))) && ((c > -1) && (c < worksheet.GetColumnCount(area))))
@@ -222,7 +222,7 @@ namespace Dt.Cells.Data
             return null;
         }
 
-        private static string GetBorderString(string lineStyle, Windows.UI.Color color)
+        static string GetBorderString(string lineStyle, Windows.UI.Color color)
         {
             string str = null;
             if (lineStyle == "double")
@@ -259,7 +259,7 @@ namespace Dt.Cells.Data
         /// <param name="area">The area.</param>
         /// <param name="layouts">The layouts.</param>
         /// <returns></returns>
-        private static PartLayoutData GetColumnWidths(SheetArea area, PartsLayoutData layouts)
+        static PartLayoutData GetColumnWidths(SheetArea area, PartsLayoutData layouts)
         {
             PartLayoutData data = null;
             switch (area)
@@ -283,7 +283,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="name">The name.</param>
         /// <returns></returns>
-        private static string GetCSSFriendlyName(string name)
+        static string GetCSSFriendlyName(string name)
         {
             char[] chArray = @" #.\/@+>:{}<".ToCharArray();
             for (int i = 0; i < chArray.Length; i++)
@@ -293,7 +293,7 @@ namespace Dt.Cells.Data
             return name;
         }
 
-        private static Dictionary<string, string> GetGridlineStyle(BorderLine Line)
+        static Dictionary<string, string> GetGridlineStyle(BorderLine Line)
         {
             Dictionary<string, string> dictionary = new Dictionary<string, string>();
             dictionary["overflow"] = "hidden";
@@ -308,7 +308,7 @@ namespace Dt.Cells.Data
             return dictionary;
         }
 
-        private static string GetHtmlBorderString(Worksheet sheet, BorderLine border)
+        static string GetHtmlBorderString(Worksheet sheet, BorderLine border)
         {
             string str = null;
             try
@@ -349,7 +349,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private static string GetHtmlColor(Windows.UI.Color color)
+        static string GetHtmlColor(Windows.UI.Color color)
         {
             return string.Format("#{0:X2}{1:X2}{2:X2}", (object[]) new object[] { ((byte) color.R), ((byte) color.G), ((byte) color.B) });
         }
@@ -359,7 +359,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="fill">The fill.</param>
         /// <returns></returns>
-        private static string GetHtmlFillEffect(Brush fill)
+        static string GetHtmlFillEffect(Brush fill)
         {
             if (fill is SolidColorBrush)
             {
@@ -376,7 +376,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="area">The area.</param>
         /// <returns></returns>
-        private static SheetArea GetLeftSideSheetArea(SheetArea area)
+        static SheetArea GetLeftSideSheetArea(SheetArea area)
         {
             switch (area)
             {
@@ -399,7 +399,7 @@ namespace Dt.Cells.Data
         /// <param name="area">The area.</param>
         /// <param name="layouts">The layouts.</param>
         /// <returns></returns>
-        private static PartLayoutData GetRowHeights(SheetArea area, PartsLayoutData layouts)
+        static PartLayoutData GetRowHeights(SheetArea area, PartsLayoutData layouts)
         {
             PartLayoutData data = null;
             switch (area)
@@ -423,7 +423,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="area">The area.</param>
         /// <returns></returns>
-        private static int GetSheetAreaIndex(SheetArea area)
+        static int GetSheetAreaIndex(SheetArea area)
         {
             switch (area)
             {
@@ -442,7 +442,7 @@ namespace Dt.Cells.Data
             return -1;
         }
 
-        private static BorderLine MaxBorderLine(BorderLine l1, BorderLine l2, BorderLine gridLine)
+        static BorderLine MaxBorderLine(BorderLine l1, BorderLine l2, BorderLine gridLine)
         {
             if ((l1 != null) && (l1.Style == BorderLineStyle.Double))
             {
@@ -552,7 +552,7 @@ namespace Dt.Cells.Data
         /// <param name="rowHeaders">if set to <c>true</c> [row headers].</param>
         /// <param name="layouts">The layouts.</param>
         /// <param name="lastNonEmptyColumn">The lastNonEmptyColumn index.</param>
-        private static void SetColGroup(TableEx table, Worksheet worksheet, int column, int columnCount, bool rowHeaders, PartsLayoutData layouts, int lastNonEmptyColumn)
+        static void SetColGroup(TableEx table, Worksheet worksheet, int column, int columnCount, bool rowHeaders, PartsLayoutData layouts, int lastNonEmptyColumn)
         {
             double num = 0.0;
             PartLayoutData columnWidths = null;
@@ -589,7 +589,7 @@ namespace Dt.Cells.Data
             table.Styles["width"] = ElementEx.GetPixcel((int) num);
         }
 
-        private static void SetCornerCell(TableCellHeaderEx td, Worksheet worksheet)
+        static void SetCornerCell(TableCellHeaderEx td, Worksheet worksheet)
         {
             if (worksheet != null)
             {
@@ -611,7 +611,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private static void SetGridline(Worksheet worksheet, StyleEx styleEx, bool rowHeaders, bool columnHeaders)
+        static void SetGridline(Worksheet worksheet, StyleEx styleEx, bool rowHeaders, bool columnHeaders)
         {
             Dictionary<string, string> gridlineStyle = GetGridlineStyle(worksheet.GetGridLine(SheetArea.Cells));
             if (worksheet.ShowGridLine)
@@ -644,7 +644,7 @@ namespace Dt.Cells.Data
         /// <param name="rowIndex">Index of the row.</param>
         /// <param name="columnIndex">Index of the column.</param>
         /// <param name="styleEx">The style ex.</param>
-        private static void SetTableCell(TableCellEx td, Worksheet worksheet, SheetArea area, int rowIndex, int columnIndex, StyleEx styleEx)
+        static void SetTableCell(TableCellEx td, Worksheet worksheet, SheetArea area, int rowIndex, int columnIndex, StyleEx styleEx)
         {
             Cell cell = GetCell(worksheet, rowIndex, columnIndex, area);
             object obj1 = cell.Value;
@@ -808,7 +808,7 @@ namespace Dt.Cells.Data
         /// <param name="styleEx">The style ex.</param>
         /// <param name="lastNonEmptyRow">The last non empty row.</param>
         /// <param name="lastNonEmptyColumn">The last non empty column.</param>
-        private static void SetTablePart(TablePartEx part, SheetArea area, Worksheet worksheet, int rowStartIndex, int rowEndIndex, int columnStartIndex, int columnEndIndex, bool hasLeft, PartsLayoutData layouts, PartsSpanLayoutData spans, StyleEx styleEx, int lastNonEmptyRow, int lastNonEmptyColumn)
+        static void SetTablePart(TablePartEx part, SheetArea area, Worksheet worksheet, int rowStartIndex, int rowEndIndex, int columnStartIndex, int columnEndIndex, bool hasLeft, PartsLayoutData layouts, PartsSpanLayoutData spans, StyleEx styleEx, int lastNonEmptyRow, int lastNonEmptyColumn)
         {
             PartLayoutData rowHeights = GetRowHeights(area, layouts);
             List<CellRange> paintedCellRanges = new List<CellRange>();
@@ -870,7 +870,7 @@ namespace Dt.Cells.Data
         /// <param name="spans">The spans.</param>
         /// <param name="styleEx">The style ex.</param>
         /// <param name="paintedCellRanges">The painted cell ranges.</param>
-        private static void SetTableRow(TableRowEx tr, Worksheet worksheet, SheetArea area, int rowIndex, int rowStartIndex, int rowEndIndex, int columnStartIndex, int columnEndIndex, PartLayoutData columnWidths, SpanLayoutData spans, StyleEx styleEx, List<CellRange> paintedCellRanges)
+        static void SetTableRow(TableRowEx tr, Worksheet worksheet, SheetArea area, int rowIndex, int rowStartIndex, int rowEndIndex, int columnStartIndex, int columnEndIndex, PartLayoutData columnWidths, SpanLayoutData spans, StyleEx styleEx, List<CellRange> paintedCellRanges)
         {
             if (paintedCellRanges == null)
             {
@@ -941,7 +941,7 @@ namespace Dt.Cells.Data
         /// Internal only.
         /// ColEx
         /// </summary>
-        private class ColEx : HtmlReport.ElementEx
+        class ColEx : HtmlReport.ElementEx
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.HtmlReport.ColEx" /> class.
@@ -982,9 +982,9 @@ namespace Dt.Cells.Data
         /// Internal only.
         /// ColGroupEx
         /// </summary>
-        private class ColGroupEx : HtmlReport.ElementEx
+        class ColGroupEx : HtmlReport.ElementEx
         {
-            private readonly List<HtmlReport.ColEx> cols = new List<HtmlReport.ColEx>();
+            readonly List<HtmlReport.ColEx> cols = new List<HtmlReport.ColEx>();
 
             /// <summary>
             /// Renders the content.
@@ -1024,9 +1024,9 @@ namespace Dt.Cells.Data
         /// Internal only.
         /// DivEx
         /// </summary>
-        private class DivEx : HtmlReport.ElementEx
+        class DivEx : HtmlReport.ElementEx
         {
-            private readonly List<HtmlReport.ElementEx> childs = new List<HtmlReport.ElementEx>();
+            readonly List<HtmlReport.ElementEx> childs = new List<HtmlReport.ElementEx>();
 
             /// <summary>
             /// Renders the content.
@@ -1067,7 +1067,7 @@ namespace Dt.Cells.Data
         /// Internal only.
         /// ElementEx
         /// </summary>
-        private abstract class ElementEx
+        abstract class ElementEx
         {
             public const string _Automatic = "automatic";
             public const string _Background = "background";
@@ -1145,8 +1145,8 @@ namespace Dt.Cells.Data
             public const string _WordBreak = "word-break";
             public const string _WordWrap = "word-wrap";
             protected readonly Dictionary<string, string> attributes = new Dictionary<string, string>();
-            private string content;
-            private bool isInlineStyle = true;
+            string content;
+            bool isInlineStyle = true;
             protected const string Newline = "\r\n";
             protected readonly Dictionary<string, string> styles = new Dictionary<string, string>();
 
@@ -1170,7 +1170,7 @@ namespace Dt.Cells.Data
             /// <param name="dic">The dictionary.</param>
             /// <param name="formatter">The formatter.</param>
             /// <returns></returns>
-            private static string GetDictionaryString(ICollection<KeyValuePair<string, string>> dic, string formatter)
+            static string GetDictionaryString(ICollection<KeyValuePair<string, string>> dic, string formatter)
             {
                 StringBuilder builder = new StringBuilder();
                 if ((dic != null) && (dic.Count > 0))
@@ -1330,10 +1330,10 @@ namespace Dt.Cells.Data
         /// Internal only.
         /// StyleEx
         /// </summary>
-        private class StyleEx : HtmlReport.ElementEx
+        class StyleEx : HtmlReport.ElementEx
         {
-            private string sheetName;
-            new private readonly Dictionary<string, Dictionary<string, string>> styles = new Dictionary<string, Dictionary<string, string>>();
+            string sheetName;
+            new readonly Dictionary<string, Dictionary<string, string>> styles = new Dictionary<string, Dictionary<string, string>>();
 
             /// <summary>
             /// Adds the style.
@@ -1444,9 +1444,9 @@ namespace Dt.Cells.Data
         /// Internal only.
         /// TableCellEx
         /// </summary>
-        private class TableCellEx : HtmlReport.ElementEx
+        class TableCellEx : HtmlReport.ElementEx
         {
-            private readonly List<HtmlReport.ElementEx> childs = new List<HtmlReport.ElementEx>();
+            readonly List<HtmlReport.ElementEx> childs = new List<HtmlReport.ElementEx>();
 
             /// <summary>
             /// Renders the content.
@@ -1487,7 +1487,7 @@ namespace Dt.Cells.Data
         /// Internal only.
         /// TableCellHeaderEx
         /// </summary>
-        private class TableCellHeaderEx : HtmlReport.TableCellEx
+        class TableCellHeaderEx : HtmlReport.TableCellEx
         {
             /// <summary>
             /// Gets the name of the tag.
@@ -1503,11 +1503,11 @@ namespace Dt.Cells.Data
         /// Internal only.
         /// TableEx
         /// </summary>
-        private class TableEx : HtmlReport.ElementEx
+        class TableEx : HtmlReport.ElementEx
         {
-            private readonly HtmlReport.TablePartEx body = new HtmlReport.TablePartEx("tbody");
-            private readonly HtmlReport.ColGroupEx colGroup = new HtmlReport.ColGroupEx();
-            private readonly HtmlReport.TablePartEx header = new HtmlReport.TablePartEx("thead");
+            readonly HtmlReport.TablePartEx body = new HtmlReport.TablePartEx("tbody");
+            readonly HtmlReport.ColGroupEx colGroup = new HtmlReport.ColGroupEx();
+            readonly HtmlReport.TablePartEx header = new HtmlReport.TablePartEx("thead");
 
             /// <summary>
             /// Renders the content.
@@ -1561,10 +1561,10 @@ namespace Dt.Cells.Data
         /// Internal only.
         /// TablePartEx
         /// </summary>
-        private class TablePartEx : HtmlReport.ElementEx
+        class TablePartEx : HtmlReport.ElementEx
         {
-            private readonly List<HtmlReport.TableRowEx> rows = new List<HtmlReport.TableRowEx>();
-            private readonly string tagName;
+            readonly List<HtmlReport.TableRowEx> rows = new List<HtmlReport.TableRowEx>();
+            readonly string tagName;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.HtmlReport.TablePartEx" /> class.
@@ -1613,9 +1613,9 @@ namespace Dt.Cells.Data
         /// Internal only.
         /// TableRowEx
         /// </summary>
-        private class TableRowEx : HtmlReport.ElementEx
+        class TableRowEx : HtmlReport.ElementEx
         {
-            private readonly List<HtmlReport.TableCellEx> cells = new List<HtmlReport.TableCellEx>();
+            readonly List<HtmlReport.TableCellEx> cells = new List<HtmlReport.TableCellEx>();
 
             /// <summary>
             /// Renders the content.

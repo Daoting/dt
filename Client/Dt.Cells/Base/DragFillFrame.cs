@@ -105,29 +105,29 @@ namespace Dt.Cells.UI
             IsBottomVisibe = true;
         }
 
-        protected override Windows.Foundation.Size ArrangeOverride(Windows.Foundation.Size finalSize)
+        protected override Size ArrangeOverride(Size finalSize)
         {
             if (!finalSize.IsEmpty)
             {
-                Windows.Foundation.Rect empty = Windows.Foundation.Rect.Empty;
-                Windows.Foundation.Rect rect2 = Windows.Foundation.Rect.Empty;
-                Windows.Foundation.Rect rect3 = Windows.Foundation.Rect.Empty;
-                Windows.Foundation.Rect rect4 = Windows.Foundation.Rect.Empty;
+                Rect empty = Rect.Empty;
+                Rect rect2 = Rect.Empty;
+                Rect rect3 = Rect.Empty;
+                Rect rect4 = Rect.Empty;
                 if (IsLeftVisibe)
                 {
-                    empty = new Windows.Foundation.Rect(0.0, 0.0, Thickness, finalSize.Height);
+                    empty = new Rect(0.0, 0.0, Thickness, finalSize.Height);
                 }
                 if (IsTopVisibie)
                 {
-                    rect2 = new Windows.Foundation.Rect(0.0, 0.0, finalSize.Width, Thickness);
+                    rect2 = new Rect(0.0, 0.0, finalSize.Width, Thickness);
                 }
                 if (IsRightVisibe)
                 {
-                    rect3 = new Windows.Foundation.Rect(finalSize.Width - Thickness, 0.0, Thickness, finalSize.Height);
+                    rect3 = new Rect(finalSize.Width - Thickness, 0.0, Thickness, finalSize.Height);
                 }
                 if (IsBottomVisibe)
                 {
-                    rect4 = new Windows.Foundation.Rect(0.0, finalSize.Height - Thickness, finalSize.Width, Thickness);
+                    rect4 = new Rect(0.0, finalSize.Height - Thickness, finalSize.Width, Thickness);
                 }
                 if (IsLeftVisibe)
                 {
@@ -165,12 +165,12 @@ namespace Dt.Cells.UI
                     geometry8.Rect = rect4;
                     _bottomRectangle2.Clip = geometry8;
                 }
-                _indicator.Arrange(new Windows.Foundation.Rect(new Windows.Foundation.Point(0.0, 0.0), finalSize));
+                _indicator.Arrange(new Rect(new Point(0.0, 0.0), finalSize));
             }
             return finalSize;
         }
 
-        protected override Windows.Foundation.Size MeasureOverride(Windows.Foundation.Size availableSize)
+        protected override Size MeasureOverride(Size availableSize)
         {
             _indicator.Measure(availableSize);
             return _indicator.DesiredSize;

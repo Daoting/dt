@@ -22,7 +22,7 @@ namespace Dt.Cells.Data
         /// <summary>
         /// A flag used to indicate whether suspend event or not.
         /// </summary>
-        private int suspendEvent;
+        int suspendEvent;
 
         /// <summary>
         /// Occurs when the user makes a change to the model 

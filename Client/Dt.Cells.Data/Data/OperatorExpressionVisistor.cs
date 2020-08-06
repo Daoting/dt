@@ -18,8 +18,8 @@ namespace Dt.Cells.Data
 {
     internal abstract class OperatorExpressionVisistor : OperatorExpressionVisistorBase
     {
-        private bool _isFullBand;
-        private bool _isRow;
+        bool _isFullBand;
+        bool _isRow;
 
         public OperatorExpressionVisistor(bool isRow, bool isFullBand, ICalcSource currentCalcSource) : base(currentCalcSource)
         {

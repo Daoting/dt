@@ -19,13 +19,13 @@ namespace Dt.Cells.Data
     /// </summary>
     public class View3DSettings : INotifyPropertyChanged
     {
-        private double _depthPercent = 100.0;
-        private double _heightPercent = 100.0;
-        private double _perspective = 30.0;
-        private bool _rightAngleAxes = true;
-        private double _rotationX;
-        private double _rotationY;
-        private double _rotationZ;
+        double _depthPercent = 100.0;
+        double _heightPercent = 100.0;
+        double _perspective = 30.0;
+        bool _rightAngleAxes = true;
+        double _rotationX;
+        double _rotationY;
+        double _rotationZ;
 
         /// <summary>
         /// Occurs when the property has changed.

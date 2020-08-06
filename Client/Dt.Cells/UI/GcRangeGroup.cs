@@ -39,7 +39,7 @@ namespace Dt.Cells.UI
             _groupDotInfos = new List<GroupDotInfo>();
         }
 
-        void ArrangeColumnGroups(Windows.Foundation.Size finalSize)
+        void ArrangeColumnGroups(Size finalSize)
         {
             if (GetMaxLevel(Orientation) != -1)
             {
@@ -60,7 +60,7 @@ namespace Dt.Cells.UI
                             num5 = (base.Location.Y + (info.Level * num2)) + num3;
                             double width = 2.0;
                             double height = 2.0;
-                            info.Dot.Arrange(new Windows.Foundation.Rect(base.PointToClient(new Windows.Foundation.Point(x, num5)), new Windows.Foundation.Size(width, height)));
+                            info.Dot.Arrange(new Rect(base.PointToClient(new Point(x, num5)), new Size(width, height)));
                         }
                     }
                     RangeGroupDirection direction = base._sheetView.Worksheet.ColumnRangeGroup.Direction;
@@ -85,7 +85,7 @@ namespace Dt.Cells.UI
                             num5 = (base.Location.Y + (info2.Level * num2)) + num3;
                             double num8 = Math.Max((double)0.0, (double)(((layout3.X + layout3.Width) - layout2.X) - 1.0));
                             double num9 = 2.0;
-                            line.Arrange(new Windows.Foundation.Rect(base.PointToClient(new Windows.Foundation.Point(x, num5)), new Windows.Foundation.Size(num8, num9)));
+                            line.Arrange(new Rect(base.PointToClient(new Point(x, num5)), new Size(num8, num9)));
                             Rectangle startLine = info2.StartLine;
                             if (startLine != null)
                             {
@@ -98,7 +98,7 @@ namespace Dt.Cells.UI
                                     }
                                     if ((x >= layout2.X) && (x < (layout3.X + layout3.Width)))
                                     {
-                                        startLine.Arrange(new Windows.Foundation.Rect(base.PointToClient(new Windows.Foundation.Point(x, num5)), new Windows.Foundation.Size(2.0, num10)));
+                                        startLine.Arrange(new Rect(base.PointToClient(new Point(x, num5)), new Size(2.0, num10)));
                                     }
                                 }
                             }
@@ -115,7 +115,7 @@ namespace Dt.Cells.UI
                             num5 = (base.Location.Y + (button.Level * num2)) + 2.0;
                             double num12 = Math.Min(num2, layout4.Width);
                             double num13 = num2;
-                            button.Arrange(new Windows.Foundation.Rect(base.PointToClient(new Windows.Foundation.Point(x, num5)), new Windows.Foundation.Size(num12, num13)));
+                            button.Arrange(new Rect(base.PointToClient(new Point(x, num5)), new Size(num12, num13)));
                             Rectangle rectangle3 = info3.Line;
                             if ((rectangle3 != null) && (num12 < layout4.Width))
                             {
@@ -128,7 +128,7 @@ namespace Dt.Cells.UI
                                     x += num11 + num12;
                                     num14 = (layout4.Width - num12) - num11;
                                 }
-                                rectangle3.Arrange(new Windows.Foundation.Rect(base.PointToClient(new Windows.Foundation.Point(x, num5)), new Windows.Foundation.Size(num14, num15)));
+                                rectangle3.Arrange(new Rect(base.PointToClient(new Point(x, num5)), new Size(num14, num15)));
                             }
                         }
                     }
@@ -136,7 +136,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        void ArrangeGroups(Windows.Foundation.Size finalSize)
+        void ArrangeGroups(Size finalSize)
         {
             if (Orientation == Windows.UI.Xaml.Controls.Orientation.Horizontal)
             {
@@ -148,13 +148,13 @@ namespace Dt.Cells.UI
             }
         }
 
-        protected override Windows.Foundation.Size ArrangeOverride(Windows.Foundation.Size finalSize)
+        protected override Size ArrangeOverride(Size finalSize)
         {
             ArrangeGroups(finalSize);
             return base.ArrangeOverride(finalSize);
         }
 
-        void ArrangeRowGroups(Windows.Foundation.Size finalSize)
+        void ArrangeRowGroups(Size finalSize)
         {
             if (GetMaxLevel(Orientation) != -1)
             {
@@ -175,7 +175,7 @@ namespace Dt.Cells.UI
                             y = layout.Y + Math.Max((double)0.0, (double)((layout.Height - 2.0) / 2.0));
                             double width = 2.0;
                             double height = 2.0;
-                            info.Dot.Arrange(new Windows.Foundation.Rect(base.PointToClient(new Windows.Foundation.Point(num4, y)), new Windows.Foundation.Size(width, height)));
+                            info.Dot.Arrange(new Rect(base.PointToClient(new Point(num4, y)), new Size(width, height)));
                         }
                     }
                     RangeGroupDirection direction = base._sheetView.Worksheet.RowRangeGroup.Direction;
@@ -200,7 +200,7 @@ namespace Dt.Cells.UI
                             }
                             double num8 = 2.0;
                             double num9 = Math.Max((double)0.0, (double)(((layout3.Y + layout3.Height) - layout2.Y) - 1.0));
-                            line.Arrange(new Windows.Foundation.Rect(base.PointToClient(new Windows.Foundation.Point(num4, y)), new Windows.Foundation.Size(num8, num9)));
+                            line.Arrange(new Rect(base.PointToClient(new Point(num4, y)), new Size(num8, num9)));
                             Rectangle startLine = info2.StartLine;
                             if (startLine != null)
                             {
@@ -213,7 +213,7 @@ namespace Dt.Cells.UI
                                     }
                                     if ((y >= layout2.Y) && (y < (layout3.Y + layout3.Height)))
                                     {
-                                        startLine.Arrange(new Windows.Foundation.Rect(base.PointToClient(new Windows.Foundation.Point(num4, y)), new Windows.Foundation.Size(num10, 2.0)));
+                                        startLine.Arrange(new Rect(base.PointToClient(new Point(num4, y)), new Size(num10, 2.0)));
                                     }
                                 }
                             }
@@ -230,7 +230,7 @@ namespace Dt.Cells.UI
                             y = layout4.Y + num11;
                             double num12 = num2;
                             double num13 = Math.Min(num2, layout4.Height);
-                            button.Arrange(new Windows.Foundation.Rect(base.PointToClient(new Windows.Foundation.Point(num4, y)), new Windows.Foundation.Size(num12, num13)));
+                            button.Arrange(new Rect(base.PointToClient(new Point(num4, y)), new Size(num12, num13)));
                             Rectangle rectangle3 = info3.Line;
                             if ((rectangle3 != null) && (num13 < layout4.Height))
                             {
@@ -243,7 +243,7 @@ namespace Dt.Cells.UI
                                     y += num11 + num13;
                                     num15 = (layout4.Height - num13) - num11;
                                 }
-                                rectangle3.Arrange(new Windows.Foundation.Rect(base.PointToClient(new Windows.Foundation.Point(num4, y)), new Windows.Foundation.Size(num14, num15)));
+                                rectangle3.Arrange(new Rect(base.PointToClient(new Point(num4, y)), new Size(num14, num15)));
                             }
                         }
                     }
@@ -364,7 +364,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        void MeasureGroups(Windows.Foundation.Size availableSize, RangeGroupInfo group, double buttonSize)
+        void MeasureGroups(Size availableSize, RangeGroupInfo group, double buttonSize)
         {
             RangeGroupDirection groupDirection = GetGroupDirection();
             int viewportStartIndex = GetViewportStartIndex();
@@ -388,7 +388,7 @@ namespace Dt.Cells.UI
                                 if ((num13 >= viewportStartIndex) && (num13 <= viewportEndIndex))
                                 {
                                     base.Children.Add(button);
-                                    button.Measure(new Windows.Foundation.Size(buttonSize, buttonSize));
+                                    button.Measure(new Size(buttonSize, buttonSize));
                                     button.Index = num13;
                                     info6.LineDirection = RangeGroupDirection.Forward;
                                     _groupButtonInfos.Add(info6);
@@ -402,7 +402,7 @@ namespace Dt.Cells.UI
                                 if ((num14 >= viewportStartIndex) && (num14 <= viewportEndIndex))
                                 {
                                     base.Children.Add(button);
-                                    button.Measure(new Windows.Foundation.Size(buttonSize, buttonSize));
+                                    button.Measure(new Size(buttonSize, buttonSize));
                                     button.Index = num14;
                                     info6.LineDirection = RangeGroupDirection.Backward;
                                     _groupButtonInfos.Add(info6);
@@ -440,9 +440,9 @@ namespace Dt.Cells.UI
                                     presenter.Index = num5;
                                     info2.LineDirection = RangeGroupDirection.Forward;
                                     base.Children.Add(presenter);
-                                    presenter.Measure(new Windows.Foundation.Size(buttonSize, buttonSize));
+                                    presenter.Measure(new Size(buttonSize, buttonSize));
                                     base.Children.Add(rectangle);
-                                    rectangle.Measure(new Windows.Foundation.Size(availableSize.Width, availableSize.Height));
+                                    rectangle.Measure(new Size(availableSize.Width, availableSize.Height));
                                     _groupButtonInfos.Add(info2);
                                 }
                                 break;
@@ -455,9 +455,9 @@ namespace Dt.Cells.UI
                                     presenter.Index = num6;
                                     info2.LineDirection = RangeGroupDirection.Backward;
                                     base.Children.Add(presenter);
-                                    presenter.Measure(new Windows.Foundation.Size(buttonSize, buttonSize));
+                                    presenter.Measure(new Size(buttonSize, buttonSize));
                                     base.Children.Add(rectangle);
-                                    rectangle.Measure(new Windows.Foundation.Size(availableSize.Width, availableSize.Height));
+                                    rectangle.Measure(new Size(availableSize.Width, availableSize.Height));
                                     _groupButtonInfos.Add(info2);
                                 }
                                 break;
@@ -479,14 +479,14 @@ namespace Dt.Cells.UI
                             Level = group.Level
                         };
                         base.Children.Add(line);
-                        line.Measure(new Windows.Foundation.Size(2.0, availableSize.Height));
+                        line.Measure(new Size(2.0, availableSize.Height));
                         if (((groupDirection == RangeGroupDirection.Forward) && (num7 == start)) || ((groupDirection == RangeGroupDirection.Backward) && (num8 == end)))
                         {
                             Rectangle rectangle3 = new Rectangle();
                             rectangle3.Fill = PaintedBrush;
                             info3.StartLine = rectangle3;
                             base.Children.Add(rectangle3);
-                            rectangle3.Measure(new Windows.Foundation.Size(availableSize.Width, availableSize.Height));
+                            rectangle3.Measure(new Size(availableSize.Width, availableSize.Height));
                         }
                         _groupLineInfos.Add(info3);
                     }
@@ -535,7 +535,7 @@ namespace Dt.Cells.UI
                                 Level = group.Level + 1
                             };
                             base.Children.Add(ellipse);
-                            ellipse.Measure(new Windows.Foundation.Size(availableSize.Width, availableSize.Height));
+                            ellipse.Measure(new Size(availableSize.Width, availableSize.Height));
                             _groupDotInfos.Add(info5);
                         }
                     }
@@ -558,7 +558,7 @@ namespace Dt.Cells.UI
             base.Children.Clear();
         }
 
-        protected override Windows.Foundation.Size MeasureOverride(Windows.Foundation.Size availableSize)
+        protected override Size MeasureOverride(Size availableSize)
         {
             MeasureInitialization();
             if (GetMaxLevel(Orientation) != -1)

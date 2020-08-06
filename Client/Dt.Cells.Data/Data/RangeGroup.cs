@@ -29,25 +29,25 @@ namespace Dt.Cells.Data
         /// <summary>
         /// The direction.
         /// </summary>
-        private RangeGroupDirection direction;
-        private RangeGroupItemInfo head;
+        RangeGroupDirection direction;
+        RangeGroupItemInfo head;
         /// <summary>
         /// The rows and columns information of the range group.
         /// </summary>
-        private SparseArray<RangeGroupItemInfo> items;
+        SparseArray<RangeGroupItemInfo> items;
         /// <summary>
         /// The root range group.
         /// </summary>
-        private RangeGroupInfo rootCached;
+        RangeGroupInfo rootCached;
         /// <summary>
         /// The state of suspend adding group.
         /// </summary>
-        private WorkingState suspendAddingGroup;
+        WorkingState suspendAddingGroup;
         /// <summary>
         /// The state of suspend adding group.
         /// </summary>
-        private WorkingState suspendEvent;
-        private RangeGroupItemInfo tail;
+        WorkingState suspendEvent;
+        RangeGroupItemInfo tail;
 
         internal event EventHandler Changed;
 
@@ -80,7 +80,7 @@ namespace Dt.Cells.Data
         /// Re-creates the range group.
         /// </summary>
         /// <returns>The range group</returns>
-        private RangeGroupInfo CreateRangeGroup()
+        RangeGroupInfo CreateRangeGroup()
         {
             RangeGroupInfo info = new RangeGroupInfo(this, 0, this.Count - 1, -1);
             GroupedItemIndexEnumerator e = new GroupedItemIndexEnumerator(this);
@@ -101,7 +101,7 @@ namespace Dt.Cells.Data
         /// <param name="e">The enumerator</param>
         /// <param name="level">The level</param>
         /// <returns>The range group</returns>
-        private RangeGroupInfo CreateRangeGroup(GroupedItemIndexEnumerator e, int level)
+        RangeGroupInfo CreateRangeGroup(GroupedItemIndexEnumerator e, int level)
         {
             RangeGroupInfo info = null;
             do
@@ -301,7 +301,7 @@ namespace Dt.Cells.Data
         /// <param name="index">The index</param>
         /// <param name="level">The level</param>
         /// <returns>The range group</returns>
-        private RangeGroupInfo Find(RangeGroupInfo group, int index, int level)
+        RangeGroupInfo Find(RangeGroupInfo group, int index, int level)
         {
             if (group != null)
             {
@@ -738,7 +738,7 @@ namespace Dt.Cells.Data
         /// <returns>
         /// <c>true</c> if [is group end] [the specified index]; otherwise, <c>false</c>
         /// </returns>
-        private bool IsGroupEnd(int index, int indexNext, int processLevel)
+        bool IsGroupEnd(int index, int indexNext, int processLevel)
         {
             int modelIndexFromViewIndex = this.GetModelIndexFromViewIndex(index);
             RangeGroupItemInfo info = this.items[modelIndexFromViewIndex];
@@ -775,12 +775,12 @@ namespace Dt.Cells.Data
         /// <returns>
         /// <c>true</c> if [is index valid] [the specified index]; otherwise, <c>false</c>
         /// </returns>
-        private bool IsIndexValid(int index)
+        bool IsIndexValid(int index)
         {
             return ((index >= -1) && (index < this.Count));
         }
 
-        private void RaiseChangedEvent()
+        void RaiseChangedEvent()
         {
             if (this.Changed != null)
             {
@@ -794,7 +794,7 @@ namespace Dt.Cells.Data
         /// <param name="item1">The item1</param>
         /// <param name="item2">The item2</param>
         /// <returns></returns>
-        private bool RangeGroupItemInfoEquals(RangeGroupItemInfo item1, RangeGroupItemInfo item2)
+        bool RangeGroupItemInfoEquals(RangeGroupItemInfo item1, RangeGroupItemInfo item2)
         {
             if (item1 == null)
             {
@@ -1315,20 +1315,20 @@ namespace Dt.Cells.Data
         /// <summary>
         /// Represent an enumerator for all items of groups from head to tail.
         /// </summary>
-        private class GroupedItemIndexEnumerator : IEnumerator<int>, IEnumerator, IDisposable
+        class GroupedItemIndexEnumerator : IEnumerator<int>, IEnumerator, IDisposable
         {
             /// <summary>
             /// The current.
             /// </summary>
-            private int currentIndex = -1;
+            int currentIndex = -1;
             /// <summary>
             /// Indicates whether end of reading.
             /// </summary>
-            private bool isEOF;
+            bool isEOF;
             /// <summary>
             /// The owner.
             /// </summary>
-            private Dt.Cells.Data.RangeGroup rangeGroup;
+            Dt.Cells.Data.RangeGroup rangeGroup;
 
             /// <summary>
             /// Initializes a new instance of the class.
@@ -1438,7 +1438,7 @@ namespace Dt.Cells.Data
             /// Gets the range group.
             /// </summary>
             /// <value>The range group</value>
-            private Dt.Cells.Data.RangeGroup RangeGroup
+            Dt.Cells.Data.RangeGroup RangeGroup
             {
                 get { return  this.rangeGroup; }
             }
@@ -1462,7 +1462,7 @@ namespace Dt.Cells.Data
         /// </summary>
         public class RangeGroupData
         {
-            private RangeGroup parent;
+            RangeGroup parent;
 
             internal RangeGroupData(RangeGroup parent)
             {

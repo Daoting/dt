@@ -23,13 +23,13 @@ namespace Dt.Cells.Data
     /// </summary>
     internal sealed class DefaultStyleCollection : IList, ICollection, IEnumerable
     {
-        private static StyleInfo cellsDefault;
-        private static StyleInfo columnFooterDefault;
-        private static StyleInfo columnHeaderDefault;
-        private static StyleInfo cornerDefault;
-        private static FontFamily defaultFontFamily;
-        private static double defaultFontSize;
-        private static StyleInfo rowHeaderDefault;
+        static StyleInfo cellsDefault;
+        static StyleInfo columnFooterDefault;
+        static StyleInfo columnHeaderDefault;
+        static StyleInfo cornerDefault;
+        static FontFamily defaultFontFamily;
+        static double defaultFontSize;
+        static StyleInfo rowHeaderDefault;
         /// <summary>
         /// Represents the array of StyleInfo objects that contain the default styles.
         /// </summary>

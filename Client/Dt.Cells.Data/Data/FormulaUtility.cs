@@ -21,7 +21,7 @@ namespace Dt.Cells.Data
 {
     internal static class FormulaUtility
     {
-        private static CalcExpression AddColumnRange(int column, int columnCount, CalcReferenceExpression dataRange)
+        static CalcExpression AddColumnRange(int column, int columnCount, CalcReferenceExpression dataRange)
         {
             CalcRangeExpression expression = dataRange as CalcRangeExpression;
             if (expression != null)
@@ -72,7 +72,7 @@ namespace Dt.Cells.Data
             return null;
         }
 
-        private static CalcExpression AddRowRange(int row, int rowCount, CalcReferenceExpression dataRange)
+        static CalcExpression AddRowRange(int row, int rowCount, CalcReferenceExpression dataRange)
         {
             CalcRangeExpression expression = dataRange as CalcRangeExpression;
             if (expression != null)
@@ -123,7 +123,7 @@ namespace Dt.Cells.Data
             return null;
         }
 
-        private static string AppendExternalName(object source)
+        static string AppendExternalName(object source)
         {
             StringBuilder builder = new StringBuilder();
             string str = (string) (source as string);
@@ -335,7 +335,7 @@ namespace Dt.Cells.Data
             return ("=" + builder.ToString().TrimEnd(new char[] { ',' }));
         }
 
-        private static string QuotesFormula(string s)
+        static string QuotesFormula(string s)
         {
             bool flag = false;
             string str = string.Empty;
@@ -379,7 +379,7 @@ namespace Dt.Cells.Data
             return s;
         }
 
-        private static CalcExpression RemoveColumnRange(int column, int columnCount, CalcReferenceExpression dataRange)
+        static CalcExpression RemoveColumnRange(int column, int columnCount, CalcReferenceExpression dataRange)
         {
             int targetEnd = (column + columnCount) - 1;
             CalcRangeExpression expression = dataRange as CalcRangeExpression;
@@ -434,7 +434,7 @@ namespace Dt.Cells.Data
             return null;
         }
 
-        private static CalcExpression RemoveRowRange(int row, int rowCount, CalcReferenceExpression dataRange)
+        static CalcExpression RemoveRowRange(int row, int rowCount, CalcReferenceExpression dataRange)
         {
             int targetEnd = (row + rowCount) - 1;
             CalcRangeExpression expression = dataRange as CalcRangeExpression;
@@ -489,7 +489,7 @@ namespace Dt.Cells.Data
             return null;
         }
 
-        private static void SubCat(int sourceStart, int sourceEnd, int targetStart, int targetEnd, ref int resultStart, ref int resultEnd)
+        static void SubCat(int sourceStart, int sourceEnd, int targetStart, int targetEnd, ref int resultStart, ref int resultEnd)
         {
             if (targetEnd < sourceStart)
             {

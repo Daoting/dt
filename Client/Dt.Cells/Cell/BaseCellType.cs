@@ -245,7 +245,7 @@ namespace Dt.Cells.CellTypes
             //            ZoomFactor).Width;
             //        double num4 = cell.ActualTextIndent * ZoomFactor;
             //        double num5 = cell.Worksheet.GetActualColumnWidth(cell.Column.Index, cell.ColumnSpan, cell.SheetArea) * ZoomFactor;
-            //        num5 = MeasureHelper.ConvertExcelCellSizeToTextSize(new Windows.Foundation.Size(num5, double.PositiveInfinity), ZoomFactor).Width;
+            //        num5 = MeasureHelper.ConvertExcelCellSizeToTextSize(new Size(num5, double.PositiveInfinity), ZoomFactor).Width;
             //        num5 = Math.Max((double) 0.0, (double) (num5 - num4));
             //        double num2 = num5 / width;
             //        if (num5 < width)
@@ -500,9 +500,9 @@ namespace Dt.Cells.CellTypes
                         {
                             foreach (UIElement element2 in view.LineContainer.Children)
                             {
-                                if (element2 is Windows.UI.Xaml.Shapes.Line)
+                                if (element2 is Line)
                                 {
-                                    (element2 as Windows.UI.Xaml.Shapes.Line).Stroke = tbElement.Foreground;
+                                    (element2 as Line).Stroke = tbElement.Foreground;
                                 }
                             }
                         }

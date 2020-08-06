@@ -26,52 +26,52 @@ namespace Dt.Cells.Data
     /// </summary>
     internal class GcRichLabel : GcPrintableControl
     {
-        private Brush background;
-        private const string Bold = "B";
-        private const string BoldString = "Bold";
-        private const string CenterPart = "C";
-        private string centerSource;
-        private Image cImage;
-        private const string ColorPrefix = "K";
-        private const string CommandPrefix = "&";
-        private const string CurrentPage = "P";
-        private const string Date = "D";
-        private const string FontPrefix = "\"";
-        private static Regex fontRegex;
-        private const string fontRegexName = "fontName";
-        private const string fontRegexStyle = "fontStyle";
-        private static Regex fontSizeRegex;
-        private const string fontSizeRegexNextIsNumber = "nextIsNumber";
-        private const string fontSizeRegexSize = "fontSize";
-        private Brush foreground;
-        private const string Italic = "I";
-        private const string ItalicString = "Italic";
-        private const string LeftPart = "L";
-        private string leftSource;
-        private Image lImage;
-        private const string NoneSpecified = "-";
-        private const string PageCount = "N";
-        private const string Picture = "G";
-        private const string RegularString = "Regular";
-        private static Regex rgbColorRegex;
-        private const string rgbColorRegexBlue = "blue";
-        private const string rgbColorRegexGreen = "green";
-        private const string rgbColorRegexRed = "red";
-        private const string RightPart = "R";
-        private string rightSource;
-        private Image rImage;
-        private const string Strikethrough = "S";
-        private static Regex themeColorRegex;
-        private const string themeColorRegexMethod = "method";
-        private const string themeColorRegexTheme = "theme";
-        private const string themeColorRegexValue = "value";
-        private const string Time = "T";
-        private const string Underline = "U";
-        private TextVerticalAlignment vAlignment;
-        private string workbookName;
-        private const string WorkbookNameCmd = "F";
-        private string worksheetName;
-        private const string WorksheetNameCmd = "A";
+        Brush background;
+        const string Bold = "B";
+        const string BoldString = "Bold";
+        const string CenterPart = "C";
+        string centerSource;
+        Image cImage;
+        const string ColorPrefix = "K";
+        const string CommandPrefix = "&";
+        const string CurrentPage = "P";
+        const string Date = "D";
+        const string FontPrefix = "\"";
+        static Regex fontRegex;
+        const string fontRegexName = "fontName";
+        const string fontRegexStyle = "fontStyle";
+        static Regex fontSizeRegex;
+        const string fontSizeRegexNextIsNumber = "nextIsNumber";
+        const string fontSizeRegexSize = "fontSize";
+        Brush foreground;
+        const string Italic = "I";
+        const string ItalicString = "Italic";
+        const string LeftPart = "L";
+        string leftSource;
+        Image lImage;
+        const string NoneSpecified = "-";
+        const string PageCount = "N";
+        const string Picture = "G";
+        const string RegularString = "Regular";
+        static Regex rgbColorRegex;
+        const string rgbColorRegexBlue = "blue";
+        const string rgbColorRegexGreen = "green";
+        const string rgbColorRegexRed = "red";
+        const string RightPart = "R";
+        string rightSource;
+        Image rImage;
+        const string Strikethrough = "S";
+        static Regex themeColorRegex;
+        const string themeColorRegexMethod = "method";
+        const string themeColorRegexTheme = "theme";
+        const string themeColorRegexValue = "value";
+        const string Time = "T";
+        const string Underline = "U";
+        TextVerticalAlignment vAlignment;
+        string workbookName;
+        const string WorkbookNameCmd = "F";
+        string worksheetName;
+        const string WorksheetNameCmd = "A";
 
         /// <summary>
         /// Creates a new rich label.
@@ -161,7 +161,7 @@ namespace Dt.Cells.Data
         /// <param name="rightSource">The right source.</param>
         /// <param name="context">The context.</param>
         /// <returns></returns>
-        private static List<List<List<GcPrintableControl>>> GenerateRangeBlock(GcRichLabel rLabel, string leftSource, string centerSource, string rightSource, GcReportContext context)
+        static List<List<List<GcPrintableControl>>> GenerateRangeBlock(GcRichLabel rLabel, string leftSource, string centerSource, string rightSource, GcReportContext context)
         {
             int width = rLabel.Width;
             int height = rLabel.Height;
@@ -216,7 +216,7 @@ namespace Dt.Cells.Data
         /// <param name="isItalic">if set to <c>true</c> [is italic].</param>
         /// <param name="foreground">The foreground.</param>
         /// <returns></returns>
-        private static List<GcPrintableControl> GenerateRangeBlockLine(GcRichLabel rLabel, string source, Windows.Foundation.Rect rect, Image image, ref Font font, ref string fontName, ref bool isStrikethrough, ref double fontSize, ref UnderlineType underlineType, ref bool isBold, ref bool isItalic, ref Brush foreground)
+        static List<GcPrintableControl> GenerateRangeBlockLine(GcRichLabel rLabel, string source, Windows.Foundation.Rect rect, Image image, ref Font font, ref string fontName, ref bool isStrikethrough, ref double fontSize, ref UnderlineType underlineType, ref bool isBold, ref bool isItalic, ref Brush foreground)
         {
             List<GcPrintableControl> list = new List<GcPrintableControl>();
             if ((!string.IsNullOrEmpty(source) && !rect.IsEmpty) && ((rect.Width != 0.0) && (rect.Height != 0.0)))
@@ -512,7 +512,7 @@ namespace Dt.Cells.Data
         /// <param name="part">The part.</param>
         /// <param name="context">The context.</param>
         /// <returns></returns>
-        private static List<List<GcPrintableControl>> GenerateRangeBlockPart(GcRichLabel rLabel, string source, Windows.Foundation.Rect rect, int part, GcReportContext context)
+        static List<List<GcPrintableControl>> GenerateRangeBlockPart(GcRichLabel rLabel, string source, Windows.Foundation.Rect rect, int part, GcReportContext context)
         {
             List<List<GcPrintableControl>> list = new List<List<GcPrintableControl>>();
             if ((!string.IsNullOrEmpty(source) && !rect.IsEmpty) && ((rect.Width != 0.0) && (rect.Height != 0.0)))
@@ -675,7 +675,7 @@ namespace Dt.Cells.Data
         /// Gets the font regex.
         /// </summary>
         /// <value>The font regex.</value>
-        private static Regex FontRegex
+        static Regex FontRegex
         {
             get
             {
@@ -692,7 +692,7 @@ namespace Dt.Cells.Data
         /// Gets the font size regex.
         /// </summary>
         /// <value>The font size regex.</value>
-        private static Regex FontSizeRegex
+        static Regex FontSizeRegex
         {
             get
             {
@@ -744,7 +744,7 @@ namespace Dt.Cells.Data
         /// Gets the font regex.
         /// </summary>
         /// <value>The font regex.</value>
-        private static Regex RgbColorRegex
+        static Regex RgbColorRegex
         {
             get
             {
@@ -783,7 +783,7 @@ namespace Dt.Cells.Data
         /// Gets the font regex.
         /// </summary>
         /// <value>The font regex.</value>
-        private static Regex ThemeColorRegex
+        static Regex ThemeColorRegex
         {
             get
             {

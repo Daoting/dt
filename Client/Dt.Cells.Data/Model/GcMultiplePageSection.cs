@@ -21,7 +21,7 @@ namespace Dt.Cells.Data
     /// </summary>
     internal abstract class GcMultiplePageSection : GcSection
     {
-        private BreakType pageBreak;
+        BreakType pageBreak;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.GcMultiplePageSection" /> class.

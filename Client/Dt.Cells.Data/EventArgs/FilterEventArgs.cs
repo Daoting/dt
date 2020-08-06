@@ -14,7 +14,7 @@ namespace Dt.Cells.Data
 {
     internal class FilterEventArgs : EventArgs
     {
-        private FilterAction _filterAction;
+        FilterAction _filterAction;
 
         public FilterEventArgs(FilterAction filterAction)
         {

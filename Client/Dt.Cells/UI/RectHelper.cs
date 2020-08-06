@@ -16,13 +16,13 @@ namespace Dt.Cells.UI
 {
     internal static class RectHelper
     {
-        public static Windows.Foundation.Rect Expand(this Windows.Foundation.Rect rect, int width, int height)
+        public static Rect Expand(this Rect rect, int width, int height)
         {
             if (rect.IsEmpty)
             {
                 return rect;
             }
-            return new Windows.Foundation.Rect { X = ((rect.X - width) > 0.0) ? (rect.X - width) : 0.0, Y = ((rect.Y - height) > 0.0) ? (rect.Y - height) : 0.0, Width = rect.Width + (2 * width), Height = rect.Height + (2 * height) };
+            return new Rect { X = ((rect.X - width) > 0.0) ? (rect.X - width) : 0.0, Y = ((rect.Y - height) > 0.0) ? (rect.Y - height) : 0.0, Width = rect.Width + (2 * width), Height = rect.Height + (2 * height) };
         }
     }
 }

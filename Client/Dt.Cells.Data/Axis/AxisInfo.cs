@@ -21,14 +21,14 @@ namespace Dt.Cells.Data
     /// </summary>
     internal sealed class AxisInfo : IXmlSerializable, ICloneable, IsEmptySupport
     {
-        private bool resizable;
-        private bool resizableSet;
-        private double size;
-        private bool sizeSet;
-        private object tag;
-        private bool tagSet;
-        private bool visible;
-        private bool visibleSet;
+        bool resizable;
+        bool resizableSet;
+        double size;
+        bool sizeSet;
+        object tag;
+        bool tagSet;
+        bool visible;
+        bool visibleSet;
 
         /// <summary>
         /// Creates new axis information for the style model.
@@ -129,7 +129,7 @@ namespace Dt.Cells.Data
             return info;
         }
 
-        private void Init()
+        void Init()
         {
             this.size = -1.0;
             this.sizeSet = false;

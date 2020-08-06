@@ -29,20 +29,20 @@ namespace Dt.Cells.Data
     /// </summary>
     internal class Graphics
     {
-        private readonly GcReportContext context;
-        private BaseFont defaultChineseFont;
-        private BaseFont defaultFont;
-        private BaseFont defaultJapanFont;
-        private BaseFont defaultKoreaFont;
-        private readonly PdfExporter exporter;
-        private float fillAlpha;
-        private readonly Stack<float> fillAlphas;
-        private bool grayMode;
-        private MatrixMock matrix;
-        private readonly Stack<MatrixMock> matrixs;
-        private readonly PdfGraphics pdfGraphics;
-        private float strokeAlpha;
-        private readonly Stack<float> strokeAlphas;
+        readonly GcReportContext context;
+        BaseFont defaultChineseFont;
+        BaseFont defaultFont;
+        BaseFont defaultJapanFont;
+        BaseFont defaultKoreaFont;
+        readonly PdfExporter exporter;
+        float fillAlpha;
+        readonly Stack<float> fillAlphas;
+        bool grayMode;
+        MatrixMock matrix;
+        readonly Stack<MatrixMock> matrixs;
+        readonly PdfGraphics pdfGraphics;
+        float strokeAlpha;
+        readonly Stack<float> strokeAlphas;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.Graphics" /> class.
@@ -369,7 +369,7 @@ namespace Dt.Cells.Data
         /// <param name="d">The d</param>
         /// <param name="x">The x</param>
         /// <param name="y">The y</param>
-        private void ApplyMatrix(double a, double b, double c, double d, double x, double y)
+        void ApplyMatrix(double a, double b, double c, double d, double x, double y)
         {
             this.pdfGraphics.ApplyCTM((float) a, (float) b, (float) c, (float) d, (float) x, (float) y);
         }
@@ -465,7 +465,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="align">The alignment</param>
         /// <returns></returns>
-        private static StringFormat ConvertToStringFormat(ContentAlignment align)
+        static StringFormat ConvertToStringFormat(ContentAlignment align)
         {
             StringFormat format = new StringFormat();
             if (align != null)
@@ -1055,7 +1055,7 @@ namespace Dt.Cells.Data
             this.pdfGraphics.FillStrokEo();
         }
 
-        private BaseFont FindSupportFont(string str, BaseFont font)
+        BaseFont FindSupportFont(string str, BaseFont font)
         {
             if (this.IsSupportFont(str, font))
             {
@@ -1081,7 +1081,7 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="effect">The effect</param>
         /// <returns></returns>
-        private static List<GradientStop> GetGradientSections(GradientBrush effect)
+        static List<GradientStop> GetGradientSections(GradientBrush effect)
         {
             List<GradientStop> sections = new List<GradientStop>((IEnumerable<GradientStop>)effect.GradientStops);
             GradientStop stop = null;
@@ -1100,7 +1100,7 @@ namespace Dt.Cells.Data
             return sections;
         }
 
-        private static GradientStyle GetGradinetStyle(GradientBrush gradientBrush)
+        static GradientStyle GetGradinetStyle(GradientBrush gradientBrush)
         {
             // uno
             //if (gradientBrush is LinearGradientBrush linearGradientBrush)
@@ -1197,12 +1197,12 @@ namespace Dt.Cells.Data
             return new Windows.Foundation.Point { X = ((x * m.M11) + (y * m.M21)) + m.OffsetX, Y = ((x * m.M12) + (y * m.M22)) + m.OffsetY };
         }
 
-        private static bool IsIntersect(Windows.Foundation.Rect rect1, Windows.Foundation.Rect rect2)
+        static bool IsIntersect(Windows.Foundation.Rect rect1, Windows.Foundation.Rect rect2)
         {
             return ((((rect2.X < (rect1.X + rect1.Width)) && (rect1.X < (rect2.X + rect2.Width))) && (rect2.Y < (rect1.Y + rect1.Height))) && (rect1.Y < (rect2.Y + rect2.Height)));
         }
 
-        private bool IsSupportFont(string str, BaseFont font)
+        bool IsSupportFont(string str, BaseFont font)
         {
             if (font == null)
             {
@@ -1607,7 +1607,7 @@ namespace Dt.Cells.Data
             this.matrix.TranslatePrepend(offsetX, offsetY);
         }
 
-        private static double UpdateAngle(double angle, double offsetx, double offsety)
+        static double UpdateAngle(double angle, double offsetx, double offsety)
         {
             if (offsetx <= 0.0)
             {

@@ -24,10 +24,10 @@ namespace Dt.Cells.Data
     /// </summary>
     public class PaperSize : IXmlSerializable
     {
-        private static readonly Dictionary<PrintMediaSize, Size> _dict;
-        private double _height;
-        private double _width;
-        private PrintMediaSize _mediaSize;
+        static readonly Dictionary<PrintMediaSize, Size> _dict;
+        double _height;
+        double _width;
+        PrintMediaSize _mediaSize;
         
         static PaperSize()
         {

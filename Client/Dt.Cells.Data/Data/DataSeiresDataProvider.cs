@@ -15,7 +15,7 @@ namespace Dt.Cells.Data
 {
     internal class DataSeiresDataProvider : WorksheetSeriesDataProvider
     {
-        private IDataSeries _dataSeries;
+        IDataSeries _dataSeries;
 
         public DataSeiresDataProvider(IDataSeries dataSeries)
         {

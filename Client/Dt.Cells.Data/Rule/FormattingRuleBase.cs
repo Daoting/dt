@@ -29,10 +29,10 @@ namespace Dt.Cells.Data
         /// Indicates the base condition of the rule.
         /// </summary>
         protected ConditionBase condition;
-        private int priority;
-        private CellRange[] ranges;
-        private bool stopIfTrue;
-        private StyleInfo style;
+        int priority;
+        CellRange[] ranges;
+        bool stopIfTrue;
+        StyleInfo style;
 
         internal event EventHandler<ConditionChangedEventArgs> ConditionChanged;
 
@@ -180,7 +180,7 @@ namespace Dt.Cells.Data
             return expected;
         }
 
-        private void GetBaseCoordinate(out int baseRow, out int baseColumn)
+        void GetBaseCoordinate(out int baseRow, out int baseColumn)
         {
             baseRow = 0x7fffffff;
             baseColumn = 0x7fffffff;
@@ -332,7 +332,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        private void OnStylePropertyChanged(object sender, PropertyChangedEventArgs e)
+        void OnStylePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             this.OnPropertyChanging("Style");
             this.OnPropertyChanged("Style");
