@@ -86,7 +86,7 @@ namespace Dt.Cells.UndoRedo
 
         void RefreshUI(object sheetView)
         {
-            SpreadView view = sheetView as SpreadView;
+            var view = sheetView as SheetView;
             if (view != null)
             {
                 view.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells);

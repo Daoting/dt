@@ -159,11 +159,11 @@ namespace Dt.Cells.UI
             _cachedSelectionFrameLayout = Rect.Empty;
             _cachedActiveSelectionLayout = Rect.Empty;
             _cachedActiveSelection = null;
-            _activeRow = Sheet.Worksheet.ActiveRowIndex;
-            _activeCol = Sheet.Worksheet.ActiveColumnIndex;
+            _activeRow = Sheet.ActiveSheet.ActiveRowIndex;
+            _activeCol = Sheet.ActiveSheet.ActiveColumnIndex;
             _selectionContainer.IsAnchorCellInSelection = false;
             CellRange activeCellRange = GetActiveCellRange();
-            List<CellRange> list = new List<CellRange>((IEnumerable<CellRange>)Sheet.Worksheet.Selections);
+            List<CellRange> list = new List<CellRange>((IEnumerable<CellRange>)Sheet.ActiveSheet.Selections);
             if (list.Count == 0)
             {
                 list.Add(activeCellRange);
@@ -190,8 +190,8 @@ namespace Dt.Cells.UI
                         }
                         int num7 = (range.Row < 0) ? 0 : range.Row;
                         int num8 = (range.Column < 0) ? 0 : range.Column;
-                        int rowCount = (range.RowCount < 0) ? Sheet.Worksheet.RowCount : range.RowCount;
-                        int columnCount = (range.ColumnCount < 0) ? Sheet.Worksheet.ColumnCount : range.ColumnCount;
+                        int rowCount = (range.RowCount < 0) ? Sheet.ActiveSheet.RowCount : range.RowCount;
+                        int columnCount = (range.ColumnCount < 0) ? Sheet.ActiveSheet.ColumnCount : range.ColumnCount;
                         range = new CellRange(num7, num8, rowCount, columnCount);
                         Rect rect2 = GetRangeBounds(range);
                         rect2.Intersect(rect);
@@ -263,7 +263,7 @@ namespace Dt.Cells.UI
                                     if (range3.Row == -1)
                                     {
                                         _selectionContainer.FocusIndicator.IsTopVisible = row == 0;
-                                        _selectionContainer.FocusIndicator.IsBottomVisible = num3 == (Sheet.Worksheet.RowCount - 1);
+                                        _selectionContainer.FocusIndicator.IsBottomVisible = num3 == (Sheet.ActiveSheet.RowCount - 1);
                                     }
                                     else
                                     {
@@ -274,7 +274,7 @@ namespace Dt.Cells.UI
                                     if (range3.Column == -1)
                                     {
                                         _selectionContainer.FocusIndicator.IsLeftVisible = column == 0;
-                                        _selectionContainer.FocusIndicator.IsRightVisible = num5 == (Sheet.Worksheet.ColumnCount - 1);
+                                        _selectionContainer.FocusIndicator.IsRightVisible = num5 == (Sheet.ActiveSheet.ColumnCount - 1);
                                     }
                                     else
                                     {
@@ -316,7 +316,7 @@ namespace Dt.Cells.UI
                                     {
                                         ViewportInfo viewportInfo = Sheet.GetViewportInfo();
                                         bool flag2 = false;
-                                        if (Sheet.Worksheet.FrozenColumnCount == 0)
+                                        if (Sheet.ActiveSheet.FrozenColumnCount == 0)
                                         {
                                             flag2 = (ColumnViewportIndex >= 0) && (ColumnViewportIndex < viewportInfo.ColumnViewportCount);
                                         }
@@ -339,7 +339,7 @@ namespace Dt.Cells.UI
                                     {
                                         ViewportInfo info2 = Sheet.GetViewportInfo();
                                         bool flag3 = false;
-                                        if (Sheet.Worksheet.FrozenRowCount == 0)
+                                        if (Sheet.ActiveSheet.FrozenRowCount == 0)
                                         {
                                             flag3 = (RowViewportIndex >= 0) && (RowViewportIndex < info2.RowViewportCount);
                                         }
@@ -528,7 +528,7 @@ namespace Dt.Cells.UI
         {
             int activeColumnViewportIndex = Sheet.GetActiveColumnViewportIndex();
             int activeRowViewportIndex = Sheet.GetActiveRowViewportIndex();
-            if (((ColumnViewportIndex == activeColumnViewportIndex) && (RowViewportIndex == activeRowViewportIndex)) && (Sheet.CanSelectFormula && (Sheet.Worksheet.Workbook.ActiveSheetIndex == Sheet.EditorConnector.SheetIndex)))
+            if (((ColumnViewportIndex == activeColumnViewportIndex) && (RowViewportIndex == activeRowViewportIndex)) && (Sheet.CanSelectFormula && (Sheet.ActiveSheet.Workbook.ActiveSheetIndex == Sheet.EditorConnector.SheetIndex)))
             {
                 Sheet.SetActiveCell(Sheet.EditorInfo.RowIndex, Sheet.EditorInfo.ColumnIndex, true);
                 Sheet.StartCellEditing(false, "=" + Sheet.EditorConnector.GetText(), EditorStatus.Edit);
@@ -562,9 +562,10 @@ namespace Dt.Cells.UI
                 return new CellRange(0, 0, 0, 0);
             }
             CellRange range = new CellRange(_activeRow, _activeCol, 1, 1);
-            if ((((Sheet.Worksheet != null) && (Sheet.Worksheet.SpanModel != null)) && (!Sheet.Worksheet.SpanModel.IsEmpty() && (range.RowCount == 1))) && (range.ColumnCount == 1))
+            var sheet = Sheet.ActiveSheet;
+            if ((((sheet != null) && (sheet.SpanModel != null)) && (!sheet.SpanModel.IsEmpty() && (range.RowCount == 1))) && (range.ColumnCount == 1))
             {
-                CellRange range2 = Sheet.Worksheet.SpanModel.Find(range.Row, range.Column);
+                CellRange range2 = sheet.SpanModel.Find(range.Row, range.Column);
                 if (range2 != null)
                 {
                     range = range2;
@@ -626,7 +627,7 @@ namespace Dt.Cells.UI
 
         internal virtual ICellsSupport GetDataContext()
         {
-            return Sheet.Worksheet;
+            return Sheet.ActiveSheet;
         }
 
         internal object GetEditorValue()
@@ -655,20 +656,20 @@ namespace Dt.Cells.UI
         internal Rect GetRangeBounds(CellRange range, SheetArea area)
         {
             SheetSpanModel spanModel = null;
-            if (Sheet.Worksheet != null)
+            if (Sheet.ActiveSheet != null)
             {
                 switch (area)
                 {
                     case SheetArea.Cells:
-                        spanModel = Sheet.Worksheet.SpanModel;
+                        spanModel = Sheet.ActiveSheet.SpanModel;
                         break;
 
                     case (SheetArea.CornerHeader | SheetArea.RowHeader):
-                        spanModel = Sheet.Worksheet.RowHeaderSpanModel;
+                        spanModel = Sheet.ActiveSheet.RowHeaderSpanModel;
                         break;
 
                     case SheetArea.ColumnHeader:
-                        spanModel = Sheet.Worksheet.ColumnHeaderSpanModel;
+                        spanModel = Sheet.ActiveSheet.ColumnHeaderSpanModel;
                         break;
                 }
             }
@@ -804,7 +805,7 @@ namespace Dt.Cells.UI
 
         internal virtual SheetSpanModelBase GetSpanModel()
         {
-            return Sheet.Worksheet.SpanModel;
+            return Sheet.ActiveSheet.SpanModel;
         }
 
         internal SpreadChartView GetSpreadChartView(string chartName)
@@ -833,7 +834,7 @@ namespace Dt.Cells.UI
             {
                 cell = presenter.GetCell(column);
             }
-            if (((cell == null) && (CurrentRow != null)) && (row == Sheet.Worksheet.ActiveRowIndex))
+            if (((cell == null) && (CurrentRow != null)) && (row == Sheet.ActiveSheet.ActiveRowIndex))
             {
                 cell = CurrentRow.GetCell(column);
             }
@@ -943,7 +944,7 @@ namespace Dt.Cells.UI
             {
                 _editorPanel.Update(editingCell);
                 FrameworkElement avaiableEditor = _editorPanel.GetAvaiableEditor();
-                object obj2 = Sheet.Worksheet.GetValue(editingCell.Row, editingCell.Column);
+                object obj2 = Sheet.ActiveSheet.GetValue(editingCell.Row, editingCell.Column);
                 if (obj2 != null)
                 {
                     if (avaiableEditor == null)
@@ -1065,7 +1066,7 @@ namespace Dt.Cells.UI
                     if (dragFillFrameRange.Row == -1)
                     {
                         DragFillContainer.DragFillFrame.IsTopVisibie = row == 0;
-                        DragFillContainer.DragFillFrame.IsBottomVisibe = num2 == (Sheet.Worksheet.RowCount - 1);
+                        DragFillContainer.DragFillFrame.IsBottomVisibe = num2 == (Sheet.ActiveSheet.RowCount - 1);
                     }
                     else
                     {
@@ -1076,7 +1077,7 @@ namespace Dt.Cells.UI
                     if (dragFillFrameRange.Column == -1)
                     {
                         DragFillContainer.DragFillFrame.IsLeftVisibe = column == 0;
-                        DragFillContainer.DragFillFrame.IsRightVisibe = num4 == (Sheet.Worksheet.ColumnCount - 1);
+                        DragFillContainer.DragFillFrame.IsRightVisibe = num4 == (Sheet.ActiveSheet.ColumnCount - 1);
                     }
                     else
                     {
@@ -1173,7 +1174,7 @@ namespace Dt.Cells.UI
                     _selectionContainer.Visibility = Visibility.Collapsed;
                     if (Sheet.InputDeviceType != InputDeviceType.Touch)
                     {
-                        (Sheet as SpreadView).InvalidateMeasure();
+                        Sheet.InvalidateMeasure();
                     }
                 }
                 else
@@ -1333,7 +1334,7 @@ namespace Dt.Cells.UI
                     else
                     {
                         FrameworkElement avaiableEditor = _editorPanel.GetAvaiableEditor();
-                        object obj2 = Sheet.Worksheet.GetValue(cell.Row, cell.Column);
+                        object obj2 = Sheet.ActiveSheet.GetValue(cell.Row, cell.Column);
                         if (obj2 != null)
                         {
                             if (avaiableEditor == null)
@@ -1520,9 +1521,9 @@ namespace Dt.Cells.UI
         internal void UpdateDataValidationUI(int row, int column)
         {
             RemoveDataValidationUI();
-            if (((Sheet != null) && (Sheet.Worksheet != null)) && ((RowViewportIndex == Sheet.GetActiveRowViewportIndex()) && (ColumnViewportIndex == Sheet.GetActiveColumnViewportIndex())))
+            if (((Sheet != null) && (Sheet.ActiveSheet != null)) && ((RowViewportIndex == Sheet.GetActiveRowViewportIndex()) && (ColumnViewportIndex == Sheet.GetActiveColumnViewportIndex())))
             {
-                DataValidator actualDataValidator = Sheet.Worksheet[row, column].ActualDataValidator;
+                DataValidator actualDataValidator = Sheet.ActiveSheet[row, column].ActualDataValidator;
                 if ((actualDataValidator != null) && (GetViewportCell(row, column, true) != null))
                 {
                     DataValidationListButtonInfo info = Sheet.GetDataValidationListButtonInfo(row, column, SheetArea.Cells);

@@ -32,7 +32,7 @@ namespace Dt.Cells.UI
             {
                 _view.MouseOverColumnIndex = -1;
             }
-            _view.UpdateColumnHeaderCellsState(_view.Worksheet.ColumnHeader.RowCount - 1, hi.HeaderInfo.Column, 1, 1);
+            _view.UpdateColumnHeaderCellsState(_view.ActiveSheet.ColumnHeader.RowCount - 1, hi.HeaderInfo.Column, 1, 1);
         }
 
         void DoCornerHeaderHover(HitTestInformation hi)
@@ -54,11 +54,11 @@ namespace Dt.Cells.UI
                     switch (_oldHi.HitTestType)
                     {
                         case HitTestType.RowHeader:
-                            _view.UpdateRowHeaderCellsState(_oldHi.HeaderInfo.Row, _view.Worksheet.RowHeader.ColumnCount - 1, 1, 1);
+                            _view.UpdateRowHeaderCellsState(_oldHi.HeaderInfo.Row, _view.ActiveSheet.RowHeader.ColumnCount - 1, 1, 1);
                             break;
 
                         case HitTestType.ColumnHeader:
-                            _view.UpdateColumnHeaderCellsState(_view.Worksheet.ColumnHeader.RowCount - 1, _oldHi.HeaderInfo.Column, 1, 1);
+                            _view.UpdateColumnHeaderCellsState(_view.ActiveSheet.ColumnHeader.RowCount - 1, _oldHi.HeaderInfo.Column, 1, 1);
                             break;
 
                         case HitTestType.Corner:
@@ -96,7 +96,7 @@ namespace Dt.Cells.UI
             {
                 _view.MouseOverRowIndex = -1;
             }
-            _view.UpdateRowHeaderCellsState(hi.HeaderInfo.Row, _view.Worksheet.RowHeader.ColumnCount - 1, 1, 1);
+            _view.UpdateRowHeaderCellsState(hi.HeaderInfo.Row, _view.ActiveSheet.RowHeader.ColumnCount - 1, 1, 1);
         }
 
         internal bool IsMouseOverColumnHeaders { get; set; }

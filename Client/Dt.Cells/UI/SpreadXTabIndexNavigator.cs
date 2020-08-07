@@ -27,7 +27,7 @@ namespace Dt.Cells.UI
 
         public override void BringCellToVisible(CompositePosition position)
         {
-            if ((!position.IsEmpty && (position.Type == DataSheetElementType.Cell)) && (_sheetView.Worksheet != null))
+            if ((!position.IsEmpty && (position.Type == DataSheetElementType.Cell)) && (_sheetView.ActiveSheet != null))
             {
                 NavigatorHelper.BringCellToVisible(_sheetView, position.Row, position.Column);
             }
@@ -35,7 +35,7 @@ namespace Dt.Cells.UI
 
         public override bool CanMoveCurrentTo(CompositePosition cellPosition)
         {
-            Worksheet worksheet = _sheetView.Worksheet;
+            var worksheet = _sheetView.ActiveSheet;
             if ((cellPosition.Type == DataSheetElementType.Cell) && (worksheet != null))
             {
                 if (!worksheet.GetActualRowVisible(cellPosition.Row, SheetArea.Cells) || !worksheet.GetActualColumnVisible(cellPosition.Column, SheetArea.Cells))
@@ -54,9 +54,9 @@ namespace Dt.Cells.UI
         public override List<int> GetColumnIndexes()
         {
             List<int> list = new List<int>();
-            if (_sheetView.Worksheet != null)
+            if (_sheetView.ActiveSheet != null)
             {
-                for (int i = 0; i < _sheetView.Worksheet.Columns.Count; i++)
+                for (int i = 0; i < _sheetView.ActiveSheet.Columns.Count; i++)
                 {
                     list.Add(i);
                 }
@@ -76,9 +76,9 @@ namespace Dt.Cells.UI
 
         public override int GetColumnSpan(CompositePosition position)
         {
-            if ((_sheetView.Worksheet != null) && (_sheetView.Worksheet.SpanModel != null))
+            if ((_sheetView.ActiveSheet != null) && (_sheetView.ActiveSheet.SpanModel != null))
             {
-                CellRange range = _sheetView.Worksheet.SpanModel.Find(position.Row, position.Column);
+                CellRange range = _sheetView.ActiveSheet.SpanModel.Find(position.Row, position.Column);
                 if (range != null)
                 {
                     return range.ColumnCount;
@@ -108,9 +108,9 @@ namespace Dt.Cells.UI
 
         public override int GetRowSpan(CompositePosition position)
         {
-            if ((_sheetView.Worksheet != null) && (_sheetView.Worksheet.SpanModel != null))
+            if ((_sheetView.ActiveSheet != null) && (_sheetView.ActiveSheet.SpanModel != null))
             {
-                CellRange range = _sheetView.Worksheet.SpanModel.Find(position.Row, position.Column);
+                CellRange range = _sheetView.ActiveSheet.SpanModel.Find(position.Row, position.Column);
                 if (range != null)
                 {
                     return range.RowCount;
@@ -131,9 +131,9 @@ namespace Dt.Cells.UI
         public override bool IsMerged(CompositePosition position, out CompositePosition topLeftPosition)
         {
             topLeftPosition = position;
-            if ((_sheetView.Worksheet != null) && (_sheetView.Worksheet.SpanModel != null))
+            if ((_sheetView.ActiveSheet != null) && (_sheetView.ActiveSheet.SpanModel != null))
             {
-                CellRange range = _sheetView.Worksheet.SpanModel.Find(position.Row, position.Column);
+                CellRange range = _sheetView.ActiveSheet.SpanModel.Find(position.Row, position.Column);
                 if (range != null)
                 {
                     topLeftPosition = new CompositePosition(DataSheetElementType.Cell, range.Row, range.Column);
@@ -150,12 +150,12 @@ namespace Dt.Cells.UI
 
         public override int CompositeColumnCount
         {
-            get { return  _sheetView.Worksheet.ColumnCount; }
+            get { return  _sheetView.ActiveSheet.ColumnCount; }
         }
 
         public override int CompositeRowCount
         {
-            get { return  _sheetView.Worksheet.RowCount; }
+            get { return  _sheetView.ActiveSheet.RowCount; }
         }
 
         public override IList<CompositeRange> Selections
@@ -163,7 +163,7 @@ namespace Dt.Cells.UI
             get
             {
                 List<CompositeRange> list = new List<CompositeRange>();
-                Worksheet worksheet = _sheetView.Worksheet;
+                var worksheet = _sheetView.ActiveSheet;
                 if (worksheet != null)
                 {
                     foreach (CellRange range in worksheet.Selections)

@@ -34,7 +34,7 @@ namespace Dt.Cells.UI
             _activeSelectionLayouts = new List<Rect>();
             ParentViewport = parentViewport;
 
-            _selectionBackground = parentViewport.Sheet.Worksheet.SelectionBackground;
+            _selectionBackground = parentViewport.Sheet.ActiveSheet.SelectionBackground;
             _selectionPath = new Path();
             if (_selectionBackground != null)
                 _selectionPath.Fill = _selectionBackground;
@@ -116,13 +116,13 @@ namespace Dt.Cells.UI
             }
 
             _selectionPath.InvalidateMeasure();
-            if (ParentViewport.Sheet.Worksheet.SelectionBackground == null)
+            if (ParentViewport.Sheet.ActiveSheet.SelectionBackground == null)
             {
                 _selectionBackground = new SolidColorBrush(Color.FromArgb(60, 180, 180, 200));
             }
             else
             {
-                _selectionBackground = ParentViewport.Sheet.Worksheet.SelectionBackground;
+                _selectionBackground = ParentViewport.Sheet.ActiveSheet.SelectionBackground;
             }
             foreach (Rectangle item in _activeSelectionRectangles)
             {
@@ -226,9 +226,9 @@ namespace Dt.Cells.UI
             _activeSelectionLayouts = new List<Rect>();
             CellRange viewportRange = GetViewportRange();
 
-            if (ParentViewport.IsActived && (ParentViewport.Sheet.Worksheet.ActiveCell != null))
+            if (ParentViewport.IsActived && (ParentViewport.Sheet.ActiveSheet.ActiveCell != null))
             {
-                Worksheet ws = ParentViewport.Sheet.Worksheet;
+                Worksheet ws = ParentViewport.Sheet.ActiveSheet;
                 range = new CellRange(ws.ActiveRowIndex, ws.ActiveColumnIndex, 1, 1);
                 CellRange range3 = ws.SpanModel.Find(range.Row, range.Column);
                 if ((range3 != null) && viewportRange.Intersects(range3.Row, range3.Column, range3.RowCount, range3.ColumnCount))

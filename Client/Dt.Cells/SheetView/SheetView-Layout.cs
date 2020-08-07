@@ -13,7 +13,7 @@ using Windows.UI.Xaml.Shapes;
 
 namespace Dt.Cells.UI
 {
-    public partial class SpreadView : SheetView
+    public partial class SheetView
     {
 
 #if IOS
@@ -21,6 +21,79 @@ namespace Dt.Cells.UI
 #endif
         void Init()
         {
+            _trailingFreezeLineStyle = null;
+            _showFreezeLine = true;
+            _protect = false;
+            _vScrollable = true;
+            _hScrollable = true;
+            _cachedColumnHeaderRowLayoutModel = null;
+            _cachedViewportRowLayoutModel = null;
+            _cachedRowHeaderColumnLayoutModel = null;
+            _cachedViewportColumnLayoutModel = null;
+            _cachedColumnHeaderViewportColumnLayoutModel = null;
+            _cachedRowHeaderViewportRowLayoutModel = null;
+            _cachedRowHeaderCellLayoutModel = null;
+            _cachedColumnHeaderCellLayoutModel = null;
+            _cachedViewportCellLayoutModel = null;
+            _cachedGroupLayout = null;
+            _cachedFloatingObjectLayoutModel = null;
+            _cornerPresenter = null;
+            _rowHeaderPresenters = null;
+            _columnHeaderPresenters = null;
+            _viewportPresenters = null;
+            _groupCornerPresenter = null;
+            _rowGroupHeaderPresenter = null;
+            _columnGroupHeaderPresenter = null;
+            _rowGroupPresenters = null;
+            _columnGroupPresenters = null;
+            _showColumnRangeGroup = true;
+            _showRowRangeGroup = true;
+            _shapeDrawingContainer = null;
+            _trackersContainer = null;
+            _columnFreezeLine = null;
+            _rowFreezeLine = null;
+            _columnTrailingFreezeLine = null;
+            _rowTrailingFreezeLine = null;
+            _resizingTracker = null;
+            _currentActiveColumnIndex = 0;
+            _currentActiveRowIndex = 0;
+            _verticalSelectionMgr = null;
+            _horizontalSelectionMgr = null;
+            _keyMap = null;
+            _floatingObjectsKeyMap = null;
+            _availableSize = new Size(double.PositiveInfinity, double.PositiveInfinity);
+            _isEditing = false;
+            _isDoubleClick = false;
+            _positionInfo = null;
+            _navigation = null;
+            _undoManager = null;
+            _eventSuspended = 0;
+            _lastClickPoint = new Point();
+            _lastClickLocation = new Point(-1.0, -1.0);
+            _hoverManager = new HoverManager(this);
+            _dragDropIndicator = null;
+            _dragDropInsertIndicator = null;
+            _dragDropFromRange = null;
+            _dragDropColumnOffset = 0;
+            _dragDropRowOffset = 0;
+            _isDragInsert = false;
+            _isDragCopy = false;
+            _dragStartRowViewport = -2;
+            _dragStartColumnViewport = -2;
+            _dragToColumnViewport = -2;
+            _dragToRowViewport = -2;
+            _dragToColumn = -2;
+            _dragToRow = -2;
+            _highlightDataValidationInvalidData = false;
+            _mouseCursor = null;
+            _tooltipHelper = null;
+            _filterPopupHelper = null;
+            _dataValidationPopUpHelper = null;
+            _inputDeviceType = InputDeviceType.Mouse;
+            _resizeZeroIndicator = ResizeZeroIndicator.Default;
+            _cachedResizerGipper = new Dictionary<string, BitmapImage>();
+            _cachedToolbarImageSources = new Dictionary<string, ImageSource>();
+
             _horizontalScrollBarHeight = 25.0;
             _verticalScrollBarWidth = 25.0;
             _horizontalScrollBarStyle = null;
@@ -93,7 +166,7 @@ namespace Dt.Cells.UI
             if (_cachedLastAvailableSize != availableSize)
             {
                 _cachedLastAvailableSize = availableSize;
-                AvailableSize = availableSize;
+                _availableSize = availableSize;
                 InvalidateLayout();
             }
             if (!IsWorking)
@@ -101,7 +174,7 @@ namespace Dt.Cells.UI
                 SaveHitInfo(null);
             }
 
-            SpreadLayout spreadLayout = GetSpreadLayout();
+            SheetLayout layout = GetSheetLayout();
             List<Image> list = new List<Image>();
             foreach (var element in Children.OfType<Image>())
             {
@@ -144,8 +217,8 @@ namespace Dt.Cells.UI
             GcViewport[,] viewportArray = null;
             if ((_viewportPresenters != null)
                 && (ActiveSheet == null
-                    || _viewportPresenters.GetUpperBound(0) != spreadLayout.RowPaneCount + 1
-                    || _viewportPresenters.GetUpperBound(1) != spreadLayout.ColumnPaneCount + 1))
+                    || _viewportPresenters.GetUpperBound(0) != layout.RowPaneCount + 1
+                    || _viewportPresenters.GetUpperBound(1) != layout.ColumnPaneCount + 1))
             {
                 GcViewport[,] viewportArray2 = _viewportPresenters;
                 int upperBound = viewportArray2.GetUpperBound(0);
@@ -167,16 +240,16 @@ namespace Dt.Cells.UI
             }
             if (_viewportPresenters == null)
             {
-                _viewportPresenters = new GcViewport[spreadLayout.RowPaneCount + 2, spreadLayout.ColumnPaneCount + 2];
+                _viewportPresenters = new GcViewport[layout.RowPaneCount + 2, layout.ColumnPaneCount + 2];
             }
-            for (int i = -1; i <= spreadLayout.ColumnPaneCount; i++)
+            for (int i = -1; i <= layout.ColumnPaneCount; i++)
             {
-                double viewportWidth = spreadLayout.GetViewportWidth(i);
-                viewportX = spreadLayout.GetViewportX(i);
-                for (int num5 = -1; num5 <= spreadLayout.RowPaneCount; num5++)
+                double viewportWidth = layout.GetViewportWidth(i);
+                viewportX = layout.GetViewportX(i);
+                for (int num5 = -1; num5 <= layout.RowPaneCount; num5++)
                 {
-                    double viewportHeight = spreadLayout.GetViewportHeight(num5);
-                    viewportY = spreadLayout.GetViewportY(num5);
+                    double viewportHeight = layout.GetViewportHeight(num5);
+                    viewportY = layout.GetViewportY(num5);
                     if (((_viewportPresenters[num5 + 1, i + 1] == null) && (viewportWidth > 0.0)) && (viewportHeight > 0.0))
                     {
                         if (((viewportArray != null) && ((num5 + 1) < viewportArray.GetUpperBound(0))) && (((i + 1) < viewportArray.GetUpperBound(1)) && (viewportArray[num5 + 1, i + 1] != null)))
@@ -210,7 +283,7 @@ namespace Dt.Cells.UI
             }
 
             // 行头，一个GcViewport对应一个行头
-            if ((_rowHeaderPresenters != null) && ((ActiveSheet == null) || (_rowHeaderPresenters.Length != (spreadLayout.RowPaneCount + 2))))
+            if ((_rowHeaderPresenters != null) && ((ActiveSheet == null) || (_rowHeaderPresenters.Length != (layout.RowPaneCount + 2))))
             {
                 foreach (GcViewport viewport3 in _rowHeaderPresenters)
                 {
@@ -220,14 +293,14 @@ namespace Dt.Cells.UI
             }
             if (_rowHeaderPresenters == null)
             {
-                _rowHeaderPresenters = new GcRowHeaderViewport[spreadLayout.RowPaneCount + 2];
+                _rowHeaderPresenters = new GcRowHeaderViewport[layout.RowPaneCount + 2];
             }
-            if (spreadLayout.HeaderWidth > 0.0)
+            if (layout.HeaderWidth > 0.0)
             {
-                for (int num7 = -1; num7 <= spreadLayout.RowPaneCount; num7++)
+                for (int num7 = -1; num7 <= layout.RowPaneCount; num7++)
                 {
-                    double height = spreadLayout.GetViewportHeight(num7);
-                    viewportY = spreadLayout.GetViewportY(num7);
+                    double height = layout.GetViewportHeight(num7);
+                    viewportY = layout.GetViewportY(num7);
                     if ((_rowHeaderPresenters[num7 + 1] == null) && (height > 0.0))
                     {
                         _rowHeaderPresenters[num7 + 1] = new GcRowHeaderViewport(this);
@@ -235,14 +308,14 @@ namespace Dt.Cells.UI
                     GcViewport viewport4 = _rowHeaderPresenters[num7 + 1];
                     if (height > 0.0)
                     {
-                        viewport4.Location = new Point(spreadLayout.HeaderX, viewportY);
+                        viewport4.Location = new Point(layout.HeaderX, viewportY);
                         viewport4.RowViewportIndex = num7;
                         if (!Children.Contains(viewport4))
                         {
                             Children.Add(viewport4);
                         }
                         viewport4.InvalidateMeasure();
-                        viewport4.Measure(new Size(spreadLayout.HeaderWidth, height));
+                        viewport4.Measure(new Size(layout.HeaderWidth, height));
                     }
                     else if (viewport4 != null)
                     {
@@ -260,7 +333,7 @@ namespace Dt.Cells.UI
             }
 
             // 列头
-            if ((_columnHeaderPresenters != null) && ((ActiveSheet == null) || (_columnHeaderPresenters.Length != (spreadLayout.ColumnPaneCount + 2))))
+            if ((_columnHeaderPresenters != null) && ((ActiveSheet == null) || (_columnHeaderPresenters.Length != (layout.ColumnPaneCount + 2))))
             {
                 foreach (GcViewport viewport6 in _columnHeaderPresenters)
                 {
@@ -270,14 +343,14 @@ namespace Dt.Cells.UI
             }
             if (_columnHeaderPresenters == null)
             {
-                _columnHeaderPresenters = new GcColumnHeaderViewport[spreadLayout.ColumnPaneCount + 2];
+                _columnHeaderPresenters = new GcColumnHeaderViewport[layout.ColumnPaneCount + 2];
             }
-            if (spreadLayout.HeaderHeight > 0.0)
+            if (layout.HeaderHeight > 0.0)
             {
-                for (int num9 = -1; num9 <= spreadLayout.ColumnPaneCount; num9++)
+                for (int num9 = -1; num9 <= layout.ColumnPaneCount; num9++)
                 {
-                    viewportX = spreadLayout.GetViewportX(num9);
-                    double width = spreadLayout.GetViewportWidth(num9);
+                    viewportX = layout.GetViewportX(num9);
+                    double width = layout.GetViewportWidth(num9);
                     if ((_columnHeaderPresenters[num9 + 1] == null) && (width > 0.0))
                     {
                         _columnHeaderPresenters[num9 + 1] = new GcColumnHeaderViewport(this);
@@ -285,14 +358,14 @@ namespace Dt.Cells.UI
                     GcViewport viewport7 = _columnHeaderPresenters[num9 + 1];
                     if (width > 0.0)
                     {
-                        viewport7.Location = new Point(viewportX, spreadLayout.HeaderY);
+                        viewport7.Location = new Point(viewportX, layout.HeaderY);
                         viewport7.ColumnViewportIndex = num9;
                         if (!Children.Contains(viewport7))
                         {
                             Children.Add(viewport7);
                         }
                         viewport7.InvalidateMeasure();
-                        viewport7.Measure(new Size(width, spreadLayout.HeaderHeight));
+                        viewport7.Measure(new Size(width, layout.HeaderHeight));
                     }
                     else if (viewport7 != null)
                     {
@@ -314,15 +387,15 @@ namespace Dt.Cells.UI
             {
                 _cornerPresenter = new GcHeaderCornerViewport(this);
             }
-            _cornerPresenter.Location = new Point(spreadLayout.HeaderX, spreadLayout.HeaderY);
-            if ((spreadLayout.HeaderWidth > 0.0) && (spreadLayout.HeaderHeight > 0.0))
+            _cornerPresenter.Location = new Point(layout.HeaderX, layout.HeaderY);
+            if ((layout.HeaderWidth > 0.0) && (layout.HeaderHeight > 0.0))
             {
                 if (!Children.Contains(_cornerPresenter))
                 {
                     Children.Add(_cornerPresenter);
                 }
                 _cornerPresenter.InvalidateMeasure();
-                _cornerPresenter.Measure(new Size(spreadLayout.HeaderWidth, spreadLayout.HeaderHeight));
+                _cornerPresenter.Measure(new Size(layout.HeaderWidth, layout.HeaderHeight));
             }
             else
             {
@@ -331,12 +404,12 @@ namespace Dt.Cells.UI
             }
 
             // 水平滚动栏
-            if (spreadLayout.OrnamentHeight > 0.0)
+            if (layout.OrnamentHeight > 0.0)
             {
-                for (int num11 = 0; num11 < spreadLayout.ColumnPaneCount; num11++)
+                for (int num11 = 0; num11 < layout.ColumnPaneCount; num11++)
                 {
                     ScrollBar bar = _horizontalScrollBar[num11];
-                    if (spreadLayout.GetHorizontalScrollBarWidth(num11) > 0.0)
+                    if (layout.GetHorizontalScrollBarWidth(num11) > 0.0)
                     {
                         if (!Children.Contains(bar))
                         {
@@ -348,7 +421,7 @@ namespace Dt.Cells.UI
                         Children.Remove(bar);
                     }
                     HorizontalSplitBox box = _horizontalSplitBox[num11];
-                    if (spreadLayout.GetHorizontalSplitBoxWidth(num11) > 0.0)
+                    if (layout.GetHorizontalSplitBoxWidth(num11) > 0.0)
                     {
                         if (!Children.Contains(box))
                         {
@@ -380,7 +453,7 @@ namespace Dt.Cells.UI
             }
 
             // sheet标签 
-            if (spreadLayout.TabStripHeight > 0.0)
+            if (layout.TabStripHeight > 0.0)
             {
                 if (_tabStrip == null)
                 {
@@ -388,7 +461,7 @@ namespace Dt.Cells.UI
                     // hdt 应用构造前的设置
                     if (_tabStripVisibility == Visibility.Collapsed)
                         _tabStrip.Visibility = Visibility.Collapsed;
-                    _tabStrip.HasInsertTab = SpreadSheet.TabStripInsertTab;
+                    _tabStrip.HasInsertTab = Excel.TabStripInsertTab;
                     _tabStrip.OwningView = this;
                     Canvas.SetZIndex(_tabStrip, 0x62);
                 }
@@ -399,19 +472,19 @@ namespace Dt.Cells.UI
                 _tabStrip.ActiveTabChanging -= new EventHandler(OnTabStripActiveTabChanging);
                 _tabStrip.ActiveTabChanged -= new EventHandler(OnTabStripActiveTabChanged);
                 _tabStrip.NewTabNeeded -= new EventHandler(OnTabStripNewTabNeeded);
-                _tabStrip.AddSheets(SpreadSheet.Sheets);
+                _tabStrip.AddSheets(Excel.Sheets);
                 if (!Children.Contains(_tabStrip))
                 {
                     Children.Add(_tabStrip);
                 }
-                int activeSheetIndex = SpreadSheet.ActiveSheetIndex;
-                if ((activeSheetIndex >= 0) && (activeSheetIndex < SpreadSheet.Sheets.Count))
+                int activeSheetIndex = Excel.ActiveSheetIndex;
+                if ((activeSheetIndex >= 0) && (activeSheetIndex < Excel.Sheets.Count))
                 {
                     _tabStrip.ActiveSheet(activeSheetIndex, false);
                 }
-                _tabStrip.SetStartSheet(SpreadSheet.StartSheetIndex);
+                _tabStrip.SetStartSheet(Excel.StartSheetIndex);
                 _tabStrip.InvalidateMeasure();
-                _tabStrip.Measure(new Size(spreadLayout.TabStripWidth, spreadLayout.TabStripHeight));
+                _tabStrip.Measure(new Size(layout.TabStripWidth, layout.TabStripHeight));
                 _tabStrip.ActiveTabChanging += new EventHandler(OnTabStripActiveTabChanging);
                 _tabStrip.ActiveTabChanged += new EventHandler(OnTabStripActiveTabChanged);
                 _tabStrip.NewTabNeeded += new EventHandler(OnTabStripNewTabNeeded);
@@ -425,7 +498,7 @@ namespace Dt.Cells.UI
                     Children.Add(tabStripSplitBox);
                 }
                 tabStripSplitBox.InvalidateMeasure();
-                tabStripSplitBox.Measure(new Size(spreadLayout.TabSplitBoxWidth, spreadLayout.OrnamentHeight));
+                tabStripSplitBox.Measure(new Size(layout.TabSplitBoxWidth, layout.OrnamentHeight));
             }
             else if (_tabStrip != null)
             {
@@ -438,12 +511,12 @@ namespace Dt.Cells.UI
             }
 
             // 水平/垂直多视窗分隔
-            if (spreadLayout.OrnamentWidth > 0.0)
+            if (layout.OrnamentWidth > 0.0)
             {
-                for (int num15 = 0; num15 < spreadLayout.RowPaneCount; num15++)
+                for (int num15 = 0; num15 < layout.RowPaneCount; num15++)
                 {
                     ScrollBar bar3 = _verticalScrollBar[num15];
-                    if (GetSpreadLayout().GetVerticalScrollBarHeight(num15) > 0.0)
+                    if (GetSheetLayout().GetVerticalScrollBarHeight(num15) > 0.0)
                     {
                         if (!Children.Contains(bar3))
                         {
@@ -455,7 +528,7 @@ namespace Dt.Cells.UI
                         Children.Remove(bar3);
                     }
                     VerticalSplitBox box3 = _verticalSplitBox[num15];
-                    if (spreadLayout.GetVerticalSplitBoxHeight(num15) > 0.0)
+                    if (layout.GetVerticalSplitBoxHeight(num15) > 0.0)
                     {
                         if (!Children.Contains(box3))
                         {
@@ -485,35 +558,35 @@ namespace Dt.Cells.UI
                     }
                 }
             }
-            for (int j = 0; j < (spreadLayout.ColumnPaneCount - 1); j++)
+            for (int j = 0; j < (layout.ColumnPaneCount - 1); j++)
             {
                 HorizontalSplitBar bar5 = _horizontalSplitBar[j];
-                double horizontalSplitBoxWidth = spreadLayout.GetHorizontalSplitBoxWidth(j);
-                double num20 = AvailableSize.Height;
+                double horizontalSplitBoxWidth = layout.GetHorizontalSplitBoxWidth(j);
+                double num20 = _availableSize.Height;
                 if (!Children.Contains(bar5))
                 {
                     Children.Add(bar5);
                 }
                 bar5.Measure(new Size(horizontalSplitBoxWidth, num20));
             }
-            for (int k = 0; k < (spreadLayout.RowPaneCount - 1); k++)
+            for (int k = 0; k < (layout.RowPaneCount - 1); k++)
             {
                 VerticalSplitBar bar6 = _verticalSplitBar[k];
-                double num22 = AvailableSize.Width;
-                double verticalSplitBarHeight = spreadLayout.GetVerticalSplitBarHeight(k);
+                double num22 = _availableSize.Width;
+                double verticalSplitBarHeight = layout.GetVerticalSplitBarHeight(k);
                 if (!Children.Contains(bar6))
                 {
                     Children.Add(bar6);
                 }
                 bar6.Measure(new Size(num22, verticalSplitBarHeight));
             }
-            for (int m = 0; m < (spreadLayout.RowPaneCount - 1); m++)
+            for (int m = 0; m < (layout.RowPaneCount - 1); m++)
             {
-                for (int num25 = 0; num25 < (spreadLayout.ColumnPaneCount - 1); num25++)
+                for (int num25 = 0; num25 < (layout.ColumnPaneCount - 1); num25++)
                 {
                     CrossSplitBar bar7 = _crossSplitBar[m, num25];
-                    double num26 = spreadLayout.GetHorizontalSplitBoxWidth(num25);
-                    double num27 = spreadLayout.GetVerticalSplitBarHeight(m);
+                    double num26 = layout.GetHorizontalSplitBoxWidth(num25);
+                    double num27 = layout.GetVerticalSplitBarHeight(m);
                     if (!Children.Contains(bar7))
                     {
                         Children.Add(bar7);
@@ -521,7 +594,7 @@ namespace Dt.Cells.UI
                     bar7.Measure(new Size(num26, num27));
                 }
             }
-            MeasureRangeGroup(spreadLayout.RowPaneCount, spreadLayout.ColumnPaneCount, spreadLayout);
+            MeasureRangeGroup(layout.RowPaneCount, layout.ColumnPaneCount, layout);
             
             // 进度环
             if (!Children.Contains(_progressGrid))
@@ -567,46 +640,46 @@ namespace Dt.Cells.UI
             {
                 _formulaSelectionGripperPanel.Measure(new Size(double.MaxValue, double.MaxValue));
             }
-            return AvailableSize;
+            return _availableSize;
         }
 
         protected override Size ArrangeOverride(Size finalSize)
         {
             double headerX;
             double headerY;
-            SpreadLayout spreadLayout = GetSpreadLayout();
+            SheetLayout layout = GetSheetLayout();
             TrackersContainer.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
             SplittingTrackerContainer.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
             ShapeDrawingContainer.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
             CursorsContainer.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
             if ((IsTouchZooming && (_cornerPresenter != null)) && (_cornerPresenter.Parent != null))
             {
-                headerX = spreadLayout.HeaderX;
-                headerY = spreadLayout.HeaderY;
-                _cornerPresenter.Arrange(new Rect(headerX, headerY, spreadLayout.HeaderWidth, spreadLayout.HeaderHeight));
+                headerX = layout.HeaderX;
+                headerY = layout.HeaderY;
+                _cornerPresenter.Arrange(new Rect(headerX, headerY, layout.HeaderWidth, layout.HeaderHeight));
                 _cornerPresenter.RenderTransform = _cachedCornerViewportTransform;
             }
             else if ((_cornerPresenter != null) && (_cornerPresenter.Parent != null))
             {
-                headerX = spreadLayout.HeaderX;
-                headerY = spreadLayout.HeaderY;
+                headerX = layout.HeaderX;
+                headerY = layout.HeaderY;
                 if (_cornerPresenter.RenderTransform != null)
                 {
                     _cornerPresenter.RenderTransform = null;
                 }
-                if ((_cornerPresenter.Width != spreadLayout.HeaderWidth) || (_cornerPresenter.Height != spreadLayout.HeaderHeight))
+                if ((_cornerPresenter.Width != layout.HeaderWidth) || (_cornerPresenter.Height != layout.HeaderHeight))
                 {
-                    _cornerPresenter.Arrange(new Rect(headerX, headerY, spreadLayout.HeaderWidth, spreadLayout.HeaderHeight));
+                    _cornerPresenter.Arrange(new Rect(headerX, headerY, layout.HeaderWidth, layout.HeaderHeight));
                 }
             }
             if (IsTouchZooming && (_cachedColumnHeaderViewportTransform != null))
             {
-                for (int i = -1; i <= spreadLayout.ColumnPaneCount; i++)
+                for (int i = -1; i <= layout.ColumnPaneCount; i++)
                 {
-                    headerX = spreadLayout.GetViewportX(i);
-                    headerY = spreadLayout.HeaderY;
-                    double viewportWidth = spreadLayout.GetViewportWidth(i);
-                    double headerHeight = spreadLayout.HeaderHeight;
+                    headerX = layout.GetViewportX(i);
+                    headerY = layout.HeaderY;
+                    double viewportWidth = layout.GetViewportWidth(i);
+                    double headerHeight = layout.HeaderHeight;
                     GcViewport viewport = _columnHeaderPresenters[i + 1];
                     if ((viewport != null) && (viewport.Parent != null))
                     {
@@ -617,16 +690,16 @@ namespace Dt.Cells.UI
             }
             else if (_columnHeaderPresenters != null)
             {
-                for (int j = -1; j <= spreadLayout.ColumnPaneCount; j++)
+                for (int j = -1; j <= layout.ColumnPaneCount; j++)
                 {
-                    headerX = spreadLayout.GetViewportX(j);
-                    if ((IsTouching && (j == spreadLayout.ColumnPaneCount)) && ((_translateOffsetX < 0.0) && (_touchStartHitTestInfo.ColumnViewportIndex == (spreadLayout.ColumnPaneCount - 1))))
+                    headerX = layout.GetViewportX(j);
+                    if ((IsTouching && (j == layout.ColumnPaneCount)) && ((_translateOffsetX < 0.0) && (_touchStartHitTestInfo.ColumnViewportIndex == (layout.ColumnPaneCount - 1))))
                     {
                         headerX += _translateOffsetX;
                     }
-                    headerY = spreadLayout.HeaderY;
-                    double width = spreadLayout.GetViewportWidth(j);
-                    double height = spreadLayout.HeaderHeight;
+                    headerY = layout.HeaderY;
+                    double width = layout.GetViewportWidth(j);
+                    double height = layout.HeaderHeight;
                     GcViewport viewport2 = _columnHeaderPresenters[j + 1];
                     if ((viewport2 != null) && (viewport2.Parent != null))
                     {
@@ -672,12 +745,12 @@ namespace Dt.Cells.UI
             }
             if (IsTouchZooming && (_cachedRowHeaderViewportTransform != null))
             {
-                for (int k = -1; k <= spreadLayout.RowPaneCount; k++)
+                for (int k = -1; k <= layout.RowPaneCount; k++)
                 {
-                    headerX = spreadLayout.HeaderX;
-                    headerY = spreadLayout.GetViewportY(k);
-                    double headerWidth = spreadLayout.HeaderWidth;
-                    double viewportHeight = spreadLayout.GetViewportHeight(k);
+                    headerX = layout.HeaderX;
+                    headerY = layout.GetViewportY(k);
+                    double headerWidth = layout.HeaderWidth;
+                    double viewportHeight = layout.GetViewportHeight(k);
                     GcViewport viewport3 = _rowHeaderPresenters[k + 1];
                     if ((viewport3 != null) && (viewport3.Parent != null))
                     {
@@ -688,16 +761,16 @@ namespace Dt.Cells.UI
             }
             else if (_rowHeaderPresenters != null)
             {
-                for (int m = -1; m <= spreadLayout.RowPaneCount; m++)
+                for (int m = -1; m <= layout.RowPaneCount; m++)
                 {
-                    headerX = spreadLayout.HeaderX;
-                    headerY = spreadLayout.GetViewportY(m);
-                    if (((IsTouching && IsTouching) && ((m == spreadLayout.RowPaneCount) && (_translateOffsetY < 0.0))) && (_touchStartHitTestInfo.RowViewportIndex == (spreadLayout.RowPaneCount - 1)))
+                    headerX = layout.HeaderX;
+                    headerY = layout.GetViewportY(m);
+                    if (((IsTouching && IsTouching) && ((m == layout.RowPaneCount) && (_translateOffsetY < 0.0))) && (_touchStartHitTestInfo.RowViewportIndex == (layout.RowPaneCount - 1)))
                     {
                         headerY += _translateOffsetY;
                     }
-                    double num15 = spreadLayout.HeaderWidth;
-                    double num16 = spreadLayout.GetViewportHeight(m);
+                    double num15 = layout.HeaderWidth;
+                    double num16 = layout.GetViewportHeight(m);
                     GcViewport viewport4 = _rowHeaderPresenters[m + 1];
                     if ((viewport4 != null) && (viewport4.Parent != null))
                     {
@@ -743,14 +816,14 @@ namespace Dt.Cells.UI
             }
             if (IsTouchZooming && (_cachedViewportTransform != null))
             {
-                for (int n = -1; n <= spreadLayout.ColumnPaneCount; n++)
+                for (int n = -1; n <= layout.ColumnPaneCount; n++)
                 {
-                    headerX = spreadLayout.GetViewportX(n);
-                    double num20 = spreadLayout.GetViewportWidth(n);
-                    for (int num21 = -1; num21 <= spreadLayout.RowPaneCount; num21++)
+                    headerX = layout.GetViewportX(n);
+                    double num20 = layout.GetViewportWidth(n);
+                    for (int num21 = -1; num21 <= layout.RowPaneCount; num21++)
                     {
-                        headerY = spreadLayout.GetViewportY(num21);
-                        double num22 = spreadLayout.GetViewportHeight(num21);
+                        headerY = layout.GetViewportY(num21);
+                        double num22 = layout.GetViewportHeight(num21);
                         GcViewport viewport5 = _viewportPresenters[num21 + 1, n + 1];
                         if (viewport5 != null)
                         {
@@ -762,22 +835,22 @@ namespace Dt.Cells.UI
             }
             else if (_viewportPresenters != null)
             {
-                for (int num23 = -1; num23 <= spreadLayout.ColumnPaneCount; num23++)
+                for (int num23 = -1; num23 <= layout.ColumnPaneCount; num23++)
                 {
-                    headerX = spreadLayout.GetViewportX(num23);
-                    if ((IsTouching && (num23 == spreadLayout.ColumnPaneCount)) && ((_translateOffsetX < 0.0) && (_touchStartHitTestInfo.ColumnViewportIndex == (spreadLayout.ColumnPaneCount - 1))))
+                    headerX = layout.GetViewportX(num23);
+                    if ((IsTouching && (num23 == layout.ColumnPaneCount)) && ((_translateOffsetX < 0.0) && (_touchStartHitTestInfo.ColumnViewportIndex == (layout.ColumnPaneCount - 1))))
                     {
                         headerX += _translateOffsetX;
                     }
-                    double num24 = spreadLayout.GetViewportWidth(num23);
-                    for (int num25 = -1; num25 <= spreadLayout.RowPaneCount; num25++)
+                    double num24 = layout.GetViewportWidth(num23);
+                    for (int num25 = -1; num25 <= layout.RowPaneCount; num25++)
                     {
-                        headerY = spreadLayout.GetViewportY(num25);
-                        if (((IsTouching && IsTouching) && ((num25 == spreadLayout.RowPaneCount) && (_translateOffsetY < 0.0))) && (_touchStartHitTestInfo.RowViewportIndex == (spreadLayout.RowPaneCount - 1)))
+                        headerY = layout.GetViewportY(num25);
+                        if (((IsTouching && IsTouching) && ((num25 == layout.RowPaneCount) && (_translateOffsetY < 0.0))) && (_touchStartHitTestInfo.RowViewportIndex == (layout.RowPaneCount - 1)))
                         {
                             headerY += _translateOffsetY;
                         }
-                        double num26 = spreadLayout.GetViewportHeight(num25);
+                        double num26 = layout.GetViewportHeight(num25);
                         GcViewport viewport6 = _viewportPresenters[num25 + 1, num23 + 1];
                         if (viewport6 != null)
                         {
@@ -838,12 +911,12 @@ namespace Dt.Cells.UI
             }
             if (_horizontalScrollBar != null)
             {
-                for (int num31 = 0; num31 < spreadLayout.ColumnPaneCount; num31++)
+                for (int num31 = 0; num31 < layout.ColumnPaneCount; num31++)
                 {
-                    double horizontalScrollBarX = spreadLayout.GetHorizontalScrollBarX(num31);
-                    double ornamentY = spreadLayout.OrnamentY;
-                    double horizontalScrollBarWidth = spreadLayout.GetHorizontalScrollBarWidth(num31);
-                    double ornamentHeight = spreadLayout.OrnamentHeight;
+                    double horizontalScrollBarX = layout.GetHorizontalScrollBarX(num31);
+                    double ornamentY = layout.OrnamentY;
+                    double horizontalScrollBarWidth = layout.GetHorizontalScrollBarWidth(num31);
+                    double ornamentHeight = layout.OrnamentHeight;
                     horizontalScrollBarWidth = Math.Max(horizontalScrollBarWidth, 0.0);
                     ornamentHeight = Math.Max(ornamentHeight, 0.0);
                     _horizontalScrollBar[num31].Width = horizontalScrollBarWidth;
@@ -853,50 +926,50 @@ namespace Dt.Cells.UI
             }
             if (_tabStrip != null)
             {
-                double tabStripX = spreadLayout.TabStripX;
-                double tabStripY = spreadLayout.TabStripY;
-                double tabStripWidth = spreadLayout.TabStripWidth;
-                double tabStripHeight = spreadLayout.TabStripHeight;
+                double tabStripX = layout.TabStripX;
+                double tabStripY = layout.TabStripY;
+                double tabStripWidth = layout.TabStripWidth;
+                double tabStripHeight = layout.TabStripHeight;
                 _tabStrip.Arrange(new Rect(tabStripX, tabStripY, tabStripWidth, tabStripHeight));
             }
             if (tabStripSplitBox != null)
             {
-                double tabSplitBoxX = spreadLayout.TabSplitBoxX;
-                double num41 = spreadLayout.OrnamentY;
-                double tabSplitBoxWidth = spreadLayout.TabSplitBoxWidth;
-                double num43 = spreadLayout.OrnamentHeight;
+                double tabSplitBoxX = layout.TabSplitBoxX;
+                double num41 = layout.OrnamentY;
+                double tabSplitBoxWidth = layout.TabSplitBoxWidth;
+                double num43 = layout.OrnamentHeight;
                 tabStripSplitBox.Arrange(new Rect(tabSplitBoxX, num41, tabSplitBoxWidth, num43));
             }
             if (_horizontalSplitBox != null)
             {
-                for (int num44 = 0; num44 < spreadLayout.ColumnPaneCount; num44++)
+                for (int num44 = 0; num44 < layout.ColumnPaneCount; num44++)
                 {
-                    double horizontalSplitBoxX = spreadLayout.GetHorizontalSplitBoxX(num44);
-                    double num46 = spreadLayout.OrnamentY;
-                    double horizontalSplitBoxWidth = spreadLayout.GetHorizontalSplitBoxWidth(num44);
-                    double num48 = spreadLayout.OrnamentHeight;
+                    double horizontalSplitBoxX = layout.GetHorizontalSplitBoxX(num44);
+                    double num46 = layout.OrnamentY;
+                    double horizontalSplitBoxWidth = layout.GetHorizontalSplitBoxWidth(num44);
+                    double num48 = layout.OrnamentHeight;
                     _horizontalSplitBox[num44].Arrange(new Rect(horizontalSplitBoxX, num46, horizontalSplitBoxWidth, num48));
                 }
             }
             if (_verticalScrollBar != null)
             {
-                for (int num49 = 0; num49 < spreadLayout.RowPaneCount; num49++)
+                for (int num49 = 0; num49 < layout.RowPaneCount; num49++)
                 {
-                    double ornamentX = spreadLayout.OrnamentX;
-                    double verticalScrollBarY = spreadLayout.GetVerticalScrollBarY(num49);
-                    double ornamentWidth = spreadLayout.OrnamentWidth;
-                    double num53 = spreadLayout.GetViewportHeight(num49) - spreadLayout.GetVerticalSplitBoxHeight(num49);
+                    double ornamentX = layout.OrnamentX;
+                    double verticalScrollBarY = layout.GetVerticalScrollBarY(num49);
+                    double ornamentWidth = layout.OrnamentWidth;
+                    double num53 = layout.GetViewportHeight(num49) - layout.GetVerticalSplitBoxHeight(num49);
                     if (((IsTouching && (_touchStartHitTestInfo != null)) && ((num49 == _touchStartHitTestInfo.RowViewportIndex) && !IsZero(_translateOffsetY))) && ((_touchStartHitTestInfo != null) && (_touchStartHitTestInfo.HitTestType == HitTestType.Viewport)))
                     {
-                        num53 = _cachedViewportHeights[num49 + 1] - spreadLayout.GetVerticalSplitBoxHeight(num49);
+                        num53 = _cachedViewportHeights[num49 + 1] - layout.GetVerticalSplitBoxHeight(num49);
                     }
                     if (num49 == 0)
                     {
-                        num53 += (spreadLayout.HeaderY + spreadLayout.HeaderHeight) + spreadLayout.FrozenHeight;
+                        num53 += (layout.HeaderY + layout.HeaderHeight) + layout.FrozenHeight;
                     }
-                    if (num49 == (spreadLayout.RowPaneCount - 1))
+                    if (num49 == (layout.RowPaneCount - 1))
                     {
-                        num53 += spreadLayout.FrozenTrailingHeight;
+                        num53 += layout.FrozenTrailingHeight;
                     }
                     ornamentWidth = Math.Max(ornamentWidth, 0.0);
                     num53 = Math.Max(num53, 0.0);
@@ -907,47 +980,47 @@ namespace Dt.Cells.UI
             }
             if (_verticalSplitBox != null)
             {
-                for (int num54 = 0; num54 < spreadLayout.RowPaneCount; num54++)
+                for (int num54 = 0; num54 < layout.RowPaneCount; num54++)
                 {
-                    double num55 = spreadLayout.OrnamentX;
-                    double verticalSplitBoxY = spreadLayout.GetVerticalSplitBoxY(num54);
-                    double num57 = spreadLayout.OrnamentWidth;
-                    double verticalSplitBoxHeight = spreadLayout.GetVerticalSplitBoxHeight(num54);
+                    double num55 = layout.OrnamentX;
+                    double verticalSplitBoxY = layout.GetVerticalSplitBoxY(num54);
+                    double num57 = layout.OrnamentWidth;
+                    double verticalSplitBoxHeight = layout.GetVerticalSplitBoxHeight(num54);
                     _verticalSplitBox[num54].Arrange(new Rect(num55, verticalSplitBoxY, num57, verticalSplitBoxHeight));
                 }
             }
             if (_horizontalSplitBar != null)
             {
-                for (int num59 = 0; num59 < (spreadLayout.ColumnPaneCount - 1); num59++)
+                for (int num59 = 0; num59 < (layout.ColumnPaneCount - 1); num59++)
                 {
                     if ((_horizontalSplitBar[num59] != null) && (_horizontalSplitBar[num59].Parent != null))
                     {
-                        double horizontalSplitBarX = spreadLayout.GetHorizontalSplitBarX(num59);
+                        double horizontalSplitBarX = layout.GetHorizontalSplitBarX(num59);
                         if (IsTouching && (_cachedViewportSplitBarX != null))
                         {
                             horizontalSplitBarX = _cachedViewportSplitBarX[num59];
                         }
-                        double num61 = spreadLayout.Y;
-                        double horizontalSplitBarWidth = spreadLayout.GetHorizontalSplitBarWidth(num59);
-                        double num63 = AvailableSize.Height;
+                        double num61 = layout.Y;
+                        double horizontalSplitBarWidth = layout.GetHorizontalSplitBarWidth(num59);
+                        double num63 = _availableSize.Height;
                         _horizontalSplitBar[num59].Arrange(new Rect(horizontalSplitBarX, num61, horizontalSplitBarWidth, num63));
                     }
                 }
             }
             if (_verticalSplitBar != null)
             {
-                for (int num64 = 0; num64 < (spreadLayout.RowPaneCount - 1); num64++)
+                for (int num64 = 0; num64 < (layout.RowPaneCount - 1); num64++)
                 {
                     if ((_verticalSplitBar[num64] != null) && (_verticalSplitBar[num64].Parent != null))
                     {
-                        double num65 = spreadLayout.X;
-                        double verticalSplitBarY = spreadLayout.GetVerticalSplitBarY(num64);
+                        double num65 = layout.X;
+                        double verticalSplitBarY = layout.GetVerticalSplitBarY(num64);
                         if (IsTouching && (_cachedViewportSplitBarY != null))
                         {
                             verticalSplitBarY = _cachedViewportSplitBarY[num64];
                         }
-                        double num67 = AvailableSize.Width;
-                        double verticalSplitBarHeight = spreadLayout.GetVerticalSplitBarHeight(num64);
+                        double num67 = _availableSize.Width;
+                        double verticalSplitBarHeight = layout.GetVerticalSplitBarHeight(num64);
                         _verticalSplitBar[num64].Arrange(new Rect(num65, verticalSplitBarY, num67, verticalSplitBarHeight));
                     }
                 }
@@ -956,20 +1029,20 @@ namespace Dt.Cells.UI
             {
                 for (int num69 = 0; num69 < _crossSplitBar.GetLength(0); num69++)
                 {
-                    double num70 = spreadLayout.GetVerticalSplitBarY(num69);
+                    double num70 = layout.GetVerticalSplitBarY(num69);
                     if (IsTouching && (_cachedViewportSplitBarY != null))
                     {
                         num70 = _cachedViewportSplitBarY[num69];
                     }
-                    double num71 = spreadLayout.GetVerticalSplitBarHeight(num69);
+                    double num71 = layout.GetVerticalSplitBarHeight(num69);
                     for (int num72 = 0; num72 < _crossSplitBar.GetLength(1); num72++)
                     {
-                        double num73 = spreadLayout.GetHorizontalSplitBarX(num72);
+                        double num73 = layout.GetHorizontalSplitBarX(num72);
                         if (IsTouching && (_cachedViewportSplitBarX != null))
                         {
                             num73 = _cachedViewportSplitBarX[num72];
                         }
-                        double num74 = spreadLayout.GetHorizontalSplitBarWidth(num72);
+                        double num74 = layout.GetHorizontalSplitBarWidth(num72);
                         if ((_crossSplitBar[num69, num72] != null) && (_crossSplitBar[num69, num72].Parent != null))
                         {
                             _crossSplitBar[num69, num72].Arrange(new Rect(num73, num70, num74, num71));
@@ -977,7 +1050,7 @@ namespace Dt.Cells.UI
                     }
                 }
             }
-            ArrangeRangeGroup(spreadLayout.RowPaneCount, spreadLayout.ColumnPaneCount, spreadLayout);
+            ArrangeRangeGroup(layout.RowPaneCount, layout.ColumnPaneCount, layout);
             Rect rect = new Rect(0.0, 0.0, finalSize.Width, finalSize.Height);
             if (_rowFreezeLine != null)
             {

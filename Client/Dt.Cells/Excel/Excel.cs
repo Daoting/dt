@@ -46,7 +46,7 @@ namespace Dt.Base
         public Excel()
         {
             DefaultStyleKey = typeof(Excel);
-            View = new SpreadView(this);
+            View = new SheetView(this);
 
             AddHandler(KeyDownEvent, new KeyEventHandler(OnKeyDown), true);
             AddHandler(KeyUpEvent, new KeyEventHandler(OnKeyUp), true);
@@ -170,7 +170,7 @@ namespace Dt.Base
         /// <param name="e"></param>
         void AutoRefreshRowColumn(object sender, SheetChangedEventArgs e)
         {
-            if ((sender == View.Worksheet) && AutoRefresh)
+            if ((sender == View.ActiveSheet) && AutoRefresh)
             {
                 if (((e.PropertyName == "Height") || (e.PropertyName == "Width")) || ((e.PropertyName == "IsVisible") || (e.PropertyName == "Axis")))
                 {
@@ -1720,12 +1720,12 @@ namespace Dt.Base
             Worksheet activeSheet = ActiveSheet;
             if (activeSheet != null)
             {
-                SpreadLayout spreadLayout = View.GetSpreadLayout();
-                if ((columnViewportIndex < -1) || (columnViewportIndex > spreadLayout.ColumnPaneCount))
+                SheetLayout layout = View.GetSheetLayout();
+                if ((columnViewportIndex < -1) || (columnViewportIndex > layout.ColumnPaneCount))
                 {
                     throw new ArgumentOutOfRangeException("columnViewportIndex");
                 }
-                if ((columnViewportIndex != -1) && (columnViewportIndex != spreadLayout.ColumnPaneCount))
+                if ((columnViewportIndex != -1) && (columnViewportIndex != layout.ColumnPaneCount))
                 {
                     if ((column < 0) || (column >= activeSheet.ColumnCount))
                     {
@@ -1751,12 +1751,12 @@ namespace Dt.Base
             Worksheet activeSheet = ActiveSheet;
             if (activeSheet != null)
             {
-                SpreadLayout spreadLayout = View.GetSpreadLayout();
-                if ((rowViewportIndex < -1) || (rowViewportIndex > spreadLayout.RowPaneCount))
+                SheetLayout layout = View.GetSheetLayout();
+                if ((rowViewportIndex < -1) || (rowViewportIndex > layout.RowPaneCount))
                 {
                     throw new ArgumentOutOfRangeException("rowViewportIndex");
                 }
-                if ((rowViewportIndex != -1) && (rowViewportIndex != spreadLayout.RowPaneCount))
+                if ((rowViewportIndex != -1) && (rowViewportIndex != layout.RowPaneCount))
                 {
                     if ((row < 0) || (row >= activeSheet.RowCount))
                     {

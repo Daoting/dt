@@ -36,7 +36,7 @@ namespace Dt.Cells.UI
                 {
                     return _sheetView.EditorConnector.ColumnIndex;
                 }
-                return _sheetView.Worksheet.ActiveColumnIndex;
+                return _sheetView.ActiveSheet.ActiveColumnIndex;
             }
         }
 
@@ -51,7 +51,7 @@ namespace Dt.Cells.UI
                 {
                     return _sheetView.EditorConnector.RowIndex;
                 }
-                return _sheetView.Worksheet.ActiveRowIndex;
+                return _sheetView.ActiveSheet.ActiveRowIndex;
             }
         }
 
@@ -67,9 +67,9 @@ namespace Dt.Cells.UI
             {
                 if (_sheetView.EditorConnector.IsInOtherSheet)
                 {
-                    return _sheetView.Worksheet.Workbook.Sheets[_sheetView.EditorConnector.SheetIndex];
+                    return _sheetView.ActiveSheet.Workbook.Sheets[_sheetView.EditorConnector.SheetIndex];
                 }
-                return _sheetView.Worksheet.Workbook.ActiveSheet;
+                return _sheetView.ActiveSheet.Workbook.ActiveSheet;
             }
         }
     }

@@ -23,7 +23,7 @@ namespace Dt.Cells.UI
                 {
                     return false;
                 }
-                Worksheet sheet = view.Worksheet;
+                Worksheet sheet = view.ActiveSheet;
                 bool flag3 = sheet.IsAnyCellInRowSelected(base.Row);
                 bool flag4 = base.Row == sheet.ActiveRowIndex;
                 bool flag5 = Enumerable.FirstOrDefault<CellLayout>(from cellLayout in view.GetViewportCellLayoutModel(view.GetActiveRowViewportIndex(), view.GetActiveColumnViewportIndex()) select cellLayout, delegate(CellLayout cellLayout)
@@ -43,7 +43,7 @@ namespace Dt.Cells.UI
             get
             {
                 SheetView sheet = base.OwningRow.OwningPresenter.Sheet;
-                Worksheet worksheet = sheet.Worksheet;
+                Worksheet worksheet = sheet.ActiveSheet;
                 return ((sheet.HoverManager.IsMouseOverRowHeaders && (sheet.MouseOverRowIndex == base.Row)) && ((base.Column == (worksheet.RowHeader.ColumnCount - 1)) && !sheet.IsWorking));
             }
         }
@@ -52,7 +52,7 @@ namespace Dt.Cells.UI
         {
             get
             {
-                Worksheet worksheet = base.OwningRow.OwningPresenter.Sheet.Worksheet;
+                Worksheet worksheet = base.OwningRow.OwningPresenter.Sheet.ActiveSheet;
                 // hdt 唐忠宝 注释掉下面语句及修改linq，增加where条件
                 // CellRange rowRange = new CellRange(base.Row, -1, 1, -1);
                 return (from range in worksheet.Selections

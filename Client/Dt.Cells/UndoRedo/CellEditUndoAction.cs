@@ -50,7 +50,7 @@ namespace Dt.Cells.UndoRedo
             bool flag = true;
             if (UI.FormulaUtility.IsFormula(newValue))
             {
-                string str2 = UI.FormulaUtility.StringVariantToInvariant(sheetView.Worksheet, newValue);
+                string str2 = UI.FormulaUtility.StringVariantToInvariant(sheetView.ActiveSheet, newValue);
                 flag = Worksheet.IsValid(rowIndex, columnIndex, str2);
             }
             else
@@ -92,7 +92,7 @@ namespace Dt.Cells.UndoRedo
             bool isFormulaApplied = false;
             string appliedFormula = null;
             bool flag3 = false;
-            using (((IUIActionExecuter) sheetView.Worksheet).BeginUIAction())
+            using (((IUIActionExecuter) sheetView.ActiveSheet).BeginUIAction())
             {
                 flag3 = BaseCellType.ApplyValueToCell(sheetView, bindingCell, view.CanUserEditFormula, newValue, valueType, out isFormulaApplied, out appliedFormula);
             }

@@ -77,7 +77,7 @@ namespace Dt.Cells.UI
         void GroupHeaderButton_Click(object sender, RoutedEventArgs e)
         {
             RangeGroupHeaderButtonPresenter presenter = sender as RangeGroupHeaderButtonPresenter;
-            Worksheet sheet = base._sheetView.Worksheet;
+            Worksheet sheet = base._sheetView.ActiveSheet;
             if (((presenter != null) && (sheet != null)) && !base._sheetView.IsEditing)
             {
                 int level = presenter.Level - 1;

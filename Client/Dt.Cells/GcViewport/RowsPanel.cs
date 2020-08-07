@@ -40,7 +40,7 @@ namespace Dt.Cells.UI
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            if (ParentViewport.SupportCellOverflow && ParentViewport.Sheet.CanCellOverflow)
+            if (ParentViewport.SupportCellOverflow && ParentViewport.Sheet.Excel.CanCellOverflow)
             {
                 int viewportLeftColumn = ParentViewport.Sheet.GetViewportLeftColumn(ParentViewport.ColumnViewportIndex);
                 ParentViewport.CellOverflowLayoutBuildEngine.ViewportLeftColumn = viewportLeftColumn;

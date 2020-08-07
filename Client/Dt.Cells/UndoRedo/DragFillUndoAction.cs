@@ -223,7 +223,7 @@ namespace Dt.Cells.UndoRedo
             {
                 ExecuteDragFill(sheetView);
             }
-            if (((_savedFilledViewportCells != null) && _savedFilledViewportCells.IsValueSaved()) && object.ReferenceEquals(sheetView.Worksheet, _workSheet))
+            if (((_savedFilledViewportCells != null) && _savedFilledViewportCells.IsValueSaved()) && object.ReferenceEquals(sheetView.ActiveSheet, _workSheet))
             {
                 CellRange fillRange = _dragFillExtent.FillRange;
                 CopyMoveHelper.RaiseValueChanged(sheetView, fillRange.Row, fillRange.Column, fillRange.RowCount, fillRange.ColumnCount, _savedFilledViewportCells.GetValues());
@@ -577,7 +577,7 @@ namespace Dt.Cells.UndoRedo
                 flag = UndoDragFill(sheetView);
             }
             sheetView.CloseDragFillPopup();
-            if ((oldValues != null) && object.ReferenceEquals(sheetView.Worksheet, _workSheet))
+            if ((oldValues != null) && object.ReferenceEquals(sheetView.ActiveSheet, _workSheet))
             {
                 CopyMoveHelper.RaiseValueChanged(sheetView, fillRange.Row, fillRange.Column, fillRange.RowCount, fillRange.ColumnCount, oldValues);
             }

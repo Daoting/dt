@@ -23,7 +23,7 @@ namespace Dt.Cells.UI
         {
             get
             {
-                Worksheet worksheet = OwningRow.OwningPresenter.Sheet.Worksheet;
+                Worksheet worksheet = OwningRow.OwningPresenter.Sheet.ActiveSheet;
                 if (worksheet.Selections.Count != 1)
                 {
                     return false;

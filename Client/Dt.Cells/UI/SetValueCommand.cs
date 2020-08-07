@@ -36,7 +36,7 @@ namespace Dt.Cells.UI
 
         public void Execute(object parameter)
         {
-            if (((_sheetView != null) && (_sheetView.Worksheet != null)) && ((_info != null) && (_info.Validator != null)))
+            if (((_sheetView != null) && (_sheetView.ActiveSheet != null)) && ((_info != null) && (_info.Validator != null)))
             {
                 if (parameter != null)
                 {
@@ -47,7 +47,7 @@ namespace Dt.Cells.UI
                     _value = null;
                 }
                 CellEditExtent extent = new CellEditExtent(_info.Row, _info.Column, (string) (_value as string));
-                CellEditUndoAction command = new CellEditUndoAction(_sheetView.Worksheet, extent);
+                CellEditUndoAction command = new CellEditUndoAction(_sheetView.ActiveSheet, extent);
                 _sheetView.DoCommand(command);
             }
         }

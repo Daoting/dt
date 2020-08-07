@@ -39,20 +39,20 @@ namespace Dt.Cells.UI
 
         bool MoveActiveCell(NavigationDirection direction)
         {
-            if (_sheetView.Worksheet != null)
+            if (_sheetView.ActiveSheet != null)
             {
                 int activeRowViewportIndex = _sheetView.GetActiveRowViewportIndex();
                 int activeColumnViewportIndex = _sheetView.GetActiveColumnViewportIndex();
                 int viewportTopRow = _sheetView.GetViewportTopRow(activeRowViewportIndex);
                 int viewportLeftColumn = _sheetView.GetViewportLeftColumn(activeColumnViewportIndex);
-                int activeRowIndex = _sheetView.Worksheet.ActiveRowIndex;
-                int activeColumnIndex = _sheetView.Worksheet.ActiveColumnIndex;
+                int activeRowIndex = _sheetView.ActiveSheet.ActiveRowIndex;
+                int activeColumnIndex = _sheetView.ActiveSheet.ActiveColumnIndex;
                 CompositePosition navigationStartPosition = _tabIndexNavigator.GetNavigationStartPosition();
                 TabularPosition position2 = _tabularNavigator.GetNavigationStartPosition();
                 TabularPosition empty = TabularPosition.Empty;
-                if (((_sheetView.Worksheet.Selections.Count > 0) && !NavigatorHelper.ActiveCellInSelection(_sheetView.Worksheet)) && IsTabNavigation(direction))
+                if (((_sheetView.ActiveSheet.Selections.Count > 0) && !NavigatorHelper.ActiveCellInSelection(_sheetView.ActiveSheet)) && IsTabNavigation(direction))
                 {
-                    empty = new TabularPosition(SheetArea.Cells, _sheetView.Worksheet.Selections[0].Row, _sheetView.Worksheet.Selections[0].Column);
+                    empty = new TabularPosition(SheetArea.Cells, _sheetView.ActiveSheet.Selections[0].Row, _sheetView.ActiveSheet.Selections[0].Column);
                 }
                 else
                 {
@@ -62,13 +62,13 @@ namespace Dt.Cells.UI
                 {
                     if (!IsTabNavigation(direction) || !ShouldNavInSelection())
                     {
-                        CellRange[] oldSelection = Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) _sheetView.Worksheet.Selections);
-                        _sheetView.SetSelection(_sheetView.Worksheet.ActiveRowIndex, _sheetView.Worksheet.ActiveColumnIndex, 1, 1);
-                        if (_sheetView.RaiseSelectionChanging(oldSelection, Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) _sheetView.Worksheet.Selections)))
+                        CellRange[] oldSelection = Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) _sheetView.ActiveSheet.Selections);
+                        _sheetView.SetSelection(_sheetView.ActiveSheet.ActiveRowIndex, _sheetView.ActiveSheet.ActiveColumnIndex, 1, 1);
+                        if (_sheetView.RaiseSelectionChanging(oldSelection, Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) _sheetView.ActiveSheet.Selections)))
                         {
                             _sheetView.RaiseSelectionChanged();
                         }
-                        NavigatorHelper.BringCellToVisible(_sheetView, _sheetView.Worksheet.ActiveRowIndex, _sheetView.Worksheet.ActiveColumnIndex);
+                        NavigatorHelper.BringCellToVisible(_sheetView, _sheetView.ActiveSheet.ActiveRowIndex, _sheetView.ActiveSheet.ActiveColumnIndex);
                     }
                     return false;
                 }
@@ -88,9 +88,9 @@ namespace Dt.Cells.UI
                     }
                     if (!IsTabNavigation(direction) || !ShouldNavInSelection())
                     {
-                        CellRange[] rangeArray2 = Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) _sheetView.Worksheet.Selections);
+                        CellRange[] rangeArray2 = Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) _sheetView.ActiveSheet.Selections);
                         _sheetView.SetSelection(row, column, 1, 1);
-                        if (_sheetView.RaiseSelectionChanging(rangeArray2, Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) _sheetView.Worksheet.Selections)))
+                        if (_sheetView.RaiseSelectionChanging(rangeArray2, Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) _sheetView.ActiveSheet.Selections)))
                         {
                             _sheetView.RaiseSelectionChanged();
                         }
@@ -119,8 +119,8 @@ namespace Dt.Cells.UI
 
         TabularPosition MoveCurrent(NavigationDirection direction)
         {
-            int activeRowIndex = _sheetView.Worksheet.ActiveRowIndex;
-            int activeColumnIndex = _sheetView.Worksheet.ActiveColumnIndex;
+            int activeRowIndex = _sheetView.ActiveSheet.ActiveRowIndex;
+            int activeColumnIndex = _sheetView.ActiveSheet.ActiveColumnIndex;
             if ((activeRowIndex != -1) && (activeColumnIndex != -1))
             {
                 if (IsTabNavigation(direction))
@@ -150,7 +150,7 @@ namespace Dt.Cells.UI
 
         bool SetActiveCell(int row, int column, bool clearSelection)
         {
-            Worksheet worksheet = _sheetView.Worksheet;
+            var worksheet = _sheetView.ActiveSheet;
             if (!_sheetView.RaiseLeaveCell(worksheet.ActiveRowIndex, worksheet.ActiveColumnIndex, row, column))
             {
                 worksheet.SetActiveCell(row, column, clearSelection);
@@ -167,11 +167,11 @@ namespace Dt.Cells.UI
 
         internal void UpdateStartPosition(int row, int column)
         {
-            if (_sheetView.Worksheet != null)
+            if (_sheetView.ActiveSheet != null)
             {
                 row = (row < 0) ? 0 : row;
                 column = (column < 0) ? 0 : column;
-                CellRange spanCell = _sheetView.Worksheet.GetSpanCell(row, column);
+                CellRange spanCell = _sheetView.ActiveSheet.GetSpanCell(row, column);
                 TabularPosition currentPosition = new TabularPosition(SheetArea.Cells, row, column);
                 TabularPosition navigationStartPosition = _tabularNavigator.GetNavigationStartPosition();
                 if ((spanCell == null) || !spanCell.Contains(navigationStartPosition.Row, navigationStartPosition.Column))

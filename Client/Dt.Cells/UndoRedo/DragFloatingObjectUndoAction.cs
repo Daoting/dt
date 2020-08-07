@@ -82,7 +82,7 @@ namespace Dt.Cells.UndoRedo
                             chart.IsSelected = false;
                             item.IsSelected = true;
                             list.Add(item);
-                            view.Worksheet.Charts.Add(item);
+                            view.ActiveSheet.Charts.Add(item);
                         }
                         if (picture != null)
                         {
@@ -94,7 +94,7 @@ namespace Dt.Cells.UndoRedo
                             picture.IsSelected = false;
                             picture2.IsSelected = true;
                             list2.Add(picture2);
-                            view.Worksheet.Pictures.Add(picture2);
+                            view.ActiveSheet.Pictures.Add(picture2);
                         }
                         if (obj2 != null)
                         {
@@ -106,7 +106,7 @@ namespace Dt.Cells.UndoRedo
                             obj2.IsSelected = false;
                             obj4.IsSelected = true;
                             list3.Add(obj4);
-                            view.Worksheet.FloatingObjects.Add(obj4);
+                            view.ActiveSheet.FloatingObjects.Add(obj4);
                         }
                         if (pastedObject != null)
                         {

@@ -33,7 +33,7 @@ namespace Dt.Cells.UI
 
         CellOverflowLayoutModel BuildCellOverflowLayoutModel(int rowIndex)
         {
-            if (!Viewport.Sheet.CanCellOverflow)
+            if (!Viewport.Sheet.Excel.CanCellOverflow)
             {
                 return null;
             }
@@ -125,7 +125,7 @@ namespace Dt.Cells.UI
                 }
                 if (layout3.BackgroundWidth > layout2.Width)
                 {
-                    Size textSize = MeasureHelper.MeasureTextInCell(cachedCell, new Size(double.PositiveInfinity, double.PositiveInfinity), (double) Viewport.Sheet.ZoomFactor, Viewport.Sheet.InheritedControlFontFamily, textFormattingMode, useLayoutRounding);
+                    Size textSize = MeasureHelper.MeasureTextInCell(cachedCell, new Size(double.PositiveInfinity, double.PositiveInfinity), (double) Viewport.Sheet.ZoomFactor, Viewport.Sheet.Excel.FontFamily, textFormattingMode, useLayoutRounding);
                     layout3.ContentWidth = MeasureHelper.ConvertTextSizeToExcelCellSize(textSize, (double) Viewport.Sheet.ZoomFactor).Width;
                     result.Add(layout3);
                 }
@@ -158,7 +158,7 @@ namespace Dt.Cells.UI
                     return null;
                 }
                 float zoomFactor = Viewport.Sheet.ZoomFactor;
-                Size textSize = MeasureHelper.MeasureTextInCell(bindingCell, new Size(double.PositiveInfinity, double.PositiveInfinity), (double) zoomFactor, Viewport.Sheet.InheritedControlFontFamily, textFormattingMode, useLayoutRounding);
+                Size textSize = MeasureHelper.MeasureTextInCell(bindingCell, new Size(double.PositiveInfinity, double.PositiveInfinity), (double) zoomFactor, Viewport.Sheet.Excel.FontFamily, textFormattingMode, useLayoutRounding);
                 double width = MeasureHelper.ConvertTextSizeToExcelCellSize(textSize, (double) zoomFactor).Width;
                 double num5 = column.ActualWidth * zoomFactor;
                 if (buildForCenter)
@@ -229,7 +229,7 @@ namespace Dt.Cells.UI
                     return null;
                 }
                 float zoomFactor = Viewport.Sheet.ZoomFactor;
-                Size textSize = MeasureHelper.MeasureTextInCell(bindingCell, new Size(double.PositiveInfinity, double.PositiveInfinity), (double) zoomFactor, Viewport.Sheet.InheritedControlFontFamily, textFormattingMode, useLayoutRounding);
+                Size textSize = MeasureHelper.MeasureTextInCell(bindingCell, new Size(double.PositiveInfinity, double.PositiveInfinity), (double) zoomFactor, Viewport.Sheet.Excel.FontFamily, textFormattingMode, useLayoutRounding);
                 double width = MeasureHelper.ConvertTextSizeToExcelCellSize(textSize, (double) zoomFactor).Width;
                 double num5 = column.ActualWidth * zoomFactor;
                 if (buildForCenter)
@@ -450,7 +450,7 @@ namespace Dt.Cells.UI
             {
                 return null;
             }
-            if (!Viewport.Sheet.CanCellOverflow)
+            if (!Viewport.Sheet.Excel.CanCellOverflow)
             {
                 return null;
             }

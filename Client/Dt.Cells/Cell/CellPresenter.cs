@@ -97,9 +97,9 @@ namespace Dt.Cells.UI
                 list.AddRange(objArray);
             }
 
-            if (SheetView != null && SheetView._host is Excel excel)
+            if (SheetView != null)
             {
-                IDrawingObjectProvider drawingObjectProvider = DrawingObjectManager.GetDrawingObjectProvider(excel);
+                IDrawingObjectProvider drawingObjectProvider = DrawingObjectManager.GetDrawingObjectProvider(SheetView.Excel);
                 if (drawingObjectProvider != null)
                 {
                     DrawingObject[] objArray2 = drawingObjectProvider.GetDrawingObjects(sheet, row, column, 1, 1);
@@ -306,7 +306,7 @@ namespace Dt.Cells.UI
                 {
                     _sparklineView = CreateSparkline(_sparkInfo);
                     _sparklineView.ZoomFactor = OwningRow.OwningPresenter.Sheet.ZoomFactor;
-                    ((IThemeContextSupport)_sparklineView).SetContext(sheetView.Worksheet);
+                    ((IThemeContextSupport)_sparklineView).SetContext(sheetView.ActiveSheet);
                     Canvas.SetZIndex(_sparklineView, 0x3e8);
                     _rootPanel.Children.Add(_sparklineView);
                     _sparklineView.Update(new Size(ActualWidth, ActualHeight), (double)sheetView.ZoomFactor);
@@ -353,7 +353,7 @@ namespace Dt.Cells.UI
         {
             get
             {
-                Worksheet worksheet = OwningRow.OwningPresenter.Sheet.Worksheet;
+                Worksheet worksheet = OwningRow.OwningPresenter.Sheet.ActiveSheet;
                 return ((worksheet.ActiveRowIndex == Row) && (worksheet.ActiveColumnIndex == Column));
             }
         }
@@ -368,7 +368,7 @@ namespace Dt.Cells.UI
         /// </summary>
         protected override bool IsSelected
         {
-            get { return OwningRow.OwningPresenter.Sheet.Worksheet.IsSelected(Row, Column); }
+            get { return OwningRow.OwningPresenter.Sheet.ActiveSheet.IsSelected(Row, Column); }
         }
 
     }

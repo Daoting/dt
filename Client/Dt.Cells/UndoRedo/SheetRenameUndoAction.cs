@@ -80,7 +80,7 @@ namespace Dt.Cells.UndoRedo
 
         void RefreshUI(object sheetView)
         {
-            SpreadView view = sheetView as SpreadView;
+            var view = sheetView as SheetView;
             if (view != null)
             {
                 view.RefreshTabStrip();

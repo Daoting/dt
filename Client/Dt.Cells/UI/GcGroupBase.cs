@@ -87,15 +87,15 @@ namespace Dt.Cells.UI
         protected virtual int GetMaxLevel(Orientation orientation)
         {
             int maxLevel = -1;
-            if (_sheetView.Worksheet != null)
+            if (_sheetView.ActiveSheet != null)
             {
                 if (orientation == Orientation.Horizontal)
                 {
-                    return _sheetView.Worksheet.RowRangeGroup.GetMaxLevel();
+                    return _sheetView.ActiveSheet.RowRangeGroup.GetMaxLevel();
                 }
                 if (orientation == Orientation.Vertical)
                 {
-                    maxLevel = _sheetView.Worksheet.ColumnRangeGroup.GetMaxLevel();
+                    maxLevel = _sheetView.ActiveSheet.ColumnRangeGroup.GetMaxLevel();
                 }
             }
             return maxLevel;

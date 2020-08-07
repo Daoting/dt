@@ -58,7 +58,7 @@ namespace Dt.Cells.UI
         string _jobName;
 
         MemoryStream _cachedStream;
-        SpreadView _content;
+        SheetView _content;
         readonly List<Rect> _pages;
         bool _hasPictures;
         bool _showDeco;

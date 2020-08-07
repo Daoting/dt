@@ -119,25 +119,25 @@ namespace Dt.Cells.UndoRedo
             SheetView view = sender as SheetView;
             if ((view != null) && (_cachedActions != null))
             {
-                CellRange[] oldSelection = Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) view.Worksheet.Selections);
-                view.Worksheet.ClearSelections();
+                CellRange[] oldSelection = Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) view.ActiveSheet.Selections);
+                view.ActiveSheet.ClearSelections();
                 if (_cachedActions.Length > 1)
                 {
                     foreach (ClipboardPasteRangeUndoAction action in _cachedActions)
                     {
-                        view.Worksheet.AddSelection(action.PasteRange, false);
+                        view.ActiveSheet.AddSelection(action.PasteRange, false);
                     }
                 }
                 else if (_cachedActions.Length > 0)
                 {
                     CellRange pasteRange = _cachedActions[0].PasteRange;
-                    view.Worksheet.AddSelection(pasteRange.Row, pasteRange.Column, pasteRange.RowCount, pasteRange.ColumnCount, false);
-                    if (!pasteRange.Contains(view.Worksheet.ActiveRowIndex, view.Worksheet.ActiveColumnIndex))
+                    view.ActiveSheet.AddSelection(pasteRange.Row, pasteRange.Column, pasteRange.RowCount, pasteRange.ColumnCount, false);
+                    if (!pasteRange.Contains(view.ActiveSheet.ActiveRowIndex, view.ActiveSheet.ActiveColumnIndex))
                     {
                         view.SetActiveCell(Math.Max(0, pasteRange.Row), Math.Max(0, pasteRange.Column), false);
                     }
                 }
-                if (view.RaiseSelectionChanging(oldSelection, Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) view.Worksheet.Selections)))
+                if (view.RaiseSelectionChanging(oldSelection, Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) view.ActiveSheet.Selections)))
                 {
                     view.RaiseSelectionChanged();
                 }
@@ -303,11 +303,11 @@ namespace Dt.Cells.UndoRedo
                         SheetView sheetView = sender as SheetView;
                         if (sheetView != null)
                         {
-                            if ((_pasteExtent.IsCutting && (_savedFromViewportCells != null)) && (_savedFromViewportCells.IsValueSaved() && object.ReferenceEquals(sheetView.Worksheet, _fromSheet)))
+                            if ((_pasteExtent.IsCutting && (_savedFromViewportCells != null)) && (_savedFromViewportCells.IsValueSaved() && object.ReferenceEquals(sheetView.ActiveSheet, _fromSheet)))
                             {
                                 CopyMoveHelper.RaiseValueChanged(sheetView, sourceRange.Row, sourceRange.Column, sourceRange.RowCount, sourceRange.ColumnCount, _savedFromViewportCells.GetValues());
                             }
-                            if (((_savedToViewportCells != null) && _savedToViewportCells.IsValueSaved()) && object.ReferenceEquals(sheetView.Worksheet, _toSheet))
+                            if (((_savedToViewportCells != null) && _savedToViewportCells.IsValueSaved()) && object.ReferenceEquals(sheetView.ActiveSheet, _toSheet))
                             {
                                 CopyMoveHelper.RaiseValueChanged(sheetView, targetRange.Row, targetRange.Column, targetRange.RowCount, targetRange.ColumnCount, _savedToViewportCells.GetValues());
                             }
@@ -552,11 +552,11 @@ namespace Dt.Cells.UndoRedo
                     {
                         return flag;
                     }
-                    if ((oldValues != null) && object.ReferenceEquals(sheetView.Worksheet, _toSheet))
+                    if ((oldValues != null) && object.ReferenceEquals(sheetView.ActiveSheet, _toSheet))
                     {
                         CopyMoveHelper.RaiseValueChanged(sheetView, row, column, rowCount, columnCount, oldValues);
                     }
-                    if ((list2 != null) && object.ReferenceEquals(sheetView.Worksheet, _fromSheet))
+                    if ((list2 != null) && object.ReferenceEquals(sheetView.ActiveSheet, _fromSheet))
                     {
                         CopyMoveHelper.RaiseValueChanged(sheetView, num5, num6, num7, num8, list2);
                     }

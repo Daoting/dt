@@ -63,7 +63,7 @@ namespace Dt.Cells.UI
                             info.Dot.Arrange(new Rect(base.PointToClient(new Point(x, num5)), new Size(width, height)));
                         }
                     }
-                    RangeGroupDirection direction = base._sheetView.Worksheet.ColumnRangeGroup.Direction;
+                    RangeGroupDirection direction = base._sheetView.ActiveSheet.ColumnRangeGroup.Direction;
                     foreach (GroupLineInfo info2 in _groupLineInfos)
                     {
                         ColumnLayout layout2 = columnLayoutModel.FindColumn(info2.Start);
@@ -178,7 +178,7 @@ namespace Dt.Cells.UI
                             info.Dot.Arrange(new Rect(base.PointToClient(new Point(num4, y)), new Size(width, height)));
                         }
                     }
-                    RangeGroupDirection direction = base._sheetView.Worksheet.RowRangeGroup.Direction;
+                    RangeGroupDirection direction = base._sheetView.ActiveSheet.RowRangeGroup.Direction;
                     foreach (GroupLineInfo info2 in _groupLineInfos)
                     {
                         RowLayout layout2 = rowLayoutModel.FindRow(info2.Start);
@@ -255,9 +255,9 @@ namespace Dt.Cells.UI
         {
             if (Orientation == Windows.UI.Xaml.Controls.Orientation.Horizontal)
             {
-                return base._sheetView.Worksheet.RowRangeGroup.Direction;
+                return base._sheetView.ActiveSheet.RowRangeGroup.Direction;
             }
-            return base._sheetView.Worksheet.ColumnRangeGroup.Direction;
+            return base._sheetView.ActiveSheet.ColumnRangeGroup.Direction;
         }
 
         List<RangeGroupInfo> GetGroupsByLevel(int level)
@@ -270,11 +270,11 @@ namespace Dt.Cells.UI
                 RangeGroupInfo info = null;
                 if (Orientation == Windows.UI.Xaml.Controls.Orientation.Horizontal)
                 {
-                    info = base._sheetView.Worksheet.RowRangeGroup.Find(rowOrColumnStartIndex, level);
+                    info = base._sheetView.ActiveSheet.RowRangeGroup.Find(rowOrColumnStartIndex, level);
                 }
                 else if (Orientation == Windows.UI.Xaml.Controls.Orientation.Vertical)
                 {
-                    info = base._sheetView.Worksheet.ColumnRangeGroup.Find(rowOrColumnStartIndex, level);
+                    info = base._sheetView.ActiveSheet.ColumnRangeGroup.Find(rowOrColumnStartIndex, level);
                 }
                 if (info != null)
                 {
@@ -291,10 +291,10 @@ namespace Dt.Cells.UI
             if (Orientation == Windows.UI.Xaml.Controls.Orientation.Horizontal)
             {
                 int viewportBottomRow = base._sheetView.GetViewportBottomRow(ViewportIndex);
-                return Math.Min(base._sheetView.Worksheet.RowCount, viewportBottomRow + 2);
+                return Math.Min(base._sheetView.ActiveSheet.RowCount, viewportBottomRow + 2);
             }
             int viewportRightColumn = base._sheetView.GetViewportRightColumn(ViewportIndex);
-            return Math.Min(base._sheetView.Worksheet.ColumnCount, viewportRightColumn + 2);
+            return Math.Min(base._sheetView.ActiveSheet.ColumnCount, viewportRightColumn + 2);
         }
 
         int GetRowOrColumnStartIndex()
@@ -331,7 +331,7 @@ namespace Dt.Cells.UI
             RangeGroupButtonPresenter presenter = sender as RangeGroupButtonPresenter;
             if ((presenter != null) && !base._sheetView.IsEditing)
             {
-                Worksheet sheet = base._sheetView.Worksheet;
+                var sheet = base._sheetView.ActiveSheet;
                 int index = presenter.Index;
                 if ((sheet != null) && (index >= 0))
                 {
@@ -340,8 +340,8 @@ namespace Dt.Cells.UI
                         bool collapsed = sheet.RowRangeGroup.Data.GetCollapsed(index);
                         RowGroupExpandExtent rowExpandExtent = new RowGroupExpandExtent(index, presenter.Level, ViewportIndex, !collapsed);
                         RowGroupExpandUndoAction command = new RowGroupExpandUndoAction(sheet, rowExpandExtent);
-                        int num2 = (base._sheetView.Worksheet.RowRangeGroup.Direction == RangeGroupDirection.Forward) ? (index - 1) : (index + 1);
-                        base._sheetView.Worksheet.RowRangeGroup.Find(num2, presenter.Level);
+                        int num2 = (base._sheetView.ActiveSheet.RowRangeGroup.Direction == RangeGroupDirection.Forward) ? (index - 1) : (index + 1);
+                        base._sheetView.ActiveSheet.RowRangeGroup.Find(num2, presenter.Level);
                         if (!base._sheetView.RaiseRangeGroupStateChanging(true, num2, presenter.Level))
                         {
                             base._sheetView.DoCommand(command);
@@ -353,7 +353,7 @@ namespace Dt.Cells.UI
                         bool flag3 = sheet.ColumnRangeGroup.Data.GetCollapsed(index);
                         ColumnGroupExpandExtent columnExpandExtent = new ColumnGroupExpandExtent(index, presenter.Level, ViewportIndex, !flag3);
                         ColumnGroupExpandUndoAction action2 = new ColumnGroupExpandUndoAction(sheet, columnExpandExtent);
-                        int num3 = (base._sheetView.Worksheet.RowRangeGroup.Direction == RangeGroupDirection.Forward) ? (index - 1) : (index + 1);
+                        int num3 = (base._sheetView.ActiveSheet.RowRangeGroup.Direction == RangeGroupDirection.Forward) ? (index - 1) : (index + 1);
                         if (!base._sheetView.RaiseRangeGroupStateChanging(false, num3, presenter.Level))
                         {
                             base._sheetView.DoCommand(action2);

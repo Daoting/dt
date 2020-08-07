@@ -288,7 +288,7 @@ namespace Dt.Cells.UI
                 if (_dataValidationInvalidPresenterInfo == null)
                 {
                     DataValidator actualDataValidator = BindingCell.ActualDataValidator;
-                    if ((actualDataValidator != null) && !actualDataValidator.IsValid(sheetView.Worksheet, Row, Column, bindingCell.Value))
+                    if ((actualDataValidator != null) && !actualDataValidator.IsValid(sheetView.ActiveSheet, Row, Column, bindingCell.Value))
                     {
                         InvalidDataPresenterInfo info2 = new InvalidDataPresenterInfo
                         {
@@ -303,7 +303,7 @@ namespace Dt.Cells.UI
                 else if (_dataValidationInvalidPresenterInfo != null)
                 {
                     DataValidator validator2 = BindingCell.ActualDataValidator;
-                    if ((validator2 == null) || validator2.IsValid(sheetView.Worksheet, Row, Column, bindingCell.Value))
+                    if ((validator2 == null) || validator2.IsValid(sheetView.ActiveSheet, Row, Column, bindingCell.Value))
                     {
                         OwningRow.OwningPresenter.RemoveDataValidationInvalidDataPresenterInfo(_dataValidationInvalidPresenterInfo);
                         _dataValidationInvalidPresenterInfo = null;

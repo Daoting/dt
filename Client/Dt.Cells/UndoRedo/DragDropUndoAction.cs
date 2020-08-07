@@ -126,9 +126,9 @@ namespace Dt.Cells.UndoRedo
                                 SheetView view2 = sender as SheetView;
                                 if (view2 != null)
                                 {
-                                    CellRange[] oldSelection = Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) view2.Worksheet.Selections);
+                                    CellRange[] oldSelection = Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) view2.ActiveSheet.Selections);
                                     view2.SetSelection(row, -1, rowCount, -1);
-                                    if (view2.RaiseSelectionChanging(oldSelection, Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) view2.Worksheet.Selections)))
+                                    if (view2.RaiseSelectionChanging(oldSelection, Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) view2.ActiveSheet.Selections)))
                                     {
                                         view2.RaiseSelectionChanged();
                                     }
@@ -169,9 +169,9 @@ namespace Dt.Cells.UndoRedo
                             SheetView view = sender as SheetView;
                             if (view != null)
                             {
-                                CellRange[] rangeArray = Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) view.Worksheet.Selections);
+                                CellRange[] rangeArray = Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) view.ActiveSheet.Selections);
                                 view.SetSelection(-1, column, -1, columnCount);
-                                if (view.RaiseSelectionChanging(rangeArray, Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) view.Worksheet.Selections)))
+                                if (view.RaiseSelectionChanging(rangeArray, Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) view.ActiveSheet.Selections)))
                                 {
                                     view.RaiseSelectionChanged();
                                 }
@@ -204,9 +204,9 @@ namespace Dt.Cells.UndoRedo
                         }
                         if (sheetView != null)
                         {
-                            CellRange[] rangeArray3 = Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) sheetView.Worksheet.Selections);
+                            CellRange[] rangeArray3 = Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) sheetView.ActiveSheet.Selections);
                             sheetView.SetSelection(num11, num12, num13, num14);
-                            if (sheetView.RaiseSelectionChanging(rangeArray3, Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) sheetView.Worksheet.Selections)))
+                            if (sheetView.RaiseSelectionChanging(rangeArray3, Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) sheetView.ActiveSheet.Selections)))
                             {
                                 sheetView.RaiseSelectionChanged();
                             }
@@ -416,9 +416,9 @@ namespace Dt.Cells.UndoRedo
                         }
                         if (sheetView != null)
                         {
-                            CellRange[] oldSelection = Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) sheetView.Worksheet.Selections);
+                            CellRange[] oldSelection = Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) sheetView.ActiveSheet.Selections);
                             sheetView.SetSelection(-1, fromColumn, -1, columnCount);
-                            if (sheetView.RaiseSelectionChanging(oldSelection, Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) sheetView.Worksheet.Selections)))
+                            if (sheetView.RaiseSelectionChanging(oldSelection, Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) sheetView.ActiveSheet.Selections)))
                             {
                                 sheetView.RaiseSelectionChanged();
                             }
@@ -483,9 +483,9 @@ namespace Dt.Cells.UndoRedo
                         }
                         if (sheetView != null)
                         {
-                            CellRange[] rangeArray2 = Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) sheetView.Worksheet.Selections);
+                            CellRange[] rangeArray2 = Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) sheetView.ActiveSheet.Selections);
                             sheetView.SetSelection(fromRow, -1, rowCount, -1);
-                            if (sheetView.RaiseSelectionChanging(rangeArray2, Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) sheetView.Worksheet.Selections)))
+                            if (sheetView.RaiseSelectionChanging(rangeArray2, Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) sheetView.ActiveSheet.Selections)))
                             {
                                 sheetView.RaiseSelectionChanged();
                             }
@@ -587,9 +587,9 @@ namespace Dt.Cells.UndoRedo
                 }
                 if (flag && (sheetView != null))
                 {
-                    CellRange[] rangeArray3 = Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) sheetView.Worksheet.Selections);
+                    CellRange[] rangeArray3 = Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) sheetView.ActiveSheet.Selections);
                     sheetView.SetSelection(_dragDropExtent.FromRow, _dragDropExtent.FromColumn, _dragDropExtent.RowCount, _dragDropExtent.ColumnCount);
-                    if (sheetView.RaiseSelectionChanging(rangeArray3, Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) sheetView.Worksheet.Selections)))
+                    if (sheetView.RaiseSelectionChanging(rangeArray3, Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) sheetView.ActiveSheet.Selections)))
                     {
                         sheetView.RaiseSelectionChanged();
                     }
@@ -614,7 +614,7 @@ namespace Dt.Cells.UndoRedo
                 }
                 if ((_savedActiveRow != -1) && (_savedActiveColumn != -1))
                 {
-                    CellRange range = sheetView.Worksheet.Selections[0];
+                    CellRange range = sheetView.ActiveSheet.Selections[0];
                     if (range.Contains(_savedActiveRow, _savedActiveColumn))
                     {
                         sheetView.SetActiveCell(_savedActiveRow, _savedActiveColumn, false);

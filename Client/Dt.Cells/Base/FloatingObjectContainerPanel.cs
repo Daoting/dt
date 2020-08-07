@@ -225,7 +225,7 @@ namespace Dt.Cells.UI
             }
             foreach (string str in Enumerable.ToArray<string>((IEnumerable<string>) _cachedCharts.Keys))
             {
-                if (ParentViewport.Sheet.Worksheet.FindChart(str) == null)
+                if (ParentViewport.Sheet.ActiveSheet.FindChart(str) == null)
                 {
                     base.Children.Remove(_cachedCharts[str]);
                     _cachedCharts.Remove(str);
@@ -273,7 +273,7 @@ namespace Dt.Cells.UI
             }
             foreach (string str in Enumerable.ToArray<string>((IEnumerable<string>) _cachedFloatingObjects.Keys))
             {
-                if (ParentViewport.Sheet.Worksheet.FindFloatingObject(str) == null)
+                if (ParentViewport.Sheet.ActiveSheet.FindFloatingObject(str) == null)
                 {
                     base.Children.Remove(_cachedFloatingObjects[str]);
                     _cachedFloatingObjects.Remove(str);
@@ -323,7 +323,7 @@ namespace Dt.Cells.UI
             }
             foreach (string str in Enumerable.ToArray<string>((IEnumerable<string>) _cachedPictures.Keys))
             {
-                if (ParentViewport.Sheet.Worksheet.FindPicture(str) == null)
+                if (ParentViewport.Sheet.ActiveSheet.FindPicture(str) == null)
                 {
                     base.Children.Remove(_cachedPictures[str]);
                     _cachedPictures.Remove(str);
@@ -499,7 +499,7 @@ namespace Dt.Cells.UI
 
         public Worksheet ActiveSheet
         {
-            get { return  ParentViewport.Sheet.Worksheet; }
+            get { return  ParentViewport.Sheet.ActiveSheet; }
         }
 
         int ColumnViewportIndex

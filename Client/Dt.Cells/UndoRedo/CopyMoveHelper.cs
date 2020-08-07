@@ -118,12 +118,12 @@ namespace Dt.Cells.UndoRedo
                 if (row < 0)
                 {
                     row = 0;
-                    rowCount = sheetView.Worksheet.RowCount;
+                    rowCount = sheetView.ActiveSheet.RowCount;
                 }
                 if (column < 0)
                 {
                     column = 0;
-                    columnCount = sheetView.Worksheet.ColumnCount;
+                    columnCount = sheetView.ActiveSheet.ColumnCount;
                 }
                 List<CellData> cellDatas = new List<CellData>((IEnumerable<CellData>)oldValues);
                 for (int i = 0; i < rowCount; i++)
@@ -131,7 +131,7 @@ namespace Dt.Cells.UndoRedo
                     for (int j = 0; j < columnCount; j++)
                     {
                         object obj3;
-                        object objA = sheetView.Worksheet.GetValue(row + i, column + j);
+                        object objA = sheetView.ActiveSheet.GetValue(row + i, column + j);
                         CellData? nullable = Remove(cellDatas, i, j);
                         if (!nullable.HasValue)
                         {

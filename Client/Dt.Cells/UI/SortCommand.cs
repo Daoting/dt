@@ -37,10 +37,10 @@ namespace Dt.Cells.UI
 
         public void Execute(object parameter)
         {
-            if (((_sheetView != null) && (_sheetView.Worksheet != null)) && (((_info != null) && (_info.RowFilter != null)) && (_info.RowFilter.Range != null)))
+            if (((_sheetView != null) && (_sheetView.ActiveSheet != null)) && (((_info != null) && (_info.RowFilter != null)) && (_info.RowFilter.Range != null)))
             {
                 CellRange range = _info.RowFilter.Range;
-                if ((range != null) && SheetView.HasArrayFormulas(_sheetView.Worksheet, range.Row, range.Column, range.RowCount, range.ColumnCount))
+                if ((range != null) && SheetView.HasArrayFormulas(_sheetView.ActiveSheet, range.Row, range.Column, range.RowCount, range.ColumnCount))
                 {
                     _sheetView.RaiseInvalidOperation("Cannot change part of an array.", null, null);
                 }

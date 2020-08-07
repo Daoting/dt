@@ -88,7 +88,7 @@ namespace Dt.Cells.UI
                 {
                     return finalSize;
                 }
-                Worksheet worksheet = OwningPresenter.Sheet.Worksheet;
+                Worksheet worksheet = OwningPresenter.Sheet.ActiveSheet;
                 float zoomFactor = OwningPresenter.Sheet.ZoomFactor;
                 if (cellOverflowLayoutModel.HeadingOverflowlayout != null)
                 {
@@ -190,7 +190,7 @@ namespace Dt.Cells.UI
 
         protected virtual SheetSpanModelBase GetCellSpanModel()
         {
-            return OwningPresenter.Sheet.Worksheet.SpanModel;
+            return OwningPresenter.Sheet.ActiveSheet.SpanModel;
         }
 
         public virtual ColumnLayoutModel GetColumnLayoutModel()
@@ -251,7 +251,7 @@ namespace Dt.Cells.UI
             double width = Math.Min(RowWidth, OwningPresenter.GetViewportSize().Width);
             if (cellOverflowLayoutModel != null)
             {
-                Worksheet worksheet = OwningPresenter.Sheet.Worksheet;
+                Worksheet worksheet = OwningPresenter.Sheet.ActiveSheet;
                 float zoomFactor = OwningPresenter.Sheet.ZoomFactor;
                 if (cellOverflowLayoutModel.HeadingOverflowlayout != null)
                 {
@@ -401,7 +401,7 @@ namespace Dt.Cells.UI
                         updated = true;
                     }
 
-                    if (((_owningPresenter.SheetArea == SheetArea.ColumnHeader) && (_owningPresenter.Sheet.ResizeZeroIndicator == ResizeZeroIndicator.Enhanced)) && (_owningPresenter.Sheet.Worksheet.GetActualColumnWidth(colLayout.Column, SheetArea.Cells) == 0.0))
+                    if (((_owningPresenter.SheetArea == SheetArea.ColumnHeader) && (_owningPresenter.Sheet.ResizeZeroIndicator == ResizeZeroIndicator.Enhanced)) && (_owningPresenter.Sheet.ActiveSheet.GetActualColumnWidth(colLayout.Column, SheetArea.Cells) == 0.0))
                     {
                         if (cell.ShowContent)
                         {
@@ -409,7 +409,7 @@ namespace Dt.Cells.UI
                             updated = true;
                         }
                     }
-                    else if (((_owningPresenter.SheetArea == (SheetArea.CornerHeader | SheetArea.RowHeader)) && (_owningPresenter.Sheet.ResizeZeroIndicator == ResizeZeroIndicator.Enhanced)) && (_owningPresenter.Sheet.Worksheet.GetActualRowHeight(Row, SheetArea.Cells) == 0.0))
+                    else if (((_owningPresenter.SheetArea == (SheetArea.CornerHeader | SheetArea.RowHeader)) && (_owningPresenter.Sheet.ResizeZeroIndicator == ResizeZeroIndicator.Enhanced)) && (_owningPresenter.Sheet.ActiveSheet.GetActualRowHeight(Row, SheetArea.Cells) == 0.0))
                     {
                         if (cell.ShowContent)
                         {

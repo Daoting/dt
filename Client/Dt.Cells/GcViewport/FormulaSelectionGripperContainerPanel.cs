@@ -25,8 +25,8 @@ namespace Dt.Cells.UI
                 CellRange range = frame.SelectionItem.Range;
                 int row = (range.Row < 0) ? 0 : range.Row;
                 int column = (range.Column < 0) ? 0 : range.Column;
-                int rowCount = (range.RowCount < 0) ? ParentSheet.Worksheet.RowCount : range.RowCount;
-                int columnCount = (range.ColumnCount < 0) ? ParentSheet.Worksheet.ColumnCount : range.ColumnCount;
+                int rowCount = (range.RowCount < 0) ? ParentSheet.ActiveSheet.RowCount : range.RowCount;
+                int columnCount = (range.ColumnCount < 0) ? ParentSheet.ActiveSheet.ColumnCount : range.ColumnCount;
                 bool isLeftVisible = false;
                 bool isTopVisible = false;
                 bool isRightVisible = false;
@@ -65,8 +65,8 @@ namespace Dt.Cells.UI
                 CellRange range = frame.SelectionItem.Range;
                 int row = (range.Row < 0) ? 0 : range.Row;
                 int column = (range.Column < 0) ? 0 : range.Column;
-                int rowCount = (range.RowCount < 0) ? ParentSheet.Worksheet.RowCount : range.RowCount;
-                int columnCount = (range.ColumnCount < 0) ? ParentSheet.Worksheet.ColumnCount : range.ColumnCount;
+                int rowCount = (range.RowCount < 0) ? ParentSheet.ActiveSheet.RowCount : range.RowCount;
+                int columnCount = (range.ColumnCount < 0) ? ParentSheet.ActiveSheet.ColumnCount : range.ColumnCount;
                 bool isLeftVisible = false;
                 bool isTopVisible = false;
                 bool isRightVisible = false;
@@ -119,7 +119,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        public SpreadView ParentSheet { get; set; }
+        public SheetView ParentSheet { get; set; }
 
     }
 }

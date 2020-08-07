@@ -577,9 +577,9 @@ namespace Dt.Cells.UI
 
         void TabPresenter_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (((e.PropertyName == "StartIndex") && (OwningView != null)) && ((OwningView.Worksheet != null) && (OwningView.Worksheet.Workbook != null)))
+            if (((e.PropertyName == "StartIndex") && (OwningView != null)) && ((OwningView.ActiveSheet != null) && (OwningView.ActiveSheet.Workbook != null)))
             {
-                OwningView.Worksheet.Workbook.StartSheetIndex = TabsPresenter.StartIndex;
+                OwningView.ActiveSheet.Workbook.StartSheetIndex = TabsPresenter.StartIndex;
             }
         }
 
@@ -665,13 +665,13 @@ namespace Dt.Cells.UI
 
         internal bool IsEditing { get; private set; }
 
-        internal SpreadView OwningView { get; set; }
+        internal SheetView OwningView { get; set; }
 
         internal TabsPresenter TabsPresenter { get; }
 
         internal Dt.Cells.Data.Workbook Workbook
         {
-            get { return OwningView.SpreadSheet.Workbook; }
+            get { return OwningView.Excel.Workbook; }
         }
     }
 }

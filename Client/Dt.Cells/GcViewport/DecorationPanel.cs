@@ -66,7 +66,7 @@ namespace Dt.Cells.UI
         /// <returns></returns>
         protected override Size MeasureOverride(Size availableSize)
         {
-            if (_viewport.Sheet == null || _viewport.Sheet.Worksheet == null)
+            if (_viewport.Sheet == null || _viewport.Sheet.ActiveSheet == null)
                 return _viewport.GetViewportSize(availableSize);
 
             double width = availableSize.Width;
@@ -121,7 +121,7 @@ namespace Dt.Cells.UI
         /// <returns></returns>
         protected override Size ArrangeOverride(Size finalSize)
         {
-            if (_viewport.Sheet == null || _viewport.Sheet.Worksheet == null)
+            if (_viewport.Sheet == null || _viewport.Sheet.ActiveSheet == null)
                 return finalSize;
 
             _rect.Arrange(_bounds);
@@ -130,7 +130,7 @@ namespace Dt.Cells.UI
             Size paperSize = _viewport.Sheet.PaperSize;
             if (paperSize.Width > 0 && paperSize.Height > 0)
             {
-                Worksheet ws = _viewport.Sheet.Worksheet;
+                Worksheet ws = _viewport.Sheet.ActiveSheet;
                 Point topLeft = ws.GetTopLeftLocation(_viewport.RowViewportIndex, _viewport.ColumnViewportIndex);
                 double offsetY = topLeft.Y % paperSize.Height;
                 double offsetX = topLeft.X % paperSize.Width;
@@ -253,7 +253,7 @@ namespace Dt.Cells.UI
             HitTestInformation info = view.HitTest(pos.X, pos.Y);
             if (info.ViewportInfo != null)
             {
-                Worksheet ws = view.Worksheet;
+                Worksheet ws = view.ActiveSheet;
                 CellRange range = view.DecorationRange;
                 int row = info.ViewportInfo.Row;
                 int column = info.ViewportInfo.Column;

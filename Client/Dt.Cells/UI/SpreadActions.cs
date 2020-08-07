@@ -47,7 +47,7 @@ namespace Dt.Cells.UI
             SheetView parameter = sender as SheetView;
             if ((parameter != null) && !parameter.IsEditing)
             {
-                Worksheet sheet = parameter.Worksheet;
+                var sheet = parameter.ActiveSheet;
                 foreach (CellRange range in sheet.Selections)
                 {
                     if (sheet.Protect && SheetView.IsAnyCellInRangeLocked(sheet, range.Row, range.Column, range.RowCount, range.ColumnCount))
@@ -142,7 +142,7 @@ namespace Dt.Cells.UI
                 FloatingObject[] floatingObjects = SpreadXClipboard.FloatingObjects;
                 if ((floatingObjects != null) && (floatingObjects.Length > 0))
                 {
-                    view.DoCommand(new ClipboardPasteFloatingObjectUndoAction(view.Worksheet, floatingObjects));
+                    view.DoCommand(new ClipboardPasteFloatingObjectUndoAction(view.ActiveSheet, floatingObjects));
                     SpreadXClipboard.Worksheet = null;
                     SpreadXClipboard.FloatingObjects = null;
                     e.Handled = true;
@@ -273,22 +273,22 @@ namespace Dt.Cells.UI
                 else
                 {
                     CellRange spanCell = null;
-                    if (view.Worksheet.Selections.Count > 1)
+                    if (view.ActiveSheet.Selections.Count > 1)
                     {
                         view.RaiseInvalidOperation(ResourceStrings.spreadActionCopyMultiplySelection, null, null);
                     }
                     else
                     {
-                        if (view.Worksheet.Selections.Count == 1)
+                        if (view.ActiveSheet.Selections.Count == 1)
                         {
-                            spanCell = view.Worksheet.Selections[0];
+                            spanCell = view.ActiveSheet.Selections[0];
                         }
                         else
                         {
-                            spanCell = view.Worksheet.GetSpanCell(view.Worksheet.ActiveRowIndex, view.Worksheet.ActiveColumnIndex);
+                            spanCell = view.ActiveSheet.GetSpanCell(view.ActiveSheet.ActiveRowIndex, view.ActiveSheet.ActiveColumnIndex);
                             if (spanCell == null)
                             {
-                                spanCell = new CellRange(view.Worksheet.ActiveRowIndex, view.Worksheet.ActiveColumnIndex, 1, 1);
+                                spanCell = new CellRange(view.ActiveSheet.ActiveRowIndex, view.ActiveSheet.ActiveColumnIndex, 1, 1);
                             }
                         }
                         view.RaiseClipboardChanging();
@@ -308,25 +308,25 @@ namespace Dt.Cells.UI
         public static void Cut(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
-            if ((((view != null) && view.AutoClipboard) && (view.Worksheet.Selections.Count == 1)) && !view.IsEditing)
+            if ((((view != null) && view.AutoClipboard) && (view.ActiveSheet.Selections.Count == 1)) && !view.IsEditing)
             {
                 CellRange spanCell = null;
-                if (view.Worksheet.Selections.Count > 1)
+                if (view.ActiveSheet.Selections.Count > 1)
                 {
                     view.RaiseInvalidOperation(ResourceStrings.spreadActionCutMultipleSelections, null, null);
                 }
                 else
                 {
-                    if (view.Worksheet.Selections.Count > 0)
+                    if (view.ActiveSheet.Selections.Count > 0)
                     {
-                        spanCell = view.Worksheet.Selections[0];
+                        spanCell = view.ActiveSheet.Selections[0];
                     }
                     else
                     {
-                        spanCell = view.Worksheet.GetSpanCell(view.Worksheet.ActiveRowIndex, view.Worksheet.ActiveColumnIndex);
+                        spanCell = view.ActiveSheet.GetSpanCell(view.ActiveSheet.ActiveRowIndex, view.ActiveSheet.ActiveColumnIndex);
                         if (spanCell == null)
                         {
-                            spanCell = new CellRange(view.Worksheet.ActiveRowIndex, view.Worksheet.ActiveColumnIndex, 1, 1);
+                            spanCell = new CellRange(view.ActiveSheet.ActiveRowIndex, view.ActiveSheet.ActiveColumnIndex, 1, 1);
                         }
                     }
                     view.RaiseClipboardChanging();
@@ -353,7 +353,7 @@ namespace Dt.Cells.UI
                     list.Add(obj2.Name);
                 }
                 FloatingObjectExtent extent = new FloatingObjectExtent(list.ToArray());
-                DeleteFloatingObjectUndoAction command = new DeleteFloatingObjectUndoAction(view.Worksheet, extent);
+                DeleteFloatingObjectUndoAction command = new DeleteFloatingObjectUndoAction(view.ActiveSheet, extent);
                 view.DoCommand(command);
                 e.Handled = true;
             }
@@ -362,7 +362,7 @@ namespace Dt.Cells.UI
         static void ExecutePaste(ActionEventArgs e, SheetView gcSheetView, string clipboardText)
         {
             CellRange range2;
-            Worksheet sheet = SpreadXClipboard.Worksheet;
+            var sheet = SpreadXClipboard.Worksheet;
             CellRange fromRange = SpreadXClipboard.Range;
             bool isCutting = SpreadXClipboard.IsCutting;
             if (((isCutting && (sheet != null)) && ((fromRange != null) && sheet.Protect)) && SheetView.IsAnyCellInRangeLocked(sheet, fromRange.Row, fromRange.Column, fromRange.RowCount, fromRange.ColumnCount))
@@ -371,9 +371,9 @@ namespace Dt.Cells.UI
             }
             bool pasteInternal = false;
             List<CellRange> list = new List<CellRange>();
-            if (gcSheetView.Worksheet.Selections.Count > 1)
+            if (gcSheetView.ActiveSheet.Selections.Count > 1)
             {
-                foreach (CellRange range3 in gcSheetView.Worksheet.Selections)
+                foreach (CellRange range3 in gcSheetView.ActiveSheet.Selections)
                 {
                     if (!gcSheetView.CheckPastedRange(sheet, fromRange, range3, isCutting, clipboardText, out range2, out pasteInternal))
                     {
@@ -387,12 +387,12 @@ namespace Dt.Cells.UI
                     list.Add(range2);
                 }
             }
-            else if (gcSheetView.Worksheet.Selections.Count <= 0)
+            else if (gcSheetView.ActiveSheet.Selections.Count <= 0)
             {
-                CellRange spanCell = gcSheetView.Worksheet.GetSpanCell(gcSheetView.Worksheet.ActiveRowIndex, gcSheetView.Worksheet.ActiveColumnIndex);
+                CellRange spanCell = gcSheetView.ActiveSheet.GetSpanCell(gcSheetView.ActiveSheet.ActiveRowIndex, gcSheetView.ActiveSheet.ActiveColumnIndex);
                 if (spanCell == null)
                 {
-                    spanCell = new CellRange(gcSheetView.Worksheet.ActiveRowIndex, gcSheetView.Worksheet.ActiveColumnIndex, 1, 1);
+                    spanCell = new CellRange(gcSheetView.ActiveSheet.ActiveRowIndex, gcSheetView.ActiveSheet.ActiveColumnIndex, 1, 1);
                 }
                 if (!gcSheetView.CheckPastedRange(sheet, fromRange, spanCell, isCutting, clipboardText, out range2, out pasteInternal))
                 {
@@ -402,7 +402,7 @@ namespace Dt.Cells.UI
             }
             else
             {
-                CellRange toRange = gcSheetView.Worksheet.Selections[0];
+                CellRange toRange = gcSheetView.ActiveSheet.Selections[0];
                 if (gcSheetView.CheckPastedRange(sheet, fromRange, toRange, isCutting, clipboardText, out range2, out pasteInternal))
                 {
                     list.Add(range2);
@@ -425,7 +425,7 @@ namespace Dt.Cells.UI
                     clipBoardOptions = ClipboardPasteOptions.All;
                 }
                 ClipboardPasteExtent pasteExtent = new ClipboardPasteExtent(fromRange, list.ToArray(), isCutting, clipboardText);
-                ClipboardPasteUndoAction command = new ClipboardPasteUndoAction(sheet, gcSheetView.Worksheet, pasteExtent, clipBoardOptions);
+                ClipboardPasteUndoAction command = new ClipboardPasteUndoAction(sheet, gcSheetView.ActiveSheet, pasteExtent, clipBoardOptions);
                 gcSheetView.DoCommand(command);
                 e.Handled = true;
             }
@@ -452,7 +452,7 @@ namespace Dt.Cells.UI
             if ((view != null) && (view.EditingViewport != null))
             {
                 string editorValue = (string) (view.EditingViewport.GetEditorValue() as string);
-                SetArrayFormulaUndoAction command = new SetArrayFormulaUndoAction(view.Worksheet, editorValue);
+                SetArrayFormulaUndoAction command = new SetArrayFormulaUndoAction(view.ActiveSheet, editorValue);
                 view.DoCommand(command);
             }
         }
@@ -468,7 +468,7 @@ namespace Dt.Cells.UI
             if ((view != null) && view.IsEditing)
             {
                 view.ProcessTextInput("\r\n", false, true);
-                view.Worksheet.ActiveCell.WordWrap = true;
+                view.ActiveSheet.ActiveCell.WordWrap = true;
                 e.Handled = true;
             }
         }
@@ -489,7 +489,7 @@ namespace Dt.Cells.UI
                     list.Add(obj2.Name);
                 }
                 MoveFloatingObjectExtent extent = new MoveFloatingObjectExtent(list.ToArray(), 0.0, 1.0);
-                MoveFloatingObjectUndoAction command = new MoveFloatingObjectUndoAction(view.Worksheet, extent);
+                MoveFloatingObjectUndoAction command = new MoveFloatingObjectUndoAction(view.ActiveSheet, extent);
                 view.DoCommand(command);
                 e.Handled = true;
             }
@@ -511,7 +511,7 @@ namespace Dt.Cells.UI
                     list.Add(obj2.Name);
                 }
                 MoveFloatingObjectExtent extent = new MoveFloatingObjectExtent(list.ToArray(), -1.0, 0.0);
-                MoveFloatingObjectUndoAction command = new MoveFloatingObjectUndoAction(view.Worksheet, extent);
+                MoveFloatingObjectUndoAction command = new MoveFloatingObjectUndoAction(view.ActiveSheet, extent);
                 view.DoCommand(command);
                 e.Handled = true;
             }
@@ -533,7 +533,7 @@ namespace Dt.Cells.UI
                     list.Add(obj2.Name);
                 }
                 MoveFloatingObjectExtent extent = new MoveFloatingObjectExtent(list.ToArray(), 1.0, 0.0);
-                MoveFloatingObjectUndoAction command = new MoveFloatingObjectUndoAction(view.Worksheet, extent);
+                MoveFloatingObjectUndoAction command = new MoveFloatingObjectUndoAction(view.ActiveSheet, extent);
                 view.DoCommand(command);
                 e.Handled = true;
             }
@@ -555,7 +555,7 @@ namespace Dt.Cells.UI
                     list.Add(obj2.Name);
                 }
                 MoveFloatingObjectExtent extent = new MoveFloatingObjectExtent(list.ToArray(), 0.0, -1.0);
-                MoveFloatingObjectUndoAction command = new MoveFloatingObjectUndoAction(view.Worksheet, extent);
+                MoveFloatingObjectUndoAction command = new MoveFloatingObjectUndoAction(view.ActiveSheet, extent);
                 view.DoCommand(command);
                 e.Handled = true;
             }
@@ -789,7 +789,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void NavigationNextSheet(object sender, ActionEventArgs e)
         {
-            SpreadView view = sender as SpreadView;
+            var view = sender as SheetView;
             if ((view != null) && view.NavigationNextSheet())
             {
                 e.Handled = true;
@@ -894,7 +894,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void NavigationPreviousSheet(object sender, ActionEventArgs e)
         {
-            SpreadView view = sender as SpreadView;
+            var view = sender as SheetView;
             if ((view != null) && view.NavigationPreviousSheet())
             {
                 e.Handled = true;
@@ -988,7 +988,7 @@ namespace Dt.Cells.UI
         {
             AsyncOperationCompletedHandler<string> handler = null;
             SheetView gcSheetView = sender as SheetView;
-            if ((((gcSheetView != null) && gcSheetView.AutoClipboard) && (gcSheetView.Worksheet != null)) && !gcSheetView.IsEditing)
+            if ((((gcSheetView != null) && gcSheetView.AutoClipboard) && (gcSheetView.ActiveSheet != null)) && !gcSheetView.IsEditing)
             {
                 DataPackageView content = Clipboard.GetContent();
                 if ((content != null) && content.Contains(StandardDataFormats.Text))
@@ -1381,7 +1381,7 @@ namespace Dt.Cells.UI
         public static void StartEditingFormula(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
-            if (((view != null) && view.CanUserEditFormula) && (!view.IsEditing && !string.IsNullOrEmpty(view.Worksheet.GetFormula(view.Worksheet.ActiveRowIndex, view.Worksheet.ActiveColumnIndex))))
+            if (((view != null) && view.CanUserEditFormula) && (!view.IsEditing && !string.IsNullOrEmpty(view.ActiveSheet.GetFormula(view.ActiveSheet.ActiveRowIndex, view.ActiveSheet.ActiveColumnIndex))))
             {
                 view.StartCellEditing(false, null);
                 e.Handled = true;

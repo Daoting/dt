@@ -16,8 +16,12 @@ namespace Dt.Cells.UI
     /// <summary>
     /// Represents the layout information of a <see cref="T:GrapeCity.Windows.SpreadSheet.UI.GcSpread" /> control.
     /// </summary>
-    internal class SpreadLayout : SheetLayout
+    internal class SheetLayout
     {
+        double[] _viewportHeight = new double[1];
+        double[] _viewportWidth = new double[1];
+        double[] _viewportX = new double[1];
+        double[] _viewportY = new double[1];
         int _columnViewportCount;
         double[] _horizontalScrollBarWidth;
         double[] _horizontalScrollBarX;
@@ -33,31 +37,130 @@ namespace Dt.Cells.UI
         double[] _verticalSplitBoxHeight;
         double[] _verticalSplitBoxY;
 
-        /// <summary>
-        /// Creates a new instance of the class.
-        /// </summary>
-        /// <param name="rowViewportCount">The row viewport count.</param>
-        /// <param name="columnViewportCount">The column viewport count.</param>
-        public SpreadLayout(int rowViewportCount, int columnViewportCount)
+        public SheetLayout(int rowViewportCount, int columnViewportCount)
         {
             _rowViewportCount = rowViewportCount;
             _columnViewportCount = columnViewportCount;
-            base._viewportX = new double[ColumnPaneCount];
-            base._viewportWidth = new double[ColumnPaneCount];
+            _viewportX = new double[ColumnPaneCount];
+            _viewportWidth = new double[ColumnPaneCount];
             _horizontalScrollBarX = new double[ColumnPaneCount];
             _horizontalScrollBarWidth = new double[ColumnPaneCount];
             _horizontalSplitBoxX = new double[ColumnPaneCount];
             _horizontalSplitBoxWidth = new double[ColumnPaneCount];
             _horizontalSplitBarX = new double[Math.Max(ColumnPaneCount - 1, 0)];
             _horizontalSplitBarWidth = new double[Math.Max(ColumnPaneCount - 1, 0)];
-            base._viewportY = new double[RowPaneCount];
-            base._viewportHeight = new double[RowPaneCount];
+            _viewportY = new double[RowPaneCount];
+            _viewportHeight = new double[RowPaneCount];
             _verticalScrollBarY = new double[RowPaneCount];
             _verticalScrollBarHeight = new double[RowPaneCount];
             _verticalSplitBoxY = new double[RowPaneCount];
             _verticalSplitBoxHeight = new double[RowPaneCount];
             _verticalSplitBarY = new double[Math.Max(RowPaneCount - 1, 0)];
             _verticalSplitBarHeight = new double[Math.Max(RowPaneCount - 1, 0)];
+        }
+
+        public double GetViewportHeight(int row)
+        {
+            if (row == -1)
+            {
+                return FrozenHeight;
+            }
+            if ((row >= 0) && (row < _viewportHeight.Length))
+            {
+                return _viewportHeight[row];
+            }
+            if (row == _viewportHeight.Length)
+            {
+                return FrozenTrailingHeight;
+            }
+            return 0.0;
+        }
+
+        public double GetViewportWidth(int column)
+        {
+            if (column == -1)
+            {
+                return FrozenWidth;
+            }
+            if ((column >= 0) && (column < _viewportWidth.Length))
+            {
+                return _viewportWidth[column];
+            }
+            if (column == _viewportWidth.Length)
+            {
+                return FrozenTrailingWidth;
+            }
+            return 0.0;
+        }
+
+        public double GetViewportX(int column)
+        {
+            if (column == -1)
+            {
+                return FrozenX;
+            }
+            if ((column >= 0) && (column < _viewportX.Length))
+            {
+                return _viewportX[column];
+            }
+            if ((column == _viewportX.Length) && (_viewportX.Length > 0))
+            {
+                return (_viewportX[_viewportX.Length - 1] + _viewportWidth[_viewportX.Length - 1]);
+            }
+            return 0.0;
+        }
+
+        public double GetViewportY(int row)
+        {
+            if (row == -1)
+            {
+                return FrozenY;
+            }
+            if ((row >= 0) && (row < _viewportY.Length))
+            {
+                return _viewportY[row];
+            }
+            if ((row == _viewportY.Length) && (_viewportY.Length > 0))
+            {
+                return (_viewportY[_viewportY.Length - 1] + _viewportHeight[_viewportY.Length - 1]);
+            }
+            return 0.0;
+        }
+
+        public void SetViewportHeight(int row, double value)
+        {
+            if ((row < 0) && (row >= _viewportHeight.Length))
+            {
+                throw new ArgumentOutOfRangeException("row");
+            }
+            _viewportHeight[row] = value;
+        }
+
+        public void SetViewportWidth(int column, double value)
+        {
+            if ((column < 0) || (column >= _viewportWidth.Length))
+            {
+                throw new ArgumentOutOfRangeException("column");
+            }
+            _viewportWidth[column] = value;
+        }
+
+        public void SetViewportX(int column, double value)
+        {
+            if ((column < 0) || (column >= _viewportX.Length))
+            {
+                throw new ArgumentOutOfRangeException("column");
+            }
+            _viewportX[column] = value;
+        }
+
+        public void SetViewportY(int row, double value)
+        {
+            if ((row < 0) || (row >= _viewportY.Length))
+            {
+                throw new ArgumentOutOfRangeException("row");
+            }
+            _viewportY[row] = value;
         }
 
         public double GetHorizontalScrollBarWidth(int column)
@@ -276,12 +379,46 @@ namespace Dt.Cells.UI
             _verticalSplitBoxY[row] = value;
         }
 
+        public double FrozenHeight { get; set; }
+
+        public double FrozenTrailingHeight { get; set; }
+
+        public double FrozenTrailingWidth { get; set; }
+
+        public double FrozenTrailingX
+        {
+            get { return  (_viewportX[_viewportX.Length - 1] + _viewportWidth[_viewportX.Length - 1]); }
+        }
+
+        public double FrozenTrailingY
+        {
+            get { return  (_viewportY[_viewportY.Length - 1] + _viewportHeight[_viewportY.Length - 1]); }
+        }
+
+        public double FrozenWidth { get; set; }
+
+        public double FrozenX { get; set; }
+
+        public double FrozenY { get; set; }
+
+        public double HeaderHeight { get; set; }
+
+        public double HeaderWidth { get; set; }
+
+        public double HeaderX { get; set; }
+
+        public double HeaderY { get; set; }
+
+        public double X { get; set; }
+
+        public double Y { get; set; }
+
         /// <summary>
         /// Gets the column pane count.
         /// </summary>
         public int ColumnPaneCount
         {
-            get { return  _columnViewportCount; }
+            get { return _columnViewportCount; }
         }
 
         public double OrnamentHeight { get; set; }
@@ -297,7 +434,7 @@ namespace Dt.Cells.UI
         /// </summary>
         public int RowPaneCount
         {
-            get { return  _rowViewportCount; }
+            get { return _rowViewportCount; }
         }
 
         public double TabSplitBoxWidth { get; set; }

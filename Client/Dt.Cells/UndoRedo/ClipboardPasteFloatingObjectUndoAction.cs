@@ -90,13 +90,13 @@ namespace Dt.Cells.UndoRedo
                             }
                             double num5 = 0.0;
                             double num6 = 0.0;
-                            for (int m = 0; m < view.Worksheet.ActiveRowIndex; m++)
+                            for (int m = 0; m < view.ActiveSheet.ActiveRowIndex; m++)
                             {
-                                num6 += view.Worksheet.GetActualRowHeight(m, SheetArea.Cells);
+                                num6 += view.ActiveSheet.GetActualRowHeight(m, SheetArea.Cells);
                             }
-                            for (int n = 0; n < view.Worksheet.ActiveColumnIndex; n++)
+                            for (int n = 0; n < view.ActiveSheet.ActiveColumnIndex; n++)
                             {
-                                num5 += view.Worksheet.GetActualColumnWidth(n, SheetArea.Cells);
+                                num5 += view.ActiveSheet.GetActualColumnWidth(n, SheetArea.Cells);
                             }
                             for (int num9 = 0; num9 < _sourceFloatingObjects.Length; num9++)
                             {

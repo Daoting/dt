@@ -25,7 +25,7 @@ namespace Dt.Cells.UI
 
         public override void BringCellToVisible(TabularPosition position)
         {
-            if ((!position.IsEmpty && (position.Area == SheetArea.Cells)) && (_sheetView.Worksheet != null))
+            if ((!position.IsEmpty && (position.Area == SheetArea.Cells)) && (_sheetView.ActiveSheet != null))
             {
                 NavigatorHelper.BringCellToVisible(_sheetView, position.Row, position.Column);
             }
@@ -51,7 +51,7 @@ namespace Dt.Cells.UI
 
         public override bool CanMoveCurrentTo(TabularPosition cellPosition)
         {
-            return (((((_sheetView.Worksheet != null) && (cellPosition.Row >= 0)) && ((cellPosition.Row < _sheetView.Worksheet.RowCount) && (cellPosition.Column >= 0))) && (((cellPosition.Column < _sheetView.Worksheet.ColumnCount) && _sheetView.Worksheet.Cells[cellPosition.Row, cellPosition.Column].ActualFocusable) && GetRowIsVisible(cellPosition.Row))) && GetColumnIsVisible(cellPosition.Column));
+            return (((((_sheetView.ActiveSheet != null) && (cellPosition.Row >= 0)) && ((cellPosition.Row < _sheetView.ActiveSheet.RowCount) && (cellPosition.Column >= 0))) && (((cellPosition.Column < _sheetView.ActiveSheet.ColumnCount) && _sheetView.ActiveSheet.Cells[cellPosition.Row, cellPosition.Column].ActualFocusable) && GetRowIsVisible(cellPosition.Row))) && GetColumnIsVisible(cellPosition.Column));
         }
 
         public override bool CanVerticalScroll(bool isBackward)
@@ -74,28 +74,28 @@ namespace Dt.Cells.UI
 
         public override bool GetColumnIsVisible(int columnIndex)
         {
-            if ((_sheetView == null) || (_sheetView.Worksheet == null))
+            if ((_sheetView == null) || (_sheetView.ActiveSheet == null))
             {
                 return base.GetColumnIsVisible(columnIndex);
             }
-            return (_sheetView.Worksheet.GetActualColumnVisible(columnIndex, SheetArea.Cells) && (_sheetView.Worksheet.GetActualColumnWidth(columnIndex, SheetArea.Cells) > 0.0));
+            return (_sheetView.ActiveSheet.GetActualColumnVisible(columnIndex, SheetArea.Cells) && (_sheetView.ActiveSheet.GetActualColumnWidth(columnIndex, SheetArea.Cells) > 0.0));
         }
 
         public override bool GetRowIsVisible(int rowIndex)
         {
-            if ((_sheetView == null) || (_sheetView.Worksheet == null))
+            if ((_sheetView == null) || (_sheetView.ActiveSheet == null))
             {
                 return base.GetRowIsVisible(rowIndex);
             }
-            return (_sheetView.Worksheet.GetActualRowVisible(rowIndex, SheetArea.Cells) && (_sheetView.Worksheet.GetActualRowHeight(rowIndex, SheetArea.Cells) > 0.0));
+            return (_sheetView.ActiveSheet.GetActualRowVisible(rowIndex, SheetArea.Cells) && (_sheetView.ActiveSheet.GetActualRowHeight(rowIndex, SheetArea.Cells) > 0.0));
         }
 
         public override bool IsMerged(TabularPosition position, out TabularRange range)
         {
             range = new TabularRange(position, 1, 1);
-            if ((_sheetView.Worksheet != null) && (_sheetView.Worksheet.SpanModel != null))
+            if ((_sheetView.ActiveSheet != null) && (_sheetView.ActiveSheet.SpanModel != null))
             {
-                CellRange range2 = _sheetView.Worksheet.SpanModel.Find(position.Row, position.Column);
+                CellRange range2 = _sheetView.ActiveSheet.SpanModel.Find(position.Row, position.Column);
                 if (range2 != null)
                 {
                     range = new TabularRange(position.Area, range2.Row, range2.Column, range2.RowCount, range2.ColumnCount);
@@ -129,11 +129,11 @@ namespace Dt.Cells.UI
         {
             get
             {
-                if ((_sheetView == null) || (_sheetView.Worksheet == null))
+                if ((_sheetView == null) || (_sheetView.ActiveSheet == null))
                 {
                     return base.ContentBounds;
                 }
-                Worksheet worksheet = _sheetView.Worksheet;
+                var worksheet = _sheetView.ActiveSheet;
                 ViewportInfo viewportInfo = worksheet.GetViewportInfo();
                 int activeRowViewportIndex = worksheet.GetActiveRowViewportIndex();
                 int activeColumnViewportIndex = worksheet.GetActiveColumnViewportIndex();
@@ -179,17 +179,17 @@ namespace Dt.Cells.UI
                 {
                     activeColumnViewportIndex = 0;
                 }
-                else if (activeColumnViewportIndex == _sheetView.Worksheet.GetViewportInfo().ColumnViewportCount)
+                else if (activeColumnViewportIndex == _sheetView.ActiveSheet.GetViewportInfo().ColumnViewportCount)
                 {
-                    activeColumnViewportIndex = _sheetView.Worksheet.GetViewportInfo().ColumnViewportCount - 1;
+                    activeColumnViewportIndex = _sheetView.ActiveSheet.GetViewportInfo().ColumnViewportCount - 1;
                 }
                 if (activeRowViewportIndex == -1)
                 {
                     activeRowViewportIndex = 0;
                 }
-                else if (activeRowViewportIndex == _sheetView.Worksheet.GetViewportInfo().RowViewportCount)
+                else if (activeRowViewportIndex == _sheetView.ActiveSheet.GetViewportInfo().RowViewportCount)
                 {
-                    activeRowViewportIndex = _sheetView.Worksheet.GetViewportInfo().RowViewportCount - 1;
+                    activeRowViewportIndex = _sheetView.ActiveSheet.GetViewportInfo().RowViewportCount - 1;
                 }
                 int viewportLeftColumn = _sheetView.GetViewportLeftColumn(activeColumnViewportIndex);
                 int viewportRightColumn = _sheetView.GetViewportRightColumn(activeColumnViewportIndex);
@@ -197,11 +197,11 @@ namespace Dt.Cells.UI
                 int viewportBottomRow = _sheetView.GetViewportBottomRow(activeRowViewportIndex);
                 double viewportWidth = _sheetView.GetViewportWidth(activeColumnViewportIndex);
                 double viewportHeight = _sheetView.GetViewportHeight(activeRowViewportIndex);
-                if (NavigatorHelper.GetColumnWidth(_sheetView.Worksheet, viewportLeftColumn, viewportRightColumn) > viewportWidth)
+                if (NavigatorHelper.GetColumnWidth(_sheetView.ActiveSheet, viewportLeftColumn, viewportRightColumn) > viewportWidth)
                 {
                     viewportRightColumn--;
                 }
-                if (NavigatorHelper.GetRowHeight(_sheetView.Worksheet, viewportTopRow, viewportBottomRow) > viewportHeight)
+                if (NavigatorHelper.GetRowHeight(_sheetView.ActiveSheet, viewportTopRow, viewportBottomRow) > viewportHeight)
                 {
                     viewportBottomRow--;
                 }
@@ -211,12 +211,12 @@ namespace Dt.Cells.UI
 
         public override int TotalColumnCount
         {
-            get { return  _sheetView.Worksheet.ColumnCount; }
+            get { return  _sheetView.ActiveSheet.ColumnCount; }
         }
 
         public override int TotalRowCount
         {
-            get { return  _sheetView.Worksheet.RowCount; }
+            get { return  _sheetView.ActiveSheet.RowCount; }
         }
     }
 }

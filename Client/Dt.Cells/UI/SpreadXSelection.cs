@@ -55,7 +55,7 @@ namespace Dt.Cells.UI
 
         CellRange GetActiveCell()
         {
-            return _sheetView.ActiveCell;
+            return _sheetView.GetActiveCell();
         }
 
         static void GetAdjustedEdge(int row, int column, int rowCount, int columnCount, NavigationDirection navigationDirection, bool shrink, out TabularPosition startPosition, out TabularPosition endPosition)
@@ -138,12 +138,12 @@ namespace Dt.Cells.UI
 
         CellRange GetExpandIntersectedRange(CellRange range)
         {
-            if (_sheetView.Worksheet.SpanModel.IsEmpty())
+            if (_sheetView.ActiveSheet.SpanModel.IsEmpty())
             {
                 return range;
             }
             List<CellRange> spans = new List<CellRange>();
-            foreach (object obj2 in _sheetView.Worksheet.SpanModel)
+            foreach (object obj2 in _sheetView.ActiveSheet.SpanModel)
             {
                 spans.Add((CellRange) obj2);
             }
@@ -179,15 +179,15 @@ namespace Dt.Cells.UI
 
         CellRange GetSelectionRange()
         {
-            if ((_sheetView.Worksheet == null) || (_sheetView.Worksheet.Selections.Count <= 0))
+            if ((_sheetView.ActiveSheet == null) || (_sheetView.ActiveSheet.Selections.Count <= 0))
             {
                 return null;
             }
-            if (_sheetView.Worksheet.SelectionPolicy == SelectionPolicy.Single)
+            if (_sheetView.ActiveSheet.SelectionPolicy == SelectionPolicy.Single)
             {
                 return null;
             }
-            return _sheetView.ActiveSelection;
+            return _sheetView.GetActiveSelection();
         }
 
         CellRange KeyboardLineSelect(CellRange currentRange, NavigationDirection navigationDirection, bool shrink)
@@ -198,8 +198,8 @@ namespace Dt.Cells.UI
             CellRange expandIntersectedRange;
             int row = (currentRange.Row < 0) ? 0 : currentRange.Row;
             int column = (currentRange.Column < 0) ? 0 : currentRange.Column;
-            int rowCount = (currentRange.Row < 0) ? _sheetView.Worksheet.RowCount : currentRange.RowCount;
-            int columnCount = (currentRange.Column < 0) ? _sheetView.Worksheet.ColumnCount : currentRange.ColumnCount;
+            int rowCount = (currentRange.Row < 0) ? _sheetView.ActiveSheet.RowCount : currentRange.RowCount;
+            int columnCount = (currentRange.Column < 0) ? _sheetView.ActiveSheet.ColumnCount : currentRange.ColumnCount;
             GetAdjustedEdge(row, column, rowCount, columnCount, navigationDirection, shrink, out position, out position2);
             if ((position == TabularPosition.Empty) || (position2 == TabularPosition.Empty))
             {
@@ -232,7 +232,7 @@ namespace Dt.Cells.UI
             int viewportRightColumn = _sheetView.GetViewportRightColumn(activeColumnViewportIndex);
             if ((navigationDirection == NavigationDirection.Up) || (navigationDirection == NavigationDirection.Down))
             {
-                if ((expandIntersectedRange.Column == 0) && (expandIntersectedRange.ColumnCount == _sheetView.Worksheet.ColumnCount))
+                if ((expandIntersectedRange.Column == 0) && (expandIntersectedRange.ColumnCount == _sheetView.ActiveSheet.ColumnCount))
                 {
                     if ((currentCell.Row >= viewportTopRow) && (currentCell.Row < viewportBottomRow))
                     {
@@ -244,7 +244,7 @@ namespace Dt.Cells.UI
                     }
                 }
             }
-            else if (((navigationDirection == NavigationDirection.Left) || (navigationDirection == NavigationDirection.Right)) && ((expandIntersectedRange.Row == 0) && (expandIntersectedRange.RowCount == _sheetView.Worksheet.RowCount)))
+            else if (((navigationDirection == NavigationDirection.Left) || (navigationDirection == NavigationDirection.Right)) && ((expandIntersectedRange.Row == 0) && (expandIntersectedRange.RowCount == _sheetView.ActiveSheet.RowCount)))
             {
                 if ((currentCell.Column >= viewportLeftColumn) && (currentCell.Column < viewportRightColumn))
                 {
@@ -265,15 +265,15 @@ namespace Dt.Cells.UI
         CellRange KeyboardPageSelect(CellRange currentRange, NavigationDirection direction)
         {
             int row = (currentRange.Row < 0) ? 0 : currentRange.Row;
-            int rowCount = (currentRange.Row < 0) ? _sheetView.Worksheet.RowCount : currentRange.RowCount;
+            int rowCount = (currentRange.Row < 0) ? _sheetView.ActiveSheet.RowCount : currentRange.RowCount;
             int column = (currentRange.Column < 0) ? 0 : currentRange.Column;
-            int columnCount = (currentRange.Column < 0) ? _sheetView.Worksheet.ColumnCount : currentRange.ColumnCount;
+            int columnCount = (currentRange.Column < 0) ? _sheetView.ActiveSheet.ColumnCount : currentRange.ColumnCount;
             int num5 = (row + rowCount) - 1;
             int num6 = (column + columnCount) - 1;
             int activeRowViewportIndex = _sheetView.GetActiveRowViewportIndex();
             int activeColumnViewportIndex = _sheetView.GetActiveColumnViewportIndex();
-            int num9 = _sheetView.Worksheet.RowCount;
-            int num10 = _sheetView.Worksheet.ColumnCount;
+            int num9 = _sheetView.ActiveSheet.RowCount;
+            int num10 = _sheetView.ActiveSheet.ColumnCount;
             int viewportTopRow = _sheetView.GetViewportTopRow(activeRowViewportIndex);
             _sheetView.GetViewportBottomRow(activeRowViewportIndex);
             int viewportLeftColumn = _sheetView.GetViewportLeftColumn(activeColumnViewportIndex);
@@ -317,7 +317,7 @@ namespace Dt.Cells.UI
                     return new CellRange(num18, column, (num19 - num18) + 1, columnCount);
                 }
                 int num20 = (num9 - row) - rowCount;
-                if ((num20 > 0) && (_sheetView.Worksheet.FrozenTrailingRowCount == 0))
+                if ((num20 > 0) && (_sheetView.ActiveSheet.FrozenTrailingRowCount == 0))
                 {
                     int num21 = num13;
                     int num22 = num9 - 1;
@@ -360,7 +360,7 @@ namespace Dt.Cells.UI
                     }
                     return new CellRange(num26, column, (num27 - num26) + 1, columnCount);
                 }
-                if ((row > 0) && (_sheetView.Worksheet.FrozenRowCount == 0))
+                if ((row > 0) && (_sheetView.ActiveSheet.FrozenRowCount == 0))
                 {
                     int num28 = 0;
                     int num29 = num13;
@@ -404,7 +404,7 @@ namespace Dt.Cells.UI
                     return new CellRange(row, num33, rowCount, (num34 - num33) + 1);
                 }
                 int num35 = (num10 - column) - columnCount;
-                if ((num35 > 0) && (_sheetView.Worksheet.FrozenTrailingColumnCount == 0))
+                if ((num35 > 0) && (_sheetView.ActiveSheet.FrozenTrailingColumnCount == 0))
                 {
                     int num36 = num14;
                     int num37 = num10 - 1;
@@ -447,7 +447,7 @@ namespace Dt.Cells.UI
                     }
                     return new CellRange(row, num41, rowCount, (num42 - num41) + 1);
                 }
-                if ((column > 0) && (_sheetView.Worksheet.FrozenColumnCount == 0))
+                if ((column > 0) && (_sheetView.ActiveSheet.FrozenColumnCount == 0))
                 {
                     int num43 = 0;
                     int num44 = num14;
@@ -484,11 +484,11 @@ namespace Dt.Cells.UI
                 }
                 if ((range != null) && !range.Equals(selectionRange))
                 {
-                    CellRange[] oldSelection = Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) _sheetView.Worksheet.Selections);
-                    _sheetView.Worksheet.ClearSelection(selectionRange);
+                    CellRange[] oldSelection = Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) _sheetView.ActiveSheet.Selections);
+                    _sheetView.ActiveSheet.ClearSelection(selectionRange);
                     range = GetExpandIntersectedRange(range);
-                    _sheetView.Worksheet.AddSelection(range, false);
-                    if (_sheetView.RaiseSelectionChanging(oldSelection, Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) _sheetView.Worksheet.Selections)))
+                    _sheetView.ActiveSheet.AddSelection(range, false);
+                    if (_sheetView.RaiseSelectionChanging(oldSelection, Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) _sheetView.ActiveSheet.Selections)))
                     {
                         _sheetView.RaiseSelectionChanged();
                     }
@@ -500,8 +500,8 @@ namespace Dt.Cells.UI
         {
             int row = (currentRange.Row < 0) ? 0 : currentRange.Row;
             int column = (currentRange.Column < 0) ? 0 : currentRange.Column;
-            int rowCount = (currentRange.Row < 0) ? _sheetView.Worksheet.RowCount : currentRange.RowCount;
-            int columnCount = (currentRange.Column < 0) ? _sheetView.Worksheet.ColumnCount : currentRange.ColumnCount;
+            int rowCount = (currentRange.Row < 0) ? _sheetView.ActiveSheet.RowCount : currentRange.RowCount;
+            int columnCount = (currentRange.Column < 0) ? _sheetView.ActiveSheet.ColumnCount : currentRange.ColumnCount;
             CellRange activeCell = GetActiveCell();
             CellRange range2 = null;
             if (direction == NavigationDirection.Home)
@@ -510,7 +510,7 @@ namespace Dt.Cells.UI
             }
             else if (direction == NavigationDirection.End)
             {
-                range2 = new CellRange(row, activeCell.Column, rowCount, _sheetView.Worksheet.ColumnCount - activeCell.Column);
+                range2 = new CellRange(row, activeCell.Column, rowCount, _sheetView.ActiveSheet.ColumnCount - activeCell.Column);
             }
             else if (direction == NavigationDirection.Top)
             {
@@ -518,15 +518,15 @@ namespace Dt.Cells.UI
             }
             else if (direction == NavigationDirection.Bottom)
             {
-                range2 = new CellRange(activeCell.Row, column, _sheetView.Worksheet.RowCount - activeCell.Row, columnCount);
+                range2 = new CellRange(activeCell.Row, column, _sheetView.ActiveSheet.RowCount - activeCell.Row, columnCount);
             }
             else if (direction == NavigationDirection.First)
             {
-                range2 = new CellRange(_sheetView.Worksheet.FrozenRowCount, _sheetView.Worksheet.FrozenColumnCount, (activeCell.Row + activeCell.RowCount) - _sheetView.Worksheet.FrozenRowCount, (activeCell.Column + activeCell.ColumnCount) - _sheetView.Worksheet.FrozenColumnCount);
+                range2 = new CellRange(_sheetView.ActiveSheet.FrozenRowCount, _sheetView.ActiveSheet.FrozenColumnCount, (activeCell.Row + activeCell.RowCount) - _sheetView.ActiveSheet.FrozenRowCount, (activeCell.Column + activeCell.ColumnCount) - _sheetView.ActiveSheet.FrozenColumnCount);
             }
             else if (direction == NavigationDirection.Last)
             {
-                range2 = new CellRange(activeCell.Row, activeCell.Column, (_sheetView.Worksheet.RowCount - _sheetView.Worksheet.FrozenTrailingRowCount) - activeCell.Row, (_sheetView.Worksheet.ColumnCount - _sheetView.Worksheet.FrozenTrailingColumnCount) - activeCell.Column);
+                range2 = new CellRange(activeCell.Row, activeCell.Column, (_sheetView.ActiveSheet.RowCount - _sheetView.ActiveSheet.FrozenTrailingRowCount) - activeCell.Row, (_sheetView.ActiveSheet.ColumnCount - _sheetView.ActiveSheet.FrozenTrailingColumnCount) - activeCell.Column);
             }
             if (range2 != null)
             {
@@ -617,7 +617,7 @@ namespace Dt.Cells.UI
 
             public override bool CanMoveCurrentTo(TabularPosition cellPosition)
             {
-                return (((((base._sheetView.Worksheet != null) && (cellPosition.Row >= 0)) && ((cellPosition.Row < base._sheetView.Worksheet.RowCount) && (cellPosition.Column >= 0))) && ((cellPosition.Column < base._sheetView.Worksheet.ColumnCount) && GetRowIsVisible(cellPosition.Row))) && GetColumnIsVisible(cellPosition.Column));
+                return (((((base._sheetView.ActiveSheet != null) && (cellPosition.Row >= 0)) && ((cellPosition.Row < base._sheetView.ActiveSheet.RowCount) && (cellPosition.Column >= 0))) && ((cellPosition.Column < base._sheetView.ActiveSheet.ColumnCount) && GetRowIsVisible(cellPosition.Row))) && GetColumnIsVisible(cellPosition.Column));
             }
         }
     }

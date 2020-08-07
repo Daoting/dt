@@ -11,6 +11,7 @@ using Dt.Cells.Data;
 using Dt.Cells.UndoRedo;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Xml.Serialization;
 using Windows.Devices.Input;
@@ -19,6 +20,7 @@ using Windows.UI.Core;
 using Windows.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 #endregion
@@ -84,9 +86,9 @@ namespace Dt.Cells.UI
                                 CapturePointer(e.Pointer);
                                 _primaryTouchDeviceId = new uint?(point.PointerId);
                                 _primaryTouchDeviceReleased = false;
-                                if ((Worksheet != null) && (Worksheet.Selections != null))
+                                if ((ActiveSheet != null) && (ActiveSheet.Selections != null))
                                 {
-                                    CellRange[] rangeArray = Enumerable.ToArray<CellRange>((IEnumerable<CellRange>)Worksheet.Selections);
+                                    CellRange[] rangeArray = Enumerable.ToArray<CellRange>((IEnumerable<CellRange>)ActiveSheet.Selections);
                                     SavedOldSelections = rangeArray;
                                 }
                             }
@@ -133,7 +135,7 @@ namespace Dt.Cells.UI
                     IsTouching = false;
 
                     // 无sheet时只底部标签有效
-                    if (Worksheet == null && HitTest(pos.X, pos.Y).HitTestType != HitTestType.TabStrip)
+                    if (ActiveSheet == null && HitTest(pos.X, pos.Y).HitTestType != HitTestType.TabStrip)
                     {
                         return;
                     }
@@ -151,30 +153,109 @@ namespace Dt.Cells.UI
             }
         }
 
-        protected virtual bool StartMouseClick(PointerRoutedEventArgs e)
+        bool StartMouseClick(PointerRoutedEventArgs e)
         {
-            if (IsMouseInEditor() || IsMouseInRangeGroup())
+            if (IsMouseInScrollBar())
             {
                 return false;
             }
 
-            if (!CapturePointer(e.Pointer))
+            if (IsEditing && ((IsMouseInSplitBar() || IsMouseInSplitBox()) || IsMouseInTabSplitBox()))
             {
                 return false;
             }
 
-            IsMouseLeftButtonPressed = true;
-            if (!_formulaSelectionFeature.IsSelectionBegined)
+            Point position = e.GetCurrentPoint(this).Position;
+            if (!GetTabStripRectangle().Contains(position))
             {
-                FocusInternal();
+                if (IsMouseInEditor() || IsMouseInRangeGroup())
+                {
+                    return false;
+                }
+
+                if (!CapturePointer(e.Pointer))
+                {
+                    return false;
+                }
+
+                IsMouseLeftButtonPressed = true;
+                if (!_formulaSelectionFeature.IsSelectionBegined)
+                {
+                    FocusInternal();
+                }
+                _lastClickPoint = e.GetCurrentPoint(this).Position;
+                _routedEventArgs = e;
+                return true;
             }
-            _lastClickPoint = e.GetCurrentPoint(this).Position;
+
+            if (CanSelectFormula)
+            {
+                IsSwitchingSheet = true;
+                EditorConnector.ClearFlickingItems();
+                if (!EditorConnector.IsInOtherSheet)
+                {
+                    EditorConnector.IsInOtherSheet = true;
+                    EditorConnector.SheetIndex = ActiveSheet.Workbook.ActiveSheetIndex;
+                    EditorConnector.RowIndex = ActiveSheet.ActiveRowIndex;
+                    EditorConnector.ColumnIndex = ActiveSheet.ActiveColumnIndex;
+                }
+            }
+
+            StopCellEditing(CanSelectFormula);
+            if (_tabStrip != null)
+            {
+                _tabStrip.StopTabEditing(false);
+            }
+            _lastClickPoint = position;
             _routedEventArgs = e;
             return true;
         }
 
-        protected virtual void ProcessMouseLeftButtonDown(HitTestInformation p_hitInfo)
+        void ProcessMouseLeftButtonDown(HitTestInformation p_hitInfo)
         {
+            // 双击行/列头自动宽高
+            if (_isDoubleClick
+                && (p_hitInfo.HitTestType == HitTestType.ColumnSplitBar || p_hitInfo.HitTestType == HitTestType.RowSplitBar))
+                return;
+
+            switch (p_hitInfo.HitTestType)
+            {
+                case HitTestType.TabStrip:
+                    if (_routedEventArgs != null)
+                    {
+                        _tabStrip.ProcessMouseClickSheetTab(_routedEventArgs);
+                    }
+                    return;
+
+                case HitTestType.RowSplitBar:
+                    StartRowSplitting();
+                    if (p_hitInfo.ColumnViewportIndex >= 0)
+                    {
+                        StartColumnSplitting();
+                    }
+                    return;
+
+                case HitTestType.ColumnSplitBar:
+                    StartColumnSplitting();
+                    if (p_hitInfo.RowViewportIndex >= 0)
+                    {
+                        StartRowSplitting();
+                    }
+                    return;
+
+                case HitTestType.RowSplitBox:
+                    StartRowSplitting();
+                    return;
+
+                case HitTestType.ColumnSplitBox:
+                    StartColumnSplitting();
+                    return;
+
+                case HitTestType.TabSplitBox:
+                    StartTabStripResizing();
+                    return;
+            }
+
             if (!IsEditing
                 || _formulaSelectionFeature.CanSelectFormula
                 || p_hitInfo.HitTestType == HitTestType.FormulaSelection
@@ -273,9 +354,9 @@ namespace Dt.Cells.UI
                                 }
                                 if (!flag6)
                                 {
-                                    if (!_allowDragFill || !p_hitInfo.ViewportInfo.InDragFillIndicator)
+                                    if (!CanUserDragFill || !p_hitInfo.ViewportInfo.InDragFillIndicator)
                                     {
-                                        if (_allowDragDrop && p_hitInfo.ViewportInfo.InSelectionDrag)
+                                        if (CanUserDragDrop && p_hitInfo.ViewportInfo.InSelectionDrag)
                                         {
                                             if (IsEditing)
                                             {
@@ -325,7 +406,7 @@ namespace Dt.Cells.UI
                                 if (obj != null)
                                 {
                                     // hdt 此处原来为 &&
-                                    flag9 = obj.Locked || Worksheet.Protect;
+                                    flag9 = obj.Locked || ActiveSheet.Protect;
                                     if (!ctrl && !shift)
                                     {
                                         if (!obj.IsSelected && !flag9)
@@ -367,11 +448,66 @@ namespace Dt.Cells.UI
                 }
             }
         }
+
+        void ProcessMouseDownFilterButton(FilterButtonInfo filterBtnInfo)
+        {
+            if (!RaiseFilterPopupOpening(filterBtnInfo.Row, filterBtnInfo.Column) && (filterBtnInfo != null))
+            {
+                _filterPopupHelper = new PopupHelper(FilterPopup);
+                ColumnDropDownList dropdown = new ColumnDropDownList();
+                AddSortItems(dropdown, filterBtnInfo);
+                dropdown.Items.Add(new SeparatorDropDownItemControl());
+                AutoFilterDropDownItemControl control = CreateAutoFilter(filterBtnInfo);
+                dropdown.Items.Add(control);
+                dropdown.Popup = _filterPopupHelper;
+                int row = filterBtnInfo.Row;
+                int column = filterBtnInfo.Column;
+                CellRange range = ActiveSheet.GetSpanCell(row, column, filterBtnInfo.SheetArea);
+                if (range != null)
+                {
+                    row = (range.Row + range.RowCount) - 1;
+                    column = (range.Column + range.ColumnCount) - 1;
+                }
+                RowLayout columnHeaderRowLayout = null;
+                ColumnLayout layout2 = GetViewportColumnLayoutModel(filterBtnInfo.ColumnViewportIndex).Find(column);
+                if (filterBtnInfo.SheetArea == SheetArea.ColumnHeader)
+                {
+                    columnHeaderRowLayout = GetColumnHeaderRowLayout(row);
+                }
+                else if (filterBtnInfo.SheetArea == SheetArea.Cells)
+                {
+                    columnHeaderRowLayout = GetViewportRowLayoutModel(filterBtnInfo.RowViewportIndex).Find(row);
+                }
+                if ((columnHeaderRowLayout != null) && (layout2 != null))
+                {
+                    _filterPopupHelper.ShowAsModal(this, dropdown, new Point(layout2.X + layout2.Width, columnHeaderRowLayout.Y + columnHeaderRowLayout.Height));
+                }
+            }
+        }
+
+        void AddSortItems(ColumnDropDownList dropdown, FilterButtonInfo info)
+        {
+            DropDownItemControl control = new DropDownItemControl();
+            control.Content = ResourceStrings.SortDropdownItemSortAscend;
+            control.Icon = SR.GetImage("SortAscending.png");
+            control.Command = new SortCommand(this, info, true);
+            dropdown.Items.Add(control);
+            DropDownItemControl control2 = new DropDownItemControl();
+            control2.Content = ResourceStrings.SortDropdownItemSortDescend;
+            control2.Icon = SR.GetImage("SortDescending.png");
+            control2.Command = new SortCommand(this, info, false);
+            dropdown.Items.Add(control2);
+        }
         #endregion
 
         #region 鼠标移动
-        protected virtual void OnPointerMoved(object sender, PointerRoutedEventArgs e)
+        void OnPointerMoved(object sender, PointerRoutedEventArgs e)
         {
+            if (e.Pointer.PointerDeviceType == PointerDeviceType.Touch)
+            {
+                UpdateScrollBarIndicatorMode(ScrollingIndicatorMode.TouchIndicator);
+            }
+
             if (IsTouching && e.Pointer.PointerDeviceType == PointerDeviceType.Touch)
             {
                 try
@@ -385,7 +521,7 @@ namespace Dt.Cells.UI
                 }
                 e.Handled = true;
             }
-            else if (Worksheet != null)
+            else if (ActiveSheet != null)
             {
                 MousePosition = e.GetCurrentPoint(this).Position;
                 HitTestInformation hi = HitTest(MousePosition.X, MousePosition.Y);
@@ -397,63 +533,146 @@ namespace Dt.Cells.UI
             }
         }
 
-        protected virtual void ProcessMouseMove(HitTestInformation p_hitInfo)
+        void ProcessMouseMove(HitTestInformation p_hitInfo)
         {
+            bool flag = false;
             switch (p_hitInfo.HitTestType)
             {
-                case HitTestType.Corner:
-                    if (!IsWorking)
+                case HitTestType.RowSplitBar:
+                    if ((!IsWorking && !IsEditing) && !Excel.Workbook.Protect)
                     {
-                        if (p_hitInfo.HeaderInfo.InColumnResize)
+                        if (InputDeviceType != InputDeviceType.Touch)
                         {
-                            SetBuiltInCursor(CoreCursorType.SizeWestEast);
+                            if (p_hitInfo.ColumnViewportIndex < 0)
+                            {
+                                SetBuiltInCursor((CoreCursorType)8);
+                            }
+                            else
+                            {
+                                SetBuiltInCursor((CoreCursorType)3);
+                            }
                         }
-                        if (p_hitInfo.HeaderInfo.InRowResize)
-                        {
-                            SetBuiltInCursor(CoreCursorType.SizeNorthSouth);
-                        }
+                        flag = true;
                     }
-                    break;
+                    goto Label_01B3;
 
-                case HitTestType.RowHeader:
-                    if (p_hitInfo.HeaderInfo.InRowResize && !IsWorking)
+                case HitTestType.ColumnSplitBar:
+                    if ((IsWorking || IsEditing) || Excel.Workbook.Protect)
                     {
-                        if (Worksheet.GetActualRowHeight(p_hitInfo.HeaderInfo.ResizingRow, SheetArea.Cells) != 0.0)
+                        goto Label_01B3;
+                    }
+                    if (InputDeviceType != InputDeviceType.Touch)
+                    {
+                        if (p_hitInfo.RowViewportIndex < 0)
                         {
-                            SetMouseCursor(CursorType.Resize_VerticalCursor);
+                            SetBuiltInCursor((CoreCursorType)10);
                             break;
                         }
-                        SetMouseCursor(CursorType.Resize_VerticalSplitCursor);
+                        SetBuiltInCursor((CoreCursorType)3);
                     }
                     break;
 
-                case HitTestType.ColumnHeader:
-                    if (p_hitInfo.HeaderInfo.InColumnResize && !IsWorking)
+                case HitTestType.RowSplitBox:
+                    if ((!IsWorking && !IsEditing) && !Excel.Workbook.Protect)
                     {
-                        if (Worksheet.GetActualColumnWidth(p_hitInfo.HeaderInfo.ResizingColumn, SheetArea.Cells) != 0.0)
+                        if (InputDeviceType != InputDeviceType.Touch)
                         {
-                            SetMouseCursor(CursorType.Resize_HorizontalCursor);
-                            break;
+                            SetBuiltInCursor((CoreCursorType)8);
                         }
-                        SetMouseCursor(CursorType.Resize_HorizontalSplitCursor);
+                        flag = true;
                     }
-                    break;
+                    goto Label_01B3;
 
-                case HitTestType.Viewport:
-                    if (IsWorking)
+                case HitTestType.ColumnSplitBox:
+                    if ((!IsWorking && !IsEditing) && !Excel.Workbook.Protect)
                     {
-                        if (IsMovingFloatingOjects)
+                        if (InputDeviceType != InputDeviceType.Touch)
                         {
-                            SetMouseCursor(CursorType.DragCell_DragCursor);
+                            SetBuiltInCursor((CoreCursorType)10);
+                        }
+                        flag = true;
+                    }
+                    goto Label_01B3;
+
+                case HitTestType.TabSplitBox:
+                    if (!IsWorking && !IsEditing)
+                    {
+                        if (InputDeviceType != InputDeviceType.Touch)
+                        {
+                            SetBuiltInCursor((CoreCursorType)10);
+                        }
+                        flag = true;
+                    }
+                    goto Label_01B3;
+
+                default:
+                    goto Label_01B3;
+            }
+            flag = true;
+        Label_01B3:
+            if (IsColumnSplitting)
+            {
+                ContinueColumnSplitting();
+            }
+            if (IsRowSplitting)
+            {
+                ContinueRowSplitting();
+            }
+            if (IsTabStripResizing)
+            {
+                ContinueTabStripResizing();
+            }
+
+            if (flag)
+            {
+                if (!IsWorking)
+                {
+                    _hoverManager.DoHover(p_hitInfo);
+                }
+            }
+            else
+            {
+                switch (p_hitInfo.HitTestType)
+                {
+                    case HitTestType.Corner:
+                        if (!IsWorking)
+                        {
+                            if (p_hitInfo.HeaderInfo.InColumnResize)
+                            {
+                                SetBuiltInCursor(CoreCursorType.SizeWestEast);
+                            }
+                            if (p_hitInfo.HeaderInfo.InRowResize)
+                            {
+                                SetBuiltInCursor(CoreCursorType.SizeNorthSouth);
+                            }
                         }
                         break;
-                    }
-                    SetCursor(p_hitInfo);
-                    break;
 
-                case HitTestType.FloatingObject:
-                    if (!IsTouching)
-                    {
+                    case HitTestType.RowHeader:
+                        if (p_hitInfo.HeaderInfo.InRowResize && !IsWorking)
+                        {
+                            if (ActiveSheet.GetActualRowHeight(p_hitInfo.HeaderInfo.ResizingRow, SheetArea.Cells) != 0.0)
+                            {
+                                SetMouseCursor(CursorType.Resize_VerticalCursor);
+                                break;
+                            }
+                            SetMouseCursor(CursorType.Resize_VerticalSplitCursor);
+                        }
+                        break;
+
+                    case HitTestType.ColumnHeader:
+                        if (p_hitInfo.HeaderInfo.InColumnResize && !IsWorking)
+                        {
+                            if (ActiveSheet.GetActualColumnWidth(p_hitInfo.HeaderInfo.ResizingColumn, SheetArea.Cells) != 0.0)
+                            {
+                                SetMouseCursor(CursorType.Resize_HorizontalCursor);
+                                break;
+                            }
+                            SetMouseCursor(CursorType.Resize_HorizontalSplitCursor);
+                        }
+                        break;
+
+                    case HitTestType.Viewport:
                         if (IsWorking)
                         {
                             if (IsMovingFloatingOjects)
@@ -462,70 +681,123 @@ namespace Dt.Cells.UI
                             }
                             break;
                         }
-                        SetCursorForFloatingObject(p_hitInfo.FloatingObjectInfo);
-                    }
-                    break;
+                        SetCursor(p_hitInfo);
+                        break;
 
-                case HitTestType.FormulaSelection:
-                    if (!IsWorking)
-                    {
-                        _formulaSelectionFeature.SetCursor(p_hitInfo.FormulaSelectionInfo);
-                    }
-                    break;
+                    case HitTestType.FloatingObject:
+                        if (!IsTouching)
+                        {
+                            if (IsWorking)
+                            {
+                                if (IsMovingFloatingOjects)
+                                {
+                                    SetMouseCursor(CursorType.DragCell_DragCursor);
+                                }
+                                break;
+                            }
+                            SetCursorForFloatingObject(p_hitInfo.FloatingObjectInfo);
+                        }
+                        break;
+
+                    case HitTestType.FormulaSelection:
+                        if (!IsWorking)
+                        {
+                            _formulaSelectionFeature.SetCursor(p_hitInfo.FormulaSelectionInfo);
+                        }
+                        break;
+                }
+                if (_formulaSelectionFeature.IsDragging)
+                {
+                    _formulaSelectionFeature.ContinueDragging();
+                }
+                if (IsResizingColumns)
+                {
+                    SetMouseCursor(CursorType.Resize_HorizontalCursor);
+                    ContinueColumnResizing();
+                }
+                if (IsResizingRows)
+                {
+                    SetMouseCursor(CursorType.Resize_VerticalCursor);
+                    ContinueRowResizing();
+                }
+                if (IsSelectingCells)
+                {
+                    ContinueCellSelecting();
+                }
+                if (IsSelectingColumns)
+                {
+                    ContinueColumnSelecting();
+                }
+                if (IsSelectingRows)
+                {
+                    ContinueRowSelecting();
+                }
+                if (IsDragDropping)
+                {
+                    ContinueDragDropping();
+                }
+                if (IsDraggingFill)
+                {
+                    ContinueDragFill();
+                }
+                if (IsMovingFloatingOjects)
+                {
+                    ContinueFloatingObjectsMoving();
+                }
+                if (IsResizingFloatingObjects)
+                {
+                    ContinueFloatingObjectsResizing();
+                }
+                if (!IsWorking)
+                {
+                    SaveHitInfo(p_hitInfo);
+                    _hoverManager.DoHover(p_hitInfo);
+                }
             }
-            if (_formulaSelectionFeature.IsDragging)
-            {
-                _formulaSelectionFeature.ContinueDragging();
-            }
-            if (IsResizingColumns)
-            {
-                SetMouseCursor(CursorType.Resize_HorizontalCursor);
-                ContinueColumnResizing();
-            }
-            if (IsResizingRows)
-            {
-                SetMouseCursor(CursorType.Resize_VerticalCursor);
-                ContinueRowResizing();
-            }
-            if (IsSelectingCells)
-            {
-                ContinueCellSelecting();
-            }
-            if (IsSelectingColumns)
-            {
-                ContinueColumnSelecting();
-            }
-            if (IsSelectingRows)
-            {
-                ContinueRowSelecting();
-            }
-            if (IsDragDropping)
-            {
-                ContinueDragDropping();
-            }
-            if (IsDraggingFill)
-            {
-                ContinueDragFill();
-            }
-            if (IsMovingFloatingOjects)
-            {
-                ContinueFloatingObjectsMoving();
-            }
-            if (IsResizingFloatingObjects)
-            {
-                ContinueFloatingObjectsResizing();
-            }
-            if (!IsWorking)
-            {
-                SaveHitInfo(p_hitInfo);
-                _hoverManager.DoHover(p_hitInfo);
-            }
+            UpdateScrollBarIndicatorMode(ScrollingIndicatorMode.MouseIndicator);
         }
         #endregion
 
         #region 鼠标释放
-        protected virtual void OnPointerReleased(object sender, PointerRoutedEventArgs e)
+        void OnPointerReleased(object sender, PointerRoutedEventArgs e)
         {
+            if (e.Pointer.PointerDeviceType == PointerDeviceType.Touch)
+            {
+                IList<PointerPoint> intermediatePoints = e.GetIntermediatePoints(this);
+                if (_primaryTouchDeviceId.HasValue
+                    && intermediatePoints != null
+                    && intermediatePoints.Count > 0)
+                {
+                    using (IEnumerator<PointerPoint> enumerator = intermediatePoints.GetEnumerator())
+                    {
+                        while (enumerator.MoveNext())
+                        {
+                            if (enumerator.Current.PointerId == _primaryTouchDeviceId.Value)
+                            {
+                                if (IsTouchColumnSplitting)
+                                {
+                                    EndColumnSplitting();
+                                }
+                                if (IsTouchRowSplitting)
+                                {
+                                    EndRowSplitting();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (TabStrip != null && TabStripEditable)
+            {
+                Point point = e.GetCurrentPoint(this).Position;
+                if ((HitTest(point.X, point.Y).HitTestType == HitTestType.TabStrip) && TabStrip.StayInEditing(point))
+                {
+                    e.Handled = true;
+                    return;
+                }
+            }
+
             if (e.Pointer.PointerDeviceType == PointerDeviceType.Touch)
             {
                 IList<PointerPoint> intermediatePoints = e.GetIntermediatePoints(this);
@@ -560,7 +832,7 @@ namespace Dt.Cells.UI
                     }
                 }
             }
-            else if (Worksheet != null)
+            else if (ActiveSheet != null)
             {
                 bool flag = IsResizingColumns || IsResizingRows || IsDragDropping || IsDraggingFill;
                 HitTestInformation hitInfo = HitTest(MousePosition.X, MousePosition.Y);
@@ -593,29 +865,42 @@ namespace Dt.Cells.UI
             }
         }
 
-        protected virtual bool EndMouseClick(PointerRoutedEventArgs e)
+        bool EndMouseClick(PointerRoutedEventArgs e)
         {
+            if (GetHitInfo().HitTestType == HitTestType.TabStrip)
+                return false;
+
             IsMouseLeftButtonPressed = false;
             ReleasePointerCapture(e.Pointer);
             return true;
         }
 
-        protected virtual void ProcessMouseLeftButtonUp(HitTestInformation p_hitInfo)
+        void ProcessMouseLeftButtonUp(HitTestInformation p_hitInfo)
         {
             ClearMouseLeftButtonDownStates();
-            if (!IsEditing && !_formulaSelectionFeature.IsSelectionBegined)
+            if ((IsColumnSplitting || IsRowSplitting) || IsTabStripResizing)
             {
-                FocusInternal();
-            }
-            if (!IsWorking)
-            {
-                if ((_allowDragDrop && (p_hitInfo.HitTestType == HitTestType.Viewport)) && p_hitInfo.ViewportInfo.InSelectionDrag)
+                if (!IsEditing)
                 {
-                    SetBuiltInCursor(CoreCursorType.Hand);
+                    FocusInternal();
                 }
-                if (((_lastClickPoint == MousePosition) && (p_hitInfo.HitTestType == HitTestType.FloatingObject)) && (p_hitInfo.FloatingObjectInfo.FloatingObject != null))
+            }
+            else
+            {
+                if (!IsEditing && !_formulaSelectionFeature.IsSelectionBegined)
                 {
-                    UnSelectFloatingObject(p_hitInfo.FloatingObjectInfo.FloatingObject);
+                    FocusInternal();
+                }
+                if (!IsWorking)
+                {
+                    if ((CanUserDragDrop && (p_hitInfo.HitTestType == HitTestType.Viewport)) && p_hitInfo.ViewportInfo.InSelectionDrag)
+                    {
+                        SetBuiltInCursor(CoreCursorType.Hand);
+                    }
+                    if (((_lastClickPoint == MousePosition) && (p_hitInfo.HitTestType == HitTestType.FloatingObject)) && (p_hitInfo.FloatingObjectInfo.FloatingObject != null))
+                    {
+                        UnSelectFloatingObject(p_hitInfo.FloatingObjectInfo.FloatingObject);
+                    }
                 }
             }
         }
@@ -629,17 +914,17 @@ namespace Dt.Cells.UI
             Point point2 = new Point(-1.0, -1.0);
             if (p_hitInfo.HitTestType == HitTestType.Viewport)
             {
-                args = CreateCellClickEventArgs(p_hitInfo.ViewportInfo.Row, p_hitInfo.ViewportInfo.Column, Worksheet.SpanModel, SheetArea.Cells, p_btnType);
+                args = CreateCellClickEventArgs(p_hitInfo.ViewportInfo.Row, p_hitInfo.ViewportInfo.Column, ActiveSheet.SpanModel, SheetArea.Cells, p_btnType);
                 point2 = new Point((double)p_hitInfo.ViewportInfo.Row, (double)p_hitInfo.ViewportInfo.Column);
             }
             else if (p_hitInfo.HitTestType == HitTestType.RowHeader)
             {
-                args = CreateCellClickEventArgs(p_hitInfo.HeaderInfo.Row, p_hitInfo.HeaderInfo.Column, Worksheet.RowHeaderSpanModel, SheetArea.CornerHeader | SheetArea.RowHeader, p_btnType);
+                args = CreateCellClickEventArgs(p_hitInfo.HeaderInfo.Row, p_hitInfo.HeaderInfo.Column, ActiveSheet.RowHeaderSpanModel, SheetArea.CornerHeader | SheetArea.RowHeader, p_btnType);
                 point2 = new Point((double)p_hitInfo.HeaderInfo.Row, (double)p_hitInfo.HeaderInfo.Column);
             }
             else if (p_hitInfo.HitTestType == HitTestType.ColumnHeader)
             {
-                args = CreateCellClickEventArgs(p_hitInfo.HeaderInfo.Row, p_hitInfo.HeaderInfo.Column, Worksheet.ColumnHeaderSpanModel, SheetArea.ColumnHeader, p_btnType);
+                args = CreateCellClickEventArgs(p_hitInfo.HeaderInfo.Row, p_hitInfo.HeaderInfo.Column, ActiveSheet.ColumnHeaderSpanModel, SheetArea.ColumnHeader, p_btnType);
                 point2 = new Point((double)p_hitInfo.HeaderInfo.Row, (double)p_hitInfo.HeaderInfo.Column);
             }
 
@@ -665,7 +950,7 @@ namespace Dt.Cells.UI
             IList<PointerPoint> intermediatePoints = e.GetIntermediatePoints(this);
             if (!IsTouching && (e.Pointer.PointerDeviceType == PointerDeviceType.Touch))
             {
-                if (Worksheet != null)
+                if (ActiveSheet != null)
                 {
                     var pt = e.GetCurrentPoint(this).Position;
                     HitTestInformation hitInfo = HitTest(pt.X, pt.Y);
@@ -710,8 +995,21 @@ namespace Dt.Cells.UI
             ResetTouchStates(intermediatePoints);
         }
 
-        protected virtual void ResetTouchStates(IList<PointerPoint> ps)
+        void ResetTouchStates(IList<PointerPoint> ps)
         {
+            if (IsTouchColumnSplitting)
+            {
+                EndColumnSplitting();
+            }
+            if (IsTouchRowSplitting)
+            {
+                EndRowSplitting();
+            }
+            if (IsTouchTabStripResizing)
+            {
+                EndTabStripResizing();
+            }
+
             if (((ps != null) && (ps.Count > 0)) && _primaryTouchDeviceId.HasValue)
             {
                 foreach (PointerPoint point in ps)
@@ -756,7 +1054,7 @@ namespace Dt.Cells.UI
         #region 鼠标滚轮
         void OnPointerWheelChanged(object sender, PointerRoutedEventArgs e)
         {
-            if ((Worksheet == null) || (e.Pointer.PointerDeviceType != PointerDeviceType.Mouse))
+            if ((ActiveSheet == null) || (e.Pointer.PointerDeviceType != PointerDeviceType.Mouse))
                 return;
 
             bool flag;
@@ -789,18 +1087,18 @@ namespace Dt.Cells.UI
                         newZoomFactor = 4f;
                     }
                     float zoomFactor = ZoomFactor;
-                    ZoomUndoAction command = new ZoomUndoAction(Worksheet, newZoomFactor);
+                    ZoomUndoAction command = new ZoomUndoAction(ActiveSheet, newZoomFactor);
                     DoCommand(command);
                     PrepareCellEditing();
                     RaiseUserZooming(zoomFactor, newZoomFactor);
                 }
             }
-            else if ((VerticalScrollable && (Worksheet != null)) && ((activeRowViewportIndex >= 0) && (activeRowViewportIndex < rowViewportCount)))
+            else if ((VerticalScrollable && (ActiveSheet != null)) && ((activeRowViewportIndex >= 0) && (activeRowViewportIndex < rowViewportCount)))
             {
                 int viewportTopRow = GetViewportTopRow(activeRowViewportIndex);
                 int num8 = num2 + viewportTopRow;
-                num8 = Math.Max(TryGetNextScrollableRow(Worksheet.FrozenRowCount), num8);
-                num8 = Math.Min(TryGetPreviousScrollableRow((Worksheet.RowCount - Worksheet.FrozenTrailingRowCount) - 1), num8);
+                num8 = Math.Max(TryGetNextScrollableRow(ActiveSheet.FrozenRowCount), num8);
+                num8 = Math.Min(TryGetPreviousScrollableRow((ActiveSheet.RowCount - ActiveSheet.FrozenTrailingRowCount) - 1), num8);
                 if (mouseWheelDelta <= 0)
                 {
                     num8 = TryGetNextScrollableRow(num8);
@@ -857,7 +1155,7 @@ namespace Dt.Cells.UI
         #region 鼠标双击
         void OnDoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
-            if (Worksheet == null)
+            if (ActiveSheet == null)
                 return;
 
             HitTestInformation hitInfo = GetHitInfo();
@@ -865,7 +1163,8 @@ namespace Dt.Cells.UI
             {
                 HitTestInformation information2 = GetHitInfo();
                 _isDoubleClick = true;
-                EndMouseClick(e);
+                IsMouseLeftButtonPressed = false;
+                ReleasePointerCaptures();
                 ProcessMouseLeftButtonDoubleClick(e);
                 _isDoubleClick = false;
                 ClearMouseLeftButtonDownStates();
@@ -878,30 +1177,62 @@ namespace Dt.Cells.UI
             }
         }
 
-        protected virtual void ProcessMouseLeftButtonDoubleClick(DoubleTappedRoutedEventArgs e)
+        void ProcessMouseLeftButtonDoubleClick(DoubleTappedRoutedEventArgs e)
         {
             HitTestInformation savedHitTestInformation = GetHitInfo();
-            if (((savedHitTestInformation.HitTestType == HitTestType.Viewport) && (savedHitTestInformation.ViewportInfo.Row > -1)) && (savedHitTestInformation.ViewportInfo.Column > -1))
+            if ((!IsEditing || ((savedHitTestInformation.HitTestType != HitTestType.RowSplitBar) && (savedHitTestInformation.HitTestType != HitTestType.ColumnSplitBar))) && ((savedHitTestInformation.HitTestType != HitTestType.Viewport) || !savedHitTestInformation.ViewportInfo.InSelectionDrag))
             {
-                DoubleClickStartCellEditing(savedHitTestInformation.ViewportInfo.Row, savedHitTestInformation.ViewportInfo.Column);
-            }
-            else if ((savedHitTestInformation.HitTestType == HitTestType.ColumnHeader) && savedHitTestInformation.HeaderInfo.InColumnResize)
-            {
-                AutoFitColumn();
-            }
-            else if ((savedHitTestInformation.HitTestType == HitTestType.RowHeader) && savedHitTestInformation.HeaderInfo.InRowResize)
-            {
-                AutoFitRow();
-            }
-            else if (savedHitTestInformation.HitTestType == HitTestType.Corner)
-            {
-                if (savedHitTestInformation.HeaderInfo.InColumnResize)
+                switch (savedHitTestInformation.HitTestType)
                 {
-                    AutoFitColumn();
-                }
-                else if (savedHitTestInformation.HeaderInfo.InRowResize)
-                {
-                    AutoFitRow();
+                    case HitTestType.RowSplitBar:
+                    case HitTestType.ColumnSplitBar:
+                        ProcessSplitBarDoubleClick(savedHitTestInformation);
+                        return;
+
+                    case HitTestType.TabStrip:
+                        {
+                            if (((_tabStrip == null) || !TabStripEditable) || (Excel.Workbook.Protect || (_routedEventArgs == null)))
+                            {
+                                break;
+                            }
+                            _tabStrip.StartTabEditing(_routedEventArgs);
+                            if (!_tabStrip.IsEditing)
+                            {
+                                break;
+                            }
+                            int sheetTabIndex = -1;
+                            if (_tabStrip.ActiveTab != null)
+                            {
+                                sheetTabIndex = _tabStrip.ActiveTab.SheetIndex;
+                            }
+                            RaiseSheetTabDoubleClick(sheetTabIndex);
+                            return;
+                        }
+                    default:
+                        if (((savedHitTestInformation.HitTestType == HitTestType.Viewport) && (savedHitTestInformation.ViewportInfo.Row > -1)) && (savedHitTestInformation.ViewportInfo.Column > -1))
+                        {
+                            DoubleClickStartCellEditing(savedHitTestInformation.ViewportInfo.Row, savedHitTestInformation.ViewportInfo.Column);
+                        }
+                        else if ((savedHitTestInformation.HitTestType == HitTestType.ColumnHeader) && savedHitTestInformation.HeaderInfo.InColumnResize)
+                        {
+                            AutoFitColumn();
+                        }
+                        else if ((savedHitTestInformation.HitTestType == HitTestType.RowHeader) && savedHitTestInformation.HeaderInfo.InRowResize)
+                        {
+                            AutoFitRow();
+                        }
+                        else if (savedHitTestInformation.HitTestType == HitTestType.Corner)
+                        {
+                            if (savedHitTestInformation.HeaderInfo.InColumnResize)
+                            {
+                                AutoFitColumn();
+                            }
+                            else if (savedHitTestInformation.HeaderInfo.InRowResize)
+                            {
+                                AutoFitRow();
+                            }
+                        }
+                        break;
                 }
             }
         }
@@ -944,8 +1275,16 @@ namespace Dt.Cells.UI
 #endif
         }
 
-        protected virtual void OnManipulationStarted()
+        void OnManipulationStarted()
         {
+            UpdateHitInfo(_touchStartPoint);
+            _touchStartHitTestInfo = GetHitInfo();
+            _touchZoomNewFactor = ActiveSheet.ZoomFactor;
+            if ((_touchStartHitTestInfo != null) && (_touchStartHitTestInfo.HitTestType != HitTestType.Empty))
+            {
+                InitTouchCacheInfomation();
+            }
+
             InputDeviceType = InputDeviceType.Touch;
             IsTouchingMovingFloatingObjects = false;
             IsTouchingResizingFloatingObjects = false;
@@ -963,12 +1302,12 @@ namespace Dt.Cells.UI
             }
             else
             {
-                if ((_touchStartHitTestInfo.HitTestType == HitTestType.Viewport) && (Worksheet.Selections != null))
+                if ((_touchStartHitTestInfo.HitTestType == HitTestType.Viewport) && (ActiveSheet.Selections != null))
                 {
                     IsTouchSelectingCells = false;
                     if ((!IsEditing && !IsTouchDrapDropping) && !IsTouchDragFilling)
                     {
-                        if (AutoFillIndicatorRec.HasValue && AutoFillIndicatorRec.Value.Contains(_touchStartPoint))
+                        if (_autoFillIndicatorRec.HasValue && _autoFillIndicatorRec.Value.Contains(_touchStartPoint))
                         {
                             StartTouchDragFill();
                         }
@@ -986,7 +1325,7 @@ namespace Dt.Cells.UI
                         }
                     }
                 }
-                if (((_touchStartHitTestInfo.HitTestType == HitTestType.RowHeader) && !_formulaSelectionFeature.IsSelectionBegined) && !AutoFillIndicatorRec.HasValue)
+                if (((_touchStartHitTestInfo.HitTestType == HitTestType.RowHeader) && !_formulaSelectionFeature.IsSelectionBegined) && !_autoFillIndicatorRec.HasValue)
                 {
                     if ((CachedGripperLocation != null) && CachedGripperLocation.TopLeft.Expand(5, 5).Contains(_touchStartPoint))
                     {
@@ -1002,7 +1341,7 @@ namespace Dt.Cells.UI
                         _IsTouchStartRowSelecting = true;
                     }
                 }
-                if (((_touchStartHitTestInfo.HitTestType == HitTestType.ColumnHeader) && (GetMouseDownFilterButton(_touchStartHitTestInfo, false) == null)) && (!_formulaSelectionFeature.IsSelectionBegined && !AutoFillIndicatorRec.HasValue))
+                if (((_touchStartHitTestInfo.HitTestType == HitTestType.ColumnHeader) && (GetMouseDownFilterButton(_touchStartHitTestInfo, false) == null)) && (!_formulaSelectionFeature.IsSelectionBegined && !_autoFillIndicatorRec.HasValue))
                 {
                     if ((CachedGripperLocation != null) && CachedGripperLocation.TopLeft.Expand(5, 5).Contains(_touchStartPoint))
                     {
@@ -1073,7 +1412,7 @@ namespace Dt.Cells.UI
                     ResetTouchWhenError();
                 }
             }
-            else if ((viewportTopRow >= GetMaxBottomScrollableRow()) && ((_translateOffsetY + Worksheet.Rows[GetMaxBottomScrollableRow()].ActualHeight) < 0.0))
+            else if ((viewportTopRow >= GetMaxBottomScrollableRow()) && ((_translateOffsetY + ActiveSheet.Rows[GetMaxBottomScrollableRow()].ActualHeight) < 0.0))
             {
                 try
                 {
@@ -1101,7 +1440,7 @@ namespace Dt.Cells.UI
                 }
                 else
                 {
-                    if ((viewportLeftColumn >= GetMaxRightScrollableColumn()) && ((_translateOffsetX + Worksheet.Columns[GetMaxRightScrollableColumn()].ActualWidth) < 0.0))
+                    if ((viewportLeftColumn >= GetMaxRightScrollableColumn()) && ((_translateOffsetX + ActiveSheet.Columns[GetMaxRightScrollableColumn()].ActualWidth) < 0.0))
                     {
                         try
                         {
@@ -1117,87 +1456,321 @@ namespace Dt.Cells.UI
             }
         }
 
-        protected virtual void ProcessGestrueRecognizerManipulationUpdated(ManipulationUpdatedEventArgs e)
+        void ProcessGestrueRecognizerManipulationUpdated(ManipulationUpdatedEventArgs e)
         {
+            Point curPos = GetPanelPosition(e.Position);
+            if (IsZero((double)(e.Cumulative.Scale - 1f)) || (_touchProcessedPointIds.Count == 1))
+            {
+                ProcessTouchFreeDrag(curPos, new Point(-e.Delta.Translation.X, -e.Delta.Translation.Y));
+            }
+            else if ((!IsZero((double)(e.Cumulative.Scale - 1f)) && !IsTouchZooming) && CanUserZoom)
+            {
+                IsContinueTouchOperation = true;
+                _touchZoomInitFactor = ActiveSheet.ZoomFactor;
+                IsTouchZooming = true;
+                _touchZoomOrigin = curPos;
+                CloseTouchToolbar();
+                if (_touchStartHitTestInfo == null)
+                {
+                    _touchStartHitTestInfo = HitTest(curPos.X, curPos.Y);
+                }
+                if (_zoomOriginHitTestInfo == null)
+                {
+                    _zoomOriginHitTestInfo = HitTest(curPos.X, curPos.Y);
+                }
+                _touchZoomOrigin = curPos;
+                InitCachedTransform();
+            }
+            else if (IsTouchZooming
+                && !IsTouchDragFilling
+                && !IsTouchDrapDropping
+                && !IsEditing
+                && !IsTouchSelectingCells
+                && !IsTouchSelectingColumns
+                && !IsTouchSelectingRows
+                && !IsTouchResizingColumns
+                && !IsTouchResizingRows
+                && CanUserZoom)
+            {
+                double num = ((_touchZoomInitFactor * ((float)e.Cumulative.Scale)) * 100.0) / 100.0;
+                float scale = e.Delta.Scale;
+                if ((num < 0.5) || (num > 4.0))
+                {
+                    scale = 1f;
+                }
+                UpdateCachedImageTransform(curPos, e.Delta.Translation, (double)scale);
+                if (num < 0.5)
+                {
+                    num = 0.5;
+                }
+                if (num > 4.0)
+                {
+                    num = 4.0;
+                }
+                _touchZoomNewFactor = num;
+                InvalidateMeasure();
+            }
         }
 
         protected virtual void ProcessTouchFreeDrag(Point p_curPos, Point p_offset)
         {
+            if (Math.Abs(p_offset.X) < 1 && Math.Abs(p_offset.Y) < 1)
+                return;
+
+            // 滑动方向
+            DragOrientation orientation;
+            if (p_offset.X == 0)
+            {
+                orientation = DragOrientation.Vertical;
+            }
+            else if (p_offset.Y == 0)
+            {
+                orientation = DragOrientation.Horizontal;
+            }
+            else
+            {
+                double num = Math.Atan(Math.Abs(p_offset.Y) / Math.Abs(p_offset.X)) * 57.295779513082323;
+                if (num > 55.0)
+                {
+                    orientation = DragOrientation.Vertical;
+                }
+                else if (num > 35.0)
+                {
+                    orientation = DragOrientation.Horizontal | DragOrientation.Vertical;
+                }
+                else
+                {
+                    orientation = DragOrientation.Horizontal;
+                }
+            }
+
+            MousePosition = p_curPos;
+            if (!IsWorking)
+            {
+                UpdateHitInfo(p_curPos);
+            }
+            HitTestInformation savedHitTestInformation = GetHitInfo();
             if (!IsTouching)
                 return;
 
-            HideMouseCursor();
-            if (IsTouchDragFilling)
+            bool flag = ((_touchStartHitTestInfo.HitTestType == HitTestType.FloatingObject)
+                && (_touchStartHitTestInfo.FloatingObjectInfo.FloatingObject != null))
+                && _touchStartHitTestInfo.FloatingObjectInfo.FloatingObject.IsSelected;
+            if ((!IsTouchDragFilling
+                    && !IsTouchDrapDropping
+                    && !IsTouchSelectingCells
+                    && !IsTouchTabStripResizing
+                    && !IsRowSplitting
+                    && !IsColumnSplitting
+                    && !IsTouchSelectingColumns
+                    && !IsTouchSelectingRows
+                    && _touchStartHitTestInfo.HitTestType == HitTestType.Viewport)
+                || ((_touchStartHitTestInfo.HitTestType == HitTestType.FloatingObject) && !flag))
             {
-                ContinueTouchDragFill();
-            }
-            else if (IsTouchDrapDropping)
-            {
-                ContinueTouchDragDropping();
-            }
-            else if (FSelectionFeature.IsDragging)
-            {
-                FSelectionFeature.ContinueDragging();
-            }
-            else if (IsTouchSelectingCells)
-            {
-                ContinueTouchSelectingCells(MousePosition);
-            }
-            else if (_IsTouchStartColumnSelecting)
-            {
-                if (!StopCellEditing(false))
+                IsContinueTouchOperation = true;
+                CloseTouchToolbar();
+                _updateViewportAfterTouch = true;
+
+                if (p_offset.X != 0.0 && (orientation & DragOrientation.Horizontal) == DragOrientation.Horizontal)
                 {
-                    return;
+                    if ((orientation & DragOrientation.Vertical) == DragOrientation.None)
+                    {
+                        _translateOffsetY = 0.0;
+                    }
+
+                    if (p_offset.X > 0.0)
+                    {
+                        _isTouchScrolling = true;
+                        TouchScrollLeft(p_curPos, p_offset);
+                    }
+                    else
+                    {
+                        _isTouchScrolling = true;
+                        TouchScrollRight(p_curPos, p_offset);
+                    }
                 }
-                UnSelectedAllFloatingObjects();
-                StartColumnSelecting();
-                _IsTouchStartColumnSelecting = false;
-            }
-            else if (IsTouchResizingColumns)
-            {
-                ContinueTouchColumnResizing();
-            }
-            else if (_IsTouchStartRowSelecting)
-            {
-                if (!StopCellEditing(false))
+
+                if (p_offset.Y != 0.0 && (orientation & DragOrientation.Vertical) == DragOrientation.Vertical)
                 {
-                    return;
+                    if ((orientation & DragOrientation.Horizontal) == DragOrientation.None)
+                    {
+                        _translateOffsetX = 0.0;
+                    }
+
+                    if (p_offset.Y > 0.0)
+                    {
+                        _isTouchScrolling = true;
+                        TouchScrollUp(p_curPos, p_offset);
+                    }
+                    else
+                    {
+                        _isTouchScrolling = true;
+                        TouchScrollBottom(p_curPos, p_offset);
+                    }
                 }
-                UnSelectedAllFloatingObjects();
-                StartRowsSelecting();
-                _IsTouchStartRowSelecting = false;
-            }
-            else if (IsTouchSelectingColumns)
-            {
-                ContinueColumnSelecting();
-            }
-            else if (IsTouchResizingRows)
-            {
-                ContinueTouchRowResizing();
-            }
-            else if (IsTouchSelectingRows)
-            {
-                ContinueRowSelecting();
+
+                SheetLayout layout = GetSheetLayout();
+                if (_translateOffsetX < 0.0)
+                {
+                    if ((_touchStartHitTestInfo.ColumnViewportIndex == -1) || (_touchStartHitTestInfo.ColumnViewportIndex == layout.ColumnPaneCount))
+                    {
+                        _translateOffsetX = 0.0;
+                    }
+                    else
+                    {
+                        layout.SetViewportWidth(_touchStartHitTestInfo.ColumnViewportIndex, _cachedViewportWidths[_touchStartHitTestInfo.ColumnViewportIndex + 1] + Math.Abs(_translateOffsetX));
+                        InvalidateViewportColumnsLayout();
+                    }
+                }
+                else if ((_touchStartHitTestInfo.ColumnViewportIndex == -1) || (_touchStartHitTestInfo.ColumnViewportIndex == layout.ColumnPaneCount))
+                {
+                    _translateOffsetX = 0.0;
+                }
+                else
+                {
+                    layout.SetViewportWidth(_touchStartHitTestInfo.ColumnViewportIndex, _cachedViewportWidths[_touchStartHitTestInfo.ColumnViewportIndex + 1]);
+                    InvalidateViewportColumnsLayout();
+                }
+
+                if (_translateOffsetY < 0.0)
+                {
+                    if ((_touchStartHitTestInfo.RowViewportIndex == -1) || (_touchStartHitTestInfo.RowViewportIndex == layout.RowPaneCount))
+                    {
+                        _translateOffsetY = 0.0;
+                    }
+                    else
+                    {
+                        layout.SetViewportHeight(_touchStartHitTestInfo.RowViewportIndex, _cachedViewportHeights[_touchStartHitTestInfo.RowViewportIndex + 1] + Math.Abs(_translateOffsetY));
+                        InvalidateViewportRowsLayout();
+                    }
+                }
+                else if ((_touchStartHitTestInfo.RowViewportIndex == -1) || (_touchStartHitTestInfo.RowViewportIndex == layout.RowPaneCount))
+                {
+                    _translateOffsetY = 0.0;
+                }
+                else
+                {
+                    layout.SetViewportHeight(_touchStartHitTestInfo.RowViewportIndex, _cachedViewportHeights[_touchStartHitTestInfo.RowViewportIndex + 1]);
+                    InvalidateViewportColumnsLayout();
+                }
+                InvalidateMeasure();
             }
 
-            HitTestInformation information = _touchStartHitTestInfo;
-            if (((information.HitTestType == HitTestType.FloatingObject) && (information.FloatingObjectInfo != null)) && ((information.FloatingObjectInfo.FloatingObject != null) && information.FloatingObjectInfo.FloatingObject.IsSelected))
+            if ((savedHitTestInformation.HitTestType == HitTestType.ColumnSplitBox) && IsTouchColumnSplitting)
             {
-                if (IsTouchingMovingFloatingObjects)
+                ContinueColumnSplitting();
+            }
+            else if ((savedHitTestInformation.HitTestType == HitTestType.RowSplitBox) && IsTouchRowSplitting)
+            {
+                ContinueRowSplitting();
+            }
+            else if ((savedHitTestInformation.HitTestType == HitTestType.RowSplitBar) || (savedHitTestInformation.HitTestType == HitTestType.ColumnSplitBar))
+            {
+                if (IsTouchRowSplitting)
                 {
-                    ContinueFloatingObjectsMoving();
+                    ContinueRowSplitting();
                 }
-                else if (IsTouchingResizingFloatingObjects)
+                if (IsTouchColumnSplitting)
                 {
-                    ContinueFloatingObjectsResizing();
+                    ContinueColumnSplitting();
                 }
-                else if (information.FloatingObjectInfo.InMoving)
+            }
+            else if (savedHitTestInformation.HitTestType == HitTestType.TabStrip)
+            {
+                IsTouchTabStripScrolling = true;
+                if ((p_offset.X != 0.0) && ((orientation & DragOrientation.Horizontal) == DragOrientation.Horizontal))
                 {
-                    StartFloatingObjectsMoving();
+                    if (p_offset.X > 0.0)
+                    {
+                        TouchTabStripScrollLeft(p_curPos, p_offset);
+                    }
+                    if (p_offset.X < 0.0)
+                    {
+                        TouchTabStripScrollRight(p_curPos, p_offset);
+                    }
+                    TabStrip.TabsPresenter.InvalidateMeasure();
+                    TabStrip.TabsPresenter.InvalidateArrange();
                 }
-                else if (((information.FloatingObjectInfo.InBottomNESWResize || information.FloatingObjectInfo.InBottomNSResize) || (information.FloatingObjectInfo.InBottomNWSEResize || information.FloatingObjectInfo.InLeftWEResize)) || ((information.FloatingObjectInfo.InRightWEResize || information.FloatingObjectInfo.InTopNESWResize) || (information.FloatingObjectInfo.InTopNSResize || information.FloatingObjectInfo.InTopNWSEResize)))
+            }
+            else if ((savedHitTestInformation.HitTestType == HitTestType.TabSplitBox) && IsTouchTabStripResizing)
+            {
+                ContinueTabStripResizing();
+            }
+            else
+            {
+                HideMouseCursor();
+                if (IsTouchDragFilling)
                 {
-                    StartFloatingObjectsResizing();
+                    ContinueTouchDragFill();
+                }
+                else if (IsTouchDrapDropping)
+                {
+                    ContinueTouchDragDropping();
+                }
+                else if (FSelectionFeature.IsDragging)
+                {
+                    FSelectionFeature.ContinueDragging();
+                }
+                else if (IsTouchSelectingCells)
+                {
+                    ContinueTouchSelectingCells(MousePosition);
+                }
+                else if (_IsTouchStartColumnSelecting)
+                {
+                    if (!StopCellEditing(false))
+                    {
+                        return;
+                    }
+                    UnSelectedAllFloatingObjects();
+                    StartColumnSelecting();
+                    _IsTouchStartColumnSelecting = false;
+                }
+                else if (IsTouchResizingColumns)
+                {
+                    ContinueTouchColumnResizing();
+                }
+                else if (_IsTouchStartRowSelecting)
+                {
+                    if (!StopCellEditing(false))
+                    {
+                        return;
+                    }
+                    UnSelectedAllFloatingObjects();
+                    StartRowsSelecting();
+                    _IsTouchStartRowSelecting = false;
+                }
+                else if (IsTouchSelectingColumns)
+                {
+                    ContinueColumnSelecting();
+                }
+                else if (IsTouchResizingRows)
+                {
+                    ContinueTouchRowResizing();
+                }
+                else if (IsTouchSelectingRows)
+                {
+                    ContinueRowSelecting();
+                }
+
+                HitTestInformation information = _touchStartHitTestInfo;
+                if (((information.HitTestType == HitTestType.FloatingObject) && (information.FloatingObjectInfo != null)) && ((information.FloatingObjectInfo.FloatingObject != null) && information.FloatingObjectInfo.FloatingObject.IsSelected))
+                {
+                    if (IsTouchingMovingFloatingObjects)
+                    {
+                        ContinueFloatingObjectsMoving();
+                    }
+                    else if (IsTouchingResizingFloatingObjects)
+                    {
+                        ContinueFloatingObjectsResizing();
+                    }
+                    else if (information.FloatingObjectInfo.InMoving)
+                    {
+                        StartFloatingObjectsMoving();
+                    }
+                    else if (((information.FloatingObjectInfo.InBottomNESWResize || information.FloatingObjectInfo.InBottomNSResize) || (information.FloatingObjectInfo.InBottomNWSEResize || information.FloatingObjectInfo.InLeftWEResize)) || ((information.FloatingObjectInfo.InRightWEResize || information.FloatingObjectInfo.InTopNESWResize) || (information.FloatingObjectInfo.InTopNSResize || information.FloatingObjectInfo.InTopNWSEResize)))
+                    {
+                        StartFloatingObjectsResizing();
+                    }
                 }
             }
         }
@@ -1228,8 +1801,158 @@ namespace Dt.Cells.UI
 #endif
         }
 
-        protected virtual void OnManipulationComplete()
+        void OnManipulationComplete()
         {
+            IsContinueTouchOperation = false;
+            CachedGripperLocation = null;
+            ClearViewportsClip();
+            UpdateViewport();
+
+            if (IsTouchTabStripScrolling)
+            {
+                IsTouchTabStripScrolling = false;
+                TabStrip.TabsPresenter.Offset = 0.0;
+                TabStrip.TabsPresenter.InvalidateMeasure();
+                TabStrip.TabsPresenter.InvalidateArrange();
+            }
+
+            if (IsTouchZooming)
+            {
+                IsTouchZooming = false;
+                _cachedViewportVisual = null;
+                _cachedColumnHeaderViewportVisual = null;
+                _cachedRowHeaderViewportVisual = null;
+                _cachedCornerViewportVisual = null;
+                _cachedBottomRightACornerVisual = null;
+                if ((_zoomOriginHitTestInfo != null) && (_zoomOriginHitTestInfo.HitTestType == HitTestType.Viewport))
+                {
+                    TransformGroup group = _cachedViewportTransform[_zoomOriginHitTestInfo.RowViewportIndex + 1, _zoomOriginHitTestInfo.ColumnViewportIndex + 1];
+                    if (group != null)
+                    {
+                        SheetLayout layout = GetSheetLayout();
+                        Point newLocation = new Point(layout.HeaderWidth, layout.HeaderHeight);
+                        Point reference = group.TransformPoint(newLocation);
+                        int viewportLeftColumn = GetViewportLeftColumn(_zoomOriginHitTestInfo.ColumnViewportIndex);
+                        Point point3 = reference.Delta(newLocation);
+                        int num2 = viewportLeftColumn;
+                        double x = point3.X;
+                        if (x > 0.0)
+                        {
+                            while ((x > 0.0) && (num2 < ActiveSheet.ColumnCount))
+                            {
+                                x -= Math.Floor((double)(ActiveSheet.Columns[num2].ActualWidth * _touchZoomNewFactor));
+                                num2++;
+                            }
+                        }
+                        else if (x < 0.0)
+                        {
+                            while (((x < 0.0) && (num2 > 0)) && (num2 < ActiveSheet.ColumnCount))
+                            {
+                                x += Math.Floor((double)(ActiveSheet.Columns[num2].ActualWidth * _touchZoomNewFactor));
+                                num2--;
+                            }
+                        }
+                        if (num2 != viewportLeftColumn)
+                        {
+                            SetViewportLeftColumn(_zoomOriginHitTestInfo.ColumnViewportIndex, num2);
+                        }
+                        int viewportTopRow = GetViewportTopRow(_zoomOriginHitTestInfo.RowViewportIndex);
+                        int num5 = viewportTopRow;
+                        double y = point3.Y;
+                        if (y > 0.0)
+                        {
+                            while ((y > 0.0) && (num5 < ActiveSheet.RowCount))
+                            {
+                                y -= Math.Floor((double)(ActiveSheet.Rows[num5].ActualHeight * _touchZoomNewFactor));
+                                num5++;
+                            }
+                        }
+                        else if (y < 0.0)
+                        {
+                            while (((y < 0.0) && (num5 > 0)) && (num5 < ActiveSheet.RowCount))
+                            {
+                                y += Math.Floor((double)(ActiveSheet.Rows[num5].ActualHeight * _touchZoomNewFactor));
+                                num5--;
+                            }
+                        }
+                        if (num5 != viewportTopRow)
+                        {
+                            SetViewportTopRow(_zoomOriginHitTestInfo.RowViewportIndex, num5);
+                        }
+                    }
+                }
+
+                _cachedViewportTransform = null;
+                _cachedRowHeaderViewportTransform = null;
+                _cachedColumnHeaderViewportTransform = null;
+                _cachedCornerViewportTransform = null;
+                float zoomFactor = ActiveSheet.ZoomFactor;
+                ActiveSheet.ZoomFactor = (float)_touchZoomNewFactor;
+                RaiseUserZooming(zoomFactor, ActiveSheet.ZoomFactor);
+                InvalidateViewportColumnsLayout();
+                InvalidateViewportRowsLayout();
+                InvalidateFloatingObjects();
+                InvalidateMeasure();
+                if (((_touchStartTopRow >= 0) && (_touchStartTopRow < ActiveSheet.RowCount)) && (_touchStartLeftColumn >= 0))
+                {
+                    int columnCount = ActiveSheet.ColumnCount;
+                    int num14 = _touchStartLeftColumn;
+                }
+            }
+
+            if (IsTouchColumnSplitting)
+            {
+                EndColumnSplitting();
+            }
+            if (IsTouchRowSplitting)
+            {
+                EndRowSplitting();
+            }
+            if (IsTouchTabStripResizing)
+            {
+                EndTabStripResizing();
+            }
+
+            _fastScroll = false;
+            GetViewportInfo();
+            if (_viewportPresenters != null)
+            {
+                GcViewport[,] viewportArray = _viewportPresenters;
+                int upperBound = viewportArray.GetUpperBound(0);
+                int num9 = viewportArray.GetUpperBound(1);
+                for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
+                {
+                    for (int j = viewportArray.GetLowerBound(1); j <= num9; j++)
+                    {
+                        GcViewport viewport = viewportArray[i, j];
+                        if (viewport != null)
+                        {
+                            viewport.InvalidateBordersMeasureState();
+                        }
+                    }
+                }
+            }
+            if (_rowHeaderPresenters != null)
+            {
+                foreach (GcViewport viewport2 in _rowHeaderPresenters)
+                {
+                    if (viewport2 != null)
+                    {
+                        viewport2.InvalidateBordersMeasureState();
+                    }
+                }
+            }
+            if (_columnHeaderPresenters != null)
+            {
+                foreach (GcViewport viewport3 in _columnHeaderPresenters)
+                {
+                    if (viewport3 != null)
+                    {
+                        viewport3.InvalidateBordersMeasureState();
+                    }
+                }
+            }
+
             IsTouching = false;
             IsTouchPromotedMouseMessage = false;
             if (FSelectionFeature.IsDragging)
@@ -1363,7 +2086,7 @@ namespace Dt.Cells.UI
                 _translateOffsetY = 0.0;
                 stop = true;
             }
-            else if ((viewportTopRow >= GetMaxBottomScrollableRow()) && ((_translateOffsetY + Worksheet.Rows[GetMaxBottomScrollableRow()].ActualHeight) < 0.0))
+            else if ((viewportTopRow >= GetMaxBottomScrollableRow()) && ((_translateOffsetY + ActiveSheet.Rows[GetMaxBottomScrollableRow()].ActualHeight) < 0.0))
             {
                 stop = true;
             }
@@ -1375,7 +2098,7 @@ namespace Dt.Cells.UI
                     _translateOffsetX = 0.0;
                     stop = true;
                 }
-                else if ((viewportLeftColumn >= GetMaxRightScrollableColumn()) && ((_translateOffsetX + Worksheet.Columns[GetMaxRightScrollableColumn()].ActualWidth) < 0.0))
+                else if ((viewportLeftColumn >= GetMaxRightScrollableColumn()) && ((_translateOffsetX + ActiveSheet.Columns[GetMaxRightScrollableColumn()].ActualWidth) < 0.0))
                 {
                     stop = true;
                 }
@@ -1451,11 +2174,30 @@ namespace Dt.Cells.UI
             }
         }
 
-        protected virtual void ProcessTap(HitTestInformation p_hitInfo)
+        void ProcessTap(HitTestInformation p_hitInfo)
         {
-            if ((GetActiveSelection() == null) && (Worksheet.Selections.Count > 0))
+            switch (p_hitInfo.HitTestType)
             {
-                CellRange range = Worksheet.Selections[0];
+                case HitTestType.HorizontalScrollBar:
+                    {
+                        int viewportLeftColumn = GetViewportLeftColumn(p_hitInfo.ColumnViewportIndex);
+                        HorizontalScrollBarTouchSmallDecrement(p_hitInfo.ColumnViewportIndex, viewportLeftColumn - 1);
+                        break;
+                    }
+                case HitTestType.VerticalScrollBar:
+                    {
+                        int viewportTopRow = GetViewportTopRow(p_hitInfo.RowViewportIndex);
+                        VerticalScrollBarTouchSmallDecrement(p_hitInfo.RowViewportIndex, viewportTopRow - 1);
+                        break;
+                    }
+                case HitTestType.TabStrip:
+                    _tabStrip.ProcessTap(p_hitInfo.HitPoint);
+                    break;
+            }
+
+            if ((GetActiveSelection() == null) && (ActiveSheet.Selections.Count > 0))
+            {
+                CellRange range = ActiveSheet.Selections[0];
             }
             if ((IsEditing && !_formulaSelectionFeature.CanSelectFormula) && !StopCellEditing(false))
             {
@@ -1610,7 +2352,7 @@ namespace Dt.Cells.UI
                         FloatingObject obj = p_hitInfo.FloatingObjectInfo.FloatingObject;
                         if (obj != null)
                         {
-                            bool flag9 = obj.Locked || Worksheet.Protect;
+                            bool flag9 = obj.Locked || ActiveSheet.Protect;
                             if (!obj.IsSelected && !flag9)
                             {
                                 UnSelectedAllFloatingObjects();
@@ -1715,41 +2457,123 @@ namespace Dt.Cells.UI
             }
         }
 
-        protected virtual void ProcessDoubleTap(HitTestInformation p_hitInfo)
+        Point TapInColumnHeaderSelection(Point point, HitTestInformation hi)
         {
-            if (p_hitInfo.HitTestType == HitTestType.Viewport
-                && p_hitInfo.ViewportInfo.Row > -1
-                && p_hitInfo.ViewportInfo.Column > -1)
+            UnSelectedAllFloatingObjects();
+            StartColumnSelecting();
+            EndColumnSelecting();
+            RaiseTouchCellClick(hi);
+            return point;
+        }
+
+        Point TapInRowHeaderSelection(Point point, HitTestInformation hi)
+        {
+            UnSelectedAllFloatingObjects();
+            StartRowsSelecting();
+            EndRowSelecting();
+            RaiseTouchCellClick(hi);
+            return point;
+        }
+
+        bool TapInSelection(Point point)
+        {
+            if (_formulaSelectionFeature.IsSelectionBegined)
             {
-                if ((_touchToolbarPopup != null) && _touchToolbarPopup.IsOpen)
-                {
-                    _touchToolbarPopup.IsOpen = false;
-                }
-                SetSelection(p_hitInfo.ViewportInfo.Row, p_hitInfo.ViewportInfo.Column, 1, 1);
-                DoubleClickStartCellEditing(p_hitInfo.ViewportInfo.Row, p_hitInfo.ViewportInfo.Column);
-                RaiseCellDoubleClick(p_hitInfo.HitPoint);
-                RefreshSelection();
+                return false;
             }
-            else
+            return GetActiveSelectionBounds().Contains(point);
+        }
+
+        bool TapInSelectionColumn(int column)
+        {
+            ReadOnlyCollection<CellRange> selections = ActiveSheet.Selections;
+            if (selections != null)
             {
-                p_hitInfo = TouchHitTest(p_hitInfo.HitPoint.X, p_hitInfo.HitPoint.Y);
-                if (p_hitInfo.HitTestType == HitTestType.ColumnHeader)
+                foreach (CellRange range in selections)
                 {
-                    AutoFitColumnForTouch(p_hitInfo);
-                }
-                else if (p_hitInfo.HitTestType == HitTestType.RowHeader)
-                {
-                    AutoFitRowForTouch(p_hitInfo);
-                }
-                else if (p_hitInfo.HitTestType == HitTestType.Corner)
-                {
-                    if (p_hitInfo.HeaderInfo.InColumnResize)
+                    if (((range.Row == -1) && (range.RowCount == -1)) && range.IntersectColumn(column))
                     {
-                        AutoFitColumnForTouch(p_hitInfo);
+                        return true;
                     }
-                    else if (p_hitInfo.HeaderInfo.InRowResize)
+                }
+            }
+            return false;
+        }
+
+        bool TapInSelectionRow(int row)
+        {
+            ReadOnlyCollection<CellRange> selections = ActiveSheet.Selections;
+            if (selections != null)
+            {
+                foreach (CellRange range in selections)
+                {
+                    if (((range.Column == -1) && (range.ColumnCount == -1)) && range.IntersectRow(row))
                     {
-                        AutoFitRowForTouch(p_hitInfo);
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        void ProcessDoubleTap(HitTestInformation p_hitInfo)
+        {
+            HitTestInformation hi = TouchHitTest(p_hitInfo.HitPoint.X, p_hitInfo.HitPoint.Y);
+            if (!IsEditing || ((hi.HitTestType != HitTestType.RowSplitBar) && (hi.HitTestType != HitTestType.ColumnSplitBar)))
+            {
+                if ((hi.HitTestType == HitTestType.RowSplitBar) || (hi.HitTestType == HitTestType.ColumnSplitBar))
+                {
+                    ProcessSplitBarDoubleTap(hi);
+                }
+                else if ((p_hitInfo.HitTestType != HitTestType.Viewport) || !p_hitInfo.ViewportInfo.InSelectionDrag)
+                {
+                    if (((p_hitInfo.HitTestType == HitTestType.TabStrip) && (_tabStrip != null)) && (TabStripEditable && !Excel.Workbook.Protect))
+                    {
+                        _tabStrip.StartTabTouchEditing(p_hitInfo.HitPoint);
+                        if (_tabStrip.IsEditing)
+                        {
+                            int sheetTabIndex = (_tabStrip.ActiveTab != null) ? _tabStrip.ActiveTab.SheetIndex : -1;
+                            RaiseSheetTabDoubleClick(sheetTabIndex);
+                        }
+                    }
+                    else
+                    {
+                        if (p_hitInfo.HitTestType == HitTestType.Viewport
+                            && p_hitInfo.ViewportInfo.Row > -1
+                            && p_hitInfo.ViewportInfo.Column > -1)
+                        {
+                            if ((_touchToolbarPopup != null) && _touchToolbarPopup.IsOpen)
+                            {
+                                _touchToolbarPopup.IsOpen = false;
+                            }
+                            SetSelection(p_hitInfo.ViewportInfo.Row, p_hitInfo.ViewportInfo.Column, 1, 1);
+                            DoubleClickStartCellEditing(p_hitInfo.ViewportInfo.Row, p_hitInfo.ViewportInfo.Column);
+                            RaiseCellDoubleClick(p_hitInfo.HitPoint);
+                            RefreshSelection();
+                        }
+                        else
+                        {
+                            p_hitInfo = TouchHitTest(p_hitInfo.HitPoint.X, p_hitInfo.HitPoint.Y);
+                            if (p_hitInfo.HitTestType == HitTestType.ColumnHeader)
+                            {
+                                AutoFitColumnForTouch(p_hitInfo);
+                            }
+                            else if (p_hitInfo.HitTestType == HitTestType.RowHeader)
+                            {
+                                AutoFitRowForTouch(p_hitInfo);
+                            }
+                            else if (p_hitInfo.HitTestType == HitTestType.Corner)
+                            {
+                                if (p_hitInfo.HeaderInfo.InColumnResize)
+                                {
+                                    AutoFitColumnForTouch(p_hitInfo);
+                                }
+                                else if (p_hitInfo.HeaderInfo.InRowResize)
+                                {
+                                    AutoFitRowForTouch(p_hitInfo);
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -1782,9 +2606,10 @@ namespace Dt.Cells.UI
             _lastClickPoint = point;
         }
 
-        internal virtual HitTestInformation HitTest(double x, double y)
+        internal HitTestInformation HitTest(double x, double y)
         {
             Point hitPoint = new Point(x, y);
+            SheetLayout layout = GetSheetLayout();
             HitTestInformation hi = new HitTestInformation
             {
                 HitTestType = HitTestType.Empty,
@@ -1792,6 +2617,72 @@ namespace Dt.Cells.UI
                 RowViewportIndex = -2,
                 HitPoint = hitPoint
             };
+            if (GetTabStripRectangle().Contains(hitPoint))
+            {
+                hi.ColumnViewportIndex = 0;
+                hi.HitTestType = HitTestType.TabStrip;
+                return hi;
+            }
+            if (GetTabSplitBoxRectangle().Contains(hitPoint))
+            {
+                hi.ColumnViewportIndex = 0;
+                hi.HitTestType = HitTestType.TabSplitBox;
+                return hi;
+            }
+            for (int i = 0; i < layout.ColumnPaneCount; i++)
+            {
+                if (GetHorizontalScrollBarRectangle(i).Contains(hitPoint))
+                {
+                    hi.ColumnViewportIndex = i;
+                    hi.HitTestType = HitTestType.HorizontalScrollBar;
+                    return hi;
+                }
+            }
+            for (int j = 0; j < layout.RowPaneCount; j++)
+            {
+                if (GetVerticalScrollBarRectangle(j).Contains(hitPoint))
+                {
+                    hi.HitTestType = HitTestType.VerticalScrollBar;
+                    hi.RowViewportIndex = j;
+                    return hi;
+                }
+            }
+            for (int k = 0; k < layout.ColumnPaneCount; k++)
+            {
+                if (GetHorizontalSplitBoxRectangle(k).Contains(hitPoint))
+                {
+                    hi.HitTestType = HitTestType.ColumnSplitBox;
+                    hi.ColumnViewportIndex = k;
+                }
+            }
+            for (int m = 0; m < layout.RowPaneCount; m++)
+            {
+                if (GetVerticalSplitBoxRectangle(m).Contains(hitPoint))
+                {
+                    hi.HitTestType = HitTestType.RowSplitBox;
+                    hi.RowViewportIndex = m;
+                }
+            }
+            for (int n = 0; n < (layout.ColumnPaneCount - 1); n++)
+            {
+                if (GetHorizontalSplitBarRectangle(n).Contains(hitPoint))
+                {
+                    hi.HitTestType = HitTestType.ColumnSplitBar;
+                    hi.ColumnViewportIndex = n;
+                }
+            }
+            for (int num6 = 0; num6 < (layout.RowPaneCount - 1); num6++)
+            {
+                if (GetVerticalSplitBarRectangle(num6).Contains(hitPoint))
+                {
+                    hi.HitTestType = HitTestType.RowSplitBar;
+                    hi.RowViewportIndex = num6;
+                }
+            }
+
+            if (hi.HitTestType != HitTestType.Empty)
+                return hi;
+
             ViewportInfo viewportInfo = GetViewportInfo();
             int columnViewportCount = viewportInfo.ColumnViewportCount;
             int rowViewportCount = viewportInfo.RowViewportCount;
@@ -1888,7 +2779,7 @@ namespace Dt.Cells.UI
                     {
                         information4.Row = viewportRowLayoutFromY.Row;
                     }
-                    if ((viewportResizingRowLayoutFromY != null) && (((viewportResizingRowLayoutFromY.Height > 0.0) || (viewportResizingRowLayoutFromY.Row >= Worksheet.RowCount)) || !Worksheet.RowRangeGroup.IsCollapsed(viewportResizingRowLayoutFromY.Row)))
+                    if ((viewportResizingRowLayoutFromY != null) && (((viewportResizingRowLayoutFromY.Height > 0.0) || (viewportResizingRowLayoutFromY.Row >= ActiveSheet.RowCount)) || !ActiveSheet.RowRangeGroup.IsCollapsed(viewportResizingRowLayoutFromY.Row)))
                     {
                         information4.InRowResize = true;
                         information4.ResizingRow = viewportResizingRowLayoutFromY.Row;
@@ -1942,7 +2833,7 @@ namespace Dt.Cells.UI
                     {
                         hi.HeaderInfo.Row = layout9.Row;
                     }
-                    if ((viewportResizingColumnLayoutFromX != null) && (((viewportResizingColumnLayoutFromX.Width > 0.0) || (viewportResizingColumnLayoutFromX.Column >= Worksheet.ColumnCount)) || !Worksheet.ColumnRangeGroup.IsCollapsed(viewportResizingColumnLayoutFromX.Column)))
+                    if ((viewportResizingColumnLayoutFromX != null) && (((viewportResizingColumnLayoutFromX.Width > 0.0) || (viewportResizingColumnLayoutFromX.Column >= ActiveSheet.ColumnCount)) || !ActiveSheet.ColumnRangeGroup.IsCollapsed(viewportResizingColumnLayoutFromX.Column)))
                     {
                         hi.HeaderInfo.InColumnResize = true;
                         hi.HeaderInfo.ResizingColumn = viewportResizingColumnLayoutFromX.Column;
@@ -2001,9 +2892,10 @@ namespace Dt.Cells.UI
             return hi;
         }
 
-        internal virtual HitTestInformation TouchHitTest(double x, double y)
+        internal HitTestInformation TouchHitTest(double x, double y)
         {
             Point hitPoint = new Point(x, y);
+            SheetLayout layout = GetSheetLayout();
             HitTestInformation hi = new HitTestInformation
             {
                 HitTestType = HitTestType.Empty,
@@ -2011,6 +2903,94 @@ namespace Dt.Cells.UI
                 RowViewportIndex = -2,
                 HitPoint = hitPoint
             };
+            bool flag = (RowSplitBoxAlignment == SplitBoxAlignment.Trailing) && (ColumnSplitBoxAlignment == SplitBoxAlignment.Trailing);
+            for (int i = 0; i < layout.ColumnPaneCount; i++)
+            {
+                Rect horizontalSplitBoxRectangle = GetHorizontalSplitBoxRectangle(i);
+                if (flag)
+                {
+                    horizontalSplitBoxRectangle = horizontalSplitBoxRectangle.Expand(30, 0);
+                }
+                else
+                {
+                    horizontalSplitBoxRectangle = horizontalSplitBoxRectangle.Expand(30, 15);
+                }
+                if (horizontalSplitBoxRectangle.Contains(hitPoint))
+                {
+                    hi.HitTestType = HitTestType.ColumnSplitBox;
+                    hi.ColumnViewportIndex = i;
+                    return hi;
+                }
+            }
+            for (int j = 0; j < layout.RowPaneCount; j++)
+            {
+                Rect verticalSplitBoxRectangle = GetVerticalSplitBoxRectangle(j);
+                if (flag)
+                {
+                    verticalSplitBoxRectangle = verticalSplitBoxRectangle.Expand(0, 30);
+                }
+                else
+                {
+                    verticalSplitBoxRectangle = verticalSplitBoxRectangle.Expand(15, 30);
+                }
+                if (verticalSplitBoxRectangle.Expand(15, 30).Contains(hitPoint))
+                {
+                    hi.HitTestType = HitTestType.RowSplitBox;
+                    hi.RowViewportIndex = j;
+                    return hi;
+                }
+            }
+            for (int k = 0; k < (layout.ColumnPaneCount - 1); k++)
+            {
+                if (GetHorizontalSplitBarRectangle(k).Expand(10, 10).Contains(hitPoint) && (hi.HitTestType != HitTestType.ColumnSplitBox))
+                {
+                    hi.HitTestType = HitTestType.ColumnSplitBar;
+                    hi.ColumnViewportIndex = k;
+                }
+            }
+            for (int m = 0; m < (layout.RowPaneCount - 1); m++)
+            {
+                if (GetVerticalSplitBarRectangle(m).Expand(10, 10).Contains(hitPoint) && (hi.HitTestType != HitTestType.RowSplitBox))
+                {
+                    hi.HitTestType = HitTestType.RowSplitBar;
+                    hi.RowViewportIndex = m;
+                }
+            }
+            if (GetTabSplitBoxRectangle().Expand(40, 10).Contains(hitPoint))
+            {
+                hi.ColumnViewportIndex = 0;
+                hi.HitTestType = HitTestType.TabSplitBox;
+                return hi;
+            }
+
+            if (hi.HitTestType == HitTestType.Empty)
+            {
+                if (GetTabStripRectangle().Contains(hitPoint))
+                {
+                    hi.ColumnViewportIndex = 0;
+                    hi.HitTestType = HitTestType.TabStrip;
+                    return hi;
+                }
+                for (int n = 0; n < layout.ColumnPaneCount; n++)
+                {
+                    if (GetHorizontalScrollBarRectangle(n).Contains(hitPoint))
+                    {
+                        hi.ColumnViewportIndex = n;
+                        hi.HitTestType = HitTestType.HorizontalScrollBar;
+                        return hi;
+                    }
+                }
+                for (int num6 = 0; num6 < layout.RowPaneCount; num6++)
+                {
+                    if (GetVerticalScrollBarRectangle(num6).Contains(hitPoint))
+                    {
+                        hi.HitTestType = HitTestType.VerticalScrollBar;
+                        hi.RowViewportIndex = num6;
+                        return hi;
+                    }
+                }
+            }
+
             ViewportInfo viewportInfo = GetViewportInfo();
             int columnViewportCount = viewportInfo.ColumnViewportCount;
             int rowViewportCount = viewportInfo.RowViewportCount;
@@ -2101,7 +3081,7 @@ namespace Dt.Cells.UI
                     {
                         information4.Row = viewportRowLayoutFromY.Row;
                     }
-                    if ((viewportResizingRowLayoutFromYForTouch != null) && (((viewportResizingRowLayoutFromYForTouch.Height > 0.0) || (viewportResizingRowLayoutFromYForTouch.Row >= Worksheet.RowCount)) || !Worksheet.RowRangeGroup.IsCollapsed(viewportResizingRowLayoutFromYForTouch.Row)))
+                    if ((viewportResizingRowLayoutFromYForTouch != null) && (((viewportResizingRowLayoutFromYForTouch.Height > 0.0) || (viewportResizingRowLayoutFromYForTouch.Row >= ActiveSheet.RowCount)) || !ActiveSheet.RowRangeGroup.IsCollapsed(viewportResizingRowLayoutFromYForTouch.Row)))
                     {
                         information4.InRowResize = true;
                         information4.ResizingRow = viewportResizingRowLayoutFromYForTouch.Row;
@@ -2164,7 +3144,7 @@ namespace Dt.Cells.UI
                     {
                         hi.HeaderInfo.Row = layout9.Row;
                     }
-                    if ((viewportResizingColumnLayoutFromXForTouch != null) && (((viewportResizingColumnLayoutFromXForTouch.Width > 0.0) || (viewportResizingColumnLayoutFromXForTouch.Column >= Worksheet.ColumnCount)) || !Worksheet.ColumnRangeGroup.IsCollapsed(viewportResizingColumnLayoutFromXForTouch.Column)))
+                    if ((viewportResizingColumnLayoutFromXForTouch != null) && (((viewportResizingColumnLayoutFromXForTouch.Width > 0.0) || (viewportResizingColumnLayoutFromXForTouch.Column >= ActiveSheet.ColumnCount)) || !ActiveSheet.ColumnRangeGroup.IsCollapsed(viewportResizingColumnLayoutFromXForTouch.Column)))
                     {
                         hi.HeaderInfo.InColumnResize = true;
                         hi.HeaderInfo.ResizingColumn = viewportResizingColumnLayoutFromXForTouch.Column;
@@ -2222,6 +3202,23 @@ namespace Dt.Cells.UI
             }
             return hi;
         }
+
+        RowLayout GetColumnHeaderResizingRowLayoutFromYForTouch(double y)
+        {
+            RowLayout columnHeaderResizingRowLayoutFromY = GetColumnHeaderResizingRowLayoutFromY(y);
+            if (columnHeaderResizingRowLayoutFromY == null)
+            {
+                for (int i = -5; i < 5; i++)
+                {
+                    columnHeaderResizingRowLayoutFromY = GetColumnHeaderResizingRowLayoutFromY(y);
+                    if (columnHeaderResizingRowLayoutFromY != null)
+                    {
+                        return columnHeaderResizingRowLayoutFromY;
+                    }
+                }
+            }
+            return columnHeaderResizingRowLayoutFromY;
+        }
         #endregion
 
         #region 内部方法
@@ -2241,6 +3238,97 @@ namespace Dt.Cells.UI
             return true;
         }
 
+        void ClearMouseLeftButtonDownStates()
+        {
+            if (IsColumnSplitting)
+            {
+                EndColumnSplitting();
+            }
+            if (IsRowSplitting)
+            {
+                EndRowSplitting();
+            }
+            if (IsTabStripResizing)
+            {
+                EndTabStripResizing();
+            }
+
+            if (IsResizingColumns)
+            {
+                EndColumnResizing();
+            }
+            if (IsResizingRows)
+            {
+                EndRowResizing();
+            }
+            if (_formulaSelectionFeature.IsDragging)
+            {
+                _formulaSelectionFeature.EndDragging();
+            }
+            if (IsSelectingCells)
+            {
+                EndCellSelecting();
+            }
+            if (IsSelectingColumns)
+            {
+                EndColumnSelecting();
+                HitTestInformation savedHitTestInformation = GetHitInfo();
+                if ((savedHitTestInformation != null) && (savedHitTestInformation.HitTestType == HitTestType.ColumnHeader))
+                {
+                    GcViewport columnHeaderRowsPresenter = GetColumnHeaderRowsPresenter(savedHitTestInformation.ColumnViewportIndex);
+                    if (columnHeaderRowsPresenter != null)
+                    {
+                        RowPresenter row = columnHeaderRowsPresenter.GetRow(savedHitTestInformation.HeaderInfo.Row);
+                        if (row != null)
+                        {
+                            CellPresenterBase cell = row.GetCell(savedHitTestInformation.HeaderInfo.Column);
+                            if (cell != null)
+                            {
+                                cell.ApplyState();
+                            }
+                        }
+                    }
+                }
+            }
+            if (IsSelectingRows)
+            {
+                EndRowSelecting();
+                HitTestInformation information2 = GetHitInfo();
+                if ((information2 != null) && (information2.HitTestType == HitTestType.RowHeader))
+                {
+                    GcViewport rowHeaderRowsPresenter = GetRowHeaderRowsPresenter(information2.RowViewportIndex);
+                    if (rowHeaderRowsPresenter != null)
+                    {
+                        RowPresenter presenter2 = rowHeaderRowsPresenter.GetRow(information2.HeaderInfo.Row);
+                        if (presenter2 != null)
+                        {
+                            CellPresenterBase base3 = presenter2.GetCell(information2.HeaderInfo.Column);
+                            if (base3 != null)
+                            {
+                                base3.ApplyState();
+                            }
+                        }
+                    }
+                }
+            }
+            if (IsDragDropping)
+            {
+                EndDragDropping();
+            }
+            if (IsDraggingFill)
+            {
+                EndDragFill();
+            }
+            if (IsMovingFloatingOjects)
+            {
+                EndFloatingObjectsMoving();
+            }
+            if (IsResizingFloatingObjects)
+            {
+                EndFloatingObjectResizing();
+            }
+        }
+
         bool CanTouchManipulate(Point point)
         {
             IsTouchPromotedMouseMessage = false;
@@ -2249,7 +3337,7 @@ namespace Dt.Cells.UI
             // 触摸位置不是底部的sheet标签
             if (information.HitTestType != HitTestType.TabStrip)
             {
-                if (Worksheet == null)
+                if (ActiveSheet == null)
                 {
                     return false;
                 }
@@ -2271,8 +3359,8 @@ namespace Dt.Cells.UI
                 if (information.HitTestType == HitTestType.Viewport)
                 {
                     if (IsEditing
-                        && Worksheet.ActiveRowIndex == information.ViewportInfo.Row
-                        && Worksheet.ActiveColumnIndex == information.ViewportInfo.Column)
+                        && ActiveSheet.ActiveRowIndex == information.ViewportInfo.Row
+                        && ActiveSheet.ActiveColumnIndex == information.ViewportInfo.Column)
                     {
                         return false;
                     }
@@ -2318,10 +3406,489 @@ namespace Dt.Cells.UI
             IsTouchZooming = false;
             _touchProcessedPointIds.Clear();
         }
+        #endregion
 
-        bool IsZero(double value)
+        #region 实现触摸滚动
+        //****************************************************
+        // 触摸时滚动单元格区通过改变 _translateOffsetX _translateOffsetY 的值在 ArrangeOverride 中实现
+        // TabStrip 通过改变 Offset 值实现标签滚动
+        //****************************************************
+
+        void TouchScrollLeft(Point currentPoint, Point deltaPoint)
         {
-            return (Math.Abs(value) < 2.2204460492503131E-15);
+            int maxRightScrollableColumn = GetMaxRightScrollableColumn();
+            ColumnLayoutModel columnLayoutModel = GetColumnLayoutModel(_touchStartHitTestInfo.ColumnViewportIndex, SheetArea.Cells);
+            double num2 = Math.Abs(deltaPoint.X);
+            int viewportLeftColumn = GetViewportLeftColumn(_touchStartHitTestInfo.ColumnViewportIndex);
+            if (viewportLeftColumn > maxRightScrollableColumn)
+            {
+                return;
+            }
+            double num4 = 0.0;
+            if (columnLayoutModel.FindColumn(viewportLeftColumn) != null)
+            {
+                num4 = columnLayoutModel.FindColumn(viewportLeftColumn).Width + _translateOffsetX;
+            }
+            if (num4 > num2)
+            {
+                _translateOffsetX += -1.0 * num2;
+                return;
+            }
+            num2 -= num4;
+            int num5 = viewportLeftColumn + 1;
+            while (true)
+            {
+                if ((num5 > maxRightScrollableColumn) || ActiveSheet.Columns[num5].ActualVisible)
+                {
+                    break;
+                }
+                num5++;
+            }
+            if (num5 > maxRightScrollableColumn)
+            {
+                _translateOffsetX += -1.0 * Math.Abs(deltaPoint.X);
+                return;
+            }
+            SetViewportLeftColumn(_touchStartHitTestInfo.ColumnViewportIndex, num5);
+            viewportLeftColumn = GetViewportLeftColumn(_touchStartHitTestInfo.ColumnViewportIndex);
+            if (viewportLeftColumn >= maxRightScrollableColumn)
+            {
+                return;
+            }
+            int num6 = viewportLeftColumn;
+        Label_010B:
+            if (num6 >= ActiveSheet.ColumnCount)
+            {
+                return;
+            }
+            if (num6 >= 0)
+            {
+                Column column = ActiveSheet.Columns[num6];
+                if (column.ActualVisible)
+                {
+                    double num7 = column.Width * ZoomFactor;
+                    if (num7 > num2)
+                    {
+                        _translateOffsetX = -1.0 * num2;
+                        return;
+                    }
+                    num2 -= num7;
+                }
+                num6++;
+                if (num6 <= maxRightScrollableColumn)
+                {
+                    if (column.ActualVisible)
+                    {
+                        SetViewportLeftColumn(_touchStartHitTestInfo.ColumnViewportIndex, num6);
+                    }
+                    goto Label_010B;
+                }
+            }
+        }
+
+        void TouchScrollRight(Point currentPoint, Point deltaPoint)
+        {
+            int maxLeftScrollableColumn = GetMaxLeftScrollableColumn();
+            int maxRightScrollableColumn = GetMaxRightScrollableColumn();
+            ColumnLayoutModel columnLayoutModel = GetColumnLayoutModel(_touchStartHitTestInfo.ColumnViewportIndex, SheetArea.Cells);
+            double num3 = Math.Abs(deltaPoint.X);
+            int viewportLeftColumn = GetViewportLeftColumn(_touchStartHitTestInfo.ColumnViewportIndex);
+            if (viewportLeftColumn <= maxLeftScrollableColumn)
+            {
+                Point point = currentPoint.Delta(_touchStartPoint);
+                _translateOffsetX = -1.0 * point.X;
+                _translateOffsetX = ManipulationAlgorithm.GetBoundaryFactor(Math.Abs(_translateOffsetX), 120.0) * Math.Sign(_translateOffsetX);
+                return;
+            }
+            if ((viewportLeftColumn >= maxRightScrollableColumn) && (currentPoint.X < _touchStartPoint.X))
+            {
+                return;
+            }
+            double num5 = 0.0;
+            if (columnLayoutModel.FindColumn(viewportLeftColumn) != null)
+            {
+                if ((_translateOffsetX + Math.Abs(deltaPoint.X)) < 0.0)
+                {
+                    num5 = (columnLayoutModel.FindColumn(viewportLeftColumn).Width + _translateOffsetX) + Math.Abs(deltaPoint.X);
+                }
+                else
+                {
+                    num5 = 0.0;
+                }
+            }
+            if (num5 >= num3)
+            {
+                _translateOffsetX += num3;
+                return;
+            }
+            num3 -= num5;
+            if ((num3 + _translateOffsetX) >= 0.0)
+            {
+                num3 += _translateOffsetX;
+                _translateOffsetX = 0.0;
+            }
+            else
+            {
+                return;
+            }
+            int num6 = viewportLeftColumn - 1;
+            while (true)
+            {
+                if ((num6 < maxLeftScrollableColumn) || ActiveSheet.Columns[num6].ActualVisible)
+                {
+                    break;
+                }
+                num6--;
+            }
+            if (num6 < maxLeftScrollableColumn)
+            {
+                Point point2 = currentPoint.Delta(_touchStartPoint);
+                _translateOffsetX = -1.0 * point2.X;
+                _translateOffsetX = ManipulationAlgorithm.GetBoundaryFactor(Math.Abs(_translateOffsetX), 120.0) * Math.Sign(_translateOffsetX);
+                return;
+            }
+            SetViewportLeftColumn(_touchStartHitTestInfo.ColumnViewportIndex, num6);
+            viewportLeftColumn = GetViewportLeftColumn(_touchStartHitTestInfo.ColumnViewportIndex);
+            if (viewportLeftColumn <= maxLeftScrollableColumn)
+            {
+                return;
+            }
+            int num7 = viewportLeftColumn;
+        Label_0201:
+            if (num7 >= ActiveSheet.ColumnCount)
+            {
+                return;
+            }
+            if (num7 >= 0)
+            {
+                Column column = ActiveSheet.Columns[num7];
+                if (column.ActualVisible)
+                {
+                    double num8 = column.Width * ZoomFactor;
+                    if (num8 >= num3)
+                    {
+                        _translateOffsetX = num3 - num8;
+                        GetSheetLayout();
+                        return;
+                    }
+                    num3 -= num8;
+                }
+                num7--;
+                if (num7 < maxLeftScrollableColumn)
+                {
+                    _translateOffsetX = num3;
+                }
+                else
+                {
+                    if (column.ActualVisible)
+                    {
+                        SetViewportLeftColumn(_touchStartHitTestInfo.ColumnViewportIndex, num7);
+                    }
+                    goto Label_0201;
+                }
+            }
+        }
+
+        void TouchScrollUp(Point currentPoint, Point deltaPoint)
+        {
+            int maxBottomScrollableRow = GetMaxBottomScrollableRow();
+            RowLayoutModel rowLayoutModel = GetRowLayoutModel(_touchStartHitTestInfo.RowViewportIndex, SheetArea.Cells);
+            int viewportTopRow = GetViewportTopRow(_touchStartHitTestInfo.RowViewportIndex);
+            if (viewportTopRow > maxBottomScrollableRow)
+            {
+                return;
+            }
+
+            double num2 = Math.Abs(deltaPoint.Y);
+            double num4 = 0.0;
+            var rowLayout = rowLayoutModel.FindRow(viewportTopRow);
+            if (rowLayout != null)
+            {
+                num4 = rowLayout.Height + _translateOffsetY;
+            }
+            if (num4 > num2)
+            {
+                _translateOffsetY += -1.0 * num2;
+                return;
+            }
+
+            num2 -= num4;
+            int num5 = viewportTopRow + 1;
+            while (true)
+            {
+                if ((num5 > maxBottomScrollableRow) || ActiveSheet.Rows[num5].ActualVisible)
+                {
+                    break;
+                }
+                num5++;
+            }
+            if (num5 > maxBottomScrollableRow)
+            {
+                _translateOffsetY += -1.0 * Math.Abs(deltaPoint.Y);
+                return;
+            }
+
+            SetViewportTopRow(_touchStartHitTestInfo.RowViewportIndex, num5);
+            viewportTopRow = GetViewportTopRow(_touchStartHitTestInfo.RowViewportIndex);
+            if (viewportTopRow >= maxBottomScrollableRow)
+            {
+                return;
+            }
+
+            int num6 = viewportTopRow;
+        Label_0112:
+            if (num6 < 0)
+            {
+                return;
+            }
+            if (num6 < ActiveSheet.RowCount)
+            {
+                Row row = ActiveSheet.Rows[num6];
+                if (row.ActualVisible)
+                {
+                    double num7 = row.ActualHeight * ZoomFactor;
+                    if (num7 > num2)
+                    {
+                        _translateOffsetY = -1.0 * num2;
+                        return;
+                    }
+                    num2 -= num7;
+                }
+                num6++;
+                if (num6 < maxBottomScrollableRow)
+                {
+                    if (row.ActualVisible)
+                    {
+                        SetViewportTopRow(_touchStartHitTestInfo.RowViewportIndex, num6);
+                    }
+                    goto Label_0112;
+                }
+            }
+        }
+
+        void TouchScrollBottom(Point currentPoint, Point deltaPoint)
+        {
+            int maxTopScrollableRow = GetMaxTopScrollableRow();
+            int maxBottomScrollableRow = GetMaxBottomScrollableRow();
+            RowLayoutModel rowLayoutModel = GetRowLayoutModel(_touchStartHitTestInfo.RowViewportIndex, SheetArea.Cells);
+            double num3 = Math.Abs(deltaPoint.Y);
+            int viewportTopRow = GetViewportTopRow(_touchStartHitTestInfo.RowViewportIndex);
+            if (viewportTopRow <= maxTopScrollableRow)
+            {
+                Point point = currentPoint.Delta(_touchStartPoint);
+                _translateOffsetY = -1.0 * point.Y;
+                _translateOffsetY = ManipulationAlgorithm.GetBoundaryFactor(Math.Abs(_translateOffsetY), 80.0) * Math.Sign(_translateOffsetY);
+                return;
+            }
+            if ((viewportTopRow >= maxBottomScrollableRow) && (currentPoint.Y < _touchStartPoint.Y))
+            {
+                return;
+            }
+            double num5 = 0.0;
+            if (rowLayoutModel.FindRow(viewportTopRow) != null)
+            {
+                if ((_translateOffsetY + Math.Abs(deltaPoint.Y)) < 0.0)
+                {
+                    num5 = (rowLayoutModel.FindRow(viewportTopRow).Height + _translateOffsetY) + Math.Abs(deltaPoint.Y);
+                }
+                else
+                {
+                    num5 = 0.0;
+                }
+            }
+            if (num5 >= num3)
+            {
+                _translateOffsetY += num3;
+                return;
+            }
+            num3 -= num5;
+            if ((num3 + _translateOffsetY) >= 0.0)
+            {
+                num3 += _translateOffsetY;
+                _translateOffsetY = 0.0;
+            }
+            else
+            {
+                return;
+            }
+            int num6 = viewportTopRow - 1;
+            while (true)
+            {
+                if ((num6 < maxTopScrollableRow) || ActiveSheet.Rows[num6].ActualVisible)
+                {
+                    break;
+                }
+                num6--;
+            }
+            if (num6 < maxTopScrollableRow)
+            {
+                Point point2 = currentPoint.Delta(_touchStartPoint);
+                _translateOffsetY = -1.0 * point2.Y;
+                _translateOffsetY = ManipulationAlgorithm.GetBoundaryFactor(Math.Abs(_translateOffsetY), 80.0) * Math.Sign(_translateOffsetY);
+                return;
+            }
+            SetViewportTopRow(_touchStartHitTestInfo.RowViewportIndex, num6);
+            viewportTopRow = GetViewportTopRow(_touchStartHitTestInfo.RowViewportIndex);
+            if (viewportTopRow <= maxTopScrollableRow)
+            {
+                return;
+            }
+            int num7 = viewportTopRow;
+        Label_0201:
+            if (!ActiveSheet.Rows[num7].ActualVisible)
+            {
+                num7--;
+            }
+            if (((num7 >= maxTopScrollableRow) && (num7 >= 0)) && (num7 < ActiveSheet.RowCount))
+            {
+                Row row = ActiveSheet.Rows[num7];
+                if (row.ActualVisible)
+                {
+                    double num8 = row.Height * ZoomFactor;
+                    if (num8 >= num3)
+                    {
+                        _translateOffsetY = num3 - num8;
+                        GetSheetLayout();
+                        return;
+                    }
+                    num3 -= num8;
+                }
+                num7--;
+                if (num7 >= maxTopScrollableRow)
+                {
+                    if (row.ActualVisible)
+                    {
+                        SetViewportTopRow(_touchStartHitTestInfo.RowViewportIndex, num7);
+                    }
+                    goto Label_0201;
+                }
+            }
+        }
+
+        void TouchTabStripScrollLeft(Point currentPoint, Point deltaPoint)
+        {
+            TabsPresenter tabsPresenter = TabStrip.TabsPresenter;
+            int firstScrollableSheetIndex = tabsPresenter.FirstScrollableSheetIndex;
+            int lastScrollableSheetIndex = tabsPresenter.LastScrollableSheetIndex;
+            int startIndex = tabsPresenter.StartIndex;
+            double num2 = Math.Abs(deltaPoint.X);
+            if (tabsPresenter.IsLastSheetVisible)
+            {
+                double num3 = -1.0 * currentPoint.Delta(_touchStartPoint).X;
+                num3 = ManipulationAlgorithm.GetBoundaryFactor(Math.Abs(num3), 120.0) * Math.Sign(num3);
+                tabsPresenter.Offset = num3;
+                return;
+            }
+            double num4 = tabsPresenter.FirstSheetTabWidth - Math.Abs(tabsPresenter.Offset);
+            if (num4 >= num2)
+            {
+                tabsPresenter.Offset += -1.0 * num2;
+                return;
+            }
+            num2 -= num4;
+            int num5 = startIndex + 1;
+            if (num5 > tabsPresenter.LastScrollableSheetIndex)
+            {
+                tabsPresenter.Offset = -1.0 * Math.Abs(deltaPoint.X);
+            }
+            if (num5 >= tabsPresenter.LastScrollableSheetIndex)
+            {
+                return;
+            }
+            Excel.StartSheetIndex = num5;
+        Label_00F0:
+            if (num5 >= tabsPresenter.LastScrollableSheetIndex)
+            {
+                return;
+            }
+            if (num5 >= 0)
+            {
+                double num6 = tabsPresenter.FirstSheetTabWidth * ZoomFactor;
+                if (num6 > num2)
+                {
+                    tabsPresenter.Offset = -1.0 * num2;
+                }
+                else
+                {
+                    num2 -= num6;
+                    num5++;
+                    if (num5 <= tabsPresenter.LastScrollableSheetIndex)
+                    {
+                        Excel.StartSheetIndex = num5;
+                        goto Label_00F0;
+                    }
+                }
+            }
+        }
+
+        void TouchTabStripScrollRight(Point currentPoint, Point deltaPoint)
+        {
+            int num7;
+            double num9;
+            TabsPresenter tabsPresenter = TabStrip.TabsPresenter;
+            int firstScrollableSheetIndex = tabsPresenter.FirstScrollableSheetIndex;
+            int lastScrollableSheetIndex = tabsPresenter.LastScrollableSheetIndex;
+            int startIndex = tabsPresenter.StartIndex;
+            double num4 = Math.Abs(deltaPoint.X);
+            if (startIndex <= firstScrollableSheetIndex)
+            {
+                Point point = currentPoint.Delta(_touchStartPoint);
+                double num5 = -1.0 * point.X;
+                num5 = ManipulationAlgorithm.GetBoundaryFactor(Math.Abs(num5), 120.0) * Math.Sign(num5);
+                tabsPresenter.Offset = num5;
+                return;
+            }
+            if ((startIndex < lastScrollableSheetIndex) || (currentPoint.X >= _touchStartPoint.X))
+            {
+                double num6 = Math.Abs(tabsPresenter.Offset);
+                if (num6 >= num4)
+                {
+                    tabsPresenter.Offset += num4;
+                    return;
+                }
+                num4 -= num6;
+                if ((num4 + tabsPresenter.Offset) >= 0.0)
+                {
+                    num4 += tabsPresenter.Offset;
+                    tabsPresenter.Offset = 0.0;
+                    num7 = startIndex - 1;
+                    if (num7 < tabsPresenter.FirstScrollableSheetIndex)
+                    {
+                        Point point2 = currentPoint.Delta(_touchStartPoint);
+                        double num8 = -1.0 * point2.X;
+                        num8 = ManipulationAlgorithm.GetBoundaryFactor(Math.Abs(num8), 120.0) * Math.Sign(num8);
+                        tabsPresenter.Offset = num8;
+                        return;
+                    }
+                    if (num7 < tabsPresenter.FirstScrollableSheetIndex)
+                    {
+                        return;
+                    }
+                    Excel.StartSheetIndex = num7;
+                    goto Label_0154;
+                }
+            }
+            return;
+        Label_0154:
+            num9 = tabsPresenter.FirstSheetTabWidth * ZoomFactor;
+            if (num9 >= num4)
+            {
+                tabsPresenter.Offset = num4 - num9;
+            }
+            else
+            {
+                num4 -= num9;
+                num7--;
+                if (num7 < tabsPresenter.FirstScrollableSheetIndex)
+                {
+                    tabsPresenter.Offset = num4;
+                }
+                else
+                {
+                    Excel.StartSheetIndex = num7;
+                    goto Label_0154;
+                }
+            }
         }
         #endregion
     }

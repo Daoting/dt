@@ -44,7 +44,7 @@ namespace Dt.Cells.UI
 
         public static void BringCellToVisible(SheetView sheetView, int viewCellRow, int viewCellColumn)
         {
-            if ((sheetView != null) && (sheetView.Worksheet != null))
+            if ((sheetView != null) && (sheetView.ActiveSheet != null))
             {
                 ViewportInfo viewportInfo = sheetView.GetViewportInfo();
                 int activeRowViewportIndex = sheetView.GetActiveRowViewportIndex();
@@ -53,23 +53,23 @@ namespace Dt.Cells.UI
                 int columnViewportIndex = activeColumnViewportIndex;
                 if (activeRowViewportIndex == -1)
                 {
-                    if (viewCellRow >= sheetView.Worksheet.FrozenRowCount)
+                    if (viewCellRow >= sheetView.ActiveSheet.FrozenRowCount)
                     {
                         rowViewportIndex = 0;
                     }
                 }
-                else if ((activeRowViewportIndex == viewportInfo.RowViewportCount) && (viewCellRow < (sheetView.Worksheet.RowCount - sheetView.Worksheet.FrozenTrailingRowCount)))
+                else if ((activeRowViewportIndex == viewportInfo.RowViewportCount) && (viewCellRow < (sheetView.ActiveSheet.RowCount - sheetView.ActiveSheet.FrozenTrailingRowCount)))
                 {
                     rowViewportIndex = viewportInfo.RowViewportCount - 1;
                 }
                 if (activeColumnViewportIndex == -1)
                 {
-                    if (viewCellColumn >= sheetView.Worksheet.FrozenColumnCount)
+                    if (viewCellColumn >= sheetView.ActiveSheet.FrozenColumnCount)
                     {
                         columnViewportIndex = 0;
                     }
                 }
-                else if ((activeColumnViewportIndex == viewportInfo.ColumnViewportCount) && (viewCellColumn < (sheetView.Worksheet.ColumnCount - sheetView.Worksheet.FrozenTrailingColumnCount)))
+                else if ((activeColumnViewportIndex == viewportInfo.ColumnViewportCount) && (viewCellColumn < (sheetView.ActiveSheet.ColumnCount - sheetView.ActiveSheet.FrozenTrailingColumnCount)))
                 {
                     columnViewportIndex = viewportInfo.ColumnViewportCount - 1;
                 }
@@ -79,9 +79,9 @@ namespace Dt.Cells.UI
 
         public static void BringCellToVisible(SheetView sheetView, int rowViewportIndex, int columnViewportIndex, int viewCellRow, int viewCellColumn)
         {
-            if ((sheetView != null) && (sheetView.Worksheet != null))
+            if ((sheetView != null) && (sheetView.ActiveSheet != null))
             {
-                Worksheet sheet = sheetView.Worksheet;
+                var sheet = sheetView.ActiveSheet;
                 double viewportWidth = sheetView.GetViewportWidth(columnViewportIndex);
                 double viewportHeight = sheetView.GetViewportHeight(rowViewportIndex);
                 int viewportLeftColumn = sheetView.GetViewportLeftColumn(columnViewportIndex);
@@ -224,7 +224,7 @@ namespace Dt.Cells.UI
 
         public static bool ScrollToNextPageOfColumns(SheetView sheetView)
         {
-            if (!sheetView.HorizontalScrollable || (sheetView.Worksheet == null))
+            if (!sheetView.HorizontalScrollable || (sheetView.ActiveSheet == null))
             {
                 return false;
             }
@@ -238,7 +238,7 @@ namespace Dt.Cells.UI
 
         public static bool ScrollToNextPageOfColumns(SheetView sheetView, int columViewportIndex)
         {
-            if (!sheetView.HorizontalScrollable || (sheetView.Worksheet == null))
+            if (!sheetView.HorizontalScrollable || (sheetView.ActiveSheet == null))
             {
                 return false;
             }
@@ -258,7 +258,7 @@ namespace Dt.Cells.UI
 
         public static bool ScrollToNextPageOfRows(SheetView sheetView)
         {
-            if (!sheetView.VerticalScrollable || (sheetView.Worksheet == null))
+            if (!sheetView.VerticalScrollable || (sheetView.ActiveSheet == null))
             {
                 return false;
             }
@@ -272,7 +272,7 @@ namespace Dt.Cells.UI
 
         public static bool ScrollToNextPageOfRows(SheetView sheetView, int rowViewportIndex)
         {
-            if (!sheetView.VerticalScrollable || (sheetView.Worksheet == null))
+            if (!sheetView.VerticalScrollable || (sheetView.ActiveSheet == null))
             {
                 return false;
             }
@@ -294,7 +294,7 @@ namespace Dt.Cells.UI
         {
             if (sheetView.HorizontalScrollable)
             {
-                Worksheet worksheet = sheetView.Worksheet;
+                var worksheet = sheetView.ActiveSheet;
                 if (worksheet != null)
                 {
                     int activeColumnViewportIndex = sheetView.GetActiveColumnViewportIndex();
@@ -312,7 +312,7 @@ namespace Dt.Cells.UI
         {
             if (sheetView.HorizontalScrollable)
             {
-                Worksheet worksheet = sheetView.Worksheet;
+                var worksheet = sheetView.ActiveSheet;
                 if (worksheet != null)
                 {
                     if (columViewportIndex == worksheet.GetViewportInfo().ColumnViewportCount)
@@ -336,7 +336,7 @@ namespace Dt.Cells.UI
         {
             if (sheetView.VerticalScrollable)
             {
-                Worksheet worksheet = sheetView.Worksheet;
+                var worksheet = sheetView.ActiveSheet;
                 if (worksheet != null)
                 {
                     int activeRowViewportIndex = sheetView.GetActiveRowViewportIndex();
@@ -354,7 +354,7 @@ namespace Dt.Cells.UI
         {
             if (sheetView.VerticalScrollable)
             {
-                Worksheet worksheet = sheetView.Worksheet;
+                var worksheet = sheetView.ActiveSheet;
                 if (worksheet != null)
                 {
                     if (rowViewportIndex == worksheet.GetViewportInfo().RowViewportCount)

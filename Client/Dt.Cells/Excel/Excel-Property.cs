@@ -34,11 +34,6 @@ namespace Dt.Base
         public Worksheet ActiveSheet
         {
             get { return Workbook.ActiveSheet; }
-            internal set
-            {
-                Workbook.ActiveSheet = value;
-                Invalidate();
-            }
         }
 
         /// <summary>
@@ -97,16 +92,6 @@ namespace Dt.Base
         {
             get { return Workbook.CanCellOverflow; }
             set { Workbook.CanCellOverflow = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets whether data can overflow into adjacent empty cells in the component while that cell is in edit mode. 
-        /// </summary>
-        [Category("Spread Workbook"), DefaultValue(true)]
-        public bool CanEditOverflow
-        {
-            get { return View.CanEditOverflow; }
-            set { View.CanEditOverflow = value; }
         }
 
         /// <summary>
@@ -272,7 +257,6 @@ namespace Dt.Base
                         if (_documentUri.IsAbsoluteUri)
                         {
                             Uri uri = _documentUri;
-                            SpreadView view = View;
                             Workbook workbook = Workbook;
                             new StyleInfo();
                             if (action == null)
@@ -754,7 +738,7 @@ namespace Dt.Base
         /// Gets the spread view associated with the control. 
         /// </summary>
         [Browsable(false)]
-        public SpreadView View { get; }
+        internal SheetView View { get; }
 
         /// <summary>
         /// Gets the workbook associated with the control. 

@@ -718,7 +718,7 @@ namespace Dt.Cells.UI
             GcViewport viewport = _viewport;
             if ((viewport != null) && (viewport.Sheet != null))
             {
-                return viewport.Sheet.Worksheet;
+                return viewport.Sheet.ActiveSheet;
             }
             return null;
         }

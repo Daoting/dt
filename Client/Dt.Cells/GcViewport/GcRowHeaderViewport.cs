@@ -36,7 +36,7 @@ namespace Dt.Cells.UI
 
         internal override ICellsSupport GetDataContext()
         {
-            return Sheet.Worksheet.RowHeader;
+            return Sheet.ActiveSheet.RowHeader;
         }
 
         internal override RowLayoutModel GetRowLayoutModel()
@@ -46,7 +46,7 @@ namespace Dt.Cells.UI
 
         internal override SheetSpanModelBase GetSpanModel()
         {
-            return Sheet.Worksheet.RowHeaderSpanModel;
+            return Sheet.ActiveSheet.RowHeaderSpanModel;
         }
 
         internal override Size GetViewportSize(Size availableSize)

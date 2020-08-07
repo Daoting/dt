@@ -264,7 +264,7 @@ namespace Dt.Cells.UI
                 TextBox editor = Editor as TextBox;
                 editor.IsHitTestVisible = false;
                 // hdt
-                Worksheet ws = _parentViewport.Sheet.Worksheet;
+                Worksheet ws = _parentViewport.Sheet.ActiveSheet;
                 if (ws != null && ws.LockCell)
                     editor.IsEnabled = false;
                 else if (!editor.IsEnabled)

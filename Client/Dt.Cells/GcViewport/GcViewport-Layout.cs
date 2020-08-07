@@ -143,15 +143,15 @@ namespace Dt.Cells.UI
                 _dataValidationPanel.Arrange(rc);
             }
             // hdt
-            //if (((SheetArea == SheetArea.Cells) && (Sheet != null)) && (Sheet.Worksheet != null))
+            //if (((SheetArea == SheetArea.Cells) && (Sheet != null)) && (Sheet.ActiveSheet != null))
             //{
-            //    if (Sheet.Worksheet != null)
+            //    if (Sheet.ActiveSheet != null)
             //    {
-            //        int activeRowIndex = Sheet.Worksheet.ActiveRowIndex;
+            //        int activeRowIndex = Sheet.ActiveSheet.ActiveRowIndex;
             //    }
-            //    if (Sheet.Worksheet != null)
+            //    if (Sheet.ActiveSheet != null)
             //    {
-            //        int activeColumnIndex = Sheet.Worksheet.ActiveColumnIndex;
+            //        int activeColumnIndex = Sheet.ActiveSheet.ActiveColumnIndex;
             //    }
             //}
 
@@ -217,12 +217,12 @@ namespace Dt.Cells.UI
                         rowStart = Sheet.GetViewportTopRow(RowViewportIndex);
                         rowEnd = Sheet.GetViewportBottomRow(RowViewportIndex);
                         columnStart = 0;
-                        columnEnd = Sheet.Worksheet.RowHeader.ColumnCount - 1;
+                        columnEnd = Sheet.ActiveSheet.RowHeader.ColumnCount - 1;
                         break;
 
                     case SheetArea.ColumnHeader:
                         rowStart = 0;
-                        rowEnd = Sheet.Worksheet.ColumnHeader.RowCount - 1;
+                        rowEnd = Sheet.ActiveSheet.ColumnHeader.RowCount - 1;
                         columnStart = Sheet.GetViewportLeftColumn(ColumnViewportIndex);
                         columnEnd = Sheet.GetViewportRightColumn(ColumnViewportIndex);
                         break;
@@ -232,7 +232,7 @@ namespace Dt.Cells.UI
                     int num5 = -1;
                     for (int i = rowStart - 1; i > -1; i--)
                     {
-                        if (Sheet.Worksheet.GetActualRowVisible(i, SheetArea))
+                        if (Sheet.ActiveSheet.GetActualRowVisible(i, SheetArea))
                         {
                             num5 = i;
                             break;
@@ -242,7 +242,7 @@ namespace Dt.Cells.UI
                     int count = GetDataContext().Rows.Count;
                     for (int j = rowEnd + 1; j < count; j++)
                     {
-                        if (Sheet.Worksheet.GetActualRowVisible(j, SheetArea))
+                        if (Sheet.ActiveSheet.GetActualRowVisible(j, SheetArea))
                         {
                             rowEnd = j;
                             break;
@@ -251,7 +251,7 @@ namespace Dt.Cells.UI
                     int num9 = -1;
                     for (int k = columnStart - 1; k > -1; k--)
                     {
-                        if (Sheet.Worksheet.GetActualColumnVisible(k, SheetArea))
+                        if (Sheet.ActiveSheet.GetActualColumnVisible(k, SheetArea))
                         {
                             num9 = k;
                             break;
@@ -261,7 +261,7 @@ namespace Dt.Cells.UI
                     int num11 = GetDataContext().Columns.Count;
                     for (int m = columnEnd + 1; m < num11; m++)
                     {
-                        if (Sheet.Worksheet.GetActualColumnVisible(m, SheetArea))
+                        if (Sheet.ActiveSheet.GetActualColumnVisible(m, SheetArea))
                         {
                             columnEnd = m;
                             break;
@@ -283,7 +283,7 @@ namespace Dt.Cells.UI
                     {
                         if (_editorPanel.Editor != null)
                         {
-                            object obj2 = editingCell.SheetView.Worksheet.GetValue(_activeRow, _activeCol);
+                            object obj2 = editingCell.SheetView.ActiveSheet.GetValue(_activeRow, _activeCol);
                             if ((obj2 != null) && string.IsNullOrEmpty((_editorPanel.Editor as TextBox).Text))
                             {
                                 (_editorPanel.Editor as TextBox).Text = obj2.ToString();

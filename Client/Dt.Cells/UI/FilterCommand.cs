@@ -37,11 +37,11 @@ namespace Dt.Cells.UI
 
         public void Execute(object parameter)
         {
-            if ((((_info != null) && (_info.RowFilter != null)) && ((_sheetView != null) && (_sheetView.Worksheet != null))) && ((_column >= 0) && (_column < _sheetView.Worksheet.ColumnCount)))
+            if ((((_info != null) && (_info.RowFilter != null)) && ((_sheetView != null) && (_sheetView.ActiveSheet != null))) && ((_column >= 0) && (_column < _sheetView.ActiveSheet.ColumnCount)))
             {
                 HideRowFilter rowFilter = _info.RowFilter;
                 object[] filterValues = parameter as object[];
-                _sheetView.Worksheet.Workbook.SuspendEvent();
+                _sheetView.ActiveSheet.Workbook.SuspendEvent();
                 try
                 {
                     rowFilter.Unfilter(_column);
@@ -80,7 +80,7 @@ namespace Dt.Cells.UI
                 }
                 finally
                 {
-                    _sheetView.Worksheet.Workbook.ResumeEvent();
+                    _sheetView.ActiveSheet.Workbook.ResumeEvent();
                 }
                 if (!_sheetView.RaiseRangeFiltering(_column, filterValues))
                 {

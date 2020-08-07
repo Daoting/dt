@@ -53,13 +53,9 @@ namespace Dt.Cells.UI
 {
     public partial class SheetView : Panel, IXmlSerializable
     {
-        bool _allowDragDrop;
-        bool _allowDragFill = true;
-        bool _allowEditOverflow;
-        bool _allowUndo;
-        bool _allowUserFormula;
-        bool _allowUserZoom;
-        bool _autoClipboard;
+        Rect? _autoFillIndicatorRec;
+        GripperLocationsStruct _gripperLocations;
+
         internal Border _autoFillIndicatorContainer;
         Size _availableSize;
         internal Ellipse _bottomRightGripper;
@@ -95,8 +91,6 @@ namespace Dt.Cells.UI
         internal TransformGroup[,] _cachedViewportTransform;
         internal Image[,] _cachedViewportVisual;
         internal double[] _cachedViewportWidths;
-        internal bool _canTouchMultiSelect;
-        ClipboardPasteOptions _clipBoardOptions;
         internal Line _columnFreezeLine;
         GcRangeGroupHeader _columnGroupHeaderPresenter;
         GcRangeGroup[] _columnGroupPresenters;
@@ -108,7 +102,6 @@ namespace Dt.Cells.UI
         internal int _currentActiveRowIndex;
         DragFillDirection _currentFillDirection = DragFillDirection.Down;
         CellRange _currentFillRange;
-        Canvas _cursorsContainer;
         Windows.UI.Xaml.Controls.Primitives.Popup _dataValidationListPopUp;
         PopupHelper _dataValidationPopUpHelper;
         int _dragDropColumnOffset;
@@ -134,7 +127,7 @@ namespace Dt.Cells.UI
         internal short _eventSuspended;
         Windows.UI.Xaml.Controls.Primitives.Popup _filterPopup;
         PopupHelper _filterPopupHelper;
-        Dictionary<KeyStroke, SpreadAction> _floatingObjectsKeyMap = new Dictionary<KeyStroke, SpreadAction>();
+        
         Point _floatingObjectsMovingResizingOffset = new Point(0.0, 0.0);
         int _floatingObjectsMovingResizingStartColumn = -2;
         Point _floatingObjectsMovingResizingStartPoint = new Point(0.0, 0.0);
@@ -143,17 +136,14 @@ namespace Dt.Cells.UI
         Dictionary<string, Point> _floatingObjectsMovingStartLocations = new Dictionary<string, Point>();
         FormulaSelectionFeature _formulaSelectionFeature;
         internal FormulaSelectionGripperContainerPanel _formulaSelectionGripperPanel;
-        Style _freezeLineStyle;
         internal GestureRecognizer _gestrueRecognizer;
         GcRangeGroupCorner _groupCornerPresenter;
         bool _hideSelectionWhenPrinting;
         bool _highlightDataValidationInvalidData;
         FilterButtonInfo _hitFilterInfo;
         ScrollSelectionManager _horizontalSelectionMgr;
-        internal Control _host;
         internal HoverManager _hoverManager;
         bool _hScrollable;
-        FontFamily _inheritedControlFontFamily;
         internal InputDeviceType _inputDeviceType;
         internal bool _isDoubleClick;
         bool _isDragCopy;
@@ -162,7 +152,7 @@ namespace Dt.Cells.UI
         internal bool _isIMEEnterEditing;
         bool _isMouseDownFloatingObject;
         internal bool _isTouchScrolling;
-        Dictionary<KeyStroke, SpreadAction> _keyMap;
+        
         internal Point _lastClickLocation;
         internal Point _lastClickPoint;
         Image _mouseCursor;
@@ -252,12 +242,55 @@ namespace Dt.Cells.UI
         internal const double RESIZE_HEIGHT = 4.0;
         internal const double RESIZE_WIDTH = 4.0;
         const string _ROW_DELIMITER = "\r\n";
-        Dt.Cells.Data.Worksheet _sheet;
         internal const double SPLITBOXWIDTH = 20.0;
         const double _TOOLTIP_OFFSET = 4.0;
         internal const double VERTICALSPLITBOX_HEIGHT = 6.0;
         const float _ZOOM_MAX = 4f;
         const float _ZOOM_MIN = 0.1f;
+
+
+        Size _cachedLastAvailableSize;
+        SplitBoxAlignment _columnSplitBoxAlignment;
+        SplitBoxPolicy _columnSplitBoxPolicy;
+        Line _columnSplittingTracker;
+        CrossSplitBar[,] _crossSplitBar;
+        ScrollBar[] _horizontalScrollBar;
+        double _horizontalScrollBarHeight;
+        Style _horizontalScrollBarStyle;
+        HorizontalSplitBar[] _horizontalSplitBar;
+        HorizontalSplitBox[] _horizontalSplitBox;
+        HashSet<int> _invisibleColumns;
+        HashSet<int> _invisibleRows;
+        bool _pendinging;
+        Grid _progressGrid;
+        ProgressRing _progressRing;
+        SplitBoxAlignment _rowSplitBoxAlignment;
+        SplitBoxPolicy _rowSplitBoxPolicy;
+        Line _rowSplittingTracker;
+        ScrollBarTrackPolicy _scrollBarTrackPolicy;
+        int _scrollTo;
+        bool _showScrollTip;
+        Canvas _splittingTrackerContainer;
+        TabStrip _tabStrip;
+        bool _tabStripEditable;
+        bool _tabStripInsertTab;
+        double _tabStripRatio;
+        Visibility _tabStripVisibility;
+        ScrollBar[] _verticalScrollBar;
+        Style _verticalScrollBarStyle;
+        double _verticalScrollBarWidth;
+        VerticalSplitBar[] _verticalSplitBar;
+        VerticalSplitBox[] _verticalSplitBox;
+        internal const double GCSPREAD_HorizontalScrollBarDefaultHeight = 25.0;
+        internal const ScrollBarTrackPolicy GCSPREAD_ScrollBarTrackPolicy = ScrollBarTrackPolicy.Both;
+        internal const double GCSPREAD_TabStripRatio = 0.5;
+        internal const double GCSPREAD_VerticalScrollBarDefaultWidth = 25.0;
+        internal static bool IsSwitchingSheet;
+        bool IsTouchColumnSplitting;
+        bool IsTouchRowSplitting;
+        bool IsTouchTabStripScrolling;
+        HorizontalSplitBox tabStripSplitBox;
+        const double TABSTRIPSPLITBOX_WIDTH = 16.0;
 
         /// <summary>
         /// Occurs when the user presses down the left mouse button in a cell. 
@@ -485,6 +518,37 @@ namespace Dt.Cells.UI
         /// Occurs when the value in the subeditor changes. 
         /// </summary>
         public event EventHandler<CellEventArgs> ValueChanged;
+
+
+        /// <summary>
+        /// Occurs when the user has changed the active sheet. 
+        /// </summary>
+        public event EventHandler ActiveSheetChanged;
+
+        /// <summary>
+        /// Occurs when the user changes the active sheet. 
+        /// </summary>
+        public event EventHandler<CancelEventArgs> ActiveSheetChanging;
+
+        /// <summary>
+        /// Occurs when the user has changed a viewport column width. 
+        /// </summary>
+        public event EventHandler<ColumnViewportWidthChangedEventArgs> ColumnViewportWidthChanged;
+
+        /// <summary>
+        /// Occurs when the user changes a viewport column width. 
+        /// </summary>
+        public event EventHandler<ColumnViewportWidthChangingEventArgs> ColumnViewportWidthChanging;
+
+        /// <summary>
+        /// Occurs when the user has changed a viewport row height. 
+        /// </summary>
+        public event EventHandler<RowViewportHeightChangedEventArgs> RowViewportHeightChanged;
+
+        /// <summary>
+        /// Occurs when the user changes a viewport row height. 
+        /// </summary>
+        public event EventHandler<RowViewportHeightChangingEventArgs> RowViewportHeightChanging;
 
     }
 }

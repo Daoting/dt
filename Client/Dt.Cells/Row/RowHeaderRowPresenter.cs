@@ -30,7 +30,7 @@ namespace Dt.Cells.UI
 
         protected override SheetSpanModelBase GetCellSpanModel()
         {
-            return OwningPresenter.Sheet.Worksheet.RowHeaderSpanModel;
+            return OwningPresenter.Sheet.ActiveSheet.RowHeaderSpanModel;
         }
 
         public override ColumnLayoutModel GetColumnLayoutModel()

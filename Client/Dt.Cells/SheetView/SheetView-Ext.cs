@@ -18,7 +18,7 @@ using Windows.UI.Xaml.Input;
 
 namespace Dt.Cells.UI
 {
-    public partial class SheetView : Panel, IXmlSerializable
+    public partial class SheetView
     {
         /// <summary>
         /// 是否显示修饰层
