@@ -29,7 +29,7 @@ namespace Dt.Cells.UI
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
-        /// Raises the <see cref="E:Dt.Cells.UI.AutoFilterItem.PropertyChanged" /> event.
+        /// Raises the <see cref="E:AutoFilterItem.PropertyChanged" /> event.
         /// </summary>
         /// <param name="e">The <see cref="T:System.ComponentModel.PropertyChangedEventArgs" /> instance containing the event data.</param>
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)

@@ -30,7 +30,7 @@ namespace Dt.Cells.UI
 
         public StrikethroughView(Cell bindingCell, CellBackgroundPanel backPanel)
         {
-            base.Margin = new Windows.UI.Xaml.Thickness(1.0);
+            base.Margin = new Thickness(1.0);
             _bindingCell = bindingCell;
             _border = new Border();
             _lineContainer = new Canvas();
@@ -146,7 +146,7 @@ namespace Dt.Cells.UI
                 double a = (textSize.Height + lineSpacing) / (lineHeight + lineSpacing);
                 int num4 = (int) Math.Round(a);
                 double width = textSize.Width;
-                Windows.UI.Xaml.Thickness excelBlank = MeasureHelper.GetExcelBlank();
+                Thickness excelBlank = MeasureHelper.GetExcelBlank();
                 _lineContainer.Height = textSize.Height + ((excelBlank.Top + excelBlank.Bottom) * cell.Worksheet.ZoomFactor);
                 _lineContainer.Width = textSize.Width + ((excelBlank.Left + excelBlank.Right) * cell.Worksheet.ZoomFactor);
                 if (num4 > 0)

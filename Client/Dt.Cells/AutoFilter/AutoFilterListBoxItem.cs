@@ -27,7 +27,7 @@ namespace Dt.Cells.UI
     public partial class AutoFilterListBoxItem : ListBoxItem
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="T:Dt.Cells.UI.AutoFilterListBoxItem" /> class.
+        /// Creates a new instance of the <see cref="T:AutoFilterListBoxItem" /> class.
         /// </summary>
         public AutoFilterListBoxItem()
         {
@@ -113,7 +113,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        internal Dt.Cells.UI.AutoFilterListBox AutoFilterListBox { get; set; }
+        internal AutoFilterListBox AutoFilterListBox { get; set; }
 
         Windows.UI.Xaml.Controls.CheckBox CheckBox { get; set; }
     }

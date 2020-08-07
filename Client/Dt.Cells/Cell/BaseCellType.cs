@@ -144,26 +144,26 @@ namespace Dt.Cells.CellTypes
             return new EditingElement();
         }
 
-        Windows.UI.Xaml.Thickness GetDefaultMarginForDisplay(double fontSize)
+        Thickness GetDefaultMarginForDisplay(double fontSize)
         {
             double zoomFactor = ZoomFactor;
-            Windows.UI.Xaml.Thickness excelBlank = MeasureHelper.GetExcelBlank();
-            Windows.UI.Xaml.Thickness textBlockBlank = MeasureHelper.GetTextBlockBlank(fontSize);
+            Thickness excelBlank = MeasureHelper.GetExcelBlank();
+            Thickness textBlockBlank = MeasureHelper.GetTextBlockBlank(fontSize);
             double left = excelBlank.Left - textBlockBlank.Left;
             double right = excelBlank.Right - textBlockBlank.Right;
             double top = excelBlank.Top - textBlockBlank.Top;
-            return new Windows.UI.Xaml.Thickness(left, top, right, excelBlank.Bottom - textBlockBlank.Bottom);
+            return new Thickness(left, top, right, excelBlank.Bottom - textBlockBlank.Bottom);
         }
 
-        Windows.UI.Xaml.Thickness GetDefaultPaddingForEdit(double fontSize)
+        Thickness GetDefaultPaddingForEdit(double fontSize)
         {
             double zoomFactor = ZoomFactor;
-            Windows.UI.Xaml.Thickness excelBlank = MeasureHelper.GetExcelBlank();
-            Windows.UI.Xaml.Thickness textBoxBlank = MeasureHelper.GetTextBoxBlank(fontSize);
+            Thickness excelBlank = MeasureHelper.GetExcelBlank();
+            Thickness textBoxBlank = MeasureHelper.GetTextBoxBlank(fontSize);
             double left = excelBlank.Left - textBoxBlank.Left;
             double right = excelBlank.Right - textBoxBlank.Right;
             double top = excelBlank.Top - textBoxBlank.Top;
-            return new Windows.UI.Xaml.Thickness(left, top, right, excelBlank.Bottom - textBoxBlank.Bottom);
+            return new Thickness(left, top, right, excelBlank.Bottom - textBoxBlank.Bottom);
         }
 
         public virtual FrameworkElement GetDisplayElement()
@@ -480,7 +480,7 @@ namespace Dt.Cells.CellTypes
             {
                 tbElement.TextAlignment = TextAlignment.Left;
             }
-            Windows.UI.Xaml.Thickness defaultPaddingForEdit = GetDefaultPaddingForEdit(tbElement.FontSize);
+            Thickness defaultPaddingForEdit = GetDefaultPaddingForEdit(tbElement.FontSize);
             tbElement.Margin = defaultPaddingForEdit;
             tbElement.TextWrapping = TextWrapping.Wrap;
             bool actualUnderline = bindingCell.ActualUnderline;

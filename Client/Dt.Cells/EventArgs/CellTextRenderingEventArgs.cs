@@ -19,7 +19,7 @@ namespace Dt.Cells.UI
     public class CellTextRenderingEventArgs : CellEventArgs
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:Dt.Cells.UI.CellTextRenderingEventArgs" /> class.
+        /// Initializes a new instance of the <see cref="T:CellTextRenderingEventArgs" /> class.
         /// </summary>
         /// <param name="row">The row.</param>
         /// <param name="column">The column.</param>

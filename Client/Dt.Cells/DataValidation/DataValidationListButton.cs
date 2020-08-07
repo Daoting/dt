@@ -15,7 +15,7 @@ using Windows.UI.Xaml.Input;
 namespace Dt.Cells.UI
 {
     /// <summary>
-    /// Represents a <see cref="T:Dt.Cells.UI.GcSpreadSheet" /> DataValidation List button. 
+    /// Represents a <see cref="T:GcSpreadSheet" /> DataValidation List button. 
     /// </summary>
     public partial class DataValidationListButton : Button
     {

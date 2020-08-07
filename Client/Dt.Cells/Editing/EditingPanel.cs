@@ -224,7 +224,6 @@ namespace Dt.Cells.UI
             if (cell == null)
                 return;
 
-            ICellType cellType = cell.CellType;
             FrameworkElement editingElement = cell.GetEditingElement();
             int row = cell.Row;
             int column = cell.Column;
@@ -254,9 +253,9 @@ namespace Dt.Cells.UI
                 }
                 EditingColumnIndex = column;
                 EditingRowIndex = row;
-                if (cellType.DataContext.ActualBackground != null)
+                if (cell.BindingCell.ActualBackground != null)
                 {
-                    Background = cellType.DataContext.ActualBackground;
+                    Background = cell.BindingCell.ActualBackground;
                 }
                 else
                 {
@@ -407,9 +406,9 @@ namespace Dt.Cells.UI
             EditorDirty = false;
             EditingColumnIndex = column;
             EditingRowIndex = row;
-            if (cell.CellType.DataContext.ActualBackground != null)
+            if (cell.BindingCell.ActualBackground != null)
             {
-                Background = cell.CellType.DataContext.ActualBackground;
+                Background = cell.BindingCell.ActualBackground;
             }
             else
             {

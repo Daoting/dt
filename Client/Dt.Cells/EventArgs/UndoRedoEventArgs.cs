@@ -19,7 +19,7 @@ namespace Dt.Cells.UI
     public class UndoRedoEventArgs : EventArgs
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:Dt.Cells.UI.UndoRedoEventArgs" /> class.
+        /// Initializes a new instance of the <see cref="T:UndoRedoEventArgs" /> class.
         /// </summary>
         /// <param name="undoRedo">The undo redo.</param>
         /// <param name="action">The action.</param>

@@ -30,7 +30,7 @@ namespace Dt.Cells.UI
         public static readonly DependencyProperty ShowIconBarProperty = DependencyProperty.Register("ShowIconBar", (Type)typeof(Visibility), (Type)typeof(ColumnDropDownList), new PropertyMetadata(Visibility.Visible));
 
         /// <summary>
-        /// Creates a new instance of the <see cref="T:Dt.Cells.UI.ColumnDropDownList" /> class.
+        /// Creates a new instance of the <see cref="T:ColumnDropDownList" /> class.
         /// </summary>
         public ColumnDropDownList()
         {

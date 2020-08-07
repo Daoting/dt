@@ -1,25 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Globalization;
-using System.IO;
+﻿using Dt.Cells.Data;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Xml;
-using System.Xml.Schema;
-using System.Xml.Serialization;
-using Windows.Foundation;
-using Windows.UI;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
-using Dt.Cells.Data;
 
 namespace Dt.Cells.UI
 {
@@ -27,7 +7,7 @@ namespace Dt.Cells.UI
     {
         public ColumnHeaderCellPresenter()
         {
-            base.DefaultStyleKey = typeof(ColumnHeaderCellPresenter);
+            DefaultStyleKey = typeof(ColumnHeaderCellPresenter);
         }
 
         internal override bool IsHightlighted
@@ -72,11 +52,11 @@ namespace Dt.Cells.UI
         {
             get
             {
-                Worksheet worksheet = base.OwningRow.OwningPresenter.Sheet.Worksheet;
+                Worksheet worksheet = OwningRow.OwningPresenter.Sheet.Worksheet;
                 // hdt 唐忠宝 注释掉下面语句及修改linq，增加where条件
                 // CellRange columnRange = new CellRange(-1, base.Column, -1, 1);
-                return (from range in (IEnumerable<CellRange>)worksheet.Selections
-                        where range.Column <= base.Column && range.Column + range.ColumnCount > base.Column
+                return (from range in worksheet.Selections
+                        where range.Column <= Column && range.Column + range.ColumnCount > Column
                         select range).Any();
             }
         }

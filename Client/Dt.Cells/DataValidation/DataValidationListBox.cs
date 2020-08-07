@@ -36,7 +36,7 @@ namespace Dt.Cells.UI
         public static readonly DependencyProperty CommandProperty = DependencyProperty.Register("Command", (Type) typeof(ICommand), (Type) typeof(DataValidationListBox), new PropertyMetadata(null));
 
         /// <summary>
-        /// Creates a new instance of the <see cref="T:Dt.Cells.UI.AutoFilterListBox" /> class.
+        /// Creates a new instance of the <see cref="T:AutoFilterListBox" /> class.
         /// </summary>
         public DataValidationListBox()
         {

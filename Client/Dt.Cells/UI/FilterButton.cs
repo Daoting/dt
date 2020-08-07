@@ -18,7 +18,7 @@ using Windows.UI.Xaml.Input;
 namespace Dt.Cells.UI
 {
     /// <summary>
-    /// Represents a <see cref="T:Dt.Cells.UI.GcSpreadSheet" /> filter button. 
+    /// Represents a <see cref="T:GcSpreadSheet" /> filter button. 
     /// </summary>
     [TemplateVisualState(GroupName="SortFilterStates", Name="FilterAscend"), TemplateVisualState(GroupName="SortFilterStates", Name="FilterAscend"), TemplateVisualState(GroupName="SortFilterStates", Name="Ascend"), TemplateVisualState(GroupName="SortFilterStates", Name="Filter"), TemplateVisualState(GroupName="SortFilterStates", Name="NoSortFilter"), TemplateVisualState(GroupName="SortFilterStates", Name="Descend")]
     public partial class FilterButton : Button

@@ -23,7 +23,7 @@ namespace Dt.Cells.UI
     public partial class AutoFilterListBox : ListBox
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="T:Dt.Cells.UI.AutoFilterListBox" /> class.
+        /// Creates a new instance of the <see cref="T:AutoFilterListBox" /> class.
         /// </summary>
         public AutoFilterListBox()
         {

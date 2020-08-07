@@ -1,14 +1,4 @@
 ﻿using Dt.Cells.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.UI;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
 
 namespace Dt.Cells.UI
@@ -20,6 +10,15 @@ namespace Dt.Cells.UI
         Rectangle _selectionRectangle;
 
         internal abstract bool IsHightlighted { get; }
+
+        protected override void UpdataContent()
+        {
+            Cell cell = BindingCell;
+            if (cell == null)
+                return;
+
+            string text = cell.Text;
+        }
 
         internal virtual void ApplyHightlightState()
         {
@@ -67,17 +66,18 @@ namespace Dt.Cells.UI
             ApplyHoverState();
         }
 
-        protected override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-            _hoverRectangle = GetTemplateChild("HoverRectangle") as Rectangle;
-            _selectionRectangle = GetTemplateChild("SelectionRectangle") as Rectangle;
-            _highlightRectangle = GetTemplateChild("HighlightRectangle") as Rectangle;
-        }
-
         internal override bool TryUpdateVisualTree()
         {
             return false;
+        }
+
+        protected override void OnApplyTemplate()
+        {
+            _hoverRectangle = GetTemplateChild("HoverRectangle") as Rectangle;
+            _selectionRectangle = GetTemplateChild("SelectionRectangle") as Rectangle;
+            _highlightRectangle = GetTemplateChild("HighlightRectangle") as Rectangle;
+
+            base.OnApplyTemplate();
         }
     }
 }

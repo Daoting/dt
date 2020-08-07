@@ -26,7 +26,7 @@ namespace Dt.Cells.UI
         /// Stops cell editing and cancels input.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void CancelInput(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -41,7 +41,7 @@ namespace Dt.Cells.UI
         /// Clears the cell value.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void Clear(object sender, ActionEventArgs e)
         {
             SheetView parameter = sender as SheetView;
@@ -69,7 +69,7 @@ namespace Dt.Cells.UI
         /// Clears the active cell value and enters edit mode.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void ClearAndEditing(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -84,7 +84,7 @@ namespace Dt.Cells.UI
         /// Copies the floating objects to the Clipboard.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the event data.</param>
         public static void ClipboardCopyFloatingObjects(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -108,7 +108,7 @@ namespace Dt.Cells.UI
         /// Cuts the floating objects to the Clipboard.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the event data.</param>
         public static void ClipboardCutFloatingObjects(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -133,7 +133,7 @@ namespace Dt.Cells.UI
         /// Pastes the floating objects from the Clipboard.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the event data.</param>
         public static void ClipboardPasteFloatingObjects(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -154,7 +154,7 @@ namespace Dt.Cells.UI
         /// Stops cell editing and moves the active cell to the next row.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance contains the action event data.</param>
         public static void CommitInputNavigationDown(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -177,7 +177,7 @@ namespace Dt.Cells.UI
         /// Stops cell editing and moves the active cell to the next cell.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void CommitInputNavigationTabNext(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -207,7 +207,7 @@ namespace Dt.Cells.UI
         /// Stops cell editing and moves the active cell to the previous cell.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void CommitInputNavigationTabPrevious(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -237,7 +237,7 @@ namespace Dt.Cells.UI
         /// Stops cell editing and moves the active cell to the previous row.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void CommitInputNavigationUp(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -260,7 +260,7 @@ namespace Dt.Cells.UI
         /// Copies the selected item text to the Clipboard.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void Copy(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -304,7 +304,7 @@ namespace Dt.Cells.UI
         /// Cuts the selected item text to the Clipboard.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void Cut(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -341,7 +341,7 @@ namespace Dt.Cells.UI
         /// Deletes the floating object.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the event data.</param>
         public static void DeleteFloatingObject(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -445,7 +445,7 @@ namespace Dt.Cells.UI
         /// Sets the array formula on the current active range.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void InputArrayFormula(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -461,7 +461,7 @@ namespace Dt.Cells.UI
         /// Inputs a new line in the current active cell.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void InputNewLine(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -565,7 +565,7 @@ namespace Dt.Cells.UI
         /// Moves the active cell to the last row.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void NavigationBottom(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -591,7 +591,7 @@ namespace Dt.Cells.UI
         /// Moves the active cell to the next row.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void NavigationDown(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -617,7 +617,7 @@ namespace Dt.Cells.UI
         /// Moves the active cell to the last column.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void NavigationEnd(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -643,7 +643,7 @@ namespace Dt.Cells.UI
         /// Moves the active cell to the first cell in the sheetview.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void NavigationFirst(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -669,7 +669,7 @@ namespace Dt.Cells.UI
         /// Moves the active cell to the first column.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void NavigationHome(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -695,7 +695,7 @@ namespace Dt.Cells.UI
         /// Moves the active cell to the last cell in the sheetview.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void NavigationLast(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -721,7 +721,7 @@ namespace Dt.Cells.UI
         /// Moves the active cell to the previous column.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void NavigationLeft(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -747,7 +747,7 @@ namespace Dt.Cells.UI
         /// Moves the active cell to the next cell.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void NavigationNext(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -762,7 +762,7 @@ namespace Dt.Cells.UI
         /// Navigates to the next floating object.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the event data.</param>
         public static void NavigationNextFloatingObject(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -786,7 +786,7 @@ namespace Dt.Cells.UI
         /// Moves the active sheet to the next sheet.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void NavigationNextSheet(object sender, ActionEventArgs e)
         {
             SpreadView view = sender as SpreadView;
@@ -800,7 +800,7 @@ namespace Dt.Cells.UI
         /// Moves the active cell down one page of rows.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void NavigationPageDown(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -826,7 +826,7 @@ namespace Dt.Cells.UI
         /// Moves the active cell up one page of rows.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void NavigationPageUp(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -852,7 +852,7 @@ namespace Dt.Cells.UI
         /// Moves the active cell to the previous cell.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void NavigationPrevious(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -867,7 +867,7 @@ namespace Dt.Cells.UI
         /// Navigates to the previous floating object.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the event data.</param>
         public static void NavigationPreviousFloatingObject(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -891,7 +891,7 @@ namespace Dt.Cells.UI
         /// Moves the active sheet to the previous sheet.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void NavigationPreviousSheet(object sender, ActionEventArgs e)
         {
             SpreadView view = sender as SpreadView;
@@ -905,7 +905,7 @@ namespace Dt.Cells.UI
         /// Moves the active cell to the next column.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void NavigationRight(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -931,7 +931,7 @@ namespace Dt.Cells.UI
         /// Moves the active cell to the first row.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void NavigationTop(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -957,7 +957,7 @@ namespace Dt.Cells.UI
         /// Moves the active cell to the previous row.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void NavigationUp(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -983,7 +983,7 @@ namespace Dt.Cells.UI
         /// Pastes the specified sender.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance containing the event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance containing the event data.</param>
         public static void Paste(object sender, ActionEventArgs e)
         {
             AsyncOperationCompletedHandler<string> handler = null;
@@ -1013,7 +1013,7 @@ namespace Dt.Cells.UI
         /// Performs a redo of the most recently undone edit or action.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void Redo(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -1028,7 +1028,7 @@ namespace Dt.Cells.UI
         /// Selects all objects.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the event data.</param>
         public static void SelectionAll(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -1050,7 +1050,7 @@ namespace Dt.Cells.UI
         /// Extends the selection to the last row.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void SelectionBottom(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -1076,7 +1076,7 @@ namespace Dt.Cells.UI
         /// Extends the selection down one row.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void SelectionDown(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -1102,7 +1102,7 @@ namespace Dt.Cells.UI
         /// Extends the selection to the last column.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void SelectionEnd(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -1128,7 +1128,7 @@ namespace Dt.Cells.UI
         /// Extends the selection to the first cell.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void SelectionFirst(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -1154,7 +1154,7 @@ namespace Dt.Cells.UI
         /// Extends the selection to the first column.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void SelectionHome(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -1180,7 +1180,7 @@ namespace Dt.Cells.UI
         /// Extends the selection to the last cell.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void SelectionLast(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -1206,7 +1206,7 @@ namespace Dt.Cells.UI
         /// Extends the selection one column to the left.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void SelectionLeft(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -1232,7 +1232,7 @@ namespace Dt.Cells.UI
         /// Extends the selection down to include one page of rows.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void SelectionPageDown(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -1258,7 +1258,7 @@ namespace Dt.Cells.UI
         /// Extends the selection up to include one page of rows.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void SelectionPageUp(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -1284,7 +1284,7 @@ namespace Dt.Cells.UI
         /// Extends the selection one column to the right.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void SelectionRight(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -1310,7 +1310,7 @@ namespace Dt.Cells.UI
         /// Extends the selection to the first row.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void SelectionTop(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -1336,7 +1336,7 @@ namespace Dt.Cells.UI
         /// Extends the selection up one row.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void SelectionUp(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -1362,7 +1362,7 @@ namespace Dt.Cells.UI
         /// Starts to edit the current active cell.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void StartEditing(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -1377,7 +1377,7 @@ namespace Dt.Cells.UI
         /// Starts to edit formula on the current active cell.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void StartEditingFormula(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -1392,7 +1392,7 @@ namespace Dt.Cells.UI
         /// Performs an undo of the most recent edit or action.
         /// </summary>
         /// <param name="sender">The object to do the action on.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void Undo(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;
@@ -1407,7 +1407,7 @@ namespace Dt.Cells.UI
         /// Unselects all floating objects.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the event data.</param>
+        /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the event data.</param>
         public static void UnSelectAllFloatingObjects(object sender, ActionEventArgs e)
         {
             SheetView view = sender as SheetView;

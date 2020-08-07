@@ -11,8 +11,6 @@ using Dt.Base;
 using Dt.Cells.Data;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
-using System.Runtime.InteropServices;
 using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Xaml;
@@ -25,9 +23,8 @@ using Windows.UI.Xaml.Shapes;
 namespace Dt.Cells.UI
 {
     /// <summary>
-    /// Represents an individual <see cref="T:Dt.Cells.UI.GcSpreadSheet" /> cell.
+    /// Represents an individual <see cref="T:GcSpreadSheet" /> cell.
     /// </summary>
-    [TemplatePart(Name = "Root", Type = typeof(CellBackgroundPanel))]
     public partial class CellPresenter : CellPresenterBase
     {
         ConditionalFormatView _conditionalView;
@@ -39,21 +36,9 @@ namespace Dt.Cells.UI
         BaseSparklineView _sparklineView;
         StrikethroughView _strikethroughView;
 
-        /// <summary>
-        /// Creates a new instance of the <see cref="T:GrapeCity.Windows.SpreadSheet.UI.CellPresenter" /> class.
-        /// </summary>
         public CellPresenter()
         {
             DefaultStyleKey = typeof(CellPresenter);
-        }
-
-        void AttachSparklineEvents()
-        {
-            Sparkline sparkline = _sparkInfo;
-            if (sparkline != null)
-            {
-                sparkline.SparklineChanged += new EventHandler(sparkline_SparklineChanged);
-            }
         }
 
         internal override void CleanUpBeforeDiscard()
@@ -61,41 +46,14 @@ namespace Dt.Cells.UI
             base.CleanUpBeforeDiscard();
             if (_customDrawingObjectView != null)
             {
-                base.RootPanel.Children.Remove(_customDrawingObjectView);
+                _rootPanel.Children.Remove(_customDrawingObjectView);
             }
-        }
-
-        BaseSparklineView CreateSparkline(Sparkline info)
-        {
-            if (info.SparklineType == SparklineType.Column)
-            {
-                return new ColumnSparklineView(new ColumnSparklineViewInfo(info));
-            }
-            if (info.SparklineType == SparklineType.Line)
-            {
-                return new LineSparklineView(new LineSparklineViewInfo(info));
-            }
-            return new WinLossSparklineView(new WinLossSparklineViewInfo(info));
         }
 
         internal override void DetachEvents()
         {
             base.DetachEvents();
             DettachSparklineEvents();
-        }
-
-        void DettachSparklineEvents()
-        {
-            Sparkline sparkline = _sparkInfo;
-            if (sparkline != null)
-            {
-                sparkline.SparklineChanged -= new EventHandler(sparkline_SparklineChanged);
-            }
-        }
-
-        void HideContent(bool visible)
-        {
-            base.SetContentVisible(visible);
         }
 
         internal override void Invalidate()
@@ -107,40 +65,101 @@ namespace Dt.Cells.UI
             base.Invalidate();
         }
 
-        void sparkline_SparklineChanged(object sender, EventArgs e)
+        #region 更新可视树
+        internal override bool TryUpdateVisualTree()
         {
-            Sparkline sparkline = sender as Sparkline;
-            if ((_sparklineView == null) || (_sparklineView.SparklineType != sparkline.SparklineType))
+            Cell bindingCell = BindingCell;
+            if (bindingCell == null)
+                return false;
+
+            Worksheet sheet = bindingCell.Worksheet;
+            int row = Row;
+            int column = Column;
+            if (CellLayout != null)
             {
-                if (_sparklineView != null)
-                {
-                    base.RootPanel.Children.Remove(_sparklineView);
-                    _sparklineView = null;
-                }
+                row = CellLayout.Row;
+                column = CellLayout.Column;
+            }
+
+            bool update = false;
+            Sparkline sparkline = sheet.GetSparkline(row, column);
+            if (!object.Equals(_sparkInfo, sparkline))
+            {
+                SparkLine = sparkline;
                 SynSparklineView();
+                update = true;
             }
-            else
+
+            List<DrawingObject> list = new List<DrawingObject>();
+            DrawingObject[] objArray = sheet.GetDrawingObject(row, column, 1, 1);
+            if ((objArray != null) && (objArray.Length > 0))
             {
-                UpdateSparkline();
+                list.AddRange(objArray);
             }
+
+            if (SheetView != null && SheetView._host is Excel excel)
+            {
+                IDrawingObjectProvider drawingObjectProvider = DrawingObjectManager.GetDrawingObjectProvider(excel);
+                if (drawingObjectProvider != null)
+                {
+                    DrawingObject[] objArray2 = drawingObjectProvider.GetDrawingObjects(sheet, row, column, 1, 1);
+                    if ((objArray2 != null) && (objArray2.Length > 0))
+                    {
+                        list.AddRange(objArray2);
+                    }
+                }
+            }
+
+            _dataBarObject = null;
+            _iconObject = null;
+            _customDrawingObject = null;
+            if ((list != null) && (list.Count > 0))
+            {
+                foreach (DrawingObject obj in list)
+                {
+                    if (obj is DataBarDrawingObject bar)
+                    {
+                        _dataBarObject = bar;
+                        update = true;
+                    }
+                    else if (obj is IconDrawingObject icon)
+                    {
+                        _iconObject = icon;
+                        update = true;
+                    }
+                    else if (obj is CustomDrawingObject cust)
+                    {
+                        _customDrawingObject = cust;
+                        update = true;
+                    }
+                }
+            }
+
+            bool noBarIcon = SynContitionalView();
+            bool noCust = SynCustomDrawingObjectView();
+            ShowContent = noBarIcon && noCust;
+            SynStrikethroughView();
+
+            bool baseUpdate = base.TryUpdateVisualTree();
+            return update || baseUpdate;
         }
 
-        void SynContitionalView(out bool isContentVisible)
+        bool SynContitionalView()
         {
-            isContentVisible = true;
+            bool isContentVisible = true;
             if ((_dataBarObject != null) || (_iconObject != null))
             {
                 if (_conditionalView == null)
                 {
-                    _conditionalView = new ConditionalFormatView(base.BindingCell);
-                    base.RootPanel.Children.Add(_conditionalView);
+                    _conditionalView = new ConditionalFormatView(BindingCell);
+                    _rootPanel.Children.Add(_conditionalView);
                     Canvas.SetZIndex(_conditionalView, 500);
                 }
                 _conditionalView.SetDataBarObject(_dataBarObject);
                 if (_iconObject != null)
                 {
                     _conditionalView.SetImageContainer();
-                    _conditionalView.SetIconObject(_iconObject, base.SheetView.ZoomFactor, base.BindingCell);
+                    _conditionalView.SetIconObject(_iconObject, SheetView.ZoomFactor, BindingCell);
                 }
                 bool flag = true;
                 if (flag && (_dataBarObject != null))
@@ -157,16 +176,32 @@ namespace Dt.Cells.UI
             {
                 if (_conditionalView != null)
                 {
-                    base.RootPanel.Children.Remove(_conditionalView);
+                    _rootPanel.Children.Remove(_conditionalView);
                     _conditionalView = null;
                 }
-                isContentVisible = true;
+            }
+            return isContentVisible;
+        }
+
+        void SynStrikethroughView()
+        {
+            bool actualStrikethrough = BindingCell.ActualStrikethrough;
+            if (_strikethroughView != null)
+            {
+                _rootPanel.Children.Remove(_strikethroughView);
+                _strikethroughView = null;
+            }
+            if (actualStrikethrough && (_strikethroughView == null))
+            {
+                _strikethroughView = new StrikethroughView(BindingCell, _rootPanel);
+                _strikethroughView.SetLines(SheetView.ZoomFactor, BindingCell);
+                _rootPanel.Children.Add(_strikethroughView);
             }
         }
 
-        void SynCustomDrawingObjectView(out bool isContentVisible)
+        bool SynCustomDrawingObjectView()
         {
-            isContentVisible = true;
+            bool isContentVisible = true;
             if (_customDrawingObject != null)
             {
                 isContentVisible = !_customDrawingObject.ShowDrawingObjectOnly;
@@ -175,235 +210,33 @@ namespace Dt.Cells.UI
                 {
                     if (_customDrawingObjectView != null)
                     {
-                        base.RootPanel.Children.Remove(_customDrawingObjectView);
+                        _rootPanel.Children.Remove(_customDrawingObjectView);
                     }
                     _customDrawingObjectView = rootElement;
                     if (_customDrawingObjectView != null)
                     {
                         Panel parent = _customDrawingObjectView.Parent as Panel;
-                        if ((parent != null) && (parent != base.RootPanel))
+                        if ((parent != null) && (parent != _rootPanel))
                         {
                             parent.Children.Remove(_customDrawingObjectView);
                         }
-                        if (!base.RootPanel.Children.Contains(_customDrawingObjectView))
+                        if (!_rootPanel.Children.Contains(_customDrawingObjectView))
                         {
-                            base.RootPanel.Children.Add(_customDrawingObjectView);
+                            _rootPanel.Children.Add(_customDrawingObjectView);
                         }
                     }
                 }
             }
             else if (_customDrawingObjectView != null)
             {
-                base.RootPanel.Children.Remove(_customDrawingObjectView);
+                _rootPanel.Children.Remove(_customDrawingObjectView);
                 _customDrawingObjectView = null;
             }
+            return isContentVisible;
         }
+        #endregion
 
-        void SynSparklineView()
-        {
-            SheetView sheetView = base.SheetView;
-            if (sheetView != null)
-            {
-                if (_sparkInfo != null)
-                {
-                    if (_sparklineView == null)
-                    {
-                        _sparklineView = CreateSparkline(_sparkInfo);
-                        _sparklineView.ZoomFactor = base.OwningRow.OwningPresenter.Sheet.ZoomFactor;
-                        ((IThemeContextSupport)_sparklineView).SetContext(sheetView.Worksheet);
-                        Canvas.SetZIndex(_sparklineView, 0x3e8);
-                        base.RootPanel.Children.Add(_sparklineView);
-                        if (base.SheetView != null)
-                        {
-                            _sparklineView.Update(new Size(base.ActualWidth, base.ActualHeight), (double)base.SheetView.ZoomFactor);
-                        }
-                    }
-                }
-                else if (_sparklineView != null)
-                {
-                    DettachSparklineEvents();
-                    base.RootPanel.Children.Remove(_sparklineView);
-                    _sparklineView = null;
-                }
-            }
-        }
-
-        void SynStrikethroughView()
-        {
-            bool actualStrikethrough = base.BindingCell.ActualStrikethrough;
-            if (_strikethroughView != null)
-            {
-                base.RootPanel.Children.Remove(_strikethroughView);
-                _strikethroughView = null;
-            }
-            if (actualStrikethrough && (_strikethroughView == null))
-            {
-                _strikethroughView = new StrikethroughView(base.BindingCell, base.RootPanel);
-                _strikethroughView.SetLines(base.SheetView.ZoomFactor, base.BindingCell);
-                base.RootPanel.Children.Add(_strikethroughView);
-            }
-        }
-
-        internal override bool TryUpdateVisualTree()
-        {
-            bool flag = false;
-            Cell bindingCell = base.BindingCell;
-            if (bindingCell == null)
-            {
-                return false;
-            }
-            Worksheet sheet = bindingCell.Worksheet;
-            int row = base.Row;
-            int column = base.Column;
-            if (base.CellLayout != null)
-            {
-                row = base.CellLayout.Row;
-                column = base.CellLayout.Column;
-            }
-            Sparkline objB = sheet.GetSparkline(row, column);
-            if (!object.Equals(_sparkInfo, objB))
-            {
-                SparkLine = objB;
-                SynSparklineView();
-                flag = true;
-            }
-            bool flag2 = false;
-            bool flag3 = false;
-            bool flag4 = false;
-            List<DrawingObject> list = new List<DrawingObject>();
-            DrawingObject[] objArray = sheet.GetDrawingObject(row, column, 1, 1);
-            if ((objArray != null) && (objArray.Length > 0))
-            {
-                list.AddRange(objArray);
-            }
-            if (((base.SheetView != null) && (base.SheetView._host != null)) && (base.SheetView._host is Excel))
-            {
-                IDrawingObjectProvider drawingObjectProvider = DrawingObjectManager.GetDrawingObjectProvider(base.SheetView._host as Excel);
-                if (drawingObjectProvider != null)
-                {
-                    DrawingObject[] objArray2 = drawingObjectProvider.GetDrawingObjects(sheet, row, column, 1, 1);
-                    if ((objArray2 != null) && (objArray2.Length > 0))
-                    {
-                        list.AddRange(objArray2);
-                    }
-                }
-            }
-            if ((list != null) && (list.Count > 0))
-            {
-                foreach (DrawingObject obj2 in list)
-                {
-                    if (!flag2)
-                    {
-                        DataBarDrawingObject obj3 = obj2 as DataBarDrawingObject;
-                        if (obj3 != null)
-                        {
-                            flag2 = true;
-                            _dataBarObject = obj3;
-                            flag = true;
-                            continue;
-                        }
-                    }
-                    if (!flag3)
-                    {
-                        IconDrawingObject obj4 = obj2 as IconDrawingObject;
-                        if (obj4 != null)
-                        {
-                            flag3 = true;
-                            _iconObject = obj4;
-                            flag = true;
-                            continue;
-                        }
-                    }
-                    if (!flag4)
-                    {
-                        CustomDrawingObject obj5 = obj2 as CustomDrawingObject;
-                        if (obj5 != null)
-                        {
-                            flag4 = true;
-                            _customDrawingObject = obj5;
-                            flag = true;
-                        }
-                    }
-                }
-            }
-            if (!flag2)
-            {
-                _dataBarObject = null;
-            }
-            if (!flag3)
-            {
-                _iconObject = null;
-            }
-            bool flag5 = false;
-            bool isContentVisible = true;
-            SynContitionalView(out isContentVisible);
-            flag5 |= !isContentVisible;
-            SynStrikethroughView();
-            if (!flag4)
-            {
-                _customDrawingObject = null;
-            }
-            bool flag7 = true;
-            SynCustomDrawingObjectView(out flag7);
-            flag5 |= !flag7;
-            HideContent(!flag5);
-            bool flag8 = base.TryUpdateVisualTree();
-            if (!flag)
-            {
-                return flag8;
-            }
-            return true;
-        }
-
-        void UpdateSparkline()
-        {
-            if (base.SheetView != null)
-            {
-                BaseSparklineView view = _sparklineView;
-                if (view != null)
-                {
-                    view.Update(new Size(base.ActualWidth, base.ActualHeight), (double)base.SheetView.ZoomFactor);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets a value that indicates that the cell's viewport is active. 
-        /// </summary>
-        protected override bool IsActive
-        {
-            get
-            {
-                SheetView sheet = base.OwningRow.OwningPresenter.Sheet;
-                return ((sheet.GetActiveColumnViewportIndex() == base.OwningRow.OwningPresenter.ColumnViewportIndex) && (sheet.GetActiveRowViewportIndex() == base.OwningRow.OwningPresenter.RowViewportIndex));
-            }
-        }
-
-        /// <summary>
-        /// Gets a value that indicates that the cell is the active cell.
-        /// </summary>
-        protected override bool IsCurrent
-        {
-            get
-            {
-                Worksheet worksheet = base.OwningRow.OwningPresenter.Sheet.Worksheet;
-                return ((worksheet.ActiveRowIndex == base.Row) && (worksheet.ActiveColumnIndex == base.Column));
-            }
-        }
-
-        internal override bool IsRecylable
-        {
-            get { return ((_customDrawingObject == null) && base.IsRecylable); }
-        }
-
-        /// <summary>
-        /// Gets a value that indicates that the cell is selected.
-        /// </summary>
-        protected override bool IsSelected
-        {
-            get { return base.OwningRow.OwningPresenter.Sheet.Worksheet.IsSelected(base.Row, base.Column); }
-        }
-
+        #region 迷你图
         Sparkline SparkLine
         {
             get { return _sparkInfo; }
@@ -414,15 +247,130 @@ namespace Dt.Cells.UI
                     DettachSparklineEvents();
                     if (_sparklineView != null)
                     {
-                        base.RootPanel.Children.Remove(_sparklineView);
+                        _rootPanel.Children.Remove(_sparklineView);
                         _sparklineView = null;
                     }
                     _sparkInfo = value;
                     AttachSparklineEvents();
-                    base.InvalidateMeasure();
                 }
             }
         }
+
+        void AttachSparklineEvents()
+        {
+            if (_sparkInfo != null)
+                _sparkInfo.SparklineChanged += new EventHandler(sparkline_SparklineChanged);
+        }
+
+        void DettachSparklineEvents()
+        {
+            if (_sparkInfo != null)
+                _sparkInfo.SparklineChanged -= new EventHandler(sparkline_SparklineChanged);
+        }
+
+        void sparkline_SparklineChanged(object sender, EventArgs e)
+        {
+            Sparkline sparkline = sender as Sparkline;
+            if ((_sparklineView == null) || (_sparklineView.SparklineType != sparkline.SparklineType))
+            {
+                if (_sparklineView != null)
+                {
+                    _rootPanel.Children.Remove(_sparklineView);
+                    _sparklineView = null;
+                }
+                SynSparklineView();
+            }
+            else
+            {
+                UpdateSparkline();
+            }
+        }
+
+        void UpdateSparkline()
+        {
+            if (SheetView != null && _sparklineView != null)
+            {
+                _sparklineView.Update(new Size(ActualWidth, ActualHeight), (double)SheetView.ZoomFactor);
+            }
+        }
+
+        void SynSparklineView()
+        {
+            SheetView sheetView = SheetView;
+            if (sheetView == null)
+                return;
+
+            if (_sparkInfo != null)
+            {
+                if (_sparklineView == null)
+                {
+                    _sparklineView = CreateSparkline(_sparkInfo);
+                    _sparklineView.ZoomFactor = OwningRow.OwningPresenter.Sheet.ZoomFactor;
+                    ((IThemeContextSupport)_sparklineView).SetContext(sheetView.Worksheet);
+                    Canvas.SetZIndex(_sparklineView, 0x3e8);
+                    _rootPanel.Children.Add(_sparklineView);
+                    _sparklineView.Update(new Size(ActualWidth, ActualHeight), (double)sheetView.ZoomFactor);
+                }
+            }
+            else if (_sparklineView != null)
+            {
+                DettachSparklineEvents();
+                _rootPanel.Children.Remove(_sparklineView);
+                _sparklineView = null;
+            }
+        }
+
+        BaseSparklineView CreateSparkline(Sparkline info)
+        {
+            if (info.SparklineType == SparklineType.Column)
+            {
+                return new ColumnSparklineView(new ColumnSparklineViewInfo(info));
+            }
+            if (info.SparklineType == SparklineType.Line)
+            {
+                return new LineSparklineView(new LineSparklineViewInfo(info));
+            }
+            return new WinLossSparklineView(new WinLossSparklineViewInfo(info));
+        }
+        #endregion
+
+        /// <summary>
+        /// Gets a value that indicates that the cell's viewport is active. 
+        /// </summary>
+        protected override bool IsActive
+        {
+            get
+            {
+                SheetView sheet = OwningRow.OwningPresenter.Sheet;
+                return ((sheet.GetActiveColumnViewportIndex() == OwningRow.OwningPresenter.ColumnViewportIndex) && (sheet.GetActiveRowViewportIndex() == OwningRow.OwningPresenter.RowViewportIndex));
+            }
+        }
+
+        /// <summary>
+        /// Gets a value that indicates that the cell is the active cell.
+        /// </summary>
+        protected override bool IsCurrent
+        {
+            get
+            {
+                Worksheet worksheet = OwningRow.OwningPresenter.Sheet.Worksheet;
+                return ((worksheet.ActiveRowIndex == Row) && (worksheet.ActiveColumnIndex == Column));
+            }
+        }
+
+        internal override bool IsRecylable
+        {
+            get { return ((_customDrawingObject == null) && IsRecylable); }
+        }
+
+        /// <summary>
+        /// Gets a value that indicates that the cell is selected.
+        /// </summary>
+        protected override bool IsSelected
+        {
+            get { return OwningRow.OwningPresenter.Sheet.Worksheet.IsSelected(Row, Column); }
+        }
+
     }
     internal partial class ConditionalFormatView : Panel
     {
@@ -451,8 +399,8 @@ namespace Dt.Cells.UI
 
         public ConditionalFormatView(Cell bindingCell)
         {
-            base.Margin = new Windows.UI.Xaml.Thickness(1.0);
-            base.UseLayoutRounding = true;
+            Margin = new Thickness(1.0);
+            UseLayoutRounding = true;
             _bindingCell = bindingCell;
             _axisCanvas = new Canvas();
             Line line = new Line();
@@ -460,11 +408,11 @@ namespace Dt.Cells.UI
             line.StrokeDashArray = new DoubleCollection { 2.0, 1.0 };
             _axisLine = line;
             _axisCanvas.Children.Add(_axisLine);
-            base.Children.Add(_axisCanvas);
+            Children.Add(_axisCanvas);
             _databarObject = null;
             _dataBarRectangle = new Rectangle();
             _dataBarRectangle.UseLayoutRounding = true;
-            base.Children.Add(_dataBarRectangle);
+            Children.Add(_dataBarRectangle);
             _dataBarBackground = new LinearGradientBrush();
             GradientStop stop = new GradientStop();
             stop.Color = Colors.Transparent;
@@ -655,8 +603,8 @@ namespace Dt.Cells.UI
                 {
                     ClearDataBar();
                 }
-                base.InvalidateMeasure();
-                base.InvalidateArrange();
+                InvalidateMeasure();
+                InvalidateArrange();
             }
         }
 
@@ -694,8 +642,8 @@ namespace Dt.Cells.UI
                     ClearIcon();
                 }
                 _iconObject = iconObject;
-                base.InvalidateMeasure();
-                base.InvalidateArrange();
+                InvalidateMeasure();
+                InvalidateArrange();
             }
             if ((_iconObject != null) && (_cachedImage != null))
             {
@@ -722,16 +670,16 @@ namespace Dt.Cells.UI
                 _cachedImage.Width = (double)(16f * zoomFactor);
                 _cachedImage.Height = (double)(16f * zoomFactor);
                 _cachedZoomFactor = zoomFactor;
-                base.InvalidateMeasure();
-                base.InvalidateArrange();
+                InvalidateMeasure();
+                InvalidateArrange();
             }
         }
 
         public void SetImageContainer()
         {
-            if (!base.Children.Contains(_imageContainer))
+            if (!Children.Contains(_imageContainer))
             {
-                base.Children.Add(_imageContainer);
+                Children.Add(_imageContainer);
             }
         }
 

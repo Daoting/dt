@@ -21,7 +21,7 @@ namespace Dt.Cells.UI
     public partial class DataValidationListBoxItem : ListBoxItem
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="T:Dt.Cells.UI.DataValidationListBoxItem" /> class.
+        /// Creates a new instance of the <see cref="T:DataValidationListBoxItem" /> class.
         /// </summary>
         public DataValidationListBoxItem()
         {
@@ -55,7 +55,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        internal Dt.Cells.UI.DataValidationListBox DataValidationListBox { get; set; }
+        internal DataValidationListBox DataValidationListBox { get; set; }
     }
 }
 

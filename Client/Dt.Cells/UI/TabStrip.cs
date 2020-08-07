@@ -313,7 +313,7 @@ namespace Dt.Cells.UI
             SheetTab hitSheetTab = GetHitSheetTab(args);
             if (hitSheetTab != null)
             {
-                Dt.Cells.UI.TabsPresenter tabsPresenter = TabsPresenter;
+                TabsPresenter tabsPresenter = TabsPresenter;
                 if (hitSheetTab == _newTab)
                 {
                     if (!Workbook.Protect)
@@ -353,7 +353,7 @@ namespace Dt.Cells.UI
             SheetTab tab = TabsPresenter.Children[nextIndex] as SheetTab;
             if (((tab != null) && (tab.SheetIndex != -1)) && (tab != null))
             {
-                Dt.Cells.UI.TabsPresenter tabsPresenter = TabsPresenter;
+                TabsPresenter tabsPresenter = TabsPresenter;
                 if (tab == _newTab)
                 {
                     if (!Workbook.Protect)
@@ -392,7 +392,7 @@ namespace Dt.Cells.UI
             if (touchHitSheetTab == null)
                 return;
 
-            Dt.Cells.UI.TabsPresenter tabsPresenter = TabsPresenter;
+            TabsPresenter tabsPresenter = TabsPresenter;
             if (touchHitSheetTab == _newTab)
             {
                 if (!Workbook.Protect)
@@ -667,7 +667,7 @@ namespace Dt.Cells.UI
 
         internal SpreadView OwningView { get; set; }
 
-        internal Dt.Cells.UI.TabsPresenter TabsPresenter { get; }
+        internal TabsPresenter TabsPresenter { get; }
 
         internal Dt.Cells.Data.Workbook Workbook
         {

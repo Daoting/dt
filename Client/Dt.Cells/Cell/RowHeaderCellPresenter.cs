@@ -1,10 +1,5 @@
 ﻿using Dt.Cells.Data;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Dt.Cells.UI
 {
@@ -60,8 +55,8 @@ namespace Dt.Cells.UI
                 Worksheet worksheet = base.OwningRow.OwningPresenter.Sheet.Worksheet;
                 // hdt 唐忠宝 注释掉下面语句及修改linq，增加where条件
                 // CellRange rowRange = new CellRange(base.Row, -1, 1, -1);
-                return (from range in (IEnumerable<CellRange>)worksheet.Selections
-                        where range.Row <= base.Row && range.Row + range.RowCount > base.Row
+                return (from range in worksheet.Selections
+                        where range.Row <= Row && range.Row + range.RowCount > Row
                         select range).Any();
             }
         }

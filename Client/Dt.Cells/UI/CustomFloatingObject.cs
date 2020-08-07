@@ -20,14 +20,14 @@ namespace Dt.Cells.UI
     public abstract class CustomFloatingObject : FloatingObject
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:Dt.Cells.UI.CustomFloatingObject" /> class.
+        /// Initializes a new instance of the <see cref="T:CustomFloatingObject" /> class.
         /// </summary>
         public CustomFloatingObject() : base(string.Empty)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:Dt.Cells.UI.CustomFloatingObject" /> class.
+        /// Initializes a new instance of the <see cref="T:CustomFloatingObject" /> class.
         /// </summary>
         /// <param name="name">The name.</param>
         public CustomFloatingObject(string name) : base(name, 0.0, 0.0, 200.0, 200.0)
@@ -35,7 +35,7 @@ namespace Dt.Cells.UI
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:Dt.Cells.UI.CustomFloatingObject" /> class.
+        /// Initializes a new instance of the <see cref="T:CustomFloatingObject" /> class.
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="x">The x.</param>

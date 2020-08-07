@@ -38,7 +38,7 @@ namespace Dt.Cells.UI
         public event RoutedEventHandler Click;
 
         /// <summary>
-        /// Creates a new instance of the <see cref="T:Dt.Cells.UI.DropDownItemControl" /> class.
+        /// Creates a new instance of the <see cref="T:DropDownItemControl" /> class.
         /// </summary>
         public DropDownItemControl()
         {

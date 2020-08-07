@@ -219,7 +219,7 @@ namespace Dt.Cells.UI
         }
 
         /// <summary>
-        /// Gets the context of the <see cref="T:Dt.Cells.UI.UndoManager" /> which is used to execute the actions. 
+        /// Gets the context of the <see cref="T:UndoManager" /> which is used to execute the actions. 
         /// </summary>
         public object Context { get; private set; }
 

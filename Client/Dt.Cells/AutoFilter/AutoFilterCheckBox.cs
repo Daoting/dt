@@ -21,7 +21,7 @@ namespace Dt.Cells.UI
     public partial class AutoFilterCheckBox : CheckBox
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="T:Dt.Cells.UI.AutoFilterCheckBox" /> class.
+        /// Creates a new instance of the <see cref="T:AutoFilterCheckBox" /> class.
         /// </summary>
         public AutoFilterCheckBox()
         {

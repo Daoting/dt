@@ -19,7 +19,7 @@ namespace Dt.Cells.UI
     public partial class InvalidDataPresenter : Control
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="T:Dt.Cells.UI.InvalidDataPresenter" /> class.
+        /// Creates a new instance of the <see cref="T:InvalidDataPresenter" /> class.
         /// </summary>
         public InvalidDataPresenter()
         {

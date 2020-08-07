@@ -39,7 +39,7 @@ namespace Dt.Cells.UI
         }
 
         /// <summary>
-        /// Indicates whether the row represented by the <see cref="T:Dt.Cells.UI.RowLayout" /> object 
+        /// Indicates whether the row represented by the <see cref="T:RowLayout" /> object 
         /// contains the specified Y coordinate.
         /// </summary>
         /// <param name="y">

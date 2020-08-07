@@ -21,15 +21,15 @@ namespace Dt.Cells.UI
     public partial class TooltipControl : Control
     {
         /// <summary>
-        /// Identifies the <see cref="P:Dt.Cells.UI.TooltipControl.Text" /> dependency property.
+        /// Identifies the <see cref="P:TooltipControl.Text" /> dependency property.
         /// </summary>
         /// <value>
-        /// The identifier for the <see cref="P:Dt.Cells.UI.TooltipControl.Text" /> dependency property.
+        /// The identifier for the <see cref="P:TooltipControl.Text" /> dependency property.
         /// </value>
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register("Text", (Type) typeof(string), (Type) typeof(TooltipControl), new PropertyMetadata(""));
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:Dt.Cells.UI.TooltipControl" /> class.
+        /// Initializes a new instance of the <see cref="T:TooltipControl" /> class.
         /// </summary>
         public TooltipControl()
         {

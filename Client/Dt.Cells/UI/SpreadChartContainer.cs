@@ -23,12 +23,12 @@ namespace Dt.Cells.UI
 
         internal override SpreadChartBaseView CreateView(SpreadChartBase spreadChart, Control c1Chart)
         {
-            return new Dt.Cells.UI.SpreadChartView(spreadChart as SpreadChart, c1Chart as Chart);
+            return new SpreadChartView(spreadChart as SpreadChart, c1Chart as Chart);
         }
 
-        public Dt.Cells.UI.SpreadChartView SpreadChartView
+        public SpreadChartView SpreadChartView
         {
-            get { return  (base._chartBaseView as Dt.Cells.UI.SpreadChartView); }
+            get { return  (base._chartBaseView as SpreadChartView); }
         }
     }
 }

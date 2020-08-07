@@ -279,7 +279,7 @@ namespace Dt.Cells.UI
                 CellPresenterBase editingCell = GetViewportCell(_activeRow, _activeCol, true);
                 if (editingCell != null)
                 {
-                    if (((_editorPanel == null) || (_editorPanel.EditingColumnIndex != _activeCol)) || ((_editorPanel.EditingRowIndex != _activeRow) || !editingCell.CellType.HasEditingElement()))
+                    if (((_editorPanel == null) || (_editorPanel.EditingColumnIndex != _activeCol)) || ((_editorPanel.EditingRowIndex != _activeRow) || !editingCell.HasEditingElement()))
                     {
                         if (_editorPanel.Editor != null)
                         {
@@ -289,7 +289,7 @@ namespace Dt.Cells.UI
                                 (_editorPanel.Editor as TextBox).Text = obj2.ToString();
                                 (_editorPanel.Editor as TextBox).SelectionStart = obj2.ToString().Length;
                             }
-                            editingCell.CellType.SetEditingElement(_editorPanel.Editor);
+                            editingCell.SetEditingElement(_editorPanel.Editor);
                         }
                         else
                         {

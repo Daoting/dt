@@ -89,12 +89,12 @@ namespace Dt.Cells.UI
         {
             DropDownItemControl control = new DropDownItemControl();
             control.Content = ResourceStrings.SortDropdownItemSortAscend;
-            control.Icon = Dt.Cells.UI.SR.GetImage("SortAscending.png");
+            control.Icon = SR.GetImage("SortAscending.png");
             control.Command = new SortCommand(this, info, true);
             dropdown.Items.Add(control);
             DropDownItemControl control2 = new DropDownItemControl();
             control2.Content = ResourceStrings.SortDropdownItemSortDescend;
-            control2.Icon = Dt.Cells.UI.SR.GetImage("SortDescending.png");
+            control2.Icon = SR.GetImage("SortDescending.png");
             control2.Command = new SortCommand(this, info, false);
             dropdown.Items.Add(control2);
         }
@@ -1391,7 +1391,7 @@ namespace Dt.Cells.UI
                     _resizingTracker.X1 = Math.Max(x, MousePosition.X) - 0.5;
                 }
                 _resizingTracker.X2 = _resizingTracker.X1;
-                if ((InputDeviceType != Dt.Cells.UI.InputDeviceType.Touch) && ((ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Both) || (ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Column)))
+                if ((InputDeviceType != InputDeviceType.Touch) && ((ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Both) || (ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Column)))
                 {
                     UpdateResizeToolTip(GetHorizontalResizeTip(Math.Max((double)0.0, (double)(MousePosition.X - x))), true);
                 }
@@ -1407,7 +1407,7 @@ namespace Dt.Cells.UI
                 if (viewportColumnLayoutNearX != null)
                 {
                     CellRange[] oldSelection = Enumerable.ToArray<CellRange>((IEnumerable<CellRange>)Worksheet.Selections);
-                    if (InputDeviceType == Dt.Cells.UI.InputDeviceType.Touch)
+                    if (InputDeviceType == InputDeviceType.Touch)
                     {
                         IsContinueTouchOperation = true;
                     }
@@ -1516,7 +1516,7 @@ namespace Dt.Cells.UI
                     _resizingTracker.Y1 = Math.Max(y, MousePosition.Y) - 0.5;
                 }
                 _resizingTracker.Y2 = _resizingTracker.Y1;
-                if ((InputDeviceType != Dt.Cells.UI.InputDeviceType.Touch) && ((ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Both) || (ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Row)))
+                if ((InputDeviceType != InputDeviceType.Touch) && ((ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Both) || (ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Row)))
                 {
                     UpdateResizeToolTip(GetVerticalResizeTip(Math.Max((double)0.0, (double)(MousePosition.Y - y))), false);
                 }
@@ -1532,7 +1532,7 @@ namespace Dt.Cells.UI
                 if (viewportRowLayoutNearY != null)
                 {
                     CellRange[] oldSelection = Enumerable.ToArray<CellRange>((IEnumerable<CellRange>)Worksheet.Selections);
-                    if (InputDeviceType == Dt.Cells.UI.InputDeviceType.Touch)
+                    if (InputDeviceType == InputDeviceType.Touch)
                     {
                         IsContinueTouchOperation = true;
                     }
@@ -1582,7 +1582,7 @@ namespace Dt.Cells.UI
                     _resizingTracker.X1 = Math.Max(x, MousePosition.X) - 0.5;
                 }
                 _resizingTracker.X2 = _resizingTracker.X1;
-                if ((InputDeviceType != Dt.Cells.UI.InputDeviceType.Touch) && ((ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Both) || (ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Column)))
+                if ((InputDeviceType != InputDeviceType.Touch) && ((ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Both) || (ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Column)))
                 {
                     UpdateResizeToolTip(GetHorizontalResizeTip(Math.Max((double)0.0, (double)(MousePosition.X - x))), true);
                 }
@@ -1644,7 +1644,7 @@ namespace Dt.Cells.UI
                     _resizingTracker.Y1 = Math.Max(y, MousePosition.Y) - 0.5;
                 }
                 _resizingTracker.Y2 = _resizingTracker.Y1;
-                if ((InputDeviceType != Dt.Cells.UI.InputDeviceType.Touch) && ((ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Both) || (ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Row)))
+                if ((InputDeviceType != InputDeviceType.Touch) && ((ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Both) || (ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Row)))
                 {
                     UpdateResizeToolTip(GetVerticalResizeTip(Math.Max((double)0.0, (double)(MousePosition.Y - y))), false);
                 }
@@ -3015,7 +3015,7 @@ namespace Dt.Cells.UI
             IsTouchSelectingColumns = false;
             IsSelectingColumns = false;
             StopScrollTimer();
-            if (InputDeviceType == Dt.Cells.UI.InputDeviceType.Touch)
+            if (InputDeviceType == InputDeviceType.Touch)
             {
                 CellRange activeSelection = GetActiveSelection();
                 if ((activeSelection == null) && (Worksheet.Selections.Count > 0))
@@ -3155,7 +3155,7 @@ namespace Dt.Cells.UI
                 RefreshViewportFloatingObjectsLayout();
                 ResetFloatingObjectsMovingResizing();
                 StopScrollTimer();
-                if (InputDeviceType == Dt.Cells.UI.InputDeviceType.Touch)
+                if (InputDeviceType == InputDeviceType.Touch)
                 {
                     base.InvalidateMeasure();
                 }
@@ -3270,7 +3270,7 @@ namespace Dt.Cells.UI
             IsSelectingRows = false;
             IsTouchSelectingRows = false;
             StopScrollTimer();
-            if (InputDeviceType == Dt.Cells.UI.InputDeviceType.Touch)
+            if (InputDeviceType == InputDeviceType.Touch)
             {
                 CellRange activeSelection = GetActiveSelection();
                 if ((activeSelection == null) && (Worksheet.Selections.Count > 0))
@@ -4073,7 +4073,7 @@ namespace Dt.Cells.UI
             }
             if (_cachedColumnHeaderViewportColumnLayoutModel[columnViewportIndex + 1] == null)
             {
-                if (ResizeZeroIndicator == Dt.Cells.UI.ResizeZeroIndicator.Enhanced)
+                if (ResizeZeroIndicator == ResizeZeroIndicator.Enhanced)
                 {
                     _cachedColumnHeaderViewportColumnLayoutModel[columnViewportIndex + 1] = CreateEnhancedResizeToZeroColumnHeaderViewportColumnLayoutModel(columnViewportIndex);
                 }
@@ -4096,7 +4096,7 @@ namespace Dt.Cells.UI
                     return GetRowHeaderColumnLayoutModel();
 
                 case SheetArea.ColumnHeader:
-                    if (ResizeZeroIndicator != Dt.Cells.UI.ResizeZeroIndicator.Enhanced)
+                    if (ResizeZeroIndicator != ResizeZeroIndicator.Enhanced)
                     {
                         return GetViewportColumnLayoutModel(columnViewportIndex);
                     }
@@ -5545,7 +5545,7 @@ namespace Dt.Cells.UI
             }
             if (_cachedRowHeaderViewportRowLayoutModel[rowViewportIndex + 1] == null)
             {
-                if (ResizeZeroIndicator == Dt.Cells.UI.ResizeZeroIndicator.Enhanced)
+                if (ResizeZeroIndicator == ResizeZeroIndicator.Enhanced)
                 {
                     _cachedRowHeaderViewportRowLayoutModel[rowViewportIndex + 1] = CreateEnhancedResizeToZeroRowHeaderViewportRowLayoutModel(rowViewportIndex);
                 }
@@ -5565,7 +5565,7 @@ namespace Dt.Cells.UI
                     return GetViewportRowLayoutModel(rowViewportIndex);
 
                 case (SheetArea.CornerHeader | SheetArea.RowHeader):
-                    if (ResizeZeroIndicator != Dt.Cells.UI.ResizeZeroIndicator.Enhanced)
+                    if (ResizeZeroIndicator != ResizeZeroIndicator.Enhanced)
                     {
                         return GetViewportRowLayoutModel(rowViewportIndex);
                     }
@@ -5750,13 +5750,13 @@ namespace Dt.Cells.UI
 
         ColumnLayout GetViewportColumnLayoutFromX(int columnViewportIndex, double x)
         {
-            if (ResizeZeroIndicator != Dt.Cells.UI.ResizeZeroIndicator.Enhanced)
+            if (ResizeZeroIndicator != ResizeZeroIndicator.Enhanced)
             {
                 return GetViewportColumnLayoutModel(columnViewportIndex).FindX(x);
             }
             ColumnLayoutModel columnHeaderViewportColumnLayoutModel = GetColumnHeaderViewportColumnLayoutModel(columnViewportIndex);
             ColumnLayout layout = columnHeaderViewportColumnLayoutModel.FindX(x);
-            if ((InputDeviceType == Dt.Cells.UI.InputDeviceType.Touch) && (layout != null))
+            if ((InputDeviceType == InputDeviceType.Touch) && (layout != null))
             {
                 if (Worksheet.GetActualColumnWidth(layout.Column, SheetArea.Cells).IsZero())
                 {
@@ -6050,13 +6050,13 @@ namespace Dt.Cells.UI
 
         RowLayout GetViewportRowLayoutFromY(int rowViewportIndex, double y)
         {
-            if (ResizeZeroIndicator != Dt.Cells.UI.ResizeZeroIndicator.Enhanced)
+            if (ResizeZeroIndicator != ResizeZeroIndicator.Enhanced)
             {
                 return GetViewportRowLayoutModel(rowViewportIndex).FindY(y);
             }
             RowLayoutModel rowHeaderViewportRowLayoutModel = GetRowHeaderViewportRowLayoutModel(rowViewportIndex);
             RowLayout layout = rowHeaderViewportRowLayoutModel.FindY(y);
-            if ((InputDeviceType == Dt.Cells.UI.InputDeviceType.Touch) && (layout != null))
+            if ((InputDeviceType == InputDeviceType.Touch) && (layout != null))
             {
                 if (Worksheet.GetActualRowHeight(layout.Row, SheetArea.Cells).IsZero())
                 {
@@ -7169,7 +7169,7 @@ namespace Dt.Cells.UI
             _eventSuspended = 0;
             _lastClickPoint = new Point();
             _lastClickLocation = new Point(-1.0, -1.0);
-            _hoverManager = new Dt.Cells.UI.HoverManager(this);
+            _hoverManager = new HoverManager(this);
             _allowDragDrop = true;
             _dragDropIndicator = null;
             _dragDropInsertIndicator = null;
@@ -7190,9 +7190,9 @@ namespace Dt.Cells.UI
             _tooltipHelper = null;
             _filterPopupHelper = null;
             _dataValidationPopUpHelper = null;
-            _inputDeviceType = Dt.Cells.UI.InputDeviceType.Mouse;
+            _inputDeviceType = InputDeviceType.Mouse;
             _canTouchMultiSelect = false;
-            _resizeZeroIndicator = Dt.Cells.UI.ResizeZeroIndicator.Default;
+            _resizeZeroIndicator = ResizeZeroIndicator.Default;
             _cachedResizerGipper = new Dictionary<string, BitmapImage>();
             _cachedToolbarImageSources = new Dictionary<string, ImageSource>();
         }
@@ -9022,11 +9022,11 @@ namespace Dt.Cells.UI
         {
             if (AllowEnterEditing(e) && (!IsEditing && IsCellEditable(Worksheet.ActiveRowIndex, Worksheet.ActiveColumnIndex)))
             {
-                if (InputDeviceType == Dt.Cells.UI.InputDeviceType.Touch)
+                if (InputDeviceType == InputDeviceType.Touch)
                 {
                     RefreshSelection();
                 }
-                InputDeviceType = Dt.Cells.UI.InputDeviceType.Keyboard;
+                InputDeviceType = InputDeviceType.Keyboard;
                 UpdateCursorType();
                 GcViewport viewportRowsPresenter = GetViewportRowsPresenter(GetActiveRowViewportIndex(), GetActiveColumnViewportIndex());
                 if (viewportRowsPresenter != null)
@@ -9051,11 +9051,11 @@ namespace Dt.Cells.UI
             bool flag3;
             bool flag4;
             bool flag = AllowEnterEditing(e);
-            if (InputDeviceType == Dt.Cells.UI.InputDeviceType.Touch)
+            if (InputDeviceType == InputDeviceType.Touch)
             {
                 RefreshSelection();
             }
-            InputDeviceType = Dt.Cells.UI.InputDeviceType.Keyboard;
+            InputDeviceType = InputDeviceType.Keyboard;
             UpdateCursorType();
             VirtualKey keyCode = e.Key;
             if (keyCode == VirtualKey.Enter)
@@ -9977,7 +9977,7 @@ namespace Dt.Cells.UI
                     return;
 
                 case "ResizeZeroIndicator":
-                    _resizeZeroIndicator = (Dt.Cells.UI.ResizeZeroIndicator)Serializer.DeserializeObj(typeof(Dt.Cells.UI.ResizeZeroIndicator), reader);
+                    _resizeZeroIndicator = (ResizeZeroIndicator)Serializer.DeserializeObj(typeof(ResizeZeroIndicator), reader);
                     return;
 
                 case "RangeGroupBackground":
@@ -11604,7 +11604,7 @@ namespace Dt.Cells.UI
                 _dragFillSmartTag = new DragFillSmartTag(this);
                 _dragFillSmartTag.AutoFilterType = initFillType;
                 _dragFillSmartTag.AutoFilterTypeChanged += new EventHandler(DragFillSmartTag_AutoFilterTypeChanged);
-                if (InputDeviceType == Dt.Cells.UI.InputDeviceType.Touch)
+                if (InputDeviceType == InputDeviceType.Touch)
                 {
                     x += 4.0;
                     y += 4.0;
@@ -11795,7 +11795,7 @@ namespace Dt.Cells.UI
                 _resizingTracker.Y1 = sheetLayout.HeaderY;
                 _resizingTracker.X2 = _resizingTracker.X1;
                 _resizingTracker.Y2 = _resizingTracker.Y1 + AvailableSize.Height;
-                if (((InputDeviceType != Dt.Cells.UI.InputDeviceType.Touch) && ((ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Both) || (ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Column))) && ((savedHitTestInformation.ColumnViewportIndex > -2) && (_columnHeaderPresenters[savedHitTestInformation.ColumnViewportIndex + 1].GetViewportCell(savedHitTestInformation.HeaderInfo.Row, savedHitTestInformation.HeaderInfo.Column, true) != null)))
+                if (((InputDeviceType != InputDeviceType.Touch) && ((ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Both) || (ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Column))) && ((savedHitTestInformation.ColumnViewportIndex > -2) && (_columnHeaderPresenters[savedHitTestInformation.ColumnViewportIndex + 1].GetViewportCell(savedHitTestInformation.HeaderInfo.Row, savedHitTestInformation.HeaderInfo.Column, true) != null)))
                 {
                     UpdateResizeToolTip(GetHorizontalResizeTip(viewportResizingColumnLayoutFromX.Width), true);
                 }
@@ -11838,7 +11838,7 @@ namespace Dt.Cells.UI
                         if (savedHitTestInformation.HeaderInfo.Column > -1)
                         {
                             CellRange[] oldSelection = Enumerable.ToArray<CellRange>((IEnumerable<CellRange>)Worksheet.Selections);
-                            if (InputDeviceType != Dt.Cells.UI.InputDeviceType.Touch)
+                            if (InputDeviceType != InputDeviceType.Touch)
                             {
                                 bool flag2;
                                 bool flag3;
@@ -12005,7 +12005,7 @@ namespace Dt.Cells.UI
                 _resizingTracker.X2 = sheetLayout.HeaderX + AvailableSize.Width;
                 _resizingTracker.Y1 = (viewportResizingRowLayoutFromY.Y + viewportResizingRowLayoutFromY.Height) - 0.5;
                 _resizingTracker.Y2 = _resizingTracker.Y1;
-                if (((InputDeviceType != Dt.Cells.UI.InputDeviceType.Touch) && ((ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Both) || (ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Row))) && ((savedHitTestInformation.RowViewportIndex > -2) && (_rowHeaderPresenters[savedHitTestInformation.RowViewportIndex + 1].GetViewportCell(savedHitTestInformation.HeaderInfo.Row, savedHitTestInformation.HeaderInfo.Column, true) != null)))
+                if (((InputDeviceType != InputDeviceType.Touch) && ((ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Both) || (ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Row))) && ((savedHitTestInformation.RowViewportIndex > -2) && (_rowHeaderPresenters[savedHitTestInformation.RowViewportIndex + 1].GetViewportCell(savedHitTestInformation.HeaderInfo.Row, savedHitTestInformation.HeaderInfo.Column, true) != null)))
                 {
                     UpdateResizeToolTip(GetVerticalResizeTip(viewportResizingRowLayoutFromY.Height), false);
                 }
@@ -12049,7 +12049,7 @@ namespace Dt.Cells.UI
                         {
                             CellRange[] oldSelection = Enumerable.ToArray<CellRange>((IEnumerable<CellRange>)Worksheet.Selections);
                             SavedOldSelections = oldSelection;
-                            if (InputDeviceType != Dt.Cells.UI.InputDeviceType.Touch)
+                            if (InputDeviceType != InputDeviceType.Touch)
                             {
                                 bool flag2;
                                 bool flag3;
@@ -12282,7 +12282,7 @@ namespace Dt.Cells.UI
                 _resizingTracker.Y1 = sheetLayout.HeaderY;
                 _resizingTracker.X2 = _resizingTracker.X1;
                 _resizingTracker.Y2 = _resizingTracker.Y1 + AvailableSize.Height;
-                if (((InputDeviceType != Dt.Cells.UI.InputDeviceType.Touch) && ((ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Both) || (ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Column))) && ((savedHitTestInformation.ColumnViewportIndex > -2) && (_columnHeaderPresenters[savedHitTestInformation.ColumnViewportIndex + 1].GetViewportCell(savedHitTestInformation.HeaderInfo.Row, savedHitTestInformation.HeaderInfo.Column, true) != null)))
+                if (((InputDeviceType != InputDeviceType.Touch) && ((ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Both) || (ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Column))) && ((savedHitTestInformation.ColumnViewportIndex > -2) && (_columnHeaderPresenters[savedHitTestInformation.ColumnViewportIndex + 1].GetViewportCell(savedHitTestInformation.HeaderInfo.Row, savedHitTestInformation.HeaderInfo.Column, true) != null)))
                 {
                     UpdateResizeToolTip(GetHorizontalResizeTip(viewportResizingColumnLayoutFromXForTouch.Width), true);
                 }
@@ -12384,7 +12384,7 @@ namespace Dt.Cells.UI
                 _resizingTracker.X2 = sheetLayout.HeaderX + AvailableSize.Width;
                 _resizingTracker.Y1 = (viewportResizingRowLayoutFromYForTouch.Y + viewportResizingRowLayoutFromYForTouch.Height) - 0.5;
                 _resizingTracker.Y2 = _resizingTracker.Y1;
-                if (((InputDeviceType != Dt.Cells.UI.InputDeviceType.Touch) && ((ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Both) || (ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Row))) && ((savedHitTestInformation.RowViewportIndex > -2) && (_rowHeaderPresenters[savedHitTestInformation.RowViewportIndex + 1].GetViewportCell(savedHitTestInformation.HeaderInfo.Row, savedHitTestInformation.HeaderInfo.Column, true) != null)))
+                if (((InputDeviceType != InputDeviceType.Touch) && ((ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Both) || (ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Row))) && ((savedHitTestInformation.RowViewportIndex > -2) && (_rowHeaderPresenters[savedHitTestInformation.RowViewportIndex + 1].GetViewportCell(savedHitTestInformation.HeaderInfo.Row, savedHitTestInformation.HeaderInfo.Column, true) != null)))
                 {
                     UpdateResizeToolTip(GetVerticalResizeTip(viewportResizingRowLayoutFromYForTouch.Height), false);
                 }
@@ -13023,14 +13023,14 @@ namespace Dt.Cells.UI
                 rectangle2.StrokeThickness = 1.0;
                 rectangle2.StrokeDashArray = new DoubleCollection { 1.0, 1.0 };
                 rectangle2.StrokeDashOffset = 0.5;
-                rectangle2.Margin = new Windows.UI.Xaml.Thickness(1.0);
+                rectangle2.Margin = new Thickness(1.0);
                 _dragDropInsertIndicator.Children.Add(rectangle2);
                 Rectangle rectangle3 = new Rectangle();
                 rectangle3.Stroke = brush;
                 rectangle3.StrokeThickness = 1.0;
                 rectangle3.StrokeDashArray = new DoubleCollection { 1.0, 1.0 };
                 rectangle3.StrokeDashOffset = 0.5;
-                rectangle3.Margin = new Windows.UI.Xaml.Thickness(2.0);
+                rectangle3.Margin = new Thickness(2.0);
                 _dragDropInsertIndicator.Children.Add(rectangle3);
                 TrackersContainer.Children.Add(_dragDropInsertIndicator);
             }
@@ -13067,28 +13067,28 @@ namespace Dt.Cells.UI
                 rectangle8.StrokeThickness = 1.0;
                 rectangle8.StrokeDashArray = new DoubleCollection { 1.0, 1.0 };
                 rectangle8.StrokeDashOffset = 0.5;
-                rectangle8.Margin = new Windows.UI.Xaml.Thickness(1.0);
+                rectangle8.Margin = new Thickness(1.0);
                 _dragDropIndicator.Children.Add(rectangle8);
                 Rectangle rectangle9 = new Rectangle();
                 rectangle9.Stroke = brush;
                 rectangle9.StrokeThickness = 1.0;
                 rectangle9.StrokeDashArray = new DoubleCollection { 1.0, 1.0 };
                 rectangle9.StrokeDashOffset = 0.5;
-                rectangle9.Margin = new Windows.UI.Xaml.Thickness(1.0);
+                rectangle9.Margin = new Thickness(1.0);
                 _dragDropIndicator.Children.Add(rectangle9);
                 Rectangle rectangle10 = new Rectangle();
                 rectangle10.Stroke = brush;
                 rectangle10.StrokeThickness = 1.0;
                 rectangle10.StrokeDashArray = new DoubleCollection { 1.0, 1.0 };
                 rectangle10.StrokeDashOffset = 0.5;
-                rectangle10.Margin = new Windows.UI.Xaml.Thickness(1.0);
+                rectangle10.Margin = new Thickness(1.0);
                 _dragDropIndicator.Children.Add(rectangle10);
                 Rectangle rectangle11 = new Rectangle();
                 rectangle11.Stroke = brush;
                 rectangle11.StrokeThickness = 1.0;
                 rectangle11.StrokeDashArray = new DoubleCollection { 1.0, 1.0 };
                 rectangle11.StrokeDashOffset = 0.5;
-                rectangle11.Margin = new Windows.UI.Xaml.Thickness(1.0);
+                rectangle11.Margin = new Thickness(1.0);
                 _dragDropIndicator.Children.Add(rectangle11);
                 TrackersContainer.Children.Add(_dragDropIndicator);
             }
@@ -13863,7 +13863,7 @@ namespace Dt.Cells.UI
         internal void UpdateTouchSelectionGripper()
         {
             Rect? autoFillIndicatorRec;
-            if (((InputDeviceType != Dt.Cells.UI.InputDeviceType.Touch) || IsTouchPromotedMouseMessage) || _formulaSelectionFeature.IsSelectionBegined)
+            if (((InputDeviceType != InputDeviceType.Touch) || IsTouchPromotedMouseMessage) || _formulaSelectionFeature.IsSelectionBegined)
             {
                 Rect rect16 = new Rect(0.0, 0.0, 0.0, 0.0);
                 GripperLocations = null;
@@ -14393,7 +14393,7 @@ namespace Dt.Cells.UI
             {
                 Serializer.SerializeObj((bool)_canTouchMultiSelect, "CanTouchMultiSelect", writer);
             }
-            if (_resizeZeroIndicator != Dt.Cells.UI.ResizeZeroIndicator.Default)
+            if (_resizeZeroIndicator != ResizeZeroIndicator.Default)
             {
                 Serializer.SerializeObj(_resizeZeroIndicator, "ResizeZeroIndicator", writer);
             }
@@ -14879,13 +14879,13 @@ namespace Dt.Cells.UI
         /// <summary>
         /// Gets the information of the editor when the sheetview enters the formula selection mode.
         /// </summary>
-        public Dt.Cells.UI.EditorInfo EditorInfo
+        public EditorInfo EditorInfo
         {
             get
             {
                 if (_editorInfo == null)
                 {
-                    _editorInfo = new Dt.Cells.UI.EditorInfo(this);
+                    _editorInfo = new EditorInfo(this);
                 }
                 return _editorInfo;
             }
@@ -15000,7 +15000,7 @@ namespace Dt.Cells.UI
             set { _hScrollable = value; }
         }
 
-        internal Dt.Cells.UI.HoverManager HoverManager
+        internal HoverManager HoverManager
         {
             get { return _hoverManager; }
         }
@@ -15029,17 +15029,17 @@ namespace Dt.Cells.UI
         /// Returns the last input device type.
         /// </summary>
         [DefaultValue(0)]
-        public Dt.Cells.UI.InputDeviceType InputDeviceType
+        public InputDeviceType InputDeviceType
         {
             get { return _inputDeviceType; }
             internal set
             {
                 _inputDeviceType = value;
-                if (_inputDeviceType == Dt.Cells.UI.InputDeviceType.Touch)
+                if (_inputDeviceType == InputDeviceType.Touch)
                 {
                     FormulaSelectionFeature.IsTouching = true;
                 }
-                else if (_inputDeviceType == Dt.Cells.UI.InputDeviceType.Mouse)
+                else if (_inputDeviceType == InputDeviceType.Mouse)
                 {
                     FormulaSelectionFeature.IsTouching = false;
                 }
@@ -15285,7 +15285,7 @@ namespace Dt.Cells.UI
         /// Specifies the drawing policy when the row or column is resized to zero.
         /// </summary>
         [DefaultValue(0)]
-        public Dt.Cells.UI.ResizeZeroIndicator ResizeZeroIndicator
+        public ResizeZeroIndicator ResizeZeroIndicator
         {
             get { return _resizeZeroIndicator; }
             set { _resizeZeroIndicator = value; }
@@ -15549,13 +15549,13 @@ namespace Dt.Cells.UI
 #if IOS
         new
 #endif
-        public Dt.Cells.UI.UndoManager UndoManager
+        public UndoManager UndoManager
         {
             get
             {
                 if (_undoManager == null)
                 {
-                    _undoManager = new Dt.Cells.UI.UndoManager(this, -1, CanUserUndo);
+                    _undoManager = new UndoManager(this, -1, CanUserUndo);
                 }
                 return _undoManager;
             }
@@ -15661,7 +15661,7 @@ namespace Dt.Cells.UI
         {
             TextBox _editorTextBox;
             string _footer;
-            Dt.Cells.UI.SheetView.FormulaSelectionFeature _formulaSelectionFeature;
+            SheetView.FormulaSelectionFeature _formulaSelectionFeature;
             string _header;
             bool _isMouseLeftButtonDown;
             string _oldText;
@@ -15669,7 +15669,7 @@ namespace Dt.Cells.UI
             bool _textChanged;
             DispatcherTimer _timer;
 
-            public EditorManager(Dt.Cells.UI.SheetView.FormulaSelectionFeature formulaSelectionFeature)
+            public EditorManager(SheetView.FormulaSelectionFeature formulaSelectionFeature)
             {
                 _formulaSelectionFeature = formulaSelectionFeature;
                 _formulaSelectionFeature.SheetView.EditStarting += new EventHandler<EditCellStartingEventArgs>(OnSheetViewEditStarting);
@@ -15868,7 +15868,7 @@ namespace Dt.Cells.UI
                 UnWireEvents();
                 try
                 {
-                    IList<Dt.Cells.UI.SheetView.ColoredText> coloredText = SheetView.EditorConnector.GetColoredText(false);
+                    IList<SheetView.ColoredText> coloredText = SheetView.EditorConnector.GetColoredText(false);
                     StringBuilder builder = new StringBuilder();
                     if (string.IsNullOrEmpty(_header) && (coloredText.Count > 0))
                     {
@@ -15878,7 +15878,7 @@ namespace Dt.Cells.UI
                     {
                         builder.Append(_header);
                     }
-                    foreach (Dt.Cells.UI.SheetView.ColoredText text in coloredText)
+                    foreach (SheetView.ColoredText text in coloredText)
                     {
                         builder.Append(text.Text);
                     }
@@ -15914,7 +15914,7 @@ namespace Dt.Cells.UI
 
             public bool IsAbsolute { get; set; }
 
-            Dt.Cells.UI.SheetView SheetView
+            SheetView SheetView
             {
                 get { return _formulaSelectionFeature.SheetView; }
             }
@@ -16985,9 +16985,9 @@ namespace Dt.Cells.UI
             int _anchorColumn = -1;
             int _anchorRow = -1;
             bool _canSelectFormula;
-            Dt.Cells.UI.SheetView.EditorManager _editorManager;
+            SheetView.EditorManager _editorManager;
             bool _forceSelection;
-            Dt.Cells.UI.SheetView.FormulaEditorConnector _formulaEditorConnector;
+            SheetView.FormulaEditorConnector _formulaEditorConnector;
             bool _isDragDropping;
             bool _isDragResizing;
             bool _isInOtherSheet;
@@ -16997,22 +16997,22 @@ namespace Dt.Cells.UI
             bool _isSelectionBegined;
             ObservableCollection<FormulaSelectionItem> _items;
             FormulaSelectionItem _lastHitItem;
-            Dt.Cells.UI.SheetView.SpreadXFormulaNavigation _navigation;
+            SheetView.SpreadXFormulaNavigation _navigation;
             int _resizingAnchorColumn;
             int _resizingAnchorRow;
-            Dt.Cells.UI.SheetView.SpreadXFormulaSelection _selection;
-            Dt.Cells.UI.SheetView _sheetView;
+            SheetView.SpreadXFormulaSelection _selection;
+            SheetView _sheetView;
 
             public event EventHandler<FormulaSelectionItemEventArgs> ItemAdded;
 
             public event EventHandler<FormulaSelectionItemEventArgs> ItemRemoved;
 
-            public FormulaSelectionFeature(Dt.Cells.UI.SheetView sheetView)
+            public FormulaSelectionFeature(SheetView sheetView)
             {
                 _sheetView = sheetView;
                 _items = new ObservableCollection<FormulaSelectionItem>();
                 _items.CollectionChanged += OnItemsCollectionChanged;
-                _editorManager = new Dt.Cells.UI.SheetView.EditorManager(this);
+                _editorManager = new SheetView.EditorManager(this);
             }
 
             public void AddSelection(int row, int column, int rowCount, int columnCount, bool clearFlickingItems = false)
@@ -18108,13 +18108,13 @@ namespace Dt.Cells.UI
                 set { _forceSelection = value; }
             }
 
-            public Dt.Cells.UI.SheetView.FormulaEditorConnector FormulaEditorConnector
+            public SheetView.FormulaEditorConnector FormulaEditorConnector
             {
                 get
                 {
                     if (_formulaEditorConnector == null)
                     {
-                        _formulaEditorConnector = new Dt.Cells.UI.SheetView.FormulaEditorConnector(this);
+                        _formulaEditorConnector = new SheetView.FormulaEditorConnector(this);
                     }
                     return _formulaEditorConnector;
                 }
@@ -18194,31 +18194,31 @@ namespace Dt.Cells.UI
                 get { return (IList<FormulaSelectionItem>)_items; }
             }
 
-            public Dt.Cells.UI.SheetView.SpreadXFormulaNavigation Navigation
+            public SheetView.SpreadXFormulaNavigation Navigation
             {
                 get
                 {
                     if (_navigation == null)
                     {
-                        _navigation = new Dt.Cells.UI.SheetView.SpreadXFormulaNavigation(this);
+                        _navigation = new SheetView.SpreadXFormulaNavigation(this);
                     }
                     return _navigation;
                 }
             }
 
-            public Dt.Cells.UI.SheetView.SpreadXFormulaSelection Selection
+            public SheetView.SpreadXFormulaSelection Selection
             {
                 get
                 {
                     if (_selection == null)
                     {
-                        _selection = new Dt.Cells.UI.SheetView.SpreadXFormulaSelection(this);
+                        _selection = new SheetView.SpreadXFormulaSelection(this);
                     }
                     return _selection;
                 }
             }
 
-            public Dt.Cells.UI.SheetView SheetView
+            public SheetView SheetView
             {
                 get { return _sheetView; }
             }

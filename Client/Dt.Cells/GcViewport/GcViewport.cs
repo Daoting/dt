@@ -942,26 +942,23 @@ namespace Dt.Cells.UI
             else if (((_editorPanel != null) && (_editorPanel.Editor != null)) && (editingCell != null))
             {
                 _editorPanel.Update(editingCell);
-                if (editingCell.CellType is BaseCellType)
+                FrameworkElement avaiableEditor = _editorPanel.GetAvaiableEditor();
+                object obj2 = Sheet.Worksheet.GetValue(editingCell.Row, editingCell.Column);
+                if (obj2 != null)
                 {
-                    FrameworkElement avaiableEditor = _editorPanel.GetAvaiableEditor();
-                    object obj2 = Sheet.Worksheet.GetValue(editingCell.Row, editingCell.Column);
-                    if (obj2 != null)
+                    if (avaiableEditor == null)
                     {
-                        if (avaiableEditor == null)
-                        {
-                            avaiableEditor = editingCell.GetEditingElement();
-                        }
-                        TextBox box = avaiableEditor as TextBox;
-                        if ((box != null) && (box.Text != obj2.ToString()))
-                        {
-                            (avaiableEditor as TextBox).Text = obj2.ToString();
-                            (avaiableEditor as TextBox).SelectionStart = (avaiableEditor as TextBox).Text.Length;
-                        }
-                        (avaiableEditor as TextBox).SelectAll();
+                        avaiableEditor = editingCell.GetEditingElement();
                     }
-                    (editingCell.CellType as BaseCellType).SetEditingElement(avaiableEditor);
+                    TextBox box = avaiableEditor as TextBox;
+                    if ((box != null) && (box.Text != obj2.ToString()))
+                    {
+                        (avaiableEditor as TextBox).Text = obj2.ToString();
+                        (avaiableEditor as TextBox).SelectionStart = (avaiableEditor as TextBox).Text.Length;
+                    }
+                    (avaiableEditor as TextBox).SelectAll();
                 }
+                editingCell.SetEditingElement(avaiableEditor);
                 _editorPanel.InstallEditor(editingCell, false);
             }
             else if ((_editorPanel != null) && (_editorPanel.Editor == null))
@@ -1327,11 +1324,11 @@ namespace Dt.Cells.UI
                 {
                     _editorPanel = new EditingPanel(this);
                 }
-                if ((cell.CellType != null) && !cell.CellType.HasEditingElement())
+                if (!cell.HasEditingElement())
                 {
                     if ((!IsEditing() && (_editorPanel.Editor != null)) && ((_editorPanel.EditingRowIndex == row) && (_editorPanel.EditingColumnIndex == column)))
                     {
-                        cell.CellType.SetEditingElement(_editorPanel.Editor);
+                        cell.SetEditingElement(_editorPanel.Editor);
                     }
                     else
                     {
@@ -1350,7 +1347,7 @@ namespace Dt.Cells.UI
                                 (avaiableEditor as TextBox).SelectionStart = (avaiableEditor as TextBox).Text.Length;
                             }
                         }
-                        cell.CellType.SetEditingElement(avaiableEditor);
+                        cell.SetEditingElement(avaiableEditor);
                     }
                 }
                 _editorPanel.InstallEditor(cell, true);

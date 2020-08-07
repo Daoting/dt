@@ -22,7 +22,7 @@ namespace Dt.Cells.UI
     public abstract class CustomDrawingObject : DrawingObject
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="T:Dt.Cells.UI.CustomDrawingObject" /> class.
+        /// Creates a new instance of the <see cref="T:CustomDrawingObject" /> class.
         /// </summary>
         /// <param name="anchorRow">The anchor row index to draw the object.</param>
         /// <param name="anchorColumn">The anchor column index to draw the object.</param>

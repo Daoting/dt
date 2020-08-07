@@ -34,7 +34,7 @@ namespace Dt.Cells.UI
         public event EventHandler SelectedAutoFitTypeChanged;
 
         /// <summary>
-        /// Creates a new instance of the <see cref="T:Dt.Cells.UI.DragFillContextMenu" /> class.
+        /// Creates a new instance of the <see cref="T:DragFillContextMenu" /> class.
         /// </summary>
         /// <param name="items">The automatic fill items.</param>
         /// <param name="defaultType">The default checked automatic fill item.</param>

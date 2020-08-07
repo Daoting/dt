@@ -49,7 +49,7 @@ namespace Dt.Cells.UI
             rectangle2.StrokeThickness = 1.0;
             rectangle2.StrokeDashArray = new DoubleCollection { 1.0, 1.0 };
             rectangle2.StrokeDashOffset = 0.5;
-            rectangle2.Margin = new Windows.UI.Xaml.Thickness(1.0);
+            rectangle2.Margin = new Thickness(1.0);
             _leftRectangle2 = rectangle2;
             Rectangle rectangle3 = new Rectangle();
             rectangle3.Stroke = brush;
@@ -62,7 +62,7 @@ namespace Dt.Cells.UI
             rectangle4.StrokeThickness = 1.0;
             rectangle4.StrokeDashArray = new DoubleCollection { 1.0, 1.0 };
             rectangle4.StrokeDashOffset = 0.5;
-            rectangle4.Margin = new Windows.UI.Xaml.Thickness(1.0);
+            rectangle4.Margin = new Thickness(1.0);
             _rightRectangle2 = rectangle4;
             Rectangle rectangle5 = new Rectangle();
             rectangle5.Stroke = brush;
@@ -75,7 +75,7 @@ namespace Dt.Cells.UI
             rectangle6.StrokeThickness = 1.0;
             rectangle6.StrokeDashArray = new DoubleCollection { 1.0, 1.0 };
             rectangle6.StrokeDashOffset = 0.5;
-            rectangle6.Margin = new Windows.UI.Xaml.Thickness(1.0);
+            rectangle6.Margin = new Thickness(1.0);
             _topRectangle2 = rectangle6;
             Rectangle rectangle7 = new Rectangle();
             rectangle7.Stroke = brush;
@@ -88,7 +88,7 @@ namespace Dt.Cells.UI
             rectangle8.StrokeThickness = 1.0;
             rectangle8.StrokeDashArray = new DoubleCollection { 1.0, 1.0 };
             rectangle8.StrokeDashOffset = 0.5;
-            rectangle8.Margin = new Windows.UI.Xaml.Thickness(1.0);
+            rectangle8.Margin = new Thickness(1.0);
             _bottomRectangle2 = rectangle8;
             _indicator.Children.Add(_leftRectangle1);
             _indicator.Children.Add(_leftRectangle2);

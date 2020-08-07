@@ -283,13 +283,14 @@ namespace Dt.Cells.UI
         internal void UpdateDisplayedCells(bool forceUpdate = false)
         {
             ColumnLayoutModel columnLayoutModel = GetColumnLayoutModel();
-            List<CellPresenterBase> list = new List<CellPresenterBase>();
-            List<CellPresenterBase> list2 = new List<CellPresenterBase>();
+            List<CellPresenterBase> lsRecy = new List<CellPresenterBase>();
+            List<CellPresenterBase> lsUsing = new List<CellPresenterBase>();
+
             foreach (KeyValuePair<int, CellPresenterBase> pair in Cells)
             {
                 if (!pair.Value.IsRecylable)
                 {
-                    list2.Add(pair.Value);
+                    lsUsing.Add(pair.Value);
                 }
                 else
                 {
@@ -297,160 +298,154 @@ namespace Dt.Cells.UI
                     ColumnLayout layout = columnLayoutModel.FindColumn(cell.Column);
                     if ((layout == null) || (layout.Width == 0.0))
                     {
-                        list.Add(cell);
+                        lsRecy.Add(cell);
                     }
                 }
             }
-            foreach (CellPresenterBase base3 in list2)
+
+            foreach (CellPresenterBase cp in lsUsing)
             {
-                Cells.Remove(base3.Column);
-                base.Children.Remove(base3);
-                base3.CleanUpBeforeDiscard();
+                Cells.Remove(cp.Column);
+                Children.Remove(cp);
+                cp.CleanUpBeforeDiscard();
             }
-            CellLayoutModel cellLayoutModel = null;
+
             SpanGraph cachedSpanGraph = OwningPresenter.CachedSpanGraph;
             ContainsSpanCell = false;
             for (int i = 0; i < columnLayoutModel.Count; i++)
             {
-                ColumnLayout layout2 = columnLayoutModel[i];
-                if (layout2.Width > 0.0)
+                ColumnLayout colLayout = columnLayoutModel[i];
+                if (colLayout.Width <= 0.0)
+                    continue;
+
+                int column = colLayout.Column;
+                CellPresenterBase cell = GetCell(column);
+                
+                byte state = cachedSpanGraph.GetState(Row, colLayout.Column);
+                CellLayout layout = null;
+                if (state > 0)
                 {
-                    int column = layout2.Column;
-                    CellPresenterBase base4 = null;
-                    base4 = GetCell(column);
-                    CellLayout layout3 = null;
-                    byte state = cachedSpanGraph.GetState(Row, layout2.Column);
-                    bool flag = false;
-                    if (state > 0)
+                    CellLayoutModel cellLayoutModel = OwningPresenter.GetCellLayoutModel();
+                    if (cellLayoutModel != null)
                     {
-                        if (cellLayoutModel == null)
-                        {
-                            cellLayoutModel = OwningPresenter.GetCellLayoutModel();
-                        }
-                        if (cellLayoutModel != null)
-                        {
-                            layout3 = cellLayoutModel.FindCell(Row, layout2.Column);
-                        }
+                        layout = cellLayoutModel.FindCell(Row, colLayout.Column);
                     }
-                    if (((layout3 != null) && (layout3.Width > 0.0)) && (layout3.Height > 0.0))
+                }
+
+                bool flag = false;
+                if (layout != null && layout.Width > 0.0 && layout.Height > 0.0)
+                {
+                    CellRange range = ClipCellRange(layout.GetCellRange());
+                    flag = (Row != range.Row) || (range.Column != colLayout.Column);
+                    if (layout.ColumnCount > 1)
                     {
-                        CellRange range = ClipCellRange(layout3.GetCellRange());
-                        flag = (Row != range.Row) || (range.Column != layout2.Column);
-                        if (layout3.ColumnCount > 1)
+                        int num4 = (layout.Column + layout.ColumnCount) - 1;
+                        for (int j = i + 1; j < columnLayoutModel.Count; j++)
                         {
-                            int num4 = (layout3.Column + layout3.ColumnCount) - 1;
-                            for (int j = i + 1; j < columnLayoutModel.Count; j++)
+                            int num6 = columnLayoutModel[j].Column;
+                            if (num6 > num4)
                             {
-                                int num6 = columnLayoutModel[j].Column;
-                                if (num6 > num4)
-                                {
-                                    break;
-                                }
-                                i = j;
-                                CellPresenterBase base5 = GetCell(num6);
-                                if ((base5 != null) && Cells.Remove(num6))
-                                {
-                                    base.Children.Remove(base5);
-                                }
+                                break;
                             }
-                        }
-                    }
-                    if (flag)
-                    {
-                        if (base4 != null)
-                        {
-                            Cells.Remove(base4.Column);
-                            base.Children.Remove(base4);
-                        }
-                    }
-                    else
-                    {
-                        bool flag2 = false;
-                        if ((base4 == null) && !flag)
-                        {
-                            if ((list.Count > 0) || (RecycledCells.Count > 0))
+                            i = j;
+                            CellPresenterBase base5 = GetCell(num6);
+                            if ((base5 != null) && Cells.Remove(num6))
                             {
-                                if (list.Count > 0)
-                                {
-                                    int num7 = list.Count - 1;
-                                    base4 = list[num7];
-                                    list.RemoveAt(num7);
-                                }
-                                else
-                                {
-                                    int num8 = RecycledCells.Count - 1;
-                                    base4 = RecycledCells[num8];
-                                    RecycledCells.RemoveAt(num8);
-                                }
-                                Cells.Remove(base4.Column);
-                                base4.Column = layout2.Column;
-                                base4.InvalidateMeasure();
+                                Children.Remove(base5);
                             }
-                            else
-                            {
-                                base4 = GenerateNewCell();
-                                base4.Column = layout2.Column;
-                            }
-                            if (base4.Parent != this)
-                            {
-                                base.Children.Add(base4);
-                            }
-                            Cells.Add(base4.Column, base4);
-                            flag2 = true;
-                        }
-                        bool flag3 = false;
-                        if (((_owningPresenter.SheetArea == SheetArea.ColumnHeader) && (_owningPresenter.Sheet.ResizeZeroIndicator == ResizeZeroIndicator.Enhanced)) && (_owningPresenter.Sheet.Worksheet.GetActualColumnWidth(layout2.Column, SheetArea.Cells) == 0.0))
-                        {
-                            if (base4.ShowContent)
-                            {
-                                base4.ShowContent = false;
-                                flag3 = true;
-                            }
-                        }
-                        else if (((_owningPresenter.SheetArea == (SheetArea.CornerHeader | SheetArea.RowHeader)) && (_owningPresenter.Sheet.ResizeZeroIndicator == ResizeZeroIndicator.Enhanced)) && (_owningPresenter.Sheet.Worksheet.GetActualRowHeight(Row, SheetArea.Cells) == 0.0))
-                        {
-                            if (base4.ShowContent)
-                            {
-                                base4.ShowContent = false;
-                                flag3 = true;
-                            }
-                        }
-                        else if (((OwningPresenter.SheetArea == (SheetArea.CornerHeader | SheetArea.RowHeader)) || (OwningPresenter.SheetArea == SheetArea.ColumnHeader)) && !base4.ShowContent)
-                        {
-                            base4.ShowContent = true;
-                            flag3 = true;
-                        }
-                        base4.CellLayout = layout3;
-                        if (layout3 != null)
-                        {
-                            ContainsSpanCell = true;
-                        }
-                        base4.OwningRow = this;
-                        base4.UpdateBindingCell();
-                        if ((CellsDirty || forceUpdate) || (flag2 || flag3))
-                        {
-                            if (base4.ShowContent)
-                            {
-                                base4.SetContentVisible(true);
-                            }
-                            base4.Reset();
-                            base4.InvalidateMeasure();
-                            base4.InvalidateArrange();
-                            base.InvalidateMeasure();
-                        }
-                        if (base4.TryUpdateVisualTree())
-                        {
-                            base4.InvalidateMeasure();
                         }
                     }
                 }
+
+                if (flag)
+                {
+                    if (cell != null)
+                    {
+                        Cells.Remove(cell.Column);
+                        Children.Remove(cell);
+                    }
+                }
+                else
+                {
+                    bool updated = false;
+                    if ((cell == null) && !flag)
+                    {
+                        if ((lsRecy.Count > 0) || (RecycledCells.Count > 0))
+                        {
+                            if (lsRecy.Count > 0)
+                            {
+                                int num7 = lsRecy.Count - 1;
+                                cell = lsRecy[num7];
+                                lsRecy.RemoveAt(num7);
+                            }
+                            else
+                            {
+                                int num8 = RecycledCells.Count - 1;
+                                cell = RecycledCells[num8];
+                                RecycledCells.RemoveAt(num8);
+                            }
+                            Cells.Remove(cell.Column);
+                            cell.Column = colLayout.Column;
+                            cell.InvalidateMeasure();
+                        }
+                        else
+                        {
+                            cell = GenerateNewCell();
+                            cell.Column = colLayout.Column;
+                        }
+                        if (cell.Parent != this)
+                        {
+                            Children.Add(cell);
+                        }
+                        Cells.Add(cell.Column, cell);
+                        updated = true;
+                    }
+
+                    if (((_owningPresenter.SheetArea == SheetArea.ColumnHeader) && (_owningPresenter.Sheet.ResizeZeroIndicator == ResizeZeroIndicator.Enhanced)) && (_owningPresenter.Sheet.Worksheet.GetActualColumnWidth(colLayout.Column, SheetArea.Cells) == 0.0))
+                    {
+                        if (cell.ShowContent)
+                        {
+                            cell.ShowContent = false;
+                            updated = true;
+                        }
+                    }
+                    else if (((_owningPresenter.SheetArea == (SheetArea.CornerHeader | SheetArea.RowHeader)) && (_owningPresenter.Sheet.ResizeZeroIndicator == ResizeZeroIndicator.Enhanced)) && (_owningPresenter.Sheet.Worksheet.GetActualRowHeight(Row, SheetArea.Cells) == 0.0))
+                    {
+                        if (cell.ShowContent)
+                        {
+                            cell.ShowContent = false;
+                            updated = true;
+                        }
+                    }
+                    else if (((OwningPresenter.SheetArea == (SheetArea.CornerHeader | SheetArea.RowHeader)) || (OwningPresenter.SheetArea == SheetArea.ColumnHeader)) && !cell.ShowContent)
+                    {
+                        cell.ShowContent = true;
+                        updated = true;
+                    }
+
+                    cell.CellLayout = layout;
+                    if (layout != null)
+                    {
+                        ContainsSpanCell = true;
+                    }
+                    cell.OwningRow = this;
+                    cell.UpdateBindingCell();
+
+                    if (CellsDirty || forceUpdate || updated || cell.TryUpdateVisualTree())
+                    {
+                        cell.Invalidate();
+                        InvalidateMeasure();
+                    }
+                }
             }
+
             CellsDirty = false;
-            foreach (CellPresenterBase base6 in list)
+            foreach (CellPresenterBase base6 in lsRecy)
             {
                 Cells.Remove(base6.Column);
-                base.Children.Remove(base6);
+                Children.Remove(base6);
             }
+
             if (OwningPresenter.SupportCellOverflow)
             {
                 CellOverflowLayoutModel cellOverflowLayoutModel = OwningPresenter.GetCellOverflowLayoutModel(Row);
@@ -469,13 +464,14 @@ namespace Dt.Cells.UI
                         if (headingOverflowCell.Column != num9)
                         {
                             headingOverflowCell.Column = num9;
-                            headingOverflowCell.Reset();
+                            headingOverflowCell.Invalidate();
                         }
                     }
                     else
                     {
                         HeadingOverflowCell = null;
                     }
+
                     if (cellOverflowLayoutModel.TrailingOverflowlayout != null)
                     {
                         CellPresenterBase trailingOverflowCell = TrailingOverflowCell;
@@ -489,14 +485,14 @@ namespace Dt.Cells.UI
                         if (trailingOverflowCell.Column != num10)
                         {
                             trailingOverflowCell.Column = num10;
-                            trailingOverflowCell.Reset();
+                            trailingOverflowCell.Invalidate();
                         }
                     }
                     else
                     {
                         TrailingOverflowCell = null;
                     }
-                    base.InvalidateMeasure();
+                    InvalidateMeasure();
                 }
                 else
                 {
@@ -529,7 +525,7 @@ namespace Dt.Cells.UI
 
         internal CellPresenterBase HeadingOverflowCell
         {
-            get { return  _headingOverflowCell; }
+            get { return _headingOverflowCell; }
             set
             {
                 if (_headingOverflowCell != value)
@@ -550,14 +546,14 @@ namespace Dt.Cells.UI
 
         public bool IsRecyclable
         {
-            get { return  AllCellsAreRecyclable; }
+            get { return AllCellsAreRecyclable; }
         }
 
         public Point Location { get; set; }
 
         public virtual GcViewport OwningPresenter
         {
-            get { return  _owningPresenter; }
+            get { return _owningPresenter; }
             set { _owningPresenter = value; }
         }
 
@@ -575,7 +571,7 @@ namespace Dt.Cells.UI
 
         public int Row
         {
-            get { return  _row; }
+            get { return _row; }
             set
             {
                 if (_row != value)
@@ -588,12 +584,12 @@ namespace Dt.Cells.UI
 
         internal double RowWidth
         {
-            get { return  _rowWidth; }
+            get { return _rowWidth; }
         }
 
         internal CellPresenterBase TrailingOverflowCell
         {
-            get { return  _trailingOverflowCell; }
+            get { return _trailingOverflowCell; }
             set
             {
                 if (_trailingOverflowCell != value)

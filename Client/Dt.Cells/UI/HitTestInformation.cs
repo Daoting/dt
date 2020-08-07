@@ -24,7 +24,7 @@ namespace Dt.Cells.UI
         /// </summary>
         internal HitTestInformation()
         {
-            HitTestType = Dt.Cells.UI.HitTestType.Empty;
+            HitTestType = HitTestType.Empty;
             RowViewportIndex = -2;
             ColumnViewportIndex = -2;
         }
@@ -54,7 +54,7 @@ namespace Dt.Cells.UI
         /// <summary>
         /// Gets the general area referred to in the spreadsheet.
         /// </summary>
-        public Dt.Cells.UI.HitTestType HitTestType { get; internal set; }
+        public HitTestType HitTestType { get; internal set; }
 
         /// <summary>
         /// Gets the row viewport referred to in the spreadsheet.

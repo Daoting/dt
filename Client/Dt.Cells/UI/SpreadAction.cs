@@ -17,7 +17,7 @@ namespace Dt.Cells.UI
     /// Represents the action delegate for input maps.
     /// </summary>
     /// <param name="sender">The object to do the action on.</param>
-    /// <param name="e">The <see cref="T:Dt.Cells.UI.ActionEventArgs" /> instance that contains the action event data.</param>
+    /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
     public delegate void SpreadAction(object sender, ActionEventArgs e);
 }
 

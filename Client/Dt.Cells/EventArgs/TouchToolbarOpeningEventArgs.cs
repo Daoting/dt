@@ -29,7 +29,7 @@ namespace Dt.Cells.UI
         /// Specifies the location of the touch strip pop up.
         /// </summary>
         /// <value>
-        /// One of the <see cref="T:Dt.Cells.UI.TouchToolbarShowingArea" /> values.
+        /// One of the <see cref="T:TouchToolbarShowingArea" /> values.
         /// </value>
         public TouchToolbarShowingArea Area { get; private set; }
 

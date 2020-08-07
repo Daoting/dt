@@ -51,7 +51,7 @@ namespace Dt.Cells.UI
             _rootLayoutGrid.RowDefinitions.Add(new RowDefinition());
             base.Children.Add(_rootLayoutGrid);
             _chartTitleView = new ChartTitleView(_spreadChartContent.ChartTitle, this);
-            _chartTitleView.Margin = new Windows.UI.Xaml.Thickness(0.0, 3.0, 0.0, 3.0);
+            _chartTitleView.Margin = new Thickness(0.0, 3.0, 0.0, 3.0);
             _chartTitleView.HorizontalAlignment = HorizontalAlignment.Center;
             _rootLayoutGrid.Children.Add(_chartTitleView);
             Grid.SetRow(_chartTitleView, 0);

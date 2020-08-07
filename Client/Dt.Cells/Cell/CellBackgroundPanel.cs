@@ -24,7 +24,7 @@ namespace Dt.Cells.UI
     public partial class CellBackgroundPanel : Panel
     {
         Rect? _cachedClip;
-        Windows.UI.Xaml.Thickness _contentPadding;
+        Thickness _contentPadding;
         CellPresenterBase _owner;
 
         protected override Size MeasureOverride(Size availableSize)
@@ -174,7 +174,7 @@ namespace Dt.Cells.UI
             return finalSize;
         }
 
-        Dt.Cells.UI.CellOverflowLayout CellOverflowLayout
+        CellOverflowLayout CellOverflowLayout
         {
             get
             {
@@ -189,7 +189,7 @@ namespace Dt.Cells.UI
         /// <summary>
         /// Gets or sets the content padding in the cell panel.
         /// </summary>
-        public Windows.UI.Xaml.Thickness ContentPadding
+        public Thickness ContentPadding
         {
             get { return  _contentPadding; }
             set

@@ -98,7 +98,7 @@ namespace Dt.Cells.UI
             }
             if (para == "margin")
             {
-                return new Windows.UI.Xaml.Thickness(dataLabele.ActualStrokeThickness * ZoomFactor);
+                return new Thickness(dataLabele.ActualStrokeThickness * ZoomFactor);
             }
             if (para == "textFontSize")
             {

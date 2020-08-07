@@ -130,7 +130,7 @@ namespace Dt.Cells.UI
         int _dragToRow;
         int _dragToRowViewport;
         GcViewport _editinViewport;
-        Dt.Cells.UI.EditorInfo _editorInfo;
+        EditorInfo _editorInfo;
         internal short _eventSuspended;
         Windows.UI.Xaml.Controls.Primitives.Popup _filterPopup;
         PopupHelper _filterPopupHelper;
@@ -151,10 +151,10 @@ namespace Dt.Cells.UI
         FilterButtonInfo _hitFilterInfo;
         ScrollSelectionManager _horizontalSelectionMgr;
         internal Control _host;
-        internal Dt.Cells.UI.HoverManager _hoverManager;
+        internal HoverManager _hoverManager;
         bool _hScrollable;
         FontFamily _inheritedControlFontFamily;
-        internal Dt.Cells.UI.InputDeviceType _inputDeviceType;
+        internal InputDeviceType _inputDeviceType;
         internal bool _isDoubleClick;
         bool _isDragCopy;
         bool _isDragInsert;
@@ -179,7 +179,7 @@ namespace Dt.Cells.UI
         Brush _rangeGroupLineStroke;
         internal bool _resetSelectionFrameStroke;
         internal Border _resizerGripperContainer;
-        internal Dt.Cells.UI.ResizeZeroIndicator _resizeZeroIndicator;
+        internal ResizeZeroIndicator _resizeZeroIndicator;
         internal Line _resizingTracker;
         internal PointerRoutedEventArgs _routedEventArgs;
         internal Line _rowFreezeLine;
@@ -211,7 +211,7 @@ namespace Dt.Cells.UI
         Style _trailingFreezeLineStyle;
         internal double _translateOffsetX;
         internal double _translateOffsetY;
-        Dt.Cells.UI.UndoManager _undoManager;
+        UndoManager _undoManager;
         internal bool _updateViewportAfterTouch;
         ScrollSelectionManager _verticalSelectionMgr;
         internal GcViewport[,] _viewportPresenters;

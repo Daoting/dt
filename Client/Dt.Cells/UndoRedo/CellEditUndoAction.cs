@@ -48,17 +48,17 @@ namespace Dt.Cells.UndoRedo
             string newValue = CellEditExtent.NewValue;
             DataValidationResult forceApply = DataValidationResult.ForceApply;
             bool flag = true;
-            if (Dt.Cells.UI.FormulaUtility.IsFormula(newValue))
+            if (UI.FormulaUtility.IsFormula(newValue))
             {
-                string str2 = Dt.Cells.UI.FormulaUtility.StringVariantToInvariant(sheetView.Worksheet, newValue);
+                string str2 = UI.FormulaUtility.StringVariantToInvariant(sheetView.Worksheet, newValue);
                 flag = Worksheet.IsValid(rowIndex, columnIndex, str2);
             }
             else
             {
-                object obj2 = Dt.Cells.UI.ConditionValueConverter.TryDateTime(newValue, true);
+                object obj2 = UI.ConditionValueConverter.TryDateTime(newValue, true);
                 if (obj2 == null)
                 {
-                    obj2 = Dt.Cells.UI.ConditionValueConverter.TryDouble(newValue, true);
+                    obj2 = UI.ConditionValueConverter.TryDouble(newValue, true);
                 }
                 if (obj2 != null)
                 {

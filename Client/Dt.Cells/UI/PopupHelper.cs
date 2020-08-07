@@ -143,7 +143,7 @@ namespace Dt.Cells.UI
             _popDirection = popDirection;
             _popupContentHost.Background = new SolidColorBrush(Colors.Transparent);
             _popupOutsideCanvas.Background = new SolidColorBrush(Colors.Transparent);
-            _popupOutsideCanvas.Margin = new Windows.UI.Xaml.Thickness(-10000.0);
+            _popupOutsideCanvas.Margin = new Thickness(-10000.0);
             placeElement.ReleasePointerCaptures();
             _popup.IsOpen = true;
             if (contentFocus)

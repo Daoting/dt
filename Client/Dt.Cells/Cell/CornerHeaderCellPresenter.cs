@@ -1,9 +1,4 @@
 ﻿using Dt.Cells.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Dt.Cells.UI
 {
@@ -11,7 +6,7 @@ namespace Dt.Cells.UI
     {
         public CornerHeaderCellPresenter()
         {
-            base.DefaultStyleKey = typeof(CornerHeaderCellPresenter);
+            DefaultStyleKey = typeof(CornerHeaderCellPresenter);
         }
 
         internal override bool IsHightlighted
@@ -21,14 +16,14 @@ namespace Dt.Cells.UI
 
         protected override bool IsMouseOver
         {
-            get { return base.OwningRow.OwningPresenter.Sheet.HoverManager.IsMouseOverCornerHeaders; }
+            get { return OwningRow.OwningPresenter.Sheet.HoverManager.IsMouseOverCornerHeaders; }
         }
 
         protected override bool IsSelected
         {
             get
             {
-                Worksheet worksheet = base.OwningRow.OwningPresenter.Sheet.Worksheet;
+                Worksheet worksheet = OwningRow.OwningPresenter.Sheet.Worksheet;
                 if (worksheet.Selections.Count != 1)
                 {
                     return false;

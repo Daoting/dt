@@ -19,7 +19,7 @@ namespace Dt.Cells.UI
     public partial class DataValidationInputMessagePopUp : ContentControl
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:Dt.Cells.UI.DataValidationInputMessagePopUp" /> class.
+        /// Initializes a new instance of the <see cref="T:DataValidationInputMessagePopUp" /> class.
         /// </summary>
         public DataValidationInputMessagePopUp()
         {

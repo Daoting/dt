@@ -47,6 +47,7 @@ namespace Dt.Cells.UI
                 int viewportRightColumn = ParentViewport.Sheet.GetViewportRightColumn(ParentViewport.ColumnViewportIndex);
                 ParentViewport.CellOverflowLayoutBuildEngine.ViewportRightColumn = viewportRightColumn;
             }
+
             double x = ParentViewport.Location.X;
             double y = ParentViewport.Location.Y;
             RowLayoutModel rowLayoutModel = ParentViewport.GetRowLayoutModel();
@@ -59,7 +60,7 @@ namespace Dt.Cells.UI
                     presenter.CleanUpBeforeDiscard();
                     if (_cachedChildren.Remove(presenter))
                     {
-                        base.Children.Remove(presenter);
+                        Children.Remove(presenter);
                         rows.Remove(presenter.Row);
                     }
                 }
@@ -68,60 +69,62 @@ namespace Dt.Cells.UI
             double num5 = 0.0;
             foreach (RowLayout layout in rowLayoutModel)
             {
-                if (layout.Height >= 0.0)
+                if (layout.Height < 0.0)
+                    continue;
+
+                RowPresenter element = null;
+                int row = layout.Row;
+                if (rows.TryGetValue(row, out element))
                 {
-                    RowPresenter element = null;
-                    int row = layout.Row;
-                    if (rows.TryGetValue(row, out element))
-                    {
-                        rows.Remove(row);
-                        if (layout.Height > 0.0)
-                        {
-                            element.UpdateDisplayedCells();
-                        }
-                    }
-                    else
-                    {
-                        element = GetNewRowWithRecyclingSupport(row);
-                        if (layout.Height > 0.0)
-                        {
-                            if (!_cachedChildren.Contains(element))
-                            {
-                                base.Children.Add(element);
-                                _cachedChildren.Add(element);
-                                element.UpdateDisplayedCells();
-                            }
-                            else
-                            {
-                                element.UpdateDisplayedCells(true);
-                            }
-                        }
-                    }
+                    rows.Remove(row);
                     if (layout.Height > 0.0)
                     {
-                        int num7 = _normalZIndexBase + element.Row;
-                        if (element.ContainsSpanCell)
-                        {
-                            num7 = _spanRowZIndexBase + element.Row;
-                        }
-                        num7 = num7 % 0x7ffe;
-                        Canvas.SetZIndex(element, num7);
-                        _rows.Add(row, element);
-                        element.Location = new Point(x, y);
-                        element.Measure(new Size(availableSize.Width, layout.Height));
-                        y += layout.Height;
-                        num5 = Math.Max(num5, element.DesiredSize.Width);
-                    }
-                    else
-                    {
-                        if (_cachedChildren.Remove(element))
-                        {
-                            base.Children.Remove(element);
-                        }
-                        TryRecycleRow(element);
+                        element.UpdateDisplayedCells();
                     }
                 }
+                else
+                {
+                    element = GetNewRowWithRecyclingSupport(row);
+                    if (layout.Height > 0.0)
+                    {
+                        if (!_cachedChildren.Contains(element))
+                        {
+                            Children.Add(element);
+                            _cachedChildren.Add(element);
+                            element.UpdateDisplayedCells();
+                        }
+                        else
+                        {
+                            element.UpdateDisplayedCells(true);
+                        }
+                    }
+                }
+
+                if (layout.Height > 0.0)
+                {
+                    int num7 = _normalZIndexBase + element.Row;
+                    if (element.ContainsSpanCell)
+                    {
+                        num7 = _spanRowZIndexBase + element.Row;
+                    }
+                    num7 = num7 % 0x7ffe;
+                    Canvas.SetZIndex(element, num7);
+                    _rows.Add(row, element);
+                    element.Location = new Point(x, y);
+                    element.Measure(new Size(availableSize.Width, layout.Height));
+                    y += layout.Height;
+                    num5 = Math.Max(num5, element.DesiredSize.Width);
+                }
+                else
+                {
+                    if (_cachedChildren.Remove(element))
+                    {
+                        Children.Remove(element);
+                    }
+                    TryRecycleRow(element);
+                }
             }
+
             foreach (RowPresenter presenter3 in RecycledRows)
             {
                 if (_cachedChildren.Remove(presenter3))
@@ -170,8 +173,7 @@ namespace Dt.Cells.UI
 
         RowPresenter GetNewRowWithRecyclingSupport(int rowIndex)
         {
-            RowPresenter recycledRow = null;
-            recycledRow = GetRecycledRow();
+            RowPresenter recycledRow = GetRecycledRow();
             if (recycledRow == null)
             {
                 recycledRow = ParentViewport.GenerateNewRow();

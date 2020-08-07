@@ -70,7 +70,7 @@ namespace Dt.Cells.UI
                 if ((intermediatePoints != null) && (intermediatePoints.Count > 0))
                 {
                     PointerPoint point = intermediatePoints[0];
-                    InputDeviceType = Dt.Cells.UI.InputDeviceType.Touch;
+                    InputDeviceType = InputDeviceType.Touch;
                     if (CanTouchManipulate(point.Position))
                     {
                         // 可以看作手势
@@ -124,7 +124,7 @@ namespace Dt.Cells.UI
             else
             {
                 // 鼠标模式
-                InputDeviceType = Dt.Cells.UI.InputDeviceType.Mouse;
+                InputDeviceType = InputDeviceType.Mouse;
                 PointerPoint currentPoint = e.GetCurrentPoint(this);
                 if (currentPoint.Properties.IsLeftButtonPressed)
                 {
@@ -946,7 +946,7 @@ namespace Dt.Cells.UI
 
         protected virtual void OnManipulationStarted()
         {
-            InputDeviceType = Dt.Cells.UI.InputDeviceType.Touch;
+            InputDeviceType = InputDeviceType.Touch;
             IsTouchingMovingFloatingObjects = false;
             IsTouchingResizingFloatingObjects = false;
             _translateOffsetX = 0.0;
@@ -1240,7 +1240,7 @@ namespace Dt.Cells.UI
             if (IsTouchSelectingCells)
             {
                 EndTouchSelectingCells();
-                if (InputDeviceType == Dt.Cells.UI.InputDeviceType.Touch)
+                if (InputDeviceType == InputDeviceType.Touch)
                 {
                     RefreshSelection();
                 }
@@ -1859,7 +1859,7 @@ namespace Dt.Cells.UI
                     hi.HitTestType = HitTestType.RowHeader;
                     hi.RowViewportIndex = i;
                     hi.HeaderInfo = information4;
-                    if (((InputDeviceType == Dt.Cells.UI.InputDeviceType.Touch) && ResizerGripperRect.HasValue) && ResizerGripperRect.Value.Contains(hitPoint))
+                    if (((InputDeviceType == InputDeviceType.Touch) && ResizerGripperRect.HasValue) && ResizerGripperRect.Value.Contains(hitPoint))
                     {
                         hi.HeaderInfo.InRowResize = true;
                         hi.HeaderInfo.ResizingRow = GetActiveCell().Row;
@@ -1910,7 +1910,7 @@ namespace Dt.Cells.UI
                     hi.HitTestType = HitTestType.ColumnHeader;
                     hi.HeaderInfo = information6;
                     hi.ColumnViewportIndex = j;
-                    if (((InputDeviceType == Dt.Cells.UI.InputDeviceType.Touch) && ResizerGripperRect.HasValue) && ResizerGripperRect.Value.Contains(hitPoint))
+                    if (((InputDeviceType == InputDeviceType.Touch) && ResizerGripperRect.HasValue) && ResizerGripperRect.Value.Contains(hitPoint))
                     {
                         hi.HeaderInfo.InColumnResize = true;
                         hi.HeaderInfo.ResizingColumn = GetActiveCell().Column;

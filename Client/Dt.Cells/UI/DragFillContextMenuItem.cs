@@ -41,7 +41,7 @@ namespace Dt.Cells.UI
         public event EventHandler Checked;
 
         /// <summary>
-        /// Creates a new instance of the <see cref="T:Dt.Cells.UI.DragFillContextMenuItem" /> class.
+        /// Creates a new instance of the <see cref="T:DragFillContextMenuItem" /> class.
         /// </summary>
         /// <param name="text">The automatic drag fill context menu item text.</param>
         /// <param name="fillType">The automatic drag fill type that the menu item represents.</param>

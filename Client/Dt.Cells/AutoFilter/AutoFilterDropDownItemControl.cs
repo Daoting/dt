@@ -24,7 +24,7 @@ namespace Dt.Cells.UI
         AutoFilterItemCollection _filterItems;
 
         /// <summary>
-        /// Creates a new instance of the <see cref="T:Dt.Cells.UI.AutoFilterDropDownItemControl" /> class.
+        /// Creates a new instance of the <see cref="T:AutoFilterDropDownItemControl" /> class.
         /// </summary>
         public AutoFilterDropDownItemControl()
         {

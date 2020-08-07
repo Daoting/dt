@@ -19,7 +19,7 @@ namespace Dt.Cells.UI
     public class ActionEventArgs : EventArgs
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:Dt.Cells.UI.ActionEventArgs" /> class.
+        /// Initializes a new instance of the <see cref="T:ActionEventArgs" /> class.
         /// </summary>
         public ActionEventArgs()
         {

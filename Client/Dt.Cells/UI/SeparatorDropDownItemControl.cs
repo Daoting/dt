@@ -18,7 +18,7 @@ namespace Dt.Cells.UI
     public partial class SeparatorDropDownItemControl : DropDownItemBaseControl
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="T:Dt.Cells.UI.SeparatorDropDownItemControl" /> class.
+        /// Creates a new instance of the <see cref="T:SeparatorDropDownItemControl" /> class.
         /// </summary>
         public SeparatorDropDownItemControl()
         {

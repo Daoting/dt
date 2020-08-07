@@ -35,8 +35,8 @@ namespace Dt.Cells.UI
             try
             {
                 CalcParser parser = new CalcParser();
-                CalcExpression expr = parser.Parse(invariantString, new Dt.Cells.UI.SpreadCalcParserContext(worksheet, !flag, 0, 0, CultureInfo.InvariantCulture));
-                str = parser.Unparse(expr, new Dt.Cells.UI.SpreadCalcParserContext(worksheet, !flag, 0, 0, CultureInfo.CurrentCulture));
+                CalcExpression expr = parser.Parse(invariantString, new SpreadCalcParserContext(worksheet, !flag, 0, 0, CultureInfo.InvariantCulture));
+                str = parser.Unparse(expr, new SpreadCalcParserContext(worksheet, !flag, 0, 0, CultureInfo.CurrentCulture));
                 if (flag2)
                 {
                     str = "=" + str;
@@ -60,8 +60,8 @@ namespace Dt.Cells.UI
             try
             {
                 CalcParser parser = new CalcParser();
-                CalcExpression expr = parser.Parse(variantString, new Dt.Cells.UI.SpreadCalcParserContext(worksheet, !flag, 0, 0, CultureInfo.CurrentCulture));
-                str = parser.Unparse(expr, new Dt.Cells.UI.SpreadCalcParserContext(worksheet, !flag, 0, 0, CultureInfo.InvariantCulture));
+                CalcExpression expr = parser.Parse(variantString, new SpreadCalcParserContext(worksheet, !flag, 0, 0, CultureInfo.CurrentCulture));
+                str = parser.Unparse(expr, new SpreadCalcParserContext(worksheet, !flag, 0, 0, CultureInfo.InvariantCulture));
                 if (flag2)
                 {
                     variantString = "=" + variantString;

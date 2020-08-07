@@ -50,16 +50,16 @@ namespace Dt.Cells.UI
         DispatcherTimer _timer;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:Dt.Cells.UI.FormulaTextBox" /> class.
+        /// Initializes a new instance of the <see cref="T:FormulaTextBox" /> class.
         /// </summary>
         public FormulaTextBox()
         {
             base.AcceptsReturn = false;
             WireEvents();
             Border border = new Border();
-            border.Padding = new Windows.UI.Xaml.Thickness(2.0);
+            border.Padding = new Thickness(2.0);
             border.BorderBrush = new SolidColorBrush(Colors.Gray);
-            border.BorderThickness = new Windows.UI.Xaml.Thickness(1.0);
+            border.BorderThickness = new Thickness(1.0);
             border.CornerRadius = new Windows.UI.Xaml.CornerRadius(2.0);
             border.Background = new SolidColorBrush(Colors.White);
             border.Child = _functionTextBlock;
@@ -76,7 +76,7 @@ namespace Dt.Cells.UI
             _functionListBox.KeyUp += FunctionListBoxKeyUp;
             Border border2 = new Border();
             border2.BorderBrush = new SolidColorBrush(Colors.Gray);
-            border2.BorderThickness = new Windows.UI.Xaml.Thickness(1.0);
+            border2.BorderThickness = new Thickness(1.0);
             border2.CornerRadius = new Windows.UI.Xaml.CornerRadius(2.0);
             border2.Background = new SolidColorBrush(Colors.White);
             border2.Child = _functionListBox;
