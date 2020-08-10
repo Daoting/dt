@@ -20,19 +20,24 @@ using Windows.UI.Xaml.Media;
 
 namespace Dt.Cells.UI
 {
-    internal partial class RowsPanel : Panel
+    /// <summary>
+    /// 按行布局的面板
+    /// </summary>
+    internal partial class RowsLayer : Panel
     {
-        HashSet<RowPresenter> _cachedChildren;
-        internal int _normalZIndexBase;
-        Dictionary<int, RowPresenter> _rows;
-        internal int _spanRowZIndexBase;
+        CellsPanel _owner;
+        HashSet<RowItem> _cachedChildren;
+        int _normalZIndexBase;
+        Dictionary<int, RowItem> _rows;
+        int _spanRowZIndexBase;
 
-        public RowsPanel()
+        public RowsLayer(CellsPanel p_owner)
         {
+            _owner = p_owner;
             _normalZIndexBase = 0x2710;
             _spanRowZIndexBase = 0x4e20;
-            _rows = new Dictionary<int, RowPresenter>();
-            _cachedChildren = new HashSet<RowPresenter>();
+            _rows = new Dictionary<int, RowItem>();
+            _cachedChildren = new HashSet<RowItem>();
             HorizontalAlignment = HorizontalAlignment.Left;
             VerticalAlignment = VerticalAlignment.Top;
             Background = new SolidColorBrush(Colors.White);
@@ -40,20 +45,20 @@ namespace Dt.Cells.UI
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            if (ParentViewport.SupportCellOverflow && ParentViewport.Sheet.Excel.CanCellOverflow)
+            if (_owner.SupportCellOverflow && _owner.Sheet.Excel.CanCellOverflow)
             {
-                int viewportLeftColumn = ParentViewport.Sheet.GetViewportLeftColumn(ParentViewport.ColumnViewportIndex);
-                ParentViewport.CellOverflowLayoutBuildEngine.ViewportLeftColumn = viewportLeftColumn;
-                int viewportRightColumn = ParentViewport.Sheet.GetViewportRightColumn(ParentViewport.ColumnViewportIndex);
-                ParentViewport.CellOverflowLayoutBuildEngine.ViewportRightColumn = viewportRightColumn;
+                int viewportLeftColumn = _owner.Sheet.GetViewportLeftColumn(_owner.ColumnViewportIndex);
+                _owner.CellOverflowLayoutBuildEngine.ViewportLeftColumn = viewportLeftColumn;
+                int viewportRightColumn = _owner.Sheet.GetViewportRightColumn(_owner.ColumnViewportIndex);
+                _owner.CellOverflowLayoutBuildEngine.ViewportRightColumn = viewportRightColumn;
             }
 
-            double x = ParentViewport.Location.X;
-            double y = ParentViewport.Location.Y;
-            RowLayoutModel rowLayoutModel = ParentViewport.GetRowLayoutModel();
-            Dictionary<int, RowPresenter> rows = _rows;
-            _rows = new Dictionary<int, RowPresenter>();
-            foreach (RowPresenter presenter in Enumerable.ToArray<RowPresenter>((IEnumerable<RowPresenter>)rows.Values))
+            double x = _owner.Location.X;
+            double y = _owner.Location.Y;
+            RowLayoutModel rowLayoutModel = _owner.GetRowLayoutModel();
+            Dictionary<int, RowItem> rows = _rows;
+            _rows = new Dictionary<int, RowItem>();
+            foreach (var presenter in rows.Values)
             {
                 if ((rowLayoutModel.FindRow(presenter.Row) == null) && !TryRecycleRow(presenter))
                 {
@@ -72,7 +77,7 @@ namespace Dt.Cells.UI
                 if (layout.Height < 0.0)
                     continue;
 
-                RowPresenter element = null;
+                RowItem element = null;
                 int row = layout.Row;
                 if (rows.TryGetValue(row, out element))
                 {
@@ -125,11 +130,11 @@ namespace Dt.Cells.UI
                 }
             }
 
-            foreach (RowPresenter presenter3 in RecycledRows)
+            foreach (RowItem presenter3 in _owner.RecycledRows)
             {
                 if (_cachedChildren.Remove(presenter3))
                 {
-                    base.Children.Remove(presenter3);
+                    Children.Remove(presenter3);
                     foreach (CellPresenterBase base2 in presenter3.Children)
                     {
                         base2.RemoveInvalidDataPresenter();
@@ -137,12 +142,12 @@ namespace Dt.Cells.UI
                 }
             }
             rows.Clear();
-            return new Size(num5 + ParentViewport.Location.X, y);
+            return new Size(num5 + _owner.Location.X, y);
         }
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            RowLayoutModel rowLayoutModel = ParentViewport.GetRowLayoutModel();
+            RowLayoutModel rowLayoutModel = _owner.GetRowLayoutModel();
             double y = 0.0;
             double rowWidth = 0.0;
             foreach (RowLayout layout in rowLayoutModel)
@@ -153,7 +158,7 @@ namespace Dt.Cells.UI
                     double height = layout.Height;
                     if (_rows.ContainsKey(layout.Row))
                     {
-                        RowPresenter presenter = _rows[layout.Row];
+                        RowItem presenter = _rows[layout.Row];
                         presenter.Arrange(new Rect(new Point(0.0, y), new Size(width, height)));
                         if (rowWidth == 0.0)
                         {
@@ -163,7 +168,7 @@ namespace Dt.Cells.UI
                     y += height;
                 }
             }
-            rowWidth = Math.Min(ParentViewport.GetViewportSize().Width, rowWidth);
+            rowWidth = Math.Min(_owner.GetViewportSize().Width, rowWidth);
             Size size = new Size(rowWidth, y);
             RectangleGeometry geometry = new RectangleGeometry();
             geometry.Rect = new Rect(new Point(0.0, 0.0), size);
@@ -171,64 +176,57 @@ namespace Dt.Cells.UI
             return size;
         }
 
-        RowPresenter GetNewRowWithRecyclingSupport(int rowIndex)
+        RowItem GetNewRowWithRecyclingSupport(int rowIndex)
         {
-            RowPresenter recycledRow = GetRecycledRow();
+            RowItem recycledRow = GetRecycledRow();
             if (recycledRow == null)
             {
-                recycledRow = ParentViewport.GenerateNewRow();
+                recycledRow = _owner.GenerateNewRow();
             }
             recycledRow.Row = rowIndex;
-            recycledRow.OwningPresenter = ParentViewport;
+            recycledRow.OwningPresenter = _owner;
             return recycledRow;
         }
 
-        internal RowPresenter GetRecycledRow()
+        RowItem GetRecycledRow()
         {
-            RowPresenter presenter = null;
-            while ((RecycledRows.Count > 0) && (presenter == null))
+            RowItem presenter = null;
+            while ((_owner.RecycledRows.Count > 0) && (presenter == null))
             {
-                RowPresenter presenter2 = RecycledRows[0];
-                if (presenter2 != null)
+                RowItem row = _owner.RecycledRows[0];
+                if (row != null)
                 {
-                    RecycledRows.Remove(presenter2);
-                    if (presenter2.IsRecyclable)
+                    _owner.RecycledRows.Remove(row);
+                    if (row.IsRecyclable)
                     {
-                        presenter = presenter2;
+                        presenter = row;
                     }
                 }
             }
             return presenter;
         }
 
-        internal RowPresenter GetRow(int row)
+        internal RowItem GetRow(int row)
         {
-            RowPresenter presenter = null;
+            RowItem presenter = null;
             _rows.TryGetValue(row, out presenter);
             return presenter;
         }
 
-        bool TryRecycleRow(RowPresenter objRow)
+        bool TryRecycleRow(RowItem objRow)
         {
             if (objRow.IsRecyclable)
             {
-                RecycledRows.Add(objRow);
+                _owner.RecycledRows.Add(objRow);
                 objRow.CellsDirty = true;
                 return true;
             }
             return false;
         }
 
-        public GcViewport ParentViewport { get; set; }
-
-        internal List<RowPresenter> RecycledRows
+        internal IEnumerable<RowItem> Rows
         {
-            get { return ParentViewport.RecycledRows; }
-        }
-
-        internal List<RowPresenter> Rows
-        {
-            get { return new List<RowPresenter>((IEnumerable<RowPresenter>)_rows.Values); }
+            get { return _rows.Values; }
         }
     }
 }

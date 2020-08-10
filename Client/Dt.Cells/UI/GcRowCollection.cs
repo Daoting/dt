@@ -12,7 +12,7 @@ using System;
 
 namespace Dt.Cells.UI
 {
-    internal class GcRowCollection : CollectionBase<RowPresenter>
+    internal class GcRowCollection : CollectionBase<RowItem>
     {
         public GcRowCollection() : base("Row")
         {

@@ -17,7 +17,7 @@ namespace Dt.Cells.UI
 {
     internal partial class SpreadChartContainer : SpreadCharBaseContainer
     {
-        public SpreadChartContainer(SpreadChart spreadChart, Chart c1Chart, GcViewport parentViewport) : base(spreadChart, c1Chart, parentViewport)
+        public SpreadChartContainer(SpreadChart spreadChart, Chart c1Chart, CellsPanel parentViewport) : base(spreadChart, c1Chart, parentViewport)
         {
         }
 

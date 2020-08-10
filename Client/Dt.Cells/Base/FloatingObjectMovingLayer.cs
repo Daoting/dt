@@ -19,11 +19,11 @@ using Windows.UI.Xaml.Shapes;
 
 namespace Dt.Cells.UI
 {
-    internal partial class FloatingObjectMovingResizingContainerPanel : Panel
+    internal partial class FloatingObjectMovingLayer : Panel
     {
         List<FloatingObjectMovingResizingFrame> _cachedFrames = new List<FloatingObjectMovingResizingFrame>();
 
-        public FloatingObjectMovingResizingContainerPanel(GcViewport parentViewport)
+        public FloatingObjectMovingLayer(CellsPanel parentViewport)
         {
             ParentViewport = parentViewport;
         }
@@ -90,7 +90,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        public GcViewport ParentViewport { get; set; }
+        public CellsPanel ParentViewport { get; set; }
     }
 
     internal partial class FloatingObjectMovingResizingFrame : Panel

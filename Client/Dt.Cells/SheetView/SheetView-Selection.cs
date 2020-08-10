@@ -329,7 +329,7 @@ namespace Dt.Cells.UI
             {
                 activeSelection = GetActiveCell();
             }
-            GcViewport viewportRowsPresenter = GetViewportRowsPresenter(GetActiveRowViewportIndex(), GetActiveColumnViewportIndex());
+            CellsPanel viewportRowsPresenter = GetViewportRowsPresenter(GetActiveRowViewportIndex(), GetActiveColumnViewportIndex());
             SheetLayout sheetLayout = GetSheetLayout();
             if (viewportRowsPresenter != null)
             {
@@ -355,14 +355,14 @@ namespace Dt.Cells.UI
         {
             if (_viewportPresenters != null)
             {
-                GcViewport[,] viewportArray = _viewportPresenters;
+                CellsPanel[,] viewportArray = _viewportPresenters;
                 int upperBound = viewportArray.GetUpperBound(0);
                 int num2 = viewportArray.GetUpperBound(1);
                 for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
                 {
                     for (int j = viewportArray.GetLowerBound(1); j <= num2; j++)
                     {
-                        GcViewport viewport = viewportArray[i, j];
+                        CellsPanel viewport = viewportArray[i, j];
                         if (viewport != null)
                         {
                             viewport.RefreshSelection();
@@ -376,14 +376,14 @@ namespace Dt.Cells.UI
         {
             if (_viewportPresenters != null)
             {
-                GcViewport[,] viewportArray = _viewportPresenters;
+                CellsPanel[,] viewportArray = _viewportPresenters;
                 int upperBound = viewportArray.GetUpperBound(0);
                 int num4 = viewportArray.GetUpperBound(1);
                 for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
                 {
                     for (int j = viewportArray.GetLowerBound(1); j <= num4; j++)
                     {
-                        GcViewport viewport = viewportArray[i, j];
+                        CellsPanel viewport = viewportArray[i, j];
                         if (viewport != null)
                         {
                             int rowViewportIndex = viewport.RowViewportIndex;
@@ -452,7 +452,7 @@ namespace Dt.Cells.UI
                 {
                     for (int j = -1; j <= columnViewportCount; j++)
                     {
-                        GcViewport viewportRowsPresenter = GetViewportRowsPresenter(i, j);
+                        CellsPanel viewportRowsPresenter = GetViewportRowsPresenter(i, j);
                         if (viewportRowsPresenter != null)
                         {
                             viewportRowsPresenter.SelectionContainer.ResetSelectionFrameStroke();
@@ -805,14 +805,14 @@ namespace Dt.Cells.UI
 
         void UpdateSelectState(ChartChangedBaseEventArgs e)
         {
-            GcViewport[,] viewportArray = _viewportPresenters;
+            CellsPanel[,] viewportArray = _viewportPresenters;
             int upperBound = viewportArray.GetUpperBound(0);
             int num2 = viewportArray.GetUpperBound(1);
             for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
             {
                 for (int j = viewportArray.GetLowerBound(1); j <= num2; j++)
                 {
-                    GcViewport viewport = viewportArray[i, j];
+                    CellsPanel viewport = viewportArray[i, j];
                     if (viewport != null)
                     {
                         if (e.Chart == null)
@@ -860,7 +860,7 @@ namespace Dt.Cells.UI
                 return;
             }
             Rect rect = new Rect(0.0, 0.0, 0.0, 0.0);
-            GcViewport viewportRowsPresenter = GetViewportRowsPresenter(GetActiveRowViewportIndex(), GetActiveColumnViewportIndex());
+            CellsPanel viewportRowsPresenter = GetViewportRowsPresenter(GetActiveRowViewportIndex(), GetActiveColumnViewportIndex());
             if (viewportRowsPresenter == null)
             {
                 return;
@@ -998,7 +998,7 @@ namespace Dt.Cells.UI
                                     viewportRightColumn = GetViewportRightColumn(j);
                                     if ((num33 >= num37) && (viewportRightColumn >= num38))
                                     {
-                                        GcViewport viewport8 = _viewportPresenters[i + 1, j + 1];
+                                        CellsPanel viewport8 = _viewportPresenters[i + 1, j + 1];
                                         if (viewport8 != null)
                                         {
                                             Rect rect13 = viewport8._cachedSelectionFrameLayout;
@@ -1049,7 +1049,7 @@ namespace Dt.Cells.UI
                     int viewportBottomRow = GetViewportBottomRow(viewportRowsPresenter.RowViewportIndex);
                     if (ActiveSheet.FrozenColumnCount > 0)
                     {
-                        GcViewport viewport5 = GetViewportRowsPresenter(GetActiveRowViewportIndex(), GetActiveColumnViewportIndex() + 1);
+                        CellsPanel viewport5 = GetViewportRowsPresenter(GetActiveRowViewportIndex(), GetActiveColumnViewportIndex() + 1);
                         Rect rect9 = viewport5._cachedSelectionFrameLayout;
                         if (!viewport5.SelectionContainer.IsAnchorCellInSelection)
                         {
@@ -1081,7 +1081,7 @@ namespace Dt.Cells.UI
                         {
                             if (GetViewportBottomRow(rowViewportIndex) >= num19)
                             {
-                                GcViewport viewport6 = _viewportPresenters[rowViewportIndex + 1, viewportRowsPresenter.ColumnViewportIndex + 1];
+                                CellsPanel viewport6 = _viewportPresenters[rowViewportIndex + 1, viewportRowsPresenter.ColumnViewportIndex + 1];
                                 if (viewport6 != null)
                                 {
                                     Rect rect10 = viewport6._cachedSelectionFrameLayout;
@@ -1131,7 +1131,7 @@ namespace Dt.Cells.UI
                     int num4 = GetViewportRightColumn(viewportRowsPresenter.ColumnViewportIndex);
                     if (ActiveSheet.FrozenRowCount > 0)
                     {
-                        GcViewport viewport2 = GetViewportRowsPresenter(GetActiveRowViewportIndex() + 1, GetActiveColumnViewportIndex());
+                        CellsPanel viewport2 = GetViewportRowsPresenter(GetActiveRowViewportIndex() + 1, GetActiveColumnViewportIndex());
                         Rect rect5 = viewport2._cachedSelectionFrameLayout;
                         if (!viewport2.SelectionContainer.IsAnchorCellInSelection)
                         {
@@ -1163,7 +1163,7 @@ namespace Dt.Cells.UI
                         {
                             if (GetViewportRightColumn(columnViewportIndex) >= num6)
                             {
-                                GcViewport viewport3 = _viewportPresenters[viewportRowsPresenter.RowViewportIndex + 1, columnViewportIndex + 1];
+                                CellsPanel viewport3 = _viewportPresenters[viewportRowsPresenter.RowViewportIndex + 1, columnViewportIndex + 1];
                                 if (viewport3 != null)
                                 {
                                     Rect rect6 = viewport3._cachedSelectionFrameLayout;
@@ -1204,7 +1204,7 @@ namespace Dt.Cells.UI
                             flag = false;
                         }
                     }
-                    GcViewport viewport4 = _columnHeaderPresenters[viewportRowsPresenter.ColumnViewportIndex + 1];
+                    CellsPanel viewport4 = _columnHeaderPresenters[viewportRowsPresenter.ColumnViewportIndex + 1];
                     CellRange range2 = new CellRange(ActiveSheet.ColumnHeader.RowCount - 1, (activeSelection.Column + activeSelection.ColumnCount) - 1, 1, 1);
                     Rect rect7 = viewport4.GetRangeBounds(range2, SheetArea.ColumnHeader);
                     int column = (activeSelection.Column + activeSelection.ColumnCount) - 1;
@@ -1228,7 +1228,7 @@ namespace Dt.Cells.UI
                     }
                     goto Label_10BF;
                 }
-                GcViewport viewport7 = _rowHeaderPresenters[viewportRowsPresenter.RowViewportIndex + 1];
+                CellsPanel viewport7 = _rowHeaderPresenters[viewportRowsPresenter.RowViewportIndex + 1];
                 CellRange range = new CellRange((activeSelection.Row + activeSelection.RowCount) - 1, ActiveSheet.RowHeader.ColumnCount - 1, 1, 1);
                 Rect rect11 = viewport7.GetRangeBounds(range, SheetArea.CornerHeader | SheetArea.RowHeader);
                 int row = (activeSelection.Row + activeSelection.RowCount) - 1;

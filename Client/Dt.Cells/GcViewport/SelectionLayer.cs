@@ -19,7 +19,7 @@ using Windows.UI.Xaml.Shapes;
 
 namespace Dt.Cells.UI
 {
-    internal partial class SelectionContainerPanel : Panel
+    internal partial class SelectionLayer : Panel
     {
         List<Rect> _activeSelectionLayouts;
         List<Rectangle> _activeSelectionRectangles;
@@ -28,7 +28,7 @@ namespace Dt.Cells.UI
         Path _selectionPath;
         const int ACTIVE_SELECTION_RECTANGLE_NUMBER = 4;
 
-        public SelectionContainerPanel(GcViewport parentViewport)
+        public SelectionLayer(CellsPanel parentViewport)
         {
             _activeSelectionRectangles = new List<Rectangle>();
             _activeSelectionLayouts = new List<Rect>();
@@ -314,7 +314,7 @@ namespace Dt.Cells.UI
 
         public bool IsAnchorCellInSelection { get; set; }
 
-        public GcViewport ParentViewport { get; set; }
+        public CellsPanel ParentViewport { get; set; }
     }
 }
 

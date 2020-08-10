@@ -26,7 +26,7 @@ namespace Dt.Cells.UI
         Image _image;
         Picture _picture;
 
-        public PictureView(Picture picture, GcViewport parentViewport)
+        public PictureView(Picture picture, CellsPanel parentViewport)
         {
             _picture = picture;
             ParentViewport = parentViewport;
@@ -93,7 +93,7 @@ namespace Dt.Cells.UI
             _image.Stretch = _picture.PictureStretch;
         }
 
-        public GcViewport ParentViewport { get; private set; }
+        public CellsPanel ParentViewport { get; private set; }
     }
 }
 

@@ -360,7 +360,7 @@ namespace Dt.Cells.UI
 
         internal override bool IsRecylable
         {
-            get { return ((_customDrawingObject == null) && IsRecylable); }
+            get { return ((_customDrawingObject == null) && base.IsRecylable); }
         }
 
         /// <summary>

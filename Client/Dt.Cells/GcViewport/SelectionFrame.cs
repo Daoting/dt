@@ -44,7 +44,7 @@ namespace Dt.Cells.UI
         double _thickNess = 3.0;
         Rectangle _topRectangle;
 
-        public SelectionFrame(GcViewport owingViewport)
+        public SelectionFrame(CellsPanel owingViewport)
         {
             OwingViewport = owingViewport;
             _selectionBorderColor = GetSelectionBorderColor(OwingViewport.Sheet.ActiveSheet.SelectionBorderColor, OwingViewport.Sheet.ActiveSheet.SelectionBorderThemeColor);
@@ -403,7 +403,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        public GcViewport OwingViewport { get; set; }
+        public CellsPanel OwingViewport { get; set; }
 
         public double Thickness
         {

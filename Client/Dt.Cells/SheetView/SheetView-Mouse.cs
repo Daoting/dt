@@ -1298,7 +1298,7 @@ namespace Dt.Cells.UI
 
             if (_formulaSelectionFeature.TouchHitTest(_touchStartPoint.X, _touchStartPoint.Y, _touchStartHitTestInfo))
             {
-                FSelectionFeature.StartDragResizing();
+                _formulaSelectionFeature.StartDragResizing();
             }
             else
             {
@@ -1707,9 +1707,9 @@ namespace Dt.Cells.UI
                 {
                     ContinueTouchDragDropping();
                 }
-                else if (FSelectionFeature.IsDragging)
+                else if (_formulaSelectionFeature.IsDragging)
                 {
-                    FSelectionFeature.ContinueDragging();
+                    _formulaSelectionFeature.ContinueDragging();
                 }
                 else if (IsTouchSelectingCells)
                 {
@@ -1917,14 +1917,14 @@ namespace Dt.Cells.UI
             GetViewportInfo();
             if (_viewportPresenters != null)
             {
-                GcViewport[,] viewportArray = _viewportPresenters;
+                CellsPanel[,] viewportArray = _viewportPresenters;
                 int upperBound = viewportArray.GetUpperBound(0);
                 int num9 = viewportArray.GetUpperBound(1);
                 for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
                 {
                     for (int j = viewportArray.GetLowerBound(1); j <= num9; j++)
                     {
-                        GcViewport viewport = viewportArray[i, j];
+                        CellsPanel viewport = viewportArray[i, j];
                         if (viewport != null)
                         {
                             viewport.InvalidateBordersMeasureState();
@@ -1934,7 +1934,7 @@ namespace Dt.Cells.UI
             }
             if (_rowHeaderPresenters != null)
             {
-                foreach (GcViewport viewport2 in _rowHeaderPresenters)
+                foreach (CellsPanel viewport2 in _rowHeaderPresenters)
                 {
                     if (viewport2 != null)
                     {
@@ -1944,7 +1944,7 @@ namespace Dt.Cells.UI
             }
             if (_columnHeaderPresenters != null)
             {
-                foreach (GcViewport viewport3 in _columnHeaderPresenters)
+                foreach (CellsPanel viewport3 in _columnHeaderPresenters)
                 {
                     if (viewport3 != null)
                     {
@@ -1955,9 +1955,9 @@ namespace Dt.Cells.UI
 
             IsTouching = false;
             IsTouchPromotedMouseMessage = false;
-            if (FSelectionFeature.IsDragging)
+            if (_formulaSelectionFeature.IsDragging)
             {
-                FSelectionFeature.EndDragging();
+                _formulaSelectionFeature.EndDragging();
             }
 
             if (IsTouchSelectingCells)
@@ -1975,7 +1975,7 @@ namespace Dt.Cells.UI
                 CloseAutoFilterIndicator();
                 if (_resetSelectionFrameStroke)
                 {
-                    GcViewport viewportRowsPresenter = GetViewportRowsPresenter(_touchStartHitTestInfo.RowViewportIndex, _touchStartHitTestInfo.ColumnViewportIndex);
+                    CellsPanel viewportRowsPresenter = GetViewportRowsPresenter(_touchStartHitTestInfo.RowViewportIndex, _touchStartHitTestInfo.ColumnViewportIndex);
                     if (viewportRowsPresenter != null)
                     {
                         viewportRowsPresenter.SelectionContainer.ResetSelectionFrameStroke();
@@ -1989,7 +1989,7 @@ namespace Dt.Cells.UI
                 EndTouchDragDropping();
                 if (_resetSelectionFrameStroke)
                 {
-                    GcViewport viewport2 = GetViewportRowsPresenter(_touchStartHitTestInfo.RowViewportIndex, _touchStartHitTestInfo.ColumnViewportIndex);
+                    CellsPanel viewport2 = GetViewportRowsPresenter(_touchStartHitTestInfo.RowViewportIndex, _touchStartHitTestInfo.ColumnViewportIndex);
                     if (viewport2 != null)
                     {
                         viewport2.SelectionContainer.ResetSelectionFrameStroke();
@@ -2868,7 +2868,7 @@ namespace Dt.Cells.UI
                         }
                         if (!_formulaSelectionFeature.HitTest(k, m, hitPoint.X, hitPoint.Y, hi) && (IsInSelectionGripper(new Point(x, y)) || !HitTestFloatingObject(k, m, hitPoint.X, hitPoint.Y, hi)))
                         {
-                            GcViewport viewportRowsPresenter = GetViewportRowsPresenter(k, m);
+                            CellsPanel viewportRowsPresenter = GetViewportRowsPresenter(k, m);
                             if ((layout11 != null) && (layout12 != null))
                             {
                                 if (IsMouseInDragFillIndicator(hitPoint.X, hitPoint.Y, k, m, false))
@@ -3179,7 +3179,7 @@ namespace Dt.Cells.UI
                         }
                         if (!HitTestFloatingObject(k, m, hitPoint.X, hitPoint.Y, hi))
                         {
-                            GcViewport viewportRowsPresenter = GetViewportRowsPresenter(k, m);
+                            CellsPanel viewportRowsPresenter = GetViewportRowsPresenter(k, m);
                             if ((layout11 != null) && (layout12 != null))
                             {
                                 if (IsMouseInDragFillIndicator(hitPoint.X, hitPoint.Y, k, m, true))
@@ -3275,10 +3275,10 @@ namespace Dt.Cells.UI
                 HitTestInformation savedHitTestInformation = GetHitInfo();
                 if ((savedHitTestInformation != null) && (savedHitTestInformation.HitTestType == HitTestType.ColumnHeader))
                 {
-                    GcViewport columnHeaderRowsPresenter = GetColumnHeaderRowsPresenter(savedHitTestInformation.ColumnViewportIndex);
+                    CellsPanel columnHeaderRowsPresenter = GetColumnHeaderRowsPresenter(savedHitTestInformation.ColumnViewportIndex);
                     if (columnHeaderRowsPresenter != null)
                     {
-                        RowPresenter row = columnHeaderRowsPresenter.GetRow(savedHitTestInformation.HeaderInfo.Row);
+                        RowItem row = columnHeaderRowsPresenter.GetRow(savedHitTestInformation.HeaderInfo.Row);
                         if (row != null)
                         {
                             CellPresenterBase cell = row.GetCell(savedHitTestInformation.HeaderInfo.Column);
@@ -3296,10 +3296,10 @@ namespace Dt.Cells.UI
                 HitTestInformation information2 = GetHitInfo();
                 if ((information2 != null) && (information2.HitTestType == HitTestType.RowHeader))
                 {
-                    GcViewport rowHeaderRowsPresenter = GetRowHeaderRowsPresenter(information2.RowViewportIndex);
+                    CellsPanel rowHeaderRowsPresenter = GetRowHeaderRowsPresenter(information2.RowViewportIndex);
                     if (rowHeaderRowsPresenter != null)
                     {
-                        RowPresenter presenter2 = rowHeaderRowsPresenter.GetRow(information2.HeaderInfo.Row);
+                        RowItem presenter2 = rowHeaderRowsPresenter.GetRow(information2.HeaderInfo.Row);
                         if (presenter2 != null)
                         {
                             CellPresenterBase base3 = presenter2.GetCell(information2.HeaderInfo.Column);

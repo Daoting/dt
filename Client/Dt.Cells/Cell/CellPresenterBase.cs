@@ -85,21 +85,183 @@ namespace Dt.Cells.UI
             return OwningRow.OwningPresenter.CellCache.GetCachedCell(row, column);
         }
 
-        internal virtual FrameworkElement GetEditingElement()
+        FrameworkElement _editingElement;
+        internal FrameworkElement GetEditingElement()
         {
-            //if (_cellType == null)
-            //{
-            //    return null;
-            //}
-            //if (_cellType is IFormulaEditingSupport)
-            //{
-            //    ((IFormulaEditingSupport)_cellType).CanUserEditFormula = SheetView.CanUserEditFormula;
-            //}
-            //_cellType.InitEditingElement();
-            //return _cellType.GetEditingElement();
-            return null;
+            CanUserEditFormula = SheetView.CanUserEditFormula;
+            if (_editingElement == null)
+                _editingElement = new EditingElement();
+
+        //    IFormatter formatter2;
+        //    IFormatter preferredEditingFormatter = null;
+        //    TextBox tbElement = GetEditingElement() as TextBox;
+        //    Cell bindingCell = DataContext;
+        //    StyleInfo info = bindingCell.Worksheet.GetActualStyleInfo(bindingCell.Row.Index, bindingCell.Column.Index, bindingCell.SheetArea, true);
+        //    if ((tbElement == null) || (info == null))
+        //    {
+        //        return;
+        //    }
+        //    bool flag = false;
+        //    string text = string.Empty;
+        //    string formula = "";
+        //    using (((IUIActionExecuter)bindingCell.Worksheet).BeginUIAction())
+        //    {
+        //        int index = bindingCell.Row.Index;
+        //        int column = bindingCell.Column.Index;
+        //        formula = bindingCell.Formula;
+        //        if (formula == null)
+        //        {
+        //            object[,] objArray = bindingCell.Worksheet.FindFormulas(index, column, 1, 1);
+        //            if (objArray.GetLength(0) > 0)
+        //            {
+        //                string str3 = objArray[0, 1].ToString();
+        //                int length = str3.Length;
+        //                if (((length > 2) && str3.StartsWith("{")) && str3.EndsWith("}"))
+        //                {
+        //                    formula = str3.Substring(1, length - 2);
+        //                }
+        //            }
+        //        }
+        //    }
+        //    if (!string.IsNullOrEmpty(formula))
+        //    {
+        //        text = "=" + formula;
+        //        flag = true;
+        //        goto Label_0293;
+        //    }
+        //    if (bindingCell.Value == null)
+        //    {
+        //        if (bindingCell.Value == null)
+        //        {
+        //            _cachedValueType = null;
+        //        }
+        //        goto Label_0293;
+        //    }
+        //    _cachedValueType = bindingCell.Value.GetType();
+        //    preferredEditingFormatter = new GeneralFormatter().GetPreferredEditingFormatter(bindingCell.Value);
+        //    if ((preferredEditingFormatter != null) && (info.Formatter is AutoFormatter))
+        //    {
+        //        try
+        //        {
+        //            text = preferredEditingFormatter.Format(bindingCell.Value);
+        //            goto Label_01F7;
+        //        }
+        //        catch
+        //        {
+        //            text = bindingCell.Text;
+        //            goto Label_01F7;
+        //        }
+        //    }
+        //    text = bindingCell.Text;
+        //Label_01F7:
+        //    formatter2 = info.Formatter;
+        //    if (formatter2 is GeneralFormatter)
+        //    {
+        //        GeneralFormatter formatter3 = formatter2 as GeneralFormatter;
+        //        switch (formatter3.GetFormatType(bindingCell.Value))
+        //        {
+        //            case NumberFormatType.Number:
+        //            case NumberFormatType.Text:
+        //                formatter2 = new GeneralFormatter();
+        //                break;
+        //        }
+        //    }
+        //    if ((formatter2 != null) && !(formatter2 is AutoFormatter))
+        //    {
+        //        text = formatter2.Format(bindingCell.Value);
+        //    }
+        //    if (((text != null) && text.StartsWith("=")) && CanUserEditFormula)
+        //    {
+        //        text = "'" + text;
+        //    }
+        //Label_0293:
+        //    tbElement.Text = text;
+        //    if (info.FontSize > 0.0)
+        //    {
+        //        tbElement.FontSize = info.FontSize * ZoomFactor;
+        //    }
+        //    else
+        //    {
+        //        tbElement.ClearValue(TextBlock.FontSizeProperty);
+        //    }
+        //    tbElement.FontStyle = info.FontStyle;
+        //    tbElement.FontWeight = info.FontWeight;
+        //    tbElement.FontStretch = info.FontStretch;
+        //    if (info.IsFontFamilySet() && (info.FontFamily != null))
+        //    {
+        //        tbElement.FontFamily = info.FontFamily;
+        //    }
+        //    else if (info.IsFontThemeSet())
+        //    {
+        //        string fontTheme = info.FontTheme;
+        //        IThemeSupport worksheet = bindingCell.Worksheet;
+        //        if (worksheet != null)
+        //        {
+        //            tbElement.FontFamily = worksheet.GetThemeFont(fontTheme);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        tbElement.ClearValue(Control.FontFamilyProperty);
+        //    }
+        //    Brush foreground = null;
+        //    if (info.IsForegroundSet())
+        //    {
+        //        foreground = info.Foreground;
+        //    }
+        //    else if (info.IsForegroundThemeColorSet())
+        //    {
+        //        string fname = info.ForegroundThemeColor;
+        //        if ((!string.IsNullOrEmpty(fname) && (bindingCell.Worksheet != null)) && (bindingCell.Worksheet.Workbook != null))
+        //        {
+        //            foreground = new SolidColorBrush(bindingCell.Worksheet.Workbook.GetThemeColor(fname));
+        //        }
+        //    }
+        //    if (foreground != null)
+        //    {
+        //        tbElement.Foreground = foreground;
+        //    }
+        //    else
+        //    {
+        //        tbElement.Foreground = new SolidColorBrush(Colors.Black);
+        //    }
+        //    HorizontalAlignment alignment = bindingCell.ToHorizontalAlignment();
+        //    VerticalAlignment alignment2 = info.VerticalAlignment.ToVerticalAlignment();
+        //    tbElement.VerticalContentAlignment = alignment2;
+        //    if (flag)
+        //    {
+        //        tbElement.TextAlignment = TextAlignment.Left;
+        //    }
+        //    else if (!bindingCell.ActualWordWrap)
+        //    {
+        //        switch (alignment)
+        //        {
+        //            case HorizontalAlignment.Left:
+        //            case HorizontalAlignment.Stretch:
+        //                tbElement.TextAlignment = TextAlignment.Left;
+        //                break;
+
+        //            case HorizontalAlignment.Center:
+        //                tbElement.TextAlignment = TextAlignment.Center;
+        //                break;
+
+        //            case HorizontalAlignment.Right:
+        //                tbElement.TextAlignment = TextAlignment.Right;
+        //                break;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        tbElement.TextAlignment = TextAlignment.Left;
+        //    }
+        //    Thickness defaultPaddingForEdit = GetDefaultPaddingForEdit(tbElement.FontSize);
+        //    tbElement.Margin = defaultPaddingForEdit;
+        //    tbElement.TextWrapping = TextWrapping.Wrap;
+            return _editingElement;
         }
 
+        public bool CanUserEditFormula { get; set; }
+        
         internal void HideForEditing()
         {
             if (!_isHiddenForEditing)
@@ -462,7 +624,7 @@ namespace Dt.Cells.UI
             get { return false; }
         }
 
-        internal RowPresenter OwningRow { get; set; }
+        internal RowItem OwningRow { get; set; }
 
         /// <summary>
         /// Gets a value that indicates the row index.

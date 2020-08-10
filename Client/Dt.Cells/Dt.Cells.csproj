@@ -7,6 +7,10 @@
   <Import Project="..\Common\Dtc-Stable.props" />
 
   <ItemGroup>
+    <Compile Remove="Row\HeaderCornerRowPresenter.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Icons\Ascend.png" />
     <Content Include="Icons\AutoFillIndicator.png" />
     <Content Include="Icons\BottomCenterGrip.png" />

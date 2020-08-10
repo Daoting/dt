@@ -31,10 +31,10 @@
             <SolidColorBrush x:Key="CrossSplitBarBrush" Color="#FFF1F1F1"/>
 
             <!--for ConorHeaderCell color settings-->
-            <SolidColorBrush x:Key="CornerHeaderCellBackgroundBrush" Color="#FFFFFFFF"/>
-            <SolidColorBrush x:Key="CornerHeaderCellHoverBackgroundBrush" Color="#FFD6D6D6"/>
-            <SolidColorBrush x:Key="CornerHeaderCellSelectedBackgroundBrush" Color="#FFC3C3C3"/>
-            <SolidColorBrush x:Key="CornerHeaderCellGlyphBrush" Color="#FF9B9B9B"/>
+            <SolidColorBrush x:Key="CornerBackground" Color="#FFFFFFFF"/>
+            <SolidColorBrush x:Key="CornerHoverBackground" Color="#FFD6D6D6"/>
+            <SolidColorBrush x:Key="CornerSelectedBackground" Color="#FFC3C3C3"/>
+            <SolidColorBrush x:Key="CornerGlyphBrush" Color="#FF9B9B9B"/>
 
             <!--for RowHeaderCell color settings-->
             <SolidColorBrush x:Key="RowHeaderCellBackgroundBrush" Color="#FFF1F1F1"/>
@@ -468,23 +468,23 @@
         </Setter>
     </Style>
 
-    <Style TargetType="local:CornerHeaderCellPresenter">
+    <Style TargetType="local:CornerPanel">
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="VerticalContentAlignment" Value="Stretch" />
         <Setter Property="IsTabStop" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="local:CornerHeaderCellPresenter">
+                <ControlTemplate TargetType="local:CornerPanel">
                     <Grid BorderBrush="{StaticResource ControlBorderBrush}" BorderThickness="0,0,1,1">
-                        <Rectangle x:Name="NormalRectangle" Fill ="{StaticResource CornerHeaderCellBackgroundBrush}" IsHitTestVisible="False" />
-                        <Rectangle x:Name="SelectionRectangle" Opacity="0" Fill ="{StaticResource CornerHeaderCellSelectedBackgroundBrush}" IsHitTestVisible="False" />
-                        <Rectangle x:Name="HoverRectangle" Opacity="0" Fill ="{StaticResource CornerHeaderCellHoverBackgroundBrush}" IsHitTestVisible="False" />
+                        <Rectangle x:Name="NormalRectangle" Fill ="{StaticResource CornerBackground}" IsHitTestVisible="False" />
+                        <Rectangle x:Name="SelectionRectangle" Visibility="Collapsed" Fill ="{StaticResource CornerSelectedBackground}" IsHitTestVisible="False" />
+                        <Rectangle x:Name="HoverRectangle" Visibility="Collapsed" Fill ="{StaticResource CornerHoverBackground}" IsHitTestVisible="False" />
                         <Path Data="M9,0 L9,9 L0,9 z"
                               HorizontalAlignment="Right"
                               VerticalAlignment="Bottom"
                               Margin="0,4,4,4" 
                               Stretch="Uniform"
-                              Fill="{StaticResource CornerHeaderCellGlyphBrush}"
+                              Fill="{StaticResource CornerGlyphBrush}"
                               IsHitTestVisible="False"/>
                     </Grid>
                 </ControlTemplate>

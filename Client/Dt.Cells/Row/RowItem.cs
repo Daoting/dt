@@ -23,10 +23,10 @@ namespace Dt.Cells.UI
     /// <summary>
     /// Represents an individual <see cref="T:GrapeCity.Windows.SpreadSheet.UI.GcSpread" /> row.
     /// </summary>
-    internal partial class RowPresenter : Panel
+    internal partial class RowItem : Panel
     {
         CellPresenterBase _headingOverflowCell;
-        GcViewport _owningPresenter;
+        CellsPanel _owningPresenter;
         List<CellPresenterBase> _recycledCells;
         int _row;
         double _rowWidth;
@@ -35,7 +35,7 @@ namespace Dt.Cells.UI
         const int _NormalCellZIndexBase = 0x2710;
         const int _SpanCellZIndexBase = 0x4e20;
 
-        public RowPresenter(GcViewport viewport)
+        public RowItem(CellsPanel viewport)
         {
             _row = -1;
             Cells = new Dictionary<int, CellPresenterBase>();
@@ -551,7 +551,7 @@ namespace Dt.Cells.UI
 
         public Point Location { get; set; }
 
-        public virtual GcViewport OwningPresenter
+        public virtual CellsPanel OwningPresenter
         {
             get { return _owningPresenter; }
             set { _owningPresenter = value; }

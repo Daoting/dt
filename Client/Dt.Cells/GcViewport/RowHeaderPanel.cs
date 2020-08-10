@@ -15,18 +15,18 @@ using Windows.Foundation;
 
 namespace Dt.Cells.UI
 {
-    internal partial class GcRowHeaderViewport : GcViewport
+    internal partial class RowHeaderPanel : CellsPanel
     {
-        List<RowPresenter> _recycledRowHeaderRows;
+        List<RowItem> _recycledRowHeaderRows;
 
-        public GcRowHeaderViewport(SheetView sheet) : base(sheet, SheetArea.CornerHeader | SheetArea.RowHeader)
+        public RowHeaderPanel(SheetView sheet) : base(sheet, SheetArea.CornerHeader | SheetArea.RowHeader)
         {
-            _recycledRowHeaderRows = new List<RowPresenter>();
+            _recycledRowHeaderRows = new List<RowItem>();
         }
 
-        internal override RowPresenter GenerateNewRow()
+        internal override RowItem GenerateNewRow()
         {
-            return new RowHeaderRowPresenter(this);
+            return new RowHeaderItem(this);
         }
 
         internal override CellLayoutModel GetCellLayoutModel()
@@ -58,13 +58,13 @@ namespace Dt.Cells.UI
             return new Size(headerWidth, Math.Min(viewportHeight, availableSize.Height));
         }
 
-        internal override List<RowPresenter> RecycledRows
+        internal override List<RowItem> RecycledRows
         {
             get
             {
                 if (_recycledRowHeaderRows == null)
                 {
-                    _recycledRowHeaderRows = new List<RowPresenter>();
+                    _recycledRowHeaderRows = new List<RowItem>();
                 }
                 return _recycledRowHeaderRows;
             }

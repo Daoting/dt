@@ -24,7 +24,7 @@ using Windows.UI.Xaml.Shapes;
 
 namespace Dt.Cells.UI
 {
-    internal partial class GcViewport : Panel
+    internal partial class CellsPanel : Panel
     {
         internal void InvalidateDecorationPanel()
         {

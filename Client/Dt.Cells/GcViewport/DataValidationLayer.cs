@@ -20,7 +20,7 @@ using Windows.UI.Xaml.Media;
 
 namespace Dt.Cells.UI
 {
-    internal partial class DataValidationPanel : Panel
+    internal partial class DataValidationLayer : Panel
     {
         DataValidationListButton _dataValidationListButton;
         DataValidationListButtonInfo _dataValidationListButtonInfo;
@@ -29,7 +29,7 @@ namespace Dt.Cells.UI
         DataValidator _validator;
         internal const double DATAVALIDATIONLISTBUTTONWIDTH = 16.0;
 
-        public DataValidationPanel(GcViewport parent)
+        public DataValidationLayer(CellsPanel parent)
         {
             IsHitTestVisible = false;
             Background = new SolidColorBrush(Colors.Transparent);
@@ -290,7 +290,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        internal GcViewport ParentViewport { get; set; }
+        internal CellsPanel ParentViewport { get; set; }
     }
 }
 

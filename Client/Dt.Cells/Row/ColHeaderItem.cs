@@ -14,39 +14,43 @@ using System.Collections.Generic;
 
 namespace Dt.Cells.UI
 {
-    internal partial class RowHeaderRowPresenter : RowPresenter
+    internal partial class ColHeaderItem : RowItem
     {
         [ThreadStatic]
-        static List<CellPresenterBase> _recycledRowHeaderCells;
+        static List<CellPresenterBase> _recycledColHeaderCells;
 
-        public RowHeaderRowPresenter(GcViewport viewport) : base(viewport)
+        public ColHeaderItem(CellsPanel viewPort) : base(viewPort)
         {
         }
 
         protected override CellPresenterBase GenerateNewCell()
         {
-            return new RowHeaderCellPresenter();
+            return new ColumnHeaderCellPresenter();
         }
 
         protected override SheetSpanModelBase GetCellSpanModel()
         {
-            return OwningPresenter.Sheet.ActiveSheet.RowHeaderSpanModel;
+            return OwningPresenter.Sheet.ActiveSheet.ColumnHeaderSpanModel;
         }
 
         public override ColumnLayoutModel GetColumnLayoutModel()
         {
-            return OwningPresenter.Sheet.GetRowHeaderColumnLayoutModel();
+            if (OwningPresenter.SheetArea == SheetArea.ColumnHeader)
+            {
+                return OwningPresenter.Sheet.GetColumnHeaderViewportColumnLayoutModel(OwningPresenter.ColumnViewportIndex);
+            }
+            return OwningPresenter.Sheet.GetViewportColumnLayoutModel(OwningPresenter.ColumnViewportIndex);
         }
 
         protected override List<CellPresenterBase> RecycledCells
         {
             get
             {
-                if (_recycledRowHeaderCells == null)
+                if (_recycledColHeaderCells == null)
                 {
-                    _recycledRowHeaderCells = new List<CellPresenterBase>();
+                    _recycledColHeaderCells = new List<CellPresenterBase>();
                 }
-                return _recycledRowHeaderCells;
+                return _recycledColHeaderCells;
             }
         }
     }

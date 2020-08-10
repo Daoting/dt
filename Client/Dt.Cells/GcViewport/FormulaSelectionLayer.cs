@@ -17,7 +17,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace Dt.Cells.UI
 {
-    internal partial class FormulaSelectionContainerPanel : Panel
+    internal partial class FormulaSelectionLayer : Panel
     {
         DispatcherTimer _timer;
 
@@ -137,7 +137,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        public GcViewport ParentViewport { get; set; }
+        public CellsPanel ParentViewport { get; set; }
     }
 }
 

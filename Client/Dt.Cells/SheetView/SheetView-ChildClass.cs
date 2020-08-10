@@ -1898,14 +1898,14 @@ namespace Dt.Cells.UI
             {
                 if (_sheetView._viewportPresenters != null)
                 {
-                    GcViewport[,] viewportArray = _sheetView._viewportPresenters;
+                    CellsPanel[,] viewportArray = _sheetView._viewportPresenters;
                     int upperBound = viewportArray.GetUpperBound(0);
                     int num2 = viewportArray.GetUpperBound(1);
                     for (int k = viewportArray.GetLowerBound(0); k <= upperBound; k++)
                     {
                         for (int i = viewportArray.GetLowerBound(1); i <= num2; i++)
                         {
-                            GcViewport viewport = viewportArray[k, i];
+                            CellsPanel viewport = viewportArray[k, i];
                             if (viewport != null)
                             {
                                 viewport.RefreshFormulaSelection();

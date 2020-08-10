@@ -58,7 +58,7 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="column">The column index to automatically fit.</param>
         /// <param name="isRowHeader">The flag indicates whether sheetArea is a row header.</param>
-        public void AutoFitColumn(int column, bool isRowHeader)
+        public void AutoFitColumn(int column, bool isRowHeader = false)
         {
             if ((column < 0) || (column >= ActiveSheet.ColumnCount))
             {
@@ -72,7 +72,7 @@ namespace Dt.Cells.UI
         /// </summary>
         /// <param name="row">The row index.</param>
         /// <param name="isColumnHeader">The flag indicates whether sheetArea is a column header.</param>
-        public void AutoFitRow(int row, bool isColumnHeader)
+        public void AutoFitRow(int row, bool isColumnHeader = false)
         {
             if ((row < 0) || (row > ActiveSheet.RowCount))
             {

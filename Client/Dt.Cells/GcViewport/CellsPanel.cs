@@ -27,7 +27,7 @@ namespace Dt.Cells.UI
     /// Used within the template of a <see cref="T:GcSpreadSheet" /> to specify the
     /// location in the control's visual tree where the rows are to be added.
     /// </summary>
-    internal partial class GcViewport : Panel
+    internal partial class CellsPanel : Panel
     {
         internal int _activeCol;
         internal int _activeRow;
@@ -44,20 +44,20 @@ namespace Dt.Cells.UI
         internal List<Rect> _cachedSelectionLayout;
         SpanGraph _cachedSpanGraph;
         CellCachePool _cellCachePool;
-        DataValidationPanel _dataValidationPanel;
-        DragFillContainerPanel _dragFillContainer;
+        DataValidationLayer _dataValidationPanel;
+        DragFillLayer _dragFillContainer;
         Rect _editorBounds;
-        internal EditingPanel _editorPanel;
-        FloatingObjectContainerPanel _floatingObjectContainerPanel;
-        FloatingObjectMovingResizingContainerPanel _floatingObjectsMovingResizingContainer;
-        FormulaSelectionContainerPanel _formulaSelectionContainer;
-        List<RowPresenter> _recycledRows;
-        RowsPanel _rowsContainer;
-        SelectionContainerPanel _selectionContainer;
+        internal EditingLayer _editorPanel;
+        FloatingObjectLayer _floatingObjectContainerPanel;
+        FloatingObjectMovingLayer _floatingObjectsMovingResizingContainer;
+        FormulaSelectionLayer _formulaSelectionContainer;
+        List<RowItem> _recycledRows;
+        RowsLayer _rowsContainer;
+        SelectionLayer _selectionContainer;
         Panel _shapeContainer;
         DecorationPanel _decoratinPanel;
 
-        public GcViewport(SheetView sheet)
+        public CellsPanel(SheetView sheet)
             : this(sheet, SheetArea.Cells)
         {
             HorizontalAlignment = HorizontalAlignment.Left;
@@ -65,7 +65,7 @@ namespace Dt.Cells.UI
             Loaded += GcViewport_Loaded;
         }
 
-        public GcViewport(SheetView sheet, SheetArea sheetArea)
+        public CellsPanel(SheetView sheet, SheetArea sheetArea)
         {
             SheetArea = sheetArea;
             Sheet = sheet;
@@ -75,7 +75,7 @@ namespace Dt.Cells.UI
             _cachedSelectionFrameLayout = new Rect();
             _cachedFocusCellLayout = new Rect();
             _editorBounds = new Rect();
-            _recycledRows = new List<RowPresenter>();
+            _recycledRows = new List<RowItem>();
             _cachedDragFillFrameRect = Rect.Empty;
             _cachedDragClearRect = Rect.Empty;
             _cellCachePool = new CellCachePool(this);
@@ -86,7 +86,7 @@ namespace Dt.Cells.UI
                 return;
 
             // 行数据层
-            _rowsContainer = new RowsPanel { ParentViewport = this };
+            _rowsContainer = new RowsLayer(this);
             Children.Add(_rowsContainer);
 
             // 行/列头只有一层
@@ -96,13 +96,13 @@ namespace Dt.Cells.UI
             // 以下为Cells内容区域
 
             // 网格层，调整为只用在内容区域，行/列头不再使用
-            _borderContainer = new GcBorders(this);
+            _borderContainer = new BorderLayer(this);
             Children.Add(_borderContainer);
 
             // 选择状态层
-            _selectionContainer = new SelectionContainerPanel(this);
+            _selectionContainer = new SelectionLayer(this);
             Children.Add(_selectionContainer);
-            _formulaSelectionContainer = new FormulaSelectionContainerPanel { ParentViewport = this };
+            _formulaSelectionContainer = new FormulaSelectionLayer { ParentViewport = this };
             Children.Add(_formulaSelectionContainer);
 
             // 图形层
@@ -112,7 +112,7 @@ namespace Dt.Cells.UI
             // 拖拽复制层
             if (Sheet.CanUserDragFill)
             {
-                _dragFillContainer = new DragFillContainerPanel { ParentViewport = this };
+                _dragFillContainer = new DragFillLayer { ParentViewport = this };
                 Children.Add(_dragFillContainer);
             }
 
@@ -123,16 +123,16 @@ namespace Dt.Cells.UI
                 Children.Add(_decoratinPanel);
             }
 
-            _dataValidationPanel = new DataValidationPanel(this);
+            _dataValidationPanel = new DataValidationLayer(this);
             Children.Add(_dataValidationPanel);
 
-            _editorPanel = new EditingPanel(this);
+            _editorPanel = new EditingLayer(this);
             Children.Add(_editorPanel);
 
-            _floatingObjectContainerPanel = new FloatingObjectContainerPanel(this);
+            _floatingObjectContainerPanel = new FloatingObjectLayer(this);
             Children.Add(_floatingObjectContainerPanel);
 
-            _floatingObjectsMovingResizingContainer = new FloatingObjectMovingResizingContainerPanel(this);
+            _floatingObjectsMovingResizingContainer = new FloatingObjectMovingLayer(this);
             Children.Add(_floatingObjectsMovingResizingContainer);
         }
 
@@ -550,9 +550,9 @@ namespace Dt.Cells.UI
             }
         }
 
-        internal virtual RowPresenter GenerateNewRow()
+        internal virtual RowItem GenerateNewRow()
         {
-            return new RowPresenter(this);
+            return new RowItem(this);
         }
 
         CellRange GetActiveCellRange()
@@ -793,7 +793,7 @@ namespace Dt.Cells.UI
             return new Rect(PointToClient(new Point(x, y)), new Size(width, height));
         }
 
-        internal virtual RowPresenter GetRow(int row)
+        internal virtual RowItem GetRow(int row)
         {
             return RowsContainer.GetRow(row);
         }
@@ -829,7 +829,7 @@ namespace Dt.Cells.UI
         internal CellPresenterBase GetViewportCell(int row, int column, bool containsSpan)
         {
             CellPresenterBase cell = null;
-            RowPresenter presenter = RowsContainer.GetRow(row);
+            RowItem presenter = RowsContainer.GetRow(row);
             if (presenter != null)
             {
                 cell = presenter.GetCell(column);
@@ -840,7 +840,7 @@ namespace Dt.Cells.UI
             }
             if (containsSpan && (cell == null))
             {
-                foreach (RowPresenter presenter2 in RowsContainer.Rows)
+                foreach (RowItem presenter2 in RowsContainer.Rows)
                 {
                     if (presenter2 != null)
                     {
@@ -937,7 +937,7 @@ namespace Dt.Cells.UI
 
             if (_editorPanel == null)
             {
-                _editorPanel = new EditingPanel(this);
+                _editorPanel = new EditingLayer(this);
                 _editorPanel.InstallEditor(editingCell, false);
             }
             else if (((_editorPanel != null) && (_editorPanel.Editor != null)) && (editingCell != null))
@@ -1323,7 +1323,7 @@ namespace Dt.Cells.UI
                 ShowSheetCell(row, column);
                 if (_editorPanel == null)
                 {
-                    _editorPanel = new EditingPanel(this);
+                    _editorPanel = new EditingLayer(this);
                 }
                 if (!cell.HasEditingElement())
                 {
@@ -1433,7 +1433,7 @@ namespace Dt.Cells.UI
                 ShowSheetCell(row, column);
                 if (_editorPanel == null)
                 {
-                    _editorPanel = new EditingPanel(this);
+                    _editorPanel = new EditingLayer(this);
                 }
                 _editorPanel.EditingChanged += new EventHandler(_editorPanel_EdtingChanged);
                 _editorPanel.Opacity = 1.0;
@@ -1507,7 +1507,7 @@ namespace Dt.Cells.UI
 
         void UpdateCellState(int row, int column)
         {
-            RowPresenter presenter = RowsContainer.GetRow(row);
+            RowItem presenter = RowsContainer.GetRow(row);
             if (presenter != null)
             {
                 CellPresenterBase cell = presenter.GetCell(column);
@@ -1570,15 +1570,15 @@ namespace Dt.Cells.UI
 
         public int ColumnViewportIndex { get; set; }
 
-        internal RowPresenter CurrentRow { get; set; }
+        internal RowItem CurrentRow { get; set; }
 
-        internal DragFillContainerPanel DragFillContainer
+        internal DragFillLayer DragFillContainer
         {
             get
             {
                 if ((_dragFillContainer == null) && Sheet.CanUserDragFill)
                 {
-                    DragFillContainerPanel panel = new DragFillContainerPanel
+                    DragFillLayer panel = new DragFillLayer
                     {
                         ParentViewport = this
                     };
@@ -1588,7 +1588,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        internal EditingPanel EditingContainer
+        internal EditingLayer EditingContainer
         {
             get { return _editorPanel; }
         }
@@ -1603,17 +1603,17 @@ namespace Dt.Cells.UI
             get { return ((_editorPanel != null) && _editorPanel.EditorDirty); }
         }
 
-        FloatingObjectMovingResizingContainerPanel FloatingObjectsMovingResizingContainer
+        FloatingObjectMovingLayer FloatingObjectsMovingResizingContainer
         {
             get { return _floatingObjectsMovingResizingContainer; }
         }
 
-        internal FloatingObjectContainerPanel FloatingObjectsPanel
+        internal FloatingObjectLayer FloatingObjectsPanel
         {
             get { return _floatingObjectContainerPanel; }
         }
 
-        internal FormulaSelectionContainerPanel FormulaSelectionContainer
+        internal FormulaSelectionLayer FormulaSelectionContainer
         {
             get { return _formulaSelectionContainer; }
         }
@@ -1625,26 +1625,26 @@ namespace Dt.Cells.UI
 
         public Point Location { get; set; }
 
-        internal virtual List<RowPresenter> RecycledRows
+        internal virtual List<RowItem> RecycledRows
         {
             get
             {
                 if (_recycledRows == null)
                 {
-                    _recycledRows = new List<RowPresenter>();
+                    _recycledRows = new List<RowItem>();
                 }
                 return _recycledRows;
             }
         }
 
-        internal RowsPanel RowsContainer
+        internal RowsLayer RowsContainer
         {
             get { return _rowsContainer; }
         }
 
         public int RowViewportIndex { get; set; }
 
-        internal SelectionContainerPanel SelectionContainer
+        internal SelectionLayer SelectionContainer
         {
             get { return _selectionContainer; }
         }
@@ -1666,9 +1666,9 @@ namespace Dt.Cells.UI
         internal sealed class CellCachePool : ICellSupport
         {
             Dictionary<ulong, Cell> _cache = new Dictionary<ulong, Cell>();
-            GcViewport _parent;
+            CellsPanel _parent;
 
-            public CellCachePool(GcViewport parentViewport)
+            public CellCachePool(CellsPanel parentViewport)
             {
                 _parent = parentViewport;
             }
@@ -1736,7 +1736,7 @@ namespace Dt.Cells.UI
                 return GetCachedCell(row, column);
             }
 
-            GcViewport ParentViewport
+            CellsPanel ParentViewport
             {
                 get { return _parent; }
             }

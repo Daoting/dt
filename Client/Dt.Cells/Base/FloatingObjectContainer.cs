@@ -54,7 +54,7 @@ namespace Dt.Cells.UI
         static readonly SolidColorBrush BorderGapBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(200, 0xeb, 0xeb, 0xeb));
         internal const int GrapStripSize = 8;
 
-        public FloatingObjectContainer(Dt.Cells.Data.FloatingObject floatingObject, GcViewport parentViewport)
+        public FloatingObjectContainer(Dt.Cells.Data.FloatingObject floatingObject, CellsPanel parentViewport)
         {
             _floatingObject = floatingObject;
             base.Visibility = floatingObject.Visible ? Visibility.Visible : Visibility.Collapsed;
@@ -321,7 +321,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        internal GcViewport ParentViewport { get; set; }
+        internal CellsPanel ParentViewport { get; set; }
 
         internal virtual SpreadTheme Theme { get; set; }
     }

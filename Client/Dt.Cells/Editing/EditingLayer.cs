@@ -33,16 +33,16 @@ using Windows.UI.Xaml.Shapes;
 namespace Dt.Cells.UI
 {
 
-    internal partial class EditingPanel : Panel
+    internal partial class EditingLayer : Panel
     {
-        GcViewport _parentViewport;
+        CellsPanel _parentViewport;
         CellPresenterBase _editingCell;
         FrameworkElement _editor1;
         FrameworkElement _editor2;
 
         public event EventHandler EditingChanged;
 
-        public EditingPanel(GcViewport parent)
+        public EditingLayer(CellsPanel parent)
         {
             _parentViewport = parent;
             Background = new SolidColorBrush(Colors.White);

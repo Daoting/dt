@@ -69,14 +69,14 @@ namespace Dt.Cells.UI
         {
             if (_viewportPresenters != null)
             {
-                GcViewport[,] viewportArray = _viewportPresenters;
+                CellsPanel[,] viewportArray = _viewportPresenters;
                 int upperBound = viewportArray.GetUpperBound(0);
                 int num2 = viewportArray.GetUpperBound(1);
                 for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
                 {
                     for (int j = viewportArray.GetLowerBound(1); j <= num2; j++)
                     {
-                        GcViewport viewport = viewportArray[i, j];
+                        CellsPanel viewport = viewportArray[i, j];
                         if ((viewport != null) && (viewport.SheetArea == SheetArea.Cells))
                         {
                             viewport.RefreshDataValidationInvalidCircles();
@@ -117,14 +117,14 @@ namespace Dt.Cells.UI
         {
             if (_viewportPresenters != null)
             {
-                GcViewport[,] viewportArray = _viewportPresenters;
+                CellsPanel[,] viewportArray = _viewportPresenters;
                 int upperBound = viewportArray.GetUpperBound(0);
                 int num2 = viewportArray.GetUpperBound(1);
                 for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
                 {
                     for (int j = viewportArray.GetLowerBound(1); j <= num2; j++)
                     {
-                        GcViewport viewport = viewportArray[i, j];
+                        CellsPanel viewport = viewportArray[i, j];
                         if ((viewport != null) && (viewport.SheetArea == SheetArea.Cells))
                         {
                             viewport.UpdateDataValidationUI(row, column);

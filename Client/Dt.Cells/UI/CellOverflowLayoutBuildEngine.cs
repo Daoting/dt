@@ -24,7 +24,7 @@ namespace Dt.Cells.UI
         int _cachedLeftColumn = -1;
         int _cachedRightColumn = -1;
 
-        public CellOverflowLayoutBuildEngine(GcViewport viewport)
+        public CellOverflowLayoutBuildEngine(CellsPanel viewport)
         {
             Viewport = viewport;
             _cachedLeftColumn = viewport.Sheet.GetViewportLeftColumn(viewport.ColumnViewportIndex);
@@ -486,7 +486,7 @@ namespace Dt.Cells.UI
             _cachedCellOverflowModels.Remove(rowIndex);
         }
 
-        GcViewport Viewport { get; set; }
+        CellsPanel Viewport { get; set; }
 
         public int ViewportLeftColumn
         {

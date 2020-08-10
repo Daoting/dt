@@ -344,7 +344,7 @@ namespace Dt.Cells.UI
             get { return GetViewportTopRow(_dragToRowViewport); }
         }
 
-        internal GcViewport EditingViewport
+        internal CellsPanel EditingViewport
         {
             get { return _editinViewport; }
             set { _editinViewport = value; }
@@ -413,56 +413,26 @@ namespace Dt.Cells.UI
             set { SetValue(FreezeLineStyleProperty, value); }
         }
 
-        internal FormulaSelectionFeature FSelectionFeature
-        {
-            get { return _formulaSelectionFeature; }
-        }
-
-
-
-
-
-
-
-
-
-
-
-
         internal bool HideSelectionWhenPrinting
         {
-            get { return _hideSelectionWhenPrinting; }
-            set { _hideSelectionWhenPrinting = value; }
+            get { return (bool)GetValue(HideSelectionWhenPrintingProperty); }
+            set { SetValue(HideSelectionWhenPrintingProperty, value); }
         }
 
         /// <summary>
         /// Gets or sets whether to highlight invalid data.
         /// </summary>
-        [DefaultValue(false)]
         public bool HighlightInvalidData
         {
-            get { return _highlightDataValidationInvalidData; }
-            set
-            {
-                if (_highlightDataValidationInvalidData != value)
-                {
-                    _highlightDataValidationInvalidData = value;
-                    if (!HighlightInvalidData)
-                    {
-                        RefreshDataValidationInvalidCircles();
-                    }
-                    else
-                    {
-                        Invalidate();
-                    }
-                }
-            }
+            get { return (bool)GetValue(HighlightInvalidDataProperty); }
+            set { SetValue(HighlightInvalidDataProperty, value); }
         }
 
-        internal FilterButtonInfo HitFilterInfo
-        {
-            get { return _hitFilterInfo; }
-        }
+
+
+
+
+        // 以下未整理
 
         /// <summary>
         /// Gets or sets a value that indicates whether the horizontal scroll bar is scrollable.
@@ -648,6 +618,9 @@ namespace Dt.Cells.UI
             }
         }
 
+        /// <summary>
+        /// 是否开始执行某个操作，如调整行高列宽、拖拽、浮动窗口移动...
+        /// </summary>
         internal bool IsWorking { get; set; }
 
         internal int MaxCellOverflowDistance
@@ -1250,6 +1223,245 @@ namespace Dt.Cells.UI
             }
         }
 
+        #region 成员变量
+        Rect? _autoFillIndicatorRec;
+        GripperLocationsStruct _gripperLocations;
+
+        internal Border _autoFillIndicatorContainer;
+        Size _availableSize;
+        internal Ellipse _bottomRightGripper;
+        internal Image _cachedautoFillIndicatorImage;
+        internal Image _cachedBottomRightACornerVisual;
+        CellLayoutModel[] _cachedColumnHeaderCellLayoutModel;
+        internal RowLayoutModel _cachedColumnHeaderRowLayoutModel;
+        internal ColumnLayoutModel[] _cachedColumnHeaderViewportColumnLayoutModel;
+        internal TransformGroup[] _cachedColumnHeaderViewportTransform;
+        internal Image[] _cachedColumnHeaderViewportVisual;
+        internal Image _cachedColumnResizerGripperImage;
+        internal TransformGroup _cachedCornerViewportTransform;
+        internal Image _cachedCornerViewportVisual;
+        FilterButtonInfoModel _cachedFilterButtonInfoModel;
+        FloatingObjectLayoutModel[,] _cachedFloatingObjectLayoutModel;
+        FloatingObjectLayoutModel[,] _cachedFloatingObjectMovingResizingLayoutModel;
+        GroupLayout _cachedGroupLayout;
+        SheetLayout _cachedLayout;
+        internal Dictionary<string, BitmapImage> _cachedResizerGipper;
+        CellLayoutModel[] _cachedRowHeaderCellLayoutModel;
+        internal ColumnLayoutModel _cachedRowHeaderColumnLayoutModel;
+        internal RowLayoutModel[] _cachedRowHeaderViewportRowLayoutModel;
+        internal TransformGroup[] _cachedRowHeaderViewportTransform;
+        internal Image[] _cachedRowHeaderViewportVisual;
+        internal Image _cachedRowResizerGripperImage;
+        internal Dictionary<string, ImageSource> _cachedToolbarImageSources;
+        CellLayoutModel[,] _cachedViewportCellLayoutModel;
+        internal ColumnLayoutModel[] _cachedViewportColumnLayoutModel;
+        internal double[] _cachedViewportHeights;
+        internal RowLayoutModel[] _cachedViewportRowLayoutModel;
+        internal double[] _cachedViewportSplitBarX;
+        internal double[] _cachedViewportSplitBarY;
+        internal TransformGroup[,] _cachedViewportTransform;
+        internal Image[,] _cachedViewportVisual;
+        internal double[] _cachedViewportWidths;
+        internal Line _columnFreezeLine;
+        GcRangeGroupHeader _columnGroupHeaderPresenter;
+        GcRangeGroup[] _columnGroupPresenters;
+        ColHeaderPanel[] _columnHeaderPresenters;
+        int _columnOffset;
+        internal Line _columnTrailingFreezeLine;
+        CornerPanel _cornerPanel;
+        internal int _currentActiveColumnIndex;
+        internal int _currentActiveRowIndex;
+        DragFillDirection _currentFillDirection = DragFillDirection.Down;
+        CellRange _currentFillRange;
+        Windows.UI.Xaml.Controls.Primitives.Popup _dataValidationListPopUp;
+        PopupHelper _dataValidationPopUpHelper;
+        int _dragDropColumnOffset;
+        CellRange _dragDropFromRange;
+        Grid _dragDropIndicator;
+        Grid _dragDropInsertIndicator;
+        int _dragDropRowOffset;
+        PopupHelper _dragFillPopup;
+        DragFillSmartTag _dragFillSmartTag;
+        int _dragFillStartBottomRowViewport = -2;
+        int _dragFillStartLeftColumnViewport = -2;
+        CellRange _dragFillStartRange;
+        int _dragFillStartRightColumnViewport = -2;
+        int _dragFillStartTopRowViewport = -2;
+        int _dragStartColumnViewport;
+        int _dragStartRowViewport;
+        int _dragToColumn;
+        int _dragToColumnViewport;
+        int _dragToRow;
+        int _dragToRowViewport;
+        CellsPanel _editinViewport;
+        EditorInfo _editorInfo;
+        internal short _eventSuspended;
+        Windows.UI.Xaml.Controls.Primitives.Popup _filterPopup;
+        PopupHelper _filterPopupHelper;
+
+        Point _floatingObjectsMovingResizingOffset = new Point(0.0, 0.0);
+        int _floatingObjectsMovingResizingStartColumn = -2;
+        Point _floatingObjectsMovingResizingStartPoint = new Point(0.0, 0.0);
+        Rect _floatingObjectsMovingResizingStartPointCellBounds = new Rect(0.0, 0.0, 0.0, 0.0);
+        int _floatingObjectsMovingResizingStartRow = -2;
+        Dictionary<string, Point> _floatingObjectsMovingStartLocations = new Dictionary<string, Point>();
+        FormulaSelectionFeature _formulaSelectionFeature;
+        internal FormulaSelectionGripperContainerPanel _formulaSelectionGripperPanel;
+        internal GestureRecognizer _gestrueRecognizer;
+        GcRangeGroupCorner _groupCornerPresenter;
+        FilterButtonInfo _hitFilterInfo;
+        ScrollSelectionManager _horizontalSelectionMgr;
+        internal HoverManager _hoverManager;
+        bool _hScrollable;
+        internal InputDeviceType _inputDeviceType;
+        internal bool _isDoubleClick;
+        bool _isDragCopy;
+        bool _isDragInsert;
+        bool _isEditing;
+        internal bool _isIMEEnterEditing;
+        bool _isMouseDownFloatingObject;
+        internal bool _isTouchScrolling;
+
+        internal Point _lastClickLocation;
+        internal Point _lastClickPoint;
+        Image _mouseCursor;
+        internal Point _mouseDownPosition;
+        FloatingObject[] _movingResizingFloatingObjects;
+        SpreadXNavigation _navigation;
+        internal HitTestInformation _positionInfo;
+        CopyMoveCellsInfo _preFillCellsInfo;
+        internal uint? _primaryTouchDeviceId = null;
+        internal bool _primaryTouchDeviceReleased;
+        bool _protect;
+        Brush _rangeGroupBackground;
+        Brush _rangeGroupBorderBrush;
+        Brush _rangeGroupLineStroke;
+        internal bool _resetSelectionFrameStroke;
+        internal Border _resizerGripperContainer;
+        internal ResizeZeroIndicator _resizeZeroIndicator;
+        internal Line _resizingTracker;
+        internal PointerRoutedEventArgs _routedEventArgs;
+        internal Line _rowFreezeLine;
+        GcRangeGroupHeader _rowGroupHeaderPresenter;
+        GcRangeGroup[] _rowGroupPresenters;
+        internal CellsPanel[] _rowHeaderPresenters;
+        int _rowOffset;
+        internal Line _rowTrailingFreezeLine;
+        SpreadXSelection _selection;
+        Canvas _shapeDrawingContainer;
+        bool _showColumnRangeGroup;
+        bool _showFreezeLine;
+        bool _showRowRangeGroup;
+        int _suspendViewInvalidate;
+        TooltipPopupHelper _tooltipHelper;
+        Windows.UI.Xaml.Controls.Primitives.Popup _tooltipPopup;
+        internal Ellipse _topLeftGripper;
+        internal HashSet<uint> _touchProcessedPointIds = new HashSet<uint>();
+        internal HitTestInformation _touchStartHitTestInfo;
+        internal int _touchStartLeftColumn = -1;
+        internal Point _touchStartPoint;
+        internal int _touchStartTopRow = -1;
+        internal Windows.UI.Xaml.Controls.Primitives.Popup _touchToolbarPopup = null;
+        //internal Point _touchTranslatePoint;
+        internal double _touchZoomInitFactor;
+        internal double _touchZoomNewFactor;
+        internal Point _touchZoomOrigin;
+        Canvas _trackersContainer;
+        Style _trailingFreezeLineStyle;
+        internal double _translateOffsetX;
+        internal double _translateOffsetY;
+        UndoManager _undoManager;
+        internal bool _updateViewportAfterTouch;
+        ScrollSelectionManager _verticalSelectionMgr;
+        internal CellsPanel[,] _viewportPresenters;
+        bool _vScrollable;
+        internal HitTestInformation _zoomOriginHitTestInfo;
+        internal GripperLocationsStruct CachedGripperLocation;
+        const string _CELL_DELIMITER = "\"";
+        const string _COLUMN_DELIMITER = "\t";
+        internal bool _DoTouchResizing;
+        internal const double ENHANCED_ZERO_INDICATOR_WIDTH = 6.0;
+        internal bool _fastScroll;
+        internal const double FILTERBUTTON_HEIGHT = 16.0;
+        internal const double FILTERBUTTON_WIDTH = 16.0;
+        static readonly Size GCSPREAD_DefaultSize = new Size(500.0, 500.0);
+        internal const int GRIPPERSIZE = 0x10;
+        const double _GROUPBUTTON_HEIGHT = 16.0;
+        const double _GROUPBUTTON_WIDTH = 16.0;
+        internal const double HALF_ENHANCED_ZERO_INDICATOR_WIDTH = 3.0;
+        internal const double HORIZONTALSPLITBOX_WIDTH = 6.0;
+        const double _INDICATOR_THICKNESS = 3.0;
+        internal bool IsContinueTouchOperation;
+        internal bool IsTouchDragFilling;
+        internal bool IsTouchDrapDropping;
+        internal bool IsTouching;
+        internal bool IsTouchPromotedMouseMessage;
+        internal bool IsTouchResizingColumns;
+        internal bool IsTouchResizingRows;
+        internal bool IsTouchSelectingCells;
+        internal bool IsTouchSelectingColumns;
+        internal bool IsTouchSelectingRows;
+        bool _IsTouchStartColumnSelecting;
+        bool _IsTouchStartRowSelecting;
+        internal bool IsTouchTabStripResizing;
+        internal bool IsTouchZooming;
+        internal const int _MAXSCROLLABLEHORIZONTALOFFSET = 120;
+        internal const int _MAXSCROLLABLEVERTICALOFFSET = 80;
+        const int _MOUSEWHEELSCROLLLINES = 3;
+        internal const double RESIZE_HEIGHT = 4.0;
+        internal const double RESIZE_WIDTH = 4.0;
+        const string _ROW_DELIMITER = "\r\n";
+        internal const double SPLITBOXWIDTH = 20.0;
+        const double _TOOLTIP_OFFSET = 4.0;
+        internal const double VERTICALSPLITBOX_HEIGHT = 6.0;
+        const float _ZOOM_MAX = 4f;
+        const float _ZOOM_MIN = 0.1f;
+
+
+        Size _cachedLastAvailableSize;
+        SplitBoxAlignment _columnSplitBoxAlignment;
+        SplitBoxPolicy _columnSplitBoxPolicy;
+        Line _columnSplittingTracker;
+        CrossSplitBar[,] _crossSplitBar;
+        ScrollBar[] _horizontalScrollBar;
+        double _horizontalScrollBarHeight;
+        Style _horizontalScrollBarStyle;
+        HorizontalSplitBar[] _horizontalSplitBar;
+        HorizontalSplitBox[] _horizontalSplitBox;
+        HashSet<int> _invisibleColumns;
+        HashSet<int> _invisibleRows;
+        bool _pendinging;
+        Grid _progressGrid;
+        ProgressRing _progressRing;
+        SplitBoxAlignment _rowSplitBoxAlignment;
+        SplitBoxPolicy _rowSplitBoxPolicy;
+        Line _rowSplittingTracker;
+        ScrollBarTrackPolicy _scrollBarTrackPolicy;
+        int _scrollTo;
+        bool _showScrollTip;
+        Canvas _splittingTrackerContainer;
+        TabStrip _tabStrip;
+        bool _tabStripEditable;
+        bool _tabStripInsertTab;
+        double _tabStripRatio;
+        Visibility _tabStripVisibility;
+        ScrollBar[] _verticalScrollBar;
+        Style _verticalScrollBarStyle;
+        double _verticalScrollBarWidth;
+        VerticalSplitBar[] _verticalSplitBar;
+        VerticalSplitBox[] _verticalSplitBox;
+        internal const double GCSPREAD_HorizontalScrollBarDefaultHeight = 25.0;
+        internal const ScrollBarTrackPolicy GCSPREAD_ScrollBarTrackPolicy = ScrollBarTrackPolicy.Both;
+        internal const double GCSPREAD_TabStripRatio = 0.5;
+        internal const double GCSPREAD_VerticalScrollBarDefaultWidth = 25.0;
+        internal static bool IsSwitchingSheet;
+        bool IsTouchColumnSplitting;
+        bool IsTouchRowSplitting;
+        bool IsTouchTabStripScrolling;
+        HorizontalSplitBox tabStripSplitBox;
+        const double TABSTRIPSPLITBOX_WIDTH = 16.0;
+        #endregion
+
         #region 静态内容
         public static readonly DependencyProperty AutoClipboardProperty = DependencyProperty.Register(
             "AutoClipboard",
@@ -1304,6 +1516,31 @@ namespace Dt.Cells.UI
             typeof(Style),
             typeof(SheetView),
             new PropertyMetadata(null, OnFreezeLineStyleChanged));
+
+        public static readonly DependencyProperty HideSelectionWhenPrintingProperty = DependencyProperty.Register(
+            "HideSelectionWhenPrinting",
+            typeof(bool),
+            typeof(SheetView),
+            new PropertyMetadata(false));
+
+        public static readonly DependencyProperty HighlightInvalidDataProperty = DependencyProperty.Register(
+            "HighlightInvalidData",
+            typeof(bool),
+            typeof(SheetView),
+            new PropertyMetadata(false, OnHighlightInvalidDataChanged));
+
+        static void OnHighlightInvalidDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var st = (SheetView)d;
+            if ((bool)e.NewValue)
+            {
+                st.Invalidate();
+            }
+            else
+            {
+                st.RefreshDataValidationInvalidCircles();
+            }
+        }
 
         static void OnFreezeLineStyleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {

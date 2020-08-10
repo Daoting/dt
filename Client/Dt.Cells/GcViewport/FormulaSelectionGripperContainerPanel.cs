@@ -33,7 +33,7 @@ namespace Dt.Cells.UI
                 bool isBottomVisible = false;
                 int activeRowViewportIndex = ParentSheet.GetActiveRowViewportIndex();
                 int activeColumnViewportIndex = ParentSheet.GetActiveColumnViewportIndex();
-                GcViewport viewportRowsPresenter = ParentSheet.GetViewportRowsPresenter(activeRowViewportIndex, activeColumnViewportIndex);
+                CellsPanel viewportRowsPresenter = ParentSheet.GetViewportRowsPresenter(activeRowViewportIndex, activeColumnViewportIndex);
                 Rect rect = viewportRowsPresenter.GetRangeBounds(new CellRange(row, column, rowCount, columnCount), out isLeftVisible, out isRightVisible, out isTopVisible, out isBottomVisible);
                 if (!rect.IsEmpty)
                 {

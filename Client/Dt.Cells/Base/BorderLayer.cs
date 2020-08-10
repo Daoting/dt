@@ -21,7 +21,7 @@ namespace Dt.Cells.UI
     /// <summary>
     /// 调整为只用在内容区域，行/列头不再使用
     /// </summary>
-    internal sealed partial class GcBorders : Panel
+    internal sealed partial class BorderLayer : Panel
     {
         Panel _borderLinesPanel = new Canvas();
         Dictionary<ulong, Rect> _cellBoundsCache = new Dictionary<ulong, Rect>();
@@ -40,7 +40,7 @@ namespace Dt.Cells.UI
         Panel _scrollingGridlinesPanel = new Canvas();
         SheetView _sheetView = null;
         Dictionary<ulong, BorderLine> _vBorderLineCache = new Dictionary<ulong, BorderLine>();
-        GcViewport _viewport = null;
+        CellsPanel _viewport = null;
         int _viewportBottomRow = -1;
         int _viewportLeftColumn = -1;
         int _viewportRightColumn = -1;
@@ -48,7 +48,7 @@ namespace Dt.Cells.UI
         Worksheet _worksheet = null;
         float _zoomFactor;
 
-        public GcBorders(GcViewport viewport)
+        public BorderLayer(CellsPanel viewport)
         {
             _viewport = viewport;
             _zoomFactor = 1f;
@@ -659,7 +659,7 @@ namespace Dt.Cells.UI
 
         BorderLine GetCellBorderByBorderIndex(int row, int column, Borders borderIndex, ref Cell cell)
         {
-            GcViewport viewport = _viewport;
+            CellsPanel viewport = _viewport;
             if (cell == null)
             {
                 cell = viewport.CellCache.GetCachedCell(row, column);
@@ -708,14 +708,14 @@ namespace Dt.Cells.UI
             return null;
         }
 
-        GcViewport GetViewport()
+        CellsPanel GetViewport()
         {
             return _viewport;
         }
 
         Worksheet GetWorksheet()
         {
-            GcViewport viewport = _viewport;
+            CellsPanel viewport = _viewport;
             if ((viewport != null) && (viewport.Sheet != null))
             {
                 return viewport.Sheet.ActiveSheet;

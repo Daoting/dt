@@ -18,7 +18,7 @@ namespace Dt.Cells.UI
     {
         PictureView _pictureView;
 
-        public PictureContainer(Picture picture, GcViewport parentViewport) : base(picture, parentViewport)
+        public PictureContainer(Picture picture, CellsPanel parentViewport) : base(picture, parentViewport)
         {
             _pictureView = new PictureView(picture, base.ParentViewport);
             _pictureView.HorizontalAlignment = HorizontalAlignment.Stretch;

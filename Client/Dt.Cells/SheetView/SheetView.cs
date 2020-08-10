@@ -152,7 +152,7 @@ namespace Dt.Cells.UI
         {
             if (IsEditing && EditorDirty)
             {
-                GcViewport editingViewport = EditingViewport;
+                CellsPanel editingViewport = EditingViewport;
                 if (((editingViewport != null) && editingViewport.IsEditing()) && !cancel)
                 {
                     int editingRowIndex = editingViewport.EditingContainer.EditingRowIndex;
@@ -387,7 +387,7 @@ namespace Dt.Cells.UI
             {
                 return false;
             }
-            GcViewport viewportRowsPresenter = GetViewportRowsPresenter(GetActiveRowViewportIndex(), GetActiveColumnViewportIndex());
+            CellsPanel viewportRowsPresenter = GetViewportRowsPresenter(GetActiveRowViewportIndex(), GetActiveColumnViewportIndex());
             if ((viewportRowsPresenter != null) && (((viewportRowsPresenter.EditingContainer != null) && (viewportRowsPresenter.EditingContainer.Editor != null)) && (viewportRowsPresenter.EditingContainer.EditorStatus == EditorStatus.Edit)))
             {
                 return false;
@@ -2345,7 +2345,7 @@ namespace Dt.Cells.UI
 
             if (_viewportPresenters != null)
             {
-                GcViewport viewport = _viewportPresenters[1, 1];
+                CellsPanel viewport = _viewportPresenters[1, 1];
                 if ((viewport != null) && !viewport.FocusContent())
                 {
                     Excel.Focus(FocusState.Programmatic);
@@ -2417,7 +2417,7 @@ namespace Dt.Cells.UI
             return list.ToArray();
         }
 
-        Rect GetAutoFillIndicatorRect(GcViewport vp, CellRange activeSelection)
+        Rect GetAutoFillIndicatorRect(CellsPanel vp, CellRange activeSelection)
         {
             SheetLayout sheetLayout = GetSheetLayout();
             double viewportX = sheetLayout.GetViewportX(vp.ColumnViewportIndex);
@@ -2711,7 +2711,7 @@ namespace Dt.Cells.UI
             return _cachedColumnHeaderRowLayoutModel;
         }
 
-        internal GcViewport GetColumnHeaderRowsPresenter(int columnViewportIndex)
+        internal CellsPanel GetColumnHeaderRowsPresenter(int columnViewportIndex)
         {
             if (_columnHeaderPresenters == null)
             {
@@ -2759,11 +2759,6 @@ namespace Dt.Cells.UI
                     return GetColumnHeaderViewportColumnLayoutModel(columnViewportIndex);
             }
             return null;
-        }
-
-        internal GcViewport GetCornerPresenter()
-        {
-            return _cornerPresenter;
         }
 
         Rect GetCornerRectangle()
@@ -3685,7 +3680,7 @@ namespace Dt.Cells.UI
             return rowHeaderResizingColumnLayoutFromX;
         }
 
-        internal GcViewport GetRowHeaderRowsPresenter(int rowViewportIndex)
+        internal CellsPanel GetRowHeaderRowsPresenter(int rowViewportIndex)
         {
             if (_rowHeaderPresenters == null)
             {
@@ -3766,17 +3761,6 @@ namespace Dt.Cells.UI
             return null;
         }
 
-        internal SheetLayout GetSheetLayout()
-        {
-            if (_cachedLayout == null)
-            {
-                _cachedLayout = CreateLayout();
-                UpdateHorizontalScrollBars();
-                UpdateVerticalScrollBars();
-            }
-            return _cachedLayout;
-        }
-
         /// <summary>
         /// Ges the spread chart view.
         /// </summary>
@@ -3786,7 +3770,7 @@ namespace Dt.Cells.UI
         {
             int activeRowViewportIndex = GetActiveRowViewportIndex();
             int activeColumnViewportIndex = GetActiveColumnViewportIndex();
-            GcViewport viewport = _viewportPresenters[activeRowViewportIndex + 1, activeColumnViewportIndex + 1];
+            CellsPanel viewport = _viewportPresenters[activeRowViewportIndex + 1, activeColumnViewportIndex + 1];
             if (viewport != null)
             {
                 return viewport.GetSpreadChartView(chartName);
@@ -3867,10 +3851,10 @@ namespace Dt.Cells.UI
         CellPresenterBase GetViewportCell(int rowViewportIndex, int columnViewportIndex, int rowIndex, int columnIndex)
         {
             CellPresenterBase cell = null;
-            GcViewport viewportRowsPresenter = GetViewportRowsPresenter(rowViewportIndex, columnViewportIndex);
+            CellsPanel viewportRowsPresenter = GetViewportRowsPresenter(rowViewportIndex, columnViewportIndex);
             if (viewportRowsPresenter != null)
             {
-                RowPresenter row = viewportRowsPresenter.GetRow(rowIndex);
+                RowItem row = viewportRowsPresenter.GetRow(rowIndex);
                 if (row != null)
                 {
                     cell = row.GetCell(columnIndex);
@@ -3992,13 +3976,6 @@ namespace Dt.Cells.UI
         double GetViewportHeight(Worksheet sheet, int rowViewportIndex)
         {
             return GetSheetLayout().GetViewportHeight(rowViewportIndex);
-        }
-
-        internal ViewportInfo GetViewportInfo(Worksheet p_sheet = null)
-        {
-            if (p_sheet == null)
-                return new ViewportInfo();
-            return p_sheet.GetViewportInfo();
         }
 
         /// <summary>
@@ -4261,7 +4238,7 @@ namespace Dt.Cells.UI
             return layout2;
         }
 
-        internal GcViewport GetViewportRowsPresenter(int rowViewportIndex, int columnViewportIndex)
+        internal CellsPanel GetViewportRowsPresenter(int rowViewportIndex, int columnViewportIndex)
         {
             if (_viewportPresenters != null)
             {
@@ -4433,14 +4410,14 @@ namespace Dt.Cells.UI
                     }
                     else if (((e.ChartArea == ChartArea.AxisX) || (e.ChartArea == ChartArea.AxisY)) || (e.ChartArea == ChartArea.AxisZ))
                     {
-                        GcViewport[,] viewportArray = _viewportPresenters;
+                        CellsPanel[,] viewportArray = _viewportPresenters;
                         int upperBound = viewportArray.GetUpperBound(0);
                         int num2 = viewportArray.GetUpperBound(1);
                         for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
                         {
                             for (int j = viewportArray.GetLowerBound(1); j <= num2; j++)
                             {
-                                GcViewport viewport = viewportArray[i, j];
+                                CellsPanel viewport = viewportArray[i, j];
                                 if (viewport != null)
                                 {
                                     if (e.Chart == null)
@@ -4464,7 +4441,7 @@ namespace Dt.Cells.UI
                         }
                         if (((e.Property == "Location") || (e.Property == "Size")) || (((e.Property == "SheetRowChanged") || (e.Property == "SheetColumnChanged")) || (e.Property == "Name")))
                         {
-                            GcViewport[,] viewportArray2 = _viewportPresenters;
+                            CellsPanel[,] viewportArray2 = _viewportPresenters;
                             int num5 = viewportArray2.GetUpperBound(0);
                             int num6 = viewportArray2.GetUpperBound(1);
                             for (int k = viewportArray2.GetLowerBound(0); k <= num5; k++)
@@ -4480,14 +4457,14 @@ namespace Dt.Cells.UI
                         }
                         else if ((((e.Property == "RowFilter") || (e.Property == "RowRangeGroup")) || ((e.Property == "ColumnRangeGroup") || (e.Property == "TableFilter"))) || (((e.Property == "AxisX") || (e.Property == "AxisY")) || (e.Property == "AxisZ")))
                         {
-                            GcViewport[,] viewportArray3 = _viewportPresenters;
+                            CellsPanel[,] viewportArray3 = _viewportPresenters;
                             int num9 = viewportArray3.GetUpperBound(0);
                             int num10 = viewportArray3.GetUpperBound(1);
                             for (int n = viewportArray3.GetLowerBound(0); n <= num9; n++)
                             {
                                 for (int num12 = viewportArray3.GetLowerBound(1); num12 <= num10; num12++)
                                 {
-                                    GcViewport viewport3 = viewportArray3[n, num12];
+                                    CellsPanel viewport3 = viewportArray3[n, num12];
                                     if (viewport3 != null)
                                     {
                                         viewport3.InvalidateFloatingObjectMeasureState(e.Chart);
@@ -4512,14 +4489,14 @@ namespace Dt.Cells.UI
                         }
                         else
                         {
-                            GcViewport[,] viewportArray4 = _viewportPresenters;
+                            CellsPanel[,] viewportArray4 = _viewportPresenters;
                             int num13 = viewportArray4.GetUpperBound(0);
                             int num14 = viewportArray4.GetUpperBound(1);
                             for (int num15 = viewportArray4.GetLowerBound(0); num15 <= num13; num15++)
                             {
                                 for (int num16 = viewportArray4.GetLowerBound(1); num16 <= num14; num16++)
                                 {
-                                    GcViewport viewport4 = viewportArray4[num15, num16];
+                                    CellsPanel viewport4 = viewportArray4[num15, num16];
                                     if (viewport4 != null)
                                     {
                                         viewport4.InvalidateFloatingObjectsMeasureState();
@@ -4553,14 +4530,14 @@ namespace Dt.Cells.UI
                 }
                 else if (property == "IsSelected")
                 {
-                    GcViewport[,] viewportArray = _viewportPresenters;
+                    CellsPanel[,] viewportArray = _viewportPresenters;
                     int upperBound = viewportArray.GetUpperBound(0);
                     int num2 = viewportArray.GetUpperBound(1);
                     for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
                     {
                         for (int j = viewportArray.GetLowerBound(1); j <= num2; j++)
                         {
-                            GcViewport viewport = viewportArray[i, j];
+                            CellsPanel viewport = viewportArray[i, j];
                             if (viewport != null)
                             {
                                 if (floatingObject == null)
@@ -4587,28 +4564,28 @@ namespace Dt.Cells.UI
                 {
                     if ((((property == "Location") || (property == "Size")) || ((property == "SheetRowChanged") || (property == "SheetColumnChanged"))) || ((((property == "AxisX") || (property == "AxisY")) || ((property == "RowFilter") || (property == "RowRangeGroup"))) || ((property == "ColumnRangeGroup") || (property == "Name"))))
                     {
-                        GcViewport[,] viewportArray2 = _viewportPresenters;
+                        CellsPanel[,] viewportArray2 = _viewportPresenters;
                         int num5 = viewportArray2.GetUpperBound(0);
                         int num6 = viewportArray2.GetUpperBound(1);
                         for (int k = viewportArray2.GetLowerBound(0); k <= num5; k++)
                         {
                             for (int m = viewportArray2.GetLowerBound(1); m <= num6; m++)
                             {
-                                GcViewport viewport1 = viewportArray2[k, m];
+                                CellsPanel viewport1 = viewportArray2[k, m];
                                 InvalidateFloatingObjectLayout();
                             }
                         }
                     }
                     else
                     {
-                        GcViewport[,] viewportArray3 = _viewportPresenters;
+                        CellsPanel[,] viewportArray3 = _viewportPresenters;
                         int num9 = viewportArray3.GetUpperBound(0);
                         int num10 = viewportArray3.GetUpperBound(1);
                         for (int n = viewportArray3.GetLowerBound(0); n <= num9; n++)
                         {
                             for (int num12 = viewportArray3.GetLowerBound(1); num12 <= num10; num12++)
                             {
-                                GcViewport viewport2 = viewportArray3[n, num12];
+                                CellsPanel viewport2 = viewportArray3[n, num12];
                                 if (viewport2 != null)
                                 {
                                     viewport2.InvalidateFloatingObjectMeasureState(floatingObject);
@@ -5254,7 +5231,7 @@ namespace Dt.Cells.UI
             int rowViewportCount = GetViewportInfo().RowViewportCount;
             for (int i = -1; i <= rowViewportCount; i++)
             {
-                GcViewport viewportRowsPresenter = GetViewportRowsPresenter(i, columnViewportIndex);
+                CellsPanel viewportRowsPresenter = GetViewportRowsPresenter(i, columnViewportIndex);
                 if (viewportRowsPresenter != null)
                 {
                     viewportRowsPresenter.InvalidateRowsMeasureState(true);
@@ -5264,7 +5241,7 @@ namespace Dt.Cells.UI
                     viewportRowsPresenter.InvalidateMeasure();
                 }
             }
-            GcViewport columnHeaderRowsPresenter = GetColumnHeaderRowsPresenter(columnViewportIndex);
+            CellsPanel columnHeaderRowsPresenter = GetColumnHeaderRowsPresenter(columnViewportIndex);
             if (columnHeaderRowsPresenter != null)
             {
                 columnHeaderRowsPresenter.InvalidateRowsMeasureState(true);
@@ -5290,19 +5267,19 @@ namespace Dt.Cells.UI
                 }
                 InvalidateLayout();
                 Children.Clear();
-                _cornerPresenter = null;
+                _cornerPanel = null;
                 _rowHeaderPresenters = null;
                 _columnHeaderPresenters = null;
                 if (_viewportPresenters != null)
                 {
-                    GcViewport[,] viewportArray = _viewportPresenters;
+                    CellsPanel[,] viewportArray = _viewportPresenters;
                     int upperBound = viewportArray.GetUpperBound(0);
                     int num2 = viewportArray.GetUpperBound(1);
                     for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
                     {
                         for (int j = viewportArray.GetLowerBound(1); j <= num2; j++)
                         {
-                            GcViewport viewport = viewportArray[i, j];
+                            CellsPanel viewport = viewportArray[i, j];
                             if (viewport != null)
                             {
                                 viewport.RemoveDataValidationUI();
@@ -5433,7 +5410,7 @@ namespace Dt.Cells.UI
                 int rowViewportCount = GetViewportInfo().RowViewportCount;
                 for (int i = -1; i <= rowViewportCount; i++)
                 {
-                    GcViewport rowHeaderRowsPresenter = GetRowHeaderRowsPresenter(i);
+                    CellsPanel rowHeaderRowsPresenter = GetRowHeaderRowsPresenter(i);
                     if (rowHeaderRowsPresenter != null)
                     {
                         rowHeaderRowsPresenter.InvalidateRowsMeasureState(true);
@@ -5441,24 +5418,19 @@ namespace Dt.Cells.UI
                         rowHeaderRowsPresenter.InvalidateMeasure();
                     }
                 }
-                GcViewport cornerPresenter = GetCornerPresenter();
-                if (cornerPresenter != null)
-                {
-                    cornerPresenter.InvalidateRowsMeasureState(true);
-                    cornerPresenter.InvalidateBordersMeasureState();
-                    cornerPresenter.InvalidateMeasure();
-                }
+                if (_cornerPanel != null)
+                    _cornerPanel.InvalidateMeasure();
             }
         }
 
         void InvalidateHeaderRowMeasure(int rowIndex)
         {
-            RowPresenter objRow;
+            RowItem objRow;
             int columnViewportCount = GetViewportInfo().ColumnViewportCount;
             for (int i = -1; i <= columnViewportCount; i++)
             {
                 Action<CellLayout> action = null;
-                GcViewport columnHeaderViewport = GetColumnHeaderRowsPresenter(i);
+                CellsPanel columnHeaderViewport = GetColumnHeaderRowsPresenter(i);
                 if (columnHeaderViewport != null)
                 {
                     objRow = columnHeaderViewport.GetRow(rowIndex);
@@ -5483,15 +5455,8 @@ namespace Dt.Cells.UI
                     Enumerable.ToList<CellLayout>(GetColumnHeaderCellLayoutModel(i)).ForEach<CellLayout>(action);
                 }
             }
-            GcViewport cornerPresenter = GetCornerPresenter();
-            if (cornerPresenter != null)
-            {
-                objRow = cornerPresenter.GetRow(rowIndex);
-                if (objRow != null)
-                {
-                    objRow.InvalidateMeasure();
-                }
-            }
+            if (_cornerPanel != null)
+                _cornerPanel.InvalidateMeasure();
         }
 
         void InvalidateHeaderRowsPresenterMeasure(bool invalidateRowMeasure)
@@ -5499,7 +5464,7 @@ namespace Dt.Cells.UI
             int columnViewportCount = GetViewportInfo().ColumnViewportCount;
             for (int i = -1; i <= columnViewportCount; i++)
             {
-                GcViewport columnHeaderRowsPresenter = GetColumnHeaderRowsPresenter(i);
+                CellsPanel columnHeaderRowsPresenter = GetColumnHeaderRowsPresenter(i);
                 if (columnHeaderRowsPresenter != null)
                 {
                     if (invalidateRowMeasure)
@@ -5509,26 +5474,6 @@ namespace Dt.Cells.UI
                     }
                     columnHeaderRowsPresenter.InvalidateMeasure();
                 }
-            }
-        }
-
-        internal void InvalidateLayout()
-        {
-            if (!IsSuspendInvalidate())
-            {
-                _cachedLayout = null;
-                _cachedViewportRowLayoutModel = null;
-                _cachedViewportColumnLayoutModel = null;
-                _cachedColumnHeaderRowLayoutModel = null;
-                _cachedColumnHeaderViewportColumnLayoutModel = null;
-                _cachedRowHeaderViewportRowLayoutModel = null;
-                _cachedRowHeaderColumnLayoutModel = null;
-                _cachedViewportCellLayoutModel = null;
-                _cachedColumnHeaderCellLayoutModel = null;
-                _cachedRowHeaderCellLayoutModel = null;
-                _cachedGroupLayout = null;
-                _cachedFilterButtonInfoModel = null;
-                _cachedFloatingObjectLayoutModel = null;
             }
         }
 
@@ -5687,12 +5632,12 @@ namespace Dt.Cells.UI
         void InvalidateViewportRowMeasureInternal(int rowViewportIndex, int rowIndex)
         {
             Action<CellLayout> action2 = null;
-            RowPresenter objRow;
+            RowItem objRow;
             int columnViewportCount = GetViewportInfo().ColumnViewportCount;
             for (int i = -1; i <= columnViewportCount; i++)
             {
                 Action<CellLayout> action = null;
-                GcViewport viewport = GetViewportRowsPresenter(rowViewportIndex, i);
+                CellsPanel viewport = GetViewportRowsPresenter(rowViewportIndex, i);
                 if (viewport != null)
                 {
                     viewport.InvalidateMeasure();
@@ -5718,7 +5663,7 @@ namespace Dt.Cells.UI
                     Enumerable.ToList<CellLayout>(GetViewportCellLayoutModel(rowViewportIndex, i)).ForEach<CellLayout>(action);
                 }
             }
-            GcViewport rowHeaderViewport = GetRowHeaderRowsPresenter(rowViewportIndex);
+            CellsPanel rowHeaderViewport = GetRowHeaderRowsPresenter(rowViewportIndex);
             if (rowHeaderViewport != null)
             {
                 rowHeaderViewport.InvalidateMeasure();
@@ -5784,7 +5729,7 @@ namespace Dt.Cells.UI
             int columnViewportCount = GetViewportInfo().ColumnViewportCount;
             for (int i = -1; i <= columnViewportCount; i++)
             {
-                GcViewport viewportRowsPresenter = GetViewportRowsPresenter(rowViewportIndex, i);
+                CellsPanel viewportRowsPresenter = GetViewportRowsPresenter(rowViewportIndex, i);
                 if (viewportRowsPresenter != null)
                 {
                     viewportRowsPresenter.InvalidateBordersMeasureState();
@@ -5793,7 +5738,7 @@ namespace Dt.Cells.UI
                     viewportRowsPresenter.InvalidateMeasure();
                 }
             }
-            GcViewport rowHeaderRowsPresenter = GetRowHeaderRowsPresenter(rowViewportIndex);
+            CellsPanel rowHeaderRowsPresenter = GetRowHeaderRowsPresenter(rowViewportIndex);
             if (rowHeaderRowsPresenter != null)
             {
                 rowHeaderRowsPresenter.InvalidateMeasure();
@@ -6035,7 +5980,7 @@ namespace Dt.Cells.UI
             {
                 return false;
             }
-            GcViewport viewportRowsPresenter = GetViewportRowsPresenter(rowViewportIndex, columnViewportIndex);
+            CellsPanel viewportRowsPresenter = GetViewportRowsPresenter(rowViewportIndex, columnViewportIndex);
             if ((viewportRowsPresenter == null) || !viewportRowsPresenter.SelectionContainer.FocusIndicator.IsFillIndicatorVisible)
             {
                 return false;
@@ -6229,11 +6174,6 @@ namespace Dt.Cells.UI
                 }
             }
             return false;
-        }
-
-        internal bool IsSuspendInvalidate()
-        {
-            return (_suspendViewInvalidate > 0);
         }
 
         internal static bool IsValidRange(int row, int column, int rowCount, int columnCount, int maxRowCount, int maxColumnCount)
@@ -6536,7 +6476,7 @@ namespace Dt.Cells.UI
         {
             if (IsCellEditable(ActiveSheet.ActiveRowIndex, ActiveSheet.ActiveColumnIndex))
             {
-                GcViewport viewportRowsPresenter = GetViewportRowsPresenter(GetActiveRowViewportIndex(), GetActiveColumnViewportIndex());
+                CellsPanel viewportRowsPresenter = GetViewportRowsPresenter(GetActiveRowViewportIndex(), GetActiveColumnViewportIndex());
                 if (viewportRowsPresenter != null)
                 {
                     viewportRowsPresenter.PrepareCellEditing(ActiveSheet.ActiveRowIndex, ActiveSheet.ActiveColumnIndex);
@@ -6571,7 +6511,7 @@ namespace Dt.Cells.UI
             }
             if (IsEditing)
             {
-                GcViewport viewportRowsPresenter = GetViewportRowsPresenter(GetActiveRowViewportIndex(), GetActiveColumnViewportIndex());
+                CellsPanel viewportRowsPresenter = GetViewportRowsPresenter(GetActiveRowViewportIndex(), GetActiveColumnViewportIndex());
                 if (viewportRowsPresenter != null)
                 {
                     viewportRowsPresenter.SendFirstKey(c, replace);
@@ -7005,13 +6945,13 @@ namespace Dt.Cells.UI
             RefreshViewportCells(_viewportPresenters, 0, 0, rowCount, columnCount);
         }
 
-        internal void RefreshCells(GcViewport viewport, int row, int column, int rowCount, int columnCount)
+        internal void RefreshCells(CellsPanel viewport, int row, int column, int rowCount, int columnCount)
         {
             foreach (RowLayout layout in viewport.GetRowLayoutModel())
             {
                 if ((row <= layout.Row) && (layout.Row < (row + rowCount)))
                 {
-                    RowPresenter presenter = viewport.GetRow(layout.Row);
+                    RowItem presenter = viewport.GetRow(layout.Row);
                     if (presenter != null)
                     {
                         foreach (CellPresenterBase base2 in presenter.Children)
@@ -7484,14 +7424,14 @@ namespace Dt.Cells.UI
         {
             if (_viewportPresenters != null)
             {
-                GcViewport[,] viewportArray = _viewportPresenters;
+                CellsPanel[,] viewportArray = _viewportPresenters;
                 int upperBound = viewportArray.GetUpperBound(0);
                 int num2 = viewportArray.GetUpperBound(1);
                 for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
                 {
                     for (int j = viewportArray.GetLowerBound(1); j <= num2; j++)
                     {
-                        GcViewport viewport = viewportArray[i, j];
+                        CellsPanel viewport = viewportArray[i, j];
                         if (viewport != null)
                         {
                             if (NeedRefresh(viewport.RowViewportIndex, viewport.ColumnViewportIndex))
@@ -7508,11 +7448,11 @@ namespace Dt.Cells.UI
             }
         }
 
-        internal void RefreshHeaderCells(GcViewport[] viewportPresenters, int row, int column, int rowCount, int columnCount)
+        internal void RefreshHeaderCells(CellsPanel[] viewportPresenters, int row, int column, int rowCount, int columnCount)
         {
             if (!IsSuspendInvalidate() && (viewportPresenters != null))
             {
-                foreach (GcViewport viewport in viewportPresenters)
+                foreach (CellsPanel viewport in viewportPresenters)
                 {
                     if (viewport != null)
                     {
@@ -7524,18 +7464,18 @@ namespace Dt.Cells.UI
             }
         }
 
-        internal void RefreshViewportCells(GcViewport[,] viewportPresenters, int row, int column, int rowCount, int columnCount)
+        internal void RefreshViewportCells(CellsPanel[,] viewportPresenters, int row, int column, int rowCount, int columnCount)
         {
             if (viewportPresenters != null)
             {
-                GcViewport[,] viewportArray = viewportPresenters;
+                CellsPanel[,] viewportArray = viewportPresenters;
                 int upperBound = viewportArray.GetUpperBound(0);
                 int num2 = viewportArray.GetUpperBound(1);
                 for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
                 {
                     for (int j = viewportArray.GetLowerBound(1); j <= num2; j++)
                     {
-                        GcViewport viewport = viewportArray[i, j];
+                        CellsPanel viewport = viewportArray[i, j];
                         if (viewport != null)
                         {
                             if (((IsEditing && (viewport.EditingContainer != null)) && viewport.IsActived) && ((viewport.EditingContainer.EditingRowIndex != ActiveSheet.ActiveRowIndex) || (ActiveSheet.ActiveColumnIndex != viewport.EditingContainer.EditingColumnIndex)))
@@ -7556,14 +7496,14 @@ namespace Dt.Cells.UI
         {
             if ((_viewportPresenters != null) && (_viewportPresenters != null))
             {
-                GcViewport[,] viewportArray = _viewportPresenters;
+                CellsPanel[,] viewportArray = _viewportPresenters;
                 int upperBound = viewportArray.GetUpperBound(0);
                 int num2 = viewportArray.GetUpperBound(1);
                 for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
                 {
                     for (int j = viewportArray.GetLowerBound(1); j <= num2; j++)
                     {
-                        GcViewport viewport = viewportArray[i, j];
+                        CellsPanel viewport = viewportArray[i, j];
                         if (viewport != null)
                         {
                             viewport.RefreshFloatingObjects();
@@ -7577,14 +7517,14 @@ namespace Dt.Cells.UI
         {
             if ((_viewportPresenters != null) && (_viewportPresenters != null))
             {
-                GcViewport[,] viewportArray = _viewportPresenters;
+                CellsPanel[,] viewportArray = _viewportPresenters;
                 int upperBound = viewportArray.GetUpperBound(0);
                 int num2 = viewportArray.GetUpperBound(1);
                 for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
                 {
                     for (int j = viewportArray.GetLowerBound(1); j <= num2; j++)
                     {
-                        GcViewport viewport = viewportArray[i, j];
+                        CellsPanel viewport = viewportArray[i, j];
                         if (viewport != null)
                         {
                             if (floatingObject is SpreadChart)
@@ -7609,14 +7549,14 @@ namespace Dt.Cells.UI
         {
             if ((_viewportPresenters != null) && (_viewportPresenters != null))
             {
-                GcViewport[,] viewportArray = _viewportPresenters;
+                CellsPanel[,] viewportArray = _viewportPresenters;
                 int upperBound = viewportArray.GetUpperBound(0);
                 int num2 = viewportArray.GetUpperBound(1);
                 for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
                 {
                     for (int j = viewportArray.GetLowerBound(1); j <= num2; j++)
                     {
-                        GcViewport viewport = viewportArray[i, j];
+                        CellsPanel viewport = viewportArray[i, j];
                         if (viewport != null)
                         {
                             if (IsNeedRefreshFloatingObjectsMovingResizingContainer(viewport.RowViewportIndex, viewport.ColumnViewportIndex))
@@ -7637,14 +7577,14 @@ namespace Dt.Cells.UI
         {
             if (_viewportPresenters != null)
             {
-                GcViewport[,] viewportArray = _viewportPresenters;
+                CellsPanel[,] viewportArray = _viewportPresenters;
                 int upperBound = viewportArray.GetUpperBound(0);
                 int num2 = viewportArray.GetUpperBound(1);
                 for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
                 {
                     for (int j = viewportArray.GetLowerBound(1); j <= num2; j++)
                     {
-                        GcViewport viewport = viewportArray[i, j];
+                        CellsPanel viewport = viewportArray[i, j];
                         if (viewport != null)
                         {
                             if (IsNeedRefreshFloatingObjectsMovingResizingContainer(viewport.RowViewportIndex, viewport.ColumnViewportIndex))
@@ -7665,14 +7605,14 @@ namespace Dt.Cells.UI
         {
             if ((_viewportPresenters != null) && (_viewportPresenters != null))
             {
-                GcViewport[,] viewportArray = _viewportPresenters;
+                CellsPanel[,] viewportArray = _viewportPresenters;
                 int upperBound = viewportArray.GetUpperBound(0);
                 int num2 = viewportArray.GetUpperBound(1);
                 for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
                 {
                     for (int j = viewportArray.GetLowerBound(1); j <= num2; j++)
                     {
-                        GcViewport viewport = viewportArray[i, j];
+                        CellsPanel viewport = viewportArray[i, j];
                         if (viewport != null)
                         {
                             viewport.InvalidateFloatingObjectsMeasureState();
@@ -7707,14 +7647,14 @@ namespace Dt.Cells.UI
             _dragToColumn = -2;
             if (_viewportPresenters != null)
             {
-                GcViewport[,] viewportArray = _viewportPresenters;
+                CellsPanel[,] viewportArray = _viewportPresenters;
                 int upperBound = viewportArray.GetUpperBound(0);
                 int num2 = viewportArray.GetUpperBound(1);
                 for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
                 {
                     for (int j = viewportArray.GetLowerBound(1); j <= num2; j++)
                     {
-                        GcViewport viewport = viewportArray[i, j];
+                        CellsPanel viewport = viewportArray[i, j];
                         if (viewport != null)
                         {
                             viewport.ResetDragFill();
@@ -7780,14 +7720,14 @@ namespace Dt.Cells.UI
         {
             if (_viewportPresenters != null)
             {
-                GcViewport[,] viewportArray = _viewportPresenters;
+                CellsPanel[,] viewportArray = _viewportPresenters;
                 int upperBound = viewportArray.GetUpperBound(0);
                 int num2 = viewportArray.GetUpperBound(1);
                 for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
                 {
                     for (int j = viewportArray.GetLowerBound(1); j <= num2; j++)
                     {
-                        GcViewport viewport = viewportArray[i, j];
+                        CellsPanel viewport = viewportArray[i, j];
                         if (viewport != null)
                         {
                             viewport.ResetFloatingObjectovingFrames();
@@ -7801,14 +7741,14 @@ namespace Dt.Cells.UI
         {
             if (_viewportPresenters != null)
             {
-                GcViewport[,] viewportArray = _viewportPresenters;
+                CellsPanel[,] viewportArray = _viewportPresenters;
                 int upperBound = viewportArray.GetUpperBound(0);
                 int num2 = viewportArray.GetUpperBound(1);
                 for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
                 {
                     for (int j = viewportArray.GetLowerBound(1); j <= num2; j++)
                     {
-                        GcViewport viewport = viewportArray[i, j];
+                        CellsPanel viewport = viewportArray[i, j];
                         if (viewport != null)
                         {
                             viewport.ResetFloatingObjectResizingFrames();
@@ -7834,14 +7774,14 @@ namespace Dt.Cells.UI
         {
             if ((_viewportPresenters != null) && (_viewportPresenters != null))
             {
-                GcViewport[,] viewportArray = _viewportPresenters;
+                CellsPanel[,] viewportArray = _viewportPresenters;
                 int upperBound = viewportArray.GetUpperBound(0);
                 int num2 = viewportArray.GetUpperBound(1);
                 for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
                 {
                     for (int j = viewportArray.GetLowerBound(1); j <= num2; j++)
                     {
-                        GcViewport viewport = viewportArray[i, j];
+                        CellsPanel viewport = viewportArray[i, j];
                         if (viewport != null)
                         {
                             viewport.ResumeFloatingObjectsInvalidate(false);
@@ -7849,16 +7789,6 @@ namespace Dt.Cells.UI
                     }
                 }
             }
-        }
-
-        internal void ResumeInvalidate()
-        {
-            _suspendViewInvalidate--;
-            if (_suspendViewInvalidate < 0)
-            {
-                _suspendViewInvalidate = 0;
-            }
-            ResumeFloatingObjectsInvalidate();
         }
 
         double RoundToPoint(double value)
@@ -7958,14 +7888,14 @@ namespace Dt.Cells.UI
         {
             if (_viewportPresenters != null)
             {
-                GcViewport[,] viewportArray = _viewportPresenters;
+                CellsPanel[,] viewportArray = _viewportPresenters;
                 int upperBound = viewportArray.GetUpperBound(0);
                 int num2 = viewportArray.GetUpperBound(1);
                 for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
                 {
                     for (int j = viewportArray.GetLowerBound(1); j <= num2; j++)
                     {
-                        GcViewport viewport = viewportArray[i, j];
+                        CellsPanel viewport = viewportArray[i, j];
                         if (viewport != null)
                         {
                             viewport.SetFlotingObjectZIndex(name, zIndex);
@@ -8063,7 +7993,7 @@ namespace Dt.Cells.UI
                     InvalidateViewportRowsPresenterMeasure(rowViewportIndex, false);
                     for (int i = -1; i < viewportInfo.ColumnViewportCount; i++)
                     {
-                        GcViewport viewportRowsPresenter = GetViewportRowsPresenter(rowViewportIndex, i);
+                        CellsPanel viewportRowsPresenter = GetViewportRowsPresenter(rowViewportIndex, i);
                         if (viewportRowsPresenter != null)
                         {
                             if ((viewportRowsPresenter.RowViewportIndex == GetActiveRowViewportIndex()) && (viewportRowsPresenter.ColumnViewportIndex == GetActiveColumnViewportIndex()))
@@ -8076,7 +8006,7 @@ namespace Dt.Cells.UI
                             viewportRowsPresenter.InvalidateFloatingObjectsMeasureState();
                         }
                     }
-                    GcViewport rowHeaderRowsPresenter = GetRowHeaderRowsPresenter(rowViewportIndex);
+                    CellsPanel rowHeaderRowsPresenter = GetRowHeaderRowsPresenter(rowViewportIndex);
                     if (rowHeaderRowsPresenter != null)
                     {
                         rowHeaderRowsPresenter.InvalidateBordersMeasureState();
@@ -8106,7 +8036,7 @@ namespace Dt.Cells.UI
         {
             if (CanUserDragFill)
             {
-                GcViewport viewportRowsPresenter = GetViewportRowsPresenter(GetActiveRowViewportIndex(), GetActiveColumnViewportIndex());
+                CellsPanel viewportRowsPresenter = GetViewportRowsPresenter(GetActiveRowViewportIndex(), GetActiveColumnViewportIndex());
                 if (viewportRowsPresenter != null)
                 {
                     CellRange activeSelection = GetActiveSelection();
@@ -8571,7 +8501,7 @@ namespace Dt.Cells.UI
                 EditingViewport = null;
                 if (!IsEditing && IsCellEditable(ActiveSheet.ActiveRowIndex, ActiveSheet.ActiveColumnIndex))
                 {
-                    GcViewport viewportRowsPresenter = GetViewportRowsPresenter(GetActiveRowViewportIndex(), GetActiveColumnViewportIndex());
+                    CellsPanel viewportRowsPresenter = GetViewportRowsPresenter(GetActiveRowViewportIndex(), GetActiveColumnViewportIndex());
                     if (viewportRowsPresenter != null)
                     {
                         CoreWindow.GetForCurrentThread().ReleasePointerCapture();
@@ -8647,20 +8577,6 @@ namespace Dt.Cells.UI
                 if (((InputDeviceType != InputDeviceType.Touch) && ((Excel.ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Both) || (Excel.ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Column))) && ((savedHitTestInformation.ColumnViewportIndex > -2) && (_columnHeaderPresenters[savedHitTestInformation.ColumnViewportIndex + 1].GetViewportCell(savedHitTestInformation.HeaderInfo.Row, savedHitTestInformation.HeaderInfo.Column, true) != null)))
                 {
                     UpdateResizeToolTip(GetHorizontalResizeTip(viewportResizingColumnLayoutFromXForTouch.Width), true);
-                }
-            }
-        }
-
-        void StartTouchDragDopping()
-        {
-            if (!IsTouchDrapDropping)
-            {
-                CellRange fromRange = GetFromRange();
-                if (fromRange != null)
-                {
-                    IsTouchDrapDropping = true;
-                    IsWorking = true;
-                    UpdateDragIndicatorAndStartTimer(fromRange);
                 }
             }
         }
@@ -8741,7 +8657,7 @@ namespace Dt.Cells.UI
         {
             if (IsEditing && (ActiveSheet != null))
             {
-                GcViewport editingViewport = EditingViewport;
+                CellsPanel editingViewport = EditingViewport;
                 if (editingViewport != null)
                 {
                     if (!cancel && (ApplyEditingValue(cancel) == DataValidationResult.Retry))
@@ -8780,14 +8696,14 @@ namespace Dt.Cells.UI
         {
             if ((_viewportPresenters != null) && (_viewportPresenters != null))
             {
-                GcViewport[,] viewportArray = _viewportPresenters;
+                CellsPanel[,] viewportArray = _viewportPresenters;
                 int upperBound = viewportArray.GetUpperBound(0);
                 int num2 = viewportArray.GetUpperBound(1);
                 for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
                 {
                     for (int j = viewportArray.GetLowerBound(1); j <= num2; j++)
                     {
-                        GcViewport viewport = viewportArray[i, j];
+                        CellsPanel viewport = viewportArray[i, j];
                         if (viewport != null)
                         {
                             viewport.SuspendFloatingObjectsInvalidate();
@@ -8795,12 +8711,6 @@ namespace Dt.Cells.UI
                     }
                 }
             }
-        }
-
-        internal void SuspendInvalidate()
-        {
-            _suspendViewInvalidate++;
-            SuspendFloatingObjectsInvalidate();
         }
 
         void SwitchDragDropIndicator()
@@ -8831,14 +8741,14 @@ namespace Dt.Cells.UI
         {
             if (_viewportPresenters != null)
             {
-                GcViewport[,] viewportArray = _viewportPresenters;
+                CellsPanel[,] viewportArray = _viewportPresenters;
                 int upperBound = viewportArray.GetUpperBound(0);
                 int num2 = viewportArray.GetUpperBound(1);
                 for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
                 {
                     for (int j = viewportArray.GetLowerBound(1); j <= num2; j++)
                     {
-                        GcViewport viewport = viewportArray[i, j];
+                        CellsPanel viewport = viewportArray[i, j];
                         if (viewport != null)
                         {
                             viewport.SynChartShapeThemes();
@@ -8982,7 +8892,7 @@ namespace Dt.Cells.UI
                 row = (row < 0) ? 0 : row;
                 column = (column < 0) ? 0 : column;
                 new CellRange(row, column, rowCount, columnCount);
-                foreach (GcViewport viewport in _columnHeaderPresenters)
+                foreach (CellsPanel viewport in _columnHeaderPresenters)
                 {
                     if (viewport != null)
                     {
@@ -8992,7 +8902,7 @@ namespace Dt.Cells.UI
                         {
                             for (int i = row; i < (row + rowCount); i++)
                             {
-                                RowPresenter presenter = viewport.GetRow(i);
+                                RowItem presenter = viewport.GetRow(i);
                                 if (presenter != null)
                                 {
                                     for (int j = Math.Max(column, viewportColumnLayoutModel[0].Column); j < (column + columnCount); j++)
@@ -9017,9 +8927,9 @@ namespace Dt.Cells.UI
 
         internal void UpdateCornerHeaderCellState()
         {
-            if (_cornerPresenter != null)
+            if (_cornerPanel != null)
             {
-                _cornerPresenter.GetRow(0).GetCell(0).ApplyState();
+                _cornerPanel.ApplyState();
             }
         }
 
@@ -9863,10 +9773,10 @@ namespace Dt.Cells.UI
             {
                 if (_hitFilterInfo.SheetArea == SheetArea.ColumnHeader)
                 {
-                    GcViewport columnHeaderRowsPresenter = GetColumnHeaderRowsPresenter(_hitFilterInfo.ColumnViewportIndex);
+                    CellsPanel columnHeaderRowsPresenter = GetColumnHeaderRowsPresenter(_hitFilterInfo.ColumnViewportIndex);
                     if (columnHeaderRowsPresenter != null)
                     {
-                        RowPresenter row = columnHeaderRowsPresenter.GetRow(_hitFilterInfo.Row);
+                        RowItem row = columnHeaderRowsPresenter.GetRow(_hitFilterInfo.Row);
                         if (row != null)
                         {
                             CellPresenterBase cell = row.GetCell(_hitFilterInfo.Column);
@@ -9879,10 +9789,10 @@ namespace Dt.Cells.UI
                 }
                 else if (_hitFilterInfo.SheetArea == SheetArea.Cells)
                 {
-                    GcViewport viewportRowsPresenter = GetViewportRowsPresenter(_hitFilterInfo.RowViewportIndex, _hitFilterInfo.ColumnViewportIndex);
+                    CellsPanel viewportRowsPresenter = GetViewportRowsPresenter(_hitFilterInfo.RowViewportIndex, _hitFilterInfo.ColumnViewportIndex);
                     if (viewportRowsPresenter != null)
                     {
-                        RowPresenter presenter2 = viewportRowsPresenter.GetRow(_hitFilterInfo.Row);
+                        RowItem presenter2 = viewportRowsPresenter.GetRow(_hitFilterInfo.Row);
                         if (presenter2 != null)
                         {
                             CellPresenterBase base3 = presenter2.GetCell(_hitFilterInfo.Column);
@@ -9941,7 +9851,7 @@ namespace Dt.Cells.UI
                 row = (row < 0) ? 0 : row;
                 column = (column < 0) ? 0 : column;
                 new CellRange(row, column, rowCount, columnCount);
-                foreach (GcViewport viewport in _rowHeaderPresenters)
+                foreach (CellsPanel viewport in _rowHeaderPresenters)
                 {
                     if (viewport != null)
                     {
@@ -9954,7 +9864,7 @@ namespace Dt.Cells.UI
                                 {
                                     break;
                                 }
-                                RowPresenter presenter = viewport.GetRow(i);
+                                RowItem presenter = viewport.GetRow(i);
                                 if (presenter != null)
                                 {
                                     for (int j = column; j < (column + columnCount); j++)
@@ -10194,7 +10104,7 @@ namespace Dt.Cells.UI
                     {
                         for (int j = -1; j <= layout.RowPaneCount; j++)
                         {
-                            GcViewport viewport = _viewportPresenters[j + 1, i + 1];
+                            CellsPanel viewport = _viewportPresenters[j + 1, i + 1];
                             if ((viewport != null) && (viewport.Clip != null))
                             {
                                 viewport.Clip = null;
@@ -10206,7 +10116,7 @@ namespace Dt.Cells.UI
                 {
                     for (int k = -1; k <= layout.ColumnPaneCount; k++)
                     {
-                        GcViewport viewport2 = _columnHeaderPresenters[k + 1];
+                        CellsPanel viewport2 = _columnHeaderPresenters[k + 1];
                         if ((viewport2 != null) && (viewport2.Clip != null))
                         {
                             viewport2.Clip = null;
@@ -10217,7 +10127,7 @@ namespace Dt.Cells.UI
                 {
                     for (int m = -1; m <= layout.RowPaneCount; m++)
                     {
-                        GcViewport viewport3 = _rowHeaderPresenters[m + 1];
+                        CellsPanel viewport3 = _rowHeaderPresenters[m + 1];
                         if ((viewport3 != null) && (viewport3.Clip != null))
                         {
                             viewport3.Clip = null;
@@ -10477,452 +10387,7 @@ namespace Dt.Cells.UI
             }
             return new Rect { X = num, Y = num2, Width = Math.Min(num9, num3), Height = Math.Min(num5, num4) };
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        SheetLayout CreateLayout()
-        {
-            var activeSheet = ActiveSheet;
-            ViewportInfo viewportInfo = GetViewportInfo();
-            double width = _availableSize.Width;
-            double height = _availableSize.Height;
-            double num3 = 0.0;
-            double num4 = 0.0;
-            double num5 = 0.0;
-            double num6 = 0.0;
-            SheetLayout layout = new SheetLayout(viewportInfo.RowViewportCount, viewportInfo.ColumnViewportCount)
-            {
-                X = 0.0,
-                Y = 0.0
-            };
-            if ((activeSheet == null) || !activeSheet.Visible)
-            {
-                layout.TabStripX = 0.0;
-                layout.TabStripHeight = 25.0;
-                layout.TabStripY = Math.Max((double)0.0, (double)(height - layout.TabStripHeight));
-                layout.TabStripWidth = Math.Max(0.0, width);
-                return layout;
-            }
-            GroupLayout groupLayout = GetGroupLayout();
-            layout.HeaderX = layout.X + groupLayout.Width;
-            layout.HeaderY = layout.Y + groupLayout.Height;
-            float zoomFactor = ZoomFactor;
-            if (activeSheet.RowHeader.IsVisible)
-            {
-                for (int num8 = 0; num8 < activeSheet.RowHeader.Columns.Count; num8++)
-                {
-                    layout.HeaderWidth += Math.Ceiling((double)(activeSheet.GetActualColumnWidth(num8, SheetArea.CornerHeader | SheetArea.RowHeader) * zoomFactor));
-                }
-                num5 += layout.HeaderWidth;
-            }
-            if (activeSheet.ColumnHeader.IsVisible)
-            {
-                for (int num9 = 0; num9 < activeSheet.ColumnHeader.Rows.Count; num9++)
-                {
-                    layout.HeaderHeight += Math.Ceiling((double)(activeSheet.GetActualRowHeight(num9, SheetArea.ColumnHeader) * zoomFactor));
-                }
-                num6 += layout.HeaderHeight;
-            }
-            layout.FrozenX = layout.HeaderX + layout.HeaderWidth;
-            layout.FrozenY = layout.HeaderY + layout.HeaderHeight;
-            for (int i = 0; i < activeSheet.FrozenColumnCount; i++)
-            {
-                layout.FrozenWidth += Math.Ceiling((double)(activeSheet.GetActualColumnWidth(i, SheetArea.Cells) * zoomFactor));
-            }
-            for (int j = 0; j < activeSheet.FrozenRowCount; j++)
-            {
-                layout.FrozenHeight += Math.Ceiling((double)(activeSheet.GetActualRowHeight(j, SheetArea.Cells) * zoomFactor));
-            }
-            for (int k = Math.Max(activeSheet.FrozenColumnCount, activeSheet.ColumnCount - activeSheet.FrozenTrailingColumnCount); k < activeSheet.ColumnCount; k++)
-            {
-                layout.FrozenTrailingWidth += Math.Ceiling((double)(activeSheet.GetActualColumnWidth(k, SheetArea.Cells) * zoomFactor));
-            }
-            for (int m = Math.Max(activeSheet.FrozenRowCount, activeSheet.RowCount - activeSheet.FrozenTrailingRowCount); m < activeSheet.RowCount; m++)
-            {
-                layout.FrozenTrailingHeight += Math.Ceiling((double)(activeSheet.GetActualRowHeight(m, SheetArea.Cells) * zoomFactor));
-            }
-            num5 += layout.FrozenWidth + layout.FrozenTrailingWidth;
-            num6 += layout.FrozenHeight + layout.FrozenTrailingHeight;
-            for (int n = activeSheet.FrozenColumnCount; (num3 <= width) && (n < (activeSheet.ColumnCount - activeSheet.FrozenTrailingColumnCount)); n++)
-            {
-                num3 += Math.Ceiling((double)(activeSheet.GetActualColumnWidth(n, SheetArea.Cells) * zoomFactor));
-            }
-            for (int num15 = activeSheet.FrozenRowCount; (num4 <= height) && (num15 < (activeSheet.RowCount - activeSheet.FrozenTrailingRowCount)); num15++)
-            {
-                num4 += Math.Ceiling((double)(activeSheet.GetActualRowHeight(num15, SheetArea.Cells) * zoomFactor));
-            }
-            num5 += num3;
-            num6 += num4;
-            bool flag = (HorizontalScrollBarPolicy == (ScrollBarVisibility)3) || (HorizontalScrollBarPolicy == 0);
-            if (HorizontalScrollBarPolicy == (ScrollBarVisibility)1)
-            {
-                if (layout.ColumnPaneCount > 1)
-                {
-                    flag = true;
-                }
-                else if ((VerticalScrollBarPolicy == (ScrollBarVisibility)3) || (VerticalScrollBarPolicy == 0))
-                {
-                    flag |= num5 > ((width - ActualVerticalScrollBarWidth) - groupLayout.Width);
-                }
-                else if (VerticalScrollBarPolicy == (ScrollBarVisibility)1)
-                {
-                    if (num4 > height)
-                    {
-                        flag |= num5 > ((width - ActualVerticalScrollBarWidth) - groupLayout.Width);
-                    }
-                    else
-                    {
-                        flag |= num5 > (width - groupLayout.Width);
-                    }
-                }
-                else
-                {
-                    flag |= num5 > (width - groupLayout.Width);
-                }
-            }
-            if (flag)
-            {
-                layout.OrnamentHeight = ActualHorizontalScrollBarHeight;
-                height -= layout.OrnamentHeight;
-                height = Math.Max(0.0, height);
-            }
-            if (TabStripVisibility == 0)
-            {
-                if (layout.OrnamentHeight > 0.0)
-                {
-                    layout.TabStripHeight = layout.OrnamentHeight;
-                }
-                else
-                {
-                    layout.TabStripHeight = 25.0;
-                    height -= layout.TabStripHeight;
-                    height = Math.Max(0.0, height);
-                }
-            }
-            bool flag3 = ((VerticalScrollBarPolicy == (ScrollBarVisibility)3) || (VerticalScrollBarPolicy == 0)) || ((VerticalScrollBarPolicy == (ScrollBarVisibility)1) && ((layout.RowPaneCount > 1) || (num6 > (height - groupLayout.Height))));
-            if (flag3)
-            {
-                layout.OrnamentWidth = ActualVerticalScrollBarWidth;
-                width -= layout.OrnamentWidth;
-                width = Math.Max(0.0, width);
-            }
-            width -= layout.HeaderX;
-            width -= layout.HeaderWidth;
-            width = Math.Max(0.0, width);
-            if (width < layout.FrozenWidth)
-            {
-                layout.FrozenWidth = width;
-                width = 0.0;
-            }
-            else
-            {
-                width -= layout.FrozenWidth;
-            }
-            width -= layout.FrozenTrailingWidth;
-            width = Math.Max(0.0, width);
-            height -= layout.HeaderY;
-            height -= layout.HeaderHeight;
-            height = Math.Max(0.0, height);
-            if (height < layout.FrozenHeight)
-            {
-                layout.FrozenHeight = height;
-                height = 0.0;
-            }
-            else
-            {
-                height -= layout.FrozenHeight;
-            }
-            height -= layout.FrozenTrailingHeight;
-            height = Math.Max(0.0, height);
-            for (int num16 = 0; num16 < (layout.ColumnPaneCount - 1); num16++)
-            {
-                double num17 = 6.0;
-                layout.SetHorizontalSplitBarWidth(num16, num17);
-                width -= layout.GetHorizontalSplitBarWidth(num16);
-                width = Math.Max(0.0, width);
-            }
-            for (int num18 = 0; num18 < (layout.RowPaneCount - 1); num18++)
-            {
-                double num19 = 6.0;
-                layout.SetVerticalSplitBarHeight(num18, num19);
-                height -= layout.GetVerticalSplitBarHeight(num18);
-                height = Math.Max(0.0, height);
-            }
-            int num20 = 0;
-            int num21 = 0;
-            for (int num22 = 0; num22 < layout.ColumnPaneCount; num22++)
-            {
-                if (viewportInfo.ViewportWidth[num22] < 0.0)
-                {
-                    num20++;
-                }
-                else
-                {
-                    layout.SetViewportWidth(num22, Math.Max(0.0, Math.Min(width, viewportInfo.ViewportWidth[num22] * zoomFactor)));
-                    width -= layout.GetViewportWidth(num22);
-                }
-            }
-            for (int num23 = 0; num23 < layout.RowPaneCount; num23++)
-            {
-                if (viewportInfo.ViewportHeight[num23] < 0.0)
-                {
-                    num21++;
-                }
-                else
-                {
-                    layout.SetViewportHeight(num23, Math.Max(0.0, Math.Min(height, viewportInfo.ViewportHeight[num23] * zoomFactor)));
-                    height -= layout.GetViewportHeight(num23);
-                }
-            }
-            width = Math.Max(0.0, width);
-            height = Math.Max(0.0, height);
-            double d = width / ((double)num20);
-            double num25 = height / ((double)num21);
-            if (double.IsInfinity(d) || double.IsNaN(d))
-            {
-                d = num5;
-            }
-            if (double.IsInfinity(num25) || double.IsNaN(num25))
-            {
-                num25 = num6;
-            }
-            for (int num26 = 0; num26 < layout.ColumnPaneCount; num26++)
-            {
-                if (viewportInfo.ViewportWidth[num26] < 0.0)
-                {
-                    layout.SetViewportWidth(num26, d);
-                }
-            }
-            for (int num27 = 0; num27 < layout.RowPaneCount; num27++)
-            {
-                if (viewportInfo.ViewportHeight[num27] < 0.0)
-                {
-                    layout.SetViewportHeight(num27, num25);
-                }
-            }
-            if ((num20 == 0) && (width > 0.0))
-            {
-                double num28 = width + viewportInfo.ViewportWidth[layout.ColumnPaneCount - 1];
-                layout.SetViewportWidth(layout.ColumnPaneCount - 1, num28);
-            }
-            if ((num21 == 0) && (height > 0.0))
-            {
-                double num29 = height + viewportInfo.ViewportHeight[layout.RowPaneCount - 1];
-                layout.SetViewportHeight(layout.RowPaneCount - 1, num29);
-            }
-            layout.SetViewportX(0, (layout.HeaderX + layout.HeaderWidth) + layout.FrozenWidth);
-            for (int num30 = 1; num30 < layout.ColumnPaneCount; num30++)
-            {
-                layout.SetHorizontalSplitBarX(num30 - 1, layout.GetViewportX(num30 - 1) + layout.GetViewportWidth(num30 - 1));
-                layout.SetViewportX(num30, layout.GetHorizontalSplitBarX(num30 - 1) + layout.GetHorizontalSplitBarWidth(num30 - 1));
-            }
-            layout.SetViewportY(0, (layout.HeaderY + layout.HeaderHeight) + layout.FrozenHeight);
-            for (int num31 = 1; num31 < layout.RowPaneCount; num31++)
-            {
-                layout.SetVerticalSplitBarY(num31 - 1, layout.GetViewportY(num31 - 1) + layout.GetViewportHeight(num31 - 1));
-                layout.SetViewportY(num31, layout.GetVerticalSplitBarY(num31 - 1) + layout.GetVerticalSplitBarHeight(num31 - 1));
-            }
-            if (layout.OrnamentHeight > 0.0)
-            {
-                layout.OrnamentY = (layout.GetViewportY(layout.RowPaneCount - 1) + layout.GetViewportHeight(layout.RowPaneCount - 1)) + layout.FrozenTrailingHeight;
-            }
-            if (layout.OrnamentWidth > 0.0)
-            {
-                layout.OrnamentX = (layout.GetViewportX(layout.ColumnPaneCount - 1) + layout.GetViewportWidth(layout.ColumnPaneCount - 1)) + layout.FrozenTrailingWidth;
-            }
-            double columnSplitBoxesWidth = GetColumnSplitBoxesWidth(layout.ColumnPaneCount);
-            for (int num33 = 0; num33 < layout.ColumnPaneCount; num33++)
-            {
-                if (num33 == 0)
-                {
-                    double num34 = ((layout.HeaderX + layout.HeaderWidth) + layout.FrozenWidth) + layout.GetViewportWidth(num33);
-                    double x = layout.X;
-                    if (ColumnSplitBoxAlignment == SplitBoxAlignment.Leading)
-                    {
-                        layout.SetHorizontalSplitBoxX(num33, x);
-                        layout.SetHorizontalSplitBoxWidth(num33, Math.Min(num34, columnSplitBoxesWidth));
-                        layout.SetHorizontalScrollBarX(num33, layout.GetHorizontalSplitBoxX(num33) + layout.GetHorizontalSplitBoxWidth(num33));
-                        layout.SetHorizontalScrollBarWidth(num33, Math.Max((double)0.0, (double)(num34 - layout.GetHorizontalSplitBoxWidth(num33))));
-                    }
-                    else
-                    {
-                        layout.SetHorizontalScrollBarX(num33, x);
-                        layout.SetHorizontalSplitBoxWidth(num33, Math.Min(num34, columnSplitBoxesWidth));
-                        layout.SetHorizontalScrollBarWidth(num33, Math.Max((double)0.0, (double)(num34 - layout.GetHorizontalSplitBoxWidth(num33))));
-                        layout.SetHorizontalSplitBoxX(num33, layout.GetHorizontalScrollBarX(num33) + layout.GetHorizontalScrollBarWidth(num33));
-                    }
-                }
-                if ((num33 > 0) && (num33 < (layout.ColumnPaneCount - 1)))
-                {
-                    double viewportWidth = layout.GetViewportWidth(num33);
-                    double viewportX = layout.GetViewportX(num33);
-                    if (ColumnSplitBoxAlignment == SplitBoxAlignment.Leading)
-                    {
-                        layout.SetHorizontalSplitBoxX(num33, viewportX);
-                        layout.SetHorizontalSplitBoxWidth(num33, Math.Min(viewportWidth, columnSplitBoxesWidth));
-                        layout.SetHorizontalScrollBarX(num33, layout.GetHorizontalSplitBoxX(num33) + layout.GetHorizontalSplitBoxWidth(num33));
-                        layout.SetHorizontalScrollBarWidth(num33, Math.Max((double)0.0, (double)(viewportWidth - layout.GetHorizontalSplitBoxWidth(num33))));
-                    }
-                    else
-                    {
-                        layout.SetHorizontalScrollBarX(num33, viewportX);
-                        layout.SetHorizontalSplitBoxWidth(num33, Math.Min(viewportWidth, columnSplitBoxesWidth));
-                        layout.SetHorizontalScrollBarWidth(num33, Math.Max((double)0.0, (double)(viewportWidth - layout.GetHorizontalSplitBoxWidth(num33))));
-                        layout.SetHorizontalSplitBoxX(num33, layout.GetHorizontalScrollBarX(num33) + layout.GetHorizontalScrollBarWidth(num33));
-                    }
-                }
-                if (num33 == (layout.ColumnPaneCount - 1))
-                {
-                    double num38 = (((layout.GetViewportWidth(layout.ColumnPaneCount - 1) + layout.FrozenTrailingWidth) + ((layout.ColumnPaneCount == 1) ? layout.HeaderX : 0.0)) + ((layout.ColumnPaneCount == 1) ? layout.HeaderWidth : 0.0)) + ((layout.ColumnPaneCount == 1) ? layout.FrozenWidth : 0.0);
-                    double num39 = (layout.ColumnPaneCount == 1) ? layout.X : layout.GetViewportX(layout.ColumnPaneCount - 1);
-                    if (ColumnSplitBoxAlignment == SplitBoxAlignment.Leading)
-                    {
-                        layout.SetHorizontalSplitBoxX(num33, num39);
-                        layout.SetHorizontalSplitBoxWidth(num33, Math.Min(num38, columnSplitBoxesWidth));
-                        layout.SetHorizontalScrollBarX(num33, layout.GetHorizontalSplitBoxX(num33) + layout.GetHorizontalSplitBoxWidth(num33));
-                        layout.SetHorizontalScrollBarWidth(num33, Math.Max((double)0.0, (double)(num38 - layout.GetHorizontalSplitBoxWidth(num33))));
-                    }
-                    else
-                    {
-                        layout.SetHorizontalScrollBarX(num33, num39);
-                        layout.SetHorizontalSplitBoxWidth(num33, Math.Min(num38, columnSplitBoxesWidth));
-                        layout.SetHorizontalScrollBarWidth(num33, Math.Max((double)0.0, (double)(num38 - layout.GetHorizontalSplitBoxWidth(num33))));
-                        layout.SetHorizontalSplitBoxX(num33, layout.GetHorizontalScrollBarX(num33) + layout.GetHorizontalScrollBarWidth(num33));
-                    }
-                }
-            }
-            double rowSplitBoxesHeight = GetRowSplitBoxesHeight(layout.RowPaneCount);
-            for (int num41 = 0; num41 < layout.RowPaneCount; num41++)
-            {
-                if (num41 == 0)
-                {
-                    double num42 = ((layout.HeaderY + layout.HeaderHeight) + layout.FrozenHeight) + layout.GetViewportHeight(num41);
-                    double y = layout.Y;
-                    if (RowSplitBoxAlignment == SplitBoxAlignment.Leading)
-                    {
-                        layout.SetVerticalSplitBoxY(num41, y);
-                        layout.SetVerticalSplitBoxHeight(num41, Math.Min(num42, rowSplitBoxesHeight));
-                        layout.SetVerticalScrollBarY(num41, layout.GetVerticalSplitBoxY(num41) + layout.GetVerticalSplitBoxHeight(num41));
-                        layout.SetVerticalScrollBarHeight(num41, Math.Max((double)0.0, (double)(num42 - layout.GetVerticalSplitBoxHeight(num41))));
-                    }
-                    else
-                    {
-                        layout.SetVerticalScrollBarY(num41, y);
-                        layout.SetVerticalSplitBoxHeight(num41, Math.Min(num42, rowSplitBoxesHeight));
-                        layout.SetVerticalScrollBarHeight(num41, Math.Max((double)0.0, (double)(num42 - layout.GetVerticalSplitBoxHeight(num41))));
-                        layout.SetVerticalSplitBoxY(num41, layout.GetVerticalScrollBarY(num41) + layout.GetVerticalScrollBarHeight(num41));
-                    }
-                }
-                if ((num41 > 0) && (num41 < (layout.RowPaneCount - 1)))
-                {
-                    double viewportHeight = layout.GetViewportHeight(num41);
-                    double viewportY = layout.GetViewportY(num41);
-                    if (RowSplitBoxAlignment == SplitBoxAlignment.Leading)
-                    {
-                        layout.SetVerticalSplitBoxY(num41, viewportY);
-                        layout.SetVerticalSplitBoxHeight(num41, Math.Min(viewportHeight, rowSplitBoxesHeight));
-                        layout.SetVerticalScrollBarY(num41, layout.GetVerticalSplitBoxY(num41) + layout.GetVerticalSplitBoxHeight(num41));
-                        layout.SetVerticalScrollBarHeight(num41, Math.Max((double)0.0, (double)(viewportHeight - layout.GetVerticalSplitBoxHeight(num41))));
-                    }
-                    else
-                    {
-                        layout.SetVerticalScrollBarY(num41, viewportY);
-                        layout.SetVerticalSplitBoxHeight(num41, Math.Min(viewportHeight, rowSplitBoxesHeight));
-                        layout.SetVerticalScrollBarHeight(num41, Math.Max((double)0.0, (double)(viewportHeight - layout.GetVerticalSplitBoxHeight(num41))));
-                        layout.SetVerticalSplitBoxY(num41, layout.GetVerticalScrollBarY(num41) + layout.GetVerticalScrollBarHeight(num41));
-                    }
-                }
-                if (num41 == (layout.RowPaneCount - 1))
-                {
-                    double num46 = (((layout.GetViewportHeight(num41) + layout.FrozenTrailingHeight) + ((layout.RowPaneCount == 1) ? layout.HeaderY : 0.0)) + ((layout.RowPaneCount == 1) ? layout.HeaderHeight : 0.0)) + ((layout.RowPaneCount == 1) ? layout.FrozenHeight : 0.0);
-                    double num47 = (layout.RowPaneCount == 1) ? layout.Y : layout.GetViewportY(layout.RowPaneCount - 1);
-                    if (RowSplitBoxAlignment == SplitBoxAlignment.Leading)
-                    {
-                        layout.SetVerticalSplitBoxY(num41, num47);
-                        layout.SetVerticalSplitBoxHeight(num41, Math.Min(num46, rowSplitBoxesHeight));
-                        layout.SetVerticalScrollBarY(num41, layout.GetVerticalSplitBoxY(num41) + layout.GetVerticalSplitBoxHeight(num41));
-                        layout.SetVerticalScrollBarHeight(num41, Math.Max((double)0.0, (double)(num46 - layout.GetVerticalSplitBoxHeight(num41))));
-                    }
-                    else
-                    {
-                        layout.SetVerticalScrollBarY(num41, num47);
-                        layout.SetVerticalSplitBoxHeight(num41, Math.Min(num46, rowSplitBoxesHeight));
-                        layout.SetVerticalScrollBarHeight(num41, Math.Max((double)0.0, (double)(num46 - layout.GetVerticalSplitBoxHeight(num41))));
-                        layout.SetVerticalSplitBoxY(num41, layout.GetVerticalScrollBarY(num41) + layout.GetVerticalScrollBarHeight(num41));
-                    }
-                }
-            }
-            if (layout.TabStripHeight > 0.0)
-            {
-                if ((layout.OrnamentHeight > 0.0) && flag)
-                {
-                    layout.TabStripX = layout.GetHorizontalScrollBarX(0);
-                    layout.TabStripY = layout.OrnamentY;
-                    layout.TabStripWidth = TabStripRatio * Math.Max((double)0.0, (double)(layout.GetHorizontalScrollBarWidth(0) - 16.0));
-                    layout.TabSplitBoxX = layout.TabStripX + layout.TabStripWidth;
-                    layout.TabSplitBoxWidth = 16.0;
-                    layout.SetHorizontalScrollBarX(0, layout.TabSplitBoxX + layout.TabSplitBoxWidth);
-                    layout.SetHorizontalScrollBarWidth(0, Math.Max((double)0.0, (double)((layout.GetHorizontalScrollBarWidth(0) - layout.TabStripWidth) - layout.TabSplitBoxWidth)));
-                }
-                else
-                {
-                    layout.TabStripX = layout.X;
-                    layout.TabStripY = (layout.GetViewportY(layout.RowPaneCount - 1) + layout.GetViewportHeight(layout.RowPaneCount - 1)) + layout.FrozenTrailingHeight;
-                    for (int num48 = 0; num48 < layout.ColumnPaneCount; num48++)
-                    {
-                        layout.TabStripWidth += layout.GetHorizontalScrollBarWidth(num48);
-                        layout.TabStripWidth += layout.GetHorizontalSplitBoxWidth(num48);
-                        if (num48 == (layout.ColumnPaneCount - 1))
-                        {
-                            break;
-                        }
-                        layout.TabStripWidth += 6.0;
-                    }
-                }
-            }
-            double num49 = _availableSize.Width;
-            if (double.IsInfinity(num49) || double.IsNaN(num49))
-            {
-                num49 = 0.0;
-                if (flag3)
-                {
-                    num49 += ActualVerticalScrollBarWidth;
-                }
-                for (int num50 = 0; num50 < (layout.ColumnPaneCount - 1); num50++)
-                {
-                    num49 += layout.GetHorizontalSplitBarWidth(num50);
-                }
-                for (int num51 = 0; num51 < layout.ColumnPaneCount; num51++)
-                {
-                    num49 += layout.GetViewportWidth(num51);
-                }
-            }
-            double num52 = _availableSize.Height;
-            if (double.IsInfinity(num52) || double.IsNaN(num52))
-            {
-                num52 = 0.0;
-                if (flag)
-                {
-                    num52 += ActualHorizontalScrollBarHeight;
-                }
-                for (int num53 = 0; num53 < (layout.RowPaneCount - 1); num53++)
-                {
-                    num52 += layout.GetVerticalSplitBarHeight(num53);
-                }
-                for (int num54 = 0; num54 < layout.RowPaneCount; num54++)
-                {
-                    num52 += layout.GetViewportHeight(num54);
-                }
-                if (layout.TabStripHeight > 0.0)
-                {
-                    num52 += layout.TabStripHeight;
-                }
-            }
-            _availableSize = new Size(num49, num52);
-            return layout;
-        }
-
+        
         /// <summary>
         /// 
         /// </summary>
@@ -11675,7 +11140,7 @@ namespace Dt.Cells.UI
             if (!IsSuspendInvalidate())
             {
                 Children.Clear();
-                _cornerPresenter = null;
+                _cornerPanel = null;
                 _rowHeaderPresenters = null;
                 _columnHeaderPresenters = null;
                 _viewportPresenters = null;

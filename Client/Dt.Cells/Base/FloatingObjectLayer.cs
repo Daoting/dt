@@ -20,7 +20,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace Dt.Cells.UI
 {
-    internal partial class FloatingObjectContainerPanel : Panel
+    internal partial class FloatingObjectLayer : Panel
     {
         Dictionary<string, SpreadChartContainer> _cachedCharts = new Dictionary<string, SpreadChartContainer>();
         Dictionary<string, FloatingObjectContainer> _cachedFloatingObjects = new Dictionary<string, FloatingObjectContainer>();
@@ -28,7 +28,7 @@ namespace Dt.Cells.UI
         int _suspendFloatingObjectInvalidate;
         const int _CHART_MARGIN = 6;
 
-        public FloatingObjectContainerPanel(GcViewport parentViewport)
+        public FloatingObjectLayer(CellsPanel parentViewport)
         {
             ParentViewport = parentViewport;
         }
@@ -517,7 +517,7 @@ namespace Dt.Cells.UI
             get { return  ParentViewport.Location; }
         }
 
-        public GcViewport ParentViewport { get; set; }
+        public CellsPanel ParentViewport { get; set; }
 
         int RowViewportIndex
         {

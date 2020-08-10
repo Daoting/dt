@@ -15,56 +15,56 @@ using Windows.Foundation;
 
 namespace Dt.Cells.UI
 {
-    internal partial class GcColumnHeaderViewport : GcViewport
+    internal partial class ColHeaderPanel : CellsPanel
     {
-        List<RowPresenter> _recycledColHeaderRows;
+        List<RowItem> _recycledColHeaderRows;
 
-        public GcColumnHeaderViewport(SheetView sheet) : base(sheet, SheetArea.ColumnHeader)
+        public ColHeaderPanel(SheetView sheet) : base(sheet, SheetArea.ColumnHeader)
         {
-            _recycledColHeaderRows = new List<RowPresenter>();
+            _recycledColHeaderRows = new List<RowItem>();
         }
 
-        internal override RowPresenter GenerateNewRow()
+        internal override RowItem GenerateNewRow()
         {
-            return new ColumnHeaderRowPresenter(this);
+            return new ColHeaderItem(this);
         }
 
         internal override CellLayoutModel GetCellLayoutModel()
         {
-            return base.Sheet.GetColumnHeaderCellLayoutModel(base.ColumnViewportIndex);
+            return Sheet.GetColumnHeaderCellLayoutModel(base.ColumnViewportIndex);
         }
 
         internal override ICellsSupport GetDataContext()
         {
-            return base.Sheet.ActiveSheet.ColumnHeader;
+            return Sheet.ActiveSheet.ColumnHeader;
         }
 
         internal override RowLayoutModel GetRowLayoutModel()
         {
-            return base.Sheet.GetColumnHeaderRowLayoutModel();
+            return Sheet.GetColumnHeaderRowLayoutModel();
         }
 
         internal override SheetSpanModelBase GetSpanModel()
         {
-            return base.Sheet.ActiveSheet.ColumnHeaderSpanModel;
+            return Sheet.ActiveSheet.ColumnHeaderSpanModel;
         }
 
         internal override Size GetViewportSize(Size availableSize)
         {
-            SheetLayout sheetLayout = base.Sheet.GetSheetLayout();
+            SheetLayout sheetLayout = Sheet.GetSheetLayout();
             double viewportWidth = sheetLayout.GetViewportWidth(base.ColumnViewportIndex);
             double headerHeight = sheetLayout.HeaderHeight;
             viewportWidth = Math.Min(viewportWidth, availableSize.Width);
             return new Size(viewportWidth, Math.Min(headerHeight, availableSize.Height));
         }
 
-        internal override List<RowPresenter> RecycledRows
+        internal override List<RowItem> RecycledRows
         {
             get
             {
                 if (_recycledColHeaderRows == null)
                 {
-                    _recycledColHeaderRows = new List<RowPresenter>();
+                    _recycledColHeaderRows = new List<RowItem>();
                 }
                 return _recycledColHeaderRows;
             }

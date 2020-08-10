@@ -93,7 +93,7 @@ namespace Dt.Cells.UI
                 {
                     for (int j = _viewportPresenters.GetLowerBound(1); j <= colBound; j++)
                     {
-                        GcViewport viewport = _viewportPresenters[i, j];
+                        CellsPanel viewport = _viewportPresenters[i, j];
                         if (viewport != null)
                             viewport.InvalidateDecorationPanel();
                     }
@@ -135,7 +135,7 @@ namespace Dt.Cells.UI
                     {
                         for (int j = _viewportPresenters.GetLowerBound(1); j <= colBound; j++)
                         {
-                            GcViewport viewport = _viewportPresenters[i, j];
+                            CellsPanel viewport = _viewportPresenters[i, j];
                             if (viewport != null)
                                 viewport.HideDecorationWhenPrinting = value;
                         }

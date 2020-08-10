@@ -16,7 +16,7 @@ using Windows.UI.Xaml.Media;
 
 namespace Dt.Cells.UI
 {
-    internal partial class GcViewport : Panel
+    internal partial class CellsPanel : Panel
     {
         protected override Size MeasureOverride(Size availableSize)
         {

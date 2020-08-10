@@ -19,12 +19,12 @@ using Windows.UI.Xaml.Shapes;
 
 namespace Dt.Cells.UI
 {
-    internal partial class DragFillContainerPanel : Panel
+    internal partial class DragFillLayer : Panel
     {
         Rectangle _dragClearRectangle;
         DragFillFrame _dragFillFrame;
 
-        public DragFillContainerPanel()
+        public DragFillLayer()
         {
             _dragFillFrame = new DragFillFrame();
             Children.Add(_dragFillFrame);
@@ -106,7 +106,7 @@ namespace Dt.Cells.UI
             get { return _dragFillFrame; }
         }
 
-        public GcViewport ParentViewport { get; set; }
+        public CellsPanel ParentViewport { get; set; }
     }
 
 }

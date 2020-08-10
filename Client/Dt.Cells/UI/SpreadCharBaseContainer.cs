@@ -19,7 +19,7 @@ namespace Dt.Cells.UI
     {
         internal SpreadChartBaseView _chartBaseView;
 
-        public SpreadCharBaseContainer(SpreadChartBase spreadChart, Control c1Chart, GcViewport parentViewport) : base(spreadChart, parentViewport)
+        public SpreadCharBaseContainer(SpreadChartBase spreadChart, Control c1Chart, CellsPanel parentViewport) : base(spreadChart, parentViewport)
         {
             _chartBaseView = CreateView(spreadChart, c1Chart);
             _chartBaseView.ParentViewport = base.ParentViewport;

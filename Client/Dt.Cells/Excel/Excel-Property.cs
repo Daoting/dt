@@ -738,7 +738,7 @@ namespace Dt.Base
         /// Gets the spread view associated with the control. 
         /// </summary>
         [Browsable(false)]
-        internal SheetView View { get; }
+        public SheetView View { get; }
 
         /// <summary>
         /// Gets the workbook associated with the control. 

@@ -536,7 +536,7 @@ namespace Dt.Cells.UI
         {
             int activeRowViewportIndex = GetActiveRowViewportIndex();
             int activeColumnViewportIndex = GetActiveColumnViewportIndex();
-            GcViewport viewportRowsPresenter = GetViewportRowsPresenter(activeRowViewportIndex, activeColumnViewportIndex);
+            CellsPanel viewportRowsPresenter = GetViewportRowsPresenter(activeRowViewportIndex, activeColumnViewportIndex);
             if (viewportRowsPresenter != null)
             {
                 return viewportRowsPresenter.GetFlotingObjectZIndex(name);

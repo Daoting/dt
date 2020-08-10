@@ -28,7 +28,7 @@ namespace Dt.Cells.UI
     internal sealed partial class DecorationPanel : Panel
     {
         const double _thickness = 3;
-        GcViewport _viewport;
+        CellsPanel _viewport;
         readonly List<Line> _horLines;
         readonly List<Line> _verLines;
         readonly Rectangle _rect;
@@ -44,7 +44,7 @@ namespace Dt.Cells.UI
         /// 构造方法
         /// </summary>
         /// <param name="p_viewport"></param>
-        public DecorationPanel(GcViewport p_viewport)
+        public DecorationPanel(CellsPanel p_viewport)
         {
             _viewport = p_viewport;
             _horLines = new List<Line>();

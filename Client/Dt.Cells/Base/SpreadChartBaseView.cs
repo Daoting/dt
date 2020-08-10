@@ -186,7 +186,7 @@ namespace Dt.Cells.UI
             get { return  _c1ChartControl; }
         }
 
-        internal GcViewport ParentViewport { get; set; }
+        internal CellsPanel ParentViewport { get; set; }
 
         internal virtual double ZoomFactor
         {
