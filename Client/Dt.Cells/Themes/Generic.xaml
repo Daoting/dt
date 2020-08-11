@@ -30,23 +30,11 @@
 
             <SolidColorBrush x:Key="CrossSplitBarBrush" Color="#FFF1F1F1"/>
 
-            <!--for ConorHeaderCell color settings-->
-            <SolidColorBrush x:Key="CornerBackground" Color="#FFFFFFFF"/>
-            <SolidColorBrush x:Key="CornerHoverBackground" Color="#FFD6D6D6"/>
-            <SolidColorBrush x:Key="CornerSelectedBackground" Color="#FFC3C3C3"/>
-            <SolidColorBrush x:Key="CornerGlyphBrush" Color="#FF9B9B9B"/>
-
             <!--for RowHeaderCell color settings-->
-            <SolidColorBrush x:Key="RowHeaderCellBackgroundBrush" Color="#FFF1F1F1"/>
-            <SolidColorBrush x:Key="RowHeaderCellHoverBackgroundBrush" Color="#FFFFFDC5"/>
-            <SolidColorBrush x:Key="RowHeaderCellSelectedBackgroundBrush" Color="#FFFFDA37"/>
-            <SolidColorBrush x:Key="RowHeaderCellHighlighedBackgroundBrush" Color="#FFFFDA37"/>
-
-            <!--for ColumnHeaderCell color settings-->
-            <SolidColorBrush x:Key="ColumnHeaderCellBackgroundBrush" Color="#FFF1F1F1"/>
-            <SolidColorBrush x:Key="ColumnHeaderCellHighlighedBackgroundBrush" Color="#FFFFDA37"/>
-            <SolidColorBrush x:Key="ColumnHeaderCellSelectedBackgroundBrush" Color="#FFFFDA37"/>
-            <SolidColorBrush x:Key="ColumnHeaderCellHoverBackgroundBrush" Color="#FFFFFDC5"/>
+            <SolidColorBrush x:Key="HeaderCellBackgroundBrush" Color="#FFF1F1F1"/>
+            <SolidColorBrush x:Key="HeaderCellHoverBackgroundBrush" Color="#FFFFFDC5"/>
+            <SolidColorBrush x:Key="HeaderCellSelectedBackgroundBrush" Color="#FFFFDA37"/>
+            <SolidColorBrush x:Key="HeaderCellHighlighedBackgroundBrush" Color="#FFFFDA37"/>
 
             <!--for ColumnDropdownList color settings-->
             <SolidColorBrush x:Key="ColumnDropDownListBackgroundBrush" Color="White"/>
@@ -475,16 +463,14 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:CornerPanel">
-                    <Grid BorderBrush="{StaticResource ControlBorderBrush}" BorderThickness="0,0,1,1">
-                        <Rectangle x:Name="NormalRectangle" Fill ="{StaticResource CornerBackground}" IsHitTestVisible="False" />
-                        <Rectangle x:Name="SelectionRectangle" Visibility="Collapsed" Fill ="{StaticResource CornerSelectedBackground}" IsHitTestVisible="False" />
-                        <Rectangle x:Name="HoverRectangle" Visibility="Collapsed" Fill ="{StaticResource CornerHoverBackground}" IsHitTestVisible="False" />
-                        <Path Data="M9,0 L9,9 L0,9 z"
+                    <Grid Background="White" BorderBrush="{StaticResource ControlBorderBrush}" BorderThickness="0,0,1,1">
+                        <Path x:Name="FlagPath"
+                              Data="M9,0 L9,9 L0,9 z"
                               HorizontalAlignment="Right"
                               VerticalAlignment="Bottom"
                               Margin="0,4,4,4" 
                               Stretch="Uniform"
-                              Fill="{StaticResource CornerGlyphBrush}"
+                              Fill="#FFE0E0E0"
                               IsHitTestVisible="False"/>
                     </Grid>
                 </ControlTemplate>
@@ -492,60 +478,54 @@
         </Setter>
     </Style>
 
-    <Style TargetType="local:RowHeaderCellPresenter">
+    <Style TargetType="local:RowHeaderCell">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="VerticalContentAlignment" Value="Stretch" />
         <Setter Property="IsTabStop" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="local:RowHeaderCellPresenter">
+                <ControlTemplate TargetType="local:RowHeaderCell">
                     <Grid BorderBrush="{StaticResource ControlBorderBrush}" BorderThickness="0,0,1,1">
-                        <Rectangle x:Name="NormalRectangle" Fill ="{StaticResource RowHeaderCellBackgroundBrush}" />
-                        <local:CellBackgroundPanel x:Name="Root" Margin="-1,-1,0,0" >
-                            <Grid Margin="1">
-                                <Rectangle x:Name="HighlightRectangle" Opacity="0" Margin="-1,-1,-1,-1" Fill ="{StaticResource RowHeaderCellHighlighedBackgroundBrush}" />
-                                <Rectangle x:Name="SelectionRectangle" Opacity="0"  Fill ="{StaticResource RowHeaderCellSelectedBackgroundBrush}" />
-                                <Rectangle x:Name="HoverRectangle" Opacity="0" Fill ="{StaticResource RowHeaderCellHoverBackgroundBrush}" />
-                            </Grid>
-                        </local:CellBackgroundPanel>
+                        <Rectangle x:Name="NormalRectangle" Fill ="{StaticResource HeaderCellBackgroundBrush}" />
+                        <Rectangle x:Name="HighlightRectangle" Visibility="Collapsed" Fill ="{StaticResource HeaderCellHighlighedBackgroundBrush}" />
+                        <Rectangle x:Name="SelectionRectangle" Visibility="Collapsed" Fill ="{StaticResource HeaderCellSelectedBackgroundBrush}" />
+                        <Rectangle x:Name="HoverRectangle" Visibility="Collapsed" Fill ="{StaticResource HeaderCellHoverBackgroundBrush}" />
+                        <TextBlock x:Name="DisplayTextBlock" TextAlignment="Center" VerticalAlignment="Center" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
 
-    <Style TargetType="local:ColumnHeaderCellPresenter">
+    <Style TargetType="local:ColHeaderCell">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="VerticalContentAlignment" Value="Stretch" />
         <Setter Property="IsTabStop" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="local:ColumnHeaderCellPresenter">
+                <ControlTemplate TargetType="local:ColHeaderCell">
                     <Grid BorderBrush="{StaticResource ControlBorderBrush}" BorderThickness="0,0,1,1">
-                        <Rectangle x:Name="NormalRectangle" Fill="{StaticResource ColumnHeaderCellBackgroundBrush}" />
-                        <local:CellBackgroundPanel x:Name="Root" Margin="-1,-1,0,0">
-                            <Grid Margin="1">
-                                <Rectangle x:Name="HighlightRectangle" Margin="-1,-1,-1,-1" Fill="{StaticResource ColumnHeaderCellHighlighedBackgroundBrush}"/>
-                                <Rectangle x:Name="SelectionRectangle" Opacity="0" Fill ="{StaticResource ColumnHeaderCellSelectedBackgroundBrush}" />
-                                <Rectangle x:Name="HoverRectangle" Opacity="0"  Fill="{StaticResource ColumnHeaderCellHoverBackgroundBrush}"/>
-                            </Grid>
-                        </local:CellBackgroundPanel>
+                        <Rectangle x:Name="NormalRectangle" Fill ="{StaticResource HeaderCellBackgroundBrush}" />
+                        <Rectangle x:Name="HighlightRectangle" Visibility="Collapsed" Fill ="{StaticResource HeaderCellHighlighedBackgroundBrush}" />
+                        <Rectangle x:Name="SelectionRectangle" Visibility="Collapsed" Fill ="{StaticResource HeaderCellSelectedBackgroundBrush}" />
+                        <Rectangle x:Name="HoverRectangle" Visibility="Collapsed" Fill ="{StaticResource HeaderCellHoverBackgroundBrush}" />
+                        <TextBlock x:Name="DisplayTextBlock" TextAlignment="Center" VerticalAlignment="Center" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
 
-    <Style TargetType="local:CellPresenter">
+    <Style TargetType="local:CellItem">
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="VerticalContentAlignment" Value="Stretch" />
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="IsTabStop" Value="False" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="local:CellPresenter">
+                <ControlTemplate TargetType="local:CellItem">
                     <local:CellBackgroundPanel x:Name="Root" Margin="-1,-1,0,0"/>
                 </ControlTemplate>
             </Setter.Value>

@@ -3,11 +3,11 @@ using System.Linq;
 
 namespace Dt.Cells.UI
 {
-    public partial class ColumnHeaderCellPresenter : HeaderCellPresenter
+    public partial class ColHeaderCell : HeaderCellItem
     {
-        public ColumnHeaderCellPresenter()
+        public ColHeaderCell()
         {
-            DefaultStyleKey = typeof(ColumnHeaderCellPresenter);
+            DefaultStyleKey = typeof(ColHeaderCell);
         }
 
         internal override bool IsHightlighted
@@ -59,22 +59,6 @@ namespace Dt.Cells.UI
                         where range.Column <= Column && range.Column + range.ColumnCount > Column
                         select range).Any();
             }
-        }
-
-        internal override bool TryUpdateVisualTree()
-        {
-            SheetView sheetView = base.SheetView;
-            if (sheetView != null)
-            {
-                FilterButtonInfo info = sheetView.GetFilterButtonInfo(base.Row, base.Column, SheetArea.ColumnHeader);
-                if (info != base.FilterButtonInfo)
-                {
-                    base.FilterButtonInfo = info;
-                    base.SynFilterButton();
-                    return true;
-                }
-            }
-            return false;
         }
     }
 }

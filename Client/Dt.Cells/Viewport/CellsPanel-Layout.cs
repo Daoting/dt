@@ -276,7 +276,7 @@ namespace Dt.Cells.UI
         {
             if (SheetArea == SheetArea.Cells)
             {
-                CellPresenterBase editingCell = GetViewportCell(_activeRow, _activeCol, true);
+                CellItemBase editingCell = GetViewportCell(_activeRow, _activeCol, true);
                 if (editingCell != null)
                 {
                     if (((_editorPanel == null) || (_editorPanel.EditingColumnIndex != _activeCol)) || ((_editorPanel.EditingRowIndex != _activeRow) || !editingCell.HasEditingElement()))

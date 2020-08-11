@@ -3848,9 +3848,9 @@ namespace Dt.Cells.UI
             return ((viewportTopRow + num4) - 1);
         }
 
-        CellPresenterBase GetViewportCell(int rowViewportIndex, int columnViewportIndex, int rowIndex, int columnIndex)
+        CellItemBase GetViewportCell(int rowViewportIndex, int columnViewportIndex, int rowIndex, int columnIndex)
         {
-            CellPresenterBase cell = null;
+            CellItemBase cell = null;
             CellsPanel viewportRowsPresenter = GetViewportRowsPresenter(rowViewportIndex, columnViewportIndex);
             if (viewportRowsPresenter != null)
             {
@@ -6954,7 +6954,7 @@ namespace Dt.Cells.UI
                     RowItem presenter = viewport.GetRow(layout.Row);
                     if (presenter != null)
                     {
-                        foreach (CellPresenterBase base2 in presenter.Children)
+                        foreach (CellItemBase base2 in presenter.Children)
                         {
                             if ((column <= base2.Column) && (base2.Column < (column + columnCount)))
                             {
@@ -8911,7 +8911,7 @@ namespace Dt.Cells.UI
                                         {
                                             break;
                                         }
-                                        CellPresenterBase cell = presenter.GetCell(j);
+                                        CellItemBase cell = presenter.GetCell(j);
                                         if (cell != null)
                                         {
                                             cell.ApplyState();
@@ -9779,7 +9779,7 @@ namespace Dt.Cells.UI
                         RowItem row = columnHeaderRowsPresenter.GetRow(_hitFilterInfo.Row);
                         if (row != null)
                         {
-                            CellPresenterBase cell = row.GetCell(_hitFilterInfo.Column);
+                            CellItemBase cell = row.GetCell(_hitFilterInfo.Column);
                             if (cell != null)
                             {
                                 cell.ApplyState();
@@ -9795,7 +9795,7 @@ namespace Dt.Cells.UI
                         RowItem presenter2 = viewportRowsPresenter.GetRow(_hitFilterInfo.Row);
                         if (presenter2 != null)
                         {
-                            CellPresenterBase base3 = presenter2.GetCell(_hitFilterInfo.Column);
+                            CellItemBase base3 = presenter2.GetCell(_hitFilterInfo.Column);
                             if (base3 != null)
                             {
                                 base3.ApplyState();
@@ -9869,7 +9869,7 @@ namespace Dt.Cells.UI
                                 {
                                     for (int j = column; j < (column + columnCount); j++)
                                     {
-                                        CellPresenterBase cell = presenter.GetCell(j);
+                                        CellItemBase cell = presenter.GetCell(j);
                                         if (cell != null)
                                         {
                                             cell.ApplyState();

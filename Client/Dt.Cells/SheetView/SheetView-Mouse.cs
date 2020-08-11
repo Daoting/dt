@@ -3281,7 +3281,7 @@ namespace Dt.Cells.UI
                         RowItem row = columnHeaderRowsPresenter.GetRow(savedHitTestInformation.HeaderInfo.Row);
                         if (row != null)
                         {
-                            CellPresenterBase cell = row.GetCell(savedHitTestInformation.HeaderInfo.Column);
+                            CellItemBase cell = row.GetCell(savedHitTestInformation.HeaderInfo.Column);
                             if (cell != null)
                             {
                                 cell.ApplyState();
@@ -3302,7 +3302,7 @@ namespace Dt.Cells.UI
                         RowItem presenter2 = rowHeaderRowsPresenter.GetRow(information2.HeaderInfo.Row);
                         if (presenter2 != null)
                         {
-                            CellPresenterBase base3 = presenter2.GetCell(information2.HeaderInfo.Column);
+                            CellItemBase base3 = presenter2.GetCell(information2.HeaderInfo.Column);
                             if (base3 != null)
                             {
                                 base3.ApplyState();

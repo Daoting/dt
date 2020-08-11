@@ -24,45 +24,29 @@ namespace Dt.Cells.UI
     public partial class CellBackgroundPanel : Panel
     {
         Rect? _cachedClip;
-        Thickness _contentPadding;
-        CellPresenterBase _owner;
+        CellItemBase _owner;
 
         protected override Size MeasureOverride(Size availableSize)
         {
             if (double.IsInfinity(availableSize.Width) || double.IsInfinity(availableSize.Height))
-            {
                 return new Size();
-            }
-            double width = availableSize.Width - (ContentPadding.Left + ContentPadding.Right);
-            if (width < 0.0)
-            {
-                width = 0.0;
-            }
-            double height = availableSize.Height - (ContentPadding.Top + ContentPadding.Bottom);
-            if (height < 0.0)
-            {
-                height = 0.0;
-            }
 
-            Size size = new Size(width, height);
-            Size size2 = size;
-            if (ContentWidth > width)
-            {
-                size2 = new Size(ContentWidth, height);
-            }
+            Size sizeOverflow = availableSize;
+            if (ContentWidth > availableSize.Width)
+                sizeOverflow = new Size(ContentWidth, availableSize.Height);
 
             foreach (UIElement element in Children)
             {
                 if (element is TextBlock)
                 {
-                    element.Measure(size2);
+                    element.Measure(sizeOverflow);
                 }
                 else
                 {
-                    element.Measure(size);
+                    element.Measure(availableSize);
                 }
             }
-            return size;
+            return availableSize;
         }
 
         /// <summary>
@@ -73,25 +57,15 @@ namespace Dt.Cells.UI
         protected override Size ArrangeOverride(Size finalSize)
         {
             if (double.IsInfinity(finalSize.Width) || double.IsInfinity(finalSize.Height))
-            {
                 return new Size();
-            }
 
-            double width = finalSize.Width - (ContentPadding.Left + ContentPadding.Right);
-            if (width < 0.0)
-            {
-                width = 0.0;
-            }
-            double height = finalSize.Height - (ContentPadding.Top + ContentPadding.Bottom);
-            if (height < 0.0)
-            {
-                height = 0.0;
-            }
-
+            double width = finalSize.Width;
+            double height = finalSize.Height;
             Rect? nullable = null;
-            double left = ContentPadding.Left;
-            double top = ContentPadding.Top;
+            double left = 0;
+            double top = 0;
             Rect rect = new Rect(left, top, width, height);
+            Rect rectOverflow = rect;
             if (ContentWidth > width)
             {
                 switch (HorizontalContentFlowDirection)
@@ -99,11 +73,9 @@ namespace Dt.Cells.UI
                     case HorizontalAlignment.Left:
                         if (CellOverflowLayout != null)
                         {
-                            double num5 = CellOverflowLayout.RightBackgroundWidth - ContentPadding.Right;
-                            if (num5 >= 0.0)
-                            {
-                                nullable = new Rect(0.0, 0.0, num5, finalSize.Height);
-                            }
+                            double w = CellOverflowLayout.RightBackgroundWidth;
+                            if (w >= 0.0)
+                                nullable = new Rect(0.0, 0.0, w, finalSize.Height);
                         }
                         break;
 
@@ -112,11 +84,9 @@ namespace Dt.Cells.UI
                         if (CellOverflowLayout != null)
                         {
                             double x = finalSize.Width - CellOverflowLayout.LeftBackgroundWidth;
-                            double num7 = CellOverflowLayout.LeftBackgroundWidth - ContentPadding.Left;
-                            if (num7 >= 0.0)
-                            {
-                                nullable = new Rect(x, 0.0, num7, finalSize.Height);
-                            }
+                            double w = CellOverflowLayout.LeftBackgroundWidth;
+                            if (w >= 0.0)
+                                nullable = new Rect(x, 0.0, w, finalSize.Height);
                         }
                         break;
 
@@ -124,46 +94,42 @@ namespace Dt.Cells.UI
                         left -= (ContentWidth - width) / 2.0;
                         if (CellOverflowLayout != null)
                         {
-                            double num8 = 0.0;
+                            double x = 0.0;
                             if (CellOverflowLayout.LeftBackgroundWidth > 0.0)
-                            {
-                                num8 = ((finalSize.Width / 2.0) - CellOverflowLayout.LeftBackgroundWidth) + ContentPadding.Left;
-                            }
-                            double num9 = CellOverflowLayout.BackgroundWidth - ContentPadding.Right;
-                            if (num9 >= 0.0)
-                            {
-                                nullable = new Rect(num8, 0.0, num9, finalSize.Height);
-                            }
+                                x = (finalSize.Width / 2.0) - CellOverflowLayout.LeftBackgroundWidth;
+
+                            double w = CellOverflowLayout.BackgroundWidth;
+                            if (w >= 0.0)
+                                nullable = new Rect(x, 0.0, w, finalSize.Height);
                         }
                         break;
                 }
                 width = ContentWidth;
+                rectOverflow = new Rect(left, top, width, height);
             }
 
-            Rect rect2 = new Rect(left, top, width, height);
-            Rect? nullable2 = _cachedClip;
-            Rect? nullable3 = nullable;
-            if ((nullable2.HasValue != nullable3.HasValue) || (nullable2.HasValue && (nullable2.GetValueOrDefault() != nullable3.GetValueOrDefault())))
+            if ((_cachedClip.HasValue != nullable.HasValue) || (_cachedClip.HasValue && (_cachedClip.Value != nullable.Value)))
             {
                 _cachedClip = nullable;
                 if (nullable.HasValue)
                 {
                     RectangleGeometry geometry = new RectangleGeometry();
                     geometry.Rect = nullable.Value;
-                    base.Clip = geometry;
+                    Clip = geometry;
                 }
                 else
                 {
-                    base.ClearValue(UIElement.ClipProperty);
+                    ClearValue(ClipProperty);
                 }
             }
+
             foreach (UIElement element in base.Children)
             {
                 if (element != null)
                 {
                     if (element is TextBlock)
                     {
-                        element.Arrange(rect2);
+                        element.Arrange(rectOverflow);
                     }
                     else
                     {
@@ -183,23 +149,6 @@ namespace Dt.Cells.UI
                     return OwneringCell.CellOverflowLayout;
                 }
                 return null;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the content padding in the cell panel.
-        /// </summary>
-        public Thickness ContentPadding
-        {
-            get { return  _contentPadding; }
-            set
-            {
-                if (_contentPadding != value)
-                {
-                    _contentPadding = value;
-                    InvalidateMeasure();
-                    InvalidateArrange();
-                }
             }
         }
 
@@ -231,7 +180,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        internal CellPresenterBase OwneringCell
+        internal CellItemBase OwneringCell
         {
             get { return  _owner; }
             set

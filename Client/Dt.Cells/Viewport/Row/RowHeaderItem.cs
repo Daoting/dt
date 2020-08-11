@@ -17,15 +17,15 @@ namespace Dt.Cells.UI
     internal partial class RowHeaderItem : RowItem
     {
         [ThreadStatic]
-        static List<CellPresenterBase> _recycledRowHeaderCells;
+        static List<CellItemBase> _recycledRowHeaderCells;
 
         public RowHeaderItem(CellsPanel viewport) : base(viewport)
         {
         }
 
-        protected override CellPresenterBase GenerateNewCell()
+        protected override CellItemBase GenerateNewCell()
         {
-            return new RowHeaderCellPresenter();
+            return new RowHeaderCell();
         }
 
         protected override SheetSpanModelBase GetCellSpanModel()
@@ -38,13 +38,13 @@ namespace Dt.Cells.UI
             return OwningPresenter.Sheet.GetRowHeaderColumnLayoutModel();
         }
 
-        protected override List<CellPresenterBase> RecycledCells
+        protected override List<CellItemBase> RecycledCells
         {
             get
             {
                 if (_recycledRowHeaderCells == null)
                 {
-                    _recycledRowHeaderCells = new List<CellPresenterBase>();
+                    _recycledRowHeaderCells = new List<CellItemBase>();
                 }
                 return _recycledRowHeaderCells;
             }

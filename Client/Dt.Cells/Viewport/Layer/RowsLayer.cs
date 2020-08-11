@@ -135,7 +135,7 @@ namespace Dt.Cells.UI
                 if (_cachedChildren.Remove(presenter3))
                 {
                     Children.Remove(presenter3);
-                    foreach (CellPresenterBase base2 in presenter3.Children)
+                    foreach (CellItemBase base2 in presenter3.Children)
                     {
                         base2.RemoveInvalidDataPresenter();
                     }

@@ -25,7 +25,7 @@ namespace Dt.Cells.UI
     /// <summary>
     /// 修饰层面板
     /// </summary>
-    internal sealed partial class DecorationPanel : Panel
+    internal sealed partial class DecorationLayer : Panel
     {
         const double _thickness = 3;
         CellsPanel _viewport;
@@ -44,7 +44,7 @@ namespace Dt.Cells.UI
         /// 构造方法
         /// </summary>
         /// <param name="p_viewport"></param>
-        public DecorationPanel(CellsPanel p_viewport)
+        public DecorationLayer(CellsPanel p_viewport)
         {
             _viewport = p_viewport;
             _horLines = new List<Line>();

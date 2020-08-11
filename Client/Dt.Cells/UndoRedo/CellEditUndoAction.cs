@@ -9,11 +9,9 @@
 #region 引用命名
 using Dt.Cells.Data;
 using Dt.Cells.UI;
-using Dt.Cells.CellTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 #endregion
 
 namespace Dt.Cells.UndoRedo
@@ -94,7 +92,7 @@ namespace Dt.Cells.UndoRedo
             bool flag3 = false;
             using (((IUIActionExecuter) sheetView.ActiveSheet).BeginUIAction())
             {
-                flag3 = BaseCellType.ApplyValueToCell(sheetView, bindingCell, view.CanUserEditFormula, newValue, valueType, out isFormulaApplied, out appliedFormula);
+                flag3 = CellItemBase.ApplyValueToCell(sheetView, bindingCell, view.CanUserEditFormula, newValue, valueType, out isFormulaApplied, out appliedFormula);
             }
             if (!flag3)
             {

@@ -7,7 +7,6 @@
 #endregion
 
 #region 引用命名
-using Dt.Cells.CellTypes;
 using Dt.Cells.Data;
 using System;
 using System.Collections.Generic;
@@ -55,7 +54,7 @@ namespace Dt.Cells.UI
         RowsLayer _rowsContainer;
         SelectionLayer _selectionContainer;
         Panel _shapeContainer;
-        DecorationPanel _decoratinPanel;
+        DecorationLayer _decoratinPanel;
 
         public CellsPanel(SheetView sheet)
             : this(sheet, SheetArea.Cells)
@@ -81,11 +80,7 @@ namespace Dt.Cells.UI
             _cellCachePool = new CellCachePool(this);
             _cachedSpanGraph = new SpanGraph();
 
-            // 左上角内容完全自定义
-            if (SheetArea == SheetArea.CornerHeader)
-                return;
-
-            // 行数据层
+            // 1 行数据层
             _rowsContainer = new RowsLayer(this);
             Children.Add(_rowsContainer);
 
@@ -95,43 +90,49 @@ namespace Dt.Cells.UI
 
             // 以下为Cells内容区域
 
-            // 网格层，调整为只用在内容区域，行/列头不再使用
+            // 2 网格层，调整为只用在内容区域，行/列头不再使用
             _borderContainer = new BorderLayer(this);
             Children.Add(_borderContainer);
 
-            // 选择状态层
+            // 3 选择状态层
             _selectionContainer = new SelectionLayer(this);
             Children.Add(_selectionContainer);
+
+            // 4 公式选择层
             _formulaSelectionContainer = new FormulaSelectionLayer { ParentViewport = this };
             Children.Add(_formulaSelectionContainer);
 
-            // 图形层
+            // 5 图形层
             _shapeContainer = new Canvas();
             Children.Add(_shapeContainer);
 
-            // 拖拽复制层
+            // 6 拖拽复制层
             if (Sheet.CanUserDragFill)
             {
                 _dragFillContainer = new DragFillLayer { ParentViewport = this };
                 Children.Add(_dragFillContainer);
             }
 
-            // hdt 新增修饰层
+            // 7 新增修饰层
             if (sheet.ShowDecoration)
             {
-                _decoratinPanel = new DecorationPanel(this);
+                _decoratinPanel = new DecorationLayer(this);
                 Children.Add(_decoratinPanel);
             }
 
+            // 8 数据校验层
             _dataValidationPanel = new DataValidationLayer(this);
             Children.Add(_dataValidationPanel);
 
+            // 9 编辑层
             _editorPanel = new EditingLayer(this);
             Children.Add(_editorPanel);
 
+            // 10 浮动对象层
             _floatingObjectContainerPanel = new FloatingObjectLayer(this);
             Children.Add(_floatingObjectContainerPanel);
 
+            // 11 浮动对象编辑层
             _floatingObjectsMovingResizingContainer = new FloatingObjectMovingLayer(this);
             Children.Add(_floatingObjectsMovingResizingContainer);
         }
@@ -438,7 +439,7 @@ namespace Dt.Cells.UI
 
         internal Rect CalcEditorBounds(int row, int column, Size viewportSize)
         {
-            CellPresenterBase base2 = GetViewportCell(row, column, true);
+            CellItemBase base2 = GetViewportCell(row, column, true);
             Rect rect = new Rect();
             if ((base2 == null) || (_editorPanel == null))
             {
@@ -826,9 +827,9 @@ namespace Dt.Cells.UI
             return new Rect(Location, GetViewportSize());
         }
 
-        internal CellPresenterBase GetViewportCell(int row, int column, bool containsSpan)
+        internal CellItemBase GetViewportCell(int row, int column, bool containsSpan)
         {
-            CellPresenterBase cell = null;
+            CellItemBase cell = null;
             RowItem presenter = RowsContainer.GetRow(row);
             if (presenter != null)
             {
@@ -844,7 +845,7 @@ namespace Dt.Cells.UI
                 {
                     if (presenter2 != null)
                     {
-                        foreach (CellPresenterBase base3 in presenter2.Cells.Values)
+                        foreach (CellItemBase base3 in presenter2.Cells.Values)
                         {
                             if (((base3 != null) && (base3.CellLayout != null)) && ((base3.CellLayout.Row == row) && (base3.CellLayout.Column == column)))
                             {
@@ -928,7 +929,7 @@ namespace Dt.Cells.UI
             return new Point(point.X - Location.X, point.Y - Location.Y);
         }
 
-        internal void PrepareCellEditing(CellPresenterBase editingCell)
+        internal void PrepareCellEditing(CellItemBase editingCell)
         {
             if (_editorPanel != null)
             {
@@ -986,7 +987,7 @@ namespace Dt.Cells.UI
 
         internal void PrepareCellEditing(int row, int column)
         {
-            CellPresenterBase editingCell = GetViewportCell(row, column, true);
+            CellItemBase editingCell = GetViewportCell(row, column, true);
             if (editingCell != null)
             {
                 PrepareCellEditing(editingCell);
@@ -1317,7 +1318,7 @@ namespace Dt.Cells.UI
             {
                 return true;
             }
-            CellPresenterBase cell = GetViewportCell(row, column, true);
+            CellItemBase cell = GetViewportCell(row, column, true);
             if (cell != null)
             {
                 ShowSheetCell(row, column);
@@ -1427,7 +1428,7 @@ namespace Dt.Cells.UI
             {
                 return true;
             }
-            CellPresenterBase base2 = GetViewportCell(row, column, true);
+            CellItemBase base2 = GetViewportCell(row, column, true);
             if (base2 != null)
             {
                 ShowSheetCell(row, column);
@@ -1473,7 +1474,7 @@ namespace Dt.Cells.UI
                 _editorPanel.EditingChanged -= new EventHandler(_editorPanel_EdtingChanged);
             }
             _editorBounds = new Rect();
-            CellPresenterBase cell = GetViewportCell(_activeRow, _activeCol, true);
+            CellItemBase cell = GetViewportCell(_activeRow, _activeCol, true);
             if (cell != null)
             {
                 cell.UnHideForEditing();
@@ -1510,7 +1511,7 @@ namespace Dt.Cells.UI
             RowItem presenter = RowsContainer.GetRow(row);
             if (presenter != null)
             {
-                CellPresenterBase cell = presenter.GetCell(column);
+                CellItemBase cell = presenter.GetCell(column);
                 if (cell != null)
                 {
                     cell.ApplyState();

@@ -17,10 +17,6 @@ using Windows.UI.Xaml.Input;
 
 namespace Dt.Cells.UI
 {
-    /// <summary>
-    /// Represents a <see cref="T:GcSpreadSheet" /> filter button. 
-    /// </summary>
-    [TemplateVisualState(GroupName="SortFilterStates", Name="FilterAscend"), TemplateVisualState(GroupName="SortFilterStates", Name="FilterAscend"), TemplateVisualState(GroupName="SortFilterStates", Name="Ascend"), TemplateVisualState(GroupName="SortFilterStates", Name="Filter"), TemplateVisualState(GroupName="SortFilterStates", Name="NoSortFilter"), TemplateVisualState(GroupName="SortFilterStates", Name="Descend")]
     public partial class FilterButton : Button
     {
         const string ASCEND_STATE = "Ascend";
@@ -37,10 +33,11 @@ namespace Dt.Cells.UI
         /// <summary>
         /// Creates a new instance of the control.
         /// </summary>
-        public FilterButton()
+        public FilterButton(CellItem p_cellView)
         {
-            base.DefaultStyleKey = typeof(FilterButton);
-            base.IsHitTestVisible = false;
+            DefaultStyleKey = typeof(FilterButton);
+            IsHitTestVisible = false;
+            CellView = p_cellView;
         }
 
         internal void ApplyState()
@@ -144,7 +141,7 @@ namespace Dt.Cells.UI
 
         internal SheetArea Area { get; set; }
 
-        internal CellPresenterBase CellView { get; set; }
+        internal CellItem CellView { get; }
     }
 }
 

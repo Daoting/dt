@@ -3,11 +3,11 @@ using System.Linq;
 
 namespace Dt.Cells.UI
 {
-    public partial class RowHeaderCellPresenter : HeaderCellPresenter
+    public partial class RowHeaderCell : HeaderCellItem
     {
-        public RowHeaderCellPresenter()
+        public RowHeaderCell()
         {
-            DefaultStyleKey = typeof(RowHeaderCellPresenter);
+            DefaultStyleKey = typeof(RowHeaderCell);
         }
 
         internal override bool IsHightlighted

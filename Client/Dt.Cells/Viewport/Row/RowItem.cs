@@ -25,12 +25,12 @@ namespace Dt.Cells.UI
     /// </summary>
     internal partial class RowItem : Panel
     {
-        CellPresenterBase _headingOverflowCell;
+        CellItemBase _headingOverflowCell;
         CellsPanel _owningPresenter;
-        List<CellPresenterBase> _recycledCells;
+        List<CellItemBase> _recycledCells;
         int _row;
         double _rowWidth;
-        CellPresenterBase _trailingOverflowCell;
+        CellItemBase _trailingOverflowCell;
         const int _FlowCellZIndexBase = 0x7530;
         const int _NormalCellZIndexBase = 0x2710;
         const int _SpanCellZIndexBase = 0x4e20;
@@ -38,7 +38,7 @@ namespace Dt.Cells.UI
         public RowItem(CellsPanel viewport)
         {
             _row = -1;
-            Cells = new Dictionary<int, CellPresenterBase>();
+            Cells = new Dictionary<int, CellItemBase>();
             HorizontalAlignment = HorizontalAlignment.Left;
             VerticalAlignment = VerticalAlignment.Top;
             Background = new SolidColorBrush(Colors.Transparent);
@@ -57,7 +57,7 @@ namespace Dt.Cells.UI
                 {
                     if (layout2.Width > 0.0)
                     {
-                        CellPresenterBase cell = GetCell(layout2.Column);
+                        CellItemBase cell = GetCell(layout2.Column);
                         if (cell != null)
                         {
                             CellLayout cellLayout = cell.CellLayout;
@@ -138,7 +138,7 @@ namespace Dt.Cells.UI
         {
             if (Cells != null)
             {
-                using (Dictionary<int, CellPresenterBase>.ValueCollection.Enumerator enumerator = Cells.Values.GetEnumerator())
+                using (Dictionary<int, CellItemBase>.ValueCollection.Enumerator enumerator = Cells.Values.GetEnumerator())
                 {
                     while (enumerator.MoveNext())
                     {
@@ -176,14 +176,14 @@ namespace Dt.Cells.UI
             return new CellRange(row, column, (num2 - row) + 1, (num4 - column) + 1);
         }
 
-        protected virtual CellPresenterBase GenerateNewCell()
+        protected virtual CellItemBase GenerateNewCell()
         {
-            return new CellPresenter();
+            return new CellItem();
         }
 
-        public virtual CellPresenterBase GetCell(int column)
+        public virtual CellItemBase GetCell(int column)
         {
-            CellPresenterBase base2 = null;
+            CellItemBase base2 = null;
             Cells.TryGetValue(column, out base2);
             return base2;
         }
@@ -219,7 +219,7 @@ namespace Dt.Cells.UI
                 double num3 = layout.Height;
                 double num4 = num2;
                 double num5 = num3;
-                CellPresenterBase cell = GetCell(layout2.Column);
+                CellItemBase cell = GetCell(layout2.Column);
                 if (cell != null)
                 {
                     CellLayout cellLayout = cell.CellLayout;
@@ -283,10 +283,10 @@ namespace Dt.Cells.UI
         internal void UpdateDisplayedCells(bool forceUpdate = false)
         {
             ColumnLayoutModel columnLayoutModel = GetColumnLayoutModel();
-            List<CellPresenterBase> lsRecy = new List<CellPresenterBase>();
-            List<CellPresenterBase> lsUsing = new List<CellPresenterBase>();
+            List<CellItemBase> lsRecy = new List<CellItemBase>();
+            List<CellItemBase> lsUsing = new List<CellItemBase>();
 
-            foreach (KeyValuePair<int, CellPresenterBase> pair in Cells)
+            foreach (KeyValuePair<int, CellItemBase> pair in Cells)
             {
                 if (!pair.Value.IsRecylable)
                 {
@@ -294,7 +294,7 @@ namespace Dt.Cells.UI
                 }
                 else
                 {
-                    CellPresenterBase cell = GetCell(pair.Key);
+                    CellItemBase cell = GetCell(pair.Key);
                     ColumnLayout layout = columnLayoutModel.FindColumn(cell.Column);
                     if ((layout == null) || (layout.Width == 0.0))
                     {
@@ -303,7 +303,7 @@ namespace Dt.Cells.UI
                 }
             }
 
-            foreach (CellPresenterBase cp in lsUsing)
+            foreach (CellItemBase cp in lsUsing)
             {
                 Cells.Remove(cp.Column);
                 Children.Remove(cp);
@@ -319,7 +319,7 @@ namespace Dt.Cells.UI
                     continue;
 
                 int column = colLayout.Column;
-                CellPresenterBase cell = GetCell(column);
+                CellItemBase cell = GetCell(column);
                 
                 byte state = cachedSpanGraph.GetState(Row, colLayout.Column);
                 CellLayout layout = null;
@@ -348,7 +348,7 @@ namespace Dt.Cells.UI
                                 break;
                             }
                             i = j;
-                            CellPresenterBase base5 = GetCell(num6);
+                            CellItemBase base5 = GetCell(num6);
                             if ((base5 != null) && Cells.Remove(num6))
                             {
                                 Children.Remove(base5);
@@ -417,7 +417,7 @@ namespace Dt.Cells.UI
                             updated = true;
                         }
                     }
-                    else if (((OwningPresenter.SheetArea == (SheetArea.CornerHeader | SheetArea.RowHeader)) || (OwningPresenter.SheetArea == SheetArea.ColumnHeader)) && !cell.ShowContent)
+                    else if (((_owningPresenter.SheetArea == (SheetArea.CornerHeader | SheetArea.RowHeader)) || (_owningPresenter.SheetArea == SheetArea.ColumnHeader)) && !cell.ShowContent)
                     {
                         cell.ShowContent = true;
                         updated = true;
@@ -430,8 +430,8 @@ namespace Dt.Cells.UI
                     }
                     cell.OwningRow = this;
                     cell.UpdateBindingCell();
-
-                    if (CellsDirty || forceUpdate || updated || cell.TryUpdateVisualTree())
+                    bool updateTree = cell.TryUpdateVisualTree();
+                    if (CellsDirty || forceUpdate || updated || updateTree)
                     {
                         cell.Invalidate();
                         InvalidateMeasure();
@@ -440,7 +440,7 @@ namespace Dt.Cells.UI
             }
 
             CellsDirty = false;
-            foreach (CellPresenterBase base6 in lsRecy)
+            foreach (CellItemBase base6 in lsRecy)
             {
                 Cells.Remove(base6.Column);
                 Children.Remove(base6);
@@ -453,7 +453,7 @@ namespace Dt.Cells.UI
                 {
                     if (cellOverflowLayoutModel.HeadingOverflowlayout != null)
                     {
-                        CellPresenterBase headingOverflowCell = HeadingOverflowCell;
+                        CellItemBase headingOverflowCell = HeadingOverflowCell;
                         if (headingOverflowCell == null)
                         {
                             headingOverflowCell = GenerateNewCell();
@@ -474,7 +474,7 @@ namespace Dt.Cells.UI
 
                     if (cellOverflowLayoutModel.TrailingOverflowlayout != null)
                     {
-                        CellPresenterBase trailingOverflowCell = TrailingOverflowCell;
+                        CellItemBase trailingOverflowCell = TrailingOverflowCell;
                         if (trailingOverflowCell == null)
                         {
                             trailingOverflowCell = GenerateNewCell();
@@ -506,7 +506,7 @@ namespace Dt.Cells.UI
         {
             get
             {
-                foreach (CellPresenterBase base2 in Cells.Values)
+                foreach (CellItemBase base2 in Cells.Values)
                 {
                     if ((base2 != null) && !base2.IsRecylable)
                     {
@@ -517,13 +517,13 @@ namespace Dt.Cells.UI
             }
         }
 
-        internal Dictionary<int, CellPresenterBase> Cells { get; private set; }
+        internal Dictionary<int, CellItemBase> Cells { get; private set; }
 
         internal bool CellsDirty { get; set; }
 
         internal bool ContainsSpanCell { get; set; }
 
-        internal CellPresenterBase HeadingOverflowCell
+        internal CellItemBase HeadingOverflowCell
         {
             get { return _headingOverflowCell; }
             set
@@ -557,13 +557,13 @@ namespace Dt.Cells.UI
             set { _owningPresenter = value; }
         }
 
-        protected virtual List<CellPresenterBase> RecycledCells
+        protected virtual List<CellItemBase> RecycledCells
         {
             get
             {
                 if (_recycledCells == null)
                 {
-                    _recycledCells = new List<CellPresenterBase>();
+                    _recycledCells = new List<CellItemBase>();
                 }
                 return _recycledCells;
             }
@@ -587,7 +587,7 @@ namespace Dt.Cells.UI
             get { return _rowWidth; }
         }
 
-        internal CellPresenterBase TrailingOverflowCell
+        internal CellItemBase TrailingOverflowCell
         {
             get { return _trailingOverflowCell; }
             set

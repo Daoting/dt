@@ -8,26 +8,13 @@
 
 #region 引用命名
 using Dt.Cells.Data;
-using Dt.Cells.CellTypes;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text.RegularExpressions;
-using System.Threading;
-using Windows.ApplicationModel;
 using Windows.Foundation;
 using Windows.UI;
-using Windows.UI.Core;
-using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Shapes;
 #endregion
 
 namespace Dt.Cells.UI
@@ -36,7 +23,7 @@ namespace Dt.Cells.UI
     internal partial class EditingLayer : Panel
     {
         CellsPanel _parentViewport;
-        CellPresenterBase _editingCell;
+        CellItemBase _editingCell;
         FrameworkElement _editor1;
         FrameworkElement _editor2;
 
@@ -219,7 +206,7 @@ namespace Dt.Cells.UI
             return FocusManager.GetFocusedElement();
         }
 
-        public void InstallEditor(CellPresenterBase cell, bool startEditing = false)
+        public void InstallEditor(CellItemBase cell, bool startEditing = false)
         {
             if (cell == null)
                 return;
@@ -286,7 +273,7 @@ namespace Dt.Cells.UI
         {
             if (_editingCell != null)
             {
-                CellPresenterBase objA = _parentViewport.GetViewportCell(EditingRowIndex, EditingColumnIndex, true);
+                CellItemBase objA = _parentViewport.GetViewportCell(EditingRowIndex, EditingColumnIndex, true);
                 if (objA != null)
                 {
                     if (!Equals(objA, _editingCell))
@@ -322,7 +309,7 @@ namespace Dt.Cells.UI
             if ((_editingCell != null) && (_parentViewport != null))
             {
                 Size viewportSize = _parentViewport.GetViewportSize();
-                CellPresenterBase base2 = _parentViewport.GetViewportCell(EditingRowIndex, EditingColumnIndex, true);
+                CellItemBase base2 = _parentViewport.GetViewportCell(EditingRowIndex, EditingColumnIndex, true);
                 if ((_editingCell != null) && (_parentViewport._editorPanel != null))
                 {
                     Rect rect = _parentViewport.GetCellBounds(EditingRowIndex, EditingColumnIndex, false);
@@ -393,7 +380,7 @@ namespace Dt.Cells.UI
             tb.Text = text;
         }
 
-        public void Update(CellPresenterBase cell)
+        public void Update(CellItemBase cell)
         {
             int row = cell.Row;
             int column = cell.Column;

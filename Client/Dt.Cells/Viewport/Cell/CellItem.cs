@@ -25,7 +25,7 @@ namespace Dt.Cells.UI
     /// <summary>
     /// Represents an individual <see cref="T:GcSpreadSheet" /> cell.
     /// </summary>
-    public partial class CellPresenter : CellPresenterBase
+    public partial class CellItem : CellItemBase
     {
         ConditionalFormatView _conditionalView;
         CustomDrawingObject _customDrawingObject;
@@ -36,24 +36,238 @@ namespace Dt.Cells.UI
         BaseSparklineView _sparklineView;
         StrikethroughView _strikethroughView;
 
-        public CellPresenter()
+        TextBlock _content;
+        FrameworkElement _editingElement;
+        FilterButton _filterButton;
+        FilterButtonInfo _filterButtonInfo;
+        Type _cachedValueType;
+        InvalidDataPresenterInfo _dataValidationInvalidPresenterInfo;
+        CellBackgroundPanel _rootPanel;
+
+        public CellItem()
         {
-            DefaultStyleKey = typeof(CellPresenter);
+            DefaultStyleKey = typeof(CellItem);
+        }
+
+        internal override void ApplyState()
+        {
+            if (BindingCell != null && _rootPanel != null)
+            {
+                _rootPanel.Background = BindingCell.ActualBackground;
+            }
+
+            if (_filterButton != null)
+            {
+                _filterButton.ApplyState();
+            }
         }
 
         internal override void CleanUpBeforeDiscard()
         {
-            base.CleanUpBeforeDiscard();
             if (_customDrawingObjectView != null)
             {
                 _rootPanel.Children.Remove(_customDrawingObjectView);
             }
+            DettachSparklineEvents();
         }
 
-        internal override void DetachEvents()
+        internal override bool HasEditingElement()
         {
-            base.DetachEvents();
-            DettachSparklineEvents();
+            return (_editingElement != null);
+        }
+
+        internal override void SetEditingElement(FrameworkElement p_editor)
+        {
+            if (_editingElement != p_editor)
+                _editingElement = p_editor;
+        }
+
+        internal override FrameworkElement GetEditingElement()
+        {
+            if (_editingElement == null)
+                _editingElement = new EditingElement();
+            TextBox textBox = _editingElement as TextBox;
+
+            Cell bindingCell = BindingCell;
+            StyleInfo info = bindingCell.Worksheet.GetActualStyleInfo(bindingCell.Row.Index, bindingCell.Column.Index, bindingCell.SheetArea, true);
+            if (info == null || textBox == null)
+                return _editingElement;
+
+            // 存在公式
+            string text = string.Empty;
+            string formula = string.Empty;
+            using (((IUIActionExecuter)bindingCell.Worksheet).BeginUIAction())
+            {
+                int index = bindingCell.Row.Index;
+                int column = bindingCell.Column.Index;
+                formula = bindingCell.Formula;
+                if (formula == null)
+                {
+                    object[,] objArray = bindingCell.Worksheet.FindFormulas(index, column, 1, 1);
+                    if (objArray.GetLength(0) > 0)
+                    {
+                        string str3 = objArray[0, 1].ToString();
+                        int length = str3.Length;
+                        if (((length > 2) && str3.StartsWith("{")) && str3.EndsWith("}"))
+                        {
+                            formula = str3.Substring(1, length - 2);
+                        }
+                    }
+                }
+            }
+            if (!string.IsNullOrEmpty(formula))
+            {
+                text = "=" + formula;
+                goto Label_0293;
+            }
+            if (bindingCell.Value == null)
+            {
+                _cachedValueType = null;
+                goto Label_0293;
+            }
+
+            // 存在格式化
+            _cachedValueType = bindingCell.Value.GetType();
+            var preferredEditingFormatter = new GeneralFormatter().GetPreferredEditingFormatter(bindingCell.Value);
+            if ((preferredEditingFormatter != null) && (info.Formatter is AutoFormatter))
+            {
+                try
+                {
+                    text = preferredEditingFormatter.Format(bindingCell.Value);
+                    goto Label_01F7;
+                }
+                catch
+                {
+                    text = bindingCell.Text;
+                    goto Label_01F7;
+                }
+            }
+
+            text = bindingCell.Text;
+        Label_01F7:
+            var formatter2 = info.Formatter;
+            if (formatter2 is GeneralFormatter formatter3)
+            {
+                switch (formatter3.GetFormatType(bindingCell.Value))
+                {
+                    case NumberFormatType.Number:
+                    case NumberFormatType.Text:
+                        formatter2 = new GeneralFormatter();
+                        break;
+                }
+            }
+            if ((formatter2 != null) && !(formatter2 is AutoFormatter))
+            {
+                text = formatter2.Format(bindingCell.Value);
+            }
+            if (text != null && text.StartsWith("=") && SheetView.CanUserEditFormula)
+            {
+                text = "'" + text;
+            }
+
+        Label_0293:
+            textBox.Text = text;
+            if (info.FontSize > 0.0)
+            {
+                textBox.FontSize = info.FontSize * ZoomFactor;
+            }
+            else
+            {
+                textBox.ClearValue(TextBlock.FontSizeProperty);
+            }
+            textBox.FontStyle = info.FontStyle;
+            textBox.FontWeight = info.FontWeight;
+            textBox.FontStretch = info.FontStretch;
+            if (info.IsFontFamilySet() && (info.FontFamily != null))
+            {
+                textBox.FontFamily = info.FontFamily;
+            }
+            else if (info.IsFontThemeSet())
+            {
+                string fontTheme = info.FontTheme;
+                IThemeSupport worksheet = bindingCell.Worksheet;
+                if (worksheet != null)
+                {
+                    textBox.FontFamily = worksheet.GetThemeFont(fontTheme);
+                }
+            }
+            else
+            {
+                textBox.ClearValue(Control.FontFamilyProperty);
+            }
+
+            Brush foreground = null;
+            if (info.IsForegroundSet())
+            {
+                foreground = info.Foreground;
+            }
+            else if (info.IsForegroundThemeColorSet())
+            {
+                string fname = info.ForegroundThemeColor;
+                if ((!string.IsNullOrEmpty(fname) && (bindingCell.Worksheet != null)) && (bindingCell.Worksheet.Workbook != null))
+                {
+                    foreground = new SolidColorBrush(bindingCell.Worksheet.Workbook.GetThemeColor(fname));
+                }
+            }
+            if (foreground != null)
+            {
+                textBox.Foreground = foreground;
+            }
+            else
+            {
+                textBox.Foreground = new SolidColorBrush(Colors.Black);
+            }
+
+            textBox.VerticalContentAlignment = info.VerticalAlignment.ToVerticalAlignment();
+            if (!string.IsNullOrEmpty(formula))
+            {
+                textBox.TextAlignment = Windows.UI.Xaml.TextAlignment.Left;
+            }
+            else if (!bindingCell.ActualWordWrap)
+            {
+                switch (bindingCell.ToHorizontalAlignment())
+                {
+                    case HorizontalAlignment.Left:
+                    case HorizontalAlignment.Stretch:
+                        textBox.TextAlignment = Windows.UI.Xaml.TextAlignment.Left;
+                        break;
+
+                    case HorizontalAlignment.Center:
+                        textBox.TextAlignment = Windows.UI.Xaml.TextAlignment.Center;
+                        break;
+
+                    case HorizontalAlignment.Right:
+                        textBox.TextAlignment = Windows.UI.Xaml.TextAlignment.Right;
+                        break;
+                }
+            }
+            else
+            {
+                textBox.TextAlignment = Windows.UI.Xaml.TextAlignment.Left;
+            }
+
+            textBox.Margin = GetDefaultPaddingForEdit(textBox.FontSize);
+            textBox.TextWrapping = TextWrapping.Wrap;
+            return _editingElement;
+        }
+
+        internal override void HideForEditing()
+        {
+            _rootPanel.Visibility = Visibility.Collapsed;
+        }
+
+        internal override void UnHideForEditing()
+        {
+            _rootPanel.ClearValue(VisibilityProperty);
+        }
+
+        internal override void RemoveInvalidDataPresenter()
+        {
+            if (_dataValidationInvalidPresenterInfo != null)
+            {
+                OwningRow.OwningPresenter.RemoveDataValidationInvalidDataPresenterInfo(_dataValidationInvalidPresenterInfo);
+                _dataValidationInvalidPresenterInfo = null;
+            }
         }
 
         internal override void Invalidate()
@@ -65,11 +279,25 @@ namespace Dt.Cells.UI
             base.Invalidate();
         }
 
+        internal FilterButtonInfo FilterButtonInfo
+        {
+            get { return _filterButtonInfo; }
+            set
+            {
+                if (_filterButtonInfo != value)
+                {
+                    _filterButtonInfo = value;
+                    InvalidateMeasure();
+                }
+            }
+        }
+
         #region 更新可视树
         internal override bool TryUpdateVisualTree()
         {
+            SheetView sheetView = SheetView;
             Cell bindingCell = BindingCell;
-            if (bindingCell == null)
+            if (sheetView == null || bindingCell == null)
                 return false;
 
             Worksheet sheet = bindingCell.Worksheet;
@@ -140,8 +368,50 @@ namespace Dt.Cells.UI
             ShowContent = noBarIcon && noCust;
             SynStrikethroughView();
 
-            bool baseUpdate = base.TryUpdateVisualTree();
-            return update || baseUpdate;
+            FilterButtonInfo info = sheetView.GetFilterButtonInfo(row, column, bindingCell.SheetArea);
+            if (info != FilterButtonInfo)
+            {
+                FilterButtonInfo = info;
+                SynFilterButton();
+                update = true;
+            }
+
+            if (OwningRow.OwningPresenter.Sheet.HighlightInvalidData)
+            {
+                if (_dataValidationInvalidPresenterInfo == null)
+                {
+                    DataValidator actualDataValidator = BindingCell.ActualDataValidator;
+                    if ((actualDataValidator != null) && !actualDataValidator.IsValid(sheetView.ActiveSheet, Row, Column, bindingCell.Value))
+                    {
+                        InvalidDataPresenterInfo info2 = new InvalidDataPresenterInfo
+                        {
+                            Row = Row,
+                            Column = Column
+                        };
+                        _dataValidationInvalidPresenterInfo = info2;
+                        OwningRow.OwningPresenter.AddDataValidationInvalidDataPresenterInfo(_dataValidationInvalidPresenterInfo);
+                        update = true;
+                    }
+                }
+                else if (_dataValidationInvalidPresenterInfo != null)
+                {
+                    DataValidator validator2 = BindingCell.ActualDataValidator;
+                    if ((validator2 == null) || validator2.IsValid(sheetView.ActiveSheet, Row, Column, bindingCell.Value))
+                    {
+                        OwningRow.OwningPresenter.RemoveDataValidationInvalidDataPresenterInfo(_dataValidationInvalidPresenterInfo);
+                        _dataValidationInvalidPresenterInfo = null;
+                    }
+                    update = true;
+                }
+            }
+            else if (_dataValidationInvalidPresenterInfo != null)
+            {
+                OwningRow.OwningPresenter.RemoveDataValidationInvalidDataPresenterInfo(_dataValidationInvalidPresenterInfo);
+                _dataValidationInvalidPresenterInfo = null;
+                update = true;
+            }
+
+            return update;
         }
 
         bool SynContitionalView()
@@ -334,6 +604,73 @@ namespace Dt.Cells.UI
         }
         #endregion
 
+        #region 重写方法
+        protected override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+
+            _rootPanel = GetTemplateChild("Root") as CellBackgroundPanel;
+            _rootPanel.OwneringCell = this;
+            UpdataContent();
+        }
+
+        protected override Size MeasureOverride(Size constraint)
+        {
+            if (_rootPanel != null && _rootPanel.Visibility == Visibility.Collapsed)
+            {
+                if (!OwningRow.OwningPresenter.IsEditing())
+                {
+                    UnHideForEditing();
+                }
+                else
+                {
+                    int editingRowIndex = OwningRow.OwningPresenter.EditingContainer.EditingRowIndex;
+                    int editingColumnIndex = OwningRow.OwningPresenter.EditingContainer.EditingColumnIndex;
+                    if ((editingRowIndex != Row) || (editingColumnIndex != Column))
+                    {
+                        UnHideForEditing();
+                    }
+                }
+            }
+
+            if (_isInvalidating)
+            {
+                UpdataContent();
+                _isInvalidating = false;
+            }
+            return base.MeasureOverride(constraint);
+        }
+        #endregion
+
+        void UpdataContent()
+        {
+            Cell cell = BindingCell;
+            if (cell == null || _rootPanel == null)
+                return;
+
+            string text = SheetView.RaiseCellTextRendering(cell.Row.Index, cell.Column.Index, cell.Text);
+            if (string.IsNullOrEmpty(text) || !ShowContent)
+            {
+                if (_content != null)
+                {
+                    _rootPanel.Children.Remove(_content);
+                    _content = null;
+                }
+            }
+            else
+            {
+                if (_content == null)
+                {
+                    _content = new TextBlock();
+                    Canvas.SetZIndex(_content, 0x7d0);
+                    _rootPanel.Children.Add(_content);
+                }
+                _content.Text = text;
+                ApplyStyle(_content);
+            }
+            ApplyState();
+        }
+
         /// <summary>
         /// Gets a value that indicates that the cell's viewport is active. 
         /// </summary>
@@ -371,7 +708,43 @@ namespace Dt.Cells.UI
             get { return OwningRow.OwningPresenter.Sheet.ActiveSheet.IsSelected(Row, Column); }
         }
 
+        void SynFilterButton()
+        {
+            if (_filterButtonInfo != null)
+            {
+                if (_filterButton == null)
+                {
+                    FilterButton element = new FilterButton(this);
+                    element.HorizontalAlignment = HorizontalAlignment.Right;
+                    element.VerticalAlignment = VerticalAlignment.Bottom;
+                    element.Area = SheetArea.Cells;
+                    _filterButton = element;
+                    Canvas.SetZIndex(element, 0xbb8);
+                    _rootPanel.Children.Add(element);
+                }
+                else
+                {
+                    _filterButton.ApplyState();
+                }
+            }
+            else if (_filterButton != null)
+            {
+                _rootPanel.Children.Remove(_filterButton);
+                _filterButton = null;
+            }
+        }
+
+        Thickness GetDefaultPaddingForEdit(double fontSize)
+        {
+            Thickness excelBlank = MeasureHelper.GetExcelBlank();
+            Thickness textBoxBlank = MeasureHelper.GetTextBoxBlank(fontSize);
+            double left = excelBlank.Left - textBoxBlank.Left;
+            double right = excelBlank.Right - textBoxBlank.Right;
+            double top = excelBlank.Top - textBoxBlank.Top;
+            return new Thickness(left, top, right, excelBlank.Bottom - textBoxBlank.Bottom);
+        }
     }
+
     internal partial class ConditionalFormatView : Panel
     {
         Canvas _axisCanvas;

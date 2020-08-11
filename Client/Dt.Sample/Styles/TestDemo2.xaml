@@ -4,11 +4,5 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base">
 
-    <a:WinCenter>
-        <a:Tabs ShowHeader="False">
-            <a:Tab>
-                <a:Excel x:Name="_excel" />
-            </a:Tab>
-        </a:Tabs>
-    </a:WinCenter>
+    <a:Excel x:Name="_excel" />
 </a:Win>
