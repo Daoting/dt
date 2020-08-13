@@ -85,15 +85,15 @@ namespace Dt.Cells.UI
 
         void InvalidateDecoration()
         {
-            if (_viewportPresenters != null)
+            if (_cellsPanels != null)
             {
-                int rowBound = _viewportPresenters.GetUpperBound(0);
-                int colBound = _viewportPresenters.GetUpperBound(1);
-                for (int i = _viewportPresenters.GetLowerBound(0); i <= rowBound; i++)
+                int rowBound = _cellsPanels.GetUpperBound(0);
+                int colBound = _cellsPanels.GetUpperBound(1);
+                for (int i = _cellsPanels.GetLowerBound(0); i <= rowBound; i++)
                 {
-                    for (int j = _viewportPresenters.GetLowerBound(1); j <= colBound; j++)
+                    for (int j = _cellsPanels.GetLowerBound(1); j <= colBound; j++)
                     {
-                        CellsPanel viewport = _viewportPresenters[i, j];
+                        CellsPanel viewport = _cellsPanels[i, j];
                         if (viewport != null)
                             viewport.InvalidateDecorationPanel();
                     }
@@ -127,15 +127,15 @@ namespace Dt.Cells.UI
         {
             set
             {
-                if (_viewportPresenters != null)
+                if (_cellsPanels != null)
                 {
-                    int rowBound = _viewportPresenters.GetUpperBound(0);
-                    int colBound = _viewportPresenters.GetUpperBound(1);
-                    for (int i = _viewportPresenters.GetLowerBound(0); i <= rowBound; i++)
+                    int rowBound = _cellsPanels.GetUpperBound(0);
+                    int colBound = _cellsPanels.GetUpperBound(1);
+                    for (int i = _cellsPanels.GetLowerBound(0); i <= rowBound; i++)
                     {
-                        for (int j = _viewportPresenters.GetLowerBound(1); j <= colBound; j++)
+                        for (int j = _cellsPanels.GetLowerBound(1); j <= colBound; j++)
                         {
-                            CellsPanel viewport = _viewportPresenters[i, j];
+                            CellsPanel viewport = _cellsPanels[i, j];
                             if (viewport != null)
                                 viewport.HideDecorationWhenPrinting = value;
                         }

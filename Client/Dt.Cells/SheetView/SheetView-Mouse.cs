@@ -1915,9 +1915,9 @@ namespace Dt.Cells.UI
 
             _fastScroll = false;
             GetViewportInfo();
-            if (_viewportPresenters != null)
+            if (_cellsPanels != null)
             {
-                CellsPanel[,] viewportArray = _viewportPresenters;
+                CellsPanel[,] viewportArray = _cellsPanels;
                 int upperBound = viewportArray.GetUpperBound(0);
                 int num9 = viewportArray.GetUpperBound(1);
                 for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
@@ -1929,26 +1929,6 @@ namespace Dt.Cells.UI
                         {
                             viewport.InvalidateBordersMeasureState();
                         }
-                    }
-                }
-            }
-            if (_rowHeaderPresenters != null)
-            {
-                foreach (CellsPanel viewport2 in _rowHeaderPresenters)
-                {
-                    if (viewport2 != null)
-                    {
-                        viewport2.InvalidateBordersMeasureState();
-                    }
-                }
-            }
-            if (_columnHeaderPresenters != null)
-            {
-                foreach (CellsPanel viewport3 in _columnHeaderPresenters)
-                {
-                    if (viewport3 != null)
-                    {
-                        viewport3.InvalidateBordersMeasureState();
                     }
                 }
             }
@@ -3275,13 +3255,13 @@ namespace Dt.Cells.UI
                 HitTestInformation savedHitTestInformation = GetHitInfo();
                 if ((savedHitTestInformation != null) && (savedHitTestInformation.HitTestType == HitTestType.ColumnHeader))
                 {
-                    CellsPanel columnHeaderRowsPresenter = GetColumnHeaderRowsPresenter(savedHitTestInformation.ColumnViewportIndex);
+                    var columnHeaderRowsPresenter = GetColumnHeaderRowsPresenter(savedHitTestInformation.ColumnViewportIndex);
                     if (columnHeaderRowsPresenter != null)
                     {
-                        RowItem row = columnHeaderRowsPresenter.GetRow(savedHitTestInformation.HeaderInfo.Row);
+                        var row = columnHeaderRowsPresenter.GetRow(savedHitTestInformation.HeaderInfo.Row);
                         if (row != null)
                         {
-                            CellItemBase cell = row.GetCell(savedHitTestInformation.HeaderInfo.Column);
+                            var cell = row.GetCell(savedHitTestInformation.HeaderInfo.Column);
                             if (cell != null)
                             {
                                 cell.ApplyState();
@@ -3296,13 +3276,13 @@ namespace Dt.Cells.UI
                 HitTestInformation information2 = GetHitInfo();
                 if ((information2 != null) && (information2.HitTestType == HitTestType.RowHeader))
                 {
-                    CellsPanel rowHeaderRowsPresenter = GetRowHeaderRowsPresenter(information2.RowViewportIndex);
+                    var rowHeaderRowsPresenter = GetRowHeaderRowsPresenter(information2.RowViewportIndex);
                     if (rowHeaderRowsPresenter != null)
                     {
-                        RowItem presenter2 = rowHeaderRowsPresenter.GetRow(information2.HeaderInfo.Row);
+                        var presenter2 = rowHeaderRowsPresenter.GetRow(information2.HeaderInfo.Row);
                         if (presenter2 != null)
                         {
-                            CellItemBase base3 = presenter2.GetCell(information2.HeaderInfo.Column);
+                            var base3 = presenter2.GetCell(information2.HeaderInfo.Column);
                             if (base3 != null)
                             {
                                 base3.ApplyState();

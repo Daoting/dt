@@ -21,71 +21,41 @@ namespace Dt.Cells.UI
         protected override Size MeasureOverride(Size availableSize)
         {
             BuildSpanGraph();
+            _rowsContainer.Measure(availableSize);
+            _borderContainer.Measure(availableSize);
 
-            if (_rowsContainer != null)
-            {
-                _rowsContainer.Measure(availableSize);
-            }
+            BuildSelection();
+            _selectionContainer.Measure(availableSize);
 
-            if (_borderContainer != null)
-            {
-                _borderContainer.Measure(availableSize);
-            }
+            if (_formulaSelectionContainer.Children.Count > 0)
+                _formulaSelectionContainer.InvalidateMeasure();
+            _formulaSelectionContainer.Measure(availableSize);
 
-            if (_selectionContainer != null)
-            {
-                BuildSelection();
-                _selectionContainer.Measure(availableSize);
-                if (_formulaSelectionContainer.Children.Count > 0)
-                {
-                    _formulaSelectionContainer.InvalidateMeasure();
-                }
-                _formulaSelectionContainer.Measure(availableSize);
-            }
-
-            if (_shapeContainer != null)
-            {
-                _shapeContainer.Measure(availableSize);
-            }
+            _shapeContainer.Measure(availableSize);
 
             if (_dragFillContainer != null)
             {
                 _dragFillContainer.Measure(availableSize);
             }
 
-            if (_editorPanel != null)
-            {
-                _editorPanel.Measure(availableSize);
-            }
-
-            AttachEditorForActiveCell();
-
-            // hdt
             if (_decoratinPanel != null)
             {
                 _decoratinPanel.InvalidateMeasure();
                 _decoratinPanel.Measure(availableSize);
             }
 
-            if (_dataValidationPanel != null)
-            {
-                _dataValidationPanel.InvalidateMeasure();
-            }
+            _dataValidationPanel.InvalidateMeasure();
+
+            _editorPanel.Measure(availableSize);
+            AttachEditorForActiveCell();
 
             if (Sheet._formulaSelectionGripperPanel != null)
             {
                 Sheet._formulaSelectionGripperPanel.InvalidateMeasure();
             }
 
-            if (_floatingObjectContainerPanel != null)
-            {
-                _floatingObjectContainerPanel.Measure(availableSize);
-            }
-
-            if (_floatingObjectsMovingResizingContainer != null)
-            {
-                _floatingObjectsMovingResizingContainer.Measure(availableSize);
-            }
+            _floatingObjectContainerPanel.Measure(availableSize);
+            _floatingObjectsMovingResizingContainer.Measure(availableSize);
 
             return GetViewportSize(availableSize);
         }
@@ -93,98 +63,50 @@ namespace Dt.Cells.UI
         protected override Size ArrangeOverride(Size finalSize)
         {
             Rect rc = new Rect(0.0, 0.0, finalSize.Width, finalSize.Height);
-            if (_rowsContainer != null)
-            {
-                _rowsContainer.Arrange(rc);
-            }
-
-            if (_borderContainer != null)
-            {
-                _borderContainer.Arrange(rc);
-            }
-
-            if (_selectionContainer != null)
-            {
-                _selectionContainer.Arrange(rc);
-                _formulaSelectionContainer.Arrange(rc);
-            }
-
-            if (_shapeContainer != null)
-            {
-                _shapeContainer.Arrange(rc);
-                // hdt
-                //Sheet.GetViewportColumnLayoutModel(ColumnViewportIndex);
-                //Sheet.GetViewportRowLayoutModel(RowViewportIndex);
-            }
-
-            if (_editorPanel != null)
-            {
-                if (IsEditing())
-                {
-                    _editorPanel.ResumeEditor();
-                }
-                _editorPanel.Arrange(rc);
-            }
+            _rowsContainer.Arrange(rc);
+            _borderContainer.Arrange(rc);
+            _selectionContainer.Arrange(rc);
+            _formulaSelectionContainer.Arrange(rc);
+            _shapeContainer.Arrange(rc);
 
             if (_dragFillContainer != null)
             {
                 _dragFillContainer.Arrange(rc);
             }
 
-            // hdt
             if (_decoratinPanel != null)
             {
-                _decoratinPanel.InvalidateArrange();
                 _decoratinPanel.Arrange(rc);
             }
+            _dataValidationPanel.Arrange(rc);
 
-            if (_dataValidationPanel != null)
+            if (IsEditing())
             {
-                _dataValidationPanel.Arrange(rc);
+                _editorPanel.ResumeEditor();
             }
-            // hdt
-            //if (((SheetArea == SheetArea.Cells) && (Sheet != null)) && (Sheet.ActiveSheet != null))
-            //{
-            //    if (Sheet.ActiveSheet != null)
-            //    {
-            //        int activeRowIndex = Sheet.ActiveSheet.ActiveRowIndex;
-            //    }
-            //    if (Sheet.ActiveSheet != null)
-            //    {
-            //        int activeColumnIndex = Sheet.ActiveSheet.ActiveColumnIndex;
-            //    }
-            //}
+            _editorPanel.Arrange(rc);
+            _floatingObjectContainerPanel.Arrange(rc);
+            _floatingObjectsMovingResizingContainer.Arrange(rc);
 
             Size viewportSize = GetViewportSize(finalSize);
-
-            if (_floatingObjectContainerPanel != null)
-            {
-                _floatingObjectContainerPanel.Arrange(rc);
-            }
-
-            if (_floatingObjectsMovingResizingContainer != null)
-            {
-                _floatingObjectsMovingResizingContainer.Arrange(rc);
-            }
-
             RectangleGeometry geometry;
-            if (Sheet != null && Sheet.IsTouching)
+            if (Sheet.IsTouching)
             {
-                if (base.Clip == null)
+                if (Clip == null)
                 {
                     geometry = new RectangleGeometry();
                     geometry.Rect = new Rect(new Point(), viewportSize);
-                    base.Clip = geometry;
+                    Clip = geometry;
                 }
             }
             else
             {
                 geometry = new RectangleGeometry();
                 geometry.Rect = new Rect(new Point(), viewportSize);
-                base.Clip = geometry;
+                Clip = geometry;
             }
 
-            if (base.Clip != null)
+            if (Clip != null)
             {
                 geometry = new RectangleGeometry();
                 geometry.Rect = Clip.Rect;
@@ -200,39 +122,17 @@ namespace Dt.Cells.UI
             SheetSpanModelBase spanModel = GetSpanModel();
             if ((spanModel != null) && !spanModel.IsEmpty())
             {
-                int rowStart = -1;
-                int rowEnd = -1;
-                int columnStart = -1;
-                int columnEnd = -1;
-                switch (SheetArea)
-                {
-                    case SheetArea.Cells:
-                        rowStart = Sheet.GetViewportTopRow(RowViewportIndex);
-                        rowEnd = Sheet.GetViewportBottomRow(RowViewportIndex);
-                        columnStart = Sheet.GetViewportLeftColumn(ColumnViewportIndex);
-                        columnEnd = Sheet.GetViewportRightColumn(ColumnViewportIndex);
-                        break;
+                int rowStart = Sheet.GetViewportTopRow(RowViewportIndex);
+                int rowEnd = Sheet.GetViewportBottomRow(RowViewportIndex);
+                int columnStart = Sheet.GetViewportLeftColumn(ColumnViewportIndex);
+                int columnEnd = Sheet.GetViewportRightColumn(ColumnViewportIndex);
 
-                    case (SheetArea.CornerHeader | SheetArea.RowHeader):
-                        rowStart = Sheet.GetViewportTopRow(RowViewportIndex);
-                        rowEnd = Sheet.GetViewportBottomRow(RowViewportIndex);
-                        columnStart = 0;
-                        columnEnd = Sheet.ActiveSheet.RowHeader.ColumnCount - 1;
-                        break;
-
-                    case SheetArea.ColumnHeader:
-                        rowStart = 0;
-                        rowEnd = Sheet.ActiveSheet.ColumnHeader.RowCount - 1;
-                        columnStart = Sheet.GetViewportLeftColumn(ColumnViewportIndex);
-                        columnEnd = Sheet.GetViewportRightColumn(ColumnViewportIndex);
-                        break;
-                }
                 if ((rowStart <= rowEnd) && (columnStart <= columnEnd))
                 {
                     int num5 = -1;
                     for (int i = rowStart - 1; i > -1; i--)
                     {
-                        if (Sheet.ActiveSheet.GetActualRowVisible(i, SheetArea))
+                        if (Sheet.ActiveSheet.GetActualRowVisible(i, SheetArea.Cells))
                         {
                             num5 = i;
                             break;
@@ -242,7 +142,7 @@ namespace Dt.Cells.UI
                     int count = GetDataContext().Rows.Count;
                     for (int j = rowEnd + 1; j < count; j++)
                     {
-                        if (Sheet.ActiveSheet.GetActualRowVisible(j, SheetArea))
+                        if (Sheet.ActiveSheet.GetActualRowVisible(j, SheetArea.Cells))
                         {
                             rowEnd = j;
                             break;
@@ -251,7 +151,7 @@ namespace Dt.Cells.UI
                     int num9 = -1;
                     for (int k = columnStart - 1; k > -1; k--)
                     {
-                        if (Sheet.ActiveSheet.GetActualColumnVisible(k, SheetArea))
+                        if (Sheet.ActiveSheet.GetActualColumnVisible(k, SheetArea.Cells))
                         {
                             num9 = k;
                             break;
@@ -261,7 +161,7 @@ namespace Dt.Cells.UI
                     int num11 = GetDataContext().Columns.Count;
                     for (int m = columnEnd + 1; m < num11; m++)
                     {
-                        if (Sheet.ActiveSheet.GetActualColumnVisible(m, SheetArea))
+                        if (Sheet.ActiveSheet.GetActualColumnVisible(m, SheetArea.Cells))
                         {
                             columnEnd = m;
                             break;
@@ -274,41 +174,38 @@ namespace Dt.Cells.UI
 
         void AttachEditorForActiveCell()
         {
-            if (SheetArea == SheetArea.Cells)
+            CellItem editingCell = GetViewportCell(_activeRow, _activeCol, true);
+            if (editingCell != null)
             {
-                CellItemBase editingCell = GetViewportCell(_activeRow, _activeCol, true);
-                if (editingCell != null)
+                if (((_editorPanel == null) || (_editorPanel.EditingColumnIndex != _activeCol)) || ((_editorPanel.EditingRowIndex != _activeRow) || !editingCell.HasEditingElement()))
                 {
-                    if (((_editorPanel == null) || (_editorPanel.EditingColumnIndex != _activeCol)) || ((_editorPanel.EditingRowIndex != _activeRow) || !editingCell.HasEditingElement()))
+                    if (_editorPanel.Editor != null)
                     {
-                        if (_editorPanel.Editor != null)
+                        object obj2 = editingCell.SheetView.ActiveSheet.GetValue(_activeRow, _activeCol);
+                        if ((obj2 != null) && string.IsNullOrEmpty((_editorPanel.Editor as TextBox).Text))
                         {
-                            object obj2 = editingCell.SheetView.ActiveSheet.GetValue(_activeRow, _activeCol);
-                            if ((obj2 != null) && string.IsNullOrEmpty((_editorPanel.Editor as TextBox).Text))
-                            {
-                                (_editorPanel.Editor as TextBox).Text = obj2.ToString();
-                                (_editorPanel.Editor as TextBox).SelectionStart = obj2.ToString().Length;
-                            }
-                            editingCell.SetEditingElement(_editorPanel.Editor);
+                            (_editorPanel.Editor as TextBox).Text = obj2.ToString();
+                            (_editorPanel.Editor as TextBox).SelectionStart = obj2.ToString().Length;
                         }
-                        else
-                        {
-                            PrepareCellEditing(editingCell);
-                        }
+                        editingCell.SetEditingElement(_editorPanel.Editor);
                     }
-                    if (_editorPanel != null)
+                    else
                     {
-                        SolidColorBrush brush = new SolidColorBrush(Colors.White);
-                        _editorPanel.SetBackground(brush);
+                        PrepareCellEditing(editingCell);
                     }
                 }
-                if ((editingCell == null) && (_editorPanel != null))
+                if (_editorPanel != null)
                 {
-                    SolidColorBrush brush = new SolidColorBrush(Colors.Transparent);
+                    SolidColorBrush brush = new SolidColorBrush(Colors.White);
                     _editorPanel.SetBackground(brush);
                 }
-                _editorPanel.InvalidateMeasure();
             }
+            if ((editingCell == null) && (_editorPanel != null))
+            {
+                SolidColorBrush brush = new SolidColorBrush(Colors.Transparent);
+                _editorPanel.SetBackground(brush);
+            }
+            _editorPanel.InvalidateMeasure();
         }
     }
 }

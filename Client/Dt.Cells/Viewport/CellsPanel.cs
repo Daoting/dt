@@ -23,8 +23,7 @@ using Windows.UI.Xaml.Media;
 namespace Dt.Cells.UI
 {
     /// <summary>
-    /// Used within the template of a <see cref="T:GcSpreadSheet" /> to specify the
-    /// location in the control's visual tree where the rows are to be added.
+    /// 单元格视口
     /// </summary>
     internal partial class CellsPanel : Panel
     {
@@ -50,23 +49,13 @@ namespace Dt.Cells.UI
         FloatingObjectLayer _floatingObjectContainerPanel;
         FloatingObjectMovingLayer _floatingObjectsMovingResizingContainer;
         FormulaSelectionLayer _formulaSelectionContainer;
-        List<RowItem> _recycledRows;
         RowsLayer _rowsContainer;
         SelectionLayer _selectionContainer;
         Panel _shapeContainer;
         DecorationLayer _decoratinPanel;
 
         public CellsPanel(SheetView sheet)
-            : this(sheet, SheetArea.Cells)
         {
-            HorizontalAlignment = HorizontalAlignment.Left;
-            VerticalAlignment = VerticalAlignment.Top;
-            Loaded += GcViewport_Loaded;
-        }
-
-        public CellsPanel(SheetView sheet, SheetArea sheetArea)
-        {
-            SheetArea = sheetArea;
             Sheet = sheet;
 
             _cachedSelectionLayout = new List<Rect>();
@@ -74,21 +63,14 @@ namespace Dt.Cells.UI
             _cachedSelectionFrameLayout = new Rect();
             _cachedFocusCellLayout = new Rect();
             _editorBounds = new Rect();
-            _recycledRows = new List<RowItem>();
             _cachedDragFillFrameRect = Rect.Empty;
             _cachedDragClearRect = Rect.Empty;
-            _cellCachePool = new CellCachePool(this);
+            _cellCachePool = new CellCachePool(GetDataContext);
             _cachedSpanGraph = new SpanGraph();
 
             // 1 行数据层
             _rowsContainer = new RowsLayer(this);
             Children.Add(_rowsContainer);
-
-            // 行/列头只有一层
-            if (SheetArea != SheetArea.Cells)
-                return;
-
-            // 以下为Cells内容区域
 
             // 2 网格层，调整为只用在内容区域，行/列头不再使用
             _borderContainer = new BorderLayer(this);
@@ -135,6 +117,11 @@ namespace Dt.Cells.UI
             // 11 浮动对象编辑层
             _floatingObjectsMovingResizingContainer = new FloatingObjectMovingLayer(this);
             Children.Add(_floatingObjectsMovingResizingContainer);
+
+            HorizontalAlignment = HorizontalAlignment.Left;
+            VerticalAlignment = VerticalAlignment.Top;
+            Background = new SolidColorBrush(Colors.White);
+            Loaded += GcViewport_Loaded;
         }
 
         void _editorPanel_EdtingChanged(object sender, EventArgs e)
@@ -439,7 +426,7 @@ namespace Dt.Cells.UI
 
         internal Rect CalcEditorBounds(int row, int column, Size viewportSize)
         {
-            CellItemBase base2 = GetViewportCell(row, column, true);
+            CellItem base2 = GetViewportCell(row, column, true);
             Rect rect = new Rect();
             if ((base2 == null) || (_editorPanel == null))
             {
@@ -551,11 +538,6 @@ namespace Dt.Cells.UI
             }
         }
 
-        internal virtual RowItem GenerateNewRow()
-        {
-            return new RowItem(this);
-        }
-
         CellRange GetActiveCellRange()
         {
             if ((_activeRow < 0) || (_activeCol < 0))
@@ -584,7 +566,7 @@ namespace Dt.Cells.UI
             CellLayoutModel model = null;
             if (!p_ignoreMerged)
             {
-                model = Sheet.GetCellLayoutModel(RowViewportIndex, ColumnViewportIndex, SheetArea);
+                model = Sheet.GetCellLayoutModel(RowViewportIndex, ColumnViewportIndex, SheetArea.Cells);
             }
             CellLayout layout = (model == null) ? null : model.FindCell(p_row, p_column);
             if (layout != null)
@@ -592,8 +574,8 @@ namespace Dt.Cells.UI
                 return new Rect(layout.X, layout.Y, layout.Width, layout.Height);
             }
 
-            RowLayoutModel rowLayoutModel = Sheet.GetRowLayoutModel(RowViewportIndex, SheetArea);
-            ColumnLayoutModel columnLayoutModel = Sheet.GetColumnLayoutModel(ColumnViewportIndex, SheetArea);
+            RowLayoutModel rowLayoutModel = Sheet.GetRowLayoutModel(RowViewportIndex, SheetArea.Cells);
+            ColumnLayoutModel columnLayoutModel = Sheet.GetColumnLayoutModel(ColumnViewportIndex, SheetArea.Cells);
             if (rowLayoutModel == null || columnLayoutModel == null)
                 return new Rect();
 
@@ -616,7 +598,7 @@ namespace Dt.Cells.UI
             return new Rect(x, y, width, height);
         }
 
-        internal virtual CellLayoutModel GetCellLayoutModel()
+        internal CellLayoutModel GetCellLayoutModel()
         {
             return Sheet.GetViewportCellLayoutModel(RowViewportIndex, ColumnViewportIndex);
         }
@@ -626,7 +608,7 @@ namespace Dt.Cells.UI
             return CellOverflowLayoutBuildEngine.GetModel(rowIndex);
         }
 
-        internal virtual ICellsSupport GetDataContext()
+        internal ICellsSupport GetDataContext()
         {
             return Sheet.ActiveSheet;
         }
@@ -651,7 +633,7 @@ namespace Dt.Cells.UI
 
         internal Rect GetRangeBounds(CellRange range)
         {
-            return GetRangeBounds(range, SheetArea);
+            return GetRangeBounds(range, SheetArea.Cells);
         }
 
         internal Rect GetRangeBounds(CellRange range, SheetArea area)
@@ -794,17 +776,17 @@ namespace Dt.Cells.UI
             return new Rect(PointToClient(new Point(x, y)), new Size(width, height));
         }
 
-        internal virtual RowItem GetRow(int row)
+        internal RowItem GetRow(int row)
         {
             return RowsContainer.GetRow(row);
         }
 
-        internal virtual RowLayoutModel GetRowLayoutModel()
+        internal RowLayoutModel GetRowLayoutModel()
         {
             return Sheet.GetViewportRowLayoutModel(RowViewportIndex);
         }
 
-        internal virtual SheetSpanModelBase GetSpanModel()
+        internal SheetSpanModelBase GetSpanModel()
         {
             return Sheet.ActiveSheet.SpanModel;
         }
@@ -827,17 +809,13 @@ namespace Dt.Cells.UI
             return new Rect(Location, GetViewportSize());
         }
 
-        internal CellItemBase GetViewportCell(int row, int column, bool containsSpan)
+        internal CellItem GetViewportCell(int row, int column, bool containsSpan)
         {
-            CellItemBase cell = null;
+            CellItem cell = null;
             RowItem presenter = RowsContainer.GetRow(row);
             if (presenter != null)
             {
                 cell = presenter.GetCell(column);
-            }
-            if (((cell == null) && (CurrentRow != null)) && (row == Sheet.ActiveSheet.ActiveRowIndex))
-            {
-                cell = CurrentRow.GetCell(column);
             }
             if (containsSpan && (cell == null))
             {
@@ -845,7 +823,7 @@ namespace Dt.Cells.UI
                 {
                     if (presenter2 != null)
                     {
-                        foreach (CellItemBase base3 in presenter2.Cells.Values)
+                        foreach (CellItem base3 in presenter2.Cells.Values)
                         {
                             if (((base3 != null) && (base3.CellLayout != null)) && ((base3.CellLayout.Row == row) && (base3.CellLayout.Column == column)))
                             {
@@ -863,7 +841,7 @@ namespace Dt.Cells.UI
             return GetViewportSize(new Size(double.PositiveInfinity, double.PositiveInfinity));
         }
 
-        internal virtual Size GetViewportSize(Size availableSize)
+        internal Size GetViewportSize(Size availableSize)
         {
             double viewportWidth = Sheet.GetViewportWidth(ColumnViewportIndex);
             double viewportHeight = Sheet.GetViewportHeight(RowViewportIndex);
@@ -929,7 +907,7 @@ namespace Dt.Cells.UI
             return new Point(point.X - Location.X, point.Y - Location.Y);
         }
 
-        internal void PrepareCellEditing(CellItemBase editingCell)
+        internal void PrepareCellEditing(CellItem editingCell)
         {
             if (_editorPanel != null)
             {
@@ -987,7 +965,7 @@ namespace Dt.Cells.UI
 
         internal void PrepareCellEditing(int row, int column)
         {
-            CellItemBase editingCell = GetViewportCell(row, column, true);
+            CellItem editingCell = GetViewportCell(row, column, true);
             if (editingCell != null)
             {
                 PrepareCellEditing(editingCell);
@@ -1318,7 +1296,7 @@ namespace Dt.Cells.UI
             {
                 return true;
             }
-            CellItemBase cell = GetViewportCell(row, column, true);
+            CellItem cell = GetViewportCell(row, column, true);
             if (cell != null)
             {
                 ShowSheetCell(row, column);
@@ -1428,7 +1406,7 @@ namespace Dt.Cells.UI
             {
                 return true;
             }
-            CellItemBase base2 = GetViewportCell(row, column, true);
+            CellItem base2 = GetViewportCell(row, column, true);
             if (base2 != null)
             {
                 ShowSheetCell(row, column);
@@ -1474,10 +1452,10 @@ namespace Dt.Cells.UI
                 _editorPanel.EditingChanged -= new EventHandler(_editorPanel_EdtingChanged);
             }
             _editorBounds = new Rect();
-            CellItemBase cell = GetViewportCell(_activeRow, _activeCol, true);
+            CellItem cell = GetViewportCell(_activeRow, _activeCol, true);
             if (cell != null)
             {
-                cell.UnHideForEditing();
+                cell.ShowAfterEdit();
             }
             if (_editorPanel != null)
             {
@@ -1511,7 +1489,7 @@ namespace Dt.Cells.UI
             RowItem presenter = RowsContainer.GetRow(row);
             if (presenter != null)
             {
-                CellItemBase cell = presenter.GetCell(column);
+                CellItem cell = presenter.GetCell(column);
                 if (cell != null)
                 {
                     cell.ApplyState();
@@ -1571,8 +1549,6 @@ namespace Dt.Cells.UI
 
         public int ColumnViewportIndex { get; set; }
 
-        internal RowItem CurrentRow { get; set; }
-
         internal DragFillLayer DragFillContainer
         {
             get
@@ -1626,18 +1602,6 @@ namespace Dt.Cells.UI
 
         public Point Location { get; set; }
 
-        internal virtual List<RowItem> RecycledRows
-        {
-            get
-            {
-                if (_recycledRows == null)
-                {
-                    _recycledRows = new List<RowItem>();
-                }
-                return _recycledRows;
-            }
-        }
-
         internal RowsLayer RowsContainer
         {
             get { return _rowsContainer; }
@@ -1657,90 +1621,84 @@ namespace Dt.Cells.UI
 
         public SheetView Sheet { get; private set; }
 
-        internal SheetArea SheetArea { get; }
-
-        internal virtual bool SupportCellOverflow
+        internal bool SupportCellOverflow
         {
             get { return true; }
         }
 
-        internal sealed class CellCachePool : ICellSupport
+    }
+
+    internal sealed class CellCachePool : ICellSupport
+    {
+        Dictionary<ulong, Cell> _cache = new Dictionary<ulong, Cell>();
+        Func<ICellsSupport> _getDataContext;
+
+        public CellCachePool(Func<ICellsSupport> p_getDataContext)
         {
-            Dictionary<ulong, Cell> _cache = new Dictionary<ulong, Cell>();
-            CellsPanel _parent;
+            _getDataContext = p_getDataContext;
+        }
 
-            public CellCachePool(CellsPanel parentViewport)
+        public void ClearAll()
+        {
+            foreach (Cell cell in _cache.Values)
             {
-                _parent = parentViewport;
+                if (cell != null)
+                {
+                    cell.CacheStyleObject(false);
+                }
             }
+            _cache.Clear();
+        }
 
-            Cell Add(int rowIndex, int columnIndex)
+        public void ClearRow(int rowIndex)
+        {
+            foreach (ulong num in _cache.Keys)
             {
-                ICellsSupport dataContext = ParentViewport.GetDataContext();
-                if ((rowIndex < 0) || (rowIndex >= dataContext.Rows.Count))
+                int num2 = (int)(num >> 0x20);
+                if (num2 == rowIndex)
                 {
-                    return null;
+                    _cache[num].CacheStyleObject(false);
+                    _cache.Remove(num);
                 }
-                if ((columnIndex < 0) || (columnIndex >= dataContext.Columns.Count))
-                {
-                    return null;
-                }
-                Cell cell = dataContext.Cells[rowIndex, columnIndex];
-                ulong num = (ulong)rowIndex;
-                num = num << 0x20;
-                num += (ulong)columnIndex;
-                _cache[num] = cell;
-                cell.CacheStyleObject(true);
+            }
+        }
+
+        public Cell GetCachedCell(int rowIndex, int columnIndex)
+        {
+            ulong num = (ulong)rowIndex;
+            num = num << 0x20;
+            num += (ulong)columnIndex;
+            Cell cell = null;
+            if (_cache.TryGetValue(num, out cell))
+            {
                 return cell;
             }
+            return Add(rowIndex, columnIndex);
+        }
 
-            public void ClearAll()
+        Cell Add(int rowIndex, int columnIndex)
+        {
+            ICellsSupport dataContext = _getDataContext();
+            if ((rowIndex < 0)
+                || (rowIndex >= dataContext.Rows.Count)
+                || (columnIndex < 0)
+                || (columnIndex >= dataContext.Columns.Count))
             {
-                foreach (Cell cell in _cache.Values)
-                {
-                    if (cell != null)
-                    {
-                        cell.CacheStyleObject(false);
-                    }
-                }
-                _cache.Clear();
+                return null;
             }
 
-            public void ClearRow(int rowIndex)
-            {
-                foreach (ulong num in Enumerable.ToArray<ulong>((IEnumerable<ulong>)_cache.Keys))
-                {
-                    int num2 = (int)(num >> 0x20);
-                    if (num2 == rowIndex)
-                    {
-                        _cache[num].CacheStyleObject(false);
-                        _cache.Remove(num);
-                    }
-                }
-            }
+            Cell cell = dataContext.Cells[rowIndex, columnIndex];
+            ulong num = (ulong)rowIndex;
+            num = num << 0x20;
+            num += (ulong)columnIndex;
+            _cache[num] = cell;
+            cell.CacheStyleObject(true);
+            return cell;
+        }
 
-            public Cell GetCachedCell(int rowIndex, int columnIndex)
-            {
-                ulong num = (ulong)rowIndex;
-                num = num << 0x20;
-                num += (ulong)columnIndex;
-                Cell cell = null;
-                if (_cache.TryGetValue(num, out cell))
-                {
-                    return cell;
-                }
-                return Add(rowIndex, columnIndex);
-            }
-
-            Cell ICellSupport.GetCell(int row, int column)
-            {
-                return GetCachedCell(row, column);
-            }
-
-            CellsPanel ParentViewport
-            {
-                get { return _parent; }
-            }
+        Cell ICellSupport.GetCell(int row, int column)
+        {
+            return GetCachedCell(row, column);
         }
     }
 }

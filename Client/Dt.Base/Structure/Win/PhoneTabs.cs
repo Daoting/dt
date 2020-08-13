@@ -37,7 +37,7 @@ namespace Dt.Base
         /// <summary>
         /// 只有是首页时才有值
         /// </summary>
-        internal Win OwnerWin { get; set; }
+        internal Win OwnWin { get; set; }
 
         /// <summary>
         /// 导航时的标识，所有Tab标题逗号隔开
@@ -87,8 +87,8 @@ namespace Dt.Base
         /// <returns>true 表允许关闭</returns>
         Task<bool> IPhonePage.OnClosing()
         {
-            if (OwnerWin != null)
-                return OwnerWin.OnClosing();
+            if (OwnWin != null)
+                return OwnWin.OnClosing();
             return Task.FromResult(true);
         }
 
@@ -98,8 +98,8 @@ namespace Dt.Base
         void IPhonePage.OnClosed()
         {
             // 只在首页时处理
-            if (OwnerWin != null)
-                OwnerWin.OnClosed();
+            if (OwnWin != null)
+                OwnWin.OnClosed();
         }
         #endregion
 

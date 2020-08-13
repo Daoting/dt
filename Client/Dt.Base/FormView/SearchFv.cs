@@ -184,8 +184,8 @@ namespace Dt.Base
                     // 隐藏标题栏
                     tab.HideTitleBar = true;
                     // 识别不同的查询面板，因uno中BaseUri为空！
-                    if (tab.OwnerWin != null)
-                        _baseUri = tab.OwnerWin.GetType().FullName;
+                    if (tab.OwnWin != null)
+                        _baseUri = tab.OwnWin.GetType().FullName;
                 }
             }
             else

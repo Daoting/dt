@@ -422,7 +422,7 @@ namespace Dt.Base
             tabs = new PhoneTabs();
             tabs.NaviID = p_tabTitle;
             if (p_tabTitle == Home)
-                tabs.OwnerWin = this;
+                tabs.OwnWin = this;
 
             Tab tab;
             string[] names = p_tabTitle.Split(',');
@@ -464,7 +464,7 @@ namespace Dt.Base
                             tab.Title = Title;
                             title = AtKit.NewID;
                         }
-                        tab.OwnerWin = this;
+                        tab.OwnWin = this;
                         _tabs[title] = tab;
                     }
                     tabs.Items.Clear();
@@ -480,7 +480,7 @@ namespace Dt.Base
                     {
                         Content = obj,
                         Title = Title,
-                        OwnerWin = this
+                        OwnWin = this
                     };
                     _tabs[AtKit.NewID] = tab;
                 }
@@ -634,7 +634,7 @@ namespace Dt.Base
 
             if ((tab = p_target as Tab) != null)
             {
-                tabs = tab.OwnerTabs;
+                tabs = tab.OwnTabs;
             }
             else if ((header = p_target as TabHeader) != null)
             {
@@ -685,8 +685,8 @@ namespace Dt.Base
             else
             {
                 WinItem oldContainer = null;
-                if (p_tab.OwnerTabs != null)
-                    oldContainer = p_tab.OwnerTabs.Parent as WinItem;
+                if (p_tab.OwnTabs != null)
+                    oldContainer = p_tab.OwnTabs.Parent as WinItem;
 
                 if (oldContainer != null)
                 {
@@ -874,7 +874,7 @@ namespace Dt.Base
             {
                 // 在WinItem内部停靠
                 rect = _sectWithCompass.GetRectDimenstion(_compass.DockPosition, p_win.Content as WinItem);
-                Point topLeft = GetElementPositionRelatedToPopup(_sectWithCompass.OwnerWinItem);
+                Point topLeft = GetElementPositionRelatedToPopup(_sectWithCompass.OwnWinItem);
                 rect.X += topLeft.X;
                 rect.Y += topLeft.Y;
                 showCue = true;
@@ -938,7 +938,7 @@ namespace Dt.Base
             {
                 Point pt = p_subtree.TransformToVisual(null).TransformPoint(p_pos);
                 return (from sect in VisualTreeHelper.FindElementsInHostCoordinates(pt, p_subtree).OfType<Tabs>()
-                        where CheckIsDockable(sect) && !p_parent.IsAncestorOf(sect.OwnerWinItem)
+                        where CheckIsDockable(sect) && !p_parent.IsAncestorOf(sect.OwnWinItem)
                         select sect).FirstOrDefault();
             }
             return null;
@@ -1096,12 +1096,12 @@ namespace Dt.Base
 
         static ToolWindow GetParentWindow(Tab p_sectItem)
         {
-            return GetParentWindow(p_sectItem?.OwnerTabs?.OwnerWinItem);
+            return GetParentWindow(p_sectItem?.OwnTabs?.OwnWinItem);
         }
 
         static ToolWindow GetParentWindow(Tabs p_sect)
         {
-            return GetParentWindow(p_sect?.OwnerWinItem);
+            return GetParentWindow(p_sect?.OwnWinItem);
         }
 
         static ToolWindow GetParentWindow(WinItem p_winItem)
@@ -1154,7 +1154,7 @@ namespace Dt.Base
             {
                 Tabs sect = item.Owner as Tabs;
                 WinItem dockItem;
-                if (sect != null && (dockItem = sect.OwnerWinItem) != null)
+                if (sect != null && (dockItem = sect.OwnWinItem) != null)
                 {
                     switch (dockItem.DockState)
                     {

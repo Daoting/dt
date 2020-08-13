@@ -1,20 +1,26 @@
-﻿using Dt.Cells.Data;
+﻿#region 文件描述
+/******************************************************************************
+* 创建: Daoting
+* 摘要: 
+* 日志: 2020-08-12 创建
+******************************************************************************/
+#endregion
+
+#region 引用命名
+using Dt.Cells.Data;
 using System.Linq;
+#endregion
+
 
 namespace Dt.Cells.UI
 {
     public partial class RowHeaderCell : HeaderCellItem
     {
-        public RowHeaderCell()
-        {
-            DefaultStyleKey = typeof(RowHeaderCell);
-        }
-
-        internal override bool IsHightlighted
+        protected override bool IsHightlighted
         {
             get
             {
-                SheetView view = base.OwningRow.OwningPresenter.Sheet;
+                SheetView view = Owner.Owner.Sheet;
                 if (view.HideSelectionWhenPrinting)
                 {
                     return false;
@@ -42,7 +48,7 @@ namespace Dt.Cells.UI
         {
             get
             {
-                SheetView sheet = base.OwningRow.OwningPresenter.Sheet;
+                SheetView sheet = Owner.Owner.Sheet;
                 Worksheet worksheet = sheet.ActiveSheet;
                 return ((sheet.HoverManager.IsMouseOverRowHeaders && (sheet.MouseOverRowIndex == base.Row)) && ((base.Column == (worksheet.RowHeader.ColumnCount - 1)) && !sheet.IsWorking));
             }
@@ -52,7 +58,7 @@ namespace Dt.Cells.UI
         {
             get
             {
-                Worksheet worksheet = base.OwningRow.OwningPresenter.Sheet.ActiveSheet;
+                Worksheet worksheet = Owner.Owner.Sheet.ActiveSheet;
                 // hdt 唐忠宝 注释掉下面语句及修改linq，增加where条件
                 // CellRange rowRange = new CellRange(base.Row, -1, 1, -1);
                 return (from range in worksheet.Selections

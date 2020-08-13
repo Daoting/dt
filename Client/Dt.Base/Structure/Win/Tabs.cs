@@ -163,7 +163,7 @@ namespace Dt.Base
         /// <summary>
         /// 所属WinItem
         /// </summary>
-        internal WinItem OwnerWinItem
+        internal WinItem OwnWinItem
         {
             get
             {
@@ -176,9 +176,9 @@ namespace Dt.Base
         /// <summary>
         /// 所属Win
         /// </summary>
-        internal Win OwnerWin
+        internal Win OwnWin
         {
-            get { return OwnerWinItem?.OwnerWin; }
+            get { return OwnWinItem?.OwnWin; }
         }
         #endregion
 
@@ -206,7 +206,7 @@ namespace Dt.Base
             else
             {
                 // 停靠在当前Tabs的一边
-                OwnerWinItem.AddItem(p_winItem, p_dockPosition, this);
+                OwnWinItem.AddItem(p_winItem, p_dockPosition, this);
                 p_winItem.RemoveUnused();
             }
         }
@@ -216,7 +216,7 @@ namespace Dt.Base
         /// </summary>
         public void RemoveFromParent()
         {
-            var par = OwnerWinItem;
+            var par = OwnWinItem;
             if (par != null && par.Items.Contains(this))
             {
                 ClearValue(TabItemPanel.SplitterChangeProperty);
@@ -250,7 +250,7 @@ namespace Dt.Base
 
         protected override void OnSwappedItem()
         {
-            OwnerWin?.OnLayoutChanged();
+            OwnWin?.OnLayoutChanged();
         }
         #endregion
 
@@ -267,11 +267,11 @@ namespace Dt.Base
             Size parentSize = Size.Empty;
             Size size = new Size(0.0, 0.0);
             bool isHor = false;
-            if (OwnerWinItem != null)
+            if (OwnWinItem != null)
             {
-                parentSize = OwnerWinItem.RenderSize;
-                isHor = OwnerWinItem.Orientation == Orientation.Horizontal;
-                RelativeSizes sumOfSizes = OwnerWinItem.GetSumOfRelativeSizes();
+                parentSize = OwnWinItem.RenderSize;
+                isHor = OwnWinItem.Orientation == Orientation.Horizontal;
+                RelativeSizes sumOfSizes = OwnWinItem.GetSumOfRelativeSizes();
 
                 if (isHor)
                 {
@@ -298,7 +298,7 @@ namespace Dt.Base
             if (p_dock != DockPosition.Center)
             {
                 bool isDockHor = (p_dock == DockPosition.Left) || (p_dock == DockPosition.Right);
-                bool isParentHor = OwnerWinItem.Orientation == Orientation.Horizontal;
+                bool isParentHor = OwnWinItem.Orientation == Orientation.Horizontal;
                 bool findHorizontal = isParentHor == (isDockHor == isParentHor);
                 double length = 0.0;
 
@@ -330,14 +330,14 @@ namespace Dt.Base
             bool shouldTransform = true;
             if (dock != DockPosition.Center)
             {
-                int index = OwnerWinItem.Items.IndexOf(this);
+                int index = OwnWinItem.Items.IndexOf(this);
                 if ((dock == DockPosition.Right) || (dock == DockPosition.Bottom))
                 {
                     index++;
                 }
 
                 bool isDockHor = (dock == DockPosition.Left) || (dock == DockPosition.Right);
-                bool isParentHor = OwnerWinItem.Orientation == Orientation.Horizontal;
+                bool isParentHor = OwnWinItem.Orientation == Orientation.Horizontal;
                 double length = 0.0;
 
                 if (isParentHor != isDockHor)
@@ -351,7 +351,7 @@ namespace Dt.Base
                 {
                     for (int i = 0; i < index; i++)
                     {
-                        FrameworkElement element = OwnerWinItem.Items[i] as FrameworkElement;
+                        FrameworkElement element = OwnWinItem.Items[i] as FrameworkElement;
                         if (element.Visibility == Visibility.Visible)
                         {
                             length += GetRenderLength(
@@ -374,10 +374,10 @@ namespace Dt.Base
             }
             if (shouldTransform)
             {
-                return base.TransformToVisual(OwnerWinItem).TransformPoint(topLeft);
+                return base.TransformToVisual(OwnWinItem).TransformPoint(topLeft);
             }
-            UIElement firstChild = OwnerWinItem.Items[0] as UIElement;
-            return firstChild.TransformToVisual(OwnerWinItem).TransformPoint(topLeft);
+            UIElement firstChild = OwnWinItem.Items[0] as UIElement;
+            return firstChild.TransformToVisual(OwnWinItem).TransformPoint(topLeft);
         }
 
         static double GetRenderLength(double splitterChange, double p_length, double p_availableLength, RelativeSizes relativeSizes)

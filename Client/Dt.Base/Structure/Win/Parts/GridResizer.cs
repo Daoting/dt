@@ -218,12 +218,12 @@ namespace Dt.Base.Docking
             FrameworkElement affectedTgt = null;
             if (Owner is Tabs tabs)
             {
-                win = tabs.OwnerWin;
-                if (tabs.OwnerWinItem != null)
+                win = tabs.OwnWin;
+                if (tabs.OwnWinItem != null)
                 {
-                    for (int i = tabs.OwnerWinItem.Items.IndexOf(tabs) - 1; i > -1; i--)
+                    for (int i = tabs.OwnWinItem.Items.IndexOf(tabs) - 1; i > -1; i--)
                     {
-                        var brother = tabs.OwnerWinItem.Items[i];
+                        var brother = tabs.OwnWinItem.Items[i];
                         if (brother.Visibility == Visibility.Visible)
                         {
                             affectedTgt = brother;
@@ -234,7 +234,7 @@ namespace Dt.Base.Docking
             }
             else if (Owner is WinItem wi)
             {
-                win = wi.OwnerWin;
+                win = wi.OwnWin;
                 if (wi.Parent is TabItemPanel pnl && pnl.Owner != null)
                 {
                     for (int i = pnl.Owner.Items.IndexOf(wi) - 1; i > -1; i--)
@@ -410,11 +410,11 @@ namespace Dt.Base.Docking
         {
             if (Owner is Tabs tabs)
             {
-                tabs.OwnerWin.OnLayoutChangeEnded(this);
+                tabs.OwnWin.OnLayoutChangeEnded(this);
             }
             else if (Owner is WinItem wi)
             {
-                wi.OwnerWin.OnLayoutChangeEnded(this);
+                wi.OwnWin.OnLayoutChangeEnded(this);
             }
         }
         #endregion

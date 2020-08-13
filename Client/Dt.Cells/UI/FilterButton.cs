@@ -17,7 +17,7 @@ using Windows.UI.Xaml.Input;
 
 namespace Dt.Cells.UI
 {
-    public partial class FilterButton : Button
+    internal partial class FilterButton : Button
     {
         const string ASCEND_STATE = "Ascend";
         const string CHECK_GROUP = "CheckStates";
@@ -87,11 +87,11 @@ namespace Dt.Cells.UI
                         }
                     }
                     bool flag = false;
-                    if ((Area == SheetArea.ColumnHeader) && (filterButtonInfo.ColumnViewportIndex == CellView.OwningRow.OwningPresenter.ColumnViewportIndex))
+                    if ((Area == SheetArea.ColumnHeader) && (filterButtonInfo.ColumnViewportIndex == CellView.OwnRow.OwnPanel.ColumnViewportIndex))
                     {
                         flag = true;
                     }
-                    else if (((Area == SheetArea.Cells) && (filterButtonInfo.RowViewportIndex == CellView.OwningRow.OwningPresenter.RowViewportIndex)) && (filterButtonInfo.ColumnViewportIndex == CellView.OwningRow.OwningPresenter.ColumnViewportIndex))
+                    else if (((Area == SheetArea.Cells) && (filterButtonInfo.RowViewportIndex == CellView.OwnRow.OwnPanel.RowViewportIndex)) && (filterButtonInfo.ColumnViewportIndex == CellView.OwnRow.OwnPanel.ColumnViewportIndex))
                     {
                         flag = true;
                     }

@@ -277,7 +277,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取所属的Tabs
         /// </summary>
-        public Tabs OwnerTabs
+        public Tabs OwnTabs
         {
             get { return (Owner as Tabs); }
         }
@@ -285,7 +285,7 @@ namespace Dt.Base
         /// <summary>
         /// 所属Win
         /// </summary>
-        internal Win OwnerWin { get; set; }
+        internal Win OwnWin { get; set; }
         #endregion
 
         #region 外部方法
@@ -301,7 +301,7 @@ namespace Dt.Base
 
             if (AtSys.IsPhoneUI)
             {
-                Tab tab = new Tab { OwnerWin = OwnerWin, Content = p_tabContent };
+                Tab tab = new Tab { OwnWin = OwnWin, Content = p_tabContent };
                 PhonePage.Show(tab);
                 return;
             }
@@ -312,7 +312,7 @@ namespace Dt.Base
                 // 内容切换动画
                 var ls = new TransitionCollection();
                 ls.Add(new ContentThemeTransition { VerticalOffset = 60 });
-                OwnerTabs.ContentTransitions = ls;
+                OwnTabs.ContentTransitions = ls;
             }
             _naviCache.Push(current);
             Content = p_tabContent;
@@ -350,8 +350,8 @@ namespace Dt.Base
         Task<bool> IPhonePage.OnClosing()
         {
             // 只在首页时处理
-            if (OwnerWin != null && OwnerWin.Home == Title)
-                return OwnerWin.OnClosing();
+            if (OwnWin != null && OwnWin.Home == Title)
+                return OwnWin.OnClosing();
             return Task.FromResult(true);
         }
 
@@ -361,8 +361,8 @@ namespace Dt.Base
         void IPhonePage.OnClosed()
         {
             // 只在首页时处理
-            if (OwnerWin != null && OwnerWin.Home == Title)
-                OwnerWin.OnClosed();
+            if (OwnWin != null && OwnWin.Home == Title)
+                OwnWin.OnClosed();
         }
         #endregion
 
@@ -379,7 +379,7 @@ namespace Dt.Base
         {
             if (PinButtonVisibility == Visibility.Visible)
             {
-                WinKit.OnPhoneTitleTapped((Grid)GetTemplateChild("HeaderGrid"), OwnerWin);
+                WinKit.OnPhoneTitleTapped((Grid)GetTemplateChild("HeaderGrid"), OwnWin);
                 Button btn = GetTemplateChild("BackButton") as Button;
                 if (btn != null)
                     btn.Click += InputManager.OnBackClick;
@@ -437,7 +437,7 @@ namespace Dt.Base
         protected override void OnStartDrag(PointerRoutedEventArgs e)
         {
             if (IsPinned && CanFloat)
-                OwnerWin.OnDragStarted(this, e);
+                OwnWin.OnDragStarted(this, e);
         }
         #endregion
 
@@ -457,7 +457,7 @@ namespace Dt.Base
             {
                 if (!IsPinned && (IsFloating || IsInCenter))
                     throw new InvalidOperationException("浮动或在中部区域时无法自动隐藏！");
-                OwnerWin.OnPinChange(this);
+                OwnWin.OnPinChange(this);
             }
         }
 

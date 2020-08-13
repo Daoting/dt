@@ -38,9 +38,9 @@ namespace Dt.Cells.UI
             _cachedGroupLayout = null;
             _cachedFloatingObjectLayoutModel = null;
             _cornerPanel = null;
-            _rowHeaderPresenters = null;
-            _columnHeaderPresenters = null;
-            _viewportPresenters = null;
+            _rowHeaders = null;
+            _colHeaders = null;
+            _cellsPanels = null;
             _groupCornerPresenter = null;
             _rowGroupHeaderPresenter = null;
             _columnGroupHeaderPresenter = null;
@@ -276,14 +276,14 @@ namespace Dt.Cells.UI
             }
             CursorsContainer.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
 
-            // 多GcViewport
+            // 多视口
             CellsPanel[,] viewportArray = null;
-            if ((_viewportPresenters != null)
+            if ((_cellsPanels != null)
                 && (ActiveSheet == null
-                    || _viewportPresenters.GetUpperBound(0) != layout.RowPaneCount + 1
-                    || _viewportPresenters.GetUpperBound(1) != layout.ColumnPaneCount + 1))
+                    || _cellsPanels.GetUpperBound(0) != layout.RowPaneCount + 1
+                    || _cellsPanels.GetUpperBound(1) != layout.ColumnPaneCount + 1))
             {
-                CellsPanel[,] viewportArray2 = _viewportPresenters;
+                CellsPanel[,] viewportArray2 = _cellsPanels;
                 int upperBound = viewportArray2.GetUpperBound(0);
                 int num29 = viewportArray2.GetUpperBound(1);
                 for (int n = viewportArray2.GetLowerBound(0); n <= upperBound; n++)
@@ -298,12 +298,12 @@ namespace Dt.Cells.UI
                         Children.Remove(viewport);
                     }
                 }
-                viewportArray = _viewportPresenters;
-                _viewportPresenters = null;
+                viewportArray = _cellsPanels;
+                _cellsPanels = null;
             }
-            if (_viewportPresenters == null)
+            if (_cellsPanels == null)
             {
-                _viewportPresenters = new CellsPanel[layout.RowPaneCount + 2, layout.ColumnPaneCount + 2];
+                _cellsPanels = new CellsPanel[layout.RowPaneCount + 2, layout.ColumnPaneCount + 2];
             }
             for (int i = -1; i <= layout.ColumnPaneCount; i++)
             {
@@ -313,18 +313,18 @@ namespace Dt.Cells.UI
                 {
                     double viewportHeight = layout.GetViewportHeight(num5);
                     viewportY = layout.GetViewportY(num5);
-                    if (((_viewportPresenters[num5 + 1, i + 1] == null) && (viewportWidth > 0.0)) && (viewportHeight > 0.0))
+                    if (((_cellsPanels[num5 + 1, i + 1] == null) && (viewportWidth > 0.0)) && (viewportHeight > 0.0))
                     {
                         if (((viewportArray != null) && ((num5 + 1) < viewportArray.GetUpperBound(0))) && (((i + 1) < viewportArray.GetUpperBound(1)) && (viewportArray[num5 + 1, i + 1] != null)))
                         {
-                            _viewportPresenters[num5 + 1, i + 1] = viewportArray[num5 + 1, i + 1];
+                            _cellsPanels[num5 + 1, i + 1] = viewportArray[num5 + 1, i + 1];
                         }
                         else
                         {
-                            _viewportPresenters[num5 + 1, i + 1] = new CellsPanel(this);
+                            _cellsPanels[num5 + 1, i + 1] = new CellsPanel(this);
                         }
                     }
-                    CellsPanel viewport2 = _viewportPresenters[num5 + 1, i + 1];
+                    CellsPanel viewport2 = _cellsPanels[num5 + 1, i + 1];
                     if ((viewportWidth > 0.0) && (viewportHeight > 0.0))
                     {
                         viewport2.Location = new Point(viewportX, viewportY);
@@ -340,73 +340,73 @@ namespace Dt.Cells.UI
                     else if (viewport2 != null)
                     {
                         Children.Remove(viewport2);
-                        _viewportPresenters[num5 + 1, i + 1] = null;
+                        _cellsPanels[num5 + 1, i + 1] = null;
                     }
                 }
             }
 
             // 行头，一个GcViewport对应一个行头
-            if ((_rowHeaderPresenters != null) && ((ActiveSheet == null) || (_rowHeaderPresenters.Length != (layout.RowPaneCount + 2))))
+            if ((_rowHeaders != null) && ((ActiveSheet == null) || (_rowHeaders.Length != (layout.RowPaneCount + 2))))
             {
-                foreach (CellsPanel viewport3 in _rowHeaderPresenters)
+                foreach (var header in _rowHeaders)
                 {
-                    Children.Remove(viewport3);
+                    Children.Remove(header);
                 }
-                _rowHeaderPresenters = null;
+                _rowHeaders = null;
             }
-            if (_rowHeaderPresenters == null)
+            if (_rowHeaders == null)
             {
-                _rowHeaderPresenters = new RowHeaderPanel[layout.RowPaneCount + 2];
+                _rowHeaders = new RowHeaderPanel[layout.RowPaneCount + 2];
             }
             if (layout.HeaderWidth > 0.0)
             {
-                for (int num7 = -1; num7 <= layout.RowPaneCount; num7++)
+                for (int i = -1; i <= layout.RowPaneCount; i++)
                 {
-                    double height = layout.GetViewportHeight(num7);
-                    viewportY = layout.GetViewportY(num7);
-                    if ((_rowHeaderPresenters[num7 + 1] == null) && (height > 0.0))
+                    double height = layout.GetViewportHeight(i);
+                    viewportY = layout.GetViewportY(i);
+                    if ((_rowHeaders[i + 1] == null) && (height > 0.0))
                     {
-                        _rowHeaderPresenters[num7 + 1] = new RowHeaderPanel(this);
+                        _rowHeaders[i + 1] = new RowHeaderPanel(this);
                     }
-                    CellsPanel viewport4 = _rowHeaderPresenters[num7 + 1];
+                    var header = _rowHeaders[i + 1];
                     if (height > 0.0)
                     {
-                        viewport4.Location = new Point(layout.HeaderX, viewportY);
-                        viewport4.RowViewportIndex = num7;
-                        if (!Children.Contains(viewport4))
+                        header.Location = new Point(layout.HeaderX, viewportY);
+                        header.RowViewportIndex = i;
+                        if (!Children.Contains(header))
                         {
-                            Children.Add(viewport4);
+                            Children.Add(header);
                         }
-                        viewport4.InvalidateMeasure();
-                        viewport4.Measure(new Size(layout.HeaderWidth, height));
+                        header.InvalidateMeasure();
+                        header.Measure(new Size(layout.HeaderWidth, height));
                     }
-                    else if (viewport4 != null)
+                    else if (header != null)
                     {
-                        Children.Remove(viewport4);
-                        _rowHeaderPresenters[num7 + 1] = null;
+                        Children.Remove(header);
+                        _rowHeaders[i + 1] = null;
                     }
                 }
             }
-            else if (_rowHeaderPresenters != null)
+            else if (_rowHeaders != null)
             {
-                foreach (CellsPanel viewport5 in _rowHeaderPresenters)
+                foreach (var header in _rowHeaders)
                 {
-                    Children.Remove(viewport5);
+                    Children.Remove(header);
                 }
             }
 
             // 列头
-            if ((_columnHeaderPresenters != null) && ((ActiveSheet == null) || (_columnHeaderPresenters.Length != (layout.ColumnPaneCount + 2))))
+            if ((_colHeaders != null) && ((ActiveSheet == null) || (_colHeaders.Length != (layout.ColumnPaneCount + 2))))
             {
-                foreach (var panel in _columnHeaderPresenters)
+                foreach (var panel in _colHeaders)
                 {
                     Children.Remove(panel);
                 }
-                _columnHeaderPresenters = null;
+                _colHeaders = null;
             }
-            if (_columnHeaderPresenters == null)
+            if (_colHeaders == null)
             {
-                _columnHeaderPresenters = new ColHeaderPanel[layout.ColumnPaneCount + 2];
+                _colHeaders = new ColHeaderPanel[layout.ColumnPaneCount + 2];
             }
             if (layout.HeaderHeight > 0.0)
             {
@@ -414,11 +414,11 @@ namespace Dt.Cells.UI
                 {
                     viewportX = layout.GetViewportX(i);
                     double width = layout.GetViewportWidth(i);
-                    if ((_columnHeaderPresenters[i + 1] == null) && (width > 0.0))
+                    if ((_colHeaders[i + 1] == null) && (width > 0.0))
                     {
-                        _columnHeaderPresenters[i + 1] = new ColHeaderPanel(this);
+                        _colHeaders[i + 1] = new ColHeaderPanel(this);
                     }
-                    var colPanel = _columnHeaderPresenters[i + 1];
+                    var colPanel = _colHeaders[i + 1];
                     if (width > 0.0)
                     {
                         colPanel.Location = new Point(viewportX, layout.HeaderY);
@@ -433,13 +433,13 @@ namespace Dt.Cells.UI
                     else if (colPanel != null)
                     {
                         Children.Remove(colPanel);
-                        _columnHeaderPresenters[i + 1] = null;
+                        _colHeaders[i + 1] = null;
                     }
                 }
             }
-            else if (_columnHeaderPresenters != null)
+            else if (_colHeaders != null)
             {
-                foreach (var colPanel in _columnHeaderPresenters)
+                foreach (var colPanel in _colHeaders)
                 {
                     Children.Remove(colPanel);
                 }
@@ -741,7 +741,7 @@ namespace Dt.Cells.UI
                     headerY = layout.HeaderY;
                     double viewportWidth = layout.GetViewportWidth(i);
                     double headerHeight = layout.HeaderHeight;
-                    CellsPanel viewport = _columnHeaderPresenters[i + 1];
+                    var viewport = _colHeaders[i + 1];
                     if ((viewport != null) && (viewport.Parent != null))
                     {
                         viewport.Arrange(new Rect(headerX, headerY, viewportWidth, headerHeight));
@@ -749,7 +749,7 @@ namespace Dt.Cells.UI
                     }
                 }
             }
-            else if (_columnHeaderPresenters != null)
+            else if (_colHeaders != null)
             {
                 for (int j = -1; j <= layout.ColumnPaneCount; j++)
                 {
@@ -761,7 +761,7 @@ namespace Dt.Cells.UI
                     headerY = layout.HeaderY;
                     double width = layout.GetViewportWidth(j);
                     double height = layout.HeaderHeight;
-                    CellsPanel viewport2 = _columnHeaderPresenters[j + 1];
+                    var viewport2 = _colHeaders[j + 1];
                     if ((viewport2 != null) && (viewport2.Parent != null))
                     {
                         if (viewport2.RenderTransform != null)
@@ -812,15 +812,15 @@ namespace Dt.Cells.UI
                     headerY = layout.GetViewportY(k);
                     double headerWidth = layout.HeaderWidth;
                     double viewportHeight = layout.GetViewportHeight(k);
-                    CellsPanel viewport3 = _rowHeaderPresenters[k + 1];
-                    if ((viewport3 != null) && (viewport3.Parent != null))
+                    var header = _rowHeaders[k + 1];
+                    if ((header != null) && (header.Parent != null))
                     {
-                        viewport3.Arrange(new Rect(headerX, headerY, headerWidth, viewportHeight));
-                        viewport3.RenderTransform = _cachedRowHeaderViewportTransform[k + 1];
+                        header.Arrange(new Rect(headerX, headerY, headerWidth, viewportHeight));
+                        header.RenderTransform = _cachedRowHeaderViewportTransform[k + 1];
                     }
                 }
             }
-            else if (_rowHeaderPresenters != null)
+            else if (_rowHeaders != null)
             {
                 for (int m = -1; m <= layout.RowPaneCount; m++)
                 {
@@ -832,18 +832,18 @@ namespace Dt.Cells.UI
                     }
                     double num15 = layout.HeaderWidth;
                     double num16 = layout.GetViewportHeight(m);
-                    CellsPanel viewport4 = _rowHeaderPresenters[m + 1];
-                    if ((viewport4 != null) && (viewport4.Parent != null))
+                    var header = _rowHeaders[m + 1];
+                    if ((header != null) && (header.Parent != null))
                     {
-                        if (viewport4.RenderTransform != null)
+                        if (header.RenderTransform != null)
                         {
-                            viewport4.RenderTransform = null;
+                            header.RenderTransform = null;
                         }
-                        if ((viewport4.Width != num15) || (viewport4.Height != num16))
+                        if ((header.Width != num15) || (header.Height != num16))
                         {
                             if (!IsTouching)
                             {
-                                viewport4.Arrange(new Rect(headerX, headerY, num15, num16));
+                                header.Arrange(new Rect(headerX, headerY, num15, num16));
                             }
                             else
                             {
@@ -853,22 +853,22 @@ namespace Dt.Cells.UI
                                 {
                                     y += num17;
                                 }
-                                viewport4.Arrange(new Rect(headerX, y, num15, num16));
+                                header.Arrange(new Rect(headerX, y, num15, num16));
                                 if ((y != headerY) && (_translateOffsetY < 0.0))
                                 {
                                     RectangleGeometry geometry3 = new RectangleGeometry();
                                     geometry3.Rect = new Rect(0.0, Math.Abs((double)(headerY - y)), num15, _cachedViewportHeights[m + 1]);
-                                    viewport4.Clip = geometry3;
+                                    header.Clip = geometry3;
                                 }
                                 else if ((y != headerY) && (_translateOffsetY > 0.0))
                                 {
                                     RectangleGeometry geometry4 = new RectangleGeometry();
                                     geometry4.Rect = new Rect(0.0, 0.0, num15, Math.Max((double)0.0, (double)(_cachedViewportHeights[m + 1] - _translateOffsetY)));
-                                    viewport4.Clip = geometry4;
+                                    header.Clip = geometry4;
                                 }
                                 else
                                 {
-                                    viewport4.Clip = null;
+                                    header.Clip = null;
                                 }
                             }
                         }
@@ -885,7 +885,7 @@ namespace Dt.Cells.UI
                     {
                         headerY = layout.GetViewportY(num21);
                         double num22 = layout.GetViewportHeight(num21);
-                        CellsPanel viewport5 = _viewportPresenters[num21 + 1, n + 1];
+                        CellsPanel viewport5 = _cellsPanels[num21 + 1, n + 1];
                         if (viewport5 != null)
                         {
                             viewport5.Arrange(new Rect(headerX, headerY, num20, num22));
@@ -894,7 +894,7 @@ namespace Dt.Cells.UI
                     }
                 }
             }
-            else if (_viewportPresenters != null)
+            else if (_cellsPanels != null)
             {
                 for (int num23 = -1; num23 <= layout.ColumnPaneCount; num23++)
                 {
@@ -912,7 +912,7 @@ namespace Dt.Cells.UI
                             headerY += _translateOffsetY;
                         }
                         double num26 = layout.GetViewportHeight(num25);
-                        CellsPanel viewport6 = _viewportPresenters[num25 + 1, num23 + 1];
+                        CellsPanel viewport6 = _cellsPanels[num25 + 1, num23 + 1];
                         if (viewport6 != null)
                         {
                             if (viewport6.RenderTransform != null)

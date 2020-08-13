@@ -353,9 +353,9 @@ namespace Dt.Cells.UI
 
         void RefreshSelection()
         {
-            if (_viewportPresenters != null)
+            if (_cellsPanels != null)
             {
-                CellsPanel[,] viewportArray = _viewportPresenters;
+                CellsPanel[,] viewportArray = _cellsPanels;
                 int upperBound = viewportArray.GetUpperBound(0);
                 int num2 = viewportArray.GetUpperBound(1);
                 for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
@@ -374,9 +374,9 @@ namespace Dt.Cells.UI
 
         void RefreshSelectionBorder()
         {
-            if (_viewportPresenters != null)
+            if (_cellsPanels != null)
             {
-                CellsPanel[,] viewportArray = _viewportPresenters;
+                CellsPanel[,] viewportArray = _cellsPanels;
                 int upperBound = viewportArray.GetUpperBound(0);
                 int num4 = viewportArray.GetUpperBound(1);
                 for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
@@ -805,7 +805,7 @@ namespace Dt.Cells.UI
 
         void UpdateSelectState(ChartChangedBaseEventArgs e)
         {
-            CellsPanel[,] viewportArray = _viewportPresenters;
+            CellsPanel[,] viewportArray = _cellsPanels;
             int upperBound = viewportArray.GetUpperBound(0);
             int num2 = viewportArray.GetUpperBound(1);
             for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
@@ -998,7 +998,7 @@ namespace Dt.Cells.UI
                                     viewportRightColumn = GetViewportRightColumn(j);
                                     if ((num33 >= num37) && (viewportRightColumn >= num38))
                                     {
-                                        CellsPanel viewport8 = _viewportPresenters[i + 1, j + 1];
+                                        CellsPanel viewport8 = _cellsPanels[i + 1, j + 1];
                                         if (viewport8 != null)
                                         {
                                             Rect rect13 = viewport8._cachedSelectionFrameLayout;
@@ -1081,7 +1081,7 @@ namespace Dt.Cells.UI
                         {
                             if (GetViewportBottomRow(rowViewportIndex) >= num19)
                             {
-                                CellsPanel viewport6 = _viewportPresenters[rowViewportIndex + 1, viewportRowsPresenter.ColumnViewportIndex + 1];
+                                CellsPanel viewport6 = _cellsPanels[rowViewportIndex + 1, viewportRowsPresenter.ColumnViewportIndex + 1];
                                 if (viewport6 != null)
                                 {
                                     Rect rect10 = viewport6._cachedSelectionFrameLayout;
@@ -1163,7 +1163,7 @@ namespace Dt.Cells.UI
                         {
                             if (GetViewportRightColumn(columnViewportIndex) >= num6)
                             {
-                                CellsPanel viewport3 = _viewportPresenters[viewportRowsPresenter.RowViewportIndex + 1, columnViewportIndex + 1];
+                                CellsPanel viewport3 = _cellsPanels[viewportRowsPresenter.RowViewportIndex + 1, columnViewportIndex + 1];
                                 if (viewport3 != null)
                                 {
                                     Rect rect6 = viewport3._cachedSelectionFrameLayout;
@@ -1204,9 +1204,9 @@ namespace Dt.Cells.UI
                             flag = false;
                         }
                     }
-                    CellsPanel viewport4 = _columnHeaderPresenters[viewportRowsPresenter.ColumnViewportIndex + 1];
+                    var colHeader = _colHeaders[viewportRowsPresenter.ColumnViewportIndex + 1];
                     CellRange range2 = new CellRange(ActiveSheet.ColumnHeader.RowCount - 1, (activeSelection.Column + activeSelection.ColumnCount) - 1, 1, 1);
-                    Rect rect7 = viewport4.GetRangeBounds(range2, SheetArea.ColumnHeader);
+                    Rect rect7 = colHeader.GetRangeBounds(range2, SheetArea.ColumnHeader);
                     int column = (activeSelection.Column + activeSelection.ColumnCount) - 1;
                     if ((ActiveSheet.GetColumnResizable(column) && !rect7.IsEmpty) && flag)
                     {
@@ -1215,7 +1215,7 @@ namespace Dt.Cells.UI
                         {
                             num12 += ActiveSheet.GetActualRowHeight(k, SheetArea.ColumnHeader) * ActiveSheet.ZoomFactor;
                         }
-                        Rect rect8 = new Rect(((num + rect7.X) + rect7.Width) - 8.0, (viewport4.Location.Y + num12) - 16.0, 16.0, 16.0);
+                        Rect rect8 = new Rect(((num + rect7.X) + rect7.Width) - 8.0, (colHeader.Location.Y + num12) - 16.0, 16.0, 16.0);
                         _resizerGripperContainer.Child = _cachedColumnResizerGripperImage;
                         _resizerGripperContainer.Arrange(rect8);
                         ResizerGripperRect = new Rect?(rect8);
@@ -1228,9 +1228,10 @@ namespace Dt.Cells.UI
                     }
                     goto Label_10BF;
                 }
-                CellsPanel viewport7 = _rowHeaderPresenters[viewportRowsPresenter.RowViewportIndex + 1];
+
+                var header = _rowHeaders[viewportRowsPresenter.RowViewportIndex + 1];
                 CellRange range = new CellRange((activeSelection.Row + activeSelection.RowCount) - 1, ActiveSheet.RowHeader.ColumnCount - 1, 1, 1);
-                Rect rect11 = viewport7.GetRangeBounds(range, SheetArea.CornerHeader | SheetArea.RowHeader);
+                Rect rect11 = header.GetRangeBounds(range, SheetArea.CornerHeader | SheetArea.RowHeader);
                 int row = (activeSelection.Row + activeSelection.RowCount) - 1;
                 if ((ActiveSheet.GetRowResizable(row) && !rect11.IsEmpty) && flag2)
                 {
@@ -1239,7 +1240,7 @@ namespace Dt.Cells.UI
                     {
                         num25 += ActiveSheet.GetActualColumnWidth(m, SheetArea.CornerHeader | SheetArea.RowHeader) * ActiveSheet.ZoomFactor;
                     }
-                    Rect rect12 = new Rect((viewport7.Location.X + num25) - 16.0, ((viewportY + rect11.Y) + rect11.Height) - 8.0, 16.0, 16.0);
+                    Rect rect12 = new Rect((header.Location.X + num25) - 16.0, ((viewportY + rect11.Y) + rect11.Height) - 8.0, 16.0, 16.0);
                     _resizerGripperContainer.Child = _cachedRowResizerGripperImage;
                     _resizerGripperContainer.Arrange(rect12);
                     ResizerGripperRect = new Rect?(rect12);

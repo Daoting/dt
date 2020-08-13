@@ -1896,9 +1896,9 @@ namespace Dt.Cells.UI
 
             void OnItemsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
             {
-                if (_sheetView._viewportPresenters != null)
+                if (_sheetView._cellsPanels != null)
                 {
-                    CellsPanel[,] viewportArray = _sheetView._viewportPresenters;
+                    CellsPanel[,] viewportArray = _sheetView._cellsPanels;
                     int upperBound = viewportArray.GetUpperBound(0);
                     int num2 = viewportArray.GetUpperBound(1);
                     for (int k = viewportArray.GetLowerBound(0); k <= upperBound; k++)

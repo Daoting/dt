@@ -24,24 +24,24 @@ namespace Dt.Cells.UI
     {
         Cell _bindingCell;
         Border _border;
-        CellBackgroundPanel _cellBackgroundPanel;
+        Panel _backPanel;
         Canvas _lineContainer;
         const int _ViewMargin = 1;
 
-        public StrikethroughView(Cell bindingCell, CellBackgroundPanel backPanel)
+        public StrikethroughView(Cell bindingCell, Panel backPanel)
         {
-            base.Margin = new Thickness(1.0);
+            Margin = new Thickness(1.0);
             _bindingCell = bindingCell;
             _border = new Border();
             _lineContainer = new Canvas();
-            _cellBackgroundPanel = backPanel;
-            base.Children.Add(_border);
+            _backPanel = backPanel;
+            Children.Add(_border);
         }
 
         protected override Size ArrangeOverride(Size availableSize)
         {
             Size size = new Size(availableSize.Width, availableSize.Height);
-            foreach (UIElement element in _cellBackgroundPanel.Children)
+            foreach (UIElement element in _backPanel.Children)
             {
                 if (element is TextBlock)
                 {

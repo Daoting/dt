@@ -1224,6 +1224,11 @@ namespace Dt.Cells.UI
         }
 
         #region 成员变量
+        RowHeaderPanel[] _rowHeaders;
+        ColHeaderPanel[] _colHeaders;
+        CornerPanel _cornerPanel;
+        CellsPanel[,] _cellsPanels;
+
         Rect? _autoFillIndicatorRec;
         GripperLocationsStruct _gripperLocations;
 
@@ -1265,10 +1270,10 @@ namespace Dt.Cells.UI
         internal Line _columnFreezeLine;
         GcRangeGroupHeader _columnGroupHeaderPresenter;
         GcRangeGroup[] _columnGroupPresenters;
-        ColHeaderPanel[] _columnHeaderPresenters;
+        
         int _columnOffset;
         internal Line _columnTrailingFreezeLine;
-        CornerPanel _cornerPanel;
+        
         internal int _currentActiveColumnIndex;
         internal int _currentActiveRowIndex;
         DragFillDirection _currentFillDirection = DragFillDirection.Down;
@@ -1344,7 +1349,7 @@ namespace Dt.Cells.UI
         internal Line _rowFreezeLine;
         GcRangeGroupHeader _rowGroupHeaderPresenter;
         GcRangeGroup[] _rowGroupPresenters;
-        internal CellsPanel[] _rowHeaderPresenters;
+        
         int _rowOffset;
         internal Line _rowTrailingFreezeLine;
         SpreadXSelection _selection;
@@ -1373,7 +1378,7 @@ namespace Dt.Cells.UI
         UndoManager _undoManager;
         internal bool _updateViewportAfterTouch;
         ScrollSelectionManager _verticalSelectionMgr;
-        internal CellsPanel[,] _viewportPresenters;
+        
         bool _vScrollable;
         internal HitTestInformation _zoomOriginHitTestInfo;
         internal GripperLocationsStruct CachedGripperLocation;

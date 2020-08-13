@@ -126,7 +126,7 @@ namespace Dt.Base
         bool _isLoaded;
         bool _isInCenter;
         bool _isInWindow;
-        Win _ownerWin;
+        Win _ownWin;
         #endregion
 
         #region 构造方法
@@ -271,13 +271,13 @@ namespace Dt.Base
         /// <summary>
         /// 所属Win
         /// </summary>
-        internal Win OwnerWin
+        internal Win OwnWin
         {
             get
             {
-                if (_ownerWin == null)
-                    _ownerWin = this.FindParentByType<Win>();
-                return _ownerWin;
+                if (_ownWin == null)
+                    _ownWin = this.FindParentByType<Win>();
+                return _ownWin;
             }
         }
 
@@ -450,7 +450,7 @@ namespace Dt.Base
             }
             else if (Parent is WinItemPanel winPnl)
             {
-                OwnerWin?.Items.Remove(this);
+                OwnWin?.Items.Remove(this);
             }
             else if (Parent is ContentControl control)
             {

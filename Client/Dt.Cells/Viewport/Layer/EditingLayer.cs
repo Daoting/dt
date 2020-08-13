@@ -23,7 +23,7 @@ namespace Dt.Cells.UI
     internal partial class EditingLayer : Panel
     {
         CellsPanel _parentViewport;
-        CellItemBase _editingCell;
+        CellItem _editingCell;
         FrameworkElement _editor1;
         FrameworkElement _editor2;
 
@@ -206,7 +206,7 @@ namespace Dt.Cells.UI
             return FocusManager.GetFocusedElement();
         }
 
-        public void InstallEditor(CellItemBase cell, bool startEditing = false)
+        public void InstallEditor(CellItem cell, bool startEditing = false)
         {
             if (cell == null)
                 return;
@@ -273,7 +273,7 @@ namespace Dt.Cells.UI
         {
             if (_editingCell != null)
             {
-                CellItemBase objA = _parentViewport.GetViewportCell(EditingRowIndex, EditingColumnIndex, true);
+                CellItem objA = _parentViewport.GetViewportCell(EditingRowIndex, EditingColumnIndex, true);
                 if (objA != null)
                 {
                     if (!Equals(objA, _editingCell))
@@ -309,7 +309,7 @@ namespace Dt.Cells.UI
             if ((_editingCell != null) && (_parentViewport != null))
             {
                 Size viewportSize = _parentViewport.GetViewportSize();
-                CellItemBase base2 = _parentViewport.GetViewportCell(EditingRowIndex, EditingColumnIndex, true);
+                CellItem base2 = _parentViewport.GetViewportCell(EditingRowIndex, EditingColumnIndex, true);
                 if ((_editingCell != null) && (_parentViewport._editorPanel != null))
                 {
                     Rect rect = _parentViewport.GetCellBounds(EditingRowIndex, EditingColumnIndex, false);
@@ -380,7 +380,7 @@ namespace Dt.Cells.UI
             tb.Text = text;
         }
 
-        public void Update(CellItemBase cell)
+        public void Update(CellItem cell)
         {
             int row = cell.Row;
             int column = cell.Column;

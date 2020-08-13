@@ -1035,7 +1035,7 @@ namespace Dt.Base.Docking
                     {
                         if (obj is Tab tab && !string.IsNullOrEmpty(tab.Title))
                         {
-                            tab.OwnerWin = _owner;
+                            tab.OwnWin = _owner;
                             _tabs[tab.Title] = tab;
                         }
                     }

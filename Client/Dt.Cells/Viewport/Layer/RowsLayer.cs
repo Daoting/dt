@@ -25,22 +25,29 @@ namespace Dt.Cells.UI
     /// </summary>
     internal partial class RowsLayer : Panel
     {
-        CellsPanel _owner;
-        HashSet<RowItem> _cachedChildren;
-        int _normalZIndexBase;
-        Dictionary<int, RowItem> _rows;
-        int _spanRowZIndexBase;
+        const int _normalZIndexBase = 10000;
+        const int _spanRowZIndexBase = 20000;
+        readonly CellsPanel _owner;
+        readonly Dictionary<int, RowItem> _rows;
+        readonly List<RowItem> _recycledRows;
 
         public RowsLayer(CellsPanel p_owner)
         {
             _owner = p_owner;
-            _normalZIndexBase = 0x2710;
-            _spanRowZIndexBase = 0x4e20;
             _rows = new Dictionary<int, RowItem>();
-            _cachedChildren = new HashSet<RowItem>();
-            HorizontalAlignment = HorizontalAlignment.Left;
-            VerticalAlignment = VerticalAlignment.Top;
-            Background = new SolidColorBrush(Colors.White);
+            _recycledRows = new List<RowItem>();
+        }
+
+        public IEnumerable<RowItem> Rows
+        {
+            get { return _rows.Values; }
+        }
+
+        public RowItem GetRow(int row)
+        {
+            if (_rows.TryGetValue(row, out var item))
+                return item;
+            return null;
         }
 
         protected override Size MeasureOverride(Size availableSize)
@@ -53,96 +60,52 @@ namespace Dt.Cells.UI
                 _owner.CellOverflowLayoutBuildEngine.ViewportRightColumn = viewportRightColumn;
             }
 
+            RowLayoutModel rowLayoutModel = _owner.GetRowLayoutModel();
+            List<RowItem> rows = _rows.Values.ToList();
+            foreach (var rowItem in rows)
+            {
+                // 不可见的行回收或丢弃
+                RowLayout layout = rowLayoutModel.FindRow(rowItem.Row);
+                if (layout == null || layout.Height <= 0.0)
+                    RecycleOrRemoveRow(rowItem);
+            }
+
             double x = _owner.Location.X;
             double y = _owner.Location.Y;
-            RowLayoutModel rowLayoutModel = _owner.GetRowLayoutModel();
-            Dictionary<int, RowItem> rows = _rows;
-            _rows = new Dictionary<int, RowItem>();
-            foreach (var presenter in rows.Values)
-            {
-                if ((rowLayoutModel.FindRow(presenter.Row) == null) && !TryRecycleRow(presenter))
-                {
-                    presenter.CleanUpBeforeDiscard();
-                    if (_cachedChildren.Remove(presenter))
-                    {
-                        Children.Remove(presenter);
-                        rows.Remove(presenter.Row);
-                    }
-                }
-            }
-
-            double num5 = 0.0;
+            double left = 0.0;
             foreach (RowLayout layout in rowLayoutModel)
             {
-                if (layout.Height < 0.0)
+                RowItem rowItem = null;
+                if (layout.Height <= 0.0)
+                {
+                    // 不可见的行回收或丢弃
+                    if (_rows.TryGetValue(layout.Row, out rowItem))
+                        RecycleOrRemoveRow(rowItem);
                     continue;
-
-                RowItem element = null;
-                int row = layout.Row;
-                if (rows.TryGetValue(row, out element))
-                {
-                    rows.Remove(row);
-                    if (layout.Height > 0.0)
-                    {
-                        element.UpdateDisplayedCells();
-                    }
-                }
-                else
-                {
-                    element = GetNewRowWithRecyclingSupport(row);
-                    if (layout.Height > 0.0)
-                    {
-                        if (!_cachedChildren.Contains(element))
-                        {
-                            Children.Add(element);
-                            _cachedChildren.Add(element);
-                            element.UpdateDisplayedCells();
-                        }
-                        else
-                        {
-                            element.UpdateDisplayedCells(true);
-                        }
-                    }
                 }
 
-                if (layout.Height > 0.0)
+                if (!_rows.TryGetValue(layout.Row, out rowItem))
                 {
-                    int num7 = _normalZIndexBase + element.Row;
-                    if (element.ContainsSpanCell)
-                    {
-                        num7 = _spanRowZIndexBase + element.Row;
-                    }
-                    num7 = num7 % 0x7ffe;
-                    Canvas.SetZIndex(element, num7);
-                    _rows.Add(row, element);
-                    element.Location = new Point(x, y);
-                    element.Measure(new Size(availableSize.Width, layout.Height));
-                    y += layout.Height;
-                    num5 = Math.Max(num5, element.DesiredSize.Width);
+                    // 重新利用回收行或新创建
+                    rowItem = GetRecycledRow();
+                    if (rowItem == null)
+                        rowItem = new RowItem(_owner);
+                    rowItem.Row = layout.Row;
+
+                    Children.Add(rowItem);
+                    _rows.Add(layout.Row, rowItem);
                 }
-                else
-                {
-                    if (_cachedChildren.Remove(element))
-                    {
-                        Children.Remove(element);
-                    }
-                    TryRecycleRow(element);
-                }
+
+                int z = rowItem.ContainsSpanCell ? _spanRowZIndexBase + rowItem.Row : _normalZIndexBase + rowItem.Row;
+                z = z % 0x7ffe;
+                Canvas.SetZIndex(rowItem, z);
+
+                rowItem.Location = new Point(x, y);
+                rowItem.Measure(new Size(availableSize.Width, layout.Height));
+                y += layout.Height;
+                left = Math.Max(left, rowItem.DesiredSize.Width);
             }
-
-            foreach (RowItem presenter3 in _owner.RecycledRows)
-            {
-                if (_cachedChildren.Remove(presenter3))
-                {
-                    Children.Remove(presenter3);
-                    foreach (CellItemBase base2 in presenter3.Children)
-                    {
-                        base2.RemoveInvalidDataPresenter();
-                    }
-                }
-            }
-            rows.Clear();
-            return new Size(num5 + _owner.Location.X, y);
+            return new Size(left + _owner.Location.X, y);
         }
 
         protected override Size ArrangeOverride(Size finalSize)
@@ -152,81 +115,45 @@ namespace Dt.Cells.UI
             double rowWidth = 0.0;
             foreach (RowLayout layout in rowLayoutModel)
             {
-                if (layout.Height >= 0.0)
+                if (layout.Height <= 0.0)
+                    continue;
+
+                if (_rows.TryGetValue(layout.Row, out var rowItem))
                 {
-                    double width = finalSize.Width;
-                    double height = layout.Height;
-                    if (_rows.ContainsKey(layout.Row))
-                    {
-                        RowItem presenter = _rows[layout.Row];
-                        presenter.Arrange(new Rect(new Point(0.0, y), new Size(width, height)));
-                        if (rowWidth == 0.0)
-                        {
-                            rowWidth = presenter.RowWidth;
-                        }
-                    }
-                    y += height;
+                    rowItem.Arrange(new Rect(0.0, y, finalSize.Width, layout.Height));
+                    if (rowWidth == 0.0)
+                        rowWidth = rowItem.RowWidth;
                 }
+                y += layout.Height;
             }
             rowWidth = Math.Min(_owner.GetViewportSize().Width, rowWidth);
             Size size = new Size(rowWidth, y);
-            RectangleGeometry geometry = new RectangleGeometry();
-            geometry.Rect = new Rect(new Point(0.0, 0.0), size);
-            base.Clip = geometry;
+            Clip = new RectangleGeometry { Rect = new Rect(new Point(), size) };
             return size;
         }
 
-        RowItem GetNewRowWithRecyclingSupport(int rowIndex)
+        void RecycleOrRemoveRow(RowItem p_rowItem)
         {
-            RowItem recycledRow = GetRecycledRow();
-            if (recycledRow == null)
+            Children.Remove(p_rowItem);
+            _rows.Remove(p_rowItem.Row);
+            p_rowItem.CleanUpBeforeDiscard();
+
+            if (p_rowItem.IsRecyclable)
             {
-                recycledRow = _owner.GenerateNewRow();
+                p_rowItem.Row = -1;
+                _recycledRows.Add(p_rowItem);
             }
-            recycledRow.Row = rowIndex;
-            recycledRow.OwningPresenter = _owner;
-            return recycledRow;
         }
 
         RowItem GetRecycledRow()
         {
-            RowItem presenter = null;
-            while ((_owner.RecycledRows.Count > 0) && (presenter == null))
+            RowItem rowItem = null;
+            if (_recycledRows.Count > 0)
             {
-                RowItem row = _owner.RecycledRows[0];
-                if (row != null)
-                {
-                    _owner.RecycledRows.Remove(row);
-                    if (row.IsRecyclable)
-                    {
-                        presenter = row;
-                    }
-                }
+                rowItem = _recycledRows[0];
+                _recycledRows.RemoveAt(0);
             }
-            return presenter;
-        }
-
-        internal RowItem GetRow(int row)
-        {
-            RowItem presenter = null;
-            _rows.TryGetValue(row, out presenter);
-            return presenter;
-        }
-
-        bool TryRecycleRow(RowItem objRow)
-        {
-            if (objRow.IsRecyclable)
-            {
-                _owner.RecycledRows.Add(objRow);
-                objRow.CellsDirty = true;
-                return true;
-            }
-            return false;
-        }
-
-        internal IEnumerable<RowItem> Rows
-        {
-            get { return _rows.Values; }
+            return rowItem;
         }
     }
 }

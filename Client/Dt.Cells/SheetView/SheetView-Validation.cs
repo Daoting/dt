@@ -67,17 +67,16 @@ namespace Dt.Cells.UI
 
         internal void RefreshDataValidationInvalidCircles()
         {
-            if (_viewportPresenters != null)
+            if (_cellsPanels != null)
             {
-                CellsPanel[,] viewportArray = _viewportPresenters;
-                int upperBound = viewportArray.GetUpperBound(0);
-                int num2 = viewportArray.GetUpperBound(1);
-                for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
+                int upperBound = _cellsPanels.GetUpperBound(0);
+                int num2 = _cellsPanels.GetUpperBound(1);
+                for (int i = _cellsPanels.GetLowerBound(0); i <= upperBound; i++)
                 {
-                    for (int j = viewportArray.GetLowerBound(1); j <= num2; j++)
+                    for (int j = _cellsPanels.GetLowerBound(1); j <= num2; j++)
                     {
-                        CellsPanel viewport = viewportArray[i, j];
-                        if ((viewport != null) && (viewport.SheetArea == SheetArea.Cells))
+                        CellsPanel viewport = _cellsPanels[i, j];
+                        if (viewport != null)
                         {
                             viewport.RefreshDataValidationInvalidCircles();
                         }
@@ -115,17 +114,16 @@ namespace Dt.Cells.UI
 
         internal void UpdateDataValidationUI(int row, int column)
         {
-            if (_viewportPresenters != null)
+            if (_cellsPanels != null)
             {
-                CellsPanel[,] viewportArray = _viewportPresenters;
-                int upperBound = viewportArray.GetUpperBound(0);
-                int num2 = viewportArray.GetUpperBound(1);
-                for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
+                int upperBound = _cellsPanels.GetUpperBound(0);
+                int num2 = _cellsPanels.GetUpperBound(1);
+                for (int i = _cellsPanels.GetLowerBound(0); i <= upperBound; i++)
                 {
-                    for (int j = viewportArray.GetLowerBound(1); j <= num2; j++)
+                    for (int j = _cellsPanels.GetLowerBound(1); j <= num2; j++)
                     {
-                        CellsPanel viewport = viewportArray[i, j];
-                        if ((viewport != null) && (viewport.SheetArea == SheetArea.Cells))
+                        CellsPanel viewport = _cellsPanels[i, j];
+                        if (viewport != null)
                         {
                             viewport.UpdateDataValidationUI(row, column);
                         }

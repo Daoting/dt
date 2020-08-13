@@ -81,7 +81,7 @@ namespace Dt.Cells.UI
 
             if (_worksheet != null)
             {
-                _gridLine = _worksheet.GetGridLine(_viewport.SheetArea);
+                _gridLine = _worksheet.GetGridLine(SheetArea.Cells);
                 MeasureBorders(availableSize);
             }
 
@@ -293,29 +293,35 @@ namespace Dt.Cells.UI
 
         void CalcVisibleRowColumnIndexes()
         {
-            switch (_viewport.SheetArea)
-            {
-                case SheetArea.Cells:
-                    _viewportTopRow = _sheetView.GetViewportTopRow(_viewport.RowViewportIndex);
-                    _viewportBottomRow = _sheetView.GetViewportBottomRow(_viewport.RowViewportIndex);
-                    _viewportLeftColumn = _sheetView.GetViewportLeftColumn(_viewport.ColumnViewportIndex);
-                    _viewportRightColumn = _sheetView.GetViewportRightColumn(_viewport.ColumnViewportIndex);
-                    break;
+            //switch (_viewport.SheetArea)
+            //{
+            //    case SheetArea.Cells:
+            //        _viewportTopRow = _sheetView.GetViewportTopRow(_viewport.RowViewportIndex);
+            //        _viewportBottomRow = _sheetView.GetViewportBottomRow(_viewport.RowViewportIndex);
+            //        _viewportLeftColumn = _sheetView.GetViewportLeftColumn(_viewport.ColumnViewportIndex);
+            //        _viewportRightColumn = _sheetView.GetViewportRightColumn(_viewport.ColumnViewportIndex);
+            //        break;
 
-                case (SheetArea.CornerHeader | SheetArea.RowHeader):
-                    _viewportTopRow = _sheetView.GetViewportTopRow(_viewport.RowViewportIndex);
-                    _viewportBottomRow = _sheetView.GetViewportBottomRow(_viewport.RowViewportIndex);
-                    _viewportLeftColumn = 0;
-                    _viewportRightColumn = _worksheet.RowHeader.ColumnCount - 1;
-                    break;
+            //    case (SheetArea.CornerHeader | SheetArea.RowHeader):
+            //        _viewportTopRow = _sheetView.GetViewportTopRow(_viewport.RowViewportIndex);
+            //        _viewportBottomRow = _sheetView.GetViewportBottomRow(_viewport.RowViewportIndex);
+            //        _viewportLeftColumn = 0;
+            //        _viewportRightColumn = _worksheet.RowHeader.ColumnCount - 1;
+            //        break;
 
-                case SheetArea.ColumnHeader:
-                    _viewportTopRow = 0;
-                    _viewportBottomRow = _worksheet.ColumnHeader.RowCount - 1;
-                    _viewportLeftColumn = _sheetView.GetViewportLeftColumn(_viewport.ColumnViewportIndex);
-                    _viewportRightColumn = _sheetView.GetViewportRightColumn(_viewport.ColumnViewportIndex);
-                    break;
-            }
+            //    case SheetArea.ColumnHeader:
+            //        _viewportTopRow = 0;
+            //        _viewportBottomRow = _worksheet.ColumnHeader.RowCount - 1;
+            //        _viewportLeftColumn = _sheetView.GetViewportLeftColumn(_viewport.ColumnViewportIndex);
+            //        _viewportRightColumn = _sheetView.GetViewportRightColumn(_viewport.ColumnViewportIndex);
+            //        break;
+            //}
+
+            _viewportTopRow = _sheetView.GetViewportTopRow(_viewport.RowViewportIndex);
+            _viewportBottomRow = _sheetView.GetViewportBottomRow(_viewport.RowViewportIndex);
+            _viewportLeftColumn = _sheetView.GetViewportLeftColumn(_viewport.ColumnViewportIndex);
+            _viewportRightColumn = _sheetView.GetViewportRightColumn(_viewport.ColumnViewportIndex);
+
             _columnEnd = _viewportRightColumn;
             _rowEnd = _viewportBottomRow;
             _rowStart = _viewportTopRow;
@@ -325,7 +331,7 @@ namespace Dt.Cells.UI
                 int num = -1;
                 for (int i = _rowStart - 1; i > -1; i--)
                 {
-                    if (_worksheet.GetActualRowVisible(i, _viewport.SheetArea))
+                    if (_worksheet.GetActualRowVisible(i, SheetArea.Cells))
                     {
                         num = i;
                         break;
@@ -335,7 +341,7 @@ namespace Dt.Cells.UI
                 int num3 = -1;
                 for (int j = _columnStart - 1; j > -1; j--)
                 {
-                    if (_worksheet.GetActualColumnVisible(j, _viewport.SheetArea))
+                    if (_worksheet.GetActualColumnVisible(j, SheetArea.Cells))
                     {
                         num3 = j;
                         break;
@@ -345,7 +351,7 @@ namespace Dt.Cells.UI
                 int count = _viewport.GetDataContext().Rows.Count;
                 for (int k = _rowEnd + 1; k < count; k++)
                 {
-                    if (_worksheet.GetActualRowVisible(k, _viewport.SheetArea))
+                    if (_worksheet.GetActualRowVisible(k, SheetArea.Cells))
                     {
                         _rowEnd = k;
                         break;
@@ -354,7 +360,7 @@ namespace Dt.Cells.UI
                 int num7 = _viewport.GetDataContext().Columns.Count;
                 for (int m = _columnEnd + 1; m < num7; m++)
                 {
-                    if (_worksheet.GetActualColumnVisible(m, _viewport.SheetArea))
+                    if (_worksheet.GetActualColumnVisible(m, SheetArea.Cells))
                     {
                         _columnEnd = m;
                         break;
@@ -363,7 +369,7 @@ namespace Dt.Cells.UI
                 List<int> list = new List<int>();
                 for (int n = _rowStart; n <= _rowEnd; n++)
                 {
-                    if (_worksheet.GetActualRowVisible(n, _viewport.SheetArea))
+                    if (_worksheet.GetActualRowVisible(n, SheetArea.Cells))
                     {
                         list.Add(n);
                     }
@@ -372,7 +378,7 @@ namespace Dt.Cells.UI
                 list.Clear();
                 for (int num11 = _columnStart; num11 <= _columnEnd; num11++)
                 {
-                    if (_worksheet.GetActualColumnVisible(num11, _viewport.SheetArea))
+                    if (_worksheet.GetActualColumnVisible(num11, SheetArea.Cells))
                     {
                         list.Add(num11);
                     }
@@ -725,8 +731,7 @@ namespace Dt.Cells.UI
 
         void InitDirtyRange()
         {
-            SheetArea sheetArea = _viewport.SheetArea;
-            int num = _worksheet.NextNonEmptyColumn(_columnStart - 1, sheetArea);
+            int num = _worksheet.NextNonEmptyColumn(_columnStart - 1, SheetArea.Cells);
             if ((_columnStart <= num) && (num <= _columnEnd))
             {
                 _rowStartDirty = _rowStart;
@@ -734,13 +739,13 @@ namespace Dt.Cells.UI
             }
             else
             {
-                _rowEndDirty = _rowStartDirty = _worksheet.NextNonEmptyRow(_rowStart - 1, sheetArea, StorageType.Style);
+                _rowEndDirty = _rowStartDirty = _worksheet.NextNonEmptyRow(_rowStart - 1, SheetArea.Cells, StorageType.Style);
                 if (_rowStartDirty > -1)
                 {
                     int row = _rowStartDirty;
                     while (row <= _rowEnd)
                     {
-                        row = _worksheet.NextNonEmptyRow(row, sheetArea, StorageType.Style);
+                        row = _worksheet.NextNonEmptyRow(row, SheetArea.Cells, StorageType.Style);
                         if (row == -1)
                         {
                             break;
@@ -786,9 +791,9 @@ namespace Dt.Cells.UI
             _scrollingGridlinesPanel.Visibility = Visibility.Visible;
             _scrollingGridlinesPanel.Children.Clear();
             CalcVisibleRowColumnIndexes();
-            BorderLine gridBorderLine = _worksheet.GetGridLine(_viewport.SheetArea);
-            RowLayoutModel rowLayoutModel = _sheetView.GetRowLayoutModel(_viewport.RowViewportIndex, _viewport.SheetArea);
-            ColumnLayoutModel columnLayoutModel = _sheetView.GetColumnLayoutModel(_viewport.ColumnViewportIndex, _viewport.SheetArea);
+            BorderLine gridBorderLine = _worksheet.GetGridLine(SheetArea.Cells);
+            RowLayoutModel rowLayoutModel = _sheetView.GetRowLayoutModel(_viewport.RowViewportIndex, SheetArea.Cells);
+            ColumnLayoutModel columnLayoutModel = _sheetView.GetColumnLayoutModel(_viewport.ColumnViewportIndex, SheetArea.Cells);
             int viewportBottomRow = _sheetView.GetViewportBottomRow(_viewport.RowViewportIndex);
             int viewportRightColumn = _sheetView.GetViewportRightColumn(_viewport.ColumnViewportIndex);
             RowLayout bottomRowLayout = rowLayoutModel.FindRow(viewportBottomRow);

@@ -92,7 +92,7 @@ namespace Dt.Cells.UndoRedo
             bool flag3 = false;
             using (((IUIActionExecuter) sheetView.ActiveSheet).BeginUIAction())
             {
-                flag3 = CellItemBase.ApplyValueToCell(sheetView, bindingCell, view.CanUserEditFormula, newValue, valueType, out isFormulaApplied, out appliedFormula);
+                flag3 = ApplyValueToCell(sheetView, bindingCell, view.CanUserEditFormula, newValue, valueType, out isFormulaApplied, out appliedFormula);
             }
             if (!flag3)
             {
@@ -304,6 +304,121 @@ namespace Dt.Cells.UndoRedo
         bool OldValueIsFormula { get; set; }
 
         Dt.Cells.Data.Worksheet Worksheet { get; set; }
+
+        static bool ApplyValueToCell(
+            SheetView sheetView,
+            Cell bindingCell,
+            bool allowFormula,
+            object editorValue,
+            Type valueType,
+            out bool isFormulaApplied,
+            out string appliedFormula)
+        {
+            isFormulaApplied = false;
+            appliedFormula = null;
+            if (bindingCell == null)
+                return true;
+
+            if (ContainsArrayFormula(bindingCell.Worksheet.FindFormulas(bindingCell.Row.Index, bindingCell.Column.Index, 1, 1)))
+            {
+                return false;
+            }
+
+            string str = editorValue as string;
+            if (allowFormula
+                && str != null
+                && str.StartsWith("=")
+                && str.Length > 1)
+            {
+                appliedFormula = str.TrimStart(new char[] { '=' });
+                try
+                {
+                    isFormulaApplied = true;
+                    bindingCell.Formula = appliedFormula;
+                }
+                catch
+                {
+                    return false;
+                }
+                return true;
+            }
+
+            if (!string.IsNullOrEmpty(bindingCell.Formula))
+            {
+                bindingCell.Formula = null;
+            }
+            if (!string.IsNullOrEmpty(str))
+            {
+                try
+                {
+                    if (str.StartsWith("'="))
+                    {
+                        str = str.Substring(1);
+                    }
+                    IFormatter actualFormatter = bindingCell.ActualFormatter;
+                    if ((actualFormatter != null) && !(actualFormatter is AutoFormatter))
+                    {
+                        object obj2 = actualFormatter.Parse(str);
+                        object obj3 = null;
+                        if (obj2 == null)
+                        {
+                            obj3 = str;
+                        }
+                        else
+                        {
+                            obj3 = obj2;
+                        }
+                        obj3 = sheetView.RaiseCellValueApplying(bindingCell.Row.Index, bindingCell.Column.Index, obj3);
+                        bindingCell.Value = obj3;
+                    }
+                    else
+                    {
+                        UpdateFormatter(str, bindingCell, valueType);
+                    }
+                    goto Label_0139;
+                }
+                catch (InvalidCastException)
+                {
+                    bindingCell.Value = editorValue as string;
+                    goto Label_0139;
+                }
+            }
+            bindingCell.Value = null;
+        Label_0139:
+            return true;
+        }
+
+        static bool ContainsArrayFormula(object[,] formulas)
+        {
+            if (formulas != null)
+            {
+                for (int i = 0; i < formulas.GetLength(0); i++)
+                {
+                    CellRange range = formulas[i, 0] as CellRange;
+                    if ((range != null) && ((range.RowCount > 1) || (range.ColumnCount > 1)))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        static void UpdateFormatter(string text, Cell cell, Type cacheValueType)
+        {
+            object obj2 = null;
+            GeneralFormatter preferredDisplayFormatter = new GeneralFormatter().GetPreferredDisplayFormatter(text, out obj2) as GeneralFormatter;
+            object obj3 = obj2;
+            if (((cell.ActualFormatter != null) && (obj2 != null)) && ((cell.ActualFormatter is AutoFormatter) && !preferredDisplayFormatter.FormatString.Equals("General")))
+            {
+                cell.Formatter = new AutoFormatter(preferredDisplayFormatter);
+            }
+            else if (cell.ActualFormatter == null)
+            {
+                cell.Formatter = new AutoFormatter(preferredDisplayFormatter);
+            }
+            cell.Value = obj3;
+        }
     }
 }
 

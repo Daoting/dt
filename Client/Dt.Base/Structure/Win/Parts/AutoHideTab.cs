@@ -41,17 +41,17 @@ namespace Dt.Base.Docking
         /// <param name="p_tab"></param>
         internal void Unpin(Tab p_tab)
         {
-            if (p_tab.OwnerTabs != null)
+            if (p_tab.OwnTabs != null)
             {
                 if (TabStripPlacement == ItemPlacement.Left || TabStripPlacement == ItemPlacement.Right)
                 {
                     if (p_tab.ReadLocalValue(TabItem.PopWidthProperty) == DependencyProperty.UnsetValue)
-                        p_tab.PopWidth = p_tab.OwnerTabs.ActualWidth;
+                        p_tab.PopWidth = p_tab.OwnTabs.ActualWidth;
                 }
                 else
                 {
                     if (p_tab.ReadLocalValue(TabItem.PopHeightProperty) == DependencyProperty.UnsetValue)
-                        p_tab.PopHeight = p_tab.OwnerTabs.ActualHeight;
+                        p_tab.PopHeight = p_tab.OwnTabs.ActualHeight;
                 }
                 p_tab.RemoveFromParent();
             }
