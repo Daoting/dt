@@ -7433,7 +7433,7 @@ namespace Dt.Cells.UI
                                 {
                                     if ((column <= base2.Column) && (base2.Column < (column + columnCount)))
                                     {
-                                        base2.Invalidate();
+                                        base2.UpdateChildren();
                                     }
                                 }
                             }

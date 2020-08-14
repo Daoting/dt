@@ -12,7 +12,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.Foundation;
-using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -27,6 +26,8 @@ namespace Dt.Cells.UI
     {
         const int _normalZIndexBase = 10000;
         const int _spanRowZIndexBase = 20000;
+        static Rect _rcEmpty = new Rect();
+        static Size _szEmpty = new Size();
         readonly CellsPanel _owner;
         readonly Dictionary<int, RowItem> _rows;
         readonly List<RowItem> _recycledRows;
@@ -36,6 +37,9 @@ namespace Dt.Cells.UI
             _owner = p_owner;
             _rows = new Dictionary<int, RowItem>();
             _recycledRows = new List<RowItem>();
+            HorizontalAlignment = HorizontalAlignment.Left;
+            VerticalAlignment = VerticalAlignment.Top;
+            Background = BrushRes.WhiteBrush;
         }
 
         public IEnumerable<RowItem> Rows
@@ -50,6 +54,7 @@ namespace Dt.Cells.UI
             return null;
         }
 
+        #region 测量布局
         protected override Size MeasureOverride(Size availableSize)
         {
             if (_owner.SupportCellOverflow && _owner.Sheet.Excel.CanCellOverflow)
@@ -60,14 +65,32 @@ namespace Dt.Cells.UI
                 _owner.CellOverflowLayoutBuildEngine.ViewportRightColumn = viewportRightColumn;
             }
 
+            // 频繁增删Children子元素会出现卡顿现象！
+            // Children = _rows + _recycledRows
             RowLayoutModel rowLayoutModel = _owner.GetRowLayoutModel();
+            int less = rowLayoutModel.Count - Children.Count;
+            if (less > 0)
+            {
+                for (int i = 0; i < less; i++)
+                {
+                    RowItem rowItem = new RowItem(_owner);
+                    Children.Add(rowItem);
+                    _recycledRows.Add(rowItem);
+                }
+            }
+
+            // 先回收不可见行
             List<RowItem> rows = _rows.Values.ToList();
             foreach (var rowItem in rows)
             {
-                // 不可见的行回收或丢弃
                 RowLayout layout = rowLayoutModel.FindRow(rowItem.Row);
                 if (layout == null || layout.Height <= 0.0)
-                    RecycleOrRemoveRow(rowItem);
+                {
+                    _recycledRows.Add(rowItem);
+                    _rows.Remove(rowItem.Row);
+                    rowItem.Row = -1;
+                    rowItem.CleanUpBeforeDiscard();
+                }
             }
 
             double x = _owner.Location.X;
@@ -75,26 +98,21 @@ namespace Dt.Cells.UI
             double left = 0.0;
             foreach (RowLayout layout in rowLayoutModel)
             {
-                RowItem rowItem = null;
                 if (layout.Height <= 0.0)
-                {
-                    // 不可见的行回收或丢弃
-                    if (_rows.TryGetValue(layout.Row, out rowItem))
-                        RecycleOrRemoveRow(rowItem);
                     continue;
-                }
 
+                bool updateAllCell = false;
+                RowItem rowItem = null;
                 if (!_rows.TryGetValue(layout.Row, out rowItem))
                 {
-                    // 重新利用回收行或新创建
-                    rowItem = GetRecycledRow();
-                    if (rowItem == null)
-                        rowItem = new RowItem(_owner);
+                    // 重新利用回收的行
+                    rowItem = _recycledRows[0];
+                    _recycledRows.RemoveAt(0);
                     rowItem.Row = layout.Row;
-
-                    Children.Add(rowItem);
                     _rows.Add(layout.Row, rowItem);
+                    updateAllCell = true;
                 }
+                rowItem.UpdateChildren(updateAllCell);
 
                 int z = rowItem.ContainsSpanCell ? _spanRowZIndexBase + rowItem.Row : _normalZIndexBase + rowItem.Row;
                 z = z % 0x7ffe;
@@ -104,6 +122,15 @@ namespace Dt.Cells.UI
                 rowItem.Measure(new Size(availableSize.Width, layout.Height));
                 y += layout.Height;
                 left = Math.Max(left, rowItem.DesiredSize.Width);
+            }
+
+            // 测量回收的行
+            if (_recycledRows.Count > 0)
+            {
+                foreach (var rowItem in _recycledRows)
+                {
+                    rowItem.Measure(_szEmpty);
+                }
             }
             return new Size(left + _owner.Location.X, y);
         }
@@ -126,35 +153,21 @@ namespace Dt.Cells.UI
                 }
                 y += layout.Height;
             }
+
+            if (_recycledRows.Count > 0)
+            {
+                foreach (var rowItem in _recycledRows)
+                {
+                    rowItem.Arrange(_rcEmpty);
+                }
+            }
+
             rowWidth = Math.Min(_owner.GetViewportSize().Width, rowWidth);
             Size size = new Size(rowWidth, y);
             Clip = new RectangleGeometry { Rect = new Rect(new Point(), size) };
             return size;
         }
-
-        void RecycleOrRemoveRow(RowItem p_rowItem)
-        {
-            Children.Remove(p_rowItem);
-            _rows.Remove(p_rowItem.Row);
-            p_rowItem.CleanUpBeforeDiscard();
-
-            if (p_rowItem.IsRecyclable)
-            {
-                p_rowItem.Row = -1;
-                _recycledRows.Add(p_rowItem);
-            }
-        }
-
-        RowItem GetRecycledRow()
-        {
-            RowItem rowItem = null;
-            if (_recycledRows.Count > 0)
-            {
-                rowItem = _recycledRows[0];
-                _recycledRows.RemoveAt(0);
-            }
-            return rowItem;
-        }
+        #endregion
     }
 }
 

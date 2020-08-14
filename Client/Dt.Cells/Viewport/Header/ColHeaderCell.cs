@@ -13,13 +13,18 @@ using System.Linq;
 
 namespace Dt.Cells.UI
 {
-    public partial class ColHeaderCell : HeaderCellItem
+    internal partial class ColHeaderCell : HeaderCellItem
     {
+        public ColHeaderCell(HeaderItem p_rowItem)
+            : base(p_rowItem)
+        { 
+        }
+
         protected override bool IsHightlighted
         {
             get
             {
-                SheetView view = Owner.Owner.Sheet;
+                SheetView view = OwnRow.Owner.Sheet;
                 if (view.HideSelectionWhenPrinting)
                 {
                     return false;
@@ -47,7 +52,7 @@ namespace Dt.Cells.UI
         {
             get
             {
-                SheetView sheet = Owner.Owner.Sheet;
+                SheetView sheet = OwnRow.Owner.Sheet;
                 Worksheet worksheet = sheet.ActiveSheet;
                 return ((sheet.HoverManager.IsMouseOverColumnHeaders && (sheet.MouseOverColumnIndex == Column)) && ((Row == (worksheet.ColumnHeader.RowCount - 1)) && !sheet.IsWorking));
             }
@@ -57,7 +62,7 @@ namespace Dt.Cells.UI
         {
             get
             {
-                Worksheet worksheet = Owner.Owner.Sheet.ActiveSheet;
+                Worksheet worksheet = OwnRow.Owner.Sheet.ActiveSheet;
                 // hdt 唐忠宝 注释掉下面语句及修改linq，增加where条件
                 // CellRange columnRange = new CellRange(-1, Column, -1, 1);
                 return (from range in worksheet.Selections

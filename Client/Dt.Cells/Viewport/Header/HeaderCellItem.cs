@@ -8,26 +8,21 @@
 
 #region 引用命名
 using Dt.Cells.Data;
-using Windows.UI.Xaml.Shapes;
-using Windows.UI.Xaml;
 using Windows.Foundation;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using System;
 #endregion
 
 namespace Dt.Cells.UI
 {
-    public abstract partial class HeaderCellItem : Panel
+    internal abstract partial class HeaderCellItem : Panel
     {
-        HeaderItem _owner;
-        Cell _bindingCell;
-        int _column = -1;
         Border _border;
         TextBlock _tb;
-        CellLayout _cellLayout;
 
-        public HeaderCellItem()
+        public HeaderCellItem(HeaderItem p_rowItem)
         {
+            OwnRow = p_rowItem;
             _border = new Border
             {
                 BorderBrush = BrushRes.浅灰边框,
@@ -40,67 +35,16 @@ namespace Dt.Cells.UI
             Children.Add(_tb);
         }
 
-        internal HeaderItem Owner
-        {
-            get { return _owner; }
-            set
-            {
-                if (_owner != value)
-                {
-                    _owner = value;
-                    if (_owner == null)
-                    {
-                        _bindingCell = null;
-                    }
-                    else
-                    {
-                        int row = _owner.Row;
-                        int column = _column;
-                        if (_cellLayout != null)
-                        {
-                            row = _cellLayout.Row;
-                            column = _cellLayout.Column;
-                        }
-                        _bindingCell = _owner.Owner.CellCache.GetCachedCell(row, column);
-                    }
-                    Invalidate();
-                }
-            }
-        }
+        public HeaderItem OwnRow { get; }
 
-        internal CellLayout CellLayout
-        {
-            get { return _cellLayout; }
-            set
-            {
-                if (_cellLayout != value)
-                {
-                    _cellLayout = value;
-                    InvalidateMeasure();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets a value that indicates the row index.
-        /// </summary>
         public int Row
         {
-            get { return _owner.Row; }
+            get { return OwnRow.Row; }
         }
 
-        public int Column
-        {
-            get { return _column; }
-            internal set
-            {
-                if (value != _column)
-                {
-                    _column = value;
-                    Invalidate();
-                }
-            }
-        }
+        public int Column { get; set; }
+
+        public CellLayout CellLayout { get; set; }
 
         public void ApplyState()
         {
@@ -110,7 +54,7 @@ namespace Dt.Cells.UI
             }
             else
             {
-                SheetView sheet = Owner.Owner.Sheet;
+                SheetView sheet = OwnRow.Owner.Sheet;
                 bool allowSelect = !sheet.HideSelectionWhenPrinting && !sheet.HasSelectedFloatingObject();
                 if ((IsSelected && allowSelect)
                     || IsHightlighted)
@@ -130,13 +74,29 @@ namespace Dt.Cells.UI
 
         protected abstract bool IsHightlighted { get; }
 
-        
-        internal void Invalidate()
+        void ApplyStyle()
         {
-            if (_bindingCell == null)
+
+        }
+
+        #region 测量布局
+        //*** HeaderPanel.Measure -> HeaderItem.UpdateChildren -> 行列改变时 HeaderCellItem.UpdateChildren -> HeaderItem.Measure -> HeaderCellItem.Measure ***//
+
+        public void UpdateChildren()
+        {
+            // 刷新绑定的Cell
+            int row = OwnRow.Row;
+            int column = Column;
+            if (CellLayout != null)
+            {
+                row = CellLayout.Row;
+                column = CellLayout.Column;
+            }
+            var bindingCell = OwnRow.Owner.CellCache.GetCachedCell(row, column);
+            if (bindingCell == null)
                 return;
 
-            string text = _bindingCell.Text;
+            string text = bindingCell.Text;
             if (string.IsNullOrEmpty(text))
             {
                 _tb.ClearValue(TextBlock.TextProperty);
@@ -149,14 +109,13 @@ namespace Dt.Cells.UI
             ApplyState();
         }
 
-        void ApplyStyle()
-        {
-
-        }
-
-        #region 测量布局
         protected override Size MeasureOverride(Size availableSize)
         {
+            if (Column == -1
+                || availableSize.Width == 0.0
+                || availableSize.Height == 0.0)
+                return new Size();
+
             _border.Measure(availableSize);
             _tb.Measure(availableSize);
             return availableSize;

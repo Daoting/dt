@@ -7,7 +7,6 @@
 #endregion
 
 #region 引用命名
-using Dt.Base;
 using Dt.Cells.Data;
 using System;
 using System.Collections.Generic;
@@ -16,8 +15,6 @@ using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Shapes;
 #endregion
 
 namespace Dt.Cells.UI
@@ -27,9 +24,9 @@ namespace Dt.Cells.UI
     /// </summary>
     internal partial class CellItem : Panel
     {
+        static Rect _rcEmpty = new Rect();
         TextBlock _tb;
         FrameworkElement _editor;
-        int _column = -1;
         CellOverflowLayout _overflowLayout;
         Rect? _cachedClip;
 
@@ -41,8 +38,6 @@ namespace Dt.Cells.UI
         Sparkline _sparkInfo;
         BaseSparklineView _sparklineView;
         StrikethroughView _strikethroughView;
-
-
         FilterButton _filterButton;
         FilterButtonInfo _filterButtonInfo;
         Type _cachedValueType;
@@ -60,27 +55,7 @@ namespace Dt.Cells.UI
             get { return OwnRow.Row; }
         }
 
-        public int Column
-        {
-            get { return _column; }
-            internal set
-            {
-                if (value != _column)
-                {
-                    _column = value;
-
-                    // 切换列时刷新绑定的Cell
-                    int row = OwnRow.Row;
-                    int column = _column;
-                    if (CellLayout != null)
-                    {
-                        row = CellLayout.Row;
-                        column = CellLayout.Column;
-                    }
-                    BindingCell = OwnRow.OwnPanel.CellCache.GetCachedCell(row, column);
-                }
-            }
-        }
+        public int Column { get; set; }
 
         public CellLayout CellLayout { get; set; }
 
@@ -93,13 +68,7 @@ namespace Dt.Cells.UI
 
         public double ZoomFactor
         {
-            get
-            {
-                SheetView sheetView = SheetView;
-                if (sheetView != null)
-                    return (double)sheetView.ZoomFactor;
-                return 1.0;
-            }
+            get { return (double)OwnRow.OwnPanel.Sheet.ZoomFactor; }
         }
 
         public CellOverflowLayout CellOverflowLayout
@@ -115,32 +84,17 @@ namespace Dt.Cells.UI
             }
         }
 
-        public bool IsActive
+        public FilterButtonInfo FilterButtonInfo
         {
-            get
+            get { return _filterButtonInfo; }
+            set
             {
-                SheetView sheet = OwnRow.OwnPanel.Sheet;
-                return ((sheet.GetActiveColumnViewportIndex() == OwnRow.OwnPanel.ColumnViewportIndex) && (sheet.GetActiveRowViewportIndex() == OwnRow.OwnPanel.RowViewportIndex));
+                if (_filterButtonInfo != value)
+                {
+                    _filterButtonInfo = value;
+                    InvalidateMeasure();
+                }
             }
-        }
-
-        public bool IsCurrent
-        {
-            get
-            {
-                Worksheet worksheet = OwnRow.OwnPanel.Sheet.ActiveSheet;
-                return ((worksheet.ActiveRowIndex == Row) && (worksheet.ActiveColumnIndex == Column));
-            }
-        }
-
-        public bool IsRecylable
-        {
-            get { return _customDrawingObject == null; }
-        }
-
-        public bool IsSelected
-        {
-            get { return OwnRow.OwnPanel.Sheet.ActiveSheet.IsSelected(Row, Column); }
         }
 
         public void ApplyState()
@@ -356,34 +310,146 @@ namespace Dt.Cells.UI
         public void Refresh()
         {
             if (_sparklineView != null)
-            {
                 UpdateSparkline();
-            }
             InvalidateMeasure();
         }
 
-        internal FilterButtonInfo FilterButtonInfo
+        #region 测量布局
+        //*** CellsPanel.Measure -> RowsLayer.Measure -> RowItem.UpdateChildren -> 行列改变时 CellItem.UpdateChildren -> RowItem.Measure -> CellItem.Measure ***//
+
+        public void UpdateChildren()
         {
-            get { return _filterButtonInfo; }
-            set
+            // 刷新绑定的Cell
+            int row = OwnRow.Row;
+            int column = Column;
+            if (CellLayout != null)
             {
-                if (_filterButtonInfo != value)
+                row = CellLayout.Row;
+                column = CellLayout.Column;
+            }
+            BindingCell = OwnRow.OwnPanel.CellCache.GetCachedCell(row, column);
+
+            SheetView sheetView = SheetView;
+            if (sheetView == null || BindingCell == null)
+                return;
+
+            Worksheet sheet = BindingCell.Worksheet;
+
+            // 迷你图
+            Sparkline sparkline = sheet.GetSparkline(row, column);
+            if (_sparkInfo != sparkline)
+            {
+                SparkLine = sparkline;
+                SynSparklineView();
+            }
+
+            // 收集所有DrawingObject
+            List<DrawingObject> list = new List<DrawingObject>();
+            DrawingObject[] objArray = sheet.GetDrawingObject(row, column, 1, 1);
+            if ((objArray != null) && (objArray.Length > 0))
+            {
+                list.AddRange(objArray);
+            }
+
+            IDrawingObjectProvider drawingObjectProvider = DrawingObjectManager.GetDrawingObjectProvider(sheetView.Excel);
+            if (drawingObjectProvider != null)
+            {
+                DrawingObject[] objArray2 = drawingObjectProvider.GetDrawingObjects(sheet, row, column, 1, 1);
+                if ((objArray2 != null) && (objArray2.Length > 0))
                 {
-                    _filterButtonInfo = value;
-                    InvalidateMeasure();
+                    list.AddRange(objArray2);
                 }
             }
+
+            _dataBarObject = null;
+            _iconObject = null;
+            _customDrawingObject = null;
+            if (list.Count > 0)
+            {
+                foreach (DrawingObject obj in list)
+                {
+                    if (obj is DataBarDrawingObject bar)
+                    {
+                        _dataBarObject = bar;
+                    }
+                    else if (obj is IconDrawingObject icon)
+                    {
+                        _iconObject = icon;
+                    }
+                    else if (obj is CustomDrawingObject cust)
+                    {
+                        _customDrawingObject = cust;
+                    }
+                }
+            }
+
+            bool noBarIcon = SynContitionalView();
+            bool noCust = SynCustomDrawingObjectView();
+
+            if (sparkline == null && noBarIcon && noCust && !string.IsNullOrEmpty(BindingCell.Text))
+            {
+                if (_tb == null)
+                {
+                    _tb = new TextBlock();
+                    Children.Add(_tb);
+                }
+                _tb.Text = BindingCell.Text;
+                ApplyStyle();
+            }
+            else if (_tb != null)
+            {
+                Children.Remove(_tb);
+                _tb = null;
+            }
+            SynStrikethroughView();
+
+            FilterButtonInfo info = sheetView.GetFilterButtonInfo(row, column, BindingCell.SheetArea);
+            if (info != FilterButtonInfo)
+            {
+                FilterButtonInfo = info;
+                SynFilterButton();
+            }
+
+            if (OwnRow.OwnPanel.Sheet.HighlightInvalidData)
+            {
+                if (_dataValidationInvalidPresenterInfo == null)
+                {
+                    DataValidator actualDataValidator = BindingCell.ActualDataValidator;
+                    if ((actualDataValidator != null) && !actualDataValidator.IsValid(sheetView.ActiveSheet, Row, Column, BindingCell.Value))
+                    {
+                        InvalidDataPresenterInfo info2 = new InvalidDataPresenterInfo
+                        {
+                            Row = Row,
+                            Column = Column
+                        };
+                        _dataValidationInvalidPresenterInfo = info2;
+                        OwnRow.OwnPanel.AddDataValidationInvalidDataPresenterInfo(_dataValidationInvalidPresenterInfo);
+                    }
+                }
+                else if (_dataValidationInvalidPresenterInfo != null)
+                {
+                    DataValidator validator2 = BindingCell.ActualDataValidator;
+                    if ((validator2 == null) || validator2.IsValid(sheetView.ActiveSheet, Row, Column, BindingCell.Value))
+                    {
+                        OwnRow.OwnPanel.RemoveDataValidationInvalidDataPresenterInfo(_dataValidationInvalidPresenterInfo);
+                        _dataValidationInvalidPresenterInfo = null;
+                    }
+                }
+            }
+            else if (_dataValidationInvalidPresenterInfo != null)
+            {
+                OwnRow.OwnPanel.RemoveDataValidationInvalidDataPresenterInfo(_dataValidationInvalidPresenterInfo);
+                _dataValidationInvalidPresenterInfo = null;
+            }
+
+            ApplyState();
         }
 
-        void ApplyStyle()
-        {
-
-        }
-
-        #region 测量布局
         protected override Size MeasureOverride(Size availableSize)
         {
-            if (double.IsInfinity(availableSize.Width) || double.IsInfinity(availableSize.Height))
+            if (Column == -1
+                || availableSize.Width == 0.0
+                || availableSize.Height == 0.0)
                 return new Size();
 
             Size sizeOverflow = availableSize;
@@ -406,8 +472,17 @@ namespace Dt.Cells.UI
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            if (double.IsInfinity(finalSize.Width) || double.IsInfinity(finalSize.Height))
-                return new Size();
+            if (Column == -1 || finalSize.Width == 0 || finalSize.Height == 0)
+            {
+                if (Children.Count > 0)
+                {
+                    foreach (UIElement elem in Children)
+                    {
+                        elem.Arrange(_rcEmpty);
+                    }
+                }
+                return finalSize;
+            }
 
             double width = finalSize.Width;
             double height = finalSize.Height;
@@ -492,127 +567,6 @@ namespace Dt.Cells.UI
         #endregion
 
         #region 更新可视树
-        public void UpdateChildren()
-        {
-            SheetView sheetView = SheetView;
-            if (sheetView == null || BindingCell == null)
-                return;
-
-            Worksheet sheet = BindingCell.Worksheet;
-            int row = Row;
-            int column = Column;
-            if (CellLayout != null)
-            {
-                row = CellLayout.Row;
-                column = CellLayout.Column;
-            }
-
-            Sparkline sparkline = sheet.GetSparkline(row, column);
-            if (_sparkInfo != sparkline)
-            {
-                SparkLine = sparkline;
-                SynSparklineView();
-            }
-
-            List<DrawingObject> list = new List<DrawingObject>();
-            DrawingObject[] objArray = sheet.GetDrawingObject(row, column, 1, 1);
-            if ((objArray != null) && (objArray.Length > 0))
-            {
-                list.AddRange(objArray);
-            }
-
-            IDrawingObjectProvider drawingObjectProvider = DrawingObjectManager.GetDrawingObjectProvider(sheetView.Excel);
-            if (drawingObjectProvider != null)
-            {
-                DrawingObject[] objArray2 = drawingObjectProvider.GetDrawingObjects(sheet, row, column, 1, 1);
-                if ((objArray2 != null) && (objArray2.Length > 0))
-                {
-                    list.AddRange(objArray2);
-                }
-            }
-
-            _dataBarObject = null;
-            _iconObject = null;
-            _customDrawingObject = null;
-            if ((list != null) && (list.Count > 0))
-            {
-                foreach (DrawingObject obj in list)
-                {
-                    if (obj is DataBarDrawingObject bar)
-                    {
-                        _dataBarObject = bar;
-                    }
-                    else if (obj is IconDrawingObject icon)
-                    {
-                        _iconObject = icon;
-                    }
-                    else if (obj is CustomDrawingObject cust)
-                    {
-                        _customDrawingObject = cust;
-                    }
-                }
-            }
-
-            bool noBarIcon = SynContitionalView();
-            bool noCust = SynCustomDrawingObjectView();
-
-            if (noBarIcon && noCust && !string.IsNullOrEmpty(BindingCell.Text))
-            {
-                if (_tb == null)
-                {
-                    _tb = new TextBlock();
-                    Children.Add(_tb);
-                }
-                _tb.Text = BindingCell.Text;
-                ApplyStyle();
-            }
-            else if (_tb != null)
-            {
-                Children.Add(_tb);
-                _tb = null;
-            }
-            SynStrikethroughView();
-
-            FilterButtonInfo info = sheetView.GetFilterButtonInfo(row, column, BindingCell.SheetArea);
-            if (info != FilterButtonInfo)
-            {
-                FilterButtonInfo = info;
-                SynFilterButton();
-            }
-
-            if (OwnRow.OwnPanel.Sheet.HighlightInvalidData)
-            {
-                if (_dataValidationInvalidPresenterInfo == null)
-                {
-                    DataValidator actualDataValidator = BindingCell.ActualDataValidator;
-                    if ((actualDataValidator != null) && !actualDataValidator.IsValid(sheetView.ActiveSheet, Row, Column, BindingCell.Value))
-                    {
-                        InvalidDataPresenterInfo info2 = new InvalidDataPresenterInfo
-                        {
-                            Row = Row,
-                            Column = Column
-                        };
-                        _dataValidationInvalidPresenterInfo = info2;
-                        OwnRow.OwnPanel.AddDataValidationInvalidDataPresenterInfo(_dataValidationInvalidPresenterInfo);
-                    }
-                }
-                else if (_dataValidationInvalidPresenterInfo != null)
-                {
-                    DataValidator validator2 = BindingCell.ActualDataValidator;
-                    if ((validator2 == null) || validator2.IsValid(sheetView.ActiveSheet, Row, Column, BindingCell.Value))
-                    {
-                        OwnRow.OwnPanel.RemoveDataValidationInvalidDataPresenterInfo(_dataValidationInvalidPresenterInfo);
-                        _dataValidationInvalidPresenterInfo = null;
-                    }
-                }
-            }
-            else if (_dataValidationInvalidPresenterInfo != null)
-            {
-                OwnRow.OwnPanel.RemoveDataValidationInvalidDataPresenterInfo(_dataValidationInvalidPresenterInfo);
-                _dataValidationInvalidPresenterInfo = null;
-            }
-        }
-
         bool SynContitionalView()
         {
             bool isContentVisible = true;
@@ -699,6 +653,32 @@ namespace Dt.Cells.UI
                 _customDrawingObjectView = null;
             }
             return isContentVisible;
+        }
+
+        void SynFilterButton()
+        {
+            if (_filterButtonInfo != null)
+            {
+                if (_filterButton == null)
+                {
+                    FilterButton element = new FilterButton(this);
+                    element.HorizontalAlignment = HorizontalAlignment.Right;
+                    element.VerticalAlignment = VerticalAlignment.Bottom;
+                    element.Area = SheetArea.Cells;
+                    _filterButton = element;
+                    Canvas.SetZIndex(element, 0xbb8);
+                    Children.Add(element);
+                }
+                else
+                {
+                    _filterButton.ApplyState();
+                }
+            }
+            else if (_filterButton != null)
+            {
+                Children.Remove(_filterButton);
+                _filterButton = null;
+            }
         }
         #endregion
 
@@ -800,30 +780,9 @@ namespace Dt.Cells.UI
         }
         #endregion
 
-        void SynFilterButton()
+        void ApplyStyle()
         {
-            if (_filterButtonInfo != null)
-            {
-                if (_filterButton == null)
-                {
-                    FilterButton element = new FilterButton(this);
-                    element.HorizontalAlignment = HorizontalAlignment.Right;
-                    element.VerticalAlignment = VerticalAlignment.Bottom;
-                    element.Area = SheetArea.Cells;
-                    _filterButton = element;
-                    Canvas.SetZIndex(element, 0xbb8);
-                    Children.Add(element);
-                }
-                else
-                {
-                    _filterButton.ApplyState();
-                }
-            }
-            else if (_filterButton != null)
-            {
-                Children.Remove(_filterButton);
-                _filterButton = null;
-            }
+
         }
 
         Thickness GetDefaultPaddingForEdit(double fontSize)

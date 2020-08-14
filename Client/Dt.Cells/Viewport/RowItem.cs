@@ -10,12 +10,10 @@
 using Dt.Cells.Data;
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+using System.Linq;
 using Windows.Foundation;
-using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 #endregion
 
 namespace Dt.Cells.UI
@@ -25,171 +23,42 @@ namespace Dt.Cells.UI
     /// </summary>
     internal partial class RowItem : Panel
     {
+        const int _flowCellZIndexBase = 0x7530;
+        const int _normalCellZIndexBase = 0x2710;
+        const int _spanCellZIndexBase = 0x4e20;
+        static Rect _rcEmpty = new Rect();
+        static Size _szEmpty = new Size();
         CellItem _headingOverflowCell;
-        int _row;
-        double _rowWidth;
         CellItem _trailingOverflowCell;
-        const int _FlowCellZIndexBase = 0x7530;
-        const int _NormalCellZIndexBase = 0x2710;
-        const int _SpanCellZIndexBase = 0x4e20;
+        readonly List<CellItem> _recycledCells;
 
         public RowItem(CellsPanel p_panel)
         {
             OwnPanel = p_panel;
-            _row = -1;
+            Row = -1;
             Cells = new Dictionary<int, CellItem>();
+            _recycledCells = new List<CellItem>();
         }
 
-        #region 测量布局
-        //*** CellsPanel.Measure -> RowsLayer.Measure -> RowItem.UpdateVisual -> CellItem.UpdateVisual -> RowItem.Measure -> CellItem.Measure ***
+        public CellsPanel OwnPanel { get; }
 
-        protected override Size MeasureOverride(Size availableSize)
+        public Dictionary<int, CellItem> Cells { get; }
+
+        public bool ContainsSpanCell { get; set; }
+
+        public Point Location { get; set; }
+
+        /// <summary>
+        /// -1表示被回收
+        /// </summary>
+        public int Row { get; set; }
+
+        public double RowWidth { get; set; }
+
+        public ColumnLayoutModel GetColumnLayoutModel()
         {
-            if (double.IsInfinity(availableSize.Width) || double.IsInfinity(availableSize.Height))
-                return Size.Empty;
-
-            ColumnLayoutModel colLayoutModel = GetColumnLayoutModel();
-            RowLayout layout = OwnPanel.GetRowLayoutModel().FindRow(Row);
-            CellOverflowLayoutModel cellOverflowLayoutModel = OwnPanel.GetCellOverflowLayoutModel(Row);
-            _rowWidth = 0.0;
-
-            foreach (ColumnLayout colLayout in colLayoutModel)
-            {
-                _rowWidth += colLayout.Width;
-                CellItem cell = GetCell(colLayout.Column);
-                if (cell == null)
-                    continue;
-
-                double w = colLayout.Width;
-                double h = layout.Height;
-                if (cell.CellLayout != null)
-                {
-                    w = cell.CellLayout.Width;
-                    h = cell.CellLayout.Height;
-                }
-
-                cell.CellOverflowLayout = null;
-                if (cell.CellLayout == null && cellOverflowLayoutModel != null)
-                {
-                    var cellOverflowLayout = cellOverflowLayoutModel.GetCellOverflowLayout(colLayout.Column);
-                    if ((cellOverflowLayout != null) && (cellOverflowLayout.Column == colLayout.Column))
-                    {
-                        cell.CellOverflowLayout = cellOverflowLayout;
-                    }
-                }
-                cell.Measure(new Size(w, h));
-            }
-
-            double width = Math.Min(_rowWidth, OwnPanel.GetViewportSize().Width);
-            if (cellOverflowLayoutModel != null)
-            {
-                Worksheet worksheet = OwnPanel.Sheet.ActiveSheet;
-                float zoomFactor = OwnPanel.Sheet.ZoomFactor;
-                if (cellOverflowLayoutModel.HeadingOverflowlayout != null)
-                {
-                    HeadingOverflowCell.CellOverflowLayout = cellOverflowLayoutModel.HeadingOverflowlayout;
-                    if ((OwnPanel != null) && OwnPanel.IsCurrentEditingCell(HeadingOverflowCell.BindingCell.Row.Index, HeadingOverflowCell.BindingCell.Column.Index))
-                    {
-                        HeadingOverflowCell.HideForEditing();
-                    }
-                    double num8 = worksheet.GetActualColumnWidth(cellOverflowLayoutModel.HeadingOverflowlayout.Column, SheetArea.Cells) * zoomFactor;
-                    Size size = new Size(num8, layout.Height);
-                    HeadingOverflowCell.Measure(size);
-                }
-                if (cellOverflowLayoutModel.TrailingOverflowlayout != null)
-                {
-                    TrailingOverflowCell.CellOverflowLayout = cellOverflowLayoutModel.TrailingOverflowlayout;
-                    double num9 = worksheet.GetActualColumnWidth(cellOverflowLayoutModel.TrailingOverflowlayout.Column, SheetArea.Cells) * zoomFactor;
-                    Size size2 = new Size(num9, layout.Height);
-                    TrailingOverflowCell.Measure(size2);
-                }
-            }
-            return new Size(width, layout.Height);
+            return OwnPanel.Sheet.GetViewportColumnLayoutModel(OwnPanel.ColumnViewportIndex);
         }
-
-        protected override Size ArrangeOverride(Size finalSize)
-        {
-            ColumnLayoutModel colLayoutModel = GetColumnLayoutModel();
-            RowLayout layout = OwnPanel.GetRowLayoutModel().FindRow(Row);
-            foreach (ColumnLayout colLayout in colLayoutModel)
-            {
-                if (colLayout.Width <= 0.0)
-                    continue;
-
-                CellItem cell = GetCell(colLayout.Column);
-                if (cell != null)
-                {
-                    double left = colLayout.X;
-                    double top = layout.Y;
-                    double w = colLayout.Width;
-                    double h = layout.Height;
-                    int num5 = 0x2710 + colLayout.Column;
-
-                    CellLayout cellLayout = cell.CellLayout;
-                    if (cellLayout != null)
-                    {
-                        left = cellLayout.X;
-                        top = cellLayout.Y;
-                        w = cellLayout.Width;
-                        h = cellLayout.Height;
-                        num5 = 0x4e20 + colLayout.Column;
-                    }
-                    if (cell.CellOverflowLayout != null)
-                        num5 = 0x7530 + colLayout.Column;
-                    num5 = num5 % 0x7ffe;
-                    Canvas.SetZIndex(cell, num5);
-                    cell.Arrange(new Rect(left - Location.X, top - Location.Y, w, h));
-                }
-            }
-
-            CellOverflowLayoutModel cellOverflowLayoutModel = OwnPanel.GetCellOverflowLayoutModel(Row);
-            if (cellOverflowLayoutModel == null)
-                return finalSize;
-
-            Worksheet worksheet = OwnPanel.Sheet.ActiveSheet;
-            float zoomFactor = OwnPanel.Sheet.ZoomFactor;
-            if (cellOverflowLayoutModel.HeadingOverflowlayout != null)
-            {
-                double num7 = Location.X;
-                double num8 = layout.Y;
-                for (int j = cellOverflowLayoutModel.HeadingOverflowlayout.Column; j < colLayoutModel[0].Column; j++)
-                {
-                    double actualColumnWidth = worksheet.GetActualColumnWidth(j, SheetArea.Cells);
-                    num7 -= actualColumnWidth * zoomFactor;
-                }
-                double num12 = worksheet.GetActualColumnWidth(cellOverflowLayoutModel.HeadingOverflowlayout.Column, SheetArea.Cells) * zoomFactor;
-                Size size = new Size(num12, layout.Height);
-                Rect rect = new Rect(PointToClient(new Point(num7, num8)), size);
-                int num13 = 0x7530 + cellOverflowLayoutModel.HeadingOverflowlayout.Column;
-                num13 = num13 % 0x7ffe;
-                Canvas.SetZIndex(HeadingOverflowCell, num13);
-                HeadingOverflowCell.Arrange(rect);
-            }
-            if (cellOverflowLayoutModel.TrailingOverflowlayout == null)
-                return finalSize;
-
-            double x = Location.X;
-            double y = layout.Y;
-            ColumnLayout layout4 = colLayoutModel[colLayoutModel.Count - 1];
-            if (layout4 == null)
-            {
-                return finalSize;
-            }
-            x = layout4.X;
-            for (int i = layout4.Column; i < cellOverflowLayoutModel.TrailingOverflowlayout.Column; i++)
-            {
-                x += worksheet.GetActualColumnWidth(i, SheetArea.Cells) * zoomFactor;
-            }
-            double width = worksheet.GetActualColumnWidth(cellOverflowLayoutModel.TrailingOverflowlayout.Column, SheetArea.Cells) * zoomFactor;
-            Size size2 = new Size(width, layout.Height);
-            Rect rect2 = new Rect(PointToClient(new Point(x, y)), size2);
-            int num18 = 0x7530 + cellOverflowLayoutModel.TrailingOverflowlayout.Column;
-            num18 = num18 % 0x7ffe;
-            Canvas.SetZIndex(TrailingOverflowCell, num18);
-            TrailingOverflowCell.Arrange(rect2);
-            return finalSize;
-        }
-        #endregion
 
         public void CleanUpBeforeDiscard()
         {
@@ -199,49 +68,48 @@ namespace Dt.Cells.UI
             }
         }
 
-        void RemoveCell(CellItem p_cell)
+        public CellItem GetCell(int column)
         {
-            Cells.Remove(p_cell.Column);
-            Children.Remove(p_cell);
-            p_cell.CleanUpBeforeDiscard();
+            if (Cells.TryGetValue(column, out var cell))
+                return cell;
+            return null;
         }
 
+        #region 测量布局
+        //*** CellsPanel.Measure -> RowsLayer.Measure -> RowItem.UpdateChildren -> 行列改变时 CellItem.UpdateChildren -> RowItem.Measure -> CellItem.Measure ***//
 
-        void UpdateChildren()
+        public void UpdateChildren(bool p_updateAllCell)
         {
-            ColumnLayoutModel columnLayoutModel = GetColumnLayoutModel();
-            List<CellItem> lsRecy = new List<CellItem>();
-            List<CellItem> lsUsing = new List<CellItem>();
+            // 频繁增删Children子元素会出现卡顿现象！
+            // Children = Cells + _recycledCells
+            ColumnLayoutModel colLayoutModel = GetColumnLayoutModel();
+            int less = colLayoutModel.Count - Children.Count;
+            if (less > 0)
+            {
+                for (int i = 0; i < less; i++)
+                {
+                    var cell = new CellItem(this);
+                    Children.Add(cell);
+                    _recycledCells.Add(cell);
+                }
+            }
+
+            // 先回收不可见格
+            var cols = Cells.Values.ToList();
+            foreach (var cell in cols)
+            {
+                ColumnLayout layout = colLayoutModel.FindColumn(cell.Column);
+                if (layout == null || layout.Width <= 0.0)
+                {
+                    PushRecycledCell(cell);
+                }
+            }
+
             ContainsSpanCell = false;
-
-            // Cells 和 Children 元素同步
-            foreach (var cell in Cells.Values)
-            {
-                if (!cell.IsRecylable)
-                {
-                    lsUsing.Add(cell);
-                }
-                else
-                {
-                    ColumnLayout layout = columnLayoutModel.FindColumn(cell.Column);
-                    if (layout == null || layout.Width <= 0.0)
-                    {
-                        // 没有使用
-                        lsRecy.Add(cell);
-                    }
-                }
-            }
-
-            // 移除不可回收的
-            foreach (CellItem cp in lsUsing)
-            {
-                RemoveCell(cp);
-            }
-
             SpanGraph cachedSpanGraph = OwnPanel.CachedSpanGraph;
-            for (int i = 0; i < columnLayoutModel.Count; i++)
+            for (int i = 0; i < colLayoutModel.Count; i++)
             {
-                ColumnLayout colLayout = columnLayoutModel[i];
+                ColumnLayout colLayout = colLayoutModel[i];
                 if (colLayout.Width <= 0.0)
                     continue;
 
@@ -259,60 +127,53 @@ namespace Dt.Cells.UI
                 }
 
                 CellItem cell = GetCell(colLayout.Column);
+                bool rangeChanged = false;
                 if (layout != null && layout.Width > 0.0 && layout.Height > 0.0)
                 {
                     CellRange range = ClipCellRange(layout.GetCellRange());
-                    bool rangeChanged = (Row != range.Row) || (range.Column != colLayout.Column);
-                    if (rangeChanged && cell != null)
-                    {
-                        // 跨度不同移除
-                        RemoveCell(cell);
-                        cell = null;
-                    }
+                    rangeChanged = (Row != range.Row) || (range.Column != colLayout.Column);
 
+                    // 跨多列
                     if (layout.ColumnCount > 1)
                     {
                         // 移除跨度区域内的所有格
-                        int num4 = (layout.Column + layout.ColumnCount) - 1;
-                        for (int j = i + 1; j < columnLayoutModel.Count; j++)
+                        int maxCol = (layout.Column + layout.ColumnCount) - 1;
+                        for (int j = i + 1; j < colLayoutModel.Count; j++)
                         {
-                            int num6 = columnLayoutModel[j].Column;
-                            if (num6 > num4)
+                            int curCol = colLayoutModel[j].Column;
+                            if (curCol > maxCol)
                                 break;
 
                             i = j;
-                            CellItem ci = GetCell(num6);
-                            if ((ci != null) && Cells.Remove(num6))
-                            {
-                                Children.Remove(ci);
-                            }
+                            CellItem ci = GetCell(curCol);
+                            if (ci != null)
+                                PushRecycledCell(ci);
                         }
                     }
                 }
 
+                // 跨度不同不显示
+                if (rangeChanged)
+                {
+                    if (cell != null)
+                        PushRecycledCell(cell);
+                    continue;
+                }
+
+                bool updated = false;
                 if (cell == null)
                 {
-                    if (lsRecy.Count > 0)
-                    {
-                        // 优先使用Cells中可回收的格
-                        cell = lsRecy[0];
-                        lsRecy.RemoveAt(0);
-                    }
-                    else
-                    {
-                        cell = new CellItem(this);
-                        Cells.Add(colLayout.Column, cell);
-                        Children.Add(cell);
-                    }
+                    // 重新利用回收的格
+                    cell = _recycledCells[0];
+                    _recycledCells.RemoveAt(0);
+                    cell.Column = colLayout.Column;
+                    Cells.Add(colLayout.Column, cell);
+                    updated = true;
                 }
                 cell.CellLayout = layout;
-                cell.Column = colLayout.Column;
-                cell.UpdateChildren();
-            }
 
-            foreach (CellItem cell in lsRecy)
-            {
-                RemoveCell(cell);
+                if (p_updateAllCell || updated)
+                    cell.UpdateChildren();
             }
 
             if (OwnPanel.SupportCellOverflow)
@@ -351,6 +212,192 @@ namespace Dt.Cells.UI
             }
         }
 
+        protected override Size MeasureOverride(Size availableSize)
+        {
+            if (Row == -1
+                || availableSize.Width == 0.0
+                || availableSize.Height == 0.0)
+                return new Size();
+
+            ColumnLayoutModel colLayoutModel = GetColumnLayoutModel();
+            RowLayout layout = OwnPanel.GetRowLayoutModel().FindRow(Row);
+            CellOverflowLayoutModel cellOverflowLayoutModel = OwnPanel.GetCellOverflowLayoutModel(Row);
+            RowWidth = 0.0;
+
+            foreach (ColumnLayout colLayout in colLayoutModel)
+            {
+                RowWidth += colLayout.Width;
+                CellItem cell = GetCell(colLayout.Column);
+                if (cell == null)
+                    continue;
+
+                double w = colLayout.Width;
+                double h = layout.Height;
+                if (cell.CellLayout != null)
+                {
+                    w = cell.CellLayout.Width;
+                    h = cell.CellLayout.Height;
+                }
+
+                cell.CellOverflowLayout = null;
+                if (cell.CellLayout == null && cellOverflowLayoutModel != null)
+                {
+                    var cellOverflowLayout = cellOverflowLayoutModel.GetCellOverflowLayout(colLayout.Column);
+                    if ((cellOverflowLayout != null) && (cellOverflowLayout.Column == colLayout.Column))
+                    {
+                        cell.CellOverflowLayout = cellOverflowLayout;
+                    }
+                }
+                cell.Measure(new Size(w, h));
+            }
+
+            if (_recycledCells.Count > 0)
+            {
+                foreach (var cell in _recycledCells)
+                {
+                    cell.Measure(_szEmpty);
+                }
+            }
+
+            double width = Math.Min(RowWidth, OwnPanel.GetViewportSize().Width);
+            if (cellOverflowLayoutModel != null)
+            {
+                Worksheet worksheet = OwnPanel.Sheet.ActiveSheet;
+                float zoomFactor = OwnPanel.Sheet.ZoomFactor;
+                if (cellOverflowLayoutModel.HeadingOverflowlayout != null)
+                {
+                    HeadingOverflowCell.CellOverflowLayout = cellOverflowLayoutModel.HeadingOverflowlayout;
+                    if ((OwnPanel != null) && OwnPanel.IsCurrentEditingCell(HeadingOverflowCell.BindingCell.Row.Index, HeadingOverflowCell.BindingCell.Column.Index))
+                    {
+                        HeadingOverflowCell.HideForEditing();
+                    }
+                    double num8 = worksheet.GetActualColumnWidth(cellOverflowLayoutModel.HeadingOverflowlayout.Column, SheetArea.Cells) * zoomFactor;
+                    Size size = new Size(num8, layout.Height);
+                    HeadingOverflowCell.Measure(size);
+                }
+                if (cellOverflowLayoutModel.TrailingOverflowlayout != null)
+                {
+                    TrailingOverflowCell.CellOverflowLayout = cellOverflowLayoutModel.TrailingOverflowlayout;
+                    double num9 = worksheet.GetActualColumnWidth(cellOverflowLayoutModel.TrailingOverflowlayout.Column, SheetArea.Cells) * zoomFactor;
+                    Size size2 = new Size(num9, layout.Height);
+                    TrailingOverflowCell.Measure(size2);
+                }
+            }
+            return new Size(width, layout.Height);
+        }
+
+        protected override Size ArrangeOverride(Size finalSize)
+        {
+            if (Row == -1 || finalSize.Width == 0 || finalSize.Height == 0)
+            {
+                if (Children.Count > 0)
+                {
+                    foreach (UIElement elem in Children)
+                    {
+                        elem.Arrange(_rcEmpty);
+                    }
+                }
+                return finalSize;
+            }
+
+            ColumnLayoutModel colLayoutModel = GetColumnLayoutModel();
+            RowLayout layout = OwnPanel.GetRowLayoutModel().FindRow(Row);
+            foreach (ColumnLayout colLayout in colLayoutModel)
+            {
+                if (colLayout.Width <= 0.0)
+                    continue;
+
+                CellItem cell = GetCell(colLayout.Column);
+                if (cell != null)
+                {
+                    double left = colLayout.X;
+                    double top = layout.Y;
+                    double w = colLayout.Width;
+                    double h = layout.Height;
+                    int zIndex = _normalCellZIndexBase + colLayout.Column;
+
+                    CellLayout cellLayout = cell.CellLayout;
+                    if (cellLayout != null)
+                    {
+                        left = cellLayout.X;
+                        top = cellLayout.Y;
+                        w = cellLayout.Width;
+                        h = cellLayout.Height;
+                        zIndex = _spanCellZIndexBase + colLayout.Column;
+                    }
+                    if (cell.CellOverflowLayout != null)
+                        zIndex = _flowCellZIndexBase + colLayout.Column;
+                    zIndex = zIndex % 0x7ffe;
+                    Canvas.SetZIndex(cell, zIndex);
+                    cell.Arrange(new Rect(left - Location.X, top - Location.Y, w, h));
+                }
+            }
+
+            if (_recycledCells.Count > 0)
+            {
+                foreach (var cell in _recycledCells)
+                {
+                    cell.Arrange(_rcEmpty);
+                }
+            }
+
+            CellOverflowLayoutModel cellOverflowLayoutModel = OwnPanel.GetCellOverflowLayoutModel(Row);
+            if (cellOverflowLayoutModel == null)
+                return finalSize;
+
+            Worksheet worksheet = OwnPanel.Sheet.ActiveSheet;
+            float zoomFactor = OwnPanel.Sheet.ZoomFactor;
+            if (cellOverflowLayoutModel.HeadingOverflowlayout != null)
+            {
+                double num7 = Location.X;
+                double num8 = layout.Y;
+                for (int j = cellOverflowLayoutModel.HeadingOverflowlayout.Column; j < colLayoutModel[0].Column; j++)
+                {
+                    double actualColumnWidth = worksheet.GetActualColumnWidth(j, SheetArea.Cells);
+                    num7 -= actualColumnWidth * zoomFactor;
+                }
+                double num12 = worksheet.GetActualColumnWidth(cellOverflowLayoutModel.HeadingOverflowlayout.Column, SheetArea.Cells) * zoomFactor;
+                Size size = new Size(num12, layout.Height);
+                Rect rect = new Rect(PointToClient(new Point(num7, num8)), size);
+                int num13 = _flowCellZIndexBase + cellOverflowLayoutModel.HeadingOverflowlayout.Column;
+                num13 = num13 % 0x7ffe;
+                Canvas.SetZIndex(HeadingOverflowCell, num13);
+                HeadingOverflowCell.Arrange(rect);
+            }
+            if (cellOverflowLayoutModel.TrailingOverflowlayout == null)
+                return finalSize;
+
+            double x = Location.X;
+            double y = layout.Y;
+            ColumnLayout layout4 = colLayoutModel[colLayoutModel.Count - 1];
+            if (layout4 == null)
+            {
+                return finalSize;
+            }
+            x = layout4.X;
+            for (int i = layout4.Column; i < cellOverflowLayoutModel.TrailingOverflowlayout.Column; i++)
+            {
+                x += worksheet.GetActualColumnWidth(i, SheetArea.Cells) * zoomFactor;
+            }
+            double width = worksheet.GetActualColumnWidth(cellOverflowLayoutModel.TrailingOverflowlayout.Column, SheetArea.Cells) * zoomFactor;
+            Size size2 = new Size(width, layout.Height);
+            Rect rect2 = new Rect(PointToClient(new Point(x, y)), size2);
+            int num18 = _flowCellZIndexBase + cellOverflowLayoutModel.TrailingOverflowlayout.Column;
+            num18 = num18 % 0x7ffe;
+            Canvas.SetZIndex(TrailingOverflowCell, num18);
+            TrailingOverflowCell.Arrange(rect2);
+            return finalSize;
+        }
+        #endregion
+
+        void PushRecycledCell(CellItem cell)
+        {
+            _recycledCells.Add(cell);
+            Cells.Remove(cell.Column);
+            cell.Column = -1;
+            cell.CleanUpBeforeDiscard();
+        }
+
         CellRange ClipCellRange(CellRange source)
         {
             RowLayoutModel rowLayoutModel = OwnPanel.GetRowLayoutModel();
@@ -379,68 +426,9 @@ namespace Dt.Cells.UI
             return new CellRange(row, column, (num2 - row) + 1, (num4 - column) + 1);
         }
 
-        public CellItem GetCell(int column)
-        {
-            if (Cells.TryGetValue(column, out var cell))
-                return cell;
-            return null;
-        }
-
-        protected SheetSpanModelBase GetCellSpanModel()
-        {
-            return OwnPanel.Sheet.ActiveSheet.SpanModel;
-        }
-
-        public ColumnLayoutModel GetColumnLayoutModel()
-        {
-            return OwnPanel.Sheet.GetViewportColumnLayoutModel(OwnPanel.ColumnViewportIndex);
-        }
-
-        public Point PointToClient(Point point)
+        Point PointToClient(Point point)
         {
             return new Point(point.X - Location.X, point.Y - Location.Y);
-        }
-
-        public Dictionary<int, CellItem> Cells { get; }
-
-        public bool ContainsSpanCell { get; set; }
-
-        public bool IsRecyclable
-        {
-            get
-            {
-                foreach (CellItem cell in Cells.Values)
-                {
-                    if (!cell.IsRecylable)
-                        return false;
-                }
-                return true;
-            }
-        }
-
-        public Point Location { get; set; }
-
-        public CellsPanel OwnPanel { get; }
-
-        public int Row
-        {
-            get { return _row; }
-            set
-            {
-                if (_row != value)
-                {
-                    _row = value;
-
-                    // -1表示被回收
-                    if (_row > -1)
-                        UpdateChildren();
-                }
-            }
-        }
-
-        public double RowWidth
-        {
-            get { return _rowWidth; }
         }
 
         CellItem HeadingOverflowCell
@@ -476,6 +464,7 @@ namespace Dt.Cells.UI
                 }
             }
         }
+
     }
 }
 

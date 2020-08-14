@@ -10,20 +10,18 @@
 using Dt.Cells.Data;
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+using System.Linq;
 using Windows.Foundation;
-using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 #endregion
 
 namespace Dt.Cells.UI
 {
     internal partial class HeaderItem : Panel
     {
-        int _row;
-        double _rowWidth;
+        static Rect _rcEmpty = new Rect();
+        static Size _szEmpty = new Size();
         readonly List<HeaderCellItem> _recycledCells;
 
         public HeaderItem(HeaderPanel p_owner)
@@ -31,6 +29,7 @@ namespace Dt.Cells.UI
             Owner = p_owner;
             Cells = new Dictionary<int, HeaderCellItem>();
             _recycledCells = new List<HeaderCellItem>();
+            Row = -1;
 
             HorizontalAlignment = HorizontalAlignment.Left;
             VerticalAlignment = VerticalAlignment.Top;
@@ -40,29 +39,13 @@ namespace Dt.Cells.UI
 
         public Dictionary<int, HeaderCellItem> Cells { get; }
 
-        public int Row
-        {
-            get { return _row; }
-            set
-            {
-                if (_row != value)
-                {
-                    _row = value;
-                    InvalidateMeasure();
-                }
-            }
-        }
+        public int Row { get; set; }
 
-        internal bool CellsDirty { get; set; }
-
-        internal double RowWidth
-        {
-            get { return _rowWidth; }
-        }
+        public double RowWidth { get; set; }
 
         public Point Location { get; set; }
 
-        internal bool ContainsSpanCell { get; set; }
+        public bool ContainsSpanCell { get; private set; }
 
         public HeaderCellItem GetCell(int column)
         {
@@ -77,31 +60,44 @@ namespace Dt.Cells.UI
                 Owner.Sheet.GetColumnHeaderViewportColumnLayoutModel(Owner.ColumnViewportIndex) : Owner.Sheet.GetRowHeaderColumnLayoutModel();
         }
 
-        public void UpdateDisplayedCells(bool forceUpdate = false)
-        {
-            ColumnLayoutModel columnLayoutModel = GetColumnLayoutModel();
-            List<HeaderCellItem> lsRecy = new List<HeaderCellItem>();
+        #region 测量布局
+        //*** HeaderPanel.Measure -> HeaderItem.UpdateChildren -> 行列改变时 HeaderCellItem.UpdateChildren -> HeaderItem.Measure -> HeaderCellItem.Measure ***//
 
-            foreach (KeyValuePair<int, HeaderCellItem> pair in Cells)
+        public void UpdateChildren(bool p_updateAllCell)
+        {
+            // 频繁增删Children子元素会出现卡顿现象！
+            // Children = Cells + _recycledCells
+            ColumnLayoutModel colLayoutModel = GetColumnLayoutModel();
+            int less = colLayoutModel.Count - Children.Count;
+            if (less > 0)
             {
-                HeaderCellItem cell = GetCell(pair.Key);
-                ColumnLayout layout = columnLayoutModel.FindColumn(cell.Column);
-                if ((layout == null) || (layout.Width == 0.0))
+                for (int i = 0; i < less; i++)
                 {
-                    lsRecy.Add(cell);
+                    var cell = (Owner.Area == SheetArea.ColumnHeader) ?
+                        (HeaderCellItem)new ColHeaderCell(this) : new RowHeaderCell(this);
+                    Children.Add(cell);
+                    _recycledCells.Add(cell);
                 }
             }
 
-            SpanGraph cachedSpanGraph = Owner.CachedSpanGraph;
-            ContainsSpanCell = false;
-            for (int i = 0; i < columnLayoutModel.Count; i++)
+            // 先回收不可见格
+            var cols = Cells.Values.ToList();
+            foreach (var cell in cols)
             {
-                ColumnLayout colLayout = columnLayoutModel[i];
+                ColumnLayout layout = colLayoutModel.FindColumn(cell.Column);
+                if (layout == null || layout.Width <= 0.0)
+                {
+                    PushRecycledCell(cell);
+                }
+            }
+
+            ContainsSpanCell = false;
+            SpanGraph cachedSpanGraph = Owner.CachedSpanGraph;
+            for (int i = 0; i < colLayoutModel.Count; i++)
+            {
+                ColumnLayout colLayout = colLayoutModel[i];
                 if (colLayout.Width <= 0.0)
                     continue;
-
-                int column = colLayout.Column;
-                HeaderCellItem cell = GetCell(column);
 
                 byte state = cachedSpanGraph.GetState(Row, colLayout.Column);
                 CellLayout layout = null;
@@ -111,135 +107,120 @@ namespace Dt.Cells.UI
                     if (cellLayoutModel != null)
                     {
                         layout = cellLayoutModel.FindCell(Row, colLayout.Column);
+                        if (layout != null)
+                            ContainsSpanCell = true;
                     }
                 }
 
-                bool flag = false;
+                HeaderCellItem cell = GetCell(colLayout.Column);
+                bool rangeChanged = false;
                 if (layout != null && layout.Width > 0.0 && layout.Height > 0.0)
                 {
                     CellRange range = ClipCellRange(layout.GetCellRange());
-                    flag = (Row != range.Row) || (range.Column != colLayout.Column);
+                    rangeChanged = (Row != range.Row) || (range.Column != colLayout.Column);
+
+                    // 跨多列
                     if (layout.ColumnCount > 1)
                     {
-                        int num4 = (layout.Column + layout.ColumnCount) - 1;
-                        for (int j = i + 1; j < columnLayoutModel.Count; j++)
+                        // 移除跨度区域内的所有格
+                        int maxCol = (layout.Column + layout.ColumnCount) - 1;
+                        for (int j = i + 1; j < colLayoutModel.Count; j++)
                         {
-                            int num6 = columnLayoutModel[j].Column;
-                            if (num6 > num4)
+                            int curCol = colLayoutModel[j].Column;
+                            if (curCol > maxCol)
                                 break;
 
                             i = j;
-                            HeaderCellItem base5 = GetCell(num6);
-                            if ((base5 != null) && Cells.Remove(num6))
-                            {
-                                Children.Remove(base5);
-                            }
+                            var ci = GetCell(curCol);
+                            if (ci != null)
+                                PushRecycledCell(ci);
                         }
                     }
                 }
 
-                if (flag)
+                // 跨度不同不显示
+                if (rangeChanged)
                 {
                     if (cell != null)
-                    {
-                        Cells.Remove(cell.Column);
-                        Children.Remove(cell);
-                    }
+                        PushRecycledCell(cell);
+                    continue;
                 }
-                else
+
+                bool updated = false;
+                if (cell == null)
                 {
-                    bool updated = false;
-                    if (cell == null)
-                    {
-                        if ((lsRecy.Count > 0) || (_recycledCells.Count > 0))
-                        {
-                            if (lsRecy.Count > 0)
-                            {
-                                int num7 = lsRecy.Count - 1;
-                                cell = lsRecy[num7];
-                                lsRecy.RemoveAt(num7);
-                            }
-                            else
-                            {
-                                int num8 = _recycledCells.Count - 1;
-                                cell = _recycledCells[num8];
-                                _recycledCells.RemoveAt(num8);
-                            }
-                            Cells.Remove(cell.Column);
-                            cell.Column = colLayout.Column;
-                        }
-                        else
-                        {
-                            cell = (Owner.Area == SheetArea.ColumnHeader) ? (HeaderCellItem)new ColHeaderCell() : new RowHeaderCell();
-                            cell.Column = colLayout.Column;
-                        }
-
-                        if (cell.Parent != this)
-                        {
-                            Children.Add(cell);
-                        }
-                        Cells.Add(cell.Column, cell);
-                        updated = true;
-                    }
-
-                    cell.CellLayout = layout;
-                    if (layout != null)
-                    {
-                        ContainsSpanCell = true;
-                    }
-                    cell.Owner = this;
-                    if (CellsDirty || forceUpdate || updated)
-                    {
-                        cell.Invalidate();
-                        InvalidateMeasure();
-                    }
+                    // 重新利用回收的格
+                    cell = _recycledCells[0];
+                    _recycledCells.RemoveAt(0);
+                    cell.Column = colLayout.Column;
+                    Cells.Add(colLayout.Column, cell);
+                    updated = true;
                 }
-            }
+                cell.CellLayout = layout;
 
-            CellsDirty = false;
-            foreach (var item in lsRecy)
-            {
-                Cells.Remove(item.Column);
-                Children.Remove(item);
+                if (p_updateAllCell || updated)
+                    cell.UpdateChildren();
             }
         }
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            if (double.IsInfinity(availableSize.Width) || double.IsInfinity(availableSize.Height))
-                return Size.Empty;
+            if (Row == -1
+                || availableSize.Width == 0.0
+                || availableSize.Height == 0.0)
+                return new Size();
 
-            ColumnLayoutModel columnLayoutModel = GetColumnLayoutModel();
+            ColumnLayoutModel colLayoutModel = GetColumnLayoutModel();
             RowLayout layout = Owner.GetRowLayoutModel().FindRow(Row);
-            _rowWidth = 0.0;
-            foreach (ColumnLayout colLayout in columnLayoutModel)
+            RowWidth = 0.0;
+
+            foreach (ColumnLayout colLayout in colLayoutModel)
             {
+                RowWidth += colLayout.Width;
                 HeaderCellItem cell = GetCell(colLayout.Column);
-                if (cell != null)
+                if (cell == null)
+                    continue;
+
+                CellLayout cellLayout = cell.CellLayout;
+                if (cellLayout != null)
                 {
-                    CellLayout cellLayout = cell.CellLayout;
-                    if (cellLayout != null)
-                    {
-                        cell.Measure(new Size(cellLayout.Width, cellLayout.Height));
-                    }
-                    else
-                    {
-                        cell.Measure(new Size(colLayout.Width, layout.Height));
-                    }
+                    cell.Measure(new Size(cellLayout.Width, cellLayout.Height));
                 }
-                _rowWidth += colLayout.Width;
+                else
+                {
+                    cell.Measure(new Size(colLayout.Width, layout.Height));
+                }
             }
 
-            CellsDirty = false;
-            double width = Math.Min(_rowWidth, Owner.GetViewportSize().Width);
+            if (_recycledCells.Count > 0)
+            {
+                foreach (var cell in _recycledCells)
+                {
+                    cell.Measure(_szEmpty);
+                }
+            }
+
+            double width = Math.Min(RowWidth, Owner.GetViewportSize().Width);
             return new Size(width, layout.Height);
         }
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            ColumnLayoutModel columnLayoutModel = GetColumnLayoutModel();
+            if (Row == -1 || finalSize.Width == 0 || finalSize.Height == 0)
+            {
+                if (Children.Count > 0)
+                {
+                    foreach (UIElement elem in Children)
+                    {
+                        elem.Arrange(_rcEmpty);
+                    }
+                }
+                return finalSize;
+            }
+
+            ColumnLayoutModel colLayoutModel = GetColumnLayoutModel();
             RowLayout layout = Owner.GetRowLayoutModel().FindRow(Row);
-            foreach (ColumnLayout colLayout in columnLayoutModel)
+            foreach (ColumnLayout colLayout in colLayoutModel)
             {
                 if (colLayout.Width <= 0.0)
                     continue;
@@ -267,7 +248,23 @@ namespace Dt.Cells.UI
                     cell.Arrange(new Rect(x - Location.X, y - Location.Y, width, height));
                 }
             }
+
+            if (_recycledCells.Count > 0)
+            {
+                foreach (var cell in _recycledCells)
+                {
+                    cell.Arrange(_rcEmpty);
+                }
+            }
             return finalSize;
+        }
+        #endregion
+
+        void PushRecycledCell(HeaderCellItem cell)
+        {
+            _recycledCells.Add(cell);
+            Cells.Remove(cell.Column);
+            cell.Column = -1;
         }
 
         CellRange ClipCellRange(CellRange source)

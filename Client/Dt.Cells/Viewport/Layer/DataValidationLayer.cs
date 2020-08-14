@@ -31,9 +31,8 @@ namespace Dt.Cells.UI
 
         public DataValidationLayer(CellsPanel parent)
         {
-            IsHitTestVisible = false;
-            Background = new SolidColorBrush(Colors.Transparent);
             ParentViewport = parent;
+            IsHitTestVisible = false;
         }
 
         public void AddDataValidationListButtonInfo(DataValidationListButtonInfo info)

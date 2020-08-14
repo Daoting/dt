@@ -120,7 +120,6 @@ namespace Dt.Cells.UI
 
             HorizontalAlignment = HorizontalAlignment.Left;
             VerticalAlignment = VerticalAlignment.Top;
-            Background = new SolidColorBrush(Colors.White);
             Loaded += GcViewport_Loaded;
         }
 
