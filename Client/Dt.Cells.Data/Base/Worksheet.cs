@@ -93,7 +93,7 @@ namespace Dt.Cells.Data
         const int _DEFAULT_COLUMN_HEADER_ROWHEIGHT = 20;
         const int _DEFAULT_COLUMN_WIDTH = 80;
         const int _DEFAULT_ROW_HEADER_COLUMNWIDTH = 40;
-        const int _DEFAULT_ROW_HEIGHT = 0x19;
+        const int _DEFAULT_ROW_HEIGHT = 30;
         const UnitType _DEFAULT_UNIT = UnitType.Pixel;
         internal static readonly string DefaultCellsStyleName = "CellsDefault";
         double _defaultColumnFooterRowHeight;
@@ -6356,11 +6356,11 @@ namespace Dt.Cells.Data
                 _rowHeaderAutoText = HeaderAutoText.Numbers;
                 _columnHeaderAutoTextIndex = -1;
                 _rowHeaderAutoTextIndex = -1;
-                _defaultColumnFooterRowHeight = 20.0;
-                _defaultColumnHeaderRowHeight = 20.0;
-                _defaultRowHeight = 25.0;
-                _defaultRowHeaderColumnWidth = 40.0;
-                _defaultColumnWidth = 80.0;
+                _defaultColumnFooterRowHeight = _DEFAULT_COLUMN_FOOTER_ROWHEIGHT;
+                _defaultColumnHeaderRowHeight = _DEFAULT_COLUMN_HEADER_ROWHEIGHT;
+                _defaultRowHeight = _DEFAULT_ROW_HEIGHT;
+                _defaultRowHeaderColumnWidth = _DEFAULT_ROW_HEADER_COLUMNWIDTH;
+                _defaultColumnWidth = _DEFAULT_COLUMN_WIDTH;
             }
             _frozenRowCount = 0;
             _frozenColumnCount = 0;
@@ -7259,10 +7259,10 @@ namespace Dt.Cells.Data
                 dest.DefaultRowHeight = src.DefaultRowHeight;
                 dest.ColumnHeader.DefaultRowHeight = src.ColumnHeader.DefaultRowHeight;
                 dest.RowHeader.DefaultColumnWidth = src.RowHeader.DefaultColumnWidth;
-                src.DefaultColumnWidth = 80.0;
-                src.DefaultRowHeight = 25.0;
-                src.ColumnHeader.DefaultRowHeight = 20.0;
-                src.RowHeader.DefaultColumnWidth = 40.0;
+                src.DefaultColumnWidth = _DEFAULT_COLUMN_WIDTH;
+                src.DefaultRowHeight = _DEFAULT_ROW_HEIGHT;
+                src.ColumnHeader.DefaultRowHeight = _DEFAULT_COLUMN_HEADER_ROWHEIGHT;
+                src.RowHeader.DefaultColumnWidth = _DEFAULT_ROW_HEADER_COLUMNWIDTH;
             }
         }
 
@@ -12486,23 +12486,23 @@ namespace Dt.Cells.Data
                 {
                     Serializer.SerializeObj((int)_rowHeaderAutoTextIndex, "RowHeaderAutoTextIndex", writer);
                 }
-                if (_defaultColumnFooterRowHeight != 20.0)
+                if (_defaultColumnFooterRowHeight != _DEFAULT_COLUMN_FOOTER_ROWHEIGHT)
                 {
                     Serializer.SerializeObj((double)_defaultColumnFooterRowHeight, "DefaultColumnFooterRowHeight", writer);
                 }
-                if (_defaultColumnHeaderRowHeight != 20.0)
+                if (_defaultColumnHeaderRowHeight != _DEFAULT_COLUMN_HEADER_ROWHEIGHT)
                 {
                     Serializer.SerializeObj((double)_defaultColumnHeaderRowHeight, "DefaultColumnHeaderRowHeight", writer);
                 }
-                if (_defaultRowHeight != 25.0)
+                if (_defaultRowHeight != _DEFAULT_ROW_HEIGHT)
                 {
                     Serializer.SerializeObj((double)_defaultRowHeight, "DefaultRowHeight", writer);
                 }
-                if (_defaultRowHeaderColumnWidth != 40.0)
+                if (_defaultRowHeaderColumnWidth != _DEFAULT_ROW_HEADER_COLUMNWIDTH)
                 {
                     Serializer.SerializeObj((double)_defaultRowHeaderColumnWidth, "DefaultRowHeaderColumnWidth", writer);
                 }
-                if (_defaultColumnWidth != 80.0)
+                if (_defaultColumnWidth != _DEFAULT_COLUMN_WIDTH)
                 {
                     Serializer.SerializeObj((double)_defaultColumnWidth, "DefaultColumnWidth", writer);
                 }
