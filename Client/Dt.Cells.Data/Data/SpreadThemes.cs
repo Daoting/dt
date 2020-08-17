@@ -43,7 +43,7 @@ namespace Dt.Cells.Data
         /// <summary>
         /// The Flow theme.
         /// </summary>
-        public static SpreadTheme Flow = new SpreadTheme("Flow", ThemeColors.Flow, "Calibri", "Constantia");
+        public static SpreadTheme Flow = new SpreadTheme("Flow", ThemeColors.Flow, NameConstans.DEFAULT_FONT_FAMILY, "Constantia");
         /// <summary>
         /// The Foundry theme.
         /// </summary>
@@ -63,7 +63,7 @@ namespace Dt.Cells.Data
         /// <summary>
         /// The Office theme.
         /// </summary>
-        public static SpreadTheme Office = new SpreadTheme("Office", ThemeColors.Office, "Cambria", "Calibri");
+        public static SpreadTheme Office = new SpreadTheme("Office", ThemeColors.Office, "Cambria", NameConstans.DEFAULT_FONT_FAMILY);
         /// <summary>
         /// The Opulent theme.
         /// </summary>

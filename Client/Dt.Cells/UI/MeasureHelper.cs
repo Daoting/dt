@@ -29,15 +29,16 @@ namespace Dt.Cells.UI
         static bool _cachedUseLayoutRounding = false;
         [ThreadStatic]
         static TextBlock _measure = null;
-        static Thickness ExcelCellBlankThickness = new Thickness(3.0, 3.3, 3.0, 3.0);
-        static Thickness TextBlockBlankThickness = new Thickness(1.0, 3.0, 1.0, 3.0);
-        static Thickness TextBoxBlankThickness = new Thickness(4.0, 6.0, 5.0, 7.0);
+        public static readonly Thickness ExcelCellBlankThickness = new Thickness(3.0, 3.3, 3.0, 3.0);
+        public static readonly Thickness TextBlockBlankThickness = new Thickness(1.0, 3.0, 1.0, 3.0);
+        public static readonly Thickness TextBlockDefaultMargin = new Thickness(2.0, 0.0, 2.0, 0.0);
+        public static readonly Thickness TextBoxBlankThickness = new Thickness(4.0, 6.0, 5.0, 7.0);
 
         public static Size ConvertExcelCellSizeToTextSize(Size excelCellSize, double zoomFactor)
         {
             double width = excelCellSize.Width;
             double height = excelCellSize.Height;
-            Thickness excelBlank = GetExcelBlank();
+            Thickness excelBlank = ExcelCellBlankThickness;
             double num3 = excelBlank.Left + excelBlank.Right;
             if (width >= num3)
             {
@@ -63,7 +64,7 @@ namespace Dt.Cells.UI
         {
             double width = textBlockSize.Width;
             double height = textBlockSize.Height;
-            Thickness textBlockBlank = GetTextBlockBlank(fontSize);
+            Thickness textBlockBlank = TextBlockBlankThickness;
             double num3 = textBlockBlank.Left + textBlockBlank.Right;
             if (width >= num3)
             {
@@ -90,17 +91,9 @@ namespace Dt.Cells.UI
         {
             double width = textSize.Width;
             double height = textSize.Height;
-            Thickness excelBlank = GetExcelBlank();
+            Thickness excelBlank = ExcelCellBlankThickness;
             width += excelBlank.Left + excelBlank.Right;
             return new Size(width, height + (excelBlank.Top + excelBlank.Bottom));
-        }
-
-        internal static Thickness GetExcelBlank()
-        {
-            double left = ExcelCellBlankThickness.Left;
-            double right = ExcelCellBlankThickness.Right;
-            double top = ExcelCellBlankThickness.Top;
-            return new Thickness(left, top, right, ExcelCellBlankThickness.Bottom);
         }
 
         static TextBlock GetTextBlock()
@@ -110,16 +103,6 @@ namespace Dt.Cells.UI
                 _measure = new TextBlock();
             }
             return _measure;
-        }
-
-        internal static Thickness GetTextBlockBlank(double fontSize)
-        {
-            return TextBlockBlankThickness;
-        }
-
-        internal static Thickness GetTextBoxBlank(double fontSize)
-        {
-            return TextBoxBlankThickness;
         }
 
         internal static Size MeasureCustomerTextInCell(Cell cell, string text, Size maxSize, double zoomFactor, FontFamily unknownFontfamily, object textFormattingMode, bool useLayoutRounding)

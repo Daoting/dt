@@ -74,11 +74,6 @@ namespace Dt.Cells.UI
 
         protected abstract bool IsHightlighted { get; }
 
-        void ApplyStyle()
-        {
-
-        }
-
         #region 测量布局
         //*** HeaderPanel.Measure -> HeaderItem.UpdateChildren -> 行列改变时 HeaderCellItem.UpdateChildren -> HeaderItem.Measure -> HeaderCellItem.Measure ***//
 
@@ -104,7 +99,7 @@ namespace Dt.Cells.UI
             else
             {
                 _tb.Text = text;
-                ApplyStyle();
+                ApplyStyle(bindingCell);
             }
             ApplyState();
         }
@@ -129,5 +124,64 @@ namespace Dt.Cells.UI
             return finalSize;
         }
         #endregion
+
+        /// <summary>
+        /// 未完全应用CellItem中的样式
+        /// </summary>
+        /// <param name="p_cell"></param>
+        void ApplyStyle(Cell p_cell)
+        {
+            Windows.UI.Xaml.TextAlignment textAlignment;
+            switch (p_cell.ActualHorizontalAlignment)
+            {
+                case CellHorizontalAlignment.Center:
+                    textAlignment = Windows.UI.Xaml.TextAlignment.Center;
+                    break;
+                case CellHorizontalAlignment.Right:
+                    textAlignment = Windows.UI.Xaml.TextAlignment.Right;
+                    break;
+                default:
+                    textAlignment = Windows.UI.Xaml.TextAlignment.Left;
+                    break;
+            }
+            if (_tb.TextAlignment != textAlignment)
+                _tb.TextAlignment = textAlignment;
+
+            VerticalAlignment verAlignment;
+            switch (p_cell.ActualVerticalAlignment)
+            {
+                case CellVerticalAlignment.Top:
+                    verAlignment = VerticalAlignment.Top;
+                    break;
+                case CellVerticalAlignment.Bottom:
+                    verAlignment = VerticalAlignment.Bottom;
+                    break;
+                default:
+                    verAlignment = VerticalAlignment.Center;
+                    break;
+            }
+            if (_tb.VerticalAlignment != verAlignment)
+                _tb.VerticalAlignment = verAlignment;
+
+            var foreground = p_cell.ActualForeground;
+            if (foreground != null && foreground != _tb.Foreground)
+                _tb.Foreground = foreground;
+
+            var fontStyle = p_cell.ActualFontStyle;
+            if (_tb.FontStyle != fontStyle)
+                _tb.FontStyle = fontStyle;
+
+            var fontWeight = p_cell.ActualFontWeight;
+            if (_tb.FontWeight.Weight != fontWeight.Weight)
+                _tb.FontWeight = fontWeight;
+
+            var fontFamily = p_cell.ActualFontFamily;
+            if (_tb.FontFamily != fontFamily)
+                _tb.FontFamily = fontFamily;
+
+            double fontSize = p_cell.ActualFontSize * (double)OwnRow.Owner.Sheet.ZoomFactor;
+            if (_tb.FontSize != fontSize)
+                _tb.FontSize = fontSize;
+        }
     }
 }

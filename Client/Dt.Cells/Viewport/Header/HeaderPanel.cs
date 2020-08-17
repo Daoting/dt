@@ -33,7 +33,7 @@ namespace Dt.Cells.UI
             Area = p_sheetArea;
             Sheet = p_sheet;
             CachedSpanGraph = new SpanGraph();
-            CellCache = new CellCachePool(GetDataContext);
+            CellCache = new CellCachePool(GetDataContext());
             _rows = new Dictionary<int, HeaderItem>();
             _recycledRows = new List<HeaderItem>();
 

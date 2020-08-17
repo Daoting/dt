@@ -7444,47 +7444,47 @@ namespace Dt.Cells.UI
             }
         }
 
-        internal void RefreshViewportCells(CellsPanel[,] viewportPresenters, int row, int column, int rowCount, int columnCount)
+        internal void RefreshViewportCells(CellsPanel[,] viewports, int row, int column, int rowCount, int columnCount)
         {
-            if (viewportPresenters != null)
-            {
-                CellsPanel[,] viewportArray = viewportPresenters;
-                int upperBound = viewportArray.GetUpperBound(0);
-                int num2 = viewportArray.GetUpperBound(1);
-                for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
-                {
-                    for (int j = viewportArray.GetLowerBound(1); j <= num2; j++)
-                    {
-                        CellsPanel viewport = viewportArray[i, j];
-                        if (viewport != null)
-                        {
-                            if (((IsEditing && (viewport.EditingContainer != null)) && viewport.IsActived) && ((viewport.EditingContainer.EditingRowIndex != ActiveSheet.ActiveRowIndex) || (ActiveSheet.ActiveColumnIndex != viewport.EditingContainer.EditingColumnIndex)))
-                            {
-                                StopCellEditing(true);
-                            }
+            if (viewports == null)
+                return;
 
-                            foreach (RowLayout layout in viewport.GetRowLayoutModel())
+            CellsPanel[,] viewportArray = viewports;
+            int upperBound = viewportArray.GetUpperBound(0);
+            int num2 = viewportArray.GetUpperBound(1);
+            for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
+            {
+                for (int j = viewportArray.GetLowerBound(1); j <= num2; j++)
+                {
+                    CellsPanel viewport = viewportArray[i, j];
+                    if (viewport != null)
+                    {
+                        if (((IsEditing && (viewport.EditingContainer != null)) && viewport.IsActived) && ((viewport.EditingContainer.EditingRowIndex != ActiveSheet.ActiveRowIndex) || (ActiveSheet.ActiveColumnIndex != viewport.EditingContainer.EditingColumnIndex)))
+                        {
+                            StopCellEditing(true);
+                        }
+
+                        foreach (RowLayout layout in viewport.GetRowLayoutModel())
+                        {
+                            if ((row <= layout.Row) && (layout.Row < (row + rowCount)))
                             {
-                                if ((row <= layout.Row) && (layout.Row < (row + rowCount)))
+                                RowItem presenter = viewport.GetRow(layout.Row);
+                                if (presenter != null)
                                 {
-                                    RowItem presenter = viewport.GetRow(layout.Row);
-                                    if (presenter != null)
+                                    foreach (CellItem cell in presenter.Children)
                                     {
-                                        foreach (CellItem cell in presenter.Children)
+                                        if ((column <= cell.Column) && (cell.Column < (column + columnCount)))
                                         {
-                                            if ((column <= cell.Column) && (cell.Column < (column + columnCount)))
-                                            {
-                                                cell.Refresh();
-                                            }
+                                            cell.Refresh();
                                         }
                                     }
                                 }
                             }
-
-                            viewport.InvalidateBordersMeasureState();
-                            viewport.InvalidateSelectionMeasureState();
-                            viewport.InvalidateRowsMeasureState(true);
                         }
+
+                        viewport.InvalidateBordersMeasureState();
+                        viewport.InvalidateSelectionMeasureState();
+                        viewport.InvalidateRowsMeasureState(true);
                     }
                 }
             }

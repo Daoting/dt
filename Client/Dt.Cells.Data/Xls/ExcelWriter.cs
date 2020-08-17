@@ -291,7 +291,7 @@ namespace Dt.Cells.Data
             {
                 bold = true;
             }
-            string source = "Calibri";
+            string source = NameConstans.DEFAULT_FONT_FAMILY;
             if (fontFamily != null)
             {
                 source = fontFamily.Source;
@@ -1292,7 +1292,10 @@ namespace Dt.Cells.Data
                 defaultStyle.FontFamily = this._workbook.CurrentTheme.BodyFontFamily;
             }
             IExtendedFormat result = null;
-            if ((((defaultStyle.Background is SolidColorBrush) && ((defaultStyle.Background as SolidColorBrush).Color == Windows.UI.Color.FromArgb(0, 0xff, 0xff, 0xff))) && (((defaultStyle.FontFamily != null) ? defaultStyle.FontFamily.Source : "Calibri") == ((this._workbook.CurrentTheme.BodyFontFamily != null) ? this._workbook.CurrentTheme.BodyFontFamily.Source : "Calibri"))) && (defaultStyle.FontSize == DefaultStyleCollection.DefaultFontSize))
+            if ((defaultStyle.Background is SolidColorBrush)
+                && ((defaultStyle.Background as SolidColorBrush).Color == Windows.UI.Color.FromArgb(0, 0xff, 0xff, 0xff))
+                && (((defaultStyle.FontFamily != null) ? defaultStyle.FontFamily.Source : NameConstans.DEFAULT_FONT_FAMILY) == ((this._workbook.CurrentTheme.BodyFontFamily != null) ? this._workbook.CurrentTheme.BodyFontFamily.Source : NameConstans.DEFAULT_FONT_FAMILY))
+                && (defaultStyle.FontSize == DefaultStyleCollection.DefaultFontSize))
             {
                 defaultStyle.Background = null;
             }
@@ -2154,7 +2157,7 @@ namespace Dt.Cells.Data
                     }
                     else
                     {
-                        block.FontFamily = new FontFamily("Calibri");
+                        block.FontFamily = new FontFamily(NameConstans.DEFAULT_FONT_FAMILY);
                     }
                 }
                 else if (this._normalStyleInfo.FontFamily != null)
@@ -2163,7 +2166,7 @@ namespace Dt.Cells.Data
                 }
                 else
                 {
-                    block.FontFamily = new FontFamily("Calibri");
+                    block.FontFamily = new FontFamily(NameConstans.DEFAULT_FONT_FAMILY);
                 }
                 block.FontSize = this._normalStyleInfo.FontSize;
                 block.FontWeight = this._normalStyleInfo.FontWeight;
@@ -3424,7 +3427,7 @@ namespace Dt.Cells.Data
             {
                 normalStyle.FontFamily = this._workbook.CurrentTheme.BodyFontFamily;
             }
-            if ((((normalStyle.Background is SolidColorBrush) && ((normalStyle.Background as SolidColorBrush).Color == Windows.UI.Color.FromArgb(0, 0xff, 0xff, 0xff))) && (((normalStyle.FontFamily != null) ? normalStyle.FontFamily.Source : "Calibri") == ((this._workbook.CurrentTheme.BodyFontFamily != null) ? this._workbook.CurrentTheme.BodyFontFamily.Source : "Calibri"))) && (normalStyle.FontSize == DefaultStyleCollection.DefaultFontSize))
+            if ((((normalStyle.Background is SolidColorBrush) && ((normalStyle.Background as SolidColorBrush).Color == Windows.UI.Color.FromArgb(0, 0xff, 0xff, 0xff))) && (((normalStyle.FontFamily != null) ? normalStyle.FontFamily.Source : NameConstans.DEFAULT_FONT_FAMILY) == ((this._workbook.CurrentTheme.BodyFontFamily != null) ? this._workbook.CurrentTheme.BodyFontFamily.Source : NameConstans.DEFAULT_FONT_FAMILY))) && (normalStyle.FontSize == DefaultStyleCollection.DefaultFontSize))
             {
                 normalStyle.Background = null;
             }
@@ -4898,7 +4901,7 @@ namespace Dt.Cells.Data
                 }
                 if (styleInfo.FontFamily == null)
                 {
-                    styleInfo.FontFamily = (workbook.DefaultStyle.FontFamily != null) ? workbook.DefaultStyle.FontFamily : new FontFamily("Calibri");
+                    styleInfo.FontFamily = (workbook.DefaultStyle.FontFamily != null) ? workbook.DefaultStyle.FontFamily : new FontFamily(NameConstans.DEFAULT_FONT_FAMILY);
                 }
                 double fontSize = (styleInfo.FontSize >= 0.0) ? styleInfo.FontSize : ((workbook.DefaultStyle.FontSize * 96.0) / 72.0);
                 double num2 = this.CalcRowHeight(cell.Value.ToString(), bodyFontFamily, fontSize, styleInfo.WordWrap, styleInfo.FontWeight, styleInfo.FontStyle, columnsWidthCollection[column]);

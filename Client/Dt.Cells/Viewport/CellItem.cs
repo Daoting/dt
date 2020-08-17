@@ -10,11 +10,14 @@
 using Dt.Cells.Data;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Documents;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Shapes;
 #endregion
 
 namespace Dt.Cells.UI
@@ -42,6 +45,7 @@ namespace Dt.Cells.UI
         FilterButtonInfo _filterButtonInfo;
         Type _cachedValueType;
         InvalidDataPresenterInfo _dataValidationInvalidPresenterInfo;
+        bool _lastUnderline;
 
         public CellItem(RowItem p_rowItem)
         {
@@ -311,6 +315,7 @@ namespace Dt.Cells.UI
         {
             if (_sparklineView != null)
                 UpdateSparkline();
+            UpdateChildren();
             InvalidateMeasure();
         }
 
@@ -390,7 +395,7 @@ namespace Dt.Cells.UI
             {
                 if (_tb == null)
                 {
-                    _tb = new TextBlock();
+                    _tb = new TextBlock { VerticalAlignment = VerticalAlignment.Center };
                     Children.Add(_tb);
                 }
                 _tb.Text = BindingCell.Text;
@@ -780,15 +785,147 @@ namespace Dt.Cells.UI
         }
         #endregion
 
+
         void ApplyStyle()
         {
+            Windows.UI.Xaml.TextAlignment textAlignment;
+            switch (BindingCell.ActualHorizontalAlignment)
+            {
+                case CellHorizontalAlignment.Center:
+                    textAlignment = Windows.UI.Xaml.TextAlignment.Center;
+                    break;
+                case CellHorizontalAlignment.Right:
+                    textAlignment = Windows.UI.Xaml.TextAlignment.Right;
+                    break;
+                default:
+                    textAlignment = Windows.UI.Xaml.TextAlignment.Left;
+                    break;
+            }
+            if (_tb.TextAlignment != textAlignment)
+                _tb.TextAlignment = textAlignment;
 
+            VerticalAlignment verAlignment;
+            switch (BindingCell.ActualVerticalAlignment)
+            {
+                case CellVerticalAlignment.Top:
+                    verAlignment = VerticalAlignment.Top;
+                    break;
+                case CellVerticalAlignment.Bottom:
+                    verAlignment = VerticalAlignment.Bottom;
+                    break;
+                default:
+                    verAlignment = VerticalAlignment.Center;
+                    break;
+            }
+            if (_tb.VerticalAlignment != verAlignment)
+                _tb.VerticalAlignment = verAlignment;
+
+            var foreground = BindingCell.ActualForeground;
+            if (foreground != null && foreground != _tb.Foreground)
+                _tb.Foreground = foreground;
+
+            var fontStyle = BindingCell.ActualFontStyle;
+            if (_tb.FontStyle != fontStyle)
+                _tb.FontStyle = fontStyle;
+
+            var fontWeight = BindingCell.ActualFontWeight;
+            if (_tb.FontWeight.Weight != fontWeight.Weight)
+                _tb.FontWeight = fontWeight;
+
+            var fontStretch = BindingCell.ActualFontStretch;
+            if (_tb.FontStretch != fontStretch)
+                _tb.FontStretch = fontStretch;
+
+            var fontFamily = BindingCell.ActualFontFamily;
+            if (fontFamily != null && _tb.FontFamily.Source != fontFamily.Source)
+                _tb.FontFamily = fontFamily;
+
+            bool wrap = BindingCell.ActualWordWrap;
+            TextWrapping textWrap = wrap ? TextWrapping.Wrap : TextWrapping.NoWrap;
+            if (_tb.TextWrapping != textWrap)
+                _tb.TextWrapping = textWrap;
+
+            double fontSize = BindingCell.ActualFontSize * ZoomFactor;
+            double fitZoom = -1;
+            if (!wrap && BindingCell.ActualShrinkToFit)
+            {
+                // 自动缩小字体适应单元格宽度
+                double textWidth = MeasureHelper.MeasureText(
+                    _tb.Text,
+                    _tb.FontFamily,
+                    fontSize,
+                    _tb.FontStretch,
+                    _tb.FontStyle,
+                    _tb.FontWeight,
+                    new Size(double.PositiveInfinity, double.PositiveInfinity),
+                    false,
+                    null,
+                    _tb.UseLayoutRounding,
+                    ZoomFactor).Width;
+                double cellWidth = BindingCell.Worksheet.GetActualColumnWidth(BindingCell.Column.Index, BindingCell.ColumnSpan, BindingCell.SheetArea) * ZoomFactor;
+                cellWidth = MeasureHelper.ConvertExcelCellSizeToTextSize(new Size(cellWidth, double.PositiveInfinity), ZoomFactor).Width;
+                cellWidth = Math.Max((double)0.0, (double)(cellWidth - BindingCell.ActualTextIndent * ZoomFactor));
+                if (cellWidth < textWidth)
+                    fitZoom = cellWidth / textWidth;
+            }
+            if (fitZoom > 0)
+                fontSize *= fitZoom;
+            if (_tb.FontSize != fontSize)
+                _tb.FontSize = fontSize;
+
+            var margin = MeasureHelper.TextBlockDefaultMargin;
+            var indent = BindingCell.ActualTextIndent * ZoomFactor;
+            if (indent > 0 && _tb.TextAlignment != Windows.UI.Xaml.TextAlignment.Center)
+            {
+                if (_tb.TextAlignment == Windows.UI.Xaml.TextAlignment.Left)
+                    margin.Left += indent;
+                else if (_tb.TextAlignment == Windows.UI.Xaml.TextAlignment.Right)
+                    margin.Right += indent;
+            }
+            if (_tb.Margin != margin)
+                _tb.Margin = margin;
+
+            if (BindingCell.ActualUnderline)
+            {
+                Underline underline = new Underline();
+                Run run = new Run();
+                run.Text = _tb.Text;
+                underline.Inlines.Add(run);
+                _tb.Inlines.Clear();
+                _tb.Inlines.Add(underline);
+                _lastUnderline = true;
+            }
+            else if (_lastUnderline)
+            {
+                string str = _tb.Text;
+                _tb.Inlines.Clear();
+                _tb.Text = str;
+            }
+
+            if (BindingCell.ActualStrikethrough)
+            {
+                foreach (UIElement element in (_tb.Parent as Panel).Children)
+                {
+                    if (element is StrikethroughView)
+                    {
+                        StrikethroughView view = element as StrikethroughView;
+                        if (view.LineContainer != null)
+                        {
+                            foreach (var line in view.LineContainer.Children.OfType<Line>())
+                            {
+                                line.Stroke = _tb.Foreground;
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
         }
 
         Thickness GetDefaultPaddingForEdit(double fontSize)
         {
-            Thickness excelBlank = MeasureHelper.GetExcelBlank();
-            Thickness textBoxBlank = MeasureHelper.GetTextBoxBlank(fontSize);
+            Thickness excelBlank = MeasureHelper.ExcelCellBlankThickness;
+            Thickness textBoxBlank = MeasureHelper.TextBoxBlankThickness;
             double left = excelBlank.Left - textBoxBlank.Left;
             double right = excelBlank.Right - textBoxBlank.Right;
             double top = excelBlank.Top - textBoxBlank.Top;

@@ -14,7 +14,7 @@ namespace Dt.Cells.Data
 {
     internal static class NameConstans
     {
-        internal const string DEFAULT_FONT_FAMILY = "Calibri";
+        internal const string DEFAULT_FONT_FAMILY = "Segoe UI";
         internal const string DEFAULT_STYLE_NAME = "Normal";
         internal const string THEME_BODY = "Body";
         internal const string THEME_HEADINGS = "Headings";

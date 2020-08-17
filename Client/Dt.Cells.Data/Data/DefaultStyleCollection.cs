@@ -412,7 +412,7 @@ namespace Dt.Cells.Data
             get
             {
                 if (defaultFontFamily == null)
-                    defaultFontFamily = new FontFamily("Calibri");
+                    defaultFontFamily = new FontFamily(NameConstans.DEFAULT_FONT_FAMILY);
                 return defaultFontFamily;
             }
         }
@@ -430,7 +430,7 @@ namespace Dt.Cells.Data
             get
             {
                 if (defaultFontSize == 0.0)
-                    defaultFontSize = 14.67;
+                    defaultFontSize = 15d;
                 return defaultFontSize;
             }
         }

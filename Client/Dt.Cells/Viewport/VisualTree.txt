@@ -6,6 +6,8 @@
 	-CellsPanel
 		-RowsLayer
 			-RowItem
+				-CellItem
+				-CellItem
 			-RowItem
 		-BorderLayer
 		-SelectionLayer
@@ -20,10 +22,14 @@
 
 	-RowHeaderPanel
 		-RowHeaderItem
+			-RowHeaderCell
+			-RowHeaderCell
 		-RowHeaderItem
 
 	-ColHeaderPanel
 		-ColHeaderItem
+			-ColHeaderCell
+			-ColHeaderCell
 		-ColHeaderItem
 
 	-CornerPanel

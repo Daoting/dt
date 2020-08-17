@@ -65,7 +65,7 @@ namespace Dt.Cells.UI
             _editorBounds = new Rect();
             _cachedDragFillFrameRect = Rect.Empty;
             _cachedDragClearRect = Rect.Empty;
-            _cellCachePool = new CellCachePool(GetDataContext);
+            _cellCachePool = new CellCachePool(Sheet.ActiveSheet);
             _cachedSpanGraph = new SpanGraph();
 
             // 1 行数据层
@@ -1483,19 +1483,6 @@ namespace Dt.Cells.UI
             }
         }
 
-        void UpdateCellState(int row, int column)
-        {
-            RowItem presenter = RowsContainer.GetRow(row);
-            if (presenter != null)
-            {
-                CellItem cell = presenter.GetCell(column);
-                if (cell != null)
-                {
-                    cell.ApplyState();
-                }
-            }
-        }
-
         internal void UpdateDataValidationUI(int row, int column)
         {
             RemoveDataValidationUI();
@@ -1630,11 +1617,11 @@ namespace Dt.Cells.UI
     internal sealed class CellCachePool : ICellSupport
     {
         Dictionary<ulong, Cell> _cache = new Dictionary<ulong, Cell>();
-        Func<ICellsSupport> _getDataContext;
+        ICellsSupport _cellsSupport;
 
-        public CellCachePool(Func<ICellsSupport> p_getDataContext)
+        public CellCachePool(ICellsSupport p_cellsSupport)
         {
-            _getDataContext = p_getDataContext;
+            _cellsSupport = p_cellsSupport;
         }
 
         public void ClearAll()
@@ -1677,16 +1664,15 @@ namespace Dt.Cells.UI
 
         Cell Add(int rowIndex, int columnIndex)
         {
-            ICellsSupport dataContext = _getDataContext();
             if ((rowIndex < 0)
-                || (rowIndex >= dataContext.Rows.Count)
+                || (rowIndex >= _cellsSupport.Rows.Count)
                 || (columnIndex < 0)
-                || (columnIndex >= dataContext.Columns.Count))
+                || (columnIndex >= _cellsSupport.Columns.Count))
             {
                 return null;
             }
 
-            Cell cell = dataContext.Cells[rowIndex, columnIndex];
+            Cell cell = _cellsSupport.Cells[rowIndex, columnIndex];
             ulong num = (ulong)rowIndex;
             num = num << 0x20;
             num += (ulong)columnIndex;

@@ -40,7 +40,7 @@ namespace Dt.Cells.Data
         /// Initializes a new instance of the <see cref="T:Dt.Cells.Data.SpreadTheme" /> class.
         /// </summary>
         /// <param name="name">The name of the spread theme.</param>
-        public SpreadTheme(string name) : this(name, ThemeColors.Office, "Calibri", "Calibri")
+        public SpreadTheme(string name) : this(name, ThemeColors.Office, NameConstans.DEFAULT_FONT_FAMILY, NameConstans.DEFAULT_FONT_FAMILY)
         {
         }
 

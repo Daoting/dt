@@ -28,7 +28,7 @@ namespace Dt.Cells.Data
 {
     internal static class Utility
     {
-        public static FontFamily DefaultFontFamily = new FontFamily("Calibri");
+        public static FontFamily DefaultFontFamily = new FontFamily(NameConstans.DEFAULT_FONT_FAMILY);
         static PropertyInfo[] infos = null;
 
         public static MemoryStream CreateMemStream(Stream source)

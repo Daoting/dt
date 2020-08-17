@@ -146,7 +146,7 @@ namespace Dt.Cells.UI
                 double a = (textSize.Height + lineSpacing) / (lineHeight + lineSpacing);
                 int num4 = (int) Math.Round(a);
                 double width = textSize.Width;
-                Thickness excelBlank = MeasureHelper.GetExcelBlank();
+                Thickness excelBlank = MeasureHelper.ExcelCellBlankThickness;
                 _lineContainer.Height = textSize.Height + ((excelBlank.Top + excelBlank.Bottom) * cell.Worksheet.ZoomFactor);
                 _lineContainer.Width = textSize.Width + ((excelBlank.Left + excelBlank.Right) * cell.Worksheet.ZoomFactor);
                 if (num4 > 0)
