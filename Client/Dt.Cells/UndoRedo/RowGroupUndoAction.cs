@@ -7,9 +7,9 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Cells.Data;
 using Dt.Cells.UI;
-using System;
 #endregion
 
 namespace Dt.Cells.UndoRedo
@@ -64,7 +64,7 @@ namespace Dt.Cells.UndoRedo
                 {
                     base.ResumeInvalidate(sender);
                 }
-                SheetView view = sender as SheetView;
+                Excel view = sender as Excel;
                 if (view != null)
                 {
                     view.InvalidateLayout();
@@ -115,7 +115,7 @@ namespace Dt.Cells.UndoRedo
                 {
                     base.ResumeInvalidate(sender);
                 }
-                SheetView view = sender as SheetView;
+                Excel view = sender as Excel;
                 if (view != null)
                 {
                     view.InvalidateLayout();

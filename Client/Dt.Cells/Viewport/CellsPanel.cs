@@ -7,10 +7,10 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Cells.Data;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 using Windows.Foundation;
 using Windows.UI;
@@ -54,9 +54,9 @@ namespace Dt.Cells.UI
         Panel _shapeContainer;
         DecorationLayer _decoratinPanel;
 
-        public CellsPanel(SheetView sheet)
+        public CellsPanel(Excel p_excel)
         {
-            Sheet = sheet;
+            Excel = p_excel;
 
             _cachedSelectionLayout = new List<Rect>();
             _cachedActiveSelectionLayout = Rect.Empty;
@@ -65,7 +65,7 @@ namespace Dt.Cells.UI
             _editorBounds = new Rect();
             _cachedDragFillFrameRect = Rect.Empty;
             _cachedDragClearRect = Rect.Empty;
-            _cellCachePool = new CellCachePool(Sheet.ActiveSheet);
+            _cellCachePool = new CellCachePool(Excel.ActiveSheet);
             _cachedSpanGraph = new SpanGraph();
 
             // 1 行数据层
@@ -89,14 +89,14 @@ namespace Dt.Cells.UI
             Children.Add(_shapeContainer);
 
             // 6 拖拽复制层
-            if (Sheet.CanUserDragFill)
+            if (Excel.CanUserDragFill)
             {
                 _dragFillContainer = new DragFillLayer { ParentViewport = this };
                 Children.Add(_dragFillContainer);
             }
 
             // 7 新增修饰层
-            if (sheet.ShowDecoration)
+            if (p_excel.ShowDecoration)
             {
                 _decoratinPanel = new DecorationLayer(this);
                 Children.Add(_decoratinPanel);
@@ -130,7 +130,7 @@ namespace Dt.Cells.UI
                 _editorPanel.InvalidateMeasure();
                 _editorPanel.InvalidateArrange();
             }
-            Sheet.RaiseEditChange(_activeRow, _activeCol);
+            Excel.RaiseEditChange(_activeRow, _activeCol);
         }
 
         internal void AddDataValidationInvalidDataPresenterInfo(InvalidDataPresenterInfo info)
@@ -146,11 +146,11 @@ namespace Dt.Cells.UI
             _cachedSelectionFrameLayout = Rect.Empty;
             _cachedActiveSelectionLayout = Rect.Empty;
             _cachedActiveSelection = null;
-            _activeRow = Sheet.ActiveSheet.ActiveRowIndex;
-            _activeCol = Sheet.ActiveSheet.ActiveColumnIndex;
+            _activeRow = Excel.ActiveSheet.ActiveRowIndex;
+            _activeCol = Excel.ActiveSheet.ActiveColumnIndex;
             _selectionContainer.IsAnchorCellInSelection = false;
             CellRange activeCellRange = GetActiveCellRange();
-            List<CellRange> list = new List<CellRange>((IEnumerable<CellRange>)Sheet.ActiveSheet.Selections);
+            List<CellRange> list = new List<CellRange>((IEnumerable<CellRange>)Excel.ActiveSheet.Selections);
             if (list.Count == 0)
             {
                 list.Add(activeCellRange);
@@ -161,7 +161,7 @@ namespace Dt.Cells.UI
             Rect rect = new Rect(0.0, 0.0, viewportSize.Width, viewportSize.Height);
             if ((rowLayoutModel != null) && (rowLayoutModel.Count > 0))
             {
-                ColumnLayoutModel viewportColumnLayoutModel = Sheet.GetViewportColumnLayoutModel(ColumnViewportIndex);
+                ColumnLayoutModel viewportColumnLayoutModel = Excel.GetViewportColumnLayoutModel(ColumnViewportIndex);
                 if ((viewportColumnLayoutModel != null) && (viewportColumnLayoutModel.Count > 0))
                 {
                     int row = rowLayoutModel[0].Row;
@@ -177,8 +177,8 @@ namespace Dt.Cells.UI
                         }
                         int num7 = (range.Row < 0) ? 0 : range.Row;
                         int num8 = (range.Column < 0) ? 0 : range.Column;
-                        int rowCount = (range.RowCount < 0) ? Sheet.ActiveSheet.RowCount : range.RowCount;
-                        int columnCount = (range.ColumnCount < 0) ? Sheet.ActiveSheet.ColumnCount : range.ColumnCount;
+                        int rowCount = (range.RowCount < 0) ? Excel.ActiveSheet.RowCount : range.RowCount;
+                        int columnCount = (range.ColumnCount < 0) ? Excel.ActiveSheet.ColumnCount : range.ColumnCount;
                         range = new CellRange(num7, num8, rowCount, columnCount);
                         Rect rect2 = GetRangeBounds(range);
                         rect2.Intersect(rect);
@@ -243,14 +243,14 @@ namespace Dt.Cells.UI
                                 _selectionContainer.FocusIndicator.Thickness = 3.0;
                                 _cachedSelectionFrameLayout = rect6.IsEmpty ? rect6 : new Rect(rect6.Left - 2.0, rect6.Top - 2.0, rect6.Width + 3.0, rect6.Height + 3.0);
                             }
-                            if (!Sheet.IsDraggingFill)
+                            if (!Excel.IsDraggingFill)
                             {
                                 if (range3.Intersects(row, column, rowLayoutModel.Count, viewportColumnLayoutModel.Count))
                                 {
                                     if (range3.Row == -1)
                                     {
                                         _selectionContainer.FocusIndicator.IsTopVisible = row == 0;
-                                        _selectionContainer.FocusIndicator.IsBottomVisible = num3 == (Sheet.ActiveSheet.RowCount - 1);
+                                        _selectionContainer.FocusIndicator.IsBottomVisible = num3 == (Excel.ActiveSheet.RowCount - 1);
                                     }
                                     else
                                     {
@@ -261,7 +261,7 @@ namespace Dt.Cells.UI
                                     if (range3.Column == -1)
                                     {
                                         _selectionContainer.FocusIndicator.IsLeftVisible = column == 0;
-                                        _selectionContainer.FocusIndicator.IsRightVisible = num5 == (Sheet.ActiveSheet.ColumnCount - 1);
+                                        _selectionContainer.FocusIndicator.IsRightVisible = num5 == (Excel.ActiveSheet.ColumnCount - 1);
                                     }
                                     else
                                     {
@@ -278,9 +278,9 @@ namespace Dt.Cells.UI
                                     _selectionContainer.FocusIndicator.IsRightVisible = false;
                                 }
                             }
-                            if (Sheet.CanUserDragFill)
+                            if (Excel.CanUserDragFill)
                             {
-                                if (!Sheet.IsDraggingFill)
+                                if (!Excel.IsDraggingFill)
                                 {
                                     if (((rect6.Width == 0.0) || (rect6.Height == 0.0)) || (_selectionContainer.FocusIndicator.Thickness == 1.0))
                                     {
@@ -289,7 +289,7 @@ namespace Dt.Cells.UI
                                     else if ((range3.Row != -1) && (range3.Column != -1))
                                     {
                                         bool flag = _selectionContainer.FocusIndicator.IsRightVisible && _selectionContainer.FocusIndicator.IsBottomVisible;
-                                        if (Sheet.InputDeviceType == InputDeviceType.Touch)
+                                        if (Excel.InputDeviceType == InputDeviceType.Touch)
                                         {
                                             flag = false;
                                         }
@@ -301,9 +301,9 @@ namespace Dt.Cells.UI
                                     }
                                     else if ((range3.Row != -1) && (range3.Column == -1))
                                     {
-                                        ViewportInfo viewportInfo = Sheet.GetViewportInfo();
+                                        ViewportInfo viewportInfo = Excel.GetViewportInfo();
                                         bool flag2 = false;
-                                        if (Sheet.ActiveSheet.FrozenColumnCount == 0)
+                                        if (Excel.ActiveSheet.FrozenColumnCount == 0)
                                         {
                                             flag2 = (ColumnViewportIndex >= 0) && (ColumnViewportIndex < viewportInfo.ColumnViewportCount);
                                         }
@@ -312,7 +312,7 @@ namespace Dt.Cells.UI
                                             flag2 = (ColumnViewportIndex == -1) || ((ColumnViewportIndex >= 1) && (ColumnViewportIndex < viewportInfo.ColumnViewportCount));
                                         }
                                         flag2 = flag2 && _selectionContainer.FocusIndicator.IsBottomVisible;
-                                        if (Sheet.InputDeviceType == InputDeviceType.Touch)
+                                        if (Excel.InputDeviceType == InputDeviceType.Touch)
                                         {
                                             flag2 = false;
                                         }
@@ -324,9 +324,9 @@ namespace Dt.Cells.UI
                                     }
                                     else if ((range3.Column != -1) && (range3.Row == -1))
                                     {
-                                        ViewportInfo info2 = Sheet.GetViewportInfo();
+                                        ViewportInfo info2 = Excel.GetViewportInfo();
                                         bool flag3 = false;
-                                        if (Sheet.ActiveSheet.FrozenRowCount == 0)
+                                        if (Excel.ActiveSheet.FrozenRowCount == 0)
                                         {
                                             flag3 = (RowViewportIndex >= 0) && (RowViewportIndex < info2.RowViewportCount);
                                         }
@@ -335,7 +335,7 @@ namespace Dt.Cells.UI
                                             flag3 = (RowViewportIndex == -1) || ((RowViewportIndex >= 1) && (RowViewportIndex < info2.RowViewportCount));
                                         }
                                         flag3 = flag3 && _selectionContainer.FocusIndicator.IsRightVisible;
-                                        if (Sheet.InputDeviceType == InputDeviceType.Touch)
+                                        if (Excel.InputDeviceType == InputDeviceType.Touch)
                                         {
                                             flag3 = false;
                                         }
@@ -453,7 +453,7 @@ namespace Dt.Cells.UI
             {
                 case HorizontalAlignment.Left:
                     {
-                        float indent = cachedCell.ActualTextIndent * Sheet.ZoomFactor;
+                        float indent = cachedCell.ActualTextIndent * Excel.ZoomFactor;
                         double num4 = (viewportSize.Width - rect2.Left) + Location.X;
                         num4 = Math.Max(Math.Min(num4, viewportSize.Width), 0.0);
                         Size maxSize = new Size(num4, height);
@@ -461,7 +461,7 @@ namespace Dt.Cells.UI
                     }
                 case HorizontalAlignment.Right:
                     {
-                        float num5 = cachedCell.ActualTextIndent * Sheet.ZoomFactor;
+                        float num5 = cachedCell.ActualTextIndent * Excel.ZoomFactor;
                         double num6 = rect2.Right - Location.X;
                         num6 = Math.Max(Math.Min(num6, viewportSize.Width), 0.0);
                         Size size4 = new Size(num6, height);
@@ -502,7 +502,7 @@ namespace Dt.Cells.UI
 
         internal bool FocusContent()
         {
-            // 手机上已在SheetView.FocusInternal屏蔽
+            // 手机上已在Excel.FocusInternal屏蔽
             if ((_editorPanel != null) && (_editorPanel.Editor != null))
             {
                 (_editorPanel.Editor as Control).Focus(FocusState.Programmatic);
@@ -513,27 +513,27 @@ namespace Dt.Cells.UI
 
         void GcViewport_Loaded(object sender, RoutedEventArgs e)
         {
-            int activeColumnViewportIndex = Sheet.GetActiveColumnViewportIndex();
-            int activeRowViewportIndex = Sheet.GetActiveRowViewportIndex();
-            if (((ColumnViewportIndex == activeColumnViewportIndex) && (RowViewportIndex == activeRowViewportIndex)) && (Sheet.CanSelectFormula && (Sheet.ActiveSheet.Workbook.ActiveSheetIndex == Sheet.EditorConnector.SheetIndex)))
+            int activeColumnViewportIndex = Excel.GetActiveColumnViewportIndex();
+            int activeRowViewportIndex = Excel.GetActiveRowViewportIndex();
+            if (((ColumnViewportIndex == activeColumnViewportIndex) && (RowViewportIndex == activeRowViewportIndex)) && (Excel.CanSelectFormula && (Excel.ActiveSheet.Workbook.ActiveSheetIndex == Excel.EditorConnector.SheetIndex)))
             {
-                Sheet.SetActiveCell(Sheet.EditorInfo.RowIndex, Sheet.EditorInfo.ColumnIndex, true);
-                Sheet.StartCellEditing(false, "=" + Sheet.EditorConnector.GetText(), EditorStatus.Edit);
+                Excel.SetActiveCell(Excel.EditorInfo.RowIndex, Excel.EditorInfo.ColumnIndex, true);
+                Excel.StartCellEditing(false, "=" + Excel.EditorConnector.GetText(), EditorStatus.Edit);
                 if (_editorPanel != null)
                 {
                     _editorPanel.EditorDirty = true;
                 }
-                if (!Sheet.EditorConnector.ActivateEditor)
+                if (!Excel.EditorConnector.ActivateEditor)
                 {
-                    Sheet.EditorConnector.ActivateEditor = true;
-                    Sheet.StopCellEditing(false);
-                    SpreadActions.CommitInputNavigationDown(Sheet, new ActionEventArgs());
+                    Excel.EditorConnector.ActivateEditor = true;
+                    Excel.StopCellEditing(false);
+                    SpreadActions.CommitInputNavigationDown(Excel, new ActionEventArgs());
                 }
             }
             RefreshFormulaSelection();
-            if (Sheet != null)
+            if (Excel != null)
             {
-                Sheet.RefreshFormulaSelectionGrippers();
+                Excel.RefreshFormulaSelectionGrippers();
             }
         }
 
@@ -544,7 +544,7 @@ namespace Dt.Cells.UI
                 return new CellRange(0, 0, 0, 0);
             }
             CellRange range = new CellRange(_activeRow, _activeCol, 1, 1);
-            var sheet = Sheet.ActiveSheet;
+            var sheet = Excel.ActiveSheet;
             if ((((sheet != null) && (sheet.SpanModel != null)) && (!sheet.SpanModel.IsEmpty() && (range.RowCount == 1))) && (range.ColumnCount == 1))
             {
                 CellRange range2 = sheet.SpanModel.Find(range.Row, range.Column);
@@ -558,14 +558,14 @@ namespace Dt.Cells.UI
 
         internal Rect GetCellBounds(int p_row, int p_column, bool p_ignoreMerged)
         {
-            if (Sheet == null)
+            if (Excel == null)
                 return new Rect();
 
             // 包含合并情况
             CellLayoutModel model = null;
             if (!p_ignoreMerged)
             {
-                model = Sheet.GetCellLayoutModel(RowViewportIndex, ColumnViewportIndex, SheetArea.Cells);
+                model = Excel.GetCellLayoutModel(RowViewportIndex, ColumnViewportIndex, SheetArea.Cells);
             }
             CellLayout layout = (model == null) ? null : model.FindCell(p_row, p_column);
             if (layout != null)
@@ -573,8 +573,8 @@ namespace Dt.Cells.UI
                 return new Rect(layout.X, layout.Y, layout.Width, layout.Height);
             }
 
-            RowLayoutModel rowLayoutModel = Sheet.GetRowLayoutModel(RowViewportIndex, SheetArea.Cells);
-            ColumnLayoutModel columnLayoutModel = Sheet.GetColumnLayoutModel(ColumnViewportIndex, SheetArea.Cells);
+            RowLayoutModel rowLayoutModel = Excel.GetRowLayoutModel(RowViewportIndex, SheetArea.Cells);
+            ColumnLayoutModel columnLayoutModel = Excel.GetColumnLayoutModel(ColumnViewportIndex, SheetArea.Cells);
             if (rowLayoutModel == null || columnLayoutModel == null)
                 return new Rect();
 
@@ -599,7 +599,7 @@ namespace Dt.Cells.UI
 
         internal CellLayoutModel GetCellLayoutModel()
         {
-            return Sheet.GetViewportCellLayoutModel(RowViewportIndex, ColumnViewportIndex);
+            return Excel.GetViewportCellLayoutModel(RowViewportIndex, ColumnViewportIndex);
         }
 
         internal CellOverflowLayoutModel GetCellOverflowLayoutModel(int rowIndex)
@@ -609,7 +609,7 @@ namespace Dt.Cells.UI
 
         internal ICellsSupport GetDataContext()
         {
-            return Sheet.ActiveSheet;
+            return Excel.ActiveSheet;
         }
 
         internal object GetEditorValue()
@@ -638,20 +638,20 @@ namespace Dt.Cells.UI
         internal Rect GetRangeBounds(CellRange range, SheetArea area)
         {
             SheetSpanModel spanModel = null;
-            if (Sheet.ActiveSheet != null)
+            if (Excel.ActiveSheet != null)
             {
                 switch (area)
                 {
                     case SheetArea.Cells:
-                        spanModel = Sheet.ActiveSheet.SpanModel;
+                        spanModel = Excel.ActiveSheet.SpanModel;
                         break;
 
                     case (SheetArea.CornerHeader | SheetArea.RowHeader):
-                        spanModel = Sheet.ActiveSheet.RowHeaderSpanModel;
+                        spanModel = Excel.ActiveSheet.RowHeaderSpanModel;
                         break;
 
                     case SheetArea.ColumnHeader:
-                        spanModel = Sheet.ActiveSheet.ColumnHeaderSpanModel;
+                        spanModel = Excel.ActiveSheet.ColumnHeaderSpanModel;
                         break;
                 }
             }
@@ -663,8 +663,8 @@ namespace Dt.Cells.UI
                     range = range2;
                 }
             }
-            RowLayoutModel rowLayoutModel = Sheet.GetRowLayoutModel(RowViewportIndex, area);
-            ColumnLayoutModel columnLayoutModel = Sheet.GetColumnLayoutModel(ColumnViewportIndex, area);
+            RowLayoutModel rowLayoutModel = Excel.GetRowLayoutModel(RowViewportIndex, area);
+            ColumnLayoutModel columnLayoutModel = Excel.GetColumnLayoutModel(ColumnViewportIndex, area);
             int row = (rowLayoutModel.Count > 0) ? rowLayoutModel[0].Row : -1;
             int num2 = (rowLayoutModel.Count > 0) ? rowLayoutModel[rowLayoutModel.Count - 1].Row : -1;
             int column = (columnLayoutModel.Count > 0) ? columnLayoutModel[0].Column : -1;
@@ -715,7 +715,7 @@ namespace Dt.Cells.UI
             isTopVisible = true;
             isBottomVisible = true;
             RowLayoutModel rowLayoutModel = GetRowLayoutModel();
-            ColumnLayoutModel viewportColumnLayoutModel = Sheet.GetViewportColumnLayoutModel(ColumnViewportIndex);
+            ColumnLayoutModel viewportColumnLayoutModel = Excel.GetViewportColumnLayoutModel(ColumnViewportIndex);
             int row = (rowLayoutModel.Count > 0) ? rowLayoutModel[0].Row : -1;
             int num2 = (rowLayoutModel.Count > 0) ? rowLayoutModel[rowLayoutModel.Count - 1].Row : -1;
             int column = (viewportColumnLayoutModel.Count > 0) ? viewportColumnLayoutModel[0].Column : -1;
@@ -782,12 +782,12 @@ namespace Dt.Cells.UI
 
         internal RowLayoutModel GetRowLayoutModel()
         {
-            return Sheet.GetViewportRowLayoutModel(RowViewportIndex);
+            return Excel.GetViewportRowLayoutModel(RowViewportIndex);
         }
 
         internal SheetSpanModelBase GetSpanModel()
         {
-            return Sheet.ActiveSheet.SpanModel;
+            return Excel.ActiveSheet.SpanModel;
         }
 
         internal SpreadChartView GetSpreadChartView(string chartName)
@@ -842,8 +842,8 @@ namespace Dt.Cells.UI
 
         internal Size GetViewportSize(Size availableSize)
         {
-            double viewportWidth = Sheet.GetViewportWidth(ColumnViewportIndex);
-            double viewportHeight = Sheet.GetViewportHeight(RowViewportIndex);
+            double viewportWidth = Excel.GetViewportWidth(ColumnViewportIndex);
+            double viewportHeight = Excel.GetViewportHeight(RowViewportIndex);
             return new Size(Math.Min(viewportWidth, availableSize.Width), Math.Min(viewportHeight, availableSize.Height));
         }
 
@@ -922,7 +922,7 @@ namespace Dt.Cells.UI
             {
                 _editorPanel.Update(editingCell);
                 FrameworkElement avaiableEditor = _editorPanel.GetAvaiableEditor();
-                object obj2 = Sheet.ActiveSheet.GetValue(editingCell.Row, editingCell.Column);
+                object obj2 = Excel.ActiveSheet.GetValue(editingCell.Row, editingCell.Column);
                 if (obj2 != null)
                 {
                     if (avaiableEditor == null)
@@ -977,7 +977,7 @@ namespace Dt.Cells.UI
 
         void RefreshChartsResizingFramesLayouts()
         {
-            Rect[] floatingObjectsResizingRects = Sheet.GetFloatingObjectsResizingRects(RowViewportIndex, ColumnViewportIndex);
+            Rect[] floatingObjectsResizingRects = Excel.GetFloatingObjectsResizingRects(RowViewportIndex, ColumnViewportIndex);
             if ((floatingObjectsResizingRects != null) && (floatingObjectsResizingRects.Length != 0))
             {
                 List<Rect> list = new List<Rect>();
@@ -999,7 +999,7 @@ namespace Dt.Cells.UI
 
         void RefreshDragClearRect()
         {
-            CellRange dragClearRange = Sheet.GetDragClearRange();
+            CellRange dragClearRange = Excel.GetDragClearRange();
             if (dragClearRange != null)
             {
                 _cachedDragClearRect = GetRangeBounds(dragClearRange);
@@ -1030,11 +1030,11 @@ namespace Dt.Cells.UI
 
         void RefreshDragFillFrameBorders()
         {
-            CellRange dragFillFrameRange = Sheet.GetDragFillFrameRange();
+            CellRange dragFillFrameRange = Excel.GetDragFillFrameRange();
             RowLayoutModel rowLayoutModel = GetRowLayoutModel();
             if ((rowLayoutModel != null) && (rowLayoutModel.Count > 0))
             {
-                ColumnLayoutModel viewportColumnLayoutModel = Sheet.GetViewportColumnLayoutModel(ColumnViewportIndex);
+                ColumnLayoutModel viewportColumnLayoutModel = Excel.GetViewportColumnLayoutModel(ColumnViewportIndex);
                 if ((viewportColumnLayoutModel != null) && (viewportColumnLayoutModel.Count > 0))
                 {
                     int row = rowLayoutModel[0].Row;
@@ -1044,7 +1044,7 @@ namespace Dt.Cells.UI
                     if (dragFillFrameRange.Row == -1)
                     {
                         DragFillContainer.DragFillFrame.IsTopVisibie = row == 0;
-                        DragFillContainer.DragFillFrame.IsBottomVisibe = num2 == (Sheet.ActiveSheet.RowCount - 1);
+                        DragFillContainer.DragFillFrame.IsBottomVisibe = num2 == (Excel.ActiveSheet.RowCount - 1);
                     }
                     else
                     {
@@ -1055,7 +1055,7 @@ namespace Dt.Cells.UI
                     if (dragFillFrameRange.Column == -1)
                     {
                         DragFillContainer.DragFillFrame.IsLeftVisibe = column == 0;
-                        DragFillContainer.DragFillFrame.IsRightVisibe = num4 == (Sheet.ActiveSheet.ColumnCount - 1);
+                        DragFillContainer.DragFillFrame.IsRightVisibe = num4 == (Excel.ActiveSheet.ColumnCount - 1);
                     }
                     else
                     {
@@ -1069,7 +1069,7 @@ namespace Dt.Cells.UI
 
         void RefreshDragFillFrameLayouts()
         {
-            CellRange dragFillFrameRange = Sheet.GetDragFillFrameRange();
+            CellRange dragFillFrameRange = Excel.GetDragFillFrameRange();
             _cachedDragFillFrameRect = GetRangeBounds(dragFillFrameRange);
             if (!_cachedDragFillFrameRect.IsEmpty)
             {
@@ -1117,7 +1117,7 @@ namespace Dt.Cells.UI
 
         void RefreshFloatingObjectMovingFramesLayouts()
         {
-            Rect[] floatingObjectsMovingFrameRects = Sheet.GetFloatingObjectsMovingFrameRects(RowViewportIndex, ColumnViewportIndex);
+            Rect[] floatingObjectsMovingFrameRects = Excel.GetFloatingObjectsMovingFrameRects(RowViewportIndex, ColumnViewportIndex);
             if ((floatingObjectsMovingFrameRects != null) && (floatingObjectsMovingFrameRects.Length != 0))
             {
                 List<Rect> list = new List<Rect>();
@@ -1146,13 +1146,13 @@ namespace Dt.Cells.UI
         {
             if (_selectionContainer != null)
             {
-                FloatingObject[] allSelectedFloatingObjects = Sheet.GetAllSelectedFloatingObjects();
+                FloatingObject[] allSelectedFloatingObjects = Excel.GetAllSelectedFloatingObjects();
                 if ((allSelectedFloatingObjects != null) && (allSelectedFloatingObjects.Length > 0))
                 {
                     _selectionContainer.Visibility = Visibility.Collapsed;
-                    if (Sheet.InputDeviceType != InputDeviceType.Touch)
+                    if (Excel.InputDeviceType != InputDeviceType.Touch)
                     {
-                        Sheet.InvalidateMeasure();
+                        Excel.InvalidateMeasure();
                     }
                 }
                 else
@@ -1223,7 +1223,7 @@ namespace Dt.Cells.UI
             }
             else
             {
-                Sheet.FocusInternal();
+                Excel.FocusInternal();
             }
         }
 
@@ -1312,7 +1312,7 @@ namespace Dt.Cells.UI
                     else
                     {
                         FrameworkElement avaiableEditor = _editorPanel.GetAvaiableEditor();
-                        object obj2 = Sheet.ActiveSheet.GetValue(cell.Row, cell.Column);
+                        object obj2 = Excel.ActiveSheet.GetValue(cell.Row, cell.Column);
                         if (obj2 != null)
                         {
                             if (avaiableEditor == null)
@@ -1332,7 +1332,7 @@ namespace Dt.Cells.UI
                 _editorPanel.InstallEditor(cell, true);
                 _editorPanel.EditingChanged += new EventHandler(_editorPanel_EdtingChanged);
                 _editorPanel.Opacity = 1.0;
-                if (Sheet.RaiseEditStarting(row, column))
+                if (Excel.RaiseEditStarting(row, column))
                 {
                     _editorPanel.EditingChanged -= new EventHandler(_editorPanel_EdtingChanged);
                     return false;
@@ -1366,7 +1366,7 @@ namespace Dt.Cells.UI
                             }
                             else if (selectAll)
                             {
-                                if (Sheet._isIMEEnterEditing)
+                                if (Excel._isIMEEnterEditing)
                                 {
                                     editor.Text = null;
                                 }
@@ -1392,9 +1392,9 @@ namespace Dt.Cells.UI
 
         async void ShowSheetCell(int row, int column)
         {
-            await Sheet.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            await Excel.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                Sheet.ShowCell(RowViewportIndex, ColumnViewportIndex, row, column, VerticalPosition.Nearest, HorizontalPosition.Nearest);
+                Excel.ShowCell(RowViewportIndex, ColumnViewportIndex, row, column, VerticalPosition.Nearest, HorizontalPosition.Nearest);
             });
         }
 
@@ -1415,7 +1415,7 @@ namespace Dt.Cells.UI
                 }
                 _editorPanel.EditingChanged += new EventHandler(_editorPanel_EdtingChanged);
                 _editorPanel.Opacity = 1.0;
-                if (Sheet.RaiseEditStarting(row, column))
+                if (Excel.RaiseEditStarting(row, column))
                 {
                     _editorPanel.EditingChanged -= new EventHandler(_editorPanel_EdtingChanged);
                     return false;
@@ -1460,9 +1460,9 @@ namespace Dt.Cells.UI
             {
                 _editorPanel.InstallEditor(cell, false);
                 _editorPanel.Opacity = 0.0;
-                Sheet.FocusInternal();
+                Excel.FocusInternal();
             }
-            Sheet.RaiseEditEnd(_activeRow, _activeCol);
+            Excel.RaiseEditEnd(_activeRow, _activeCol);
             _editorPanel.InvalidateMeasure();
             _editorPanel.InvalidateArrange();
         }
@@ -1486,12 +1486,12 @@ namespace Dt.Cells.UI
         internal void UpdateDataValidationUI(int row, int column)
         {
             RemoveDataValidationUI();
-            if (((Sheet != null) && (Sheet.ActiveSheet != null)) && ((RowViewportIndex == Sheet.GetActiveRowViewportIndex()) && (ColumnViewportIndex == Sheet.GetActiveColumnViewportIndex())))
+            if (((Excel != null) && (Excel.ActiveSheet != null)) && ((RowViewportIndex == Excel.GetActiveRowViewportIndex()) && (ColumnViewportIndex == Excel.GetActiveColumnViewportIndex())))
             {
-                DataValidator actualDataValidator = Sheet.ActiveSheet[row, column].ActualDataValidator;
+                DataValidator actualDataValidator = Excel.ActiveSheet[row, column].ActualDataValidator;
                 if ((actualDataValidator != null) && (GetViewportCell(row, column, true) != null))
                 {
-                    DataValidationListButtonInfo info = Sheet.GetDataValidationListButtonInfo(row, column, SheetArea.Cells);
+                    DataValidationListButtonInfo info = Excel.GetDataValidationListButtonInfo(row, column, SheetArea.Cells);
                     if (info != null)
                     {
                         if (_dataValidationPanel != null)
@@ -1539,7 +1539,7 @@ namespace Dt.Cells.UI
         {
             get
             {
-                if ((_dragFillContainer == null) && Sheet.CanUserDragFill)
+                if ((_dragFillContainer == null) && Excel.CanUserDragFill)
                 {
                     DragFillLayer panel = new DragFillLayer
                     {
@@ -1583,7 +1583,7 @@ namespace Dt.Cells.UI
 
         internal bool IsActived
         {
-            get { return ((Sheet == null) || ((Sheet.GetActiveColumnViewportIndex() == ColumnViewportIndex) && (Sheet.GetActiveRowViewportIndex() == RowViewportIndex))); }
+            get { return ((Excel == null) || ((Excel.GetActiveColumnViewportIndex() == ColumnViewportIndex) && (Excel.GetActiveRowViewportIndex() == RowViewportIndex))); }
         }
 
         public Point Location { get; set; }
@@ -1605,7 +1605,7 @@ namespace Dt.Cells.UI
             get { return _shapeContainer; }
         }
 
-        public SheetView Sheet { get; private set; }
+        public Excel Excel { get; private set; }
 
         internal bool SupportCellOverflow
         {

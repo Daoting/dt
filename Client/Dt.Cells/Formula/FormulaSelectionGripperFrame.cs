@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using System.ComponentModel;
 using Windows.Foundation;
 using Windows.UI;
@@ -109,7 +110,7 @@ namespace Dt.Cells.UI
 
         void UpdateGripperVisibility()
         {
-            if (SheetView.FormulaSelectionFeature.IsTouching && _canChangeBoundsByUI)
+            if (Excel.FormulaSelectionFeature.IsTouching && _canChangeBoundsByUI)
             {
                 _topLeftGripper.Visibility = _topLeftVisibility;
                 _bottomRightGripper.Visibility = _bottomRightVisibility;

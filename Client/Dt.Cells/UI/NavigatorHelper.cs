@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Cells.Data;
 using System;
 #endregion
@@ -42,52 +43,52 @@ namespace Dt.Cells.UI
             return false;
         }
 
-        public static void BringCellToVisible(SheetView sheetView, int viewCellRow, int viewCellColumn)
+        public static void BringCellToVisible(Excel excel, int viewCellRow, int viewCellColumn)
         {
-            if ((sheetView != null) && (sheetView.ActiveSheet != null))
+            if ((excel != null) && (excel.ActiveSheet != null))
             {
-                ViewportInfo viewportInfo = sheetView.GetViewportInfo();
-                int activeRowViewportIndex = sheetView.GetActiveRowViewportIndex();
-                int activeColumnViewportIndex = sheetView.GetActiveColumnViewportIndex();
+                ViewportInfo viewportInfo = excel.GetViewportInfo();
+                int activeRowViewportIndex = excel.GetActiveRowViewportIndex();
+                int activeColumnViewportIndex = excel.GetActiveColumnViewportIndex();
                 int rowViewportIndex = activeRowViewportIndex;
                 int columnViewportIndex = activeColumnViewportIndex;
                 if (activeRowViewportIndex == -1)
                 {
-                    if (viewCellRow >= sheetView.ActiveSheet.FrozenRowCount)
+                    if (viewCellRow >= excel.ActiveSheet.FrozenRowCount)
                     {
                         rowViewportIndex = 0;
                     }
                 }
-                else if ((activeRowViewportIndex == viewportInfo.RowViewportCount) && (viewCellRow < (sheetView.ActiveSheet.RowCount - sheetView.ActiveSheet.FrozenTrailingRowCount)))
+                else if ((activeRowViewportIndex == viewportInfo.RowViewportCount) && (viewCellRow < (excel.ActiveSheet.RowCount - excel.ActiveSheet.FrozenTrailingRowCount)))
                 {
                     rowViewportIndex = viewportInfo.RowViewportCount - 1;
                 }
                 if (activeColumnViewportIndex == -1)
                 {
-                    if (viewCellColumn >= sheetView.ActiveSheet.FrozenColumnCount)
+                    if (viewCellColumn >= excel.ActiveSheet.FrozenColumnCount)
                     {
                         columnViewportIndex = 0;
                     }
                 }
-                else if ((activeColumnViewportIndex == viewportInfo.ColumnViewportCount) && (viewCellColumn < (sheetView.ActiveSheet.ColumnCount - sheetView.ActiveSheet.FrozenTrailingColumnCount)))
+                else if ((activeColumnViewportIndex == viewportInfo.ColumnViewportCount) && (viewCellColumn < (excel.ActiveSheet.ColumnCount - excel.ActiveSheet.FrozenTrailingColumnCount)))
                 {
                     columnViewportIndex = viewportInfo.ColumnViewportCount - 1;
                 }
-                BringCellToVisible(sheetView, rowViewportIndex, columnViewportIndex, viewCellRow, viewCellColumn);
+                BringCellToVisible(excel, rowViewportIndex, columnViewportIndex, viewCellRow, viewCellColumn);
             }
         }
 
-        public static void BringCellToVisible(SheetView sheetView, int rowViewportIndex, int columnViewportIndex, int viewCellRow, int viewCellColumn)
+        public static void BringCellToVisible(Excel excel, int rowViewportIndex, int columnViewportIndex, int viewCellRow, int viewCellColumn)
         {
-            if ((sheetView != null) && (sheetView.ActiveSheet != null))
+            if ((excel != null) && (excel.ActiveSheet != null))
             {
-                var sheet = sheetView.ActiveSheet;
-                double viewportWidth = sheetView.GetViewportWidth(columnViewportIndex);
-                double viewportHeight = sheetView.GetViewportHeight(rowViewportIndex);
-                int viewportLeftColumn = sheetView.GetViewportLeftColumn(columnViewportIndex);
-                int viewportRightColumn = sheetView.GetViewportRightColumn(columnViewportIndex);
-                int viewportTopRow = sheetView.GetViewportTopRow(rowViewportIndex);
-                int viewportBottomRow = sheetView.GetViewportBottomRow(rowViewportIndex);
+                var sheet = excel.ActiveSheet;
+                double viewportWidth = excel.GetViewportWidth(columnViewportIndex);
+                double viewportHeight = excel.GetViewportHeight(rowViewportIndex);
+                int viewportLeftColumn = excel.GetViewportLeftColumn(columnViewportIndex);
+                int viewportRightColumn = excel.GetViewportRightColumn(columnViewportIndex);
+                int viewportTopRow = excel.GetViewportTopRow(rowViewportIndex);
+                int viewportBottomRow = excel.GetViewportBottomRow(rowViewportIndex);
                 int row = viewCellRow;
                 int column = viewCellColumn;
                 int rowCount = 1;
@@ -103,11 +104,11 @@ namespace Dt.Cells.UI
                         columnCount = range.ColumnCount;
                     }
                 }
-                if (sheetView.HorizontalScrollable)
+                if (excel.HorizontalScrollable)
                 {
                     if (column < viewportLeftColumn)
                     {
-                        sheetView.SetViewportLeftColumn(columnViewportIndex, column);
+                        excel.SetViewportLeftColumn(columnViewportIndex, column);
                     }
                     else if ((column > viewportLeftColumn) && (column <= viewportRightColumn))
                     {
@@ -116,7 +117,7 @@ namespace Dt.Cells.UI
                             double increasedWidth = GetColumnWidth(sheet, viewportLeftColumn, Math.Min((int) ((sheet.ColumnCount - sheet.FrozenTrailingColumnCount) - 1), (int) ((column + columnCount) - 1))) - viewportWidth;
                             if (increasedWidth > 0.0)
                             {
-                                sheetView.SetViewportLeftColumn(columnViewportIndex, GetNewLeftColumn(sheet, viewportLeftColumn, increasedWidth));
+                                excel.SetViewportLeftColumn(columnViewportIndex, GetNewLeftColumn(sheet, viewportLeftColumn, increasedWidth));
                             }
                         }
                     }
@@ -124,23 +125,23 @@ namespace Dt.Cells.UI
                     {
                         if (GetColumnWidth(sheet, column, Math.Min((int) ((sheet.ColumnCount - sheet.FrozenTrailingColumnCount) - 1), (int) ((column + columnCount) - 1))) >= viewportWidth)
                         {
-                            sheetView.SetViewportLeftColumn(columnViewportIndex, column);
+                            excel.SetViewportLeftColumn(columnViewportIndex, column);
                         }
                         else
                         {
                             double num12 = GetColumnWidth(sheet, viewportLeftColumn, Math.Min((int) ((sheet.ColumnCount - sheet.FrozenTrailingColumnCount) - 1), (int) ((column + columnCount) - 1))) - viewportWidth;
                             if (num12 > 0.0)
                             {
-                                sheetView.SetViewportLeftColumn(columnViewportIndex, GetNewLeftColumn(sheet, viewportLeftColumn, num12));
+                                excel.SetViewportLeftColumn(columnViewportIndex, GetNewLeftColumn(sheet, viewportLeftColumn, num12));
                             }
                         }
                     }
                 }
-                if (sheetView.VerticalScrollable)
+                if (excel.VerticalScrollable)
                 {
                     if (row < viewportTopRow)
                     {
-                        sheetView.SetViewportTopRow(rowViewportIndex, row);
+                        excel.SetViewportTopRow(rowViewportIndex, row);
                     }
                     else if ((row > viewportTopRow) && (row <= viewportBottomRow))
                     {
@@ -149,7 +150,7 @@ namespace Dt.Cells.UI
                             double increasedHeight = GetRowHeight(sheet, viewportTopRow, Math.Min((int) ((sheet.RowCount - sheet.FrozenTrailingRowCount) - 1), (int) ((row + rowCount) - 1))) - viewportHeight;
                             if (increasedHeight > 0.0)
                             {
-                                sheetView.SetViewportTopRow(rowViewportIndex, GetNewTopRow(sheet, viewportTopRow, increasedHeight));
+                                excel.SetViewportTopRow(rowViewportIndex, GetNewTopRow(sheet, viewportTopRow, increasedHeight));
                             }
                         }
                     }
@@ -157,14 +158,14 @@ namespace Dt.Cells.UI
                     {
                         if (GetRowHeight(sheet, row, Math.Min((int) ((sheet.RowCount - sheet.FrozenTrailingRowCount) - 1), (int) ((row + rowCount) - 1))) >= viewportHeight)
                         {
-                            sheetView.SetViewportTopRow(rowViewportIndex, row);
+                            excel.SetViewportTopRow(rowViewportIndex, row);
                         }
                         else
                         {
                             double num14 = GetRowHeight(sheet, viewportTopRow, Math.Min((int) ((sheet.RowCount - sheet.FrozenTrailingRowCount) - 1), (int) ((row + rowCount) - 1))) - viewportHeight;
                             if (num14 > 0.0)
                             {
-                                sheetView.SetViewportTopRow(rowViewportIndex, GetNewTopRow(sheet, viewportTopRow, num14));
+                                excel.SetViewportTopRow(rowViewportIndex, GetNewTopRow(sheet, viewportTopRow, num14));
                             }
                         }
                     }
@@ -222,23 +223,23 @@ namespace Dt.Cells.UI
             return num;
         }
 
-        public static bool ScrollToNextPageOfColumns(SheetView sheetView)
+        public static bool ScrollToNextPageOfColumns(Excel excel)
         {
-            if (!sheetView.HorizontalScrollable || (sheetView.ActiveSheet == null))
+            if (!excel.HorizontalScrollable || (excel.ActiveSheet == null))
             {
                 return false;
             }
-            int activeColumnViewportIndex = sheetView.GetActiveColumnViewportIndex();
+            int activeColumnViewportIndex = excel.GetActiveColumnViewportIndex();
             if (activeColumnViewportIndex == -1)
             {
                 activeColumnViewportIndex = 0;
             }
-            return ScrollToNextPageOfColumns(sheetView, activeColumnViewportIndex);
+            return ScrollToNextPageOfColumns(excel, activeColumnViewportIndex);
         }
 
-        public static bool ScrollToNextPageOfColumns(SheetView sheetView, int columViewportIndex)
+        public static bool ScrollToNextPageOfColumns(Excel excel, int columViewportIndex)
         {
-            if (!sheetView.HorizontalScrollable || (sheetView.ActiveSheet == null))
+            if (!excel.HorizontalScrollable || (excel.ActiveSheet == null))
             {
                 return false;
             }
@@ -246,33 +247,33 @@ namespace Dt.Cells.UI
             {
                 columViewportIndex = 0;
             }
-            int nextPageColumnCount = sheetView.GetNextPageColumnCount(columViewportIndex);
+            int nextPageColumnCount = excel.GetNextPageColumnCount(columViewportIndex);
             if (nextPageColumnCount == 0)
             {
                 return false;
             }
-            int viewportLeftColumn = sheetView.GetViewportLeftColumn(columViewportIndex);
-            sheetView.SetViewportLeftColumn(columViewportIndex, viewportLeftColumn + nextPageColumnCount);
+            int viewportLeftColumn = excel.GetViewportLeftColumn(columViewportIndex);
+            excel.SetViewportLeftColumn(columViewportIndex, viewportLeftColumn + nextPageColumnCount);
             return true;
         }
 
-        public static bool ScrollToNextPageOfRows(SheetView sheetView)
+        public static bool ScrollToNextPageOfRows(Excel excel)
         {
-            if (!sheetView.VerticalScrollable || (sheetView.ActiveSheet == null))
+            if (!excel.VerticalScrollable || (excel.ActiveSheet == null))
             {
                 return false;
             }
-            int activeRowViewportIndex = sheetView.GetActiveRowViewportIndex();
+            int activeRowViewportIndex = excel.GetActiveRowViewportIndex();
             if (activeRowViewportIndex == -1)
             {
                 activeRowViewportIndex = 0;
             }
-            return ScrollToNextPageOfRows(sheetView, activeRowViewportIndex);
+            return ScrollToNextPageOfRows(excel, activeRowViewportIndex);
         }
 
-        public static bool ScrollToNextPageOfRows(SheetView sheetView, int rowViewportIndex)
+        public static bool ScrollToNextPageOfRows(Excel excel, int rowViewportIndex)
         {
-            if (!sheetView.VerticalScrollable || (sheetView.ActiveSheet == null))
+            if (!excel.VerticalScrollable || (excel.ActiveSheet == null))
             {
                 return false;
             }
@@ -280,94 +281,94 @@ namespace Dt.Cells.UI
             {
                 rowViewportIndex = 0;
             }
-            int nextPageRowCount = sheetView.GetNextPageRowCount(rowViewportIndex);
+            int nextPageRowCount = excel.GetNextPageRowCount(rowViewportIndex);
             if (nextPageRowCount == 0)
             {
                 return false;
             }
-            int viewportTopRow = sheetView.GetViewportTopRow(rowViewportIndex);
-            sheetView.SetViewportTopRow(rowViewportIndex, viewportTopRow + nextPageRowCount);
+            int viewportTopRow = excel.GetViewportTopRow(rowViewportIndex);
+            excel.SetViewportTopRow(rowViewportIndex, viewportTopRow + nextPageRowCount);
             return true;
         }
 
-        public static bool ScrollToPreviousPageOfColumns(SheetView sheetView)
+        public static bool ScrollToPreviousPageOfColumns(Excel excel)
         {
-            if (sheetView.HorizontalScrollable)
+            if (excel.HorizontalScrollable)
             {
-                var worksheet = sheetView.ActiveSheet;
+                var worksheet = excel.ActiveSheet;
                 if (worksheet != null)
                 {
-                    int activeColumnViewportIndex = sheetView.GetActiveColumnViewportIndex();
+                    int activeColumnViewportIndex = excel.GetActiveColumnViewportIndex();
                     if (activeColumnViewportIndex == worksheet.GetViewportInfo().ColumnViewportCount)
                     {
                         activeColumnViewportIndex = worksheet.GetViewportInfo().ColumnViewportCount - 1;
                     }
-                    return ScrollToPreviousPageOfColumns(sheetView, activeColumnViewportIndex);
+                    return ScrollToPreviousPageOfColumns(excel, activeColumnViewportIndex);
                 }
             }
             return false;
         }
 
-        public static bool ScrollToPreviousPageOfColumns(SheetView sheetView, int columViewportIndex)
+        public static bool ScrollToPreviousPageOfColumns(Excel excel, int columViewportIndex)
         {
-            if (sheetView.HorizontalScrollable)
+            if (excel.HorizontalScrollable)
             {
-                var worksheet = sheetView.ActiveSheet;
+                var worksheet = excel.ActiveSheet;
                 if (worksheet != null)
                 {
                     if (columViewportIndex == worksheet.GetViewportInfo().ColumnViewportCount)
                     {
                         columViewportIndex = worksheet.GetViewportInfo().ColumnViewportCount - 1;
                     }
-                    int prePageColumnCount = sheetView.GetPrePageColumnCount(columViewportIndex);
+                    int prePageColumnCount = excel.GetPrePageColumnCount(columViewportIndex);
                     if (prePageColumnCount == 0)
                     {
                         return false;
                     }
-                    int viewportLeftColumn = sheetView.GetViewportLeftColumn(columViewportIndex);
-                    sheetView.SetViewportLeftColumn(columViewportIndex, viewportLeftColumn - prePageColumnCount);
+                    int viewportLeftColumn = excel.GetViewportLeftColumn(columViewportIndex);
+                    excel.SetViewportLeftColumn(columViewportIndex, viewportLeftColumn - prePageColumnCount);
                     return true;
                 }
             }
             return false;
         }
 
-        public static bool ScrollToPreviousPageOfRows(SheetView sheetView)
+        public static bool ScrollToPreviousPageOfRows(Excel excel)
         {
-            if (sheetView.VerticalScrollable)
+            if (excel.VerticalScrollable)
             {
-                var worksheet = sheetView.ActiveSheet;
+                var worksheet = excel.ActiveSheet;
                 if (worksheet != null)
                 {
-                    int activeRowViewportIndex = sheetView.GetActiveRowViewportIndex();
+                    int activeRowViewportIndex = excel.GetActiveRowViewportIndex();
                     if (activeRowViewportIndex == worksheet.GetViewportInfo().RowViewportCount)
                     {
                         activeRowViewportIndex = worksheet.GetViewportInfo().RowViewportCount - 1;
                     }
-                    return ScrollToPreviousPageOfRows(sheetView, activeRowViewportIndex);
+                    return ScrollToPreviousPageOfRows(excel, activeRowViewportIndex);
                 }
             }
             return false;
         }
 
-        public static bool ScrollToPreviousPageOfRows(SheetView sheetView, int rowViewportIndex)
+        public static bool ScrollToPreviousPageOfRows(Excel excel, int rowViewportIndex)
         {
-            if (sheetView.VerticalScrollable)
+            if (excel.VerticalScrollable)
             {
-                var worksheet = sheetView.ActiveSheet;
+                var worksheet = excel.ActiveSheet;
                 if (worksheet != null)
                 {
                     if (rowViewportIndex == worksheet.GetViewportInfo().RowViewportCount)
                     {
                         rowViewportIndex = worksheet.GetViewportInfo().RowViewportCount - 1;
                     }
-                    int prePageRowCount = sheetView.GetPrePageRowCount(rowViewportIndex);
+                    int prePageRowCount = excel.GetPrePageRowCount(rowViewportIndex);
                     if (prePageRowCount == 0)
                     {
                         return false;
                     }
-                    int viewportTopRow = sheetView.GetViewportTopRow(rowViewportIndex);
-                    sheetView.SetViewportTopRow(rowViewportIndex, viewportTopRow - prePageRowCount);
+                    int viewportTopRow = excel.GetViewportTopRow(rowViewportIndex);
+                    excel.SetViewportTopRow(rowViewportIndex, viewportTopRow - prePageRowCount);
                     return true;
                 }
             }

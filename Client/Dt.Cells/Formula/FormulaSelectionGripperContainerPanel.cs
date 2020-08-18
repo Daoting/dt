@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Cells.Data;
 using System.Collections.Generic;
 using Windows.Foundation;
@@ -25,15 +26,15 @@ namespace Dt.Cells.UI
                 CellRange range = frame.SelectionItem.Range;
                 int row = (range.Row < 0) ? 0 : range.Row;
                 int column = (range.Column < 0) ? 0 : range.Column;
-                int rowCount = (range.RowCount < 0) ? ParentSheet.ActiveSheet.RowCount : range.RowCount;
-                int columnCount = (range.ColumnCount < 0) ? ParentSheet.ActiveSheet.ColumnCount : range.ColumnCount;
+                int rowCount = (range.RowCount < 0) ? Excel.ActiveSheet.RowCount : range.RowCount;
+                int columnCount = (range.ColumnCount < 0) ? Excel.ActiveSheet.ColumnCount : range.ColumnCount;
                 bool isLeftVisible = false;
                 bool isTopVisible = false;
                 bool isRightVisible = false;
                 bool isBottomVisible = false;
-                int activeRowViewportIndex = ParentSheet.GetActiveRowViewportIndex();
-                int activeColumnViewportIndex = ParentSheet.GetActiveColumnViewportIndex();
-                CellsPanel viewportRowsPresenter = ParentSheet.GetViewportRowsPresenter(activeRowViewportIndex, activeColumnViewportIndex);
+                int activeRowViewportIndex = Excel.GetActiveRowViewportIndex();
+                int activeColumnViewportIndex = Excel.GetActiveColumnViewportIndex();
+                CellsPanel viewportRowsPresenter = Excel.GetViewportRowsPresenter(activeRowViewportIndex, activeColumnViewportIndex);
                 Rect rect = viewportRowsPresenter.GetRangeBounds(new CellRange(row, column, rowCount, columnCount), out isLeftVisible, out isRightVisible, out isTopVisible, out isBottomVisible);
                 if (!rect.IsEmpty)
                 {
@@ -65,15 +66,15 @@ namespace Dt.Cells.UI
                 CellRange range = frame.SelectionItem.Range;
                 int row = (range.Row < 0) ? 0 : range.Row;
                 int column = (range.Column < 0) ? 0 : range.Column;
-                int rowCount = (range.RowCount < 0) ? ParentSheet.ActiveSheet.RowCount : range.RowCount;
-                int columnCount = (range.ColumnCount < 0) ? ParentSheet.ActiveSheet.ColumnCount : range.ColumnCount;
+                int rowCount = (range.RowCount < 0) ? Excel.ActiveSheet.RowCount : range.RowCount;
+                int columnCount = (range.ColumnCount < 0) ? Excel.ActiveSheet.ColumnCount : range.ColumnCount;
                 bool isLeftVisible = false;
                 bool isTopVisible = false;
                 bool isRightVisible = false;
                 bool isBottomVisible = false;
-                int activeRowViewportIndex = ParentSheet.GetActiveRowViewportIndex();
-                int activeColumnViewportIndex = ParentSheet.GetActiveColumnViewportIndex();
-                Rect rect = ParentSheet.GetViewportRowsPresenter(activeRowViewportIndex, activeColumnViewportIndex).GetRangeBounds(new CellRange(row, column, rowCount, columnCount), out isLeftVisible, out isRightVisible, out isTopVisible, out isBottomVisible);
+                int activeRowViewportIndex = Excel.GetActiveRowViewportIndex();
+                int activeColumnViewportIndex = Excel.GetActiveColumnViewportIndex();
+                Rect rect = Excel.GetViewportRowsPresenter(activeRowViewportIndex, activeColumnViewportIndex).GetRangeBounds(new CellRange(row, column, rowCount, columnCount), out isLeftVisible, out isRightVisible, out isTopVisible, out isBottomVisible);
                 if ((rect.IsEmpty || (rect.Width == 0.0)) || (rect.Height == 0.0))
                 {
                     frame.Visibility = Visibility.Collapsed;
@@ -109,7 +110,7 @@ namespace Dt.Cells.UI
         public void Refresh()
         {
             base.Children.Clear();
-            using (IEnumerator<FormulaSelectionItem> enumerator = ParentSheet.FormulaSelections.GetEnumerator())
+            using (IEnumerator<FormulaSelectionItem> enumerator = Excel.FormulaSelections.GetEnumerator())
             {
                 while (enumerator.MoveNext())
                 {
@@ -119,7 +120,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        public SheetView ParentSheet { get; set; }
+        public Excel Excel { get; set; }
 
     }
 }

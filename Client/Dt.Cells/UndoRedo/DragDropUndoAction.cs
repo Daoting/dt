@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Cells.Data;
 using Dt.Cells.UI;
 using System;
@@ -86,7 +87,7 @@ namespace Dt.Cells.UndoRedo
         /// <param name="sender">Object on which the action occurred.</param>
         public override void Execute(object sender)
         {
-            if (SheetView.IsValidRange(_dragDropExtent.FromRow, _dragDropExtent.FromColumn, _dragDropExtent.RowCount, _dragDropExtent.ColumnCount, _sheet.RowCount, _sheet.ColumnCount) && (_insert || SheetView.IsValidRange(_dragDropExtent.ToRow, _dragDropExtent.ToColumn, _dragDropExtent.RowCount, _dragDropExtent.ColumnCount, _sheet.RowCount, _sheet.ColumnCount)))
+            if (Excel.IsValidRange(_dragDropExtent.FromRow, _dragDropExtent.FromColumn, _dragDropExtent.RowCount, _dragDropExtent.ColumnCount, _sheet.RowCount, _sheet.ColumnCount) && (_insert || Excel.IsValidRange(_dragDropExtent.ToRow, _dragDropExtent.ToColumn, _dragDropExtent.RowCount, _dragDropExtent.ColumnCount, _sheet.RowCount, _sheet.ColumnCount)))
             {
                 SaveState();
                 if (_insert)
@@ -123,7 +124,7 @@ namespace Dt.Cells.UndoRedo
                                 {
                                     base.ResumeInvalidate(sender);
                                 }
-                                SheetView view2 = sender as SheetView;
+                                Excel view2 = sender as Excel;
                                 if (view2 != null)
                                 {
                                     CellRange[] oldSelection = Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) view2.ActiveSheet.Selections);
@@ -166,7 +167,7 @@ namespace Dt.Cells.UndoRedo
                             {
                                 base.ResumeInvalidate(sender);
                             }
-                            SheetView view = sender as SheetView;
+                            Excel view = sender as Excel;
                             if (view != null)
                             {
                                 CellRange[] rangeArray = Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) view.ActiveSheet.Selections);
@@ -190,7 +191,7 @@ namespace Dt.Cells.UndoRedo
                     int num12 = _dragDropExtent.ToColumn;
                     int num13 = _dragDropExtent.RowCount;
                     int num14 = _dragDropExtent.ColumnCount;
-                    SheetView sheetView = sender as SheetView;
+                    Excel sheetView = sender as Excel;
                     base.SuspendInvalidate(sender);
                     try
                     {
@@ -268,7 +269,7 @@ namespace Dt.Cells.UndoRedo
             int columnCount = (_dragDropExtent.FromColumn < 0) ? _sheet.ColumnCount : _dragDropExtent.ColumnCount;
             if (_insert)
             {
-                if (((_dragDropExtent.FromColumn < 0) || (_dragDropExtent.FromRow < 0)) && (((_dragDropExtent.FromColumn < 0) && (_dragDropExtent.FromRow >= 0)) && (!_copy && SheetView.HasTable(_sheet, row, -1, 1, -1, true))))
+                if (((_dragDropExtent.FromColumn < 0) || (_dragDropExtent.FromRow < 0)) && (((_dragDropExtent.FromColumn < 0) && (_dragDropExtent.FromRow >= 0)) && (!_copy && Excel.HasTable(_sheet, row, -1, 1, -1, true))))
                 {
                     CopyMoveCellsInfo headerCellsInfo = new CopyMoveCellsInfo(rowCount, _sheet.RowHeader.ColumnCount);
                     CopyMoveRowsInfo rowsInfo = new CopyMoveRowsInfo(rowCount);
@@ -364,16 +365,16 @@ namespace Dt.Cells.UndoRedo
         /// </returns>
         public bool Undo(object parameter)
         {
-            if (!SheetView.IsValidRange(_dragDropExtent.FromRow, _dragDropExtent.FromColumn, _dragDropExtent.RowCount, _dragDropExtent.ColumnCount, _sheet.RowCount, _sheet.ColumnCount))
+            if (!Excel.IsValidRange(_dragDropExtent.FromRow, _dragDropExtent.FromColumn, _dragDropExtent.RowCount, _dragDropExtent.ColumnCount, _sheet.RowCount, _sheet.ColumnCount))
             {
                 return false;
             }
-            if (!_insert && !SheetView.IsValidRange(_dragDropExtent.ToRow, _dragDropExtent.ToColumn, _dragDropExtent.RowCount, _dragDropExtent.ColumnCount, _sheet.RowCount, _sheet.ColumnCount))
+            if (!_insert && !Excel.IsValidRange(_dragDropExtent.ToRow, _dragDropExtent.ToColumn, _dragDropExtent.RowCount, _dragDropExtent.ColumnCount, _sheet.RowCount, _sheet.ColumnCount))
             {
                 return false;
             }
             bool flag = false;
-            SheetView sheetView = parameter as SheetView;
+            Excel sheetView = parameter as Excel;
             if (_insert)
             {
                 if ((_dragDropExtent.FromColumn < 0) || (_dragDropExtent.FromRow < 0))

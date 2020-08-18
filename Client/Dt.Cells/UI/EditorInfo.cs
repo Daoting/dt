@@ -7,8 +7,8 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Cells.Data;
-using System;
 #endregion
 
 namespace Dt.Cells.UI
@@ -18,11 +18,11 @@ namespace Dt.Cells.UI
     /// </summary>
     public class EditorInfo
     {
-        SheetView _sheetView;
+        Excel _excel;
 
-        internal EditorInfo(SheetView sheetView)
+        internal EditorInfo(Excel p_excel)
         {
-            _sheetView = sheetView;
+            _excel = p_excel;
         }
 
         /// <summary>
@@ -32,11 +32,11 @@ namespace Dt.Cells.UI
         {
             get
             {
-                if (_sheetView.EditorConnector.IsInOtherSheet)
+                if (_excel.EditorConnector.IsInOtherSheet)
                 {
-                    return _sheetView.EditorConnector.ColumnIndex;
+                    return _excel.EditorConnector.ColumnIndex;
                 }
-                return _sheetView.ActiveSheet.ActiveColumnIndex;
+                return _excel.ActiveSheet.ActiveColumnIndex;
             }
         }
 
@@ -47,11 +47,11 @@ namespace Dt.Cells.UI
         {
             get
             {
-                if (_sheetView.EditorConnector.IsInOtherSheet)
+                if (_excel.EditorConnector.IsInOtherSheet)
                 {
-                    return _sheetView.EditorConnector.RowIndex;
+                    return _excel.EditorConnector.RowIndex;
                 }
-                return _sheetView.ActiveSheet.ActiveRowIndex;
+                return _excel.ActiveSheet.ActiveRowIndex;
             }
         }
 
@@ -65,11 +65,11 @@ namespace Dt.Cells.UI
         {
             get
             {
-                if (_sheetView.EditorConnector.IsInOtherSheet)
+                if (_excel.EditorConnector.IsInOtherSheet)
                 {
-                    return _sheetView.ActiveSheet.Workbook.Sheets[_sheetView.EditorConnector.SheetIndex];
+                    return _excel.ActiveSheet.Workbook.Sheets[_excel.EditorConnector.SheetIndex];
                 }
-                return _sheetView.ActiveSheet.Workbook.ActiveSheet;
+                return _excel.ActiveSheet.Workbook.ActiveSheet;
             }
         }
     }

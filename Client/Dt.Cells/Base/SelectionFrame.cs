@@ -47,7 +47,7 @@ namespace Dt.Cells.UI
         public SelectionFrame(CellsPanel owingViewport)
         {
             OwingViewport = owingViewport;
-            _selectionBorderColor = GetSelectionBorderColor(OwingViewport.Sheet.ActiveSheet.SelectionBorderColor, OwingViewport.Sheet.ActiveSheet.SelectionBorderThemeColor);
+            _selectionBorderColor = GetSelectionBorderColor(OwingViewport.Excel.ActiveSheet.SelectionBorderColor, OwingViewport.Excel.ActiveSheet.SelectionBorderThemeColor);
             _currentBorderColor = _selectionBorderColor;
             _leftRectangle = new Rectangle();
             _leftRectangle.Fill = DefaultSelectionBorderBrush;
@@ -228,7 +228,7 @@ namespace Dt.Cells.UI
                 {
                     _fillIndicatorBounds = ArrangeFillRect(finalSize);
                 }
-                OwingViewport.Sheet.UpdateTouchSelectionGripper();
+                OwingViewport.Excel.UpdateTouchSelectionGripper();
             }
             return finalSize;
         }
@@ -237,7 +237,7 @@ namespace Dt.Cells.UI
         {
             if (themeColor != null)
             {
-                return OwingViewport.Sheet.ActiveSheet.Workbook.GetThemeColor(themeColor);
+                return OwingViewport.Excel.ActiveSheet.Workbook.GetThemeColor(themeColor);
             }
             return selectionBorderColor;
         }
@@ -249,7 +249,7 @@ namespace Dt.Cells.UI
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            _selectionBorderColor = GetSelectionBorderColor(OwingViewport.Sheet.ActiveSheet.SelectionBorderColor, OwingViewport.Sheet.ActiveSheet.SelectionBorderThemeColor);
+            _selectionBorderColor = GetSelectionBorderColor(OwingViewport.Excel.ActiveSheet.SelectionBorderColor, OwingViewport.Excel.ActiveSheet.SelectionBorderThemeColor);
             if (_currentBorderColor != _selectionBorderColor)
             {
                 _currentBorderColor = _selectionBorderColor;

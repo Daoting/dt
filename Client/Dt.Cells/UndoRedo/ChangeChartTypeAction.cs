@@ -7,9 +7,9 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Cells.Data;
 using Dt.Cells.UI;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
@@ -396,10 +396,10 @@ namespace Dt.Cells.UndoRedo
         public override void Execute(object parameter)
         {
             ChangeChartType(_oldType, _newType);
-            SheetView view = parameter as SheetView;
-            if (view != null)
+            var excel = parameter as Excel;
+            if (excel != null)
             {
-                view.InvalidateCharts(new SpreadChart[] { _chart });
+                excel.InvalidateCharts(new SpreadChart[] { _chart });
             }
         }
 
@@ -442,10 +442,10 @@ namespace Dt.Cells.UndoRedo
         public bool Undo(object parameter)
         {
             ChangeChartType(_newType, _oldType);
-            SheetView view = parameter as SheetView;
-            if (view != null)
+            var excel = parameter as Excel;
+            if (excel != null)
             {
-                view.InvalidateCharts(new SpreadChart[] { _chart });
+                excel.InvalidateCharts(new SpreadChart[] { _chart });
             }
             return true;
         }

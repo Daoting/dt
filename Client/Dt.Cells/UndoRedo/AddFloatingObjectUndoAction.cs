@@ -7,9 +7,9 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Cells.Data;
 using Dt.Cells.UI;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 #endregion
@@ -58,10 +58,10 @@ namespace Dt.Cells.UndoRedo
         {
             if (CanExecute(parameter))
             {
-                SheetView view = parameter as SheetView;
+                var excel = parameter as Excel;
                 try
                 {
-                    view.SuspendFloatingObjectsInvalidate();
+                    excel.SuspendFloatingObjectsInvalidate();
                     SaveState();
                     if ((_savedCharts != null) && (_savedCharts.Length > 0))
                     {
@@ -78,17 +78,17 @@ namespace Dt.Cells.UndoRedo
                 }
                 finally
                 {
-                    view.ResumeFloatingObjectsInvalidate();
+                    excel.ResumeFloatingObjectsInvalidate();
                     ReadOnlyCollection<CellRange> selections = _worksheet.Selections;
                     if (selections.Count != 0)
                     {
                         foreach (CellRange range in selections)
                         {
-                            view.UpdateHeaderCellsState(range.Row, range.RowCount, range.Column, range.ColumnCount);
+                            excel.UpdateHeaderCellsState(range.Row, range.RowCount, range.Column, range.ColumnCount);
                         }
                     }
                 }
-                view.InvalidateFloatingObjectLayout();
+                excel.InvalidateFloatingObjectLayout();
             }
         }
 
@@ -140,10 +140,10 @@ namespace Dt.Cells.UndoRedo
         /// </returns>
         public bool Undo(object parameter)
         {
-            SheetView view = parameter as SheetView;
+            var excel = parameter as Excel;
             try
             {
-                view.SuspendFloatingObjectsInvalidate();
+                excel.SuspendFloatingObjectsInvalidate();
                 if ((_savedCharts != null) && (_savedCharts.Length > 0))
                 {
                     foreach (SpreadChart chart in _savedCharts)
@@ -168,17 +168,17 @@ namespace Dt.Cells.UndoRedo
             }
             finally
             {
-                view.ResumeFloatingObjectsInvalidate();
+                excel.ResumeFloatingObjectsInvalidate();
                 ReadOnlyCollection<CellRange> selections = _worksheet.Selections;
                 if (selections.Count != 0)
                 {
                     foreach (CellRange range in selections)
                     {
-                        view.UpdateHeaderCellsState(range.Row, range.RowCount, range.Column, range.ColumnCount);
+                        excel.UpdateHeaderCellsState(range.Row, range.RowCount, range.Column, range.ColumnCount);
                     }
                 }
             }
-            view.InvalidateFloatingObjectLayout();
+            excel.InvalidateFloatingObjectLayout();
             return true;
         }
 

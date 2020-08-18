@@ -7,10 +7,10 @@
 #endregion
 
 #region 引用命名
-using Dt.Base;
 using Dt.CalcEngine;
 using Dt.CalcEngine.Expressions;
 using Dt.Cells.Data;
+using Dt.Cells.UI;
 using Dt.Cells.UndoRedo;
 using System;
 using System.Collections;
@@ -18,28 +18,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Windows.Input;
 using System.Xml;
-using System.Xml.Schema;
-using System.Xml.Serialization;
-using Windows.ApplicationModel;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.Devices.Input;
 using Windows.Foundation;
-using Windows.System;
 using Windows.UI;
 using Windows.UI.Core;
-using Windows.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -49,54 +35,300 @@ using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Shapes;
 #endregion
 
-namespace Dt.Cells.UI
+namespace Dt.Base
 {
     /// <summary>
     /// Represents the GcSpreadSheet worksheet viewer used to present and handle worksheet operations.
     /// </summary>
-    public partial class SheetView : Panel, IXmlSerializable
+    public partial class Excel
     {
-        internal SheetView(Excel p_owner)
+        /// <summary>
+        /// Opens an Excel Compound Document File and loads it into GcSpreadSheet. 
+        /// </summary>
+        /// <param name="stream">The file stream.</param>
+        /// <param name="password">The file password.</param>
+        /// <returns></returns>
+        internal IAsyncAction OpenExcel(Stream stream, string password)
         {
-            Excel = p_owner;
-            _invisibleRows = new HashSet<int>();
-            _invisibleColumns = new HashSet<int>();
-            _formulaSelectionFeature = new FormulaSelectionFeature(this);
-            InitInput();
-            Init();
+            return OpenExcel(stream, ExcelOpenFlags.NoFlagsSet, password);
         }
 
         /// <summary>
-        /// Adjusts the adjacent column viewport's width.
+        /// Opens an Excel Compound Document File and loads it into GcSpreadSheet. 
         /// </summary>
-        /// <param name="columnViewportIndex">The column viewport index to adjust, it adjusts the column viewport and its next column viewport.</param>
-        /// <param name="deltaViewportWidth">The column width adjusted offset.</param>
-        public void AdjustColumnViewport(int columnViewportIndex, double deltaViewportWidth)
+        /// <param name="stream">The file stream.</param>
+        /// <param name="openFlags">The flag used to open the file.</param>
+        /// <param name="password">The file password.</param>
+        /// <returns></returns>
+        internal IAsyncAction OpenExcel(Stream stream, ExcelOpenFlags openFlags, string password)
         {
-            ViewportInfo viewportInfo = GetViewportInfo();
-            if ((columnViewportIndex < 0) || (columnViewportIndex > (viewportInfo.ColumnViewportCount - 1)))
+            IAsyncAction action2;
+            if (stream == null)
             {
-                throw new ArgumentOutOfRangeException("columnViewportIndex");
+                throw new ArgumentNullException("stream");
             }
-            if ((viewportInfo.ColumnViewportCount > 1) && (columnViewportIndex != (viewportInfo.ColumnViewportCount - 1)))
+            try
             {
-                int index = columnViewportIndex + 1;
-                viewportInfo.ViewportWidth[columnViewportIndex] = DoubleUtil.Formalize(GetViewportWidth(columnViewportIndex) + deltaViewportWidth) / ((double)ZoomFactor);
-                viewportInfo.ViewportWidth[index] = DoubleUtil.Formalize(GetViewportWidth(index) - deltaViewportWidth) / ((double)ZoomFactor);
-                if (viewportInfo.ViewportWidth[index] == 0.0)
-                {
-                    ActiveSheet.RemoveColumnViewport(index);
-                }
-                if (viewportInfo.ViewportWidth[columnViewportIndex] == 0.0)
-                {
-                    ActiveSheet.RemoveColumnViewport(columnViewportIndex);
-                }
-                viewportInfo = GetViewportInfo();
-                viewportInfo.ViewportWidth[viewportInfo.ColumnViewportCount - 1] = -1.0;
-                ActiveSheet.SetViewportInfo(viewportInfo);
-                InvalidateLayout();
-                InvalidateMeasure();
+                ShowOpeningStatus();
+                action2 = Workbook.OpenExcelAsync(stream, openFlags);
             }
+            catch (Exception exception)
+            {
+                while ((exception is TargetInvocationException) && (exception.InnerException != null))
+                {
+                    exception = exception.InnerException;
+                }
+                throw exception;
+            }
+            return action2;
+        }
+
+        internal void OpenXmlInternal(Stream xmlStream)
+        {
+            XmlReader reader = null;
+            Workbook.SuspendEvent();
+            try
+            {
+                if (_workbook != null)
+                {
+                    _workbook.Sheets.Clear();
+                    _workbook.Sheets.CollectionChanged -= new NotifyCollectionChangedEventHandler(OnSheetsCollectionChanged);
+                    _workbook.PropertyChanged -= new PropertyChangedEventHandler(OnWorkbookPropertyChanged);
+                    _workbook = null;
+                }
+                using (reader = XmlReader.Create(xmlStream))
+                {
+                    Serializer.InitReader(reader);
+                    while (reader.Read())
+                    {
+                        string str;
+                        ReadXmlInternal(reader);
+                        if ((reader.NodeType == ((XmlNodeType)((int)XmlNodeType.Element))) && ((str = reader.Name) != null))
+                        {
+                            if (str == "Data")
+                            {
+                                XmlReader reader2 = Serializer.ExtractNode(reader);
+                                Serializer.InitReader(reader2);
+                                reader2.Read();
+                                _workbook = new Workbook();
+                                _workbook.OpenXml(reader);
+                            }
+                            else if (str == "View")
+                            {
+                                goto Label_00D7;
+                            }
+                        }
+                        continue;
+                    Label_00D7:
+                        Serializer.DeserializeSerializableObject(this, reader);
+                    }
+                }
+                if (_workbook != null)
+                {
+                    foreach (Worksheet worksheet in _workbook.Sheets)
+                    {
+                        AttachSheet(worksheet);
+                    }
+                    _workbook.Sheets.CollectionChanged += new NotifyCollectionChangedEventHandler(OnSheetsCollectionChanged);
+                    _workbook.PropertyChanged += new PropertyChangedEventHandler(OnWorkbookPropertyChanged);
+                }
+            }
+            catch (Exception exception)
+            {
+                while ((exception is TargetInvocationException) && (exception.InnerException != null))
+                {
+                    exception = exception.InnerException;
+                }
+                throw exception;
+            }
+            finally
+            {
+                if (reader != null)
+                {
+                    reader.Close();
+                }
+                Workbook.ResumeEvent();
+            }
+            Invalidate();
+        }
+
+        void OpenXmlOnBackground(Stream xmlStream)
+        {
+            XmlReader reader = null;
+            Workbook.SuspendEvent();
+            try
+            {
+                if (_workbook != null)
+                {
+                    _workbook.Reset();
+                    _workbook.Sheets.CollectionChanged -= new NotifyCollectionChangedEventHandler(OnSheetsCollectionChanged);
+                    _workbook.PropertyChanged -= new PropertyChangedEventHandler(OnWorkbookPropertyChanged);
+                }
+                ShowOpeningStatus();
+                using (reader = XmlReader.Create(xmlStream))
+                {
+                    Serializer.InitReader(reader);
+                    while (reader.Read())
+                    {
+                        string str;
+                        ReadXmlInternal(reader);
+                        if ((reader.NodeType == ((XmlNodeType)((int)XmlNodeType.Element))) && ((str = reader.Name) != null))
+                        {
+                            if (str == "Data")
+                            {
+                                XmlReader reader2 = Serializer.ExtractNode(reader);
+                                Serializer.InitReader(reader2);
+                                reader2.Read();
+                                _workbook = new Workbook();
+                                _workbook.SuspendEvent();
+                                _workbook.OpenXml(reader);
+                            }
+                            else if (str == "View")
+                            {
+                                goto Label_0112;
+                            }
+                        }
+                        continue;
+                    Label_0112:
+                        Serializer.DeserializeSerializableObject(this, reader);
+                    }
+                }
+                if (_workbook != null)
+                {
+                    foreach (Worksheet worksheet in _workbook.Sheets)
+                    {
+                        AttachSheet(worksheet);
+                    }
+                    _workbook.Sheets.CollectionChanged += new NotifyCollectionChangedEventHandler(OnSheetsCollectionChanged);
+                    _workbook.PropertyChanged += new PropertyChangedEventHandler(OnWorkbookPropertyChanged);
+                }
+            }
+            catch (Exception exception)
+            {
+                while ((exception is TargetInvocationException) && (exception.InnerException != null))
+                {
+                    exception = exception.InnerException;
+                }
+                throw exception;
+            }
+            finally
+            {
+                if (reader != null)
+                {
+                    reader.Close();
+                }
+                Workbook.ResumeEvent();
+            }
+            Invalidate();
+            HideOpeningStatus();
+        }
+
+        void SaveXmlBackGround(Stream xmlStream, bool dataOnly)
+        {
+            XmlWriter writer = null;
+            try
+            {
+                writer = XmlWriter.Create(xmlStream);
+                if (writer != null)
+                {
+                    Serializer.WriteStartObj("Spread", writer);
+                    WriteXmlInternal(writer);
+                    Serializer.WriteStartObj("View", writer);
+                    Serializer.SerializeObj(this, null, writer);
+                    Serializer.WriteEndObj(writer);
+                    Serializer.WriteStartObj("Data", writer);
+                    Workbook.SaveXml(writer, dataOnly, false);
+                    Serializer.WriteEndObj(writer);
+                    Serializer.WriteEndObj(writer);
+                }
+            }
+            catch (Exception exception)
+            {
+                while ((exception is TargetInvocationException) && (exception.InnerException != null))
+                {
+                    exception = exception.InnerException;
+                }
+                throw exception;
+            }
+            finally
+            {
+                if (writer != null)
+                {
+                    writer.Close();
+                }
+            }
+        }
+
+        internal void SaveXmlInternal(Stream xmlStream)
+        {
+            SaveXmlBackGround(xmlStream, false);
+        }
+
+        internal void SetActiveViewport(int sheetIndex, int rowViewportIndex, int columnViewportIndex)
+        {
+            if ((sheetIndex < 0) || (sheetIndex >= SheetCount))
+            {
+                throw new ArgumentOutOfRangeException("sheetIndex");
+            }
+            if (sheetIndex == ActiveSheetIndex)
+            {
+                SetActiveViewport(rowViewportIndex, columnViewportIndex);
+            }
+            else
+            {
+                Sheets[sheetIndex].SetActiveViewport(rowViewportIndex, columnViewportIndex);
+            }
+        }
+
+        internal void AddRowViewport(int sheetIndex, int rowViewportIndex, double viewportHeight)
+        {
+            if ((sheetIndex < 0) || (sheetIndex >= SheetCount))
+            {
+                throw new ArgumentOutOfRangeException("sheetIndex");
+            }
+            if (sheetIndex == ActiveSheetIndex)
+            {
+                AddRowViewport(rowViewportIndex, viewportHeight);
+            }
+            else
+            {
+                Sheets[sheetIndex].AddRowViewport(rowViewportIndex, viewportHeight);
+            }
+        }
+
+        void AttachSheet(Worksheet sheet)
+        {
+            DetachSheet(sheet);
+            sheet.PropertyChanged += new PropertyChangedEventHandler(OnSheetPropertyChanged);
+            sheet.RowHeader.PropertyChanged += new PropertyChangedEventHandler(OnSheetRowHeaderPropertyChanged);
+            sheet.ColumnHeader.PropertyChanged += new PropertyChangedEventHandler(OnSheetColumnHeaderPropertyChanged);
+            sheet.CellChanged += new EventHandler<CellChangedEventArgs>(OnSheetCellChanged);
+            sheet.RowChanged += new EventHandler<SheetChangedEventArgs>(OnSheetRowChanged);
+            sheet.ColumnChanged += new EventHandler<SheetChangedEventArgs>(OnSheetColumnChanged);
+            sheet.SelectionChanged += new EventHandler<SheetSelectionChangedEventArgs>(OnSelectionChanged);
+            sheet.SpanModel.Changed += new EventHandler<SheetSpanModelChangedEventArgs>(OnSpanModelChanged);
+            sheet.RowHeaderSpanModel.Changed += new EventHandler<SheetSpanModelChangedEventArgs>(OnRowHeaderSpanModelChanged);
+            sheet.ColumnHeaderSpanModel.Changed += new EventHandler<SheetSpanModelChangedEventArgs>(OnColumnHeaderSpanModelChanged);
+            sheet.ChartChanged += new EventHandler<ChartChangedEventArgs>(OnSheetChartChanged);
+            sheet.FloatingObjectChanged += new EventHandler<FloatingObjectChangedEventArgs>(OnSheetFloatingObjectChanged);
+            sheet.PictureChanged += new EventHandler<PictureChangedEventArgs>(OnPictureChanged);
+        }
+
+        void DetachSheet(Worksheet sheet)
+        {
+            sheet.PropertyChanged -= new PropertyChangedEventHandler(OnSheetPropertyChanged);
+            sheet.RowHeader.PropertyChanged -= new PropertyChangedEventHandler(OnSheetRowHeaderPropertyChanged);
+            sheet.ColumnHeader.PropertyChanged -= new PropertyChangedEventHandler(OnSheetColumnHeaderPropertyChanged);
+            sheet.CellChanged -= new EventHandler<CellChangedEventArgs>(OnSheetCellChanged);
+            sheet.RowChanged -= new EventHandler<SheetChangedEventArgs>(OnSheetRowChanged);
+            sheet.ColumnChanged -= new EventHandler<SheetChangedEventArgs>(OnSheetColumnChanged);
+            sheet.SelectionChanged -= new EventHandler<SheetSelectionChangedEventArgs>(OnSelectionChanged);
+            sheet.SpanModel.Changed += new EventHandler<SheetSpanModelChangedEventArgs>(OnSpanModelChanged);
+            sheet.RowHeaderSpanModel.Changed -= new EventHandler<SheetSpanModelChangedEventArgs>(OnRowHeaderSpanModelChanged);
+            sheet.ColumnHeaderSpanModel.Changed -= new EventHandler<SheetSpanModelChangedEventArgs>(OnColumnHeaderSpanModelChanged);
+            sheet.ChartChanged -= new EventHandler<ChartChangedEventArgs>(OnSheetChartChanged);
+            sheet.FloatingObjectChanged -= new EventHandler<FloatingObjectChangedEventArgs>(OnSheetFloatingObjectChanged);
+            sheet.PictureChanged -= new EventHandler<PictureChangedEventArgs>(OnPictureChanged);
         }
 
         CellRange AdjustFillRange(CellRange fillRange)
@@ -105,39 +337,6 @@ namespace Dt.Cells.UI
             int column = (fillRange.Column != -1) ? fillRange.Column : 0;
             int rowCount = (fillRange.RowCount != -1) ? fillRange.RowCount : ActiveSheet.RowCount;
             return new CellRange(row, column, rowCount, (fillRange.ColumnCount != -1) ? fillRange.ColumnCount : ActiveSheet.ColumnCount);
-        }
-
-        /// <summary>
-        /// Adjusts the adjacent row viewport's height.
-        /// </summary>
-        /// <param name="rowViewportIndex">The row viewport index to adjust, it adjusts the row viewport and its next row viewport.</param>
-        /// <param name="deltaViewportHeight">The row height adjusted offset.</param>
-        public void AdjustRowViewport(int rowViewportIndex, double deltaViewportHeight)
-        {
-            ViewportInfo viewportInfo = GetViewportInfo();
-            if ((rowViewportIndex < 0) || (rowViewportIndex > (viewportInfo.RowViewportCount - 1)))
-            {
-                throw new ArgumentOutOfRangeException("rowViewportIndex");
-            }
-            if ((viewportInfo.RowViewportCount > 1) && (rowViewportIndex != (viewportInfo.RowViewportCount - 1)))
-            {
-                int index = rowViewportIndex + 1;
-                viewportInfo.ViewportHeight[rowViewportIndex] = DoubleUtil.Formalize(GetViewportHeight(rowViewportIndex) + deltaViewportHeight) / ((double)ZoomFactor);
-                viewportInfo.ViewportHeight[index] = DoubleUtil.Formalize(GetViewportHeight(index) - deltaViewportHeight) / ((double)ZoomFactor);
-                if (viewportInfo.ViewportHeight[index] == 0.0)
-                {
-                    ActiveSheet.RemoveRowViewport(rowViewportIndex + 1);
-                }
-                if (viewportInfo.ViewportHeight[rowViewportIndex] == 0.0)
-                {
-                    ActiveSheet.RemoveRowViewport(rowViewportIndex);
-                }
-                viewportInfo = GetViewportInfo();
-                viewportInfo.ViewportHeight[viewportInfo.RowViewportCount - 1] = -1.0;
-                ActiveSheet.SetViewportInfo(viewportInfo);
-                InvalidateLayout();
-                InvalidateMeasure();
-            }
         }
 
         CellRange AdjustViewportRange(int rowViewport, int columnViewport, CellRange range)
@@ -528,115 +727,6 @@ namespace Dt.Cells.UI
                 }
             }
             return true;
-        }
-
-        /// <summary>
-        /// Clears all undo and redo actions in the current UndoManager. 
-        /// </summary>
-        public void ClearUndoManager()
-        {
-            if (_undoManager != null)
-            {
-                _undoManager.UndoList.Clear();
-                _undoManager.RedoList.Clear();
-            }
-        }
-
-        /// <summary>
-        /// Copies the text of a cell range to the Clipboard.
-        /// </summary>
-        /// <param name="range">The copied cell range.</param>
-        public void ClipboardCopy(CellRange range)
-        {
-            if (ActiveSheet != null)
-            {
-                if (range == null)
-                {
-                    throw new ArgumentNullException("range");
-                }
-                if (!IsValidRange(range.Row, range.Column, range.RowCount, range.ColumnCount, ActiveSheet.RowCount, ActiveSheet.ColumnCount))
-                {
-                    throw new ArgumentException(ResourceStrings.SheetViewClipboardArgumentException);
-                }
-                CopyToClipboard(range, false);
-            }
-        }
-
-        /// <summary>
-        /// Cuts the text of a cell range to the Clipboard.
-        /// </summary>
-        /// <param name="range">The cut cell range.</param>
-        public void ClipboardCut(CellRange range)
-        {
-            if (ActiveSheet != null)
-            {
-                if (range == null)
-                {
-                    throw new ArgumentNullException("range");
-                }
-                if (!IsValidRange(range.Row, range.Column, range.RowCount, range.ColumnCount, ActiveSheet.RowCount, ActiveSheet.ColumnCount))
-                {
-                    throw new ArgumentException(ResourceStrings.SheetViewClipboardArgumentException);
-                }
-                CopyToClipboard(range, true);
-            }
-        }
-
-        /// <summary>
-        /// Pastes content from the Clipboard to a cell range on the sheet.
-        /// </summary>
-        /// <param name="range">The pasted cell range on the sheet.</param>
-        public void ClipboardPaste(CellRange range)
-        {
-            ClipboardPaste(range, ClipboardPasteOptions.All);
-        }
-
-        /// <summary>
-        /// Pastes content from the Clipboard to a cell range on the sheet.
-        /// </summary>
-        /// <param name="range">The pasted cell range.</param>
-        /// <param name="option">The Clipboard paste option that indicates which content type to paste.</param>
-        public void ClipboardPaste(CellRange range, ClipboardPasteOptions option)
-        {
-            if (ActiveSheet != null)
-            {
-                CellRange range1;
-                bool flag2;
-                if (range == null)
-                {
-                    throw new ArgumentNullException("range");
-                }
-                if (!IsValidRange(range.Row, range.Column, range.RowCount, range.ColumnCount, ActiveSheet.RowCount, ActiveSheet.ColumnCount))
-                {
-                    throw new ArgumentException(ResourceStrings.SheetViewClipboardArgumentException);
-                }
-                var fromSheet = SpreadXClipboard.Worksheet;
-                CellRange fromRange = SpreadXClipboard.Range;
-                string clipboardText = ClipboardHelper.GetClipboardData();
-                bool isCutting = SpreadXClipboard.IsCutting;
-                if (((isCutting && (fromSheet != null)) && ((fromRange != null) && fromSheet.Protect)) && IsAnyCellInRangeLocked(fromSheet, fromRange.Row, fromRange.Column, fromRange.RowCount, fromRange.ColumnCount))
-                {
-                    isCutting = false;
-                }
-                if (CheckPastedRange(fromSheet, fromRange, range, isCutting, clipboardText, out range1, out flag2))
-                {
-                    if (isCutting)
-                    {
-                        option = ClipboardPasteOptions.All;
-                    }
-                    if (flag2)
-                    {
-                        ClipboardPaste(fromSheet, fromRange, ActiveSheet, range1, isCutting, clipboardText, option);
-                    }
-                    else
-                    {
-                        ClipboardPaste(null, null, ActiveSheet, range1, isCutting, clipboardText, option);
-                    }
-                    SetSelection(range1.Row, range1.Column, range1.RowCount, range1.ColumnCount);
-                    SetActiveCell((range.Row < 0) ? 0 : range.Row, (range.Column < 0) ? 0 : range.Column, false);
-                    InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
-                }
-            }
         }
 
         internal static void ClipboardPaste(Worksheet fromSheet, CellRange fromRange, Worksheet toSheet, CellRange toRange, bool isCutting, string clipboardText, ClipboardPasteOptions option)
@@ -1792,11 +1882,6 @@ namespace Dt.Cells.UI
             return model;
         }
 
-        internal bool DoCommand(ICommand command)
-        {
-            return UndoManager.Do(command);
-        }
-
         void DoContinueDragDropping()
         {
             UpdateMouseCursorLocation();
@@ -1910,12 +1995,12 @@ namespace Dt.Cells.UI
                     Point point = ArrangeDragFillTooltip(_currentFillRange, currentFillDirection);
                     if (IsTouchDragFilling)
                     {
-                        if (Excel.ShowDragFillTip)
+                        if (ShowDragFillTip)
                         {
                             TooltipHelper.ShowTooltip(str, point.X + 40.0, point.Y);
                         }
                     }
-                    else if (Excel.ShowDragFillTip)
+                    else if (ShowDragFillTip)
                     {
                         TooltipHelper.ShowTooltip(str, point.X, point.Y);
                     }
@@ -2341,15 +2426,11 @@ namespace Dt.Cells.UI
         {
 #if UWP || WASM
             // 手机上不设置输入焦点
-            Excel.IsTabStop = true;
-
             if (_cellsPanels != null)
             {
                 CellsPanel viewport = _cellsPanels[1, 1];
-                if ((viewport != null) && !viewport.FocusContent())
-                {
-                    Excel.Focus(FocusState.Programmatic);
-                }
+                if (viewport != null)
+                    viewport.FocusContent();
             }
 #endif
         }
@@ -2365,16 +2446,6 @@ namespace Dt.Cells.UI
                 range = range2;
             }
             return range;
-        }
-
-        internal int GetActiveColumnViewportIndex()
-        {
-            return ActiveSheet.GetActiveColumnViewportIndex();
-        }
-
-        internal int GetActiveRowViewportIndex()
-        {
-            return ActiveSheet.GetActiveRowViewportIndex();
         }
 
         internal FloatingObject[] GetAllFloatingObjects()
@@ -2427,7 +2498,7 @@ namespace Dt.Cells.UI
             {
                 rangeBounds = vp._cachedFocusCellLayout;
             }
-            if (vp.Sheet.ActiveSheet.Selections.Count > 0)
+            if (vp.Excel.ActiveSheet.Selections.Count > 0)
             {
                 rangeBounds = vp.GetRangeBounds(activeSelection);
             }
@@ -2559,7 +2630,6 @@ namespace Dt.Cells.UI
             Worksheet worksheet = ActiveSheet;
             int rowCount = worksheet.RowCount;
             Cell cell = null;
-            FontFamily fontFamily = Excel.FontFamily;
             object textFormattingMode = null;
             SheetArea sheetArea = rowHeader ? (SheetArea.CornerHeader | SheetArea.RowHeader) : SheetArea.Cells;
             IDictionary<MeasureInfo, Dictionary<string, object>> dictionary = (IDictionary<MeasureInfo, Dictionary<string, object>>)new Dictionary<MeasureInfo, Dictionary<string, object>>();
@@ -2594,7 +2664,7 @@ namespace Dt.Cells.UI
                         Size maxSize = MeasureHelper.ConvertExcelCellSizeToTextSize(new Size(double.PositiveInfinity, height), 1.0);
                         if ((viewportTopRow <= i) && (i < (viewportTopRow + num5)))
                         {
-                            num = Math.Max(num, MeasureCellText(cell, i, column, maxSize, fontFamily, textFormattingMode, base.UseLayoutRounding));
+                            num = Math.Max(num, MeasureCellText(cell, i, column, maxSize, null, textFormattingMode, base.UseLayoutRounding));
                         }
                         else
                         {
@@ -2641,7 +2711,7 @@ namespace Dt.Cells.UI
                     }
                 }
                 Size size2 = MeasureHelper.ConvertExcelCellSizeToTextSize(new Size(double.PositiveInfinity, rowHeight), 1.0);
-                num = Math.Max(num, MeasureCellText(cell, row, column, size2, fontFamily, textFormattingMode, base.UseLayoutRounding));
+                num = Math.Max(num, MeasureCellText(cell, row, column, size2, null, textFormattingMode, base.UseLayoutRounding));
             }
             return num;
         }
@@ -3085,7 +3155,7 @@ namespace Dt.Cells.UI
             {
                 return _cachedToolbarImageSources[image];
             }
-            string name = IntrospectionExtensions.GetTypeInfo((Type)typeof(SheetView)).Assembly.GetName().Name;
+            string name = IntrospectionExtensions.GetTypeInfo(typeof(Excel)).Assembly.GetName().Name;
             Uri uri = new Uri(string.Format("ms-appx:///{0}/Icons/{1}", (object[])new object[] { name, image }), (UriKind)UriKind.RelativeOrAbsolute);
             BitmapImage image2 = new BitmapImage(uri);
             _cachedResizerGipper[image] = image2;
@@ -3225,16 +3295,6 @@ namespace Dt.Cells.UI
             return null;
         }
 
-        /// <summary>
-        /// Gets the column count when scrolling right one page.
-        /// </summary>
-        /// <param name="columnViewportIndex">The column viewport index one page to the right.</param>
-        /// <returns>The column count when scrolling right one page.</returns>
-        public int GetNextPageColumnCount(int columnViewportIndex)
-        {
-            return GetNextPageColumnCount(ActiveSheet, columnViewportIndex);
-        }
-
         int GetNextPageColumnCount(Worksheet sheet, int columnViewportIndex)
         {
             if (sheet == null)
@@ -3267,16 +3327,6 @@ namespace Dt.Cells.UI
                 num4 = 0;
             }
             return num4;
-        }
-
-        /// <summary>
-        /// Gets the row count when scrolling down one page.
-        /// </summary>
-        /// <param name="rowViewportIndex">The row viewport index one page down.</param>
-        /// <returns>The row count when scrolling down one page.</returns>
-        public int GetNextPageRowCount(int rowViewportIndex)
-        {
-            return GetNextPageRowCount(ActiveSheet, rowViewportIndex);
         }
 
         int GetNextPageRowCount(Worksheet sheet, int rowViewportIndex)
@@ -3409,16 +3459,6 @@ namespace Dt.Cells.UI
             return new CellRange(num5, num6, num7, num8);
         }
 
-        /// <summary>
-        /// Gets the column count when scrolling left one page.
-        /// </summary>
-        /// <param name="columnViewportIndex">The column viewport index one page to the left.</param>
-        /// <returns>The column count when scrolling left one page.</returns>
-        public int GetPrePageColumnCount(int columnViewportIndex)
-        {
-            return GetPrePageColumnCount(ActiveSheet, columnViewportIndex);
-        }
-
         int GetPrePageColumnCount(Worksheet sheet, int columnViewportIndex)
         {
             if (sheet == null)
@@ -3447,16 +3487,6 @@ namespace Dt.Cells.UI
                 column--;
             }
             return num6;
-        }
-
-        /// <summary>
-        /// Gets the row count when scrolling up one page.
-        /// </summary>
-        /// <param name="rowViewportIndex">The row viewport index one page up.</param>
-        /// <returns>The row count when scrolling up one page.</returns>
-        public int GetPrePageRowCount(int rowViewportIndex)
-        {
-            return GetPrePageRowCount(ActiveSheet, rowViewportIndex);
         }
 
         int GetPrePageRowCount(Worksheet sheet, int rowViewportIndex)
@@ -3548,7 +3578,7 @@ namespace Dt.Cells.UI
             {
                 return _cachedResizerGipper[str];
             }
-            string name = IntrospectionExtensions.GetTypeInfo((Type)typeof(SheetView)).Assembly.GetName().Name;
+            string name = IntrospectionExtensions.GetTypeInfo(typeof(Excel)).Assembly.GetName().Name;
             Uri uri = new Uri(string.Format("ms-appx:///{0}/Icons/{1}", (object[])new object[] { name, str }), (UriKind)UriKind.RelativeOrAbsolute);
             BitmapImage image = new BitmapImage(uri);
             _cachedResizerGipper[str] = image;
@@ -3561,7 +3591,7 @@ namespace Dt.Cells.UI
             Worksheet worksheet = ActiveSheet;
             int columnCount = worksheet.ColumnCount;
             Cell cell = null;
-            FontFamily unknownFontfamily = Excel.FontFamily;
+            FontFamily unknownFontfamily = null;
             object textFormattingMode = null;
             for (int i = 0; i < columnCount; i++)
             {
@@ -3757,23 +3787,6 @@ namespace Dt.Cells.UI
             return null;
         }
 
-        /// <summary>
-        /// Ges the spread chart view.
-        /// </summary>
-        /// <param name="chartName">Name of the chart.</param>
-        /// <returns></returns>
-        public SpreadChartView GetSpreadChartView(string chartName)
-        {
-            int activeRowViewportIndex = GetActiveRowViewportIndex();
-            int activeColumnViewportIndex = GetActiveColumnViewportIndex();
-            CellsPanel viewport = _cellsPanels[activeRowViewportIndex + 1, activeColumnViewportIndex + 1];
-            if (viewport != null)
-            {
-                return viewport.GetSpreadChartView(chartName);
-            }
-            return null;
-        }
-
         ColumnLayout GetValidHorDragToColumnLayout()
         {
             if (IsIncreaseFill)
@@ -3811,16 +3824,6 @@ namespace Dt.Cells.UI
         string GetVericalScrollTip(int row)
         {
             return string.Format(ResourceStrings.VerticalScroll, (object[])new object[] { ((int)row) });
-        }
-
-        /// <summary>
-        /// Gets the row viewport's bottom row index.
-        /// </summary>
-        /// <param name="rowViewportIndex">The row viewport index.</param>
-        /// <returns>The bottom row index in the row viewport.</returns>
-        public int GetViewportBottomRow(int rowViewportIndex)
-        {
-            return GetViewportBottomRow(ActiveSheet, rowViewportIndex);
         }
 
         int GetViewportBottomRow(Worksheet sheet, int rowViewportIndex)
@@ -3968,16 +3971,6 @@ namespace Dt.Cells.UI
         double GetViewportHeight(Worksheet sheet, int rowViewportIndex)
         {
             return GetSheetLayout().GetViewportHeight(rowViewportIndex);
-        }
-
-        /// <summary>
-        /// Gets the column viewport's left column index.
-        /// </summary>
-        /// <param name="columnViewportIndex">The column viewport index.</param>
-        /// <returns>The left column index in the column viewport.</returns>
-        public int GetViewportLeftColumn(int columnViewportIndex)
-        {
-            return ActiveSheet.GetViewportLeftColumn(columnViewportIndex);
         }
 
         Rect GetViewportRectangle(int rowViewportIndex, int columnViewportIndex)
@@ -4130,16 +4123,6 @@ namespace Dt.Cells.UI
             return null;
         }
 
-        /// <summary>
-        /// Gets the column viewport's right column index.
-        /// </summary>
-        /// <param name="columnViewportIndex">The column viewport index.</param>
-        /// <returns>The right column index in the column viewport.</returns>
-        public int GetViewportRightColumn(int columnViewportIndex)
-        {
-            return GetViewportRightColumn(ActiveSheet, columnViewportIndex);
-        }
-
         int GetViewportRightColumn(Worksheet sheet, int columnViewportIndex)
         {
             if (columnViewportIndex == GetViewportInfo(sheet).ColumnViewportCount)
@@ -4266,16 +4249,6 @@ namespace Dt.Cells.UI
             return new Point(x, y);
         }
 
-        /// <summary>
-        /// Gets the row viewport's top row index.
-        /// </summary>
-        /// <param name="rowViewportIndex">The row viewport index.</param>
-        /// <returns>The top row index in the row viewport.</returns>
-        public int GetViewportTopRow(int rowViewportIndex)
-        {
-            return GetViewportTopRow(ActiveSheet, rowViewportIndex);
-        }
-
         int GetViewportTopRow(Worksheet sheet, int rowViewportIndex)
         {
             ViewportInfo viewportInfo = GetViewportInfo();
@@ -4351,483 +4324,6 @@ namespace Dt.Cells.UI
             return num;
         }
 
-        internal void HandleCellChanged(object sender, CellChangedEventArgs e)
-        {
-            if (sender == ActiveSheet)
-            {
-                switch (e.SheetArea)
-                {
-                    case SheetArea.CornerHeader:
-                    case (SheetArea.Cells | SheetArea.RowHeader):
-                        return;
-
-                    case SheetArea.Cells:
-                        if (e.PropertyName != "Formula")
-                        {
-                            if (e.PropertyName == "Axis")
-                            {
-                                InvalidateLayout();
-                            }
-                            InvalidateRange(e.Row, e.Column, e.RowCount, e.ColumnCount, e.SheetArea);
-                            return;
-                        }
-                        InvalidateRange(-1, -1, -1, -1, SheetArea.Cells);
-                        return;
-
-                    case (SheetArea.CornerHeader | SheetArea.RowHeader):
-                    case SheetArea.ColumnHeader:
-                        if (e.PropertyName == "Axis")
-                        {
-                            InvalidateLayout();
-                        }
-                        InvalidateRange(e.Row, e.Column, e.RowCount, e.ColumnCount, e.SheetArea);
-                        return;
-                }
-            }
-        }
-
-        internal void HandleChartChanged(object sender, ChartChangedBaseEventArgs e, bool autoRefresh)
-        {
-            if (_cellsPanels != null)
-            {
-                if (e.Property == "IsSelected")
-                {
-                    UpdateSelectState(e);
-                }
-                else if (autoRefresh)
-                {
-                    if (e.Chart == null)
-                    {
-                        InvalidateFloatingObjectLayout();
-                    }
-                    else if (((e.ChartArea == ChartArea.AxisX) || (e.ChartArea == ChartArea.AxisY)) || (e.ChartArea == ChartArea.AxisZ))
-                    {
-                        CellsPanel[,] viewportArray = _cellsPanels;
-                        int upperBound = viewportArray.GetUpperBound(0);
-                        int num2 = viewportArray.GetUpperBound(1);
-                        for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
-                        {
-                            for (int j = viewportArray.GetLowerBound(1); j <= num2; j++)
-                            {
-                                CellsPanel viewport = viewportArray[i, j];
-                                if (viewport != null)
-                                {
-                                    if (e.Chart == null)
-                                    {
-                                        viewport.RefreshFloatingObjects();
-                                    }
-                                    else
-                                    {
-                                        viewport.RefreshFloatingObject(e);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        bool displayHidden = false;
-                        if (e.Chart is SpreadChart)
-                        {
-                            displayHidden = (e.Chart as SpreadChart).DisplayHidden;
-                        }
-                        if (((e.Property == "Location") || (e.Property == "Size")) || (((e.Property == "SheetRowChanged") || (e.Property == "SheetColumnChanged")) || (e.Property == "Name")))
-                        {
-                            CellsPanel[,] viewportArray2 = _cellsPanels;
-                            int num5 = viewportArray2.GetUpperBound(0);
-                            int num6 = viewportArray2.GetUpperBound(1);
-                            for (int k = viewportArray2.GetLowerBound(0); k <= num5; k++)
-                            {
-                                for (int m = viewportArray2.GetLowerBound(1); m <= num6; m++)
-                                {
-                                    if (viewportArray2[k, m] != null)
-                                    {
-                                        InvalidateFloatingObjectLayout();
-                                    }
-                                }
-                            }
-                        }
-                        else if ((((e.Property == "RowFilter") || (e.Property == "RowRangeGroup")) || ((e.Property == "ColumnRangeGroup") || (e.Property == "TableFilter"))) || (((e.Property == "AxisX") || (e.Property == "AxisY")) || (e.Property == "AxisZ")))
-                        {
-                            CellsPanel[,] viewportArray3 = _cellsPanels;
-                            int num9 = viewportArray3.GetUpperBound(0);
-                            int num10 = viewportArray3.GetUpperBound(1);
-                            for (int n = viewportArray3.GetLowerBound(0); n <= num9; n++)
-                            {
-                                for (int num12 = viewportArray3.GetLowerBound(1); num12 <= num10; num12++)
-                                {
-                                    CellsPanel viewport3 = viewportArray3[n, num12];
-                                    if (viewport3 != null)
-                                    {
-                                        viewport3.InvalidateFloatingObjectMeasureState(e.Chart);
-                                        if (e.Chart == null)
-                                        {
-                                            viewport3.InvalidateFloatingObjectsMeasureState();
-                                            foreach (SpreadChart chart in ActiveSheet.Charts)
-                                            {
-                                                if (!displayHidden)
-                                                {
-                                                    viewport3.RefreshFloatingObject(e);
-                                                }
-                                            }
-                                        }
-                                        if ((e.Chart != null) && !displayHidden)
-                                        {
-                                            viewport3.RefreshFloatingObject(e);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            CellsPanel[,] viewportArray4 = _cellsPanels;
-                            int num13 = viewportArray4.GetUpperBound(0);
-                            int num14 = viewportArray4.GetUpperBound(1);
-                            for (int num15 = viewportArray4.GetLowerBound(0); num15 <= num13; num15++)
-                            {
-                                for (int num16 = viewportArray4.GetLowerBound(1); num16 <= num14; num16++)
-                                {
-                                    CellsPanel viewport4 = viewportArray4[num15, num16];
-                                    if (viewport4 != null)
-                                    {
-                                        viewport4.InvalidateFloatingObjectsMeasureState();
-                                        if (e.Chart == null)
-                                        {
-                                            foreach (SpreadChart chart in ActiveSheet.Charts)
-                                            {
-                                                viewport4.RefreshFloatingObject(e);
-                                            }
-                                        }
-                                        if (e.Chart != null)
-                                        {
-                                            viewport4.RefreshFloatingObject(e);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        internal void HandleFloatingObjectChanged(FloatingObject floatingObject, string property, bool autoRefresh)
-        {
-            if (_cellsPanels != null)
-            {
-                if (floatingObject == null)
-                {
-                    InvalidateFloatingObjectLayout();
-                }
-                else if (property == "IsSelected")
-                {
-                    CellsPanel[,] viewportArray = _cellsPanels;
-                    int upperBound = viewportArray.GetUpperBound(0);
-                    int num2 = viewportArray.GetUpperBound(1);
-                    for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
-                    {
-                        for (int j = viewportArray.GetLowerBound(1); j <= num2; j++)
-                        {
-                            CellsPanel viewport = viewportArray[i, j];
-                            if (viewport != null)
-                            {
-                                if (floatingObject == null)
-                                {
-                                    viewport.RefreshFloatingObjectContainerIsSelected();
-                                }
-                                else
-                                {
-                                    viewport.RefreshFloatingObjectContainerIsSelected(floatingObject);
-                                }
-                            }
-                        }
-                    }
-                    ReadOnlyCollection<CellRange> selections = ActiveSheet.Selections;
-                    if (selections.Count != 0)
-                    {
-                        foreach (CellRange range in selections)
-                        {
-                            UpdateHeaderCellsState(range.Row, range.RowCount, range.Column, range.ColumnCount);
-                        }
-                    }
-                }
-                else if (autoRefresh)
-                {
-                    if ((((property == "Location") || (property == "Size")) || ((property == "SheetRowChanged") || (property == "SheetColumnChanged"))) || ((((property == "AxisX") || (property == "AxisY")) || ((property == "RowFilter") || (property == "RowRangeGroup"))) || ((property == "ColumnRangeGroup") || (property == "Name"))))
-                    {
-                        CellsPanel[,] viewportArray2 = _cellsPanels;
-                        int num5 = viewportArray2.GetUpperBound(0);
-                        int num6 = viewportArray2.GetUpperBound(1);
-                        for (int k = viewportArray2.GetLowerBound(0); k <= num5; k++)
-                        {
-                            for (int m = viewportArray2.GetLowerBound(1); m <= num6; m++)
-                            {
-                                CellsPanel viewport1 = viewportArray2[k, m];
-                                InvalidateFloatingObjectLayout();
-                            }
-                        }
-                    }
-                    else
-                    {
-                        CellsPanel[,] viewportArray3 = _cellsPanels;
-                        int num9 = viewportArray3.GetUpperBound(0);
-                        int num10 = viewportArray3.GetUpperBound(1);
-                        for (int n = viewportArray3.GetLowerBound(0); n <= num9; n++)
-                        {
-                            for (int num12 = viewportArray3.GetLowerBound(1); num12 <= num10; num12++)
-                            {
-                                CellsPanel viewport2 = viewportArray3[n, num12];
-                                if (viewport2 != null)
-                                {
-                                    viewport2.InvalidateFloatingObjectMeasureState(floatingObject);
-                                    viewport2.RefreshFloatingObject(new FloatingObjectChangedEventArgs(floatingObject, null));
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        internal void HandleFloatingObjectChanged(object sender, FloatingObjectChangedEventArgs e, bool autoRefresh)
-        {
-            HandleFloatingObjectChanged(e.FloatingObject, e.Property, autoRefresh);
-        }
-
-        internal void HandlePictureChanged(object sender, PictureChangedEventArgs e, bool autoRefresh)
-        {
-            HandleFloatingObjectChanged(e.Picture, e.Property, autoRefresh);
-        }
-
-        internal void HandleSheetColumnHeaderPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (sender == ActiveSheet.ColumnHeader)
-            {
-                switch (e.PropertyName)
-                {
-                    case "DefaultStyle":
-                    case "AutoText":
-                    case "AutoTextIndex":
-                    case "IsVisible":
-                    case "RowCount":
-                        Invalidate();
-                        return;
-
-                    case "DefaultRowHeight":
-                        InvalidateRows(0, ActiveSheet.ColumnHeader.RowCount, SheetArea.ColumnHeader);
-                        return;
-                }
-            }
-        }
-
-        internal void HandleSheetPropertyChanged(object sender, PropertyChangedEventArgs e, bool autoRefresh)
-        {
-            if (ActiveSheet != null)
-            {
-                if (e.PropertyName == "Visible")
-                {
-                    Worksheet sheet = sender as Worksheet;
-                    if (sheet != null)
-                    {
-                        HandleVisibleChanged(sheet);
-                        if (autoRefresh)
-                        {
-                            Invalidate();
-                        }
-                    }
-                }
-                if ((e.PropertyName == "SheetTabColor") || (e.PropertyName == "SheetTabThemeColor"))
-                {
-                    UpdateTabStrip();
-                }
-                if (sender == ActiveSheet)
-                {
-                    switch (e.PropertyName)
-                    {
-                        case "ActiveCell":
-                        case "ActiveColumnIndex":
-                        case "ActiveRowIndex":
-                            Navigation.UpdateStartPosition(ActiveSheet.ActiveRowIndex, ActiveSheet.ActiveColumnIndex);
-                            UpdateHeaderCellsStateInSpanArea();
-                            UpdateFocusIndicator();
-                            UpdateHeaderCellsStateInSpanArea();
-                            PrepareCellEditing();
-                            UpdateDataValidationUI(ActiveSheet.ActiveRowIndex, ActiveSheet.ActiveColumnIndex);
-                            return;
-
-                        case "FrozenRowCount":
-                            SetViewportTopRow(0, ActiveSheet.FrozenRowCount);
-                            if (autoRefresh)
-                            {
-                                InvalidateRows(0, ActiveSheet.FrozenRowCount, SheetArea.Cells | SheetArea.RowHeader);
-                            }
-                            return;
-
-                        case "FrozenColumnCount":
-                            SetViewportLeftColumn(0, ActiveSheet.FrozenColumnCount);
-                            if (autoRefresh)
-                            {
-                                InvalidateColumns(0, ActiveSheet.FrozenColumnCount, SheetArea.Cells | SheetArea.ColumnHeader);
-                            }
-                            return;
-
-                        case "FrozenTrailingRowCount":
-                            if (autoRefresh)
-                            {
-                                InvalidateRows(Math.Max(0, ActiveSheet.RowCount - ActiveSheet.FrozenTrailingRowCount), ActiveSheet.FrozenTrailingRowCount, SheetArea.Cells | SheetArea.RowHeader);
-                            }
-                            return;
-
-                        case "FrozenTrailingColumnCount":
-                            if (autoRefresh)
-                            {
-                                InvalidateRows(Math.Max(0, ActiveSheet.ColumnCount - ActiveSheet.FrozenTrailingColumnCount), ActiveSheet.FrozenTrailingColumnCount, SheetArea.Cells | SheetArea.ColumnHeader);
-                            }
-                            return;
-
-                        case "RowFilter":
-                            if (_cachedFilterButtonInfoModel != null)
-                            {
-                                _cachedFilterButtonInfoModel.Clear();
-                                _cachedFilterButtonInfoModel = null;
-                            }
-                            if (autoRefresh)
-                            {
-                                InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
-                            }
-                            return;
-
-                        case "ShowGridLine":
-                        case "GridLineColor":
-                        case "ZoomFactor":
-                        case "DefaultColumnWidth":
-                        case "DefaultRowHeight":
-                        case "NamedStyles":
-                        case "DefaultStyle":
-                        case "[Sort]":
-                        case "[MoveTo]":
-                        case "[CopyTo]":
-                        case "SelectionBorderColor":
-                        case "SelectionBorderThemeColor":
-                        case "SelectionBackground":
-                            if (autoRefresh)
-                            {
-                                InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
-                            }
-                            return;
-
-                        case "DataSource":
-                            if (autoRefresh)
-                            {
-                                Invalidate();
-                            }
-                            return;
-
-                        case "[ViewportInfo]":
-                            return;
-
-                        case "RowCount":
-                        case "RowRangeGroup":
-                            if (autoRefresh)
-                            {
-                                InvalidateRows(0, ActiveSheet.RowCount, SheetArea.Cells | SheetArea.RowHeader);
-                            }
-                            return;
-
-                        case "ColumnCount":
-                        case "ColumnRangeGroup":
-                            if (autoRefresh)
-                            {
-                                InvalidateColumns(0, ActiveSheet.ColumnCount, SheetArea.Cells | SheetArea.ColumnHeader);
-                            }
-                            return;
-
-                        case "StartingRowNumber":
-                        case "RowHeaderColumnCount":
-                            if (autoRefresh)
-                            {
-                                InvalidateColumns(0, ActiveSheet.RowHeader.ColumnCount, SheetArea.CornerHeader | SheetArea.RowHeader);
-                            }
-                            return;
-
-                        case "StartingColumnNumber":
-                        case "ColumnHeaderRowCount":
-                            if (autoRefresh)
-                            {
-                                InvalidateRows(0, ActiveSheet.ColumnHeader.RowCount, SheetArea.ColumnHeader);
-                            }
-                            return;
-
-                        case "RowHeaderDefaultStyle":
-                            if (autoRefresh)
-                            {
-                                InvalidateRange(-1, -1, -1, -1, SheetArea.CornerHeader | SheetArea.RowHeader);
-                            }
-                            return;
-
-                        case "ColumnHeaderDefaultStyle":
-                            if (autoRefresh)
-                            {
-                                InvalidateRange(-1, -1, -1, -1, SheetArea.ColumnHeader);
-                            }
-                            return;
-
-                        case "ReferenceStyle":
-                        case "Names":
-                            if (autoRefresh)
-                            {
-                                InvalidateRange(-1, -1, -1, -1, SheetArea.Cells);
-                            }
-                            return;
-
-                        case "[ImportFile]":
-                            if (autoRefresh)
-                            {
-                                InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
-                            }
-                            Excel.HideProgressRingOnOpenCSVCompleted();
-                            return;
-
-                        case "[OpenXml]":
-                            InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
-                            return;
-
-                        case "Charts":
-                        case "SurfaceCharts":
-                        case "FloatingObjects":
-                        case "Pictures":
-                            if (autoRefresh)
-                            {
-                                InvalidateFloatingObjectLayout();
-                            }
-                            return;
-                    }
-                }
-            }
-        }
-
-        internal void HandleSheetRowHeaderPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (sender == ActiveSheet.RowHeader)
-            {
-                switch (e.PropertyName)
-                {
-                    case "DefaultStyle":
-                    case "AutoText":
-                    case "AutoTextIndex":
-                    case "IsVisible":
-                    case "ColumnCount":
-                        Invalidate();
-                        return;
-
-                    case "DefaultColumnWidth":
-                        InvalidateColumns(0, ActiveSheet.RowHeader.ColumnCount, SheetArea.CornerHeader | SheetArea.RowHeader);
-                        return;
-                }
-            }
-        }
-
         void HandleVisibleChanged(Worksheet sheet)
         {
             if ((sheet != null) && (sheet.Workbook != null))
@@ -4861,47 +4357,6 @@ namespace Dt.Cells.UI
                         sheet.Workbook.ActiveSheetIndex = num3;
                     }
                 }
-            }
-        }
-
-        internal void HandleWorkbookPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case "Sheets":
-                case "ActiveSheetIndex":
-                case "ActiveSheet":
-                    Invalidate();
-                    return;
-
-                case "StartSheetIndex":
-                    ProcessStartSheetIndexChanged();
-                    return;
-
-                case "CurrentThemeName":
-                case "CurrentTheme":
-                    InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
-                    InvalidateFloatingObjects();
-                    return;
-
-                case "HorizontalScrollBarVisibility":
-                case "VerticalScrollBarVisibility":
-                case "ReferenceStyle":
-                case "Names":
-                case "CanCellOverflow":
-                case "AutoRefresh":
-                case "[OpenXml]":
-                    InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
-                    return;
-
-                case "[OpenExcel]":
-                case "[DataCalculated]":
-                    Excel.HideOpeningStatusOnOpenExcelCompleted();
-                    InvalidateLayout();
-                    base.InvalidateMeasure();
-                    base.InvalidateArrange();
-                    Invalidate();
-                    return;
             }
         }
 
@@ -5241,152 +4696,10 @@ namespace Dt.Cells.UI
             }
         }
 
-        /// <summary>
-        /// Invalidates the measurement state (layout) and the arranged state (layout) for the control.
-        /// The view layout and data is updated after the invalidation.
-        /// </summary>
-#if ANDROID
-        new
-#endif
-        public void Invalidate()
-        {
-            if (!IsSuspendInvalidate())
-            {
-                if (IsEditing)
-                {
-                    StopCellEditing(true);
-                }
-                InvalidateLayout();
-                Children.Clear();
-                _cornerPanel = null;
-                _rowHeaders = null;
-                _colHeaders = null;
-                if (_cellsPanels != null)
-                {
-                    CellsPanel[,] viewportArray = _cellsPanels;
-                    int upperBound = viewportArray.GetUpperBound(0);
-                    int num2 = viewportArray.GetUpperBound(1);
-                    for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
-                    {
-                        for (int j = viewportArray.GetLowerBound(1); j <= num2; j++)
-                        {
-                            CellsPanel viewport = viewportArray[i, j];
-                            if (viewport != null)
-                            {
-                                viewport.RemoveDataValidationUI();
-                            }
-                        }
-                    }
-                }
-                _cellsPanels = null;
-                _groupCornerPresenter = null;
-                _rowGroupHeaderPresenter = null;
-                _columnGroupHeaderPresenter = null;
-                _rowGroupPresenters = null;
-                _columnGroupPresenters = null;
-                _tooltipHelper = null;
-                _currentActiveColumnIndex = (ActiveSheet == null) ? -1 : ActiveSheet.ActiveColumnIndex;
-                _currentActiveRowIndex = (ActiveSheet == null) ? -1 : ActiveSheet.ActiveRowIndex;
-                Navigation.UpdateStartPosition(_currentActiveRowIndex, _currentActiveColumnIndex);
-            }
-        }
-
-        /// <summary>
-        /// Invalidates the charts.
-        /// </summary>
-        public void InvalidateCharts()
-        {
-            if ((ActiveSheet != null) && (ActiveSheet.Charts.Count > 0))
-            {
-                InvalidateCharts(ActiveSheet.Charts.ToArray());
-            }
-        }
-
-        /// <summary>
-        /// Invalidates the charts.
-        /// </summary>
-        /// <param name="charts">The charts.</param>
-        public void InvalidateCharts(params SpreadChart[] charts)
-        {
-            InvalidateFloatingObjectLayout();
-            foreach (SpreadChart chart in charts)
-            {
-                RefreshViewportFloatingObjects(chart);
-            }
-        }
-
-        /// <summary>
-        /// Invalidates the column state in the control; the column layout and data is updated after the invalidation.
-        /// </summary>
-        /// <param name="column">The start column index.</param>
-        /// <param name="columnCount">The column count.</param>
-        /// <param name="sheetArea">The invalidated sheet area.</param>
-        public void InvalidateColumns(int column, int columnCount, SheetArea sheetArea)
-        {
-            if (!IsSuspendInvalidate())
-            {
-                InvalidateRange(-1, column, -1, columnCount, sheetArea);
-            }
-        }
-
-        /// <summary>
-        /// Invalidates the custom floating objects.
-        /// </summary>
-        public void InvalidateCustomFloatingObjects()
-        {
-            if ((ActiveSheet != null) && (ActiveSheet.FloatingObjects.Count > 0))
-            {
-                List<CustomFloatingObject> list = new List<CustomFloatingObject>();
-                foreach (FloatingObject obj2 in ActiveSheet.FloatingObjects)
-                {
-                    if (obj2 is CustomFloatingObject)
-                    {
-                        list.Add(obj2 as CustomFloatingObject);
-                    }
-                }
-                InvalidateCustomFloatingObjects(list.ToArray());
-            }
-        }
-
-        /// <summary>
-        /// Invalidates the custom floating objects.
-        /// </summary>
-        /// <param name="floatingObjects">The floating objects.</param>
-        public void InvalidateCustomFloatingObjects(params CustomFloatingObject[] floatingObjects)
-        {
-            InvalidateFloatingObjectLayout();
-            foreach (CustomFloatingObject obj2 in floatingObjects)
-            {
-                RefreshViewportFloatingObjects(obj2);
-            }
-        }
-
         internal void InvalidateFloatingObjectLayout()
         {
             InvalidateFloatingObjectsLayoutModel();
             RefreshViewportFloatingObjectsLayout();
-        }
-
-        /// <summary>
-        /// Invalidates the charts.
-        /// </summary>
-        public void InvalidateFloatingObjects()
-        {
-            InvalidateFloatingObjectLayout();
-            RefreshViewportFloatingObjects();
-        }
-
-        /// <summary>
-        /// Invalidates the floating object.
-        /// </summary>
-        /// <param name="floatingObjects">The floating objects.</param>
-        public void InvalidateFloatingObjects(params FloatingObject[] floatingObjects)
-        {
-            InvalidateFloatingObjectLayout();
-            foreach (FloatingObject obj2 in floatingObjects)
-            {
-                RefreshViewportFloatingObjects(obj2);
-            }
         }
 
         void InvalidateFloatingObjectsLayoutModel()
@@ -5460,111 +4773,6 @@ namespace Dt.Cells.UI
                         columnHeaderRowsPresenter.InvalidateRowsMeasureState(true);
                     columnHeaderRowsPresenter.InvalidateMeasure();
                 }
-            }
-        }
-
-        /// <summary>
-        /// Invalidates the pictures.
-        /// </summary>
-        public void InvalidatePictures()
-        {
-            if ((ActiveSheet != null) && (ActiveSheet.Pictures.Count > 0))
-            {
-                InvalidatePictures(ActiveSheet.Pictures.ToArray());
-            }
-        }
-
-        /// <summary>
-        /// Invalidates the pictures.
-        /// </summary>
-        /// <param name="pictures">The pictures.</param>
-        public void InvalidatePictures(params Picture[] pictures)
-        {
-            InvalidateFloatingObjectLayout();
-            foreach (Picture picture in pictures)
-            {
-                RefreshViewportFloatingObjects(picture);
-            }
-        }
-
-        /// <summary>
-        /// Invalidates a range state in the control; the range layout and data is updated after the invalidation.
-        /// </summary>
-        /// <param name="row">The start row index.</param>
-        /// <param name="column">The start column index.</param>
-        /// <param name="rowCount">The row count.</param>
-        /// <param name="columnCount">The column count.</param>
-        /// <param name="sheetArea">The invalidated sheet area.</param>
-        public void InvalidateRange(int row, int column, int rowCount, int columnCount, SheetArea sheetArea)
-        {
-            if (!IsSuspendInvalidate())
-            {
-                if ((row < 0) || (column < 0))
-                {
-                    InvalidateLayout();
-                }
-                _cachedFilterButtonInfoModel = null;
-                InvalidateMeasure();
-                Worksheet worksheet = ActiveSheet;
-                if (((byte)(sheetArea & SheetArea.Cells)) == 1)
-                {
-                    if (row < 0)
-                    {
-                        row = 0;
-                        rowCount = (worksheet == null) ? 0 : worksheet.RowCount;
-                    }
-                    if (column < 0)
-                    {
-                        column = 0;
-                        columnCount = (worksheet == null) ? 0 : worksheet.ColumnCount;
-                    }
-                    _cachedViewportCellLayoutModel = null;
-                    RefreshViewportCells(_cellsPanels, row, column, rowCount, columnCount);
-                }
-                if (((byte)(sheetArea & SheetArea.ColumnHeader)) == 4)
-                {
-                    if (row < 0)
-                    {
-                        row = 0;
-                        rowCount = (worksheet == null) ? 0 : worksheet.RowCount;
-                    }
-                    if (column < 0)
-                    {
-                        column = 0;
-                        columnCount = (worksheet == null) ? 0 : worksheet.ColumnCount;
-                    }
-                    _cachedColumnHeaderCellLayoutModel = null;
-                    RefreshHeaderCells(_colHeaders, row, column, rowCount, columnCount);
-                }
-                if (((byte)(sheetArea & (SheetArea.CornerHeader | SheetArea.RowHeader))) == 2)
-                {
-                    if (row < 0)
-                    {
-                        row = 0;
-                        rowCount = (worksheet == null) ? 0 : worksheet.RowCount;
-                    }
-                    if (column < 0)
-                    {
-                        column = 0;
-                        columnCount = (worksheet == null) ? 0 : worksheet.ColumnCount;
-                    }
-                    _cachedRowHeaderCellLayoutModel = null;
-                    RefreshHeaderCells(_rowHeaders, row, column, rowCount, columnCount);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Invalidates the row state in the control; the row layout and data is updated after the invalidation.
-        /// </summary>
-        /// <param name="row">The start row index.</param>
-        /// <param name="rowCount">The row count.</param>
-        /// <param name="sheetArea">The invalidated sheet area.</param>
-        public void InvalidateRows(int row, int rowCount, SheetArea sheetArea)
-        {
-            if (!IsSuspendInvalidate())
-            {
-                InvalidateRange(row, -1, rowCount, -1, sheetArea);
             }
         }
 
@@ -6440,16 +5648,6 @@ namespace Dt.Cells.UI
             return (flag && flag2);
         }
 
-        internal void OnActiveSheetChanged()
-        {
-            if (EditorConnector.IsFormulaSelectionBegined)
-            {
-                EditorConnector.UpdateSelectionItemsForCurrentSheet();
-                EditorConnector.ActivateEditor = true;
-            }
-            Invalidate();
-        }
-
         void OnEditedCellChanged(object sender, CellChangedEventArgs e)
         {
             if (string.Equals(e.PropertyName, "Value"))
@@ -7186,7 +6384,7 @@ namespace Dt.Cells.UI
                             ((UIElement)_dragDropIndicator.Children[7]).Clip = geometry8;
                         }
                     }
-                    if (Excel.ShowDragDropTip)
+                    if (ShowDragDropTip)
                     {
                         TooltipHelper.ShowTooltip(GetRangeString(new CellRange(num5, num6, rowCount, columnCount)), num19 + 2.0, num20 + 5.0);
                     }
@@ -7289,7 +6487,7 @@ namespace Dt.Cells.UI
                             RectangleGeometry geometry = new RectangleGeometry();
                             geometry.Rect = new Rect(0.0, 0.0, width, num13);
                             _dragDropInsertIndicator.Clip = geometry;
-                            if (Excel.ShowDragDropTip)
+                            if (ShowDragDropTip)
                             {
                                 TooltipHelper.ShowTooltip(GetRangeString(new CellRange(-1, dragToColumn, -1, num7)), MousePosition.X + 10.0, _mouseDownPosition.Y + 10.0);
                             }
@@ -7375,7 +6573,7 @@ namespace Dt.Cells.UI
                             RectangleGeometry geometry2 = new RectangleGeometry();
                             geometry2.Rect = new Rect(0.0, 0.0, num20, width);
                             _dragDropInsertIndicator.Clip = geometry2;
-                            if (Excel.ShowDragDropTip)
+                            if (ShowDragDropTip)
                             {
                                 TooltipHelper.ShowTooltip(GetRangeString(new CellRange(dragToRow, -1, num15, -1)), _mouseDownPosition.X + 10.0, MousePosition.Y + 10.0);
                             }
@@ -7622,7 +6820,9 @@ namespace Dt.Cells.UI
 
         internal void Reset()
         {
-            Init();
+            InitLayout();
+
+            // 初始化其他属性
         }
 
         void ResetDragFill()
@@ -7756,18 +6956,6 @@ namespace Dt.Cells.UI
             }
         }
 
-        /// <summary>
-        /// Resumes the events.
-        /// </summary>
-        public void ResumeEvent()
-        {
-            _eventSuspended--;
-            if (_eventSuspended < 0)
-            {
-                _eventSuspended = 0;
-            }
-        }
-
         internal void ResumeFloatingObjectsInvalidate()
         {
             if ((_cellsPanels != null) && (_cellsPanels != null))
@@ -7792,20 +6980,6 @@ namespace Dt.Cells.UI
         double RoundToPoint(double value)
         {
             return Math.Floor(value);
-        }
-
-        /// <summary>
-        /// Sets the active cell of the sheet.
-        /// </summary>
-        /// <param name="row">The active row index.</param>
-        /// <param name="column">The active column index.</param>
-        /// <param name="clearSelection"> if set to <c>true</c> clears the old selection.</param>
-        public void SetActiveCell(int row, int column, bool clearSelection)
-        {
-            if (ActiveSheet.GetActualStyleInfo(row, column, SheetArea.Cells).Focusable)
-            {
-                SetActiveCellInternal(row, column, clearSelection);
-            }
         }
 
         internal void SetActiveCellInternal(int row, int column, bool clearSelection)
@@ -7877,298 +7051,6 @@ namespace Dt.Cells.UI
             }
         }
 
-        /// <summary>
-        /// Sets the index of the floating object Z.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="zIndex">Index of the z.</param>
-        public void SetFloatingObjectZIndex(string name, int zIndex)
-        {
-            if (_cellsPanels != null)
-            {
-                CellsPanel[,] viewportArray = _cellsPanels;
-                int upperBound = viewportArray.GetUpperBound(0);
-                int num2 = viewportArray.GetUpperBound(1);
-                for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
-                {
-                    for (int j = viewportArray.GetLowerBound(1); j <= num2; j++)
-                    {
-                        CellsPanel viewport = viewportArray[i, j];
-                        if (viewport != null)
-                        {
-                            viewport.SetFlotingObjectZIndex(name, zIndex);
-                        }
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Sets the column viewport's left column.
-        /// </summary>
-        /// <param name="columnViewportIndex">The column viewport index.</param>
-        /// <param name="value">The column index.</param>
-        public void SetViewportLeftColumn(int columnViewportIndex, int value)
-        {
-            if ((ActiveSheet != null) && (_hScrollable || _isTouchScrolling))
-            {
-                value = Math.Max(ActiveSheet.FrozenColumnCount, value);
-                value = Math.Min((ActiveSheet.ColumnCount - ActiveSheet.FrozenTrailingColumnCount) - 1, value);
-                value = TryGetNextScrollableColumn(value);
-
-                ViewportInfo viewportInfo = GetViewportInfo();
-                value = Math.Max(ActiveSheet.FrozenColumnCount, value);
-                value = Math.Min((ActiveSheet.ColumnCount - ActiveSheet.FrozenTrailingColumnCount) - 1, value);
-                value = TryGetNextScrollableColumn(value);
-                if (((columnViewportIndex >= 0) && (columnViewportIndex < viewportInfo.ColumnViewportCount)) && (viewportInfo.LeftColumns[columnViewportIndex] != value))
-                {
-                    int oldIndex = viewportInfo.LeftColumns[columnViewportIndex];
-                    viewportInfo.LeftColumns[columnViewportIndex] = value;
-                    InvalidateViewportColumnsLayout();
-                    InvalidateViewportHorizontalArrangement(columnViewportIndex);
-                    if (_columnGroupPresenters != null)
-                    {
-                        GcRangeGroup group = _columnGroupPresenters[columnViewportIndex + 1];
-                        if (group != null)
-                        {
-                            group.InvalidateMeasure();
-                        }
-                    }
-                    RaiseLeftChanged(oldIndex, value, columnViewportIndex);
-                }
-                if (!IsWorking)
-                {
-                    SaveHitInfo(null);
-                }
-
-                if (_horizontalScrollBar != null)
-                {
-                    GetSheetLayout();
-                    if (((columnViewportIndex > -1) && (columnViewportIndex < _horizontalScrollBar.Length)) && (_horizontalScrollBar[columnViewportIndex].Value != value))
-                    {
-                        int invisibleColumnsBeforeColumn = GetInvisibleColumnsBeforeColumn(ActiveSheet, value);
-                        int num2 = value - invisibleColumnsBeforeColumn;
-                        _horizontalScrollBar[columnViewportIndex].Value = (double)num2;
-                        _horizontalScrollBar[columnViewportIndex].InvalidateArrange();
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Sets the row viewport's top row.
-        /// </summary>
-        /// <param name="rowViewportIndex">The row viewport index.</param>
-        /// <param name="value">The row index.</param>
-        public void SetViewportTopRow(int rowViewportIndex, int value)
-        {
-            if ((ActiveSheet != null) && (_vScrollable || _isTouchScrolling))
-            {
-                value = Math.Max(ActiveSheet.FrozenRowCount, value);
-                value = Math.Min((ActiveSheet.RowCount - ActiveSheet.FrozenTrailingRowCount) - 1, value);
-                value = TryGetNextScrollableRow(value);
-                if (_verticalScrollBar != null)
-                {
-                    GetSheetLayout();
-                    if (((rowViewportIndex > -1) && (rowViewportIndex < _verticalScrollBar.Length)) && (value != _verticalScrollBar[rowViewportIndex].Value))
-                    {
-                        int invisibleRowsBeforeRow = GetInvisibleRowsBeforeRow(ActiveSheet, value);
-                        int num2 = value - invisibleRowsBeforeRow;
-                        _verticalScrollBar[rowViewportIndex].Value = (double)num2;
-                        _verticalScrollBar[rowViewportIndex].InvalidateArrange();
-                    }
-                }
-
-                ViewportInfo viewportInfo = GetViewportInfo();
-                value = Math.Max(ActiveSheet.FrozenRowCount, value);
-                value = Math.Min((ActiveSheet.RowCount - ActiveSheet.FrozenTrailingRowCount) - 1, value);
-                value = TryGetNextScrollableRow(value);
-                if (((rowViewportIndex >= 0) && (rowViewportIndex < viewportInfo.RowViewportCount)) && (viewportInfo.TopRows[rowViewportIndex] != value))
-                {
-                    int oldIndex = viewportInfo.TopRows[rowViewportIndex];
-                    viewportInfo.TopRows[rowViewportIndex] = value;
-                    InvalidateViewportRowsLayout();
-                    InvalidateViewportRowsPresenterMeasure(rowViewportIndex, false);
-                    for (int i = -1; i < viewportInfo.ColumnViewportCount; i++)
-                    {
-                        CellsPanel viewportRowsPresenter = GetViewportRowsPresenter(rowViewportIndex, i);
-                        if (viewportRowsPresenter != null)
-                        {
-                            if ((viewportRowsPresenter.RowViewportIndex == GetActiveRowViewportIndex()) && (viewportRowsPresenter.ColumnViewportIndex == GetActiveColumnViewportIndex()))
-                            {
-                                viewportRowsPresenter.UpdateDataValidationUI(ActiveSheet.ActiveRowIndex, ActiveSheet.ActiveColumnIndex);
-                            }
-                            viewportRowsPresenter.InvalidateMeasure();
-                            viewportRowsPresenter.InvalidateBordersMeasureState();
-                            viewportRowsPresenter.InvalidateSelectionMeasureState();
-                            viewportRowsPresenter.InvalidateFloatingObjectsMeasureState();
-                        }
-                    }
-                    var rowHeaderRowsPresenter = GetRowHeaderRowsPresenter(rowViewportIndex);
-                    if (rowHeaderRowsPresenter != null)
-                    {
-                        rowHeaderRowsPresenter.InvalidateMeasure();
-                    }
-                    if (_rowGroupPresenters != null)
-                    {
-                        GcRangeGroup group = _rowGroupPresenters[rowViewportIndex + 1];
-                        if (group != null)
-                        {
-                            group.InvalidateMeasure();
-                        }
-                    }
-                    RaiseTopChanged(oldIndex, value, rowViewportIndex);
-                }
-                if (!IsWorking)
-                {
-                    SaveHitInfo(null);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Displays the automatic fill indicator.
-        /// </summary>
-        public void ShowAutoFillIndicator()
-        {
-            if (CanUserDragFill)
-            {
-                CellsPanel viewportRowsPresenter = GetViewportRowsPresenter(GetActiveRowViewportIndex(), GetActiveColumnViewportIndex());
-                if (viewportRowsPresenter != null)
-                {
-                    CellRange activeSelection = GetActiveSelection();
-                    if ((activeSelection == null) && (ActiveSheet.Selections.Count > 0))
-                    {
-                        activeSelection = ActiveSheet.Selections[0];
-                    }
-                    if (activeSelection != null)
-                    {
-                        _autoFillIndicatorContainer.Width = 16.0;
-                        _autoFillIndicatorContainer.Height = 16.0;
-                        _autoFillIndicatorRec = new Rect?(GetAutoFillIndicatorRect(viewportRowsPresenter, activeSelection));
-                        base.InvalidateArrange();
-                        CachedGripperLocation = null;
-                    }
-                }
-            }
-        }
-
-        internal void ShowCell(int rowViewportIndex, int columnViewportIndex, int row, int column, VerticalPosition verticalPosition, HorizontalPosition horizontalPosition)
-        {
-            Worksheet worksheet = ActiveSheet;
-            if (((worksheet != null) && (row <= worksheet.RowCount)) && (column <= worksheet.ColumnCount))
-            {
-                int viewportTopRow = GetViewportTopRow(rowViewportIndex);
-                int viewportLeftColumn = GetViewportLeftColumn(columnViewportIndex);
-                switch (horizontalPosition)
-                {
-                    case HorizontalPosition.Center:
-                        {
-                            double num3 = RoundToPoint((GetViewportWidth(columnViewportIndex) - RoundToPoint(worksheet.Columns[column].ActualWidth * ZoomFactor)) / 2.0);
-                            while (0 < column)
-                            {
-                                num3 -= RoundToPoint(worksheet.Columns[column - 1].ActualWidth * ZoomFactor);
-                                if (num3 < 0.0)
-                                {
-                                    break;
-                                }
-                                column--;
-                            }
-                            break;
-                        }
-                    case HorizontalPosition.Right:
-                        {
-                            double num4 = GetViewportWidth(columnViewportIndex) - RoundToPoint(worksheet.Columns[column].ActualWidth * ZoomFactor);
-                            while (0 < column)
-                            {
-                                num4 -= RoundToPoint(worksheet.Columns[column - 1].ActualWidth * ZoomFactor);
-                                if (num4 < 0.0)
-                                {
-                                    break;
-                                }
-                                column--;
-                            }
-                            break;
-                        }
-                    case HorizontalPosition.Nearest:
-                        if (column >= viewportLeftColumn)
-                        {
-                            double num5 = GetViewportWidth(columnViewportIndex) - RoundToPoint(worksheet.Columns[column].Width * ZoomFactor);
-                            while (viewportLeftColumn < column)
-                            {
-                                num5 -= RoundToPoint(worksheet.Columns[column - 1].ActualWidth * ZoomFactor);
-                                if (num5 < 0.0)
-                                {
-                                    break;
-                                }
-                                column--;
-                            }
-                        }
-                        break;
-                }
-                switch (verticalPosition)
-                {
-                    case VerticalPosition.Center:
-                        {
-                            double num6 = RoundToPoint((GetViewportHeight(rowViewportIndex) - RoundToPoint(worksheet.Rows[row].ActualHeight * ZoomFactor)) / 2.0);
-                            while (0 < row)
-                            {
-                                num6 -= RoundToPoint(worksheet.Rows[row - 1].ActualHeight * ZoomFactor);
-                                if (num6 < 0.0)
-                                {
-                                    break;
-                                }
-                                row--;
-                            }
-                            break;
-                        }
-                    case VerticalPosition.Bottom:
-                        {
-                            double num7 = GetViewportHeight(rowViewportIndex) - RoundToPoint(worksheet.Rows[row].ActualHeight * ZoomFactor);
-                            while (0 < row)
-                            {
-                                num7 -= RoundToPoint(worksheet.Rows[row - 1].ActualHeight * ZoomFactor);
-                                if (num7 < 0.0)
-                                {
-                                    break;
-                                }
-                                row--;
-                            }
-                            break;
-                        }
-                    case VerticalPosition.Nearest:
-                        if ((row >= viewportTopRow) && (viewportTopRow != -1))
-                        {
-                            double num8 = GetViewportHeight(rowViewportIndex) - RoundToPoint(worksheet.Rows[row].ActualHeight * ZoomFactor);
-                            while (viewportTopRow < row)
-                            {
-                                num8 -= RoundToPoint(worksheet.Rows[row - 1].ActualHeight * ZoomFactor);
-                                if (num8 < 0.0)
-                                {
-                                    break;
-                                }
-                                row--;
-                            }
-                        }
-                        break;
-                }
-                if (row != viewportTopRow)
-                {
-                    SetViewportTopRow(rowViewportIndex, row);
-                }
-                if (column != viewportLeftColumn)
-                {
-                    SetViewportLeftColumn(columnViewportIndex, column);
-                }
-            }
-        }
-
-        internal void ShowColumn(int columnViewportIndex, int column, HorizontalPosition horizontalPosition)
-        {
-            int viewportTopRow = GetViewportTopRow(0);
-            ShowCell(0, columnViewportIndex, viewportTopRow, column, VerticalPosition.Top, horizontalPosition);
-        }
-
         void ShowDragFillSmartTag(CellRange fillRange, AutoFillType initFillType)
         {
             double x = 0.0;
@@ -8225,7 +7107,7 @@ namespace Dt.Cells.UI
                 y++;
                 Windows.UI.Xaml.Controls.Primitives.Popup popup = new Windows.UI.Xaml.Controls.Primitives.Popup();
                 _dragFillPopup = new PopupHelper(popup);
-                base.Children.Add(popup);
+                Children.Add(popup);
                 popup.Closed += DragFillSmartTagPopup_Closed;
                 _dragFillSmartTag = new DragFillSmartTag(this);
                 _dragFillSmartTag.AutoFilterType = initFillType;
@@ -8245,12 +7127,6 @@ namespace Dt.Cells.UI
             {
                 _formulaSelectionGripperPanel.Visibility = Visibility.Visible;
             }
-        }
-
-        internal void ShowRow(int rowViewportIndex, int row, VerticalPosition verticalPosition)
-        {
-            int viewportLeftColumn = GetViewportLeftColumn(0);
-            ShowCell(rowViewportIndex, 0, row, viewportLeftColumn, verticalPosition, HorizontalPosition.Left);
         }
 
         IEnumerable<FloatingObject> SortFloatingObjectByZIndex(FloatingObject[] floatingObjects)
@@ -8284,16 +7160,6 @@ namespace Dt.Cells.UI
             }
             list2.Reverse();
             return (IEnumerable<FloatingObject>)list2;
-        }
-
-        /// <summary>
-        /// Starts to edit the active cell.
-        /// </summary>
-        /// <param name="selectAll">if set to <c>true</c> selects all the text when the text is changed during editing.</param>
-        /// <param name="defaultText">if set to <c>true</c> [default text].</param>
-        public void StartCellEditing(bool selectAll = false, string defaultText = null)
-        {
-            StartCellEditing(selectAll, defaultText, EditorStatus.Edit);
         }
 
         /// <summary>
@@ -8356,7 +7222,7 @@ namespace Dt.Cells.UI
                 _resizingTracker.Y1 = sheetLayout.HeaderY;
                 _resizingTracker.X2 = _resizingTracker.X1;
                 _resizingTracker.Y2 = _resizingTracker.Y1 + _availableSize.Height;
-                if (((InputDeviceType != InputDeviceType.Touch) && ((Excel.ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Both) || (Excel.ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Column))) && ((savedHitTestInformation.ColumnViewportIndex > -2) && (_colHeaders[savedHitTestInformation.ColumnViewportIndex + 1].GetViewportCell(savedHitTestInformation.HeaderInfo.Row, savedHitTestInformation.HeaderInfo.Column, true) != null)))
+                if (((InputDeviceType != InputDeviceType.Touch) && ((ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Both) || (ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Column))) && ((savedHitTestInformation.ColumnViewportIndex > -2) && (_colHeaders[savedHitTestInformation.ColumnViewportIndex + 1].GetViewportCell(savedHitTestInformation.HeaderInfo.Row, savedHitTestInformation.HeaderInfo.Column, true) != null)))
                 {
                     UpdateResizeToolTip(GetHorizontalResizeTip(viewportResizingColumnLayoutFromX.Width), true);
                 }
@@ -8479,7 +7345,7 @@ namespace Dt.Cells.UI
                 _resizingTracker.X2 = sheetLayout.HeaderX + _availableSize.Width;
                 _resizingTracker.Y1 = (viewportResizingRowLayoutFromY.Y + viewportResizingRowLayoutFromY.Height) - 0.5;
                 _resizingTracker.Y2 = _resizingTracker.Y1;
-                if (((InputDeviceType != InputDeviceType.Touch) && ((Excel.ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Both) || (Excel.ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Row)))
+                if (((InputDeviceType != InputDeviceType.Touch) && ((ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Both) || (ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Row)))
                     && ((savedHitTestInformation.RowViewportIndex > -2) && (_rowHeaders[savedHitTestInformation.RowViewportIndex + 1].GetViewportCell(savedHitTestInformation.HeaderInfo.Row, savedHitTestInformation.HeaderInfo.Column, true) != null)))
                 {
                     UpdateResizeToolTip(GetVerticalResizeTip(viewportResizingRowLayoutFromY.Height), false);
@@ -8514,7 +7380,6 @@ namespace Dt.Cells.UI
                             flag = viewportRowsPresenter.StartCellEditing(ActiveSheet.ActiveRowIndex, ActiveSheet.ActiveColumnIndex, selectAll, defaultText, status);
                         }
                         IsEditing = flag;
-                        Excel.IsTabStop = !flag;
                         if (!flag)
                         {
                             EditingViewport = null;
@@ -8572,7 +7437,7 @@ namespace Dt.Cells.UI
                 _resizingTracker.Y1 = sheetLayout.HeaderY;
                 _resizingTracker.X2 = _resizingTracker.X1;
                 _resizingTracker.Y2 = _resizingTracker.Y1 + _availableSize.Height;
-                if (((InputDeviceType != InputDeviceType.Touch) && ((Excel.ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Both) || (Excel.ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Column))) && ((savedHitTestInformation.ColumnViewportIndex > -2) && (_colHeaders[savedHitTestInformation.ColumnViewportIndex + 1].GetViewportCell(savedHitTestInformation.HeaderInfo.Row, savedHitTestInformation.HeaderInfo.Column, true) != null)))
+                if (((InputDeviceType != InputDeviceType.Touch) && ((ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Both) || (ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Column))) && ((savedHitTestInformation.ColumnViewportIndex > -2) && (_colHeaders[savedHitTestInformation.ColumnViewportIndex + 1].GetViewportCell(savedHitTestInformation.HeaderInfo.Row, savedHitTestInformation.HeaderInfo.Column, true) != null)))
                 {
                     UpdateResizeToolTip(GetHorizontalResizeTip(viewportResizingColumnLayoutFromXForTouch.Width), true);
                 }
@@ -8639,55 +7504,11 @@ namespace Dt.Cells.UI
                 _resizingTracker.X2 = sheetLayout.HeaderX + _availableSize.Width;
                 _resizingTracker.Y1 = (viewportResizingRowLayoutFromYForTouch.Y + viewportResizingRowLayoutFromYForTouch.Height) - 0.5;
                 _resizingTracker.Y2 = _resizingTracker.Y1;
-                if (((InputDeviceType != InputDeviceType.Touch) && ((Excel.ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Both) || (Excel.ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Row))) && ((savedHitTestInformation.RowViewportIndex > -2) && (_rowHeaders[savedHitTestInformation.RowViewportIndex + 1].GetViewportCell(savedHitTestInformation.HeaderInfo.Row, savedHitTestInformation.HeaderInfo.Column, true) != null)))
+                if (((InputDeviceType != InputDeviceType.Touch) && ((ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Both) || (ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Row))) && ((savedHitTestInformation.RowViewportIndex > -2) && (_rowHeaders[savedHitTestInformation.RowViewportIndex + 1].GetViewportCell(savedHitTestInformation.HeaderInfo.Row, savedHitTestInformation.HeaderInfo.Column, true) != null)))
                 {
                     UpdateResizeToolTip(GetVerticalResizeTip(viewportResizingRowLayoutFromYForTouch.Height), false);
                 }
             }
-        }
-
-        /// <summary>
-        /// Stops editing the active cell.
-        /// </summary>
-        /// <param name="cancel">if set to <c>true</c> does not apply the edited text to the cell.</param>
-        /// <returns><c>true</c> when able to stop cell editing successfully; otherwise, <c>false</c>.</returns>
-        public bool StopCellEditing(bool cancel = false)
-        {
-            if (IsEditing && (ActiveSheet != null))
-            {
-                CellsPanel editingViewport = EditingViewport;
-                if (editingViewport != null)
-                {
-                    if (!cancel && (ApplyEditingValue(cancel) == DataValidationResult.Retry))
-                    {
-                        editingViewport.RetryEditing();
-                    }
-                    else
-                    {
-                        bool editorDirty = editingViewport.EditorDirty;
-                        editingViewport.StopCellEditing(cancel);
-                        if (editorDirty && !cancel)
-                        {
-                            RefreshViewportCells(_cellsPanels, 0, 0, ActiveSheet.RowCount, ActiveSheet.ColumnCount);
-                        }
-                    }
-                    if (editingViewport.IsEditing())
-                    {
-                        return false;
-                    }
-                    EditingViewport = null;
-                }
-            }
-            IsEditing = false;
-            return true;
-        }
-
-        /// <summary>
-        /// Suspends all events.
-        /// </summary>
-        public void SuspendEvent()
-        {
-            _eventSuspended++;
         }
 
         internal void SuspendFloatingObjectsInvalidate()
@@ -9826,13 +8647,13 @@ namespace Dt.Cells.UI
 
         void UpdateResizeToolTip(string text, bool resizeColumn)
         {
-            if (resizeColumn && ((Excel.ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Column) || (Excel.ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Both)))
+            if (resizeColumn && ((ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Column) || (ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Both)))
             {
                 double x = _mouseDownPosition.X;
                 double offsetY = _mouseDownPosition.Y - 40.0;
                 TooltipHelper.ShowTooltip(text, x, offsetY);
             }
-            else if ((Excel.ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Row) || (Excel.ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Both))
+            else if ((ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Row) || (ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Both))
             {
                 double offsetX = _mouseDownPosition.X;
                 double num4 = _mouseDownPosition.Y - 38.0;
@@ -9883,7 +8704,7 @@ namespace Dt.Cells.UI
 
         internal void UpdateScrollToolTip(bool verticalScroll, int scrollTo = -1)
         {
-            if (verticalScroll && ((Excel.ShowScrollTip == Dt.Cells.Data.ShowScrollTip.Vertical) || (Excel.ShowScrollTip == Dt.Cells.Data.ShowScrollTip.Both)))
+            if (verticalScroll && ((ShowScrollTip == Dt.Cells.Data.ShowScrollTip.Vertical) || (ShowScrollTip == Dt.Cells.Data.ShowScrollTip.Both)))
             {
                 double offsetX = _mouseDownPosition.X - 100.0;
                 double offsetY = _mouseDownPosition.Y - 10.0;
@@ -9893,7 +8714,7 @@ namespace Dt.Cells.UI
                 }
                 TooltipHelper.ShowTooltip(GetVericalScrollTip(scrollTo), offsetX, offsetY);
             }
-            else if ((Excel.ShowScrollTip == Dt.Cells.Data.ShowScrollTip.Horizontal) || (Excel.ShowScrollTip == Dt.Cells.Data.ShowScrollTip.Both))
+            else if ((ShowScrollTip == Dt.Cells.Data.ShowScrollTip.Horizontal) || (ShowScrollTip == Dt.Cells.Data.ShowScrollTip.Both))
             {
                 double num3 = _mouseDownPosition.X - 20.0;
                 double num4 = _mouseDownPosition.Y - 40.0;
@@ -9945,30 +8766,6 @@ namespace Dt.Cells.UI
                 RaiseInvalidOperation(message, null, null);
             }
             return flag;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="columnViewportIndex"></param>
-        /// <param name="viewportWidth"></param>
-        internal void AddColumnViewport(int columnViewportIndex, double viewportWidth)
-        {
-            ActiveSheet.AddColumnViewport(columnViewportIndex, viewportWidth / ((double)ZoomFactor));
-            InvalidateLayout();
-            InvalidateMeasure();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="rowViewportIndex"></param>
-        /// <param name="viewportHeight"></param>
-        internal void AddRowViewport(int rowViewportIndex, double viewportHeight)
-        {
-            ActiveSheet.AddRowViewport(rowViewportIndex, viewportHeight / ((double)ZoomFactor));
-            InvalidateLayout();
-            InvalidateMeasure();
         }
 
         /// <summary>
@@ -10209,7 +9006,7 @@ namespace Dt.Cells.UI
             double tabStripHeight = layout.TabStripHeight;
             double num2 = layout.GetHorizontalScrollBarWidth(0) + layout.TabStripWidth;
             double num3 = Math.Min(Math.Max((double)0.0, (double)(MousePosition.X - tabStripX)), num2);
-            _tabStripRatio = num3 / num2;
+            TabStripRatio = num3 / num2;
             InvalidateLayout();
             InvalidateMeasure();
         }
@@ -10456,11 +9253,11 @@ namespace Dt.Cells.UI
         /// <returns></returns>
         internal int GetActiveRowViewportIndex(int sheetIndex)
         {
-            if ((sheetIndex < 0) || (sheetIndex >= Excel.SheetCount))
+            if ((sheetIndex < 0) || (sheetIndex >= SheetCount))
             {
                 throw new ArgumentOutOfRangeException("sheetIndex");
             }
-            var sheet = Excel.Sheets[sheetIndex];
+            var sheet = Sheets[sheetIndex];
             return GetViewportInfo(sheet).ActiveRowViewport;
         }
 
@@ -10539,17 +9336,12 @@ namespace Dt.Cells.UI
 
         internal int GetActiveColumnViewportIndex(int sheetIndex)
         {
-            if ((sheetIndex < 0) || (sheetIndex >= Excel.SheetCount))
+            if ((sheetIndex < 0) || (sheetIndex >= SheetCount))
             {
                 throw new ArgumentOutOfRangeException("sheetIndex");
             }
-            var sheet = Excel.Sheets[sheetIndex];
+            var sheet = Sheets[sheetIndex];
             return GetViewportInfo(sheet).ActiveColumnViewport;
-        }
-
-        internal int GetColumnPaneCount()
-        {
-            return GetViewportInfo().ColumnViewportCount;
         }
 
         /// <summary>
@@ -10559,9 +9351,9 @@ namespace Dt.Cells.UI
         /// <returns></returns>
         double GetColumnSplitBoxesWidth(int columnPaneCount)
         {
-            if (_columnSplitBoxPolicy != SplitBoxPolicy.Always)
+            if (ColumnSplitBoxPolicy != SplitBoxPolicy.Always)
             {
-                if (_columnSplitBoxPolicy == SplitBoxPolicy.AsNeeded)
+                if (ColumnSplitBoxPolicy == SplitBoxPolicy.AsNeeded)
                 {
                     if (columnPaneCount == 1)
                     {
@@ -10569,7 +9361,7 @@ namespace Dt.Cells.UI
                     }
                     return 0.0;
                 }
-                if (_columnSplitBoxPolicy == SplitBoxPolicy.Never)
+                if (ColumnSplitBoxPolicy == SplitBoxPolicy.Never)
                 {
                     return 0.0;
                 }
@@ -10680,20 +9472,11 @@ namespace Dt.Cells.UI
             return num;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        internal int GetRowPaneCount()
-        {
-            return GetViewportInfo().RowViewportCount;
-        }
-
         double GetRowSplitBoxesHeight(int rowPaneCount)
         {
-            if (_rowSplitBoxPolicy != SplitBoxPolicy.Always)
+            if (RowSplitBoxPolicy != SplitBoxPolicy.Always)
             {
-                if (_rowSplitBoxPolicy == SplitBoxPolicy.AsNeeded)
+                if (RowSplitBoxPolicy == SplitBoxPolicy.AsNeeded)
                 {
                     if (rowPaneCount == 1)
                     {
@@ -10701,7 +9484,7 @@ namespace Dt.Cells.UI
                     }
                     return 0.0;
                 }
-                if (_rowSplitBoxPolicy == SplitBoxPolicy.Never)
+                if (RowSplitBoxPolicy == SplitBoxPolicy.Never)
                 {
                     return 0.0;
                 }
@@ -10761,20 +9544,6 @@ namespace Dt.Cells.UI
                 return 1.0;
             }
             return scale;
-        }
-
-        /// <summary>
-        /// Calculates the start index to bring the tab into view. 
-        /// </summary>
-        /// <param name="tabIndex">Index of the tab.</param>
-        /// <returns></returns>
-        public int GetStartIndexToBringTabIntoView(int tabIndex)
-        {
-            if (TabStrip != null)
-            {
-                return TabStrip.GetStartIndexToBringTabIntoView(tabIndex);
-            }
-            return Excel.StartSheetIndex;
         }
 
         /// <summary>
@@ -10926,9 +9695,9 @@ namespace Dt.Cells.UI
         internal void HideOpeningStatus()
         {
             HideOpeningProgressRing();
-            if (TabStrip != null)
+            if (_tabStrip != null)
             {
-                TabStrip.Visibility = 0;
+                _tabStrip.Visibility = 0;
             }
         }
 
@@ -11286,7 +10055,7 @@ namespace Dt.Cells.UI
             {
                 return false;
             }
-            TabStrip tabStrip = TabStrip;
+            TabStrip tabStrip = _tabStrip;
             if (tabStrip != null)
             {
                 tabStrip.ActiveNextTab();
@@ -11305,7 +10074,7 @@ namespace Dt.Cells.UI
             {
                 return false;
             }
-            TabStrip tabStrip = TabStrip;
+            TabStrip tabStrip = _tabStrip;
             if (tabStrip != null)
             {
                 tabStrip.ActivePreviousTab();
@@ -11335,7 +10104,7 @@ namespace Dt.Cells.UI
             {
                 InputDeviceType = InputDeviceType.Mouse;
             }
-            if ((ElementTreeHelper.GetParentOrSelf<Thumb>(e.OriginalSource as DependencyObject) != null) && ((Excel.ShowScrollTip == ShowScrollTip.Horizontal) || (Excel.ShowScrollTip == ShowScrollTip.Both)))
+            if ((ElementTreeHelper.GetParentOrSelf<Thumb>(e.OriginalSource as DependencyObject) != null) && ((ShowScrollTip == ShowScrollTip.Horizontal) || (ShowScrollTip == ShowScrollTip.Both)))
             {
                 _showScrollTip = true;
                 _mouseDownPosition = e.GetCurrentPoint(this).Position;
@@ -11370,22 +10139,18 @@ namespace Dt.Cells.UI
             {
                 sheetIndex = strip.ActiveTab.SheetIndex;
             }
-            if ((sheetIndex >= 0) && (sheetIndex < Excel.Sheets.Count))
+            if ((sheetIndex >= 0) && (sheetIndex < Sheets.Count))
             {
                 StopCellEditing(false);
-                if (sheetIndex != Excel.ActiveSheetIndex)
+                if (sheetIndex != ActiveSheetIndex)
                 {
-                    Excel.Workbook.ActiveSheetIndex = sheetIndex;
+                    Workbook.ActiveSheetIndex = sheetIndex;
                     RaiseActiveSheetIndexChanged();
-                    _currentActiveRowIndex = Excel.ActiveSheet.ActiveRowIndex;
-                    _currentActiveColumnIndex = Excel.ActiveSheet.ActiveColumnIndex;
+                    _currentActiveRowIndex = ActiveSheet.ActiveRowIndex;
+                    _currentActiveColumnIndex = ActiveSheet.ActiveColumnIndex;
                     Navigation.UpdateStartPosition(_currentActiveRowIndex, _currentActiveColumnIndex);
                     Invalidate();
                 }
-            }
-            if (!IsEditing)
-            {
-                Excel.Focus(FocusState.Programmatic);
             }
         }
 
@@ -11411,8 +10176,8 @@ namespace Dt.Cells.UI
         {
             StopCellEditing(false);
             var item = new Worksheet();
-            Excel.Sheets.Add(item);
-            item.ReferenceStyle = Excel.Workbook.ReferenceStyle;
+            Sheets.Add(item);
+            item.ReferenceStyle = Workbook.ReferenceStyle;
             if (item.ReferenceStyle == ReferenceStyle.R1C1)
             {
                 item.ColumnHeader.AutoText = HeaderAutoText.Numbers;
@@ -11424,7 +10189,7 @@ namespace Dt.Cells.UI
             _currentActiveRowIndex = item.ActiveRowIndex;
             _currentActiveColumnIndex = item.ActiveColumnIndex;
             Navigation.UpdateStartPosition(_currentActiveRowIndex, _currentActiveColumnIndex);
-            (sender as TabStrip).NewTab(Excel.Sheets.Count - 1);
+            (sender as TabStrip).NewTab(Sheets.Count - 1);
             InvalidateSheetLayout();
         }
 
@@ -11455,7 +10220,7 @@ namespace Dt.Cells.UI
             {
                 InputDeviceType = InputDeviceType.Mouse;
             }
-            if ((ElementTreeHelper.GetParentOrSelf<Thumb>(e.OriginalSource as DependencyObject) != null) && ((Excel.ShowScrollTip == ShowScrollTip.Vertical) || (Excel.ShowScrollTip == ShowScrollTip.Both)))
+            if ((ElementTreeHelper.GetParentOrSelf<Thumb>(e.OriginalSource as DependencyObject) != null) && ((ShowScrollTip == ShowScrollTip.Vertical) || (ShowScrollTip == ShowScrollTip.Both)))
             {
                 _showScrollTip = true;
                 _mouseDownPosition = e.GetCurrentPoint(this).Position;
@@ -11535,7 +10300,7 @@ namespace Dt.Cells.UI
                     _horizontalScrollBar[columnViewportIndex].InvalidateArrange();
                 }
             }
-            if (_showScrollTip && ((Excel.ShowScrollTip == ShowScrollTip.Both) || (Excel.ShowScrollTip == ShowScrollTip.Horizontal)))
+            if (_showScrollTip && ((ShowScrollTip == ShowScrollTip.Both) || (ShowScrollTip == ShowScrollTip.Horizontal)))
             {
                 UpdateScrollToolTip(false, num3 + 1);
             }
@@ -11547,7 +10312,7 @@ namespace Dt.Cells.UI
         /// <param name="hi"></param>
         void ProcessSplitBarDoubleClick(HitTestInformation hi)
         {
-            if (!Excel.Workbook.Protect)
+            if (!Workbook.Protect)
             {
                 int rowViewportIndex = hi.RowViewportIndex;
                 int columnViewportIndex = hi.ColumnViewportIndex;
@@ -11646,7 +10411,7 @@ namespace Dt.Cells.UI
                     _verticalScrollBar[rowViewportIndex].InvalidateArrange();
                 }
             }
-            if (_showScrollTip && ((Excel.ShowScrollTip == ShowScrollTip.Both) || (Excel.ShowScrollTip == ShowScrollTip.Vertical)))
+            if (_showScrollTip && ((ShowScrollTip == ShowScrollTip.Both) || (ShowScrollTip == ShowScrollTip.Vertical)))
             {
                 UpdateScrollToolTip(true, _scrollTo + 1);
             }
@@ -11758,26 +10523,36 @@ namespace Dt.Cells.UI
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="columnViewportIndex"></param>
-        internal void RemoveColumnViewport(int columnViewportIndex)
+        internal void RemoveColumnViewport(int sheetIndex, int columnViewportIndex)
         {
-            ActiveSheet.RemoveColumnViewport(columnViewportIndex);
-            InvalidateLayout();
-            InvalidateMeasure();
+            if ((sheetIndex < 0) || (sheetIndex >= SheetCount))
+            {
+                throw new ArgumentOutOfRangeException("sheetIndex");
+            }
+            if (sheetIndex == ActiveSheetIndex)
+            {
+                RemoveColumnViewport(columnViewportIndex);
+            }
+            else
+            {
+                Sheets[sheetIndex].RemoveColumnViewport(columnViewportIndex);
+            }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="rowViewportIndex"></param>
-        internal void RemoveRowViewport(int rowViewportIndex)
+        internal void RemoveRowViewport(int sheetIndex, int rowViewportIndex)
         {
-            ActiveSheet.RemoveRowViewport(rowViewportIndex);
-            InvalidateLayout();
-            InvalidateMeasure();
+            if ((sheetIndex < 0) || (sheetIndex >= SheetCount))
+            {
+                throw new ArgumentOutOfRangeException("sheetIndex");
+            }
+            if (sheetIndex == ActiveSheetIndex)
+            {
+                RemoveRowViewport(rowViewportIndex);
+            }
+            else
+            {
+                Sheets[sheetIndex].RemoveRowViewport(rowViewportIndex);
+            }
         }
 
         /// <summary>
@@ -11787,7 +10562,6 @@ namespace Dt.Cells.UI
         {
             if (CanSelectFormula)
             {
-                IsSwitchingSheet = true;
                 EditorConnector.ClearFlickingItems();
                 if (!EditorConnector.IsInOtherSheet)
                 {
@@ -11817,9 +10591,9 @@ namespace Dt.Cells.UI
         internal void ShowOpeningStatus()
         {
             ShowOpeningProgressRing();
-            if (TabStrip != null)
+            if (_tabStrip != null)
             {
-                TabStrip.Visibility = (Visibility)1;
+                _tabStrip.Visibility = (Visibility)1;
             }
         }
 
@@ -11828,7 +10602,7 @@ namespace Dt.Cells.UI
         /// </summary>
         void StartColumnSplitting()
         {
-            if (!Excel.Workbook.Protect)
+            if (!Workbook.Protect)
             {
                 HitTestInformation savedHitTestInformation = GetHitInfo();
                 SheetLayout layout = GetSheetLayout();
@@ -11889,7 +10663,7 @@ namespace Dt.Cells.UI
         /// </summary>
         void StartRowSplitting()
         {
-            if (!Excel.Workbook.Protect)
+            if (!Workbook.Protect)
             {
                 HitTestInformation savedHitTestInformation = GetHitInfo();
                 SheetLayout layout = GetSheetLayout();
@@ -12122,7 +10896,7 @@ namespace Dt.Cells.UI
                         _horizontalScrollBar[k] = new ScrollBar();
                         _horizontalScrollBar[k].Orientation = (Orientation)1;
                         _horizontalScrollBar[k].IsTabStop = false;
-                        _horizontalScrollBar[k].TypeSafeSetStyle(Excel.HorizontalScrollBarStyle);
+                        _horizontalScrollBar[k].TypeSafeSetStyle(HorizontalScrollBarStyle);
                         _horizontalScrollBar[k].Scroll += HorizontalScrollbar_Scroll;
                         _horizontalScrollBar[k].PointerPressed += OnHorizontalScrollBarPointerPressed;
                         _horizontalScrollBar[k].PointerReleased += OnHorizontalScrollBarPointerReleased;
@@ -12146,7 +10920,7 @@ namespace Dt.Cells.UI
                     viewportLeftColumn -= invisibleColumnsBeforeColumn;
                     _horizontalScrollBar[i].Value = (double)viewportLeftColumn;
                     _horizontalScrollBar[i].InvalidateArrange();
-                    _horizontalScrollBar[i].IsEnabled = HorizontalScrollBarPolicy != 0;
+                    _horizontalScrollBar[i].IsEnabled = HorizontalScrollBarVisibility != 0;
                 }
             }
         }
@@ -12259,7 +11033,7 @@ namespace Dt.Cells.UI
                         _verticalScrollBar[k].Orientation = 0;
                         _verticalScrollBar[k].ViewportSize = 25.0;
                         _verticalScrollBar[k].IsTabStop = false;
-                        _verticalScrollBar[k].TypeSafeSetStyle(Excel.VerticalScrollBarStyle);
+                        _verticalScrollBar[k].TypeSafeSetStyle(VerticalScrollBarStyle);
                         _verticalScrollBar[k].Scroll += VerticalScrollbar_Scroll;
                         _verticalScrollBar[k].PointerPressed += OnVerticalScrollbarPointerPressed;
                         _verticalScrollBar[k].PointerReleased += OnVerticalScrollbarPointerReleased;
@@ -12283,7 +11057,7 @@ namespace Dt.Cells.UI
                     viewportTopRow -= invisibleRowsBeforeRow;
                     _verticalScrollBar[i].Value = (double)viewportTopRow;
                     _verticalScrollBar[i].InvalidateArrange();
-                    _verticalScrollBar[i].IsEnabled = VerticalScrollBarPolicy != 0;
+                    _verticalScrollBar[i].IsEnabled = VerticalScrollBarVisibility != 0;
                 }
             }
         }
@@ -12402,6 +11176,26 @@ namespace Dt.Cells.UI
                 SetViewportTopRow(rowViewportIndex, num2);
             }
         }
+
+
+        void InvalidateDecoration()
+        {
+            if (_cellsPanels != null)
+            {
+                int rowBound = _cellsPanels.GetUpperBound(0);
+                int colBound = _cellsPanels.GetUpperBound(1);
+                for (int i = _cellsPanels.GetLowerBound(0); i <= rowBound; i++)
+                {
+                    for (int j = _cellsPanels.GetLowerBound(1); j <= colBound; j++)
+                    {
+                        CellsPanel viewport = _cellsPanels[i, j];
+                        if (viewport != null)
+                            viewport.InvalidateDecorationPanel();
+                    }
+                }
+            }
+        }
+
     }
 }
 

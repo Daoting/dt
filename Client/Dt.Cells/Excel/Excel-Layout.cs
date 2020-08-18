@@ -1,4 +1,14 @@
-﻿using Dt.Cells.Data;
+﻿#region 文件描述
+/******************************************************************************
+* 创建: Daoting
+* 摘要: 
+* 日志: 2020-08-17 创建
+******************************************************************************/
+#endregion
+
+#region 引用命名
+using Dt.Cells.Data;
+using Dt.Cells.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,103 +20,23 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Shapes;
+#endregion
 
-namespace Dt.Cells.UI
+namespace Dt.Base
 {
-    public partial class SheetView
+    public partial class Excel
     {
-
-#if IOS
-        new
-#endif
-        void Init()
+        void InitLayout()
         {
-            _trailingFreezeLineStyle = null;
-            _showFreezeLine = true;
-            _protect = false;
-            _vScrollable = true;
-            _hScrollable = true;
-            _cachedColumnHeaderRowLayoutModel = null;
-            _cachedViewportRowLayoutModel = null;
-            _cachedRowHeaderColumnLayoutModel = null;
-            _cachedViewportColumnLayoutModel = null;
-            _cachedColumnHeaderViewportColumnLayoutModel = null;
-            _cachedRowHeaderViewportRowLayoutModel = null;
-            _cachedRowHeaderCellLayoutModel = null;
-            _cachedColumnHeaderCellLayoutModel = null;
-            _cachedViewportCellLayoutModel = null;
-            _cachedGroupLayout = null;
-            _cachedFloatingObjectLayoutModel = null;
-            _cornerPanel = null;
-            _rowHeaders = null;
-            _colHeaders = null;
-            _cellsPanels = null;
-            _groupCornerPresenter = null;
-            _rowGroupHeaderPresenter = null;
-            _columnGroupHeaderPresenter = null;
-            _rowGroupPresenters = null;
-            _columnGroupPresenters = null;
-            _showColumnRangeGroup = true;
-            _showRowRangeGroup = true;
-            _shapeDrawingContainer = null;
-            _trackersContainer = null;
-            _columnFreezeLine = null;
-            _rowFreezeLine = null;
-            _columnTrailingFreezeLine = null;
-            _rowTrailingFreezeLine = null;
-            _resizingTracker = null;
-            _currentActiveColumnIndex = 0;
-            _currentActiveRowIndex = 0;
-            _verticalSelectionMgr = null;
-            _horizontalSelectionMgr = null;
-            _keyMap = null;
-            _floatingObjectsKeyMap = null;
-            _availableSize = new Size(double.PositiveInfinity, double.PositiveInfinity);
-            _isEditing = false;
-            _isDoubleClick = false;
-            _positionInfo = null;
-            _navigation = null;
-            _undoManager = null;
-            _eventSuspended = 0;
-            _lastClickPoint = new Point();
-            _lastClickLocation = new Point(-1.0, -1.0);
             _hoverManager = new HoverManager(this);
-            _dragDropIndicator = null;
-            _dragDropInsertIndicator = null;
-            _dragDropFromRange = null;
-            _dragDropColumnOffset = 0;
-            _dragDropRowOffset = 0;
-            _isDragInsert = false;
-            _isDragCopy = false;
             _dragStartRowViewport = -2;
             _dragStartColumnViewport = -2;
             _dragToColumnViewport = -2;
             _dragToRowViewport = -2;
             _dragToColumn = -2;
             _dragToRow = -2;
-            _mouseCursor = null;
-            _tooltipHelper = null;
-            _filterPopupHelper = null;
-            _dataValidationPopUpHelper = null;
-            _inputDeviceType = InputDeviceType.Mouse;
-            _resizeZeroIndicator = ResizeZeroIndicator.Default;
             _cachedResizerGipper = new Dictionary<string, BitmapImage>();
             _cachedToolbarImageSources = new Dictionary<string, ImageSource>();
-
-            _horizontalScrollBarHeight = 25.0;
-            _verticalScrollBarWidth = 25.0;
-            _horizontalScrollBarStyle = null;
-            _verticalScrollBarStyle = null;
-            _scrollBarTrackPolicy = ScrollBarTrackPolicy.Both;
-            _columnSplitBoxAlignment = SplitBoxAlignment.Leading;
-            _rowSplitBoxAlignment = SplitBoxAlignment.Leading;
-            _tabStripEditable = true;
-            _tabStripInsertTab = true;
-            _tabStripVisibility = 0;
-            _tabStripRatio = 0.5;
-            _cachedLastAvailableSize = new Size(0.0, 0.0);
-            _columnSplitBoxPolicy = SplitBoxPolicy.Always;
-            _rowSplitBoxPolicy = SplitBoxPolicy.Always;
 
             _progressGrid = new Grid();
             _progressRing = new ProgressRing();
@@ -123,7 +53,7 @@ namespace Dt.Cells.UI
             _showScrollTip = false;
             FormulaSelectionGripperContainerPanel panel = new FormulaSelectionGripperContainerPanel
             {
-                ParentSheet = this
+                Excel = this
             };
             panel.IsHitTestVisible = false;
             _formulaSelectionGripperPanel = panel;
@@ -156,6 +86,8 @@ namespace Dt.Cells.UI
             _cachedautoFillIndicatorImage = new Image();
             _autoFillIndicatorContainer.Child = _cachedautoFillIndicatorImage;
             _cachedToolbarImageSources = new Dictionary<string, ImageSource>();
+
+            Background = BrushRes.浅灰背景;
         }
 
         internal void InvalidateLayout()
@@ -520,10 +452,10 @@ namespace Dt.Cells.UI
                 {
                     _tabStrip = new TabStrip();
                     // hdt 应用构造前的设置
-                    if (_tabStripVisibility == Visibility.Collapsed)
+                    if (TabStripVisibility == Visibility.Collapsed)
                         _tabStrip.Visibility = Visibility.Collapsed;
-                    _tabStrip.HasInsertTab = Excel.TabStripInsertTab;
-                    _tabStrip.OwningView = this;
+                    _tabStrip.HasInsertTab = TabStripInsertTab;
+                    _tabStrip.Excel = this;
                     Canvas.SetZIndex(_tabStrip, 0x62);
                 }
                 else
@@ -533,17 +465,17 @@ namespace Dt.Cells.UI
                 _tabStrip.ActiveTabChanging -= new EventHandler(OnTabStripActiveTabChanging);
                 _tabStrip.ActiveTabChanged -= new EventHandler(OnTabStripActiveTabChanged);
                 _tabStrip.NewTabNeeded -= new EventHandler(OnTabStripNewTabNeeded);
-                _tabStrip.AddSheets(Excel.Sheets);
+                _tabStrip.AddSheets(Sheets);
                 if (!Children.Contains(_tabStrip))
                 {
                     Children.Add(_tabStrip);
                 }
-                int activeSheetIndex = Excel.ActiveSheetIndex;
-                if ((activeSheetIndex >= 0) && (activeSheetIndex < Excel.Sheets.Count))
+                int activeSheetIndex = ActiveSheetIndex;
+                if ((activeSheetIndex >= 0) && (activeSheetIndex < Sheets.Count))
                 {
                     _tabStrip.ActiveSheet(activeSheetIndex, false);
                 }
-                _tabStrip.SetStartSheet(Excel.StartSheetIndex);
+                _tabStrip.SetStartSheet(StartSheetIndex);
                 _tabStrip.InvalidateMeasure();
                 _tabStrip.Measure(new Size(layout.TabStripWidth, layout.TabStripHeight));
                 _tabStrip.ActiveTabChanging += new EventHandler(OnTabStripActiveTabChanging);
@@ -1222,22 +1154,22 @@ namespace Dt.Cells.UI
             totalWidth += tempWidth;
             totalHeight += tempHeight;
 
-            bool flag = (HorizontalScrollBarPolicy == ScrollBarVisibility.Visible) || (HorizontalScrollBarPolicy == ScrollBarVisibility.Disabled);
-            if (HorizontalScrollBarPolicy == ScrollBarVisibility.Auto)
+            bool flag = (HorizontalScrollBarVisibility == ScrollBarVisibility.Visible) || (HorizontalScrollBarVisibility == ScrollBarVisibility.Disabled);
+            if (HorizontalScrollBarVisibility == ScrollBarVisibility.Auto)
             {
                 if (layout.ColumnPaneCount > 1)
                 {
                     flag = true;
                 }
-                else if ((VerticalScrollBarPolicy == (ScrollBarVisibility)3) || (VerticalScrollBarPolicy == 0))
+                else if ((VerticalScrollBarVisibility == (ScrollBarVisibility)3) || (VerticalScrollBarVisibility == 0))
                 {
-                    flag |= totalWidth > ((width - ActualVerticalScrollBarWidth) - groupLayout.Width);
+                    flag |= totalWidth > ((width - VerticalScrollBarWidth) - groupLayout.Width);
                 }
-                else if (VerticalScrollBarPolicy == (ScrollBarVisibility)1)
+                else if (VerticalScrollBarVisibility == (ScrollBarVisibility)1)
                 {
                     if (tempHeight > height)
                     {
-                        flag |= totalWidth > ((width - ActualVerticalScrollBarWidth) - groupLayout.Width);
+                        flag |= totalWidth > ((width - VerticalScrollBarWidth) - groupLayout.Width);
                     }
                     else
                     {
@@ -1252,7 +1184,7 @@ namespace Dt.Cells.UI
             if (flag)
             {
                 // 显示水平滚动栏
-                layout.OrnamentHeight = ActualHorizontalScrollBarHeight;
+                layout.OrnamentHeight = HorizontalScrollBarHeight;
                 height -= layout.OrnamentHeight;
                 height = Math.Max(0.0, height);
             }
@@ -1271,11 +1203,11 @@ namespace Dt.Cells.UI
                 }
             }
 
-            bool flag3 = ((VerticalScrollBarPolicy == (ScrollBarVisibility)3) || (VerticalScrollBarPolicy == 0)) || ((VerticalScrollBarPolicy == (ScrollBarVisibility)1) && ((layout.RowPaneCount > 1) || (totalHeight > (height - groupLayout.Height))));
+            bool flag3 = ((VerticalScrollBarVisibility == (ScrollBarVisibility)3) || (VerticalScrollBarVisibility == 0)) || ((VerticalScrollBarVisibility == (ScrollBarVisibility)1) && ((layout.RowPaneCount > 1) || (totalHeight > (height - groupLayout.Height))));
             if (flag3)
             {
                 // 显示垂直滚动栏
-                layout.OrnamentWidth = ActualVerticalScrollBarWidth;
+                layout.OrnamentWidth = VerticalScrollBarWidth;
                 width -= layout.OrnamentWidth;
                 width = Math.Max(0.0, width);
             }
@@ -1568,7 +1500,7 @@ namespace Dt.Cells.UI
                 num49 = 0.0;
                 if (flag3)
                 {
-                    num49 += ActualVerticalScrollBarWidth;
+                    num49 += VerticalScrollBarWidth;
                 }
                 for (int num50 = 0; num50 < (layout.ColumnPaneCount - 1); num50++)
                 {
@@ -1585,7 +1517,7 @@ namespace Dt.Cells.UI
                 num52 = 0.0;
                 if (flag)
                 {
-                    num52 += ActualHorizontalScrollBarHeight;
+                    num52 += HorizontalScrollBarHeight;
                 }
                 for (int num53 = 0; num53 < (layout.RowPaneCount - 1); num53++)
                 {

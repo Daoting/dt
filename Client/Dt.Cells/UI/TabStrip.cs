@@ -7,21 +7,18 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Cells.Data;
 using Dt.Cells.UndoRedo;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading;
 using Windows.Foundation;
 using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 #endregion
@@ -201,7 +198,7 @@ namespace Dt.Cells.UI
         SheetTab GetTouchHitSheetTab(Point point)
         {
             int count = TabsPresenter.Count;
-            if ((OwningView != null) && (count > 0))
+            if ((Excel != null) && (count > 0))
             {
                 List<UIElement> list = Enumerable.ToList<UIElement>(VisualTreeHelper.FindElementsInHostCoordinates(TranslatePoint(point, Windows.UI.Xaml.Window.Current.Content), Windows.UI.Xaml.Window.Current.Content));
                 if ((list != null) && (list.Count > 0))
@@ -318,7 +315,7 @@ namespace Dt.Cells.UI
                 {
                     if (!Workbook.Protect)
                     {
-                        OwningView.SaveDataForFormulaSelection();
+                        Excel.SaveDataForFormulaSelection();
                         OnNewTabNeeded(EventArgs.Empty);
                         if (tabsPresenter.Count > 1)
                         {
@@ -340,11 +337,11 @@ namespace Dt.Cells.UI
                     }
                     if (hitSheetTab != _activeTab)
                     {
-                        OwningView.SaveDataForFormulaSelection();
+                        Excel.SaveDataForFormulaSelection();
                         ActiveSheet(hitSheetTab.SheetIndex, true);
                     }
                 }
-                OwningView.RaiseSheetTabClick(hitSheetTab.SheetIndex);
+                Excel.RaiseSheetTabClick(hitSheetTab.SheetIndex);
             }
         }
 
@@ -382,7 +379,7 @@ namespace Dt.Cells.UI
                         ActiveSheet(tab.SheetIndex, true);
                     }
                 }
-                OwningView.RaiseSheetTabClick(tab.SheetIndex);
+                Excel.RaiseSheetTabClick(tab.SheetIndex);
             }
         }
 
@@ -397,10 +394,10 @@ namespace Dt.Cells.UI
             {
                 if (!Workbook.Protect)
                 {
-                    if (OwningView.CanSelectFormula)
+                    if (Excel.CanSelectFormula)
                     {
-                        OwningView.SaveDataForFormulaSelection();
-                        OwningView.StopCellEditing(true);
+                        Excel.SaveDataForFormulaSelection();
+                        Excel.StopCellEditing(true);
                     }
                     OnNewTabNeeded(EventArgs.Empty);
                     if (tabsPresenter.Count > 1)
@@ -423,15 +420,15 @@ namespace Dt.Cells.UI
                 }
                 if (touchHitSheetTab != _activeTab)
                 {
-                    if (OwningView.CanSelectFormula)
+                    if (Excel.CanSelectFormula)
                     {
-                        OwningView.SaveDataForFormulaSelection();
-                        OwningView.StopCellEditing(true);
+                        Excel.SaveDataForFormulaSelection();
+                        Excel.StopCellEditing(true);
                     }
                     ActiveSheet(touchHitSheetTab.SheetIndex, true);
                 }
             }
-            OwningView.RaiseSheetTabClick(touchHitSheetTab.SheetIndex);
+            Excel.RaiseSheetTabClick(touchHitSheetTab.SheetIndex);
         }
 
         internal void Refresh()
@@ -520,7 +517,7 @@ namespace Dt.Cells.UI
                     if ((!cancel && !string.IsNullOrEmpty(text)) && IsValidSheetName(text))
                     {
                         SheetRenameUndoAction command = new SheetRenameUndoAction(Workbook.Sheets[_editingTab.SheetIndex], text);
-                        OwningView.DoCommand(command);
+                        Excel.DoCommand(command);
                     }
                     editingElement.Loaded += PrepareTabForEditing;
                     editingElement.LostFocus += TabEditor_LostFocus;
@@ -531,16 +528,16 @@ namespace Dt.Cells.UI
                 _editingTab = null;
                 TabsPresenter.InvalidateMeasure();
                 TabsPresenter.InvalidateArrange();
-                if (OwningView != null)
+                if (Excel != null)
                 {
                     if (agileCallback == null)
                     {
                         agileCallback = delegate
                         {
-                            OwningView.FocusInternal();
+                            Excel.FocusInternal();
                         };
                     }
-                    await OwningView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, agileCallback);
+                    await Excel.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, agileCallback);
                 }
             }
             IsEditing = false;
@@ -577,15 +574,15 @@ namespace Dt.Cells.UI
 
         void TabPresenter_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (((e.PropertyName == "StartIndex") && (OwningView != null)) && ((OwningView.ActiveSheet != null) && (OwningView.ActiveSheet.Workbook != null)))
+            if (((e.PropertyName == "StartIndex") && (Excel != null)) && ((Excel.ActiveSheet != null) && (Excel.ActiveSheet.Workbook != null)))
             {
-                OwningView.ActiveSheet.Workbook.StartSheetIndex = TabsPresenter.StartIndex;
+                Excel.ActiveSheet.Workbook.StartSheetIndex = TabsPresenter.StartIndex;
             }
         }
 
         Point TranslatePoint(Point point, UIElement element)
         {
-            return OwningView.TransformToVisual(element).TransformPoint(point);
+            return Excel.TransformToVisual(element).TransformPoint(point);
         }
 
         internal void Update()
@@ -665,13 +662,13 @@ namespace Dt.Cells.UI
 
         internal bool IsEditing { get; private set; }
 
-        internal SheetView OwningView { get; set; }
+        internal Excel Excel { get; set; }
 
         internal TabsPresenter TabsPresenter { get; }
 
         internal Dt.Cells.Data.Workbook Workbook
         {
-            get { return OwningView.Excel.Workbook; }
+            get { return Excel.Workbook; }
         }
     }
 }

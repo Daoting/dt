@@ -11,9 +11,7 @@ using Dt.Base;
 using Dt.Cells.Data;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Foundation;
@@ -58,7 +56,6 @@ namespace Dt.Cells.UI
         string _jobName;
 
         MemoryStream _cachedStream;
-        SheetView _content;
         readonly List<Rect> _pages;
         bool _hasPictures;
         bool _showDeco;
@@ -80,7 +77,6 @@ namespace Dt.Cells.UI
             // 最终打印页集合
             _printDoc.AddPages += OnAddPages;
 
-            _content = _excel.View;
             _pages = new List<Rect>();
             _hasPictures = _excel.Sheets[_sheetIndex].Pictures.Count > 0;
             _showDeco = _excel.ShowDecoration;
@@ -270,8 +266,8 @@ namespace Dt.Cells.UI
             }
 
             _pages.Clear();
-            _content.RenderTransform = null;
-            _content.Clip = null;
+            _excel.RenderTransform = null;
+            _excel.Clip = null;
             if (_pageIndexs.Count > 0)
             {
                 CreatePages();
@@ -289,7 +285,7 @@ namespace Dt.Cells.UI
             try
             {
                 ArrangePage(e.PageNumber - 1);
-                _printDoc.SetPreviewPage(e.PageNumber, _content);
+                _printDoc.SetPreviewPage(e.PageNumber, _excel);
             }
             catch { }
         }
@@ -304,7 +300,7 @@ namespace Dt.Cells.UI
             for (int i = 0; i < _pages.Count; i++)
             {
                 ArrangePage(i);
-                _printDoc.AddPage(_content);
+                _printDoc.AddPage(_excel);
             }
             _printDoc.AddPagesComplete();
         }
@@ -437,7 +433,7 @@ namespace Dt.Cells.UI
         /// </summary>
         void StretchContent()
         {
-            Grid grid = VisualTreeHelper.GetParent(_content) as Grid;
+            Grid grid = VisualTreeHelper.GetParent(_excel) as Grid;
             Worksheet sheet = _excel.Sheets[_sheetIndex];
             int endRow = sheet.GetLastDirtyRow();
             int endCol = sheet.GetLastDirtyColumn();
@@ -461,13 +457,12 @@ namespace Dt.Cells.UI
         /// <param name="p_memento"></param>
         void Init(Memento p_memento)
         {
-            Grid grid = VisualTreeHelper.GetParent(_content) as Grid;
+            Grid grid = VisualTreeHelper.GetParent(_excel) as Grid;
             p_memento.Height = grid.Height;
             p_memento.Width = grid.Width;
             p_memento.VerticalScrollBarVisibility = _excel.VerticalScrollBarVisibility;
             p_memento.HorizontalScrollBarVisibility = _excel.HorizontalScrollBarVisibility;
             p_memento.TabStripVisibility = _excel.TabStripVisibility;
-            p_memento.BorderThickness = _excel.BorderThickness;
             p_memento.ShowRowRangeGroup = _excel.ShowRowRangeGroup;
             p_memento.ShowColumnRangeGroup = _excel.ShowColumnRangeGroup;
             p_memento.ShowFreezeLine = _excel.ShowFreezeLine;
@@ -475,11 +470,10 @@ namespace Dt.Cells.UI
             _excel.VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
             _excel.HorizontalScrollBarVisibility = ScrollBarVisibility.Hidden;
             _excel.TabStripVisibility = Visibility.Collapsed;
-            _excel.BorderThickness = new Thickness(0.0);
             _excel.ShowRowRangeGroup = false;
             _excel.ShowColumnRangeGroup = false;
-            _excel.View.HideSelectionWhenPrinting = true;
-            _excel.View.HideDecorationWhenPrinting = true;
+            _excel.HideSelectionWhenPrinting = true;
+            _excel.HideDecorationWhenPrinting = true;
             _excel.ShowFreezeLine = false;
 
             Worksheet sheet = _excel.Sheets[_sheetIndex];
@@ -494,21 +488,20 @@ namespace Dt.Cells.UI
         /// <param name="p_memento"></param>
         void Resume(Memento p_memento)
         {
-            _content.RenderTransform = null;
-            _content.Clip = null;
+            _excel.RenderTransform = null;
+            _excel.Clip = null;
 
-            Grid grid = VisualTreeHelper.GetParent(_content) as Grid;
+            Grid grid = VisualTreeHelper.GetParent(_excel) as Grid;
             grid.Height = p_memento.Height;
             grid.Width = p_memento.Width;
             _excel.VerticalScrollBarVisibility = p_memento.VerticalScrollBarVisibility;
             _excel.HorizontalScrollBarVisibility = p_memento.HorizontalScrollBarVisibility;
             _excel.TabStripVisibility = p_memento.TabStripVisibility;
-            _excel.BorderThickness = p_memento.BorderThickness;
             _excel.ShowRowRangeGroup = p_memento.ShowRowRangeGroup;
             _excel.ShowColumnRangeGroup = p_memento.ShowColumnRangeGroup;
             _excel.ShowFreezeLine = p_memento.ShowFreezeLine;
-            _excel.View.HideSelectionWhenPrinting = false;
-            _excel.View.HideDecorationWhenPrinting = false;
+            _excel.HideSelectionWhenPrinting = false;
+            _excel.HideDecorationWhenPrinting = false;
         }
 
         /// <summary>
@@ -584,9 +577,9 @@ namespace Dt.Cells.UI
             TranslateTransform trans = new TranslateTransform();
             trans.X = -page.Left + _printArea.Left;
             trans.Y = -page.Top + _printArea.Top;
-            _content.RenderTransform = trans;
+            _excel.RenderTransform = trans;
 
-            _content.Clip = new RectangleGeometry { Rect = page };
+            _excel.Clip = new RectangleGeometry { Rect = page };
         }
 
         /// <summary>
@@ -604,7 +597,7 @@ namespace Dt.Cells.UI
 
             public Visibility TabStripVisibility;
 
-            public Thickness BorderThickness;
+            public Thickness BorderThickness = new Thickness(0);
 
             public bool ShowRowRangeGroup;
 

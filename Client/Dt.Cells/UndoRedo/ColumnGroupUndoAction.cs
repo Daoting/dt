@@ -7,9 +7,9 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Cells.Data;
 using Dt.Cells.UI;
-using System;
 #endregion
 
 namespace Dt.Cells.UndoRedo
@@ -64,13 +64,13 @@ namespace Dt.Cells.UndoRedo
                 {
                     base.ResumeInvalidate(sender);
                 }
-                SheetView view = sender as SheetView;
-                if (view != null)
+                Excel excel = sender as Excel;
+                if (excel != null)
                 {
-                    view.InvalidateLayout();
-                    view.InvalidateViewportHorizontalArrangement(-2);
-                    view.InvalidateHeaderHorizontalArrangement();
-                    view.InvalidateMeasure();
+                    excel.InvalidateLayout();
+                    excel.InvalidateViewportHorizontalArrangement(-2);
+                    excel.InvalidateHeaderHorizontalArrangement();
+                    excel.InvalidateMeasure();
                 }
             }
         }
@@ -103,7 +103,7 @@ namespace Dt.Cells.UndoRedo
             bool flag = false;
             if (((_sheet != null) && (_columnGroupExtent != null)) && (_sheet.ColumnRangeGroup != null))
             {
-                SheetView view = sender as SheetView;
+                Excel excel = sender as Excel;
                 base.SuspendInvalidate(sender);
                 try
                 {
@@ -116,12 +116,12 @@ namespace Dt.Cells.UndoRedo
                 {
                     base.ResumeInvalidate(sender);
                 }
-                if (view != null)
+                if (excel != null)
                 {
-                    view.InvalidateLayout();
-                    view.InvalidateViewportHorizontalArrangement(-2);
-                    view.InvalidateHeaderHorizontalArrangement();
-                    view.InvalidateMeasure();
+                    excel.InvalidateLayout();
+                    excel.InvalidateViewportHorizontalArrangement(-2);
+                    excel.InvalidateHeaderHorizontalArrangement();
+                    excel.InvalidateMeasure();
                 }
             }
             return flag;

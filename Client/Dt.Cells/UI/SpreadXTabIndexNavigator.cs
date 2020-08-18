@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Cells.Data;
 using System;
 using System.Collections.Generic;
@@ -17,25 +18,25 @@ namespace Dt.Cells.UI
 {
     internal class SpreadXTabIndexNavigator : TabIndexNavigator
     {
-        SheetView _sheetView;
+        Excel _excel;
 
-        public SpreadXTabIndexNavigator(SheetView sheetView)
+        public SpreadXTabIndexNavigator(Excel p_excel)
         {
-            _sheetView = sheetView;
-            _sheetView.SelectionChanging += new EventHandler<SelectionChangingEventArgs>(OnSelectionChanging);
+            _excel = p_excel;
+            _excel.SelectionChanging += new EventHandler<SelectionChangingEventArgs>(OnSelectionChanging);
         }
 
         public override void BringCellToVisible(CompositePosition position)
         {
-            if ((!position.IsEmpty && (position.Type == DataSheetElementType.Cell)) && (_sheetView.ActiveSheet != null))
+            if ((!position.IsEmpty && (position.Type == DataSheetElementType.Cell)) && (_excel.ActiveSheet != null))
             {
-                NavigatorHelper.BringCellToVisible(_sheetView, position.Row, position.Column);
+                NavigatorHelper.BringCellToVisible(_excel, position.Row, position.Column);
             }
         }
 
         public override bool CanMoveCurrentTo(CompositePosition cellPosition)
         {
-            var worksheet = _sheetView.ActiveSheet;
+            var worksheet = _excel.ActiveSheet;
             if ((cellPosition.Type == DataSheetElementType.Cell) && (worksheet != null))
             {
                 if (!worksheet.GetActualRowVisible(cellPosition.Row, SheetArea.Cells) || !worksheet.GetActualColumnVisible(cellPosition.Column, SheetArea.Cells))
@@ -54,9 +55,9 @@ namespace Dt.Cells.UI
         public override List<int> GetColumnIndexes()
         {
             List<int> list = new List<int>();
-            if (_sheetView.ActiveSheet != null)
+            if (_excel.ActiveSheet != null)
             {
-                for (int i = 0; i < _sheetView.ActiveSheet.Columns.Count; i++)
+                for (int i = 0; i < _excel.ActiveSheet.Columns.Count; i++)
                 {
                     list.Add(i);
                 }
@@ -76,9 +77,9 @@ namespace Dt.Cells.UI
 
         public override int GetColumnSpan(CompositePosition position)
         {
-            if ((_sheetView.ActiveSheet != null) && (_sheetView.ActiveSheet.SpanModel != null))
+            if ((_excel.ActiveSheet != null) && (_excel.ActiveSheet.SpanModel != null))
             {
-                CellRange range = _sheetView.ActiveSheet.SpanModel.Find(position.Row, position.Column);
+                CellRange range = _excel.ActiveSheet.SpanModel.Find(position.Row, position.Column);
                 if (range != null)
                 {
                     return range.ColumnCount;
@@ -108,9 +109,9 @@ namespace Dt.Cells.UI
 
         public override int GetRowSpan(CompositePosition position)
         {
-            if ((_sheetView.ActiveSheet != null) && (_sheetView.ActiveSheet.SpanModel != null))
+            if ((_excel.ActiveSheet != null) && (_excel.ActiveSheet.SpanModel != null))
             {
-                CellRange range = _sheetView.ActiveSheet.SpanModel.Find(position.Row, position.Column);
+                CellRange range = _excel.ActiveSheet.SpanModel.Find(position.Row, position.Column);
                 if (range != null)
                 {
                     return range.RowCount;
@@ -131,9 +132,9 @@ namespace Dt.Cells.UI
         public override bool IsMerged(CompositePosition position, out CompositePosition topLeftPosition)
         {
             topLeftPosition = position;
-            if ((_sheetView.ActiveSheet != null) && (_sheetView.ActiveSheet.SpanModel != null))
+            if ((_excel.ActiveSheet != null) && (_excel.ActiveSheet.SpanModel != null))
             {
-                CellRange range = _sheetView.ActiveSheet.SpanModel.Find(position.Row, position.Column);
+                CellRange range = _excel.ActiveSheet.SpanModel.Find(position.Row, position.Column);
                 if (range != null)
                 {
                     topLeftPosition = new CompositePosition(DataSheetElementType.Cell, range.Row, range.Column);
@@ -150,12 +151,12 @@ namespace Dt.Cells.UI
 
         public override int CompositeColumnCount
         {
-            get { return  _sheetView.ActiveSheet.ColumnCount; }
+            get { return  _excel.ActiveSheet.ColumnCount; }
         }
 
         public override int CompositeRowCount
         {
-            get { return  _sheetView.ActiveSheet.RowCount; }
+            get { return  _excel.ActiveSheet.RowCount; }
         }
 
         public override IList<CompositeRange> Selections
@@ -163,7 +164,7 @@ namespace Dt.Cells.UI
             get
             {
                 List<CompositeRange> list = new List<CompositeRange>();
-                var worksheet = _sheetView.ActiveSheet;
+                var worksheet = _excel.ActiveSheet;
                 if (worksheet != null)
                 {
                     foreach (CellRange range in worksheet.Selections)

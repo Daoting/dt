@@ -27,27 +27,27 @@ namespace Dt.Cells.UI
         public CellOverflowLayoutBuildEngine(CellsPanel viewport)
         {
             Viewport = viewport;
-            _cachedLeftColumn = viewport.Sheet.GetViewportLeftColumn(viewport.ColumnViewportIndex);
-            _cachedRightColumn = viewport.Sheet.GetViewportRightColumn(viewport.ColumnViewportIndex);
+            _cachedLeftColumn = viewport.Excel.GetViewportLeftColumn(viewport.ColumnViewportIndex);
+            _cachedRightColumn = viewport.Excel.GetViewportRightColumn(viewport.ColumnViewportIndex);
         }
 
         CellOverflowLayoutModel BuildCellOverflowLayoutModel(int rowIndex)
         {
-            if (!Viewport.Sheet.Excel.CanCellOverflow)
+            if (!Viewport.Excel.CanCellOverflow)
             {
                 return null;
             }
-            if (Viewport.Sheet.MaxCellOverflowDistance == 1)
+            if (Viewport.Excel.MaxCellOverflowDistance == 1)
             {
                 return null;
             }
-            ColumnLayoutModel viewportColumnLayoutModel = Viewport.Sheet.GetViewportColumnLayoutModel(Viewport.ColumnViewportIndex);
+            ColumnLayoutModel viewportColumnLayoutModel = Viewport.Excel.GetViewportColumnLayoutModel(Viewport.ColumnViewportIndex);
             if (viewportColumnLayoutModel == null)
             {
                 return null;
             }
             object textFormattingMode = null;
-            bool useLayoutRounding = Viewport.Sheet.UseLayoutRounding;
+            bool useLayoutRounding = Viewport.Excel.UseLayoutRounding;
             SpanGraph cachedSpanGraph = Viewport.CachedSpanGraph;
             CellOverflowLayoutModel result = new CellOverflowLayoutModel();
             CellOverflowLayout layout = BuildHeadingCellOverflowLayoutModel(rowIndex, viewportColumnLayoutModel, textFormattingMode, useLayoutRounding);
@@ -125,8 +125,8 @@ namespace Dt.Cells.UI
                 }
                 if (layout3.BackgroundWidth > layout2.Width)
                 {
-                    Size textSize = MeasureHelper.MeasureTextInCell(cachedCell, new Size(double.PositiveInfinity, double.PositiveInfinity), (double) Viewport.Sheet.ZoomFactor, Viewport.Sheet.Excel.FontFamily, textFormattingMode, useLayoutRounding);
-                    layout3.ContentWidth = MeasureHelper.ConvertTextSizeToExcelCellSize(textSize, (double) Viewport.Sheet.ZoomFactor).Width;
+                    Size textSize = MeasureHelper.MeasureTextInCell(cachedCell, new Size(double.PositiveInfinity, double.PositiveInfinity), (double) Viewport.Excel.ZoomFactor, null, textFormattingMode, useLayoutRounding);
+                    layout3.ContentWidth = MeasureHelper.ConvertTextSizeToExcelCellSize(textSize, (double) Viewport.Excel.ZoomFactor).Width;
                     result.Add(layout3);
                 }
             }
@@ -157,8 +157,8 @@ namespace Dt.Cells.UI
                 {
                     return null;
                 }
-                float zoomFactor = Viewport.Sheet.ZoomFactor;
-                Size textSize = MeasureHelper.MeasureTextInCell(bindingCell, new Size(double.PositiveInfinity, double.PositiveInfinity), (double) zoomFactor, Viewport.Sheet.Excel.FontFamily, textFormattingMode, useLayoutRounding);
+                float zoomFactor = Viewport.Excel.ZoomFactor;
+                Size textSize = MeasureHelper.MeasureTextInCell(bindingCell, new Size(double.PositiveInfinity, double.PositiveInfinity), (double) zoomFactor, null, textFormattingMode, useLayoutRounding);
                 double width = MeasureHelper.ConvertTextSizeToExcelCellSize(textSize, (double) zoomFactor).Width;
                 double num5 = column.ActualWidth * zoomFactor;
                 if (buildForCenter)
@@ -228,8 +228,8 @@ namespace Dt.Cells.UI
                 {
                     return null;
                 }
-                float zoomFactor = Viewport.Sheet.ZoomFactor;
-                Size textSize = MeasureHelper.MeasureTextInCell(bindingCell, new Size(double.PositiveInfinity, double.PositiveInfinity), (double) zoomFactor, Viewport.Sheet.Excel.FontFamily, textFormattingMode, useLayoutRounding);
+                float zoomFactor = Viewport.Excel.ZoomFactor;
+                Size textSize = MeasureHelper.MeasureTextInCell(bindingCell, new Size(double.PositiveInfinity, double.PositiveInfinity), (double) zoomFactor, null, textFormattingMode, useLayoutRounding);
                 double width = MeasureHelper.ConvertTextSizeToExcelCellSize(textSize, (double) zoomFactor).Width;
                 double num5 = column.ActualWidth * zoomFactor;
                 if (buildForCenter)
@@ -299,7 +299,7 @@ namespace Dt.Cells.UI
                 layout = columnLayoutModel[0];
             }
             CellOverflowLayout layout2 = new CellOverflowLayout(layout.Column, 0.0);
-            int maxCellOverflowDistance = Viewport.Sheet.MaxCellOverflowDistance;
+            int maxCellOverflowDistance = Viewport.Excel.MaxCellOverflowDistance;
             SheetSpanModelBase spanModel = Viewport.GetSpanModel();
             ICellsSupport dataContext = Viewport.GetDataContext();
             for (int i = 1; i < maxCellOverflowDistance; i++)
@@ -347,7 +347,7 @@ namespace Dt.Cells.UI
                                 {
                                     return null;
                                 }
-                                layout2.BackgroundWidth += (dataContext.Columns[column].ActualWidth * Viewport.Sheet.ZoomFactor) / 2.0;
+                                layout2.BackgroundWidth += (dataContext.Columns[column].ActualWidth * Viewport.Excel.ZoomFactor) / 2.0;
                                 return layout2;
                             }
                             case HorizontalAlignment.Right:
@@ -376,7 +376,7 @@ namespace Dt.Cells.UI
             if (!existed.Contains(layout.Column))
             {
                 CellOverflowLayout layout2 = new CellOverflowLayout(layout.Column, 0.0);
-                int maxCellOverflowDistance = Viewport.Sheet.MaxCellOverflowDistance;
+                int maxCellOverflowDistance = Viewport.Excel.MaxCellOverflowDistance;
                 ICellsSupport dataContext = Viewport.GetDataContext();
                 SheetSpanModelBase spanModel = Viewport.GetSpanModel();
                 for (int i = 1; i < maxCellOverflowDistance; i++)
@@ -417,7 +417,7 @@ namespace Dt.Cells.UI
                                     {
                                         return null;
                                     }
-                                    layout2.BackgroundWidth += (dataContext.Columns[column].ActualWidth * Viewport.Sheet.ZoomFactor) / 2.0;
+                                    layout2.BackgroundWidth += (dataContext.Columns[column].ActualWidth * Viewport.Excel.ZoomFactor) / 2.0;
                                     return layout2;
                                 }
                                 case HorizontalAlignment.Right:
@@ -450,7 +450,7 @@ namespace Dt.Cells.UI
             {
                 return null;
             }
-            if (!Viewport.Sheet.Excel.CanCellOverflow)
+            if (!Viewport.Excel.CanCellOverflow)
             {
                 return null;
             }
@@ -458,7 +458,7 @@ namespace Dt.Cells.UI
             {
                 return null;
             }
-            if (Viewport.Sheet.MaxCellOverflowDistance == 1)
+            if (Viewport.Excel.MaxCellOverflowDistance == 1)
             {
                 return null;
             }

@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Dt.Cells.Data;
+using Dt.Cells.UI;
 using Dt.Cells.UndoRedo;
 using System;
 using System.Collections.Generic;
@@ -25,11 +26,11 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 #endregion
 
-namespace Dt.Cells.UI
+namespace Dt.Base
 {
-    public partial class SheetView : Panel, IXmlSerializable
+    public partial class Excel
     {
-        void InitInput()
+        void InitPointer()
         {
             PointerPressed += OnPointerPressed;
             PointerMoved += OnPointerMoved;
@@ -85,7 +86,6 @@ namespace Dt.Cells.UI
                                 _mouseDownPosition = e.GetCurrentPoint(this).Position;
                                 CapturePointer(e.Pointer);
                                 _primaryTouchDeviceId = new uint?(point.PointerId);
-                                _primaryTouchDeviceReleased = false;
                                 if ((ActiveSheet != null) && (ActiveSheet.Selections != null))
                                 {
                                     CellRange[] rangeArray = Enumerable.ToArray<CellRange>((IEnumerable<CellRange>)ActiveSheet.Selections);
@@ -190,7 +190,6 @@ namespace Dt.Cells.UI
 
             if (CanSelectFormula)
             {
-                IsSwitchingSheet = true;
                 EditorConnector.ClearFlickingItems();
                 if (!EditorConnector.IsInOtherSheet)
                 {
@@ -539,7 +538,7 @@ namespace Dt.Cells.UI
             switch (p_hitInfo.HitTestType)
             {
                 case HitTestType.RowSplitBar:
-                    if ((!IsWorking && !IsEditing) && !Excel.Workbook.Protect)
+                    if ((!IsWorking && !IsEditing) && !Workbook.Protect)
                     {
                         if (InputDeviceType != InputDeviceType.Touch)
                         {
@@ -557,7 +556,7 @@ namespace Dt.Cells.UI
                     goto Label_01B3;
 
                 case HitTestType.ColumnSplitBar:
-                    if ((IsWorking || IsEditing) || Excel.Workbook.Protect)
+                    if ((IsWorking || IsEditing) || Workbook.Protect)
                     {
                         goto Label_01B3;
                     }
@@ -573,7 +572,7 @@ namespace Dt.Cells.UI
                     break;
 
                 case HitTestType.RowSplitBox:
-                    if ((!IsWorking && !IsEditing) && !Excel.Workbook.Protect)
+                    if ((!IsWorking && !IsEditing) && !Workbook.Protect)
                     {
                         if (InputDeviceType != InputDeviceType.Touch)
                         {
@@ -584,7 +583,7 @@ namespace Dt.Cells.UI
                     goto Label_01B3;
 
                 case HitTestType.ColumnSplitBox:
-                    if ((!IsWorking && !IsEditing) && !Excel.Workbook.Protect)
+                    if ((!IsWorking && !IsEditing) && !Workbook.Protect)
                     {
                         if (InputDeviceType != InputDeviceType.Touch)
                         {
@@ -788,10 +787,10 @@ namespace Dt.Cells.UI
                 }
             }
 
-            if (TabStrip != null && TabStripEditable)
+            if (_tabStrip != null && TabStripEditable)
             {
                 Point point = e.GetCurrentPoint(this).Position;
-                if ((HitTest(point.X, point.Y).HitTestType == HitTestType.TabStrip) && TabStrip.StayInEditing(point))
+                if ((HitTest(point.X, point.Y).HitTestType == HitTestType.TabStrip) && _tabStrip.StayInEditing(point))
                 {
                     e.Handled = true;
                     return;
@@ -1039,7 +1038,6 @@ namespace Dt.Cells.UI
                     if (_primaryTouchDeviceId.HasValue && (_primaryTouchDeviceId.Value == point2.PointerId))
                     {
                         _primaryTouchDeviceId = null;
-                        _primaryTouchDeviceReleased = true;
                     }
                     _touchProcessedPointIds.Remove(point2.PointerId);
                 }
@@ -1137,7 +1135,6 @@ namespace Dt.Cells.UI
                         if (_primaryTouchDeviceId.Value == point.PointerId)
                         {
                             _primaryTouchDeviceId = null;
-                            _primaryTouchDeviceReleased = true;
                             _touchProcessedPointIds.Clear();
                             break;
                         }
@@ -1191,7 +1188,7 @@ namespace Dt.Cells.UI
 
                     case HitTestType.TabStrip:
                         {
-                            if (((_tabStrip == null) || !TabStripEditable) || (Excel.Workbook.Protect || (_routedEventArgs == null)))
+                            if (((_tabStrip == null) || !TabStripEditable) || (Workbook.Protect || (_routedEventArgs == null)))
                             {
                                 break;
                             }
@@ -1688,8 +1685,8 @@ namespace Dt.Cells.UI
                     {
                         TouchTabStripScrollRight(p_curPos, p_offset);
                     }
-                    TabStrip.TabsPresenter.InvalidateMeasure();
-                    TabStrip.TabsPresenter.InvalidateArrange();
+                    _tabStrip.TabsPresenter.InvalidateMeasure();
+                    _tabStrip.TabsPresenter.InvalidateArrange();
                 }
             }
             else if ((savedHitTestInformation.HitTestType == HitTestType.TabSplitBox) && IsTouchTabStripResizing)
@@ -1811,9 +1808,9 @@ namespace Dt.Cells.UI
             if (IsTouchTabStripScrolling)
             {
                 IsTouchTabStripScrolling = false;
-                TabStrip.TabsPresenter.Offset = 0.0;
-                TabStrip.TabsPresenter.InvalidateMeasure();
-                TabStrip.TabsPresenter.InvalidateArrange();
+                _tabStrip.TabsPresenter.Offset = 0.0;
+                _tabStrip.TabsPresenter.InvalidateMeasure();
+                _tabStrip.TabsPresenter.InvalidateArrange();
             }
 
             if (IsTouchZooming)
@@ -2507,7 +2504,7 @@ namespace Dt.Cells.UI
                 }
                 else if ((p_hitInfo.HitTestType != HitTestType.Viewport) || !p_hitInfo.ViewportInfo.InSelectionDrag)
                 {
-                    if (((p_hitInfo.HitTestType == HitTestType.TabStrip) && (_tabStrip != null)) && (TabStripEditable && !Excel.Workbook.Protect))
+                    if (((p_hitInfo.HitTestType == HitTestType.TabStrip) && (_tabStrip != null)) && (TabStripEditable && !Workbook.Protect))
                     {
                         _tabStrip.StartTabTouchEditing(p_hitInfo.HitPoint);
                         if (_tabStrip.IsEditing)
@@ -2584,292 +2581,6 @@ namespace Dt.Cells.UI
                 SaveHitInfo(hitInfo);
             }
             _lastClickPoint = point;
-        }
-
-        internal HitTestInformation HitTest(double x, double y)
-        {
-            Point hitPoint = new Point(x, y);
-            SheetLayout layout = GetSheetLayout();
-            HitTestInformation hi = new HitTestInformation
-            {
-                HitTestType = HitTestType.Empty,
-                ColumnViewportIndex = -2,
-                RowViewportIndex = -2,
-                HitPoint = hitPoint
-            };
-            if (GetTabStripRectangle().Contains(hitPoint))
-            {
-                hi.ColumnViewportIndex = 0;
-                hi.HitTestType = HitTestType.TabStrip;
-                return hi;
-            }
-            if (GetTabSplitBoxRectangle().Contains(hitPoint))
-            {
-                hi.ColumnViewportIndex = 0;
-                hi.HitTestType = HitTestType.TabSplitBox;
-                return hi;
-            }
-            for (int i = 0; i < layout.ColumnPaneCount; i++)
-            {
-                if (GetHorizontalScrollBarRectangle(i).Contains(hitPoint))
-                {
-                    hi.ColumnViewportIndex = i;
-                    hi.HitTestType = HitTestType.HorizontalScrollBar;
-                    return hi;
-                }
-            }
-            for (int j = 0; j < layout.RowPaneCount; j++)
-            {
-                if (GetVerticalScrollBarRectangle(j).Contains(hitPoint))
-                {
-                    hi.HitTestType = HitTestType.VerticalScrollBar;
-                    hi.RowViewportIndex = j;
-                    return hi;
-                }
-            }
-            for (int k = 0; k < layout.ColumnPaneCount; k++)
-            {
-                if (GetHorizontalSplitBoxRectangle(k).Contains(hitPoint))
-                {
-                    hi.HitTestType = HitTestType.ColumnSplitBox;
-                    hi.ColumnViewportIndex = k;
-                }
-            }
-            for (int m = 0; m < layout.RowPaneCount; m++)
-            {
-                if (GetVerticalSplitBoxRectangle(m).Contains(hitPoint))
-                {
-                    hi.HitTestType = HitTestType.RowSplitBox;
-                    hi.RowViewportIndex = m;
-                }
-            }
-            for (int n = 0; n < (layout.ColumnPaneCount - 1); n++)
-            {
-                if (GetHorizontalSplitBarRectangle(n).Contains(hitPoint))
-                {
-                    hi.HitTestType = HitTestType.ColumnSplitBar;
-                    hi.ColumnViewportIndex = n;
-                }
-            }
-            for (int num6 = 0; num6 < (layout.RowPaneCount - 1); num6++)
-            {
-                if (GetVerticalSplitBarRectangle(num6).Contains(hitPoint))
-                {
-                    hi.HitTestType = HitTestType.RowSplitBar;
-                    hi.RowViewportIndex = num6;
-                }
-            }
-
-            if (hi.HitTestType != HitTestType.Empty)
-                return hi;
-
-            ViewportInfo viewportInfo = GetViewportInfo();
-            int columnViewportCount = viewportInfo.ColumnViewportCount;
-            int rowViewportCount = viewportInfo.RowViewportCount;
-            if (IsCornerRangeGroupHitTest(hitPoint))
-            {
-                hi.HitTestType = HitTestType.CornerRangeGroup;
-                return hi;
-            }
-            if (IsRowRangeGroupHitTest(hitPoint))
-            {
-                hi.HitTestType = HitTestType.RowRangeGroup;
-                return hi;
-            }
-            if (IsColumnRangeGroupHitTest(hitPoint))
-            {
-                hi.HitTestType = HitTestType.ColumnRangeGroup;
-                return hi;
-            }
-            if (GetCornerRectangle().Contains(hitPoint))
-            {
-                HeaderHitTestInformation information2 = new HeaderHitTestInformation
-                {
-                    Column = -1,
-                    Row = -1,
-                    ResizingColumn = -1,
-                    ResizingRow = -1
-                };
-                hi.HitTestType = HitTestType.Corner;
-                hi.HeaderInfo = information2;
-                ColumnLayout rowHeaderColumnLayoutFromX = GetRowHeaderColumnLayoutFromX(hitPoint.X);
-                RowLayout columnHeaderRowLayoutFromY = GetColumnHeaderRowLayoutFromY(hitPoint.Y);
-                ColumnLayout rowHeaderResizingColumnLayoutFromX = GetRowHeaderResizingColumnLayoutFromX(hitPoint.X);
-                RowLayout columnHeaderResizingRowLayoutFromY = GetColumnHeaderResizingRowLayoutFromY(hitPoint.Y);
-                if (rowHeaderColumnLayoutFromX != null)
-                {
-                    information2.Column = rowHeaderColumnLayoutFromX.Column;
-                }
-                if (columnHeaderRowLayoutFromY != null)
-                {
-                    information2.Row = columnHeaderRowLayoutFromY.Row;
-                }
-                if (rowHeaderResizingColumnLayoutFromX != null)
-                {
-                    information2.InColumnResize = true;
-                    information2.ResizingColumn = rowHeaderResizingColumnLayoutFromX.Column;
-                }
-                if (columnHeaderResizingRowLayoutFromY != null)
-                {
-                    information2.InRowResize = true;
-                    information2.ResizingRow = columnHeaderResizingRowLayoutFromY.Row;
-                }
-                return hi;
-            }
-            for (int i = -1; i <= rowViewportCount; i++)
-            {
-                if (GetRowHeaderRectangle(i).Contains(hitPoint))
-                {
-                    HeaderHitTestInformation information4 = new HeaderHitTestInformation
-                    {
-                        Row = -1,
-                        Column = -1,
-                        ResizingColumn = -1,
-                        ResizingRow = -1
-                    };
-                    hi.HitTestType = HitTestType.RowHeader;
-                    hi.RowViewportIndex = i;
-                    hi.HeaderInfo = information4;
-                    if (((InputDeviceType == InputDeviceType.Touch) && ResizerGripperRect.HasValue) && ResizerGripperRect.Value.Contains(hitPoint))
-                    {
-                        hi.HeaderInfo.InRowResize = true;
-                        hi.HeaderInfo.ResizingRow = GetActiveCell().Row;
-                        return hi;
-                    }
-                    ColumnLayout layout5 = GetRowHeaderColumnLayoutFromX(hitPoint.X);
-                    RowLayout viewportRowLayoutFromY = GetViewportRowLayoutFromY(i, hitPoint.Y);
-                    RowLayout viewportResizingRowLayoutFromY = GetViewportResizingRowLayoutFromY(i, hitPoint.Y);
-                    if ((viewportResizingRowLayoutFromY == null) && (hi.RowViewportIndex == 0))
-                    {
-                        viewportResizingRowLayoutFromY = GetViewportResizingRowLayoutFromY(-1, hi.HitPoint.Y);
-                    }
-                    if ((viewportResizingRowLayoutFromY == null) && ((hi.RowViewportIndex == 0) || (hi.RowViewportIndex == -1)))
-                    {
-                        viewportResizingRowLayoutFromY = GetColumnHeaderResizingRowLayoutFromY(hi.HitPoint.Y);
-                        if (viewportResizingRowLayoutFromY != null)
-                        {
-                            hi.HitTestType = HitTestType.Corner;
-                        }
-                    }
-                    if (layout5 != null)
-                    {
-                        information4.Column = layout5.Column;
-                    }
-                    if (viewportRowLayoutFromY != null)
-                    {
-                        information4.Row = viewportRowLayoutFromY.Row;
-                    }
-                    if ((viewportResizingRowLayoutFromY != null) && (((viewportResizingRowLayoutFromY.Height > 0.0) || (viewportResizingRowLayoutFromY.Row >= ActiveSheet.RowCount)) || !ActiveSheet.RowRangeGroup.IsCollapsed(viewportResizingRowLayoutFromY.Row)))
-                    {
-                        information4.InRowResize = true;
-                        information4.ResizingRow = viewportResizingRowLayoutFromY.Row;
-                    }
-                    return hi;
-                }
-            }
-            for (int j = -1; j <= columnViewportCount; j++)
-            {
-                if (GetColumnHeaderRectangle(j).Contains(hitPoint))
-                {
-                    HeaderHitTestInformation information6 = new HeaderHitTestInformation
-                    {
-                        Row = -1,
-                        Column = -1,
-                        ResizingRow = -1,
-                        ResizingColumn = -1
-                    };
-                    hi.HitTestType = HitTestType.ColumnHeader;
-                    hi.HeaderInfo = information6;
-                    hi.ColumnViewportIndex = j;
-                    if (((InputDeviceType == InputDeviceType.Touch) && ResizerGripperRect.HasValue) && ResizerGripperRect.Value.Contains(hitPoint))
-                    {
-                        hi.HeaderInfo.InColumnResize = true;
-                        hi.HeaderInfo.ResizingColumn = GetActiveCell().Column;
-                        return hi;
-                    }
-                    ColumnLayout viewportColumnLayoutFromX = GetViewportColumnLayoutFromX(j, hitPoint.X);
-                    RowLayout layout9 = GetColumnHeaderRowLayoutFromY(hitPoint.Y);
-                    ColumnLayout viewportResizingColumnLayoutFromX = GetViewportResizingColumnLayoutFromX(j, hitPoint.X);
-                    if (viewportResizingColumnLayoutFromX == null)
-                    {
-                        if (hi.ColumnViewportIndex == 0)
-                        {
-                            viewportResizingColumnLayoutFromX = GetViewportResizingColumnLayoutFromX(-1, hitPoint.X);
-                        }
-                        if ((viewportResizingColumnLayoutFromX == null) && ((hi.ColumnViewportIndex == 0) || (hi.ColumnViewportIndex == -1)))
-                        {
-                            viewportResizingColumnLayoutFromX = GetRowHeaderResizingColumnLayoutFromX(hitPoint.X);
-                            if (viewportResizingColumnLayoutFromX != null)
-                            {
-                                hi.HitTestType = HitTestType.Corner;
-                            }
-                        }
-                    }
-                    if (viewportColumnLayoutFromX != null)
-                    {
-                        hi.HeaderInfo.Column = viewportColumnLayoutFromX.Column;
-                    }
-                    if (layout9 != null)
-                    {
-                        hi.HeaderInfo.Row = layout9.Row;
-                    }
-                    if ((viewportResizingColumnLayoutFromX != null) && (((viewportResizingColumnLayoutFromX.Width > 0.0) || (viewportResizingColumnLayoutFromX.Column >= ActiveSheet.ColumnCount)) || !ActiveSheet.ColumnRangeGroup.IsCollapsed(viewportResizingColumnLayoutFromX.Column)))
-                    {
-                        hi.HeaderInfo.InColumnResize = true;
-                        hi.HeaderInfo.ResizingColumn = viewportResizingColumnLayoutFromX.Column;
-                    }
-                    return hi;
-                }
-            }
-            for (int k = -1; k <= rowViewportCount; k++)
-            {
-                for (int m = -1; m <= columnViewportCount; m++)
-                {
-                    if (GetViewportRectangle(k, m).Contains(hitPoint))
-                    {
-                        hi.ColumnViewportIndex = m;
-                        hi.RowViewportIndex = k;
-                        ViewportHitTestInformation information8 = new ViewportHitTestInformation
-                        {
-                            Column = -1,
-                            Row = -1
-                        };
-                        hi.HitTestType = HitTestType.Viewport;
-                        hi.ViewportInfo = information8;
-                        ColumnLayout layout11 = GetViewportColumnLayoutFromX(m, hitPoint.X);
-                        RowLayout layout12 = GetViewportRowLayoutFromY(k, hitPoint.Y);
-                        if (layout11 != null)
-                        {
-                            hi.ViewportInfo.Column = layout11.Column;
-                        }
-                        if (layout12 != null)
-                        {
-                            hi.ViewportInfo.Row = layout12.Row;
-                        }
-                        if (!_formulaSelectionFeature.HitTest(k, m, hitPoint.X, hitPoint.Y, hi) && (IsInSelectionGripper(new Point(x, y)) || !HitTestFloatingObject(k, m, hitPoint.X, hitPoint.Y, hi)))
-                        {
-                            CellsPanel viewportRowsPresenter = GetViewportRowsPresenter(k, m);
-                            if ((layout11 != null) && (layout12 != null))
-                            {
-                                if (IsMouseInDragFillIndicator(hitPoint.X, hitPoint.Y, k, m, false))
-                                {
-                                    hi.ViewportInfo.InDragFillIndicator = true;
-                                }
-                                else if (IsMouseInDragDropLocation(hitPoint.X, hitPoint.Y, k, m, false))
-                                {
-                                    hi.ViewportInfo.InSelectionDrag = true;
-                                }
-                            }
-                            if (((IsEditing && !hi.ViewportInfo.InSelectionDrag) && (!hi.ViewportInfo.InDragFillIndicator && (viewportRowsPresenter != null))) && viewportRowsPresenter.EditorBounds.Contains(new Point(x - viewportRowsPresenter.Location.X, y - viewportRowsPresenter.Location.Y)))
-                            {
-                                hi.ViewportInfo.InEditor = true;
-                            }
-                            return hi;
-                        }
-                    }
-                }
-            }
-            return hi;
         }
 
         internal HitTestInformation TouchHitTest(double x, double y)
@@ -3380,7 +3091,6 @@ namespace Dt.Cells.UI
         void ResetTouchWhenError()
         {
             _primaryTouchDeviceId = null;
-            _primaryTouchDeviceReleased = false;
             IsTouching = false;
             _isTouchScrolling = false;
             IsTouchZooming = false;
@@ -3747,7 +3457,7 @@ namespace Dt.Cells.UI
 
         void TouchTabStripScrollLeft(Point currentPoint, Point deltaPoint)
         {
-            TabsPresenter tabsPresenter = TabStrip.TabsPresenter;
+            TabsPresenter tabsPresenter = _tabStrip.TabsPresenter;
             int firstScrollableSheetIndex = tabsPresenter.FirstScrollableSheetIndex;
             int lastScrollableSheetIndex = tabsPresenter.LastScrollableSheetIndex;
             int startIndex = tabsPresenter.StartIndex;
@@ -3775,7 +3485,7 @@ namespace Dt.Cells.UI
             {
                 return;
             }
-            Excel.StartSheetIndex = num5;
+            StartSheetIndex = num5;
         Label_00F0:
             if (num5 >= tabsPresenter.LastScrollableSheetIndex)
             {
@@ -3794,7 +3504,7 @@ namespace Dt.Cells.UI
                     num5++;
                     if (num5 <= tabsPresenter.LastScrollableSheetIndex)
                     {
-                        Excel.StartSheetIndex = num5;
+                        StartSheetIndex = num5;
                         goto Label_00F0;
                     }
                 }
@@ -3805,7 +3515,7 @@ namespace Dt.Cells.UI
         {
             int num7;
             double num9;
-            TabsPresenter tabsPresenter = TabStrip.TabsPresenter;
+            TabsPresenter tabsPresenter = _tabStrip.TabsPresenter;
             int firstScrollableSheetIndex = tabsPresenter.FirstScrollableSheetIndex;
             int lastScrollableSheetIndex = tabsPresenter.LastScrollableSheetIndex;
             int startIndex = tabsPresenter.StartIndex;
@@ -3844,7 +3554,7 @@ namespace Dt.Cells.UI
                     {
                         return;
                     }
-                    Excel.StartSheetIndex = num7;
+                    StartSheetIndex = num7;
                     goto Label_0154;
                 }
             }
@@ -3865,7 +3575,7 @@ namespace Dt.Cells.UI
                 }
                 else
                 {
-                    Excel.StartSheetIndex = num7;
+                    StartSheetIndex = num7;
                     goto Label_0154;
                 }
             }

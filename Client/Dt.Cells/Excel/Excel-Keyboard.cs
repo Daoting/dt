@@ -8,17 +8,23 @@
 
 #region 引用命名
 using Dt.Cells.Data;
-using System;
+using Dt.Cells.UI;
 using System.Collections.Generic;
 using Windows.System;
 using Windows.UI.Xaml.Input;
 #endregion
 
-namespace Dt.Cells.UI
+namespace Dt.Base
 {
-    public partial class SheetView
+    public partial class Excel
     {
-        internal void ProcessKeyDown(KeyRoutedEventArgs e)
+        void InitKeyboard()
+        {
+            AddHandler(KeyDownEvent, new KeyEventHandler(OnKeyDown), true);
+            AddHandler(KeyUpEvent, new KeyEventHandler(OnKeyUp), true);
+        }
+
+        void OnKeyDown(object sender, KeyRoutedEventArgs e)
         {
             if ((_tabStrip != null) && _tabStrip.IsEditing)
             {
@@ -111,7 +117,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        internal void ProcessKeyUp(KeyRoutedEventArgs e)
+        void OnKeyUp(object sender, KeyRoutedEventArgs e)
         {
             UpdateCursorType();
             if (!IsEditing)

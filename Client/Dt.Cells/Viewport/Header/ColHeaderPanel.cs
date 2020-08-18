@@ -7,10 +7,8 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Cells.Data;
-using System;
-using System.Collections.Generic;
-using Windows.Foundation;
 #endregion
 
 namespace Dt.Cells.UI
@@ -20,8 +18,8 @@ namespace Dt.Cells.UI
     /// </summary>
     internal partial class ColHeaderPanel : HeaderPanel
     {
-        public ColHeaderPanel(SheetView sheet)
-            : base(sheet, SheetArea.ColumnHeader)
+        public ColHeaderPanel(Excel p_excel)
+            : base(p_excel, SheetArea.ColumnHeader)
         {
         }
     }

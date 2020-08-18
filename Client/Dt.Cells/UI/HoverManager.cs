@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using System;
 using System.Runtime.CompilerServices;
 #endregion
@@ -16,29 +17,28 @@ namespace Dt.Cells.UI
     internal class HoverManager
     {
         HitTestInformation _oldHi;
-        SheetView _view;
+        Excel _excel;
 
-        public HoverManager(SheetView view)
+        public HoverManager(Excel p_excel)
         {
-            _view = view;
-            _oldHi = null;
+            _excel = p_excel;
         }
 
         void DoColumnHeaderHover(HitTestInformation hi)
         {
             IsMouseOverColumnHeaders = true;
-            _view.MouseOverColumnIndex = hi.HeaderInfo.Column;
+            _excel.MouseOverColumnIndex = hi.HeaderInfo.Column;
             if (hi.HeaderInfo.InColumnResize)
             {
-                _view.MouseOverColumnIndex = -1;
+                _excel.MouseOverColumnIndex = -1;
             }
-            _view.UpdateColumnHeaderCellsState(_view.ActiveSheet.ColumnHeader.RowCount - 1, hi.HeaderInfo.Column, 1, 1);
+            _excel.UpdateColumnHeaderCellsState(_excel.ActiveSheet.ColumnHeader.RowCount - 1, hi.HeaderInfo.Column, 1, 1);
         }
 
         void DoCornerHeaderHover(HitTestInformation hi)
         {
             IsMouseOverCornerHeaders = true;
-            _view.UpdateCornerHeaderCellState();
+            _excel.UpdateCornerHeaderCellState();
         }
 
         public void DoHover(HitTestInformation hi)
@@ -54,15 +54,15 @@ namespace Dt.Cells.UI
                     switch (_oldHi.HitTestType)
                     {
                         case HitTestType.RowHeader:
-                            _view.UpdateRowHeaderCellsState(_oldHi.HeaderInfo.Row, _view.ActiveSheet.RowHeader.ColumnCount - 1, 1, 1);
+                            _excel.UpdateRowHeaderCellsState(_oldHi.HeaderInfo.Row, _excel.ActiveSheet.RowHeader.ColumnCount - 1, 1, 1);
                             break;
 
                         case HitTestType.ColumnHeader:
-                            _view.UpdateColumnHeaderCellsState(_view.ActiveSheet.ColumnHeader.RowCount - 1, _oldHi.HeaderInfo.Column, 1, 1);
+                            _excel.UpdateColumnHeaderCellsState(_excel.ActiveSheet.ColumnHeader.RowCount - 1, _oldHi.HeaderInfo.Column, 1, 1);
                             break;
 
                         case HitTestType.Corner:
-                            _view.UpdateCornerHeaderCellState();
+                            _excel.UpdateCornerHeaderCellState();
                             break;
                     }
                 }
@@ -91,12 +91,12 @@ namespace Dt.Cells.UI
         void DoRowHeaderHover(HitTestInformation hi)
         {
             IsMouseOverRowHeaders = true;
-            _view.MouseOverRowIndex = hi.HeaderInfo.Row;
+            _excel.MouseOverRowIndex = hi.HeaderInfo.Row;
             if (hi.HeaderInfo.InRowResize)
             {
-                _view.MouseOverRowIndex = -1;
+                _excel.MouseOverRowIndex = -1;
             }
-            _view.UpdateRowHeaderCellsState(hi.HeaderInfo.Row, _view.ActiveSheet.RowHeader.ColumnCount - 1, 1, 1);
+            _excel.UpdateRowHeaderCellsState(hi.HeaderInfo.Row, _excel.ActiveSheet.RowHeader.ColumnCount - 1, 1, 1);
         }
 
         internal bool IsMouseOverColumnHeaders { get; set; }

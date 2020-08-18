@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Cells.Data;
 using System;
 using System.Collections.Generic;
@@ -17,15 +18,15 @@ namespace Dt.Cells.UI
 {
     internal class SpreadXNavigation
     {
-        SheetView _sheetView;
+        Excel _excel;
         SpreadXTabIndexNavigator _tabIndexNavigator;
         SpreadXTabularNavigator _tabularNavigator;
 
-        public SpreadXNavigation(SheetView sheetView)
+        public SpreadXNavigation(Excel p_excel)
         {
-            _sheetView = sheetView;
-            _tabularNavigator = new SpreadXTabularNavigator(_sheetView);
-            _tabIndexNavigator = new SpreadXTabIndexNavigator(_sheetView);
+            _excel = p_excel;
+            _tabularNavigator = new SpreadXTabularNavigator(_excel);
+            _tabIndexNavigator = new SpreadXTabIndexNavigator(_excel);
         }
 
         bool IsTabNavigation(NavigationDirection direction)
@@ -39,20 +40,20 @@ namespace Dt.Cells.UI
 
         bool MoveActiveCell(NavigationDirection direction)
         {
-            if (_sheetView.ActiveSheet != null)
+            if (_excel.ActiveSheet != null)
             {
-                int activeRowViewportIndex = _sheetView.GetActiveRowViewportIndex();
-                int activeColumnViewportIndex = _sheetView.GetActiveColumnViewportIndex();
-                int viewportTopRow = _sheetView.GetViewportTopRow(activeRowViewportIndex);
-                int viewportLeftColumn = _sheetView.GetViewportLeftColumn(activeColumnViewportIndex);
-                int activeRowIndex = _sheetView.ActiveSheet.ActiveRowIndex;
-                int activeColumnIndex = _sheetView.ActiveSheet.ActiveColumnIndex;
+                int activeRowViewportIndex = _excel.GetActiveRowViewportIndex();
+                int activeColumnViewportIndex = _excel.GetActiveColumnViewportIndex();
+                int viewportTopRow = _excel.GetViewportTopRow(activeRowViewportIndex);
+                int viewportLeftColumn = _excel.GetViewportLeftColumn(activeColumnViewportIndex);
+                int activeRowIndex = _excel.ActiveSheet.ActiveRowIndex;
+                int activeColumnIndex = _excel.ActiveSheet.ActiveColumnIndex;
                 CompositePosition navigationStartPosition = _tabIndexNavigator.GetNavigationStartPosition();
                 TabularPosition position2 = _tabularNavigator.GetNavigationStartPosition();
                 TabularPosition empty = TabularPosition.Empty;
-                if (((_sheetView.ActiveSheet.Selections.Count > 0) && !NavigatorHelper.ActiveCellInSelection(_sheetView.ActiveSheet)) && IsTabNavigation(direction))
+                if (((_excel.ActiveSheet.Selections.Count > 0) && !NavigatorHelper.ActiveCellInSelection(_excel.ActiveSheet)) && IsTabNavigation(direction))
                 {
-                    empty = new TabularPosition(SheetArea.Cells, _sheetView.ActiveSheet.Selections[0].Row, _sheetView.ActiveSheet.Selections[0].Column);
+                    empty = new TabularPosition(SheetArea.Cells, _excel.ActiveSheet.Selections[0].Row, _excel.ActiveSheet.Selections[0].Column);
                 }
                 else
                 {
@@ -62,13 +63,13 @@ namespace Dt.Cells.UI
                 {
                     if (!IsTabNavigation(direction) || !ShouldNavInSelection())
                     {
-                        CellRange[] oldSelection = Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) _sheetView.ActiveSheet.Selections);
-                        _sheetView.SetSelection(_sheetView.ActiveSheet.ActiveRowIndex, _sheetView.ActiveSheet.ActiveColumnIndex, 1, 1);
-                        if (_sheetView.RaiseSelectionChanging(oldSelection, Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) _sheetView.ActiveSheet.Selections)))
+                        CellRange[] oldSelection = Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) _excel.ActiveSheet.Selections);
+                        _excel.SetSelection(_excel.ActiveSheet.ActiveRowIndex, _excel.ActiveSheet.ActiveColumnIndex, 1, 1);
+                        if (_excel.RaiseSelectionChanging(oldSelection, Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) _excel.ActiveSheet.Selections)))
                         {
-                            _sheetView.RaiseSelectionChanged();
+                            _excel.RaiseSelectionChanged();
                         }
-                        NavigatorHelper.BringCellToVisible(_sheetView, _sheetView.ActiveSheet.ActiveRowIndex, _sheetView.ActiveSheet.ActiveColumnIndex);
+                        NavigatorHelper.BringCellToVisible(_excel, _excel.ActiveSheet.ActiveRowIndex, _excel.ActiveSheet.ActiveColumnIndex);
                     }
                     return false;
                 }
@@ -88,23 +89,23 @@ namespace Dt.Cells.UI
                     }
                     if (!IsTabNavigation(direction) || !ShouldNavInSelection())
                     {
-                        CellRange[] rangeArray2 = Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) _sheetView.ActiveSheet.Selections);
-                        _sheetView.SetSelection(row, column, 1, 1);
-                        if (_sheetView.RaiseSelectionChanging(rangeArray2, Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) _sheetView.ActiveSheet.Selections)))
+                        CellRange[] rangeArray2 = Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) _excel.ActiveSheet.Selections);
+                        _excel.SetSelection(row, column, 1, 1);
+                        if (_excel.RaiseSelectionChanging(rangeArray2, Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) _excel.ActiveSheet.Selections)))
                         {
-                            _sheetView.RaiseSelectionChanged();
+                            _excel.RaiseSelectionChanged();
                         }
                     }
-                    int num9 = _sheetView.GetActiveRowViewportIndex();
-                    int num10 = _sheetView.GetActiveColumnViewportIndex();
+                    int num9 = _excel.GetActiveRowViewportIndex();
+                    int num10 = _excel.GetActiveColumnViewportIndex();
                     if ((activeRowViewportIndex != num9) || (activeColumnViewportIndex != num10))
                     {
-                        NavigatorHelper.BringCellToVisible(_sheetView, row, column);
+                        NavigatorHelper.BringCellToVisible(_excel, row, column);
                     }
                     return true;
                 }
-                _sheetView.SetViewportTopRow(activeRowViewportIndex, viewportTopRow);
-                _sheetView.SetViewportLeftColumn(activeColumnViewportIndex, viewportLeftColumn);
+                _excel.SetViewportTopRow(activeRowViewportIndex, viewportTopRow);
+                _excel.SetViewportLeftColumn(activeColumnViewportIndex, viewportLeftColumn);
                 if (IsTabNavigation(direction))
                 {
                     UpdateStartPosition(new TabularPosition(SheetArea.Cells, activeRowIndex, activeColumnIndex), new TabularPosition(SheetArea.Cells, navigationStartPosition.Row, navigationStartPosition.Column), ActiveCellSyncState.TabIndexNavigator);
@@ -119,8 +120,8 @@ namespace Dt.Cells.UI
 
         TabularPosition MoveCurrent(NavigationDirection direction)
         {
-            int activeRowIndex = _sheetView.ActiveSheet.ActiveRowIndex;
-            int activeColumnIndex = _sheetView.ActiveSheet.ActiveColumnIndex;
+            int activeRowIndex = _excel.ActiveSheet.ActiveRowIndex;
+            int activeColumnIndex = _excel.ActiveSheet.ActiveColumnIndex;
             if ((activeRowIndex != -1) && (activeColumnIndex != -1))
             {
                 if (IsTabNavigation(direction))
@@ -150,11 +151,11 @@ namespace Dt.Cells.UI
 
         bool SetActiveCell(int row, int column, bool clearSelection)
         {
-            var worksheet = _sheetView.ActiveSheet;
-            if (!_sheetView.RaiseLeaveCell(worksheet.ActiveRowIndex, worksheet.ActiveColumnIndex, row, column))
+            var worksheet = _excel.ActiveSheet;
+            if (!_excel.RaiseLeaveCell(worksheet.ActiveRowIndex, worksheet.ActiveColumnIndex, row, column))
             {
                 worksheet.SetActiveCell(row, column, clearSelection);
-                _sheetView.RaiseEnterCell(row, column);
+                _excel.RaiseEnterCell(row, column);
                 return true;
             }
             return false;
@@ -167,11 +168,11 @@ namespace Dt.Cells.UI
 
         internal void UpdateStartPosition(int row, int column)
         {
-            if (_sheetView.ActiveSheet != null)
+            if (_excel.ActiveSheet != null)
             {
                 row = (row < 0) ? 0 : row;
                 column = (column < 0) ? 0 : column;
-                CellRange spanCell = _sheetView.ActiveSheet.GetSpanCell(row, column);
+                CellRange spanCell = _excel.ActiveSheet.GetSpanCell(row, column);
                 TabularPosition currentPosition = new TabularPosition(SheetArea.Cells, row, column);
                 TabularPosition navigationStartPosition = _tabularNavigator.GetNavigationStartPosition();
                 if ((spanCell == null) || !spanCell.Contains(navigationStartPosition.Row, navigationStartPosition.Column))

@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Cells.Data;
 using Dt.Cells.UI;
 using System;
@@ -21,7 +22,7 @@ namespace Dt.Cells.UndoRedo
     /// </summary>
     public class CellEditUndoAction : ActionBase, IUndo
     {
-        SheetView _cachedView;
+        Excel _excel;
 
         /// <summary>
         /// Creates a new instance of the <see cref="T:Dt.Cells.UndoRedo.CellEditUndoAction" /> class.
@@ -34,12 +35,11 @@ namespace Dt.Cells.UndoRedo
             CellEditExtent = extent;
         }
 
-        DataValidationResult ApplyEditing(SheetView sheetView)
+        DataValidationResult ApplyEditing(Excel excel)
         {
-            SheetView view = sheetView;
             int rowIndex = CellEditExtent.RowIndex;
             int columnIndex = CellEditExtent.ColumnIndex;
-            if (view == null)
+            if (excel == null)
             {
                 return DataValidationResult.Discard;
             }
@@ -48,7 +48,7 @@ namespace Dt.Cells.UndoRedo
             bool flag = true;
             if (UI.FormulaUtility.IsFormula(newValue))
             {
-                string str2 = UI.FormulaUtility.StringVariantToInvariant(sheetView.ActiveSheet, newValue);
+                string str2 = UI.FormulaUtility.StringVariantToInvariant(excel.ActiveSheet, newValue);
                 flag = Worksheet.IsValid(rowIndex, columnIndex, str2);
             }
             else
@@ -69,7 +69,7 @@ namespace Dt.Cells.UndoRedo
             }
             if (!flag)
             {
-                forceApply = ValidationError(view, rowIndex, columnIndex, newValue);
+                forceApply = ValidationError(excel, rowIndex, columnIndex, newValue);
             }
             switch (forceApply)
             {
@@ -90,18 +90,18 @@ namespace Dt.Cells.UndoRedo
             bool isFormulaApplied = false;
             string appliedFormula = null;
             bool flag3 = false;
-            using (((IUIActionExecuter) sheetView.ActiveSheet).BeginUIAction())
+            using (((IUIActionExecuter) excel.ActiveSheet).BeginUIAction())
             {
-                flag3 = ApplyValueToCell(sheetView, bindingCell, view.CanUserEditFormula, newValue, valueType, out isFormulaApplied, out appliedFormula);
+                flag3 = ApplyValueToCell(excel, bindingCell, excel.CanUserEditFormula, newValue, valueType, out isFormulaApplied, out appliedFormula);
             }
             if (!flag3)
             {
-                sheetView.RaiseInvalidOperation(isFormulaApplied ? string.Format(ResourceStrings.undoActionCannotApplyFormula, (object[]) new object[] { appliedFormula }) : ResourceStrings.undoActionCannotApplyValue, null, null);
+                excel.RaiseInvalidOperation(isFormulaApplied ? string.Format(ResourceStrings.undoActionCannotApplyFormula, (object[]) new object[] { appliedFormula }) : ResourceStrings.undoActionCannotApplyValue, null, null);
                 return DataValidationResult.Discard;
             }
             if (isFormulaApplied)
             {
-                sheetView.RaiseUserFormulaEntered(rowIndex, columnIndex, appliedFormula);
+                excel.RaiseUserFormulaEntered(rowIndex, columnIndex, appliedFormula);
             }
             return forceApply;
         }
@@ -124,35 +124,35 @@ namespace Dt.Cells.UndoRedo
         /// <param name="parameter">Object on which the action occurred.</param>
         public override void Execute(object parameter)
         {
-            SheetView sheetView = parameter as SheetView;
-            if (sheetView != null)
+            Excel excel = parameter as Excel;
+            if (excel != null)
             {
                 base.SuspendInvalidate(parameter);
                 SaveState();
                 try
                 {
-                    _cachedView = sheetView;
+                    _excel = excel;
                     Worksheet.CellChanged += new EventHandler<CellChangedEventArgs>(OnEditedCellChanged);
-                    ApplyResult = ApplyEditing(sheetView);
+                    ApplyResult = ApplyEditing(excel);
                 }
                 finally
                 {
                     Worksheet.CellChanged -= new EventHandler<CellChangedEventArgs>(OnEditedCellChanged);
-                    _cachedView = null;
+                    _excel = null;
                 }
-                sheetView.ResumeInvalidate();
+                excel.ResumeInvalidate();
                 switch (ApplyResult)
                 {
                     case DataValidationResult.ForceApply:
                     {
-                        sheetView.RefreshCellAreaViewport(0, 0, Worksheet.RowCount, Worksheet.ColumnCount);
+                        excel.RefreshCellAreaViewport(0, 0, Worksheet.RowCount, Worksheet.ColumnCount);
                         IList<SpreadChartBase> list = Dt.Cells.Data.SpreadChartUtility.GetChartShapeAffectedCellChanged(Worksheet, CellEditExtent.RowIndex, CellEditExtent.ColumnIndex);
                         if (list.Count <= 0)
                         {
-                            sheetView.InvalidateFloatingObjects();
+                            excel.InvalidateFloatingObjects();
                             return;
                         }
-                        sheetView.InvalidateFloatingObjects(Enumerable.ToArray<SpreadChartBase>((IEnumerable<SpreadChartBase>) list));
+                        excel.InvalidateFloatingObjects(Enumerable.ToArray<SpreadChartBase>((IEnumerable<SpreadChartBase>) list));
                         return;
                     }
                 }
@@ -162,9 +162,9 @@ namespace Dt.Cells.UndoRedo
 
         void OnEditedCellChanged(object sender, CellChangedEventArgs e)
         {
-            if ((_cachedView != null) && string.Equals(e.PropertyName, "Value"))
+            if ((_excel != null) && string.Equals(e.PropertyName, "Value"))
             {
-                _cachedView.RaiseValueChanged(e.Row, e.Column);
+                _excel.RaiseValueChanged(e.Row, e.Column);
             }
         }
 
@@ -215,11 +215,11 @@ namespace Dt.Cells.UndoRedo
             int columnIndex = CellEditExtent.ColumnIndex;
             try
             {
-                SheetView view = parameter as SheetView;
+                Excel view = parameter as Excel;
                 base.SuspendInvalidate(parameter);
                 if (view != null)
                 {
-                    _cachedView = view;
+                    _excel = view;
                     Worksheet.CellChanged += new EventHandler<CellChangedEventArgs>(OnEditedCellChanged);
                 }
                 if (OldValueIsFormula)
@@ -258,12 +258,12 @@ namespace Dt.Cells.UndoRedo
             finally
             {
                 Worksheet.CellChanged -= new EventHandler<CellChangedEventArgs>(OnEditedCellChanged);
-                _cachedView = null;
+                _excel = null;
             }
             return flag;
         }
 
-        DataValidationResult ValidationError(SheetView sheetView, int row, int column, string text)
+        DataValidationResult ValidationError(Excel excel, int row, int column, string text)
         {
             DataValidationResult forceApply = DataValidationResult.ForceApply;
             StyleInfo info = Worksheet.GetActualStyleInfo(row, column, SheetArea.Cells);
@@ -271,12 +271,12 @@ namespace Dt.Cells.UndoRedo
             if (validator != null)
             {
                 ValidationErrorEventArgs eventArgs = new ValidationErrorEventArgs(row, column, validator.Clone() as DataValidator);
-                sheetView.RaiseValidationError(row, column, eventArgs);
+                excel.RaiseValidationError(row, column, eventArgs);
                 forceApply = eventArgs.ValidationResult;
             }
             if ((forceApply == DataValidationResult.ForceApply) || (forceApply == DataValidationResult.Discard))
             {
-                sheetView.FocusInternal();
+                excel.FocusInternal();
             }
             return forceApply;
         }
@@ -306,7 +306,7 @@ namespace Dt.Cells.UndoRedo
         Dt.Cells.Data.Worksheet Worksheet { get; set; }
 
         static bool ApplyValueToCell(
-            SheetView sheetView,
+            Excel excel,
             Cell bindingCell,
             bool allowFormula,
             object editorValue,
@@ -368,7 +368,7 @@ namespace Dt.Cells.UndoRedo
                         {
                             obj3 = obj2;
                         }
-                        obj3 = sheetView.RaiseCellValueApplying(bindingCell.Row.Index, bindingCell.Column.Index, obj3);
+                        obj3 = excel.RaiseCellValueApplying(bindingCell.Row.Index, bindingCell.Column.Index, obj3);
                         bindingCell.Value = obj3;
                     }
                     else

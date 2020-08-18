@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Cells.Data;
 using Dt.Cells.UI;
 using System;
@@ -86,10 +87,10 @@ namespace Dt.Cells.UndoRedo
         {
             if (_cachedActions != null)
             {
-                SheetView view = sender as SheetView;
+                var excel = sender as Excel;
                 foreach (ClipboardPasteRangeUndoAction action in _cachedActions)
                 {
-                    if (view == null)
+                    if (excel == null)
                     {
                         action.Execute(sender);
                     }
@@ -97,59 +98,59 @@ namespace Dt.Cells.UndoRedo
                     {
                         ClipboardPasteOptions options;
                         action.SaveState();
-                        if (!view.RaiseClipboardPasting(_sourceSheet, action.SourceRange, _destSheet, action.PasteRange, action.PasteOption, action.IsCutting, out options))
+                        if (!excel.RaiseClipboardPasting(_sourceSheet, action.SourceRange, _destSheet, action.PasteRange, action.PasteOption, action.IsCutting, out options))
                         {
                             action.PasteOption = options;
                             action.Execute(sender);
-                            view.RaiseClipboardPasted(_sourceSheet, action.SourceRange, _destSheet, action.PasteRange, options);
+                            excel.RaiseClipboardPasted(_sourceSheet, action.SourceRange, _destSheet, action.PasteRange, options);
                         }
                     }
                 }
                 RefreshSelection(sender);
                 RefreshUI(sender);
-                if (view != null)
+                if (excel != null)
                 {
-                    view.InvalidateFloatingObjects();
+                    excel.InvalidateFloatingObjects();
                 }
             }
         }
 
         void RefreshSelection(object sender)
         {
-            SheetView view = sender as SheetView;
-            if ((view != null) && (_cachedActions != null))
+            var excel = sender as Excel;
+            if ((excel != null) && (_cachedActions != null))
             {
-                CellRange[] oldSelection = Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) view.ActiveSheet.Selections);
-                view.ActiveSheet.ClearSelections();
+                CellRange[] oldSelection = Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) excel.ActiveSheet.Selections);
+                excel.ActiveSheet.ClearSelections();
                 if (_cachedActions.Length > 1)
                 {
                     foreach (ClipboardPasteRangeUndoAction action in _cachedActions)
                     {
-                        view.ActiveSheet.AddSelection(action.PasteRange, false);
+                        excel.ActiveSheet.AddSelection(action.PasteRange, false);
                     }
                 }
                 else if (_cachedActions.Length > 0)
                 {
                     CellRange pasteRange = _cachedActions[0].PasteRange;
-                    view.ActiveSheet.AddSelection(pasteRange.Row, pasteRange.Column, pasteRange.RowCount, pasteRange.ColumnCount, false);
-                    if (!pasteRange.Contains(view.ActiveSheet.ActiveRowIndex, view.ActiveSheet.ActiveColumnIndex))
+                    excel.ActiveSheet.AddSelection(pasteRange.Row, pasteRange.Column, pasteRange.RowCount, pasteRange.ColumnCount, false);
+                    if (!pasteRange.Contains(excel.ActiveSheet.ActiveRowIndex, excel.ActiveSheet.ActiveColumnIndex))
                     {
-                        view.SetActiveCell(Math.Max(0, pasteRange.Row), Math.Max(0, pasteRange.Column), false);
+                        excel.SetActiveCell(Math.Max(0, pasteRange.Row), Math.Max(0, pasteRange.Column), false);
                     }
                 }
-                if (view.RaiseSelectionChanging(oldSelection, Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) view.ActiveSheet.Selections)))
+                if (excel.RaiseSelectionChanging(oldSelection, Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) excel.ActiveSheet.Selections)))
                 {
-                    view.RaiseSelectionChanged();
+                    excel.RaiseSelectionChanged();
                 }
             }
         }
 
         void RefreshUI(object sender)
         {
-            SheetView view = sender as SheetView;
-            if (view != null)
+            var excel = sender as Excel;
+            if (excel != null)
             {
-                view.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
+                excel.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
             }
         }
 
@@ -294,22 +295,22 @@ namespace Dt.Cells.UndoRedo
             {
                 CellRange sourceRange = _pasteExtent.SourceRange;
                 CellRange targetRange = _pasteExtent.TargetRange;
-                if (((((_fromSheet == null) || (sourceRange == null)) || SheetView.IsValidRange(sourceRange.Row, sourceRange.Column, sourceRange.RowCount, sourceRange.ColumnCount, _fromSheet.RowCount, _fromSheet.ColumnCount)) && ((_toSheet != null) && (targetRange != null))) && SheetView.IsValidRange(targetRange.Row, targetRange.Column, targetRange.RowCount, targetRange.ColumnCount, _toSheet.RowCount, _toSheet.ColumnCount))
+                if (((((_fromSheet == null) || (sourceRange == null)) || Excel.IsValidRange(sourceRange.Row, sourceRange.Column, sourceRange.RowCount, sourceRange.ColumnCount, _fromSheet.RowCount, _fromSheet.ColumnCount)) && ((_toSheet != null) && (targetRange != null))) && Excel.IsValidRange(targetRange.Row, targetRange.Column, targetRange.RowCount, targetRange.ColumnCount, _toSheet.RowCount, _toSheet.ColumnCount))
                 {
                     base.SuspendInvalidate(sender);
                     try
                     {
-                        SheetView.ClipboardPaste(_fromSheet, sourceRange, _toSheet, targetRange, _pasteExtent.IsCutting, _pasteExtent.ClipboardText, _pasteOption);
-                        SheetView sheetView = sender as SheetView;
-                        if (sheetView != null)
+                        Excel.ClipboardPaste(_fromSheet, sourceRange, _toSheet, targetRange, _pasteExtent.IsCutting, _pasteExtent.ClipboardText, _pasteOption);
+                        Excel excel = sender as Excel;
+                        if (excel != null)
                         {
-                            if ((_pasteExtent.IsCutting && (_savedFromViewportCells != null)) && (_savedFromViewportCells.IsValueSaved() && object.ReferenceEquals(sheetView.ActiveSheet, _fromSheet)))
+                            if ((_pasteExtent.IsCutting && (_savedFromViewportCells != null)) && (_savedFromViewportCells.IsValueSaved() && object.ReferenceEquals(excel.ActiveSheet, _fromSheet)))
                             {
-                                CopyMoveHelper.RaiseValueChanged(sheetView, sourceRange.Row, sourceRange.Column, sourceRange.RowCount, sourceRange.ColumnCount, _savedFromViewportCells.GetValues());
+                                CopyMoveHelper.RaiseValueChanged(excel, sourceRange.Row, sourceRange.Column, sourceRange.RowCount, sourceRange.ColumnCount, _savedFromViewportCells.GetValues());
                             }
-                            if (((_savedToViewportCells != null) && _savedToViewportCells.IsValueSaved()) && object.ReferenceEquals(sheetView.ActiveSheet, _toSheet))
+                            if (((_savedToViewportCells != null) && _savedToViewportCells.IsValueSaved()) && object.ReferenceEquals(excel.ActiveSheet, _toSheet))
                             {
-                                CopyMoveHelper.RaiseValueChanged(sheetView, targetRange.Row, targetRange.Column, targetRange.RowCount, targetRange.ColumnCount, _savedToViewportCells.GetValues());
+                                CopyMoveHelper.RaiseValueChanged(excel, targetRange.Row, targetRange.Column, targetRange.RowCount, targetRange.ColumnCount, _savedToViewportCells.GetValues());
                             }
                         }
                     }
@@ -342,7 +343,7 @@ namespace Dt.Cells.UndoRedo
             {
                 InitSaveState();
                 bool isCutting = _pasteExtent.IsCutting;
-                CopyToOption option = SheetView.ConvertPasteOption(_pasteOption);
+                CopyToOption option = Excel.ConvertPasteOption(_pasteOption);
                 CellRange sourceRange = _pasteExtent.SourceRange;
                 CellRange targetRange = _pasteExtent.TargetRange;
                 if (((_fromSheet != null) && (sourceRange != null)) && isCutting)
@@ -427,18 +428,18 @@ namespace Dt.Cells.UndoRedo
             {
                 CellRange sourceRange = _pasteExtent.SourceRange;
                 CellRange targetRange = _pasteExtent.TargetRange;
-                SheetView sheetView = sender as SheetView;
+                Excel excel = sender as Excel;
                 if ((_toSheet == null) || (targetRange == null))
                 {
                     return false;
                 }
-                if (!SheetView.IsValidRange(targetRange.Row, targetRange.Column, targetRange.RowCount, targetRange.ColumnCount, _toSheet.RowCount, _toSheet.ColumnCount))
+                if (!Excel.IsValidRange(targetRange.Row, targetRange.Column, targetRange.RowCount, targetRange.ColumnCount, _toSheet.RowCount, _toSheet.ColumnCount))
                 {
                     return false;
                 }
                 if ((_fromSheet != null) && (sourceRange != null))
                 {
-                    if (!SheetView.IsValidRange(sourceRange.Row, sourceRange.Column, sourceRange.RowCount, sourceRange.ColumnCount, _fromSheet.RowCount, _fromSheet.ColumnCount))
+                    if (!Excel.IsValidRange(sourceRange.Row, sourceRange.Column, sourceRange.RowCount, sourceRange.ColumnCount, _fromSheet.RowCount, _fromSheet.ColumnCount))
                     {
                         return false;
                     }
@@ -494,7 +495,7 @@ namespace Dt.Cells.UndoRedo
                     if (_savedToFloatingObjects != null)
                     {
                         CopyMoveHelper.UndoFloatingObjectsInfo(_toSheet, _savedToFloatingObjects);
-                        sheetView.InvalidateFloatingObjects();
+                        excel.InvalidateFloatingObjects();
                         flag = true;
                     }
                     int num5 = 0;
@@ -544,21 +545,21 @@ namespace Dt.Cells.UndoRedo
                         if (_savedFromFloatingObjects != null)
                         {
                             CopyMoveHelper.UndoFloatingObjectsInfo(_fromSheet, _savedFromFloatingObjects);
-                            sheetView.InvalidateFloatingObjects();
+                            excel.InvalidateFloatingObjects();
                             flag = true;
                         }
                     }
-                    if (!flag || (sheetView == null))
+                    if (!flag || (excel == null))
                     {
                         return flag;
                     }
-                    if ((oldValues != null) && object.ReferenceEquals(sheetView.ActiveSheet, _toSheet))
+                    if ((oldValues != null) && object.ReferenceEquals(excel.ActiveSheet, _toSheet))
                     {
-                        CopyMoveHelper.RaiseValueChanged(sheetView, row, column, rowCount, columnCount, oldValues);
+                        CopyMoveHelper.RaiseValueChanged(excel, row, column, rowCount, columnCount, oldValues);
                     }
-                    if ((list2 != null) && object.ReferenceEquals(sheetView.ActiveSheet, _fromSheet))
+                    if ((list2 != null) && object.ReferenceEquals(excel.ActiveSheet, _fromSheet))
                     {
-                        CopyMoveHelper.RaiseValueChanged(sheetView, num5, num6, num7, num8, list2);
+                        CopyMoveHelper.RaiseValueChanged(excel, num5, num6, num7, num8, list2);
                     }
                 }
                 finally
@@ -566,7 +567,7 @@ namespace Dt.Cells.UndoRedo
                     base.ResumeInvalidate(sender);
                     if (_savedFromFloatingObjects != null)
                     {
-                        sheetView.InvalidateFloatingObjects();
+                        excel.InvalidateFloatingObjects();
                     }
                 }
                 return flag;

@@ -7,9 +7,8 @@
 #endregion
 
 #region 引用命名
-using Dt.Cells.UI;
+using Dt.Base;
 using System;
-using System.Threading;
 using System.Windows.Input;
 #endregion
 
@@ -58,26 +57,26 @@ namespace Dt.Cells.UndoRedo
         }
 
         /// <summary>
-        /// Resumes all Invalidate methods if the sender is SheetView.
+        /// Resumes all Invalidate methods if the sender is Excel.
         /// </summary>
         /// <param name="sender"></param>
         protected void ResumeInvalidate(object sender)
         {
-            if (sender is SheetView)
+            if (sender is Excel excel)
             {
-                (sender as SheetView).ResumeInvalidate();
+                excel.ResumeInvalidate();
             }
         }
 
         /// <summary>
-        /// Suspends all Invalidate methods if the sender is SheetView.
+        /// Suspends all Invalidate methods if the sender is Excel.
         /// </summary>
         /// <param name="sender"></param>
         protected void SuspendInvalidate(object sender)
         {
-            if (sender is SheetView)
+            if (sender is Excel excel)
             {
-                (sender as SheetView).SuspendInvalidate();
+                excel.SuspendInvalidate();
             }
         }
     }

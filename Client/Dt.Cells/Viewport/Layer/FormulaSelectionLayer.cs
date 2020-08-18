@@ -28,8 +28,8 @@ namespace Dt.Cells.UI
                 CellRange range = frame.SelectionItem.Range;
                 int row = (range.Row < 0) ? 0 : range.Row;
                 int column = (range.Column < 0) ? 0 : range.Column;
-                int rowCount = (range.RowCount < 0) ? ParentViewport.Sheet.ActiveSheet.RowCount : range.RowCount;
-                int columnCount = (range.ColumnCount < 0) ? ParentViewport.Sheet.ActiveSheet.ColumnCount : range.ColumnCount;
+                int rowCount = (range.RowCount < 0) ? ParentViewport.Excel.ActiveSheet.RowCount : range.RowCount;
+                int columnCount = (range.ColumnCount < 0) ? ParentViewport.Excel.ActiveSheet.ColumnCount : range.ColumnCount;
                 bool isLeftVisible = false;
                 bool isTopVisible = false;
                 bool isRightVisible = false;
@@ -61,8 +61,8 @@ namespace Dt.Cells.UI
                 CellRange range = frame.SelectionItem.Range;
                 int row = (range.Row < 0) ? 0 : range.Row;
                 int column = (range.Column < 0) ? 0 : range.Column;
-                int rowCount = (range.RowCount < 0) ? ParentViewport.Sheet.ActiveSheet.RowCount : range.RowCount;
-                int columnCount = (range.ColumnCount < 0) ? ParentViewport.Sheet.ActiveSheet.ColumnCount : range.ColumnCount;
+                int rowCount = (range.RowCount < 0) ? ParentViewport.Excel.ActiveSheet.RowCount : range.RowCount;
+                int columnCount = (range.ColumnCount < 0) ? ParentViewport.Excel.ActiveSheet.ColumnCount : range.ColumnCount;
                 bool isLeftVisible = false;
                 bool isTopVisible = false;
                 bool isRightVisible = false;
@@ -91,7 +91,7 @@ namespace Dt.Cells.UI
         public void Refresh()
         {
             base.Children.Clear();
-            using (IEnumerator<FormulaSelectionItem> enumerator = ParentViewport.Sheet.FormulaSelections.GetEnumerator())
+            using (IEnumerator<FormulaSelectionItem> enumerator = ParentViewport.Excel.FormulaSelections.GetEnumerator())
             {
                 while (enumerator.MoveNext())
                 {

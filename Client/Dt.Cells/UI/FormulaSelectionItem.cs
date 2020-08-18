@@ -7,13 +7,9 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Cells.Data;
-using System;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Threading;
-using Windows.UI;
 #endregion
 
 namespace Dt.Cells.UI
@@ -74,7 +70,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        public SheetView.FormulaExpression Expression { get; set; }
+        public Excel.FormulaExpression Expression { get; set; }
 
         public bool IsFlickering
         {

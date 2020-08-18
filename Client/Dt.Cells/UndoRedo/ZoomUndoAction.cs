@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Cells.Data;
 using Dt.Cells.UI;
 using System;
@@ -52,8 +53,8 @@ namespace Dt.Cells.UndoRedo
         /// </returns>
         public override bool CanExecute(object parameter)
         {
-            SheetView view = parameter as SheetView;
-            return (((view != null) && view.CanUserZoom) && (view.ZoomFactor != zoomFactor));
+            Excel excel = parameter as Excel;
+            return (((excel != null) && excel.CanUserZoom) && (excel.ZoomFactor != zoomFactor));
         }
 
         /// <summary>
@@ -63,7 +64,7 @@ namespace Dt.Cells.UndoRedo
         public override void Execute(object parameter)
         {
             SaveState();
-            SheetView sheetView = parameter as SheetView;
+            Excel sheetView = parameter as Excel;
             if (((sheetView == null) || !sheetView.CanUserZoom) || (sheetView.ZoomFactor == zoomFactor))
             {
                 throw new ActionFailedException(this);
@@ -86,14 +87,14 @@ namespace Dt.Cells.UndoRedo
 
         void RefreshUI(object sheetView)
         {
-            var view = sheetView as SheetView;
-            if (view != null)
+            var excel = sheetView as Excel;
+            if (excel != null)
             {
-                view.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells);
-                view.InvalidateRange(-1, -1, -1, -1, SheetArea.ColumnHeader);
-                view.InvalidateRange(-1, -1, -1, -1, SheetArea.CornerHeader | SheetArea.RowHeader);
-                view.InvalidateFloatingObjects();
-                view.InvalidateMeasure();
+                excel.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells);
+                excel.InvalidateRange(-1, -1, -1, -1, SheetArea.ColumnHeader);
+                excel.InvalidateRange(-1, -1, -1, -1, SheetArea.CornerHeader | SheetArea.RowHeader);
+                excel.InvalidateFloatingObjects();
+                excel.InvalidateMeasure();
             }
         }
 
@@ -141,7 +142,7 @@ namespace Dt.Cells.UndoRedo
             {
                 base.ResumeInvalidate(parameter);
             }
-            SheetView sheetView = parameter as SheetView;
+            Excel sheetView = parameter as Excel;
             if (sheetView != null)
             {
                 RefreshUI(sheetView);

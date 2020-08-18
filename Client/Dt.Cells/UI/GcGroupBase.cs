@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Cells.Data;
 using System;
 using System.Runtime.CompilerServices;
@@ -24,16 +25,16 @@ namespace Dt.Cells.UI
     {
         protected Rectangle _borderBottom;
         protected Rectangle _borderRight;
-        protected SheetView _sheetView;
+        protected Excel _excel;
         Brush borderBrush;
         internal const double PADDING = 2.0;
 
-        public GcGroupBase(SheetView sheetView)
+        public GcGroupBase(Excel p_excel)
         {
-            _sheetView = sheetView;
-            if ((_sheetView != null) && (_sheetView.RangeGroupBackground != null))
+            _excel = p_excel;
+            if ((_excel != null) && (_excel.RangeGroupBackground != null))
             {
-                Background = _sheetView.RangeGroupBackground;
+                Background = _excel.RangeGroupBackground;
             }
             else if (Application.Current.RequestedTheme == ApplicationTheme.Light)
             {
@@ -87,15 +88,15 @@ namespace Dt.Cells.UI
         protected virtual int GetMaxLevel(Orientation orientation)
         {
             int maxLevel = -1;
-            if (_sheetView.ActiveSheet != null)
+            if (_excel.ActiveSheet != null)
             {
                 if (orientation == Orientation.Horizontal)
                 {
-                    return _sheetView.ActiveSheet.RowRangeGroup.GetMaxLevel();
+                    return _excel.ActiveSheet.RowRangeGroup.GetMaxLevel();
                 }
                 if (orientation == Orientation.Vertical)
                 {
-                    maxLevel = _sheetView.ActiveSheet.ColumnRangeGroup.GetMaxLevel();
+                    maxLevel = _excel.ActiveSheet.ColumnRangeGroup.GetMaxLevel();
                 }
             }
             return maxLevel;
@@ -147,9 +148,9 @@ namespace Dt.Cells.UI
         {
             get
             {
-                if ((_sheetView != null) && (_sheetView.RangeGroupBorderBrush != null))
+                if ((_excel != null) && (_excel.RangeGroupBorderBrush != null))
                 {
-                    return _sheetView.RangeGroupBorderBrush;
+                    return _excel.RangeGroupBorderBrush;
                 }
                 if (borderBrush == null)
                     borderBrush = new SolidColorBrush(Windows.UI.Color.FromArgb(0xff, 160, 160, 160));

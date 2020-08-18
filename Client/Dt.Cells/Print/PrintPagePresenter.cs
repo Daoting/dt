@@ -68,7 +68,6 @@ namespace Dt.Cells.UI
             _excel.VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
             _excel.HorizontalScrollBarVisibility = ScrollBarVisibility.Hidden;
             _excel.TabStripVisibility = Visibility.Collapsed;
-            _excel.BorderThickness = new Thickness(0.0);
             _excel.ShowRowRangeGroup = false;
             _excel.ShowColumnRangeGroup = false;
 

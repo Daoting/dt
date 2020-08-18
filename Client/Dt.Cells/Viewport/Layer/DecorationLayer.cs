@@ -10,7 +10,6 @@
 using Dt.Cells.Data;
 using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Xaml;
@@ -66,7 +65,7 @@ namespace Dt.Cells.UI
         /// <returns></returns>
         protected override Size MeasureOverride(Size availableSize)
         {
-            if (_viewport.Sheet == null || _viewport.Sheet.ActiveSheet == null)
+            if (_viewport.Excel == null || _viewport.Excel.ActiveSheet == null)
                 return _viewport.GetViewportSize(availableSize);
 
             double width = availableSize.Width;
@@ -78,7 +77,7 @@ namespace Dt.Cells.UI
 
             // 计算选择框位置区域
             bool isEmpty = true;
-            CellRange range = _viewport.Sheet.DecorationRange;
+            CellRange range = _viewport.Excel.DecorationRange;
             if (range != null)
             {
                 _bounds = _viewport.GetRangeBounds(range);
@@ -100,7 +99,7 @@ namespace Dt.Cells.UI
             }
 
             // 水平垂直分页线
-            Size paperSize = _viewport.Sheet.PaperSize;
+            Size paperSize = _viewport.Excel.PaperSize;
             if (paperSize.Width > 0 && paperSize.Height > 0)
             {
                 PrepareLines(width, height, true, paperSize);
@@ -121,16 +120,16 @@ namespace Dt.Cells.UI
         /// <returns></returns>
         protected override Size ArrangeOverride(Size finalSize)
         {
-            if (_viewport.Sheet == null || _viewport.Sheet.ActiveSheet == null)
+            if (_viewport.Excel == null || _viewport.Excel.ActiveSheet == null)
                 return finalSize;
 
             _rect.Arrange(_bounds);
 
             // 分页线
-            Size paperSize = _viewport.Sheet.PaperSize;
+            Size paperSize = _viewport.Excel.PaperSize;
             if (paperSize.Width > 0 && paperSize.Height > 0)
             {
-                Worksheet ws = _viewport.Sheet.ActiveSheet;
+                Worksheet ws = _viewport.Excel.ActiveSheet;
                 Point topLeft = ws.GetTopLeftLocation(_viewport.RowViewportIndex, _viewport.ColumnViewportIndex);
                 double offsetY = topLeft.Y % paperSize.Height;
                 double offsetX = topLeft.X % paperSize.Width;
@@ -241,20 +240,20 @@ namespace Dt.Cells.UI
         /// <param name="e"></param>
         void OnPointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            if (_viewport.Sheet == null
-                || _viewport.Sheet.DecorationRange == null
+            if (_viewport.Excel == null
+                || _viewport.Excel.DecorationRange == null
                 || !_rect.CapturePointer(e.Pointer))
                 return;
 
             e.Handled = true;
             _moving = true;
-            SheetView view = _viewport.Sheet;
-            Point pos = e.GetCurrentPoint(view).Position;
-            HitTestInformation info = view.HitTest(pos.X, pos.Y);
+            var excel = _viewport.Excel;
+            Point pos = e.GetCurrentPoint(excel).Position;
+            HitTestInformation info = excel.HitTest(pos.X, pos.Y);
             if (info.ViewportInfo != null)
             {
-                Worksheet ws = view.ActiveSheet;
-                CellRange range = view.DecorationRange;
+                Worksheet ws = excel.ActiveSheet;
+                CellRange range = excel.DecorationRange;
                 int row = info.ViewportInfo.Row;
                 int column = info.ViewportInfo.Column;
                 int minRow = (range.Row < 0) ? 0 : range.Row;
@@ -281,7 +280,7 @@ namespace Dt.Cells.UI
                 _startCol = _toCol = column;
 
                 ShowIndicator();
-                _viewport.Sheet.OnItemStartDrag();
+                _viewport.Excel.OnItemStartDrag();
             }
             else
             {
@@ -296,18 +295,18 @@ namespace Dt.Cells.UI
         /// <param name="e"></param>
         void OnPointerMoved(object sender, PointerRoutedEventArgs e)
         {
-            if (_viewport.Sheet == null
-                || _viewport.Sheet.DecorationRange == null)
+            if (_viewport.Excel == null
+                || _viewport.Excel.DecorationRange == null)
                 return;
 
             e.Handled = true;
-            SheetView view = _viewport.Sheet;
-            Point pos = e.GetCurrentPoint(view).Position;
-            view.MousePosition = pos;
+            var excel = _viewport.Excel;
+            Point pos = e.GetCurrentPoint(excel).Position;
+            excel.MousePosition = pos;
             if (_moving)
             {
-                view.UpdateMouseCursorLocation();
-                HitTestInformation info = view.HitTest(pos.X, pos.Y);
+                excel.UpdateMouseCursorLocation();
+                HitTestInformation info = excel.HitTest(pos.X, pos.Y);
                 if (info.ViewportInfo != null)
                 {
                     // 位置不同时重绘
@@ -325,7 +324,7 @@ namespace Dt.Cells.UI
             }
             else
             {
-                view.SetMouseCursor(CursorType.DragCell_DragCursor);
+                excel.SetMouseCursor(CursorType.DragCell_DragCursor);
             }
         }
 
@@ -333,7 +332,7 @@ namespace Dt.Cells.UI
         {
             e.Handled = true;
             if (!_moving)
-                _viewport.Sheet.ResetCursor();
+                _viewport.Excel.ResetCursor();
         }
 
         void OnPointerReleased(object sender, PointerRoutedEventArgs e)
@@ -342,8 +341,8 @@ namespace Dt.Cells.UI
             {
                 if (_startRow != _toRow || _startCol != _toCol)
                 {
-                    CellRange origin = _viewport.Sheet.DecorationRange;
-                    _viewport.Sheet.OnItemDropped(new CellEventArgs(origin.Row + _toRow - _startRow, origin.Column + _toCol - _startCol));
+                    CellRange origin = _viewport.Excel.DecorationRange;
+                    _viewport.Excel.OnItemDropped(new CellEventArgs(origin.Row + _toRow - _startRow, origin.Column + _toCol - _startCol));
                 }
                 ReleasePointer(e);
             }
@@ -363,21 +362,21 @@ namespace Dt.Cells.UI
 
         void ShowIndicator()
         {
-            if (_dragRect == null && _viewport.Sheet != null)
+            if (_dragRect == null && _viewport.Excel != null)
             {
                 _dragRect = CreateRectangle();
-                _viewport.Sheet.TrackersContainer.Children.Add(_dragRect);
+                _viewport.Excel.TrackersContainer.Children.Add(_dragRect);
             }
         }
 
         void RefreshIndicator()
         {
-            if (_viewport.Sheet == null
-                || _viewport.Sheet.DecorationRange == null
+            if (_viewport.Excel == null
+                || _viewport.Excel.DecorationRange == null
                 || _dragRect == null)
                 return;
 
-            CellRange origin = _viewport.Sheet.DecorationRange;
+            CellRange origin = _viewport.Excel.DecorationRange;
             CellRange range = new CellRange(origin.Row + _toRow - _startRow, origin.Column + _toCol - _startCol, origin.RowCount, origin.ColumnCount);
             Rect rc = _viewport.GetRangeBounds(range);
             Canvas.SetLeft(_dragRect, Math.Floor(rc.Left + _viewport.Location.X - _thickness + 1));

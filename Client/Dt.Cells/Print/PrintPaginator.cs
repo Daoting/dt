@@ -400,7 +400,7 @@ namespace Dt.Cells.UI
                 return columnWidth;
             }
             bool rowHeader = sheetArea == (SheetArea.CornerHeader | SheetArea.RowHeader);
-            double num2 = Math.Ceiling(_excel.View.GetColumnAutoFitValue(c, rowHeader));
+            double num2 = Math.Ceiling(_excel.GetColumnAutoFitValue(c, rowHeader));
             if (num2 <= 0.0)
             {
                 return columnWidth;
@@ -425,7 +425,7 @@ namespace Dt.Cells.UI
                 return rowHeight;
             }
             bool columnHeader = sheetArea == SheetArea.ColumnHeader;
-            double num2 = Math.Ceiling(_excel.View.GetRowAutoFitValue(r, columnHeader));
+            double num2 = Math.Ceiling(_excel.GetRowAutoFitValue(r, columnHeader));
             if (num2 <= 0.0)
             {
                 return rowHeight;

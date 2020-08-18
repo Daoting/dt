@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Cells.Data;
 using Dt.Cells.UI;
 using System;
@@ -64,7 +65,7 @@ namespace Dt.Cells.UndoRedo
         {
             if (((sheet != null) && (rows != null)) && CanExecute(sender))
             {
-                SheetView view = sender as SheetView;
+                Excel view = sender as Excel;
                 int[] rowsResized = GetRowsResized(rows);
                 base.SuspendInvalidate(sender);
                 try
@@ -211,7 +212,7 @@ namespace Dt.Cells.UndoRedo
             bool flag = false;
             if ((sheet != null) && (rows != null))
             {
-                SheetView view = sender as SheetView;
+                Excel view = sender as Excel;
                 int[] rowsResized = GetRowsResized(rows);
                 base.SuspendInvalidate(sender);
                 try

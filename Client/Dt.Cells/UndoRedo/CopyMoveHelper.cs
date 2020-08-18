@@ -7,9 +7,8 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Cells.Data;
-using Dt.Cells.UI;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 #endregion
@@ -111,19 +110,19 @@ namespace Dt.Cells.UndoRedo
             return list;
         }
 
-        public static void RaiseValueChanged(SheetView sheetView, int row, int column, int rowCount, int columnCount, List<CellData> oldValues)
+        public static void RaiseValueChanged(Excel excel, int row, int column, int rowCount, int columnCount, List<CellData> oldValues)
         {
-            if (((sheetView != null) && (sheetView._eventSuspended <= 0)) && (oldValues != null))
+            if (((excel != null) && (excel._eventSuspended <= 0)) && (oldValues != null))
             {
                 if (row < 0)
                 {
                     row = 0;
-                    rowCount = sheetView.ActiveSheet.RowCount;
+                    rowCount = excel.ActiveSheet.RowCount;
                 }
                 if (column < 0)
                 {
                     column = 0;
-                    columnCount = sheetView.ActiveSheet.ColumnCount;
+                    columnCount = excel.ActiveSheet.ColumnCount;
                 }
                 List<CellData> cellDatas = new List<CellData>((IEnumerable<CellData>)oldValues);
                 for (int i = 0; i < rowCount; i++)
@@ -131,7 +130,7 @@ namespace Dt.Cells.UndoRedo
                     for (int j = 0; j < columnCount; j++)
                     {
                         object obj3;
-                        object objA = sheetView.ActiveSheet.GetValue(row + i, column + j);
+                        object objA = excel.ActiveSheet.GetValue(row + i, column + j);
                         CellData? nullable = Remove(cellDatas, i, j);
                         if (!nullable.HasValue)
                         {
@@ -143,7 +142,7 @@ namespace Dt.Cells.UndoRedo
                         }
                         if (!object.Equals(objA, obj3))
                         {
-                            sheetView.RaiseValueChanged(row + i, column + j);
+                            excel.RaiseValueChanged(row + i, column + j);
                         }
                     }
                 }
@@ -336,7 +335,7 @@ namespace Dt.Cells.UndoRedo
                         if (((option & CopyToOption.Value) > ((CopyToOption)0)) || ((option & CopyToOption.Formula) > ((CopyToOption)0)))
                         {
                             cellsInfo.SaveFormula(i, j, sheet.GetFormula(baseRow + i, baseColumn + j));
-                            object[,] arrayFormulas = SheetView.GetsArrayFormulas(sheet, baseRow, baseColumn, rowCount, columnCount);
+                            object[,] arrayFormulas = Excel.GetsArrayFormulas(sheet, baseRow, baseColumn, rowCount, columnCount);
                             cellsInfo.SaveArrayFormula(arrayFormulas);
                         }
                         if ((option & CopyToOption.Sparkline) > ((CopyToOption)0))
@@ -468,7 +467,7 @@ namespace Dt.Cells.UndoRedo
                 }
                 if (cellsInfo.IsArrayFormulaSaved() && (area == SheetArea.Cells))
                 {
-                    object[,] arrayFormula = SheetView.GetsArrayFormulas(sheet, baseRow, baseColumn, rowCount, columnCount);
+                    object[,] arrayFormula = Excel.GetsArrayFormulas(sheet, baseRow, baseColumn, rowCount, columnCount);
                     if ((arrayFormula != null) && (arrayFormula.Length > 0))
                     {
                         int length = arrayFormula.GetLength(0);

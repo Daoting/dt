@@ -80,7 +80,7 @@ namespace Dt.Cells.UI
                 _backgroundRect.Fill = new SolidColorBrush(Colors.Transparent);
             }
             _backgroundRect.Stroke = _picture.ActualStroke;
-            double num = _picture.StrokeThickness * ParentViewport.Sheet.ZoomFactor;
+            double num = _picture.StrokeThickness * ParentViewport.Excel.ZoomFactor;
             if (num > 0.0)
             {
                 _backgroundRect.StrokeThickness = num;

@@ -62,7 +62,7 @@ namespace Dt.Cells.UI
                 {
                     if ((_parentView != null) && (_parentView.ParentViewport != null))
                     {
-                        strokeThickness *= _parentView.ParentViewport.Sheet.ZoomFactor;
+                        strokeThickness *= _parentView.ParentViewport.Excel.ZoomFactor;
                     }
                     _titleFrame.StrokeThickness = strokeThickness;
                 }
@@ -96,9 +96,9 @@ namespace Dt.Cells.UI
                 }
                 _titleContent.FontFamily = actualFontFamily;
                 double actualFontSize = ChartTitle.ActualFontSize;
-                if ((_parentView.ParentViewport != null) && (_parentView.ParentViewport.Sheet != null))
+                if ((_parentView.ParentViewport != null) && (_parentView.ParentViewport.Excel != null))
                 {
-                    actualFontSize *= _parentView.ParentViewport.Sheet.ZoomFactor;
+                    actualFontSize *= _parentView.ParentViewport.Excel.ZoomFactor;
                 }
                 if (actualFontSize > 0.0)
                 {

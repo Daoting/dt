@@ -7,80 +7,18 @@
 #endregion
 
 #region 引用命名
-using Dt.Base;
-using Dt.CalcEngine;
-using Dt.CalcEngine.Expressions;
 using Dt.Cells.Data;
+using Dt.Cells.UI;
 using Dt.Cells.UndoRedo;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Windows.Input;
-using System.Xml;
-using System.Xml.Schema;
-using System.Xml.Serialization;
-using Windows.ApplicationModel;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.Devices.Input;
-using Windows.Foundation;
-using Windows.System;
-using Windows.UI;
-using Windows.UI.Core;
-using Windows.UI.Input;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Shapes;
 #endregion
 
-namespace Dt.Cells.UI
+namespace Dt.Base
 {
-    public partial class SheetView
+    public partial class Excel
     {
-        /// <summary>
-        /// Automatically fits the viewport column.
-        /// </summary>
-        /// <param name="column">The column index to automatically fit.</param>
-        /// <param name="isRowHeader">The flag indicates whether sheetArea is a row header.</param>
-        public void AutoFitColumn(int column, bool isRowHeader = false)
-        {
-            if ((column < 0) || (column >= ActiveSheet.ColumnCount))
-            {
-                throw new ArgumentOutOfRangeException("column");
-            }
-            AutoFitColumnInternal(column, false, isRowHeader);
-        }
-
-        /// <summary>
-        /// Automatically fits the viewport row.
-        /// </summary>
-        /// <param name="row">The row index.</param>
-        /// <param name="isColumnHeader">The flag indicates whether sheetArea is a column header.</param>
-        public void AutoFitRow(int row, bool isColumnHeader = false)
-        {
-            if ((row < 0) || (row > ActiveSheet.RowCount))
-            {
-                throw new ArgumentOutOfRangeException("row");
-            }
-            AutoFitRowInternal(row, false, isColumnHeader);
-        }
-
         void AutoFitColumn()
         {
             ColumnLayout viewportResizingColumnLayoutFromX;
@@ -390,7 +328,7 @@ namespace Dt.Cells.UI
                     _resizingTracker.X1 = Math.Max(x, MousePosition.X) - 0.5;
                 }
                 _resizingTracker.X2 = _resizingTracker.X1;
-                if ((InputDeviceType != InputDeviceType.Touch) && ((Excel.ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Both) || (Excel.ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Column)))
+                if ((InputDeviceType != InputDeviceType.Touch) && ((ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Both) || (ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Column)))
                 {
                     UpdateResizeToolTip(GetHorizontalResizeTip(Math.Max((double)0.0, (double)(MousePosition.X - x))), true);
                 }
@@ -435,7 +373,7 @@ namespace Dt.Cells.UI
                     _resizingTracker.Y1 = Math.Max(y, MousePosition.Y) - 0.5;
                 }
                 _resizingTracker.Y2 = _resizingTracker.Y1;
-                if ((InputDeviceType != InputDeviceType.Touch) && ((Excel.ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Both) || (Excel.ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Row)))
+                if ((InputDeviceType != InputDeviceType.Touch) && ((ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Both) || (ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Row)))
                 {
                     UpdateResizeToolTip(GetVerticalResizeTip(Math.Max((double)0.0, (double)(MousePosition.Y - y))), false);
                 }
@@ -481,7 +419,7 @@ namespace Dt.Cells.UI
                     _resizingTracker.X1 = Math.Max(x, MousePosition.X) - 0.5;
                 }
                 _resizingTracker.X2 = _resizingTracker.X1;
-                if ((InputDeviceType != InputDeviceType.Touch) && ((Excel.ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Both) || (Excel.ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Column)))
+                if ((InputDeviceType != InputDeviceType.Touch) && ((ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Both) || (ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Column)))
                 {
                     UpdateResizeToolTip(GetHorizontalResizeTip(Math.Max((double)0.0, (double)(MousePosition.X - x))), true);
                 }
@@ -527,7 +465,7 @@ namespace Dt.Cells.UI
                     _resizingTracker.Y1 = Math.Max(y, MousePosition.Y) - 0.5;
                 }
                 _resizingTracker.Y2 = _resizingTracker.Y1;
-                if ((InputDeviceType != InputDeviceType.Touch) && ((Excel.ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Both) || (Excel.ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Row)))
+                if ((InputDeviceType != InputDeviceType.Touch) && ((ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Both) || (ShowResizeTip == Dt.Cells.Data.ShowResizeTip.Row)))
                 {
                     UpdateResizeToolTip(GetVerticalResizeTip(Math.Max((double)0.0, (double)(MousePosition.Y - y))), false);
                 }

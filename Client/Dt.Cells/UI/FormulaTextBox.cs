@@ -8,12 +8,9 @@
 
 #region 引用命名
 using Dt.Base;
-using Dt.Cells.Data;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Text.RegularExpressions;
 using Windows.Foundation;
@@ -21,7 +18,6 @@ using Windows.System;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 #endregion
@@ -44,7 +40,7 @@ namespace Dt.Cells.UI
         int _length;
         Windows.UI.Xaml.Controls.Primitives.Popup _namePopup = new Windows.UI.Xaml.Controls.Primitives.Popup();
         bool _selectionChanged;
-        Excel _spreadSheet;
+        Excel _excel;
         int _startIndex = -1;
         bool _textChanged;
         DispatcherTimer _timer;
@@ -238,11 +234,11 @@ namespace Dt.Cells.UI
 
         void OnFormulaTextBoxSelectionChanged(object sender, RoutedEventArgs e)
         {
-            if (SpreadSheet != null)
+            if (Excel != null)
             {
                 if (FocusManager.GetFocusedElement() == this)
                 {
-                    SpreadSheet.View.EditorConnector.Editor = this;
+                    Excel.EditorConnector.Editor = this;
                 }
                 _selectionChanged = true;
                 StartTimer();
@@ -251,7 +247,7 @@ namespace Dt.Cells.UI
 
         void OnFormulaTextBoxTextChanged(object sender, TextChangedEventArgs e)
         {
-            if (SpreadSheet != null)
+            if (Excel != null)
             {
                 _textChanged = true;
                 _selectionChanged = true;
@@ -268,7 +264,7 @@ namespace Dt.Cells.UI
         protected override void OnGotFocus(RoutedEventArgs e)
         {
             base.OnGotFocus(e);
-            if (_spreadSheet != null)
+            if (_excel != null)
             {
                 if (IsArrayFormula)
                 {
@@ -278,7 +274,7 @@ namespace Dt.Cells.UI
                         base.Text = match.Groups[1].Value;
                     }
                 }
-                _spreadSheet.View.EditorConnector.Editor = this;
+                _excel.EditorConnector.Editor = this;
                 _textChanged = true;
                 _selectionChanged = true;
                 OnTimerTick(this, EventArgs.Empty);
@@ -292,9 +288,9 @@ namespace Dt.Cells.UI
         protected override void OnKeyDown(KeyRoutedEventArgs e)
         {
             base.OnKeyDown(e);
-            if (((e.Key == VirtualKey.F4) && (SpreadSheet != null)) && ((SpreadSheet.View != null) && (SpreadSheet.View.EditorConnector.Editor == this)))
+            if (e.Key == VirtualKey.F4 && Excel != null && Excel.EditorConnector.Editor == this)
             {
-                SpreadSheet.View.EditorConnector.ChangeRelative();
+                Excel.EditorConnector.ChangeRelative();
             }
         }
 
@@ -319,16 +315,16 @@ namespace Dt.Cells.UI
         protected override void OnLostFocus(RoutedEventArgs e)
         {
             base.OnLostFocus(e);
-            if ((_spreadSheet != null) && (_spreadSheet.View.EditorConnector.Editor == this))
+            if ((_excel != null) && (_excel.EditorConnector.Editor == this))
             {
-                _spreadSheet.View.EndFormulaSelection();
-                _spreadSheet.View.EditorConnector.Editor = null;
+                _excel.EndFormulaSelection();
+                _excel.EditorConnector.Editor = null;
             }
         }
 
         void OnTimerTick(object sender, object e)
         {
-            if (((SpreadSheet != null) && (SpreadSheet.View != null)) && (SpreadSheet.View.EditorConnector.Editor == this))
+            if ((Excel != null) && (Excel.EditorConnector.Editor == this))
             {
                 string text = base.Text;
                 Match match = new Regex(@"(^\s*=\s*)(.*?)(\s*$)").Match(text);
@@ -342,16 +338,16 @@ namespace Dt.Cells.UI
                     {
                         _timer.Stop();
                     }
-                    SpreadSheet.View.EditorConnector.OnFormulaTextChanged(string.Empty);
-                    SpreadSheet.View.EndFormulaSelection();
+                    Excel.EditorConnector.OnFormulaTextChanged(string.Empty);
+                    Excel.EndFormulaSelection();
                     return;
                 }
                 if (_textChanged)
                 {
-                    SpreadSheet.View.BeginFormulaSelection(null);
+                    Excel.BeginFormulaSelection(null);
                     _header = match.Groups[1].Value;
                     _footer = match.Groups[3].Value;
-                    SpreadSheet.View.EditorConnector.OnFormulaTextChanged(match.Groups[2].Value);
+                    Excel.EditorConnector.OnFormulaTextChanged(match.Groups[2].Value);
                 }
                 if (_selectionChanged)
                 {
@@ -363,7 +359,7 @@ namespace Dt.Cells.UI
                         selectionStart -= _header.Length;
                         end -= _header.Length;
                     }
-                    SpreadSheet.View.EditorConnector.OnCursorPositionChanged(selectionStart, end);
+                    Excel.EditorConnector.OnCursorPositionChanged(selectionStart, end);
                 }
                 if (_textChanged)
                 {
@@ -531,7 +527,7 @@ namespace Dt.Cells.UI
             UnWireEvents();
             try
             {
-                IList<SheetView.ColoredText> coloredText = SpreadSheet.View.EditorConnector.GetColoredText(false);
+                IList<Excel.ColoredText> coloredText = Excel.EditorConnector.GetColoredText(false);
                 StringBuilder builder = new StringBuilder();
                 if (string.IsNullOrEmpty(_header) && (coloredText.Count > 0))
                 {
@@ -541,7 +537,7 @@ namespace Dt.Cells.UI
                 {
                     builder.Append(_header);
                 }
-                foreach (SheetView.ColoredText text in coloredText)
+                foreach (var text in coloredText)
                 {
                     builder.Append(text.Text);
                 }
@@ -550,7 +546,7 @@ namespace Dt.Cells.UI
                     builder.Append(_footer);
                 }
                 base.Text = builder.ToString();
-                int cursorPositionStart = SpreadSheet.View.EditorConnector.GetCursorPositionStart();
+                int cursorPositionStart = Excel.EditorConnector.GetCursorPositionStart();
                 if (_header != null)
                 {
                     cursorPositionStart += _header.Length;
@@ -603,21 +599,21 @@ namespace Dt.Cells.UI
         /// <value>
         /// The spread sheet.
         /// </value>
-        public Excel SpreadSheet
+        public Excel Excel
         {
-            get { return _spreadSheet; }
+            get { return _excel; }
             set
             {
-                if (_spreadSheet != value)
+                if (_excel != value)
                 {
-                    if (_spreadSheet != null)
+                    if (_excel != null)
                     {
-                        _spreadSheet.View.EditorConnector.FormulaChangedByUI -= new EventHandler(OnEditorConnectorFormulaChangedByUI);
+                        _excel.EditorConnector.FormulaChangedByUI -= new EventHandler(OnEditorConnectorFormulaChangedByUI);
                     }
-                    _spreadSheet = value;
-                    if (_spreadSheet != null)
+                    _excel = value;
+                    if (_excel != null)
                     {
-                        _spreadSheet.View.EditorConnector.FormulaChangedByUI += new EventHandler(OnEditorConnectorFormulaChangedByUI);
+                        _excel.EditorConnector.FormulaChangedByUI += new EventHandler(OnEditorConnectorFormulaChangedByUI);
                     }
                 }
             }

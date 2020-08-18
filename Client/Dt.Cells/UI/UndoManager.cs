@@ -7,10 +7,9 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Threading;
 using System.Windows.Input;
 #endregion
 
@@ -71,9 +70,9 @@ namespace Dt.Cells.UI
             {
                 flag = false;
             }
-            if (Context is SheetView)
+            if (Context is Excel excel)
             {
-                (Context as SheetView).ResumeInvalidate();
+                excel.ResumeInvalidate();
             }
             if (AllowUndo)
             {
@@ -187,9 +186,9 @@ namespace Dt.Cells.UI
                 {
                     flag = false;
                 }
-                if (Context is SheetView)
+                if (Context is Excel excel)
                 {
-                    (Context as SheetView).ResumeInvalidate();
+                    excel.ResumeInvalidate();
                 }
                 if (flag)
                 {

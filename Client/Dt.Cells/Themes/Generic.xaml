@@ -269,18 +269,6 @@
 
 
     <!--###################### Main Control Style ####################-->
-    <Style TargetType="dt:Excel">
-        <Setter Property="Foreground" Value="{StaticResource ControlForegroundBrush}" />
-        <Setter Property="Background" Value="{StaticResource ControlBackgroundBrush}" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="dt:Excel">
-                    <Grid x:Name="Root" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" />
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
     <Style TargetType="local:TabStripSplitBox">
         <Setter Property="IsTabStop" Value="False"/>
         <Setter Property="Template">

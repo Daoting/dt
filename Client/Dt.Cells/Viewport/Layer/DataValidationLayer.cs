@@ -193,7 +193,7 @@ namespace Dt.Cells.UI
         {
             if (_presenters != null)
             {
-                if (ParentViewport.Sheet.HighlightInvalidData)
+                if (ParentViewport.Excel.HighlightInvalidData)
                 {
                     using (Dictionary<int, Dictionary<int, InvalidDataPresenter>>.Enumerator enumerator = _presenters.GetEnumerator())
                     {

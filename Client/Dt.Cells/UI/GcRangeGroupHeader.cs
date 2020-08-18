@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Cells.Data;
 using Dt.Cells.UndoRedo;
 using System;
@@ -24,7 +25,7 @@ namespace Dt.Cells.UI
     {
         List<RangeGroupHeaderButtonPresenter> _headButtons;
 
-        public GcRangeGroupHeader(SheetView sheetView) : base(sheetView)
+        public GcRangeGroupHeader(Excel p_excel) : base(p_excel)
         {
         }
 
@@ -77,8 +78,8 @@ namespace Dt.Cells.UI
         void GroupHeaderButton_Click(object sender, RoutedEventArgs e)
         {
             RangeGroupHeaderButtonPresenter presenter = sender as RangeGroupHeaderButtonPresenter;
-            Worksheet sheet = base._sheetView.ActiveSheet;
-            if (((presenter != null) && (sheet != null)) && !base._sheetView.IsEditing)
+            Worksheet sheet = _excel.ActiveSheet;
+            if (((presenter != null) && (sheet != null)) && !_excel.IsEditing)
             {
                 int level = presenter.Level - 1;
                 if (level >= 0)
@@ -86,21 +87,21 @@ namespace Dt.Cells.UI
                     if (Orientation == Windows.UI.Xaml.Controls.Orientation.Horizontal)
                     {
                         RowGroupHeaderExpandExtent rowGroupHeaderExpandExtent = new RowGroupHeaderExpandExtent(level);
-                        if (!base._sheetView.RaiseRangeGroupStateChanging(true, -1, level))
+                        if (!_excel.RaiseRangeGroupStateChanging(true, -1, level))
                         {
                             RowGroupHeaderExpandUndoAction command = new RowGroupHeaderExpandUndoAction(sheet, rowGroupHeaderExpandExtent);
-                            base._sheetView.DoCommand(command);
-                            base._sheetView.RaiseRangeGroupStateChanged(true, -1, level);
+                            _excel.DoCommand(command);
+                            _excel.RaiseRangeGroupStateChanged(true, -1, level);
                         }
                     }
                     else if (Orientation == Windows.UI.Xaml.Controls.Orientation.Vertical)
                     {
                         ColumnGroupHeaderExpandExtent columnGroupHeaderExpandExtent = new ColumnGroupHeaderExpandExtent(level);
                         ColumnGroupHeaderExpandUndoAction action2 = new ColumnGroupHeaderExpandUndoAction(sheet, columnGroupHeaderExpandExtent);
-                        if (!base._sheetView.RaiseRangeGroupStateChanging(false, -1, level))
+                        if (!_excel.RaiseRangeGroupStateChanging(false, -1, level))
                         {
-                            base._sheetView.DoCommand(action2);
-                            base._sheetView.RaiseRangeGroupStateChanged(false, -1, level);
+                            _excel.DoCommand(action2);
+                            _excel.RaiseRangeGroupStateChanged(false, -1, level);
                         }
                     }
                 }

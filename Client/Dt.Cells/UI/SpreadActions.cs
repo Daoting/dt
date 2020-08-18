@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Cells.Data;
 using Dt.Cells.UndoRedo;
 using System;
@@ -29,7 +30,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void CancelInput(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if ((view != null) && view.IsEditing)
             {
                 view.StopCellEditing(true);
@@ -44,13 +45,13 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void Clear(object sender, ActionEventArgs e)
         {
-            SheetView parameter = sender as SheetView;
+            Excel parameter = sender as Excel;
             if ((parameter != null) && !parameter.IsEditing)
             {
                 var sheet = parameter.ActiveSheet;
                 foreach (CellRange range in sheet.Selections)
                 {
-                    if (sheet.Protect && SheetView.IsAnyCellInRangeLocked(sheet, range.Row, range.Column, range.RowCount, range.ColumnCount))
+                    if (sheet.Protect && Excel.IsAnyCellInRangeLocked(sheet, range.Row, range.Column, range.RowCount, range.ColumnCount))
                     {
                         return;
                     }
@@ -72,7 +73,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void ClearAndEditing(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if ((view != null) && !view.IsEditing)
             {
                 view.StartCellEditing(false, "");
@@ -87,7 +88,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the event data.</param>
         public static void ClipboardCopyFloatingObjects(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if ((view != null) && view.HasSelectedFloatingObject())
             {
                 FloatingObject[] allSelectedFloatingObjects = view.GetAllSelectedFloatingObjects();
@@ -111,7 +112,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the event data.</param>
         public static void ClipboardCutFloatingObjects(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if ((view != null) && view.HasSelectedFloatingObject())
             {
                 FloatingObject[] allSelectedFloatingObjects = view.GetAllSelectedFloatingObjects();
@@ -136,7 +137,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the event data.</param>
         public static void ClipboardPasteFloatingObjects(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if (view != null)
             {
                 FloatingObject[] floatingObjects = SpreadXClipboard.FloatingObjects;
@@ -157,7 +158,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance contains the action event data.</param>
         public static void CommitInputNavigationDown(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if (view != null)
             {
                 bool flag = true;
@@ -180,7 +181,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void CommitInputNavigationTabNext(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if (view != null)
             {
                 bool flag = true;
@@ -210,7 +211,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void CommitInputNavigationTabPrevious(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if (view != null)
             {
                 bool flag = true;
@@ -240,7 +241,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void CommitInputNavigationUp(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if (view != null)
             {
                 bool flag = true;
@@ -263,7 +264,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void Copy(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if ((view != null) && view.AutoClipboard)
             {
                 if (view.IsEditing)
@@ -307,7 +308,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void Cut(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if ((((view != null) && view.AutoClipboard) && (view.ActiveSheet.Selections.Count == 1)) && !view.IsEditing)
             {
                 CellRange spanCell = null;
@@ -344,7 +345,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the event data.</param>
         public static void DeleteFloatingObject(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if ((view != null) && view.HasSelectedFloatingObject())
             {
                 List<string> list = new List<string>();
@@ -359,13 +360,13 @@ namespace Dt.Cells.UI
             }
         }
 
-        static void ExecutePaste(ActionEventArgs e, SheetView gcSheetView, string clipboardText)
+        static void ExecutePaste(ActionEventArgs e, Excel gcSheetView, string clipboardText)
         {
             CellRange range2;
             var sheet = SpreadXClipboard.Worksheet;
             CellRange fromRange = SpreadXClipboard.Range;
             bool isCutting = SpreadXClipboard.IsCutting;
-            if (((isCutting && (sheet != null)) && ((fromRange != null) && sheet.Protect)) && SheetView.IsAnyCellInRangeLocked(sheet, fromRange.Row, fromRange.Column, fromRange.RowCount, fromRange.ColumnCount))
+            if (((isCutting && (sheet != null)) && ((fromRange != null) && sheet.Protect)) && Excel.IsAnyCellInRangeLocked(sheet, fromRange.Row, fromRange.Column, fromRange.RowCount, fromRange.ColumnCount))
             {
                 isCutting = false;
             }
@@ -431,7 +432,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        static string[] GetSelectedFloatingObjectNames(SheetView gcSheetView)
+        static string[] GetSelectedFloatingObjectNames(Excel gcSheetView)
         {
             List<string> list = new List<string>();
             foreach (FloatingObject obj2 in gcSheetView.GetAllSelectedFloatingObjects())
@@ -448,7 +449,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void InputArrayFormula(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if ((view != null) && (view.EditingViewport != null))
             {
                 string editorValue = (string) (view.EditingViewport.GetEditorValue() as string);
@@ -464,7 +465,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void InputNewLine(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if ((view != null) && view.IsEditing)
             {
                 view.ProcessTextInput("\r\n", false, true);
@@ -480,7 +481,7 @@ namespace Dt.Cells.UI
         /// <param name="e"></param>
         public static void MoveFloatingObjectDown(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if ((view != null) && view.HasSelectedFloatingObject())
             {
                 List<string> list = new List<string>();
@@ -502,7 +503,7 @@ namespace Dt.Cells.UI
         /// <param name="e"></param>
         public static void MoveFloatingObjectLeft(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if ((view != null) && view.HasSelectedFloatingObject())
             {
                 List<string> list = new List<string>();
@@ -524,7 +525,7 @@ namespace Dt.Cells.UI
         /// <param name="e"></param>
         public static void MoveFloatingObjectRight(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if ((view != null) && view.HasSelectedFloatingObject())
             {
                 List<string> list = new List<string>();
@@ -546,7 +547,7 @@ namespace Dt.Cells.UI
         /// <param name="e"></param>
         public static void MoveFloatingObjectTop(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if ((view != null) && view.HasSelectedFloatingObject())
             {
                 List<string> list = new List<string>();
@@ -568,7 +569,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void NavigationBottom(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if (view != null)
             {
                 if (view.IsSelectionBegined)
@@ -594,7 +595,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void NavigationDown(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if (view != null)
             {
                 if (view.IsSelectionBegined)
@@ -620,7 +621,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void NavigationEnd(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if (view != null)
             {
                 if (view.IsSelectionBegined)
@@ -646,7 +647,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void NavigationFirst(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if (view != null)
             {
                 if (view.IsSelectionBegined)
@@ -672,7 +673,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void NavigationHome(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if (view != null)
             {
                 if (view.IsSelectionBegined)
@@ -698,7 +699,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void NavigationLast(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if (view != null)
             {
                 if (view.IsSelectionBegined)
@@ -724,7 +725,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void NavigationLeft(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if (view != null)
             {
                 if (view.IsSelectionBegined)
@@ -750,7 +751,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void NavigationNext(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if ((view != null) && !view.IsEditing)
             {
                 view.Navigation.ProcessNavigation((NavigationDirection)5);
@@ -765,7 +766,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the event data.</param>
         public static void NavigationNextFloatingObject(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if ((view != null) && view.HasSelectedFloatingObject())
             {
                 List<FloatingObject> list = new List<FloatingObject>(view.GetAllFloatingObjects());
@@ -789,7 +790,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void NavigationNextSheet(object sender, ActionEventArgs e)
         {
-            var view = sender as SheetView;
+            var view = sender as Excel;
             if ((view != null) && view.NavigationNextSheet())
             {
                 e.Handled = true;
@@ -803,7 +804,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void NavigationPageDown(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if (view != null)
             {
                 if (view.IsSelectionBegined)
@@ -829,7 +830,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void NavigationPageUp(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if (view != null)
             {
                 if (view.IsSelectionBegined)
@@ -855,7 +856,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void NavigationPrevious(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if ((view != null) && !view.IsEditing)
             {
                 view.Navigation.ProcessNavigation((NavigationDirection)4);
@@ -870,7 +871,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the event data.</param>
         public static void NavigationPreviousFloatingObject(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if ((view != null) && view.HasSelectedFloatingObject())
             {
                 List<FloatingObject> list = new List<FloatingObject>(view.GetAllFloatingObjects());
@@ -894,7 +895,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void NavigationPreviousSheet(object sender, ActionEventArgs e)
         {
-            var view = sender as SheetView;
+            var view = sender as Excel;
             if ((view != null) && view.NavigationPreviousSheet())
             {
                 e.Handled = true;
@@ -908,7 +909,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void NavigationRight(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if (view != null)
             {
                 if (view.IsSelectionBegined)
@@ -934,7 +935,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void NavigationTop(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if (view != null)
             {
                 if (view.IsSelectionBegined)
@@ -960,7 +961,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void NavigationUp(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if (view != null)
             {
                 if (view.IsSelectionBegined)
@@ -987,7 +988,7 @@ namespace Dt.Cells.UI
         public static void Paste(object sender, ActionEventArgs e)
         {
             AsyncOperationCompletedHandler<string> handler = null;
-            SheetView gcSheetView = sender as SheetView;
+            Excel gcSheetView = sender as Excel;
             if ((((gcSheetView != null) && gcSheetView.AutoClipboard) && (gcSheetView.ActiveSheet != null)) && !gcSheetView.IsEditing)
             {
                 DataPackageView content = Clipboard.GetContent();
@@ -1016,7 +1017,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void Redo(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if (((view != null) && !view.IsEditing) && view.UndoManager.CanRedo)
             {
                 view.UndoManager.Redo();
@@ -1031,7 +1032,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the event data.</param>
         public static void SelectionAll(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if ((view != null) && view.HasSelectedFloatingObject())
             {
                 List<FloatingObject> list = new List<FloatingObject>(view.GetAllFloatingObjects());
@@ -1053,7 +1054,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void SelectionBottom(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if (view != null)
             {
                 if (view.IsSelectionBegined)
@@ -1079,7 +1080,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void SelectionDown(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if (view != null)
             {
                 if (view.IsSelectionBegined)
@@ -1105,7 +1106,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void SelectionEnd(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if (view != null)
             {
                 if (view.IsSelectionBegined)
@@ -1131,7 +1132,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void SelectionFirst(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if (view != null)
             {
                 if (view.IsSelectionBegined)
@@ -1157,7 +1158,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void SelectionHome(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if (view != null)
             {
                 if (view.IsSelectionBegined)
@@ -1183,7 +1184,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void SelectionLast(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if (view != null)
             {
                 if (view.IsSelectionBegined)
@@ -1209,7 +1210,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void SelectionLeft(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if (view != null)
             {
                 if (view.IsSelectionBegined)
@@ -1235,7 +1236,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void SelectionPageDown(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if (view != null)
             {
                 if (view.IsSelectionBegined)
@@ -1261,7 +1262,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void SelectionPageUp(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if (view != null)
             {
                 if (view.IsSelectionBegined)
@@ -1287,7 +1288,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void SelectionRight(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if (view != null)
             {
                 if (view.IsSelectionBegined)
@@ -1313,7 +1314,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void SelectionTop(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if (view != null)
             {
                 if (view.IsSelectionBegined)
@@ -1339,7 +1340,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void SelectionUp(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if (view != null)
             {
                 if (view.IsSelectionBegined)
@@ -1365,7 +1366,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void StartEditing(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if ((view != null) && !view.IsEditing)
             {
                 view.StartCellEditing(false, null);
@@ -1380,7 +1381,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void StartEditingFormula(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if (((view != null) && view.CanUserEditFormula) && (!view.IsEditing && !string.IsNullOrEmpty(view.ActiveSheet.GetFormula(view.ActiveSheet.ActiveRowIndex, view.ActiveSheet.ActiveColumnIndex))))
             {
                 view.StartCellEditing(false, null);
@@ -1395,7 +1396,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the action event data.</param>
         public static void Undo(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if (((view != null) && !view.IsEditing) && view.UndoManager.CanUndo)
             {
                 view.UndoManager.Undo();
@@ -1410,7 +1411,7 @@ namespace Dt.Cells.UI
         /// <param name="e">The <see cref="T:ActionEventArgs" /> instance that contains the event data.</param>
         public static void UnSelectAllFloatingObjects(object sender, ActionEventArgs e)
         {
-            SheetView view = sender as SheetView;
+            Excel view = sender as Excel;
             if ((view != null) && view.HasSelectedFloatingObject())
             {
                 view.UnSelectedAllFloatingObjects();

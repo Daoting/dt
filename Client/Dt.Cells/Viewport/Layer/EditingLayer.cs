@@ -58,7 +58,7 @@ namespace Dt.Cells.UI
                 HorizontalAlignment alignment = HorizontalAlignment.Left;
                 if (_editingCell.BindingCell != null)
                 {
-                    float num2 = _editingCell.BindingCell.ActualTextIndent * _parentViewport.Sheet.ZoomFactor;
+                    float num2 = _editingCell.BindingCell.ActualTextIndent * _parentViewport.Excel.ZoomFactor;
                     alignment = _editingCell.BindingCell.ToHorizontalAlignment();
                     if (_editingCell.BindingCell.ActualTextIndent > 0)
                     {
@@ -251,7 +251,7 @@ namespace Dt.Cells.UI
                 TextBox editor = Editor as TextBox;
                 editor.IsHitTestVisible = false;
                 // hdt
-                Worksheet ws = _parentViewport.Sheet.ActiveSheet;
+                Worksheet ws = _parentViewport.Excel.ActiveSheet;
                 if (ws != null && ws.LockCell)
                     editor.IsEnabled = false;
                 else if (!editor.IsEnabled)
@@ -323,7 +323,7 @@ namespace Dt.Cells.UI
                         {
                             case HorizontalAlignment.Left:
                                 {
-                                    float indent = cachedCell.ActualTextIndent * _parentViewport.Sheet.ZoomFactor;
+                                    float indent = cachedCell.ActualTextIndent * _parentViewport.Excel.ZoomFactor;
                                     double num3 = (viewportSize.Width - rect.Left) + _parentViewport.Location.X;
                                     num3 = Math.Max(Math.Min(num3, viewportSize.Width), 0.0);
                                     Size maxSize = new Size(num3, height);
@@ -332,7 +332,7 @@ namespace Dt.Cells.UI
                                 }
                             case HorizontalAlignment.Right:
                                 {
-                                    float num4 = cachedCell.ActualTextIndent * _parentViewport.Sheet.ZoomFactor;
+                                    float num4 = cachedCell.ActualTextIndent * _parentViewport.Excel.ZoomFactor;
                                     double num5 = rect.Right - _parentViewport.Location.X;
                                     num5 = Math.Max(Math.Min(num5, viewportSize.Width), 0.0);
                                     Size size4 = new Size(num5, height);

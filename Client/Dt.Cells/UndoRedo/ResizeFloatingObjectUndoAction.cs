@@ -7,9 +7,9 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Cells.Data;
 using Dt.Cells.UI;
-using System;
 using System.Collections.Generic;
 using Windows.Foundation;
 #endregion
@@ -56,7 +56,7 @@ namespace Dt.Cells.UndoRedo
         {
             if (CanExecute(parameter))
             {
-                SheetView view = parameter as SheetView;
+                Excel view = parameter as Excel;
                 try
                 {
                     view.SuspendFloatingObjectsInvalidate();
@@ -128,7 +128,7 @@ namespace Dt.Cells.UndoRedo
         /// </returns>
         public bool Undo(object parameter)
         {
-            SheetView view = parameter as SheetView;
+            Excel view = parameter as Excel;
             try
             {
                 view.SuspendFloatingObjectsInvalidate();

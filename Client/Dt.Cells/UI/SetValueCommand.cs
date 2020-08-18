@@ -7,9 +7,9 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Cells.UndoRedo;
 using System;
-using System.Threading;
 using System.Windows.Input;
 #endregion
 
@@ -18,15 +18,15 @@ namespace Dt.Cells.UI
     internal class SetValueCommand : ICommand
     {
         DataValidationListButtonInfo _info;
-        SheetView _sheetView;
+        Excel _excel;
         object _value;
 
         public event EventHandler CanExecuteChanged;
 
-        public SetValueCommand(SheetView sheetView, DataValidationListButtonInfo info)
+        public SetValueCommand(Excel p_excel, DataValidationListButtonInfo info)
         {
             _info = info;
-            _sheetView = sheetView;
+            _excel = p_excel;
         }
 
         public bool CanExecute(object parameter)
@@ -36,7 +36,7 @@ namespace Dt.Cells.UI
 
         public void Execute(object parameter)
         {
-            if (((_sheetView != null) && (_sheetView.ActiveSheet != null)) && ((_info != null) && (_info.Validator != null)))
+            if (((_excel != null) && (_excel.ActiveSheet != null)) && ((_info != null) && (_info.Validator != null)))
             {
                 if (parameter != null)
                 {
@@ -47,8 +47,8 @@ namespace Dt.Cells.UI
                     _value = null;
                 }
                 CellEditExtent extent = new CellEditExtent(_info.Row, _info.Column, (string) (_value as string));
-                CellEditUndoAction command = new CellEditUndoAction(_sheetView.ActiveSheet, extent);
-                _sheetView.DoCommand(command);
+                CellEditUndoAction command = new CellEditUndoAction(_excel.ActiveSheet, extent);
+                _excel.DoCommand(command);
             }
         }
 

@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Cells.Data;
 using Dt.Cells.UI;
 using System;
@@ -212,26 +213,26 @@ namespace Dt.Cells.UndoRedo
             }
         }
 
-        void Execute(SheetView sheetView)
+        void Execute(Excel excel)
         {
             CellRange[] oldSelection = (_workSheet.Selections != null) ? Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) _workSheet.Selections) : null;
             if (_dragFillExtent.AutoFillType == AutoFillType.ClearValues)
             {
-                ExecuteDragFillClear(sheetView);
+                ExecuteDragFillClear(excel);
             }
             else
             {
-                ExecuteDragFill(sheetView);
+                ExecuteDragFill(excel);
             }
-            if (((_savedFilledViewportCells != null) && _savedFilledViewportCells.IsValueSaved()) && object.ReferenceEquals(sheetView.ActiveSheet, _workSheet))
+            if (((_savedFilledViewportCells != null) && _savedFilledViewportCells.IsValueSaved()) && object.ReferenceEquals(excel.ActiveSheet, _workSheet))
             {
                 CellRange fillRange = _dragFillExtent.FillRange;
-                CopyMoveHelper.RaiseValueChanged(sheetView, fillRange.Row, fillRange.Column, fillRange.RowCount, fillRange.ColumnCount, _savedFilledViewportCells.GetValues());
+                CopyMoveHelper.RaiseValueChanged(excel, fillRange.Row, fillRange.Column, fillRange.RowCount, fillRange.ColumnCount, _savedFilledViewportCells.GetValues());
             }
             CellRange[] newSelection = (_workSheet.Selections != null) ? Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) _workSheet.Selections) : null;
-            if (sheetView.RaiseSelectionChanging(oldSelection, newSelection))
+            if (excel.RaiseSelectionChanging(oldSelection, newSelection))
             {
-                sheetView.RaiseSelectionChanged();
+                excel.RaiseSelectionChanged();
             }
         }
 
@@ -243,7 +244,7 @@ namespace Dt.Cells.UndoRedo
         {
             if (CanExecute(parameter))
             {
-                SheetView sender = parameter as SheetView;
+                Excel sender = parameter as Excel;
                 try
                 {
                     base.SuspendInvalidate(sender);
@@ -269,7 +270,7 @@ namespace Dt.Cells.UndoRedo
             }
         }
 
-        void ExecuteDragFill(SheetView sheetView)
+        void ExecuteDragFill(Excel excel)
         {
             CellRange startRange = _dragFillExtent.StartRange;
             CellRange fillRange = _dragFillExtent.FillRange;
@@ -329,13 +330,13 @@ namespace Dt.Cells.UndoRedo
                     }
                 }
             }
-            sheetView.SetActiveCell(Math.Max(0, _wholeFillRange.Row), Math.Max(0, _wholeFillRange.Column), true);
+            excel.SetActiveCell(Math.Max(0, _wholeFillRange.Row), Math.Max(0, _wholeFillRange.Column), true);
             _workSheet.SetSelection(_wholeFillRange);
         }
 
-        void ExecuteDragFillClear(SheetView sheetView)
+        void ExecuteDragFillClear(Excel excel)
         {
-            _clearValueUndoAction.Execute(sheetView);
+            _clearValueUndoAction.Execute(excel);
             CellRange startRange = _dragFillExtent.StartRange;
             CellRange fillRange = _dragFillExtent.FillRange;
             if (!startRange.Equals(fillRange))
@@ -343,13 +344,13 @@ namespace Dt.Cells.UndoRedo
                 if (_fillSeries == FillSeries.Column)
                 {
                     CellRange range = new CellRange(startRange.Row, startRange.Column, startRange.RowCount - fillRange.RowCount, startRange.ColumnCount);
-                    sheetView.SetActiveCell(Math.Max(0, range.Row), Math.Max(0, range.Column), true);
+                    excel.SetActiveCell(Math.Max(0, range.Row), Math.Max(0, range.Column), true);
                     _workSheet.SetSelection(range);
                 }
                 else
                 {
                     CellRange range4 = new CellRange(startRange.Row, startRange.Column, startRange.RowCount, startRange.ColumnCount - fillRange.ColumnCount);
-                    sheetView.SetActiveCell(Math.Max(0, range4.Row), Math.Max(0, range4.Column), true);
+                    excel.SetActiveCell(Math.Max(0, range4.Row), Math.Max(0, range4.Column), true);
                     _workSheet.SetSelection(range4);
                 }
             }
@@ -558,7 +559,7 @@ namespace Dt.Cells.UndoRedo
             return ResourceStrings.undoActionAutoFill;
         }
 
-        bool Undo(SheetView sheetView)
+        bool Undo(Excel excel)
         {
             bool flag;
             CellRange[] oldSelection = (_workSheet.Selections != null) ? Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) _workSheet.Selections) : null;
@@ -570,23 +571,23 @@ namespace Dt.Cells.UndoRedo
             }
             if (_dragFillExtent.AutoFillType == AutoFillType.ClearValues)
             {
-                flag = UndoDragClear(sheetView);
+                flag = UndoDragClear(excel);
             }
             else
             {
-                flag = UndoDragFill(sheetView);
+                flag = UndoDragFill(excel);
             }
-            sheetView.CloseDragFillPopup();
-            if ((oldValues != null) && object.ReferenceEquals(sheetView.ActiveSheet, _workSheet))
+            excel.CloseDragFillPopup();
+            if ((oldValues != null) && object.ReferenceEquals(excel.ActiveSheet, _workSheet))
             {
-                CopyMoveHelper.RaiseValueChanged(sheetView, fillRange.Row, fillRange.Column, fillRange.RowCount, fillRange.ColumnCount, oldValues);
+                CopyMoveHelper.RaiseValueChanged(excel, fillRange.Row, fillRange.Column, fillRange.RowCount, fillRange.ColumnCount, oldValues);
             }
             CellRange[] newSelection = (_workSheet.Selections != null) ? Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) _workSheet.Selections) : null;
-            if (sheetView.RaiseSelectionChanging(oldSelection, newSelection))
+            if (excel.RaiseSelectionChanging(oldSelection, newSelection))
             {
-                sheetView.RaiseSelectionChanged();
+                excel.RaiseSelectionChanged();
             }
-            sheetView.RefreshCellAreaViewport(0, 0, _workSheet.RowCount, _workSheet.ColumnCount);
+            excel.RefreshCellAreaViewport(0, 0, _workSheet.RowCount, _workSheet.ColumnCount);
             return flag;
         }
 
@@ -600,54 +601,54 @@ namespace Dt.Cells.UndoRedo
         public bool Undo(object parameter)
         {
             bool flag;
-            SheetView sheetView = parameter as SheetView;
+            Excel excel = parameter as Excel;
             try
             {
-                flag = Undo(sheetView);
+                flag = Undo(excel);
             }
             finally
             {
                 _workSheet.ResumeCalcService();
-                base.ResumeInvalidate(sheetView);
+                base.ResumeInvalidate(excel);
             }
-            sheetView.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
+            excel.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
             IList<SpreadChartBase> list = Dt.Cells.Data.SpreadChartUtility.GetChartShapeAffectedCellChanged(_workSheet, _dragFillExtent.FillRange.Row, _dragFillExtent.FillRange.Column, _dragFillExtent.FillRange.RowCount, _dragFillExtent.FillRange.ColumnCount);
             if (list.Count > 0)
             {
-                sheetView.InvalidateFloatingObjects(Enumerable.ToArray<SpreadChartBase>((IEnumerable<SpreadChartBase>) list));
+                excel.InvalidateFloatingObjects(Enumerable.ToArray<SpreadChartBase>((IEnumerable<SpreadChartBase>) list));
                 return flag;
             }
-            sheetView.InvalidateFloatingObjects();
+            excel.InvalidateFloatingObjects();
             return flag;
         }
 
-        bool UndoDragClear(SheetView sheetView)
+        bool UndoDragClear(Excel excel)
         {
-            bool flag = _clearValueUndoAction.Undo(sheetView);
+            bool flag = _clearValueUndoAction.Undo(excel);
             UndoFillRangeTables();
-            sheetView.SetActiveCell(Math.Max(0, _dragFillExtent.StartRange.Row), Math.Max(0, _dragFillExtent.StartRange.Column), true);
+            excel.SetActiveCell(Math.Max(0, _dragFillExtent.StartRange.Row), Math.Max(0, _dragFillExtent.StartRange.Column), true);
             _workSheet.SetSelection(_dragFillExtent.StartRange);
             return flag;
         }
 
-        bool UndoDragFill(SheetView sheetView)
+        bool UndoDragFill(Excel excel)
         {
-            base.SuspendInvalidate(sheetView);
+            base.SuspendInvalidate(excel);
             _workSheet.SuspendCalcService();
             try
             {
                 UndoRangeStates(_savedFilledViewportCells, _dragFillExtent.FillRange);
                 UndoRangeStates(_savedStartViewportCells, _dragFillExtent.StartRange);
                 UndoFillRangeTables();
-                sheetView.SetActiveCell(Math.Max(0, _dragFillExtent.StartRange.Row), Math.Max(0, _dragFillExtent.StartRange.Column), true);
+                excel.SetActiveCell(Math.Max(0, _dragFillExtent.StartRange.Row), Math.Max(0, _dragFillExtent.StartRange.Column), true);
                 _workSheet.SetSelection(_dragFillExtent.StartRange);
             }
             finally
             {
                 _workSheet.ResumeCalcService();
-                base.ResumeInvalidate(sheetView);
+                base.ResumeInvalidate(excel);
             }
-            sheetView.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
+            excel.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
             return true;
         }
 

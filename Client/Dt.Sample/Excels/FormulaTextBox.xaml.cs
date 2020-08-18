@@ -51,7 +51,7 @@ namespace Dt.Sample
 
         void OnInit()
         {
-            _ftBox.SpreadSheet = _excel;
+            _ftBox.Excel = _excel;
             _excel.ActiveSheetChanged += OnExcelActiveSheetChanged;
             _excel.EnterCell += OnExcelEnterCell;
             _ftBox.KeyUp += OnBoxKeyUp;
@@ -62,7 +62,7 @@ namespace Dt.Sample
 
         void OnExcelActiveSheetChanged(object sender, EventArgs e)
         {
-            if (_excel.View.CanSelectFormula) return;
+            if (_excel.CanSelectFormula) return;
 
             ApplyTexttoCell();
             ApplyTextToFormulaTextBox();
@@ -84,7 +84,6 @@ namespace Dt.Sample
                     _excel.Workbook.ActiveSheet = _editSheet;
                     _editRowIndex++;
                     _editSheet.SetActiveCell(_editRowIndex, _editColumnIndex);
-                    _excel.Focus(FocusState.Keyboard);
                 }
                 ApplyTextToFormulaTextBox();
             }
@@ -92,7 +91,7 @@ namespace Dt.Sample
 
         void OnBoxLostFocus(object sender, RoutedEventArgs e)
         {
-            if (_excel.View.CanSelectFormula) return;
+            if (_excel.CanSelectFormula) return;
 
             ApplyTexttoCell();
         }

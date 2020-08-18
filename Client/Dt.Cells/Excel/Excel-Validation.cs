@@ -8,6 +8,7 @@
 
 #region 引用命名
 using Dt.Cells.Data;
+using Dt.Cells.UI;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -17,9 +18,9 @@ using Windows.UI;
 using Windows.UI.Xaml.Media;
 #endregion
 
-namespace Dt.Cells.UI
+namespace Dt.Base
 {
-    public partial class SheetView
+    public partial class Excel
     {
         internal bool RaiseValidationDragDropBlock(int fromRow, int fromColumn, int toRow, int toColumn, int rowCount, int columnCount, bool copy, bool insert, out bool isInValid, out string invalidMessage)
         {

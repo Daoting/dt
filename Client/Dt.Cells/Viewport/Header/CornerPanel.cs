@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Cells.Data;
 using System.ComponentModel;
 using Windows.Foundation;
@@ -21,13 +22,13 @@ namespace Dt.Cells.UI
 {
     internal partial class CornerPanel : Panel
     {
-        readonly SheetView _view;
+        readonly Excel _excel;
         Border _border;
         Path _path;
 
-        public CornerPanel(SheetView p_view)
+        public CornerPanel(Excel p_excel)
         {
-            _view = p_view;
+            _excel = p_excel;
             _border = new Border
             {
                 BorderBrush = BrushRes.浅灰边框,
@@ -59,9 +60,9 @@ namespace Dt.Cells.UI
         internal void ApplyState()
         {
             bool selectAll = false;
-            Worksheet worksheet = _view.ActiveSheet;
-            if (!_view.HideSelectionWhenPrinting
-                && !_view.HasSelectedFloatingObject()
+            Worksheet worksheet = _excel.ActiveSheet;
+            if (!_excel.HideSelectionWhenPrinting
+                && !_excel.HasSelectedFloatingObject()
                 && worksheet.Selections.Count == 1)
             {
                 CellRange range = worksheet.Selections[0];
@@ -72,7 +73,7 @@ namespace Dt.Cells.UI
             {
                 _path.Fill = BrushRes.醒目蓝色;
             }
-            else if (_view.HoverManager.IsMouseOverCornerHeaders)
+            else if (_excel.HoverManager.IsMouseOverCornerHeaders)
             {
                 _path.Fill = BrushRes.主题蓝色;
             }

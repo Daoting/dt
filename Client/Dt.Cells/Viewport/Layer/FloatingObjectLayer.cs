@@ -35,7 +35,7 @@ namespace Dt.Cells.UI
 
         void ArrangeCharts()
         {
-            FloatingObjectLayoutModel viewportFloatingObjectLayoutModel = ParentViewport.Sheet.GetViewportFloatingObjectLayoutModel(RowViewportIndex, ColumnViewportIndex);
+            FloatingObjectLayoutModel viewportFloatingObjectLayoutModel = ParentViewport.Excel.GetViewportFloatingObjectLayoutModel(RowViewportIndex, ColumnViewportIndex);
             foreach (SpreadChartContainer container in _cachedCharts.Values)
             {
                 IFloatingObject floatingObject = container.FloatingObject;
@@ -56,7 +56,7 @@ namespace Dt.Cells.UI
 
         void ArrangeFloatingObjects()
         {
-            FloatingObjectLayoutModel viewportFloatingObjectLayoutModel = ParentViewport.Sheet.GetViewportFloatingObjectLayoutModel(RowViewportIndex, ColumnViewportIndex);
+            FloatingObjectLayoutModel viewportFloatingObjectLayoutModel = ParentViewport.Excel.GetViewportFloatingObjectLayoutModel(RowViewportIndex, ColumnViewportIndex);
             foreach (FloatingObjectContainer container in _cachedFloatingObjects.Values)
             {
                 IFloatingObject floatingObject = container.FloatingObject;
@@ -88,7 +88,7 @@ namespace Dt.Cells.UI
 
         void ArrangePictures()
         {
-            FloatingObjectLayoutModel viewportFloatingObjectLayoutModel = ParentViewport.Sheet.GetViewportFloatingObjectLayoutModel(RowViewportIndex, ColumnViewportIndex);
+            FloatingObjectLayoutModel viewportFloatingObjectLayoutModel = ParentViewport.Excel.GetViewportFloatingObjectLayoutModel(RowViewportIndex, ColumnViewportIndex);
             foreach (PictureContainer container in _cachedPictures.Values)
             {
                 FloatingObject floatingObject = container.FloatingObject;
@@ -197,7 +197,7 @@ namespace Dt.Cells.UI
         void MeasureCharts()
         {
             List<SpreadChart> charts = GetCharts();
-            FloatingObjectLayoutModel viewportFloatingObjectLayoutModel = ParentViewport.Sheet.GetViewportFloatingObjectLayoutModel(RowViewportIndex, ColumnViewportIndex);
+            FloatingObjectLayoutModel viewportFloatingObjectLayoutModel = ParentViewport.Excel.GetViewportFloatingObjectLayoutModel(RowViewportIndex, ColumnViewportIndex);
             for (int i = 0; i < charts.Count; i++)
             {
                 SpreadChartContainer container;
@@ -225,7 +225,7 @@ namespace Dt.Cells.UI
             }
             foreach (string str in Enumerable.ToArray<string>((IEnumerable<string>) _cachedCharts.Keys))
             {
-                if (ParentViewport.Sheet.ActiveSheet.FindChart(str) == null)
+                if (ParentViewport.Excel.ActiveSheet.FindChart(str) == null)
                 {
                     base.Children.Remove(_cachedCharts[str]);
                     _cachedCharts.Remove(str);
@@ -236,7 +236,7 @@ namespace Dt.Cells.UI
         void MeasureFloatingObjects()
         {
             List<FloatingObject> floatingObjects = GetFloatingObjects();
-            FloatingObjectLayoutModel viewportFloatingObjectLayoutModel = ParentViewport.Sheet.GetViewportFloatingObjectLayoutModel(RowViewportIndex, ColumnViewportIndex);
+            FloatingObjectLayoutModel viewportFloatingObjectLayoutModel = ParentViewport.Excel.GetViewportFloatingObjectLayoutModel(RowViewportIndex, ColumnViewportIndex);
             for (int i = 0; i < floatingObjects.Count; i++)
             {
                 FloatingObjectContainer container;
@@ -273,7 +273,7 @@ namespace Dt.Cells.UI
             }
             foreach (string str in Enumerable.ToArray<string>((IEnumerable<string>) _cachedFloatingObjects.Keys))
             {
-                if (ParentViewport.Sheet.ActiveSheet.FindFloatingObject(str) == null)
+                if (ParentViewport.Excel.ActiveSheet.FindFloatingObject(str) == null)
                 {
                     base.Children.Remove(_cachedFloatingObjects[str]);
                     _cachedFloatingObjects.Remove(str);
@@ -295,7 +295,7 @@ namespace Dt.Cells.UI
         void MeasurePictures()
         {
             List<Picture> pictures = GetPictures();
-            FloatingObjectLayoutModel viewportFloatingObjectLayoutModel = ParentViewport.Sheet.GetViewportFloatingObjectLayoutModel(RowViewportIndex, ColumnViewportIndex);
+            FloatingObjectLayoutModel viewportFloatingObjectLayoutModel = ParentViewport.Excel.GetViewportFloatingObjectLayoutModel(RowViewportIndex, ColumnViewportIndex);
             for (int i = 0; i < pictures.Count; i++)
             {
                 PictureContainer container;
@@ -323,7 +323,7 @@ namespace Dt.Cells.UI
             }
             foreach (string str in Enumerable.ToArray<string>((IEnumerable<string>) _cachedPictures.Keys))
             {
-                if (ParentViewport.Sheet.ActiveSheet.FindPicture(str) == null)
+                if (ParentViewport.Excel.ActiveSheet.FindPicture(str) == null)
                 {
                     base.Children.Remove(_cachedPictures[str]);
                     _cachedPictures.Remove(str);
@@ -499,7 +499,7 @@ namespace Dt.Cells.UI
 
         public Worksheet ActiveSheet
         {
-            get { return  ParentViewport.Sheet.ActiveSheet; }
+            get { return  ParentViewport.Excel.ActiveSheet; }
         }
 
         int ColumnViewportIndex

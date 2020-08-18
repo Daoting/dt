@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Cells.Data;
 using System;
 using System.Threading;
@@ -19,13 +20,13 @@ namespace Dt.Cells.UI
     {
         int _column;
         FilterButtonInfo _info;
-        SheetView _sheetView;
+        Excel _excel;
 
         public event EventHandler CanExecuteChanged;
 
-        public FilterCommand(SheetView sheet, FilterButtonInfo info, int column)
+        public FilterCommand(Excel p_excel, FilterButtonInfo info, int column)
         {
-            _sheetView = sheet;
+            _excel = p_excel;
             _column = column;
             _info = info;
         }
@@ -37,11 +38,11 @@ namespace Dt.Cells.UI
 
         public void Execute(object parameter)
         {
-            if ((((_info != null) && (_info.RowFilter != null)) && ((_sheetView != null) && (_sheetView.ActiveSheet != null))) && ((_column >= 0) && (_column < _sheetView.ActiveSheet.ColumnCount)))
+            if ((((_info != null) && (_info.RowFilter != null)) && ((_excel != null) && (_excel.ActiveSheet != null))) && ((_column >= 0) && (_column < _excel.ActiveSheet.ColumnCount)))
             {
                 HideRowFilter rowFilter = _info.RowFilter;
                 object[] filterValues = parameter as object[];
-                _sheetView.ActiveSheet.Workbook.SuspendEvent();
+                _excel.ActiveSheet.Workbook.SuspendEvent();
                 try
                 {
                     rowFilter.Unfilter(_column);
@@ -80,15 +81,15 @@ namespace Dt.Cells.UI
                 }
                 finally
                 {
-                    _sheetView.ActiveSheet.Workbook.ResumeEvent();
+                    _excel.ActiveSheet.Workbook.ResumeEvent();
                 }
-                if (!_sheetView.RaiseRangeFiltering(_column, filterValues))
+                if (!_excel.RaiseRangeFiltering(_column, filterValues))
                 {
                     rowFilter.Filter(_column);
-                    _sheetView.RaiseRangeFiltered(_column, filterValues);
+                    _excel.RaiseRangeFiltered(_column, filterValues);
                 }
-                _sheetView.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
-                _sheetView.InvalidateFloatingObjects();
+                _excel.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
+                _excel.InvalidateFloatingObjects();
             }
         }
 

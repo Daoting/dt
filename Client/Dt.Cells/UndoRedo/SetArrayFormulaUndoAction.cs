@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Cells.Data;
 using Dt.Cells.UI;
 using System;
@@ -65,7 +66,7 @@ namespace Dt.Cells.UndoRedo
         {
             if (CanExecute(parameter))
             {
-                SheetView sender = parameter as SheetView;
+                Excel sender = parameter as Excel;
                 if (_arrayFormulaRange == null)
                 {
                     _arrayFormulaRange = sender.GetActiveSelection();
@@ -91,9 +92,9 @@ namespace Dt.Cells.UndoRedo
             }
         }
 
-        void Execute(SheetView sheetView, string formula)
+        void Execute(Excel excel, string formula)
         {
-            if (sheetView != null)
+            if (excel != null)
             {
                 try
                 {
@@ -101,7 +102,7 @@ namespace Dt.Cells.UndoRedo
                     {
                         if ((_arrayFormulaRange.ColumnCount == 1) && (_arrayFormulaRange.RowCount == 1))
                         {
-                            object[,] objArray = sheetView.ActiveSheet.FindFormulas(_arrayFormulaRange.Row, _arrayFormulaRange.Column, _arrayFormulaRange.RowCount, _arrayFormulaRange.ColumnCount);
+                            object[,] objArray = excel.ActiveSheet.FindFormulas(_arrayFormulaRange.Row, _arrayFormulaRange.Column, _arrayFormulaRange.RowCount, _arrayFormulaRange.ColumnCount);
                             for (int i = 0; i < objArray.GetLength(0); i++)
                             {
                                 CellRange range = objArray[i, 0] as CellRange;
@@ -111,7 +112,7 @@ namespace Dt.Cells.UndoRedo
                                     _arrayFormulaRange = range;
                                     using (((IUIActionExecuter) _workSheet).BeginUIAction())
                                     {
-                                        sheetView.ActiveSheet.SetArrayFormula(_arrayFormulaRange.Row, _arrayFormulaRange.Column, _arrayFormulaRange.RowCount, _arrayFormulaRange.ColumnCount, formula);
+                                        excel.ActiveSheet.SetArrayFormula(_arrayFormulaRange.Row, _arrayFormulaRange.Column, _arrayFormulaRange.RowCount, _arrayFormulaRange.ColumnCount, formula);
                                         break;
                                     }
                                 }
@@ -124,7 +125,7 @@ namespace Dt.Cells.UndoRedo
                         {
                             if ((_arrayFormulaRange.ColumnCount == 1) && (_arrayFormulaRange.RowCount == 1))
                             {
-                                object[,] objArray2 = sheetView.ActiveSheet.FindFormulas(_arrayFormulaRange.Row, _arrayFormulaRange.Column, _arrayFormulaRange.RowCount, _arrayFormulaRange.ColumnCount);
+                                object[,] objArray2 = excel.ActiveSheet.FindFormulas(_arrayFormulaRange.Row, _arrayFormulaRange.Column, _arrayFormulaRange.RowCount, _arrayFormulaRange.ColumnCount);
                                 for (int k = 0; k < objArray2.GetLength(0); k++)
                                 {
                                     CellRange range2 = objArray2[k, 0] as CellRange;
@@ -151,7 +152,7 @@ namespace Dt.Cells.UndoRedo
                             }
                             using (((IUIActionExecuter) _workSheet).BeginUIAction())
                             {
-                                sheetView.ActiveSheet.SetArrayFormula(_arrayFormulaRange.Row, _arrayFormulaRange.Column, _arrayFormulaRange.RowCount, _arrayFormulaRange.ColumnCount, formula);
+                                excel.ActiveSheet.SetArrayFormula(_arrayFormulaRange.Row, _arrayFormulaRange.Column, _arrayFormulaRange.RowCount, _arrayFormulaRange.ColumnCount, formula);
                                 return;
                             }
                         }
@@ -159,15 +160,15 @@ namespace Dt.Cells.UndoRedo
                         {
                             for (int m = 0; m < _arrayFormulaRange.ColumnCount; m++)
                             {
-                                sheetView.ActiveSheet.SetValue(_arrayFormulaRange.Row + j, _arrayFormulaRange.Column + m, formula);
+                                excel.ActiveSheet.SetValue(_arrayFormulaRange.Row + j, _arrayFormulaRange.Column + m, formula);
                             }
                         }
                     }
                 }
                 finally
                 {
-                    sheetView.StopCellEditing(true);
-                    sheetView.Invalidate();
+                    excel.StopCellEditing(true);
+                    excel.Invalidate();
                 }
             }
         }
@@ -194,26 +195,26 @@ namespace Dt.Cells.UndoRedo
             return ResourceStrings.undoActionArrayFormula;
         }
 
-        bool Undo(SheetView sheetView)
+        bool Undo(Excel excel)
         {
-            bool flag = UndoSetArrayFormula(sheetView);
+            bool flag = UndoSetArrayFormula(excel);
             CellRange[] oldSelection = (_workSheet.Selections != null) ? Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) _workSheet.Selections) : null;
             List<CellData> oldValues = null;
             if ((_savedArrayFormulaViewportCells != null) && _savedArrayFormulaViewportCells.IsValueSaved())
             {
                 oldValues = CopyMoveHelper.GetValues(_workSheet, _arrayFormulaRange.Row, _arrayFormulaRange.Column, _arrayFormulaRange.RowCount, _arrayFormulaRange.ColumnCount);
             }
-            if ((oldValues != null) && object.ReferenceEquals(sheetView.ActiveSheet, _workSheet))
+            if ((oldValues != null) && object.ReferenceEquals(excel.ActiveSheet, _workSheet))
             {
-                CopyMoveHelper.RaiseValueChanged(sheetView, _arrayFormulaRange.Row, _arrayFormulaRange.Column, _arrayFormulaRange.RowCount, _arrayFormulaRange.ColumnCount, oldValues);
+                CopyMoveHelper.RaiseValueChanged(excel, _arrayFormulaRange.Row, _arrayFormulaRange.Column, _arrayFormulaRange.RowCount, _arrayFormulaRange.ColumnCount, oldValues);
             }
             CellRange[] newSelection = (_workSheet.Selections != null) ? Enumerable.ToArray<CellRange>((IEnumerable<CellRange>) _workSheet.Selections) : null;
-            if (sheetView.RaiseSelectionChanging(oldSelection, newSelection))
+            if (excel.RaiseSelectionChanging(oldSelection, newSelection))
             {
-                sheetView.RaiseSelectionChanged();
+                excel.RaiseSelectionChanged();
             }
-            sheetView.RefreshCellAreaViewport(0, 0, _workSheet.RowCount, _workSheet.ColumnCount);
-            sheetView.InvalidateCharts();
+            excel.RefreshCellAreaViewport(0, 0, _workSheet.RowCount, _workSheet.ColumnCount);
+            excel.InvalidateCharts();
             return flag;
         }
 
@@ -227,42 +228,42 @@ namespace Dt.Cells.UndoRedo
         public bool Undo(object parameter)
         {
             bool flag;
-            SheetView sheetView = parameter as SheetView;
+            Excel excel = parameter as Excel;
             try
             {
-                flag = Undo(sheetView);
+                flag = Undo(excel);
             }
             finally
             {
                 _workSheet.ResumeCalcService();
-                base.ResumeInvalidate(sheetView);
+                base.ResumeInvalidate(excel);
             }
-            sheetView.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
+            excel.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
             return flag;
         }
 
-        bool UndoSetArrayFormula(SheetView sheetView)
+        bool UndoSetArrayFormula(Excel excel)
         {
-            base.SuspendInvalidate(sheetView);
+            base.SuspendInvalidate(excel);
             _workSheet.SuspendCalcService();
             try
             {
                 using (((IUIActionExecuter) _workSheet).BeginUIAction())
                 {
-                    sheetView.ActiveSheet.SetArrayFormula(_arrayFormulaRange.Row, _arrayFormulaRange.Column, _arrayFormulaRange.RowCount, _arrayFormulaRange.ColumnCount, null);
+                    excel.ActiveSheet.SetArrayFormula(_arrayFormulaRange.Row, _arrayFormulaRange.Column, _arrayFormulaRange.RowCount, _arrayFormulaRange.ColumnCount, null);
                 }
                 CellRange range = new CellRange(_arrayFormulaRange.Row, _arrayFormulaRange.Column, _arrayFormulaRange.RowCount, _arrayFormulaRange.ColumnCount);
                 CellRange range2 = AdjustRange(range);
                 CopyMoveHelper.UndoCellsInfo(_workSheet, _savedArrayFormulaViewportCells, range2.Row, range2.Column, SheetArea.Cells);
-                sheetView.SetActiveCell(Math.Max(0, range.Row), Math.Max(0, range.Column), true);
+                excel.SetActiveCell(Math.Max(0, range.Row), Math.Max(0, range.Column), true);
                 _workSheet.SetSelection(range);
             }
             finally
             {
                 _workSheet.ResumeCalcService();
-                base.ResumeInvalidate(sheetView);
+                base.ResumeInvalidate(excel);
             }
-            sheetView.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
+            excel.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
             return true;
         }
 

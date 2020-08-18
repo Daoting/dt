@@ -7,11 +7,11 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Cells.Data;
 using Dt.Cells.UI;
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 #endregion
@@ -86,7 +86,7 @@ namespace Dt.Cells.UndoRedo
                 }
                 catch (InvalidOperationException exception)
                 {
-                    (parameter as SheetView).RaiseInvalidOperation(exception.Message, null, null);
+                    (parameter as Excel).RaiseInvalidOperation(exception.Message, null, null);
                     throw;
                 }
                 finally
@@ -99,15 +99,15 @@ namespace Dt.Cells.UndoRedo
 
         void RefreshUI(object view)
         {
-            SheetView view2 = view as SheetView;
-            if (view2 != null)
+            var excel = view as Excel;
+            if (excel != null)
             {
-                view2.InvalidateLayout();
-                view2.InvalidateViewportHorizontalArrangement(-2);
-                view2.InvalidateHeaderHorizontalArrangement();
-                view2.InvalidateMeasure();
-                view2.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader);
-                view2.InvalidateFloatingObjects();
+                excel.InvalidateLayout();
+                excel.InvalidateViewportHorizontalArrangement(-2);
+                excel.InvalidateHeaderHorizontalArrangement();
+                excel.InvalidateMeasure();
+                excel.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader);
+                excel.InvalidateFloatingObjects();
             }
         }
 
@@ -206,7 +206,7 @@ namespace Dt.Cells.UndoRedo
             List<int> _cachedFilteredColumns;
             List<SheetTable> _cachedTables;
             Dictionary<ulong, CellValueEntry> _cachedValues;
-            SheetView _cachedView;
+            Excel _excel;
 
             public ClearRangeValueUndoAction(Dt.Cells.Data.Worksheet sheet, CellRange clearRange)
             {
@@ -221,7 +221,7 @@ namespace Dt.Cells.UndoRedo
                     return false;
                 }
                 CellRange range = FixRange(Worksheet, ClearRange);
-                if (Worksheet.Protect && SheetView.IsAnyCellInRangeLocked(Worksheet, range.Row, range.Column, range.RowCount, range.ColumnCount))
+                if (Worksheet.Protect && Excel.IsAnyCellInRangeLocked(Worksheet, range.Row, range.Column, range.RowCount, range.ColumnCount))
                 {
                     return false;
                 }
@@ -238,7 +238,7 @@ namespace Dt.Cells.UndoRedo
                     {
                         try
                         {
-                            _cachedView = parameter as SheetView;
+                            _excel = parameter as Excel;
                             Worksheet.CellChanged += new EventHandler<CellChangedEventArgs>(OnEditedCellChanged);
                             Worksheet.Clear(ClearRange.Row, ClearRange.Column, ClearRange.RowCount, ClearRange.ColumnCount, SheetArea.Cells, StorageType.Data);
                             RefreshUI(parameter);
@@ -246,7 +246,7 @@ namespace Dt.Cells.UndoRedo
                         finally
                         {
                             Worksheet.CellChanged -= new EventHandler<CellChangedEventArgs>(OnEditedCellChanged);
-                            _cachedView = null;
+                            _excel = null;
                         }
                     }
                 }
@@ -262,7 +262,7 @@ namespace Dt.Cells.UndoRedo
 
             void OnEditedCellChanged(object sender, CellChangedEventArgs e)
             {
-                if ((_cachedView != null) && string.Equals(e.PropertyName, "Value"))
+                if ((_excel != null) && string.Equals(e.PropertyName, "Value"))
                 {
                     CellRange range = FixRange(Worksheet, ClearRange);
                     int row = e.Row - range.Row;
@@ -275,12 +275,12 @@ namespace Dt.Cells.UndoRedo
                         {
                             if (!string.IsNullOrEmpty((string) (entry.Value as string)))
                             {
-                                _cachedView.RaiseValueChanged(e.Row, e.Column);
+                                _excel.RaiseValueChanged(e.Row, e.Column);
                             }
                         }
                         else if (entry.Value != null)
                         {
-                            _cachedView.RaiseValueChanged(e.Row, e.Column);
+                            _excel.RaiseValueChanged(e.Row, e.Column);
                         }
                     }
                 }
@@ -288,10 +288,10 @@ namespace Dt.Cells.UndoRedo
 
             void RefreshUI(object view)
             {
-                SheetView view2 = view as SheetView;
-                if (view2 != null)
+                Excel excel = view as Excel;
+                if (excel != null)
                 {
-                    view2.RefreshCellAreaViewport(0, 0, Worksheet.RowCount, Worksheet.ColumnCount);
+                    excel.RefreshCellAreaViewport(0, 0, Worksheet.RowCount, Worksheet.ColumnCount);
                 }
             }
 
@@ -434,7 +434,7 @@ namespace Dt.Cells.UndoRedo
                     {
                         try
                         {
-                            _cachedView = parameter as SheetView;
+                            _excel = parameter as Excel;
                             Worksheet.CellChanged += new EventHandler<CellChangedEventArgs>(OnEditedCellChanged);
                             int num5 = range2.RowCount;
                             int num6 = range2.ColumnCount;
@@ -474,7 +474,7 @@ namespace Dt.Cells.UndoRedo
                         finally
                         {
                             Worksheet.CellChanged -= new EventHandler<CellChangedEventArgs>(OnEditedCellChanged);
-                            _cachedView = null;
+                            _excel = null;
                         }
                     }
                     if (((_cachedFilteredColumns != null) && (_cachedFilteredColumns.Count > 0)) && (Worksheet.RowFilter != null))

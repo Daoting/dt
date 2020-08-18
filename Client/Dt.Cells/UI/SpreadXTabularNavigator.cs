@@ -7,95 +7,95 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Cells.Data;
 using System;
-using System.Runtime.InteropServices;
 #endregion
 
 namespace Dt.Cells.UI
 {
     internal class SpreadXTabularNavigator : TabularNavigator
     {
-        internal SheetView _sheetView;
+        internal Excel _excel;
 
-        public SpreadXTabularNavigator(SheetView sheetView)
+        public SpreadXTabularNavigator(Excel p_excel)
         {
-            _sheetView = sheetView;
+            _excel = p_excel;
         }
 
         public override void BringCellToVisible(TabularPosition position)
         {
-            if ((!position.IsEmpty && (position.Area == SheetArea.Cells)) && (_sheetView.ActiveSheet != null))
+            if ((!position.IsEmpty && (position.Area == SheetArea.Cells)) && (_excel.ActiveSheet != null))
             {
-                NavigatorHelper.BringCellToVisible(_sheetView, position.Row, position.Column);
+                NavigatorHelper.BringCellToVisible(_excel, position.Row, position.Column);
             }
         }
 
         public override bool CanHorizontalScroll(bool isBackward)
         {
-            if (_sheetView == null)
+            if (_excel == null)
             {
                 return base.CanHorizontalScroll(isBackward);
             }
-            if (!_sheetView.HorizontalScrollable)
+            if (!_excel.HorizontalScrollable)
             {
                 return false;
             }
-            int activeColumnViewportIndex = _sheetView.GetActiveColumnViewportIndex();
+            int activeColumnViewportIndex = _excel.GetActiveColumnViewportIndex();
             if (isBackward)
             {
-                return (_sheetView.GetNextPageColumnCount(activeColumnViewportIndex) > 0);
+                return (_excel.GetNextPageColumnCount(activeColumnViewportIndex) > 0);
             }
-            return (_sheetView.GetPrePageColumnCount(activeColumnViewportIndex) > 0);
+            return (_excel.GetPrePageColumnCount(activeColumnViewportIndex) > 0);
         }
 
         public override bool CanMoveCurrentTo(TabularPosition cellPosition)
         {
-            return (((((_sheetView.ActiveSheet != null) && (cellPosition.Row >= 0)) && ((cellPosition.Row < _sheetView.ActiveSheet.RowCount) && (cellPosition.Column >= 0))) && (((cellPosition.Column < _sheetView.ActiveSheet.ColumnCount) && _sheetView.ActiveSheet.Cells[cellPosition.Row, cellPosition.Column].ActualFocusable) && GetRowIsVisible(cellPosition.Row))) && GetColumnIsVisible(cellPosition.Column));
+            return (((((_excel.ActiveSheet != null) && (cellPosition.Row >= 0)) && ((cellPosition.Row < _excel.ActiveSheet.RowCount) && (cellPosition.Column >= 0))) && (((cellPosition.Column < _excel.ActiveSheet.ColumnCount) && _excel.ActiveSheet.Cells[cellPosition.Row, cellPosition.Column].ActualFocusable) && GetRowIsVisible(cellPosition.Row))) && GetColumnIsVisible(cellPosition.Column));
         }
 
         public override bool CanVerticalScroll(bool isBackward)
         {
-            if (_sheetView == null)
+            if (_excel == null)
             {
                 return base.CanVerticalScroll(isBackward);
             }
-            if (!_sheetView.VerticalScrollable)
+            if (!_excel.VerticalScrollable)
             {
                 return false;
             }
-            int activeRowViewportIndex = _sheetView.GetActiveRowViewportIndex();
+            int activeRowViewportIndex = _excel.GetActiveRowViewportIndex();
             if (isBackward)
             {
-                return (_sheetView.GetNextPageRowCount(activeRowViewportIndex) > 0);
+                return (_excel.GetNextPageRowCount(activeRowViewportIndex) > 0);
             }
-            return (_sheetView.GetPrePageRowCount(activeRowViewportIndex) > 0);
+            return (_excel.GetPrePageRowCount(activeRowViewportIndex) > 0);
         }
 
         public override bool GetColumnIsVisible(int columnIndex)
         {
-            if ((_sheetView == null) || (_sheetView.ActiveSheet == null))
+            if ((_excel == null) || (_excel.ActiveSheet == null))
             {
                 return base.GetColumnIsVisible(columnIndex);
             }
-            return (_sheetView.ActiveSheet.GetActualColumnVisible(columnIndex, SheetArea.Cells) && (_sheetView.ActiveSheet.GetActualColumnWidth(columnIndex, SheetArea.Cells) > 0.0));
+            return (_excel.ActiveSheet.GetActualColumnVisible(columnIndex, SheetArea.Cells) && (_excel.ActiveSheet.GetActualColumnWidth(columnIndex, SheetArea.Cells) > 0.0));
         }
 
         public override bool GetRowIsVisible(int rowIndex)
         {
-            if ((_sheetView == null) || (_sheetView.ActiveSheet == null))
+            if ((_excel == null) || (_excel.ActiveSheet == null))
             {
                 return base.GetRowIsVisible(rowIndex);
             }
-            return (_sheetView.ActiveSheet.GetActualRowVisible(rowIndex, SheetArea.Cells) && (_sheetView.ActiveSheet.GetActualRowHeight(rowIndex, SheetArea.Cells) > 0.0));
+            return (_excel.ActiveSheet.GetActualRowVisible(rowIndex, SheetArea.Cells) && (_excel.ActiveSheet.GetActualRowHeight(rowIndex, SheetArea.Cells) > 0.0));
         }
 
         public override bool IsMerged(TabularPosition position, out TabularRange range)
         {
             range = new TabularRange(position, 1, 1);
-            if ((_sheetView.ActiveSheet != null) && (_sheetView.ActiveSheet.SpanModel != null))
+            if ((_excel.ActiveSheet != null) && (_excel.ActiveSheet.SpanModel != null))
             {
-                CellRange range2 = _sheetView.ActiveSheet.SpanModel.Find(position.Row, position.Column);
+                CellRange range2 = _excel.ActiveSheet.SpanModel.Find(position.Row, position.Column);
                 if (range2 != null)
                 {
                     range = new TabularRange(position.Area, range2.Row, range2.Column, range2.RowCount, range2.ColumnCount);
@@ -107,33 +107,33 @@ namespace Dt.Cells.UI
 
         public override void ScrollToNextPageOfColumns()
         {
-            NavigatorHelper.ScrollToNextPageOfColumns(_sheetView);
+            NavigatorHelper.ScrollToNextPageOfColumns(_excel);
         }
 
         public override void ScrollToNextPageOfRows()
         {
-            NavigatorHelper.ScrollToNextPageOfRows(_sheetView);
+            NavigatorHelper.ScrollToNextPageOfRows(_excel);
         }
 
         public override void ScrollToPreviousPageOfColumns()
         {
-            NavigatorHelper.ScrollToPreviousPageOfColumns(_sheetView);
+            NavigatorHelper.ScrollToPreviousPageOfColumns(_excel);
         }
 
         public override void ScrollToPreviousPageOfRows()
         {
-            NavigatorHelper.ScrollToPreviousPageOfRows(_sheetView);
+            NavigatorHelper.ScrollToPreviousPageOfRows(_excel);
         }
 
         public override TabularRange ContentBounds
         {
             get
             {
-                if ((_sheetView == null) || (_sheetView.ActiveSheet == null))
+                if ((_excel == null) || (_excel.ActiveSheet == null))
                 {
                     return base.ContentBounds;
                 }
-                var worksheet = _sheetView.ActiveSheet;
+                var worksheet = _excel.ActiveSheet;
                 ViewportInfo viewportInfo = worksheet.GetViewportInfo();
                 int activeRowViewportIndex = worksheet.GetActiveRowViewportIndex();
                 int activeColumnViewportIndex = worksheet.GetActiveColumnViewportIndex();
@@ -173,35 +173,35 @@ namespace Dt.Cells.UI
         {
             get
             {
-                int activeColumnViewportIndex = _sheetView.GetActiveColumnViewportIndex();
-                int activeRowViewportIndex = _sheetView.GetActiveRowViewportIndex();
+                int activeColumnViewportIndex = _excel.GetActiveColumnViewportIndex();
+                int activeRowViewportIndex = _excel.GetActiveRowViewportIndex();
                 if (activeColumnViewportIndex == -1)
                 {
                     activeColumnViewportIndex = 0;
                 }
-                else if (activeColumnViewportIndex == _sheetView.ActiveSheet.GetViewportInfo().ColumnViewportCount)
+                else if (activeColumnViewportIndex == _excel.ActiveSheet.GetViewportInfo().ColumnViewportCount)
                 {
-                    activeColumnViewportIndex = _sheetView.ActiveSheet.GetViewportInfo().ColumnViewportCount - 1;
+                    activeColumnViewportIndex = _excel.ActiveSheet.GetViewportInfo().ColumnViewportCount - 1;
                 }
                 if (activeRowViewportIndex == -1)
                 {
                     activeRowViewportIndex = 0;
                 }
-                else if (activeRowViewportIndex == _sheetView.ActiveSheet.GetViewportInfo().RowViewportCount)
+                else if (activeRowViewportIndex == _excel.ActiveSheet.GetViewportInfo().RowViewportCount)
                 {
-                    activeRowViewportIndex = _sheetView.ActiveSheet.GetViewportInfo().RowViewportCount - 1;
+                    activeRowViewportIndex = _excel.ActiveSheet.GetViewportInfo().RowViewportCount - 1;
                 }
-                int viewportLeftColumn = _sheetView.GetViewportLeftColumn(activeColumnViewportIndex);
-                int viewportRightColumn = _sheetView.GetViewportRightColumn(activeColumnViewportIndex);
-                int viewportTopRow = _sheetView.GetViewportTopRow(activeRowViewportIndex);
-                int viewportBottomRow = _sheetView.GetViewportBottomRow(activeRowViewportIndex);
-                double viewportWidth = _sheetView.GetViewportWidth(activeColumnViewportIndex);
-                double viewportHeight = _sheetView.GetViewportHeight(activeRowViewportIndex);
-                if (NavigatorHelper.GetColumnWidth(_sheetView.ActiveSheet, viewportLeftColumn, viewportRightColumn) > viewportWidth)
+                int viewportLeftColumn = _excel.GetViewportLeftColumn(activeColumnViewportIndex);
+                int viewportRightColumn = _excel.GetViewportRightColumn(activeColumnViewportIndex);
+                int viewportTopRow = _excel.GetViewportTopRow(activeRowViewportIndex);
+                int viewportBottomRow = _excel.GetViewportBottomRow(activeRowViewportIndex);
+                double viewportWidth = _excel.GetViewportWidth(activeColumnViewportIndex);
+                double viewportHeight = _excel.GetViewportHeight(activeRowViewportIndex);
+                if (NavigatorHelper.GetColumnWidth(_excel.ActiveSheet, viewportLeftColumn, viewportRightColumn) > viewportWidth)
                 {
                     viewportRightColumn--;
                 }
-                if (NavigatorHelper.GetRowHeight(_sheetView.ActiveSheet, viewportTopRow, viewportBottomRow) > viewportHeight)
+                if (NavigatorHelper.GetRowHeight(_excel.ActiveSheet, viewportTopRow, viewportBottomRow) > viewportHeight)
                 {
                     viewportBottomRow--;
                 }
@@ -211,12 +211,12 @@ namespace Dt.Cells.UI
 
         public override int TotalColumnCount
         {
-            get { return  _sheetView.ActiveSheet.ColumnCount; }
+            get { return  _excel.ActiveSheet.ColumnCount; }
         }
 
         public override int TotalRowCount
         {
-            get { return  _sheetView.ActiveSheet.RowCount; }
+            get { return  _excel.ActiveSheet.RowCount; }
         }
     }
 }

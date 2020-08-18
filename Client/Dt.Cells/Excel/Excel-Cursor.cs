@@ -2,19 +2,20 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2020-08-07 创建
+* 日志: 2020-08-17 创建
 ******************************************************************************/
 #endregion
 
 #region 引用命名
+using Dt.Cells.UI;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Cells.UI
+namespace Dt.Base
 {
-    public partial class SheetView
+    public partial class Excel
     {
         Canvas _cursorsContainer;
 

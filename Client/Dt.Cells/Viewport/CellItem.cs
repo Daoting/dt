@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Cells.Data;
 using System;
 using System.Collections.Generic;
@@ -65,14 +66,14 @@ namespace Dt.Cells.UI
 
         public Cell BindingCell { get; private set; }
 
-        public SheetView SheetView
+        public Excel Excel
         {
-            get { return OwnRow.OwnPanel.Sheet; }
+            get { return OwnRow.OwnPanel.Excel; }
         }
 
         public double ZoomFactor
         {
-            get { return (double)OwnRow.OwnPanel.Sheet.ZoomFactor; }
+            get { return (double)OwnRow.OwnPanel.Excel.ZoomFactor; }
         }
 
         public CellOverflowLayout CellOverflowLayout
@@ -210,7 +211,7 @@ namespace Dt.Cells.UI
             {
                 text = formatter2.Format(BindingCell.Value);
             }
-            if (text != null && text.StartsWith("=") && SheetView.CanUserEditFormula)
+            if (text != null && text.StartsWith("=") && Excel.CanUserEditFormula)
             {
                 text = "'" + text;
             }
@@ -334,8 +335,8 @@ namespace Dt.Cells.UI
             }
             BindingCell = OwnRow.OwnPanel.CellCache.GetCachedCell(row, column);
 
-            SheetView sheetView = SheetView;
-            if (sheetView == null || BindingCell == null)
+            var excel = Excel;
+            if (excel == null || BindingCell == null)
                 return;
 
             Worksheet sheet = BindingCell.Worksheet;
@@ -356,7 +357,7 @@ namespace Dt.Cells.UI
                 list.AddRange(objArray);
             }
 
-            IDrawingObjectProvider drawingObjectProvider = DrawingObjectManager.GetDrawingObjectProvider(sheetView.Excel);
+            IDrawingObjectProvider drawingObjectProvider = DrawingObjectManager.GetDrawingObjectProvider(excel);
             if (drawingObjectProvider != null)
             {
                 DrawingObject[] objArray2 = drawingObjectProvider.GetDrawingObjects(sheet, row, column, 1, 1);
@@ -408,19 +409,19 @@ namespace Dt.Cells.UI
             }
             SynStrikethroughView();
 
-            FilterButtonInfo info = sheetView.GetFilterButtonInfo(row, column, BindingCell.SheetArea);
+            FilterButtonInfo info = excel.GetFilterButtonInfo(row, column, BindingCell.SheetArea);
             if (info != FilterButtonInfo)
             {
                 FilterButtonInfo = info;
                 SynFilterButton();
             }
 
-            if (OwnRow.OwnPanel.Sheet.HighlightInvalidData)
+            if (OwnRow.OwnPanel.Excel.HighlightInvalidData)
             {
                 if (_dataValidationInvalidPresenterInfo == null)
                 {
                     DataValidator actualDataValidator = BindingCell.ActualDataValidator;
-                    if ((actualDataValidator != null) && !actualDataValidator.IsValid(sheetView.ActiveSheet, Row, Column, BindingCell.Value))
+                    if ((actualDataValidator != null) && !actualDataValidator.IsValid(excel.ActiveSheet, Row, Column, BindingCell.Value))
                     {
                         InvalidDataPresenterInfo info2 = new InvalidDataPresenterInfo
                         {
@@ -434,7 +435,7 @@ namespace Dt.Cells.UI
                 else if (_dataValidationInvalidPresenterInfo != null)
                 {
                     DataValidator validator2 = BindingCell.ActualDataValidator;
-                    if ((validator2 == null) || validator2.IsValid(sheetView.ActiveSheet, Row, Column, BindingCell.Value))
+                    if ((validator2 == null) || validator2.IsValid(excel.ActiveSheet, Row, Column, BindingCell.Value))
                     {
                         OwnRow.OwnPanel.RemoveDataValidationInvalidDataPresenterInfo(_dataValidationInvalidPresenterInfo);
                         _dataValidationInvalidPresenterInfo = null;
@@ -587,7 +588,7 @@ namespace Dt.Cells.UI
                 if (_iconObject != null)
                 {
                     _conditionalView.SetImageContainer();
-                    _conditionalView.SetIconObject(_iconObject, SheetView.ZoomFactor, BindingCell);
+                    _conditionalView.SetIconObject(_iconObject, Excel.ZoomFactor, BindingCell);
                 }
                 bool flag = true;
                 if (flag && (_dataBarObject != null))
@@ -619,7 +620,7 @@ namespace Dt.Cells.UI
             if (actualStrikethrough && (_strikethroughView == null))
             {
                 _strikethroughView = new StrikethroughView(BindingCell, this);
-                _strikethroughView.SetLines(SheetView.ZoomFactor, BindingCell);
+                _strikethroughView.SetLines(Excel.ZoomFactor, BindingCell);
                 Children.Add(_strikethroughView);
             }
         }
@@ -739,16 +740,16 @@ namespace Dt.Cells.UI
 
         void UpdateSparkline()
         {
-            if (SheetView != null && _sparklineView != null)
+            if (Excel != null && _sparklineView != null)
             {
-                _sparklineView.Update(new Size(ActualWidth, ActualHeight), (double)SheetView.ZoomFactor);
+                _sparklineView.Update(new Size(ActualWidth, ActualHeight), (double)Excel.ZoomFactor);
             }
         }
 
         void SynSparklineView()
         {
-            SheetView sheetView = SheetView;
-            if (sheetView == null)
+            var excel = Excel;
+            if (excel == null)
                 return;
 
             if (_sparkInfo != null)
@@ -756,11 +757,11 @@ namespace Dt.Cells.UI
                 if (_sparklineView == null)
                 {
                     _sparklineView = CreateSparkline(_sparkInfo);
-                    _sparklineView.ZoomFactor = OwnRow.OwnPanel.Sheet.ZoomFactor;
-                    ((IThemeContextSupport)_sparklineView).SetContext(sheetView.ActiveSheet);
+                    _sparklineView.ZoomFactor = OwnRow.OwnPanel.Excel.ZoomFactor;
+                    ((IThemeContextSupport)_sparklineView).SetContext(excel.ActiveSheet);
                     Canvas.SetZIndex(_sparklineView, 0x3e8);
                     Children.Add(_sparklineView);
-                    _sparklineView.Update(new Size(ActualWidth, ActualHeight), (double)sheetView.ZoomFactor);
+                    _sparklineView.Update(new Size(ActualWidth, ActualHeight), (double)excel.ZoomFactor);
                 }
             }
             else if (_sparklineView != null)
@@ -994,7 +995,7 @@ namespace Dt.Cells.UI
             //            {
             //                fontSize = editingElement.FontSize;
             //            }
-            //            return MeasureHelper.MeasureText((text == null) ? editingElement.Text : text, actualFontFamily, fontSize, bindingCell.ActualFontStretch, bindingCell.ActualFontStyle, bindingCell.ActualFontWeight, maxSize, allowWrap, textFormattingMode, SheetView.UseLayoutRounding, ZoomFactor);
+            //            return MeasureHelper.MeasureText((text == null) ? editingElement.Text : text, actualFontFamily, fontSize, bindingCell.ActualFontStretch, bindingCell.ActualFontStyle, bindingCell.ActualFontWeight, maxSize, allowWrap, textFormattingMode, Excel.UseLayoutRounding, ZoomFactor);
             //        }
             //    }
             //}

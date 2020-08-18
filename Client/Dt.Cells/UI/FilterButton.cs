@@ -8,8 +8,6 @@
 
 #region 引用命名
 using Dt.Cells.Data;
-using System;
-using System.Runtime.CompilerServices;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -42,7 +40,7 @@ namespace Dt.Cells.UI
 
         internal void ApplyState()
         {
-            if ((CellView != null) && (CellView.SheetView != null))
+            if ((CellView != null) && (CellView.Excel != null))
             {
                 FilterButtonInfo filterButtonInfo = CellView.FilterButtonInfo;
                 if (filterButtonInfo == null)
@@ -97,7 +95,7 @@ namespace Dt.Cells.UI
                     }
                     if (flag)
                     {
-                        if (CellView.SheetView.IsFilterDropDownOpen)
+                        if (CellView.Excel.IsFilterDropDownOpen)
                         {
                             VisualStateManager.GoToState(this, "Checked", true);
                         }

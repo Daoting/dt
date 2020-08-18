@@ -57,11 +57,11 @@ namespace Dt.Cells.UI
         #region 测量布局
         protected override Size MeasureOverride(Size availableSize)
         {
-            if (_owner.SupportCellOverflow && _owner.Sheet.Excel.CanCellOverflow)
+            if (_owner.SupportCellOverflow && _owner.Excel.CanCellOverflow)
             {
-                int viewportLeftColumn = _owner.Sheet.GetViewportLeftColumn(_owner.ColumnViewportIndex);
+                int viewportLeftColumn = _owner.Excel.GetViewportLeftColumn(_owner.ColumnViewportIndex);
                 _owner.CellOverflowLayoutBuildEngine.ViewportLeftColumn = viewportLeftColumn;
-                int viewportRightColumn = _owner.Sheet.GetViewportRightColumn(_owner.ColumnViewportIndex);
+                int viewportRightColumn = _owner.Excel.GetViewportRightColumn(_owner.ColumnViewportIndex);
                 _owner.CellOverflowLayoutBuildEngine.ViewportRightColumn = viewportRightColumn;
             }
 

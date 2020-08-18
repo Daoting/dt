@@ -192,9 +192,9 @@ namespace Dt.Cells.UI
         {
             get
             {
-                if ((ParentViewport != null) && (ParentViewport.Sheet != null))
+                if ((ParentViewport != null) && (ParentViewport.Excel != null))
                 {
-                    return (double) ParentViewport.Sheet.ZoomFactor;
+                    return (double) ParentViewport.Excel.ZoomFactor;
                 }
                 return 1.0;
             }

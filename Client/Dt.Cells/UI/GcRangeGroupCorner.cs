@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using System;
 using Windows.Foundation;
 #endregion
@@ -15,7 +16,7 @@ namespace Dt.Cells.UI
 {
     internal partial class GcRangeGroupCorner : GcGroupBase
     {
-        public GcRangeGroupCorner(SheetView sheetView) : base(sheetView)
+        public GcRangeGroupCorner(Excel p_excel) : base(p_excel)
         {
         }
 

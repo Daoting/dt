@@ -54,8 +54,8 @@ namespace Dt.Cells.UI
             }
             else
             {
-                SheetView sheet = OwnRow.Owner.Sheet;
-                bool allowSelect = !sheet.HideSelectionWhenPrinting && !sheet.HasSelectedFloatingObject();
+                var excel = OwnRow.Owner.Excel;
+                bool allowSelect = !excel.HideSelectionWhenPrinting && !excel.HasSelectedFloatingObject();
                 if ((IsSelected && allowSelect)
                     || IsHightlighted)
                 {
@@ -179,7 +179,7 @@ namespace Dt.Cells.UI
             if (_tb.FontFamily != fontFamily)
                 _tb.FontFamily = fontFamily;
 
-            double fontSize = p_cell.ActualFontSize * (double)OwnRow.Owner.Sheet.ZoomFactor;
+            double fontSize = p_cell.ActualFontSize * (double)OwnRow.Owner.Excel.ZoomFactor;
             if (_tb.FontSize != fontSize)
                 _tb.FontSize = fontSize;
         }

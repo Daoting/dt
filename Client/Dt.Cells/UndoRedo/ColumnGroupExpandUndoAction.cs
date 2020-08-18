@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Cells.Data;
 using Dt.Cells.UI;
 using System;
@@ -66,20 +67,20 @@ namespace Dt.Cells.UndoRedo
                 {
                     base.ResumeInvalidate(sender);
                 }
-                SheetView sheetView = sender as SheetView;
-                if (sheetView != null)
+                Excel excel = sender as Excel;
+                if (excel != null)
                 {
-                    sheetView.InvalidateLayout();
-                    sheetView.InvalidateViewportHorizontalArrangement(-2);
-                    sheetView.InvalidateHeaderHorizontalArrangement();
-                    sheetView.InvalidateMeasure();
-                    sheetView.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader);
-                    IList<SpreadChartBase> chartShapeAffectedByColumnRangeGroup = Dt.Cells.Data.SpreadChartUtility.GetChartShapeAffectedByColumnRangeGroup(sheetView.ActiveSheet);
+                    excel.InvalidateLayout();
+                    excel.InvalidateViewportHorizontalArrangement(-2);
+                    excel.InvalidateHeaderHorizontalArrangement();
+                    excel.InvalidateMeasure();
+                    excel.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader);
+                    IList<SpreadChartBase> chartShapeAffectedByColumnRangeGroup = Dt.Cells.Data.SpreadChartUtility.GetChartShapeAffectedByColumnRangeGroup(excel.ActiveSheet);
                     if (chartShapeAffectedByColumnRangeGroup.Count > 0)
                     {
-                        sheetView.InvalidateFloatingObjects(Enumerable.ToArray<SpreadChartBase>((IEnumerable<SpreadChartBase>) chartShapeAffectedByColumnRangeGroup));
+                        excel.InvalidateFloatingObjects(Enumerable.ToArray<SpreadChartBase>((IEnumerable<SpreadChartBase>) chartShapeAffectedByColumnRangeGroup));
                     }
-                    ShowColumnRangeGroup(sheetView);
+                    ShowColumnRangeGroup(excel);
                 }
             }
         }
@@ -91,13 +92,13 @@ namespace Dt.Cells.UndoRedo
         {
         }
 
-        void ShowColumnRangeGroup(SheetView sheetView)
+        void ShowColumnRangeGroup(Excel excel)
         {
             int index = _columnExpandExtent.Index;
             if ((index >= 0) && (index < _sheet.ColumnCount))
             {
-                ViewportInfo viewportInfo = sheetView.GetViewportInfo();
-                if (sheetView.ActiveSheet.ColumnRangeGroup.Direction == RangeGroupDirection.Forward)
+                ViewportInfo viewportInfo = excel.GetViewportInfo();
+                if (excel.ActiveSheet.ColumnRangeGroup.Direction == RangeGroupDirection.Forward)
                 {
                     RangeGroupInfo info2 = _sheet.ColumnRangeGroup.Find(index - 1, _columnExpandExtent.Level);
                     if (info2 != null)
@@ -121,34 +122,34 @@ namespace Dt.Cells.UndoRedo
                             }
                             if (viewportIndex == 0)
                             {
-                                if (start < sheetView.ActiveSheet.FrozenColumnCount)
+                                if (start < excel.ActiveSheet.FrozenColumnCount)
                                 {
-                                    start = sheetView.ActiveSheet.FrozenColumnCount;
+                                    start = excel.ActiveSheet.FrozenColumnCount;
                                 }
                             }
                             else if (viewportIndex >= viewportInfo.ColumnViewportCount)
                             {
-                                if (start >= (sheetView.ActiveSheet.ColumnCount - sheetView.ActiveSheet.FrozenTrailingColumnCount))
+                                if (start >= (excel.ActiveSheet.ColumnCount - excel.ActiveSheet.FrozenTrailingColumnCount))
                                 {
                                     return;
                                 }
-                                start = Math.Max(start, sheetView.ActiveSheet.FrozenColumnCount);
-                                rightColumn = (sheetView.ActiveSheet.ColumnCount - sheetView.ActiveSheet.FrozenTrailingColumnCount) - 1;
+                                start = Math.Max(start, excel.ActiveSheet.FrozenColumnCount);
+                                rightColumn = (excel.ActiveSheet.ColumnCount - excel.ActiveSheet.FrozenTrailingColumnCount) - 1;
                                 viewportIndex--;
                             }
                         }
-                        int viewportLeftColumn = sheetView.GetViewportLeftColumn(viewportIndex);
+                        int viewportLeftColumn = excel.GetViewportLeftColumn(viewportIndex);
                         if (start < viewportLeftColumn)
                         {
                             viewportLeftColumn = start;
                         }
-                        double viewportWidth = sheetView.GetViewportWidth(viewportIndex);
-                        double num7 = NavigatorHelper.GetColumnWidth(sheetView.ActiveSheet, viewportLeftColumn, rightColumn);
+                        double viewportWidth = excel.GetViewportWidth(viewportIndex);
+                        double num7 = NavigatorHelper.GetColumnWidth(excel.ActiveSheet, viewportLeftColumn, rightColumn);
                         if (num7 > viewportWidth)
                         {
-                            viewportLeftColumn = NavigatorHelper.GetNewLeftColumn(sheetView.ActiveSheet, viewportLeftColumn, num7 - viewportWidth);
+                            viewportLeftColumn = NavigatorHelper.GetNewLeftColumn(excel.ActiveSheet, viewportLeftColumn, num7 - viewportWidth);
                         }
-                        sheetView.SetViewportLeftColumn(viewportIndex, viewportLeftColumn);
+                        excel.SetViewportLeftColumn(viewportIndex, viewportLeftColumn);
                     }
                 }
                 else if (_sheet.ColumnRangeGroup.Direction == RangeGroupDirection.Backward)
@@ -175,35 +176,35 @@ namespace Dt.Cells.UndoRedo
                             }
                             if (columnViewportIndex == (viewportInfo.ColumnViewportCount - 1))
                             {
-                                if (end >= (sheetView.ActiveSheet.ColumnCount - sheetView.ActiveSheet.FrozenTrailingColumnCount))
+                                if (end >= (excel.ActiveSheet.ColumnCount - excel.ActiveSheet.FrozenTrailingColumnCount))
                                 {
-                                    end = (sheetView.ActiveSheet.ColumnCount - sheetView.ActiveSheet.FrozenTrailingColumnCount) - 1;
+                                    end = (excel.ActiveSheet.ColumnCount - excel.ActiveSheet.FrozenTrailingColumnCount) - 1;
                                 }
                             }
                             else if (columnViewportIndex < 0)
                             {
-                                if (end < sheetView.ActiveSheet.FrozenColumnCount)
+                                if (end < excel.ActiveSheet.FrozenColumnCount)
                                 {
                                     return;
                                 }
-                                frozenColumnCount = sheetView.ActiveSheet.FrozenColumnCount;
-                                end = Math.Min(end, (sheetView.ActiveSheet.ColumnCount - sheetView.ActiveSheet.FrozenTrailingColumnCount) - 1);
+                                frozenColumnCount = excel.ActiveSheet.FrozenColumnCount;
+                                end = Math.Min(end, (excel.ActiveSheet.ColumnCount - excel.ActiveSheet.FrozenTrailingColumnCount) - 1);
                                 columnViewportIndex++;
                             }
                         }
-                        int leftColumn = sheetView.GetViewportLeftColumn(columnViewportIndex);
+                        int leftColumn = excel.GetViewportLeftColumn(columnViewportIndex);
                         if (frozenColumnCount < leftColumn)
                         {
-                            sheetView.SetViewportLeftColumn(columnViewportIndex, frozenColumnCount);
+                            excel.SetViewportLeftColumn(columnViewportIndex, frozenColumnCount);
                         }
                         else
                         {
-                            double num12 = sheetView.GetViewportWidth(columnViewportIndex);
-                            double num13 = NavigatorHelper.GetColumnWidth(sheetView.ActiveSheet, leftColumn, end);
+                            double num12 = excel.GetViewportWidth(columnViewportIndex);
+                            double num13 = NavigatorHelper.GetColumnWidth(excel.ActiveSheet, leftColumn, end);
                             if (num13 > num12)
                             {
-                                leftColumn = NavigatorHelper.GetNewLeftColumn(sheetView.ActiveSheet, leftColumn, num13 - num12);
-                                sheetView.SetViewportLeftColumn(columnViewportIndex, Math.Min(frozenColumnCount, leftColumn));
+                                leftColumn = NavigatorHelper.GetNewLeftColumn(excel.ActiveSheet, leftColumn, num13 - num12);
+                                excel.SetViewportLeftColumn(columnViewportIndex, Math.Min(frozenColumnCount, leftColumn));
                             }
                         }
                     }
@@ -244,22 +245,22 @@ namespace Dt.Cells.UndoRedo
                 {
                     base.ResumeInvalidate(sender);
                 }
-                SheetView sheetView = sender as SheetView;
-                if (sheetView == null)
+                Excel excel = sender as Excel;
+                if (excel == null)
                 {
                     return flag;
                 }
-                sheetView.InvalidateLayout();
-                sheetView.InvalidateViewportHorizontalArrangement(-2);
-                sheetView.InvalidateHeaderHorizontalArrangement();
-                sheetView.InvalidateMeasure();
-                sheetView.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader);
-                IList<SpreadChartBase> chartShapeAffectedByColumnRangeGroup = Dt.Cells.Data.SpreadChartUtility.GetChartShapeAffectedByColumnRangeGroup(sheetView.ActiveSheet);
+                excel.InvalidateLayout();
+                excel.InvalidateViewportHorizontalArrangement(-2);
+                excel.InvalidateHeaderHorizontalArrangement();
+                excel.InvalidateMeasure();
+                excel.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader);
+                IList<SpreadChartBase> chartShapeAffectedByColumnRangeGroup = Dt.Cells.Data.SpreadChartUtility.GetChartShapeAffectedByColumnRangeGroup(excel.ActiveSheet);
                 if (chartShapeAffectedByColumnRangeGroup.Count > 0)
                 {
-                    sheetView.InvalidateFloatingObjects(Enumerable.ToArray<SpreadChartBase>((IEnumerable<SpreadChartBase>) chartShapeAffectedByColumnRangeGroup));
+                    excel.InvalidateFloatingObjects(Enumerable.ToArray<SpreadChartBase>((IEnumerable<SpreadChartBase>) chartShapeAffectedByColumnRangeGroup));
                 }
-                ShowColumnRangeGroup(sheetView);
+                ShowColumnRangeGroup(excel);
             }
             return flag;
         }

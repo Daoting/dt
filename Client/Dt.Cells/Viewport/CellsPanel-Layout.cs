@@ -49,9 +49,9 @@ namespace Dt.Cells.UI
             _editorPanel.Measure(availableSize);
             AttachEditorForActiveCell();
 
-            if (Sheet._formulaSelectionGripperPanel != null)
+            if (Excel._formulaSelectionGripperPanel != null)
             {
-                Sheet._formulaSelectionGripperPanel.InvalidateMeasure();
+                Excel._formulaSelectionGripperPanel.InvalidateMeasure();
             }
 
             _floatingObjectContainerPanel.Measure(availableSize);
@@ -90,7 +90,7 @@ namespace Dt.Cells.UI
 
             Size viewportSize = GetViewportSize(finalSize);
             RectangleGeometry geometry;
-            if (Sheet.IsTouching)
+            if (Excel.IsTouching)
             {
                 if (Clip == null)
                 {
@@ -122,17 +122,17 @@ namespace Dt.Cells.UI
             SheetSpanModelBase spanModel = GetSpanModel();
             if ((spanModel != null) && !spanModel.IsEmpty())
             {
-                int rowStart = Sheet.GetViewportTopRow(RowViewportIndex);
-                int rowEnd = Sheet.GetViewportBottomRow(RowViewportIndex);
-                int columnStart = Sheet.GetViewportLeftColumn(ColumnViewportIndex);
-                int columnEnd = Sheet.GetViewportRightColumn(ColumnViewportIndex);
+                int rowStart = Excel.GetViewportTopRow(RowViewportIndex);
+                int rowEnd = Excel.GetViewportBottomRow(RowViewportIndex);
+                int columnStart = Excel.GetViewportLeftColumn(ColumnViewportIndex);
+                int columnEnd = Excel.GetViewportRightColumn(ColumnViewportIndex);
 
                 if ((rowStart <= rowEnd) && (columnStart <= columnEnd))
                 {
                     int num5 = -1;
                     for (int i = rowStart - 1; i > -1; i--)
                     {
-                        if (Sheet.ActiveSheet.GetActualRowVisible(i, SheetArea.Cells))
+                        if (Excel.ActiveSheet.GetActualRowVisible(i, SheetArea.Cells))
                         {
                             num5 = i;
                             break;
@@ -142,7 +142,7 @@ namespace Dt.Cells.UI
                     int count = GetDataContext().Rows.Count;
                     for (int j = rowEnd + 1; j < count; j++)
                     {
-                        if (Sheet.ActiveSheet.GetActualRowVisible(j, SheetArea.Cells))
+                        if (Excel.ActiveSheet.GetActualRowVisible(j, SheetArea.Cells))
                         {
                             rowEnd = j;
                             break;
@@ -151,7 +151,7 @@ namespace Dt.Cells.UI
                     int num9 = -1;
                     for (int k = columnStart - 1; k > -1; k--)
                     {
-                        if (Sheet.ActiveSheet.GetActualColumnVisible(k, SheetArea.Cells))
+                        if (Excel.ActiveSheet.GetActualColumnVisible(k, SheetArea.Cells))
                         {
                             num9 = k;
                             break;
@@ -161,7 +161,7 @@ namespace Dt.Cells.UI
                     int num11 = GetDataContext().Columns.Count;
                     for (int m = columnEnd + 1; m < num11; m++)
                     {
-                        if (Sheet.ActiveSheet.GetActualColumnVisible(m, SheetArea.Cells))
+                        if (Excel.ActiveSheet.GetActualColumnVisible(m, SheetArea.Cells))
                         {
                             columnEnd = m;
                             break;
@@ -181,7 +181,7 @@ namespace Dt.Cells.UI
                 {
                     if (_editorPanel.Editor != null)
                     {
-                        object obj2 = editingCell.SheetView.ActiveSheet.GetValue(_activeRow, _activeCol);
+                        object obj2 = editingCell.Excel.ActiveSheet.GetValue(_activeRow, _activeCol);
                         if ((obj2 != null) && string.IsNullOrEmpty((_editorPanel.Editor as TextBox).Text))
                         {
                             (_editorPanel.Editor as TextBox).Text = obj2.ToString();

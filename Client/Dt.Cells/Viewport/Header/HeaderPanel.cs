@@ -7,14 +7,15 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Cells.Data;
 using System;
 using System.Collections.Generic;
-using Windows.Foundation;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Media;
 using System.Linq;
+using Windows.Foundation;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 #endregion
 
 namespace Dt.Cells.UI
@@ -28,10 +29,10 @@ namespace Dt.Cells.UI
         readonly Dictionary<int, HeaderItem> _rows;
         readonly List<HeaderItem> _recycledRows;
 
-        public HeaderPanel(SheetView p_sheet, SheetArea p_sheetArea)
+        public HeaderPanel(Excel p_excel, SheetArea p_sheetArea)
         {
             Area = p_sheetArea;
-            Sheet = p_sheet;
+            Excel = p_excel;
             CachedSpanGraph = new SpanGraph();
             CellCache = new CellCachePool(GetDataContext());
             _rows = new Dictionary<int, HeaderItem>();
@@ -41,7 +42,7 @@ namespace Dt.Cells.UI
             VerticalAlignment = VerticalAlignment.Top;
         }
 
-        public SheetView Sheet { get; }
+        public Excel Excel { get; }
 
         public SheetArea Area { get; }
 
@@ -58,20 +59,20 @@ namespace Dt.Cells.UI
         public Rect GetRangeBounds(CellRange range, SheetArea area)
         {
             SheetSpanModel spanModel = null;
-            if (Sheet.ActiveSheet != null)
+            if (Excel.ActiveSheet != null)
             {
                 switch (area)
                 {
                     case SheetArea.Cells:
-                        spanModel = Sheet.ActiveSheet.SpanModel;
+                        spanModel = Excel.ActiveSheet.SpanModel;
                         break;
 
                     case (SheetArea.CornerHeader | SheetArea.RowHeader):
-                        spanModel = Sheet.ActiveSheet.RowHeaderSpanModel;
+                        spanModel = Excel.ActiveSheet.RowHeaderSpanModel;
                         break;
 
                     case SheetArea.ColumnHeader:
-                        spanModel = Sheet.ActiveSheet.ColumnHeaderSpanModel;
+                        spanModel = Excel.ActiveSheet.ColumnHeaderSpanModel;
                         break;
                 }
             }
@@ -83,8 +84,8 @@ namespace Dt.Cells.UI
                     range = range2;
                 }
             }
-            RowLayoutModel rowLayoutModel = Sheet.GetRowLayoutModel(RowViewportIndex, area);
-            ColumnLayoutModel columnLayoutModel = Sheet.GetColumnLayoutModel(ColumnViewportIndex, area);
+            RowLayoutModel rowLayoutModel = Excel.GetRowLayoutModel(RowViewportIndex, area);
+            ColumnLayoutModel columnLayoutModel = Excel.GetColumnLayoutModel(ColumnViewportIndex, area);
             int row = (rowLayoutModel.Count > 0) ? rowLayoutModel[0].Row : -1;
             int num2 = (rowLayoutModel.Count > 0) ? rowLayoutModel[rowLayoutModel.Count - 1].Row : -1;
             int column = (columnLayoutModel.Count > 0) ? columnLayoutModel[0].Column : -1;
@@ -150,7 +151,7 @@ namespace Dt.Cells.UI
 
         public RowLayoutModel GetRowLayoutModel()
         {
-            return (Area == SheetArea.ColumnHeader) ? Sheet.GetColumnHeaderRowLayoutModel() : Sheet.GetViewportRowLayoutModel(RowViewportIndex);
+            return (Area == SheetArea.ColumnHeader) ? Excel.GetColumnHeaderRowLayoutModel() : Excel.GetViewportRowLayoutModel(RowViewportIndex);
         }
 
         public HeaderCellItem GetViewportCell(int row, int column, bool containsSpan)
@@ -182,7 +183,7 @@ namespace Dt.Cells.UI
 
         public ICellsSupport GetDataContext()
         {
-            return (Area == SheetArea.ColumnHeader) ? (ICellsSupport)Sheet.ActiveSheet.ColumnHeader : Sheet.ActiveSheet.RowHeader;
+            return (Area == SheetArea.ColumnHeader) ? (ICellsSupport)Excel.ActiveSheet.ColumnHeader : Excel.ActiveSheet.RowHeader;
         }
 
         public Size GetViewportSize()
@@ -192,7 +193,7 @@ namespace Dt.Cells.UI
 
         public Size GetViewportSize(Size availableSize)
         {
-            SheetLayout sheetLayout = Sheet.GetSheetLayout();
+            SheetLayout sheetLayout = Excel.GetSheetLayout();
             if (Area == SheetArea.ColumnHeader)
             {
                 double viewportWidth = sheetLayout.GetViewportWidth(ColumnViewportIndex);
@@ -210,7 +211,7 @@ namespace Dt.Cells.UI
         public CellLayoutModel GetCellLayoutModel()
         {
             return (Area == SheetArea.ColumnHeader) ?
-                Sheet.GetColumnHeaderCellLayoutModel(ColumnViewportIndex) : Sheet.GetRowHeaderCellLayoutModel(RowViewportIndex);
+                Excel.GetColumnHeaderCellLayoutModel(ColumnViewportIndex) : Excel.GetRowHeaderCellLayoutModel(RowViewportIndex);
         }
 
         #region 测量布局
@@ -335,17 +336,17 @@ namespace Dt.Cells.UI
             switch (Area)
             {
                 case (SheetArea.CornerHeader | SheetArea.RowHeader):
-                    rowStart = Sheet.GetViewportTopRow(RowViewportIndex);
-                    rowEnd = Sheet.GetViewportBottomRow(RowViewportIndex);
+                    rowStart = Excel.GetViewportTopRow(RowViewportIndex);
+                    rowEnd = Excel.GetViewportBottomRow(RowViewportIndex);
                     columnStart = 0;
-                    columnEnd = Sheet.ActiveSheet.RowHeader.ColumnCount - 1;
+                    columnEnd = Excel.ActiveSheet.RowHeader.ColumnCount - 1;
                     break;
 
                 case SheetArea.ColumnHeader:
                     rowStart = 0;
-                    rowEnd = Sheet.ActiveSheet.ColumnHeader.RowCount - 1;
-                    columnStart = Sheet.GetViewportLeftColumn(ColumnViewportIndex);
-                    columnEnd = Sheet.GetViewportRightColumn(ColumnViewportIndex);
+                    rowEnd = Excel.ActiveSheet.ColumnHeader.RowCount - 1;
+                    columnStart = Excel.GetViewportLeftColumn(ColumnViewportIndex);
+                    columnEnd = Excel.GetViewportRightColumn(ColumnViewportIndex);
                     break;
             }
             if ((rowStart <= rowEnd) && (columnStart <= columnEnd))
@@ -353,7 +354,7 @@ namespace Dt.Cells.UI
                 int num5 = -1;
                 for (int i = rowStart - 1; i > -1; i--)
                 {
-                    if (Sheet.ActiveSheet.GetActualRowVisible(i, Area))
+                    if (Excel.ActiveSheet.GetActualRowVisible(i, Area))
                     {
                         num5 = i;
                         break;
@@ -363,7 +364,7 @@ namespace Dt.Cells.UI
                 int count = GetDataContext().Rows.Count;
                 for (int j = rowEnd + 1; j < count; j++)
                 {
-                    if (Sheet.ActiveSheet.GetActualRowVisible(j, Area))
+                    if (Excel.ActiveSheet.GetActualRowVisible(j, Area))
                     {
                         rowEnd = j;
                         break;
@@ -372,7 +373,7 @@ namespace Dt.Cells.UI
                 int num9 = -1;
                 for (int k = columnStart - 1; k > -1; k--)
                 {
-                    if (Sheet.ActiveSheet.GetActualColumnVisible(k, Area))
+                    if (Excel.ActiveSheet.GetActualColumnVisible(k, Area))
                     {
                         num9 = k;
                         break;
@@ -382,7 +383,7 @@ namespace Dt.Cells.UI
                 int num11 = GetDataContext().Columns.Count;
                 for (int m = columnEnd + 1; m < num11; m++)
                 {
-                    if (Sheet.ActiveSheet.GetActualColumnVisible(m, Area))
+                    if (Excel.ActiveSheet.GetActualColumnVisible(m, Area))
                     {
                         columnEnd = m;
                         break;
@@ -394,7 +395,7 @@ namespace Dt.Cells.UI
 
         SheetSpanModelBase GetSpanModel()
         {
-            return (Area == SheetArea.ColumnHeader) ? Sheet.ActiveSheet.ColumnHeaderSpanModel : Sheet.ActiveSheet.RowHeaderSpanModel;
+            return (Area == SheetArea.ColumnHeader) ? Excel.ActiveSheet.ColumnHeaderSpanModel : Excel.ActiveSheet.RowHeaderSpanModel;
         }
     }
 }

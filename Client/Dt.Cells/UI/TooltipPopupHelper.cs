@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -26,9 +27,9 @@ namespace Dt.Cells.UI
         TooltipControl _toolTipBlock;
         Grid _tooltipFocusableElement;
 
-        public TooltipPopupHelper(SheetView sheetView, double minWidth = -1.0)
+        public TooltipPopupHelper(Excel p_excel, double minWidth = -1.0)
         {
-            _popup = sheetView.ToolTipPopup;
+            _popup = p_excel.ToolTipPopup;
             _tooltipFocusableElement = new Grid();
             new Border();
             new LinearGradientBrush().StartPoint = new Point();

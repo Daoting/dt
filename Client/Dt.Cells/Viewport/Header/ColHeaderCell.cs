@@ -24,19 +24,19 @@ namespace Dt.Cells.UI
         {
             get
             {
-                SheetView view = OwnRow.Owner.Sheet;
-                if (view.HideSelectionWhenPrinting)
+                var excel = OwnRow.Owner.Excel;
+                if (excel.HideSelectionWhenPrinting)
                 {
                     return false;
                 }
-                if (view.HasSelectedFloatingObject())
+                if (excel.HasSelectedFloatingObject())
                 {
                     return false;
                 }
-                Worksheet sheet = view.ActiveSheet;
+                Worksheet sheet = excel.ActiveSheet;
                 bool flag3 = sheet.IsAnyCellInColumnSelected(Column);
                 bool flag4 = Column == sheet.ActiveColumnIndex;
-                bool flag5 = Enumerable.FirstOrDefault<CellLayout>(from cellLayout in view.GetViewportCellLayoutModel(0, 0) select cellLayout, delegate (CellLayout cellLayout)
+                bool flag5 = Enumerable.FirstOrDefault<CellLayout>(from cellLayout in excel.GetViewportCellLayoutModel(0, 0) select cellLayout, delegate (CellLayout cellLayout)
                 {
                     return (Column >= cellLayout.Column) && (Column < (cellLayout.Column + cellLayout.ColumnCount));
                 }) != null;
@@ -52,9 +52,9 @@ namespace Dt.Cells.UI
         {
             get
             {
-                SheetView sheet = OwnRow.Owner.Sheet;
-                Worksheet worksheet = sheet.ActiveSheet;
-                return ((sheet.HoverManager.IsMouseOverColumnHeaders && (sheet.MouseOverColumnIndex == Column)) && ((Row == (worksheet.ColumnHeader.RowCount - 1)) && !sheet.IsWorking));
+                var excel = OwnRow.Owner.Excel;
+                Worksheet worksheet = excel.ActiveSheet;
+                return ((excel.HoverManager.IsMouseOverColumnHeaders && (excel.MouseOverColumnIndex == Column)) && ((Row == (worksheet.ColumnHeader.RowCount - 1)) && !excel.IsWorking));
             }
         }
 
@@ -62,7 +62,7 @@ namespace Dt.Cells.UI
         {
             get
             {
-                Worksheet worksheet = OwnRow.Owner.Sheet.ActiveSheet;
+                Worksheet worksheet = OwnRow.Owner.Excel.ActiveSheet;
                 // hdt 唐忠宝 注释掉下面语句及修改linq，增加where条件
                 // CellRange columnRange = new CellRange(-1, Column, -1, 1);
                 return (from range in worksheet.Selections

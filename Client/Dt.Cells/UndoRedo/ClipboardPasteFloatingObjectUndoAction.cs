@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Cells.Data;
 using Dt.Cells.UI;
 using System;
@@ -60,14 +61,14 @@ namespace Dt.Cells.UndoRedo
         {
             if (CanExecute(parameter))
             {
-                SheetView view = parameter as SheetView;
+                var excel = parameter as Excel;
                 try
                 {
-                    view.SuspendFloatingObjectsInvalidate();
+                    excel.SuspendFloatingObjectsInvalidate();
                     if ((_sourceFloatingObjects != null) && (_sourceFloatingObjects.Length > 0))
                     {
                         Point[] pointArray = new Point[_sourceFloatingObjects.Length];
-                        if (view.HasSelectedFloatingObject())
+                        if (excel.HasSelectedFloatingObject())
                         {
                             for (int j = 0; j < _sourceFloatingObjects.Length; j++)
                             {
@@ -90,13 +91,13 @@ namespace Dt.Cells.UndoRedo
                             }
                             double num5 = 0.0;
                             double num6 = 0.0;
-                            for (int m = 0; m < view.ActiveSheet.ActiveRowIndex; m++)
+                            for (int m = 0; m < excel.ActiveSheet.ActiveRowIndex; m++)
                             {
-                                num6 += view.ActiveSheet.GetActualRowHeight(m, SheetArea.Cells);
+                                num6 += excel.ActiveSheet.GetActualRowHeight(m, SheetArea.Cells);
                             }
-                            for (int n = 0; n < view.ActiveSheet.ActiveColumnIndex; n++)
+                            for (int n = 0; n < excel.ActiveSheet.ActiveColumnIndex; n++)
                             {
-                                num5 += view.ActiveSheet.GetActualColumnWidth(n, SheetArea.Cells);
+                                num5 += excel.ActiveSheet.GetActualColumnWidth(n, SheetArea.Cells);
                             }
                             for (int num9 = 0; num9 < _sourceFloatingObjects.Length; num9++)
                             {
@@ -130,7 +131,7 @@ namespace Dt.Cells.UndoRedo
                                 _worksheet.FloatingObjects.Add(item);
                                 list2.Add(item);
                             }
-                            view.RaiseFloatingObjectPasted(_worksheet, item);
+                            excel.RaiseFloatingObjectPasted(_worksheet, item);
                             list4.Add(item);
                         }
                         if (list.Count > 0)
@@ -149,17 +150,17 @@ namespace Dt.Cells.UndoRedo
                 }
                 finally
                 {
-                    view.ResumeFloatingObjectsInvalidate();
+                    excel.ResumeFloatingObjectsInvalidate();
                     ReadOnlyCollection<CellRange> selections = _worksheet.Selections;
                     if (selections.Count != 0)
                     {
                         foreach (CellRange range in selections)
                         {
-                            view.UpdateHeaderCellsState(range.Row, range.RowCount, range.Column, range.ColumnCount);
+                            excel.UpdateHeaderCellsState(range.Row, range.RowCount, range.Column, range.ColumnCount);
                         }
                     }
                 }
-                view.InvalidateFloatingObjectLayout();
+                excel.InvalidateFloatingObjectLayout();
             }
         }
 
@@ -211,10 +212,10 @@ namespace Dt.Cells.UndoRedo
         /// </returns>
         public bool Undo(object parameter)
         {
-            SheetView view = parameter as SheetView;
+            var excel = parameter as Excel;
             try
             {
-                view.SuspendFloatingObjectsInvalidate();
+                excel.SuspendFloatingObjectsInvalidate();
                 if ((_savedCharts != null) && (_savedCharts.Length > 0))
                 {
                     foreach (SpreadChart chart in _savedCharts)
@@ -243,17 +244,17 @@ namespace Dt.Cells.UndoRedo
             }
             finally
             {
-                view.ResumeFloatingObjectsInvalidate();
+                excel.ResumeFloatingObjectsInvalidate();
                 ReadOnlyCollection<CellRange> selections = _worksheet.Selections;
                 if (selections.Count != 0)
                 {
                     foreach (CellRange range in selections)
                     {
-                        view.UpdateHeaderCellsState(range.Row, range.RowCount, range.Column, range.ColumnCount);
+                        excel.UpdateHeaderCellsState(range.Row, range.RowCount, range.Column, range.ColumnCount);
                     }
                 }
             }
-            view.InvalidateFloatingObjectLayout();
+            excel.InvalidateFloatingObjectLayout();
             return true;
         }
 

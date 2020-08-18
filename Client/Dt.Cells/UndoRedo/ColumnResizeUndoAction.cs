@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Cells.Data;
 using Dt.Cells.UI;
 using System;
@@ -82,12 +83,12 @@ namespace Dt.Cells.UndoRedo
         {
             if (((sheet != null) && (columns != null)) && CanExecute(sender))
             {
-                SheetView view = sender as SheetView;
+                Excel excel = sender as Excel;
                 int[] columnsReiszed = GetColumnsReiszed(columns);
                 base.SuspendInvalidate(sender);
                 try
                 {
-                    if ((view != null) && view.RaiseColumnWidthChanging(columnsReiszed, rowHeader))
+                    if ((excel != null) && excel.RaiseColumnWidthChanging(columnsReiszed, rowHeader))
                     {
                         return;
                     }
@@ -148,15 +149,15 @@ namespace Dt.Cells.UndoRedo
                 {
                     base.ResumeInvalidate(sender);
                 }
-                if (view != null)
+                if (excel != null)
                 {
-                    view.InvalidateLayout();
-                    view.InvalidateViewportHorizontalArrangement(-2);
-                    view.InvalidateHeaderHorizontalArrangement();
-                    view.InvalidateMeasure();
-                    view.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
-                    view.InvalidateFloatingObjects();
-                    view.RaiseColumnWidthChanged(columnsReiszed, rowHeader);
+                    excel.InvalidateLayout();
+                    excel.InvalidateViewportHorizontalArrangement(-2);
+                    excel.InvalidateHeaderHorizontalArrangement();
+                    excel.InvalidateMeasure();
+                    excel.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
+                    excel.InvalidateFloatingObjects();
+                    excel.RaiseColumnWidthChanged(columnsReiszed, rowHeader);
                 }
             }
         }
@@ -229,12 +230,12 @@ namespace Dt.Cells.UndoRedo
             bool flag = false;
             if ((sheet != null) && (columns != null))
             {
-                SheetView view = sender as SheetView;
+                Excel excel = sender as Excel;
                 int[] columnsReiszed = GetColumnsReiszed(columns);
                 base.SuspendInvalidate(sender);
                 try
                 {
-                    if ((view != null) && view.RaiseColumnWidthChanging(columnsReiszed, rowHeader))
+                    if ((excel != null) && excel.RaiseColumnWidthChanging(columnsReiszed, rowHeader))
                     {
                         return true;
                     }
@@ -276,14 +277,14 @@ namespace Dt.Cells.UndoRedo
                 {
                     base.ResumeInvalidate(sender);
                 }
-                if (view != null)
+                if (excel != null)
                 {
-                    view.InvalidateLayout();
-                    view.InvalidateViewportHorizontalArrangement(-2);
-                    view.InvalidateHeaderHorizontalArrangement();
-                    view.InvalidateMeasure();
-                    view.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader);
-                    view.RaiseColumnWidthChanged(columnsReiszed, rowHeader);
+                    excel.InvalidateLayout();
+                    excel.InvalidateViewportHorizontalArrangement(-2);
+                    excel.InvalidateHeaderHorizontalArrangement();
+                    excel.InvalidateMeasure();
+                    excel.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader);
+                    excel.RaiseColumnWidthChanged(columnsReiszed, rowHeader);
                 }
             }
             return flag;

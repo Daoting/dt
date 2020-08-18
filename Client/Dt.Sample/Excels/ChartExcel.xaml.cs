@@ -210,7 +210,7 @@ namespace Dt.Sample
             {
                 SpreadChartType chartType = (SpreadChartType)Enum.Parse(typeof(SpreadChartType), (string)_cbTypes.SelectedItem, false);
                 var changeChartType = new ChangeChartTypeAction(_selectedChart, chartType);
-                _excel.View.UndoManager.Do(changeChartType);
+                _excel.UndoManager.Do(changeChartType);
                 _selectedChart.ChartTitle.Text = _selectedChart.ChartType.ToString();
                 _excel.InvalidateCharts(_selectedChart);
             }

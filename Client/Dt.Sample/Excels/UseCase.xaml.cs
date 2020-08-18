@@ -127,7 +127,7 @@ namespace Dt.Sample
             sheet.SetValue(1, 1, "Conditional Format Samples");
             sheet[1, 1].FontSize = 24;
             sheet[1, 1].HorizontalAlignment = CellHorizontalAlignment.Center;
-            _excel.View.AutoFitRow(1);
+            _excel.AutoFitRow(1);
 
             // cell value rule
             int r = 3; int c = 1; int w = 6; int h = 4;

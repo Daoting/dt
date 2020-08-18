@@ -57,7 +57,7 @@ namespace Dt.Cells.UI
         ColumnLayoutModel GetColumnLayoutModel()
         {
             return (Owner.Area == SheetArea.ColumnHeader) ?
-                Owner.Sheet.GetColumnHeaderViewportColumnLayoutModel(Owner.ColumnViewportIndex) : Owner.Sheet.GetRowHeaderColumnLayoutModel();
+                Owner.Excel.GetColumnHeaderViewportColumnLayoutModel(Owner.ColumnViewportIndex) : Owner.Excel.GetRowHeaderColumnLayoutModel();
         }
 
         #region 测量布局

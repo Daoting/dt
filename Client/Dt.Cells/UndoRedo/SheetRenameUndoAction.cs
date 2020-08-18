@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Cells.Data;
 using Dt.Cells.UI;
 using System;
@@ -80,7 +81,7 @@ namespace Dt.Cells.UndoRedo
 
         void RefreshUI(object sheetView)
         {
-            var view = sheetView as SheetView;
+            var view = sheetView as Excel;
             if (view != null)
             {
                 view.RefreshTabStrip();

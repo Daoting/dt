@@ -104,7 +104,7 @@ namespace Dt.Sample
             sheet[3, 3].FontTheme = "Headings";
             sheet[3, 3].HorizontalAlignment = CellHorizontalAlignment.Center;
             sheet[3, 3].ColumnSpan = 10;
-            _excel.View.AutoFitRow(3);
+            _excel.AutoFitRow(3);
 
             sheet[4, 3].Value = "Background 1";
             sheet[4, 4].Value = "Text 1";

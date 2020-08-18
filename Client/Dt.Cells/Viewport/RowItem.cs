@@ -57,7 +57,7 @@ namespace Dt.Cells.UI
 
         public ColumnLayoutModel GetColumnLayoutModel()
         {
-            return OwnPanel.Sheet.GetViewportColumnLayoutModel(OwnPanel.ColumnViewportIndex);
+            return OwnPanel.Excel.GetViewportColumnLayoutModel(OwnPanel.ColumnViewportIndex);
         }
 
         public void CleanUpBeforeDiscard()
@@ -262,8 +262,8 @@ namespace Dt.Cells.UI
             double width = Math.Min(RowWidth, OwnPanel.GetViewportSize().Width);
             if (cellOverflowLayoutModel != null)
             {
-                Worksheet worksheet = OwnPanel.Sheet.ActiveSheet;
-                float zoomFactor = OwnPanel.Sheet.ZoomFactor;
+                Worksheet worksheet = OwnPanel.Excel.ActiveSheet;
+                float zoomFactor = OwnPanel.Excel.ZoomFactor;
                 if (cellOverflowLayoutModel.HeadingOverflowlayout != null)
                 {
                     HeadingOverflowCell.CellOverflowLayout = cellOverflowLayoutModel.HeadingOverflowlayout;
@@ -345,8 +345,8 @@ namespace Dt.Cells.UI
             if (cellOverflowLayoutModel == null)
                 return finalSize;
 
-            Worksheet worksheet = OwnPanel.Sheet.ActiveSheet;
-            float zoomFactor = OwnPanel.Sheet.ZoomFactor;
+            Worksheet worksheet = OwnPanel.Excel.ActiveSheet;
+            float zoomFactor = OwnPanel.Excel.ZoomFactor;
             if (cellOverflowLayoutModel.HeadingOverflowlayout != null)
             {
                 double num7 = Location.X;

@@ -7,51 +7,18 @@
 #endregion
 
 #region 引用命名
-using Dt.Base;
-using Dt.CalcEngine;
-using Dt.CalcEngine.Expressions;
 using Dt.Cells.Data;
-using Dt.Cells.UndoRedo;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Windows.Input;
+using Dt.Cells.UI;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using Windows.ApplicationModel;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.Devices.Input;
-using Windows.Foundation;
-using Windows.System;
-using Windows.UI;
-using Windows.UI.Core;
-using Windows.UI.Input;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Shapes;
 #endregion
 
-namespace Dt.Cells.UI
+namespace Dt.Base
 {
-    public partial class SheetView
+    public partial class Excel
     {
         XmlSchema IXmlSerializable.GetSchema()
         {
@@ -88,11 +55,11 @@ namespace Dt.Cells.UI
                     return;
 
                 case "TrailingFreezeLineStyle":
-                    _trailingFreezeLineStyle = Serializer.DeserializeObj(typeof(Style), reader) as Style;
+                    TrailingFreezeLineStyle = Serializer.DeserializeObj(typeof(Style), reader) as Style;
                     return;
 
                 case "ShowFreezeLine":
-                    _showFreezeLine = (bool)((bool)Serializer.DeserializeObj(typeof(bool), reader));
+                    ShowFreezeLine = (bool)((bool)Serializer.DeserializeObj(typeof(bool), reader));
                     return;
 
                 case "AllowUserZoom":
@@ -120,11 +87,11 @@ namespace Dt.Cells.UI
                     return;
 
                 case "ShowRowRangeGroup":
-                    _showRowRangeGroup = (bool)((bool)Serializer.DeserializeObj(typeof(bool), reader));
+                    ShowRowRangeGroup = (bool)((bool)Serializer.DeserializeObj(typeof(bool), reader));
                     return;
 
                 case "ShowColumnRangeGroup":
-                    _showColumnRangeGroup = (bool)((bool)Serializer.DeserializeObj(typeof(bool), reader));
+                    ShowColumnRangeGroup = (bool)((bool)Serializer.DeserializeObj(typeof(bool), reader));
                     return;
 
                 case "AllowDragFill":
@@ -136,57 +103,57 @@ namespace Dt.Cells.UI
                     return;
 
                 case "ResizeZeroIndicator":
-                    _resizeZeroIndicator = (ResizeZeroIndicator)Serializer.DeserializeObj(typeof(ResizeZeroIndicator), reader);
+                    ResizeZeroIndicator = (ResizeZeroIndicator)Serializer.DeserializeObj(typeof(ResizeZeroIndicator), reader);
                     return;
 
                 case "RangeGroupBackground":
-                    _rangeGroupBackground = (Brush)Serializer.DeserializeObj(typeof(Brush), reader);
+                    RangeGroupBackground = (Brush)Serializer.DeserializeObj(typeof(Brush), reader);
                     return;
 
                 case "RangeGroupBorderBrush":
-                    _rangeGroupBorderBrush = (Brush)Serializer.DeserializeObj(typeof(Brush), reader);
+                    RangeGroupBorderBrush = (Brush)Serializer.DeserializeObj(typeof(Brush), reader);
                     return;
 
                 case "RangeGroupLineStroke":
-                    _rangeGroupLineStroke = (Brush)Serializer.DeserializeObj(typeof(Brush), reader);
+                    RangeGroupLineStroke = (Brush)Serializer.DeserializeObj(typeof(Brush), reader);
                     return;
 
                 case "ScrollBarTrackPolicy":
-                    _scrollBarTrackPolicy = (ScrollBarTrackPolicy)Serializer.DeserializeObj(typeof(ScrollBarTrackPolicy), reader);
+                    ScrollBarTrackPolicy = (ScrollBarTrackPolicy)Serializer.DeserializeObj(typeof(ScrollBarTrackPolicy), reader);
                     return;
 
                 case "ColumnSplitBoxAlignment":
-                    _columnSplitBoxAlignment = (SplitBoxAlignment)Serializer.DeserializeObj(typeof(SplitBoxAlignment), reader);
+                    ColumnSplitBoxAlignment = (SplitBoxAlignment)Serializer.DeserializeObj(typeof(SplitBoxAlignment), reader);
                     return;
 
                 case "RowSplitBoxAlignment":
-                    _rowSplitBoxAlignment = (SplitBoxAlignment)Serializer.DeserializeObj(typeof(SplitBoxAlignment), reader);
+                    RowSplitBoxAlignment = (SplitBoxAlignment)Serializer.DeserializeObj(typeof(SplitBoxAlignment), reader);
                     return;
 
                 case "HorizontalScrollBarHeight":
-                    _horizontalScrollBarHeight = (double)((double)Serializer.DeserializeObj(typeof(double), reader));
+                    HorizontalScrollBarHeight = (double)((double)Serializer.DeserializeObj(typeof(double), reader));
                     return;
 
                 case "VerticalScrollBarWidth":
-                    _verticalScrollBarWidth = (double)((double)Serializer.DeserializeObj(typeof(double), reader));
+                    VerticalScrollBarWidth = (double)((double)Serializer.DeserializeObj(typeof(double), reader));
                     return;
 
                 case "TabStripVisibility":
-                    _tabStripVisibility = (Visibility)Serializer.DeserializeObj(typeof(Visibility), reader);
+                    TabStripVisibility = (Visibility)Serializer.DeserializeObj(typeof(Visibility), reader);
                     return;
 
                 case "TabStripEditable":
-                    _tabStripEditable = (bool)((bool)Serializer.DeserializeObj(typeof(bool), reader));
+                    TabStripEditable = (bool)((bool)Serializer.DeserializeObj(typeof(bool), reader));
                     return;
 
                 case "TabStripRadio":
-                    _tabStripRatio = (double)((double)Serializer.DeserializeObj(typeof(double), reader));
+                    TabStripRatio = (double)((double)Serializer.DeserializeObj(typeof(double), reader));
                     return;
 
                 case "TabStripInsertTab":
                     {
                         bool flag = (bool)((bool)Serializer.DeserializeObj(typeof(bool), reader));
-                        _tabStripInsertTab = flag;
+                        TabStripInsertTab = flag;
                         if (_tabStrip == null)
                         {
                             break;
@@ -195,11 +162,11 @@ namespace Dt.Cells.UI
                         return;
                     }
                 case "ColumnSplitBoxPolicy":
-                    _columnSplitBoxPolicy = (SplitBoxPolicy)Serializer.DeserializeObj(typeof(SplitBoxPolicy), reader);
+                    ColumnSplitBoxPolicy = (SplitBoxPolicy)Serializer.DeserializeObj(typeof(SplitBoxPolicy), reader);
                     return;
 
                 case "RowSplitBoxPolicy":
-                    _rowSplitBoxPolicy = (SplitBoxPolicy)Serializer.DeserializeObj(typeof(SplitBoxPolicy), reader);
+                    RowSplitBoxPolicy = (SplitBoxPolicy)Serializer.DeserializeObj(typeof(SplitBoxPolicy), reader);
                     return;
 
                 default:
@@ -229,13 +196,13 @@ namespace Dt.Cells.UI
             {
                 Serializer.SerializeObj(FreezeLineStyle, "FreezeLineStyle", writer);
             }
-            if (_trailingFreezeLineStyle != null)
+            if (TrailingFreezeLineStyle != null)
             {
-                Serializer.SerializeObj(_trailingFreezeLineStyle, "TrailingFreezeLineStyle", writer);
+                Serializer.SerializeObj(TrailingFreezeLineStyle, "TrailingFreezeLineStyle", writer);
             }
-            if (!_showFreezeLine)
+            if (!ShowFreezeLine)
             {
-                Serializer.SerializeObj((bool)_showFreezeLine, "ShowFreezeLine", writer);
+                Serializer.SerializeObj(ShowFreezeLine, "ShowFreezeLine", writer);
             }
             if (!CanUserZoom)
             {
@@ -257,13 +224,13 @@ namespace Dt.Cells.UI
             {
                 Serializer.SerializeObj(CanUserDragDrop, "AllowDragDrop", writer);
             }
-            if (!_showRowRangeGroup)
+            if (!ShowRowRangeGroup)
             {
-                Serializer.SerializeObj((bool)_showRowRangeGroup, "ShowRowRangeGroup", writer);
+                Serializer.SerializeObj(ShowRowRangeGroup, "ShowRowRangeGroup", writer);
             }
-            if (!_showColumnRangeGroup)
+            if (!ShowColumnRangeGroup)
             {
-                Serializer.SerializeObj((bool)_showColumnRangeGroup, "ShowColumnRangeGroup", writer);
+                Serializer.SerializeObj(ShowColumnRangeGroup, "ShowColumnRangeGroup", writer);
             }
             if (!CanUserDragFill)
             {
@@ -273,70 +240,70 @@ namespace Dt.Cells.UI
             {
                 Serializer.SerializeObj(CanTouchMultiSelect, "CanTouchMultiSelect", writer);
             }
-            if (_resizeZeroIndicator != ResizeZeroIndicator.Default)
+            if (ResizeZeroIndicator != ResizeZeroIndicator.Default)
             {
-                Serializer.SerializeObj(_resizeZeroIndicator, "ResizeZeroIndicator", writer);
+                Serializer.SerializeObj(ResizeZeroIndicator, "ResizeZeroIndicator", writer);
             }
             if (DefaultAutoFillType.HasValue)
             {
                 Serializer.SerializeObj(DefaultAutoFillType, "DefaultAutoFillType", writer);
             }
-            if (_rangeGroupBackground != null)
+            if (RangeGroupBackground != null)
             {
-                Serializer.SerializeObj(_rangeGroupBackground, "RangeGroupBackground", writer);
+                Serializer.SerializeObj(RangeGroupBackground, "RangeGroupBackground", writer);
             }
-            if (_rangeGroupBorderBrush != null)
+            if (RangeGroupBorderBrush != null)
             {
-                Serializer.SerializeObj(_rangeGroupBorderBrush, "RangeGroupBorderBrush", writer);
+                Serializer.SerializeObj(RangeGroupBorderBrush, "RangeGroupBorderBrush", writer);
             }
-            if (_rangeGroupLineStroke != null)
+            if (RangeGroupLineStroke != null)
             {
-                Serializer.SerializeObj(_rangeGroupLineStroke, "RangeGroupLineStroke", writer);
+                Serializer.SerializeObj(RangeGroupLineStroke, "RangeGroupLineStroke", writer);
             }
 
-            if (_horizontalScrollBarHeight != 25.0)
+            if (HorizontalScrollBarHeight != 25.0)
             {
-                Serializer.SerializeObj((double)_horizontalScrollBarHeight, "HorizontalScrollBarHeight", writer);
+                Serializer.SerializeObj((double)HorizontalScrollBarHeight, "HorizontalScrollBarHeight", writer);
             }
-            if (_verticalScrollBarWidth != 25.0)
+            if (VerticalScrollBarWidth != 25.0)
             {
-                Serializer.SerializeObj((double)_verticalScrollBarWidth, "VerticalScrollBarWidth", writer);
+                Serializer.SerializeObj(VerticalScrollBarWidth, "VerticalScrollBarWidth", writer);
             }
-            if (_scrollBarTrackPolicy != ScrollBarTrackPolicy.Both)
+            if (ScrollBarTrackPolicy != ScrollBarTrackPolicy.Both)
             {
-                Serializer.SerializeObj(_scrollBarTrackPolicy, "ScrollBarTrackPolicy", writer);
+                Serializer.SerializeObj(ScrollBarTrackPolicy, "ScrollBarTrackPolicy", writer);
             }
-            if (_columnSplitBoxAlignment != SplitBoxAlignment.Leading)
+            if (ColumnSplitBoxAlignment != SplitBoxAlignment.Leading)
             {
-                Serializer.SerializeObj(_columnSplitBoxAlignment, "ColumnSplitBoxAlignment", writer);
+                Serializer.SerializeObj(ColumnSplitBoxAlignment, "ColumnSplitBoxAlignment", writer);
             }
-            if (_rowSplitBoxAlignment != SplitBoxAlignment.Leading)
+            if (RowSplitBoxAlignment != SplitBoxAlignment.Leading)
             {
-                Serializer.SerializeObj(_rowSplitBoxAlignment, "RowSplitBoxAlignment", writer);
+                Serializer.SerializeObj(RowSplitBoxAlignment, "RowSplitBoxAlignment", writer);
             }
-            if (_tabStripVisibility != 0)
+            if (TabStripVisibility != 0)
             {
-                Serializer.SerializeObj(_tabStripVisibility, "TabStripVisibility", writer);
+                Serializer.SerializeObj(TabStripVisibility, "TabStripVisibility", writer);
             }
-            if (!_tabStripEditable)
+            if (!TabStripEditable)
             {
-                Serializer.SerializeObj((bool)_tabStripEditable, "TabStripEditable", writer);
+                Serializer.SerializeObj(TabStripEditable, "TabStripEditable", writer);
             }
-            if (_tabStripRatio != 0.5)
+            if (TabStripRatio != 0.5)
             {
-                Serializer.SerializeObj((double)_tabStripRatio, "TabStripRadio", writer);
+                Serializer.SerializeObj(TabStripRatio, "TabStripRadio", writer);
             }
-            if (!_tabStripInsertTab)
+            if (!TabStripInsertTab)
             {
-                Serializer.SerializeObj((bool)_tabStripInsertTab, "TabStripInsertTab", writer);
+                Serializer.SerializeObj(TabStripInsertTab, "TabStripInsertTab", writer);
             }
-            if (_columnSplitBoxPolicy != SplitBoxPolicy.Always)
+            if (ColumnSplitBoxPolicy != SplitBoxPolicy.Always)
             {
-                Serializer.SerializeObj(_columnSplitBoxPolicy, "ColumnSplitBoxPolicy", writer);
+                Serializer.SerializeObj(ColumnSplitBoxPolicy, "ColumnSplitBoxPolicy", writer);
             }
-            if (_rowSplitBoxPolicy != SplitBoxPolicy.Always)
+            if (RowSplitBoxPolicy != SplitBoxPolicy.Always)
             {
-                Serializer.SerializeObj(_rowSplitBoxPolicy, "RowSplitBoxPolicy", writer);
+                Serializer.SerializeObj(RowSplitBoxPolicy, "RowSplitBoxPolicy", writer);
             }
         }
     }

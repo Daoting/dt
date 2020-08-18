@@ -25,19 +25,19 @@ namespace Dt.Cells.UI
         {
             get
             {
-                SheetView view = OwnRow.Owner.Sheet;
-                if (view.HideSelectionWhenPrinting)
+                var excel = OwnRow.Owner.Excel;
+                if (excel.HideSelectionWhenPrinting)
                 {
                     return false;
                 }
-                if (view.HasSelectedFloatingObject())
+                if (excel.HasSelectedFloatingObject())
                 {
                     return false;
                 }
-                Worksheet sheet = view.ActiveSheet;
+                Worksheet sheet = excel.ActiveSheet;
                 bool flag3 = sheet.IsAnyCellInRowSelected(base.Row);
                 bool flag4 = base.Row == sheet.ActiveRowIndex;
-                bool flag5 = Enumerable.FirstOrDefault<CellLayout>(from cellLayout in view.GetViewportCellLayoutModel(view.GetActiveRowViewportIndex(), view.GetActiveColumnViewportIndex()) select cellLayout, delegate(CellLayout cellLayout)
+                bool flag5 = Enumerable.FirstOrDefault<CellLayout>(from cellLayout in excel.GetViewportCellLayoutModel(excel.GetActiveRowViewportIndex(), excel.GetActiveColumnViewportIndex()) select cellLayout, delegate(CellLayout cellLayout)
                 {
                     return (base.Row >= cellLayout.Row) && (base.Row < (cellLayout.Row + cellLayout.RowCount));
                 }) != null;
@@ -53,9 +53,9 @@ namespace Dt.Cells.UI
         {
             get
             {
-                SheetView sheet = OwnRow.Owner.Sheet;
-                Worksheet worksheet = sheet.ActiveSheet;
-                return ((sheet.HoverManager.IsMouseOverRowHeaders && (sheet.MouseOverRowIndex == base.Row)) && ((base.Column == (worksheet.RowHeader.ColumnCount - 1)) && !sheet.IsWorking));
+                var excel = OwnRow.Owner.Excel;
+                Worksheet worksheet = excel.ActiveSheet;
+                return ((excel.HoverManager.IsMouseOverRowHeaders && (excel.MouseOverRowIndex == base.Row)) && ((base.Column == (worksheet.RowHeader.ColumnCount - 1)) && !excel.IsWorking));
             }
         }
 
@@ -63,7 +63,7 @@ namespace Dt.Cells.UI
         {
             get
             {
-                Worksheet worksheet = OwnRow.Owner.Sheet.ActiveSheet;
+                Worksheet worksheet = OwnRow.Owner.Excel.ActiveSheet;
                 // hdt 唐忠宝 注释掉下面语句及修改linq，增加where条件
                 // CellRange rowRange = new CellRange(base.Row, -1, 1, -1);
                 return (from range in worksheet.Selections

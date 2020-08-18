@@ -7,51 +7,18 @@
 #endregion
 
 #region 引用命名
-using Dt.Base;
-using Dt.CalcEngine;
-using Dt.CalcEngine.Expressions;
 using Dt.Cells.Data;
-using Dt.Cells.UndoRedo;
+using Dt.Cells.UI;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Windows.Input;
-using System.Xml;
-using System.Xml.Schema;
-using System.Xml.Serialization;
-using Windows.ApplicationModel;
-using Windows.ApplicationModel.DataTransfer;
-using Windows.Devices.Input;
 using Windows.Foundation;
-using Windows.System;
-using Windows.UI;
-using Windows.UI.Core;
-using Windows.UI.Input;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Imaging;
-using Windows.UI.Xaml.Shapes;
 #endregion
 
-namespace Dt.Cells.UI
+namespace Dt.Base
 {
-    public partial class SheetView
+    public partial class Excel
     {
         /// <summary>
         /// Adds a cell or cells to the selection.
@@ -342,13 +309,6 @@ namespace Dt.Cells.UI
                 }
             }
             return Rect.Empty;
-        }
-
-        internal void HandleSheetSelectionChanged(object sender, SheetSelectionChangedEventArgs e)
-        {
-            RefreshSelection();
-            UpdateHeaderCellsState(e.Row, e.RowCount, e.Column, e.ColumnCount);
-            Navigation.UpdateStartPosition(ActiveSheet.ActiveRowIndex, ActiveSheet.ActiveColumnIndex);
         }
 
         void RefreshSelection()
@@ -923,7 +883,7 @@ namespace Dt.Cells.UI
                 _autoFillIndicatorRec = new Rect?(autoFillIndicatorRect);
                 return;
             }
-            if (viewportRowsPresenter.Sheet.ActiveSheet.Selections.Count <= 0)
+            if (viewportRowsPresenter.Excel.ActiveSheet.Selections.Count <= 0)
             {
                 return;
             }
@@ -933,7 +893,7 @@ namespace Dt.Cells.UI
             {
                 rangeBounds = viewportRowsPresenter._cachedFocusCellLayout;
             }
-            if (viewportRowsPresenter.Sheet.ActiveSheet.Selections.Count > 0)
+            if (viewportRowsPresenter.Excel.ActiveSheet.Selections.Count > 0)
             {
                 rangeBounds = viewportRowsPresenter.GetRangeBounds(activeSelection);
             }
@@ -1455,7 +1415,7 @@ namespace Dt.Cells.UI
 
         void OnHorizontalSelectionTick(bool needIncrease)
         {
-            if (_hScrollable)
+            if (HorizontalScrollable)
             {
                 HitTestInformation savedHitTestInformation = GetHitInfo();
                 int viewportLeftColumn = GetViewportLeftColumn(savedHitTestInformation.ColumnViewportIndex);
@@ -1537,7 +1497,7 @@ namespace Dt.Cells.UI
 
         void OnVerticalSelectionTick(bool needIncrease)
         {
-            if (_vScrollable)
+            if (VerticalScrollable)
             {
                 HitTestInformation savedHitTestInformation = GetHitInfo();
                 int viewportTopRow = GetViewportTopRow(savedHitTestInformation.RowViewportIndex);

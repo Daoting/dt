@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Base;
 using Dt.Cells.Data;
 using System;
 using System.Collections.Generic;
@@ -35,16 +36,16 @@ namespace Dt.Cells.UI
         PopupHelper _dragFillPopupManager;
         bool _isHover;
         bool _isPressed;
-        SheetView _ownerSheet;
+        Excel _excel;
 
         /// <summary>
         /// Occurs when the automatic fill type has changed.
         /// </summary>
         public event EventHandler AutoFilterTypeChanged;
 
-        internal DragFillSmartTag(SheetView ownerSheet)
+        internal DragFillSmartTag(Excel p_excel)
         {
-            _ownerSheet = ownerSheet;
+            _excel = p_excel;
             InitializeContextMenu();
             _dragFillPopupManager = new PopupHelper(_autoFitContentMenuPopup);
             base.DefaultStyleKey = typeof(DragFillSmartTag);
@@ -105,18 +106,18 @@ namespace Dt.Cells.UI
             double num = 0.0;
             double actualHeight = base.ActualHeight;
             Point point2 = new Point(num - 5.0, actualHeight);
-            point2 = base.TransformToVisual(_ownerSheet).Transform(point2);
+            point2 = base.TransformToVisual(_excel).Transform(point2);
             if (!_isPressed)
             {
                 _isPressed = true;
                 UpdateVisualState(true);
-                _dragFillPopupManager.ShowAsModal(_ownerSheet, _autoFitListBox, point2, PopupDirection.BottomRight, true, false);
+                _dragFillPopupManager.ShowAsModal(_excel, _autoFitListBox, point2, PopupDirection.BottomRight, true, false);
             }
             else
             {
                 _closedByThis = true;
                 _isPressed = false;
-                _dragFillPopupManager.ShowAsModal(_ownerSheet, _autoFitListBox, point2, PopupDirection.BottomRight, true, false);
+                _dragFillPopupManager.ShowAsModal(_excel, _autoFitListBox, point2, PopupDirection.BottomRight, true, false);
             }
         }
 
@@ -188,24 +189,24 @@ namespace Dt.Cells.UI
             double num = 0.0;
             double actualHeight = base.ActualHeight;
             Point point = new Point(num - 5.0, actualHeight);
-            point = base.TransformToVisual(_ownerSheet).Transform(point);
+            point = base.TransformToVisual(_excel).Transform(point);
             if (!_isPressed)
             {
                 _isPressed = true;
                 UpdateVisualState(true);
-                _dragFillPopupManager.ShowAsModal(_ownerSheet, _autoFitListBox, point, PopupDirection.BottomRight, true, false);
+                _dragFillPopupManager.ShowAsModal(_excel, _autoFitListBox, point, PopupDirection.BottomRight, true, false);
             }
             else
             {
                 _closedByThis = true;
                 _isPressed = false;
-                _dragFillPopupManager.ShowAsModal(_ownerSheet, _autoFitListBox, point, PopupDirection.BottomRight, true, false);
+                _dragFillPopupManager.ShowAsModal(_excel, _autoFitListBox, point, PopupDirection.BottomRight, true, false);
             }
         }
 
         Point TranslatePoint(Point point, UIElement element)
         {
-            return _ownerSheet.TransformToVisual(element).Transform(point);
+            return _excel.TransformToVisual(element).Transform(point);
         }
 
         void UpdateVisualState(bool useTransitions)

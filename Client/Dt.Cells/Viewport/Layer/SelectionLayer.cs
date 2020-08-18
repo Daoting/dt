@@ -34,7 +34,7 @@ namespace Dt.Cells.UI
             _activeSelectionLayouts = new List<Rect>();
             ParentViewport = parentViewport;
 
-            _selectionBackground = parentViewport.Sheet.ActiveSheet.SelectionBackground;
+            _selectionBackground = parentViewport.Excel.ActiveSheet.SelectionBackground;
             _selectionPath = new Path();
             if (_selectionBackground != null)
                 _selectionPath.Fill = _selectionBackground;
@@ -60,7 +60,7 @@ namespace Dt.Cells.UI
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            if (ParentViewport.Sheet.HideSelectionWhenPrinting)
+            if (ParentViewport.Excel.HideSelectionWhenPrinting)
             {
                 return availableSize;
             }
@@ -116,13 +116,13 @@ namespace Dt.Cells.UI
             }
 
             _selectionPath.InvalidateMeasure();
-            if (ParentViewport.Sheet.ActiveSheet.SelectionBackground == null)
+            if (ParentViewport.Excel.ActiveSheet.SelectionBackground == null)
             {
                 _selectionBackground = new SolidColorBrush(Color.FromArgb(60, 180, 180, 200));
             }
             else
             {
-                _selectionBackground = ParentViewport.Sheet.ActiveSheet.SelectionBackground;
+                _selectionBackground = ParentViewport.Excel.ActiveSheet.SelectionBackground;
             }
             foreach (Rectangle item in _activeSelectionRectangles)
             {
@@ -154,7 +154,7 @@ namespace Dt.Cells.UI
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            if (!ParentViewport.Sheet.HideSelectionWhenPrinting)
+            if (!ParentViewport.Excel.HideSelectionWhenPrinting)
             {
                 Rect rect = new Rect(new Point(), finalSize);
                 for (int i = 0; i < _activeSelectionRectangles.Count; i++)
@@ -201,10 +201,10 @@ namespace Dt.Cells.UI
 
         CellRange GetViewportRange()
         {
-            int viewportTopRow = ParentViewport.Sheet.GetViewportTopRow(ParentViewport.RowViewportIndex);
-            int viewportLeftColumn = ParentViewport.Sheet.GetViewportLeftColumn(ParentViewport.ColumnViewportIndex);
-            int viewportBottomRow = ParentViewport.Sheet.GetViewportBottomRow(ParentViewport.RowViewportIndex);
-            int viewportRightColumn = ParentViewport.Sheet.GetViewportRightColumn(ParentViewport.ColumnViewportIndex);
+            int viewportTopRow = ParentViewport.Excel.GetViewportTopRow(ParentViewport.RowViewportIndex);
+            int viewportLeftColumn = ParentViewport.Excel.GetViewportLeftColumn(ParentViewport.ColumnViewportIndex);
+            int viewportBottomRow = ParentViewport.Excel.GetViewportBottomRow(ParentViewport.RowViewportIndex);
+            int viewportRightColumn = ParentViewport.Excel.GetViewportRightColumn(ParentViewport.ColumnViewportIndex);
             return new CellRange(viewportTopRow, viewportLeftColumn, (viewportBottomRow - viewportTopRow) + 1, (viewportRightColumn - viewportLeftColumn) + 1);
         }
 
@@ -226,9 +226,9 @@ namespace Dt.Cells.UI
             _activeSelectionLayouts = new List<Rect>();
             CellRange viewportRange = GetViewportRange();
 
-            if (ParentViewport.IsActived && (ParentViewport.Sheet.ActiveSheet.ActiveCell != null))
+            if (ParentViewport.IsActived && (ParentViewport.Excel.ActiveSheet.ActiveCell != null))
             {
-                Worksheet ws = ParentViewport.Sheet.ActiveSheet;
+                Worksheet ws = ParentViewport.Excel.ActiveSheet;
                 range = new CellRange(ws.ActiveRowIndex, ws.ActiveColumnIndex, 1, 1);
                 CellRange range3 = ws.SpanModel.Find(range.Row, range.Column);
                 if ((range3 != null) && viewportRange.Intersects(range3.Row, range3.Column, range3.RowCount, range3.ColumnCount))
