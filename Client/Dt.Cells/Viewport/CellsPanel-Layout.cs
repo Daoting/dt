@@ -9,7 +9,6 @@
 #region 引用命名
 using Dt.Cells.Data;
 using Windows.Foundation;
-using Windows.UI;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 #endregion
@@ -21,41 +20,39 @@ namespace Dt.Cells.UI
         protected override Size MeasureOverride(Size availableSize)
         {
             BuildSpanGraph();
-            _rowsContainer.Measure(availableSize);
-            _borderContainer.Measure(availableSize);
+            _rowsLayer.Measure(availableSize);
+            _borderLayer.Measure(availableSize);
 
             BuildSelection();
-            _selectionContainer.Measure(availableSize);
+            _selectionLayer.Measure(availableSize);
 
-            if (_formulaSelectionContainer.Children.Count > 0)
-                _formulaSelectionContainer.InvalidateMeasure();
-            _formulaSelectionContainer.Measure(availableSize);
+            if (_formulaSelectionLayer.Children.Count > 0)
+                _formulaSelectionLayer.InvalidateMeasure();
+            _formulaSelectionLayer.Measure(availableSize);
 
-            _shapeContainer.Measure(availableSize);
+            _shapeLayer.Measure(availableSize);
 
-            if (_dragFillContainer != null)
+            if (_dragFillLayer != null)
             {
-                _dragFillContainer.Measure(availableSize);
+                _dragFillLayer.Measure(availableSize);
             }
 
-            if (_decoratinPanel != null)
+            if (_decorationLayer != null)
             {
-                _decoratinPanel.InvalidateMeasure();
-                _decoratinPanel.Measure(availableSize);
+                _decorationLayer.InvalidateMeasure();
+                _decorationLayer.Measure(availableSize);
             }
 
-            _dataValidationPanel.InvalidateMeasure();
-
-            _editorPanel.Measure(availableSize);
-            AttachEditorForActiveCell();
+            _dataValidationLayer.InvalidateMeasure();
+            _editorLayer.Measure(availableSize);
 
             if (Excel._formulaSelectionGripperPanel != null)
             {
                 Excel._formulaSelectionGripperPanel.InvalidateMeasure();
             }
 
-            _floatingObjectContainerPanel.Measure(availableSize);
-            _floatingObjectsMovingResizingContainer.Measure(availableSize);
+            _floatingObjectLayer.Measure(availableSize);
+            _floatingObjectsMovingResizingLayer.Measure(availableSize);
 
             return GetViewportSize(availableSize);
         }
@@ -63,56 +60,43 @@ namespace Dt.Cells.UI
         protected override Size ArrangeOverride(Size finalSize)
         {
             Rect rc = new Rect(0.0, 0.0, finalSize.Width, finalSize.Height);
-            _rowsContainer.Arrange(rc);
-            _borderContainer.Arrange(rc);
-            _selectionContainer.Arrange(rc);
-            _formulaSelectionContainer.Arrange(rc);
-            _shapeContainer.Arrange(rc);
+            _rowsLayer.Arrange(rc);
+            _borderLayer.Arrange(rc);
+            _selectionLayer.Arrange(rc);
+            _formulaSelectionLayer.Arrange(rc);
+            _shapeLayer.Arrange(rc);
 
-            if (_dragFillContainer != null)
+            if (_dragFillLayer != null)
             {
-                _dragFillContainer.Arrange(rc);
+                _dragFillLayer.Arrange(rc);
             }
 
-            if (_decoratinPanel != null)
+            if (_decorationLayer != null)
             {
-                _decoratinPanel.Arrange(rc);
+                _decorationLayer.Arrange(rc);
             }
-            _dataValidationPanel.Arrange(rc);
+            _dataValidationLayer.Arrange(rc);
 
             if (IsEditing())
-            {
-                _editorPanel.ResumeEditor();
-            }
-            _editorPanel.Arrange(rc);
-            _floatingObjectContainerPanel.Arrange(rc);
-            _floatingObjectsMovingResizingContainer.Arrange(rc);
+                _editorLayer.InvalidateArrange();
+            _editorLayer.Arrange(rc);
+
+            _floatingObjectLayer.Arrange(rc);
+            _floatingObjectsMovingResizingLayer.Arrange(rc);
 
             Size viewportSize = GetViewportSize(finalSize);
-            RectangleGeometry geometry;
             if (Excel.IsTouching)
             {
                 if (Clip == null)
-                {
-                    geometry = new RectangleGeometry();
-                    geometry.Rect = new Rect(new Point(), viewportSize);
-                    Clip = geometry;
-                }
+                    Clip = new RectangleGeometry { Rect = new Rect(new Point(), viewportSize) };
             }
             else
             {
-                geometry = new RectangleGeometry();
-                geometry.Rect = new Rect(new Point(), viewportSize);
-                Clip = geometry;
+                Clip = new RectangleGeometry { Rect = new Rect(new Point(), viewportSize) };
             }
 
             if (Clip != null)
-            {
-                geometry = new RectangleGeometry();
-                geometry.Rect = Clip.Rect;
-                if (_borderContainer != null)
-                    _borderContainer.Clip = geometry;
-            }
+                _borderLayer.Clip = new RectangleGeometry { Rect = Clip.Rect };
             return viewportSize;
         }
 
@@ -170,42 +154,6 @@ namespace Dt.Cells.UI
                     _cachedSpanGraph.BuildGraph(columnStart, columnEnd, rowStart, rowEnd, GetSpanModel(), CellCache);
                 }
             }
-        }
-
-        void AttachEditorForActiveCell()
-        {
-            CellItem editingCell = GetViewportCell(_activeRow, _activeCol, true);
-            if (editingCell != null)
-            {
-                if (((_editorPanel == null) || (_editorPanel.EditingColumnIndex != _activeCol)) || ((_editorPanel.EditingRowIndex != _activeRow) || !editingCell.HasEditingElement()))
-                {
-                    if (_editorPanel.Editor != null)
-                    {
-                        object obj2 = editingCell.Excel.ActiveSheet.GetValue(_activeRow, _activeCol);
-                        if ((obj2 != null) && string.IsNullOrEmpty((_editorPanel.Editor as TextBox).Text))
-                        {
-                            (_editorPanel.Editor as TextBox).Text = obj2.ToString();
-                            (_editorPanel.Editor as TextBox).SelectionStart = obj2.ToString().Length;
-                        }
-                        editingCell.SetEditingElement(_editorPanel.Editor);
-                    }
-                    else
-                    {
-                        PrepareCellEditing(editingCell);
-                    }
-                }
-                if (_editorPanel != null)
-                {
-                    SolidColorBrush brush = new SolidColorBrush(Colors.White);
-                    _editorPanel.SetBackground(brush);
-                }
-            }
-            if ((editingCell == null) && (_editorPanel != null))
-            {
-                SolidColorBrush brush = new SolidColorBrush(Colors.Transparent);
-                _editorPanel.SetBackground(brush);
-            }
-            _editorPanel.InvalidateMeasure();
         }
     }
 }

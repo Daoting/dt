@@ -183,12 +183,43 @@ namespace Dt.Base
         }
 
         /// <summary>
-        ///Gets or sets whether this workbook is protected.  
+        /// Gets or sets whether this workbook is protected.  
         /// </summary>
         public bool Protect
         {
-            get { return Workbook.Protect; }
-            set { Workbook.Protect = value; }
+            get
+            {
+                var sheet = Workbook.ActiveSheet;
+                if (sheet != null)
+                    return sheet.Protect;
+                return false;
+            }
+            set
+            {
+                var sheet = Workbook.ActiveSheet;
+                if (sheet != null)
+                    sheet.Protect = value;
+            }
+        }
+
+        /// <summary>
+        /// 在报表预览中实现单元格不可编辑且图表可拖动
+        /// </summary>
+        public bool LockCell
+        {
+            get
+            {
+                var sheet = Workbook.ActiveSheet;
+                if (sheet != null)
+                    return sheet.LockCell;
+                return false;
+            }
+            set
+            {
+                var sheet = Workbook.ActiveSheet;
+                if (sheet != null)
+                    sheet.LockCell = value;
+            }
         }
 
         /// <summary>
@@ -691,6 +722,15 @@ namespace Dt.Base
         {
             get { return (bool)GetValue(VerticalScrollableProperty); }
             set { SetValue(VerticalScrollableProperty, value); }
+        }
+
+        /// <summary>
+        /// Gets or sets whether data can overflow into adjacent empty cells in the component while the cell is in edit mode. 
+        /// </summary>
+        public bool CanEditOverflow
+        {
+            get { return (bool)GetValue(CanEditOverflowProperty); }
+            set { SetValue(CanEditOverflowProperty, value); }
         }
 
         /// <summary>
@@ -2196,7 +2236,7 @@ namespace Dt.Base
         }
 
         /// <summary>
-        ///Moves a cell to the specified position.  
+        /// Moves a cell to the specified position.  
         /// </summary>
         /// <param name="rowViewportIndex">The row viewport index.</param>
         /// <param name="columnViewportIndex">The column viewport index.</param>
@@ -2713,7 +2753,7 @@ namespace Dt.Base
         /// <returns><c>true</c> when able to stop cell editing successfully; otherwise, <c>false</c>.</returns>
         public bool StopCellEditing(bool cancel = false)
         {
-            if (IsEditing && (ActiveSheet != null))
+            if (IsEditing && ActiveSheet != null)
             {
                 CellsPanel editingViewport = EditingViewport;
                 if (editingViewport != null)
@@ -2725,7 +2765,8 @@ namespace Dt.Base
                     else
                     {
                         bool editorDirty = editingViewport.EditorDirty;
-                        editingViewport.StopCellEditing(cancel);
+                        editingViewport.StopCellEditing();
+                        IsEditing = editingViewport.IsEditing();
                         if (editorDirty && !cancel)
                         {
                             RefreshViewportCells(_cellsPanels, 0, 0, ActiveSheet.RowCount, ActiveSheet.ColumnCount);

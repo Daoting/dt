@@ -124,7 +124,7 @@ namespace Dt.Cells.UI
         {
             if (_editingElement == null)
             {
-                _editingElement = new EditingElement();
+                _editingElement = new TextBox();
                 _editingElement.Padding = new Thickness(0.0);
                 _editingElement.VerticalAlignment = (VerticalAlignment)2;
                 _editingElement.FontSize = DEFAULT_FONTSIZE;

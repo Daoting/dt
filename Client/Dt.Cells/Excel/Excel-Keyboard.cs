@@ -107,6 +107,7 @@ namespace Dt.Base
                 {
                     if (!IsEditing && flag)
                     {
+                        // Enter状态表示因键盘输入触发，Edit状态表示双击触发
                         StartCellEditing(true, null, EditorStatus.Enter);
                     }
                     if (!IsEditing)
@@ -176,7 +177,6 @@ namespace Dt.Base
             bool flag;
             bool flag2;
             bool flag3;
-            _isIMEEnterEditing = false;
             KeyboardHelper.GetMetaKeyState(out flag, out flag2, out flag3);
             if (flag2 || flag3)
             {

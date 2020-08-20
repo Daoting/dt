@@ -30,7 +30,6 @@ namespace Dt.Cells.UI
     {
         static Rect _rcEmpty = new Rect();
         TextBlock _tb;
-        FrameworkElement _editor;
         CellOverflowLayout _overflowLayout;
         Rect? _cachedClip;
 
@@ -44,7 +43,6 @@ namespace Dt.Cells.UI
         StrikethroughView _strikethroughView;
         FilterButton _filterButton;
         FilterButtonInfo _filterButtonInfo;
-        Type _cachedValueType;
         InvalidDataPresenterInfo _dataValidationInvalidPresenterInfo;
         bool _lastUnderline;
 
@@ -102,6 +100,7 @@ namespace Dt.Cells.UI
             }
         }
 
+        #region 外部方法
         public void ApplyState()
         {
             Background = BindingCell.ActualBackground;
@@ -123,202 +122,15 @@ namespace Dt.Cells.UI
             DettachSparklineEvents();
         }
 
-        public bool HasEditingElement()
-        {
-            return (_editor != null);
-        }
-
-        public void SetEditingElement(FrameworkElement p_editor)
-        {
-            if (_editor != p_editor)
-                _editor = p_editor;
-        }
-
-        public FrameworkElement GetEditingElement()
-        {
-            if (_editor == null)
-                _editor = new EditingElement();
-            TextBox textBox = _editor as TextBox;
-
-            StyleInfo info = BindingCell.Worksheet.GetActualStyleInfo(BindingCell.Row.Index, BindingCell.Column.Index, BindingCell.SheetArea, true);
-            if (info == null || textBox == null)
-                return _editor;
-
-            // 存在公式
-            string text = string.Empty;
-            string formula = string.Empty;
-            using (((IUIActionExecuter)BindingCell.Worksheet).BeginUIAction())
-            {
-                int index = BindingCell.Row.Index;
-                int column = BindingCell.Column.Index;
-                formula = BindingCell.Formula;
-                if (formula == null)
-                {
-                    object[,] objArray = BindingCell.Worksheet.FindFormulas(index, column, 1, 1);
-                    if (objArray.GetLength(0) > 0)
-                    {
-                        string str3 = objArray[0, 1].ToString();
-                        int length = str3.Length;
-                        if (((length > 2) && str3.StartsWith("{")) && str3.EndsWith("}"))
-                        {
-                            formula = str3.Substring(1, length - 2);
-                        }
-                    }
-                }
-            }
-            if (!string.IsNullOrEmpty(formula))
-            {
-                text = "=" + formula;
-                goto Label_0293;
-            }
-            if (BindingCell.Value == null)
-            {
-                _cachedValueType = null;
-                goto Label_0293;
-            }
-
-            // 存在格式化
-            _cachedValueType = BindingCell.Value.GetType();
-            var preferredEditingFormatter = new GeneralFormatter().GetPreferredEditingFormatter(BindingCell.Value);
-            if ((preferredEditingFormatter != null) && (info.Formatter is AutoFormatter))
-            {
-                try
-                {
-                    text = preferredEditingFormatter.Format(BindingCell.Value);
-                    goto Label_01F7;
-                }
-                catch
-                {
-                    text = BindingCell.Text;
-                    goto Label_01F7;
-                }
-            }
-
-            text = BindingCell.Text;
-        Label_01F7:
-            var formatter2 = info.Formatter;
-            if (formatter2 is GeneralFormatter formatter3)
-            {
-                switch (formatter3.GetFormatType(BindingCell.Value))
-                {
-                    case NumberFormatType.Number:
-                    case NumberFormatType.Text:
-                        formatter2 = new GeneralFormatter();
-                        break;
-                }
-            }
-            if ((formatter2 != null) && !(formatter2 is AutoFormatter))
-            {
-                text = formatter2.Format(BindingCell.Value);
-            }
-            if (text != null && text.StartsWith("=") && Excel.CanUserEditFormula)
-            {
-                text = "'" + text;
-            }
-
-        Label_0293:
-            textBox.Text = text;
-            if (info.FontSize > 0.0)
-            {
-                textBox.FontSize = info.FontSize * ZoomFactor;
-            }
-            else
-            {
-                textBox.ClearValue(TextBlock.FontSizeProperty);
-            }
-            textBox.FontStyle = info.FontStyle;
-            textBox.FontWeight = info.FontWeight;
-            textBox.FontStretch = info.FontStretch;
-            if (info.IsFontFamilySet() && (info.FontFamily != null))
-            {
-                textBox.FontFamily = info.FontFamily;
-            }
-            else if (info.IsFontThemeSet())
-            {
-                string fontTheme = info.FontTheme;
-                IThemeSupport worksheet = BindingCell.Worksheet;
-                if (worksheet != null)
-                {
-                    textBox.FontFamily = worksheet.GetThemeFont(fontTheme);
-                }
-            }
-            else
-            {
-                textBox.ClearValue(Control.FontFamilyProperty);
-            }
-
-            Brush foreground = null;
-            if (info.IsForegroundSet())
-            {
-                foreground = info.Foreground;
-            }
-            else if (info.IsForegroundThemeColorSet())
-            {
-                string fname = info.ForegroundThemeColor;
-                if ((!string.IsNullOrEmpty(fname) && (BindingCell.Worksheet != null)) && (BindingCell.Worksheet.Workbook != null))
-                {
-                    foreground = new SolidColorBrush(BindingCell.Worksheet.Workbook.GetThemeColor(fname));
-                }
-            }
-            if (foreground != null)
-            {
-                textBox.Foreground = foreground;
-            }
-            else
-            {
-                textBox.Foreground = new SolidColorBrush(Colors.Black);
-            }
-
-            textBox.VerticalContentAlignment = info.VerticalAlignment.ToVerticalAlignment();
-            if (!string.IsNullOrEmpty(formula))
-            {
-                textBox.TextAlignment = Windows.UI.Xaml.TextAlignment.Left;
-            }
-            else if (!BindingCell.ActualWordWrap)
-            {
-                switch (BindingCell.ToHorizontalAlignment())
-                {
-                    case HorizontalAlignment.Left:
-                    case HorizontalAlignment.Stretch:
-                        textBox.TextAlignment = Windows.UI.Xaml.TextAlignment.Left;
-                        break;
-
-                    case HorizontalAlignment.Center:
-                        textBox.TextAlignment = Windows.UI.Xaml.TextAlignment.Center;
-                        break;
-
-                    case HorizontalAlignment.Right:
-                        textBox.TextAlignment = Windows.UI.Xaml.TextAlignment.Right;
-                        break;
-                }
-            }
-            else
-            {
-                textBox.TextAlignment = Windows.UI.Xaml.TextAlignment.Left;
-            }
-
-            textBox.Margin = GetDefaultPaddingForEdit(textBox.FontSize);
-            textBox.TextWrapping = TextWrapping.Wrap;
-            return _editor;
-        }
-
-        public void HideForEditing()
-        {
-            Visibility = Visibility.Collapsed;
-        }
-
-        public void ShowAfterEdit()
-        {
-            ClearValue(VisibilityProperty);
-        }
-
         public void Refresh()
         {
             if (_sparklineView != null)
                 UpdateSparkline();
             UpdateChildren();
             InvalidateMeasure();
+            InvalidateArrange();
         }
+        #endregion
 
         #region 测量布局
         //*** CellsPanel.Measure -> RowsLayer.Measure -> RowItem.UpdateChildren -> 行列改变时 CellItem.UpdateChildren -> RowItem.Measure -> CellItem.Measure ***//
@@ -786,16 +598,20 @@ namespace Dt.Cells.UI
         }
         #endregion
 
-
+        #region 内部方法
         void ApplyStyle()
         {
+            HorizontalAlignment horAlignment = BindingCell.ToHorizontalAlignment();
+            if (_tb.HorizontalAlignment != horAlignment)
+                _tb.HorizontalAlignment = horAlignment;
+
             Windows.UI.Xaml.TextAlignment textAlignment;
-            switch (BindingCell.ActualHorizontalAlignment)
+            switch (horAlignment)
             {
-                case CellHorizontalAlignment.Center:
+                case HorizontalAlignment.Center:
                     textAlignment = Windows.UI.Xaml.TextAlignment.Center;
                     break;
-                case CellHorizontalAlignment.Right:
+                case HorizontalAlignment.Right:
                     textAlignment = Windows.UI.Xaml.TextAlignment.Right;
                     break;
                 default:
@@ -874,17 +690,17 @@ namespace Dt.Cells.UI
             if (_tb.FontSize != fontSize)
                 _tb.FontSize = fontSize;
 
-            var margin = MeasureHelper.TextBlockDefaultMargin;
+            var padding = MeasureHelper.TextBlockDefaultMargin;
             var indent = BindingCell.ActualTextIndent * ZoomFactor;
             if (indent > 0 && _tb.TextAlignment != Windows.UI.Xaml.TextAlignment.Center)
             {
                 if (_tb.TextAlignment == Windows.UI.Xaml.TextAlignment.Left)
-                    margin.Left += indent;
+                    padding.Left += indent;
                 else if (_tb.TextAlignment == Windows.UI.Xaml.TextAlignment.Right)
-                    margin.Right += indent;
+                    padding.Right += indent;
             }
-            if (_tb.Margin != margin)
-                _tb.Margin = margin;
+            if (_tb.Padding != padding)
+                _tb.Padding = padding;
 
             if (BindingCell.ActualUnderline)
             {
@@ -923,85 +739,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        Thickness GetDefaultPaddingForEdit(double fontSize)
-        {
-            Thickness excelBlank = MeasureHelper.ExcelCellBlankThickness;
-            Thickness textBoxBlank = MeasureHelper.TextBoxBlankThickness;
-            double left = excelBlank.Left - textBoxBlank.Left;
-            double right = excelBlank.Right - textBoxBlank.Right;
-            double top = excelBlank.Top - textBoxBlank.Top;
-            return new Thickness(left, top, right, excelBlank.Bottom - textBoxBlank.Bottom);
-        }
-
-
-        internal Size GetPreferredEditorSize(Size maxSize, Size cellContentSize, HorizontalAlignment alignment, float indent)
-        {
-            if (((OwnRow == null) ? null : OwnRow.OwnPanel) == null)
-            {
-                return new Size();
-            }
-            //if (!_owningRow.OwningPresenter.Sheet.CanEditOverflow || (_cellType == null))
-            //{
-            //    return new Size(cellContentSize.Width, cellContentSize.Height);
-            //}
-            double num = Math.Min(maxSize.Width, cellContentSize.Width);
-            Size size = MeasureHelper.ConvertTextSizeToExcelCellSize(CalcStringSize(maxSize, true, null), ZoomFactor);
-            size.Width += 2.0;
-            string text = "T";
-            Size size2 = CalcStringSize(new Size(2147483647.0, 2147483647.0), false, text);
-            size.Width += size2.Width;
-            if (((alignment == HorizontalAlignment.Left) || (alignment == HorizontalAlignment.Right)) && (num < (size.Width + indent)))
-            {
-                size.Width += indent;
-            }
-            return new Size(Math.Max(num, size.Width), Math.Max(cellContentSize.Height, size.Height));
-        }
-
-        internal bool JudgeWordWrap(Size maxSize, Size cellContentSize, HorizontalAlignment alignment, float indent)
-        {
-            return false;
-            //if (((((_owningRow == null) ? null : _owningRow.OwningPresenter) == null) || !_owningRow.OwningPresenter.Sheet.CanEditOverflow) || (_cellType == null))
-            //{
-            //    return false;
-            //}
-            //double num = Math.Min(maxSize.Width, cellContentSize.Width);
-            //Size size = MeasureHelper.ConvertTextSizeToExcelCellSize(CalcStringSize(new Size(2147483647.0, 2147483647.0), false, null), ZoomFactor);
-            //size.Width += 2.0;
-            //if (((alignment == HorizontalAlignment.Left) || (alignment == HorizontalAlignment.Right)) && (num < (size.Width + indent)))
-            //{
-            //    size.Width += indent;
-            //}
-            //return (maxSize.Width < size.Width);
-        }
-
-        Size CalcStringSize(Size maxSize, bool allowWrap, string text = null)
-        {
-            //if (_cellType.HasEditingElement())
-            //{
-            //    TextBox editingElement = _cellType.GetEditingElement() as TextBox;
-            //    if ((editingElement != null) && !string.IsNullOrEmpty(editingElement.Text))
-            //    {
-            //        Cell bindingCell = BindingCell;
-            //        if (bindingCell != null)
-            //        {
-            //            FontFamily actualFontFamily = bindingCell.ActualFontFamily;
-            //            if (actualFontFamily == null)
-            //            {
-            //                actualFontFamily = editingElement.FontFamily;
-            //            }
-            //            object textFormattingMode = null;
-            //            double fontSize = bindingCell.ActualFontSize * ZoomFactor;
-            //            if (fontSize < 0.0)
-            //            {
-            //                fontSize = editingElement.FontSize;
-            //            }
-            //            return MeasureHelper.MeasureText((text == null) ? editingElement.Text : text, actualFontFamily, fontSize, bindingCell.ActualFontStretch, bindingCell.ActualFontStyle, bindingCell.ActualFontWeight, maxSize, allowWrap, textFormattingMode, Excel.UseLayoutRounding, ZoomFactor);
-            //        }
-            //    }
-            //}
-            return new Size();
-        }
-
+        #endregion
     }
 }
 

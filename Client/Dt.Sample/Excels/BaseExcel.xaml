@@ -16,7 +16,7 @@
         <a:Tabs>
             <a:Tab Title="属性">
                 <a:Fv Data="{Binding ElementName=_excel}">
-                    <a:CBool ID="ActiveSheet.Protect" Title="只读" />
+                    <a:CBool ID="Protect" Title="只读" />
                     <a:CText ID="ActiveSheet.RowCount" Title="总行数" />
                     <a:CText ID="ActiveSheet.ColumnCount" Title="总列数" />
                     <a:CList ID="ActiveSheet.SelectionPolicy" Title="选择模式" />

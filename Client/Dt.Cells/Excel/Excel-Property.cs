@@ -687,7 +687,6 @@ namespace Dt.Base
         bool _isDragCopy;
         bool _isDragInsert;
         bool _isEditing;
-        internal bool _isIMEEnterEditing;
         bool _isMouseDownFloatingObject;
         bool _isTouchScrolling;
 
@@ -1030,6 +1029,12 @@ namespace Dt.Base
             typeof(bool),
             typeof(Excel),
             new PropertyMetadata(false));
+
+        public readonly static DependencyProperty CanEditOverflowProperty = DependencyProperty.Register(
+            "CanEditOverflow",
+            typeof(bool),
+            typeof(Excel),
+            new PropertyMetadata(true));
 
         static void OnTrailingFreezeLineStyleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {

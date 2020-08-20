@@ -7,19 +7,8 @@
 #endregion
 
 #region 引用命名
-using Dt.Cells.Data;
-using Dt.Cells.UI;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.InteropServices;
-using System.Xml.Serialization;
-using Windows.Foundation;
-using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Shapes;
 #endregion
 
 namespace Dt.Cells.UI
@@ -28,9 +17,9 @@ namespace Dt.Cells.UI
     {
         internal void InvalidateDecorationPanel()
         {
-            if (_decoratinPanel != null)
+            if (_decorationLayer != null)
             {
-                _decoratinPanel.InvalidateMeasure();
+                _decorationLayer.InvalidateMeasure();
             }
         }
 
@@ -41,12 +30,12 @@ namespace Dt.Cells.UI
         {
             set
             {
-                if (_decoratinPanel != null)
+                if (_decorationLayer != null)
                 {
                     if (value)
-                        _decoratinPanel.Visibility = Visibility.Collapsed;
+                        _decorationLayer.Visibility = Visibility.Collapsed;
                     else
-                        _decoratinPanel.Visibility = Visibility.Visible;
+                        _decorationLayer.Visibility = Visibility.Visible;
                 }
             }
         }

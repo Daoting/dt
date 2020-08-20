@@ -15,7 +15,7 @@
     <a:WinItem DockState="DockedRight">
         <a:Tabs>
             <a:Tab Title="属性">
-                <a:Fv>
+                <a:Fv Data="{Binding ElementName=_excel}">
                     <a:CFree Title="图表类型">
                         <ComboBox x:Name="_cbTypes" />
                     </a:CFree>
@@ -23,7 +23,9 @@
                         <ComboBox x:Name="_cbTheme" />
                     </a:CFree>
                     <Button Content="添加图表" Click="AddNewChart" />
-
+                    <a:CBool ID="LockCell" Title="格只读图可动" />
+                    <a:CBool ID="Protect" Title="只读" />
+                    
                     <a:CBar Title="保存为Excel" />
                     <a:CFree Title="保存选项">
                         <ComboBox x:Name="_saveFlags" SelectedIndex="0">

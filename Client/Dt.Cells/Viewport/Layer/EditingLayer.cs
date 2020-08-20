@@ -10,7 +10,6 @@
 using Dt.Cells.Data;
 using System;
 using Windows.Foundation;
-using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -19,421 +18,423 @@ using Windows.UI.Xaml.Media;
 
 namespace Dt.Cells.UI
 {
-
     internal partial class EditingLayer : Panel
     {
-        CellsPanel _parentViewport;
+        static Rect _rcEmpty = new Rect();
+        static Size _szEmpty = new Size();
+        CellsPanel _ownPanel;
         CellItem _editingCell;
-        FrameworkElement _editor1;
-        FrameworkElement _editor2;
 
         public event EventHandler EditingChanged;
 
         public EditingLayer(CellsPanel parent)
         {
-            _parentViewport = parent;
-            Background = new SolidColorBrush(Colors.White);
-            IsHitTestVisible = false;
+            _ownPanel = parent;
+
+            EditorStatus = EditorStatus.Ready;
+            Editor = new TextBox
+            {
+                BorderThickness = new Thickness(0.0),
+                Padding = new Thickness(2, 5, 2, 4),
+                TextWrapping = TextWrapping.Wrap,
+                Background = BrushRes.WhiteBrush,
+                IsHitTestVisible = false,
+                Opacity = 0d,
+            };
+            Editor.TextChanged += EditorTextChanged;
+            Children.Add(Editor);
         }
 
-        protected override Size MeasureOverride(Size availableSize)
+        public void PrepareEditor(CellItem p_cell)
         {
-            if (_editor1 != null)
-            {
-                _editor1.Measure(availableSize);
-            }
-            if (_editor2 != null)
-            {
-                _editor2.Measure(availableSize);
-            }
-            return _parentViewport.GetViewportSize(availableSize);
+            ResetEditorCell(p_cell, EditorStatus.Ready);
+
+            // false可控制光标不显示
+            Editor.IsHitTestVisible = false;
+            Editor.Opacity = 0d;
+            Editor.Text = "";
+
+            InvalidateMeasure();
+            InvalidateArrange();
         }
 
-        protected override Size ArrangeOverride(Size finalSize)
+        public void ShowEditor(CellItem p_cell, EditorStatus p_status)
         {
-            if ((_editingCell != null) && (_parentViewport != null))
-            {
-                Rect rect = _parentViewport.CalcEditorBounds(EditingRowIndex, EditingColumnIndex, finalSize);
-                double left = rect.Left;
-                HorizontalAlignment alignment = HorizontalAlignment.Left;
-                if (_editingCell.BindingCell != null)
-                {
-                    float num2 = _editingCell.BindingCell.ActualTextIndent * _parentViewport.Excel.ZoomFactor;
-                    alignment = _editingCell.BindingCell.ToHorizontalAlignment();
-                    if (_editingCell.BindingCell.ActualTextIndent > 0)
-                    {
-                        switch (alignment)
-                        {
-                            case HorizontalAlignment.Left:
-                                left += num2;
-                                break;
+            ResetEditorCell(p_cell, p_status);
 
-                            case HorizontalAlignment.Right:
-                                left -= num2;
-                                break;
-                        }
-                    }
-                }
-                Rect rect2 = new Rect(left, rect.Top - 1.0, (rect.Width >= 2.0) ? (rect.Width - 2.0) : 0.0, rect.Height + 1.0);
-                if (_editingCell.BindingCell.ActualVerticalAlignment == CellVerticalAlignment.Top)
-                {
-                    rect2 = new Rect(left, rect.Top - 2.0, (rect.Width >= 2.0) ? (rect.Width - 2.0) : 0.0, rect.Height + 2.0);
-                }
-                else if (_editingCell.BindingCell.ActualVerticalAlignment == CellVerticalAlignment.Bottom)
-                {
-                    rect2 = new Rect(left, rect.Top, (rect.Width >= 2.0) ? (rect.Width - 2.0) : 0.0, rect.Height);
-                }
-                double x = rect2.X;
-                double y = rect2.Y;
-                IsEditorVisible = (rect2.Width > 0.0) && (rect2.Height > 0.0);
-                RectangleGeometry geometry = new RectangleGeometry();
-                geometry.Rect = new Rect(rect.X, rect.Y, rect.Width, rect.Height);
-                Clip = geometry;
+            // 双击显示光标，IsHitTestVisible为false可控制光标不显示
+            // 保证Editor再次点击时不失去焦点
+            Editor.IsHitTestVisible = true;
+            Editor.Opacity = 1.0;
 
-                if (Editor != null)
-                {
-                    if ((rect2.Width > 1.0) && (rect2.Height > 1.0))
-                    {
-                        if (_editor1 != null)
-                        {
-                            _editor1.Width = rect2.Width;
-                            _editor1.Height = rect2.Height;
-                        }
-                        if (_editor2 != null)
-                        {
-                            _editor2.Width = rect2.Width;
-                            _editor2.Height = rect2.Height;
-                        }
-                    }
-                    if ((_editor1 != null) && (_editor1.Visibility == Visibility.Visible))
-                    {
-                        _editor1.Arrange(new Rect(rect2.X, rect2.Y, rect2.Width, rect2.Height));
-                    }
-                    if ((_editor2 != null) && (_editor2.Visibility == Visibility.Visible))
-                    {
-                        _editor2.Arrange(new Rect(rect2.X, rect2.Y, rect2.Width, rect2.Height));
-                    }
-                }
-            }
-            return base.ArrangeOverride(finalSize);
-        }
-
-        void EditorTextChanged(object sender, TextChangedEventArgs e)
-        {
-            if ((_parentViewport != null) && _parentViewport.IsEditing())
-            {
-                EditorDirty = true;
-                if (EditingChanged != null)
-                {
-                    EditingChanged(this, EventArgs.Empty);
-                }
-            }
-        }
-
-        internal FrameworkElement GetAvaiableEditor()
-        {
-            object focusedElement = GetFocusedElement();
-            if (object.ReferenceEquals(Editor, _editor1))
-            {
-                if (_editor2 != null)
-                {
-                    _editor2.Visibility = Visibility.Visible;
-                    if ((focusedElement == _editor1) && (_editor2 != null))
-                    {
-                        //(_editor2 as TextBox).Focus(FocusState.Programmatic);
-                    }
-                    if (_editor2 is EditingElement)
-                    {
-                        (_editor2 as EditingElement).Status = EditorStatus.Ready;
-                    }
-                }
-
-                if (_editor1 != null)
-                {
-                    //if (focusedElement == _editor1
-                    //    && !ReferenceEquals(GetFocusedElement(), _editor2)
-                    //    && _parentViewport != null
-                    //    && _parentViewport.Sheet != null
-                    //    && _parentViewport.Sheet._host != null)
-                    //{
-                    //    _parentViewport.Sheet._host.Focus(FocusState.Programmatic);
-                    //}
-                    _editor1.Visibility = Visibility.Collapsed;
-                    if (_editor1 is TextBox)
-                    {
-                        (_editor1 as TextBox).Text = string.Empty;
-                    }
-                    if (_editor1 is EditingElement)
-                    {
-                        (_editor1 as EditingElement).Status = EditorStatus.Ready;
-                    }
-                }
-                return _editor2;
-            }
-            if (!object.ReferenceEquals(Editor, _editor2))
-            {
-                return Editor;
-            }
-            if (_editor1 != null)
-            {
-                _editor1.Visibility = Visibility.Visible;
-                if ((focusedElement == _editor2) && (_editor1 != null))
-                {
-                    //(_editor1 as TextBox).Focus(FocusState.Programmatic);
-                }
-                if (_editor1 is EditingElement)
-                {
-                    (_editor1 as EditingElement).Status = EditorStatus.Ready;
-                }
-            }
-            if (_editor2 != null)
-            {
-                _editor2.Visibility = Visibility.Collapsed;
-                if (_editor2 is TextBox)
-                {
-                    (_editor2 as TextBox).Text = string.Empty;
-                }
-                if (_editor2 is EditingElement)
-                {
-                    (_editor2 as EditingElement).Status = EditorStatus.Ready;
-                }
-            }
-            return _editor1;
-        }
-
-        object GetFocusedElement()
-        {
-            return FocusManager.GetFocusedElement();
-        }
-
-        public void InstallEditor(CellItem cell, bool startEditing = false)
-        {
-            if (cell == null)
+            var cell = _editingCell.BindingCell;
+            StyleInfo info = cell.Worksheet.GetActualStyleInfo(cell.Row.Index, cell.Column.Index, cell.SheetArea, true);
+            if (info == null)
                 return;
 
-            FrameworkElement editingElement = cell.GetEditingElement();
-            int row = cell.Row;
-            int column = cell.Column;
-            if (cell.CellLayout != null)
-            {
-                row = cell.CellLayout.Row;
-                column = cell.CellLayout.Column;
-            }
-            _editingCell = cell;
+            // Enter状态表示因键盘输入触发，不需要给Editor设置Cell原有的Text
+            // Edit状态表示双击触发
+            bool isFormula = false;
+            if (p_status != EditorStatus.Enter)
+                isFormula = ApplyEditorText(info);
+            ApplyEditorStyle(info, isFormula);
+            Editor.Focus(FocusState.Programmatic);
+
+            InvalidateMeasure();
+            InvalidateArrange();
+        }
+
+        public void HideEditor()
+        {
+            _editingCell = null;
             EditorDirty = false;
-            if (!ReferenceEquals(editingElement, _editor2) && (_editor1 == null))
-            {
-                _editor1 = editingElement;
-            }
-            else if (!ReferenceEquals(editingElement, _editor1) && (_editor2 == null))
-            {
-                _editor2 = editingElement;
-            }
+            EditorStatus = EditorStatus.Ready;
+            EditingColumnIndex = -2;
+            EditingRowIndex = -2;
 
-            Editor = editingElement;
-            Editor.Visibility = Visibility.Visible;
-            if (Editor != null)
-            {
-                if (!Children.Contains(Editor))
-                {
-                    Children.Add(Editor);
-                }
-                EditingColumnIndex = column;
-                EditingRowIndex = row;
-                if (cell.BindingCell.ActualBackground != null)
-                {
-                    Background = cell.BindingCell.ActualBackground;
-                }
-                else
-                {
-                    Background = new SolidColorBrush(Colors.Transparent);
-                }
-                TextBox editor = Editor as TextBox;
-                editor.IsHitTestVisible = false;
-                // hdt
-                Worksheet ws = _parentViewport.Excel.ActiveSheet;
-                if (ws != null && ws.LockCell)
-                    editor.IsEnabled = false;
-                else if (!editor.IsEnabled)
-                    editor.IsEnabled = true;
+            Editor.IsHitTestVisible = false;
+            Editor.Opacity = 0d;
+            Editor.Text = "";
 
-                if (IsHitTestVisible)
-                    IsHitTestVisible = false;
-                UpateScrollViewSize(editor);
-                editor.SelectAll();
-                if (editor != null)
-                {
-                    editor.TextChanged -= EditorTextChanged;
-                    editor.TextChanged += EditorTextChanged;
-                }
-            }
-        }
-
-        public void ResumeEditor()
-        {
-            if (_editingCell != null)
-            {
-                CellItem objA = _parentViewport.GetViewportCell(EditingRowIndex, EditingColumnIndex, true);
-                if (objA != null)
-                {
-                    if (!Equals(objA, _editingCell))
-                    {
-                        Control editor = Editor as Control;
-                        if (editor != null)
-                        {
-                            //editor.Focus(FocusState.Programmatic);
-                        }
-                        _editingCell = objA;
-                    }
-                    objA.HideForEditing();
-                }
-            }
-        }
-
-        public void SetBackground(Brush brush)
-        {
-            Background = brush;
-        }
-
-        internal void SetEditorStatus(EditorStatus status)
-        {
-            if (Editor is EditingElement)
-            {
-                (Editor as EditingElement).Status = status;
-            }
-        }
-
-        internal void UpadateEditor()
-        {
-            bool isWrap = false;
-            if ((_editingCell != null) && (_parentViewport != null))
-            {
-                Size viewportSize = _parentViewport.GetViewportSize();
-                CellItem base2 = _parentViewport.GetViewportCell(EditingRowIndex, EditingColumnIndex, true);
-                if ((_editingCell != null) && (_parentViewport._editorPanel != null))
-                {
-                    Rect rect = _parentViewport.GetCellBounds(EditingRowIndex, EditingColumnIndex, false);
-                    Size cellContentSize = new Size(rect.Width, rect.Height);
-                    double height = viewportSize.Height - (rect.Top - _parentViewport.Location.Y);
-                    if ((rect.Width != 0.0) && (rect.Height != 0.0))
-                    {
-                        Cell cachedCell = _parentViewport.CellCache.GetCachedCell(EditingRowIndex, EditingColumnIndex);
-                        HorizontalAlignment alignment = cachedCell.ToHorizontalAlignment();
-                        switch (alignment)
-                        {
-                            case HorizontalAlignment.Left:
-                                {
-                                    float indent = cachedCell.ActualTextIndent * _parentViewport.Excel.ZoomFactor;
-                                    double num3 = (viewportSize.Width - rect.Left) + _parentViewport.Location.X;
-                                    num3 = Math.Max(Math.Min(num3, viewportSize.Width), 0.0);
-                                    Size maxSize = new Size(num3, height);
-                                    isWrap = base2.JudgeWordWrap(maxSize, cellContentSize, alignment, indent);
-                                    goto Label_02B5;
-                                }
-                            case HorizontalAlignment.Right:
-                                {
-                                    float num4 = cachedCell.ActualTextIndent * _parentViewport.Excel.ZoomFactor;
-                                    double num5 = rect.Right - _parentViewport.Location.X;
-                                    num5 = Math.Max(Math.Min(num5, viewportSize.Width), 0.0);
-                                    Size size4 = new Size(num5, height);
-                                    isWrap = _editingCell.JudgeWordWrap(size4, cellContentSize, alignment, num4);
-                                    goto Label_02B5;
-                                }
-                        }
-                        if (alignment == HorizontalAlignment.Center)
-                        {
-                            double num6 = (rect.Left - _parentViewport.Location.X) + (rect.Width / 2.0);
-                            if (num6 < 0.0)
-                            {
-                                num6 = 0.0;
-                            }
-                            double num7 = viewportSize.Width - num6;
-                            if (num7 < 0.0)
-                            {
-                                num7 = 0.0;
-                            }
-                            double width = 2.0 * Math.Min(num6, num7);
-                            Size size5 = new Size(width, height);
-                            isWrap = _editingCell.JudgeWordWrap(size5, cellContentSize, alignment, 0f);
-                        }
-                    }
-                }
-            }
-        Label_02B5:
-            if (Editor != null)
-            {
-                if (_editor1 != null)
-                {
-                    UpdateEditingElement(_editor1, isWrap);
-                }
-                if (_editor2 != null)
-                {
-                    UpdateEditingElement(_editor2, isWrap);
-                }
-            }
-        }
-
-        void UpateScrollViewSize(TextBox tb)
-        {
-            string text = tb.Text;
-            tb.Text = "Text";
-            tb.Text = text;
-        }
-
-        public void Update(CellItem cell)
-        {
-            int row = cell.Row;
-            int column = cell.Column;
-            if (cell.CellLayout != null)
-            {
-                row = cell.CellLayout.Row;
-                column = cell.CellLayout.Column;
-            }
-            _editingCell = cell;
-            EditorDirty = false;
-            EditingColumnIndex = column;
-            EditingRowIndex = row;
-            if (cell.BindingCell.ActualBackground != null)
-            {
-                Background = cell.BindingCell.ActualBackground;
-            }
-            else
-            {
-                Background = new SolidColorBrush(Colors.Transparent);
-            }
-        }
-
-        void UpdateEditingElement(FrameworkElement editElement, bool isWrap)
-        {
-            EditingElement element = editElement as EditingElement;
-            if (element != null)
-            {
-                element.TextWrapping = isWrap ? TextWrapping.Wrap : TextWrapping.NoWrap;
-            }
+            InvalidateMeasure();
+            InvalidateArrange();
         }
 
         public int EditingColumnIndex { get; private set; }
 
         public int EditingRowIndex { get; private set; }
 
-        public FrameworkElement Editor { get; private set; }
+        public TextBox Editor { get; }
 
         public bool EditorDirty { get; set; }
 
-        internal EditorStatus EditorStatus
+        public EditorStatus EditorStatus { get; set; }
+
+        protected override Size MeasureOverride(Size availableSize)
         {
-            get
-            {
-                if ((Editor != null) && (Editor is EditingElement))
-                {
-                    return (Editor as EditingElement).Status;
-                }
-                return EditorStatus.Ready;
-            }
+            //if (_editingCell == null || _editingCell.BindingCell == null)
+            //    Editor.Measure(_szEmpty);
+            //else
+            Editor.Measure(availableSize);
+            return _ownPanel.GetViewportSize(availableSize);
         }
 
-        public bool IsEditorVisible { get; set; }
-    }
+        protected override Size ArrangeOverride(Size finalSize)
+        {
+            if (_editingCell == null || _editingCell.BindingCell == null)
+            {
+                Editor.Arrange(_rcEmpty);
+                return finalSize;
+            }
 
+            Rect rect = CalcEditorBounds(finalSize);
+            double left = rect.Left;
+            if (_editingCell.BindingCell.ActualTextIndent > 0)
+            {
+                float indent = _editingCell.BindingCell.ActualTextIndent * _ownPanel.Excel.ZoomFactor;
+                var alignment = _editingCell.BindingCell.ToHorizontalAlignment();
+                switch (alignment)
+                {
+                    case HorizontalAlignment.Left:
+                        left += indent;
+                        break;
+
+                    case HorizontalAlignment.Right:
+                        left -= indent;
+                        break;
+                }
+            }
+            Editor.Arrange(new Rect(left, rect.Top, rect.Width, rect.Height));
+            Clip = new RectangleGeometry { Rect = rect };
+            return finalSize;
+        }
+
+        void ResetEditorCell(CellItem p_cell, EditorStatus p_status)
+        {
+            _editingCell = p_cell;
+            EditorDirty = false;
+            int row = p_cell.Row;
+            int column = p_cell.Column;
+            if (p_cell.CellLayout != null)
+            {
+                row = p_cell.CellLayout.Row;
+                column = p_cell.CellLayout.Column;
+            }
+            EditingColumnIndex = column;
+            EditingRowIndex = row;
+            EditorStatus = p_status;
+        }
+
+        bool ApplyEditorText(StyleInfo p_info)
+        {
+            var cell = _editingCell.BindingCell;
+            string formula = string.Empty;
+            using (((IUIActionExecuter)cell.Worksheet).BeginUIAction())
+            {
+                int index = cell.Row.Index;
+                int column = cell.Column.Index;
+                formula = cell.Formula;
+                if (formula == null)
+                {
+                    object[,] objArray = cell.Worksheet.FindFormulas(index, column, 1, 1);
+                    if (objArray.GetLength(0) > 0)
+                    {
+                        string str3 = objArray[0, 1].ToString();
+                        int length = str3.Length;
+                        if (((length > 2) && str3.StartsWith("{")) && str3.EndsWith("}"))
+                        {
+                            formula = str3.Substring(1, length - 2);
+                        }
+                    }
+                }
+            }
+
+            // 存在公式
+            if (!string.IsNullOrEmpty(formula))
+            {
+                Editor.Text = "=" + formula;
+                return true;
+            }
+
+            if (cell.Value == null)
+            {
+                Editor.Text = string.Empty;
+                return false;
+            }
+
+            string text;
+            // 存在格式化
+            var preferredEditingFormatter = new GeneralFormatter().GetPreferredEditingFormatter(cell.Value);
+            if ((preferredEditingFormatter != null) && (p_info.Formatter is AutoFormatter))
+            {
+                try
+                {
+                    text = preferredEditingFormatter.Format(cell.Value);
+                }
+                catch
+                {
+                    text = cell.Text;
+                }
+            }
+            else
+            {
+                text = cell.Text;
+            }
+
+            var formatter2 = p_info.Formatter;
+            if (formatter2 is GeneralFormatter formatter3)
+            {
+                switch (formatter3.GetFormatType(cell.Value))
+                {
+                    case NumberFormatType.Number:
+                    case NumberFormatType.Text:
+                        formatter2 = new GeneralFormatter();
+                        break;
+                }
+            }
+            if ((formatter2 != null) && !(formatter2 is AutoFormatter))
+            {
+                text = formatter2.Format(cell.Value);
+            }
+            if (text != null && text.StartsWith("=") && _ownPanel.Excel.CanUserEditFormula)
+            {
+                text = "'" + text;
+            }
+            Editor.Text = text;
+            return false;
+        }
+
+        void ApplyEditorStyle(StyleInfo p_info, bool p_isFormula)
+        {
+            var cell = _editingCell.BindingCell;
+            if (p_info.FontSize > 0.0)
+            {
+                Editor.FontSize = p_info.FontSize * _ownPanel.Excel.ZoomFactor;
+            }
+            else
+            {
+                Editor.ClearValue(TextBlock.FontSizeProperty);
+            }
+
+            Editor.FontStyle = p_info.FontStyle;
+            Editor.FontWeight = p_info.FontWeight;
+            Editor.FontStretch = p_info.FontStretch;
+
+            if (p_info.IsFontFamilySet() && (p_info.FontFamily != null))
+            {
+                Editor.FontFamily = p_info.FontFamily;
+            }
+            else if (p_info.IsFontThemeSet())
+            {
+                string fontTheme = p_info.FontTheme;
+                IThemeSupport worksheet = cell.Worksheet;
+                if (worksheet != null)
+                {
+                    Editor.FontFamily = worksheet.GetThemeFont(fontTheme);
+                }
+            }
+            else
+            {
+                Editor.ClearValue(Control.FontFamilyProperty);
+            }
+
+            Brush foreground = null;
+            if (p_info.IsForegroundSet())
+            {
+                foreground = p_info.Foreground;
+            }
+            else if (p_info.IsForegroundThemeColorSet())
+            {
+                string fname = p_info.ForegroundThemeColor;
+                if ((!string.IsNullOrEmpty(fname) && (cell.Worksheet != null)) && (cell.Worksheet.Workbook != null))
+                {
+                    foreground = new SolidColorBrush(cell.Worksheet.Workbook.GetThemeColor(fname));
+                }
+            }
+            if (foreground != null)
+            {
+                Editor.Foreground = foreground;
+            }
+            else
+            {
+                Editor.Foreground = BrushRes.BlackBrush;
+            }
+
+            Editor.VerticalContentAlignment = p_info.VerticalAlignment.ToVerticalAlignment();
+            if (p_isFormula)
+            {
+                Editor.TextAlignment = Windows.UI.Xaml.TextAlignment.Left;
+            }
+            else if (!cell.ActualWordWrap)
+            {
+                switch (cell.ToHorizontalAlignment())
+                {
+                    case HorizontalAlignment.Left:
+                    case HorizontalAlignment.Stretch:
+                        Editor.TextAlignment = Windows.UI.Xaml.TextAlignment.Left;
+                        break;
+
+                    case HorizontalAlignment.Center:
+                        Editor.TextAlignment = Windows.UI.Xaml.TextAlignment.Center;
+                        break;
+
+                    case HorizontalAlignment.Right:
+                        Editor.TextAlignment = Windows.UI.Xaml.TextAlignment.Right;
+                        break;
+                }
+            }
+            else
+            {
+                Editor.TextAlignment = Windows.UI.Xaml.TextAlignment.Left;
+            }
+
+            Editor.SelectionStart = Editor.Text.Length;
+            Editor.SelectAll();
+        }
+
+        Rect CalcEditorBounds(Size viewportSize)
+        {
+            Rect bounds = _ownPanel.GetCellBounds(EditingRowIndex, EditingColumnIndex, false);
+            bounds.Width--;
+            bounds.Height--;
+            Rect rcPanel = new Rect(_ownPanel.Location, viewportSize);
+            bounds.Intersect(rcPanel);
+            if (bounds.IsEmpty || bounds.Width == 0.0 || bounds.Height == 0.0)
+                return new Rect();
+
+            Size cellContentSize = new Size(bounds.Width, bounds.Height);
+            double x = bounds.X;
+            double height = viewportSize.Height - (bounds.Top - _ownPanel.Location.Y);
+
+            Cell cachedCell = _ownPanel.CellCache.GetCachedCell(EditingRowIndex, EditingColumnIndex);
+            HorizontalAlignment alignment = cachedCell.ToHorizontalAlignment();
+            switch (alignment)
+            {
+                case HorizontalAlignment.Left:
+                    {
+                        float indent = cachedCell.ActualTextIndent * _ownPanel.Excel.ZoomFactor;
+                        double num4 = (viewportSize.Width - bounds.Left) + _ownPanel.Location.X;
+                        num4 = Math.Max(Math.Min(num4, viewportSize.Width), 0.0);
+                        Size maxSize = new Size(num4, height);
+                        return new Rect(_ownPanel.PointToClient(new Point(x, bounds.Y)), GetPreferredEditorSize(maxSize, cellContentSize, alignment, indent));
+                    }
+                case HorizontalAlignment.Right:
+                    {
+                        float num5 = cachedCell.ActualTextIndent * _ownPanel.Excel.ZoomFactor;
+                        double num6 = bounds.Right - _ownPanel.Location.X;
+                        num6 = Math.Max(Math.Min(num6, viewportSize.Width), 0.0);
+                        Size size4 = new Size(num6, height);
+                        Size size = GetPreferredEditorSize(size4, cellContentSize, alignment, num5);
+                        Point point = new Point(bounds.Right - size.Width, bounds.Top);
+                        return new Rect(_ownPanel.PointToClient(point), size);
+                    }
+                case HorizontalAlignment.Center:
+                    {
+                        double num7 = (bounds.Left - _ownPanel.Location.X) + (bounds.Width / 2.0);
+                        if (num7 < 0.0)
+                        {
+                            num7 = 0.0;
+                        }
+                        double num8 = viewportSize.Width - num7;
+                        if (num8 < 0.0)
+                        {
+                            num8 = 0.0;
+                        }
+                        double width = 2.0 * Math.Min(num7, num8);
+                        Size size6 = new Size(width, height);
+                        Size size7 = GetPreferredEditorSize(size6, cellContentSize, alignment, 0f);
+                        if (size7.Width > bounds.Width)
+                        {
+                            x -= (size7.Width - bounds.Width) / 2.0;
+                        }
+                        return new Rect(_ownPanel.PointToClient(new Point(x, bounds.Y)), size7);
+                    }
+            }
+            Point location = _ownPanel.PointToClient(new Point(bounds.X, bounds.Y));
+            return new Rect(location, new Size(bounds.Width, bounds.Height));
+        }
+
+        Size GetPreferredEditorSize(Size maxSize, Size cellContentSize, HorizontalAlignment alignment, float indent)
+        {
+            if (!_ownPanel.Excel.CanEditOverflow || string.IsNullOrEmpty(Editor.Text))
+                return cellContentSize;
+
+            // 支持文本溢出单元格
+            Size realSize = MeasureHelper.MeasureText(
+                    Editor.Text,
+                    Editor.FontFamily,
+                    Editor.FontSize,
+                    Editor.FontStretch,
+                    Editor.FontStyle,
+                    Editor.FontWeight,
+                    maxSize,
+                    true,
+                    null,
+                    _ownPanel.Excel.UseLayoutRounding,
+                    _ownPanel.Excel.ZoomFactor);
+            Size size = MeasureHelper.ConvertTextSizeToExcelCellSize(realSize, _ownPanel.Excel.ZoomFactor);
+            // 多出字符'T'的宽度，不再测量
+            size.Width += Editor.FontSize;
+            //string text = "T";
+            //Size size2 = CalcStringSize(new Size(2147483647.0, 2147483647.0), false, text);
+            //size.Width += size2.Width;
+
+            double width = Math.Min(maxSize.Width, cellContentSize.Width);
+            if (((alignment == HorizontalAlignment.Left) || (alignment == HorizontalAlignment.Right)) && (width < (size.Width + indent)))
+            {
+                size.Width += indent;
+            }
+            return new Size(Math.Max(width, size.Width), Math.Max(cellContentSize.Height, size.Height));
+        }
+
+        void EditorTextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (_ownPanel.IsEditing())
+            {
+                EditorDirty = true;
+                EditingChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+    }
 }
 

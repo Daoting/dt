@@ -2176,23 +2176,9 @@ namespace Dt.Base
             }
             if ((row == _currentActiveRowIndex) && (column == _currentActiveColumnIndex))
             {
-                object formula = ActiveSheet.GetValue(row, column);
-                if (formula == null)
-                {
-                    formula = ActiveSheet.GetFormula(row, column);
-                }
-                EditorStatus enter = EditorStatus.Enter;
-                if ((formula != null) && (formula.ToString() != ""))
-                {
-                    enter = EditorStatus.Edit;
-                }
-                StartCellEditing(false, null, enter);
+                // Enter状态表示因键盘输入触发，Edit状态表示双击触发
+                StartCellEditing(false, null, EditorStatus.Edit);
             }
-        }
-
-        void DoubleTapStartCellEediting(int row, int column)
-        {
-            DoubleClickStartCellEditing(row, column);
         }
 
         void DragFillSmartTag_AutoFilterTypeChanged(object sender, EventArgs e)
@@ -2424,7 +2410,7 @@ namespace Dt.Base
 
         internal void FocusInternal()
         {
-#if UWP || WASM
+#if UWP
             // 手机上不设置输入焦点
             if (_cellsPanels != null)
             {

@@ -267,10 +267,6 @@ namespace Dt.Cells.UI
                 if (cellOverflowLayoutModel.HeadingOverflowlayout != null)
                 {
                     HeadingOverflowCell.CellOverflowLayout = cellOverflowLayoutModel.HeadingOverflowlayout;
-                    if ((OwnPanel != null) && OwnPanel.IsCurrentEditingCell(HeadingOverflowCell.BindingCell.Row.Index, HeadingOverflowCell.BindingCell.Column.Index))
-                    {
-                        HeadingOverflowCell.HideForEditing();
-                    }
                     double num8 = worksheet.GetActualColumnWidth(cellOverflowLayoutModel.HeadingOverflowlayout.Column, SheetArea.Cells) * zoomFactor;
                     Size size = new Size(num8, layout.Height);
                     HeadingOverflowCell.Measure(size);
