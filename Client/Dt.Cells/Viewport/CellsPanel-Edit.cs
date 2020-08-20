@@ -7,10 +7,8 @@
 #endregion
 
 #region 引用命名
-using Dt.Cells.Data;
 using System;
 using Windows.Foundation;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 #endregion
 

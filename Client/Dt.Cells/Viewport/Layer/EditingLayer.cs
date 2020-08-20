@@ -12,7 +12,6 @@ using System;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 #endregion
 
@@ -21,7 +20,6 @@ namespace Dt.Cells.UI
     internal partial class EditingLayer : Panel
     {
         static Rect _rcEmpty = new Rect();
-        static Size _szEmpty = new Size();
         CellsPanel _ownPanel;
         CellItem _editingCell;
 
@@ -112,9 +110,6 @@ namespace Dt.Cells.UI
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            //if (_editingCell == null || _editingCell.BindingCell == null)
-            //    Editor.Measure(_szEmpty);
-            //else
             Editor.Measure(availableSize);
             return _ownPanel.GetViewportSize(availableSize);
         }
