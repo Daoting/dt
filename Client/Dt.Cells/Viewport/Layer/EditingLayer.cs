@@ -330,6 +330,10 @@ namespace Dt.Cells.UI
         Rect CalcEditorBounds(Size viewportSize)
         {
             Rect bounds = _ownPanel.GetCellBounds(EditingRowIndex, EditingColumnIndex, false);
+            // 不在可视区
+            if (bounds.Width <= 1 || bounds.Height <= 1)
+                return new Rect();
+
             bounds.Width--;
             bounds.Height--;
             Rect rcPanel = new Rect(_ownPanel.Location, viewportSize);

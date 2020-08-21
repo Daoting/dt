@@ -56,20 +56,34 @@ namespace Dt.Sample
             var sheet = _excel.ActiveSheet;
             sheet.SelectionPolicy = SelectionPolicy.Single;
             sheet.SelectionUnit = SelectionUnit.Row;
-            sheet.DataSource = getDataSource();
-            sheet.AddSelection(0, 0, 1, 1);
-            sheet.Columns[0].Locked = false;
-            sheet.Columns[1].Locked = false;
-            sheet.Columns[2].Locked = false;
-            sheet.Columns[3].Locked = false;
-            sheet.Columns[4].Locked = false;
-            sheet.Columns[0].Width = 100;
-            sheet.Columns[1].Width = 100;
-            sheet.Columns[2].Width = 200;
-            sheet.Columns[3].Width = 100;
-            sheet.Columns[4].Width = 300;
             sheet.RowFilter = new HideRowFilter(new CellRange(-1, -1, -1, -1));
             sheet.Protect = true;
+
+            //sheet.DataSource = GetDataSource();
+            //sheet.AddSelection(0, 0, 1, 1);
+            //sheet.Columns[0].Locked = false;
+            //sheet.Columns[1].Locked = false;
+            //sheet.Columns[2].Locked = false;
+            //sheet.Columns[3].Locked = false;
+            //sheet.Columns[4].Locked = false;
+            //sheet.Columns[0].Width = 100;
+            //sheet.Columns[1].Width = 100;
+            //sheet.Columns[2].Width = 200;
+            //sheet.Columns[3].Width = 100;
+            //sheet.Columns[4].Width = 300;
+
+            sheet.DataSource = SampleData.CreatePersonsList(5000);
+            sheet.Columns[0].Width = 150;
+            sheet.Columns[1].Width = 100;
+            sheet.Columns[2].Width = 60;
+            sheet.Columns[3].Width = 100;
+            sheet.Columns[4].Width = 200;
+            sheet.Columns[5].Width = 60;
+            sheet.Columns[6].Width = 60;
+            sheet.Columns[7].Width = 80;
+            sheet.Columns[8].Width = 80;
+            sheet.Columns[9].Width = 150;
+            sheet.Columns[10].Width = 100;
         }
 
         void gcSpreadSheet1_ValueChanged(object sender, CellEventArgs e)
@@ -80,7 +94,7 @@ namespace Dt.Sample
             _btnUpdate.IsEnabled = true;
         }
 
-        Employee[] getDataSource()
+        Employee[] GetDataSource()
         {
             return new Employee[] {
                 new Employee(){ LastName="Freehafer",   FirstName="Nancy",  Title="Sales Representative", Phone="(123)555-0100", Email="nancy@northwindtraders.com"},

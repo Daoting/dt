@@ -29,7 +29,7 @@ namespace Dt.Cells.UI
     internal partial class CellItem : Panel
     {
         static Rect _rcEmpty = new Rect();
-        TextBlock _tb;
+        readonly TextBlock _tb;
         CellOverflowLayout _overflowLayout;
         Rect? _cachedClip;
 
@@ -49,6 +49,8 @@ namespace Dt.Cells.UI
         public CellItem(RowItem p_rowItem)
         {
             OwnRow = p_rowItem;
+            _tb = new TextBlock { VerticalAlignment = VerticalAlignment.Center, TextTrimming = TextTrimming.CharacterEllipsis };
+            Children.Add(_tb);
         }
 
         public RowItem OwnRow { get; }
@@ -206,18 +208,12 @@ namespace Dt.Cells.UI
 
             if (sparkline == null && noBarIcon && noCust && !string.IsNullOrEmpty(BindingCell.Text))
             {
-                if (_tb == null)
-                {
-                    _tb = new TextBlock { VerticalAlignment = VerticalAlignment.Center };
-                    Children.Add(_tb);
-                }
                 _tb.Text = BindingCell.Text;
                 ApplyStyle();
             }
-            else if (_tb != null)
+            else
             {
-                Children.Remove(_tb);
-                _tb = null;
+                _tb.Text = "";
             }
             SynStrikethroughView();
 
