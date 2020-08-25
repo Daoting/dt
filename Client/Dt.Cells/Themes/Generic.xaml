@@ -1,122 +1,94 @@
 ﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Dt.Cells.UI">
+    xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:wasm="http://uno.ui/wasm"
+    xmlns:not_wasm="http://uno.ui/not_wasm"
+    xmlns:local="using:Dt.Cells.UI"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="wasm not_wasm">
 
-    <ResourceDictionary.ThemeDictionaries>
-        <!--Light主题被删除 hdt-->
-        <ResourceDictionary x:Key="Default">
-            <SolidColorBrush x:Key="ProgressForegroundThemeBrush" Color="#80FFFFFF"></SolidColorBrush>
-            <!--###################### Brushed Resources ####################-->
+    <!--原来放在主题样式中-->
+    <!--###################### Brushed Resources ####################-->
 
-            <!--for spread control color settings-->
-            <SolidColorBrush x:Key="ControlBorderBrush" Color="#FFE0E0E0"/>
-            <SolidColorBrush x:Key="ControlForegroundBrush" Color="#000000"/>
-            <SolidColorBrush x:Key="ControlBackgroundBrush" Color="#FFF6F6F6"/>
+    <!--for spread control color settings-->
+    <SolidColorBrush x:Key="ControlBorderBrush" Color="#FFE0E0E0"/>
+    <SolidColorBrush x:Key="ControlForegroundBrush" Color="#000000"/>
+    <SolidColorBrush x:Key="ControlBackgroundBrush" Color="#FFF6F6F6"/>
 
-            <!--for SplitBox color settings-->
-            <SolidColorBrush x:Key="HSplitBoxBackgroundBrush" Color="#FFBEBEBE"/>
-            <SolidColorBrush x:Key="VSplitBoxBackgroundBrush" Color="#FFBEBEBE"/>
+    <SolidColorBrush x:Key="灰色背景" Color="#FFD6D6D6"/>
+    <SolidColorBrush x:Key="灰色边框" Color="#FFC3C3C3"/>
 
-            <!--for SplitBar color settings-->
-            <SolidColorBrush x:Key="HSplitBarBrush1" Color="White"/>
-            <SolidColorBrush x:Key="HSplitBarBrush2" Color="#FFD5D5D5"/>
-            <SolidColorBrush x:Key="HSplitBarBrush3" Color="#FF989898"/>
+    <SolidColorBrush x:Key="浅灰背景" Color="#FFF1F1F1"/>
+    <SolidColorBrush x:Key="浅灰边框" Color="#FFE0E0E0"/>
 
-            <SolidColorBrush x:Key="VSplitBarBrush1" Color="White"/>
-            <SolidColorBrush x:Key="VSplitBarBrush2" Color="#FFD5D5D5"/>
-            <SolidColorBrush x:Key="VSplitBarBrush3" Color="#FF989898"/>
+    <!--for ColumnDropdownList color settings-->
+    <SolidColorBrush x:Key="ColumnDropDownListBackgroundBrush" Color="White"/>
+    <SolidColorBrush x:Key="ColumnDropDownListBorderBrush" Color="#FFC6C6C6"/>
 
-            <SolidColorBrush x:Key="CrossSplitBarBrush" Color="#FFF1F1F1"/>
+    <!--for RangeGroupHeader color settings-->
 
-            <!--for ColumnDropdownList color settings-->
-            <SolidColorBrush x:Key="ColumnDropDownListBackgroundBrush" Color="White"/>
-            <SolidColorBrush x:Key="ColumnDropDownListBorderBrush" Color="#FFC6C6C6"/>
+    <SolidColorBrush x:Key="RangeGroupHeaderBackgroundBrush" Color="#FFF1F1F1"/>
+    <SolidColorBrush x:Key="RangeGroupHeaderBorderBrush" Color="#FF808080"/>
+    <SolidColorBrush x:Key="RangeGroupHeaderPressedBackgroundBrush" Color="#FF50C6FF"/>
+    <SolidColorBrush x:Key="RangeGroupHeaderMouseOverBackgroundBrush" Color="#FF94DCFF"/>
+    <SolidColorBrush x:Key="RangeGroupHeaderForeGroundBrush" Color="#FF474747"/>
 
-            <!--###################### Internal Parts ####################-->
-            <SolidColorBrush x:Key="TabStripBackgroundBrush" Color="#FFF6F6F6"/>
-            <SolidColorBrush x:Key="TabStripBorderBrush" Color="#FF0A0AE6"/>
-            <SolidColorBrush x:Key="TabStripNavigatorBorderBrush" Color="#FFBEBEBE"/>
-            <SolidColorBrush x:Key="TabStripNavigatorButtonBackgroundBrush" Color="#FFF6F6F6"/>
-            <SolidColorBrush x:Key="TabStripNavigatorButtonForegroundBrush" Color="#FF666363"/>
-            <SolidColorBrush x:Key="SheetTabForegroundBrush" Color="#FF464747"/>
-            <SolidColorBrush x:Key="SheetTabBorder" Color="#FFBEBEBE"/>
-            <SolidColorBrush x:Key="SheetTabBackgroundBrush" Color="#FFF1F1F1"/>
+    <!--for RangeGroupButton color settings-->
+    <SolidColorBrush x:Key="RangeGroupButtonForegroundBrush" Color="#FF474747"/>
+    <SolidColorBrush x:Key="RangeGroupButtonBackgroundBrush" Color="#FFF1F1F1"/>
+    <SolidColorBrush x:Key="RangeGroupButtonBorderBrush" Color="#FF808080"/>
+    <SolidColorBrush x:Key="RangeGroupButtonPressedBackgroundBrush" Color="#FF50C6FF"/>
+    <SolidColorBrush x:Key="RangeGroupButtonMouseOverBackgroundBrush" Color="#FF94DCFF"/>
 
-            <!--################## SheetTab ############-->
-            <SolidColorBrush x:Key = "RepeatButtonHoverFill" Color = "#FFE8E8E8"/>
-            <SolidColorBrush x:Key = "RepeatButtonHoverStroke" Color = "#FFD1D1D1"/>
-            <SolidColorBrush x:Key = "RepeatButtonPressedFill" Color = "#FFD1D1D1"/>
-            <SolidColorBrush x:Key = "RepeatButtonPressedStroke" Color = "#FFD6D6D6"/>
-            <SolidColorBrush x:Key = "RepeatButtonDisabledFill" Color = "#FFFFFFFF"/>
+    <!--###################### FilterButton ####################-->
+    <SolidColorBrush x:Key="filterButtonBackgroundBrush" Color="#FFEFF2F7"/>
+    <SolidColorBrush x:Key="filterButtonBorderBrush" Color="#FFA2A2A2" />
 
-            <SolidColorBrush x:Key = "SheetTabDisabledVEFill" Color = "#FFFFFFFF"/>
-            <Color x:Key = "SheetTabActiveColor1" >#B8B6B6</Color>
-            <Color x:Key = "SheetTabActiveColor2" >#B8B6B6</Color>
-            <Color x:Key = "SheetTabActiveColor3" >#AAA9A9</Color>
-            <Color x:Key = "SheetTabActiveColor4" >#FFFFFF</Color>
+    <!--###################### DataValidationList ####################-->
+    <SolidColorBrush x:Key="dataValidationListButtonBrush" Color="White" />
+    <SolidColorBrush x:Key="DataValidationPopBackground" Color="#FFFFFFE1" />
+    <SolidColorBrush x:Key="DataValidationInvalidDataBrush" Color="#FFFF0000"/>
+    <SolidColorBrush x:Key="DataValidationPopBorderBrush" Color="#FFC6C6C6"/>
+    <SolidColorBrush x:Key="DataValidationInnerBorderBrush" Color="#FFFFFFFF" />
 
-            <SolidColorBrush x:Key="TabStripPointBrush" Color="#FFB3B3B3" />
-            <!--for RangeGroupHeader color settings-->
+    <SolidColorBrush x:Key="ListBoxItemBackground" Color="Transparent" />
+    <SolidColorBrush x:Key="ListBoxItemNormalBackground" Color="#FFBADDE9" />
+    <SolidColorBrush x:Key="ListBoxItemFocusBackground" Color="#5B1BA1E2" />
+    <SolidColorBrush x:Key="DataValidationBackground" Color="#FFFFFFFF" />
+    <SolidColorBrush x:Key="DataValidationForeground" Color="#FF000000" />
+    <SolidColorBrush x:Key="DataValidationBorderBrush" Color="#FFC6C6C6" />
 
-            <SolidColorBrush x:Key="RangeGroupHeaderBackgroundBrush" Color="#FFF1F1F1"/>
-            <SolidColorBrush x:Key="RangeGroupHeaderBorderBrush" Color="#FF808080"/>
-            <SolidColorBrush x:Key="RangeGroupHeaderPressedBackgroundBrush" Color="#FF50C6FF"/>
-            <SolidColorBrush x:Key="RangeGroupHeaderMouseOverBackgroundBrush" Color="#FF94DCFF"/>
-            <SolidColorBrush x:Key="RangeGroupHeaderForeGroundBrush" Color="#FF474747"/>
+    <!--###################### ToolTip ####################-->
+    <SolidColorBrush x:Key="toolTipBorderBrush" Color="#FFBEBEBE" />
+    <SolidColorBrush x:Key="toolTipBackgroundBrush" Color="White" />
 
-            <!--for RangeGroupButton color settings-->
-            <SolidColorBrush x:Key="RangeGroupButtonForegroundBrush" Color="#FF474747"/>
-            <SolidColorBrush x:Key="RangeGroupButtonBackgroundBrush" Color="#FFF1F1F1"/>
-            <SolidColorBrush x:Key="RangeGroupButtonBorderBrush" Color="#FF808080"/>
-            <SolidColorBrush x:Key="RangeGroupButtonPressedBackgroundBrush" Color="#FF50C6FF"/>
-            <SolidColorBrush x:Key="RangeGroupButtonMouseOverBackgroundBrush" Color="#FF94DCFF"/>
+    <Color x:Key="DragFillCheckedFillColor"  >#5B1BA1E2</Color>
+    <Color x:Key="DragFillCheckedStrokeColor"  >#FF1BA1E2</Color>
 
-            <!--###################### FilterButton ####################-->
-            <SolidColorBrush x:Key="filterButtonBackgroundBrush" Color="#FFEFF2F7"/>
-            <SolidColorBrush x:Key="filterButtonBorderBrush" Color="#FFA2A2A2" />
+    <Color x:Key="DragFillMouseOverFillColor">#7F1BA1E2</Color>
+    <Color x:Key="DragFillMouseOverStrokeColor"  >#FF1BA1E2</Color>
 
-            <!--###################### DataValidationList ####################-->
-            <SolidColorBrush x:Key="dataValidationListButtonBrush" Color="White" />
-            <SolidColorBrush x:Key="DataValidationPopBackground" Color="#FFFFFFE1" />
-            <SolidColorBrush x:Key="DataValidationInvalidDataBrush" Color="#FFFF0000"/>
-            <SolidColorBrush x:Key="DataValidationPopBorderBrush" Color="#FFC6C6C6"/>
-            <SolidColorBrush x:Key="DataValidationInnerBorderBrush" Color="#FFFFFFFF" />
+    <SolidColorBrush x:Key="ContextMenuItemMouseOverFillColor" Color="#3F1BA1E2" />
+    <SolidColorBrush x:Key="ContextMenuItemMouseOverStrokeColor" Color="#3F1BA1E2" />
 
-            <SolidColorBrush x:Key="ListBoxItemBackground" Color="Transparent" />
-            <SolidColorBrush x:Key="ListBoxItemNormalBackground" Color="#FFBADDE9" />
-            <SolidColorBrush x:Key="ListBoxItemFocusBackground" Color="#5B1BA1E2" />
-            <SolidColorBrush x:Key="DataValidationBackground" Color="#FFFFFFFF" />
-            <SolidColorBrush x:Key="DataValidationForeground" Color="#FF000000" />
-            <SolidColorBrush x:Key="DataValidationBorderBrush" Color="#FFC6C6C6" />
+    <SolidColorBrush x:Key="ContextMenuItemCheckFillColor" Color="#5B1BA1E2" />
+    <SolidColorBrush x:Key="ContextMenuItemCheckStrokeColor" Color="#5B1BA1E2" />
 
-            <!--###################### ToolTip ####################-->
-            <SolidColorBrush x:Key="toolTipBorderBrush" Color="#FFBEBEBE" />
-            <SolidColorBrush x:Key="toolTipBackgroundBrush" Color="White" />
+    <SolidColorBrush x:Key="AutofilterListBoxBackground" Color="#FFFFFFFF" />
+    <SolidColorBrush x:Key="AutofilterListBoxForground" Color="#FF000000" />
+    <SolidColorBrush x:Key="AutoFilterCheckBoxBackground" Color="#FF448DCA" />
 
-            <Color x:Key="DragFillCheckedFillColor"  >#5B1BA1E2</Color>
-            <Color x:Key="DragFillCheckedStrokeColor"  >#FF1BA1E2</Color>
+    <SolidColorBrush x:Key="SeparatorDropDownItemBackground" Color="#FFC6C6C6" />
 
-            <Color x:Key="DragFillMouseOverFillColor">#7F1BA1E2</Color>
-            <Color x:Key="DragFillMouseOverStrokeColor"  >#FF1BA1E2</Color>
-
-            <SolidColorBrush x:Key="ContextMenuItemMouseOverFillColor" Color="#3F1BA1E2" />
-            <SolidColorBrush x:Key="ContextMenuItemMouseOverStrokeColor" Color="#3F1BA1E2" />
-
-            <SolidColorBrush x:Key="ContextMenuItemCheckFillColor" Color="#5B1BA1E2" />
-            <SolidColorBrush x:Key="ContextMenuItemCheckStrokeColor" Color="#5B1BA1E2" />
-
-            <SolidColorBrush x:Key="AutofilterListBoxBackground" Color="#FFFFFFFF" />
-            <SolidColorBrush x:Key="AutofilterListBoxForground" Color="#FF000000" />
-            <SolidColorBrush x:Key="AutoFilterCheckBoxBackground" Color="#FF448DCA" />
-
-            <SolidColorBrush x:Key="SeparatorDropDownItemBackground" Color="#FFC6C6C6" />
-
-            <SolidColorBrush x:Key="ListBoxItemNormalBackColor" Color="#FF1BA1E2" />
-            <SolidColorBrush x:Key="ListBoxItemFocusBackColor" Color="#FF6DBDD1" />
-        </ResourceDictionary>
-    </ResourceDictionary.ThemeDictionaries>
-
+    <SolidColorBrush x:Key="ListBoxItemNormalBackColor" Color="#FF1BA1E2" />
+    <SolidColorBrush x:Key="ListBoxItemFocusBackColor" Color="#FF6DBDD1" />
+    
+    <!--自定义图标字体库-->
+    <win:FontFamily x:Key="IconFont">ms-appx:///Assets/Fonts/icon.ttf#DtIcon</win:FontFamily>
+    <not_wasm:FontFamily x:Key="IconFont">ms-appx:///Assets/Fonts/icon.ttf#DtIcon</not_wasm:FontFamily>
+    <wasm:FontFamily x:Key="IconFont">DtIcon</wasm:FontFamily>
+    
     <!--################## Silverlight Button Style############-->
 
     <!-- Default style for System.Windows.Controls.Button -->
@@ -268,198 +240,23 @@
 
 
     <!--###################### Main Control Style ####################-->
-    <Style TargetType="local:TabStripSplitBox">
-        <Setter Property="IsTabStop" Value="False"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="local:TabStripSplitBox">
-                    <Grid Background="{StaticResource TabStripBackgroundBrush}">
-                        <Grid x:Name="Root"
-                              Margin="1,1,1,1">
-                            <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-                                <Ellipse Fill="{StaticResource TabStripPointBrush}" Height="2" Width="2" Margin="2" />
-                                <Ellipse Fill="{StaticResource TabStripPointBrush}" Height="2" Width="2" Margin="2"/>
-                                <Ellipse Fill="{StaticResource TabStripPointBrush}" Height="2" Width="2" Margin="2"/>
-                            </StackPanel>
-                        </Grid>
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <Style TargetType="local:HorizontalSplitBox">
-        <Setter Property="IsTabStop" Value="False"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="local:HorizontalSplitBox">
-                    <Grid Background="{StaticResource HSplitBoxBackgroundBrush}">
-                        <Grid x:Name="Root"
-                              Margin="1,1,1,1">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1" />
-                                <ColumnDefinition Width="1" />
-                                <ColumnDefinition Width="1" />
-                                <ColumnDefinition Width="1" />
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="1" />
-                                <RowDefinition Height="2" />
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="1" />
-                                <RowDefinition Height="2" />
-                            </Grid.RowDefinitions>
-
-                            <Rectangle Grid.Column="0"
-                                       Grid.RowSpan="5"
-                                       Fill="{StaticResource HSplitBarBrush1}" />
-                            <Rectangle Grid.Row="0"
-                                       Grid.ColumnSpan="4"
-                                       Fill="{StaticResource HSplitBarBrush2}" />
-                            <Rectangle Grid.Row="1"
-                                       Grid.Column="1"
-                                       Grid.ColumnSpan="3"
-                                       Fill="{StaticResource HSplitBarBrush2}" />
-                            <Rectangle Grid.Row="2"
-                                       Grid.Column="1"
-                                       Grid.RowSpan="3"
-                                       Fill="{StaticResource HSplitBarBrush3}" />
-                            <Rectangle Grid.Row="2"
-                                       Grid.Column="2"
-                                       Fill="{StaticResource HSplitBarBrush1}" />
-                            <Rectangle Grid.Row="2"
-                                       Grid.Column="3"
-                                       Fill="{StaticResource HSplitBarBrush2}" />
-                            <Rectangle Grid.Row="3"
-                                       Grid.Column="2"
-                                       Grid.ColumnSpan="2"
-                                       Fill="{StaticResource HSplitBarBrush2}" />
-                            <Rectangle Grid.Row="4"
-                                       Grid.Column="1"
-                                       Grid.ColumnSpan="3"
-                                       Fill="{StaticResource HSplitBarBrush2}" />
-                        </Grid>
-
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <Style TargetType="local:VerticalSplitBox">
-        <Setter Property="IsTabStop" Value="False"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="local:VerticalSplitBox">
-                    <Grid Background="{StaticResource VSplitBoxBackgroundBrush}">
-                        <Grid x:Name="Root" Margin="1,1,1,1">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="1"/>
-                                <ColumnDefinition Width="2"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="1"/>
-                                <ColumnDefinition Width="2"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="1"/>
-                                <RowDefinition Height="1"/>
-                                <RowDefinition Height="1"/>
-                                <RowDefinition Height="1"/>
-                            </Grid.RowDefinitions>
-
-                            <Rectangle Grid.Row="0" Grid.ColumnSpan="5" Fill="{StaticResource VSplitBarBrush1}"/>
-                            <Rectangle Grid.Column="0" Grid.RowSpan="4" Fill="{StaticResource VSplitBarBrush2}"/>
-                            <Rectangle Grid.Column="1" Grid.Row="1" Grid.RowSpan="3" Fill="{StaticResource VSplitBarBrush2}"/>
-                            <Rectangle Grid.Column="2" Grid.Row="1" Grid.ColumnSpan="3" Fill="{StaticResource VSplitBarBrush3}"/>
-                            <Rectangle Grid.Column="2" Grid.Row="2" Fill="{StaticResource VSplitBarBrush1}"/>
-                            <Rectangle Grid.Column="2" Grid.Row="3" Fill="{StaticResource VSplitBarBrush2}"/>
-                            <Rectangle Grid.Column="3" Grid.Row="2" Grid.RowSpan="2" Fill="{StaticResource VSplitBarBrush2}"/>
-                            <Rectangle Grid.Column="4" Grid.Row="1" Grid.RowSpan="3" Fill="{StaticResource VSplitBarBrush2}"/>
-                        </Grid>
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <Style TargetType="local:HorizontalSplitBar">
-        <Setter Property="IsTabStop" Value="False"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="local:HorizontalSplitBar">
-                    <Grid x:Name="Root">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1"/>
-                            <ColumnDefinition Width="4"/>
-                            <ColumnDefinition Width="1"/>
-                        </Grid.ColumnDefinitions>
-                        <Rectangle Grid.Column="0" Fill="{StaticResource HSplitBarBrush1}"/>
-                        <Rectangle Grid.Column="1" Fill="{StaticResource HSplitBarBrush2}"/>
-                        <Rectangle Grid.Column="2" Fill="{StaticResource HSplitBarBrush3}"/>
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <Style TargetType="local:VerticalSplitBar">
-        <Setter Property="IsTabStop" Value="false"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="local:VerticalSplitBar">
-                    <Grid x:Name="Root">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="1"/>
-                            <RowDefinition Height="4"/>
-                            <RowDefinition Height="1"/>
-                        </Grid.RowDefinitions>
-                        <Rectangle Grid.Row="0" Fill="{StaticResource VSplitBarBrush1}"/>
-                        <Rectangle Grid.Row="1" Fill="{StaticResource VSplitBarBrush2}"/>
-                        <Rectangle Grid.Row="2" Fill="{StaticResource VSplitBarBrush3}"/>
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <Style TargetType="local:CrossSplitBar">
-        <Setter Property="IsTabStop" Value="False"/>
-        <Setter Property="Width" Value="6"/>
-        <Setter Property="Height" Value="6"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="local:CrossSplitBar">
-                    <Grid>
-                        <Rectangle Fill="{StaticResource CrossSplitBarBrush}"/>
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
 
     <!--###################### TabStrip ####################-->
 
     <Style TargetType="local:TabStrip">
-        <Setter Property="BorderBrush" Value="{StaticResource TabStripBorderBrush}"/>
-        <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="Background" Value="{StaticResource TabStripBackgroundBrush}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:TabStrip">
-                    <Grid x:Name="Root"
-                          Background="{TemplateBinding Background}"
-                          BorderBrush="{TemplateBinding BorderBrush}"
-                          BorderThickness="{TemplateBinding BorderThickness}"
-                          Padding="20,0,20,0" />
+                    <Grid x:Name="Root">
+                        <Border BorderThickness="0,1,0,0" BorderBrush="{StaticResource 浅灰边框}" Background="White" />
+                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
 
     <Style TargetType="local:SheetTab">
-        <Setter Property="Foreground" Value="{StaticResource SheetTabForegroundBrush}"/>
         <Setter Property="IsTabStop" Value="False"/>
-        <Setter Property="HorizontalContentAlignment" Value="Center"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:SheetTab">
@@ -475,14 +272,13 @@
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
 
-                        <Rectangle x:Name="NormalBorder" Margin="0,0,-1,0" Stroke="{StaticResource SheetTabBorder}" Fill="#FFF1F1F1" StrokeThickness="1" IsHitTestVisible="False"/>
+                        <Rectangle x:Name="NormalBorder" Margin="0,0,-1,0" Stroke="{StaticResource 浅灰边框}" Fill="{StaticResource 浅灰背景}" StrokeThickness="1" IsHitTestVisible="False"/>
                         <Rectangle x:Name="SelectedBorder" Margin="1,0,0,1" Fill="White" Visibility="Collapsed" IsHitTestVisible="False"/>
                         <ContentControl x:Name="PART_ContentPresenter"
                                         Foreground="{TemplateBinding Foreground}"
                                         Content="{TemplateBinding Content}"
                                         Margin="15,0,15,0"
                                         VerticalContentAlignment="Center" />
-                        <Rectangle x:Name="DisabledVisualElement" Fill="{StaticResource SheetTabDisabledVEFill}" IsHitTestVisible="false" Opacity="0"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

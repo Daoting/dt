@@ -146,10 +146,6 @@ namespace Dt.Base
                     TabStripEditable = (bool)((bool)Serializer.DeserializeObj(typeof(bool), reader));
                     return;
 
-                case "TabStripRadio":
-                    TabStripRatio = (double)((double)Serializer.DeserializeObj(typeof(double), reader));
-                    return;
-
                 case "TabStripInsertTab":
                     {
                         bool flag = (bool)((bool)Serializer.DeserializeObj(typeof(bool), reader));
@@ -288,10 +284,6 @@ namespace Dt.Base
             if (!TabStripEditable)
             {
                 Serializer.SerializeObj(TabStripEditable, "TabStripEditable", writer);
-            }
-            if (TabStripRatio != 0.5)
-            {
-                Serializer.SerializeObj(TabStripRatio, "TabStripRadio", writer);
             }
             if (!TabStripInsertTab)
             {

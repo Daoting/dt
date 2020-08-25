@@ -79,11 +79,12 @@ namespace Dt.Base
             _autoFillIndicatorContainer.Width = 16.0;
             _autoFillIndicatorContainer.Height = 16.0;
 
-            _cachedColumnResizerGripperImage = new Image();
+
+            _cachedColumnResizerGripperImage = new Image { Source = GetResizerBitmapImage(false) };
             _resizerGripperContainer.Child = _cachedColumnResizerGripperImage;
-            _cachedRowResizerGripperImage = new Image();
+            _cachedRowResizerGripperImage = new Image { Source = GetResizerBitmapImage(true) };
             _cachedResizerGipper = new Dictionary<string, BitmapImage>();
-            _cachedautoFillIndicatorImage = new Image();
+            _cachedautoFillIndicatorImage = new Image { Source = GetImageSource("AutoFillIndicator.png") };
             _autoFillIndicatorContainer.Child = _cachedautoFillIndicatorImage;
             _cachedToolbarImageSources = new Dictionary<string, ImageSource>();
 
@@ -165,9 +166,7 @@ namespace Dt.Base
                 InvalidateLayout();
             }
             if (!IsWorking)
-            {
                 SaveHitInfo(null);
-            }
 
             SheetLayout layout = GetSheetLayout();
             List<Image> list = new List<Image>();
@@ -187,98 +186,12 @@ namespace Dt.Base
             UpdateCrossSplitBars();
             UpdateFreezeLines();
 
-            // 跟踪层，调整行列宽高时的虚线，拖拽时的标志，冻结线
-            if (!Children.Contains(TrackersContainer))
-            {
-                Children.Add(TrackersContainer);
-            }
-            TrackersContainer.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+            //**************最底部三层为：视口 列头 行头，因可能动态增删，采用Insert到0的方式，后插入的在底层**************/
+            bool reload = (_cellsPanels != null)
+                && (ActiveSheet == null || _cellsPanels.GetUpperBound(0) != layout.RowPaneCount + 1 || _cellsPanels.GetUpperBound(1) != layout.ColumnPaneCount + 1);
 
-            // 分隔栏层，多个GcViewport时的分割线
-            if (!Children.Contains(SplittingTrackerContainer))
-            {
-                Children.Add(SplittingTrackerContainer);
-            }
-            SplittingTrackerContainer.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-
-            // 光标层，各种图标的png图片
-            if (!Children.Contains(CursorsContainer))
-            {
-                Children.Add(CursorsContainer);
-            }
-            CursorsContainer.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-
-            // 多视口
-            CellsPanel[,] viewportArray = null;
-            if ((_cellsPanels != null)
-                && (ActiveSheet == null
-                    || _cellsPanels.GetUpperBound(0) != layout.RowPaneCount + 1
-                    || _cellsPanels.GetUpperBound(1) != layout.ColumnPaneCount + 1))
-            {
-                CellsPanel[,] viewportArray2 = _cellsPanels;
-                int upperBound = viewportArray2.GetUpperBound(0);
-                int num29 = viewportArray2.GetUpperBound(1);
-                for (int n = viewportArray2.GetLowerBound(0); n <= upperBound; n++)
-                {
-                    for (int num31 = viewportArray2.GetLowerBound(1); num31 <= num29; num31++)
-                    {
-                        CellsPanel viewport = viewportArray2[n, num31];
-                        if (viewport != null)
-                        {
-                            viewport.RemoveDataValidationUI();
-                        }
-                        Children.Remove(viewport);
-                    }
-                }
-                viewportArray = _cellsPanels;
-                _cellsPanels = null;
-            }
-            if (_cellsPanels == null)
-            {
-                _cellsPanels = new CellsPanel[layout.RowPaneCount + 2, layout.ColumnPaneCount + 2];
-            }
-            for (int i = -1; i <= layout.ColumnPaneCount; i++)
-            {
-                double viewportWidth = layout.GetViewportWidth(i);
-                viewportX = layout.GetViewportX(i);
-                for (int num5 = -1; num5 <= layout.RowPaneCount; num5++)
-                {
-                    double viewportHeight = layout.GetViewportHeight(num5);
-                    viewportY = layout.GetViewportY(num5);
-                    if (((_cellsPanels[num5 + 1, i + 1] == null) && (viewportWidth > 0.0)) && (viewportHeight > 0.0))
-                    {
-                        if (((viewportArray != null) && ((num5 + 1) < viewportArray.GetUpperBound(0))) && (((i + 1) < viewportArray.GetUpperBound(1)) && (viewportArray[num5 + 1, i + 1] != null)))
-                        {
-                            _cellsPanels[num5 + 1, i + 1] = viewportArray[num5 + 1, i + 1];
-                        }
-                        else
-                        {
-                            _cellsPanels[num5 + 1, i + 1] = new CellsPanel(this);
-                        }
-                    }
-                    CellsPanel viewport2 = _cellsPanels[num5 + 1, i + 1];
-                    if ((viewportWidth > 0.0) && (viewportHeight > 0.0))
-                    {
-                        viewport2.Location = new Point(viewportX, viewportY);
-                        viewport2.ColumnViewportIndex = i;
-                        viewport2.RowViewportIndex = num5;
-                        if (!Children.Contains(viewport2))
-                        {
-                            Children.Add(viewport2);
-                        }
-                        viewport2.InvalidateMeasure();
-                        viewport2.Measure(new Size(viewportWidth, viewportHeight));
-                    }
-                    else if (viewport2 != null)
-                    {
-                        Children.Remove(viewport2);
-                        _cellsPanels[num5 + 1, i + 1] = null;
-                    }
-                }
-            }
-
-            // 行头，一个GcViewport对应一个行头
-            if ((_rowHeaders != null) && ((ActiveSheet == null) || (_rowHeaders.Length != (layout.RowPaneCount + 2))))
+            // 行头
+            if (reload)
             {
                 foreach (var header in _rowHeaders)
                 {
@@ -307,7 +220,7 @@ namespace Dt.Base
                         header.RowViewportIndex = i;
                         if (!Children.Contains(header))
                         {
-                            Children.Add(header);
+                            Children.Insert(0, header);
                         }
                         header.InvalidateMeasure();
                         header.Measure(new Size(layout.HeaderWidth, height));
@@ -328,7 +241,7 @@ namespace Dt.Base
             }
 
             // 列头
-            if ((_colHeaders != null) && ((ActiveSheet == null) || (_colHeaders.Length != (layout.ColumnPaneCount + 2))))
+            if (reload)
             {
                 foreach (var panel in _colHeaders)
                 {
@@ -357,7 +270,7 @@ namespace Dt.Base
                         colPanel.ColumnViewportIndex = i;
                         if (!Children.Contains(colPanel))
                         {
-                            Children.Add(colPanel);
+                            Children.Insert(0, colPanel);
                         }
                         colPanel.InvalidateMeasure();
                         colPanel.Measure(new Size(width, layout.HeaderHeight));
@@ -374,6 +287,72 @@ namespace Dt.Base
                 foreach (var colPanel in _colHeaders)
                 {
                     Children.Remove(colPanel);
+                }
+            }
+
+            // 多视口
+            CellsPanel[,] viewportArray = null;
+            if (reload)
+            {
+                // 视口数目变化时
+                int upperRow = _cellsPanels.GetUpperBound(0);
+                int upperCol = _cellsPanels.GetUpperBound(1);
+                for (int i = _cellsPanels.GetLowerBound(0); i <= upperRow; i++)
+                {
+                    for (int j = _cellsPanels.GetLowerBound(1); j <= upperCol; j++)
+                    {
+                        CellsPanel viewport = _cellsPanels[i, j];
+                        if (viewport != null)
+                            viewport.RemoveDataValidationUI();
+                        Children.Remove(viewport);
+                    }
+                }
+                viewportArray = _cellsPanels;
+                _cellsPanels = null;
+            }
+            if (_cellsPanels == null)
+            {
+                _cellsPanels = new CellsPanel[layout.RowPaneCount + 2, layout.ColumnPaneCount + 2];
+            }
+            for (int i = -1; i <= layout.ColumnPaneCount; i++)
+            {
+                double viewportWidth = layout.GetViewportWidth(i);
+                viewportX = layout.GetViewportX(i);
+                for (int j = -1; j <= layout.RowPaneCount; j++)
+                {
+                    double viewportHeight = layout.GetViewportHeight(j);
+                    viewportY = layout.GetViewportY(j);
+                    if (((_cellsPanels[j + 1, i + 1] == null) && (viewportWidth > 0.0)) && (viewportHeight > 0.0))
+                    {
+                        if (((viewportArray != null) && ((j + 1) < viewportArray.GetUpperBound(0))) && (((i + 1) < viewportArray.GetUpperBound(1)) && (viewportArray[j + 1, i + 1] != null)))
+                        {
+                            _cellsPanels[j + 1, i + 1] = viewportArray[j + 1, i + 1];
+                        }
+                        else
+                        {
+                            _cellsPanels[j + 1, i + 1] = new CellsPanel(this);
+                        }
+                    }
+
+                    CellsPanel cellPanel = _cellsPanels[j + 1, i + 1];
+                    if ((viewportWidth > 0.0) && (viewportHeight > 0.0))
+                    {
+                        cellPanel.Location = new Point(viewportX, viewportY);
+                        cellPanel.ColumnViewportIndex = i;
+                        cellPanel.RowViewportIndex = j;
+                        if (!Children.Contains(cellPanel))
+                        {
+                            // 单元格区域放最低层
+                            Children.Insert(0, cellPanel);
+                        }
+                        cellPanel.InvalidateMeasure();
+                        cellPanel.Measure(new Size(viewportWidth, viewportHeight));
+                    }
+                    else if (cellPanel != null)
+                    {
+                        Children.Remove(cellPanel);
+                        _cellsPanels[j + 1, i + 1] = null;
+                    }
                 }
             }
 
@@ -399,27 +378,32 @@ namespace Dt.Base
             // 水平滚动栏
             if (layout.OrnamentHeight > 0.0)
             {
-                for (int num11 = 0; num11 < layout.ColumnPaneCount; num11++)
+                for (int i = 0; i < layout.ColumnPaneCount; i++)
                 {
-                    ScrollBar bar = _horizontalScrollBar[num11];
-                    if (layout.GetHorizontalScrollBarWidth(num11) > 0.0)
+                    ScrollBar bar = _horizontalScrollBar[i];
+                    double barWidth = layout.GetHorizontalScrollBarWidth(i);
+                    if (barWidth > 0.0)
                     {
                         if (!Children.Contains(bar))
                         {
                             Children.Add(bar);
                         }
+                        bar.Measure(new Size(barWidth, HorizontalScrollBarHeight));
                     }
                     else
                     {
                         Children.Remove(bar);
                     }
-                    HorizontalSplitBox box = _horizontalSplitBox[num11];
-                    if (layout.GetHorizontalSplitBoxWidth(num11) > 0.0)
+
+                    var box = _horizontalSplitBox[i];
+                    double splitBoxWidth = layout.GetHorizontalSplitBoxWidth(i);
+                    if (splitBoxWidth > 0.0)
                     {
                         if (!Children.Contains(box))
                         {
                             Children.Add(box);
                         }
+                        bar.Measure(new Size(splitBoxWidth, HorizontalScrollBarHeight));
                     }
                     else
                     {
@@ -438,12 +422,99 @@ namespace Dt.Base
                 }
                 if (_horizontalSplitBox != null)
                 {
-                    foreach (HorizontalSplitBox box2 in _horizontalSplitBox)
+                    foreach (var box2 in _horizontalSplitBox)
                     {
                         Children.Remove(box2);
                     }
                 }
             }
+
+            // 垂直滚动栏
+            if (layout.OrnamentWidth > 0.0)
+            {
+                for (int i = 0; i < layout.RowPaneCount; i++)
+                {
+                    ScrollBar bar = _verticalScrollBar[i];
+                    double barHeight = layout.GetVerticalScrollBarHeight(i);
+                    if (barHeight > 0.0)
+                    {
+                        if (!Children.Contains(bar))
+                        {
+                            Children.Add(bar);
+                        }
+                        bar.Measure(new Size(VerticalScrollBarWidth, barHeight));
+                    }
+                    else
+                    {
+                        Children.Remove(bar);
+                    }
+
+                    var vbox = _verticalSplitBox[i];
+                    double vboxHeight = layout.GetVerticalSplitBoxHeight(i);
+                    if (vboxHeight > 0.0)
+                    {
+                        if (!Children.Contains(vbox))
+                        {
+                            Children.Add(vbox);
+                        }
+                        vbox.Measure(new Size(VerticalScrollBarWidth, vboxHeight));
+                    }
+                    else
+                    {
+                        Children.Remove(vbox);
+                    }
+                }
+            }
+            else
+            {
+                if (_verticalScrollBar != null)
+                {
+                    foreach (ScrollBar bar4 in _verticalScrollBar)
+                    {
+                        Children.Remove(bar4);
+                    }
+                }
+                if (_verticalSplitBox != null)
+                {
+                    foreach (var box4 in _verticalSplitBox)
+                    {
+                        Children.Remove(box4);
+                    }
+                }
+            }
+
+            // 水平/垂直分隔栏
+            for (int j = 0; j < (layout.ColumnPaneCount - 1); j++)
+            {
+                var bar = _horizontalSplitBar[j];
+                if (!Children.Contains(bar))
+                {
+                    Children.Add(bar);
+                }
+                bar.Measure(new Size(_defaultSplitBarSize, _availableSize.Height));
+            }
+            for (int k = 0; k < (layout.RowPaneCount - 1); k++)
+            {
+                var bar = _verticalSplitBar[k];
+                if (!Children.Contains(bar))
+                {
+                    Children.Add(bar);
+                }
+                bar.Measure(new Size(_availableSize.Width, _defaultSplitBarSize));
+            }
+            for (int i = 0; i < (layout.RowPaneCount - 1); i++)
+            {
+                for (int j = 0; j < (layout.ColumnPaneCount - 1); j++)
+                {
+                    var bar = _crossSplitBar[i, j];
+                    if (!Children.Contains(bar))
+                    {
+                        Children.Add(bar);
+                    }
+                    bar.Measure(new Size(_availableSize.Width, _availableSize.Width));
+                }
+            }
+            MeasureRangeGroup(layout.RowPaneCount, layout.ColumnPaneCount, layout);
 
             // sheet标签 
             if (layout.TabStripHeight > 0.0)
@@ -456,7 +527,6 @@ namespace Dt.Base
                         _tabStrip.Visibility = Visibility.Collapsed;
                     _tabStrip.HasInsertTab = TabStripInsertTab;
                     _tabStrip.Excel = this;
-                    Canvas.SetZIndex(_tabStrip, 0x62);
                 }
                 else
                 {
@@ -481,17 +551,6 @@ namespace Dt.Base
                 _tabStrip.ActiveTabChanging += new EventHandler(OnTabStripActiveTabChanging);
                 _tabStrip.ActiveTabChanged += new EventHandler(OnTabStripActiveTabChanged);
                 _tabStrip.NewTabNeeded += new EventHandler(OnTabStripNewTabNeeded);
-                if (tabStripSplitBox == null)
-                {
-                    tabStripSplitBox = new TabStripSplitBox();
-                    Canvas.SetZIndex(tabStripSplitBox, 0x62);
-                }
-                if (!Children.Contains(tabStripSplitBox))
-                {
-                    Children.Add(tabStripSplitBox);
-                }
-                tabStripSplitBox.InvalidateMeasure();
-                tabStripSplitBox.Measure(new Size(layout.TabSplitBoxWidth, layout.OrnamentHeight));
             }
             else if (_tabStrip != null)
             {
@@ -499,95 +558,28 @@ namespace Dt.Base
                 _tabStrip.ActiveTabChanging -= new EventHandler(OnTabStripActiveTabChanging);
                 _tabStrip.ActiveTabChanged -= new EventHandler(OnTabStripActiveTabChanged);
                 _tabStrip = null;
-                Children.Remove(tabStripSplitBox);
-                tabStripSplitBox = null;
             }
 
-            // 水平/垂直多视窗分隔
-            if (layout.OrnamentWidth > 0.0)
+            // 跟踪层，调整行列宽高时的虚线，拖拽时的标志，冻结线
+            if (!Children.Contains(TrackersContainer))
             {
-                for (int num15 = 0; num15 < layout.RowPaneCount; num15++)
-                {
-                    ScrollBar bar3 = _verticalScrollBar[num15];
-                    if (GetSheetLayout().GetVerticalScrollBarHeight(num15) > 0.0)
-                    {
-                        if (!Children.Contains(bar3))
-                        {
-                            Children.Add(bar3);
-                        }
-                    }
-                    else
-                    {
-                        Children.Remove(bar3);
-                    }
-                    VerticalSplitBox box3 = _verticalSplitBox[num15];
-                    if (layout.GetVerticalSplitBoxHeight(num15) > 0.0)
-                    {
-                        if (!Children.Contains(box3))
-                        {
-                            Children.Add(box3);
-                        }
-                    }
-                    else
-                    {
-                        Children.Remove(box3);
-                    }
-                }
+                Children.Add(TrackersContainer);
             }
-            else
+            TrackersContainer.Measure(availableSize);
+
+            // 分隔栏层，多视口时的分割线
+            if (!Children.Contains(SplittingTrackerContainer))
             {
-                if (_verticalScrollBar != null)
-                {
-                    foreach (ScrollBar bar4 in _verticalScrollBar)
-                    {
-                        Children.Remove(bar4);
-                    }
-                }
-                if (_verticalSplitBox != null)
-                {
-                    foreach (VerticalSplitBox box4 in _verticalSplitBox)
-                    {
-                        Children.Remove(box4);
-                    }
-                }
+                Children.Add(SplittingTrackerContainer);
             }
-            for (int j = 0; j < (layout.ColumnPaneCount - 1); j++)
+            SplittingTrackerContainer.Measure(availableSize);
+
+            // 光标层，各种图标的png图片
+            if (!Children.Contains(CursorsContainer))
             {
-                HorizontalSplitBar bar5 = _horizontalSplitBar[j];
-                double horizontalSplitBoxWidth = layout.GetHorizontalSplitBoxWidth(j);
-                double num20 = _availableSize.Height;
-                if (!Children.Contains(bar5))
-                {
-                    Children.Add(bar5);
-                }
-                bar5.Measure(new Size(horizontalSplitBoxWidth, num20));
+                Children.Add(CursorsContainer);
             }
-            for (int k = 0; k < (layout.RowPaneCount - 1); k++)
-            {
-                VerticalSplitBar bar6 = _verticalSplitBar[k];
-                double num22 = _availableSize.Width;
-                double verticalSplitBarHeight = layout.GetVerticalSplitBarHeight(k);
-                if (!Children.Contains(bar6))
-                {
-                    Children.Add(bar6);
-                }
-                bar6.Measure(new Size(num22, verticalSplitBarHeight));
-            }
-            for (int m = 0; m < (layout.RowPaneCount - 1); m++)
-            {
-                for (int num25 = 0; num25 < (layout.ColumnPaneCount - 1); num25++)
-                {
-                    CrossSplitBar bar7 = _crossSplitBar[m, num25];
-                    double num26 = layout.GetHorizontalSplitBoxWidth(num25);
-                    double num27 = layout.GetVerticalSplitBarHeight(m);
-                    if (!Children.Contains(bar7))
-                    {
-                        Children.Add(bar7);
-                    }
-                    bar7.Measure(new Size(num26, num27));
-                }
-            }
-            MeasureRangeGroup(layout.RowPaneCount, layout.ColumnPaneCount, layout);
+            CursorsContainer.Measure(availableSize);
 
             // 进度环
             if (!Children.Contains(_progressGrid))
@@ -596,55 +588,59 @@ namespace Dt.Base
             }
             _progressGrid.Measure(availableSize);
 
-            Children.Remove(_topLeftGripper);
-            Children.Remove(_bottomRightGripper);
-            Children.Remove(_resizerGripperContainer);
-            Children.Remove(_autoFillIndicatorContainer);
-            if (_formulaSelectionGripperPanel != null)
+            // 触摸时调整选择范围的圈圈
+            if (!Children.Contains(_topLeftGripper))
             {
-                Children.Remove(_formulaSelectionGripperPanel);
+                Children.Add(_topLeftGripper);
             }
             _topLeftGripper.Stroke = new SolidColorBrush(GetGripperStrokeColor());
             _topLeftGripper.Fill = new SolidColorBrush(GetGripperFillColor());
+            _topLeftGripper.Measure(availableSize);
+
+            if (!Children.Contains(_bottomRightGripper))
+            {
+                Children.Add(_bottomRightGripper);
+            }
             _bottomRightGripper.Stroke = new SolidColorBrush(GetGripperStrokeColor());
             _bottomRightGripper.Fill = new SolidColorBrush(GetGripperFillColor());
-            Children.Add(_topLeftGripper);
-            Children.Add(_bottomRightGripper);
-            Children.Add(_resizerGripperContainer);
+            _bottomRightGripper.Measure(availableSize);
+
+            if (!Children.Contains(_resizerGripperContainer))
+            {
+                Children.Add(_resizerGripperContainer);
+            }
+            _resizerGripperContainer.Measure(availableSize);
+
+            if (!Children.Contains(_autoFillIndicatorContainer))
+            {
+                Children.Add(_autoFillIndicatorContainer);
+            }
             _autoFillIndicatorContainer.Width = 16.0;
             _autoFillIndicatorContainer.Height = 16.0;
-            Children.Add(_autoFillIndicatorContainer);
-            if (_formulaSelectionGripperPanel != null)
+            _autoFillIndicatorContainer.Measure(availableSize);
+
+            if (!Children.Contains(_formulaSelectionGripperPanel))
             {
                 Children.Add(_formulaSelectionGripperPanel);
             }
-            _cachedColumnResizerGripperImage.Source = GetResizerBitmapImage(false);
-            _cachedRowResizerGripperImage.Source = GetResizerBitmapImage(true);
-            _cachedautoFillIndicatorImage.Source = GetImageSource("AutoFillIndicator.png");
-            Canvas.SetZIndex(_topLeftGripper, 90);
-            Canvas.SetZIndex(_bottomRightGripper, 90);
-            Canvas.SetZIndex(_resizerGripperContainer, 90);
-            Canvas.SetZIndex(_autoFillIndicatorContainer, 90);
-            if (_formulaSelectionGripperPanel != null)
-            {
-                Canvas.SetZIndex(_formulaSelectionGripperPanel, 90);
-            }
-            if (_formulaSelectionGripperPanel != null)
-            {
-                _formulaSelectionGripperPanel.Measure(new Size(double.MaxValue, double.MaxValue));
-            }
+            _formulaSelectionGripperPanel.Measure(availableSize);
+
             return _availableSize;
         }
 
         protected override Size ArrangeOverride(Size finalSize)
         {
+            Rect rcFull = new Rect(0.0, 0.0, finalSize.Width, finalSize.Height);
+            TrackersContainer.Arrange(rcFull);
+            SplittingTrackerContainer.Arrange(rcFull);
+            ShapeDrawingContainer.Arrange(rcFull);
+            CursorsContainer.Arrange(rcFull);
+
             double headerX;
             double headerY;
             SheetLayout layout = GetSheetLayout();
-            TrackersContainer.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
-            SplittingTrackerContainer.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
-            ShapeDrawingContainer.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
-            CursorsContainer.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
+
+            // 左上角
             if ((IsTouchZooming && (_cornerPanel != null)) && (_cornerPanel.Parent != null))
             {
                 headerX = layout.HeaderX;
@@ -665,6 +661,8 @@ namespace Dt.Base
                     _cornerPanel.Arrange(new Rect(headerX, headerY, layout.HeaderWidth, layout.HeaderHeight));
                 }
             }
+
+            // 列头
             if (IsTouchZooming && (_cachedColumnHeaderViewportTransform != null))
             {
                 for (int i = -1; i <= layout.ColumnPaneCount; i++)
@@ -736,6 +734,8 @@ namespace Dt.Base
                     }
                 }
             }
+
+            // 行头
             if (IsTouchZooming && (_cachedRowHeaderViewportTransform != null))
             {
                 for (int k = -1; k <= layout.RowPaneCount; k++)
@@ -807,44 +807,46 @@ namespace Dt.Base
                     }
                 }
             }
+
+            // 单元格区域
             if (IsTouchZooming && (_cachedViewportTransform != null))
             {
-                for (int n = -1; n <= layout.ColumnPaneCount; n++)
+                for (int i = -1; i <= layout.ColumnPaneCount; i++)
                 {
-                    headerX = layout.GetViewportX(n);
-                    double num20 = layout.GetViewportWidth(n);
-                    for (int num21 = -1; num21 <= layout.RowPaneCount; num21++)
+                    headerX = layout.GetViewportX(i);
+                    double num20 = layout.GetViewportWidth(i);
+                    for (int j = -1; j <= layout.RowPaneCount; j++)
                     {
-                        headerY = layout.GetViewportY(num21);
-                        double num22 = layout.GetViewportHeight(num21);
-                        CellsPanel viewport5 = _cellsPanels[num21 + 1, n + 1];
+                        headerY = layout.GetViewportY(j);
+                        double num22 = layout.GetViewportHeight(j);
+                        CellsPanel viewport5 = _cellsPanels[j + 1, i + 1];
                         if (viewport5 != null)
                         {
                             viewport5.Arrange(new Rect(headerX, headerY, num20, num22));
-                            viewport5.RenderTransform = _cachedViewportTransform[num21 + 1, n + 1];
+                            viewport5.RenderTransform = _cachedViewportTransform[j + 1, i + 1];
                         }
                     }
                 }
             }
             else if (_cellsPanels != null)
             {
-                for (int num23 = -1; num23 <= layout.ColumnPaneCount; num23++)
+                for (int i = -1; i <= layout.ColumnPaneCount; i++)
                 {
-                    headerX = layout.GetViewportX(num23);
-                    if ((IsTouching && (num23 == layout.ColumnPaneCount)) && ((_translateOffsetX < 0.0) && (_touchStartHitTestInfo.ColumnViewportIndex == (layout.ColumnPaneCount - 1))))
+                    headerX = layout.GetViewportX(i);
+                    if ((IsTouching && (i == layout.ColumnPaneCount)) && ((_translateOffsetX < 0.0) && (_touchStartHitTestInfo.ColumnViewportIndex == (layout.ColumnPaneCount - 1))))
                     {
                         headerX += _translateOffsetX;
                     }
-                    double num24 = layout.GetViewportWidth(num23);
-                    for (int num25 = -1; num25 <= layout.RowPaneCount; num25++)
+                    double num24 = layout.GetViewportWidth(i);
+                    for (int j = -1; j <= layout.RowPaneCount; j++)
                     {
-                        headerY = layout.GetViewportY(num25);
-                        if (((IsTouching && IsTouching) && ((num25 == layout.RowPaneCount) && (_translateOffsetY < 0.0))) && (_touchStartHitTestInfo.RowViewportIndex == (layout.RowPaneCount - 1)))
+                        headerY = layout.GetViewportY(j);
+                        if (((IsTouching && IsTouching) && ((j == layout.RowPaneCount) && (_translateOffsetY < 0.0))) && (_touchStartHitTestInfo.RowViewportIndex == (layout.RowPaneCount - 1)))
                         {
                             headerY += _translateOffsetY;
                         }
-                        double num26 = layout.GetViewportHeight(num25);
-                        CellsPanel viewport6 = _cellsPanels[num25 + 1, num23 + 1];
+                        double num26 = layout.GetViewportHeight(j);
+                        CellsPanel viewport6 = _cellsPanels[j + 1, i + 1];
                         if (viewport6 != null)
                         {
                             if (viewport6.RenderTransform != null)
@@ -863,11 +865,11 @@ namespace Dt.Base
                                     int num28 = (int)Math.Ceiling(_translateOffsetY);
                                     double num29 = headerX;
                                     double num30 = headerY;
-                                    if ((_touchStartHitTestInfo != null) && (num23 == _touchStartHitTestInfo.ColumnViewportIndex))
+                                    if ((_touchStartHitTestInfo != null) && (i == _touchStartHitTestInfo.ColumnViewportIndex))
                                     {
                                         num29 += num27;
                                     }
-                                    if ((_touchStartHitTestInfo != null) && (num25 == _touchStartHitTestInfo.RowViewportIndex))
+                                    if ((_touchStartHitTestInfo != null) && (j == _touchStartHitTestInfo.RowViewportIndex))
                                     {
                                         num30 += num28;
                                     }
@@ -875,19 +877,19 @@ namespace Dt.Base
                                     if (((headerY != num30) && (_translateOffsetY < 0.0)) || ((headerX != num29) && (_translateOffsetX < 0.0)))
                                     {
                                         RectangleGeometry geometry5 = new RectangleGeometry();
-                                        geometry5.Rect = new Rect(Math.Abs((double)(headerX - num29)), Math.Abs((double)(headerY - num30)), _cachedViewportWidths[num23 + 1], _cachedViewportHeights[num25 + 1]);
+                                        geometry5.Rect = new Rect(Math.Abs((double)(headerX - num29)), Math.Abs((double)(headerY - num30)), _cachedViewportWidths[i + 1], _cachedViewportHeights[j + 1]);
                                         viewport6.Clip = geometry5;
                                     }
                                     else if ((headerX != num29) && (_translateOffsetX > 0.0))
                                     {
                                         RectangleGeometry geometry6 = new RectangleGeometry();
-                                        geometry6.Rect = new Rect(0.0, 0.0, Math.Max((double)0.0, (double)(_cachedViewportWidths[num23 + 1] - _translateOffsetX)), _cachedViewportHeights[num25 + 1]);
+                                        geometry6.Rect = new Rect(0.0, 0.0, Math.Max((double)0.0, (double)(_cachedViewportWidths[i + 1] - _translateOffsetX)), _cachedViewportHeights[j + 1]);
                                         viewport6.Clip = geometry6;
                                     }
                                     else if ((headerY != num30) && (_translateOffsetY > 0.0))
                                     {
                                         RectangleGeometry geometry7 = new RectangleGeometry();
-                                        geometry7.Rect = new Rect(0.0, 0.0, _cachedViewportWidths[num23 + 1], Math.Max((double)0.0, (double)(_cachedViewportHeights[num25 + 1] - _translateOffsetY)));
+                                        geometry7.Rect = new Rect(0.0, 0.0, _cachedViewportWidths[i + 1], Math.Max((double)0.0, (double)(_cachedViewportHeights[j + 1] - _translateOffsetY)));
                                         viewport6.Clip = geometry7;
                                     }
                                     else
@@ -902,147 +904,96 @@ namespace Dt.Base
                     }
                 }
             }
+
             if (_horizontalScrollBar != null)
             {
-                for (int num31 = 0; num31 < layout.ColumnPaneCount; num31++)
+                for (int i = 0; i < layout.ColumnPaneCount; i++)
                 {
-                    double horizontalScrollBarX = layout.GetHorizontalScrollBarX(num31);
-                    double ornamentY = layout.OrnamentY;
-                    double horizontalScrollBarWidth = layout.GetHorizontalScrollBarWidth(num31);
-                    double ornamentHeight = layout.OrnamentHeight;
-                    horizontalScrollBarWidth = Math.Max(horizontalScrollBarWidth, 0.0);
-                    ornamentHeight = Math.Max(ornamentHeight, 0.0);
-                    _horizontalScrollBar[num31].Width = horizontalScrollBarWidth;
-                    _horizontalScrollBar[num31].Height = ornamentHeight;
-                    _horizontalScrollBar[num31].Arrange(new Rect(horizontalScrollBarX, ornamentY, horizontalScrollBarWidth, ornamentHeight));
+                    _horizontalScrollBar[i].Arrange(new Rect(layout.GetHorizontalScrollBarX(i), layout.OrnamentY, layout.GetHorizontalScrollBarWidth(i), layout.OrnamentHeight));
                 }
             }
+
             if (_tabStrip != null)
-            {
-                double tabStripX = layout.TabStripX;
-                double tabStripY = layout.TabStripY;
-                double tabStripWidth = layout.TabStripWidth;
-                double tabStripHeight = layout.TabStripHeight;
-                _tabStrip.Arrange(new Rect(tabStripX, tabStripY, tabStripWidth, tabStripHeight));
-            }
-            if (tabStripSplitBox != null)
-            {
-                double tabSplitBoxX = layout.TabSplitBoxX;
-                double num41 = layout.OrnamentY;
-                double tabSplitBoxWidth = layout.TabSplitBoxWidth;
-                double num43 = layout.OrnamentHeight;
-                tabStripSplitBox.Arrange(new Rect(tabSplitBoxX, num41, tabSplitBoxWidth, num43));
-            }
+                _tabStrip.Arrange(new Rect(layout.TabStripX, layout.TabStripY, layout.TabStripWidth, layout.TabStripHeight));
+
             if (_horizontalSplitBox != null)
             {
-                for (int num44 = 0; num44 < layout.ColumnPaneCount; num44++)
+                for (int i = 0; i < layout.ColumnPaneCount; i++)
                 {
-                    double horizontalSplitBoxX = layout.GetHorizontalSplitBoxX(num44);
-                    double num46 = layout.OrnamentY;
-                    double horizontalSplitBoxWidth = layout.GetHorizontalSplitBoxWidth(num44);
-                    double num48 = layout.OrnamentHeight;
-                    _horizontalSplitBox[num44].Arrange(new Rect(horizontalSplitBoxX, num46, horizontalSplitBoxWidth, num48));
+                    _horizontalSplitBox[i].Arrange(new Rect(layout.GetHorizontalSplitBoxX(i), layout.OrnamentY, layout.GetHorizontalSplitBoxWidth(i), layout.OrnamentHeight));
                 }
             }
+
             if (_verticalScrollBar != null)
             {
-                for (int num49 = 0; num49 < layout.RowPaneCount; num49++)
+                for (int i = 0; i < layout.RowPaneCount; i++)
                 {
-                    double ornamentX = layout.OrnamentX;
-                    double verticalScrollBarY = layout.GetVerticalScrollBarY(num49);
-                    double ornamentWidth = layout.OrnamentWidth;
-                    double num53 = layout.GetViewportHeight(num49) - layout.GetVerticalSplitBoxHeight(num49);
-                    if (((IsTouching && (_touchStartHitTestInfo != null)) && ((num49 == _touchStartHitTestInfo.RowViewportIndex) && !IsZero(_translateOffsetY))) && ((_touchStartHitTestInfo != null) && (_touchStartHitTestInfo.HitTestType == HitTestType.Viewport)))
-                    {
-                        num53 = _cachedViewportHeights[num49 + 1] - layout.GetVerticalSplitBoxHeight(num49);
-                    }
-                    if (num49 == 0)
-                    {
-                        num53 += (layout.HeaderY + layout.HeaderHeight) + layout.FrozenHeight;
-                    }
-                    if (num49 == (layout.RowPaneCount - 1))
-                    {
-                        num53 += layout.FrozenTrailingHeight;
-                    }
-                    ornamentWidth = Math.Max(ornamentWidth, 0.0);
-                    num53 = Math.Max(num53, 0.0);
-                    _verticalScrollBar[num49].Width = ornamentWidth;
-                    _verticalScrollBar[num49].Height = num53;
-                    _verticalScrollBar[num49].Arrange(new Rect(ornamentX, verticalScrollBarY, ornamentWidth, num53));
+                    _verticalScrollBar[i].Arrange(new Rect(layout.OrnamentX, layout.GetVerticalScrollBarY(i), layout.OrnamentWidth, layout.GetVerticalScrollBarHeight(i)));
                 }
             }
             if (_verticalSplitBox != null)
             {
-                for (int num54 = 0; num54 < layout.RowPaneCount; num54++)
+                for (int i = 0; i < layout.RowPaneCount; i++)
                 {
-                    double num55 = layout.OrnamentX;
-                    double verticalSplitBoxY = layout.GetVerticalSplitBoxY(num54);
-                    double num57 = layout.OrnamentWidth;
-                    double verticalSplitBoxHeight = layout.GetVerticalSplitBoxHeight(num54);
-                    _verticalSplitBox[num54].Arrange(new Rect(num55, verticalSplitBoxY, num57, verticalSplitBoxHeight));
+                    _verticalSplitBox[i].Arrange(new Rect(layout.OrnamentX, layout.GetVerticalSplitBoxY(i), layout.OrnamentWidth, layout.GetVerticalSplitBoxHeight(i)));
                 }
             }
             if (_horizontalSplitBar != null)
             {
-                for (int num59 = 0; num59 < (layout.ColumnPaneCount - 1); num59++)
+                for (int i = 0; i < (layout.ColumnPaneCount - 1); i++)
                 {
-                    if ((_horizontalSplitBar[num59] != null) && (_horizontalSplitBar[num59].Parent != null))
+                    if ((_horizontalSplitBar[i] != null) && (_horizontalSplitBar[i].Parent != null))
                     {
-                        double horizontalSplitBarX = layout.GetHorizontalSplitBarX(num59);
+                        double horizontalSplitBarX = layout.GetHorizontalSplitBarX(i);
                         if (IsTouching && (_cachedViewportSplitBarX != null))
                         {
-                            horizontalSplitBarX = _cachedViewportSplitBarX[num59];
+                            horizontalSplitBarX = _cachedViewportSplitBarX[i];
                         }
-                        double num61 = layout.Y;
-                        double horizontalSplitBarWidth = layout.GetHorizontalSplitBarWidth(num59);
-                        double num63 = _availableSize.Height;
-                        _horizontalSplitBar[num59].Arrange(new Rect(horizontalSplitBarX, num61, horizontalSplitBarWidth, num63));
+                        _horizontalSplitBar[i].Arrange(new Rect(horizontalSplitBarX, layout.Y, _defaultSplitBarSize, _availableSize.Height));
                     }
                 }
             }
             if (_verticalSplitBar != null)
             {
-                for (int num64 = 0; num64 < (layout.RowPaneCount - 1); num64++)
+                for (int i = 0; i < (layout.RowPaneCount - 1); i++)
                 {
-                    if ((_verticalSplitBar[num64] != null) && (_verticalSplitBar[num64].Parent != null))
+                    if ((_verticalSplitBar[i] != null) && (_verticalSplitBar[i].Parent != null))
                     {
-                        double num65 = layout.X;
-                        double verticalSplitBarY = layout.GetVerticalSplitBarY(num64);
+                        double verticalSplitBarY = layout.GetVerticalSplitBarY(i);
                         if (IsTouching && (_cachedViewportSplitBarY != null))
                         {
-                            verticalSplitBarY = _cachedViewportSplitBarY[num64];
+                            verticalSplitBarY = _cachedViewportSplitBarY[i];
                         }
-                        double num67 = _availableSize.Width;
-                        double verticalSplitBarHeight = layout.GetVerticalSplitBarHeight(num64);
-                        _verticalSplitBar[num64].Arrange(new Rect(num65, verticalSplitBarY, num67, verticalSplitBarHeight));
+                        _verticalSplitBar[i].Arrange(new Rect(layout.X, verticalSplitBarY, _availableSize.Width, _defaultSplitBarSize));
                     }
                 }
             }
             if (_crossSplitBar != null)
             {
-                for (int num69 = 0; num69 < _crossSplitBar.GetLength(0); num69++)
+                for (int i = 0; i < _crossSplitBar.GetLength(0); i++)
                 {
-                    double num70 = layout.GetVerticalSplitBarY(num69);
+                    double num70 = layout.GetVerticalSplitBarY(i);
                     if (IsTouching && (_cachedViewportSplitBarY != null))
                     {
-                        num70 = _cachedViewportSplitBarY[num69];
+                        num70 = _cachedViewportSplitBarY[i];
                     }
-                    double num71 = layout.GetVerticalSplitBarHeight(num69);
-                    for (int num72 = 0; num72 < _crossSplitBar.GetLength(1); num72++)
+                    double num71 = layout.GetVerticalSplitBarHeight(i);
+                    for (int j = 0; j < _crossSplitBar.GetLength(1); j++)
                     {
-                        double num73 = layout.GetHorizontalSplitBarX(num72);
+                        double num73 = layout.GetHorizontalSplitBarX(j);
                         if (IsTouching && (_cachedViewportSplitBarX != null))
                         {
-                            num73 = _cachedViewportSplitBarX[num72];
+                            num73 = _cachedViewportSplitBarX[j];
                         }
-                        double num74 = layout.GetHorizontalSplitBarWidth(num72);
-                        if ((_crossSplitBar[num69, num72] != null) && (_crossSplitBar[num69, num72].Parent != null))
+                        double num74 = layout.GetHorizontalSplitBarWidth(j);
+                        if ((_crossSplitBar[i, j] != null) && (_crossSplitBar[i, j].Parent != null))
                         {
-                            _crossSplitBar[num69, num72].Arrange(new Rect(num73, num70, num74, num71));
+                            _crossSplitBar[i, j].Arrange(new Rect(num73, num70, num74, num71));
                         }
                     }
                 }
             }
+
             ArrangeRangeGroup(layout.RowPaneCount, layout.ColumnPaneCount, layout);
             Rect rect = new Rect(0.0, 0.0, finalSize.Width, finalSize.Height);
             if (_rowFreezeLine != null)
@@ -1079,19 +1030,16 @@ namespace Dt.Base
             ViewportInfo viewportInfo = GetViewportInfo(sheet);
             double width = _availableSize.Width;
             double height = _availableSize.Height;
-            SheetLayout layout = new SheetLayout(viewportInfo.RowViewportCount, viewportInfo.ColumnViewportCount)
-            {
-                X = 0.0,
-                Y = 0.0
-            };
+            SheetLayout layout = new SheetLayout(viewportInfo.RowViewportCount, viewportInfo.ColumnViewportCount);
+
+            layout.TabStripX = 0.0;
+            if (TabStripVisibility == Visibility.Visible)
+                layout.TabStripHeight = _defaultTabStripHeight;
+            layout.TabStripY = Math.Max(0.0, height - layout.TabStripHeight);
+            layout.TabStripWidth = Math.Max(0.0, width);
+
             if ((sheet == null) || !sheet.Visible)
-            {
-                layout.TabStripX = 0.0;
-                layout.TabStripHeight = 25.0;
-                layout.TabStripY = Math.Max((double)0.0, (double)(height - layout.TabStripHeight));
-                layout.TabStripWidth = Math.Max(0.0, width);
                 return layout;
-            }
 
             GroupLayout groupLayout = GetGroupLayout();
             layout.HeaderX = layout.X + groupLayout.Width;
@@ -1147,71 +1095,66 @@ namespace Dt.Base
             {
                 tempWidth += Math.Ceiling((double)(sheet.GetActualColumnWidth(i, SheetArea.Cells) * zoomFactor));
             }
-            for (int num15 = sheet.FrozenRowCount; (tempHeight <= height) && (num15 < (sheet.RowCount - sheet.FrozenTrailingRowCount)); num15++)
+            for (int i = sheet.FrozenRowCount; (tempHeight <= height) && (i < (sheet.RowCount - sheet.FrozenTrailingRowCount)); i++)
             {
-                tempHeight += Math.Ceiling((double)(sheet.GetActualRowHeight(num15, SheetArea.Cells) * zoomFactor));
+                tempHeight += Math.Ceiling((double)(sheet.GetActualRowHeight(i, SheetArea.Cells) * zoomFactor));
             }
             totalWidth += tempWidth;
             totalHeight += tempHeight;
 
-            bool flag = (HorizontalScrollBarVisibility == ScrollBarVisibility.Visible) || (HorizontalScrollBarVisibility == ScrollBarVisibility.Disabled);
+            bool showHorScrollBar = (HorizontalScrollBarVisibility == ScrollBarVisibility.Visible) || (HorizontalScrollBarVisibility == ScrollBarVisibility.Disabled);
             if (HorizontalScrollBarVisibility == ScrollBarVisibility.Auto)
             {
                 if (layout.ColumnPaneCount > 1)
                 {
-                    flag = true;
+                    // 多列视口
+                    showHorScrollBar = true;
                 }
-                else if ((VerticalScrollBarVisibility == (ScrollBarVisibility)3) || (VerticalScrollBarVisibility == 0))
-                {
-                    flag |= totalWidth > ((width - VerticalScrollBarWidth) - groupLayout.Width);
-                }
-                else if (VerticalScrollBarVisibility == (ScrollBarVisibility)1)
-                {
-                    if (tempHeight > height)
-                    {
-                        flag |= totalWidth > ((width - VerticalScrollBarWidth) - groupLayout.Width);
-                    }
-                    else
-                    {
-                        flag |= totalWidth > (width - groupLayout.Width);
-                    }
-                }
+                //else if ((VerticalScrollBarVisibility == ScrollBarVisibility.Visible) || (VerticalScrollBarVisibility == ScrollBarVisibility.Disabled))
+                //{
+                //    flag |= totalWidth > ((width - VerticalScrollBarWidth) - groupLayout.Width);
+                //}
+                //else if (VerticalScrollBarVisibility == ScrollBarVisibility.Auto)
+                //{
+                //    if (tempHeight > height)
+                //    {
+                //        flag |= totalWidth > ((width - VerticalScrollBarWidth) - groupLayout.Width);
+                //    }
+                //    else
+                //    {
+                //        flag |= totalWidth > (width - groupLayout.Width);
+                //    }
+                //}
                 else
                 {
-                    flag |= totalWidth > (width - groupLayout.Width);
+                    // 垂直滚动栏不独立占用宽度
+                    showHorScrollBar |= totalWidth > (width - groupLayout.Width);
                 }
             }
-            if (flag)
+            if (showHorScrollBar)
             {
                 // 显示水平滚动栏
                 layout.OrnamentHeight = HorizontalScrollBarHeight;
-                height -= layout.OrnamentHeight;
-                height = Math.Max(0.0, height);
+
+                // 水平滚动栏不独立占用高度
+                //height -= layout.OrnamentHeight;
+                //height = Math.Max(0.0, height);
             }
 
-            if (TabStripVisibility == Visibility.Visible)
-            {
-                if (layout.OrnamentHeight > 0.0)
-                {
-                    layout.TabStripHeight = layout.OrnamentHeight;
-                }
-                else
-                {
-                    layout.TabStripHeight = 25.0;
-                    height -= layout.TabStripHeight;
-                    height = Math.Max(0.0, height);
-                }
-            }
-
-            bool flag3 = ((VerticalScrollBarVisibility == (ScrollBarVisibility)3) || (VerticalScrollBarVisibility == 0)) || ((VerticalScrollBarVisibility == (ScrollBarVisibility)1) && ((layout.RowPaneCount > 1) || (totalHeight > (height - groupLayout.Height))));
-            if (flag3)
+            bool showVerScrollBar = ((VerticalScrollBarVisibility == ScrollBarVisibility.Visible)
+                || (VerticalScrollBarVisibility == ScrollBarVisibility.Disabled))
+                || ((VerticalScrollBarVisibility == ScrollBarVisibility.Auto) && ((layout.RowPaneCount > 1) || (totalHeight > (height - groupLayout.Height))));
+            if (showVerScrollBar)
             {
                 // 显示垂直滚动栏
                 layout.OrnamentWidth = VerticalScrollBarWidth;
-                width -= layout.OrnamentWidth;
-                width = Math.Max(0.0, width);
+
+                // 垂直滚动栏不独立占用宽度
+                //width -= layout.OrnamentWidth;
+                //width = Math.Max(0.0, width);
             }
 
+            // 内容区的可见宽度
             width -= layout.HeaderX;
             width -= layout.HeaderWidth;
             width = Math.Max(0.0, width);
@@ -1227,6 +1170,7 @@ namespace Dt.Base
             width -= layout.FrozenTrailingWidth;
             width = Math.Max(0.0, width);
 
+            // 内容区的可见高度
             height -= layout.HeaderY;
             height -= layout.HeaderHeight;
             height = Math.Max(0.0, height);
@@ -1242,20 +1186,21 @@ namespace Dt.Base
             height -= layout.FrozenTrailingHeight;
             height = Math.Max(0.0, height);
 
+            // 设置多视口分隔栏的宽高，并从可见大小中扣除
             for (int i = 0; i < (layout.ColumnPaneCount - 1); i++)
             {
-                layout.SetHorizontalSplitBarWidth(i, 6.0);
-                width -= layout.GetHorizontalSplitBarWidth(i);
+                layout.SetHorizontalSplitBarWidth(i, _defaultSplitBarSize);
+                width -= _defaultSplitBarSize;
                 width = Math.Max(0.0, width);
             }
             for (int i = 0; i < (layout.RowPaneCount - 1); i++)
             {
-                layout.SetVerticalSplitBarHeight(i, 6.0);
-                height -= layout.GetVerticalSplitBarHeight(i);
+                layout.SetVerticalSplitBarHeight(i, _defaultSplitBarSize);
+                height -= _defaultSplitBarSize;
                 height = Math.Max(0.0, height);
             }
 
-            // 为未设置大小的Viewport设置尺寸
+            // 为未设置大小的Viewport设置尺寸，剩余大小平均分配
             int cntNotSettingWidth = 0;
             int cntNotSettingHeight = 0;
             for (int i = 0; i < layout.ColumnPaneCount; i++)
@@ -1320,7 +1265,7 @@ namespace Dt.Base
                 layout.SetViewportHeight(layout.RowPaneCount - 1, num29);
             }
 
-
+            // 计算每个视口的左上角位置
             layout.SetViewportX(0, (layout.HeaderX + layout.HeaderWidth) + layout.FrozenWidth);
             for (int i = 1; i < layout.ColumnPaneCount; i++)
             {
@@ -1337,204 +1282,214 @@ namespace Dt.Base
 
             if (layout.OrnamentHeight > 0.0)
             {
-                layout.OrnamentY = (layout.GetViewportY(layout.RowPaneCount - 1) + layout.GetViewportHeight(layout.RowPaneCount - 1)) + layout.FrozenTrailingHeight;
+                // y位置需扣除本身的高度和SheetTab的高度
+                double oy = layout.GetViewportY(layout.RowPaneCount - 1) + layout.GetViewportHeight(layout.RowPaneCount - 1) + layout.FrozenTrailingHeight - HorizontalScrollBarHeight;
+                if (layout.TabStripHeight > 0)
+                    oy -= layout.TabStripHeight;
+                layout.OrnamentY = Math.Max(oy, 0);
             }
             if (layout.OrnamentWidth > 0.0)
             {
-                layout.OrnamentX = (layout.GetViewportX(layout.ColumnPaneCount - 1) + layout.GetViewportWidth(layout.ColumnPaneCount - 1)) + layout.FrozenTrailingWidth;
+                // 扣除ScrollBar本身宽度
+                double oy = layout.GetViewportX(layout.ColumnPaneCount - 1) + layout.GetViewportWidth(layout.ColumnPaneCount - 1) + layout.FrozenTrailingWidth - VerticalScrollBarWidth;
+                layout.OrnamentX = Math.Max(oy, 0);
             }
 
             double columnSplitBoxesWidth = GetColumnSplitBoxesWidth(layout.ColumnPaneCount);
-            for (int i = 0; i < layout.ColumnPaneCount; i++)
+            if (layout.ColumnPaneCount == 1)
             {
-                if (i == 0)
+                double vWidth = layout.GetViewportWidth(0) + layout.FrozenTrailingWidth + layout.HeaderX + layout.HeaderWidth + layout.FrozenWidth;
+                double boxWidth = Math.Min(vWidth, columnSplitBoxesWidth);
+                double svWidth = Math.Max(0.0, vWidth - boxWidth);
+                if (ColumnSplitBoxAlignment == SplitBoxAlignment.Leading)
                 {
-                    double num34 = ((layout.HeaderX + layout.HeaderWidth) + layout.FrozenWidth) + layout.GetViewportWidth(i);
-                    double x = layout.X;
-                    if (ColumnSplitBoxAlignment == SplitBoxAlignment.Leading)
-                    {
-                        layout.SetHorizontalSplitBoxX(i, x);
-                        layout.SetHorizontalSplitBoxWidth(i, Math.Min(num34, columnSplitBoxesWidth));
-                        layout.SetHorizontalScrollBarX(i, layout.GetHorizontalSplitBoxX(i) + layout.GetHorizontalSplitBoxWidth(i));
-                        layout.SetHorizontalScrollBarWidth(i, Math.Max((double)0.0, (double)(num34 - layout.GetHorizontalSplitBoxWidth(i))));
-                    }
-                    else
-                    {
-                        layout.SetHorizontalScrollBarX(i, x);
-                        layout.SetHorizontalSplitBoxWidth(i, Math.Min(num34, columnSplitBoxesWidth));
-                        layout.SetHorizontalScrollBarWidth(i, Math.Max((double)0.0, (double)(num34 - layout.GetHorizontalSplitBoxWidth(i))));
-                        layout.SetHorizontalSplitBoxX(i, layout.GetHorizontalScrollBarX(i) + layout.GetHorizontalScrollBarWidth(i));
-                    }
-                }
-                if ((i > 0) && (i < (layout.ColumnPaneCount - 1)))
-                {
-                    double viewportWidth = layout.GetViewportWidth(i);
-                    double viewportX = layout.GetViewportX(i);
-                    if (ColumnSplitBoxAlignment == SplitBoxAlignment.Leading)
-                    {
-                        layout.SetHorizontalSplitBoxX(i, viewportX);
-                        layout.SetHorizontalSplitBoxWidth(i, Math.Min(viewportWidth, columnSplitBoxesWidth));
-                        layout.SetHorizontalScrollBarX(i, layout.GetHorizontalSplitBoxX(i) + layout.GetHorizontalSplitBoxWidth(i));
-                        layout.SetHorizontalScrollBarWidth(i, Math.Max((double)0.0, (double)(viewportWidth - layout.GetHorizontalSplitBoxWidth(i))));
-                    }
-                    else
-                    {
-                        layout.SetHorizontalScrollBarX(i, viewportX);
-                        layout.SetHorizontalSplitBoxWidth(i, Math.Min(viewportWidth, columnSplitBoxesWidth));
-                        layout.SetHorizontalScrollBarWidth(i, Math.Max((double)0.0, (double)(viewportWidth - layout.GetHorizontalSplitBoxWidth(i))));
-                        layout.SetHorizontalSplitBoxX(i, layout.GetHorizontalScrollBarX(i) + layout.GetHorizontalScrollBarWidth(i));
-                    }
-                }
-                if (i == (layout.ColumnPaneCount - 1))
-                {
-                    double num38 = (((layout.GetViewportWidth(layout.ColumnPaneCount - 1) + layout.FrozenTrailingWidth) + ((layout.ColumnPaneCount == 1) ? layout.HeaderX : 0.0)) + ((layout.ColumnPaneCount == 1) ? layout.HeaderWidth : 0.0)) + ((layout.ColumnPaneCount == 1) ? layout.FrozenWidth : 0.0);
-                    double num39 = (layout.ColumnPaneCount == 1) ? layout.X : layout.GetViewportX(layout.ColumnPaneCount - 1);
-                    if (ColumnSplitBoxAlignment == SplitBoxAlignment.Leading)
-                    {
-                        layout.SetHorizontalSplitBoxX(i, num39);
-                        layout.SetHorizontalSplitBoxWidth(i, Math.Min(num38, columnSplitBoxesWidth));
-                        layout.SetHorizontalScrollBarX(i, layout.GetHorizontalSplitBoxX(i) + layout.GetHorizontalSplitBoxWidth(i));
-                        layout.SetHorizontalScrollBarWidth(i, Math.Max((double)0.0, (double)(num38 - layout.GetHorizontalSplitBoxWidth(i))));
-                    }
-                    else
-                    {
-                        layout.SetHorizontalScrollBarX(i, num39);
-                        layout.SetHorizontalSplitBoxWidth(i, Math.Min(num38, columnSplitBoxesWidth));
-                        layout.SetHorizontalScrollBarWidth(i, Math.Max((double)0.0, (double)(num38 - layout.GetHorizontalSplitBoxWidth(i))));
-                        layout.SetHorizontalSplitBoxX(i, layout.GetHorizontalScrollBarX(i) + layout.GetHorizontalScrollBarWidth(i));
-                    }
-                }
-            }
-            double rowSplitBoxesHeight = GetRowSplitBoxesHeight(layout.RowPaneCount);
-            for (int i = 0; i < layout.RowPaneCount; i++)
-            {
-                if (i == 0)
-                {
-                    double num42 = ((layout.HeaderY + layout.HeaderHeight) + layout.FrozenHeight) + layout.GetViewportHeight(i);
-                    double y = layout.Y;
-                    if (RowSplitBoxAlignment == SplitBoxAlignment.Leading)
-                    {
-                        layout.SetVerticalSplitBoxY(i, y);
-                        layout.SetVerticalSplitBoxHeight(i, Math.Min(num42, rowSplitBoxesHeight));
-                        layout.SetVerticalScrollBarY(i, layout.GetVerticalSplitBoxY(i) + layout.GetVerticalSplitBoxHeight(i));
-                        layout.SetVerticalScrollBarHeight(i, Math.Max((double)0.0, (double)(num42 - layout.GetVerticalSplitBoxHeight(i))));
-                    }
-                    else
-                    {
-                        layout.SetVerticalScrollBarY(i, y);
-                        layout.SetVerticalSplitBoxHeight(i, Math.Min(num42, rowSplitBoxesHeight));
-                        layout.SetVerticalScrollBarHeight(i, Math.Max((double)0.0, (double)(num42 - layout.GetVerticalSplitBoxHeight(i))));
-                        layout.SetVerticalSplitBoxY(i, layout.GetVerticalScrollBarY(i) + layout.GetVerticalScrollBarHeight(i));
-                    }
-                }
-                if ((i > 0) && (i < (layout.RowPaneCount - 1)))
-                {
-                    double viewportHeight = layout.GetViewportHeight(i);
-                    double viewportY = layout.GetViewportY(i);
-                    if (RowSplitBoxAlignment == SplitBoxAlignment.Leading)
-                    {
-                        layout.SetVerticalSplitBoxY(i, viewportY);
-                        layout.SetVerticalSplitBoxHeight(i, Math.Min(viewportHeight, rowSplitBoxesHeight));
-                        layout.SetVerticalScrollBarY(i, layout.GetVerticalSplitBoxY(i) + layout.GetVerticalSplitBoxHeight(i));
-                        layout.SetVerticalScrollBarHeight(i, Math.Max((double)0.0, (double)(viewportHeight - layout.GetVerticalSplitBoxHeight(i))));
-                    }
-                    else
-                    {
-                        layout.SetVerticalScrollBarY(i, viewportY);
-                        layout.SetVerticalSplitBoxHeight(i, Math.Min(viewportHeight, rowSplitBoxesHeight));
-                        layout.SetVerticalScrollBarHeight(i, Math.Max((double)0.0, (double)(viewportHeight - layout.GetVerticalSplitBoxHeight(i))));
-                        layout.SetVerticalSplitBoxY(i, layout.GetVerticalScrollBarY(i) + layout.GetVerticalScrollBarHeight(i));
-                    }
-                }
-                if (i == (layout.RowPaneCount - 1))
-                {
-                    double num46 = (((layout.GetViewportHeight(i) + layout.FrozenTrailingHeight) + ((layout.RowPaneCount == 1) ? layout.HeaderY : 0.0)) + ((layout.RowPaneCount == 1) ? layout.HeaderHeight : 0.0)) + ((layout.RowPaneCount == 1) ? layout.FrozenHeight : 0.0);
-                    double num47 = (layout.RowPaneCount == 1) ? layout.Y : layout.GetViewportY(layout.RowPaneCount - 1);
-                    if (RowSplitBoxAlignment == SplitBoxAlignment.Leading)
-                    {
-                        layout.SetVerticalSplitBoxY(i, num47);
-                        layout.SetVerticalSplitBoxHeight(i, Math.Min(num46, rowSplitBoxesHeight));
-                        layout.SetVerticalScrollBarY(i, layout.GetVerticalSplitBoxY(i) + layout.GetVerticalSplitBoxHeight(i));
-                        layout.SetVerticalScrollBarHeight(i, Math.Max((double)0.0, (double)(num46 - layout.GetVerticalSplitBoxHeight(i))));
-                    }
-                    else
-                    {
-                        layout.SetVerticalScrollBarY(i, num47);
-                        layout.SetVerticalSplitBoxHeight(i, Math.Min(num46, rowSplitBoxesHeight));
-                        layout.SetVerticalScrollBarHeight(i, Math.Max((double)0.0, (double)(num46 - layout.GetVerticalSplitBoxHeight(i))));
-                        layout.SetVerticalSplitBoxY(i, layout.GetVerticalScrollBarY(i) + layout.GetVerticalScrollBarHeight(i));
-                    }
-                }
-            }
-            if (layout.TabStripHeight > 0.0)
-            {
-                if ((layout.OrnamentHeight > 0.0) && flag)
-                {
-                    layout.TabStripX = layout.GetHorizontalScrollBarX(0);
-                    layout.TabStripY = layout.OrnamentY;
-                    layout.TabStripWidth = TabStripRatio * Math.Max((double)0.0, (double)(layout.GetHorizontalScrollBarWidth(0) - 16.0));
-                    layout.TabSplitBoxX = layout.TabStripX + layout.TabStripWidth;
-                    layout.TabSplitBoxWidth = 16.0;
-                    layout.SetHorizontalScrollBarX(0, layout.TabSplitBoxX + layout.TabSplitBoxWidth);
-                    layout.SetHorizontalScrollBarWidth(0, Math.Max((double)0.0, (double)((layout.GetHorizontalScrollBarWidth(0) - layout.TabStripWidth) - layout.TabSplitBoxWidth)));
+                    layout.SetHorizontalSplitBoxX(0, layout.X);
+                    layout.SetHorizontalSplitBoxWidth(0, boxWidth);
+                    layout.SetHorizontalScrollBarX(0, layout.X + boxWidth);
+                    layout.SetHorizontalScrollBarWidth(0, svWidth);
                 }
                 else
                 {
-                    layout.TabStripX = layout.X;
-                    layout.TabStripY = (layout.GetViewportY(layout.RowPaneCount - 1) + layout.GetViewportHeight(layout.RowPaneCount - 1)) + layout.FrozenTrailingHeight;
-                    for (int num48 = 0; num48 < layout.ColumnPaneCount; num48++)
+                    layout.SetHorizontalScrollBarX(0, layout.X);
+                    layout.SetHorizontalScrollBarWidth(0, svWidth);
+                    layout.SetHorizontalSplitBoxX(0, layout.X + svWidth);
+                    layout.SetHorizontalSplitBoxWidth(0, boxWidth);
+                }
+            }
+            else if (layout.ColumnPaneCount > 1)
+            {
+                for (int i = 0; i < layout.ColumnPaneCount; i++)
+                {
+                    if (i == 0)
                     {
-                        layout.TabStripWidth += layout.GetHorizontalScrollBarWidth(num48);
-                        layout.TabStripWidth += layout.GetHorizontalSplitBoxWidth(num48);
-                        if (num48 == (layout.ColumnPaneCount - 1))
+                        double vWidth = ((layout.HeaderX + layout.HeaderWidth) + layout.FrozenWidth) + layout.GetViewportWidth(i);
+                        double x = layout.X;
+                        double boxWidth = Math.Min(vWidth, columnSplitBoxesWidth);
+                        double svWidth = Math.Max(0.0, vWidth - boxWidth);
+                        if (ColumnSplitBoxAlignment == SplitBoxAlignment.Leading)
                         {
-                            break;
+                            layout.SetHorizontalSplitBoxX(i, x);
+                            layout.SetHorizontalSplitBoxWidth(i, boxWidth);
+                            layout.SetHorizontalScrollBarX(i, x + boxWidth);
+                            layout.SetHorizontalScrollBarWidth(i, svWidth);
                         }
-                        layout.TabStripWidth += 6.0;
+                        else
+                        {
+                            layout.SetHorizontalScrollBarX(i, x);
+                            layout.SetHorizontalScrollBarWidth(i, svWidth);
+                            layout.SetHorizontalSplitBoxX(i, x + svWidth);
+                            layout.SetHorizontalSplitBoxWidth(i, boxWidth);
+                        }
+                    }
+                    else
+                    {
+                        double viewportWidth = layout.GetViewportWidth(i);
+                        if (i == layout.ColumnPaneCount - 1)
+                            viewportWidth += layout.FrozenTrailingWidth;
+                        double viewportX = layout.GetViewportX(i);
+                        double boxWidth = Math.Min(viewportWidth, columnSplitBoxesWidth);
+                        double svWidth = Math.Max(0.0, viewportWidth - boxWidth);
+                        if (ColumnSplitBoxAlignment == SplitBoxAlignment.Leading)
+                        {
+                            layout.SetHorizontalSplitBoxX(i, viewportX);
+                            layout.SetHorizontalSplitBoxWidth(i, boxWidth);
+                            layout.SetHorizontalScrollBarX(i, viewportX + boxWidth);
+                            layout.SetHorizontalScrollBarWidth(i, svWidth);
+                        }
+                        else
+                        {
+                            layout.SetHorizontalScrollBarX(i, viewportX);
+                            layout.SetHorizontalScrollBarWidth(i, svWidth);
+                            layout.SetHorizontalSplitBoxX(i, viewportX + svWidth);
+                            layout.SetHorizontalSplitBoxWidth(i, svWidth);
+                        }
                     }
                 }
             }
-            double num49 = _availableSize.Width;
-            if (double.IsInfinity(num49) || double.IsNaN(num49))
+
+            double rowSplitBoxesHeight = GetRowSplitBoxesHeight(layout.RowPaneCount);
+            if (layout.RowPaneCount == 1)
             {
-                num49 = 0.0;
-                if (flag3)
+                // 仅一行视口
+                double vHeight = layout.GetViewportHeight(0) + layout.FrozenTrailingHeight + layout.HeaderY + layout.HeaderHeight + layout.FrozenHeight;
+                double vY = layout.Y;
+                double boxHeight = Math.Min(vHeight, rowSplitBoxesHeight);
+                double scrollBarHeight = Math.Max(0.0, vHeight - boxHeight - layout.TabStripHeight);
+                if (RowSplitBoxAlignment == SplitBoxAlignment.Leading)
                 {
-                    num49 += VerticalScrollBarWidth;
+                    layout.SetVerticalSplitBoxY(0, vY);
+                    layout.SetVerticalSplitBoxHeight(0, boxHeight);
+                    layout.SetVerticalScrollBarY(0, vY + boxHeight);
+                    layout.SetVerticalScrollBarHeight(0, scrollBarHeight);
                 }
-                for (int num50 = 0; num50 < (layout.ColumnPaneCount - 1); num50++)
+                else
                 {
-                    num49 += layout.GetHorizontalSplitBarWidth(num50);
-                }
-                for (int num51 = 0; num51 < layout.ColumnPaneCount; num51++)
-                {
-                    num49 += layout.GetViewportWidth(num51);
+                    layout.SetVerticalScrollBarY(0, vY);
+                    layout.SetVerticalScrollBarHeight(0, scrollBarHeight);
+                    layout.SetVerticalSplitBoxY(0, vY + scrollBarHeight);
+                    layout.SetVerticalSplitBoxHeight(0, boxHeight);
                 }
             }
-            double num52 = _availableSize.Height;
-            if (double.IsInfinity(num52) || double.IsNaN(num52))
+            else if (layout.RowPaneCount > 1)
             {
-                num52 = 0.0;
-                if (flag)
+                // 多行视口
+                for (int i = 0; i < layout.RowPaneCount; i++)
                 {
-                    num52 += HorizontalScrollBarHeight;
+                    if (i == 0)
+                    {
+                        double vHeight = layout.HeaderY + layout.HeaderHeight + layout.FrozenHeight + layout.GetViewportHeight(i);
+                        double boxHeight = Math.Min(vHeight, rowSplitBoxesHeight);
+                        if (RowSplitBoxAlignment == SplitBoxAlignment.Leading)
+                        {
+                            layout.SetVerticalSplitBoxY(i, layout.Y);
+                            layout.SetVerticalSplitBoxHeight(i, boxHeight);
+                            layout.SetVerticalScrollBarY(i, layout.Y + boxHeight);
+                            layout.SetVerticalScrollBarHeight(i, Math.Max(0.0, vHeight - boxHeight));
+                        }
+                        else
+                        {
+                            layout.SetVerticalScrollBarY(i, layout.Y);
+                            layout.SetVerticalScrollBarHeight(i, Math.Max(0.0, vHeight - boxHeight));
+                            layout.SetVerticalSplitBoxHeight(i, boxHeight);
+                            layout.SetVerticalSplitBoxY(i, layout.Y + layout.GetVerticalScrollBarHeight(i));
+                        }
+                    }
+                    else if (i < layout.RowPaneCount - 1)
+                    {
+                        double vHeight = layout.GetViewportHeight(i);
+                        double vY = layout.GetViewportY(i);
+                        double boxHeight = Math.Min(vHeight, rowSplitBoxesHeight);
+                        if (RowSplitBoxAlignment == SplitBoxAlignment.Leading)
+                        {
+                            layout.SetVerticalSplitBoxY(i, vY);
+                            layout.SetVerticalSplitBoxHeight(i, boxHeight);
+                            layout.SetVerticalScrollBarY(i, vY + boxHeight);
+                            layout.SetVerticalScrollBarHeight(i, Math.Max(0.0, vHeight - boxHeight));
+                        }
+                        else
+                        {
+                            layout.SetVerticalScrollBarY(i, vY);
+                            layout.SetVerticalScrollBarHeight(i, Math.Max(0.0, vHeight - boxHeight));
+                            layout.SetVerticalSplitBoxY(i, vY + layout.GetVerticalScrollBarHeight(i));
+                            layout.SetVerticalSplitBoxHeight(i, boxHeight);
+                        }
+                    }
+                    else if (i == layout.RowPaneCount - 1)
+                    {
+                        double vHeight = layout.GetViewportHeight(i) + layout.FrozenTrailingHeight;
+                        double vY = layout.GetViewportY(i);
+                        double boxHeight = Math.Min(vHeight, rowSplitBoxesHeight);
+                        double scrollBarHeight = Math.Max(0.0, vHeight - boxHeight - layout.TabStripHeight);
+                        if (RowSplitBoxAlignment == SplitBoxAlignment.Leading)
+                        {
+                            layout.SetVerticalSplitBoxY(i, vY);
+                            layout.SetVerticalSplitBoxHeight(i, boxHeight);
+                            layout.SetVerticalScrollBarY(i, vY + boxHeight);
+                            layout.SetVerticalScrollBarHeight(i, scrollBarHeight);
+                        }
+                        else
+                        {
+                            layout.SetVerticalScrollBarY(i, vY);
+                            layout.SetVerticalScrollBarHeight(i, scrollBarHeight);
+                            layout.SetVerticalSplitBoxY(i, vY + scrollBarHeight);
+                            layout.SetVerticalSplitBoxHeight(i, boxHeight);
+                        }
+                    }
                 }
-                for (int num53 = 0; num53 < (layout.RowPaneCount - 1); num53++)
+            }
+
+            double avWidth = _availableSize.Width;
+            if (double.IsInfinity(avWidth) || double.IsNaN(avWidth))
+            {
+                avWidth = 0.0;
+                for (int i = 0; i < (layout.ColumnPaneCount - 1); i++)
                 {
-                    num52 += layout.GetVerticalSplitBarHeight(num53);
+                    avWidth += layout.GetHorizontalSplitBarWidth(i);
                 }
-                for (int num54 = 0; num54 < layout.RowPaneCount; num54++)
+                for (int i = 0; i < layout.ColumnPaneCount; i++)
                 {
-                    num52 += layout.GetViewportHeight(num54);
+                    avWidth += layout.GetViewportWidth(i);
+                }
+            }
+            double avHeight = _availableSize.Height;
+            if (double.IsInfinity(avHeight) || double.IsNaN(avHeight))
+            {
+                avHeight = 0.0;
+                for (int i = 0; i < (layout.RowPaneCount - 1); i++)
+                {
+                    avHeight += layout.GetVerticalSplitBarHeight(i);
+                }
+                for (int i = 0; i < layout.RowPaneCount; i++)
+                {
+                    avHeight += layout.GetViewportHeight(i);
                 }
                 if (layout.TabStripHeight > 0.0)
                 {
-                    num52 += layout.TabStripHeight;
+                    avHeight += layout.TabStripHeight;
                 }
             }
-            _availableSize = new Size(num49, num52);
+            _availableSize = new Size(avWidth, avHeight);
             return layout;
         }
-
     }
 }

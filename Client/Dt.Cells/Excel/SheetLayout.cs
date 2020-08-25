@@ -437,17 +437,13 @@ namespace Dt.Cells.UI
             get { return _rowViewportCount; }
         }
 
-        public double TabSplitBoxWidth { get; set; }
+        public double TabStripX { get; set; }
 
-        public double TabSplitBoxX { get; set; }
+        public double TabStripY { get; set; }
 
         public double TabStripHeight { get; set; }
 
         public double TabStripWidth { get; set; }
-
-        public double TabStripX { get; set; }
-
-        public double TabStripY { get; set; }
     }
 }
 

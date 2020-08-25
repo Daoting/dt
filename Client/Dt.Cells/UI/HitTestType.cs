@@ -7,7 +7,6 @@
 #endregion
 
 #region 引用命名
-using System;
 #endregion
 
 namespace Dt.Cells.UI
@@ -27,7 +26,8 @@ namespace Dt.Cells.UI
         ColumnSplitBar,
         RowSplitBox,
         ColumnSplitBox,
-        TabSplitBox,
+        // 已删，怕有数字转类型的造成串位，未移除！
+        TabSplitBoxRemove,
         HorizontalScrollBar,
         VerticalScrollBar,
         CornerRangeGroup,

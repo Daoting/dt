@@ -75,7 +75,7 @@ namespace Dt.Cells.UI
 
         internal void ActiveSheet(int sheetIndex, bool raiseEvent)
         {
-            if (TabsPresenter.Count != 0)
+            if (TabsPresenter.Children.Count != 0)
             {
                 for (int i = 0; i < TabsPresenter.Children.Count; i++)
                 {
@@ -121,7 +121,7 @@ namespace Dt.Cells.UI
             StopTabEditing(false);
             List<SheetTab> list = new List<SheetTab>();
             List<SheetTab> list2 = new List<SheetTab>();
-            int count = TabsPresenter.Count;
+            int count = TabsPresenter.Children.Count;
             int num2 = sheets.Count;
             if (count < num2)
             {
@@ -171,19 +171,19 @@ namespace Dt.Cells.UI
             }
         }
 
-        SheetTab GetHitSheetTab(PointerRoutedEventArgs mArgs)
+        SheetTab GetHitSheetTab(Point p_point)
         {
-            if (TabsPresenter.Count > 0)
+            if (TabsPresenter.Children.Count > 0)
             {
-                List<UIElement> list = Enumerable.ToList<UIElement>(VisualTreeHelper.FindElementsInHostCoordinates(mArgs.GetCurrentPoint(Windows.UI.Xaml.Window.Current.Content).Position, Windows.UI.Xaml.Window.Current.Content));
-                if ((list != null) && (list.Count > 0))
+                var pt = Windows.UI.Xaml.Window.Current.Content.TransformToVisual(TabsPresenter).TransformPoint(p_point);
+                if (pt.X > 0)
                 {
-                    foreach (UIElement element in list)
+                    double x = 0.0;
+                    foreach (var tab in TabsPresenter.Children.OfType<SheetTab>())
                     {
-                        if (element is SheetTab)
-                        {
-                            return (SheetTab)element;
-                        }
+                        if (pt.X > x && pt.X <= x + tab.DesiredSize.Width)
+                            return tab;
+                        x += tab.DesiredSize.Width;
                     }
                 }
             }
@@ -193,26 +193,6 @@ namespace Dt.Cells.UI
         internal int GetStartIndexToBringTabIntoView(int tabIndex)
         {
             return TabsPresenter.GetStartIndexToBringTabIntoView(tabIndex);
-        }
-
-        SheetTab GetTouchHitSheetTab(Point point)
-        {
-            int count = TabsPresenter.Count;
-            if ((Excel != null) && (count > 0))
-            {
-                List<UIElement> list = Enumerable.ToList<UIElement>(VisualTreeHelper.FindElementsInHostCoordinates(TranslatePoint(point, Windows.UI.Xaml.Window.Current.Content), Windows.UI.Xaml.Window.Current.Content));
-                if ((list != null) && (list.Count > 0))
-                {
-                    foreach (UIElement element in list)
-                    {
-                        if (element is SheetTab)
-                        {
-                            return (SheetTab)element;
-                        }
-                    }
-                }
-            }
-            return null;
         }
 
         bool IsValidSheetName(string sheetName)
@@ -240,14 +220,14 @@ namespace Dt.Cells.UI
                 SheetIndex = sheetIndex
             };
             tab.Click += Tab_Click;
-            int count = TabsPresenter.Count;
-            if (HasInsertTab && (TabsPresenter.Count > 0))
+            int count = TabsPresenter.Children.Count;
+            if (HasInsertTab && (TabsPresenter.Children.Count > 0))
             {
-                count = TabsPresenter.Count - 1;
+                count = TabsPresenter.Children.Count - 1;
             }
             TabsPresenter.Children.Insert(count, tab);
             TabsPresenter.Update();
-            TabsPresenter.ReCalculateStartIndex(0, TabsPresenter.Count - 1);
+            TabsPresenter.ReCalculateStartIndex(0, TabsPresenter.Children.Count - 1);
         }
 
         internal void OnActiveTabChanged(EventArgs e)
@@ -307,7 +287,7 @@ namespace Dt.Cells.UI
 
         internal void ProcessMouseClickSheetTab(PointerRoutedEventArgs args)
         {
-            SheetTab hitSheetTab = GetHitSheetTab(args);
+            SheetTab hitSheetTab = GetHitSheetTab(args.GetCurrentPoint(null).Position);
             if (hitSheetTab != null)
             {
                 TabsPresenter tabsPresenter = TabsPresenter;
@@ -317,9 +297,9 @@ namespace Dt.Cells.UI
                     {
                         Excel.SaveDataForFormulaSelection();
                         OnNewTabNeeded(EventArgs.Empty);
-                        if (tabsPresenter.Count > 1)
+                        if (tabsPresenter.Children.Count > 1)
                         {
-                            ActiveSheet(((SheetTab)tabsPresenter.Children[tabsPresenter.Count - 2]).SheetIndex, true);
+                            ActiveSheet(((SheetTab)tabsPresenter.Children[tabsPresenter.Children.Count - 2]).SheetIndex, true);
                         }
                     }
                 }
@@ -356,9 +336,9 @@ namespace Dt.Cells.UI
                     if (!Workbook.Protect)
                     {
                         OnNewTabNeeded(EventArgs.Empty);
-                        if (tabsPresenter.Count > 1)
+                        if (tabsPresenter.Children.Count > 1)
                         {
-                            ActiveSheet(((SheetTab)tabsPresenter.Children[tabsPresenter.Count - 2]).SheetIndex, true);
+                            ActiveSheet(((SheetTab)tabsPresenter.Children[tabsPresenter.Children.Count - 2]).SheetIndex, true);
                         }
                     }
                 }
@@ -385,7 +365,7 @@ namespace Dt.Cells.UI
 
         internal void ProcessTap(Point point)
         {
-            SheetTab touchHitSheetTab = GetTouchHitSheetTab(point);
+            SheetTab touchHitSheetTab = GetHitSheetTab(point);
             if (touchHitSheetTab == null)
                 return;
 
@@ -400,9 +380,9 @@ namespace Dt.Cells.UI
                         Excel.StopCellEditing(true);
                     }
                     OnNewTabNeeded(EventArgs.Empty);
-                    if (tabsPresenter.Count > 1)
+                    if (tabsPresenter.Children.Count > 1)
                     {
-                        ActiveSheet(((SheetTab)tabsPresenter.Children[tabsPresenter.Count - 2]).SheetIndex, true);
+                        ActiveSheet(((SheetTab)tabsPresenter.Children[tabsPresenter.Children.Count - 2]).SheetIndex, true);
                     }
                 }
             }
@@ -445,7 +425,7 @@ namespace Dt.Cells.UI
 
         internal void SetStartSheet(int startSheetIndex)
         {
-            if ((TabsPresenter.Count != 0) && (TabsPresenter.Count > startSheetIndex))
+            if ((TabsPresenter.Children.Count != 0) && (TabsPresenter.Children.Count > startSheetIndex))
             {
                 TabsPresenter.SetStartSheet(startSheetIndex);
             }
@@ -455,7 +435,7 @@ namespace Dt.Cells.UI
         {
             if (((mouseEventArgs != null) && (_activeTab != null)) && ((Workbook != null) && !Workbook.Protect))
             {
-                SheetTab hitSheetTab = GetHitSheetTab(mouseEventArgs);
+                SheetTab hitSheetTab = GetHitSheetTab(mouseEventArgs.GetCurrentPoint(null).Position);
                 if (((hitSheetTab != null) && (hitSheetTab.SheetIndex == Workbook.ActiveSheetIndex)) && (hitSheetTab != _editingTab))
                 {
                     if (IsEditing)
@@ -479,7 +459,7 @@ namespace Dt.Cells.UI
         {
             if (((_activeTab != null) && (Workbook != null)) && !Workbook.Protect)
             {
-                SheetTab touchHitSheetTab = GetTouchHitSheetTab(point);
+                SheetTab touchHitSheetTab = GetHitSheetTab(point);
                 if (((touchHitSheetTab != null) && (touchHitSheetTab.SheetIndex == Workbook.ActiveSheetIndex)) && (touchHitSheetTab != _editingTab))
                 {
                     if (IsEditing)
@@ -502,7 +482,7 @@ namespace Dt.Cells.UI
 
         internal bool StayInEditing(Point point)
         {
-            return ((IsEditing && (_editingTab != null)) && (GetTouchHitSheetTab(point) == _editingTab));
+            return ((IsEditing && (_editingTab != null)) && (GetHitSheetTab(point) == _editingTab));
         }
 
         internal async void StopTabEditing(bool cancel)
@@ -580,11 +560,6 @@ namespace Dt.Cells.UI
             }
         }
 
-        Point TranslatePoint(Point point, UIElement element)
-        {
-            return Excel.TransformToVisual(element).TransformPoint(point);
-        }
-
         internal void Update()
         {
             StopTabEditing(false);
@@ -602,7 +577,7 @@ namespace Dt.Cells.UI
 
         void UpdateZIndexes()
         {
-            int count = TabsPresenter.Count;
+            int count = TabsPresenter.Children.Count;
             if ((count > 0) && (_activeTab != null))
             {
                 for (int i = 0; i < count; i++)
@@ -644,7 +619,7 @@ namespace Dt.Cells.UI
                         if (IsLoaded)
                         {
                             TabsPresenter.Update();
-                            TabsPresenter.ReCalculateStartIndex(0, TabsPresenter.Count - 1);
+                            TabsPresenter.ReCalculateStartIndex(0, TabsPresenter.Children.Count - 1);
                         }
                     }
                     else

@@ -8921,85 +8921,6 @@ namespace Dt.Base
         /// <summary>
         /// 
         /// </summary>
-        void ContinueColumnSplitting()
-        {
-            HitTestInformation savedHitTestInformation = GetHitInfo();
-            SheetLayout layout = GetSheetLayout();
-            int columnViewportIndex = savedHitTestInformation.ColumnViewportIndex;
-            switch (savedHitTestInformation.HitTestType)
-            {
-                case HitTestType.RowSplitBar:
-                case HitTestType.ColumnSplitBar:
-                    if (MousePosition.X <= _columnSplittingTracker.X1)
-                    {
-                        _columnSplittingTracker.X1 = Math.Max(MousePosition.X, layout.GetViewportX(columnViewportIndex) + (layout.GetHorizontalSplitBarWidth(columnViewportIndex) / 2.0));
-                        break;
-                    }
-                    _columnSplittingTracker.X1 = Math.Min(MousePosition.X, (layout.GetViewportX(columnViewportIndex + 1) + layout.GetViewportWidth(columnViewportIndex + 1)) - (layout.GetHorizontalSplitBarWidth(columnViewportIndex) / 2.0));
-                    break;
-
-                case HitTestType.ColumnSplitBox:
-                    if (MousePosition.X <= _columnSplittingTracker.X1)
-                    {
-                        _columnSplittingTracker.X1 = Math.Max(MousePosition.X, layout.GetViewportX(columnViewportIndex) + (layout.GetHorizontalSplitBoxWidth(columnViewportIndex) / 2.0));
-                        break;
-                    }
-                    _columnSplittingTracker.X1 = Math.Min(MousePosition.X, (layout.GetViewportX(columnViewportIndex) + layout.GetViewportWidth(columnViewportIndex)) - (layout.GetHorizontalSplitBoxWidth(columnViewportIndex) / 2.0));
-                    break;
-            }
-            _columnSplittingTracker.X2 = _columnSplittingTracker.X1;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        void ContinueRowSplitting()
-        {
-            HitTestInformation savedHitTestInformation = GetHitInfo();
-            SheetLayout layout = GetSheetLayout();
-            int rowViewportIndex = savedHitTestInformation.RowViewportIndex;
-            switch (savedHitTestInformation.HitTestType)
-            {
-                case HitTestType.RowSplitBar:
-                case HitTestType.ColumnSplitBar:
-                    if (MousePosition.Y <= _rowSplittingTracker.Y1)
-                    {
-                        _rowSplittingTracker.Y1 = Math.Max(MousePosition.Y, layout.GetViewportY(rowViewportIndex) + (layout.GetVerticalSplitBarHeight(rowViewportIndex) / 2.0));
-                        break;
-                    }
-                    _rowSplittingTracker.Y1 = Math.Min(MousePosition.Y, (layout.GetViewportY(rowViewportIndex + 1) + layout.GetViewportHeight(rowViewportIndex + 1)) - (layout.GetVerticalSplitBarHeight(rowViewportIndex) / 2.0));
-                    break;
-
-                case HitTestType.RowSplitBox:
-                    if (MousePosition.Y <= _rowSplittingTracker.Y1)
-                    {
-                        _rowSplittingTracker.Y1 = Math.Max(MousePosition.Y, layout.GetViewportY(rowViewportIndex) + (layout.GetVerticalSplitBoxHeight(rowViewportIndex) / 2.0));
-                        break;
-                    }
-                    _rowSplittingTracker.Y1 = Math.Min(MousePosition.Y, (layout.GetViewportY(rowViewportIndex) + layout.GetViewportHeight(rowViewportIndex)) - (layout.GetVerticalSplitBoxHeight(rowViewportIndex) / 2.0));
-                    break;
-            }
-            _rowSplittingTracker.Y2 = _rowSplittingTracker.Y1;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        void ContinueTabStripResizing()
-        {
-            SheetLayout layout = GetSheetLayout();
-            double tabStripX = layout.TabStripX;
-            double tabStripHeight = layout.TabStripHeight;
-            double num2 = layout.GetHorizontalScrollBarWidth(0) + layout.TabStripWidth;
-            double num3 = Math.Min(Math.Max((double)0.0, (double)(MousePosition.X - tabStripX)), num2);
-            TabStripRatio = num3 / num2;
-            InvalidateLayout();
-            InvalidateMeasure();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="child"></param>
         /// <param name="renderSize"></param>
         /// <returns></returns>
@@ -9172,69 +9093,6 @@ namespace Dt.Base
         /// <summary>
         /// 
         /// </summary>
-        void EndColumnSplitting()
-        {
-            double num2;
-            HitTestInformation savedHitTestInformation = GetHitInfo();
-            SheetLayout layout = GetSheetLayout();
-            int columnViewportIndex = savedHitTestInformation.ColumnViewportIndex;
-            IsWorking = false;
-            IsTouchColumnSplitting = false;
-            IsColumnSplitting = false;
-            switch (savedHitTestInformation.HitTestType)
-            {
-                case HitTestType.RowSplitBar:
-                case HitTestType.ColumnSplitBar:
-                    if (MousePosition.X <= layout.GetHorizontalSplitBarX(savedHitTestInformation.ColumnViewportIndex))
-                    {
-                        num2 = layout.GetHorizontalSplitBarX(savedHitTestInformation.ColumnViewportIndex) - MousePosition.X;
-                    }
-                    else
-                    {
-                        num2 = Math.Max((double)0.0, (double)((MousePosition.X - layout.GetHorizontalSplitBarX(savedHitTestInformation.ColumnViewportIndex)) - layout.GetHorizontalSplitBarWidth(savedHitTestInformation.ColumnViewportIndex)));
-                    }
-                    if (num2 != 0.0)
-                    {
-                        double deltaViewportWidth = (_columnSplittingTracker.X1 - layout.GetHorizontalSplitBarX(savedHitTestInformation.ColumnViewportIndex)) - (layout.GetHorizontalSplitBarWidth(savedHitTestInformation.ColumnViewportIndex) / 2.0);
-                        int viewportIndex = savedHitTestInformation.ColumnViewportIndex;
-                        if (!RaiseColumnViewportWidthChanging(viewportIndex, deltaViewportWidth))
-                        {
-                            AdjustColumnViewport(columnViewportIndex, deltaViewportWidth);
-                            RaiseColumnViewportWidthChanged(viewportIndex, deltaViewportWidth);
-                        }
-                    }
-                    goto Label_0258;
-
-                case HitTestType.ColumnSplitBox:
-                    if (ColumnSplitBoxAlignment != SplitBoxAlignment.Leading)
-                    {
-                        num2 = Math.Max((double)0.0, (double)(((layout.GetViewportX(savedHitTestInformation.ColumnViewportIndex) + layout.GetViewportWidth(savedHitTestInformation.ColumnViewportIndex)) - MousePosition.X) - layout.GetHorizontalSplitBoxWidth(savedHitTestInformation.ColumnViewportIndex)));
-                        break;
-                    }
-                    num2 = Math.Max((double)0.0, (double)((MousePosition.X - layout.GetViewportX(savedHitTestInformation.ColumnViewportIndex)) - layout.GetHorizontalSplitBoxWidth(savedHitTestInformation.ColumnViewportIndex)));
-                    break;
-
-                default:
-                    goto Label_0258;
-            }
-            if (num2 > 0.0)
-            {
-                double num3 = (_columnSplittingTracker.X1 - layout.GetViewportX(columnViewportIndex)) - (layout.GetHorizontalSplitBoxWidth(columnViewportIndex) / 2.0);
-                int num4 = (ColumnSplitBoxAlignment == SplitBoxAlignment.Leading) ? 0 : (GetViewportInfo().ColumnViewportCount - 1);
-                if (!RaiseColumnViewportWidthChanging(num4, num3))
-                {
-                    AddColumnViewport(columnViewportIndex, num3);
-                    RaiseColumnViewportWidthChanged(num4, num3);
-                    ShowCell(GetActiveRowViewportIndex(), GetActiveColumnViewportIndex(), ActiveSheet.ActiveRowIndex, ActiveSheet.ActiveColumnIndex, VerticalPosition.Nearest, HorizontalPosition.Nearest);
-                }
-            }
-        Label_0258:
-            _columnSplittingTracker.Opacity = 0.0;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="sheetIndex"></param>
         /// <returns></returns>
         internal int GetActiveRowViewportIndex(int sheetIndex)
@@ -9245,79 +9103,6 @@ namespace Dt.Base
             }
             var sheet = Sheets[sheetIndex];
             return GetViewportInfo(sheet).ActiveRowViewport;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        void EndRowSplitting()
-        {
-            double num2;
-            HitTestInformation savedHitTestInformation = GetHitInfo();
-            SheetLayout layout = GetSheetLayout();
-            int rowViewportIndex = savedHitTestInformation.RowViewportIndex;
-            IsWorking = false;
-            IsRowSplitting = false;
-            IsTouchRowSplitting = false;
-            switch (savedHitTestInformation.HitTestType)
-            {
-                case HitTestType.RowSplitBar:
-                case HitTestType.ColumnSplitBar:
-                    if (MousePosition.Y <= layout.GetVerticalSplitBarY(rowViewportIndex))
-                    {
-                        num2 = layout.GetVerticalSplitBarY(rowViewportIndex) - MousePosition.Y;
-                    }
-                    else
-                    {
-                        num2 = Math.Max((double)0.0, (double)((MousePosition.Y - layout.GetVerticalSplitBarY(rowViewportIndex)) - layout.GetVerticalSplitBarHeight(rowViewportIndex)));
-                    }
-                    if (num2 != 0.0)
-                    {
-                        double deltaViewportHeight = (_rowSplittingTracker.Y1 - layout.GetVerticalSplitBarY(rowViewportIndex)) - (layout.GetVerticalSplitBarHeight(rowViewportIndex) / 2.0);
-                        int viewportIndex = savedHitTestInformation.RowViewportIndex;
-                        if (!RaiseRowViewportHeightChanging(viewportIndex, deltaViewportHeight))
-                        {
-                            AdjustRowViewport(rowViewportIndex, deltaViewportHeight);
-                            RaiseRowViewportHeightChanged(viewportIndex, deltaViewportHeight);
-                        }
-                    }
-                    goto Label_021D;
-
-                case HitTestType.RowSplitBox:
-                    if (RowSplitBoxAlignment != SplitBoxAlignment.Leading)
-                    {
-                        num2 = Math.Max((double)0.0, (double)(((layout.GetViewportY(rowViewportIndex) + layout.GetViewportHeight(rowViewportIndex)) - MousePosition.Y) - layout.GetVerticalSplitBoxHeight(rowViewportIndex)));
-                        break;
-                    }
-                    num2 = Math.Max((double)0.0, (double)((MousePosition.Y - layout.GetViewportY(rowViewportIndex)) - layout.GetVerticalSplitBoxHeight(rowViewportIndex)));
-                    break;
-
-                default:
-                    goto Label_021D;
-            }
-            if (num2 > 0.0)
-            {
-                double num3 = (_rowSplittingTracker.Y1 - layout.GetViewportY(rowViewportIndex)) - (layout.GetVerticalSplitBoxHeight(rowViewportIndex) / 2.0);
-                int num4 = (RowSplitBoxAlignment == SplitBoxAlignment.Leading) ? 0 : (GetViewportInfo().RowViewportCount - 1);
-                if (!RaiseRowViewportHeightChanging(num4, num3))
-                {
-                    AddRowViewport(rowViewportIndex, num3);
-                    RaiseRowViewportHeightChanged(num4, num3);
-                    ShowCell(GetActiveRowViewportIndex(), GetActiveColumnViewportIndex(), ActiveSheet.ActiveRowIndex, ActiveSheet.ActiveColumnIndex, VerticalPosition.Nearest, HorizontalPosition.Nearest);
-                }
-            }
-        Label_021D:
-            _rowSplittingTracker.Opacity = 0.0;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        void EndTabStripResizing()
-        {
-            IsTabStripResizing = false;
-            IsTouchTabStripResizing = false;
-            IsWorking = false;
         }
 
         internal int GetActiveColumnViewportIndex(int sheetIndex)
@@ -9343,7 +9128,7 @@ namespace Dt.Base
                 {
                     if (columnPaneCount == 1)
                     {
-                        return 6.0;
+                        return HORIZONTALSPLITBOX_WIDTH;
                     }
                     return 0.0;
                 }
@@ -9352,7 +9137,7 @@ namespace Dt.Base
                     return 0.0;
                 }
             }
-            return 6.0;
+            return HORIZONTALSPLITBOX_WIDTH;
         }
 
         /// <summary>
@@ -9466,7 +9251,7 @@ namespace Dt.Base
                 {
                     if (rowPaneCount == 1)
                     {
-                        return 6.0;
+                        return VERTICALSPLITBOX_HEIGHT;
                     }
                     return 0.0;
                 }
@@ -9475,7 +9260,7 @@ namespace Dt.Base
                     return 0.0;
                 }
             }
-            return 6.0;
+            return VERTICALSPLITBOX_HEIGHT;
         }
 
         /// <summary>
@@ -9530,24 +9315,6 @@ namespace Dt.Base
                 return 1.0;
             }
             return scale;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        Rect GetTabSplitBoxRectangle()
-        {
-            SheetLayout layout = GetSheetLayout();
-            double tabSplitBoxX = layout.TabSplitBoxX;
-            double ornamentY = layout.OrnamentY;
-            double width = layout.TabSplitBoxWidth - 1.0;
-            double height = layout.OrnamentHeight - 1.0;
-            if ((width >= 0.0) && (height >= 0.0))
-            {
-                return new Rect(tabSplitBoxX, ornamentY, width, height);
-            }
-            return Rect.Empty;
         }
 
         /// <summary>
@@ -9954,15 +9721,6 @@ namespace Dt.Base
                 return false;
             }
             return true;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        bool IsMouseInTabSplitBox()
-        {
-            return (GetHitInfo().HitTestType == HitTestType.TabSplitBox);
         }
 
         /// <summary>
@@ -10586,141 +10344,6 @@ namespace Dt.Base
         /// <summary>
         /// 
         /// </summary>
-        void StartColumnSplitting()
-        {
-            if (!Workbook.Protect)
-            {
-                HitTestInformation savedHitTestInformation = GetHitInfo();
-                SheetLayout layout = GetSheetLayout();
-                if (!IsTouching)
-                {
-                    IsColumnSplitting = true;
-                }
-                else
-                {
-                    IsTouchColumnSplitting = true;
-                }
-                IsWorking = true;
-                if (_columnSplittingTracker == null)
-                {
-                    Line line = new Line();
-                    line.Stroke = new SolidColorBrush(Colors.Black);
-                    line.Opacity = 0.5;
-                    _columnSplittingTracker = line;
-                    SplittingTrackerContainer.Children.Add(_columnSplittingTracker);
-                }
-                int columnViewportIndex = savedHitTestInformation.ColumnViewportIndex;
-                int rowViewportIndex = savedHitTestInformation.RowViewportIndex;
-                _columnSplittingTracker.Opacity = 0.5;
-                switch (savedHitTestInformation.HitTestType)
-                {
-                    case HitTestType.RowSplitBar:
-                    case HitTestType.ColumnSplitBar:
-                        _columnSplittingTracker.StrokeThickness = layout.GetHorizontalSplitBarWidth(columnViewportIndex);
-                        _columnSplittingTracker.X1 = layout.GetHorizontalSplitBarX(columnViewportIndex) + (layout.GetHorizontalSplitBarWidth(columnViewportIndex) / 2.0);
-                        _columnSplittingTracker.Y1 = layout.Y;
-                        _columnSplittingTracker.X2 = _columnSplittingTracker.X1;
-                        _columnSplittingTracker.Y2 = layout.HeaderY + _availableSize.Height;
-                        return;
-
-                    case HitTestType.RowSplitBox:
-                        return;
-
-                    case HitTestType.ColumnSplitBox:
-                        _columnSplittingTracker.StrokeThickness = layout.GetHorizontalSplitBoxWidth(columnViewportIndex);
-                        if (ColumnSplitBoxAlignment != SplitBoxAlignment.Leading)
-                        {
-                            _columnSplittingTracker.X1 = (layout.GetViewportX(columnViewportIndex) + layout.GetViewportWidth(columnViewportIndex)) - (layout.GetHorizontalSplitBoxWidth(columnViewportIndex) / 2.0);
-                        }
-                        else
-                        {
-                            _columnSplittingTracker.X1 = layout.GetViewportX(columnViewportIndex) + (layout.GetHorizontalSplitBoxWidth(columnViewportIndex) / 2.0);
-                        }
-                        _columnSplittingTracker.Y1 = layout.Y;
-                        _columnSplittingTracker.X2 = _columnSplittingTracker.X1;
-                        _columnSplittingTracker.Y2 = layout.HeaderY + _availableSize.Height;
-                        return;
-                }
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        void StartRowSplitting()
-        {
-            if (!Workbook.Protect)
-            {
-                HitTestInformation savedHitTestInformation = GetHitInfo();
-                SheetLayout layout = GetSheetLayout();
-                if (!IsTouching)
-                {
-                    IsRowSplitting = true;
-                }
-                else
-                {
-                    IsTouchRowSplitting = true;
-                }
-                IsWorking = true;
-                if (_rowSplittingTracker == null)
-                {
-                    Line line = new Line();
-                    line.Stroke = new SolidColorBrush(Colors.Black);
-                    line.Opacity = 0.5;
-                    _rowSplittingTracker = line;
-                    SplittingTrackerContainer.Children.Add(_rowSplittingTracker);
-                }
-                int columnViewportIndex = savedHitTestInformation.ColumnViewportIndex;
-                int rowViewportIndex = savedHitTestInformation.RowViewportIndex;
-                _rowSplittingTracker.Opacity = 0.5;
-                switch (savedHitTestInformation.HitTestType)
-                {
-                    case HitTestType.RowSplitBar:
-                    case HitTestType.ColumnSplitBar:
-                        _rowSplittingTracker.StrokeThickness = layout.GetVerticalSplitBarHeight(rowViewportIndex);
-                        _rowSplittingTracker.Y1 = layout.GetVerticalSplitBarY(rowViewportIndex) + (layout.GetVerticalSplitBarHeight(rowViewportIndex) / 2.0);
-                        _rowSplittingTracker.X1 = layout.X;
-                        _rowSplittingTracker.Y2 = _rowSplittingTracker.Y1;
-                        _rowSplittingTracker.X2 = layout.X + _availableSize.Width;
-                        return;
-
-                    case HitTestType.RowSplitBox:
-                        _rowSplittingTracker.StrokeThickness = layout.GetVerticalSplitBoxHeight(rowViewportIndex);
-                        if (RowSplitBoxAlignment != SplitBoxAlignment.Leading)
-                        {
-                            _rowSplittingTracker.Y1 = (layout.GetViewportY(rowViewportIndex) + layout.GetViewportHeight(rowViewportIndex)) - (layout.GetVerticalSplitBoxHeight(rowViewportIndex) / 2.0);
-                        }
-                        else
-                        {
-                            _rowSplittingTracker.Y1 = layout.GetViewportY(rowViewportIndex) + (layout.GetVerticalSplitBoxHeight(rowViewportIndex) / 2.0);
-                        }
-                        _rowSplittingTracker.X1 = layout.X;
-                        _rowSplittingTracker.Y2 = _rowSplittingTracker.Y1;
-                        _rowSplittingTracker.X2 = layout.X + _availableSize.Width;
-                        return;
-                }
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        void StartTabStripResizing()
-        {
-            if (!IsTouching)
-            {
-                IsTabStripResizing = true;
-            }
-            else
-            {
-                IsTouchTabStripResizing = true;
-            }
-            IsWorking = true;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <param name="currentPoint"></param>
         /// <param name="translate"></param>
         /// <param name="scale"></param>
@@ -10826,145 +10449,137 @@ namespace Dt.Base
         /// <summary>
         /// 
         /// </summary>
-        internal void UpdateCrossSplitBars()
+        internal void UpdateHorizontalScrollBars()
         {
+            if (ActiveSheet == null)
+                return;
+
             SheetLayout layout = GetSheetLayout();
-            if ((_crossSplitBar != null) && (((ActiveSheet == null) || (_crossSplitBar.GetLength(0) != (layout.RowPaneCount - 1))) || (_crossSplitBar.GetLength(1) != (layout.ColumnPaneCount - 1))))
+            if (_horizontalScrollBar != null && _horizontalScrollBar.Length != layout.ColumnPaneCount)
             {
-                for (int i = 0; i < _crossSplitBar.GetLength(0); i++)
+                for (int j = 0; j < _horizontalScrollBar.Length; j++)
                 {
-                    for (int j = 0; j < _crossSplitBar.GetLength(1); j++)
-                    {
-                        Children.Remove(_crossSplitBar[i, j]);
-                    }
+                    var scrollBar = _horizontalScrollBar[j];
+                    scrollBar.Scroll -= HorizontalScrollbar_Scroll;
+                    scrollBar.PointerPressed -= OnHorizontalScrollBarPointerPressed;
+                    scrollBar.PointerReleased -= OnHorizontalScrollBarPointerReleased;
+                    scrollBar.PointerExited -= OnHorizontalScrollBarPointerExited;
+                    Children.Remove(scrollBar);
                 }
-                _crossSplitBar = null;
+                _horizontalScrollBar = null;
             }
-            if (((ActiveSheet != null) && (_crossSplitBar == null)) && ((layout == null) || ((layout.RowPaneCount >= 1) && (layout.ColumnPaneCount >= 1))))
+
+            if (_horizontalScrollBar == null)
             {
-                _crossSplitBar = new CrossSplitBar[layout.RowPaneCount - 1, layout.ColumnPaneCount - 1];
-                for (int k = 0; k < _crossSplitBar.GetLength(0); k++)
+                _horizontalScrollBar = new ScrollBar[layout.ColumnPaneCount];
+                for (int k = 0; k < layout.ColumnPaneCount; k++)
                 {
-                    for (int m = 0; m < _crossSplitBar.GetLength(1); m++)
-                    {
-                        _crossSplitBar[k, m] = new CrossSplitBar();
-                        Canvas.SetZIndex(_crossSplitBar[k, m], 2);
-                    }
+                    var scrollBar = new ScrollBar();
+                    scrollBar.Orientation = (Orientation)1;
+#if UWP || WASM
+                    scrollBar.IndicatorMode = ScrollingIndicatorMode.MouseIndicator;
+#else
+                    scrollBar.IndicatorMode = ScrollingIndicatorMode.TouchIndicator;
+#endif
+                    scrollBar.IsTabStop = false;
+                    scrollBar.TypeSafeSetStyle(HorizontalScrollBarStyle);
+                    scrollBar.Scroll += HorizontalScrollbar_Scroll;
+                    scrollBar.PointerPressed += OnHorizontalScrollBarPointerPressed;
+                    scrollBar.PointerReleased += OnHorizontalScrollBarPointerReleased;
+                    scrollBar.PointerExited += OnHorizontalScrollBarPointerExited;
+                    Canvas.SetZIndex(scrollBar, 0x62);
+                    _horizontalScrollBar[k] = scrollBar;
                 }
+            }
+
+            int sheetInvisibleColumns = GetSheetInvisibleColumns(ActiveSheet);
+            for (int i = 0; i < layout.ColumnPaneCount; i++)
+            {
+                var scrollBar = _horizontalScrollBar[i];
+                scrollBar.Minimum = (double)ActiveSheet.FrozenColumnCount;
+                scrollBar.Maximum = (double)Math.Max(ActiveSheet.FrozenColumnCount, ((ActiveSheet.ColumnCount - ActiveSheet.FrozenTrailingColumnCount) - sheetInvisibleColumns) - 1);
+                
+                double largeSize = GetViewportColumnLayoutModel(i).Count - GetViewportInvisibleColumns(i);
+                scrollBar.ViewportSize = largeSize;
+                scrollBar.LargeChange = largeSize;
+                
+                scrollBar.SmallChange = 1.0;
+                int viewportLeftColumn = GetViewportLeftColumn(i);
+                viewportLeftColumn = TryGetNextScrollableColumn(viewportLeftColumn);
+                int invisibleColumnsBeforeColumn = GetInvisibleColumnsBeforeColumn(ActiveSheet, viewportLeftColumn);
+                viewportLeftColumn -= invisibleColumnsBeforeColumn;
+                scrollBar.Value = (double)viewportLeftColumn;
+                scrollBar.InvalidateArrange();
+                scrollBar.IsEnabled = HorizontalScrollBarVisibility != 0;
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        internal void UpdateHorizontalScrollBars()
+        internal void UpdateVerticalScrollBars()
         {
             if (ActiveSheet != null)
             {
                 SheetLayout layout = GetSheetLayout();
-                if ((_horizontalScrollBar != null) && ((ActiveSheet == null) || (_horizontalScrollBar.Length != layout.ColumnPaneCount)))
+                if ((_verticalScrollBar != null) && ((ActiveSheet == null) || (_verticalScrollBar.Length != layout.RowPaneCount)))
                 {
-                    for (int j = 0; j < _horizontalScrollBar.Length; j++)
+                    for (int j = 0; j < _verticalScrollBar.Length; j++)
                     {
-                        _horizontalScrollBar[j].Scroll -= HorizontalScrollbar_Scroll;
-                        _horizontalScrollBar[j].PointerPressed -= OnHorizontalScrollBarPointerPressed;
-                        _horizontalScrollBar[j].PointerReleased -= OnHorizontalScrollBarPointerReleased;
-                        _horizontalScrollBar[j].PointerExited -= OnHorizontalScrollBarPointerExited;
-                        Children.Remove(_horizontalScrollBar[j]);
+                        var scrollBar = _verticalScrollBar[j];
+                        scrollBar.Scroll -= VerticalScrollbar_Scroll;
+                        scrollBar.PointerPressed -= OnVerticalScrollbarPointerPressed;
+                        scrollBar.PointerReleased -= OnVerticalScrollbarPointerReleased;
+                        scrollBar.PointerExited -= OnVerticalScrollbarPointerExited;
+                        Children.Remove(scrollBar);
                     }
-                    _horizontalScrollBar = null;
+                    _verticalScrollBar = null;
                 }
-                if (_horizontalScrollBar == null)
+
+                if ((ActiveSheet != null) && (_verticalScrollBar == null))
                 {
-                    _horizontalScrollBar = new ScrollBar[layout.ColumnPaneCount];
-                    for (int k = 0; k < layout.ColumnPaneCount; k++)
+                    _verticalScrollBar = new ScrollBar[layout.RowPaneCount];
+                    for (int k = 0; k < _verticalScrollBar.Length; k++)
                     {
-                        _horizontalScrollBar[k] = new ScrollBar();
-                        _horizontalScrollBar[k].Orientation = (Orientation)1;
-                        _horizontalScrollBar[k].IsTabStop = false;
-                        _horizontalScrollBar[k].TypeSafeSetStyle(HorizontalScrollBarStyle);
-                        _horizontalScrollBar[k].Scroll += HorizontalScrollbar_Scroll;
-                        _horizontalScrollBar[k].PointerPressed += OnHorizontalScrollBarPointerPressed;
-                        _horizontalScrollBar[k].PointerReleased += OnHorizontalScrollBarPointerReleased;
-                        _horizontalScrollBar[k].PointerExited += OnHorizontalScrollBarPointerExited;
-                        Canvas.SetZIndex(_horizontalScrollBar[k], 0x62);
+                        var scrollBar = new ScrollBar();
+                        scrollBar.Orientation = (Orientation)0;
+#if UWP || WASM
+                        scrollBar.IndicatorMode = ScrollingIndicatorMode.MouseIndicator;
+#else
+                        scrollBar.IndicatorMode = ScrollingIndicatorMode.TouchIndicator;
+#endif
+                        scrollBar.ViewportSize = 30.0;
+                        scrollBar.IsTabStop = false;
+                        scrollBar.TypeSafeSetStyle(VerticalScrollBarStyle);
+                        scrollBar.Scroll += VerticalScrollbar_Scroll;
+                        scrollBar.PointerPressed += OnVerticalScrollbarPointerPressed;
+                        scrollBar.PointerReleased += OnVerticalScrollbarPointerReleased;
+                        scrollBar.PointerExited += OnVerticalScrollbarPointerExited;
+                        Canvas.SetZIndex(scrollBar, 0x62);
+                        _verticalScrollBar[k] = scrollBar;
                     }
                 }
-                int sheetInvisibleColumns = GetSheetInvisibleColumns(ActiveSheet);
-                for (int i = 0; i < layout.ColumnPaneCount; i++)
+
+                int sheetInvisibleRows = GetSheetInvisibleRows(ActiveSheet);
+                for (int i = 0; i < layout.RowPaneCount; i++)
                 {
-                    double num8;
-                    int viewportInvisibleColumns = GetViewportInvisibleColumns(i);
-                    _horizontalScrollBar[i].Minimum = (double)ActiveSheet.FrozenColumnCount;
-                    _horizontalScrollBar[i].Maximum = (double)Math.Max(ActiveSheet.FrozenColumnCount, ((ActiveSheet.ColumnCount - ActiveSheet.FrozenTrailingColumnCount) - sheetInvisibleColumns) - 1);
-                    _horizontalScrollBar[i].ViewportSize = num8 = GetViewportColumnLayoutModel(i).Count - viewportInvisibleColumns;
-                    _horizontalScrollBar[i].LargeChange = num8;
-                    _horizontalScrollBar[i].SmallChange = 1.0;
-                    int viewportLeftColumn = GetViewportLeftColumn(i);
-                    viewportLeftColumn = TryGetNextScrollableColumn(viewportLeftColumn);
-                    int invisibleColumnsBeforeColumn = GetInvisibleColumnsBeforeColumn(ActiveSheet, viewportLeftColumn);
-                    viewportLeftColumn -= invisibleColumnsBeforeColumn;
-                    _horizontalScrollBar[i].Value = (double)viewportLeftColumn;
-                    _horizontalScrollBar[i].InvalidateArrange();
-                    _horizontalScrollBar[i].IsEnabled = HorizontalScrollBarVisibility != 0;
+                    var scrollBar = _verticalScrollBar[i];
+                    scrollBar.Minimum = (double)ActiveSheet.FrozenRowCount;
+                    scrollBar.Maximum = (double)Math.Max(ActiveSheet.FrozenRowCount, ((ActiveSheet.RowCount - ActiveSheet.FrozenTrailingRowCount) - sheetInvisibleRows) - 1);
+
+                    double largeSize = GetViewportRowLayoutModel(i).Count - GetViewportInvisibleRows(i);
+                    scrollBar.ViewportSize = largeSize;
+                    scrollBar.LargeChange = largeSize;
+
+                    scrollBar.SmallChange = 1.0;
+                    int viewportTopRow = GetViewportTopRow(i);
+                    viewportTopRow = TryGetNextScrollableRow(viewportTopRow);
+                    int invisibleRowsBeforeRow = GetInvisibleRowsBeforeRow(ActiveSheet, viewportTopRow);
+                    viewportTopRow -= invisibleRowsBeforeRow;
+                    scrollBar.Value = (double)viewportTopRow;
+                    scrollBar.InvalidateArrange();
+                    scrollBar.IsEnabled = VerticalScrollBarVisibility != 0;
                 }
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        internal void UpdateHorizontalSplitBars()
-        {
-            SheetLayout layout = GetSheetLayout();
-            if ((_horizontalSplitBar != null) && ((ActiveSheet == null) || (_horizontalSplitBar.Length != (layout.ColumnPaneCount - 1))))
-            {
-                foreach (HorizontalSplitBar bar in _horizontalSplitBar)
-                {
-                    Children.Remove(bar);
-                }
-                _horizontalSplitBar = null;
-            }
-            if (((ActiveSheet != null) && (_horizontalSplitBar == null)) && (layout.ColumnPaneCount >= 1))
-            {
-                _horizontalSplitBar = new HorizontalSplitBar[layout.ColumnPaneCount - 1];
-                for (int i = 0; i < _horizontalSplitBar.Length; i++)
-                {
-                    _horizontalSplitBar[i] = new HorizontalSplitBar();
-                    Canvas.SetZIndex(_horizontalSplitBar[i], 2);
-                }
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        internal void UpdateHorizontalSplitBoxes()
-        {
-            SheetLayout layout = GetSheetLayout();
-            if ((_horizontalSplitBox != null) && ((ActiveSheet == null) || (_horizontalSplitBox.Length != layout.ColumnPaneCount)))
-            {
-                for (int i = 0; i < _horizontalSplitBox.Length; i++)
-                {
-                    Children.Remove(_horizontalSplitBox[i]);
-                }
-                _horizontalSplitBox = null;
-            }
-            if ((ActiveSheet != null) && (_horizontalSplitBox == null))
-            {
-                _horizontalSplitBox = new HorizontalSplitBox[layout.ColumnPaneCount];
-                for (int j = 0; j < layout.ColumnPaneCount; j++)
-                {
-                    _horizontalSplitBox[j] = new HorizontalSplitBox();
-                    Canvas.SetZIndex(_horizontalSplitBox[j], 0x62);
-                }
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="ScrollingIndicatorMode"></param>
         void UpdateScrollBarIndicatorMode(ScrollingIndicatorMode ScrollingIndicatorMode)
         {
             if (_horizontalScrollBar != null)
@@ -10989,118 +10604,6 @@ namespace Dt.Base
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        internal void UpdateVerticalScrollBars()
-        {
-            if (ActiveSheet != null)
-            {
-                SheetLayout layout = GetSheetLayout();
-                if ((_verticalScrollBar != null) && ((ActiveSheet == null) || (_verticalScrollBar.Length != layout.RowPaneCount)))
-                {
-                    for (int j = 0; j < _verticalScrollBar.Length; j++)
-                    {
-                        _verticalScrollBar[j].Scroll -= VerticalScrollbar_Scroll;
-                        _verticalScrollBar[j].PointerPressed -= OnVerticalScrollbarPointerPressed;
-                        _verticalScrollBar[j].PointerReleased -= OnVerticalScrollbarPointerReleased;
-                        _verticalScrollBar[j].PointerExited -= OnVerticalScrollbarPointerExited;
-                        Children.Remove(_verticalScrollBar[j]);
-                    }
-                    _verticalScrollBar = null;
-                }
-                if ((ActiveSheet != null) && (_verticalScrollBar == null))
-                {
-                    _verticalScrollBar = new ScrollBar[layout.RowPaneCount];
-                    for (int k = 0; k < _verticalScrollBar.Length; k++)
-                    {
-                        _verticalScrollBar[k] = new ScrollBar();
-                        _verticalScrollBar[k].IsEnabled = true;
-                        _verticalScrollBar[k].Orientation = 0;
-                        _verticalScrollBar[k].ViewportSize = 25.0;
-                        _verticalScrollBar[k].IsTabStop = false;
-                        _verticalScrollBar[k].TypeSafeSetStyle(VerticalScrollBarStyle);
-                        _verticalScrollBar[k].Scroll += VerticalScrollbar_Scroll;
-                        _verticalScrollBar[k].PointerPressed += OnVerticalScrollbarPointerPressed;
-                        _verticalScrollBar[k].PointerReleased += OnVerticalScrollbarPointerReleased;
-                        _verticalScrollBar[k].PointerExited += OnVerticalScrollbarPointerExited;
-                        Canvas.SetZIndex(_verticalScrollBar[k], 0x62);
-                    }
-                }
-                int sheetInvisibleRows = GetSheetInvisibleRows(ActiveSheet);
-                for (int i = 0; i < layout.RowPaneCount; i++)
-                {
-                    double num8;
-                    int viewportInvisibleRows = GetViewportInvisibleRows(i);
-                    _verticalScrollBar[i].Minimum = (double)ActiveSheet.FrozenRowCount;
-                    _verticalScrollBar[i].Maximum = (double)Math.Max(ActiveSheet.FrozenRowCount, ((ActiveSheet.RowCount - ActiveSheet.FrozenTrailingRowCount) - sheetInvisibleRows) - 1);
-                    _verticalScrollBar[i].ViewportSize = num8 = GetViewportRowLayoutModel(i).Count - viewportInvisibleRows;
-                    _verticalScrollBar[i].LargeChange = num8;
-                    _verticalScrollBar[i].SmallChange = 1.0;
-                    int viewportTopRow = GetViewportTopRow(i);
-                    viewportTopRow = TryGetNextScrollableRow(viewportTopRow);
-                    int invisibleRowsBeforeRow = GetInvisibleRowsBeforeRow(ActiveSheet, viewportTopRow);
-                    viewportTopRow -= invisibleRowsBeforeRow;
-                    _verticalScrollBar[i].Value = (double)viewportTopRow;
-                    _verticalScrollBar[i].InvalidateArrange();
-                    _verticalScrollBar[i].IsEnabled = VerticalScrollBarVisibility != 0;
-                }
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        internal void UpdateVerticalSplitBars()
-        {
-            SheetLayout layout = GetSheetLayout();
-            if ((_verticalSplitBar != null) && ((ActiveSheet == null) || (_verticalSplitBar.Length != (layout.RowPaneCount - 1))))
-            {
-                foreach (VerticalSplitBar bar in _verticalSplitBar)
-                {
-                    Children.Remove(bar);
-                }
-                _verticalSplitBar = null;
-            }
-            if (((ActiveSheet != null) && (_verticalSplitBar == null)) && (layout.RowPaneCount >= 1))
-            {
-                _verticalSplitBar = new VerticalSplitBar[layout.RowPaneCount - 1];
-                for (int i = 0; i < _verticalSplitBar.Length; i++)
-                {
-                    _verticalSplitBar[i] = new VerticalSplitBar();
-                    Canvas.SetZIndex(_verticalSplitBar[i], 2);
-                }
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        internal void UpdateVerticalSplitBoxes()
-        {
-            SheetLayout layout = GetSheetLayout();
-            if ((_verticalSplitBox != null) && ((ActiveSheet == null) || (_verticalSplitBox.Length != layout.RowPaneCount)))
-            {
-                foreach (VerticalSplitBox box in _verticalSplitBox)
-                {
-                    Children.Remove(box);
-                }
-                _verticalSplitBox = null;
-            }
-            if ((ActiveSheet != null) && (_verticalSplitBox == null))
-            {
-                _verticalSplitBox = new VerticalSplitBox[layout.RowPaneCount];
-                for (int i = 0; i < layout.RowPaneCount; i++)
-                {
-                    _verticalSplitBox[i] = new VerticalSplitBox();
-                    Canvas.SetZIndex(_verticalSplitBox[i], 0x62);
-                }
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         void UpdateViewport()
         {
             bool flag = ((_touchStartHitTestInfo.HitTestType == HitTestType.FloatingObject) && (_touchStartHitTestInfo.FloatingObjectInfo.FloatingObject != null)) && _touchStartHitTestInfo.FloatingObjectInfo.FloatingObject.IsSelected;
@@ -11119,11 +10622,6 @@ namespace Dt.Base
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         void VerticalScrollbar_Scroll(object sender, ScrollEventArgs e)
         {
             if ((_touchToolbarPopup != null) && _touchToolbarPopup.IsOpen)
@@ -11148,11 +10646,6 @@ namespace Dt.Base
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="rowViewportIndex"></param>
-        /// <param name="newValue"></param>
         void VerticalScrollBarTouchSmallDecrement(int rowViewportIndex, int newValue)
         {
             int viewportTopRow = GetViewportTopRow(rowViewportIndex);
@@ -11162,7 +10655,6 @@ namespace Dt.Base
                 SetViewportTopRow(rowViewportIndex, num2);
             }
         }
-
 
         void InvalidateDecoration()
         {
@@ -11181,7 +10673,6 @@ namespace Dt.Base
                 }
             }
         }
-
     }
 }
 

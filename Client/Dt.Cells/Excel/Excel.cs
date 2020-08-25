@@ -647,15 +647,6 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// Gets or sets the width of the tab strip for this component expressed as a percentage of the overall horizontal scroll bar width. 
-        /// </summary>
-        public double TabStripRatio
-        {
-            get { return (double)GetValue(TabStripRatioProperty); }
-            set { SetValue(TabStripRatioProperty, value); }
-        }
-
-        /// <summary>
         /// Gets or sets the display policy for the sheet tab strip for this component. 
         /// </summary>
         public Visibility TabStripVisibility
@@ -1018,12 +1009,6 @@ namespace Dt.Base
             {
                 hi.ColumnViewportIndex = 0;
                 hi.HitTestType = HitTestType.TabStrip;
-                return hi;
-            }
-            if (GetTabSplitBoxRectangle().Contains(hitPoint))
-            {
-                hi.ColumnViewportIndex = 0;
-                hi.HitTestType = HitTestType.TabSplitBox;
                 return hi;
             }
             for (int i = 0; i < layout.ColumnPaneCount; i++)

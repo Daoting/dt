@@ -16,7 +16,7 @@ namespace Dt.Cells.UI
         ContentControl _content;
         TextBlock _displayElement;
         TextBox _editingElement;
-        static string _inser_TabName;
+        const string _inser_TabName = "新建...";
         bool _isEditing;
         int _sheetIndex;
         const double DEFAULT_FONTSIZE = 13.0;
@@ -25,17 +25,17 @@ namespace Dt.Cells.UI
         const double DEFAULT_PADDING_RIGHT = 6.0;
         public static readonly DependencyProperty IsActiveProperty;
 
-        static string INSER_TabName
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(_inser_TabName))
-                {
-                    _inser_TabName = ResourceStrings.TabStrip_NewSheet;
-                }
-                return _inser_TabName;
-            }
-        }
+        //static string INSER_TabName
+        //{
+        //    get
+        //    {
+        //        if (string.IsNullOrEmpty(_inser_TabName))
+        //        {
+        //            _inser_TabName = ResourceStrings.TabStrip_NewSheet;
+        //        }
+        //        return _inser_TabName;
+        //    }
+        //}
 
         public bool IsActive
         {
@@ -70,7 +70,7 @@ namespace Dt.Cells.UI
                 {
                     return OwningStrip.Workbook.Sheets[_sheetIndex].Name;
                 }
-                return INSER_TabName;
+                return _inser_TabName;
             }
         }
 
@@ -135,8 +135,7 @@ namespace Dt.Cells.UI
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            _content = base.GetTemplateChild("PART_ContentPresenter") as ContentControl;
-            FontSize = 13.0;
+            _content = GetTemplateChild("PART_ContentPresenter") as ContentControl;
             PrepareForDisplay();
             UpdateActiveStates();
         }

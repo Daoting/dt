@@ -160,7 +160,7 @@ namespace Dt.Base
                 return false;
             }
 
-            if (IsEditing && ((IsMouseInSplitBar() || IsMouseInSplitBox()) || IsMouseInTabSplitBox()))
+            if (IsEditing && (IsMouseInSplitBar() || IsMouseInSplitBox()))
             {
                 return false;
             }
@@ -248,10 +248,6 @@ namespace Dt.Base
 
                 case HitTestType.ColumnSplitBox:
                     StartColumnSplitting();
-                    return;
-
-                case HitTestType.TabSplitBox:
-                    StartTabStripResizing();
                     return;
             }
 
@@ -502,10 +498,11 @@ namespace Dt.Base
         #region 鼠标移动
         void OnPointerMoved(object sender, PointerRoutedEventArgs e)
         {
-            if (e.Pointer.PointerDeviceType == PointerDeviceType.Touch)
-            {
-                UpdateScrollBarIndicatorMode(ScrollingIndicatorMode.TouchIndicator);
-            }
+            // 构造ScrollBar时设置
+            //if (e.Pointer.PointerDeviceType == PointerDeviceType.Touch)
+            //{
+            //    UpdateScrollBarIndicatorMode(ScrollingIndicatorMode.TouchIndicator);
+            //}
 
             if (IsTouching && e.Pointer.PointerDeviceType == PointerDeviceType.Touch)
             {
@@ -593,17 +590,6 @@ namespace Dt.Base
                     }
                     goto Label_01B3;
 
-                case HitTestType.TabSplitBox:
-                    if (!IsWorking && !IsEditing)
-                    {
-                        if (InputDeviceType != InputDeviceType.Touch)
-                        {
-                            SetBuiltInCursor((CoreCursorType)10);
-                        }
-                        flag = true;
-                    }
-                    goto Label_01B3;
-
                 default:
                     goto Label_01B3;
             }
@@ -616,10 +602,6 @@ namespace Dt.Base
             if (IsRowSplitting)
             {
                 ContinueRowSplitting();
-            }
-            if (IsTabStripResizing)
-            {
-                ContinueTabStripResizing();
             }
 
             if (flag)
@@ -753,7 +735,9 @@ namespace Dt.Base
                     _hoverManager.DoHover(p_hitInfo);
                 }
             }
-            UpdateScrollBarIndicatorMode(ScrollingIndicatorMode.MouseIndicator);
+
+            // 构造ScrollBar时设置
+            //UpdateScrollBarIndicatorMode(ScrollingIndicatorMode.MouseIndicator);
         }
         #endregion
 
@@ -877,7 +861,7 @@ namespace Dt.Base
         void ProcessMouseLeftButtonUp(HitTestInformation p_hitInfo)
         {
             ClearMouseLeftButtonDownStates();
-            if ((IsColumnSplitting || IsRowSplitting) || IsTabStripResizing)
+            if (IsColumnSplitting || IsRowSplitting)
             {
                 if (!IsEditing)
                 {
@@ -1003,10 +987,6 @@ namespace Dt.Base
             if (IsTouchRowSplitting)
             {
                 EndRowSplitting();
-            }
-            if (IsTouchTabStripResizing)
-            {
-                EndTabStripResizing();
             }
 
             if (((ps != null) && (ps.Count > 0)) && _primaryTouchDeviceId.HasValue)
@@ -1556,7 +1536,6 @@ namespace Dt.Base
             if ((!IsTouchDragFilling
                     && !IsTouchDrapDropping
                     && !IsTouchSelectingCells
-                    && !IsTouchTabStripResizing
                     && !IsRowSplitting
                     && !IsColumnSplitting
                     && !IsTouchSelectingColumns
@@ -1688,10 +1667,6 @@ namespace Dt.Base
                     _tabStrip.TabsPresenter.InvalidateMeasure();
                     _tabStrip.TabsPresenter.InvalidateArrange();
                 }
-            }
-            else if ((savedHitTestInformation.HitTestType == HitTestType.TabSplitBox) && IsTouchTabStripResizing)
-            {
-                ContinueTabStripResizing();
             }
             else
             {
@@ -1904,10 +1879,6 @@ namespace Dt.Base
             if (IsTouchRowSplitting)
             {
                 EndRowSplitting();
-            }
-            if (IsTouchTabStripResizing)
-            {
-                EndTabStripResizing();
             }
 
             _fastScroll = false;
@@ -2647,12 +2618,6 @@ namespace Dt.Base
                     hi.RowViewportIndex = m;
                 }
             }
-            if (GetTabSplitBoxRectangle().Expand(40, 10).Contains(hitPoint))
-            {
-                hi.ColumnViewportIndex = 0;
-                hi.HitTestType = HitTestType.TabSplitBox;
-                return hi;
-            }
 
             if (hi.HitTestType == HitTestType.Empty)
             {
@@ -2939,10 +2904,6 @@ namespace Dt.Base
             {
                 EndRowSplitting();
             }
-            if (IsTabStripResizing)
-            {
-                EndTabStripResizing();
-            }
 
             if (IsResizingColumns)
             {
@@ -3039,8 +3000,7 @@ namespace Dt.Base
                     || information.HitTestType == HitTestType.RowSplitBar
                     || information.HitTestType == HitTestType.ColumnSplitBar
                     || information.HitTestType == HitTestType.ColumnSplitBox
-                    || information.HitTestType == HitTestType.RowSplitBox
-                    || information.HitTestType == HitTestType.TabSplitBox)
+                    || information.HitTestType == HitTestType.RowSplitBox)
                 {
                     // 触摸升级为鼠标消息
                     IsTouchPromotedMouseMessage = true;

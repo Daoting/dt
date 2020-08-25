@@ -567,11 +567,6 @@ namespace Dt.Base
         /// <summary>
         /// 
         /// </summary>
-        bool IsTabStripResizing { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
         Canvas SplittingTrackerContainer
         {
             get
@@ -747,7 +742,7 @@ namespace Dt.Base
         const double _GROUPBUTTON_HEIGHT = 16.0;
         const double _GROUPBUTTON_WIDTH = 16.0;
         const double HALF_ENHANCED_ZERO_INDICATOR_WIDTH = 3.0;
-        const double HORIZONTALSPLITBOX_WIDTH = 6.0;
+        const double HORIZONTALSPLITBOX_WIDTH = 30.0;
         const double _INDICATOR_THICKNESS = 3.0;
         bool IsContinueTouchOperation;
         bool IsTouchDragFilling;
@@ -761,7 +756,6 @@ namespace Dt.Base
         bool IsTouchSelectingRows;
         bool _IsTouchStartColumnSelecting;
         bool _IsTouchStartRowSelecting;
-        bool IsTouchTabStripResizing;
         bool IsTouchZooming;
         const int _MAXSCROLLABLEHORIZONTALOFFSET = 120;
         const int _MAXSCROLLABLEVERTICALOFFSET = 80;
@@ -771,16 +765,23 @@ namespace Dt.Base
         const string _ROW_DELIMITER = "\r\n";
         const double SPLITBOXWIDTH = 20.0;
         const double _TOOLTIP_OFFSET = 4.0;
-        const double VERTICALSPLITBOX_HEIGHT = 6.0;
+        const double VERTICALSPLITBOX_HEIGHT = 30.0;
         const float _ZOOM_MAX = 4f;
         const float _ZOOM_MIN = 0.1f;
+        const double _defaultTabStripHeight = 40;
+        const double _defaultSplitBarSize = 6.0;
+
+        Rectangle[,] _crossSplitBar;
+        Rectangle[] _horizontalSplitBar;
+        Rectangle[] _verticalSplitBar;
+
+        Border[] _horizontalSplitBox;
+        Border[] _verticalSplitBox;
 
         Size _cachedLastAvailableSize;
         Line _columnSplittingTracker;
-        CrossSplitBar[,] _crossSplitBar;
         ScrollBar[] _horizontalScrollBar;
-        HorizontalSplitBar[] _horizontalSplitBar;
-        HorizontalSplitBox[] _horizontalSplitBox;
+        
         HashSet<int> _invisibleColumns;
         HashSet<int> _invisibleRows;
         bool _pendinging;
@@ -792,15 +793,13 @@ namespace Dt.Base
         Canvas _splittingTrackerContainer;
         TabStrip _tabStrip;
         ScrollBar[] _verticalScrollBar;
-        VerticalSplitBar[] _verticalSplitBar;
-        VerticalSplitBox[] _verticalSplitBox;
+
         const double GCSPREAD_HorizontalScrollBarDefaultHeight = 25.0;
         const double GCSPREAD_TabStripRatio = 0.5;
         const double GCSPREAD_VerticalScrollBarDefaultWidth = 25.0;
         bool IsTouchColumnSplitting;
         bool IsTouchRowSplitting;
         bool IsTouchTabStripScrolling;
-        HorizontalSplitBox tabStripSplitBox;
         const double TABSTRIPSPLITBOX_WIDTH = 16.0;
         #endregion
 
@@ -978,12 +977,6 @@ namespace Dt.Base
             typeof(bool),
             typeof(Excel),
             new PropertyMetadata(true, OnTabStripInsertTabChanged));
-
-        public static readonly DependencyProperty TabStripRatioProperty = DependencyProperty.Register(
-            "TabStripRatio",
-            typeof(double),
-            typeof(Excel),
-            new PropertyMetadata(0.5d, OnTabStripRatioChanged));
 
         public static readonly DependencyProperty TabStripVisibilityProperty = DependencyProperty.Register(
             "TabStripVisibility",

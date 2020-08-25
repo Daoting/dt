@@ -89,8 +89,8 @@ namespace Dt.Cells.Data
         ConditionalFormat _conditionalFormats;
         bool _dataAutoHeadings;
         object _datasource;
-        const int _DEFAULT_COLUMN_FOOTER_ROWHEIGHT = 20;
-        const int _DEFAULT_COLUMN_HEADER_ROWHEIGHT = 20;
+        const int _DEFAULT_COLUMN_FOOTER_ROWHEIGHT = 30;
+        const int _DEFAULT_COLUMN_HEADER_ROWHEIGHT = 30;
         const int _DEFAULT_COLUMN_WIDTH = 80;
         const int _DEFAULT_ROW_HEADER_COLUMNWIDTH = 40;
         const int _DEFAULT_ROW_HEIGHT = 30;
@@ -13255,7 +13255,7 @@ namespace Dt.Cells.Data
         /// Gets or sets the default height of the column footer row.
         /// </summary>
         /// <value>The default height of the column footer row.</value>
-        [DefaultValue(20)]
+        [DefaultValue(30)]
         internal double DefaultColumnFooterRowHeight
         {
             get { return _defaultColumnFooterRowHeight; }
@@ -13270,7 +13270,7 @@ namespace Dt.Cells.Data
         /// Gets or sets the default height of the column header row.
         /// </summary>
         /// <value>The default height of the column header row.</value>
-        [DefaultValue(20)]
+        [DefaultValue(30)]
         internal double DefaultColumnHeaderRowHeight
         {
             get { return _defaultColumnHeaderRowHeight; }
