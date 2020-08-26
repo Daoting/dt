@@ -50,11 +50,7 @@ namespace Dt.Charts
 
         internal override Rect LabelRect
         {
-            get
-            {
-                UpdateGeometry(Size);
-                return base.LabelRect;
-            }
+            get { return new Rect(new Point(), Size); }
         }
 
         protected override Shape LegendShape

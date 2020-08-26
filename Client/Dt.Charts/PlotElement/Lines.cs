@@ -21,6 +21,7 @@ namespace Dt.Charts
     {
         bool _smoothed;
         bool _xinc = false;
+        Rect _labelRect;
 
         public Lines()
         {
@@ -219,6 +220,7 @@ namespace Dt.Charts
                 }
             }
             Data = geometry;
+            _labelRect = clipBounds;
 
             if (!isCustomClipping)
             {
@@ -328,6 +330,11 @@ namespace Dt.Charts
         public bool IsClosed { get; set; }
 
         public bool IsFilled { get; set; }
+
+        internal override Rect LabelRect
+        {
+            get { return _labelRect; }
+        }
 
         protected override Shape LegendShape
         {

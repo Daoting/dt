@@ -16,6 +16,8 @@ namespace Dt.Charts
 {
     public partial class HLBar : Bar, ICustomClipping
     {
+        Rect _labelRect;
+
         internal override object Clone()
         {
             HLBar clone = new HLBar();
@@ -85,11 +87,16 @@ namespace Dt.Charts
 
             Canvas.SetLeft(this, left);
             Canvas.SetTop(this, top);
-            Rect rect = rc.Bounds2D;
+            _labelRect = rc.Bounds2D;
             RectangleGeometry geo = new RectangleGeometry();
-            geo.Rect = new Rect(rect.X - left, rect.Y - top, rect.Width, rect.Height);
+            geo.Rect = new Rect(_labelRect.X - left, _labelRect.Y - top, _labelRect.Width, _labelRect.Height);
             Clip = geo;
             return true;
+        }
+
+        internal override Rect LabelRect
+        {
+            get { return _labelRect; }
         }
 
         protected override bool IsClustered

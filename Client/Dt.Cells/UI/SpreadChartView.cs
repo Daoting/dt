@@ -15,6 +15,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Text;
@@ -32,16 +33,14 @@ namespace Dt.Cells.UI
     /// </summary>
     public partial class SpreadChartView : SpreadChartBaseView
     {
+        // hdt 原来放在Loaded事件中，无法打印
+        internal static ResourceDictionary _resourceDictionary = new ResourceDictionary { Source = new Uri("ms-appx:///Dt.Cells/Themes/DataLableTemplate.xaml") };
+        
         Dictionary<int, SpreadDataSeries> _cachedDataSeries;
         Dictionary<int, List<PlotElement>> _cachedPlotElement;
         int _cachedTotalDataPointCount;
         int _loadedDataPointCount;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="spreadChartContent"></param>
-        /// <param name="c1Chart"></param>
         public SpreadChartView(Dt.Cells.Data.SpreadChart spreadChartContent, Chart c1Chart)
             : base(spreadChartContent, c1Chart)
         {
@@ -69,7 +68,7 @@ namespace Dt.Cells.UI
 
         void SyncC1ChartSettings()
         {
-            base.UpdateC1ChartControl(new Chart());
+            UpdateC1ChartControl(new Chart());
             C1Chart.Background = new SolidColorBrush(Colors.Transparent);
             C1Chart.IsTabStop = false;
             double width = 5.0 * ZoomFactor;
@@ -80,38 +79,38 @@ namespace Dt.Cells.UI
 
         void SyncChartTitle()
         {
-            Size chartTitleSize = base.GetChartTitleSize(SpreadChart.ChartTitle);
-            base._chartTitleView.Width = chartTitleSize.Width;
-            base._chartTitleView.Height = chartTitleSize.Height;
-            base._chartTitleView.ChartTitle = SpreadChart.ChartTitle;
+            Size chartTitleSize = GetChartTitleSize(SpreadChart.ChartTitle);
+            _chartTitleView.Width = chartTitleSize.Width;
+            _chartTitleView.Height = chartTitleSize.Height;
+            _chartTitleView.ChartTitle = SpreadChart.ChartTitle;
         }
 
         void SyncChartArea()
         {
-            base._formatRect.Stroke = SpreadChart.ActualStroke;
-            base._formatRect.StrokeDashArray = Dt.Cells.Data.StrokeDashHelper.GetStrokeDashes(SpreadChart.StrokeDashType);
+            _formatRect.Stroke = SpreadChart.ActualStroke;
+            _formatRect.StrokeDashArray = Dt.Cells.Data.StrokeDashHelper.GetStrokeDashes(SpreadChart.StrokeDashType);
             double strokeThickness = SpreadChart.StrokeThickness;
             if (strokeThickness > 0.0)
             {
-                base._formatRect.StrokeThickness = strokeThickness * ZoomFactor;
+                _formatRect.StrokeThickness = strokeThickness * ZoomFactor;
             }
             else
             {
-                base._formatRect.StrokeThickness = 0.0;
+                _formatRect.StrokeThickness = 0.0;
             }
             if (SpreadChart.CornerRadius > 0.0)
             {
-                base._formatRect.RadiusX = SpreadChart.CornerRadius;
-                base._formatRect.RadiusY = SpreadChart.CornerRadius;
+                _formatRect.RadiusX = SpreadChart.CornerRadius;
+                _formatRect.RadiusY = SpreadChart.CornerRadius;
             }
             Brush actualFill = SpreadChart.ActualFill;
             if (actualFill != null)
             {
-                base._formatRect.Fill = actualFill;
+                _formatRect.Fill = actualFill;
             }
             else
             {
-                base._formatRect.Fill = new SolidColorBrush(Colors.Transparent);
+                _formatRect.Fill = new SolidColorBrush(Colors.Transparent);
             }
             C1Chart.ChartType = SpreadChartTypeToC1ChartType(SpreadChart.ChartType);
             FontFamily actualFontFamily = SpreadChart.ActualFontFamily;
@@ -144,116 +143,113 @@ namespace Dt.Cells.UI
 
         void SyncLegend()
         {
-            if (SpreadChart.Legend != null)
+            if (SpreadChart.Legend == null)
+                return;
+
+            ChartLegend legend = new ChartLegend();
+            LegendConverter converter = _resourceDictionary["lc"] as LegendConverter;
+            converter.Legend = SpreadChart.Legend;
+            converter.ZoomFactor = ZoomFactor;
+            legend.Template = _resourceDictionary["legendTeplate"] as ControlTemplate;
+            legend.IsTabStop = false;
+            legend.IsHitTestVisible = false;
+            Brush actualFill = SpreadChart.Legend.ActualFill;
+            if (actualFill != null)
             {
-                ChartLegend legend = new ChartLegend();
-                if (base.resourceDictionary != null)
-                {
-                    LegendConverter converter = base.resourceDictionary["lc"] as LegendConverter;
-                    converter.Legend = SpreadChart.Legend;
-                    converter.ZoomFactor = ZoomFactor;
-                    legend.Template = base.resourceDictionary["legendTeplate"] as ControlTemplate;
-                }
-                legend.IsTabStop = false;
-                legend.IsHitTestVisible = false;
-                Brush actualFill = SpreadChart.Legend.ActualFill;
-                if (actualFill != null)
-                {
-                    legend.Background = actualFill;
-                }
-                else
-                {
-                    legend.Background = new SolidColorBrush(Colors.Transparent);
-                }
-                Brush actualStroke = SpreadChart.Legend.ActualStroke;
-                if (actualStroke != null)
-                {
-                    legend.BorderBrush = actualStroke;
-                }
-                else
-                {
-                    legend.BorderBrush = new SolidColorBrush(Colors.Transparent);
-                }
-                FontFamily actualFontFamily = SpreadChart.Legend.ActualFontFamily;
-                if (actualFontFamily == null)
-                {
-                    actualFontFamily = Utility.DefaultFontFamily;
-                }
-                legend.FontFamily = actualFontFamily;
-                double num = SpreadChart.Legend.ActualFontSize * ZoomFactor;
-                if (num > 0.0)
-                {
-                    legend.FontSize = num;
-                }
-                legend.FontStretch = SpreadChart.Legend.ActualFontStretch;
-                legend.FontStyle = SpreadChart.Legend.ActualFontStyle;
-                legend.FontWeight = SpreadChart.Legend.ActualFontWeight;
-                legend.Orientation = SpreadChart.Legend.Orientation;
-                Brush actualForeground = SpreadChart.Legend.ActualForeground;
-                if (actualForeground != null)
-                {
-                    legend.Foreground = actualForeground;
-                }
-                else
-                {
-                    legend.ClearValue(Control.ForegroundProperty);
-                }
-                switch (SpreadChart.Legend.Alignment)
-                {
-                    case LegendAlignment.TopLeft:
-                        legend.Position = Dt.Charts.LegendPosition.TopLeft;
-                        break;
+                legend.Background = actualFill;
+            }
+            else
+            {
+                legend.Background = new SolidColorBrush(Colors.Transparent);
+            }
+            Brush actualStroke = SpreadChart.Legend.ActualStroke;
+            if (actualStroke != null)
+            {
+                legend.BorderBrush = actualStroke;
+            }
+            else
+            {
+                legend.BorderBrush = new SolidColorBrush(Colors.Transparent);
+            }
+            FontFamily actualFontFamily = SpreadChart.Legend.ActualFontFamily;
+            if (actualFontFamily == null)
+            {
+                actualFontFamily = Utility.DefaultFontFamily;
+            }
+            legend.FontFamily = actualFontFamily;
+            double num = SpreadChart.Legend.ActualFontSize * ZoomFactor;
+            if (num > 0.0)
+            {
+                legend.FontSize = num;
+            }
+            legend.FontStretch = SpreadChart.Legend.ActualFontStretch;
+            legend.FontStyle = SpreadChart.Legend.ActualFontStyle;
+            legend.FontWeight = SpreadChart.Legend.ActualFontWeight;
+            legend.Orientation = SpreadChart.Legend.Orientation;
+            Brush actualForeground = SpreadChart.Legend.ActualForeground;
+            if (actualForeground != null)
+            {
+                legend.Foreground = actualForeground;
+            }
+            else
+            {
+                legend.ClearValue(Control.ForegroundProperty);
+            }
+            switch (SpreadChart.Legend.Alignment)
+            {
+                case LegendAlignment.TopLeft:
+                    legend.Position = Dt.Charts.LegendPosition.TopLeft;
+                    break;
 
-                    case LegendAlignment.TopRight:
-                        legend.Position = Dt.Charts.LegendPosition.TopRight;
-                        break;
+                case LegendAlignment.TopRight:
+                    legend.Position = Dt.Charts.LegendPosition.TopRight;
+                    break;
 
-                    case LegendAlignment.TopCenter:
-                        legend.Position = Dt.Charts.LegendPosition.TopCenter;
-                        break;
+                case LegendAlignment.TopCenter:
+                    legend.Position = Dt.Charts.LegendPosition.TopCenter;
+                    break;
 
-                    case LegendAlignment.MiddleLeft:
-                        legend.Position = Dt.Charts.LegendPosition.Left;
-                        break;
+                case LegendAlignment.MiddleLeft:
+                    legend.Position = Dt.Charts.LegendPosition.Left;
+                    break;
 
-                    case LegendAlignment.MiddleRight:
-                        legend.Position = Dt.Charts.LegendPosition.Right;
-                        break;
+                case LegendAlignment.MiddleRight:
+                    legend.Position = Dt.Charts.LegendPosition.Right;
+                    break;
 
-                    case LegendAlignment.BottomLeft:
-                        legend.Position = Dt.Charts.LegendPosition.BottomLeft;
-                        break;
+                case LegendAlignment.BottomLeft:
+                    legend.Position = Dt.Charts.LegendPosition.BottomLeft;
+                    break;
 
-                    case LegendAlignment.BottomCenter:
-                        legend.Position = Dt.Charts.LegendPosition.BottomCenter;
-                        break;
+                case LegendAlignment.BottomCenter:
+                    legend.Position = Dt.Charts.LegendPosition.BottomCenter;
+                    break;
 
-                    case LegendAlignment.BottomRight:
-                        legend.Position = Dt.Charts.LegendPosition.BottomRight;
-                        break;
-                }
-                string text = SpreadChart.Legend.Text;
-                if (!string.IsNullOrEmpty(text))
+                case LegendAlignment.BottomRight:
+                    legend.Position = Dt.Charts.LegendPosition.BottomRight;
+                    break;
+            }
+            string text = SpreadChart.Legend.Text;
+            if (!string.IsNullOrEmpty(text))
+            {
+                legend.Title = text;
+            }
+            int num2 = -1;
+            for (int i = 0; i < C1Chart.Children.Count; i++)
+            {
+                if (C1Chart.Children[i] is ChartLegend)
                 {
-                    legend.Title = text;
+                    num2 = i;
                 }
-                int num2 = -1;
-                for (int i = 0; i < C1Chart.Children.Count; i++)
-                {
-                    if (C1Chart.Children[i] is ChartLegend)
-                    {
-                        num2 = i;
-                    }
-                }
-                if (num2 >= 0)
-                {
-                    C1Chart.Children.RemoveAt(num2);
-                    C1Chart.Children.Insert(num2, legend);
-                }
-                else
-                {
-                    C1Chart.Children.Add(legend);
-                }
+            }
+            if (num2 >= 0)
+            {
+                C1Chart.Children.RemoveAt(num2);
+                C1Chart.Children.Insert(num2, legend);
+            }
+            else
+            {
+                C1Chart.Children.Add(legend);
             }
         }
 
@@ -315,12 +311,11 @@ namespace Dt.Cells.UI
         {
             ChartData data = C1Chart.Data;
             data.Children.Clear();
-            if (base.resourceDictionary != null)
-            {
-                DataPointLabelConverter converter = base.resourceDictionary["fc"] as DataPointLabelConverter;
-                converter.ZoomFactor = ZoomFactor;
-                converter.DataSeries.Clear();
-            }
+
+            DataPointLabelConverter converter = _resourceDictionary["fc"] as DataPointLabelConverter;
+            converter.ZoomFactor = ZoomFactor;
+            converter.DataSeries.Clear();
+
             DataSeries[] seriesArray = GenerateC1DataSeries();
             if ((seriesArray != null) && (seriesArray.Length != 0))
             {
@@ -513,99 +508,78 @@ namespace Dt.Cells.UI
 
         DataTemplate CreateAnnoTemplate(Dt.Cells.Data.Axis axis, Dt.Charts.Axis c1Axis, AxisAnnotation[] annotations, AxisXYZType xyzType)
         {
-            double minValue;
-            double num2;
-            object textFormattingMode = null;
+            double minWidth;
+            double minHeight;
             if ((annotations == null) || (annotations.Length == 0))
             {
-                minValue = 0.0;
-                num2 = 0.0;
+                minWidth = 0.0;
+                minHeight = 0.0;
             }
             else
             {
-                minValue = double.MinValue;
-                num2 = double.MinValue;
+                minWidth = double.MinValue;
+                minHeight = double.MinValue;
             }
+
             FontFamily actualFontFamily = axis.ActualFontFamily;
             if (actualFontFamily == null)
-            {
                 actualFontFamily = Utility.DefaultFontFamily;
-            }
             double fontSize = axis.ActualFontSize * ZoomFactor;
             if (fontSize < 0.0)
-            {
-                fontSize = 14.67;
-            }
-            FontStretch actualFontStretch = axis.ActualFontStretch;
-            FontStyle actualFontStyle = axis.ActualFontStyle;
-            FontWeight actualFontWeight = axis.ActualFontWeight;
+                fontSize = 15;
+
             if ((annotations != null) && (annotations.Length > 0))
             {
                 foreach (AxisAnnotation annotation in annotations)
                 {
-                    Size size = MeasureHelper.MeasureText(annotation.Label, actualFontFamily, fontSize, actualFontStretch, actualFontStyle, actualFontWeight, new Size(double.PositiveInfinity, double.PositiveInfinity), true, textFormattingMode, true, 1.0);
-                    minValue = Math.Round(Math.Max(minValue, size.Width), 1);
-                    num2 = Math.Round(Math.Max(num2, size.Height), 1);
+                    Size size = MeasureHelper.MeasureText(
+                        annotation.Label,
+                        actualFontFamily,
+                        fontSize,
+                        axis.ActualFontStretch,
+                        axis.ActualFontStyle,
+                        axis.ActualFontWeight,
+                        new Size(double.PositiveInfinity, double.PositiveInfinity),
+                        true,
+                        null,
+                        true,
+                        1.0);
+                    minWidth = Math.Round(Math.Max(minWidth, size.Width), 1);
+                    minHeight = Math.Round(Math.Max(minHeight, size.Height), 1);
                 }
             }
-            TextAlignment center = Windows.UI.Xaml.TextAlignment.Center;
+
+            StringBuilder sb = new StringBuilder("<DataTemplate xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\">");
+            sb.Append("<Border ");
+            sb.AppendFormat("Width=\"{0}\" ", minWidth + 5.0);
+            sb.AppendFormat("Height=\"{0}\" ", minHeight + 5.0);
+            string brush = GetBrushXamlContent(axis.ActualFill);
+            if (!string.IsNullOrEmpty(brush))
+                sb.AppendFormat("Background=\"{0}\" ", brush);
+            sb.Append(">");
+
+            sb.Append("<TextBlock Text=\"{Binding}\" ");
             if (xyzType == AxisXYZType.AxisX)
-            {
-                center = Windows.UI.Xaml.TextAlignment.Center;
-            }
+                sb.Append("TextAlignment=\"Center\" ");
             else if (axis.AxisPosition == Dt.Cells.Data.AxisPosition.Near)
-            {
-                center = Windows.UI.Xaml.TextAlignment.Right;
-            }
+                sb.Append("TextAlignment=\"Right\" ");
             else
-            {
-                center = Windows.UI.Xaml.TextAlignment.Left;
-            }
-            string fontWeightString = Utility.GetFontWeightString(axis.ActualFontWeight);
-            string newValue = string.Concat((string[])new string[] { 
-                "<TextBlock", " ", "Text='{Binding}'", " ", string.Format("TextAlignment='{0}'", (object[]) new object[] { center.ToString() }), " ", "VerticalAlignment='Center'", " ", string.Format("FontFamily='{0}'", (object[]) new object[] { actualFontFamily.Source }), " ", string.Format("FontSize='{0}'", (object[]) new object[] { ((double) fontSize).ToString((IFormatProvider) CultureInfo.InvariantCulture) }), " ", string.Format("FontStretch='{0}'", (object[]) new object[] { axis.ActualFontStretch }), " ", string.Format("FontStyle='{0}'", (object[]) new object[] { axis.ActualFontStyle }), " ", 
-                string.Format("FontWeight='{0}'", (object[]) new object[] { fontWeightString }), " >", "ForegroundTemplateContent", "</TextBlock>"
-             });
-            string str3 = string.Empty;
-            Brush actualForeground = axis.ActualForeground;
-            string brushXamlContent = GetBrushXamlContent(actualForeground);
-            if (!string.IsNullOrEmpty(brushXamlContent))
-            {
-                str3 = "<TextBlock.Foreground>" + brushXamlContent + "</TextBlock.Foreground>";
-            }
-            if (!string.IsNullOrEmpty(str3))
-            {
-                newValue = newValue.Replace("ForegroundTemplateContent", str3);
-            }
-            string[] strArray2 = new string[9];
-            strArray2[0] = "<Border ";
-            object[] args = new object[1];
-            double num5 = minValue + 5.0;
-            args[0] = ((double)num5).ToString((IFormatProvider)CultureInfo.InvariantCulture);
-            strArray2[1] = string.Format("Width='{0}' ", args);
-            object[] objArray8 = new object[1];
-            double num6 = num2 + 5.0;
-            objArray8[0] = ((double)num6).ToString((IFormatProvider)CultureInfo.InvariantCulture);
-            strArray2[2] = string.Format("Height='{0}' ", objArray8);
-            strArray2[3] = " >";
-            strArray2[4] = "BackgroundTemplateContent";
-            strArray2[5] = " ";
-            strArray2[6] = "TextBlockTemplateContent";
-            strArray2[7] = " ";
-            strArray2[8] = "</Border>";
-            string str5 = string.Concat(strArray2);
-            string str6 = string.Empty;
-            Brush actualFill = axis.ActualFill;
-            if (actualFill != null)
-            {
-                string str7 = GetBrushXamlContent(actualFill);
-                if (!string.IsNullOrEmpty(str7))
-                {
-                    str6 = "<Border.Background>" + str7 + "</Border.Background>";
-                }
-            }
-            str5 = str5.Replace("BackgroundTemplateContent", str6).Replace("TextBlockTemplateContent", newValue);
-            return (XamlReader.Load(string.Concat((string[])new string[] { "<DataTemplate", " ", "xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'", " ", "xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml' >", " ", "BorderTemplateContent", " ", "</DataTemplate>" }).Replace("BorderTemplateContent", str5)) as DataTemplate);
+                sb.Append("TextAlignment=\"Left\" ");
+            sb.Append("VerticalAlignment=\"Center\" ");
+            sb.AppendFormat("FontFamily=\"{0}\" ", actualFontFamily.Source);
+            sb.AppendFormat("FontSize=\"{0}\" ", fontSize);
+            sb.AppendFormat("FontStretch=\"{0}\" ", axis.ActualFontStretch);
+            sb.AppendFormat("FontStyle=\"{0}\" ", axis.ActualFontStyle);
+            sb.AppendFormat("FontWeight=\"{0}\" ", Utility.GetFontWeightString(axis.ActualFontWeight));
+            brush = GetBrushXamlContent(axis.ActualForeground);
+            if (!string.IsNullOrEmpty(brush))
+                sb.AppendFormat("Foreground=\"{0}\" ", brush);
+            sb.Append("/>");
+
+            sb.Append("</Border>");
+            sb.Append("</DataTemplate>");
+
+            return XamlReader.Load(sb.ToString()) as DataTemplate;
         }
 
         DataSeries[] CreateC1DataSeries(Type spreadDataSeriesType)
@@ -771,13 +745,9 @@ namespace Dt.Cells.UI
 
         string GetBrushXamlContent(Brush brush)
         {
-            string str = string.Empty;
-            if (brush is SolidColorBrush)
-            {
-                SolidColorBrush brush2 = brush as SolidColorBrush;
-                str = "<SolidColorBrush " + string.Format("Color='{0}'/>", (object[])new object[] { brush2.Color.ToString() });
-            }
-            return str;
+            if (brush is SolidColorBrush sb)
+                return $"#{sb.Color.A.ToString("X2")}{sb.Color.R.ToString("X2")}{sb.Color.G.ToString("X2")}{sb.Color.B.ToString("X2")}";
+            return null;
         }
 
         internal int GetDataDimension(SpreadChartType chartType)
@@ -1207,10 +1177,7 @@ namespace Dt.Cells.UI
 
         void SetPointLabelTemplate(SpreadDataSeries spDataSeries, DataSeries c1DataSeries)
         {
-            if (base.resourceDictionary != null)
-            {
-                c1DataSeries.PointLabelTemplate = base.resourceDictionary["lbl"] as DataTemplate;
-            }
+            c1DataSeries.PointLabelTemplate = _resourceDictionary["lbl"] as DataTemplate;
         }
 
         ChartType SpreadChartTypeToC1ChartType(SpreadChartType spChartType)
@@ -1312,7 +1279,7 @@ namespace Dt.Cells.UI
             }
             return ChartType.Column;
         }
-        
+
         Marker SpreadMarkerToC1Marker(Dt.Cells.Data.MarkerType spMarker)
         {
             switch (spMarker)
@@ -1657,7 +1624,7 @@ namespace Dt.Cells.UI
             if (spAxis.Title != null)
             {
                 ChartTitleView view = new ChartTitleView(spAxis.Title, this);
-                Size chartTitleSize = base.GetChartTitleSize(spAxis.Title);
+                Size chartTitleSize = GetChartTitleSize(spAxis.Title);
                 view.HorizontalAlignment = HorizontalAlignment.Center;
                 view.VerticalAlignment = VerticalAlignment.Center;
                 view.Width = chartTitleSize.Width;
@@ -1860,20 +1827,14 @@ namespace Dt.Cells.UI
 
         void SyncDataSeriesDataLabel(SpreadDataSeries spDataSeries, DataSeries c1DataSeries)
         {
-            if (base.resourceDictionary != null)
+            DataPointLabelConverter converter = _resourceDictionary["fc"] as DataPointLabelConverter;
+            converter.ZoomFactor = ZoomFactor;
+            int index = GetDisplayingDataSeries().IndexOf(spDataSeries);
+            if ((index >= 0) && !converter.DataSeries.ContainsKey(index))
             {
-                if (base.resourceDictionary != null)
-                {
-                    DataPointLabelConverter converter = base.resourceDictionary["fc"] as DataPointLabelConverter;
-                    converter.ZoomFactor = ZoomFactor;
-                    int index = GetDisplayingDataSeries().IndexOf(spDataSeries);
-                    if ((index >= 0) && !converter.DataSeries.ContainsKey(index))
-                    {
-                        converter.DataSeries.Add(index, spDataSeries);
-                    }
-                }
-                SetPointLabelTemplate(spDataSeries, c1DataSeries);
+                converter.DataSeries.Add(index, spDataSeries);
             }
+            SetPointLabelTemplate(spDataSeries, c1DataSeries);
         }
 
         void SyncDataSeriesProperties(SpreadDataSeries spDataSeries, DataSeries c1DataSeries)
@@ -2247,12 +2208,11 @@ namespace Dt.Cells.UI
         void SyncOpenHighLowCloseSeries(DataSeries[] c1DataSeriesList, SpreadOpenHighLowCloseSeries spOHLCSeries)
         {
             HighLowOpenCloseSeries series = c1DataSeriesList[0] as HighLowOpenCloseSeries;
-            if (base.resourceDictionary != null)
-            {
-                DataPointLabelConverter converter = base.resourceDictionary["fc"] as DataPointLabelConverter;
-                converter.ZoomFactor = ZoomFactor;
-                CachVOHLCDataSeries(converter.DataSeries, spOHLCSeries);
-            }
+
+            DataPointLabelConverter converter = _resourceDictionary["fc"] as DataPointLabelConverter;
+            converter.ZoomFactor = ZoomFactor;
+            CachVOHLCDataSeries(converter.DataSeries, spOHLCSeries);
+
             if (((spOHLCSeries.XValues != null) && (spOHLCSeries.XValues.Count > 0)) && !ContainsNaN(spOHLCSeries.XValues))
             {
                 series.XValuesSource = spOHLCSeries.XValues;
@@ -2830,7 +2790,7 @@ namespace Dt.Cells.UI
         /// </value>
         public Chart C1Chart
         {
-            get { return (base.C1ChartControl as Chart); }
+            get { return (C1ChartControl as Chart); }
         }
 
         /// <summary>
@@ -2841,7 +2801,7 @@ namespace Dt.Cells.UI
         /// </value>
         public Dt.Cells.Data.SpreadChart SpreadChart
         {
-            get { return (base._spreadChartContent as Dt.Cells.Data.SpreadChart); }
+            get { return (_spreadChartContent as Dt.Cells.Data.SpreadChart); }
         }
 
         internal class AxisOriginalItemsCollection : SeriesDataCollection<object>

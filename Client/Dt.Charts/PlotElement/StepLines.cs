@@ -16,6 +16,8 @@ namespace Dt.Charts
 {
     public partial class StepLines : Lines
     {
+        Rect _labelRect;
+
         internal override object Clone()
         {
             StepLines clone = new StepLines();
@@ -67,6 +69,7 @@ namespace Dt.Charts
                 }
             }
             Data = geometry;
+            _labelRect = rect;
 
             if (!isCustomClipping)
             {
@@ -75,6 +78,11 @@ namespace Dt.Charts
                 base.Clip = geometry2;
             }
             return true;
+        }
+
+        internal override Rect LabelRect
+        {
+            get { return _labelRect; }
         }
     }
 }

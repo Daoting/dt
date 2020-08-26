@@ -31,25 +31,21 @@ namespace Dt.Cells.UI
         internal Rectangle _formatRect;
         Grid _rootLayoutGrid;
         internal SpreadChartBase _spreadChartContent;
-        internal ResourceDictionary resourceDictionary;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="spreadChartContent"></param>
-        /// <param name="c1Chart"></param>
         public SpreadChartBaseView(SpreadChartBase spreadChartContent, Control c1Chart)
         {
             _spreadChartContent = spreadChartContent;
             _formatRect = new Rectangle();
             _formatRect.Fill = new SolidColorBrush(Colors.Transparent);
-            base.Children.Add(_formatRect);
+            Children.Add(_formatRect);
+
             _rootLayoutGrid = new Grid();
             RowDefinition definition = new RowDefinition();
             definition.Height = new Windows.UI.Xaml.GridLength(0.0, Windows.UI.Xaml.GridUnitType.Auto);
             _rootLayoutGrid.RowDefinitions.Add(definition);
             _rootLayoutGrid.RowDefinitions.Add(new RowDefinition());
-            base.Children.Add(_rootLayoutGrid);
+            Children.Add(_rootLayoutGrid);
+
             _chartTitleView = new ChartTitleView(_spreadChartContent.ChartTitle, this);
             _chartTitleView.Margin = new Thickness(0.0, 3.0, 0.0, 3.0);
             _chartTitleView.HorizontalAlignment = HorizontalAlignment.Center;
@@ -58,12 +54,7 @@ namespace Dt.Cells.UI
             _c1ChartControl = c1Chart;
             _rootLayoutGrid.Children.Add(c1Chart);
             Grid.SetRow(c1Chart, 1);
-            base.IsHitTestVisible = false;
-
-            // hdt 原来放在Loaded事件中，无法打印
-            Uri uri = new Uri("ms-appx:///Dt.Cells/Themes/DataLableTemplate.xaml");
-            resourceDictionary = new ResourceDictionary();
-            Application.LoadComponent(resourceDictionary, uri);
+            IsHitTestVisible = false;
         }
 
         /// <summary>
@@ -178,7 +169,7 @@ namespace Dt.Cells.UI
         {
             RectangleGeometry geometry = new RectangleGeometry();
             geometry.Rect = new Rect(0.0, 0.0, size.Width, size.Height);
-            base.Clip = geometry;
+            Clip = geometry;
         }
 
         internal Control C1ChartControl

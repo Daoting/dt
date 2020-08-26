@@ -33,6 +33,157 @@ namespace Dt.Cells.UI
             ParentViewport = parentViewport;
         }
 
+        #region 测量
+        protected override Size MeasureOverride(Size availableSize)
+        {
+            if (!IsSuspendFloatingObjectInvalidate)
+            {
+                MeasureCharts();
+                MeasureFloatingObjects();
+                MeasurePictures();
+            }
+            return ParentViewport.GetViewportSize(availableSize);
+        }
+
+        void MeasureCharts()
+        {
+            List<SpreadChart> charts = GetCharts();
+            FloatingObjectLayoutModel layoutModel = ParentViewport.Excel.GetViewportFloatingObjectLayoutModel(RowViewportIndex, ColumnViewportIndex);
+            for (int i = 0; i < charts.Count; i++)
+            {
+                SpreadChartContainer container;
+                SpreadChart chart = charts[i];
+                if (!_cachedCharts.TryGetValue(chart.Name, out container))
+                {
+                    container = new SpreadChartContainer(chart, new Chart(), ParentViewport);
+                    int maxZIndex = GetMaxZIndex();
+                    Canvas.SetZIndex(container, maxZIndex + 1);
+                    Children.Add(container);
+                    _cachedCharts.Add(chart.Name, container);
+                }
+                if (container != null)
+                {
+                    Size empty = Size.Empty;
+                    FloatingObjectLayout layout = layoutModel.Find(chart.Name);
+                    if (layout != null)
+                    {
+                        double num3 = 7.0;
+                        empty = new Size(layout.Width + (2.0 * num3), layout.Height + (2.0 * num3));
+                    }
+                    container.InvalidateMeasure();
+                    container.Measure(empty);
+                }
+            }
+            foreach (string str in Enumerable.ToArray<string>((IEnumerable<string>)_cachedCharts.Keys))
+            {
+                if (ParentViewport.Excel.ActiveSheet.FindChart(str) == null)
+                {
+                    base.Children.Remove(_cachedCharts[str]);
+                    _cachedCharts.Remove(str);
+                }
+            }
+        }
+
+        void MeasureFloatingObjects()
+        {
+            List<FloatingObject> floatingObjects = GetFloatingObjects();
+            FloatingObjectLayoutModel viewportFloatingObjectLayoutModel = ParentViewport.Excel.GetViewportFloatingObjectLayoutModel(RowViewportIndex, ColumnViewportIndex);
+            for (int i = 0; i < floatingObjects.Count; i++)
+            {
+                FloatingObjectContainer container;
+                FloatingObject floatingObject = floatingObjects[i];
+                if (!_cachedFloatingObjects.TryGetValue(floatingObject.Name, out container))
+                {
+                    FrameworkElement content = null;
+                    if (floatingObject is CustomFloatingObject)
+                    {
+                        content = (floatingObject as CustomFloatingObject).Content;
+                    }
+                    container = new FloatingObjectContainer(floatingObject, ParentViewport);
+                    if (content != null)
+                    {
+                        container.Content = content;
+                    }
+                    int maxZIndex = GetMaxZIndex();
+                    Canvas.SetZIndex(container, maxZIndex + 1);
+                    base.Children.Add(container);
+                    _cachedFloatingObjects.Add(floatingObject.Name, container);
+                }
+                if (container != null)
+                {
+                    Size empty = Size.Empty;
+                    FloatingObjectLayout layout = viewportFloatingObjectLayoutModel.Find(floatingObject.Name);
+                    if (layout != null)
+                    {
+                        double num3 = 7.0;
+                        empty = new Size(layout.Width + (2.0 * num3), layout.Height + (2.0 * num3));
+                    }
+                    container.InvalidateMeasure();
+                    container.Measure(empty);
+                }
+            }
+            foreach (string str in Enumerable.ToArray<string>((IEnumerable<string>)_cachedFloatingObjects.Keys))
+            {
+                if (ParentViewport.Excel.ActiveSheet.FindFloatingObject(str) == null)
+                {
+                    base.Children.Remove(_cachedFloatingObjects[str]);
+                    _cachedFloatingObjects.Remove(str);
+                }
+            }
+        }
+
+        void MeasurePictures()
+        {
+            List<Picture> pictures = GetPictures();
+            FloatingObjectLayoutModel viewportFloatingObjectLayoutModel = ParentViewport.Excel.GetViewportFloatingObjectLayoutModel(RowViewportIndex, ColumnViewportIndex);
+            for (int i = 0; i < pictures.Count; i++)
+            {
+                PictureContainer container;
+                Picture picture = pictures[i];
+                if (!_cachedPictures.TryGetValue(picture.Name, out container))
+                {
+                    container = new PictureContainer(picture, ParentViewport);
+                    int maxZIndex = GetMaxZIndex();
+                    Canvas.SetZIndex(container, maxZIndex + 1);
+                    base.Children.Add(container);
+                    _cachedPictures.Add(picture.Name, container);
+                }
+                if (container != null)
+                {
+                    Size empty = Size.Empty;
+                    FloatingObjectLayout layout = viewportFloatingObjectLayoutModel.Find(picture.Name);
+                    if (layout != null)
+                    {
+                        double num3 = 7.0;
+                        empty = new Size(layout.Width + (2.0 * num3), layout.Height + (2.0 * num3));
+                    }
+                    container.InvalidateMeasure();
+                    container.Measure(empty);
+                }
+            }
+            foreach (string str in Enumerable.ToArray<string>((IEnumerable<string>)_cachedPictures.Keys))
+            {
+                if (ParentViewport.Excel.ActiveSheet.FindPicture(str) == null)
+                {
+                    base.Children.Remove(_cachedPictures[str]);
+                    _cachedPictures.Remove(str);
+                }
+            }
+        }
+        #endregion
+
+        #region 布局
+        protected override Size ArrangeOverride(Size finalSize)
+        {
+            if (!IsSuspendFloatingObjectInvalidate)
+            {
+                ArrangeCharts();
+                ArrangeFloatingObjects();
+                ArrangePictures();
+            }
+            return finalSize;
+        }
+
         void ArrangeCharts()
         {
             FloatingObjectLayoutModel viewportFloatingObjectLayoutModel = ParentViewport.Excel.GetViewportFloatingObjectLayoutModel(RowViewportIndex, ColumnViewportIndex);
@@ -75,17 +226,6 @@ namespace Dt.Cells.UI
             }
         }
 
-        protected override Size ArrangeOverride(Size finalSize)
-        {
-            if (!IsSuspendFloatingObjectInvalidate)
-            {
-                ArrangeCharts();
-                ArrangeFloatingObjects();
-                ArrangePictures();
-            }
-            return finalSize;
-        }
-
         void ArrangePictures()
         {
             FloatingObjectLayoutModel viewportFloatingObjectLayoutModel = ParentViewport.Excel.GetViewportFloatingObjectLayoutModel(RowViewportIndex, ColumnViewportIndex);
@@ -106,6 +246,7 @@ namespace Dt.Cells.UI
                 container.Arrange(new Rect(location, size));
             }
         }
+        #endregion
 
         List<SpreadChart> GetCharts()
         {
@@ -192,143 +333,6 @@ namespace Dt.Cells.UI
                 }
             }
             return list;
-        }
-
-        void MeasureCharts()
-        {
-            List<SpreadChart> charts = GetCharts();
-            FloatingObjectLayoutModel viewportFloatingObjectLayoutModel = ParentViewport.Excel.GetViewportFloatingObjectLayoutModel(RowViewportIndex, ColumnViewportIndex);
-            for (int i = 0; i < charts.Count; i++)
-            {
-                SpreadChartContainer container;
-                SpreadChart spreadChart = charts[i];
-                if (!_cachedCharts.TryGetValue(spreadChart.Name, out container))
-                {
-                    container = new SpreadChartContainer(spreadChart, new Chart(), ParentViewport);
-                    int maxZIndex = GetMaxZIndex();
-                    Canvas.SetZIndex(container, maxZIndex + 1);
-                    base.Children.Add(container);
-                    _cachedCharts.Add(spreadChart.Name, container);
-                }
-                if (container != null)
-                {
-                    Size empty = Size.Empty;
-                    FloatingObjectLayout layout = viewportFloatingObjectLayoutModel.Find(spreadChart.Name);
-                    if (layout != null)
-                    {
-                        double num3 = 7.0;
-                        empty = new Size(layout.Width + (2.0 * num3), layout.Height + (2.0 * num3));
-                    }
-                    container.InvalidateMeasure();
-                    container.Measure(empty);
-                }
-            }
-            foreach (string str in Enumerable.ToArray<string>((IEnumerable<string>) _cachedCharts.Keys))
-            {
-                if (ParentViewport.Excel.ActiveSheet.FindChart(str) == null)
-                {
-                    base.Children.Remove(_cachedCharts[str]);
-                    _cachedCharts.Remove(str);
-                }
-            }
-        }
-
-        void MeasureFloatingObjects()
-        {
-            List<FloatingObject> floatingObjects = GetFloatingObjects();
-            FloatingObjectLayoutModel viewportFloatingObjectLayoutModel = ParentViewport.Excel.GetViewportFloatingObjectLayoutModel(RowViewportIndex, ColumnViewportIndex);
-            for (int i = 0; i < floatingObjects.Count; i++)
-            {
-                FloatingObjectContainer container;
-                FloatingObject floatingObject = floatingObjects[i];
-                if (!_cachedFloatingObjects.TryGetValue(floatingObject.Name, out container))
-                {
-                    FrameworkElement content = null;
-                    if (floatingObject is CustomFloatingObject)
-                    {
-                        content = (floatingObject as CustomFloatingObject).Content;
-                    }
-                    container = new FloatingObjectContainer(floatingObject, ParentViewport);
-                    if (content != null)
-                    {
-                        container.Content = content;
-                    }
-                    int maxZIndex = GetMaxZIndex();
-                    Canvas.SetZIndex(container, maxZIndex + 1);
-                    base.Children.Add(container);
-                    _cachedFloatingObjects.Add(floatingObject.Name, container);
-                }
-                if (container != null)
-                {
-                    Size empty = Size.Empty;
-                    FloatingObjectLayout layout = viewportFloatingObjectLayoutModel.Find(floatingObject.Name);
-                    if (layout != null)
-                    {
-                        double num3 = 7.0;
-                        empty = new Size(layout.Width + (2.0 * num3), layout.Height + (2.0 * num3));
-                    }
-                    container.InvalidateMeasure();
-                    container.Measure(empty);
-                }
-            }
-            foreach (string str in Enumerable.ToArray<string>((IEnumerable<string>) _cachedFloatingObjects.Keys))
-            {
-                if (ParentViewport.Excel.ActiveSheet.FindFloatingObject(str) == null)
-                {
-                    base.Children.Remove(_cachedFloatingObjects[str]);
-                    _cachedFloatingObjects.Remove(str);
-                }
-            }
-        }
-
-        protected override Size MeasureOverride(Size availableSize)
-        {
-            if (!IsSuspendFloatingObjectInvalidate)
-            {
-                MeasureCharts();
-                MeasureFloatingObjects();
-                MeasurePictures();
-            }
-            return ParentViewport.GetViewportSize(availableSize);
-        }
-
-        void MeasurePictures()
-        {
-            List<Picture> pictures = GetPictures();
-            FloatingObjectLayoutModel viewportFloatingObjectLayoutModel = ParentViewport.Excel.GetViewportFloatingObjectLayoutModel(RowViewportIndex, ColumnViewportIndex);
-            for (int i = 0; i < pictures.Count; i++)
-            {
-                PictureContainer container;
-                Picture picture = pictures[i];
-                if (!_cachedPictures.TryGetValue(picture.Name, out container))
-                {
-                    container = new PictureContainer(picture, ParentViewport);
-                    int maxZIndex = GetMaxZIndex();
-                    Canvas.SetZIndex(container, maxZIndex + 1);
-                    base.Children.Add(container);
-                    _cachedPictures.Add(picture.Name, container);
-                }
-                if (container != null)
-                {
-                    Size empty = Size.Empty;
-                    FloatingObjectLayout layout = viewportFloatingObjectLayoutModel.Find(picture.Name);
-                    if (layout != null)
-                    {
-                        double num3 = 7.0;
-                        empty = new Size(layout.Width + (2.0 * num3), layout.Height + (2.0 * num3));
-                    }
-                    container.InvalidateMeasure();
-                    container.Measure(empty);
-                }
-            }
-            foreach (string str in Enumerable.ToArray<string>((IEnumerable<string>) _cachedPictures.Keys))
-            {
-                if (ParentViewport.Excel.ActiveSheet.FindPicture(str) == null)
-                {
-                    base.Children.Remove(_cachedPictures[str]);
-                    _cachedPictures.Remove(str);
-                }
-            }
         }
 
         internal void Refresh()

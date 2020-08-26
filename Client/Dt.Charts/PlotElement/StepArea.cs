@@ -16,6 +16,8 @@ namespace Dt.Charts
 {
     public partial class StepArea : Area
     {
+        Rect _labelRect;
+
         internal override object Clone()
         {
             StepArea clone = new StepArea();
@@ -95,9 +97,15 @@ namespace Dt.Charts
             Data = geometry;
 
             RectangleGeometry geometry3 = new RectangleGeometry();
-            geometry3.Rect = rc.Bounds2D;
-            base.Clip = geometry3;
+            _labelRect = rc.Bounds2D;
+            geometry3.Rect = _labelRect;
+            Clip = geometry3;
             return true;
+        }
+
+        internal override Rect LabelRect
+        {
+            get { return _labelRect; }
         }
     }
 }

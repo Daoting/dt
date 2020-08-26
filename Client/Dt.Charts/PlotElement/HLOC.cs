@@ -19,6 +19,7 @@ namespace Dt.Charts
     public partial class HLOC : PlotElement, ICustomClipping
     {
         protected HLOCAppearance app;
+        Rect _labelRect;
 
         public HLOC()
         {
@@ -65,7 +66,8 @@ namespace Dt.Charts
             //    return false;
             //}
             RectangleGeometry geometry = new RectangleGeometry();
-            geometry.Rect = rc.Bounds2D;
+            _labelRect = rc.Bounds2D;
+            geometry.Rect = _labelRect;
             base.Clip = geometry;
             return true;
         }
@@ -274,6 +276,11 @@ namespace Dt.Charts
                 geometry.Figures.Add(figure);
             }
             Data = geometry;
+        }
+
+        internal override Rect LabelRect
+        {
+            get { return _labelRect; }
         }
 
 #if IOS
