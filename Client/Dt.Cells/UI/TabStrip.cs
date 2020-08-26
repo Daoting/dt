@@ -11,7 +11,6 @@ using Dt.Base;
 using Dt.Cells.Data;
 using Dt.Cells.UndoRedo;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using Windows.Foundation;
@@ -20,7 +19,6 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 #endregion
 
 namespace Dt.Cells.UI
@@ -28,28 +26,111 @@ namespace Dt.Cells.UI
     /// <summary>
     /// Represents a <see cref="T:GrapeCity.Windows.SpreadSheet.UI.GcSpreadSheet" /> tab strip control.
     /// </summary>
-    public partial class TabStrip : Control
+    internal partial class TabStrip : Control
     {
+        #region 静态内容
+        public readonly static DependencyProperty HasInsertTabProperty = DependencyProperty.Register(
+            "HasInsertTab",
+            typeof(bool),
+            typeof(TabStrip),
+            new PropertyMetadata(true, OnHasInsertTabChanged));
+
+        static void OnHasInsertTabChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            TabStrip strip = (TabStrip)d;
+            if ((bool)e.NewValue)
+            {
+                if (strip._newTab == null)
+                {
+                    strip._newTab = new SheetTab(strip);
+                }
+                if (!strip.TabsPresenter.Children.Contains(strip._newTab))
+                {
+                    strip.TabsPresenter.Children.Add(strip._newTab);
+                }
+                if (strip.IsLoaded)
+                {
+                    strip.TabsPresenter.ReCalculateStartIndex(0, strip.TabsPresenter.Children.Count - 1);
+                }
+            }
+            else if (strip._newTab != null)
+            {
+                strip.TabsPresenter.Children.Remove(strip._newTab);
+                strip._newTab = null;
+            }
+        }
+        #endregion
+
         SheetTab _activeTab;
         SheetTab _editingTab;
-        bool _hasNewTab = true;
         SheetTab _newTab;
-        bool showTextBoxContextMenus;
 
-        internal event EventHandler ActiveTabChanged;
+        public event EventHandler ActiveTabChanged;
 
-        internal event EventHandler ActiveTabChanging;
+        public event EventHandler ActiveTabChanging;
 
-        internal event EventHandler NewTabNeeded;
+        public event EventHandler NewTabNeeded;
 
-        public TabStrip()
+        public TabStrip(Excel p_excel)
         {
             DefaultStyleKey = typeof(TabStrip);
-            TabsPresenter = new TabsPresenter();
-            TabsPresenter.PropertyChanged += new EventHandler<PropertyChangedEventArgs>(TabPresenter_PropertyChanged);
+            Excel = p_excel;
+            TabsPresenter = new TabsPresenter(this);
         }
 
-        internal void ActiveNextTab()
+        public SheetTab ActiveTab
+        {
+            get { return _activeTab; }
+        }
+
+        public bool HasInsertTab
+        {
+            get { return (bool)GetValue(HasInsertTabProperty); }
+            set { SetValue(HasInsertTabProperty, value); }
+        }
+
+        public bool IsEditing { get; private set; }
+
+        public Excel Excel { get; }
+
+        public TabsPresenter TabsPresenter { get; }
+
+        public Dt.Cells.Data.Workbook Workbook
+        {
+            get { return Excel.Workbook; }
+        }
+
+        public void Init(WorksheetCollection p_sheets, int p_activeSheetIndex)
+        {
+            for (int i = 0; i < p_sheets.Count; i++)
+            {
+                SheetTab tab = new SheetTab(this);
+                tab.SheetIndex = i;
+                TabsPresenter.Children.Add(tab);
+            }
+
+            if (HasInsertTab)
+            {
+                _newTab = new SheetTab(this);
+                TabsPresenter.Children.Add(_newTab);
+            }
+            ActiveSheet(p_activeSheetIndex, false);
+        }
+
+        public void NewTab(int sheetIndex)
+        {
+            StopTabEditing(false);
+            SheetTab tab = new SheetTab(this) { SheetIndex = sheetIndex };
+            int count = TabsPresenter.Children.Count;
+            if (HasInsertTab && (TabsPresenter.Children.Count > 0))
+            {
+                count = TabsPresenter.Children.Count - 1;
+            }
+            TabsPresenter.Children.Insert(count, tab);
+            TabsPresenter.ReCalculateStartIndex(0, TabsPresenter.Children.Count - 1);
+        }
+
+        public void ActiveNextTab()
         {
             if (_activeTab != null)
             {
@@ -61,7 +142,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        internal void ActivePreviousTab()
+        public void ActivePreviousTab()
         {
             if (_activeTab != null)
             {
@@ -73,177 +154,45 @@ namespace Dt.Cells.UI
             }
         }
 
-        internal void ActiveSheet(int sheetIndex, bool raiseEvent)
+        void ActiveSheet(int p_sheetIndex, bool raiseEvent)
         {
-            if (TabsPresenter.Children.Count != 0)
+            if (TabsPresenter.Children.Count == 0
+                || p_sheetIndex < 0
+                || p_sheetIndex >= TabsPresenter.Children.Count)
+                return;
+
+            SheetTab tab = TabsPresenter.Children[p_sheetIndex] as SheetTab;
+            if (tab.SheetIndex == p_sheetIndex && tab != _activeTab)
             {
-                for (int i = 0; i < TabsPresenter.Children.Count; i++)
+                if (raiseEvent)
                 {
-                    SheetTab tab = TabsPresenter.Children[i] as SheetTab;
-                    if ((tab.SheetIndex == sheetIndex) && (tab != _activeTab))
+                    CancelEventArgs args = new CancelEventArgs();
+                    if (!tab.IsActive)
                     {
-                        if (raiseEvent)
-                        {
-                            CancelEventArgs args = new CancelEventArgs();
-                            if (!tab.IsActive)
-                            {
-                                OnActiveTabChanging((EventArgs)args);
-                            }
-                            if (!args.Cancel)
-                            {
-                                if (_activeTab != null)
-                                {
-                                    _activeTab.IsActive = false;
-                                }
-                                tab.IsActive = true;
-                                _activeTab = tab;
-                                UpdateZIndexes();
-                                OnActiveTabChanged(EventArgs.Empty);
-                            }
-                        }
-                        else
-                        {
-                            if (_activeTab != null)
-                            {
-                                _activeTab.IsActive = false;
-                            }
-                            tab.IsActive = true;
-                            _activeTab = tab;
-                            UpdateZIndexes();
-                        }
+                        OnActiveTabChanging((EventArgs)args);
+                    }
+                    if (!args.Cancel)
+                    {
+                        if (_activeTab != null)
+                            _activeTab.IsActive = false;
+                        tab.IsActive = true;
+                        _activeTab = tab;
+                        OnActiveTabChanged(EventArgs.Empty);
                     }
                 }
+                else
+                {
+                    if (_activeTab != null)
+                        _activeTab.IsActive = false;
+                    tab.IsActive = true;
+                    _activeTab = tab;
+                }
             }
         }
 
-        internal void AddSheets(WorksheetCollection sheets)
-        {
-            StopTabEditing(false);
-            List<SheetTab> list = new List<SheetTab>();
-            List<SheetTab> list2 = new List<SheetTab>();
-            int count = TabsPresenter.Children.Count;
-            int num2 = sheets.Count;
-            if (count < num2)
-            {
-                for (int j = count; j < num2; j++)
-                {
-                    SheetTab tab = new SheetTab();
-                    list.Add(tab);
-                }
-            }
-            else if (count > num2)
-            {
-                for (int k = num2; k < count; k++)
-                {
-                    list2.Add((SheetTab)TabsPresenter.Children[k]);
-                }
-            }
-            UIElementCollection children = TabsPresenter.Children;
-            if (list2.Count > 0)
-            {
-                foreach (SheetTab tab2 in list2)
-                {
-                    children.Remove(tab2);
-                }
-            }
-            if (list.Count > 0)
-            {
-                foreach (SheetTab tab3 in list)
-                {
-                    children.Add(tab3);
-                }
-            }
-            for (int i = 0; i < children.Count; i++)
-            {
-                SheetTab tab4 = children[i] as SheetTab;
-                tab4.OwningStrip = this;
-                tab4.SheetIndex = i;
-                tab4.Click -= Tab_Click;
-                tab4.Click += Tab_Click;
-            }
-            if (_hasNewTab)
-            {
-                _newTab = new SheetTab();
-                _newTab.OwningStrip = this;
-                SheetTab tab5 = _newTab;
-                tab5.Click += Tab_Click;
-                TabsPresenter.Children.Add(_newTab);
-            }
-        }
-
-        SheetTab GetHitSheetTab(Point p_point)
-        {
-            if (TabsPresenter.Children.Count > 0)
-            {
-                var pt = Windows.UI.Xaml.Window.Current.Content.TransformToVisual(TabsPresenter).TransformPoint(p_point);
-                if (pt.X > 0)
-                {
-                    double x = 0.0;
-                    foreach (var tab in TabsPresenter.Children.OfType<SheetTab>())
-                    {
-                        if (pt.X > x && pt.X <= x + tab.DesiredSize.Width)
-                            return tab;
-                        x += tab.DesiredSize.Width;
-                    }
-                }
-            }
-            return null;
-        }
-
-        internal int GetStartIndexToBringTabIntoView(int tabIndex)
+        public int GetStartIndexToBringTabIntoView(int tabIndex)
         {
             return TabsPresenter.GetStartIndexToBringTabIntoView(tabIndex);
-        }
-
-        bool IsValidSheetName(string sheetName)
-        {
-            if (string.IsNullOrEmpty(sheetName))
-            {
-                return false;
-            }
-            foreach (Worksheet worksheet in Workbook.Sheets)
-            {
-                if ((worksheet != Workbook.ActiveSheet) && (sheetName == worksheet.Name))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        internal void NewTab(int sheetIndex)
-        {
-            StopTabEditing(false);
-            SheetTab tab = new SheetTab
-            {
-                OwningStrip = this,
-                SheetIndex = sheetIndex
-            };
-            tab.Click += Tab_Click;
-            int count = TabsPresenter.Children.Count;
-            if (HasInsertTab && (TabsPresenter.Children.Count > 0))
-            {
-                count = TabsPresenter.Children.Count - 1;
-            }
-            TabsPresenter.Children.Insert(count, tab);
-            TabsPresenter.Update();
-            TabsPresenter.ReCalculateStartIndex(0, TabsPresenter.Children.Count - 1);
-        }
-
-        internal void OnActiveTabChanged(EventArgs e)
-        {
-            if (ActiveTabChanged != null)
-            {
-                ActiveTabChanged(this, e);
-            }
-        }
-
-        internal void OnActiveTabChanging(EventArgs e)
-        {
-            if (ActiveTabChanging != null)
-            {
-                ActiveTabChanging(this, e);
-            }
         }
 
         protected override void OnApplyTemplate()
@@ -254,38 +203,7 @@ namespace Dt.Cells.UI
                 root.Children.Add(TabsPresenter);
         }
 
-        void OnEditorContextMenuOpening(object sender, ContextMenuEventArgs e)
-        {
-            if (!showTextBoxContextMenus)
-            {
-                e.Handled = true;
-            }
-            showTextBoxContextMenus = true;
-        }
-
-        internal virtual void OnNewTabNeeded(EventArgs e)
-        {
-            EventHandler newTabNeeded = NewTabNeeded;
-            if (newTabNeeded != null)
-            {
-                newTabNeeded(this, e);
-            }
-        }
-
-        async void PrepareTabForEditing(object sender, RoutedEventArgs e)
-        {
-            TextBox editor = sender as TextBox;
-            if (editor != null)
-            {
-                await editor.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, delegate
-                {
-                    editor.Focus(FocusState.Programmatic);
-                    editor.SelectAll();
-                });
-            }
-        }
-
-        internal void ProcessMouseClickSheetTab(PointerRoutedEventArgs args)
+        public void ProcessMouseClickSheetTab(PointerRoutedEventArgs args)
         {
             SheetTab hitSheetTab = GetHitSheetTab(args.GetCurrentPoint(null).Position);
             if (hitSheetTab != null)
@@ -363,7 +281,7 @@ namespace Dt.Cells.UI
             }
         }
 
-        internal void ProcessTap(Point point)
+        public void ProcessTap(Point point)
         {
             SheetTab touchHitSheetTab = GetHitSheetTab(point);
             if (touchHitSheetTab == null)
@@ -411,7 +329,7 @@ namespace Dt.Cells.UI
             Excel.RaiseSheetTabClick(touchHitSheetTab.SheetIndex);
         }
 
-        internal void Refresh()
+        public void Refresh()
         {
             if (TabsPresenter.Children.Count > 0)
             {
@@ -420,10 +338,9 @@ namespace Dt.Cells.UI
                     tab.PrepareForDisplay();
                 }
             }
-            showTextBoxContextMenus = false;
         }
 
-        internal void SetStartSheet(int startSheetIndex)
+        public void SetStartSheet(int startSheetIndex)
         {
             if ((TabsPresenter.Children.Count != 0) && (TabsPresenter.Children.Count > startSheetIndex))
             {
@@ -431,220 +348,105 @@ namespace Dt.Cells.UI
             }
         }
 
-        internal void StartTabEditing(PointerRoutedEventArgs mouseEventArgs)
+        SheetTab GetHitSheetTab(Point p_point)
         {
-            if (((mouseEventArgs != null) && (_activeTab != null)) && ((Workbook != null) && !Workbook.Protect))
+            if (TabsPresenter.Children.Count > 0)
             {
-                SheetTab hitSheetTab = GetHitSheetTab(mouseEventArgs.GetCurrentPoint(null).Position);
-                if (((hitSheetTab != null) && (hitSheetTab.SheetIndex == Workbook.ActiveSheetIndex)) && (hitSheetTab != _editingTab))
+                var pt = Windows.UI.Xaml.Window.Current.Content.TransformToVisual(TabsPresenter).TransformPoint(p_point);
+                if (pt.X > 0)
                 {
-                    if (IsEditing)
+                    double x = 0.0;
+                    foreach (var tab in TabsPresenter.Children.OfType<SheetTab>())
                     {
-                        StopTabEditing(false);
+                        if (pt.X > x && pt.X <= x + tab.DesiredSize.Width)
+                            return tab;
+                        x += tab.DesiredSize.Width;
                     }
-                    TextBox editingElement = hitSheetTab.GetEditingElement();
-                    editingElement.Loaded += PrepareTabForEditing;
-                    editingElement.LostFocus += TabEditor_LostFocus;
-                    hitSheetTab.PrepareForEditing();
-                    editingElement.TextChanged += TabEditor_TextChanged;
-                    TabsPresenter.InvalidateMeasure();
-                    TabsPresenter.InvalidateArrange();
-                    IsEditing = true;
-                    _editingTab = hitSheetTab;
                 }
             }
+            return null;
         }
 
-        internal void StartTabTouchEditing(Point point)
+        #region 编辑
+        public void StartTabEditing(PointerRoutedEventArgs e)
         {
             if (((_activeTab != null) && (Workbook != null)) && !Workbook.Protect)
+                StartTabEditing(e.GetCurrentPoint(null).Position);
+        }
+
+        public void StartTabTouchEditing(Point point)
+        {
+            if (((_activeTab != null) && (Workbook != null)) && !Workbook.Protect)
+                StartTabEditing(point);
+        }
+
+        void StartTabEditing(Point point)
+        {
+            SheetTab tab = GetHitSheetTab(point);
+            if (tab != null && tab.SheetIndex == Workbook.ActiveSheetIndex && tab != _editingTab)
             {
-                SheetTab touchHitSheetTab = GetHitSheetTab(point);
-                if (((touchHitSheetTab != null) && (touchHitSheetTab.SheetIndex == Workbook.ActiveSheetIndex)) && (touchHitSheetTab != _editingTab))
-                {
-                    if (IsEditing)
-                    {
-                        StopTabEditing(false);
-                    }
-                    TextBox editingElement = touchHitSheetTab.GetEditingElement();
-                    editingElement.Loaded += PrepareTabForEditing;
-                    editingElement.LostFocus += TabEditor_LostFocus;
-                    editingElement.ContextMenuOpening += OnEditorContextMenuOpening;
-                    touchHitSheetTab.PrepareForEditing();
-                    editingElement.TextChanged += TabEditor_TextChanged;
-                    TabsPresenter.InvalidateMeasure();
-                    TabsPresenter.InvalidateArrange();
-                    IsEditing = true;
-                    _editingTab = touchHitSheetTab;
-                }
+                if (IsEditing)
+                    StopTabEditing(false);
+
+                tab.PrepareForEditing();
+                IsEditing = true;
+                _editingTab = tab;
             }
         }
 
-        internal bool StayInEditing(Point point)
+        public void StopTabEditing(bool cancel)
+        {
+            if (!IsEditing)
+                return;
+
+            string text = _editingTab.GetEditText();
+            if (!cancel && !string.IsNullOrEmpty(text) && IsValidSheetName(text))
+            {
+                SheetRenameUndoAction command = new SheetRenameUndoAction(Workbook.Sheets[_editingTab.SheetIndex], text);
+                Excel.DoCommand(command);
+            }
+            _editingTab.PrepareForDisplay();
+            _editingTab = null;
+            IsEditing = false;
+        }
+
+        public bool StayInEditing(Point point)
         {
             return ((IsEditing && (_editingTab != null)) && (GetHitSheetTab(point) == _editingTab));
         }
 
-        internal async void StopTabEditing(bool cancel)
+        bool IsValidSheetName(string sheetName)
         {
-            DispatchedHandler agileCallback = null;
-            if ((_editingTab != null) && IsEditing)
+            if (string.IsNullOrEmpty(sheetName))
             {
-                TextBox editingElement = _editingTab.GetEditingElement();
-                if (editingElement != null)
+                return false;
+            }
+            foreach (Worksheet worksheet in Workbook.Sheets)
+            {
+                if ((worksheet != Workbook.ActiveSheet) && (sheetName == worksheet.Name))
                 {
-                    string text = editingElement.Text;
-                    if ((!cancel && !string.IsNullOrEmpty(text)) && IsValidSheetName(text))
-                    {
-                        SheetRenameUndoAction command = new SheetRenameUndoAction(Workbook.Sheets[_editingTab.SheetIndex], text);
-                        Excel.DoCommand(command);
-                    }
-                    editingElement.Loaded += PrepareTabForEditing;
-                    editingElement.LostFocus += TabEditor_LostFocus;
-                    editingElement.ContextMenuOpening += OnEditorContextMenuOpening;
-                    editingElement.TextChanged += TabEditor_TextChanged;
-                }
-                _editingTab.PrepareForDisplay();
-                _editingTab = null;
-                TabsPresenter.InvalidateMeasure();
-                TabsPresenter.InvalidateArrange();
-                if (Excel != null)
-                {
-                    if (agileCallback == null)
-                    {
-                        agileCallback = delegate
-                        {
-                            Excel.FocusInternal();
-                        };
-                    }
-                    await Excel.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, agileCallback);
+                    return false;
                 }
             }
-            IsEditing = false;
-            showTextBoxContextMenus = false;
+            return true;
         }
+        #endregion
 
-        void Tab_Click(object sender, RoutedEventArgs e)
+        void OnActiveTabChanged(EventArgs e)
         {
+            ActiveTabChanged?.Invoke(this, e);
         }
 
-        void TabEditor_KeyDown(object sender, KeyRoutedEventArgs e)
+        void OnActiveTabChanging(EventArgs e)
         {
-            if (e.Key == VirtualKey.Enter)
-            {
-                StopTabEditing(false);
-                e.Handled = true;
-            }
-            else if (e.Key == VirtualKey.Escape)
-            {
-                StopTabEditing(true);
-            }
+            ActiveTabChanging?.Invoke(this, e);
         }
 
-        void TabEditor_LostFocus(object sender, RoutedEventArgs e)
+        void OnNewTabNeeded(EventArgs e)
         {
-            StopTabEditing(false);
+            NewTabNeeded?.Invoke(this, e);
         }
 
-        void TabEditor_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            TabsPresenter.InvalidateMeasure();
-            TabsPresenter.InvalidateArrange();
-        }
-
-        void TabPresenter_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (((e.PropertyName == "StartIndex") && (Excel != null)) && ((Excel.ActiveSheet != null) && (Excel.ActiveSheet.Workbook != null)))
-            {
-                Excel.ActiveSheet.Workbook.StartSheetIndex = TabsPresenter.StartIndex;
-            }
-        }
-
-        internal void Update()
-        {
-            StopTabEditing(false);
-            foreach (SheetTab tab in TabsPresenter.Children)
-            {
-                tab.Click -= Tab_Click;
-                tab.SheetIndex = -1;
-                tab.OwningStrip = null;
-                tab.IsActive = false;
-            }
-            TabsPresenter.Update();
-            _activeTab = null;
-            _editingTab = null;
-        }
-
-        void UpdateZIndexes()
-        {
-            int count = TabsPresenter.Children.Count;
-            if ((count > 0) && (_activeTab != null))
-            {
-                for (int i = 0; i < count; i++)
-                {
-                    if (TabsPresenter.Children[i] != _activeTab)
-                    {
-                        Canvas.SetZIndex((UIElement)TabsPresenter.Children[i], count - i);
-                    }
-                }
-                Canvas.SetZIndex(_activeTab, count + 1);
-            }
-        }
-
-        internal SheetTab ActiveTab
-        {
-            get { return _activeTab; }
-        }
-
-        internal bool HasInsertTab
-        {
-            get { return _hasNewTab; }
-            set
-            {
-                if (value != _hasNewTab)
-                {
-                    _hasNewTab = value;
-                    if (_hasNewTab)
-                    {
-                        if (_newTab == null)
-                        {
-                            _newTab = new SheetTab();
-                            _newTab.OwningStrip = this;
-                            _newTab.Click += Tab_Click;
-                        }
-                        if (!TabsPresenter.Children.Contains(_newTab))
-                        {
-                            TabsPresenter.Children.Add(_newTab);
-                        }
-                        if (IsLoaded)
-                        {
-                            TabsPresenter.Update();
-                            TabsPresenter.ReCalculateStartIndex(0, TabsPresenter.Children.Count - 1);
-                        }
-                    }
-                    else
-                    {
-                        TabsPresenter.Children.Remove(_newTab);
-                        if (_newTab != null)
-                        {
-                            _newTab.Click -= Tab_Click;
-                            _newTab = null;
-                        }
-                    }
-                }
-            }
-        }
-
-        internal bool IsEditing { get; private set; }
-
-        internal Excel Excel { get; set; }
-
-        internal TabsPresenter TabsPresenter { get; }
-
-        internal Dt.Cells.Data.Workbook Workbook
-        {
-            get { return Excel.Workbook; }
-        }
     }
 }
 

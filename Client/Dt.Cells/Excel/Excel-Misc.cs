@@ -9911,11 +9911,6 @@ namespace Dt.Base
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         void OnTabStripNewTabNeeded(object sender, EventArgs e)
         {
             StopCellEditing(false);

@@ -274,11 +274,7 @@
 
                         <Rectangle x:Name="NormalBorder" Margin="0,0,-1,0" Stroke="{StaticResource 浅灰边框}" Fill="{StaticResource 浅灰背景}" StrokeThickness="1" IsHitTestVisible="False"/>
                         <Rectangle x:Name="SelectedBorder" Margin="1,0,0,1" Fill="White" Visibility="Collapsed" IsHitTestVisible="False"/>
-                        <ContentControl x:Name="PART_ContentPresenter"
-                                        Foreground="{TemplateBinding Foreground}"
-                                        Content="{TemplateBinding Content}"
-                                        Margin="15,0,15,0"
-                                        VerticalContentAlignment="Center" />
+                        <ContentPresenter x:Name="ContentPresenter" Margin="15,0,15,0" VerticalContentAlignment="Center" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

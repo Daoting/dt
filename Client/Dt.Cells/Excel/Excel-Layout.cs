@@ -521,42 +521,30 @@ namespace Dt.Base
             {
                 if (_tabStrip == null)
                 {
-                    _tabStrip = new TabStrip();
-                    // hdt 应用构造前的设置
+                    _tabStrip = new TabStrip(this);
                     if (TabStripVisibility == Visibility.Collapsed)
                         _tabStrip.Visibility = Visibility.Collapsed;
                     _tabStrip.HasInsertTab = TabStripInsertTab;
-                    _tabStrip.Excel = this;
+                    _tabStrip.Init(Sheets, ActiveSheetIndex);
+
+                    _tabStrip.ActiveTabChanging += OnTabStripActiveTabChanging;
+                    _tabStrip.ActiveTabChanged += OnTabStripActiveTabChanged;
+                    _tabStrip.NewTabNeeded += OnTabStripNewTabNeeded;
                 }
-                else
-                {
-                    _tabStrip.Update();
-                }
-                _tabStrip.ActiveTabChanging -= new EventHandler(OnTabStripActiveTabChanging);
-                _tabStrip.ActiveTabChanged -= new EventHandler(OnTabStripActiveTabChanged);
-                _tabStrip.NewTabNeeded -= new EventHandler(OnTabStripNewTabNeeded);
-                _tabStrip.AddSheets(Sheets);
+
                 if (!Children.Contains(_tabStrip))
                 {
                     Children.Add(_tabStrip);
                 }
-                int activeSheetIndex = ActiveSheetIndex;
-                if ((activeSheetIndex >= 0) && (activeSheetIndex < Sheets.Count))
-                {
-                    _tabStrip.ActiveSheet(activeSheetIndex, false);
-                }
-                _tabStrip.SetStartSheet(StartSheetIndex);
                 _tabStrip.InvalidateMeasure();
                 _tabStrip.Measure(new Size(layout.TabStripWidth, layout.TabStripHeight));
-                _tabStrip.ActiveTabChanging += new EventHandler(OnTabStripActiveTabChanging);
-                _tabStrip.ActiveTabChanged += new EventHandler(OnTabStripActiveTabChanged);
-                _tabStrip.NewTabNeeded += new EventHandler(OnTabStripNewTabNeeded);
             }
             else if (_tabStrip != null)
             {
                 Children.Remove(_tabStrip);
-                _tabStrip.ActiveTabChanging -= new EventHandler(OnTabStripActiveTabChanging);
-                _tabStrip.ActiveTabChanged -= new EventHandler(OnTabStripActiveTabChanged);
+                _tabStrip.ActiveTabChanging -= OnTabStripActiveTabChanging;
+                _tabStrip.ActiveTabChanged -= OnTabStripActiveTabChanged;
+                _tabStrip.NewTabNeeded -= OnTabStripNewTabNeeded;
                 _tabStrip = null;
             }
 

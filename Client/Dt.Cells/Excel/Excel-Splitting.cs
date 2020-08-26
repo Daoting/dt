@@ -416,8 +416,10 @@ namespace Dt.Base
                         Child = new TextBlock
                         {
                             Text = "\uE063",
-                            HorizontalAlignment = HorizontalAlignment.Center,
-                            VerticalAlignment = VerticalAlignment.Center,
+                            // 居中在android上位置不对
+                            Margin = new Thickness(9, 7, 0, 0),
+                            //HorizontalAlignment = HorizontalAlignment.Center,
+                            //VerticalAlignment = VerticalAlignment.Center,
                             FontFamily = (FontFamily)Application.Current.Resources["IconFont"],
                             FontSize = 12,
                             Foreground = BrushRes.深灰边框,

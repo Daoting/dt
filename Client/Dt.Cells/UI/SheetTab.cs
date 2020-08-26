@@ -11,201 +11,157 @@ namespace Dt.Cells.UI
     /// <summary>
     /// hdt 大调整
     /// </summary>
-    public partial class SheetTab : Button
+    internal partial class SheetTab : Control
     {
-        ContentControl _content;
-        TextBlock _displayElement;
-        TextBox _editingElement;
+        #region 静态内容
+        public static readonly DependencyProperty IsActiveProperty = DependencyProperty.Register(
+                "IsActive",
+                typeof(bool),
+                typeof(SheetTab),
+                new PropertyMetadata(false, OnIsActiveChanged));
+
+        static void OnIsActiveChanged(object s, DependencyPropertyChangedEventArgs e)
+        {
+            ((SheetTab)s).UpdateActiveStates();
+        }
+        #endregion
+
+        ContentPresenter _presenter;
+        readonly TextBlock _block;
+        TextBox _textBox;
         const string _inser_TabName = "新建...";
         bool _isEditing;
         int _sheetIndex;
-        const double DEFAULT_FONTSIZE = 13.0;
-        const double DEFAULT_HEIGHT = 18.0;
-        const double DEFAULT_PADDING_LEFT = 12.0;
-        const double DEFAULT_PADDING_RIGHT = 6.0;
-        public static readonly DependencyProperty IsActiveProperty;
 
-        //static string INSER_TabName
-        //{
-        //    get
-        //    {
-        //        if (string.IsNullOrEmpty(_inser_TabName))
-        //        {
-        //            _inser_TabName = ResourceStrings.TabStrip_NewSheet;
-        //        }
-        //        return _inser_TabName;
-        //    }
-        //}
+        public SheetTab(TabStrip p_owner)
+        {
+            DefaultStyleKey = typeof(SheetTab);
+            Owner = p_owner;
+            _sheetIndex = -1;
+            _block = new TextBlock { VerticalAlignment = VerticalAlignment.Center };
+        }
 
         public bool IsActive
         {
-            get { return (bool)((bool)base.GetValue(IsActiveProperty)); }
-            set { base.SetValue(IsActiveProperty, (bool)value); }
+            get { return (bool)GetValue(IsActiveProperty); }
+            set { SetValue(IsActiveProperty, value); }
         }
 
-        internal TabStrip OwningStrip { get; set; }
+        public TabStrip Owner { get; }
 
         public int SheetIndex
         {
             get { return _sheetIndex; }
             internal set
             {
-                _sheetIndex = value;
-                if (_isEditing)
+                if (_sheetIndex != value)
                 {
-                    GetEditingElement().Text = SheetName;
-                }
-                else
-                {
-                    GetDisplayElement().Text = SheetName;
+                    _sheetIndex = value;
+                    if (_isEditing)
+                        _textBox.Text = SheetName;
+                    else
+                        _block.Text = SheetName;
                 }
             }
         }
 
-        internal string SheetName
+        public string SheetName
         {
             get
             {
-                if (((OwningStrip != null) && (_sheetIndex != -1)) && (_sheetIndex < OwningStrip.Workbook.SheetCount))
-                {
-                    return OwningStrip.Workbook.Sheets[_sheetIndex].Name;
-                }
+                if (_sheetIndex != -1 && _sheetIndex < Owner.Workbook.SheetCount)
+                    return Owner.Workbook.Sheets[_sheetIndex].Name;
                 return _inser_TabName;
             }
         }
 
-        internal bool Visible
+        public bool Visible
         {
             get
             {
-                if (OwningStrip == null)
-                {
-                    return false;
-                }
                 if (_sheetIndex == -1)
-                {
-                    return OwningStrip.HasInsertTab;
-                }
-                return ((_sheetIndex < OwningStrip.Workbook.SheetCount) && OwningStrip.Workbook.Sheets[_sheetIndex].Visible);
+                    return Owner.HasInsertTab;
+                return (_sheetIndex < Owner.Workbook.SheetCount) && Owner.Workbook.Sheets[_sheetIndex].Visible;
             }
         }
 
-        static SheetTab()
+        public void PrepareForDisplay()
         {
-            IsActiveProperty = DependencyProperty.Register(
-                "IsActive",
-                typeof(bool),
-                typeof(SheetTab),
-                new PropertyMetadata(false, new PropertyChangedCallback(OnIsActiveChanged)));
-        }
-
-        public SheetTab()
-        {
-            DefaultStyleKey = typeof(SheetTab);
-            ClickMode = ClickMode.Press;
-            _sheetIndex = -1;
-        }
-
-        internal TextBlock GetDisplayElement()
-        {
-            if (_displayElement == null)
+            if (_presenter != null)
             {
-                _displayElement = new TextBlock();
-                _displayElement.Padding = new Thickness(0.0);
-                _displayElement.VerticalAlignment = (VerticalAlignment)1;
-                _displayElement.FontSize = DEFAULT_FONTSIZE;
-                _displayElement.LineStackingStrategy = LineStackingStrategy.MaxHeight;
-                _displayElement.LineHeight = 0;
+                _block.Text = SheetName;
+                _presenter.Content = _block;
+                _isEditing = false;
             }
-            return _displayElement;
         }
 
-        internal TextBox GetEditingElement()
+        public void PrepareForEditing()
         {
-            if (_editingElement == null)
+            if (_presenter != null)
             {
-                _editingElement = new TextBox();
-                _editingElement.Padding = new Thickness(0.0);
-                _editingElement.VerticalAlignment = (VerticalAlignment)2;
-                _editingElement.FontSize = DEFAULT_FONTSIZE;
+                TextBox tb = GetEditor();
+                tb.Text = SheetName;
+                _presenter.Content = tb;
+                _isEditing = true;
             }
-            return _editingElement;
+        }
+
+        public string GetEditText()
+        {
+            if (_textBox != null)
+                return _textBox.Text;
+            return null;
         }
 
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
-            _content = GetTemplateChild("PART_ContentPresenter") as ContentControl;
+            _presenter = GetTemplateChild("ContentPresenter") as ContentPresenter;
             PrepareForDisplay();
             UpdateActiveStates();
         }
 
-        static void OnIsActiveChanged(object sender, DependencyPropertyChangedEventArgs e)
+        TextBox GetEditor()
         {
-            SheetTab tab = sender as SheetTab;
-            if (tab != null)
-                tab.UpdateActiveStates();
-        }
-
-        protected override void OnPointerEntered(PointerRoutedEventArgs e)
-        {
-            base.OnPointerEntered(e);
-            UpdateActiveStates();
-        }
-
-        protected override void OnPointerExited(PointerRoutedEventArgs e)
-        {
-            base.OnPointerExited(e);
-            UpdateActiveStates();
-        }
-
-        protected override void OnPointerPressed(PointerRoutedEventArgs e)
-        {
-            base.OnPointerPressed(e);
-            e.Handled = false;
-        }
-
-        protected override void OnPointerReleased(PointerRoutedEventArgs e)
-        {
-            base.OnPointerReleased(e);
-            e.Handled = false;
-        }
-
-        internal void PrepareForDisplay()
-        {
-            if (_content != null)
+            if (_textBox == null)
             {
-                TextBlock txtDisplay = GetDisplayElement();
-                txtDisplay.Text = SheetName;
-                _content.Content = txtDisplay;
-                _isEditing = false;
+                _textBox = new TextBox
+                {
+                    BorderThickness = new Thickness(0.0),
+                    Padding = new Thickness(0, 7, 0, 7),
+                    VerticalAlignment = VerticalAlignment.Center,
+                    FontSize = 15,
+                };
+                _textBox.Loaded += OnEditorLoaded;
+                _textBox.LostFocus += OnEditorLostFocus;
+                // uno上android只支持KeyUp，且只在Enter键时触发！
+                _textBox.KeyUp += OnEditorKeyUp;
             }
+            return _textBox;
         }
 
-        internal void PrepareForEditing()
+        void OnEditorLoaded(object sender, RoutedEventArgs e)
         {
-            if (_content != null)
-            {
-                TextBox editingElement = GetEditingElement();
-                editingElement.Text = SheetName;
-                _content.Content = editingElement;
-                editingElement.KeyDown += txtEditor_KeyDown;
-                _isEditing = true;
-            }
+            _textBox.Focus(FocusState.Programmatic);
+            _textBox.SelectAll();
         }
 
-        void txtEditor_KeyDown(object sender, KeyRoutedEventArgs e)
+        void OnEditorKeyUp(object sender, KeyRoutedEventArgs e)
         {
-            if (e.Key == (VirtualKey)0x20)
+            if (e.Key == VirtualKey.Enter)
             {
-                TextBox box = sender as TextBox;
-                int startIndex = box.SelectionStart;
-                int count = box.SelectionLength;
-                string str = box.Text.Remove(startIndex, count);
-                box.Text = str.Insert(startIndex, " ");
-                box.SelectionStart = startIndex + 1;
+                Owner.StopTabEditing(false);
                 e.Handled = true;
             }
+            else if (e.Key == VirtualKey.Escape)
+            {
+                Owner.StopTabEditing(true);
+            }
+        }
+
+        void OnEditorLostFocus(object sender, RoutedEventArgs e)
+        {
+            Owner.StopTabEditing(false);
         }
 
         void UpdateActiveStates()
