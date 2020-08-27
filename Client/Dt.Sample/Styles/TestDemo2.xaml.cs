@@ -9,6 +9,7 @@
 #region 引用命名
 using Dt.Base;
 using Windows.Foundation;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -22,6 +23,13 @@ namespace Dt.Sample
         public TestDemo2()
         {
             InitializeComponent();
+
+            _excel.SuspendEvent();
+            var sheet = _excel.ActiveSheet;
+            sheet.AddSpanCell(0, 0, 3, 4);
+            sheet.SetValue(0, 0, "啊手动阀");
+            sheet[0, 0, 2, 3].Background = new SolidColorBrush(Color.FromArgb(50, 0, 0, 255));
+            
         }
     }
 }

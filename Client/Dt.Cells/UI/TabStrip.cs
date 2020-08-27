@@ -355,9 +355,10 @@ namespace Dt.Cells.UI
                 var pt = Windows.UI.Xaml.Window.Current.Content.TransformToVisual(TabsPresenter).TransformPoint(p_point);
                 if (pt.X > 0)
                 {
-                    double x = 0.0;
-                    foreach (var tab in TabsPresenter.Children.OfType<SheetTab>())
+                    double x = TabsPresenter.StartIndex > 0 ? 10 : 0.0;
+                    for (int i = TabsPresenter.StartIndex; i < TabsPresenter.Children.Count; i++)
                     {
+                        var tab = (SheetTab)TabsPresenter.Children[i];
                         if (pt.X > x && pt.X <= x + tab.DesiredSize.Width)
                             return tab;
                         x += tab.DesiredSize.Width;

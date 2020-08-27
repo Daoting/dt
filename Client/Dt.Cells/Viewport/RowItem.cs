@@ -223,6 +223,7 @@ namespace Dt.Cells.UI
             RowLayout layout = OwnPanel.GetRowLayoutModel().FindRow(Row);
             CellOverflowLayoutModel cellOverflowLayoutModel = OwnPanel.GetCellOverflowLayoutModel(Row);
             RowWidth = 0.0;
+            double height = 0.0;
 
             foreach (ColumnLayout colLayout in colLayoutModel)
             {
@@ -249,6 +250,8 @@ namespace Dt.Cells.UI
                     }
                 }
                 cell.Measure(new Size(w, h));
+                if (h > height)
+                    height = h;
             }
 
             if (_recycledCells.Count > 0)
@@ -279,7 +282,7 @@ namespace Dt.Cells.UI
                     TrailingOverflowCell.Measure(size2);
                 }
             }
-            return new Size(width, layout.Height);
+            return new Size(width, height);
         }
 
         protected override Size ArrangeOverride(Size finalSize)
@@ -300,33 +303,32 @@ namespace Dt.Cells.UI
             RowLayout layout = OwnPanel.GetRowLayoutModel().FindRow(Row);
             foreach (ColumnLayout colLayout in colLayoutModel)
             {
-                if (colLayout.Width <= 0.0)
+                CellItem cell;
+                if (colLayout.Width <= 0.0 || (cell = GetCell(colLayout.Column)) == null)
                     continue;
 
-                CellItem cell = GetCell(colLayout.Column);
-                if (cell != null)
-                {
-                    double left = colLayout.X;
-                    double top = layout.Y;
-                    double w = colLayout.Width;
-                    double h = layout.Height;
-                    int zIndex = _normalCellZIndexBase + colLayout.Column;
+                double left = colLayout.X;
+                double top = layout.Y;
+                double w = colLayout.Width;
+                double h = layout.Height;
+                int zIndex = _normalCellZIndexBase + colLayout.Column;
 
-                    CellLayout cellLayout = cell.CellLayout;
-                    if (cellLayout != null)
-                    {
-                        left = cellLayout.X;
-                        top = cellLayout.Y;
-                        w = cellLayout.Width;
-                        h = cellLayout.Height;
-                        zIndex = _spanCellZIndexBase + colLayout.Column;
-                    }
-                    if (cell.CellOverflowLayout != null)
-                        zIndex = _flowCellZIndexBase + colLayout.Column;
-                    zIndex = zIndex % 0x7ffe;
-                    Canvas.SetZIndex(cell, zIndex);
-                    cell.Arrange(new Rect(left - Location.X, top - Location.Y, w, h));
+                CellLayout cellLayout = cell.CellLayout;
+                if (cellLayout != null)
+                {
+                    left = cellLayout.X;
+                    top = cellLayout.Y;
+                    w = cellLayout.Width;
+                    h = cellLayout.Height;
+                    zIndex = _spanCellZIndexBase + colLayout.Column;
                 }
+
+                if (cell.CellOverflowLayout != null)
+                    zIndex = _flowCellZIndexBase + colLayout.Column;
+                zIndex = zIndex % 0x7ffe;
+                Canvas.SetZIndex(cell, zIndex);
+
+                cell.Arrange(new Rect(left - Location.X, top - Location.Y, w, h));
             }
 
             if (_recycledCells.Count > 0)
@@ -363,14 +365,12 @@ namespace Dt.Cells.UI
             if (cellOverflowLayoutModel.TrailingOverflowlayout == null)
                 return finalSize;
 
-            double x = Location.X;
-            double y = layout.Y;
             ColumnLayout layout4 = colLayoutModel[colLayoutModel.Count - 1];
             if (layout4 == null)
-            {
                 return finalSize;
-            }
-            x = layout4.X;
+
+            double x = layout4.X;
+            double y = layout.Y;
             for (int i = layout4.Column; i < cellOverflowLayoutModel.TrailingOverflowlayout.Column; i++)
             {
                 x += worksheet.GetActualColumnWidth(i, SheetArea.Cells) * zoomFactor;

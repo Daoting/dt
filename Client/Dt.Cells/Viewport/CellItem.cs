@@ -13,7 +13,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.Foundation;
-using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
@@ -49,6 +48,7 @@ namespace Dt.Cells.UI
         public CellItem(RowItem p_rowItem)
         {
             OwnRow = p_rowItem;
+            Column = -1;
             _tb = new TextBlock { VerticalAlignment = VerticalAlignment.Center, TextTrimming = TextTrimming.CharacterEllipsis };
             Children.Add(_tb);
         }
@@ -126,8 +126,6 @@ namespace Dt.Cells.UI
 
         public void Refresh()
         {
-            if (_sparklineView != null)
-                UpdateSparkline();
             UpdateChildren();
             InvalidateMeasure();
             InvalidateArrange();
@@ -148,11 +146,10 @@ namespace Dt.Cells.UI
                 column = CellLayout.Column;
             }
             BindingCell = OwnRow.OwnPanel.CellCache.GetCachedCell(row, column);
-
-            var excel = Excel;
-            if (excel == null || BindingCell == null)
+            if (BindingCell == null)
                 return;
 
+            var excel = Excel;
             Worksheet sheet = BindingCell.Worksheet;
 
             // 迷你图
@@ -272,14 +269,7 @@ namespace Dt.Cells.UI
 
             foreach (UIElement element in Children)
             {
-                if (element is TextBlock)
-                {
-                    element.Measure(sizeOverflow);
-                }
-                else
-                {
-                    element.Measure(availableSize);
-                }
+                element.Measure(element is TextBlock ? sizeOverflow : availableSize);
             }
             return availableSize;
         }
@@ -364,17 +354,7 @@ namespace Dt.Cells.UI
 
             foreach (UIElement element in Children)
             {
-                if (element != null)
-                {
-                    if (element is TextBlock)
-                    {
-                        element.Arrange(rectOverflow);
-                    }
-                    else
-                    {
-                        element.Arrange(rect);
-                    }
-                }
+                element.Arrange(element is TextBlock ? rectOverflow : rect);
             }
             return finalSize;
         }
@@ -390,7 +370,6 @@ namespace Dt.Cells.UI
                 {
                     _conditionalView = new ConditionalFormatView(BindingCell);
                     Children.Add(_conditionalView);
-                    Canvas.SetZIndex(_conditionalView, 500);
                 }
                 _conditionalView.SetDataBarObject(_dataBarObject);
                 if (_iconObject != null)
@@ -480,7 +459,6 @@ namespace Dt.Cells.UI
                     element.VerticalAlignment = VerticalAlignment.Bottom;
                     element.Area = SheetArea.Cells;
                     _filterButton = element;
-                    Canvas.SetZIndex(element, 0xbb8);
                     Children.Add(element);
                 }
                 else
@@ -540,36 +518,22 @@ namespace Dt.Cells.UI
                 }
                 SynSparklineView();
             }
-            else
+            else if (_sparklineView != null)
             {
-                UpdateSparkline();
-            }
-        }
-
-        void UpdateSparkline()
-        {
-            if (Excel != null && _sparklineView != null)
-            {
-                _sparklineView.Update(new Size(ActualWidth, ActualHeight), (double)Excel.ZoomFactor);
+                _sparklineView.Update(GetCellSize(), Excel.ZoomFactor);
             }
         }
 
         void SynSparklineView()
         {
-            var excel = Excel;
-            if (excel == null)
-                return;
-
             if (_sparkInfo != null)
             {
                 if (_sparklineView == null)
                 {
                     _sparklineView = CreateSparkline(_sparkInfo);
                     _sparklineView.ZoomFactor = OwnRow.OwnPanel.Excel.ZoomFactor;
-                    ((IThemeContextSupport)_sparklineView).SetContext(excel.ActiveSheet);
-                    Canvas.SetZIndex(_sparklineView, 0x3e8);
+                    ((IThemeContextSupport)_sparklineView).SetContext(OwnRow.OwnPanel.Excel.ActiveSheet);
                     Children.Add(_sparklineView);
-                    _sparklineView.Update(new Size(ActualWidth, ActualHeight), (double)excel.ZoomFactor);
                 }
             }
             else if (_sparklineView != null)
@@ -735,6 +699,17 @@ namespace Dt.Cells.UI
             }
         }
 
+        Size GetCellSize()
+        {
+            if (CellLayout != null)
+                return new Size(CellLayout.Width, CellLayout.Height);
+
+            var colLayout = OwnRow.GetColumnLayoutModel().FindColumn(Column);
+            var rowLayout = OwnRow.OwnPanel.GetRowLayoutModel().FindRow(Row);
+            if (colLayout != null && rowLayout != null)
+                return new Size(colLayout.Width, rowLayout.Height);
+            return new Size();
+        }
         #endregion
     }
 }
