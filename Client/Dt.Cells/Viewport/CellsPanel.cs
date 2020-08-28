@@ -29,7 +29,7 @@ namespace Dt.Cells.UI
     {
         internal int _activeCol;
         internal int _activeRow;
-        Panel _borderLayer;
+        BorderLayer _borderLayer;
         CellOverflowLayoutBuildEngine _buildEngine;
         internal CellRange _cachedActiveSelection;
         internal Rect _cachedActiveSelectionLayout;
@@ -687,7 +687,7 @@ namespace Dt.Cells.UI
 
         internal RowItem GetRow(int row)
         {
-            return RowsContainer.GetRow(row);
+            return _rowsLayer.GetRow(row);
         }
 
         internal RowLayoutModel GetRowLayoutModel()
@@ -721,14 +721,14 @@ namespace Dt.Cells.UI
         internal CellItem GetViewportCell(int row, int column, bool containsSpan)
         {
             CellItem cell = null;
-            RowItem presenter = RowsContainer.GetRow(row);
+            RowItem presenter = _rowsLayer.GetRow(row);
             if (presenter != null)
             {
                 cell = presenter.GetCell(column);
             }
             if (containsSpan && (cell == null))
             {
-                foreach (RowItem presenter2 in RowsContainer.Rows)
+                foreach (RowItem presenter2 in _rowsLayer.Rows)
                 {
                     if (presenter2 != null)
                     {
@@ -759,7 +759,7 @@ namespace Dt.Cells.UI
 
         internal void InvalidateBordersMeasureState()
         {
-            _borderLayer?.InvalidateMeasure();
+            _borderLayer.InvalidateMeasure();
         }
 
         internal void InvalidateFloatingObjectMeasureState(FloatingObject floatingObject)
@@ -769,25 +769,19 @@ namespace Dt.Cells.UI
 
         internal void InvalidateFloatingObjectsMeasureState()
         {
-            if (FloatingObjectsPanel != null)
-            {
-                FloatingObjectsPanel.InvalidateMeasure();
-            }
+            _floatingObjectLayer?.InvalidateMeasure();
         }
 
         internal void InvalidateRowsMeasureState(bool forceInvalidateRows)
         {
-            if (RowsContainer != null)
+            _rowsLayer.InvalidateMeasure();
+            if (forceInvalidateRows)
             {
-                RowsContainer.InvalidateMeasure();
-                if (forceInvalidateRows)
+                CellCache.ClearAll();
+                CellOverflowLayoutBuildEngine.Clear();
+                foreach (UIElement elem in _rowsLayer.Children)
                 {
-                    CellCache.ClearAll();
-                    CellOverflowLayoutBuildEngine.Clear();
-                    foreach (UIElement elem in RowsContainer.Children)
-                    {
-                        elem.InvalidateMeasure();
-                    }
+                    elem.InvalidateMeasure();
                 }
             }
         }

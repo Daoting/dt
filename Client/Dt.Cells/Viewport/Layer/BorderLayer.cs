@@ -39,9 +39,8 @@ namespace Dt.Cells.UI
         int _rowStart = 0;
         int _rowStartDirty;
         Panel _scrollingGridlinesPanel = new Canvas();
-        Excel _excel = null;
         Dictionary<ulong, BorderLine> _vBorderLineCache = new Dictionary<ulong, BorderLine>();
-        CellsPanel _viewport = null;
+        CellsPanel _owner = null;
         int _viewportBottomRow = -1;
         int _viewportLeftColumn = -1;
         int _viewportRightColumn = -1;
@@ -51,7 +50,7 @@ namespace Dt.Cells.UI
 
         public BorderLayer(CellsPanel viewport)
         {
-            _viewport = viewport;
+            _owner = viewport;
             _zoomFactor = 1f;
             Children.Add(_borderLinesPanel);
             Children.Add(_scrollingGridlinesPanel);
@@ -59,8 +58,7 @@ namespace Dt.Cells.UI
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            _excel = GetExcel();
-            if (_excel._fastScroll)
+            if (_owner.Excel._fastScroll)
             {
                 _scrollingGridlinesPanel.Measure(availableSize);
                 MeasureGridLinesForScrolling();
@@ -78,7 +76,7 @@ namespace Dt.Cells.UI
             _lineMap = new Dictionary<ComboLine, LineItem>();
             _linesPool = new BorderLinesPool(_borderLinesPanel.Children);
             _linesPool.Reset();
-            _zoomFactor = _excel.ZoomFactor;
+            _zoomFactor = _owner.Excel.ZoomFactor;
 
             if (_worksheet != null)
             {
@@ -90,7 +88,7 @@ namespace Dt.Cells.UI
             foreach (ComboLine line in _lineMap.Keys)
             {
                 LineItem lineItem = _lineMap[line];
-                Point point = _viewport.PointToClient(new Point(0.0, 0.0));
+                Point point = _owner.PointToClient(new Point(0.0, 0.0));
                 line.Width = availableSize.Width;
                 line.Height = availableSize.Height;
                 ((IThemeContextSupport)lineItem).SetContext(_worksheet);
@@ -102,7 +100,7 @@ namespace Dt.Cells.UI
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            if (_excel._fastScroll)
+            if (_owner.Excel._fastScroll)
             {
                 _scrollingGridlinesPanel.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
                 return base.ArrangeOverride(finalSize);
@@ -318,10 +316,10 @@ namespace Dt.Cells.UI
             //        break;
             //}
 
-            _viewportTopRow = _excel.GetViewportTopRow(_viewport.RowViewportIndex);
-            _viewportBottomRow = _excel.GetViewportBottomRow(_viewport.RowViewportIndex);
-            _viewportLeftColumn = _excel.GetViewportLeftColumn(_viewport.ColumnViewportIndex);
-            _viewportRightColumn = _excel.GetViewportRightColumn(_viewport.ColumnViewportIndex);
+            _viewportTopRow = _owner.Excel.GetViewportTopRow(_owner.RowViewportIndex);
+            _viewportBottomRow = _owner.Excel.GetViewportBottomRow(_owner.RowViewportIndex);
+            _viewportLeftColumn = _owner.Excel.GetViewportLeftColumn(_owner.ColumnViewportIndex);
+            _viewportRightColumn = _owner.Excel.GetViewportRightColumn(_owner.ColumnViewportIndex);
 
             _columnEnd = _viewportRightColumn;
             _rowEnd = _viewportBottomRow;
@@ -349,7 +347,7 @@ namespace Dt.Cells.UI
                     }
                 }
                 _columnStart = num3;
-                int count = _viewport.GetDataContext().Rows.Count;
+                int count = _owner.GetDataContext().Rows.Count;
                 for (int k = _rowEnd + 1; k < count; k++)
                 {
                     if (_worksheet.GetActualRowVisible(k, SheetArea.Cells))
@@ -358,7 +356,7 @@ namespace Dt.Cells.UI
                         break;
                     }
                 }
-                int num7 = _viewport.GetDataContext().Columns.Count;
+                int num7 = _owner.GetDataContext().Columns.Count;
                 for (int m = _columnEnd + 1; m < num7; m++)
                 {
                     if (_worksheet.GetActualColumnVisible(m, SheetArea.Cells))
@@ -506,13 +504,13 @@ namespace Dt.Cells.UI
             bool flag = false;
             BorderLine empty = null;
             Cell cachedCell = null;
-            byte state = _viewport.CachedSpanGraph.GetState(row, column);
+            byte state = _owner.CachedSpanGraph.GetState(row, column);
             switch (borderIndex)
             {
                 case Borders.LEFT:
                     if (state <= 0)
                     {
-                        CellOverflowLayoutModel model = _viewport.CellOverflowLayoutBuildEngine.GetModel(row);
+                        CellOverflowLayoutModel model = _owner.CellOverflowLayoutBuildEngine.GetModel(row);
                         if (model != null)
                         {
                             CellOverflowLayout cellOverflowLayout = model.GetCellOverflowLayout(column);
@@ -576,7 +574,7 @@ namespace Dt.Cells.UI
                 case Borders.RIGHT:
                     if (state <= 0)
                     {
-                        CellOverflowLayoutModel model2 = _viewport.CellOverflowLayoutBuildEngine.GetModel(row);
+                        CellOverflowLayoutModel model2 = _owner.CellOverflowLayoutBuildEngine.GetModel(row);
                         if (model2 != null)
                         {
                             CellOverflowLayout layout2 = model2.GetCellOverflowLayout(column);
@@ -654,7 +652,7 @@ namespace Dt.Cells.UI
                 }
                 if (cachedCell == null)
                 {
-                    cachedCell = _viewport.CellCache.GetCachedCell(row, column);
+                    cachedCell = _owner.CellCache.GetCachedCell(row, column);
                 }
                 if ((cachedCell != null) && (cachedCell.ActualBackground != null))
                 {
@@ -666,7 +664,7 @@ namespace Dt.Cells.UI
 
         BorderLine GetCellBorderByBorderIndex(int row, int column, Borders borderIndex, ref Cell cell)
         {
-            CellsPanel viewport = _viewport;
+            CellsPanel viewport = _owner;
             if (cell == null)
             {
                 cell = viewport.CellCache.GetCachedCell(row, column);
@@ -694,35 +692,21 @@ namespace Dt.Cells.UI
 
         Rect GetCellBounds(int row, int column)
         {
-            Rect rect = _viewport.GetCellBounds(row, column, true);
+            Rect rect = _owner.GetCellBounds(row, column, true);
             if (rect.X == -1.0)
             {
-                rect.X = _viewport.Location.X;
+                rect.X = _owner.Location.X;
             }
             if (rect.Y == -1.0)
             {
-                rect.Y = _viewport.Location.Y;
+                rect.Y = _owner.Location.Y;
             }
             return rect;
         }
 
-        Excel GetExcel()
-        {
-            if (_viewport != null)
-            {
-                return _viewport.Excel;
-            }
-            return null;
-        }
-
-        CellsPanel GetViewport()
-        {
-            return _viewport;
-        }
-
         Worksheet GetWorksheet()
         {
-            CellsPanel viewport = _viewport;
+            CellsPanel viewport = _owner;
             if ((viewport != null) && (viewport.Excel != null))
             {
                 return viewport.Excel.ActiveSheet;
@@ -793,16 +777,16 @@ namespace Dt.Cells.UI
             _scrollingGridlinesPanel.Children.Clear();
             CalcVisibleRowColumnIndexes();
             BorderLine gridBorderLine = _worksheet.GetGridLine(SheetArea.Cells);
-            RowLayoutModel rowLayoutModel = _excel.GetRowLayoutModel(_viewport.RowViewportIndex, SheetArea.Cells);
-            ColumnLayoutModel columnLayoutModel = _excel.GetColumnLayoutModel(_viewport.ColumnViewportIndex, SheetArea.Cells);
-            int viewportBottomRow = _excel.GetViewportBottomRow(_viewport.RowViewportIndex);
-            int viewportRightColumn = _excel.GetViewportRightColumn(_viewport.ColumnViewportIndex);
+            RowLayoutModel rowLayoutModel = _owner.Excel.GetRowLayoutModel(_owner.RowViewportIndex, SheetArea.Cells);
+            ColumnLayoutModel columnLayoutModel = _owner.Excel.GetColumnLayoutModel(_owner.ColumnViewportIndex, SheetArea.Cells);
+            int viewportBottomRow = _owner.Excel.GetViewportBottomRow(_owner.RowViewportIndex);
+            int viewportRightColumn = _owner.Excel.GetViewportRightColumn(_owner.ColumnViewportIndex);
             RowLayout bottomRowLayout = rowLayoutModel.FindRow(viewportBottomRow);
             ColumnLayout rightColumnLayout = columnLayoutModel.FindColumn(viewportRightColumn);
-            Point viewportLocation = _viewport.Location;
+            Point viewportLocation = _owner.Location;
             if (((_rowIndexes.Length != 1) || (_rowIndexes[0] != -1)) && ((_columnIndexes.Length != 1) || (_columnIndexes[0] != -1)))
             {
-                double viewportWidth = _excel.GetViewportWidth(_viewport.ColumnViewportIndex);
+                double viewportWidth = _owner.Excel.GetViewportWidth(_owner.ColumnViewportIndex);
                 SolidColorBrush brush = new SolidColorBrush(gridBorderLine.Color);
                 if ((rightColumnLayout != null) && (viewportWidth > ((rightColumnLayout.X + rightColumnLayout.Width) - viewportLocation.X)))
                 {
@@ -826,7 +810,7 @@ namespace Dt.Cells.UI
                         _scrollingGridlinesPanel.Children.Add(line);
                     }
                 }
-                double viewportHeight = _excel.GetViewportHeight(_viewport.RowViewportIndex);
+                double viewportHeight = _owner.Excel.GetViewportHeight(_owner.RowViewportIndex);
                 double num5 = viewportLocation.X + 0.5;
                 double num6 = viewportHeight;
                 if ((bottomRowLayout != null) && (viewportHeight > ((bottomRowLayout.Y + bottomRowLayout.Height) - viewportLocation.Y)))

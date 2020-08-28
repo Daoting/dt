@@ -23,6 +23,7 @@ namespace Dt.Cells.UI
     /// </summary>
     internal partial class RowItem : Panel
     {
+        #region 成员变量
         const int _flowCellZIndexBase = 0x7530;
         const int _normalCellZIndexBase = 0x2710;
         const int _spanCellZIndexBase = 0x4e20;
@@ -31,15 +32,21 @@ namespace Dt.Cells.UI
         CellItem _headingOverflowCell;
         CellItem _trailingOverflowCell;
         readonly List<CellItem> _recycledCells;
+        #endregion
 
+        #region 构造方法
         public RowItem(CellsPanel p_panel)
         {
             OwnPanel = p_panel;
             Row = -1;
             Cells = new Dictionary<int, CellItem>();
             _recycledCells = new List<CellItem>();
+            HorizontalAlignment = HorizontalAlignment.Left;
+            VerticalAlignment = VerticalAlignment.Top;
         }
+        #endregion
 
+        #region 属性
         public CellsPanel OwnPanel { get; }
 
         public Dictionary<int, CellItem> Cells { get; }
@@ -74,6 +81,7 @@ namespace Dt.Cells.UI
                 return cell;
             return null;
         }
+        #endregion
 
         #region 测量布局
         //*** CellsPanel.Measure -> RowsLayer.Measure -> RowItem.UpdateChildren -> 行列改变时 CellItem.UpdateChildren -> RowItem.Measure -> CellItem.Measure ***//
@@ -214,10 +222,14 @@ namespace Dt.Cells.UI
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            if (Row == -1
-                || availableSize.Width == 0.0
-                || availableSize.Height == 0.0)
-                return new Size();
+            if (Row == -1 || availableSize.Width == 0.0 || availableSize.Height == 0.0)
+            {
+                foreach (UIElement elem in Children)
+                {
+                    elem.Measure(_szEmpty);
+                }
+                return _szEmpty;
+            }
 
             ColumnLayoutModel colLayoutModel = GetColumnLayoutModel();
             RowLayout layout = OwnPanel.GetRowLayoutModel().FindRow(Row);
@@ -289,12 +301,9 @@ namespace Dt.Cells.UI
         {
             if (Row == -1 || finalSize.Width == 0 || finalSize.Height == 0)
             {
-                if (Children.Count > 0)
+                foreach (UIElement elem in Children)
                 {
-                    foreach (UIElement elem in Children)
-                    {
-                        elem.Arrange(_rcEmpty);
-                    }
+                    elem.Arrange(_rcEmpty);
                 }
                 return finalSize;
             }

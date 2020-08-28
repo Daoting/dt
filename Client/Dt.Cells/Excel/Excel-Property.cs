@@ -598,15 +598,12 @@ namespace Dt.Base
         Size _availableSize;
         Ellipse _bottomRightGripper;
         Image _cachedautoFillIndicatorImage;
-        Image _cachedBottomRightACornerVisual;
         CellLayoutModel[] _cachedColumnHeaderCellLayoutModel;
         RowLayoutModel _cachedColumnHeaderRowLayoutModel;
         ColumnLayoutModel[] _cachedColumnHeaderViewportColumnLayoutModel;
         TransformGroup[] _cachedColumnHeaderViewportTransform;
-        Image[] _cachedColumnHeaderViewportVisual;
         Image _cachedColumnResizerGripperImage;
         TransformGroup _cachedCornerViewportTransform;
-        Image _cachedCornerViewportVisual;
         FilterButtonInfoModel _cachedFilterButtonInfoModel;
         FloatingObjectLayoutModel[,] _cachedFloatingObjectLayoutModel;
         FloatingObjectLayoutModel[,] _cachedFloatingObjectMovingResizingLayoutModel;
@@ -617,7 +614,6 @@ namespace Dt.Base
         ColumnLayoutModel _cachedRowHeaderColumnLayoutModel;
         RowLayoutModel[] _cachedRowHeaderViewportRowLayoutModel;
         TransformGroup[] _cachedRowHeaderViewportTransform;
-        Image[] _cachedRowHeaderViewportVisual;
         Image _cachedRowResizerGripperImage;
         Dictionary<string, ImageSource> _cachedToolbarImageSources;
         CellLayoutModel[,] _cachedViewportCellLayoutModel;
@@ -627,7 +623,6 @@ namespace Dt.Base
         double[] _cachedViewportSplitBarX;
         double[] _cachedViewportSplitBarY;
         TransformGroup[,] _cachedViewportTransform;
-        Image[,] _cachedViewportVisual;
         double[] _cachedViewportWidths;
         Line _columnFreezeLine;
         GcRangeGroupHeader _columnGroupHeaderPresenter;

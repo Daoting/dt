@@ -4747,21 +4747,6 @@ namespace Dt.Base
                 _cornerPanel.InvalidateMeasure();
         }
 
-        void InvalidateHeaderRowsPresenterMeasure(bool invalidateRowMeasure)
-        {
-            int columnViewportCount = GetViewportInfo().ColumnViewportCount;
-            for (int i = -1; i <= columnViewportCount; i++)
-            {
-                var columnHeaderRowsPresenter = GetColumnHeaderRowsPresenter(i);
-                if (columnHeaderRowsPresenter != null)
-                {
-                    if (invalidateRowMeasure)
-                        columnHeaderRowsPresenter.InvalidateRowsMeasureState(true);
-                    columnHeaderRowsPresenter.InvalidateMeasure();
-                }
-            }
-        }
-
         internal void InvalidateViewportColumnsLayout()
         {
             if (!IsSuspendInvalidate())
@@ -4882,9 +4867,6 @@ namespace Dt.Base
             }
         }
 
-        /// <summary>
-        /// Invalidate the specified RowsPresenter.
-        /// </summary>
         internal void InvalidateViewportRowsPresenterMeasure(int rowViewportIndex, bool invalidateRowsMeasure)
         {
             if (!IsSuspendInvalidate())
@@ -8721,10 +8703,6 @@ namespace Dt.Base
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="point"></param>
         protected void UpdateTouchHitTestInfoForHold(Point point)
         {
             GetHitInfo();
@@ -8755,103 +8733,6 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        void AdjustViewportLeftColumn()
-        {
-            if (_translateOffsetX != 0.0)
-            {
-                int viewportLeftColumn = GetViewportLeftColumn(_touchStartHitTestInfo.ColumnViewportIndex);
-                if (viewportLeftColumn >= ActiveSheet.FrozenColumnCount)
-                {
-                    ColumnLayout layout = GetColumnLayoutModel(_touchStartHitTestInfo.ColumnViewportIndex, SheetArea.Cells).FindColumn(viewportLeftColumn);
-                    if (layout != null)
-                    {
-                        double width = layout.Width;
-                        int maxLeftScrollableColumn = GetMaxLeftScrollableColumn();
-                        if (viewportLeftColumn <= maxLeftScrollableColumn)
-                        {
-                            if ((_translateOffsetX < 0.0) && (Math.Abs(_translateOffsetX) >= (width / 2.0)))
-                            {
-                                int nextScrollableColumn = GetNextScrollableColumn(viewportLeftColumn);
-                                if (nextScrollableColumn != -1)
-                                {
-                                    SetViewportLeftColumn(_touchStartHitTestInfo.ColumnViewportIndex, nextScrollableColumn);
-                                }
-                            }
-                        }
-                        else if (Math.Abs(_translateOffsetX) >= (width / 2.0))
-                        {
-                            int num5 = GetNextScrollableColumn(viewportLeftColumn);
-                            if (num5 != -1)
-                            {
-                                SetViewportLeftColumn(_touchStartHitTestInfo.ColumnViewportIndex, num5);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        void AdjustViewportSize()
-        {
-            SheetLayout layout = GetSheetLayout();
-            if (layout != null)
-            {
-                if (((_cachedViewportWidths != null) && (_touchStartHitTestInfo.ColumnViewportIndex != -1)) && (_touchStartHitTestInfo.ColumnViewportIndex < layout.ColumnPaneCount))
-                {
-                    layout.SetViewportWidth(_touchStartHitTestInfo.ColumnViewportIndex, _cachedViewportWidths[_touchStartHitTestInfo.ColumnViewportIndex + 1]);
-                }
-                if (((_cachedViewportHeights != null) && (_touchStartHitTestInfo.RowViewportIndex != -1)) && (_touchStartHitTestInfo.RowViewportIndex < layout.RowPaneCount))
-                {
-                    layout.SetViewportHeight(_touchStartHitTestInfo.RowViewportIndex, _cachedViewportHeights[_touchStartHitTestInfo.RowViewportIndex + 1]);
-                }
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        void AdjustViewportTopRow()
-        {
-            if (_translateOffsetY != 0.0)
-            {
-                int viewportTopRow = GetViewportTopRow(_touchStartHitTestInfo.RowViewportIndex);
-                if (viewportTopRow >= ActiveSheet.FrozenRowCount)
-                {
-                    RowLayout layout = GetRowLayoutModel(_touchStartHitTestInfo.RowViewportIndex, SheetArea.Cells).FindRow(viewportTopRow);
-                    if (layout != null)
-                    {
-                        double height = layout.Height;
-                        int maxTopScrollableRow = GetMaxTopScrollableRow();
-                        if (viewportTopRow <= maxTopScrollableRow)
-                        {
-                            if ((_translateOffsetY < 0.0) && (Math.Abs(_translateOffsetY) >= (height / 2.0)))
-                            {
-                                int nextScrollableRow = GetNextScrollableRow(viewportTopRow);
-                                if (nextScrollableRow != -1)
-                                {
-                                    SetViewportTopRow(_touchStartHitTestInfo.RowViewportIndex, nextScrollableRow);
-                                }
-                            }
-                        }
-                        else if (Math.Abs(_translateOffsetY) >= (height / 2.0))
-                        {
-                            int num5 = GetNextScrollableRow(viewportTopRow);
-                            if (num5 != -1)
-                            {
-                                SetViewportTopRow(_touchStartHitTestInfo.RowViewportIndex, num5);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        /// <summary>
         /// Sets the top row index async, for performance optimization 
         /// </summary>
         /// <param name="rowViewportIndex"></param>
@@ -8871,9 +8752,6 @@ namespace Dt.Base
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         void ClearViewportsClip()
         {
             SheetLayout layout = GetSheetLayout();
@@ -8918,23 +8796,11 @@ namespace Dt.Base
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="child"></param>
-        /// <param name="renderSize"></param>
-        /// <returns></returns>
         BitmapSource CreateCachedIamge(UIElement child, Size renderSize)
         {
             return null;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="image"></param>
-        /// <param name="bounds"></param>
-        /// <returns></returns>
         Image CreateCachedVisual(ImageSource image, Rect bounds)
         {
 #if UWP
@@ -8962,16 +8828,6 @@ namespace Dt.Base
             return null;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="columnX"></param>
-        /// <param name="rowY"></param>
-        /// <param name="viewportWidth"></param>
-        /// <param name="viewportHeight"></param>
-        /// <param name="viewportColumnIndex"></param>
-        /// <param name="viewportRowIndex"></param>
-        /// <returns></returns>
         Rect CreateClipRect(double columnX, double rowY, double viewportWidth, double viewportHeight, int viewportColumnIndex, int viewportRowIndex)
         {
             SheetLayout layout = GetSheetLayout();
@@ -9090,11 +8946,6 @@ namespace Dt.Base
             return new Rect { X = num, Y = num2, Width = Math.Min(num9, num3), Height = Math.Min(num5, num4) };
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sheetIndex"></param>
-        /// <returns></returns>
         internal int GetActiveRowViewportIndex(int sheetIndex)
         {
             if ((sheetIndex < 0) || (sheetIndex >= SheetCount))
@@ -9115,11 +8966,6 @@ namespace Dt.Base
             return GetViewportInfo(sheet).ActiveColumnViewport;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="columnPaneCount"></param>
-        /// <returns></returns>
         double GetColumnSplitBoxesWidth(int columnPaneCount)
         {
             if (ColumnSplitBoxPolicy != SplitBoxPolicy.Always)
@@ -9140,11 +8986,6 @@ namespace Dt.Base
             return HORIZONTALSPLITBOX_WIDTH;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="columnViewportIndex"></param>
-        /// <returns></returns>
         Rect GetHorizontalScrollBarRectangle(int columnViewportIndex)
         {
             SheetLayout layout = GetSheetLayout();
@@ -9159,11 +9000,6 @@ namespace Dt.Base
             return Rect.Empty;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="columnViewportIndex"></param>
-        /// <returns></returns>
         Rect GetHorizontalSplitBarRectangle(int columnViewportIndex)
         {
             SheetLayout layout = GetSheetLayout();
@@ -9178,11 +9014,6 @@ namespace Dt.Base
             return Rect.Empty;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="columnViewportIndex"></param>
-        /// <returns></returns>
         Rect GetHorizontalSplitBoxRectangle(int columnViewportIndex)
         {
             SheetLayout layout = GetSheetLayout();
@@ -9197,12 +9028,6 @@ namespace Dt.Base
             return Rect.Empty;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sheet"></param>
-        /// <param name="beforeColumn"></param>
-        /// <returns></returns>
         int GetInvisibleColumnsBeforeColumn(Worksheet sheet, int beforeColumn)
         {
             int num = 0;
@@ -9220,12 +9045,6 @@ namespace Dt.Base
             return num;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sheet"></param>
-        /// <param name="beforeRow"></param>
-        /// <returns></returns>
         int GetInvisibleRowsBeforeRow(Worksheet sheet, int beforeRow)
         {
             int num = 0;
@@ -9263,11 +9082,6 @@ namespace Dt.Base
             return VERTICALSPLITBOX_HEIGHT;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sheet"></param>
-        /// <returns></returns>
         int GetSheetInvisibleColumns(Worksheet sheet)
         {
             int num = 0;
@@ -9283,11 +9097,6 @@ namespace Dt.Base
             return num;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sheet"></param>
-        /// <returns></returns>
         int GetSheetInvisibleRows(Worksheet sheet)
         {
             int num = 0;
@@ -9303,11 +9112,6 @@ namespace Dt.Base
             return num;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="scale"></param>
-        /// <returns></returns>
         double GetSmoothingScale(double scale)
         {
             if ((scale > 0.99) && (scale < 1.01))
@@ -9317,10 +9121,6 @@ namespace Dt.Base
             return scale;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         Rect GetTabStripRectangle()
         {
             SheetLayout layout = GetSheetLayout();
@@ -9335,11 +9135,6 @@ namespace Dt.Base
             return Rect.Empty;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="rowViewportIndex"></param>
-        /// <returns></returns>
         Rect GetVerticalScrollBarRectangle(int rowViewportIndex)
         {
             SheetLayout layout = GetSheetLayout();
@@ -9354,11 +9149,6 @@ namespace Dt.Base
             return Rect.Empty;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="rowViewportIndex"></param>
-        /// <returns></returns>
         Rect GetVerticalSplitBarRectangle(int rowViewportIndex)
         {
             SheetLayout layout = GetSheetLayout();
@@ -9373,11 +9163,6 @@ namespace Dt.Base
             return Rect.Empty;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="rowViewportIndex"></param>
-        /// <returns></returns>
         Rect GetVerticalSplitBoxRectangle(int rowViewportIndex)
         {
             SheetLayout layout = GetSheetLayout();
@@ -9392,11 +9177,6 @@ namespace Dt.Base
             return Rect.Empty;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="columnViewportIndex"></param>
-        /// <returns></returns>
         int GetViewportInvisibleColumns(int columnViewportIndex)
         {
             ColumnLayoutModel viewportColumnLayoutModel = GetViewportColumnLayoutModel(columnViewportIndex);
@@ -9411,11 +9191,6 @@ namespace Dt.Base
             return num;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="rowViewportIndex"></param>
-        /// <returns></returns>
         int GetViewportInvisibleRows(int rowViewportIndex)
         {
             RowLayoutModel viewportRowLayoutModel = GetViewportRowLayoutModel(rowViewportIndex);
@@ -9430,9 +9205,6 @@ namespace Dt.Base
             return num;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         internal void HideOpeningProgressRing()
         {
             if (_progressRing != null)
@@ -9442,9 +9214,6 @@ namespace Dt.Base
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         internal void HideOpeningStatus()
         {
             HideOpeningProgressRing();
@@ -9454,11 +9223,6 @@ namespace Dt.Base
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         void HorizontalScrollbar_Scroll(object sender, ScrollEventArgs e)
         {
             if ((_touchToolbarPopup != null) && _touchToolbarPopup.IsOpen)
@@ -9483,11 +9247,6 @@ namespace Dt.Base
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="columnViewportIndex"></param>
-        /// <param name="newValue"></param>
         void HorizontalScrollBarTouchSmallDecrement(int columnViewportIndex, int newValue)
         {
             int viewportLeftColumn = GetViewportLeftColumn(columnViewportIndex);
@@ -9498,9 +9257,6 @@ namespace Dt.Base
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         void InitCachedTransform()
         {
             SheetLayout layout = GetSheetLayout();
@@ -9537,66 +9293,6 @@ namespace Dt.Base
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        void InitCachedVisual()
-        {
-            SheetLayout layout = GetSheetLayout();
-            BitmapSource image = CreateCachedIamge(this, RenderSize);
-            if (_cachedViewportVisual == null)
-            {
-                _cachedViewportVisual = new Image[layout.RowPaneCount + 2, layout.ColumnPaneCount + 2];
-                for (int i = -1; i <= layout.ColumnPaneCount; i++)
-                {
-                    double viewportX = layout.GetViewportX(i);
-                    double viewportWidth = layout.GetViewportWidth(i);
-                    for (int j = -1; j <= layout.RowPaneCount; j++)
-                    {
-                        double viewportY = layout.GetViewportY(j);
-                        double viewportHeight = layout.GetViewportHeight(j);
-                        _cachedViewportVisual[j + 1, i + 1] = CreateCachedVisual(image, CreateClipRect(viewportX, viewportY, viewportWidth, viewportHeight, i, j));
-                    }
-                }
-            }
-            if (_cachedColumnHeaderViewportVisual == null)
-            {
-                _cachedColumnHeaderViewportVisual = new Image[layout.ColumnPaneCount + 2];
-                for (int k = -1; k <= layout.ColumnPaneCount; k++)
-                {
-                    double columnX = layout.GetViewportX(k);
-                    double headerY = layout.HeaderY;
-                    double num10 = layout.GetViewportWidth(k);
-                    double headerHeight = layout.HeaderHeight;
-                    _cachedColumnHeaderViewportVisual[k + 1] = CreateCachedVisual(image, CreateClipRect(columnX, headerY, num10, headerHeight, k, -2));
-                }
-            }
-            if (_cachedRowHeaderViewportVisual == null)
-            {
-                _cachedRowHeaderViewportVisual = new Image[layout.RowPaneCount + 2];
-                for (int m = -1; m <= layout.RowPaneCount; m++)
-                {
-                    double headerX = layout.HeaderX;
-                    double rowY = layout.GetViewportY(m);
-                    double headerWidth = layout.HeaderWidth;
-                    double num16 = layout.GetViewportHeight(m);
-                    _cachedRowHeaderViewportVisual[m + 1] = CreateCachedVisual(image, CreateClipRect(headerX, rowY, headerWidth, num16, -2, m));
-                }
-            }
-            if (_cachedCornerViewportVisual == null)
-            {
-                _cachedCornerViewportVisual = CreateCachedVisual(image, new Rect(layout.HeaderX, layout.HeaderY, layout.HeaderWidth, layout.HeaderHeight));
-            }
-            if (_cachedBottomRightACornerVisual == null)
-            {
-                _cachedBottomRightACornerVisual = CreateCachedVisual(image, new Rect(layout.OrnamentX, layout.OrnamentY, layout.OrnamentWidth, layout.OrnamentHeight));
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         TransformGroup InitManipulationTransforms()
         {
             TransformGroup group = new TransformGroup();
@@ -9607,9 +9303,6 @@ namespace Dt.Base
             return group;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         void InitTouchCacheInfomation()
         {
             SheetLayout layout = GetSheetLayout();
@@ -9652,9 +9345,6 @@ namespace Dt.Base
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         internal void InvalidateSheetLayout()
         {
             if (!IsSuspendInvalidate())
@@ -9670,9 +9360,6 @@ namespace Dt.Base
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         internal void InvalidTabStrip()
         {
             if (!IsSuspendInvalidate())
@@ -9681,10 +9368,6 @@ namespace Dt.Base
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         bool IsMouseInScrollBar()
         {
             HitTestInformation savedHitTestInformation = GetHitInfo();
@@ -9695,10 +9378,6 @@ namespace Dt.Base
             return true;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         bool IsMouseInSplitBar()
         {
             HitTestInformation savedHitTestInformation = GetHitInfo();
@@ -9709,10 +9388,6 @@ namespace Dt.Base
             return true;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         bool IsMouseInSplitBox()
         {
             HitTestInformation savedHitTestInformation = GetHitInfo();
@@ -9723,31 +9398,11 @@ namespace Dt.Base
             return true;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        bool IsMouseInTabStrip()
-        {
-            return (GetHitInfo().HitTestType == HitTestType.TabStrip);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
         bool IsZero(double value)
         {
             return (Math.Abs(value) < 2.2204460492503131E-15);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sheet"></param>
-        /// <param name="scrollValue"></param>
-        /// <returns></returns>
         int MapScrollValueToColumnIndex(Worksheet sheet, int scrollValue)
         {
             int num = 0;
@@ -9765,12 +9420,6 @@ namespace Dt.Base
             return scrollValue;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sheet"></param>
-        /// <param name="scrollValue"></param>
-        /// <returns></returns>
         int MapScrollValueToRowIndex(Worksheet sheet, int scrollValue)
         {
             int num = 0;
@@ -9788,10 +9437,6 @@ namespace Dt.Base
             return scrollValue;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         internal bool NavigationNextSheet()
         {
             SaveDataForFormulaSelection();
@@ -9807,10 +9452,6 @@ namespace Dt.Base
             return true;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         internal bool NavigationPreviousSheet()
         {
             SaveDataForFormulaSelection();
@@ -9826,11 +9467,6 @@ namespace Dt.Base
             return true;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         void OnHorizontalScrollBarPointerExited(object sender, PointerRoutedEventArgs e)
         {
             _showScrollTip = false;
@@ -9856,11 +9492,6 @@ namespace Dt.Base
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         void OnHorizontalScrollBarPointerReleased(object sender, PointerRoutedEventArgs e)
         {
             _showScrollTip = false;
@@ -9868,13 +9499,6 @@ namespace Dt.Base
             CloseTooltip();
         }
 
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         void OnTabStripActiveTabChanged(object sender, EventArgs e)
         {
             TabStrip strip = sender as TabStrip;
@@ -9898,11 +9522,6 @@ namespace Dt.Base
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         void OnTabStripActiveTabChanging(object sender, EventArgs e)
         {
             if ((sender is TabStrip) && (e is CancelEventArgs))
@@ -9932,11 +9551,6 @@ namespace Dt.Base
             InvalidateSheetLayout();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         void OnVerticalScrollbarPointerExited(object sender, PointerRoutedEventArgs e)
         {
             _showScrollTip = false;
@@ -9944,11 +9558,6 @@ namespace Dt.Base
             CloseTooltip();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         void OnVerticalScrollbarPointerPressed(object sender, PointerRoutedEventArgs e)
         {
             if (e.Pointer.PointerDeviceType == 0)
@@ -9967,11 +9576,6 @@ namespace Dt.Base
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         void OnVerticalScrollbarPointerReleased(object sender, PointerRoutedEventArgs e)
         {
             _showScrollTip = false;
@@ -9979,11 +9583,6 @@ namespace Dt.Base
             CloseTooltip();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="columnViewportIndex"></param>
-        /// <param name="e"></param>
         void ProcessHorizontalScroll(int columnViewportIndex, ScrollEventArgs e)
         {
             int viewportLeftColumn = GetViewportLeftColumn(columnViewportIndex);
@@ -10045,10 +9644,6 @@ namespace Dt.Base
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="hi"></param>
         void ProcessSplitBarDoubleClick(HitTestInformation hi)
         {
             if (!Workbook.Protect)
@@ -10079,20 +9674,11 @@ namespace Dt.Base
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="hi"></param>
         void ProcessSplitBarDoubleTap(HitTestInformation hi)
         {
             ProcessSplitBarDoubleClick(hi);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="rowViewportIndex"></param>
-        /// <param name="e"></param>
         void ProcessVerticalScroll(int rowViewportIndex, ScrollEventArgs e)
         {
             int viewportTopRow = GetViewportTopRow(rowViewportIndex);
@@ -10156,9 +9742,6 @@ namespace Dt.Base
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         internal void RaiseActiveSheetIndexChanged()
         {
             if ((ActiveSheetChanged != null) && (_eventSuspended == 0))
@@ -10167,10 +9750,6 @@ namespace Dt.Base
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         internal bool RaiseActiveSheetIndexChanging()
         {
             if ((ActiveSheetChanging != null) && (_eventSuspended == 0))
@@ -10185,11 +9764,6 @@ namespace Dt.Base
             return false;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="viewportIndex"></param>
-        /// <param name="deltaViewportWidth"></param>
         internal void RaiseColumnViewportWidthChanged(int viewportIndex, double deltaViewportWidth)
         {
             if ((ColumnViewportWidthChanged != null) && (_eventSuspended == 0))
@@ -10198,12 +9772,6 @@ namespace Dt.Base
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="viewportIndex"></param>
-        /// <param name="deltaViewportWidth"></param>
-        /// <returns></returns>
         internal bool RaiseColumnViewportWidthChanging(int viewportIndex, double deltaViewportWidth)
         {
             if ((ColumnViewportWidthChanging != null) && (_eventSuspended == 0))
@@ -10218,11 +9786,6 @@ namespace Dt.Base
             return false;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="viewportIndex"></param>
-        /// <param name="deltaViewportHeight"></param>
         internal void RaiseRowViewportHeightChanged(int viewportIndex, double deltaViewportHeight)
         {
             if ((RowViewportHeightChanged != null) && (_eventSuspended == 0))
@@ -10231,12 +9794,6 @@ namespace Dt.Base
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="viewportIndex"></param>
-        /// <param name="deltaViewportHeight"></param>
-        /// <returns></returns>
         internal bool RaiseRowViewportHeightChanging(int viewportIndex, double deltaViewportHeight)
         {
             if ((RowViewportHeightChanging != null) && (_eventSuspended == 0))
@@ -10251,9 +9808,6 @@ namespace Dt.Base
             return false;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         internal void RefreshTabStrip()
         {
             if (_tabStrip != null)
@@ -10294,9 +9848,6 @@ namespace Dt.Base
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         internal void SaveDataForFormulaSelection()
         {
             if (CanSelectFormula)
@@ -10312,9 +9863,6 @@ namespace Dt.Base
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         internal void ShowOpeningProgressRing()
         {
             if (_progressRing != null)
@@ -10324,9 +9872,6 @@ namespace Dt.Base
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         internal void ShowOpeningStatus()
         {
             ShowOpeningProgressRing();
@@ -10336,12 +9881,6 @@ namespace Dt.Base
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="currentPoint"></param>
-        /// <param name="translate"></param>
-        /// <param name="scale"></param>
         void UpdateCachedImageTransform(Point currentPoint, Point translate, double scale)
         {
             SheetLayout layout = GetSheetLayout();
@@ -10381,17 +9920,6 @@ namespace Dt.Base
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="transformGruop"></param>
-        /// <param name="currentPoint"></param>
-        /// <param name="translate"></param>
-        /// <param name="scale"></param>
-        /// <param name="columnViewportIndex"></param>
-        /// <param name="rowViewportIndex"></param>
-        /// <param name="columnX"></param>
-        /// <param name="rowY"></param>
         void UpdateCachedImageTransform(TransformGroup transformGruop, Point currentPoint, Point translate, double scale, int columnViewportIndex, int rowViewportIndex, double columnX, double rowY)
         {
             MatrixTransform transform = null;
@@ -10441,9 +9969,6 @@ namespace Dt.Base
             transform2.TranslateY = num4;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         internal void UpdateHorizontalScrollBars()
         {
             if (ActiveSheet == null)
@@ -10493,11 +10018,11 @@ namespace Dt.Base
                 var scrollBar = _horizontalScrollBar[i];
                 scrollBar.Minimum = (double)ActiveSheet.FrozenColumnCount;
                 scrollBar.Maximum = (double)Math.Max(ActiveSheet.FrozenColumnCount, ((ActiveSheet.ColumnCount - ActiveSheet.FrozenTrailingColumnCount) - sheetInvisibleColumns) - 1);
-                
+
                 double largeSize = GetViewportColumnLayoutModel(i).Count - GetViewportInvisibleColumns(i);
                 scrollBar.ViewportSize = largeSize;
                 scrollBar.LargeChange = largeSize;
-                
+
                 scrollBar.SmallChange = 1.0;
                 int viewportLeftColumn = GetViewportLeftColumn(i);
                 viewportLeftColumn = TryGetNextScrollableColumn(viewportLeftColumn);
@@ -10575,34 +10100,11 @@ namespace Dt.Base
             }
         }
 
-        void UpdateScrollBarIndicatorMode(ScrollingIndicatorMode ScrollingIndicatorMode)
-        {
-            if (_horizontalScrollBar != null)
-            {
-                for (int i = 0; i < _horizontalScrollBar.Length; i++)
-                {
-                    if (_horizontalScrollBar[i] != null)
-                    {
-                        _horizontalScrollBar[i].IndicatorMode = ScrollingIndicatorMode;
-                    }
-                }
-            }
-            if (_verticalScrollBar != null)
-            {
-                for (int j = 0; j < _verticalScrollBar.Length; j++)
-                {
-                    if (_verticalScrollBar[j] != null)
-                    {
-                        _verticalScrollBar[j].IndicatorMode = ScrollingIndicatorMode;
-                    }
-                }
-            }
-        }
-
         void UpdateViewport()
         {
             bool flag = ((_touchStartHitTestInfo.HitTestType == HitTestType.FloatingObject) && (_touchStartHitTestInfo.FloatingObjectInfo.FloatingObject != null)) && _touchStartHitTestInfo.FloatingObjectInfo.FloatingObject.IsSelected;
-            if (((_touchStartHitTestInfo != null) && (_touchStartHitTestInfo.HitTestType == HitTestType.Viewport)) || ((_touchStartHitTestInfo.HitTestType == HitTestType.FloatingObject) && !flag))
+            if (((_touchStartHitTestInfo != null) && (_touchStartHitTestInfo.HitTestType == HitTestType.Viewport))
+                || ((_touchStartHitTestInfo.HitTestType == HitTestType.FloatingObject) && !flag))
             {
                 AdjustViewportLeftColumn();
                 AdjustViewportTopRow();
@@ -10614,6 +10116,96 @@ namespace Dt.Base
                     InvalidateLayout();
                     InvalidateMeasure();
                 }
+            }
+        }
+
+        void AdjustViewportLeftColumn()
+        {
+            if (_translateOffsetX == 0.0)
+                return;
+
+            int viewportLeftColumn = GetViewportLeftColumn(_touchStartHitTestInfo.ColumnViewportIndex);
+            if (viewportLeftColumn < ActiveSheet.FrozenColumnCount)
+                return;
+
+            ColumnLayout layout = GetColumnLayoutModel(_touchStartHitTestInfo.ColumnViewportIndex, SheetArea.Cells).FindColumn(viewportLeftColumn);
+            if (layout == null)
+                return;
+
+            double width = layout.Width;
+            int maxLeftScrollableColumn = GetMaxLeftScrollableColumn();
+            if (viewportLeftColumn <= maxLeftScrollableColumn)
+            {
+                if ((_translateOffsetX < 0.0) && (Math.Abs(_translateOffsetX) >= (width / 2.0)))
+                {
+                    int nextScrollableColumn = GetNextScrollableColumn(viewportLeftColumn);
+                    if (nextScrollableColumn != -1)
+                    {
+                        SetViewportLeftColumn(_touchStartHitTestInfo.ColumnViewportIndex, nextScrollableColumn);
+                    }
+                }
+            }
+            else if (Math.Abs(_translateOffsetX) >= (width / 2.0))
+            {
+                int num5 = GetNextScrollableColumn(viewportLeftColumn);
+                if (num5 != -1)
+                {
+                    SetViewportLeftColumn(_touchStartHitTestInfo.ColumnViewportIndex, num5);
+                }
+            }
+        }
+
+        void AdjustViewportTopRow()
+        {
+            if (_translateOffsetY == 0.0)
+                return;
+
+            int viewportTopRow = GetViewportTopRow(_touchStartHitTestInfo.RowViewportIndex);
+            if (viewportTopRow < ActiveSheet.FrozenRowCount)
+                return;
+
+            RowLayout layout = GetRowLayoutModel(_touchStartHitTestInfo.RowViewportIndex, SheetArea.Cells).FindRow(viewportTopRow);
+            if (layout == null)
+                return;
+
+            double height = layout.Height;
+            int maxTopScrollableRow = GetMaxTopScrollableRow();
+            if (viewportTopRow <= maxTopScrollableRow)
+            {
+                if ((_translateOffsetY < 0.0) && (Math.Abs(_translateOffsetY) >= (height / 2.0)))
+                {
+                    int nextScrollableRow = GetNextScrollableRow(viewportTopRow);
+                    if (nextScrollableRow != -1)
+                    {
+                        SetViewportTopRow(_touchStartHitTestInfo.RowViewportIndex, nextScrollableRow);
+                    }
+                }
+            }
+            else if (Math.Abs(_translateOffsetY) >= (height / 2.0))
+            {
+                int num5 = GetNextScrollableRow(viewportTopRow);
+                if (num5 != -1)
+                {
+                    SetViewportTopRow(_touchStartHitTestInfo.RowViewportIndex, num5);
+                }
+            }
+        }
+
+        void AdjustViewportSize()
+        {
+            SheetLayout layout = GetSheetLayout();
+            if (((_cachedViewportWidths != null)
+                && (_touchStartHitTestInfo.ColumnViewportIndex != -1))
+                && (_touchStartHitTestInfo.ColumnViewportIndex < layout.ColumnPaneCount))
+            {
+                layout.SetViewportWidth(_touchStartHitTestInfo.ColumnViewportIndex, _cachedViewportWidths[_touchStartHitTestInfo.ColumnViewportIndex + 1]);
+            }
+
+            if (((_cachedViewportHeights != null)
+                && (_touchStartHitTestInfo.RowViewportIndex != -1))
+                && (_touchStartHitTestInfo.RowViewportIndex < layout.RowPaneCount))
+            {
+                layout.SetViewportHeight(_touchStartHitTestInfo.RowViewportIndex, _cachedViewportHeights[_touchStartHitTestInfo.RowViewportIndex + 1]);
             }
         }
 

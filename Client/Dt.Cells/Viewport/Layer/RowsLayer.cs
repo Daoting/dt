@@ -24,6 +24,7 @@ namespace Dt.Cells.UI
     /// </summary>
     internal partial class RowsLayer : Panel
     {
+        #region 成员变量
         const int _normalZIndexBase = 10000;
         const int _spanRowZIndexBase = 20000;
         static Rect _rcEmpty = new Rect();
@@ -31,7 +32,9 @@ namespace Dt.Cells.UI
         readonly CellsPanel _owner;
         readonly Dictionary<int, RowItem> _rows;
         readonly List<RowItem> _recycledRows;
+        #endregion
 
+        #region 构造方法
         public RowsLayer(CellsPanel p_owner)
         {
             _owner = p_owner;
@@ -41,7 +44,9 @@ namespace Dt.Cells.UI
             VerticalAlignment = VerticalAlignment.Top;
             Background = BrushRes.WhiteBrush;
         }
+        #endregion
 
+        #region 属性
         public IEnumerable<RowItem> Rows
         {
             get { return _rows.Values; }
@@ -53,6 +58,7 @@ namespace Dt.Cells.UI
                 return item;
             return null;
         }
+        #endregion
 
         #region 测量布局
         protected override Size MeasureOverride(Size availableSize)

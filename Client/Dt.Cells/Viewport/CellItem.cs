@@ -27,6 +27,8 @@ namespace Dt.Cells.UI
     /// </summary>
     internal partial class CellItem : Panel
     {
+        #region 成员变量
+        static Size _szEmpty = new Size();
         static Rect _rcEmpty = new Rect();
         readonly TextBlock _tb;
         CellOverflowLayout _overflowLayout;
@@ -44,7 +46,9 @@ namespace Dt.Cells.UI
         FilterButtonInfo _filterButtonInfo;
         InvalidDataPresenterInfo _dataValidationInvalidPresenterInfo;
         bool _lastUnderline;
+        #endregion
 
+        #region 构造方法
         public CellItem(RowItem p_rowItem)
         {
             OwnRow = p_rowItem;
@@ -52,7 +56,9 @@ namespace Dt.Cells.UI
             _tb = new TextBlock { VerticalAlignment = VerticalAlignment.Center, TextTrimming = TextTrimming.CharacterEllipsis };
             Children.Add(_tb);
         }
+        #endregion
 
+        #region 属性
         public RowItem OwnRow { get; }
 
         public int Row
@@ -101,6 +107,7 @@ namespace Dt.Cells.UI
                 }
             }
         }
+        #endregion
 
         #region 外部方法
         public void ApplyState()
@@ -210,7 +217,7 @@ namespace Dt.Cells.UI
             }
             else
             {
-                _tb.Text = "";
+                _tb.ClearValue(TextBlock.TextProperty);
             }
             SynStrikethroughView();
 
@@ -258,10 +265,20 @@ namespace Dt.Cells.UI
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            if (Column == -1
-                || availableSize.Width == 0.0
-                || availableSize.Height == 0.0)
-                return new Size();
+            if (Column == -1 || availableSize.Width == 0.0 || availableSize.Height == 0.0)
+            {
+                // 测量时uno android报错
+                foreach (UIElement elem in Children)
+                {
+                    try
+                    {
+                        elem.Measure(_szEmpty);
+                    }
+                    catch (Exception ex)
+                    { }
+                }
+                return _szEmpty;
+            }
 
             Size sizeOverflow = availableSize;
             if (_overflowLayout != null && _overflowLayout.ContentWidth > availableSize.Width)
@@ -278,12 +295,9 @@ namespace Dt.Cells.UI
         {
             if (Column == -1 || finalSize.Width == 0 || finalSize.Height == 0)
             {
-                if (Children.Count > 0)
+                foreach (UIElement elem in Children)
                 {
-                    foreach (UIElement elem in Children)
-                    {
-                        elem.Arrange(_rcEmpty);
-                    }
+                    elem.Arrange(_rcEmpty);
                 }
                 return finalSize;
             }
@@ -565,21 +579,22 @@ namespace Dt.Cells.UI
             if (_tb.HorizontalAlignment != horAlignment)
                 _tb.HorizontalAlignment = horAlignment;
 
-            Windows.UI.Xaml.TextAlignment textAlignment;
-            switch (horAlignment)
-            {
-                case HorizontalAlignment.Center:
-                    textAlignment = Windows.UI.Xaml.TextAlignment.Center;
-                    break;
-                case HorizontalAlignment.Right:
-                    textAlignment = Windows.UI.Xaml.TextAlignment.Right;
-                    break;
-                default:
-                    textAlignment = Windows.UI.Xaml.TextAlignment.Left;
-                    break;
-            }
-            if (_tb.TextAlignment != textAlignment)
-                _tb.TextAlignment = textAlignment;
+            // uno绘制Right位置错误，慎用TextAlignment！
+            //Windows.UI.Xaml.TextAlignment textAlignment;
+            //switch (horAlignment)
+            //{
+            //    case HorizontalAlignment.Center:
+            //        textAlignment = Windows.UI.Xaml.TextAlignment.Center;
+            //        break;
+            //    case HorizontalAlignment.Right:
+            //        textAlignment = Windows.UI.Xaml.TextAlignment.Right;
+            //        break;
+            //    default:
+            //        textAlignment = Windows.UI.Xaml.TextAlignment.Left;
+            //        break;
+            //}
+            //if (_tb.TextAlignment != textAlignment)
+            //    _tb.TextAlignment = textAlignment;
 
             VerticalAlignment verAlignment;
             switch (BindingCell.ActualVerticalAlignment)

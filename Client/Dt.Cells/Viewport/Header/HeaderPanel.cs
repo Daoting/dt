@@ -272,7 +272,9 @@ namespace Dt.Cells.UI
                 Canvas.SetZIndex(rowItem, z);
 
                 rowItem.Location = new Point(x, y);
-                rowItem.Measure(new Size(availableSize.Width, layout.Height));
+                rowItem.InvalidateMeasure();
+                // 测量尺寸足够大，否则当单元格占多行时在uno上只绘一行！
+                rowItem.Measure(availableSize);
                 y += layout.Height;
                 maxWidth = Math.Max(maxWidth, rowItem.DesiredSize.Width);
             }
@@ -300,7 +302,8 @@ namespace Dt.Cells.UI
 
                 if (_rows.TryGetValue(layout.Row, out var rowItem))
                 {
-                    rowItem.Arrange(new Rect(0.0, y, finalSize.Width, layout.Height));
+                    // 一定按行的最大高度布局，否则当单元格占多行时在uno上只绘一行！
+                    rowItem.Arrange(new Rect(0.0, y, finalSize.Width, rowItem.DesiredSize.Height));
                     if (rowWidth == 0.0)
                         rowWidth = rowItem.RowWidth;
                 }

@@ -173,6 +173,7 @@ namespace Dt.Cells.UI
             ColumnLayoutModel colLayoutModel = GetColumnLayoutModel();
             RowLayout layout = Owner.GetRowLayoutModel().FindRow(Row);
             RowWidth = 0.0;
+            double height = 0.0;
 
             foreach (ColumnLayout colLayout in colLayoutModel)
             {
@@ -185,10 +186,14 @@ namespace Dt.Cells.UI
                 if (cellLayout != null)
                 {
                     cell.Measure(new Size(cellLayout.Width, cellLayout.Height));
+                    if (cellLayout.Height > height)
+                        height = cellLayout.Height;
                 }
                 else
                 {
                     cell.Measure(new Size(colLayout.Width, layout.Height));
+                    if (layout.Height > height)
+                        height = layout.Height;
                 }
             }
 
@@ -201,7 +206,7 @@ namespace Dt.Cells.UI
             }
 
             double width = Math.Min(RowWidth, Owner.GetViewportSize().Width);
-            return new Size(width, layout.Height);
+            return new Size(width, height);
         }
 
         protected override Size ArrangeOverride(Size finalSize)

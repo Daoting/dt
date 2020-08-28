@@ -55,9 +55,9 @@ namespace Dt.Sample
             _excel.RowSplitBoxPolicy = SplitBoxPolicy.Never;
             var sheet = _excel.ActiveSheet;
             sheet.SelectionPolicy = SelectionPolicy.Single;
-            sheet.SelectionUnit = SelectionUnit.Row;
+            //sheet.SelectionUnit = SelectionUnit.Row;
             sheet.RowFilter = new HideRowFilter(new CellRange(-1, -1, -1, -1));
-            sheet.Protect = true;
+            //sheet.Protect = true;
 
             //sheet.DataSource = GetDataSource();
             //sheet.AddSelection(0, 0, 1, 1);

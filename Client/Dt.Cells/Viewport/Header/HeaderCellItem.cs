@@ -31,7 +31,7 @@ namespace Dt.Cells.UI
             };
             Children.Add(_border);
 
-            _tb = new TextBlock { TextAlignment = Windows.UI.Xaml.TextAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
+            _tb = new TextBlock { HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center };
             Children.Add(_tb);
         }
 
@@ -106,11 +106,6 @@ namespace Dt.Cells.UI
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            if (Column == -1
-                || availableSize.Width == 0.0
-                || availableSize.Height == 0.0)
-                return new Size();
-
             _border.Measure(availableSize);
             _tb.Measure(availableSize);
             return availableSize;
@@ -131,21 +126,22 @@ namespace Dt.Cells.UI
         /// <param name="p_cell"></param>
         void ApplyStyle(Cell p_cell)
         {
-            Windows.UI.Xaml.TextAlignment textAlignment;
+            // uno绘制Right位置错误，慎用TextAlignment！
+            HorizontalAlignment horAlignment;
             switch (p_cell.ActualHorizontalAlignment)
             {
                 case CellHorizontalAlignment.Center:
-                    textAlignment = Windows.UI.Xaml.TextAlignment.Center;
+                    horAlignment = HorizontalAlignment.Center;
                     break;
                 case CellHorizontalAlignment.Right:
-                    textAlignment = Windows.UI.Xaml.TextAlignment.Right;
+                    horAlignment = HorizontalAlignment.Right;
                     break;
                 default:
-                    textAlignment = Windows.UI.Xaml.TextAlignment.Left;
+                    horAlignment = HorizontalAlignment.Left;
                     break;
             }
-            if (_tb.TextAlignment != textAlignment)
-                _tb.TextAlignment = textAlignment;
+            if (_tb.HorizontalAlignment != horAlignment)
+                _tb.HorizontalAlignment = horAlignment;
 
             VerticalAlignment verAlignment;
             switch (p_cell.ActualVerticalAlignment)

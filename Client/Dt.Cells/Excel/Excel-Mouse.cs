@@ -1791,11 +1791,6 @@ namespace Dt.Base
             if (IsTouchZooming)
             {
                 IsTouchZooming = false;
-                _cachedViewportVisual = null;
-                _cachedColumnHeaderViewportVisual = null;
-                _cachedRowHeaderViewportVisual = null;
-                _cachedCornerViewportVisual = null;
-                _cachedBottomRightACornerVisual = null;
                 if ((_zoomOriginHitTestInfo != null) && (_zoomOriginHitTestInfo.HitTestType == HitTestType.Viewport))
                 {
                     TransformGroup group = _cachedViewportTransform[_zoomOriginHitTestInfo.RowViewportIndex + 1, _zoomOriginHitTestInfo.ColumnViewportIndex + 1];
