@@ -31,7 +31,6 @@ namespace Dt.Cells.UI
         static TextBlock _measure = null;
         public static readonly Thickness ExcelCellBlankThickness = new Thickness(3.0, 3.3, 3.0, 3.0);
         public static readonly Thickness TextBlockBlankThickness = new Thickness(1.0, 3.0, 1.0, 3.0);
-        public static readonly Thickness TextBlockDefaultMargin = new Thickness(2.0, 0.0, 3.0, 0.0);
         public static readonly Thickness TextBoxBlankThickness = new Thickness(4.0, 6.0, 5.0, 7.0);
 
         public static Size ConvertExcelCellSizeToTextSize(Size excelCellSize, double zoomFactor)

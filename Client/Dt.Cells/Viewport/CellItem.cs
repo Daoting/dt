@@ -16,7 +16,6 @@ using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
 #endregion
 
@@ -28,11 +27,12 @@ namespace Dt.Cells.UI
     internal partial class CellItem : Panel
     {
         #region 成员变量
+        const double _textPadding = 4.0;
         static Size _szEmpty = new Size();
         static Rect _rcEmpty = new Rect();
         readonly TextBlock _tb;
         CellOverflowLayout _overflowLayout;
-        Rect? _cachedClip;
+        //Rect? _cachedClip;
 
         ConditionalFormatView _conditionalView;
         CustomDrawingObject _customDrawingObject;
@@ -110,25 +110,33 @@ namespace Dt.Cells.UI
         #endregion
 
         #region 外部方法
-        public void ApplyState()
+        public void UpdateFilterButtonState()
         {
-            Background = BindingCell.ActualBackground;
-            if (_filterButton != null)
-                _filterButton.ApplyState();
+            _filterButton?.ApplyState();
         }
 
         public void CleanUpBeforeDiscard()
         {
-            if (_customDrawingObjectView != null)
-                Children.Remove(_customDrawingObjectView);
+            if (Children.Count > 1)
+            {
+                while (Children.Count > 1)
+                {
+                    Children.RemoveAt(Children.Count - 1);
+                }
+
+                _customDrawingObjectView = null;
+                if (_sparkInfo != null)
+                {
+                    _sparkInfo.SparklineChanged -= new EventHandler(sparkline_SparklineChanged);
+                    _sparkInfo = null;
+                }
+            }
 
             if (_dataValidationInvalidPresenterInfo != null)
             {
                 OwnRow.OwnPanel.RemoveDataValidationInvalidDataPresenterInfo(_dataValidationInvalidPresenterInfo);
                 _dataValidationInvalidPresenterInfo = null;
             }
-
-            DettachSparklineEvents();
         }
 
         public void Refresh()
@@ -156,6 +164,7 @@ namespace Dt.Cells.UI
             if (BindingCell == null)
                 return;
 
+            Background = BindingCell.ActualBackground;
             var excel = Excel;
             Worksheet sheet = BindingCell.Worksheet;
 
@@ -259,118 +268,133 @@ namespace Dt.Cells.UI
                 OwnRow.OwnPanel.RemoveDataValidationInvalidDataPresenterInfo(_dataValidationInvalidPresenterInfo);
                 _dataValidationInvalidPresenterInfo = null;
             }
-
-            ApplyState();
         }
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            if (Column == -1 || availableSize.Width == 0.0 || availableSize.Height == 0.0)
+            if (Column == -1 || availableSize.Width < _textPadding * 2)
             {
-                // 测量时uno android报错
+                // TextBlock设置Padding时，若Padding左右之和大于Measure时给的Width，uno莫名报错，布局混乱，不易发现！
                 foreach (UIElement elem in Children)
                 {
-                    try
-                    {
-                        elem.Measure(_szEmpty);
-                    }
-                    catch (Exception ex)
-                    { }
+                    elem.Measure(_szEmpty);
                 }
                 return _szEmpty;
             }
 
-            Size sizeOverflow = availableSize;
-            if (_overflowLayout != null && _overflowLayout.ContentWidth > availableSize.Width)
-                sizeOverflow = new Size(_overflowLayout.ContentWidth, availableSize.Height);
-
-            foreach (UIElement element in Children)
+            _tb.Measure(new Size(availableSize.Width - _textPadding * 2, availableSize.Height));
+            if (Children.Count > 1)
             {
-                element.Measure(element is TextBlock ? sizeOverflow : availableSize);
+                for (int i = 1; i < Children.Count; i++)
+                {
+                    ((UIElement)Children[i]).Measure(availableSize);
+                }
             }
             return availableSize;
+
+            // 溢出功能未启用
+            //Size sizeOverflow = availableSize;
+            //if (_overflowLayout != null && _overflowLayout.ContentWidth > availableSize.Width)
+            //    sizeOverflow = new Size(_overflowLayout.ContentWidth, availableSize.Height);
+
+            //foreach (UIElement element in Children)
+            //{
+            //    element.Measure(element is TextBlock ? sizeOverflow : availableSize);
+            //}
         }
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            if (Column == -1 || finalSize.Width == 0 || finalSize.Height == 0)
+            if (Column == -1 || finalSize.Width < _textPadding * 2)
             {
                 foreach (UIElement elem in Children)
                 {
                     elem.Arrange(_rcEmpty);
                 }
-                return finalSize;
+                return _szEmpty;
             }
 
-            double width = finalSize.Width;
-            double height = finalSize.Height;
-            Rect? nullable = null;
-            double left = 0;
-            double top = 0;
-            Rect rect = new Rect(left, top, width, height);
-            Rect rectOverflow = rect;
-            if (_overflowLayout != null && _overflowLayout.ContentWidth > width)
+            // 文字默认边距：4,0,4,0
+            _tb.Arrange(new Rect(_textPadding, 0, finalSize.Width - _textPadding * 2, finalSize.Height));
+            if (Children.Count > 1)
             {
-                switch (BindingCell.ToHorizontalAlignment())
+                Rect rect = new Rect(new Point(), finalSize);
+                for (int i = 1; i < Children.Count; i++)
                 {
-                    case HorizontalAlignment.Left:
-                        if (CellOverflowLayout != null)
-                        {
-                            double w = CellOverflowLayout.RightBackgroundWidth;
-                            if (w >= 0.0)
-                                nullable = new Rect(0.0, 0.0, w, finalSize.Height);
-                        }
-                        break;
-
-                    case HorizontalAlignment.Right:
-                        left -= _overflowLayout.ContentWidth - width;
-                        if (CellOverflowLayout != null)
-                        {
-                            double x = finalSize.Width - CellOverflowLayout.LeftBackgroundWidth;
-                            double w = CellOverflowLayout.LeftBackgroundWidth;
-                            if (w >= 0.0)
-                                nullable = new Rect(x, 0.0, w, finalSize.Height);
-                        }
-                        break;
-
-                    default:
-                        left -= (_overflowLayout.ContentWidth - width) / 2.0;
-                        if (CellOverflowLayout != null)
-                        {
-                            double x = 0.0;
-                            if (CellOverflowLayout.LeftBackgroundWidth > 0.0)
-                                x = (finalSize.Width / 2.0) - CellOverflowLayout.LeftBackgroundWidth;
-
-                            double w = CellOverflowLayout.BackgroundWidth;
-                            if (w >= 0.0)
-                                nullable = new Rect(x, 0.0, w, finalSize.Height);
-                        }
-                        break;
+                    ((UIElement)Children[i]).Arrange(rect);
                 }
-                width = _overflowLayout.ContentWidth;
-                rectOverflow = new Rect(left, top, width, height);
-            }
-
-            if ((_cachedClip.HasValue != nullable.HasValue) || (_cachedClip.HasValue && (_cachedClip.Value != nullable.Value)))
-            {
-                _cachedClip = nullable;
-                if (nullable.HasValue)
-                {
-                    RectangleGeometry geometry = new RectangleGeometry();
-                    geometry.Rect = nullable.Value;
-                    Clip = geometry;
-                }
-                else
-                {
-                    ClearValue(ClipProperty);
-                }
-            }
-
-            foreach (UIElement element in Children)
-            {
-                element.Arrange(element is TextBlock ? rectOverflow : rect);
             }
             return finalSize;
+
+            // 溢出功能未启用
+            //double width = finalSize.Width;
+            //double height = finalSize.Height;
+            //Rect? nullable = null;
+            //double left = 0;
+            //double top = 0;
+            //Rect rect = new Rect(left, top, width, height);
+            //Rect rectOverflow = rect;
+            //if (_overflowLayout != null && _overflowLayout.ContentWidth > width)
+            //{
+            //    switch (BindingCell.ToHorizontalAlignment())
+            //    {
+            //        case HorizontalAlignment.Left:
+            //            if (CellOverflowLayout != null)
+            //            {
+            //                double w = CellOverflowLayout.RightBackgroundWidth;
+            //                if (w >= 0.0)
+            //                    nullable = new Rect(0.0, 0.0, w, finalSize.Height);
+            //            }
+            //            break;
+
+            //        case HorizontalAlignment.Right:
+            //            left -= _overflowLayout.ContentWidth - width;
+            //            if (CellOverflowLayout != null)
+            //            {
+            //                double x = finalSize.Width - CellOverflowLayout.LeftBackgroundWidth;
+            //                double w = CellOverflowLayout.LeftBackgroundWidth;
+            //                if (w >= 0.0)
+            //                    nullable = new Rect(x, 0.0, w, finalSize.Height);
+            //            }
+            //            break;
+
+            //        default:
+            //            left -= (_overflowLayout.ContentWidth - width) / 2.0;
+            //            if (CellOverflowLayout != null)
+            //            {
+            //                double x = 0.0;
+            //                if (CellOverflowLayout.LeftBackgroundWidth > 0.0)
+            //                    x = (finalSize.Width / 2.0) - CellOverflowLayout.LeftBackgroundWidth;
+
+            //                double w = CellOverflowLayout.BackgroundWidth;
+            //                if (w >= 0.0)
+            //                    nullable = new Rect(x, 0.0, w, finalSize.Height);
+            //            }
+            //            break;
+            //    }
+            //    width = _overflowLayout.ContentWidth;
+            //    rectOverflow = new Rect(left, top, width, height);
+            //}
+
+            //if ((_cachedClip.HasValue != nullable.HasValue) || (_cachedClip.HasValue && (_cachedClip.Value != nullable.Value)))
+            //{
+            //    _cachedClip = nullable;
+            //    if (nullable.HasValue)
+            //    {
+            //        RectangleGeometry geometry = new RectangleGeometry();
+            //        geometry.Rect = nullable.Value;
+            //        Clip = geometry;
+            //    }
+            //    else
+            //    {
+            //        ClearValue(ClipProperty);
+            //    }
+            //}
+
+            //foreach (UIElement element in Children)
+            //{
+            //    element.Arrange(element is TextBlock ? rectOverflow : rect);
+            //}
         }
         #endregion
 
@@ -624,10 +648,6 @@ namespace Dt.Cells.UI
             if (_tb.FontWeight.Weight != fontWeight.Weight)
                 _tb.FontWeight = fontWeight;
 
-            var fontStretch = BindingCell.ActualFontStretch;
-            if (_tb.FontStretch != fontStretch)
-                _tb.FontStretch = fontStretch;
-
             var fontFamily = BindingCell.ActualFontFamily;
             if (fontFamily != null && _tb.FontFamily.Source != fontFamily.Source)
                 _tb.FontFamily = fontFamily;
@@ -665,17 +685,23 @@ namespace Dt.Cells.UI
             if (_tb.FontSize != fontSize)
                 _tb.FontSize = fontSize;
 
-            var padding = MeasureHelper.TextBlockDefaultMargin;
+            // TextBlock设置Padding时，若Padding左右之和大于Measure时给的Width，uno莫名报错，布局混乱，不易发现！
+            Thickness margin = new Thickness();
             var indent = BindingCell.ActualTextIndent * ZoomFactor;
-            if (indent > 0 && _tb.TextAlignment != Windows.UI.Xaml.TextAlignment.Center)
+            if (indent > 0 && _tb.HorizontalAlignment != HorizontalAlignment.Center)
             {
-                if (_tb.TextAlignment == Windows.UI.Xaml.TextAlignment.Left)
-                    padding.Left += indent;
-                else if (_tb.TextAlignment == Windows.UI.Xaml.TextAlignment.Right)
-                    padding.Right += indent;
+                if (_tb.HorizontalAlignment == HorizontalAlignment.Right)
+                    margin.Right += indent;
+                else
+                    margin.Left += indent;
             }
-            if (_tb.Padding != padding)
-                _tb.Padding = padding;
+            if (_tb.Margin != margin)
+                _tb.Margin = margin;
+
+            // 未用到
+            //var fontStretch = BindingCell.ActualFontStretch;
+            //if (_tb.FontStretch != fontStretch)
+            //    _tb.FontStretch = fontStretch;
 
             if (BindingCell.ActualUnderline)
             {

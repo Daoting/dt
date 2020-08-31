@@ -8585,7 +8585,7 @@ namespace Dt.Base
                             CellItem base3 = presenter2.GetCell(_hitFilterInfo.Column);
                             if (base3 != null)
                             {
-                                base3.ApplyState();
+                                base3.UpdateFilterButtonState();
                             }
                         }
                     }

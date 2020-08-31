@@ -33,7 +33,7 @@ namespace Dt.Cells.UI
             Editor = new TextBox
             {
                 BorderThickness = new Thickness(0.0),
-                Padding = new Thickness(2, 5, 2, 4),
+                Padding = new Thickness(4, 5, 4, 4),
                 TextWrapping = TextWrapping.Wrap,
                 Background = BrushRes.WhiteBrush,
                 IsHitTestVisible = false,

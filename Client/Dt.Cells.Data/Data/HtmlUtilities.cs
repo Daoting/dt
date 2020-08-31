@@ -141,9 +141,9 @@ namespace Dt.Cells.Data
                     return HorizontalAlignment.Right;
                 }
                 default:
-                    return HorizontalAlignment.Left;
+                    return HorizontalAlignment.Stretch;
             }
-            return HorizontalAlignment.Left;
+            return HorizontalAlignment.Stretch;
         }
     }
 }
