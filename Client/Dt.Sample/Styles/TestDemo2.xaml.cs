@@ -24,9 +24,13 @@ namespace Dt.Sample
         public TestDemo2()
         {
             InitializeComponent();
-            _excel.ActiveSheet.RowCount = 2;
-            _excel.ActiveSheet.ColumnCount = 4;
-            FillSampleData(_excel.ActiveSheet, new CellRange(0, 0, 2, 4));
+
+            _excel.SuspendEvent();
+            var sheet = _excel.ActiveSheet;
+            FillSampleData(sheet, new CellRange(0, 0, 100, 30));
+            sheet.AddTable("sampleTable1", 0, 0, 10, 4, TableStyles.Medium3);
+
+            sheet[1, 2].Strikethrough = true;
             _excel.SuspendEvent();
         }
 

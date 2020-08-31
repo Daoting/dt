@@ -230,12 +230,18 @@ namespace Dt.Cells.UI
             }
             SynStrikethroughView();
 
-            FilterButtonInfo info = excel.GetFilterButtonInfo(row, column, BindingCell.SheetArea);
-            if (info != FilterButtonInfo)
+#if UWP || WASM
+            // 手机上体验不好
+            if (!excel.IsTouching)
             {
-                FilterButtonInfo = info;
-                SynFilterButton();
+                FilterButtonInfo info = excel.GetFilterButtonInfo(row, column, BindingCell.SheetArea);
+                if (info != FilterButtonInfo)
+                {
+                    FilterButtonInfo = info;
+                    SynFilterButton();
+                }
             }
+#endif
 
             if (OwnRow.OwnPanel.Excel.HighlightInvalidData)
             {
@@ -442,10 +448,10 @@ namespace Dt.Cells.UI
                 Children.Remove(_strikethroughView);
                 _strikethroughView = null;
             }
-            if (actualStrikethrough && (_strikethroughView == null))
+
+            if (actualStrikethrough)
             {
                 _strikethroughView = new StrikethroughView(BindingCell, this);
-                _strikethroughView.SetLines(Excel.ZoomFactor, BindingCell);
                 Children.Add(_strikethroughView);
             }
         }
@@ -637,8 +643,16 @@ namespace Dt.Cells.UI
                 _tb.VerticalAlignment = verAlignment;
 
             var foreground = BindingCell.ActualForeground;
-            if (foreground != null && foreground != _tb.Foreground)
+            if (foreground == null)
+            {
+                // 默认黑色
+                if (_tb.ReadLocalValue(TextBlock.ForegroundProperty) != DependencyProperty.UnsetValue)
+                    _tb.ClearValue(TextBlock.ForegroundProperty);
+            }
+            else if (foreground != _tb.Foreground)
+            {
                 _tb.Foreground = foreground;
+            }
 
             var fontStyle = BindingCell.ActualFontStyle;
             if (_tb.FontStyle != fontStyle)

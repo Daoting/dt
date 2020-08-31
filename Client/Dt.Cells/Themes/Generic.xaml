@@ -1209,64 +1209,46 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:FilterButton">
-                    <Grid>
+                    <Grid BorderBrush="{TemplateBinding BorderBrush}"
+                          BorderThickness="{TemplateBinding BorderThickness}"
+                          Background="{StaticResource filterButtonBackgroundBrush}">
                         <VisualStateManager.VisualStateGroups>
 
                             <VisualStateGroup x:Name="SortFilterStates">
                                 <VisualState x:Name="NoSortFilter">
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="NoSortFilterState"
-                                                         Storyboard.TargetProperty="Opacity"
-                                                         Duration="0"
-                                                         To="1" />
-                                    </Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="ImageState.Source" Value="ms-appx:///Dt.Cells/Icons/NoSortFilter.png" />
+                                    </VisualState.Setters>
                                 </VisualState>
 
                                 <VisualState x:Name="Ascend">
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="AscendState"
-                                                         Storyboard.TargetProperty="Opacity"
-                                                         Duration="0"
-                                                         To="1" />
-                                    </Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="ImageState.Source" Value="ms-appx:///Dt.Cells/Icons/Ascend.png" />
+                                    </VisualState.Setters>
                                 </VisualState>
 
                                 <VisualState x:Name="Descend">
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="DescendState"
-                                                         Storyboard.TargetProperty="Opacity"
-                                                         Duration="0"
-                                                         To="1" />
-                                    </Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="ImageState.Source" Value="ms-appx:///Dt.Cells/Icons/Descend.png" />
+                                    </VisualState.Setters>
                                 </VisualState>
 
                                 <VisualState x:Name="Filter">
-                                    <Storyboard>
-                                        <Storyboard>
-                                            <DoubleAnimation Storyboard.TargetName="FilterState"
-                                                             Storyboard.TargetProperty="Opacity"
-                                                             Duration="0"
-                                                             To="1" />
-                                        </Storyboard>
-                                    </Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="ImageState.Source" Value="ms-appx:///Dt.Cells/Icons/Filter.png" />
+                                    </VisualState.Setters>
                                 </VisualState>
 
                                 <VisualState x:Name="FilterAscend">
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="FilterAscendState"
-                                                         Storyboard.TargetProperty="Opacity"
-                                                         Duration="0"
-                                                         To="1" />
-                                    </Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="ImageState.Source" Value="ms-appx:///Dt.Cells/Icons/FilterAscend.png" />
+                                    </VisualState.Setters>
                                 </VisualState>
 
                                 <VisualState x:Name="FilterDescend">
-                                    <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetName="FilterDescendState"
-                                                         Storyboard.TargetProperty="Opacity"
-                                                         Duration="0"
-                                                         To="1" />
-                                    </Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="ImageState.Source" Value="ms-appx:///Dt.Cells/Icons/FilterDescend.png" />
+                                    </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
 
@@ -1276,46 +1258,8 @@
                             </VisualStateGroup>
 
                         </VisualStateManager.VisualStateGroups>
-                        <Rectangle x:Name="Background"
-                                   Stroke="{TemplateBinding BorderBrush}"
-                                   StrokeThickness="{TemplateBinding BorderThickness}" Fill="{StaticResource filterButtonBackgroundBrush}">
-                        </Rectangle>
-                        <Image x:Name="NoSortFilterState"
-                               Width="16"
-                               Height="16"
-                               Source="ms-appx:///Dt.Cells/Icons/NoSortFilter.png"
-                               Opacity="0">
-                        </Image>
-                        <Image x:Name="AscendState"
-                               Width="16"
-                               Height="16"
-                               Source="ms-appx:///Dt.Cells/Icons/Ascend.png"
-                               Opacity="0">
-                        </Image>
-                        <Image x:Name="DescendState"
-                               Width="16"
-                               Height="16"
-                               Source="ms-appx:///Dt.Cells/Icons/Descend.png"
-                               Opacity="0">
-                        </Image>
-                        <Image x:Name="FilterState"
-                               Width="16"
-                               Height="16"
-                               Source="ms-appx:///Dt.Cells/Icons/Filter.png"
-                               Opacity="0">
-                        </Image>
-                        <Image x:Name="FilterAscendState"
-                               Width="16"
-                               Height="16"
-                               Source="ms-appx:///Dt.Cells/Icons/FilterAscend.png"
-                               Opacity="0">
-                        </Image>
-                        <Image x:Name="FilterDescendState"
-                               Width="16"
-                               Height="16"
-                               Source="ms-appx:///Dt.Cells/Icons/FilterDescend.png"
-                               Opacity="0">
-                        </Image>
+
+                        <Image x:Name="ImageState" Width="16" Height="16" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

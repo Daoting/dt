@@ -111,13 +111,13 @@ namespace Dt.Cells.UI
             {
                 _isPressed = true;
                 UpdateVisualState(true);
-                _dragFillPopupManager.ShowAsModal(_excel, _autoFitListBox, point2, PopupDirection.BottomRight, true, false);
+                _dragFillPopupManager.ShowAsModal(_excel, _autoFitListBox, point2, PopupDirection.BottomRight);
             }
             else
             {
                 _closedByThis = true;
                 _isPressed = false;
-                _dragFillPopupManager.ShowAsModal(_excel, _autoFitListBox, point2, PopupDirection.BottomRight, true, false);
+                _dragFillPopupManager.ShowAsModal(_excel, _autoFitListBox, point2, PopupDirection.BottomRight);
             }
         }
 
@@ -194,13 +194,13 @@ namespace Dt.Cells.UI
             {
                 _isPressed = true;
                 UpdateVisualState(true);
-                _dragFillPopupManager.ShowAsModal(_excel, _autoFitListBox, point, PopupDirection.BottomRight, true, false);
+                _dragFillPopupManager.ShowAsModal(_excel, _autoFitListBox, point, PopupDirection.BottomRight);
             }
             else
             {
                 _closedByThis = true;
                 _isPressed = false;
-                _dragFillPopupManager.ShowAsModal(_excel, _autoFitListBox, point, PopupDirection.BottomRight, true, false);
+                _dragFillPopupManager.ShowAsModal(_excel, _autoFitListBox, point, PopupDirection.BottomRight);
             }
         }
 

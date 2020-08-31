@@ -7085,7 +7085,7 @@ namespace Dt.Base
                     x += 4.0;
                     y += 4.0;
                 }
-                _dragFillPopup.ShowAsModal(this, _dragFillSmartTag, new Point(x, y), PopupDirection.BottomRight, false, false);
+                _dragFillPopup.ShowAsModal(this, _dragFillSmartTag, new Point(x, y), PopupDirection.BottomRight);
             }
         }
 

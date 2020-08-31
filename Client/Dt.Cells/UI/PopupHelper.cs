@@ -36,16 +36,16 @@ namespace Dt.Cells.UI
         {
             _popup = popup;
             _popupChildGrid = new Grid();
-            _popup.Child = _popupChildGrid;
+
             _popupOutsideCanvas = new Canvas();
+            _popupOutsideCanvas.PointerPressed += OnOutsideCanvasMouseLeftButtonDown;
             _popupChildGrid.Children.Add(_popupOutsideCanvas);
+
             _popupContentHost = new Border();
-            _popupContentHost.Style = null;
+            _popupContentHost.SizeChanged += OnPopupContentHostSizeChanged;
             _popupChildGrid.Children.Add(_popupContentHost);
-            Canvas canvas = _popupOutsideCanvas;
-            canvas.PointerPressed += OnOutsideCanvasMouseLeftButtonDown;
-            Border border = _popupContentHost;
-            border.SizeChanged += OnPopupContentHostSizeChanged;
+
+            _popup.Child = _popupChildGrid;
         }
 
         Point CalcPlacementPosition(Point basePoint, Size popSize, PopupDirection popDirection)
@@ -132,24 +132,16 @@ namespace Dt.Cells.UI
 
         public void ShowAsModal(FrameworkElement placeElement, Control contentElement, Point relativePoint, PopupDirection popDirection)
         {
-            ShowAsModal(placeElement, contentElement, relativePoint, popDirection, true, true);
-        }
-
-        public void ShowAsModal(FrameworkElement placeElement, Control contentElement, Point relativePoint, PopupDirection popDirection, bool capture, bool contentFocus)
-        {
             _popupContentHost.Child = contentElement;
             _placeElement = placeElement;
-            _relativePoint = relativePoint;
+            // 相对整个视图的位置
+            _relativePoint = placeElement.TransformToVisual(null).Transform(relativePoint);
             _popDirection = popDirection;
             _popupContentHost.Background = new SolidColorBrush(Colors.Transparent);
             _popupOutsideCanvas.Background = new SolidColorBrush(Colors.Transparent);
             _popupOutsideCanvas.Margin = new Thickness(-10000.0);
             placeElement.ReleasePointerCaptures();
             _popup.IsOpen = true;
-            if (contentFocus)
-            {
-                contentElement.Focus(FocusState.Programmatic);
-            }
         }
 
         internal Point Location
