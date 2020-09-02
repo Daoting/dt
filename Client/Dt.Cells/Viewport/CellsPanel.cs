@@ -1250,12 +1250,6 @@ namespace Dt.Cells.UI
         }
 
         public Excel Excel { get; private set; }
-
-        internal bool SupportCellOverflow
-        {
-            get { return true; }
-        }
-
     }
 
     internal sealed class CellCachePool : ICellSupport

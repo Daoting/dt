@@ -91,7 +91,7 @@ namespace Dt.Cells.UI
             // 频繁增删Children子元素会出现卡顿现象！
             // Children = Cells + _recycledCells
             ColumnLayoutModel colLayoutModel = GetColumnLayoutModel();
-            int less = colLayoutModel.Count - Children.Count;
+            int less = colLayoutModel.Count - Children.Count + (_headingOverflowCell == null ? 0 : 1) + (_trailingOverflowCell == null ? 0 : 1);
             if (less > 0)
             {
                 for (int i = 0; i < less; i++)
@@ -184,39 +184,43 @@ namespace Dt.Cells.UI
                     cell.UpdateChildren();
             }
 
-            if (OwnPanel.SupportCellOverflow)
+            CellOverflowLayoutModel cellOverflowLayoutModel = OwnPanel.GetCellOverflowLayoutModel(Row);
+            if ((cellOverflowLayoutModel != null) && !cellOverflowLayoutModel.IsEmpty)
             {
-                CellOverflowLayoutModel cellOverflowLayoutModel = OwnPanel.GetCellOverflowLayoutModel(Row);
-                if ((cellOverflowLayoutModel != null) && !cellOverflowLayoutModel.IsEmpty)
+                if (cellOverflowLayoutModel.HeadingOverflowlayout != null)
                 {
-                    if (cellOverflowLayoutModel.HeadingOverflowlayout != null)
+                    if (HeadingOverflowCell == null)
+                        HeadingOverflowCell = new CellItem(this);
+                    if (HeadingOverflowCell.Column != cellOverflowLayoutModel.HeadingOverflowlayout.Column)
                     {
-                        if (HeadingOverflowCell == null)
-                            HeadingOverflowCell = new CellItem(this);
                         HeadingOverflowCell.Column = cellOverflowLayoutModel.HeadingOverflowlayout.Column;
+                        HeadingOverflowCell.UpdateChildren();
                     }
-                    else
-                    {
-                        HeadingOverflowCell = null;
-                    }
-
-                    if (cellOverflowLayoutModel.TrailingOverflowlayout != null)
-                    {
-                        if (TrailingOverflowCell == null)
-                            TrailingOverflowCell = new CellItem(this);
-                        TrailingOverflowCell.Column = cellOverflowLayoutModel.TrailingOverflowlayout.Column;
-                    }
-                    else
-                    {
-                        TrailingOverflowCell = null;
-                    }
-                    InvalidateMeasure();
                 }
                 else
                 {
                     HeadingOverflowCell = null;
+                }
+
+                if (cellOverflowLayoutModel.TrailingOverflowlayout != null)
+                {
+                    if (TrailingOverflowCell == null)
+                        TrailingOverflowCell = new CellItem(this);
+                    if (TrailingOverflowCell.Column != cellOverflowLayoutModel.TrailingOverflowlayout.Column)
+                    {
+                        TrailingOverflowCell.Column = cellOverflowLayoutModel.TrailingOverflowlayout.Column;
+                        TrailingOverflowCell.UpdateChildren();
+                    }
+                }
+                else
+                {
                     TrailingOverflowCell = null;
                 }
+            }
+            else
+            {
+                HeadingOverflowCell = null;
+                TrailingOverflowCell = null;
             }
         }
 

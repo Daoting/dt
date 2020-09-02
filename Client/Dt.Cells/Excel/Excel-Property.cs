@@ -447,14 +447,6 @@ namespace Dt.Base
             }
         }
 
-        internal int MaxCellOverflowDistance
-        {
-            get { return 100; }
-            set
-            {
-            }
-        }
-
         internal int MouseOverColumnIndex { get; set; }
 
         internal int MouseOverRowIndex { get; set; }

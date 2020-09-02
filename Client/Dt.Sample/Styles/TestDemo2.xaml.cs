@@ -25,13 +25,15 @@ namespace Dt.Sample
         {
             InitializeComponent();
 
+            _excel.AutoRefresh = false;
             _excel.SuspendEvent();
-            var sheet = _excel.ActiveSheet;
-            FillSampleData(sheet, new CellRange(0, 0, 100, 30));
-            sheet.AddTable("sampleTable1", 0, 0, 10, 4, TableStyles.Medium3);
+            _excel.CanCellOverflow = true;
 
-            sheet[1, 2].Strikethrough = true;
-            _excel.SuspendEvent();
+            var sheet = _excel.ActiveSheet;
+            sheet.SetValue(0, 0, "System.Random r = new System.Random();");
+
+            _excel.ResumeEvent();
+            _excel.AutoRefresh = true;
         }
 
         void FillSampleData(Worksheet sheet, CellRange range)

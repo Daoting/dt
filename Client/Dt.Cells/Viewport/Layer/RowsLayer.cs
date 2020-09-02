@@ -63,7 +63,7 @@ namespace Dt.Cells.UI
         #region 测量布局
         protected override Size MeasureOverride(Size availableSize)
         {
-            if (_owner.SupportCellOverflow && _owner.Excel.CanCellOverflow)
+            if (_owner.Excel.CanCellOverflow)
             {
                 int viewportLeftColumn = _owner.Excel.GetViewportLeftColumn(_owner.ColumnViewportIndex);
                 _owner.CellOverflowLayoutBuildEngine.ViewportLeftColumn = viewportLeftColumn;

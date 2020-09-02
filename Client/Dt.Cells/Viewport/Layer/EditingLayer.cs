@@ -131,6 +131,7 @@ namespace Dt.Cells.UI
                 switch (alignment)
                 {
                     case HorizontalAlignment.Left:
+                    case HorizontalAlignment.Stretch:
                         left += indent;
                         break;
 
@@ -350,6 +351,7 @@ namespace Dt.Cells.UI
             switch (alignment)
             {
                 case HorizontalAlignment.Left:
+                case HorizontalAlignment.Stretch:
                     {
                         float indent = cachedCell.ActualTextIndent * _ownPanel.Excel.ZoomFactor;
                         double num4 = (viewportSize.Width - bounds.Left) + _ownPanel.Location.X;

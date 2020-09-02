@@ -98,7 +98,7 @@ namespace Dt.Cells.Data
                 IEnumerator enumerator = spanModel.GetEnumerator(rowStartIndex, columnStartIndex, (rowEndIndex - rowStartIndex) + 1, (columnEndIndex - columnStartIndex) + 1);
                 while (enumerator.MoveNext())
                 {
-                    CellRange current = (CellRange) enumerator.Current;
+                    CellRange current = (CellRange)enumerator.Current;
                     data.Add(current.Row, current.Column, current.RowCount, current.ColumnCount, true);
                 }
             }
@@ -124,24 +124,18 @@ namespace Dt.Cells.Data
                     return HorizontalAlignment.Right;
 
                 case CellHorizontalAlignment.General:
-                {
-                    object obj2 = cell.Value;
-                    if (obj2 == null)
                     {
-                        break;
-                    }
-                    if (!IsExcelRightAlignmentValue(obj2))
-                    {
-                        if (obj2 is bool)
-                        {
+                        object val = cell.Value;
+                        if (val == null)
+                            return HorizontalAlignment.Stretch;
+
+                        if (IsExcelRightAlignmentValue(val))
+                            return HorizontalAlignment.Right;
+
+                        if (val is bool)
                             return HorizontalAlignment.Center;
-                        }
-                        break;
+                        return HorizontalAlignment.Stretch;
                     }
-                    return HorizontalAlignment.Right;
-                }
-                default:
-                    return HorizontalAlignment.Stretch;
             }
             return HorizontalAlignment.Stretch;
         }

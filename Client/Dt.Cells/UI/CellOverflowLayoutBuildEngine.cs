@@ -20,6 +20,7 @@ namespace Dt.Cells.UI
 {
     internal class CellOverflowLayoutBuildEngine
     {
+        const int _maxCellOverflowDistance = 100;
         Dictionary<int, CellOverflowLayoutModel> _cachedCellOverflowModels = new Dictionary<int, CellOverflowLayoutModel>();
         int _cachedLeftColumn = -1;
         int _cachedRightColumn = -1;
@@ -37,10 +38,7 @@ namespace Dt.Cells.UI
             {
                 return null;
             }
-            if (Viewport.Excel.MaxCellOverflowDistance == 1)
-            {
-                return null;
-            }
+
             ColumnLayoutModel viewportColumnLayoutModel = Viewport.Excel.GetViewportColumnLayoutModel(Viewport.ColumnViewportIndex);
             if (viewportColumnLayoutModel == null)
             {
@@ -66,46 +64,47 @@ namespace Dt.Cells.UI
                         switch (cachedCell.ToHorizontalAlignment())
                         {
                             case HorizontalAlignment.Left:
-                            {
-                                int deadColumnIndex = Enumerable.Last<ColumnLayout>((IEnumerable<ColumnLayout>) viewportColumnLayoutModel).Column + 1;
-                                CellOverflowLayout item = BuildCellOverflowLayoutModelForLeft(cachedCell, rowIndex, false, deadColumnIndex, textFormattingMode, useLayoutRounding);
-                                if (item != null)
+                            case HorizontalAlignment.Stretch:
                                 {
-                                    result.Add(item);
-                                    int index = viewportColumnLayoutModel.IndexOf(viewportColumnLayoutModel.FindColumn(item.EndingColumn));
-                                    if (index > -1)
+                                    int deadColumnIndex = Enumerable.Last<ColumnLayout>((IEnumerable<ColumnLayout>)viewportColumnLayoutModel).Column + 1;
+                                    CellOverflowLayout item = BuildCellOverflowLayoutModelForLeft(cachedCell, rowIndex, false, deadColumnIndex, textFormattingMode, useLayoutRounding);
+                                    if (item != null)
                                     {
-                                        i = index;
+                                        result.Add(item);
+                                        int index = viewportColumnLayoutModel.IndexOf(viewportColumnLayoutModel.FindColumn(item.EndingColumn));
+                                        if (index > -1)
+                                        {
+                                            i = index;
+                                        }
                                     }
+                                    break;
                                 }
-                                break;
-                            }
                             case HorizontalAlignment.Center:
-                            {
-                                layout3 = new CellOverflowLayout(layout2.Column, 0.0);
-                                int num3 = Enumerable.Last<ColumnLayout>((IEnumerable<ColumnLayout>) viewportColumnLayoutModel).Column + 1;
-                                CellOverflowLayout layout4 = BuildCellOverflowLayoutModelForLeft(cachedCell, rowIndex, true, num3, textFormattingMode, useLayoutRounding);
-                                num3 = viewportColumnLayoutModel[0].Column - 1;
-                                layout5 = BuildCellOverflowLayoutModelForRight(cachedCell, rowIndex, result, true, num3, textFormattingMode, useLayoutRounding);
-                                if (layout4 == null)
                                 {
-                                    goto Label_01C1;
+                                    layout3 = new CellOverflowLayout(layout2.Column, 0.0);
+                                    int num3 = Enumerable.Last<ColumnLayout>((IEnumerable<ColumnLayout>)viewportColumnLayoutModel).Column + 1;
+                                    CellOverflowLayout layout4 = BuildCellOverflowLayoutModelForLeft(cachedCell, rowIndex, true, num3, textFormattingMode, useLayoutRounding);
+                                    num3 = viewportColumnLayoutModel[0].Column - 1;
+                                    layout5 = BuildCellOverflowLayoutModelForRight(cachedCell, rowIndex, result, true, num3, textFormattingMode, useLayoutRounding);
+                                    if (layout4 == null)
+                                    {
+                                        goto Label_01C1;
+                                    }
+                                    layout3.EndingColumn = layout4.EndingColumn;
+                                    layout3.BackgroundWidth += layout4.BackgroundWidth;
+                                    layout3.RightBackgroundWidth = layout4.RightBackgroundWidth;
+                                    goto Label_01E0;
                                 }
-                                layout3.EndingColumn = layout4.EndingColumn;
-                                layout3.BackgroundWidth += layout4.BackgroundWidth;
-                                layout3.RightBackgroundWidth = layout4.RightBackgroundWidth;
-                                goto Label_01E0;
-                            }
                             case HorizontalAlignment.Right:
-                            {
-                                int num6 = viewportColumnLayoutModel[0].Column - 1;
-                                CellOverflowLayout layout7 = BuildCellOverflowLayoutModelForRight(cachedCell, rowIndex, result, false, num6, textFormattingMode, useLayoutRounding);
-                                if (layout7 != null)
                                 {
-                                    result.Add(layout7);
+                                    int num6 = viewportColumnLayoutModel[0].Column - 1;
+                                    CellOverflowLayout layout7 = BuildCellOverflowLayoutModelForRight(cachedCell, rowIndex, result, false, num6, textFormattingMode, useLayoutRounding);
+                                    if (layout7 != null)
+                                    {
+                                        result.Add(layout7);
+                                    }
+                                    break;
                                 }
-                                break;
-                            }
                         }
                     }
                 }
@@ -125,8 +124,8 @@ namespace Dt.Cells.UI
                 }
                 if (layout3.BackgroundWidth > layout2.Width)
                 {
-                    Size textSize = MeasureHelper.MeasureTextInCell(cachedCell, new Size(double.PositiveInfinity, double.PositiveInfinity), (double) Viewport.Excel.ZoomFactor, null, textFormattingMode, useLayoutRounding);
-                    layout3.ContentWidth = MeasureHelper.ConvertTextSizeToExcelCellSize(textSize, (double) Viewport.Excel.ZoomFactor).Width;
+                    Size textSize = MeasureHelper.MeasureTextInCell(cachedCell, new Size(double.PositiveInfinity, double.PositiveInfinity), (double)Viewport.Excel.ZoomFactor, null, textFormattingMode, useLayoutRounding);
+                    layout3.ContentWidth = MeasureHelper.ConvertTextSizeToExcelCellSize(textSize, (double)Viewport.Excel.ZoomFactor).Width;
                     result.Add(layout3);
                 }
             }
@@ -158,8 +157,8 @@ namespace Dt.Cells.UI
                     return null;
                 }
                 float zoomFactor = Viewport.Excel.ZoomFactor;
-                Size textSize = MeasureHelper.MeasureTextInCell(bindingCell, new Size(double.PositiveInfinity, double.PositiveInfinity), (double) zoomFactor, null, textFormattingMode, useLayoutRounding);
-                double width = MeasureHelper.ConvertTextSizeToExcelCellSize(textSize, (double) zoomFactor).Width;
+                Size textSize = MeasureHelper.MeasureTextInCell(bindingCell, new Size(double.PositiveInfinity, double.PositiveInfinity), (double)zoomFactor, null, textFormattingMode, useLayoutRounding);
+                double width = MeasureHelper.ConvertTextSizeToExcelCellSize(textSize, (double)zoomFactor).Width;
                 double num5 = column.ActualWidth * zoomFactor;
                 if (buildForCenter)
                 {
@@ -169,7 +168,8 @@ namespace Dt.Cells.UI
                 double num6 = num5;
                 if (num6 < width)
                 {
-                    CellOverflowLayout layout2 = new CellOverflowLayout(column.Index, num6) {
+                    CellOverflowLayout layout2 = new CellOverflowLayout(column.Index, num6)
+                    {
                         EndingColumn = column.Index
                     };
                     for (int i = index + 1; (i < dataContext.Columns.Count) && (i <= deadColumnIndex); i++)
@@ -200,7 +200,7 @@ namespace Dt.Cells.UI
                     }
                     if (layout2.EndingColumn != column.Index)
                     {
-                        layout2.ContentWidth = MeasureHelper.ConvertTextSizeToExcelCellSize(textSize, (double) zoomFactor).Width;
+                        layout2.ContentWidth = MeasureHelper.ConvertTextSizeToExcelCellSize(textSize, (double)zoomFactor).Width;
                         layout2.RightBackgroundWidth = num6;
                         return layout2;
                     }
@@ -229,8 +229,8 @@ namespace Dt.Cells.UI
                     return null;
                 }
                 float zoomFactor = Viewport.Excel.ZoomFactor;
-                Size textSize = MeasureHelper.MeasureTextInCell(bindingCell, new Size(double.PositiveInfinity, double.PositiveInfinity), (double) zoomFactor, null, textFormattingMode, useLayoutRounding);
-                double width = MeasureHelper.ConvertTextSizeToExcelCellSize(textSize, (double) zoomFactor).Width;
+                Size textSize = MeasureHelper.MeasureTextInCell(bindingCell, new Size(double.PositiveInfinity, double.PositiveInfinity), (double)zoomFactor, null, textFormattingMode, useLayoutRounding);
+                double width = MeasureHelper.ConvertTextSizeToExcelCellSize(textSize, (double)zoomFactor).Width;
                 double num5 = column.ActualWidth * zoomFactor;
                 if (buildForCenter)
                 {
@@ -240,7 +240,8 @@ namespace Dt.Cells.UI
                 double num6 = num5;
                 if (num6 < width)
                 {
-                    CellOverflowLayout layout2 = new CellOverflowLayout(column.Index, num6) {
+                    CellOverflowLayout layout2 = new CellOverflowLayout(column.Index, num6)
+                    {
                         StartingColumn = column.Index
                     };
                     for (int i = index - 1; (i >= 0) && (i >= deadColumnIndex); i--)
@@ -276,7 +277,7 @@ namespace Dt.Cells.UI
                     }
                     if (layout2.StartingColumn != column.Index)
                     {
-                        layout2.ContentWidth = MeasureHelper.ConvertTextSizeToExcelCellSize(textSize, (double) zoomFactor).Width;
+                        layout2.ContentWidth = MeasureHelper.ConvertTextSizeToExcelCellSize(textSize, (double)zoomFactor).Width;
                         layout2.LeftBackgroundWidth = num6;
                         return layout2;
                     }
@@ -287,7 +288,8 @@ namespace Dt.Cells.UI
 
         CellOverflowLayout BuildHeadingCellOverflowLayoutModel(int rowIndex, ColumnLayoutModel columnLayoutModel, object textFormattingMode, bool useLayoutRounding)
         {
-            ColumnLayout layout = Enumerable.FirstOrDefault<ColumnLayout>(columnLayoutModel, delegate (ColumnLayout clm) {
+            ColumnLayout layout = Enumerable.FirstOrDefault<ColumnLayout>(columnLayoutModel, delegate (ColumnLayout clm)
+            {
                 return clm.Width > 0.0;
             });
             if (layout == null)
@@ -299,10 +301,9 @@ namespace Dt.Cells.UI
                 layout = columnLayoutModel[0];
             }
             CellOverflowLayout layout2 = new CellOverflowLayout(layout.Column, 0.0);
-            int maxCellOverflowDistance = Viewport.Excel.MaxCellOverflowDistance;
             SheetSpanModelBase spanModel = Viewport.GetSpanModel();
             ICellsSupport dataContext = Viewport.GetDataContext();
-            for (int i = 1; i < maxCellOverflowDistance; i++)
+            for (int i = 1; i < _maxCellOverflowDistance; i++)
             {
                 int column = layout.Column - i;
                 if (column < 0)
@@ -330,26 +331,26 @@ namespace Dt.Cells.UI
                         {
                             case HorizontalAlignment.Left:
                             case HorizontalAlignment.Stretch:
-                            {
-                                int deadColumnIndex = Enumerable.Last<ColumnLayout>((IEnumerable<ColumnLayout>) columnLayoutModel).Column + 1;
-                                layout2 = BuildCellOverflowLayoutModelForLeft(cachedCell, rowIndex, false, deadColumnIndex, textFormattingMode, useLayoutRounding);
-                                if ((layout2 == null) || (layout2.EndingColumn < ViewportLeftColumn))
                                 {
-                                    return null;
+                                    int deadColumnIndex = Enumerable.Last<ColumnLayout>((IEnumerable<ColumnLayout>)columnLayoutModel).Column + 1;
+                                    layout2 = BuildCellOverflowLayoutModelForLeft(cachedCell, rowIndex, false, deadColumnIndex, textFormattingMode, useLayoutRounding);
+                                    if ((layout2 == null) || (layout2.EndingColumn < ViewportLeftColumn))
+                                    {
+                                        return null;
+                                    }
+                                    return layout2;
                                 }
-                                return layout2;
-                            }
                             case HorizontalAlignment.Center:
-                            {
-                                int num4 = Enumerable.Last<ColumnLayout>((IEnumerable<ColumnLayout>) columnLayoutModel).Column + 1;
-                                layout2 = BuildCellOverflowLayoutModelForLeft(cachedCell, rowIndex, true, num4, textFormattingMode, useLayoutRounding);
-                                if ((layout2 == null) || (layout2.EndingColumn < ViewportLeftColumn))
                                 {
-                                    return null;
+                                    int num4 = Enumerable.Last<ColumnLayout>((IEnumerable<ColumnLayout>)columnLayoutModel).Column + 1;
+                                    layout2 = BuildCellOverflowLayoutModelForLeft(cachedCell, rowIndex, true, num4, textFormattingMode, useLayoutRounding);
+                                    if ((layout2 == null) || (layout2.EndingColumn < ViewportLeftColumn))
+                                    {
+                                        return null;
+                                    }
+                                    layout2.BackgroundWidth += (dataContext.Columns[column].ActualWidth * Viewport.Excel.ZoomFactor) / 2.0;
+                                    return layout2;
                                 }
-                                layout2.BackgroundWidth += (dataContext.Columns[column].ActualWidth * Viewport.Excel.ZoomFactor) / 2.0;
-                                return layout2;
-                            }
                             case HorizontalAlignment.Right:
                                 return null;
                         }
@@ -362,7 +363,8 @@ namespace Dt.Cells.UI
 
         CellOverflowLayout BuildTrailingCellOverflowLayoutModel(int rowIndex, ColumnLayoutModel columnLayoutModel, CellOverflowLayoutModel existed, object textFormattingMode, bool useLayoutRounding)
         {
-            ColumnLayout layout = Enumerable.LastOrDefault<ColumnLayout>(columnLayoutModel, delegate (ColumnLayout clm) {
+            ColumnLayout layout = Enumerable.LastOrDefault<ColumnLayout>(columnLayoutModel, delegate (ColumnLayout clm)
+            {
                 return clm.Width > 0.0;
             });
             if (layout == null)
@@ -376,10 +378,9 @@ namespace Dt.Cells.UI
             if (!existed.Contains(layout.Column))
             {
                 CellOverflowLayout layout2 = new CellOverflowLayout(layout.Column, 0.0);
-                int maxCellOverflowDistance = Viewport.Excel.MaxCellOverflowDistance;
                 ICellsSupport dataContext = Viewport.GetDataContext();
                 SheetSpanModelBase spanModel = Viewport.GetSpanModel();
-                for (int i = 1; i < maxCellOverflowDistance; i++)
+                for (int i = 1; i < _maxCellOverflowDistance; i++)
                 {
                     int column = layout.Column + i;
                     if (column >= dataContext.Columns.Count)
@@ -410,26 +411,26 @@ namespace Dt.Cells.UI
                                     return null;
 
                                 case HorizontalAlignment.Center:
-                                {
-                                    int deadColumnIndex = columnLayoutModel[0].Column - 1;
-                                    layout2 = BuildCellOverflowLayoutModelForRight(cachedCell, rowIndex, existed, true, deadColumnIndex, textFormattingMode, useLayoutRounding);
-                                    if ((layout2 == null) || (layout2.StartingColumn > ViewportRightColumn))
                                     {
-                                        return null;
+                                        int deadColumnIndex = columnLayoutModel[0].Column - 1;
+                                        layout2 = BuildCellOverflowLayoutModelForRight(cachedCell, rowIndex, existed, true, deadColumnIndex, textFormattingMode, useLayoutRounding);
+                                        if ((layout2 == null) || (layout2.StartingColumn > ViewportRightColumn))
+                                        {
+                                            return null;
+                                        }
+                                        layout2.BackgroundWidth += (dataContext.Columns[column].ActualWidth * Viewport.Excel.ZoomFactor) / 2.0;
+                                        return layout2;
                                     }
-                                    layout2.BackgroundWidth += (dataContext.Columns[column].ActualWidth * Viewport.Excel.ZoomFactor) / 2.0;
-                                    return layout2;
-                                }
                                 case HorizontalAlignment.Right:
-                                {
-                                    int num5 = columnLayoutModel[0].Column - 1;
-                                    layout2 = BuildCellOverflowLayoutModelForRight(cachedCell, rowIndex, existed, false, num5, textFormattingMode, useLayoutRounding);
-                                    if ((layout2 == null) || (layout2.StartingColumn > ViewportRightColumn))
                                     {
-                                        return null;
+                                        int num5 = columnLayoutModel[0].Column - 1;
+                                        layout2 = BuildCellOverflowLayoutModelForRight(cachedCell, rowIndex, existed, false, num5, textFormattingMode, useLayoutRounding);
+                                        if ((layout2 == null) || (layout2.StartingColumn > ViewportRightColumn))
+                                        {
+                                            return null;
+                                        }
+                                        return layout2;
                                     }
-                                    return layout2;
-                                }
                             }
                             break;
                         }
@@ -446,22 +447,11 @@ namespace Dt.Cells.UI
 
         public CellOverflowLayoutModel GetModel(int rowIndex)
         {
-            if (Viewport == null)
+            if (Viewport == null || !Viewport.Excel.CanCellOverflow)
             {
                 return null;
             }
-            if (!Viewport.Excel.CanCellOverflow)
-            {
-                return null;
-            }
-            if (!Viewport.SupportCellOverflow)
-            {
-                return null;
-            }
-            if (Viewport.Excel.MaxCellOverflowDistance == 1)
-            {
-                return null;
-            }
+
             CellOverflowLayoutModel model = null;
             if (_cachedCellOverflowModels.TryGetValue(rowIndex, out model))
             {
@@ -490,7 +480,7 @@ namespace Dt.Cells.UI
 
         public int ViewportLeftColumn
         {
-            get { return  _cachedLeftColumn; }
+            get { return _cachedLeftColumn; }
             set
             {
                 if (_cachedLeftColumn != value)
@@ -503,7 +493,7 @@ namespace Dt.Cells.UI
 
         public int ViewportRightColumn
         {
-            get { return  _cachedRightColumn; }
+            get { return _cachedRightColumn; }
             set
             {
                 if (_cachedRightColumn != value)
