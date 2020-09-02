@@ -69,7 +69,7 @@ namespace Dt.Sample
                     fileFormat = ExcelFileFormat.XLSX;
                 else
                     fileFormat = ExcelFileFormat.XLS;
-                await _excel.SaveExcelAsync(stream, fileFormat, GetSaveFlag());
+                await _excel.SaveExcel(stream, fileFormat, GetSaveFlag());
                 stream.Dispose();
                 AtKit.Msg("导出成功！");
             }

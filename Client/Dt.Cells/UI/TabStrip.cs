@@ -28,39 +28,6 @@ namespace Dt.Cells.UI
     /// </summary>
     internal partial class TabStrip : Control
     {
-        #region 静态内容
-        public readonly static DependencyProperty HasInsertTabProperty = DependencyProperty.Register(
-            "HasInsertTab",
-            typeof(bool),
-            typeof(TabStrip),
-            new PropertyMetadata(true, OnHasInsertTabChanged));
-
-        static void OnHasInsertTabChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            TabStrip strip = (TabStrip)d;
-            if ((bool)e.NewValue)
-            {
-                if (strip._newTab == null)
-                {
-                    strip._newTab = new SheetTab(strip);
-                }
-                if (!strip.TabsPresenter.Children.Contains(strip._newTab))
-                {
-                    strip.TabsPresenter.Children.Add(strip._newTab);
-                }
-                if (strip.IsLoaded)
-                {
-                    strip.TabsPresenter.ReCalculateStartIndex(0, strip.TabsPresenter.Children.Count - 1);
-                }
-            }
-            else if (strip._newTab != null)
-            {
-                strip.TabsPresenter.Children.Remove(strip._newTab);
-                strip._newTab = null;
-            }
-        }
-        #endregion
-
         SheetTab _activeTab;
         SheetTab _editingTab;
         SheetTab _newTab;
@@ -76,17 +43,12 @@ namespace Dt.Cells.UI
             DefaultStyleKey = typeof(TabStrip);
             Excel = p_excel;
             TabsPresenter = new TabsPresenter(this);
+            Init();
         }
 
         public SheetTab ActiveTab
         {
             get { return _activeTab; }
-        }
-
-        public bool HasInsertTab
-        {
-            get { return (bool)GetValue(HasInsertTabProperty); }
-            set { SetValue(HasInsertTabProperty, value); }
         }
 
         public bool IsEditing { get; private set; }
@@ -100,21 +62,21 @@ namespace Dt.Cells.UI
             get { return Excel.Workbook; }
         }
 
-        public void Init(WorksheetCollection p_sheets, int p_activeSheetIndex)
+        void Init()
         {
-            for (int i = 0; i < p_sheets.Count; i++)
+            for (int i = 0; i < Excel.Sheets.Count; i++)
             {
                 SheetTab tab = new SheetTab(this);
                 tab.SheetIndex = i;
                 TabsPresenter.Children.Add(tab);
             }
 
-            if (HasInsertTab)
+            if (Excel.TabStripInsertTab)
             {
                 _newTab = new SheetTab(this);
                 TabsPresenter.Children.Add(_newTab);
             }
-            ActiveSheet(p_activeSheetIndex, false);
+            ActiveSheet(Excel.ActiveSheetIndex, false);
         }
 
         public void NewTab(int sheetIndex)
@@ -122,7 +84,7 @@ namespace Dt.Cells.UI
             StopTabEditing(false);
             SheetTab tab = new SheetTab(this) { SheetIndex = sheetIndex };
             int count = TabsPresenter.Children.Count;
-            if (HasInsertTab && (TabsPresenter.Children.Count > 0))
+            if (Excel.TabStripInsertTab && (TabsPresenter.Children.Count > 0))
             {
                 count = TabsPresenter.Children.Count - 1;
             }
@@ -151,6 +113,30 @@ namespace Dt.Cells.UI
                 {
                     ProcessNavigation(preVisibleIndex);
                 }
+            }
+        }
+
+        public void UpdateInsertNewTab()
+        {
+            if (Excel.TabStripInsertTab)
+            {
+                if (_newTab == null)
+                {
+                    _newTab = new SheetTab(this);
+                }
+                if (!TabsPresenter.Children.Contains(_newTab))
+                {
+                    TabsPresenter.Children.Add(_newTab);
+                }
+                if (IsLoaded)
+                {
+                    TabsPresenter.ReCalculateStartIndex(0, TabsPresenter.Children.Count - 1);
+                }
+            }
+            else if (_newTab != null)
+            {
+                TabsPresenter.Children.Remove(_newTab);
+                _newTab = null;
             }
         }
 

@@ -18,14 +18,13 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Reflection;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Xml.Serialization;
 using Windows.Foundation;
 using Windows.UI;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
@@ -38,6 +37,7 @@ namespace Dt.Base
     /// </summary>
     public partial class Excel : Panel, IXmlSerializable
     {
+        #region 构造方法
         public Excel()
         {
             _invisibleRows = new HashSet<int>();
@@ -48,6 +48,7 @@ namespace Dt.Base
             InitKeyboard();
             InitLayout();
         }
+        #endregion
 
         #region 属性
         /// <summary>
@@ -88,7 +89,7 @@ namespace Dt.Base
                 {
                     Workbook.ActiveSheetIndex = value;
                     RaiseActiveSheetIndexChanged();
-                    Invalidate();
+                    InvalidateAll();
                 }
             }
         }
@@ -147,7 +148,7 @@ namespace Dt.Base
             set
             {
                 Workbook.GridLineColor = value;
-                InvalidateSheet();
+                InvalidateAll();
             }
         }
 
@@ -178,7 +179,7 @@ namespace Dt.Base
             set
             {
                 Workbook.NamedStyles = value;
-                InvalidateSheet();
+                InvalidateAll();
             }
         }
 
@@ -243,7 +244,7 @@ namespace Dt.Base
             set
             {
                 Workbook.SheetCount = value;
-                Invalidate();
+                InvalidateAll();
             }
         }
 
@@ -320,7 +321,7 @@ namespace Dt.Base
             set
             {
                 Workbook.ShowGridLine = value;
-                InvalidateSheet();
+                InvalidateAll();
             }
         }
 
@@ -797,6 +798,143 @@ namespace Dt.Base
 
         #endregion
 
+        #region 打开保存
+        /// <summary>
+        /// Opens an Excel Compound Document File and loads it into Sheet. 
+        /// </summary>
+        /// <param name="stream">The file stream.</param>
+        /// <param name="openFlags">The flag used to open the file.</param>
+        /// <returns></returns>
+        public Task OpenExcel(Stream stream, ExcelOpenFlags openFlags = ExcelOpenFlags.NoFlagsSet)
+        {
+            if (stream == null)
+                throw new ArgumentNullException("stream");
+            return OpenStream(() => Workbook.OpenExcel(stream, openFlags));
+        }
+
+        /// <summary>
+        /// Saves Sheet to an Excel Compound Document File. 
+        /// </summary>
+        /// <param name="stream">The stream to save to.</param>
+        /// <param name="format">The file format.</param>
+        /// <param name="saveFlags">Options for saving to a file.</param>
+        /// <returns></returns>
+        public IAsyncAction SaveExcel(Stream stream, ExcelFileFormat format = ExcelFileFormat.XLSX, ExcelSaveFlags saveFlags = ExcelSaveFlags.NoFlagsSet)
+        {
+            if (stream == null)
+                throw new ArgumentNullException("stream");
+            return Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => Workbook.SaveExcel(stream, format, saveFlags));
+        }
+
+        /// <summary>
+        /// Loads the data on the sheet from the specified XML stream. 
+        /// </summary>
+        /// <param name="xmlStream">The XML stream.</param>
+        /// <returns></returns>
+        public Task OpenXml(Stream xmlStream)
+        {
+            if (xmlStream == null)
+                throw new ArgumentNullException("xmlStream");
+            return OpenStream(() => OpenXmlOnBackground(xmlStream));
+        }
+
+        /// <summary>
+        /// Saves the data on the sheet to the specified XML stream asynchronously. 
+        /// </summary>
+        /// <param name="xmlStream">The XML stream.</param>
+        /// <param name="dataOnly">Whether to save data only.</param>
+        /// <returns></returns>
+        public IAsyncAction SaveXmlAsync(Stream xmlStream, bool dataOnly = false)
+        {
+            return Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => SaveXmlBackground(xmlStream, dataOnly));
+        }
+
+        /// <summary>
+        /// Saves the content of the component to the specified stream asynchronously. 
+        /// </summary>
+        /// <param name="stream">Stream to which to save the data.</param>
+        /// <param name="sheetIndexes">The sheet indexes.</param>
+        /// <param name="settings">The export settings.</param>
+        /// <returns></returns>
+        public IAsyncAction SavePdf(Stream stream, int[] sheetIndexes = null, PdfExportSettings settings = null)
+        {
+            return Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => Workbook.SavePdf(stream, sheetIndexes, settings));
+        }
+
+        /// <summary>
+        /// Loads the CSV (comma-separated values) file asynchronously. 
+        /// </summary>
+        /// <param name="sheetIndex">The destination sheet index for loading.</param>
+        /// <param name="stream">Stream from which to load.</param>
+        /// <param name="flags">The import flags.</param>
+        /// <returns></returns>
+        public Task OpenCSV(int sheetIndex, Stream stream, TextFileOpenFlags flags = TextFileOpenFlags.None)
+        {
+            if ((sheetIndex < 0) || (sheetIndex >= SheetCount) || stream == null)
+                throw new ArgumentOutOfRangeException("sheetIndex");
+            return OpenStream(() => Sheets[sheetIndex].OpenCsv(stream, flags));
+        }
+
+        /// <summary>
+        /// Saves the CSV (comma-separated values) file asynchronously. 
+        /// </summary>
+        /// <param name="sheetIndex">The destination sheet index for saving.</param>
+        /// <param name="stream">Stream to which to save the content.</param>
+        /// <param name="flags">The export flags.</param>
+        /// <returns></returns>
+        public IAsyncAction SaveCSV(int sheetIndex, Stream stream, TextFileSaveFlags flags = TextFileSaveFlags.None)
+        {
+            if ((sheetIndex < 0) || (sheetIndex >= SheetCount))
+                throw new ArgumentOutOfRangeException("sheetIndex");
+            return Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => Sheets[sheetIndex].SaveCsv(stream, flags, Encoding.UTF8));
+        }
+
+        /// <summary>
+        /// Loads the CSV file with the specified separator asynchronously. 
+        /// </summary>
+        /// <param name="sheetIndex">The destination sheet index for loading.</param>
+        /// <param name="stream">Stream from which to load.</param>
+        /// <param name="flags">The import flags.</param>
+        /// <param name="rowDelimiter">Row delimiter string.</param>
+        /// <param name="columnDelimiter">Column delimiter string.</param>
+        /// <param name="cellDelimiter">Cell delimiter string.</param>
+        /// <returns></returns>
+        public Task OpenTextFile(
+            int sheetIndex,
+            Stream stream,
+            TextFileOpenFlags flags,
+            string rowDelimiter,
+            string columnDelimiter,
+            string cellDelimiter)
+        {
+            if ((sheetIndex < 0) || (sheetIndex >= SheetCount))
+                throw new ArgumentOutOfRangeException("sheetIndex");
+            return OpenStream(() => Sheets[sheetIndex].OpenTextFile(stream, flags, rowDelimiter, columnDelimiter, cellDelimiter));
+        }
+
+        /// <summary>
+        /// Saves the range of cells in the specified sheet as delimited text with the specified delimiters, to a stream asynchronously. 
+        /// </summary>
+        /// <param name="sheetIndex">The destination sheet index to save to.</param>
+        /// <param name="row">Starting row index.</param>
+        /// <param name="column">Starting column index.</param>
+        /// <param name="rowCount">The number of rows.</param>
+        /// <param name="columnCount">The number of columns.</param>
+        /// <param name="stream">Stream to which to save the text range.</param>
+        /// <param name="flags">The export flags.</param>
+        /// <param name="rowDelimiter">Row delimiter string.</param>
+        /// <param name="columnDelimiter">Column delimiter string.</param>
+        /// <param name="cellDelimiter">Cell delimiter string.</param>
+        /// <returns></returns>
+        public IAsyncAction SaveTextFileRangeAsync(int sheetIndex, int row, int column, int rowCount, int columnCount, Stream stream, TextFileSaveFlags flags, string rowDelimiter, string columnDelimiter, string cellDelimiter)
+        {
+            if ((sheetIndex < 0) || (sheetIndex >= SheetCount))
+                throw new ArgumentOutOfRangeException("sheetIndex");
+            return Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => Sheets[sheetIndex].SaveTextFileRange(row, column, rowCount, columnCount, stream, flags, rowDelimiter, columnDelimiter, cellDelimiter));
+        }
+        #endregion
+
+        #region 外部方法
         /// <summary>
         /// Adds a new column viewport to the control. 
         /// </summary>
@@ -1275,63 +1413,50 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// Invalidates the measurement state (layout) and the arrangement state (layout) for the control. After the invalidation, the control layout and data are updated. 
-        /// </summary>
-#if ANDROID
-    new
-#endif
-        public void Invalidate()
-        {
-            InvalidateLayout();
-            InvalidateMeasure();
-            InvalidateArrange();
-            InvalidateSheet();
-        }
-
-        /// <summary>
         /// Invalidates the measurement state (layout) and the arrangement state (layout) for the view. After the invalidation, the view layout and data are updated. 
         /// </summary>
-        public void InvalidateSheet()
+        public void InvalidateAll()
         {
-            if (!IsSuspendInvalidate())
+            if (IsSuspendInvalidate())
+                return;
+
+            if (IsEditing)
+                StopCellEditing(true);
+            InvalidateLayout();
+            Children.Clear();
+
+            _cornerPanel = null;
+            _rowHeaders = null;
+            _colHeaders = null;
+
+            if (_cellsPanels != null)
             {
-                if (IsEditing)
+                CellsPanel[,] viewportArray = _cellsPanels;
+                int upperBound = viewportArray.GetUpperBound(0);
+                int num2 = viewportArray.GetUpperBound(1);
+                for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
                 {
-                    StopCellEditing(true);
-                }
-                InvalidateLayout();
-                Children.Clear();
-                _cornerPanel = null;
-                _rowHeaders = null;
-                _colHeaders = null;
-                if (_cellsPanels != null)
-                {
-                    CellsPanel[,] viewportArray = _cellsPanels;
-                    int upperBound = viewportArray.GetUpperBound(0);
-                    int num2 = viewportArray.GetUpperBound(1);
-                    for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
+                    for (int j = viewportArray.GetLowerBound(1); j <= num2; j++)
                     {
-                        for (int j = viewportArray.GetLowerBound(1); j <= num2; j++)
+                        CellsPanel viewport = viewportArray[i, j];
+                        if (viewport != null)
                         {
-                            CellsPanel viewport = viewportArray[i, j];
-                            if (viewport != null)
-                            {
-                                viewport.RemoveDataValidationUI();
-                            }
+                            viewport.RemoveDataValidationUI();
                         }
                     }
                 }
-                _cellsPanels = null;
-                _groupCornerPresenter = null;
-                _rowGroupHeaderPresenter = null;
-                _columnGroupHeaderPresenter = null;
-                _rowGroupPresenters = null;
-                _columnGroupPresenters = null;
-                _tooltipHelper = null;
-                _currentActiveColumnIndex = (ActiveSheet == null) ? -1 : ActiveSheet.ActiveColumnIndex;
-                _currentActiveRowIndex = (ActiveSheet == null) ? -1 : ActiveSheet.ActiveRowIndex;
-                Navigation.UpdateStartPosition(_currentActiveRowIndex, _currentActiveColumnIndex);
             }
+            _cellsPanels = null;
+
+            _groupCornerPresenter = null;
+            _rowGroupHeaderPresenter = null;
+            _columnGroupHeaderPresenter = null;
+            _rowGroupPresenters = null;
+            _columnGroupPresenters = null;
+            _tooltipHelper = null;
+            _currentActiveColumnIndex = (ActiveSheet == null) ? -1 : ActiveSheet.ActiveColumnIndex;
+            _currentActiveRowIndex = (ActiveSheet == null) ? -1 : ActiveSheet.ActiveRowIndex;
+            Navigation.UpdateStartPosition(_currentActiveRowIndex, _currentActiveColumnIndex);
         }
 
         /// <summary>
@@ -1532,113 +1657,6 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// Loads the CSV (comma-separated values) file asynchronously. 
-        /// </summary>
-        /// <param name="sheetIndex">The destination sheet index for loading.</param>
-        /// <param name="stream">Stream from which to load.</param>
-        /// <param name="flags">The import flags.</param>
-        /// <returns></returns>
-        public IAsyncAction OpenCSVAsync(int sheetIndex, Stream stream, TextFileOpenFlags flags)
-        {
-            return OpenCSVAsync(sheetIndex, stream, flags, Encoding.UTF8);
-        }
-
-        /// <summary>
-        /// Loads the CSV (comma-separated values) file asynchronously. 
-        /// </summary>
-        /// <param name="sheetIndex">The destination sheet index for loading.</param>
-        /// <param name="stream">Stream from which to load.</param>
-        /// <param name="flags">The import flags.</param>
-        /// <param name="encoding">The encoding.</param>
-        /// <returns></returns>
-        public IAsyncAction OpenCSVAsync(int sheetIndex, Stream stream, TextFileOpenFlags flags, Encoding encoding)
-        {
-            IAsyncAction action;
-            if ((sheetIndex < 0) || (sheetIndex >= SheetCount))
-            {
-                throw new ArgumentOutOfRangeException("sheetIndex");
-            }
-            Workbook.SuspendEvent();
-            try
-            {
-                ShowOpeningProgressRing();
-                action = Sheets[sheetIndex].OpenCsvAsync(stream, flags, encoding);
-            }
-            finally
-            {
-                Workbook.ResumeEvent();
-            }
-            return action;
-        }
-
-        /// <summary>
-        /// Opens an Excel Compound Document File and loads it into GcSpreadSheet.
-        /// </summary>
-        /// <param name="stream">The file stream.</param>
-        /// <returns></returns>
-        public IAsyncAction OpenExcelAsync(Stream stream)
-        {
-            return OpenExcel(stream, ExcelOpenFlags.NoFlagsSet, null);
-        }
-
-        /// <summary>
-        /// Opens an Excel Compound Document File and loads it into GcSpreadSheet. 
-        /// </summary>
-        /// <param name="stream">The file stream.</param>
-        /// <param name="openFlags">The flag used to open the file.</param>
-        /// <returns></returns>
-        public IAsyncAction OpenExcelAsync(Stream stream, ExcelOpenFlags openFlags)
-        {
-            return OpenExcel(stream, openFlags, null);
-        }
-
-        /// <summary>
-        /// Loads the CSV file with the specified separator asynchronously. 
-        /// </summary>
-        /// <param name="sheetIndex">The destination sheet index for loading.</param>
-        /// <param name="stream">Stream from which to load.</param>
-        /// <param name="flags">The import flags.</param>
-        /// <param name="rowDelimiter">Row delimiter string.</param>
-        /// <param name="columnDelimiter">Column delimiter string.</param>
-        /// <param name="cellDelimiter">Cell delimiter string.</param>
-        /// <returns></returns>
-        public IAsyncAction OpenTextFileAsync(int sheetIndex, Stream stream, TextFileOpenFlags flags, string rowDelimiter, string columnDelimiter, string cellDelimiter)
-        {
-            IAsyncAction action;
-            if ((sheetIndex < 0) || (sheetIndex >= SheetCount))
-            {
-                throw new ArgumentOutOfRangeException("sheetIndex");
-            }
-            Workbook.SuspendEvent();
-            try
-            {
-                ShowOpeningProgressRing();
-                action = Sheets[sheetIndex].OpenTextFileAsync(stream, flags, rowDelimiter, columnDelimiter, cellDelimiter);
-            }
-            finally
-            {
-                Workbook.ResumeEvent();
-            }
-            return action;
-        }
-
-        /// <summary>
-        /// Loads the data on the sheet from the specified XML stream. 
-        /// </summary>
-        /// <param name="xmlStream">The XML stream.</param>
-        /// <returns></returns>
-        public IAsyncAction OpenXmlAsync(Stream xmlStream)
-        {
-            return AsyncInfo.Run(delegate (CancellationToken token)
-            {
-                return Task.Factory.StartNew(delegate
-                {
-                    OpenXmlOnBackground(xmlStream);
-                });
-            });
-        }
-
-        /// <summary>
         /// Removes a column viewport from the control. 
         /// </summary>
         /// <param name="columnViewportIndex">The column viewport index to remove.</param>
@@ -1675,7 +1693,7 @@ namespace Dt.Base
         public void ResetThemes()
         {
             Workbook.ResetThemes();
-            InvalidateSheet();
+            InvalidateAll();
         }
 
         /// <summary>
@@ -1684,7 +1702,7 @@ namespace Dt.Base
         public void ResumeCalcService()
         {
             Workbook.ResumeCalcService();
-            InvalidateSheet();
+            InvalidateAll();
         }
 
         /// <summary>
@@ -1698,177 +1716,6 @@ namespace Dt.Base
             {
                 _eventSuspended = 0;
             }
-        }
-
-        /// <summary>
-        /// Saves the CSV (comma-separated values) file asynchronously. 
-        /// </summary>
-        /// <param name="sheetIndex">The destination sheet index for saving.</param>
-        /// <param name="stream">Stream to which to save the content.</param>
-        /// <param name="flags">The export flags.</param>
-        /// <returns></returns>
-        public IAsyncAction SaveCSVAsync(int sheetIndex, Stream stream, TextFileSaveFlags flags)
-        {
-            if ((sheetIndex < 0) || (sheetIndex >= SheetCount))
-            {
-                throw new ArgumentOutOfRangeException("sheetIndex");
-            }
-            return Sheets[sheetIndex].SaveCsvAsync(stream, flags);
-        }
-
-        /// <summary>
-        /// Saves the CSV (comma-separated values) file asynchronously. 
-        /// </summary>
-        /// <param name="sheetIndex">The destination sheet index for saving.</param>
-        /// <param name="stream">Stream to which to save the content.</param>
-        /// <param name="flags">The export flags.</param>
-        /// <param name="encoding">The encoding.</param>
-        /// <returns></returns>
-        public IAsyncAction SaveCSVAsync(int sheetIndex, Stream stream, TextFileSaveFlags flags, Encoding encoding)
-        {
-            if ((sheetIndex < 0) || (sheetIndex >= SheetCount))
-            {
-                throw new ArgumentOutOfRangeException("sheetIndex");
-            }
-            return Sheets[sheetIndex].SaveCsvAsync(stream, flags, encoding);
-        }
-
-        /// <summary>
-        /// Saves GcSpreadSheet to an Excel Compound Document File. 
-        /// </summary>
-        /// <param name="stream">The stream to save to.</param>
-        /// <param name="format">The file format to save to.</param>
-        /// <returns></returns>
-        public IAsyncAction SaveExcelAsync(Stream stream, ExcelFileFormat format)
-        {
-            return SaveExcel(stream, format, ExcelSaveFlags.NoFlagsSet, null);
-        }
-
-        /// <summary>
-        /// Saves GcSpreadSheet to an Excel Compound Document File. 
-        /// </summary>
-        /// <param name="stream">The stream to save to.</param>
-        /// <param name="format">The file format to save to.</param>
-        /// <param name="saveFlags">Options for saving to a file.</param>
-        /// <returns></returns>
-        public IAsyncAction SaveExcelAsync(Stream stream, ExcelFileFormat format, ExcelSaveFlags saveFlags)
-        {
-            return SaveExcel(stream, format, saveFlags, null);
-        }
-
-        /// <summary>
-        /// Saves GcSpreadSheet to an Excel Compound Document File. 
-        /// </summary>
-        /// <param name="stream">The stream to save to.</param>
-        /// <param name="format">The file format to save to.</param>
-        /// <param name="password">The password for the file.</param>
-        /// <returns></returns>
-        public IAsyncAction SaveExcelAsync(Stream stream, ExcelFileFormat format, string password)
-        {
-            return SaveExcel(stream, format, ExcelSaveFlags.NoFlagsSet, password);
-        }
-
-        /// <summary>
-        /// Saves GcSpreadSheet to an Excel Compound Document File. 
-        /// </summary>
-        /// <param name="stream">The stream to save to.</param>
-        /// <param name="format">The file format.</param>
-        /// <param name="saveFlags">Options for saving to a file.</param>
-        /// <param name="password">The file password.</param>
-        /// <returns></returns>
-        public IAsyncAction SaveExcel(Stream stream, ExcelFileFormat format, ExcelSaveFlags saveFlags, string password)
-        {
-            IAsyncAction action;
-            if (stream == null)
-            {
-                throw new ArgumentNullException("stream");
-            }
-            try
-            {
-                action = Workbook.SaveExcelAsync(stream, format, saveFlags);
-            }
-            catch (Exception exception)
-            {
-                while ((exception is TargetInvocationException) && (exception.InnerException != null))
-                {
-                    exception = exception.InnerException;
-                }
-                throw exception;
-            }
-            return action;
-        }
-
-        /// <summary>
-        /// Saves the content of the component to the specified stream asynchronously. 
-        /// </summary>
-        /// <param name="stream">Stream to which to save the data.</param>
-        /// <param name="sheetIndexes">The sheet indexes collection.</param>
-        /// <returns></returns>
-        public IAsyncAction SavePdfAsync(Stream stream, params int[] sheetIndexes)
-        {
-            return SavePdfAsync(stream, null, sheetIndexes);
-        }
-
-        /// <summary>
-        /// Saves the content of the component to the specified stream asynchronously. 
-        /// </summary>
-        /// <param name="stream">Stream to which to save the data.</param>
-        /// <param name="settings">The export settings.</param>
-        /// <param name="sheetIndexes">The sheet indexes.</param>
-        /// <returns></returns>
-        public IAsyncAction SavePdfAsync(Stream stream, PdfExportSettings settings, params int[] sheetIndexes)
-        {
-            return Workbook.SavePdfAsync(stream, settings, sheetIndexes);
-        }
-
-        /// <summary>
-        /// Saves the range of cells in the specified sheet as delimited text with the specified delimiters, to a stream asynchronously. 
-        /// </summary>
-        /// <param name="sheetIndex">The destination sheet index to save to.</param>
-        /// <param name="row">Starting row index.</param>
-        /// <param name="column">Starting column index.</param>
-        /// <param name="rowCount">The number of rows.</param>
-        /// <param name="columnCount">The number of columns.</param>
-        /// <param name="stream">Stream to which to save the text range.</param>
-        /// <param name="flags">The export flags.</param>
-        /// <param name="rowDelimiter">Row delimiter string.</param>
-        /// <param name="columnDelimiter">Column delimiter string.</param>
-        /// <param name="cellDelimiter">Cell delimiter string.</param>
-        /// <returns></returns>
-        public IAsyncAction SaveTextFileRangeAsync(int sheetIndex, int row, int column, int rowCount, int columnCount, Stream stream, TextFileSaveFlags flags, string rowDelimiter, string columnDelimiter, string cellDelimiter)
-        {
-            if ((sheetIndex < 0) || (sheetIndex >= SheetCount))
-            {
-                throw new ArgumentOutOfRangeException("sheetIndex");
-            }
-            return Sheets[sheetIndex].SaveTextFileRangeAsync(row, column, rowCount, columnCount, stream, flags, rowDelimiter, columnDelimiter, cellDelimiter);
-        }
-
-        /// <summary>
-        /// Saves the data on the sheet to the specified XML stream asynchronously. 
-        /// </summary>
-        /// <param name="xmlStream">The XML stream.</param>
-        /// <returns></returns>
-        public IAsyncAction SaveXmlAsync(Stream xmlStream)
-        {
-            return SaveXmlAsync(xmlStream, false);
-        }
-
-        /// <summary>
-        /// Saves the data on the sheet to the specified XML stream asynchronously. 
-        /// </summary>
-        /// <param name="xmlStream">The XML stream.</param>
-        /// <param name="dataOnly">Whether to save data only.</param>
-        /// <returns></returns>
-        public IAsyncAction SaveXmlAsync(Stream xmlStream, bool dataOnly)
-        {
-            return AsyncInfo.Run(delegate (CancellationToken token)
-            {
-                return Task.Factory.StartNew(delegate
-                {
-                    SaveXmlBackGround(xmlStream, dataOnly);
-                });
-            });
         }
 
         /// <summary>
@@ -2802,6 +2649,6 @@ namespace Dt.Base
             string jobName = string.IsNullOrEmpty(p_title) ? Sheets[index].Name : p_title;
             printer.Print(jobName);
         }
-
+        #endregion
     }
 }

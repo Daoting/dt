@@ -780,8 +780,7 @@ namespace Dt.Base
         HashSet<int> _invisibleColumns;
         HashSet<int> _invisibleRows;
         bool _pendinging;
-        Grid _progressGrid;
-        ProgressRing _progressRing;
+        Grid _progressRing;
         Line _rowSplittingTracker;
         int _scrollTo;
         bool _showScrollTip;
@@ -1030,7 +1029,7 @@ namespace Dt.Base
             var style = (Style)e.NewValue;
             excel._columnTrailingFreezeLine.TypeSafeSetStyle(style);
             excel._rowTrailingFreezeLine.TypeSafeSetStyle(style);
-            excel.Invalidate();
+            excel.InvalidateAll();
         }
 
         static void OnTabStripRatioChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -1047,12 +1046,8 @@ namespace Dt.Base
         static void OnTabStripInsertTabChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var excel = (Excel)d;
-            if ((excel._tabStrip != null) && ((bool)e.NewValue != excel._tabStrip.HasInsertTab))
-            {
-                excel._tabStrip.HasInsertTab = (bool)e.NewValue;
-                excel.InvalidateLayout();
-                excel.InvalidateMeasure();
-            }
+            if (excel._tabStrip != null)
+                excel._tabStrip.UpdateInsertNewTab();
         }
 
         static void OnTabStripEditableChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -1071,107 +1066,27 @@ namespace Dt.Base
 
         static void OnInvalidateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ((Excel)d).Invalidate();
+            ((Excel)d).InvalidateAll();
         }
 
-        static void OnDocumentUriChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        static async void OnDocumentUriChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var excel = (Excel)d;
             Uri uri = (Uri)e.NewValue;
             if (uri == null)
                 return;
 
-            Action<Task<StorageFile>> action = null;
-            Action<Task<StorageFile>> action2 = null;
-            bool xmlFile = false;
-            bool excelFile = false;
-            string str = uri.IsAbsoluteUri ? uri.LocalPath : uri.OriginalString;
-            if (!string.IsNullOrEmpty(str))
+            var file = await StorageFile.GetFileFromApplicationUriAsync(uri);
+            using (Stream stream = WindowsRuntimeStreamExtensions.AsStreamForRead(await file.OpenReadAsync()))
             {
-                string extension = System.IO.Path.GetExtension(str);
-                switch (extension)
+                if (file.FileType == ".ssxml" || file.FileType == ".xml")
                 {
-                    case ".xml":
-                    case ".ssxml":
-                        xmlFile = true;
-                        break;
+                    await excel.OpenXml(stream);
                 }
-                if ((extension == ".xls") || (extension == ".xlsx"))
+                else if (file.FileType == ".xlsx" || file.FileType == ".xls")
                 {
-                    excelFile = true;
+                    await excel.OpenExcel(stream);
                 }
-            }
-
-            if (uri.IsAbsoluteUri)
-            {
-                Workbook workbook = excel.Workbook;
-                if (action == null)
-                {
-                    action = delegate (Task<StorageFile> fr)
-                    {
-                        Func<Task<IRandomAccessStreamWithContentType>, Task> func = null;
-                        if ((fr.Result != null) && !fr.IsFaulted)
-                        {
-                            if (func == null)
-                            {
-                                func = async delegate (Task<IRandomAccessStreamWithContentType> r)
-                                {
-                                    if ((r.Result != null) && !r.IsFaulted)
-                                    {
-                                        using (Stream stream = WindowsRuntimeStreamExtensions.AsStreamForRead(r.Result))
-                                        {
-                                            if (xmlFile)
-                                            {
-                                                await excel.OpenXmlAsync(stream);
-                                            }
-                                            if (excelFile)
-                                            {
-                                                await excel.OpenExcelAsync(stream);
-                                            }
-                                        }
-                                    }
-                                };
-                            }
-                            WindowsRuntimeSystemExtensions.AsTask<IRandomAccessStreamWithContentType>(fr.Result.OpenReadAsync()).ContinueWith<Task>(func);
-                        }
-                    };
-                }
-                WindowsRuntimeSystemExtensions.AsTask<StorageFile>(StorageFile.GetFileFromApplicationUriAsync(uri)).ContinueWith(action);
-            }
-            else
-            {
-                if (action2 == null)
-                {
-                    action2 = delegate (Task<StorageFile> fr)
-                    {
-                        Func<Task<IRandomAccessStreamWithContentType>, Task> func = null;
-                        if (fr.Result != null)
-                        {
-                            if (func == null)
-                            {
-                                func = async delegate (Task<IRandomAccessStreamWithContentType> r)
-                                {
-                                    if (r.Result != null)
-                                    {
-                                        using (Stream stream = WindowsRuntimeStreamExtensions.AsStreamForRead(r.Result))
-                                        {
-                                            if (xmlFile)
-                                            {
-                                                await excel.OpenXmlAsync(stream);
-                                            }
-                                            if (excelFile)
-                                            {
-                                                await excel.OpenExcelAsync(stream);
-                                            }
-                                        }
-                                    }
-                                };
-                            }
-                            WindowsRuntimeSystemExtensions.AsTask<IRandomAccessStreamWithContentType>(fr.Result.OpenReadAsync()).ContinueWith<Task>(func);
-                        }
-                    };
-                }
-                WindowsRuntimeSystemExtensions.AsTask<StorageFile>(StorageFile.GetFileFromApplicationUriAsync(uri)).ContinueWith(action2);
             }
         }
 
@@ -1187,7 +1102,7 @@ namespace Dt.Base
             var excel = (Excel)d;
             if ((bool)e.NewValue)
             {
-                excel.Invalidate();
+                excel.InvalidateAll();
             }
             else
             {
@@ -1201,7 +1116,7 @@ namespace Dt.Base
             Style style = (Style)e.NewValue;
             excel._columnFreezeLine.TypeSafeSetStyle(style);
             excel._rowFreezeLine.TypeSafeSetStyle(style);
-            excel.Invalidate();
+            excel.InvalidateAll();
         }
 
         static void OnCanUserUndoChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

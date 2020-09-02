@@ -42,228 +42,6 @@ namespace Dt.Base
     /// </summary>
     public partial class Excel
     {
-        /// <summary>
-        /// Opens an Excel Compound Document File and loads it into GcSpreadSheet. 
-        /// </summary>
-        /// <param name="stream">The file stream.</param>
-        /// <param name="password">The file password.</param>
-        /// <returns></returns>
-        internal IAsyncAction OpenExcel(Stream stream, string password)
-        {
-            return OpenExcel(stream, ExcelOpenFlags.NoFlagsSet, password);
-        }
-
-        /// <summary>
-        /// Opens an Excel Compound Document File and loads it into GcSpreadSheet. 
-        /// </summary>
-        /// <param name="stream">The file stream.</param>
-        /// <param name="openFlags">The flag used to open the file.</param>
-        /// <param name="password">The file password.</param>
-        /// <returns></returns>
-        internal IAsyncAction OpenExcel(Stream stream, ExcelOpenFlags openFlags, string password)
-        {
-            IAsyncAction action2;
-            if (stream == null)
-            {
-                throw new ArgumentNullException("stream");
-            }
-            try
-            {
-                ShowOpeningStatus();
-                action2 = Workbook.OpenExcelAsync(stream, openFlags);
-            }
-            catch (Exception exception)
-            {
-                while ((exception is TargetInvocationException) && (exception.InnerException != null))
-                {
-                    exception = exception.InnerException;
-                }
-                throw exception;
-            }
-            return action2;
-        }
-
-        internal void OpenXmlInternal(Stream xmlStream)
-        {
-            XmlReader reader = null;
-            Workbook.SuspendEvent();
-            try
-            {
-                if (_workbook != null)
-                {
-                    _workbook.Sheets.Clear();
-                    _workbook.Sheets.CollectionChanged -= new NotifyCollectionChangedEventHandler(OnSheetsCollectionChanged);
-                    _workbook.PropertyChanged -= new PropertyChangedEventHandler(OnWorkbookPropertyChanged);
-                    _workbook = null;
-                }
-                using (reader = XmlReader.Create(xmlStream))
-                {
-                    Serializer.InitReader(reader);
-                    while (reader.Read())
-                    {
-                        string str;
-                        ReadXmlInternal(reader);
-                        if ((reader.NodeType == ((XmlNodeType)((int)XmlNodeType.Element))) && ((str = reader.Name) != null))
-                        {
-                            if (str == "Data")
-                            {
-                                XmlReader reader2 = Serializer.ExtractNode(reader);
-                                Serializer.InitReader(reader2);
-                                reader2.Read();
-                                _workbook = new Workbook();
-                                _workbook.OpenXml(reader);
-                            }
-                            else if (str == "View")
-                            {
-                                goto Label_00D7;
-                            }
-                        }
-                        continue;
-                    Label_00D7:
-                        Serializer.DeserializeSerializableObject(this, reader);
-                    }
-                }
-                if (_workbook != null)
-                {
-                    foreach (Worksheet worksheet in _workbook.Sheets)
-                    {
-                        AttachSheet(worksheet);
-                    }
-                    _workbook.Sheets.CollectionChanged += new NotifyCollectionChangedEventHandler(OnSheetsCollectionChanged);
-                    _workbook.PropertyChanged += new PropertyChangedEventHandler(OnWorkbookPropertyChanged);
-                }
-            }
-            catch (Exception exception)
-            {
-                while ((exception is TargetInvocationException) && (exception.InnerException != null))
-                {
-                    exception = exception.InnerException;
-                }
-                throw exception;
-            }
-            finally
-            {
-                if (reader != null)
-                {
-                    reader.Close();
-                }
-                Workbook.ResumeEvent();
-            }
-            Invalidate();
-        }
-
-        void OpenXmlOnBackground(Stream xmlStream)
-        {
-            XmlReader reader = null;
-            Workbook.SuspendEvent();
-            try
-            {
-                if (_workbook != null)
-                {
-                    _workbook.Reset();
-                    _workbook.Sheets.CollectionChanged -= new NotifyCollectionChangedEventHandler(OnSheetsCollectionChanged);
-                    _workbook.PropertyChanged -= new PropertyChangedEventHandler(OnWorkbookPropertyChanged);
-                }
-                ShowOpeningStatus();
-                using (reader = XmlReader.Create(xmlStream))
-                {
-                    Serializer.InitReader(reader);
-                    while (reader.Read())
-                    {
-                        string str;
-                        ReadXmlInternal(reader);
-                        if ((reader.NodeType == ((XmlNodeType)((int)XmlNodeType.Element))) && ((str = reader.Name) != null))
-                        {
-                            if (str == "Data")
-                            {
-                                XmlReader reader2 = Serializer.ExtractNode(reader);
-                                Serializer.InitReader(reader2);
-                                reader2.Read();
-                                _workbook = new Workbook();
-                                _workbook.SuspendEvent();
-                                _workbook.OpenXml(reader);
-                            }
-                            else if (str == "View")
-                            {
-                                goto Label_0112;
-                            }
-                        }
-                        continue;
-                    Label_0112:
-                        Serializer.DeserializeSerializableObject(this, reader);
-                    }
-                }
-                if (_workbook != null)
-                {
-                    foreach (Worksheet worksheet in _workbook.Sheets)
-                    {
-                        AttachSheet(worksheet);
-                    }
-                    _workbook.Sheets.CollectionChanged += new NotifyCollectionChangedEventHandler(OnSheetsCollectionChanged);
-                    _workbook.PropertyChanged += new PropertyChangedEventHandler(OnWorkbookPropertyChanged);
-                }
-            }
-            catch (Exception exception)
-            {
-                while ((exception is TargetInvocationException) && (exception.InnerException != null))
-                {
-                    exception = exception.InnerException;
-                }
-                throw exception;
-            }
-            finally
-            {
-                if (reader != null)
-                {
-                    reader.Close();
-                }
-                Workbook.ResumeEvent();
-            }
-            Invalidate();
-            HideOpeningStatus();
-        }
-
-        void SaveXmlBackGround(Stream xmlStream, bool dataOnly)
-        {
-            XmlWriter writer = null;
-            try
-            {
-                writer = XmlWriter.Create(xmlStream);
-                if (writer != null)
-                {
-                    Serializer.WriteStartObj("Spread", writer);
-                    WriteXmlInternal(writer);
-                    Serializer.WriteStartObj("View", writer);
-                    Serializer.SerializeObj(this, null, writer);
-                    Serializer.WriteEndObj(writer);
-                    Serializer.WriteStartObj("Data", writer);
-                    Workbook.SaveXml(writer, dataOnly, false);
-                    Serializer.WriteEndObj(writer);
-                    Serializer.WriteEndObj(writer);
-                }
-            }
-            catch (Exception exception)
-            {
-                while ((exception is TargetInvocationException) && (exception.InnerException != null))
-                {
-                    exception = exception.InnerException;
-                }
-                throw exception;
-            }
-            finally
-            {
-                if (writer != null)
-                {
-                    writer.Close();
-                }
-            }
-        }
-
-        internal void SaveXmlInternal(Stream xmlStream)
-        {
-            SaveXmlBackGround(xmlStream, false);
-        }
-
         internal void SetActiveViewport(int sheetIndex, int rowViewportIndex, int columnViewportIndex)
         {
             if ((sheetIndex < 0) || (sheetIndex >= SheetCount))
@@ -6786,13 +6564,6 @@ namespace Dt.Base
             }
         }
 
-        internal void Reset()
-        {
-            InitLayout();
-
-            // 初始化其他属性
-        }
-
         void ResetDragFill()
         {
             ResetMouseCursor();
@@ -9205,24 +8976,6 @@ namespace Dt.Base
             return num;
         }
 
-        internal void HideOpeningProgressRing()
-        {
-            if (_progressRing != null)
-            {
-                _progressRing.Visibility = (Visibility)1;
-                _progressRing.IsActive = false;
-            }
-        }
-
-        internal void HideOpeningStatus()
-        {
-            HideOpeningProgressRing();
-            if (_tabStrip != null)
-            {
-                _tabStrip.Visibility = 0;
-            }
-        }
-
         void HorizontalScrollbar_Scroll(object sender, ScrollEventArgs e)
         {
             if ((_touchToolbarPopup != null) && _touchToolbarPopup.IsOpen)
@@ -9342,21 +9095,6 @@ namespace Dt.Base
                 }
                 _touchStartLeftColumn = GetViewportLeftColumn(_touchStartHitTestInfo.ColumnViewportIndex);
                 _touchStartTopRow = GetViewportTopRow(_touchStartHitTestInfo.RowViewportIndex);
-            }
-        }
-
-        internal void InvalidateSheetLayout()
-        {
-            if (!IsSuspendInvalidate())
-            {
-                Children.Clear();
-                _cornerPanel = null;
-                _rowHeaders = null;
-                _colHeaders = null;
-                _cellsPanels = null;
-                InvalidateLayout();
-                InvalidateMeasure();
-                InvalidateArrange();
             }
         }
 
@@ -9499,37 +9237,6 @@ namespace Dt.Base
             CloseTooltip();
         }
 
-        void OnTabStripActiveTabChanged(object sender, EventArgs e)
-        {
-            TabStrip strip = sender as TabStrip;
-            int sheetIndex = -1;
-            if ((strip != null) && (strip.ActiveTab != null))
-            {
-                sheetIndex = strip.ActiveTab.SheetIndex;
-            }
-            if ((sheetIndex >= 0) && (sheetIndex < Sheets.Count))
-            {
-                StopCellEditing(false);
-                if (sheetIndex != ActiveSheetIndex)
-                {
-                    Workbook.ActiveSheetIndex = sheetIndex;
-                    RaiseActiveSheetIndexChanged();
-                    _currentActiveRowIndex = ActiveSheet.ActiveRowIndex;
-                    _currentActiveColumnIndex = ActiveSheet.ActiveColumnIndex;
-                    Navigation.UpdateStartPosition(_currentActiveRowIndex, _currentActiveColumnIndex);
-                    Invalidate();
-                }
-            }
-        }
-
-        void OnTabStripActiveTabChanging(object sender, EventArgs e)
-        {
-            if ((sender is TabStrip) && (e is CancelEventArgs))
-            {
-                ((CancelEventArgs)e).Cancel = RaiseActiveSheetIndexChanging();
-            }
-        }
-
         void OnTabStripNewTabNeeded(object sender, EventArgs e)
         {
             StopCellEditing(false);
@@ -9548,7 +9255,36 @@ namespace Dt.Base
             _currentActiveColumnIndex = item.ActiveColumnIndex;
             Navigation.UpdateStartPosition(_currentActiveRowIndex, _currentActiveColumnIndex);
             (sender as TabStrip).NewTab(Sheets.Count - 1);
-            InvalidateSheetLayout();
+        }
+
+        void OnTabStripActiveTabChanged(object sender, EventArgs e)
+        {
+            TabStrip strip = sender as TabStrip;
+            int sheetIndex = -1;
+            if ((strip != null) && (strip.ActiveTab != null))
+            {
+                sheetIndex = strip.ActiveTab.SheetIndex;
+            }
+            if ((sheetIndex >= 0) && (sheetIndex < Sheets.Count))
+            {
+                StopCellEditing(false);
+                if (sheetIndex != ActiveSheetIndex)
+                {
+                    Workbook.ActiveSheetIndex = sheetIndex;
+                    RaiseActiveSheetIndexChanged();
+                    _currentActiveRowIndex = ActiveSheet.ActiveRowIndex;
+                    _currentActiveColumnIndex = ActiveSheet.ActiveColumnIndex;
+                    Navigation.UpdateStartPosition(_currentActiveRowIndex, _currentActiveColumnIndex);
+                }
+            }
+        }
+
+        void OnTabStripActiveTabChanging(object sender, EventArgs e)
+        {
+            if ((sender is TabStrip) && (e is CancelEventArgs))
+            {
+                ((CancelEventArgs)e).Cancel = RaiseActiveSheetIndexChanging();
+            }
         }
 
         void OnVerticalScrollbarPointerExited(object sender, PointerRoutedEventArgs e)
@@ -9860,24 +9596,6 @@ namespace Dt.Base
                     EditorConnector.RowIndex = ActiveSheet.ActiveRowIndex;
                     EditorConnector.ColumnIndex = ActiveSheet.ActiveColumnIndex;
                 }
-            }
-        }
-
-        internal void ShowOpeningProgressRing()
-        {
-            if (_progressRing != null)
-            {
-                _progressRing.Visibility = 0;
-                _progressRing.IsActive = true;
-            }
-        }
-
-        internal void ShowOpeningStatus()
-        {
-            ShowOpeningProgressRing();
-            if (_tabStrip != null)
-            {
-                _tabStrip.Visibility = (Visibility)1;
             }
         }
 

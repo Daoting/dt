@@ -161,9 +161,9 @@ namespace Dt.Cells.UI
                 {
                     _excel.ShowDecoration = false;
                     _cachedStream = new MemoryStream();
-                    _excel.SaveXmlInternal(_cachedStream);
+                    _excel.SaveXmlBackground(_cachedStream);
                     _cachedStream.Seek(0L, SeekOrigin.Begin);
-                    _excel.OpenXmlInternal(_cachedStream);
+                    _excel.OpenXmlOnBackground(_cachedStream);
                 }
 
                 Memento memento = new Memento();
@@ -181,7 +181,7 @@ namespace Dt.Cells.UI
                         {
                             _excel.ShowDecoration = true;
                             _cachedStream.Seek(0L, SeekOrigin.Begin);
-                            _excel.OpenXmlInternal(_cachedStream);
+                            _excel.OpenXmlOnBackground(_cachedStream);
                         }
 
                         _cachedStream.Close();

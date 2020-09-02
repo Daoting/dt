@@ -12,8 +12,10 @@ using Dt.Cells.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -37,18 +39,6 @@ namespace Dt.Base
             _dragToRow = -2;
             _cachedResizerGipper = new Dictionary<string, BitmapImage>();
             _cachedToolbarImageSources = new Dictionary<string, ImageSource>();
-
-            _progressGrid = new Grid();
-            _progressRing = new ProgressRing();
-            if (!_progressGrid.Children.Contains(_progressRing))
-            {
-                _progressRing.Foreground = new SolidColorBrush(Colors.Black);
-                _progressRing.IsActive = true;
-                _progressRing.Visibility = (Visibility)1;
-                _progressRing.Width = 200.0;
-                _progressRing.Height = 200.0;
-                _progressGrid.Children.Add(_progressRing);
-            }
 
             _showScrollTip = false;
             FormulaSelectionGripperContainerPanel panel = new FormulaSelectionGripperContainerPanel
@@ -78,7 +68,6 @@ namespace Dt.Base
             _autoFillIndicatorContainer = new Border();
             _autoFillIndicatorContainer.Width = 16.0;
             _autoFillIndicatorContainer.Height = 16.0;
-
 
             _cachedColumnResizerGripperImage = new Image { Source = GetResizerBitmapImage(false) };
             _resizerGripperContainer.Child = _cachedColumnResizerGripperImage;
@@ -522,11 +511,6 @@ namespace Dt.Base
                 if (_tabStrip == null)
                 {
                     _tabStrip = new TabStrip(this);
-                    if (TabStripVisibility == Visibility.Collapsed)
-                        _tabStrip.Visibility = Visibility.Collapsed;
-                    _tabStrip.HasInsertTab = TabStripInsertTab;
-                    _tabStrip.Init(Sheets, ActiveSheetIndex);
-
                     _tabStrip.ActiveTabChanging += OnTabStripActiveTabChanging;
                     _tabStrip.ActiveTabChanged += OnTabStripActiveTabChanged;
                     _tabStrip.NewTabNeeded += OnTabStripNewTabNeeded;
@@ -569,13 +553,6 @@ namespace Dt.Base
             }
             CursorsContainer.Measure(availableSize);
 
-            // 进度环
-            if (!Children.Contains(_progressGrid))
-            {
-                Children.Add(_progressGrid);
-            }
-            _progressGrid.Measure(availableSize);
-
             // 触摸时调整选择范围的圈圈
             if (!Children.Contains(_topLeftGripper))
             {
@@ -613,6 +590,8 @@ namespace Dt.Base
             }
             _formulaSelectionGripperPanel.Measure(availableSize);
 
+            // 进度环
+            _progressRing?.Measure(availableSize);
             return _availableSize;
         }
 
@@ -1008,7 +987,8 @@ namespace Dt.Base
                 _formulaSelectionGripperPanel.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
             }
             UpdateTouchSelectionGripper();
-            _progressGrid.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
+
+            _progressRing?.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
             return finalSize;
         }
 
@@ -1478,6 +1458,81 @@ namespace Dt.Base
             }
             _availableSize = new Size(avWidth, avHeight);
             return layout;
+        }
+
+        async Task OpenStream(DispatchedHandler p_handler)
+        {
+            try
+            {
+                ShowProgressRing();
+                // 显示进度圈，不然界面混乱
+                await Task.Delay(100);
+
+                InitLayout();
+                ClearValue(TabStripInsertTabProperty);
+                ClearValue(TabStripVisibilityProperty);
+                ClearValue(TabStripEditableProperty);
+                ClearValue(CanTouchMultiSelectProperty);
+                ClearValue(CanUserDragDropProperty);
+                ClearValue(CanUserDragFillProperty);
+                ClearValue(CanUserEditFormulaProperty);
+                ClearValue(CanUserUndoProperty);
+                ClearValue(CanUserZoomProperty);
+                ClearValue(FreezeLineStyleProperty);
+                ClearValue(HighlightInvalidDataProperty);
+                ClearValue(ColumnSplitBoxAlignmentProperty);
+                ClearValue(ColumnSplitBoxPolicyProperty);
+                ClearValue(HorizontalScrollBarHeightProperty);
+                ClearValue(DefaultAutoFillTypeProperty);
+                ClearValue(HorizontalScrollBarStyleProperty);
+                ClearValue(RangeGroupBackgroundProperty);
+                ClearValue(RangeGroupBorderBrushProperty);
+                ClearValue(RangeGroupLineStrokeProperty);
+                ClearValue(ShowColumnRangeGroupProperty);
+                ClearValue(ShowFreezeLineProperty);
+                ClearValue(ShowRowRangeGroupProperty);
+                ClearValue(VerticalScrollBarStyleProperty);
+                ClearValue(VerticalScrollBarWidthProperty);
+                ClearValue(HorizontalScrollableProperty);
+                ClearValue(VerticalScrollableProperty);
+                ClearValue(TrailingFreezeLineStyleProperty);
+                ClearValue(ShowDecorationProperty);
+
+                if (_tabStrip != null)
+                {
+                    _tabStrip.ActiveTabChanging -= OnTabStripActiveTabChanging;
+                    _tabStrip.ActiveTabChanged -= OnTabStripActiveTabChanged;
+                    _tabStrip.NewTabNeeded -= OnTabStripNewTabNeeded;
+                    _tabStrip = null;
+                }
+
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, p_handler);
+            }
+            finally
+            {
+                HideProgressRing();
+            }
+        }
+
+        void ShowProgressRing()
+        {
+            HideProgressRing();
+            _progressRing = new Grid { Background = BrushRes.浅灰背景 };
+            var ring = new ProgressRing
+            {
+                Foreground = BrushRes.主题蓝色,
+                IsActive = true,
+                Width = 100.0,
+                Height = 100.0,
+            };
+            _progressRing.Children.Add(ring);
+            Children.Add(_progressRing);
+        }
+
+        void HideProgressRing()
+        {
+            if (_progressRing != null)
+                Children.Remove(_progressRing);
         }
     }
 }

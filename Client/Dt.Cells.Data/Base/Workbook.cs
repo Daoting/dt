@@ -975,28 +975,18 @@ namespace Dt.Cells.Data
             this.RaisePropertyChanged("Sheets");
         }
 
-        internal IAsyncAction OpenExcel(Stream stream, ExcelOpenFlags openFlags, string password)
+        public IAsyncAction OpenExcelAsync(Stream stream, ExcelOpenFlags openFlags = ExcelOpenFlags.NoFlagsSet)
         {
-            return AsyncInfo.Run(delegate(CancellationToken token)
+            return AsyncInfo.Run(delegate (CancellationToken token)
             {
                 return Task.Factory.StartNew(delegate
                 {
-                    this.OpenExcelOnBackground(stream, openFlags);
+                    OpenExcel(stream, openFlags);
                 });
             });
         }
 
-        public IAsyncAction OpenExcelAsync(Stream stream)
-        {
-            return this.OpenExcel(stream, ExcelOpenFlags.NoFlagsSet, null);
-        }
-
-        public IAsyncAction OpenExcelAsync(Stream stream, ExcelOpenFlags openFlags)
-        {
-            return this.OpenExcel(stream, openFlags, null);
-        }
-
-        void OpenExcelOnBackground(Stream stream, ExcelOpenFlags openFlags)
+        public void OpenExcel(Stream stream, ExcelOpenFlags openFlags)
         {
             ExtendedNumberFormatHelper.Reset();
             using (IEnumerator<Worksheet> enumerator = this.Sheets.GetEnumerator())
@@ -1007,7 +997,7 @@ namespace Dt.Cells.Data
                 }
             }
             Reset();
-            this.SuspendEvent();
+            SuspendEvent();
             ExcelReader reader = new ExcelReader(this, openFlags);
             try
             {
@@ -1020,8 +1010,7 @@ namespace Dt.Cells.Data
                 {
                     stream.Seek(0L, (SeekOrigin)SeekOrigin.Begin);
                 }
-                reader = null;
-                this.ResumeEvent();
+                ResumeEvent();
                 RaisePropertyChanged("[OpenExcel]");
             }
         }
@@ -1336,7 +1325,7 @@ namespace Dt.Cells.Data
             }
         }
 
-        internal IAsyncAction SaveExcel(Stream stream, ExcelFileFormat workbookType, ExcelSaveFlags saveFlags, string password = null)
+        public IAsyncAction SaveExcelAsync(Stream stream, ExcelFileFormat workbookType, ExcelSaveFlags saveFlags)
         {
             if ((this.Sheets == null) || (this.Sheets.Count == 0))
             {
@@ -1346,49 +1335,34 @@ namespace Dt.Cells.Data
             {
                 return Task.Factory.StartNew(delegate
                 {
-                    this.SaveExcelOnBackground(stream, workbookType, saveFlags);
+                    this.SaveExcel(stream, workbookType, saveFlags);
                 });
             });
         }
 
-        public IAsyncAction SaveExcelAsync(Stream stream, ExcelFileFormat workbookType, ExcelSaveFlags saveFlags)
-        {
-            return this.SaveExcel(stream, workbookType, saveFlags, null);
-        }
-
-        void SaveExcelOnBackground(Stream stream, ExcelFileFormat workbookType, ExcelSaveFlags saveFlags)
+        public void SaveExcel(Stream stream, ExcelFileFormat workbookType, ExcelSaveFlags saveFlags)
         {
             ExcelWriter writer = new ExcelWriter(this, saveFlags);
             this.ExcelOperator = new ExcelOperator(null, writer, null);
             this.ExcelOperator.Save(stream, (ExcelFileType)workbookType, null);
         }
 
-        public IAsyncAction SavePdfAsync(Stream stream, params int[] sheetIndexs)
-        {
-            return this.SavePdfAsync(stream, null, sheetIndexs);
-        }
-
-        public IAsyncAction SavePdfAsync(Stream stream, PdfExportSettings settings, params int[] sheetIndexs)
+        public IAsyncAction SavePdfAsync(Stream stream, int[] sheetIndexs, PdfExportSettings settings)
         {
             return AsyncInfo.Run(delegate(CancellationToken token)
             {
                 return Task.Factory.StartNew(delegate
                 {
-                    this.SavePdfBackGround(stream, settings, sheetIndexs);
+                    SavePdf(stream, sheetIndexs, settings);
                 });
             });
         }
 
-        void SavePdfBackGround(Stream stream, PdfExportSettings settings, params int[] sheetIndexs)
+        public void SavePdf(Stream stream, int[] sheetIndexs, PdfExportSettings settings)
         {
-            if (stream == null)
-            {
-                throw new ArgumentNullException("stream");
-            }
-            if (!stream.CanWrite)
-            {
+            if (stream == null || !stream.CanWrite)
                 throw new ArgumentException();
-            }
+
             if (this.Sheets.Count > 0)
             {
                 List<int> list = new List<int>();

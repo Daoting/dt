@@ -289,7 +289,7 @@ namespace Dt.Sample
                     fileFormat = ExcelFileFormat.XLSX;
                 else
                     fileFormat = ExcelFileFormat.XLS;
-                await _excel.SaveExcelAsync(stream, fileFormat, GetSaveFlag());
+                await _excel.SaveExcel(stream, fileFormat, GetSaveFlag());
                 stream.Dispose();
                 AtKit.Msg("导出成功！");
             }
@@ -312,7 +312,7 @@ namespace Dt.Sample
             if (storageFile != null)
             {
                 var stream = await storageFile.OpenStreamForWriteAsync();
-                await _excel.SavePdfAsync(stream);
+                await _excel.SavePdf(stream);
                 stream.Dispose();
                 AtKit.Msg("导出成功！");
             }
@@ -327,7 +327,7 @@ namespace Dt.Sample
             if (storageFile != null)
             {
                 var stream = await storageFile.OpenStreamForWriteAsync();
-                await _excel.SaveCSVAsync(_excel.ActiveSheetIndex, stream, TextFileSaveFlags.AsViewed);
+                await _excel.SaveCSV(_excel.ActiveSheetIndex, stream, TextFileSaveFlags.AsViewed);
                 stream.Dispose();
                 AtKit.Msg("导出成功！");
             }

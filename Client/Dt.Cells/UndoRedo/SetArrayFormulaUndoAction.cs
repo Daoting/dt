@@ -168,7 +168,7 @@ namespace Dt.Cells.UndoRedo
                 finally
                 {
                     excel.StopCellEditing(true);
-                    excel.Invalidate();
+                    excel.InvalidateAll();
                 }
             }
         }

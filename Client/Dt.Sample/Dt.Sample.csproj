@@ -7,16 +7,31 @@
   <Import Project="..\Common\dtc.props" />
 
   <ItemGroup>
-    <Content Include="Resource\Excel\1040.ssxml" />
-    <Content Include="Resource\Excel\Car repair tracker.ssxml" />
-    <Content Include="Resource\Excel\Expense trends budget.ssxml" />
-    <Content Include="Resource\Excel\MonthProfit.ssxml" />
-    <Content Include="Resource\Excel\StudentCalendar.ssxml" />
-    <Content Include="Resource\Excel\Wedding budget.ssxml" />
+    <None Remove="Resource\Excel\1040.xlsx" />
+    <None Remove="Resource\Excel\CarRepair.xlsx" />
+    <None Remove="Resource\Excel\Expense.xlsx" />
+    <None Remove="Resource\Excel\MonthProfit.xlsx" />
+    <None Remove="Resource\Excel\StudentCalendar.xlsx" />
+    <None Remove="Resource\Excel\Wedding.xlsx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resource\Excel\1040.ssxml" />
+    <EmbeddedResource Include="Resource\Excel\CarRepair.ssxml" />
+    <EmbeddedResource Include="Resource\Excel\CarRepair.xlsx" />
+    <EmbeddedResource Include="Resource\Excel\Expense.ssxml" />
+    <EmbeddedResource Include="Resource\Excel\1040.xlsx" />
+    <EmbeddedResource Include="Resource\Excel\Expense.xlsx" />
+    <EmbeddedResource Include="Resource\Excel\MonthProfit.ssxml" />
+    <EmbeddedResource Include="Resource\Excel\StudentCalendar.ssxml" />
+    <EmbeddedResource Include="Resource\Excel\StudentCalendar.xlsx" />
+    <EmbeddedResource Include="Resource\Excel\Wedding.ssxml" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Resource\browsers.csv" />
+    <EmbeddedResource Include="Resource\Excel\MonthProfit.xlsx" />
+    <EmbeddedResource Include="Resource\Excel\Wedding.xlsx" />
     <EmbeddedResource Include="Resource\Logo.png" />
     <EmbeddedResource Include="Resource\健康档案50.json" />
     <EmbeddedResource Include="Resource\健康档案200.json" />

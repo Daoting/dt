@@ -1654,45 +1654,50 @@ namespace Dt.Cells.Data
             for (int i = 1; i <= range.ColumnCount; i++)
             {
                 ExcelTableColumn column = new ExcelTableColumn();
-                SheetTable.TableColumn column2 = table.GetColumn(i - 1);
                 column.Id = i;
                 column.Name = table.GetColumnName(i - 1);
-                string totalsRowCustomFunction = null;
-                if (!string.IsNullOrWhiteSpace(column2.TotalsRowCustomFunction))
+
+                SheetTable.TableColumn column2 = table.GetColumn(i - 1);
+                if (column2 != null)
                 {
-                    totalsRowCustomFunction = column2.TotalsRowCustomFunction;
-                }
-                else if (!string.IsNullOrWhiteSpace(column2.Formula))
-                {
-                    totalsRowCustomFunction = column2.Formula;
-                }
-                if (!string.IsNullOrWhiteSpace(totalsRowCustomFunction))
-                {
-                    if (totalsRowCustomFunction.StartsWith("{") && totalsRowCustomFunction.EndsWith("}"))
+                    string totalsRowCustomFunction = null;
+                    if (!string.IsNullOrWhiteSpace(column2.TotalsRowCustomFunction))
                     {
-                        totalsRowCustomFunction = totalsRowCustomFunction.Substring(1, totalsRowCustomFunction.Length - 2);
-                        column.TotalsRowFunctionIsArrayFormula = true;
+                        totalsRowCustomFunction = column2.TotalsRowCustomFunction;
                     }
-                    column.TotalsRowFunction = this.GetExcelTableTotalsRowFunction(totalsRowCustomFunction);
-                    if (column.TotalsRowFunction == ExcelTableTotalsRowFunction.Custom)
+                    else if (!string.IsNullOrWhiteSpace(column2.Formula))
                     {
-                        column.TotalsRowCustomFunction = totalsRowCustomFunction;
+                        totalsRowCustomFunction = column2.Formula;
                     }
-                }
-                column.TotalsRowFunctionIsArrayFormula = column2.TotalsRowFunctionIsArrayFormula;
-                if (!string.IsNullOrWhiteSpace(column2.TotalsRowFunction))
-                {
-                    ExcelTableTotalsRowFunction none = ExcelTableTotalsRowFunction.None;
-                    Enum.TryParse<ExcelTableTotalsRowFunction>(column2.TotalsRowFunction, true, out none);
-                    column.TotalsRowFunction = none;
-                    if (column.TotalsRowFunction == ExcelTableTotalsRowFunction.Custom)
+                    if (!string.IsNullOrWhiteSpace(totalsRowCustomFunction))
                     {
-                        column.TotalsRowCustomFunction = totalsRowCustomFunction;
+                        if (totalsRowCustomFunction.StartsWith("{") && totalsRowCustomFunction.EndsWith("}"))
+                        {
+                            totalsRowCustomFunction = totalsRowCustomFunction.Substring(1, totalsRowCustomFunction.Length - 2);
+                            column.TotalsRowFunctionIsArrayFormula = true;
+                        }
+                        column.TotalsRowFunction = this.GetExcelTableTotalsRowFunction(totalsRowCustomFunction);
+                        if (column.TotalsRowFunction == ExcelTableTotalsRowFunction.Custom)
+                        {
+                            column.TotalsRowCustomFunction = totalsRowCustomFunction;
+                        }
                     }
+                    column.TotalsRowFunctionIsArrayFormula = column2.TotalsRowFunctionIsArrayFormula;
+                    if (!string.IsNullOrWhiteSpace(column2.TotalsRowFunction))
+                    {
+                        ExcelTableTotalsRowFunction none = ExcelTableTotalsRowFunction.None;
+                        Enum.TryParse<ExcelTableTotalsRowFunction>(column2.TotalsRowFunction, true, out none);
+                        column.TotalsRowFunction = none;
+                        if (column.TotalsRowFunction == ExcelTableTotalsRowFunction.Custom)
+                        {
+                            column.TotalsRowCustomFunction = totalsRowCustomFunction;
+                        }
+                    }
+                    column.TotalsRowLabel = column2.TotalsRowLabel;
+                    column.CalculatedColumnFormula = column2.CalculatedColumnFormula;
+                    column.CalculatedColumnFormulaIsArrayFormula = column2.CalculatedColumnFormulaIsArrayFormula;
                 }
-                column.TotalsRowLabel = column2.TotalsRowLabel;
-                column.CalculatedColumnFormula = column2.CalculatedColumnFormula;
-                column.CalculatedColumnFormulaIsArrayFormula = column2.CalculatedColumnFormulaIsArrayFormula;
+                
                 table2.Columns.Add(column);
             }
             ExcelTableStyleInfo info = new ExcelTableStyleInfo

@@ -217,7 +217,9 @@ namespace Dt.Cells.Data
         {
             if (((this.columns != null) && (tableColumnIndex >= 0)) && (tableColumnIndex < this.columns.Length))
             {
-                return this.columns[tableColumnIndex].Name;
+                var col = columns[tableColumnIndex];
+                if (col != null)
+                    return col.Name;
             }
             return string.Empty;
         }
@@ -230,7 +232,7 @@ namespace Dt.Cells.Data
             }
             if ((column < 0) || (column > (this.Sheet.ColumnCount - 1)))
             {
-                throw new ArgumentOutOfRangeException(string.Format(ResourceStrings.TableColumnDestinationOutOfRange, (object[]) new object[] { ((int) column) }));
+                throw new ArgumentOutOfRangeException(string.Format(ResourceStrings.TableColumnDestinationOutOfRange, (object[])new object[] { ((int)column) }));
             }
             if (column < (this.column + this.columnCount))
             {
@@ -250,7 +252,7 @@ namespace Dt.Cells.Data
                 this.UpdateHeader(0);
                 if (this.rowfilter != null)
                 {
-                    ((IRangeSupport) this.rowfilter).AddColumns(column, count);
+                    ((IRangeSupport)this.rowfilter).AddColumns(column, count);
                 }
             }
         }
@@ -263,7 +265,7 @@ namespace Dt.Cells.Data
             }
             if ((row < 0) || (row >= this.Sheet.RowCount))
             {
-                throw new ArgumentOutOfRangeException(string.Format(ResourceStrings.TableRowDestinationOutOfRangeError, (object[]) new object[] { ((int) row) }));
+                throw new ArgumentOutOfRangeException(string.Format(ResourceStrings.TableRowDestinationOutOfRangeError, (object[])new object[] { ((int)row) }));
             }
             if (row < (this.row + this.rowCount))
             {
@@ -282,7 +284,7 @@ namespace Dt.Cells.Data
                 this.footerRowIndex = this.CalcFooterIndex();
                 if (this.rowfilter != null)
                 {
-                    ((IRangeSupport) this.rowfilter).AddRows(row, count);
+                    ((IRangeSupport)this.rowfilter).AddRows(row, count);
                 }
             }
         }
@@ -336,7 +338,7 @@ namespace Dt.Cells.Data
             }
             if (this.rowfilter != null)
             {
-                ((IRangeSupport) this.rowfilter).Clear(row, column, rowCount, columnCount);
+                ((IRangeSupport)this.rowfilter).Clear(row, column, rowCount, columnCount);
             }
         }
 
@@ -376,7 +378,7 @@ namespace Dt.Cells.Data
             }
             if (this.rowfilter != null)
             {
-                ((IRangeSupport) this.rowfilter).Copy(fromRow, fromColumn, toRow, toColumn, rowCount, columnCount);
+                ((IRangeSupport)this.rowfilter).Copy(fromRow, fromColumn, toRow, toColumn, rowCount, columnCount);
             }
         }
 
@@ -405,7 +407,7 @@ namespace Dt.Cells.Data
                         {
                             strArray[i] = this.GetColumnName(i + num9);
                         }
-                        ((IRangeSupport) this).Clear(row, column, num3, num4);
+                        ((IRangeSupport)this).Clear(row, column, num3, num4);
                         num8 = range2.Row - row;
                         num9 = range2.Column - column;
                         for (int j = 0; j < num7; j++)
@@ -417,7 +419,7 @@ namespace Dt.Cells.Data
             }
             if (this.rowfilter != null)
             {
-                ((IRangeSupport) this.rowfilter).Move(fromRow, fromColumn, toRow, toColumn, rowCount, columnCount);
+                ((IRangeSupport)this.rowfilter).Move(fromRow, fromColumn, toRow, toColumn, rowCount, columnCount);
             }
         }
 
@@ -429,7 +431,7 @@ namespace Dt.Cells.Data
             }
             if (column < 0)
             {
-                throw new ArgumentOutOfRangeException(string.Format(ResourceStrings.TableColumnDestinationOutOfRange, (object[]) new object[] { ((int) column) }));
+                throw new ArgumentOutOfRangeException(string.Format(ResourceStrings.TableColumnDestinationOutOfRange, (object[])new object[] { ((int)column) }));
             }
             if (column < (this.column + this.columnCount))
             {
@@ -458,7 +460,7 @@ namespace Dt.Cells.Data
                 this.UpdateHeader(0);
                 if (this.rowfilter != null)
                 {
-                    ((IRangeSupport) this.rowfilter).RemoveColumns(column, count);
+                    ((IRangeSupport)this.rowfilter).RemoveColumns(column, count);
                 }
             }
         }
@@ -471,7 +473,7 @@ namespace Dt.Cells.Data
             }
             if (row < 0)
             {
-                throw new ArgumentOutOfRangeException(string.Format(ResourceStrings.TableRowDestinationOutOfRangeError, (object[]) new object[] { ((int) row) }));
+                throw new ArgumentOutOfRangeException(string.Format(ResourceStrings.TableRowDestinationOutOfRangeError, (object[])new object[] { ((int)row) }));
             }
             if (row < (this.row + this.rowCount))
             {
@@ -496,7 +498,7 @@ namespace Dt.Cells.Data
                 }
                 if (this.rowfilter != null)
                 {
-                    ((IRangeSupport) this.rowfilter).RemoveRows(row, count);
+                    ((IRangeSupport)this.rowfilter).RemoveRows(row, count);
                 }
             }
         }
@@ -505,7 +507,7 @@ namespace Dt.Cells.Data
         {
             if (this.rowfilter != null)
             {
-                ((IRangeSupport) this.rowfilter).Swap(fromRow, fromColumn, toRow, toColumn, rowCount, columnCount);
+                ((IRangeSupport)this.rowfilter).Swap(fromRow, fromColumn, toRow, toColumn, rowCount, columnCount);
             }
         }
 
@@ -802,11 +804,11 @@ namespace Dt.Cells.Data
             }
             if (rowCount < num)
             {
-                throw new ArgumentOutOfRangeException("row", string.Format(ResourceStrings.TableResizeOutOfRangeError, (object[]) new object[] { "row" }));
+                throw new ArgumentOutOfRangeException("row", string.Format(ResourceStrings.TableResizeOutOfRangeError, (object[])new object[] { "row" }));
             }
             if (columnCount < 1)
             {
-                throw new ArgumentOutOfRangeException("column", string.Format(ResourceStrings.TableResizeOutOfRangeError, (object[]) new object[] { "column" }));
+                throw new ArgumentOutOfRangeException("column", string.Format(ResourceStrings.TableResizeOutOfRangeError, (object[])new object[] { "column" }));
             }
             if (rowCount > this.owner.innerSheet.RowCount)
             {
@@ -948,7 +950,7 @@ namespace Dt.Cells.Data
             if (this.headerRowIndex == row)
             {
                 int tableColumnIndex = column - this.Range.Column;
-                this.SetColumnName(tableColumnIndex, (value == null) ? ((string) (value as string)) : value.ToString());
+                this.SetColumnName(tableColumnIndex, (value == null) ? ((string)(value as string)) : value.ToString());
                 return true;
             }
             return false;
@@ -1096,19 +1098,19 @@ namespace Dt.Cells.Data
             }
             if (this.row != -1)
             {
-                Serializer.SerializeObj((int) this.row, "Row", writer);
+                Serializer.SerializeObj((int)this.row, "Row", writer);
             }
             if (this.column != -1)
             {
-                Serializer.SerializeObj((int) this.column, "Column", writer);
+                Serializer.SerializeObj((int)this.column, "Column", writer);
             }
             if (this.rowCount != -1)
             {
-                Serializer.SerializeObj((int) this.rowCount, "RowCount", writer);
+                Serializer.SerializeObj((int)this.rowCount, "RowCount", writer);
             }
             if (this.columnCount != -1)
             {
-                Serializer.SerializeObj((int) this.columnCount, "ColumnCount", writer);
+                Serializer.SerializeObj((int)this.columnCount, "ColumnCount", writer);
             }
             if ((this.dataConnection != null) && (this.dataConnection.DataSource is IXmlSerializable))
             {
@@ -1130,30 +1132,30 @@ namespace Dt.Cells.Data
             }
             if (!this.showHeader)
             {
-                Serializer.SerializeObj((bool) this.showHeader, "ShowHeader", writer);
+                Serializer.SerializeObj((bool)this.showHeader, "ShowHeader", writer);
             }
             if (this.showFooter)
             {
-                Serializer.SerializeObj((bool) this.showFooter, "ShowFooter", writer);
+                Serializer.SerializeObj((bool)this.showFooter, "ShowFooter", writer);
             }
             if (this.highlightFirstColumn)
             {
-                Serializer.SerializeObj((bool) this.highlightFirstColumn, "HighlightFirstColumn", writer);
+                Serializer.SerializeObj((bool)this.highlightFirstColumn, "HighlightFirstColumn", writer);
             }
             if (this.highlightLastColumn)
             {
-                Serializer.SerializeObj((bool) this.highlightLastColumn, "HighlightLastColumn", writer);
+                Serializer.SerializeObj((bool)this.highlightLastColumn, "HighlightLastColumn", writer);
             }
             if (!this.bandedRows)
             {
-                Serializer.SerializeObj((bool) this.bandedRows, "BandedRows", writer);
+                Serializer.SerializeObj((bool)this.bandedRows, "BandedRows", writer);
             }
             if (this.bandedColumns)
             {
-                Serializer.SerializeObj((bool) this.bandedColumns, "BandedColumns", writer);
+                Serializer.SerializeObj((bool)this.bandedColumns, "BandedColumns", writer);
             }
-            Serializer.SerializeObj((int) this.headerRowIndex, "HeaderRowIndex", writer);
-            Serializer.SerializeObj((int) this.footerRowIndex, "FooterRowIndex", writer);
+            Serializer.SerializeObj((int)this.headerRowIndex, "HeaderRowIndex", writer);
+            Serializer.SerializeObj((int)this.footerRowIndex, "FooterRowIndex", writer);
             if (this.rowfilter != null)
             {
                 Serializer.SerializeObj(this.rowfilter, "RowFilter", writer);
@@ -1200,19 +1202,19 @@ namespace Dt.Cells.Data
                             break;
 
                         case 1:
-                        {
-                            string cellFormula = this.Sheet.GetCellFormula(this.footerRowIndex, num2);
-                            if (string.IsNullOrEmpty(cellFormula))
                             {
-                                string cellText = this.Sheet.GetCellText(this.footerRowIndex, num2);
-                                column.SetFormula(null, cellText);
+                                string cellFormula = this.Sheet.GetCellFormula(this.footerRowIndex, num2);
+                                if (string.IsNullOrEmpty(cellFormula))
+                                {
+                                    string cellText = this.Sheet.GetCellText(this.footerRowIndex, num2);
+                                    column.SetFormula(null, cellText);
+                                }
+                                else
+                                {
+                                    column.SetFormula(cellFormula, null);
+                                }
+                                break;
                             }
-                            else
-                            {
-                                column.SetFormula(cellFormula, null);
-                            }
-                            break;
-                        }
                     }
                     if (num3 == 2)
                     {
@@ -1259,14 +1261,14 @@ namespace Dt.Cells.Data
                             break;
 
                         case 1:
-                        {
-                            string cellText = this.Sheet.GetCellText(this.headerRowIndex, num2);
-                            if (cellText != null)
                             {
-                                column.SetName(cellText);
+                                string cellText = this.Sheet.GetCellText(this.headerRowIndex, num2);
+                                if (cellText != null)
+                                {
+                                    column.SetName(cellText);
+                                }
+                                break;
                             }
-                            break;
-                        }
                     }
                     if (column.Name == null)
                     {
@@ -1286,7 +1288,7 @@ namespace Dt.Cells.Data
         [DefaultValue(false)]
         public bool BandedColumns
         {
-            get { return  this.bandedColumns; }
+            get { return this.bandedColumns; }
             set
             {
                 if (this.bandedColumns != value)
@@ -1303,7 +1305,7 @@ namespace Dt.Cells.Data
         [DefaultValue(true)]
         public bool BandedRows
         {
-            get { return  this.bandedRows; }
+            get { return this.bandedRows; }
             set
             {
                 if (this.bandedRows != value)
@@ -1319,7 +1321,7 @@ namespace Dt.Cells.Data
         /// </summary>
         public CellRange DataRange
         {
-            get { return  this.CalcDataRange(); }
+            get { return this.CalcDataRange(); }
         }
 
         /// <summary>
@@ -1327,7 +1329,7 @@ namespace Dt.Cells.Data
         /// </summary>
         public int FooterIndex
         {
-            get { return  this.footerRowIndex; }
+            get { return this.footerRowIndex; }
         }
 
         /// <summary>
@@ -1335,7 +1337,7 @@ namespace Dt.Cells.Data
         /// </summary>
         public int HeaderIndex
         {
-            get { return  this.headerRowIndex; }
+            get { return this.headerRowIndex; }
         }
 
         /// <summary>
@@ -1344,7 +1346,7 @@ namespace Dt.Cells.Data
         [DefaultValue(false)]
         public bool HighlightFirstColumn
         {
-            get { return  this.highlightFirstColumn; }
+            get { return this.highlightFirstColumn; }
             set
             {
                 if (this.highlightFirstColumn != value)
@@ -1361,7 +1363,7 @@ namespace Dt.Cells.Data
         [DefaultValue(false)]
         public bool HighlightLastColumn
         {
-            get { return  this.highlightLastColumn; }
+            get { return this.highlightLastColumn; }
             set
             {
                 if (this.highlightLastColumn != value)
@@ -1374,7 +1376,7 @@ namespace Dt.Cells.Data
 
         internal bool IsCopying
         {
-            get { return  this.copying; }
+            get { return this.copying; }
             set { this.copying = value; }
         }
 
@@ -1383,7 +1385,7 @@ namespace Dt.Cells.Data
         /// </summary>
         public string Name
         {
-            get { return  this.name; }
+            get { return this.name; }
             set
             {
                 if (this.name != value)
@@ -1399,7 +1401,7 @@ namespace Dt.Cells.Data
         /// </summary>
         public CellRange Range
         {
-            get { return  new CellRange(this.row, this.column, this.rowCount, this.columnCount); }
+            get { return new CellRange(this.row, this.column, this.rowCount, this.columnCount); }
         }
 
         /// <summary>
@@ -1438,7 +1440,7 @@ namespace Dt.Cells.Data
         [DefaultValue(false)]
         public bool ShowFooter
         {
-            get { return  this.showFooter; }
+            get { return this.showFooter; }
             set
             {
                 if (this.showFooter != value)
@@ -1448,7 +1450,7 @@ namespace Dt.Cells.Data
                         this.rowCount++;
                         if (this.rowCount > this.owner.InnerSheet.RowCount)
                         {
-                            throw new ArgumentOutOfRangeException(string.Format(ResourceStrings.TableShowFooterError, (object[]) new object[] { ((int) this.rowCount) }));
+                            throw new ArgumentOutOfRangeException(string.Format(ResourceStrings.TableShowFooterError, (object[])new object[] { ((int)this.rowCount) }));
                         }
                         this.showFooter = value;
                         this.footerRowIndex = this.CalcFooterIndex();
@@ -1473,7 +1475,7 @@ namespace Dt.Cells.Data
         [DefaultValue(true)]
         public bool ShowHeader
         {
-            get { return  this.showHeader; }
+            get { return this.showHeader; }
             set
             {
                 if (this.showHeader != value)
@@ -1512,10 +1514,10 @@ namespace Dt.Cells.Data
         /// <summary>
         /// Gets or sets a style for the table.
         /// </summary>
-        [DefaultValue((string) null)]
+        [DefaultValue((string)null)]
         public TableStyle Style
         {
-            get { return  this.style; }
+            get { return this.style; }
             set
             {
                 this.style = (value == null) ? null : (value.Clone() as TableStyle);
@@ -1543,46 +1545,46 @@ namespace Dt.Cells.Data
                 this.Value = null;
                 while (reader.Read())
                 {
-                    if (reader.NodeType == ((XmlNodeType) ((int) XmlNodeType.Element)))
+                    if (reader.NodeType == ((XmlNodeType)((int)XmlNodeType.Element)))
                     {
                         switch (reader.Name)
                         {
                             case "TableColumnName":
-                            {
-                                string name = (string) (Serializer.DeserializeObj(typeof(string), reader) as string);
-                                this.SetName(name);
-                                break;
-                            }
+                                {
+                                    string name = (string)(Serializer.DeserializeObj(typeof(string), reader) as string);
+                                    this.SetName(name);
+                                    break;
+                                }
                             case "TableColumnFormula":
-                                this.Formula = (string) (Serializer.DeserializeObj(typeof(string), reader) as string);
+                                this.Formula = (string)(Serializer.DeserializeObj(typeof(string), reader) as string);
                                 break;
 
                             case "TableColumnValue":
-                                this.Value = (string) (Serializer.DeserializeObj(typeof(string), reader) as string);
+                                this.Value = (string)(Serializer.DeserializeObj(typeof(string), reader) as string);
                                 break;
 
                             case "TableColumnValueTotalsRowLabel":
-                                this.TotalsRowLabel = (string) (Serializer.DeserializeObj(typeof(string), reader) as string);
+                                this.TotalsRowLabel = (string)(Serializer.DeserializeObj(typeof(string), reader) as string);
                                 break;
 
                             case "TableColumnValueTotalsRowFunction":
-                                this.TotalsRowFunction = (string) (Serializer.DeserializeObj(typeof(string), reader) as string);
+                                this.TotalsRowFunction = (string)(Serializer.DeserializeObj(typeof(string), reader) as string);
                                 break;
 
                             case "TableColumnValueTotalsRowCustomFunction":
-                                this.TotalsRowCustomFunction = (string) (Serializer.DeserializeObj(typeof(string), reader) as string);
+                                this.TotalsRowCustomFunction = (string)(Serializer.DeserializeObj(typeof(string), reader) as string);
                                 break;
 
                             case "TableColumnValueCalculatedColumnFormula":
-                                this.CalculatedColumnFormula = (string) (Serializer.DeserializeObj(typeof(string), reader) as string);
+                                this.CalculatedColumnFormula = (string)(Serializer.DeserializeObj(typeof(string), reader) as string);
                                 break;
 
                             case "TableColumnValueTotalsRowFunctionIsArrayFormula":
-                                this.TotalsRowFunctionIsArrayFormula = (bool) ((bool) Serializer.DeserializeObj(typeof(bool), reader));
+                                this.TotalsRowFunctionIsArrayFormula = (bool)((bool)Serializer.DeserializeObj(typeof(bool), reader));
                                 break;
 
                             case "TableColumnValueCalculatedColumnFormulaIsArrayFormula":
-                                this.CalculatedColumnFormulaIsArrayFormula = (bool) ((bool) Serializer.DeserializeObj(typeof(bool), reader));
+                                this.CalculatedColumnFormulaIsArrayFormula = (bool)((bool)Serializer.DeserializeObj(typeof(bool), reader));
                                 break;
                         }
                     }
@@ -1597,7 +1599,7 @@ namespace Dt.Cells.Data
 
             public void SetName(short idx)
             {
-                this.Name = SheetTable.COLUMN_NAME_PREFIX + ((short) idx);
+                this.Name = SheetTable.COLUMN_NAME_PREFIX + ((short)idx);
                 this.IsAutoName = true;
             }
 
@@ -1645,8 +1647,8 @@ namespace Dt.Cells.Data
                 {
                     Serializer.SerializeObj(this.CalculatedColumnFormula, "TableColumnValueCalculatedColumnFormula", writer);
                 }
-                Serializer.SerializeObj((bool) this.TotalsRowFunctionIsArrayFormula, "TableColumnValueTotalsRowFunctionIsArrayFormula", writer);
-                Serializer.SerializeObj((bool) this.CalculatedColumnFormulaIsArrayFormula, "TableColumnValueCalculatedColumnFormulaIsArrayFormula", writer);
+                Serializer.SerializeObj((bool)this.TotalsRowFunctionIsArrayFormula, "TableColumnValueTotalsRowFunctionIsArrayFormula", writer);
+                Serializer.SerializeObj((bool)this.CalculatedColumnFormulaIsArrayFormula, "TableColumnValueCalculatedColumnFormulaIsArrayFormula", writer);
             }
 
             internal string CalculatedColumnFormula { get; set; }

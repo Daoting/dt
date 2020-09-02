@@ -9,6 +9,11 @@
 #region 引用命名
 using Dt.Cells.Data;
 using Dt.Cells.UI;
+using System;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.IO;
+using System.Reflection;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
@@ -20,15 +25,112 @@ namespace Dt.Base
 {
     public partial class Excel
     {
-        XmlSchema IXmlSerializable.GetSchema()
+        /// <summary>
+        /// 比Workbook中的xml多出UI节点
+        /// </summary>
+        /// <param name="xmlStream"></param>
+        internal void OpenXmlOnBackground(Stream xmlStream)
         {
-            return null;
+            XmlReader reader = null;
+            Workbook.SuspendEvent();
+            try
+            {
+                if (_workbook != null)
+                {
+                    _workbook.Sheets.CollectionChanged -= new NotifyCollectionChangedEventHandler(OnSheetsCollectionChanged);
+                    _workbook.PropertyChanged -= new PropertyChangedEventHandler(OnWorkbookPropertyChanged);
+                    _workbook.Reset();
+                }
+
+                using (reader = XmlReader.Create(xmlStream))
+                {
+                    Serializer.InitReader(reader);
+                    while (reader.Read())
+                    {
+                        string str;
+                        ReadXmlInternal(reader);
+                        if ((reader.NodeType == ((XmlNodeType)((int)XmlNodeType.Element))) && ((str = reader.Name) != null))
+                        {
+                            if (str == "Data")
+                            {
+                                XmlReader reader2 = Serializer.ExtractNode(reader);
+                                Serializer.InitReader(reader2);
+                                reader2.Read();
+                                _workbook = new Workbook();
+                                _workbook.SuspendEvent();
+                                _workbook.OpenXml(reader);
+                            }
+                            else if (str == "View")
+                            {
+                                Serializer.DeserializeSerializableObject(this, reader);
+                            }
+                        }
+                    }
+                }
+
+                if (_workbook != null)
+                {
+                    foreach (Worksheet worksheet in _workbook.Sheets)
+                    {
+                        AttachSheet(worksheet);
+                    }
+                    _workbook.Sheets.CollectionChanged += new NotifyCollectionChangedEventHandler(OnSheetsCollectionChanged);
+                    _workbook.PropertyChanged += new PropertyChangedEventHandler(OnWorkbookPropertyChanged);
+                }
+            }
+            catch (Exception exception)
+            {
+                while ((exception is TargetInvocationException) && (exception.InnerException != null))
+                {
+                    exception = exception.InnerException;
+                }
+                throw exception;
+            }
+            finally
+            {
+                if (reader != null)
+                    reader.Close();
+                Workbook.ResumeEvent();
+            }
+            InvalidateAll();
+        }
+
+        internal void SaveXmlBackground(Stream xmlStream, bool dataOnly = false)
+        {
+            XmlWriter writer = null;
+            try
+            {
+                writer = XmlWriter.Create(xmlStream);
+                Serializer.WriteStartObj("Spread", writer);
+                WriteXmlInternal(writer);
+                Serializer.WriteStartObj("View", writer);
+                Serializer.SerializeObj(this, null, writer);
+                Serializer.WriteEndObj(writer);
+                Serializer.WriteStartObj("Data", writer);
+                Workbook.SaveXml(writer, dataOnly, false);
+                Serializer.WriteEndObj(writer);
+                Serializer.WriteEndObj(writer);
+            }
+            catch (Exception exception)
+            {
+                while ((exception is TargetInvocationException) && (exception.InnerException != null))
+                {
+                    exception = exception.InnerException;
+                }
+                throw exception;
+            }
+            finally
+            {
+                if (writer != null)
+                {
+                    writer.Close();
+                }
+            }
         }
 
         void IXmlSerializable.ReadXml(XmlReader reader)
         {
             Serializer.InitReader(reader);
-            Reset();
             while (reader.Read())
             {
                 if (reader.NodeType == ((XmlNodeType)((int)XmlNodeType.Element)))
@@ -147,16 +249,9 @@ namespace Dt.Base
                     return;
 
                 case "TabStripInsertTab":
-                    {
-                        bool flag = (bool)((bool)Serializer.DeserializeObj(typeof(bool), reader));
-                        TabStripInsertTab = flag;
-                        if (_tabStrip == null)
-                        {
-                            break;
-                        }
-                        _tabStrip.HasInsertTab = flag;
-                        return;
-                    }
+                    TabStripInsertTab = (bool)((bool)Serializer.DeserializeObj(typeof(bool), reader));
+                    return;
+
                 case "ColumnSplitBoxPolicy":
                     ColumnSplitBoxPolicy = (SplitBoxPolicy)Serializer.DeserializeObj(typeof(SplitBoxPolicy), reader);
                     return;
@@ -297,6 +392,10 @@ namespace Dt.Base
             {
                 Serializer.SerializeObj(RowSplitBoxPolicy, "RowSplitBoxPolicy", writer);
             }
+        }
+        XmlSchema IXmlSerializable.GetSchema()
+        {
+            return null;
         }
     }
 }

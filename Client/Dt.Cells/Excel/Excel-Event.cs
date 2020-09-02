@@ -507,7 +507,7 @@ namespace Dt.Base
             {
                 if (((e.PropertyName == "Height") || (e.PropertyName == "Width")) || ((e.PropertyName == "IsVisible") || (e.PropertyName == "Axis")))
                 {
-                    InvalidateSheetLayout();
+                    InvalidateAll();
                 }
                 else
                 {
@@ -527,7 +527,7 @@ namespace Dt.Base
                     case "AutoTextIndex":
                     case "IsVisible":
                     case "RowCount":
-                        Invalidate();
+                        InvalidateAll();
                         return;
 
                     case "DefaultRowHeight":
@@ -647,7 +647,7 @@ namespace Dt.Base
                         HandleVisibleChanged(sheet);
                         if (autoRefresh)
                         {
-                            Invalidate();
+                            InvalidateAll();
                         }
                     }
                 }
@@ -734,7 +734,7 @@ namespace Dt.Base
                         case "DataSource":
                             if (autoRefresh)
                             {
-                                Invalidate();
+                                InvalidateAll();
                             }
                             return;
 
@@ -800,7 +800,7 @@ namespace Dt.Base
                             {
                                 InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
                             }
-                            HideOpeningProgressRing();
+                            HideProgressRing();
                             return;
 
                         case "[OpenXml]":
@@ -832,7 +832,7 @@ namespace Dt.Base
                     case "AutoTextIndex":
                     case "IsVisible":
                     case "ColumnCount":
-                        Invalidate();
+                        InvalidateAll();
                         return;
 
                     case "DefaultColumnWidth":
@@ -896,7 +896,10 @@ namespace Dt.Base
                     case "Sheets":
                     case "ActiveSheetIndex":
                     case "ActiveSheet":
-                        Invalidate();
+                    case "[OpenExcel]":
+                    case "[DataCalculated]":
+                    case "[OpenXml]":
+                        InvalidateAll();
                         return;
 
                     case "StartSheetIndex":
@@ -915,17 +918,7 @@ namespace Dt.Base
                     case "Names":
                     case "CanCellOverflow":
                     case "AutoRefresh":
-                    case "[OpenXml]":
                         InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
-                        return;
-
-                    case "[OpenExcel]":
-                    case "[DataCalculated]":
-                        HideOpeningStatus();
-                        InvalidateLayout();
-                        InvalidateMeasure();
-                        InvalidateArrange();
-                        Invalidate();
                         return;
                 }
             }
@@ -937,7 +930,7 @@ namespace Dt.Base
                     EditorConnector.UpdateSelectionItemsForCurrentSheet();
                     EditorConnector.ActivateEditor = true;
                 }
-                Invalidate();
+                InvalidateAll();
             }
         }
 

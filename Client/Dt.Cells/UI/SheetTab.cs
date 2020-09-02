@@ -80,7 +80,7 @@ namespace Dt.Cells.UI
             get
             {
                 if (_sheetIndex == -1)
-                    return Owner.HasInsertTab;
+                    return Owner.Excel.TabStripInsertTab;
                 return (_sheetIndex < Owner.Workbook.SheetCount) && Owner.Workbook.Sheets[_sheetIndex].Visible;
             }
         }

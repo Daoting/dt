@@ -8897,9 +8897,9 @@ namespace Dt.Cells.Data
         /// </summary>
         /// <param name="stream">The stream from which to load the file.</param>
         /// <param name="flags">The import flags.</param>
-        public IAsyncAction OpenCsvAsync(Stream stream, TextFileOpenFlags flags)
+        public void OpenCsv(Stream stream, TextFileOpenFlags flags)
         {
-            return OpenCsvAsync(stream, flags, Encoding.UTF8);
+            OpenTextFileBackGround(stream, flags, "\r\n", ",", "\"", Encoding.UTF8);
         }
 
         /// <summary>
@@ -8911,6 +8911,11 @@ namespace Dt.Cells.Data
         public IAsyncAction OpenCsvAsync(Stream stream, TextFileOpenFlags flags, Encoding encoding)
         {
             return OpenTextFileAsync(stream, flags, "\r\n", ",", "\"", encoding);
+        }
+
+        public void OpenTextFile(Stream stream, TextFileOpenFlags flags, string rowDelimiter, string columnDelimiter, string cellDelimiter)
+        {
+            OpenTextFileBackGround(stream, flags, rowDelimiter, columnDelimiter, cellDelimiter, Encoding.UTF8);
         }
 
         /// <summary>
@@ -10078,6 +10083,11 @@ namespace Dt.Cells.Data
             }
         }
 
+        public void SaveCsv(Stream stream, TextFileSaveFlags flags, Encoding encoding)
+        {
+            SaveTextFileRangeBackGround(-1, -1, -1, -1, stream, flags, "\r\n", ",", "\"", encoding);
+        }
+
         /// <summary>
         /// Saves the CSV (comma-separated values) file asynchronously.
         /// </summary>
@@ -10209,6 +10219,11 @@ namespace Dt.Cells.Data
                 throw new ArgumentException();
             }
             new PdfExporter(GetPrintableReport(), settings).Export(stream);
+        }
+
+        public void SaveTextFileRange(int row, int column, int rowCount, int columnCount, Stream stream, TextFileSaveFlags flags, string rowDelimiter, string columnDelimiter, string cellDelimiter)
+        {
+            SaveTextFileRangeBackGround(row, column, rowCount, columnCount, stream, flags, rowDelimiter, columnDelimiter, cellDelimiter, Encoding.UTF8);
         }
 
         /// <summary>

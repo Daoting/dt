@@ -40,7 +40,117 @@ namespace Dt.Sample
         public UseCase()
         {
             InitializeComponent();
-            
+        }
+
+        async void OnLoadFile(object sender, RoutedEventArgs e)
+        {
+            var file = ((Button)sender).Tag.ToString();
+            using(var stream = ResKit.GetResource("Excel." + file))
+            {
+                if (file.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
+                    await _excel.OpenExcel(stream);
+                else
+                    await _excel.OpenXml(stream);
+            }
+        }
+
+        async void SaveExcelFile(object sender, RoutedEventArgs e)
+        {
+            var filePicker = new Windows.Storage.Pickers.FileSavePicker();
+            filePicker.FileTypeChoices.Add("Excel Files", new List<string>(new string[] { ".xlsx" }));
+            filePicker.FileTypeChoices.Add("Excel 97-2003 Files", new List<string>(new string[] { ".xls" }));
+            filePicker.SuggestedFileName = "新文件";
+            StorageFile storageFile = await filePicker.PickSaveFileAsync();
+            if (storageFile != null)
+            {
+                var stream = await storageFile.OpenStreamForWriteAsync();
+                var fileName = storageFile.FileType.ToUpperInvariant();
+                var fileFormat = ExcelFileFormat.XLS;
+                if (fileName.EndsWith(".XLSX"))
+                    fileFormat = ExcelFileFormat.XLSX;
+                else
+                    fileFormat = ExcelFileFormat.XLS;
+                await _excel.SaveExcel(stream, fileFormat, ExcelSaveFlags.NoFlagsSet);
+                stream.Dispose();
+                AtKit.Msg("导出成功！");
+            }
+        }
+
+        async void SavePDFFile(object sender, RoutedEventArgs e)
+        {
+            var filePicker = new Windows.Storage.Pickers.FileSavePicker();
+            filePicker.FileTypeChoices.Add("PDF文件", new List<string>(new string[] { ".pdf" }));
+            filePicker.SuggestedFileName = "新文件";
+            StorageFile storageFile = await filePicker.PickSaveFileAsync();
+            if (storageFile != null)
+            {
+                var stream = await storageFile.OpenStreamForWriteAsync();
+                await _excel.SavePdf(stream);
+                stream.Dispose();
+                AtKit.Msg("导出成功！");
+            }
+        }
+
+        async void SaveXmlFile(object sender, RoutedEventArgs e)
+        {
+            var filePicker = new Windows.Storage.Pickers.FileSavePicker();
+            filePicker.FileTypeChoices.Add("Xml文件", new List<string>(new string[] { ".xml" }));
+            filePicker.SuggestedFileName = "新文件";
+            StorageFile storageFile = await filePicker.PickSaveFileAsync();
+            if (storageFile != null)
+            {
+                var stream = await storageFile.OpenStreamForWriteAsync();
+                await _excel.SaveXmlAsync(stream);
+                stream.Dispose();
+                AtKit.Msg("导出成功！");
+            }
+        }
+
+        async void SaveCsvFile(object sender, RoutedEventArgs e)
+        {
+            var filePicker = new Windows.Storage.Pickers.FileSavePicker();
+            filePicker.FileTypeChoices.Add("Csv文件", new List<string>(new string[] { ".csv" }));
+            filePicker.SuggestedFileName = "新文件";
+            StorageFile storageFile = await filePicker.PickSaveFileAsync();
+            if (storageFile != null)
+            {
+                var stream = await storageFile.OpenStreamForWriteAsync();
+                await _excel.SaveCSV(_excel.ActiveSheetIndex, stream);
+                stream.Dispose();
+                AtKit.Msg("导出成功！");
+            }
+        }
+
+        async void OpenFile(object sender, RoutedEventArgs e)
+        {
+            var filePicker = new Windows.Storage.Pickers.FileOpenPicker();
+            filePicker.FileTypeFilter.Add(".xlsx");
+            filePicker.FileTypeFilter.Add(".xml");
+            filePicker.FileTypeFilter.Add(".csv");
+            filePicker.FileTypeFilter.Add(".xls");
+            StorageFile storageFile = await filePicker.PickSingleFileAsync();
+            if (storageFile != null)
+            {
+                using (var stream = await storageFile.OpenStreamForReadAsync())
+                {
+                    switch (storageFile.FileType.ToLower())
+                    {
+                        case ".xml":
+                        case ".ssxml":
+                            await _excel.OpenXml(stream);
+                            break;
+
+                        case ".xlsx":
+                        case ".xls":
+                            await _excel.OpenExcel(stream);
+                            break;
+
+                        case ".csv":
+                            await _excel.OpenCSV(_excel.ActiveSheetIndex, stream);
+                            break;
+                    }
+                }
+            }
         }
 
         void OnMonthProfit(object sender, RoutedEventArgs e)
@@ -328,56 +438,5 @@ namespace Dt.Sample
                 sheet[e.Row, e.Column].Text = "☐";
         }
 
-        async void SaveExcelFile(object sender, RoutedEventArgs e)
-        {
-            var filePicker = new Windows.Storage.Pickers.FileSavePicker();
-            filePicker.FileTypeChoices.Add("Excel Files", new List<string>(new string[] { ".xlsx" }));
-            filePicker.FileTypeChoices.Add("Excel 97-2003 Files", new List<string>(new string[] { ".xls" }));
-            filePicker.SuggestedFileName = "新文件";
-            StorageFile storageFile = await filePicker.PickSaveFileAsync();
-            if (storageFile != null)
-            {
-                var stream = await storageFile.OpenStreamForWriteAsync();
-                var fileName = storageFile.FileType.ToUpperInvariant();
-                var fileFormat = ExcelFileFormat.XLS;
-                if (fileName.EndsWith(".XLSX"))
-                    fileFormat = ExcelFileFormat.XLSX;
-                else
-                    fileFormat = ExcelFileFormat.XLS;
-                await _excel.SaveExcelAsync(stream, fileFormat, ExcelSaveFlags.NoFlagsSet);
-                stream.Dispose();
-                AtKit.Msg("导出成功！");
-            }
-        }
-
-        async void SavePDFFile(object sender, RoutedEventArgs e)
-        {
-            var filePicker = new Windows.Storage.Pickers.FileSavePicker();
-            filePicker.FileTypeChoices.Add("PDF文件", new List<string>(new string[] { ".pdf" }));
-            filePicker.SuggestedFileName = "新文件";
-            StorageFile storageFile = await filePicker.PickSaveFileAsync();
-            if (storageFile != null)
-            {
-                var stream = await storageFile.OpenStreamForWriteAsync();
-                await _excel.SavePdfAsync(stream);
-                stream.Dispose();
-                AtKit.Msg("导出成功！");
-            }
-        }
-
-        async void SaveXmlFile(object sender, RoutedEventArgs e)
-        {
-            var filePicker = new Windows.Storage.Pickers.FileSavePicker();
-            filePicker.FileTypeChoices.Add("Xml文件", new List<string>(new string[] { ".xml" }));
-            filePicker.SuggestedFileName = "新文件";
-            StorageFile storageFile = await filePicker.PickSaveFileAsync();
-            if (storageFile != null)
-            {
-                var stream = await storageFile.OpenStreamForWriteAsync();
-                await _excel.SaveXmlAsync(stream);
-                stream.Dispose();
-                AtKit.Msg("导出成功！");
-            }
-        }
     }
 }

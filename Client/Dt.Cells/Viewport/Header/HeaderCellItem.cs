@@ -160,8 +160,16 @@ namespace Dt.Cells.UI
                 _tb.VerticalAlignment = verAlignment;
 
             var foreground = p_cell.ActualForeground;
-            if (foreground != null && foreground != _tb.Foreground)
+            if (foreground == null)
+            {
+                // 默认黑色
+                if (_tb.ReadLocalValue(TextBlock.ForegroundProperty) != DependencyProperty.UnsetValue)
+                    _tb.ClearValue(TextBlock.ForegroundProperty);
+            }
+            else if (foreground != _tb.Foreground)
+            {
                 _tb.Foreground = foreground;
+            }
 
             var fontStyle = p_cell.ActualFontStyle;
             if (_tb.FontStyle != fontStyle)
@@ -172,7 +180,7 @@ namespace Dt.Cells.UI
                 _tb.FontWeight = fontWeight;
 
             var fontFamily = p_cell.ActualFontFamily;
-            if (_tb.FontFamily != fontFamily)
+            if (fontFamily != null && _tb.FontFamily.Source != fontFamily.Source)
                 _tb.FontFamily = fontFamily;
 
             double fontSize = p_cell.ActualFontSize * (double)OwnRow.Owner.Excel.ZoomFactor;

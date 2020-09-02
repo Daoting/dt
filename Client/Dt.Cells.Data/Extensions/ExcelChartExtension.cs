@@ -429,63 +429,59 @@ namespace Dt.Cells.Data
         /// <returns></returns>
         static double GetGradientFillAngle(GradientBrush gradientBrush)
         {
-            // uno
-            //if (gradientBrush is LinearGradientBrush linearGradientBrush)
-            //{
-            //    Windows.Foundation.Point startPoint = new Windows.Foundation.Point();
-            //    Windows.Foundation.Point endPoint = new Windows.Foundation.Point();
-            //    UIAdaptor.InvokeSync(delegate {
-            //        startPoint = linearGradientBrush.StartPoint;
-            //        endPoint = linearGradientBrush.EndPoint;
-            //    });
-            //    double offsetx = endPoint.X - startPoint.X;
-            //    if (Math.Abs((double) (offsetx - 0.0)) < 1E-07)
-            //    {
-            //        offsetx = 0.0;
-            //    }
-            //    double offsety = endPoint.Y - startPoint.Y;
-            //    double num4 = UpdateAngle(Math.Asin(offsety / Math.Sqrt(Math.Pow(offsetx, 2.0) + Math.Pow(offsety, 2.0))), offsetx, offsety);
-            //    if (Math.Abs(num4) < 0.78539816339744828)
-            //    {
-            //        if (num4 >= 0.0)
-            //        {
-            //            return (45.0 * (Math.Abs(num4) / 0.78539816339744828));
-            //        }
-            //        return (360.0 - (45.0 * (Math.Abs(num4) / 0.78539816339744828)));
-            //    }
-            //    if (num4 == 0.78539816339744828)
-            //    {
-            //        return 45.0;
-            //    }
-            //    if ((0.78539816339744828 < num4) && (num4 <= 1.5707963267948966))
-            //    {
-            //        return (90.0 * (num4 / 1.5707963267948966));
-            //    }
-            //    if ((1.5707963267948966 < num4) && (num4 <= 2.3561944901923448))
-            //    {
-            //        return (135.0 * (num4 / 2.3561944901923448));
-            //    }
-            //    if ((num4 > 2.3561944901923448) && (num4 <= 3.1415926535897931))
-            //    {
-            //        return (180.0 * (num4 / 3.1415926535897931));
-            //    }
-            //    if ((num4 < -2.3561944901923448) && (num4 >= -3.1415926535897931))
-            //    {
-            //        return (180.0 * ((6.2831853071795862 + num4) / 3.1415926535897931));
-            //    }
-            //    if ((num4 < -0.78539816339744828) && (num4 > -2.3561944901923448))
-            //    {
-            //        return (180.0 * ((6.2831853071795862 + num4) / 3.1415926535897931));
-            //    }
-            //    if (num4 == -2.3561944901923448)
-            //    {
-            //        return 225.0;
-            //    }
-            //    if (num4 == -0.78539816339744828)
-            //    {
-            //        return 315.0;
-            //    }
-            //}
+            // uno 取消注释
+            if (gradientBrush is LinearGradientBrush linearGradientBrush)
+            {
+                Windows.Foundation.Point startPoint = linearGradientBrush.StartPoint;
+                Windows.Foundation.Point endPoint = linearGradientBrush.EndPoint;
+                double offsetx = endPoint.X - startPoint.X;
+                if (Math.Abs((double)(offsetx - 0.0)) < 1E-07)
+                {
+                    offsetx = 0.0;
+                }
+                double offsety = endPoint.Y - startPoint.Y;
+                double num4 = UpdateAngle(Math.Asin(offsety / Math.Sqrt(Math.Pow(offsetx, 2.0) + Math.Pow(offsety, 2.0))), offsetx, offsety);
+                if (Math.Abs(num4) < 0.78539816339744828)
+                {
+                    if (num4 >= 0.0)
+                    {
+                        return (45.0 * (Math.Abs(num4) / 0.78539816339744828));
+                    }
+                    return (360.0 - (45.0 * (Math.Abs(num4) / 0.78539816339744828)));
+                }
+                if (num4 == 0.78539816339744828)
+                {
+                    return 45.0;
+                }
+                if ((0.78539816339744828 < num4) && (num4 <= 1.5707963267948966))
+                {
+                    return (90.0 * (num4 / 1.5707963267948966));
+                }
+                if ((1.5707963267948966 < num4) && (num4 <= 2.3561944901923448))
+                {
+                    return (135.0 * (num4 / 2.3561944901923448));
+                }
+                if ((num4 > 2.3561944901923448) && (num4 <= 3.1415926535897931))
+                {
+                    return (180.0 * (num4 / 3.1415926535897931));
+                }
+                if ((num4 < -2.3561944901923448) && (num4 >= -3.1415926535897931))
+                {
+                    return (180.0 * ((6.2831853071795862 + num4) / 3.1415926535897931));
+                }
+                if ((num4 < -0.78539816339744828) && (num4 > -2.3561944901923448))
+                {
+                    return (180.0 * ((6.2831853071795862 + num4) / 3.1415926535897931));
+                }
+                if (num4 == -2.3561944901923448)
+                {
+                    return 225.0;
+                }
+                if (num4 == -0.78539816339744828)
+                {
+                    return 315.0;
+                }
+            }
             return 0.0;
         }
 

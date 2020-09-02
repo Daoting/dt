@@ -490,7 +490,7 @@ namespace Dt.Cells.UndoRedo
                             {
                                 sheetView.RaiseSelectionChanged();
                             }
-                            sheetView.Invalidate();
+                            sheetView.InvalidateAll();
                             sheetView.UpdateLayout();
                             sheetView.InvalidateFloatingObjects();
                         }
