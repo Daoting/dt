@@ -531,7 +531,7 @@ namespace Dt.Base
                 if (_trackersContainer == null)
                 {
                     _trackersContainer = new Canvas();
-                    Canvas.SetZIndex(_trackersContainer, 2);
+                    //Canvas.SetZIndex(_trackersContainer, 2);
                 }
                 return _trackersContainer;
             }
@@ -566,7 +566,7 @@ namespace Dt.Base
                 if (_splittingTrackerContainer == null)
                 {
                     _splittingTrackerContainer = new Canvas();
-                    Canvas.SetZIndex(_splittingTrackerContainer, 0x63);
+                    //Canvas.SetZIndex(_splittingTrackerContainer, 0x63);
                 }
                 return _splittingTrackerContainer;
             }

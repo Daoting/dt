@@ -211,7 +211,6 @@ namespace Dt.Base
                         {
                             Children.Insert(0, header);
                         }
-                        header.InvalidateMeasure();
                         header.Measure(new Size(layout.HeaderWidth, height));
                     }
                     else if (header != null)
@@ -261,7 +260,6 @@ namespace Dt.Base
                         {
                             Children.Insert(0, colPanel);
                         }
-                        colPanel.InvalidateMeasure();
                         colPanel.Measure(new Size(width, layout.HeaderHeight));
                     }
                     else if (colPanel != null)
@@ -334,7 +332,6 @@ namespace Dt.Base
                             // 单元格区域放最低层
                             Children.Insert(0, cellPanel);
                         }
-                        cellPanel.InvalidateMeasure();
                         cellPanel.Measure(new Size(viewportWidth, viewportHeight));
                     }
                     else if (cellPanel != null)
@@ -520,7 +517,6 @@ namespace Dt.Base
                 {
                     Children.Add(_tabStrip);
                 }
-                _tabStrip.InvalidateMeasure();
                 _tabStrip.Measure(new Size(layout.TabStripWidth, layout.TabStripHeight));
             }
             else if (_tabStrip != null)

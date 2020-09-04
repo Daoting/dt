@@ -333,7 +333,7 @@ namespace Dt.Base
                 for (int i = 0; i < _horizontalSplitBar.Length; i++)
                 {
                     _horizontalSplitBar[i] = CreateSplitBar();
-                    Canvas.SetZIndex(_horizontalSplitBar[i], 2);
+                    //Canvas.SetZIndex(_horizontalSplitBar[i], 2);
                 }
             }
         }
@@ -355,7 +355,7 @@ namespace Dt.Base
                 for (int i = 0; i < _verticalSplitBar.Length; i++)
                 {
                     _verticalSplitBar[i] = CreateSplitBar();
-                    Canvas.SetZIndex(_verticalSplitBar[i], 2);
+                    //Canvas.SetZIndex(_verticalSplitBar[i], 2);
                 }
             }
         }
@@ -382,7 +382,7 @@ namespace Dt.Base
                     for (int m = 0; m < _crossSplitBar.GetLength(1); m++)
                     {
                         _crossSplitBar[k, m] = CreateSplitBar();
-                        Canvas.SetZIndex(_crossSplitBar[k, m], 2);
+                        //Canvas.SetZIndex(_crossSplitBar[k, m], 2);
                     }
                 }
             }

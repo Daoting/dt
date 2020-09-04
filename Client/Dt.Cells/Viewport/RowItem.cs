@@ -113,6 +113,7 @@ namespace Dt.Cells.UI
                 }
             }
 
+            int updateCells = 0;
             ContainsSpanCell = false;
             SpanGraph cachedSpanGraph = OwnPanel.CachedSpanGraph;
             for (int i = 0; i < colLayoutModel.Count; i++)
@@ -181,7 +182,10 @@ namespace Dt.Cells.UI
                 cell.CellLayout = layout;
 
                 if (p_updateAllCell || updated)
+                {
                     cell.UpdateChildren();
+                    updateCells++;
+                }
             }
 
             CellOverflowLayoutModel cellOverflowLayoutModel = OwnPanel.GetCellOverflowLayoutModel(Row);
@@ -195,6 +199,7 @@ namespace Dt.Cells.UI
                     {
                         HeadingOverflowCell.Column = cellOverflowLayoutModel.HeadingOverflowlayout.Column;
                         HeadingOverflowCell.UpdateChildren();
+                        updateCells++;
                     }
                 }
                 else
@@ -210,6 +215,7 @@ namespace Dt.Cells.UI
                     {
                         TrailingOverflowCell.Column = cellOverflowLayoutModel.TrailingOverflowlayout.Column;
                         TrailingOverflowCell.UpdateChildren();
+                        updateCells++;
                     }
                 }
                 else
@@ -222,6 +228,13 @@ namespace Dt.Cells.UI
                 HeadingOverflowCell = null;
                 TrailingOverflowCell = null;
             }
+
+#if !IOS
+            // iOS在 MeasureOverride 内部调用子元素的 InvalidateMeasure 会造成死循环！
+            // 不重新测量会造成如：迷你图忽大忽小的情况
+            if (updateCells > 0)
+                InvalidateMeasure();
+#endif
         }
 
         protected override Size MeasureOverride(Size availableSize)
@@ -336,6 +349,8 @@ namespace Dt.Cells.UI
                     zIndex = _spanCellZIndexBase + colLayout.Column;
                 }
 
+                // Canvas.SetZIndex 对所有继承自 Panel 的面板都有效，z值大的在上层，z值相同时按 Children 的索引，索引大的在上层
+                // 但uno中 Canvas.SetZIndex 无效，只按 Children 的索引确定层次！
                 if (cell.CellOverflowLayout != null)
                     zIndex = _flowCellZIndexBase + colLayout.Column;
                 zIndex = zIndex % 0x7ffe;

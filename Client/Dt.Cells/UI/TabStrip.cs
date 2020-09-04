@@ -43,7 +43,7 @@ namespace Dt.Cells.UI
             DefaultStyleKey = typeof(TabStrip);
             Excel = p_excel;
             TabsPresenter = new TabsPresenter(this);
-            Init();
+            LoadTab();
         }
 
         public SheetTab ActiveTab
@@ -62,7 +62,7 @@ namespace Dt.Cells.UI
             get { return Excel.Workbook; }
         }
 
-        void Init()
+        void LoadTab()
         {
             for (int i = 0; i < Excel.Sheets.Count; i++)
             {

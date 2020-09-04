@@ -5,7 +5,7 @@
     <TargetFrameworks Condition=" '$(SolutionFileName)' == 'Dtc-Android.sln' ">uap10.0.18362;monoandroid10.0</TargetFrameworks>
     <TargetFrameworks Condition=" '$(SolutionFileName)' == 'Dtc-iOS.sln' ">uap10.0.18362;xamarinios10</TargetFrameworks>
     <TargetFrameworks Condition=" '$(SolutionFileName)' == 'Dtc-Wasm.sln' ">uap10.0.18362;netstandard2.0</TargetFrameworks>
-    <TargetFrameworks Condition=" '$(SolutionFileName)' == 'Dtc-All.sln' ">uap10.0.18362;monoandroid10.0</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(SolutionFileName)' == 'Dtc-All.sln' ">uap10.0.18362;monoandroid10.0;xamarinios10;netstandard2.0</TargetFrameworks>
     <Authors>hdt</Authors>
     <Product>DT业务基础平台</Product>
     <Copyright>Copyright © 2020</Copyright>

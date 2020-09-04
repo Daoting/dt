@@ -272,7 +272,6 @@ namespace Dt.Cells.UI
                 Canvas.SetZIndex(rowItem, z);
 
                 rowItem.Location = new Point(x, y);
-                rowItem.InvalidateMeasure();
                 // 测量尺寸足够大，否则当单元格占多行时在uno上只绘一行！
                 rowItem.Measure(availableSize);
                 y += layout.Height;

@@ -7,438 +7,536 @@
 #endregion
 
 #region 引用命名
-using Dt.Base;
 using Dt.Cells.Data;
-using System;
 using System.Collections.Generic;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Shapes;
 #endregion
 
 namespace Dt.Cells.UI
 {
     /// <summary>
     /// 调整为只用在内容区域，行/列头不再使用
+    /// 因原代码在iOS中布局时造成死循环，已大改
     /// </summary>
     internal sealed partial class BorderLayer : Panel
     {
-        Panel _borderLinesPanel = new Canvas();
-        Dictionary<ulong, Rect> _cellBoundsCache = new Dictionary<ulong, Rect>();
-        int _columnEnd = 0;
-        int[] _columnIndexes = new int[0];
-        int _columnStart = 0;
-        BorderLine _gridLine = null;
-        Dictionary<ulong, BorderLine> _hBorderLineCache = new Dictionary<ulong, BorderLine>();
-        Dictionary<ComboLine, LineItem> _lineMap = new Dictionary<ComboLine, LineItem>();
-        BorderLinesPool _linesPool;
-        int _rowEnd = 0;
-        int _rowEndDirty;
-        int[] _rowIndexes = new int[0];
-        int _rowStart = 0;
-        int _rowStartDirty;
-        Panel _scrollingGridlinesPanel = new Canvas();
-        Dictionary<ulong, BorderLine> _vBorderLineCache = new Dictionary<ulong, BorderLine>();
-        CellsPanel _owner = null;
+        readonly CellsPanel _owner;
+        readonly List<int> _visibleRows = new List<int>();
+        readonly List<int> _visibleCols = new List<int>();
+        readonly List<CombinLine> _lines = new List<CombinLine>();
+        int _recycledStart;
+        int _rowStart;
+        int _rowEnd;
+        int _columnEnd;
+        int _columnStart;
+        BorderLine _gridLine;
         int _viewportBottomRow = -1;
-        int _viewportLeftColumn = -1;
         int _viewportRightColumn = -1;
-        int _viewportTopRow = -1;
-        Worksheet _worksheet = null;
-        float _zoomFactor;
+        Point _location;
+
+        readonly Dictionary<ulong, BorderLine> _hBorderLineCache = new Dictionary<ulong, BorderLine>();
+        readonly Dictionary<ulong, BorderLine> _vBorderLineCache = new Dictionary<ulong, BorderLine>();
+        readonly Dictionary<ulong, Rect> _cellBoundsCache = new Dictionary<ulong, Rect>();
+        static Dictionary<Windows.UI.Color, SolidColorBrush> _brushCache = new Dictionary<Windows.UI.Color, SolidColorBrush>();
 
         public BorderLayer(CellsPanel viewport)
         {
             _owner = viewport;
-            _zoomFactor = 1f;
-            Children.Add(_borderLinesPanel);
-            Children.Add(_scrollingGridlinesPanel);
         }
 
         protected override Size MeasureOverride(Size availableSize)
         {
             if (_owner.Excel._fastScroll)
-            {
-                _scrollingGridlinesPanel.Measure(availableSize);
-                MeasureGridLinesForScrolling();
-                return base.MeasureOverride(availableSize);
-            }
+                return availableSize;
 
-            _worksheet = GetWorksheet();
-            _rowIndexes = new int[0];
-            _columnIndexes = new int[0];
-            _rowStart = 0;
-            _rowEnd = 0;
-            _columnStart = 0;
-            _columnEnd = 0;
-            _borderLinesPanel.Measure(availableSize);
-            _lineMap = new Dictionary<ComboLine, LineItem>();
-            _linesPool = new BorderLinesPool(_borderLinesPanel.Children);
-            _linesPool.Reset();
-            _zoomFactor = _owner.Excel.ZoomFactor;
+            var sheet = _owner.Excel.ActiveSheet;
+            _gridLine = sheet.GetGridLine(SheetArea.Cells);
+            _recycledStart = 0;
+            _location = _owner.PointToClient(new Point());
+            _lines.Clear();
+            _vBorderLineCache.Clear();
+            _hBorderLineCache.Clear();
+            _cellBoundsCache.Clear();
 
-            if (_worksheet != null)
-            {
-                _gridLine = _worksheet.GetGridLine(SheetArea.Cells);
-                MeasureBorders(availableSize);
-            }
+            CalcVisibleRowColumnIndexes();
+            BuildHorizontalBorders();
+            BuildVerticalBorders();
+            LinkBorders(availableSize);
+            RecycleBorders();
 
-            _linesPool.Collect();
-            foreach (ComboLine line in _lineMap.Keys)
-            {
-                LineItem lineItem = _lineMap[line];
-                Point point = _owner.PointToClient(new Point(0.0, 0.0));
-                line.Width = availableSize.Width;
-                line.Height = availableSize.Height;
-                ((IThemeContextSupport)lineItem).SetContext(_worksheet);
-                line.Layout(lineItem, -point.X, -point.Y);
-                ((IThemeContextSupport)lineItem).SetContext(null);
-            }
-            return base.MeasureOverride(availableSize);
+            return availableSize;
         }
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            if (_owner.Excel._fastScroll)
+            Rect rc = new Rect(new Point(), finalSize);
+            foreach (UIElement elem in Children)
             {
-                _scrollingGridlinesPanel.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
-                return base.ArrangeOverride(finalSize);
+                elem.Arrange(rc);
             }
-
-            _borderLinesPanel.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
-            foreach (KeyValuePair<ComboLine, LineItem> pair in _lineMap)
-            {
-                ComboLine line = pair.Key;
-                line.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
-            }
-            return base.ArrangeOverride(finalSize);
-        }
-
-        void BuildBordersInternal(ref int rIndex, ref int cIndex, int row, int column, int lineDirection, ref LineItem previousLineItem, ref BorderLine previousLine, ref BorderLine previousBreaker1, ref BorderLine previousBreaker2)
-        {
-            BorderLine line = null;
-            if ((row != -1) || (column != -1))
-            {
-                if ((row == -1) && (lineDirection == 1))
-                {
-                    previousBreaker1 = GetBorderLine(rIndex, cIndex, 0, column, Borders.TOP);
-                    previousBreaker2 = GetBorderLine(rIndex, cIndex, 0, NextColumn(cIndex), Borders.TOP);
-                }
-                else if ((column != -1) || (lineDirection != 0))
-                {
-                    if (column == -1)
-                    {
-                        line = GetBorderLine(rIndex, cIndex, row, 0, Borders.LEFT);
-                    }
-                    else if (row == -1)
-                    {
-                        line = GetBorderLine(rIndex, cIndex, 0, column, Borders.TOP);
-                    }
-                    else
-                    {
-                        Borders borderIndex = (lineDirection == 0) ? Borders.BOTTOM : Borders.RIGHT;
-                        line = GetBorderLine(rIndex, cIndex, row, column, borderIndex);
-                    }
-                    bool flag = !BorderLineLayoutEngine.IsDoubleLine(line) && object.Equals(line, previousLine);
-                    if (flag)
-                    {
-                        flag = BorderLine.Max(previousBreaker1, previousBreaker2) < line
-                            || BorderLine.Max(previousBreaker1, previousBreaker2) == line;
-                    }
-                    if (flag && (IsDoubleLine(previousBreaker1) || IsDoubleLine(previousBreaker2)))
-                    {
-                        flag = false;
-                    }
-                    LineItem item = null;
-                    if (flag)
-                    {
-                        item = previousLineItem;
-                        switch (lineDirection)
-                        {
-                            case 0:
-                                previousLineItem.ColumnEnd = column;
-                                break;
-
-                            case 1:
-                                previousLineItem.RowEnd = row;
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        item = new LineItem {
-                            Direction = lineDirection,
-                            RowFrom = row,
-                            RowEnd = row,
-                            ColumnFrom = column,
-                            ColumnEnd = column,
-                            Line = line,
-                            PreviousLine = previousLine,
-                            PreviousBreaker1 = previousBreaker1,
-                            PreviousBreaker2 = previousBreaker2
-                        };
-                        if (((item.Line != BorderLine.Empty) && (item.Line != BorderLine.NoBorder)) && (!item.IsGridLine || (line.Color.A != 0)))
-                        {
-                            ((IThemeContextSupport) line).SetContext(_worksheet);
-                            ComboLine line2 = ComboLine.Create(_linesPool, line);
-                            ((IThemeContextSupport) line).SetContext(null);
-                            _lineMap.Add(line2, item);
-                        }
-                    }
-                    switch (lineDirection)
-                    {
-                        case 0:
-                            if (row != -1)
-                            {
-                                item.NextLine = GetBorderLine(rIndex, cIndex, row, NextColumn(cIndex), Borders.BOTTOM);
-                                item.NextBreaker1 = GetBorderLine(rIndex, cIndex, row, column, Borders.RIGHT);
-                                item.NextBreaker2 = GetBorderLine(rIndex, cIndex, NextRow(rIndex), column, Borders.RIGHT);
-                                break;
-                            }
-                            item.NextLine = GetBorderLine(rIndex, cIndex, 0, NextColumn(cIndex), Borders.TOP);
-                            item.NextBreaker1 = _gridLine;
-                            item.NextBreaker2 = GetBorderLine(rIndex, cIndex, 0, column, Borders.RIGHT);
-                            break;
-
-                        case 1:
-                            if (column != -1)
-                            {
-                                item.NextLine = GetBorderLine(rIndex, cIndex, NextRow(rIndex), column, Borders.RIGHT);
-                                item.NextBreaker1 = GetBorderLine(rIndex, cIndex, row, column, Borders.BOTTOM);
-                                item.NextBreaker2 = GetBorderLine(rIndex, cIndex, row, NextColumn(cIndex), Borders.BOTTOM);
-                                break;
-                            }
-                            item.NextLine = GetBorderLine(rIndex, cIndex, NextRow(rIndex), column, Borders.LEFT);
-                            item.NextBreaker1 = _gridLine;
-                            item.NextBreaker2 = GetBorderLine(rIndex, cIndex, row, 0, Borders.BOTTOM);
-                            break;
-                    }
-                    Rect empty = Rect.Empty;
-                    ulong num = (ulong) row;
-                    num = num << 0x20;
-                    num |= (uint) column;
-                    if (!_cellBoundsCache.TryGetValue(num, out empty))
-                    {
-                        empty = GetCellBounds(row, column);
-                        _cellBoundsCache.Add(num, empty);
-                    }
-                    item.Bounds.Add(empty);
-                    previousLine = line;
-                    previousLineItem = item;
-                    previousBreaker1 = item.NextBreaker1;
-                    previousBreaker2 = item.NextBreaker2;
-                }
-            }
-        }
-
-        void BuildHorizontalBorders()
-        {
-            if ((_rowIndexes.Length != 1) || (_rowIndexes[0] != -1))
-            {
-                for (int i = 0; i < _rowIndexes.Length; i++)
-                {
-                    int row = _rowIndexes[i];
-                    if (row > _viewportBottomRow)
-                    {
-                        return;
-                    }
-                    LineItem previousLineItem = null;
-                    BorderLine previousLine = null;
-                    BorderLine line2 = null;
-                    BorderLine line3 = null;
-                    int length = _columnIndexes.Length;
-                    for (int j = 0; j < length; j++)
-                    {
-                        int column = _columnIndexes[j];
-                        if ((j == (length - 1)) && (column > _viewportRightColumn))
-                        {
-                            break;
-                        }
-                        BuildBordersInternal(ref i, ref j, row, column, 0, ref previousLineItem, ref previousLine, ref line2, ref line3);
-                    }
-                }
-            }
-        }
-
-        void BuildVerticalBorders()
-        {
-            if ((_columnIndexes.Length != 1) || (_columnIndexes[0] != -1))
-            {
-                for (int i = 0; i < _columnIndexes.Length; i++)
-                {
-                    int column = _columnIndexes[i];
-                    if (column > _viewportRightColumn)
-                    {
-                        return;
-                    }
-                    LineItem previousLineItem = null;
-                    BorderLine previousLine = null;
-                    BorderLine line2 = null;
-                    BorderLine line3 = null;
-                    int length = _rowIndexes.Length;
-                    for (int j = 0; j < length; j++)
-                    {
-                        int row = _rowIndexes[j];
-                        if ((j == (length - 1)) && (row > _viewportBottomRow))
-                        {
-                            break;
-                        }
-                        BuildBordersInternal(ref j, ref i, row, column, 1, ref previousLineItem, ref previousLine, ref line2, ref line3);
-                    }
-                }
-            }
+            return finalSize;
         }
 
         void CalcVisibleRowColumnIndexes()
         {
-            //switch (_viewport.SheetArea)
-            //{
-            //    case SheetArea.Cells:
-            //        _viewportTopRow = _sheetView.GetViewportTopRow(_viewport.RowViewportIndex);
-            //        _viewportBottomRow = _sheetView.GetViewportBottomRow(_viewport.RowViewportIndex);
-            //        _viewportLeftColumn = _sheetView.GetViewportLeftColumn(_viewport.ColumnViewportIndex);
-            //        _viewportRightColumn = _sheetView.GetViewportRightColumn(_viewport.ColumnViewportIndex);
-            //        break;
-
-            //    case (SheetArea.CornerHeader | SheetArea.RowHeader):
-            //        _viewportTopRow = _sheetView.GetViewportTopRow(_viewport.RowViewportIndex);
-            //        _viewportBottomRow = _sheetView.GetViewportBottomRow(_viewport.RowViewportIndex);
-            //        _viewportLeftColumn = 0;
-            //        _viewportRightColumn = _worksheet.RowHeader.ColumnCount - 1;
-            //        break;
-
-            //    case SheetArea.ColumnHeader:
-            //        _viewportTopRow = 0;
-            //        _viewportBottomRow = _worksheet.ColumnHeader.RowCount - 1;
-            //        _viewportLeftColumn = _sheetView.GetViewportLeftColumn(_viewport.ColumnViewportIndex);
-            //        _viewportRightColumn = _sheetView.GetViewportRightColumn(_viewport.ColumnViewportIndex);
-            //        break;
-            //}
-
-            _viewportTopRow = _owner.Excel.GetViewportTopRow(_owner.RowViewportIndex);
+            _rowStart = _owner.Excel.GetViewportTopRow(_owner.RowViewportIndex);
+            _columnStart = _owner.Excel.GetViewportLeftColumn(_owner.ColumnViewportIndex);
             _viewportBottomRow = _owner.Excel.GetViewportBottomRow(_owner.RowViewportIndex);
-            _viewportLeftColumn = _owner.Excel.GetViewportLeftColumn(_owner.ColumnViewportIndex);
-            _viewportRightColumn = _owner.Excel.GetViewportRightColumn(_owner.ColumnViewportIndex);
-
-            _columnEnd = _viewportRightColumn;
             _rowEnd = _viewportBottomRow;
-            _rowStart = _viewportTopRow;
-            _columnStart = _viewportLeftColumn;
+            _viewportRightColumn = _owner.Excel.GetViewportRightColumn(_owner.ColumnViewportIndex);
+            _columnEnd = _viewportRightColumn;
+
+            var sheet = _owner.Excel.ActiveSheet;
+            _visibleRows.Clear();
+            _visibleCols.Clear();
+
             if ((_rowStart <= _rowEnd) && (_columnStart <= _columnEnd))
             {
                 int num = -1;
                 for (int i = _rowStart - 1; i > -1; i--)
                 {
-                    if (_worksheet.GetActualRowVisible(i, SheetArea.Cells))
+                    if (sheet.GetActualRowVisible(i, SheetArea.Cells))
                     {
                         num = i;
                         break;
                     }
                 }
                 _rowStart = num;
-                int num3 = -1;
-                for (int j = _columnStart - 1; j > -1; j--)
+
+                num = -1;
+                for (int i = _columnStart - 1; i > -1; i--)
                 {
-                    if (_worksheet.GetActualColumnVisible(j, SheetArea.Cells))
+                    if (sheet.GetActualColumnVisible(i, SheetArea.Cells))
                     {
-                        num3 = j;
+                        num = i;
                         break;
                     }
                 }
-                _columnStart = num3;
+                _columnStart = num;
+
                 int count = _owner.GetDataContext().Rows.Count;
-                for (int k = _rowEnd + 1; k < count; k++)
+                for (int i = _rowEnd + 1; i < count; i++)
                 {
-                    if (_worksheet.GetActualRowVisible(k, SheetArea.Cells))
+                    if (sheet.GetActualRowVisible(i, SheetArea.Cells))
                     {
-                        _rowEnd = k;
+                        _rowEnd = i;
                         break;
                     }
                 }
-                int num7 = _owner.GetDataContext().Columns.Count;
-                for (int m = _columnEnd + 1; m < num7; m++)
+
+                count = _owner.GetDataContext().Columns.Count;
+                for (int i = _columnEnd + 1; i < count; i++)
                 {
-                    if (_worksheet.GetActualColumnVisible(m, SheetArea.Cells))
+                    if (sheet.GetActualColumnVisible(i, SheetArea.Cells))
                     {
-                        _columnEnd = m;
+                        _columnEnd = i;
                         break;
                     }
                 }
-                List<int> list = new List<int>();
-                for (int n = _rowStart; n <= _rowEnd; n++)
+
+                for (int i = _rowStart; i <= _rowEnd; i++)
                 {
-                    if (_worksheet.GetActualRowVisible(n, SheetArea.Cells))
+                    if (sheet.GetActualRowVisible(i, SheetArea.Cells))
                     {
-                        list.Add(n);
+                        _visibleRows.Add(i);
                     }
                 }
-                _rowIndexes = list.ToArray();
-                list.Clear();
-                for (int num11 = _columnStart; num11 <= _columnEnd; num11++)
+
+                for (int i = _columnStart; i <= _columnEnd; i++)
                 {
-                    if (_worksheet.GetActualColumnVisible(num11, SheetArea.Cells))
+                    if (sheet.GetActualColumnVisible(i, SheetArea.Cells))
                     {
-                        list.Add(num11);
+                        _visibleCols.Add(i);
                     }
                 }
-                _columnIndexes = list.ToArray();
             }
         }
 
-        void ClearBorderLineCache()
+        void BuildHorizontalBorders()
         {
-            _vBorderLineCache.Clear();
-            _hBorderLineCache.Clear();
-            _cellBoundsCache.Clear();
+            if (_visibleRows.Count == 0)
+                return;
+
+            for (int i = 0; i < _visibleRows.Count; i++)
+            {
+                int row = _visibleRows[i];
+                if (row > _viewportBottomRow)
+                    return;
+
+                LineItem previousLineItem = null;
+                BorderLine previousLine = null;
+                BorderLine line2 = null;
+                BorderLine line3 = null;
+                int length = _visibleCols.Count;
+                for (int j = 0; j < length; j++)
+                {
+                    int column = _visibleCols[j];
+                    if ((j == (length - 1)) && (column > _viewportRightColumn))
+                        break;
+
+                    if ((row != -1) || (column != -1))
+                        BuildBordersInternal(ref i, ref j, row, column, 0, ref previousLineItem, ref previousLine, ref line2, ref line3);
+                }
+            }
         }
 
-        ulong ConverIndexToKey(int rIndex, int cIndex, int row, int column, Borders borderIndex)
+        void BuildVerticalBorders()
         {
-            ulong num = 0L;
-            if (borderIndex == Borders.RIGHT)
+            if (_visibleCols.Count == 0)
+                return;
+
+            for (int i = 0; i < _visibleCols.Count; i++)
             {
-                num = (ulong) row;
-                num = num << 0x20;
-                return (num | ((uint) column));
+                int column = _visibleCols[i];
+                if (column > _viewportRightColumn)
+                    return;
+
+                LineItem previousLineItem = null;
+                BorderLine previousLine = null;
+                BorderLine line2 = null;
+                BorderLine line3 = null;
+                int length = _visibleRows.Count;
+                for (int j = 0; j < length; j++)
+                {
+                    int row = _visibleRows[j];
+                    if ((j == (length - 1)) && (row > _viewportBottomRow))
+                        break;
+
+                    if ((row != -1) || (column != -1))
+                        BuildBordersInternal(ref j, ref i, row, column, 1, ref previousLineItem, ref previousLine, ref line2, ref line3);
+                }
             }
-            if (borderIndex == Borders.BOTTOM)
+        }
+
+        void LinkBorders(Size availableSize)
+        {
+            foreach (var l in _lines)
             {
-                num = (ulong) row;
-                num = num << 0x20;
-                return (num | ((uint)column));
+                var borderLine = l.Item.Line;
+                if (borderLine.Style == BorderLineStyle.Double)
+                {
+                    if (l.Item.Direction == 0)
+                    {
+                        // 水平线
+                        BorderLineLayoutEngine.CalcDoubleLayout(l.Item, -_location.X, -_location.Y, 0, out double num, out double num2, out double num3, out double num4, out double num5, out double num6, out double num7, out double num8, out double num9, out double num10, out double num11, out double num12);
+                        l.Line1.X1 = num5;
+                        l.Line1.X2 = num7;
+                        l.Line2.X1 = num6;
+                        l.Line2.X2 = num8;
+                        l.Line1.Y1 = num3 - 1.0;
+                        l.Line1.Y2 = num4 - 1.0;
+                        l.Line2.Y1 = num3 + 1.0;
+                        l.Line2.Y2 = num4 + 1.0;
+                    }
+                    else
+                    {
+                        BorderLineLayoutEngine.CalcDoubleLayout(l.Item, -_location.X, -_location.Y, 1, out double num, out double num2, out double num3, out double num4, out double num5, out double num6, out double num7, out double num8, out double num9, out double num10, out double num11, out double num12);
+                        l.Line1.Y1 = num9;
+                        l.Line1.Y2 = num11;
+                        l.Line2.Y1 = num10;
+                        l.Line2.Y2 = num12;
+                        l.Line1.X1 = num - 1.0;
+                        l.Line1.X2 = num2 - 1.0;
+                        l.Line2.X1 = num + 1.0;
+                        l.Line2.X2 = num2 + 1.0;
+                    }
+                }
+                else if (borderLine.Style == BorderLineStyle.SlantedDashDot)
+                {
+                    if (l.Item.Direction == 0)
+                    {
+                        // 水平线
+                        BorderLineLayoutEngine.CalcNormalLayout(l.Item, -_location.X, -_location.Y, 0, out double num, out double num2, out double num3, out double num4);
+                        l.Line1.X1 = num;
+                        l.Line1.X2 = num2;
+                        l.Line1.Y1 = num3 - 1.0;
+                        l.Line1.Y2 = num4 - 1.0;
+                        l.Line2.X1 = num;
+                        l.Line2.X2 = num2;
+                        l.Line2.Y1 = num3;
+                        l.Line2.Y2 = num4;
+                        l.Line1.StrokeDashOffset = ((borderLine.StyleData.StrokeDashOffset + l.Line1.StrokeThickness) == 0.0) ? 0.0 : (((num - _location.X) / l.Line1.StrokeThickness) - 1.0);
+                        l.Line2.StrokeDashOffset = ((borderLine.StyleData.StrokeDashOffset + l.Line2.StrokeThickness) == 0.0) ? 0.0 : ((num - _location.X) / l.Line2.StrokeThickness);
+                    }
+                    else
+                    {
+                        BorderLineLayoutEngine.CalcNormalLayout(l.Item, -_location.X, -_location.Y, 1, out double num, out double num2, out double num3, out double num4);
+                        l.Line1.X1 = num - 1.0;
+                        l.Line1.X2 = num2 - 1.0;
+                        l.Line1.Y1 = num3;
+                        l.Line1.Y2 = num4;
+                        l.Line2.X1 = num;
+                        l.Line2.X2 = num2;
+                        l.Line2.Y1 = num3;
+                        l.Line2.Y2 = num4;
+                        l.Line1.StrokeDashOffset = ((borderLine.StyleData.StrokeDashOffset + l.Line1.StrokeThickness) == 0.0) ? 0.0 : (((num3 - _location.Y) / l.Line1.StrokeThickness) - 1.0);
+                        l.Line2.StrokeDashOffset = ((borderLine.StyleData.StrokeDashOffset + l.Line2.StrokeThickness) == 0.0) ? 0.0 : ((num3 - _location.Y) / l.Line2.StrokeThickness);
+                    }
+                }
+                else
+                {
+                    if (l.Item.Direction == 0)
+                    {
+                        // 水平线
+                        BorderLineLayoutEngine.CalcNormalLayout(l.Item, -_location.X, -_location.Y, 0, out double num, out double num2, out double num3, out double num4);
+                        l.Line1.X1 = num;
+                        l.Line1.X2 = num2;
+                        l.Line1.Y1 = num3;
+                        l.Line1.Y2 = num4;
+                        l.Line1.StrokeDashOffset = ((borderLine.StyleData.StrokeDashOffset + l.Line1.StrokeThickness) == 0.0) ? 0.0 : ((num - _location.X) / l.Line1.StrokeThickness);
+                    }
+                    else
+                    {
+                        BorderLineLayoutEngine.CalcNormalLayout(l.Item, -_location.X, -_location.Y, 1, out double num, out double num2, out double num3, out double num4);
+                        l.Line1.X1 = num;
+                        l.Line1.X2 = num2;
+                        num3 += 0.0001;
+                        l.Line1.Y1 = num3;
+                        l.Line1.Y2 = num4;
+                        l.Line1.StrokeDashOffset = ((borderLine.StyleData.StrokeDashOffset + l.Line1.StrokeThickness) == 0.0) ? 0.0 : ((num3 - _location.Y) / l.Line1.StrokeThickness);
+                    }
+                }
+
+                l.Line1.Measure(availableSize);
+                l.Line2?.Measure(availableSize);
             }
-            if (borderIndex == Borders.LEFT)
+        }
+
+        void RecycleBorders()
+        {
+            // 频繁增删Children子元素会出现卡顿现象！
+            // 将多余的线画在外部
+            for (int i = _recycledStart; i < Children.Count; i++)
             {
-                int num2 = PreviousColumn(cIndex);
-                num = (ulong) row;
-                num = num << 0x20;
-                return (num | ((uint)num2));
+                Line line = (Line)Children[i];
+                line.X1 = -1;
+                line.X2 = -1;
+                line.Y1 = -1;
+                line.Y2 = -1;
             }
-            if (borderIndex == Borders.TOP)
+        }
+
+        void BuildBordersInternal(ref int rIndex, ref int cIndex, int row, int column, int lineDirection, ref LineItem previousLineItem, ref BorderLine previousLine, ref BorderLine previousBreaker1, ref BorderLine previousBreaker2)
+        {
+            if ((row == -1) && (lineDirection == 1))
             {
-                num = (ulong) PreviousRow(rIndex);
+                // 垂直线
+                previousBreaker1 = GetBorderLine(rIndex, cIndex, 0, column, Borders.TOP);
+                previousBreaker2 = GetBorderLine(rIndex, cIndex, 0, NextColumn(cIndex), Borders.TOP);
+            }
+            else if ((column != -1) || (lineDirection != 0))
+            {
+                BorderLine line;
+                if (column == -1)
+                {
+                    line = GetBorderLine(rIndex, cIndex, row, 0, Borders.LEFT);
+                }
+                else if (row == -1)
+                {
+                    line = GetBorderLine(rIndex, cIndex, 0, column, Borders.TOP);
+                }
+                else
+                {
+                    Borders borderIndex = (lineDirection == 0) ? Borders.BOTTOM : Borders.RIGHT;
+                    line = GetBorderLine(rIndex, cIndex, row, column, borderIndex);
+                }
+
+                bool flag = !BorderLineLayoutEngine.IsDoubleLine(line) && object.Equals(line, previousLine);
+                if (flag)
+                {
+                    flag = BorderLine.Max(previousBreaker1, previousBreaker2) < line
+                        || BorderLine.Max(previousBreaker1, previousBreaker2) == line;
+                }
+
+                if (flag && (IsDoubleLine(previousBreaker1) || IsDoubleLine(previousBreaker2)))
+                {
+                    flag = false;
+                }
+
+                LineItem item;
+                if (flag)
+                {
+                    // 等同上一线
+                    item = previousLineItem;
+                    switch (lineDirection)
+                    {
+                        case 0:
+                            previousLineItem.ColumnEnd = column;
+                            break;
+
+                        case 1:
+                            previousLineItem.RowEnd = row;
+                            break;
+                    }
+                }
+                else
+                {
+                    item = new LineItem
+                    {
+                        Direction = lineDirection,
+                        RowFrom = row,
+                        RowEnd = row,
+                        ColumnFrom = column,
+                        ColumnEnd = column,
+                        Line = line,
+                        PreviousLine = previousLine,
+                        PreviousBreaker1 = previousBreaker1,
+                        PreviousBreaker2 = previousBreaker2
+                    };
+
+                    if (((item.Line != BorderLine.Empty)
+                        && (item.Line != BorderLine.NoBorder))
+                        && (!item.IsGridLine || (line.Color.A != 0)))
+                    {
+                        ((IThemeContextSupport)line).SetContext(_owner.Excel.ActiveSheet);
+                        CreateLine(item);
+                        ((IThemeContextSupport)line).SetContext(null);
+                    }
+                }
+
+                switch (lineDirection)
+                {
+                    case 0:
+                        if (row != -1)
+                        {
+                            item.NextLine = GetBorderLine(rIndex, cIndex, row, NextColumn(cIndex), Borders.BOTTOM);
+                            item.NextBreaker1 = GetBorderLine(rIndex, cIndex, row, column, Borders.RIGHT);
+                            item.NextBreaker2 = GetBorderLine(rIndex, cIndex, NextRow(rIndex), column, Borders.RIGHT);
+                            break;
+                        }
+                        item.NextLine = GetBorderLine(rIndex, cIndex, 0, NextColumn(cIndex), Borders.TOP);
+                        item.NextBreaker1 = _gridLine;
+                        item.NextBreaker2 = GetBorderLine(rIndex, cIndex, 0, column, Borders.RIGHT);
+                        break;
+
+                    case 1:
+                        if (column != -1)
+                        {
+                            item.NextLine = GetBorderLine(rIndex, cIndex, NextRow(rIndex), column, Borders.RIGHT);
+                            item.NextBreaker1 = GetBorderLine(rIndex, cIndex, row, column, Borders.BOTTOM);
+                            item.NextBreaker2 = GetBorderLine(rIndex, cIndex, row, NextColumn(cIndex), Borders.BOTTOM);
+                            break;
+                        }
+                        item.NextLine = GetBorderLine(rIndex, cIndex, NextRow(rIndex), column, Borders.LEFT);
+                        item.NextBreaker1 = _gridLine;
+                        item.NextBreaker2 = GetBorderLine(rIndex, cIndex, row, 0, Borders.BOTTOM);
+                        break;
+                }
+
+                ulong num = (ulong)row;
                 num = num << 0x20;
                 num |= (uint)column;
+
+                Rect empty;
+                if (!_cellBoundsCache.TryGetValue(num, out empty))
+                {
+                    empty = GetCellBounds(row, column);
+                    _cellBoundsCache.Add(num, empty);
+                }
+                item.Bounds.Add(empty);
+
+                previousLine = line;
+                previousLineItem = item;
+                previousBreaker1 = item.NextBreaker1;
+                previousBreaker2 = item.NextBreaker2;
             }
-            return num;
         }
 
-        /// <summary>
-        /// GetCachedBorderLine 
-        /// </summary>
+        void CreateLine(LineItem p_lineItem)
+        {
+            var borderLine = p_lineItem.Line;
+            if (borderLine.Style == BorderLineStyle.Double)
+            {
+                Line line1 = PopLine();
+                line1.StrokeThickness = 1.0;
+                line1.Stroke = GetSolidBrush(borderLine.Color);
+                ApplyDashArray(line1, borderLine.StyleData.FarDash, borderLine.StyleData.StrokeDashOffset);
+
+                Line line2 = PopLine();
+                line2.StrokeThickness = 1.0;
+                line2.Stroke = GetSolidBrush(borderLine.Color);
+                ApplyDashArray(line2, borderLine.StyleData.NearDash, borderLine.StyleData.StrokeDashOffset);
+                _lines.Add(new CombinLine { Item = p_lineItem, Line1 = line1, Line2 = line2 });
+            }
+            else if (borderLine.Style == BorderLineStyle.SlantedDashDot)
+            {
+                Line line1 = PopLine();
+                line1.StrokeThickness = 1.0;
+                line1.Stroke = GetSolidBrush(borderLine.Color);
+                ApplyDashArray(line1, borderLine.StyleData.FarDash, borderLine.StyleData.StrokeDashOffset - 1);
+
+                Line line2 = PopLine();
+                line2.StrokeThickness = 1.0;
+                line2.Stroke = GetSolidBrush(borderLine.Color);
+                ApplyDashArray(line2, borderLine.StyleData.MiddleDash, borderLine.StyleData.StrokeDashOffset);
+                _lines.Add(new CombinLine { Item = p_lineItem, Line1 = line1, Line2 = line2 });
+            }
+            else
+            {
+                Line line = PopLine();
+                line.StrokeThickness = borderLine.StyleData.DrawingThickness;
+                line.Stroke = GetSolidBrush(borderLine.Color);
+                ApplyDashArray(line, borderLine.StyleData.MiddleDash, borderLine.StyleData.StrokeDashOffset);
+                _lines.Add(new CombinLine { Item = p_lineItem, Line1 = line });
+            }
+        }
+
+        void ApplyDashArray(Line p_line, DoubleCollection p_value, int p_offset)
+        {
+            p_line.StrokeDashArray?.Clear();
+            if (p_value != null)
+            {
+                if (p_line.StrokeDashArray == null)
+                    p_line.StrokeDashArray = new DoubleCollection();
+                foreach (double num in p_value)
+                {
+                    p_line.StrokeDashArray.Add(num);
+                }
+                p_line.StrokeDashOffset = p_offset;
+            }
+        }
+
+        SolidColorBrush GetSolidBrush(Windows.UI.Color color)
+        {
+            SolidColorBrush brush;
+            if (!_brushCache.TryGetValue(color, out brush))
+            {
+                brush = new SolidColorBrush(color);
+                _brushCache.Add(color, brush);
+            }
+            return brush;
+        }
+
+        Line PopLine()
+        {
+            Line line;
+            if (_recycledStart >= Children.Count)
+            {
+                line = new Line();
+                Children.Add(line);
+            }
+            else
+            {
+                line = (Line)Children[_recycledStart];
+            }
+            _recycledStart++;
+            return line;
+        }
+
         BorderLine GetBorderLine(int rIndex, int cIndex, int row, int column, Borders borderIndex)
         {
             if ((row == -1) && (borderIndex != Borders.BOTTOM))
-            {
                 return null;
-            }
+
             if ((column == -1) && (borderIndex != Borders.RIGHT))
-            {
                 return null;
-            }
+
             ulong num = ConverIndexToKey(rIndex, cIndex, row, column, borderIndex);
-            BorderLine noBorder = null;
+            BorderLine noBorder;
             if ((borderIndex == Borders.LEFT) || (borderIndex == Borders.RIGHT))
             {
                 if (_vBorderLineCache.TryGetValue(num, out noBorder))
@@ -450,8 +548,10 @@ namespace Dt.Cells.UI
             {
                 return noBorder;
             }
+
             bool isInCellflow = false;
             noBorder = GetCellActualBorderLine(row, column, borderIndex, out isInCellflow);
+
             if (!isInCellflow)
             {
                 BorderLine line2 = null;
@@ -470,12 +570,9 @@ namespace Dt.Cells.UI
                 }
                 else
                 {
-                    if (borderIndex != Borders.BOTTOM)
-                    {
-                        throw new NotSupportedException(ResourceStrings.NotSupportExceptionBorderIndexError);
-                    }
                     line2 = GetCellActualBorderLine(NextRow(rIndex), column, borders, out isInCellflow);
                 }
+
                 if (!IsDoubleLine(noBorder) && IsDoubleLine(line2))
                 {
                     noBorder = line2;
@@ -485,16 +582,20 @@ namespace Dt.Cells.UI
                     noBorder = line2;
                 }
             }
+
             if (noBorder == null)
             {
                 noBorder = BorderLine.NoBorder;
             }
+
             if ((borderIndex == Borders.LEFT) || (borderIndex == Borders.RIGHT))
             {
                 _vBorderLineCache.Add(num, noBorder);
-                return noBorder;
             }
-            _hBorderLineCache.Add(num, noBorder);
+            else
+            {
+                _hBorderLineCache.Add(num, noBorder);
+            }
             return noBorder;
         }
 
@@ -505,6 +606,7 @@ namespace Dt.Cells.UI
             BorderLine empty = null;
             Cell cachedCell = null;
             byte state = _owner.CachedSpanGraph.GetState(row, column);
+
             switch (borderIndex)
             {
                 case Borders.LEFT:
@@ -635,25 +737,30 @@ namespace Dt.Cells.UI
                     empty = GetCellBorderByBorderIndex(row, column, borderIndex, ref cachedCell);
                     break;
             }
+
             if ((!flag && !isInCellflow) && (empty == null))
             {
-                if (_zoomFactor < 0.4f)
+                if (_owner.Excel.ZoomFactor < 0.4f)
                 {
                     return BorderLine.Empty;
                 }
+
                 empty = _gridLine;
                 if ((state & 0x20) == 0x20)
                 {
                     return BorderLine.Empty;
                 }
+
                 if (state != 0)
                 {
                     return empty;
                 }
+
                 if (cachedCell == null)
                 {
                     cachedCell = _owner.CellCache.GetCachedCell(row, column);
                 }
+
                 if ((cachedCell != null) && (cachedCell.ActualBackground != null))
                 {
                     empty = BorderLine.Empty;
@@ -662,17 +769,48 @@ namespace Dt.Cells.UI
             return empty;
         }
 
+        ulong ConverIndexToKey(int rIndex, int cIndex, int row, int column, Borders borderIndex)
+        {
+            ulong num = 0L;
+            if (borderIndex == Borders.RIGHT)
+            {
+                num = (ulong)row;
+                num = num << 0x20;
+                return (num | ((uint)column));
+            }
+            if (borderIndex == Borders.BOTTOM)
+            {
+                num = (ulong)row;
+                num = num << 0x20;
+                return (num | ((uint)column));
+            }
+            if (borderIndex == Borders.LEFT)
+            {
+                int num2 = PreviousColumn(cIndex);
+                num = (ulong)row;
+                num = num << 0x20;
+                return (num | ((uint)num2));
+            }
+            if (borderIndex == Borders.TOP)
+            {
+                num = (ulong)PreviousRow(rIndex);
+                num = num << 0x20;
+                num |= (uint)column;
+            }
+            return num;
+        }
+
         BorderLine GetCellBorderByBorderIndex(int row, int column, Borders borderIndex, ref Cell cell)
         {
-            CellsPanel viewport = _owner;
             if (cell == null)
             {
-                cell = viewport.CellCache.GetCachedCell(row, column);
+                cell = _owner.CellCache.GetCachedCell(row, column);
                 if (cell == null)
                 {
                     return null;
                 }
             }
+
             switch (borderIndex)
             {
                 case Borders.LEFT:
@@ -704,174 +842,54 @@ namespace Dt.Cells.UI
             return rect;
         }
 
-        Worksheet GetWorksheet()
-        {
-            CellsPanel viewport = _owner;
-            if ((viewport != null) && (viewport.Excel != null))
-            {
-                return viewport.Excel.ActiveSheet;
-            }
-            return null;
-        }
-
-        void InitDirtyRange()
-        {
-            int num = _worksheet.NextNonEmptyColumn(_columnStart - 1, SheetArea.Cells);
-            if ((_columnStart <= num) && (num <= _columnEnd))
-            {
-                _rowStartDirty = _rowStart;
-                _rowEndDirty = _rowEnd;
-            }
-            else
-            {
-                _rowEndDirty = _rowStartDirty = _worksheet.NextNonEmptyRow(_rowStart - 1, SheetArea.Cells, StorageType.Style);
-                if (_rowStartDirty > -1)
-                {
-                    int row = _rowStartDirty;
-                    while (row <= _rowEnd)
-                    {
-                        row = _worksheet.NextNonEmptyRow(row, SheetArea.Cells, StorageType.Style);
-                        if (row == -1)
-                        {
-                            break;
-                        }
-                        _rowEndDirty = row;
-                    }
-                }
-                else
-                {
-                    _rowEndDirty = -1;
-                }
-            }
-            if (_rowStartDirty > -1)
-            {
-                _rowStartDirty--;
-            }
-            if (_rowEndDirty > -1)
-            {
-                _rowEndDirty++;
-            }
-        }
-
         static bool IsDoubleLine(BorderLine line)
         {
             return BorderLineLayoutEngine.IsDoubleLine(line);
         }
 
-        void MeasureBorders(Size availableSize)
+        int PreviousRow(int rPos)
         {
-            _borderLinesPanel.Visibility = Visibility.Visible;
-            _scrollingGridlinesPanel.Visibility = Visibility.Collapsed;
-            CalcVisibleRowColumnIndexes();
-            InitDirtyRange();
-            ClearBorderLineCache();
-            BuildHorizontalBorders();
-            BuildVerticalBorders();
-            ClearBorderLineCache();
-        }
-
-        void MeasureGridLinesForScrolling()
-        {
-            _borderLinesPanel.Visibility = Visibility.Collapsed;
-            _scrollingGridlinesPanel.Visibility = Visibility.Visible;
-            _scrollingGridlinesPanel.Children.Clear();
-            CalcVisibleRowColumnIndexes();
-            BorderLine gridBorderLine = _worksheet.GetGridLine(SheetArea.Cells);
-            RowLayoutModel rowLayoutModel = _owner.Excel.GetRowLayoutModel(_owner.RowViewportIndex, SheetArea.Cells);
-            ColumnLayoutModel columnLayoutModel = _owner.Excel.GetColumnLayoutModel(_owner.ColumnViewportIndex, SheetArea.Cells);
-            int viewportBottomRow = _owner.Excel.GetViewportBottomRow(_owner.RowViewportIndex);
-            int viewportRightColumn = _owner.Excel.GetViewportRightColumn(_owner.ColumnViewportIndex);
-            RowLayout bottomRowLayout = rowLayoutModel.FindRow(viewportBottomRow);
-            ColumnLayout rightColumnLayout = columnLayoutModel.FindColumn(viewportRightColumn);
-            Point viewportLocation = _owner.Location;
-            if (((_rowIndexes.Length != 1) || (_rowIndexes[0] != -1)) && ((_columnIndexes.Length != 1) || (_columnIndexes[0] != -1)))
+            if ((rPos >= 1) && (rPos <= _visibleRows.Count))
             {
-                double viewportWidth = _owner.Excel.GetViewportWidth(_owner.ColumnViewportIndex);
-                SolidColorBrush brush = new SolidColorBrush(gridBorderLine.Color);
-                if ((rightColumnLayout != null) && (viewportWidth > ((rightColumnLayout.X + rightColumnLayout.Width) - viewportLocation.X)))
-                {
-                    double x = rightColumnLayout.X;
-                    double width = rightColumnLayout.Width;
-                    double num9 = viewportLocation.X;
-                }
-                double num2 = viewportLocation.Y + 0.5;
-                for (int k = 0; k < _rowIndexes.Length; k++)
-                {
-                    RowLayout layout = rowLayoutModel.FindRow(_rowIndexes[k]);
-                    if (layout != null)
-                    {
-                        Windows.UI.Xaml.Shapes.Line line = new Windows.UI.Xaml.Shapes.Line();
-                        line.X1 = 0.0;
-                        line.Y1 = (layout.Y + layout.Height) - num2;
-                        line.X2 = viewportWidth;
-                        line.Y2 = line.Y1;
-                        line.Stroke = brush;
-                        line.StrokeThickness = 1.0;
-                        _scrollingGridlinesPanel.Children.Add(line);
-                    }
-                }
-                double viewportHeight = _owner.Excel.GetViewportHeight(_owner.RowViewportIndex);
-                double num5 = viewportLocation.X + 0.5;
-                double num6 = viewportHeight;
-                if ((bottomRowLayout != null) && (viewportHeight > ((bottomRowLayout.Y + bottomRowLayout.Height) - viewportLocation.Y)))
-                {
-                    num6 = ((bottomRowLayout.Y + bottomRowLayout.Height) - viewportLocation.Y) - 0.5;
-                }
-                for (int i = 0; i < _columnIndexes.Length; i++)
-                {
-                    ColumnLayout layout2 = columnLayoutModel.FindColumn(_columnIndexes[i]);
-                    if (layout2 != null)
-                    {
-                        Windows.UI.Xaml.Shapes.Line line2 = new Windows.UI.Xaml.Shapes.Line();
-                        line2.X1 = (layout2.X + layout2.Width) - num5;
-                        line2.Y1 = 0.0;
-                        line2.X2 = line2.X1;
-                        line2.Y2 = num6;
-                        line2.Stroke = brush;
-                        line2.StrokeThickness = 1.0;
-                        _scrollingGridlinesPanel.Children.Add(line2);
-                    }
-                }
+                return _visibleRows[rPos - 1];
             }
+            return -1;
         }
 
-
-        int NextColumn(int cPos)
+        int PreviousColumn(int cPos)
         {
-            return NextIndex(_columnIndexes, cPos);
-        }
-
-        static int NextIndex(int[] indexes, int rPos)
-        {
-            if ((rPos >= -1) && (rPos < (indexes.Length - 1)))
+            if ((cPos >= 1) && (cPos <= _visibleCols.Count))
             {
-                return indexes[rPos + 1];
+                return _visibleCols[cPos - 1];
             }
             return -1;
         }
 
         int NextRow(int rPos)
         {
-            return NextIndex(_rowIndexes, rPos);
-        }
-
-        int PreviousColumn(int cPos)
-        {
-            return PreviousIndex(_columnIndexes, cPos);
-        }
-
-        static int PreviousIndex(int[] indexes, int rPos)
-        {
-            if ((rPos >= 1) && (rPos <= indexes.Length))
+            if ((rPos >= -1) && (rPos < (_visibleRows.Count - 1)))
             {
-                return indexes[rPos - 1];
+                return _visibleRows[rPos + 1];
             }
             return -1;
         }
 
-        int PreviousRow(int rPos)
+        int NextColumn(int cPos)
         {
-            return PreviousIndex(_rowIndexes, rPos);
+            if ((cPos >= -1) && (cPos < (_visibleCols.Count - 1)))
+            {
+                return _visibleCols[cPos + 1];
+            }
+            return -1;
+        }
+
+        class CombinLine
+        {
+            public LineItem Item { get; set; }
+
+            public Line Line1 { get; set; }
+
+            public Line Line2 { get; set; }
         }
     }
 }

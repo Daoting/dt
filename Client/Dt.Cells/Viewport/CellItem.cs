@@ -260,7 +260,7 @@ namespace Dt.Cells.UI
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            if (Column == -1 || availableSize.Width < _textPadding * 2)
+            if (Column == -1)
             {
                 // TextBlock设置Padding时，若Padding左右之和大于Measure时给的Width，uno莫名报错，布局混乱，不易发现！
                 foreach (UIElement elem in Children)
@@ -273,7 +273,7 @@ namespace Dt.Cells.UI
             if (_overflowLayout != null && _overflowLayout.ContentWidth > availableSize.Width)
                 _tb.Measure(new Size(_overflowLayout.ContentWidth, availableSize.Height));
             else
-                _tb.Measure(new Size(availableSize.Width - _textPadding * 2, availableSize.Height));
+                _tb.Measure(new Size(Math.Max(availableSize.Width - _textPadding * 2, 0.0), availableSize.Height));
 
             if (Children.Count > 1)
             {

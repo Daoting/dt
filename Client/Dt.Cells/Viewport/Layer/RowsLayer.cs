@@ -99,7 +99,6 @@ namespace Dt.Cells.UI
                 }
             }
 
-            double x = _owner.Location.X;
             double y = _owner.Location.Y;
             double left = 0.0;
             foreach (RowLayout layout in rowLayoutModel)
@@ -118,15 +117,13 @@ namespace Dt.Cells.UI
                     _rows.Add(layout.Row, rowItem);
                     updateAllCell = true;
                 }
+                rowItem.Location = new Point(_owner.Location.X, y);
                 rowItem.UpdateChildren(updateAllCell);
 
                 int z = rowItem.ContainsSpanCell ? _spanRowZIndexBase + rowItem.Row : _normalZIndexBase + rowItem.Row;
                 z = z % 0x7ffe;
                 Canvas.SetZIndex(rowItem, z);
 
-                rowItem.Location = new Point(x, y);
-                // 不重新测量会造成如：迷你图忽大忽小的情况
-                rowItem.InvalidateMeasure();
                 // 测量尺寸足够大，否则当单元格占多行时在uno上只绘一行！
                 rowItem.Measure(availableSize);
                 y += layout.Height;

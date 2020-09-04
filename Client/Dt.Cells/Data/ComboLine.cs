@@ -69,6 +69,7 @@ namespace Dt.Cells.Data
             {
                 line = new ComboLine();
             }
+
             if (borderLine != null)
             {
                 if (borderLine.Style == BorderLineStyle.Double)
@@ -92,6 +93,7 @@ namespace Dt.Cells.Data
                     ApplyDashArray(line._line3, borderLine.StyleData.NearDash, borderLine.StyleData.StrokeDashOffset);
                     return line;
                 }
+
                 if (borderLine.Style == BorderLineStyle.SlantedDashDot)
                 {
                     line._line1.Visibility = Visibility.Visible;
@@ -113,6 +115,7 @@ namespace Dt.Cells.Data
                     ApplyDashArray(line._line2, borderLine.StyleData.MiddleDash, borderLine.StyleData.StrokeDashOffset);
                     return line;
                 }
+
                 line._line1.Visibility = Visibility.Collapsed;
                 line._line2.Visibility = Visibility.Visible;
                 line._line3.Visibility = Visibility.Collapsed;

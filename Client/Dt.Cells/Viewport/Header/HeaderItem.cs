@@ -91,6 +91,7 @@ namespace Dt.Cells.UI
                 }
             }
 
+            int updateCells = 0;
             ContainsSpanCell = false;
             SpanGraph cachedSpanGraph = Owner.CachedSpanGraph;
             for (int i = 0; i < colLayoutModel.Count; i++)
@@ -159,8 +160,18 @@ namespace Dt.Cells.UI
                 cell.CellLayout = layout;
 
                 if (p_updateAllCell || updated)
+                {
                     cell.UpdateChildren();
+                    updateCells++;
+                }
             }
+
+#if !IOS
+            // iOS在 MeasureOverride 内部调用子元素的 InvalidateMeasure 会造成死循环！
+            // 不重新测量会造成如：迷你图忽大忽小的情况
+            if (updateCells > 0)
+                InvalidateMeasure();
+#endif
         }
 
         protected override Size MeasureOverride(Size availableSize)

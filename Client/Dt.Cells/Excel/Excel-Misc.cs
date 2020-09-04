@@ -9725,7 +9725,7 @@ namespace Dt.Base
                     scrollBar.PointerPressed += OnHorizontalScrollBarPointerPressed;
                     scrollBar.PointerReleased += OnHorizontalScrollBarPointerReleased;
                     scrollBar.PointerExited += OnHorizontalScrollBarPointerExited;
-                    Canvas.SetZIndex(scrollBar, 0x62);
+                    //Canvas.SetZIndex(scrollBar, 0x62);
                     _horizontalScrollBar[k] = scrollBar;
                 }
             }
@@ -9790,7 +9790,7 @@ namespace Dt.Base
                         scrollBar.PointerPressed += OnVerticalScrollbarPointerPressed;
                         scrollBar.PointerReleased += OnVerticalScrollbarPointerReleased;
                         scrollBar.PointerExited += OnVerticalScrollbarPointerExited;
-                        Canvas.SetZIndex(scrollBar, 0x62);
+                        //Canvas.SetZIndex(scrollBar, 0x62);
                         _verticalScrollBar[k] = scrollBar;
                     }
                 }
