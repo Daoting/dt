@@ -10,8 +10,6 @@
 using Dt.Cells.Data;
 using System.Collections.Generic;
 using Windows.Foundation;
-using Windows.UI;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
@@ -26,8 +24,7 @@ namespace Dt.Cells.UI
         readonly CellsPanel _owner;
         readonly List<Rect> _activeSelectionLayouts;
         readonly List<Rectangle> _activeSelectionRectangles;
-        Path _selectionPath;
-        const int ACTIVE_SELECTION_RECTANGLE_NUMBER = 4;
+        int _recycledStart;
 
         public SelectionLayer(CellsPanel viewport)
         {
@@ -35,18 +32,8 @@ namespace Dt.Cells.UI
             _activeSelectionRectangles = new List<Rectangle>();
             _activeSelectionLayouts = new List<Rect>();
 
-            _selectionPath = new Path();
+            // 当前焦点区域的背景，由4个矩形组成，一般使用2个
             var back = _owner.Excel.ActiveSheet.SelectionBackground;
-            if (back != null)
-                _selectionPath.Fill = back;
-            else
-                _selectionPath.Fill = new SolidColorBrush(Color.FromArgb(60, 180, 180, 200));
-
-            GeometryGroup group = new GeometryGroup();
-            group.FillRule = FillRule.Nonzero;
-            _selectionPath.Data = group;
-            Children.Add(_selectionPath);
-
             for (int i = 0; i < 4; i++)
             {
                 Rectangle rectangle = new Rectangle();
@@ -66,6 +53,47 @@ namespace Dt.Cells.UI
                 return availableSize;
             }
 
+            // 选择多区域时，非当前焦点区域，原来用Path实现，但在iOS上造成死循环
+            _recycledStart = 0;
+            for (int i = 0; i < _owner._cachedSelectionLayout.Count; i++)
+            {
+                Rect curRect = _owner._cachedSelectionLayout[i];
+                if (curRect.IsEmpty)
+                    continue;
+
+                bool show = false;
+                if (_owner.IsActived)
+                {
+                    Rect activeRect = _owner._cachedActiveSelectionLayout;
+                    if (activeRect.IsEmpty
+                        || (!ContainsRect(curRect, activeRect) && !ContainsRect(activeRect, curRect)))
+                    {
+                        show = true;
+                    }
+                }
+                else
+                {
+                    show = true;
+                }
+
+                if (show)
+                {
+                    Rectangle rect = PopCachedSelection();
+                    rect.Tag = curRect;
+                    rect.Measure(new Size(curRect.Width, curRect.Height));
+                }
+            }
+            int recycled = Children.Count - 5 - _recycledStart;
+            if (recycled > 0)
+            {
+                // 多余的区域，为避免频繁增删Children子元素，区域矩形只增不删
+                for (int i = 0; i < recycled; i++)
+                {
+                    ((Rectangle)Children[i + _recycledStart]).Tag = _rcEmpty;
+                }
+            }
+
+            // 当前焦点区域背景
             UpdateActiveSelectionLayouts();
             for (int i = 0; i < _activeSelectionRectangles.Count; i++)
             {
@@ -81,57 +109,15 @@ namespace Dt.Cells.UI
                 }
             }
 
-            //GeometryGroup data = _selectionPath.Data as GeometryGroup;
-            //if (data != null)
-            //{
-            //    data.Children.Clear();
-            //    for (int j = 0; j < _owner._cachedSelectionLayout.Count; j++)
-            //    {
-            //        Rect rect2 = _owner._cachedSelectionLayout[j];
-            //        if (_owner.IsActived)
-            //        {
-            //            Rect rect3 = _owner._cachedActiveSelectionLayout;
-            //            if (!rect2.IsEmpty)
-            //            {
-            //                if (rect3.IsEmpty)
-            //                {
-            //                    RectangleGeometry geometry = new RectangleGeometry();
-            //                    geometry.Rect = rect2;
-            //                    data.Children.Add(geometry);
-            //                }
-            //                else if (!ContainsRect(rect2, rect3) && !ContainsRect(rect3, rect2))
-            //                {
-            //                    RectangleGeometry geometry2 = new RectangleGeometry();
-            //                    geometry2.Rect = rect2;
-            //                    data.Children.Add(geometry2);
-            //                }
-            //            }
-            //        }
-            //        else if (!rect2.IsEmpty)
-            //        {
-            //            RectangleGeometry geometry3 = new RectangleGeometry();
-            //            geometry3.Rect = rect2;
-            //            data.Children.Add(geometry3);
-            //        }
-            //    }
-            //}
-            //_selectionPath.Measure(availableSize);
-
-            Rect rect4 = _owner._cachedSelectionFrameLayout;
-            if (!IsAnchorCellInSelection)
+            // 当前焦点区域的外框，选择多区域时不可见
+            if (_owner.IsActived || (_owner._cachedSelectionLayout.Count <= 1))
             {
-                rect4 = _owner._cachedFocusCellLayout;
-            }
-            if ((FocusIndicator.Visibility == Visibility.Visible) && (_owner.IsActived || (_owner._cachedSelectionLayout.Count <= 1)))
-            {
-                if ((rect4.Width > 0.0) && (rect4.Height > 0.0))
-                {
-                    FocusIndicator.Measure(new Size(rect4.Width, rect4.Height));
-                }
+                Rect rcFrame = IsAnchorCellInSelection ? _owner._cachedSelectionFrameLayout : _owner._cachedFocusCellLayout;
+                FocusIndicator.Measure(new Size(rcFrame.Width, rcFrame.Height));
             }
             else
             {
-                FocusIndicator.Visibility = Visibility.Collapsed;
+                FocusIndicator.Measure(_szEmpty);
             }
             return availableSize;
         }
@@ -141,7 +127,17 @@ namespace Dt.Cells.UI
             if (_owner.Excel.HideSelectionWhenPrinting)
                 return finalSize;
 
-            Rect rect = new Rect(new Point(), finalSize);
+            // 选择多区域时，非当前焦点区域
+            if (Children.Count - 5 > 0)
+            {
+                for (int i = 0; i < Children.Count - 5; i++)
+                {
+                    var rc = (Rectangle)Children[i];
+                    rc.Arrange((Rect)rc.Tag);
+                }
+            }
+
+            // 当前焦点区域背景
             for (int i = 0; i < _activeSelectionRectangles.Count; i++)
             {
                 if ((_activeSelectionLayouts[i].Width > 0.0) && (_activeSelectionLayouts[i].Height > 0.0))
@@ -154,24 +150,16 @@ namespace Dt.Cells.UI
                 }
             }
 
-            //_selectionPath.Arrange(rect);
-
-            Rect rect2 = _owner._cachedSelectionFrameLayout;
-            if (!IsAnchorCellInSelection)
+            // 当前焦点区域的外框，选择多区域时不可见
+            if (_owner.IsActived || (_owner._cachedSelectionLayout.Count <= 1))
             {
-                rect2 = _owner._cachedFocusCellLayout;
+                Rect rcFrame = IsAnchorCellInSelection ? _owner._cachedSelectionFrameLayout : _owner._cachedFocusCellLayout;
+                FocusIndicator.Arrange(rcFrame);
             }
-            if ((FocusIndicator.Visibility == Visibility.Visible) && (_owner.IsActived || (_owner._cachedSelectionLayout.Count <= 1)))
+            else
             {
-                if ((rect2.Width > 0.0) && (rect2.Height > 0.0))
-                {
-                    FocusIndicator.Arrange(rect2);
-                    return finalSize;
-                }
-                FocusIndicator.Visibility = Visibility.Collapsed;
-                return finalSize;
+                FocusIndicator.Arrange(_rcEmpty);
             }
-            FocusIndicator.Visibility = Visibility.Collapsed;
             return finalSize;
         }
 
@@ -199,10 +187,26 @@ namespace Dt.Cells.UI
             FocusIndicator.SetSelectionFrameStroke(brush);
         }
 
+        Rectangle PopCachedSelection()
+        {
+            Rectangle rect;
+            if (_recycledStart + 5 >= Children.Count)
+            {
+                rect = new Rectangle { Fill = _owner.Excel.ActiveSheet.SelectionBackground };
+                Children.Insert(_recycledStart, rect);
+            }
+            else
+            {
+                rect = (Rectangle)Children[_recycledStart];
+            }
+            _recycledStart++;
+            return rect;
+        }
+
         void UpdateActiveSelectionLayouts()
         {
-            Rect rect = _owner._cachedActiveSelectionLayout;
-            Rect rect2 = _owner._cachedFocusCellLayout;
+            Rect rcSelection = _owner._cachedActiveSelectionLayout;
+            Rect rcFocus = _owner._cachedFocusCellLayout;
             CellRange range = null;
             _activeSelectionLayouts.Clear();
             CellRange viewportRange = GetViewportRange();
@@ -229,7 +233,7 @@ namespace Dt.Cells.UI
                 }
                 else if ((range != null) && !viewportRange.Contains(range))
                 {
-                    _activeSelectionLayouts.Add(rect);
+                    _activeSelectionLayouts.Add(rcSelection);
                     _activeSelectionLayouts.Add(Rect.Empty);
                     _activeSelectionLayouts.Add(Rect.Empty);
                     _activeSelectionLayouts.Add(Rect.Empty);
@@ -240,20 +244,20 @@ namespace Dt.Cells.UI
                     && _owner._cachedActiveSelection != range
                     && _owner._cachedActiveSelection.Contains(range))
                 {
-                    Rect rect3 = new Rect(rect.X, rect.Y, rect.Width, rect2.Y - rect.Y);
-                    Rect rect4 = new Rect(rect.X, rect2.Y, rect2.X - rect.X, rect2.Height);
-                    double width = rect.Right - rect2.Right;
+                    Rect rect3 = new Rect(rcSelection.X, rcSelection.Y, rcSelection.Width, rcFocus.Y - rcSelection.Y);
+                    Rect rect4 = new Rect(rcSelection.X, rcFocus.Y, rcFocus.X - rcSelection.X, rcFocus.Height);
+                    double width = rcSelection.Right - rcFocus.Right;
                     if (width < 0.0)
                     {
                         width = 0.0;
                     }
-                    Rect rect5 = new Rect(rect2.Right, rect2.Y, width, rect2.Height);
-                    double height = rect.Bottom - rect2.Bottom;
+                    Rect rect5 = new Rect(rcFocus.Right, rcFocus.Y, width, rcFocus.Height);
+                    double height = rcSelection.Bottom - rcFocus.Bottom;
                     if (height < 0.0)
                     {
                         height = 0.0;
                     }
-                    Rect rect6 = new Rect(rect.X, rect2.Bottom, rect.Width, height);
+                    Rect rect6 = new Rect(rcSelection.X, rcFocus.Bottom, rcSelection.Width, height);
                     _activeSelectionLayouts.Add(rect3);
                     _activeSelectionLayouts.Add(rect4);
                     _activeSelectionLayouts.Add(rect5);
@@ -276,7 +280,7 @@ namespace Dt.Cells.UI
             }
             else
             {
-                _activeSelectionLayouts.Add(rect);
+                _activeSelectionLayouts.Add(rcSelection);
                 _activeSelectionLayouts.Add(Rect.Empty);
                 _activeSelectionLayouts.Add(Rect.Empty);
                 _activeSelectionLayouts.Add(Rect.Empty);

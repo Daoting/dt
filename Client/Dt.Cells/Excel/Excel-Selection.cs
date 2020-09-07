@@ -388,10 +388,6 @@ namespace Dt.Base
                                         viewport.SelectionContainer.FocusIndicator.IsLeftVisible = true;
                                     }
                                 }
-                                else
-                                {
-                                    DragFillDirection direction1 = _currentFillDirection;
-                                }
                                 viewport.SelectionContainer.FocusIndicator.InvalidateMeasure();
                                 viewport.SelectionContainer.FocusIndicator.InvalidateArrange();
                             }

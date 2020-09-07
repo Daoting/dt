@@ -27,6 +27,7 @@ namespace Dt.Cells.UI
     /// </summary>
     internal partial class CellsPanel : Panel
     {
+        static Rect _rcEmpty = new Rect();
         internal int _activeCol;
         internal int _activeRow;
         BorderLayer _borderLayer;
@@ -131,286 +132,287 @@ namespace Dt.Cells.UI
         void BuildSelection()
         {
             _cachedSelectionLayout.Clear();
-            _selectionLayer.FocusIndicator.Visibility = Visibility.Collapsed;
-            _cachedFocusCellLayout = Rect.Empty;
-            _cachedSelectionFrameLayout = Rect.Empty;
-            _cachedActiveSelectionLayout = Rect.Empty;
+            _cachedFocusCellLayout = _rcEmpty;
+            _cachedSelectionFrameLayout = _rcEmpty;
+            _cachedActiveSelectionLayout = _rcEmpty;
             _cachedActiveSelection = null;
             _activeRow = Excel.ActiveSheet.ActiveRowIndex;
             _activeCol = Excel.ActiveSheet.ActiveColumnIndex;
             _selectionLayer.IsAnchorCellInSelection = false;
-            CellRange activeCellRange = GetActiveCellRange();
-            List<CellRange> list = new List<CellRange>((IEnumerable<CellRange>)Excel.ActiveSheet.Selections);
-            if (list.Count == 0)
-            {
-                list.Add(activeCellRange);
-            }
-            int num = list.Count;
+
+            var indicator = _selectionLayer.FocusIndicator;
             RowLayoutModel rowLayoutModel = GetRowLayoutModel();
-            Size viewportSize = GetViewportSize();
-            Rect rect = new Rect(0.0, 0.0, viewportSize.Width, viewportSize.Height);
-            if ((rowLayoutModel != null) && (rowLayoutModel.Count > 0))
+            ColumnLayoutModel colLayoutModel = Excel.GetViewportColumnLayoutModel(ColumnViewportIndex);
+            if (rowLayoutModel == null
+                || rowLayoutModel.Count == 0
+                || colLayoutModel == null
+                || colLayoutModel.Count == 0)
             {
-                ColumnLayoutModel viewportColumnLayoutModel = Excel.GetViewportColumnLayoutModel(ColumnViewportIndex);
-                if ((viewportColumnLayoutModel != null) && (viewportColumnLayoutModel.Count > 0))
+                indicator.HideAll();
+                return;
+            }
+
+            CellRange activeCellRange = GetActiveCellRange();
+            List<CellRange> ranges = new List<CellRange>((IEnumerable<CellRange>)Excel.ActiveSheet.Selections);
+            if (ranges.Count == 0)
+            {
+                ranges.Add(activeCellRange);
+            }
+
+            int rangeCount = ranges.Count;
+            Size viewportSize = GetViewportSize();
+            Rect rectViewport = new Rect(0.0, 0.0, viewportSize.Width, viewportSize.Height);
+
+            int topRow = rowLayoutModel[0].Row;
+            int bottomRow = rowLayoutModel[rowLayoutModel.Count - 1].Row;
+            int leftCol = colLayoutModel[0].Column;
+            int rightCol = colLayoutModel[colLayoutModel.Count - 1].Column;
+
+            for (int i = 0; i < rangeCount; i++)
+            {
+                CellRange range = ranges[i];
+                if (range.Contains(_activeRow, _activeCol))
                 {
-                    int row = rowLayoutModel[0].Row;
-                    int num3 = rowLayoutModel[rowLayoutModel.Count - 1].Row;
-                    int column = viewportColumnLayoutModel[0].Column;
-                    int num5 = viewportColumnLayoutModel[viewportColumnLayoutModel.Count - 1].Column;
-                    for (int i = 0; i < num; i++)
+                    _selectionLayer.IsAnchorCellInSelection = true;
+                }
+
+                int num7 = (range.Row < 0) ? 0 : range.Row;
+                int num8 = (range.Column < 0) ? 0 : range.Column;
+                int rowCount = (range.RowCount < 0) ? Excel.ActiveSheet.RowCount : range.RowCount;
+                int columnCount = (range.ColumnCount < 0) ? Excel.ActiveSheet.ColumnCount : range.ColumnCount;
+                range = new CellRange(num7, num8, rowCount, columnCount);
+
+                Rect rect2 = GetRangeBounds(range);
+                rect2.Intersect(rectViewport);
+                if (rect2.IsEmpty)
+                    continue;
+
+                _cachedSelectionLayout.Add(new Rect(rect2.Left + 1.0, rect2.Top + 1.0, Math.Max((double)0.0, (double)(rect2.Width - 3.0)), Math.Max((double)0.0, (double)(rect2.Height - 3.0))));
+                if (range.Contains(activeCellRange))
+                {
+                    Rect rect3 = new Rect(rect2.Left + 1.0, rect2.Top + 1.0, Math.Max((double)0.0, (double)(rect2.Width - 3.0)), Math.Max((double)0.0, (double)(rect2.Height - 3.0)));
+                    if (_cachedActiveSelectionLayout.IsEmpty || (rangeCount == 1))
                     {
-                        CellRange range = list[i];
-                        if (range.Contains(_activeRow, _activeCol))
-                        {
-                            _selectionLayer.IsAnchorCellInSelection = true;
-                        }
-                        int num7 = (range.Row < 0) ? 0 : range.Row;
-                        int num8 = (range.Column < 0) ? 0 : range.Column;
-                        int rowCount = (range.RowCount < 0) ? Excel.ActiveSheet.RowCount : range.RowCount;
-                        int columnCount = (range.ColumnCount < 0) ? Excel.ActiveSheet.ColumnCount : range.ColumnCount;
-                        range = new CellRange(num7, num8, rowCount, columnCount);
-                        Rect rect2 = GetRangeBounds(range);
-                        rect2.Intersect(rect);
-                        if (!rect2.IsEmpty)
-                        {
-                            _cachedSelectionLayout.Add(new Rect(rect2.Left + 1.0, rect2.Top + 1.0, Math.Max((double)0.0, (double)(rect2.Width - 3.0)), Math.Max((double)0.0, (double)(rect2.Height - 3.0))));
-                            if (range.Contains(activeCellRange))
-                            {
-                                Rect rect3 = new Rect(rect2.Left + 1.0, rect2.Top + 1.0, Math.Max((double)0.0, (double)(rect2.Width - 3.0)), Math.Max((double)0.0, (double)(rect2.Height - 3.0)));
-                                if (_cachedActiveSelectionLayout.IsEmpty || (num == 1))
-                                {
-                                    _cachedActiveSelectionLayout = rect3;
-                                    _cachedActiveSelection = range;
-                                }
-                                else
-                                {
-                                    Rect rect4 = new Rect(rect3.Left, rect3.Top, rect3.Width, rect3.Height);
-                                    rect4.Intersect(_cachedActiveSelectionLayout);
-                                    if (rect4.IsEmpty)
-                                    {
-                                        _cachedActiveSelectionLayout = rect3;
-                                        _cachedActiveSelection = range;
-                                    }
-                                    else if (ContainsRect(rect3, _cachedActiveSelectionLayout))
-                                    {
-                                        _cachedActiveSelectionLayout = rect3;
-                                        _cachedActiveSelection = range;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    Rect rangeBounds = GetRangeBounds(activeCellRange);
-                    if (!rangeBounds.IsEmpty)
-                    {
-                        rangeBounds = new Rect(rangeBounds.Left + 1.0, rangeBounds.Top + 1.0, Math.Max((double)0.0, (double)(rangeBounds.Width - 3.0)), Math.Max((double)0.0, (double)(rangeBounds.Height - 3.0)));
-                    }
-                    _cachedFocusCellLayout = rangeBounds;
-                    if (num == 1)
-                    {
-                        CellRange range3 = list[0];
-                        if (!_selectionLayer.IsAnchorCellInSelection)
-                        {
-                            range3 = activeCellRange;
-                        }
-                        Rect rect6 = GetRangeBounds(range3);
-                        rect6.Intersect(rect);
-                        if (!rect6.IsEmpty)
-                        {
-                            if ((range3.Row == -1) && (range3.Column == -1))
-                            {
-                                _selectionLayer.FocusIndicator.Thickness = 1.0;
-                                _cachedSelectionFrameLayout = rect6;
-                            }
-                            else if (!_selectionLayer.IsAnchorCellInSelection)
-                            {
-                                _selectionLayer.FocusIndicator.Thickness = 1.0;
-                                _cachedSelectionFrameLayout = new Rect(rect6.Left, rect6.Top, rect6.Width, rect6.Height);
-                            }
-                            else
-                            {
-                                _selectionLayer.FocusIndicator.Thickness = 3.0;
-                                _cachedSelectionFrameLayout = rect6.IsEmpty ? rect6 : new Rect(rect6.Left - 2.0, rect6.Top - 2.0, rect6.Width + 3.0, rect6.Height + 3.0);
-                            }
-                            if (!Excel.IsDraggingFill)
-                            {
-                                if (range3.Intersects(row, column, rowLayoutModel.Count, viewportColumnLayoutModel.Count))
-                                {
-                                    if (range3.Row == -1)
-                                    {
-                                        _selectionLayer.FocusIndicator.IsTopVisible = row == 0;
-                                        _selectionLayer.FocusIndicator.IsBottomVisible = num3 == (Excel.ActiveSheet.RowCount - 1);
-                                    }
-                                    else
-                                    {
-                                        _selectionLayer.FocusIndicator.IsTopVisible = (range3.Row >= row) && (range3.Row <= num3);
-                                        int num11 = (range3.Row + range3.RowCount) - 1;
-                                        _selectionLayer.FocusIndicator.IsBottomVisible = (num11 >= row) && (num11 <= num3);
-                                    }
-                                    if (range3.Column == -1)
-                                    {
-                                        _selectionLayer.FocusIndicator.IsLeftVisible = column == 0;
-                                        _selectionLayer.FocusIndicator.IsRightVisible = num5 == (Excel.ActiveSheet.ColumnCount - 1);
-                                    }
-                                    else
-                                    {
-                                        _selectionLayer.FocusIndicator.IsLeftVisible = (range3.Column >= column) && (range3.Column <= num5);
-                                        int num12 = (range3.Column + range3.ColumnCount) - 1;
-                                        _selectionLayer.FocusIndicator.IsRightVisible = (num12 >= column) && (num12 <= num5);
-                                    }
-                                }
-                                else
-                                {
-                                    _selectionLayer.FocusIndicator.IsTopVisible = false;
-                                    _selectionLayer.FocusIndicator.IsBottomVisible = false;
-                                    _selectionLayer.FocusIndicator.IsLeftVisible = false;
-                                    _selectionLayer.FocusIndicator.IsRightVisible = false;
-                                }
-                            }
-                            if (Excel.CanUserDragFill)
-                            {
-                                if (!Excel.IsDraggingFill)
-                                {
-                                    if (((rect6.Width == 0.0) || (rect6.Height == 0.0)) || (_selectionLayer.FocusIndicator.Thickness == 1.0))
-                                    {
-                                        _selectionLayer.FocusIndicator.IsFillIndicatorVisible = false;
-                                    }
-                                    else if ((range3.Row != -1) && (range3.Column != -1))
-                                    {
-                                        bool flag = _selectionLayer.FocusIndicator.IsRightVisible && _selectionLayer.FocusIndicator.IsBottomVisible;
-                                        if (Excel.InputDeviceType == InputDeviceType.Touch)
-                                        {
-                                            flag = false;
-                                        }
-                                        _selectionLayer.FocusIndicator.IsFillIndicatorVisible = flag;
-                                        if (flag)
-                                        {
-                                            _selectionLayer.FocusIndicator.FillIndicatorPosition = FillIndicatorPosition.BottomRight;
-                                        }
-                                    }
-                                    else if ((range3.Row != -1) && (range3.Column == -1))
-                                    {
-                                        ViewportInfo viewportInfo = Excel.GetViewportInfo();
-                                        bool flag2 = false;
-                                        if (Excel.ActiveSheet.FrozenColumnCount == 0)
-                                        {
-                                            flag2 = (ColumnViewportIndex >= 0) && (ColumnViewportIndex < viewportInfo.ColumnViewportCount);
-                                        }
-                                        else
-                                        {
-                                            flag2 = (ColumnViewportIndex == -1) || ((ColumnViewportIndex >= 1) && (ColumnViewportIndex < viewportInfo.ColumnViewportCount));
-                                        }
-                                        flag2 = flag2 && _selectionLayer.FocusIndicator.IsBottomVisible;
-                                        if (Excel.InputDeviceType == InputDeviceType.Touch)
-                                        {
-                                            flag2 = false;
-                                        }
-                                        _selectionLayer.FocusIndicator.IsFillIndicatorVisible = flag2;
-                                        if (flag2)
-                                        {
-                                            _selectionLayer.FocusIndicator.FillIndicatorPosition = FillIndicatorPosition.BottomLeft;
-                                        }
-                                    }
-                                    else if ((range3.Column != -1) && (range3.Row == -1))
-                                    {
-                                        ViewportInfo info2 = Excel.GetViewportInfo();
-                                        bool flag3 = false;
-                                        if (Excel.ActiveSheet.FrozenRowCount == 0)
-                                        {
-                                            flag3 = (RowViewportIndex >= 0) && (RowViewportIndex < info2.RowViewportCount);
-                                        }
-                                        else
-                                        {
-                                            flag3 = (RowViewportIndex == -1) || ((RowViewportIndex >= 1) && (RowViewportIndex < info2.RowViewportCount));
-                                        }
-                                        flag3 = flag3 && _selectionLayer.FocusIndicator.IsRightVisible;
-                                        if (Excel.InputDeviceType == InputDeviceType.Touch)
-                                        {
-                                            flag3 = false;
-                                        }
-                                        _selectionLayer.FocusIndicator.IsFillIndicatorVisible = flag3;
-                                        if (flag3)
-                                        {
-                                            _selectionLayer.FocusIndicator.FillIndicatorPosition = FillIndicatorPosition.TopRight;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        _selectionLayer.FocusIndicator.IsFillIndicatorVisible = false;
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                _selectionLayer.FocusIndicator.IsFillIndicatorVisible = false;
-                            }
-                            _selectionLayer.FocusIndicator.Visibility = Visibility.Visible;
-                        }
-                        else
-                        {
-                            _selectionLayer.FocusIndicator.Visibility = Visibility.Collapsed;
-                        }
+                        _cachedActiveSelectionLayout = rect3;
+                        _cachedActiveSelection = range;
                     }
                     else
                     {
-                        Rect rect7 = GetRangeBounds(activeCellRange);
-                        if (!rect7.IsEmpty)
+                        Rect rect4 = new Rect(rect3.Left, rect3.Top, rect3.Width, rect3.Height);
+                        rect4.Intersect(_cachedActiveSelectionLayout);
+                        if (rect4.IsEmpty)
                         {
-                            _selectionLayer.FocusIndicator.Thickness = 1.0;
-                            _selectionLayer.FocusIndicator.Visibility = Visibility.Visible;
-                            _cachedSelectionFrameLayout = rect7;
-                            _cachedSelectionFrameLayout.Width = Math.Max((double)0.0, (double)(_cachedSelectionFrameLayout.Width - 1.0));
-                            _cachedSelectionFrameLayout.Height = Math.Max((double)0.0, (double)(_cachedSelectionFrameLayout.Height - 1.0));
-                            int num13 = 0;
-                            int num14 = 0;
-                            int num15 = 0;
-                            int num16 = 0;
-                            for (int j = 0; j < num; j++)
-                            {
-                                CellRange range4 = list[j];
-                                if (range4 != null)
-                                {
-                                    if (activeCellRange.Row == range4.Row)
-                                    {
-                                        num14 = 1;
-                                    }
-                                    if (activeCellRange.Column == range4.Column)
-                                    {
-                                        num13 = 1;
-                                    }
-                                    if (activeCellRange.Row == ((range4.Row + range4.RowCount) - 1))
-                                    {
-                                        num16 = 1;
-                                    }
-                                    if (activeCellRange.Column == ((range4.Column + range4.ColumnCount) - 1))
-                                    {
-                                        num15 = 1;
-                                    }
-                                }
-                            }
-                            _cachedSelectionFrameLayout.Y += num14;
-                            _cachedSelectionFrameLayout.Height = Math.Max((double)0.0, (double)(_cachedSelectionFrameLayout.Height - (num14 + num16)));
-                            _cachedSelectionFrameLayout.X += num13;
-                            _cachedSelectionFrameLayout.Width = Math.Max((double)0.0, (double)(_cachedSelectionFrameLayout.Width - (num13 + num15)));
+                            _cachedActiveSelectionLayout = rect3;
+                            _cachedActiveSelection = range;
                         }
-                        else
+                        else if (ContainsRect(rect3, _cachedActiveSelectionLayout))
                         {
-                            _selectionLayer.FocusIndicator.Visibility = Visibility.Collapsed;
+                            _cachedActiveSelectionLayout = rect3;
+                            _cachedActiveSelection = range;
                         }
-                        _selectionLayer.FocusIndicator.IsBottomVisible = true;
-                        _selectionLayer.FocusIndicator.IsTopVisible = true;
-                        _selectionLayer.FocusIndicator.IsLeftVisible = true;
-                        _selectionLayer.FocusIndicator.IsRightVisible = true;
-                        _selectionLayer.FocusIndicator.IsFillIndicatorVisible = false;
                     }
                 }
             }
-            if (_selectionLayer.FocusIndicator != null)
+
+            Rect rangeBounds = GetRangeBounds(activeCellRange);
+            if (!rangeBounds.IsEmpty)
             {
-                _selectionLayer.FocusIndicator.InvalidateMeasure();
-                _selectionLayer.FocusIndicator.InvalidateArrange();
+                rangeBounds = new Rect(rangeBounds.Left + 1.0, rangeBounds.Top + 1.0, Math.Max((double)0.0, (double)(rangeBounds.Width - 3.0)), Math.Max((double)0.0, (double)(rangeBounds.Height - 3.0)));
             }
+            _cachedFocusCellLayout = rangeBounds;
+
+            // 只一个选择区域
+            if (rangeCount == 1)
+            {
+                CellRange range = ranges[0];
+                if (!_selectionLayer.IsAnchorCellInSelection)
+                {
+                    range = activeCellRange;
+                }
+                Rect bounds = GetRangeBounds(range);
+                bounds.Intersect(rectViewport);
+                if (bounds.IsEmpty)
+                {
+                    indicator.HideAll();
+                    return;
+                }
+
+                if ((range.Row == -1) && (range.Column == -1))
+                {
+                    // 全选
+                    indicator.Thickness = 1.0;
+                    _cachedSelectionFrameLayout = bounds;
+                }
+                else if (!_selectionLayer.IsAnchorCellInSelection)
+                {
+                    indicator.Thickness = 1.0;
+                    _cachedSelectionFrameLayout = new Rect(bounds.Left, bounds.Top, bounds.Width, bounds.Height);
+                }
+                else
+                {
+                    indicator.Thickness = 3.0;
+                    _cachedSelectionFrameLayout = new Rect(bounds.Left - 2.0, bounds.Top - 2.0, bounds.Width + 3.0, bounds.Height + 3.0);
+                }
+
+                if (!Excel.IsDraggingFill && range.Intersects(topRow, leftCol, rowLayoutModel.Count, colLayoutModel.Count))
+                {
+                    if (range.Row == -1)
+                    {
+                        indicator.IsTopVisible = topRow == 0;
+                        indicator.IsBottomVisible = bottomRow == (Excel.ActiveSheet.RowCount - 1);
+                    }
+                    else
+                    {
+                        indicator.IsTopVisible = (range.Row >= topRow) && (range.Row <= bottomRow);
+                        int num11 = (range.Row + range.RowCount) - 1;
+                        indicator.IsBottomVisible = (num11 >= topRow) && (num11 <= bottomRow);
+                    }
+
+                    if (range.Column == -1)
+                    {
+                        indicator.IsLeftVisible = leftCol == 0;
+                        indicator.IsRightVisible = rightCol == (Excel.ActiveSheet.ColumnCount - 1);
+                    }
+                    else
+                    {
+                        indicator.IsLeftVisible = (range.Column >= leftCol) && (range.Column <= rightCol);
+                        int num12 = (range.Column + range.ColumnCount) - 1;
+                        indicator.IsRightVisible = (num12 >= leftCol) && (num12 <= rightCol);
+                    }
+                }
+                else
+                {
+                    indicator.IsTopVisible = false;
+                    indicator.IsBottomVisible = false;
+                    indicator.IsLeftVisible = false;
+                    indicator.IsRightVisible = false;
+                }
+
+                if (Excel.CanUserDragFill)
+                {
+                    if (!Excel.IsDraggingFill)
+                    {
+                        if (((bounds.Width == 0.0) || (bounds.Height == 0.0)) || (indicator.Thickness == 1.0))
+                        {
+                            indicator.IsFillIndicatorVisible = false;
+                        }
+                        else if ((range.Row != -1) && (range.Column != -1))
+                        {
+                            bool flag = indicator.IsRightVisible && indicator.IsBottomVisible;
+                            if (Excel.InputDeviceType == InputDeviceType.Touch)
+                            {
+                                flag = false;
+                            }
+                            indicator.IsFillIndicatorVisible = flag;
+                            if (flag)
+                            {
+                                indicator.FillIndicatorPosition = FillIndicatorPosition.BottomRight;
+                            }
+                        }
+                        else if ((range.Row != -1) && (range.Column == -1))
+                        {
+                            ViewportInfo viewportInfo = Excel.GetViewportInfo();
+                            bool flag2;
+                            if (Excel.ActiveSheet.FrozenColumnCount == 0)
+                            {
+                                flag2 = (ColumnViewportIndex >= 0) && (ColumnViewportIndex < viewportInfo.ColumnViewportCount);
+                            }
+                            else
+                            {
+                                flag2 = (ColumnViewportIndex == -1) || ((ColumnViewportIndex >= 1) && (ColumnViewportIndex < viewportInfo.ColumnViewportCount));
+                            }
+                            flag2 = flag2 && indicator.IsBottomVisible;
+                            if (Excel.InputDeviceType == InputDeviceType.Touch)
+                            {
+                                flag2 = false;
+                            }
+                            indicator.IsFillIndicatorVisible = flag2;
+                            if (flag2)
+                            {
+                                indicator.FillIndicatorPosition = FillIndicatorPosition.BottomLeft;
+                            }
+                        }
+                        else if ((range.Column != -1) && (range.Row == -1))
+                        {
+                            ViewportInfo info2 = Excel.GetViewportInfo();
+                            bool flag3;
+                            if (Excel.ActiveSheet.FrozenRowCount == 0)
+                            {
+                                flag3 = (RowViewportIndex >= 0) && (RowViewportIndex < info2.RowViewportCount);
+                            }
+                            else
+                            {
+                                flag3 = (RowViewportIndex == -1) || ((RowViewportIndex >= 1) && (RowViewportIndex < info2.RowViewportCount));
+                            }
+                            flag3 = flag3 && indicator.IsRightVisible;
+                            if (Excel.InputDeviceType == InputDeviceType.Touch)
+                            {
+                                flag3 = false;
+                            }
+                            indicator.IsFillIndicatorVisible = flag3;
+                            if (flag3)
+                            {
+                                indicator.FillIndicatorPosition = FillIndicatorPosition.TopRight;
+                            }
+                        }
+                        else
+                        {
+                            indicator.IsFillIndicatorVisible = false;
+                        }
+                    }
+                }
+                else
+                {
+                    indicator.IsFillIndicatorVisible = false;
+                }
+                return;
+            }
+
+            // 多个选择区域
+            Rect rect7 = GetRangeBounds(activeCellRange);
+            if (!rect7.IsEmpty)
+            {
+                indicator.Thickness = 1.0;
+                _cachedSelectionFrameLayout = rect7;
+                _cachedSelectionFrameLayout.Width = Math.Max((double)0.0, (double)(_cachedSelectionFrameLayout.Width - 1.0));
+                _cachedSelectionFrameLayout.Height = Math.Max((double)0.0, (double)(_cachedSelectionFrameLayout.Height - 1.0));
+                int num13 = 0;
+                int num14 = 0;
+                int num15 = 0;
+                int num16 = 0;
+                for (int j = 0; j < rangeCount; j++)
+                {
+                    CellRange range4 = ranges[j];
+                    if (range4 != null)
+                    {
+                        if (activeCellRange.Row == range4.Row)
+                        {
+                            num14 = 1;
+                        }
+                        if (activeCellRange.Column == range4.Column)
+                        {
+                            num13 = 1;
+                        }
+                        if (activeCellRange.Row == ((range4.Row + range4.RowCount) - 1))
+                        {
+                            num16 = 1;
+                        }
+                        if (activeCellRange.Column == ((range4.Column + range4.ColumnCount) - 1))
+                        {
+                            num15 = 1;
+                        }
+                    }
+                }
+                _cachedSelectionFrameLayout.Y += num14;
+                _cachedSelectionFrameLayout.Height = Math.Max((double)0.0, (double)(_cachedSelectionFrameLayout.Height - (num14 + num16)));
+                _cachedSelectionFrameLayout.X += num13;
+                _cachedSelectionFrameLayout.Width = Math.Max((double)0.0, (double)(_cachedSelectionFrameLayout.Width - (num13 + num15)));
+            }
+            indicator.IsBottomVisible = true;
+            indicator.IsTopVisible = true;
+            indicator.IsLeftVisible = true;
+            indicator.IsRightVisible = true;
+            indicator.IsFillIndicatorVisible = false;
         }
 
         bool ContainsRect(Rect rect1, Rect rect2)
