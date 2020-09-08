@@ -20,6 +20,95 @@ namespace Dt.Base
 {
     public partial class Excel
     {
+        bool InitFloatingObjectsMovingResizing()
+        {
+            HitTestInformation savedHitTestInformation = GetHitInfo();
+            if (IsTouching)
+            {
+                savedHitTestInformation = _touchStartHitTestInfo;
+            }
+            if (((savedHitTestInformation.ViewportInfo == null) || (savedHitTestInformation.RowViewportIndex == -2)) || (savedHitTestInformation.ColumnViewportIndex == 2))
+            {
+                return false;
+            }
+            _floatingObjectsMovingResizingStartRow = savedHitTestInformation.ViewportInfo.Row;
+            _floatingObjectsMovingResizingStartColumn = savedHitTestInformation.ViewportInfo.Column;
+            _dragStartRowViewport = savedHitTestInformation.RowViewportIndex;
+            _dragStartColumnViewport = savedHitTestInformation.ColumnViewportIndex;
+            _dragToRowViewport = savedHitTestInformation.RowViewportIndex;
+            _dragToColumnViewport = savedHitTestInformation.ColumnViewportIndex;
+            _floatingObjectsMovingResizingStartPoint = savedHitTestInformation.HitPoint;
+            SetActiveColumnViewportIndex(savedHitTestInformation.ColumnViewportIndex);
+            SetActiveRowViewportIndex(savedHitTestInformation.RowViewportIndex);
+            CachFloatingObjectsMovingResizingLayoutModels();
+            RowLayout viewportRowLayoutNearY = GetViewportRowLayoutNearY(_dragStartRowViewport, _floatingObjectsMovingResizingStartPoint.Y);
+            ColumnLayout viewportColumnLayoutNearX = GetViewportColumnLayoutNearX(_dragToColumnViewport, _floatingObjectsMovingResizingStartPoint.X);
+            _floatingObjectsMovingResizingStartPointCellBounds = new Rect(viewportColumnLayoutNearX.X, viewportRowLayoutNearY.Y, viewportColumnLayoutNearX.Width, viewportRowLayoutNearY.Height);
+            _floatingObjectsMovingStartLocations = new Dictionary<string, Point>();
+            FloatingObject[] objArray = _movingResizingFloatingObjects;
+            for (int i = 0; i < objArray.Length; i++)
+            {
+                IFloatingObject obj2 = objArray[i];
+                _floatingObjectsMovingStartLocations.Add(obj2.Name, obj2.Location);
+            }
+            return true;
+        }
+
+        void StartFloatingObjectsMoving()
+        {
+            _movingResizingFloatingObjects = GetAllSelectedFloatingObjects();
+            if (((_movingResizingFloatingObjects != null) && (_movingResizingFloatingObjects.Length != 0)) && InitFloatingObjectsMovingResizing())
+            {
+                if ((_touchToolbarPopup != null) && _touchToolbarPopup.IsOpen)
+                {
+                    _touchToolbarPopup.IsOpen = false;
+                }
+                IsWorking = true;
+                if (IsTouching)
+                {
+                    IsTouchingMovingFloatingObjects = true;
+                }
+                else
+                {
+                    IsMovingFloatingOjects = true;
+                }
+                StartScrollTimer();
+            }
+        }
+
+        void StartFloatingObjectsResizing()
+        {
+            _movingResizingFloatingObjects = GetAllSelectedFloatingObjects();
+            if (((_movingResizingFloatingObjects != null) && (_movingResizingFloatingObjects.Length != 0)) && InitFloatingObjectsMovingResizing())
+            {
+                if ((_touchToolbarPopup != null) && _touchToolbarPopup.IsOpen)
+                {
+                    _touchToolbarPopup.IsOpen = false;
+                }
+                IsWorking = true;
+                if (IsTouching)
+                {
+                    IsTouchingResizingFloatingObjects = true;
+                }
+                else
+                {
+                    IsResizingFloatingObjects = true;
+                }
+                StartScrollTimer();
+            }
+        }
+
+        internal bool HasSelectedFloatingObject()
+        {
+            foreach (IFloatingObject obj2 in GetAllFloatingObjects())
+            {
+                if (obj2.IsSelected)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
 
         void CachFloatingObjectsMovingResizingLayoutModels()
         {
@@ -33,6 +122,41 @@ namespace Dt.Base
                 {
                     _cachedFloatingObjectMovingResizingLayoutModel[i + 1, j + 1] = new FloatingObjectLayoutModel(GetViewportFloatingObjectLayoutModel(i, j));
                 }
+            }
+        }
+
+        internal void UnSelectedAllFloatingObjects()
+        {
+            FloatingObject[] allFloatingObjects = GetAllFloatingObjects();
+            if (allFloatingObjects.Length > 0)
+            {
+                FloatingObject[] objArray2 = allFloatingObjects;
+                for (int i = 0; i < objArray2.Length; i++)
+                {
+                    IFloatingObject obj2 = objArray2[i];
+                    obj2.IsSelected = false;
+                }
+            }
+        }
+
+        void UnSelectFloatingObject(FloatingObject floatingObject)
+        {
+            try
+            {
+                if (!_isMouseDownFloatingObject)
+                {
+                    bool flag;
+                    bool flag2;
+                    KeyboardHelper.GetMetaKeyState(out flag, out flag2);
+                    if (((flag2 || flag) && !(floatingObject.Locked && ActiveSheet.Protect)) && floatingObject.IsSelected)
+                    {
+                        floatingObject.IsSelected = false;
+                    }
+                }
+            }
+            finally
+            {
+                _isMouseDownFloatingObject = false;
             }
         }
 

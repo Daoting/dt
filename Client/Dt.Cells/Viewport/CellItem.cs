@@ -44,7 +44,6 @@ namespace Dt.Cells.UI
         BaseSparklineView _sparklineView;
         StrikethroughView _strikethroughView;
         FilterButton _filterButton;
-        InvalidDataPresenterInfo _dataValidationInvalidPresenterInfo;
         bool _lastUnderline;
         #endregion
 
@@ -112,12 +111,6 @@ namespace Dt.Cells.UI
                     _sparkInfo.SparklineChanged -= new EventHandler(sparkline_SparklineChanged);
                     _sparkInfo = null;
                 }
-            }
-
-            if (_dataValidationInvalidPresenterInfo != null)
-            {
-                OwnRow.OwnPanel.RemoveDataValidationInvalidDataPresenterInfo(_dataValidationInvalidPresenterInfo);
-                _dataValidationInvalidPresenterInfo = null;
             }
         }
 
@@ -224,38 +217,6 @@ namespace Dt.Cells.UI
                 }
             }
 #endif
-
-            if (OwnRow.OwnPanel.Excel.HighlightInvalidData)
-            {
-                if (_dataValidationInvalidPresenterInfo == null)
-                {
-                    DataValidator actualDataValidator = BindingCell.ActualDataValidator;
-                    if ((actualDataValidator != null) && !actualDataValidator.IsValid(excel.ActiveSheet, Row, Column, BindingCell.Value))
-                    {
-                        InvalidDataPresenterInfo info2 = new InvalidDataPresenterInfo
-                        {
-                            Row = Row,
-                            Column = Column
-                        };
-                        _dataValidationInvalidPresenterInfo = info2;
-                        OwnRow.OwnPanel.AddDataValidationInvalidDataPresenterInfo(_dataValidationInvalidPresenterInfo);
-                    }
-                }
-                else if (_dataValidationInvalidPresenterInfo != null)
-                {
-                    DataValidator validator2 = BindingCell.ActualDataValidator;
-                    if ((validator2 == null) || validator2.IsValid(excel.ActiveSheet, Row, Column, BindingCell.Value))
-                    {
-                        OwnRow.OwnPanel.RemoveDataValidationInvalidDataPresenterInfo(_dataValidationInvalidPresenterInfo);
-                        _dataValidationInvalidPresenterInfo = null;
-                    }
-                }
-            }
-            else if (_dataValidationInvalidPresenterInfo != null)
-            {
-                OwnRow.OwnPanel.RemoveDataValidationInvalidDataPresenterInfo(_dataValidationInvalidPresenterInfo);
-                _dataValidationInvalidPresenterInfo = null;
-            }
         }
 
         protected override Size MeasureOverride(Size availableSize)

@@ -179,28 +179,13 @@ namespace Dt.Base
                 }
 
                 IsMouseLeftButtonPressed = true;
-                if (!_formulaSelectionFeature.IsSelectionBegined)
-                {
-                    FocusInternal();
-                }
+                FocusInternal();
                 _lastClickPoint = e.GetCurrentPoint(this).Position;
                 _routedEventArgs = e;
                 return true;
             }
 
-            if (CanSelectFormula)
-            {
-                EditorConnector.ClearFlickingItems();
-                if (!EditorConnector.IsInOtherSheet)
-                {
-                    EditorConnector.IsInOtherSheet = true;
-                    EditorConnector.SheetIndex = ActiveSheet.Workbook.ActiveSheetIndex;
-                    EditorConnector.RowIndex = ActiveSheet.ActiveRowIndex;
-                    EditorConnector.ColumnIndex = ActiveSheet.ActiveColumnIndex;
-                }
-            }
-
-            StopCellEditing(CanSelectFormula);
+            StopCellEditing(true);
             if (_tabStrip != null)
             {
                 _tabStrip.StopTabEditing(false);
@@ -251,24 +236,13 @@ namespace Dt.Base
                     return;
             }
 
-            if (!IsEditing
-                || _formulaSelectionFeature.CanSelectFormula
-                || p_hitInfo.HitTestType == HitTestType.FormulaSelection
-                || StopCellEditing(false))
+            if (!IsEditing || StopCellEditing(false))
             {
                 UpdateLastClickLocation(p_hitInfo);
                 _hitFilterInfo = GetMouseDownFilterButton(p_hitInfo, false);
-                DataValidationListButtonInfo mouseDownDataValidationButton = GetMouseDownDataValidationButton(p_hitInfo, false);
-                if ((_hitFilterInfo != null) || (mouseDownDataValidationButton != null))
+                if (_hitFilterInfo != null)
                 {
-                    if (mouseDownDataValidationButton != null)
-                    {
-                        ProcessMouseDownDataValidationListButton(mouseDownDataValidationButton);
-                    }
-                    else if (_hitFilterInfo != null)
-                    {
-                        ProcessMouseDownFilterButton(_hitFilterInfo);
-                    }
+                    ProcessMouseDownFilterButton(_hitFilterInfo);
                 }
                 else
                 {
@@ -276,25 +250,17 @@ namespace Dt.Base
                     {
                         case HitTestType.Corner:
                             {
-                                bool flag3 = false;
-                                if (_formulaSelectionFeature.IsSelectionBegined)
+                                if (p_hitInfo.HeaderInfo.InRowResize)
                                 {
-                                    flag3 = _formulaSelectionFeature.StartSelecting(SheetArea.CornerHeader);
+                                    StartRowResizing();
+                                    return;
                                 }
-                                if (!flag3)
+                                if (p_hitInfo.HeaderInfo.InColumnResize)
                                 {
-                                    if (p_hitInfo.HeaderInfo.InRowResize)
-                                    {
-                                        StartRowResizing();
-                                        return;
-                                    }
-                                    if (p_hitInfo.HeaderInfo.InColumnResize)
-                                    {
-                                        StartColumnResizing();
-                                        return;
-                                    }
-                                    StartSheetSelecting();
+                                    StartColumnResizing();
+                                    return;
                                 }
+                                StartSheetSelecting();
                                 return;
                             }
                         case HitTestType.TabStrip:
@@ -304,89 +270,57 @@ namespace Dt.Base
 
                         case HitTestType.RowHeader:
                             {
-                                bool flag5 = false;
-                                if (_formulaSelectionFeature.IsSelectionBegined)
+                                if (p_hitInfo.HeaderInfo.InRowResize)
                                 {
-                                    flag5 = _formulaSelectionFeature.StartSelecting(SheetArea.CornerHeader | SheetArea.RowHeader);
+                                    StartRowResizing();
+                                    return;
                                 }
-                                if (!flag5)
-                                {
-                                    if (p_hitInfo.HeaderInfo.InRowResize)
-                                    {
-                                        StartRowResizing();
-                                        return;
-                                    }
-                                    UnSelectedAllFloatingObjects();
-                                    StartRowsSelecting();
-                                }
+                                UnSelectedAllFloatingObjects();
+                                StartRowsSelecting();
                                 return;
                             }
                         case HitTestType.ColumnHeader:
                             {
-                                bool flag4 = false;
-                                if (_formulaSelectionFeature.IsSelectionBegined)
+                                if (p_hitInfo.HeaderInfo.InColumnResize)
                                 {
-                                    flag4 = _formulaSelectionFeature.StartSelecting(SheetArea.ColumnHeader);
+                                    StartColumnResizing();
+                                    return;
                                 }
-                                if (!flag4)
-                                {
-                                    if (p_hitInfo.HeaderInfo.InColumnResize)
-                                    {
-                                        StartColumnResizing();
-                                        return;
-                                    }
-                                    UnSelectedAllFloatingObjects();
-                                    StartColumnSelecting();
-                                }
+                                UnSelectedAllFloatingObjects();
+                                StartColumnSelecting();
                                 return;
                             }
                         case HitTestType.Viewport:
                             {
-                                bool flag6 = false;
-                                if (_formulaSelectionFeature.IsSelectionBegined)
+                                if (!CanUserDragFill || !p_hitInfo.ViewportInfo.InDragFillIndicator)
                                 {
-                                    flag6 = _formulaSelectionFeature.StartSelecting(SheetArea.Cells);
-                                }
-                                if (!flag6)
-                                {
-                                    if (!CanUserDragFill || !p_hitInfo.ViewportInfo.InDragFillIndicator)
-                                    {
-                                        if (CanUserDragDrop && p_hitInfo.ViewportInfo.InSelectionDrag)
-                                        {
-                                            if (IsEditing)
-                                            {
-                                                StopCellEditing(false);
-                                            }
-                                            StartDragDropping();
-                                        }
-                                        else if (!IsEditing)
-                                        {
-                                            StartCellSelecting();
-                                        }
-                                    }
-                                    else
+                                    if (CanUserDragDrop && p_hitInfo.ViewportInfo.InSelectionDrag)
                                     {
                                         if (IsEditing)
                                         {
                                             StopCellEditing(false);
                                         }
-                                        StartDragFill();
+                                        StartDragDropping();
                                     }
+                                    else if (!IsEditing)
+                                    {
+                                        StartCellSelecting();
+                                    }
+                                }
+                                else
+                                {
+                                    if (IsEditing)
+                                    {
+                                        StopCellEditing(false);
+                                    }
+                                    StartDragFill();
                                 }
                                 UnSelectedAllFloatingObjects();
                                 return;
                             }
                         case HitTestType.CornerRangeGroup:
                             {
-                                bool flag2 = false;
-                                if (_formulaSelectionFeature.IsSelectionBegined)
-                                {
-                                    flag2 = _formulaSelectionFeature.StartSelecting(SheetArea.CornerHeader);
-                                }
-                                if (!flag2)
-                                {
-                                    StartSheetSelecting();
-                                }
+                                StartSheetSelecting();
                                 return;
                             }
                         case HitTestType.FloatingObject:
@@ -429,15 +363,6 @@ namespace Dt.Base
                                     }
                                 }
                             }
-                            return;
-
-                        case HitTestType.FormulaSelection:
-                            if (!p_hitInfo.FormulaSelectionInfo.CanMove)
-                            {
-                                _formulaSelectionFeature.StartDragResizing();
-                                return;
-                            }
-                            _formulaSelectionFeature.StartDragDropping();
                             return;
                     }
                 }
@@ -680,16 +605,6 @@ namespace Dt.Base
                         }
                         break;
 
-                    case HitTestType.FormulaSelection:
-                        if (!IsWorking)
-                        {
-                            _formulaSelectionFeature.SetCursor(p_hitInfo.FormulaSelectionInfo);
-                        }
-                        break;
-                }
-                if (_formulaSelectionFeature.IsDragging)
-                {
-                    _formulaSelectionFeature.ContinueDragging();
                 }
                 if (IsResizingColumns)
                 {
@@ -870,7 +785,7 @@ namespace Dt.Base
             }
             else
             {
-                if (!IsEditing && !_formulaSelectionFeature.IsSelectionBegined)
+                if (!IsEditing)
                 {
                     FocusInternal();
                 }
@@ -1273,66 +1188,61 @@ namespace Dt.Base
                 CloseDragFillPopup();
             }
 
-            if (_formulaSelectionFeature.TouchHitTest(_touchStartPoint.X, _touchStartPoint.Y, _touchStartHitTestInfo))
+            if ((_touchStartHitTestInfo.HitTestType == HitTestType.Viewport) && (ActiveSheet.Selections != null))
             {
-                _formulaSelectionFeature.StartDragResizing();
+                IsTouchSelectingCells = false;
+                if ((!IsEditing && !IsTouchDrapDropping) && !IsTouchDragFilling)
+                {
+                    if (_autoFillIndicatorRec.HasValue && _autoFillIndicatorRec.Value.Contains(_touchStartPoint))
+                    {
+                        StartTouchDragFill();
+                    }
+                    else if (CachedGripperLocation != null)
+                    {
+                        if (CachedGripperLocation.TopLeft.Expand(5, 5).Contains(_touchStartPoint))
+                        {
+                            MoveActiveCellToBottom();
+                            StartTouchingSelecting();
+                        }
+                        else if (CachedGripperLocation.BottomRight.Expand(5, 5).Contains(_touchStartPoint))
+                        {
+                            StartTouchingSelecting();
+                        }
+                    }
+                }
             }
-            else
+            if (_touchStartHitTestInfo.HitTestType == HitTestType.RowHeader && !_autoFillIndicatorRec.HasValue)
             {
-                if ((_touchStartHitTestInfo.HitTestType == HitTestType.Viewport) && (ActiveSheet.Selections != null))
+                if ((CachedGripperLocation != null) && CachedGripperLocation.TopLeft.Expand(5, 5).Contains(_touchStartPoint))
                 {
-                    IsTouchSelectingCells = false;
-                    if ((!IsEditing && !IsTouchDrapDropping) && !IsTouchDragFilling)
-                    {
-                        if (_autoFillIndicatorRec.HasValue && _autoFillIndicatorRec.Value.Contains(_touchStartPoint))
-                        {
-                            StartTouchDragFill();
-                        }
-                        else if (CachedGripperLocation != null)
-                        {
-                            if (CachedGripperLocation.TopLeft.Expand(5, 5).Contains(_touchStartPoint))
-                            {
-                                MoveActiveCellToBottom();
-                                StartTouchingSelecting();
-                            }
-                            else if (CachedGripperLocation.BottomRight.Expand(5, 5).Contains(_touchStartPoint))
-                            {
-                                StartTouchingSelecting();
-                            }
-                        }
-                    }
+                    MoveActiveCellToBottom();
+                    StartTouchingSelecting();
                 }
-                if (((_touchStartHitTestInfo.HitTestType == HitTestType.RowHeader) && !_formulaSelectionFeature.IsSelectionBegined) && !_autoFillIndicatorRec.HasValue)
+                else if (ResizerGripperRect.HasValue && ResizerGripperRect.Value.Contains(_touchStartPoint))
                 {
-                    if ((CachedGripperLocation != null) && CachedGripperLocation.TopLeft.Expand(5, 5).Contains(_touchStartPoint))
-                    {
-                        MoveActiveCellToBottom();
-                        StartTouchingSelecting();
-                    }
-                    else if (ResizerGripperRect.HasValue && ResizerGripperRect.Value.Contains(_touchStartPoint))
-                    {
-                        StartTouchRowResizing();
-                    }
-                    else
-                    {
-                        _IsTouchStartRowSelecting = true;
-                    }
+                    StartTouchRowResizing();
                 }
-                if (((_touchStartHitTestInfo.HitTestType == HitTestType.ColumnHeader) && (GetMouseDownFilterButton(_touchStartHitTestInfo, false) == null)) && (!_formulaSelectionFeature.IsSelectionBegined && !_autoFillIndicatorRec.HasValue))
+                else
                 {
-                    if ((CachedGripperLocation != null) && CachedGripperLocation.TopLeft.Expand(5, 5).Contains(_touchStartPoint))
-                    {
-                        MoveActiveCellToBottom();
-                        StartTouchingSelecting();
-                    }
-                    else if (ResizerGripperRect.HasValue && ResizerGripperRect.Value.Contains(_touchStartPoint))
-                    {
-                        StartTouchColumnResizing();
-                    }
-                    else
-                    {
-                        _IsTouchStartColumnSelecting = true;
-                    }
+                    _IsTouchStartRowSelecting = true;
+                }
+            }
+            if (_touchStartHitTestInfo.HitTestType == HitTestType.ColumnHeader
+                && GetMouseDownFilterButton(_touchStartHitTestInfo, false) == null
+                && !_autoFillIndicatorRec.HasValue)
+            {
+                if ((CachedGripperLocation != null) && CachedGripperLocation.TopLeft.Expand(5, 5).Contains(_touchStartPoint))
+                {
+                    MoveActiveCellToBottom();
+                    StartTouchingSelecting();
+                }
+                else if (ResizerGripperRect.HasValue && ResizerGripperRect.Value.Contains(_touchStartPoint))
+                {
+                    StartTouchColumnResizing();
+                }
+                else
+                {
+                    _IsTouchStartColumnSelecting = true;
                 }
             }
         }
@@ -1679,10 +1589,6 @@ namespace Dt.Base
                 {
                     ContinueTouchDragDropping();
                 }
-                else if (_formulaSelectionFeature.IsDragging)
-                {
-                    _formulaSelectionFeature.ContinueDragging();
-                }
                 else if (IsTouchSelectingCells)
                 {
                     ContinueTouchSelectingCells(MousePosition);
@@ -1898,10 +1804,6 @@ namespace Dt.Base
 
             IsTouching = false;
             IsTouchPromotedMouseMessage = false;
-            if (_formulaSelectionFeature.IsDragging)
-            {
-                _formulaSelectionFeature.EndDragging();
-            }
 
             if (IsTouchSelectingCells)
             {
@@ -2142,26 +2044,16 @@ namespace Dt.Base
             {
                 CellRange range = ActiveSheet.Selections[0];
             }
-            if ((IsEditing && !_formulaSelectionFeature.CanSelectFormula) && !StopCellEditing(false))
+            if (IsEditing && !StopCellEditing(false))
             {
                 return;
             }
 
             CloseAutoFilterIndicator();
             _hitFilterInfo = GetMouseDownFilterButton(p_hitInfo, true);
-            DataValidationListButtonInfo mouseDownDataValidationButton = GetMouseDownDataValidationButton(p_hitInfo, true);
-            if ((_hitFilterInfo != null) || (mouseDownDataValidationButton != null))
+            if (_hitFilterInfo != null)
             {
-                if (mouseDownDataValidationButton != null)
-                {
-                    ProcessMouseDownDataValidationListButton(mouseDownDataValidationButton);
-                    return;
-                }
-                if (_hitFilterInfo != null)
-                {
-                    ProcessMouseDownFilterButton(_hitFilterInfo);
-                    return;
-                }
+                ProcessMouseDownFilterButton(_hitFilterInfo);
                 return;
             }
 
@@ -2190,18 +2082,10 @@ namespace Dt.Base
                     }
                     else if (IsEditing)
                     {
-                        if (_formulaSelectionFeature.IsSelectionBegined)
-                        {
-                            _formulaSelectionFeature.TouchSelect(SheetArea.CornerHeader | SheetArea.RowHeader);
-                        }
                     }
                     else if (!TapInSelectionRow(p_hitInfo.HeaderInfo.Row))
                     {
-                        if (_formulaSelectionFeature.IsSelectionBegined)
-                        {
-                            _formulaSelectionFeature.TouchSelect(SheetArea.CornerHeader | SheetArea.RowHeader);
-                        }
-                        else if (p_hitInfo.HeaderInfo.Row > -1)
+                        if (p_hitInfo.HeaderInfo.Row > -1)
                         {
                             UnSelectedAllFloatingObjects();
                             StartRowsSelecting();
@@ -2234,18 +2118,10 @@ namespace Dt.Base
                         }
                         else if (IsEditing)
                         {
-                            if (_formulaSelectionFeature.IsSelectionBegined)
-                            {
-                                _formulaSelectionFeature.TouchSelect(SheetArea.ColumnHeader);
-                            }
                         }
                         else if (TapInSelectionColumn(p_hitInfo.HeaderInfo.Column))
                         {
                             TapInColumnHeaderSelection(p_hitInfo.HitPoint, p_hitInfo);
-                        }
-                        else if (_formulaSelectionFeature.IsSelectionBegined)
-                        {
-                            _formulaSelectionFeature.TouchSelect(SheetArea.ColumnHeader);
                         }
                         else if (p_hitInfo.HeaderInfo.Column > -1)
                         {
@@ -2314,17 +2190,7 @@ namespace Dt.Base
                 default:
                     goto Label_0568;
             }
-            if (((_dataValidationListPopUp != null) && _dataValidationListPopUp.IsOpen) && (_dataValidationPopUpHelper != null))
-            {
-                _dataValidationPopUpHelper.Close();
-                if (!IsEditing)
-                {
-                    UnSelectedAllFloatingObjects();
-                    StartTapSelectCells();
-                    EndTouchSelectingCells();
-                    RaiseTouchCellClick(p_hitInfo);
-                }
-            }
+
             if (((_filterPopup != null) && _filterPopup.IsOpen) && (_filterPopupHelper != null))
             {
                 _filterPopupHelper.Close();
@@ -2377,10 +2243,6 @@ namespace Dt.Base
                         }
                     }
                 }
-                else if (_formulaSelectionFeature.IsSelectionBegined)
-                {
-                    _formulaSelectionFeature.TouchSelect(SheetArea.Cells);
-                }
                 else
                 {
                     StartTapSelectCells();
@@ -2388,16 +2250,9 @@ namespace Dt.Base
                     RaiseTouchCellClick(p_hitInfo);
                 }
             }
-            else if (_formulaSelectionFeature.IsSelectionBegined)
-            {
-                _formulaSelectionFeature.TouchSelect(SheetArea.Cells);
-            }
             UnSelectedAllFloatingObjects();
         Label_0568:
-            if (!CanSelectFormula)
-            {
-                FocusInternal();
-            }
+            FocusInternal();
         }
 
         Point TapInColumnHeaderSelection(Point point, HitTestInformation hi)
@@ -2420,10 +2275,6 @@ namespace Dt.Base
 
         bool TapInSelection(Point point)
         {
-            if (_formulaSelectionFeature.IsSelectionBegined)
-            {
-                return false;
-            }
             return GetActiveSelectionBounds().Contains(point);
         }
 
@@ -2908,10 +2759,6 @@ namespace Dt.Base
             {
                 EndRowResizing();
             }
-            if (_formulaSelectionFeature.IsDragging)
-            {
-                _formulaSelectionFeature.EndDragging();
-            }
             if (IsSelectingCells)
             {
                 EndCellSelecting();
@@ -3007,13 +2854,6 @@ namespace Dt.Base
                     if (IsEditing
                         && ActiveSheet.ActiveRowIndex == information.ViewportInfo.Row
                         && ActiveSheet.ActiveColumnIndex == information.ViewportInfo.Column)
-                    {
-                        return false;
-                    }
-
-                    if (_dataValidationListPopUp != null
-                        && _dataValidationListPopUp.IsOpen
-                        && HitTestPopup(_dataValidationPopUpHelper, point))
                     {
                         return false;
                     }

@@ -30,14 +30,7 @@ namespace Dt.Cells.UI
         /// </summary>
         public int ColumnIndex
         {
-            get
-            {
-                if (_excel.EditorConnector.IsInOtherSheet)
-                {
-                    return _excel.EditorConnector.ColumnIndex;
-                }
-                return _excel.ActiveSheet.ActiveColumnIndex;
-            }
+            get { return _excel.ActiveSheet.ActiveColumnIndex; }
         }
 
         /// <summary>
@@ -45,14 +38,7 @@ namespace Dt.Cells.UI
         /// </summary>
         public int RowIndex
         {
-            get
-            {
-                if (_excel.EditorConnector.IsInOtherSheet)
-                {
-                    return _excel.EditorConnector.RowIndex;
-                }
-                return _excel.ActiveSheet.ActiveRowIndex;
-            }
+            get { return _excel.ActiveSheet.ActiveRowIndex; }
         }
 
         /// <summary>
@@ -63,14 +49,7 @@ namespace Dt.Cells.UI
         /// </value>
         public Worksheet Sheet
         {
-            get
-            {
-                if (_excel.EditorConnector.IsInOtherSheet)
-                {
-                    return _excel.ActiveSheet.Workbook.Sheets[_excel.EditorConnector.SheetIndex];
-                }
-                return _excel.ActiveSheet.Workbook.ActiveSheet;
-            }
+            get { return _excel.ActiveSheet.Workbook.ActiveSheet; }
         }
     }
 }

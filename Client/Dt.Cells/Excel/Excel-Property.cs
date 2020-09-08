@@ -51,11 +51,6 @@ namespace Dt.Base
 
         internal bool IsMouseRightButtonPressed { get; set; }
 
-        internal bool IsSelectionBegined
-        {
-            get { return _formulaSelectionFeature.IsSelectionBegined; }
-        }
-
         internal bool IsTouchingMovingFloatingObjects { get; set; }
 
         internal bool IsTouchingResizingFloatingObjects { get; set; }
@@ -96,20 +91,6 @@ namespace Dt.Base
                     return (EditingViewport.EditingContainer.Editor as Control);
                 }
                 return null;
-            }
-        }
-
-        Windows.UI.Xaml.Controls.Primitives.Popup DataValidationListPopUp
-        {
-            get
-            {
-                if (_dataValidationListPopUp == null)
-                {
-                    _dataValidationListPopUp = new Windows.UI.Xaml.Controls.Primitives.Popup();
-                    _dataValidationListPopUp.Opened += _dataValidationListPopUp_Opened;
-                    _dataValidationListPopUp.Closed += _dataValidationListPopUp_Closed;
-                }
-                return _dataValidationListPopUp;
             }
         }
 
@@ -275,11 +256,6 @@ namespace Dt.Base
 
         internal CellsPanel EditingViewport { get; set; }
 
-        internal FormulaEditorConnector EditorConnector
-        {
-            get { return _formulaSelectionFeature.FormulaEditorConnector; }
-        }
-
         internal bool EditorDirty
         {
             get { return ((EditingViewport != null) && EditingViewport.EditorDirty); }
@@ -297,21 +273,6 @@ namespace Dt.Base
                 }
                 return _filterPopup;
             }
-        }
-
-        internal SpreadXFormulaNavigation FormulaNavigation
-        {
-            get { return _formulaSelectionFeature.Navigation; }
-        }
-
-        internal SpreadXFormulaSelection FormulaSelection
-        {
-            get { return _formulaSelectionFeature.Selection; }
-        }
-
-        internal IList<FormulaSelectionItem> FormulaSelections
-        {
-            get { return _formulaSelectionFeature.Items; }
         }
 
         /// <summary>
@@ -620,14 +581,11 @@ namespace Dt.Base
         GcRangeGroupHeader _columnGroupHeaderPresenter;
         GcRangeGroup[] _columnGroupPresenters;
 
-        int _columnOffset;
         Line _columnTrailingFreezeLine;
         int _currentActiveColumnIndex;
         int _currentActiveRowIndex;
         DragFillDirection _currentFillDirection = DragFillDirection.Down;
         CellRange _currentFillRange;
-        Windows.UI.Xaml.Controls.Primitives.Popup _dataValidationListPopUp;
-        PopupHelper _dataValidationPopUpHelper;
         int _dragDropColumnOffset;
         CellRange _dragDropFromRange;
         Grid _dragDropIndicator;
@@ -657,8 +615,6 @@ namespace Dt.Base
         Rect _floatingObjectsMovingResizingStartPointCellBounds = new Rect(0.0, 0.0, 0.0, 0.0);
         int _floatingObjectsMovingResizingStartRow = -2;
         Dictionary<string, Point> _floatingObjectsMovingStartLocations = new Dictionary<string, Point>();
-        FormulaSelectionFeature _formulaSelectionFeature;
-        internal FormulaSelectionGripperContainerPanel _formulaSelectionGripperPanel;
         GestureRecognizer _gestrueRecognizer;
         GcRangeGroupCorner _groupCornerPresenter;
         FilterButtonInfo _hitFilterInfo;
@@ -690,7 +646,6 @@ namespace Dt.Base
         GcRangeGroupHeader _rowGroupHeaderPresenter;
         GcRangeGroup[] _rowGroupPresenters;
 
-        int _rowOffset;
         Line _rowTrailingFreezeLine;
         SpreadXSelection _selection;
         Canvas _shapeDrawingContainer;
@@ -849,12 +804,6 @@ namespace Dt.Base
             typeof(bool),
             typeof(Excel),
             new PropertyMetadata(false));
-
-        public static readonly DependencyProperty HighlightInvalidDataProperty = DependencyProperty.Register(
-            "HighlightInvalidData",
-            typeof(bool),
-            typeof(Excel),
-            new PropertyMetadata(false, OnHighlightInvalidDataChanged));
 
         public static readonly DependencyProperty ColumnSplitBoxAlignmentProperty = DependencyProperty.Register(
             "ColumnSplitBoxAlignment",
@@ -1087,19 +1036,6 @@ namespace Dt.Base
             var excel = (Excel)d;
             excel.InvalidateLayout();
             excel.InvalidateMeasure();
-        }
-
-        static void OnHighlightInvalidDataChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var excel = (Excel)d;
-            if ((bool)e.NewValue)
-            {
-                excel.InvalidateAll();
-            }
-            else
-            {
-                excel.RefreshDataValidationInvalidCircles();
-            }
         }
 
         static void OnFreezeLineStyleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

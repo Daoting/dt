@@ -43,16 +43,13 @@ namespace Dt.Cells.UI
         internal List<Rect> _cachedSelectionLayout;
         SpanGraph _cachedSpanGraph;
         CellCachePool _cellCachePool;
-        DataValidationLayer _dataValidationLayer;
         DragFillLayer _dragFillLayer;
         Rect _editorBounds;
         internal EditingLayer _editorLayer;
-        FloatingObjectLayer _floatingObjectLayer;
-        FloatingObjectMovingLayer _floatingObjectsMovingResizingLayer;
-        FormulaSelectionLayer _formulaSelectionLayer;
+        FloatingObjectLayer _floatingLayer;
+        FloatingObjectMovingLayer _floatingEditLayer;
         RowsLayer _rowsLayer;
         SelectionLayer _selectionLayer;
-        Panel _shapeLayer;
         DecorationLayer _decorationLayer;
 
         public CellsPanel(Excel p_excel)
@@ -69,6 +66,7 @@ namespace Dt.Cells.UI
             _cellCachePool = new CellCachePool(Excel.ActiveSheet);
             _cachedSpanGraph = new SpanGraph();
 
+            //--------------已移除 公式编辑层、图形层、数据校验层-------------------
             // 1 行数据层
             _rowsLayer = new RowsLayer(this);
             Children.Add(_rowsLayer);
@@ -81,52 +79,34 @@ namespace Dt.Cells.UI
             _selectionLayer = new SelectionLayer(this);
             Children.Add(_selectionLayer);
 
-            // 4 公式选择层
-            _formulaSelectionLayer = new FormulaSelectionLayer { ParentViewport = this };
-            Children.Add(_formulaSelectionLayer);
-
-            // 5 图形层
-            _shapeLayer = new Canvas();
-            Children.Add(_shapeLayer);
-
-            // 6 拖拽复制层
+            // 4 拖拽复制层，点击右下角加号复制格内容
             if (Excel.CanUserDragFill)
             {
                 _dragFillLayer = new DragFillLayer { ParentViewport = this };
                 Children.Add(_dragFillLayer);
             }
 
-            // 7 新增修饰层
+            // 5 新增修饰层，打印时页面边线
             if (p_excel.ShowDecoration)
             {
                 _decorationLayer = new DecorationLayer(this);
                 Children.Add(_decorationLayer);
             }
 
-            // 8 数据校验层
-            _dataValidationLayer = new DataValidationLayer(this);
-            Children.Add(_dataValidationLayer);
-
-            // 9 编辑层
+            // 6 编辑层
             _editorLayer = new EditingLayer(this);
             Children.Add(_editorLayer);
 
-            // 10 浮动对象层
-            _floatingObjectLayer = new FloatingObjectLayer(this);
-            Children.Add(_floatingObjectLayer);
+            // 7 浮动对象层
+            _floatingLayer = new FloatingObjectLayer(this);
+            Children.Add(_floatingLayer);
 
-            // 11 浮动对象编辑层
-            _floatingObjectsMovingResizingLayer = new FloatingObjectMovingLayer(this);
-            Children.Add(_floatingObjectsMovingResizingLayer);
+            // 8 浮动对象拖拽移动层
+            _floatingEditLayer = new FloatingObjectMovingLayer(this);
+            Children.Add(_floatingEditLayer);
 
             HorizontalAlignment = HorizontalAlignment.Left;
             VerticalAlignment = VerticalAlignment.Top;
-            Loaded += GcViewport_Loaded;
-        }
-
-        internal void AddDataValidationInvalidDataPresenterInfo(InvalidDataPresenterInfo info)
-        {
-            _dataValidationLayer.AddInvalidDataPresenterInfo(info);
         }
 
         void BuildSelection()
@@ -429,29 +409,6 @@ namespace Dt.Cells.UI
                 return true;
             }
             return false;
-        }
-
-        void GcViewport_Loaded(object sender, RoutedEventArgs e)
-        {
-            int activeColumnViewportIndex = Excel.GetActiveColumnViewportIndex();
-            int activeRowViewportIndex = Excel.GetActiveRowViewportIndex();
-            if (((ColumnViewportIndex == activeColumnViewportIndex) && (RowViewportIndex == activeRowViewportIndex)) && (Excel.CanSelectFormula && (Excel.ActiveSheet.Workbook.ActiveSheetIndex == Excel.EditorConnector.SheetIndex)))
-            {
-                Excel.SetActiveCell(Excel.EditorInfo.RowIndex, Excel.EditorInfo.ColumnIndex, true);
-                Excel.StartCellEditing(false, "=" + Excel.EditorConnector.GetText(), EditorStatus.Edit);
-                _editorLayer.EditorDirty = true;
-                if (!Excel.EditorConnector.ActivateEditor)
-                {
-                    Excel.EditorConnector.ActivateEditor = true;
-                    Excel.StopCellEditing(false);
-                    SpreadActions.CommitInputNavigationDown(Excel, new ActionEventArgs());
-                }
-            }
-            RefreshFormulaSelection();
-            if (Excel != null)
-            {
-                Excel.RefreshFormulaSelectionGrippers();
-            }
         }
 
         CellRange GetActiveCellRange()
@@ -771,7 +728,7 @@ namespace Dt.Cells.UI
 
         internal void InvalidateFloatingObjectsMeasureState()
         {
-            _floatingObjectLayer?.InvalidateMeasure();
+            _floatingLayer?.InvalidateMeasure();
         }
 
         internal void InvalidateRowsMeasureState(bool forceInvalidateRows)
@@ -818,14 +775,6 @@ namespace Dt.Cells.UI
                     list.Add(new Rect(rect.X - Location.X, rect.Y - Location.Y, rect.Width, rect.Height));
                 }
                 _cachedChartShapeResizingRects = list.ToArray();
-            }
-        }
-
-        internal void RefreshDataValidationInvalidCircles()
-        {
-            if (_dataValidationLayer != null)
-            {
-                _dataValidationLayer.InvalidateMeasure();
             }
         }
 
@@ -969,11 +918,6 @@ namespace Dt.Cells.UI
             }
         }
 
-        public void RefreshFormulaSelection()
-        {
-            _formulaSelectionLayer?.Refresh();
-        }
-
         public void RefreshSelection()
         {
             if (_selectionLayer != null)
@@ -999,20 +943,6 @@ namespace Dt.Cells.UI
         internal void RemoveCellOverflowLayoutModel(int rowIndex)
         {
             CellOverflowLayoutBuildEngine.RemoveModel(rowIndex);
-        }
-
-        internal void RemoveDataValidationInvalidDataPresenterInfo(InvalidDataPresenterInfo info)
-        {
-            _dataValidationLayer.RemoveInvalidDataPresenterInfo(info);
-        }
-
-        internal void RemoveDataValidationUI()
-        {
-            if (_dataValidationLayer != null)
-            {
-                _dataValidationLayer.CloseInputMessageToolTip();
-                _dataValidationLayer.RemoveDataValidationListButtonInfo();
-            }
         }
 
         internal void ResetDragFill()
@@ -1129,34 +1059,6 @@ namespace Dt.Cells.UI
             }
         }
 
-        internal void UpdateDataValidationUI(int row, int column)
-        {
-            RemoveDataValidationUI();
-            if (((Excel != null) && (Excel.ActiveSheet != null)) && ((RowViewportIndex == Excel.GetActiveRowViewportIndex()) && (ColumnViewportIndex == Excel.GetActiveColumnViewportIndex())))
-            {
-                DataValidator actualDataValidator = Excel.ActiveSheet[row, column].ActualDataValidator;
-                if ((actualDataValidator != null) && (GetViewportCell(row, column, true) != null))
-                {
-                    DataValidationListButtonInfo info = Excel.GetDataValidationListButtonInfo(row, column, SheetArea.Cells);
-                    if (info != null)
-                    {
-                        if (_dataValidationLayer != null)
-                        {
-                            _dataValidationLayer.AddDataValidationListButtonInfo(info);
-                        }
-                    }
-                    else if (_dataValidationLayer != null)
-                    {
-                        _dataValidationLayer.RemoveDataValidationListButtonInfo();
-                    }
-                    if ((actualDataValidator.ShowInputMessage && !string.IsNullOrEmpty(actualDataValidator.InputMessage)) && (_dataValidationLayer != null))
-                    {
-                        _dataValidationLayer.ShowInputMessageToolTip(actualDataValidator);
-                    }
-                }
-            }
-        }
-
         internal SpanGraph CachedSpanGraph
         {
             get { return _cachedSpanGraph; }
@@ -1214,17 +1116,12 @@ namespace Dt.Cells.UI
 
         FloatingObjectMovingLayer FloatingObjectsMovingResizingContainer
         {
-            get { return _floatingObjectsMovingResizingLayer; }
+            get { return _floatingEditLayer; }
         }
 
         internal FloatingObjectLayer FloatingObjectsPanel
         {
-            get { return _floatingObjectLayer; }
-        }
-
-        internal FormulaSelectionLayer FormulaSelectionContainer
-        {
-            get { return _formulaSelectionLayer; }
+            get { return _floatingLayer; }
         }
 
         internal bool IsActived
@@ -1244,11 +1141,6 @@ namespace Dt.Cells.UI
         internal SelectionLayer SelectionContainer
         {
             get { return _selectionLayer; }
-        }
-
-        protected Panel ShapesContainer
-        {
-            get { return _shapeLayer; }
         }
 
         public Excel Excel { get; private set; }

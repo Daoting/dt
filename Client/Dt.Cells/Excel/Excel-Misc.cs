@@ -385,29 +385,16 @@ namespace Dt.Base
             Worksheet toSheet = ActiveSheet;
             if (pasteInternal)
             {
-                bool flag;
-                string str;
                 if ((isCutting && fromSheet.Protect) && IsAnyCellInRangeLocked(fromSheet, fromRange.Row, fromRange.Column, fromRange.RowCount, fromRange.ColumnCount))
                 {
                     RaiseInvalidOperation(ResourceStrings.SheetViewPasteSouceSheetCellsAreLocked, null, null);
                     return false;
                 }
                 pastedRange = GetPastedRange(fromSheet, fromRange, toSheet, toRange, isCutting);
-                if (RaiseValidationPasting(fromSheet, fromRange, ActiveSheet, toRange, pastedRange, isCutting, out flag, out str))
-                {
-                    pastedRange = GetPastedRange(fromSheet, fromRange, toSheet, toRange, isCutting);
-                    return !flag;
-                }
             }
             else
             {
-                bool flag3;
-                string str2;
                 pastedRange = GetPastedRange(toRange, clipboardText);
-                if (RaiseValidationPasting(null, null, ActiveSheet, toRange, pastedRange, isCutting, out flag3, out str2))
-                {
-                    return !flag3;
-                }
             }
             if (pastedRange == null)
             {
@@ -1813,29 +1800,27 @@ namespace Dt.Base
                                 }
                                 if ((_isDragCopy && ((toRow <= row) || (toRow >= (row + rowCount)))) || (!_isDragCopy && ((toRow < row) || (toRow > (row + rowCount)))))
                                 {
-                                    if (!RaiseValidationDragDropBlock(row, column, toRow, toColumn, rowCount, columnCount, _isDragCopy, true, out isInvalid, out invalidMessage))
+                                    if (HasPartSpans(ActiveSheet, row, -1, rowCount, -1) || HasPartSpans(ActiveSheet, toRow, -1, 0, -1))
                                     {
-                                        if (HasPartSpans(ActiveSheet, row, -1, rowCount, -1) || HasPartSpans(ActiveSheet, toRow, -1, 0, -1))
-                                        {
-                                            isInvalid = true;
-                                            invalidMessage = ResourceStrings.SheetViewDragDropChangePartOfMergedCell;
-                                        }
-                                        if (!isInvalid && (HasPartArrayFormulas(ActiveSheet, row, -1, rowCount, -1, exceptedRange) || HasPartArrayFormulas(ActiveSheet, toRow, -1, 0, -1, exceptedRange)))
-                                        {
-                                            isInvalid = true;
-                                            invalidMessage = ResourceStrings.SheetViewPasteChangePartOfArrayFormula;
-                                        }
-                                        if (!isInvalid && ActiveSheet.Protect)
-                                        {
-                                            isInvalid = true;
-                                            invalidMessage = ResourceStrings.SheetViewDragDropChangeProtectRow;
-                                        }
-                                        if ((!isInvalid && !_isDragCopy) && HasTable(ActiveSheet, row, -1, rowCount, -1, true))
-                                        {
-                                            isInvalid = true;
-                                            invalidMessage = ResourceStrings.SheetViewDragDropChangePartOfTable;
-                                        }
+                                        isInvalid = true;
+                                        invalidMessage = ResourceStrings.SheetViewDragDropChangePartOfMergedCell;
                                     }
+                                    if (!isInvalid && (HasPartArrayFormulas(ActiveSheet, row, -1, rowCount, -1, exceptedRange) || HasPartArrayFormulas(ActiveSheet, toRow, -1, 0, -1, exceptedRange)))
+                                    {
+                                        isInvalid = true;
+                                        invalidMessage = ResourceStrings.SheetViewPasteChangePartOfArrayFormula;
+                                    }
+                                    if (!isInvalid && ActiveSheet.Protect)
+                                    {
+                                        isInvalid = true;
+                                        invalidMessage = ResourceStrings.SheetViewDragDropChangeProtectRow;
+                                    }
+                                    if ((!isInvalid && !_isDragCopy) && HasTable(ActiveSheet, row, -1, rowCount, -1, true))
+                                    {
+                                        isInvalid = true;
+                                        invalidMessage = ResourceStrings.SheetViewDragDropChangePartOfTable;
+                                    }
+
                                     if (!isInvalid)
                                     {
                                         DragDropExtent dragMoveExtent = new DragDropExtent(row, -1, toRow, -1, rowCount, -1);
@@ -1859,33 +1844,30 @@ namespace Dt.Base
                             }
                             if ((_isDragCopy && ((toColumn <= column) || (toColumn >= (column + columnCount)))) || (!_isDragCopy && ((toColumn < column) || (toColumn > (column + columnCount)))))
                             {
-                                if (!RaiseValidationDragDropBlock(row, column, toRow, toColumn, rowCount, columnCount, _isDragCopy, true, out isInvalid, out invalidMessage))
+                                if (HasPartSpans(ActiveSheet, -1, column, -1, columnCount) || HasPartSpans(ActiveSheet, -1, toColumn, -1, 0))
                                 {
-                                    if (HasPartSpans(ActiveSheet, -1, column, -1, columnCount) || HasPartSpans(ActiveSheet, -1, toColumn, -1, 0))
-                                    {
-                                        isInvalid = true;
-                                        invalidMessage = ResourceStrings.SheetViewDragDropChangePartOfMergedCell;
-                                    }
-                                    if (!isInvalid && (HasPartArrayFormulas(ActiveSheet, -1, column, -1, columnCount, exceptedRange) || HasPartArrayFormulas(ActiveSheet, -1, toColumn, -1, 0, exceptedRange)))
-                                    {
-                                        isInvalid = true;
-                                        invalidMessage = ResourceStrings.SheetViewDragDropChangePartOChangePartOfAnArray;
-                                    }
-                                    if (!isInvalid && ActiveSheet.Protect)
-                                    {
-                                        isInvalid = true;
-                                        invalidMessage = ResourceStrings.SheetViewDragDropChangeProtectColumn;
-                                    }
-                                    if (!isInvalid && HasTable(ActiveSheet, -1, toColumn, -1, 1, true))
-                                    {
-                                        isInvalid = true;
-                                        invalidMessage = ResourceStrings.SheetViewDragDropShiftTableCell;
-                                    }
-                                    if ((!isInvalid && !_isDragCopy) && HasTable(ActiveSheet, -1, column, -1, columnCount, true))
-                                    {
-                                        isInvalid = true;
-                                        invalidMessage = ResourceStrings.SheetViewDragDropChangePartOfTable;
-                                    }
+                                    isInvalid = true;
+                                    invalidMessage = ResourceStrings.SheetViewDragDropChangePartOfMergedCell;
+                                }
+                                if (!isInvalid && (HasPartArrayFormulas(ActiveSheet, -1, column, -1, columnCount, exceptedRange) || HasPartArrayFormulas(ActiveSheet, -1, toColumn, -1, 0, exceptedRange)))
+                                {
+                                    isInvalid = true;
+                                    invalidMessage = ResourceStrings.SheetViewDragDropChangePartOChangePartOfAnArray;
+                                }
+                                if (!isInvalid && ActiveSheet.Protect)
+                                {
+                                    isInvalid = true;
+                                    invalidMessage = ResourceStrings.SheetViewDragDropChangeProtectColumn;
+                                }
+                                if (!isInvalid && HasTable(ActiveSheet, -1, toColumn, -1, 1, true))
+                                {
+                                    isInvalid = true;
+                                    invalidMessage = ResourceStrings.SheetViewDragDropShiftTableCell;
+                                }
+                                if ((!isInvalid && !_isDragCopy) && HasTable(ActiveSheet, -1, column, -1, columnCount, true))
+                                {
+                                    isInvalid = true;
+                                    invalidMessage = ResourceStrings.SheetViewDragDropChangePartOfTable;
                                 }
                                 if (!isInvalid)
                                 {
@@ -1909,23 +1891,20 @@ namespace Dt.Base
                     toColumn = (_dragDropFromRange.Column < 0) ? -1 : Math.Max(0, Math.Min((int)(ActiveSheet.ColumnCount - columnCount), (int)(toColumn - _dragDropColumnOffset)));
                     if ((toRow != row) || (toColumn != column))
                     {
-                        if (!RaiseValidationDragDropBlock(row, column, toRow, toColumn, rowCount, columnCount, _isDragCopy, true, out isInvalid, out invalidMessage))
+                        if (HasPartSpans(ActiveSheet, row, column, rowCount, columnCount) || HasPartSpans(ActiveSheet, toRow, toColumn, rowCount, columnCount))
                         {
-                            if (HasPartSpans(ActiveSheet, row, column, rowCount, columnCount) || HasPartSpans(ActiveSheet, toRow, toColumn, rowCount, columnCount))
-                            {
-                                isInvalid = true;
-                                invalidMessage = ResourceStrings.SheetViewDragDropChangePartOfMergedCell;
-                            }
-                            if (!isInvalid && (HasPartArrayFormulas(ActiveSheet, row, column, rowCount, columnCount, exceptedRange) || HasPartArrayFormulas(ActiveSheet, toRow, toColumn, rowCount, columnCount, exceptedRange)))
-                            {
-                                isInvalid = true;
-                                invalidMessage = ResourceStrings.SheetViewPasteChangePartOfArrayFormula;
-                            }
-                            if ((!isInvalid && ActiveSheet.Protect) && ((!_isDragCopy && IsAnyCellInRangeLocked(ActiveSheet, row, column, rowCount, columnCount)) || IsAnyCellInRangeLocked(ActiveSheet, toRow, toColumn, rowCount, columnCount)))
-                            {
-                                isInvalid = true;
-                                invalidMessage = ResourceStrings.SheetViewDragDropChangeProtectCell;
-                            }
+                            isInvalid = true;
+                            invalidMessage = ResourceStrings.SheetViewDragDropChangePartOfMergedCell;
+                        }
+                        if (!isInvalid && (HasPartArrayFormulas(ActiveSheet, row, column, rowCount, columnCount, exceptedRange) || HasPartArrayFormulas(ActiveSheet, toRow, toColumn, rowCount, columnCount, exceptedRange)))
+                        {
+                            isInvalid = true;
+                            invalidMessage = ResourceStrings.SheetViewPasteChangePartOfArrayFormula;
+                        }
+                        if ((!isInvalid && ActiveSheet.Protect) && ((!_isDragCopy && IsAnyCellInRangeLocked(ActiveSheet, row, column, rowCount, columnCount)) || IsAnyCellInRangeLocked(ActiveSheet, toRow, toColumn, rowCount, columnCount)))
+                        {
+                            isInvalid = true;
+                            invalidMessage = ResourceStrings.SheetViewDragDropChangeProtectCell;
                         }
                         if (!isInvalid)
                         {
@@ -4215,18 +4194,6 @@ namespace Dt.Base
             return false;
         }
 
-        internal bool HasSelectedFloatingObject()
-        {
-            foreach (IFloatingObject obj2 in GetAllFloatingObjects())
-            {
-                if (obj2.IsSelected)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
         bool HasSpans(int row, int column, int rowCount, int columnCount)
         {
             IEnumerable spanModel = ActiveSheet.SpanModel;
@@ -4401,40 +4368,6 @@ namespace Dt.Base
                 height = 0.0;
             }
             return new Rect(x, y, width, height);
-        }
-
-        bool InitFloatingObjectsMovingResizing()
-        {
-            HitTestInformation savedHitTestInformation = GetHitInfo();
-            if (IsTouching)
-            {
-                savedHitTestInformation = _touchStartHitTestInfo;
-            }
-            if (((savedHitTestInformation.ViewportInfo == null) || (savedHitTestInformation.RowViewportIndex == -2)) || (savedHitTestInformation.ColumnViewportIndex == 2))
-            {
-                return false;
-            }
-            _floatingObjectsMovingResizingStartRow = savedHitTestInformation.ViewportInfo.Row;
-            _floatingObjectsMovingResizingStartColumn = savedHitTestInformation.ViewportInfo.Column;
-            _dragStartRowViewport = savedHitTestInformation.RowViewportIndex;
-            _dragStartColumnViewport = savedHitTestInformation.ColumnViewportIndex;
-            _dragToRowViewport = savedHitTestInformation.RowViewportIndex;
-            _dragToColumnViewport = savedHitTestInformation.ColumnViewportIndex;
-            _floatingObjectsMovingResizingStartPoint = savedHitTestInformation.HitPoint;
-            SetActiveColumnViewportIndex(savedHitTestInformation.ColumnViewportIndex);
-            SetActiveRowViewportIndex(savedHitTestInformation.RowViewportIndex);
-            CachFloatingObjectsMovingResizingLayoutModels();
-            RowLayout viewportRowLayoutNearY = GetViewportRowLayoutNearY(_dragStartRowViewport, _floatingObjectsMovingResizingStartPoint.Y);
-            ColumnLayout viewportColumnLayoutNearX = GetViewportColumnLayoutNearX(_dragToColumnViewport, _floatingObjectsMovingResizingStartPoint.X);
-            _floatingObjectsMovingResizingStartPointCellBounds = new Rect(viewportColumnLayoutNearX.X, viewportRowLayoutNearY.Y, viewportColumnLayoutNearX.Width, viewportRowLayoutNearY.Height);
-            _floatingObjectsMovingStartLocations = new Dictionary<string, Point>();
-            FloatingObject[] objArray = _movingResizingFloatingObjects;
-            for (int i = 0; i < objArray.Length; i++)
-            {
-                IFloatingObject obj2 = objArray[i];
-                _floatingObjectsMovingStartLocations.Add(obj2.Name, obj2.Location);
-            }
-            return true;
         }
 
         void InvaidateViewportHorizontalArrangementInternal(int columnViewportIndex)
@@ -6738,7 +6671,6 @@ namespace Dt.Base
                 viewportInfo.ActiveColumnViewport = value;
                 ActiveSheet.SetViewportInfo(viewportInfo);
                 UpdateFocusIndicator();
-                UpdateDataValidationUI(ActiveSheet.ActiveRowIndex, ActiveSheet.ActiveColumnIndex);
             }
         }
 
@@ -6786,7 +6718,6 @@ namespace Dt.Base
                 viewportInfo.ActiveRowViewport = value;
                 ActiveSheet.SetViewportInfo(viewportInfo);
                 UpdateFocusIndicator();
-                UpdateDataValidationUI(ActiveSheet.ActiveRowIndex, ActiveSheet.ActiveColumnIndex);
             }
         }
 
@@ -6857,14 +6788,6 @@ namespace Dt.Base
                     y += 4.0;
                 }
                 _dragFillPopup.ShowAsModal(this, _dragFillSmartTag, new Point(x, y), PopupDirection.BottomRight);
-            }
-        }
-
-        internal void ShowFormulaSelectionTouchGrippers()
-        {
-            if (_formulaSelectionGripperPanel != null)
-            {
-                _formulaSelectionGripperPanel.Visibility = Visibility.Visible;
             }
         }
 
@@ -6993,50 +6916,6 @@ namespace Dt.Base
                     IsWorking = true;
                     UpdateDragFillViewportInfoAndStartTimer();
                 }
-            }
-        }
-
-        void StartFloatingObjectsMoving()
-        {
-            _movingResizingFloatingObjects = GetAllSelectedFloatingObjects();
-            if (((_movingResizingFloatingObjects != null) && (_movingResizingFloatingObjects.Length != 0)) && InitFloatingObjectsMovingResizing())
-            {
-                if ((_touchToolbarPopup != null) && _touchToolbarPopup.IsOpen)
-                {
-                    _touchToolbarPopup.IsOpen = false;
-                }
-                IsWorking = true;
-                if (IsTouching)
-                {
-                    IsTouchingMovingFloatingObjects = true;
-                }
-                else
-                {
-                    IsMovingFloatingOjects = true;
-                }
-                StartScrollTimer();
-            }
-        }
-
-        void StartFloatingObjectsResizing()
-        {
-            _movingResizingFloatingObjects = GetAllSelectedFloatingObjects();
-            if (((_movingResizingFloatingObjects != null) && (_movingResizingFloatingObjects.Length != 0)) && InitFloatingObjectsMovingResizing())
-            {
-                if ((_touchToolbarPopup != null) && _touchToolbarPopup.IsOpen)
-                {
-                    _touchToolbarPopup.IsOpen = false;
-                }
-                IsWorking = true;
-                if (IsTouching)
-                {
-                    IsTouchingResizingFloatingObjects = true;
-                }
-                else
-                {
-                    IsResizingFloatingObjects = true;
-                }
-                StartScrollTimer();
             }
         }
 
@@ -7404,41 +7283,6 @@ namespace Dt.Base
                 }
             }
             return -1;
-        }
-
-        internal void UnSelectedAllFloatingObjects()
-        {
-            FloatingObject[] allFloatingObjects = GetAllFloatingObjects();
-            if (allFloatingObjects.Length > 0)
-            {
-                FloatingObject[] objArray2 = allFloatingObjects;
-                for (int i = 0; i < objArray2.Length; i++)
-                {
-                    IFloatingObject obj2 = objArray2[i];
-                    obj2.IsSelected = false;
-                }
-            }
-        }
-
-        void UnSelectFloatingObject(FloatingObject floatingObject)
-        {
-            try
-            {
-                if (!_isMouseDownFloatingObject)
-                {
-                    bool flag;
-                    bool flag2;
-                    KeyboardHelper.GetMetaKeyState(out flag, out flag2);
-                    if (((flag2 || flag) && !(floatingObject.Locked && ActiveSheet.Protect)) && floatingObject.IsSelected)
-                    {
-                        floatingObject.IsSelected = false;
-                    }
-                }
-            }
-            finally
-            {
-                _isMouseDownFloatingObject = false;
-            }
         }
 
         internal void UpdateColumnHeaderCellsState(int row, int column, int rowCount, int columnCount)
@@ -9177,8 +9021,7 @@ namespace Dt.Base
 
         internal bool NavigationNextSheet()
         {
-            SaveDataForFormulaSelection();
-            if (!StopCellEditing(CanSelectFormula))
+            if (!StopCellEditing())
             {
                 return false;
             }
@@ -9192,8 +9035,7 @@ namespace Dt.Base
 
         internal bool NavigationPreviousSheet()
         {
-            SaveDataForFormulaSelection();
-            if (!StopCellEditing(CanSelectFormula))
+            if (!StopCellEditing())
             {
                 return false;
             }
@@ -9581,21 +9423,6 @@ namespace Dt.Base
             else
             {
                 Sheets[sheetIndex].RemoveRowViewport(rowViewportIndex);
-            }
-        }
-
-        internal void SaveDataForFormulaSelection()
-        {
-            if (CanSelectFormula)
-            {
-                EditorConnector.ClearFlickingItems();
-                if (!EditorConnector.IsInOtherSheet)
-                {
-                    EditorConnector.IsInOtherSheet = true;
-                    EditorConnector.SheetIndex = ActiveSheet.Workbook.ActiveSheetIndex;
-                    EditorConnector.RowIndex = ActiveSheet.ActiveRowIndex;
-                    EditorConnector.ColumnIndex = ActiveSheet.ActiveColumnIndex;
-                }
             }
         }
 

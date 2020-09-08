@@ -44,43 +44,45 @@ namespace Dt.Cells.UndoRedo
                 return DataValidationResult.Discard;
             }
             string newValue = CellEditExtent.NewValue;
-            DataValidationResult forceApply = DataValidationResult.ForceApply;
-            bool flag = true;
-            if (UI.FormulaUtility.IsFormula(newValue))
-            {
-                string str2 = UI.FormulaUtility.StringVariantToInvariant(excel.ActiveSheet, newValue);
-                flag = Worksheet.IsValid(rowIndex, columnIndex, str2);
-            }
-            else
-            {
-                object obj2 = UI.ConditionValueConverter.TryDateTime(newValue, true);
-                if (obj2 == null)
-                {
-                    obj2 = UI.ConditionValueConverter.TryDouble(newValue, true);
-                }
-                if (obj2 != null)
-                {
-                    flag = Worksheet.IsValid(rowIndex, columnIndex, obj2);
-                }
-                else
-                {
-                    flag = Worksheet.IsValid(rowIndex, columnIndex, newValue);
-                }
-            }
-            if (!flag)
-            {
-                forceApply = ValidationError(excel, rowIndex, columnIndex, newValue);
-            }
-            switch (forceApply)
-            {
-                case DataValidationResult.Discard:
-                case DataValidationResult.Retry:
-                    return forceApply;
-            }
-            if (forceApply != DataValidationResult.ForceApply)
-            {
-                throw new NotSupportedException(ResourceStrings.undoActionCellEditInvalidValidationFlag);
-            }
+
+            //DataValidationResult forceApply = DataValidationResult.ForceApply;
+            //bool flag = true;
+            //if (UI.FormulaUtility.IsFormula(newValue))
+            //{
+            //    string str2 = UI.FormulaUtility.StringVariantToInvariant(excel.ActiveSheet, newValue);
+            //    flag = Worksheet.IsValid(rowIndex, columnIndex, str2);
+            //}
+            //else
+            //{
+            //    object obj2 = UI.ConditionValueConverter.TryDateTime(newValue, true);
+            //    if (obj2 == null)
+            //    {
+            //        obj2 = UI.ConditionValueConverter.TryDouble(newValue, true);
+            //    }
+            //    if (obj2 != null)
+            //    {
+            //        flag = Worksheet.IsValid(rowIndex, columnIndex, obj2);
+            //    }
+            //    else
+            //    {
+            //        flag = Worksheet.IsValid(rowIndex, columnIndex, newValue);
+            //    }
+            //}
+            //if (!flag)
+            //{
+            //    forceApply = ValidationError(excel, rowIndex, columnIndex, newValue);
+            //}
+            //switch (forceApply)
+            //{
+            //    case DataValidationResult.Discard:
+            //    case DataValidationResult.Retry:
+            //        return forceApply;
+            //}
+            //if (forceApply != DataValidationResult.ForceApply)
+            //{
+            //    throw new NotSupportedException(ResourceStrings.undoActionCellEditInvalidValidationFlag);
+            //}
+
             Cell bindingCell = Worksheet.Cells[rowIndex, columnIndex];
             Type valueType = null;
             if ((bindingCell != null) && (bindingCell.Value != null))
@@ -103,7 +105,7 @@ namespace Dt.Cells.UndoRedo
             {
                 excel.RaiseUserFormulaEntered(rowIndex, columnIndex, appliedFormula);
             }
-            return forceApply;
+            return DataValidationResult.ForceApply;
         }
 
         /// <summary>
@@ -261,24 +263,6 @@ namespace Dt.Cells.UndoRedo
                 _excel = null;
             }
             return flag;
-        }
-
-        DataValidationResult ValidationError(Excel excel, int row, int column, string text)
-        {
-            DataValidationResult forceApply = DataValidationResult.ForceApply;
-            StyleInfo info = Worksheet.GetActualStyleInfo(row, column, SheetArea.Cells);
-            DataValidator validator = (info == null) ? null : info.DataValidator;
-            if (validator != null)
-            {
-                ValidationErrorEventArgs eventArgs = new ValidationErrorEventArgs(row, column, validator.Clone() as DataValidator);
-                excel.RaiseValidationError(row, column, eventArgs);
-                forceApply = eventArgs.ValidationResult;
-            }
-            if ((forceApply == DataValidationResult.ForceApply) || (forceApply == DataValidationResult.Discard))
-            {
-                excel.FocusInternal();
-            }
-            return forceApply;
         }
 
         /// <summary>

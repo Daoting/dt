@@ -199,7 +199,6 @@ namespace Dt.Cells.UI
                 {
                     if (!Workbook.Protect)
                     {
-                        Excel.SaveDataForFormulaSelection();
                         OnNewTabNeeded(EventArgs.Empty);
                         if (tabsPresenter.Children.Count > 1)
                         {
@@ -221,7 +220,6 @@ namespace Dt.Cells.UI
                     }
                     if (hitSheetTab != _activeTab)
                     {
-                        Excel.SaveDataForFormulaSelection();
                         ActiveSheet(hitSheetTab.SheetIndex, true);
                     }
                 }
@@ -278,11 +276,6 @@ namespace Dt.Cells.UI
             {
                 if (!Workbook.Protect)
                 {
-                    if (Excel.CanSelectFormula)
-                    {
-                        Excel.SaveDataForFormulaSelection();
-                        Excel.StopCellEditing(true);
-                    }
                     OnNewTabNeeded(EventArgs.Empty);
                     if (tabsPresenter.Children.Count > 1)
                     {
@@ -304,11 +297,6 @@ namespace Dt.Cells.UI
                 }
                 if (touchHitSheetTab != _activeTab)
                 {
-                    if (Excel.CanSelectFormula)
-                    {
-                        Excel.SaveDataForFormulaSelection();
-                        Excel.StopCellEditing(true);
-                    }
                     ActiveSheet(touchHitSheetTab.SheetIndex, true);
                 }
             }

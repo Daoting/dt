@@ -572,18 +572,11 @@ namespace Dt.Cells.UI
             Excel view = sender as Excel;
             if (view != null)
             {
-                if (view.IsSelectionBegined)
+                if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
                 {
-                    view.FormulaNavigation.ProcessNavigation((NavigationDirection)15);
+                    return;
                 }
-                else
-                {
-                    if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
-                    {
-                        return;
-                    }
-                    view.Navigation.ProcessNavigation((NavigationDirection)15);
-                }
+                view.Navigation.ProcessNavigation((NavigationDirection)15);
                 e.Handled = true;
             }
         }
@@ -598,18 +591,11 @@ namespace Dt.Cells.UI
             Excel view = sender as Excel;
             if (view != null)
             {
-                if (view.IsSelectionBegined)
+                if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
                 {
-                    view.FormulaNavigation.ProcessNavigation((NavigationDirection)3);
+                    return;
                 }
-                else
-                {
-                    if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
-                    {
-                        return;
-                    }
-                    view.Navigation.ProcessNavigation((NavigationDirection)3);
-                }
+                view.Navigation.ProcessNavigation((NavigationDirection)3);
                 e.Handled = true;
             }
         }
@@ -624,18 +610,11 @@ namespace Dt.Cells.UI
             Excel view = sender as Excel;
             if (view != null)
             {
-                if (view.IsSelectionBegined)
+                if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
                 {
-                    view.FormulaNavigation.ProcessNavigation((NavigationDirection)13);
+                    return;
                 }
-                else
-                {
-                    if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
-                    {
-                        return;
-                    }
-                    view.Navigation.ProcessNavigation((NavigationDirection)13);
-                }
+                view.Navigation.ProcessNavigation((NavigationDirection)13);
                 e.Handled = true;
             }
         }
@@ -650,18 +629,11 @@ namespace Dt.Cells.UI
             Excel view = sender as Excel;
             if (view != null)
             {
-                if (view.IsSelectionBegined)
+                if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
                 {
-                    view.FormulaNavigation.ProcessNavigation((NavigationDirection)0x10);
+                    return;
                 }
-                else
-                {
-                    if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
-                    {
-                        return;
-                    }
-                    view.Navigation.ProcessNavigation((NavigationDirection)0x10);
-                }
+                view.Navigation.ProcessNavigation((NavigationDirection)0x10);
                 e.Handled = true;
             }
         }
@@ -676,18 +648,11 @@ namespace Dt.Cells.UI
             Excel view = sender as Excel;
             if (view != null)
             {
-                if (view.IsSelectionBegined)
+                if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
                 {
-                    view.FormulaNavigation.ProcessNavigation((NavigationDirection)12);
+                    return;
                 }
-                else
-                {
-                    if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
-                    {
-                        return;
-                    }
-                    view.Navigation.ProcessNavigation((NavigationDirection)12);
-                }
+                view.Navigation.ProcessNavigation((NavigationDirection)12);
                 e.Handled = true;
             }
         }
@@ -702,18 +667,11 @@ namespace Dt.Cells.UI
             Excel view = sender as Excel;
             if (view != null)
             {
-                if (view.IsSelectionBegined)
+                if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
                 {
-                    view.FormulaNavigation.ProcessNavigation((NavigationDirection)0x11);
+                    return;
                 }
-                else
-                {
-                    if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
-                    {
-                        return;
-                    }
-                    view.Navigation.ProcessNavigation((NavigationDirection)0x11);
-                }
+                view.Navigation.ProcessNavigation((NavigationDirection)0x11);
                 e.Handled = true;
             }
         }
@@ -728,18 +686,11 @@ namespace Dt.Cells.UI
             Excel view = sender as Excel;
             if (view != null)
             {
-                if (view.IsSelectionBegined)
+                if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
                 {
-                    view.FormulaNavigation.ProcessNavigation(0);
+                    return;
                 }
-                else
-                {
-                    if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
-                    {
-                        return;
-                    }
-                    view.Navigation.ProcessNavigation(0);
-                }
+                view.Navigation.ProcessNavigation(0);
                 e.Handled = true;
             }
         }
@@ -807,18 +758,11 @@ namespace Dt.Cells.UI
             Excel view = sender as Excel;
             if (view != null)
             {
-                if (view.IsSelectionBegined)
+                if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
                 {
-                    view.FormulaNavigation.ProcessNavigation((NavigationDirection)9);
+                    return;
                 }
-                else
-                {
-                    if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
-                    {
-                        return;
-                    }
-                    view.Navigation.ProcessNavigation((NavigationDirection)9);
-                }
+                view.Navigation.ProcessNavigation((NavigationDirection)9);
                 e.Handled = true;
             }
         }
@@ -833,18 +777,11 @@ namespace Dt.Cells.UI
             Excel view = sender as Excel;
             if (view != null)
             {
-                if (view.IsSelectionBegined)
+                if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
                 {
-                    view.FormulaNavigation.ProcessNavigation((NavigationDirection)8);
+                    return;
                 }
-                else
-                {
-                    if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
-                    {
-                        return;
-                    }
-                    view.Navigation.ProcessNavigation((NavigationDirection)8);
-                }
+                view.Navigation.ProcessNavigation((NavigationDirection)8);
                 e.Handled = true;
             }
         }
@@ -912,18 +849,11 @@ namespace Dt.Cells.UI
             Excel view = sender as Excel;
             if (view != null)
             {
-                if (view.IsSelectionBegined)
+                if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
                 {
-                    view.FormulaNavigation.ProcessNavigation((NavigationDirection)1);
+                    return;
                 }
-                else
-                {
-                    if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
-                    {
-                        return;
-                    }
-                    view.Navigation.ProcessNavigation((NavigationDirection)1);
-                }
+                view.Navigation.ProcessNavigation((NavigationDirection)1);
                 e.Handled = true;
             }
         }
@@ -938,18 +868,11 @@ namespace Dt.Cells.UI
             Excel view = sender as Excel;
             if (view != null)
             {
-                if (view.IsSelectionBegined)
+                if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
                 {
-                    view.FormulaNavigation.ProcessNavigation((NavigationDirection)14);
+                    return;
                 }
-                else
-                {
-                    if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
-                    {
-                        return;
-                    }
-                    view.Navigation.ProcessNavigation((NavigationDirection)14);
-                }
+                view.Navigation.ProcessNavigation((NavigationDirection)14);
                 e.Handled = true;
             }
         }
@@ -964,18 +887,11 @@ namespace Dt.Cells.UI
             Excel view = sender as Excel;
             if (view != null)
             {
-                if (view.IsSelectionBegined)
+                if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
                 {
-                    view.FormulaNavigation.ProcessNavigation((NavigationDirection)2);
+                    return;
                 }
-                else
-                {
-                    if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
-                    {
-                        return;
-                    }
-                    view.Navigation.ProcessNavigation((NavigationDirection)2);
-                }
+                view.Navigation.ProcessNavigation((NavigationDirection)2);
                 e.Handled = true;
             }
         }
@@ -1057,18 +973,11 @@ namespace Dt.Cells.UI
             Excel view = sender as Excel;
             if (view != null)
             {
-                if (view.IsSelectionBegined)
+                if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
                 {
-                    view.FormulaSelection.KeyboardSelect(NavigationDirection.Bottom);
+                    return;
                 }
-                else
-                {
-                    if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
-                    {
-                        return;
-                    }
-                    view.Selection.KeyboardSelect(NavigationDirection.Bottom);
-                }
+                view.Selection.KeyboardSelect(NavigationDirection.Bottom);
                 e.Handled = true;
             }
         }
@@ -1083,18 +992,11 @@ namespace Dt.Cells.UI
             Excel view = sender as Excel;
             if (view != null)
             {
-                if (view.IsSelectionBegined)
+                if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
                 {
-                    view.FormulaSelection.KeyboardSelect(NavigationDirection.Down);
+                    return;
                 }
-                else
-                {
-                    if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
-                    {
-                        return;
-                    }
-                    view.Selection.KeyboardSelect(NavigationDirection.Down);
-                }
+                view.Selection.KeyboardSelect(NavigationDirection.Down);
                 e.Handled = true;
             }
         }
@@ -1109,18 +1011,11 @@ namespace Dt.Cells.UI
             Excel view = sender as Excel;
             if (view != null)
             {
-                if (view.IsSelectionBegined)
+                if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
                 {
-                    view.FormulaSelection.KeyboardSelect(NavigationDirection.End);
+                    return;
                 }
-                else
-                {
-                    if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
-                    {
-                        return;
-                    }
-                    view.Selection.KeyboardSelect(NavigationDirection.End);
-                }
+                view.Selection.KeyboardSelect(NavigationDirection.End);
                 e.Handled = true;
             }
         }
@@ -1135,18 +1030,11 @@ namespace Dt.Cells.UI
             Excel view = sender as Excel;
             if (view != null)
             {
-                if (view.IsSelectionBegined)
+                if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
                 {
-                    view.FormulaSelection.KeyboardSelect(NavigationDirection.First);
+                    return;
                 }
-                else
-                {
-                    if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
-                    {
-                        return;
-                    }
-                    view.Selection.KeyboardSelect(NavigationDirection.First);
-                }
+                view.Selection.KeyboardSelect(NavigationDirection.First);
                 e.Handled = true;
             }
         }
@@ -1161,18 +1049,11 @@ namespace Dt.Cells.UI
             Excel view = sender as Excel;
             if (view != null)
             {
-                if (view.IsSelectionBegined)
+                if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
                 {
-                    view.FormulaSelection.KeyboardSelect(NavigationDirection.Home);
+                    return;
                 }
-                else
-                {
-                    if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
-                    {
-                        return;
-                    }
-                    view.Selection.KeyboardSelect(NavigationDirection.Home);
-                }
+                view.Selection.KeyboardSelect(NavigationDirection.Home);
                 e.Handled = true;
             }
         }
@@ -1187,18 +1068,11 @@ namespace Dt.Cells.UI
             Excel view = sender as Excel;
             if (view != null)
             {
-                if (view.IsSelectionBegined)
+                if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
                 {
-                    view.FormulaSelection.KeyboardSelect(NavigationDirection.Last);
+                    return;
                 }
-                else
-                {
-                    if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
-                    {
-                        return;
-                    }
-                    view.Selection.KeyboardSelect(NavigationDirection.Last);
-                }
+                view.Selection.KeyboardSelect(NavigationDirection.Last);
                 e.Handled = true;
             }
         }
@@ -1213,18 +1087,11 @@ namespace Dt.Cells.UI
             Excel view = sender as Excel;
             if (view != null)
             {
-                if (view.IsSelectionBegined)
+                if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
                 {
-                    view.FormulaSelection.KeyboardSelect(NavigationDirection.Left);
+                    return;
                 }
-                else
-                {
-                    if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
-                    {
-                        return;
-                    }
-                    view.Selection.KeyboardSelect(NavigationDirection.Left);
-                }
+                view.Selection.KeyboardSelect(NavigationDirection.Left);
                 e.Handled = true;
             }
         }
@@ -1239,18 +1106,11 @@ namespace Dt.Cells.UI
             Excel view = sender as Excel;
             if (view != null)
             {
-                if (view.IsSelectionBegined)
+                if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
                 {
-                    view.FormulaSelection.KeyboardSelect(NavigationDirection.PageDown);
+                    return;
                 }
-                else
-                {
-                    if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
-                    {
-                        return;
-                    }
-                    view.Selection.KeyboardSelect(NavigationDirection.PageDown);
-                }
+                view.Selection.KeyboardSelect(NavigationDirection.PageDown);
                 e.Handled = true;
             }
         }
@@ -1265,18 +1125,11 @@ namespace Dt.Cells.UI
             Excel view = sender as Excel;
             if (view != null)
             {
-                if (view.IsSelectionBegined)
+                if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
                 {
-                    view.FormulaSelection.KeyboardSelect(NavigationDirection.PageUp);
+                    return;
                 }
-                else
-                {
-                    if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
-                    {
-                        return;
-                    }
-                    view.Selection.KeyboardSelect(NavigationDirection.PageUp);
-                }
+                view.Selection.KeyboardSelect(NavigationDirection.PageUp);
                 e.Handled = true;
             }
         }
@@ -1291,18 +1144,11 @@ namespace Dt.Cells.UI
             Excel view = sender as Excel;
             if (view != null)
             {
-                if (view.IsSelectionBegined)
+                if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
                 {
-                    view.FormulaSelection.KeyboardSelect(NavigationDirection.Right);
+                    return;
                 }
-                else
-                {
-                    if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
-                    {
-                        return;
-                    }
-                    view.Selection.KeyboardSelect(NavigationDirection.Right);
-                }
+                view.Selection.KeyboardSelect(NavigationDirection.Right);
                 e.Handled = true;
             }
         }
@@ -1317,18 +1163,11 @@ namespace Dt.Cells.UI
             Excel view = sender as Excel;
             if (view != null)
             {
-                if (view.IsSelectionBegined)
+                if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
                 {
-                    view.FormulaSelection.KeyboardSelect(NavigationDirection.Top);
+                    return;
                 }
-                else
-                {
-                    if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
-                    {
-                        return;
-                    }
-                    view.Selection.KeyboardSelect(NavigationDirection.Top);
-                }
+                view.Selection.KeyboardSelect(NavigationDirection.Top);
                 e.Handled = true;
             }
         }
@@ -1343,18 +1182,11 @@ namespace Dt.Cells.UI
             Excel view = sender as Excel;
             if (view != null)
             {
-                if (view.IsSelectionBegined)
+                if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
                 {
-                    view.FormulaSelection.KeyboardSelect(NavigationDirection.Up);
+                    return;
                 }
-                else
-                {
-                    if (view.IsEditing && (!view.CanCommitAndNavigate() || !view.StopCellEditing(false)))
-                    {
-                        return;
-                    }
-                    view.Selection.KeyboardSelect(NavigationDirection.Up);
-                }
+                view.Selection.KeyboardSelect(NavigationDirection.Up);
                 e.Handled = true;
             }
         }

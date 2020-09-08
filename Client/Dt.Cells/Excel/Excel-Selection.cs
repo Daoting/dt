@@ -57,22 +57,6 @@ namespace Dt.Base
             }
         }
 
-        /// <summary>
-        /// Enters a state where the user can select formulas with the mouse or keyboard.
-        /// </summary>
-        public void BeginFormulaSelection(object editor = null)
-        {
-            _formulaSelectionFeature.BeginFormulaSelection(editor);
-        }
-
-        /// <summary>
-        /// Exits the state where the user can select formulas with the mouse or keyboard.
-        /// </summary>
-        public void EndFormulaSelection()
-        {
-            _formulaSelectionFeature.EndFormulaSelection();
-        }
-
         public CellRange GetActiveSelection()
         {
             CellRange activeCell = GetActiveCell();
@@ -795,7 +779,7 @@ namespace Dt.Base
         internal void UpdateTouchSelectionGripper()
         {
             Rect? autoFillIndicatorRec;
-            if (((InputDeviceType != InputDeviceType.Touch) || IsTouchPromotedMouseMessage) || _formulaSelectionFeature.IsSelectionBegined)
+            if (((InputDeviceType != InputDeviceType.Touch) || IsTouchPromotedMouseMessage))
             {
                 Rect rect16 = new Rect(0.0, 0.0, 0.0, 0.0);
                 _gripperLocations = null;
@@ -1444,10 +1428,6 @@ namespace Dt.Base
                     SetViewportLeftColumn(savedHitTestInformation.ColumnViewportIndex, viewportLeftColumn - 1);
                     base.InvalidateMeasure();
                 }
-                if (_formulaSelectionFeature.IsDragging)
-                {
-                    _formulaSelectionFeature.ContinueDragging();
-                }
                 if (IsSelectingCells)
                 {
                     ContinueCellSelecting();
@@ -1526,10 +1506,6 @@ namespace Dt.Base
                     SetViewportTopRow(savedHitTestInformation.RowViewportIndex, viewportTopRow - 1);
                     base.InvalidateMeasure();
                 }
-                if (_formulaSelectionFeature.IsDragging)
-                {
-                    _formulaSelectionFeature.ContinueDragging();
-                }
                 if (IsSelectingCells)
                 {
                     ContinueCellSelecting();
@@ -1589,14 +1565,6 @@ namespace Dt.Base
                 return true;
             }
             return false;
-        }
-
-        internal void RefreshFormulaSelectionGrippers()
-        {
-            if (_formulaSelectionGripperPanel != null)
-            {
-                _formulaSelectionGripperPanel.Refresh();
-            }
         }
     }
 }

@@ -21,7 +21,6 @@ namespace Dt.Base
 {
     public partial class Excel
     {
-
         void StartColumnSplitting()
         {
             if (Workbook.Protect)

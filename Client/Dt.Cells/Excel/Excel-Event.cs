@@ -72,11 +72,6 @@ namespace Dt.Base
         public event EventHandler<ColumnWidthChangingEventArgs> ColumnWidthChanging;
 
         /// <summary>
-        /// Occurs when [data validation list popup opening].
-        /// </summary>
-        public event EventHandler<CellCancelEventArgs> DataValidationListPopupOpening;
-
-        /// <summary>
         /// Occurs when the user drags and drops a range of cells.
         /// </summary>
         public event EventHandler<DragDropBlockEventArgs> DragDropBlock;
@@ -229,25 +224,9 @@ namespace Dt.Base
         public event EventHandler<ZoomEventArgs> UserZooming;
 
         /// <summary>
-        /// Occurs when the user drags and drops a range of cells.
-        /// </summary>
-        public event EventHandler<ValidationDragDropBlockEventArgs> ValidationDragDropBlock;
-
-        /// <summary>
-        /// Occurs when the applied cell value is invalid.
-        /// </summary>
-        public event EventHandler<ValidationErrorEventArgs> ValidationError;
-
-        /// <summary>
-        /// Occurs when validation the whether the pasting is validate.
-        /// </summary>
-        public event EventHandler<ValidationPastingEventArgs> ValidationPasting;
-
-        /// <summary>
         /// Occurs when the value in the subeditor changes. 
         /// </summary>
         public event EventHandler<CellEventArgs> ValueChanged;
-
 
         /// <summary>
         /// Occurs when the user has changed the active sheet. 
@@ -667,7 +646,6 @@ namespace Dt.Base
                             UpdateFocusIndicator();
                             UpdateHeaderCellsStateInSpanArea();
                             PrepareCellEditing();
-                            UpdateDataValidationUI(ActiveSheet.ActiveRowIndex, ActiveSheet.ActiveColumnIndex);
                             return;
 
                         case "FrozenRowCount":
@@ -925,11 +903,6 @@ namespace Dt.Base
 
             if (e.PropertyName == "ActiveSheetIndex")
             {
-                if (EditorConnector.IsFormulaSelectionBegined)
-                {
-                    EditorConnector.UpdateSelectionItemsForCurrentSheet();
-                    EditorConnector.ActivateEditor = true;
-                }
                 InvalidateAll();
             }
         }

@@ -20,40 +20,17 @@ namespace Dt.Cells.UI
         protected override Size MeasureOverride(Size availableSize)
         {
             BuildSpanGraph();
+            BuildSelection();
+
             _rowsLayer.Measure(availableSize);
             _borderLayer.Measure(availableSize);
-
-            BuildSelection();
             _selectionLayer.Measure(availableSize);
-
-            //if (_formulaSelectionLayer.Children.Count > 0)
-            //    _formulaSelectionLayer.InvalidateMeasure();
-            //_formulaSelectionLayer.Measure(availableSize);
-
-            //_shapeLayer.Measure(availableSize);
-
-            //if (_dragFillLayer != null)
-            //{
-            //    _dragFillLayer.Measure(availableSize);
-            //}
-
-            //if (_decorationLayer != null)
-            //{
-            //    _decorationLayer.InvalidateMeasure();
-            //    _decorationLayer.Measure(availableSize);
-            //}
-
-            //_dataValidationLayer.InvalidateMeasure();
-            //_editorLayer.Measure(availableSize);
-
-            //if (Excel._formulaSelectionGripperPanel != null)
-            //{
-            //    Excel._formulaSelectionGripperPanel.InvalidateMeasure();
-            //}
-
-            //_floatingObjectLayer.Measure(availableSize);
-            //_floatingObjectsMovingResizingLayer.Measure(availableSize);
-
+            _dragFillLayer?.Measure(availableSize);
+            _decorationLayer?.Measure(availableSize);
+            _editorLayer.Measure(availableSize);
+            _floatingLayer.Measure(availableSize);
+            _floatingEditLayer.Measure(availableSize);
+            
             return GetViewportSize(availableSize);
         }
 
@@ -63,40 +40,33 @@ namespace Dt.Cells.UI
             _rowsLayer.Arrange(rc);
             _borderLayer.Arrange(rc);
             _selectionLayer.Arrange(rc);
-            //_formulaSelectionLayer.Arrange(rc);
-            //_shapeLayer.Arrange(rc);
+            _dragFillLayer?.Arrange(rc);
+            _decorationLayer?.Arrange(rc);
 
-            //if (_dragFillLayer != null)
-            //{
-            //    _dragFillLayer.Arrange(rc);
-            //}
+#if !IOS
+            // 正在编辑时滚动页面若不重新布局会造成编辑框没跟着滚动
+            // iOS始终重新布局，再调用 InvalidateArrange 会死循环！
+            if (IsEditing())
+                _editorLayer.InvalidateArrange();
+#endif
+            _editorLayer.Arrange(rc);
 
-            //if (_decorationLayer != null)
-            //{
-            //    _decorationLayer.Arrange(rc);
-            //}
-            //_dataValidationLayer.Arrange(rc);
+            _floatingLayer.Arrange(rc);
+            _floatingEditLayer.Arrange(rc);
 
-            //if (IsEditing())
-            //    _editorLayer.InvalidateArrange();
-            //_editorLayer.Arrange(rc);
+            Size viewportSize = GetViewportSize(finalSize);
+            if (Excel.IsTouching)
+            {
+                if (Clip == null)
+                    Clip = new RectangleGeometry { Rect = new Rect(new Point(), viewportSize) };
+            }
+            else
+            {
+                Clip = new RectangleGeometry { Rect = new Rect(new Point(), viewportSize) };
+            }
 
-            //_floatingObjectLayer.Arrange(rc);
-            //_floatingObjectsMovingResizingLayer.Arrange(rc);
-
-            //Size viewportSize = GetViewportSize(finalSize);
-            //if (Excel.IsTouching)
-            //{
-            //    if (Clip == null)
-            //        Clip = new RectangleGeometry { Rect = new Rect(new Point(), viewportSize) };
-            //}
-            //else
-            //{
-            //    Clip = new RectangleGeometry { Rect = new Rect(new Point(), viewportSize) };
-            //}
-
-            //if (Clip != null)
-            //    _borderLayer.Clip = new RectangleGeometry { Rect = Clip.Rect };
+            if (Clip != null)
+                _borderLayer.Clip = new RectangleGeometry { Rect = Clip.Rect };
             return finalSize;
         }
 

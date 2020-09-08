@@ -33,7 +33,11 @@ namespace Dt.Cells.UI
             Editor = new TextBox
             {
                 BorderThickness = new Thickness(0.0),
+#if IOS
+                Padding = new Thickness(4, -1, 0, 0),
+#else
                 Padding = new Thickness(4, 5, 4, 4),
+#endif
                 TextWrapping = TextWrapping.Wrap,
                 Background = BrushRes.WhiteBrush,
                 IsHitTestVisible = false,
@@ -111,7 +115,7 @@ namespace Dt.Cells.UI
         protected override Size MeasureOverride(Size availableSize)
         {
             Editor.Measure(availableSize);
-            return _ownPanel.GetViewportSize(availableSize);
+            return availableSize;
         }
 
         protected override Size ArrangeOverride(Size finalSize)

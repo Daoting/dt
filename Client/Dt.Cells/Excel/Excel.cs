@@ -42,7 +42,6 @@ namespace Dt.Base
         {
             _invisibleRows = new HashSet<int>();
             _invisibleColumns = new HashSet<int>();
-            _formulaSelectionFeature = new FormulaSelectionFeature(this);
 
             InitPointer();
             InitKeyboard();
@@ -359,14 +358,6 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// Gets a value that indicates whether the user is editing a formula.
-        /// </summary>
-        public bool CanSelectFormula
-        {
-            get { return (_formulaSelectionFeature.IsSelectionBegined && _formulaSelectionFeature.CanSelectFormula); }
-        }
-
-        /// <summary>
         /// Indicates whether the user can select multiple ranges by touch.
         /// </summary>
         public bool CanTouchMultiSelect
@@ -427,15 +418,6 @@ namespace Dt.Base
         {
             get { return (ClipboardPasteOptions)GetValue(ClipBoardOptionsProperty); }
             set { SetValue(ClipBoardOptionsProperty, value); }
-        }
-
-        /// <summary>
-        /// Gets or sets whether to highlight invalid data.
-        /// </summary>
-        public bool HighlightInvalidData
-        {
-            get { return (bool)GetValue(HighlightInvalidDataProperty); }
-            set { SetValue(HighlightInvalidDataProperty, value); }
         }
 
         /// <summary>
@@ -525,18 +507,7 @@ namespace Dt.Base
         public InputDeviceType InputDeviceType
         {
             get { return _inputDeviceType; }
-            internal set
-            {
-                _inputDeviceType = value;
-                if (_inputDeviceType == InputDeviceType.Touch)
-                {
-                    FormulaSelectionFeature.IsTouching = true;
-                }
-                else if (_inputDeviceType == InputDeviceType.Mouse)
-                {
-                    FormulaSelectionFeature.IsTouching = false;
-                }
-            }
+            internal set { _inputDeviceType = value; }
         }
 
         /// <summary>
@@ -1386,7 +1357,8 @@ namespace Dt.Base
                         {
                             hi.ViewportInfo.Row = layout12.Row;
                         }
-                        if (!_formulaSelectionFeature.HitTest(k, m, hitPoint.X, hitPoint.Y, hi) && (IsInSelectionGripper(new Point(x, y)) || !HitTestFloatingObject(k, m, hitPoint.X, hitPoint.Y, hi)))
+
+                        if (IsInSelectionGripper(new Point(x, y)) || !HitTestFloatingObject(k, m, hitPoint.X, hitPoint.Y, hi))
                         {
                             CellsPanel viewportRowsPresenter = GetViewportRowsPresenter(k, m);
                             if ((layout11 != null) && (layout12 != null))
@@ -1428,24 +1400,6 @@ namespace Dt.Base
             _cornerPanel = null;
             _rowHeaders = null;
             _colHeaders = null;
-
-            if (_cellsPanels != null)
-            {
-                CellsPanel[,] viewportArray = _cellsPanels;
-                int upperBound = viewportArray.GetUpperBound(0);
-                int num2 = viewportArray.GetUpperBound(1);
-                for (int i = viewportArray.GetLowerBound(0); i <= upperBound; i++)
-                {
-                    for (int j = viewportArray.GetLowerBound(1); j <= num2; j++)
-                    {
-                        CellsPanel viewport = viewportArray[i, j];
-                        if (viewport != null)
-                        {
-                            viewport.RemoveDataValidationUI();
-                        }
-                    }
-                }
-            }
             _cellsPanels = null;
 
             _groupCornerPresenter = null;
@@ -2018,10 +1972,6 @@ namespace Dt.Base
                         CellsPanel viewportRowsPresenter = GetViewportRowsPresenter(rowViewportIndex, i);
                         if (viewportRowsPresenter != null)
                         {
-                            if ((viewportRowsPresenter.RowViewportIndex == GetActiveRowViewportIndex()) && (viewportRowsPresenter.ColumnViewportIndex == GetActiveColumnViewportIndex()))
-                            {
-                                viewportRowsPresenter.UpdateDataValidationUI(ActiveSheet.ActiveRowIndex, ActiveSheet.ActiveColumnIndex);
-                            }
                             viewportRowsPresenter.InvalidateMeasure();
                             viewportRowsPresenter.InvalidateBordersMeasureState();
                             viewportRowsPresenter.InvalidateSelectionMeasureState();

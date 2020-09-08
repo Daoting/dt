@@ -41,13 +41,6 @@ namespace Dt.Base
             _cachedToolbarImageSources = new Dictionary<string, ImageSource>();
 
             _showScrollTip = false;
-            FormulaSelectionGripperContainerPanel panel = new FormulaSelectionGripperContainerPanel
-            {
-                Excel = this
-            };
-            panel.IsHitTestVisible = false;
-            _formulaSelectionGripperPanel = panel;
-
             _topLeftGripper = new Ellipse();
             _topLeftGripper.Stroke = new SolidColorBrush(Color.FromArgb(220, 0, 0, 0));
             _topLeftGripper.StrokeThickness = 2.0;
@@ -290,8 +283,7 @@ namespace Dt.Base
                     {
                         CellsPanel viewport = _cellsPanels[i, j];
                         if (viewport != null)
-                            viewport.RemoveDataValidationUI();
-                        Children.Remove(viewport);
+                            Children.Remove(viewport);
                     }
                 }
                 viewportArray = _cellsPanels;
@@ -579,12 +571,6 @@ namespace Dt.Base
             _autoFillIndicatorContainer.Width = 16.0;
             _autoFillIndicatorContainer.Height = 16.0;
             _autoFillIndicatorContainer.Measure(availableSize);
-
-            if (!Children.Contains(_formulaSelectionGripperPanel))
-            {
-                Children.Add(_formulaSelectionGripperPanel);
-            }
-            _formulaSelectionGripperPanel.Measure(availableSize);
 
             // 进度环
             _progressRing?.Measure(availableSize);
@@ -978,10 +964,6 @@ namespace Dt.Base
             RectangleGeometry geometry9 = new RectangleGeometry();
             geometry9.Rect = rect;
             Clip = geometry9;
-            if (_formulaSelectionGripperPanel != null)
-            {
-                _formulaSelectionGripperPanel.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
-            }
             UpdateTouchSelectionGripper();
 
             _progressRing?.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
@@ -1475,7 +1457,6 @@ namespace Dt.Base
                 ClearValue(CanUserUndoProperty);
                 ClearValue(CanUserZoomProperty);
                 ClearValue(FreezeLineStyleProperty);
-                ClearValue(HighlightInvalidDataProperty);
                 ClearValue(ColumnSplitBoxAlignmentProperty);
                 ClearValue(ColumnSplitBoxPolicyProperty);
                 ClearValue(HorizontalScrollBarHeightProperty);

@@ -59,7 +59,6 @@ namespace Dt.Base
                     int index = activeSheet.Workbook.Sheets.IndexOf(EditorInfo.Sheet);
                     activeSheet.Workbook.ActiveSheetIndex = index;
                     StopCellEditing(false);
-                    EditorConnector.ActivateEditor = false;
                     e.Handled = true;
                     return;
                 }
