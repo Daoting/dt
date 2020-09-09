@@ -19,49 +19,29 @@ namespace Dt.Cells.UI
     /// Represents a <see cref="T:GrapeCity.Windows.SpreadSheet.UI.GcSpreadSheet" /> range group header button
     /// that is used to expand or collapse all the groups in the same level.
     /// </summary>
-    public partial class RangeGroupHeaderButtonPresenter : Button
+    public partial class GroupHeaderButton : Button
     {
-        /// <summary>
-        /// Indicates the level dependency property.
-        /// </summary>
-        public static readonly DependencyProperty LevelProperty = DependencyProperty.Register("Level", (Type) typeof(int), (Type) typeof(RangeGroupHeaderButtonPresenter), new PropertyMetadata((int) 0));
+        public static readonly DependencyProperty LevelProperty = DependencyProperty.Register(
+            "Level",
+            typeof(string),
+            typeof(GroupHeaderButton),
+            new PropertyMetadata("0"));
 
         /// <summary>
         /// Creates a new instance of the control.
         /// </summary>
-        public RangeGroupHeaderButtonPresenter()
+        public GroupHeaderButton()
         {
-            base.DefaultStyleKey = typeof(RangeGroupHeaderButtonPresenter);
-            base.IsTabStop = false;
-        }
-
-        /// <summary>
-        /// Called before the PointerPressed event occurs.
-        /// </summary>
-        /// <param name="e">Event data for the event.</param>
-        protected override void OnPointerPressed(PointerRoutedEventArgs e)
-        {
-            base.OnPointerPressed(e);
-            e.Handled = false;
-        }
-
-        /// <summary>
-        /// Called before the PointerReleased event occurs.
-        /// </summary>
-        /// <param name="e">Event data for the event.</param>
-        protected override void OnPointerReleased(PointerRoutedEventArgs e)
-        {
-            base.OnPointerReleased(e);
-            e.Handled = false;
+            DefaultStyleKey = typeof(GroupHeaderButton);
         }
 
         /// <summary>
         /// Gets or sets a value that indicates the range group level.
         /// </summary>
-        public int Level
+        public string Level
         {
-            get { return  (int) ((int) base.GetValue(LevelProperty)); }
-            set { base.SetValue(LevelProperty, (int) value); }
+            get { return (string)GetValue(LevelProperty); }
+            set { SetValue(LevelProperty, value); }
         }
     }
 }

@@ -2213,7 +2213,7 @@ namespace Dt.Base
                         StartTapSelectCells();
                         EndTouchSelectingCells();
                         RaiseTouchCellClick(p_hitInfo);
-                        UpdateTouchSelectionGripper();
+                        ArrangeSelectionGripper();
                     }
                     else
                     {
@@ -2235,7 +2235,7 @@ namespace Dt.Base
                             StartTapSelectCells();
                             EndTouchSelectingCells();
                             RaiseTouchCellClick(p_hitInfo);
-                            UpdateTouchSelectionGripper();
+                            ArrangeSelectionGripper();
                         }
                         else
                         {

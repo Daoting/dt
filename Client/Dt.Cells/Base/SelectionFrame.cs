@@ -158,7 +158,7 @@ namespace Dt.Cells.UI
             }
             _fillIndicator.Arrange(_fillIndicatorBounds);
 
-            OwingViewport.Excel.UpdateTouchSelectionGripper();
+            OwingViewport.Excel.ArrangeSelectionGripper();
             return finalSize;
         }
 

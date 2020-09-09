@@ -20,28 +20,17 @@ namespace Dt.Cells.UI
     /// Represents a <see cref="T:GrapeCity.Windows.SpreadSheet.UI.GcSpreadSheet" /> range group button
     /// that is used to expand or collapse the group.
     /// </summary>
-    [TemplateVisualState(GroupName="GroupState", Name="Expanded"), TemplateVisualState(GroupName="GroupState", Name="Collapsed")]
-    public partial class RangeGroupButtonPresenter : Button
+    public partial class GroupButton : Button
     {
-        /// <summary>
-        /// Indicates IsExpanded dependency property.
-        /// </summary>
-        public static readonly DependencyProperty IsExpandedProperty = DependencyProperty.Register("IsExpanded", (Type) typeof(bool), (Type) typeof(RangeGroupButtonPresenter), new PropertyMetadata((bool) false, new PropertyChangedCallback(RangeGroupButtonPresenter.OnIsExpandedPropertyChanged)));
+        public static readonly DependencyProperty IsExpandedProperty = DependencyProperty.Register("IsExpanded", (Type) typeof(bool), (Type) typeof(GroupButton), new PropertyMetadata((bool) false, new PropertyChangedCallback(GroupButton.OnIsExpandedPropertyChanged)));
 
-        /// <summary>
-        /// Creates a new instance of the control.
-        /// </summary>
-        public RangeGroupButtonPresenter()
+        public GroupButton()
         {
-            base.DefaultStyleKey = typeof(RangeGroupButtonPresenter);
-            base.IsTabStop = false;
+            DefaultStyleKey = typeof(GroupButton);
             Index = -1;
             Level = -1;
         }
 
-        /// <summary>
-        /// Is invoked whenever application code or internal processes call <see cref="M:FrameworkElement.ApplyTemplate" /> when overridden in a derived class.
-        /// </summary>
         protected override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -50,31 +39,11 @@ namespace Dt.Cells.UI
 
         static void OnIsExpandedPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            RangeGroupButtonPresenter presenter = d as RangeGroupButtonPresenter;
+            GroupButton presenter = d as GroupButton;
             if (presenter != null)
             {
                 presenter.UpdateVisualState(true);
             }
-        }
-
-        /// <summary>
-        /// Called before the PointerPressed event occurs.
-        /// </summary>
-        /// <param name="e">Event data for the event.</param>
-        protected override void OnPointerPressed(PointerRoutedEventArgs e)
-        {
-            base.OnPointerPressed(e);
-            e.Handled = false;
-        }
-
-        /// <summary>
-        /// Called before the PointerReleased event occurs.
-        /// </summary>
-        /// <param name="e">Event data for the event.</param>
-        protected override void OnPointerReleased(PointerRoutedEventArgs e)
-        {
-            base.OnPointerReleased(e);
-            e.Handled = false;
         }
 
         void UpdateVisualState(bool useTransitions)
@@ -91,9 +60,6 @@ namespace Dt.Cells.UI
 
         internal int Index { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value that indicates whether the range group is expanded.
-        /// </summary>
         public bool IsExpanded
         {
             get { return  (bool) ((bool) base.GetValue(IsExpandedProperty)); }

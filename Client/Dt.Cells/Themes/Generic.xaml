@@ -22,24 +22,14 @@
     <SolidColorBrush x:Key="浅灰背景" Color="#FFF1F1F1"/>
     <SolidColorBrush x:Key="浅灰边框" Color="#FFE0E0E0"/>
 
+    <SolidColorBrush x:Key="GroupButtonForeground" Color="#FF474747"/>
+    <SolidColorBrush x:Key="GroupButtonMouseOver" Color="#FF94DCFF"/>
+    <SolidColorBrush x:Key="GroupButtonPressed" Color="#FF50C6FF"/>
+    <SolidColorBrush x:Key="GroupButtonBorder" Color="#FF808080"/>
+    
     <!--for ColumnDropdownList color settings-->
     <SolidColorBrush x:Key="ColumnDropDownListBackgroundBrush" Color="White"/>
     <SolidColorBrush x:Key="ColumnDropDownListBorderBrush" Color="#FFC6C6C6"/>
-
-    <!--for RangeGroupHeader color settings-->
-
-    <SolidColorBrush x:Key="RangeGroupHeaderBackgroundBrush" Color="#FFF1F1F1"/>
-    <SolidColorBrush x:Key="RangeGroupHeaderBorderBrush" Color="#FF808080"/>
-    <SolidColorBrush x:Key="RangeGroupHeaderPressedBackgroundBrush" Color="#FF50C6FF"/>
-    <SolidColorBrush x:Key="RangeGroupHeaderMouseOverBackgroundBrush" Color="#FF94DCFF"/>
-    <SolidColorBrush x:Key="RangeGroupHeaderForeGroundBrush" Color="#FF474747"/>
-
-    <!--for RangeGroupButton color settings-->
-    <SolidColorBrush x:Key="RangeGroupButtonForegroundBrush" Color="#FF474747"/>
-    <SolidColorBrush x:Key="RangeGroupButtonBackgroundBrush" Color="#FFF1F1F1"/>
-    <SolidColorBrush x:Key="RangeGroupButtonBorderBrush" Color="#FF808080"/>
-    <SolidColorBrush x:Key="RangeGroupButtonPressedBackgroundBrush" Color="#FF50C6FF"/>
-    <SolidColorBrush x:Key="RangeGroupButtonMouseOverBackgroundBrush" Color="#FF94DCFF"/>
 
     <!--###################### FilterButton ####################-->
     <SolidColorBrush x:Key="filterButtonBackgroundBrush" Color="#FFEFF2F7"/>
@@ -283,119 +273,81 @@
 
 
     <!-- ##################### controls.xaml #####################-->
-    <Style TargetType="local:RangeGroupHeaderButtonPresenter">
-        <Setter Property="IsTabStop" Value="False"/>
-        <Setter Property="Background" Value="{StaticResource ResourceKey=RangeGroupHeaderBackgroundBrush}"/>
-        <Setter Property="BorderBrush" Value="{StaticResource ResourceKey=RangeGroupHeaderBorderBrush}"/>
-        <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="Foreground" Value="{StaticResource ResourceKey=RangeGroupHeaderForeGroundBrush}"/>
+    <Style TargetType="local:GroupHeaderButton">
+        <Setter Property="Background" Value="{StaticResource 浅灰背景}"/>
+        <Setter Property="Foreground" Value="{StaticResource GroupButtonForeground}"/>
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="local:RangeGroupHeaderButtonPresenter">
-                    <Grid>
+                <ControlTemplate TargetType="local:GroupHeaderButton">
+                    <Grid x:Name="RootGrid"
+                          BorderBrush="{StaticResource GroupButtonBorder}"
+                          BorderThickness="1"
+                          Background="{TemplateBinding Background}">
+                        
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
-                                <VisualState x:Name="Pressed">
-                                    <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Background" Storyboard.TargetProperty="Background" >
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource ResourceKey=RangeGroupHeaderPressedBackgroundBrush}"/>
-                                        </ObjectAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                </VisualState>
                                 <VisualState x:Name="Normal"/>
                                 <VisualState x:Name="PointerOver">
-                                    <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Background" Storyboard.TargetProperty="Background" >
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource ResourceKey=RangeGroupHeaderMouseOverBackgroundBrush}"/>
-                                        </ObjectAnimationUsingKeyFrames>
-                                    </Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="RootGrid.Background" Value="{StaticResource GroupButtonMouseOver}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <VisualState.Setters>
+                                        <Setter Target="RootGrid.Background" Value="{StaticResource GroupButtonPressed}" />
+                                    </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
 
-                        <Border x:Name="Background"
-                                Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}">
-                            <ContentPresenter HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"
-                                              Content="{TemplateBinding Level}" Margin="0,-3,0,0"/>
-                        </Border>
+                        <TextBlock Text="{TemplateBinding Level}" FontSize="15" TextAlignment="Center" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
 
-    <Style TargetType="local:RangeGroupButtonPresenter">
-        <Setter Property="IsTabStop" Value="False"/>
-        <Setter Property="Background" Value="{StaticResource ResourceKey=RangeGroupButtonBackgroundBrush}"/>
-        <Setter Property="Foreground" Value="{StaticResource ResourceKey=RangeGroupButtonForegroundBrush}"/>
-        <Setter Property="BorderBrush"  Value="{StaticResource ResourceKey=RangeGroupButtonBorderBrush}"/>
-        <Setter Property="BorderThickness" Value="1"/>
+    <Style TargetType="local:GroupButton">
+        <Setter Property="Background" Value="{StaticResource 浅灰背景}"/>
+        <Setter Property="Foreground" Value="{StaticResource GroupButtonForeground}"/>
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="local:RangeGroupButtonPresenter">
-                    <Grid>
+                <ControlTemplate TargetType="local:GroupButton">
+                    <Grid x:Name="RootGrid"
+                          BorderBrush="{StaticResource GroupButtonBorder}"
+                          BorderThickness="1"
+                          Background="{TemplateBinding Background}">
+                        
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
-                                <VisualState x:Name="Pressed">
-                                    <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Background" Storyboard.TargetProperty="Fill" >
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource ResourceKey=RangeGroupButtonPressedBackgroundBrush}"/>
-                                        </ObjectAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                </VisualState>
                                 <VisualState x:Name="Normal"/>
                                 <VisualState x:Name="PointerOver">
-                                    <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Background" Storyboard.TargetProperty="Fill" >
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource ResourceKey=RangeGroupButtonMouseOverBackgroundBrush}"/>
-                                        </ObjectAnimationUsingKeyFrames>
-                                    </Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="RootGrid.Background" Value="{StaticResource GroupButtonMouseOver}" />
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState x:Name="Pressed">
+                                    <VisualState.Setters>
+                                        <Setter Target="RootGrid.Background" Value="{StaticResource GroupButtonPressed}" />
+                                    </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
 
                             <VisualStateGroup x:Name="GroupState">
                                 <VisualState x:Name="Expanded">
-                                    <Storyboard>
-                                        <DoubleAnimation Duration="0"
-                                                         To="1"
-                                                         Storyboard.TargetProperty="Opacity"
-                                                         Storyboard.TargetName="Expandeder" />
-                                    </Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="Expander.Text" Value="一" />
+                                    </VisualState.Setters>
                                 </VisualState>
                                 <VisualState x:Name="Collapsed">
-                                    <Storyboard>
-                                        <DoubleAnimation Duration="0"
-                                                         To="1"
-                                                         Storyboard.TargetProperty="Opacity"
-                                                         Storyboard.TargetName="Collapseder" />
-                                    </Storyboard>
+                                    <VisualState.Setters>
+                                        <Setter Target="Expander.Text" Value="十" />
+                                    </VisualState.Setters>
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
 
-                        <Rectangle x:Name="Background"
-                                   Fill="{TemplateBinding Background}"
-                                   Stroke="{TemplateBinding BorderBrush}"
-                                   StrokeThickness="{TemplateBinding BorderThickness}" />
-                        <Path x:Name="Expandeder"
-                              Stroke="{TemplateBinding Foreground}"
-                              StrokeThickness="2"
-                              HorizontalAlignment="Center"
-                              VerticalAlignment="Center"
-                              Data="M0,0 H8"
-                              Opacity="0"
-                              Fill="Gray"/>
-                        <Path x:Name="Collapseder"
-                              Stroke="{TemplateBinding Foreground}"
-                              StrokeThickness="2"
-                              HorizontalAlignment="Center"
-                              VerticalAlignment="Center"
-                              Data="M0,4 H8 m-4,-4 V8"
-                              Opacity="0"/>
-
+                        <TextBlock x:Name="Expander" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

@@ -23,67 +23,107 @@ namespace Dt.Cells.UI
 {
     internal partial class GcRangeGroupHeader : GcGroupBase
     {
-        List<RangeGroupHeaderButtonPresenter> _headButtons;
+        List<GroupHeaderButton> _headButtons;
+        int _maxLevel = -1;
+        double _lastSize = 0;
 
         public GcRangeGroupHeader(Excel p_excel) : base(p_excel)
         {
         }
 
-        void ArrangeGroupHeader(Size finalSize)
+        protected override Size MeasureOverride(Size availableSize)
         {
-            if (((GetMaxLevel(Orientation) != -1) && (_headButtons != null)) && (_headButtons.Count > 0))
+            int maxLevel = GetMaxLevel(Orientation);
+            double size = CalcMinWidthOrHeight(availableSize, Orientation);
+            if (maxLevel == -1 || size == 0.0)
             {
-                double width = CalcMinWidthOrHeight(finalSize, Orientation);
-                if (width != 0.0)
+                _maxLevel = -1;
+                _lastSize = 0;
+                return availableSize;
+            }
+
+            if (_maxLevel == maxLevel && _lastSize == size)
+            {
+                foreach (UIElement elem in Children)
                 {
-                    double num3;
-                    double num4;
-                    if (Orientation == Windows.UI.Xaml.Controls.Orientation.Horizontal)
-                    {
-                        num3 = base.Location.X + 2.0;
-                        num4 = base.Location.Y + Math.Max((double) 0.0, (double) ((finalSize.Height - width) / 2.0));
-                        using (List<RangeGroupHeaderButtonPresenter>.Enumerator enumerator = _headButtons.GetEnumerator())
-                        {
-                            while (enumerator.MoveNext())
-                            {
-                                enumerator.Current.Arrange(new Rect(base.PointToClient(new Point(num3, num4)), new Size(width, width)));
-                                num3 += width;
-                            }
-                            return;
-                        }
-                    }
-                    if (Orientation == Windows.UI.Xaml.Controls.Orientation.Vertical)
-                    {
-                        num3 = base.Location.X + Math.Max((double) 0.0, (double) ((finalSize.Width - width) / 2.0));
-                        num4 = base.Location.Y + 2.0;
-                        using (List<RangeGroupHeaderButtonPresenter>.Enumerator enumerator2 = _headButtons.GetEnumerator())
-                        {
-                            while (enumerator2.MoveNext())
-                            {
-                                enumerator2.Current.Arrange(new Rect(base.PointToClient(new Point(num3, num4)), new Size(width, width)));
-                                num4 += width;
-                            }
-                        }
-                    }
+                    elem.Measure(availableSize);
+                }
+                return availableSize;
+            }
+
+            _maxLevel = maxLevel;
+            _lastSize = size;
+            Children.Clear();
+            if ((_headButtons != null) && (_headButtons.Count > 0))
+            {
+                foreach (GroupHeaderButton rbp in _headButtons)
+                {
+                    rbp.Click -= GroupHeaderButton_Click;
                 }
             }
+
+            _headButtons = new List<GroupHeaderButton>();
+            for (int i = 0; i < maxLevel + 2; i++)
+            {
+                GroupHeaderButton presenter = new GroupHeaderButton();
+                presenter.Click += GroupHeaderButton_Click;
+                presenter.Level = (i + 1).ToString();
+                presenter.Height = size;
+                presenter.Width = size;
+                Children.Add(presenter);
+                _headButtons.Add(presenter);
+            }
+
+            MeasureBorderLines(availableSize);
+            return availableSize;
         }
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            ArrangeGroupHeader(finalSize);
-            return base.ArrangeOverride(finalSize);
+            if (_maxLevel == -1 || _headButtons == null)
+                return finalSize;
+
+            double num3;
+            double num4;
+            if (Orientation == Windows.UI.Xaml.Controls.Orientation.Horizontal)
+            {
+                num3 = Location.X + 2.0;
+                num4 = Location.Y + Math.Max(0.0, (finalSize.Height - _lastSize) / 2.0);
+                using (List<GroupHeaderButton>.Enumerator enumerator = _headButtons.GetEnumerator())
+                {
+                    while (enumerator.MoveNext())
+                    {
+                        enumerator.Current.Arrange(new Rect(PointToClient(new Point(num3, num4)), new Size(_lastSize, _lastSize)));
+                        num3 += _lastSize;
+                    }
+                }
+            }
+            else if (Orientation == Windows.UI.Xaml.Controls.Orientation.Vertical)
+            {
+                num3 = Location.X + Math.Max(0.0, (finalSize.Width - _lastSize) / 2.0);
+                num4 = Location.Y + 2.0;
+                using (List<GroupHeaderButton>.Enumerator enumerator2 = _headButtons.GetEnumerator())
+                {
+                    while (enumerator2.MoveNext())
+                    {
+                        enumerator2.Current.Arrange(new Rect(PointToClient(new Point(num3, num4)), new Size(_lastSize, _lastSize)));
+                        num4 += _lastSize;
+                    }
+                }
+            }
+            return finalSize;
         }
 
         void GroupHeaderButton_Click(object sender, RoutedEventArgs e)
         {
-            RangeGroupHeaderButtonPresenter presenter = sender as RangeGroupHeaderButtonPresenter;
+            GroupHeaderButton presenter = sender as GroupHeaderButton;
             Worksheet sheet = _excel.ActiveSheet;
             if (((presenter != null) && (sheet != null)) && !_excel.IsEditing)
             {
-                int level = presenter.Level - 1;
+                int level = int.Parse(presenter.Level) - 1;
                 if (level >= 0)
                 {
+                    _excel.InvalidateRangeGroup();
                     if (Orientation == Windows.UI.Xaml.Controls.Orientation.Horizontal)
                     {
                         RowGroupHeaderExpandExtent rowGroupHeaderExpandExtent = new RowGroupHeaderExpandExtent(level);
@@ -106,50 +146,6 @@ namespace Dt.Cells.UI
                     }
                 }
             }
-        }
-
-        void MeasureGroupHeader(Size availableSize)
-        {
-            int maxLevel = GetMaxLevel(Orientation);
-            if (maxLevel != -1)
-            {
-                double num2 = CalcMinWidthOrHeight(availableSize, Orientation);
-                if (num2 != 0.0)
-                {
-                    int num3 = maxLevel + 2;
-                    for (int i = 0; i < num3; i++)
-                    {
-                        RangeGroupHeaderButtonPresenter presenter = new RangeGroupHeaderButtonPresenter();
-                        presenter.Click += GroupHeaderButton_Click;
-                        presenter.Level = i + 1;
-                        presenter.Height = num2;
-                        presenter.Width = num2;
-                        base.Children.Add(presenter);
-                        _headButtons.Add(presenter);
-                    }
-                }
-            }
-        }
-
-        void MeasureInitialization()
-        {
-            if ((_headButtons != null) && (_headButtons.Count > 0))
-            {
-                foreach(RangeGroupHeaderButtonPresenter rbp in _headButtons)
-                {
-                    rbp.Click -= GroupHeaderButton_Click;
-                }
-            }
-            _headButtons = new List<RangeGroupHeaderButtonPresenter>();
-            base.Children.Clear();
-        }
-
-        protected override Size MeasureOverride(Size availableSize)
-        {
-            MeasureInitialization();
-            MeasureGroupHeader(availableSize);
-            MeasureBorderLines(availableSize);
-            return base.MeasureOverride(availableSize);
         }
 
         public Windows.UI.Xaml.Controls.Orientation Orientation { get; set; }

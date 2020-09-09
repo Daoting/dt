@@ -28,6 +28,1634 @@ namespace Dt.Base
 {
     public partial class Excel
     {
+        #region 测量
+        protected override Size MeasureOverride(Size availableSize)
+        {
+            if (_cachedLastAvailableSize != availableSize)
+            {
+                _cachedLastAvailableSize = availableSize;
+                _availableSize = availableSize;
+                InvalidateLayout();
+            }
+            if (!IsWorking)
+                SaveHitInfo(null);
+
+            List<Image> list = new List<Image>();
+            foreach (var element in Children.OfType<Image>())
+            {
+                list.Add(element);
+            }
+            foreach (var element2 in list)
+            {
+                Children.Remove(element2);
+            }
+
+            UpdateHorizontalSplitBoxes();
+            UpdateVerticalSplitBoxes();
+            UpdateHorizontalSplitBars();
+            UpdateVerticalSplitBars();
+            UpdateCrossSplitBars();
+            UpdateFreezeLines();
+
+            //**************最底部三层为：视口 列头 行头，因可能动态增删，采用Insert到0的方式，后插入的在底层**************/
+            SheetLayout layout = GetSheetLayout();
+            bool reload = (_cellsPanels != null)
+                && (ActiveSheet == null || _cellsPanels.GetUpperBound(0) != layout.RowPaneCount + 1 || _cellsPanels.GetUpperBound(1) != layout.ColumnPaneCount + 1);
+
+            // 行头
+            MeasureRowHeaders(reload, layout);
+            // 列头
+            MeasureColHeaders(reload, layout);
+            // 多视口
+            MeasureCellPanels(reload, layout);
+            // 左上角
+            MeasureCornerPanel(layout);
+            // 水平滚动栏
+            MeasureHorScrollBar(layout);
+            // 垂直滚动栏
+            MeasureVerScrollBar(layout);
+            // 水平/垂直分隔栏
+            MeasureSplitBars(layout);
+            // 区域分组
+            MeasureRangeGroup(layout);
+            // sheet标签 
+            MeasureTabStrip(layout);
+
+            // 跟踪层，调整行列宽高时的虚线，拖拽时的标志，冻结线
+            if (!Children.Contains(TrackersContainer))
+                Children.Add(TrackersContainer);
+            TrackersContainer.Measure(availableSize);
+
+            // 分隔栏层，多视口时的分割线
+            if (!Children.Contains(SplittingTrackerContainer))
+                Children.Add(SplittingTrackerContainer);
+            SplittingTrackerContainer.Measure(availableSize);
+
+            // 光标层，各种图标的png图片
+            if (!Children.Contains(CursorsContainer))
+                Children.Add(CursorsContainer);
+            CursorsContainer.Measure(availableSize);
+
+            // 触摸时调整选择范围的圈圈
+            if (!Children.Contains(_topLeftGripper))
+                Children.Add(_topLeftGripper);
+            _topLeftGripper.Measure(availableSize);
+
+            if (!Children.Contains(_bottomRightGripper))
+                Children.Add(_bottomRightGripper);
+            _bottomRightGripper.Measure(availableSize);
+
+            // 触摸时调整列宽行高的标志
+            if (!Children.Contains(_resizerGripperContainer))
+                Children.Add(_resizerGripperContainer);
+            _resizerGripperContainer.Measure(availableSize);
+
+            if (!Children.Contains(_autoFillIndicatorContainer))
+                Children.Add(_autoFillIndicatorContainer);
+            _autoFillIndicatorContainer.Measure(availableSize);
+
+            // 进度环
+            _progressRing?.Measure(availableSize);
+            return _availableSize;
+        }
+
+        void MeasureRowHeaders(bool p_reload, SheetLayout p_layout)
+        {
+            if (p_reload)
+            {
+                foreach (var header in _rowHeaders)
+                {
+                    Children.Remove(header);
+                }
+                _rowHeaders = null;
+            }
+
+            if (_rowHeaders == null)
+                _rowHeaders = new RowHeaderPanel[p_layout.RowPaneCount + 2];
+
+            if (p_layout.HeaderWidth > 0.0)
+            {
+                for (int i = -1; i <= p_layout.RowPaneCount; i++)
+                {
+                    double height = p_layout.GetViewportHeight(i);
+                    if ((_rowHeaders[i + 1] == null) && (height > 0.0))
+                    {
+                        _rowHeaders[i + 1] = new RowHeaderPanel(this);
+                    }
+
+                    var header = _rowHeaders[i + 1];
+                    if (height > 0.0)
+                    {
+                        header.Location = new Point(p_layout.HeaderX, p_layout.GetViewportY(i));
+                        header.RowViewportIndex = i;
+                        if (!Children.Contains(header))
+                        {
+                            Children.Insert(0, header);
+                        }
+                        header.Measure(new Size(p_layout.HeaderWidth, height));
+                    }
+                    else if (header != null)
+                    {
+                        Children.Remove(header);
+                        _rowHeaders[i + 1] = null;
+                    }
+                }
+            }
+            else if (_rowHeaders != null)
+            {
+                foreach (var header in _rowHeaders)
+                {
+                    Children.Remove(header);
+                }
+            }
+        }
+
+        void MeasureColHeaders(bool p_reload, SheetLayout p_layout)
+        {
+            if (p_reload)
+            {
+                foreach (var panel in _colHeaders)
+                {
+                    Children.Remove(panel);
+                }
+                _colHeaders = null;
+            }
+
+            if (_colHeaders == null)
+                _colHeaders = new ColHeaderPanel[p_layout.ColumnPaneCount + 2];
+
+            if (p_layout.HeaderHeight > 0.0)
+            {
+                for (int i = -1; i <= p_layout.ColumnPaneCount; i++)
+                {
+                    double width = p_layout.GetViewportWidth(i);
+                    if ((_colHeaders[i + 1] == null) && (width > 0.0))
+                    {
+                        _colHeaders[i + 1] = new ColHeaderPanel(this);
+                    }
+
+                    var colPanel = _colHeaders[i + 1];
+                    if (width > 0.0)
+                    {
+                        colPanel.Location = new Point(p_layout.GetViewportX(i), p_layout.HeaderY);
+                        colPanel.ColumnViewportIndex = i;
+                        if (!Children.Contains(colPanel))
+                        {
+                            Children.Insert(0, colPanel);
+                        }
+                        colPanel.Measure(new Size(width, p_layout.HeaderHeight));
+                    }
+                    else if (colPanel != null)
+                    {
+                        Children.Remove(colPanel);
+                        _colHeaders[i + 1] = null;
+                    }
+                }
+            }
+            else if (_colHeaders != null)
+            {
+                foreach (var colPanel in _colHeaders)
+                {
+                    Children.Remove(colPanel);
+                }
+            }
+        }
+
+        void MeasureCellPanels(bool p_reload, SheetLayout p_layout)
+        {
+            CellsPanel[,] viewportArray = null;
+            if (p_reload)
+            {
+                // 视口数目变化时
+                int upperRow = _cellsPanels.GetUpperBound(0);
+                int upperCol = _cellsPanels.GetUpperBound(1);
+                for (int i = _cellsPanels.GetLowerBound(0); i <= upperRow; i++)
+                {
+                    for (int j = _cellsPanels.GetLowerBound(1); j <= upperCol; j++)
+                    {
+                        CellsPanel viewport = _cellsPanels[i, j];
+                        if (viewport != null)
+                            Children.Remove(viewport);
+                    }
+                }
+                viewportArray = _cellsPanels;
+                _cellsPanels = null;
+            }
+
+            if (_cellsPanels == null)
+                _cellsPanels = new CellsPanel[p_layout.RowPaneCount + 2, p_layout.ColumnPaneCount + 2];
+
+            for (int i = -1; i <= p_layout.ColumnPaneCount; i++)
+            {
+                double viewportWidth = p_layout.GetViewportWidth(i);
+                double viewportX = p_layout.GetViewportX(i);
+                for (int j = -1; j <= p_layout.RowPaneCount; j++)
+                {
+                    double viewportHeight = p_layout.GetViewportHeight(j);
+                    if (((_cellsPanels[j + 1, i + 1] == null) && (viewportWidth > 0.0)) && (viewportHeight > 0.0))
+                    {
+                        if (((viewportArray != null) && ((j + 1) < viewportArray.GetUpperBound(0))) && (((i + 1) < viewportArray.GetUpperBound(1)) && (viewportArray[j + 1, i + 1] != null)))
+                        {
+                            _cellsPanels[j + 1, i + 1] = viewportArray[j + 1, i + 1];
+                        }
+                        else
+                        {
+                            _cellsPanels[j + 1, i + 1] = new CellsPanel(this);
+                        }
+                    }
+
+                    CellsPanel cellPanel = _cellsPanels[j + 1, i + 1];
+                    if ((viewportWidth > 0.0) && (viewportHeight > 0.0))
+                    {
+                        cellPanel.Location = new Point(viewportX, p_layout.GetViewportY(j));
+                        cellPanel.ColumnViewportIndex = i;
+                        cellPanel.RowViewportIndex = j;
+                        if (!Children.Contains(cellPanel))
+                        {
+                            // 单元格区域放最低层
+                            Children.Insert(0, cellPanel);
+                        }
+                        cellPanel.Measure(new Size(viewportWidth, viewportHeight));
+                    }
+                    else if (cellPanel != null)
+                    {
+                        Children.Remove(cellPanel);
+                        _cellsPanels[j + 1, i + 1] = null;
+                    }
+                }
+            }
+        }
+
+        void MeasureCornerPanel(SheetLayout p_layout)
+        {
+            if (_cornerPanel == null)
+            {
+                _cornerPanel = new CornerPanel(this);
+            }
+            if ((p_layout.HeaderWidth > 0.0) && (p_layout.HeaderHeight > 0.0))
+            {
+                if (!Children.Contains(_cornerPanel))
+                {
+                    Children.Add(_cornerPanel);
+                }
+                _cornerPanel.Measure(new Size(p_layout.HeaderWidth, p_layout.HeaderHeight));
+            }
+            else
+            {
+                Children.Remove(_cornerPanel);
+                _cornerPanel = null;
+            }
+        }
+
+        void MeasureHorScrollBar(SheetLayout p_layout)
+        {
+            if (p_layout.OrnamentHeight > 0.0)
+            {
+                for (int i = 0; i < p_layout.ColumnPaneCount; i++)
+                {
+                    ScrollBar bar = _horizontalScrollBar[i];
+                    double barWidth = p_layout.GetHorizontalScrollBarWidth(i);
+                    if (barWidth > 0.0)
+                    {
+                        if (!Children.Contains(bar))
+                        {
+                            Children.Add(bar);
+                        }
+                        bar.Measure(new Size(barWidth, HorizontalScrollBarHeight));
+                    }
+                    else
+                    {
+                        Children.Remove(bar);
+                    }
+
+                    var box = _horizontalSplitBox[i];
+                    double splitBoxWidth = p_layout.GetHorizontalSplitBoxWidth(i);
+                    if (splitBoxWidth > 0.0)
+                    {
+                        if (!Children.Contains(box))
+                        {
+                            Children.Add(box);
+                        }
+                        bar.Measure(new Size(splitBoxWidth, HorizontalScrollBarHeight));
+                    }
+                    else
+                    {
+                        Children.Remove(box);
+                    }
+                }
+            }
+            else
+            {
+                if (_horizontalScrollBar != null)
+                {
+                    foreach (ScrollBar bar2 in _horizontalScrollBar)
+                    {
+                        Children.Remove(bar2);
+                    }
+                }
+                if (_horizontalSplitBox != null)
+                {
+                    foreach (var box2 in _horizontalSplitBox)
+                    {
+                        Children.Remove(box2);
+                    }
+                }
+            }
+
+        }
+
+        void MeasureVerScrollBar(SheetLayout p_layout)
+        {
+            if (p_layout.OrnamentWidth > 0.0)
+            {
+                for (int i = 0; i < p_layout.RowPaneCount; i++)
+                {
+                    ScrollBar bar = _verticalScrollBar[i];
+                    double barHeight = p_layout.GetVerticalScrollBarHeight(i);
+                    if (barHeight > 0.0)
+                    {
+                        if (!Children.Contains(bar))
+                        {
+                            Children.Add(bar);
+                        }
+                        bar.Measure(new Size(VerticalScrollBarWidth, barHeight));
+                    }
+                    else
+                    {
+                        Children.Remove(bar);
+                    }
+
+                    var vbox = _verticalSplitBox[i];
+                    double vboxHeight = p_layout.GetVerticalSplitBoxHeight(i);
+                    if (vboxHeight > 0.0)
+                    {
+                        if (!Children.Contains(vbox))
+                        {
+                            Children.Add(vbox);
+                        }
+                        vbox.Measure(new Size(VerticalScrollBarWidth, vboxHeight));
+                    }
+                    else
+                    {
+                        Children.Remove(vbox);
+                    }
+                }
+            }
+            else
+            {
+                if (_verticalScrollBar != null)
+                {
+                    foreach (ScrollBar bar4 in _verticalScrollBar)
+                    {
+                        Children.Remove(bar4);
+                    }
+                }
+                if (_verticalSplitBox != null)
+                {
+                    foreach (var box4 in _verticalSplitBox)
+                    {
+                        Children.Remove(box4);
+                    }
+                }
+            }
+        }
+
+        void MeasureSplitBars(SheetLayout p_layout)
+        {
+            for (int j = 0; j < (p_layout.ColumnPaneCount - 1); j++)
+            {
+                var bar = _horizontalSplitBar[j];
+                if (!Children.Contains(bar))
+                {
+                    Children.Add(bar);
+                }
+                bar.Measure(new Size(_defaultSplitBarSize, _availableSize.Height));
+            }
+            for (int k = 0; k < (p_layout.RowPaneCount - 1); k++)
+            {
+                var bar = _verticalSplitBar[k];
+                if (!Children.Contains(bar))
+                {
+                    Children.Add(bar);
+                }
+                bar.Measure(new Size(_availableSize.Width, _defaultSplitBarSize));
+            }
+            for (int i = 0; i < (p_layout.RowPaneCount - 1); i++)
+            {
+                for (int j = 0; j < (p_layout.ColumnPaneCount - 1); j++)
+                {
+                    var bar = _crossSplitBar[i, j];
+                    if (!Children.Contains(bar))
+                    {
+                        Children.Add(bar);
+                    }
+                    bar.Measure(new Size(_availableSize.Width, _availableSize.Width));
+                }
+            }
+        }
+
+        void MeasureRangeGroup(SheetLayout p_layout)
+        {
+            GroupLayout groupLayout = GetGroupLayout();
+            if (groupLayout.Width == 0.0 && groupLayout.Height == 0.0)
+            {
+                if (_rowGroupPresenters != null)
+                    ClearRowGroups();
+
+                if (_columnGroupPresenters != null)
+                    ClearColumnGroups();
+
+                if (_rowGroupHeaderPresenter != null)
+                {
+                    Children.Remove(_rowGroupHeaderPresenter);
+                    _rowGroupHeaderPresenter = null;
+                }
+
+                if (_columnGroupHeaderPresenter != null)
+                {
+                    Children.Remove(_columnGroupHeaderPresenter);
+                    _columnGroupHeaderPresenter = null;
+                }
+
+                if (_groupCornerPresenter != null)
+                {
+                    Children.Remove(_groupCornerPresenter);
+                    _groupCornerPresenter = null;
+                }
+                return;
+            }
+
+            if ((_rowGroupPresenters != null)
+                && ((ActiveSheet == null) || (_rowGroupPresenters.Length != p_layout.RowPaneCount + 2)))
+            {
+                ClearRowGroups();
+            }
+
+            if (_rowGroupPresenters == null)
+            {
+                _rowGroupPresenters = new GcRangeGroup[p_layout.RowPaneCount + 2];
+            }
+            if (groupLayout.Width > 0.0)
+            {
+                for (int i = -1; i <= p_layout.RowPaneCount; i++)
+                {
+                    double viewportY = p_layout.GetViewportY(i);
+                    double viewportHeight = p_layout.GetViewportHeight(i);
+                    if (_rowGroupPresenters[i + 1] == null)
+                    {
+                        GcRangeGroup group2 = new GcRangeGroup(this);
+                        _rowGroupPresenters[i + 1] = group2;
+                    }
+                    GcRangeGroup group3 = _rowGroupPresenters[i + 1];
+                    group3.Orientation = Orientation.Horizontal;
+                    group3.ViewportIndex = i;
+                    group3.Location = new Point(groupLayout.X, viewportY);
+                    if (viewportHeight > 0.0)
+                    {
+                        if (!Children.Contains(group3))
+                        {
+                            Children.Add(group3);
+                        }
+                        group3.Measure(new Size(groupLayout.Width, viewportHeight));
+                    }
+                    else
+                    {
+                        Children.Remove(group3);
+                        _rowGroupPresenters[i + 1] = null;
+                    }
+                }
+            }
+            else
+            {
+                ClearRowGroups();
+            }
+
+            if ((_columnGroupPresenters != null)
+                && ((ActiveSheet == null) || (_columnGroupPresenters.Length != p_layout.ColumnPaneCount)))
+            {
+                ClearColumnGroups();
+            }
+            if (_columnGroupPresenters == null)
+            {
+                _columnGroupPresenters = new GcRangeGroup[p_layout.ColumnPaneCount + 2];
+            }
+            if (groupLayout.Height > 0.0)
+            {
+                for (int k = -1; k <= p_layout.ColumnPaneCount; k++)
+                {
+                    double viewportX = p_layout.GetViewportX(k);
+                    double viewportWidth = p_layout.GetViewportWidth(k);
+                    if (_columnGroupPresenters[k + 1] == null)
+                    {
+                        GcRangeGroup group5 = new GcRangeGroup(this);
+                        _columnGroupPresenters[k + 1] = group5;
+                    }
+                    GcRangeGroup group6 = _columnGroupPresenters[k + 1];
+                    group6.Orientation = Orientation.Vertical;
+                    group6.ViewportIndex = k;
+                    group6.Location = new Point(viewportX, groupLayout.Y);
+                    if (viewportWidth > 0.0)
+                    {
+                        if (!Children.Contains(group6))
+                        {
+                            Children.Add(group6);
+                        }
+                        group6.Measure(new Size(viewportWidth, groupLayout.Height));
+                    }
+                    else
+                    {
+                        Children.Remove(group6);
+                        _columnGroupPresenters[k + 1] = null;
+                    }
+                }
+            }
+            else
+            {
+                ClearColumnGroups();
+            }
+
+            if (_rowGroupHeaderPresenter == null)
+            {
+                _rowGroupHeaderPresenter = new GcRangeGroupHeader(this);
+            }
+            _rowGroupHeaderPresenter.Orientation = Orientation.Horizontal;
+            _rowGroupHeaderPresenter.Location = new Point(groupLayout.X, groupLayout.Y + groupLayout.Height);
+            if (groupLayout.Width > 0.0)
+            {
+                if (!Children.Contains(_rowGroupHeaderPresenter))
+                {
+                    Children.Add(_rowGroupHeaderPresenter);
+                }
+                _rowGroupHeaderPresenter.Measure(new Size(groupLayout.Width, p_layout.HeaderHeight));
+            }
+            else
+            {
+                Children.Remove(_rowGroupHeaderPresenter);
+                _rowGroupHeaderPresenter = null;
+            }
+
+            if (_columnGroupHeaderPresenter == null)
+            {
+                _columnGroupHeaderPresenter = new GcRangeGroupHeader(this);
+            }
+            _columnGroupHeaderPresenter.Orientation = Orientation.Vertical;
+            _columnGroupHeaderPresenter.Location = new Point(groupLayout.X + groupLayout.Width, groupLayout.Y);
+            if (groupLayout.Height > 0.0)
+            {
+                if (!Children.Contains(_columnGroupHeaderPresenter))
+                {
+                    Children.Add(_columnGroupHeaderPresenter);
+                }
+                _columnGroupHeaderPresenter.Measure(new Size(p_layout.HeaderWidth, groupLayout.Height));
+            }
+            else
+            {
+                Children.Remove(_columnGroupHeaderPresenter);
+                _columnGroupHeaderPresenter = null;
+            }
+
+            if (_groupCornerPresenter == null)
+            {
+                _groupCornerPresenter = new GcRangeGroupCorner(this);
+            }
+            _groupCornerPresenter.Location = new Point(groupLayout.X, groupLayout.Y);
+            if ((groupLayout.Width > 0.0) && (groupLayout.Height > 0.0))
+            {
+                if (!Children.Contains(_groupCornerPresenter))
+                {
+                    Children.Add(_groupCornerPresenter);
+                }
+                _groupCornerPresenter.Measure(new Size(groupLayout.Width, groupLayout.Height));
+            }
+            else
+            {
+                Children.Remove(_groupCornerPresenter);
+                _groupCornerPresenter = null;
+            }
+        }
+
+        void ClearRowGroups()
+        {
+            foreach (GcRangeGroup group in _rowGroupPresenters)
+            {
+                Children.Remove(group);
+            }
+            _rowGroupPresenters = null;
+        }
+
+        void ClearColumnGroups()
+        {
+            foreach (GcRangeGroup group4 in _columnGroupPresenters)
+            {
+                Children.Remove(group4);
+            }
+            _columnGroupPresenters = null;
+        }
+
+        void MeasureTabStrip(SheetLayout p_layout)
+        {
+            if (p_layout.TabStripHeight > 0.0)
+            {
+                if (_tabStrip == null)
+                {
+                    _tabStrip = new TabStrip(this);
+                    _tabStrip.ActiveTabChanging += OnTabStripActiveTabChanging;
+                    _tabStrip.ActiveTabChanged += OnTabStripActiveTabChanged;
+                    _tabStrip.NewTabNeeded += OnTabStripNewTabNeeded;
+                }
+
+                if (!Children.Contains(_tabStrip))
+                {
+                    Children.Add(_tabStrip);
+                }
+                _tabStrip.Measure(new Size(p_layout.TabStripWidth, p_layout.TabStripHeight));
+            }
+            else if (_tabStrip != null)
+            {
+                Children.Remove(_tabStrip);
+                _tabStrip.ActiveTabChanging -= OnTabStripActiveTabChanging;
+                _tabStrip.ActiveTabChanged -= OnTabStripActiveTabChanged;
+                _tabStrip.NewTabNeeded -= OnTabStripNewTabNeeded;
+                _tabStrip = null;
+            }
+        }
+        #endregion
+
+        #region 布局
+        protected override Size ArrangeOverride(Size finalSize)
+        {
+            Rect rcFull = new Rect(0.0, 0.0, finalSize.Width, finalSize.Height);
+            TrackersContainer.Arrange(rcFull);
+            SplittingTrackerContainer.Arrange(rcFull);
+            ShapeDrawingContainer.Arrange(rcFull);
+            CursorsContainer.Arrange(rcFull);
+
+            SheetLayout layout = GetSheetLayout();
+            // 左上角
+            ArrangeCornerPanel(layout);
+            // 列头
+            ArrangeColHeaders(layout);
+            // 行头
+            ArrangeRowHeaders(layout);
+            // 单元格区域
+            ArrangeCellPanels(layout);
+            // 滚动栏
+            ArrangeScrollBar(layout);
+            // 分隔栏
+            ArrangeSplitBar(layout);
+            // 区域分组
+            ArrangeRangeGroup(layout);
+            // 触摸时调整选择范围的圈圈 和 调整列宽行高的标志
+            ArrangeSelectionGripper();
+
+            _tabStrip?.Arrange(new Rect(layout.TabStripX, layout.TabStripY, layout.TabStripWidth, layout.TabStripHeight));
+            _rowFreezeLine?.Arrange(rcFull);
+            _rowTrailingFreezeLine?.Arrange(rcFull);
+            _columnFreezeLine?.Arrange(rcFull);
+            _columnTrailingFreezeLine?.Arrange(rcFull);
+            _progressRing?.Arrange(rcFull);
+
+            Clip = new RectangleGeometry { Rect = rcFull };
+            return finalSize;
+        }
+
+        void ArrangeCornerPanel(SheetLayout p_layout)
+        {
+            double headerX;
+            double headerY;
+            if ((IsTouchZooming && (_cornerPanel != null)) && (_cornerPanel.Parent != null))
+            {
+                headerX = p_layout.HeaderX;
+                headerY = p_layout.HeaderY;
+                _cornerPanel.Arrange(new Rect(headerX, headerY, p_layout.HeaderWidth, p_layout.HeaderHeight));
+                _cornerPanel.RenderTransform = _cachedCornerViewportTransform;
+            }
+            else if ((_cornerPanel != null) && (_cornerPanel.Parent != null))
+            {
+                headerX = p_layout.HeaderX;
+                headerY = p_layout.HeaderY;
+                if (_cornerPanel.RenderTransform != null)
+                {
+                    _cornerPanel.RenderTransform = null;
+                }
+                if ((_cornerPanel.Width != p_layout.HeaderWidth) || (_cornerPanel.Height != p_layout.HeaderHeight))
+                {
+                    _cornerPanel.Arrange(new Rect(headerX, headerY, p_layout.HeaderWidth, p_layout.HeaderHeight));
+                }
+            }
+        }
+
+        void ArrangeColHeaders(SheetLayout p_layout)
+        {
+            double headerX;
+            double headerY;
+            if (IsTouchZooming && (_cachedColumnHeaderViewportTransform != null))
+            {
+                for (int i = -1; i <= p_layout.ColumnPaneCount; i++)
+                {
+                    headerX = p_layout.GetViewportX(i);
+                    headerY = p_layout.HeaderY;
+                    double viewportWidth = p_layout.GetViewportWidth(i);
+                    double headerHeight = p_layout.HeaderHeight;
+                    var viewport = _colHeaders[i + 1];
+                    if ((viewport != null) && (viewport.Parent != null))
+                    {
+                        viewport.Arrange(new Rect(headerX, headerY, viewportWidth, headerHeight));
+                        viewport.RenderTransform = _cachedColumnHeaderViewportTransform[i + 1];
+                    }
+                }
+            }
+            else if (_colHeaders != null)
+            {
+                for (int j = -1; j <= p_layout.ColumnPaneCount; j++)
+                {
+                    headerX = p_layout.GetViewportX(j);
+                    if ((IsTouching && (j == p_layout.ColumnPaneCount)) && ((_translateOffsetX < 0.0) && (_touchStartHitTestInfo.ColumnViewportIndex == (p_layout.ColumnPaneCount - 1))))
+                    {
+                        headerX += _translateOffsetX;
+                    }
+                    headerY = p_layout.HeaderY;
+                    double width = p_layout.GetViewportWidth(j);
+                    double height = p_layout.HeaderHeight;
+                    var viewport2 = _colHeaders[j + 1];
+                    if ((viewport2 != null) && (viewport2.Parent != null))
+                    {
+                        if (viewport2.RenderTransform != null)
+                        {
+                            viewport2.RenderTransform = null;
+                        }
+                        if ((viewport2.Width != width) || (viewport2.Height != height))
+                        {
+                            if (!IsTouching)
+                            {
+                                viewport2.Arrange(new Rect(headerX, headerY, width, height));
+                            }
+                            else
+                            {
+                                int num9 = (int)Math.Ceiling(_translateOffsetX);
+                                double x = headerX;
+                                if ((_touchStartHitTestInfo != null) && (j == _touchStartHitTestInfo.ColumnViewportIndex))
+                                {
+                                    x += num9;
+                                }
+                                viewport2.Arrange(new Rect(x, headerY, width, height));
+                                if ((x != headerX) && (_translateOffsetX < 0.0))
+                                {
+                                    RectangleGeometry geometry = new RectangleGeometry();
+                                    geometry.Rect = new Rect(Math.Abs((double)(headerX - x)), 0.0, _cachedViewportWidths[j + 1], height);
+                                    viewport2.Clip = geometry;
+                                }
+                                else if ((x != headerX) && (_translateOffsetX > 0.0))
+                                {
+                                    RectangleGeometry geometry2 = new RectangleGeometry();
+                                    geometry2.Rect = new Rect(0.0, 0.0, Math.Max((double)0.0, (double)(_cachedViewportWidths[j + 1] - _translateOffsetX)), height);
+                                    viewport2.Clip = geometry2;
+                                }
+                                else
+                                {
+                                    viewport2.Clip = null;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        void ArrangeRowHeaders(SheetLayout p_layout)
+        {
+            double headerX;
+            double headerY;
+            if (IsTouchZooming && (_cachedRowHeaderViewportTransform != null))
+            {
+                for (int k = -1; k <= p_layout.RowPaneCount; k++)
+                {
+                    headerX = p_layout.HeaderX;
+                    headerY = p_layout.GetViewportY(k);
+                    double headerWidth = p_layout.HeaderWidth;
+                    double viewportHeight = p_layout.GetViewportHeight(k);
+                    var header = _rowHeaders[k + 1];
+                    if ((header != null) && (header.Parent != null))
+                    {
+                        header.Arrange(new Rect(headerX, headerY, headerWidth, viewportHeight));
+                        header.RenderTransform = _cachedRowHeaderViewportTransform[k + 1];
+                    }
+                }
+            }
+            else if (_rowHeaders != null)
+            {
+                for (int m = -1; m <= p_layout.RowPaneCount; m++)
+                {
+                    headerX = p_layout.HeaderX;
+                    headerY = p_layout.GetViewportY(m);
+                    if (((IsTouching && IsTouching) && ((m == p_layout.RowPaneCount) && (_translateOffsetY < 0.0))) && (_touchStartHitTestInfo.RowViewportIndex == (p_layout.RowPaneCount - 1)))
+                    {
+                        headerY += _translateOffsetY;
+                    }
+                    double num15 = p_layout.HeaderWidth;
+                    double num16 = p_layout.GetViewportHeight(m);
+                    var header = _rowHeaders[m + 1];
+                    if ((header != null) && (header.Parent != null))
+                    {
+                        if (header.RenderTransform != null)
+                        {
+                            header.RenderTransform = null;
+                        }
+                        if ((header.Width != num15) || (header.Height != num16))
+                        {
+                            if (!IsTouching)
+                            {
+                                header.Arrange(new Rect(headerX, headerY, num15, num16));
+                            }
+                            else
+                            {
+                                int num17 = (int)Math.Ceiling(_translateOffsetY);
+                                double y = headerY;
+                                if ((_touchStartHitTestInfo != null) && (m == _touchStartHitTestInfo.RowViewportIndex))
+                                {
+                                    y += num17;
+                                }
+                                header.Arrange(new Rect(headerX, y, num15, num16));
+                                if ((y != headerY) && (_translateOffsetY < 0.0))
+                                {
+                                    RectangleGeometry geometry3 = new RectangleGeometry();
+                                    geometry3.Rect = new Rect(0.0, Math.Abs((double)(headerY - y)), num15, _cachedViewportHeights[m + 1]);
+                                    header.Clip = geometry3;
+                                }
+                                else if ((y != headerY) && (_translateOffsetY > 0.0))
+                                {
+                                    RectangleGeometry geometry4 = new RectangleGeometry();
+                                    geometry4.Rect = new Rect(0.0, 0.0, num15, Math.Max((double)0.0, (double)(_cachedViewportHeights[m + 1] - _translateOffsetY)));
+                                    header.Clip = geometry4;
+                                }
+                                else
+                                {
+                                    header.Clip = null;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        void ArrangeCellPanels(SheetLayout p_layout)
+        {
+            double headerX;
+            double headerY;
+            if (IsTouchZooming && (_cachedViewportTransform != null))
+            {
+                for (int i = -1; i <= p_layout.ColumnPaneCount; i++)
+                {
+                    headerX = p_layout.GetViewportX(i);
+                    double num20 = p_layout.GetViewportWidth(i);
+                    for (int j = -1; j <= p_layout.RowPaneCount; j++)
+                    {
+                        headerY = p_layout.GetViewportY(j);
+                        double num22 = p_layout.GetViewportHeight(j);
+                        CellsPanel viewport5 = _cellsPanels[j + 1, i + 1];
+                        if (viewport5 != null)
+                        {
+                            viewport5.Arrange(new Rect(headerX, headerY, num20, num22));
+                            viewport5.RenderTransform = _cachedViewportTransform[j + 1, i + 1];
+                        }
+                    }
+                }
+            }
+            else if (_cellsPanels != null)
+            {
+                for (int i = -1; i <= p_layout.ColumnPaneCount; i++)
+                {
+                    headerX = p_layout.GetViewportX(i);
+                    if ((IsTouching && (i == p_layout.ColumnPaneCount)) && ((_translateOffsetX < 0.0) && (_touchStartHitTestInfo.ColumnViewportIndex == (p_layout.ColumnPaneCount - 1))))
+                    {
+                        headerX += _translateOffsetX;
+                    }
+                    double num24 = p_layout.GetViewportWidth(i);
+                    for (int j = -1; j <= p_layout.RowPaneCount; j++)
+                    {
+                        headerY = p_layout.GetViewportY(j);
+                        if (((IsTouching && IsTouching) && ((j == p_layout.RowPaneCount) && (_translateOffsetY < 0.0))) && (_touchStartHitTestInfo.RowViewportIndex == (p_layout.RowPaneCount - 1)))
+                        {
+                            headerY += _translateOffsetY;
+                        }
+                        double num26 = p_layout.GetViewportHeight(j);
+                        CellsPanel viewport6 = _cellsPanels[j + 1, i + 1];
+                        if (viewport6 != null)
+                        {
+                            if (viewport6.RenderTransform != null)
+                            {
+                                viewport6.RenderTransform = null;
+                            }
+                            if ((viewport6.Width != num24) || (viewport6.Height != num26))
+                            {
+                                if (!IsTouching)
+                                {
+                                    viewport6.Arrange(new Rect(headerX, headerY, num24, num26));
+                                }
+                                else
+                                {
+                                    int num27 = (int)Math.Ceiling(_translateOffsetX);
+                                    int num28 = (int)Math.Ceiling(_translateOffsetY);
+                                    double num29 = headerX;
+                                    double num30 = headerY;
+                                    if ((_touchStartHitTestInfo != null) && (i == _touchStartHitTestInfo.ColumnViewportIndex))
+                                    {
+                                        num29 += num27;
+                                    }
+                                    if ((_touchStartHitTestInfo != null) && (j == _touchStartHitTestInfo.RowViewportIndex))
+                                    {
+                                        num30 += num28;
+                                    }
+                                    viewport6.Arrange(new Rect(num29, num30, num24, num26));
+                                    if (((headerY != num30) && (_translateOffsetY < 0.0)) || ((headerX != num29) && (_translateOffsetX < 0.0)))
+                                    {
+                                        RectangleGeometry geometry5 = new RectangleGeometry();
+                                        geometry5.Rect = new Rect(Math.Abs((double)(headerX - num29)), Math.Abs((double)(headerY - num30)), _cachedViewportWidths[i + 1], _cachedViewportHeights[j + 1]);
+                                        viewport6.Clip = geometry5;
+                                    }
+                                    else if ((headerX != num29) && (_translateOffsetX > 0.0))
+                                    {
+                                        RectangleGeometry geometry6 = new RectangleGeometry();
+                                        geometry6.Rect = new Rect(0.0, 0.0, Math.Max((double)0.0, (double)(_cachedViewportWidths[i + 1] - _translateOffsetX)), _cachedViewportHeights[j + 1]);
+                                        viewport6.Clip = geometry6;
+                                    }
+                                    else if ((headerY != num30) && (_translateOffsetY > 0.0))
+                                    {
+                                        RectangleGeometry geometry7 = new RectangleGeometry();
+                                        geometry7.Rect = new Rect(0.0, 0.0, _cachedViewportWidths[i + 1], Math.Max((double)0.0, (double)(_cachedViewportHeights[j + 1] - _translateOffsetY)));
+                                        viewport6.Clip = geometry7;
+                                    }
+                                    else
+                                    {
+                                        RectangleGeometry geometry8 = new RectangleGeometry();
+                                        geometry8.Rect = new Rect(0.0, 0.0, num24, num26);
+                                        viewport6.Clip = geometry8;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        void ArrangeScrollBar(SheetLayout p_layout)
+        {
+            if (_horizontalScrollBar != null)
+            {
+                for (int i = 0; i < p_layout.ColumnPaneCount; i++)
+                {
+                    _horizontalScrollBar[i].Arrange(new Rect(p_layout.GetHorizontalScrollBarX(i), p_layout.OrnamentY, p_layout.GetHorizontalScrollBarWidth(i), p_layout.OrnamentHeight));
+                }
+            }
+
+            if (_verticalScrollBar != null)
+            {
+                for (int i = 0; i < p_layout.RowPaneCount; i++)
+                {
+                    _verticalScrollBar[i].Arrange(new Rect(p_layout.OrnamentX, p_layout.GetVerticalScrollBarY(i), p_layout.OrnamentWidth, p_layout.GetVerticalScrollBarHeight(i)));
+                }
+            }
+
+            if (_horizontalSplitBox != null)
+            {
+                for (int i = 0; i < p_layout.ColumnPaneCount; i++)
+                {
+                    _horizontalSplitBox[i].Arrange(new Rect(p_layout.GetHorizontalSplitBoxX(i), p_layout.OrnamentY, p_layout.GetHorizontalSplitBoxWidth(i), p_layout.OrnamentHeight));
+                }
+            }
+
+            if (_verticalSplitBox != null)
+            {
+                for (int i = 0; i < p_layout.RowPaneCount; i++)
+                {
+                    _verticalSplitBox[i].Arrange(new Rect(p_layout.OrnamentX, p_layout.GetVerticalSplitBoxY(i), p_layout.OrnamentWidth, p_layout.GetVerticalSplitBoxHeight(i)));
+                }
+            }
+        }
+
+        void ArrangeSplitBar(SheetLayout p_layout)
+        {
+            if (_horizontalSplitBar != null)
+            {
+                for (int i = 0; i < (p_layout.ColumnPaneCount - 1); i++)
+                {
+                    if ((_horizontalSplitBar[i] != null) && (_horizontalSplitBar[i].Parent != null))
+                    {
+                        double horizontalSplitBarX = p_layout.GetHorizontalSplitBarX(i);
+                        if (IsTouching && (_cachedViewportSplitBarX != null))
+                        {
+                            horizontalSplitBarX = _cachedViewportSplitBarX[i];
+                        }
+                        _horizontalSplitBar[i].Arrange(new Rect(horizontalSplitBarX, p_layout.Y, _defaultSplitBarSize, _availableSize.Height));
+                    }
+                }
+            }
+
+            if (_verticalSplitBar != null)
+            {
+                for (int i = 0; i < (p_layout.RowPaneCount - 1); i++)
+                {
+                    if ((_verticalSplitBar[i] != null) && (_verticalSplitBar[i].Parent != null))
+                    {
+                        double verticalSplitBarY = p_layout.GetVerticalSplitBarY(i);
+                        if (IsTouching && (_cachedViewportSplitBarY != null))
+                        {
+                            verticalSplitBarY = _cachedViewportSplitBarY[i];
+                        }
+                        _verticalSplitBar[i].Arrange(new Rect(p_layout.X, verticalSplitBarY, _availableSize.Width, _defaultSplitBarSize));
+                    }
+                }
+            }
+
+            if (_crossSplitBar != null)
+            {
+                for (int i = 0; i < _crossSplitBar.GetLength(0); i++)
+                {
+                    double num70 = p_layout.GetVerticalSplitBarY(i);
+                    if (IsTouching && (_cachedViewportSplitBarY != null))
+                    {
+                        num70 = _cachedViewportSplitBarY[i];
+                    }
+                    double num71 = p_layout.GetVerticalSplitBarHeight(i);
+                    for (int j = 0; j < _crossSplitBar.GetLength(1); j++)
+                    {
+                        double num73 = p_layout.GetHorizontalSplitBarX(j);
+                        if (IsTouching && (_cachedViewportSplitBarX != null))
+                        {
+                            num73 = _cachedViewportSplitBarX[j];
+                        }
+                        double num74 = p_layout.GetHorizontalSplitBarWidth(j);
+                        if ((_crossSplitBar[i, j] != null) && (_crossSplitBar[i, j].Parent != null))
+                        {
+                            _crossSplitBar[i, j].Arrange(new Rect(num73, num70, num74, num71));
+                        }
+                    }
+                }
+            }
+        }
+
+        void ArrangeRangeGroup(SheetLayout p_layout)
+        {
+            double x;
+            double y;
+            GroupLayout groupLayout = GetGroupLayout();
+            if ((_groupCornerPresenter != null) && (_groupCornerPresenter.Parent != null))
+            {
+                x = groupLayout.X;
+                y = groupLayout.Y;
+                if ((_groupCornerPresenter.Width != groupLayout.Width) || (_groupCornerPresenter.Height != groupLayout.Height))
+                {
+                    _groupCornerPresenter.Arrange(new Rect(x, y, groupLayout.Width, groupLayout.Height));
+                }
+            }
+
+            if ((_rowGroupHeaderPresenter != null) && (_rowGroupHeaderPresenter.Parent != null))
+            {
+                x = groupLayout.X;
+                y = groupLayout.Y + groupLayout.Height;
+                double width = groupLayout.Width;
+                double headerHeight = p_layout.HeaderHeight;
+                _rowGroupHeaderPresenter.Arrange(new Rect(x, y, width, headerHeight));
+            }
+
+            if ((_columnGroupHeaderPresenter != null) && (_columnGroupHeaderPresenter.Parent != null))
+            {
+                x = groupLayout.X + groupLayout.Width;
+                y = groupLayout.Y;
+                double headerWidth = p_layout.HeaderWidth;
+                double height = groupLayout.Height;
+                _columnGroupHeaderPresenter.Arrange(new Rect(x, y, headerWidth, height));
+            }
+
+            if (_rowGroupPresenters != null)
+            {
+                for (int i = -1; i <= p_layout.RowPaneCount; i++)
+                {
+                    GcRangeGroup group = _rowGroupPresenters[i + 1];
+                    if (group != null)
+                    {
+                        x = groupLayout.X;
+                        y = p_layout.GetViewportY(i);
+                        double num8 = groupLayout.Width;
+                        double viewportHeight = p_layout.GetViewportHeight(i);
+                        if (!IsTouching || (i != _touchStartHitTestInfo.RowViewportIndex))
+                        {
+                            group.Arrange(new Rect(x, y, num8, viewportHeight));
+                            group.Clip = null;
+                        }
+                        else
+                        {
+                            group.Arrange(new Rect(x, y + _translateOffsetY, num8, viewportHeight));
+                            if (_translateOffsetY < 0.0)
+                            {
+                                RectangleGeometry geometry = new RectangleGeometry();
+                                geometry.Rect = new Rect(x, Math.Abs(_translateOffsetY), num8, viewportHeight);
+                                group.Clip = geometry;
+                            }
+                            else if (_translateOffsetY > 0.0)
+                            {
+                                RectangleGeometry geometry2 = new RectangleGeometry();
+                                geometry2.Rect = new Rect(x, 0.0, num8, Math.Max((double)0.0, (double)(viewportHeight - Math.Abs(_translateOffsetY))));
+                                group.Clip = geometry2;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (_columnGroupPresenters != null)
+            {
+                for (int j = -1; j <= p_layout.ColumnPaneCount; j++)
+                {
+                    GcRangeGroup group2 = _columnGroupPresenters[j + 1];
+                    if (group2 != null)
+                    {
+                        x = p_layout.GetViewportX(j);
+                        y = groupLayout.Y;
+                        double viewportWidth = p_layout.GetViewportWidth(j);
+                        double num12 = groupLayout.Height;
+                        if (!IsTouching || (j != _touchStartHitTestInfo.ColumnViewportIndex))
+                        {
+                            group2.Arrange(new Rect(x, y, viewportWidth, num12));
+                            group2.Clip = null;
+                        }
+                        else
+                        {
+                            group2.Arrange(new Rect(x + _translateOffsetX, y, viewportWidth, num12));
+                            if (_translateOffsetX < 0.0)
+                            {
+                                RectangleGeometry geometry3 = new RectangleGeometry();
+                                geometry3.Rect = new Rect(Math.Abs(_translateOffsetX), y, viewportWidth, num12);
+                                group2.Clip = geometry3;
+                            }
+                            else if (_translateOffsetX > 0.0)
+                            {
+                                RectangleGeometry geometry4 = new RectangleGeometry();
+                                geometry4.Rect = new Rect(0.0, y, Math.Max((double)0.0, (double)(viewportWidth - Math.Abs(_translateOffsetX))), num12);
+                                group2.Clip = geometry4;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        internal void ArrangeSelectionGripper()
+        {
+            Rect? autoFillIndicatorRec;
+            if (((InputDeviceType != InputDeviceType.Touch) || IsTouchPromotedMouseMessage))
+            {
+                Rect rect16 = new Rect(0.0, 0.0, 0.0, 0.0);
+                _gripperLocations = null;
+                ResizerGripperRect = null;
+                _topLeftGripper.Arrange(rect16);
+                _bottomRightGripper.Arrange(rect16);
+                _resizerGripperContainer.Arrange(rect16);
+                autoFillIndicatorRec = _autoFillIndicatorRec;
+                if (autoFillIndicatorRec.HasValue)
+                {
+                    _autoFillIndicatorContainer.Arrange(rect16);
+                    _autoFillIndicatorRec = null;
+                }
+                if ((_touchToolbarPopup != null) && _touchToolbarPopup.IsOpen)
+                {
+                    _touchToolbarPopup.IsOpen = false;
+                }
+                return;
+            }
+
+            Rect rect = new Rect(0.0, 0.0, 0.0, 0.0);
+            CellsPanel viewportRowsPresenter = GetViewportRowsPresenter(GetActiveRowViewportIndex(), GetActiveColumnViewportIndex());
+            if (viewportRowsPresenter == null)
+            {
+                return;
+            }
+            if ((IsContinueTouchOperation || IsEditing) || (ActiveSheet.SelectionPolicy == SelectionPolicy.Single))
+            {
+                if (_gripperLocations != null)
+                {
+                    CachedGripperLocation = _gripperLocations;
+                }
+                _gripperLocations = null;
+                _topLeftGripper.Arrange(rect);
+                _bottomRightGripper.Arrange(rect);
+                _resizerGripperContainer.Arrange(rect);
+                return;
+            }
+            FloatingObject[] allSelectedFloatingObjects = GetAllSelectedFloatingObjects();
+            if ((allSelectedFloatingObjects != null) && (allSelectedFloatingObjects.Length > 0))
+            {
+                if (_gripperLocations != null)
+                {
+                    CachedGripperLocation = _gripperLocations;
+                }
+                _gripperLocations = null;
+                _topLeftGripper.Arrange(rect);
+                _bottomRightGripper.Arrange(rect);
+                _resizerGripperContainer.Arrange(rect);
+                return;
+            }
+            CellRange activeSelection = GetActiveSelection();
+            if ((activeSelection == null) && (ActiveSheet.Selections.Count > 0))
+            {
+                activeSelection = ActiveSheet.Selections[0];
+            }
+            if (activeSelection == null)
+            {
+                if (_gripperLocations != null)
+                {
+                    CachedGripperLocation = _gripperLocations;
+                }
+                _gripperLocations = null;
+                _topLeftGripper.Arrange(rect);
+                _bottomRightGripper.Arrange(rect);
+                _resizerGripperContainer.Arrange(rect);
+                return;
+            }
+            autoFillIndicatorRec = _autoFillIndicatorRec;
+            if (autoFillIndicatorRec.HasValue)
+            {
+                if (_gripperLocations != null)
+                {
+                    CachedGripperLocation = _gripperLocations;
+                }
+                _gripperLocations = null;
+                _topLeftGripper.Arrange(rect);
+                _bottomRightGripper.Arrange(rect);
+                _resizerGripperContainer.Arrange(rect);
+                Rect autoFillIndicatorRect = GetAutoFillIndicatorRect(viewportRowsPresenter, activeSelection);
+                _autoFillIndicatorContainer.Arrange(autoFillIndicatorRect);
+                _autoFillIndicatorRec = new Rect?(autoFillIndicatorRect);
+                return;
+            }
+            if (viewportRowsPresenter.Excel.ActiveSheet.Selections.Count <= 0)
+            {
+                return;
+            }
+            SheetLayout sheetLayout = GetSheetLayout();
+            Rect rangeBounds = viewportRowsPresenter._cachedSelectionFrameLayout;
+            if (!viewportRowsPresenter.SelectionContainer.IsAnchorCellInSelection)
+            {
+                rangeBounds = viewportRowsPresenter._cachedFocusCellLayout;
+            }
+            if (viewportRowsPresenter.Excel.ActiveSheet.Selections.Count > 0)
+            {
+                rangeBounds = viewportRowsPresenter.GetRangeBounds(activeSelection);
+            }
+            List<Tuple<Point, double>> list = new List<Tuple<Point, double>>();
+            if (IsEntrieSheetSelection())
+            {
+                _gripperLocations = null;
+                _topLeftGripper.Arrange(rect);
+                _bottomRightGripper.Arrange(rect);
+                _resizerGripperContainer.Arrange(rect);
+                autoFillIndicatorRec = null;
+                ResizerGripperRect = autoFillIndicatorRec;
+            }
+            else
+            {
+                double viewportY;
+                bool flag2;
+                if (!IsEntrieColumnSelection())
+                {
+                    if (!IsEntrieRowSelection())
+                    {
+                        double num27 = sheetLayout.GetViewportX(viewportRowsPresenter.ColumnViewportIndex);
+                        double num28 = sheetLayout.GetViewportY(viewportRowsPresenter.RowViewportIndex);
+                        int num29 = GetActiveRowViewportIndex();
+                        int activeColumnViewportIndex = GetActiveColumnViewportIndex();
+                        int viewportLeftColumn = GetViewportLeftColumn(activeColumnViewportIndex);
+                        int num32 = GetViewportTopRow(num29);
+                        int num33 = GetViewportBottomRow(num29);
+                        int viewportRightColumn = GetViewportRightColumn(activeColumnViewportIndex);
+                        int num35 = -7;
+                        int num36 = -7;
+                        if ((activeSelection.Column < viewportLeftColumn) || (activeSelection.Row < num32))
+                        {
+                            list.Add(Tuple.Create<Point, double>(new Point(-2147483648.0, -2147483648.0), 0.0));
+                        }
+                        else
+                        {
+                            list.Add(Tuple.Create<Point, double>(new Point((num27 + rangeBounds.X) + num35, (num28 + rangeBounds.Y) + num36), 16.0));
+                        }
+                        num35 = (int)(rangeBounds.Width - 9.0);
+                        num36 = (int)(rangeBounds.Height - 9.0);
+                        int num37 = (activeSelection.Row + activeSelection.RowCount) - 1;
+                        int num38 = (activeSelection.Column + activeSelection.ColumnCount) - 1;
+                        if (num37 > num33)
+                        {
+                            num36 = 0x7fffffff;
+                        }
+                        if (num38 > viewportRightColumn)
+                        {
+                            num35 = 0x7fffffff;
+                        }
+                        int num39 = GetActiveRowViewportIndex();
+                        int num40 = GetActiveColumnViewportIndex();
+                        ActiveSheet.GetViewportInfo();
+                        if ((num35 == 0x7fffffff) || (num36 == 0x7fffffff))
+                        {
+                            for (int i = num39; i <= GetViewportInfo(ActiveSheet).RowViewportCount; i++)
+                            {
+                                for (int j = num40; j <= GetViewportInfo(ActiveSheet).ColumnViewportCount; j++)
+                                {
+                                    num33 = GetViewportBottomRow(i);
+                                    viewportRightColumn = GetViewportRightColumn(j);
+                                    if ((num33 >= num37) && (viewportRightColumn >= num38))
+                                    {
+                                        CellsPanel viewport8 = _cellsPanels[i + 1, j + 1];
+                                        if (viewport8 != null)
+                                        {
+                                            Rect rect13 = viewport8._cachedSelectionFrameLayout;
+                                            if (!viewport8.SelectionContainer.IsAnchorCellInSelection)
+                                            {
+                                                rect13 = viewport8._cachedFocusCellLayout;
+                                            }
+                                            num35 = (int)(((sheetLayout.GetViewportX(j) + rect13.X) + rect13.Width) - 9.0);
+                                            num36 = (int)(((sheetLayout.GetViewportY(i) + rect13.Y) + rect13.Height) - 9.0);
+                                            if (list.Count == 1)
+                                            {
+                                                if ((num35 > (sheetLayout.GetViewportX(j) + sheetLayout.GetViewportWidth(j))) || (num36 > (sheetLayout.GetViewportY(i) + sheetLayout.GetViewportHeight(i))))
+                                                {
+                                                    list.Add(Tuple.Create<Point, double>(new Point(2147483647.0, 2147483647.0), 0.0));
+                                                }
+                                                else
+                                                {
+                                                    list.Add(Tuple.Create<Point, double>(new Point((double)num35, (double)num36), 16.0));
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if (list.Count == 1)
+                            {
+                                list.Add(Tuple.Create<Point, double>(new Point(2147483647.0, 2147483647.0), 0.0));
+                            }
+                        }
+                        else
+                        {
+                            num35 = (int)((num35 + num27) + rangeBounds.X);
+                            num36 = (int)((num36 + num28) + rangeBounds.Y);
+                            if ((num35 > (sheetLayout.GetViewportX(activeColumnViewportIndex) + sheetLayout.GetViewportWidth(activeColumnViewportIndex))) || (num36 > (sheetLayout.GetViewportY(num29) + sheetLayout.GetViewportHeight(num29))))
+                            {
+                                list.Add(Tuple.Create<Point, double>(new Point(2147483647.0, 2147483647.0), 0.0));
+                            }
+                            else
+                            {
+                                list.Add(Tuple.Create<Point, double>(new Point((double)num35, (double)num36), 16.0));
+                            }
+                        }
+                        goto Label_10BF;
+                    }
+                    double viewportX = sheetLayout.GetViewportX(viewportRowsPresenter.ColumnViewportIndex);
+                    viewportY = sheetLayout.GetViewportY(viewportRowsPresenter.RowViewportIndex);
+                    int viewportTopRow = GetViewportTopRow(viewportRowsPresenter.RowViewportIndex);
+                    int viewportBottomRow = GetViewportBottomRow(viewportRowsPresenter.RowViewportIndex);
+                    if (ActiveSheet.FrozenColumnCount > 0)
+                    {
+                        CellsPanel viewport5 = GetViewportRowsPresenter(GetActiveRowViewportIndex(), GetActiveColumnViewportIndex() + 1);
+                        Rect rect9 = viewport5._cachedSelectionFrameLayout;
+                        if (!viewport5.SelectionContainer.IsAnchorCellInSelection)
+                        {
+                            rect9 = viewportRowsPresenter._cachedFocusCellLayout;
+                        }
+                        rangeBounds = new Rect(rangeBounds.X, rangeBounds.Y, rangeBounds.Width + rect9.Width, rangeBounds.Height);
+                    }
+                    if (activeSelection.Row >= viewportTopRow)
+                    {
+                        list.Add(Tuple.Create<Point, double>(new Point(((viewportX + rangeBounds.X) + (rangeBounds.Width / 2.0)) - 7.0, (viewportY + rangeBounds.Y) - 16.0), 16.0));
+                    }
+                    else
+                    {
+                        list.Add(Tuple.Create<Point, double>(new Point(((viewportX + rangeBounds.X) + (rangeBounds.Width / 2.0)) - 7.0, -2147483648.0), 0.0));
+                    }
+                    int num18 = (int)(rangeBounds.Height - 9.0);
+                    int num19 = (activeSelection.Row + activeSelection.RowCount) - 1;
+                    if (num19 > viewportBottomRow)
+                    {
+                        num18 = 0x7fffffff;
+                    }
+                    int activeRowViewportIndex = GetActiveRowViewportIndex();
+                    ActiveSheet.GetViewportInfo();
+                    flag2 = true;
+                    int rowViewportIndex = activeRowViewportIndex;
+                    if (num18 == 0x7fffffff)
+                    {
+                        while (rowViewportIndex <= GetViewportInfo(ActiveSheet).RowViewportCount)
+                        {
+                            if (GetViewportBottomRow(rowViewportIndex) >= num19)
+                            {
+                                CellsPanel viewport6 = _cellsPanels[rowViewportIndex + 1, viewportRowsPresenter.ColumnViewportIndex + 1];
+                                if (viewport6 != null)
+                                {
+                                    Rect rect10 = viewport6._cachedSelectionFrameLayout;
+                                    if (!viewport6.SelectionContainer.IsAnchorCellInSelection)
+                                    {
+                                        rect10 = viewport6._cachedFocusCellLayout;
+                                    }
+                                    num18 = (int)((sheetLayout.GetViewportY(rowViewportIndex) + rect10.Y) + rect10.Height);
+                                    if (list.Count == 1)
+                                    {
+                                        if (num18 <= (sheetLayout.GetViewportY(rowViewportIndex) + sheetLayout.GetViewportHeight(rowViewportIndex)))
+                                        {
+                                            list.Add(Tuple.Create<Point, double>(new Point(((viewportX + rangeBounds.X) + (rangeBounds.Width / 2.0)) - 7.0, (double)num18), 16.0));
+                                        }
+                                        else
+                                        {
+                                            list.Add(Tuple.Create<Point, double>(new Point(((viewportX + rangeBounds.X) + (rangeBounds.Width / 2.0)) - 7.0, 2147483647.0), 0.0));
+                                            flag2 = false;
+                                        }
+                                        break;
+                                    }
+                                }
+                            }
+                            rowViewportIndex++;
+                        }
+                    }
+                    else
+                    {
+                        double viewportHeight = sheetLayout.GetViewportHeight(viewportRowsPresenter.RowViewportIndex);
+                        double y = (viewportY + rangeBounds.Y) + rangeBounds.Height;
+                        if (y <= (viewportY + viewportHeight))
+                        {
+                            list.Add(Tuple.Create<Point, double>(new Point(((viewportX + rangeBounds.X) + (rangeBounds.Width / 2.0)) - 7.0, y), 16.0));
+                        }
+                        else
+                        {
+                            list.Add(Tuple.Create<Point, double>(new Point(viewportX, 2147483647.0), 0.0));
+                            flag2 = false;
+                        }
+                    }
+                }
+                else
+                {
+                    double num = sheetLayout.GetViewportX(viewportRowsPresenter.ColumnViewportIndex);
+                    double num2 = sheetLayout.GetViewportY(viewportRowsPresenter.RowViewportIndex);
+                    int num3 = GetViewportLeftColumn(viewportRowsPresenter.ColumnViewportIndex);
+                    int num4 = GetViewportRightColumn(viewportRowsPresenter.ColumnViewportIndex);
+                    if (ActiveSheet.FrozenRowCount > 0)
+                    {
+                        CellsPanel viewport2 = GetViewportRowsPresenter(GetActiveRowViewportIndex() + 1, GetActiveColumnViewportIndex());
+                        Rect rect5 = viewport2._cachedSelectionFrameLayout;
+                        if (!viewport2.SelectionContainer.IsAnchorCellInSelection)
+                        {
+                            rect5 = viewport2._cachedFocusCellLayout;
+                        }
+                        rangeBounds = new Rect(rangeBounds.X, rangeBounds.Y, rangeBounds.Width, rangeBounds.Height + rect5.Height);
+                    }
+                    if (activeSelection.Column >= num3)
+                    {
+                        list.Add(Tuple.Create<Point, double>(new Point((num + rangeBounds.X) - 16.0, ((num2 + rangeBounds.Y) + (rangeBounds.Height / 2.0)) - 9.0), 16.0));
+                    }
+                    else
+                    {
+                        list.Add(Tuple.Create<Point, double>(new Point(-2147483648.0, ((num2 + rangeBounds.Y) + (rangeBounds.Height / 2.0)) - 9.0), 0.0));
+                    }
+                    int num5 = (int)(rangeBounds.Width - 9.0);
+                    int num6 = (activeSelection.Column + activeSelection.ColumnCount) - 1;
+                    if (num6 > num4)
+                    {
+                        num5 = 0x7fffffff;
+                    }
+                    int num7 = GetActiveColumnViewportIndex();
+                    ActiveSheet.GetViewportInfo();
+                    bool flag = true;
+                    int columnViewportIndex = num7;
+                    if (num5 == 0x7fffffff)
+                    {
+                        while (columnViewportIndex <= GetViewportInfo(ActiveSheet).ColumnViewportCount)
+                        {
+                            if (GetViewportRightColumn(columnViewportIndex) >= num6)
+                            {
+                                CellsPanel viewport3 = _cellsPanels[viewportRowsPresenter.RowViewportIndex + 1, columnViewportIndex + 1];
+                                if (viewport3 != null)
+                                {
+                                    Rect rect6 = viewport3._cachedSelectionFrameLayout;
+                                    if (!viewport3.SelectionContainer.IsAnchorCellInSelection)
+                                    {
+                                        rect6 = viewport3._cachedFocusCellLayout;
+                                    }
+                                    num5 = (int)((sheetLayout.GetViewportX(columnViewportIndex) + rect6.X) + rect6.Width);
+                                    if (list.Count == 1)
+                                    {
+                                        if (num5 <= (sheetLayout.GetViewportX(columnViewportIndex) + sheetLayout.GetViewportWidth(columnViewportIndex)))
+                                        {
+                                            list.Add(Tuple.Create<Point, double>(new Point((double)num5, ((num2 + rangeBounds.Y) + (rangeBounds.Height / 2.0)) - 9.0), 16.0));
+                                        }
+                                        else
+                                        {
+                                            list.Add(Tuple.Create<Point, double>(new Point(-2147483648.0, ((num2 + rangeBounds.Y) + (rangeBounds.Height / 2.0)) - 9.0), 0.0));
+                                            flag = false;
+                                        }
+                                        break;
+                                    }
+                                }
+                            }
+                            columnViewportIndex++;
+                        }
+                    }
+                    else
+                    {
+                        double viewportWidth = sheetLayout.GetViewportWidth(viewportRowsPresenter.ColumnViewportIndex);
+                        double x = (num + rangeBounds.X) + rangeBounds.Width;
+                        if (x <= (num + viewportWidth))
+                        {
+                            list.Add(Tuple.Create<Point, double>(new Point(x, ((num2 + rangeBounds.Y) + (rangeBounds.Height / 2.0)) - 9.0), 16.0));
+                        }
+                        else
+                        {
+                            list.Add(Tuple.Create<Point, double>(new Point(2147483647.0, ((num2 + rangeBounds.Y) + (rangeBounds.Height / 2.0)) - 9.0), 0.0));
+                            flag = false;
+                        }
+                    }
+                    var colHeader = _colHeaders[viewportRowsPresenter.ColumnViewportIndex + 1];
+                    CellRange range2 = new CellRange(ActiveSheet.ColumnHeader.RowCount - 1, (activeSelection.Column + activeSelection.ColumnCount) - 1, 1, 1);
+                    Rect rect7 = colHeader.GetRangeBounds(range2, SheetArea.ColumnHeader);
+                    int column = (activeSelection.Column + activeSelection.ColumnCount) - 1;
+                    if ((ActiveSheet.GetColumnResizable(column) && !rect7.IsEmpty) && flag)
+                    {
+                        double num12 = 0.0;
+                        for (int k = 0; k < ActiveSheet.ColumnHeader.RowCount; k++)
+                        {
+                            num12 += ActiveSheet.GetActualRowHeight(k, SheetArea.ColumnHeader) * ActiveSheet.ZoomFactor;
+                        }
+                        Rect rect8 = new Rect(((num + rect7.X) + rect7.Width) - 8.0, (colHeader.Location.Y + num12) - 16.0, 16.0, 16.0);
+                        _resizerGripperContainer.Child = _cachedColumnResizerGripperImage;
+                        _resizerGripperContainer.Arrange(rect8);
+                        ResizerGripperRect = new Rect?(rect8);
+                    }
+                    else
+                    {
+                        _resizerGripperContainer.Arrange(rect);
+                        autoFillIndicatorRec = null;
+                        ResizerGripperRect = autoFillIndicatorRec;
+                    }
+                    goto Label_10BF;
+                }
+
+                var header = _rowHeaders[viewportRowsPresenter.RowViewportIndex + 1];
+                CellRange range = new CellRange((activeSelection.Row + activeSelection.RowCount) - 1, ActiveSheet.RowHeader.ColumnCount - 1, 1, 1);
+                Rect rect11 = header.GetRangeBounds(range, SheetArea.CornerHeader | SheetArea.RowHeader);
+                int row = (activeSelection.Row + activeSelection.RowCount) - 1;
+                if ((ActiveSheet.GetRowResizable(row) && !rect11.IsEmpty) && flag2)
+                {
+                    double num25 = 0.0;
+                    for (int m = 0; m < ActiveSheet.RowHeader.ColumnCount; m++)
+                    {
+                        num25 += ActiveSheet.GetActualColumnWidth(m, SheetArea.CornerHeader | SheetArea.RowHeader) * ActiveSheet.ZoomFactor;
+                    }
+                    Rect rect12 = new Rect((header.Location.X + num25) - 16.0, ((viewportY + rect11.Y) + rect11.Height) - 8.0, 16.0, 16.0);
+                    _resizerGripperContainer.Child = _cachedRowResizerGripperImage;
+                    _resizerGripperContainer.Arrange(rect12);
+                    ResizerGripperRect = new Rect?(rect12);
+                }
+                else
+                {
+                    _resizerGripperContainer.Arrange(rect);
+                    autoFillIndicatorRec = null;
+                    ResizerGripperRect = autoFillIndicatorRec;
+                }
+            }
+        Label_10BF:
+            if (list.Count == 2)
+            {
+                Point point = list[0].Item1;
+                double width = list[0].Item2;
+                Rect rect14 = new Rect((double)((int)point.X), (double)((int)point.Y), width, width);
+                _topLeftGripper.Arrange(rect14);
+                point = list[1].Item1;
+                width = list[1].Item2;
+                Rect rect15 = new Rect((double)((int)point.X), (double)((int)point.Y), width, width);
+                _bottomRightGripper.Arrange(rect15);
+                GripperLocationsStruct struct2 = new GripperLocationsStruct
+                {
+                    TopLeft = rect14,
+                    BottomRight = rect15
+                };
+                _gripperLocations = struct2;
+                CachedGripperLocation = _gripperLocations;
+                if (IsEntrieSheetSelection() || (!IsEntrieRowSelection() && !IsEntrieColumnSelection()))
+                {
+                    _resizerGripperContainer.Arrange(rect);
+                    ResizerGripperRect = null;
+                    return;
+                }
+            }
+            else
+            {
+                _gripperLocations = null;
+                _topLeftGripper.Arrange(rect);
+                _bottomRightGripper.Arrange(rect);
+                _resizerGripperContainer.Arrange(rect);
+                ResizerGripperRect = null;
+            }
+        }
+        #endregion
+
+        #region 内部方法
         void InitLayout()
         {
             _hoverManager = new HoverManager(this);
@@ -44,14 +1672,14 @@ namespace Dt.Base
             _topLeftGripper = new Ellipse();
             _topLeftGripper.Stroke = new SolidColorBrush(Color.FromArgb(220, 0, 0, 0));
             _topLeftGripper.StrokeThickness = 2.0;
-            _topLeftGripper.Fill = new SolidColorBrush(Colors.White);
+            _topLeftGripper.Fill = BrushRes.WhiteBrush;
             _topLeftGripper.Height = 16.0;
             _topLeftGripper.Width = 16.0;
 
             _bottomRightGripper = new Ellipse();
             _bottomRightGripper.Stroke = new SolidColorBrush(Color.FromArgb(220, 0, 0, 0));
             _bottomRightGripper.StrokeThickness = 2.0;
-            _bottomRightGripper.Fill = new SolidColorBrush(Colors.White);
+            _bottomRightGripper.Fill = BrushRes.WhiteBrush;
             _bottomRightGripper.Height = 16.0;
             _bottomRightGripper.Width = 16.0;
 
@@ -137,837 +1765,23 @@ namespace Dt.Base
             SuspendFloatingObjectsInvalidate();
         }
 
-        protected override Size MeasureOverride(Size availableSize)
+        internal void InvalidateRangeGroup()
         {
-            double viewportX;
-            double viewportY;
-            if (_cachedLastAvailableSize != availableSize)
+            if (_rowGroupPresenters != null)
             {
-                _cachedLastAvailableSize = availableSize;
-                _availableSize = availableSize;
-                InvalidateLayout();
-            }
-            if (!IsWorking)
-                SaveHitInfo(null);
-
-            SheetLayout layout = GetSheetLayout();
-            List<Image> list = new List<Image>();
-            foreach (var element in Children.OfType<Image>())
-            {
-                list.Add(element);
-            }
-            foreach (var element2 in list)
-            {
-                Children.Remove(element2);
-            }
-
-            UpdateHorizontalSplitBoxes();
-            UpdateVerticalSplitBoxes();
-            UpdateHorizontalSplitBars();
-            UpdateVerticalSplitBars();
-            UpdateCrossSplitBars();
-            UpdateFreezeLines();
-
-            //**************最底部三层为：视口 列头 行头，因可能动态增删，采用Insert到0的方式，后插入的在底层**************/
-            bool reload = (_cellsPanels != null)
-                && (ActiveSheet == null || _cellsPanels.GetUpperBound(0) != layout.RowPaneCount + 1 || _cellsPanels.GetUpperBound(1) != layout.ColumnPaneCount + 1);
-
-            // 行头
-            if (reload)
-            {
-                foreach (var header in _rowHeaders)
+                foreach (var group in _rowGroupPresenters)
                 {
-                    Children.Remove(header);
-                }
-                _rowHeaders = null;
-            }
-            if (_rowHeaders == null)
-            {
-                _rowHeaders = new RowHeaderPanel[layout.RowPaneCount + 2];
-            }
-            if (layout.HeaderWidth > 0.0)
-            {
-                for (int i = -1; i <= layout.RowPaneCount; i++)
-                {
-                    double height = layout.GetViewportHeight(i);
-                    viewportY = layout.GetViewportY(i);
-                    if ((_rowHeaders[i + 1] == null) && (height > 0.0))
-                    {
-                        _rowHeaders[i + 1] = new RowHeaderPanel(this);
-                    }
-                    var header = _rowHeaders[i + 1];
-                    if (height > 0.0)
-                    {
-                        header.Location = new Point(layout.HeaderX, viewportY);
-                        header.RowViewportIndex = i;
-                        if (!Children.Contains(header))
-                        {
-                            Children.Insert(0, header);
-                        }
-                        header.Measure(new Size(layout.HeaderWidth, height));
-                    }
-                    else if (header != null)
-                    {
-                        Children.Remove(header);
-                        _rowHeaders[i + 1] = null;
-                    }
-                }
-            }
-            else if (_rowHeaders != null)
-            {
-                foreach (var header in _rowHeaders)
-                {
-                    Children.Remove(header);
+                    group?.InvalidateMeasure();
                 }
             }
 
-            // 列头
-            if (reload)
+            if (_columnGroupPresenters != null)
             {
-                foreach (var panel in _colHeaders)
+                foreach (var group in _columnGroupPresenters)
                 {
-                    Children.Remove(panel);
-                }
-                _colHeaders = null;
-            }
-            if (_colHeaders == null)
-            {
-                _colHeaders = new ColHeaderPanel[layout.ColumnPaneCount + 2];
-            }
-            if (layout.HeaderHeight > 0.0)
-            {
-                for (int i = -1; i <= layout.ColumnPaneCount; i++)
-                {
-                    viewportX = layout.GetViewportX(i);
-                    double width = layout.GetViewportWidth(i);
-                    if ((_colHeaders[i + 1] == null) && (width > 0.0))
-                    {
-                        _colHeaders[i + 1] = new ColHeaderPanel(this);
-                    }
-                    var colPanel = _colHeaders[i + 1];
-                    if (width > 0.0)
-                    {
-                        colPanel.Location = new Point(viewportX, layout.HeaderY);
-                        colPanel.ColumnViewportIndex = i;
-                        if (!Children.Contains(colPanel))
-                        {
-                            Children.Insert(0, colPanel);
-                        }
-                        colPanel.Measure(new Size(width, layout.HeaderHeight));
-                    }
-                    else if (colPanel != null)
-                    {
-                        Children.Remove(colPanel);
-                        _colHeaders[i + 1] = null;
-                    }
+                    group?.InvalidateMeasure();
                 }
             }
-            else if (_colHeaders != null)
-            {
-                foreach (var colPanel in _colHeaders)
-                {
-                    Children.Remove(colPanel);
-                }
-            }
-
-            // 多视口
-            CellsPanel[,] viewportArray = null;
-            if (reload)
-            {
-                // 视口数目变化时
-                int upperRow = _cellsPanels.GetUpperBound(0);
-                int upperCol = _cellsPanels.GetUpperBound(1);
-                for (int i = _cellsPanels.GetLowerBound(0); i <= upperRow; i++)
-                {
-                    for (int j = _cellsPanels.GetLowerBound(1); j <= upperCol; j++)
-                    {
-                        CellsPanel viewport = _cellsPanels[i, j];
-                        if (viewport != null)
-                            Children.Remove(viewport);
-                    }
-                }
-                viewportArray = _cellsPanels;
-                _cellsPanels = null;
-            }
-            if (_cellsPanels == null)
-            {
-                _cellsPanels = new CellsPanel[layout.RowPaneCount + 2, layout.ColumnPaneCount + 2];
-            }
-            for (int i = -1; i <= layout.ColumnPaneCount; i++)
-            {
-                double viewportWidth = layout.GetViewportWidth(i);
-                viewportX = layout.GetViewportX(i);
-                for (int j = -1; j <= layout.RowPaneCount; j++)
-                {
-                    double viewportHeight = layout.GetViewportHeight(j);
-                    viewportY = layout.GetViewportY(j);
-                    if (((_cellsPanels[j + 1, i + 1] == null) && (viewportWidth > 0.0)) && (viewportHeight > 0.0))
-                    {
-                        if (((viewportArray != null) && ((j + 1) < viewportArray.GetUpperBound(0))) && (((i + 1) < viewportArray.GetUpperBound(1)) && (viewportArray[j + 1, i + 1] != null)))
-                        {
-                            _cellsPanels[j + 1, i + 1] = viewportArray[j + 1, i + 1];
-                        }
-                        else
-                        {
-                            _cellsPanels[j + 1, i + 1] = new CellsPanel(this);
-                        }
-                    }
-
-                    CellsPanel cellPanel = _cellsPanels[j + 1, i + 1];
-                    if ((viewportWidth > 0.0) && (viewportHeight > 0.0))
-                    {
-                        cellPanel.Location = new Point(viewportX, viewportY);
-                        cellPanel.ColumnViewportIndex = i;
-                        cellPanel.RowViewportIndex = j;
-                        if (!Children.Contains(cellPanel))
-                        {
-                            // 单元格区域放最低层
-                            Children.Insert(0, cellPanel);
-                        }
-                        cellPanel.Measure(new Size(viewportWidth, viewportHeight));
-                    }
-                    else if (cellPanel != null)
-                    {
-                        Children.Remove(cellPanel);
-                        _cellsPanels[j + 1, i + 1] = null;
-                    }
-                }
-            }
-
-            // 左上角
-            if (_cornerPanel == null)
-            {
-                _cornerPanel = new CornerPanel(this);
-            }
-            if ((layout.HeaderWidth > 0.0) && (layout.HeaderHeight > 0.0))
-            {
-                if (!Children.Contains(_cornerPanel))
-                {
-                    Children.Add(_cornerPanel);
-                }
-                _cornerPanel.Measure(new Size(layout.HeaderWidth, layout.HeaderHeight));
-            }
-            else
-            {
-                Children.Remove(_cornerPanel);
-                _cornerPanel = null;
-            }
-
-            // 水平滚动栏
-            if (layout.OrnamentHeight > 0.0)
-            {
-                for (int i = 0; i < layout.ColumnPaneCount; i++)
-                {
-                    ScrollBar bar = _horizontalScrollBar[i];
-                    double barWidth = layout.GetHorizontalScrollBarWidth(i);
-                    if (barWidth > 0.0)
-                    {
-                        if (!Children.Contains(bar))
-                        {
-                            Children.Add(bar);
-                        }
-                        bar.Measure(new Size(barWidth, HorizontalScrollBarHeight));
-                    }
-                    else
-                    {
-                        Children.Remove(bar);
-                    }
-
-                    var box = _horizontalSplitBox[i];
-                    double splitBoxWidth = layout.GetHorizontalSplitBoxWidth(i);
-                    if (splitBoxWidth > 0.0)
-                    {
-                        if (!Children.Contains(box))
-                        {
-                            Children.Add(box);
-                        }
-                        bar.Measure(new Size(splitBoxWidth, HorizontalScrollBarHeight));
-                    }
-                    else
-                    {
-                        Children.Remove(box);
-                    }
-                }
-            }
-            else
-            {
-                if (_horizontalScrollBar != null)
-                {
-                    foreach (ScrollBar bar2 in _horizontalScrollBar)
-                    {
-                        Children.Remove(bar2);
-                    }
-                }
-                if (_horizontalSplitBox != null)
-                {
-                    foreach (var box2 in _horizontalSplitBox)
-                    {
-                        Children.Remove(box2);
-                    }
-                }
-            }
-
-            // 垂直滚动栏
-            if (layout.OrnamentWidth > 0.0)
-            {
-                for (int i = 0; i < layout.RowPaneCount; i++)
-                {
-                    ScrollBar bar = _verticalScrollBar[i];
-                    double barHeight = layout.GetVerticalScrollBarHeight(i);
-                    if (barHeight > 0.0)
-                    {
-                        if (!Children.Contains(bar))
-                        {
-                            Children.Add(bar);
-                        }
-                        bar.Measure(new Size(VerticalScrollBarWidth, barHeight));
-                    }
-                    else
-                    {
-                        Children.Remove(bar);
-                    }
-
-                    var vbox = _verticalSplitBox[i];
-                    double vboxHeight = layout.GetVerticalSplitBoxHeight(i);
-                    if (vboxHeight > 0.0)
-                    {
-                        if (!Children.Contains(vbox))
-                        {
-                            Children.Add(vbox);
-                        }
-                        vbox.Measure(new Size(VerticalScrollBarWidth, vboxHeight));
-                    }
-                    else
-                    {
-                        Children.Remove(vbox);
-                    }
-                }
-            }
-            else
-            {
-                if (_verticalScrollBar != null)
-                {
-                    foreach (ScrollBar bar4 in _verticalScrollBar)
-                    {
-                        Children.Remove(bar4);
-                    }
-                }
-                if (_verticalSplitBox != null)
-                {
-                    foreach (var box4 in _verticalSplitBox)
-                    {
-                        Children.Remove(box4);
-                    }
-                }
-            }
-
-            // 水平/垂直分隔栏
-            for (int j = 0; j < (layout.ColumnPaneCount - 1); j++)
-            {
-                var bar = _horizontalSplitBar[j];
-                if (!Children.Contains(bar))
-                {
-                    Children.Add(bar);
-                }
-                bar.Measure(new Size(_defaultSplitBarSize, _availableSize.Height));
-            }
-            for (int k = 0; k < (layout.RowPaneCount - 1); k++)
-            {
-                var bar = _verticalSplitBar[k];
-                if (!Children.Contains(bar))
-                {
-                    Children.Add(bar);
-                }
-                bar.Measure(new Size(_availableSize.Width, _defaultSplitBarSize));
-            }
-            for (int i = 0; i < (layout.RowPaneCount - 1); i++)
-            {
-                for (int j = 0; j < (layout.ColumnPaneCount - 1); j++)
-                {
-                    var bar = _crossSplitBar[i, j];
-                    if (!Children.Contains(bar))
-                    {
-                        Children.Add(bar);
-                    }
-                    bar.Measure(new Size(_availableSize.Width, _availableSize.Width));
-                }
-            }
-            MeasureRangeGroup(layout.RowPaneCount, layout.ColumnPaneCount, layout);
-
-            // sheet标签 
-            if (layout.TabStripHeight > 0.0)
-            {
-                if (_tabStrip == null)
-                {
-                    _tabStrip = new TabStrip(this);
-                    _tabStrip.ActiveTabChanging += OnTabStripActiveTabChanging;
-                    _tabStrip.ActiveTabChanged += OnTabStripActiveTabChanged;
-                    _tabStrip.NewTabNeeded += OnTabStripNewTabNeeded;
-                }
-
-                if (!Children.Contains(_tabStrip))
-                {
-                    Children.Add(_tabStrip);
-                }
-                _tabStrip.Measure(new Size(layout.TabStripWidth, layout.TabStripHeight));
-            }
-            else if (_tabStrip != null)
-            {
-                Children.Remove(_tabStrip);
-                _tabStrip.ActiveTabChanging -= OnTabStripActiveTabChanging;
-                _tabStrip.ActiveTabChanged -= OnTabStripActiveTabChanged;
-                _tabStrip.NewTabNeeded -= OnTabStripNewTabNeeded;
-                _tabStrip = null;
-            }
-
-            // 跟踪层，调整行列宽高时的虚线，拖拽时的标志，冻结线
-            if (!Children.Contains(TrackersContainer))
-            {
-                Children.Add(TrackersContainer);
-            }
-            TrackersContainer.Measure(availableSize);
-
-            // 分隔栏层，多视口时的分割线
-            if (!Children.Contains(SplittingTrackerContainer))
-            {
-                Children.Add(SplittingTrackerContainer);
-            }
-            SplittingTrackerContainer.Measure(availableSize);
-
-            // 光标层，各种图标的png图片
-            if (!Children.Contains(CursorsContainer))
-            {
-                Children.Add(CursorsContainer);
-            }
-            CursorsContainer.Measure(availableSize);
-
-            // 触摸时调整选择范围的圈圈
-            if (!Children.Contains(_topLeftGripper))
-            {
-                Children.Add(_topLeftGripper);
-            }
-            _topLeftGripper.Stroke = new SolidColorBrush(GetGripperStrokeColor());
-            _topLeftGripper.Fill = new SolidColorBrush(GetGripperFillColor());
-            _topLeftGripper.Measure(availableSize);
-
-            if (!Children.Contains(_bottomRightGripper))
-            {
-                Children.Add(_bottomRightGripper);
-            }
-            _bottomRightGripper.Stroke = new SolidColorBrush(GetGripperStrokeColor());
-            _bottomRightGripper.Fill = new SolidColorBrush(GetGripperFillColor());
-            _bottomRightGripper.Measure(availableSize);
-
-            if (!Children.Contains(_resizerGripperContainer))
-            {
-                Children.Add(_resizerGripperContainer);
-            }
-            _resizerGripperContainer.Measure(availableSize);
-
-            if (!Children.Contains(_autoFillIndicatorContainer))
-            {
-                Children.Add(_autoFillIndicatorContainer);
-            }
-            _autoFillIndicatorContainer.Width = 16.0;
-            _autoFillIndicatorContainer.Height = 16.0;
-            _autoFillIndicatorContainer.Measure(availableSize);
-
-            // 进度环
-            _progressRing?.Measure(availableSize);
-            return _availableSize;
-        }
-
-        protected override Size ArrangeOverride(Size finalSize)
-        {
-            Rect rcFull = new Rect(0.0, 0.0, finalSize.Width, finalSize.Height);
-            TrackersContainer.Arrange(rcFull);
-            SplittingTrackerContainer.Arrange(rcFull);
-            ShapeDrawingContainer.Arrange(rcFull);
-            CursorsContainer.Arrange(rcFull);
-
-            double headerX;
-            double headerY;
-            SheetLayout layout = GetSheetLayout();
-
-            // 左上角
-            if ((IsTouchZooming && (_cornerPanel != null)) && (_cornerPanel.Parent != null))
-            {
-                headerX = layout.HeaderX;
-                headerY = layout.HeaderY;
-                _cornerPanel.Arrange(new Rect(headerX, headerY, layout.HeaderWidth, layout.HeaderHeight));
-                _cornerPanel.RenderTransform = _cachedCornerViewportTransform;
-            }
-            else if ((_cornerPanel != null) && (_cornerPanel.Parent != null))
-            {
-                headerX = layout.HeaderX;
-                headerY = layout.HeaderY;
-                if (_cornerPanel.RenderTransform != null)
-                {
-                    _cornerPanel.RenderTransform = null;
-                }
-                if ((_cornerPanel.Width != layout.HeaderWidth) || (_cornerPanel.Height != layout.HeaderHeight))
-                {
-                    _cornerPanel.Arrange(new Rect(headerX, headerY, layout.HeaderWidth, layout.HeaderHeight));
-                }
-            }
-
-            // 列头
-            if (IsTouchZooming && (_cachedColumnHeaderViewportTransform != null))
-            {
-                for (int i = -1; i <= layout.ColumnPaneCount; i++)
-                {
-                    headerX = layout.GetViewportX(i);
-                    headerY = layout.HeaderY;
-                    double viewportWidth = layout.GetViewportWidth(i);
-                    double headerHeight = layout.HeaderHeight;
-                    var viewport = _colHeaders[i + 1];
-                    if ((viewport != null) && (viewport.Parent != null))
-                    {
-                        viewport.Arrange(new Rect(headerX, headerY, viewportWidth, headerHeight));
-                        viewport.RenderTransform = _cachedColumnHeaderViewportTransform[i + 1];
-                    }
-                }
-            }
-            else if (_colHeaders != null)
-            {
-                for (int j = -1; j <= layout.ColumnPaneCount; j++)
-                {
-                    headerX = layout.GetViewportX(j);
-                    if ((IsTouching && (j == layout.ColumnPaneCount)) && ((_translateOffsetX < 0.0) && (_touchStartHitTestInfo.ColumnViewportIndex == (layout.ColumnPaneCount - 1))))
-                    {
-                        headerX += _translateOffsetX;
-                    }
-                    headerY = layout.HeaderY;
-                    double width = layout.GetViewportWidth(j);
-                    double height = layout.HeaderHeight;
-                    var viewport2 = _colHeaders[j + 1];
-                    if ((viewport2 != null) && (viewport2.Parent != null))
-                    {
-                        if (viewport2.RenderTransform != null)
-                        {
-                            viewport2.RenderTransform = null;
-                        }
-                        if ((viewport2.Width != width) || (viewport2.Height != height))
-                        {
-                            if (!IsTouching)
-                            {
-                                viewport2.Arrange(new Rect(headerX, headerY, width, height));
-                            }
-                            else
-                            {
-                                int num9 = (int)Math.Ceiling(_translateOffsetX);
-                                double x = headerX;
-                                if ((_touchStartHitTestInfo != null) && (j == _touchStartHitTestInfo.ColumnViewportIndex))
-                                {
-                                    x += num9;
-                                }
-                                viewport2.Arrange(new Rect(x, headerY, width, height));
-                                if ((x != headerX) && (_translateOffsetX < 0.0))
-                                {
-                                    RectangleGeometry geometry = new RectangleGeometry();
-                                    geometry.Rect = new Rect(Math.Abs((double)(headerX - x)), 0.0, _cachedViewportWidths[j + 1], height);
-                                    viewport2.Clip = geometry;
-                                }
-                                else if ((x != headerX) && (_translateOffsetX > 0.0))
-                                {
-                                    RectangleGeometry geometry2 = new RectangleGeometry();
-                                    geometry2.Rect = new Rect(0.0, 0.0, Math.Max((double)0.0, (double)(_cachedViewportWidths[j + 1] - _translateOffsetX)), height);
-                                    viewport2.Clip = geometry2;
-                                }
-                                else
-                                {
-                                    viewport2.Clip = null;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            // 行头
-            if (IsTouchZooming && (_cachedRowHeaderViewportTransform != null))
-            {
-                for (int k = -1; k <= layout.RowPaneCount; k++)
-                {
-                    headerX = layout.HeaderX;
-                    headerY = layout.GetViewportY(k);
-                    double headerWidth = layout.HeaderWidth;
-                    double viewportHeight = layout.GetViewportHeight(k);
-                    var header = _rowHeaders[k + 1];
-                    if ((header != null) && (header.Parent != null))
-                    {
-                        header.Arrange(new Rect(headerX, headerY, headerWidth, viewportHeight));
-                        header.RenderTransform = _cachedRowHeaderViewportTransform[k + 1];
-                    }
-                }
-            }
-            else if (_rowHeaders != null)
-            {
-                for (int m = -1; m <= layout.RowPaneCount; m++)
-                {
-                    headerX = layout.HeaderX;
-                    headerY = layout.GetViewportY(m);
-                    if (((IsTouching && IsTouching) && ((m == layout.RowPaneCount) && (_translateOffsetY < 0.0))) && (_touchStartHitTestInfo.RowViewportIndex == (layout.RowPaneCount - 1)))
-                    {
-                        headerY += _translateOffsetY;
-                    }
-                    double num15 = layout.HeaderWidth;
-                    double num16 = layout.GetViewportHeight(m);
-                    var header = _rowHeaders[m + 1];
-                    if ((header != null) && (header.Parent != null))
-                    {
-                        if (header.RenderTransform != null)
-                        {
-                            header.RenderTransform = null;
-                        }
-                        if ((header.Width != num15) || (header.Height != num16))
-                        {
-                            if (!IsTouching)
-                            {
-                                header.Arrange(new Rect(headerX, headerY, num15, num16));
-                            }
-                            else
-                            {
-                                int num17 = (int)Math.Ceiling(_translateOffsetY);
-                                double y = headerY;
-                                if ((_touchStartHitTestInfo != null) && (m == _touchStartHitTestInfo.RowViewportIndex))
-                                {
-                                    y += num17;
-                                }
-                                header.Arrange(new Rect(headerX, y, num15, num16));
-                                if ((y != headerY) && (_translateOffsetY < 0.0))
-                                {
-                                    RectangleGeometry geometry3 = new RectangleGeometry();
-                                    geometry3.Rect = new Rect(0.0, Math.Abs((double)(headerY - y)), num15, _cachedViewportHeights[m + 1]);
-                                    header.Clip = geometry3;
-                                }
-                                else if ((y != headerY) && (_translateOffsetY > 0.0))
-                                {
-                                    RectangleGeometry geometry4 = new RectangleGeometry();
-                                    geometry4.Rect = new Rect(0.0, 0.0, num15, Math.Max((double)0.0, (double)(_cachedViewportHeights[m + 1] - _translateOffsetY)));
-                                    header.Clip = geometry4;
-                                }
-                                else
-                                {
-                                    header.Clip = null;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            // 单元格区域
-            if (IsTouchZooming && (_cachedViewportTransform != null))
-            {
-                for (int i = -1; i <= layout.ColumnPaneCount; i++)
-                {
-                    headerX = layout.GetViewportX(i);
-                    double num20 = layout.GetViewportWidth(i);
-                    for (int j = -1; j <= layout.RowPaneCount; j++)
-                    {
-                        headerY = layout.GetViewportY(j);
-                        double num22 = layout.GetViewportHeight(j);
-                        CellsPanel viewport5 = _cellsPanels[j + 1, i + 1];
-                        if (viewport5 != null)
-                        {
-                            viewport5.Arrange(new Rect(headerX, headerY, num20, num22));
-                            viewport5.RenderTransform = _cachedViewportTransform[j + 1, i + 1];
-                        }
-                    }
-                }
-            }
-            else if (_cellsPanels != null)
-            {
-                for (int i = -1; i <= layout.ColumnPaneCount; i++)
-                {
-                    headerX = layout.GetViewportX(i);
-                    if ((IsTouching && (i == layout.ColumnPaneCount)) && ((_translateOffsetX < 0.0) && (_touchStartHitTestInfo.ColumnViewportIndex == (layout.ColumnPaneCount - 1))))
-                    {
-                        headerX += _translateOffsetX;
-                    }
-                    double num24 = layout.GetViewportWidth(i);
-                    for (int j = -1; j <= layout.RowPaneCount; j++)
-                    {
-                        headerY = layout.GetViewportY(j);
-                        if (((IsTouching && IsTouching) && ((j == layout.RowPaneCount) && (_translateOffsetY < 0.0))) && (_touchStartHitTestInfo.RowViewportIndex == (layout.RowPaneCount - 1)))
-                        {
-                            headerY += _translateOffsetY;
-                        }
-                        double num26 = layout.GetViewportHeight(j);
-                        CellsPanel viewport6 = _cellsPanels[j + 1, i + 1];
-                        if (viewport6 != null)
-                        {
-                            if (viewport6.RenderTransform != null)
-                            {
-                                viewport6.RenderTransform = null;
-                            }
-                            if ((viewport6.Width != num24) || (viewport6.Height != num26))
-                            {
-                                if (!IsTouching)
-                                {
-                                    viewport6.Arrange(new Rect(headerX, headerY, num24, num26));
-                                }
-                                else
-                                {
-                                    int num27 = (int)Math.Ceiling(_translateOffsetX);
-                                    int num28 = (int)Math.Ceiling(_translateOffsetY);
-                                    double num29 = headerX;
-                                    double num30 = headerY;
-                                    if ((_touchStartHitTestInfo != null) && (i == _touchStartHitTestInfo.ColumnViewportIndex))
-                                    {
-                                        num29 += num27;
-                                    }
-                                    if ((_touchStartHitTestInfo != null) && (j == _touchStartHitTestInfo.RowViewportIndex))
-                                    {
-                                        num30 += num28;
-                                    }
-                                    viewport6.Arrange(new Rect(num29, num30, num24, num26));
-                                    if (((headerY != num30) && (_translateOffsetY < 0.0)) || ((headerX != num29) && (_translateOffsetX < 0.0)))
-                                    {
-                                        RectangleGeometry geometry5 = new RectangleGeometry();
-                                        geometry5.Rect = new Rect(Math.Abs((double)(headerX - num29)), Math.Abs((double)(headerY - num30)), _cachedViewportWidths[i + 1], _cachedViewportHeights[j + 1]);
-                                        viewport6.Clip = geometry5;
-                                    }
-                                    else if ((headerX != num29) && (_translateOffsetX > 0.0))
-                                    {
-                                        RectangleGeometry geometry6 = new RectangleGeometry();
-                                        geometry6.Rect = new Rect(0.0, 0.0, Math.Max((double)0.0, (double)(_cachedViewportWidths[i + 1] - _translateOffsetX)), _cachedViewportHeights[j + 1]);
-                                        viewport6.Clip = geometry6;
-                                    }
-                                    else if ((headerY != num30) && (_translateOffsetY > 0.0))
-                                    {
-                                        RectangleGeometry geometry7 = new RectangleGeometry();
-                                        geometry7.Rect = new Rect(0.0, 0.0, _cachedViewportWidths[i + 1], Math.Max((double)0.0, (double)(_cachedViewportHeights[j + 1] - _translateOffsetY)));
-                                        viewport6.Clip = geometry7;
-                                    }
-                                    else
-                                    {
-                                        RectangleGeometry geometry8 = new RectangleGeometry();
-                                        geometry8.Rect = new Rect(0.0, 0.0, num24, num26);
-                                        viewport6.Clip = geometry8;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (_horizontalScrollBar != null)
-            {
-                for (int i = 0; i < layout.ColumnPaneCount; i++)
-                {
-                    _horizontalScrollBar[i].Arrange(new Rect(layout.GetHorizontalScrollBarX(i), layout.OrnamentY, layout.GetHorizontalScrollBarWidth(i), layout.OrnamentHeight));
-                }
-            }
-
-            if (_tabStrip != null)
-                _tabStrip.Arrange(new Rect(layout.TabStripX, layout.TabStripY, layout.TabStripWidth, layout.TabStripHeight));
-
-            if (_horizontalSplitBox != null)
-            {
-                for (int i = 0; i < layout.ColumnPaneCount; i++)
-                {
-                    _horizontalSplitBox[i].Arrange(new Rect(layout.GetHorizontalSplitBoxX(i), layout.OrnamentY, layout.GetHorizontalSplitBoxWidth(i), layout.OrnamentHeight));
-                }
-            }
-
-            if (_verticalScrollBar != null)
-            {
-                for (int i = 0; i < layout.RowPaneCount; i++)
-                {
-                    _verticalScrollBar[i].Arrange(new Rect(layout.OrnamentX, layout.GetVerticalScrollBarY(i), layout.OrnamentWidth, layout.GetVerticalScrollBarHeight(i)));
-                }
-            }
-            if (_verticalSplitBox != null)
-            {
-                for (int i = 0; i < layout.RowPaneCount; i++)
-                {
-                    _verticalSplitBox[i].Arrange(new Rect(layout.OrnamentX, layout.GetVerticalSplitBoxY(i), layout.OrnamentWidth, layout.GetVerticalSplitBoxHeight(i)));
-                }
-            }
-            if (_horizontalSplitBar != null)
-            {
-                for (int i = 0; i < (layout.ColumnPaneCount - 1); i++)
-                {
-                    if ((_horizontalSplitBar[i] != null) && (_horizontalSplitBar[i].Parent != null))
-                    {
-                        double horizontalSplitBarX = layout.GetHorizontalSplitBarX(i);
-                        if (IsTouching && (_cachedViewportSplitBarX != null))
-                        {
-                            horizontalSplitBarX = _cachedViewportSplitBarX[i];
-                        }
-                        _horizontalSplitBar[i].Arrange(new Rect(horizontalSplitBarX, layout.Y, _defaultSplitBarSize, _availableSize.Height));
-                    }
-                }
-            }
-            if (_verticalSplitBar != null)
-            {
-                for (int i = 0; i < (layout.RowPaneCount - 1); i++)
-                {
-                    if ((_verticalSplitBar[i] != null) && (_verticalSplitBar[i].Parent != null))
-                    {
-                        double verticalSplitBarY = layout.GetVerticalSplitBarY(i);
-                        if (IsTouching && (_cachedViewportSplitBarY != null))
-                        {
-                            verticalSplitBarY = _cachedViewportSplitBarY[i];
-                        }
-                        _verticalSplitBar[i].Arrange(new Rect(layout.X, verticalSplitBarY, _availableSize.Width, _defaultSplitBarSize));
-                    }
-                }
-            }
-            if (_crossSplitBar != null)
-            {
-                for (int i = 0; i < _crossSplitBar.GetLength(0); i++)
-                {
-                    double num70 = layout.GetVerticalSplitBarY(i);
-                    if (IsTouching && (_cachedViewportSplitBarY != null))
-                    {
-                        num70 = _cachedViewportSplitBarY[i];
-                    }
-                    double num71 = layout.GetVerticalSplitBarHeight(i);
-                    for (int j = 0; j < _crossSplitBar.GetLength(1); j++)
-                    {
-                        double num73 = layout.GetHorizontalSplitBarX(j);
-                        if (IsTouching && (_cachedViewportSplitBarX != null))
-                        {
-                            num73 = _cachedViewportSplitBarX[j];
-                        }
-                        double num74 = layout.GetHorizontalSplitBarWidth(j);
-                        if ((_crossSplitBar[i, j] != null) && (_crossSplitBar[i, j].Parent != null))
-                        {
-                            _crossSplitBar[i, j].Arrange(new Rect(num73, num70, num74, num71));
-                        }
-                    }
-                }
-            }
-
-            ArrangeRangeGroup(layout.RowPaneCount, layout.ColumnPaneCount, layout);
-            Rect rect = new Rect(0.0, 0.0, finalSize.Width, finalSize.Height);
-            if (_rowFreezeLine != null)
-            {
-                _rowFreezeLine.Arrange(rect);
-            }
-            if (_rowTrailingFreezeLine != null)
-            {
-                _rowTrailingFreezeLine.Arrange(rect);
-            }
-            if (_columnFreezeLine != null)
-            {
-                _columnFreezeLine.Arrange(rect);
-            }
-            if (_columnTrailingFreezeLine != null)
-            {
-                _columnTrailingFreezeLine.Arrange(rect);
-            }
-            RectangleGeometry geometry9 = new RectangleGeometry();
-            geometry9.Rect = rect;
-            Clip = geometry9;
-            UpdateTouchSelectionGripper();
-
-            _progressRing?.Arrange(new Rect(0.0, 0.0, finalSize.Width, finalSize.Height));
-            return finalSize;
         }
 
         SheetLayout CreateLayout()
@@ -1511,5 +2325,6 @@ namespace Dt.Base
             if (_progressRing != null)
                 Children.Remove(_progressRing);
         }
+        #endregion
     }
 }
