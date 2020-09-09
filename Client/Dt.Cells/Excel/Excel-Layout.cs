@@ -40,16 +40,6 @@ namespace Dt.Base
             if (!IsWorking)
                 SaveHitInfo(null);
 
-            List<Image> list = new List<Image>();
-            foreach (var element in Children.OfType<Image>())
-            {
-                list.Add(element);
-            }
-            foreach (var element2 in list)
-            {
-                Children.Remove(element2);
-            }
-
             UpdateHorizontalSplitBoxes();
             UpdateVerticalSplitBoxes();
             UpdateHorizontalSplitBars();

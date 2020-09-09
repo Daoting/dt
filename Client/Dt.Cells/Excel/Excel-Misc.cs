@@ -4321,41 +4321,6 @@ namespace Dt.Base
             }
         }
 
-        void InvalidateHeaderRowMeasure(int rowIndex)
-        {
-            int columnViewportCount = GetViewportInfo().ColumnViewportCount;
-            for (int i = -1; i <= columnViewportCount; i++)
-            {
-                Action<CellLayout> action = null;
-                var columnHeaderViewport = GetColumnHeaderRowsPresenter(i);
-                if (columnHeaderViewport != null)
-                {
-                    var objRow = columnHeaderViewport.GetRow(rowIndex);
-                    if (objRow != null)
-                    {
-                        objRow.InvalidateMeasure();
-                    }
-                    if (action == null)
-                    {
-                        action = delegate (CellLayout cellLayout)
-                        {
-                            if ((rowIndex >= cellLayout.Row) && (rowIndex < (cellLayout.Row + cellLayout.RowCount)))
-                            {
-                                objRow = columnHeaderViewport.GetRow(cellLayout.Row);
-                                if (objRow != null)
-                                {
-                                    objRow.InvalidateMeasure();
-                                }
-                            }
-                        };
-                    }
-                    Enumerable.ToList<CellLayout>(GetColumnHeaderCellLayoutModel(i)).ForEach<CellLayout>(action);
-                }
-            }
-            if (_cornerPanel != null)
-                _cornerPanel.InvalidateMeasure();
-        }
-
         internal void InvalidateViewportColumnsLayout()
         {
             if (!IsSuspendInvalidate())
