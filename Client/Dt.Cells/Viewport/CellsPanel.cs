@@ -18,6 +18,7 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Shapes;
 #endregion
 
 namespace Dt.Cells.UI
@@ -36,14 +37,13 @@ namespace Dt.Cells.UI
         internal Rect _cachedActiveSelectionLayout;
         internal Rect[] _cachedChartShapeMovingRects;
         internal Rect[] _cachedChartShapeResizingRects;
-        internal Rect _cachedDragClearRect;
-        internal Rect _cachedDragFillFrameRect;
+        internal Rect _cachedDragFillRect;
         internal Rect _cachedFocusCellLayout;
         internal Rect _cachedSelectionFrameLayout;
         internal List<Rect> _cachedSelectionLayout;
         SpanGraph _cachedSpanGraph;
         CellCachePool _cellCachePool;
-        DragFillLayer _dragFillLayer;
+        Rectangle _dragFillLayer;
         Rect _editorBounds;
         internal EditingLayer _editorLayer;
         FloatingObjectLayer _floatingLayer;
@@ -61,8 +61,7 @@ namespace Dt.Cells.UI
             _cachedSelectionFrameLayout = new Rect();
             _cachedFocusCellLayout = new Rect();
             _editorBounds = new Rect();
-            _cachedDragFillFrameRect = Rect.Empty;
-            _cachedDragClearRect = Rect.Empty;
+            _cachedDragFillRect = _rcEmpty;
             _cellCachePool = new CellCachePool(Excel.ActiveSheet);
             _cachedSpanGraph = new SpanGraph();
 
@@ -80,11 +79,8 @@ namespace Dt.Cells.UI
             Children.Add(_selectionLayer);
 
             // 4 拖拽复制层，点击右下角加号复制格内容
-            if (Excel.CanUserDragFill)
-            {
-                _dragFillLayer = new DragFillLayer { ParentViewport = this };
-                Children.Add(_dragFillLayer);
-            }
+            _dragFillLayer = CreateDragFillLayer();
+            Children.Add(_dragFillLayer);
 
             // 5 新增修饰层，打印时页面边线
             if (p_excel.ShowDecoration)
@@ -778,84 +774,30 @@ namespace Dt.Cells.UI
             }
         }
 
-        void RefreshDragClearRect()
+        internal void RefreshDragFill()
         {
-            CellRange dragClearRange = Excel.GetDragClearRange();
-            if (dragClearRange != null)
+            CellRange dragFillFrameRange = Excel.GetDragFillFrameRange();
+            _cachedDragFillRect = GetRangeBounds(dragFillFrameRange);
+            if (!_cachedDragFillRect.IsEmpty)
             {
-                _cachedDragClearRect = GetRangeBounds(dragClearRange);
-                if (!_cachedDragClearRect.IsEmpty)
-                {
-                    _cachedDragClearRect = new Rect(_cachedDragClearRect.Left - 2.0, _cachedDragClearRect.Top - 2.0, _cachedDragClearRect.Width + 3.0, _cachedDragClearRect.Height + 3.0);
-                }
+                _cachedDragFillRect = new Rect(_cachedDragFillRect.Left - 2.0, _cachedDragFillRect.Top - 2.0, _cachedDragFillRect.Width + 3.0, _cachedDragFillRect.Height + 3.0);
+                if (_dragFillLayer.Width == 0.0)
+                    _dragFillLayer.Width = double.NaN;
+                if (_dragFillLayer.Height == 0.0)
+                    _dragFillLayer.Height = double.NaN;
             }
             else
             {
-                _cachedDragClearRect = Rect.Empty;
+                _cachedDragFillRect = _rcEmpty;
             }
+            _dragFillLayer.Arrange(_cachedDragFillRect);
         }
 
-        internal void RefreshDragFill()
+        internal void ResetDragFill()
         {
-            RefreshDragFillFrame();
-            RefreshDragClearRect();
-            DragFillContainer.InvalidateMeasure();
-            DragFillContainer.InvalidateArrange();
-        }
-
-        void RefreshDragFillFrame()
-        {
-            RefreshDragFillFrameLayouts();
-            RefreshDragFillFrameBorders();
-        }
-
-        void RefreshDragFillFrameBorders()
-        {
-            CellRange dragFillFrameRange = Excel.GetDragFillFrameRange();
-            RowLayoutModel rowLayoutModel = GetRowLayoutModel();
-            if ((rowLayoutModel != null) && (rowLayoutModel.Count > 0))
-            {
-                ColumnLayoutModel viewportColumnLayoutModel = Excel.GetViewportColumnLayoutModel(ColumnViewportIndex);
-                if ((viewportColumnLayoutModel != null) && (viewportColumnLayoutModel.Count > 0))
-                {
-                    int row = rowLayoutModel[0].Row;
-                    int num2 = rowLayoutModel[rowLayoutModel.Count - 1].Row;
-                    int column = viewportColumnLayoutModel[0].Column;
-                    int num4 = viewportColumnLayoutModel[viewportColumnLayoutModel.Count - 1].Column;
-                    if (dragFillFrameRange.Row == -1)
-                    {
-                        DragFillContainer.DragFillFrame.IsTopVisibie = row == 0;
-                        DragFillContainer.DragFillFrame.IsBottomVisibe = num2 == (Excel.ActiveSheet.RowCount - 1);
-                    }
-                    else
-                    {
-                        DragFillContainer.DragFillFrame.IsTopVisibie = (dragFillFrameRange.Row >= row) && (dragFillFrameRange.Row <= num2);
-                        int num5 = (dragFillFrameRange.Row + dragFillFrameRange.RowCount) - 1;
-                        DragFillContainer.DragFillFrame.IsBottomVisibe = (num5 >= row) && (num5 <= num2);
-                    }
-                    if (dragFillFrameRange.Column == -1)
-                    {
-                        DragFillContainer.DragFillFrame.IsLeftVisibe = column == 0;
-                        DragFillContainer.DragFillFrame.IsRightVisibe = num4 == (Excel.ActiveSheet.ColumnCount - 1);
-                    }
-                    else
-                    {
-                        DragFillContainer.DragFillFrame.IsLeftVisibe = (dragFillFrameRange.Column >= column) && (dragFillFrameRange.Column <= num4);
-                        int num6 = (dragFillFrameRange.Column + dragFillFrameRange.ColumnCount) - 1;
-                        DragFillContainer.DragFillFrame.IsRightVisibe = (num6 >= column) && (num6 <= num4);
-                    }
-                }
-            }
-        }
-
-        void RefreshDragFillFrameLayouts()
-        {
-            CellRange dragFillFrameRange = Excel.GetDragFillFrameRange();
-            _cachedDragFillFrameRect = GetRangeBounds(dragFillFrameRange);
-            if (!_cachedDragFillFrameRect.IsEmpty)
-            {
-                _cachedDragFillFrameRect = new Rect(_cachedDragFillFrameRect.Left - 2.0, _cachedDragFillFrameRect.Top - 2.0, _cachedDragFillFrameRect.Width + 3.0, _cachedDragFillFrameRect.Height + 3.0);
-            }
+            _cachedDragFillRect = _rcEmpty;
+            _dragFillLayer.Width = _cachedDragFillRect.Width;
+            _dragFillLayer.Height = _cachedDragFillRect.Height;
         }
 
         internal void RefreshFlaotingObjectResizingFrames()
@@ -922,8 +864,8 @@ namespace Dt.Cells.UI
         {
             if (_selectionLayer != null)
             {
-                FloatingObject[] allSelectedFloatingObjects = Excel.GetAllSelectedFloatingObjects();
-                if ((allSelectedFloatingObjects != null) && (allSelectedFloatingObjects.Length > 0))
+                var allSelectedFloatingObjects = Excel.GetAllSelectedFloatingObjects();
+                if ((allSelectedFloatingObjects != null) && (allSelectedFloatingObjects.Count > 0))
                 {
                     _selectionLayer.Visibility = Visibility.Collapsed;
                     if (Excel.InputDeviceType != InputDeviceType.Touch)
@@ -943,14 +885,6 @@ namespace Dt.Cells.UI
         internal void RemoveCellOverflowLayoutModel(int rowIndex)
         {
             CellOverflowLayoutBuildEngine.RemoveModel(rowIndex);
-        }
-
-        internal void ResetDragFill()
-        {
-            _cachedDragFillFrameRect = Rect.Empty;
-            _cachedDragClearRect = Rect.Empty;
-            DragFillContainer.InvalidateMeasure();
-            DragFillContainer.InvalidateArrange();
         }
 
         internal void ResetFloatingObjectovingFrames()
@@ -1083,22 +1017,6 @@ namespace Dt.Cells.UI
 
         public int ColumnViewportIndex { get; set; }
 
-        internal DragFillLayer DragFillContainer
-        {
-            get
-            {
-                if ((_dragFillLayer == null) && Excel.CanUserDragFill)
-                {
-                    DragFillLayer panel = new DragFillLayer
-                    {
-                        ParentViewport = this
-                    };
-                    _dragFillLayer = panel;
-                }
-                return _dragFillLayer;
-            }
-        }
-
         internal EditingLayer EditingContainer
         {
             get { return _editorLayer; }
@@ -1144,6 +1062,16 @@ namespace Dt.Cells.UI
         }
 
         public Excel Excel { get; private set; }
+
+        Rectangle CreateDragFillLayer()
+        {
+            Rectangle rect = new Rectangle();
+            rect.Stroke = BrushRes.BlackBrush;
+            rect.StrokeThickness = 2.0;
+            rect.StrokeDashArray = new DoubleCollection { 2.0, 1.0 };
+            rect.StrokeDashOffset = 0.5;
+            return rect;
+        }
     }
 
     internal sealed class CellCachePool : ICellSupport

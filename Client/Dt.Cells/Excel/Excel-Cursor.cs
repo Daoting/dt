@@ -17,21 +17,6 @@ namespace Dt.Base
 {
     public partial class Excel
     {
-        Canvas _cursorsContainer;
-
-        Canvas CursorsContainer
-        {
-            get
-            {
-                if (_cursorsContainer == null)
-                {
-                    _cursorsContainer = new Canvas();
-                    Canvas.SetZIndex(_cursorsContainer, 100);
-                }
-                return _cursorsContainer;
-            }
-        }
-
         internal void ResetCursor()
         {
             SetBuiltInCursor(CoreCursorType.Arrow);
@@ -129,7 +114,7 @@ namespace Dt.Base
             {
                 _mouseCursor = new Image();
                 _mouseCursor.IsHitTestVisible = false;
-                CursorsContainer.Children.Add(_mouseCursor);
+                _trackersPanel.Children.Add(_mouseCursor);
             }
             _mouseCursor.Opacity = 1.0;
 #if UWP

@@ -40,13 +40,6 @@ namespace Dt.Base
             if (!IsWorking)
                 SaveHitInfo(null);
 
-            UpdateHorizontalSplitBoxes();
-            UpdateVerticalSplitBoxes();
-            UpdateHorizontalSplitBars();
-            UpdateVerticalSplitBars();
-            UpdateCrossSplitBars();
-            UpdateFreezeLines();
-
             //**************最底部三层为：视口 列头 行头，因可能动态增删，采用Insert到0的方式，后插入的在底层**************/
             SheetLayout layout = GetSheetLayout();
             bool reload = (_cellsPanels != null)
@@ -60,49 +53,22 @@ namespace Dt.Base
             MeasureCellPanels(reload, layout);
             // 左上角
             MeasureCornerPanel(layout);
-            // 水平滚动栏
-            MeasureHorScrollBar(layout);
-            // 垂直滚动栏
-            MeasureVerScrollBar(layout);
+            // 滚动栏
+            MeasureScrollBar(layout);
             // 水平/垂直分隔栏
             MeasureSplitBars(layout);
             // 区域分组
             MeasureRangeGroup(layout);
-            // sheet标签 
+            // sheet标签
             MeasureTabStrip(layout);
+            // 触摸时调整选择范围的圈圈、调整列宽行高的标志、自动填充标志
+            MeasureSelectionGripper();
 
-            // 跟踪层，调整行列宽高时的虚线，拖拽时的标志，冻结线
-            if (!Children.Contains(TrackersContainer))
-                Children.Add(TrackersContainer);
-            TrackersContainer.Measure(availableSize);
-
-            // 分隔栏层，多视口时的分割线
-            if (!Children.Contains(SplittingTrackerContainer))
-                Children.Add(SplittingTrackerContainer);
-            SplittingTrackerContainer.Measure(availableSize);
-
-            // 光标层，各种图标的png图片
-            if (!Children.Contains(CursorsContainer))
-                Children.Add(CursorsContainer);
-            CursorsContainer.Measure(availableSize);
-
-            // 触摸时调整选择范围的圈圈
-            if (!Children.Contains(_topLeftGripper))
-                Children.Add(_topLeftGripper);
-            _topLeftGripper.Measure(availableSize);
-
-            if (!Children.Contains(_bottomRightGripper))
-                Children.Add(_bottomRightGripper);
-            _bottomRightGripper.Measure(availableSize);
-
-            // 触摸时调整列宽行高的标志
-            if (!Children.Contains(_resizerGripperContainer))
-                Children.Add(_resizerGripperContainer);
-            _resizerGripperContainer.Measure(availableSize);
-
-            if (!Children.Contains(_autoFillIndicatorContainer))
-                Children.Add(_autoFillIndicatorContainer);
-            _autoFillIndicatorContainer.Measure(availableSize);
+            // 跟踪层：调整行列宽高时的虚线，拖拽时的标志，冻结线，动态调整时的分隔栏，各种png图片的光标
+            UpdateFreezeLines();
+            if (!Children.Contains(_trackersPanel))
+                Children.Add(_trackersPanel);
+            _trackersPanel.Measure(availableSize);
 
             // 进度环
             _progressRing?.Measure(availableSize);
@@ -297,8 +263,9 @@ namespace Dt.Base
             }
         }
 
-        void MeasureHorScrollBar(SheetLayout p_layout)
+        void MeasureScrollBar(SheetLayout p_layout)
         {
+            UpdateHorizontalSplitBoxes();
             if (p_layout.OrnamentHeight > 0.0)
             {
                 for (int i = 0; i < p_layout.ColumnPaneCount; i++)
@@ -352,10 +319,7 @@ namespace Dt.Base
                 }
             }
 
-        }
-
-        void MeasureVerScrollBar(SheetLayout p_layout)
-        {
+            UpdateVerticalSplitBoxes();
             if (p_layout.OrnamentWidth > 0.0)
             {
                 for (int i = 0; i < p_layout.RowPaneCount; i++)
@@ -412,6 +376,10 @@ namespace Dt.Base
 
         void MeasureSplitBars(SheetLayout p_layout)
         {
+            UpdateHorizontalSplitBars();
+            UpdateVerticalSplitBars();
+            UpdateCrossSplitBars();
+
             for (int j = 0; j < (p_layout.ColumnPaneCount - 1); j++)
             {
                 var bar = _horizontalSplitBar[j];
@@ -624,6 +592,34 @@ namespace Dt.Base
             }
         }
 
+        void MeasureSelectionGripper()
+        {
+            Size size = new Size(16, 16);
+
+            // 触摸时调整选择范围的圈圈
+            if (!Children.Contains(_topLeftGripper))
+                Children.Add(_topLeftGripper);
+            _topLeftGripper.Measure(size);
+
+            if (!Children.Contains(_bottomRightGripper))
+                Children.Add(_bottomRightGripper);
+            _bottomRightGripper.Measure(size);
+
+            // 触摸时调整列宽/行高的标志
+            if (!Children.Contains(_rowResizeGripper))
+                Children.Add(_rowResizeGripper);
+            _rowResizeGripper.Measure(size);
+
+            if (!Children.Contains(_colResizeGripper))
+                Children.Add(_colResizeGripper);
+            _colResizeGripper.Measure(size);
+
+            // 自动填充格标志
+            if (!Children.Contains(_autoFillIndicator))
+                Children.Add(_autoFillIndicator);
+            _autoFillIndicator.Measure(size);
+        }
+
         void ClearRowGroups()
         {
             foreach (GcRangeGroup group in _rowGroupPresenters)
@@ -674,35 +670,34 @@ namespace Dt.Base
         #region 布局
         protected override Size ArrangeOverride(Size finalSize)
         {
-            Rect rcFull = new Rect(0.0, 0.0, finalSize.Width, finalSize.Height);
-            TrackersContainer.Arrange(rcFull);
-            SplittingTrackerContainer.Arrange(rcFull);
-            ShapeDrawingContainer.Arrange(rcFull);
-            CursorsContainer.Arrange(rcFull);
-
             SheetLayout layout = GetSheetLayout();
-            // 左上角
-            ArrangeCornerPanel(layout);
-            // 列头
-            ArrangeColHeaders(layout);
             // 行头
             ArrangeRowHeaders(layout);
+            // 列头
+            ArrangeColHeaders(layout);
             // 单元格区域
             ArrangeCellPanels(layout);
+            // 左上角
+            ArrangeCornerPanel(layout);
             // 滚动栏
             ArrangeScrollBar(layout);
             // 分隔栏
             ArrangeSplitBar(layout);
             // 区域分组
             ArrangeRangeGroup(layout);
-            // 触摸时调整选择范围的圈圈 和 调整列宽行高的标志
+            // sheet标签
+            _tabStrip?.Arrange(new Rect(layout.TabStripX, layout.TabStripY, layout.TabStripWidth, layout.TabStripHeight));
+            // 触摸时调整选择范围的圈圈、调整列宽行高的标志、自动填充标志
             ArrangeSelectionGripper();
 
-            _tabStrip?.Arrange(new Rect(layout.TabStripX, layout.TabStripY, layout.TabStripWidth, layout.TabStripHeight));
+            // 跟踪层
+            Rect rcFull = new Rect(0.0, 0.0, finalSize.Width, finalSize.Height);
+            _trackersPanel.Arrange(rcFull);
             _rowFreezeLine?.Arrange(rcFull);
             _rowTrailingFreezeLine?.Arrange(rcFull);
             _columnFreezeLine?.Arrange(rcFull);
             _columnTrailingFreezeLine?.Arrange(rcFull);
+            // 进度环
             _progressRing?.Arrange(rcFull);
 
             Clip = new RectangleGeometry { Rect = rcFull };
@@ -1194,421 +1189,370 @@ namespace Dt.Base
 
         internal void ArrangeSelectionGripper()
         {
-            Rect? autoFillIndicatorRec;
-            if (((InputDeviceType != InputDeviceType.Touch) || IsTouchPromotedMouseMessage))
+            if (InputDeviceType != InputDeviceType.Touch || IsTouchPromotedMouseMessage)
             {
-                Rect rect16 = new Rect(0.0, 0.0, 0.0, 0.0);
-                _gripperLocations = null;
-                ResizerGripperRect = null;
-                _topLeftGripper.Arrange(rect16);
-                _bottomRightGripper.Arrange(rect16);
-                _resizerGripperContainer.Arrange(rect16);
-                autoFillIndicatorRec = _autoFillIndicatorRec;
-                if (autoFillIndicatorRec.HasValue)
-                {
-                    _autoFillIndicatorContainer.Arrange(rect16);
-                    _autoFillIndicatorRec = null;
-                }
-                if ((_touchToolbarPopup != null) && _touchToolbarPopup.IsOpen)
-                {
-                    _touchToolbarPopup.IsOpen = false;
-                }
+                ArrangeMouseSelectionGripper();
                 return;
             }
 
-            Rect rect = new Rect(0.0, 0.0, 0.0, 0.0);
-            CellsPanel viewportRowsPresenter = GetViewportRowsPresenter(GetActiveRowViewportIndex(), GetActiveColumnViewportIndex());
-            if (viewportRowsPresenter == null)
+            CellsPanel cellsPanel = GetViewportRowsPresenter(GetActiveRowViewportIndex(), GetActiveColumnViewportIndex());
+            if (cellsPanel == null || cellsPanel.Excel.ActiveSheet.Selections.Count <= 0)
+                return;
+
+            if (IsContinueTouchOperation
+                || IsEditing
+                || ActiveSheet.SelectionPolicy == SelectionPolicy.Single
+                || GetAllSelectedFloatingObjects().Count > 0)
             {
+                HideSelectionGripper();
                 return;
             }
-            if ((IsContinueTouchOperation || IsEditing) || (ActiveSheet.SelectionPolicy == SelectionPolicy.Single))
-            {
-                if (_gripperLocations != null)
-                {
-                    CachedGripperLocation = _gripperLocations;
-                }
-                _gripperLocations = null;
-                _topLeftGripper.Arrange(rect);
-                _bottomRightGripper.Arrange(rect);
-                _resizerGripperContainer.Arrange(rect);
-                return;
-            }
-            FloatingObject[] allSelectedFloatingObjects = GetAllSelectedFloatingObjects();
-            if ((allSelectedFloatingObjects != null) && (allSelectedFloatingObjects.Length > 0))
-            {
-                if (_gripperLocations != null)
-                {
-                    CachedGripperLocation = _gripperLocations;
-                }
-                _gripperLocations = null;
-                _topLeftGripper.Arrange(rect);
-                _bottomRightGripper.Arrange(rect);
-                _resizerGripperContainer.Arrange(rect);
-                return;
-            }
+
             CellRange activeSelection = GetActiveSelection();
             if ((activeSelection == null) && (ActiveSheet.Selections.Count > 0))
-            {
                 activeSelection = ActiveSheet.Selections[0];
-            }
             if (activeSelection == null)
             {
-                if (_gripperLocations != null)
-                {
-                    CachedGripperLocation = _gripperLocations;
-                }
-                _gripperLocations = null;
-                _topLeftGripper.Arrange(rect);
-                _bottomRightGripper.Arrange(rect);
-                _resizerGripperContainer.Arrange(rect);
+                HideSelectionGripper();
                 return;
             }
-            autoFillIndicatorRec = _autoFillIndicatorRec;
-            if (autoFillIndicatorRec.HasValue)
+
+            if (_autoFillIndicatorRect.HasValue)
             {
-                if (_gripperLocations != null)
-                {
-                    CachedGripperLocation = _gripperLocations;
-                }
-                _gripperLocations = null;
-                _topLeftGripper.Arrange(rect);
-                _bottomRightGripper.Arrange(rect);
-                _resizerGripperContainer.Arrange(rect);
-                Rect autoFillIndicatorRect = GetAutoFillIndicatorRect(viewportRowsPresenter, activeSelection);
-                _autoFillIndicatorContainer.Arrange(autoFillIndicatorRect);
-                _autoFillIndicatorRec = new Rect?(autoFillIndicatorRect);
+                HideSelectionGripper();
+                Rect autoFillIndicatorRect = GetAutoFillIndicatorRect(cellsPanel, activeSelection);
+                _autoFillIndicator.Arrange(autoFillIndicatorRect);
+                _autoFillIndicatorRect = new Rect?(autoFillIndicatorRect);
                 return;
             }
-            if (viewportRowsPresenter.Excel.ActiveSheet.Selections.Count <= 0)
-            {
-                return;
-            }
-            SheetLayout sheetLayout = GetSheetLayout();
-            Rect rangeBounds = viewportRowsPresenter._cachedSelectionFrameLayout;
-            if (!viewportRowsPresenter.SelectionContainer.IsAnchorCellInSelection)
-            {
-                rangeBounds = viewportRowsPresenter._cachedFocusCellLayout;
-            }
-            if (viewportRowsPresenter.Excel.ActiveSheet.Selections.Count > 0)
-            {
-                rangeBounds = viewportRowsPresenter.GetRangeBounds(activeSelection);
-            }
-            List<Tuple<Point, double>> list = new List<Tuple<Point, double>>();
+
             if (IsEntrieSheetSelection())
             {
-                _gripperLocations = null;
-                _topLeftGripper.Arrange(rect);
-                _bottomRightGripper.Arrange(rect);
-                _resizerGripperContainer.Arrange(rect);
-                autoFillIndicatorRec = null;
-                ResizerGripperRect = autoFillIndicatorRec;
+                // 全选
+                HideSelectionAndResizeGripper();
+                return;
             }
-            else
+
+            SheetLayout sheetLayout = GetSheetLayout();
+            Rect rangeBounds = cellsPanel._cachedSelectionFrameLayout;
+            if (!cellsPanel.SelectionContainer.IsAnchorCellInSelection)
             {
-                double viewportY;
-                bool flag2;
-                if (!IsEntrieColumnSelection())
+                rangeBounds = cellsPanel._cachedFocusCellLayout;
+            }
+            if (cellsPanel.Excel.ActiveSheet.Selections.Count > 0)
+            {
+                rangeBounds = cellsPanel.GetRangeBounds(activeSelection);
+            }
+
+            List<Tuple<Point, double>> list = new List<Tuple<Point, double>>();
+            double viewportY;
+            bool flag2;
+            if (!IsEntrieColumnSelection())
+            {
+                // 非整列非整行
+                if (!IsEntrieRowSelection())
                 {
-                    if (!IsEntrieRowSelection())
+                    double num27 = sheetLayout.GetViewportX(cellsPanel.ColumnViewportIndex);
+                    double num28 = sheetLayout.GetViewportY(cellsPanel.RowViewportIndex);
+                    int num29 = GetActiveRowViewportIndex();
+                    int activeColumnViewportIndex = GetActiveColumnViewportIndex();
+                    int viewportLeftColumn = GetViewportLeftColumn(activeColumnViewportIndex);
+                    int num32 = GetViewportTopRow(num29);
+                    int num33 = GetViewportBottomRow(num29);
+                    int viewportRightColumn = GetViewportRightColumn(activeColumnViewportIndex);
+                    int num35 = -7;
+                    int num36 = -7;
+                    if ((activeSelection.Column < viewportLeftColumn) || (activeSelection.Row < num32))
                     {
-                        double num27 = sheetLayout.GetViewportX(viewportRowsPresenter.ColumnViewportIndex);
-                        double num28 = sheetLayout.GetViewportY(viewportRowsPresenter.RowViewportIndex);
-                        int num29 = GetActiveRowViewportIndex();
-                        int activeColumnViewportIndex = GetActiveColumnViewportIndex();
-                        int viewportLeftColumn = GetViewportLeftColumn(activeColumnViewportIndex);
-                        int num32 = GetViewportTopRow(num29);
-                        int num33 = GetViewportBottomRow(num29);
-                        int viewportRightColumn = GetViewportRightColumn(activeColumnViewportIndex);
-                        int num35 = -7;
-                        int num36 = -7;
-                        if ((activeSelection.Column < viewportLeftColumn) || (activeSelection.Row < num32))
+                        list.Add(Tuple.Create<Point, double>(new Point(-2147483648.0, -2147483648.0), 0.0));
+                    }
+                    else
+                    {
+                        list.Add(Tuple.Create<Point, double>(new Point((num27 + rangeBounds.X) + num35, (num28 + rangeBounds.Y) + num36), 16.0));
+                    }
+                    num35 = (int)(rangeBounds.Width - 9.0);
+                    num36 = (int)(rangeBounds.Height - 9.0);
+                    int num37 = (activeSelection.Row + activeSelection.RowCount) - 1;
+                    int num38 = (activeSelection.Column + activeSelection.ColumnCount) - 1;
+                    if (num37 > num33)
+                    {
+                        num36 = 0x7fffffff;
+                    }
+                    if (num38 > viewportRightColumn)
+                    {
+                        num35 = 0x7fffffff;
+                    }
+                    int num39 = GetActiveRowViewportIndex();
+                    int num40 = GetActiveColumnViewportIndex();
+                    ActiveSheet.GetViewportInfo();
+                    if ((num35 == 0x7fffffff) || (num36 == 0x7fffffff))
+                    {
+                        for (int i = num39; i <= GetViewportInfo(ActiveSheet).RowViewportCount; i++)
                         {
-                            list.Add(Tuple.Create<Point, double>(new Point(-2147483648.0, -2147483648.0), 0.0));
-                        }
-                        else
-                        {
-                            list.Add(Tuple.Create<Point, double>(new Point((num27 + rangeBounds.X) + num35, (num28 + rangeBounds.Y) + num36), 16.0));
-                        }
-                        num35 = (int)(rangeBounds.Width - 9.0);
-                        num36 = (int)(rangeBounds.Height - 9.0);
-                        int num37 = (activeSelection.Row + activeSelection.RowCount) - 1;
-                        int num38 = (activeSelection.Column + activeSelection.ColumnCount) - 1;
-                        if (num37 > num33)
-                        {
-                            num36 = 0x7fffffff;
-                        }
-                        if (num38 > viewportRightColumn)
-                        {
-                            num35 = 0x7fffffff;
-                        }
-                        int num39 = GetActiveRowViewportIndex();
-                        int num40 = GetActiveColumnViewportIndex();
-                        ActiveSheet.GetViewportInfo();
-                        if ((num35 == 0x7fffffff) || (num36 == 0x7fffffff))
-                        {
-                            for (int i = num39; i <= GetViewportInfo(ActiveSheet).RowViewportCount; i++)
+                            for (int j = num40; j <= GetViewportInfo(ActiveSheet).ColumnViewportCount; j++)
                             {
-                                for (int j = num40; j <= GetViewportInfo(ActiveSheet).ColumnViewportCount; j++)
+                                num33 = GetViewportBottomRow(i);
+                                viewportRightColumn = GetViewportRightColumn(j);
+                                if ((num33 >= num37) && (viewportRightColumn >= num38))
                                 {
-                                    num33 = GetViewportBottomRow(i);
-                                    viewportRightColumn = GetViewportRightColumn(j);
-                                    if ((num33 >= num37) && (viewportRightColumn >= num38))
+                                    CellsPanel viewport8 = _cellsPanels[i + 1, j + 1];
+                                    if (viewport8 != null)
                                     {
-                                        CellsPanel viewport8 = _cellsPanels[i + 1, j + 1];
-                                        if (viewport8 != null)
+                                        Rect rect13 = viewport8._cachedSelectionFrameLayout;
+                                        if (!viewport8.SelectionContainer.IsAnchorCellInSelection)
                                         {
-                                            Rect rect13 = viewport8._cachedSelectionFrameLayout;
-                                            if (!viewport8.SelectionContainer.IsAnchorCellInSelection)
+                                            rect13 = viewport8._cachedFocusCellLayout;
+                                        }
+                                        num35 = (int)(((sheetLayout.GetViewportX(j) + rect13.X) + rect13.Width) - 9.0);
+                                        num36 = (int)(((sheetLayout.GetViewportY(i) + rect13.Y) + rect13.Height) - 9.0);
+                                        if (list.Count == 1)
+                                        {
+                                            if ((num35 > (sheetLayout.GetViewportX(j) + sheetLayout.GetViewportWidth(j))) || (num36 > (sheetLayout.GetViewportY(i) + sheetLayout.GetViewportHeight(i))))
                                             {
-                                                rect13 = viewport8._cachedFocusCellLayout;
+                                                list.Add(Tuple.Create<Point, double>(new Point(2147483647.0, 2147483647.0), 0.0));
                                             }
-                                            num35 = (int)(((sheetLayout.GetViewportX(j) + rect13.X) + rect13.Width) - 9.0);
-                                            num36 = (int)(((sheetLayout.GetViewportY(i) + rect13.Y) + rect13.Height) - 9.0);
-                                            if (list.Count == 1)
+                                            else
                                             {
-                                                if ((num35 > (sheetLayout.GetViewportX(j) + sheetLayout.GetViewportWidth(j))) || (num36 > (sheetLayout.GetViewportY(i) + sheetLayout.GetViewportHeight(i))))
-                                                {
-                                                    list.Add(Tuple.Create<Point, double>(new Point(2147483647.0, 2147483647.0), 0.0));
-                                                }
-                                                else
-                                                {
-                                                    list.Add(Tuple.Create<Point, double>(new Point((double)num35, (double)num36), 16.0));
-                                                }
+                                                list.Add(Tuple.Create<Point, double>(new Point((double)num35, (double)num36), 16.0));
                                             }
                                         }
                                     }
                                 }
                             }
-                            if (list.Count == 1)
-                            {
-                                list.Add(Tuple.Create<Point, double>(new Point(2147483647.0, 2147483647.0), 0.0));
-                            }
+                        }
+                        if (list.Count == 1)
+                        {
+                            list.Add(Tuple.Create<Point, double>(new Point(2147483647.0, 2147483647.0), 0.0));
+                        }
+                    }
+                    else
+                    {
+                        num35 = (int)((num35 + num27) + rangeBounds.X);
+                        num36 = (int)((num36 + num28) + rangeBounds.Y);
+                        if ((num35 > (sheetLayout.GetViewportX(activeColumnViewportIndex) + sheetLayout.GetViewportWidth(activeColumnViewportIndex))) || (num36 > (sheetLayout.GetViewportY(num29) + sheetLayout.GetViewportHeight(num29))))
+                        {
+                            list.Add(Tuple.Create<Point, double>(new Point(2147483647.0, 2147483647.0), 0.0));
                         }
                         else
                         {
-                            num35 = (int)((num35 + num27) + rangeBounds.X);
-                            num36 = (int)((num36 + num28) + rangeBounds.Y);
-                            if ((num35 > (sheetLayout.GetViewportX(activeColumnViewportIndex) + sheetLayout.GetViewportWidth(activeColumnViewportIndex))) || (num36 > (sheetLayout.GetViewportY(num29) + sheetLayout.GetViewportHeight(num29))))
-                            {
-                                list.Add(Tuple.Create<Point, double>(new Point(2147483647.0, 2147483647.0), 0.0));
-                            }
-                            else
-                            {
-                                list.Add(Tuple.Create<Point, double>(new Point((double)num35, (double)num36), 16.0));
-                            }
+                            list.Add(Tuple.Create<Point, double>(new Point((double)num35, (double)num36), 16.0));
                         }
-                        goto Label_10BF;
-                    }
-                    double viewportX = sheetLayout.GetViewportX(viewportRowsPresenter.ColumnViewportIndex);
-                    viewportY = sheetLayout.GetViewportY(viewportRowsPresenter.RowViewportIndex);
-                    int viewportTopRow = GetViewportTopRow(viewportRowsPresenter.RowViewportIndex);
-                    int viewportBottomRow = GetViewportBottomRow(viewportRowsPresenter.RowViewportIndex);
-                    if (ActiveSheet.FrozenColumnCount > 0)
-                    {
-                        CellsPanel viewport5 = GetViewportRowsPresenter(GetActiveRowViewportIndex(), GetActiveColumnViewportIndex() + 1);
-                        Rect rect9 = viewport5._cachedSelectionFrameLayout;
-                        if (!viewport5.SelectionContainer.IsAnchorCellInSelection)
-                        {
-                            rect9 = viewportRowsPresenter._cachedFocusCellLayout;
-                        }
-                        rangeBounds = new Rect(rangeBounds.X, rangeBounds.Y, rangeBounds.Width + rect9.Width, rangeBounds.Height);
-                    }
-                    if (activeSelection.Row >= viewportTopRow)
-                    {
-                        list.Add(Tuple.Create<Point, double>(new Point(((viewportX + rangeBounds.X) + (rangeBounds.Width / 2.0)) - 7.0, (viewportY + rangeBounds.Y) - 16.0), 16.0));
-                    }
-                    else
-                    {
-                        list.Add(Tuple.Create<Point, double>(new Point(((viewportX + rangeBounds.X) + (rangeBounds.Width / 2.0)) - 7.0, -2147483648.0), 0.0));
-                    }
-                    int num18 = (int)(rangeBounds.Height - 9.0);
-                    int num19 = (activeSelection.Row + activeSelection.RowCount) - 1;
-                    if (num19 > viewportBottomRow)
-                    {
-                        num18 = 0x7fffffff;
-                    }
-                    int activeRowViewportIndex = GetActiveRowViewportIndex();
-                    ActiveSheet.GetViewportInfo();
-                    flag2 = true;
-                    int rowViewportIndex = activeRowViewportIndex;
-                    if (num18 == 0x7fffffff)
-                    {
-                        while (rowViewportIndex <= GetViewportInfo(ActiveSheet).RowViewportCount)
-                        {
-                            if (GetViewportBottomRow(rowViewportIndex) >= num19)
-                            {
-                                CellsPanel viewport6 = _cellsPanels[rowViewportIndex + 1, viewportRowsPresenter.ColumnViewportIndex + 1];
-                                if (viewport6 != null)
-                                {
-                                    Rect rect10 = viewport6._cachedSelectionFrameLayout;
-                                    if (!viewport6.SelectionContainer.IsAnchorCellInSelection)
-                                    {
-                                        rect10 = viewport6._cachedFocusCellLayout;
-                                    }
-                                    num18 = (int)((sheetLayout.GetViewportY(rowViewportIndex) + rect10.Y) + rect10.Height);
-                                    if (list.Count == 1)
-                                    {
-                                        if (num18 <= (sheetLayout.GetViewportY(rowViewportIndex) + sheetLayout.GetViewportHeight(rowViewportIndex)))
-                                        {
-                                            list.Add(Tuple.Create<Point, double>(new Point(((viewportX + rangeBounds.X) + (rangeBounds.Width / 2.0)) - 7.0, (double)num18), 16.0));
-                                        }
-                                        else
-                                        {
-                                            list.Add(Tuple.Create<Point, double>(new Point(((viewportX + rangeBounds.X) + (rangeBounds.Width / 2.0)) - 7.0, 2147483647.0), 0.0));
-                                            flag2 = false;
-                                        }
-                                        break;
-                                    }
-                                }
-                            }
-                            rowViewportIndex++;
-                        }
-                    }
-                    else
-                    {
-                        double viewportHeight = sheetLayout.GetViewportHeight(viewportRowsPresenter.RowViewportIndex);
-                        double y = (viewportY + rangeBounds.Y) + rangeBounds.Height;
-                        if (y <= (viewportY + viewportHeight))
-                        {
-                            list.Add(Tuple.Create<Point, double>(new Point(((viewportX + rangeBounds.X) + (rangeBounds.Width / 2.0)) - 7.0, y), 16.0));
-                        }
-                        else
-                        {
-                            list.Add(Tuple.Create<Point, double>(new Point(viewportX, 2147483647.0), 0.0));
-                            flag2 = false;
-                        }
-                    }
-                }
-                else
-                {
-                    double num = sheetLayout.GetViewportX(viewportRowsPresenter.ColumnViewportIndex);
-                    double num2 = sheetLayout.GetViewportY(viewportRowsPresenter.RowViewportIndex);
-                    int num3 = GetViewportLeftColumn(viewportRowsPresenter.ColumnViewportIndex);
-                    int num4 = GetViewportRightColumn(viewportRowsPresenter.ColumnViewportIndex);
-                    if (ActiveSheet.FrozenRowCount > 0)
-                    {
-                        CellsPanel viewport2 = GetViewportRowsPresenter(GetActiveRowViewportIndex() + 1, GetActiveColumnViewportIndex());
-                        Rect rect5 = viewport2._cachedSelectionFrameLayout;
-                        if (!viewport2.SelectionContainer.IsAnchorCellInSelection)
-                        {
-                            rect5 = viewport2._cachedFocusCellLayout;
-                        }
-                        rangeBounds = new Rect(rangeBounds.X, rangeBounds.Y, rangeBounds.Width, rangeBounds.Height + rect5.Height);
-                    }
-                    if (activeSelection.Column >= num3)
-                    {
-                        list.Add(Tuple.Create<Point, double>(new Point((num + rangeBounds.X) - 16.0, ((num2 + rangeBounds.Y) + (rangeBounds.Height / 2.0)) - 9.0), 16.0));
-                    }
-                    else
-                    {
-                        list.Add(Tuple.Create<Point, double>(new Point(-2147483648.0, ((num2 + rangeBounds.Y) + (rangeBounds.Height / 2.0)) - 9.0), 0.0));
-                    }
-                    int num5 = (int)(rangeBounds.Width - 9.0);
-                    int num6 = (activeSelection.Column + activeSelection.ColumnCount) - 1;
-                    if (num6 > num4)
-                    {
-                        num5 = 0x7fffffff;
-                    }
-                    int num7 = GetActiveColumnViewportIndex();
-                    ActiveSheet.GetViewportInfo();
-                    bool flag = true;
-                    int columnViewportIndex = num7;
-                    if (num5 == 0x7fffffff)
-                    {
-                        while (columnViewportIndex <= GetViewportInfo(ActiveSheet).ColumnViewportCount)
-                        {
-                            if (GetViewportRightColumn(columnViewportIndex) >= num6)
-                            {
-                                CellsPanel viewport3 = _cellsPanels[viewportRowsPresenter.RowViewportIndex + 1, columnViewportIndex + 1];
-                                if (viewport3 != null)
-                                {
-                                    Rect rect6 = viewport3._cachedSelectionFrameLayout;
-                                    if (!viewport3.SelectionContainer.IsAnchorCellInSelection)
-                                    {
-                                        rect6 = viewport3._cachedFocusCellLayout;
-                                    }
-                                    num5 = (int)((sheetLayout.GetViewportX(columnViewportIndex) + rect6.X) + rect6.Width);
-                                    if (list.Count == 1)
-                                    {
-                                        if (num5 <= (sheetLayout.GetViewportX(columnViewportIndex) + sheetLayout.GetViewportWidth(columnViewportIndex)))
-                                        {
-                                            list.Add(Tuple.Create<Point, double>(new Point((double)num5, ((num2 + rangeBounds.Y) + (rangeBounds.Height / 2.0)) - 9.0), 16.0));
-                                        }
-                                        else
-                                        {
-                                            list.Add(Tuple.Create<Point, double>(new Point(-2147483648.0, ((num2 + rangeBounds.Y) + (rangeBounds.Height / 2.0)) - 9.0), 0.0));
-                                            flag = false;
-                                        }
-                                        break;
-                                    }
-                                }
-                            }
-                            columnViewportIndex++;
-                        }
-                    }
-                    else
-                    {
-                        double viewportWidth = sheetLayout.GetViewportWidth(viewportRowsPresenter.ColumnViewportIndex);
-                        double x = (num + rangeBounds.X) + rangeBounds.Width;
-                        if (x <= (num + viewportWidth))
-                        {
-                            list.Add(Tuple.Create<Point, double>(new Point(x, ((num2 + rangeBounds.Y) + (rangeBounds.Height / 2.0)) - 9.0), 16.0));
-                        }
-                        else
-                        {
-                            list.Add(Tuple.Create<Point, double>(new Point(2147483647.0, ((num2 + rangeBounds.Y) + (rangeBounds.Height / 2.0)) - 9.0), 0.0));
-                            flag = false;
-                        }
-                    }
-                    var colHeader = _colHeaders[viewportRowsPresenter.ColumnViewportIndex + 1];
-                    CellRange range2 = new CellRange(ActiveSheet.ColumnHeader.RowCount - 1, (activeSelection.Column + activeSelection.ColumnCount) - 1, 1, 1);
-                    Rect rect7 = colHeader.GetRangeBounds(range2, SheetArea.ColumnHeader);
-                    int column = (activeSelection.Column + activeSelection.ColumnCount) - 1;
-                    if ((ActiveSheet.GetColumnResizable(column) && !rect7.IsEmpty) && flag)
-                    {
-                        double num12 = 0.0;
-                        for (int k = 0; k < ActiveSheet.ColumnHeader.RowCount; k++)
-                        {
-                            num12 += ActiveSheet.GetActualRowHeight(k, SheetArea.ColumnHeader) * ActiveSheet.ZoomFactor;
-                        }
-                        Rect rect8 = new Rect(((num + rect7.X) + rect7.Width) - 8.0, (colHeader.Location.Y + num12) - 16.0, 16.0, 16.0);
-                        _resizerGripperContainer.Child = _cachedColumnResizerGripperImage;
-                        _resizerGripperContainer.Arrange(rect8);
-                        ResizerGripperRect = new Rect?(rect8);
-                    }
-                    else
-                    {
-                        _resizerGripperContainer.Arrange(rect);
-                        autoFillIndicatorRec = null;
-                        ResizerGripperRect = autoFillIndicatorRec;
                     }
                     goto Label_10BF;
                 }
 
-                var header = _rowHeaders[viewportRowsPresenter.RowViewportIndex + 1];
-                CellRange range = new CellRange((activeSelection.Row + activeSelection.RowCount) - 1, ActiveSheet.RowHeader.ColumnCount - 1, 1, 1);
-                Rect rect11 = header.GetRangeBounds(range, SheetArea.CornerHeader | SheetArea.RowHeader);
-                int row = (activeSelection.Row + activeSelection.RowCount) - 1;
-                if ((ActiveSheet.GetRowResizable(row) && !rect11.IsEmpty) && flag2)
+                // 选择整行
+                double viewportX = sheetLayout.GetViewportX(cellsPanel.ColumnViewportIndex);
+                viewportY = sheetLayout.GetViewportY(cellsPanel.RowViewportIndex);
+                int viewportTopRow = GetViewportTopRow(cellsPanel.RowViewportIndex);
+                int viewportBottomRow = GetViewportBottomRow(cellsPanel.RowViewportIndex);
+                if (ActiveSheet.FrozenColumnCount > 0)
                 {
-                    double num25 = 0.0;
-                    for (int m = 0; m < ActiveSheet.RowHeader.ColumnCount; m++)
+                    CellsPanel viewport5 = GetViewportRowsPresenter(GetActiveRowViewportIndex(), GetActiveColumnViewportIndex() + 1);
+                    Rect rect9 = viewport5._cachedSelectionFrameLayout;
+                    if (!viewport5.SelectionContainer.IsAnchorCellInSelection)
                     {
-                        num25 += ActiveSheet.GetActualColumnWidth(m, SheetArea.CornerHeader | SheetArea.RowHeader) * ActiveSheet.ZoomFactor;
+                        rect9 = cellsPanel._cachedFocusCellLayout;
                     }
-                    Rect rect12 = new Rect((header.Location.X + num25) - 16.0, ((viewportY + rect11.Y) + rect11.Height) - 8.0, 16.0, 16.0);
-                    _resizerGripperContainer.Child = _cachedRowResizerGripperImage;
-                    _resizerGripperContainer.Arrange(rect12);
-                    ResizerGripperRect = new Rect?(rect12);
+                    rangeBounds = new Rect(rangeBounds.X, rangeBounds.Y, rangeBounds.Width + rect9.Width, rangeBounds.Height);
+                }
+
+                if (activeSelection.Row >= viewportTopRow)
+                {
+                    list.Add(Tuple.Create<Point, double>(new Point(((viewportX + rangeBounds.X) + (rangeBounds.Width / 2.0)) - 7.0, (viewportY + rangeBounds.Y) - 16.0), 16.0));
                 }
                 else
                 {
-                    _resizerGripperContainer.Arrange(rect);
-                    autoFillIndicatorRec = null;
-                    ResizerGripperRect = autoFillIndicatorRec;
+                    list.Add(Tuple.Create<Point, double>(new Point(((viewportX + rangeBounds.X) + (rangeBounds.Width / 2.0)) - 7.0, -2147483648.0), 0.0));
+                }
+
+                int num18 = (int)(rangeBounds.Height - 9.0);
+                int num19 = (activeSelection.Row + activeSelection.RowCount) - 1;
+                if (num19 > viewportBottomRow)
+                {
+                    num18 = 0x7fffffff;
+                }
+                int activeRowViewportIndex = GetActiveRowViewportIndex();
+                ActiveSheet.GetViewportInfo();
+                flag2 = true;
+                int rowViewportIndex = activeRowViewportIndex;
+
+                if (num18 == 0x7fffffff)
+                {
+                    while (rowViewportIndex <= GetViewportInfo(ActiveSheet).RowViewportCount)
+                    {
+                        if (GetViewportBottomRow(rowViewportIndex) >= num19)
+                        {
+                            CellsPanel viewport6 = _cellsPanels[rowViewportIndex + 1, cellsPanel.ColumnViewportIndex + 1];
+                            if (viewport6 != null)
+                            {
+                                Rect rect10 = viewport6._cachedSelectionFrameLayout;
+                                if (!viewport6.SelectionContainer.IsAnchorCellInSelection)
+                                {
+                                    rect10 = viewport6._cachedFocusCellLayout;
+                                }
+                                num18 = (int)((sheetLayout.GetViewportY(rowViewportIndex) + rect10.Y) + rect10.Height);
+                                if (list.Count == 1)
+                                {
+                                    if (num18 <= (sheetLayout.GetViewportY(rowViewportIndex) + sheetLayout.GetViewportHeight(rowViewportIndex)))
+                                    {
+                                        list.Add(Tuple.Create<Point, double>(new Point(((viewportX + rangeBounds.X) + (rangeBounds.Width / 2.0)) - 7.0, (double)num18), 16.0));
+                                    }
+                                    else
+                                    {
+                                        list.Add(Tuple.Create<Point, double>(new Point(((viewportX + rangeBounds.X) + (rangeBounds.Width / 2.0)) - 7.0, 2147483647.0), 0.0));
+                                        flag2 = false;
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                        rowViewportIndex++;
+                    }
+                }
+                else
+                {
+                    double viewportHeight = sheetLayout.GetViewportHeight(cellsPanel.RowViewportIndex);
+                    double y = (viewportY + rangeBounds.Y) + rangeBounds.Height;
+                    if (y <= (viewportY + viewportHeight))
+                    {
+                        list.Add(Tuple.Create<Point, double>(new Point(((viewportX + rangeBounds.X) + (rangeBounds.Width / 2.0)) - 7.0, y), 16.0));
+                    }
+                    else
+                    {
+                        list.Add(Tuple.Create<Point, double>(new Point(viewportX, 2147483647.0), 0.0));
+                        flag2 = false;
+                    }
                 }
             }
+            else
+            {
+                // 选择整列
+                double num = sheetLayout.GetViewportX(cellsPanel.ColumnViewportIndex);
+                double num2 = sheetLayout.GetViewportY(cellsPanel.RowViewportIndex);
+                int num3 = GetViewportLeftColumn(cellsPanel.ColumnViewportIndex);
+                int num4 = GetViewportRightColumn(cellsPanel.ColumnViewportIndex);
+                if (ActiveSheet.FrozenRowCount > 0)
+                {
+                    CellsPanel viewport2 = GetViewportRowsPresenter(GetActiveRowViewportIndex() + 1, GetActiveColumnViewportIndex());
+                    Rect rect5 = viewport2._cachedSelectionFrameLayout;
+                    if (!viewport2.SelectionContainer.IsAnchorCellInSelection)
+                    {
+                        rect5 = viewport2._cachedFocusCellLayout;
+                    }
+                    rangeBounds = new Rect(rangeBounds.X, rangeBounds.Y, rangeBounds.Width, rangeBounds.Height + rect5.Height);
+                }
+                if (activeSelection.Column >= num3)
+                {
+                    list.Add(Tuple.Create<Point, double>(new Point((num + rangeBounds.X) - 16.0, ((num2 + rangeBounds.Y) + (rangeBounds.Height / 2.0)) - 9.0), 16.0));
+                }
+                else
+                {
+                    list.Add(Tuple.Create<Point, double>(new Point(-2147483648.0, ((num2 + rangeBounds.Y) + (rangeBounds.Height / 2.0)) - 9.0), 0.0));
+                }
+                int num5 = (int)(rangeBounds.Width - 9.0);
+                int num6 = (activeSelection.Column + activeSelection.ColumnCount) - 1;
+                if (num6 > num4)
+                {
+                    num5 = 0x7fffffff;
+                }
+                int num7 = GetActiveColumnViewportIndex();
+                ActiveSheet.GetViewportInfo();
+                bool flag = true;
+                int columnViewportIndex = num7;
+                if (num5 == 0x7fffffff)
+                {
+                    while (columnViewportIndex <= GetViewportInfo(ActiveSheet).ColumnViewportCount)
+                    {
+                        if (GetViewportRightColumn(columnViewportIndex) >= num6)
+                        {
+                            CellsPanel viewport3 = _cellsPanels[cellsPanel.RowViewportIndex + 1, columnViewportIndex + 1];
+                            if (viewport3 != null)
+                            {
+                                Rect rect6 = viewport3._cachedSelectionFrameLayout;
+                                if (!viewport3.SelectionContainer.IsAnchorCellInSelection)
+                                {
+                                    rect6 = viewport3._cachedFocusCellLayout;
+                                }
+                                num5 = (int)((sheetLayout.GetViewportX(columnViewportIndex) + rect6.X) + rect6.Width);
+                                if (list.Count == 1)
+                                {
+                                    if (num5 <= (sheetLayout.GetViewportX(columnViewportIndex) + sheetLayout.GetViewportWidth(columnViewportIndex)))
+                                    {
+                                        list.Add(Tuple.Create<Point, double>(new Point((double)num5, ((num2 + rangeBounds.Y) + (rangeBounds.Height / 2.0)) - 9.0), 16.0));
+                                    }
+                                    else
+                                    {
+                                        list.Add(Tuple.Create<Point, double>(new Point(-2147483648.0, ((num2 + rangeBounds.Y) + (rangeBounds.Height / 2.0)) - 9.0), 0.0));
+                                        flag = false;
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                        columnViewportIndex++;
+                    }
+                }
+                else
+                {
+                    double viewportWidth = sheetLayout.GetViewportWidth(cellsPanel.ColumnViewportIndex);
+                    double x = (num + rangeBounds.X) + rangeBounds.Width;
+                    if (x <= (num + viewportWidth))
+                    {
+                        list.Add(Tuple.Create<Point, double>(new Point(x, ((num2 + rangeBounds.Y) + (rangeBounds.Height / 2.0)) - 9.0), 16.0));
+                    }
+                    else
+                    {
+                        list.Add(Tuple.Create<Point, double>(new Point(2147483647.0, ((num2 + rangeBounds.Y) + (rangeBounds.Height / 2.0)) - 9.0), 0.0));
+                        flag = false;
+                    }
+                }
+                var colHeader = _colHeaders[cellsPanel.ColumnViewportIndex + 1];
+                CellRange range2 = new CellRange(ActiveSheet.ColumnHeader.RowCount - 1, (activeSelection.Column + activeSelection.ColumnCount) - 1, 1, 1);
+                Rect rect7 = colHeader.GetRangeBounds(range2, SheetArea.ColumnHeader);
+                int column = (activeSelection.Column + activeSelection.ColumnCount) - 1;
+                if ((ActiveSheet.GetColumnResizable(column) && !rect7.IsEmpty) && flag)
+                {
+                    double num12 = 0.0;
+                    for (int k = 0; k < ActiveSheet.ColumnHeader.RowCount; k++)
+                    {
+                        num12 += ActiveSheet.GetActualRowHeight(k, SheetArea.ColumnHeader) * ActiveSheet.ZoomFactor;
+                    }
+                    Rect rect8 = new Rect(((num + rect7.X) + rect7.Width) - 8.0, (colHeader.Location.Y + num12) - 16.0, 16.0, 16.0);
+                    _colResizeGripper.Arrange(rect8);
+                    ResizerGripperRect = new Rect?(rect8);
+                }
+                else
+                {
+                    _colResizeGripper.Arrange(_rcEmpty);
+                    ResizerGripperRect = null;
+                }
+                _rowResizeGripper.Arrange(_rcEmpty);
+                goto Label_10BF;
+            }
+
+            var header = _rowHeaders[cellsPanel.RowViewportIndex + 1];
+            CellRange range = new CellRange((activeSelection.Row + activeSelection.RowCount) - 1, ActiveSheet.RowHeader.ColumnCount - 1, 1, 1);
+            Rect rect11 = header.GetRangeBounds(range, SheetArea.CornerHeader | SheetArea.RowHeader);
+            int row = (activeSelection.Row + activeSelection.RowCount) - 1;
+            if ((ActiveSheet.GetRowResizable(row) && !rect11.IsEmpty) && flag2)
+            {
+                double num25 = 0.0;
+                for (int m = 0; m < ActiveSheet.RowHeader.ColumnCount; m++)
+                {
+                    num25 += ActiveSheet.GetActualColumnWidth(m, SheetArea.CornerHeader | SheetArea.RowHeader) * ActiveSheet.ZoomFactor;
+                }
+                Rect rect12 = new Rect((header.Location.X + num25) - 16.0, ((viewportY + rect11.Y) + rect11.Height) - 8.0, 16.0, 16.0);
+                _rowResizeGripper.Arrange(rect12);
+                ResizerGripperRect = new Rect?(rect12);
+            }
+            else
+            {
+                _rowResizeGripper.Arrange(_rcEmpty);
+                ResizerGripperRect = null;
+            }
+            _colResizeGripper.Arrange(_rcEmpty);
+
         Label_10BF:
             if (list.Count == 2)
             {
@@ -1620,27 +1564,64 @@ namespace Dt.Base
                 width = list[1].Item2;
                 Rect rect15 = new Rect((double)((int)point.X), (double)((int)point.Y), width, width);
                 _bottomRightGripper.Arrange(rect15);
-                GripperLocationsStruct struct2 = new GripperLocationsStruct
+                _gripperLocations = new GripperLocationsStruct
                 {
                     TopLeft = rect14,
                     BottomRight = rect15
                 };
-                _gripperLocations = struct2;
                 CachedGripperLocation = _gripperLocations;
-                if (IsEntrieSheetSelection() || (!IsEntrieRowSelection() && !IsEntrieColumnSelection()))
+
+                if (!IsEntrieRowSelection() && !IsEntrieColumnSelection())
                 {
-                    _resizerGripperContainer.Arrange(rect);
+                    _rowResizeGripper.Arrange(_rcEmpty);
+                    _colResizeGripper.Arrange(_rcEmpty);
                     ResizerGripperRect = null;
                     return;
                 }
             }
             else
             {
-                _gripperLocations = null;
-                _topLeftGripper.Arrange(rect);
-                _bottomRightGripper.Arrange(rect);
-                _resizerGripperContainer.Arrange(rect);
-                ResizerGripperRect = null;
+                HideSelectionAndResizeGripper();
+            }
+        }
+
+        void HideSelectionGripper()
+        {
+            if (_gripperLocations != null)
+                CachedGripperLocation = _gripperLocations;
+            _gripperLocations = null;
+            _topLeftGripper.Arrange(_rcEmpty);
+            _bottomRightGripper.Arrange(_rcEmpty);
+            _rowResizeGripper.Arrange(_rcEmpty);
+            _colResizeGripper.Arrange(_rcEmpty);
+        }
+
+        void HideSelectionAndResizeGripper()
+        {
+            _gripperLocations = null;
+            _topLeftGripper.Arrange(_rcEmpty);
+            _bottomRightGripper.Arrange(_rcEmpty);
+            _rowResizeGripper.Arrange(_rcEmpty);
+            _colResizeGripper.Arrange(_rcEmpty);
+            ResizerGripperRect = null;
+        }
+
+        void ArrangeMouseSelectionGripper()
+        {
+            _gripperLocations = null;
+            ResizerGripperRect = null;
+            _topLeftGripper.Arrange(_rcEmpty);
+            _bottomRightGripper.Arrange(_rcEmpty);
+            _rowResizeGripper.Arrange(_rcEmpty);
+            _colResizeGripper.Arrange(_rcEmpty);
+            if (_autoFillIndicatorRect.HasValue)
+            {
+                _autoFillIndicator.Arrange(_rcEmpty);
+                _autoFillIndicatorRect = null;
+            }
+            if ((_touchToolbarPopup != null) && _touchToolbarPopup.IsOpen)
+            {
+                _touchToolbarPopup.IsOpen = false;
             }
         }
         #endregion
@@ -1655,38 +1636,39 @@ namespace Dt.Base
             _dragToRowViewport = -2;
             _dragToColumn = -2;
             _dragToRow = -2;
-            _cachedResizerGipper = new Dictionary<string, BitmapImage>();
-            _cachedToolbarImageSources = new Dictionary<string, ImageSource>();
-
             _showScrollTip = false;
+
+            _trackersPanel = new Canvas();
             _topLeftGripper = new Ellipse();
-            _topLeftGripper.Stroke = new SolidColorBrush(Color.FromArgb(220, 0, 0, 0));
+            _topLeftGripper.Stroke = BrushRes.BlackBrush;
             _topLeftGripper.StrokeThickness = 2.0;
             _topLeftGripper.Fill = BrushRes.WhiteBrush;
             _topLeftGripper.Height = 16.0;
             _topLeftGripper.Width = 16.0;
 
             _bottomRightGripper = new Ellipse();
-            _bottomRightGripper.Stroke = new SolidColorBrush(Color.FromArgb(220, 0, 0, 0));
+            _bottomRightGripper.Stroke = BrushRes.BlackBrush;
             _bottomRightGripper.StrokeThickness = 2.0;
             _bottomRightGripper.Fill = BrushRes.WhiteBrush;
             _bottomRightGripper.Height = 16.0;
             _bottomRightGripper.Width = 16.0;
 
-            _resizerGripperContainer = new Border();
-            _resizerGripperContainer.Width = 16.0;
-            _resizerGripperContainer.Height = 16.0;
-            _autoFillIndicatorContainer = new Border();
-            _autoFillIndicatorContainer.Width = 16.0;
-            _autoFillIndicatorContainer.Height = 16.0;
+            // iOS暂时不支持程序集中的内容图片，3.1将支持
+            _rowResizeGripper = new Image { Source = new BitmapImage(new Uri("ms-appx:///Dt.Cells/Icons/ResizeGripperVer.png")) };
+            _rowResizeGripper.Width = 16.0;
+            _rowResizeGripper.Height = 16.0;
+            _colResizeGripper = new Image { Source = new BitmapImage(new Uri("ms-appx:///Dt.Cells/Icons/ResizeGripperHor.png")) };
+            _colResizeGripper.Width = 16.0;
+            _colResizeGripper.Height = 16.0;
 
-            _cachedColumnResizerGripperImage = new Image { Source = GetResizerBitmapImage(false) };
-            _resizerGripperContainer.Child = _cachedColumnResizerGripperImage;
-            _cachedRowResizerGripperImage = new Image { Source = GetResizerBitmapImage(true) };
-            _cachedResizerGipper = new Dictionary<string, BitmapImage>();
-            _cachedautoFillIndicatorImage = new Image { Source = GetImageSource("AutoFillIndicator.png") };
-            _autoFillIndicatorContainer.Child = _cachedautoFillIndicatorImage;
-            _cachedToolbarImageSources = new Dictionary<string, ImageSource>();
+            _autoFillIndicator = new Rectangle
+            {
+                Stroke = BrushRes.BlackBrush,
+                StrokeThickness = 2.0,
+                Fill = BrushRes.WhiteBrush,
+                Height = 16.0,
+                Width = 16.0,
+            };
 
             Background = BrushRes.浅灰背景;
         }
@@ -2242,6 +2224,140 @@ namespace Dt.Base
             return layout;
         }
 
+        void UpdateFreezeLines()
+        {
+            if (IsTouchZooming)
+                return;
+
+            // 原程序造成iOS滚动时非常慢，每次都创建 FreezeLine 再移除，不易发现！
+            SheetLayout sheetLayout = GetSheetLayout();
+            if ((sheetLayout.FrozenWidth > 0.0) && ShowFreezeLine)
+            {
+                if (_columnFreezeLine == null)
+                    _columnFreezeLine = CreateFreezeLine();
+
+                if (!_trackersPanel.Children.Contains(_columnFreezeLine))
+                {
+                    _trackersPanel.Children.Add(_columnFreezeLine);
+                }
+                int frozenColumnCount = ActiveSheet.FrozenColumnCount;
+                if (frozenColumnCount > ActiveSheet.ColumnCount)
+                {
+                    frozenColumnCount = ActiveSheet.ColumnCount;
+                }
+                ColumnLayout layout2 = GetViewportColumnLayoutModel(-1).FindColumn(frozenColumnCount - 1);
+                if (layout2 != null)
+                {
+                    _columnFreezeLine.X1 = layout2.X + layout2.Width;
+                    _columnFreezeLine.X2 = _columnFreezeLine.X1;
+                    _columnFreezeLine.Y1 = 0.0;
+                    _columnFreezeLine.Y2 = sheetLayout.FrozenTrailingY + sheetLayout.FrozenTrailingHeight;
+                }
+                else
+                {
+                    _trackersPanel.Children.Remove(_columnFreezeLine);
+                }
+            }
+            else if (_columnFreezeLine != null)
+            {
+                _trackersPanel.Children.Remove(_columnFreezeLine);
+            }
+
+            ViewportInfo viewportInfo = GetViewportInfo();
+            if ((sheetLayout.FrozenTrailingWidth > 0.0) && ShowFreezeLine)
+            {
+                if (_columnTrailingFreezeLine == null)
+                    _columnTrailingFreezeLine = CreateFreezeLine();
+
+                if (!_trackersPanel.Children.Contains(_columnTrailingFreezeLine))
+                {
+                    _trackersPanel.Children.Add(_columnTrailingFreezeLine);
+                }
+                ColumnLayout layout3 = GetViewportColumnLayoutModel(viewportInfo.ColumnViewportCount).FindColumn(Math.Max(ActiveSheet.FrozenColumnCount, ActiveSheet.ColumnCount - ActiveSheet.FrozenTrailingColumnCount));
+                if (layout3 != null)
+                {
+                    _columnTrailingFreezeLine.X1 = layout3.X;
+                    _columnTrailingFreezeLine.X2 = _columnTrailingFreezeLine.X1;
+                    _columnTrailingFreezeLine.Y1 = 0.0;
+                    _columnTrailingFreezeLine.Y2 = sheetLayout.FrozenTrailingY + sheetLayout.FrozenTrailingHeight;
+                }
+                else
+                {
+                    _trackersPanel.Children.Remove(_columnTrailingFreezeLine);
+                }
+            }
+            else if (_columnTrailingFreezeLine != null)
+            {
+                _trackersPanel.Children.Remove(_columnTrailingFreezeLine);
+            }
+
+            if ((sheetLayout.FrozenHeight > 0.0) && ShowFreezeLine)
+            {
+                if (_rowFreezeLine == null)
+                    _rowFreezeLine = CreateFreezeLine();
+
+                if (!_trackersPanel.Children.Contains(_rowFreezeLine))
+                {
+                    _trackersPanel.Children.Add(_rowFreezeLine);
+                }
+                int frozenRowCount = ActiveSheet.FrozenRowCount;
+                if (ActiveSheet.RowCount < frozenRowCount)
+                {
+                    frozenRowCount = ActiveSheet.RowCount;
+                }
+                RowLayout layout4 = GetViewportRowLayoutModel(-1).FindRow(frozenRowCount - 1);
+                if (layout4 != null)
+                {
+                    _rowFreezeLine.X1 = 0.0;
+                    if (_translateOffsetX >= 0.0)
+                    {
+                        _rowFreezeLine.X2 = sheetLayout.FrozenTrailingX + sheetLayout.FrozenTrailingWidth;
+                    }
+                    else
+                    {
+                        _rowFreezeLine.X2 = (sheetLayout.FrozenTrailingX + _translateOffsetX) + sheetLayout.FrozenTrailingWidth;
+                    }
+                    _rowFreezeLine.Y1 = layout4.Y + layout4.Height;
+                    _rowFreezeLine.Y2 = _rowFreezeLine.Y1;
+                }
+                else
+                {
+                    _trackersPanel.Children.Remove(_rowFreezeLine);
+                }
+            }
+            else if (_rowFreezeLine != null)
+            {
+                _trackersPanel.Children.Remove(_rowFreezeLine);
+            }
+
+            if ((sheetLayout.FrozenTrailingHeight > 0.0) && ShowFreezeLine)
+            {
+                if (_rowTrailingFreezeLine == null)
+                    _rowTrailingFreezeLine = CreateFreezeLine();
+
+                if (!_trackersPanel.Children.Contains(_rowTrailingFreezeLine))
+                {
+                    _trackersPanel.Children.Add(_rowTrailingFreezeLine);
+                }
+                RowLayout layout5 = GetViewportRowLayoutModel(viewportInfo.RowViewportCount).FindRow(Math.Max(ActiveSheet.FrozenRowCount, ActiveSheet.RowCount - ActiveSheet.FrozenTrailingRowCount));
+                if (layout5 != null)
+                {
+                    _rowTrailingFreezeLine.X1 = 0.0;
+                    _rowTrailingFreezeLine.X2 = sheetLayout.FrozenTrailingX + sheetLayout.FrozenTrailingWidth;
+                    _rowTrailingFreezeLine.Y1 = layout5.Y + ((_translateOffsetY < 0.0) ? _translateOffsetY : 0.0);
+                    _rowTrailingFreezeLine.Y2 = _rowTrailingFreezeLine.Y1;
+                }
+                else
+                {
+                    _trackersPanel.Children.Remove(_rowTrailingFreezeLine);
+                }
+            }
+            else if (_rowTrailingFreezeLine != null)
+            {
+                _trackersPanel.Children.Remove(_rowTrailingFreezeLine);
+            }
+        }
+
         async Task OpenStream(DispatchedHandler p_handler)
         {
             try
@@ -2260,7 +2376,6 @@ namespace Dt.Base
                 ClearValue(CanUserEditFormulaProperty);
                 ClearValue(CanUserUndoProperty);
                 ClearValue(CanUserZoomProperty);
-                ClearValue(FreezeLineStyleProperty);
                 ClearValue(ColumnSplitBoxAlignmentProperty);
                 ClearValue(ColumnSplitBoxPolicyProperty);
                 ClearValue(HorizontalScrollBarHeightProperty);

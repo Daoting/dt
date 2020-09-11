@@ -162,15 +162,6 @@ namespace Dt.Cells.UI
             return finalSize;
         }
 
-        Color GetSelectionBorderColor(Color selectionBorderColor, string themeColor)
-        {
-            if (themeColor != null)
-            {
-                return OwingViewport.Excel.ActiveSheet.Workbook.GetThemeColor(themeColor);
-            }
-            return selectionBorderColor;
-        }
-
         internal bool IsMouseInFillIndicator(Point viewportPoint)
         {
             return IsFillIndicatorVisible && _fillIndicatorBounds.Contains(viewportPoint);

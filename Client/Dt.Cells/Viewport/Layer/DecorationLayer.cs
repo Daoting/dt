@@ -365,7 +365,7 @@ namespace Dt.Cells.UI
             if (_dragRect == null && _viewport.Excel != null)
             {
                 _dragRect = CreateRectangle();
-                _viewport.Excel.TrackersContainer.Children.Add(_dragRect);
+                _viewport.Excel.TrackersPanel.Children.Add(_dragRect);
             }
         }
 

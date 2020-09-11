@@ -152,10 +152,6 @@ namespace Dt.Base
                     CanUserUndo = (bool)((bool)Serializer.DeserializeObj(typeof(bool), reader));
                     return;
 
-                case "FreezeLineStyle":
-                    FreezeLineStyle = Serializer.DeserializeObj(typeof(Style), reader) as Style;
-                    return;
-
                 case "TrailingFreezeLineStyle":
                     TrailingFreezeLineStyle = Serializer.DeserializeObj(typeof(Style), reader) as Style;
                     return;
@@ -282,10 +278,6 @@ namespace Dt.Base
             if (!CanUserUndo)
             {
                 Serializer.SerializeObj(CanUserUndo, "AllowUndo", writer);
-            }
-            if (FreezeLineStyle != null)
-            {
-                Serializer.SerializeObj(FreezeLineStyle, "FreezeLineStyle", writer);
             }
             if (TrailingFreezeLineStyle != null)
             {

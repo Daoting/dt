@@ -486,11 +486,11 @@ namespace Dt.Base
 
         internal void CloseAutoFilterIndicator()
         {
-            _autoFillIndicatorContainer.Width = 0.0;
-            _autoFillIndicatorContainer.Height = 0.0;
-            _autoFillIndicatorContainer.Arrange(new Rect(0.0, 0.0, 0.0, 0.0));
-            _autoFillIndicatorContainer.InvalidateMeasure();
-            _autoFillIndicatorRec = null;
+            _autoFillIndicator.Width = 0.0;
+            _autoFillIndicator.Height = 0.0;
+            _autoFillIndicator.Arrange(new Rect(0.0, 0.0, 0.0, 0.0));
+            _autoFillIndicator.InvalidateMeasure();
+            _autoFillIndicatorRect = null;
         }
 
         internal void CloseDragFillPopup()
@@ -1182,13 +1182,10 @@ namespace Dt.Base
 
         internal Line CreateFreezeLine()
         {
-            SolidColorBrush brush = new SolidColorBrush(Colors.Black);
-            Line line2 = new Line();
-            line2.StrokeThickness = 1.0;
-            line2.Stroke = brush;
-            Line element = line2;
-            element.TypeSafeSetStyle(FreezeLineStyle);
-            return element;
+            Line line = new Line();
+            line.StrokeThickness = 1.0;
+            line.Stroke = BrushRes.BlackBrush;
+            return line;
         }
 
         internal GroupLayout CreateGroupLayout()
@@ -1398,16 +1395,17 @@ namespace Dt.Base
         FloatingObjectLayoutModel CreateViewportChartShapeLayoutMode(int rowViewportIndex, int columnViewportIndex)
         {
             FloatingObjectLayoutModel model = new FloatingObjectLayoutModel();
-            FloatingObject[] allFloatingObjects = GetAllFloatingObjects();
-            if (allFloatingObjects.Length != 0)
+            var ls = GetAllFloatingObjects();
+            if (ls.Count > 0)
             {
                 SheetLayout sheetLayout = GetSheetLayout();
                 double viewportX = sheetLayout.GetViewportX(columnViewportIndex);
                 double viewportY = sheetLayout.GetViewportY(rowViewportIndex);
                 Point viewportTopLeftCoordinates = GetViewportTopLeftCoordinates(rowViewportIndex, columnViewportIndex);
-                for (int i = 0; i < allFloatingObjects.Length; i++)
+
+                for (int i = 0; i < ls.Count; i++)
                 {
-                    FloatingObject obj2 = allFloatingObjects[i];
+                    FloatingObject obj2 = ls[i];
                     double x = 0.0;
                     for (int j = 0; j < obj2.StartColumn; j++)
                     {
@@ -2089,44 +2087,47 @@ namespace Dt.Base
             return range;
         }
 
-        internal FloatingObject[] GetAllFloatingObjects()
+        internal List<FloatingObject> GetAllFloatingObjects()
         {
+            var sheet = ActiveSheet;
             List<FloatingObject> list = new List<FloatingObject>();
-            if (ActiveSheet != null)
+            if (sheet != null)
             {
-                if (ActiveSheet.FloatingObjects.Count > 0)
+                if (sheet.FloatingObjects.Count > 0)
                 {
-                    list.AddRange((IEnumerable<FloatingObject>)ActiveSheet.FloatingObjects);
+                    list.AddRange((IEnumerable<FloatingObject>)sheet.FloatingObjects);
                 }
-                if (ActiveSheet.Pictures.Count > 0)
+                if (sheet.Pictures.Count > 0)
                 {
-                    foreach (Picture picture in ActiveSheet.Pictures)
+                    foreach (Picture picture in sheet.Pictures)
                     {
                         list.Add(picture);
                     }
                 }
-                if (ActiveSheet.Charts.Count > 0)
+                if (sheet.Charts.Count > 0)
                 {
-                    foreach (FloatingObject obj2 in ActiveSheet.Charts)
+                    foreach (FloatingObject obj2 in sheet.Charts)
                     {
                         list.Add(obj2);
                     }
                 }
             }
-            return list.ToArray();
+            return list;
         }
 
-        internal FloatingObject[] GetAllSelectedFloatingObjects()
+        internal List<FloatingObject> GetAllSelectedFloatingObjects()
         {
             List<FloatingObject> list = new List<FloatingObject>();
-            foreach (FloatingObject obj2 in GetAllFloatingObjects())
+            var ls = GetAllFloatingObjects();
+            if (ls.Count > 0)
             {
-                if (obj2.IsSelected)
+                foreach (FloatingObject obj in ls)
                 {
-                    list.Add(obj2);
+                    if (obj.IsSelected)
+                        list.Add(obj);
                 }
             }
-            return list.ToArray();
+            return list;
         }
 
         Rect GetAutoFillIndicatorRect(CellsPanel vp, CellRange activeSelection)
@@ -2143,8 +2144,7 @@ namespace Dt.Base
             {
                 rangeBounds = vp.GetRangeBounds(activeSelection);
             }
-            Rect rect3 = rangeBounds;
-            return new Rect(((rect3.Width + viewportX) + rangeBounds.X) - 16.0, (rect3.Height + viewportY) + rangeBounds.Y, 16.0, 16.0);
+            return new Rect(viewportX + rangeBounds.X + rangeBounds.Width - 9.0, rangeBounds.Height + viewportY + rangeBounds.Y - 9.0, 16.0, 16.0);
         }
 
         FloatingObjectLayoutModel GetCacheFloatingObjectsMovingResizingLayoutModels(int rowViewport, int columnViewport)
@@ -2790,19 +2790,6 @@ namespace Dt.Base
             return string.Format(ResourceStrings.HorizentalScroll, (object[])new object[] { ((ActiveSheet.ColumnHeader.AutoText == HeaderAutoText.Numbers) ? ((int)column).ToString() : IndexToLetter(column)) });
         }
 
-        internal ImageSource GetImageSource(string image)
-        {
-            if (_cachedToolbarImageSources.ContainsKey(image))
-            {
-                return _cachedToolbarImageSources[image];
-            }
-            string name = IntrospectionExtensions.GetTypeInfo(typeof(Excel)).Assembly.GetName().Name;
-            Uri uri = new Uri(string.Format("ms-appx:///{0}/Icons/{1}", (object[])new object[] { name, image }), (UriKind)UriKind.RelativeOrAbsolute);
-            BitmapImage image2 = new BitmapImage(uri);
-            _cachedResizerGipper[image] = image2;
-            return image2;
-        }
-
         internal int GetMaxBottomScrollableRow()
         {
             int frozenRowCount = ActiveSheet.FrozenRowCount;
@@ -3194,36 +3181,6 @@ namespace Dt.Base
             }
             CalcParserContext context = new CalcParserContext(ActiveSheet.ReferenceStyle == ReferenceStyle.R1C1, 0, 0, null);
             return parser.Unparse(expression, context);
-        }
-
-        internal BitmapImage GetResizerBitmapImage(bool rowHeaderResizer)
-        {
-            string str = "";
-            if (rowHeaderResizer)
-            {
-                str = "ResizeGripperVer.png";
-                if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
-                {
-                    str = "ResizeGripperVer_dark.png";
-                }
-            }
-            else
-            {
-                str = "ResizeGripperHor.png";
-                if (Application.Current.RequestedTheme == ApplicationTheme.Dark)
-                {
-                    str = "ResizeGripperHor_dark.png";
-                }
-            }
-            if (_cachedResizerGipper.ContainsKey(str))
-            {
-                return _cachedResizerGipper[str];
-            }
-            string name = IntrospectionExtensions.GetTypeInfo(typeof(Excel)).Assembly.GetName().Name;
-            Uri uri = new Uri(string.Format("ms-appx:///{0}/Icons/{1}", (object[])new object[] { name, str }), (UriKind)UriKind.RelativeOrAbsolute);
-            BitmapImage image = new BitmapImage(uri);
-            _cachedResizerGipper[str] = image;
-            return image;
         }
 
         internal double GetRowAutoFitValue(int row, bool columnHeader)
@@ -4134,8 +4091,7 @@ namespace Dt.Base
             FloatingObjectLayoutModel viewportFloatingObjectLayoutModel = GetViewportFloatingObjectLayoutModel(rowViewportIndex, columnViewportIndex);
             if ((viewportFloatingObjectLayoutModel != null) && (viewportFloatingObjectLayoutModel.Count != 0))
             {
-                FloatingObject[] allFloatingObjects = GetAllFloatingObjects();
-                foreach (FloatingObject obj2 in SortFloatingObjectByZIndex(allFloatingObjects))
+                foreach (FloatingObject obj2 in SortFloatingObjectByZIndex(GetAllFloatingObjects()))
                 {
                     FloatingObjectLayout layout = viewportFloatingObjectLayoutModel.Find(obj2.Name);
                     if ((layout != null) && obj2.Visible)
@@ -4349,22 +4305,6 @@ namespace Dt.Base
                 {
                     InvaidateViewportHorizontalArrangementInternal(columnViewportIndex);
                 }
-            }
-        }
-
-        void InvalidateViewportRowMeasure(int rowViewportIndex, int rowIndex)
-        {
-            if (rowViewportIndex < -1)
-            {
-                int rowViewportCount = GetViewportInfo().RowViewportCount;
-                for (int i = -1; i <= rowViewportCount; i++)
-                {
-                    InvalidateViewportRowMeasureInternal(i, rowIndex);
-                }
-            }
-            else
-            {
-                InvalidateViewportRowMeasureInternal(rowViewportIndex, rowIndex);
             }
         }
 
@@ -4588,116 +4528,108 @@ namespace Dt.Base
 
         bool IsMouseInDragDropLocation(double mouseX, double mouseY, int rowViewportIndex, int columnViewportIndex, bool isTouching = false)
         {
-            Worksheet worksheet = ActiveSheet;
-            if (worksheet != null)
+            Worksheet sheet = ActiveSheet;
+            if (sheet == null || sheet.Selections.Count > 1)
+                return false;
+
+            int row;
+            int column;
+            int rowCount;
+            int columnCount;
+            CellRange spanCell = null;
+            if (sheet.Selections.Count == 1)
             {
-                int row;
-                int column;
-                int rowCount;
-                int columnCount;
-                CellRange spanCell = worksheet.GetSpanCell(worksheet.ActiveRowIndex, worksheet.ActiveColumnIndex);
+                CellRange range2 = sheet.Selections[0];
+                row = range2.Row;
+                column = range2.Column;
+                rowCount = range2.RowCount;
+                columnCount = range2.ColumnCount;
+            }
+            else
+            {
+                spanCell = sheet.GetSpanCell(sheet.ActiveRowIndex, sheet.ActiveColumnIndex);
                 if (spanCell == null)
+                    spanCell = new CellRange(sheet.ActiveRowIndex, sheet.ActiveColumnIndex, 1, 1);
+                row = spanCell.Row;
+                column = spanCell.Column;
+                rowCount = spanCell.RowCount;
+                columnCount = spanCell.ColumnCount;
+            }
+
+            if ((row == -1) && (column == -1))
+                return false;
+
+            if (row == -1)
+            {
+                row = 0;
+                rowCount = sheet.RowCount;
+            }
+            if (column == -1)
+            {
+                column = 0;
+                columnCount = sheet.ColumnCount;
+            }
+
+            SheetLayout sheetLayout = GetSheetLayout();
+            var rowLayoutMode = GetViewportRowLayoutModel(rowViewportIndex);
+            RowLayout topRowLayout = rowLayoutMode.Find(row);
+            RowLayout bottomRowLayout = rowLayoutMode.Find((row + rowCount) - 1);
+            var colLayoutMode = GetViewportColumnLayoutModel(columnViewportIndex);
+            ColumnLayout leftColLayout = colLayoutMode.Find(column);
+            ColumnLayout rightColLayout = colLayoutMode.Find((column + columnCount) - 1);
+            if ((rowCount < sheet.RowCount && topRowLayout == null && bottomRowLayout == null)
+                || (columnCount < sheet.ColumnCount && leftColLayout == null && rightColLayout == null))
+            {
+                return false;
+            }
+
+            double left = Math.Ceiling((leftColLayout == null) ? sheetLayout.GetViewportX(columnViewportIndex) : leftColLayout.X);
+            double right = Math.Ceiling((rightColLayout == null) ? ((double)((sheetLayout.GetViewportX(columnViewportIndex) + sheetLayout.GetViewportWidth(columnViewportIndex)) - 1.0)) : ((double)((rightColLayout.X + rightColLayout.Width) - 1.0)));
+            double top = Math.Ceiling((topRowLayout == null) ? sheetLayout.GetViewportY(rowViewportIndex) : topRowLayout.Y);
+            double bottom = Math.Ceiling((bottomRowLayout == null) ? ((double)((sheetLayout.GetViewportY(rowViewportIndex) + sheetLayout.GetViewportHeight(rowViewportIndex)) - 1.0)) : ((double)((bottomRowLayout.Y + bottomRowLayout.Height) - 1.0)));
+            double num9 = isTouching ? 10.0 : 2.0;
+            double num10 = isTouching ? 5.0 : 1.0;
+
+            if (IsEditing && spanCell != null && spanCell.Equals(row, column, rowCount, columnCount))
+            {
+                if ((mouseY >= (top - num9)) && (mouseY <= (bottom + num10)))
                 {
-                    spanCell = new CellRange(worksheet.ActiveRowIndex, worksheet.ActiveColumnIndex, 1, 1);
-                }
-                if (worksheet.Selections.Count > 1)
-                {
-                    return false;
-                }
-                if (worksheet.Selections.Count == 1)
-                {
-                    CellRange range2 = worksheet.Selections[0];
-                    row = range2.Row;
-                    column = range2.Column;
-                    rowCount = range2.RowCount;
-                    columnCount = range2.ColumnCount;
-                }
-                else
-                {
-                    row = spanCell.Row;
-                    column = spanCell.Column;
-                    rowCount = spanCell.RowCount;
-                    columnCount = spanCell.ColumnCount;
-                }
-                if ((row == -1) && (column == -1))
-                {
-                    return false;
-                }
-                if (row == -1)
-                {
-                    row = 0;
-                    rowCount = worksheet.RowCount;
-                }
-                if (column == -1)
-                {
-                    column = 0;
-                    columnCount = worksheet.ColumnCount;
-                }
-                SheetLayout sheetLayout = GetSheetLayout();
-                RowLayout layout2 = GetViewportRowLayoutModel(rowViewportIndex).Find(row);
-                RowLayout layout3 = GetViewportRowLayoutModel(rowViewportIndex).Find((row + rowCount) - 1);
-                ColumnLayout layout4 = GetViewportColumnLayoutModel(columnViewportIndex).Find(column);
-                ColumnLayout layout5 = GetViewportColumnLayoutModel(columnViewportIndex).Find((column + columnCount) - 1);
-                if (((rowCount < worksheet.RowCount) && (layout2 == null)) && (layout3 == null))
-                {
-                    return false;
-                }
-                if (((columnCount < worksheet.ColumnCount) && (layout4 == null)) && (layout5 == null))
-                {
-                    return false;
-                }
-                double num5 = Math.Ceiling((layout4 == null) ? sheetLayout.GetViewportX(columnViewportIndex) : layout4.X);
-                double num6 = Math.Ceiling((layout5 == null) ? ((double)((sheetLayout.GetViewportX(columnViewportIndex) + sheetLayout.GetViewportWidth(columnViewportIndex)) - 1.0)) : ((double)((layout5.X + layout5.Width) - 1.0)));
-                double num7 = Math.Ceiling((layout2 == null) ? sheetLayout.GetViewportY(rowViewportIndex) : layout2.Y);
-                double num8 = Math.Ceiling((layout3 == null) ? ((double)((sheetLayout.GetViewportY(rowViewportIndex) + sheetLayout.GetViewportHeight(rowViewportIndex)) - 1.0)) : ((double)((layout3.Y + layout3.Height) - 1.0)));
-                double num9 = 2.0;
-                double num10 = 1.0;
-                if (isTouching)
-                {
-                    num9 = 10.0;
-                    num10 = 5.0;
-                }
-                if (IsEditing && spanCell.Equals(row, column, rowCount, columnCount))
-                {
-                    if ((mouseY >= (num7 - num9)) && (mouseY <= (num8 + num10)))
+                    if (((leftColLayout != null) && (mouseX >= (left - num9))) && (mouseX <= (left - num10)))
                     {
-                        if (((layout4 != null) && (mouseX >= (num5 - num9))) && (mouseX <= (num5 - num10)))
-                        {
-                            return true;
-                        }
-                        if (((layout5 != null) && (mouseX >= (num6 + num10))) && (mouseX <= (num6 + num10)))
-                        {
-                            return true;
-                        }
+                        return true;
                     }
-                    if (((mouseX >= (num5 - num9)) && (mouseX <= (num6 + num10))) && ((((layout2 != null) && (mouseY >= (num7 - num9))) && (mouseY <= (num7 - num10))) || (((layout3 != null) && (mouseY >= (num8 + num10))) && (mouseY <= (num8 + num10)))))
+                    if (((rightColLayout != null) && (mouseX >= (right + num10))) && (mouseX <= (right + num10)))
                     {
                         return true;
                     }
                 }
-                else
+                if (((mouseX >= (left - num9)) && (mouseX <= (right + num10))) && ((((topRowLayout != null) && (mouseY >= (top - num9))) && (mouseY <= (top - num10))) || (((bottomRowLayout != null) && (mouseY >= (bottom + num10))) && (mouseY <= (bottom + num10)))))
                 {
-                    if ((mouseY >= (num7 - num9)) && (mouseY <= (num8 + num10)))
+                    return true;
+                }
+            }
+            else
+            {
+                if ((mouseY >= (top - num9)) && (mouseY <= (bottom + num10)))
+                {
+                    if (((leftColLayout != null) && (mouseX >= (left - num9))) && (mouseX <= left))
                     {
-                        if (((layout4 != null) && (mouseX >= (num5 - num9))) && (mouseX <= num5))
-                        {
-                            return true;
-                        }
-                        if (((layout5 != null) && (mouseX >= (num6 - num10))) && (mouseX <= (num6 + num10)))
-                        {
-                            return true;
-                        }
+                        return true;
                     }
-                    if ((mouseX >= (num5 - num9)) && (mouseX <= (num6 + num10)))
+                    if (((rightColLayout != null) && (mouseX >= (right - num10))) && (mouseX <= (right + num10)))
                     {
-                        if (((layout2 != null) && (mouseY >= (num7 - num9))) && (mouseY <= num7))
-                        {
-                            return true;
-                        }
-                        if (((layout3 != null) && (mouseY >= (num8 - num10))) && (mouseY <= (num8 + num10)))
-                        {
-                            return true;
-                        }
+                        return true;
+                    }
+                }
+                if ((mouseX >= (left - num9)) && (mouseX <= (right + num10)))
+                {
+                    if (((topRowLayout != null) && (mouseY >= (top - num9))) && (mouseY <= top))
+                    {
+                        return true;
+                    }
+                    if (((bottomRowLayout != null) && (mouseY >= (bottom - num10))) && (mouseY <= (bottom + num10)))
+                    {
+                        return true;
                     }
                 }
             }
@@ -6486,7 +6418,7 @@ namespace Dt.Base
             }
         }
 
-        IEnumerable<FloatingObject> SortFloatingObjectByZIndex(FloatingObject[] floatingObjects)
+        IEnumerable<FloatingObject> SortFloatingObjectByZIndex(List<FloatingObject> floatingObjects)
         {
             Dictionary<int, List<FloatingObject>> dictionary = new Dictionary<int, List<FloatingObject>>();
             foreach (FloatingObject obj2 in floatingObjects)
@@ -6545,7 +6477,7 @@ namespace Dt.Base
                 line.StrokeThickness = 1.0;
                 line.StrokeDashArray = new DoubleCollection { 1.0 };
                 _resizingTracker = line;
-                TrackersContainer.Children.Add(_resizingTracker);
+                _trackersPanel.Children.Add(_resizingTracker);
             }
             _resizingTracker.Visibility = Visibility.Visible;
             switch (savedHitTestInformation.HitTestType)
@@ -6627,7 +6559,7 @@ namespace Dt.Base
                 _resizingTracker.Stroke = new SolidColorBrush(Colors.Black);
                 _resizingTracker.StrokeThickness = 1.0;
                 _resizingTracker.StrokeDashArray = new DoubleCollection { 1.0 };
-                TrackersContainer.Children.Add(_resizingTracker);
+                _trackersPanel.Children.Add(_resizingTracker);
             }
             _resizingTracker.Visibility = Visibility.Visible;
             switch (savedHitTestInformation.HitTestType)
@@ -6719,7 +6651,7 @@ namespace Dt.Base
                 line.StrokeThickness = 1.0;
                 line.StrokeDashArray = new DoubleCollection { 1.0 };
                 _resizingTracker = line;
-                TrackersContainer.Children.Add(_resizingTracker);
+                _trackersPanel.Children.Add(_resizingTracker);
             }
             _resizingTracker.Visibility = Visibility.Visible;
             switch (savedHitTestInformation.HitTestType)
@@ -6786,7 +6718,7 @@ namespace Dt.Base
                 _resizingTracker.Stroke = new SolidColorBrush(Colors.Black);
                 _resizingTracker.StrokeThickness = 1.0;
                 _resizingTracker.StrokeDashArray = new DoubleCollection { 1.0 };
-                TrackersContainer.Children.Add(_resizingTracker);
+                _trackersPanel.Children.Add(_resizingTracker);
             }
             _resizingTracker.Visibility = Visibility.Visible;
             switch (savedHitTestInformation.HitTestType)
@@ -7239,7 +7171,7 @@ namespace Dt.Base
                 rectangle3.StrokeDashOffset = 0.5;
                 rectangle3.Margin = new Thickness(2.0);
                 _dragDropInsertIndicator.Children.Add(rectangle3);
-                TrackersContainer.Children.Add(_dragDropInsertIndicator);
+                _trackersPanel.Children.Add(_dragDropInsertIndicator);
             }
             if (_dragDropIndicator == null)
             {
@@ -7297,7 +7229,7 @@ namespace Dt.Base
                 rectangle11.StrokeDashOffset = 0.5;
                 rectangle11.Margin = new Thickness(1.0);
                 _dragDropIndicator.Children.Add(rectangle11);
-                TrackersContainer.Children.Add(_dragDropIndicator);
+                _trackersPanel.Children.Add(_dragDropIndicator);
             }
             _dragDropFromRange = fromRange;
             HitTestInformation savedHitTestInformation = GetHitInfo();
@@ -7707,142 +7639,6 @@ namespace Dt.Base
             _currentActiveColumnIndex = ActiveSheet.ActiveColumnIndex;
             UpdateColumnHeaderCellsState(-1, _currentActiveColumnIndex, -1, 1);
             UpdateRowHeaderCellsState(_currentActiveRowIndex, -1, 1, -1);
-        }
-
-        internal void UpdateFreezeLines()
-        {
-            if (!IsTouchZooming)
-            {
-                SheetLayout sheetLayout = GetSheetLayout();
-                ViewportInfo viewportInfo = GetViewportInfo();
-                int columnViewportCount = viewportInfo.ColumnViewportCount;
-                int rowViewportCount = viewportInfo.RowViewportCount;
-                if (_columnFreezeLine == null)
-                {
-                    _columnFreezeLine = CreateFreezeLine();
-                }
-                if ((sheetLayout.FrozenWidth > 0.0) && ShowFreezeLine)
-                {
-                    if (!TrackersContainer.Children.Contains(_columnFreezeLine))
-                    {
-                        TrackersContainer.Children.Add(_columnFreezeLine);
-                    }
-                    int frozenColumnCount = ActiveSheet.FrozenColumnCount;
-                    if (frozenColumnCount > ActiveSheet.ColumnCount)
-                    {
-                        frozenColumnCount = ActiveSheet.ColumnCount;
-                    }
-                    ColumnLayout layout2 = GetViewportColumnLayoutModel(-1).FindColumn(frozenColumnCount - 1);
-                    if (layout2 != null)
-                    {
-                        _columnFreezeLine.X1 = layout2.X + layout2.Width;
-                        _columnFreezeLine.X2 = _columnFreezeLine.X1;
-                        _columnFreezeLine.Y1 = 0.0;
-                        _columnFreezeLine.Y2 = sheetLayout.FrozenTrailingY + sheetLayout.FrozenTrailingHeight;
-                    }
-                    else
-                    {
-                        TrackersContainer.Children.Remove(_columnFreezeLine);
-                    }
-                }
-                else
-                {
-                    TrackersContainer.Children.Remove(_columnFreezeLine);
-                }
-                if (_columnTrailingFreezeLine == null)
-                {
-                    _columnTrailingFreezeLine = CreateFreezeLine();
-                }
-                if ((sheetLayout.FrozenTrailingWidth > 0.0) && ShowFreezeLine)
-                {
-                    if (!TrackersContainer.Children.Contains(_columnTrailingFreezeLine))
-                    {
-                        TrackersContainer.Children.Add(_columnTrailingFreezeLine);
-                    }
-                    ColumnLayout layout3 = GetViewportColumnLayoutModel(columnViewportCount).FindColumn(Math.Max(ActiveSheet.FrozenColumnCount, ActiveSheet.ColumnCount - ActiveSheet.FrozenTrailingColumnCount));
-                    if (layout3 != null)
-                    {
-                        _columnTrailingFreezeLine.X1 = layout3.X;
-                        _columnTrailingFreezeLine.X2 = _columnTrailingFreezeLine.X1;
-                        _columnTrailingFreezeLine.Y1 = 0.0;
-                        _columnTrailingFreezeLine.Y2 = sheetLayout.FrozenTrailingY + sheetLayout.FrozenTrailingHeight;
-                    }
-                    else
-                    {
-                        TrackersContainer.Children.Remove(_columnTrailingFreezeLine);
-                    }
-                }
-                else
-                {
-                    TrackersContainer.Children.Remove(_columnTrailingFreezeLine);
-                }
-                if (_rowFreezeLine == null)
-                {
-                    _rowFreezeLine = CreateFreezeLine();
-                }
-                if ((sheetLayout.FrozenHeight > 0.0) && ShowFreezeLine)
-                {
-                    if (!TrackersContainer.Children.Contains(_rowFreezeLine))
-                    {
-                        TrackersContainer.Children.Add(_rowFreezeLine);
-                    }
-                    int frozenRowCount = ActiveSheet.FrozenRowCount;
-                    if (ActiveSheet.RowCount < frozenRowCount)
-                    {
-                        frozenRowCount = ActiveSheet.RowCount;
-                    }
-                    RowLayout layout4 = GetViewportRowLayoutModel(-1).FindRow(frozenRowCount - 1);
-                    if (layout4 != null)
-                    {
-                        _rowFreezeLine.X1 = 0.0;
-                        if (_translateOffsetX >= 0.0)
-                        {
-                            _rowFreezeLine.X2 = sheetLayout.FrozenTrailingX + sheetLayout.FrozenTrailingWidth;
-                        }
-                        else
-                        {
-                            _rowFreezeLine.X2 = (sheetLayout.FrozenTrailingX + _translateOffsetX) + sheetLayout.FrozenTrailingWidth;
-                        }
-                        _rowFreezeLine.Y1 = layout4.Y + layout4.Height;
-                        _rowFreezeLine.Y2 = _rowFreezeLine.Y1;
-                    }
-                    else
-                    {
-                        TrackersContainer.Children.Remove(_rowFreezeLine);
-                    }
-                }
-                else
-                {
-                    TrackersContainer.Children.Remove(_rowFreezeLine);
-                }
-                if (_rowTrailingFreezeLine == null)
-                {
-                    _rowTrailingFreezeLine = CreateFreezeLine();
-                }
-                if ((sheetLayout.FrozenTrailingHeight > 0.0) && ShowFreezeLine)
-                {
-                    if (!TrackersContainer.Children.Contains(_rowTrailingFreezeLine))
-                    {
-                        TrackersContainer.Children.Add(_rowTrailingFreezeLine);
-                    }
-                    RowLayout layout5 = GetViewportRowLayoutModel(rowViewportCount).FindRow(Math.Max(ActiveSheet.FrozenRowCount, ActiveSheet.RowCount - ActiveSheet.FrozenTrailingRowCount));
-                    if (layout5 != null)
-                    {
-                        _rowTrailingFreezeLine.X1 = 0.0;
-                        _rowTrailingFreezeLine.X2 = sheetLayout.FrozenTrailingX + sheetLayout.FrozenTrailingWidth;
-                        _rowTrailingFreezeLine.Y1 = layout5.Y + ((_translateOffsetY < 0.0) ? _translateOffsetY : 0.0);
-                        _rowTrailingFreezeLine.Y2 = _rowTrailingFreezeLine.Y1;
-                    }
-                    else
-                    {
-                        TrackersContainer.Children.Remove(_rowTrailingFreezeLine);
-                    }
-                }
-                else
-                {
-                    TrackersContainer.Children.Remove(_rowTrailingFreezeLine);
-                }
-            }
         }
 
         internal void UpdateHeaderCellsState(int row, int rowCount, int column, int columnCount)

@@ -39,11 +39,10 @@ namespace Dt.Base
             IsWorking = true;
             if (_columnSplittingTracker == null)
             {
-                Line line = new Line();
-                line.Stroke = new SolidColorBrush(Colors.Black);
-                line.Opacity = 0.5;
-                _columnSplittingTracker = line;
-                SplittingTrackerContainer.Children.Add(_columnSplittingTracker);
+                // 动态分割线，创建后始终在可视树，通过Opacity控制是否显示
+                _columnSplittingTracker = new Line();
+                _columnSplittingTracker.Stroke = BrushRes.BlackBrush;
+                _trackersPanel.Children.Add(_columnSplittingTracker);
             }
             int columnViewportIndex = savedHitTestInformation.ColumnViewportIndex;
             _columnSplittingTracker.Opacity = 0.5;
@@ -188,11 +187,10 @@ namespace Dt.Base
             IsWorking = true;
             if (_rowSplittingTracker == null)
             {
-                Line line = new Line();
-                line.Stroke = new SolidColorBrush(Colors.Black);
-                line.Opacity = 0.5;
-                _rowSplittingTracker = line;
-                SplittingTrackerContainer.Children.Add(_rowSplittingTracker);
+                // 动态分割线，创建后始终在可视树，通过Opacity控制是否显示
+                _rowSplittingTracker = new Line();
+                _rowSplittingTracker.Stroke = BrushRes.BlackBrush;
+                _trackersPanel.Children.Add(_rowSplittingTracker);
             }
             int rowViewportIndex = savedHitTestInformation.RowViewportIndex;
             _rowSplittingTracker.Opacity = 0.5;
@@ -326,7 +324,8 @@ namespace Dt.Base
                 }
                 _horizontalSplitBar = null;
             }
-            if (((ActiveSheet != null) && (_horizontalSplitBar == null)) && (layout.ColumnPaneCount >= 1))
+
+            if (((ActiveSheet != null) && (_horizontalSplitBar == null)) && (layout.ColumnPaneCount > 1))
             {
                 _horizontalSplitBar = new Rectangle[layout.ColumnPaneCount - 1];
                 for (int i = 0; i < _horizontalSplitBar.Length; i++)
@@ -348,7 +347,7 @@ namespace Dt.Base
                 }
                 _verticalSplitBar = null;
             }
-            if (((ActiveSheet != null) && (_verticalSplitBar == null)) && (layout.RowPaneCount >= 1))
+            if (((ActiveSheet != null) && (_verticalSplitBar == null)) && (layout.RowPaneCount > 1))
             {
                 _verticalSplitBar = new Rectangle[layout.RowPaneCount - 1];
                 for (int i = 0; i < _verticalSplitBar.Length; i++)
@@ -373,7 +372,11 @@ namespace Dt.Base
                 }
                 _crossSplitBar = null;
             }
-            if (((ActiveSheet != null) && (_crossSplitBar == null)) && ((layout == null) || ((layout.RowPaneCount >= 1) && (layout.ColumnPaneCount >= 1))))
+
+            if (ActiveSheet != null
+                && _crossSplitBar == null
+                && layout.RowPaneCount > 1
+                && layout.ColumnPaneCount > 1)
             {
                 _crossSplitBar = new Rectangle[layout.RowPaneCount - 1, layout.ColumnPaneCount - 1];
                 for (int k = 0; k < _crossSplitBar.GetLength(0); k++)
@@ -404,6 +407,7 @@ namespace Dt.Base
                 }
                 _horizontalSplitBox = null;
             }
+
             if ((ActiveSheet != null) && (_horizontalSplitBox == null))
             {
                 _horizontalSplitBox = new Border[layout.ColumnPaneCount];
@@ -440,6 +444,7 @@ namespace Dt.Base
                 }
                 _verticalSplitBox = null;
             }
+
             if ((ActiveSheet != null) && (_verticalSplitBox == null))
             {
                 _verticalSplitBox = new Border[layout.RowPaneCount];

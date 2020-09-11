@@ -25,6 +25,8 @@ namespace Dt.Sample
         {
             InitializeComponent();
 
+            //_excel.ActiveSheet.RowCount = 3;
+            //_excel.ActiveSheet.ColumnCount = 2;
             //_excel.AutoRefresh = false;
             //_excel.SuspendEvent();
             //_excel.CanCellOverflow = true;
@@ -46,6 +48,12 @@ namespace Dt.Sample
                     sheet.SetValue(range.Row + i, range.Column + j, r.Next(50, 300));
                 }
             }
+        }
+
+        void OnTest(object sender, RoutedEventArgs e)
+        {
+            _excel.ShowAutoFillIndicator();
+            //_excel.InvalidateMeasure();
         }
     }
 }

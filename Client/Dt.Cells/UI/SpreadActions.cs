@@ -91,8 +91,8 @@ namespace Dt.Cells.UI
             Excel view = sender as Excel;
             if ((view != null) && view.HasSelectedFloatingObject())
             {
-                FloatingObject[] allSelectedFloatingObjects = view.GetAllSelectedFloatingObjects();
-                if ((allSelectedFloatingObjects != null) && (allSelectedFloatingObjects.Length > 0))
+                var allSelectedFloatingObjects = view.GetAllSelectedFloatingObjects();
+                if ((allSelectedFloatingObjects != null) && (allSelectedFloatingObjects.Count > 0))
                 {
                     List<FloatingObject> list = new List<FloatingObject>();
                     foreach (FloatingObject obj2 in allSelectedFloatingObjects)
@@ -115,8 +115,8 @@ namespace Dt.Cells.UI
             Excel view = sender as Excel;
             if ((view != null) && view.HasSelectedFloatingObject())
             {
-                FloatingObject[] allSelectedFloatingObjects = view.GetAllSelectedFloatingObjects();
-                if ((allSelectedFloatingObjects != null) && (allSelectedFloatingObjects.Length > 0))
+                var allSelectedFloatingObjects = view.GetAllSelectedFloatingObjects();
+                if ((allSelectedFloatingObjects != null) && (allSelectedFloatingObjects.Count > 0))
                 {
                     List<FloatingObject> list = new List<FloatingObject>();
                     foreach (FloatingObject obj2 in allSelectedFloatingObjects)
@@ -720,8 +720,8 @@ namespace Dt.Cells.UI
             Excel view = sender as Excel;
             if ((view != null) && view.HasSelectedFloatingObject())
             {
-                List<FloatingObject> list = new List<FloatingObject>(view.GetAllFloatingObjects());
-                List<FloatingObject> list2 = new List<FloatingObject>(view.GetAllSelectedFloatingObjects());
+                List<FloatingObject> list = view.GetAllFloatingObjects();
+                List<FloatingObject> list2 = view.GetAllSelectedFloatingObjects();
                 FloatingObject obj2 = list2[list2.Count - 1];
                 view.UnSelectedAllFloatingObjects();
                 int num2 = list.IndexOf(obj2) + 1;
@@ -811,8 +811,8 @@ namespace Dt.Cells.UI
             Excel view = sender as Excel;
             if ((view != null) && view.HasSelectedFloatingObject())
             {
-                List<FloatingObject> list = new List<FloatingObject>(view.GetAllFloatingObjects());
-                List<FloatingObject> list2 = new List<FloatingObject>(view.GetAllSelectedFloatingObjects());
+                List<FloatingObject> list = view.GetAllFloatingObjects();
+                List<FloatingObject> list2 = view.GetAllSelectedFloatingObjects();
                 FloatingObject obj2 = list2[list2.Count - 1];
                 view.UnSelectedAllFloatingObjects();
                 int num2 = list.IndexOf(obj2) - 1;

@@ -2508,9 +2508,9 @@ namespace Dt.Base
                     }
                     if (activeSelection != null)
                     {
-                        _autoFillIndicatorContainer.Width = 16.0;
-                        _autoFillIndicatorContainer.Height = 16.0;
-                        _autoFillIndicatorRec = new Rect?(GetAutoFillIndicatorRect(viewportRowsPresenter, activeSelection));
+                        _autoFillIndicator.Width = 16.0;
+                        _autoFillIndicator.Height = 16.0;
+                        _autoFillIndicatorRect = new Rect?(GetAutoFillIndicatorRect(viewportRowsPresenter, activeSelection));
                         base.InvalidateArrange();
                         CachedGripperLocation = null;
                     }

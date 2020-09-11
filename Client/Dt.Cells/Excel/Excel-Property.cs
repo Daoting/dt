@@ -79,19 +79,9 @@ namespace Dt.Base
             }
         }
 
-        /// <summary>
-        /// Gets the cell editor control on the editing viewport.
-        /// </summary>
-        Control CellEditor
+        internal Canvas TrackersPanel
         {
-            get
-            {
-                if (((EditingViewport != null) && (EditingViewport.EditingContainer != null)) && ((EditingViewport.EditingContainer.EditingRowIndex == ActiveSheet.ActiveRowIndex) && (EditingViewport.EditingContainer.EditingColumnIndex == ActiveSheet.ActiveColumnIndex)))
-                {
-                    return (EditingViewport.EditingContainer.Editor as Control);
-                }
-                return null;
-            }
+            get { return _trackersPanel; }
         }
 
         int DragFillStartBottomRow
@@ -275,15 +265,6 @@ namespace Dt.Base
             }
         }
 
-        /// <summary>
-        /// Gets or sets a value that indicates the freeze line style.
-        /// </summary>
-        internal Style FreezeLineStyle
-        {
-            get { return (Style)GetValue(FreezeLineStyleProperty); }
-            set { SetValue(FreezeLineStyleProperty, value); }
-        }
-
         internal bool HideSelectionWhenPrinting
         {
             get { return (bool)GetValue(HideSelectionWhenPrintingProperty); }
@@ -446,18 +427,6 @@ namespace Dt.Base
             }
         }
 
-        internal Canvas ShapeDrawingContainer
-        {
-            get
-            {
-                if (_shapeDrawingContainer == null)
-                {
-                    _shapeDrawingContainer = new Canvas();
-                }
-                return _shapeDrawingContainer;
-            }
-        }
-
         TooltipPopupHelper TooltipHelper
         {
             get
@@ -485,19 +454,6 @@ namespace Dt.Base
             }
         }
 
-        internal Canvas TrackersContainer
-        {
-            get
-            {
-                if (_trackersContainer == null)
-                {
-                    _trackersContainer = new Canvas();
-                    //Canvas.SetZIndex(_trackersContainer, 2);
-                }
-                return _trackersContainer;
-            }
-        }
-
         /// <summary>
         /// Gets or sets a value that indicates the trailing freeze line style.
         /// </summary>
@@ -517,58 +473,55 @@ namespace Dt.Base
         /// </summary>
         bool IsRowSplitting { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        Canvas SplittingTrackerContainer
-        {
-            get
-            {
-                if (_splittingTrackerContainer == null)
-                {
-                    _splittingTrackerContainer = new Canvas();
-                    //Canvas.SetZIndex(_splittingTrackerContainer, 0x63);
-                }
-                return _splittingTrackerContainer;
-            }
-        }
-
-
-        // 以下未整理
-
         #region 成员变量
         Workbook _workbook;
         RowHeaderPanel[] _rowHeaders;
         ColHeaderPanel[] _colHeaders;
         CornerPanel _cornerPanel;
         CellsPanel[,] _cellsPanels;
-
-        Size _paperSize;
-        CellRange _decorationRange;
-        Rect? _autoFillIndicatorRec;
-        GripperLocationsStruct _gripperLocations;
-        Border _autoFillIndicatorContainer;
-        Size _availableSize;
+        ScrollBar[] _horizontalScrollBar;
+        ScrollBar[] _verticalScrollBar;
+        Rectangle[,] _crossSplitBar;
+        Rectangle[] _horizontalSplitBar;
+        Rectangle[] _verticalSplitBar;
+        Border[] _horizontalSplitBox;
+        Border[] _verticalSplitBox;
+        Canvas _trackersPanel;
+        TabStrip _tabStrip;
+        Grid _progressRing;
+        Ellipse _topLeftGripper;
         Ellipse _bottomRightGripper;
-        Image _cachedautoFillIndicatorImage;
+        Image _rowResizeGripper;
+        Image _colResizeGripper;
+        Rectangle _autoFillIndicator;
+        GcRangeGroupHeader _columnGroupHeaderPresenter;
+        GcRangeGroup[] _columnGroupPresenters;
+        GcRangeGroupHeader _rowGroupHeaderPresenter;
+        GcRangeGroup[] _rowGroupPresenters;
+        Line _columnSplittingTracker;
+        Line _rowSplittingTracker;
+        Line _columnFreezeLine;
+        Line _columnTrailingFreezeLine;
+        Line _rowFreezeLine;
+        Line _rowTrailingFreezeLine;
+        Line _resizingTracker;
+        Grid _dragDropIndicator;
+        Grid _dragDropInsertIndicator;
+
         CellLayoutModel[] _cachedColumnHeaderCellLayoutModel;
         RowLayoutModel _cachedColumnHeaderRowLayoutModel;
         ColumnLayoutModel[] _cachedColumnHeaderViewportColumnLayoutModel;
         TransformGroup[] _cachedColumnHeaderViewportTransform;
-        Image _cachedColumnResizerGripperImage;
         TransformGroup _cachedCornerViewportTransform;
         FilterButtonInfoModel _cachedFilterButtonInfoModel;
         FloatingObjectLayoutModel[,] _cachedFloatingObjectLayoutModel;
         FloatingObjectLayoutModel[,] _cachedFloatingObjectMovingResizingLayoutModel;
         GroupLayout _cachedGroupLayout;
         SheetLayout _cachedLayout;
-        Dictionary<string, BitmapImage> _cachedResizerGipper;
         CellLayoutModel[] _cachedRowHeaderCellLayoutModel;
         ColumnLayoutModel _cachedRowHeaderColumnLayoutModel;
         RowLayoutModel[] _cachedRowHeaderViewportRowLayoutModel;
         TransformGroup[] _cachedRowHeaderViewportTransform;
-        Image _cachedRowResizerGripperImage;
-        Dictionary<string, ImageSource> _cachedToolbarImageSources;
         CellLayoutModel[,] _cachedViewportCellLayoutModel;
         ColumnLayoutModel[] _cachedViewportColumnLayoutModel;
         double[] _cachedViewportHeights;
@@ -577,19 +530,18 @@ namespace Dt.Base
         double[] _cachedViewportSplitBarY;
         TransformGroup[,] _cachedViewportTransform;
         double[] _cachedViewportWidths;
-        Line _columnFreezeLine;
-        GcRangeGroupHeader _columnGroupHeaderPresenter;
-        GcRangeGroup[] _columnGroupPresenters;
+        Size _paperSize;
+        CellRange _decorationRange;
+        Rect? _autoFillIndicatorRect;
+        GripperLocationsStruct _gripperLocations;
+        Size _availableSize;
 
-        Line _columnTrailingFreezeLine;
         int _currentActiveColumnIndex;
         int _currentActiveRowIndex;
         DragFillDirection _currentFillDirection = DragFillDirection.Down;
         CellRange _currentFillRange;
         int _dragDropColumnOffset;
         CellRange _dragDropFromRange;
-        Grid _dragDropIndicator;
-        Grid _dragDropInsertIndicator;
         int _dragDropRowOffset;
         PopupHelper _dragFillPopup;
         DragFillSmartTag _dragFillSmartTag;
@@ -632,38 +584,30 @@ namespace Dt.Base
         Point _lastClickPoint;
         Image _mouseCursor;
         Point _mouseDownPosition;
-        FloatingObject[] _movingResizingFloatingObjects;
+        List<FloatingObject> _movingResizingFloatingObjects;
         SpreadXNavigation _navigation;
         HitTestInformation _positionInfo;
         CopyMoveCellsInfo _preFillCellsInfo;
         uint? _primaryTouchDeviceId = null;
         bool _protect;
         bool _resetSelectionFrameStroke;
-        Border _resizerGripperContainer;
-        Line _resizingTracker;
-        PointerRoutedEventArgs _routedEventArgs;
-        Line _rowFreezeLine;
-        GcRangeGroupHeader _rowGroupHeaderPresenter;
-        GcRangeGroup[] _rowGroupPresenters;
 
-        Line _rowTrailingFreezeLine;
+        PointerRoutedEventArgs _routedEventArgs;
         SpreadXSelection _selection;
-        Canvas _shapeDrawingContainer;
         int _suspendViewInvalidate;
         TooltipPopupHelper _tooltipHelper;
         Windows.UI.Xaml.Controls.Primitives.Popup _tooltipPopup;
-        Ellipse _topLeftGripper;
+        
         HashSet<uint> _touchProcessedPointIds = new HashSet<uint>();
         HitTestInformation _touchStartHitTestInfo;
         int _touchStartLeftColumn = -1;
         Point _touchStartPoint;
         int _touchStartTopRow = -1;
         Windows.UI.Xaml.Controls.Primitives.Popup _touchToolbarPopup = null;
-        //Point _touchTranslatePoint;
         double _touchZoomInitFactor;
         double _touchZoomNewFactor;
         Point _touchZoomOrigin;
-        Canvas _trackersContainer;
+        
         double _translateOffsetX;
         double _translateOffsetY;
         UndoManager _undoManager;
@@ -672,20 +616,8 @@ namespace Dt.Base
 
         HitTestInformation _zoomOriginHitTestInfo;
         GripperLocationsStruct CachedGripperLocation;
-        const string _CELL_DELIMITER = "\"";
-        const string _COLUMN_DELIMITER = "\t";
         bool _DoTouchResizing;
-        const double ENHANCED_ZERO_INDICATOR_WIDTH = 6.0;
         internal bool _fastScroll;
-        const double FILTERBUTTON_HEIGHT = 16.0;
-        const double FILTERBUTTON_WIDTH = 16.0;
-        static readonly Size GCSPREAD_DefaultSize = new Size(500.0, 500.0);
-        const int GRIPPERSIZE = 0x10;
-        const double _GROUPBUTTON_HEIGHT = 16.0;
-        const double _GROUPBUTTON_WIDTH = 16.0;
-        const double HALF_ENHANCED_ZERO_INDICATOR_WIDTH = 3.0;
-        const double HORIZONTALSPLITBOX_WIDTH = 30.0;
-        const double _INDICATOR_THICKNESS = 3.0;
         bool IsContinueTouchOperation;
         bool IsTouchDragFilling;
         bool IsTouchDrapDropping;
@@ -699,49 +631,23 @@ namespace Dt.Base
         bool _IsTouchStartColumnSelecting;
         bool _IsTouchStartRowSelecting;
         bool IsTouchZooming;
-        const int _MAXSCROLLABLEHORIZONTALOFFSET = 120;
-        const int _MAXSCROLLABLEVERTICALOFFSET = 80;
-        const int _MOUSEWHEELSCROLLLINES = 3;
-        const double RESIZE_HEIGHT = 4.0;
-        const double RESIZE_WIDTH = 4.0;
-        const string _ROW_DELIMITER = "\r\n";
-        const double SPLITBOXWIDTH = 20.0;
-        const double _TOOLTIP_OFFSET = 4.0;
-        const double VERTICALSPLITBOX_HEIGHT = 30.0;
-        const float _ZOOM_MAX = 4f;
-        const float _ZOOM_MIN = 0.1f;
-        const double _defaultTabStripHeight = 40;
-        const double _defaultSplitBarSize = 6.0;
-
-        Rectangle[,] _crossSplitBar;
-        Rectangle[] _horizontalSplitBar;
-        Rectangle[] _verticalSplitBar;
-
-        Border[] _horizontalSplitBox;
-        Border[] _verticalSplitBox;
 
         Size _cachedLastAvailableSize;
-        Line _columnSplittingTracker;
-        ScrollBar[] _horizontalScrollBar;
-        
         HashSet<int> _invisibleColumns;
         HashSet<int> _invisibleRows;
         bool _pendinging;
-        Grid _progressRing;
-        Line _rowSplittingTracker;
         int _scrollTo;
         bool _showScrollTip;
-        Canvas _splittingTrackerContainer;
-        TabStrip _tabStrip;
-        ScrollBar[] _verticalScrollBar;
 
-        const double GCSPREAD_HorizontalScrollBarDefaultHeight = 25.0;
-        const double GCSPREAD_TabStripRatio = 0.5;
-        const double GCSPREAD_VerticalScrollBarDefaultWidth = 25.0;
         bool IsTouchColumnSplitting;
         bool IsTouchRowSplitting;
         bool IsTouchTabStripScrolling;
-        const double TABSTRIPSPLITBOX_WIDTH = 16.0;
+
+        static Rect _rcEmpty = new Rect();
+        const double VERTICALSPLITBOX_HEIGHT = 30.0;
+        const double _defaultTabStripHeight = 40;
+        const double _defaultSplitBarSize = 6.0;
+        const double HORIZONTALSPLITBOX_WIDTH = 30.0;
         #endregion
 
         #region 静态内容
@@ -792,12 +698,6 @@ namespace Dt.Base
             typeof(ClipboardPasteOptions),
             typeof(Excel),
             new PropertyMetadata(ClipboardPasteOptions.All));
-
-        public static readonly DependencyProperty FreezeLineStyleProperty = DependencyProperty.Register(
-            "FreezeLineStyle",
-            typeof(Style),
-            typeof(Excel),
-            new PropertyMetadata(null, OnFreezeLineStyleChanged));
 
         public static readonly DependencyProperty HideSelectionWhenPrintingProperty = DependencyProperty.Register(
             "HideSelectionWhenPrinting",
@@ -1036,15 +936,6 @@ namespace Dt.Base
             var excel = (Excel)d;
             excel.InvalidateLayout();
             excel.InvalidateMeasure();
-        }
-
-        static void OnFreezeLineStyleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var excel = (Excel)d;
-            Style style = (Style)e.NewValue;
-            excel._columnFreezeLine.TypeSafeSetStyle(style);
-            excel._rowFreezeLine.TypeSafeSetStyle(style);
-            excel.InvalidateAll();
         }
 
         static void OnCanUserUndoChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)

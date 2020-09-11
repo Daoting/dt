@@ -25,7 +25,7 @@ namespace Dt.Cells.UI
             _rowsLayer.Measure(availableSize);
             _borderLayer.Measure(availableSize);
             _selectionLayer.Measure(availableSize);
-            _dragFillLayer?.Measure(availableSize);
+            _dragFillLayer.Measure(availableSize);
             _decorationLayer?.Measure(availableSize);
             _editorLayer.Measure(availableSize);
             _floatingLayer.Measure(availableSize);
@@ -40,7 +40,7 @@ namespace Dt.Cells.UI
             _rowsLayer.Arrange(rc);
             _borderLayer.Arrange(rc);
             _selectionLayer.Arrange(rc);
-            _dragFillLayer?.Arrange(rc);
+            _dragFillLayer.Arrange(_cachedDragFillRect);
             _decorationLayer?.Arrange(rc);
 
 #if !IOS

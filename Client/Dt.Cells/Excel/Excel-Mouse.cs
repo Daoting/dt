@@ -1169,7 +1169,7 @@ namespace Dt.Base
 
         void OnManipulationStarted()
         {
-            UpdateHitInfo(_touchStartPoint);
+            UpdateTouchHitInfo(_touchStartPoint);
             _touchStartHitTestInfo = GetHitInfo();
             _touchZoomNewFactor = ActiveSheet.ZoomFactor;
             if ((_touchStartHitTestInfo != null) && (_touchStartHitTestInfo.HitTestType != HitTestType.Empty))
@@ -1193,7 +1193,7 @@ namespace Dt.Base
                 IsTouchSelectingCells = false;
                 if ((!IsEditing && !IsTouchDrapDropping) && !IsTouchDragFilling)
                 {
-                    if (_autoFillIndicatorRec.HasValue && _autoFillIndicatorRec.Value.Contains(_touchStartPoint))
+                    if (_autoFillIndicatorRect.HasValue && _autoFillIndicatorRect.Value.Contains(_touchStartPoint))
                     {
                         StartTouchDragFill();
                     }
@@ -1211,7 +1211,7 @@ namespace Dt.Base
                     }
                 }
             }
-            if (_touchStartHitTestInfo.HitTestType == HitTestType.RowHeader && !_autoFillIndicatorRec.HasValue)
+            if (_touchStartHitTestInfo.HitTestType == HitTestType.RowHeader && !_autoFillIndicatorRect.HasValue)
             {
                 if ((CachedGripperLocation != null) && CachedGripperLocation.TopLeft.Expand(5, 5).Contains(_touchStartPoint))
                 {
@@ -1229,7 +1229,7 @@ namespace Dt.Base
             }
             if (_touchStartHitTestInfo.HitTestType == HitTestType.ColumnHeader
                 && GetMouseDownFilterButton(_touchStartHitTestInfo, false) == null
-                && !_autoFillIndicatorRec.HasValue)
+                && !_autoFillIndicatorRect.HasValue)
             {
                 if ((CachedGripperLocation != null) && CachedGripperLocation.TopLeft.Expand(5, 5).Contains(_touchStartPoint))
                 {
@@ -1434,7 +1434,7 @@ namespace Dt.Base
             MousePosition = p_curPos;
             if (!IsWorking)
             {
-                UpdateHitInfo(p_curPos);
+                UpdateTouchHitInfo(p_curPos);
             }
             HitTestInformation savedHitTestInformation = GetHitInfo();
             if (!IsTouching)
@@ -2005,7 +2005,7 @@ namespace Dt.Base
         void OnGestureRecognizerTapped(GestureRecognizer sender, TappedEventArgs args)
         {
             // 鼠标操作时不调用！
-            UpdateHitInfo(args.Position);
+            UpdateTouchHitInfo(args.Position);
             HitTestInformation hitInfo = GetHitInfo();
 
             if (args.TapCount == 1)
@@ -2206,8 +2206,8 @@ namespace Dt.Base
             {
                 if (TapInSelection(p_hitInfo.HitPoint))
                 {
-                    FloatingObject[] allSelectedFloatingObjects = GetAllSelectedFloatingObjects();
-                    if ((allSelectedFloatingObjects != null) && (allSelectedFloatingObjects.Length > 0))
+                    var allSelectedFloatingObjects = GetAllSelectedFloatingObjects();
+                    if ((allSelectedFloatingObjects != null) && (allSelectedFloatingObjects.Count > 0))
                     {
                         UnSelectedAllFloatingObjects();
                         StartTapSelectCells();
@@ -2375,7 +2375,7 @@ namespace Dt.Base
         #endregion
 
         #region HitTest
-        protected HitTestInformation GetHitInfo()
+        HitTestInformation GetHitInfo()
         {
             if (_positionInfo == null)
             {
@@ -2384,17 +2384,17 @@ namespace Dt.Base
             return _positionInfo;
         }
 
-        protected void SaveHitInfo(HitTestInformation hitTestInfo)
+        void SaveHitInfo(HitTestInformation hitTestInfo)
         {
             _positionInfo = hitTestInfo;
         }
 
-        protected void UpdateHitInfo(Point point)
+        void UpdateTouchHitInfo(Point point)
         {
             HitTestInformation hitInfo = GetHitInfo();
             if (point != hitInfo.HitPoint)
             {
-                hitInfo = HitTest(point.X, point.Y);
+                hitInfo = TouchHitTest(point.X, point.Y);
                 SaveHitInfo(hitInfo);
             }
             _lastClickPoint = point;

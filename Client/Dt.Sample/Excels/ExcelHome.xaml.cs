@@ -33,6 +33,7 @@ namespace Dt.Sample
                 new CenterInfo(Icons.划卡, "过滤", typeof(FilterExcel), ""),
                 new CenterInfo(Icons.排列, "分组排序", typeof(RangeGroup), ""),
                 new CenterInfo(Icons.录音, "浮动对象", typeof(FloatingObject), ""),
+                new CenterInfo(Icons.点击, "触摸时选择", typeof(TouchExcel), ""),
                 new CenterInfo(Icons.详细, "格式化", typeof(Formatter), ""),
                 new CenterInfo(Icons.日历, "样式", typeof(ExcelTheme), ""),
                 new CenterInfo(Icons.修改, "图片", typeof(ImgExcel), ""),

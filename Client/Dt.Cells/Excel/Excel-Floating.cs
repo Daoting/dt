@@ -45,10 +45,9 @@ namespace Dt.Base
             ColumnLayout viewportColumnLayoutNearX = GetViewportColumnLayoutNearX(_dragToColumnViewport, _floatingObjectsMovingResizingStartPoint.X);
             _floatingObjectsMovingResizingStartPointCellBounds = new Rect(viewportColumnLayoutNearX.X, viewportRowLayoutNearY.Y, viewportColumnLayoutNearX.Width, viewportRowLayoutNearY.Height);
             _floatingObjectsMovingStartLocations = new Dictionary<string, Point>();
-            FloatingObject[] objArray = _movingResizingFloatingObjects;
-            for (int i = 0; i < objArray.Length; i++)
+            for (int i = 0; i < _movingResizingFloatingObjects.Count; i++)
             {
-                IFloatingObject obj2 = objArray[i];
+                IFloatingObject obj2 = _movingResizingFloatingObjects[i];
                 _floatingObjectsMovingStartLocations.Add(obj2.Name, obj2.Location);
             }
             return true;
@@ -57,7 +56,7 @@ namespace Dt.Base
         void StartFloatingObjectsMoving()
         {
             _movingResizingFloatingObjects = GetAllSelectedFloatingObjects();
-            if (((_movingResizingFloatingObjects != null) && (_movingResizingFloatingObjects.Length != 0)) && InitFloatingObjectsMovingResizing())
+            if (((_movingResizingFloatingObjects != null) && (_movingResizingFloatingObjects.Count != 0)) && InitFloatingObjectsMovingResizing())
             {
                 if ((_touchToolbarPopup != null) && _touchToolbarPopup.IsOpen)
                 {
@@ -79,7 +78,7 @@ namespace Dt.Base
         void StartFloatingObjectsResizing()
         {
             _movingResizingFloatingObjects = GetAllSelectedFloatingObjects();
-            if (((_movingResizingFloatingObjects != null) && (_movingResizingFloatingObjects.Length != 0)) && InitFloatingObjectsMovingResizing())
+            if (((_movingResizingFloatingObjects != null) && (_movingResizingFloatingObjects.Count != 0)) && InitFloatingObjectsMovingResizing())
             {
                 if ((_touchToolbarPopup != null) && _touchToolbarPopup.IsOpen)
                 {
@@ -127,14 +126,13 @@ namespace Dt.Base
 
         internal void UnSelectedAllFloatingObjects()
         {
-            FloatingObject[] allFloatingObjects = GetAllFloatingObjects();
-            if (allFloatingObjects.Length > 0)
+            var ls = GetAllFloatingObjects();
+            if (ls.Count > 0)
             {
-                FloatingObject[] objArray2 = allFloatingObjects;
-                for (int i = 0; i < objArray2.Length; i++)
+                foreach (var obj in ls)
                 {
-                    IFloatingObject obj2 = objArray2[i];
-                    obj2.IsSelected = false;
+                    if (obj.IsSelected)
+                        obj.IsSelected = false;
                 }
             }
         }
@@ -173,7 +171,7 @@ namespace Dt.Base
             {
                 return;
             }
-            if ((_movingResizingFloatingObjects != null) && (_movingResizingFloatingObjects.Length != 0))
+            if ((_movingResizingFloatingObjects != null) && (_movingResizingFloatingObjects.Count != 0))
             {
                 UpdateFloatingObjectsMovingResizingToViewports();
                 UpdateFloatingObjectsMovingResizingToCoordicates();
@@ -195,7 +193,7 @@ namespace Dt.Base
             {
                 return;
             }
-            if ((_movingResizingFloatingObjects != null) && (_movingResizingFloatingObjects.Length != 0))
+            if ((_movingResizingFloatingObjects != null) && (_movingResizingFloatingObjects.Count != 0))
             {
                 UpdateFloatingObjectsMovingResizingToViewports();
                 UpdateFloatingObjectsMovingResizingToCoordicates();
@@ -208,7 +206,7 @@ namespace Dt.Base
         {
             SuspendFloatingObjectsInvalidate();
             _floatingObjectsMovingResizingOffset = CalcMoveOffset(_dragStartRowViewport, _dragStartColumnViewport, _floatingObjectsMovingResizingStartRow, _floatingObjectsMovingResizingStartColumn, _floatingObjectsMovingResizingStartPoint, _dragToRowViewport, _dragToColumnViewport, _dragToRow, _dragToColumn, MousePosition);
-            if ((_movingResizingFloatingObjects != null) && (_movingResizingFloatingObjects.Length > 0))
+            if ((_movingResizingFloatingObjects != null) && (_movingResizingFloatingObjects.Count > 0))
             {
                 List<string> list = new List<string>();
                 foreach (FloatingObject obj2 in _movingResizingFloatingObjects)
@@ -225,7 +223,7 @@ namespace Dt.Base
         {
             SuspendFloatingObjectsInvalidate();
             _floatingObjectsMovingResizingOffset = CalcMoveOffset(_dragStartRowViewport, _dragStartColumnViewport, _floatingObjectsMovingResizingStartRow, _floatingObjectsMovingResizingStartColumn, _floatingObjectsMovingResizingStartPoint, _dragToRowViewport, _dragToColumnViewport, _dragToRow, _dragToColumn, MousePosition);
-            if ((_movingResizingFloatingObjects != null) && (_movingResizingFloatingObjects.Length > 0))
+            if ((_movingResizingFloatingObjects != null) && (_movingResizingFloatingObjects.Count > 0))
             {
                 List<string> list = new List<string>();
                 foreach (FloatingObject obj2 in _movingResizingFloatingObjects)
@@ -241,14 +239,14 @@ namespace Dt.Base
         void DoResizeFloatingObjects()
         {
             SuspendFloatingObjectsInvalidate();
-            if ((_movingResizingFloatingObjects != null) && (_movingResizingFloatingObjects.Length > 0))
+            if ((_movingResizingFloatingObjects != null) && (_movingResizingFloatingObjects.Count > 0))
             {
                 int activeRowViewportIndex = GetActiveRowViewportIndex();
                 int activeColumnViewportIndex = GetActiveColumnViewportIndex();
                 Rect[] floatingObjectsResizingRects = GetFloatingObjectsResizingRects(activeRowViewportIndex, activeColumnViewportIndex);
                 List<string> list = new List<string>();
                 List<Rect> list2 = new List<Rect>();
-                for (int i = 0; (i < _movingResizingFloatingObjects.Length) && (i < floatingObjectsResizingRects.Length); i++)
+                for (int i = 0; (i < _movingResizingFloatingObjects.Count) && (i < floatingObjectsResizingRects.Length); i++)
                 {
                     FloatingObject obj2 = _movingResizingFloatingObjects[i];
                     Rect rect = new Rect(floatingObjectsResizingRects[i].X, floatingObjectsResizingRects[i].Y, floatingObjectsResizingRects[i].Width, floatingObjectsResizingRects[i].Height);
@@ -463,8 +461,8 @@ namespace Dt.Base
 
         internal Rect[] GetFloatingObjectsMovingFrameRects(int rowViewport, int columnViewport)
         {
-            FloatingObject[] allSelectedFloatingObjects = GetAllSelectedFloatingObjects();
-            if ((allSelectedFloatingObjects == null) || (allSelectedFloatingObjects.Length == 0))
+            var allSelectedFloatingObjects = GetAllSelectedFloatingObjects();
+            if ((allSelectedFloatingObjects == null) || (allSelectedFloatingObjects.Count == 0))
             {
                 return null;
             }
@@ -501,7 +499,7 @@ namespace Dt.Base
 
         internal Rect[] GetFloatingObjectsResizingRects(int rowViewport, int columnViewport)
         {
-            if ((_movingResizingFloatingObjects == null) || (_movingResizingFloatingObjects.Length == 0))
+            if ((_movingResizingFloatingObjects == null) || (_movingResizingFloatingObjects.Count == 0))
             {
                 return null;
             }
