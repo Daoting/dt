@@ -127,7 +127,8 @@
     <Reference Include="Xamarin.iOS" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Uno.UI" Version="3.0.12" />
+    <PackageReference Include="Uno.UI" Version="3.1.0-dev.288" />
+    <PackageReference Include="Dt.Cells" Version="2.0.0" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="..\Common\App.xaml">
@@ -145,10 +146,6 @@
       <Project>{13a270fb-825a-4fb3-ae13-01dfd7c7a147}</Project>
       <Name>Dt.Base</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Dt.Charts\Dt.Charts.csproj">
-      <Project>{138be732-7f56-4b27-83a3-cfde63b7e7b0}</Project>
-      <Name>Dt.Charts</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Dt.Core\Dt.Core.csproj">
       <Project>{89b073f7-81dd-4e5d-a093-f73121b1f406}</Project>
       <Name>Dt.Core</Name>
@@ -161,6 +158,19 @@
       <Project>{e9c48931-cc12-4f49-8fbb-ebefc628dfc6}</Project>
       <Name>Dt.Fz</Name>
     </ProjectReference>
+    <!--修改Excel或Chart时引用项目-->
+    <!--<ProjectReference Include="..\Dt.Cells.Data\Dt.Cells.Data.csproj">
+      <Project>{2b8fda51-98e6-4968-87ec-f878058fdfd4}</Project>
+      <Name>Dt.Cells.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dt.Cells\Dt.Cells.csproj">
+      <Project>{191d199e-f280-4f36-a929-2b17218cacc0}</Project>
+      <Name>Dt.Cells</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dt.Charts\Dt.Charts.csproj">
+      <Project>{138be732-7f56-4b27-83a3-cfde63b7e7b0}</Project>
+      <Name>Dt.Charts</Name>
+    </ProjectReference>-->
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>
