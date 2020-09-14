@@ -457,7 +457,6 @@
         </Setter>
     </Style>
 
-
     <Style TargetType="local:AutoFilterDropDownItemControl">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="BorderBrush" Value="Transparent" />
@@ -1128,33 +1127,8 @@
         </Setter>
     </Style>
 
-    <Style TargetType="local:DataValidationListButton">
-        <Setter Property="IsTabStop" Value="False" />
-        <Setter Property="BorderBrush" Value="{StaticResource filterButtonBorderBrush}" />
-        <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="Margin" Value="0,0,1,1" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="local:DataValidationListButton">
-                    <Grid>
-                        <Rectangle x:Name="Background"
-                                   Stroke="{TemplateBinding BorderBrush}"
-                                   StrokeThickness="{TemplateBinding BorderThickness}" 
-                                   Fill="{StaticResource dataValidationListButtonBrush}"/>
-                        <Image x:Name="NoSortFilterState"
-                               Width="16"
-                               Height="16"
-                               Source="ms-appx:///Dt.Cells/Icons/NoSortFilter.png"
-                               Opacity="1"/>
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
     <!--################# filter.xaml #####################-->
     <Style TargetType="local:FilterButton">
-        <Setter Property="IsTabStop" Value="False" />
         <Setter Property="BorderBrush" Value="{StaticResource filterButtonBorderBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Margin" Value="0,0,1,1" />
@@ -1164,54 +1138,7 @@
                     <Grid BorderBrush="{TemplateBinding BorderBrush}"
                           BorderThickness="{TemplateBinding BorderThickness}"
                           Background="{StaticResource filterButtonBackgroundBrush}">
-                        <VisualStateManager.VisualStateGroups>
-
-                            <VisualStateGroup x:Name="SortFilterStates">
-                                <VisualState x:Name="NoSortFilter">
-                                    <VisualState.Setters>
-                                        <Setter Target="ImageState.Source" Value="ms-appx:///Dt.Cells/Icons/NoSortFilter.png" />
-                                    </VisualState.Setters>
-                                </VisualState>
-
-                                <VisualState x:Name="Ascend">
-                                    <VisualState.Setters>
-                                        <Setter Target="ImageState.Source" Value="ms-appx:///Dt.Cells/Icons/Ascend.png" />
-                                    </VisualState.Setters>
-                                </VisualState>
-
-                                <VisualState x:Name="Descend">
-                                    <VisualState.Setters>
-                                        <Setter Target="ImageState.Source" Value="ms-appx:///Dt.Cells/Icons/Descend.png" />
-                                    </VisualState.Setters>
-                                </VisualState>
-
-                                <VisualState x:Name="Filter">
-                                    <VisualState.Setters>
-                                        <Setter Target="ImageState.Source" Value="ms-appx:///Dt.Cells/Icons/Filter.png" />
-                                    </VisualState.Setters>
-                                </VisualState>
-
-                                <VisualState x:Name="FilterAscend">
-                                    <VisualState.Setters>
-                                        <Setter Target="ImageState.Source" Value="ms-appx:///Dt.Cells/Icons/FilterAscend.png" />
-                                    </VisualState.Setters>
-                                </VisualState>
-
-                                <VisualState x:Name="FilterDescend">
-                                    <VisualState.Setters>
-                                        <Setter Target="ImageState.Source" Value="ms-appx:///Dt.Cells/Icons/FilterDescend.png" />
-                                    </VisualState.Setters>
-                                </VisualState>
-                            </VisualStateGroup>
-
-                            <VisualStateGroup x:Name="CheckStates">
-                                <VisualState x:Name="Checked"/>
-                                <VisualState x:Name="Unchecked" />
-                            </VisualStateGroup>
-
-                        </VisualStateManager.VisualStateGroups>
-
-                        <Image x:Name="ImageState" Width="16" Height="16" />
+                        <Image Source="{TemplateBinding Bitmap}" Width="16" Height="16" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

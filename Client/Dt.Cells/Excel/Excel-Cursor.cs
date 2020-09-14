@@ -108,7 +108,7 @@ namespace Dt.Base
             }
         }
 
-        internal void SetMouseCursor(CursorType cursorType)
+        internal async void SetMouseCursor(CursorType cursorType)
         {
             if (_mouseCursor == null)
             {
@@ -120,7 +120,7 @@ namespace Dt.Base
 #if UWP
             Window.Current.CoreWindow.PointerCursor = null;
 #endif
-            _mouseCursor.Source = CursorGenerator.GetCursor(cursorType);
+            _mouseCursor.Source = await CursorGenerator.GetCursor(cursorType);
             _mouseCursor.SetValue(Canvas.LeftProperty, (double)(MousePosition.X - 32.0));
             _mouseCursor.SetValue(Canvas.TopProperty, (double)(MousePosition.Y - 32.0));
         }
@@ -158,9 +158,9 @@ namespace Dt.Base
             }
         }
 
-        void UpdateMouseCursorType(CursorType cursorType)
+        async void UpdateMouseCursorType(CursorType cursorType)
         {
-            _mouseCursor.Source = CursorGenerator.GetCursor(cursorType);
+            _mouseCursor.Source = await CursorGenerator.GetCursor(cursorType);
         }
     }
 }

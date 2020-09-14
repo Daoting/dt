@@ -11,6 +11,8 @@ using Dt.Base;
 using Dt.Cells.Data;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Xaml;
@@ -279,13 +281,13 @@ namespace Dt.Cells.UI
             }
         }
 
-        public void SetIconObject(IconDrawingObject iconObject, float zoomFactor, Cell bindingCell)
+        public async void SetIconObject(IconDrawingObject iconObject, float zoomFactor, Cell bindingCell)
         {
             if (!object.Equals(_iconObject, iconObject))
             {
                 if (iconObject != null)
                 {
-                    _cachedImage.Source = ConditionalFormatIcons.GetIconSource(iconObject.IconSetType, iconObject.IndexOfIcon);
+                    _cachedImage.Source = await ConditionalFormatIcons.GetIconSource(iconObject.IconSetType, iconObject.IndexOfIcon);
                 }
                 else
                 {
@@ -340,16 +342,23 @@ namespace Dt.Cells.UI
             [ThreadStatic]
             static ImageSource[,] _cachedImageSources;
 
-            public static ImageSource GetIconSource(IconSetType iconType, int iconIndex)
+            public static async Task<ImageSource> GetIconSource(IconSetType iconType, int iconIndex)
             {
                 int num = (int)iconType;
                 ImageSource source = CachedImageSources[num, iconIndex];
                 if (source == null)
                 {
-                    // hdt
-                    Uri uri = new Uri(string.Format("ms-appx:///Dt.Cells/Icons/ConditionalFormats/{0}", CachedIconNames[num, iconIndex]));
-                    source = new BitmapImage(uri);
-                    CachedImageSources[num, iconIndex] = source;
+                    BitmapImage bmp = new BitmapImage();
+                    using (var stream = typeof(SR).Assembly.GetManifestResourceStream("Dt.Cells.Icons.ConditionalFormats." + CachedIconNames[num, iconIndex]))
+                    {
+#if UWP
+                        await bmp.SetSourceAsync(stream.AsRandomAccessStream());
+#else
+                        await bmp.SetSourceAsync(stream);
+#endif
+                    }
+                    source = bmp;
+                    CachedImageSources[num, iconIndex] = bmp;
                 }
                 return source;
             }

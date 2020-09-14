@@ -405,16 +405,16 @@ namespace Dt.Base
             }
         }
 
-        void AddSortItems(ColumnDropDownList dropdown, FilterButtonInfo info)
+        async void AddSortItems(ColumnDropDownList dropdown, FilterButtonInfo info)
         {
             DropDownItemControl control = new DropDownItemControl();
             control.Content = ResourceStrings.SortDropdownItemSortAscend;
-            control.Icon = SR.GetImage("SortAscending.png");
+            control.Icon = await SR.GetImage("SortAscending.png");
             control.Command = new SortCommand(this, info, true);
             dropdown.Items.Add(control);
             DropDownItemControl control2 = new DropDownItemControl();
             control2.Content = ResourceStrings.SortDropdownItemSortDescend;
-            control2.Icon = SR.GetImage("SortDescending.png");
+            control2.Icon = await SR.GetImage("SortDescending.png");
             control2.Command = new SortCommand(this, info, false);
             dropdown.Items.Add(control2);
         }

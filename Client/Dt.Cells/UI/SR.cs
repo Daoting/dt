@@ -9,6 +9,9 @@
 #region 引用命名
 using Dt.Cells.Data;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 using Windows.UI.Xaml.Media.Imaging;
 #endregion
 
@@ -16,14 +19,25 @@ namespace Dt.Cells.UI
 {
     internal class SR : SR<ResourceStrings>
     {
-        static readonly string _resourcePrefix = "ms-appx:///Dt.Cells/Icons/";
+        static Dictionary<string, BitmapImage> _caches = new Dictionary<string, BitmapImage>();
 
-        public static BitmapImage GetImage(string resourceId)
+        public static async Task<BitmapImage> GetImage(string resourceId)
         {
-            BitmapImage image = new BitmapImage();
-            Uri uri = new Uri(_resourcePrefix + resourceId);
-            image.UriSource = uri;
-            return image;
+            BitmapImage bmp;
+            if (_caches.TryGetValue(resourceId, out bmp))
+                return bmp;
+
+            bmp = new BitmapImage();
+            using (var stream = typeof(SR).Assembly.GetManifestResourceStream("Dt.Cells.Icons." + resourceId))
+            {
+#if UWP
+                await bmp.SetSourceAsync(stream.AsRandomAccessStream());
+#else
+                await bmp.SetSourceAsync(stream);
+#endif
+            }
+            _caches[resourceId] = bmp;
+            return bmp;
         }
     }
 }

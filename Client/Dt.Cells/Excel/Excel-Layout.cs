@@ -1654,12 +1654,8 @@ namespace Dt.Base
             _bottomRightGripper.Width = 16.0;
 
             // iOS暂时不支持程序集中的内容图片，3.1将支持
-            _rowResizeGripper = new Image { Source = new BitmapImage(new Uri("ms-appx:///Dt.Cells/Icons/ResizeGripperVer.png")) };
-            _rowResizeGripper.Width = 16.0;
-            _rowResizeGripper.Height = 16.0;
-            _colResizeGripper = new Image { Source = new BitmapImage(new Uri("ms-appx:///Dt.Cells/Icons/ResizeGripperHor.png")) };
-            _colResizeGripper.Width = 16.0;
-            _colResizeGripper.Height = 16.0;
+            _rowResizeGripper = new Image { Width = 16.0, Height = 16.0 };
+            _colResizeGripper = new Image { Width = 16.0, Height = 16.0 };
 
             _autoFillIndicator = new Rectangle
             {
@@ -1671,6 +1667,7 @@ namespace Dt.Base
             };
 
             Background = BrushRes.浅灰背景;
+            LoadResizeGripper();
         }
 
         internal void InvalidateLayout()
@@ -2429,6 +2426,12 @@ namespace Dt.Base
         {
             if (_progressRing != null)
                 Children.Remove(_progressRing);
+        }
+
+        async void LoadResizeGripper()
+        {
+            _rowResizeGripper.Source = await SR.GetImage("ResizeGripperVer.png");
+            _colResizeGripper.Source = await SR.GetImage("ResizeGripperHor.png");
         }
         #endregion
     }

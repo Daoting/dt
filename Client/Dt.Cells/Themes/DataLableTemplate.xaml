@@ -33,7 +33,7 @@
     </DataTemplate>
 
     <local:LegendConverter x:Key="lc"></local:LegendConverter>
-    <ControlTemplate  x:Key="legendTeplate" TargetType="c1:ChartLegend">
+    <ControlTemplate x:Key="legendTeplate" TargetType="c1:ChartLegend">
         <Grid>
             <Rectangle Stroke="{TemplateBinding BorderBrush}"
                        Fill="{TemplateBinding Background}"
@@ -52,14 +52,4 @@
             </StackPanel>
         </Grid>
     </ControlTemplate>
-    <DataTemplate x:Key="ListBoxItemTemplate">
-        <Grid Height="15" VerticalAlignment="Top" Name="grid">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="20"/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <Image Source ="ms-appx:///Dt.Cells/Icons/InsertFunction.png" Stretch="Uniform"/>
-            <TextBlock Text="{Binding Name}" Grid.Column="1" VerticalAlignment="Center" Margin="3,0"/>
-        </Grid>
-    </DataTemplate>
 </ResourceDictionary>

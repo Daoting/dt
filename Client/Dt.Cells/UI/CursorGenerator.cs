@@ -9,6 +9,8 @@
 #region 引用命名
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
@@ -18,16 +20,24 @@ namespace Dt.Cells.UI
 {
     internal static class CursorGenerator
     {
-        static Dictionary<CursorType, ImageSource> _cache = new Dictionary<CursorType, ImageSource>();
+        static Dictionary<CursorType, BitmapImage> _cache = new Dictionary<CursorType, BitmapImage>();
 
-        internal static ImageSource GetCursor(CursorType cursorType)
+        internal static async Task<BitmapImage> GetCursor(CursorType cursorType)
         {
-            ImageSource source;
+            BitmapImage source;
             if (!_cache.TryGetValue(cursorType, out source))
             {
                 bool flag = cursorType.ToString().StartsWith("Resize");
                 string str = cursorType.ToString() + (((Application.Current.RequestedTheme == ApplicationTheme.Dark) && flag) ? "_dark" : "") + ".png";
-                source = new BitmapImage(new Uri("ms-appx:///Dt.Cells/Icons/" + str));
+                source = new BitmapImage();
+                using (var stream = typeof(CursorGenerator).Assembly.GetManifestResourceStream("Dt.Cells.Icons." + str))
+                {
+#if UWP
+                    await source.SetSourceAsync(stream.AsRandomAccessStream());
+#else
+                    await source.SetSourceAsync(stream);
+#endif
+                }
                 _cache.Add(cursorType, source);
             }
             return source;

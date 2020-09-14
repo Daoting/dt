@@ -14,6 +14,7 @@ using Windows.Devices.Input;
 using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media.Imaging;
 #endregion
 
 namespace Dt.Cells.UI
@@ -27,7 +28,11 @@ namespace Dt.Cells.UI
         /// <summary>
         /// Indicates the icon property.
         /// </summary>
-        public static readonly DependencyProperty IconProperty = DependencyProperty.Register("Icon", (Type) typeof(object), (Type) typeof(DropDownItemControl), new PropertyMetadata(null));
+        public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
+            "Icon",
+            typeof(BitmapImage),
+            typeof(DropDownItemControl),
+            new PropertyMetadata(null));
 
         /// <summary>
         /// Occurs when mouse click the item.
@@ -163,10 +168,10 @@ namespace Dt.Cells.UI
         /// <summary>
         /// Gets or sets the item icon image.
         /// </summary>
-        public object Icon
+        public BitmapImage Icon
         {
-            get { return  base.GetValue(IconProperty); }
-            set { base.SetValue(IconProperty, value); }
+            get { return  (BitmapImage)GetValue(IconProperty); }
+            set { SetValue(IconProperty, value); }
         }
     }
 }

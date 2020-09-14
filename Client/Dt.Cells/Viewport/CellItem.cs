@@ -421,7 +421,6 @@ namespace Dt.Cells.UI
                     FilterButton element = new FilterButton(this);
                     element.HorizontalAlignment = HorizontalAlignment.Right;
                     element.VerticalAlignment = VerticalAlignment.Bottom;
-                    element.Area = SheetArea.Cells;
                     _filterButton = element;
                     Children.Add(element);
                 }
