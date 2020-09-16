@@ -864,6 +864,21 @@ namespace Dt.Base
             typeof(Excel),
             new PropertyMetadata(true));
 
+        public static readonly DependencyProperty IsBusyProperty = DependencyProperty.Register(
+            "IsBusy",
+            typeof(bool),
+            typeof(Excel),
+            new PropertyMetadata(false, OnIsBusyChanged));
+
+        static void OnIsBusyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var excel = (Excel)d;
+            if ((bool)e.NewValue)
+                excel.ShowProgressRing();
+            else
+                excel.HideProgressRing();
+        }
+
         static void OnTrailingFreezeLineStyleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var excel = (Excel)d;

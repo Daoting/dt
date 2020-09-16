@@ -8,6 +8,7 @@
 
 #region 引用命名
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace Dt.Cells.UI
 {
     internal static class CursorGenerator
     {
-        static Dictionary<CursorType, BitmapImage> _cache = new Dictionary<CursorType, BitmapImage>();
+        static ConcurrentDictionary<CursorType, BitmapImage> _cache = new ConcurrentDictionary<CursorType, BitmapImage>();
 
         internal static async Task<BitmapImage> GetCursor(CursorType cursorType)
         {
@@ -38,7 +39,7 @@ namespace Dt.Cells.UI
                     await source.SetSourceAsync(stream);
 #endif
                 }
-                _cache.Add(cursorType, source);
+                _cache[cursorType] = source;
             }
             return source;
         }

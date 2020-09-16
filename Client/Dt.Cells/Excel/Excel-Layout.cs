@@ -71,7 +71,12 @@ namespace Dt.Base
             _trackersPanel.Measure(availableSize);
 
             // 进度环
-            _progressRing?.Measure(availableSize);
+            if (_progressRing != null)
+            {
+                if (!Children.Contains(_progressRing))
+                    Children.Add(_progressRing);
+                _progressRing.Measure(availableSize);
+            }
             return _availableSize;
         }
 
@@ -2411,6 +2416,10 @@ namespace Dt.Base
         {
             HideProgressRing();
             _progressRing = new Grid { Background = BrushRes.浅灰背景 };
+            // 屏蔽交互事件
+            _progressRing.PointerPressed += (s, e) => e.Handled = true;
+            _progressRing.PointerMoved += (s, e) => e.Handled = true;
+            _progressRing.PointerReleased += (s, e) => e.Handled = true;
             var ring = new ProgressRing
             {
                 Foreground = BrushRes.主题蓝色,
@@ -2419,13 +2428,16 @@ namespace Dt.Base
                 Height = 100.0,
             };
             _progressRing.Children.Add(ring);
-            Children.Add(_progressRing);
+            InvalidateMeasure();
         }
 
         void HideProgressRing()
         {
             if (_progressRing != null)
+            {
                 Children.Remove(_progressRing);
+                _progressRing = null;
+            }
         }
 
         async void LoadResizeGripper()

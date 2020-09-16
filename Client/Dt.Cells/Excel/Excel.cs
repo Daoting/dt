@@ -767,6 +767,14 @@ namespace Dt.Base
             }
         }
 
+        /// <summary>
+        /// 获取设置是否忙状态
+        /// </summary>
+        public bool IsBusy
+        {
+            get { return (bool)GetValue(IsBusyProperty); }
+            set { SetValue(IsBusyProperty, value); }
+        }
         #endregion
 
         #region 打开保存
