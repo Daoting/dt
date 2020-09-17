@@ -257,15 +257,15 @@ namespace Dt.Cells.UndoRedo
                     _workSheet.ResumeCalcService();
                     base.ResumeInvalidate(sender);
                 }
-                sender.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
+                sender.RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
                 IList<SpreadChartBase> list = Dt.Cells.Data.SpreadChartUtility.GetChartShapeAffectedCellChanged(_workSheet, _dragFillExtent.FillRange.Row, _dragFillExtent.FillRange.Column, _dragFillExtent.FillRange.RowCount, _dragFillExtent.FillRange.ColumnCount);
                 if (list.Count > 0)
                 {
-                    sender.InvalidateFloatingObjects(Enumerable.ToArray<SpreadChartBase>((IEnumerable<SpreadChartBase>) list));
+                    sender.RefreshFloatingObjects(Enumerable.ToArray<SpreadChartBase>((IEnumerable<SpreadChartBase>) list));
                 }
                 else
                 {
-                    sender.InvalidateFloatingObjects();
+                    sender.RefreshFloatingObjects();
                 }
             }
         }
@@ -611,14 +611,14 @@ namespace Dt.Cells.UndoRedo
                 _workSheet.ResumeCalcService();
                 base.ResumeInvalidate(excel);
             }
-            excel.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
+            excel.RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
             IList<SpreadChartBase> list = Dt.Cells.Data.SpreadChartUtility.GetChartShapeAffectedCellChanged(_workSheet, _dragFillExtent.FillRange.Row, _dragFillExtent.FillRange.Column, _dragFillExtent.FillRange.RowCount, _dragFillExtent.FillRange.ColumnCount);
             if (list.Count > 0)
             {
-                excel.InvalidateFloatingObjects(Enumerable.ToArray<SpreadChartBase>((IEnumerable<SpreadChartBase>) list));
+                excel.RefreshFloatingObjects(Enumerable.ToArray<SpreadChartBase>((IEnumerable<SpreadChartBase>) list));
                 return flag;
             }
-            excel.InvalidateFloatingObjects();
+            excel.RefreshFloatingObjects();
             return flag;
         }
 
@@ -648,7 +648,7 @@ namespace Dt.Cells.UndoRedo
                 _workSheet.ResumeCalcService();
                 base.ResumeInvalidate(excel);
             }
-            excel.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
+            excel.RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
             return true;
         }
 

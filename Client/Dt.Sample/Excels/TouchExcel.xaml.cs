@@ -40,7 +40,12 @@ namespace Dt.Sample
         public TouchExcel()
         {
             InitializeComponent();
-            _excel.ActiveSheet.SetValue(2, 1, "Goods");
+
+            using (_excel.Defer())
+            {
+                _excel.ActiveSheet.SetValue(2, 1, "Goods");
+                _excel.ActiveSheet.AddTable("sampleTable1", 3, 0, 5, 4, TableStyles.Medium3);
+            }
         }
 
         void OnAutoFill(object sender, RoutedEventArgs e)

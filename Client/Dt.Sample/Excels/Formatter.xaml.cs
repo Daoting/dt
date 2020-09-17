@@ -40,19 +40,21 @@ namespace Dt.Sample
         public Formatter()
         {
             InitializeComponent();
-            _excel.AutoRefresh = false;
-            Worksheet sheet = _excel.Sheets[0];
-            sheet.Name = "Standard Formatter";
-            initStandardFormatter(sheet);
-            sheet = new Worksheet("Date Formatter");
-            _excel.Sheets.Insert(0, sheet);
-            initFormatterUnitTest(sheet);
-            startFormatterUnitTest(sheet, dateFormatterArray);
-            sheet = new Worksheet("Number Formatter");
-            _excel.Sheets.Insert(0, sheet);
-            initFormatterUnitTest(sheet);
-            startFormatterUnitTest(sheet, numberFormatterArray);
-            _excel.AutoRefresh = true;
+
+            using (_excel.Defer())
+            {
+                Worksheet sheet = _excel.Sheets[0];
+                sheet.Name = "Standard Formatter";
+                initStandardFormatter(sheet);
+                sheet = new Worksheet("Date Formatter");
+                _excel.Sheets.Insert(0, sheet);
+                initFormatterUnitTest(sheet);
+                startFormatterUnitTest(sheet, dateFormatterArray);
+                sheet = new Worksheet("Number Formatter");
+                _excel.Sheets.Insert(0, sheet);
+                initFormatterUnitTest(sheet);
+                startFormatterUnitTest(sheet, numberFormatterArray);
+            }
         }
 
         void initStandardFormatter(Worksheet sheet)

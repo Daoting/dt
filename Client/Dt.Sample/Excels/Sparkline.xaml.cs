@@ -40,16 +40,17 @@ namespace Dt.Sample
         public Sparkline()
         {
             InitializeComponent();
-            InitializeSample();
+
+            using (_excel.Defer())
+            {
+                InitializeSample();
+            }
             AddEnumToComboBox(typeof(SparklineType), _cbSparklineType);
             AddEnumToComboBox(typeof(DataOrientation), _cbOrientation);
         }
 
         void InitializeSample()
         {
-            _excel.AutoRefresh = false;
-            _excel.SuspendEvent();
-
             Worksheet sheet = _excel.ActiveSheet;
             _excel.CanCellOverflow = true;
 
@@ -228,8 +229,6 @@ namespace Dt.Sample
                 }
                 );
 
-            _excel.ResumeEvent();
-            _excel.AutoRefresh = true;
             _excel.ActiveSheet.AddSelection(0, 0, 1, 1);
         }
 

@@ -1764,7 +1764,7 @@ namespace Dt.Base
                 RaiseUserZooming(zoomFactor, ActiveSheet.ZoomFactor);
                 InvalidateViewportColumnsLayout();
                 InvalidateViewportRowsLayout();
-                InvalidateFloatingObjects();
+                RefreshFloatingObjects();
                 InvalidateMeasure();
                 if (((_touchStartTopRow >= 0) && (_touchStartTopRow < ActiveSheet.RowCount)) && (_touchStartLeftColumn >= 0))
                 {

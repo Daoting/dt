@@ -44,24 +44,17 @@ namespace Dt.Sample
         public FloatingObject()
         {
             InitializeComponent();
-            InitSample();
+
+            using (_excel.Defer())
+            {
+                Color color = Colors.Red;
+                color.A = (byte)((1 - 0.8) * 255);
+                AddEllipse(new Point(150, 100), color);
+                color = Colors.Green;
+                color.A = (byte)((1 - 0.8) * 255);
+                AddRectangle(new Point(500, 100), color);
+            }
             _excel.SelectionChanging += OnSelectionChaging;
-        }
-
-        void InitSample()
-        {
-            _excel.AutoRefresh = false;
-            _excel.SuspendEvent();
-
-            Color color = Colors.Red;
-            color.A = (byte)((1 - 0.8) * 255);
-            AddEllipse(new Point(150, 100), color);
-            color = Colors.Green;
-            color.A = (byte)((1 - 0.8) * 255);
-            AddRectangle(new Point(500, 100), color);
-
-            _excel.ResumeEvent();
-            _excel.AutoRefresh = true;
         }
 
         void AddRectangleButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)

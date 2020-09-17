@@ -110,7 +110,7 @@ namespace Dt.Cells.UndoRedo
                 RefreshUI(sender);
                 if (excel != null)
                 {
-                    excel.InvalidateFloatingObjects();
+                    excel.RefreshFloatingObjects();
                 }
             }
         }
@@ -150,7 +150,7 @@ namespace Dt.Cells.UndoRedo
             var excel = sender as Excel;
             if (excel != null)
             {
-                excel.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
+                excel.RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
             }
         }
 
@@ -495,7 +495,7 @@ namespace Dt.Cells.UndoRedo
                     if (_savedToFloatingObjects != null)
                     {
                         CopyMoveHelper.UndoFloatingObjectsInfo(_toSheet, _savedToFloatingObjects);
-                        excel.InvalidateFloatingObjects();
+                        excel.RefreshFloatingObjects();
                         flag = true;
                     }
                     int num5 = 0;
@@ -545,7 +545,7 @@ namespace Dt.Cells.UndoRedo
                         if (_savedFromFloatingObjects != null)
                         {
                             CopyMoveHelper.UndoFloatingObjectsInfo(_fromSheet, _savedFromFloatingObjects);
-                            excel.InvalidateFloatingObjects();
+                            excel.RefreshFloatingObjects();
                             flag = true;
                         }
                     }
@@ -567,7 +567,7 @@ namespace Dt.Cells.UndoRedo
                     base.ResumeInvalidate(sender);
                     if (_savedFromFloatingObjects != null)
                     {
-                        excel.InvalidateFloatingObjects();
+                        excel.RefreshFloatingObjects();
                     }
                 }
                 return flag;

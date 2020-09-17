@@ -131,8 +131,8 @@ namespace Dt.Cells.UndoRedo
                     view.InvalidateViewportHorizontalArrangement(-2);
                     view.InvalidateHeaderHorizontalArrangement();
                     view.InvalidateMeasure();
-                    view.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.RowHeader);
-                    view.InvalidateFloatingObjects();
+                    view.RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.RowHeader);
+                    view.RefreshFloatingObjects();
                     view.RaiseRowHeightChanged(rowsResized, _columnHeader);
                 }
             }
@@ -248,7 +248,7 @@ namespace Dt.Cells.UndoRedo
                     view.InvalidateViewportHorizontalArrangement(-2);
                     view.InvalidateHeaderHorizontalArrangement();
                     view.InvalidateMeasure();
-                    view.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.RowHeader);
+                    view.RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.RowHeader);
                     view.RaiseRowHeightChanged(rowsResized, _columnHeader);
                 }
             }

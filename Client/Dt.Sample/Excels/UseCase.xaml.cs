@@ -153,249 +153,178 @@ namespace Dt.Sample
             }
         }
 
-        void OnMonthProfit(object sender, RoutedEventArgs e)
-        {
-            DetachEvent();
-            _excel.AutoRefresh = false;
-            _excel.SuspendCalcService();
-            _excel.SuspendEvent();
-            var sheet = _excel.ActiveSheet;
-
-            for (int i = 0; i < sheet.RowCount; i++)
-            {
-                for (int j = 0; j < sheet.ColumnCount; j++)
-                {
-                    bool isLock = sheet[i, j].Locked;
-                    sheet[i, j].TabStop = !isLock;
-                }
-            }
-            _excel.ResumeEvent();
-            _excel.ResumeCalcService();
-            _excel.AutoRefresh = true;
-            _excel.DocumentUri = new Uri("ms-appx:///Dt.Sample/Resource/Excel/MonthProfit.ssxml");
-        }
-
-        void OnStudentCalendar(object sender, RoutedEventArgs e)
-        {
-            DetachEvent();
-            _excel.ActiveSheetChanged += new System.EventHandler(gcSpreadSheet1_ActiveSheetChanged);
-            _excel.DocumentUri = new Uri("ms-appx:///Dt.Sample/Resource/Excel/StudentCalendar.ssxml");
-        }
-
-        void OnWedding(object sender, RoutedEventArgs e)
-        {
-            DetachEvent();
-            _excel.DocumentUri = new Uri("ms-appx:///Dt.Sample/Resource/Excel/Wedding budget.ssxml");
-        }
-
-        void OnCarRepairTracker(object sender, RoutedEventArgs e)
-        {
-            DetachEvent();
-            _excel.DocumentUri = new Uri("ms-appx:///Dt.Sample/Resource/Excel/Car repair tracker.ssxml");
-        }
-
-        void OnExpense(object sender, RoutedEventArgs e)
-        {
-            DetachEvent();
-            _excel.DocumentUri = new Uri("ms-appx:///Dt.Sample/Resource/Excel/Expense trends budget.ssxml");
-        }
-
-        void OnTaxForm(object sender, RoutedEventArgs e)
-        {
-            DetachEvent();
-            _excel.AutoRefresh = false;
-            _excel.SuspendEvent();
-            _excel.CellClick += new EventHandler<CellClickEventArgs>(gcSpreadSheet1_CellClick);
-            _excel.KeyDown += new KeyEventHandler(gcSpreadSheet1_KeyDown);
-            var sheet = _excel.ActiveSheet;
-
-            for (int i = 0; i < sheet.RowCount; i++)
-            {
-                for (int j = 0; j < sheet.ColumnCount; j++)
-                {
-                    sheet[i, j].TabStop = sheet[i, j].Tag != null; // all editable cell has "Editable" in Tag property
-                }
-            }
-            _excel.ResumeEvent();
-            _excel.AutoRefresh = true;
-            _excel.DocumentUri = new Uri("ms-appx:///Dt.Sample/Resource/Excel/1040.ssxml");
-        }
-
         void OnConditionalFormat(object sender, RoutedEventArgs e)
         {
             DetachEvent();
 
-            Worksheet sheet = _excel.ActiveSheet;
-            _excel.AutoRefresh = false;
-            _excel.SuspendEvent();
-
-            sheet.Columns[0].Width = 5;
-            sheet.Columns[7].Width = 5;
-
-            // sample title
-            sheet.AddSpanCell(1, 1, 1, 13);
-            sheet.SetValue(1, 1, "Conditional Format Samples");
-            sheet[1, 1].FontSize = 24;
-            sheet[1, 1].HorizontalAlignment = CellHorizontalAlignment.Center;
-            _excel.AutoFitRow(1);
-
-            // cell value rule
-            int r = 3; int c = 1; int w = 6; int h = 4;
-            sheet.AddSpanCell(r, c, 1, w);
-            sheet.SetValue(r, c, "Displays green background if cell value is greater than 100:");
-            int increase = 0;
-            for (int row = 0; row < h - 1; row++)
+            using (_excel.Defer())
             {
-                for (int col = 0; col < w; col++)
-                {
-                    sheet.SetValue(row + 4, col + 1, increase);
-                    increase += 10;
-                }
-            }
-            sheet.SetBorder(new CellRange(r, c, h, w), new BorderLine(Colors.Black, BorderLineStyle.Dashed), SetBorderOptions.All);
-            var cvRule = new CellValueRule();
-            cvRule.Ranges = new CellRange[] { new CellRange(r + 1, c, h - 1, w) };
-            cvRule.Operator = ComparisonOperator.GreaterThan;
-            cvRule.Value1 = 100;
-            cvRule.Style = new StyleInfo() { Background = new SolidColorBrush(Color.FromArgb(50, 0, 255, 0)) };
-            sheet.ConditionalFormats.AddRule(cvRule);
+                Worksheet sheet = _excel.ActiveSheet;
+                sheet.Columns[0].Width = 5;
+                sheet.Columns[7].Width = 5;
 
-            r = 3; c = 8;
-            sheet.AddSpanCell(r, c, 1, w);
-            sheet.SetValue(r, c, "Displays red background if cell value is between 60 to 120:");
-            increase = 0;
-            for (int row = 0; row < h - 1; row++)
-            {
-                for (int col = 0; col < w; col++)
-                {
-                    sheet.SetValue(row + r + 1, col + c, increase);
-                    increase += 10;
-                }
-            }
-            sheet.SetBorder(new CellRange(r, c, h, w), new BorderLine(Colors.Black, BorderLineStyle.Dashed), SetBorderOptions.All);
-            cvRule = new CellValueRule();
-            cvRule.Ranges = new CellRange[] { new CellRange(r + 1, c, h - 1, w) };
-            cvRule.Operator = ComparisonOperator.Between;
-            cvRule.Value1 = 60;
-            cvRule.Value2 = 120;
-            cvRule.Style = new StyleInfo() { Background = new SolidColorBrush(Color.FromArgb(50, 255, 0, 0)) };
-            sheet.ConditionalFormats.AddRule(cvRule);
+                // sample title
+                sheet.AddSpanCell(1, 1, 1, 13);
+                sheet.SetValue(1, 1, "Conditional Format Samples");
+                sheet[1, 1].FontSize = 24;
+                sheet[1, 1].HorizontalAlignment = CellHorizontalAlignment.Center;
+                _excel.AutoFitRow(1);
 
-            // 2 color scale rule
-            r = 8; c = 1;
-            sheet.AddSpanCell(r, c, 1, w);
-            sheet.SetValue(r, c, "Displays two color gradient represents cell value:");
-            increase = 0;
-            for (int row = 0; row < h - 1; row++)
-            {
-                for (int col = 0; col < w; col++)
+                // cell value rule
+                int r = 3; int c = 1; int w = 6; int h = 4;
+                sheet.AddSpanCell(r, c, 1, w);
+                sheet.SetValue(r, c, "Displays green background if cell value is greater than 100:");
+                int increase = 0;
+                for (int row = 0; row < h - 1; row++)
                 {
-                    sheet.SetValue(row + r + 1, col + c, increase);
-                    increase += 10;
+                    for (int col = 0; col < w; col++)
+                    {
+                        sheet.SetValue(row + 4, col + 1, increase);
+                        increase += 10;
+                    }
                 }
-            }
-            sheet.SetBorder(new CellRange(r, c, h, w), new BorderLine(Colors.Black, BorderLineStyle.Dashed), SetBorderOptions.All);
-            var tcsRule = TwoColorScaleRule.Create(ScaleValueType.LowestValue, null, Color.FromArgb(100, 255, 0, 0), ScaleValueType.HighestValue, null, Color.FromArgb(100, 0, 0, 255));
-            tcsRule.Ranges = new CellRange[] { new CellRange(r + 1, c, h - 1, w) };
-            sheet.ConditionalFormats.AddRule(tcsRule);
+                sheet.SetBorder(new CellRange(r, c, h, w), new BorderLine(Colors.Black, BorderLineStyle.Dashed), SetBorderOptions.All);
+                var cvRule = new CellValueRule();
+                cvRule.Ranges = new CellRange[] { new CellRange(r + 1, c, h - 1, w) };
+                cvRule.Operator = ComparisonOperator.GreaterThan;
+                cvRule.Value1 = 100;
+                cvRule.Style = new StyleInfo() { Background = new SolidColorBrush(Color.FromArgb(50, 0, 255, 0)) };
+                sheet.ConditionalFormats.AddRule(cvRule);
 
-            // 3 color scale rule
-            r = 8; c = 8;
-            sheet.AddSpanCell(r, c, 1, w);
-            sheet.SetValue(r, c, "Displays three color gradient represents cell value:");
-            increase = 0;
-            for (int row = 0; row < h - 1; row++)
-            {
-                for (int col = 0; col < w; col++)
+                r = 3; c = 8;
+                sheet.AddSpanCell(r, c, 1, w);
+                sheet.SetValue(r, c, "Displays red background if cell value is between 60 to 120:");
+                increase = 0;
+                for (int row = 0; row < h - 1; row++)
                 {
-                    sheet.SetValue(row + r + 1, col + c, increase);
-                    increase += 10;
+                    for (int col = 0; col < w; col++)
+                    {
+                        sheet.SetValue(row + r + 1, col + c, increase);
+                        increase += 10;
+                    }
                 }
-            }
-            sheet.SetBorder(new CellRange(r, c, h, w), new BorderLine(Colors.Black, BorderLineStyle.Dashed), SetBorderOptions.All);
-            var threecsRule = ThreeColorScaleRule.Create(ScaleValueType.LowestValue, null, Color.FromArgb(100, 255, 0, 0),
-                ScaleValueType.Number, 100, Color.FromArgb(100, 0, 255, 0),
-                ScaleValueType.HighestValue, null, Color.FromArgb(100, 0, 0, 255));
-            threecsRule.Ranges = new CellRange[] { new CellRange(r + 1, c, h - 1, w) };
-            sheet.ConditionalFormats.AddRule(threecsRule);
+                sheet.SetBorder(new CellRange(r, c, h, w), new BorderLine(Colors.Black, BorderLineStyle.Dashed), SetBorderOptions.All);
+                cvRule = new CellValueRule();
+                cvRule.Ranges = new CellRange[] { new CellRange(r + 1, c, h - 1, w) };
+                cvRule.Operator = ComparisonOperator.Between;
+                cvRule.Value1 = 60;
+                cvRule.Value2 = 120;
+                cvRule.Style = new StyleInfo() { Background = new SolidColorBrush(Color.FromArgb(50, 255, 0, 0)) };
+                sheet.ConditionalFormats.AddRule(cvRule);
 
-            // date occurring rule
-            r = 13; c = 1;
-            sheet.AddSpanCell(r, c, 1, w);
-            sheet.SetValue(r, c, "Display blue background if cell value is in next week:");
-            increase = 0;
-            for (int row = 0; row < h - 1; row++)
-            {
-                for (int col = 0; col < w; col++)
+                // 2 color scale rule
+                r = 8; c = 1;
+                sheet.AddSpanCell(r, c, 1, w);
+                sheet.SetValue(r, c, "Displays two color gradient represents cell value:");
+                increase = 0;
+                for (int row = 0; row < h - 1; row++)
                 {
-                    sheet.SetValue(row + r + 1, col + c, DateTime.Now.AddDays(increase));
-                    increase += 1;
+                    for (int col = 0; col < w; col++)
+                    {
+                        sheet.SetValue(row + r + 1, col + c, increase);
+                        increase += 10;
+                    }
                 }
-            }
-            sheet.SetBorder(new CellRange(r, c, h, w), new BorderLine(Colors.Black, BorderLineStyle.Dashed), SetBorderOptions.All);
-            sheet[r, c, r + h, c + w].Formatter = new GeneralFormatter("mm/dd");
-            var doRule = new DateOccurringRule();
-            doRule.Ranges = new CellRange[] { new CellRange(r + 1, c, h - 1, w) };
-            doRule.Operator = DateOccurringType.NextWeek;
-            doRule.Style = new StyleInfo() { Background = new SolidColorBrush(Color.FromArgb(50, 0, 0, 255)) };
-            sheet.ConditionalFormats.AddRule(doRule);
+                sheet.SetBorder(new CellRange(r, c, h, w), new BorderLine(Colors.Black, BorderLineStyle.Dashed), SetBorderOptions.All);
+                var tcsRule = TwoColorScaleRule.Create(ScaleValueType.LowestValue, null, Color.FromArgb(100, 255, 0, 0), ScaleValueType.HighestValue, null, Color.FromArgb(100, 0, 0, 255));
+                tcsRule.Ranges = new CellRange[] { new CellRange(r + 1, c, h - 1, w) };
+                sheet.ConditionalFormats.AddRule(tcsRule);
 
-            // specific text rule
-            r = 13; c = 8;
-            sheet.AddSpanCell(r, c, 1, w);
-            sheet.SetValue(r, c, "Display red foreground if cell value contains \"o\":");
-            var data = new string[] { "The", "quick", "brown", "fox", "jumps", "over", "the", "lazy", "dog", "The", "quick", "brown", "fox", "jumps", "over", "the", "lazy", "dog" };
-            increase = 0;
-            for (int row = 0; row < h - 1; row++)
-            {
-                for (int col = 0; col < w; col++)
+                // 3 color scale rule
+                r = 8; c = 8;
+                sheet.AddSpanCell(r, c, 1, w);
+                sheet.SetValue(r, c, "Displays three color gradient represents cell value:");
+                increase = 0;
+                for (int row = 0; row < h - 1; row++)
                 {
-                    sheet.SetValue(row + r + 1, col + c, data[increase]);
-                    increase += 1;
+                    for (int col = 0; col < w; col++)
+                    {
+                        sheet.SetValue(row + r + 1, col + c, increase);
+                        increase += 10;
+                    }
                 }
-            }
-            sheet.SetBorder(new CellRange(r, c, h, w), new BorderLine(Colors.Black, BorderLineStyle.Dashed), SetBorderOptions.All);
-            var stRule = new SpecificTextRule();
-            stRule.Ranges = new CellRange[] { new CellRange(r + 1, c, h - 1, w) };
-            stRule.Operator = TextComparisonOperator.Contains;
-            stRule.Text = "o";
-            stRule.Style = new StyleInfo() { Foreground = new SolidColorBrush(Colors.Red), FontWeight = FontWeights.Bold };
-            sheet.ConditionalFormats.AddRule(stRule);
+                sheet.SetBorder(new CellRange(r, c, h, w), new BorderLine(Colors.Black, BorderLineStyle.Dashed), SetBorderOptions.All);
+                var threecsRule = ThreeColorScaleRule.Create(ScaleValueType.LowestValue, null, Color.FromArgb(100, 255, 0, 0),
+                    ScaleValueType.Number, 100, Color.FromArgb(100, 0, 255, 0),
+                    ScaleValueType.HighestValue, null, Color.FromArgb(100, 0, 0, 255));
+                threecsRule.Ranges = new CellRange[] { new CellRange(r + 1, c, h - 1, w) };
+                sheet.ConditionalFormats.AddRule(threecsRule);
 
-            // data bar rule
-            r = 18; c = 1;
-            sheet.AddSpanCell(r, c, 1, w);
-            sheet.SetValue(r, c, "Displays a colored data bar represents cell value:");
-            increase = 0;
-            for (int row = 0; row < h - 1; row++)
-            {
-                for (int col = 0; col < w; col++)
+                // date occurring rule
+                r = 13; c = 1;
+                sheet.AddSpanCell(r, c, 1, w);
+                sheet.SetValue(r, c, "Display blue background if cell value is in next week:");
+                increase = 0;
+                for (int row = 0; row < h - 1; row++)
                 {
-                    sheet.SetValue(row + r + 1, col + c, increase);
-                    increase += 10;
+                    for (int col = 0; col < w; col++)
+                    {
+                        sheet.SetValue(row + r + 1, col + c, DateTime.Now.AddDays(increase));
+                        increase += 1;
+                    }
                 }
-            }
-            sheet.SetBorder(new CellRange(r, c, h, w), new BorderLine(Colors.Black, BorderLineStyle.Dashed), SetBorderOptions.All);
-            sheet.ConditionalFormats.AddDataBarRule(ScaleValueType.LowestValue, null, ScaleValueType.HighestValue, null, Colors.Green, new CellRange(r + 1, c, h - 1, w)); ;
+                sheet.SetBorder(new CellRange(r, c, h, w), new BorderLine(Colors.Black, BorderLineStyle.Dashed), SetBorderOptions.All);
+                sheet[r, c, r + h, c + w].Formatter = new GeneralFormatter("mm/dd");
+                var doRule = new DateOccurringRule();
+                doRule.Ranges = new CellRange[] { new CellRange(r + 1, c, h - 1, w) };
+                doRule.Operator = DateOccurringType.NextWeek;
+                doRule.Style = new StyleInfo() { Background = new SolidColorBrush(Color.FromArgb(50, 0, 0, 255)) };
+                sheet.ConditionalFormats.AddRule(doRule);
 
-            // icon set rule
-            r = 18; c = 8;
-            sheet.AddSpanCell(r, c, 1, w);
-            sheet.SetValue(r, c, "Displays an icon represents cell value:");
-            increase = 0;
-            for (int row = 0; row < h - 1; row++)
-            {
-                for (int col = 0; col < w; col++)
+                // specific text rule
+                r = 13; c = 8;
+                sheet.AddSpanCell(r, c, 1, w);
+                sheet.SetValue(r, c, "Display red foreground if cell value contains \"o\":");
+                var data = new string[] { "The", "quick", "brown", "fox", "jumps", "over", "the", "lazy", "dog", "The", "quick", "brown", "fox", "jumps", "over", "the", "lazy", "dog" };
+                increase = 0;
+                for (int row = 0; row < h - 1; row++)
                 {
-                    sheet.SetValue(row + r + 1, col + c, increase);
-                    increase += 10;
+                    for (int col = 0; col < w; col++)
+                    {
+                        sheet.SetValue(row + r + 1, col + c, data[increase]);
+                        increase += 1;
+                    }
                 }
-            }
-            sheet.SetBorder(new CellRange(r, c, h, w), new BorderLine(Colors.Black, BorderLineStyle.Dashed), SetBorderOptions.All);
-            sheet.ConditionalFormats.AddIconSetRule(IconSetType.FiveArrowsColored, new CellRange(r + 1, c, h - 1, w));
+                sheet.SetBorder(new CellRange(r, c, h, w), new BorderLine(Colors.Black, BorderLineStyle.Dashed), SetBorderOptions.All);
+                var stRule = new SpecificTextRule();
+                stRule.Ranges = new CellRange[] { new CellRange(r + 1, c, h - 1, w) };
+                stRule.Operator = TextComparisonOperator.Contains;
+                stRule.Text = "o";
+                stRule.Style = new StyleInfo() { Foreground = new SolidColorBrush(Colors.Red), FontWeight = FontWeights.Bold };
+                sheet.ConditionalFormats.AddRule(stRule);
 
-            _excel.ResumeEvent();
-            _excel.AutoRefresh = true;
+                // data bar rule
+                r = 18; c = 1;
+                sheet.AddSpanCell(r, c, 1, w);
+                sheet.SetValue(r, c, "Displays a colored data bar represents cell value:");
+                increase = 0;
+                for (int row = 0; row < h - 1; row++)
+                {
+                    for (int col = 0; col < w; col++)
+                    {
+                        sheet.SetValue(row + r + 1, col + c, increase);
+                        increase += 10;
+                    }
+                }
+                sheet.SetBorder(new CellRange(r, c, h, w), new BorderLine(Colors.Black, BorderLineStyle.Dashed), SetBorderOptions.All);
+                sheet.ConditionalFormats.AddDataBarRule(ScaleValueType.LowestValue, null, ScaleValueType.HighestValue, null, Colors.Green, new CellRange(r + 1, c, h - 1, w)); ;
+
+                // icon set rule
+                r = 18; c = 8;
+                sheet.AddSpanCell(r, c, 1, w);
+                sheet.SetValue(r, c, "Displays an icon represents cell value:");
+                increase = 0;
+                for (int row = 0; row < h - 1; row++)
+                {
+                    for (int col = 0; col < w; col++)
+                    {
+                        sheet.SetValue(row + r + 1, col + c, increase);
+                        increase += 10;
+                    }
+                }
+                sheet.SetBorder(new CellRange(r, c, h, w), new BorderLine(Colors.Black, BorderLineStyle.Dashed), SetBorderOptions.All);
+                sheet.ConditionalFormats.AddIconSetRule(IconSetType.FiveArrowsColored, new CellRange(r + 1, c, h - 1, w));
+            }
         }
 
         void DetachEvent()

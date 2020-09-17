@@ -326,10 +326,10 @@ namespace Dt.Base
                             {
                                 InvalidateLayout();
                             }
-                            InvalidateRange(e.Row, e.Column, e.RowCount, e.ColumnCount, e.SheetArea);
+                            RefreshRange(e.Row, e.Column, e.RowCount, e.ColumnCount, e.SheetArea);
                             return;
                         }
-                        InvalidateRange(-1, -1, -1, -1, SheetArea.Cells);
+                        RefreshRange(-1, -1, -1, -1, SheetArea.Cells);
                         return;
 
                     case (SheetArea.CornerHeader | SheetArea.RowHeader):
@@ -338,7 +338,7 @@ namespace Dt.Base
                         {
                             InvalidateLayout();
                         }
-                        InvalidateRange(e.Row, e.Column, e.RowCount, e.ColumnCount, e.SheetArea);
+                        RefreshRange(e.Row, e.Column, e.RowCount, e.ColumnCount, e.SheetArea);
                         return;
                 }
             }
@@ -486,11 +486,11 @@ namespace Dt.Base
             {
                 if (((e.PropertyName == "Height") || (e.PropertyName == "Width")) || ((e.PropertyName == "IsVisible") || (e.PropertyName == "Axis")))
                 {
-                    InvalidateAll();
+                    RefreshAll();
                 }
                 else
                 {
-                    InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
+                    RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
                 }
             }
         }
@@ -506,11 +506,11 @@ namespace Dt.Base
                     case "AutoTextIndex":
                     case "IsVisible":
                     case "RowCount":
-                        InvalidateAll();
+                        RefreshAll();
                         return;
 
                     case "DefaultRowHeight":
-                        InvalidateRows(0, ActiveSheet.ColumnHeader.RowCount, SheetArea.ColumnHeader);
+                        RefreshRows(0, ActiveSheet.ColumnHeader.RowCount, SheetArea.ColumnHeader);
                         return;
                 }
             }
@@ -603,9 +603,9 @@ namespace Dt.Base
         {
             if (e.PropertyName == "Name")
             {
-                if (AutoRefresh)
+                if (AutoRefresh && !IsSuspendInvalidate())
                 {
-                    InvalidTabStrip();
+                    RefreshTabStrip();
                 }
             }
             else
@@ -626,7 +626,7 @@ namespace Dt.Base
                         HandleVisibleChanged(sheet);
                         if (autoRefresh)
                         {
-                            InvalidateAll();
+                            RefreshAll();
                         }
                     }
                 }
@@ -652,7 +652,7 @@ namespace Dt.Base
                             SetViewportTopRow(0, ActiveSheet.FrozenRowCount);
                             if (autoRefresh)
                             {
-                                InvalidateRows(0, ActiveSheet.FrozenRowCount, SheetArea.Cells | SheetArea.RowHeader);
+                                RefreshRows(0, ActiveSheet.FrozenRowCount, SheetArea.Cells | SheetArea.RowHeader);
                             }
                             return;
 
@@ -660,21 +660,21 @@ namespace Dt.Base
                             SetViewportLeftColumn(0, ActiveSheet.FrozenColumnCount);
                             if (autoRefresh)
                             {
-                                InvalidateColumns(0, ActiveSheet.FrozenColumnCount, SheetArea.Cells | SheetArea.ColumnHeader);
+                                RefreshColumns(0, ActiveSheet.FrozenColumnCount, SheetArea.Cells | SheetArea.ColumnHeader);
                             }
                             return;
 
                         case "FrozenTrailingRowCount":
                             if (autoRefresh)
                             {
-                                InvalidateRows(Math.Max(0, ActiveSheet.RowCount - ActiveSheet.FrozenTrailingRowCount), ActiveSheet.FrozenTrailingRowCount, SheetArea.Cells | SheetArea.RowHeader);
+                                RefreshRows(Math.Max(0, ActiveSheet.RowCount - ActiveSheet.FrozenTrailingRowCount), ActiveSheet.FrozenTrailingRowCount, SheetArea.Cells | SheetArea.RowHeader);
                             }
                             return;
 
                         case "FrozenTrailingColumnCount":
                             if (autoRefresh)
                             {
-                                InvalidateRows(Math.Max(0, ActiveSheet.ColumnCount - ActiveSheet.FrozenTrailingColumnCount), ActiveSheet.FrozenTrailingColumnCount, SheetArea.Cells | SheetArea.ColumnHeader);
+                                RefreshRows(Math.Max(0, ActiveSheet.ColumnCount - ActiveSheet.FrozenTrailingColumnCount), ActiveSheet.FrozenTrailingColumnCount, SheetArea.Cells | SheetArea.ColumnHeader);
                             }
                             return;
 
@@ -686,7 +686,7 @@ namespace Dt.Base
                             }
                             if (autoRefresh)
                             {
-                                InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
+                                RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
                             }
                             return;
 
@@ -705,14 +705,14 @@ namespace Dt.Base
                         case "SelectionBackground":
                             if (autoRefresh)
                             {
-                                InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
+                                RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
                             }
                             return;
 
                         case "DataSource":
                             if (autoRefresh)
                             {
-                                InvalidateAll();
+                                RefreshAll();
                             }
                             return;
 
@@ -723,7 +723,7 @@ namespace Dt.Base
                         case "RowRangeGroup":
                             if (autoRefresh)
                             {
-                                InvalidateRows(0, ActiveSheet.RowCount, SheetArea.Cells | SheetArea.RowHeader);
+                                RefreshRows(0, ActiveSheet.RowCount, SheetArea.Cells | SheetArea.RowHeader);
                             }
                             return;
 
@@ -731,7 +731,7 @@ namespace Dt.Base
                         case "ColumnRangeGroup":
                             if (autoRefresh)
                             {
-                                InvalidateColumns(0, ActiveSheet.ColumnCount, SheetArea.Cells | SheetArea.ColumnHeader);
+                                RefreshColumns(0, ActiveSheet.ColumnCount, SheetArea.Cells | SheetArea.ColumnHeader);
                             }
                             return;
 
@@ -739,7 +739,7 @@ namespace Dt.Base
                         case "RowHeaderColumnCount":
                             if (autoRefresh)
                             {
-                                InvalidateColumns(0, ActiveSheet.RowHeader.ColumnCount, SheetArea.CornerHeader | SheetArea.RowHeader);
+                                RefreshColumns(0, ActiveSheet.RowHeader.ColumnCount, SheetArea.CornerHeader | SheetArea.RowHeader);
                             }
                             return;
 
@@ -747,21 +747,21 @@ namespace Dt.Base
                         case "ColumnHeaderRowCount":
                             if (autoRefresh)
                             {
-                                InvalidateRows(0, ActiveSheet.ColumnHeader.RowCount, SheetArea.ColumnHeader);
+                                RefreshRows(0, ActiveSheet.ColumnHeader.RowCount, SheetArea.ColumnHeader);
                             }
                             return;
 
                         case "RowHeaderDefaultStyle":
                             if (autoRefresh)
                             {
-                                InvalidateRange(-1, -1, -1, -1, SheetArea.CornerHeader | SheetArea.RowHeader);
+                                RefreshRange(-1, -1, -1, -1, SheetArea.CornerHeader | SheetArea.RowHeader);
                             }
                             return;
 
                         case "ColumnHeaderDefaultStyle":
                             if (autoRefresh)
                             {
-                                InvalidateRange(-1, -1, -1, -1, SheetArea.ColumnHeader);
+                                RefreshRange(-1, -1, -1, -1, SheetArea.ColumnHeader);
                             }
                             return;
 
@@ -769,20 +769,20 @@ namespace Dt.Base
                         case "Names":
                             if (autoRefresh)
                             {
-                                InvalidateRange(-1, -1, -1, -1, SheetArea.Cells);
+                                RefreshRange(-1, -1, -1, -1, SheetArea.Cells);
                             }
                             return;
 
                         case "[ImportFile]":
                             if (autoRefresh)
                             {
-                                InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
+                                RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
                             }
                             HideProgressRing();
                             return;
 
                         case "[OpenXml]":
-                            InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
+                            RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
                             return;
 
                         case "Charts":
@@ -810,11 +810,11 @@ namespace Dt.Base
                     case "AutoTextIndex":
                     case "IsVisible":
                     case "ColumnCount":
-                        InvalidateAll();
+                        RefreshAll();
                         return;
 
                     case "DefaultColumnWidth":
-                        InvalidateColumns(0, ActiveSheet.RowHeader.ColumnCount, SheetArea.CornerHeader | SheetArea.RowHeader);
+                        RefreshColumns(0, ActiveSheet.RowHeader.ColumnCount, SheetArea.CornerHeader | SheetArea.RowHeader);
                         return;
                 }
             }
@@ -861,7 +861,7 @@ namespace Dt.Base
         {
             if (AutoRefresh)
             {
-                InvalidateRange(row, column, rowCount, columnCount, area);
+                RefreshRange(row, column, rowCount, columnCount, area);
             }
         }
 
@@ -877,7 +877,8 @@ namespace Dt.Base
                     case "[OpenExcel]":
                     case "[DataCalculated]":
                     case "[OpenXml]":
-                        InvalidateAll();
+                    case "AutoRefresh":
+                        RefreshAll();
                         return;
 
                     case "StartSheetIndex":
@@ -886,8 +887,8 @@ namespace Dt.Base
 
                     case "CurrentThemeName":
                     case "CurrentTheme":
-                        InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
-                        InvalidateFloatingObjects();
+                        RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
+                        RefreshFloatingObjects();
                         return;
 
                     case "HorizontalScrollBarVisibility":
@@ -895,15 +896,14 @@ namespace Dt.Base
                     case "ReferenceStyle":
                     case "Names":
                     case "CanCellOverflow":
-                    case "AutoRefresh":
-                        InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
+                        RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
                         return;
                 }
             }
 
             if (e.PropertyName == "ActiveSheetIndex")
             {
-                InvalidateAll();
+                RefreshAll();
             }
         }
 

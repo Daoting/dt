@@ -43,16 +43,17 @@ namespace Dt.Sample
         public BaseExcel()
         {
             InitializeComponent();
-            InitSpread();
+
+            using (_excel.Defer())
+            {
+                InitSpread();
+            }
             InitProperty();
         }
 
         #region 初始化
         void InitSpread()
         {
-            _excel.AutoRefresh = false;
-            _excel.SuspendEvent();
-
             // 三层列头
             var sheet = _excel.ActiveSheet;
             sheet.AddSpanCell(1, 1, 1, 3);
@@ -189,9 +190,6 @@ namespace Dt.Sample
             sheet.SetFormula(9, 0, 1, 8, "=SUM(A1:A9)");
 
             FillSampleData(sheet, new CellRange(0, 0, 9, 8));
-
-            _excel.ResumeEvent();
-            _excel.AutoRefresh = true;
         }
 
         void InitProperty()
@@ -473,46 +471,42 @@ namespace Dt.Sample
         #region 边框
         void setBorderButton_Click(object sender, RoutedEventArgs e)
         {
-            _excel.AutoRefresh = false;
-            _excel.SuspendEvent();
-
-            Worksheet sheet = _excel.ActiveSheet;
-            foreach (CellRange cellRange in sheet.Selections)
+            using (_excel.Defer())
             {
-                CellRange range = GetActualCellRange(cellRange, sheet.RowCount, sheet.ColumnCount);
-                for (int i = 0; i < range.RowCount; i++)
+                Worksheet sheet = _excel.ActiveSheet;
+                foreach (CellRange cellRange in sheet.Selections)
                 {
-                    for (int j = 0; j < range.ColumnCount; j++)
+                    CellRange range = GetActualCellRange(cellRange, sheet.RowCount, sheet.ColumnCount);
+                    for (int i = 0; i < range.RowCount; i++)
                     {
-                        SetBorder(sheet.Cells[i + range.Row, j + range.Column], new BorderLine(GetColor(_cbBorderColor.SelectedItem.ToString()),
-                            GetBorderLineStyle(_cbLineStyle.SelectedItem.ToString())));
+                        for (int j = 0; j < range.ColumnCount; j++)
+                        {
+                            SetBorder(sheet.Cells[i + range.Row, j + range.Column], new BorderLine(GetColor(_cbBorderColor.SelectedItem.ToString()),
+                                GetBorderLineStyle(_cbLineStyle.SelectedItem.ToString())));
+                        }
                     }
                 }
             }
-            _excel.ResumeEvent();
-            _excel.AutoRefresh = true;
         }
 
         void clearBorderButton_Click(object sender, RoutedEventArgs e)
         {
-            _excel.AutoRefresh = false;
-            _excel.SuspendEvent();
-
-            Worksheet sheet = _excel.ActiveSheet;
-
-            foreach (CellRange cellRange in sheet.Selections)
+            using (_excel.Defer())
             {
-                CellRange range = GetActualCellRange(cellRange, sheet.RowCount, sheet.ColumnCount);
-                for (int i = 0; i < range.RowCount; i++)
+                Worksheet sheet = _excel.ActiveSheet;
+
+                foreach (CellRange cellRange in sheet.Selections)
                 {
-                    for (int j = 0; j < range.ColumnCount; j++)
+                    CellRange range = GetActualCellRange(cellRange, sheet.RowCount, sheet.ColumnCount);
+                    for (int i = 0; i < range.RowCount; i++)
                     {
-                        SetBorder(sheet.Cells[i + range.Row, j + range.Column], null);
+                        for (int j = 0; j < range.ColumnCount; j++)
+                        {
+                            SetBorder(sheet.Cells[i + range.Row, j + range.Column], null);
+                        }
                     }
                 }
             }
-            _excel.ResumeEvent();
-            _excel.AutoRefresh = true;
         }
 
         void SetBorder(Cell cell, BorderLine border)
@@ -587,7 +581,7 @@ namespace Dt.Sample
                 finally
                 {
                     _excel.ResumeEvent();
-                    _excel.InvalidatePictures();
+                    _excel.RefreshPictures();
                 }
             }
         }
@@ -598,7 +592,6 @@ namespace Dt.Sample
             if (sheet.Selections.Count == 0)
                 return;
 
-            _excel.AutoRefresh = true;
             CellRange cr = sheet.Selections[0];
             double X = 0d, Y = 0d;
             double width = 0d;

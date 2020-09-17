@@ -40,12 +40,6 @@ namespace Dt.Sample
         public ImgExcel()
         {
             InitializeComponent();
-            InitializeSample();
-        }
-
-        void InitializeSample()
-        {
-            _excel.AutoRefresh = true;
         }
 
         async void AddPictureButton_Click(object sender, RoutedEventArgs e)
@@ -80,7 +74,7 @@ namespace Dt.Sample
             finally
             {
                 _excel.ResumeEvent();
-                _excel.InvalidatePictures();
+                _excel.RefreshPictures();
             }
         }
 

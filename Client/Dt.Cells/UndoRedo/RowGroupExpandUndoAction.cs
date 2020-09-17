@@ -74,11 +74,11 @@ namespace Dt.Cells.UndoRedo
                     excel.InvalidateViewportHorizontalArrangement(-2);
                     excel.InvalidateHeaderHorizontalArrangement();
                     excel.InvalidateMeasure();
-                    excel.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.RowHeader);
+                    excel.RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.RowHeader);
                     IList<SpreadChartBase> chartShapeAffectedByRowRangeGroup = Dt.Cells.Data.SpreadChartUtility.GetChartShapeAffectedByRowRangeGroup(excel.ActiveSheet);
                     if (chartShapeAffectedByRowRangeGroup.Count > 0)
                     {
-                        excel.InvalidateFloatingObjects(Enumerable.ToArray<SpreadChartBase>((IEnumerable<SpreadChartBase>) chartShapeAffectedByRowRangeGroup));
+                        excel.RefreshFloatingObjects(Enumerable.ToArray<SpreadChartBase>((IEnumerable<SpreadChartBase>) chartShapeAffectedByRowRangeGroup));
                     }
                     ShowRowRangeGroup(excel);
                 }
@@ -254,11 +254,11 @@ namespace Dt.Cells.UndoRedo
                 excel.InvalidateViewportHorizontalArrangement(-2);
                 excel.InvalidateHeaderHorizontalArrangement();
                 excel.InvalidateMeasure();
-                excel.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.RowHeader);
+                excel.RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.RowHeader);
                 IList<SpreadChartBase> chartShapeAffectedByRowRangeGroup = Dt.Cells.Data.SpreadChartUtility.GetChartShapeAffectedByRowRangeGroup(excel.ActiveSheet);
                 if (chartShapeAffectedByRowRangeGroup.Count > 0)
                 {
-                    excel.InvalidateFloatingObjects(Enumerable.ToArray<SpreadChartBase>((IEnumerable<SpreadChartBase>) chartShapeAffectedByRowRangeGroup));
+                    excel.RefreshFloatingObjects(Enumerable.ToArray<SpreadChartBase>((IEnumerable<SpreadChartBase>) chartShapeAffectedByRowRangeGroup));
                 }
                 ShowRowRangeGroup(excel);
             }

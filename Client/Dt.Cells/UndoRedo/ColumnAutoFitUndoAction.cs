@@ -121,8 +121,8 @@ namespace Dt.Cells.UndoRedo
                     excel.InvalidateViewportHorizontalArrangement(-2);
                     excel.InvalidateHeaderHorizontalArrangement();
                     excel.InvalidateMeasure();
-                    excel.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader);
-                    excel.InvalidateFloatingObjects();
+                    excel.RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader);
+                    excel.RefreshFloatingObjects();
                     excel.RaiseColumnWidthChanged(columnsReiszed, _rowHeader);
                 }
             }
@@ -238,7 +238,7 @@ namespace Dt.Cells.UndoRedo
                     excel.InvalidateViewportHorizontalArrangement(-2);
                     excel.InvalidateHeaderHorizontalArrangement();
                     excel.InvalidateMeasure();
-                    excel.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader);
+                    excel.RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader);
                     excel.RaiseColumnWidthChanged(columnsReiszed, _rowHeader);
                 }
             }

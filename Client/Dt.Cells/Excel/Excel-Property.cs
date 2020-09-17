@@ -474,7 +474,6 @@ namespace Dt.Base
         bool IsRowSplitting { get; set; }
 
         #region 成员变量
-        Workbook _workbook;
         RowHeaderPanel[] _rowHeaders;
         ColHeaderPanel[] _colHeaders;
         CornerPanel _cornerPanel;
@@ -885,7 +884,7 @@ namespace Dt.Base
             var style = (Style)e.NewValue;
             excel._columnTrailingFreezeLine.TypeSafeSetStyle(style);
             excel._rowTrailingFreezeLine.TypeSafeSetStyle(style);
-            excel.InvalidateAll();
+            excel.RefreshAll();
         }
 
         static void OnTabStripRatioChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -922,7 +921,7 @@ namespace Dt.Base
 
         static void OnInvalidateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ((Excel)d).InvalidateAll();
+            ((Excel)d).RefreshAll();
         }
 
         static async void OnDocumentUriChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -964,7 +963,7 @@ namespace Dt.Base
 
         static void OnCanUserDragFillChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            ((Excel)d).InvalidateRange(-1, -1, -1, -1, SheetArea.Cells);
+            ((Excel)d).RefreshRange(-1, -1, -1, -1, SheetArea.Cells);
         }
         #endregion
     }

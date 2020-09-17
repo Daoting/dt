@@ -44,10 +44,16 @@ namespace Dt.Sample
         public ChartExcel()
         {
             InitializeComponent();
-            InitializeSample();
+
+            using (_excel.Defer())
+            {
+                InitChart();
+                InitChartTitle();
+            }
+            InitProperty();
         }
 
-        void InitializeSample()
+        void InitProperty()
         {
             _cbTypes.ItemsSource = GetEnumValues(typeof(SpreadChartType));
             foreach (SpreadTheme st in _excel.Themes)
@@ -59,9 +65,6 @@ namespace Dt.Sample
 
             _cbTypes.SelectionChanged += _cbTypes_SelectionChanged;
             _cbTheme.SelectionChanged += Theme_SelectionChanged;
-
-            InitChart();
-            InitChartTitle();
 
             _cbTypes.SelectedItem = _selectedChart.ChartType.ToString();
         }
@@ -212,7 +215,7 @@ namespace Dt.Sample
                 var changeChartType = new ChangeChartTypeAction(_selectedChart, chartType);
                 _excel.UndoManager.Do(changeChartType);
                 _selectedChart.ChartTitle.Text = _selectedChart.ChartType.ToString();
-                _excel.InvalidateCharts(_selectedChart);
+                _excel.RefreshCharts(_selectedChart);
             }
         }
 

@@ -106,8 +106,8 @@ namespace Dt.Cells.UndoRedo
                 excel.InvalidateViewportHorizontalArrangement(-2);
                 excel.InvalidateHeaderHorizontalArrangement();
                 excel.InvalidateMeasure();
-                excel.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader);
-                excel.InvalidateFloatingObjects();
+                excel.RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader);
+                excel.RefreshFloatingObjects();
             }
         }
 

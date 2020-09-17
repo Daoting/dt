@@ -26,6 +26,7 @@
                         <ComboBox x:Name="_cbGridlineColor" SelectionChanged="borderColor_SelectionChanged" />
                     </a:CFree>
                     <a:CList ID="ScrollBarTrackPolicy" Title="滚动栏跟踪方式" />
+                    <a:CBool ID="IsBusy" Title="忙状态" />
                     <StackPanel Orientation="Horizontal">
                         <Button Content="添加行" Click="OnAddRow" />
                         <Button Content="移除行" Click="OnRemoveRow" />

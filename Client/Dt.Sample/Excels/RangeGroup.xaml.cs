@@ -40,14 +40,14 @@ namespace Dt.Sample
         public RangeGroup()
         {
             InitializeComponent();
-            InitializeSample();
+            using (_excel.Defer())
+            {
+                InitializeSample();
+            }
         }
         void InitializeSample()
         {
             // Range group
-            _excel.AutoRefresh = false;
-            _excel.SuspendEvent();
-
             Worksheet sheet = _excel.Sheets[0];
 
             sheet.ColumnCount = 7;
@@ -137,8 +137,6 @@ namespace Dt.Sample
             sheet.RowRangeGroup.Group(28, 4);
             // sheet.RowRangeGroup.Expand(1, false);
 
-            _excel.ResumeEvent();
-            _excel.AutoRefresh = true;
             _cbRow.IsChecked = true;
             _cbColumn.IsChecked = true;
         }

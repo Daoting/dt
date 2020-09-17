@@ -134,8 +134,8 @@ namespace Dt.Cells.UndoRedo
                                         view2.RaiseSelectionChanged();
                                     }
                                     view2.SetActiveCell(row, 0, false);
-                                    view2.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
-                                    view2.InvalidateFloatingObjects();
+                                    view2.RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
+                                    view2.RefreshFloatingObjects();
                                 }
                             }
                         }
@@ -177,8 +177,8 @@ namespace Dt.Cells.UndoRedo
                                     view.RaiseSelectionChanged();
                                 }
                                 view.SetActiveCell(0, column, false);
-                                view.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
-                                view.InvalidateFloatingObjects();
+                                view.RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
+                                view.RefreshFloatingObjects();
                             }
                         }
                     }
@@ -228,8 +228,8 @@ namespace Dt.Cells.UndoRedo
                     }
                     if (sheetView != null)
                     {
-                        sheetView.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
-                        sheetView.InvalidateFloatingObjects();
+                        sheetView.RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
+                        sheetView.RefreshFloatingObjects();
                     }
                 }
             }
@@ -423,8 +423,8 @@ namespace Dt.Cells.UndoRedo
                             {
                                 sheetView.RaiseSelectionChanged();
                             }
-                            sheetView.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
-                            sheetView.InvalidateFloatingObjects();
+                            sheetView.RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
+                            sheetView.RefreshFloatingObjects();
                         }
                         flag = true;
                     }
@@ -490,9 +490,9 @@ namespace Dt.Cells.UndoRedo
                             {
                                 sheetView.RaiseSelectionChanged();
                             }
-                            sheetView.InvalidateAll();
+                            sheetView.RefreshAll();
                             sheetView.UpdateLayout();
-                            sheetView.InvalidateFloatingObjects();
+                            sheetView.RefreshFloatingObjects();
                         }
                         flag = true;
                     }
@@ -547,7 +547,7 @@ namespace Dt.Cells.UndoRedo
                     if (_savedToFloatingObjects != null)
                     {
                         CopyMoveHelper.UndoFloatingObjectsInfo(_sheet, _savedToFloatingObjects);
-                        sheetView.InvalidateFloatingObjects();
+                        sheetView.RefreshFloatingObjects();
                         flag = true;
                     }
                     if (_savedFromColumnHeaderCells != null)
@@ -578,7 +578,7 @@ namespace Dt.Cells.UndoRedo
                     if (_savedFromFloatingObjects != null)
                     {
                         CopyMoveHelper.UndoFloatingObjectsInfo(_sheet, _savedFromFloatingObjects);
-                        sheetView.InvalidateFloatingObjects();
+                        sheetView.RefreshFloatingObjects();
                         flag = true;
                     }
                 }
@@ -602,8 +602,8 @@ namespace Dt.Cells.UndoRedo
                     {
                         CopyMoveHelper.RaiseValueChanged(sheetView, num9, num10, num13, num14, list2);
                     }
-                    sheetView.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
-                    sheetView.InvalidateFloatingObjects();
+                    sheetView.RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
+                    sheetView.RefreshFloatingObjects();
                 }
             }
             if (flag && (sheetView != null))

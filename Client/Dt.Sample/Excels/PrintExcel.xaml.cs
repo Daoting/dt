@@ -39,16 +39,17 @@ namespace Dt.Sample
         public PrintExcel()
         {
             InitializeComponent();
-            InitSpread();
+
+            using (_excel.Defer())
+            {
+                InitSpread();
+            }
             InitPrintInfo();
         }
 
         #region 初始化
         void InitSpread()
         {
-            _excel.AutoRefresh = false;
-            _excel.SuspendEvent();
-
             // 三层列头
             var sheet = _excel.ActiveSheet;
             sheet.AddSpanCell(1, 1, 1, 3);
@@ -182,9 +183,6 @@ namespace Dt.Sample
             sheet.SetFormula(9, 0, 1, 8, "=SUM(A1:A9)");
 
             FillSampleData(sheet, new CellRange(0, 0, 9, 8));
-
-            _excel.ResumeEvent();
-            _excel.AutoRefresh = true;
         }
 
         void InitPrintInfo()

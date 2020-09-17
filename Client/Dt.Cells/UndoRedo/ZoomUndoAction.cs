@@ -90,10 +90,10 @@ namespace Dt.Cells.UndoRedo
             var excel = sheetView as Excel;
             if (excel != null)
             {
-                excel.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells);
-                excel.InvalidateRange(-1, -1, -1, -1, SheetArea.ColumnHeader);
-                excel.InvalidateRange(-1, -1, -1, -1, SheetArea.CornerHeader | SheetArea.RowHeader);
-                excel.InvalidateFloatingObjects();
+                excel.RefreshRange(-1, -1, -1, -1, SheetArea.Cells);
+                excel.RefreshRange(-1, -1, -1, -1, SheetArea.ColumnHeader);
+                excel.RefreshRange(-1, -1, -1, -1, SheetArea.CornerHeader | SheetArea.RowHeader);
+                excel.RefreshFloatingObjects();
                 excel.InvalidateMeasure();
             }
         }

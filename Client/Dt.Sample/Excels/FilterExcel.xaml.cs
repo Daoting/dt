@@ -42,13 +42,14 @@ namespace Dt.Sample
         public FilterExcel()
         {
             InitializeComponent();
-            InitializeSample();
+
+            using (_excel.Defer())
+            {
+                InitializeSample();
+            }
         }
         void InitializeSample()
         {
-            _excel.AutoRefresh = false;
-            _excel.SuspendEvent();
-
             Worksheet sheet = _excel.Sheets[0];
             sheet.RowCount = 50;
             sheet.ColumnCount = 8;
@@ -102,9 +103,6 @@ namespace Dt.Sample
             _filter.ShowFilterButton = false;
 
             sheet.RowFilter = _filter;
-
-            _excel.ResumeEvent();
-            _excel.AutoRefresh = true;
         }
 
 

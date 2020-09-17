@@ -40,6 +40,13 @@ namespace Dt.Base
         #region 构造方法
         public Excel()
         {
+            Workbook = new Workbook();
+            var sheet = new Worksheet();
+            AttachSheet(sheet);
+            Workbook.Sheets.Add(sheet);
+            Workbook.Sheets.CollectionChanged += OnSheetsCollectionChanged;
+            Workbook.PropertyChanged += OnWorkbookPropertyChanged;
+
             _invisibleRows = new HashSet<int>();
             _invisibleColumns = new HashSet<int>();
 
@@ -53,20 +60,7 @@ namespace Dt.Base
         /// <summary>
         /// Gets the workbook associated with the control. 
         /// </summary>
-        public Workbook Workbook
-        {
-            get
-            {
-                if (_workbook == null)
-                {
-                    _workbook = new Workbook();
-                    _workbook.Sheets.CollectionChanged += new NotifyCollectionChangedEventHandler(OnSheetsCollectionChanged);
-                    _workbook.PropertyChanged += new PropertyChangedEventHandler(OnWorkbookPropertyChanged);
-                    _workbook.Sheets.Add(new Worksheet());
-                }
-                return _workbook;
-            }
-        }
+        public Workbook Workbook { get; }
 
         /// <summary>
         /// Gets the active sheet in the Excel control. 
@@ -88,7 +82,7 @@ namespace Dt.Base
                 {
                     Workbook.ActiveSheetIndex = value;
                     RaiseActiveSheetIndexChanged();
-                    InvalidateAll();
+                    RefreshAll();
                 }
             }
         }
@@ -147,7 +141,7 @@ namespace Dt.Base
             set
             {
                 Workbook.GridLineColor = value;
-                InvalidateAll();
+                RefreshAll();
             }
         }
 
@@ -178,7 +172,7 @@ namespace Dt.Base
             set
             {
                 Workbook.NamedStyles = value;
-                InvalidateAll();
+                RefreshAll();
             }
         }
 
@@ -243,7 +237,7 @@ namespace Dt.Base
             set
             {
                 Workbook.SheetCount = value;
-                InvalidateAll();
+                RefreshAll();
             }
         }
 
@@ -320,7 +314,7 @@ namespace Dt.Base
             set
             {
                 Workbook.ShowGridLine = value;
-                InvalidateAll();
+                RefreshAll();
             }
         }
 
@@ -718,9 +712,9 @@ namespace Dt.Base
                 if (ActiveSheet != null)
                 {
                     ActiveSheet.ZoomFactor = value;
-                    InvalidateRange(-1, -1, -1, -1, SheetArea.Cells);
-                    InvalidateRange(-1, -1, -1, -1, SheetArea.ColumnHeader);
-                    InvalidateRange(-1, -1, -1, -1, SheetArea.CornerHeader | SheetArea.RowHeader);
+                    RefreshRange(-1, -1, -1, -1, SheetArea.Cells);
+                    RefreshRange(-1, -1, -1, -1, SheetArea.ColumnHeader);
+                    RefreshRange(-1, -1, -1, -1, SheetArea.CornerHeader | SheetArea.RowHeader);
                     InvalidateMeasure();
                 }
             }
@@ -910,6 +904,257 @@ namespace Dt.Base
             if ((sheetIndex < 0) || (sheetIndex >= SheetCount))
                 throw new ArgumentOutOfRangeException("sheetIndex");
             return Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => Sheets[sheetIndex].SaveTextFileRange(row, column, rowCount, columnCount, stream, flags, rowDelimiter, columnDelimiter, cellDelimiter));
+        }
+        #endregion
+
+        #region 重绘方法
+        /// <summary>
+        /// 延迟重绘
+        /// </summary>
+        /// <returns></returns>
+        /// <example>
+        /// <code>
+        /// using (_excel.Defer())
+        /// {
+        ///     _excel.Sheets.AddTable("sampleTable1", 22, 5, 10, 5, TableStyles.Medium3);
+        /// }
+        /// </code>
+        /// </example>
+        public IDisposable Defer()
+        {
+            return new Deferral(this);
+        }
+
+        /// <summary>
+        /// 刷新整个可视区域，全部重新测量布局
+        /// </summary>
+        public void RefreshAll()
+        {
+            if (IsSuspendInvalidate())
+                return;
+
+            if (IsEditing)
+                StopCellEditing(true);
+            InvalidateLayout();
+            Children.Clear();
+            _tabStrip?.UpdateTabs();
+
+            _cornerPanel = null;
+            _rowHeaders = null;
+            _colHeaders = null;
+            _cellsPanels = null;
+
+            _groupCornerPresenter = null;
+            _rowGroupHeaderPresenter = null;
+            _columnGroupHeaderPresenter = null;
+            _rowGroupPresenters = null;
+            _columnGroupPresenters = null;
+            _columnFreezeLine = null;
+            _columnTrailingFreezeLine = null;
+            _rowFreezeLine = null;
+            _rowTrailingFreezeLine = null;
+
+            _tooltipHelper = null;
+            _currentActiveColumnIndex = (ActiveSheet == null) ? -1 : ActiveSheet.ActiveColumnIndex;
+            _currentActiveRowIndex = (ActiveSheet == null) ? -1 : ActiveSheet.ActiveRowIndex;
+            Navigation.UpdateStartPosition(_currentActiveRowIndex, _currentActiveColumnIndex);
+        }
+
+        /// <summary>
+        /// Invalidates the charts.
+        /// </summary>
+        public void RefreshCharts()
+        {
+            if ((ActiveSheet != null) && (ActiveSheet.Charts.Count > 0))
+            {
+                RefreshCharts(ActiveSheet.Charts.ToArray());
+            }
+        }
+
+        /// <summary>
+        /// Invalidates the charts.
+        /// </summary>
+        /// <param name="charts">The charts.</param>
+        public void RefreshCharts(params SpreadChart[] charts)
+        {
+            InvalidateFloatingObjectLayout();
+            foreach (SpreadChart chart in charts)
+            {
+                RefreshViewportFloatingObjects(chart);
+            }
+        }
+
+        /// <summary>
+        /// Invalidates a range state in the control; the range layout and data is updated after the invalidation.
+        /// </summary>
+        /// <param name="row">The start row index.</param>
+        /// <param name="column">The start column index.</param>
+        /// <param name="rowCount">The row count.</param>
+        /// <param name="columnCount">The column count.</param>
+        /// <param name="sheetArea">The invalidated sheet area.</param>
+        public void RefreshRange(int row, int column, int rowCount, int columnCount, SheetArea sheetArea = SheetArea.Cells)
+        {
+            if (!IsSuspendInvalidate())
+            {
+                if ((row < 0) || (column < 0))
+                {
+                    InvalidateLayout();
+                }
+                _cachedFilterButtonInfoModel = null;
+                InvalidateMeasure();
+                Worksheet worksheet = ActiveSheet;
+                if (((byte)(sheetArea & SheetArea.Cells)) == 1)
+                {
+                    if (row < 0)
+                    {
+                        row = 0;
+                        rowCount = (worksheet == null) ? 0 : worksheet.RowCount;
+                    }
+                    if (column < 0)
+                    {
+                        column = 0;
+                        columnCount = (worksheet == null) ? 0 : worksheet.ColumnCount;
+                    }
+                    _cachedViewportCellLayoutModel = null;
+                    RefreshViewportCells(_cellsPanels, row, column, rowCount, columnCount);
+                }
+                if (((byte)(sheetArea & SheetArea.ColumnHeader)) == 4)
+                {
+                    if (row < 0)
+                    {
+                        row = 0;
+                        rowCount = (worksheet == null) ? 0 : worksheet.RowCount;
+                    }
+                    if (column < 0)
+                    {
+                        column = 0;
+                        columnCount = (worksheet == null) ? 0 : worksheet.ColumnCount;
+                    }
+                    _cachedColumnHeaderCellLayoutModel = null;
+                    RefreshHeaderCells(_colHeaders, row, column, rowCount, columnCount);
+                }
+                if (((byte)(sheetArea & (SheetArea.CornerHeader | SheetArea.RowHeader))) == 2)
+                {
+                    if (row < 0)
+                    {
+                        row = 0;
+                        rowCount = (worksheet == null) ? 0 : worksheet.RowCount;
+                    }
+                    if (column < 0)
+                    {
+                        column = 0;
+                        columnCount = (worksheet == null) ? 0 : worksheet.ColumnCount;
+                    }
+                    _cachedRowHeaderCellLayoutModel = null;
+                    RefreshHeaderCells(_rowHeaders, row, column, rowCount, columnCount);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Invalidates the row state in the control. After the invalidation, the row layout and data are updated. 
+        /// </summary>
+        /// <param name="row">The start row index.</param>
+        /// <param name="rowCount">The row count.</param>
+        /// <param name="sheetArea">The invalid sheet area.</param>
+        public void RefreshRows(int row, int rowCount, SheetArea sheetArea = SheetArea.Cells)
+        {
+            if (!IsSuspendInvalidate())
+            {
+                RefreshRange(row, -1, rowCount, -1, sheetArea);
+            }
+        }
+
+        /// <summary>
+        /// Invalidates the column state in the control. After the invalidation, the column layout and data are updated. 
+        /// </summary>
+        /// <param name="column">The start column index.</param>
+        /// <param name="columnCount">The column count.</param>
+        /// <param name="sheetArea">The invalid sheet area</param>
+        public void RefreshColumns(int column, int columnCount, SheetArea sheetArea = SheetArea.Cells)
+        {
+            if (!IsSuspendInvalidate())
+            {
+                RefreshRange(-1, column, -1, columnCount, sheetArea);
+            }
+        }
+
+        /// <summary>
+        /// Invalidates the custom floating objects.
+        /// </summary>
+        public void RefreshCustomFloatingObjects()
+        {
+            if ((ActiveSheet != null) && (ActiveSheet.FloatingObjects.Count > 0))
+            {
+                List<CustomFloatingObject> list = new List<CustomFloatingObject>();
+                foreach (FloatingObject obj2 in ActiveSheet.FloatingObjects)
+                {
+                    if (obj2 is CustomFloatingObject)
+                    {
+                        list.Add(obj2 as CustomFloatingObject);
+                    }
+                }
+                RefreshCustomFloatingObjects(list.ToArray());
+            }
+        }
+
+        /// <summary>
+        /// Invalidates the custom floating objects.
+        /// </summary>
+        /// <param name="floatingObjects">The floating objects.</param>
+        public void RefreshCustomFloatingObjects(params CustomFloatingObject[] floatingObjects)
+        {
+            InvalidateFloatingObjectLayout();
+            foreach (CustomFloatingObject obj2 in floatingObjects)
+            {
+                RefreshViewportFloatingObjects(obj2);
+            }
+        }
+
+        /// <summary>
+        /// Invalidates the charts.
+        /// </summary>
+        public void RefreshFloatingObjects()
+        {
+            InvalidateFloatingObjectLayout();
+            RefreshViewportFloatingObjects();
+        }
+
+        /// <summary>
+        /// Invalidates the floating object.
+        /// </summary>
+        /// <param name="floatingObjects">The floating objects.</param>
+        public void RefreshFloatingObjects(params FloatingObject[] floatingObjects)
+        {
+            InvalidateFloatingObjectLayout();
+            foreach (FloatingObject obj2 in floatingObjects)
+            {
+                RefreshViewportFloatingObjects(obj2);
+            }
+        }
+
+        /// <summary>
+        /// Invalidates the pictures.
+        /// </summary>
+        public void RefreshPictures()
+        {
+            if ((ActiveSheet != null) && (ActiveSheet.Pictures.Count > 0))
+            {
+                RefreshPictures(ActiveSheet.Pictures.ToArray());
+            }
+        }
+
+        /// <summary>
+        /// Invalidates the pictures.
+        /// </summary>
+        /// <param name="pictures">The pictures.</param>
+        public void RefreshPictures(params Picture[] pictures)
+        {
+            InvalidateFloatingObjectLayout();
+            foreach (Picture picture in pictures)
+            {
+                RefreshViewportFloatingObjects(picture);
+            }
         }
         #endregion
 
@@ -1393,232 +1638,6 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// Invalidates the measurement state (layout) and the arrangement state (layout) for the view. After the invalidation, the view layout and data are updated. 
-        /// </summary>
-        public void InvalidateAll()
-        {
-            if (IsSuspendInvalidate())
-                return;
-
-            if (IsEditing)
-                StopCellEditing(true);
-            InvalidateLayout();
-            Children.Clear();
-
-            _cornerPanel = null;
-            _rowHeaders = null;
-            _colHeaders = null;
-            _cellsPanels = null;
-
-            _groupCornerPresenter = null;
-            _rowGroupHeaderPresenter = null;
-            _columnGroupHeaderPresenter = null;
-            _rowGroupPresenters = null;
-            _columnGroupPresenters = null;
-            _tooltipHelper = null;
-            _currentActiveColumnIndex = (ActiveSheet == null) ? -1 : ActiveSheet.ActiveColumnIndex;
-            _currentActiveRowIndex = (ActiveSheet == null) ? -1 : ActiveSheet.ActiveRowIndex;
-            Navigation.UpdateStartPosition(_currentActiveRowIndex, _currentActiveColumnIndex);
-        }
-
-        /// <summary>
-        /// Invalidates the charts.
-        /// </summary>
-        public void InvalidateCharts()
-        {
-            if ((ActiveSheet != null) && (ActiveSheet.Charts.Count > 0))
-            {
-                InvalidateCharts(ActiveSheet.Charts.ToArray());
-            }
-        }
-
-        /// <summary>
-        /// Invalidates the charts.
-        /// </summary>
-        /// <param name="charts">The charts.</param>
-        public void InvalidateCharts(params SpreadChart[] charts)
-        {
-            InvalidateFloatingObjectLayout();
-            foreach (SpreadChart chart in charts)
-            {
-                RefreshViewportFloatingObjects(chart);
-            }
-        }
-
-        /// <summary>
-        /// Invalidates a range state in the control; the range layout and data is updated after the invalidation.
-        /// </summary>
-        /// <param name="row">The start row index.</param>
-        /// <param name="column">The start column index.</param>
-        /// <param name="rowCount">The row count.</param>
-        /// <param name="columnCount">The column count.</param>
-        /// <param name="sheetArea">The invalidated sheet area.</param>
-        public void InvalidateRange(int row, int column, int rowCount, int columnCount, SheetArea sheetArea = SheetArea.Cells)
-        {
-            if (!IsSuspendInvalidate())
-            {
-                if ((row < 0) || (column < 0))
-                {
-                    InvalidateLayout();
-                }
-                _cachedFilterButtonInfoModel = null;
-                InvalidateMeasure();
-                Worksheet worksheet = ActiveSheet;
-                if (((byte)(sheetArea & SheetArea.Cells)) == 1)
-                {
-                    if (row < 0)
-                    {
-                        row = 0;
-                        rowCount = (worksheet == null) ? 0 : worksheet.RowCount;
-                    }
-                    if (column < 0)
-                    {
-                        column = 0;
-                        columnCount = (worksheet == null) ? 0 : worksheet.ColumnCount;
-                    }
-                    _cachedViewportCellLayoutModel = null;
-                    RefreshViewportCells(_cellsPanels, row, column, rowCount, columnCount);
-                }
-                if (((byte)(sheetArea & SheetArea.ColumnHeader)) == 4)
-                {
-                    if (row < 0)
-                    {
-                        row = 0;
-                        rowCount = (worksheet == null) ? 0 : worksheet.RowCount;
-                    }
-                    if (column < 0)
-                    {
-                        column = 0;
-                        columnCount = (worksheet == null) ? 0 : worksheet.ColumnCount;
-                    }
-                    _cachedColumnHeaderCellLayoutModel = null;
-                    RefreshHeaderCells(_colHeaders, row, column, rowCount, columnCount);
-                }
-                if (((byte)(sheetArea & (SheetArea.CornerHeader | SheetArea.RowHeader))) == 2)
-                {
-                    if (row < 0)
-                    {
-                        row = 0;
-                        rowCount = (worksheet == null) ? 0 : worksheet.RowCount;
-                    }
-                    if (column < 0)
-                    {
-                        column = 0;
-                        columnCount = (worksheet == null) ? 0 : worksheet.ColumnCount;
-                    }
-                    _cachedRowHeaderCellLayoutModel = null;
-                    RefreshHeaderCells(_rowHeaders, row, column, rowCount, columnCount);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Invalidates the row state in the control. After the invalidation, the row layout and data are updated. 
-        /// </summary>
-        /// <param name="row">The start row index.</param>
-        /// <param name="rowCount">The row count.</param>
-        /// <param name="sheetArea">The invalid sheet area.</param>
-        public void InvalidateRows(int row, int rowCount, SheetArea sheetArea = SheetArea.Cells)
-        {
-            if (!IsSuspendInvalidate())
-            {
-                InvalidateRange(row, -1, rowCount, -1, sheetArea);
-            }
-        }
-
-        /// <summary>
-        /// Invalidates the column state in the control. After the invalidation, the column layout and data are updated. 
-        /// </summary>
-        /// <param name="column">The start column index.</param>
-        /// <param name="columnCount">The column count.</param>
-        /// <param name="sheetArea">The invalid sheet area</param>
-        public void InvalidateColumns(int column, int columnCount, SheetArea sheetArea = SheetArea.Cells)
-        {
-            if (!IsSuspendInvalidate())
-            {
-                InvalidateRange(-1, column, -1, columnCount, sheetArea);
-            }
-        }
-
-        /// <summary>
-        /// Invalidates the custom floating objects.
-        /// </summary>
-        public void InvalidateCustomFloatingObjects()
-        {
-            if ((ActiveSheet != null) && (ActiveSheet.FloatingObjects.Count > 0))
-            {
-                List<CustomFloatingObject> list = new List<CustomFloatingObject>();
-                foreach (FloatingObject obj2 in ActiveSheet.FloatingObjects)
-                {
-                    if (obj2 is CustomFloatingObject)
-                    {
-                        list.Add(obj2 as CustomFloatingObject);
-                    }
-                }
-                InvalidateCustomFloatingObjects(list.ToArray());
-            }
-        }
-
-        /// <summary>
-        /// Invalidates the custom floating objects.
-        /// </summary>
-        /// <param name="floatingObjects">The floating objects.</param>
-        public void InvalidateCustomFloatingObjects(params CustomFloatingObject[] floatingObjects)
-        {
-            InvalidateFloatingObjectLayout();
-            foreach (CustomFloatingObject obj2 in floatingObjects)
-            {
-                RefreshViewportFloatingObjects(obj2);
-            }
-        }
-
-        /// <summary>
-        /// Invalidates the charts.
-        /// </summary>
-        public void InvalidateFloatingObjects()
-        {
-            InvalidateFloatingObjectLayout();
-            RefreshViewportFloatingObjects();
-        }
-
-        /// <summary>
-        /// Invalidates the floating object.
-        /// </summary>
-        /// <param name="floatingObjects">The floating objects.</param>
-        public void InvalidateFloatingObjects(params FloatingObject[] floatingObjects)
-        {
-            InvalidateFloatingObjectLayout();
-            foreach (FloatingObject obj2 in floatingObjects)
-            {
-                RefreshViewportFloatingObjects(obj2);
-            }
-        }
-
-        /// <summary>
-        /// Invalidates the pictures.
-        /// </summary>
-        public void InvalidatePictures()
-        {
-            if ((ActiveSheet != null) && (ActiveSheet.Pictures.Count > 0))
-            {
-                InvalidatePictures(ActiveSheet.Pictures.ToArray());
-            }
-        }
-
-        /// <summary>
-        /// Invalidates the pictures.
-        /// </summary>
-        /// <param name="pictures">The pictures.</param>
-        public void InvalidatePictures(params Picture[] pictures)
-        {
-            InvalidateFloatingObjectLayout();
-            foreach (Picture picture in pictures)
-            {
-                RefreshViewportFloatingObjects(picture);
-            }
-        }
-
-        /// <summary>
         /// Removes a column viewport from the control. 
         /// </summary>
         /// <param name="columnViewportIndex">The column viewport index to remove.</param>
@@ -1655,7 +1674,7 @@ namespace Dt.Base
         public void ResetThemes()
         {
             Workbook.ResetThemes();
-            InvalidateAll();
+            RefreshAll();
         }
 
         /// <summary>
@@ -1664,7 +1683,7 @@ namespace Dt.Base
         public void ResumeCalcService()
         {
             Workbook.ResumeCalcService();
-            InvalidateAll();
+            RefreshAll();
         }
 
         /// <summary>
@@ -2397,7 +2416,7 @@ namespace Dt.Base
                     }
                     SetSelection(range1.Row, range1.Column, range1.RowCount, range1.ColumnCount);
                     SetActiveCell((range.Row < 0) ? 0 : range.Row, (range.Column < 0) ? 0 : range.Column, false);
-                    InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
+                    RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
                 }
             }
         }

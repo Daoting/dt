@@ -207,10 +207,7 @@ namespace Dt.Cells.UI
                 if (_startIndex != value)
                 {
                     _startIndex = value;
-                    if (_owner.Excel.ActiveSheet != null && _owner.Excel.ActiveSheet.Workbook != null)
-                    {
-                        _owner.Excel.ActiveSheet.Workbook.StartSheetIndex = _startIndex;
-                    }
+                    _owner.Excel.Workbook.StartSheetIndex = _startIndex;
                 }
             }
         }

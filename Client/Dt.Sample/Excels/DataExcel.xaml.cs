@@ -40,7 +40,11 @@ namespace Dt.Sample
         public DataExcel()
         {
             InitializeComponent();
-            InitializeSpread();
+
+            using (_excel.Defer())
+            {
+                InitializeSpread();
+            }
         }
 
         void InitializeSpread()

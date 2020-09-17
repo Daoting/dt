@@ -4981,9 +4981,9 @@ namespace Dt.Base
 
         internal void ProcessStartSheetIndexChanged()
         {
-            if (((ActiveSheet != null) && (ActiveSheet.Workbook != null)) && (_tabStrip != null))
+            if (ActiveSheet != null && _tabStrip != null)
             {
-                _tabStrip.SetStartSheet(ActiveSheet.Workbook.StartSheetIndex);
+                _tabStrip.SetStartSheet(Workbook.StartSheetIndex);
             }
         }
 
@@ -5961,35 +5961,35 @@ namespace Dt.Base
                 for (int j = viewportArray.GetLowerBound(1); j <= num2; j++)
                 {
                     CellsPanel viewport = viewportArray[i, j];
-                    if (viewport != null)
-                    {
-                        if (((IsEditing && (viewport.EditingContainer != null)) && viewport.IsActived) && ((viewport.EditingContainer.EditingRowIndex != ActiveSheet.ActiveRowIndex) || (ActiveSheet.ActiveColumnIndex != viewport.EditingContainer.EditingColumnIndex)))
-                        {
-                            StopCellEditing(true);
-                        }
+                    if (viewport == null)
+                        continue;
 
-                        foreach (RowLayout layout in viewport.GetRowLayoutModel())
+                    if (((IsEditing && (viewport.EditingContainer != null)) && viewport.IsActived) && ((viewport.EditingContainer.EditingRowIndex != ActiveSheet.ActiveRowIndex) || (ActiveSheet.ActiveColumnIndex != viewport.EditingContainer.EditingColumnIndex)))
+                    {
+                        StopCellEditing(true);
+                    }
+
+                    foreach (RowLayout layout in viewport.GetRowLayoutModel())
+                    {
+                        if ((row <= layout.Row) && (layout.Row < (row + rowCount)))
                         {
-                            if ((row <= layout.Row) && (layout.Row < (row + rowCount)))
+                            RowItem presenter = viewport.GetRow(layout.Row);
+                            if (presenter != null)
                             {
-                                RowItem presenter = viewport.GetRow(layout.Row);
-                                if (presenter != null)
+                                foreach (CellItem cell in presenter.Children)
                                 {
-                                    foreach (CellItem cell in presenter.Children)
+                                    if ((column <= cell.Column) && (cell.Column < (column + columnCount)))
                                     {
-                                        if ((column <= cell.Column) && (cell.Column < (column + columnCount)))
-                                        {
-                                            cell.Refresh();
-                                        }
+                                        cell.Refresh();
                                     }
                                 }
                             }
                         }
-
-                        viewport.InvalidateBordersMeasureState();
-                        viewport.InvalidateSelectionMeasureState();
-                        viewport.InvalidateRowsMeasureState(true);
                     }
+
+                    viewport.InvalidateBordersMeasureState();
+                    viewport.InvalidateSelectionMeasureState();
+                    viewport.InvalidateRowsMeasureState(true);
                 }
             }
         }
@@ -8433,14 +8433,6 @@ namespace Dt.Base
             }
         }
 
-        internal void InvalidTabStrip()
-        {
-            if (!IsSuspendInvalidate())
-            {
-                RefreshTabStrip();
-            }
-        }
-
         bool IsMouseInScrollBar()
         {
             HitTestInformation savedHitTestInformation = GetHitInfo();
@@ -8879,10 +8871,7 @@ namespace Dt.Base
 
         internal void RefreshTabStrip()
         {
-            if (_tabStrip != null)
-            {
-                _tabStrip.Refresh();
-            }
+            _tabStrip?.Refresh();
         }
 
         internal void RemoveColumnViewport(int sheetIndex, int columnViewportIndex)
@@ -9281,7 +9270,7 @@ namespace Dt.Base
 
         void InvalidateDecoration()
         {
-            if (_cellsPanels != null)
+            if (!IsSuspendInvalidate() && _cellsPanels != null)
             {
                 int rowBound = _cellsPanels.GetUpperBound(0);
                 int colBound = _cellsPanels.GetUpperBound(1);

@@ -42,7 +42,10 @@ namespace Dt.Sample
             InitializeComponent();
             Worksheet sheet = _excel.ActiveSheet;
 
-            InitializeSample();
+            using (_excel.Defer())
+            {
+                InitializeSample();
+            }
 
             foreach (SpreadTheme st in _excel.Themes)
             {
@@ -77,9 +80,6 @@ namespace Dt.Sample
 
         void InitializeSample()
         {
-            _excel.AutoRefresh = false;
-            _excel.SuspendEvent();
-
             var sheet = _excel.ActiveSheet;
 
             string themes = "";
@@ -204,10 +204,6 @@ namespace Dt.Sample
 
             sheet.AddTable("sampleTable2", 14, 3, 6, 4, TableStyles.Medium4);
             sheet.AddTable("sampleTable3", 14, 9, 6, 4, TableStyles.Medium5);
-
-            _excel.ResumeEvent();
-            _excel.AutoRefresh = true;
-
         }
 
         void ThemeColorType_SelectionChanged(object sender, SelectionChangedEventArgs e)

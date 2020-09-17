@@ -43,7 +43,7 @@ namespace Dt.Cells.UI
             DefaultStyleKey = typeof(TabStrip);
             Excel = p_excel;
             TabsPresenter = new TabsPresenter(this);
-            LoadTab();
+            LoadTabs();
         }
 
         public SheetTab ActiveTab
@@ -62,7 +62,7 @@ namespace Dt.Cells.UI
             get { return Excel.Workbook; }
         }
 
-        void LoadTab()
+        void LoadTabs()
         {
             for (int i = 0; i < Excel.Sheets.Count; i++)
             {
@@ -77,6 +77,43 @@ namespace Dt.Cells.UI
                 TabsPresenter.Children.Add(_newTab);
             }
             ActiveSheet(Excel.ActiveSheetIndex, false);
+        }
+
+        /// <summary>
+        /// Tab项个数不同时重新加载，相同时刷新名称
+        /// </summary>
+        public void UpdateTabs()
+        {
+            int cnt = Excel.Sheets.Count;
+            if (_newTab != null)
+                cnt += 1;
+            if (cnt != TabsPresenter.Children.Count)
+            {
+                TabsPresenter.Children.Clear();
+                _newTab = null;
+                LoadTabs();
+            }
+            else if(TabsPresenter.Children.Count > 0)
+            {
+                foreach (SheetTab tab in TabsPresenter.Children)
+                {
+                    tab.PrepareForDisplay();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 刷新标签名称
+        /// </summary>
+        public void Refresh()
+        {
+            if (TabsPresenter.Children.Count > 0)
+            {
+                foreach (SheetTab tab in TabsPresenter.Children)
+                {
+                    tab.PrepareForDisplay();
+                }
+            }
         }
 
         public void NewTab(int sheetIndex)
@@ -303,17 +340,6 @@ namespace Dt.Cells.UI
             Excel.RaiseSheetTabClick(touchHitSheetTab.SheetIndex);
         }
 
-        public void Refresh()
-        {
-            if (TabsPresenter.Children.Count > 0)
-            {
-                foreach (SheetTab tab in TabsPresenter.Children)
-                {
-                    tab.PrepareForDisplay();
-                }
-            }
-        }
-
         public void SetStartSheet(int startSheetIndex)
         {
             if ((TabsPresenter.Children.Count != 0) && (TabsPresenter.Children.Count > startSheetIndex))
@@ -345,13 +371,13 @@ namespace Dt.Cells.UI
         #region 编辑
         public void StartTabEditing(PointerRoutedEventArgs e)
         {
-            if (((_activeTab != null) && (Workbook != null)) && !Workbook.Protect)
+            if (_activeTab != null && !Workbook.Protect)
                 StartTabEditing(e.GetCurrentPoint(null).Position);
         }
 
         public void StartTabTouchEditing(Point point)
         {
-            if (((_activeTab != null) && (Workbook != null)) && !Workbook.Protect)
+            if (_activeTab != null && !Workbook.Protect)
                 StartTabEditing(point);
         }
 

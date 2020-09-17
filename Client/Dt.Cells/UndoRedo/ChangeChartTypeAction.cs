@@ -399,7 +399,7 @@ namespace Dt.Cells.UndoRedo
             var excel = parameter as Excel;
             if (excel != null)
             {
-                excel.InvalidateCharts(new SpreadChart[] { _chart });
+                excel.RefreshCharts(new SpreadChart[] { _chart });
             }
         }
 
@@ -445,7 +445,7 @@ namespace Dt.Cells.UndoRedo
             var excel = parameter as Excel;
             if (excel != null)
             {
-                excel.InvalidateCharts(new SpreadChart[] { _chart });
+                excel.RefreshCharts(new SpreadChart[] { _chart });
             }
             return true;
         }

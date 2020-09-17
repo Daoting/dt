@@ -88,8 +88,8 @@ namespace Dt.Cells.UI
                     rowFilter.Filter(_column);
                     _excel.RaiseRangeFiltered(_column, filterValues);
                 }
-                _excel.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
-                _excel.InvalidateFloatingObjects();
+                _excel.RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
+                _excel.RefreshFloatingObjects();
             }
         }
 

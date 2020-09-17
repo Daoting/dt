@@ -48,7 +48,7 @@ namespace Dt.Cells.UI
                 else if (!_excel.RaiseRangeSorting(_info.Column, _ascending) && _info.RowFilter.SortColumn(_info.Column, _ascending))
                 {
                     _excel.RaiseRangeSorted(_info.Column, _ascending);
-                    _excel.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
+                    _excel.RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
                 }
             }
         }

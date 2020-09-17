@@ -87,8 +87,8 @@ namespace Dt.Cells.UndoRedo
                     _workSheet.ResumeCalcService();
                     base.ResumeInvalidate(sender);
                 }
-                sender.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
-                sender.InvalidateCharts();
+                sender.RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
+                sender.RefreshCharts();
             }
         }
 
@@ -168,7 +168,7 @@ namespace Dt.Cells.UndoRedo
                 finally
                 {
                     excel.StopCellEditing(true);
-                    excel.InvalidateAll();
+                    excel.RefreshAll();
                 }
             }
         }
@@ -214,7 +214,7 @@ namespace Dt.Cells.UndoRedo
                 excel.RaiseSelectionChanged();
             }
             excel.RefreshCellAreaViewport(0, 0, _workSheet.RowCount, _workSheet.ColumnCount);
-            excel.InvalidateCharts();
+            excel.RefreshCharts();
             return flag;
         }
 
@@ -238,7 +238,7 @@ namespace Dt.Cells.UndoRedo
                 _workSheet.ResumeCalcService();
                 base.ResumeInvalidate(excel);
             }
-            excel.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
+            excel.RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
             return flag;
         }
 
@@ -263,7 +263,7 @@ namespace Dt.Cells.UndoRedo
                 _workSheet.ResumeCalcService();
                 base.ResumeInvalidate(excel);
             }
-            excel.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
+            excel.RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader | SheetArea.RowHeader);
             return true;
         }
 

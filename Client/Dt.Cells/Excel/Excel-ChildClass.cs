@@ -18,6 +18,26 @@ namespace Dt.Base
 {
     public partial class Excel
     {
+        class Deferral : IDisposable
+        {
+            Excel _excel;
+
+            public Deferral(Excel p_excel)
+            {
+                _excel = p_excel;
+                _excel.AutoRefresh = false;
+                _excel.SuspendInvalidate();
+                _excel.SuspendEvent();
+            }
+
+            public void Dispose()
+            {
+                _excel.ResumeInvalidate();
+                _excel.ResumeEvent();
+                _excel.AutoRefresh = true;
+            }
+        }
+
         class ActiveCellChangingEventArgs : CancelEventArgs
         {
             public ActiveCellChangingEventArgs(int row, int column)

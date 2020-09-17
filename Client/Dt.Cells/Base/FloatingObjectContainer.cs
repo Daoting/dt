@@ -106,34 +106,16 @@ namespace Dt.Cells.UI
             _glyphGrid.Children.Add(_bottomRect);
             Grid.SetRow(_bottomRect, 2);
             Grid.SetColumnSpan(_bottomRect, 3);
-            LoadImages();
-            
-            _innerBorder = new Border();
-            _innerBorder.BorderBrush = BorderBrush;
-            _innerBorder.BorderThickness = new Thickness(2.0);
-            _innerBorder.CornerRadius = new Windows.UI.Xaml.CornerRadius(10.0);
-            base.Children.Add(_innerBorder);
-            _contentPanel = new Border();
-            _contentPanel.Background = new SolidColorBrush(Colors.Transparent);
-            base.Children.Add(_contentPanel);
-            _defaultContent = new Border();
-            _contentPanel.Child = _defaultContent;
-            UpdateElements(false);
-        }
 
-        async void LoadImages()
-        {
             _topLeftRect = new Image();
             _topLeftRect.Width = 7.0;
             _topLeftRect.Height = 7.0;
-            _topLeftRect.Source = await SR.GetImage("TopLeftGrip.png");
             _glyphGrid.Children.Add(_topLeftRect);
             Grid.SetRow(_topLeftRect, 0);
             Grid.SetColumn(_topLeftRect, 0);
             _topCentertRect = new Image();
             _topCentertRect.Width = 15.0;
             _topCentertRect.Height = 3.0;
-            _topCentertRect.Source = await SR.GetImage("TopCenterGrip.png");
             _topCentertRect.VerticalAlignment = VerticalAlignment.Top;
             _glyphGrid.Children.Add(_topCentertRect);
             Grid.SetRow(_topCentertRect, 0);
@@ -141,14 +123,12 @@ namespace Dt.Cells.UI
             _topRightRect = new Image();
             _topRightRect.Width = 7.0;
             _topRightRect.Height = 7.0;
-            _topRightRect.Source = await SR.GetImage("TopRightGrip.png");
             _glyphGrid.Children.Add(_topRightRect);
             Grid.SetRow(_topRightRect, 0);
             Grid.SetColumn(_topRightRect, 2);
             _middleLeftRect = new Image();
             _middleLeftRect.Width = 3.0;
             _middleLeftRect.Height = 15.0;
-            _middleLeftRect.Source = await SR.GetImage("MiddleLeftGrip.png");
             _middleLeftRect.HorizontalAlignment = HorizontalAlignment.Left;
             _glyphGrid.Children.Add(_middleLeftRect);
             Grid.SetRow(_middleLeftRect, 1);
@@ -156,7 +136,6 @@ namespace Dt.Cells.UI
             _middleRightRect = new Image();
             _middleRightRect.Width = 3.0;
             _middleRightRect.Height = 15.0;
-            _middleRightRect.Source = await SR.GetImage("MiddleRightGrip.png");
             _middleRightRect.HorizontalAlignment = HorizontalAlignment.Right;
             _glyphGrid.Children.Add(_middleRightRect);
             Grid.SetRow(_middleRightRect, 1);
@@ -164,14 +143,12 @@ namespace Dt.Cells.UI
             _bottomLeftRect = new Image();
             _bottomLeftRect.Width = 7.0;
             _bottomLeftRect.Height = 7.0;
-            _bottomLeftRect.Source = await SR.GetImage("BottomLeftGrip.png");
             _glyphGrid.Children.Add(_bottomLeftRect);
             Grid.SetRow(_bottomLeftRect, 2);
             Grid.SetColumn(_bottomLeftRect, 0);
             _bottomCenterRect = new Image();
             _bottomCenterRect.Width = 15.0;
             _bottomCenterRect.Height = 3.0;
-            _bottomCenterRect.Source = await SR.GetImage("BottomCenterGrip.png");
             _bottomCenterRect.VerticalAlignment = VerticalAlignment.Bottom;
             _glyphGrid.Children.Add(_bottomCenterRect);
             Grid.SetRow(_bottomCenterRect, 2);
@@ -179,10 +156,34 @@ namespace Dt.Cells.UI
             _bottomRightRect = new Image();
             _bottomRightRect.Width = 7.0;
             _bottomRightRect.Height = 7.0;
-            _bottomRightRect.Source = await SR.GetImage("BottomRightGrip.png");
             _glyphGrid.Children.Add(_bottomRightRect);
             Grid.SetRow(_bottomRightRect, 2);
             Grid.SetColumn(_bottomRightRect, 2);
+            LoadImages();
+            
+            _innerBorder = new Border();
+            _innerBorder.BorderBrush = BorderBrush;
+            _innerBorder.BorderThickness = new Thickness(2.0);
+            _innerBorder.CornerRadius = new Windows.UI.Xaml.CornerRadius(10.0);
+            Children.Add(_innerBorder);
+            _contentPanel = new Border();
+            _contentPanel.Background = new SolidColorBrush(Colors.Transparent);
+            Children.Add(_contentPanel);
+            _defaultContent = new Border();
+            _contentPanel.Child = _defaultContent;
+            UpdateElements(false);
+        }
+
+        async void LoadImages()
+        {
+            _topLeftRect.Source = await SR.GetImage("TopLeftGrip.png");
+            _topCentertRect.Source = await SR.GetImage("TopCenterGrip.png");
+            _topRightRect.Source = await SR.GetImage("TopRightGrip.png");
+            _middleLeftRect.Source = await SR.GetImage("MiddleLeftGrip.png");
+            _middleRightRect.Source = await SR.GetImage("MiddleRightGrip.png");
+            _bottomLeftRect.Source = await SR.GetImage("BottomLeftGrip.png");
+            _bottomCenterRect.Source = await SR.GetImage("BottomCenterGrip.png");
+            _bottomRightRect.Source = await SR.GetImage("BottomRightGrip.png");
         }
 
         protected override Size ArrangeOverride(Size finalSize)

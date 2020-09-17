@@ -31,18 +31,12 @@ namespace Dt.Base
         /// <param name="xmlStream"></param>
         internal void OpenXmlOnBackground(Stream xmlStream)
         {
-            XmlReader reader = null;
             Workbook.SuspendEvent();
+            Workbook.Reset();
+
             try
             {
-                if (_workbook != null)
-                {
-                    _workbook.Sheets.CollectionChanged -= new NotifyCollectionChangedEventHandler(OnSheetsCollectionChanged);
-                    _workbook.PropertyChanged -= new PropertyChangedEventHandler(OnWorkbookPropertyChanged);
-                    _workbook.Reset();
-                }
-
-                using (reader = XmlReader.Create(xmlStream))
+                using (var reader = XmlReader.Create(xmlStream))
                 {
                     Serializer.InitReader(reader);
                     while (reader.Read())
@@ -56,9 +50,7 @@ namespace Dt.Base
                                 XmlReader reader2 = Serializer.ExtractNode(reader);
                                 Serializer.InitReader(reader2);
                                 reader2.Read();
-                                _workbook = new Workbook();
-                                _workbook.SuspendEvent();
-                                _workbook.OpenXml(reader);
+                                Workbook.OpenXml(reader);
                             }
                             else if (str == "View")
                             {
@@ -66,16 +58,6 @@ namespace Dt.Base
                             }
                         }
                     }
-                }
-
-                if (_workbook != null)
-                {
-                    foreach (Worksheet worksheet in _workbook.Sheets)
-                    {
-                        AttachSheet(worksheet);
-                    }
-                    _workbook.Sheets.CollectionChanged += new NotifyCollectionChangedEventHandler(OnSheetsCollectionChanged);
-                    _workbook.PropertyChanged += new PropertyChangedEventHandler(OnWorkbookPropertyChanged);
                 }
             }
             catch (Exception exception)
@@ -88,11 +70,9 @@ namespace Dt.Base
             }
             finally
             {
-                if (reader != null)
-                    reader.Close();
                 Workbook.ResumeEvent();
             }
-            InvalidateAll();
+            RefreshAll();
         }
 
         internal void SaveXmlBackground(Stream xmlStream, bool dataOnly = false)

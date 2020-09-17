@@ -2263,6 +2263,7 @@ namespace Dt.Base
             else if (_columnFreezeLine != null)
             {
                 _trackersPanel.Children.Remove(_columnFreezeLine);
+                _columnFreezeLine = null;
             }
 
             ViewportInfo viewportInfo = GetViewportInfo();
@@ -2291,6 +2292,7 @@ namespace Dt.Base
             else if (_columnTrailingFreezeLine != null)
             {
                 _trackersPanel.Children.Remove(_columnTrailingFreezeLine);
+                _columnTrailingFreezeLine = null;
             }
 
             if ((sheetLayout.FrozenHeight > 0.0) && ShowFreezeLine)
@@ -2330,6 +2332,7 @@ namespace Dt.Base
             else if (_rowFreezeLine != null)
             {
                 _trackersPanel.Children.Remove(_rowFreezeLine);
+                _rowFreezeLine = null;
             }
 
             if ((sheetLayout.FrozenTrailingHeight > 0.0) && ShowFreezeLine)
@@ -2357,11 +2360,15 @@ namespace Dt.Base
             else if (_rowTrailingFreezeLine != null)
             {
                 _trackersPanel.Children.Remove(_rowTrailingFreezeLine);
+                _rowTrailingFreezeLine = null;
             }
         }
 
         async Task OpenStream(DispatchedHandler p_handler)
         {
+            Workbook.Sheets.CollectionChanged -= OnSheetsCollectionChanged;
+            Workbook.PropertyChanged -= OnWorkbookPropertyChanged;
+
             try
             {
                 ShowProgressRing();
@@ -2396,19 +2403,19 @@ namespace Dt.Base
                 ClearValue(TrailingFreezeLineStyleProperty);
                 ClearValue(ShowDecorationProperty);
 
-                if (_tabStrip != null)
-                {
-                    _tabStrip.ActiveTabChanging -= OnTabStripActiveTabChanging;
-                    _tabStrip.ActiveTabChanged -= OnTabStripActiveTabChanged;
-                    _tabStrip.NewTabNeeded -= OnTabStripNewTabNeeded;
-                    _tabStrip = null;
-                }
-
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, p_handler);
             }
             finally
             {
-                HideProgressRing();
+                foreach (Worksheet worksheet in Workbook.Sheets)
+                {
+                    AttachSheet(worksheet);
+                }
+                Workbook.Sheets.CollectionChanged += OnSheetsCollectionChanged;
+                Workbook.PropertyChanged += OnWorkbookPropertyChanged;
+
+                _progressRing = null;
+                RefreshAll();
             }
         }
 

@@ -151,10 +151,10 @@ namespace Dt.Cells.UndoRedo
                         IList<SpreadChartBase> list = Dt.Cells.Data.SpreadChartUtility.GetChartShapeAffectedCellChanged(Worksheet, CellEditExtent.RowIndex, CellEditExtent.ColumnIndex);
                         if (list.Count <= 0)
                         {
-                            excel.InvalidateFloatingObjects();
+                            excel.RefreshFloatingObjects();
                             return;
                         }
-                        excel.InvalidateFloatingObjects(Enumerable.ToArray<SpreadChartBase>((IEnumerable<SpreadChartBase>) list));
+                        excel.RefreshFloatingObjects(Enumerable.ToArray<SpreadChartBase>((IEnumerable<SpreadChartBase>) list));
                         return;
                     }
                 }
@@ -244,11 +244,11 @@ namespace Dt.Cells.UndoRedo
                     IList<SpreadChartBase> list = Dt.Cells.Data.SpreadChartUtility.GetChartShapeAffectedCellChanged(Worksheet, rowIndex, columnIndex);
                     if (list.Count > 0)
                     {
-                        view.InvalidateFloatingObjects(Enumerable.ToArray<SpreadChartBase>((IEnumerable<SpreadChartBase>) list));
+                        view.RefreshFloatingObjects(Enumerable.ToArray<SpreadChartBase>((IEnumerable<SpreadChartBase>) list));
                     }
                     else
                     {
-                        view.InvalidateFloatingObjects();
+                        view.RefreshFloatingObjects();
                     }
                 }
                 flag = true;

@@ -74,11 +74,11 @@ namespace Dt.Cells.UndoRedo
                     excel.InvalidateViewportHorizontalArrangement(-2);
                     excel.InvalidateHeaderHorizontalArrangement();
                     excel.InvalidateMeasure();
-                    excel.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader);
+                    excel.RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader);
                     IList<SpreadChartBase> chartShapeAffectedByColumnRangeGroup = Dt.Cells.Data.SpreadChartUtility.GetChartShapeAffectedByColumnRangeGroup(excel.ActiveSheet);
                     if (chartShapeAffectedByColumnRangeGroup.Count > 0)
                     {
-                        excel.InvalidateFloatingObjects(Enumerable.ToArray<SpreadChartBase>((IEnumerable<SpreadChartBase>) chartShapeAffectedByColumnRangeGroup));
+                        excel.RefreshFloatingObjects(Enumerable.ToArray<SpreadChartBase>((IEnumerable<SpreadChartBase>) chartShapeAffectedByColumnRangeGroup));
                     }
                     ShowColumnRangeGroup(excel);
                 }
@@ -254,11 +254,11 @@ namespace Dt.Cells.UndoRedo
                 excel.InvalidateViewportHorizontalArrangement(-2);
                 excel.InvalidateHeaderHorizontalArrangement();
                 excel.InvalidateMeasure();
-                excel.InvalidateRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader);
+                excel.RefreshRange(-1, -1, -1, -1, SheetArea.Cells | SheetArea.ColumnHeader);
                 IList<SpreadChartBase> chartShapeAffectedByColumnRangeGroup = Dt.Cells.Data.SpreadChartUtility.GetChartShapeAffectedByColumnRangeGroup(excel.ActiveSheet);
                 if (chartShapeAffectedByColumnRangeGroup.Count > 0)
                 {
-                    excel.InvalidateFloatingObjects(Enumerable.ToArray<SpreadChartBase>((IEnumerable<SpreadChartBase>) chartShapeAffectedByColumnRangeGroup));
+                    excel.RefreshFloatingObjects(Enumerable.ToArray<SpreadChartBase>((IEnumerable<SpreadChartBase>) chartShapeAffectedByColumnRangeGroup));
                 }
                 ShowColumnRangeGroup(excel);
             }
