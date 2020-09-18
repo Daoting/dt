@@ -7,6 +7,25 @@
   <Import Project="..\Common\dtc.props" />
 
   <ItemGroup>
+    <None Remove="Report\模板\两层矩阵.xml" />
+    <None Remove="Report\模板\分组表格.xml" />
+    <None Remove="Report\模板\含头尾表格.xml" />
+    <None Remove="Report\模板\含小计矩阵.xml" />
+    <None Remove="Report\模板\含标题矩阵.xml" />
+    <None Remove="Report\模板\固定行数列表.xml" />
+    <None Remove="Report\模板\图表.xml" />
+    <None Remove="Report\模板\完整矩阵.xml" />
+    <None Remove="Report\模板\完整表格.xml" />
+    <None Remove="Report\模板\报表链接.xml" />
+    <None Remove="Report\模板\最少行表格.xml" />
+    <None Remove="Report\模板\点击脚本1.xml" />
+    <None Remove="Report\模板\点击脚本2.xml" />
+    <None Remove="Report\模板\甘特图.xml" />
+    <None Remove="Report\模板\简单文本.xml" />
+    <None Remove="Report\模板\自动行数列表.xml" />
+    <None Remove="Report\模板\跨页矩阵.xml" />
+    <None Remove="Report\模板\跨页表格.xml" />
+    <None Remove="Report\模板\页眉页脚.xml" />
     <None Remove="Resource\Excel\1040.xlsx" />
     <None Remove="Resource\Excel\CarRepair.xlsx" />
     <None Remove="Resource\Excel\Expense.xlsx" />
@@ -16,6 +35,25 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Report\模板\两层矩阵.xml" />
+    <EmbeddedResource Include="Report\模板\分组表格.xml" />
+    <EmbeddedResource Include="Report\模板\自动行数列表.xml" />
+    <EmbeddedResource Include="Report\模板\含头尾表格.xml" />
+    <EmbeddedResource Include="Report\模板\含小计矩阵.xml" />
+    <EmbeddedResource Include="Report\模板\含标题矩阵.xml" />
+    <EmbeddedResource Include="Report\模板\固定行数列表.xml" />
+    <EmbeddedResource Include="Report\模板\图表.xml" />
+    <EmbeddedResource Include="Report\模板\报表链接.xml" />
+    <EmbeddedResource Include="Report\模板\最少行表格.xml" />
+    <EmbeddedResource Include="Report\模板\点击脚本1.xml" />
+    <EmbeddedResource Include="Report\模板\点击脚本2.xml" />
+    <EmbeddedResource Include="Report\模板\甘特图.xml" />
+    <EmbeddedResource Include="Report\模板\完整矩阵.xml" />
+    <EmbeddedResource Include="Report\模板\简单文本.xml" />
+    <EmbeddedResource Include="Report\模板\完整表格.xml" />
+    <EmbeddedResource Include="Report\模板\跨页矩阵.xml" />
+    <EmbeddedResource Include="Report\模板\跨页表格.xml" />
+    <EmbeddedResource Include="Report\模板\页眉页脚.xml" />
     <EmbeddedResource Include="Resource\Excel\1040.ssxml" />
     <EmbeddedResource Include="Resource\Excel\CarRepair.ssxml" />
     <EmbeddedResource Include="Resource\Excel\CarRepair.xlsx" />

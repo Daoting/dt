@@ -552,7 +552,7 @@ namespace Dt.Base
         public bool HasSelected
         {
             get { return (bool)GetValue(HasSelectedProperty); }
-            private set { SetValue(HasSelectedProperty, value); }
+            set { SetValue(HasSelectedProperty, value); }
         }
 
         /// <summary>
@@ -774,7 +774,7 @@ namespace Dt.Base
             get { return AtSys.IsPhoneUI ? (PhoneViewMode.HasValue ? PhoneViewMode.Value : ViewMode) : ViewMode; }
         }
 
-        internal ScrollViewer Scroll { get; private set; }
+        internal ScrollViewer Scroll { get; set; }
 
         /// <summary>
         /// 滚动栏是否在内部

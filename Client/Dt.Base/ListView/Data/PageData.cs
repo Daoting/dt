@@ -134,7 +134,7 @@ namespace Dt.Base
         /// <summary>
         /// 获取设置是否还有未加载的页面
         /// </summary>
-        public bool HasMorePages { get; private set; }
+        public bool HasMorePages { get; set; }
 
         /// <summary>
         /// 获取设置是否将新页面数据插入到头部

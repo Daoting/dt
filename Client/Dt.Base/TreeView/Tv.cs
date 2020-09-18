@@ -371,7 +371,7 @@ namespace Dt.Base
         public bool HasSelected
         {
             get { return (bool)GetValue(HasSelectedProperty); }
-            private set { SetValue(HasSelectedProperty, value); }
+            set { SetValue(HasSelectedProperty, value); }
         }
 
         /// <summary>
@@ -483,7 +483,7 @@ namespace Dt.Base
         /// </summary>
         internal TvRootItems RootItems { get; }
 
-        internal ScrollViewer Scroll { get; private set; }
+        internal ScrollViewer Scroll { get; set; }
 
         internal TvPanel Panel
         {

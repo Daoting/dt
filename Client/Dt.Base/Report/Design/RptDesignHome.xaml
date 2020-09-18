@@ -1,0 +1,21 @@
+﻿<a:Win
+    x:Class="Dt.Base.Report.RptDesignHome"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base"
+    Home="功能列表">
+
+    <a:WinItem DockState="DockedLeft">
+        <a:Tabs>
+            <a:Tab Title="功能列表">
+                <StackPanel>
+                    <a:BtnItem Icon="修改" Title="模板编辑" Click="OnEditTemplate" />
+                    <a:BtnItem Icon="备注" Title="删除聊天记录" Desc="删除所有历史聊天记录，包括文字、文件、图片、音视频等。" />
+                    <a:BtnItem Icon="排列" Title="清除自定义布局" Desc="将所有视图布局恢复到默认状态。" />
+                    <a:BtnItem Icon="文件" Title="删除临时文件" Desc="删除所有临时文件，删除后再次用到时需要重新下载，建议存储空间充足时不必清除。" />
+                    <a:BtnItem Icon="禁止登记" Title="注销" Desc="设置自动登录时，可以通过注销切换账号。"/>
+                </StackPanel>
+            </a:Tab>
+        </a:Tabs>
+    </a:WinItem>
+</a:Win>

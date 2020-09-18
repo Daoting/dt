@@ -1,0 +1,7 @@
+﻿<Data>
+  <Tbl ID="数据集名称1"
+       Db="数据源标识"
+       IsSP="True"
+       Cols="id,name,address"
+       Cmd="select * from dual" />
+</Data>

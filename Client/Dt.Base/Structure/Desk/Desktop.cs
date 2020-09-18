@@ -189,10 +189,8 @@ namespace Dt.Base
             {
                 if (win.GetType() == p_type)
                 {
-                    if (win.Params == null
-                        || (p_params != null
-                            && win.Params != null
-                            && JsonSerializer.Serialize(win.Params, JsonOptions.UnsafeSerializer) == JsonSerializer.Serialize(p_params, JsonOptions.UnsafeSerializer)))
+                    if ((win.Params == null && p_params == null)
+                        || (p_params != null && win.Params != null && win.Params.Equals(p_params)))
                     {
                         MainWin = win;
                         return win;

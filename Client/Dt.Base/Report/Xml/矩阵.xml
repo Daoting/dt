@@ -1,0 +1,53 @@
+﻿<Matrix row="2"
+        col="1"
+        rowspan="5"
+        colspan="4"
+        tbl="数据源名称"
+        hiderowheader="0"
+        hidecolheader="0"
+        repeatcolheader="1"
+        repeatrowheader="1"
+        rowsort="行排序表达式"
+        colsort="列排序表达式">
+  <Corner>
+    <Text row="2" col="1" rowspan="2" colspan="3" val="值" hidetopdup="1" hideleftdup="1" wordwrap="1" autoheight="1"/>
+  </Corner>
+  <RowHeader>
+    <Level field="字段名">
+      <Text row="2" col="1" rowspan="2" colspan="3" val="值" hidetopdup="1" hideleftdup="1" wordwrap="1" autoheight="1"/>
+      <Subtotal beforelevel="1" span="1">
+        <Text row="2" col="1" rowspan="2" colspan="3" val="值" hidetopdup="1" hideleftdup="1" wordwrap="1" autoheight="1"/>
+        <Subtotal beforelevel="1" span="1">
+          <Text row="2" col="1" rowspan="2" colspan="3" val="值" hidetopdup="1" hideleftdup="1" wordwrap="1" autoheight="1"/>
+        </Subtotal>
+      </Subtotal>
+      <Subtitle span="1">
+        <Text row="2" col="1" rowspan="2" colspan="3" val="值" hidetopdup="1" hideleftdup="1" wordwrap="1" autoheight="1"/>
+        <Subtitle>
+          <Text row="2" col="1" rowspan="2" colspan="3" val="值" hidetopdup="1" hideleftdup="1" wordwrap="1" autoheight="1"/>
+        </Subtitle>
+      </Subtitle>
+    </Level>
+    <Level field="字段名">
+      <Text row="2" col="1" rowspan="2" colspan="3" val="值" hidetopdup="1" hideleftdup="1" wordwrap="1" autoheight="1"/>
+      <Subtotal beforelevel="1" span="1">
+        <Text row="2" col="1" rowspan="2" colspan="3" val="值" hidetopdup="1" hideleftdup="1" wordwrap="1" autoheight="1"/>
+        <Subtotal beforelevel="1" span="1">
+          <Text row="2" col="1" rowspan="2" colspan="3" val="值" hidetopdup="1" hideleftdup="1" wordwrap="1" autoheight="1"/>
+        </Subtotal>
+      </Subtotal>
+      <Subtitle>
+        <Text row="2" col="1" rowspan="2" colspan="3" val="值" hidetopdup="1" hideleftdup="1" wordwrap="1" autoheight="1"/>
+        <Subtitle>
+          <Text row="2" col="1" rowspan="2" colspan="3" val="值" hidetopdup="1" hideleftdup="1" wordwrap="1" autoheight="1"/>
+        </Subtitle>
+      </Subtitle>
+    </Level>
+  </RowHeader>
+  <ColHeader>
+    
+  </ColHeader>
+  <MRow id="trow16" row="2" col="1" rowspan="1" colspan="4">
+    <Text id="txt16" row="2" col="1" rowspan="2" colspan="3" val="值" hidetopdup="1" hideleftdup="1" wordwrap="1" autoheight="1"/>
+  </MRow>
+</Matrix>

@@ -1,0 +1,32 @@
+﻿<Rpt id="5a44c8d2cc984faba05bf72122bc7707" name="查询菜单项" cols="80,30,155,138">
+  <Params>
+    <Param id="id" name="父项菜单" val="" ct="" note="" />
+  </Params>
+  <Data>
+    <Tbl id="子菜单项" db="" cols="id,parentid,name,isgrp,mdate" cmd="select id,&#xD;&#xA;       parentid,&#xD;&#xA;       name,&#xD;&#xA;       (case isgroup&#xD;&#xA;         when '1' then&#xD;&#xA;          unistr('\e188')&#xD;&#xA;         else&#xD;&#xA;          unistr('\e160')&#xD;&#xA;       end) isgrp,&#xD;&#xA;       to_char(mtime, 'yyyy-mm-dd') mdate&#xD;&#xA;  from dt_menu&#xD;&#xA; where parentid = :id" />
+    <Tbl id="菜单项名称" db="" cols="name" cmd="select name from dt_menu where id=:id" />
+  </Data>
+  <Setting />
+  <Header height="40" />
+  <Body rows="40,25,25,25,25">
+    <Text col="1" colspan="3" val=":Val(菜单项名称,name) " fontsize="20" lbs="None" tbs="None" rbs="None" bbs="None" />
+    <Table row="1" col="1" rowspan="2" colspan="3" tbl="子菜单项" repeatheader="1" repeatfooter="1">
+      <THeader>
+        <TRow>
+          <Text row="1" col="1" rbs="None" />
+          <Text row="1" col="2" val="菜单名称" lbs="None" />
+          <Text row="1" col="3" val="修改日期" />
+        </TRow>
+      </THeader>
+      <TBody>
+        <TRow>
+          <Text row="2" col="1" val=":Val(子菜单项,isgrp) " fontfamily="Segoe UI Symbol" foreground="#FFE18030" rbs="None" />
+          <Text row="2" col="2" val=":Val(子菜单项,name) " clickaction="OpenReport" rptid="查询菜单项" horalign="Left" lbs="None" />
+          <Text row="2" col="3" val=":Val(子菜单项,mdate) " />
+        </TRow>
+      </TBody>
+    </Table>
+    <Text row="4" col="3" val=":&quot;合计 &quot;&#xD;&#xA;+ Count(子菜单项)&#xD;&#xA;+ &quot; 个&quot;" lbs="None" tbs="None" rbs="None" bbs="None" />
+  </Body>
+  <Footer height="40" />
+</Rpt>

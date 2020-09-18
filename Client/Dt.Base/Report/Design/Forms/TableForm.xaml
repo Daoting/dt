@@ -1,0 +1,24 @@
+﻿<UserControl
+    x:Class="Dt.Base.Report.TableForm"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Fv x:Name="_fv">
+        <a:CBar Title="表格属性" />
+        <a:CText ID="txt" Title="文本框" />
+        <a:CBar Title="行操作" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="之前插入行" Click="OnInsertRow" Tag="Before" />
+            <Button Content="后面插入行" Click="OnInsertRow" Tag="After" />
+            <Button Content="删除行" Click="OnDeleteRow" />
+        </StackPanel>
+        <a:CBar Title="列操作" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="左侧插入列" Click="OnInsertCol" Tag="Left" />
+            <Button Content="右侧插入列" Click="OnInsertCol" Tag="Right" />
+            <Button Content="删除列" Click="OnDeleteCol" />
+        </StackPanel>
+        <Button Content="删除表格" Click="OnDeleteTbl" />
+    </a:Fv>
+</UserControl>

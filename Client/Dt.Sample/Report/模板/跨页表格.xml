@@ -1,0 +1,27 @@
+﻿<Rpt id="65d5d0c9ea7a40149b310f1295bbb9ee" name="简单文本" cols="80,80,100,80,80">
+  <Params />
+  <Data />
+  <Setting papername="PrinterCustom" width="392" />
+  <Header height="40" />
+  <Body rows="25,25,25">
+    <Table row="1" col="1" rowspan="2" colspan="4" tbl="个人成绩" repeatheader="1" repeatfooter="1">
+      <THeader>
+        <TRow>
+          <Text row="1" col="1" val="姓名" />
+          <Text row="1" col="2" val="学期" />
+          <Text row="1" col="3" val="课程" />
+          <Text row="1" col="4" val="成绩" />
+        </TRow>
+      </THeader>
+      <TBody>
+        <TRow>
+          <Text row="2" col="1" val=":Val(个人成绩,xm)" />
+          <Text row="2" col="2" val=":Val(个人成绩,year)" />
+          <Text row="2" col="3" val=":Val(个人成绩,subject)" />
+          <Text row="2" col="4" val=":Val(个人成绩,score)" />
+        </TRow>
+      </TBody>
+    </Table>
+  </Body>
+  <Footer height="40" />
+</Rpt>

@@ -107,6 +107,12 @@ namespace Dt.Sample
                 },
                 new DataCmd
                 {
+                    Title = "报表",
+                    Note = "可视化报表模板设计，报表预览时支持导出、打印、简单编辑，支持报表绘制过程脚本",
+                    Tag = typeof(RptHome)
+                },
+                new DataCmd
+                {
                     Title = "数据图表",
                     Note = "支持柱线饼等9大类40种不同图表，每种图表提供多种不同的调色板，支持交互操作",
                     Tag = typeof(ChartHome)

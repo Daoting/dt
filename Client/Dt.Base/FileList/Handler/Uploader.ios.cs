@@ -90,7 +90,7 @@ namespace Dt.Base
         NSMutableData _dataResponse;
         string _tempFile;
 
-        private Uploader()
+        Uploader()
         {
             var config = NSUrlSessionConfiguration.DefaultSessionConfiguration;
             config.TLSMinimumSupportedProtocol = SslProtocol.Tls_1_2;

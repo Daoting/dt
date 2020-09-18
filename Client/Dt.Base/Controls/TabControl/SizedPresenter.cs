@@ -21,7 +21,7 @@ namespace Dt.Base
         /// <summary>
         /// 内容的有效区域
         /// </summary>
-        public Size AvailableSize { get; private set; }
+        public Size AvailableSize { get; set; }
 
         protected override Size MeasureOverride(Size availableSize)
         {

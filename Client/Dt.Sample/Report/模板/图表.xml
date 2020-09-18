@@ -1,0 +1,27 @@
+﻿<Rpt id="121842b9832e4bc0bfc19fde10ee5c10" name="报表内容1_3" cols="80,80,80,80,80,80,80,80,80">
+  <Params />
+  <Data />
+  <Setting />
+  <Header height="40" />
+  <Body rows="25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25">
+    <Chart row="2" col="1" rowspan="13" colspan="7" theme="Office2007Silver" tbl="图表数据" fieldx="xm" fieldy="score" fieldseries="subject" />
+    <Table row="18" col="3" rowspan="2" colspan="3" tbl="图表数据">
+      <THeader>
+        <TRow>
+          <Text row="18" col="3" val="姓名" />
+          <Text row="18" col="4" val="课程" />
+          <Text row="18" col="5" val="成绩" />
+        </TRow>
+      </THeader>
+      <TBody>
+        <TRow>
+          <Text row="19" col="3" val=":Val(图表数据,xm)" />
+          <Text row="19" col="4" val=":Val(图表数据,subject)" />
+          <Text row="19" col="5" val=":Val(图表数据,score)" />
+        </TRow>
+      </TBody>
+    </Table>
+    <Chart row="22" col="1" rowspan="12" colspan="7" type="Line" tbl="图表数据" fieldx="xm" fieldy="score" fieldseries="subject" />
+  </Body>
+  <Footer height="40" />
+</Rpt>

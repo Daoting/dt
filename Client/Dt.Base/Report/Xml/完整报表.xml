@@ -1,0 +1,19 @@
+﻿<Rpt name="报表名称" cols="60,80,90,90">
+  <Params>
+    <Param id="参数标识" name="参数名" type="double" val="初始值" macro="1" ct="&lt;dt:CtCheck /&gt;" readonly="1" hide="1" colspan="8" rowspan="3" horstretch="1" verstretch="1" hidetitle="1" verticaltitle="1" titlewidth="60" note="提示信息" />
+  </Params>
+  <Data>
+    <Tbl ID="数据集名称1" Db="数据源标识" IsSP="True" Cols="id,name,address" Cmd="select * from dual" />
+    <Tbl ID="数据集名称2" Db="数据源标识" Cols="role,prv,rpt,menu" Cmd="select * from dual" />
+  </Data>
+  <Setting PaperName="B5" Height="1122" Width="794" LeftMargin="36" TopMargin="36" RightMargin="36" BottomMargin="36" Landscape="True" />
+  <Header height="40">
+
+  </Header>
+  <Body rows="20,30,100">
+
+  </Body>
+  <Footer height="40">
+
+  </Footer>
+</Rpt>

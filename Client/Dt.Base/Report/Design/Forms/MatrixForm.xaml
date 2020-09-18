@@ -1,0 +1,11 @@
+﻿<UserControl
+    x:Class="Dt.Base.Report.MatrixForm"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Fv x:Name="_fv">
+        <a:CBar Title="基本格" />
+        <a:CText ID="txt" Title="文本框" />
+    </a:Fv>
+</UserControl>

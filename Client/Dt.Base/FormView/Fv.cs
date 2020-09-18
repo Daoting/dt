@@ -171,7 +171,7 @@ namespace Dt.Base
         public bool IsDirty
         {
             get { return (bool)GetValue(IsDirtyProperty); }
-            private set { SetValue(IsDirtyProperty, value); }
+            set { SetValue(IsDirtyProperty, value); }
         }
 
         /// <summary>

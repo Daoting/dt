@@ -27,15 +27,9 @@ namespace Dt.Sample
 
             //_excel.ActiveSheet.RowCount = 3;
             //_excel.ActiveSheet.ColumnCount = 2;
-            //_excel.AutoRefresh = false;
-            //_excel.SuspendEvent();
-            //_excel.CanCellOverflow = true;
 
             //var sheet = _excel.ActiveSheet;
             //sheet.SetValue(0, 0, "System.Random r = new System.Random();");
-
-            //_excel.ResumeEvent();
-            //_excel.AutoRefresh = true;
         }
 
         void FillSampleData(Worksheet sheet, CellRange range)

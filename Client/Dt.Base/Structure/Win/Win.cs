@@ -225,27 +225,27 @@ namespace Dt.Base
         /// <summary>
         /// 获取内部停靠面板
         /// </summary>
-        internal WinItemPanel RootPanel { get; private set; }
+        internal WinItemPanel RootPanel { get; set; }
 
         /// <summary>
         /// 获取左侧隐藏面板
         /// </summary>
-        internal AutoHideTab LeftAutoHide { get; private set; }
+        internal AutoHideTab LeftAutoHide { get; set; }
 
         /// <summary>
         /// 获取右侧隐藏面板
         /// </summary>
-        internal AutoHideTab RightAutoHide { get; private set; }
+        internal AutoHideTab RightAutoHide { get; set; }
 
         /// <summary>
         /// 获取上侧隐藏面板
         /// </summary>
-        internal AutoHideTab TopAutoHide { get; private set; }
+        internal AutoHideTab TopAutoHide { get; set; }
 
         /// <summary>
         /// 获取下侧隐藏面板
         /// </summary>
-        internal AutoHideTab BottomAutoHide { get; private set; }
+        internal AutoHideTab BottomAutoHide { get; set; }
 
         /// <summary>
         /// 获取是否正在重置布局

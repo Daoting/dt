@@ -121,7 +121,7 @@ namespace Dt.Base.FormView
         /// 如果调用 AcceptChanges 方法，则 originalValue 属性的值将变成当前 Val 属性的值
         /// 如果调用了 RejectChanges 方法，则该数据项的值将变为当前 OriginalVal 属性的值
         /// </remark>
-        public object OriginalVal { get; private set; }
+        public object OriginalVal { get; set; }
 
         /// <summary>
         /// 提交自上次调用以来对该数据项进行的所有更改

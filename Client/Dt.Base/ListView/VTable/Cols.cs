@@ -40,7 +40,7 @@ namespace Dt.Base
         /// <summary>
         /// 列总宽
         /// </summary>
-        internal double TotalWidth { get; private set; }
+        internal double TotalWidth { get; set; }
 
         /// <summary>
         /// 列位置失效，触发重新测量布局
