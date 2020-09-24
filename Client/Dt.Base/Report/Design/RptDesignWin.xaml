@@ -14,10 +14,6 @@
                         <a:Mi ID="撤消" Icon="撤销" />
                         <a:Mi ID="重做" Icon="重做" />
                         <a:Mi ID="网格" IsCheckable="True" Click="OnCheckChanged" />
-                        <a:Mi ID="页面设置" Icon="文件" />
-                        <a:Mi ID="导出" Icon="导出" />
-                        <a:Mi ID="导入" Icon="导入" />
-                        <a:Mi ID="查看" Icon="Excel" />
                     </a:Menu>
                 </a:Tab.Menu>
                 <a:Excel x:Name="_excel"

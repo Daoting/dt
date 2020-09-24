@@ -36,7 +36,7 @@ namespace Dt.Base.Report
             _data.AddCell("col", 0);
             _data.AddCell("rowspan", 1);
             _data.AddCell("colspan", 1);
-        }        
+        }
 
         /// <summary>
         /// 获取报表模板根对象
@@ -197,6 +197,22 @@ namespace Dt.Base.Report
             RptRoot root = Root;
             if (root != null)
                 root.OnUpdated(this, p_clearOld);
+        }
+
+        /// <summary>
+        /// 序列化位置
+        /// </summary>
+        /// <param name="p_writer"></param>
+        protected void WritePosition(XmlWriter p_writer)
+        {
+            if (Row != 0)
+                p_writer.WriteAttributeString("row", _data.Str("row"));
+            if (Col != 0)
+                p_writer.WriteAttributeString("col", _data.Str("col"));
+            if (RowSpan != 1)
+                p_writer.WriteAttributeString("rowspan", _data.Str("rowspan"));
+            if (ColSpan != 1)
+                p_writer.WriteAttributeString("colspan", _data.Str("colspan"));
         }
     }
 }

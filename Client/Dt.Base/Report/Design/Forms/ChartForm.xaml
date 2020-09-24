@@ -4,8 +4,32 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base">
 
-    <a:Fv x:Name="_fv">
-        <a:CBar Title="基本格" />
-        <a:CText ID="txt" Title="文本框" />
-    </a:Fv>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="200" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <a:Chart x:Name="_chart" >
+            <a:ChartLegend x:Name="_legend" />
+        </a:Chart>
+        <a:Fv x:Name="_fv" Grid.Row="1">
+            <a:CList ID="type" Title="图表类型" Enum="Dt.Charts.ChartType,Dt.Charts" />
+            <a:CList ID="palette" Title="调色板" Enum="Dt.Charts.Palette,Dt.Charts" />
+            <a:CList ID="tbl" Title="数据源" />
+            <a:CList ID="fieldx" Title="分类字段" />
+            <a:CList ID="fieldy" Title="值字段" />
+            <a:CList ID="fieldz" Title="扩展字段" />
+            <a:CList ID="fieldseries" Title="系列字段" />
+            <a:CBar Title="图例" />
+            <a:CBool ID="showlegend" Title="显示图例" />
+            <a:CText ID="legtitle" Title="标题" />
+            <a:CList ID="legpos" Title="图例位置" Enum="Dt.Charts.LegendPosition,Dt.Charts" />
+            <a:CList ID="legorientation" Title="布局方向" />
+            <a:CBool ID="legoverlap" Title="重叠方式" />
+            <a:CBar Title="坐标轴" />
+            <a:CText ID="titlex" Title="X轴标题" />
+            <a:CText ID="titley" Title="Y轴标题" />
+            <a:CBool ID="axisinverted" Title="转换XY轴" />
+        </a:Fv>
+    </Grid>
 </UserControl>

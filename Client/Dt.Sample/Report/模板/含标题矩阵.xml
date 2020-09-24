@@ -1,8 +1,8 @@
-﻿<Rpt id="26aedd85b7614e8bb8344f02a9bdacf8" name="标题矩阵" cols="80,80,80,80,80">
+﻿<Rpt name="标题矩阵" cols="80,80,80,80,80">
   <Params />
   <Data />
   <Setting />
-  <Header height="40" />
+  <Header />
   <Body rows="25,25,25,25">
     <Matrix row="1" col="1" rowspan="3" colspan="4" tbl="个人成绩_矩阵标题">
       <Corner>
@@ -15,7 +15,7 @@
       </RowHeader>
       <ColHeader>
         <Level field="year">
-          <Text row="1" col="2" colspan="3" val=":Val(个人成绩_矩阵标题,year)" hideleftdup="1" />
+          <Text row="1" col="2" colspan="3" val=":Val(个人成绩_矩阵标题,year)" hideleftdup="True" />
           <Subtitle>
             <Text row="2" col="2" val="数学" />
           </Subtitle>
@@ -34,5 +34,5 @@
       </MRow>
     </Matrix>
   </Body>
-  <Footer height="40" />
+  <Footer />
 </Rpt>

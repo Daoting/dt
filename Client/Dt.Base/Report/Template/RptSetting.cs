@@ -18,33 +18,22 @@ namespace Dt.Base.Report
     /// </summary>
     internal class RptSetting
     {
+        const double _defaultMargin = 36;
+        const double _defaultHeight = 1122;
+        const double _defaultWidth = 793;
         Row _data;
 
         public RptSetting()
         {
-            Table tbl = new Table();
-            var cols = tbl.Columns;
-            cols.Add(new Column("PaperName", typeof(string)));
-            cols.Add(new Column("Height", typeof(double)));
-            cols.Add(new Column("Width", typeof(double)));
-            cols.Add(new Column("LeftMargin", typeof(double)));
-            cols.Add(new Column("TopMargin", typeof(double)));
-            cols.Add(new Column("RightMargin", typeof(double)));
-            cols.Add(new Column("BottomMargin", typeof(double)));
-            cols.Add(new Column("Landscape", typeof(string)));
-
-            _data = tbl.NewRow(new 
-            {
-                PaperName = "IsoA4",
-                Height = 1122,
-                Width = 793,
-                LeftMargin = 36,
-                TopMargin = 36,
-                RightMargin = 36,
-                BottomMargin = 36,
-                Landscape = "0",
-            });
-            tbl.Add(_data);
+            _data = new Row();
+            _data.AddCell("papername", "IsoA4");
+            _data.AddCell("height", _defaultHeight);
+            _data.AddCell("width", _defaultWidth);
+            _data.AddCell("leftmargin", _defaultMargin);
+            _data.AddCell("topmargin", _defaultMargin);
+            _data.AddCell("rightmargin", _defaultMargin);
+            _data.AddCell("bottommargin", _defaultMargin);
+            _data.AddCell<bool>("landscape");
         }
 
         /// <summary>
@@ -123,7 +112,7 @@ namespace Dt.Base.Report
         /// </summary>
         public bool Landscape
         {
-            set { _data["Landscape"] = value ? "1" : "0"; }
+            set { _data["Landscape"] = value; }
             get { return _data.Bool("Landscape"); }
         }
 
@@ -160,7 +149,23 @@ namespace Dt.Base.Report
         public void WriteXml(XmlWriter p_writer)
         {
             p_writer.WriteStartElement("Setting");
-            _data.WriteXml(p_writer);
+            string val = _data.Str("papername");
+            if (val != "IsoA4")
+                p_writer.WriteAttributeString("papername", val);
+            if (Height != _defaultHeight)
+                p_writer.WriteAttributeString("height", _data.Str("height"));
+            if (Width != _defaultWidth)
+                p_writer.WriteAttributeString("width", _data.Str("width"));
+            if (LeftMargin != _defaultMargin)
+                p_writer.WriteAttributeString("leftmargin", _data.Str("leftmargin"));
+            if (TopMargin != _defaultMargin)
+                p_writer.WriteAttributeString("topmargin", _data.Str("topmargin"));
+            if (RightMargin != _defaultMargin)
+                p_writer.WriteAttributeString("rightmargin", _data.Str("rightmargin"));
+            if (BottomMargin != _defaultMargin)
+                p_writer.WriteAttributeString("bottommargin", _data.Str("bottommargin"));
+            if (Landscape)
+                p_writer.WriteAttributeString("landscape", "True");
             p_writer.WriteEndElement();
         }
     }

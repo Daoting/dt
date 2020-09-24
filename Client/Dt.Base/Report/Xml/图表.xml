@@ -6,11 +6,11 @@
        type="40种图表类型"
        palette="调色板"
        
-       showlegend="1"
+       showlegend="False"
        legtitle="图例标题"
        legpos="图例位置"
        legorientation="布局方向"
-       legoverlap="重叠方式"
+       legoverlap="False"
        
        title="标题"
        titlex="X轴标题"
@@ -21,6 +21,4 @@
        fieldseries="系列字段名"
        fieldx="x轴字段名"
        fieldy="y轴字段名"
-       fieldL="L扩展字段名"
-       fieldM="M扩展字段名"
-       fieldN="N扩展字段名"/>
+       fieldz="扩展字段名"/>

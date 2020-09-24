@@ -1,10 +1,10 @@
-﻿<Rpt id="5522b04b27634b9083235eb4e269cecc" name="两层矩阵" cols="111,109">
+﻿<Rpt name="两层矩阵" cols="111,109">
   <Params />
   <Data />
   <Setting papername="PrinterCustom" height="400" width="550" />
-  <Header height="40" />
+  <Header />
   <Body rows="25,25,25">
-    <Matrix rowspan="3" colspan="2" tbl="个人成绩" repeatrowheader="1" repeatcolheader="1" rowsort="name" colsort="year,subject">
+    <Matrix rowspan="3" colspan="2" tbl="个人成绩" repeatrowheader="True" repeatcolheader="True" rowsort="name" colsort="year,subject">
       <Corner>
         <Text rowspan="2" val="姓名\成绩" background="#FFD8D8D8" />
       </Corner>
@@ -15,7 +15,7 @@
       </RowHeader>
       <ColHeader>
         <Level field="year">
-          <Text col="1" val=":Val(个人成绩,year) " hideleftdup="1" background="#FFD8D8D8" />
+          <Text col="1" val=":Val(个人成绩,year) " hideleftdup="True" background="#FFD8D8D8" />
         </Level>
         <Level field="subject">
           <Text row="1" col="1" val=":Val(个人成绩,subject) " background="#FFD8D8D8" />
@@ -26,5 +26,5 @@
       </MRow>
     </Matrix>
   </Body>
-  <Footer height="40" />
+  <Footer />
 </Rpt>

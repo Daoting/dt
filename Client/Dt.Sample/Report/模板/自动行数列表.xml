@@ -1,10 +1,10 @@
-﻿<Rpt id="65d5d0c9ea7a40149b310f1295bbb9ee" name="简单文本" cols="80,80,80,80">
+﻿<Rpt name="简单文本" cols="80,80,80,80">
   <Params />
   <Data />
   <Setting papername="PrinterCustom" width="790" />
-  <Header height="40" />
+  <Header />
   <Body rows="25,25,25,25">
-    <Table row="1" col="1" rowspan="3" colspan="3" tbl="通讯录" repeatheader="1" repeatfooter="1" rowbreakcount="-1" colbreakcount="3">
+    <Table row="1" col="1" rowspan="3" colspan="3" tbl="通讯录" repeatheader="True" repeatfooter="True" rowbreakcount="-1" colbreakcount="3">
       <THeader>
         <TRow>
           <Text row="1" col="1" val="部门" />
@@ -28,5 +28,5 @@
       </TFooter>
     </Table>
   </Body>
-  <Footer height="40" />
+  <Footer />
 </Rpt>

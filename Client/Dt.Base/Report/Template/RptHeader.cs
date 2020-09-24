@@ -79,7 +79,8 @@ namespace Dt.Base.Report
         public override void WriteXml(XmlWriter p_writer)
         {
             p_writer.WriteStartElement("Header");
-            p_writer.WriteAttributeString("height", _height.ToString());
+            if (_height != 40)
+                p_writer.WriteAttributeString("height", _height.ToString());
             base.WriteXml(p_writer);
             p_writer.WriteEndElement();
         }

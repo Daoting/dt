@@ -10,6 +10,7 @@
 using Dt.Charts;
 using Dt.Core;
 using System;
+using System.Xml;
 using Windows.UI.Xaml.Controls;
 #endregion
 
@@ -28,7 +29,7 @@ namespace Dt.Base.Report
             // 调色板
             _data.AddCell("palette", "Default");
             // 图例是否可见
-            _data.AddCell("showlegend", "1");
+            _data.AddCell("showlegend", true);
             // 图例标题
             _data.AddCell<string>("legtitle");
             // 图例位置
@@ -36,7 +37,7 @@ namespace Dt.Base.Report
             // 布局方向
             _data.AddCell("legorientation", "Vertical");
             // 重叠方式
-            _data.AddCell("legoverlap", "0");
+            _data.AddCell<bool>("legoverlap");
             // 标题
             _data.AddCell<string>("title");
             // X轴标题
@@ -44,7 +45,7 @@ namespace Dt.Base.Report
             // Y轴标题
             _data.AddCell<string>("titley");
             // 转换XY轴
-            _data.AddCell("axisinverted", "0");
+            _data.AddCell<bool>("axisinverted");
             // 数据源名称
             _data.AddCell<string>("tbl");
             // 系列字段名
@@ -92,14 +93,6 @@ namespace Dt.Base.Report
         public string FieldSeries
         {
             get { return _data.Str("fieldseries"); }
-        }
-
-        /// <summary>
-        /// 获取序列化时标签名称
-        /// </summary>
-        public override string XmlName
-        {
-            get { return "Chart"; }
         }
 
         /// <summary>
@@ -169,6 +162,62 @@ namespace Dt.Base.Report
 
             ct.View.Inverted = _data.Bool("axisinverted");
             return ct;
+        }
+
+        public override void WriteXml(XmlWriter p_writer)
+        {
+            p_writer.WriteStartElement("Chart");
+            WritePosition(p_writer);
+
+            string val = _data.Str("type");
+            if (val != string.Empty && val != "Column")
+                p_writer.WriteAttributeString("type", val);
+            val = _data.Str("palette");
+            if (val != string.Empty && val != "Default")
+                p_writer.WriteAttributeString("palette", val);
+
+            if (!_data.Bool("showlegend"))
+                p_writer.WriteAttributeString("showlegend", "False");
+            val = _data.Str("legtitle");
+            if (val != string.Empty)
+                p_writer.WriteAttributeString("legtitle", val);
+            val = _data.Str("legpos");
+            if (val != string.Empty && val != "Right")
+                p_writer.WriteAttributeString("legpos", val);
+            val = _data.Str("legorientation");
+            if (val != string.Empty && val != "Vertical")
+                p_writer.WriteAttributeString("legorientation", val);
+            if (_data.Bool("legoverlap"))
+                p_writer.WriteAttributeString("legoverlap", "True");
+            val = _data.Str("title");
+            if (val != string.Empty)
+                p_writer.WriteAttributeString("title", val);
+            val = _data.Str("titlex");
+            if (val != string.Empty)
+                p_writer.WriteAttributeString("titlex", val);
+            val = _data.Str("titley");
+            if (val != string.Empty)
+                p_writer.WriteAttributeString("titley", val);
+            if (_data.Bool("axisinverted"))
+                p_writer.WriteAttributeString("axisinverted", "True");
+
+            val = _data.Str("tbl");
+            if (val != string.Empty)
+                p_writer.WriteAttributeString("tbl", val);
+            val = _data.Str("fieldseries");
+            if (val != string.Empty)
+                p_writer.WriteAttributeString("fieldseries", val);
+            val = _data.Str("fieldx");
+            if (val != string.Empty)
+                p_writer.WriteAttributeString("fieldx", val);
+            val = _data.Str("fieldy");
+            if (val != string.Empty)
+                p_writer.WriteAttributeString("fieldy", val);
+            val = _data.Str("fieldz");
+            if (val != string.Empty)
+                p_writer.WriteAttributeString("fieldz", val);
+
+            p_writer.WriteEndElement();
         }
     }
 }

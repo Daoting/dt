@@ -193,6 +193,24 @@ namespace Dt.Base.Report
         public List<RptTblPartRow> Rows { get; }
 
         /// <summary>
+        /// 构造子元素
+        /// </summary>
+        protected void BuildChild()
+        {
+            foreach (RptTblPartRow row in Rows)
+            {
+                List<RptText> cells = row.Cells;
+                if (cells != null && cells.Count > 0)
+                {
+                    foreach (RptText cell in cells)
+                    {
+                        cell.Build();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// 读取子元素xml，结束时定位在该子元素的末尾元素上
         /// </summary>
         /// <param name="p_reader"></param>
@@ -210,31 +228,13 @@ namespace Dt.Base.Report
         /// 序列化子元素
         /// </summary>
         /// <param name="p_writer"></param>
-        protected override void WriteChildXml(XmlWriter p_writer)
+        protected void WriteChildXml(XmlWriter p_writer)
         {
             if (Rows.Count > 0)
             {
                 foreach (RptTblPartRow row in Rows)
                 {
                     row.WriteXml(p_writer);
-                }
-            }
-        }
-
-        /// <summary>
-        /// 构造子元素
-        /// </summary>
-        protected void BuildChild()
-        {
-            foreach (RptTblPartRow row in Rows)
-            {
-                List<RptText> cells = row.Cells;
-                if (cells != null && cells.Count > 0)
-                {
-                    foreach (RptText cell in cells)
-                    {
-                        cell.Build();
-                    }
                 }
             }
         }

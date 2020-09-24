@@ -70,7 +70,7 @@ namespace Dt.Base.Report
 
             p_root.OnBeforeSerialize();
             StringBuilder sb = new StringBuilder();
-            using (XmlWriter writer = XmlWriter.Create(sb, AtKit.WriterSettings))
+            using (XmlWriter writer = XmlWriter.Create(sb, new XmlWriterSettings() { OmitXmlDeclaration = true, Indent = true }))
             {
                 p_root.WriteXml(writer);
                 writer.Flush();

@@ -1,16 +1,16 @@
-﻿<Rpt id="aea95df2bc524f3cb6907c16a90f67e8" name="矩阵测试" cols="53,82,71,76,80">
+﻿<Rpt name="矩阵测试" cols="53,82,71,76,80">
   <Params />
   <Data />
   <Setting />
-  <Header height="40" />
+  <Header />
   <Body rows="25,33,25,25">
-    <Matrix row="1" col="1" rowspan="3" colspan="4" tbl="个人成绩" repeatrowheader="1" repeatcolheader="1" rowsort="xm,year">
+    <Matrix row="1" col="1" rowspan="3" colspan="4" tbl="个人成绩" repeatrowheader="True" repeatcolheader="True" rowsort="xm,year">
       <Corner>
         <Text row="1" col="1" colspan="2" val="姓名\成绩" background="#FFD8D8D8" />
       </Corner>
       <RowHeader>
         <Level field="xm">
-          <Text row="2" col="1" rowspan="2" val=":Val(个人成绩,xm)" hidetopdup="1" background="#FFD8D8D8" />
+          <Text row="2" col="1" rowspan="2" val=":Val(个人成绩,xm)" hidetopdup="True" background="#FFD8D8D8" />
         </Level>
         <Level field="year">
           <Text row="3" col="2" val=":Val(个人成绩,year)" background="#FFD8D8D8" />
@@ -37,5 +37,5 @@
       </MRow>
     </Matrix>
   </Body>
-  <Footer height="40" />
+  <Footer />
 </Rpt>

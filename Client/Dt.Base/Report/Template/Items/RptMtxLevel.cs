@@ -37,7 +37,7 @@ namespace Dt.Base.Report
         }
         #endregion
 
-        #region 外部属性
+        #region 属性
         /// <summary>
         /// 获取报表模板根对象
         /// </summary>
@@ -60,14 +60,6 @@ namespace Dt.Base.Report
         public override RptItemBase Parent
         {
             get { return _header; }
-        }
-
-        /// <summary>
-        /// 获取序列化时标签名称
-        /// </summary>
-        public override string XmlName
-        {
-            get { return "Level"; }
         }
 
         /// <summary>
@@ -249,58 +241,7 @@ namespace Dt.Base.Report
         }
         #endregion
 
-        #region 重写方法
-        /// <summary>
-        /// 读取子元素xml，结束时定位在该子元素的末尾元素上
-        /// </summary>
-        /// <param name="p_reader"></param>
-        protected override void ReadChildXml(XmlReader p_reader)
-        {
-            switch (p_reader.Name)
-            {
-                case "Text":
-                    Item.ReadXml(p_reader);
-                    break;
-                case "Subtotal":
-                    if (SubTotals == null)
-                        SubTotals = new List<RptMtxSubtotal>();
-                    RptMtxSubtotal sub = new RptMtxSubtotal(this);
-                    sub.ReadXml(p_reader);
-                    SubTotals.Add(sub);
-                    break;
-                case "Subtitle":
-                    if (SubTitles == null)
-                        SubTitles = new List<RptMtxSubtitle>();
-                    RptMtxSubtitle title = new RptMtxSubtitle(this);
-                    title.ReadXml(p_reader);
-                    SubTitles.Add(title);
-                    break;
-            }
-        }
-
-        /// <summary>
-        /// 序列化子元素
-        /// </summary>
-        /// <param name="p_writer"></param>
-        protected override void WriteChildXml(XmlWriter p_writer)
-        {
-            Item.WriteXml(p_writer);
-            if (SubTotals != null && SubTotals.Count > 0)
-            {
-                foreach (RptMtxSubtotal subtotal in SubTotals)
-                {
-                    subtotal.WriteXml(p_writer);
-                }
-            }
-            if (SubTitles != null && SubTitles.Count > 0)
-            {
-                foreach (RptMtxSubtitle title in SubTitles)
-                {
-                    title.WriteXml(p_writer);
-                }
-            }
-        }
-
+        #region 外部方法
         /// <summary>
         /// 克隆层
         /// </summary>
@@ -321,9 +262,7 @@ namespace Dt.Base.Report
             }
             return level;
         }
-        #endregion
 
-        #region 内部方法
         /// <summary>
         /// 递归获取小计所占行（列）数
         /// </summary>
@@ -382,6 +321,57 @@ namespace Dt.Base.Report
                 span += GetTotalSpan(level.SubTotals);  //小计与层同一级，有几行就占几行
             }
             return span;
+        }
+        #endregion
+
+        #region xml
+        protected override void ReadChildXml(XmlReader p_reader)
+        {
+            switch (p_reader.Name)
+            {
+                case "Text":
+                    Item.ReadXml(p_reader);
+                    break;
+                case "Subtotal":
+                    if (SubTotals == null)
+                        SubTotals = new List<RptMtxSubtotal>();
+                    RptMtxSubtotal sub = new RptMtxSubtotal(this);
+                    sub.ReadXml(p_reader);
+                    SubTotals.Add(sub);
+                    break;
+                case "Subtitle":
+                    if (SubTitles == null)
+                        SubTitles = new List<RptMtxSubtitle>();
+                    RptMtxSubtitle title = new RptMtxSubtitle(this);
+                    title.ReadXml(p_reader);
+                    SubTitles.Add(title);
+                    break;
+            }
+        }
+
+        public override void WriteXml(XmlWriter p_writer)
+        {
+            p_writer.WriteStartElement("Level");
+            string val = _data.Str("field");
+            if (val != string.Empty)
+                p_writer.WriteAttributeString("field", val);
+
+            Item.WriteXml(p_writer);
+            if (SubTotals != null && SubTotals.Count > 0)
+            {
+                foreach (RptMtxSubtotal subtotal in SubTotals)
+                {
+                    subtotal.WriteXml(p_writer);
+                }
+            }
+            if (SubTitles != null && SubTitles.Count > 0)
+            {
+                foreach (RptMtxSubtitle title in SubTitles)
+                {
+                    title.WriteXml(p_writer);
+                }
+            }
+            p_writer.WriteEndElement();
         }
         #endregion
     }

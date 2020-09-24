@@ -26,7 +26,6 @@ namespace Dt.Base.Report
             Item = new RptText(this);
         }
 
-        #region 公有属性
         /// <summary>
         /// 获取报表模板根对象
         /// </summary>
@@ -93,16 +92,6 @@ namespace Dt.Base.Report
         public RptText Item { get; }
 
         /// <summary>
-        /// 获取序列化时标签名称
-        /// </summary>
-        public override string XmlName
-        {
-            get { return "Corner"; }
-        }
-        #endregion
-
-        #region 公有、重写方法
-        /// <summary>
         /// 读取子元素xml，结束时定位在该子元素的末尾元素上
         /// </summary>
         /// <param name="p_reader"></param>
@@ -114,13 +103,11 @@ namespace Dt.Base.Report
             }
         }
 
-        /// <summary>
-        /// 序列化子元素
-        /// </summary>
-        /// <param name="p_writer"></param>
-        protected override void WriteChildXml(XmlWriter p_writer)
+        public override void WriteXml(XmlWriter p_writer)
         {
+            p_writer.WriteStartElement("Corner");
             Item.WriteXml(p_writer);
+            p_writer.WriteEndElement();
         }
 
         /// <summary>
@@ -134,6 +121,5 @@ namespace Dt.Base.Report
             corner.Item.Data.Copy(Item.Data);
             return corner;
         }
-        #endregion
     }
 }

@@ -95,14 +95,6 @@ namespace Dt.Base.Report
         public RptTable Table { get; }
 
         /// <summary>
-        /// 获取序列化时标签名称
-        /// </summary>
-        public override string XmlName
-        {
-            get { return "TGroup"; }
-        }
-        
-        /// <summary>
         /// 获取设置分组字段
         /// </summary>
         public string Field
@@ -115,10 +107,6 @@ namespace Dt.Base.Report
 
         public RptTblGroupFooter Footer { get; set; }
 
-        /// <summary>
-        /// 读取子元素xml，结束时定位在该子元素的末尾元素上
-        /// </summary>
-        /// <param name="p_reader"></param>
         protected override void ReadChildXml(XmlReader p_reader)
         {
             if (p_reader.Name == "TGroupHeader")
@@ -133,16 +121,19 @@ namespace Dt.Base.Report
             }
         }
 
-        /// <summary>
-        /// 序列化子元素
-        /// </summary>
-        /// <param name="p_writer"></param>
-        protected override void WriteChildXml(XmlWriter p_writer)
+        public override void WriteXml(XmlWriter p_writer)
         {
+            p_writer.WriteStartElement("TGroup");
+            string val = _data.Str("field");
+            if (val != string.Empty)
+                p_writer.WriteAttributeString("field", val);
+
             if (Header != null)
                 Header.WriteXml(p_writer);
             if (Footer != null)
                 Footer.WriteXml(p_writer);
+
+            p_writer.WriteEndElement();
         }
     }
 }

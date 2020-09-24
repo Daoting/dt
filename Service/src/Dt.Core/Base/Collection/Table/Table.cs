@@ -802,7 +802,7 @@ namespace Dt.Core
                 if (p_reader.NodeType == XmlNodeType.EndElement && p_reader.Name == root)
                     break;
 
-                Row row = NewRow();
+                Row row = AddRow();
                 row.IsAdded = false;
                 for (int i = 0; i < p_reader.AttributeCount; i++)
                 {

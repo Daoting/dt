@@ -108,24 +108,29 @@ namespace Dt.Base.Report
         }
 
         /// <summary>
-        /// 获取序列化时标签名称
-        /// </summary>
-        public override string XmlName
-        {
-            get { return "MRow"; }
-        }
-
-        /// <summary>
         /// 获取行内容单元格
         /// </summary>
         public List<RptText> Cells { get; }
         #endregion
 
-        #region 重写方法
         /// <summary>
-        /// 读取子元素xml，结束时定位在该子元素的末尾元素上
+        /// 克隆行
         /// </summary>
-        /// <param name="p_reader"></param>
+        /// <param name="p_mat"></param>
+        /// <returns></returns>
+        public RptMtxRow Clone(RptMatrix p_mat)
+        {
+            RptMtxRow row = new RptMtxRow(p_mat);
+            foreach (RptText txt in Cells)
+            {
+                RptText newtxt = new RptText(row);
+                newtxt.Data.Copy(txt.Data);
+                row.Cells.Add(newtxt);
+            }
+            return row;
+        }
+
+        #region xml
         protected override void ReadChildXml(XmlReader p_reader)
         {
             if (p_reader.Name == "Text")
@@ -136,12 +141,9 @@ namespace Dt.Base.Report
             }
         }
 
-        /// <summary>
-        /// 序列化子元素
-        /// </summary>
-        /// <param name="p_writer"></param>
-        protected override void WriteChildXml(XmlWriter p_writer)
+        public override void WriteXml(XmlWriter p_writer)
         {
+            p_writer.WriteStartElement("MRow");
             if (Cells.Count > 0)
             {
                 foreach (RptText cell in Cells)
@@ -149,23 +151,7 @@ namespace Dt.Base.Report
                     cell.WriteXml(p_writer);
                 }
             }
-        }
-
-        /// <summary>
-        /// 克隆行
-        /// </summary>
-        /// <param name="p_mat"></param>
-        /// <returns></returns>
-        public RptMtxRow Clone(RptMatrix p_mat)
-        {
-            RptMtxRow row = new RptMtxRow(p_mat);
-            foreach(RptText txt in Cells)
-            {
-                RptText newtxt = new RptText(row);
-                newtxt.Data.Copy(txt.Data);
-                row.Cells.Add(newtxt);
-            }
-            return row;
+            p_writer.WriteEndElement();
         }
         #endregion
     }

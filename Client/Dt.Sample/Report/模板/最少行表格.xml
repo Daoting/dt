@@ -1,10 +1,10 @@
-﻿<Rpt id="65d5d0c9ea7a40149b310f1295bbb9ee" name="简单文本" cols="80,80,80,80,80">
+﻿<Rpt name="简单文本" cols="80,80,80,80,80">
   <Params />
   <Data />
   <Setting />
-  <Header height="40" />
+  <Header />
   <Body rows="25,25,25">
-    <Table row="1" col="1" rowspan="2" colspan="4" tbl="网损情况" repeatheader="1" repeatfooter="1" minrowcount="35">
+    <Table row="1" col="1" rowspan="2" colspan="4" tbl="网损情况" repeatheader="True" repeatfooter="True" minrowcount="35">
       <THeader>
         <TRow>
           <Text row="1" col="1" val="年度" />
@@ -23,5 +23,5 @@
       </TBody>
     </Table>
   </Body>
-  <Footer height="40" />
+  <Footer />
 </Rpt>

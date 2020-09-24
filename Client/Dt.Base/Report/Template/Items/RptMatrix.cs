@@ -27,22 +27,17 @@ namespace Dt.Base.Report
             : base(p_owner)
         {
             Rows = new List<RptMtxRow>();
-            _data.AddCell("hiderowheader", "0");
-            _data.AddCell("hidecolheader", "0");
-            _data.AddCell("repeatrowheader", "0");
-            _data.AddCell("repeatcolheader", "0");
+            _data.AddCell<string>("tbl");
+            _data.AddCell<bool>("hiderowheader");
+            _data.AddCell<bool>("hidecolheader");
+            _data.AddCell<bool>("repeatrowheader");
+            _data.AddCell<bool>("repeatcolheader");
+            _data.AddCell<string>("rowsort");
+            _data.AddCell<string>("colsort");
         }
         #endregion
 
         #region 属性
-        /// <summary>
-        /// 获取序列化时标签名称
-        /// </summary>
-        public override string XmlName
-        {
-            get { return "Matrix"; }
-        }
-
         //获取设置数据源ID
         public string Tbl
         {
@@ -56,7 +51,7 @@ namespace Dt.Base.Report
         public bool HideRowHeader
         {
             get { return _data.Bool("hiderowheader"); }
-            set { _data["hiderowheader"] = value ? "1" : "0"; }
+            set { _data["hiderowheader"] = value; }
         }
 
         /// <summary>
@@ -65,7 +60,7 @@ namespace Dt.Base.Report
         public bool HideColHeader
         {
             get { return _data.Bool("hidecolheader"); }
-            set { _data["hidecolheader"] = value ? "1" : "0"; }
+            set { _data["hidecolheader"] = value; }
         }
 
         /// <summary>
@@ -74,7 +69,7 @@ namespace Dt.Base.Report
         public bool RepeatRowHeader
         {
             get { return _data.Bool("repeatrowheader"); }
-            set { _data["repeatrowheader"] = value ? "1" : "0"; }
+            set { _data["repeatrowheader"] = value; }
         }
 
         /// <summary>
@@ -83,7 +78,7 @@ namespace Dt.Base.Report
         public bool RepeatColHeader
         {
             get { return _data.Bool("repeatcolheader"); }
-            set { _data["repeatcolheader"] = value ? "1" : "0"; }
+            set { _data["repeatcolheader"] = value; }
         }
 
         /// <summary>
@@ -144,62 +139,6 @@ namespace Dt.Base.Report
             return mtx;
         }
 
-        /// <summary>
-        /// 读取子元素xml，结束时定位在该子元素的末尾元素上
-        /// </summary>
-        /// <param name="p_reader"></param>
-        protected override void ReadChildXml(XmlReader p_reader)
-        {
-            switch (p_reader.Name)
-            {
-                case "Corner":
-                    Corner = new RptMtxCorner(this);
-                    Corner.ReadXml(p_reader);
-                    break;
-                case "RowHeader":
-                    RowHeader = new RptMtxRowHeader(this);
-                    RowHeader.ReadXml(p_reader);
-                    break;
-                case "ColHeader":
-                    ColHeader = new RptMtxColHeader(this);
-                    ColHeader.ReadXml(p_reader);
-                    break;
-                case "MRow":
-                    if (Rows == null)
-                        Rows = new List<RptMtxRow>();
-                    RptMtxRow row = new RptMtxRow(this);
-                    row.ReadXml(p_reader);
-                    Rows.Add(row);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        /// <summary>
-        /// 序列化子元素
-        /// </summary>
-        /// <param name="p_writer"></param>
-        protected override void WriteChildXml(XmlWriter p_writer)
-        {
-            if (Corner != null)
-                Corner.WriteXml(p_writer);
-            if (RowHeader != null)
-                RowHeader.WriteXml(p_writer);
-            if (ColHeader != null)
-                ColHeader.WriteXml(p_writer);
-            if (Rows != null)
-            {
-                foreach (RptMtxRow row in Rows)
-                {
-                    row.WriteXml(p_writer);
-                }
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         public override void Build()
         {
             RptRootInst inst = _part.Inst;
@@ -424,6 +363,76 @@ namespace Dt.Base.Report
         public int GetCellsCount()
         {
             return Rows.Sum(itm => itm.Cells.Count);
+        }
+        #endregion
+
+        #region xml
+        protected override void ReadChildXml(XmlReader p_reader)
+        {
+            switch (p_reader.Name)
+            {
+                case "Corner":
+                    Corner = new RptMtxCorner(this);
+                    Corner.ReadXml(p_reader);
+                    break;
+                case "RowHeader":
+                    RowHeader = new RptMtxRowHeader(this);
+                    RowHeader.ReadXml(p_reader);
+                    break;
+                case "ColHeader":
+                    ColHeader = new RptMtxColHeader(this);
+                    ColHeader.ReadXml(p_reader);
+                    break;
+                case "MRow":
+                    if (Rows == null)
+                        Rows = new List<RptMtxRow>();
+                    RptMtxRow row = new RptMtxRow(this);
+                    row.ReadXml(p_reader);
+                    Rows.Add(row);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public override void WriteXml(XmlWriter p_writer)
+        {
+            p_writer.WriteStartElement("Matrix");
+            WritePosition(p_writer);
+
+            string val = _data.Str("tbl");
+            if (val != string.Empty)
+                p_writer.WriteAttributeString("tbl", val);
+            if (HideRowHeader)
+                p_writer.WriteAttributeString("hiderowheader", "True");
+            if (HideColHeader)
+                p_writer.WriteAttributeString("hidecolheader", "True");
+            if (RepeatRowHeader)
+                p_writer.WriteAttributeString("repeatrowheader", "True");
+            if (RepeatColHeader)
+                p_writer.WriteAttributeString("repeatcolheader", "True");
+            val = _data.Str("rowsort");
+            if (val != string.Empty)
+                p_writer.WriteAttributeString("rowsort", val);
+            val = _data.Str("colsort");
+            if (val != string.Empty)
+                p_writer.WriteAttributeString("colsort", val);
+
+            if (Corner != null)
+                Corner.WriteXml(p_writer);
+            if (RowHeader != null)
+                RowHeader.WriteXml(p_writer);
+            if (ColHeader != null)
+                ColHeader.WriteXml(p_writer);
+            if (Rows != null)
+            {
+                foreach (RptMtxRow row in Rows)
+                {
+                    row.WriteXml(p_writer);
+                }
+            }
+
+            p_writer.WriteEndElement();
         }
         #endregion
 

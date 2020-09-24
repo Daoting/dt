@@ -1,10 +1,10 @@
-﻿<Rpt id="65d5d0c9ea7a40149b310f1295bbb9ee" name="简单文本" cols="90,130,120,100,100">
+﻿<Rpt name="简单文本" cols="90,130,120,100,100">
   <Params />
   <Data />
   <Setting />
-  <Header height="40" />
+  <Header />
   <Body rows="25,25,25,25,25,25,25,25">
-    <Table row="1" col="1" rowspan="7" colspan="4" tbl="个人成绩" repeatheader="1" repeatfooter="1">
+    <Table row="1" col="1" rowspan="7" colspan="4" tbl="个人成绩" repeatheader="True" repeatfooter="True">
       <THeader>
         <TRow>
           <Text row="1" col="1" val="学期" />
@@ -15,8 +15,8 @@
       </THeader>
       <TBody>
         <TRow>
-          <Text row="4" col="1" val=":Val(个人成绩,year)" hidetopdup="1"/>
-          <Text row="4" col="2" val=":Val(个人成绩,subject)" hidetopdup="1"/>
+          <Text row="4" col="1" val=":Val(个人成绩,year)" hidetopdup="True" />
+          <Text row="4" col="2" val=":Val(个人成绩,subject)" hidetopdup="True" />
           <Text row="4" col="3" val=":Val(个人成绩,xm)" />
           <Text row="4" col="4" val=":Val(个人成绩,score)" />
         </TRow>
@@ -25,7 +25,7 @@
         <TRow>
           <Text row="7" col="1" rbc="#FFFFFFFF" />
           <Text row="7" col="2" val="表尾" horalign="Right" lbc="#FFFFFFFF" rbc="#FFFFFFFF" />
-          <Text row="7" col="3" lbc="#FFFFFFFF" rbc="#FFFFFFFF"/>
+          <Text row="7" col="3" lbc="#FFFFFFFF" rbc="#FFFFFFFF" />
           <Text row="7" col="4" lbc="#FFFFFFFF" />
         </TRow>
       </TFooter>
@@ -67,5 +67,5 @@
       </TGroup>
     </Table>
   </Body>
-  <Footer height="40" />
+  <Footer />
 </Rpt>

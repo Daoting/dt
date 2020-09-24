@@ -22,25 +22,11 @@ namespace Dt.Base.Report
     /// </summary>
     internal class RptMtxColHeader : RptMtxHeader
     {
-        /// <summary>
-        /// 
-        /// </summary>
         public RptMtxColHeader(RptMatrix p_matrix)
             : base(p_matrix)
         {
         }
 
-        /// <summary>
-        /// 获取序列化时标签名称
-        /// </summary>
-        public override string XmlName
-        {
-            get { return "ColHeader"; }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         public override int RowSpan
         {
             get
@@ -62,9 +48,6 @@ namespace Dt.Base.Report
             set { }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public override int ColSpan
         {
             get
@@ -92,6 +75,13 @@ namespace Dt.Base.Report
                 header.Levels.Add(level.Clone(header));
             }
             return header;
+        }
+
+        public override void WriteXml(XmlWriter p_writer)
+        {
+            p_writer.WriteStartElement("ColHeader");
+            WriteChildXml(p_writer);
+            p_writer.WriteEndElement();
         }
 
         /// <summary>

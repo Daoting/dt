@@ -25,7 +25,7 @@ namespace Dt.Base
         // 所有元素
         readonly IList<FrameworkElement> _list = new List<FrameworkElement>();
         // 所有含ID的格元素
-        readonly Dictionary<string, FvCell> _cells = new Dictionary<string, FvCell>();
+        readonly Dictionary<string, FvCell> _cells = new Dictionary<string, FvCell>(StringComparer.OrdinalIgnoreCase);
         int _updating;
 
         /// <summary>

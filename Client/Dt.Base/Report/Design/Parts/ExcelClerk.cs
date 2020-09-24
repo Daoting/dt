@@ -57,18 +57,13 @@ namespace Dt.Base.Report
         /// <param name="p_item"></param>
         public void LoadItem(RptItem p_item)
         {
-            RptText txt;
-            RptTable tbl;
-            RptMatrix mtx;
-            RptChart ct;
-
-            if ((txt = p_item as RptText) != null)
+            if (p_item is RptText txt)
                 LoadText(txt);
-            else if ((tbl = p_item as RptTable) != null)
+            else if (p_item is RptTable tbl)
                 LoadTable(tbl);
-            else if ((mtx = p_item as RptMatrix) != null)
+            else if (p_item is RptMatrix mtx)
                 LoadMatrix(mtx);
-            else if ((ct = p_item as RptChart) != null)
+            else if (p_item is RptChart ct)
                 LoadChart(ct);
         }
 

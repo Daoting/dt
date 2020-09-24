@@ -10,6 +10,7 @@
 using Dt.Core;
 using System;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Windows.Foundation;
@@ -255,17 +256,20 @@ namespace Dt.Base
             RightWin = null;
             MainWin = p_win;
 
-            foreach (var win in Items)
+            var ls = (from win in Items
+                      where win != p_win
+                      select win).ToList();
+            if (ls != null && ls.Count > 0)
             {
-                if (win == p_win)
-                    continue;
-
-                // 触发关闭前事件，外部判断是否允许关闭
-                if (await win.OnClosing())
+                foreach (var win in ls)
                 {
-                    Items.Remove(win);
-                    // 关闭后
-                    win.OnClosed();
+                    // 触发关闭前事件，外部判断是否允许关闭
+                    if (await win.OnClosing())
+                    {
+                        Items.Remove(win);
+                        // 关闭后
+                        win.OnClosed();
+                    }
                 }
             }
             GC.Collect();

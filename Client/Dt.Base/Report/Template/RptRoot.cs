@@ -54,6 +54,11 @@ namespace Dt.Base.Report
         public event EventHandler<Cell> TextChanged;
 
         /// <summary>
+        /// 报表项值变化事件
+        /// </summary>
+        public event EventHandler<Cell> ValueChanged;
+
+        /// <summary>
         /// 报表项更新事件
         /// </summary>
         public event EventHandler<bool> Updated;
@@ -235,9 +240,14 @@ namespace Dt.Base.Report
         /// <param name="p_cell"></param>
         public void OnValueChanged(RptItemBase p_item, Cell p_cell)
         {
-            if (p_item is RptText pt && TextChanged != null)
-                TextChanged(pt, p_cell);
-            p_cell.AcceptChanges();
+            ValueChangedCmd cmd = RptCmds.ValueChanged;
+            if (!cmd.IsSetting)
+            {
+                ValueChanged?.Invoke(p_cell, p_cell);
+                if (p_item is RptText pt && TextChanged != null)
+                    TextChanged(pt, p_cell);
+                p_cell.AcceptChanges();
+            }
         }
 
         /// <summary>

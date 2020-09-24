@@ -28,14 +28,6 @@ namespace Dt.Base.Report
         }
 
         /// <summary>
-        /// 获取序列化时标签名称
-        /// </summary>
-        public override string XmlName
-        {
-            get { return "TGroupFooter"; }
-        }
-
-        /// <summary>
         /// 构造报表项实例
         /// </summary>
         /// <param name="p_filter"></param>
@@ -51,6 +43,13 @@ namespace Dt.Base.Report
                 inst.CurrentTable.AddRow(footer);
             inst.CurrentParent = footer;
             BuildChild();
+        }
+
+        public override void WriteXml(XmlWriter p_writer)
+        {
+            p_writer.WriteStartElement("TGroupFooter");
+            WriteChildXml(p_writer);
+            p_writer.WriteEndElement();
         }
     }
 }

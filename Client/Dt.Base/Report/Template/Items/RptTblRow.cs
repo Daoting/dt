@@ -8,6 +8,7 @@
 
 #region 命名空间
 using Dt.Core;
+using System.Xml;
 
 #endregion
 
@@ -23,14 +24,6 @@ namespace Dt.Base.Report
         {
             // 最少行数
             _data.AddCell("minrowcount", 0);
-        }
-
-        /// <summary>
-        /// 获取序列化时标签名称
-        /// </summary>
-        public override string XmlName
-        {
-            get { return "TBody"; }
         }
 
         /// <summary>
@@ -63,6 +56,16 @@ namespace Dt.Base.Report
                 inst.CurrentTable.AddRow(row);
             inst.CurrentParent = row;
             BuildChild();
+        }
+
+        public override void WriteXml(XmlWriter p_writer)
+        {
+            p_writer.WriteStartElement("TBody");
+            string val = _data.Str("minrowcount");
+            if (val != "0")
+                p_writer.WriteAttributeString("minrowcount", val);
+            WriteChildXml(p_writer);
+            p_writer.WriteEndElement();
         }
     }
 }

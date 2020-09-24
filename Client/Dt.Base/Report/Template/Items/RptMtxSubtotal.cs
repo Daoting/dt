@@ -34,11 +34,11 @@ namespace Dt.Base.Report
             // 是否在层次前面
             _data.AddCell("beforelevel", "1");
             // 所占行数/列数
-            _data.AddCell("span", "1");
+            _data.AddCell("span", 1);
         }
         #endregion
 
-        #region 外部属性
+        #region 属性
         /// <summary>
         /// 获取报表模板根对象
         /// </summary>
@@ -61,14 +61,6 @@ namespace Dt.Base.Report
         public override RptItemBase Parent
         {
             get { return _parent; }
-        }
-
-        /// <summary>
-        /// 获取序列化时标签名称
-        /// </summary>
-        public override string XmlName
-        {
-            get { return "Subtotal"; }
         }
 
         /// <summary>
@@ -284,44 +276,7 @@ namespace Dt.Base.Report
         }
         #endregion
 
-        #region 重写方法
-        /// <summary>
-        /// 读取子元素xml，结束时定位在该子元素的末尾元素上
-        /// </summary>
-        /// <param name="p_reader"></param>
-        protected override void ReadChildXml(XmlReader p_reader)
-        {
-            switch (p_reader.Name)
-            {
-                case "Text":
-                    Item.ReadXml(p_reader);
-                    break;
-                case "Subtotal":
-                    if (SubTotals == null)
-                        SubTotals = new List<RptMtxSubtotal>();
-                    RptMtxSubtotal sub = new RptMtxSubtotal(this);
-                    sub.ReadXml(p_reader);
-                    SubTotals.Add(sub);
-                    break;
-            }
-        }
-
-        /// <summary>
-        /// 序列化子元素
-        /// </summary>
-        /// <param name="p_writer"></param>
-        protected override void WriteChildXml(XmlWriter p_writer)
-        {
-            Item.WriteXml(p_writer);
-            if (SubTotals != null && SubTotals.Count > 0)
-            {
-                foreach (RptMtxSubtotal sub in SubTotals)
-                {
-                    sub.WriteXml(p_writer);
-                }
-            }
-        }
-
+        #region 内部方法
         /// <summary>
         /// 克隆小计
         /// </summary>
@@ -338,9 +293,7 @@ namespace Dt.Base.Report
             }
             return total;
         }
-        #endregion
 
-        #region 内部方法
         /// <summary>
         /// 获取当前占行（列）数
         /// </summary>
@@ -407,6 +360,46 @@ namespace Dt.Base.Report
             }
             p_index = -1;
             return null;
+        }
+        #endregion
+
+        #region xml
+        protected override void ReadChildXml(XmlReader p_reader)
+        {
+            switch (p_reader.Name)
+            {
+                case "Text":
+                    Item.ReadXml(p_reader);
+                    break;
+                case "Subtotal":
+                    if (SubTotals == null)
+                        SubTotals = new List<RptMtxSubtotal>();
+                    RptMtxSubtotal sub = new RptMtxSubtotal(this);
+                    sub.ReadXml(p_reader);
+                    SubTotals.Add(sub);
+                    break;
+            }
+        }
+
+        public override void WriteXml(XmlWriter p_writer)
+        {
+            p_writer.WriteStartElement("Subtotal");
+
+            string val = _data.Str("beforelevel");
+            if (val != "1")
+                p_writer.WriteAttributeString("beforelevel", val);
+            if (Span != 1)
+                p_writer.WriteAttributeString("span", _data.Str("span"));
+
+            Item.WriteXml(p_writer);
+            if (SubTotals != null && SubTotals.Count > 0)
+            {
+                foreach (RptMtxSubtotal sub in SubTotals)
+                {
+                    sub.WriteXml(p_writer);
+                }
+            }
+            p_writer.WriteEndElement();
         }
         #endregion
     }

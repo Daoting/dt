@@ -57,7 +57,7 @@ namespace Dt.Base.Report
                 // 初次加载模板
                 string define = await ReadTemplate();
                 _root = await RptKit.DeserializeTemplate(define);
-                _root.Serialized += OnSerialized;
+                _root.ValueChanged += OnItemValueChanged;
             }
             return _root;
         }
@@ -65,17 +65,20 @@ namespace Dt.Base.Report
         internal async Task ImportTemplate(string p_define)
         {
             if (_root != null)
-                _root.Serialized -= OnSerialized;
+                _root.ValueChanged -= OnItemValueChanged;
 
             _root = await RptKit.DeserializeTemplate(p_define);
-            _root.Serialized += OnSerialized;
+            _root.ValueChanged += OnItemValueChanged;
             TemplateChanged?.Invoke(this, _root);
         }
 
         internal void SaveTemplate()
         {
             if (_root != null)
+            {
                 SaveTemplate(RptKit.SerializeTemplate(_root));
+                History.Clear();
+            }
         }
 
         #region 命令
@@ -120,24 +123,17 @@ namespace Dt.Base.Report
         /// <summary>
         /// 记录报表项属性值变化，提供可撤消和重做功能
         /// </summary>
-        /// <param name="p_item"></param>
-        /// <param name="p_cell"></param>
-        internal void OnValueChanged(RptText p_item, Dt.Core.Cell p_cell)
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void OnItemValueChanged(object sender, Core.Cell e)
         {
             ValueChangedCmd cmd = RptCmds.ValueChanged;
             if (!cmd.IsSetting)
-            {
-                History.RecordAction(new HistoryCmdAction(cmd, new ValueChangedArgs(p_cell, p_item as RptText)));
-            }
+                History.RecordAction(new HistoryCmdAction(cmd, new ValueChangedArgs(e, sender as RptText)));
         }
         #endregion
 
         #region 内部方法
-
-        void OnSerialized(object sender, EventArgs e)
-        {
-            History.Clear();
-        }
 
         public override bool Equals(object obj)
         {

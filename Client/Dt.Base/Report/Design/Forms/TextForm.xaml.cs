@@ -20,18 +20,21 @@ namespace Dt.Base.Report
 {
     public sealed partial class TextForm : UserControl
     {
+        RptText _item;
+
         public TextForm()
         {
             InitializeComponent();
         }
 
-        /// <summary>
-        /// 切换报表项实例
-        /// </summary>
-        /// <param name="p_item"></param>
         internal void LoadItem(RptText p_item)
         {
-            
+            if (_item != p_item)
+            {
+                _item = p_item;
+                _fv.Data = _item.Data;
+            }
         }
+
     }
 }

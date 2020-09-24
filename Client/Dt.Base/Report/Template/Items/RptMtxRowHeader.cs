@@ -27,18 +27,6 @@ namespace Dt.Base.Report
         {
         }
 
-        #region 外部属性
-        /// <summary>
-        /// 获取序列化时标签名称
-        /// </summary>
-        public override string XmlName
-        {
-            get { return "RowHeader"; }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         public override int RowSpan
         {
             get
@@ -53,9 +41,6 @@ namespace Dt.Base.Report
             set { }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public override int ColSpan
         {
             get
@@ -91,7 +76,13 @@ namespace Dt.Base.Report
             }
             return header;
         }
-        #endregion
+
+        public override void WriteXml(XmlWriter p_writer)
+        {
+            p_writer.WriteStartElement("RowHeader");
+            WriteChildXml(p_writer);
+            p_writer.WriteEndElement();
+        }
 
         #region 私有方法
         int GetSubTotalMaxCol(List<RptMtxSubtotal> p_totals)

@@ -110,18 +110,6 @@ namespace Dt.Base.Report
 
         public List<RptText> Cells { get; set; }
 
-        /// <summary>
-        /// 获取序列化时标签名称
-        /// </summary>
-        public override string XmlName
-        {
-            get { return "TRow"; }
-        }
-
-        /// <summary>
-        /// 读取子元素xml，结束时定位在该子元素的末尾元素上
-        /// </summary>
-        /// <param name="p_reader"></param>
         protected override void ReadChildXml(XmlReader p_reader)
         {
             if (p_reader.Name == "Text")
@@ -134,12 +122,9 @@ namespace Dt.Base.Report
             }
         }
 
-        /// <summary>
-        /// 序列化子元素
-        /// </summary>
-        /// <param name="p_writer"></param>
-        protected override void WriteChildXml(XmlWriter p_writer)
+        public override void WriteXml(XmlWriter p_writer)
         {
+            p_writer.WriteStartElement("TRow");
             if (Cells != null)
             {
                 foreach (RptText cell in Cells)
@@ -147,6 +132,7 @@ namespace Dt.Base.Report
                     cell.WriteXml(p_writer);
                 }
             }
+            p_writer.WriteEndElement();
         }
     }
 }

@@ -1,10 +1,8 @@
-﻿<Rpt id="28fa3a01c58541c78f597d97b2191b0d" name="测试列表" cols="80,80,80,80,80,80,80,80,80">
-  <Params>
-    <Param id="V001" name="住院号" val="0001" ct="" note="" />
-  </Params>
+﻿<Rpt name="测试列表" cols="80,80,80,80,80,80,80,80,80">
+  <Params />
   <Data />
   <Setting />
-  <Header height="40" />
+  <Header />
   <Body rows="25,25,25,25,25">
     <Text colspan="4" val="无表头表尾" />
     <Text col="5" colspan="4" val="包含表头表尾" />
@@ -45,5 +43,5 @@
       </TFooter>
     </Table>
   </Body>
-  <Footer height="40" />
+  <Footer />
 </Rpt>

@@ -28,14 +28,6 @@ namespace Dt.Base.Report
         }
 
         /// <summary>
-        /// 获取序列化时标签名称
-        /// </summary>
-        public override string XmlName
-        {
-            get { return "THeader"; }
-        }
-
-        /// <summary>
         /// 构造报表项实例
         /// </summary>
         public override void Build()
@@ -46,6 +38,13 @@ namespace Dt.Base.Report
                 inst.CurrentTable.Header = header;
             inst.CurrentParent = header;
             BuildChild();
+        }
+
+        public override void WriteXml(XmlWriter p_writer)
+        {
+            p_writer.WriteStartElement("THeader");
+            WriteChildXml(p_writer);
+            p_writer.WriteEndElement();
         }
     }
 }

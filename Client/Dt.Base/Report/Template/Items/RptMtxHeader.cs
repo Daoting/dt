@@ -112,7 +112,7 @@ namespace Dt.Base.Report
         /// 序列化子元素
         /// </summary>
         /// <param name="p_writer"></param>
-        protected override void WriteChildXml(XmlWriter p_writer)
+        protected void WriteChildXml(XmlWriter p_writer)
         {
             if (Levels.Count > 0)
             {

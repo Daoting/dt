@@ -22,6 +22,7 @@ namespace Dt.Base.Report
     {
         RptDesignInfo _info;
         RptDesignWin _design;
+        TextBox _tbXaml;
 
         public RptDesignHome(RptDesignInfo p_info)
         {
@@ -36,5 +37,17 @@ namespace Dt.Base.Report
             LoadCenter(_design);
         }
 
+        void OnExport(object sender, RoutedEventArgs e)
+        {
+            if (_tbXaml == null)
+            {
+                _tbXaml = new TextBox { AcceptsReturn = true, BorderThickness = new Thickness(0) };
+                ScrollViewer.SetHorizontalScrollBarVisibility(_tbXaml, ScrollBarVisibility.Auto);
+                ScrollViewer.SetVerticalScrollBarVisibility(_tbXaml, ScrollBarVisibility.Auto);
+            }
+                
+            _tbXaml.Text = RptKit.SerializeTemplate(_design.Root);
+            LoadCenter(_tbXaml);
+        }
     }
 }

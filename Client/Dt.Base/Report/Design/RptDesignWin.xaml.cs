@@ -104,7 +104,7 @@ namespace Dt.Base.Report
         #region 属性表单
         internal void LoadForms(RptItem p_item, CellRange p_range)
         {
-            if (p_item == _curItem || p_item == null || p_range == null)
+            if (p_item == null || p_range == null)
                 return;
 
             _curItem = p_item;
@@ -112,6 +112,7 @@ namespace Dt.Base.Report
             {
                 LoadCellForm(txt);
                 _tabItem.Content = null;
+                _tabCell.IsSelected = true;
                 return;
             }
 
@@ -119,21 +120,12 @@ namespace Dt.Base.Report
             {
                 txt = tbl.GetText(p_range.Row, p_range.Column);
                 LoadCellForm(txt);
-                TblRangeType tblRng = tbl.GetRangeType(p_range.Row, p_range.Column);
+
                 if (_fmTbl == null)
                     _fmTbl = new TableForm(this);
+                TblRangeType tblRng = tbl.GetRangeType(p_range.Row, p_range.Column);
                 _fmTbl.LoadItem(txt, tblRng == TblRangeType.Group);
                 _tabItem.Content = _fmTbl;
-                return;
-            }
-
-            if (p_item is RptChart chart)
-            {
-                if (_fmChart == null)
-                    _fmChart = new ChartForm(this);
-                _fmChart.LoadItem(chart);
-                _tabItem.Content = _fmChart;
-                _tabCell.Content = null;
                 return;
             }
 
@@ -141,6 +133,7 @@ namespace Dt.Base.Report
             {
                 txt = mtx.GetText(p_range.Row, p_range.Column);
                 LoadCellForm(txt);
+
                 MtxRangeType mtxRng = mtx.GetRangeType(p_range.Row, p_range.Column);
                 switch (mtxRng)
                 {
@@ -169,11 +162,23 @@ namespace Dt.Base.Report
                         _tabItem.Content = _fmMatrix;
                         break;
                 }
+                return;
+            }
+
+            if (p_item is RptChart chart)
+            {
+                if (_fmChart == null)
+                    _fmChart = new ChartForm(this);
+                _fmChart.LoadItem(chart);
+                _tabItem.Content = _fmChart;
+                _tabCell.Content = null;
+                _tabItem.IsSelected = true;
             }
         }
 
         internal void ClearForms()
         {
+            _curItem = null;
             _tabItem.Content = null;
             _tabCell.Content = null;
         }

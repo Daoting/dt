@@ -34,7 +34,7 @@ namespace Dt.Base.Report
             Item = new RptText(this);
             SubTitles = new List<RptMtxSubtitle>();
             // 所占行数/列数
-            _data.AddCell("span", "1");
+            _data.AddCell("span", 1);
         }
         #endregion
 
@@ -61,14 +61,6 @@ namespace Dt.Base.Report
         public override RptItemBase Parent
         {
             get { return _parent; }
-        }
-
-        /// <summary>
-        /// 获取序列化时标签名称
-        /// </summary>
-        public override string XmlName
-        {
-            get { return "Subtitle"; }
         }
 
         /// <summary>
@@ -249,44 +241,7 @@ namespace Dt.Base.Report
         }
         #endregion
 
-        #region 重写方法
-        /// <summary>
-        /// 读取子元素xml，结束时定位在该子元素的末尾元素上
-        /// </summary>
-        /// <param name="p_reader"></param>
-        protected override void ReadChildXml(XmlReader p_reader)
-        {
-            switch (p_reader.Name)
-            {
-                case "Text":
-                    Item.ReadXml(p_reader);
-                    break;
-                case "Subtitle":
-                    if (SubTitles == null)
-                        SubTitles = new List<RptMtxSubtitle>();
-                    RptMtxSubtitle title = new RptMtxSubtitle(this);
-                    title.ReadXml(p_reader);
-                    SubTitles.Add(title);
-                    break;
-            }
-        }
-
-        /// <summary>
-        /// 序列化子元素
-        /// </summary>
-        /// <param name="p_writer"></param>
-        protected override void WriteChildXml(XmlWriter p_writer)
-        {
-            Item.WriteXml(p_writer);
-            if (SubTitles != null && SubTitles.Count > 0)
-            {
-                foreach (RptMtxSubtitle title in SubTitles)
-                {
-                    title.WriteXml(p_writer);
-                }
-            }
-        }
-
+        #region 内部方法
         /// <summary>
         /// 克隆标题
         /// </summary>
@@ -303,9 +258,7 @@ namespace Dt.Base.Report
             }
             return title;
         }
-        #endregion
 
-        #region 内部方法
         /// <summary>
         /// 获取当前占行（列）数
         /// </summary>
@@ -372,6 +325,42 @@ namespace Dt.Base.Report
             }
             p_index = -1;
             return null;
+        }
+        #endregion
+
+        #region xml
+        protected override void ReadChildXml(XmlReader p_reader)
+        {
+            switch (p_reader.Name)
+            {
+                case "Text":
+                    Item.ReadXml(p_reader);
+                    break;
+                case "Subtitle":
+                    if (SubTitles == null)
+                        SubTitles = new List<RptMtxSubtitle>();
+                    RptMtxSubtitle title = new RptMtxSubtitle(this);
+                    title.ReadXml(p_reader);
+                    SubTitles.Add(title);
+                    break;
+            }
+        }
+
+        public override void WriteXml(XmlWriter p_writer)
+        {
+            p_writer.WriteStartElement("Subtitle");
+            if (Span != 1)
+                p_writer.WriteAttributeString("span", _data.Str("span"));
+
+            Item.WriteXml(p_writer);
+            if (SubTitles != null && SubTitles.Count > 0)
+            {
+                foreach (RptMtxSubtitle title in SubTitles)
+                {
+                    title.WriteXml(p_writer);
+                }
+            }
+            p_writer.WriteEndElement();
         }
         #endregion
     }

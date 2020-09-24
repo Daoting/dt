@@ -123,11 +123,6 @@ namespace Dt.Base.Report
         }
 
         /// <summary>
-        /// 获取序列化时标签名称
-        /// </summary>
-        public abstract string XmlName { get; }
-
-        /// <summary>
         /// 获取内部行高
         /// </summary>
         /// <param name="p_offset">偏移位置</param>
@@ -203,6 +198,26 @@ namespace Dt.Base.Report
         }
 
         /// <summary>
+        /// 构造报表元素实例
+        /// </summary>
+        public virtual void Build()
+        {
+        }
+
+        /// <summary>
+        /// 值变化时通知Root
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void OnValueChanged(object sender, Cell e)
+        {
+            RptRoot root = Root;
+            if (root != null)
+                root.OnValueChanged(this, e);
+        }
+
+        #region xml
+        /// <summary>
         /// 加载xml
         /// </summary>
         /// <param name="p_reader"></param>
@@ -236,39 +251,7 @@ namespace Dt.Base.Report
         /// 序列化xml
         /// </summary>
         /// <param name="p_writer"></param>
-        public virtual void WriteXml(XmlWriter p_writer)
-        {
-            p_writer.WriteStartElement(XmlName);
-            _data.WriteXml(p_writer);
-            WriteChildXml(p_writer);
-            p_writer.WriteEndElement();
-        }
-
-        /// <summary>
-        /// 序列化子元素
-        /// </summary>
-        /// <param name="p_writer"></param>
-        protected virtual void WriteChildXml(XmlWriter p_writer)
-        {
-        }
-
-        /// <summary>
-        /// 构造报表元素实例
-        /// </summary>
-        public virtual void Build()
-        {
-        }
-
-        /// <summary>
-        /// 值变化时通知Root
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected void OnValueChanged(object sender, Cell e)
-        {
-            RptRoot root = Root;
-            if (root != null)
-                root.OnValueChanged(this, e);
-        }
+        public abstract void WriteXml(XmlWriter p_writer);
+        #endregion
     }
 }

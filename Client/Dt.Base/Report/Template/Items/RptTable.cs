@@ -26,8 +26,8 @@ namespace Dt.Base.Report
             // 数据源名称
             _data.AddCell<string>("tbl");
             // 在每页重复表头表尾
-            _data.AddCell("repeatheader", 0);
-            _data.AddCell("repeatfooter", 0);
+            _data.AddCell<bool>("repeatheader");
+            _data.AddCell<bool>("repeatfooter");
             // 最少行数
             _data.AddCell("minrowcount", 0);
             // 多列显示
@@ -104,67 +104,6 @@ namespace Dt.Base.Report
         public string Tbl
         {
             get { return _data.Str("tbl"); }
-        }
-
-        /// <summary>
-        /// 获取序列化时标签名称
-        /// </summary>
-        public override string XmlName
-        {
-            get { return "Table"; }
-        }
-
-        /// <summary>
-        /// 读取子元素xml，结束时定位在该子元素的末尾元素上
-        /// </summary>
-        /// <param name="p_reader"></param>
-        protected override void ReadChildXml(XmlReader p_reader)
-        {
-            switch (p_reader.Name)
-            {
-                case "THeader":
-                    Header = new RptTblHeader(this);
-                    Header.ReadXml(p_reader);
-                    break;
-                case "TBody":
-                    Body = new RptTblRow(this);
-                    Body.ReadXml(p_reader);
-                    break;
-                case "TFooter":
-                    Footer = new RptTblFooter(this);
-                    Footer.ReadXml(p_reader);
-                    break;
-                case "TGroup":
-                    if (Groups == null)
-                        Groups = new List<RptTblGroup>();
-                    RptTblGroup group = new RptTblGroup(this);
-                    group.ReadXml(p_reader);
-                    Groups.Add(group);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        /// <summary>
-        /// 序列化子元素
-        /// </summary>
-        /// <param name="p_writer"></param>
-        protected override void WriteChildXml(XmlWriter p_writer)
-        {
-            if (Header != null)
-                Header.WriteXml(p_writer);
-            if (Body != null)
-                Body.WriteXml(p_writer);
-            if (Footer != null)
-                Footer.WriteXml(p_writer);
-            if (Groups != null)
-            {
-                foreach (RptTblGroup group in Groups)
-                {
-                    group.WriteXml(p_writer);
-                }
-            }
         }
 
         /// <summary>
@@ -517,6 +456,74 @@ namespace Dt.Base.Report
             }
             return filters;
         }
+
+        #region xml
+        protected override void ReadChildXml(XmlReader p_reader)
+        {
+            switch (p_reader.Name)
+            {
+                case "THeader":
+                    Header = new RptTblHeader(this);
+                    Header.ReadXml(p_reader);
+                    break;
+                case "TBody":
+                    Body = new RptTblRow(this);
+                    Body.ReadXml(p_reader);
+                    break;
+                case "TFooter":
+                    Footer = new RptTblFooter(this);
+                    Footer.ReadXml(p_reader);
+                    break;
+                case "TGroup":
+                    if (Groups == null)
+                        Groups = new List<RptTblGroup>();
+                    RptTblGroup group = new RptTblGroup(this);
+                    group.ReadXml(p_reader);
+                    Groups.Add(group);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public override void WriteXml(XmlWriter p_writer)
+        {
+            p_writer.WriteStartElement("Table");
+            WritePosition(p_writer);
+
+            string val = _data.Str("tbl");
+            if (val != string.Empty)
+                p_writer.WriteAttributeString("tbl", val);
+            if (RepeatHeader)
+                p_writer.WriteAttributeString("repeatheader", "True");
+            if (RepeatFooter)
+                p_writer.WriteAttributeString("repeatfooter", "True");
+            val = _data.Str("minrowcount");
+            if (val != "0")
+                p_writer.WriteAttributeString("minrowcount", val);
+            val = _data.Str("rowbreakcount");
+            if (val != "0")
+                p_writer.WriteAttributeString("rowbreakcount", val);
+            val = _data.Str("colbreakcount");
+            if (val != "1")
+                p_writer.WriteAttributeString("colbreakcount", val);
+
+            if (Header != null)
+                Header.WriteXml(p_writer);
+            if (Body != null)
+                Body.WriteXml(p_writer);
+            if (Footer != null)
+                Footer.WriteXml(p_writer);
+            if (Groups != null)
+            {
+                foreach (RptTblGroup group in Groups)
+                {
+                    group.WriteXml(p_writer);
+                }
+            }
+            p_writer.WriteEndElement();
+        }
+        #endregion
     }
 
     /// <summary>

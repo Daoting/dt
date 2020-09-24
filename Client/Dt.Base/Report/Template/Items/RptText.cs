@@ -28,6 +28,10 @@ namespace Dt.Base.Report
         #region 成员变量
         public const string DefaultFontName = "Segoe UI";
         public const double DefaultFontSize = 15.0;
+        const string _defaultForeground = "#ff000000";
+        const string _defaultBackground = "#00ffffff";
+        const string _defaultAlign = "Center";
+        const string _defaultBorder = "Thin";
         RptItemBase _parent;
         #endregion
 
@@ -35,32 +39,30 @@ namespace Dt.Base.Report
             : base(p_owner)
         {
             _data.AddCell<string>("val");
-            _data.AddCell("hidetopdup", "0");
-            _data.AddCell("hideleftdup", "0");
-            _data.AddCell("autoheight", "0");
-            _data.AddCell("clickaction", "None");
-            _data.AddCell<string>("rptid");
+            _data.AddCell<bool>("hidetopdup");
+            _data.AddCell<bool>("hideleftdup");
+            _data.AddCell<bool>("autoheight");
             _data.AddCell<string>("scriptid");
-            _data.AddCell("wordwrap", "0");
+            _data.AddCell<bool>("wordwrap");
             _data.AddCell("fontfamily", DefaultFontName);
             _data.AddCell("fontsize", DefaultFontSize);
-            _data.AddCell("bold", "0");
-            _data.AddCell("italic", "0");
-            _data.AddCell("underline", "0");
-            _data.AddCell("strikeout", "0");
-            _data.AddCell("foreground", "#ff000000");
-            _data.AddCell("background", "#00ffffff");
-            _data.AddCell("horalign", "Center");
-            _data.AddCell("veralign", "Center");
-            _data.AddCell("margin", 1);
-            _data.AddCell("lbc", "#ff000000");
-            _data.AddCell("tbc", "#ff000000");
-            _data.AddCell("rbc", "#ff000000");
-            _data.AddCell("bbc", "#ff000000");
-            _data.AddCell("lbs", "Thin");
-            _data.AddCell("tbs", "Thin");
-            _data.AddCell("rbs", "Thin");
-            _data.AddCell("bbs", "Thin");
+            _data.AddCell<bool>("bold");
+            _data.AddCell<bool>("italic");
+            _data.AddCell<bool>("underline");
+            _data.AddCell<bool>("strikeout");
+            _data.AddCell("foreground", _defaultForeground);
+            _data.AddCell("background", _defaultBackground);
+            _data.AddCell("horalign", _defaultAlign);
+            _data.AddCell("veralign", _defaultAlign);
+            _data.AddCell("margin", 0);
+            _data.AddCell("lbc", _defaultForeground);
+            _data.AddCell("tbc", _defaultForeground);
+            _data.AddCell("rbc", _defaultForeground);
+            _data.AddCell("bbc", _defaultForeground);
+            _data.AddCell("lbs", _defaultBorder);
+            _data.AddCell("tbs", _defaultBorder);
+            _data.AddCell("rbs", _defaultBorder);
+            _data.AddCell("bbs", _defaultBorder);
         }
 
         public RptText(RptItemBase p_parent)
@@ -92,7 +94,7 @@ namespace Dt.Base.Report
         public bool HideTopDup
         {
             get { return _data.Bool("hidetopdup"); }
-            set { _data["hidetopdup"] = value ? "1" : "0"; }
+            set { _data["hidetopdup"] = value; }
         }
 
         /// <summary>
@@ -101,7 +103,7 @@ namespace Dt.Base.Report
         public bool HideLeftDup
         {
             get { return _data.Bool("hideleftdup"); }
-            set { _data["hideleftdup"] = value ? "1" : "0"; }
+            set { _data["hideleftdup"] = value; }
         }
 
         /// <summary>
@@ -110,7 +112,7 @@ namespace Dt.Base.Report
         public bool WordWrap
         {
             get { return _data.Bool("wordwrap"); }
-            set { _data["wordwrap"] = value ? "1" : "0"; }
+            set { _data["wordwrap"] = value; }
         }
 
         /// <summary>
@@ -119,30 +121,7 @@ namespace Dt.Base.Report
         public bool AutoHeight
         {
             get { return _data.Bool("autoheight"); }
-            set { _data["autoheight"] = value ? "1" : "0"; }
-        }
-
-        /// <summary>
-        /// 获取设置点击文本时的操作
-        /// </summary>
-        public TextClickAction ClickAction
-        {
-            get
-            {
-                TextClickAction tp = TextClickAction.None;
-                Enum.TryParse<TextClickAction>(_data.Str("clickaction"), out tp);
-                return tp;
-            }
-            set { _data["clickaction"] = value; }
-        }
-
-        /// <summary>
-        /// 获取设置点击打开报表的uri或name
-        /// </summary>
-        public string RptID
-        {
-            get { return _data.Str("rptid"); }
-            set { _data["rptid"] = value; }
+            set { _data["autoheight"] = value; }
         }
 
         /// <summary>
@@ -183,7 +162,7 @@ namespace Dt.Base.Report
         public bool Bold
         {
             get { return _data.Bool("bold"); }
-            set { _data["bold"] = value ? "1" : "0"; }
+            set { _data["bold"] = value; }
         }
 
         /// <summary>
@@ -192,7 +171,7 @@ namespace Dt.Base.Report
         public bool Italic
         {
             get { return _data.Bool("italic"); }
-            set { _data["italic"] = value ? "1" : "0"; }
+            set { _data["italic"] = value; }
         }
 
         /// <summary>
@@ -201,7 +180,7 @@ namespace Dt.Base.Report
         public bool UnderLine
         {
             get { return _data.Bool("underline"); }
-            set { _data["underline"] = value ? "1" : "0"; }
+            set { _data["underline"] = value; }
         }
 
         /// <summary>
@@ -210,7 +189,7 @@ namespace Dt.Base.Report
         public bool StrikeOut
         {
             get { return _data.Bool("strikeout"); }
-            set { _data["strikeout"] = value ? "1" : "0"; }
+            set { _data["strikeout"] = value; }
         }
 
         /// <summary>
@@ -336,51 +315,6 @@ namespace Dt.Base.Report
         public bool ExistPlaceholder { get; set; }
 
         /// <summary>
-        /// 获取序列化时标签名称
-        /// </summary>
-        public override string XmlName
-        {
-            get { return "Text"; }
-        }
-
-        /// <summary>
-        /// 加载xml时解析表达式
-        /// </summary>
-        /// <param name="p_reader"></param>
-        public override void ReadXml(XmlReader p_reader)
-        {
-            base.ReadXml(p_reader);
-
-            string val = _data.Str("val").Trim();
-            if (string.IsNullOrEmpty(val) || !val.StartsWith(":"))
-                return;
-
-            // 解析表达式
-            if (Expressions == null)
-                Expressions = new List<RptExpression>();
-            string[] subs = val.Substring(1).Split('+');
-            foreach (string item in subs)
-            {
-                string str = item.Trim();
-                if (str.Length < 3)
-                    continue;
-
-                if (str.StartsWith("\""))
-                {
-                    // 字符串
-                    RptExpression exp = new RptExpression();
-                    exp.Func = RptExpFunc.Unknown;
-                    exp.VarName = str.Substring(1, str.Length - 2);
-                    Expressions.Add(exp);
-                }
-                else
-                {
-                    Expressions.Add(ParseExpression(str));
-                }
-            }
-        }
-
-        /// <summary>
         ///  克隆方法
         /// </summary>
         /// <returns></returns>
@@ -418,12 +352,11 @@ namespace Dt.Base.Report
         }
 
         /// <summary>
-        /// 给 cell 实例对象设定RptText的样式。
+        /// 给 cell 实例对象设定RptText的样式
         /// </summary>
         /// <param name="p_cell"></param>
         public void ApplyStyle(Cells.Data.Cell p_cell)
         {
-            Worksheet sheet = p_cell.Worksheet;
             p_cell.WordWrap = WordWrap;
             p_cell.FontFamily = new FontFamily(FontFamily);
             p_cell.FontSize = FontSize;
@@ -431,7 +364,7 @@ namespace Dt.Base.Report
             p_cell.FontStyle = Italic ? FontStyle.Italic : FontStyle.Normal;
             p_cell.Underline = UnderLine;
             p_cell.Strikethrough = StrikeOut;
-            p_cell.Foreground = (_data.Str("clickaction") == "None") ? new SolidColorBrush(Foreground) : Dt.Base.AtRes.主题蓝色;
+            p_cell.Foreground = _data.IsEmpty("scriptid") ? new SolidColorBrush(Foreground) : Dt.Base.AtRes.主题蓝色;
             p_cell.Background = Background.A == 0 ? null : new SolidColorBrush(Background);
             p_cell.HorizontalAlignment = Horalign;
             p_cell.VerticalAlignment = Veralign;
@@ -439,6 +372,7 @@ namespace Dt.Base.Report
 
             if (p_cell.RowSpan > 1 || p_cell.ColumnSpan > 1)
             {
+                Worksheet sheet = p_cell.Worksheet;
                 for (int i = p_cell.Column.Index; i < p_cell.Column.Index + p_cell.ColumnSpan; i++)
                 {
                     sheet[p_cell.Row.Index, i].BorderTop = TopStyle == BorderLineStyle.None ? null : new BorderLine(TopColor, TopStyle);
@@ -458,6 +392,118 @@ namespace Dt.Base.Report
                 p_cell.BorderBottom = BottomStyle == BorderLineStyle.None ? null : new BorderLine(BottomColor, BottomStyle);
             }
         }
+
+        #region xml
+        /// <summary>
+        /// 加载xml时解析表达式
+        /// </summary>
+        /// <param name="p_reader"></param>
+        public override void ReadXml(XmlReader p_reader)
+        {
+            base.ReadXml(p_reader);
+
+            string val = _data.Str("val").Trim();
+            if (string.IsNullOrEmpty(val) || !val.StartsWith(":"))
+                return;
+
+            // 解析表达式
+            if (Expressions == null)
+                Expressions = new List<RptExpression>();
+            string[] subs = val.Substring(1).Split('+');
+            foreach (string item in subs)
+            {
+                string str = item.Trim();
+                if (str.Length < 3)
+                    continue;
+
+                if (str.StartsWith("\""))
+                {
+                    // 字符串
+                    RptExpression exp = new RptExpression();
+                    exp.Func = RptExpFunc.Unknown;
+                    exp.VarName = str.Substring(1, str.Length - 2);
+                    Expressions.Add(exp);
+                }
+                else
+                {
+                    Expressions.Add(ParseExpression(str));
+                }
+            }
+        }
+
+        public override void WriteXml(XmlWriter p_writer)
+        {
+            p_writer.WriteStartElement("Text");
+            WritePosition(p_writer);
+
+            if (!_data.IsEmpty("val"))
+                p_writer.WriteAttributeString("val", _data.Str("val"));
+            if (HideTopDup)
+                p_writer.WriteAttributeString("hidetopdup", "True");
+            if (HideLeftDup)
+                p_writer.WriteAttributeString("hideleftdup", "True");
+            if (AutoHeight)
+                p_writer.WriteAttributeString("autoheight", "True");
+            if (!_data.IsEmpty("scriptid"))
+                p_writer.WriteAttributeString("scriptid", _data.Str("scriptid"));
+            if (WordWrap)
+                p_writer.WriteAttributeString("wordwrap", "True");
+            if (FontFamily != DefaultFontName)
+                p_writer.WriteAttributeString("fontfamily", FontFamily);
+            if (FontSize != DefaultFontSize)
+                p_writer.WriteAttributeString("fontsize", _data.Str("fontsize"));
+            if (Bold)
+                p_writer.WriteAttributeString("bold", "True");
+            if (Italic)
+                p_writer.WriteAttributeString("italic", "True");
+            if (UnderLine)
+                p_writer.WriteAttributeString("underline", "True");
+            if (StrikeOut)
+                p_writer.WriteAttributeString("strikeout", "True");
+            string val = _data.Str("foreground");
+            if (val != _defaultForeground)
+                p_writer.WriteAttributeString("foreground", val);
+            val = _data.Str("background");
+            if (val != _defaultBackground)
+                p_writer.WriteAttributeString("background", val);
+            val = _data.Str("horalign");
+            if (val != _defaultAlign)
+                p_writer.WriteAttributeString("horalign", val);
+            val = _data.Str("veralign");
+            if (val != _defaultAlign)
+                p_writer.WriteAttributeString("veralign", val);
+            if (Margin != 0)
+                p_writer.WriteAttributeString("margin", _data.Str("margin"));
+
+            val = _data.Str("lbc");
+            if (val != _defaultForeground)
+                p_writer.WriteAttributeString("lbc", val);
+            val = _data.Str("tbc");
+            if (val != _defaultForeground)
+                p_writer.WriteAttributeString("tbc", val);
+            val = _data.Str("rbc");
+            if (val != _defaultForeground)
+                p_writer.WriteAttributeString("rbc", val);
+            val = _data.Str("bbc");
+            if (val != _defaultForeground)
+                p_writer.WriteAttributeString("bbc", val);
+
+            val = _data.Str("lbs");
+            if (val != _defaultBorder)
+                p_writer.WriteAttributeString("lbs", val);
+            val = _data.Str("tbs");
+            if (val != _defaultBorder)
+                p_writer.WriteAttributeString("tbs", val);
+            val = _data.Str("rbs");
+            if (val != _defaultBorder)
+                p_writer.WriteAttributeString("rbs", val);
+            val = _data.Str("bbs");
+            if (val != _defaultBorder)
+                p_writer.WriteAttributeString("bbs", val);
+
+            p_writer.WriteEndElement();
+        }
+        #endregion
 
         /// <summary>
         /// 解析表达式
@@ -565,26 +611,5 @@ namespace Dt.Base.Report
             }
             return color;
         }
-    }
-
-    /// <summary>
-    /// 报表预览点击文本时的操作
-    /// </summary>
-    public enum TextClickAction
-    {
-        /// <summary>
-        /// 无操作
-        /// </summary>
-        None,
-
-        /// <summary>
-        /// 打开新报表
-        /// </summary>
-        OpenReport,
-
-        /// <summary>
-        /// 允许自定义脚本
-        /// </summary>
-        RunScript
     }
 }
