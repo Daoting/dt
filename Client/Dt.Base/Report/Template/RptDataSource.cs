@@ -32,8 +32,8 @@ namespace Dt.Base.Report
                 { "id" },
                 { "isscritp", typeof(bool) },
                 { "srv" },
-                { "cols" },
                 { "sql" },
+                { "cols" },
             };
         }
 
@@ -165,19 +165,11 @@ namespace Dt.Base.Report
         }
 
         /// <summary>
-        /// 服务名称或脚本类型
+        /// 服务名称
         /// </summary>
         public string Srv
         {
             get { return _row.Str("srv"); }
-        }
-
-        /// <summary>
-        /// 数据源列
-        /// </summary>
-        public string Cols
-        {
-            get { return _row.Str("cols"); }
         }
 
         /// <summary>
@@ -186,6 +178,14 @@ namespace Dt.Base.Report
         public string Sql
         {
             get { return _row.Str("sql"); }
+        }
+
+        /// <summary>
+        /// 数据源列
+        /// </summary>
+        public string Cols
+        {
+            get { return _row.Str("cols"); }
         }
     }
 }

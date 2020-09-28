@@ -21,7 +21,7 @@ namespace Dt.Base.Report
     public sealed partial class RptSearchForm : UserControl
     {
 
-        public RptSearchForm(RptInfo p_info)
+        public RptSearchForm(RptInfo p_info, Tab p_tab)
         {
             InitializeComponent();
         }

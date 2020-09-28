@@ -773,53 +773,6 @@ namespace Dt.Core
         }
         #endregion
 
-        #region Xml
-        /// <summary>
-        /// 读取xml中的单元格数据，元素名称任意，xml内容形如：
-        ///   Param id="参数标识" name="参数名" type="double"
-        /// </summary>
-        /// <param name="p_reader"></param>
-        public void ReadXml(XmlReader p_reader)
-        {
-            if (p_reader == null)
-                return;
-
-            for (int i = 0; i < p_reader.AttributeCount; i++)
-            {
-                p_reader.MoveToAttribute(i);
-                string id = p_reader.Name;
-                if (_cells.Contains(id))
-                    _cells[id].InitVal(p_reader.Value);
-            }
-            p_reader.MoveToElement();
-        }
-
-        /// <summary>
-        /// 序列化行数据xml
-        /// </summary>
-        /// <param name="p_writer"></param>
-        public void WriteXml(XmlWriter p_writer)
-        {
-            if (p_writer == null)
-                return;
-
-            foreach (var cell in _cells)
-            {
-                string val = cell.GetVal<string>();
-
-                // 为空或与默认值相同时不输出
-                if (string.IsNullOrEmpty(val))
-                    continue;
-
-                // 列值以属性输出
-                if (cell.Type == typeof(DateTime))
-                    p_writer.WriteAttributeString(cell.ID, ((DateTime)cell.Val).ToString("yyyy-MM-ddTHH:mm:ss.ffffff"));
-                else
-                    p_writer.WriteAttributeString(cell.ID, val);
-            }
-        }
-        #endregion
-
         #region INotifyPropertyChanged
         /// <summary>
         /// 属性 IsChanged 变化事件

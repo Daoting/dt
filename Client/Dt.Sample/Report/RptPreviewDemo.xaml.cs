@@ -14,7 +14,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
+using System.Xml;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -53,7 +56,28 @@ namespace Dt.Sample
 
         void OnRptGroup(object sender, RoutedEventArgs e)
         {
+            //Table tbl = new Table();
+            //using (var stream = typeof(RptDesignDemo).Assembly.GetManifestResourceStream($"Dt.Sample.Report.数据源.{_tb.Text}.xml"))
+            //{
+            //    using (XmlReader reader = XmlReader.Create(stream, AtKit.ReaderSettings))
+            //    {
+            //        tbl.ReadRpcXml(reader);
+            //    }
+            //}
 
+
+            //using (var stream = new MemoryStream())
+            //{
+            //    using (var writer = new Utf8JsonWriter(stream, JsonOptions.IndentedWriter))
+            //    {
+            //        JsonRpcSerializer.Serialize(tbl, writer);
+            //    }
+            //    var str = Encoding.UTF8.GetString(stream.ToArray());
+            //    DataPackage data = new DataPackage();
+            //    data.SetText(str);
+            //    Clipboard.SetContent(data);
+            //    AtKit.Msg("已保存到剪切板！");
+            //}
         }
     }
 
@@ -71,5 +95,26 @@ namespace Dt.Sample
             });
         }
 
+    }
+
+    public class MyRptScript : RptScript
+    {
+        public override Task<Table> GetData(string p_name)
+        {
+            return Task.Run(() =>
+            {
+                using (var stream = typeof(RptDesignDemo).Assembly.GetManifestResourceStream($"Dt.Sample.Report.数据源.{p_name}.json"))
+                {
+                    return Table.Create(stream);
+                }
+            });
+        }
+
+        public override void InitMenu(Menu p_menu)
+        {
+            p_menu.Items.Add(new Mi { ID = "显示网格", IsCheckable = true, Cmd = View.CmdGridLine });
+            p_menu.Items.Add(new Mi { ID = "显示列头", IsCheckable = true, Cmd = View.CmdColHeader });
+            p_menu.Items.Add(new Mi { ID = "显示行头", IsCheckable = true, Cmd = View.CmdRowHeader });
+        }
     }
 }

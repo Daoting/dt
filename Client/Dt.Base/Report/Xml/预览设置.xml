@@ -1,8 +1,10 @@
-﻿<View hidesearchform="False"
+﻿<View script="Dt.Base.MyScript,Dt.Base"
+      showsearchform="False"
       autoquery="False"
       showcolheader="False"
       showrowheader="False"
       showgridline="False"
+      showmenu="False"
       showsearchmi="False"
       showexportmi="False"
       showprintmi="False" />

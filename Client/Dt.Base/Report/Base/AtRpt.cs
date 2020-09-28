@@ -24,20 +24,21 @@ namespace Dt.Base
     /// </summary>
     public static class AtRpt
     {
-        #region 成员变量
         const string _assertMsg = "报表描述信息不完整！";
-        
-        #endregion
 
         /// <summary>
         /// 打开新窗口显示报表
         /// </summary>
         /// <param name="p_info">报表描述信息</param>
         /// <param name="p_icon">图标</param>
-        public static void Show(RptInfo p_info, string p_winTitle = null, Icons p_icon = Icons.折线图)
+        public static async void Show(RptInfo p_info, string p_winTitle = null, Icons p_icon = Icons.折线图)
         {
             Throw.IfNull(p_info, _assertMsg);
-            AtApp.OpenWin(typeof(RptViewWin), string.IsNullOrEmpty(p_winTitle) ? p_info.Name : p_winTitle, p_icon, p_info);
+
+            if (await p_info.Init())
+                AtApp.OpenWin(typeof(RptViewWin), string.IsNullOrEmpty(p_winTitle) ? p_info.Name : p_winTitle, p_icon, p_info);
+            else
+                AtKit.Warn($"初始化报表模板[{p_info.Name}]出错！");
         }
 
         /// <summary>
@@ -77,7 +78,7 @@ namespace Dt.Base
                 AtApp.OpenWin(typeof(RptDesignHome), string.IsNullOrEmpty(p_winTitle) ? p_info.Name : p_winTitle, p_icon, p_info);
                 return true;
             }
-            return false; 
+            return false;
         }
 
         /// <summary>
@@ -133,25 +134,6 @@ namespace Dt.Base
             return sb.ToString();
         }
 
-        /// <summary>
-        /// 根据参数默认值创建初始查询参数（自动查询时用）
-        /// </summary>
-        /// <param name="p_info"></param>
-        /// <returns></returns>
-        internal static Dict CreateDefaultParams(RptInfo p_info)
-        {
-            if (p_info == null || p_info.Root == null || p_info.Root.Params == null || p_info.Root.Params.Data == null)
-                return null;
-
-            Dict dict = new Dict();
-            foreach (var row in p_info.Root.Params.Data)
-            {
-                //dict.Add(row.Str("id"), cell.Val);
-            }
-            return dict;
-        }
-
-        
         /// <summary>
         /// 校验报表组描述信息
         /// </summary>

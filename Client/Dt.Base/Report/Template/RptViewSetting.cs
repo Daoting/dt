@@ -22,11 +22,12 @@ namespace Dt.Base.Report
         {
             Data = new Row();
             Data.AddCell<string>("script");
-            Data.AddCell<bool>("hidesearchform");
+            Data.AddCell("showsearchform", true);
             Data.AddCell<bool>("autoquery");
             Data.AddCell<bool>("showcolheader");
             Data.AddCell<bool>("showrowheader");
             Data.AddCell<bool>("showgridline");
+            Data.AddCell("showmenu", true);
             Data.AddCell<bool>("showsearchmi");
             Data.AddCell("showexportmi", true);
             Data.AddCell("showprintmi", true);
@@ -47,12 +48,12 @@ namespace Dt.Base.Report
         }
 
         /// <summary>
-        /// 获取设置是否隐藏报表查询面板（报表组时无效），默认false
+        /// 获取设置是否显示报表查询面板，默认true，报表组时始终true
         /// </summary>
-        public bool HideSearchForm
+        public bool ShowSearchForm
         {
-            get { return Data.Bool("hidesearchform"); }
-            set { Data["hidesearchform"] = value; }
+            get { return Data.Bool("showsearchform"); }
+            set { Data["showsearchform"] = value; }
         }
 
         /// <summary>
@@ -89,6 +90,15 @@ namespace Dt.Base.Report
         {
             get { return Data.Bool("showgridline"); }
             set { Data["showgridline"] = value; }
+        }
+
+        /// <summary>
+        /// 获取设置是否显示菜单，默认true
+        /// </summary>
+        public bool ShowMenu
+        {
+            get { return Data.Bool("showmenu"); }
+            set { Data["showmenu"] = value; }
         }
 
         /// <summary>
@@ -130,8 +140,8 @@ namespace Dt.Base.Report
             string val = Data.Str("script");
             if (!string.IsNullOrEmpty(val))
                 p_writer.WriteAttributeString("script", val);
-            if (HideSearchForm)
-                p_writer.WriteAttributeString("hidesearchform", "True");
+            if (!ShowSearchForm)
+                p_writer.WriteAttributeString("showsearchform", "False");
             if (AutoQuery)
                 p_writer.WriteAttributeString("autoquery", "True");
             if (ShowColHeader)
@@ -140,6 +150,8 @@ namespace Dt.Base.Report
                 p_writer.WriteAttributeString("showrowheader", "True");
             if (ShowGridLine)
                 p_writer.WriteAttributeString("showgridline", "True");
+            if (!ShowMenu)
+                p_writer.WriteAttributeString("showmenu", "False");
             if (ShowSearchMi)
                 p_writer.WriteAttributeString("showsearchmi", "True");
             if (!ShowExportMi)

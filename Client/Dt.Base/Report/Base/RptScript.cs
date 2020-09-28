@@ -7,6 +7,7 @@
 #endregion
 
 #region 命名空间
+using Dt.Base.Report;
 using Dt.Core;
 using System.Threading.Tasks;
 #endregion
@@ -18,18 +19,22 @@ namespace Dt.Base
     /// </summary>
     public abstract class RptScript
     {
+        /// <summary>
+        /// 报表预览控件
+        /// </summary>
+        public RptView View { get; internal set; }
+
         public virtual Task<Table> GetData(string p_name)
         {
             return Task.FromResult(default(Table));
         }
 
         /// <summary>
-        /// 初始化工具栏菜单
+        /// 初始化工具栏菜单，报表组不支持
         /// </summary>
         /// <param name="p_menu"></param>
         public virtual void InitMenu(Menu p_menu)
         {
-
         }
 
         /// <summary>

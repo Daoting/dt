@@ -1,7 +1,7 @@
 ﻿<Data>
   <Tbl id="数据集名称1"
        isscritp="False"
-       srv="服务名称或脚本类型"
-       cols="id,name,address"
-       sql="select * from dual" />
+       srv="服务名称"
+       sql="select * from dual"
+       cols="id,name,address" />
 </Data>

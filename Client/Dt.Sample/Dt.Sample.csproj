@@ -7,6 +7,13 @@
   <Import Project="..\Common\dtc.props" />
 
   <ItemGroup>
+    <None Remove="Report\数据源\个人成绩.json" />
+    <None Remove="Report\数据源\个人成绩_矩阵标题.json" />
+    <None Remove="Report\数据源\图表数据.json" />
+    <None Remove="Report\数据源\成绩汇总.json" />
+    <None Remove="Report\数据源\甘特图.json" />
+    <None Remove="Report\数据源\网损情况.json" />
+    <None Remove="Report\数据源\通讯录.json" />
     <None Remove="Report\模板\两层矩阵.xml" />
     <None Remove="Report\模板\分组表格.xml" />
     <None Remove="Report\模板\含头尾表格.xml" />
@@ -35,6 +42,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Report\数据源\个人成绩.json" />
+    <EmbeddedResource Include="Report\数据源\个人成绩_矩阵标题.json" />
+    <EmbeddedResource Include="Report\数据源\图表数据.json" />
+    <EmbeddedResource Include="Report\数据源\成绩汇总.json" />
+    <EmbeddedResource Include="Report\数据源\甘特图.json" />
+    <EmbeddedResource Include="Report\数据源\网损情况.json" />
+    <EmbeddedResource Include="Report\数据源\通讯录.json" />
     <EmbeddedResource Include="Report\模板\两层矩阵.xml" />
     <EmbeddedResource Include="Report\模板\分组表格.xml" />
     <EmbeddedResource Include="Report\模板\自动行数列表.xml" />

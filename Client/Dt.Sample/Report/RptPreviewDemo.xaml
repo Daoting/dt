@@ -43,5 +43,6 @@
             <Button Content="点击脚本2" />
             <Button Content="报表组" Click="OnRptGroup" />
         </StackPanel>
+        <TextBox x:Name="_tb" />
     </a:Fv>
 </a:Win>
