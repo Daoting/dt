@@ -7,12 +7,9 @@
 #endregion
 
 #region 命名空间
-using Dt.Core;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Xml;
-
 #endregion
 
 namespace Dt.Base.Report
@@ -88,13 +85,14 @@ namespace Dt.Base.Report
         /// <summary>
         /// 构造页眉实例
         /// </summary>
-        public void Build()
+        public Task Build()
         {
             if (Items.Count > 0)
             {
                 Inst.Header = new RptHeaderInst(this);
-                BuildChild();
+                return BuildChild();
             }
+            return Task.CompletedTask;
         }
 
         /// <summary>

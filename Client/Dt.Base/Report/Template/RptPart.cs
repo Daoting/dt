@@ -7,15 +7,15 @@
 #endregion
 
 #region 命名空间
-using Dt.Core;
 using Dt.Cells.Data;
+using Dt.Core;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Text;
-using System.Xml;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml;
 #endregion
 
 namespace Dt.Base.Report
@@ -165,11 +165,11 @@ namespace Dt.Base.Report
         /// <summary>
         /// 构造所有报表项实例
         /// </summary>
-        public void BuildChild()
+        public async Task BuildChild()
         {
             foreach (RptItem item in Items)
             {
-                item.Build();
+                await item.Build();
             }
         }
 

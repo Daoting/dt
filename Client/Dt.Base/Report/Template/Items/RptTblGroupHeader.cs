@@ -11,6 +11,7 @@ using Dt.Core;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Xml;
 
 #endregion
@@ -31,7 +32,7 @@ namespace Dt.Base.Report
         /// 构造报表项实例
         /// </summary>
         /// <param name="p_filter"></param>
-        public void Build(Dictionary<string, string> p_filter)
+        public Task Build(Dictionary<string, string> p_filter)
         {
             RptRootInst inst = Root.Inst;
             RptTblGroupHeaderInst header = new RptTblGroupHeaderInst(this);
@@ -42,7 +43,7 @@ namespace Dt.Base.Report
             if (inst.CurrentTable != null)
                 inst.CurrentTable.AddRow(header);
             inst.CurrentParent = header;
-            BuildChild();
+            return BuildChild();
         }
 
         public override void WriteXml(XmlWriter p_writer)

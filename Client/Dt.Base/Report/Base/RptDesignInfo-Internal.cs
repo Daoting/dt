@@ -2,12 +2,13 @@
 /**************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2014-06-11 创建
+* 日志: 2020-09-25 创建
 **************************************************************************/
 #endregion
 
 #region 命名空间
 using Dt.Base;
+using Dt.Base.Report;
 using Dt.Cells.Data;
 using Dt.Core;
 using System;
@@ -17,69 +18,70 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.Base.Report
+namespace Dt.Base
 {
     /// <summary>
     /// 报表设计的描述信息
     /// </summary>
-    public abstract class RptDesignInfo
+    public abstract partial class RptDesignInfo
     {
+        #region 成员变量
         internal readonly RptCmdHistory History = new RptCmdHistory();
-        RptRoot _root;
 
-        #region 外部方法
-        /// <summary>
-        /// 获取设置报表名称，作为唯一标识识别窗口用
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// 读取模板内容
-        /// </summary>
-        /// <returns></returns>
-        public abstract Task<string> ReadTemplate();
-
-        /// <summary>
-        /// 保存模板内容
-        /// </summary>
-        /// <param name="p_xml"></param>
-        public abstract void SaveTemplate(string p_xml);
         #endregion
 
-        internal event EventHandler<RptRoot> TemplateChanged;
+        internal event EventHandler<TemplateChangedArgs> TemplateChanged;
 
+        internal RptRoot Root { get; private set; }
 
-        internal async Task<RptRoot> GetTemplate()
+        #region 报表模板
+        /// <summary>
+        /// 初始化报表模板
+        /// </summary>
+        /// <returns></returns>
+        internal async Task<bool> InitTemplate()
         {
-            // 报表设计时始终不缓存模板！
-            if (_root == null)
+            try
             {
-                // 初次加载模板
+                // 报表设计时始终不缓存模板！
                 string define = await ReadTemplate();
-                _root = await RptKit.DeserializeTemplate(define);
-                _root.ValueChanged += OnItemValueChanged;
+                Root = await AtRpt.DeserializeTemplate(define);
+                Root.ValueChanged += OnItemValueChanged;
+                return true;
             }
-            return _root;
+            catch { }
+
+            return false;
         }
 
+        /// <summary>
+        /// 导入报表模板
+        /// </summary>
+        /// <param name="p_define"></param>
+        /// <returns></returns>
         internal async Task ImportTemplate(string p_define)
         {
-            if (_root != null)
-                _root.ValueChanged -= OnItemValueChanged;
+            var old = Root;
+            if (old != null)
+                old.ValueChanged -= OnItemValueChanged;
 
-            _root = await RptKit.DeserializeTemplate(p_define);
-            _root.ValueChanged += OnItemValueChanged;
-            TemplateChanged?.Invoke(this, _root);
+            Root = await AtRpt.DeserializeTemplate(p_define);
+            Root.ValueChanged += OnItemValueChanged;
+            TemplateChanged?.Invoke(this, new TemplateChangedArgs { NewRoot = Root, OldRoot = old });
         }
 
+        /// <summary>
+        /// 保存报表模板
+        /// </summary>
         internal void SaveTemplate()
         {
-            if (_root != null)
+            if (Root != null)
             {
-                SaveTemplate(RptKit.SerializeTemplate(_root));
+                SaveTemplate(AtRpt.SerializeTemplate(Root));
                 History.Clear();
             }
         }
+        #endregion
 
         #region 命令
         /// <summary>
@@ -133,8 +135,7 @@ namespace Dt.Base.Report
         }
         #endregion
 
-        #region 内部方法
-
+        #region 比较
         public override bool Equals(object obj)
         {
             if (obj == null || !(obj is RptDesignInfo))
@@ -142,9 +143,6 @@ namespace Dt.Base.Report
 
             if (ReferenceEquals(this, obj))
                 return true;
-
-            if (GetType() != obj.GetType())
-                return false;
 
             // 只比较标识，识别窗口用
             return Name == ((RptDesignInfo)obj).Name;
@@ -157,5 +155,12 @@ namespace Dt.Base.Report
             return Name.GetHashCode();
         }
         #endregion
+    }
+
+    internal class TemplateChangedArgs
+    {
+        public RptRoot NewRoot { get; set; }
+
+        public RptRoot OldRoot { get; set; }
     }
 }

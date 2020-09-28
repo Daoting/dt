@@ -22,9 +22,9 @@ using Windows.UI.Xaml.Controls;
 
 namespace Dt.Sample
 {
-    public partial class RptDesignDemo : Win
+    public partial class RptPreviewDemo : Win
     {
-        public RptDesignDemo()
+        public RptPreviewDemo()
         {
             InitializeComponent();
             AttachEvent();
@@ -38,7 +38,8 @@ namespace Dt.Sample
                 {
                     foreach (Button btn in pnl.Children.OfType<Button>())
                     {
-                        btn.Click += OnBtnClick;
+                        if (btn.Content.ToString() != "报表组")
+                            btn.Click += OnBtnClick;
                     }
                 }
             }
@@ -47,11 +48,16 @@ namespace Dt.Sample
         void OnBtnClick(object sender, RoutedEventArgs e)
         {
             string name = ((Button)sender).Content.ToString();
-            _ = AtRpt.ShowDesign(new MyRptDesignInfo { Name = name });
+            AtRpt.Show(new MyRptInfo { Name = name });
+        }
+
+        void OnRptGroup(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 
-    public class MyRptDesignInfo : RptDesignInfo
+    public class MyRptInfo : RptInfo
     {
         public override Task<string> ReadTemplate()
         {
@@ -65,12 +71,5 @@ namespace Dt.Sample
             });
         }
 
-        public override void SaveTemplate(string p_xml)
-        {
-            DataPackage data = new DataPackage();
-            data.SetText(p_xml);
-            Clipboard.SetContent(data);
-            AtKit.Msg("已保存到剪切板！");
-        }
     }
 }

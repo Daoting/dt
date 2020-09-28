@@ -20,18 +20,78 @@ namespace Dt.Base.Report
 {
     public sealed partial class MatrixLevelForm : UserControl
     {
-        RptDesignWin _owner;
+        RptDesignInfo _info;
         RptMtxLevel _level;
 
-        public MatrixLevelForm(RptDesignWin p_owner)
+        public MatrixLevelForm(RptDesignInfo p_info)
         {
             InitializeComponent();
-            _owner = p_owner;
+            _info = p_info;
+            _fvMtx.Info = _info;
         }
 
         internal void LoadItem(RptText p_item)
         {
             _level = p_item.Parent as RptMtxLevel;
+            _fv.Data = _level.Data;
+            ((CList)_fv["field"]).Data = _info.Root.Data.GetCols(_level.Matrix.Tbl);
+            _fvMtx.LoadItem(_level.Parent.Parent as RptMatrix);
+        }
+
+        void OnAddLevel(object sender, RoutedEventArgs e)
+        {
+            bool isOverlap = false;
+            if (_level.SubTitles.Count > 0)
+                isOverlap = IsOverLap();
+
+            if (isOverlap)
+                AtKit.Warn("增加行后与已有控件位置发生重叠，请调整控件位置后重试！");
+            else
+                _info.ExecuteCmd(RptCmds.AddSubLevel, new SubLevelCmdArgs(_level.Parent as RptMtxHeader));
+        }
+
+        void OnAddTotal(object sender, RoutedEventArgs e)
+        {
+            if (IsOverLap())
+                AtKit.Warn("增加行后与已有控件位置发生重叠，请调整控件位置后重试！");
+            else
+                _info.ExecuteCmd(RptCmds.AddSubTotal, new SubTotalCmdArgs(_level));
+        }
+
+        void OnAddTitle(object sender, RoutedEventArgs e)
+        {
+            bool isOverlap = false;
+            if (_level.SubTitles.Count > 0)
+                isOverlap = IsOverLap();
+
+            if (isOverlap)
+                AtKit.Warn("增加行后与已有控件位置发生重叠，请调整控件位置后重试！");
+            else
+                _info.ExecuteCmd(RptCmds.AddSubTitle, new SubTitleCmdArgs(_level));
+        }
+
+        void OnDelLevel(object sender, RoutedEventArgs e)
+        {
+            if ((_level.Parent as RptMtxHeader).Levels.IndexOf(_level) == 0)
+                AtKit.Warn("根层次不可删除！");
+            else
+                _info.ExecuteCmd(RptCmds.DelSubLevel, new SubLevelCmdArgs(_level.Parent as RptMtxHeader, _level));
+        }
+
+        /// <summary>
+        /// 扩展位置是否与其他控件冲突
+        /// </summary>
+        /// <returns></returns>
+        bool IsOverLap()
+        {
+            if (_level.Parent is RptMtxRowHeader)
+            {
+                return (_level.Matrix).TestIncIntersect(0, 1);
+            }
+            else
+            {
+                return (_level.Matrix).TestIncIntersect(1);
+            }
         }
     }
 }

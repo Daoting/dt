@@ -7,34 +7,32 @@
 #endregion
 
 #region 命名空间
-using Dt.Core;
+using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Base
 {
     /// <summary>
-    /// 单元格信息，提供给脚本用
+    /// 报表设计的描述信息
     /// </summary>
-    public interface IRptCell
+    public abstract partial class RptDesignInfo
     {
         /// <summary>
-        /// 获取单元格字符串
+        /// 获取设置报表名称，作为唯一标识识别窗口用
         /// </summary>
-        string Text { get; }
+        public string Name { get; set; }
 
         /// <summary>
-        /// 获取对应的数据行
+        /// 读取模板内容
         /// </summary>
-        Row Data { get; }
+        /// <returns></returns>
+        public abstract Task<string> ReadTemplate();
 
         /// <summary>
-        /// 获取单元格行索引
+        /// 保存模板内容
         /// </summary>
-        int Row { get; }
+        /// <param name="p_xml"></param>
+        public abstract void SaveTemplate(string p_xml);
 
-        /// <summary>
-        /// 获取单元格列索引
-        /// </summary>
-        int Col { get; }
     }
 }

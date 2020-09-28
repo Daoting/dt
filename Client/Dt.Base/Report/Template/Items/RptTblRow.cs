@@ -7,9 +7,8 @@
 #endregion
 
 #region 命名空间
-using Dt.Core;
+using System.Threading.Tasks;
 using System.Xml;
-
 #endregion
 
 namespace Dt.Base.Report
@@ -38,7 +37,7 @@ namespace Dt.Base.Report
         /// <summary>
         /// 构造报表项实例
         /// </summary>
-        public override void Build()
+        public override Task Build()
         {
             RptRootInst inst = Root.Inst;
             RptTblRowInst row = new RptTblRowInst(this);
@@ -55,7 +54,7 @@ namespace Dt.Base.Report
             if (inst.CurrentTable != null)
                 inst.CurrentTable.AddRow(row);
             inst.CurrentParent = row;
-            BuildChild();
+            return BuildChild();
         }
 
         public override void WriteXml(XmlWriter p_writer)

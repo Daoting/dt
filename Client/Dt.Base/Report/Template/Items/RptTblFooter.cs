@@ -7,10 +7,7 @@
 #endregion
 
 #region 命名空间
-using Dt.Core;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Xml;
 
 #endregion
@@ -30,14 +27,14 @@ namespace Dt.Base.Report
         /// <summary>
         /// 构造报表项实例
         /// </summary>
-        public override void Build()
+        public override Task Build()
         {
             RptRootInst inst = Root.Inst;
             RptTblFooterInst footer = new RptTblFooterInst(this);
             if (inst.CurrentTable != null)
                 inst.CurrentTable.Footer = footer;
             inst.CurrentParent = footer;
-            BuildChild();
+            return BuildChild();
         }
 
         public override void WriteXml(XmlWriter p_writer)

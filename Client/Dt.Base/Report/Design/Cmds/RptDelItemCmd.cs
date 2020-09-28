@@ -44,19 +44,18 @@ namespace Dt.Base.Report
     /// </summary>
     internal class DelRptItemArgs
     {
-        public DelRptItemArgs(Worksheet p_sheet, RptItem p_rptItem)
+        public DelRptItemArgs(RptItem p_rptItem)
         {
-            Container = p_rptItem.Part;
             RptItem = p_rptItem;
-            Sheet = p_sheet;
         }
 
         /// <summary>
         /// 获取所属容器，页眉、页脚或模板
         /// </summary>
-        public RptPart Container { get; }
-
-        public Worksheet Sheet { get; }
+        public RptPart Container
+        {
+            get { return RptItem.Part; }
+        }
 
         /// <summary>
         /// 获取要放置的区域

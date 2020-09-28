@@ -150,7 +150,6 @@ namespace Dt.Base.Report
                 return;
             }
 
-            Dictionary<string, RptData> dt = Inst.Info.DataSet;
             StringBuilder sb = new StringBuilder();
             foreach (var exp in exps)
             {
@@ -224,7 +223,7 @@ namespace Dt.Base.Report
                 {
                     RptData src;
                     string tbl = exp.DataName;
-                    if (string.IsNullOrEmpty(tbl) || !dt.TryGetValue(tbl, out src))
+                    if (string.IsNullOrEmpty(tbl) || (src = Inst.Info.GetData(tbl).Result) == null)
                         continue;
 
                     Data = src.CurrentRow;

@@ -7,10 +7,10 @@
 #endregion
 
 #region 命名空间
-using Dt.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 #endregion
 
 namespace Dt.Base.Report
@@ -142,11 +142,11 @@ namespace Dt.Base.Report
         /// 绘制报表
         /// </summary>
         /// <returns></returns>
-        public bool Draw()
+        public async Task<bool> Draw()
         {
             // 构造报表项实例
             RptRoot root = Info.Root;
-            root.Build(this);
+            await root.Build(this);
 
             // 页面固定尺寸
             HeaderHeight = root.Header.ActualHeight;
@@ -155,7 +155,7 @@ namespace Dt.Base.Report
             BodyWidth = root.Setting.ValidWidth - PageGap;
 
             // 输出成页，页眉页脚在创建页时输出
-            RptPage page = CreatePage(0, 0);
+            CreatePage(0, 0);
             if (Body != null)
                 Body.Output();
 

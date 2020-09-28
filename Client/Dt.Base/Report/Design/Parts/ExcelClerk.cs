@@ -32,23 +32,22 @@ namespace Dt.Base.Report
         /// <summary>
         /// 绑定事件
         /// </summary>
-        public void AttachEvent()
+        public void AttachEvent(RptRoot p_root)
         {
-            RptRoot root = _owner.Root;
-            root.ItemsChanged += OnItemsChanged;
-            root.TextChanged += OnTextChanged;
-            root.Updated += OnUpdated;
+            p_root.ItemsChanged += OnItemsChanged;
+            p_root.TextChanged += OnTextChanged;
+            p_root.Updated += OnUpdated;
         }
 
         /// <summary>
         /// 松绑事件
         /// </summary>
-        public void DetachEvent()
+        /// <param name="p_root"></param>
+        public void DetachEvent(RptRoot p_root)
         {
-            RptRoot root = _owner.Root;
-            root.ItemsChanged -= OnItemsChanged;
-            root.TextChanged -= OnTextChanged;
-            root.Updated -= OnUpdated;
+            p_root.ItemsChanged -= OnItemsChanged;
+            p_root.TextChanged -= OnTextChanged;
+            p_root.Updated -= OnUpdated;
         }
 
         /// <summary>
@@ -97,7 +96,7 @@ namespace Dt.Base.Report
                 }
 
                 // 页眉页脚报表项变化时刷新分割线
-                if (sender != _owner.Root.Body)
+                if (sender != _owner.Info.Root.Body)
                     _owner.RefreshSpliter();
             });
         }

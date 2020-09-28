@@ -1,0 +1,8 @@
+﻿<View hidesearchform="False"
+      autoquery="False"
+      showcolheader="False"
+      showrowheader="False"
+      showgridline="False"
+      showsearchmi="False"
+      showexportmi="False"
+      showprintmi="False" />

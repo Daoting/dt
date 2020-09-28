@@ -10,6 +10,7 @@
 using Dt.Core;
 using System;
 using System.Collections.Specialized;
+using System.Threading.Tasks;
 using System.Xml;
 #endregion
 
@@ -29,6 +30,7 @@ namespace Dt.Base.Report
             Header = new RptHeader(this);
             Body = new RptBody(this);
             Footer = new RptFooter(this);
+            ViewSetting = new RptViewSetting();
         }
         #endregion
 
@@ -101,6 +103,11 @@ namespace Dt.Base.Report
         public RptFooter Footer { get; }
 
         /// <summary>
+        /// 默认报表预览窗口的设置
+        /// </summary>
+        public RptViewSetting ViewSetting { get; }
+
+        /// <summary>
         /// 获取报表实例
         /// </summary>
         public RptRootInst Inst { get; set; }
@@ -159,6 +166,9 @@ namespace Dt.Base.Report
                     case "Footer":
                         Footer.ReadXml(p_reader);
                         break;
+                    case "View":
+                        ViewSetting.ReadXml(p_reader);
+                        break;
                 }
             }
         }
@@ -179,6 +189,7 @@ namespace Dt.Base.Report
             Header.WriteXml(p_writer);
             Body.WriteXml(p_writer);
             Footer.WriteXml(p_writer);
+            ViewSetting.WriteXml(p_writer);
 
             p_writer.WriteEndElement();
         }
@@ -187,12 +198,12 @@ namespace Dt.Base.Report
         /// 构造报表实例
         /// </summary>
         /// <param name="p_inst"></param>
-        public void Build(RptRootInst p_inst)
+        public async Task Build(RptRootInst p_inst)
         {
             Inst = p_inst;
-            Header.Build();
-            Body.Build();
-            Footer.Build();
+            await Header.Build();
+            await Body.Build();
+            await Footer.Build();
         }
 
         /// <summary>

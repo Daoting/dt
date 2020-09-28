@@ -18,21 +18,25 @@ using Windows.UI.Xaml.Controls;
 
 namespace Dt.Base.Report
 {
-    public sealed partial class MatrixSubtotalForm : UserControl
+    public sealed partial class RptSearchForm : UserControl
     {
-        RptDesignInfo _info;
-        RptMtxSubtotal _total;
 
-        public MatrixSubtotalForm(RptDesignInfo p_info)
+        public RptSearchForm(RptInfo p_info)
         {
             InitializeComponent();
-            _info = p_info;
         }
 
-        internal void LoadItem(RptText p_item)
+        /// <summary>
+        /// 查询事件
+        /// </summary>
+        public event EventHandler<RptInfo> Query;
+
+        /// <summary>
+        /// 执行查询
+        /// </summary>
+        internal void DoQuery()
         {
-            if (p_item != null)
-                _total = p_item.Parent as RptMtxSubtotal;
+
         }
     }
 }

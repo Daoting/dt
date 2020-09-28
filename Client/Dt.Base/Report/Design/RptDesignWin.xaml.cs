@@ -39,7 +39,7 @@ namespace Dt.Base.Report
         {
             InitializeComponent();
             Info = p_info;
-            Info.TemplateChanged += (s, e) => LoadTemplate();
+            Info.TemplateChanged += (s, e) => LoadTemplate(e.NewRoot, e.OldRoot);
 
             _excelClerk = new ExcelClerk(this);
             _selectionClerk = new SelectionClerk(this);
@@ -48,12 +48,12 @@ namespace Dt.Base.Report
             _menu["撤消"].Cmd = new UndoCmd(Info);
             _menu["重做"].Cmd = new RedoCmd(Info);
             _menu["网格"].IsChecked = true;
-            LoadTemplate();
+            LoadTemplate(Info.Root, null);
         }
 
         internal RptDesignInfo Info { get; }
 
-        internal RptRoot Root { get; set; }
+        //internal RptRoot Root { get; set; }
 
         internal Excel Excel
         {
@@ -65,9 +65,9 @@ namespace Dt.Base.Report
         /// </summary>
         public void RefreshSpliter()
         {
-            RptSetting setting = Root.Setting;
-            double headHeight = Root.Header.ActualHeight;
-            double footHeight = Root.Footer.ActualHeight;
+            RptSetting setting = Info.Root.Setting;
+            double headHeight = Info.Root.Header.ActualHeight;
+            double footHeight = Info.Root.Footer.ActualHeight;
             double newHeight = setting.ValidHeight - headHeight - footHeight;
             double newWidth = setting.ValidWidth;
             if (newHeight > 0 && newWidth > 0)
@@ -93,11 +93,11 @@ namespace Dt.Base.Report
             RptPart container;
             int index = _excel.ActiveSheetIndex;
             if (index == 1)
-                container = Root.Header;
+                container = Info.Root.Header;
             else if (index == 2)
-                container = Root.Footer;
+                container = Info.Root.Footer;
             else
-                container = Root.Body;
+                container = Info.Root.Body;
             return container;
         }
 
@@ -122,7 +122,7 @@ namespace Dt.Base.Report
                 LoadCellForm(txt);
 
                 if (_fmTbl == null)
-                    _fmTbl = new TableForm(this);
+                    _fmTbl = new TableForm(Info);
                 TblRangeType tblRng = tbl.GetRangeType(p_range.Row, p_range.Column);
                 _fmTbl.LoadItem(txt, tblRng == TblRangeType.Group);
                 _tabItem.Content = _fmTbl;
@@ -139,25 +139,25 @@ namespace Dt.Base.Report
                 {
                     case MtxRangeType.Level:
                         if (_fmMtxLevel == null)
-                            _fmMtxLevel = new MatrixLevelForm(this);
+                            _fmMtxLevel = new MatrixLevelForm(Info);
                         _fmMtxLevel.LoadItem(txt);
                         _tabItem.Content = _fmMtxLevel;
                         break;
                     case MtxRangeType.Subtotal:
                         if (_fmMtxSubtotal == null)
-                            _fmMtxSubtotal = new MatrixSubtotalForm(this);
+                            _fmMtxSubtotal = new MatrixSubtotalForm(Info);
                         _fmMtxSubtotal.LoadItem(txt);
                         _tabItem.Content = _fmMtxSubtotal;
                         break;
                     case MtxRangeType.Subtitle:
                         if (_fmMtxSubtitle == null)
-                            _fmMtxSubtitle = new MatrixSubtitleForm(this);
+                            _fmMtxSubtitle = new MatrixSubtitleForm(Info);
                         _fmMtxSubtitle.LoadItem(txt);
                         _tabItem.Content = _fmMtxSubtitle;
                         break;
                     default:
                         if (_fmMatrix == null)
-                            _fmMatrix = new MatrixForm(this);
+                            _fmMatrix = new MatrixForm { Info = Info };
                         _fmMatrix.LoadItem(mtx);
                         _tabItem.Content = _fmMatrix;
                         break;
@@ -168,7 +168,7 @@ namespace Dt.Base.Report
             if (p_item is RptChart chart)
             {
                 if (_fmChart == null)
-                    _fmChart = new ChartForm(this);
+                    _fmChart = new ChartForm(Info);
                 _fmChart.LoadItem(chart);
                 _tabItem.Content = _fmChart;
                 _tabCell.Content = null;
@@ -224,25 +224,23 @@ namespace Dt.Base.Report
         #endregion
 
         #region 初始加载
-        async void LoadTemplate()
+        void LoadTemplate(RptRoot p_newRoot, RptRoot p_oldRoot)
         {
+            Throw.IfNull(p_newRoot, "报表模板不可为空！");
             _excel.IsBusy = true;
-            ClearForms();
-            var root = await Info.GetTemplate();
 
             try
             {
-                if (Root != null)
+                ClearForms();
+                if (p_oldRoot != null)
                 {
-                    Root.Serializing -= OnBeforeSerialize;
-                    _excelClerk.DetachEvent();
+                    p_oldRoot.Serializing -= OnBeforeSerialize;
+                    _excelClerk.DetachEvent(p_oldRoot);
                     _excel.ColumnWidthChanged -= OnColumnWidthChanged;
                     _excel.RowHeightChanged -= OnRowHeightChanged;
                 }
 
-                Root = root;
-                _excelClerk.AttachEvent();
-
+                _excelClerk.AttachEvent(p_newRoot);
                 using (_excel.Defer())
                 {
                     CreateSheets();
@@ -251,7 +249,7 @@ namespace Dt.Base.Report
                     _excel.DecorationRange = null;
                 }
 
-                Root.Serializing += OnBeforeSerialize;
+                p_newRoot.Serializing += OnBeforeSerialize;
                 _excel.ColumnWidthChanged += OnColumnWidthChanged;
                 _excel.RowHeightChanged += OnRowHeightChanged;
             }
@@ -292,7 +290,7 @@ namespace Dt.Base.Report
         {
             // 内容区域
             Worksheet ws = _excel.Sheets[0];
-            double[] size = Root.Body.Rows;
+            double[] size = Info.Root.Body.Rows;
             if (size != null && size.Length > 0)
             {
                 for (int i = 0; i < size.Length; i++)
@@ -303,14 +301,14 @@ namespace Dt.Base.Report
 
             // 页眉
             ws = _excel.Sheets[1];
-            ws.Rows[0].Height = Root.Header.Height;
+            ws.Rows[0].Height = Info.Root.Header.Height;
 
             // 页脚
             ws = _excel.Sheets[2];
-            ws.Rows[0].Height = Root.Footer.Height;
+            ws.Rows[0].Height = Info.Root.Footer.Height;
 
             // 列宽
-            size = Root.Cols;
+            size = Info.Root.Cols;
             if (size != null && size.Length > 0)
             {
                 for (int i = 0; i < size.Length; i++)
@@ -328,15 +326,15 @@ namespace Dt.Base.Report
         /// </summary>
         void LoadItems()
         {
-            foreach (RptItem item in Root.Body.Items)
+            foreach (RptItem item in Info.Root.Body.Items)
             {
                 _excelClerk.LoadItem(item);
             }
-            foreach (RptItem item in Root.Header.Items)
+            foreach (RptItem item in Info.Root.Header.Items)
             {
                 _excelClerk.LoadItem(item);
             }
-            foreach (RptItem item in Root.Footer.Items)
+            foreach (RptItem item in Info.Root.Footer.Items)
             {
                 _excelClerk.LoadItem(item);
             }
@@ -362,14 +360,14 @@ namespace Dt.Base.Report
         void OnBeforeSerialize(object sender, EventArgs e)
         {
             Worksheet ws = _excel.Sheets[0];
-            RptBody body = Root.Body;
+            RptBody body = Info.Root.Body;
 
             // 列宽
             int maxCol = body.ColSpan;
-            int temp = Root.Header.ColSpan;
+            int temp = Info.Root.Header.ColSpan;
             if (temp > maxCol)
                 maxCol = temp;
-            temp = Root.Footer.ColSpan;
+            temp = Info.Root.Footer.ColSpan;
             if (temp > maxCol)
                 maxCol = temp;
 
@@ -378,7 +376,7 @@ namespace Dt.Base.Report
             {
                 size[i] = ws.Columns[i].Width;
             }
-            Root.Cols = size;
+            Info.Root.Cols = size;
 
             // 内容区域
             int rowSpan = body.RowSpan;
@@ -391,11 +389,11 @@ namespace Dt.Base.Report
 
             // 页眉
             ws = _excel.Sheets[1];
-            Root.Header.SetHeight(ws.Rows[0].Height);
+            Info.Root.Header.SetHeight(ws.Rows[0].Height);
 
             // 页脚
             ws = _excel.Sheets[2];
-            Root.Footer.SetHeight(ws.Rows[0].Height);
+            Info.Root.Footer.SetHeight(ws.Rows[0].Height);
         }
 
         /// <summary>
@@ -434,12 +432,12 @@ namespace Dt.Base.Report
             RptPartType partType = this.GetContainer().PartType;
             if (partType == RptPartType.Header)
             {
-                Root.Header.SetHeight(_excel.ActiveSheet.Rows[e.RowList[0]].Height);
+                Info.Root.Header.SetHeight(_excel.ActiveSheet.Rows[e.RowList[0]].Height);
                 needRefresh = true;
             }
             if (partType == RptPartType.Footer)
             {
-                Root.Footer.SetHeight(_excel.ActiveSheet.Rows[e.RowList[0]].Height);
+                Info.Root.Footer.SetHeight(_excel.ActiveSheet.Rows[e.RowList[0]].Height);
                 needRefresh = true;
             }
             if (needRefresh == true)

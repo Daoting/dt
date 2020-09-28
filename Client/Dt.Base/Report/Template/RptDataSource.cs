@@ -11,7 +11,7 @@ using Dt.Core;
 using System;
 using System.Collections.Generic;
 using System.Xml;
-
+using System.Linq;
 #endregion
 
 namespace Dt.Base.Report
@@ -30,10 +30,10 @@ namespace Dt.Base.Report
             _dataSet = new Table
             {
                 { "id" },
-                { "db" },
-                { "issp" },
+                { "isscritp", typeof(bool) },
+                { "srv" },
                 { "cols" },
-                { "cmd" },
+                { "sql" },
             };
         }
 
@@ -85,6 +85,21 @@ namespace Dt.Base.Report
         }
 
         /// <summary>
+        /// 获取某项数据源
+        /// </summary>
+        /// <param name="p_tblID"></param>
+        /// <returns></returns>
+        public RptDataSourceItem GetDataSourceItem(string p_tblID)
+        {
+            Row row = (from dr in _dataSet
+                       where dr.Str("id") == p_tblID
+                       select dr).FirstOrDefault();
+            if (row != null)
+                return new RptDataSourceItem(row);
+            return null;
+        }
+
+        /// <summary>
         /// 生成字段 
         /// </summary>
         void GenerDic()
@@ -121,6 +136,56 @@ namespace Dt.Base.Report
         public void WriteXml(XmlWriter p_writer)
         {
             _dataSet.WriteXml(p_writer, "Data", "Tbl");
+        }
+    }
+
+    internal class RptDataSourceItem
+    {
+        Row _row;
+
+        public RptDataSourceItem(Row p_row)
+        {
+            _row = p_row;
+        }
+
+        /// <summary>
+        /// 数据集名称
+        /// </summary>
+        public string ID
+        {
+            get { return _row.Str("id"); }
+        }
+
+        /// <summary>
+        /// 是否通过脚本获取数据源
+        /// </summary>
+        public bool IsScritp
+        {
+            get { return _row.Bool("isscritp"); }
+        }
+
+        /// <summary>
+        /// 服务名称或脚本类型
+        /// </summary>
+        public string Srv
+        {
+            get { return _row.Str("srv"); }
+        }
+
+        /// <summary>
+        /// 数据源列
+        /// </summary>
+        public string Cols
+        {
+            get { return _row.Str("cols"); }
+        }
+
+        /// <summary>
+        /// Sql语句
+        /// </summary>
+        public string Sql
+        {
+            get { return _row.Str("sql"); }
         }
     }
 }

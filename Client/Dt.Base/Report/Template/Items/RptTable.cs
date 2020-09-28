@@ -9,8 +9,8 @@
 #region 命名空间
 using Dt.Core;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Xml;
-
 #endregion
 
 namespace Dt.Base.Report
@@ -109,22 +109,27 @@ namespace Dt.Base.Report
         /// <summary>
         /// 构造报表项实例
         /// </summary>
-        public override void Build()
+        public override async Task Build()
         {
             RptRootInst inst = _part.Inst;
             string tblName = _data.Str("tbl");
-            if (string.IsNullOrEmpty(tblName) || !inst.Info.DataSet.ContainsKey(tblName))
+            if (string.IsNullOrEmpty(tblName))
+                return;
+
+            // 使用时再加载数据
+            var rptData = await inst.Info.GetData(tblName);
+            if (rptData == null)
                 return;
 
             inst.CurrentParent = null;
             RptTableInst tbl = new RptTableInst(this);
             inst.Body.AddChild(tbl);
             inst.CurrentTable = tbl;
-            tbl.Data = inst.Info.DataSet[tblName];
+            tbl.Data = rptData;
             Table data = tbl.Data.Data;
 
             if (Header != null && Header.Rows.Count > 0)
-                Header.Build();
+                await Header.Build();
 
             if (Body != null)
             {
@@ -155,7 +160,7 @@ namespace Dt.Base.Report
                                     if (group.Header != null && group.Header.Rows.Count > 0)
                                     {
                                         Dictionary<string, string> dict = GetFilters(j, curRow);
-                                        group.Header.Build(dict);
+                                        await group.Header.Build(dict);
                                     }
                                 }
                                 break;
@@ -163,7 +168,7 @@ namespace Dt.Base.Report
                         }
                     }
 
-                    Body.Build();
+                    await Body.Build();
 
                     // 分组尾
                     if (Groups != null)
@@ -181,7 +186,7 @@ namespace Dt.Base.Report
                                     if (group.Footer != null && group.Footer.Rows.Count > 0)
                                     {
                                         Dictionary<string, string> dict = GetFilters(j, curRow);
-                                        group.Footer.Build(dict);
+                                        await group.Footer.Build(dict);
                                     }
                                 }
                                 break;
@@ -197,13 +202,13 @@ namespace Dt.Base.Report
                     int tail = minCount - data.Count;
                     for (int i = 0; i < tail; i++)
                     {
-                        Body.Build();
+                        await Body.Build();
                     }
                 }
             }
 
             if (Footer != null && Footer.Rows.Count > 0)
-                Footer.Build();
+                await Footer.Build();
         }
 
         /// <summary>

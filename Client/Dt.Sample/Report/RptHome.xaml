@@ -10,6 +10,8 @@
             <a:Tab Title="功能列表">
                 <a:Fv x:Name="_fv">
                     <a:CLink Title="报表模板设计" Click="OnDesign" />
+                    <a:CLink Title="默认报表预览" Click="OnPreview" />
+                    <a:CLink Title="自定义报表预览" Click="OnCustomView" />
                 </a:Fv>
             </a:Tab>
         </a:Tabs>

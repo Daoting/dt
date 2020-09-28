@@ -20,18 +20,26 @@ namespace Dt.Base.Report
 {
     public sealed partial class MatrixForm : UserControl
     {
-        RptDesignWin _owner;
         RptMatrix _matrix;
 
-        public MatrixForm(RptDesignWin p_owner)
+        public MatrixForm()
         {
             InitializeComponent();
-            _owner = p_owner;
         }
+
+        internal RptDesignInfo Info { get; set; }
 
         internal void LoadItem(RptMatrix p_matrix)
         {
             _matrix = p_matrix;
+            _fv.Data = _matrix.Data;
+            ((CList)_fv["tbl"]).Data = p_matrix.Root.Data.DataSet;
+        }
+
+        void OnDelMtx(object sender, RoutedEventArgs e)
+        {
+            DelRptItemArgs delArgs = new DelRptItemArgs(_matrix);
+            Info.ExecuteCmd(RptCmds.DelRptItemCmd, delArgs);
         }
     }
 }

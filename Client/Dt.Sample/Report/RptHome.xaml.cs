@@ -21,6 +21,8 @@ namespace Dt.Sample
     public sealed partial class RptHome : Win
     {
         RptDesignDemo _design;
+        RptPreviewDemo _preview;
+        RptCustomViewDemo _custom;
 
         public RptHome()
         {
@@ -32,6 +34,20 @@ namespace Dt.Sample
             if (_design == null)
                 _design = new RptDesignDemo();
             LoadCenter(_design);
+        }
+
+        void OnPreview(object sender, EventArgs e)
+        {
+            if (_preview == null)
+                _preview = new RptPreviewDemo();
+            LoadCenter(_preview);
+        }
+
+        void OnCustomView(object sender, EventArgs e)
+        {
+            if (_custom == null)
+                _custom = new RptCustomViewDemo();
+            LoadCenter(_custom);
         }
     }
 }

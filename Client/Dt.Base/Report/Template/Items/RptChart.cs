@@ -8,8 +8,8 @@
 
 #region 命名空间
 using Dt.Charts;
-using Dt.Core;
 using System;
+using System.Threading.Tasks;
 using System.Xml;
 using Windows.UI.Xaml.Controls;
 #endregion
@@ -109,8 +109,19 @@ namespace Dt.Base.Report
         /// <summary>
         /// 构造报表项实例
         /// </summary>
-        public override void Build()
+        public override async Task Build()
         {
+            RptRootInst inst = _part.Inst;
+            string tblName = _data.Str("tbl");
+            if (string.IsNullOrEmpty(tblName))
+                return;
+
+            // 使用时再加载数据
+            var rptData = await inst.Info.GetData(tblName);
+            if (rptData == null)
+                return;
+
+            // 无数据不加载
             _part.Inst.Body.AddChild(new RptChartInst(this));
         }
 

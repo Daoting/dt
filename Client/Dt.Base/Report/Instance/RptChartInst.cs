@@ -17,9 +17,6 @@ namespace Dt.Base.Report
     /// </summary>
     internal class RptChartInst : RptOutputInst
     {
-        /// <summary>
-        /// 
-        /// </summary>
         public RptChartInst(RptItemBase p_item)
             : base(p_item)
         {

@@ -24,7 +24,12 @@
             <a:CBool ID="showlegend" Title="显示图例" />
             <a:CText ID="legtitle" Title="标题" />
             <a:CList ID="legpos" Title="图例位置" Enum="Dt.Charts.LegendPosition,Dt.Charts" />
-            <a:CList ID="legorientation" Title="布局方向" />
+            <a:CList ID="legorientation" Title="布局方向">
+                <a:CList.Items>
+                    <x:String>Vertical</x:String>
+                    <x:String>Horizontal</x:String>
+                </a:CList.Items>
+            </a:CList>
             <a:CBool ID="legoverlap" Title="重叠方式" />
             <a:CBar Title="坐标轴" />
             <a:CText ID="titlex" Title="X轴标题" />

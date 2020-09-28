@@ -17,17 +17,17 @@ namespace Dt.Base.Report
 {
     public sealed partial class TableForm : UserControl
     {
-        RptDesignWin _owner;
+        RptDesignInfo _info;
         RptText _txt;
         RptTblPartRow _curRow;
         RptTblPart _part;
         RptTable _table;
 
-        public TableForm(RptDesignWin p_owner)
+        public TableForm(RptDesignInfo p_info)
         {
             InitializeComponent();
-            _owner = p_owner;
-            ((CList)_fv["tbl"]).Data = p_owner.Root.Data.DataSet;
+            _info = p_info;
+            ((CList)_fv["tbl"]).Data = _info.Root.Data.DataSet;
         }
 
         internal void LoadItem(RptText p_item, bool p_isGroup)
@@ -78,7 +78,7 @@ namespace Dt.Base.Report
                     AtKit.Warn("增加行后与已有控件位置发生重叠，请调整控件位置后重试！");
                     return;
                 }
-                _owner.Info.ExecuteCmd(RptCmds.ConHeadOrFoot, new ContainHeadOrFootCmdArgs(p_flag, _table));
+                _info.ExecuteCmd(RptCmds.ConHeadOrFoot, new ContainHeadOrFootCmdArgs(p_flag, _table));
             }
             else
             {
@@ -92,7 +92,7 @@ namespace Dt.Base.Report
 
                 RptTblPartRow[] rows = new RptTblPartRow[part.Rows.Count];
                 part.Rows.CopyTo(rows, 0);
-                _owner.Info.ExecuteCmd(RptCmds.RemHeadOrFoot, new RemoveHeadOrFootCmdArgs(p_flag, _table, rows));
+                _info.ExecuteCmd(RptCmds.RemHeadOrFoot, new RemoveHeadOrFootCmdArgs(p_flag, _table, rows));
             }
             UpdateHeaderFooterState();
         }
@@ -117,7 +117,7 @@ namespace Dt.Base.Report
             RptTblGroup grp = new RptTblGroup(_table);
             grp.Header = new RptTblGroupHeader(_table);
             grp.Footer = new RptTblGroupFooter(_table);
-            _owner.Info.ExecuteCmd(RptCmds.InsertTblGrp, new InsertTblGrpCmdArgs(_table, grp));
+            _info.ExecuteCmd(RptCmds.InsertTblGrp, new InsertTblGrpCmdArgs(_table, grp));
         }
 
         void OnClearGrpClick(object sender, RoutedEventArgs e)
@@ -129,7 +129,7 @@ namespace Dt.Base.Report
             {
                 grps.Add(grp);
             }
-            _owner.Info.ExecuteCmd(RptCmds.ClearTblGrp, new ClearTblGrpCmdArgs(_table, grps));
+            _info.ExecuteCmd(RptCmds.ClearTblGrp, new ClearTblGrpCmdArgs(_table, grps));
         }
         #endregion
 
@@ -145,12 +145,12 @@ namespace Dt.Base.Report
 
             int index = GetIndex();
             index = (((Button)sender).Tag ?? string.Empty).ToString() == "Before" ? index : index + 1;
-            _owner.Info.ExecuteCmd(RptCmds.InsertTblRow, new InsertTblRowCmdArgs(_part, index));
+            _info.ExecuteCmd(RptCmds.InsertTblRow, new InsertTblRowCmdArgs(_part, index));
         }
 
         void OnDeleteRow(object sender, RoutedEventArgs e)
         {
-            _owner.Info.ExecuteCmd(RptCmds.DeleTblRow, new DeleTblRowCmdArgs(GetIndex(), _curRow));
+            _info.ExecuteCmd(RptCmds.DeleTblRow, new DeleTblRowCmdArgs(GetIndex(), _curRow));
         }
 
         void OnInsertCol(object sender, RoutedEventArgs e)
@@ -164,19 +164,19 @@ namespace Dt.Base.Report
 
             int index = GetTextIndex();
             index = (((Button)sender).Tag ?? string.Empty).ToString() == "Left" ? index : index + 1;
-            _owner.Info.ExecuteCmd(RptCmds.InsertTblCol, new InsertRptTblColCmdArgs(_table, index));
+            _info.ExecuteCmd(RptCmds.InsertTblCol, new InsertRptTblColCmdArgs(_table, index));
         }
 
         void OnDeleteCol(object sender, RoutedEventArgs e)
         {
             Dictionary<string, RptText> dict = new Dictionary<string, RptText>();
             int index = GetTextIndex();
-            _owner.Info.ExecuteCmd(RptCmds.DeleTblCol, new DeleRptTblColCmdArgs(_table, index, dict));
+            _info.ExecuteCmd(RptCmds.DeleTblCol, new DeleRptTblColCmdArgs(_table, index, dict));
         }
 
         void OnDeleteTbl(object sender, RoutedEventArgs e)
         {
-            _owner.Info.ExecuteCmd(RptCmds.DelRptItemCmd, new DelRptItemArgs(_owner.Excel.ActiveSheet, _table));
+            _info.ExecuteCmd(RptCmds.DelRptItemCmd, new DelRptItemArgs(_table));
         }
         
         int GetIndex()

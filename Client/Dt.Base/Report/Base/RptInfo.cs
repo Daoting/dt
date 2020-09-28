@@ -2,305 +2,73 @@
 /**************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2014-06-11 创建
+* 日志: 2020-09-25 创建
 **************************************************************************/
 #endregion
 
 #region 命名空间
+using Dt.Base.Report;
 using Dt.Cells.Data;
 using Dt.Core;
 using System;
 using System.Collections.Generic;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Base.Report
+namespace Dt.Base
 {
     /// <summary>
     /// 报表描述信息
     /// 报表模板三种方式优先级：
-    /// 1. 外部直接提供RptRoot对象
-    /// 2. 通过Uri加载模板
-    /// 3. 通过Name查询数据加载模板（调试状态在服务器端db，运行状态在本地db）
+    /// 1. 直接提供RptRoot对象，内部使用，如报表编辑时预览
+    /// 2. 重写 ReadTemplate 方法，模板在其他位置时
+    /// 3. 默认通过Name查询本地db数据加载模板
     /// </summary>
-    public partial class RptInfo : DependencyObject
+    public class RptInfo
     {
-        #region 静态内容
-        /// <summary>
-        /// 报表模板的位置
-        /// </summary>
-        public readonly static DependencyProperty UriProperty = DependencyProperty.Register(
-            "Uri",
-            typeof(Uri),
-            typeof(RptInfo),
-            new PropertyMetadata(null));
-
-        /// <summary>
-        /// 报表标题
-        /// </summary>
-        public readonly static DependencyProperty TitleProperty = DependencyProperty.Register(
-            "Title",
-            typeof(string),
-            typeof(RptInfo),
-            new PropertyMetadata(null));
-
-        /// <summary>
-        /// 是否隐藏报表查询面板（报表组时无效），默认false
-        /// </summary>
-        public readonly static DependencyProperty HideSearchFormProperty = DependencyProperty.Register(
-            "HideSearchForm",
-            typeof(bool),
-            typeof(RptInfo),
-            new PropertyMetadata(false));
-
-        /// <summary>
-        /// 初次加载时是否自动执行查询，前提是Params参数值提供完备，默认false
-        /// </summary>
-        public readonly static DependencyProperty AutoQueryProperty = DependencyProperty.Register(
-            "AutoQuery",
-            typeof(bool),
-            typeof(RptInfo),
-            new PropertyMetadata(false));
-
-        /// <summary>
-        /// 是否显示查询菜单项，默认false
-        /// </summary>
-        public readonly static DependencyProperty ShowSearchMiProperty = DependencyProperty.Register(
-            "ShowSearchMi",
-            typeof(bool),
-            typeof(RptInfo),
-            new PropertyMetadata(false));
-
-        /// <summary>
-        /// 是否显示导出菜单项，默认true
-        /// </summary>
-        public readonly static DependencyProperty ShowExportMiProperty = DependencyProperty.Register(
-            "ShowExportMi",
-            typeof(bool),
-            typeof(RptInfo),
-            new PropertyMetadata(true));
-
-        /// <summary>
-        /// 是否显示打印菜单项，默认true
-        /// </summary>
-        public readonly static DependencyProperty ShowPrintMiProperty = DependencyProperty.Register(
-            "ShowPrintMi",
-            typeof(bool),
-            typeof(RptInfo),
-            new PropertyMetadata(true));
-
-        /// <summary>
-        /// Worksheet是否显示列头
-        /// </summary>
-        public readonly static DependencyProperty ShowColHeaderProperty = DependencyProperty.Register(
-            "ShowColHeader",
-            typeof(bool),
-            typeof(RptInfo),
-            new PropertyMetadata(false, OnShowColHeaderChanged));
-
-        /// <summary>
-        /// Worksheet是否显示行头
-        /// </summary>
-        public readonly static DependencyProperty ShowRowHeaderProperty = DependencyProperty.Register(
-            "ShowRowHeader",
-            typeof(bool),
-            typeof(RptInfo),
-            new PropertyMetadata(false, OnShowRowHeaderChanged));
-
-        /// <summary>
-        /// Worksheet是否显示网格
-        /// </summary>
-        public readonly static DependencyProperty ShowGridLineProperty = DependencyProperty.Register(
-            "ShowGridLine",
-            typeof(bool),
-            typeof(RptInfo),
-            new PropertyMetadata(false, OnShowGridLineChanged));
-
-        /// <summary>
-        /// AppBar关闭时的显示方式，Mini版有效
-        /// </summary>
-        public readonly static DependencyProperty ClosedDisplayModeProperty = DependencyProperty.Register(
-            "ClosedDisplayMode",
-            typeof(AppBarClosedDisplayMode),
-            typeof(RptInfo),
-            new PropertyMetadata(AppBarClosedDisplayMode.Minimal));
-
-        static void OnShowColHeaderChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            RptInfo info = (RptInfo)d;
-            if (info._sheet != null)
-                info._sheet.ColumnHeader.IsVisible = (bool)e.NewValue;
-        }
-
-        static void OnShowRowHeaderChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            RptInfo info = (RptInfo)d;
-            if (info._sheet != null)
-                info._sheet.RowHeader.IsVisible = (bool)e.NewValue;
-        }
-
-        static void OnShowGridLineChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            RptInfo info = (RptInfo)d;
-            if (info._sheet != null)
-                info._sheet.ShowGridLine = (bool)e.NewValue;
-        }
-        #endregion
-
         #region 成员变量
-        protected Dict _params;
-        protected Worksheet _sheet;
-        protected Dictionary<string, RptData> _dataSet;
+        // 报表模板缓存
+        static readonly Dictionary<string, RptRoot> _tempCache = new Dictionary<string, RptRoot>();
+        const string _paramsMsg = "报表查询参数不完整！";
+        readonly Dictionary<string, RptData> _dataSet = new Dictionary<string, RptData>(StringComparer.OrdinalIgnoreCase);
+        RptScript _scriptObj;
         #endregion
-
-        public RptInfo(string p_name)
-        {
-            Name = p_name;
-        }
 
         /// <summary>
         /// 获取设置报表名称，作为唯一标识识别窗口用
         /// </summary>
-        public string Name { get; }
-
-        /// <summary>
-        /// 获取设置报表标题，未设置时使用报表名称
-        /// </summary>
-        public string Title
-        {
-            get
-            {
-                if (this.ExistLocalValue(TitleProperty))
-                    return (string)GetValue(TitleProperty);
-                return Name;
-            }
-            set { SetValue(TitleProperty, value); }
-        }
+        public string Name { get; set; }
 
         /// <summary>
         /// 获取设置报表数据的查询参数，初始化时做为预输入参数
         /// </summary>
-        public Dict Params
-        {
-            get { return _params; }
-            set { _params = value; }
-        }
+        public Dict Params { get; set; }
 
         /// <summary>
-        /// 获取设置报表模板的位置
+        /// 是否缓存报表模板，默认true
         /// </summary>
-        public Uri Uri
-        {
-            get { return (Uri)GetValue(UriProperty); }
-            set { SetValue(UriProperty, value); }
-        }
+        public bool CacheTemplate { get; set; } = true;
 
         /// <summary>
-        /// 获取设置是否隐藏报表查询面板（报表组时无效），默认false
+        /// 读取模板内容
         /// </summary>
-        public bool HideSearchForm
+        /// <returns></returns>
+        public virtual Task<string> ReadTemplate()
         {
-            get { return (bool)GetValue(HideSearchFormProperty); }
-            set { SetValue(HideSearchFormProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取设置初次加载时是否自动执行查询，前提是Params参数值提供完备，默认false
-        /// </summary>
-        public bool AutoQuery
-        {
-            get { return (bool)GetValue(AutoQueryProperty); }
-            set { SetValue(AutoQueryProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取设置是否显示查询菜单项，默认false
-        /// </summary>
-        public bool ShowSearchMi
-        {
-            get { return (bool)GetValue(ShowSearchMiProperty); }
-            set { SetValue(ShowSearchMiProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取设置是否显示导出菜单项，默认true
-        /// </summary>
-        public bool ShowExportMi
-        {
-            get { return (bool)GetValue(ShowExportMiProperty); }
-            set { SetValue(ShowExportMiProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取设置是否显示打印菜单项，默认true
-        /// </summary>
-        public bool ShowPrintMi
-        {
-            get { return (bool)GetValue(ShowPrintMiProperty); }
-            set { SetValue(ShowPrintMiProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取设置Worksheet是否显示列头
-        /// </summary>
-        public bool ShowColHeader
-        {
-            get { return (bool)GetValue(ShowColHeaderProperty); }
-            set { SetValue(ShowColHeaderProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取设置Worksheet是否显示行头
-        /// </summary>
-        public bool ShowRowHeader
-        {
-            get { return (bool)GetValue(ShowRowHeaderProperty); }
-            set { SetValue(ShowRowHeaderProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取设置Worksheet是否显示网格
-        /// </summary>
-        public bool ShowGridLine
-        {
-            get { return (bool)GetValue(ShowGridLineProperty); }
-            set { SetValue(ShowGridLineProperty, value); }
-        }
-
-        /// <summary>
-        /// 获取设置AppBar关闭时的显示方式，默认Minimal，Mini版有效
-        /// </summary>
-        public AppBarClosedDisplayMode ClosedDisplayMode
-        {
-            get { return (AppBarClosedDisplayMode)GetValue(ClosedDisplayModeProperty); }
-            set { SetValue(ClosedDisplayModeProperty, value); }
+            return Task.Run(() =>
+            {
+                string define = AtLocal.GetModelScalar<string>("select define from OmReport where name=:name", new Dict { { "name", Name } });
+                if (string.IsNullOrEmpty(define))
+                    AtKit.Warn($"未找到报表模板【{Name}】！");
+                return define;
+            });
         }
 
         /// <summary>
         /// 获取报表要输出的Sheet
         /// </summary>
-        public Worksheet Sheet
-        {
-            get { return _sheet; }
-            internal set { _sheet = value; }
-        }
+        internal Worksheet Sheet { get; set; }
 
-        /// <summary>
-        /// 获取报表数据集
-        /// </summary>
-        public Dictionary<string, RptData> DataSet
-        {
-            get { return _dataSet; }
-            internal set { _dataSet = value; }
-        }
-
-        /// <summary>
-        /// 根据报表描述信息链接到报表
-        /// </summary>
-        public Action<RptInfo> LinkReport { get; internal set; }
-
-        #region 内部属性
         /// <summary>
         /// 获取设置报表模板根节点
         /// </summary>
@@ -310,41 +78,175 @@ namespace Dt.Base.Report
         /// 获取设置报表实例
         /// </summary>
         internal RptRootInst Inst { get; set; }
-        #endregion
 
         /// <summary>
-        /// 加载报表数据集，键为数据源名称，值为结果集Table
+        /// 报表预览菜单
         /// </summary>
-        /// <param name="p_dt"></param>
-        public void LoadDataSet(Dict p_dt)
+        internal Menu ViewMenu { get; set; }
+
+        internal RptScript GetScriptObj()
         {
-            _dataSet = new Dictionary<string, RptData>();
-            if (p_dt != null)
+            if (_scriptObj != null)
+                return _scriptObj;
+
+            Type type;
+            if (Root == null 
+                || string.IsNullOrEmpty(Root.ViewSetting.Script)
+                || (type = Type.GetType(Root.ViewSetting.Script)) == null)
+                return null;
+
+            _scriptObj = (RptScript)Activator.CreateInstance(type);
+            return _scriptObj;
+        }
+
+        /// <summary>
+        /// 初始化报表模板
+        /// </summary>
+        /// <returns></returns>
+        internal async Task<bool> InitTemplate()
+        {
+            if (Root != null)
+                return true;
+
+            if (string.IsNullOrEmpty(Name))
             {
-                foreach (var item in p_dt)
+                AtKit.Warn("未提供报表模板名称！");
+                return false;
+            }
+
+            // 允许缓存先查找缓存
+            // 通过名称加载模板，代码中写名称可读性比ID高！！！
+            if (CacheTemplate && _tempCache.TryGetValue(Name, out var temp))
+            {
+                Root = temp;
+                return true;
+            }
+
+            try
+            {
+                string define = await ReadTemplate();
+                Root = await AtRpt.DeserializeTemplate(define);
+
+                if (CacheTemplate)
                 {
-                    Table tbl = item.Value as Table;
-                    if (tbl != null)
-                        _dataSet[item.Key.ToLower()] = new RptData(tbl);
+                    // 允许缓存，名称作为键
+                    _tempCache[Name] = Root;
                 }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                AtKit.Warn("加载报表模板时异常！\r\n" + ex.Message);
+                return false;
             }
         }
 
         /// <summary>
-        /// 初始化工具栏菜单
+        /// 获取数据表
         /// </summary>
-        /// <param name="p_menu"></param>
-        public virtual void InitMenu(Menu p_menu)
+        /// <param name="p_name">数据源名称</param>
+        internal async Task<RptData> GetData(string p_name)
         {
+            if (_dataSet.TryGetValue(p_name, out var data))
+                return data;
+
+            RptDataSourceItem srcItem;
+            if (Root == null || (srcItem = Root.Data.GetDataSourceItem(p_name)) == null)
+                return null;
+
+            Table tbl = null;
+            if (srcItem.IsScritp)
+            {
+                // 通过脚本获取数据源
+                var script = GetScriptObj();
+                if (script != null)
+                {
+                    tbl = await script.GetData(p_name);
+                }
+                else
+                {
+                    AtKit.Warn($"未定义报表脚本，无法获取数据集 {p_name}");
+                }
+            }
+            else
+            {
+
+            }
+
+            if (tbl != null)
+            {
+                var rptData = new RptData(tbl);
+                _dataSet[p_name] = rptData;
+                return rptData;
+            }
+            return null;
         }
 
         /// <summary>
-        /// 点击单元格脚本
+        /// 查询参数是否完备有效
         /// </summary>
-        /// <param name="p_id">脚本标识</param>
-        /// <param name="p_text">单元格</param>
-        public virtual void OnCellClick(string p_id, IRptCell p_text)
+        /// <param name="p_info"></param>
+        /// <returns></returns>
+        internal bool IsParamsValid()
         {
+            if (Root == null)
+            {
+                AtKit.Msg("未加载报表模板，无法验证查询参数！");
+                return false;
+            }
+
+            int count = Root.Params.Data.Count;
+            Dict dt = Params;
+
+            // 未提供查询参数
+            if (dt == null || dt.Count == 0)
+            {
+                if (count > 0)
+                {
+                    AtKit.Msg(_paramsMsg);
+                    return false;
+                }
+                return true;
+            }
+
+            // 参数个数不够
+            if (dt.Count < count)
+            {
+                AtKit.Msg(_paramsMsg);
+                return false;
+            }
+
+            // 确保每个参数都包含
+            foreach (var row in Root.Params.Data)
+            {
+                if (!dt.ContainsKey(row.Str("id")))
+                {
+                    AtKit.Msg(_paramsMsg);
+                    return false;
+                }
+            }
+            return true;
         }
+
+        #region 比较
+        public override bool Equals(object obj)
+        {
+            if (obj == null || !(obj is RptInfo))
+                return false;
+
+            if (ReferenceEquals(this, obj))
+                return true;
+
+            // 只比较标识，识别窗口用
+            return Name == ((RptInfo)obj).Name;
+        }
+
+        public override int GetHashCode()
+        {
+            if (string.IsNullOrEmpty(Name))
+                return 0;
+            return Name.GetHashCode();
+        }
+        #endregion
     }
 }

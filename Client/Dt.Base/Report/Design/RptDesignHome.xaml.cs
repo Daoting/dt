@@ -46,8 +46,27 @@ namespace Dt.Base.Report
                 ScrollViewer.SetVerticalScrollBarVisibility(_tbXaml, ScrollBarVisibility.Auto);
             }
                 
-            _tbXaml.Text = RptKit.SerializeTemplate(_design.Root);
+            _tbXaml.Text = AtRpt.SerializeTemplate(_info.Root);
             LoadCenter(_tbXaml);
+        }
+
+        void OnImport(object sender, RoutedEventArgs e)
+        {
+            AtRpt.Show(new List<RptInfo> { new RptInfo { Name = "a" }, new RptInfo { Name = "b" } });
+        }
+
+        void OnPreview(object sender, RoutedEventArgs e)
+        {
+            // 比较窗口类型和初始参数，关闭旧窗口
+            var info = new RptInfo { Name = _info.Name, Root = _info.Root };
+            Win win;
+            if (!AtSys.IsPhoneUI
+                && (win = Desktop.Inst.ActiveWin(typeof(RptViewWin), info)) != null)
+            {
+                win.Close();
+            }
+
+            AtRpt.Show(info);
         }
     }
 }

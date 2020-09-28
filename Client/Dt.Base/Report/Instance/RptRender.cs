@@ -234,7 +234,7 @@ namespace Dt.Base.Report
             RptChart ct = p_inst.Item as RptChart;
             RptData data = null;
 
-            if (!ValidChartFilds(ct) || !_info.DataSet.TryGetValue(ct.Tbl, out data))
+            if (!ValidChartFilds(ct) || (data = _info.GetData(ct.Tbl).Result) == null)
                 return;
 
             Task<RenderTargetBitmap> task = null;

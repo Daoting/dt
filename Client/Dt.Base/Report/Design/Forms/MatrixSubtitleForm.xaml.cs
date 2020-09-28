@@ -20,13 +20,13 @@ namespace Dt.Base.Report
 {
     public sealed partial class MatrixSubtitleForm : UserControl
     {
-        RptDesignWin _owner;
+        RptDesignInfo _info;
         RptMtxSubtitle _title;
 
-        public MatrixSubtitleForm(RptDesignWin p_owner)
+        public MatrixSubtitleForm(RptDesignInfo p_info)
         {
             InitializeComponent();
-            _owner = p_owner;
+            _info = p_info;
         }
 
         internal void LoadItem(RptText p_item)

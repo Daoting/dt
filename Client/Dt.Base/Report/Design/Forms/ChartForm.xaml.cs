@@ -22,15 +22,15 @@ namespace Dt.Base.Report
 {
     public sealed partial class ChartForm : UserControl
     {
-        RptDesignWin _owner;
+        RptDesignInfo _info;
         RptChart _item;
         ChartData _defaultData;
         ChartData _ganttData;
 
-        public ChartForm(RptDesignWin p_owner)
+        public ChartForm(RptDesignInfo p_info)
         {
             InitializeComponent();
-            _owner = p_owner;
+            _info = p_info;
         }
 
         internal void LoadItem(RptChart p_item)
@@ -113,19 +113,21 @@ namespace Dt.Base.Report
                     {
                         if (_chart.Children[i] is ChartLegend)
                         {
-                            _chart.Children[i].Visibility = e.GetVal<string>() == "1" ? Visibility.Visible : Visibility.Collapsed;
+                            _chart.Children[i].Visibility = e.GetVal<bool>() ? Visibility.Visible : Visibility.Collapsed;
                         }
                     }
                     break;
+
                 case "legoverlap":
                     for (int i = 0; i < _chart.Children.Count; i++)
                     {
                         if (_chart.Children[i] is ChartLegend)
                         {
-                            (_chart.Children[i] as ChartLegend).OverlapChart = e.GetVal<string>() == "1";
+                            (_chart.Children[i] as ChartLegend).OverlapChart = e.GetVal<bool>();
                         }
                     }
                     break;
+
                 case "legtitle":
                     for (int i = 0; i < _chart.Children.Count; i++)
                     {
@@ -135,6 +137,7 @@ namespace Dt.Base.Report
                         }
                     }
                     break;
+
                 case "legpos":
                     LegendPosition pos = LegendPosition.Right;
                     Enum.TryParse<LegendPosition>(e.GetVal<string>(), out pos);
@@ -146,6 +149,7 @@ namespace Dt.Base.Report
                         }
                     }
                     break;
+
                 case "legorientation":
                     Orientation ori;
                     Enum.TryParse<Orientation>(e.GetVal<string>(), out ori);
@@ -157,15 +161,19 @@ namespace Dt.Base.Report
                         }
                     }
                     break;
+
                 case "titlex":
                     _chart.View.AxisX.Title = e.GetVal<string>();
                     break;
+
                 case "titley":
                     _chart.View.AxisY.Title = e.GetVal<string>();
                     break;
+
                 case "axisinverted":
-                    _chart.View.Inverted = (e.GetVal<string>() == "1");
+                    _chart.View.Inverted = e.GetVal<bool>();
                     break;
+
                 default:
                     break;
             }

@@ -22,9 +22,9 @@ using Windows.UI.Xaml.Controls;
 
 namespace Dt.Sample
 {
-    public partial class RptDesignDemo : Win
+    public partial class RptCustomViewDemo : Win
     {
-        public RptDesignDemo()
+        public RptCustomViewDemo()
         {
             InitializeComponent();
             AttachEvent();
@@ -48,29 +48,6 @@ namespace Dt.Sample
         {
             string name = ((Button)sender).Content.ToString();
             _ = AtRpt.ShowDesign(new MyRptDesignInfo { Name = name });
-        }
-    }
-
-    public class MyRptDesignInfo : RptDesignInfo
-    {
-        public override Task<string> ReadTemplate()
-        {
-            return Task.Run(() =>
-            {
-                using (var stream = typeof(RptDesignDemo).Assembly.GetManifestResourceStream($"Dt.Sample.Report.模板.{Name}.xml"))
-                using (var reader = new StreamReader(stream))
-                {
-                    return reader.ReadToEnd();
-                }
-            });
-        }
-
-        public override void SaveTemplate(string p_xml)
-        {
-            DataPackage data = new DataPackage();
-            data.SetText(p_xml);
-            Clipboard.SetContent(data);
-            AtKit.Msg("已保存到剪切板！");
         }
     }
 }

@@ -9,10 +9,8 @@
 #region 命名空间
 using Dt.Core;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Xml;
-using System.Linq;
 #endregion
 
 namespace Dt.Base.Report
@@ -200,8 +198,9 @@ namespace Dt.Base.Report
         /// <summary>
         /// 构造报表元素实例
         /// </summary>
-        public virtual void Build()
+        public virtual Task Build()
         {
+            return Task.CompletedTask;
         }
 
         /// <summary>

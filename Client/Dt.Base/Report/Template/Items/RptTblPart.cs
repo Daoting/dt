@@ -8,8 +8,8 @@
 
 #region 命名空间
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Xml;
-
 #endregion
 
 namespace Dt.Base.Report
@@ -195,7 +195,7 @@ namespace Dt.Base.Report
         /// <summary>
         /// 构造子元素
         /// </summary>
-        protected void BuildChild()
+        protected async Task BuildChild()
         {
             foreach (RptTblPartRow row in Rows)
             {
@@ -204,7 +204,7 @@ namespace Dt.Base.Report
                 {
                     foreach (RptText cell in cells)
                     {
-                        cell.Build();
+                        await cell.Build();
                     }
                 }
             }

@@ -8,11 +8,10 @@
 
 #region 命名空间
 using Dt.Core;
-using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Xml;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Xml;
 #endregion
 
 namespace Dt.Base.Report
@@ -139,13 +138,19 @@ namespace Dt.Base.Report
             return mtx;
         }
 
-        public override void Build()
+        public override async Task Build()
         {
             RptRootInst inst = _part.Inst;
-            if (string.IsNullOrEmpty(Tbl) || !inst.Info.DataSet.ContainsKey(Tbl))
+            if (string.IsNullOrEmpty(Tbl))
                 return;
+
+            // 使用时再加载
+            var rptData = await inst.Info.GetData(Tbl);
+            if (rptData == null)
+                return;
+
             RptMatrixInst matrixInst = new RptMatrixInst(this);
-            matrixInst.RptData = inst.Info.DataSet[Tbl];
+            matrixInst.RptData = rptData;
             ReBuildData(matrixInst.RptData.Data);
             inst.Body.AddChild(matrixInst);
             if (!HideRowHeader && !HideColHeader)
@@ -154,9 +159,9 @@ namespace Dt.Base.Report
                 matrixInst.CornerInst = corner;
             }
             //列头
-            BuildHeader(this, ColHeader, matrixInst, inst);
+            BuildHeader(rptData, ColHeader, matrixInst);
             //行头
-            BuildHeader(this, RowHeader, matrixInst, inst);
+            BuildHeader(rptData, RowHeader, matrixInst);
             //数据
             foreach (RptMtxHeaderInst rowHeaderInst in matrixInst.RowHeaderInsts)
             {
@@ -509,15 +514,13 @@ namespace Dt.Base.Report
         /// <summary>
         /// 构造行头或列头
         /// </summary>
-        /// <param name="p_matrix"></param>
+        /// <param name="p_rptData"></param>
         /// <param name="p_header"></param>
         /// <param name="p_matInst"></param>
-        /// <param name="p_inst"></param>
-        void BuildHeader(RptMatrix p_matrix, RptMtxHeader p_header, RptMatrixInst p_matInst, RptRootInst p_inst)
+        void BuildHeader(RptData p_rptData, RptMtxHeader p_header, RptMatrixInst p_matInst)
         {
-            RptData dt = p_inst.Info.DataSet[Tbl];
             List<string> colNames = p_header.GetFieldNames();
-            List<Row> allHeaderData = SelectDistinctDataRows(dt.Data, colNames);
+            List<Row> allHeaderData = SelectDistinctDataRows(p_rptData.Data, colNames);
             Row preRow = null;
             for (int i = 0; i < allHeaderData.Count; i++)
             {
@@ -535,7 +538,7 @@ namespace Dt.Base.Report
                         //第一行（列） 或者 前一行（列）层值与当前行层值不同 创建小计
                         if (preRow == null || (beforLevel != null && preRow.Str(beforLevel.Field) != curRow.Str(beforLevel.Field)))
                         {
-                            CreateTotalInst(level.SubTotals, p_header, p_matInst, curRow, dt, TotalLocation.Before);
+                            CreateTotalInst(level.SubTotals, p_header, p_matInst, curRow, p_rptData, TotalLocation.Before);
                         }
                     }
 
@@ -545,7 +548,7 @@ namespace Dt.Base.Report
                     {
                         if (level.SubTitles.Count > 0)
                         {
-                            CreateSubTiltelInst(level.SubTitles, p_header, p_matInst, curRow, dt);
+                            CreateSubTiltelInst(level.SubTitles, p_header, p_matInst, curRow, p_rptData);
                         }
                         else
                         {
@@ -558,7 +561,7 @@ namespace Dt.Base.Report
                     }
                     if (headerInst.TxtInsts.Count > 0)
                     {
-                        headerInst.RptData = dt;
+                        headerInst.RptData = p_rptData;
                         headerInst.Index = curRow.Index;
                         if (p_header is RptMtxColHeader)
                         {
@@ -594,7 +597,7 @@ namespace Dt.Base.Report
                         {
                             foreach (RptMtxSubtotal total in level.SubTotals)
                             {
-                                CreateTotalInst(level.SubTotals, p_header, p_matInst, curRow, dt, TotalLocation.After);
+                                CreateTotalInst(level.SubTotals, p_header, p_matInst, curRow, p_rptData, TotalLocation.After);
                             }
                         }
                     }

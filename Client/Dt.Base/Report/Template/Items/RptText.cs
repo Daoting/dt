@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Xml;
 using Windows.UI;
 using Windows.UI.Text;
@@ -337,7 +338,7 @@ namespace Dt.Base.Report
         /// <summary>
         /// 构造报表项实例
         /// </summary>
-        public override void Build()
+        public override Task Build()
         {
             RptRootInst inst = _part.Inst;
             RptTextInst txt = new RptTextInst(this);
@@ -349,6 +350,7 @@ namespace Dt.Base.Report
                 inst.Footer.AddChild(txt);
             else
                 inst.Body.AddChild(txt);
+            return Task.CompletedTask;
         }
 
         /// <summary>
