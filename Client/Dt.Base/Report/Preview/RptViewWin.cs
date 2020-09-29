@@ -51,7 +51,7 @@ namespace Dt.Base
                 p_info.ScriptObj?.InitMenu(_menu);
                 tab.Menu = _menu;
             }
-                        
+
             if (setting.ShowSearchForm && p_info.Root.Params.Data.Count > 0)
             {
                 WinItem wi = new WinItem { DockState = WinItemState.DockedLeft };
@@ -67,8 +67,8 @@ namespace Dt.Base
             }
 
             // 初次加载自动执行查询
-            //if (setting.AutoQuery)
-            _view.LoadReport(p_info);
+            if (setting.AutoQuery || p_info.Root.Params.Data.Count == 0)
+                _view.LoadReport(p_info);
         }
 
         #region 报表组

@@ -24,6 +24,11 @@ namespace Dt.Base
         /// </summary>
         public RptView View { get; internal set; }
 
+        /// <summary>
+        /// 获取数据表
+        /// </summary>
+        /// <param name="p_name">数据表名称</param>
+        /// <returns></returns>
         public virtual Task<Table> GetData(string p_name)
         {
             return Task.FromResult(default(Table));

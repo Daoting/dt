@@ -72,7 +72,7 @@ namespace Dt.Base
         #endregion
 
         /// <summary>
-        /// 读取模板内容
+        /// 读取模板内容，重写可自定义读取模板过程
         /// </summary>
         /// <returns></returns>
         public virtual Task<string> ReadTemplate()
@@ -133,11 +133,19 @@ namespace Dt.Base
             }
 
             // 脚本对象
-            Type type;
-            if (!string.IsNullOrEmpty(Root.ViewSetting.Script)
-                && (type = Type.GetType(Root.ViewSetting.Script)) != null)
+            if (!string.IsNullOrEmpty(Root.ViewSetting.Script))
             {
-                ScriptObj = (RptScript)Activator.CreateInstance(type);
+                Type type = Type.GetType(Root.ViewSetting.Script);
+                if (type == null)
+                {
+                    AtKit.Warn($"缺少脚本类型【{Root.ViewSetting.Script}】");
+                }
+                else
+                {
+                    ScriptObj = (RptScript)Activator.CreateInstance(type);
+                    if (ScriptObj == null)
+                        AtKit.Warn($"脚本类型【{Root.ViewSetting.Script}】需继承RptScript");
+                }
             }
 
             // 根据参数默认值创建初始查询参数（自动查询时用）
@@ -156,7 +164,8 @@ namespace Dt.Base
         /// <summary>
         /// 获取数据表
         /// </summary>
-        /// <param name="p_name">数据源名称</param>
+        /// <param name="p_name">数据表名称</param>
+        /// <returns></returns>
         internal async Task<RptData> GetData(string p_name)
         {
             if (_dataSet.TryGetValue(p_name, out var data))
@@ -176,7 +185,7 @@ namespace Dt.Base
                 }
                 else
                 {
-                    AtKit.Warn($"未定义报表脚本，无法获取数据集 {p_name}");
+                    AtKit.Warn($"未定义报表脚本，无法获取数据集【{p_name}】");
                 }
             }
             else

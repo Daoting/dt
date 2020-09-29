@@ -36,11 +36,9 @@
         <StackPanel Orientation="Horizontal">
             <Button Content="简单文本" />
             <Button Content="页眉页脚" />
-            <Button Content="报表链接" />
         </StackPanel>
         <StackPanel Orientation="Horizontal">
-            <Button Content="点击脚本1" />
-            <Button Content="点击脚本2" />
+            <Button Content="脚本" />
         </StackPanel>
     </a:Fv>
 </a:Win>

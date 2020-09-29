@@ -13,6 +13,7 @@
     <None Remove="Report\数据源\成绩汇总.json" />
     <None Remove="Report\数据源\甘特图.json" />
     <None Remove="Report\数据源\网损情况.json" />
+    <None Remove="Report\数据源\菜单.json" />
     <None Remove="Report\数据源\通讯录.json" />
     <None Remove="Report\模板\两层矩阵.xml" />
     <None Remove="Report\模板\分组表格.xml" />
@@ -23,12 +24,10 @@
     <None Remove="Report\模板\图表.xml" />
     <None Remove="Report\模板\完整矩阵.xml" />
     <None Remove="Report\模板\完整表格.xml" />
-    <None Remove="Report\模板\报表链接.xml" />
     <None Remove="Report\模板\最少行表格.xml" />
-    <None Remove="Report\模板\点击脚本1.xml" />
-    <None Remove="Report\模板\点击脚本2.xml" />
     <None Remove="Report\模板\甘特图.xml" />
     <None Remove="Report\模板\简单文本.xml" />
+    <None Remove="Report\模板\脚本.xml" />
     <None Remove="Report\模板\自动行数列表.xml" />
     <None Remove="Report\模板\跨页矩阵.xml" />
     <None Remove="Report\模板\跨页表格.xml" />
@@ -48,6 +47,7 @@
     <EmbeddedResource Include="Report\数据源\成绩汇总.json" />
     <EmbeddedResource Include="Report\数据源\甘特图.json" />
     <EmbeddedResource Include="Report\数据源\网损情况.json" />
+    <EmbeddedResource Include="Report\数据源\菜单.json" />
     <EmbeddedResource Include="Report\数据源\通讯录.json" />
     <EmbeddedResource Include="Report\模板\两层矩阵.xml" />
     <EmbeddedResource Include="Report\模板\分组表格.xml" />
@@ -57,10 +57,8 @@
     <EmbeddedResource Include="Report\模板\含标题矩阵.xml" />
     <EmbeddedResource Include="Report\模板\固定行数列表.xml" />
     <EmbeddedResource Include="Report\模板\图表.xml" />
-    <EmbeddedResource Include="Report\模板\报表链接.xml" />
     <EmbeddedResource Include="Report\模板\最少行表格.xml" />
-    <EmbeddedResource Include="Report\模板\点击脚本1.xml" />
-    <EmbeddedResource Include="Report\模板\点击脚本2.xml" />
+    <EmbeddedResource Include="Report\模板\脚本.xml" />
     <EmbeddedResource Include="Report\模板\甘特图.xml" />
     <EmbeddedResource Include="Report\模板\完整矩阵.xml" />
     <EmbeddedResource Include="Report\模板\简单文本.xml" />

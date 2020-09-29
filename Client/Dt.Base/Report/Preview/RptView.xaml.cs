@@ -7,19 +7,16 @@
 #endregion
 
 #region 引用命名
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
-using Dt.Base;
 using Dt.Cells.Data;
 using Dt.Cells.UI;
 using Dt.Core;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using Windows.Foundation;
 using Windows.Graphics.Printing;
 using Windows.Storage;
 using Windows.Storage.Pickers;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 #endregion
 
@@ -120,45 +117,18 @@ namespace Dt.Base.Report
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        async void OnCellClick(object sender, CellClickEventArgs e)
+        void OnCellClick(object sender, CellClickEventArgs e)
         {
-            //RptTextInst inst = _excel.ActiveSheet[e.Row, e.Column].Tag as RptTextInst;
-            //if (inst == null || inst.Item == null)
-            //{
-            //    return;
-            //}
-
-            //RptText txt = (RptText)inst.Item;
-            //if (txt.ClickAction == TextClickAction.None
-            //    || (txt.ClickAction == TextClickAction.OpenReport && string.IsNullOrEmpty(txt.RptID))
-            //    || (txt.ClickAction == TextClickAction.RunScript && string.IsNullOrEmpty(txt.ScriptID)))
-            //{
-            //    return;
-            //}
-
-            //if (txt.ClickAction == TextClickAction.OpenReport)
-            //{
-            //    RptInfo info = new RptInfo();
-            //    info.Name = txt.RptID;
-            //    await AtRpt.LoadTemplate(info);
-
-            //    // 构造查询参数
-            //    Dict dt = new Dict();
-            //    DataRow row = inst.Data;
-            //    foreach (DataRow data in info.Root.Params.Data)
-            //    {
-            //        string id = data.Str("id");
-            //        dt[id] = (row != null && row.Contains(id)) ? row[id] : data["val"];
-            //    }
-            //    info.Params = dt;
-            //    LinkReport(info);
-            //}
-            //else
-            //{
-            //    inst.Row = e.Row;
-            //    inst.Col = e.Column;
-            //    _info.OnCellClick(txt.ScriptID, inst);
-            //}
+            RptTextInst inst;
+            if (Info.ScriptObj != null
+                && (inst = _excel.ActiveSheet[e.Row, e.Column].Tag as RptTextInst) != null
+                && inst.Item is RptText txt
+                && !string.IsNullOrEmpty(txt.ScriptID))
+            {
+                inst.Row = e.Row;
+                inst.Col = e.Column;
+                Info.ScriptObj.OnCellClick(txt.ScriptID, inst);
+            }
         }
 
         /// <summary>
@@ -264,10 +234,10 @@ namespace Dt.Base.Report
             {
                 if (_cmdColHeader == null)
                 {
-                    _cmdColHeader = new BaseCommand((p_param) => 
+                    _cmdColHeader = new BaseCommand((p_param) =>
                     {
                         if (_excel.ActiveSheet != null)
-                            DoShowColHeader(!_excel.ActiveSheet.ColumnHeader.IsVisible); 
+                            DoShowColHeader(!_excel.ActiveSheet.ColumnHeader.IsVisible);
                     });
                 }
                 return _cmdColHeader;
@@ -283,10 +253,10 @@ namespace Dt.Base.Report
             {
                 if (_cmdRowHeader == null)
                 {
-                    _cmdRowHeader = new BaseCommand((p_param) => 
+                    _cmdRowHeader = new BaseCommand((p_param) =>
                     {
                         if (_excel.ActiveSheet != null)
-                            DoShowRowHeader(!_excel.ActiveSheet.RowHeader.IsVisible); 
+                            DoShowRowHeader(!_excel.ActiveSheet.RowHeader.IsVisible);
                     });
                 }
                 return _cmdRowHeader;

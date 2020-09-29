@@ -39,8 +39,7 @@
             <Button Content="报表链接" />
         </StackPanel>
         <StackPanel Orientation="Horizontal">
-            <Button Content="点击脚本1" />
-            <Button Content="点击脚本2" />
+            <Button Content="脚本" Click="OnScript" />
             <Button Content="报表组" Click="OnRptGroup" />
         </StackPanel>
         <TextBox x:Name="_tb" />

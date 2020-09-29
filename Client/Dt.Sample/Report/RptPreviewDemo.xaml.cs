@@ -41,7 +41,8 @@ namespace Dt.Sample
                 {
                     foreach (Button btn in pnl.Children.OfType<Button>())
                     {
-                        if (btn.Content.ToString() != "报表组")
+                        var name = btn.Content.ToString();
+                        if (name != "报表组" && name != "脚本")
                             btn.Click += OnBtnClick;
                     }
                 }
@@ -51,7 +52,7 @@ namespace Dt.Sample
         void OnBtnClick(object sender, RoutedEventArgs e)
         {
             string name = ((Button)sender).Content.ToString();
-            AtRpt.Show(new MyRptInfo { Name = name });
+            AtRpt.Show(new MyRptInfo { Name = name, CacheTemplate = false });
         }
 
         void OnRptGroup(object sender, RoutedEventArgs e)
@@ -79,6 +80,11 @@ namespace Dt.Sample
             //    AtKit.Msg("已保存到剪切板！");
             //}
         }
+
+        void OnScript(object sender, RoutedEventArgs e)
+        {
+            AtRpt.Show(new MyRptInfo { Name = "脚本", CacheTemplate = false, Params = new Dict { { "parentid", "" }, { "parentname", "根菜单" } } });
+        }
     }
 
     public class MyRptInfo : RptInfo
@@ -93,28 +99,6 @@ namespace Dt.Sample
                     return reader.ReadToEnd();
                 }
             });
-        }
-
-    }
-
-    public class MyRptScript : RptScript
-    {
-        public override Task<Table> GetData(string p_name)
-        {
-            return Task.Run(() =>
-            {
-                using (var stream = typeof(RptDesignDemo).Assembly.GetManifestResourceStream($"Dt.Sample.Report.数据源.{p_name}.json"))
-                {
-                    return Table.Create(stream);
-                }
-            });
-        }
-
-        public override void InitMenu(Menu p_menu)
-        {
-            p_menu.Items.Add(new Mi { ID = "显示网格", IsCheckable = true, Cmd = View.CmdGridLine });
-            p_menu.Items.Add(new Mi { ID = "显示列头", IsCheckable = true, Cmd = View.CmdColHeader });
-            p_menu.Items.Add(new Mi { ID = "显示行头", IsCheckable = true, Cmd = View.CmdRowHeader });
         }
     }
 }
