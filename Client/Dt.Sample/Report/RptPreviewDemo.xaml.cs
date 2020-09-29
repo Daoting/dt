@@ -52,7 +52,7 @@ namespace Dt.Sample
         void OnBtnClick(object sender, RoutedEventArgs e)
         {
             string name = ((Button)sender).Content.ToString();
-            AtRpt.Show(new MyRptInfo { Name = name, CacheTemplate = false });
+            AtRpt.Show(new MyRptInfo { Name = name });
         }
 
         void OnRptGroup(object sender, RoutedEventArgs e)
@@ -83,7 +83,7 @@ namespace Dt.Sample
 
         void OnScript(object sender, RoutedEventArgs e)
         {
-            AtRpt.Show(new MyRptInfo { Name = "脚本", CacheTemplate = false, Params = new Dict { { "parentid", "" }, { "parentname", "根菜单" } } });
+            AtRpt.Show(new MyRptInfo { Name = "脚本", Params = new Dict { { "parentid", "" }, { "parentname", "根菜单" } } });
         }
     }
 

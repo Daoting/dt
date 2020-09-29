@@ -84,6 +84,8 @@ namespace Dt.Base.Report
             try
             {
                 Info = p_info;
+                if (p_info.ScriptObj != null && p_info.ScriptObj.View != this)
+                    p_info.ScriptObj.View = this;
 
                 // 绘制报表内容
                 if (Info.Sheet == null)

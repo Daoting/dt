@@ -63,14 +63,58 @@ namespace Dt.Sample
 
         public override void InitMenu(Menu p_menu)
         {
+            Mi mi = new Mi { ID = "后退", Icon = Icons.左 };
+            mi.Click += OnBack;
+            p_menu.Items.Insert(0, mi);
             p_menu.Items.Add(new Mi { ID = "显示网格", IsCheckable = true, Cmd = View.CmdGridLine });
-            p_menu.Items.Add(new Mi { ID = "显示列头", IsCheckable = true, Cmd = View.CmdColHeader });
-            p_menu.Items.Add(new Mi { ID = "显示行头", IsCheckable = true, Cmd = View.CmdRowHeader });
+        }
+
+        void OnBack(object sender, Mi e)
+        {
+            var ls = View.Tag as Stack<RptInfo>;
+            if (ls != null && ls.Count > 0)
+                View.LoadReport(ls.Pop());
         }
 
         public override void OnCellClick(string p_id, IRptCell p_text)
         {
-            
+            var row = p_text.Data;
+            if (p_id == "flag1")
+            {
+                if (row.Bool("isgroup"))
+                {
+                    var info = new MyRptInfo { Name = "脚本", Params = new Dict { { "parentid", row.Str("id") }, { "parentname", row.Str("name") } } };
+                    var ls = View.Tag as Stack<RptInfo>;
+                    if (ls == null)
+                    {
+                        ls = new Stack<RptInfo>();
+                        View.Tag = ls;
+                    }
+                    ls.Push(View.Info);
+                    View.LoadReport(info);
+                }
+                else
+                {
+                    Dlg dlg = new Dlg();
+                    var pnl = new StackPanel
+                    {
+                        Children =
+                    {
+                        new TextBlock { Text = "id：" + row.Str("id")},
+                        new TextBlock { Text = "parentid：" + row.Str("parentid")},
+                        new TextBlock { Text = "name：" + row.Str("name")},
+                        new TextBlock { Text = "isgroup：" + row.Str("isgroup")},
+                    },
+                        Margin = new Thickness(20),
+                    };
+                    dlg.Content = pnl;
+                    dlg.Show();
+                }
+            }
+            else if (p_id == "flag2")
+            {
+                AtKit.Msg(row.Bool("isgroup") ? "分组菜单" : "实体菜单");
+            }
         }
     }
 }

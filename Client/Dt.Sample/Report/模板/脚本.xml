@@ -19,13 +19,13 @@
       </THeader>
       <TBody>
         <TRow>
-          <Text row="2" col="1" val=":Val(菜单,name) " scriptid="name" horalign="Left" />
-          <Text row="2" col="2" val=":Val(菜单,isgroup)" />
+          <Text row="2" col="1" val=":Val(菜单,name) " scriptid="flag1" horalign="Left" />
+          <Text row="2" col="2" val=":Val(菜单,isgroup)" scriptid="flag2" />
         </TRow>
       </TBody>
     </Table>
     <Text row="4" col="1" val=":&quot;合计 &quot;&#xD;&#xA;+ Count(菜单)&#xD;&#xA;+ &quot; 个&quot;" horalign="Left" lbs="None" tbs="None" rbs="None" bbs="None" />
   </Body>
   <Footer />
-  <View script="Dt.Sample.MyRptScript,Dt.Sample" autoquery="True" />
+  <View script="Dt.Sample.MyRptScript,Dt.Sample" autoquery="True" showsearchform="False" />
 </Rpt>
