@@ -466,13 +466,14 @@ namespace Dt.Cells.UI
             p_memento.ShowRowRangeGroup = _excel.ShowRowRangeGroup;
             p_memento.ShowColumnRangeGroup = _excel.ShowColumnRangeGroup;
             p_memento.ShowFreezeLine = _excel.ShowFreezeLine;
+            p_memento.ShowSelection = _excel.ShowSelection;
 
             _excel.VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
             _excel.HorizontalScrollBarVisibility = ScrollBarVisibility.Hidden;
             _excel.TabStripVisibility = Visibility.Collapsed;
             _excel.ShowRowRangeGroup = false;
             _excel.ShowColumnRangeGroup = false;
-            _excel.HideSelectionWhenPrinting = true;
+            _excel.ShowSelection = false;
             _excel.HideDecorationWhenPrinting = true;
             _excel.ShowFreezeLine = false;
 
@@ -500,7 +501,7 @@ namespace Dt.Cells.UI
             _excel.ShowRowRangeGroup = p_memento.ShowRowRangeGroup;
             _excel.ShowColumnRangeGroup = p_memento.ShowColumnRangeGroup;
             _excel.ShowFreezeLine = p_memento.ShowFreezeLine;
-            _excel.HideSelectionWhenPrinting = false;
+            _excel.ShowSelection = p_memento.ShowSelection;
             _excel.HideDecorationWhenPrinting = false;
         }
 
@@ -604,6 +605,8 @@ namespace Dt.Cells.UI
             public bool ShowColumnRangeGroup;
 
             public bool ShowFreezeLine;
+
+            public bool ShowSelection;
         }
     }
 }

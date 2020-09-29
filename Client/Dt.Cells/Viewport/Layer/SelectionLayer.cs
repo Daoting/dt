@@ -48,7 +48,7 @@ namespace Dt.Cells.UI
 
         protected override Size MeasureOverride(Size availableSize)
         {
-            if (_owner.Excel.HideSelectionWhenPrinting)
+            if (!_owner.Excel.ShowSelection)
             {
                 return availableSize;
             }
@@ -124,7 +124,7 @@ namespace Dt.Cells.UI
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            if (_owner.Excel.HideSelectionWhenPrinting)
+            if (!_owner.Excel.ShowSelection)
                 return finalSize;
 
             // 选择多区域时，非当前焦点区域

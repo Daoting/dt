@@ -95,9 +95,9 @@ namespace Dt.Base.Report
 
             // 创建Worksheet
             _ws = new Worksheet(rows.Count, cols.Count);
-            // 不显示选择区黑框和触摸时的两圈
-            _ws.SelectionBorderColor = Colors.Transparent;
-            _ws.TouchSelectionGripperBackgroundColor = Colors.Transparent;
+            // 不显示选择区黑框和触摸时的两圈，改用 Excel.ShowSelection 控制
+            //_ws.SelectionBorderColor = Colors.Transparent;
+            //_ws.TouchSelectionGripperBackgroundColor = Colors.Transparent;
             // 单元格不可编辑，图表可拖动
             _ws.LockCell = true;
             // Wp始终不可编辑

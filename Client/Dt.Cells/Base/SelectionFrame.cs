@@ -19,8 +19,8 @@ namespace Dt.Cells.UI
 {
     internal partial class SelectionFrame : Panel
     {
-        static readonly Brush DefaultSelectionBorderBrush = new SolidColorBrush(Color.FromArgb(220, 0, 0, 0));
         static Rect _rcEmpty = new Rect();
+        SolidColorBrush _brush;
         Rectangle _bottomRectangle;
         Rectangle _fillIndicator;
         Rect _fillIndicatorBounds = Rect.Empty;
@@ -33,29 +33,30 @@ namespace Dt.Cells.UI
         public SelectionFrame(CellsPanel owingViewport)
         {
             OwingViewport = owingViewport;
+            _brush = new SolidColorBrush(owingViewport.Excel.ActiveSheet.SelectionBorderColor);
             _leftRectangle = new Rectangle();
-            _leftRectangle.Fill = DefaultSelectionBorderBrush;
+            _leftRectangle.Fill = _brush;
             _leftRectangle.Stroke = null;
             _leftRectangle.StrokeThickness = 0.0;
             _leftRectangle.Width = 3.0;
             Children.Add(_leftRectangle);
 
             _topRectangle = new Rectangle();
-            _topRectangle.Fill = DefaultSelectionBorderBrush;
+            _topRectangle.Fill = _brush;
             _topRectangle.Stroke = null;
             _topRectangle.StrokeThickness = 0.0;
             _topRectangle.Height = 3.0;
             Children.Add(_topRectangle);
 
             _rightRectangle = new Rectangle();
-            _rightRectangle.Fill = DefaultSelectionBorderBrush;
+            _rightRectangle.Fill = _brush;
             _rightRectangle.Stroke = null;
             _rightRectangle.StrokeThickness = 0.0;
             _rightRectangle.Width = 3.0;
             Children.Add(_rightRectangle);
 
             _bottomRectangle = new Rectangle();
-            _bottomRectangle.Fill = DefaultSelectionBorderBrush;
+            _bottomRectangle.Fill = _brush;
             _bottomRectangle.Stroke = null;
             _bottomRectangle.StrokeThickness = 0.0;
             _bottomRectangle.Height = 3.0;
@@ -63,7 +64,7 @@ namespace Dt.Cells.UI
 
             // 右下矩形标志
             _fillIndicator = new Rectangle();
-            _fillIndicator.Fill = DefaultSelectionBorderBrush;
+            _fillIndicator.Fill = _brush;
             Children.Add(_fillIndicator);
             _fillIndicatorPosition = FillIndicatorPosition.BottomRight;
         }
@@ -169,10 +170,10 @@ namespace Dt.Cells.UI
 
         internal void ResetSelectionFrameStoke()
         {
-            _leftRectangle.Fill = DefaultSelectionBorderBrush;
-            _topRectangle.Fill = DefaultSelectionBorderBrush;
-            _rightRectangle.Fill = DefaultSelectionBorderBrush;
-            _bottomRectangle.Fill = DefaultSelectionBorderBrush;
+            _leftRectangle.Fill = _brush;
+            _topRectangle.Fill = _brush;
+            _rightRectangle.Fill = _brush;
+            _bottomRectangle.Fill = _brush;
         }
 
         internal void SetSelectionFrameStroke(Brush brush)
@@ -217,7 +218,7 @@ namespace Dt.Cells.UI
             set
             {
                 if (value && _bottomRectangle.Fill == null)
-                    _bottomRectangle.Fill = DefaultSelectionBorderBrush;
+                    _bottomRectangle.Fill = _brush;
                 else if (!value && _bottomRectangle.Fill != null)
                     _bottomRectangle.Fill = null;
             }
@@ -229,7 +230,7 @@ namespace Dt.Cells.UI
             set
             {
                 if (value && _fillIndicator.Fill == null)
-                    _fillIndicator.Fill = DefaultSelectionBorderBrush;
+                    _fillIndicator.Fill = _brush;
                 else if (!value && _fillIndicator.Fill != null)
                     _fillIndicator.Fill = null;
             }
@@ -241,7 +242,7 @@ namespace Dt.Cells.UI
             set
             {
                 if (value && _leftRectangle.Fill == null)
-                    _leftRectangle.Fill = DefaultSelectionBorderBrush;
+                    _leftRectangle.Fill = _brush;
                 else if (!value && _leftRectangle.Fill != null)
                     _leftRectangle.Fill = null;
             }
@@ -253,7 +254,7 @@ namespace Dt.Cells.UI
             set
             {
                 if (value && _rightRectangle.Fill == null)
-                    _rightRectangle.Fill = DefaultSelectionBorderBrush;
+                    _rightRectangle.Fill = _brush;
                 else if (!value && _rightRectangle.Fill != null)
                     _rightRectangle.Fill = null;
             }
@@ -265,7 +266,7 @@ namespace Dt.Cells.UI
             set
             {
                 if (value && _topRectangle.Fill == null)
-                    _topRectangle.Fill = DefaultSelectionBorderBrush;
+                    _topRectangle.Fill = _brush;
                 else if (!value && _topRectangle.Fill != null)
                     _topRectangle.Fill = null;
             }

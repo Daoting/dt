@@ -265,12 +265,6 @@ namespace Dt.Base
             }
         }
 
-        internal bool HideSelectionWhenPrinting
-        {
-            get { return (bool)GetValue(HideSelectionWhenPrintingProperty); }
-            set { SetValue(HideSelectionWhenPrintingProperty, value); }
-        }
-
         internal HoverManager HoverManager
         {
             get { return _hoverManager; }
@@ -698,11 +692,11 @@ namespace Dt.Base
             typeof(Excel),
             new PropertyMetadata(ClipboardPasteOptions.All));
 
-        public static readonly DependencyProperty HideSelectionWhenPrintingProperty = DependencyProperty.Register(
-            "HideSelectionWhenPrinting",
+        public static readonly DependencyProperty ShowSelectionProperty = DependencyProperty.Register(
+            "ShowSelection",
             typeof(bool),
             typeof(Excel),
-            new PropertyMetadata(false));
+            new PropertyMetadata(true));
 
         public static readonly DependencyProperty ColumnSplitBoxAlignmentProperty = DependencyProperty.Register(
             "ColumnSplitBoxAlignment",

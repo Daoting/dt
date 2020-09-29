@@ -721,6 +721,15 @@ namespace Dt.Base
         }
 
         /// <summary>
+        /// 获取设置是否显示选择区域，默认true
+        /// </summary>
+        public bool ShowSelection
+        {
+            get { return (bool)GetValue(ShowSelectionProperty); }
+            set { SetValue(ShowSelectionProperty, value); }
+        }
+
+        /// <summary>
         /// 获取设置是否显示修饰层
         /// </summary>
         public bool ShowDecoration

@@ -3,7 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base"
-    Home="编辑,属性">
+    Home="编辑,报表项,单元格">
 
     <a:WinCenter>
         <a:Tabs>

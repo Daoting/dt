@@ -805,7 +805,7 @@ namespace Dt.Base
 
         void RaiseCellClick(MouseButtonType p_btnType, HitTestInformation p_hitInfo)
         {
-            if ((CellClick == null || _eventSuspended == 0))
+            if (CellClick == null || _eventSuspended != 0)
                 return;
 
             CellClickEventArgs args = null;

@@ -61,7 +61,7 @@ namespace Dt.Cells.UI
         {
             bool selectAll = false;
             Worksheet worksheet = _excel.ActiveSheet;
-            if (!_excel.HideSelectionWhenPrinting
+            if (_excel.ShowSelection
                 && !_excel.HasSelectedFloatingObject()
                 && worksheet.Selections.Count == 1)
             {

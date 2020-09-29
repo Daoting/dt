@@ -55,7 +55,7 @@ namespace Dt.Cells.UI
             else
             {
                 var excel = OwnRow.Owner.Excel;
-                bool allowSelect = !excel.HideSelectionWhenPrinting && !excel.HasSelectedFloatingObject();
+                bool allowSelect = excel.ShowSelection && !excel.HasSelectedFloatingObject();
                 if ((IsSelected && allowSelect)
                     || IsHightlighted)
                 {

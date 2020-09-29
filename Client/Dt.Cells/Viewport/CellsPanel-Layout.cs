@@ -26,7 +26,14 @@ namespace Dt.Cells.UI
             _borderLayer.Measure(availableSize);
             _selectionLayer.Measure(availableSize);
             _dragFillLayer.Measure(availableSize);
-            _decorationLayer?.Measure(availableSize);
+            if (_decorationLayer != null)
+            {
+#if UWP
+                // UWP不失效不会重新测量！iOS失效会死循环！
+                _decorationLayer.InvalidateMeasure();
+#endif
+                _decorationLayer.Measure(availableSize);
+            }
             _editorLayer.Measure(availableSize);
             _floatingLayer.Measure(availableSize);
             _floatingEditLayer.Measure(availableSize);

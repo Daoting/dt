@@ -25,7 +25,7 @@ namespace Dt.Cells.UI
             get
             {
                 var excel = OwnRow.Owner.Excel;
-                if (excel.HideSelectionWhenPrinting)
+                if (!excel.ShowSelection)
                 {
                     return false;
                 }

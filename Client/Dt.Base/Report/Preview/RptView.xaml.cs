@@ -12,12 +12,16 @@ using Dt.Cells.UI;
 using Dt.Core;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
+using System.Text;
 using Windows.Foundation;
 using Windows.Graphics.Printing;
 using Windows.Storage;
 using Windows.Storage.Pickers;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 #endregion
 
 namespace Dt.Base.Report
@@ -25,6 +29,10 @@ namespace Dt.Base.Report
     public sealed partial class RptView : UserControl
     {
         #region 成员变量
+        Menu _selectionMenu;
+        Menu _rightMenu;
+        SheetTable _selectedTable;
+
         BaseCommand _cmdExport;
         BaseCommand _cmdPrint;
         BaseCommand _cmdSearch;
@@ -42,6 +50,7 @@ namespace Dt.Base.Report
             _excel.Sheets.Clear();
             _excel.CellClick += OnCellClick;
             _excel.SelectionChanged += OnSelectionChanged;
+            _excel.RightTapped += OnExcelRightTapped;
         }
 
         /// <summary>
@@ -112,6 +121,7 @@ namespace Dt.Base.Report
             }
         }
 
+        #region Excel事件
         /// <summary>
         /// 点击单元格
         /// </summary>
@@ -138,32 +148,274 @@ namespace Dt.Base.Report
         /// <param name="e"></param>
         void OnSelectionChanged(object sender, EventArgs e)
         {
-            //object selectedItem = null;
-            //if (_previewMenu != null && _previewMenu.IsOpened)
-            //    _previewMenu.Close();
+            _selectedTable = null;
+            _excel.DecorationRange = null;
 
-            //Worksheet sheet = _excel.ActiveSheet;
-            //if (sheet.Selections.Count == 0)
-            //    return;
+            Worksheet sheet = _excel.ActiveSheet;
+            if (sheet == null || sheet.Selections.Count != 1)
+                return;
 
-            //CellRange range = sheet.Selections[0];
-            //SheetTable[] st = sheet.GetTables();
-            //foreach (SheetTable tbl in st)
-            //{
-            //    if (tbl.Range.Intersects(range.Row, range.Column, range.RowCount, range.ColumnCount))
-            //    {
-            //        selectedItem = tbl;
-            //        break;
-            //    }
-            //}
-            //if (selectedItem == null && range.RowCount == 1 && range.ColumnCount == 1)
-            //    return;
+            CellRange range = sheet.Selections[0];
+            SheetTable[] st = sheet.GetTables();
+            foreach (SheetTable tbl in st)
+            {
+                if (tbl.Range.Intersects(range.Row, range.Column, range.RowCount, range.ColumnCount))
+                {
+                    _selectedTable = tbl;
+                    _excel.DecorationRange = tbl.Range;
+                    break;
+                }
+            }
+            // 选择区包含表格 单行时不显示菜单
+            if (_selectedTable != null || range.RowCount == 1)
+                return;
 
-            //if (_previewMenu == null)
-            //    _previewMenu = new PreviewMenu(this);
-            //_previewMenu.SelectedItem = selectedItem;
-            //_previewMenu.Show(this, range);
+            if (_selectionMenu == null)
+            {
+                _selectionMenu = new Menu { IsContextMenu = true };
+                Mi mi = new Mi { ID = "转为表格", Icon = Icons.田字格 };
+                mi.Click += (s, args) => AddSheetTable(_excel.ActiveSheet.Selections[0]);
+                _selectionMenu.Items.Add(mi);
+
+                mi = new Mi { ID = "生成柱状图", Icon = Icons.对比图 };
+                mi.Click += (s, args) => AddChart(_excel.ActiveSheet.Selections[0]);
+                _selectionMenu.Items.Add(mi);
+            }
+
+            Point topLeft = _excel.GetAbsolutePosition();
+            Rect rc = _excel.ActiveSheet.GetRangeBound(range);
+            double x = topLeft.X + rc.X + rc.Width + 5 - (_excel.ActiveSheet.RowHeader.IsVisible ? 0 : _excel.ActiveSheet.RowHeader.DefaultColumnWidth);
+            double y = topLeft.Y + rc.Y - (_excel.ActiveSheet.ColumnHeader.IsVisible ? 0 : _excel.ActiveSheet.ColumnHeader.DefaultRowHeight);
+            _selectionMenu.OpenContextMenu(new Point(x, y));
         }
+
+        void OnExcelRightTapped(object sender, RightTappedRoutedEventArgs e)
+        {
+            if (_excel.ActiveSheet == null)
+                return;
+
+            if (_rightMenu == null)
+            {
+                _rightMenu = new Menu { IsContextMenu = true };
+                Mi mi = new Mi { ID = "删除表格", Icon = Icons.田字格 };
+                mi.Click += (s, args) => DelSheetTable();
+                _rightMenu.Items.Add(mi);
+
+                mi = new Mi { ID = "清除所有图表", Icon = Icons.对比图 };
+                mi.Click += (s, args) => ClearChart();
+                _rightMenu.Items.Add(mi);
+
+                mi = new Mi { ID = "清除所有表格", Icon = Icons.田字格 };
+                mi.Click += (s, args) => ClearTable();
+                _rightMenu.Items.Add(mi);
+
+                _rightMenu.Items.Add(new Mi { ID = "显示网格", IsCheckable = true, IsChecked = _excel.ActiveSheet.ShowGridLine, Cmd = CmdGridLine });
+                _rightMenu.Items.Add(new Mi { ID = "显示列头", IsCheckable = true, IsChecked = _excel.ActiveSheet.ColumnHeader.IsVisible, Cmd = CmdColHeader });
+                _rightMenu.Items.Add(new Mi { ID = "显示行头", IsCheckable = true, IsChecked = _excel.ActiveSheet.RowHeader.IsVisible, Cmd = CmdRowHeader });
+            }
+
+            _rightMenu["删除表格"].Visibility = _selectedTable != null ? Visibility.Visible : Visibility.Collapsed;
+            _rightMenu["清除所有图表"].Visibility = _excel.ActiveSheet.Charts.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+            _rightMenu["清除所有表格"].Visibility = _excel.ActiveSheet.GetTables().Length > 0 ? Visibility.Visible : Visibility.Collapsed;
+            _rightMenu.OpenContextMenu(e.GetPosition(null));
+        }
+        #endregion
+
+        #region 增删表格图表
+        /// <summary>
+        /// 添加表格
+        /// </summary>
+        /// <param name="p_range"></param>
+        SheetTable AddSheetTable(CellRange p_range)
+        {
+            Worksheet sheet = _excel.ActiveSheet;
+            int maxRow = p_range.Row + p_range.RowCount;
+            int maxCol = p_range.Column + p_range.ColumnCount;
+            for (int i = p_range.Row; i < maxRow; i++)
+            {
+                for (int j = p_range.Column; j < maxCol; j++)
+                {
+                    sheet[i, j].StyleName = "";
+                }
+            }
+            SheetTable table = sheet.AddTable("table" + AtKit.NewID, p_range.Row, p_range.Column, p_range.RowCount, p_range.ColumnCount, TableStyles.Light21);
+            sheet.SetActiveCell(0, 0, true);
+            return table;
+        }
+
+        /// <summary>
+        /// 添加图表
+        /// </summary>
+        /// <param name="p_range"></param>
+        SpreadChart AddChart(CellRange p_range)
+        {
+            Worksheet sheet = _excel.ActiveSheet;
+            Rect rc = sheet.GetRangeLocation(p_range);
+            string rangeFormula = sheet.Cells[p_range.Row, p_range.Column, p_range.RowCount + p_range.Row - 1, p_range.ColumnCount + p_range.Column - 1].ToString(this.Excel.ActiveSheet.Cells[0, 0]);
+            rangeFormula = "'" + sheet.Name + "'!" + rangeFormula;
+            SpreadChart chart = sheet.AddChart("table" + AtKit.NewID, SpreadChartType.ColumnClustered, rangeFormula, rc.Left, rc.Top + rc.Height + 8, 600, 300);
+            chart.Legend.Orientation = Orientation.Vertical;
+            StringBuilder builder = new StringBuilder("chart");
+            builder.Append(sheet.Charts.Count.ToString()).Append("!");
+            builder.Append(p_range.Row.ToString()).Append(",").Append(p_range.Column.ToString()).Append(",");
+            builder.Append(p_range.RowCount.ToString()).Append(",").Append(p_range.ColumnCount.ToString());
+            chart.Name = builder.ToString();
+            chart.PropertyChanged += OnPropertyChanged;
+            chart.IsSelected = true;
+            sheet.SetActiveCell(0, 0, true);
+            return chart;
+        }
+
+        /// <summary>
+        /// 删除当前选择的表格
+        /// </summary>
+        void DelSheetTable()
+        {
+            if (_selectedTable == null)
+                return;
+
+            Worksheet sheet = _excel.ActiveSheet;
+            List<string> recText = new List<string>();
+            List<object> recInst = new List<object>();
+            CellRange range = _selectedTable.Range;
+            int idx = 0;
+            RptTextInst inst;
+            Dt.Cells.Data.Cell cell = null;
+            int maxRow = range.Row + range.RowCount;
+            int maxCol = range.Column + range.ColumnCount;
+            for (int i = range.Row; i < maxRow; i++)
+            {
+                for (int j = range.Column; j < maxCol; j++)
+                {
+                    cell = sheet[i, j];
+                    recText.Add((cell.Text.StartsWith("Column") && cell.Tag == null) ? null : cell.Text);
+                    recInst.Add(cell.Tag);
+                }
+            }
+
+            using (_excel.Defer())
+            {
+                _excel.DecorationRange = null;
+                sheet.RemoveTable(_selectedTable);
+                for (int i = range.Row; i < maxRow; i++)
+                {
+                    for (int j = range.Column; j < maxCol; j++)
+                    {
+                        sheet[i, j].Text = recText[idx];
+                        sheet[i, j].Tag = recInst[idx];
+                        inst = sheet[i, j].Tag as RptTextInst;
+                        if (inst == null)
+                        {
+                            sheet[i, j].StyleName = "";
+                        }
+                        else
+                        {
+                            AtKit.RunSync(() => { (inst.Item as RptText).ApplyStyle(sheet[i, j]); });
+                        }
+                        idx++;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 当选中图表的时候，显示图表数据范围，不选中不显示。
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "IsSelected")
+            {
+                SpreadChart chart = sender as SpreadChart;
+                if (chart == null)
+                    return;
+                Worksheet sheet = _excel.ActiveSheet;
+                string[] Position = chart.Name.Substring(chart.Name.IndexOf("!") + 1).Split(',');
+                if (Position.Length != 4)
+                    return;
+                CellRange range = new CellRange(int.Parse(Position[0]), int.Parse(Position[1]), int.Parse(Position[2]), int.Parse(Position[3]));
+                if (!range.IsValidRange(sheet))
+                    return;
+                _excel.DecorationRange = chart.IsSelected ? range : null;
+            }
+        }
+
+        /// <summary>
+        /// 清除表格
+        /// </summary>
+        void ClearTable()
+        {
+            Worksheet sheet = _excel.ActiveSheet;
+            if (sheet == null)
+                return;
+
+            List<string> recText = new List<string>();
+            List<object> recInst = new List<object>();
+            int idx = 0;
+            RptTextInst inst;
+            Dt.Cells.Data.Cell cell = null;
+            _selectedTable = null;
+
+            using (_excel.Defer())
+            {
+                _excel.DecorationRange = null;
+                foreach (SheetTable tbl in sheet.GetTables())
+                {
+                    CellRange range = tbl.Range;
+                    int maxRow = range.Row + range.RowCount;
+                    int maxCol = range.Column + range.ColumnCount;
+                    for (int i = range.Row; i < maxRow; i++)
+                    {
+                        for (int j = range.Column; j < maxCol; j++)
+                        {
+                            cell = sheet[i, j];
+                            recText.Add((cell.Text.StartsWith("Column") && cell.Tag == null) ? null : cell.Text);
+                            recInst.Add(cell.Tag);
+                        }
+                    }
+                    sheet.RemoveTable(tbl);
+                    idx = 0;
+                    for (int i = range.Row; i < maxRow; i++)
+                    {
+                        for (int j = range.Column; j < maxCol; j++)
+                        {
+                            sheet[i, j].Text = recText[idx];
+                            sheet[i, j].Tag = recInst[idx];
+                            inst = sheet[i, j].Tag as RptTextInst;
+                            if (inst == null)
+                            {
+                                sheet[i, j].StyleName = "";
+                            }
+                            else
+                            {
+                                AtKit.RunSync(() => { (inst.Item as RptText).ApplyStyle(sheet[i, j]); });
+                            }
+                            idx++;
+                        }
+                    }
+                    recText.Clear();
+                    recInst.Clear();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 清除图表
+        /// </summary>
+        void ClearChart()
+        {
+            Worksheet sheet = _excel.ActiveSheet;
+            if (sheet != null)
+            {
+                using (_excel.Defer())
+                {
+                    sheet.Charts.Clear();
+                    _excel.DecorationRange = null;
+                }
+            }
+        }
+        #endregion
 
         #region 命令
         /// <summary>
@@ -406,76 +658,6 @@ namespace Dt.Base.Report
             var st = _excel.ActiveSheet;
             if (st != null)
                 st.RowHeader.IsVisible = p_show;
-        }
-
-        /// <summary>
-        /// 清除表格。
-        /// </summary>
-        private void ClearTable()
-        {
-            Worksheet sheet = _excel.ActiveSheet;
-            if (sheet == null)
-                return;
-
-            List<string> recText = new List<string>();
-            List<object> recInst = new List<object>();
-            int idx = 0;
-            RptTextInst inst;
-            _excel.AutoRefresh = false;
-            _excel.SuspendEvent();
-            Dt.Cells.Data.Cell cell = null;
-            foreach (SheetTable tbl in sheet.GetTables())
-            {
-                CellRange range = tbl.Range;
-                int maxRow = range.Row + range.RowCount;
-                int maxCol = range.Column + range.ColumnCount;
-                for (int i = range.Row; i < maxRow; i++)
-                {
-                    for (int j = range.Column; j < maxCol; j++)
-                    {
-                        cell = sheet[i, j];
-                        recText.Add((cell.Text.StartsWith("Column") && cell.Tag == null) ? null : cell.Text);
-                        recInst.Add(cell.Tag);
-                    }
-                }
-                sheet.RemoveTable(tbl);
-                idx = 0;
-                for (int i = range.Row; i < maxRow; i++)
-                {
-                    for (int j = range.Column; j < maxCol; j++)
-                    {
-                        sheet[i, j].Text = recText[idx];
-                        sheet[i, j].Tag = recInst[idx];
-                        inst = sheet[i, j].Tag as RptTextInst;
-                        if (inst == null)
-                        {
-                            sheet[i, j].StyleName = "";
-                        }
-                        else
-                        {
-                            AtKit.RunSync(() => { (inst.Item as RptText).ApplyStyle(sheet[i, j]); });
-                        }
-                        idx++;
-                    }
-                }
-                recText.Clear();
-                recInst.Clear();
-            }
-            _excel.ResumeEvent();
-            _excel.AutoRefresh = true;
-        }
-
-        /// <summary>
-        /// 清除图表
-        /// </summary>
-        private void ClearChart()
-        {
-            Worksheet sheet = _excel.ActiveSheet;
-            if (sheet != null)
-            {
-                sheet.Charts.Clear();
-                _excel.DecorationRange = null;
-            }
         }
         #endregion
     }
