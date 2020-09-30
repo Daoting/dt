@@ -43,13 +43,20 @@ namespace Dt.Base
         }
 
         /// <summary>
+        /// RptView中打开上下文菜单
+        /// </summary>
+        /// <param name="rightMenu"></param>
+        public virtual void OpenContextMenu(Menu p_contextMenu)
+        {
+        }
+
+        /// <summary>
         /// 点击单元格脚本
         /// </summary>
         /// <param name="p_id">脚本标识</param>
         /// <param name="p_text">单元格</param>
         public virtual void OnCellClick(string p_id, IRptCell p_text)
         {
-
         }
     }
 }

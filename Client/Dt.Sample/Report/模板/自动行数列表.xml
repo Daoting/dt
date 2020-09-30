@@ -1,6 +1,8 @@
-﻿<Rpt name="简单文本" cols="80,80,80,80">
+﻿<Rpt cols="80,80,80,80">
   <Params />
-  <Data />
+  <Data>
+    <Tbl id="通讯录" isscritp="True" cols="bm,xm,fjh" />
+  </Data>
   <Setting papername="PrinterCustom" width="790" />
   <Header />
   <Body rows="25,25,25,25">
@@ -29,4 +31,5 @@
     </Table>
   </Body>
   <Footer />
+  <View script="Dt.Sample.DataRptScript,Dt.Sample" />
 </Rpt>

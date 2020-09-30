@@ -202,7 +202,7 @@ namespace Dt.Base.Report
                             sb.Append(_page.Y + 1);
                             break;
                         case "报表名称":
-                            sb.Append(Inst.Info.Root.Name);
+                            sb.Append(Inst.Info.Name);
                             break;
                         case "日期":
                             sb.Append(DateTime.Now.ToString("yyyy-MM-dd"));

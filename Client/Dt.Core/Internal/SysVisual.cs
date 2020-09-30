@@ -112,10 +112,10 @@ namespace Dt.Core
             get { return _rootContent; }
             set
             {
-                if (_rootGrid.Children.Count > 2)
-                    _rootGrid.Children.RemoveAt(0);
-                if (value != null)
+                if (value != null && value != _rootContent)
                 {
+                    if (_rootContent != null)
+                        _rootGrid.Children.Remove(_rootContent);
                     _rootContent = value;
                     _rootGrid.Children.Insert(0, value);
                 }

@@ -1,6 +1,8 @@
-﻿<Rpt name="测试列表" cols="80,80,80,80,80,80,80,80,80">
+﻿<Rpt cols="80,80,80,80,80,80,80,80,80">
   <Params />
-  <Data />
+  <Data>
+    <Tbl id="网损情况" isscritp="True" cols="year,month,unit,val" />
+  </Data>
   <Setting />
   <Header />
   <Body rows="25,25,25,25,25">
@@ -44,4 +46,5 @@
     </Table>
   </Body>
   <Footer />
+  <View script="Dt.Sample.DataRptScript,Dt.Sample" />
 </Rpt>

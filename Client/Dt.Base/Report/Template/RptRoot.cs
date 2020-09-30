@@ -68,11 +68,6 @@ namespace Dt.Base.Report
 
         #region 属性
         /// <summary>
-        /// 获取报表名称
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
         /// 获取报表参数
         /// </summary>
         public RptParams Params { get; }
@@ -128,16 +123,8 @@ namespace Dt.Base.Report
             if (p_reader == null || p_reader.IsEmptyElement || p_reader.Name != "Rpt")
                 throw new Exception("加载报表模板根节点时出错！");
 
-            // 报表名称
-            for (int i = 0; i < p_reader.AttributeCount; i++)
-            {
-                p_reader.MoveToAttribute(i);
-                string id = p_reader.Name;
-                if (id == "name")
-                    Name = p_reader.Value;
-                else if (id == "cols")
-                    Cols = RptPart.SplitSize(p_reader.Value);
-            }
+            // 报表列宽
+            Cols = RptPart.SplitSize(p_reader.GetAttribute("cols"));
 
             // 模板内容
             p_reader.Read();
@@ -180,7 +167,6 @@ namespace Dt.Base.Report
         public void WriteXml(XmlWriter p_writer)
         {
             p_writer.WriteStartElement("Rpt");
-            p_writer.WriteAttributeString("name", Name);
             p_writer.WriteAttributeString("cols", RptPart.MergeSize(Cols));
 
             Params.WriteXml(p_writer);

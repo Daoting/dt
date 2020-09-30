@@ -109,7 +109,7 @@ namespace Dt.Sample
                 {
                     Title = "报表",
                     Note = "可视化报表模板设计，报表预览时支持导出、打印、简单编辑，支持报表绘制过程脚本",
-                    Tag = typeof(RptHome)
+                    Tag = typeof(RptDemo)
                 },
                 new DataCmd
                 {

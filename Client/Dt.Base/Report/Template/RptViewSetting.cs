@@ -28,9 +28,7 @@ namespace Dt.Base.Report
             Data.AddCell<bool>("showrowheader");
             Data.AddCell<bool>("showgridline");
             Data.AddCell("showmenu", true);
-            Data.AddCell<bool>("showsearchmi");
-            Data.AddCell("showexportmi", true);
-            Data.AddCell("showprintmi", true);
+            Data.AddCell("showcontextmenu", true);
         }
 
         /// <summary>
@@ -104,28 +102,10 @@ namespace Dt.Base.Report
         /// <summary>
         /// 获取设置是否显示查询菜单项，默认false
         /// </summary>
-        public bool ShowSearchMi
+        public bool ShowContextMenu
         {
-            get { return Data.Bool("showsearchmi"); }
-            set { Data["showsearchmi"] = value; }
-        }
-
-        /// <summary>
-        /// 获取设置是否显示导出菜单项，默认true
-        /// </summary>
-        public bool ShowExportMi
-        {
-            get { return Data.Bool("showexportmi"); }
-            set { Data["showexportmi"] = value; }
-        }
-
-        /// <summary>
-        /// 获取设置是否显示打印菜单项，默认true
-        /// </summary>
-        public bool ShowPrintMi
-        {
-            get { return Data.Bool("showprintmi"); }
-            set { Data["showprintmi"] = value; }
+            get { return Data.Bool("showcontextmenu"); }
+            set { Data["showcontextmenu"] = value; }
         }
 
         public void ReadXml(XmlReader p_reader)
@@ -152,12 +132,8 @@ namespace Dt.Base.Report
                 p_writer.WriteAttributeString("showgridline", "True");
             if (!ShowMenu)
                 p_writer.WriteAttributeString("showmenu", "False");
-            if (ShowSearchMi)
-                p_writer.WriteAttributeString("showsearchmi", "True");
-            if (!ShowExportMi)
-                p_writer.WriteAttributeString("showexportmi", "False");
-            if (!ShowPrintMi)
-                p_writer.WriteAttributeString("showprintmi", "False");
+            if (!ShowContextMenu)
+                p_writer.WriteAttributeString("showcontextmenu", "False");
             p_writer.WriteEndElement();
         }
     }

@@ -25,13 +25,51 @@ using Windows.UI.Xaml.Controls;
 
 namespace Dt.Sample
 {
+    public class MyRptDesignInfo : RptDesignInfo
+    {
+        public override Task<string> ReadTemplate()
+        {
+            return Task.Run(() =>
+            {
+                using (var stream = typeof(RptDemo).Assembly.GetManifestResourceStream($"Dt.Sample.Report.模板.{Name}.xml"))
+                using (var reader = new StreamReader(stream))
+                {
+                    return reader.ReadToEnd();
+                }
+            });
+        }
+
+        public override void SaveTemplate(string p_xml)
+        {
+            DataPackage data = new DataPackage();
+            data.SetText(p_xml);
+            Clipboard.SetContent(data);
+            AtKit.Msg("已保存到剪切板！");
+        }
+    }
+
+    public class MyRptInfo : RptInfo
+    {
+        public override Task<string> ReadTemplate()
+        {
+            return Task.Run(() =>
+            {
+                using (var stream = typeof(RptDemo).Assembly.GetManifestResourceStream($"Dt.Sample.Report.模板.{Name}.xml"))
+                using (var reader = new StreamReader(stream))
+                {
+                    return reader.ReadToEnd();
+                }
+            });
+        }
+    }
+
     public class DataRptScript : RptScript
     {
         public override Task<Table> GetData(string p_name)
         {
             return Task.Run(() =>
             {
-                using (var stream = typeof(RptDesignDemo).Assembly.GetManifestResourceStream($"Dt.Sample.Report.数据源.{p_name}.json"))
+                using (var stream = typeof(RptDemo).Assembly.GetManifestResourceStream($"Dt.Sample.Report.数据源.{p_name}.json"))
                 {
                     return Table.Create(stream);
                 }
@@ -45,7 +83,7 @@ namespace Dt.Sample
         {
             return Task.Run(() =>
             {
-                using (var stream = typeof(RptDesignDemo).Assembly.GetManifestResourceStream($"Dt.Sample.Report.数据源.{p_name}.json"))
+                using (var stream = typeof(RptDemo).Assembly.GetManifestResourceStream($"Dt.Sample.Report.数据源.{p_name}.json"))
                 {
                     var tbl = Table.Create(stream);
                     var tgt = Table.Create(tbl);
@@ -69,11 +107,24 @@ namespace Dt.Sample
             p_menu.Items.Add(new Mi { ID = "显示网格", IsCheckable = true, Cmd = View.CmdGridLine });
         }
 
-        void OnBack(object sender, Mi e)
+        public override void OpenContextMenu(Menu p_contextMenu)
         {
+            Mi back = p_contextMenu["后退"];
+            if (back == null)
+            {
+                back = new Mi { ID = "后退", Icon = Icons.左 };
+                back.Click += OnBack;
+                p_contextMenu.Items.Insert(0, back);
+            }
             var ls = View.Tag as Stack<RptInfo>;
-            if (ls != null && ls.Count > 0)
-                View.LoadReport(ls.Pop());
+            back.Visibility = (ls != null && ls.Count > 0) ? Visibility.Visible : Visibility.Collapsed;
+
+            if (p_contextMenu["菜单详情"] == null)
+            {
+                Mi mi = new Mi { ID = "菜单详情", Icon = Icons.文件 };
+                mi.Click += OnDetail;
+                p_contextMenu.Items.Add(mi);
+            }
         }
 
         public override void OnCellClick(string p_id, IRptCell p_text)
@@ -115,6 +166,20 @@ namespace Dt.Sample
             {
                 AtKit.Msg(row.Bool("isgroup") ? "分组菜单" : "实体菜单");
             }
+        }
+
+        void OnBack(object sender, Mi e)
+        {
+            var ls = View.Tag as Stack<RptInfo>;
+            if (ls != null && ls.Count > 0)
+                View.LoadReport(ls.Pop());
+        }
+
+        void OnDetail(object sender, Mi e)
+        {
+            Dlg dlg = new Dlg();
+            dlg.Content = new TextBlock { Margin = new Thickness(20), Text = $"id：{View.Info.Params["parentid"]}\r\nname：{View.Info.Params["parentname"]}" };
+            dlg.Show();
         }
     }
 }

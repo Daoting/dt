@@ -11,10 +11,9 @@ using Dt.Base.Docking;
 using Dt.Base.Report;
 using Dt.Core;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Data;
 #endregion
 
-namespace Dt.Base
+namespace Dt.Base.Report
 {
     /// <summary>
     /// 默认报表预览窗口
@@ -42,12 +41,10 @@ namespace Dt.Base
             if (setting.ShowMenu)
             {
                 _menu = new Menu();
-                if (setting.ShowSearchMi)
+                //if (setting.ShowSearchMi)
                     _menu.Items.Add(new Mi { ID = "查询", Icon = Icons.搜索, Cmd = _view.CmdSearch });
-                if (setting.ShowExportMi)
-                    _menu.Items.Add(new Mi { ID = "导出", Icon = Icons.导出, Cmd = _view.CmdExport });
-                if (setting.ShowPrintMi)
-                    _menu.Items.Add(new Mi { ID = "打印", Icon = Icons.打印, Cmd = _view.CmdPrint });
+                _menu.Items.Add(new Mi { ID = "导出", Icon = Icons.导出, Cmd = _view.CmdExport });
+                _menu.Items.Add(new Mi { ID = "打印", Icon = Icons.打印, Cmd = _view.CmdPrint });
                 p_info.ScriptObj?.InitMenu(_menu);
                 tab.Menu = _menu;
             }
@@ -120,22 +117,7 @@ namespace Dt.Base
         void OnQuery(object sender, RptInfo e)
         {
             if (_view.Info != e)
-            {
-                var setting = e.Root.ViewSetting;
-                if (setting.ShowMenu)
-                {
-                    if (_menu.Visibility == Visibility.Collapsed)
-                        _menu.Visibility = Visibility.Visible;
-                    _menu["查询"].Visibility = setting.ShowSearchMi ? Visibility.Visible : Visibility.Collapsed;
-                    _menu["导出"].Visibility = setting.ShowExportMi ? Visibility.Visible : Visibility.Collapsed;
-                    _menu["打印"].Visibility = setting.ShowPrintMi ? Visibility.Visible : Visibility.Collapsed;
-                }
-                else
-                {
-                    if (_menu.Visibility == Visibility.Visible)
-                        _menu.Visibility = Visibility.Collapsed;
-                }
-            }
+                _menu.Visibility = e.Root.ViewSetting.ShowMenu ? Visibility.Visible : Visibility.Collapsed;
             _view.LoadReport(e);
         }
 
@@ -153,7 +135,6 @@ namespace Dt.Base
             {
                 Items =
                 {
-                    new Mi { ID = "查询", Icon = Icons.搜索, Cmd = _view.CmdSearch },
                     new Mi { ID = "导出", Icon = Icons.导出, Cmd = _view.CmdExport },
                     new Mi { ID = "打印", Icon = Icons.打印, Cmd = _view.CmdPrint },
                 }

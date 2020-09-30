@@ -1,6 +1,8 @@
-﻿<Rpt name="报表内容1_3" cols="80,80,80,80,80,80,80,80">
+﻿<Rpt cols="80,80,80,80,80,80,80,80">
   <Params />
-  <Data />
+  <Data>
+    <Tbl id="图表数据" isscritp="True" cols="xm,subject,score" />
+  </Data>
   <Setting />
   <Header />
   <Body rows="25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25">
@@ -24,4 +26,5 @@
     <Chart row="22" col="1" rowspan="12" colspan="7" type="Line" tbl="图表数据" fieldseries="subject" fieldx="xm" fieldy="score" />
   </Body>
   <Footer />
+  <View script="Dt.Sample.DataRptScript,Dt.Sample" />
 </Rpt>

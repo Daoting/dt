@@ -7,6 +7,7 @@
 #endregion
 
 #region 引用命名
+using Dt.Base.Report;
 using Dt.Cells.Data;
 using Dt.Cells.UI;
 using Dt.Core;
@@ -24,7 +25,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 #endregion
 
-namespace Dt.Base.Report
+namespace Dt.Base
 {
     public sealed partial class RptView : UserControl
     {
@@ -137,6 +138,8 @@ namespace Dt.Base.Report
                 && inst.Item is RptText txt
                 && !string.IsNullOrEmpty(txt.ScriptID))
             {
+                _selectedTable = null;
+                _excel.DecorationRange = null;
                 inst.Row = e.Row;
                 inst.Col = e.Column;
                 Info.ScriptObj.OnCellClick(txt.ScriptID, inst);
@@ -150,6 +153,9 @@ namespace Dt.Base.Report
         /// <param name="e"></param>
         void OnSelectionChanged(object sender, EventArgs e)
         {
+            if (!Info.Root.ViewSetting.ShowContextMenu)
+                return;
+
             _selectedTable = null;
             _excel.DecorationRange = null;
 
@@ -193,7 +199,7 @@ namespace Dt.Base.Report
 
         void OnExcelRightTapped(object sender, RightTappedRoutedEventArgs e)
         {
-            if (_excel.ActiveSheet == null)
+            if (!Info.Root.ViewSetting.ShowContextMenu || _excel.ActiveSheet == null)
                 return;
 
             if (_rightMenu == null)
@@ -211,6 +217,8 @@ namespace Dt.Base.Report
                 mi.Click += (s, args) => ClearTable();
                 _rightMenu.Items.Add(mi);
 
+                _rightMenu.Items.Add(new Mi { ID = "导出", Icon = Icons.导出, Cmd = CmdExport });
+                _rightMenu.Items.Add(new Mi { ID = "打印", Icon = Icons.打印, Cmd = CmdPrint });
                 _rightMenu.Items.Add(new Mi { ID = "显示网格", IsCheckable = true, IsChecked = _excel.ActiveSheet.ShowGridLine, Cmd = CmdGridLine });
                 _rightMenu.Items.Add(new Mi { ID = "显示列头", IsCheckable = true, IsChecked = _excel.ActiveSheet.ColumnHeader.IsVisible, Cmd = CmdColHeader });
                 _rightMenu.Items.Add(new Mi { ID = "显示行头", IsCheckable = true, IsChecked = _excel.ActiveSheet.RowHeader.IsVisible, Cmd = CmdRowHeader });
@@ -219,6 +227,8 @@ namespace Dt.Base.Report
             _rightMenu["删除表格"].Visibility = _selectedTable != null ? Visibility.Visible : Visibility.Collapsed;
             _rightMenu["清除所有图表"].Visibility = _excel.ActiveSheet.Charts.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
             _rightMenu["清除所有表格"].Visibility = _excel.ActiveSheet.GetTables().Length > 0 ? Visibility.Visible : Visibility.Collapsed;
+            // 脚本处理上下文菜单
+            Info.ScriptObj?.OpenContextMenu(_rightMenu);
             _rightMenu.OpenContextMenu(e.GetPosition(null));
         }
         #endregion

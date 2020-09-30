@@ -31,21 +31,25 @@ namespace Dt.Base
     /// </summary>
     public static class UIElementExt
     {
-        /// <summary>
-        /// 获取当前界面元素的截图
-        /// </summary>
-        /// <param name="p_element"></param>
-        /// <returns></returns>
-        public static async Task<RenderTargetBitmap> GetSnapshot(this UIElement p_element)
-        {
-            if (p_element != null)
-            {
-                RenderTargetBitmap bmp = new RenderTargetBitmap();
-                await bmp.RenderAsync(p_element);
-                return bmp;
-            }
-            return null;
-        }
+        ///// <summary>
+        ///// 获取当前界面元素的截图，uno不支持RenderTargetBitmap，废弃
+        ///// </summary>
+        ///// <param name="p_element"></param>
+        ///// <returns></returns>
+        //public static async Task<RenderTargetBitmap> GetSnapshot(this UIElement p_element)
+        //{
+        //    if (p_element == null)
+        //        return null;
+
+        //    var parent = VisualTreeHelper.GetParent(p_element);
+        //    if (parent == null)
+        //        SysVisual.InvisibleGrid.Children.Add(p_element);
+        //    RenderTargetBitmap bmp = new RenderTargetBitmap();
+        //    await bmp.RenderAsync(p_element);
+        //    if (parent == null)
+        //        SysVisual.InvisibleGrid.Children.Remove(p_element);
+        //    return bmp;
+        //}
 
         /// <summary>
         /// 保存当前界面元素的png截图

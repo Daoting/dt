@@ -7,40 +7,6 @@
   <Import Project="..\Common\dtc.props" />
 
   <ItemGroup>
-    <None Remove="Report\数据源\个人成绩.json" />
-    <None Remove="Report\数据源\个人成绩_矩阵标题.json" />
-    <None Remove="Report\数据源\图表数据.json" />
-    <None Remove="Report\数据源\成绩汇总.json" />
-    <None Remove="Report\数据源\甘特图.json" />
-    <None Remove="Report\数据源\网损情况.json" />
-    <None Remove="Report\数据源\菜单.json" />
-    <None Remove="Report\数据源\通讯录.json" />
-    <None Remove="Report\模板\两层矩阵.xml" />
-    <None Remove="Report\模板\分组表格.xml" />
-    <None Remove="Report\模板\含头尾表格.xml" />
-    <None Remove="Report\模板\含小计矩阵.xml" />
-    <None Remove="Report\模板\含标题矩阵.xml" />
-    <None Remove="Report\模板\固定行数列表.xml" />
-    <None Remove="Report\模板\图表.xml" />
-    <None Remove="Report\模板\完整矩阵.xml" />
-    <None Remove="Report\模板\完整表格.xml" />
-    <None Remove="Report\模板\最少行表格.xml" />
-    <None Remove="Report\模板\甘特图.xml" />
-    <None Remove="Report\模板\简单文本.xml" />
-    <None Remove="Report\模板\脚本.xml" />
-    <None Remove="Report\模板\自动行数列表.xml" />
-    <None Remove="Report\模板\跨页矩阵.xml" />
-    <None Remove="Report\模板\跨页表格.xml" />
-    <None Remove="Report\模板\页眉页脚.xml" />
-    <None Remove="Resource\Excel\1040.xlsx" />
-    <None Remove="Resource\Excel\CarRepair.xlsx" />
-    <None Remove="Resource\Excel\Expense.xlsx" />
-    <None Remove="Resource\Excel\MonthProfit.xlsx" />
-    <None Remove="Resource\Excel\StudentCalendar.xlsx" />
-    <None Remove="Resource\Excel\Wedding.xlsx" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="Report\数据源\个人成绩.json" />
     <EmbeddedResource Include="Report\数据源\个人成绩_矩阵标题.json" />
     <EmbeddedResource Include="Report\数据源\图表数据.json" />
@@ -59,7 +25,6 @@
     <EmbeddedResource Include="Report\模板\图表.xml" />
     <EmbeddedResource Include="Report\模板\最少行表格.xml" />
     <EmbeddedResource Include="Report\模板\脚本.xml" />
-    <EmbeddedResource Include="Report\模板\甘特图.xml" />
     <EmbeddedResource Include="Report\模板\完整矩阵.xml" />
     <EmbeddedResource Include="Report\模板\简单文本.xml" />
     <EmbeddedResource Include="Report\模板\完整表格.xml" />
@@ -76,9 +41,6 @@
     <EmbeddedResource Include="Resource\Excel\StudentCalendar.ssxml" />
     <EmbeddedResource Include="Resource\Excel\StudentCalendar.xlsx" />
     <EmbeddedResource Include="Resource\Excel\Wedding.ssxml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="Resource\browsers.csv" />
     <EmbeddedResource Include="Resource\Excel\MonthProfit.xlsx" />
     <EmbeddedResource Include="Resource\Excel\Wedding.xlsx" />

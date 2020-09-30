@@ -238,12 +238,12 @@ namespace Dt.Base.Report
                 return;
 
             Task<RenderTargetBitmap> task = null;
-            AtKit.RunSync(() =>
-            {
-                Dt.Base.Chart chart = ct.CreateChart();
-                chart.LoadData(data.Data, ct.FieldSeries, ct.FieldX, ct.FieldY, ct.FieldZ);
-                task = chart.GetSnapshot();
-            });
+            //AtKit.RunSync(() =>
+            //{
+            //    Dt.Base.Chart chart = ct.CreateChart();
+            //    chart.LoadData(data.Data, ct.FieldSeries, ct.FieldX, ct.FieldY, ct.FieldZ);
+            //    task = chart.GetSnapshot();
+            //});
             task.Wait();
             Rect rc = _ws.GetRangeLocation(new CellRange(p_row, p_col, ct.RowSpan, ct.ColSpan));
             Picture pic = _ws.AddPicture(_ws.Pictures.Count.ToString(), task.Result, rc.Left, rc.Top, rc.Width, rc.Height);

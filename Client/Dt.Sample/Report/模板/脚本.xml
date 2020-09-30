@@ -1,4 +1,4 @@
-﻿<Rpt name="查询菜单项" cols="160,260,60">
+﻿<Rpt cols="160,260,60">
   <Params>
     <Param id="parentid" name="父项标识" val="" />
     <Param id="parentname" name="父项名称" val="" />

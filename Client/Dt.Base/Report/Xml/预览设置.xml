@@ -5,6 +5,4 @@
       showrowheader="False"
       showgridline="False"
       showmenu="False"
-      showsearchmi="False"
-      showexportmi="False"
-      showprintmi="False" />
+      showcontextmenu="False" />

@@ -1,4 +1,4 @@
-﻿<Rpt name="报表名称" cols="60,80,90,90">
+﻿<Rpt cols="60,80,90,90">
   <Params>
     <Param />
     <Param />

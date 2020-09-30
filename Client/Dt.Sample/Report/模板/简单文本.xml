@@ -1,12 +1,12 @@
-﻿<Rpt id="65d5d0c9ea7a40149b310f1295bbb9ee" name="简单文本" cols="80,80,80,80,80">
+﻿<Rpt cols="80,80,80,80,80">
   <Params />
   <Data />
   <Setting papername="PrinterCustom" height="322" width="392" />
-  <Header height="40" />
+  <Header />
   <Body rows="25,25,25,25,25,25,25,25,25,25">
     <Text row="2" col="1" val="文本1" />
     <Text row="2" col="3" colspan="2" val="文本占两列文本占两列" />
-    <Text row="9" col="2" val="自动行高长文本，此处长文本应该换页" wordwrap="1" autoheight="1" />
+    <Text row="9" col="2" val="自动行高长文本，此处长文本应该换页" wordwrap="True" autoheight="True" />
   </Body>
-  <Footer height="40" />
+  <Footer />
 </Rpt>
