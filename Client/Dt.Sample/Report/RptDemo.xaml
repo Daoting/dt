@@ -22,7 +22,8 @@
                             <StackPanel Orientation="Horizontal">
                                 <Button Content="简单文本" />
                                 <Button Content="页眉页脚" />
-                                <Button Content="图表" />
+                                <Button Content="图表矩阵" />
+                                <Button Content="图表表格" />
                             </StackPanel>
                             <a:CBar Title="表格" />
                             <StackPanel Orientation="Horizontal">

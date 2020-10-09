@@ -34,8 +34,6 @@ namespace Dt.Cells.UI
     public partial class SpreadChartView : SpreadChartBaseView
     {
         // hdt 原来放在Loaded事件中，无法打印
-        internal static ResourceDictionary _resourceDictionary = new ResourceDictionary { Source = new Uri("ms-appx:///Dt.Cells/Themes/DataLableTemplate.xaml") };
-        
         Dictionary<int, SpreadDataSeries> _cachedDataSeries;
         Dictionary<int, List<PlotElement>> _cachedPlotElement;
         int _cachedTotalDataPointCount;
@@ -147,12 +145,6 @@ namespace Dt.Cells.UI
                 return;
 
             ChartLegend legend = new ChartLegend();
-            LegendConverter converter = _resourceDictionary["lc"] as LegendConverter;
-            converter.Legend = SpreadChart.Legend;
-            converter.ZoomFactor = ZoomFactor;
-            legend.Template = _resourceDictionary["legendTeplate"] as ControlTemplate;
-            legend.IsTabStop = false;
-            legend.IsHitTestVisible = false;
             Brush actualFill = SpreadChart.Legend.ActualFill;
             if (actualFill != null)
             {
@@ -311,10 +303,6 @@ namespace Dt.Cells.UI
         {
             ChartData data = C1Chart.Data;
             data.Children.Clear();
-
-            DataPointLabelConverter converter = _resourceDictionary["fc"] as DataPointLabelConverter;
-            converter.ZoomFactor = ZoomFactor;
-            converter.DataSeries.Clear();
 
             DataSeries[] seriesArray = GenerateC1DataSeries();
             if ((seriesArray != null) && (seriesArray.Length != 0))
@@ -1175,11 +1163,6 @@ namespace Dt.Cells.UI
             }
         }
 
-        void SetPointLabelTemplate(SpreadDataSeries spDataSeries, DataSeries c1DataSeries)
-        {
-            c1DataSeries.PointLabelTemplate = _resourceDictionary["lbl"] as DataTemplate;
-        }
-
         ChartType SpreadChartTypeToC1ChartType(SpreadChartType spChartType)
         {
             switch (spChartType)
@@ -1825,22 +1808,9 @@ namespace Dt.Cells.UI
             }
         }
 
-        void SyncDataSeriesDataLabel(SpreadDataSeries spDataSeries, DataSeries c1DataSeries)
-        {
-            DataPointLabelConverter converter = _resourceDictionary["fc"] as DataPointLabelConverter;
-            converter.ZoomFactor = ZoomFactor;
-            int index = GetDisplayingDataSeries().IndexOf(spDataSeries);
-            if ((index >= 0) && !converter.DataSeries.ContainsKey(index))
-            {
-                converter.DataSeries.Add(index, spDataSeries);
-            }
-            SetPointLabelTemplate(spDataSeries, c1DataSeries);
-        }
-
         void SyncDataSeriesProperties(SpreadDataSeries spDataSeries, DataSeries c1DataSeries)
         {
             SyncDataSeriesChartType(spDataSeries, c1DataSeries);
-            SyncDataSeriesDataLabel(spDataSeries, c1DataSeries);
             SyncDataSeriesSettings(spDataSeries, c1DataSeries);
         }
 
@@ -2209,10 +2179,6 @@ namespace Dt.Cells.UI
         {
             HighLowOpenCloseSeries series = c1DataSeriesList[0] as HighLowOpenCloseSeries;
 
-            DataPointLabelConverter converter = _resourceDictionary["fc"] as DataPointLabelConverter;
-            converter.ZoomFactor = ZoomFactor;
-            CachVOHLCDataSeries(converter.DataSeries, spOHLCSeries);
-
             if (((spOHLCSeries.XValues != null) && (spOHLCSeries.XValues.Count > 0)) && !ContainsNaN(spOHLCSeries.XValues))
             {
                 series.XValuesSource = spOHLCSeries.XValues;
@@ -2243,7 +2209,6 @@ namespace Dt.Cells.UI
                             series2.ChartType = (ChartType)10;
                         }
                         SyncOHLCDataSeriesSettings(spOHLCSeries.OpenSeries, series2);
-                        SetPointLabelTemplate(spOHLCSeries.OpenSeries, series2);
                         if ((string.IsNullOrEmpty(series2.Label) && (spOHLCSeries.OpenSeries.Values != null)) && (spOHLCSeries.OpenSeries.Values.Count > 0))
                         {
                             series2.Label = ResourceStrings.DefaultDataSeriesName + "1";
@@ -2270,7 +2235,6 @@ namespace Dt.Cells.UI
                             series3.ChartType = (ChartType)10;
                         }
                         SyncOHLCDataSeriesSettings(spOHLCSeries.HighSeries, series3);
-                        SetPointLabelTemplate(spOHLCSeries.HighSeries, series3);
                         if ((string.IsNullOrEmpty(series3.Label) && (spOHLCSeries.HighSeries.Values != null)) && (spOHLCSeries.HighSeries.Values.Count > 0))
                         {
                             series3.Label = ResourceStrings.DefaultDataSeriesName + "2";
@@ -2297,7 +2261,6 @@ namespace Dt.Cells.UI
                             series4.ChartType = (ChartType)10;
                         }
                         SyncOHLCDataSeriesSettings(spOHLCSeries.LowSeries, series4);
-                        SetPointLabelTemplate(spOHLCSeries.LowSeries, series4);
                         if ((string.IsNullOrEmpty(series4.Label) && (spOHLCSeries.LowSeries.Values != null)) && (spOHLCSeries.LowSeries.Values.Count > 0))
                         {
                             series4.Label = ResourceStrings.DefaultDataSeriesName + "3";
@@ -2324,7 +2287,6 @@ namespace Dt.Cells.UI
                             series5.ChartType = (ChartType)10;
                         }
                         SyncOHLCDataSeriesSettings(spOHLCSeries.CloseSeries, series5);
-                        SetPointLabelTemplate(spOHLCSeries.CloseSeries, series5);
                         if ((string.IsNullOrEmpty(series5.Label) && (spOHLCSeries.CloseSeries.Values != null)) && (spOHLCSeries.CloseSeries.Values.Count > 0))
                         {
                             series5.Label = ResourceStrings.DefaultDataSeriesName + "4";

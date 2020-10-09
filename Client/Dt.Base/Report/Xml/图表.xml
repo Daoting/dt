@@ -4,21 +4,18 @@
        colspan="4"
        
        type="40种图表类型"
-       palette="调色板"
-       
+
        showlegend="False"
        legtitle="图例标题"
        legpos="图例位置"
        legorientation="布局方向"
-       legoverlap="False"
        
        title="标题"
        titlex="X轴标题"
        titley="Y轴标题"
-       axisinverted="转换XY轴"
        
        tbl="数据源名称"
        fieldseries="系列字段名"
        fieldx="x轴字段名"
        fieldy="y轴字段名"
-       fieldz="扩展字段名"/>
+       fieldz="扩展字段名" />

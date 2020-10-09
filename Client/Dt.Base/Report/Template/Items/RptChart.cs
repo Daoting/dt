@@ -7,10 +7,13 @@
 #endregion
 
 #region 命名空间
+using Dt.Cells.Data;
 using Dt.Charts;
+using Dt.Core;
 using System;
 using System.Threading.Tasks;
 using System.Xml;
+using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
 #endregion
 
@@ -26,8 +29,6 @@ namespace Dt.Base.Report
         {
             // 图表类型
             _data.AddCell("type", "Column");
-            // 调色板
-            _data.AddCell("palette", "Default");
             // 图例是否可见
             _data.AddCell("showlegend", true);
             // 图例标题
@@ -36,16 +37,12 @@ namespace Dt.Base.Report
             _data.AddCell("legpos", "Right");
             // 布局方向
             _data.AddCell("legorientation", "Vertical");
-            // 重叠方式
-            _data.AddCell<bool>("legoverlap");
             // 标题
             _data.AddCell<string>("title");
             // X轴标题
             _data.AddCell<string>("titlex");
             // Y轴标题
             _data.AddCell<string>("titley");
-            // 转换XY轴
-            _data.AddCell<bool>("axisinverted");
             // 数据源名称
             _data.AddCell<string>("tbl");
             // 系列字段名
@@ -95,6 +92,11 @@ namespace Dt.Base.Report
             get { return _data.Str("fieldseries"); }
         }
 
+        public bool ShowLegend
+        {
+            get { return _data.Bool("showlegend"); }
+        }
+
         /// <summary>
         /// 拷贝对象方法
         /// </summary>
@@ -126,53 +128,260 @@ namespace Dt.Base.Report
         }
 
         /// <summary>
-        /// 根据参数设置创建图表实例
+        /// 输出图表
         /// </summary>
-        /// <returns></returns>
-        public Chart CreateChart()
+        /// <param name="p_row"></param>
+        /// <param name="p_col"></param>
+        public void Render(Worksheet _ws, int p_row, int p_col)
         {
-            Chart ct = new Chart();
-            ct.Width = Width;
-            ct.Height = Height;
+            if (!ValidFilds())
+                return;
 
-            ChartType tp = ChartType.Column;
-            Enum.TryParse<ChartType>(_data.Str("type"), out tp);
-            ct.ChartType = tp;
-
-            Palette pal = Palette.Default;
-            Enum.TryParse<Palette>(_data.Str("palette"), out pal);
-            ct.Palette = pal;
-
-            if (_data.Bool("showlegend"))
-            {
-                ChartLegend lg = new ChartLegend();
-                lg.Title = _data.Str("legtitle");
-
-                LegendPosition pos = LegendPosition.Right;
-                Enum.TryParse<LegendPosition>(_data.Str("legpos"), out pos);
-                lg.Position = pos;
-
-                Orientation ori = Orientation.Vertical;
-                Enum.TryParse<Orientation>(_data.Str("legorientation"), out ori);
-                lg.Orientation = ori;
-                lg.OverlapChart = _data.Bool("legoverlap");
-                ct.Children.Add(lg);
-            }
+            Rect rc = _ws.GetRangeLocation(new CellRange(p_row, p_col, RowSpan, ColSpan));
+            var chartType = GetChartType();
+            SpreadChart c = _ws.AddChart("chart" + _ws.Charts.Count.ToString(), chartType, rc.Left, rc.Top, rc.Width, rc.Height);
+            // 锁定图表，禁止拖动缩放
+            c.Locked = true;
 
             string title = _data.Str("title");
             if (!string.IsNullOrEmpty(title))
-                ct.Header = title;
+                c.ChartTitle = new ChartTitle { Text = title };
 
             title = _data.Str("titlex");
             if (!string.IsNullOrEmpty(title))
-                ct.View.AxisX.Title = title;
+                c.AxisX.Title = new ChartTitle { Text = title };
 
             title = _data.Str("titley");
             if (!string.IsNullOrEmpty(title))
-                ct.View.AxisY.Title = title;
+                c.AxisY.Title = new ChartTitle { Text = title };
 
-            ct.View.Inverted = _data.Bool("axisinverted");
-            return ct;
+            if (ShowLegend)
+            {
+                c.Legend.Text = _data.Str("legtitle");
+                if (Enum.TryParse<Dt.Charts.LegendPosition>(_data.Str("legpos"), out var pos))
+                    c.Legend.Alignment = GetLegendAlignment(pos);
+                if (Enum.TryParse<Orientation>(_data.Str("legorientation"), out var ori))
+                    c.Legend.Orientation = ori;
+            }
+            else
+            {
+                c.Legend = null;
+            }
+
+            if (string.IsNullOrEmpty(FieldSeries))
+                LoadTable(c);
+            else
+                LoadMatrix(c);
+        }
+
+        void LoadMatrix(SpreadChart p_chart)
+        {
+            // Build()中已判断空的情况
+            RptData data = _part.Inst.Info.GetData(Tbl).Result;
+            var tbl = data.Data.CreateMatrix(FieldX, FieldSeries, FieldY);
+            for (int i = 0; i < tbl.Columns.Count; i++)
+            {
+                string colName = tbl.Columns[i].ID;
+                if (colName == FieldX)
+                    continue;
+
+                SpreadDataSeries ser = new SpreadDataSeries();
+                ser.Name = colName;
+                DoubleSeriesCollection vals = new DoubleSeriesCollection();
+                foreach (var row in tbl)
+                {
+                    try
+                    {
+                        double val = row.Double(i);
+                        vals.Add(val);
+                    }
+                    catch
+                    {
+                        vals.Add(0);
+                    }
+                }
+                ser.Values = vals;
+                p_chart.DataSeries.Add(ser);
+            }
+
+            // 添加系列数据时已创建x轴Items，只能重新设置x轴
+            p_chart.AxisX.Items.Clear();
+            for (int i = 0; i < tbl.Count; i++)
+            {
+                p_chart.AxisX.Items.Add(tbl[i].Str(FieldX));
+            }
+        }
+
+        void LoadTable(SpreadChart p_chart)
+        {
+            RptData data = _part.Inst.Info.GetData(Tbl).Result;
+            SpreadDataSeries ser = new SpreadDataSeries();
+            DoubleSeriesCollection vals = new DoubleSeriesCollection();
+            foreach (var row in data.Data)
+            {
+                try
+                {
+                    double val = row.Double(FieldY);
+                    vals.Add(val);
+                }
+                catch
+                {
+                    vals.Add(0);
+                }
+            }
+            ser.Values = vals;
+            p_chart.DataSeries.Add(ser);
+
+            p_chart.AxisX.Items.Clear();
+            foreach (var row in data.Data)
+            {
+                p_chart.AxisX.Items.Add(row.Str(FieldX));
+            }
+        }
+
+        /// <summary>
+        /// 判断数据表字段是否完整
+        /// </summary>
+        /// <returns></returns>
+        bool ValidFilds()
+        {
+            if (string.IsNullOrEmpty(Tbl))
+            {
+                AtKit.Msg("数据源不可为空。");
+                return false;
+            }
+
+            string type = _data.Str("type");
+            if (type == "Gantt")
+            {
+                if (string.IsNullOrEmpty(FieldZ)
+                    || string.IsNullOrEmpty(FieldX)
+                    || string.IsNullOrEmpty(FieldY))
+                {
+                    AtKit.Msg("任务字段、起始时间字段及终止时间字段均不可为空，图表生成失败。");
+                    return false;
+                }
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(FieldX)
+                    || string.IsNullOrEmpty(FieldY))
+                {
+                    AtKit.Msg("分类字段和值字段不可为空，图表生成失败。");
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        SpreadChartType GetChartType()
+        {
+            if (Enum.TryParse<ChartType>(_data.Str("type"), out var tp))
+            {
+                switch (tp)
+                {
+                    case ChartType.Bar:
+                        return SpreadChartType.BarClustered;
+
+                    case ChartType.BarStacked:
+                        return SpreadChartType.BarStacked;
+
+                    case ChartType.Column:
+                        return SpreadChartType.ColumnClustered;
+
+                    case ChartType.ColumnStacked:
+                        return SpreadChartType.ColumnStacked;
+
+                    case ChartType.Line:
+                        return SpreadChartType.Line;
+
+                    case ChartType.LineSmoothed:
+                        return SpreadChartType.LineSmoothed;
+
+                    case ChartType.LineStacked:
+                        return SpreadChartType.LineStacked;
+
+                    case ChartType.LineSymbols:
+                        return SpreadChartType.LineWithMarkers;
+
+                    case ChartType.LineSymbolsSmoothed:
+                        return SpreadChartType.LineWithMarkersSmoothed;
+
+                    case ChartType.LineSymbolsStacked:
+                        return SpreadChartType.LineStackedWithMarkers;
+
+                    case ChartType.Pie:
+                        return SpreadChartType.Pie;
+
+                    case ChartType.PieExploded:
+                        return SpreadChartType.PieExploded;
+
+                    case ChartType.PieDoughnut:
+                        return SpreadChartType.PieDoughnut;
+
+                    case ChartType.PieExplodedDoughnut:
+                        return SpreadChartType.PieExplodedDoughnut;
+
+                    case ChartType.Area:
+                        return SpreadChartType.Area;
+
+                    case ChartType.AreaStacked:
+                        return SpreadChartType.AreaStacked;
+
+                    case ChartType.AreaStacked100pc:
+                        return SpreadChartType.AreaStacked;
+
+                    case ChartType.Radar:
+                        return SpreadChartType.Radar;
+
+                    case ChartType.RadarSymbols:
+                        return SpreadChartType.RadarWithMarkers;
+
+                    case ChartType.RadarFilled:
+                        return SpreadChartType.RadarFilled;
+
+                    case ChartType.XYPlot:
+                        return SpreadChartType.Scatter;
+
+                    case ChartType.Bubble:
+                        return SpreadChartType.Bubble;
+
+                    case ChartType.Candle:
+                        return SpreadChartType.StockHighLowOpenClose;
+                }
+            }
+            return SpreadChartType.ColumnClustered;
+        }
+
+        LegendAlignment GetLegendAlignment(Charts.LegendPosition pos)
+        {
+            switch (pos)
+            {
+                case Charts.LegendPosition.TopLeft:
+                    return LegendAlignment.TopLeft;
+
+                case Charts.LegendPosition.TopRight:
+                    return LegendAlignment.TopRight;
+
+                case Charts.LegendPosition.TopCenter:
+                    return LegendAlignment.TopCenter;
+
+                case Charts.LegendPosition.Left:
+                    return LegendAlignment.MiddleLeft;
+
+                case Charts.LegendPosition.Right:
+                    return LegendAlignment.MiddleRight;
+
+                case Charts.LegendPosition.BottomLeft:
+                    return LegendAlignment.BottomLeft;
+
+                case Charts.LegendPosition.BottomCenter:
+                    return LegendAlignment.BottomCenter;
+
+                case Charts.LegendPosition.BottomRight:
+                    return LegendAlignment.BottomRight;
+            }
+            return LegendAlignment.BottomCenter;
         }
 
         public override void WriteXml(XmlWriter p_writer)
@@ -183,9 +392,6 @@ namespace Dt.Base.Report
             string val = _data.Str("type");
             if (val != string.Empty && val != "Column")
                 p_writer.WriteAttributeString("type", val);
-            val = _data.Str("palette");
-            if (val != string.Empty && val != "Default")
-                p_writer.WriteAttributeString("palette", val);
 
             if (!_data.Bool("showlegend"))
                 p_writer.WriteAttributeString("showlegend", "False");
@@ -198,8 +404,6 @@ namespace Dt.Base.Report
             val = _data.Str("legorientation");
             if (val != string.Empty && val != "Vertical")
                 p_writer.WriteAttributeString("legorientation", val);
-            if (_data.Bool("legoverlap"))
-                p_writer.WriteAttributeString("legoverlap", "True");
             val = _data.Str("title");
             if (val != string.Empty)
                 p_writer.WriteAttributeString("title", val);
@@ -209,8 +413,6 @@ namespace Dt.Base.Report
             val = _data.Str("titley");
             if (val != string.Empty)
                 p_writer.WriteAttributeString("titley", val);
-            if (_data.Bool("axisinverted"))
-                p_writer.WriteAttributeString("axisinverted", "True");
 
             val = _data.Str("tbl");
             if (val != string.Empty)

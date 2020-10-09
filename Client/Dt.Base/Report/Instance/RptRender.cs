@@ -187,7 +187,7 @@ namespace Dt.Base.Report
                     }
                     else if ((chart = (item as RptChartInst)) != null)
                     {
-                        RenderChart(chart, row, col);
+                        ((RptChart)chart.Item).Render(_ws, row, col);
                     }
                 }
 
@@ -221,70 +221,6 @@ namespace Dt.Base.Report
             cell.Value = p_txt.GetText();
             AtKit.RunSync(() => item.ApplyStyle(cell));
             return cell;
-        }
-
-        /// <summary>
-        /// 输出图表
-        /// </summary>
-        /// <param name="p_inst"></param>
-        /// <param name="p_row"></param>
-        /// <param name="p_col"></param>
-        void RenderChart(RptChartInst p_inst, int p_row, int p_col)
-        {
-            RptChart ct = p_inst.Item as RptChart;
-            RptData data = null;
-
-            if (!ValidChartFilds(ct) || (data = _info.GetData(ct.Tbl).Result) == null)
-                return;
-
-            Task<RenderTargetBitmap> task = null;
-            //AtKit.RunSync(() =>
-            //{
-            //    Dt.Base.Chart chart = ct.CreateChart();
-            //    chart.LoadData(data.Data, ct.FieldSeries, ct.FieldX, ct.FieldY, ct.FieldZ);
-            //    task = chart.GetSnapshot();
-            //});
-            task.Wait();
-            Rect rc = _ws.GetRangeLocation(new CellRange(p_row, p_col, ct.RowSpan, ct.ColSpan));
-            Picture pic = _ws.AddPicture(_ws.Pictures.Count.ToString(), task.Result, rc.Left, rc.Top, rc.Width, rc.Height);
-            // 锁定图表，禁止拖动缩放
-            pic.Locked = true;
-        }
-
-        /// <summary>
-        /// 判断数据表字段是否完整
-        /// </summary>
-        /// <param name="p_chart"></param>
-        /// <returns></returns>
-        bool ValidChartFilds(RptChart p_chart)
-        {
-            if (string.IsNullOrEmpty(p_chart.Tbl))
-            {
-                AtKit.Msg("数据源不可为空。");
-                return false;
-            }
-            string type = p_chart.Data.Str("type");
-            if (type == "Gantt")
-            {
-                if (string.IsNullOrEmpty(p_chart.FieldZ)
-                    || string.IsNullOrEmpty(p_chart.FieldX)
-                    || string.IsNullOrEmpty(p_chart.FieldY))
-                {
-                    AtKit.Msg("任务字段、起始时间字段及终止时间字段均不可为空，图表生成失败。");
-                    return false;
-                }
-            }
-            else
-            {
-                if (string.IsNullOrEmpty(p_chart.FieldX)
-                    || string.IsNullOrEmpty(p_chart.FieldY))
-                {
-                    AtKit.Msg("分类字段和值字段不可为空，图表生成失败。");
-                    return false;
-                }
-            }
-
-            return true;
         }
 
         /// <summary>

@@ -91,11 +91,6 @@ namespace Dt.Base.Report
                     ChgFldByType(tp);
                     break;
 
-                case "palette":
-                    Enum.TryParse<Palette>(_item.Data.Str("palette"), out var pal);
-                    _chart.Palette = pal;
-                    break;
-
                 case "title":
                     _chart.Header = e.GetVal<string>();
                     break;
@@ -114,16 +109,6 @@ namespace Dt.Base.Report
                         if (_chart.Children[i] is ChartLegend)
                         {
                             _chart.Children[i].Visibility = e.GetVal<bool>() ? Visibility.Visible : Visibility.Collapsed;
-                        }
-                    }
-                    break;
-
-                case "legoverlap":
-                    for (int i = 0; i < _chart.Children.Count; i++)
-                    {
-                        if (_chart.Children[i] is ChartLegend)
-                        {
-                            (_chart.Children[i] as ChartLegend).OverlapChart = e.GetVal<bool>();
                         }
                     }
                     break;
@@ -168,10 +153,6 @@ namespace Dt.Base.Report
 
                 case "titley":
                     _chart.View.AxisY.Title = e.GetVal<string>();
-                    break;
-
-                case "axisinverted":
-                    _chart.View.Inverted = e.GetVal<bool>();
                     break;
 
                 default:
@@ -233,13 +214,11 @@ namespace Dt.Base.Report
 
             _chart.BeginUpdate();
             Enum.TryParse<ChartType>(_item.Data.Str("type"), out var tp);
-            Enum.TryParse<Palette>(_item.Data.Str("palette"), out var pal);
             Enum.TryParse<Orientation>(_item.Data.Str("legorientation"), out var ori);
             Enum.TryParse<LegendPosition>(_item.Data.Str("legpos"), out var pos);
             _chart.ChartType = tp;
             ChgFldByType(tp);
             _chart.Data = GetData(tp);
-            _chart.Palette = pal;
 
             _chart.Header = _item.Data.Str("title");
             for (int i = 0; i < _chart.Children.Count; i++)
@@ -248,7 +227,6 @@ namespace Dt.Base.Report
                 {
                     // 加载初始数据值，改变legend表现样式。
                     ChartLegend legend = _chart.Children[i] as ChartLegend;
-                    legend.OverlapChart = _item.Data.Bool("legoverlap");
                     legend.Visibility = _item.Data.Bool("showlegend") ? Visibility.Visible : Visibility.Collapsed;
                     legend.Title = _item.Data.Str("legtitle");
                     legend.Position = pos;
@@ -257,7 +235,6 @@ namespace Dt.Base.Report
             }
             _chart.View.AxisX.Title = _item.Data.Str("titlex");
             _chart.View.AxisY.Title = _item.Data.Str("titley");
-            _chart.View.Inverted = _item.Data.Bool("axisinverted");
             _chart.EndUpdate();
         }
 
