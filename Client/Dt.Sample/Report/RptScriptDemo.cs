@@ -19,6 +19,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Xml;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 #endregion
@@ -99,6 +100,30 @@ namespace Dt.Sample
             });
         }
 
+        public override void RenderCell(Cells.Data.Cell p_cell, RptCellArgs p_args)
+        {
+            if (p_args.Col == 1)
+            {
+                if (p_args.Text != "根菜单")
+                    p_cell.Value = "<- " + p_args.Text;
+                else
+                    p_cell.Foreground = AtRes.BlackBrush;
+            }
+            else if (p_args.Col == 2)
+            {
+                if (p_args.Data.Bool("isgroup"))
+                {
+                    p_cell.Value = "V";
+                    p_cell.Foreground = AtRes.GreenBrush;
+                }
+                else
+                {
+                    p_cell.Value = "X";
+                    p_cell.Foreground = AtRes.RedBrush;
+                }
+            }
+        }
+
         public override void InitMenu(Menu p_menu)
         {
             Mi mi = new Mi { ID = "后退", Icon = Icons.左 };
@@ -127,10 +152,17 @@ namespace Dt.Sample
             }
         }
 
-        public override void OnCellClick(string p_id, IRptCell p_text)
+        public override void OnCellClick(RptCellArgs p_args)
         {
-            var row = p_text.Data;
-            if (p_id == "flag1")
+            var row = p_args.Data;
+            if (p_args.Row == 0 && p_args.Col == 1)
+            {
+                if (p_args.Text != "根菜单")
+                {
+                    OnBack(null, null);
+                }
+            }
+            else if (p_args.Col == 1)
             {
                 if (row.Bool("isgroup"))
                 {
@@ -162,7 +194,7 @@ namespace Dt.Sample
                     dlg.Show();
                 }
             }
-            else if (p_id == "flag2")
+            else if (p_args.Col == 2)
             {
                 AtKit.Msg(row.Bool("isgroup") ? "分组菜单" : "实体菜单");
             }

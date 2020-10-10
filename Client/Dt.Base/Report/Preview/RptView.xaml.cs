@@ -132,17 +132,14 @@ namespace Dt.Base
         /// <param name="e"></param>
         void OnCellClick(object sender, CellClickEventArgs e)
         {
-            RptTextInst inst;
             if (Info.ScriptObj != null
-                && (inst = _excel.ActiveSheet[e.Row, e.Column].Tag as RptTextInst) != null
+                && _excel.ActiveSheet[e.Row, e.Column].Tag is RptTextInst inst
                 && inst.Item is RptText txt
-                && !string.IsNullOrEmpty(txt.ScriptID))
+                && txt.HandleClick)
             {
                 _selectedTable = null;
                 _excel.DecorationRange = null;
-                inst.Row = e.Row;
-                inst.Col = e.Column;
-                Info.ScriptObj.OnCellClick(txt.ScriptID, inst);
+                Info.ScriptObj.OnCellClick(new RptCellArgs(inst));
             }
         }
 

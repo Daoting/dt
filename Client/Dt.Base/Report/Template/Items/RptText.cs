@@ -43,7 +43,7 @@ namespace Dt.Base.Report
             _data.AddCell<bool>("hidetopdup");
             _data.AddCell<bool>("hideleftdup");
             _data.AddCell<bool>("autoheight");
-            _data.AddCell<string>("scriptid");
+            _data.AddCell<bool>("handleclick");
             _data.AddCell<bool>("wordwrap");
             _data.AddCell("fontfamily", DefaultFontName);
             _data.AddCell("fontsize", DefaultFontSize);
@@ -126,12 +126,12 @@ namespace Dt.Base.Report
         }
 
         /// <summary>
-        /// 获取设置点击时执行脚本的标识
+        /// 获取设置点击时是否执行脚本
         /// </summary>
-        public string ScriptID
+        public bool HandleClick
         {
-            get { return _data.Str("scriptid"); }
-            set { _data["scriptid"] = value; }
+            get { return _data.Bool("handleclick"); }
+            set { _data["handleclick"] = value; }
         }
 
         /// <summary>
@@ -316,14 +316,19 @@ namespace Dt.Base.Report
         public bool ExistPlaceholder { get; set; }
 
         /// <summary>
+        /// 是否通过脚本绘制单元格内容和样式
+        /// </summary>
+        public bool IsScriptRender { get; private set; }
+
+        /// <summary>
         ///  克隆方法
         /// </summary>
         /// <returns></returns>
         public override RptItem Clone()
         {
             RptText newOne = new RptText(_part);
-            newOne.Data.Copy(this._data);
-            return newOne as RptItem;
+            newOne.Data.Copy(_data);
+            return newOne;
         }
 
         /// <summary>
@@ -366,7 +371,7 @@ namespace Dt.Base.Report
             p_cell.FontStyle = Italic ? FontStyle.Italic : FontStyle.Normal;
             p_cell.Underline = UnderLine;
             p_cell.Strikethrough = StrikeOut;
-            p_cell.Foreground = _data.IsEmpty("scriptid") ? new SolidColorBrush(Foreground) : Dt.Base.AtRes.主题蓝色;
+            p_cell.Foreground = HandleClick ? Dt.Base.AtRes.主题蓝色 : new SolidColorBrush(Foreground);
             p_cell.Background = Background.A == 0 ? null : new SolidColorBrush(Background);
             p_cell.HorizontalAlignment = Horalign;
             p_cell.VerticalAlignment = Veralign;
@@ -446,8 +451,8 @@ namespace Dt.Base.Report
                 p_writer.WriteAttributeString("hideleftdup", "True");
             if (AutoHeight)
                 p_writer.WriteAttributeString("autoheight", "True");
-            if (!_data.IsEmpty("scriptid"))
-                p_writer.WriteAttributeString("scriptid", _data.Str("scriptid"));
+            if (HandleClick)
+                p_writer.WriteAttributeString("handleclick", "True");
             if (WordWrap)
                 p_writer.WriteAttributeString("wordwrap", "True");
             if (FontFamily != DefaultFontName)
@@ -579,6 +584,11 @@ namespace Dt.Base.Report
                         exp.VarName = valName;
                         if (valName == "总页数" || valName == "页号")
                             ExistPlaceholder = true;
+                        break;
+                    case "script":
+                        exp.Func = RptExpFunc.Script;
+                        exp.DataName = match.Groups[2].Value;
+                        IsScriptRender = true;
                         break;
                     default:
                         exp.Func = RptExpFunc.Unknown;

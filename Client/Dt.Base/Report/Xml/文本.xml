@@ -7,7 +7,7 @@
       hideleftdup="False"
       wordwrap="False"
       autoheight="False"
-      scriptid="脚本标识"
+      handleclick="False"
       
       fontfamily="宋体"
       fontsize="9"

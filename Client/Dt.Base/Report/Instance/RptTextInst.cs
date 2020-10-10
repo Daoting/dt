@@ -7,7 +7,6 @@
 #endregion
 
 #region 命名空间
-using Dt.Cells.Data;
 using Dt.Core;
 using System;
 using System.Collections.Generic;
@@ -27,7 +26,7 @@ namespace Dt.Base.Report
     /// <summary>
     /// 文本项实例
     /// </summary>
-    internal class RptTextInst : RptOutputInst, IRptCell
+    internal class RptTextInst : RptOutputInst
     {
         #region 构造方法
         public RptTextInst(RptItemBase p_item)
@@ -47,19 +46,9 @@ namespace Dt.Base.Report
         public Dictionary<string, string> Filter { get; set; }
 
         /// <summary>
-        /// 获取文本项对应的数据行，RptInfo脚本用
+        /// 获取文本项对应的数据行，脚本用
         /// </summary>
-        public Core.Row Data { get; set; }
-
-        /// <summary>
-        /// 获取当前单元格行索引，RptInfo脚本用
-        /// </summary>
-        public int Row { get; set; }
-
-        /// <summary>
-        /// 获取当前单元格列索引，RptInfo脚本用
-        /// </summary>
-        public int Col { get; set; }
+        public Core.Row Data { get; private set; }
 
         /// <summary>
         /// 输出到指定页的页眉
@@ -132,7 +121,10 @@ namespace Dt.Base.Report
         public string GetText()
         {
             if (((RptText)_item).ExistPlaceholder)
+            {
+                // 解析时已将页号、总页数转为内置符号
                 Text = Text.Replace("$$", Inst.Pages.Count.ToString()).Replace("##", _page.PageNum);
+            }
             return Text;
         }
 
@@ -146,6 +138,7 @@ namespace Dt.Base.Report
             List<RptExpression> exps = item.Expressions;
             if (exps == null || exps.Count == 0)
             {
+                // 静态文本
                 Text = item.Val;
                 return;
             }
@@ -256,6 +249,10 @@ namespace Dt.Base.Report
 
                         case RptExpFunc.Index:
                             sb.Append(src.Current);
+                            break;
+
+                        case RptExpFunc.Script:
+                            // 通过外部脚本绘制单元格内容和样式
                             break;
                     }
                 }

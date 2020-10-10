@@ -17,36 +17,20 @@ namespace Dt.Base.Report
     /// </summary>
     internal class RptExpression
     {
-        RptExpFunc _func;
-        string _dataName;
-        string _varName;
-
         /// <summary>
         /// 获取设置功能种类
         /// </summary>
-        public RptExpFunc Func
-        {
-            get { return _func; }
-            set { _func = value; }
-        }
+        public RptExpFunc Func { get; set; }
 
         /// <summary>
         /// 获取设置数据源名称
         /// </summary>
-        public string DataName
-        {
-            get { return _dataName; }
-            set { _dataName = value; }
-        }
+        public string DataName { get; set; }
 
         /// <summary>
         /// 获取设置变量名称
         /// </summary>
-        public string VarName
-        {
-            get { return _varName; }
-            set { _varName = value; }
-        }
+        public string VarName { get; set; }
     }
 
     /// <summary>
@@ -98,6 +82,11 @@ namespace Dt.Base.Report
         /// 取全局变量值
         /// </summary>
         Global,
+
+        /// <summary>
+        /// 通过外部脚本绘制单元格内容和样式
+        /// </summary>
+        Script,
 
         /// <summary>
         /// 未知

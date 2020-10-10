@@ -7,7 +7,6 @@
 #endregion
 
 #region 命名空间
-using Dt.Base.Report;
 using Dt.Core;
 using System.Threading.Tasks;
 #endregion
@@ -35,6 +34,15 @@ namespace Dt.Base
         }
 
         /// <summary>
+        /// 绘制单元格内容和样式
+        /// </summary>
+        /// <param name="p_cell">单元格</param>
+        /// <param name="p_args">单元格脚本参数</param>
+        public virtual void RenderCell(Cells.Data.Cell p_cell, RptCellArgs p_args)
+        {
+        }
+
+        /// <summary>
         /// 初始化工具栏菜单，报表组不支持
         /// </summary>
         /// <param name="p_menu"></param>
@@ -53,9 +61,8 @@ namespace Dt.Base
         /// <summary>
         /// 点击单元格脚本
         /// </summary>
-        /// <param name="p_id">脚本标识</param>
-        /// <param name="p_text">单元格</param>
-        public virtual void OnCellClick(string p_id, IRptCell p_text)
+        /// <param name="p_args">单元格脚本参数</param>
+        public virtual void OnCellClick(RptCellArgs p_args)
         {
         }
     }

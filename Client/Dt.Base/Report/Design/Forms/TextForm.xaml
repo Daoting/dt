@@ -11,12 +11,12 @@
             <Button Content="+数据集列值" />
             <Button Content="+参数值" />
             <Button Content="+全局变量值" />
+            <Button Content="+脚本取值" />
         </StackPanel>
+        <a:CBool ID="handleclick" Title="点击时执行脚本" />
         <a:CBar Title="自动合并重复值的格" />
         <a:CBool ID="hidetopdup" Title="纵向合并" />
         <a:CBool ID="hideleftdup" Title="横向合并" />
-        <a:CBar Title="单元格标识，用于在脚本中识别不同单元格" />
-        <a:CText ID="scriptid" ShowTitle="False" />
         
         <a:CBar Title="样式" />
         <a:CBool ID="wordwrap" Title="自动换行" />

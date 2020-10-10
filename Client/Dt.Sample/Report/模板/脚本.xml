@@ -9,7 +9,7 @@
   <Setting />
   <Header />
   <Body rows="40,25,25,25,25">
-    <Text col="1" colspan="2" val=":Param(parentname)" fontsize="20" lbs="None" tbs="None" rbs="None" bbs="None" />
+    <Text col="1" colspan="2" val=":Param(parentname) + Script()" handleclick="True" fontsize="20" lbs="None" tbs="None" rbs="None" bbs="None" />
     <Table row="1" col="1" rowspan="2" colspan="2" tbl="菜单">
       <THeader>
         <TRow>
@@ -19,8 +19,8 @@
       </THeader>
       <TBody>
         <TRow>
-          <Text row="2" col="1" val=":Val(菜单,name) " scriptid="flag1" horalign="Left" />
-          <Text row="2" col="2" val=":Val(菜单,isgroup)" scriptid="flag2" />
+          <Text row="2" col="1" val=":Val(菜单,name)" handleclick="True" horalign="Left" />
+          <Text row="2" col="2" val=":Script(菜单)" handleclick="True" />
         </TRow>
       </TBody>
     </Table>

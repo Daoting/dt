@@ -153,20 +153,20 @@ namespace Dt.Base.Report
                         CellRange range;
                         RptText text = txt.Item as RptText;
                         var dataRow = (txt.Item as RptText).Data;
-                        var randerCell = RenderText(txt, row, col);
+                        var renderCell = RenderText(txt, row, col);
 
                         if (row > startRow && dataRow.Bool("hidetopdup"))
                         {
                             tmpCell = _ws[row - 1, col];
                             if (tmpCell.Tag != null
                                 && txt.Item.Data.Bool("hidetopdup")
-                                && tmpCell.Text == randerCell.Text)
+                                && tmpCell.Text == renderCell.Text)
                             {
                                 range = _ws.GetSpanCell(row - 1, col);
                                 if (range != null)
                                     tmpCell = _ws[range.Row, range.Column];
-                                if (tmpCell.ColumnSpan == randerCell.ColumnSpan)
-                                    tmpCell.RowSpan += randerCell.RowSpan;
+                                if (tmpCell.ColumnSpan == renderCell.ColumnSpan)
+                                    tmpCell.RowSpan += renderCell.RowSpan;
                             }
                         }
 
@@ -175,13 +175,13 @@ namespace Dt.Base.Report
                             tmpCell = _ws[row, col - 1];
                             if (tmpCell.Tag != null
                                && txt.Item.Data.Bool("hidetopdup")
-                               && tmpCell.Text == randerCell.Text)
+                               && tmpCell.Text == renderCell.Text)
                             {
                                 range = _ws.GetSpanCell(row, col - 1);
                                 if (range != null)
                                     tmpCell = _ws[range.Row, range.Column];
-                                if (tmpCell.RowSpan == randerCell.RowSpan)
-                                    tmpCell.ColumnSpan += randerCell.ColumnSpan;
+                                if (tmpCell.RowSpan == renderCell.RowSpan)
+                                    tmpCell.ColumnSpan += renderCell.ColumnSpan;
                             }
                         }
                     }
@@ -219,7 +219,13 @@ namespace Dt.Base.Report
             cell.RowSpan = item.RowSpan;
             cell.Tag = p_txt;
             cell.Value = p_txt.GetText();
-            AtKit.RunSync(() => item.ApplyStyle(cell));
+            item.ApplyStyle(cell);
+
+            if (item.IsScriptRender && _info.ScriptObj != null)
+            {
+                // 脚本绘制
+                _info.ScriptObj.RenderCell(cell, new RptCellArgs(p_txt));
+            }
             return cell;
         }
 
