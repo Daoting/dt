@@ -100,7 +100,7 @@ namespace Dt.Base
                     _excel.Sheets.Clear();
 
                     // 设置分页线
-                    _excel.PaperSize = new Size(Info.Root.Setting.ValidWidth, Info.Root.Setting.ValidHeight);
+                    _excel.PaperSize = new Size(Info.Root.PageSetting.ValidWidth, Info.Root.PageSetting.ValidHeight);
 
                     // 添加报表页
                     var ws = Info.Sheet;
@@ -586,8 +586,8 @@ namespace Dt.Base
             if (_excel.ActiveSheet != null)
             {
                 PrintInfo info = new PrintInfo();
-                RptSetting setting = Info.Root.Setting;
-                info.PaperSize = setting.PaperName == "PrinterCustom" ? new PaperSize(setting.Width, setting.Height) : new PaperSize((PrintMediaSize)Enum.Parse(typeof(PrintMediaSize), setting.PaperName));
+                RptPageSetting setting = Info.Root.PageSetting;
+                info.PaperSize = new PaperSize(setting.Width, setting.Height);
                 info.Margin = new Margins((int)setting.TopMargin, (int)setting.BottomMargin, (int)setting.LeftMargin, (int)setting.RightMargin);
                 info.Orientation = setting.Landscape ? PrintPageOrientation.Landscape : PrintPageOrientation.Portrait;
                 info.ShowBorder = false;

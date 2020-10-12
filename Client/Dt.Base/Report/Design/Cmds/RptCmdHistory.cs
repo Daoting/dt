@@ -88,10 +88,11 @@ namespace Dt.Base.Report
         /// </summary>
         public void Clear()
         {
-            if (CanUndo && DirtyChanged != null)
-                DirtyChanged(this, false);
+            bool canUndo = CanUndo;
             _undoStack.Clear();
             _redoStack.Clear();
+            if (canUndo && DirtyChanged != null)
+                DirtyChanged(this, false);
         }
 
         public bool CanRedo

@@ -20,7 +20,7 @@ namespace Dt.Base.Report
         {
             _owner = p_owner;
             UpdateAllowExecute();
-            _owner.History.DirtyChanged += (sender, e) => UpdateAllowExecute();
+            _owner.DirtyChanged += (sender, e) => UpdateAllowExecute();
         }
 
         protected override void DoExecute(object p_parameter)
@@ -30,7 +30,7 @@ namespace Dt.Base.Report
 
         void UpdateAllowExecute()
         {
-            AllowExecute = _owner.History.CanUndo;
+            AllowExecute = _owner.IsDirty;
         }
     }
 }

@@ -20,8 +20,9 @@ namespace Dt.Base.Report
     /// </summary>
     internal class RptParams
     {
-        public RptParams()
+        public RptParams(RptRoot p_root)
         {
+            Root = p_root;
             Data = new Table
             {
                 { "id" },
@@ -41,7 +42,13 @@ namespace Dt.Base.Report
                 { "verticaltitle" },
                 { "titlewidth",  typeof(double)},
             };
+            Data.Changed += Root.OnCellValueChanged;
         }
+
+        /// <summary>
+        /// 获取报表模板根对象
+        /// </summary>
+        public RptRoot Root { get; }
 
         /// <summary>
         /// 获取数据源列表

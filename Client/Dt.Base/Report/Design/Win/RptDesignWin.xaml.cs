@@ -40,11 +40,11 @@ namespace Dt.Base.Report
             InitializeComponent();
             Info = p_info;
             Info.TemplateChanged += (s, e) => LoadTemplate(e.NewRoot, e.OldRoot);
+            Info.PageSettingChanged += (s, e) => RefreshSpliter();
 
             _excelClerk = new ExcelClerk(this);
             _selectionClerk = new SelectionClerk(this);
 
-            _menu["保存"].Cmd = new SaveCmd(Info);
             _menu["撤消"].Cmd = new UndoCmd(Info);
             _menu["重做"].Cmd = new RedoCmd(Info);
             _menu["网格"].IsChecked = true;
@@ -53,19 +53,18 @@ namespace Dt.Base.Report
 
         internal RptDesignInfo Info { get; }
 
-        //internal RptRoot Root { get; set; }
-
         internal Excel Excel
         {
             get { return _excel; }
         }
 
+        /// <summary>
         /// 重新刷新页面设计部分的分割线高度。
         /// PaperSize 的一个值为0的时候，不会在页面上画线
         /// </summary>
         public void RefreshSpliter()
         {
-            RptSetting setting = Info.Root.Setting;
+            RptPageSetting setting = Info.Root.PageSetting;
             double headHeight = Info.Root.Header.ActualHeight;
             double footHeight = Info.Root.Footer.ActualHeight;
             double newHeight = setting.ValidHeight - headHeight - footHeight;
@@ -247,6 +246,7 @@ namespace Dt.Base.Report
                     InitRowColSize();
                     LoadItems();
                     _excel.DecorationRange = null;
+                    RefreshSpliter();
                 }
 
                 p_newRoot.Serializing += OnBeforeSerialize;

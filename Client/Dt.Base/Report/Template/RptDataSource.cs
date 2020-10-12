@@ -24,8 +24,9 @@ namespace Dt.Base.Report
         Table _dataSet;
         Dictionary<string, Table> _dicCols;
 
-        public RptDataSource()
+        public RptDataSource(RptRoot p_root)
         {
+            Root = p_root;
             _dicCols = new Dictionary<string, Table>();
             _dataSet = new Table
             {
@@ -35,7 +36,13 @@ namespace Dt.Base.Report
                 { "sql" },
                 { "cols" },
             };
+            _dataSet.Changed += Root.OnCellValueChanged;
         }
+
+        /// <summary>
+        /// 获取报表模板根对象
+        /// </summary>
+        public RptRoot Root { get; }
 
         /// <summary>
         /// 获取数据源列表

@@ -3,7 +3,7 @@
   <Data>
     <Tbl id="通讯录" isscritp="True" cols="bm,xm,fjh" />
   </Data>
-  <Setting papername="PrinterCustom" width="790" />
+  <Page width="790" />
   <Header />
   <Body rows="25,25,25,25">
     <Table row="1" col="1" rowspan="3" colspan="3" tbl="通讯录" repeatheader="True" repeatfooter="True" rowbreakcount="-1" colbreakcount="3">

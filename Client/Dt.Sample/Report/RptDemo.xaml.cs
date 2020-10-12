@@ -26,7 +26,8 @@ namespace Dt.Sample
             InitializeComponent();
 
             Row row = new Row();
-            row.AddCell("type", "使用RptView预览");
+            row.AddCell("type", "打开模板编辑窗口");
+            //row.AddCell("type", "使用RptView预览");
             _fv.Data = row;
             AttachEvent();
         }

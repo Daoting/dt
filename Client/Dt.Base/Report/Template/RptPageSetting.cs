@@ -16,41 +16,45 @@ namespace Dt.Base.Report
     /// <summary>
     /// 页面设置
     /// </summary>
-    internal class RptSetting
+    internal class RptPageSetting
     {
         const double _defaultMargin = 36;
         const double _defaultHeight = 1122;
         const double _defaultWidth = 793;
-        Row _data;
 
-        public RptSetting()
+        public RptPageSetting(RptRoot p_root)
         {
-            _data = new Row();
-            _data.AddCell("papername", "IsoA4");
-            _data.AddCell("height", _defaultHeight);
-            _data.AddCell("width", _defaultWidth);
-            _data.AddCell("leftmargin", _defaultMargin);
-            _data.AddCell("topmargin", _defaultMargin);
-            _data.AddCell("rightmargin", _defaultMargin);
-            _data.AddCell("bottommargin", _defaultMargin);
-            _data.AddCell<bool>("landscape");
+            Root = p_root;
+            Data = new Row();
+            // 纸张名称不保存
+            Data.AddCell<string>("papername");
+            Data.AddCell("height", _defaultHeight);
+            Data.AddCell("width", _defaultWidth);
+            Data.AddCell("leftmargin", _defaultMargin);
+            Data.AddCell("topmargin", _defaultMargin);
+            Data.AddCell("rightmargin", _defaultMargin);
+            Data.AddCell("bottommargin", _defaultMargin);
+            Data.AddCell<bool>("landscape");
+            Data.Changed += Root.OnCellValueChanged;
         }
+
+        /// <summary>
+        /// 获取报表模板根对象
+        /// </summary>
+        public RptRoot Root { get; }
 
         /// <summary>
         /// 获取页面设置数据源
         /// </summary>
-        public Row Data
-        {
-            get { return _data; }
-        }
+        public Row Data { get; }
 
         /// <summary>
         /// 获取纸张名称
         /// </summary>
         public string PaperName
         {
-            set { _data["PaperName"] = value; }
-            get { return _data.Str("PaperName"); }
+            set { Data["PaperName"] = value; }
+            get { return Data.Str("PaperName"); }
         }
 
         /// <summary>
@@ -58,8 +62,8 @@ namespace Dt.Base.Report
         /// </summary>
         public double Height
         {
-            set { _data["Height"] = value; }
-            get { return _data.Int("Height"); }
+            set { Data["Height"] = value; }
+            get { return Data.Int("Height"); }
         }
 
         /// <summary>
@@ -67,8 +71,8 @@ namespace Dt.Base.Report
         /// </summary>
         public double Width
         {
-            set { _data["Width"] = value; }
-            get { return _data.Int("Width"); }
+            set { Data["Width"] = value; }
+            get { return Data.Int("Width"); }
         }
 
         /// <summary>
@@ -76,8 +80,8 @@ namespace Dt.Base.Report
         /// </summary>
         public double LeftMargin
         {
-            set { _data["LeftMargin"] = value; }
-            get { return _data.Int("LeftMargin"); }
+            set { Data["LeftMargin"] = value; }
+            get { return Data.Int("LeftMargin"); }
         }
 
         /// <summary>
@@ -85,8 +89,8 @@ namespace Dt.Base.Report
         /// </summary>
         public double TopMargin
         {
-            set { _data["TopMargin"] = value; }
-            get { return _data.Int("TopMargin"); }
+            set { Data["TopMargin"] = value; }
+            get { return Data.Int("TopMargin"); }
         }
 
         /// <summary>
@@ -94,8 +98,8 @@ namespace Dt.Base.Report
         /// </summary>
         public double RightMargin
         {
-            set { _data["RightMargin"] = value; }
-            get { return _data.Int("RightMargin"); }
+            set { Data["RightMargin"] = value; }
+            get { return Data.Int("RightMargin"); }
         }
 
         /// <summary>
@@ -103,8 +107,8 @@ namespace Dt.Base.Report
         /// </summary>
         public double BottomMargin
         {
-            set { _data["BottomMargin"] = value; }
-            get { return _data.Int("BottomMargin"); }
+            set { Data["BottomMargin"] = value; }
+            get { return Data.Int("BottomMargin"); }
         }
 
         /// <summary>
@@ -112,8 +116,8 @@ namespace Dt.Base.Report
         /// </summary>
         public bool Landscape
         {
-            set { _data["Landscape"] = value; }
-            get { return _data.Bool("Landscape"); }
+            set { Data["Landscape"] = value; }
+            get { return Data.Bool("Landscape"); }
         }
 
         /// <summary>
@@ -138,7 +142,7 @@ namespace Dt.Base.Report
         /// <param name="p_reader"></param>
         public void ReadXml(XmlReader p_reader)
         {
-            _data.ReadXml(p_reader);
+            Data.ReadXml(p_reader);
             p_reader.Read();
         }
 
@@ -148,22 +152,23 @@ namespace Dt.Base.Report
         /// <param name="p_writer"></param>
         public void WriteXml(XmlWriter p_writer)
         {
-            p_writer.WriteStartElement("Setting");
-            string val = _data.Str("papername");
-            if (val != "IsoA4")
-                p_writer.WriteAttributeString("papername", val);
+            p_writer.WriteStartElement("Page");
+            // 不保存纸张名称
+            //string val = Data.Str("papername");
+            //if (val != "IsoA4")
+            //    p_writer.WriteAttributeString("papername", val);
             if (Height != _defaultHeight)
-                p_writer.WriteAttributeString("height", _data.Str("height"));
+                p_writer.WriteAttributeString("height", Height.ToString());
             if (Width != _defaultWidth)
-                p_writer.WriteAttributeString("width", _data.Str("width"));
+                p_writer.WriteAttributeString("width", Width.ToString());
             if (LeftMargin != _defaultMargin)
-                p_writer.WriteAttributeString("leftmargin", _data.Str("leftmargin"));
+                p_writer.WriteAttributeString("leftmargin", LeftMargin.ToString());
             if (TopMargin != _defaultMargin)
-                p_writer.WriteAttributeString("topmargin", _data.Str("topmargin"));
+                p_writer.WriteAttributeString("topmargin", TopMargin.ToString());
             if (RightMargin != _defaultMargin)
-                p_writer.WriteAttributeString("rightmargin", _data.Str("rightmargin"));
+                p_writer.WriteAttributeString("rightmargin", RightMargin.ToString());
             if (BottomMargin != _defaultMargin)
-                p_writer.WriteAttributeString("bottommargin", _data.Str("bottommargin"));
+                p_writer.WriteAttributeString("bottommargin", BottomMargin.ToString());
             if (Landscape)
                 p_writer.WriteAttributeString("landscape", "True");
             p_writer.WriteEndElement();

@@ -24,13 +24,13 @@ namespace Dt.Base.Report
         #region 构造方法
         public RptRoot()
         {
-            Params = new RptParams();
-            Data = new RptDataSource();
-            Setting = new RptSetting();
+            Params = new RptParams(this);
+            Data = new RptDataSource(this);
+            PageSetting = new RptPageSetting(this);
             Header = new RptHeader(this);
             Body = new RptBody(this);
             Footer = new RptFooter(this);
-            ViewSetting = new RptViewSetting();
+            ViewSetting = new RptViewSetting(this);
         }
         #endregion
 
@@ -58,12 +58,17 @@ namespace Dt.Base.Report
         /// <summary>
         /// 报表项值变化事件
         /// </summary>
-        public event EventHandler<Cell> ValueChanged;
+        public event EventHandler<Cell> ItemValueChanged;
 
         /// <summary>
         /// 报表项更新事件
         /// </summary>
         public event EventHandler<bool> Updated;
+
+        /// <summary>
+        /// 模板中值变化事件
+        /// </summary>
+        public event EventHandler CellValueChanged;
         #endregion
 
         #region 属性
@@ -80,7 +85,7 @@ namespace Dt.Base.Report
         /// <summary>
         /// 获取报表页面设置
         /// </summary>
-        public RptSetting Setting { get; }
+        public RptPageSetting PageSetting { get; }
 
         /// <summary>
         /// 获取报表页眉
@@ -141,8 +146,8 @@ namespace Dt.Base.Report
                     case "Data":
                         Data.ReadXml(p_reader);
                         break;
-                    case "Setting":
-                        Setting.ReadXml(p_reader);
+                    case "Page":
+                        PageSetting.ReadXml(p_reader);
                         break;
                     case "Header":
                         Header.ReadXml(p_reader);
@@ -171,7 +176,7 @@ namespace Dt.Base.Report
 
             Params.WriteXml(p_writer);
             Data.WriteXml(p_writer);
-            Setting.WriteXml(p_writer);
+            PageSetting.WriteXml(p_writer);
             Header.WriteXml(p_writer);
             Body.WriteXml(p_writer);
             Footer.WriteXml(p_writer);
@@ -235,16 +240,26 @@ namespace Dt.Base.Report
         /// </summary>
         /// <param name="p_item"></param>
         /// <param name="p_cell"></param>
-        public void OnValueChanged(RptItemBase p_item, Cell p_cell)
+        public void OnItemValueChanged(RptItemBase p_item, Cell p_cell)
         {
             ValueChangedCmd cmd = RptCmds.ValueChanged;
             if (!cmd.IsSetting)
             {
-                ValueChanged?.Invoke(p_cell, p_cell);
+                ItemValueChanged?.Invoke(p_cell, p_cell);
                 if (p_item is RptText pt && TextChanged != null)
                     TextChanged(pt, p_cell);
                 p_cell.AcceptChanges();
             }
+        }
+
+        /// <summary>
+        /// 触发模板中值变化事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void OnCellValueChanged(object sender, Cell e)
+        {
+            CellValueChanged?.Invoke(sender, EventArgs.Empty);
         }
 
         /// <summary>

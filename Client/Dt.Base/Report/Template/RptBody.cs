@@ -79,6 +79,7 @@ namespace Dt.Base.Report
         /// <param name="p_reader"></param>
         public override void ReadXml(XmlReader p_reader)
         {
+            DetachEvent();
             // 行高列宽
             for (int i = 0; i < p_reader.AttributeCount; i++)
             {
@@ -91,6 +92,7 @@ namespace Dt.Base.Report
                 }
             }
             base.ReadXml(p_reader);
+            AtachEvent();
         }
 
         /// <summary>

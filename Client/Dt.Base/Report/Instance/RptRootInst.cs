@@ -151,8 +151,8 @@ namespace Dt.Base.Report
             // 页面固定尺寸
             HeaderHeight = root.Header.ActualHeight;
             FooterHeight = root.Footer.ActualHeight;
-            BodyHeight = root.Setting.ValidHeight - HeaderHeight - FooterHeight - PageGap;
-            BodyWidth = root.Setting.ValidWidth - PageGap;
+            BodyHeight = root.PageSetting.ValidHeight - HeaderHeight - FooterHeight - PageGap;
+            BodyWidth = root.PageSetting.ValidWidth - PageGap;
 
             // 输出成页，页眉页脚在创建页时输出
             CreatePage(0, 0);

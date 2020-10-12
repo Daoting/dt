@@ -7,11 +7,11 @@
 #endregion
 
 #region 引用命名
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Dt.Base;
 using Dt.Core;
+using System;
+using System.IO;
+using Windows.Storage;
+using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 #endregion
@@ -23,6 +23,11 @@ namespace Dt.Base.Report
         RptDesignInfo _info;
         RptDesignWin _design;
         TextBox _tbXaml;
+        ViewSettingWin _viewSetting;
+        PageSettingWin _pageSetting;
+        ParamsWin _params;
+        DbDataWin _dbData;
+        ScriptDataWin _scriptData;
 
         public RptDesignHome(RptDesignInfo p_info)
         {
@@ -30,6 +35,7 @@ namespace Dt.Base.Report
             _info = p_info;
             _design = new RptDesignWin(_info);
             LoadCenter(_design);
+            _btnSave.Command = new SaveCmd(_info);
         }
 
         void OnEditTemplate(object sender, RoutedEventArgs e)
@@ -50,9 +56,29 @@ namespace Dt.Base.Report
             LoadCenter(_tbXaml);
         }
 
-        void OnImport(object sender, RoutedEventArgs e)
+        async void OnImport(object sender, RoutedEventArgs e)
         {
-            AtRpt.Show(new List<RptInfo> { new RptInfo { Name = "a" }, new RptInfo { Name = "b" } });
+            if (_info.IsDirty && !await AtKit.Confirm("当前模板已修改，导入新模板会丢失修改内容，继续导入吗？"))
+                return;
+
+            FileOpenPicker picker = new FileOpenPicker();
+            picker.FileTypeFilter.Add(".xml");
+            StorageFile sf = await picker.PickSingleFileAsync();
+            if (sf != null)
+            {
+                try
+                {
+                    using (var stream = await sf.OpenStreamForReadAsync())
+                    using (var reader = new StreamReader(stream))
+                    {
+                        await _info.ImportTemplate(reader.ReadToEnd());
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception(string.Format("导入报表模板时异常：{0}", ex.Message));
+                }
+            }
         }
 
         void OnPreview(object sender, RoutedEventArgs e)
@@ -67,6 +93,46 @@ namespace Dt.Base.Report
             }
 
             AtRpt.Show(info);
+        }
+
+        void OnPageSetting(object sender, RoutedEventArgs e)
+        {
+            if (_pageSetting == null)
+                _pageSetting = new PageSettingWin(_info);
+            LoadCenter(_pageSetting);
+        }
+
+        void OnViewSetting(object sender, RoutedEventArgs e)
+        {
+            if (_viewSetting == null)
+                _viewSetting = new ViewSettingWin(_info);
+            LoadCenter(_viewSetting);
+        }
+
+        void OnParams(object sender, RoutedEventArgs e)
+        {
+            if (_params == null)
+                _params = new ParamsWin(_info);
+            LoadCenter(_params);
+        }
+
+        void OnDbData(object sender, RoutedEventArgs e)
+        {
+            if (_dbData == null)
+                _dbData = new DbDataWin(_info);
+            LoadCenter(_dbData);
+        }
+
+        void OnScriptData(object sender, RoutedEventArgs e)
+        {
+            if (_scriptData == null)
+                _scriptData = new ScriptDataWin(_info);
+            LoadCenter(_scriptData);
+        }
+
+        void OnSave(object sender, RoutedEventArgs e)
+        {
+            _info.SaveTemplate();
         }
     }
 }

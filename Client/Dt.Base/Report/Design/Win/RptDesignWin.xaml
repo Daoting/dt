@@ -10,7 +10,6 @@
             <a:Tab Title="编辑">
                 <a:Tab.Menu>
                     <a:Menu x:Name="_menu">
-                        <a:Mi ID="保存" Icon="保存" ShowInPhone="Icon" />
                         <a:Mi ID="撤消" Icon="撤销" />
                         <a:Mi ID="重做" Icon="重做" />
                         <a:Mi ID="网格" IsCheckable="True" Click="OnCheckChanged" />

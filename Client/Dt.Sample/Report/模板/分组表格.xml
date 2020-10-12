@@ -3,7 +3,7 @@
   <Data>
     <Tbl id="网损情况" isscritp="True" cols="year,month,unit,val" />
   </Data>
-  <Setting />
+  <Page />
   <Header />
   <Body rows="25,25,25,25,25,25,25,25">
     <Table row="1" col="1" rowspan="7" colspan="4" tbl="网损情况" repeatheader="True" repeatfooter="True">

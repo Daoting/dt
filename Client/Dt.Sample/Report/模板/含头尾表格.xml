@@ -3,7 +3,7 @@
   <Data>
     <Tbl id="网损情况" isscritp="True" cols="year,month,unit,val" />
   </Data>
-  <Setting />
+  <Page />
   <Header />
   <Body rows="25,25,25,25,25">
     <Text colspan="4" val="无表头表尾" />

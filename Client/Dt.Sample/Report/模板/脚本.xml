@@ -6,7 +6,7 @@
   <Data>
     <Tbl id="菜单" isscritp="True" cols="id,parentid,name,isgroup" />
   </Data>
-  <Setting />
+  <Page />
   <Header />
   <Body rows="40,25,25,25,25">
     <Text col="1" colspan="2" val=":Param(parentname) + Script()" handleclick="True" fontsize="20" lbs="None" tbs="None" rbs="None" bbs="None" />

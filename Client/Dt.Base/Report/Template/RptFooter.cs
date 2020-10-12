@@ -56,6 +56,7 @@ namespace Dt.Base.Report
         /// <param name="p_reader"></param>
         public override void ReadXml(XmlReader p_reader)
         {
+            DetachEvent();
             for (int i = 0; i < p_reader.AttributeCount; i++)
             {
                 p_reader.MoveToAttribute(i);
@@ -67,6 +68,7 @@ namespace Dt.Base.Report
                 }
             }
             base.ReadXml(p_reader);
+            AtachEvent();
         }
 
         /// <summary>

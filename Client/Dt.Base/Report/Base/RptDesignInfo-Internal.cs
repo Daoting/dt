@@ -30,9 +30,29 @@ namespace Dt.Base
 
         #endregion
 
+        /// <summary>
+        /// 切换模板事件
+        /// </summary>
         internal event EventHandler<TemplateChangedArgs> TemplateChanged;
 
+        /// <summary>
+        /// 模板修改变化事件
+        /// </summary>
+        internal event EventHandler<bool> DirtyChanged;
+
+        /// <summary>
+        /// 模板保存后事件
+        /// </summary>
+        internal event EventHandler Saved;
+
+        /// <summary>
+        /// 页面设置变化事件
+        /// </summary>
+        internal event EventHandler PageSettingChanged;
+
         internal RptRoot Root { get; private set; }
+
+        internal bool IsDirty { get; private set; }
 
         #region 报表模板
         /// <summary>
@@ -46,7 +66,7 @@ namespace Dt.Base
                 // 报表设计时始终不缓存模板！
                 string define = await ReadTemplate();
                 Root = await AtRpt.DeserializeTemplate(define);
-                Root.ValueChanged += OnItemValueChanged;
+                AttachRootEvent();
                 return true;
             }
             catch { }
@@ -63,10 +83,10 @@ namespace Dt.Base
         {
             var old = Root;
             if (old != null)
-                old.ValueChanged -= OnItemValueChanged;
+                DetachRootEvent();
 
             Root = await AtRpt.DeserializeTemplate(p_define);
-            Root.ValueChanged += OnItemValueChanged;
+            AttachRootEvent();
             TemplateChanged?.Invoke(this, new TemplateChangedArgs { NewRoot = Root, OldRoot = old });
         }
 
@@ -79,6 +99,8 @@ namespace Dt.Base
             {
                 SaveTemplate(AtRpt.SerializeTemplate(Root));
                 History.Clear();
+                Saved?.Invoke(this, EventArgs.Empty);
+                OnCellValueChanged(this, EventArgs.Empty);
             }
         }
         #endregion
@@ -96,6 +118,7 @@ namespace Dt.Base
             cmd.IsSetting = true;
             object result = p_cmd.Execute(p_args);
             History.RecordAction(new HistoryCmdAction(p_cmd, p_args));
+            OnCellValueChanged(p_cmd, null);
             cmd.IsSetting = false;
             return result;
         }
@@ -109,6 +132,7 @@ namespace Dt.Base
             cmd.IsSetting = true;
             History.Undo();
             cmd.IsSetting = false;
+            OnCellValueChanged(null, null);
         }
 
         /// <summary>
@@ -120,6 +144,26 @@ namespace Dt.Base
             cmd.IsSetting = true;
             History.Redo();
             cmd.IsSetting = false;
+            OnCellValueChanged(null, null);
+        }
+        #endregion
+
+        #region 事件
+        void AttachRootEvent()
+        {
+            Root.ItemValueChanged += OnItemValueChanged;
+            Root.CellValueChanged += OnCellValueChanged;
+        }
+
+        void DetachRootEvent()
+        {
+            Root.ItemValueChanged -= OnItemValueChanged;
+            Root.CellValueChanged -= OnCellValueChanged;
+        }
+
+        internal void OnPageSettingChanged()
+        {
+            PageSettingChanged?.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -129,9 +173,23 @@ namespace Dt.Base
         /// <param name="e"></param>
         void OnItemValueChanged(object sender, Core.Cell e)
         {
-            ValueChangedCmd cmd = RptCmds.ValueChanged;
-            if (!cmd.IsSetting)
-                History.RecordAction(new HistoryCmdAction(cmd, new ValueChangedArgs(e, sender as RptText)));
+            History.RecordAction(new HistoryCmdAction(RptCmds.ValueChanged, new ValueChangedArgs(e, sender as RptText)));
+            OnCellValueChanged(sender, null);
+        }
+
+        void OnCellValueChanged(object sender, EventArgs e)
+        {
+            bool isDirty = History.CanUndo
+                || Root.Params.Data.IsChanged
+                || Root.Data.DataSet.IsChanged
+                || Root.PageSetting.Data.IsChanged
+                || Root.ViewSetting.Data.IsChanged;
+
+            if (IsDirty != isDirty)
+            {
+                IsDirty = isDirty;
+                DirtyChanged?.Invoke(this, IsDirty);
+            }
         }
         #endregion
 

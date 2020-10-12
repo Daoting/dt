@@ -1,7 +1,7 @@
 ﻿<Rpt cols="80,80,80,80,80">
   <Params />
   <Data />
-  <Setting papername="PrinterCustom" height="322" width="392" />
+  <Page height="322" width="392" />
   <Header />
   <Body rows="25,25,25,25,25,25,25,25,25,25">
     <Text row="2" col="1" val="文本1" />

@@ -209,11 +209,12 @@ namespace Dt.Core
         public void RejectChanges()
         {
             _delayCheckChanges = true;
+            // 回滚过程中可能判断行IsChanged，原来放在回滚后！
+            IsChanged = false;
             foreach (var cell in ChangedCells)
             {
                 cell.RejectChanges();
             }
-            IsChanged = false;
             _delayCheckChanges = false;
         }
 

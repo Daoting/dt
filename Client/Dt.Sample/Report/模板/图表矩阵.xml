@@ -3,7 +3,7 @@
   <Data>
     <Tbl id="图表矩阵" isscritp="True" cols="xm,subject,score" />
   </Data>
-  <Setting />
+  <Page />
   <Header />
   <Body rows="25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25">
     <Chart row="2" col="1" rowspan="13" colspan="7" tbl="图表矩阵" fieldseries="subject" fieldx="xm" fieldy="score" title="成绩一览表" titlex="姓名" titley="成绩" />

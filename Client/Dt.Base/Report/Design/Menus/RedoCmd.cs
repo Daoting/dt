@@ -25,7 +25,7 @@ namespace Dt.Base.Report
 
         protected override void DoExecute(object p_parameter)
         {
-            _owner.History.Redo();
+            _owner.Redo();
         }
 
         void UpdateAllowExecute()

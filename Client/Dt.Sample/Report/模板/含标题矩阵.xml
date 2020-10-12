@@ -3,7 +3,7 @@
   <Data>
     <Tbl id="个人成绩_矩阵标题" isscritp="True" cols="xm,year,数学,语文,英语" />
   </Data>
-  <Setting />
+  <Page />
   <Header />
   <Body rows="25,25,25,25">
     <Matrix row="1" col="1" rowspan="3" colspan="4" tbl="个人成绩_矩阵标题">

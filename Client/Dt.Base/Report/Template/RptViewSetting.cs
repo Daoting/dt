@@ -8,6 +8,7 @@
 
 #region 命名空间
 using Dt.Core;
+using System;
 using System.Xml;
 #endregion
 
@@ -18,8 +19,9 @@ namespace Dt.Base.Report
     /// </summary>
     internal class RptViewSetting
     {
-        public RptViewSetting()
+        public RptViewSetting(RptRoot p_root)
         {
+            Root = p_root;
             Data = new Row();
             Data.AddCell<string>("script");
             Data.AddCell("showsearchform", true);
@@ -29,7 +31,13 @@ namespace Dt.Base.Report
             Data.AddCell<bool>("showgridline");
             Data.AddCell("showmenu", true);
             Data.AddCell("showcontextmenu", true);
+            Data.Changed += Root.OnCellValueChanged;
         }
+
+        /// <summary>
+        /// 获取报表模板根对象
+        /// </summary>
+        public RptRoot Root { get; }
 
         /// <summary>
         /// 预览设置数据源
@@ -91,7 +99,7 @@ namespace Dt.Base.Report
         }
 
         /// <summary>
-        /// 获取设置是否显示菜单，默认true
+        /// 获取设置是否显示工具栏菜单，默认true
         /// </summary>
         public bool ShowMenu
         {
@@ -100,7 +108,7 @@ namespace Dt.Base.Report
         }
 
         /// <summary>
-        /// 获取设置是否显示查询菜单项，默认false
+        /// 获取设置是否显示上下文菜单，默认true
         /// </summary>
         public bool ShowContextMenu
         {
@@ -116,7 +124,7 @@ namespace Dt.Base.Report
 
         public void WriteXml(XmlWriter p_writer)
         {
-            p_writer.WriteStartElement("Setting");
+            p_writer.WriteStartElement("View");
             string val = Data.Str("script");
             if (!string.IsNullOrEmpty(val))
                 p_writer.WriteAttributeString("script", val);

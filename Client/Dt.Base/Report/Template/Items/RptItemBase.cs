@@ -210,9 +210,7 @@ namespace Dt.Base.Report
         /// <param name="e"></param>
         protected void OnValueChanged(object sender, Cell e)
         {
-            RptRoot root = Root;
-            if (root != null)
-                root.OnValueChanged(this, e);
+            Root?.OnItemValueChanged(this, e);
         }
 
         #region xml
