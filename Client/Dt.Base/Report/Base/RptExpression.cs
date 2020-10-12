@@ -84,11 +84,6 @@ namespace Dt.Base.Report
         Global,
 
         /// <summary>
-        /// 通过外部脚本绘制单元格内容和样式
-        /// </summary>
-        Script,
-
-        /// <summary>
         /// 未知
         /// </summary>
         Unknown

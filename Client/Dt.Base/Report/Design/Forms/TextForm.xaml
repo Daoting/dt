@@ -11,7 +11,7 @@
             <Button Content="+数据集列值" />
             <Button Content="+参数值" />
             <Button Content="+全局变量值" />
-            <Button Content="+脚本取值" />
+            <Button Content="脚本赋值" Click="OnScriptVal" />
         </StackPanel>
         <a:CBool ID="handleclick" Title="点击时执行脚本" />
         <a:CBar Title="自动合并重复值的格" />

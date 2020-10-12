@@ -104,10 +104,16 @@ namespace Dt.Sample
         {
             if (p_args.Col == 1)
             {
-                if (p_args.Text != "根菜单")
-                    p_cell.Value = "<- " + p_args.Text;
-                else
+                string name = View.Info.Params.Str("parentname");
+                if (name == "根菜单")
+                {
+                    p_cell.Value = name;
                     p_cell.Foreground = AtRes.BlackBrush;
+                }
+                else
+                {
+                    p_cell.Value = "<- " + name;
+                }
             }
             else if (p_args.Col == 2)
             {

@@ -138,8 +138,29 @@ namespace Dt.Base.Report
             List<RptExpression> exps = item.Expressions;
             if (exps == null || exps.Count == 0)
             {
-                // 静态文本
-                Text = item.Val;
+                if (item.IsScriptRender)
+                {
+                    // 通过外部脚本绘制单元格内容和样式
+                    string tbl = null;
+                    if (item.Parent is RptTblPartRow tblRow)
+                    {
+                        tbl = tblRow.Table.Tbl;
+                    }
+                    else if (item.Parent is RptMtxRow ib && ib.Parent is RptMatrix mtx)
+                    {
+                        // 矩阵其他位置无当前数据行概念，需要数据源可在脚本中通过 info.GetData 获取
+                        tbl = mtx.Tbl;
+                    }
+
+                    RptData src;
+                    if (!string.IsNullOrEmpty(tbl) && (src = Inst.Info.GetData(tbl).Result) != null)
+                        Data = src.CurrentRow;
+                }
+                else
+                {
+                    // 静态文本
+                    Text = item.Val;
+                }
                 return;
             }
 
@@ -249,10 +270,6 @@ namespace Dt.Base.Report
 
                         case RptExpFunc.Index:
                             sb.Append(src.Current);
-                            break;
-
-                        case RptExpFunc.Script:
-                            // 通过外部脚本绘制单元格内容和样式
                             break;
                     }
                 }

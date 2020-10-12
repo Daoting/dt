@@ -218,13 +218,16 @@ namespace Dt.Base.Report
             cell.ColumnSpan = item.ColSpan;
             cell.RowSpan = item.RowSpan;
             cell.Tag = p_txt;
-            cell.Value = p_txt.GetText();
             item.ApplyStyle(cell);
 
             if (item.IsScriptRender && _info.ScriptObj != null)
             {
                 // 脚本绘制
                 _info.ScriptObj.RenderCell(cell, new RptCellArgs(p_txt));
+            }
+            else
+            {
+                cell.Value = p_txt.GetText();
             }
             return cell;
         }

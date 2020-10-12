@@ -87,6 +87,47 @@ namespace Dt.Base
         }
 
         /// <summary>
+        /// 获取数据表
+        /// </summary>
+        /// <param name="p_name">数据表名称</param>
+        /// <returns></returns>
+        public async Task<RptData> GetData(string p_name)
+        {
+            if (_dataSet.TryGetValue(p_name, out var data))
+                return data;
+
+            RptDataSourceItem srcItem;
+            if (Root == null || (srcItem = Root.Data.GetDataSourceItem(p_name)) == null)
+                return null;
+
+            Table tbl = null;
+            if (srcItem.IsScritp)
+            {
+                // 通过脚本获取数据源
+                if (ScriptObj != null)
+                {
+                    tbl = await ScriptObj.GetData(p_name);
+                }
+                else
+                {
+                    AtKit.Warn($"未定义报表脚本，无法获取数据集【{p_name}】");
+                }
+            }
+            else
+            {
+
+            }
+
+            if (tbl != null)
+            {
+                var rptData = new RptData(tbl);
+                _dataSet[p_name] = rptData;
+                return rptData;
+            }
+            return null;
+        }
+
+        /// <summary>
         /// 初始化模板、脚本、参数默认值
         /// </summary>
         /// <returns></returns>
@@ -159,47 +200,6 @@ namespace Dt.Base
                 Params = dict;
             }
             return true;
-        }
-
-        /// <summary>
-        /// 获取数据表
-        /// </summary>
-        /// <param name="p_name">数据表名称</param>
-        /// <returns></returns>
-        internal async Task<RptData> GetData(string p_name)
-        {
-            if (_dataSet.TryGetValue(p_name, out var data))
-                return data;
-
-            RptDataSourceItem srcItem;
-            if (Root == null || (srcItem = Root.Data.GetDataSourceItem(p_name)) == null)
-                return null;
-
-            Table tbl = null;
-            if (srcItem.IsScritp)
-            {
-                // 通过脚本获取数据源
-                if (ScriptObj != null)
-                {
-                    tbl = await ScriptObj.GetData(p_name);
-                }
-                else
-                {
-                    AtKit.Warn($"未定义报表脚本，无法获取数据集【{p_name}】");
-                }
-            }
-            else
-            {
-
-            }
-
-            if (tbl != null)
-            {
-                var rptData = new RptData(tbl);
-                _dataSet[p_name] = rptData;
-                return rptData;
-            }
-            return null;
         }
 
         /// <summary>

@@ -29,6 +29,7 @@ namespace Dt.Base.Report
         #region 成员变量
         public const string DefaultFontName = "Segoe UI";
         public const double DefaultFontSize = 15.0;
+        public const string ScriptValue = "#script#";
         const string _defaultForeground = "#ff000000";
         const string _defaultBackground = "#00ffffff";
         const string _defaultAlign = "Center";
@@ -410,8 +411,14 @@ namespace Dt.Base.Report
             base.ReadXml(p_reader);
 
             string val = _data.Str("val").Trim();
-            if (string.IsNullOrEmpty(val) || !val.StartsWith(":"))
+            if (string.IsNullOrEmpty(val))
                 return;
+
+            if (!val.StartsWith(":"))
+            {
+                IsScriptRender = (val.ToLower() == ScriptValue);
+                return;
+            }
 
             // 解析表达式
             if (Expressions == null)
@@ -584,11 +591,6 @@ namespace Dt.Base.Report
                         exp.VarName = valName;
                         if (valName == "总页数" || valName == "页号")
                             ExistPlaceholder = true;
-                        break;
-                    case "script":
-                        exp.Func = RptExpFunc.Script;
-                        exp.DataName = match.Groups[2].Value;
-                        IsScriptRender = true;
                         break;
                     default:
                         exp.Func = RptExpFunc.Unknown;

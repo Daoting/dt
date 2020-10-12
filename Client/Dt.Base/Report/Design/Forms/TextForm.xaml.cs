@@ -36,5 +36,9 @@ namespace Dt.Base.Report
             }
         }
 
+        void OnScriptVal(object sender, RoutedEventArgs e)
+        {
+            _item.Val = RptText.ScriptValue;
+        }
     }
 }
