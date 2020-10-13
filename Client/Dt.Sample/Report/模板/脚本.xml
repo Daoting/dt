@@ -1,7 +1,7 @@
 ﻿<Rpt cols="160,260,60">
   <Params>
-    <Param id="parentid" name="父项标识" val="" />
-    <Param id="parentname" name="父项名称" val="" />
+    <Param id="parentid" title="父项标识" val="" />
+    <Param id="parentname" title="父项名称" val="" />
   </Params>
   <Data>
     <Tbl id="菜单" isscritp="True" cols="id,parentid,name,isgroup" />

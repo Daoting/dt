@@ -7,11 +7,6 @@
   <Import Project="..\Common\dtc.props" />
 
   <ItemGroup>
-    <None Remove="Report\数据源\图表表格.json" />
-    <None Remove="Report\模板\图表表格.xml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="Report\数据源\个人成绩.json" />
     <EmbeddedResource Include="Report\数据源\个人成绩_矩阵标题.json" />
     <EmbeddedResource Include="Report\数据源\图表表格.json" />
@@ -24,6 +19,7 @@
     <EmbeddedResource Include="Report\模板\两层矩阵.xml" />
     <EmbeddedResource Include="Report\模板\分组表格.xml" />
     <EmbeddedResource Include="Report\模板\图表表格.xml" />
+    <EmbeddedResource Include="Report\模板\默认查询面板.xml" />
     <EmbeddedResource Include="Report\模板\自动行数列表.xml" />
     <EmbeddedResource Include="Report\模板\含头尾表格.xml" />
     <EmbeddedResource Include="Report\模板\含小计矩阵.xml" />

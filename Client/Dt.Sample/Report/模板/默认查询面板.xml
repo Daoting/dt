@@ -1,0 +1,15 @@
+﻿<Rpt cols="160,260,60">
+  <Params>
+    <Param id="parentid" title="父项标识" val="" />
+    <Param id="parentname" title="父项名称" val="" />
+  </Params>
+  <Data />
+  <Page />
+  <Header />
+  <Body rows="40,25,25,25,25">
+    <Text col="1" colspan="2" val="#script#" handleclick="True" fontsize="20" lbs="None" tbs="None" rbs="None" bbs="None" />
+    
+  </Body>
+  <Footer />
+  <View />
+</Rpt>

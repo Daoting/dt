@@ -169,14 +169,11 @@ namespace Dt.Base.Report
         void DataDropBox(string p_dsName)
         {
             // 数据源改变，关系到列的内容全部改变。
-            var dtCols = _item.Root.Data.GetCols(p_dsName);
-            if (dtCols != null)
-            {
-                ((CList)_fv["fieldseries"]).Data = dtCols;
-                ((CList)_fv["fieldx"]).Data = dtCols;
-                ((CList)_fv["fieldy"]).Data = dtCols;
-                ((CList)_fv["fieldz"]).Data = dtCols;
-            }
+            var dtCols = _item.Root.Data.GetColsData(p_dsName);
+            ((CList)_fv["fieldseries"]).Data = dtCols;
+            ((CList)_fv["fieldx"]).Data = dtCols;
+            ((CList)_fv["fieldy"]).Data = dtCols;
+            ((CList)_fv["fieldz"]).Data = dtCols;
         }
 
         /// <summary>

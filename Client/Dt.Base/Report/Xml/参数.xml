@@ -1,6 +1,7 @@
 ﻿<Params>
-  <Param id="参数标识" name="参数名" val="1" macro="1" readonly="1" hide="1" ct="&lt;dt:CtCheck /&gt;" note="提示信息" hidetitle="1" verticaltitle="1" titlewidth="60" />
-  <Param id="参数测试" name="参数测试" val="test" ct="&lt;dt:CtDrop IsEditable=&quot;True&quot; /&gt;" note="" titlewidth="80" />
-  <Param id="参数测试2" name="参数测试2" val="男" ct="&lt;dt:CtChecklist Code=&quot;性别&quot; /&gt;" note="" horstretch="1" titlewidth="100" />
-  <Param id="参数测试3" name="参数测试3" val="test" macro="1" readonly="" ct="" note="" titlewidth="120" />
+  <Param id="参数标识"
+         title="参数名"
+         type="参数类型"
+         ismacro="True"
+         />
 </Params>

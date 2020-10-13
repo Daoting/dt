@@ -22,8 +22,6 @@
                             <StackPanel Orientation="Horizontal">
                                 <Button Content="简单文本" />
                                 <Button Content="页眉页脚" />
-                                <Button Content="图表矩阵" />
-                                <Button Content="图表表格" />
                             </StackPanel>
                             <a:CBar Title="表格" />
                             <StackPanel Orientation="Horizontal">
@@ -46,6 +44,16 @@
                             <StackPanel Orientation="Horizontal">
                                 <Button Content="含标题矩阵" />
                                 <Button Content="跨页矩阵" />
+                            </StackPanel>
+                            <a:CBar Title="图表" />
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="图表矩阵" />
+                                <Button Content="图表表格" />
+                            </StackPanel>
+                            <a:CBar Title="报表参数" />
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="默认查询面板" />
+                                <Button Content="自定义查询面板" />
                             </StackPanel>
                         </a:Fv>
                         <a:Fv x:Name="_fvOther">

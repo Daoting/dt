@@ -494,7 +494,8 @@ namespace Dt.Base
             Binding oldBind = ValBinding;
             if (oldBind.Source is ICell cell)
             {
-                cell.RejectChanges();
+                // 不需回滚，有时需要编辑结果！
+                //cell.RejectChanges();
                 cell.PropertyChanged -= OnDataPropertyChanged;
             }
 

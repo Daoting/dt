@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Xml;
 using System.Linq;
+using System.Text;
 #endregion
 
 namespace Dt.Base.Report
@@ -21,14 +22,10 @@ namespace Dt.Base.Report
     /// </summary>
     internal class RptDataSource
     {
-        Table _dataSet;
-        Dictionary<string, Table> _dicCols;
-
         public RptDataSource(RptRoot p_root)
         {
             Root = p_root;
-            _dicCols = new Dictionary<string, Table>();
-            _dataSet = new Table
+            DataSet = new Table
             {
                 { "id" },
                 { "isscritp", typeof(bool) },
@@ -36,7 +33,7 @@ namespace Dt.Base.Report
                 { "sql" },
                 { "cols" },
             };
-            _dataSet.Changed += Root.OnCellValueChanged;
+            DataSet.Changed += Root.OnCellValueChanged;
         }
 
         /// <summary>
@@ -47,49 +44,7 @@ namespace Dt.Base.Report
         /// <summary>
         /// 获取数据源列表
         /// </summary>
-        public Table DataSet
-        {
-            get { return _dataSet; }
-            set
-            {
-                _dataSet = value;
-                GenerDic();
-            }
-        }
-
-        /// <summary>
-        /// 获取数据源字段列表
-        /// </summary>
-        /// <param name="p_tblID"></param>
-        /// <returns></returns>
-        public Table GetCols(string p_tblID)
-        {
-            if (_dicCols.ContainsKey(p_tblID))
-            {
-                return _dicCols[p_tblID].Clone();
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// 添加、更新或删除字典内容；
-        /// 参数【p_dt】为null时，移除键为【p_id】的项
-        /// </summary>
-        /// <param name="p_id"></param>
-        /// <param name="p_dt"></param>
-        public void ModDicCol(string p_id, Table p_dt = null)
-        {
-            if (string.IsNullOrEmpty(p_id))
-                return;
-            if (_dicCols.ContainsKey(p_id))
-            {
-                _dicCols.Remove(p_id);
-            }
-            if (p_dt != null)
-            {
-                _dicCols.Add(p_id, p_dt);
-            }
-        }
+        public Table DataSet { get; }
 
         /// <summary>
         /// 获取某项数据源
@@ -98,7 +53,7 @@ namespace Dt.Base.Report
         /// <returns></returns>
         public RptDataSourceItem GetDataSourceItem(string p_tblID)
         {
-            Row row = (from dr in _dataSet
+            Row row = (from dr in DataSet
                        where dr.Str("id") == p_tblID
                        select dr).FirstOrDefault();
             if (row != null)
@@ -107,22 +62,48 @@ namespace Dt.Base.Report
         }
 
         /// <summary>
-        /// 生成字段 
+        /// 获取指定数据集的列Table
         /// </summary>
-        void GenerDic()
+        /// <param name="p_tblID"></param>
+        /// <returns></returns>
+        public Table GetColsData(string p_tblID)
         {
-            foreach (Row dr in _dataSet)
+            Table tbl = new Table { { "id" } };
+            Row row = (from dr in DataSet
+                       where dr.Str("id") == p_tblID
+                       select dr).FirstOrDefault();
+            if (row != null)
             {
-                Table dt = new Table();
-                dt.Columns.Add(new Column("id"));
-                string[] cols = dr.Str("cols").Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] cols = row.Str("cols").Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string col in cols)
                 {
-                    Row nCol = dt.NewRow();
-                    nCol["id"] = col;
-                    dt.Add(nCol);
+                    tbl.AddRow(new { id = col });
                 }
-                _dicCols.Add(dr.Str("id"), dt);
+            }
+            return tbl;
+        }
+
+        /// <summary>
+        /// 更新指定数据集的列
+        /// </summary>
+        /// <param name="p_tblID"></param>
+        /// <param name="p_cols"></param>
+        public void UpdateCols(string p_tblID, Table p_cols)
+        {
+            Row row = (from dr in DataSet
+                       where dr.Str("id") == p_tblID
+                       select dr).FirstOrDefault();
+            if (row != null)
+            {
+                // 合并列
+                StringBuilder sb = new StringBuilder();
+                foreach (var r in p_cols)
+                {
+                    if (sb.Length > 0)
+                        sb.Append(",");
+                    sb.Append(r.Str(0));
+                }
+                row["cols"] = sb.ToString();
             }
         }
 
@@ -132,8 +113,12 @@ namespace Dt.Base.Report
         /// <param name="p_reader"></param>
         public void ReadXml(XmlReader p_reader)
         {
-            _dataSet.ReadXml(p_reader);
-            GenerDic();
+            XmlTable.ReadXml(p_reader, CreateNewRow);
+        }
+
+        Row CreateNewRow()
+        {
+            return DataSet.AddRow();
         }
 
         /// <summary>
@@ -142,7 +127,7 @@ namespace Dt.Base.Report
         /// <param name="p_writer"></param>
         public void WriteXml(XmlWriter p_writer)
         {
-            _dataSet.WriteXml(p_writer, "Data", "Tbl");
+            DataSet.WriteXml(p_writer, "Data", "Tbl");
         }
     }
 

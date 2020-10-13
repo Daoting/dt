@@ -452,41 +452,6 @@ namespace Dt.Base
             string path = $"{BaseUri.AbsolutePath}+{Name}+{cell.ID}";
             return AtLocal.GetScalar<string>($"select val from CellLastVal where id=\"{path}\"");
         }
-
-        /// <summary>
-        /// 根据类型生成格
-        /// </summary>
-        /// <param name="p_type"></param>
-        /// <param name="p_id"></param>
-        /// <returns></returns>
-        public static FvCell CreateCell(Type p_type, string p_id)
-        {
-            if (p_type == typeof(string))
-                return new CText { ID = p_id };
-
-            if (p_type == typeof(int) || p_type == typeof(long) || p_type == typeof(short))
-                return new CNum { ID = p_id, IsInteger = true };
-
-            if (p_type == typeof(double) || p_type == typeof(float))
-                return new CNum { ID = p_id };
-
-            if (p_type == typeof(bool))
-                return new CBool { ID = p_id };
-
-            if (p_type == typeof(DateTime))
-                return new CDate { ID = p_id };
-
-            if (p_type == typeof(Icons))
-                return new CIcon { ID = p_id };
-
-            if (p_type.IsEnum)
-                return new CList { ID = p_id };
-
-            if (p_type == typeof(SolidColorBrush) || p_type == typeof(Color))
-                return new CColor { ID = p_id };
-
-            return new CText { ID = p_id };
-        }
         #endregion
 
         #region 焦点处理

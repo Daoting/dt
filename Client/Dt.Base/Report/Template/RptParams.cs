@@ -26,21 +26,20 @@ namespace Dt.Base.Report
             Data = new Table
             {
                 { "id" },
-                { "name" },
+                { "title" },
                 { "type" },
-                { "macro" },
                 { "val" },
-                { "ct" },
-                { "note" },
-                { "colspan", typeof(int) },
-                { "rowspan", typeof(int) },
-                { "readonly" },
-                { "hide" },
-                { "horstretch" },
-                { "verstretch" },
-                { "hidetitle" },
-                { "verticaltitle" },
+                { "ismacro", typeof(bool) },
+                { "showtitle", typeof(bool) },
                 { "titlewidth",  typeof(double)},
+                { "showstar", typeof(bool) },
+                { "isverticaltitle", typeof(bool) },
+                { "ishorstretch", typeof(bool) },
+                { "rowspan", typeof(int) },
+                { "placeholder" },
+                { "isreadonly", typeof(bool) },
+                { "hide", typeof(bool) },
+                { "note" },
             };
             Data.Changed += Root.OnCellValueChanged;
         }
@@ -95,7 +94,17 @@ namespace Dt.Base.Report
         /// <param name="p_reader"></param>
         public void ReadXml(XmlReader p_reader)
         {
-            Data.ReadXml(p_reader);
+            XmlTable.ReadXml(p_reader, CreateNewRow);
+        }
+
+        Row CreateNewRow()
+        {
+            return Data.AddRow(new
+            {
+                type = "string",
+                showtitle = true,
+                rowspan = 1,
+            });
         }
 
         /// <summary>
@@ -104,7 +113,55 @@ namespace Dt.Base.Report
         /// <param name="p_writer"></param>
         public void WriteXml(XmlWriter p_writer)
         {
-            Data.WriteXml(p_writer, "Params", "Param");
+            p_writer.WriteStartElement("Params");
+            foreach (Row row in Data)
+            {
+                p_writer.WriteStartElement("Param");
+
+                p_writer.WriteAttributeString("id", row.Str("id"));
+
+                string val = row.Str("title");
+                if (val != string.Empty)
+                    p_writer.WriteAttributeString("title", val);
+
+                val = row.Str("type");
+                if (val != string.Empty && val != "string")
+                    p_writer.WriteAttributeString("type", val);
+
+                val = row.Str("val");
+                if (val != string.Empty)
+                    p_writer.WriteAttributeString("val", val);
+
+                if (row.Bool("ismacro"))
+                    p_writer.WriteAttributeString("ismacro", "True");
+                if (!row.Bool("showtitle"))
+                    p_writer.WriteAttributeString("showtitle", "False");
+                if (row.Double("titlewidth") > 0)
+                    p_writer.WriteAttributeString("titlewidth", row.Int("titlewidth").ToString());
+                if (row.Bool("showstar"))
+                    p_writer.WriteAttributeString("showstar", "True");
+                if (row.Bool("isverticaltitle"))
+                    p_writer.WriteAttributeString("isverticaltitle", "True");
+                if (row.Bool("ishorstretch"))
+                    p_writer.WriteAttributeString("ishorstretch", "True");
+                if (row.Int("rowspan") > 1)
+                    p_writer.WriteAttributeString("rowspan", row.Int("rowspan").ToString());
+
+                val = row.Str("placeholder");
+                if (val != string.Empty)
+                    p_writer.WriteAttributeString("placeholder", val);
+
+                if (row.Bool("isreadonly"))
+                    p_writer.WriteAttributeString("isreadonly", "True");
+                if (row.Bool("hide"))
+                    p_writer.WriteAttributeString("hide", "True");
+
+                val = row.Str("note");
+                if (val != string.Empty)
+                    p_writer.WriteAttributeString("note", val);
+                p_writer.WriteEndElement();
+            }
+            p_writer.WriteEndElement();
         }
     }
 }

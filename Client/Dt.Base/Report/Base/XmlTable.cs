@@ -32,7 +32,7 @@ namespace Dt.Base.Report
         /// Params>
         /// </summary>
         /// <param name="p_reader"></param>
-        public static void ReadXml(this Table p_tbl, XmlReader p_reader)
+        public static void ReadXml(XmlReader p_reader, Func<Row> p_newRow)
         {
             if (p_reader == null)
                 return;
@@ -51,7 +51,7 @@ namespace Dt.Base.Report
                 if (p_reader.NodeType == XmlNodeType.EndElement && p_reader.Name == root)
                     break;
 
-                Row row = p_tbl.AddRow();
+                Row row = p_newRow();
                 row.IsAdded = false;
                 for (int i = 0; i < p_reader.AttributeCount; i++)
                 {
