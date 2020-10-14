@@ -120,6 +120,15 @@ namespace Dt.Base.Report
 
         #region 外部方法
         /// <summary>
+        /// 检查报表模板是否有效
+        /// </summary>
+        /// <returns></returns>
+        public bool IsValid()
+        {
+            return Params.IsValid() && Data.IsValid() && PageSetting.IsValid();
+        }
+
+        /// <summary>
         /// 加载xml
         /// </summary>
         /// <param name="p_reader"></param>

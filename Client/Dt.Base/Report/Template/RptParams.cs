@@ -11,6 +11,7 @@ using Dt.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Xml;
 using Windows.UI.Xaml.Markup;
 #endregion
@@ -269,6 +270,26 @@ namespace Dt.Base.Report
                 }
             }
             p_fv.Data = BuildInitRow();
+        }
+
+        public bool IsValid()
+        {
+            bool fail = (from row in Data
+                         where row.Str("id") == string.Empty
+                         select row).Any();
+            if (fail)
+            {
+                AtKit.Warn("参数标识不可为空！");
+                return false;
+            }
+
+            fail = Data.GroupBy(r => r.Str("id")).Where(g => g.Count() > 1).Any();
+            if (fail)
+            {
+                AtKit.Warn("参数标识不可重复！");
+                return false;
+            }
+            return true;
         }
 
         /// <summary>

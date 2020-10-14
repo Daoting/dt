@@ -95,7 +95,7 @@ namespace Dt.Base
         /// </summary>
         internal void SaveTemplate()
         {
-            if (Root != null)
+            if (Root != null && Root.IsValid())
             {
                 SaveTemplate(AtRpt.SerializeTemplate(Root));
                 History.Clear();

@@ -107,6 +107,26 @@ namespace Dt.Base.Report
             }
         }
 
+        public bool IsValid()
+        {
+            bool fail = (from row in DataSet
+                         where row.Str("id") == string.Empty
+                         select row).Any();
+            if (fail)
+            {
+                AtKit.Warn("数据集名称不可为空！");
+                return false;
+            }
+
+            fail = DataSet.GroupBy(r => r.Str("id")).Where(g => g.Count() > 1).Any();
+            if (fail)
+            {
+                AtKit.Warn("数据集名称不可重复！");
+                return false;
+            }
+            return true;
+        }
+
         /// <summary>
         /// 加载xml
         /// </summary>

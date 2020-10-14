@@ -136,6 +136,21 @@ namespace Dt.Base.Report
             get { return Landscape ? Height - LeftMargin - RightMargin : Width - LeftMargin - RightMargin; }
         }
 
+        public bool IsValid()
+        {
+            if (ValidHeight - Root.Header.ActualHeight - Root.Footer.ActualHeight <= 0)
+            {
+                AtKit.Warn("报表的可用页面高度不足，请确认！");
+                return false;
+            }
+            if (ValidWidth <= 0)
+            {
+                AtKit.Warn("报表的可用页面宽度不足，请确认！");
+                return false;
+            }
+            return true;
+        }
+
         /// <summary>
         /// 加载xml
         /// </summary>

@@ -46,15 +46,7 @@ namespace Dt.Base.Report
 
         void OnValueChanged(object sender, Core.Cell e)
         {
-            if (_info.Root.PageSetting.ValidHeight - _info.Root.Header.ActualHeight - _info.Root.Footer.ActualHeight <= 0)
-            {
-                AtKit.Warn("报表的可用页面高度不足，请确认。");
-            }
-            else if (_info.Root.PageSetting.ValidWidth <= 0)
-            {
-                AtKit.Error("报表的可用页面宽度不足，请确认。");
-            }
-            else
+            if (_info.Root.PageSetting.IsValid())
             {
                 _info.OnPageSettingChanged();
             }

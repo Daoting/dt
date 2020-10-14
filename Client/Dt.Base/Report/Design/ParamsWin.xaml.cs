@@ -50,7 +50,7 @@ namespace Dt.Base.Report
 
         void OnAdd(object sender, Mi e)
         {
-            _fv.Data = _info.Root.Data.DataSet.AddRow(new { id = "新数据" });
+            _fv.Data = _info.Root.Params.Data.AddRow(new { id = "新参数" });
         }
 
         void OnDel(object sender, Mi e)
