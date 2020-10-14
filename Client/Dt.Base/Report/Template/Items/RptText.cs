@@ -427,21 +427,8 @@ namespace Dt.Base.Report
             foreach (string item in subs)
             {
                 string str = item.Trim();
-                if (str.Length < 3)
-                    continue;
-
-                if (str.StartsWith("\""))
-                {
-                    // 字符串
-                    RptExpression exp = new RptExpression();
-                    exp.Func = RptExpFunc.Unknown;
-                    exp.VarName = str.Substring(1, str.Length - 2);
-                    Expressions.Add(exp);
-                }
-                else
-                {
+                if (str != string.Empty)
                     Expressions.Add(ParseExpression(str));
-                }
             }
         }
 
@@ -601,6 +588,7 @@ namespace Dt.Base.Report
             }
 
             exp.Func = RptExpFunc.Unknown;
+            exp.VarName = p_str;
             return exp;
         }
 

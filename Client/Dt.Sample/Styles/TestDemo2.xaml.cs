@@ -13,6 +13,7 @@ using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Markup;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Shapes;
 #endregion
@@ -24,30 +25,13 @@ namespace Dt.Sample
         public TestDemo2()
         {
             InitializeComponent();
-
-            //_excel.ActiveSheet.RowCount = 3;
-            //_excel.ActiveSheet.ColumnCount = 2;
-
-            //var sheet = _excel.ActiveSheet;
-            //sheet.SetValue(0, 0, "System.Random r = new System.Random();");
-        }
-
-        void FillSampleData(Worksheet sheet, CellRange range)
-        {
-            System.Random r = new System.Random();
-            for (int i = 0; i < range.RowCount; i++)
-            {
-                for (int j = 0; j < range.ColumnCount; j++)
-                {
-                    sheet.SetValue(range.Row + i, range.Column + j, r.Next(50, 300));
-                }
-            }
         }
 
         void OnTest(object sender, RoutedEventArgs e)
         {
-            _excel.ShowAutoFillIndicator();
-            //_excel.InvalidateMeasure();
+            var btn = (BtnItem)XamlReader.Load("<a:BtnItem xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\" xmlns:a=\"using:Dt.Base\" Icon=\"个人信息\" Title=\"个人选项\" Desc=\"包括自定义参数设置，查看修改个人信息及密码等功能。\" />");
+            Grid.SetRow(btn, 1);
+            _grid.Children.Add(btn);
         }
     }
 }

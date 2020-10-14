@@ -8,6 +8,7 @@
 
 #region 命名空间
 using Dt.Core;
+using System;
 using System.Threading.Tasks;
 #endregion
 
@@ -43,7 +44,17 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 初始化工具栏菜单，报表组不支持
+        /// 获取脚本自定义的报表查询面板
+        /// </summary>
+        /// <param name="p_info"></param>
+        /// <returns></returns>
+        public virtual IRptSearchForm GetSearchForm(RptInfo p_info)
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// 初始化工具栏菜单
         /// </summary>
         /// <param name="p_menu"></param>
         public virtual void InitMenu(Menu p_menu)
@@ -65,5 +76,21 @@ namespace Dt.Base
         public virtual void OnCellClick(RptCellArgs p_args)
         {
         }
+    }
+
+    /// <summary>
+    /// 报表查询面板接口
+    /// </summary>
+    public interface IRptSearchForm
+    {
+        /// <summary>
+        /// 查询事件
+        /// </summary>
+        event EventHandler<RptInfo> Query;
+
+        /// <summary>
+        /// 查询面板菜单
+        /// </summary>
+        Menu Menu { get; }
     }
 }

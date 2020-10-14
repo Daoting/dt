@@ -62,7 +62,7 @@ namespace Dt.Base.Report
         void OnCreatePreview(object sender, Mi e)
         {
             Fv fv = new Fv();
-            RptSearchForm.LoadCells(_info.Root, fv);
+            _info.Root.Params.LoadFvCells(fv);
             _tab.Content = fv;
         }
     }

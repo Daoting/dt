@@ -78,6 +78,14 @@ namespace Dt.Sample
         }
     }
 
+    public class RptSearchFormScript : DataRptScript
+    {
+        public override IRptSearchForm GetSearchForm(RptInfo p_info)
+        {
+            return new CustomSearchForm(p_info);
+        }
+    }
+
     public class MyRptScript : DataRptScript
     {
         public override Task<Table> GetData(string p_name)

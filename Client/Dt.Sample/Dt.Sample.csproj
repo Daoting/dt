@@ -19,6 +19,7 @@
     <EmbeddedResource Include="Report\模板\两层矩阵.xml" />
     <EmbeddedResource Include="Report\模板\分组表格.xml" />
     <EmbeddedResource Include="Report\模板\图表表格.xml" />
+    <EmbeddedResource Include="Report\模板\自定义查询面板.xml" />
     <EmbeddedResource Include="Report\模板\默认查询面板.xml" />
     <EmbeddedResource Include="Report\模板\自动行数列表.xml" />
     <EmbeddedResource Include="Report\模板\含头尾表格.xml" />

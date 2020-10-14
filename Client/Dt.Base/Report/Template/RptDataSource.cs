@@ -113,12 +113,7 @@ namespace Dt.Base.Report
         /// <param name="p_reader"></param>
         public void ReadXml(XmlReader p_reader)
         {
-            XmlTable.ReadXml(p_reader, CreateNewRow);
-        }
-
-        Row CreateNewRow()
-        {
-            return DataSet.AddRow();
+            DataSet.ReadXml(p_reader);
         }
 
         /// <summary>

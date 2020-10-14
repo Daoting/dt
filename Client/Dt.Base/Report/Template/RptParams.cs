@@ -8,9 +8,11 @@
 
 #region 命名空间
 using Dt.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
+using Windows.UI.Xaml.Markup;
 #endregion
 
 namespace Dt.Base.Report
@@ -20,26 +22,19 @@ namespace Dt.Base.Report
     /// </summary>
     internal class RptParams
     {
+        const string _xamlPrefix = "xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\" xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\" xmlns:a=\"using:Dt.Base\" ";
+
         public RptParams(RptRoot p_root)
         {
             Root = p_root;
             Data = new Table
             {
                 { "id" },
-                { "title" },
                 { "type" },
                 { "val" },
                 { "ismacro", typeof(bool) },
-                { "showtitle", typeof(bool) },
-                { "titlewidth",  typeof(double)},
-                { "showstar", typeof(bool) },
-                { "isverticaltitle", typeof(bool) },
-                { "ishorstretch", typeof(bool) },
-                { "rowspan", typeof(int) },
-                { "placeholder" },
-                { "isreadonly", typeof(bool) },
-                { "hide", typeof(bool) },
                 { "note" },
+                { "xaml" },
             };
             Data.Changed += Root.OnCellValueChanged;
         }
@@ -89,22 +84,234 @@ namespace Dt.Base.Report
         }
 
         /// <summary>
+        /// 是否存在含xaml的参数
+        /// </summary>
+        public bool ExistXaml
+        {
+            get
+            {
+                return (from row in Data
+                        where row.Str("xaml") != string.Empty
+                        select row).Any();
+            }
+        }
+
+        /// <summary>
+        /// 根据初始参数值生成Row，常用来提供给查询面板
+        /// </summary>
+        /// <returns></returns>
+        public Row BuildInitRow()
+        {
+            var data = new Row();
+            foreach (var row in Data)
+            {
+                string id = row.Str("id");
+                if (id == string.Empty)
+                    continue;
+
+                string val = row.Str("val");
+                switch (row.Str("type").ToLower())
+                {
+                    case "bool":
+                        if (val == string.Empty)
+                        {
+                            data.AddCell<bool>(id);
+                        }
+                        else
+                        {
+                            string l = val.ToLower();
+                            data.AddCell(id, (l == "1" || l == "true"));
+                        }
+                        break;
+
+                    case "double":
+                        if (val != string.Empty && double.TryParse(val, out var v))
+                        {
+                            data.AddCell(id, v);
+                        }
+                        else
+                        {
+                            data.AddCell<double>(id);
+                        }
+                        break;
+
+                    case "int":
+                        if (val != string.Empty && int.TryParse(val, out var i))
+                        {
+                            data.AddCell(id, i);
+                        }
+                        else
+                        {
+                            data.AddCell<int>(id);
+                        }
+                        break;
+
+                    case "datetime":
+                    case "date":
+                        if (val != string.Empty && DateTime.TryParse(val, out var d))
+                        {
+                            data.AddCell(id, d);
+                        }
+                        else
+                        {
+                            data.AddCell<DateTime>(id);
+                        }
+                        break;
+
+                    default:
+                        data.AddCell(id, val);
+                        break;
+                }
+            }
+            return data;
+        }
+
+        /// <summary>
+        /// 根据初始参数值生成查询参数字典
+        /// </summary>
+        /// <returns></returns>
+        public Dict BuildInitDict()
+        {
+            Dict dict = new Dict();
+            foreach (var row in Data)
+            {
+                string id = row.Str("id");
+                if (id == string.Empty)
+                    continue;
+
+                string val = row.Str("val");
+                switch (row.Str("type").ToLower())
+                {
+                    case "bool":
+                        if (val == string.Empty)
+                        {
+                            dict[id] = false;
+                        }
+                        else
+                        {
+                            string l = val.ToLower();
+                            dict[id] = (l == "1" || l == "true");
+                        }
+                        break;
+
+                    case "double":
+                        if (val != string.Empty && double.TryParse(val, out var v))
+                        {
+                            dict[id] = v;
+                        }
+                        else
+                        {
+                            dict[id] = default(double);
+                        }
+                        break;
+
+                    case "int":
+                        if (val != string.Empty && int.TryParse(val, out var i))
+                        {
+                            dict[id] = i;
+                        }
+                        else
+                        {
+                            dict[id] = default(int);
+                        }
+                        break;
+
+                    case "datetime":
+                    case "date":
+                        if (val != string.Empty && DateTime.TryParse(val, out var d))
+                        {
+                            dict[id] = d;
+                        }
+                        else
+                        {
+                            dict[id] = default(DateTime);
+                        }
+                        break;
+
+                    default:
+                        dict[id] = val;
+                        break;
+                }
+            }
+            return dict;
+        }
+
+        /// <summary>
+        /// 构造查询面板的单元格
+        /// </summary>
+        /// <param name="p_fv"></param>
+        public void LoadFvCells(Fv p_fv)
+        {
+            foreach (var row in Data)
+            {
+                string id = row.Str("id");
+                if (id == string.Empty)
+                    continue;
+
+                // 由xaml生成格
+                string xaml = row.Str("xaml").Trim();
+                if (xaml != string.Empty)
+                {
+                    try
+                    {
+                        int index = xaml.IndexOf(' ') + 1;
+                        var cell = XamlReader.Load(xaml.Insert(index, _xamlPrefix)) as FvCell;
+                        if (cell != null)
+                        {
+                            cell.ID = id;
+                            p_fv.Items.Add(cell);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        AtKit.Warn($"报表参数【{id}】的xaml内容错误：{ex.Message}");
+                    }
+                }
+            }
+            p_fv.Data = BuildInitRow();
+        }
+
+        /// <summary>
         /// 加载xml
         /// </summary>
         /// <param name="p_reader"></param>
         public void ReadXml(XmlReader p_reader)
         {
-            XmlTable.ReadXml(p_reader, CreateNewRow);
-        }
+            if (p_reader == null)
+                return;
 
-        Row CreateNewRow()
-        {
-            return Data.AddRow(new
+            if (p_reader.IsEmptyElement)
             {
-                type = "string",
-                showtitle = true,
-                rowspan = 1,
-            });
+                p_reader.Read();
+                return;
+            }
+
+            string root = p_reader.Name;
+            p_reader.Read();
+            while (p_reader.NodeType != XmlNodeType.None)
+            {
+                if (p_reader.NodeType == XmlNodeType.EndElement && p_reader.Name == root)
+                    break;
+
+                Row row = Data.AddRow(new { type = "string" });
+                row.IsAdded = false;
+                for (int i = 0; i < p_reader.AttributeCount; i++)
+                {
+                    p_reader.MoveToAttribute(i);
+                    string id = p_reader.Name;
+                    if (row.Cells.Contains(id))
+                        row.Cells[id].InitVal(p_reader.Value);
+                }
+
+                p_reader.Read();
+                if (p_reader.NodeType == XmlNodeType.CDATA)
+                {
+                    row.Cells["xaml"].InitVal(p_reader.Value);
+                    p_reader.Read();
+                    p_reader.Read();
+                }
+            }
+            p_reader.Read();
         }
 
         /// <summary>
@@ -120,11 +327,7 @@ namespace Dt.Base.Report
 
                 p_writer.WriteAttributeString("id", row.Str("id"));
 
-                string val = row.Str("title");
-                if (val != string.Empty)
-                    p_writer.WriteAttributeString("title", val);
-
-                val = row.Str("type");
+                string val = row.Str("type");
                 if (val != string.Empty && val != "string")
                     p_writer.WriteAttributeString("type", val);
 
@@ -134,31 +337,14 @@ namespace Dt.Base.Report
 
                 if (row.Bool("ismacro"))
                     p_writer.WriteAttributeString("ismacro", "True");
-                if (!row.Bool("showtitle"))
-                    p_writer.WriteAttributeString("showtitle", "False");
-                if (row.Double("titlewidth") > 0)
-                    p_writer.WriteAttributeString("titlewidth", row.Int("titlewidth").ToString());
-                if (row.Bool("showstar"))
-                    p_writer.WriteAttributeString("showstar", "True");
-                if (row.Bool("isverticaltitle"))
-                    p_writer.WriteAttributeString("isverticaltitle", "True");
-                if (row.Bool("ishorstretch"))
-                    p_writer.WriteAttributeString("ishorstretch", "True");
-                if (row.Int("rowspan") > 1)
-                    p_writer.WriteAttributeString("rowspan", row.Int("rowspan").ToString());
-
-                val = row.Str("placeholder");
-                if (val != string.Empty)
-                    p_writer.WriteAttributeString("placeholder", val);
-
-                if (row.Bool("isreadonly"))
-                    p_writer.WriteAttributeString("isreadonly", "True");
-                if (row.Bool("hide"))
-                    p_writer.WriteAttributeString("hide", "True");
 
                 val = row.Str("note");
                 if (val != string.Empty)
                     p_writer.WriteAttributeString("note", val);
+
+                val = row.Str("xaml");
+                if (val != string.Empty)
+                    p_writer.WriteCData(val);
                 p_writer.WriteEndElement();
             }
             p_writer.WriteEndElement();

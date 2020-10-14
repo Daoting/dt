@@ -1,7 +1,9 @@
 ﻿<Params>
   <Param id="参数标识"
-         title="参数名"
          type="参数类型"
+         val="缺省值"
          ismacro="True"
-         />
+         note="备注">
+    <![CDATA[xaml内容]]>
+  </Param>
 </Params>

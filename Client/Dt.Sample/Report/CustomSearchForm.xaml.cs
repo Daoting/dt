@@ -8,21 +8,27 @@
 
 #region 引用命名
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Dt.Base;
+using Dt.Core;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Markup;
 #endregion
 
-namespace Dt.Base.Report
+namespace Dt.Sample
 {
-    public sealed partial class RptSearchForm : UserControl, IRptSearchForm
+    public sealed partial class CustomSearchForm : UserControl, IRptSearchForm
     {
         readonly RptInfo _info;
         Menu _menu;
 
-        public RptSearchForm(RptInfo p_info)
+        public CustomSearchForm(RptInfo p_info)
         {
             InitializeComponent();
             _info = p_info;
-            _info.Root.Params.LoadFvCells(_fv);
+            _fv.Data = _info.BuildParamsRow();
         }
 
         /// <summary>
@@ -46,6 +52,7 @@ namespace Dt.Base.Report
                     mi = new Mi { ID = "重置", Icon = Icons.撤销 };
                     mi.Click += OnResetParams;
                     _menu.Items.Add(mi);
+                    _menu.Items.Add(new Mi { ID = "自定义", Icon = Icons.两人 });
                 }
                 return _menu;
             }

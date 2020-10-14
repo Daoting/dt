@@ -49,28 +49,9 @@ namespace Dt.Base
         /// 是否缓存报表模板，默认true
         /// </summary>
         public bool CacheTemplate { get; set; } = true;
-
-        /// <summary>
-        /// 获取报表要输出的Sheet
-        /// </summary>
-        internal Worksheet Sheet { get; set; }
-
-        /// <summary>
-        /// 获取设置报表模板根节点
-        /// </summary>
-        internal RptRoot Root { get; set; }
-
-        /// <summary>
-        /// 获取设置报表实例
-        /// </summary>
-        internal RptRootInst Inst { get; set; }
-
-        /// <summary>
-        /// 脚本对象
-        /// </summary>
-        internal RptScript ScriptObj { get; private set; }
         #endregion
 
+        #region 外部方法
         /// <summary>
         /// 读取模板内容，重写可自定义读取模板过程
         /// </summary>
@@ -87,9 +68,9 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取数据表
+        /// 获取数据集的数据
         /// </summary>
-        /// <param name="p_name">数据表名称</param>
+        /// <param name="p_name">数据集名称</param>
         /// <returns></returns>
         public async Task<RptData> GetData(string p_name)
         {
@@ -127,6 +108,68 @@ namespace Dt.Base
             return null;
         }
 
+        /// <summary>
+        /// 根据初始参数值生成Row，常用来给查询面板提供数据源
+        /// </summary>
+        /// <returns></returns>
+        public Core.Row BuildParamsRow()
+        {
+            Throw.IfNull(Root, "未初始化模板，无法生成初始参数值");
+            return Root.Params.BuildInitRow();
+        }
+
+        /// <summary>
+        /// 根据初始参数值生成查询参数字典
+        /// </summary>
+        /// <returns></returns>
+        public Dict BuildParamsDict()
+        {
+            Throw.IfNull(Root, "未初始化模板，无法生成查询参数");
+            return Root.Params.BuildInitDict();
+        }
+
+        /// <summary>
+        /// 更新查询参数
+        /// </summary>
+        /// <param name="p_row"></param>
+        public void UpdateParams(Core.Row p_row)
+        {
+            if (p_row != null)
+            {
+                Params = p_row.ToDict();
+                Sheet = null;
+            }
+        }
+        #endregion
+
+        #region 内部属性
+        /// <summary>
+        /// 获取报表要输出的Sheet
+        /// </summary>
+        internal Worksheet Sheet { get; set; }
+
+        /// <summary>
+        /// 获取设置报表模板根节点
+        /// </summary>
+        internal RptRoot Root { get; set; }
+
+        /// <summary>
+        /// 获取设置报表实例
+        /// </summary>
+        internal RptRootInst Inst { get; set; }
+
+        /// <summary>
+        /// 脚本对象
+        /// </summary>
+        internal RptScript ScriptObj { get; private set; }
+
+        /// <summary>
+        /// 报表组时当前报表预览的工具栏菜单
+        /// </summary>
+        internal Menu ViewMenu { get; set; }
+        #endregion
+
+        #region 内部方法
         /// <summary>
         /// 初始化模板、脚本、参数默认值
         /// </summary>
@@ -190,14 +233,11 @@ namespace Dt.Base
             }
 
             // 根据参数默认值创建初始查询参数（自动查询时用）
-            if (Params == null && Root.Params.Data.Count > 0)
+            if (Root.ViewSetting.AutoQuery
+                && Params == null
+                && Root.Params.Data.Count > 0)
             {
-                Dict dict = new Dict();
-                foreach (var row in Root.Params.Data)
-                {
-                    //dict.Add(row.Str("id"), cell.Val);
-                }
-                Params = dict;
+                Params = Root.Params.BuildInitDict();
             }
             return true;
         }
@@ -246,6 +286,7 @@ namespace Dt.Base
             }
             return true;
         }
+        #endregion
 
         #region 比较
         public override bool Equals(object obj)

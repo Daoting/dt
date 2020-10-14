@@ -8,9 +8,7 @@
 
 #region 命名空间
 using Dt.Base.Docking;
-using Dt.Base.Report;
 using Dt.Core;
-using Windows.UI.Xaml;
 #endregion
 
 namespace Dt.Base.Report
@@ -21,13 +19,18 @@ namespace Dt.Base.Report
     internal partial class RptViewWin : Win
     {
         readonly RptView _view = new RptView();
-        Menu _menu;
+        Tab _tabCenter;
 
         public RptViewWin(RptInfo p_info)
         {
-            // 确保RptInfo已初始化，因含异步
+            // 确保RptInfo已初始化，因含异步！
+
+            IRptSearchForm searchForm = null;
             if (p_info.ScriptObj != null)
+            {
                 p_info.ScriptObj.View = _view;
+                searchForm = p_info.ScriptObj.GetSearchForm(p_info);
+            }
 
             WinCenter wc = new WinCenter();
             var tabs = new Tabs();
@@ -40,24 +43,32 @@ namespace Dt.Base.Report
             var setting = p_info.Root.ViewSetting;
             if (setting.ShowMenu)
             {
-                _menu = new Menu();
-                //if (setting.ShowSearchMi)
-                    _menu.Items.Add(new Mi { ID = "查询", Icon = Icons.搜索, Cmd = _view.CmdSearch });
-                _menu.Items.Add(new Mi { ID = "导出", Icon = Icons.导出, Cmd = _view.CmdExport });
-                _menu.Items.Add(new Mi { ID = "打印", Icon = Icons.打印, Cmd = _view.CmdPrint });
-                p_info.ScriptObj?.InitMenu(_menu);
-                tab.Menu = _menu;
+                var menu = new Menu();
+                if (!setting.ShowSearchForm
+                    && (searchForm != null || p_info.Root.Params.ExistXaml))
+                {
+                    menu.Items.Add(new Mi { ID = "查询", Icon = Icons.搜索, Cmd = _view.CmdSearch });
+                }
+                menu.Items.Add(new Mi { ID = "导出", Icon = Icons.导出, Cmd = _view.CmdExport });
+                menu.Items.Add(new Mi { ID = "打印", Icon = Icons.打印, Cmd = _view.CmdPrint });
+                p_info.ScriptObj?.InitMenu(menu);
+                tab.Menu = menu;
             }
 
-            if (setting.ShowSearchForm && p_info.Root.Params.Data.Count > 0)
+            if (setting.ShowSearchForm
+                && (searchForm != null || p_info.Root.Params.ExistXaml))
             {
                 WinItem wi = new WinItem { DockState = WinItemState.DockedLeft };
                 tabs = new Tabs();
                 tab = new Tab { Title = "查询" };
+
                 // 加载查询面板内容
-                var fm = new RptSearchForm(p_info, tab);
-                fm.Query += (s, e) => _view.LoadReport(e);
-                tab.Content = fm;
+                if (searchForm == null)
+                    searchForm = new RptSearchForm(p_info);
+                tab.Menu = searchForm.Menu;
+                searchForm.Query += (s, e) => _view.LoadReport(e);
+                tab.Content = searchForm;
+
                 tabs.Items.Add(tab);
                 wi.Items.Add(tabs);
                 Items.Add(wi);
@@ -99,14 +110,21 @@ namespace Dt.Base.Report
             if (!await info.Init())
                 return;
 
-            // 加载查询面板内容
-            var fm = new RptSearchForm(info, tab);
-            tab.Content = fm;
-            fm.Query += OnQuery;
+            // 加载查询面板内容，脚本优先
+            IRptSearchForm searchForm = null;
+            if (info.ScriptObj != null)
+                searchForm = info.ScriptObj.GetSearchForm(info);
+            if (searchForm == null && info.Root.Params.ExistXaml)
+                searchForm = new RptSearchForm(info);
+            if (searchForm != null)
+            {
+                tab.Content = searchForm;
+                searchForm.Query += OnQuery;
+            }
 
             // 初次加载自动执行查询
-            if (info.Root.ViewSetting.AutoQuery)
-                fm.DoQuery();
+            if (info.Root.ViewSetting.AutoQuery || searchForm == null)
+                _view.LoadReport(info);
         }
 
         /// <summary>
@@ -117,7 +135,29 @@ namespace Dt.Base.Report
         void OnQuery(object sender, RptInfo e)
         {
             if (_view.Info != e)
-                _menu.Visibility = e.Root.ViewSetting.ShowMenu ? Visibility.Visible : Visibility.Collapsed;
+            {
+                if (e.Root.ViewSetting.ShowMenu)
+                {
+                    if (e.ViewMenu == null)
+                    {
+                        var menu = new Menu
+                        {
+                            Items =
+                            {
+                                new Mi { ID = "导出", Icon = Icons.导出, Cmd = _view.CmdExport },
+                                new Mi { ID = "打印", Icon = Icons.打印, Cmd = _view.CmdPrint },
+                            }
+                        };
+                        e.ViewMenu = menu;
+                        e.ScriptObj?.InitMenu(menu);
+                    }
+                    _tabCenter.Menu = e.ViewMenu;
+                }
+                else if (_tabCenter.Menu != null)
+                {
+                    _tabCenter.ClearValue(Tab.MenuProperty);
+                }
+            }
             _view.LoadReport(e);
         }
 
@@ -125,21 +165,11 @@ namespace Dt.Base.Report
         {
             WinCenter wc = new WinCenter();
             var tabs = new Tabs();
-            var tab = new Tab { Title = "内容" };
-            tab.Content = _view;
-            tabs.Items.Add(tab);
+            _tabCenter = new Tab { Title = "内容" };
+            _tabCenter.Content = _view;
+            tabs.Items.Add(_tabCenter);
             wc.Items.Add(tabs);
             Items.Add(wc);
-
-            _menu = new Menu
-            {
-                Items =
-                {
-                    new Mi { ID = "导出", Icon = Icons.导出, Cmd = _view.CmdExport },
-                    new Mi { ID = "打印", Icon = Icons.打印, Cmd = _view.CmdPrint },
-                }
-            };
-            tab.Menu = _menu;
         }
         #endregion
     }
