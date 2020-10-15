@@ -33,7 +33,6 @@ namespace Dt.Base.Report
                 { "id" },
                 { "type" },
                 { "val" },
-                { "ismacro", typeof(bool) },
                 { "note" },
                 { "xaml" },
             };
@@ -111,6 +110,8 @@ namespace Dt.Base.Report
                     continue;
 
                 string val = row.Str("val");
+                if (val != string.Empty && val[0] == ':')
+                    val = ValueExpression.GetValue(val.Substring(1));
                 switch (row.Str("type").ToLower())
                 {
                     case "bool":
@@ -147,7 +148,6 @@ namespace Dt.Base.Report
                         }
                         break;
 
-                    case "datetime":
                     case "date":
                         if (val != string.Empty && DateTime.TryParse(val, out var d))
                         {
@@ -181,6 +181,8 @@ namespace Dt.Base.Report
                     continue;
 
                 string val = row.Str("val");
+                if (val != string.Empty && val[0] == ':')
+                    val = ValueExpression.GetValue(val.Substring(1));
                 switch (row.Str("type").ToLower())
                 {
                     case "bool":
@@ -217,7 +219,6 @@ namespace Dt.Base.Report
                         }
                         break;
 
-                    case "datetime":
                     case "date":
                         if (val != string.Empty && DateTime.TryParse(val, out var d))
                         {
@@ -355,9 +356,6 @@ namespace Dt.Base.Report
                 val = row.Str("val");
                 if (val != string.Empty)
                     p_writer.WriteAttributeString("val", val);
-
-                if (row.Bool("ismacro"))
-                    p_writer.WriteAttributeString("ismacro", "True");
 
                 val = row.Str("note");
                 if (val != string.Empty)

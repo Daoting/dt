@@ -77,7 +77,7 @@ namespace Dt.Base.FormView
             else if (!string.IsNullOrEmpty(_owner.Code))
             {
                 // 基础代码
-                lv.Data = AtLocal.QueryModel($"select id name from OmBaseCode where grp=\"{_owner.Code}\"");
+                lv.Data = AtLocal.QueryModel($"select id,name from OmBaseCode where grp=\"{_owner.Code}\"");
             }
             else if (!string.IsNullOrEmpty(_owner.Sql))
             {

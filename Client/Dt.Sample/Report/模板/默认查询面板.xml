@@ -22,15 +22,19 @@
 </a:CList>]]>
     </Param>
     <Param id="param4" />
+    <Param id="UserID" val=":UserID" />
+    <Param id="Now" val=":Now" />
   </Params>
   <Data />
   <Page />
   <Header />
-  <Body rows="25,25,25,25,25">
+  <Body rows="25,25,25,25,25,25,25">
     <Text col="1" colspan="2" val=":参数1：+ Param(param1)" />
     <Text row="1" col="1" colspan="2" val=":参数2：+ Param(param2)" />
     <Text row="2" col="1" colspan="2" val=":参数3：+ Param(param3)" />
     <Text row="3" col="1" colspan="2" val=":参数id：+ Param(param4)" />
+    <Text row="4" col="1" colspan="2" val=":userid：+ Param(UserID)" />
+    <Text row="5" col="1" colspan="2" val=":当前时间：+ Param(Now)" />
   </Body>
   <Footer />
   <View />
