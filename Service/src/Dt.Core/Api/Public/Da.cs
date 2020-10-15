@@ -24,7 +24,7 @@ namespace Dt.Core
         /// </summary>
         /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
-        /// <returns>返回Table数据集</returns>
+        /// <returns>返回Table数据</returns>
         public Task<Table> Query(string p_keyOrSql, object p_params = null)
         {
             return new Db().Query(p_keyOrSql, p_params);
@@ -37,7 +37,7 @@ namespace Dt.Core
         /// <param name="p_pageSize">每页显示行数</param>
         /// <param name="p_keyOrSql">Sql字典中的键名(无空格) 或 Sql语句</param>
         /// <param name="p_params">参数值，支持Dict或匿名对象，默认null</param>
-        /// <returns>返回Table数据集</returns>
+        /// <returns>返回Table数据</returns>
         public Task<Table> GetPage(int p_starRow, int p_pageSize, string p_keyOrSql, object p_params = null)
         {
             string sql = $"select * from ({Glb.Sql(p_keyOrSql)}) a limit {p_starRow},{p_pageSize} ";

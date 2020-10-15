@@ -6,7 +6,7 @@
 
     <a:WinItem DockState="DockedLeft">
         <a:Tabs>
-            <a:Tab Title="数据集">
+            <a:Tab Title="数据源">
                 <a:Lv x:Name="_lv" ItemClick="OnItemClick">
                     <DataTemplate>
                         <StackPanel Padding="10">
@@ -29,7 +29,7 @@
                     </a:Menu>
                 </a:Tab.Menu>
                 <a:Fv x:Name="_fv">
-                    <a:CText ID="id" Title="数据集名称" />
+                    <a:CText ID="id" Title="数据名称" />
                     <a:CBar Title="列名，逗号隔开" />
                     <a:CText ID="cols" ShowTitle="False" AcceptsReturn="True" RowSpan="3" />
                 </a:Fv>

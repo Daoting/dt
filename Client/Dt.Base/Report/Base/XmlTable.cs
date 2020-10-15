@@ -27,12 +27,14 @@ namespace Dt.Base.Report
         #region Table
         /// <summary>
         /// 读取xml中的行数据，根元素和行元素名称任意，xml内容形如：
-        /// Params>
-        ///   Param id="参数标识" name="参数名" type="double" />
-        /// Params>
+        /// \Params>
+        ///   \Param id="参数标识" name="参数名" type="double"\
+        ///     <![CDATA[xaml内容]]>
+        ///   /Param>
+        /// /Params>
         /// </summary>
         /// <param name="p_reader"></param>
-        public static void ReadXml(this Table p_tbl, XmlReader p_reader)
+        public static void ReadXml(this Table p_tbl, XmlReader p_reader, string p_cdataCol)
         {
             if (p_reader == null)
                 return;
@@ -45,7 +47,6 @@ namespace Dt.Base.Report
 
             string root = p_reader.Name;
             p_reader.Read();
-            string rowName = p_reader.Name;
             while (p_reader.NodeType != XmlNodeType.None)
             {
                 if (p_reader.NodeType == XmlNodeType.EndElement && p_reader.Name == root)
@@ -61,7 +62,13 @@ namespace Dt.Base.Report
                         row.Cells[id].InitVal(p_reader.Value);
                 }
 
-                p_reader.ReadToNextSibling(rowName);
+                p_reader.Read();
+                if (p_reader.NodeType == XmlNodeType.CDATA)
+                {
+                    row.Cells[p_cdataCol].InitVal(p_reader.Value);
+                    p_reader.Read();
+                    p_reader.Read();
+                }
             }
             p_reader.Read();
         }

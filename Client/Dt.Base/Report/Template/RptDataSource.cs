@@ -62,7 +62,7 @@ namespace Dt.Base.Report
         }
 
         /// <summary>
-        /// 获取指定数据集的列Table
+        /// 获取指定数据源的列Table
         /// </summary>
         /// <param name="p_tblID"></param>
         /// <returns></returns>
@@ -84,7 +84,7 @@ namespace Dt.Base.Report
         }
 
         /// <summary>
-        /// 更新指定数据集的列
+        /// 更新指定数据源的列
         /// </summary>
         /// <param name="p_tblID"></param>
         /// <param name="p_cols"></param>
@@ -114,14 +114,14 @@ namespace Dt.Base.Report
                          select row).Any();
             if (fail)
             {
-                AtKit.Warn("数据集名称不可为空！");
+                AtKit.Warn("数据名称不可为空！");
                 return false;
             }
 
             fail = DataSet.GroupBy(r => r.Str("id")).Where(g => g.Count() > 1).Any();
             if (fail)
             {
-                AtKit.Warn("数据集名称不可重复！");
+                AtKit.Warn("数据名称不可重复！");
                 return false;
             }
             return true;
@@ -133,7 +133,7 @@ namespace Dt.Base.Report
         /// <param name="p_reader"></param>
         public void ReadXml(XmlReader p_reader)
         {
-            DataSet.ReadXml(p_reader);
+            DataSet.ReadXml(p_reader, "sql");
         }
 
         /// <summary>
@@ -142,7 +142,30 @@ namespace Dt.Base.Report
         /// <param name="p_writer"></param>
         public void WriteXml(XmlWriter p_writer)
         {
-            DataSet.WriteXml(p_writer, "Data", "Tbl");
+            p_writer.WriteStartElement("Data");
+            foreach (Row row in DataSet)
+            {
+                p_writer.WriteStartElement("Tbl");
+
+                p_writer.WriteAttributeString("id", row.Str("id"));
+
+                if (row.Bool("isscritp"))
+                    p_writer.WriteAttributeString("isscritp", "True");
+
+                string val = row.Str("srv");
+                if (val != string.Empty)
+                    p_writer.WriteAttributeString("srv", val);
+
+                val = row.Str("cols");
+                if (val != string.Empty)
+                    p_writer.WriteAttributeString("cols", val);
+
+                val = row.Str("sql");
+                if (val != string.Empty)
+                    p_writer.WriteCData(val);
+                p_writer.WriteEndElement();
+            }
+            p_writer.WriteEndElement();
         }
     }
 
@@ -156,7 +179,7 @@ namespace Dt.Base.Report
         }
 
         /// <summary>
-        /// 数据集名称
+        /// 数据名称
         /// </summary>
         public string ID
         {

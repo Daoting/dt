@@ -299,41 +299,16 @@ namespace Dt.Base.Report
         /// <param name="p_reader"></param>
         public void ReadXml(XmlReader p_reader)
         {
-            if (p_reader == null)
-                return;
+            Data.ReadXml(p_reader, "xaml");
 
-            if (p_reader.IsEmptyElement)
+            // 默认类型
+            var ls = from row in Data
+                     where row.Str("type") == string.Empty
+                     select row;
+            foreach (var row in ls)
             {
-                p_reader.Read();
-                return;
+                row.Cells["type"].InitVal("string");
             }
-
-            string root = p_reader.Name;
-            p_reader.Read();
-            while (p_reader.NodeType != XmlNodeType.None)
-            {
-                if (p_reader.NodeType == XmlNodeType.EndElement && p_reader.Name == root)
-                    break;
-
-                Row row = Data.AddRow(new { type = "string" });
-                row.IsAdded = false;
-                for (int i = 0; i < p_reader.AttributeCount; i++)
-                {
-                    p_reader.MoveToAttribute(i);
-                    string id = p_reader.Name;
-                    if (row.Cells.Contains(id))
-                        row.Cells[id].InitVal(p_reader.Value);
-                }
-
-                p_reader.Read();
-                if (p_reader.NodeType == XmlNodeType.CDATA)
-                {
-                    row.Cells["xaml"].InitVal(p_reader.Value);
-                    p_reader.Read();
-                    p_reader.Read();
-                }
-            }
-            p_reader.Read();
         }
 
         /// <summary>

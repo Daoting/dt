@@ -9,10 +9,12 @@
 #region 命名空间
 using Dt.Base.Report;
 using Dt.Core;
+using Dt.Core.Rpc;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 #endregion
@@ -132,6 +134,59 @@ namespace Dt.Base
             }
             p_root.OnAfterSerialize();
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// 查询报表数据
+        /// </summary>
+        /// <param name="p_srv">服务名称</param>
+        /// <param name="p_sql">Sql语句</param>
+        /// <param name="p_params">参数字典</param>
+        /// <returns></returns>
+        internal static Task<Table> Query(string p_srv, string p_sql, Dict p_params)
+        {
+            Throw.If(string.IsNullOrEmpty(p_srv) || string.IsNullOrEmpty(p_sql), "查询报表数据时服务名称和Sql不可为空！");
+
+            // 按参数位置顺序整理查询参数
+            Dict sqlDt = new Dict();
+            Regex reg = new Regex(@"@[^\s,]+");
+            MatchCollection matches = reg.Matches(p_sql);
+            foreach (Match match in matches)
+            {
+                string name = match.Value.Substring(1);
+                if (p_params != null && p_params.TryGetValue(name, out var val))
+                {
+                    sqlDt[name] = val;
+                }
+                else
+                {
+                    Throw.If(true, $"查询报表数据时未提供参数【{name}】的值！");
+                }
+            }
+
+            // 参数值替换占位符
+            string sql = p_sql;
+            reg = new Regex(@"#[^\s,]+");
+            matches = reg.Matches(p_sql);
+            foreach (Match match in matches)
+            {
+                string name = match.Value.Substring(1);
+                if (p_params != null && p_params.TryGetValue(name, out var val))
+                {
+                    sql = sql.Replace(match.Value, val == null ? string.Empty : val.ToString());
+                }
+                else
+                {
+                    Throw.If(true, $"查询报表数据时未提供参数【{name}】的值！");
+                }
+            }
+
+            return new UnaryRpc(
+                p_srv,
+                "Da.Query",
+                sql,
+                sqlDt
+            ).Call<Table>();
         }
 
         /// <summary>

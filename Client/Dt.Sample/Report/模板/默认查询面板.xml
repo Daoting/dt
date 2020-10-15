@@ -21,7 +21,7 @@
     </a:CList.Items>
 </a:CList>]]>
     </Param>
-    <Param id="param4" />
+    <Param id="param4" type="int" />
     <Param id="UserID" val=":UserID" />
     <Param id="Now" val=":Now" />
   </Params>

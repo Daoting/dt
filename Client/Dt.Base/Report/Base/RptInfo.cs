@@ -68,9 +68,9 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 获取数据集的数据
+        /// 根据数据名称获取数据
         /// </summary>
-        /// <param name="p_name">数据集名称</param>
+        /// <param name="p_name">数据名称</param>
         /// <returns></returns>
         public async Task<RptData> GetData(string p_name)
         {
@@ -91,12 +91,12 @@ namespace Dt.Base
                 }
                 else
                 {
-                    AtKit.Warn($"未定义报表脚本，无法获取数据集【{p_name}】");
+                    AtKit.Warn($"未定义报表脚本，无法获取数据【{p_name}】");
                 }
             }
             else
             {
-
+                tbl = await AtRpt.Query(srcItem.Srv, srcItem.Sql, Params);
             }
 
             if (tbl != null)

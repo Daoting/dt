@@ -1,7 +1,8 @@
 ﻿<Data>
-  <Tbl id="数据集名称1"
+  <Tbl id="数据名称1"
        isscritp="False"
        srv="服务名称"
-       sql="select * from dual"
-       cols="id,name,address" />
+       cols="id,name,address">
+    <![CDATA[select * from dual]]>
+  </Tbl>
 </Data>

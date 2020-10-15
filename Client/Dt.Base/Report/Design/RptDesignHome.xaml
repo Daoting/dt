@@ -11,8 +11,8 @@
                 <StackPanel>
                     <a:BtnItem Icon="修改" Title="模板编辑" Desc="编辑报表模板" Click="OnEditTemplate" />
                     <a:BtnItem Icon="信件" Title="参数定义" Desc="报表输入参数可以为内部宏参数或外部输入参数" Click="OnParams" />
-                    <a:BtnItem Icon="数据库" Title="Db数据源" Desc="定义查询数据集的SQL语句" Click="OnDbData" />
-                    <a:BtnItem Icon="U盘" Title="脚本数据源" Desc="程序中动态提供的数据集" Click="OnScriptData" />
+                    <a:BtnItem Icon="数据库" Title="Db数据源" Desc="定义查询数据的SQL语句" Click="OnDbData" />
+                    <a:BtnItem Icon="U盘" Title="脚本数据源" Desc="程序中动态提供的数据" Click="OnScriptData" />
                     <a:BtnItem Icon="文件" Title="页面设置" Desc="设置报表页面大小" Click="OnPageSetting" />
                     <a:BtnItem Icon="大图标" Title="报表预览设置" Desc="定制报表预览窗口的内容" Click="OnViewSetting" />
                     <a:BtnItem x:Name="_btnSave" Icon="保存" Title="保存模板" Desc="保存报表模板Xml内容" />
