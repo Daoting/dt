@@ -68,5 +68,10 @@ namespace Dt.Base.Report
             tbl.AddRow(new { id = "日期时间" });
             _lv.Data = tbl;
         }
+
+        void OnDoubleClick(object sender, object e)
+        {
+            OnSave(null, null);
+        }
     }
 }

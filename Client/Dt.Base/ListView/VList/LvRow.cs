@@ -114,6 +114,7 @@ namespace Dt.Base.ListView
             PointerReleased += OnPointerReleased;
             PointerEntered += OnPointerEntered;
             PointerExited += OnPointerExited;
+            DoubleTapped += (s, e) => _row.OnDoubleClick();
 
             // android上快速滑动时未触发PointerMoved！
 #if ANDROID

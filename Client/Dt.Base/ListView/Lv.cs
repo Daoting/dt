@@ -355,6 +355,11 @@ namespace Dt.Base
         public event EventHandler<ItemClickArgs> ItemClick;
 
         /// <summary>
+        /// 双击行/项目事件
+        /// </summary>
+        public event EventHandler<object> ItemDoubleClick;
+
+        /// <summary>
         /// 选择变化事件
         /// </summary>
         public event SelectionChangedEventHandler SelectionChanged;
@@ -1525,6 +1530,15 @@ namespace Dt.Base
         internal void OnItemClick(object p_data, object p_oldData)
         {
             ItemClick?.Invoke(this, new ItemClickArgs(p_data, p_oldData));
+        }
+
+        /// <summary>
+        /// 触发双击行事件
+        /// </summary>
+        /// <param name="p_data"></param>
+        internal void OnItemDoubleClick(object p_data)
+        {
+            ItemDoubleClick?.Invoke(this, p_data);
         }
 
         /// <summary>

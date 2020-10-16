@@ -146,5 +146,10 @@ namespace Dt.Base.Report
                 _lv.Data = null;
             }
         }
+
+        void OnDoubleClick(object sender, object e)
+        {
+            OnSave(null, null);
+        }
     }
 }

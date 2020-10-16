@@ -49,6 +49,7 @@
                     <a:CBar Title="附加事件" />
                     <CheckBox Content="行单击事件" Click="OnRowClick" />
                     <CheckBox Content="选择变化事件" Click="OnSelectionChangedClick" />
+                    <CheckBox Content="行双击事件" Click="OnRowDoubleClick" />
                     
                     <a:CBar Title="操作" />
                     <StackPanel Orientation="Horizontal">

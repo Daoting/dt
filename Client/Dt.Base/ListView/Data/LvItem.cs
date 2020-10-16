@@ -122,5 +122,10 @@ namespace Dt.Base
                 }
             }
         }
+
+        internal void OnDoubleClick()
+        {
+            _owner.OnItemDoubleClick(Data);
+        }
     }
 }

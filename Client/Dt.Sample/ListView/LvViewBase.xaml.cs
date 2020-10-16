@@ -90,6 +90,26 @@ namespace Dt.Sample
             AtKit.Msg($"增加选择{e.AddedItems.Count}行，取消选择{e.RemovedItems.Count}行");
         }
 
+        void OnRowDoubleClick(object sender, RoutedEventArgs e)
+        {
+            if ((sender as CheckBox).IsChecked.Value)
+                _lv.ItemDoubleClick += OnItemDoubleClick;
+            else
+                _lv.ItemDoubleClick -= OnItemDoubleClick;
+        }
+
+        void OnItemDoubleClick(object sender, object e)
+        {
+            if (e is Row row)
+            {
+                AtKit.Msg($"双击行：{row.Str("xm")}");
+            }
+            else if (e is Person per)
+            {
+                AtKit.Msg($"双击行：{per.Xm}");
+            }
+        }
+
         void OnAddRow(object sender, RoutedEventArgs e)
         {
             var tbl = _lv.Table;

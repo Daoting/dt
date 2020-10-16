@@ -250,6 +250,11 @@ namespace Dt.Base
         public event EventHandler<ItemClickArgs> ItemClick;
 
         /// <summary>
+        /// 双击行事件
+        /// </summary>
+        public event EventHandler<object> ItemDoubleClick;
+
+        /// <summary>
         /// 加载子节点事件
         /// </summary>
         public event EventHandler<LoadingChildArgs> LoadingChild;
@@ -1191,6 +1196,15 @@ namespace Dt.Base
         internal void OnItemClick(object p_data, object p_oldData)
         {
             ItemClick?.Invoke(this, new ItemClickArgs(p_data, p_oldData));
+        }
+
+        /// <summary>
+        /// 触发双击行事件
+        /// </summary>
+        /// <param name="p_data"></param>
+        internal void OnItemDoubleClick(object p_data)
+        {
+            ItemDoubleClick?.Invoke(this, p_data);
         }
 
         /// <summary>

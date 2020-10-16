@@ -52,5 +52,10 @@ namespace Dt.Base.Report
                 Close(true);
             }
         }
+
+        void OnDoubleClick(object sender, object e)
+        {
+            OnSave(null, null);
+        }
     }
 }

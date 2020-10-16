@@ -223,6 +223,7 @@ namespace Dt.Base
         {
             if (_btnExpanded != null)
                 IsExpanded = !IsExpanded;
+            _owner.OnItemDoubleClick(Data);
         }
 
         internal void SetExpandState(bool p_isExpanded)

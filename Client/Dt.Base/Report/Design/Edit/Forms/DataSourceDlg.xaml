@@ -54,8 +54,8 @@
                 <ComboBoxItem Content="总数" />
             </ComboBox>
         </Grid>
-        
-        <a:Lv x:Name="_lv" Grid.Row="2">
+
+        <a:Lv x:Name="_lv" ItemDoubleClick="OnDoubleClick" Grid.Row="2">
             <DataTemplate>
                 <a:Dot ID="id" Padding="10"/>
             </DataTemplate>
