@@ -51,6 +51,14 @@ namespace Dt.Base.Report
         void OnItemClick(object sender, ItemClickArgs e)
         {
             _fv.Data = e.Row;
+            if (AtSys.IsPhoneUI)
+                GetPhoneTabs(Home).Select("编辑");
+        }
+
+        protected override void OnInitPhoneTabs(PhoneTabs p_tabs)
+        {
+            if (_lv.Rows.Count == 0)
+                p_tabs.Select("编辑");
         }
 
         void OnAdd(object sender, Mi e)

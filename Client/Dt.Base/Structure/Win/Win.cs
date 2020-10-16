@@ -301,6 +301,17 @@ namespace Dt.Base
                 NaviToMultiTabs(p_tabTitle);
         }
 
+        public PhoneTabs GetPhoneTabs(string p_tabTitle)
+        {
+            if (_cacheMultiTabs != null)
+            {
+                return (from t in _cacheMultiTabs
+                        where t.NaviID == p_tabTitle
+                        select t).FirstOrDefault();
+            }
+            return null;
+        }
+
         /// <summary>
         /// 导航到第一个Tab
         /// </summary>
@@ -436,13 +447,22 @@ namespace Dt.Base
             // 起始页隐藏返回按钮
             if (frame.Content == null)
                 tabs.HideBackButton();
-            tabs.SelectFirstItem();
+            tabs.Select(0);
 
             if (_cacheMultiTabs == null)
                 _cacheMultiTabs = new List<PhoneTabs>();
             _cacheMultiTabs.Add(tabs);
 
+            OnInitPhoneTabs(tabs);
             PhonePage.Show(tabs);
+        }
+
+        /// <summary>
+        /// 初次加载多页Tab，可用于动态选择Tab
+        /// </summary>
+        /// <param name="p_tabs"></param>
+        protected virtual void OnInitPhoneTabs(PhoneTabs p_tabs)
+        {
         }
 
         /// <summary>

@@ -2,7 +2,8 @@
     x:Class="Dt.Base.Report.ScriptDataWin"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:a="using:Dt.Base">
+    xmlns:a="using:Dt.Base"
+    Home="数据源,编辑">
 
     <a:WinItem DockState="DockedLeft">
         <a:Tabs>

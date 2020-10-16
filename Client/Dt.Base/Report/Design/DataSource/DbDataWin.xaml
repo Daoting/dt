@@ -2,7 +2,8 @@
     x:Class="Dt.Base.Report.DbDataWin"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:a="using:Dt.Base">
+    xmlns:a="using:Dt.Base"
+    Home="数据源,编辑,查询测试">
 
     <a:WinItem DockState="DockedLeft" InitWidth="240">
         <a:Tabs>

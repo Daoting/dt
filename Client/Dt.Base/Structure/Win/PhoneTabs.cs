@@ -72,12 +72,29 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 选择第一个标签
+        /// 选择指定索引的标签
         /// </summary>
-        internal void SelectFirstItem()
+        /// <param name="p_index"></param>
+        public void Select(int p_index)
         {
-            if (_grid.Children.Count > 0)
-                SelectItem((Button)_grid.Children[0]);
+            if (p_index >= 0 && p_index < _grid.Children.Count)
+                SelectItem((Button)_grid.Children[p_index]);
+        }
+
+        /// <summary>
+        /// 选择指定标题的标签
+        /// </summary>
+        /// <param name="p_title"></param>
+        public void Select(string p_title)
+        {
+            foreach (var btn in _grid.Children.OfType<Button>())
+            {
+                if (((Tab)btn.DataContext).Title == p_title)
+                {
+                    SelectItem(btn);
+                    break;
+                }
+            }
         }
 
         #region 实现接口
