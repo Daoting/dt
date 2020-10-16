@@ -21,7 +21,7 @@ namespace Dt.Base
     {
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            string result = string.Empty;
+            string result = "";
             if (value != null)
             {
                 string text = value.ToString();

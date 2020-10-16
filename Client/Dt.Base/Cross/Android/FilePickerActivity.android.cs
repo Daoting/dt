@@ -285,7 +285,7 @@ namespace Dt.Base
             string[] projection = { MediaStore.MediaColumns.DisplayName };
 
             var resolver = context.ContentResolver;
-            var name = string.Empty;
+            var name = "";
             var metaCursor = resolver.Query(uri, projection, null, null, null);
 
             if (metaCursor != null)

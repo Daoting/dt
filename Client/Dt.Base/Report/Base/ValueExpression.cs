@@ -73,7 +73,7 @@ namespace Dt.Base
             if (!Enum.TryParse(p_expression, true, out exp))
             {
                 AtKit.Warn($"无法识别内置表达式【{p_expression}】!");
-                return string.Empty;
+                return "";
             }
 
             switch (exp)
@@ -142,7 +142,7 @@ namespace Dt.Base
                     dt = AtSys.Now;
                     return new DateTime(dt.Year, GetFirstMonthInQuarter(dt.AddMonths(-3)) + 2, DateTime.DaysInMonth(dt.Year, GetFirstMonthInQuarter(dt) + 2)).ToString("yyyy-MM-dd 23:59:59");
             }
-            return string.Empty;
+            return "";
         }
 
         /// <summary>

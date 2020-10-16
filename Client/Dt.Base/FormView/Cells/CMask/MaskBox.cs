@@ -229,7 +229,7 @@ namespace Dt.Base
             get
             {
                 if (Value == null)
-                    return string.Empty;
+                    return "";
                 return Value.ToString();
             }
         }
@@ -1111,7 +1111,7 @@ namespace Dt.Base
                 object val = _masker.GetCurrentEditValue();
                 if (val != null)
                     return val.ToString();
-                return string.Empty;
+                return "";
             }
         }
 
@@ -1172,7 +1172,7 @@ namespace Dt.Base
             string str = _owner.Mask;
             if (str == null)
             {
-                str = string.Empty;
+                str = "";
             }
 
             // 根据掩码属性创建掩码管理者

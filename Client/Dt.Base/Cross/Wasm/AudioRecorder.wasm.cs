@@ -89,7 +89,7 @@ namespace Dt.Base
                 Debug.WriteLine($"Error deleting audio file: {ex}");
             }
 
-            _audioFilePath = string.Empty;
+            _audioFilePath = "";
             _mediaCapture = null;
         }
     }

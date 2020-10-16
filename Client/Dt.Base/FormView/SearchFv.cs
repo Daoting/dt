@@ -94,7 +94,7 @@ namespace Dt.Base
             {
                 e.Handled = true;
                 string txt = ((TextBox)sender).Text.Trim();
-                if (txt != string.Empty)
+                if (txt != "")
                     OnSearch(txt);
             }
         }

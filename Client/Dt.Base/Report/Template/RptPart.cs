@@ -242,7 +242,7 @@ namespace Dt.Base.Report
         public static string MergeSize(double[] p_size)
         {
             if (p_size == null || p_size.Length == 0)
-                return string.Empty;
+                return "";
 
             int length = p_size.Length;
             StringBuilder sb = new StringBuilder();

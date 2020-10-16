@@ -27,7 +27,7 @@ namespace Dt.Base.ListView
             "Title",
             typeof(string),
             typeof(GroupHeaderCell),
-            new PropertyMetadata(string.Empty));
+            new PropertyMetadata(""));
 
         public static readonly DependencyProperty IsSelectedProperty = DependencyProperty.Register(
             "IsSelected",

@@ -110,7 +110,7 @@ namespace Dt.Base.Report
         public bool IsValid()
         {
             bool fail = (from row in DataSet
-                         where row.Str("id") == string.Empty
+                         where row.Str("id") == ""
                          select row).Any();
             if (fail)
             {
@@ -153,15 +153,15 @@ namespace Dt.Base.Report
                     p_writer.WriteAttributeString("isscritp", "True");
 
                 string val = row.Str("srv");
-                if (val != string.Empty)
+                if (val != "")
                     p_writer.WriteAttributeString("srv", val);
 
                 val = row.Str("cols");
-                if (val != string.Empty)
+                if (val != "")
                     p_writer.WriteAttributeString("cols", val);
 
                 val = row.Str("sql");
-                if (val != string.Empty)
+                if (val != "")
                     p_writer.WriteCData(val);
                 p_writer.WriteEndElement();
             }

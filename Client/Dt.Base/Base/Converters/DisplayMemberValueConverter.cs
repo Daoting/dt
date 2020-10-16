@@ -30,7 +30,7 @@ namespace Dt.Base
         {
             if (value == null)
             {
-                return string.Empty;
+                return "";
             }
             return value.ToString();
         }

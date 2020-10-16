@@ -406,7 +406,7 @@ namespace Dt.Base.Report
             WritePosition(p_writer);
 
             string val = _data.Str("tbl");
-            if (val != string.Empty)
+            if (val != "")
                 p_writer.WriteAttributeString("tbl", val);
             if (HideRowHeader)
                 p_writer.WriteAttributeString("hiderowheader", "True");
@@ -417,10 +417,10 @@ namespace Dt.Base.Report
             if (RepeatColHeader)
                 p_writer.WriteAttributeString("repeatcolheader", "True");
             val = _data.Str("rowsort");
-            if (val != string.Empty)
+            if (val != "")
                 p_writer.WriteAttributeString("rowsort", val);
             val = _data.Str("colsort");
-            if (val != string.Empty)
+            if (val != "")
                 p_writer.WriteAttributeString("colsort", val);
 
             if (Corner != null)

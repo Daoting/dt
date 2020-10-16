@@ -53,7 +53,7 @@ namespace Dt.Base
             if (value == null)
                 return "";
 
-            string format = string.Empty;
+            string format = "";
             var info = CultureInfo.CurrentCulture.NumberFormat;
             info.NumberGroupSeparator = ",";
             if (_isPercentage)

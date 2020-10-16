@@ -40,7 +40,7 @@ namespace Dt.Base
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             if (value == null)
-                return string.Empty;
+                return "";
 
             DateTime dt;
             if (value.GetType() == typeof(DateTime))
@@ -55,7 +55,7 @@ namespace Dt.Base
                 }
                 catch
                 {
-                    return string.Empty;
+                    return "";
                 }
             }
             return dt.ToString(_format);

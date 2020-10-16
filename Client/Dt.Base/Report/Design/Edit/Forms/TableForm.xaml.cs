@@ -144,7 +144,7 @@ namespace Dt.Base.Report
             }
 
             int index = GetIndex();
-            index = (((Button)sender).Tag ?? string.Empty).ToString() == "Before" ? index : index + 1;
+            index = (((Button)sender).Tag ?? "").ToString() == "Before" ? index : index + 1;
             _info.ExecuteCmd(RptCmds.InsertTblRow, new InsertTblRowCmdArgs(_part, index));
         }
 
@@ -163,7 +163,7 @@ namespace Dt.Base.Report
             }
 
             int index = GetTextIndex();
-            index = (((Button)sender).Tag ?? string.Empty).ToString() == "Left" ? index : index + 1;
+            index = (((Button)sender).Tag ?? "").ToString() == "Left" ? index : index + 1;
             _info.ExecuteCmd(RptCmds.InsertTblCol, new InsertRptTblColCmdArgs(_table, index));
         }
 

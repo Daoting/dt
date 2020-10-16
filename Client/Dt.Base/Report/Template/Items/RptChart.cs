@@ -390,44 +390,44 @@ namespace Dt.Base.Report
             WritePosition(p_writer);
 
             string val = _data.Str("type");
-            if (val != string.Empty && val != "Column")
+            if (val != "" && val != "Column")
                 p_writer.WriteAttributeString("type", val);
 
             if (!_data.Bool("showlegend"))
                 p_writer.WriteAttributeString("showlegend", "False");
             val = _data.Str("legtitle");
-            if (val != string.Empty)
+            if (val != "")
                 p_writer.WriteAttributeString("legtitle", val);
             val = _data.Str("legpos");
-            if (val != string.Empty && val != "Right")
+            if (val != "" && val != "Right")
                 p_writer.WriteAttributeString("legpos", val);
             val = _data.Str("legorientation");
-            if (val != string.Empty && val != "Vertical")
+            if (val != "" && val != "Vertical")
                 p_writer.WriteAttributeString("legorientation", val);
             val = _data.Str("title");
-            if (val != string.Empty)
+            if (val != "")
                 p_writer.WriteAttributeString("title", val);
             val = _data.Str("titlex");
-            if (val != string.Empty)
+            if (val != "")
                 p_writer.WriteAttributeString("titlex", val);
             val = _data.Str("titley");
-            if (val != string.Empty)
+            if (val != "")
                 p_writer.WriteAttributeString("titley", val);
 
             val = _data.Str("tbl");
-            if (val != string.Empty)
+            if (val != "")
                 p_writer.WriteAttributeString("tbl", val);
             val = _data.Str("fieldseries");
-            if (val != string.Empty)
+            if (val != "")
                 p_writer.WriteAttributeString("fieldseries", val);
             val = _data.Str("fieldx");
-            if (val != string.Empty)
+            if (val != "")
                 p_writer.WriteAttributeString("fieldx", val);
             val = _data.Str("fieldy");
-            if (val != string.Empty)
+            if (val != "")
                 p_writer.WriteAttributeString("fieldy", val);
             val = _data.Str("fieldz");
-            if (val != string.Empty)
+            if (val != "")
                 p_writer.WriteAttributeString("fieldz", val);
 
             p_writer.WriteEndElement();

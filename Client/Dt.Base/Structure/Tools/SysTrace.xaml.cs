@@ -146,7 +146,7 @@ namespace Dt.Base.Tools
 
         void OnCopy(object sender, Mi e)
         {
-            if (_tb.Text != string.Empty)
+            if (_tb.Text != "")
                 CopyToClipboard(_tb.Text);
         }
 

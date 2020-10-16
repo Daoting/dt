@@ -32,7 +32,7 @@ namespace Dt.Base
                 }
                 catch { }
             }
-            return string.Empty;
+            return "";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
@@ -76,7 +76,7 @@ namespace Dt.Base
                 }
                 catch { }
             }
-            return string.Empty;
+            return "";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

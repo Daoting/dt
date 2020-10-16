@@ -497,7 +497,7 @@ namespace Dt.Base.Report
             WritePosition(p_writer);
 
             string val = _data.Str("tbl");
-            if (val != string.Empty)
+            if (val != "")
                 p_writer.WriteAttributeString("tbl", val);
             if (RepeatHeader)
                 p_writer.WriteAttributeString("repeatheader", "True");

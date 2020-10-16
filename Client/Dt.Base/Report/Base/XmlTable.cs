@@ -89,7 +89,7 @@ namespace Dt.Base.Report
                 {
                     // 为空或与默认值相同时不输出
                     if (cell.Val == null
-                        || (cell.Type == typeof(string) && cell.GetVal<string>() == string.Empty)
+                        || (cell.Type == typeof(string) && cell.GetVal<string>() == "")
                         || (cell.Type == typeof(bool) && !cell.GetVal<bool>()))
                         continue;
 

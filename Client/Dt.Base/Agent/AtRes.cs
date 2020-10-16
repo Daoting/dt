@@ -476,7 +476,7 @@ namespace Dt.Base
         public static string GetIconChar(Icons p_icon)
         {
             if (p_icon == Icons.None)
-                return string.Empty;
+                return "";
 
             // 自定义Icon字库在 E000 ~ FFFF 之间
             // 枚举类型定义了在字库中的偏移量

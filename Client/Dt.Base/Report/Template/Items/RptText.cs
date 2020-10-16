@@ -427,7 +427,7 @@ namespace Dt.Base.Report
             foreach (string item in subs)
             {
                 string str = item.Trim();
-                if (str != string.Empty)
+                if (str != "")
                     Expressions.Add(ParseExpression(str));
             }
         }

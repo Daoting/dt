@@ -123,7 +123,7 @@ namespace Dt.Base
         internal static string SerializeTemplate(RptRoot p_root)
         {
             if (p_root == null)
-                return string.Empty;
+                return "";
 
             p_root.OnBeforeSerialize();
             StringBuilder sb = new StringBuilder();
@@ -173,7 +173,7 @@ namespace Dt.Base
                 string name = match.Value.Substring(1);
                 if (p_params != null && p_params.TryGetValue(name, out var val))
                 {
-                    sql = sql.Replace(match.Value, val == null ? string.Empty : val.ToString());
+                    sql = sql.Replace(match.Value, val == null ? "" : val.ToString());
                 }
                 else
                 {

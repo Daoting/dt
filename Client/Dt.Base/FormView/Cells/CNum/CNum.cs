@@ -104,7 +104,7 @@ namespace Dt.Base
             "NullValue",
             typeof(string),
             typeof(CNum),
-            new PropertyMetadata(string.Empty, OnUpdateText));
+            new PropertyMetadata("", OnUpdateText));
 
         /// <summary>
         /// 最大变化量
@@ -292,7 +292,7 @@ namespace Dt.Base
         bool _isChanging;
         bool _isSpinning;
         bool _updatingContent;
-        string _lastInput = string.Empty;
+        string _lastInput = "";
         #endregion
 
         #region 构造方法
@@ -664,7 +664,7 @@ namespace Dt.Base
                     if (string.IsNullOrEmpty(_textBox.Text))
                     {
                         _inputValue = double.NaN;
-                        _lastInput = string.Empty;
+                        _lastInput = "";
                     }
                     else
                     {
@@ -719,7 +719,7 @@ namespace Dt.Base
             if (double.IsNaN(Value))
                 return NullValue;
 
-            string format = string.Empty;
+            string format = "";
             int decimals = GetNumberDecimalDigits();
             switch (ValueFormat)
             {
@@ -753,10 +753,10 @@ namespace Dt.Base
         /// <returns>正在编辑时的内容串</returns>
         string FormatEdit()
         {
-            NumberFormatInfo.NumberGroupSeparator = string.Empty;
+            NumberFormatInfo.NumberGroupSeparator = "";
             if (double.IsNaN(Value))
             {
-                return string.Empty;
+                return "";
             }
             return Value.ToString("N" + GetNumberDecimalDigits(), NumberFormatInfo);
         }

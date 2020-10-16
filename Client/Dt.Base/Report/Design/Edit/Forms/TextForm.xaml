@@ -8,9 +8,9 @@
         <a:CBar Title="单元格值" />
         <a:CText ID="val" ShowTitle="False" AcceptsReturn="True" RowSpan="3" />
         <StackPanel Orientation="Horizontal">
-            <Button Content="+数据源列值" />
-            <Button Content="+参数值" />
-            <Button Content="+全局变量值" />
+            <Button Content="+数据源列值" Click="OnAddDataVal" />
+            <Button Content="+参数值" Click="OnAddParamVal" />
+            <Button Content="+全局变量值" Click="OnAddGlobalVal" />
             <Button Content="脚本赋值" Click="OnScriptVal" />
         </StackPanel>
         <a:CBool ID="handleclick" Title="点击时执行脚本" />

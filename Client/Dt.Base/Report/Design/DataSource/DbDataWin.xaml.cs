@@ -76,7 +76,7 @@ namespace Dt.Base.Report
             }
 
             Row row = _fv.Row;
-            if (row == null || row.Str("srv") == string.Empty || row.Str("sql") == string.Empty)
+            if (row == null || row.Str("srv") == "" || row.Str("sql") == "")
             {
                 AtKit.Warn("无法执行Sql，服务名称和Sql不可为空！");
                 return;

@@ -91,7 +91,7 @@ namespace Dt.Base.Report
             get
             {
                 return (from row in Data
-                        where row.Str("xaml") != string.Empty
+                        where row.Str("xaml") != ""
                         select row).Any();
             }
         }
@@ -106,16 +106,16 @@ namespace Dt.Base.Report
             foreach (var row in Data)
             {
                 string id = row.Str("id");
-                if (id == string.Empty)
+                if (id == "")
                     continue;
 
                 string val = row.Str("val");
-                if (val != string.Empty && val[0] == ':')
+                if (val != "" && val[0] == ':')
                     val = ValueExpression.GetValue(val.Substring(1));
                 switch (row.Str("type").ToLower())
                 {
                     case "bool":
-                        if (val == string.Empty)
+                        if (val == "")
                         {
                             data.AddCell<bool>(id);
                         }
@@ -127,7 +127,7 @@ namespace Dt.Base.Report
                         break;
 
                     case "double":
-                        if (val != string.Empty && double.TryParse(val, out var v))
+                        if (val != "" && double.TryParse(val, out var v))
                         {
                             data.AddCell(id, v);
                         }
@@ -138,7 +138,7 @@ namespace Dt.Base.Report
                         break;
 
                     case "int":
-                        if (val != string.Empty && int.TryParse(val, out var i))
+                        if (val != "" && int.TryParse(val, out var i))
                         {
                             data.AddCell(id, i);
                         }
@@ -149,7 +149,7 @@ namespace Dt.Base.Report
                         break;
 
                     case "date":
-                        if (val != string.Empty && DateTime.TryParse(val, out var d))
+                        if (val != "" && DateTime.TryParse(val, out var d))
                         {
                             data.AddCell(id, d);
                         }
@@ -177,16 +177,16 @@ namespace Dt.Base.Report
             foreach (var row in Data)
             {
                 string id = row.Str("id");
-                if (id == string.Empty)
+                if (id == "")
                     continue;
 
                 string val = row.Str("val");
-                if (val != string.Empty && val[0] == ':')
+                if (val != "" && val[0] == ':')
                     val = ValueExpression.GetValue(val.Substring(1));
                 switch (row.Str("type").ToLower())
                 {
                     case "bool":
-                        if (val == string.Empty)
+                        if (val == "")
                         {
                             dict[id] = false;
                         }
@@ -198,7 +198,7 @@ namespace Dt.Base.Report
                         break;
 
                     case "double":
-                        if (val != string.Empty && double.TryParse(val, out var v))
+                        if (val != "" && double.TryParse(val, out var v))
                         {
                             dict[id] = v;
                         }
@@ -209,7 +209,7 @@ namespace Dt.Base.Report
                         break;
 
                     case "int":
-                        if (val != string.Empty && int.TryParse(val, out var i))
+                        if (val != "" && int.TryParse(val, out var i))
                         {
                             dict[id] = i;
                         }
@@ -220,7 +220,7 @@ namespace Dt.Base.Report
                         break;
 
                     case "date":
-                        if (val != string.Empty && DateTime.TryParse(val, out var d))
+                        if (val != "" && DateTime.TryParse(val, out var d))
                         {
                             dict[id] = d;
                         }
@@ -247,12 +247,12 @@ namespace Dt.Base.Report
             foreach (var row in Data)
             {
                 string id = row.Str("id");
-                if (id == string.Empty)
+                if (id == "")
                     continue;
 
                 // 由xaml生成格
                 string xaml = row.Str("xaml").Trim();
-                if (xaml != string.Empty)
+                if (xaml != "")
                 {
                     try
                     {
@@ -276,7 +276,7 @@ namespace Dt.Base.Report
         public bool IsValid()
         {
             bool fail = (from row in Data
-                         where row.Str("id") == string.Empty
+                         where row.Str("id") == ""
                          select row).Any();
             if (fail)
             {
@@ -303,7 +303,7 @@ namespace Dt.Base.Report
 
             // 默认类型
             var ls = from row in Data
-                     where row.Str("type") == string.Empty
+                     where row.Str("type") == ""
                      select row;
             foreach (var row in ls)
             {
@@ -325,19 +325,19 @@ namespace Dt.Base.Report
                 p_writer.WriteAttributeString("id", row.Str("id"));
 
                 string val = row.Str("type");
-                if (val != string.Empty && val != "string")
+                if (val != "" && val != "string")
                     p_writer.WriteAttributeString("type", val);
 
                 val = row.Str("val");
-                if (val != string.Empty)
+                if (val != "")
                     p_writer.WriteAttributeString("val", val);
 
                 val = row.Str("note");
-                if (val != string.Empty)
+                if (val != "")
                     p_writer.WriteAttributeString("note", val);
 
                 val = row.Str("xaml");
-                if (val != string.Empty)
+                if (val != "")
                     p_writer.WriteCData(val);
                 p_writer.WriteEndElement();
             }

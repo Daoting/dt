@@ -125,7 +125,7 @@ namespace Dt.Base.Report
         {
             p_writer.WriteStartElement("TGroup");
             string val = _data.Str("field");
-            if (val != string.Empty)
+            if (val != "")
                 p_writer.WriteAttributeString("field", val);
 
             if (Header != null)
