@@ -38,7 +38,7 @@ namespace Dt.Base.Report
 
         public string GetExpression()
         {
-            return $"Param({_lv.SelectedRow.Str("id")})";
+            return $"Param({_lv.SelectedRow.Str("name")})";
         }
 
         void OnSave(object sender, Mi e)

@@ -10,7 +10,7 @@
                 <a:Lv x:Name="_lv" ItemClick="OnItemClick">
                     <DataTemplate>
                         <StackPanel Padding="10">
-                            <a:Dot ID="id" />
+                            <a:Dot ID="name" />
                             <a:Dot ID="cols" Foreground="{StaticResource 深灰边框}" FontSize="12" />
                         </StackPanel>
                     </DataTemplate>
@@ -29,8 +29,8 @@
                     </a:Menu>
                 </a:Tab.Menu>
                 <a:Fv x:Name="_fv">
-                    <a:CText ID="id" Title="数据名称" />
-                    <a:CText ID="srv" Title="服务名称" />
+                    <a:CText ID="name" Title="数据名称" />
+                    <a:CText ID="srv" Title="服务名称" AutoCookie="True" />
                     <a:CBar Title="Sql查询" />
                     <a:CText ID="sql" ShowTitle="False" AcceptsReturn="True" IsHorStretch="True" RowSpan="17" />
                     <a:CBar Title="列名，逗号隔开" />

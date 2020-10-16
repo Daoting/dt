@@ -278,7 +278,7 @@ namespace Dt.Base
             // 确保每个参数都包含
             foreach (var row in Root.Params.Data)
             {
-                if (!dt.ContainsKey(row.Str("id")))
+                if (!dt.ContainsKey(row.Str("name")))
                 {
                     AtKit.Msg(_paramsMsg);
                     return false;

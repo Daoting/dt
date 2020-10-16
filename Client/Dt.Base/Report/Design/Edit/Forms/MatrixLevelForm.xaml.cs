@@ -34,7 +34,6 @@ namespace Dt.Base.Report
         {
             _level = p_item.Parent as RptMtxLevel;
             _fv.Data = _level.Data;
-            ((CList)_fv["field"]).Data = _info.Root.Data.GetColsData(_level.Matrix.Tbl);
             _fvMtx.LoadItem(_level.Parent.Parent as RptMatrix);
         }
 
@@ -92,6 +91,11 @@ namespace Dt.Base.Report
             {
                 return (_level.Matrix).TestIncIntersect(1);
             }
+        }
+
+        void OnLoadField(object sender, AsyncEventArgs e)
+        {
+            ((CList)_fv["field"]).Data = _info.Root.Data.GetColsData(_level.Matrix.Tbl);
         }
     }
 }

@@ -1,10 +1,10 @@
 ﻿<Rpt cols="160,260,60">
   <Params>
-    <Param id="parentid" title="父项标识" val="" />
-    <Param id="parentname" title="父项名称" val="" />
+    <Param name="parentid" title="父项标识" val="" />
+    <Param name="parentname" title="父项名称" val="" />
   </Params>
   <Data>
-    <Tbl id="菜单" isscritp="True" cols="id,parentid,name,isgroup" />
+    <Tbl name="菜单" isscritp="True" cols="id,parentid,name,isgroup" />
   </Data>
   <Page />
   <Header />

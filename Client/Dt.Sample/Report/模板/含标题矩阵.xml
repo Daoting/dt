@@ -1,7 +1,7 @@
 ﻿<Rpt cols="80,80,80,80,80">
   <Params />
   <Data>
-    <Tbl id="个人成绩_矩阵标题" isscritp="True" cols="xm,year,数学,语文,英语" />
+    <Tbl name="个人成绩_矩阵标题" isscritp="True" cols="xm,year,数学,语文,英语" />
   </Data>
   <Page />
   <Header />

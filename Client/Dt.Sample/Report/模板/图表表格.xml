@@ -1,7 +1,7 @@
 ﻿<Rpt cols="80,80,80,80,80,80,80,80">
   <Params />
   <Data>
-    <Tbl id="图表表格" isscritp="True" cols="xm,score" />
+    <Tbl name="图表表格" isscritp="True" cols="xm,score" />
   </Data>
   <Page />
   <Header />

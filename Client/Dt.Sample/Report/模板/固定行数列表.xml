@@ -1,7 +1,7 @@
 ﻿<Rpt cols="80,80,80,80">
   <Params />
   <Data>
-    <Tbl id="通讯录" isscritp="True" cols="bm,xm,fjh" />
+    <Tbl name="通讯录" isscritp="True" cols="bm,xm,fjh" />
   </Data>
   <Page width="900" />
   <Header />

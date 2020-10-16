@@ -57,7 +57,7 @@ namespace Dt.Base.Report
 
         void OnAdd(object sender, Mi e)
         {
-            _fv.Data = _info.Root.Data.DataSet.AddRow(new { id = "新数据" });
+            _fv.Data = _info.Root.Data.DataSet.AddRow(new { name = "新数据", srv = _fv.GetCookie("srv") });
         }
 
         void OnDel(object sender, Mi e)

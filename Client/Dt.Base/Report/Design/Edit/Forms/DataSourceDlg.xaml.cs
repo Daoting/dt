@@ -37,7 +37,7 @@ namespace Dt.Base.Report
                 foreach (var r in dataSet)
                 {
                     var temp = new ComboBoxItem();
-                    temp.Content = r.Str("id");
+                    temp.Content = r.Str("name");
                     _dataSets.Items.Add(temp);
                 }
 
@@ -101,7 +101,7 @@ namespace Dt.Base.Report
                 return null;
 
             string dsName = _dataSets.SelectionBoxItem as string;
-            string colName = row.Str("id");
+            string colName = row.Str("name");
             switch (_func.SelectionBoxItem as string)
             {
                 case "数据":

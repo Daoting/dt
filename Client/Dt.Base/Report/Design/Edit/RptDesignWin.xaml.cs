@@ -7,23 +7,18 @@
 #endregion
 
 #region 引用命名
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Dt.Base;
 using Dt.Cells.Data;
 using Dt.Cells.UI;
 using Dt.Core;
+using System;
 using Windows.Foundation;
-using Windows.UI;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 #endregion
 
 namespace Dt.Base.Report
 {
     public sealed partial class RptDesignWin : Win
     {
+        #region 成员变量
         readonly ExcelClerk _excelClerk;
         readonly SelectionClerk _selectionClerk;
         RptItem _curItem;
@@ -34,6 +29,7 @@ namespace Dt.Base.Report
         MatrixLevelForm _fmMtxLevel;
         MatrixSubtitleForm _fmMtxSubtitle;
         MatrixSubtotalForm _fmMtxSubtotal;
+        #endregion
 
         public RptDesignWin(RptDesignInfo p_info)
         {

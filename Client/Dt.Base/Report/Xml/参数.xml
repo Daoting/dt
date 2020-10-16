@@ -1,5 +1,5 @@
 ﻿<Params>
-  <Param id="参数标识"
+  <Param name="参数名称"
          type="参数类型"
          val="缺省值"
          note="备注">

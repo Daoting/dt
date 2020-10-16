@@ -57,7 +57,7 @@
 
         <a:Lv x:Name="_lv" ItemDoubleClick="OnDoubleClick" Grid.Row="2">
             <DataTemplate>
-                <a:Dot ID="id" Padding="10"/>
+                <a:Dot ID="name" Padding="10"/>
             </DataTemplate>
         </a:Lv>
     </Grid>

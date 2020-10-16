@@ -54,15 +54,15 @@ namespace Dt.Base.Report
                     if (ls != null && ls.Count == 1)
                     {
                         // 使用initVal 避免重做撤销命令产生冗余操作。
-                        _item.Data.InitVal("tbl", ls[0].Str("id"));
-                        DataDropBox(ls[0].Str("id"));
+                        _item.Data.InitVal("tbl", ls[0].Str("name"));
+                        DataDropBox(ls[0].Str("name"));
                     }
                 }
                 else
                 {
                     for (int i = 0; i < _item.Root.Data.DataSet.Count; i++)
                     {
-                        if (_item.Root.Data.DataSet[i].Str("id") == dataSourceName)
+                        if (_item.Root.Data.DataSet[i].Str("name") == dataSourceName)
                         {
                             DataDropBox(dataSourceName);
                             break;

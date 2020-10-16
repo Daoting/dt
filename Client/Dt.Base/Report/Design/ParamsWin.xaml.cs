@@ -50,7 +50,7 @@ namespace Dt.Base.Report
 
         void OnAdd(object sender, Mi e)
         {
-            _fv.Data = _info.Root.Params.Data.AddRow(new { id = "新参数", type = "string" });
+            _fv.Data = _info.Root.Params.Data.AddRow(new { name = "新参数", type = "string" });
         }
 
         void OnDel(object sender, Mi e)

@@ -7,10 +7,6 @@
 #endregion
 
 #region 引用命名
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Dt.Base;
 using Dt.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -27,11 +23,58 @@ namespace Dt.Base.Report
         {
             InitializeComponent();
             _info = p_info;
+            _fvMtx.Info = _info;
         }
 
         internal void LoadItem(RptText p_item)
         {
             _title = p_item.Parent as RptMtxSubtitle;
+
+            Row row = new Row();
+            row.AddCell("span", _title.Data.Int("span"));
+            row.Changed += OnChanged;
+            _fv.Data = row;
+
+            _fvMtx.LoadItem(_title.Level.Matrix);
+        }
+
+        void OnChanged(object sender, Cell e)
+        {
+            _info.ExecuteCmd(RptCmds.ChangeTitleSpanCmd, new SubTitleCmdArgs(_title.Parent, _title, e.GetVal<int>()));
+        }
+
+        void OnAddTitle(object sender, RoutedEventArgs e)
+        {
+            bool isOverlap = false;
+            if (_title.SubTitles.Count > 0)
+            {
+                isOverlap = IsOverLap();
+            }
+
+            if (isOverlap)
+            {
+                AtKit.Warn("增加行后与已有控件位置发生重叠，请调整控件位置后重试！");
+                return;
+            }
+
+            _info.ExecuteCmd(RptCmds.AddSubTitle, new SubTitleCmdArgs(_title));
+        }
+
+        void OnDelTitle(object sender, RoutedEventArgs e)
+        {
+            _info.ExecuteCmd(RptCmds.DelSubTitle, new SubTitleCmdArgs(_title.Parent, _title));
+        }
+
+        bool IsOverLap()
+        {
+            if (_title.Level.Parent is RptMtxRowHeader)
+            {
+                return (_title.Level.Matrix).TestIncIntersect(0, 1);
+            }
+            else
+            {
+                return (_title.Level.Matrix).TestIncIntersect(1);
+            }
         }
     }
 }

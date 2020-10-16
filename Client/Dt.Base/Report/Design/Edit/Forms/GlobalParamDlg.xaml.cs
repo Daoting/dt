@@ -40,7 +40,7 @@ namespace Dt.Base.Report
 
         public string GetExpression()
         {
-            return $"Global({_lv.SelectedRow.Str("id")})";
+            return $"Global({_lv.SelectedRow.Str("name")})";
         }
 
         void OnSave(object sender, Mi e)
@@ -57,15 +57,15 @@ namespace Dt.Base.Report
 
         void LoadItems()
         {
-            Table tbl = new Table { { "id" } };
-            tbl.AddRow(new { id = "页号" });
-            tbl.AddRow(new { id = "总页数" });
-            tbl.AddRow(new { id = "水平页号" });
-            tbl.AddRow(new { id = "垂直页号" });
-            tbl.AddRow(new { id = "报表名称" });
-            tbl.AddRow(new { id = "日期" });
-            tbl.AddRow(new { id = "时间" });
-            tbl.AddRow(new { id = "日期时间" });
+            Table tbl = new Table { { "name" } };
+            tbl.AddRow(new { name = "页号" });
+            tbl.AddRow(new { name = "总页数" });
+            tbl.AddRow(new { name = "水平页号" });
+            tbl.AddRow(new { name = "垂直页号" });
+            tbl.AddRow(new { name = "报表名称" });
+            tbl.AddRow(new { name = "日期" });
+            tbl.AddRow(new { name = "时间" });
+            tbl.AddRow(new { name = "日期时间" });
             _lv.Data = tbl;
         }
 

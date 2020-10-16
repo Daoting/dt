@@ -10,7 +10,7 @@
                 <a:Lv x:Name="_lv" ItemClick="OnItemClick">
                     <DataTemplate>
                         <StackPanel Padding="10">
-                            <a:Dot ID="id" />
+                            <a:Dot ID="name" />
                             <a:Dot ID="cols" Foreground="{StaticResource 深灰边框}" FontSize="12" />
                         </StackPanel>
                     </DataTemplate>
@@ -29,7 +29,7 @@
                     </a:Menu>
                 </a:Tab.Menu>
                 <a:Fv x:Name="_fv">
-                    <a:CText ID="id" Title="数据名称" />
+                    <a:CText ID="name" Title="数据名称" />
                     <a:CBar Title="列名，逗号隔开" />
                     <a:CText ID="cols" ShowTitle="False" AcceptsReturn="True" RowSpan="3" />
                 </a:Fv>

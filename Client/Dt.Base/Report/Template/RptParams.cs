@@ -30,7 +30,7 @@ namespace Dt.Base.Report
             Root = p_root;
             Data = new Table
             {
-                { "id" },
+                { "name" },
                 { "type" },
                 { "val" },
                 { "note" },
@@ -50,25 +50,6 @@ namespace Dt.Base.Report
         public Table Data { get; }
 
         /// <summary>
-        /// 获取宏参数名列表
-        /// </summary>
-        public List<string> Macros
-        {
-            get
-            {
-                List<string> ls = new List<string>();
-                foreach (Row row in Data)
-                {
-                    if (row.Bool("macro"))
-                        ls.Add(row.Str("id"));
-                }
-                if (ls.Count == 0)
-                    return null;
-                return ls;
-            }
-        }
-
-        /// <summary>
         /// 根据参数名获取参数定义Row
         /// </summary>
         /// <param name="p_col"></param>
@@ -78,7 +59,7 @@ namespace Dt.Base.Report
             get
             {
                 return (from row in Data
-                        where row.Str("id") == p_col
+                        where row.Str("name") == p_col
                         select row).FirstOrDefault();
             }
         }
@@ -105,8 +86,8 @@ namespace Dt.Base.Report
             var data = new Row();
             foreach (var row in Data)
             {
-                string id = row.Str("id");
-                if (id == "")
+                string name = row.Str("name");
+                if (name == "")
                     continue;
 
                 string val = row.Str("val");
@@ -117,50 +98,50 @@ namespace Dt.Base.Report
                     case "bool":
                         if (val == "")
                         {
-                            data.AddCell<bool>(id);
+                            data.AddCell<bool>(name);
                         }
                         else
                         {
                             string l = val.ToLower();
-                            data.AddCell(id, (l == "1" || l == "true"));
+                            data.AddCell(name, (l == "1" || l == "true"));
                         }
                         break;
 
                     case "double":
                         if (val != "" && double.TryParse(val, out var v))
                         {
-                            data.AddCell(id, v);
+                            data.AddCell(name, v);
                         }
                         else
                         {
-                            data.AddCell<double>(id);
+                            data.AddCell<double>(name);
                         }
                         break;
 
                     case "int":
                         if (val != "" && int.TryParse(val, out var i))
                         {
-                            data.AddCell(id, i);
+                            data.AddCell(name, i);
                         }
                         else
                         {
-                            data.AddCell<int>(id);
+                            data.AddCell<int>(name);
                         }
                         break;
 
                     case "date":
                         if (val != "" && DateTime.TryParse(val, out var d))
                         {
-                            data.AddCell(id, d);
+                            data.AddCell(name, d);
                         }
                         else
                         {
-                            data.AddCell<DateTime>(id);
+                            data.AddCell<DateTime>(name);
                         }
                         break;
 
                     default:
-                        data.AddCell(id, val);
+                        data.AddCell(name, val);
                         break;
                 }
             }
@@ -176,8 +157,8 @@ namespace Dt.Base.Report
             Dict dict = new Dict();
             foreach (var row in Data)
             {
-                string id = row.Str("id");
-                if (id == "")
+                string name = row.Str("name");
+                if (name == "")
                     continue;
 
                 string val = row.Str("val");
@@ -188,50 +169,50 @@ namespace Dt.Base.Report
                     case "bool":
                         if (val == "")
                         {
-                            dict[id] = false;
+                            dict[name] = false;
                         }
                         else
                         {
                             string l = val.ToLower();
-                            dict[id] = (l == "1" || l == "true");
+                            dict[name] = (l == "1" || l == "true");
                         }
                         break;
 
                     case "double":
                         if (val != "" && double.TryParse(val, out var v))
                         {
-                            dict[id] = v;
+                            dict[name] = v;
                         }
                         else
                         {
-                            dict[id] = default(double);
+                            dict[name] = default(double);
                         }
                         break;
 
                     case "int":
                         if (val != "" && int.TryParse(val, out var i))
                         {
-                            dict[id] = i;
+                            dict[name] = i;
                         }
                         else
                         {
-                            dict[id] = default(int);
+                            dict[name] = default(int);
                         }
                         break;
 
                     case "date":
                         if (val != "" && DateTime.TryParse(val, out var d))
                         {
-                            dict[id] = d;
+                            dict[name] = d;
                         }
                         else
                         {
-                            dict[id] = default(DateTime);
+                            dict[name] = default(DateTime);
                         }
                         break;
 
                     default:
-                        dict[id] = val;
+                        dict[name] = val;
                         break;
                 }
             }
@@ -246,8 +227,8 @@ namespace Dt.Base.Report
         {
             foreach (var row in Data)
             {
-                string id = row.Str("id");
-                if (id == "")
+                string name = row.Str("name");
+                if (name == "")
                     continue;
 
                 // 由xaml生成格
@@ -260,13 +241,13 @@ namespace Dt.Base.Report
                         var cell = XamlReader.Load(xaml.Insert(index, _xamlPrefix)) as FvCell;
                         if (cell != null)
                         {
-                            cell.ID = id;
+                            cell.ID = name;
                             p_fv.Items.Add(cell);
                         }
                     }
                     catch (Exception ex)
                     {
-                        AtKit.Warn($"报表参数【{id}】的xaml内容错误：{ex.Message}");
+                        AtKit.Warn($"报表参数【{name}】的xaml内容错误：{ex.Message}");
                     }
                 }
             }
@@ -276,7 +257,7 @@ namespace Dt.Base.Report
         public bool IsValid()
         {
             bool fail = (from row in Data
-                         where row.Str("id") == ""
+                         where row.Str("name") == ""
                          select row).Any();
             if (fail)
             {
@@ -284,7 +265,7 @@ namespace Dt.Base.Report
                 return false;
             }
 
-            fail = Data.GroupBy(r => r.Str("id")).Where(g => g.Count() > 1).Any();
+            fail = Data.GroupBy(r => r.Str("name")).Where(g => g.Count() > 1).Any();
             if (fail)
             {
                 AtKit.Warn("参数标识不可重复！");
@@ -322,7 +303,7 @@ namespace Dt.Base.Report
             {
                 p_writer.WriteStartElement("Param");
 
-                p_writer.WriteAttributeString("id", row.Str("id"));
+                p_writer.WriteAttributeString("name", row.Str("name"));
 
                 string val = row.Str("type");
                 if (val != "" && val != "string")

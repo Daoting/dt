@@ -10,7 +10,7 @@
             <a:Tab Title="参数列表">
                 <a:Lv x:Name="_lv" ItemClick="OnItemClick">
                     <DataTemplate>
-                        <a:Dot ID="id" Padding="10" />
+                        <a:Dot ID="name" Padding="10" />
                     </DataTemplate>
                 </a:Lv>
             </a:Tab>
@@ -27,7 +27,7 @@
                     </a:Menu>
                 </a:Tab.Menu>
                 <a:Fv x:Name="_fv">
-                    <a:CText ID="id" Title="参数标识" />
+                    <a:CText ID="name" Title="参数名称" />
                     <a:CList ID="type" Title="参数类型">
                         <a:CList.Items>
                             <x:String>string</x:String>

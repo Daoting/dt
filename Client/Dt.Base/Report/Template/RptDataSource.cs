@@ -27,7 +27,7 @@ namespace Dt.Base.Report
             Root = p_root;
             DataSet = new Table
             {
-                { "id" },
+                { "name" },
                 { "isscritp", typeof(bool) },
                 { "srv" },
                 { "sql" },
@@ -49,12 +49,12 @@ namespace Dt.Base.Report
         /// <summary>
         /// 获取某项数据源
         /// </summary>
-        /// <param name="p_tblID"></param>
+        /// <param name="p_tblName"></param>
         /// <returns></returns>
-        public RptDataSourceItem GetDataSourceItem(string p_tblID)
+        public RptDataSourceItem GetDataSourceItem(string p_tblName)
         {
             Row row = (from dr in DataSet
-                       where dr.Str("id") == p_tblID
+                       where dr.Str("name") == p_tblName
                        select dr).FirstOrDefault();
             if (row != null)
                 return new RptDataSourceItem(row);
@@ -64,53 +64,29 @@ namespace Dt.Base.Report
         /// <summary>
         /// 获取指定数据源的列Table
         /// </summary>
-        /// <param name="p_tblID"></param>
+        /// <param name="p_tblName"></param>
         /// <returns></returns>
-        public Table GetColsData(string p_tblID)
+        public Table GetColsData(string p_tblName)
         {
-            Table tbl = new Table { { "id" } };
+            Table tbl = new Table { { "name" } };
             Row row = (from dr in DataSet
-                       where dr.Str("id") == p_tblID
+                       where dr.Str("name") == p_tblName
                        select dr).FirstOrDefault();
             if (row != null)
             {
                 string[] cols = row.Str("cols").Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string col in cols)
                 {
-                    tbl.AddRow(new { id = col });
+                    tbl.AddRow(new { name = col });
                 }
             }
             return tbl;
         }
 
-        /// <summary>
-        /// 更新指定数据源的列
-        /// </summary>
-        /// <param name="p_tblID"></param>
-        /// <param name="p_cols"></param>
-        public void UpdateCols(string p_tblID, Table p_cols)
-        {
-            Row row = (from dr in DataSet
-                       where dr.Str("id") == p_tblID
-                       select dr).FirstOrDefault();
-            if (row != null)
-            {
-                // 合并列
-                StringBuilder sb = new StringBuilder();
-                foreach (var r in p_cols)
-                {
-                    if (sb.Length > 0)
-                        sb.Append(",");
-                    sb.Append(r.Str(0));
-                }
-                row["cols"] = sb.ToString();
-            }
-        }
-
         public bool IsValid()
         {
             bool fail = (from row in DataSet
-                         where row.Str("id") == ""
+                         where row.Str("name") == ""
                          select row).Any();
             if (fail)
             {
@@ -118,7 +94,7 @@ namespace Dt.Base.Report
                 return false;
             }
 
-            fail = DataSet.GroupBy(r => r.Str("id")).Where(g => g.Count() > 1).Any();
+            fail = DataSet.GroupBy(r => r.Str("name")).Where(g => g.Count() > 1).Any();
             if (fail)
             {
                 AtKit.Warn("数据名称不可重复！");
@@ -147,7 +123,7 @@ namespace Dt.Base.Report
             {
                 p_writer.WriteStartElement("Tbl");
 
-                p_writer.WriteAttributeString("id", row.Str("id"));
+                p_writer.WriteAttributeString("name", row.Str("name"));
 
                 if (row.Bool("isscritp"))
                     p_writer.WriteAttributeString("isscritp", "True");
@@ -181,9 +157,9 @@ namespace Dt.Base.Report
         /// <summary>
         /// 数据名称
         /// </summary>
-        public string ID
+        public string Name
         {
-            get { return _row.Str("id"); }
+            get { return _row.Str("name"); }
         }
 
         /// <summary>

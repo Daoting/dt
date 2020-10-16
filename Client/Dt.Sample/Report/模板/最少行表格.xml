@@ -1,7 +1,7 @@
 ﻿<Rpt cols="80,80,80,80,80">
   <Params />
   <Data>
-    <Tbl id="网损情况" isscritp="True" cols="year,month,unit,val" />
+    <Tbl name="网损情况" isscritp="True" cols="year,month,unit,val" />
   </Data>
   <Page />
   <Header />

@@ -1,8 +1,8 @@
 ﻿<Rpt cols="160,260,60">
   <Params>
-    <Param id="param1" val="a" />
-    <Param id="param2" val="b" />
-    <Param id="param3" val="c" />
+    <Param name="param1" val="a" />
+    <Param name="param2" val="b" />
+    <Param name="param3" val="c" />
   </Params>
   <Data />
   <Page />
