@@ -53,8 +53,7 @@ namespace Dt.Base.Report
         void OnItemClick(object sender, ItemClickArgs e)
         {
             _fv.Data = e.Row;
-            if (AtSys.IsPhoneUI)
-                GetPhoneTabs(Home).Select("编辑");
+            SelectTab("编辑");
         }
 
         protected override void OnInitPhoneTabs(PhoneTabs p_tabs)

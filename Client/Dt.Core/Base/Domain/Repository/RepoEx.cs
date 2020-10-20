@@ -44,5 +44,19 @@ namespace Dt.Core
         {
             return p_repo.DelByID(p_id.ToString(), p_isNotify);
         }
+
+        /// <summary>
+        /// 调用服务端Repo删除实体
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="p_repo"></param>
+        /// <param name="p_id">主键</param>
+        /// <param name="p_isNotify">是否提示删除结果</param>
+        /// <returns>true 删除成功</returns>
+        public static Task<bool> DelRowByKey<TEntity>(this Repo<TEntity> p_repo, long p_id, bool p_isNotify = true)
+            where TEntity : Entity
+        {
+            return p_repo.DelRowByKey(p_id.ToString(), p_isNotify);
+        }
     }
 }

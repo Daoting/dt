@@ -35,6 +35,16 @@ namespace Dt.App.Model
             _fv.DataChanged += OnFvDataChanged;
             _fv.Data = _tv.FixedRoot;
             LoadTreeData();
+
+            Table tbl = new Table { { "name" }, { "desc" } };
+            foreach (var item in AtSys.Stub.ViewTypes)
+            {
+                if (item.Key == "报表")
+                    tbl.AddRow(new { name = item.Key, desc = "视图参数中多个报表名称之间逗号隔开" });
+                else
+                    tbl.AddRow(new { name = item.Key, desc = item.Value.Name });
+            }
+            ((CList)_fv["viewname"]).Data = tbl;
         }
 
         async void LoadTreeData()

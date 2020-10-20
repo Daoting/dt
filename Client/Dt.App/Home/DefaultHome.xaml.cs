@@ -17,7 +17,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 #endregion
 
-namespace Dt.App.Home
+namespace Dt.App
 {
     /// <summary>
     /// 主页

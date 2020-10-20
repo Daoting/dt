@@ -8,15 +8,8 @@
 
 #region 引用命名
 using Dt.App;
-using Dt.App.Chat;
-using Dt.App.Home;
-using Dt.App.Model;
 using Dt.Base;
-using Dt.Base.Docking;
-using Dt.Base.FormView;
 using Dt.Core;
-using Dt.Core.Model;
-using Dt.Sample;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -142,17 +135,19 @@ namespace Dt.Shell
         /// </summary>
         public Dictionary<string, Type> ViewTypes => new Dictionary<string, Type>
         {
-            { "基础代码", typeof(BaseCode) },
-            { "菜单管理", typeof(SysMenu) },
-            { "基础权限", typeof(BasePrivilege) },
-            { "系统角色", typeof(SysRole) },
-            { "参数定义", typeof(UserParams) },
-            { "用户账号", typeof(UserAccount) },
-            { "主页", typeof(DefaultHome) },
-            { "通讯录", typeof(ChatHome) },
-            { "控件样例", typeof(SamplesMain) },
-            { "文章管理", typeof(Fz.PostMgr) },
-            { "福祉主页", typeof(Fz.ClientHome) },
+            { "主页", typeof(Dt.App.DefaultHome) },
+            { "报表", typeof(Dt.App.ReportView) },
+            { "基础代码", typeof(Dt.App.Model.BaseCode) },
+            { "菜单管理", typeof(Dt.App.Model.SysMenu) },
+            { "基础权限", typeof(Dt.App.Model.BasePrivilege) },
+            { "报表设计", typeof(Dt.App.Model.ReportMgr) },
+            { "系统角色", typeof(Dt.App.Model.SysRole) },
+            { "参数定义", typeof(Dt.App.Model.UserParams) },
+            { "用户账号", typeof(Dt.App.Model.UserAccount) },
+            { "通讯录", typeof(Dt.App.Chat.ChatHome) },
+            { "福祉主页", typeof(Dt.Fz.ClientHome) },
+            { "文章管理", typeof(Dt.Fz.PostMgr) },
+            { "控件样例", typeof(Dt.Sample.SamplesMain) },
         };
 
         /// <summary>
@@ -160,7 +155,7 @@ namespace Dt.Shell
         /// </summary>
         public Dictionary<string, Type> PushHandlers => new Dictionary<string, Type>
         {
-            { "syspushapi", typeof(SysPushApi) },
+            { "syspushapi", typeof(Dt.Base.SysPushApi) },
         };
 
         /// <summary>
@@ -168,9 +163,9 @@ namespace Dt.Shell
         /// </summary>
         public Dictionary<string, Type> SerializeTypes => new Dictionary<string, Type>
         {
-            { "产品", typeof(Product) },
-            { "学生", typeof(Student) },
-            { "部门", typeof(Department) },
+            { "产品", typeof(Dt.Sample.Product) },
+            { "学生", typeof(Dt.Sample.Student) },
+            { "部门", typeof(Dt.Sample.Department) },
         };
 
         /// <summary>
@@ -178,20 +173,20 @@ namespace Dt.Shell
         /// </summary>
         public Dictionary<string, Type> StateTbls => new Dictionary<string, Type>
         {
-            { "menufav", typeof(MenuFav) },
-            { "chatmember", typeof(ChatMember) },
-            { "letter", typeof(Letter) },
-            { "docklayout", typeof(DockLayout) },
-            { "celllastval", typeof(CellLastVal) },
-            { "searchfvhis", typeof(SearchFvHis) },
-            { "clientlog", typeof(ClientLog) },
-            { "clientcookie", typeof(ClientCookie) },
+            { "menufav", typeof(Dt.App.MenuFav) },
+            { "chatmember", typeof(Dt.Base.ChatMember) },
+            { "letter", typeof(Dt.Base.Letter) },
+            { "docklayout", typeof(Dt.Base.Docking.DockLayout) },
+            { "celllastval", typeof(Dt.Base.FormView.CellLastVal) },
+            { "searchfvhis", typeof(Dt.Base.FormView.SearchFvHis) },
+            { "clientlog", typeof(Dt.Core.Model.ClientLog) },
+            { "clientcookie", typeof(Dt.Core.Model.ClientCookie) },
         };
 
         /// <summary>
         /// 获取状态库版本号，和本地不同时自动更新
         /// </summary>
-        public string StateDbVer => "cfe061dec371ded2b7692c2c00bc9a40";
+        public string StateDbVer => "c60f4b219316ca1f69701bb06dd340a7";
         #endregion
     }
 }

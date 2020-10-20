@@ -119,6 +119,7 @@ namespace Dt.Base.Report
             if (searchForm != null)
             {
                 tab.Content = searchForm;
+                tab.Menu = searchForm.Menu;
                 searchForm.Query += OnQuery;
             }
 

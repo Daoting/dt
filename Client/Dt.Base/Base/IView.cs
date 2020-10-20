@@ -10,7 +10,7 @@
 
 #endregion
 
-namespace Dt.Core
+namespace Dt.Base
 {
     /// <summary>
     /// 自定义视图启动
@@ -20,7 +20,9 @@ namespace Dt.Core
         /// <summary>
         /// 视图启动入口
         /// </summary>
-        /// <param name="p_obj">启动参数，如菜单</param>
-        void Run(object p_obj);
+        /// <param name="p_title">标题</param>
+        /// <param name="p_icon">图标</param>
+        /// <param name="p_params">启动参数</param>
+        void Run(string p_title, Icons p_icon, object p_params);
     }
 }

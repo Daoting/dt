@@ -301,15 +301,19 @@ namespace Dt.Base
                 NaviToMultiTabs(p_tabTitle);
         }
 
-        public PhoneTabs GetPhoneTabs(string p_tabTitle)
+        /// <summary>
+        /// 在多页Tab中选择指定Tab
+        /// </summary>
+        /// <param name="p_tabTitle"></param>
+        public void SelectTab(string p_tabTitle)
         {
-            if (_cacheMultiTabs != null)
+            if (!AtSys.IsPhoneUI)
+                return;
+
+            if (((PhonePage)SysVisual.RootFrame.Content).Content is PhoneTabs tabs)
             {
-                return (from t in _cacheMultiTabs
-                        where t.NaviID == p_tabTitle
-                        select t).FirstOrDefault();
+                tabs.Select(p_tabTitle);
             }
-            return null;
         }
 
         /// <summary>

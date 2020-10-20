@@ -26,8 +26,8 @@ namespace Dt.Sample
             InitializeComponent();
 
             Row row = new Row();
-            row.AddCell("type", "打开模板编辑窗口");
-            //row.AddCell("type", "使用RptView预览");
+            //row.AddCell("type", "打开模板编辑窗口");
+            row.AddCell("type", "使用RptView预览");
             _fv.Data = row;
             AttachEvent();
         }
@@ -82,7 +82,12 @@ namespace Dt.Sample
 
         void OnRptGroup(object sender, RoutedEventArgs e)
         {
-
+            List<RptInfo> ls = new List<RptInfo>
+            {
+                new MyRptInfo { Name = "默认查询面板" },
+                new MyRptInfo { Name = "自定义查询面板" }
+            };
+            AtRpt.Show(ls, "报表组");
         }
     }
 }

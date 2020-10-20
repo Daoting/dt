@@ -46,8 +46,7 @@ namespace Dt.Base.Report
         void OnItemClick(object sender, ItemClickArgs e)
         {
             _fv.Data = e.Row;
-            if (AtSys.IsPhoneUI)
-                GetPhoneTabs(Home).Select("编辑");
+            SelectTab("编辑");
         }
 
         protected override void OnInitPhoneTabs(PhoneTabs p_tabs)
@@ -120,7 +119,7 @@ namespace Dt.Base.Report
             "Scale=\"4\"\n" +
             "Maximum=\"100\"\n" +
             "Minimum=\"-100\"\n" +
-            "NullValue=\"为空时的串\"\n" ;
+            "NullValue=\"为空时的串\"\n";
 
         const string _cdate =
             "<a:CDate Title=\"标题\" />\n\n" +

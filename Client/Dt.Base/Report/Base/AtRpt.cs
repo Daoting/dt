@@ -49,7 +49,7 @@ namespace Dt.Base
         /// <param name="p_infos">报表组描述信息</param>
         /// <param name="p_winTitle">窗口标题</param>
         /// <param name="p_icon">图标</param>
-        public static void Show(List<RptInfo> p_infos, string p_winTitle = null, Icons p_icon = Icons.折线图)
+        public static void Show(IList<RptInfo> p_infos, string p_winTitle = null, Icons p_icon = Icons.折线图)
         {
             Throw.If(!IsValid(p_infos), _assertMsg);
             if (p_infos.Count == 1)
@@ -194,7 +194,7 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_infos"></param>
         /// <returns></returns>
-        static bool IsValid(List<RptInfo> p_infos)
+        static bool IsValid(IList<RptInfo> p_infos)
         {
             bool valid = false;
             if (p_infos != null && p_infos.Count > 0)

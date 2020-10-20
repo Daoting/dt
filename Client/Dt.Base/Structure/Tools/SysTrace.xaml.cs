@@ -377,7 +377,7 @@ namespace Dt.Base.Tools
             p_sb.AppendLine("\t\t{");
             foreach (var item in p_dt)
             {
-                p_sb.AppendFormat("\t\t\t{{ \"{0}\", typeof({1}) }},\r\n", item.Key, item.Value.Name);
+                p_sb.AppendFormat("\t\t\t{{ \"{0}\", typeof({1}) }},\r\n", item.Key, item.Value.FullName);
             }
             p_sb.AppendLine("\t\t};");
             p_sb.AppendLine();

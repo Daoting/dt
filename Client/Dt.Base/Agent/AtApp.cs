@@ -177,9 +177,9 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 根据窗口类型和参数激活旧窗口或打开新窗口
+        /// 根据窗口/视图类型和参数激活旧窗口、打开新窗口 或 自定义启动(IView)
         /// </summary>
-        /// <param name="p_type">窗口类型</param>
+        /// <param name="p_type">窗口/视图类型</param>
         /// <param name="p_title">标题</param>
         /// <param name="p_icon">图标</param>
         /// <param name="p_params">初始参数</param>
@@ -231,7 +231,7 @@ namespace Dt.Base
             if (p_type.GetTypeInfo().ImplementedInterfaces.Contains(typeof(IView)))
             {
                 IView viewer = Activator.CreateInstance(p_type) as IView;
-                viewer.Run(p_params);
+                viewer.Run(p_title, p_icon, p_params);
                 return viewer;
             }
 

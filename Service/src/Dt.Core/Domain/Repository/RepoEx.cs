@@ -44,5 +44,20 @@ namespace Dt.Core
         {
             return p_repo.DelByKey("id", p_id.ToString());
         }
+
+        /// <summary>
+        /// 根据单主键或唯一索引列删除实体
+        /// 依靠数据库的级联删除自动删除子实体
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <param name="p_repo"></param>
+        /// <param name="p_keyName">主键或唯一索引列名</param>
+        /// <param name="p_keyVal">主键值</param>
+        /// <returns>实际删除行数</returns>
+        public static Task<int> DelByKey<TEntity>(this Repo<TEntity> p_repo, string p_keyName, long p_keyVal)
+            where TEntity : Entity
+        {
+            return p_repo.DelByKey(p_keyName, p_keyVal.ToString());
+        }
     }
 }
