@@ -25,9 +25,9 @@ namespace Dt.Base
         public RptView View { get; internal set; }
 
         /// <summary>
-        /// 获取数据表
+        /// 根据数据名称获取数据
         /// </summary>
-        /// <param name="p_name">数据表名称</param>
+        /// <param name="p_name">数据名称</param>
         /// <returns></returns>
         public virtual Task<Table> GetData(string p_name)
         {
