@@ -444,10 +444,18 @@ namespace Dt.Base
         #region 内部方法
         internal void OnHeaderButtonClick()
         {
-            if (_naviCache != null && _naviCache.Count > 0)
-                Content = _naviCache.Pop();
+            if (_naviCache != null)
+            {
+                // 避免连续返回时造成停靠的误操作，使第一次点击停靠时无效！
+                if (_naviCache.Count > 0)
+                    Content = _naviCache.Pop();
+                else
+                    _naviCache = null;
+            }
             else
+            {
                 IsPinned = !IsPinned;
+            }
         }
 
         void OnIsPinnedChanged()

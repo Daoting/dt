@@ -279,23 +279,26 @@ namespace Dt.Base
         }
 
         /// <summary>
-        /// 在UI元素的Loaded事件中调用Dispatcher.RunAsync来执行Action方法，只调用一次
+        /// 在UI元素第一次Loaded事件后调用Action方法，只调用一次
         /// </summary>
         /// <param name="source"></param>
         /// <param name="p_action"></param>
-        public static void AfterLoad(this FrameworkElement source, Action p_action)
+        public static void FirstLoaded(this FrameworkElement source, Action p_action)
         {
             if (source == null || p_action == null)
                 return;
 
             RoutedEventHandler handler = null;
-            handler = async (sender, e) =>
+            handler = (sender, e) =>
             {
                 FrameworkElement elem = sender as FrameworkElement;
                 if (elem != null)
                 {
                     elem.Loaded -= handler;
-                    await elem.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, new DispatchedHandler(p_action));
+                    if (elem.Dispatcher.HasThreadAccess)
+                        p_action();
+                    else
+                        _ = elem.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, new DispatchedHandler(p_action));
                 }
             };
             source.Loaded += handler;

@@ -27,6 +27,8 @@ namespace Dt.App
     public static class MenuKit
     {
         #region 成员变量
+        // 常用组菜单项的上限
+        const int _maxFixed = 8;
         // 所有菜单项 = _rootPageMenus + _leaveMenus
         static Nl<GroupData<OmMenu>> _rootPageMenus;
         static List<OmMenu> _leaveMenus;
@@ -149,21 +151,31 @@ namespace Dt.App
                 idsAll.Add(rm.MenuID);
             }
 
-            // 常用菜单项，按点击次数排序取前6名
-            List<long> idsFav = new List<long>();
-            var favMenu = AtLocal.DeferredQuery<MenuFav>($"select menuid from menufav where userid={AtUser.ID} order by clicks desc limit 0,6");
-            foreach (var fav in favMenu)
-            {
-                idsFav.Add(fav.MenuID);
-            }
-
-            // 常用组的固定项
+            // 常用组菜单项(最多共8项)：固定项 + 点击次数最多的前n项
             _favMenus.Clear();
             if (FixedMenus != null)
             {
+                // 固定项
                 foreach (var om in FixedMenus)
                 {
                     _favMenus.Add(om);
+                }
+            }
+
+            // 点击次数最多的前n项
+            if (_favMenus.Count < _maxFixed)
+            {
+                var favMenu = AtLocal.DeferredQuery<MenuFav>($"select menuid from menufav where userid={AtUser.ID} order by clicks desc");
+                foreach (var fav in favMenu)
+                {
+                    // 过滤无权限的项
+                    if (idsAll.Contains(fav.MenuID))
+                    {
+                        var om = AtLocal.QueryModelFirst<OmMenu>($"select * from OmMenu where id={fav.MenuID}");
+                        _favMenus.Add(om);
+                        if (_favMenus.Count >= _maxFixed)
+                            break;
+                    }
                 }
             }
 
@@ -186,10 +198,6 @@ namespace Dt.App
                     roots.Add(item);
                 else
                     _leaveMenus.Add(item);
-
-                // 常用项
-                if (!item.IsGroup && idsFav.Contains(item.ID))
-                    _favMenus.Add(item);
             }
             // 根页面常用组
             if (_favMenus.Count > 0)

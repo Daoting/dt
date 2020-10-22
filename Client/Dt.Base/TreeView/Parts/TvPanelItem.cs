@@ -353,17 +353,19 @@ namespace Dt.Base.TreeView
         /// </summary>
         /// <param name="p_pos"></param>
         /// <param name="p_tgt"></param>
-        void OpenContextMenu(Point p_pos, FrameworkElement p_tgt = null)
+        async void OpenContextMenu(Point p_pos, FrameworkElement p_tgt = null)
         {
             Menu menu = Ex.GetMenu(_owner);
             if (menu == null)
                 return;
 
-            _menuOpened = true;
-            _rcPointer.Fill = AtRes.深黄遮罩;
             menu.TargetData = _row.Data;
             menu.Closed += OnMenuClosed;
-            menu.OpenContextMenu(p_pos, p_tgt);
+            if (await menu.OpenContextMenu(p_pos, p_tgt))
+            {
+                _menuOpened = true;
+                _rcPointer.Fill = AtRes.深黄遮罩;
+            }
         }
 
         void CreateMenuButton(Menu p_menu)

@@ -546,7 +546,7 @@ namespace Dt.Base
             if (suc)
                 _owner.AfterDeleteItem(this);
             else
-                AtKit.Warn("删除失败！");
+                AtKit.Warn("删除文件失败！");
             return suc;
         }
         #endregion
@@ -1284,7 +1284,7 @@ namespace Dt.Base
             {
                 menu.TargetData = this;
                 menu.DataContext = this;
-                menu.OpenContextMenu(p_pos, p_tgt);
+                _ = menu.OpenContextMenu(p_pos, p_tgt);
             }
         }
         #endregion

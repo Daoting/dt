@@ -10,6 +10,7 @@
 using Dt.Base.MenuView;
 using Dt.Core;
 using System;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI.Input;
 using Windows.UI.Xaml;
@@ -116,9 +117,9 @@ namespace Dt.Base
         /// 打开上下文菜单
         /// </summary>
         /// <param name="p_tgt">相对目标元素，win模式有效，通过WinPlacement控制相对位置</param>
-        public void OpenContextMenu(FrameworkElement p_tgt)
+        public Task<bool> OpenContextMenu(FrameworkElement p_tgt)
         {
-            OpenContextMenu(default, p_tgt);
+            return OpenContextMenu(default, p_tgt);
         }
 
         /// <summary>
@@ -126,10 +127,11 @@ namespace Dt.Base
         /// </summary>
         /// <param name="p_pos">在指定位置显示，win模式有效</param>
         /// <param name="p_tgtPlacement">相对目标元素，win模式有效</param>
-        public async void OpenContextMenu(Point p_pos = default, FrameworkElement p_tgtPlacement = null)
+        /// <returns>false表菜单已取消显示</returns>
+        public async Task<bool> OpenContextMenu(Point p_pos = default, FrameworkElement p_tgtPlacement = null)
         {
             if (!IsContextMenu || (_dlg != null && _dlg.IsOpened))
-                return;
+                return false;
 
             // 取消或无菜单项时不显示
             if (Opening != null)
@@ -138,7 +140,7 @@ namespace Dt.Base
                 Opening(this, args);
                 await args.EnsureAllCompleted();
                 if (args.Cancel || Items.Count == 0)
-                    return;
+                    return false;
             }
 
             if (_dlg == null)
@@ -178,6 +180,7 @@ namespace Dt.Base
 
             Focus(FocusState.Programmatic);
             Opened?.Invoke(this, EventArgs.Empty);
+            return true;
         }
 
         /// <summary>
@@ -257,26 +260,26 @@ namespace Dt.Base
         {
             e.Handled = true;
             if (!AtSys.IsPhoneUI && Placement == MenuPosition.Default)
-                OpenContextMenu(e.GetPosition(null));
+                _ = OpenContextMenu(e.GetPosition(null));
             else
-                OpenContextMenu();
+                _ = OpenContextMenu();
         }
 
         void OnTargetTapped(object sender, TappedRoutedEventArgs e)
         {
             e.Handled = true;
             if (!AtSys.IsPhoneUI && Placement == MenuPosition.Default)
-                OpenContextMenu(e.GetPosition(null));
+                _ = OpenContextMenu(e.GetPosition(null));
             else
-                OpenContextMenu();
+                _ = OpenContextMenu();
         }
 
         void OnButtonClick(object sender, RoutedEventArgs e)
         {
             if (!AtSys.IsPhoneUI && Placement == MenuPosition.Default)
-                OpenContextMenu(((Button)sender).GetAbsolutePosition());
+                _ = OpenContextMenu(((Button)sender).GetAbsolutePosition());
             else
-                OpenContextMenu();
+                _ = OpenContextMenu();
         }
 
         void OnTargetUnloaded(object sender, RoutedEventArgs e)

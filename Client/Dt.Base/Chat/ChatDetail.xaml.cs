@@ -330,7 +330,7 @@ namespace Dt.Base
             _msgMenu.DataContext = p_letter;
             if (AtSys.IsPhoneUI)
             {
-                _msgMenu.OpenContextMenu();
+                _ = _msgMenu.OpenContextMenu();
             }
             else
             {
@@ -341,7 +341,7 @@ namespace Dt.Base
                     pos = rt.GetPosition(null);
                 else
                     pos = new Point();
-                _msgMenu.OpenContextMenu(pos);
+                _ = _msgMenu.OpenContextMenu(pos);
             }
         }
 
@@ -438,9 +438,9 @@ namespace Dt.Base
             }
 
             if (AtSys.IsPhoneUI)
-                _fileMenu.OpenContextMenu();
+                _ = _fileMenu.OpenContextMenu();
             else
-                _fileMenu.OpenContextMenu(p_pos);
+                _ = _fileMenu.OpenContextMenu(p_pos);
         }
         #endregion
     }

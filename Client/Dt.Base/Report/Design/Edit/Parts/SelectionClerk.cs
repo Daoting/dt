@@ -114,7 +114,7 @@ namespace Dt.Base.Report
             Point topLeft = excel.GetAbsolutePosition();
             Rect rc = excel.ActiveSheet.GetRangeBound(p_range);
             Point pos = new Point(topLeft.X + rc.X + rc.Width + 5, topLeft.Y + rc.Y);
-            p_menu.OpenContextMenu(pos);
+            _ = p_menu.OpenContextMenu(pos);
         }
 
         /// <summary>

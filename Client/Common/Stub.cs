@@ -126,6 +126,13 @@ namespace Dt.Shell
                     Icon = "主页",
                     ViewName = "福祉主页"
                 },
+                new OmMenu
+                {
+                    ID = 3000,
+                    Name = "文件",
+                    Icon = "文件夹",
+                    ViewName = "文件"
+                },
             };
         }
 
@@ -144,6 +151,7 @@ namespace Dt.Shell
             { "系统角色", typeof(Dt.App.Model.SysRole) },
             { "参数定义", typeof(Dt.App.Model.UserParams) },
             { "用户账号", typeof(Dt.App.Model.UserAccount) },
+            { "文件", typeof(Dt.App.File.FileHome) },
             { "通讯录", typeof(Dt.App.Chat.ChatHome) },
             { "福祉主页", typeof(Dt.Fz.ClientHome) },
             { "文章管理", typeof(Dt.Fz.PostMgr) },

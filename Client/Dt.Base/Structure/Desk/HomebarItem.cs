@@ -102,7 +102,7 @@ namespace Dt.Base
                 item.Click += (s, a) => SysTrace.ShowBox();
                 _menu.Items.Add(item);
             }
-            _menu.OpenContextMenu(p_pos);
+            _ = _menu.OpenContextMenu(p_pos);
         }
         #endregion
 

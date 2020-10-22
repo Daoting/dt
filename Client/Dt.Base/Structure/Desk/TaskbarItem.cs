@@ -182,7 +182,7 @@ namespace Dt.Base
             _menu.Items[4].Visibility = !win.IsActived ? Visibility.Visible : Visibility.Collapsed;
             _menu.Items[5].Visibility = !win.IsActived ? Visibility.Visible : Visibility.Collapsed;
 
-            _menu.OpenContextMenu(p_pos);
+            _ = _menu.OpenContextMenu(p_pos);
         }
 
         static void SetAutoStart(object sender, Mi e)

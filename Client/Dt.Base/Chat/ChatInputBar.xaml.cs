@@ -89,7 +89,7 @@ namespace Dt.Base
                     mi.Click += OnAddFile;
                     _menu.Items.Add(mi);
                 }
-                _menu.OpenContextMenu();
+                _ = _menu.OpenContextMenu();
             }
             else
             {

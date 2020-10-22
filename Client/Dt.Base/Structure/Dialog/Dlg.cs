@@ -153,6 +153,7 @@ namespace Dt.Base
         Rect _initRect;
         TaskCompletionSource<bool> _taskSrc;
         Border _bdResize;
+        bool _isRemoving;
         #endregion
 
         #region 构造方法
@@ -614,36 +615,49 @@ namespace Dt.Base
         /// <param name="p_ok">传递给异步等待对话框关闭方法的返回值(通过ShowAsync方法)</param>
         async void RemoveFromCanvas(bool p_ok = false)
         {
-            // 关闭前
-            if (Closing != null)
-            {
-                var args = new AsyncCancelEventArgs();
-                Closing(this, args);
-                await args.EnsureAllCompleted();
-                if (args.Cancel)
-                    return;
-            }
-            if (!await OnClosing())
+            // 屏蔽多次触发移除的情况
+            // 如：关闭对话框前弹出确认对话框，点击确认对话框时可能触发OnOuterPressed，出现多次触发Closing事件！
+            if (_isRemoving)
                 return;
 
-            SysVisual.RemoveDlg(this);
-
-            // ShowAsync情况
-            if (_taskSrc != null && !_taskSrc.Task.IsCompleted)
+            try
             {
-                _taskSrc.SetResult(p_ok);
-                _taskSrc = null;
+                _isRemoving = true;
+                // 关闭前
+                if (Closing != null)
+                {
+                    var args = new AsyncCancelEventArgs();
+                    Closing(this, args);
+                    await args.EnsureAllCompleted();
+                    if (args.Cancel)
+                        return;
+                }
+                if (!await OnClosing())
+                    return;
+
+                SysVisual.RemoveDlg(this);
+
+                // ShowAsync情况
+                if (_taskSrc != null && !_taskSrc.Task.IsCompleted)
+                {
+                    _taskSrc.SetResult(p_ok);
+                    _taskSrc = null;
+                }
+
+                // 关闭后
+                Closed?.Invoke(this, EventArgs.Empty);
+                OnClosed();
+
+                // 遗漏的外框
+                if (_bdResize != null)
+                {
+                    SysVisual.RemoveDlgResizeFlag(_bdResize);
+                    _bdResize = null;
+                }
             }
-
-            // 关闭后
-            Closed?.Invoke(this, EventArgs.Empty);
-            OnClosed();
-
-            // 遗漏的外框
-            if (_bdResize != null)
+            finally
             {
-                SysVisual.RemoveDlgResizeFlag(_bdResize);
-                _bdResize = null;
+                _isRemoving = false;
             }
         }
 

@@ -191,7 +191,7 @@ namespace Dt.Base
             Rect rc = _excel.ActiveSheet.GetRangeBound(range);
             double x = topLeft.X + rc.X + rc.Width + 5 - (_excel.ActiveSheet.RowHeader.IsVisible ? 0 : _excel.ActiveSheet.RowHeader.DefaultColumnWidth);
             double y = topLeft.Y + rc.Y - (_excel.ActiveSheet.ColumnHeader.IsVisible ? 0 : _excel.ActiveSheet.ColumnHeader.DefaultRowHeight);
-            _selectionMenu.OpenContextMenu(new Point(x, y));
+            _ = _selectionMenu.OpenContextMenu(new Point(x, y));
         }
 
         void OnExcelRightTapped(object sender, RightTappedRoutedEventArgs e)
@@ -226,7 +226,7 @@ namespace Dt.Base
             _rightMenu["清除所有表格"].Visibility = _excel.ActiveSheet.GetTables().Length > 0 ? Visibility.Visible : Visibility.Collapsed;
             // 脚本处理上下文菜单
             Info.ScriptObj?.OpenContextMenu(_rightMenu);
-            _rightMenu.OpenContextMenu(e.GetPosition(null));
+            _ = _rightMenu.OpenContextMenu(e.GetPosition(null));
         }
         #endregion
 

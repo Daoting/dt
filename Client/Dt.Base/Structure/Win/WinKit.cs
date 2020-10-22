@@ -65,7 +65,7 @@ namespace Dt.Base
                     _menu.Items[1].Visibility = Visibility.Visible;
                     _currentWin = p_win;
                 }
-                _menu.OpenContextMenu(default, p_elem);
+                _ = _menu.OpenContextMenu(default, p_elem);
             };
         }
 

@@ -1,0 +1,12 @@
+﻿<UserControl
+    x:Class="Dt.App.File.SearchFilePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:a="using:Dt.Base">
+
+    <a:Lv x:Name="_lv">
+        <DataTemplate>
+            <a:FileList Data="{Binding [Info]}" BorderBrush="Transparent" />
+        </DataTemplate>
+    </a:Lv>
+</UserControl>
