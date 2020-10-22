@@ -18,18 +18,23 @@ using Windows.UI.Xaml.Controls;
 
 namespace Dt.Sample
 {
-    public sealed partial class TabNav1 : UserControl, ITabContent
+    public sealed partial class TabNav1 : UserControl, INaviContent
     {
-        Menu _menu;
-
         public TabNav1()
         {
             InitializeComponent();
         }
 
-        public Tab Tab { get; set; }
+        void OnNextPage(object sender, RoutedEventArgs e)
+        {
+            Host.NaviTo(new TabNav2());
+        }
 
-        public Menu Menu
+        #region INaviContent
+        public INaviHost Host { get; set; }
+
+        Menu _menu;
+        public Menu HostMenu
         {
             get
             {
@@ -43,14 +48,10 @@ namespace Dt.Sample
             }
         }
 
-        public string Title
+        public string HostTitle
         {
             get { return "Tab内部导航"; }
         }
-
-        void OnNextPage(object sender, RoutedEventArgs e)
-        {
-            Tab.NaviTo(new TabNav2());
-        }
+        #endregion
     }
 }

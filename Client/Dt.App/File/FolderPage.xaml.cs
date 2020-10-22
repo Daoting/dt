@@ -23,7 +23,7 @@ namespace Dt.App.File
     /// <summary>
     /// 文件夹内容
     /// </summary>
-    public sealed partial class FolderPage : UserControl, ITabContent
+    public sealed partial class FolderPage : UserControl, INaviContent
     {
         readonly IFileMgr _fileMgr;
 
@@ -47,13 +47,13 @@ namespace Dt.App.File
                 var mgr = (IFileMgr)Activator.CreateInstance(_fileMgr.GetType());
                 mgr.FolderID = e.Row.Long("id");
                 mgr.FolderName = e.Row.Str("name");
-                Tab.NaviTo(new FolderPage(mgr));
+                Host.NaviTo(new FolderPage(mgr));
             }
         }
 
         void OnSearch(object sender, Mi e)
         {
-            Tab.NaviTo(new SearchFilePage(_fileMgr));
+            Host.NaviTo(new SearchFilePage(_fileMgr));
         }
 
         async void OnUpload(object sender, Mi e)
@@ -128,7 +128,7 @@ namespace Dt.App.File
                 var mgr = (IFileMgr)Activator.CreateInstance(_fileMgr.GetType());
                 mgr.FolderID = dlg.Target.Long("id");
                 mgr.FolderName = dlg.Target.Str("name");
-                Tab.NaviTo(new FolderPage(mgr));
+                Host.NaviTo(new FolderPage(mgr));
             }
         }
 
@@ -202,11 +202,11 @@ namespace Dt.App.File
             }
         }
 
-        #region ITabContent
-        public Tab Tab { get; set; }
+        #region INaviContent
+        public INaviHost Host { get; set; }
 
         Menu _menu;
-        public Menu Menu
+        public Menu HostMenu
         {
             get
             {
@@ -232,7 +232,7 @@ namespace Dt.App.File
             }
         }
 
-        public string Title
+        public string HostTitle
         {
             get { return _fileMgr.FolderName; }
         }

@@ -24,7 +24,7 @@ namespace Dt.App.Home
     /// <summary>
     /// 根级菜单项页面(带分组)
     /// </summary>
-    public sealed partial class RootMenu : UserControl, ITabContent
+    public sealed partial class RootMenu : UserControl, INaviContent
     {
         DateTime _dtLast;
 
@@ -42,7 +42,7 @@ namespace Dt.App.Home
             {
                 OmMenu menu = (OmMenu)e.Data;
                 if (menu.IsGroup)
-                    Tab.NaviTo(new GroupMenu(menu));
+                    Host.NaviTo(new GroupMenu(menu));
                 else
                     MenuKit.OpenMenu(menu);
             });
@@ -50,7 +50,7 @@ namespace Dt.App.Home
 
         void OnSearch(object sender, Mi e)
         {
-            Tab.NaviTo(new SearchMenu());
+            Host.NaviTo(new SearchMenu());
         }
 
         void OnReset(object sender, Mi e)
@@ -124,11 +124,11 @@ namespace Dt.App.Home
             });
         }
 
-        #region ITabContent
-        public Tab Tab { get; set; }
+        #region INaviContent
+        public INaviHost Host { get; set; }
 
         Menu _menu;
-        public Menu Menu
+        public Menu HostMenu
         {
             get
             {
@@ -149,7 +149,7 @@ namespace Dt.App.Home
             }
         }
 
-        public string Title
+        public string HostTitle
         {
             get { return "开始"; }
         }

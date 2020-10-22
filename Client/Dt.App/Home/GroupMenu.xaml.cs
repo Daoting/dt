@@ -18,7 +18,7 @@ namespace Dt.App.Home
     /// <summary>
     /// 分组菜单项页面
     /// </summary>
-    public sealed partial class GroupMenu : UserControl, ITabContent
+    public sealed partial class GroupMenu : UserControl, INaviContent
     {
         OmMenu _parent;
 
@@ -36,7 +36,7 @@ namespace Dt.App.Home
             {
                 OmMenu menu = (OmMenu)e.Data;
                 if (menu.IsGroup)
-                    Tab.NaviTo(new GroupMenu(menu));
+                    Host.NaviTo(new GroupMenu(menu));
                 else
                     MenuKit.OpenMenu(menu);
             });
@@ -44,14 +44,14 @@ namespace Dt.App.Home
 
         void OnSearch(object sender, Mi e)
         {
-            Tab.NaviTo(new SearchMenu());
+            Host.NaviTo(new SearchMenu());
         }
 
-        #region ITabContent
-        public Tab Tab { get; set; }
+        #region INaviContent
+        public INaviHost Host { get; set; }
 
         Menu _menu;
-        public Menu Menu
+        public Menu HostMenu
         {
             get
             {
@@ -66,7 +66,7 @@ namespace Dt.App.Home
             }
         }
 
-        public string Title
+        public string HostTitle
         {
             get { return _parent.Name; }
         }

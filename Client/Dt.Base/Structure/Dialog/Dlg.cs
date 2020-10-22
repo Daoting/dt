@@ -10,6 +10,7 @@
 using Dt.Base.Docking;
 using Dt.Core;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI.Core;
@@ -27,7 +28,7 @@ namespace Dt.Base
     /// 对话框容器
     /// </summary>
     [ContentProperty(Name = "Content")]
-    public partial class Dlg : Control, IDlgOuterPressed
+    public partial class Dlg : Control, IDlgOuterPressed, INaviHost
     {
         #region 静态成员
         public readonly static DependencyProperty TitleProperty = DependencyProperty.Register(
@@ -106,13 +107,25 @@ namespace Dt.Base
             "Content",
             typeof(object),
             typeof(Dlg),
-            new PropertyMetadata(null));
+            new PropertyMetadata(null, OnContentChanged));
 
         public static readonly DependencyProperty ShowWinVeilProperty = DependencyProperty.Register(
             "ShowWinVeil",
             typeof(bool),
             typeof(Dlg),
             new PropertyMetadata(false, OnShowWinVeilChanged));
+
+        public static readonly DependencyProperty HeaderButtonTextProperty = DependencyProperty.Register(
+            "HeaderButtonText",
+            typeof(string),
+            typeof(Dlg),
+            new PropertyMetadata("\uE018"));
+
+        public static readonly DependencyProperty ContentTransitionsProperty = DependencyProperty.Register(
+            "ContentTransitions",
+            typeof(TransitionCollection),
+            typeof(Dlg),
+            new PropertyMetadata(null));
 
         static void OnWinPlacementChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -134,6 +147,11 @@ namespace Dt.Base
         static void OnTopPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             Canvas.SetTop((Dlg)d, (double)e.NewValue);
+        }
+
+        static void OnContentChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((Dlg)d).OnContentChanged();
         }
 
         static void OnShowWinVeilChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -313,6 +331,24 @@ namespace Dt.Base
         }
 
         /// <summary>
+        /// 获取设置标题栏按钮字符
+        /// </summary>
+        public string HeaderButtonText
+        {
+            get { return (string)GetValue(HeaderButtonTextProperty); }
+            set { SetValue(HeaderButtonTextProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取或设置切换内容时的转换
+        /// </summary>
+        public TransitionCollection ContentTransitions
+        {
+            get { return (TransitionCollection)GetValue(ContentTransitionsProperty); }
+            set { SetValue(ContentTransitionsProperty, value); }
+        }
+
+        /// <summary>
         /// 获取对话框是否已显示
         /// </summary>
         public bool IsOpened
@@ -378,7 +414,7 @@ namespace Dt.Base
 
             Button btn = (Button)GetTemplateChild("CloseButton");
             if (btn != null)
-                btn.Click += (s, e) => Close();
+                btn.Click += OnHeaderButtonClick;
 
             if (AtSys.System == TargetSystem.Windows || AtSys.System == TargetSystem.Web)
             {
@@ -732,6 +768,76 @@ namespace Dt.Base
         /// </summary>
         protected virtual void OnClosed()
         {
+        }
+        #endregion
+
+        #region INaviHost
+        Stack<INaviContent> _naviCache;
+
+        /// <summary>
+        /// 向前导航到新内容
+        /// </summary>
+        /// <param name="p_content"></param>
+        void INaviHost.NaviTo(INaviContent p_content)
+        {
+            INaviContent current;
+            if (p_content == null || (current = Content as INaviContent) == null)
+                return;
+
+            if (_naviCache == null)
+            {
+                _naviCache = new Stack<INaviContent>();
+                // 内容切换动画
+                var ls = new TransitionCollection();
+                ls.Add(new ContentThemeTransition { VerticalOffset = 60 });
+                ContentTransitions = ls;
+            }
+            _naviCache.Push(current);
+            Content = p_content;
+        }
+
+        /// <summary>
+        /// 返回上一内容
+        /// </summary>
+        void INaviHost.GoBack()
+        {
+            if (_naviCache != null && _naviCache.Count > 0)
+                Content = _naviCache.Pop();
+        }
+
+        void OnContentChanged()
+        {
+            var navi = Content as INaviContent;
+            if (navi == null)
+                return;
+
+            if (_naviCache != null)
+            {
+                if (_naviCache.Count == 1)
+                    HeaderButtonText = "\uE085";
+                else if (_naviCache.Count == 0)
+                    HeaderButtonText = "\uE018";
+            }
+
+            // 有独立的Menu和Title
+            navi.Host = this;
+            Menu = navi.HostMenu;
+            if (!string.IsNullOrEmpty(navi.HostTitle))
+                Title = navi.HostTitle;
+            else if (string.IsNullOrEmpty(Title))
+                Title = "无标题";
+        }
+
+        void OnHeaderButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (_naviCache != null && _naviCache.Count > 0)
+            {
+                Content = _naviCache.Pop();
+            }
+            else
+            {
+                Close();
+            }
         }
         #endregion
 

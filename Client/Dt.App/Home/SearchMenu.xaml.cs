@@ -18,7 +18,7 @@ namespace Dt.App.Home
     /// <summary>
     /// 搜索菜单项
     /// </summary>
-    public sealed partial class SearchMenu : UserControl, ITabContent
+    public sealed partial class SearchMenu : UserControl, INaviContent
     {
         public SearchMenu()
         {
@@ -31,7 +31,7 @@ namespace Dt.App.Home
             {
                 OmMenu menu = (OmMenu)e.Data;
                 if (menu.IsGroup)
-                    Tab.NaviTo(new GroupMenu(menu));
+                    Host.NaviTo(new GroupMenu(menu));
                 else
                     MenuKit.OpenMenu(menu);
             });
@@ -50,15 +50,15 @@ namespace Dt.App.Home
                 _lv.Data = MenuKit.LoadMenusByName(p_filter.ToLower());
         }
 
-        #region ITabContent
-        public Tab Tab { get; set; }
+        #region INaviContent
+        public INaviHost Host { get; set; }
 
-        public Menu Menu
+        public Menu HostMenu
         {
             get { return null; }
         }
 
-        public string Title
+        public string HostTitle
         {
             get { return "搜索"; }
         }

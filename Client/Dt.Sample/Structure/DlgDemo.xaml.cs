@@ -127,6 +127,18 @@ namespace Dt.Sample
             _dlg.Show();
         }
 
+        void OnNaviClick(object sender, RoutedEventArgs e)
+        {
+            Dlg dlg = new Dlg();
+            dlg.Content = new TabNav1();
+            if (!AtSys.IsPhoneUI)
+            {
+                dlg.Width = 300;
+                dlg.Height = 300;
+            }
+            dlg.Show();
+        }
+
         void OnClosed(object sender, EventArgs e)
         {
             if (_dlg != null)

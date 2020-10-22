@@ -21,7 +21,7 @@ namespace Dt.App.File
     /// <summary>
     /// 搜索文件
     /// </summary>
-    public sealed partial class SearchFilePage : UserControl, ITabContent
+    public sealed partial class SearchFilePage : UserControl, INaviContent
     {
         readonly IFileMgr _fileMgr;
 
@@ -31,12 +31,15 @@ namespace Dt.App.File
             _fileMgr = p_fileMgr;
         }
 
-        #region ITabContent
-        public Tab Tab { get; set; }
+        #region INaviContent
+        public INaviHost Host { get; set; }
 
-        public Menu Menu { get; }
+        public Menu HostMenu
+        {
+            get { return null; }
+        }
 
-        public string Title
+        public string HostTitle
         {
             get { return "搜索"; }
         }

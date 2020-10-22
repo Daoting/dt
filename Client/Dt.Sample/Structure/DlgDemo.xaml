@@ -17,7 +17,10 @@
             <Button Content="异步等待对话框" Click="OnShowAsync" />
             <Button Content="随机位置显示" Click="OnShowPos" />
         </StackPanel>
-        <Button Content="椭圆形对话框" Click="OnClicked4" />
+        <StackPanel Orientation="Horizontal">
+            <Button Content="椭圆形对话框" Click="OnClicked4" />
+            <Button Content="对话框内部导航" Click="OnNaviClick" />
+        </StackPanel>
         <a:CBar Title="内置对话框" />
         <StackPanel Orientation="Horizontal">
             <Button Content="确认对话框" Click="OnClicked1" />

@@ -18,46 +18,47 @@ using Windows.UI.Xaml.Controls;
 
 namespace Dt.Sample
 {
-    public sealed partial class TabNav2 : UserControl, ITabContent
+    public sealed partial class TabNav2 : UserControl, INaviContent
     {
-        Menu _menu;
-
         public TabNav2()
         {
             InitializeComponent();
-        }
-
-        public Tab Tab { get; set; }
-
-        public Menu Menu
-        {
-            get
-            {
-                if (_menu == null)
-                {
-                    _menu = new Menu();
-                    _menu.Items.Add(new Mi { ID = "搜索", Icon = Icons.搜索, ShowInPhone = VisibleInPhone.Icon });
-                    _menu.Items.Add(new Mi { ID = "保存", Icon = Icons.保存, ShowInPhone = VisibleInPhone.Icon });
-                }
-                return _menu;
-            }
-        }
-
-        public string Title
-        {
-            get { return $"第{Index}页"; }
         }
 
         public int Index { get; set; } = 1;
 
         void OnNextPage(object sender, RoutedEventArgs e)
         {
-            Tab.NaviTo(new TabNav2 { Index = Index + 1 });
+            Host.NaviTo(new TabNav2 { Index = Index + 1 });
         }
 
         void OnBackPage(object sender, RoutedEventArgs e)
         {
-            Tab.GoBack();
+            Host.GoBack();
         }
+
+        #region INaviContent
+        public INaviHost Host { get; set; }
+
+        Menu _menu;
+        public Menu HostMenu
+        {
+            get
+            {
+                if (_menu == null)
+                {
+                    _menu = new Menu();
+                    _menu.Items.Add(new Mi { ID = "保存", Icon = Icons.保存, ShowInPhone = VisibleInPhone.Icon });
+                    _menu.Items.Add(new Mi { ID = "搜索", Icon = Icons.搜索, ShowInPhone = VisibleInPhone.Icon });
+                }
+                return _menu;
+            }
+        }
+
+        public string HostTitle
+        {
+            get { return $"第{Index}页"; }
+        }
+        #endregion
     }
 }

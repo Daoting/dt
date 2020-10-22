@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2018-08-28 创建
+* 日志: 2020-10-22 创建
 ******************************************************************************/
 #endregion
 
@@ -12,18 +12,19 @@
 namespace Dt.Base
 {
     /// <summary>
-    /// PhoneUI页面内容的接口定义
+    /// 支持内部导航的宿主接口，如Tab Dlg都支持内部导航
     /// </summary>
-    public interface IPageContent
+    public interface INaviHost
     {
         /// <summary>
-        /// 页面标题
+        /// 向前导航到新内容
         /// </summary>
-        string Title { get; set; }
+        /// <param name="p_content"></param>
+        void NaviTo(INaviContent p_content);
 
         /// <summary>
-        /// 是否显示顶部导航栏
+        /// 返回上一内容
         /// </summary>
-        bool ShowTopbar { get; set; }
+        void GoBack();
     }
 }

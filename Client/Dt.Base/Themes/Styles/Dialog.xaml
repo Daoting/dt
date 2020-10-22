@@ -36,7 +36,7 @@
                             <!--关闭-->
                             <Button x:Name="CloseButton"
                                     Style="{StaticResource 字符按钮}"
-                                    Content="&#xE018;"
+                                    Content="{TemplateBinding HeaderButtonText}"
                                     VerticalAlignment="Stretch" />
                             <!--标题-->
                             <TextBlock Text="{TemplateBinding Title}"
@@ -53,6 +53,7 @@
                         </Grid>
                         <!--用在win模式的Tabs、phone模式的Tab、Dlg，为Lv Fv等内容提供区域大小-->
                         <a:SizedPresenter Content="{TemplateBinding Content}"
+                                          ContentTransitions="{TemplateBinding ContentTransitions}"
                                           HorizontalContentAlignment="Stretch"
                                           VerticalContentAlignment="Stretch"
                                           Grid.Row="1" />
@@ -89,7 +90,7 @@
                             <Button x:Name="CloseButton"
                                     Style="{StaticResource 字符按钮}"
                                     Foreground="{StaticResource 默认背景}"
-                                    Content="&#xE018;"
+                                    Content="{TemplateBinding HeaderButtonText}"
                                     VerticalAlignment="Stretch"
                                     Width="50" />
                             <!--标题-->
@@ -107,6 +108,7 @@
                         </Grid>
                         <!--用在win模式的Tabs、phone模式的Tab、Dlg，为Lv Fv等内容提供区域大小-->
                         <a:SizedPresenter Content="{TemplateBinding Content}"
+                                          ContentTransitions="{TemplateBinding ContentTransitions}"
                                           HorizontalContentAlignment="Stretch"
                                           VerticalContentAlignment="Stretch"
                                           Grid.Row="1" />

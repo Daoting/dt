@@ -23,7 +23,7 @@ namespace Dt.Base
     /// <summary>
     /// 增加属性控制的TabItem
     /// </summary>
-    public partial class Tab : TabItem, IPhonePage
+    public partial class Tab : TabItem, IPhonePage, INaviHost
     {
         #region 静态内容
         public readonly static DependencyProperty IconProperty = DependencyProperty.Register(
@@ -124,10 +124,6 @@ namespace Dt.Base
                 btn.Style = AtRes.PhonSearchButton;
             }
         }
-        #endregion
-
-        #region 成员变量
-        Stack<ITabContent> _naviCache;
         #endregion
 
         #region 构造方法
@@ -288,61 +284,51 @@ namespace Dt.Base
         internal Win OwnWin { get; set; }
         #endregion
 
-        #region 外部方法
+        #region INaviHost
+        Stack<INaviContent> _naviCache;
+
         /// <summary>
-        /// 向前导航到
+        /// 向前导航到新内容
         /// </summary>
-        /// <param name="p_tabContent"></param>
-        public void NaviTo(ITabContent p_tabContent)
+        /// <param name="p_content"></param>
+        void INaviHost.NaviTo(INaviContent p_content)
         {
-            ITabContent current;
-            if (p_tabContent == null || (current = Content as ITabContent) == null)
+            INaviContent current;
+            if (p_content == null || (current = Content as INaviContent) == null)
                 return;
 
             if (AtSys.IsPhoneUI)
             {
-                Tab tab = new Tab { OwnWin = OwnWin, Content = p_tabContent };
+                Tab tab = new Tab { OwnWin = OwnWin, Content = p_content };
                 PhonePage.Show(tab);
                 return;
             }
 
             if (_naviCache == null)
             {
-                _naviCache = new Stack<ITabContent>();
+                _naviCache = new Stack<INaviContent>();
                 // 内容切换动画
                 var ls = new TransitionCollection();
                 ls.Add(new ContentThemeTransition { VerticalOffset = 60 });
                 OwnTabs.ContentTransitions = ls;
             }
             _naviCache.Push(current);
-            Content = p_tabContent;
+            Content = p_content;
         }
 
         /// <summary>
-        /// 返回
+        /// 返回上一内容
         /// </summary>
-        public void GoBack()
+        void INaviHost.GoBack()
         {
             if (AtSys.IsPhoneUI)
                 InputManager.GoBack();
             else if (_naviCache != null && _naviCache.Count > 0)
                 Content = _naviCache.Pop();
         }
-
-        /// <summary>
-        /// 从父容器中移除当前Tab
-        /// </summary>
-        public void RemoveFromParent()
-        {
-            if (Owner != null)
-            {
-                ClearValue(TabItemPanel.SplitterChangeProperty);
-                Owner.Items.Remove(this);
-            }
-        }
         #endregion
 
-        #region 实现接口
+        #region IPhonePage
         /// <summary>
         /// 关闭或后退之前，返回false表示禁止关闭
         /// </summary>
@@ -393,41 +379,28 @@ namespace Dt.Base
         /// </summary>
         protected override void OnContentChanged()
         {
-            if (AtSys.IsPhoneUI)
-            {
-                // 自定义Tab内容
-                if (Content is ITabContent tc)
-                {
-                    // 有独立的Menu和Title
-                    tc.Tab = this;
-                    Menu = tc.Menu;
-                    if (!string.IsNullOrEmpty(tc.Title))
-                        Title = tc.Title;
-                    else if (string.IsNullOrEmpty(Title))
-                        Title = "无标题";
-                }
-            }
-            else
-            {
+            if (!AtSys.IsPhoneUI)
                 base.OnContentChanged();
-                // 自定义Tab内容
-                if (Content is ITabContent tc)
-                {
-                    if (_naviCache != null)
-                    {
-                        if (_naviCache.Count == 1)
-                            HeaderButtonText = "\uE085";
-                        else if (_naviCache.Count == 0)
-                            HeaderButtonText = IsPinned ? "\uE022" : "\uE021";
-                    }
 
-                    // 有独立的Menu和Title
-                    tc.Tab = this;
-                    Menu = tc.Menu;
-                    if (!string.IsNullOrEmpty(tc.Title))
-                        Title = tc.Title;
-                }
+            var navi = Content as INaviContent;
+            if (navi == null)
+                return;
+
+            if (_naviCache != null)
+            {
+                if (_naviCache.Count == 1)
+                    HeaderButtonText = "\uE085";
+                else if (_naviCache.Count == 0)
+                    HeaderButtonText = IsPinned ? "\uE022" : "\uE021";
             }
+
+            // 有独立的Menu和Title
+            navi.Host = this;
+            Menu = navi.HostMenu;
+            if (!string.IsNullOrEmpty(navi.HostTitle))
+                Title = navi.HostTitle;
+            else if (string.IsNullOrEmpty(Title))
+                Title = "无标题";
         }
 
         /// <summary>
@@ -442,6 +415,18 @@ namespace Dt.Base
         #endregion
 
         #region 内部方法
+        /// <summary>
+        /// 从父容器中移除当前Tab
+        /// </summary>
+        internal void RemoveFromParent()
+        {
+            if (Owner != null)
+            {
+                ClearValue(TabItemPanel.SplitterChangeProperty);
+                Owner.Items.Remove(this);
+            }
+        }
+
         internal void OnHeaderButtonClick()
         {
             if (_naviCache != null)
@@ -474,26 +459,5 @@ namespace Dt.Base
             PinButtonVisibility = (CanUserPin && !IsInCenter && !IsFloating) ? Visibility.Visible : Visibility.Collapsed;
         }
         #endregion
-    }
-
-    /// <summary>
-    /// 自定义Tab内容
-    /// </summary>
-    public interface ITabContent
-    {
-        /// <summary>
-        /// 所属Tab
-        /// </summary>
-        Tab Tab { get; set; }
-
-        /// <summary>
-        /// Tab.Menu
-        /// </summary>
-        Menu Menu { get; }
-
-        /// <summary>
-        /// Tab的标题
-        /// </summary>
-        string Title { get; }
     }
 }
