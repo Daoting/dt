@@ -59,13 +59,13 @@ namespace Dt.App.Model
 
         async void OnEditPrv(object sender, Mi e)
         {
-            if (await new EditPrvDlg().Show(e.To<Prv>().ID))
+            if (await new EditPrvDlg().Show(e.Data.To<Prv>().ID))
                 LoadAll();
         }
 
         async void OnDelPrv(object sender, Mi e)
         {
-            var prv = e.To<Prv>();
+            var prv = e.Data.To<Prv>();
             if (!await AtKit.Confirm($"确认要删除[{prv.ID}]吗？"))
             {
                 AtKit.Msg("已取消删除！");
@@ -86,7 +86,7 @@ namespace Dt.App.Model
         void OnItemClick(object sender, ItemClickArgs e)
         {
             if (e.IsChanged)
-                RefreshRelation(e.To<Prv>().ID);
+                RefreshRelation(e.Data.To<Prv>().ID);
 
             NaviTo("授权角色,授权用户");
         }
@@ -105,7 +105,7 @@ namespace Dt.App.Model
 
         async void OnAddRole(object sender, Mi e)
         {
-            string prvID = _lvPrv.Selected<Prv>().ID;
+            string prvID = _lvPrv.SelectedItem.To<Prv>().ID;
             SelectRolesDlg dlg = new SelectRolesDlg();
             
             if (await dlg.Show(RoleRelations.Prv, prvID, e))
@@ -122,7 +122,7 @@ namespace Dt.App.Model
 
         async void OnRemoveRole(object sender, Mi e)
         {
-            string prvID = _lvPrv.Selected<Prv>().ID;
+            string prvID = _lvPrv.SelectedItem.To<Prv>().ID;
             var rp = new RolePrv(_lvRole.SelectedRow.Long("roleid"), prvID);
             rp.AcceptChanges();
             if (await new Repo<RolePrv>().Delete(rp))

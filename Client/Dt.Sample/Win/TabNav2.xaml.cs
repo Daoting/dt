@@ -29,35 +29,26 @@ namespace Dt.Sample
 
         void OnNextPage(object sender, RoutedEventArgs e)
         {
-            Host.NaviTo(new TabNav2 { Index = Index + 1 });
+            _host.NaviTo(new TabNav2 { Index = Index + 1 });
         }
 
         void OnBackPage(object sender, RoutedEventArgs e)
         {
-            Host.GoBack();
+            _host.GoBack();
         }
 
         #region INaviContent
-        public INaviHost Host { get; set; }
+        INaviHost _host;
 
-        Menu _menu;
-        public Menu HostMenu
+        void INaviContent.AddToHost(INaviHost p_host)
         {
-            get
-            {
-                if (_menu == null)
-                {
-                    _menu = new Menu();
-                    _menu.Items.Add(new Mi { ID = "保存", Icon = Icons.保存, ShowInPhone = VisibleInPhone.Icon });
-                    _menu.Items.Add(new Mi { ID = "搜索", Icon = Icons.搜索, ShowInPhone = VisibleInPhone.Icon });
-                }
-                return _menu;
-            }
-        }
+            _host = p_host;
+            _host.Title = $"第{Index}页";
 
-        public string HostTitle
-        {
-            get { return $"第{Index}页"; }
+            var menu = new Menu();
+            menu.Items.Add(new Mi { ID = "保存", Icon = Icons.保存, ShowInPhone = VisibleInPhone.Icon });
+            menu.Items.Add(new Mi { ID = "搜索", Icon = Icons.搜索, ShowInPhone = VisibleInPhone.Icon });
+            _host.Menu = menu;
         }
         #endregion
     }

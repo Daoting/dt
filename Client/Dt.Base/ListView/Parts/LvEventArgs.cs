@@ -49,16 +49,5 @@ namespace Dt.Base
         {
             get { return Data as Row; }
         }
-
-        /// <summary>
-        /// 当前点击的实体
-        /// </summary>
-        /// <typeparam name="TEntity">实体类型</typeparam>
-        /// <returns></returns>
-        public TEntity To<TEntity>()
-            where TEntity : Entity
-        {
-            return Data as TEntity;
-        }
     }
 }

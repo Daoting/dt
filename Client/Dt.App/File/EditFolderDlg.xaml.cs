@@ -30,7 +30,7 @@ namespace Dt.App.File
             Row row = CreateData();
             if (p_row != null)
             {
-                row.InitVal(0, p_row.Long("id"));
+                row.InitVal(0, p_row.ID);
                 row.InitVal(1, p_row["name"]);
             }
             _fv.Data = row;
@@ -52,7 +52,7 @@ namespace Dt.App.File
                 return;
 
             Row row = _fv.Row;
-            if (await _fileMgr.SaveFolder(row.Long("id"), row.Str("name")))
+            if (await _fileMgr.SaveFolder(row.ID, row.Str("name")))
             {
                 _needRefresh = true;
                 _fv.Data = CreateData();

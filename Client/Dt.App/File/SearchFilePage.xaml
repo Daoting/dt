@@ -4,9 +4,16 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base">
 
-    <a:Lv x:Name="_lv">
-        <DataTemplate>
-            <a:FileList Data="{Binding [Info]}" BorderBrush="Transparent" />
-        </DataTemplate>
-    </a:Lv>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <a:SearchBox Placeholder="文件名包含的文字..." Search="OnSearch" BorderThickness="0,0,0,1" />
+        <a:Lv x:Name="_lv" Grid.Row="1">
+            <DataTemplate>
+                <a:FileList Data="{Binding [Info]}" BorderBrush="Transparent" />
+            </DataTemplate>
+        </a:Lv>
+    </Grid>
 </UserControl>

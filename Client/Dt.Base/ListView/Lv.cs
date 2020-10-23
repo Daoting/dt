@@ -290,17 +290,17 @@ namespace Dt.Base
                     row.ValueChanged = null;
                 }
 
-                if (lv._selectedRows.Count > 0)
+                if (lv._selectedLvItems.Count > 0)
                 {
                     try
                     {
-                        lv._selectedRows.CollectionChanged -= lv.OnSelectedItemsChanged;
-                        lv._selectedRows.Clear();
+                        lv._selectedLvItems.CollectionChanged -= lv.OnSelectedItemsChanged;
+                        lv._selectedLvItems.Clear();
                         lv.HasSelected = false;
                     }
                     finally
                     {
-                        lv._selectedRows.CollectionChanged += lv.OnSelectedItemsChanged;
+                        lv._selectedLvItems.CollectionChanged += lv.OnSelectedItemsChanged;
                     }
                 }
                 lv._panel.Reload();
@@ -330,7 +330,7 @@ namespace Dt.Base
         LvPanel _panel;
         LvDataView _dataView;
         readonly List<LvItem> _rows;
-        readonly ObservableCollection<LvItem> _selectedRows;
+        readonly ObservableCollection<LvItem> _selectedLvItems;
         Dictionary<string, MethodInfo> _exMethod;
         MethodInfo _styleMethod;
         bool _updatingView;
@@ -343,8 +343,8 @@ namespace Dt.Base
             DefaultStyleKey = typeof(Lv);
 
             _rows = new List<LvItem>();
-            _selectedRows = new ObservableCollection<LvItem>();
-            _selectedRows.CollectionChanged += OnSelectedItemsChanged;
+            _selectedLvItems = new ObservableCollection<LvItem>();
+            _selectedLvItems.CollectionChanged += OnSelectedItemsChanged;
         }
         #endregion
 
@@ -567,7 +567,7 @@ namespace Dt.Base
         {
             get
             {
-                return from row in _selectedRows
+                return from row in _selectedLvItems
                        select row.Data;
             }
         }
@@ -579,7 +579,7 @@ namespace Dt.Base
         {
             get
             {
-                var row = _selectedRows.LastOrDefault();
+                var row = _selectedLvItems.LastOrDefault();
                 if (row != null)
                     return row.Data;
                 return null;
@@ -589,8 +589,8 @@ namespace Dt.Base
                 // 清空选择
                 if (value == null)
                 {
-                    if (_selectedRows.Count > 0)
-                        _selectedRows.Clear();
+                    if (_selectedLvItems.Count > 0)
+                        _selectedLvItems.Clear();
                     return;
                 }
 
@@ -604,7 +604,7 @@ namespace Dt.Base
                 // 挑出取消选择的行
                 bool exist = false;
                 List<object> removes = new List<object>();
-                foreach (var row in _selectedRows)
+                foreach (var row in _selectedLvItems)
                 {
                     if (row != selectedRow)
                     {
@@ -622,16 +622,16 @@ namespace Dt.Base
 
                 try
                 {
-                    _selectedRows.CollectionChanged -= OnSelectedItemsChanged;
-                    if (_selectedRows.Count > 0)
-                        _selectedRows.Clear();
-                    _selectedRows.Add(selectedRow);
+                    _selectedLvItems.CollectionChanged -= OnSelectedItemsChanged;
+                    if (_selectedLvItems.Count > 0)
+                        _selectedLvItems.Clear();
+                    _selectedLvItems.Add(selectedRow);
                     selectedRow.IsSelected = true;
                     HasSelected = true;
                 }
                 finally
                 {
-                    _selectedRows.CollectionChanged += OnSelectedItemsChanged;
+                    _selectedLvItems.CollectionChanged += OnSelectedItemsChanged;
                 }
 
                 if (SelectionChanged != null)
@@ -651,7 +651,7 @@ namespace Dt.Base
         {
             get
             {
-                var row = _selectedRows.LastOrDefault();
+                var row = _selectedLvItems.LastOrDefault();
                 if (row != null)
                     return _rows.IndexOf(row);
                 return -1;
@@ -661,8 +661,8 @@ namespace Dt.Base
                 // 清空选择
                 if (value == -1)
                 {
-                    if (_selectedRows.Count > 0)
-                        _selectedRows.Clear();
+                    if (_selectedLvItems.Count > 0)
+                        _selectedLvItems.Clear();
                     return;
                 }
 
@@ -674,7 +674,7 @@ namespace Dt.Base
                 bool exist = false;
                 var selectedRow = _rows[value];
                 List<object> removes = new List<object>();
-                foreach (var row in _selectedRows)
+                foreach (var row in _selectedLvItems)
                 {
                     if (row != selectedRow)
                     {
@@ -692,16 +692,16 @@ namespace Dt.Base
 
                 try
                 {
-                    _selectedRows.CollectionChanged -= OnSelectedItemsChanged;
-                    if (_selectedRows.Count > 0)
-                        _selectedRows.Clear();
-                    _selectedRows.Add(selectedRow);
+                    _selectedLvItems.CollectionChanged -= OnSelectedItemsChanged;
+                    if (_selectedLvItems.Count > 0)
+                        _selectedLvItems.Clear();
+                    _selectedLvItems.Add(selectedRow);
                     selectedRow.IsSelected = true;
                     HasSelected = true;
                 }
                 finally
                 {
-                    _selectedRows.CollectionChanged += OnSelectedItemsChanged;
+                    _selectedLvItems.CollectionChanged += OnSelectedItemsChanged;
                 }
 
                 if (SelectionChanged != null)
@@ -719,7 +719,19 @@ namespace Dt.Base
         /// </summary>
         public int SelectedCount
         {
-            get { return _selectedRows.Count; }
+            get { return _selectedLvItems.Count; }
+        }
+
+        /// <summary>
+        /// 获取当前选择的Row列表
+        /// </summary>
+        public IEnumerable<Row> SelectedRows
+        {
+            get
+            {
+                return from row in _selectedLvItems
+                       select (Row)row.Data;
+            }
         }
 
         /// <summary>
@@ -794,27 +806,13 @@ namespace Dt.Base
             get { return View as Cols; }
         }
 
-        internal IList<LvItem> SelectedRows
+        internal IList<LvItem> SelectedLvItems
         {
-            get { return _selectedRows; }
+            get { return _selectedLvItems; }
         }
         #endregion
 
         #region 外部方法
-        /// <summary>
-        /// 获取当前选定的实体
-        /// </summary>
-        /// <typeparam name="TEntity">实体类型</typeparam>
-        /// <returns></returns>
-#if ANDROID
-        new
-#endif
-        public TEntity Selected<TEntity>()
-        where TEntity : Entity
-        {
-            return SelectedItem as TEntity;
-        }
-
         /// <summary>
         /// 刷新数据视图，通常在动态过滤时调用
         /// </summary>
@@ -844,8 +842,8 @@ namespace Dt.Base
                 if (p_viewMode.HasValue && ViewMode != p_viewMode.Value)
                 {
                     _rows.Clear();
-                    if (_selectedRows.Count > 0)
-                        _selectedRows.Clear();
+                    if (_selectedLvItems.Count > 0)
+                        _selectedLvItems.Clear();
                     if (GroupRows != null)
                     {
                         GroupRows.Clear();
@@ -900,20 +898,20 @@ namespace Dt.Base
             List<object> adds = new List<object>();
             try
             {
-                _selectedRows.CollectionChanged -= OnSelectedItemsChanged;
+                _selectedLvItems.CollectionChanged -= OnSelectedItemsChanged;
                 foreach (var row in _rows)
                 {
                     if (!row.IsSelected)
                     {
                         adds.Add(row.Data);
-                        _selectedRows.Add(row);
+                        _selectedLvItems.Add(row);
                         row.IsSelected = true;
                     }
                 }
             }
             finally
             {
-                _selectedRows.CollectionChanged += OnSelectedItemsChanged;
+                _selectedLvItems.CollectionChanged += OnSelectedItemsChanged;
             }
 
             if (adds.Count > 0 && SelectionChanged != null)
@@ -925,8 +923,8 @@ namespace Dt.Base
         /// </summary>
         public void ClearSelection()
         {
-            if (_selectedRows.Count > 0)
-                _selectedRows.Clear();
+            if (_selectedLvItems.Count > 0)
+                _selectedLvItems.Clear();
         }
 
         /// <summary>
@@ -941,20 +939,20 @@ namespace Dt.Base
             List<object> adds = new List<object>();
             try
             {
-                _selectedRows.CollectionChanged -= OnSelectedItemsChanged;
+                _selectedLvItems.CollectionChanged -= OnSelectedItemsChanged;
                 foreach (var row in _rows)
                 {
                     if (!row.IsSelected && p_ls.Contains(row.Data))
                     {
                         adds.Add(row.Data);
-                        _selectedRows.Add(row);
+                        _selectedLvItems.Add(row);
                         row.IsSelected = true;
                     }
                 }
             }
             finally
             {
-                _selectedRows.CollectionChanged += OnSelectedItemsChanged;
+                _selectedLvItems.CollectionChanged += OnSelectedItemsChanged;
             }
 
             if (adds.Count > 0 && SelectionChanged != null)
@@ -973,23 +971,23 @@ namespace Dt.Base
             List<object> removes = new List<object>();
             try
             {
-                _selectedRows.CollectionChanged -= OnSelectedItemsChanged;
+                _selectedLvItems.CollectionChanged -= OnSelectedItemsChanged;
                 foreach (var data in p_ls)
                 {
-                    var item = (from row in _selectedRows
+                    var item = (from row in _selectedLvItems
                                 where row.Data == data
                                 select row).FirstOrDefault();
                     if (item != null)
                     {
                         removes.Add(data);
-                        _selectedRows.Remove(item);
+                        _selectedLvItems.Remove(item);
                         item.IsSelected = false;
                     }
                 }
             }
             finally
             {
-                _selectedRows.CollectionChanged += OnSelectedItemsChanged;
+                _selectedLvItems.CollectionChanged += OnSelectedItemsChanged;
             }
 
             if (removes.Count > 0 && SelectionChanged != null)
@@ -1004,9 +1002,9 @@ namespace Dt.Base
         public void DeleteSelection()
         {
             var data = Data;
-            if (data != null && _selectedRows.Count > 0)
+            if (data != null && _selectedLvItems.Count > 0)
             {
-                data.RemoveRange((from row in _selectedRows
+                data.RemoveRange((from row in _selectedLvItems
                                   select row.Data).ToList());
             }
         }
@@ -1240,8 +1238,8 @@ namespace Dt.Base
         internal void LoadRows(IEnumerable p_rows)
         {
             _rows.Clear();
-            if (_selectedRows.Count > 0)
-                _selectedRows.Clear();
+            if (_selectedLvItems.Count > 0)
+                _selectedLvItems.Clear();
             bool existGroup = false;
             if (GroupRows != null)
             {
@@ -1267,8 +1265,8 @@ namespace Dt.Base
         internal void LoadGroupRows(IList p_groups)
         {
             _rows.Clear();
-            if (_selectedRows.Count > 0)
-                _selectedRows.Clear();
+            if (_selectedLvItems.Count > 0)
+                _selectedLvItems.Clear();
             int i = 1;
 
             MapRows = new List<bool>();
@@ -1357,8 +1355,8 @@ namespace Dt.Base
         internal void ClearAllRows()
         {
             _rows.Clear();
-            if (_selectedRows.Count > 0)
-                _selectedRows.Clear();
+            if (_selectedLvItems.Count > 0)
+                _selectedLvItems.Clear();
             bool existGroup = false;
             if (GroupRows != null)
             {
@@ -1417,9 +1415,9 @@ namespace Dt.Base
         {
             // HasSelected状态
             bool hasSelected = HasSelected;
-            if (_selectedRows.Count == 0 && hasSelected)
+            if (_selectedLvItems.Count == 0 && hasSelected)
                 ClearValue(HasSelectedProperty);
-            else if (_selectedRows.Count > 0 && !hasSelected)
+            else if (_selectedLvItems.Count > 0 && !hasSelected)
                 HasSelected = true;
 
             if (e.Action == NotifyCollectionChangedAction.Add)
@@ -1476,22 +1474,22 @@ namespace Dt.Base
             List<object> removes = new List<object>();
             try
             {
-                _selectedRows.CollectionChanged -= OnSelectedItemsChanged;
-                if (_selectedRows.Count > 0)
+                _selectedLvItems.CollectionChanged -= OnSelectedItemsChanged;
+                if (_selectedLvItems.Count > 0)
                 {
-                    var row = _selectedRows[0];
+                    var row = _selectedLvItems[0];
                     row.IsSelected = false;
                     removes.Add(row.Data);
-                    _selectedRows.Clear();
+                    _selectedLvItems.Clear();
                 }
 
-                _selectedRows.Add(p_vr);
+                _selectedLvItems.Add(p_vr);
                 p_vr.IsSelected = true;
                 HasSelected = true;
             }
             finally
             {
-                _selectedRows.CollectionChanged += OnSelectedItemsChanged;
+                _selectedLvItems.CollectionChanged += OnSelectedItemsChanged;
             }
             SelectionChanged?.Invoke(this, new SelectionChangedEventArgs(removes, new List<object> { p_vr.Data }));
         }

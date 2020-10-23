@@ -29,6 +29,8 @@
     <Compile Include="..\..\Service\src\Dt.Core\Domain\Entity\TblAttribute.cs" Link="Base\Domain\Entity\TblAttribute.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Domain\Repository\ChildEntitySchema.cs" Link="Base\Domain\Repository\ChildEntitySchema.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Domain\Repository\EntitySchema.cs" Link="Base\Domain\Repository\EntitySchema.cs" />
+    <Compile Include="..\..\Service\src\Dt.Core\Internal\Extensions\EnumEx.cs" Link="Internal\Extensions\EnumEx.cs" />
+    <Compile Include="..\..\Service\src\Dt.Core\Internal\Extensions\ObjectEx.cs" Link="Internal\Extensions\ObjectEx.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\KnownException.cs" Link="Base\KnownException.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\LetterInfo.cs" Link="Base\LetterInfo.cs" />
     <Compile Include="..\..\Service\src\Dt.Core\Internal\Misc\MsgInfo.cs" Link="Base\MsgInfo.cs" />

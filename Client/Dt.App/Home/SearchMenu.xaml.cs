@@ -9,7 +9,6 @@
 #region 引用命名
 using Dt.Base;
 using Dt.Core;
-using Dt.Core.Model;
 using Windows.UI.Xaml.Controls;
 #endregion
 
@@ -31,7 +30,7 @@ namespace Dt.App.Home
             {
                 OmMenu menu = (OmMenu)e.Data;
                 if (menu.IsGroup)
-                    Host.NaviTo(new GroupMenu(menu));
+                    _host.NaviTo(new GroupMenu(menu));
                 else
                     MenuKit.OpenMenu(menu);
             });
@@ -51,16 +50,13 @@ namespace Dt.App.Home
         }
 
         #region INaviContent
-        public INaviHost Host { get; set; }
+        INaviHost _host;
 
-        public Menu HostMenu
+        void INaviContent.AddToHost(INaviHost p_host)
         {
-            get { return null; }
-        }
-
-        public string HostTitle
-        {
-            get { return "搜索"; }
+            _host = p_host;
+            _host.Title = "搜索";
+            _host.Menu = null;
         }
         #endregion
     }

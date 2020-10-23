@@ -9,13 +9,11 @@
 #region 引用命名
 using Dt.Base;
 using Dt.Core;
-using Dt.Core.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
 #endregion
 
 namespace Dt.App.File
@@ -37,23 +35,23 @@ namespace Dt.App.File
 
         async void LoadData()
         {
-            _lv.Data = await _fileMgr.GetFiles();
+            _lv.Data = await _fileMgr.GetChildren();
         }
 
         void OnItemClick(object sender, ItemClickArgs e)
         {
-            if (e.Row.Bool("IsFolder"))
-            {
-                var mgr = (IFileMgr)Activator.CreateInstance(_fileMgr.GetType());
-                mgr.FolderID = e.Row.Long("id");
-                mgr.FolderName = e.Row.Str("name");
-                Host.NaviTo(new FolderPage(mgr));
-            }
+            if (_lv.SelectionMode == Base.SelectionMode.Multiple || !e.Row.Bool("IsFolder"))
+                return;
+
+            var mgr = (IFileMgr)Activator.CreateInstance(_fileMgr.GetType());
+            mgr.FolderID = e.Row.ID;
+            mgr.FolderName = e.Row.Str("name");
+            _host.NaviTo(new FolderPage(mgr));
         }
 
         void OnSearch(object sender, Mi e)
         {
-            Host.NaviTo(new SearchFilePage(_fileMgr));
+            _host.NaviTo(new SearchFilePage(_fileMgr));
         }
 
         async void OnUpload(object sender, Mi e)
@@ -120,32 +118,56 @@ namespace Dt.App.File
             GetFileItem(e.Row)?.ShareFile();
         }
 
-        async void OnMove(object sender, Mi e)
+        void OnMove(object sender, Mi e)
+        {
+            MoveFiles(new List<Row> { e.Row });
+        }
+
+        void OnMultiMove(object sender, Mi e)
+        {
+            MoveFiles(_lv.SelectedRows);
+        }
+
+        async void MoveFiles(IEnumerable<Row> p_rows)
         {
             var dlg = new MoveFileDlg();
-            if (await dlg.Show(_fileMgr, e.Row))
+            if (await dlg.Show(_fileMgr, p_rows))
             {
                 var mgr = (IFileMgr)Activator.CreateInstance(_fileMgr.GetType());
-                mgr.FolderID = dlg.Target.Long("id");
-                mgr.FolderName = dlg.Target.Str("name");
-                Host.NaviTo(new FolderPage(mgr));
+                mgr.FolderID = dlg.Target.FolderID;
+                mgr.FolderName = dlg.Target.FolderName;
+                _host.NaviTo(new FolderPage(mgr));
+                LoadData();
             }
         }
 
-        async void OnDelete(object sender, Mi e)
+        void OnDelete(object sender, Mi e)
         {
-            if (!(await AtKit.Confirm($"确认要删除【{e.Row.Str("name")}】吗？")))
+            DeleteFiles(new List<Row> { e.Row });
+        }
+
+        void OnMultiDelete(object sender, Mi e)
+        {
+            DeleteFiles(_lv.SelectedRows);
+        }
+
+        async void DeleteFiles(IEnumerable<Row> p_rows)
+        {
+            if (!await AtKit.Confirm("确认要删除吗？"))
             {
                 AtKit.Msg("已取消删除！");
             }
-            else if (await _fileMgr.Delete(e.Row))
+            else if (await _fileMgr.Delete(p_rows))
             {
-                if (!e.Row.Bool("IsFolder"))
+                foreach (var row in p_rows)
                 {
-                    // 删除文件
-                    var fi = GetFileItem(e.Row);
-                    if (fi != null)
-                        await fi.Delete();
+                    if (!row.Bool("IsFolder"))
+                    {
+                        // 删除文件
+                        var fi = GetFileItem(row);
+                        if (fi != null)
+                            await fi.Delete();
+                    }
                 }
                 LoadData();
             }
@@ -202,39 +224,72 @@ namespace Dt.App.File
             }
         }
 
-        #region INaviContent
-        public INaviHost Host { get; set; }
-
-        Menu _menu;
-        public Menu HostMenu
+        void OnMultiMode(object sender, Mi e)
         {
-            get
+            if (_menuMulti == null)
             {
-                if (_menu == null)
-                {
-                    _menu = new Menu();
-                    Mi mi = new Mi { ID = "搜索", Icon = Icons.搜索, ShowInPhone = VisibleInPhone.Icon };
-                    mi.Click += OnSearch;
-                    _menu.Items.Add(mi);
+                _menuMulti = new Menu();
+                Mi mi = new Mi { ID = "移到", Icon = Icons.导入 };
+                mi.Click += OnMultiMove;
+                _menuMulti.Items.Add(mi);
 
-                    if (_fileMgr.AllowEdit)
-                    {
-                        mi = new Mi { ID = "上传文件", Icon = Icons.曲别针 };
-                        mi.Click += OnUpload;
-                        _menu.Items.Add(mi);
+                mi = new Mi { ID = "删除", Icon = Icons.删除 };
+                mi.Click += OnMultiDelete;
+                _menuMulti.Items.Add(mi);
 
-                        mi = new Mi { ID = "新建文件夹", Icon = Icons.加号 };
-                        mi.Click += OnAddFolder;
-                        _menu.Items.Add(mi);
-                    }
-                }
-                return _menu;
+                mi = new Mi { ID = "全选", Icon = Icons.删除 };
+                mi.Click += OnSelectAll;
+                _menuMulti.Items.Add(mi);
+
+                mi = new Mi { ID = "取消", Icon = Icons.详细 };
+                mi.Click += OnCancelMulti;
+                _menuMulti.Items.Add(mi);
             }
+            _host.Menu = _menuMulti;
+            _lv.SelectionMode = Base.SelectionMode.Multiple;
         }
 
-        public string HostTitle
+        void OnSelectAll(object sender, Mi e)
         {
-            get { return _fileMgr.FolderName; }
+            _lv.SelectAll();
+        }
+
+        void OnCancelMulti(object sender, Mi e)
+        {
+            _host.Menu = _menu;
+            _lv.SelectionMode = Base.SelectionMode.Single;
+        }
+
+        #region INaviContent
+        INaviHost _host;
+        Menu _menu;
+        Menu _menuMulti;
+
+        void INaviContent.AddToHost(INaviHost p_host)
+        {
+            _host = p_host;
+            _host.Title = _fileMgr.FolderName;
+
+            _menu = new Menu();
+            Mi mi = new Mi { ID = "搜索", Icon = Icons.搜索, ShowInPhone = VisibleInPhone.Icon };
+            mi.Click += OnSearch;
+            _menu.Items.Add(mi);
+
+            if (_fileMgr.AllowEdit)
+            {
+                mi = new Mi { ID = "上传文件", Icon = Icons.曲别针 };
+                mi.Click += OnUpload;
+                _menu.Items.Add(mi);
+
+                mi = new Mi { ID = "新建文件夹", Icon = Icons.加号 };
+                mi.Click += OnAddFolder;
+                _menu.Items.Add(mi);
+
+                mi = new Mi { ID = "选择", Icon = Icons.详细 };
+                mi.Click += OnMultiMode;
+                _menu.Items.Add(mi);
+            }
+            _host.Menu = _menu;
         }
         #endregion
     }

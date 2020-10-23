@@ -9,6 +9,7 @@
 #region 引用命名
 using Dt.Core;
 using Dt.Core.Sqlite;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 #endregion
 
@@ -19,41 +20,57 @@ namespace Dt.App.File
     /// </summary>
     public class PubFileMgr : IFileMgr
     {
-        public long FolderID { get; set; }
-        public string FolderName { get; set; }
+        long _folderID = -1;
+        string _folderName;
+        protected long _rootFolderID = 1;
+        protected string _rootFolderName = "公共文件";
+
+        public long FolderID
+        {
+            get
+            {
+                if (_folderID == -1)
+                    return _rootFolderID;
+                return _folderID;
+            }
+            set { _folderID = value; }
+        }
+
+        public string FolderName
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_folderName))
+                    return _rootFolderName;
+                return _folderName;
+            }
+            set { _folderName = value; }
+        }
 
         public bool AllowEdit
         {
             get { return AtUser.HasPrv("公共文件管理"); }
         }
 
-        public async Task<bool> Delete(Row p_row)
+        public Task<Table> GetChildren()
         {
-            if (p_row.Bool("IsFolder"))
-            {
-                int cnt = await AtCm.GetScalar<int>("文件-子项个数", new { parentid = p_row.Long("id") });
-                if (cnt > 0)
-                {
-                    AtKit.Warn("含有下级文件或文件夹，无法删除！");
-                    return false;
-                }
-            }
-            return await new Repo<Pubfile>().DelByID(p_row.Long("id"));
+            return AtCm.Query("文件-所有子级", new { parentid = FolderID });
         }
 
-        public Task<Table> GetFiles()
+        public Task<Table> GetChildFolders()
         {
-            //Table tbl = Table.Create("cm_pubfile");
-            //tbl.AddRow(new { id = 2, parentid = 1, name = "文件.jpg", info = "[[\"photo/1.jpg\",\"1\",\"300 x 300 (.jpg)\",49179,\"daoting\",\"2020-03-13 10:37\"]]" });
-            //tbl.AddRow(new { id = 3, parentid = 1, name = "文件夹", IsFolder = true });
-            //return Task.FromResult(tbl);
-            return AtCm.Query("文件-查询目录", new { parentid = FolderID });
+            return AtCm.Query("文件-子级文件夹", new { parentid = FolderID });
+        }
+
+        public Task<Table> SearchFiles(string p_name)
+        {
+            return AtCm.Query("文件-搜索文件", new { name = $"%{p_name}%" });
         }
 
         public Task<bool> SaveFile(Row p_row)
         {
             Pubfile pf = new Pubfile(
-                    ID: p_row.Long("id"),
+                    ID: p_row.ID,
                     ParentID: FolderID,
                     Name: p_row.Str("name"),
                     IsFolder: false,
@@ -81,6 +98,48 @@ namespace Dt.App.File
                 pf["name"] = p_name;
             }
             return await new Repo<Pubfile>().Save(pf);
+        }
+
+        public async Task<bool> Delete(IEnumerable<Row> p_rows)
+        {
+            var ls = new List<Pubfile>();
+            foreach (var row in p_rows)
+            {
+                if (row.Bool("IsFolder"))
+                {
+                    int cnt = await AtCm.GetScalar<int>("文件-子项个数", new { parentid = row.ID });
+                    if (cnt > 0)
+                    {
+                        AtKit.Warn($"[{row.Str("name")}]含有下级文件或文件夹，无法删除！");
+                        return false;
+                    }
+                }
+
+                ls.Add(new Pubfile(ID: row.ID));
+            }
+            return await new Repo<Pubfile>().BatchDelete(ls);
+        }
+
+        public Task<bool> MoveFiles(IEnumerable<Row> p_files, long p_folderID)
+        {
+            var ls = new List<Pubfile>();
+            foreach (var row in p_files)
+            {
+                var pf = new Pubfile(ID: row.ID);
+                pf.IsAdded = false;
+                pf["ParentID"] = p_folderID;
+                ls.Add(pf);
+            }
+            return new Repo<Pubfile>().BatchSave(ls, false);
+        }
+    }
+
+    public class ResFileMgr : PubFileMgr
+    {
+        public ResFileMgr()
+        {
+            _rootFolderID = 2;
+            _rootFolderName = "素材库";
         }
     }
 }

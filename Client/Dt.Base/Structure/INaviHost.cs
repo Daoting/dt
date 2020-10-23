@@ -17,6 +17,16 @@ namespace Dt.Base
     public interface INaviHost
     {
         /// <summary>
+        /// 获取设置宿主标题文字
+        /// </summary>
+        string Title { get; set; }
+
+        /// <summary>
+        /// 获取设置宿主菜单
+        /// </summary>
+        Menu Menu { get; set; }
+
+        /// <summary>
         /// 向前导航到新内容
         /// </summary>
         /// <param name="p_content"></param>

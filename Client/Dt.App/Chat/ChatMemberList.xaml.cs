@@ -74,7 +74,7 @@ namespace Dt.App.Chat
 
         void OnItemClick(object sender, ItemClickArgs e)
         {
-            ItemClick?.Invoke(this, e.Row.Long("id"));
+            ItemClick?.Invoke(this, e.Row.ID);
         }
     }
 }

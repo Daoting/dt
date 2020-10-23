@@ -28,8 +28,8 @@ namespace Dt.App.File
         public FileHome()
         {
             InitializeComponent();
-            _tabPub.Content = new FolderPage(new PubFileMgr { FolderID = 1, FolderName = "公共文件" });
-            //_tabMy.Content = new FolderPage(new MyFileMgr { FolderName = "我的文件" });
+            _tabPub.Content = new FolderPage(new PubFileMgr());
+            _tabMy.Content = new FolderPage(new MyFileMgr());
         }
     }
 }

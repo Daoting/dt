@@ -44,7 +44,7 @@ namespace Dt.App.Model
             if (_fv.ExistNull("id"))
                 return;
 
-            var prv = _fv.To<Prv>();
+            var prv = _fv.Data.To<Prv>();
             if ((prv.IsAdded || prv.Cells["id"].IsChanged)
                 && await AtCm.GetScalar<int>("权限-名称重复", new { id = prv.ID }) > 0)
             {

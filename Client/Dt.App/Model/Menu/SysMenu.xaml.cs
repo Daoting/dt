@@ -150,7 +150,7 @@ namespace Dt.App.Model
             if (_fv.ExistNull("name"))
                 return;
 
-            if (await _menu.Save(_fv.To<Menu>()))
+            if (await _menu.Save(_fv.Data.To<Menu>()))
             {
                 OnFvDataChanged(_fv, _fv.Data);
                 LoadTreeData();
@@ -159,7 +159,7 @@ namespace Dt.App.Model
 
         void OnDel(object sender, Mi e)
         {
-            DelMenuRow(_fv.To<Menu>());
+            DelMenuRow(_fv.Data.To<Menu>());
         }
 
         async void DelMenuRow(Menu p_row)
@@ -200,7 +200,7 @@ namespace Dt.App.Model
 
         void OnOpen(object sender, Mi e)
         {
-            var row = _fv.To<Menu>();
+            var row = _fv.Data.To<Menu>();
             OmMenu menu = new OmMenu();
             menu.ID = row.ID;
             menu.Name = row.Name;
@@ -218,7 +218,7 @@ namespace Dt.App.Model
         async void OnAddRole(object sender, Mi e)
         {
             SelectRolesDlg dlg = new SelectRolesDlg();
-            long menuID = _fv.To<Menu>().ID;
+            long menuID = _fv.Data.To<Menu>().ID;
             if (await dlg.Show(RoleRelations.Menu, menuID.ToString(), e))
             {
                 List<RoleMenu> ls = new List<RoleMenu>();
@@ -233,7 +233,7 @@ namespace Dt.App.Model
 
         async void OnRemoveRole(object sender, Mi e)
         {
-            if (await _roleMenu.Delete(_lvRole.Selected<RoleMenu>()))
+            if (await _roleMenu.Delete(_lvRole.SelectedItem.To<RoleMenu>()))
                 _lvRole.DeleteSelection();
         }
 
@@ -247,7 +247,7 @@ namespace Dt.App.Model
 
         async void OnMoveUp(object sender, Mi e)
         {
-            var src = e.To<Menu>();
+            var src = e.Data.To<Menu>();
             if (src.ID == 0)
                 return;
 
@@ -258,7 +258,7 @@ namespace Dt.App.Model
 
         async void OnMoveDown(object sender, Mi e)
         {
-            var src = e.To<Menu>();
+            var src = e.Data.To<Menu>();
             if (src.ID == 0)
                 return;
 
@@ -269,7 +269,7 @@ namespace Dt.App.Model
 
         void OnListDel(object sender, Mi e)
         {
-            DelMenuRow(e.To<Menu>());
+            DelMenuRow(e.Data.To<Menu>());
         }
     }
 }

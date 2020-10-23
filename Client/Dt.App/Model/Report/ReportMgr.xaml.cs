@@ -36,7 +36,7 @@ namespace Dt.App.Model
 
         async void OnItemClick(object sender, ItemClickArgs e)
         {
-            Rpt rpt = _fv.To<Rpt>();
+            Rpt rpt = _fv.Data.To<Rpt>();
             if (rpt != null && rpt.IsChanged)
             {
                 if (!await AtKit.Confirm("数据已修改，确认要放弃修改吗？"))
@@ -45,7 +45,7 @@ namespace Dt.App.Model
                 rpt.RejectChanges();
             }
 
-            _fv.Data = await _repo.Get("报表-ID", new { id = e.To<Rpt>().ID });
+            _fv.Data = await _repo.Get("报表-ID", new { id = e.Data.To<Rpt>().ID });
             SelectTab("编辑");
         }
 
@@ -78,7 +78,7 @@ namespace Dt.App.Model
             if (_fv.ExistNull("name"))
                 return;
 
-            Rpt rpt = _fv.To<Rpt>();
+            Rpt rpt = _fv.Data.To<Rpt>();
             if ((rpt.IsAdded || rpt.Cells["name"].IsChanged)
                 && await AtCm.GetScalar<int>("报表-重复名称", new { name = rpt.Name }) > 0)
             {
@@ -103,14 +103,14 @@ namespace Dt.App.Model
 
         void OnDel(object sender, Mi e)
         {
-            Rpt rpt = _fv.To<Rpt>();
+            Rpt rpt = _fv.Data.To<Rpt>();
             if (rpt != null)
                 DelRpt(rpt);
         }
 
         void OnDelContext(object sender, Mi e)
         {
-            DelRpt(e.To<Rpt>());
+            DelRpt(e.Data.To<Rpt>());
         }
 
         async void DelRpt(Rpt rpt)
@@ -140,12 +140,12 @@ namespace Dt.App.Model
 
         void OnEditTemplateContext(object sender, Mi e)
         {
-            EditTemplate(e.To<Rpt>());
+            EditTemplate(e.Data.To<Rpt>());
         }
 
         void OnEditTemplate(object sender, Mi e)
         {
-            Rpt rpt = _fv.To<Rpt>();
+            Rpt rpt = _fv.Data.To<Rpt>();
             if (rpt != null)
                 EditTemplate(rpt);
         }

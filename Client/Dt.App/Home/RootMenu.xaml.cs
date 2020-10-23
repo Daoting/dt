@@ -42,7 +42,7 @@ namespace Dt.App.Home
             {
                 OmMenu menu = (OmMenu)e.Data;
                 if (menu.IsGroup)
-                    Host.NaviTo(new GroupMenu(menu));
+                    _host.NaviTo(new GroupMenu(menu));
                 else
                     MenuKit.OpenMenu(menu);
             });
@@ -50,7 +50,7 @@ namespace Dt.App.Home
 
         void OnSearch(object sender, Mi e)
         {
-            Host.NaviTo(new SearchMenu());
+            _host.NaviTo(new SearchMenu());
         }
 
         void OnReset(object sender, Mi e)
@@ -125,33 +125,24 @@ namespace Dt.App.Home
         }
 
         #region INaviContent
-        public INaviHost Host { get; set; }
+        INaviHost _host;
 
-        Menu _menu;
-        public Menu HostMenu
+        void INaviContent.AddToHost(INaviHost p_host)
         {
-            get
+            _host = p_host;
+            _host.Title = "开始";
+
+            var menu = new Menu();
+            Mi mi = new Mi { ID = "搜索", Icon = Icons.搜索, ShowInPhone = VisibleInPhone.Icon };
+            mi.Click += OnSearch;
+            menu.Items.Add(mi);
+            if (MenuKit.FavMenus.Count > MenuKit.FixedMenusCount)
             {
-                if (_menu == null)
-                {
-                    _menu = new Menu();
-                    Mi mi = new Mi { ID = "搜索", Icon = Icons.搜索, ShowInPhone = VisibleInPhone.Icon };
-                    mi.Click += OnSearch;
-                    _menu.Items.Add(mi);
-                    if (MenuKit.FavMenus.Count > MenuKit.FixedMenusCount)
-                    {
-                        mi = new Mi { ID = "重置常用", Icon = Icons.刷新, ShowInPhone = VisibleInPhone.Icon };
-                        mi.Click += OnReset;
-                        _menu.Items.Add(mi);
-                    }
-                }
-                return _menu;
+                mi = new Mi { ID = "重置常用", Icon = Icons.刷新, ShowInPhone = VisibleInPhone.Icon };
+                mi.Click += OnReset;
+                menu.Items.Add(mi);
             }
-        }
-
-        public string HostTitle
-        {
-            get { return "开始"; }
+            _host.Menu = menu;
         }
         #endregion
     }

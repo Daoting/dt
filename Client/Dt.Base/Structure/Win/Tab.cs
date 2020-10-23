@@ -394,12 +394,9 @@ namespace Dt.Base
                     HeaderButtonText = IsPinned ? "\uE022" : "\uE021";
             }
 
-            // 有独立的Menu和Title
-            navi.Host = this;
-            Menu = navi.HostMenu;
-            if (!string.IsNullOrEmpty(navi.HostTitle))
-                Title = navi.HostTitle;
-            else if (string.IsNullOrEmpty(Title))
+            // 外部可设置Menu和Title
+            navi.AddToHost(this);
+            if (string.IsNullOrEmpty(Title))
                 Title = "无标题";
         }
 

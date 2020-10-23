@@ -31,17 +31,16 @@ namespace Dt.App.File
             _fileMgr = p_fileMgr;
         }
 
-        #region INaviContent
-        public INaviHost Host { get; set; }
-
-        public Menu HostMenu
+        async void OnSearch(object sender, string e)
         {
-            get { return null; }
+            _lv.Data = await _fileMgr.SearchFiles(e);
         }
 
-        public string HostTitle
+        #region INaviContent
+        void INaviContent.AddToHost(INaviHost p_host)
         {
-            get { return "搜索"; }
+            p_host.Title = "搜索";
+            p_host.Menu = null;
         }
         #endregion
     }

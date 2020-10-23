@@ -100,11 +100,11 @@ namespace Dt.Base
             if (_owner.SelectionMode == SelectionMode.Multiple)
             {
                 // 多选时切换选择状态
-                var old = _owner.SelectedRows.LastOrDefault();
+                var old = _owner.SelectedLvItems.LastOrDefault();
                 if (IsSelected)
-                    _owner.SelectedRows.Remove(this);
+                    _owner.SelectedLvItems.Remove(this);
                 else
-                    _owner.SelectedRows.Add(this);
+                    _owner.SelectedLvItems.Add(this);
                 _owner.OnItemClick(Data, (old != null) ? old.Data : null);
             }
             else

@@ -12,23 +12,14 @@
 namespace Dt.Base
 {
     /// <summary>
-    /// 自定义Tab内容
+    /// 支持内部导航的内容接口
     /// </summary>
     public interface INaviContent
     {
         /// <summary>
-        /// 所属容器
+        /// 将内容添加到宿主容器
         /// </summary>
-        INaviHost Host { get; set; }
-
-        /// <summary>
-        /// 在容器显示的菜单
-        /// </summary>
-        Menu HostMenu { get; }
-
-        /// <summary>
-        /// 容器标题
-        /// </summary>
-        string HostTitle { get; }
+        /// <param name="p_host">宿主容器</param>
+        void AddToHost(INaviHost p_host);
     }
 }
