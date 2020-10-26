@@ -182,6 +182,7 @@ namespace Dt.Shell
         public Dictionary<string, Type> StateTbls => new Dictionary<string, Type>
         {
             { "menufav", typeof(Dt.App.MenuFav) },
+            { "readfilehistory", typeof(Dt.App.File.ReadFileHistory) },
             { "chatmember", typeof(Dt.Base.ChatMember) },
             { "letter", typeof(Dt.Base.Letter) },
             { "docklayout", typeof(Dt.Base.Docking.DockLayout) },
@@ -194,7 +195,7 @@ namespace Dt.Shell
         /// <summary>
         /// 获取状态库版本号，和本地不同时自动更新
         /// </summary>
-        public string StateDbVer => "c60f4b219316ca1f69701bb06dd340a7";
+        public string StateDbVer => "5cb90c74d13b600087112c85be55dae6";
         #endregion
     }
 }

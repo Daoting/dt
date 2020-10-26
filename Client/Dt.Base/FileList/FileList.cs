@@ -131,6 +131,11 @@ namespace Dt.Base
         /// 文件列表变化事件
         /// </summary>
         public event EventHandler Changed;
+
+        /// <summary>
+        /// 文件打开后事件
+        /// </summary>
+        public event EventHandler<FileItem> OpenedFile;
         #endregion
 
         #region 属性
@@ -666,6 +671,13 @@ namespace Dt.Base
                 }
             }
             Changed?.Invoke(this, EventArgs.Empty);
+        }
+        #endregion
+
+        #region 触发事件
+        internal void OnOpenedFile(FileItem p_item)
+        {
+            OpenedFile?.Invoke(this, p_item);
         }
         #endregion
     }

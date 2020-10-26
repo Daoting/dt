@@ -20,7 +20,7 @@
         </DataTemplate>
 
         <DataTemplate x:Key="FileTemplate">
-            <a:FileList Data="{Binding [Info]}" BorderBrush="Transparent" />
+            <a:FileList Data="{Binding [Info]}" OpenedFile="OnOpenedFile" BorderBrush="Transparent" />
         </DataTemplate>
     </UserControl.Resources>
 

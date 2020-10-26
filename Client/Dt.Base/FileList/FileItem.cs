@@ -366,6 +366,7 @@ namespace Dt.Base
                     File = new ReadOnlyFile(fileName)
                 });
             }
+            _owner.OnOpenedFile(this);
         }
 
         /// <summary>

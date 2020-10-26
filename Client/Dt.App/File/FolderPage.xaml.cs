@@ -24,11 +24,13 @@ namespace Dt.App.File
     public sealed partial class FolderPage : UserControl, INaviContent
     {
         readonly IFileMgr _fileMgr;
+        readonly FileHome _owner;
 
-        public FolderPage(IFileMgr p_fileMgr)
+        public FolderPage(IFileMgr p_fileMgr, FileHome p_owner)
         {
             InitializeComponent();
             _fileMgr = p_fileMgr;
+            _owner = p_owner;
             _lv.View = new FileItemSelector((DataTemplate)Resources["FolderTemplate"], (DataTemplate)Resources["FileTemplate"]);
             this.FirstLoaded(LoadData);
         }
@@ -46,7 +48,28 @@ namespace Dt.App.File
             var mgr = (IFileMgr)Activator.CreateInstance(_fileMgr.GetType());
             mgr.FolderID = e.Row.ID;
             mgr.FolderName = e.Row.Str("name");
-            _host.NaviTo(new FolderPage(mgr));
+            _host.NaviTo(new FolderPage(mgr, _owner));
+        }
+
+        void OnOpenedFile(object sender, FileItem e)
+        {
+            AtKit.RunAsync(() =>
+            {
+                // 记录到本地已读文件目录
+                var row = ((LvItem)e.DataContext).Row;
+                var his = AtLocal.GetFirst<ReadFileHistory>("select * from ReadFileHistory where ID=@id", new Dict { { "id", row.ID } });
+                if (his == null)
+                {
+                    his = new ReadFileHistory();
+                    his.ID = row.ID;
+                    his.Info = row.Str("info");
+                }
+                his.LastReadTime = AtSys.Now;
+                if (AtLocal.Save(his) == 1)
+                {
+                    _owner.LoadHistory();
+                }
+            });
         }
 
         void OnSearch(object sender, Mi e)
@@ -136,7 +159,7 @@ namespace Dt.App.File
                 var mgr = (IFileMgr)Activator.CreateInstance(_fileMgr.GetType());
                 mgr.FolderID = dlg.Target.FolderID;
                 mgr.FolderName = dlg.Target.FolderName;
-                _host.NaviTo(new FolderPage(mgr));
+                _host.NaviTo(new FolderPage(mgr, _owner));
                 LoadData();
             }
         }
