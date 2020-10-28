@@ -9,14 +9,11 @@
 #region 引用命名
 using Dt.Base;
 using Dt.Core;
-using Dt.Fz.Base;
 using System;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Windows.UI.Xaml;
 #endregion
 
-namespace Dt.Fz
+namespace Dt.App.Publish
 {
     public sealed partial class EditPostDlg : Dlg
     {

@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2020-06-02 创建
+* 日志: 2020-06-08 创建
 ******************************************************************************/
 #endregion
 
@@ -17,22 +17,19 @@ using Windows.UI.Xaml.Controls;
 using Xamarin.Essentials;
 #endregion
 
-namespace Dt.Fz
+namespace Dt.App.Publish
 {
-    public partial class ViewPostDlg : Dlg
+    public partial class PostDetail : Win
     {
-        public ViewPostDlg(PostMgr p_owner)
+        public PostDetail()
         {
             InitializeComponent();
+        }
 
-            if (!AtSys.IsPhoneUI)
-            {
-                ShowWinVeil = true;
-                Height = AtApp.ViewHeight - 140;
-                Width = Math.Min(900, AtApp.ViewWidth - 200);
-            }
-            Title = p_owner.CurrentPost.Title;
-            _wv.Source = new Uri($"{AtSys.Stub.ServerUrl.TrimEnd('/')}/pub/{p_owner.CurrentPost.Url}");
+        public void Refresh(Row p_row)
+        {
+            _tab.Title = p_row.Str("title");
+            _wv.Source = new Uri($"{AtSys.Stub.ServerUrl.Replace("https:", "http:").TrimEnd('/')}/pub/{p_row.Str("url")}");
         }
 
         async void OnShare(object sender, Mi e)

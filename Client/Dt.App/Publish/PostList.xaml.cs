@@ -9,15 +9,12 @@
 #region 引用命名
 using Dt.Base;
 using Dt.Core;
-using Dt.Fz.Base;
-using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media.Imaging;
 using Xamarin.Essentials;
 #endregion
 
-namespace Dt.Fz
+namespace Dt.App.Publish
 {
     public partial class PostList : UserControl
     {

@@ -114,17 +114,17 @@ namespace Dt.Shell
             {
                 new OmMenu
                 {
-                    ID = 1110,
-                    Name = "通讯录",
-                    Icon = "留言",
-                    ViewName = "通讯录"
-                },
-                new OmMenu
-                {
                     ID = 2000,
                     Name = "福祉主页",
                     Icon = "主页",
                     ViewName = "福祉主页"
+                },
+                new OmMenu
+                {
+                    ID = 1110,
+                    Name = "通讯录",
+                    Icon = "留言",
+                    ViewName = "通讯录"
                 },
                 new OmMenu
                 {
@@ -144,6 +144,7 @@ namespace Dt.Shell
         {
             { "主页", typeof(Dt.App.DefaultHome) },
             { "报表", typeof(Dt.App.ReportView) },
+            { "发布管理", typeof(Dt.App.Publish.PublishMgr) },
             { "基础代码", typeof(Dt.App.Model.BaseCode) },
             { "菜单管理", typeof(Dt.App.Model.SysMenu) },
             { "基础权限", typeof(Dt.App.Model.BasePrivilege) },
@@ -154,7 +155,6 @@ namespace Dt.Shell
             { "文件", typeof(Dt.App.File.FileHome) },
             { "通讯录", typeof(Dt.App.Chat.ChatHome) },
             { "福祉主页", typeof(Dt.Fz.ClientHome) },
-            { "文章管理", typeof(Dt.Fz.PostMgr) },
             { "控件样例", typeof(Dt.Sample.SamplesMain) },
         };
 

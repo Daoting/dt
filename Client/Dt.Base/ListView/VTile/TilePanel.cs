@@ -174,15 +174,15 @@ namespace Dt.Base.ListView
         protected override Size MeasureVirRows()
         {
             // 数据行
-            if (_dataRows.Count > 0)
+            if (_dataRows.Count == 0)
+                return new Size(_maxSize.Width, 0);
+
+            // 重新测量
+            Size testSize = new Size(_itemWidth, _rowHeight);
+            // 只在创建虚拟行时确定宽度，重新测量时不重置，避免不一样时死循环！
+            foreach (var row in _dataRows)
             {
-                // 重新测量
-                Size testSize = new Size(_itemWidth, _rowHeight);
-                // 只在创建虚拟行时确定宽度，重新测量时不重置，避免不一样时死循环！
-                foreach (var row in _dataRows)
-                {
-                    row.Measure(testSize);
-                }
+                row.Measure(testSize);
             }
 
             double height = 0;

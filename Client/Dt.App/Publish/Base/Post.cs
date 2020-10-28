@@ -14,7 +14,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Fz.Base
+namespace Dt.App.Publish
 {
     public partial class Post
     {
@@ -47,7 +47,7 @@ namespace Dt.Fz.Base
             bool AllowCoverClick = default,
             bool AllowComment = default,
             bool AddAlbumLink = default,
-            bool AddCatLink = default,
+            bool AddKeywordLink = default,
             string Url = default,
             int Dispidx = default,
             long CreatorID = default,
@@ -69,7 +69,7 @@ namespace Dt.Fz.Base
             AddCell<bool>("AllowCoverClick", AllowCoverClick);
             AddCell<bool>("AllowComment", AllowComment);
             AddCell<bool>("AddAlbumLink", AddAlbumLink);
-            AddCell<bool>("AddCatLink", AddCatLink);
+            AddCell<bool>("AddKeywordLink", AddKeywordLink);
             AddCell<string>("Url", Url);
             AddCell<int>("Dispidx", Dispidx);
             AddCell<long>("CreatorID", CreatorID);
@@ -168,12 +168,12 @@ namespace Dt.Fz.Base
         }
 
         /// <summary>
-        /// 文章末尾是否添加同分类链接
+        /// 文章末尾是否添加同关键字链接
         /// </summary>
-        public bool AddCatLink
+        public bool AddKeywordLink
         {
-            get { return (bool)this["AddCatLink"]; }
-            set { this["AddCatLink"] = value; }
+            get { return (bool)this["AddKeywordLink"]; }
+            set { this["AddKeywordLink"] = value; }
         }
 
         /// <summary>
@@ -317,7 +317,7 @@ namespace Dt.Fz.Base
         {
         }
 
-        void SetAddCatLink(bool p_value)
+        void SetAddKeywordLink(bool p_value)
         {
         }
 

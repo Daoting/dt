@@ -13,7 +13,7 @@ using Dt.Core.Rpc;
 using System.Threading.Tasks;
 #endregion
 
-namespace Dt.Fz.Base
+namespace Dt.App.Publish
 {
     /// <summary>
     /// 发布服务Api代理类（自动生成）

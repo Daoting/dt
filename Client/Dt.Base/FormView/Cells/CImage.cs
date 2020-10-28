@@ -195,7 +195,8 @@ namespace Dt.Base
 
         void OnAddImage(object sender, RoutedEventArgs e)
         {
-            _fl.AddImage();
+            if (ValBinding.Source != null)
+                _fl.AddImage();
         }
         #endregion
     }

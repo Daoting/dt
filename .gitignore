@@ -3,14 +3,6 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
-# 后添加
-Service/src/Dt.Cm/etc/log/
-Service/src/Dt.Cm/etc/model/
-Service/src/Dt.Msg/etc/log/
-Service/src/Dt.Fsm/etc/log/
-Client/Common/wasm/
-Client/Common/nupkg/
-
 # User-specific files
 *.rsuser
 *.suo
@@ -355,3 +347,12 @@ healthchecksdb
 
 # Backup folder for Package Reference Convert tool in Visual Studio 2017
 MigrationBackup/
+
+# 后添加
+Service/src/Dt.Cm/etc/log/
+Service/src/Dt.Cm/etc/model/
+Service/src/Dt.Msg/etc/log/
+Service/src/Dt.Fsm/etc/log/
+Client/Common/wasm/
+Client/Common/nupkg/
+!Client/Dt.App/Publish/

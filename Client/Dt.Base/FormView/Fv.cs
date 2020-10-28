@@ -56,6 +56,12 @@ namespace Dt.Base
             typeof(Fv),
             new PropertyMetadata(false));
 
+        public readonly static DependencyProperty MaxColCountProperty = DependencyProperty.Register(
+            "MaxColCount",
+            typeof(int),
+            typeof(Fv),
+            new PropertyMetadata(4, OnMaxColCountChanged));
+
         public readonly static DependencyProperty DataViewProperty = DependencyProperty.Register(
             "DataView",
             typeof(ObjectView),
@@ -96,6 +102,13 @@ namespace Dt.Base
         {
             ((Fv)d).OnDirty();
         }
+
+        static void OnMaxColCountChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            Fv fv = (Fv)d;
+            if (fv._isLoaded)
+                fv._panel.InvalidateMeasure();
+        }
         #endregion
 
         #region 成员变量
@@ -109,7 +122,7 @@ namespace Dt.Base
         public Fv()
         {
             DefaultStyleKey = typeof(Fv);
-            _panel = new FormPanel();
+            _panel = new FormPanel(this);
         }
         #endregion
 
@@ -181,6 +194,15 @@ namespace Dt.Base
         {
             get { return (bool)GetValue(AutoCreateCellProperty); }
             set { SetValue(AutoCreateCellProperty, value); }
+        }
+
+        /// <summary>
+        /// 获取设置布局时的最大列数，默认最多4列
+        /// </summary>
+        public int MaxColCount
+        {
+            get { return (int)GetValue(MaxColCountProperty); }
+            set { SetValue(MaxColCountProperty, value); }
         }
 
         /// <summary>

@@ -2,7 +2,7 @@
 /******************************************************************************
 * 创建: Daoting
 * 摘要: 
-* 日志: 2020-06-08 创建
+* 日志: 2020-06-02 创建
 ******************************************************************************/
 #endregion
 
@@ -10,26 +10,25 @@
 using Dt.Base;
 using Dt.Core;
 using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using Xamarin.Essentials;
 #endregion
 
-namespace Dt.Fz
+namespace Dt.App.Publish
 {
-    public partial class PostDetail : Win
+    public partial class ViewPostDlg : Dlg
     {
-        public PostDetail()
+        public ViewPostDlg(PostMgr p_owner)
         {
             InitializeComponent();
-        }
 
-        public void Refresh(Row p_row)
-        {
-            _tab.Title = p_row.Str("title");
-            _wv.Source = new Uri($"{AtSys.Stub.ServerUrl.Replace("https:", "http:").TrimEnd('/')}/pub/{p_row.Str("url")}");
+            if (!AtSys.IsPhoneUI)
+            {
+                ShowWinVeil = true;
+                Height = AtApp.ViewHeight - 140;
+                Width = Math.Min(900, AtApp.ViewWidth - 200);
+            }
+            Title = p_owner.CurrentPost.Title;
+            _wv.Source = new Uri($"{AtSys.Stub.ServerUrl.TrimEnd('/')}/pub/{p_owner.CurrentPost.Url}");
         }
 
         async void OnShare(object sender, Mi e)

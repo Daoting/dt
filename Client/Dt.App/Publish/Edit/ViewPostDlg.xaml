@@ -1,5 +1,5 @@
 ﻿<a:Dlg
-    x:Class="Dt.Fz.ViewPostDlg"
+    x:Class="Dt.App.Publish.ViewPostDlg"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:a="using:Dt.Base">

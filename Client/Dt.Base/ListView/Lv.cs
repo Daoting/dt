@@ -1145,13 +1145,17 @@ namespace Dt.Base
                 else if (_sizedPresenter != null)
                 {
                     // Phone模式Lv外部有ScrollViewer时，取父级SizedPresenter有效大小
-                    _panel.SetMaxSize(_sizedPresenter.AvailableSize);
+                    _panel.SetMaxSize(new Size(
+                        Math.Min(_sizedPresenter.AvailableSize.Width, availableSize.Width),
+                        Math.Min(_sizedPresenter.AvailableSize.Height, availableSize.Height)));
                 }
                 else if (!IsInnerScroll)
                 {
                     // Win模式外部有ScrollViewer时，动态获取父级，因所属Tabs在Win中恢复布局时变化
                     var pre = Scroll.FindParentInWin<SizedPresenter>();
-                    _panel.SetMaxSize(pre.AvailableSize);
+                    _panel.SetMaxSize(new Size(
+                        Math.Min(pre.AvailableSize.Width, availableSize.Width),
+                        Math.Min(pre.AvailableSize.Height, availableSize.Height)));
                 }
                 else
                 {

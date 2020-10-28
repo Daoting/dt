@@ -9,18 +9,12 @@
 #region 引用命名
 using Dt.Base;
 using Dt.Core;
-using Dt.Core.Model;
-using Dt.Fz.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 #endregion
 
-namespace Dt.Fz
+namespace Dt.App.Publish
 {
-    [View("文章管理")]
     public partial class PostMgr : Win
     {
         readonly Repo<Post> _repoPost = new Repo<Post>();
@@ -29,7 +23,6 @@ namespace Dt.Fz
         {
             InitializeComponent();
             LoadAll();
-            _fv.DataChanged += OnPostChanged;
         }
 
         #region 文章列表
@@ -44,7 +37,7 @@ namespace Dt.Fz
             {
                 LoadPost(e.Row.ID);
             }
-            NaviTo("文章,所属专辑,所属分类");
+            SelectTab("文章编辑");
         }
 
         async void OnSearch(object sender, string e)
@@ -62,6 +55,18 @@ namespace Dt.Fz
         async void LoadPost(long p_id)
         {
             _fv.Data = await _repoPost.Get("文章-编辑", new { id = p_id });
+            LoadKeyword(p_id);
+            LoadAlbum(p_id);
+        }
+
+        async void LoadKeyword(long p_id)
+        {
+            _lvKeyword.Data = await AtPublish.Query("文章-已选关键字", new { postid = p_id });
+        }
+
+        async void LoadAlbum(long p_id)
+        {
+            _lvAlbum.Data = await AtPublish.Query("文章-已选专辑", new { postid = p_id });
         }
 
         async void OnAddPost(object sender, Mi e)
@@ -145,16 +150,37 @@ namespace Dt.Fz
             }
         }
 
-        void OnPhotoChanged(object sender, object e)
+        async void OnAddKeyword(object sender, RoutedEventArgs e)
         {
-            _ = SavePost();
+            if (_fv.Data != null)
+            {
+                if (await new SelectKeywordDlg().Show(_fv.Row.ID))
+                    LoadKeyword(_fv.Row.ID);
+            }
+        }
+
+        async void OnDelPostKeyword(object sender, Mi e)
+        {
+            Postkeyword pk = new Postkeyword(PostID: _fv.Row.ID, Keyword: e.Row.Str(0));
+            if (await new Repo<Postkeyword>().Delete(pk))
+                LoadKeyword(_fv.Row.ID);
+        }
+
+        async void OnAddAlbum(object sender, RoutedEventArgs e)
+        {
+            if (_fv.Data != null)
+            {
+                if (await new SelectAlbumDlg().Show(_fv.Row.ID))
+                    LoadAlbum(_fv.Row.ID);
+            }
+        }
+
+        async void OnDelPostAlbum(object sender, Mi e)
+        {
+            var pa = new Postalbum(PostID: _fv.Row.ID, AlbumID: e.Row.ID);
+            if (await new Repo<Postalbum>().Delete(pa))
+                LoadAlbum(_fv.Row.ID);
         }
         #endregion
-
-        void OnPostChanged(object sender, object e)
-        {
-
-        }
-
     }
 }

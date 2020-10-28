@@ -30,19 +30,20 @@ namespace Dt.Base.FormView
         // 单元格宽度范围
         const double CellMaxWidth = 456;
         const double CellMinWidth = 296;
-        const double CellMaxHeight = 5000;
 
         /// <summary>
         /// 面板最大尺寸，宽高始终不为无穷大！
         /// </summary>
         Size _maxSize = Size.Empty;
 
+        readonly Fv _owner;
         // 为uno节省可视树级数
         readonly Rectangle _border = new Rectangle { Stroke = AtRes.浅灰边框, IsHitTestVisible = false };
         #endregion
 
-        public FormPanel()
+        public FormPanel(Fv p_owner)
         {
+            _owner = p_owner;
             Background = AtRes.浅灰背景;
             HorizontalAlignment = HorizontalAlignment.Left;
             VerticalAlignment = VerticalAlignment.Top;
@@ -86,7 +87,7 @@ namespace Dt.Base.FormView
             double maxWidth = _maxSize.Width;
 
             // 确定列数和列宽
-            if (maxWidth < CellMinWidth * 2)
+            if (maxWidth < CellMinWidth * 2 || _owner.MaxColCount == 1)
             {
                 // 只能放一列
                 colWidth = maxWidth > CellMaxWidth ? CellMaxWidth : maxWidth;
@@ -102,30 +103,26 @@ namespace Dt.Base.FormView
                     colWidth = CellMaxWidth;
                     colCount = 1;
                 }
-                else if (maxWidth < CellMinWidth * 3)
+                else if (_owner.MaxColCount == 2
+                    || maxWidth < CellMinWidth * 3
+                    || maxHeight >= GetTotalHeight(2, (maxWidth / 2) > CellMaxWidth ? CellMaxWidth : (maxWidth / 2), false))
                 {
-                    // 最多只能放两列，采用两列
+                    // 采用两列：
+                    // 外部设置最多两列；
+                    // 最多只能放两列；
+                    // 两列在可视高度的80%以内；
                     width = maxWidth / 2;
                     colWidth = width > CellMaxWidth ? CellMaxWidth : width;
                     colCount = 2;
                 }
-                else if (maxHeight >= GetTotalHeight(2, (maxWidth / 2) > CellMaxWidth ? CellMaxWidth : (maxWidth / 2), false))
+                else if (_owner.MaxColCount == 3
+                    || maxWidth < CellMinWidth * 4
+                    || maxHeight >= GetTotalHeight(3, (maxWidth / 3) > CellMaxWidth ? CellMaxWidth : (maxWidth / 3), false))
                 {
-                    // 两列在可视高度的80%以内，采用两列
-                    width = maxWidth / 2;
-                    colWidth = width > CellMaxWidth ? CellMaxWidth : width;
-                    colCount = 2;
-                }
-                else if (maxWidth < CellMinWidth * 4)
-                {
-                    // 最多只能放三列，采用三列
-                    width = maxWidth / 3;
-                    colWidth = width > CellMaxWidth ? CellMaxWidth : width;
-                    colCount = 3;
-                }
-                else if (maxHeight >= GetTotalHeight(3, (maxWidth / 3) > CellMaxWidth ? CellMaxWidth : (maxWidth / 3), false))
-                {
-                    // 三列在可视高度的80%以内，采用三列
+                    // 采用三列：
+                    // 外部设置最多三列；
+                    // 最多只能放三列；
+                    // 三列在可视高度的80%以内；
                     width = maxWidth / 3;
                     colWidth = width > CellMaxWidth ? CellMaxWidth : width;
                     colCount = 3;
@@ -191,7 +188,7 @@ namespace Dt.Base.FormView
                     else
                     {
                         // 自动行高，计算占用行数，uno中无法使用double.MaxValue！
-                        cell.Measure(new Size(p_colWidth, CellMaxHeight));
+                        cell.Measure(new Size(p_colWidth, SysVisual.ViewHeight));
                         // uno中高度莫名多出小数点后的
                         rowSpan = (int)Math.Ceiling(Math.Floor(cell.DesiredSize.Height) / AtRes.RowOuterHeight);
                     }
@@ -265,7 +262,7 @@ namespace Dt.Base.FormView
                     else
                     {
                         // 自动行高，计算占用行数
-                        cell.Measure(new Size(p_colWidth * p_colCount, CellMaxHeight));
+                        cell.Measure(new Size(p_colWidth * p_colCount, SysVisual.ViewHeight));
                         rowSpan = (int)Math.Ceiling(cell.DesiredSize.Height / AtRes.RowOuterHeight);
                     }
 
@@ -326,7 +323,7 @@ namespace Dt.Base.FormView
                     else
                     {
                         // 自动行高，计算占用行数
-                        cell.Measure(new Size(p_colWidth, CellMaxHeight));
+                        cell.Measure(new Size(p_colWidth, SysVisual.ViewHeight));
                         rowSpan = (int)Math.Ceiling(cell.DesiredSize.Height / AtRes.RowOuterHeight);
                     }
 

@@ -246,7 +246,7 @@ namespace Dt.Base
             if (_toolbar == null)
             {
                 Button btn = new Button { Content = "\uE080", Style = AtRes.字符按钮 };
-                btn.Click += (s, e) => _fl.AddFile();
+                btn.Click += AddFile;
                 _toolbar = btn;
             }
             Toolbar = _toolbar;
@@ -277,6 +277,12 @@ namespace Dt.Base
                 menu.Items.Add(mi);
             }
             Ex.SetMenu(_fl, menu);
+        }
+
+        void AddFile(object sender, RoutedEventArgs e)
+        {
+            if (ValBinding.Source != null)
+                _fl.AddImage();
         }
         #endregion
     }
